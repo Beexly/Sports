@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
 import { OddsApiClient, DataNormalizer, SUPPORTED_SPORTS, MARKETS } from "@sports/data-ingestion";
 import { scoreGames } from "@sports/prediction-engine";
-import type { OddsInput } from "@sports/types";
+import type { OddsInput, GameContextInput } from "@sports/types";
 
 export async function POST(): Promise<NextResponse> {
   const session = await auth();
@@ -95,6 +95,27 @@ export async function POST(): Promise<NextResponse> {
         if (!gameRecord) continue;
 
         const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
+        const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
+        const bookmakerCoverageMax = new Set(gameOdds.map((o) => o.bookmaker)).size;
+
+        const context: GameContextInput = {
+          openingSpread: null,
+          currentSpread: null,
+          openingTotal: null,
+          currentTotal: null,
+          restDaysHome: null,
+          restDaysAway: null,
+          isBackToBackHome: false,
+          isBackToBackAway: false,
+          homeAtsForm: null,
+          awayAtsForm: null,
+          bookmakerCoverageMax,
+          dataFreshnessMinutes: freshnessMinutes,
+          hasSpreadMarket: gameOdds.some((o) => o.market === "SPREADS"),
+          hasTotalMarket: gameOdds.some((o) => o.market === "TOTALS"),
+          hasH2HMarket: gameOdds.some((o) => o.market === "H2H"),
+        };
+
         oddsInputs.push({
           gameId: gameRecord.id,
           homeTeam: game.homeTeam,
@@ -113,6 +134,7 @@ export async function POST(): Promise<NextResponse> {
             overPrice: o.overPrice,
             underPrice: o.underPrice,
           })),
+          context,
         });
       }
 
@@ -149,6 +171,9 @@ export async function POST(): Promise<NextResponse> {
               factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
               modelVersion: pick.modelVersion,
               dataFreshnessAt: pick.dataFreshnessAt,
+              isFeatured:
+                pick.pickGrade === "ELITE_PLAY" ||
+                (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80),
             },
           });
           picksGenerated++;

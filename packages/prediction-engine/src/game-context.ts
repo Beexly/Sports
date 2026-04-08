@@ -256,7 +256,7 @@ export function computeDataQuality(
   // Bookmaker coverage score (0–40): ideal = 10+ books
   const coverageScore = clamp((bookmakerCoverageMax / 10) * 40, 0, 40);
 
-  // Freshness score (0–30): full credit <10min, linear decay to 0 at 90min
+  // Freshness score (0–30): full credit at 0min, linear decay to 0 at 90min
   const freshnessScore = clamp(((90 - dataFreshnessMinutes) / 90) * 30, 0, 30);
 
   // Market coverage score (0–30): 10pts per market type

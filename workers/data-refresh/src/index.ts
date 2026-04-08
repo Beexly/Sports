@@ -223,6 +223,9 @@ async function runRefreshCycle(): Promise<void> {
               factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
               modelVersion: pick.modelVersion,
               dataFreshnessAt: pick.dataFreshnessAt,
+              isFeatured:
+                pick.pickGrade === "ELITE_PLAY" ||
+                (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80),
             },
           });
           picksGenerated++;
