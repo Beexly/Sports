@@ -11,6 +11,11 @@ export {
   computeRestAdvantageScore,
   computeHistoricalFormScore,
   computeDataQuality,
+  // v4
+  computeHeadToHeadScore,
+  computeVenueFormScore,
+  computeCrossMarketScore,
+  computeUncertaintyPenalty,
 } from "./game-context.js";
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export * from "./constants.js";

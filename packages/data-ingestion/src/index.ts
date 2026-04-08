@@ -5,6 +5,7 @@ export {
   trackOpeningLines,
   computeRestDays,
   getAtsForm,
+  getHeadToHeadForm,
   settleGameLogs,
 } from "./context-enrichment.js";
 export * from "./config.js";

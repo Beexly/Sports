@@ -267,6 +267,20 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
     computeVolatilityPenalty(spreadOdds.length, spreadOfSpreads);
 
+  // Compute ML fair probability for cross-market validation
+  const h2hForContext = input.bookmakerOdds.filter(
+    (o) => o.market === "H2H" && o.homePrice !== undefined && o.awayPrice !== undefined
+  );
+  let mlFairProbHome: number | null = null;
+  if (h2hForContext.length >= 2) {
+    const homeImplied = h2hForContext.map((o) => americanToImpliedProbability(o.homePrice!));
+    const awayImplied = h2hForContext.map((o) => americanToImpliedProbability(o.awayPrice!));
+    const avgH = homeImplied.reduce((a, b) => a + b, 0) / homeImplied.length;
+    const avgA = awayImplied.reduce((a, b) => a + b, 0) / awayImplied.length;
+    const fairML = removeVig(avgH, avgA);
+    mlFairProbHome = fairML.home;
+  }
+
   // Game context signals
   const ctx = input.context
     ? computeGameContext(
@@ -276,6 +290,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
           hasTotalMarket: input.bookmakerOdds.some((o) => o.market === "TOTALS"),
           hasH2HMarket: input.bookmakerOdds.some((o) => o.market === "H2H"),
           bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? spreadOdds.length,
+          mlFairProbHome,
         },
         "SPREAD",
         pickedSide
@@ -286,6 +301,11 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const restAdvantageScore = ctx?.restAdvantageScore ?? 0;
   const historicalFormScore = ctx?.historicalFormScore ?? 0;
   const dataQualityPenalty = ctx?.dataQualityPenalty ?? 0;
+  const headToHeadScore = ctx?.headToHeadScore ?? 0;
+  const venueFormScore = ctx?.venueFormScore ?? 0;
+  const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
+  const crossMarketScore = ctx?.crossMarketScore ?? 0;
+  const dataQualityScore = ctx?.dataQualityScore ?? 100;
 
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
 
@@ -300,7 +320,8 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const confidence = Math.round(
     clamp(
       consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
-      lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty + 10,
+      lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
+      headToHeadScore + venueFormScore + uncertaintyPenalty + crossMarketScore + 10,
       0, 100
     )
   );
@@ -316,15 +337,31 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     chosenSpread > 0 ? `+${chosenSpread.toFixed(1)}` : chosenSpread.toFixed(1);
   const selection = `${chosenTeam} ${spreadDisplay}`;
 
+  // Build contextual reasoning clauses
+  const contextClauses: string[] = [];
+  if (restAdvantageScore > 3) contextClauses.push("rest advantage");
+  else if (restAdvantageScore < -3) contextClauses.push("rest disadvantage");
+  if (headToHeadScore > 0) contextClauses.push("favorable H2H history");
+  else if (headToHeadScore < 0) contextClauses.push("poor H2H history");
+  if (venueFormScore > 0) contextClauses.push("strong venue form");
+  if (lineMovementScore > 5) contextClauses.push("confirming line movement");
+  else if (lineMovementScore < -5) contextClauses.push("fading line movement");
+  if (uncertaintyPenalty < -3) contextClauses.push("conflicting signals noted");
+
+  const contextNote = contextClauses.length > 0
+    ? ` Context: ${contextClauses.join(", ")}.`
+    : "";
+
   const reasoning =
-    `${chosenTeam} ${spreadDisplay} is supported by ${Math.round(consensusPct * 100)}% of ${spreadOdds.length} ` +
-    `bookmakers. Fair value probability: ${Math.round(fairProb * 100)}%. ` +
-    `Pricing edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%. ` +
-    `Market depth: ${spreadOdds.length} sources. ` +
-    `Confidence: ${confidence}/100 (${pickGrade.replace("_", " ")}).`;
+    `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${spreadOdds.length} ` +
+    `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
+    `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
+    contextNote +
+    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
 
   const reasoningShort =
-    `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.`;
+    `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
+    (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -332,6 +369,11 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     edgeScore: edgeComponentScore,
     lineMovementScore,
     volatilityPenalty,
+    headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,
+    venueFormScore: venueFormScore !== 0 ? venueFormScore : undefined,
+    uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
+    crossMarketScore: crossMarketScore !== 0 ? crossMarketScore : undefined,
+    dataQualityScore,
     factors,
   };
 
@@ -344,6 +386,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     edgeScore,
     consensusPct,
     bookmakerCount: spreadOdds.length,
+    dataQualityScore,
     tier,
     pickGrade,
     riskLevel,
@@ -435,6 +478,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const lineMovementScore = ctx?.lineMovementScore ?? 0;
   const dataQualityPenalty = ctx?.dataQualityPenalty ?? 0;
+  const dataQualityScore = ctx?.dataQualityScore ?? 100;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
 
   const factors: FactorDetail[] = [
@@ -463,12 +507,15 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const direction = overIsChosen ? "OVER" : "UNDER";
   const selection = `${direction} ${avgTotal.toFixed(1)}`;
 
+  const movementNote = lineMovementScore > 5 ? " Total line moving in pick direction." :
+    lineMovementScore < -5 ? " Total line moving against pick direction." : "";
+
   const reasoning =
     `${direction} ${avgTotal.toFixed(1)} backed by ${Math.round(consensusPct * 100)}% of ${totalOdds.length} ` +
     `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
-    `Pricing edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%. ` +
-    `Average total across sources: ${avgTotal.toFixed(1)}. ` +
-    `Confidence: ${confidence}/100 (${pickGrade.replace("_", " ")}).`;
+    `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
+    movementNote +
+    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
 
   const reasoningShort =
     `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${avgTotal.toFixed(1)}.`;
@@ -479,6 +526,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     edgeScore: edgeComponentScore,
     lineMovementScore,
     volatilityPenalty,
+    dataQualityScore,
     factors,
   };
 
@@ -491,6 +539,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     edgeScore,
     consensusPct,
     bookmakerCount: totalOdds.length,
+    dataQualityScore,
     tier,
     pickGrade,
     riskLevel,
@@ -559,6 +608,10 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const restAdvantageScore = ctx?.restAdvantageScore ?? 0;
   const historicalFormScore = ctx?.historicalFormScore ?? 0;
   const dataQualityPenalty = ctx?.dataQualityPenalty ?? 0;
+  const headToHeadScore = ctx?.headToHeadScore ?? 0;
+  const venueFormScore = ctx?.venueFormScore ?? 0;
+  const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
+  const dataQualityScore = ctx?.dataQualityScore ?? 100;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
 
   const factors: FactorDetail[] = [
@@ -572,7 +625,8 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const confidence = Math.round(
     clamp(
       consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
-      lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty + 10,
+      lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
+      headToHeadScore + venueFormScore + uncertaintyPenalty + 10,
       0, 100
     )
   );
@@ -588,14 +642,28 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     avgPrice > 0 ? `+${Math.round(avgPrice)}` : Math.round(avgPrice).toString();
   const selection = `${chosenTeam} ML (${priceDisplay})`;
 
+  // Context-aware reasoning
+  const contextClauses: string[] = [];
+  if (restAdvantageScore > 3) contextClauses.push("rest advantage");
+  else if (restAdvantageScore < -3) contextClauses.push("rest disadvantage");
+  if (headToHeadScore > 0) contextClauses.push("favorable H2H history");
+  else if (headToHeadScore < 0) contextClauses.push("poor H2H history");
+  if (venueFormScore > 0) contextClauses.push("strong venue form");
+  if (uncertaintyPenalty < -3) contextClauses.push("conflicting signals");
+  const contextNote = contextClauses.length > 0
+    ? ` Context: ${contextClauses.join(", ")}.`
+    : "";
+
   const reasoning =
-    `${chosenTeam} ML (${priceDisplay}): fair value probability ${Math.round(fairProb * 100)}% ` +
+    `${chosenTeam} ML (${priceDisplay}): fair value ${Math.round(fairProb * 100)}% ` +
     `across ${h2hOdds.length} bookmakers. ` +
-    `Pricing edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%. ` +
-    `Confidence: ${confidence}/100 (${pickGrade.replace("_", " ")}).`;
+    `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
+    contextNote +
+    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
 
   const reasoningShort =
-    `${chosenTeam} implied at ${Math.round(fairProb * 100)}% across ${h2hOdds.length} books.`;
+    `${chosenTeam} implied at ${Math.round(fairProb * 100)}% across ${h2hOdds.length} books.` +
+    (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -603,6 +671,10 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     edgeScore: edgeComponentScore,
     lineMovementScore,
     volatilityPenalty,
+    headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,
+    venueFormScore: venueFormScore !== 0 ? venueFormScore : undefined,
+    uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
+    dataQualityScore,
     factors,
   };
 
@@ -615,6 +687,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     edgeScore,
     consensusPct,
     bookmakerCount: h2hOdds.length,
+    dataQualityScore,
     tier,
     pickGrade,
     riskLevel,

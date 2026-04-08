@@ -76,6 +76,19 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       }
     }
 
+    // Extract dataQualityScore — always public trust signal
+    // Prefer from stored factorBreakdown JSON if available, else fall back to game.dataQualityScore
+    let storedDqScore: number | null = null;
+    if (pick.factorBreakdown) {
+      try {
+        const fb = pick.factorBreakdown as Record<string, unknown>;
+        if (typeof fb["dataQualityScore"] === "number") {
+          storedDqScore = fb["dataQualityScore"];
+        }
+      } catch { /* ignore */ }
+    }
+    const dataQualityScore = storedDqScore ?? Math.round(pick.game.dataQualityScore);
+
     return {
       id: pick.id,
       game: {
@@ -91,7 +104,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       confidence: entitlements.canSeeConfidence ? pick.confidence : null,
       edgeScore: entitlements.canSeeEdgeScore ? pick.edgeScore : null,
       factorBreakdown,
-      // Always visible
+      // Always visible — trust transparency
+      dataQualityScore,
       tier: pick.tier as "FREE" | "PREMIUM",
       pickGrade: (pick.pickGrade ?? "LEAN") as PickGrade,
       riskLevel: (pick.riskLevel ?? "MODERATE") as RiskLevel,

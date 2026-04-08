@@ -11,6 +11,10 @@ import {
   computeRestAdvantageScore,
   computeHistoricalFormScore,
   computeDataQuality,
+  computeHeadToHeadScore,
+  computeVenueFormScore,
+  computeCrossMarketScore,
+  computeUncertaintyPenalty,
 } from "../game-context.js";
 import type { OddsInput } from "@sports/types";
 import { MODEL_VERSION } from "../constants.js";
@@ -431,9 +435,9 @@ describe("scoreGame — context integration", () => {
     }
   });
 
-  it("modelVersion is v3.0.0", () => {
+  it("modelVersion is v4.0.0", () => {
     const picks = scoreGame(makeOddsInput());
-    expect(picks[0]?.modelVersion).toBe("v3.0.0");
+    expect(picks[0]?.modelVersion).toBe("v4.0.0");
   });
 });
 
@@ -460,5 +464,221 @@ describe("scoreGames", () => {
     for (const pick of picks) {
       expect(pick.dataFreshnessAt).toEqual(at);
     }
+  });
+});
+
+// ============================================================
+// v4: Head-to-head form
+// ============================================================
+
+describe("computeHeadToHeadScore", () => {
+  it("returns 0 for null input", () => {
+    const { score, atsPct, factor } = computeHeadToHeadScore(null);
+    expect(score).toBe(0);
+    expect(atsPct).toBeNull();
+    expect(factor).toBeNull();
+  });
+
+  it("returns 0 for sample below minimum (< 5 games)", () => {
+    const { score } = computeHeadToHeadScore({ wins: 3, losses: 1, pushes: 0, sampleSize: 4 });
+    expect(score).toBe(0);
+  });
+
+  it("returns +5 for dominant H2H record (70%+)", () => {
+    const { score } = computeHeadToHeadScore({ wins: 8, losses: 2, pushes: 0, sampleSize: 10 });
+    expect(score).toBe(5);
+  });
+
+  it("returns +3 for favorable H2H record (60–69%)", () => {
+    const { score } = computeHeadToHeadScore({ wins: 7, losses: 4, pushes: 0, sampleSize: 11 });
+    // 7/11 ≈ 63.6% → should be +3
+    expect(score).toBe(3);
+  });
+
+  it("returns -5 for poor H2H record (≤30%)", () => {
+    const { score } = computeHeadToHeadScore({ wins: 2, losses: 8, pushes: 0, sampleSize: 10 });
+    expect(score).toBe(-5);
+  });
+
+  it("returns -3 for below-average H2H record (31–40%)", () => {
+    const { score } = computeHeadToHeadScore({ wins: 4, losses: 7, pushes: 0, sampleSize: 11 });
+    // 4/11 ≈ 36.4% → should be -3
+    expect(score).toBe(-3);
+  });
+
+  it("returns 0 for neutral H2H record (~50%)", () => {
+    const { score } = computeHeadToHeadScore({ wins: 5, losses: 5, pushes: 0, sampleSize: 10 });
+    expect(score).toBe(0);
+  });
+
+  it("includes positive factor description when score > 0", () => {
+    const { factor } = computeHeadToHeadScore({ wins: 8, losses: 2, pushes: 0, sampleSize: 10 });
+    expect(factor).not.toBeNull();
+    expect(factor?.impact).toBe("positive");
+    expect(factor?.name).toBe("Head-to-Head Form");
+  });
+
+  it("includes negative factor description when score < 0", () => {
+    const { factor } = computeHeadToHeadScore({ wins: 2, losses: 8, pushes: 0, sampleSize: 10 });
+    expect(factor).not.toBeNull();
+    expect(factor?.impact).toBe("negative");
+  });
+
+  it("returns null factor for neutral record", () => {
+    const { factor } = computeHeadToHeadScore({ wins: 5, losses: 5, pushes: 0, sampleSize: 10 });
+    expect(factor).toBeNull();
+  });
+});
+
+// ============================================================
+// v4: Venue-specific ATS form
+// ============================================================
+
+describe("computeVenueFormScore", () => {
+  it("returns 0 for null input", () => {
+    const { score, factor } = computeVenueFormScore(null, "Home");
+    expect(score).toBe(0);
+    expect(factor).toBeNull();
+  });
+
+  it("returns 0 for sample below minimum (< 5 games)", () => {
+    const { score } = computeVenueFormScore({ wins: 3, losses: 1, pushes: 0, sampleSize: 4 }, "Home");
+    expect(score).toBe(0);
+  });
+
+  it("returns +5 for dominant venue record (65%+)", () => {
+    const { score } = computeVenueFormScore({ wins: 7, losses: 3, pushes: 0, sampleSize: 10 }, "Home");
+    expect(score).toBe(5);
+  });
+
+  it("returns +3 for solid venue record (58–64%)", () => {
+    // 6/10 = 60% → +3
+    const { score } = computeVenueFormScore({ wins: 6, losses: 4, pushes: 0, sampleSize: 10 }, "Away");
+    expect(score).toBe(3);
+  });
+
+  it("returns -5 for poor venue record (≤35%)", () => {
+    const { score } = computeVenueFormScore({ wins: 3, losses: 9, pushes: 0, sampleSize: 12 }, "Home");
+    // 3/12 = 25% → -5
+    expect(score).toBe(-5);
+  });
+
+  it("returns -3 for below-average venue record (36–42%)", () => {
+    // 4/10 = 40% → -3
+    const { score } = computeVenueFormScore({ wins: 4, losses: 6, pushes: 0, sampleSize: 10 }, "Away");
+    expect(score).toBe(-3);
+  });
+
+  it("includes venue label in factor description", () => {
+    const { factor } = computeVenueFormScore({ wins: 7, losses: 3, pushes: 0, sampleSize: 10 }, "Home");
+    expect(factor?.name).toBe("Home Venue Form");
+    expect(factor?.description).toContain("home");
+  });
+});
+
+// ============================================================
+// v4: Cross-market consistency
+// ============================================================
+
+describe("computeCrossMarketScore", () => {
+  it("returns 0 for non-SPREAD market types", () => {
+    const { score } = computeCrossMarketScore("OVER", 0.65, "TOTAL");
+    expect(score).toBe(0);
+  });
+
+  it("returns 0 when mlFairProbHome is null", () => {
+    const { score } = computeCrossMarketScore("HOME", null, "SPREAD");
+    expect(score).toBe(0);
+  });
+
+  it("returns 0 when ML has weak conviction (within 5% of 50%)", () => {
+    const { score } = computeCrossMarketScore("HOME", 0.52, "SPREAD");
+    expect(score).toBe(0);
+  });
+
+  it("returns +4 when spread and ML agree (both favor home)", () => {
+    const { score } = computeCrossMarketScore("HOME", 0.65, "SPREAD");
+    expect(score).toBe(4);
+  });
+
+  it("returns +4 when spread and ML agree (both favor away)", () => {
+    const { score } = computeCrossMarketScore("AWAY", 0.35, "SPREAD");
+    expect(score).toBe(4);
+  });
+
+  it("returns -3 when spread and ML disagree (spread HOME but ML favors away)", () => {
+    const { score } = computeCrossMarketScore("HOME", 0.35, "SPREAD");
+    expect(score).toBe(-3);
+  });
+
+  it("returns -3 when spread and ML disagree (spread AWAY but ML favors home)", () => {
+    const { score } = computeCrossMarketScore("AWAY", 0.65, "SPREAD");
+    expect(score).toBe(-3);
+  });
+
+  it("includes positive factor when markets agree", () => {
+    const { factor } = computeCrossMarketScore("HOME", 0.65, "SPREAD");
+    expect(factor?.impact).toBe("positive");
+    expect(factor?.name).toBe("Cross-Market Alignment");
+  });
+
+  it("includes negative factor when markets diverge", () => {
+    const { factor } = computeCrossMarketScore("HOME", 0.35, "SPREAD");
+    expect(factor?.impact).toBe("negative");
+    expect(factor?.name).toBe("Cross-Market Divergence");
+  });
+});
+
+// ============================================================
+// v4: Uncertainty penalty
+// ============================================================
+
+describe("computeUncertaintyPenalty", () => {
+  it("returns 0 when no signals conflict", () => {
+    const { penalty } = computeUncertaintyPenalty(5, 5, 3, 4);
+    expect(penalty).toBe(0);
+  });
+
+  it("returns 0 when all signals are neutral", () => {
+    const { penalty } = computeUncertaintyPenalty(0, 0, 0, 0);
+    expect(penalty).toBe(0);
+  });
+
+  it("applies -4 penalty for line movement vs historical conflict", () => {
+    // Line moving strongly against (-8), but historical form is positive (+5)
+    const { penalty } = computeUncertaintyPenalty(-8, 5, 0, 0);
+    expect(penalty).toBeLessThan(0);
+    expect(penalty).toBeGreaterThanOrEqual(-8);
+  });
+
+  it("applies penalty for market fading historically strong side", () => {
+    // Line moving very strongly against (-10), historical form very positive (+7)
+    const { penalty } = computeUncertaintyPenalty(-10, 7, 0, 0);
+    expect(penalty).toBeLessThan(0);
+  });
+
+  it("applies additional penalty when cross-market also disagrees", () => {
+    // Line fade + cross-market disagree = multiple conflicts
+    const { penalty: single } = computeUncertaintyPenalty(-8, 5, 0, 0);
+    const { penalty: multiple } = computeUncertaintyPenalty(-8, 5, 0, -3);
+    expect(multiple).toBeLessThanOrEqual(single);
+  });
+
+  it("caps penalty at -8 regardless of conflict count", () => {
+    // Max conflicts scenario
+    const { penalty } = computeUncertaintyPenalty(-12, 10, 5, -3);
+    expect(penalty).toBeGreaterThanOrEqual(-8);
+  });
+
+  it("includes factor description when penalty applied", () => {
+    const { factor } = computeUncertaintyPenalty(-8, 5, 0, 0);
+    expect(factor).not.toBeNull();
+    expect(factor?.impact).toBe("negative");
+    expect(factor?.name).toBe("Signal Conflict");
+  });
+
+  it("returns null factor when no conflict", () => {
+    const { factor } = computeUncertaintyPenalty(5, 5, 3, 4);
+    expect(factor).toBeNull();
   });
 });

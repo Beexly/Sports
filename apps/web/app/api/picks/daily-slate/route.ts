@@ -87,6 +87,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   let topEdgePick: PublicPick | null = null;
   if (topEdgeDbPick) {
+    // Extract dataQualityScore from stored factorBreakdown JSON
+    let slatePickDqScore = Math.round(topEdgeDbPick.game.dataQualityScore ?? 0);
+    if (topEdgeDbPick.factorBreakdown) {
+      try {
+        const fb = topEdgeDbPick.factorBreakdown as Record<string, unknown>;
+        if (typeof fb["dataQualityScore"] === "number") slatePickDqScore = fb["dataQualityScore"];
+      } catch { /* ignore */ }
+    }
+
     topEdgePick = {
       id: topEdgeDbPick.id,
       game: {
@@ -101,6 +110,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       confidence: entitlements.canSeeConfidence ? topEdgeDbPick.confidence : null,
       edgeScore: entitlements.canSeeEdgeScore ? topEdgeDbPick.edgeScore : null,
       factorBreakdown: null,
+      dataQualityScore: slatePickDqScore,
       tier: topEdgeDbPick.tier as "FREE" | "PREMIUM",
       pickGrade: (topEdgeDbPick.pickGrade ?? "LEAN") as PickGrade,
       riskLevel: (topEdgeDbPick.riskLevel ?? "MODERATE") as RiskLevel,

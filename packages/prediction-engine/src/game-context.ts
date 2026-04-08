@@ -1,10 +1,14 @@
 // ============================================================
-// Game Context Feature Computation
+// Game Context Feature Computation  (v4.0.0)
 //
 // Computes structured contextual signals from historical data:
 //   - Line movement (opening vs current)
 //   - Rest days & back-to-back penalty
-//   - Historical ATS form (bucketed)
+//   - Overall ATS form (bucketed)
+//   - Venue-specific ATS form (home-at-home, away-on-road)
+//   - Head-to-head ATS form between these exact opponents
+//   - Cross-market consistency (spread vs ML agreement)
+//   - Uncertainty penalty (conflicting signal detection)
 //   - Data quality score with confidence penalty
 //
 // All signals are normalized to the same units as other
@@ -24,11 +28,16 @@ export type { GameContextInput, AtsFormBucket };
 // ============================================================
 
 export interface GameContextScores {
-  lineMovementScore: number;        // –15 to +15
-  restAdvantageScore: number;       // –10 to +10 (positive = home advantage)
-  historicalFormScore: number;      // –10 to +10 (positive = strong ATS record)
+  lineMovementScore: number;        // –15 to +15 (enhanced with sharp proxy)
+  restAdvantageScore: number;       // –10 to +10
+  historicalFormScore: number;      // –10 to +10 (overall ATS form)
   dataQualityPenalty: number;       // –20 to 0
   dataQualityScore: number;         // 0–100 (overall data quality, stored on game)
+  // v4 additions
+  headToHeadScore: number;          // –5 to +5 (H2H ATS record)
+  venueFormScore: number;           // –5 to +5 (venue-specific ATS)
+  uncertaintyPenalty: number;       // –8 to 0 (conflicting signals)
+  crossMarketScore: number;         // –3 to +4 (spread/ML agreement)
   factors: FactorDetail[];
 }
 
@@ -296,6 +305,226 @@ export function computeDataQuality(
 }
 
 // ============================================================
+// Head-to-head ATS form
+// ============================================================
+
+/**
+ * Returns a score from –5 to +5 based on the picked team's ATS record
+ * against this specific opponent. Stricter minimum sample (5 games) and
+ * tighter scoring range than overall form — H2H data is sparser.
+ */
+export function computeHeadToHeadScore(
+  h2hForm: AtsFormBucket | null | undefined
+): { score: number; atsPct: number | null; factor: FactorDetail | null } {
+  const MIN_SAMPLE = 5;
+  if (!h2hForm || h2hForm.sampleSize < MIN_SAMPLE) {
+    return { score: 0, atsPct: null, factor: null };
+  }
+
+  const decided = h2hForm.wins + h2hForm.losses;
+  if (decided === 0) return { score: 0, atsPct: null, factor: null };
+
+  const atsPct = h2hForm.wins / decided;
+
+  let score = 0;
+  let impact: FactorDetail["impact"] = "neutral";
+  let description = "";
+
+  if (atsPct >= 0.70) {
+    score = 5;
+    impact = "positive";
+    description = `Strong H2H ATS: ${h2hForm.wins}-${h2hForm.losses} vs this opponent (${Math.round(atsPct * 100)}%)`;
+  } else if (atsPct >= 0.60) {
+    score = 3;
+    impact = "positive";
+    description = `Favorable H2H ATS: ${h2hForm.wins}-${h2hForm.losses} vs this opponent`;
+  } else if (atsPct <= 0.30) {
+    score = -5;
+    impact = "negative";
+    description = `Poor H2H ATS: ${h2hForm.wins}-${h2hForm.losses} vs this opponent (${Math.round(atsPct * 100)}%)`;
+  } else if (atsPct <= 0.40) {
+    score = -3;
+    impact = "negative";
+    description = `Below-average H2H ATS: ${h2hForm.wins}-${h2hForm.losses} vs this opponent`;
+  }
+
+  return {
+    score,
+    atsPct,
+    factor:
+      score !== 0
+        ? { name: "Head-to-Head Form", impact, description, weight: score }
+        : null,
+  };
+}
+
+// ============================================================
+// Venue-specific ATS form
+// ============================================================
+
+/**
+ * Returns a score from –5 to +5 using the team's ATS record in their
+ * specific venue role (home team at home, away team away).
+ * Venue splits are more predictive than overall form for certain matchup types.
+ */
+export function computeVenueFormScore(
+  atsFormAtVenue: AtsFormBucket | null | undefined,
+  venueLabel: string   // "Home" | "Away" for descriptions
+): { score: number; factor: FactorDetail | null } {
+  const MIN_SAMPLE = 5;
+  if (!atsFormAtVenue || atsFormAtVenue.sampleSize < MIN_SAMPLE) {
+    return { score: 0, factor: null };
+  }
+
+  const decided = atsFormAtVenue.wins + atsFormAtVenue.losses;
+  if (decided === 0) return { score: 0, factor: null };
+
+  const atsPct = atsFormAtVenue.wins / decided;
+
+  let score = 0;
+  let impact: FactorDetail["impact"] = "neutral";
+  let description = "";
+
+  if (atsPct >= 0.65) {
+    score = 5;
+    impact = "positive";
+    description = `${venueLabel} covering at ${Math.round(atsPct * 100)}% at ${venueLabel.toLowerCase()} (${atsFormAtVenue.wins}-${atsFormAtVenue.losses} last ${atsFormAtVenue.sampleSize})`;
+  } else if (atsPct >= 0.58) {
+    score = 3;
+    impact = "positive";
+    description = `${venueLabel} solid at ${venueLabel.toLowerCase()}: ${atsFormAtVenue.wins}-${atsFormAtVenue.losses} ATS`;
+  } else if (atsPct <= 0.35) {
+    score = -5;
+    impact = "negative";
+    description = `${venueLabel} struggling at ${venueLabel.toLowerCase()}: ${atsFormAtVenue.wins}-${atsFormAtVenue.losses} ATS (${Math.round(atsPct * 100)}%)`;
+  } else if (atsPct <= 0.42) {
+    score = -3;
+    impact = "negative";
+    description = `${venueLabel} below average at ${venueLabel.toLowerCase()}: ${atsFormAtVenue.wins}-${atsFormAtVenue.losses} ATS`;
+  }
+
+  return {
+    score,
+    factor:
+      score !== 0
+        ? { name: `${venueLabel} Venue Form`, impact, description, weight: score }
+        : null,
+  };
+}
+
+// ============================================================
+// Cross-market consistency
+// ============================================================
+
+/**
+ * Compares spread pick direction against moneyline market consensus.
+ * When both markets independently agree on the same team, conviction increases.
+ * When they disagree, a small uncertainty signal is raised.
+ *
+ * mlFairProbHome: the H2H-derived fair probability for the home team (0–1).
+ * If > 0.5, ML market favors home. Use null if no H2H data.
+ */
+export function computeCrossMarketScore(
+  pickedSide: "HOME" | "AWAY" | "OVER" | "UNDER",
+  mlFairProbHome: number | null | undefined,
+  marketType: "SPREAD" | "TOTAL" | "MONEYLINE"
+): { score: number; factor: FactorDetail | null } {
+  // Cross-market only applies to SPREAD picks vs ML market
+  if (marketType !== "SPREAD" || mlFairProbHome == null) {
+    return { score: 0, factor: null };
+  }
+  // Avoid noise — only signal when ML has clear conviction (≥55%)
+  if (Math.abs(mlFairProbHome - 0.5) < 0.05) {
+    return { score: 0, factor: null };
+  }
+
+  const mlFavorsHome = mlFairProbHome > 0.5;
+  const spreadFavorsHome = pickedSide === "HOME";
+  const agree = mlFavorsHome === spreadFavorsHome;
+
+  if (agree) {
+    return {
+      score: WEIGHTS.CROSS_MARKET_AGREE_BONUS,
+      factor: {
+        name: "Cross-Market Alignment",
+        impact: "positive",
+        description: `Spread and moneyline markets independently agree — conviction reinforced`,
+        weight: WEIGHTS.CROSS_MARKET_AGREE_BONUS,
+      },
+    };
+  } else {
+    return {
+      score: WEIGHTS.CROSS_MARKET_DISAGREE_PENALTY,
+      factor: {
+        name: "Cross-Market Divergence",
+        impact: "negative",
+        description: `Spread and moneyline markets favor opposite sides — conflicting signals`,
+        weight: WEIGHTS.CROSS_MARKET_DISAGREE_PENALTY,
+      },
+    };
+  }
+}
+
+// ============================================================
+// Uncertainty penalty — conflicting signal detector
+// ============================================================
+
+/**
+ * Applies a confidence penalty when key model signals directly contradict.
+ * High-conviction picks should have aligned signals.
+ * Misaligned signals increase uncertainty even when the pick still scores positively overall.
+ *
+ * Scenarios that trigger uncertainty:
+ *   1. Reverse line movement: strong public consensus but line moving against pick
+ *   2. ATS form vs line movement conflict: strong form but line is moving against
+ *   3. Cross-market divergence already detected (passed in as flag)
+ */
+export function computeUncertaintyPenalty(
+  lineMovementScore: number,
+  historicalFormScore: number,
+  headToHeadScore: number,
+  crossMarketScore: number
+): { penalty: number; factor: FactorDetail | null } {
+  const MAX_PENALTY = WEIGHTS.UNCERTAINTY_PENALTY_MAX; // -8
+
+  let conflictCount = 0;
+  const conflictDescriptions: string[] = [];
+
+  // Conflict 1: strong line movement against a positive historical signal
+  if (lineMovementScore < -5 && (historicalFormScore > 3 || headToHeadScore > 2)) {
+    conflictCount++;
+    conflictDescriptions.push("line moving against historical trend");
+  }
+
+  // Conflict 2: strong historical form but significant line fade
+  if (lineMovementScore < -8 && historicalFormScore > 5) {
+    conflictCount++;
+    conflictDescriptions.push("market fading a historically strong side");
+  }
+
+  // Conflict 3: cross-market divergence compounds other conflicts
+  if (crossMarketScore < 0 && lineMovementScore < -3) {
+    conflictCount++;
+    conflictDescriptions.push("spread and ML markets disagree with line direction");
+  }
+
+  if (conflictCount === 0) return { penalty: 0, factor: null };
+
+  // Scale penalty by number of conflicts (each adds -3 to -4)
+  const penalty = clamp(conflictCount * -4, MAX_PENALTY, 0);
+
+  return {
+    penalty,
+    factor: {
+      name: "Signal Conflict",
+      impact: "negative",
+      description: `Conflicting signals: ${conflictDescriptions.join("; ")} — confidence reduced`,
+      weight: penalty,
+    },
+  };
+}
+
+// ============================================================
 // Compute all game context scores at once
 // ============================================================
 
@@ -342,7 +571,7 @@ export function computeGameContext(
     if (ra.factor) factors.push(ra.factor);
   }
 
-  // 3. Historical form for the picked side
+  // 3. Historical form for the picked side (overall ATS)
   let historicalFormScore = 0;
   if (pickedSide === "HOME" && context.homeAtsForm) {
     const hf = computeHistoricalFormScore(context.homeAtsForm, "Home");
@@ -354,7 +583,46 @@ export function computeGameContext(
     if (af.factor) factors.push(af.factor);
   }
 
-  // 4. Data quality
+  // 4. Venue-specific ATS form (v4)
+  let venueFormScore = 0;
+  if (pickedSide === "HOME" && context.homeAtsFormAtHome) {
+    const vf = computeVenueFormScore(context.homeAtsFormAtHome, "Home");
+    venueFormScore = vf.score;
+    if (vf.factor) factors.push(vf.factor);
+  } else if (pickedSide === "AWAY" && context.awayAtsFormAway) {
+    const vf = computeVenueFormScore(context.awayAtsFormAway, "Away");
+    venueFormScore = vf.score;
+    if (vf.factor) factors.push(vf.factor);
+  }
+
+  // 5. Head-to-head form (v4)
+  let headToHeadScore = 0;
+  if (context.headToHeadForm && (pickedSide === "HOME" || pickedSide === "AWAY")) {
+    const h2h = computeHeadToHeadScore(context.headToHeadForm);
+    headToHeadScore = h2h.score;
+    if (h2h.factor) factors.push(h2h.factor);
+  }
+
+  // 6. Cross-market consistency (v4) — only meaningful for SPREAD vs ML
+  const crossMarket = computeCrossMarketScore(
+    pickedSide,
+    context.mlFairProbHome,
+    marketType
+  );
+  const crossMarketScore = crossMarket.score;
+  if (crossMarket.factor) factors.push(crossMarket.factor);
+
+  // 7. Uncertainty penalty (v4) — detects conflicting signal combinations
+  const up = computeUncertaintyPenalty(
+    lineMovementScore,
+    historicalFormScore,
+    headToHeadScore,
+    crossMarketScore
+  );
+  const uncertaintyPenalty = up.penalty;
+  if (up.factor) factors.push(up.factor);
+
+  // 8. Data quality
   const dq = computeDataQuality(
     context.bookmakerCoverageMax,
     context.dataFreshnessMinutes,
@@ -371,6 +639,11 @@ export function computeGameContext(
     historicalFormScore,
     dataQualityPenalty,
     dataQualityScore: dq.qualityScore,
+    // v4
+    headToHeadScore,
+    venueFormScore,
+    uncertaintyPenalty,
+    crossMarketScore,
     factors,
   };
 }

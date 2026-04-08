@@ -111,15 +111,58 @@ export async function computeRestDays(
 /**
  * Fetches the last N TeamGameLogs for a team and computes their ATS record.
  * Returns null if fewer than MIN_SAMPLE games are settled.
+ *
+ * @param venueFilter - If "HOME", only count games where team was home.
+ *                      If "AWAY", only count games where team was away.
+ *                      If omitted, count all games.
  */
 export async function getAtsForm(
   teamName: string,
   sport: string,
-  windowGames: number = 15
+  windowGames: number = 15,
+  venueFilter?: "HOME" | "AWAY"
 ): Promise<{ wins: number; losses: number; pushes: number; sampleSize: number } | null> {
   const logs = await prisma.teamGameLog.findMany({
     where: {
       teamName,
+      sport,
+      atsResult: { in: ["WIN", "LOSS", "PUSH"] },
+      ...(venueFilter === "HOME" && { isHome: true }),
+      ...(venueFilter === "AWAY" && { isHome: false }),
+    },
+    orderBy: { gameDate: "desc" },
+    take: windowGames,
+  });
+
+  if (logs.length < 5) return null;
+
+  const wins = logs.filter((l) => l.atsResult === "WIN").length;
+  const losses = logs.filter((l) => l.atsResult === "LOSS").length;
+  const pushes = logs.filter((l) => l.atsResult === "PUSH").length;
+
+  return { wins, losses, pushes, sampleSize: logs.length };
+}
+
+// ============================================================
+// Head-to-head ATS form between two specific opponents
+// ============================================================
+
+/**
+ * Fetches the ATS record for `teamName` specifically when playing against
+ * `opponentName`. Uses `opponentName` field stored in TeamGameLog.
+ *
+ * Returns null if fewer than 5 H2H matchups are settled.
+ */
+export async function getHeadToHeadForm(
+  teamName: string,
+  opponentName: string,
+  sport: string,
+  windowGames: number = 10
+): Promise<{ wins: number; losses: number; pushes: number; sampleSize: number } | null> {
+  const logs = await prisma.teamGameLog.findMany({
+    where: {
+      teamName,
+      opponentName,
       sport,
       atsResult: { in: ["WIN", "LOSS", "PUSH"] },
     },

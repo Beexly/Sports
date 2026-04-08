@@ -1,5 +1,5 @@
 // Model version — bump when scoring logic changes
-export const MODEL_VERSION = "v3.0.0";
+export const MODEL_VERSION = "v4.0.0";
 
 // ============================================================
 // Confidence thresholds
@@ -38,6 +38,24 @@ export const WEIGHTS = {
 
   // Volatility penalty — thin market, injury flag, fast-moving line
   VOLATILITY_PENALTY_MAX: -15,
+
+  // ── Intelligence Layer v4 additions ──────────────────────────
+
+  // Head-to-head ATS form — picked team's record vs this specific opponent
+  // Signal is small to avoid overfitting on low-sample matchup data
+  HEAD_TO_HEAD_COMPONENT_MAX: 5,
+
+  // Venue-specific ATS form — home team covering at home, away team covering away
+  VENUE_FORM_COMPONENT_MAX: 5,
+
+  // Uncertainty penalty — applied when key signals directly contradict each other
+  // (e.g. strong public consensus but line is moving opposite = sharp fade)
+  UNCERTAINTY_PENALTY_MAX: -8,
+
+  // Cross-market consistency — bonus when spread and H2H ML agree on the same side
+  CROSS_MARKET_AGREE_BONUS: 4,
+  // Slight penalty when spread pick and ML market disagree
+  CROSS_MARKET_DISAGREE_PENALTY: -3,
 } as const;
 
 // ============================================================

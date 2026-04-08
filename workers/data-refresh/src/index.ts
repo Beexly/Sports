@@ -12,6 +12,7 @@ import {
   MARKETS,
   enrichGameContext,
   getAtsForm,
+  getHeadToHeadForm,
   settleGameLogs,
 } from "@sports/data-ingestion";
 import { scoreGames } from "@sports/prediction-engine";
@@ -142,10 +143,20 @@ async function runRefreshCycle(): Promise<void> {
         // Reload game record to get updated context fields
         const enrichedGame = await db.game.findUnique({ where: { id: gameRecord.id } });
 
-        // Fetch ATS form for both teams
-        const [homeAtsForm, awayAtsForm] = await Promise.all([
+        // Fetch all ATS forms in parallel: overall + venue splits + H2H
+        const [
+          homeAtsForm,
+          awayAtsForm,
+          homeAtsFormAtHome,
+          awayAtsFormAway,
+          homeH2HForm,
+        ] = await Promise.all([
           getAtsForm(game.homeTeam, sport.key).catch(() => null),
           getAtsForm(game.awayTeam, sport.key).catch(() => null),
+          getAtsForm(game.homeTeam, sport.key, 15, "HOME").catch(() => null),
+          getAtsForm(game.awayTeam, sport.key, 15, "AWAY").catch(() => null),
+          // H2H from home team's perspective (away team flipped in scoring)
+          getHeadToHeadForm(game.homeTeam, game.awayTeam, sport.key).catch(() => null),
         ]);
 
         const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
@@ -161,6 +172,11 @@ async function runRefreshCycle(): Promise<void> {
           isBackToBackAway: enrichedGame?.isBackToBackAway ?? false,
           homeAtsForm: homeAtsForm ?? null,
           awayAtsForm: awayAtsForm ?? null,
+          // Venue-specific splits (v4)
+          homeAtsFormAtHome: homeAtsFormAtHome ?? null,
+          awayAtsFormAway: awayAtsFormAway ?? null,
+          // H2H from home team's perspective — scoring engine reads picked-side form
+          headToHeadForm: homeH2HForm ?? null,
           bookmakerCoverageMax,
           dataFreshnessMinutes: freshnessMinutes,
           hasSpreadMarket: spreadOdds.length > 0,

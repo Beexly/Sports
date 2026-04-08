@@ -25,8 +25,14 @@ export interface FactorBreakdown {
   consensusScore: number;      // 0–30: how aligned bookmakers are
   marketDepthScore: number;    // 0–20: how many bookmakers cover this
   edgeScore: number;           // 0–25: net pricing edge vs fair value
-  lineMovementScore: number;   // 0–15: movement direction/magnitude
-  volatilityPenalty: number;   // negative: -15 to 0, penalizes thin/unstable markets
+  lineMovementScore: number;   // ±15: movement direction/magnitude (enhanced with sharp proxy)
+  volatilityPenalty: number;   // -15–0: thin/unstable markets
+  // Extended intelligence layer (v4+)
+  headToHeadScore?: number;    // ±5: H2H ATS record between these specific teams
+  venueFormScore?: number;     // ±5: picked team's venue-specific ATS record
+  uncertaintyPenalty?: number; // -8–0: conflicting signals reduce confidence
+  crossMarketScore?: number;   // -3–+4: spread and ML markets agree/disagree
+  dataQualityScore?: number;   // 0–100: overall data trust score (always public)
   factors: FactorDetail[];     // human-readable factor list
 }
 
@@ -202,8 +208,17 @@ export interface GameContextInput {
   restDaysAway?: number | null;
   isBackToBackHome?: boolean;
   isBackToBackAway?: boolean;
+  // Overall ATS form (any venue)
   homeAtsForm?: AtsFormBucket | null;
   awayAtsForm?: AtsFormBucket | null;
+  // Venue-specific ATS splits (v4)
+  homeAtsFormAtHome?: AtsFormBucket | null;  // home team's record playing at home
+  awayAtsFormAway?: AtsFormBucket | null;    // away team's record playing away
+  // Head-to-head between these exact opponents (v4)
+  headToHeadForm?: AtsFormBucket | null;     // picked team's H2H ATS vs this opponent
+  // Cross-market validation (v4)
+  mlFairProbHome?: number | null;            // H2H fair prob for home team (0–1)
+  // Data coverage
   bookmakerCoverageMax?: number;
   dataFreshnessMinutes?: number;
   hasSpreadMarket?: boolean;
@@ -249,6 +264,7 @@ export interface ScoredPick {
   edgeScore: number;       // 0–100
   consensusPct: number;    // 0.0–1.0
   bookmakerCount: number;
+  dataQualityScore: number; // 0–100 data trust score (always public)
 
   // Classification
   tier: PickTier;
@@ -304,6 +320,9 @@ export interface PublicPick {
   confidence: number | null;         // null for FREE
   edgeScore: number | null;          // null for FREE
   factorBreakdown: FactorBreakdown | null; // null for FREE
+
+  // Always visible — trust transparency
+  dataQualityScore: number;          // 0–100: always public trust signal
 
   // Always visible
   tier: PickTier;

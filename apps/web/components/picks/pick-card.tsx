@@ -137,12 +137,11 @@ export function PickCard({
         </div>
       )}
 
-      {/* Freshness footer */}
-      {freshnessAge !== null && (
-        <div className="flex items-center gap-1.5 border-t border-gray-800/60 pt-2">
-          <FreshnessIndicator ageMinutes={freshnessAge} />
-        </div>
-      )}
+      {/* Data quality + freshness footer */}
+      <div className="flex items-center justify-between border-t border-gray-800/60 pt-2">
+        <DataQualityMeter score={pick.dataQualityScore} />
+        {freshnessAge !== null && <FreshnessIndicator ageMinutes={freshnessAge} />}
+      </div>
     </article>
   );
 }
@@ -152,19 +151,48 @@ export function PickCard({
 // ─────────────────────────────────────────────
 
 function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
+  const hasIntelligenceLayer =
+    (breakdown.headToHeadScore !== undefined && breakdown.headToHeadScore !== 0) ||
+    (breakdown.venueFormScore !== undefined && breakdown.venueFormScore !== 0) ||
+    (breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore !== 0);
+
   return (
     <div className="rounded-lg border border-gray-800/60 bg-gray-950/40 p-3">
       <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
         Factor Breakdown
       </p>
 
-      {/* Score bars */}
+      {/* Core market score bars */}
       <div className="mb-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
         <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-blue-500" />
         <ScoreBar label="Market Depth" value={breakdown.marketDepthScore} max={20} color="bg-purple-500" />
         <ScoreBar label="Pricing Edge" value={breakdown.edgeScore} max={25} color="bg-green-500" />
         <ScoreBar label="Line Movement" value={Math.max(0, breakdown.lineMovementScore)} max={15} color="bg-yellow-500" />
       </div>
+
+      {/* Intelligence layer signal chips (v4) */}
+      {hasIntelligenceLayer && (
+        <div className="mb-2 flex flex-wrap gap-1.5">
+          {breakdown.headToHeadScore !== undefined && breakdown.headToHeadScore > 0 && (
+            <IntelChip label="H2H +" positive />
+          )}
+          {breakdown.headToHeadScore !== undefined && breakdown.headToHeadScore < 0 && (
+            <IntelChip label="H2H –" positive={false} />
+          )}
+          {breakdown.venueFormScore !== undefined && breakdown.venueFormScore > 0 && (
+            <IntelChip label="Venue +" positive />
+          )}
+          {breakdown.venueFormScore !== undefined && breakdown.venueFormScore < 0 && (
+            <IntelChip label="Venue –" positive={false} />
+          )}
+          {breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore > 0 && (
+            <IntelChip label="Markets align" positive />
+          )}
+          {breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore < 0 && (
+            <IntelChip label="Markets split" positive={false} />
+          )}
+        </div>
+      )}
 
       {/* Individual factors */}
       {breakdown.factors.length > 0 && (
@@ -190,15 +218,41 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         </div>
       )}
 
-      {/* Volatility penalty */}
-      {breakdown.volatilityPenalty < 0 && (
-        <div className="mt-1.5 flex items-center gap-1.5 rounded bg-red-950/30 px-2 py-1">
-          <span className="text-[10px] text-red-400">
-            Market risk penalty: {breakdown.volatilityPenalty} pts
-          </span>
+      {/* Penalty summary row */}
+      {(breakdown.volatilityPenalty < 0 || (breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0)) && (
+        <div className="mt-1.5 flex flex-wrap gap-1.5">
+          {breakdown.volatilityPenalty < 0 && (
+            <div className="flex items-center gap-1 rounded bg-red-950/30 px-2 py-0.5">
+              <span className="text-[10px] text-red-400">
+                Market risk: {breakdown.volatilityPenalty} pts
+              </span>
+            </div>
+          )}
+          {breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0 && (
+            <div className="flex items-center gap-1 rounded bg-orange-950/30 px-2 py-0.5">
+              <span className="text-[10px] text-orange-400">
+                Signal conflict: {breakdown.uncertaintyPenalty} pts
+              </span>
+            </div>
+          )}
         </div>
       )}
     </div>
+  );
+}
+
+function IntelChip({ label, positive }: { label: string; positive: boolean }) {
+  return (
+    <span
+      className={[
+        "rounded-full px-2 py-0.5 text-[9px] font-semibold",
+        positive
+          ? "bg-emerald-900/40 text-emerald-400"
+          : "bg-red-900/30 text-red-400",
+      ].join(" ")}
+    >
+      {label}
+    </span>
   );
 }
 
@@ -334,6 +388,34 @@ function LockedValue({ label }: { label: string }) {
       </svg>
       {label}
     </span>
+  );
+}
+
+function DataQualityMeter({ score }: { score: number }) {
+  const clamped = Math.max(0, Math.min(100, Math.round(score)));
+  let color = "bg-green-500";
+  let textColor = "text-green-400";
+  let label = "High";
+  if (clamped < 40) {
+    color = "bg-red-500";
+    textColor = "text-red-400";
+    label = "Low";
+  } else if (clamped < 70) {
+    color = "bg-yellow-500";
+    textColor = "text-yellow-400";
+    label = "Med";
+  }
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-[10px] text-gray-600">Data Quality</span>
+      <div className="h-1 w-16 overflow-hidden rounded-full bg-gray-800">
+        <div
+          className={`h-full rounded-full ${color}`}
+          style={{ width: `${clamped}%` }}
+        />
+      </div>
+      <span className={`text-[10px] font-semibold ${textColor}`}>{label}</span>
+    </div>
   );
 }
 
