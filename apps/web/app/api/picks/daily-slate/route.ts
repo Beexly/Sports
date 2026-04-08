@@ -106,8 +106,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       riskLevel: (topEdgeDbPick.riskLevel ?? "MODERATE") as RiskLevel,
       reasoning: entitlements.canSeeConfidence
         ? topEdgeDbPick.reasoning
-        : topEdgeDbPick.reasoningShort,
-      reasoningShort: topEdgeDbPick.reasoningShort,
+        : (topEdgeDbPick.reasoningShort || topEdgeDbPick.reasoning.split(".")[0] + "."),
+      reasoningShort: topEdgeDbPick.reasoningShort || topEdgeDbPick.reasoning.split(".")[0] + ".",
       isFeatured: topEdgeDbPick.isFeatured,
       generatedAt: topEdgeDbPick.generatedAt.toISOString(),
       dataFreshnessAt: topEdgeDbPick.dataFreshnessAt?.toISOString() ?? null,

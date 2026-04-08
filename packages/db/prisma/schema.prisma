@@ -264,6 +264,7 @@ model TeamGameLog {
 
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
+  @@unique([gameId, teamName])
   @@index([teamName, sport, gameDate])
   @@index([gameId])
   @@map("team_game_logs")

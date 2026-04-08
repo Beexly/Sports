@@ -190,6 +190,14 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
   // +30 assumes at least one market type — actual market coverage tracked per pick
 
   // 4. Update game record
+  // IMPORTANT: openingSpread/openingTotal must only be written on first sight.
+  // The real opening line is tracked in the OpeningLine model by trackOpeningLines.
+  // We conditionally set them here only when not yet stored on the game record.
+  const existingGame = await prisma.game.findUnique({
+    where: { id: gameId },
+    select: { openingSpread: true, openingTotal: true },
+  });
+
   await prisma.game.update({
     where: { id: gameId },
     data: {
@@ -197,8 +205,9 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
       restDaysAway: awayRest.restDays,
       isBackToBackHome: homeRest.isBackToBack,
       isBackToBackAway: awayRest.isBackToBack,
-      openingSpread: avgSpread,    // stored on first run (won't overwrite — see below)
-      openingTotal: avgTotal,
+      // Only set on first ingestion — never overwrite with current line
+      ...(existingGame?.openingSpread == null && avgSpread !== null && { openingSpread: avgSpread }),
+      ...(existingGame?.openingTotal == null && avgTotal !== null && { openingTotal: avgTotal }),
       ...(lineMovementSpread !== null && { lineMovementSpread }),
       ...(lineMovementTotal !== null && { lineMovementTotal }),
       bookmakerCoverageMax,
@@ -262,14 +271,10 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
     }
   }
 
-  // Upsert TeamGameLog for both teams (avoid duplicates on re-settlement)
+  // Upsert TeamGameLog for both teams using the @@unique([gameId, teamName]) constraint
   await prisma.$transaction([
     prisma.teamGameLog.upsert({
-      where: {
-        // Use a compound unique-ish approach via gameId + team
-        // Since there's no @@unique on [gameId, teamName], we query first
-        id: await getOrCreateLogId(gameId, homeTeam),
-      },
+      where: { gameId_teamName: { gameId, teamName: homeTeam } },
       update: {
         teamScore: homeScore,
         opponentScore: awayScore,
@@ -291,9 +296,7 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
       },
     }),
     prisma.teamGameLog.upsert({
-      where: {
-        id: await getOrCreateLogId(gameId, awayTeam),
-      },
+      where: { gameId_teamName: { gameId, teamName: awayTeam } },
       update: {
         teamScore: awayScore,
         opponentScore: homeScore,
@@ -315,14 +318,4 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
       },
     }),
   ]);
-}
-
-// Helper to get existing TeamGameLog id for upsert
-async function getOrCreateLogId(gameId: string, teamName: string): Promise<string> {
-  const existing = await prisma.teamGameLog.findFirst({
-    where: { gameId, teamName },
-    select: { id: true },
-  });
-  // Return existing id or a placeholder that won't match — upsert create path runs
-  return existing?.id ?? `__new__${gameId}__${teamName}`;
 }

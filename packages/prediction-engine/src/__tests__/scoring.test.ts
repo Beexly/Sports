@@ -6,6 +6,12 @@ import {
   scoreGame,
   scoreGames,
 } from "../scoring.js";
+import {
+  computeLineMovementScore,
+  computeRestAdvantageScore,
+  computeHistoricalFormScore,
+  computeDataQuality,
+} from "../game-context.js";
 import type { OddsInput } from "@sports/types";
 import { MODEL_VERSION } from "../constants.js";
 
@@ -260,6 +266,176 @@ describe("scoreGame — risk level", () => {
 // ============================================================
 // scoreGames
 // ============================================================
+
+// ============================================================
+// Game context signals
+// ============================================================
+
+describe("computeLineMovementScore", () => {
+  it("returns 0 with no opening line data", () => {
+    const { score, delta } = computeLineMovementScore(null, -3.5, "SPREAD", "HOME");
+    expect(score).toBe(0);
+    expect(delta).toBeNull();
+  });
+
+  it("returns 0 when line is unchanged", () => {
+    const { score, delta } = computeLineMovementScore(-3.5, -3.5, "SPREAD", "HOME");
+    expect(score).toBe(0);
+    expect(delta).toBe(0);
+  });
+
+  it("positive score when line moves to confirm home pick (spread goes more negative)", () => {
+    // Home spread: -3.5 → -4.5 (delta = -1.0): home being bet, confirms HOME pick
+    const { score } = computeLineMovementScore(-3.5, -4.5, "SPREAD", "HOME");
+    expect(score).toBeGreaterThan(0);
+  });
+
+  it("negative score when line moves against home pick (spread goes less negative)", () => {
+    // Home spread: -3.5 → -2.5 (delta = +1.0): away being bet, fades HOME pick
+    const { score } = computeLineMovementScore(-3.5, -2.5, "SPREAD", "HOME");
+    expect(score).toBeLessThan(0);
+  });
+
+  it("confirms OVER pick when total moves up", () => {
+    const { score } = computeLineMovementScore(48.0, 49.5, "TOTAL", "OVER");
+    expect(score).toBeGreaterThan(0);
+  });
+
+  it("fades OVER pick when total moves down", () => {
+    const { score } = computeLineMovementScore(49.5, 48.0, "TOTAL", "OVER");
+    expect(score).toBeLessThan(0);
+  });
+
+  it("score is capped at LINE_MOVEMENT_COMPONENT_MAX (15)", () => {
+    const { score } = computeLineMovementScore(-3.5, -10.5, "SPREAD", "HOME");
+    expect(score).toBeLessThanOrEqual(15);
+    expect(score).toBeGreaterThan(0);
+  });
+});
+
+describe("computeRestAdvantageScore", () => {
+  it("returns 0 when no data available", () => {
+    const { score } = computeRestAdvantageScore(null, null, false, false, "HOME");
+    expect(score).toBe(0);
+  });
+
+  it("negative for HOME when home is on back-to-back", () => {
+    const { score } = computeRestAdvantageScore(1, 3, true, false, "HOME");
+    expect(score).toBeLessThan(0);
+  });
+
+  it("positive for HOME when away is on back-to-back", () => {
+    const { score } = computeRestAdvantageScore(3, 1, false, true, "HOME");
+    expect(score).toBeGreaterThan(0);
+  });
+
+  it("positive for AWAY when home is on back-to-back", () => {
+    const { score } = computeRestAdvantageScore(1, 3, true, false, "AWAY");
+    expect(score).toBeGreaterThan(0);
+  });
+
+  it("home with 3 more rest days = positive home advantage", () => {
+    const { score } = computeRestAdvantageScore(4, 1, false, false, "HOME");
+    expect(score).toBeGreaterThan(0);
+  });
+
+  it("score bounded between -10 and +10", () => {
+    const { score } = computeRestAdvantageScore(0, 10, true, false, "HOME");
+    expect(score).toBeGreaterThanOrEqual(-10);
+    expect(score).toBeLessThanOrEqual(10);
+  });
+});
+
+describe("computeHistoricalFormScore", () => {
+  it("returns null signal for small samples", () => {
+    const { score, atsPct } = computeHistoricalFormScore({ wins: 3, losses: 1, pushes: 0, sampleSize: 4 }, "Home");
+    expect(score).toBe(0);
+    expect(atsPct).toBeNull();
+  });
+
+  it("returns strong positive signal for 65%+ ATS record", () => {
+    const { score } = computeHistoricalFormScore({ wins: 10, losses: 4, pushes: 1, sampleSize: 15 }, "Home");
+    expect(score).toBe(10);
+  });
+
+  it("returns negative signal for ≤35% ATS record", () => {
+    const { score } = computeHistoricalFormScore({ wins: 3, losses: 10, pushes: 2, sampleSize: 15 }, "Home");
+    expect(score).toBe(-10);
+  });
+
+  it("returns 0 for neutral ATS record (50%)", () => {
+    const { score } = computeHistoricalFormScore({ wins: 7, losses: 7, pushes: 1, sampleSize: 15 }, "Home");
+    expect(score).toBe(0);
+  });
+});
+
+describe("computeDataQuality", () => {
+  it("returns high quality for fresh, deep, multi-market data", () => {
+    const { qualityScore, penalty } = computeDataQuality(12, 2, true, true, true);
+    expect(qualityScore).toBeGreaterThanOrEqual(80);
+    expect(penalty).toBe(0);
+  });
+
+  it("applies penalty for stale data (> 90 min old)", () => {
+    const { qualityScore, penalty } = computeDataQuality(5, 120, true, false, false);
+    expect(qualityScore).toBeLessThan(50);
+    expect(penalty).toBeLessThan(0);
+  });
+
+  it("applies larger penalty for very low quality (< 30)", () => {
+    const { penalty } = computeDataQuality(0, 200, false, false, false);
+    expect(penalty).toBe(-15);
+  });
+
+  it("quality score is capped at 100", () => {
+    const { qualityScore } = computeDataQuality(20, 0, true, true, true);
+    expect(qualityScore).toBeLessThanOrEqual(100);
+  });
+});
+
+describe("scoreGame — context integration", () => {
+  it("lower confidence when data quality is poor (stale, thin market)", () => {
+    const base = scoreGame(makeOddsInput());
+    const withBadContext = scoreGame(makeOddsInput({
+      context: {
+        bookmakerCoverageMax: 2,
+        dataFreshnessMinutes: 200,  // very stale
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+      },
+    }));
+
+    const baseConf = base.find((p) => p.pickType === "SPREAD")?.confidence ?? 0;
+    const contextConf = withBadContext.find((p) => p.pickType === "SPREAD")?.confidence ?? 0;
+    // Stale + thin market should lower confidence
+    expect(contextConf).toBeLessThanOrEqual(baseConf);
+  });
+
+  it("line movement score appears in factorBreakdown when context provided", () => {
+    const picks = scoreGame(makeOddsInput({
+      context: {
+        openingSpread: -3.5,
+        currentSpread: -5.5,  // moved 2pts toward home
+        hasSpreadMarket: true,
+        hasTotalMarket: true,
+        hasH2HMarket: true,
+        bookmakerCoverageMax: 5,
+        dataFreshnessMinutes: 5,
+      },
+    }));
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      // Line movement score should be non-zero
+      expect(spreadPick.factorBreakdown.lineMovementScore).not.toBe(0);
+    }
+  });
+
+  it("modelVersion is v3.0.0", () => {
+    const picks = scoreGame(makeOddsInput());
+    expect(picks[0]?.modelVersion).toBe("v3.0.0");
+  });
+});
 
 describe("scoreGames", () => {
   it("processes multiple games and returns all picks sorted", () => {

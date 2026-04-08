@@ -11,45 +11,13 @@
 // scoring components so they can be added/subtracted cleanly.
 // ============================================================
 
-import type { FactorDetail } from "@sports/types";
+// Import shared types from @sports/types — single source of truth
+import type { FactorDetail, GameContextInput, AtsFormBucket } from "@sports/types";
 import { WEIGHTS } from "./constants.js";
 import { clamp } from "./scoring.js";
 
-// ============================================================
-// Input types for game context
-// ============================================================
-
-export interface GameContextInput {
-  // Line movement
-  openingSpread?: number | null;
-  currentSpread?: number | null;
-  openingTotal?: number | null;
-  currentTotal?: number | null;
-
-  // Rest / scheduling
-  restDaysHome?: number | null;
-  restDaysAway?: number | null;
-  isBackToBackHome?: boolean;
-  isBackToBackAway?: boolean;
-
-  // Historical ATS form (last N games, bucketed as wins/losses/pushes)
-  homeAtsForm?: AtsFormBucket | null;
-  awayAtsForm?: AtsFormBucket | null;
-
-  // Data quality
-  bookmakerCoverageMax?: number;   // max bookmakers seen in any market
-  dataFreshnessMinutes?: number;   // minutes since last successful fetch
-  hasSpreadMarket?: boolean;
-  hasTotalMarket?: boolean;
-  hasH2HMarket?: boolean;
-}
-
-export interface AtsFormBucket {
-  wins: number;
-  losses: number;
-  pushes: number;
-  sampleSize: number;   // total games in bucket
-}
+// Re-export so consumers can import GameContextInput/AtsFormBucket from this module
+export type { GameContextInput, AtsFormBucket };
 
 // ============================================================
 // Output types
