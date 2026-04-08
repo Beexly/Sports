@@ -195,17 +195,78 @@ model Game {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
+  // ── Scheduling / fatigue context (computed from game history) ──
+  restDaysHome        Int?     // calendar days since home team's prior game
+  restDaysAway        Int?     // calendar days since away team's prior game
+  isBackToBackHome    Boolean  @default(false)
+  isBackToBackAway    Boolean  @default(false)
+
+  // ── Line movement (populated on repeat ingestion) ──
+  openingSpread       Float?   // spread at first ingestion
+  openingTotal        Float?   // total at first ingestion
+  lineMovementSpread  Float?   // current avg spread − opening (negative = home favored more)
+  lineMovementTotal   Float?   // current avg total − opening
+
+  // ── Data quality ──
+  bookmakerCoverageMax Int      @default(0)  // highest bookmaker count seen for this game
+  dataQualityScore     Float    @default(0)  // 0–100 composite at last computation
+  contextComputedAt    DateTime?              // when scheduling context was last computed
+
   sport    Sport   @relation(fields: [sportId], references: [id])
   league   League? @relation(fields: [leagueId], references: [id])
   homeTeam Team?   @relation("HomeTeam", fields: [homeTeamId], references: [id])
   awayTeam Team?   @relation("AwayTeam", fields: [awayTeamId], references: [id])
-  odds     Odds[]
-  picks    Pick[]
+  odds          Odds[]
+  picks         Pick[]
+  openingLines  OpeningLine[]
+  teamGameLogs  TeamGameLog[]
 
   @@index([sportId])
   @@index([commenceTime])
   @@index([status])
   @@map("games")
+}
+
+// Stores the first-seen odds snapshot per game+market for line movement tracking
+model OpeningLine {
+  id          String     @id @default(cuid())
+  gameId      String
+  market      OddsMarket
+  spread      Float?     // opening spread (home perspective)
+  total       Float?     // opening total
+  homePrice   Float?     // opening moneyline home
+  awayPrice   Float?     // opening moneyline away
+  firstSeenAt DateTime   @default(now())
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, market])
+  @@index([gameId])
+  @@map("opening_lines")
+}
+
+// Stores each team's game log for form computation (populated when games settle)
+model TeamGameLog {
+  id            String         @id @default(cuid())
+  teamName      String         // denormalized team identifier (homeTeamName / awayTeamName)
+  sport         String
+  gameId        String
+  opponentName  String
+  isHome        Boolean
+  gameDate      DateTime       // commenceTime of the game
+  teamScore     Int?
+  opponentScore Int?
+  result        GameLogResult  @default(TBD)
+  // ATS tracking
+  spread        Float?         // spread from team perspective (negative = team was favored)
+  atsResult     AtsResult      @default(TBD)  // did team cover?
+  createdAt     DateTime       @default(now())
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([teamName, sport, gameDate])
+  @@index([gameId])
+  @@map("team_game_logs")
 }
 
 model Odds {
@@ -261,27 +322,50 @@ model IngestionRun {
 // ============================================================
 
 model Pick {
-  id             String     @id @default(cuid())
+  id             String    @id @default(cuid())
   gameId         String
   ingestionRunId String?
+
+  // Core pick fields
   pickType       PickType
-  selection      String     // e.g. "Chiefs -3.5" or "OVER 48.5"
+  selection      String    // e.g. "Chiefs -3.5" or "OVER 48.5"
   line           Float
-  confidence     Int        // 0–100
+
+  // Scoring precision fields
+  confidence     Int       // 0–100 overall score
+  edgeScore      Float     @default(0)  // net bookmaker edge (0–100)
+  consensusPct   Float     @default(0)  // bookmaker consensus 0.0–1.0
+  bookmakerCount Int       @default(0)  // number of sources used
+
+  // Classification
   tier           PickTier   @default(FREE)
-  reasoning      String     @db.Text
+  pickGrade      PickGrade  @default(LEAN)    // A+/A/B/C label
+  riskLevel      RiskLevel  @default(MODERATE) // volatility classification
+
+  // Explainability
+  reasoning         String @db.Text          // short plain-English summary
+  reasoningShort    String @default("")       // 1-sentence teaser (free users)
+  factorBreakdown   Json?                     // structured scoring factors
+
+  // Metadata
   modelVersion   String
   generatedAt    DateTime   @default(now())
+  dataFreshnessAt DateTime? // when the underlying odds data was fetched
+
+  // Outcome
   result         PickResult @default(PENDING)
   settledAt      DateTime?
   isPublished    Boolean    @default(true)
+  isFeatured     Boolean    @default(false)
 
   game     Game @relation(fields: [gameId], references: [id])
 
   @@index([gameId])
   @@index([tier])
+  @@index([pickGrade])
   @@index([generatedAt])
   @@index([result])
+  @@index([isFeatured])
   @@map("picks")
 }
 
@@ -407,6 +491,23 @@ enum PickTier {
   PREMIUM
 }
 
+// Pick quality grade — visible on card
+enum PickGrade {
+  ELITE_PLAY  // confidence 85+, edge 80+
+  STRONG_PLAY // confidence 75+, edge 65+
+  SOLID_PLAY  // confidence 65+, edge 50+
+  LEAN        // confidence 50+
+}
+
+// Risk classification based on volatility factors
+enum RiskLevel {
+  LOW_RISK       // High bookmaker consensus, deep market
+  MODERATE       // Decent consensus, normal market
+  HIGH_VARIANCE  // Low consensus or thin market
+  INJURY_RISK    // Game-time decision or key injury impact
+  LINE_STEAM     // Fast-moving line (high movement detected)
+}
+
 enum PickResult {
   PENDING
   WIN
@@ -431,4 +532,17 @@ enum ContentStatus {
 enum AlertChannel {
   EMAIL
   PUSH
+}
+
+enum GameLogResult {
+  WIN
+  LOSS
+  TBD
+}
+
+enum AtsResult {
+  WIN
+  LOSS
+  PUSH
+  TBD
 }

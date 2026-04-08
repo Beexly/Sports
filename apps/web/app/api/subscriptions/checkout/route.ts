@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import {
-  stripe,
   STRIPE_PRICE_IDS,
   getOrCreateStripeCustomer,
   createCheckoutSession,

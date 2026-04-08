@@ -1,7 +1,7 @@
 /**
- * Data Refresh Worker
- * Fetches live odds from The Odds API every 30 minutes.
- * Upserts games + odds, then triggers pick generation.
+ * Data Refresh Worker — v3
+ * Fetches live odds every 30 minutes, enriches with game context
+ * (opening lines, rest days, ATS form), then scores picks.
  */
 
 import { db } from "@sports/db";
@@ -10,22 +10,23 @@ import {
   DataNormalizer,
   SUPPORTED_SPORTS,
   MARKETS,
+  enrichGameContext,
+  getAtsForm,
+  settleGameLogs,
 } from "@sports/data-ingestion";
 import { scoreGames } from "@sports/prediction-engine";
-import type { OddsInput } from "@sports/types";
+import type { OddsInput, GameContextInput } from "@sports/types";
 
-const REFRESH_INTERVAL_MS = 30 * 60 * 1000; // 30 minutes
+const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
 
 async function runRefreshCycle(): Promise<void> {
   const apiKey = process.env["THE_ODDS_API_KEY"];
-  if (!apiKey) {
-    throw new Error("THE_ODDS_API_KEY environment variable is not set");
-  }
+  if (!apiKey) throw new Error("THE_ODDS_API_KEY not set");
 
   const client = new OddsApiClient(apiKey);
   const normalizer = new DataNormalizer();
 
-  console.log(`[data-refresh] Starting refresh cycle at ${new Date().toISOString()}`);
+  console.log(`[data-refresh] Cycle start ${new Date().toISOString()}`);
 
   for (const sport of SUPPORTED_SPORTS) {
     const run = await db.ingestionRun.create({
@@ -33,40 +34,28 @@ async function runRefreshCycle(): Promise<void> {
     });
 
     try {
-      console.log(`[data-refresh] Fetching ${sport.key}...`);
-
-      const { data: events, remainingRequests } = await client.getOdds(
-        sport.key,
-        [...MARKETS]
-      );
-
-      console.log(
-        `[data-refresh] ${sport.key}: ${events.length} events. Remaining API requests: ${remainingRequests}`
-      );
-
+      const { data: events, remainingRequests } = await client.getOdds(sport.key, [...MARKETS]);
       const fetchedAt = new Date();
 
+      console.log(`[data-refresh] ${sport.key}: ${events.length} events, ${remainingRequests} requests remaining`);
+
       if (!normalizer.validateFreshness(fetchedAt)) {
-        throw new Error("Data failed freshness validation (too old)");
+        throw new Error("Freshness validation failed");
       }
 
       const normalizedGames = normalizer.normalizeGames(events);
       const normalizedOdds = normalizer.normalizeOdds(events, fetchedAt);
 
-      // Ensure sport record exists
       const sportRecord = await db.sport.upsert({
         where: { key: sport.key },
-        create: {
-          key: sport.key,
-          name: sport.name,
-          displayName: sport.displayName,
-        },
+        create: { key: sport.key, name: sport.name, displayName: sport.displayName },
         update: {},
       });
 
-      let gamesUpserted = 0;
+      // Upsert all games first
+      const gameRecords: Record<string, { id: string; homeTeamName: string; awayTeamName: string; commenceTime: Date }> = {};
       for (const game of normalizedGames) {
-        await db.game.upsert({
+        const record = await db.game.upsert({
           where: { externalId: game.externalId },
           create: {
             externalId: game.externalId,
@@ -81,16 +70,14 @@ async function runRefreshCycle(): Promise<void> {
             commenceTime: game.commenceTime,
           },
         });
-        gamesUpserted++;
+        gameRecords[game.externalId] = record;
       }
 
+      // Ingest odds
       let oddsInserted = 0;
       for (const odds of normalizedOdds) {
-        const game = await db.game.findUnique({
-          where: { externalId: odds.gameExternalId },
-        });
+        const game = gameRecords[odds.gameExternalId];
         if (!game) continue;
-
         await db.odds.create({
           data: {
             gameId: game.id,
@@ -112,17 +99,74 @@ async function runRefreshCycle(): Promise<void> {
         oddsInserted++;
       }
 
-      // Generate picks from this run's data
+      // Build OddsInputs with game context
       const oddsInputs: OddsInput[] = [];
       for (const game of normalizedGames) {
-        const gameRecord = await db.game.findUnique({
-          where: { externalId: game.externalId },
-        });
+        const gameRecord = gameRecords[game.externalId];
         if (!gameRecord) continue;
 
-        const gameOdds = normalizedOdds.filter(
-          (o) => o.gameExternalId === game.externalId
-        );
+        const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
+        const bookmakerKeys = new Set(gameOdds.map((o) => o.bookmaker));
+        const bookmakerCoverageMax = bookmakerKeys.size;
+
+        // Compute avg spread and total for context
+        const spreadOdds = gameOdds.filter((o) => o.market === "SPREADS" && o.spread !== undefined);
+        const totalOdds = gameOdds.filter((o) => o.market === "TOTALS" && o.total !== undefined);
+        const avgSpread =
+          spreadOdds.length > 0
+            ? spreadOdds.reduce((s, o) => s + (o.spread ?? 0), 0) / spreadOdds.length
+            : null;
+        const avgTotal =
+          totalOdds.length > 0
+            ? totalOdds.reduce((s, o) => s + (o.total ?? 0), 0) / totalOdds.length
+            : null;
+
+        // Run context enrichment (opening lines, rest days, data quality)
+        try {
+          await enrichGameContext({
+            gameId: gameRecord.id,
+            homeTeam: game.homeTeam,
+            awayTeam: game.awayTeam,
+            sport: sport.key,
+            commenceTime: game.commenceTime,
+            avgSpread,
+            avgTotal,
+            bookmakerCoverageMax,
+            fetchedAt,
+          });
+        } catch (enrichErr) {
+          // Non-fatal — picks still generated without context
+          console.warn(`[data-refresh] Enrichment failed for ${game.externalId}: ${enrichErr instanceof Error ? enrichErr.message : enrichErr}`);
+        }
+
+        // Reload game record to get updated context fields
+        const enrichedGame = await db.game.findUnique({ where: { id: gameRecord.id } });
+
+        // Fetch ATS form for both teams
+        const [homeAtsForm, awayAtsForm] = await Promise.all([
+          getAtsForm(game.homeTeam, sport.key).catch(() => null),
+          getAtsForm(game.awayTeam, sport.key).catch(() => null),
+        ]);
+
+        const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
+
+        const context: GameContextInput = {
+          openingSpread: enrichedGame?.openingSpread ?? avgSpread,
+          currentSpread: avgSpread,
+          openingTotal: enrichedGame?.openingTotal ?? avgTotal,
+          currentTotal: avgTotal,
+          restDaysHome: enrichedGame?.restDaysHome ?? null,
+          restDaysAway: enrichedGame?.restDaysAway ?? null,
+          isBackToBackHome: enrichedGame?.isBackToBackHome ?? false,
+          isBackToBackAway: enrichedGame?.isBackToBackAway ?? false,
+          homeAtsForm: homeAtsForm ?? null,
+          awayAtsForm: awayAtsForm ?? null,
+          bookmakerCoverageMax,
+          dataFreshnessMinutes: freshnessMinutes,
+          hasSpreadMarket: spreadOdds.length > 0,
+          hasTotalMarket: totalOdds.length > 0,
+          hasH2HMarket: gameOdds.some((o) => o.market === "H2H"),
+        };
 
         oddsInputs.push({
           gameId: gameRecord.id,
@@ -142,14 +186,13 @@ async function runRefreshCycle(): Promise<void> {
             overPrice: o.overPrice,
             underPrice: o.underPrice,
           })),
+          context,
         });
       }
 
-      const scoredPicks = scoreGames(oddsInputs);
+      const scoredPicks = scoreGames(oddsInputs, fetchedAt);
+      const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
       let picksGenerated = 0;
-
-      const todayStart = new Date();
-      todayStart.setHours(0, 0, 0, 0);
 
       for (const pick of scoredPicks) {
         const existing = await db.pick.findFirst({
@@ -169,9 +212,17 @@ async function runRefreshCycle(): Promise<void> {
               selection: pick.selection,
               line: pick.line,
               confidence: pick.confidence,
+              edgeScore: pick.edgeScore,
+              consensusPct: pick.consensusPct,
+              bookmakerCount: pick.bookmakerCount,
               tier: pick.tier,
+              pickGrade: pick.pickGrade,
+              riskLevel: pick.riskLevel,
               reasoning: pick.reasoning,
+              reasoningShort: pick.reasoningShort,
+              factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
               modelVersion: pick.modelVersion,
+              dataFreshnessAt: pick.dataFreshnessAt,
             },
           });
           picksGenerated++;
@@ -180,36 +231,23 @@ async function runRefreshCycle(): Promise<void> {
 
       await db.ingestionRun.update({
         where: { id: run.id },
-        data: {
-          status: "SUCCESS",
-          gamesUpserted,
-          oddsInserted,
-          completedAt: new Date(),
-        },
+        data: { status: "SUCCESS", gamesUpserted: Object.keys(gameRecords).length, oddsInserted, completedAt: new Date() },
       });
 
-      console.log(
-        `[data-refresh] ${sport.key}: ${gamesUpserted} games, ${oddsInserted} odds records, ${picksGenerated} new picks`
-      );
+      console.log(`[data-refresh] ${sport.key}: ${Object.keys(gameRecords).length} games, ${oddsInserted} odds, ${picksGenerated} new picks`);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown error";
-      console.error(`[data-refresh] ${sport.key} FAILED: ${message}`);
-
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`[data-refresh] ${sport.key} failed: ${msg}`);
       await db.ingestionRun.update({
         where: { id: run.id },
-        data: {
-          status: "FAILED",
-          errorMessage: message,
-          completedAt: new Date(),
-        },
+        data: { status: "FAILED", errorMessage: msg, completedAt: new Date() },
       });
     }
 
-    // Small delay between sports to respect rate limits
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((r) => setTimeout(r, 1000));
   }
 
-  console.log(`[data-refresh] Cycle complete at ${new Date().toISOString()}`);
+  console.log(`[data-refresh] Cycle complete ${new Date().toISOString()}`);
 }
 
 async function settleResults(): Promise<void> {
@@ -226,51 +264,57 @@ async function settleResults(): Promise<void> {
 
       for (const score of normalized) {
         if (!score.completed) continue;
-
         const game = await db.game.findUnique({
           where: { externalId: score.externalId },
           include: { picks: { where: { result: "PENDING" } } },
         });
+        if (!game) continue;
 
-        if (!game || game.picks.length === 0) continue;
-
-        // Update game scores
         await db.game.update({
           where: { id: game.id },
-          data: {
-            homeScore: score.homeScore,
-            awayScore: score.awayScore,
-            status: "FINAL",
-          },
+          data: { homeScore: score.homeScore, awayScore: score.awayScore, status: "FINAL" },
         });
 
-        // Settle each pending pick
-        if (
-          score.homeScore !== null &&
-          score.awayScore !== null
-        ) {
+        if (score.homeScore !== null && score.awayScore !== null) {
+          // Settle pick results
           for (const pick of game.picks) {
             const result = calculatePickResult(
               pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
               pick.selection,
               pick.line,
               game.homeTeamName,
-              game.awayTeamName,
               score.homeScore,
               score.awayScore
             );
-
             await db.pick.update({
               where: { id: pick.id },
               data: { result, settledAt: new Date() },
             });
           }
+
+          // Write TeamGameLog entries for ATS form tracking
+          const openingSpreadOdds = await db.openingLine.findUnique({
+            where: { gameId_market: { gameId: game.id, market: "SPREADS" } },
+          });
+
+          try {
+            await settleGameLogs({
+              gameId: game.id,
+              homeTeam: game.homeTeamName,
+              awayTeam: game.awayTeamName,
+              sport: sport.key,
+              gameDate: game.commenceTime,
+              homeScore: score.homeScore,
+              awayScore: score.awayScore,
+              spread: openingSpreadOdds?.spread ?? null,
+            });
+          } catch (settleErr) {
+            console.warn(`[settlement] GameLog failed for ${game.id}: ${settleErr instanceof Error ? settleErr.message : settleErr}`);
+          }
         }
       }
     } catch (err) {
-      console.error(
-        `[data-refresh] Score settlement failed for ${sport.key}: ${err instanceof Error ? err.message : err}`
-      );
+      console.error(`[settlement] ${sport.key}: ${err instanceof Error ? err.message : err}`);
     }
   }
 }
@@ -280,7 +324,6 @@ function calculatePickResult(
   selection: string,
   line: number,
   homeTeam: string,
-  awayTeam: string,
   homeScore: number,
   awayScore: number
 ): "WIN" | "LOSS" | "PUSH" {
@@ -290,50 +333,37 @@ function calculatePickResult(
     if (homeScore === awayScore) return "PUSH";
     return pickedHome === homeWon ? "WIN" : "LOSS";
   }
-
   if (pickType === "SPREAD") {
     const pickedHome = selection.includes(homeTeam);
     const homeMargin = homeScore - awayScore;
-    const adjustedMargin = homeMargin + (pickedHome ? -line : line);
-    if (adjustedMargin === 0) return "PUSH";
-    return adjustedMargin > 0 ? "WIN" : "LOSS";
+    const adjusted = homeMargin + (pickedHome ? -line : line);
+    if (adjusted === 0) return "PUSH";
+    return adjusted > 0 ? "WIN" : "LOSS";
   }
-
   if (pickType === "TOTAL") {
-    const totalScore = homeScore + awayScore;
+    const total = homeScore + awayScore;
     const isOver = selection.startsWith("OVER");
-    if (totalScore === line) return "PUSH";
-    return (isOver && totalScore > line) || (!isOver && totalScore < line)
-      ? "WIN"
-      : "LOSS";
+    if (total === line) return "PUSH";
+    return (isOver && total > line) || (!isOver && total < line) ? "WIN" : "LOSS";
   }
-
   return "PUSH";
 }
 
-// Main execution loop
 async function main(): Promise<void> {
-  console.log("[data-refresh] Worker starting...");
-
-  // Run immediately on startup
+  console.log("[data-refresh] Worker v3 starting...");
   await runRefreshCycle();
   await settleResults();
-
-  // Then run on schedule
   setInterval(async () => {
     try {
       await runRefreshCycle();
       await settleResults();
     } catch (err) {
-      console.error(
-        "[data-refresh] Unhandled error in refresh cycle:",
-        err instanceof Error ? err.message : err
-      );
+      console.error("[data-refresh] Unhandled error:", err instanceof Error ? err.message : err);
     }
   }, REFRESH_INTERVAL_MS);
 }
 
 main().catch((err) => {
-  console.error("[data-refresh] Fatal error:", err);
+  console.error("[data-refresh] Fatal:", err);
   process.exit(1);
 });

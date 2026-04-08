@@ -1,8 +1,9 @@
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { PickCard } from "@/components/picks/pick-card";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
-import type { PublicPick, PickType, PickResult } from "@sports/types";
+import type { PublicPick, DailySlate } from "@sports/types";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -10,42 +11,47 @@ import Link from "next/link";
 // ─────────────────────────────────────────────
 
 interface PicksPageProps {
-  searchParams: { sport?: string; date?: string };
+  searchParams: { sport?: string; date?: string; grade?: string };
 }
 
 interface PicksResponse {
   success: boolean;
   data: PublicPick[];
-  meta: {
-    tier: string;
-    total: number;
-    date: string;
-  };
+  meta: { tier: string; total: number; date: string };
 }
 
 // ─────────────────────────────────────────────
 // Data fetching
 // ─────────────────────────────────────────────
 
-async function fetchPicks(sport?: string, date?: string): Promise<PicksResponse> {
-  const appUrl =
-    process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
+async function fetchPicks(
+  sport?: string,
+  date?: string,
+  grade?: string
+): Promise<PicksResponse> {
+  const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
   const params = new URLSearchParams();
   if (sport) params.set("sport", sport);
   if (date) params.set("date", date);
-
+  if (grade) params.set("grade", grade);
   const url = `${appUrl}/api/picks${params.toString() ? `?${params}` : ""}`;
-
-  const res = await fetch(url, {
-    // always fresh on the server — picks update every 30 min
-    next: { revalidate: 1800 },
-  });
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch picks: ${res.status}`);
-  }
-
+  const res = await fetch(url, { next: { revalidate: 1800 } });
+  if (!res.ok) throw new Error(`Failed to fetch picks: ${res.status}`);
   return res.json() as Promise<PicksResponse>;
+}
+
+async function fetchSlate(): Promise<DailySlate | null> {
+  try {
+    const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
+    const res = await fetch(`${appUrl}/api/picks/daily-slate`, {
+      next: { revalidate: 1800 },
+    });
+    if (!res.ok) return null;
+    const body = await res.json() as { success: boolean; data: DailySlate };
+    return body.data ?? null;
+  } catch {
+    return null;
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -53,7 +59,7 @@ async function fetchPicks(sport?: string, date?: string): Promise<PicksResponse>
 // ─────────────────────────────────────────────
 
 export default async function PicksPage({ searchParams }: PicksPageProps) {
-  const { sport, date } = searchParams;
+  const { sport, date, grade } = searchParams;
 
   const session = await auth();
   const entitlements = session?.user?.id
@@ -63,34 +69,49 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
         canSeePremiumPicks: false,
         canSeeConfidence: false,
         canSeeLineMovement: false,
+        canSeeFactorBreakdown: false,
+        canSeeEdgeScore: false,
         canGetAlerts: false,
         dailyPickLimit: 1 as number | null,
       };
 
+  const isPro = entitlements.tier === "PRO" || entitlements.tier === "ELITE";
   const isFreeTier = entitlements.tier === "FREE";
 
-  let picks: PublicPick[] = [];
-  let fetchError: string | null = null;
-  let metaDate = date ?? new Date().toISOString().split("T")[0]!;
+  const [slateResult, picksResult] = await Promise.allSettled([
+    fetchSlate(),
+    fetchPicks(sport, date, grade),
+  ]);
 
-  try {
-    const response = await fetchPicks(sport, date);
-    picks = response.data;
-    metaDate = response.meta.date;
-  } catch (err) {
-    fetchError =
-      err instanceof Error ? err.message : "Failed to load picks.";
-  }
+  const slate = slateResult.status === "fulfilled" ? slateResult.value : null;
+  const picks: PublicPick[] =
+    picksResult.status === "fulfilled" ? picksResult.value.data : [];
+  const fetchError =
+    picksResult.status === "rejected"
+      ? (picksResult.reason instanceof Error
+          ? picksResult.reason.message
+          : "Failed to load picks.")
+      : null;
+  const metaDate =
+    picksResult.status === "fulfilled"
+      ? picksResult.value.meta.date
+      : (date ?? new Date().toISOString().split("T")[0]!);
 
   const SPORTS = [
-    { key: "", label: "All Sports" },
+    { key: "", label: "All" },
     { key: "nfl", label: "NFL" },
     { key: "nba", label: "NBA" },
     { key: "mlb", label: "MLB" },
     { key: "nhl", label: "NHL" },
     { key: "ncaaf", label: "NCAAF" },
     { key: "ncaab", label: "NCAAB" },
-    { key: "soccer", label: "Soccer" },
+  ];
+
+  const GRADES = [
+    { key: "", label: "All Grades" },
+    { key: "ELITE_PLAY", label: "Elite Play" },
+    { key: "STRONG_PLAY", label: "Strong Play" },
+    { key: "SOLID_PLAY", label: "Solid Play" },
   ];
 
   return (
@@ -99,39 +120,41 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
       <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
+
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-6">
             <h1 className="text-3xl font-bold tracking-tight text-white">
               Today&apos;s Picks
             </h1>
-            <p className="mt-2 text-gray-400">
+            <p className="mt-1.5 text-sm text-gray-400">
               Algorithmic picks ranked by confidence — updated every 30 minutes.
             </p>
           </div>
 
-          {/* Paywall Banner */}
-          {isFreeTier && (
-            <PaywallBanner hasAccount={!!session?.user} />
-          )}
+          {/* Daily Slate Bar */}
+          {slate && <SlateBar slate={slate} />}
 
-          {/* Filters */}
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-            {/* Sport selector */}
+          {/* Paywall Banner */}
+          {isFreeTier && <PaywallBanner hasAccount={!!session?.user} />}
+
+          {/* Filters row */}
+          <div className="mb-6 flex flex-col gap-3">
+            {/* Sport tabs */}
             <div className="flex flex-wrap gap-2">
               {SPORTS.map(({ key, label }) => {
                 const isActive = (sport ?? "") === key;
-                const params = new URLSearchParams();
-                if (key) params.set("sport", key);
-                if (date) params.set("date", date);
-                const href = `/picks${params.toString() ? `?${params}` : ""}`;
+                const p = new URLSearchParams();
+                if (key) p.set("sport", key);
+                if (date) p.set("date", date);
+                if (grade) p.set("grade", grade);
                 return (
                   <Link
                     key={key}
-                    href={href}
+                    href={`/picks${p.toString() ? `?${p}` : ""}`}
                     className={[
                       "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
                       isActive
-                        ? "bg-brand-600 text-white"
+                        ? "bg-blue-600 text-white"
                         : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white",
                     ].join(" ")}
                   >
@@ -141,9 +164,33 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               })}
             </div>
 
-            {/* Date picker */}
-            <div className="sm:ml-auto">
-              <DatePickerForm currentDate={metaDate} currentSport={sport} />
+            {/* Grade filter + date picker */}
+            <div className="flex flex-wrap items-center gap-2">
+              {GRADES.map(({ key, label }) => {
+                const isActive = (grade ?? "") === key;
+                const p = new URLSearchParams();
+                if (sport) p.set("sport", sport);
+                if (date) p.set("date", date);
+                if (key) p.set("grade", key);
+                return (
+                  <Link
+                    key={key}
+                    href={`/picks${p.toString() ? `?${p}` : ""}`}
+                    className={[
+                      "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
+                      isActive
+                        ? "bg-yellow-400/20 text-yellow-300 ring-1 ring-yellow-600/40"
+                        : "bg-gray-800/60 text-gray-500 hover:text-gray-300",
+                    ].join(" ")}
+                  >
+                    {label}
+                  </Link>
+                );
+              })}
+
+              <div className="ml-auto">
+                <DatePickerForm currentDate={metaDate} currentSport={sport} currentGrade={grade} />
+              </div>
             </div>
           </div>
 
@@ -176,12 +223,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold text-white">
-                No picks for this date
-              </h3>
+              <h3 className="text-base font-semibold text-white">No picks for this date</h3>
               <p className="mt-2 text-sm text-gray-500">
                 Picks are generated daily based on available games and odds.
-                Check back tomorrow or select a different date.
               </p>
             </div>
           )}
@@ -194,25 +238,40 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   key={pick.id}
                   pick={pick}
                   canSeeConfidence={entitlements.canSeeConfidence}
+                  canSeeEdgeScore={entitlements.canSeeEdgeScore ?? false}
+                  canSeeFactorBreakdown={entitlements.canSeeFactorBreakdown ?? false}
                 />
               ))}
             </div>
           )}
 
-          {/* Bottom upgrade CTA */}
+          {/* Bottom upgrade CTA for free users */}
           {isFreeTier && picks.length > 0 && (
-            <div className="mt-10 rounded-xl border border-brand-800 bg-brand-950/30 p-6 text-center">
-              <p className="text-sm font-semibold text-brand-200">
-                You&apos;re seeing {entitlements.dailyPickLimit ?? 1} free pick
-                per day. Upgrade to unlock all picks with confidence scores and
-                full reasoning.
+            <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
+              <p className="text-sm font-semibold text-blue-200">
+                You&apos;re seeing {entitlements.dailyPickLimit ?? 1} free pick per day.
+              </p>
+              <p className="mt-1 text-xs text-blue-400/70">
+                Upgrade to unlock all picks, confidence scores, factor breakdowns, and edge scores.
               </p>
               <Link
                 href="/pricing"
-                className="mt-4 inline-flex rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
+                className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
               >
                 Upgrade to Pro — $19/mo
               </Link>
+            </div>
+          )}
+
+          {/* PRO conversion teaser for elite features */}
+          {isPro && entitlements.tier === "PRO" && picks.length > 0 && (
+            <div className="mt-8 rounded-xl border border-purple-800/30 bg-purple-950/10 p-4 text-center">
+              <p className="text-xs text-purple-400">
+                Want early access, daily alerts, and advanced analytics?{" "}
+                <Link href="/pricing" className="font-semibold underline underline-offset-2">
+                  Upgrade to Elite — $49/mo
+                </Link>
+              </p>
             </div>
           )}
         </div>
@@ -224,193 +283,104 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 }
 
 // ─────────────────────────────────────────────
-// PickCard
+// Daily Slate Bar
 // ─────────────────────────────────────────────
 
-function PickCard({
-  pick,
-  canSeeConfidence,
-}: {
-  pick: PublicPick;
-  canSeeConfidence: boolean;
-}) {
-  const gameTime = new Date(pick.game.commenceTime).toLocaleString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    timeZoneName: "short",
-  });
+function SlateBar({ slate }: { slate: DailySlate }) {
+  const record = slate.recentRecord;
+  const lastUpdated = slate.lastUpdatedAt
+    ? new Date(slate.lastUpdatedAt).toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
+      })
+    : null;
 
   return (
-    <article className="flex flex-col gap-4 rounded-2xl border border-gray-800 bg-gray-900 p-5 transition-shadow hover:shadow-lg hover:shadow-black/40">
-      {/* Sport + tier badges */}
-      <div className="flex items-center justify-between gap-2">
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs font-semibold text-gray-300">
-          {pick.game.sport}
-        </span>
-        <div className="flex items-center gap-2">
-          <TierBadge tier={pick.tier} />
-          <ResultBadge result={pick.result} />
-        </div>
-      </div>
-
-      {/* Matchup */}
-      <div>
-        <p className="text-xs text-gray-500">{gameTime}</p>
-        <div className="mt-1.5 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold text-white">
-              {pick.game.awayTeam}
-            </p>
-            <p className="text-xs text-gray-500">@</p>
-            <p className="text-sm font-semibold text-white">
-              {pick.game.homeTeam}
-            </p>
-          </div>
-          <PickTypeBadge type={pick.pickType} />
-        </div>
-      </div>
-
-      {/* Selection */}
-      <div className="rounded-lg bg-gray-800/60 px-4 py-3">
-        <p className="text-xs font-medium text-gray-500">Pick</p>
-        <p className="mt-0.5 text-lg font-bold text-white">{pick.selection}</p>
-        {pick.line !== 0 && (
-          <p className="mt-0.5 text-xs text-gray-500">
-            Line: {pick.line > 0 ? "+" : ""}
-            {pick.line}
-          </p>
-        )}
-      </div>
-
-      {/* Confidence */}
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-gray-500">Confidence</span>
-        {canSeeConfidence && pick.confidence !== null ? (
-          <ConfidenceBadge confidence={pick.confidence} />
-        ) : (
-          <span className="flex items-center gap-1 text-xs text-gray-600">
-            <svg
-              className="h-3.5 w-3.5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
-                clipRule="evenodd"
-              />
-            </svg>
-            Pro only
-          </span>
-        )}
-      </div>
-
-      {/* Reasoning */}
-      <p className="text-xs leading-relaxed text-gray-500">{pick.reasoning}</p>
-    </article>
-  );
-}
-
-// ─────────────────────────────────────────────
-// Sub-components
-// ─────────────────────────────────────────────
-
-function TierBadge({ tier }: { tier: "FREE" | "PREMIUM" }) {
-  if (tier === "FREE") {
-    return (
-      <span className="rounded-full bg-green-900/40 px-2 py-0.5 text-xs font-semibold text-green-400">
-        Free
-      </span>
-    );
-  }
-  return (
-    <span className="flex items-center gap-1 rounded-full bg-yellow-900/40 px-2 py-0.5 text-xs font-semibold text-yellow-400">
-      <svg
-        className="h-3 w-3"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-        aria-hidden="true"
-      >
-        <path
-          fillRule="evenodd"
-          d="M10 1a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L10 13.187l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L2.818 7.125a.75.75 0 01.416-1.28l4.21-.61L9.327 1.42A.75.75 0 0110 1z"
-          clipRule="evenodd"
+    <div className="mb-6 rounded-xl border border-gray-800 bg-gray-900/60 px-5 py-4">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+        {/* Games / picks */}
+        <StatPill label="Games Today" value={String(slate.totalGames)} />
+        <StatPill label="Total Picks" value={String(slate.totalPicks)} />
+        <StatPill
+          label="Premium Picks"
+          value={String(slate.premiumPickCount)}
+          highlight
         />
-      </svg>
-      Premium
-    </span>
+
+        {/* Recent record */}
+        {record && (
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-gray-500">{record.period}:</span>
+            <span className="text-xs font-bold text-green-400">{record.wins}W</span>
+            <span className="text-xs text-gray-600">-</span>
+            <span className="text-xs font-bold text-red-400">{record.losses}L</span>
+            {record.pushes > 0 && (
+              <>
+                <span className="text-xs text-gray-600">-</span>
+                <span className="text-xs font-semibold text-gray-400">{record.pushes}P</span>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Last updated */}
+        {lastUpdated && (
+          <div className="ml-auto flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-400" aria-hidden="true" />
+            <span className="text-[10px] text-gray-500">Updated {lastUpdated}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Sport breakdown */}
+      {slate.sportBreakdown.length > 1 && (
+        <div className="mt-3 flex flex-wrap gap-2 border-t border-gray-800/60 pt-3">
+          {slate.sportBreakdown.map(({ sport, pickCount }) => (
+            <Link
+              key={sport}
+              href={`/picks?sport=${sport.toLowerCase()}`}
+              className="rounded-full bg-gray-800/60 px-2.5 py-0.5 text-[10px] font-medium text-gray-400 hover:text-white transition-colors"
+            >
+              {sport} &middot; {pickCount}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
-function PickTypeBadge({ type }: { type: PickType }) {
-  const colors: Record<PickType, string> = {
-    SPREAD: "bg-blue-900/40 text-blue-400",
-    MONEYLINE: "bg-purple-900/40 text-purple-400",
-    TOTAL: "bg-orange-900/40 text-orange-400",
-  };
-  const labels: Record<PickType, string> = {
-    SPREAD: "Spread",
-    MONEYLINE: "ML",
-    TOTAL: "Total",
-  };
+function StatPill({
+  label,
+  value,
+  highlight = false,
+}: {
+  label: string;
+  value: string;
+  highlight?: boolean;
+}) {
   return (
-    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${colors[type]}`}>
-      {labels[type]}
-    </span>
+    <div className="text-center">
+      <p className={`text-lg font-bold ${highlight ? "text-yellow-400" : "text-white"}`}>
+        {value}
+      </p>
+      <p className="text-[10px] text-gray-500">{label}</p>
+    </div>
   );
 }
 
-function ConfidenceBadge({ confidence }: { confidence: number }) {
-  let color = "text-gray-400 bg-gray-800";
-  let label = "Lean";
-  if (confidence >= 80) {
-    color = "text-green-400 bg-green-900/40";
-    label = "Strong";
-  } else if (confidence >= 70) {
-    color = "text-brand-400 bg-brand-900/40";
-    label = "Good";
-  } else if (confidence >= 60) {
-    color = "text-yellow-400 bg-yellow-900/40";
-    label = "Moderate";
-  }
-
-  return (
-    <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${color}`}>
-      {confidence}% &middot; {label}
-    </span>
-  );
-}
-
-function ResultBadge({ result }: { result: PickResult }) {
-  if (result === "PENDING") return null;
-
-  const styles: Record<Exclude<PickResult, "PENDING">, string> = {
-    WIN: "bg-green-900/50 text-green-400",
-    LOSS: "bg-red-900/50 text-red-400",
-    PUSH: "bg-gray-800 text-gray-400",
-    VOID: "bg-gray-800 text-gray-500",
-  };
-  return (
-    <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${styles[result as Exclude<PickResult, "PENDING">]}`}>
-      {result}
-    </span>
-  );
-}
+// ─────────────────────────────────────────────
+// Paywall Banner
+// ─────────────────────────────────────────────
 
 function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
   return (
     <div className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/50 bg-yellow-950/30 p-5 sm:flex-row sm:items-center">
       <div>
-        <p className="text-sm font-semibold text-yellow-300">
-          You&apos;re on the Free plan
-        </p>
+        <p className="text-sm font-semibold text-yellow-300">You&apos;re on the Free plan</p>
         <p className="mt-0.5 text-xs text-yellow-600">
-          Upgrade to Pro or Elite to unlock all picks, confidence scores, and
-          detailed reasoning.
+          Upgrade to Pro or Elite to unlock all picks, confidence scores, and factor breakdowns.
         </p>
       </div>
       <div className="flex shrink-0 items-center gap-3">
@@ -424,7 +394,7 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
         )}
         <Link
           href="/pricing"
-          className="rounded-lg bg-brand-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-brand-500"
+          className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
         >
           Upgrade Now
         </Link>
@@ -433,28 +403,30 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
   );
 }
 
-// Client date picker rendered as a progressive-enhancement form
+// ─────────────────────────────────────────────
+// Date picker
+// ─────────────────────────────────────────────
+
 function DatePickerForm({
   currentDate,
   currentSport,
+  currentGrade,
 }: {
   currentDate: string;
   currentSport?: string;
+  currentGrade?: string;
 }) {
   return (
     <form method="get" action="/picks" className="flex items-center gap-2">
-      {currentSport && (
-        <input type="hidden" name="sport" value={currentSport} />
-      )}
-      <label htmlFor="date" className="text-xs text-gray-500 sr-only">
-        Date
-      </label>
+      {currentSport && <input type="hidden" name="sport" value={currentSport} />}
+      {currentGrade && <input type="hidden" name="grade" value={currentGrade} />}
+      <label htmlFor="date" className="sr-only text-xs text-gray-500">Date</label>
       <input
         id="date"
         type="date"
         name="date"
         defaultValue={currentDate}
-        className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm text-gray-300 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+        className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm text-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
       <button
         type="submit"

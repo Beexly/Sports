@@ -1,42 +1,26 @@
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import type { PublicPick } from "@sports/types";
+import { PICK_GRADE_LABELS } from "@sports/types";
 
 // ─────────────────────────────────────────────
-// Static data for locked preview picks
+// Fetch real picks for homepage preview
 // ─────────────────────────────────────────────
-const FEATURED_PICKS = [
-  {
-    id: "1",
-    sport: "NFL",
-    awayTeam: "Kansas City Chiefs",
-    homeTeam: "Baltimore Ravens",
-    gameTime: "Sun, Apr 13 · 4:25 PM",
-    pickType: "SPREAD",
-    selection: "Chiefs -3.5",
-    tier: "PREMIUM",
-  },
-  {
-    id: "2",
-    sport: "NBA",
-    awayTeam: "Boston Celtics",
-    homeTeam: "Golden State Warriors",
-    gameTime: "Sat, Apr 12 · 9:30 PM",
-    pickType: "TOTAL",
-    selection: "OVER 224.5",
-    tier: "PREMIUM",
-  },
-  {
-    id: "3",
-    sport: "MLB",
-    awayTeam: "New York Yankees",
-    homeTeam: "Houston Astros",
-    gameTime: "Fri, Apr 11 · 8:05 PM",
-    pickType: "MONEYLINE",
-    selection: "Yankees ML",
-    tier: "FREE",
-  },
-] as const;
+
+async function fetchHomepagePicks(): Promise<PublicPick[]> {
+  try {
+    const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
+    const res = await fetch(`${appUrl}/api/picks?limit=3`, {
+      next: { revalidate: 1800 },
+    });
+    if (!res.ok) return [];
+    const body = await res.json() as { success: boolean; data: PublicPick[] };
+    return (body.data ?? []).slice(0, 3);
+  } catch {
+    return [];
+  }
+}
 
 const TESTIMONIALS = [
   {
@@ -66,7 +50,8 @@ const TESTIMONIALS = [
 // Page
 // ─────────────────────────────────────────────
 
-export default function HomePage() {
+export default async function HomePage() {
+  const featuredPicks = await fetchHomepagePicks();
   return (
     <div className="flex min-h-screen flex-col bg-gray-950">
       <Nav />
@@ -281,9 +266,13 @@ export default function HomePage() {
             </div>
 
             <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {FEATURED_PICKS.map((pick) => (
-                <LockedPickCard key={pick.id} pick={pick} />
-              ))}
+              {featuredPicks.length > 0
+                ? featuredPicks.map((pick) => (
+                    <LockedPickCard key={pick.id} pick={pick} />
+                  ))
+                : FALLBACK_PICKS.map((pick) => (
+                    <LockedPickCard key={pick.id} pick={pick} />
+                  ))}
             </div>
 
             <div className="mt-8 rounded-xl border border-brand-800 bg-brand-950/30 p-6 text-center">
@@ -371,63 +360,124 @@ export default function HomePage() {
 }
 
 // ─────────────────────────────────────────────
+// Fallback picks (shown only when DB is empty)
+// ─────────────────────────────────────────────
+
+const FALLBACK_PICKS: PublicPick[] = [
+  {
+    id: "f1",
+    game: { homeTeam: "Baltimore Ravens", awayTeam: "Kansas City Chiefs", commenceTime: new Date().toISOString(), sport: "NFL" },
+    pickType: "SPREAD",
+    selection: "— upgrade to see —",
+    line: 0,
+    confidence: null,
+    edgeScore: null,
+    factorBreakdown: null,
+    tier: "PREMIUM",
+    pickGrade: "STRONG_PLAY",
+    riskLevel: "MODERATE",
+    reasoning: "Unlock with Pro to see full reasoning.",
+    reasoningShort: "Upgrade to see this pick.",
+    isFeatured: false,
+    generatedAt: new Date().toISOString(),
+    dataFreshnessAt: null,
+    result: "PENDING",
+  },
+  {
+    id: "f2",
+    game: { homeTeam: "Golden State Warriors", awayTeam: "Boston Celtics", commenceTime: new Date().toISOString(), sport: "NBA" },
+    pickType: "TOTAL",
+    selection: "— upgrade to see —",
+    line: 0,
+    confidence: null,
+    edgeScore: null,
+    factorBreakdown: null,
+    tier: "PREMIUM",
+    pickGrade: "SOLID_PLAY",
+    riskLevel: "LOW_RISK",
+    reasoning: "Unlock with Pro to see full reasoning.",
+    reasoningShort: "Upgrade to see this pick.",
+    isFeatured: false,
+    generatedAt: new Date().toISOString(),
+    dataFreshnessAt: null,
+    result: "PENDING",
+  },
+  {
+    id: "f3",
+    game: { homeTeam: "Houston Astros", awayTeam: "New York Yankees", commenceTime: new Date().toISOString(), sport: "MLB" },
+    pickType: "MONEYLINE",
+    selection: "Yankees ML",
+    line: -140,
+    confidence: null,
+    edgeScore: null,
+    factorBreakdown: null,
+    tier: "FREE",
+    pickGrade: "LEAN",
+    riskLevel: "MODERATE",
+    reasoning: "Sign up for free to see today's picks.",
+    reasoningShort: "Sign up for free to see today's picks.",
+    isFeatured: false,
+    generatedAt: new Date().toISOString(),
+    dataFreshnessAt: null,
+    result: "PENDING",
+  },
+];
+
+// ─────────────────────────────────────────────
 // Sub-components
 // ─────────────────────────────────────────────
 
-type LockedPickCardProps = {
-  pick: {
-    id: string;
-    sport: string;
-    awayTeam: string;
-    homeTeam: string;
-    gameTime: string;
-    pickType: string;
-    selection: string;
-    tier: "FREE" | "PREMIUM";
-  };
-};
-
-function LockedPickCard({ pick }: LockedPickCardProps) {
+function LockedPickCard({ pick }: { pick: PublicPick }) {
   const isPremium = pick.tier === "PREMIUM";
+  const gradeInfo = PICK_GRADE_LABELS[pick.pickGrade];
+  const showGrade = pick.pickGrade !== "LEAN";
+
+  const gameTime = new Date(pick.game.commenceTime).toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 
   return (
     <div className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 p-5">
-      {/* Sport badge */}
+      {/* Sport + grade badges */}
       <div className="flex items-center justify-between">
         <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs font-semibold text-gray-300">
-          {pick.sport}
+          {pick.game.sport}
         </span>
-        {isPremium ? (
-          <span className="flex items-center gap-1 rounded-full bg-yellow-900/40 px-2.5 py-0.5 text-xs font-semibold text-yellow-400">
-            <svg
-              className="h-3 w-3"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 1a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L10 13.187l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L2.818 7.125a.75.75 0 01.416-1.28l4.21-.61L9.327 1.42A.75.75 0 0110 1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            Premium
-          </span>
-        ) : (
-          <span className="rounded-full bg-green-900/40 px-2.5 py-0.5 text-xs font-semibold text-green-400">
-            Free
-          </span>
-        )}
+        <div className="flex items-center gap-1.5">
+          {showGrade && (
+            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${gradeInfo.color} ${gradeInfo.bgColor}`}>
+              {gradeInfo.label}
+            </span>
+          )}
+          {isPremium ? (
+            <span className="flex items-center gap-1 rounded-full bg-yellow-900/40 px-2.5 py-0.5 text-xs font-semibold text-yellow-400">
+              <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  fillRule="evenodd"
+                  d="M10 1a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L10 13.187l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L2.818 7.125a.75.75 0 01.416-1.28l4.21-.61L9.327 1.42A.75.75 0 0110 1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Premium
+            </span>
+          ) : (
+            <span className="rounded-full bg-green-900/40 px-2.5 py-0.5 text-xs font-semibold text-green-400">
+              Free
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Matchup */}
       <div>
-        <p className="text-xs text-gray-500">{pick.gameTime}</p>
-        <p className="mt-1 text-sm font-medium text-gray-200">
-          {pick.awayTeam}
-        </p>
-        <p className="text-xs text-gray-500">vs</p>
-        <p className="text-sm font-medium text-gray-200">{pick.homeTeam}</p>
+        <p className="text-xs text-gray-500">{gameTime}</p>
+        <p className="mt-1 text-sm font-medium text-gray-200">{pick.game.awayTeam}</p>
+        <p className="text-xs text-gray-500">@</p>
+        <p className="text-sm font-medium text-gray-200">{pick.game.homeTeam}</p>
       </div>
 
       {/* Pick details */}
@@ -435,37 +485,28 @@ function LockedPickCard({ pick }: LockedPickCardProps) {
         <p className="text-xs text-gray-500">{pick.pickType}</p>
         {isPremium ? (
           <div className="mt-1 flex items-center gap-2">
-            <svg
-              className="h-4 w-4 shrink-0 text-gray-600"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              aria-hidden="true"
-            >
+            <svg className="h-4 w-4 shrink-0 text-gray-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
               <path
                 fillRule="evenodd"
                 d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
                 clipRule="evenodd"
               />
             </svg>
-            <span className="text-sm font-semibold text-gray-500">
-              Unlock with Pro
-            </span>
+            <span className="text-sm font-semibold text-gray-500">Unlock with Pro</span>
           </div>
         ) : (
           <p className="mt-1 text-base font-bold text-white">{pick.selection}</p>
         )}
       </div>
 
-      {/* Confidence (always locked on homepage) */}
+      {/* Teaser reasoning */}
+      <p className="text-xs leading-relaxed text-gray-500">{pick.reasoningShort}</p>
+
+      {/* Confidence (locked) */}
       <div className="flex items-center justify-between text-xs text-gray-600">
         <span>Confidence</span>
-        <span className="flex items-center gap-1 text-gray-600">
-          <svg
-            className="h-3.5 w-3.5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            aria-hidden="true"
-          >
+        <span className="flex items-center gap-1">
+          <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
             <path
               fillRule="evenodd"
               d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
@@ -476,7 +517,6 @@ function LockedPickCard({ pick }: LockedPickCardProps) {
         </span>
       </div>
 
-      {/* Overlay blur for premium on the entire card edge */}
       {isPremium && (
         <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-yellow-800/30" />
       )}
