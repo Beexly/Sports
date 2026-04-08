@@ -13,10 +13,7 @@ export async function POST(): Promise<NextResponse> {
 
   const apiKey = process.env["THE_ODDS_API_KEY"];
   if (!apiKey) {
-    return NextResponse.json(
-      { error: "THE_ODDS_API_KEY not configured" },
-      { status: 503 }
-    );
+    return NextResponse.json({ error: "THE_ODDS_API_KEY not configured" }, { status: 503 });
   }
 
   const results: Array<{ sport: string; status: string; games: number; picks: number }> = [];
@@ -40,14 +37,12 @@ export async function POST(): Promise<NextResponse> {
       const normalizedGames = normalizer.normalizeGames(events);
       const normalizedOdds = normalizer.normalizeOdds(events, fetchedAt);
 
-      // Ensure sport exists
       const sportRecord = await db.sport.upsert({
         where: { key: sport.key },
         create: { key: sport.key, name: sport.name, displayName: sport.displayName },
         update: {},
       });
 
-      // Upsert games
       let gamesUpserted = 0;
       for (const game of normalizedGames) {
         await db.game.upsert({
@@ -68,14 +63,10 @@ export async function POST(): Promise<NextResponse> {
         gamesUpserted++;
       }
 
-      // Insert odds
       let oddsInserted = 0;
       for (const odds of normalizedOdds) {
-        const game = await db.game.findUnique({
-          where: { externalId: odds.gameExternalId },
-        });
+        const game = await db.game.findUnique({ where: { externalId: odds.gameExternalId } });
         if (!game) continue;
-
         await db.odds.create({
           data: {
             gameId: game.id,
@@ -97,18 +88,13 @@ export async function POST(): Promise<NextResponse> {
         oddsInserted++;
       }
 
-      // Generate picks
+      // Build scoring inputs
       const oddsInputs: OddsInput[] = [];
       for (const game of normalizedGames) {
-        const gameRecord = await db.game.findUnique({
-          where: { externalId: game.externalId },
-        });
+        const gameRecord = await db.game.findUnique({ where: { externalId: game.externalId } });
         if (!gameRecord) continue;
 
-        const gameOdds = normalizedOdds.filter(
-          (o) => o.gameExternalId === game.externalId
-        );
-
+        const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
         oddsInputs.push({
           gameId: gameRecord.id,
           homeTeam: game.homeTeam,
@@ -130,16 +116,16 @@ export async function POST(): Promise<NextResponse> {
         });
       }
 
-      const scoredPicks = scoreGames(oddsInputs);
-
+      const scoredPicks = scoreGames(oddsInputs, fetchedAt);
+      const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
       let picksGenerated = 0;
+
       for (const pick of scoredPicks) {
-        // Check if pick already exists for this game + type today
         const existing = await db.pick.findFirst({
           where: {
             gameId: pick.gameId,
             pickType: pick.pickType,
-            generatedAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
+            generatedAt: { gte: todayStart },
           },
         });
 
@@ -152,9 +138,17 @@ export async function POST(): Promise<NextResponse> {
               selection: pick.selection,
               line: pick.line,
               confidence: pick.confidence,
+              edgeScore: pick.edgeScore,
+              consensusPct: pick.consensusPct,
+              bookmakerCount: pick.bookmakerCount,
               tier: pick.tier,
+              pickGrade: pick.pickGrade,
+              riskLevel: pick.riskLevel,
               reasoning: pick.reasoning,
+              reasoningShort: pick.reasoningShort,
+              factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
               modelVersion: pick.modelVersion,
+              dataFreshnessAt: pick.dataFreshnessAt,
             },
           });
           picksGenerated++;
@@ -163,31 +157,16 @@ export async function POST(): Promise<NextResponse> {
 
       await db.ingestionRun.update({
         where: { id: run.id },
-        data: {
-          status: "SUCCESS",
-          gamesUpserted,
-          oddsInserted,
-          completedAt: new Date(),
-        },
+        data: { status: "SUCCESS", gamesUpserted, oddsInserted, completedAt: new Date() },
       });
 
-      results.push({
-        sport: sport.key,
-        status: "success",
-        games: gamesUpserted,
-        picks: picksGenerated,
-      });
+      results.push({ sport: sport.key, status: "success", games: gamesUpserted, picks: picksGenerated });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
       await db.ingestionRun.update({
         where: { id: run.id },
-        data: {
-          status: "FAILED",
-          errorMessage: message,
-          completedAt: new Date(),
-        },
+        data: { status: "FAILED", errorMessage: message, completedAt: new Date() },
       });
-
       results.push({ sport: sport.key, status: `failed: ${message}`, games: 0, picks: 0 });
     }
   }

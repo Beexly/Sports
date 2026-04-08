@@ -2,23 +2,33 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
-import type { PublicPick, PickResult } from "@sports/types";
+import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown } from "@sports/types";
 import { startOfDay, endOfDay } from "date-fns";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const session = await auth();
 
-  // Get entitlements — works for both authenticated and anonymous users
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)
-    : { tier: "FREE" as const, canSeePremiumPicks: false, canSeeConfidence: false, canSeeLineMovement: false, canGetAlerts: false, dailyPickLimit: 1 };
+    : {
+        tier: "FREE" as const,
+        canSeePremiumPicks: false,
+        canSeeConfidence: false,
+        canSeeLineMovement: false,
+        canSeeFactorBreakdown: false,
+        canSeeEdgeScore: false,
+        canGetAlerts: false,
+        dailyPickLimit: 1,
+      };
 
   const { searchParams } = new URL(req.url);
   const sportFilter = searchParams.get("sport");
   const dateParam = searchParams.get("date");
+  const gradeFilter = searchParams.get("grade") as PickGrade | null;
   const targetDate = dateParam ? new Date(dateParam) : new Date();
 
-  // Build query
   const picks = await db.pick.findMany({
     where: {
       isPublished: true,
@@ -26,10 +36,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         gte: startOfDay(targetDate),
         lte: endOfDay(targetDate),
       },
-      // Only return premium picks if user has access
-      ...(entitlements.canSeePremiumPicks
-        ? {}
-        : { tier: "FREE" }),
+      // Server-side tier gate
+      ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
+      // Optional grade filter (only useful for PRO+ who can see premium)
+      ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
       ...(sportFilter
         ? {
             game: {
@@ -47,30 +57,54 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         },
       },
     },
-    orderBy: [{ confidence: "desc" }, { generatedAt: "desc" }],
-    take: entitlements.dailyPickLimit ?? 100,
+    orderBy: [
+      { isFeatured: "desc" },
+      { confidence: "desc" },
+      { generatedAt: "desc" },
+    ],
+    take: entitlements.dailyPickLimit ?? 200,
   });
 
-  const publicPicks: PublicPick[] = picks.map((pick) => ({
-    id: pick.id,
-    game: {
-      homeTeam: pick.game.homeTeamName,
-      awayTeam: pick.game.awayTeamName,
-      commenceTime: pick.game.commenceTime.toISOString(),
-      sport: pick.game.sport.name,
-    },
-    pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
-    selection: pick.selection,
-    line: pick.line,
-    // PAYWALL: hide confidence score from non-subscribers
-    confidence: entitlements.canSeeConfidence ? pick.confidence : null,
-    tier: pick.tier as "FREE" | "PREMIUM",
-    reasoning: entitlements.canSeeConfidence
-      ? pick.reasoning
-      : pick.reasoning.split(".")[0] + ".", // Truncate reasoning for free users
-    generatedAt: pick.generatedAt.toISOString(),
-    result: pick.result as PickResult,
-  }));
+  const publicPicks: PublicPick[] = picks.map((pick) => {
+    // Parse factorBreakdown from JSON storage
+    let factorBreakdown: FactorBreakdown | null = null;
+    if (entitlements.canSeeFactorBreakdown && pick.factorBreakdown) {
+      try {
+        factorBreakdown = pick.factorBreakdown as unknown as FactorBreakdown;
+      } catch {
+        factorBreakdown = null;
+      }
+    }
+
+    return {
+      id: pick.id,
+      game: {
+        homeTeam: pick.game.homeTeamName,
+        awayTeam: pick.game.awayTeamName,
+        commenceTime: pick.game.commenceTime.toISOString(),
+        sport: pick.game.sport.name,
+      },
+      pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
+      selection: pick.selection,
+      line: pick.line,
+      // Gated fields
+      confidence: entitlements.canSeeConfidence ? pick.confidence : null,
+      edgeScore: entitlements.canSeeEdgeScore ? pick.edgeScore : null,
+      factorBreakdown,
+      // Always visible
+      tier: pick.tier as "FREE" | "PREMIUM",
+      pickGrade: (pick.pickGrade ?? "LEAN") as PickGrade,
+      riskLevel: (pick.riskLevel ?? "MODERATE") as RiskLevel,
+      reasoning: entitlements.canSeeConfidence
+        ? pick.reasoning
+        : pick.reasoningShort || pick.reasoning.split(".")[0] + ".",
+      reasoningShort: pick.reasoningShort,
+      isFeatured: pick.isFeatured,
+      generatedAt: pick.generatedAt.toISOString(),
+      dataFreshnessAt: pick.dataFreshnessAt?.toISOString() ?? null,
+      result: pick.result as PickResult,
+    };
+  });
 
   return NextResponse.json({
     success: true,
@@ -79,6 +113,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       tier: entitlements.tier,
       total: publicPicks.length,
       date: targetDate.toISOString().split("T")[0],
+      canSeeConfidence: entitlements.canSeeConfidence,
+      canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
     },
   });
 }
