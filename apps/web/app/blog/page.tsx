@@ -7,21 +7,36 @@ import { formatDate } from "@/lib/utils";
 export const revalidate = 300; // 5 min
 
 export default async function BlogPage() {
-  const posts = await db.blogPost.findMany({
-    where: { status: "PUBLISHED" },
-    orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
-    take: 20,
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      excerpt: true,
-      sport: true,
-      tags: true,
-      publishedAt: true,
-      isFeatured: true,
-    },
-  });
+  let posts: Array<{
+    id: string;
+    title: string;
+    slug: string;
+    excerpt: string;
+    sport: string | null;
+    tags: string[];
+    publishedAt: Date | null;
+    isFeatured: boolean;
+  }> = [];
+
+  try {
+    posts = await db.blogPost.findMany({
+      where: { status: "PUBLISHED" },
+      orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
+      take: 20,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        sport: true,
+        tags: true,
+        publishedAt: true,
+        isFeatured: true,
+      },
+    });
+  } catch {
+    // DB unavailable during build — renders empty state, revalidated at runtime
+  }
 
   return (
     <>

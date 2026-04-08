@@ -9,6 +9,16 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ["@prisma/client"],
   },
+  webpack: (config) => {
+    // Resolve .js extension imports to .ts source files for transpiled workspace packages.
+    // Workspace packages use ESM-style `.js` extension imports in TypeScript source,
+    // which webpack can't find without this alias.
+    config.resolve.extensionAlias = {
+      ".js": [".ts", ".tsx", ".js"],
+      ".jsx": [".tsx", ".jsx"],
+    };
+    return config;
+  },
   images: {
     domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
   },
