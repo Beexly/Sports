@@ -278,7 +278,7 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
       update: {
         teamScore: homeScore,
         opponentScore: awayScore,
-        result: homeWon ? "WIN" : awayWon ? "LOSS" : "LOSS",
+        result: homeWon ? "WIN" : awayWon ? "LOSS" : "TBD",
         atsResult: homeAts,
       },
       create: {
@@ -290,7 +290,7 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
         gameDate,
         teamScore: homeScore,
         opponentScore: awayScore,
-        result: homeWon ? "WIN" : awayWon ? "LOSS" : "LOSS",
+        result: homeWon ? "WIN" : awayWon ? "LOSS" : "TBD",
         spread,
         atsResult: homeAts,
       },
@@ -300,7 +300,7 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
       update: {
         teamScore: awayScore,
         opponentScore: homeScore,
-        result: awayWon ? "WIN" : homeWon ? "LOSS" : "LOSS",
+        result: awayWon ? "WIN" : homeWon ? "LOSS" : "TBD",
         atsResult: awayAts,
       },
       create: {
@@ -312,7 +312,7 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
         gameDate,
         teamScore: awayScore,
         opponentScore: homeScore,
-        result: awayWon ? "WIN" : homeWon ? "LOSS" : "LOSS",
+        result: awayWon ? "WIN" : homeWon ? "LOSS" : "TBD",
         spread: spread !== null ? -spread : null,
         atsResult: awayAts,
       },
