@@ -16,8 +16,12 @@
  *   If homeCoverMargin = 0  → PUSH for both
  */
 
-export type PickResult = "WIN" | "LOSS" | "PUSH";
-export type PickType = "SPREAD" | "MONEYLINE" | "TOTAL";
+import type { PickType } from "@sports/types";
+
+// Settlement-only result type — a settled pick is always WIN, LOSS, or PUSH.
+// Not to be confused with the full PickResult type ("PENDING"|"WIN"|"LOSS"|"PUSH"|"VOID")
+// from @sports/types, which also covers unsettled and voided states.
+export type SettlementResult = "WIN" | "LOSS" | "PUSH";
 
 /**
  * Calculate the settlement result for a single pick.
@@ -39,7 +43,7 @@ export function calculatePickResult(
   homeScore: number,
   awayScore: number,
   sportKey: string
-): PickResult {
+): SettlementResult {
   if (pickType === "MONEYLINE") {
     const homeWon = homeScore > awayScore;
     const pickedHome = selection.includes(homeTeam);
