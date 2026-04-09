@@ -207,45 +207,39 @@ async function runRefreshCycle(): Promise<void> {
       }
 
       const scoredPicks = scoreGames(oddsInputs, fetchedAt);
-      const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
       let picksGenerated = 0;
 
       for (const pick of scoredPicks) {
-        const existing = await db.pick.findFirst({
-          where: {
-            gameId: pick.gameId,
-            pickType: pick.pickType,
-            generatedAt: { gte: todayStart },
-          },
-        });
+        const pickData = {
+          ingestionRunId: run.id,
+          selection: pick.selection,
+          line: pick.line,
+          confidence: pick.confidence,
+          edgeScore: pick.edgeScore,
+          consensusPct: pick.consensusPct,
+          bookmakerCount: pick.bookmakerCount,
+          tier: pick.tier,
+          pickGrade: pick.pickGrade,
+          riskLevel: pick.riskLevel,
+          reasoning: pick.reasoning,
+          reasoningShort: pick.reasoningShort,
+          factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
+          modelVersion: pick.modelVersion,
+          dataFreshnessAt: pick.dataFreshnessAt,
+          isFeatured:
+            pick.pickGrade === "ELITE_PLAY" ||
+            (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80),
+        };
 
-        if (!existing) {
-          await db.pick.create({
-            data: {
-              gameId: pick.gameId,
-              ingestionRunId: run.id,
-              pickType: pick.pickType,
-              selection: pick.selection,
-              line: pick.line,
-              confidence: pick.confidence,
-              edgeScore: pick.edgeScore,
-              consensusPct: pick.consensusPct,
-              bookmakerCount: pick.bookmakerCount,
-              tier: pick.tier,
-              pickGrade: pick.pickGrade,
-              riskLevel: pick.riskLevel,
-              reasoning: pick.reasoning,
-              reasoningShort: pick.reasoningShort,
-              factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
-              modelVersion: pick.modelVersion,
-              dataFreshnessAt: pick.dataFreshnessAt,
-              isFeatured:
-                pick.pickGrade === "ELITE_PLAY" ||
-                (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80),
-            },
-          });
-          picksGenerated++;
-        }
+        // Upsert by the DB-enforced unique key [gameId, pickType].
+        // On subsequent refresh cycles, refreshes confidence/odds with latest data.
+        // result and settledAt are never in pickData so they are never overwritten.
+        await db.pick.upsert({
+          where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
+          create: { gameId: pick.gameId, pickType: pick.pickType, ...pickData },
+          update: pickData,
+        });
+        picksGenerated++;
       }
 
       await db.ingestionRun.update({

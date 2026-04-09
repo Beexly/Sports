@@ -361,7 +361,9 @@ model Pick {
 
   game     Game @relation(fields: [gameId], references: [id])
 
-  @@index([gameId])
+  // One active pick per game per pick type — enforced at DB level to prevent
+  // duplicate inserts from concurrent worker runs (TOCTOU race prevention).
+  @@unique([gameId, pickType])
   @@index([tier])
   @@index([pickGrade])
   @@index([generatedAt])
