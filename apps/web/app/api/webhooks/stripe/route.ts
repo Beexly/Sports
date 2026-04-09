@@ -58,6 +58,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 async function handleStripeEvent(event: Stripe.Event): Promise<void> {
   switch (event.type) {
+    case "checkout.session.completed": {
+      // Fires when a user completes checkout. The subscription record may not
+      // have the subscriptionId yet — retrieve and sync it now.
+      const session = event.data.object as Stripe.Checkout.Session;
+      if (session.subscription) {
+        const subscription = await stripe.subscriptions.retrieve(
+          session.subscription as string
+        );
+        await syncSubscription(subscription);
+      }
+      break;
+    }
+
     case "customer.subscription.created":
     case "customer.subscription.updated": {
       const subscription = event.data.object as Stripe.Subscription;
@@ -129,20 +142,43 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
     ? new Date(stripeSubscription.trial_end * 1000)
     : null;
 
-  await db.subscription.updateMany({
-    where: { stripeCustomerId: customerId },
-    data: {
-      stripeSubscriptionId: stripeSubscription.id,
-      stripePriceId: priceId,
-      tier,
-      status,
-      currentPeriodStart: periodStart,
-      currentPeriodEnd: periodEnd,
-      cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-      trialStart,
-      trialEnd,
-    },
-  });
+  const updateData = {
+    stripeSubscriptionId: stripeSubscription.id,
+    stripePriceId: priceId,
+    tier,
+    status,
+    currentPeriodStart: periodStart,
+    currentPeriodEnd: periodEnd,
+    cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
+    trialStart,
+    trialEnd,
+  };
+
+  // userId is embedded in subscription metadata during checkout session creation
+  const userId = stripeSubscription.metadata?.["userId"];
+
+  if (userId) {
+    // Upsert by stripeCustomerId — safe even if the subscription record was
+    // created by getOrCreateStripeCustomer (update path) or is brand new (create path)
+    await db.subscription.upsert({
+      where: { stripeCustomerId: customerId },
+      create: {
+        userId,
+        stripeCustomerId: customerId,
+        ...updateData,
+      },
+      update: updateData,
+    });
+  } else {
+    // No userId in metadata — fall back to updateMany (handles legacy records)
+    const updated = await db.subscription.updateMany({
+      where: { stripeCustomerId: customerId },
+      data: updateData,
+    });
+    if (updated.count === 0) {
+      console.warn(`[stripe] syncSubscription: no subscription record for customer ${customerId} — subscription ${stripeSubscription.id} not synced`);
+    }
+  }
 }
 
 function getTierFromPriceId(priceId: string | undefined): "FREE" | "PRO" | "ELITE" {

@@ -18,4 +18,6 @@ export {
   computeUncertaintyPenalty,
 } from "./game-context.js";
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
+export { calculatePickResult } from "./settlement.js";
+export type { PickResult, PickType } from "./settlement.js";
 export * from "./constants.js";

@@ -15,7 +15,7 @@ import {
   getHeadToHeadForm,
   settleGameLogs,
 } from "@sports/data-ingestion";
-import { scoreGames } from "@sports/prediction-engine";
+import { scoreGames, calculatePickResult } from "@sports/prediction-engine";
 import type { OddsInput, GameContextInput } from "@sports/types";
 
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
@@ -303,7 +303,8 @@ async function settleResults(): Promise<void> {
               pick.line,
               game.homeTeamName,
               score.homeScore,
-              score.awayScore
+              score.awayScore,
+              sport.key
             );
             await db.pick.update({
               where: { id: pick.id },
@@ -338,35 +339,7 @@ async function settleResults(): Promise<void> {
   }
 }
 
-function calculatePickResult(
-  pickType: "SPREAD" | "MONEYLINE" | "TOTAL",
-  selection: string,
-  line: number,
-  homeTeam: string,
-  homeScore: number,
-  awayScore: number
-): "WIN" | "LOSS" | "PUSH" {
-  if (pickType === "MONEYLINE") {
-    const homeWon = homeScore > awayScore;
-    const pickedHome = selection.includes(homeTeam);
-    if (homeScore === awayScore) return "PUSH";
-    return pickedHome === homeWon ? "WIN" : "LOSS";
-  }
-  if (pickType === "SPREAD") {
-    const pickedHome = selection.includes(homeTeam);
-    const homeMargin = homeScore - awayScore;
-    const adjusted = homeMargin + (pickedHome ? -line : line);
-    if (adjusted === 0) return "PUSH";
-    return adjusted > 0 ? "WIN" : "LOSS";
-  }
-  if (pickType === "TOTAL") {
-    const total = homeScore + awayScore;
-    const isOver = selection.startsWith("OVER");
-    if (total === line) return "PUSH";
-    return (isOver && total > line) || (!isOver && total < line) ? "WIN" : "LOSS";
-  }
-  return "PUSH";
-}
+// calculatePickResult is imported from @sports/prediction-engine/settlement
 
 async function main(): Promise<void> {
   console.log("[data-refresh] Worker v3 starting...");

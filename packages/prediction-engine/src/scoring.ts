@@ -305,7 +305,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const venueFormScore = ctx?.venueFormScore ?? 0;
   const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
   const crossMarketScore = ctx?.crossMarketScore ?? 0;
-  const dataQualityScore = ctx?.dataQualityScore ?? 100;
+  const dataQualityScore = ctx?.dataQualityScore ?? 0;
 
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
 
@@ -478,7 +478,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const lineMovementScore = ctx?.lineMovementScore ?? 0;
   const dataQualityPenalty = ctx?.dataQualityPenalty ?? 0;
-  const dataQualityScore = ctx?.dataQualityScore ?? 100;
+  const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
 
   const factors: FactorDetail[] = [
@@ -611,7 +611,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const headToHeadScore = ctx?.headToHeadScore ?? 0;
   const venueFormScore = ctx?.venueFormScore ?? 0;
   const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
-  const dataQualityScore = ctx?.dataQualityScore ?? 100;
+  const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
 
   const factors: FactorDetail[] = [
