@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
-import { OddsApiClient, DataNormalizer, SUPPORTED_SPORTS, MARKETS } from "@sports/data-ingestion";
+import {
+  OddsApiClient,
+  DataNormalizer,
+  SUPPORTED_SPORTS,
+  MARKETS,
+  enrichGameContext,
+  getAtsForm,
+  getHeadToHeadForm,
+} from "@sports/data-ingestion";
 import { scoreGames } from "@sports/prediction-engine";
 import type { OddsInput, GameContextInput } from "@sports/types";
 
@@ -43,9 +51,10 @@ export async function POST(): Promise<NextResponse> {
         update: {},
       });
 
-      let gamesUpserted = 0;
+      // Upsert game records
+      const gameRecords: Record<string, { id: string }> = {};
       for (const game of normalizedGames) {
-        await db.game.upsert({
+        const record = await db.game.upsert({
           where: { externalId: game.externalId },
           create: {
             externalId: game.externalId,
@@ -60,12 +69,12 @@ export async function POST(): Promise<NextResponse> {
             commenceTime: game.commenceTime,
           },
         });
-        gamesUpserted++;
+        gameRecords[game.externalId] = record;
       }
 
       let oddsInserted = 0;
       for (const odds of normalizedOdds) {
-        const game = await db.game.findUnique({ where: { externalId: odds.gameExternalId } });
+        const game = gameRecords[odds.gameExternalId];
         if (!game) continue;
         await db.odds.create({
           data: {
@@ -88,31 +97,76 @@ export async function POST(): Promise<NextResponse> {
         oddsInserted++;
       }
 
-      // Build scoring inputs
+      // Build OddsInputs with full context enrichment (matches data-refresh worker)
       const oddsInputs: OddsInput[] = [];
       for (const game of normalizedGames) {
-        const gameRecord = await db.game.findUnique({ where: { externalId: game.externalId } });
+        const gameRecord = gameRecords[game.externalId];
         if (!gameRecord) continue;
 
         const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
-        const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
         const bookmakerCoverageMax = new Set(gameOdds.map((o) => o.bookmaker)).size;
 
+        const spreadOdds = gameOdds.filter((o) => o.market === "SPREADS" && o.spread !== undefined);
+        const totalOdds = gameOdds.filter((o) => o.market === "TOTALS" && o.total !== undefined);
+        const avgSpread =
+          spreadOdds.length > 0
+            ? spreadOdds.reduce((s, o) => s + (o.spread ?? 0), 0) / spreadOdds.length
+            : null;
+        const avgTotal =
+          totalOdds.length > 0
+            ? totalOdds.reduce((s, o) => s + (o.total ?? 0), 0) / totalOdds.length
+            : null;
+
+        // Run opening line tracking, rest day computation, and data quality scoring
+        try {
+          await enrichGameContext({
+            gameId: gameRecord.id,
+            homeTeam: game.homeTeam,
+            awayTeam: game.awayTeam,
+            sport: sport.key,
+            commenceTime: game.commenceTime,
+            avgSpread,
+            avgTotal,
+            bookmakerCoverageMax,
+            fetchedAt,
+          });
+        } catch (enrichErr) {
+          console.warn(
+            `[trigger-refresh] Enrichment failed for ${game.externalId}: ${enrichErr instanceof Error ? enrichErr.message : enrichErr}`
+          );
+        }
+
+        const enrichedGame = await db.game.findUnique({ where: { id: gameRecord.id } });
+
+        const [homeAtsForm, awayAtsForm, homeAtsFormAtHome, awayAtsFormAway, homeH2HForm] =
+          await Promise.all([
+            getAtsForm(game.homeTeam, sport.key).catch(() => null),
+            getAtsForm(game.awayTeam, sport.key).catch(() => null),
+            getAtsForm(game.homeTeam, sport.key, 15, "HOME").catch(() => null),
+            getAtsForm(game.awayTeam, sport.key, 15, "AWAY").catch(() => null),
+            getHeadToHeadForm(game.homeTeam, game.awayTeam, sport.key).catch(() => null),
+          ]);
+
+        const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
+
         const context: GameContextInput = {
-          openingSpread: null,
-          currentSpread: null,
-          openingTotal: null,
-          currentTotal: null,
-          restDaysHome: null,
-          restDaysAway: null,
-          isBackToBackHome: false,
-          isBackToBackAway: false,
-          homeAtsForm: null,
-          awayAtsForm: null,
+          openingSpread: enrichedGame?.openingSpread ?? avgSpread,
+          currentSpread: avgSpread,
+          openingTotal: enrichedGame?.openingTotal ?? avgTotal,
+          currentTotal: avgTotal,
+          restDaysHome: enrichedGame?.restDaysHome ?? null,
+          restDaysAway: enrichedGame?.restDaysAway ?? null,
+          isBackToBackHome: enrichedGame?.isBackToBackHome ?? false,
+          isBackToBackAway: enrichedGame?.isBackToBackAway ?? false,
+          homeAtsForm: homeAtsForm ?? null,
+          awayAtsForm: awayAtsForm ?? null,
+          homeAtsFormAtHome: homeAtsFormAtHome ?? null,
+          awayAtsFormAway: awayAtsFormAway ?? null,
+          headToHeadForm: homeH2HForm ?? null,
           bookmakerCoverageMax,
           dataFreshnessMinutes: freshnessMinutes,
-          hasSpreadMarket: gameOdds.some((o) => o.market === "SPREADS"),
-          hasTotalMarket: gameOdds.some((o) => o.market === "TOTALS"),
+          hasSpreadMarket: spreadOdds.length > 0,
+          hasTotalMarket: totalOdds.length > 0,
           hasH2HMarket: gameOdds.some((o) => o.market === "H2H"),
         };
 
@@ -139,53 +193,44 @@ export async function POST(): Promise<NextResponse> {
       }
 
       const scoredPicks = scoreGames(oddsInputs, fetchedAt);
-      const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
       let picksGenerated = 0;
 
       for (const pick of scoredPicks) {
-        const existing = await db.pick.findFirst({
-          where: {
-            gameId: pick.gameId,
-            pickType: pick.pickType,
-            generatedAt: { gte: todayStart },
-          },
-        });
+        const pickData = {
+          ingestionRunId: run.id,
+          selection: pick.selection,
+          line: pick.line,
+          confidence: pick.confidence,
+          edgeScore: pick.edgeScore,
+          consensusPct: pick.consensusPct,
+          bookmakerCount: pick.bookmakerCount,
+          tier: pick.tier,
+          pickGrade: pick.pickGrade,
+          riskLevel: pick.riskLevel,
+          reasoning: pick.reasoning,
+          reasoningShort: pick.reasoningShort,
+          factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
+          modelVersion: pick.modelVersion,
+          dataFreshnessAt: pick.dataFreshnessAt,
+          isFeatured:
+            pick.pickGrade === "ELITE_PLAY" ||
+            (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80),
+        };
 
-        if (!existing) {
-          await db.pick.create({
-            data: {
-              gameId: pick.gameId,
-              ingestionRunId: run.id,
-              pickType: pick.pickType,
-              selection: pick.selection,
-              line: pick.line,
-              confidence: pick.confidence,
-              edgeScore: pick.edgeScore,
-              consensusPct: pick.consensusPct,
-              bookmakerCount: pick.bookmakerCount,
-              tier: pick.tier,
-              pickGrade: pick.pickGrade,
-              riskLevel: pick.riskLevel,
-              reasoning: pick.reasoning,
-              reasoningShort: pick.reasoningShort,
-              factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
-              modelVersion: pick.modelVersion,
-              dataFreshnessAt: pick.dataFreshnessAt,
-              isFeatured:
-                pick.pickGrade === "ELITE_PLAY" ||
-                (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80),
-            },
-          });
-          picksGenerated++;
-        }
+        await db.pick.upsert({
+          where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
+          create: { gameId: pick.gameId, pickType: pick.pickType, ...pickData },
+          update: pickData,
+        });
+        picksGenerated++;
       }
 
       await db.ingestionRun.update({
         where: { id: run.id },
-        data: { status: "SUCCESS", gamesUpserted, oddsInserted, completedAt: new Date() },
+        data: { status: "SUCCESS", gamesUpserted: normalizedGames.length, oddsInserted, completedAt: new Date() },
       });
 
-      results.push({ sport: sport.key, status: "success", games: gamesUpserted, picks: picksGenerated });
+      results.push({ sport: sport.key, status: "success", games: normalizedGames.length, picks: picksGenerated });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
       await db.ingestionRun.update({
