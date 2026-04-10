@@ -129,6 +129,9 @@ export async function POST(): Promise<NextResponse> {
             avgTotal,
             bookmakerCoverageMax,
             fetchedAt,
+            hasSpreadMarket: spreadOdds.length > 0,
+            hasTotalMarket: totalOdds.length > 0,
+            hasH2HMarket: gameOdds.some((o) => o.market === "H2H"),
           });
         } catch (enrichErr) {
           console.warn(
@@ -196,8 +199,9 @@ export async function POST(): Promise<NextResponse> {
       let picksGenerated = 0;
 
       for (const pick of scoredPicks) {
-        const pickData = {
-          ingestionRunId: run.id,
+        // result and settledAt are intentionally absent — never overwritten by refresh.
+        // ingestionRunId is intentionally absent from update — keeps the creation run ID.
+        const pickUpdateData = {
           selection: pick.selection,
           line: pick.line,
           confidence: pick.confidence,
@@ -219,8 +223,8 @@ export async function POST(): Promise<NextResponse> {
 
         await db.pick.upsert({
           where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-          create: { gameId: pick.gameId, pickType: pick.pickType, ...pickData },
-          update: pickData,
+          create: { gameId: pick.gameId, pickType: pick.pickType, ingestionRunId: run.id, ...pickUpdateData },
+          update: pickUpdateData,
         });
         picksGenerated++;
       }

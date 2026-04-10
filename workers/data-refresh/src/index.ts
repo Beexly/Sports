@@ -134,6 +134,9 @@ async function runRefreshCycle(): Promise<void> {
             avgTotal,
             bookmakerCoverageMax,
             fetchedAt,
+            hasSpreadMarket: spreadOdds.length > 0,
+            hasTotalMarket: totalOdds.length > 0,
+            hasH2HMarket: gameOdds.some((o) => o.market === "H2H"),
           });
         } catch (enrichErr) {
           // Non-fatal — picks still generated without context
@@ -210,8 +213,11 @@ async function runRefreshCycle(): Promise<void> {
       let picksGenerated = 0;
 
       for (const pick of scoredPicks) {
-        const pickData = {
-          ingestionRunId: run.id,
+        // Fields refreshed on every cycle (confidence, odds, reasoning).
+        // result and settledAt are intentionally absent — never overwritten by refresh.
+        // ingestionRunId is intentionally absent from update — keeps the creation run ID
+        // so admins can trace which run originally generated this pick.
+        const pickUpdateData = {
           selection: pick.selection,
           line: pick.line,
           confidence: pick.confidence,
@@ -232,12 +238,11 @@ async function runRefreshCycle(): Promise<void> {
         };
 
         // Upsert by the DB-enforced unique key [gameId, pickType].
-        // On subsequent refresh cycles, refreshes confidence/odds with latest data.
-        // result and settledAt are never in pickData so they are never overwritten.
+        // Create sets ingestionRunId to track origin; update never changes it.
         await db.pick.upsert({
           where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-          create: { gameId: pick.gameId, pickType: pick.pickType, ...pickData },
-          update: pickData,
+          create: { gameId: pick.gameId, pickType: pick.pickType, ingestionRunId: run.id, ...pickUpdateData },
+          update: pickUpdateData,
         });
         picksGenerated++;
       }

@@ -16,21 +16,23 @@ export async function GET(): Promise<NextResponse> {
     };
   }
 
-  // Last ingestion run check
+  // Last ingestion run check — must be a SUCCESS run, not any run.
+  // A FAILED run that started recently should not report healthy.
   try {
-    const lastRun = await db.ingestionRun.findFirst({
-      orderBy: { startedAt: "desc" },
-      select: { status: true, startedAt: true },
+    const lastSuccessRun = await db.ingestionRun.findFirst({
+      where: { status: "SUCCESS" },
+      orderBy: { completedAt: "desc" },
+      select: { completedAt: true },
     });
 
-    if (!lastRun) {
-      checks["ingestion"] = { status: "ok", detail: "No runs yet" };
+    if (!lastSuccessRun || !lastSuccessRun.completedAt) {
+      checks["ingestion"] = { status: "error", detail: "No successful runs recorded" };
     } else {
-      const ageMs = Date.now() - lastRun.startedAt.getTime();
+      const ageMs = Date.now() - lastSuccessRun.completedAt.getTime();
       const ageHours = ageMs / (1000 * 60 * 60);
       checks["ingestion"] = {
         status: ageHours > 2 ? "error" : "ok",
-        detail: `Last run: ${lastRun.startedAt.toISOString()} (${lastRun.status})`,
+        detail: `Last success: ${lastSuccessRun.completedAt.toISOString()} (${Math.round(ageHours * 60)}m ago)`,
       };
     }
   } catch {

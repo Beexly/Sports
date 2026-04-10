@@ -193,6 +193,11 @@ interface GameEnrichmentInput {
   avgTotal: number | null;
   bookmakerCoverageMax: number;
   fetchedAt: Date;
+  // Market presence flags — used to compute accurate dataQualityScore.
+  // Must match what the scoring engine computes per-pick in computeDataQuality().
+  hasSpreadMarket?: boolean;
+  hasTotalMarket?: boolean;
+  hasH2HMarket?: boolean;
 }
 
 /**
@@ -210,6 +215,9 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
     avgTotal,
     bookmakerCoverageMax,
     fetchedAt,
+    hasSpreadMarket,
+    hasTotalMarket,
+    hasH2HMarket,
   } = input;
 
   // 1. Opening line tracking + movement delta
@@ -225,12 +233,22 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
     computeRestDays(awayTeam, sport, commenceTime),
   ]);
 
-  // 3. Data quality score (mirrors computeDataQuality in prediction-engine)
+  // 3. Data quality score — formula must exactly mirror computeDataQuality() in
+  //    packages/prediction-engine/src/game-context.ts so that game.dataQualityScore
+  //    matches factorBreakdown.dataQualityScore when used as a fallback in the picks API.
   const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
   const coverageScore = Math.min((bookmakerCoverageMax / 10) * 40, 40);
   const freshnessScore = Math.max(((90 - freshnessMinutes) / 90) * 30, 0);
-  const dataQualityScore = Math.round(Math.min(coverageScore + freshnessScore + 30, 100));
-  // +30 assumes at least one market type — actual market coverage tracked per pick
+  // Market coverage: 10 pts each for spread, total, H2H (0–30 total).
+  // Use actual flags when provided; fall back to inferring from avg values.
+  const effectiveHasSpread = hasSpreadMarket ?? avgSpread !== null;
+  const effectiveHasTotal = hasTotalMarket ?? avgTotal !== null;
+  const effectiveHasH2H = hasH2HMarket ?? false;
+  const marketScore =
+    (effectiveHasSpread ? 10 : 0) +
+    (effectiveHasTotal ? 10 : 0) +
+    (effectiveHasH2H ? 10 : 0);
+  const dataQualityScore = Math.round(Math.min(coverageScore + freshnessScore + marketScore, 100));
 
   // 4. Update game record
   // IMPORTANT: openingSpread/openingTotal must only be written on first sight.
