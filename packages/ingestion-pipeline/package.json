@@ -1,24 +1,20 @@
 {
-  "name": "@sports/worker-data-refresh",
+  "name": "@sports/ingestion-pipeline",
   "version": "1.0.0",
   "private": true,
   "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "scripts": {
-    "start": "ts-node --esm src/index.ts",
-    "build": "tsc",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@sports/db": "*",
     "@sports/data-ingestion": "*",
-    "@sports/ingestion-pipeline": "*",
     "@sports/prediction-engine": "*",
-    "@sports/types": "*",
-    "date-fns": "^4.1.0"
+    "@sports/types": "*"
   },
   "devDependencies": {
     "typescript": "^5.4.5",
-    "@types/node": "^22.5.5",
-    "ts-node": "^10.9.2"
+    "@types/node": "^22.5.5"
   }
 }

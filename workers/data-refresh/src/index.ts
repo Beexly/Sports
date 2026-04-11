@@ -4,6 +4,9 @@
  * Fetches live odds every 30 minutes, enriches with game context
  * (opening lines, rest days, schedule density, ATS form), then scores picks.
  *
+ * Pick generation is delegated to processSport() from @sports/ingestion-pipeline,
+ * which is the single source of truth shared with the admin trigger-refresh route.
+ *
  * Bootstrap safety: reads PlatformConfig on every cycle. Behavior gates:
  *   - DERIVED_MODEL_HISTORY_ENABLED: controls whether ATS/H2H/venue form
  *     influence scoring. When false, only canonical market signals are used.
@@ -23,22 +26,16 @@
 
 import { db } from "@sports/db";
 import {
+  SUPPORTED_SPORTS,
   OddsApiClient,
   DataNormalizer,
-  SUPPORTED_SPORTS,
-  MARKETS,
-  enrichGameContext,
-  getAtsForm,
-  getHeadToHeadForm,
   settleGameLogs,
 } from "@sports/data-ingestion";
 import {
-  scoreGames,
-  calculatePickResult,
   getReadinessGates,
-  buildPickSignalSnapshot,
+  calculatePickResult,
 } from "@sports/prediction-engine";
-import type { OddsInput, GameContextInput } from "@sports/types";
+import { processSport } from "@sports/ingestion-pipeline";
 
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
 
@@ -48,13 +45,6 @@ async function runRefreshCycle(): Promise<void> {
 
   // Read readiness gates fresh every cycle — env vars may change across deploys
   const gates = getReadinessGates();
-
-  const client = new OddsApiClient(apiKey);
-  const normalizer = new DataNormalizer();
-
-  // Bootstrap flag derived once per cycle — gates pick creation, GameSignal writes,
-  // TeamGameLog writes, and PickSignalSnapshot provenance.
-  const isBootstrap = !gates.canPersistCanonicalHistory;
 
   const bootstrapLabel = gates.isBootstrapMode ? " [BOOTSTRAP MODE]" : "";
   console.log(`[data-refresh] Cycle start ${new Date().toISOString()}${bootstrapLabel}`);
@@ -68,299 +58,8 @@ async function runRefreshCycle(): Promise<void> {
   }
 
   for (const sport of SUPPORTED_SPORTS) {
-    const run = await db.ingestionRun.create({
-      data: { sport: sport.key, status: "RUNNING" },
-    });
-
-    try {
-      const { data: events, remainingRequests } = await client.getOdds(sport.key, [...MARKETS]);
-      const fetchedAt = new Date();
-
-      console.log(`[data-refresh] ${sport.key}: ${events.length} events, ${remainingRequests} requests remaining`);
-
-      if (!normalizer.validateFreshness(fetchedAt)) {
-        throw new Error("Freshness validation failed");
-      }
-
-      const normalizedGames = normalizer.normalizeGames(events);
-      const normalizedOdds = normalizer.normalizeOdds(events, fetchedAt);
-
-      const sportRecord = await db.sport.upsert({
-        where: { key: sport.key },
-        create: { key: sport.key, name: sport.name, displayName: sport.displayName },
-        update: {},
-      });
-
-      // Upsert all games first
-      const gameRecords: Record<string, { id: string; homeTeamName: string; awayTeamName: string; commenceTime: Date }> = {};
-      for (const game of normalizedGames) {
-        const record = await db.game.upsert({
-          where: { externalId: game.externalId },
-          create: {
-            externalId: game.externalId,
-            sportId: sportRecord.id,
-            homeTeamName: game.homeTeam,
-            awayTeamName: game.awayTeam,
-            commenceTime: game.commenceTime,
-          },
-          update: {
-            homeTeamName: game.homeTeam,
-            awayTeamName: game.awayTeam,
-            commenceTime: game.commenceTime,
-          },
-        });
-        gameRecords[game.externalId] = record;
-      }
-
-      // Ingest odds
-      let oddsInserted = 0;
-      for (const odds of normalizedOdds) {
-        const game = gameRecords[odds.gameExternalId];
-        if (!game) continue;
-        await db.odds.create({
-          data: {
-            gameId: game.id,
-            ingestionRunId: run.id,
-            bookmaker: odds.bookmaker,
-            market: odds.market,
-            homePrice: odds.homePrice,
-            awayPrice: odds.awayPrice,
-            drawPrice: odds.drawPrice,
-            spread: odds.spread,
-            homeSpreadPrice: odds.homeSpreadPrice,
-            awaySpreadPrice: odds.awaySpreadPrice,
-            total: odds.total,
-            overPrice: odds.overPrice,
-            underPrice: odds.underPrice,
-            fetchedAt: odds.fetchedAt,
-          },
-        });
-        oddsInserted++;
-      }
-
-      // Build OddsInputs with game context
-      const oddsInputs: OddsInput[] = [];
-      for (const game of normalizedGames) {
-        const gameRecord = gameRecords[game.externalId];
-        if (!gameRecord) continue;
-
-        const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
-        const bookmakerKeys = new Set(gameOdds.map((o) => o.bookmaker));
-        const bookmakerCoverageMax = bookmakerKeys.size;
-
-        // Compute avg spread and total for context
-        const spreadOdds = gameOdds.filter((o) => o.market === "SPREADS" && o.spread !== undefined);
-        const totalOdds = gameOdds.filter((o) => o.market === "TOTALS" && o.total !== undefined);
-        const avgSpread =
-          spreadOdds.length > 0
-            ? spreadOdds.reduce((s, o) => s + (o.spread ?? 0), 0) / spreadOdds.length
-            : null;
-        const avgTotal =
-          totalOdds.length > 0
-            ? totalOdds.reduce((s, o) => s + (o.total ?? 0), 0) / totalOdds.length
-            : null;
-        const hasH2HMarket = gameOdds.some((o) => o.market === "H2H");
-
-        // Run context enrichment (opening lines, rest days, schedule density, data quality)
-        try {
-          await enrichGameContext({
-            gameId: gameRecord.id,
-            homeTeam: game.homeTeam,
-            awayTeam: game.awayTeam,
-            sport: sport.key,
-            commenceTime: game.commenceTime,
-            avgSpread,
-            avgTotal,
-            bookmakerCoverageMax,
-            fetchedAt,
-            hasSpreadMarket: spreadOdds.length > 0,
-            hasTotalMarket: totalOdds.length > 0,
-            hasH2HMarket,
-            isBootstrap, // propagate for GameSignal provenance tracking
-          });
-        } catch (enrichErr) {
-          // Non-fatal — picks still generated without context
-          console.warn(`[data-refresh] Enrichment failed for ${game.externalId}: ${enrichErr instanceof Error ? enrichErr.message : enrichErr}`);
-        }
-
-        // Reload game record to get updated context fields
-        const enrichedGame = await db.game.findUnique({ where: { id: gameRecord.id } });
-
-        // Derived history gate: only fetch ATS/H2H form when the flag is on.
-        // When off, all historical factors are null → scoring treats them as 0 (neutral).
-        // When on, use canonicalOnly=true so bootstrap-era logs never enter canonical scoring.
-        const [
-          homeAtsForm,
-          awayAtsForm,
-          homeAtsFormAtHome,
-          awayAtsFormAway,
-          homeH2HForm,
-        ] = gates.canUseDerivedHistory
-          ? await Promise.all([
-              getAtsForm(game.homeTeam, sport.key, 15, undefined, true).catch(() => null),
-              getAtsForm(game.awayTeam, sport.key, 15, undefined, true).catch(() => null),
-              getAtsForm(game.homeTeam, sport.key, 15, "HOME", true).catch(() => null),
-              getAtsForm(game.awayTeam, sport.key, 15, "AWAY", true).catch(() => null),
-              getHeadToHeadForm(game.homeTeam, game.awayTeam, sport.key, 10, true).catch(() => null),
-            ])
-          : [null, null, null, null, null];
-
-        const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
-
-        const context: GameContextInput = {
-          openingSpread: enrichedGame?.openingSpread ?? avgSpread,
-          currentSpread: avgSpread,
-          openingTotal: enrichedGame?.openingTotal ?? avgTotal,
-          currentTotal: avgTotal,
-          restDaysHome: enrichedGame?.restDaysHome ?? null,
-          restDaysAway: enrichedGame?.restDaysAway ?? null,
-          isBackToBackHome: enrichedGame?.isBackToBackHome ?? false,
-          isBackToBackAway: enrichedGame?.isBackToBackAway ?? false,
-          // Schedule density (v5) — from enriched game, computed from all TeamGameLog
-          // entries regardless of bootstrap state (physical schedule reality).
-          scheduleDensityHome: enrichedGame?.scheduleDensityHome ?? null,
-          scheduleDensityAway: enrichedGame?.scheduleDensityAway ?? null,
-          // Historical signals — only wired in when derived history is enabled.
-          // When null, computeGameContext returns 0 for these factors (neutral).
-          homeAtsForm: homeAtsForm ?? null,
-          awayAtsForm: awayAtsForm ?? null,
-          // Venue-specific splits (v4)
-          homeAtsFormAtHome: homeAtsFormAtHome ?? null,
-          awayAtsFormAway: awayAtsFormAway ?? null,
-          // H2H from home team's perspective — scoring engine reads picked-side form
-          headToHeadForm: homeH2HForm ?? null,
-          bookmakerCoverageMax,
-          dataFreshnessMinutes: freshnessMinutes,
-          hasSpreadMarket: spreadOdds.length > 0,
-          hasTotalMarket: totalOdds.length > 0,
-          hasH2HMarket,
-        };
-
-        oddsInputs.push({
-          gameId: gameRecord.id,
-          homeTeam: game.homeTeam,
-          awayTeam: game.awayTeam,
-          commenceTime: game.commenceTime,
-          sport: sport.name,
-          bookmakerOdds: gameOdds.map((o) => ({
-            bookmaker: o.bookmaker,
-            market: o.market,
-            homePrice: o.homePrice,
-            awayPrice: o.awayPrice,
-            spread: o.spread,
-            homeSpreadPrice: o.homeSpreadPrice,
-            awaySpreadPrice: o.awaySpreadPrice,
-            total: o.total,
-            overPrice: o.overPrice,
-            underPrice: o.underPrice,
-          })),
-          context,
-        });
-      }
-
-      const scoredPicks = scoreGames(oddsInputs, fetchedAt);
-      let picksGenerated = 0;
-
-      for (const pick of scoredPicks) {
-        // Fields refreshed on every cycle (confidence, odds, reasoning).
-        // result and settledAt are intentionally absent — never overwritten by refresh.
-        // ingestionRunId is intentionally absent from update — preserves creation run ID.
-        // isFeatured is intentionally absent from update — promotion is set only on create
-        //   and re-evaluated below; we don't downgrade featured status mid-life.
-        const pickUpdateData = {
-          selection: pick.selection,
-          line: pick.line,
-          confidence: pick.confidence,
-          edgeScore: pick.edgeScore,
-          consensusPct: pick.consensusPct,
-          bookmakerCount: pick.bookmakerCount,
-          tier: pick.tier,
-          pickGrade: pick.pickGrade,
-          riskLevel: pick.riskLevel,
-          reasoning: pick.reasoning,
-          reasoningShort: pick.reasoningShort,
-          factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
-          modelVersion: pick.modelVersion,
-          dataFreshnessAt: pick.dataFreshnessAt,
-        };
-
-        // Featured promotion gate: only auto-promote when explicitly enabled.
-        // In bootstrap mode, no pick is featured — grades are uncalibrated.
-        const isFeatured =
-          gates.canPromoteFeaturedPicks &&
-          (pick.pickGrade === "ELITE_PLAY" ||
-            (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80));
-
-        // Upsert by the DB-enforced unique key [gameId, pickType].
-        // Create sets origin fields (ingestionRunId, isBootstrap, isFeatured).
-        // Update never changes isBootstrap — creation era is immutable.
-        const upsertedPick = await db.pick.upsert({
-          where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-          create: {
-            gameId: pick.gameId,
-            pickType: pick.pickType,
-            ingestionRunId: run.id,
-            isBootstrap,
-            isFeatured,
-            ...pickUpdateData,
-          },
-          update: {
-            ...pickUpdateData,
-            // Re-evaluate featured status on each refresh when promotion is enabled.
-            // If promotion is disabled, clear featured status on existing picks.
-            isFeatured,
-          },
-        });
-        picksGenerated++;
-
-        // Capture PickSignalSnapshot — immutable record of signal state at prediction time.
-        // Created ONCE (update: {} ensures existing snapshots are never overwritten).
-        // This is the foundation for future outcome-anchored calibration:
-        // "Given these signals at prediction time, what was the real win rate?"
-        try {
-          // Find the OddsInput context that was used for this pick
-          const oddsInputForPick = oddsInputs.find((o) => o.gameId === pick.gameId);
-          const snapshotData = buildPickSignalSnapshot(
-            upsertedPick.id,
-            pick,
-            oddsInputForPick?.context,
-            isBootstrap,
-            // usedDerivedHistory = gate was on AND at least one ATS signal was non-null
-            gates.canUseDerivedHistory && (
-              oddsInputForPick?.context?.homeAtsForm != null ||
-              oddsInputForPick?.context?.awayAtsForm != null ||
-              oddsInputForPick?.context?.headToHeadForm != null
-            ),
-          );
-          await db.pickSignalSnapshot.upsert({
-            where: { pickId: upsertedPick.id },
-            create: snapshotData,
-            update: {}, // immutable — never overwrite an existing snapshot
-          });
-        } catch (snapErr) {
-          // Non-fatal: snapshot capture failure must never kill a pick
-          console.warn(
-            `[data-refresh] Snapshot capture failed for pick ${upsertedPick.id}: ` +
-            `${snapErr instanceof Error ? snapErr.message : snapErr}`
-          );
-        }
-      }
-
-      await db.ingestionRun.update({
-        where: { id: run.id },
-        data: { status: "SUCCESS", gamesUpserted: Object.keys(gameRecords).length, oddsInserted, completedAt: new Date() },
-      });
-
-      console.log(`[data-refresh] ${sport.key}: ${Object.keys(gameRecords).length} games, ${oddsInserted} odds, ${picksGenerated} picks (bootstrap=${isBootstrap})`);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      console.error(`[data-refresh] ${sport.key} failed: ${msg}`);
-      await db.ingestionRun.update({
-        where: { id: run.id },
-        data: { status: "FAILED", errorMessage: msg, completedAt: new Date() },
-      });
-    }
-
+    await processSport(sport, apiKey, gates, "[data-refresh]");
+    // Brief pause between sports to avoid saturating the API
     await new Promise((r) => setTimeout(r, 1000));
   }
 
@@ -468,7 +167,10 @@ async function settleResults(): Promise<void> {
               minDataQualityThreshold: gates.minDataQualityForGameLog,
             });
           } catch (settleErr) {
-            console.warn(`[settlement] GameLog failed for ${game.id}: ${settleErr instanceof Error ? settleErr.message : settleErr}`);
+            console.warn(
+              `[settlement] GameLog failed for ${game.id}: ` +
+              `${settleErr instanceof Error ? settleErr.message : settleErr}`
+            );
           }
         }
       }
@@ -480,7 +182,7 @@ async function settleResults(): Promise<void> {
 
 async function main(): Promise<void> {
   const gates = getReadinessGates();
-  console.log("[data-refresh] Worker v4 starting...");
+  console.log("[data-refresh] Worker v5 starting...");
   console.log(`[data-refresh] Bootstrap mode: ${gates.isBootstrapMode}`);
   console.log(`[data-refresh] Derived history enabled: ${gates.canUseDerivedHistory}`);
   console.log(`[data-refresh] Featured promotion enabled: ${gates.canPromoteFeaturedPicks}`);
