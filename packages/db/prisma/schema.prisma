@@ -200,6 +200,8 @@ model Game {
   restDaysAway        Int?     // calendar days since away team's prior game
   isBackToBackHome    Boolean  @default(false)
   isBackToBackAway    Boolean  @default(false)
+  scheduleDensityHome Int?     // canonical games in last 7 days (home team)
+  scheduleDensityAway Int?     // canonical games in last 7 days (away team)
 
   // ── Line movement (populated on repeat ingestion) ──
   openingSpread       Float?   // spread at first ingestion
@@ -216,10 +218,12 @@ model Game {
   league   League? @relation(fields: [leagueId], references: [id])
   homeTeam Team?   @relation("HomeTeam", fields: [homeTeamId], references: [id])
   awayTeam Team?   @relation("AwayTeam", fields: [awayTeamId], references: [id])
-  odds          Odds[]
-  picks         Pick[]
-  openingLines  OpeningLine[]
-  teamGameLogs  TeamGameLog[]
+  odds                Odds[]
+  picks               Pick[]
+  openingLines        OpeningLine[]
+  teamGameLogs        TeamGameLog[]
+  gameSignals         GameSignal[]
+  pickSignalSnapshots PickSignalSnapshot[]
 
   @@index([sportId])
   @@index([commenceTime])
@@ -369,7 +373,8 @@ model Pick {
   // canonical performance metrics and public performance stats.
   isBootstrap    Boolean    @default(true)
 
-  game     Game @relation(fields: [gameId], references: [id])
+  game           Game @relation(fields: [gameId], references: [id])
+  signalSnapshot PickSignalSnapshot?
 
   // One active pick per game per pick type — enforced at DB level to prevent
   // duplicate inserts from concurrent worker runs (TOCTOU race prevention).
@@ -380,6 +385,98 @@ model Pick {
   @@index([result])
   @@index([isFeatured])
   @@map("picks")
+}
+
+// ============================================================
+// SIGNAL ARCHITECTURE
+// ============================================================
+
+// GameSignal — source-aware signal store for any external or derived input.
+// Every signal carries: source identity, category, trust level, freshness,
+// and bootstrap provenance. This enables future multi-source intelligence
+// without schema sprawl and makes source trust explicit and queryable.
+// Current signals: SCHEDULE density (from TeamGameLog).
+// Future: WEATHER, INJURIES, RATINGS, MARKET_SENTIMENT.
+// @@unique([gameId, sourceName, signalKey]) — one current value per (source, signal) per game.
+model GameSignal {
+  id             String        @id @default(cuid())
+  gameId         String
+  sourceCategory SignalCategory
+  sourceName     String        // provider key e.g. "schedule-internal", "openweather"
+  signalKey      String        // e.g. "schedule_density_7d_home", "wind_mph"
+  signalValue    Json          // number | string | object — flexible for all signal types
+  fetchedAt      DateTime
+  expiresAt      DateTime?     // null = valid until game commences
+  trustLevel     Float         @default(1.0)   // 0.0–1.0: source reliability weight
+  isBootstrap    Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, sourceName, signalKey])
+  @@index([gameId, sourceCategory])
+  @@index([fetchedAt])
+  @@map("game_signals")
+}
+
+// PickSignalSnapshot — immutable record of which signals were active when a pick was scored.
+// Foundation for outcome-anchored learning and calibration.
+// Created ONCE at pick time (update is always empty).
+// settlementResult/settledAt filled when pick settles.
+// eligibleForLearning set only when: canLearnFromOutcomes=true, isBootstrap=false, settled.
+model PickSignalSnapshot {
+  id         String   @id @default(cuid())
+  pickId     String   @unique
+  gameId     String
+  capturedAt DateTime @default(now())
+
+  // Active signal categories at prediction time (all boolean flags)
+  hadOddsSignal         Boolean @default(false)  // always true — primary input
+  hadLineMovementSignal Boolean @default(false)  // opening line existed
+  hadRestSignal         Boolean @default(false)  // restDays or B2B data present
+  hadScheduleSignal     Boolean @default(false)  // scheduleDensity data present
+  hadAtsFormSignal      Boolean @default(false)  // canonical ATS form used
+  hadH2HSignal          Boolean @default(false)  // canonical H2H form used
+  hadVenueSignal        Boolean @default(false)  // venue-specific ATS form used
+  hadWeatherSignal      Boolean @default(false)  // weather data present (future)
+  hadInjurySignal       Boolean @default(false)  // injury data present (future)
+  hadRatingsSignal      Boolean @default(false)  // team ratings present (future)
+
+  // Key quantitative values at prediction time (queryable for calibration regression)
+  bookmakerCount         Int    @default(0)
+  dataQualityScore       Float  @default(0)
+  confidenceAtPrediction Int    @default(0)  // raw confidence at creation — immutable
+  lineMovementDelta      Float?              // current_spread − opening_spread at pick time
+  restAdvantageNet       Int?               // restDaysHome − restDaysAway (positive = home more rested)
+  atsFormSampleSize      Int?               // largest canonical ATS sample used (0 if none)
+  h2hSampleSize          Int?               // H2H matchup sample size (null if not used)
+  scheduleDensityHome    Int?               // home team games in last 7 days
+  scheduleDensityAway    Int?               // away team games in last 7 days
+
+  // Provenance — immutable creation-era flags
+  isBootstrap          Boolean @default(true)   // mirrors pick.isBootstrap at creation
+  usedDerivedHistory   Boolean @default(false)  // ATS/H2H signals were active
+  usedScheduleSignal   Boolean @default(false)  // schedule density signal was active
+  modelVersion         String  @default("")     // prediction engine version at prediction time
+
+  // Outcome — filled in when the underlying pick settles (never before)
+  // settlementResult: "WIN" | "LOSS" | "PUSH" — mirrors pick.result
+  settlementResult     String?
+  settledAt            DateTime?
+
+  // Learning eligibility — set by settlement flow when all eligibility conditions met:
+  // (1) canLearnFromOutcomes=true, (2) isBootstrap=false, (3) settlement recorded
+  eligibleForLearning  Boolean   @default(false)
+  learningEligibleAt   DateTime?
+
+  pick Pick @relation(fields: [pickId], references: [id], onDelete: Cascade)
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId])
+  @@index([capturedAt])
+  @@index([eligibleForLearning])
+  @@index([isBootstrap])
+  @@map("pick_signal_snapshots")
 }
 
 // ============================================================
@@ -551,6 +648,15 @@ enum GameLogResult {
   WIN
   LOSS
   TBD
+}
+
+enum SignalCategory {
+  ODDS
+  SCHEDULE
+  WEATHER
+  INJURIES
+  RATINGS
+  MARKET_SENTIMENT
 }
 
 enum AtsResult {

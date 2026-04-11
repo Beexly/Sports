@@ -1,5 +1,5 @@
 // Model version — bump when scoring logic changes
-export const MODEL_VERSION = "v4.0.0";
+export const MODEL_VERSION = "v5.0.0";
 
 // ============================================================
 // Confidence thresholds
@@ -56,6 +56,13 @@ export const WEIGHTS = {
   CROSS_MARKET_AGREE_BONUS: 4,
   // Slight penalty when spread pick and ML market disagree
   CROSS_MARKET_DISAGREE_PENALTY: -3,
+
+  // ── Schedule density (v5) ─────────────────────────────────────
+  // Signal is intentionally small — schedule stress is a secondary fatigue proxy
+  // that complements back-to-back detection. The model does not claim to know
+  // how fatigue translates to ATS outcomes until calibrated.
+  // Fires only when home/away game count diverges by 2+ in last 7 days.
+  SCHEDULE_STRESS_COMPONENT_MAX: 5,
 } as const;
 
 // ============================================================

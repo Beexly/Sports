@@ -1,8 +1,8 @@
 /**
- * Data Refresh Worker — v4
+ * Data Refresh Worker — v5
  *
  * Fetches live odds every 30 minutes, enriches with game context
- * (opening lines, rest days, ATS form), then scores picks.
+ * (opening lines, rest days, schedule density, ATS form), then scores picks.
  *
  * Bootstrap safety: reads PlatformConfig on every cycle. Behavior gates:
  *   - DERIVED_MODEL_HISTORY_ENABLED: controls whether ATS/H2H/venue form
@@ -10,6 +10,15 @@
  *   - CANONICAL_HISTORY_ENABLED: controls isBootstrap flag on new picks and
  *     TeamGameLog entries. When false, all writes are marked bootstrap.
  *   - FEATURED_PICK_PROMOTION_ENABLED: when false, isFeatured=false for all picks.
+ *   - OUTCOME_LEARNING_ENABLED: when true, settled canonical snapshots become
+ *     eligibleForLearning=true, enabling future outcome-anchored calibration.
+ *
+ * Intelligence architecture (v5):
+ *   Layer 1 — External truth: sportsbook odds, lines, market depth
+ *   Layer 2 — Derived signals: schedule density, line movement, rest/B2B
+ *   Layer 3 — Guarded history: canonical ATS/H2H form (gated by flags)
+ *   Learning: PickSignalSnapshot captures prediction-time signal state;
+ *             future calibration reads snapshots joined to settled outcomes.
  */
 
 import { db } from "@sports/db";
@@ -23,7 +32,12 @@ import {
   getHeadToHeadForm,
   settleGameLogs,
 } from "@sports/data-ingestion";
-import { scoreGames, calculatePickResult, getReadinessGates } from "@sports/prediction-engine";
+import {
+  scoreGames,
+  calculatePickResult,
+  getReadinessGates,
+  buildPickSignalSnapshot,
+} from "@sports/prediction-engine";
 import type { OddsInput, GameContextInput } from "@sports/types";
 
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
@@ -37,6 +51,10 @@ async function runRefreshCycle(): Promise<void> {
 
   const client = new OddsApiClient(apiKey);
   const normalizer = new DataNormalizer();
+
+  // Bootstrap flag derived once per cycle — gates pick creation, GameSignal writes,
+  // TeamGameLog writes, and PickSignalSnapshot provenance.
+  const isBootstrap = !gates.canPersistCanonicalHistory;
 
   const bootstrapLabel = gates.isBootstrapMode ? " [BOOTSTRAP MODE]" : "";
   console.log(`[data-refresh] Cycle start ${new Date().toISOString()}${bootstrapLabel}`);
@@ -143,7 +161,7 @@ async function runRefreshCycle(): Promise<void> {
             : null;
         const hasH2HMarket = gameOdds.some((o) => o.market === "H2H");
 
-        // Run context enrichment (opening lines, rest days, data quality)
+        // Run context enrichment (opening lines, rest days, schedule density, data quality)
         try {
           await enrichGameContext({
             gameId: gameRecord.id,
@@ -158,6 +176,7 @@ async function runRefreshCycle(): Promise<void> {
             hasSpreadMarket: spreadOdds.length > 0,
             hasTotalMarket: totalOdds.length > 0,
             hasH2HMarket,
+            isBootstrap, // propagate for GameSignal provenance tracking
           });
         } catch (enrichErr) {
           // Non-fatal — picks still generated without context
@@ -197,6 +216,10 @@ async function runRefreshCycle(): Promise<void> {
           restDaysAway: enrichedGame?.restDaysAway ?? null,
           isBackToBackHome: enrichedGame?.isBackToBackHome ?? false,
           isBackToBackAway: enrichedGame?.isBackToBackAway ?? false,
+          // Schedule density (v5) — from enriched game, computed from all TeamGameLog
+          // entries regardless of bootstrap state (physical schedule reality).
+          scheduleDensityHome: enrichedGame?.scheduleDensityHome ?? null,
+          scheduleDensityAway: enrichedGame?.scheduleDensityAway ?? null,
           // Historical signals — only wired in when derived history is enabled.
           // When null, computeGameContext returns 0 for these factors (neutral).
           homeAtsForm: homeAtsForm ?? null,
@@ -238,9 +261,6 @@ async function runRefreshCycle(): Promise<void> {
       const scoredPicks = scoreGames(oddsInputs, fetchedAt);
       let picksGenerated = 0;
 
-      // Bootstrap flag for picks written this cycle
-      const isBootstrap = !gates.canPersistCanonicalHistory;
-
       for (const pick of scoredPicks) {
         // Fields refreshed on every cycle (confidence, odds, reasoning).
         // result and settledAt are intentionally absent — never overwritten by refresh.
@@ -274,7 +294,7 @@ async function runRefreshCycle(): Promise<void> {
         // Upsert by the DB-enforced unique key [gameId, pickType].
         // Create sets origin fields (ingestionRunId, isBootstrap, isFeatured).
         // Update never changes isBootstrap — creation era is immutable.
-        await db.pick.upsert({
+        const upsertedPick = await db.pick.upsert({
           where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
           create: {
             gameId: pick.gameId,
@@ -292,6 +312,38 @@ async function runRefreshCycle(): Promise<void> {
           },
         });
         picksGenerated++;
+
+        // Capture PickSignalSnapshot — immutable record of signal state at prediction time.
+        // Created ONCE (update: {} ensures existing snapshots are never overwritten).
+        // This is the foundation for future outcome-anchored calibration:
+        // "Given these signals at prediction time, what was the real win rate?"
+        try {
+          // Find the OddsInput context that was used for this pick
+          const oddsInputForPick = oddsInputs.find((o) => o.gameId === pick.gameId);
+          const snapshotData = buildPickSignalSnapshot(
+            upsertedPick.id,
+            pick,
+            oddsInputForPick?.context,
+            isBootstrap,
+            // usedDerivedHistory = gate was on AND at least one ATS signal was non-null
+            gates.canUseDerivedHistory && (
+              oddsInputForPick?.context?.homeAtsForm != null ||
+              oddsInputForPick?.context?.awayAtsForm != null ||
+              oddsInputForPick?.context?.headToHeadForm != null
+            ),
+          );
+          await db.pickSignalSnapshot.upsert({
+            where: { pickId: upsertedPick.id },
+            create: snapshotData,
+            update: {}, // immutable — never overwrite an existing snapshot
+          });
+        } catch (snapErr) {
+          // Non-fatal: snapshot capture failure must never kill a pick
+          console.warn(
+            `[data-refresh] Snapshot capture failed for pick ${upsertedPick.id}: ` +
+            `${snapErr instanceof Error ? snapErr.message : snapErr}`
+          );
+        }
       }
 
       await db.ingestionRun.update({
@@ -346,6 +398,7 @@ async function settleResults(): Promise<void> {
         if (score.homeScore !== null && score.awayScore !== null) {
           // Settle pick results — always runs, regardless of bootstrap mode.
           // Real game outcomes are source truth and must be recorded.
+          const settledAt = new Date();
           for (const pick of game.picks) {
             const result = calculatePickResult(
               pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
@@ -358,8 +411,39 @@ async function settleResults(): Promise<void> {
             );
             await db.pick.update({
               where: { id: pick.id },
-              data: { result, settledAt: new Date() },
+              data: { result, settledAt },
             });
+
+            // Record settlement outcome in the PickSignalSnapshot.
+            // This is the outcome-anchored learning data: real result tied to the
+            // signal conditions that were present at prediction time.
+            // eligibleForLearning is set ONLY when:
+            //   (1) canLearnFromOutcomes=true
+            //   (2) pick was canonical (isBootstrap=false)
+            //   (3) result is a decisive outcome (WIN/LOSS/PUSH — not VOID)
+            const isDecisiveResult = result === "WIN" || result === "LOSS" || result === "PUSH";
+            const isEligibleForLearning =
+              gates.canLearnFromOutcomes &&
+              !pick.isBootstrap &&
+              isDecisiveResult;
+
+            try {
+              await db.pickSignalSnapshot.updateMany({
+                where: { pickId: pick.id, settlementResult: null },
+                data: {
+                  settlementResult: result,
+                  settledAt,
+                  eligibleForLearning: isEligibleForLearning,
+                  ...(isEligibleForLearning ? { learningEligibleAt: settledAt } : {}),
+                },
+              });
+            } catch (snapErr) {
+              // Non-fatal: snapshot update failure must never kill settlement
+              console.warn(
+                `[settlement] Snapshot outcome update failed for pick ${pick.id}: ` +
+                `${snapErr instanceof Error ? snapErr.message : snapErr}`
+              );
+            }
           }
 
           // Write TeamGameLog entries for ATS form tracking.

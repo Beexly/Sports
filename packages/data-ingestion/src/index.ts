@@ -4,6 +4,7 @@ export {
   enrichGameContext,
   trackOpeningLines,
   computeRestDays,
+  computeScheduleDensity,
   getAtsForm,
   getHeadToHeadForm,
   settleGameLogs,

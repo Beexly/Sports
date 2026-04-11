@@ -105,6 +105,46 @@ export async function computeRestDays(
 }
 
 // ============================================================
+// Schedule density — games in last 7/14 days (v5)
+// ============================================================
+
+/**
+ * Counts how many games a team played in the last 7 and 14 days before gameDate.
+ * Uses ALL TeamGameLog entries (not canonicalOnly) — this is about physical
+ * game schedule reality, not ATS accuracy. Active even in bootstrap mode.
+ *
+ * Returns { gamesLast7: 0, gamesLast14: 0 } when no history exists, which
+ * causes computeScheduleStressScore() to return 0 (neutral) — safe default.
+ */
+export async function computeScheduleDensity(
+  teamName: string,
+  sport: string,
+  gameDate: Date
+): Promise<{ gamesLast7: number; gamesLast14: number }> {
+  const sevenDaysAgo  = new Date(gameDate.getTime() - 7 * MS_PER_DAY);
+  const fourteenDaysAgo = new Date(gameDate.getTime() - 14 * MS_PER_DAY);
+
+  const [last7, last14] = await Promise.all([
+    prisma.teamGameLog.count({
+      where: {
+        teamName,
+        sport,
+        gameDate: { gte: sevenDaysAgo, lt: gameDate },
+      },
+    }),
+    prisma.teamGameLog.count({
+      where: {
+        teamName,
+        sport,
+        gameDate: { gte: fourteenDaysAgo, lt: gameDate },
+      },
+    }),
+  ]);
+
+  return { gamesLast7: last7, gamesLast14: last14 };
+}
+
+// ============================================================
 // ATS form bucketing
 // ============================================================
 
@@ -207,6 +247,9 @@ interface GameEnrichmentInput {
   hasSpreadMarket?: boolean;
   hasTotalMarket?: boolean;
   hasH2HMarket?: boolean;
+  // Bootstrap state — passed through to GameSignal writes for provenance tracking.
+  // Defaults to true (safe) when not provided.
+  isBootstrap?: boolean;
 }
 
 /**
@@ -227,6 +270,7 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
     hasSpreadMarket,
     hasTotalMarket,
     hasH2HMarket,
+    isBootstrap = true, // default safe: treat as bootstrap unless caller explicitly opts in
   } = input;
 
   // 1. Opening line tracking + movement delta
@@ -242,7 +286,65 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
     computeRestDays(awayTeam, sport, commenceTime),
   ]);
 
-  // 3. Data quality score — formula must exactly mirror computeDataQuality() in
+  // 3a. Schedule density — game count in last 7 days for both teams (v5)
+  // Active regardless of bootstrap mode: reads real schedule dates, not ATS results.
+  const [homeDensity, awayDensity] = await Promise.all([
+    computeScheduleDensity(homeTeam, sport, commenceTime),
+    computeScheduleDensity(awayTeam, sport, commenceTime),
+  ]);
+
+  // Write schedule density to GameSignal for source-aware signal tracking.
+  // @@unique([gameId, sourceName, signalKey]) enforces idempotent upserts.
+  await Promise.all([
+    prisma.gameSignal.upsert({
+      where: {
+        gameId_sourceName_signalKey: {
+          gameId,
+          sourceName: "schedule-internal",
+          signalKey: "schedule_density_7d_home",
+        },
+      },
+      create: {
+        gameId,
+        sourceCategory: "SCHEDULE",
+        sourceName: "schedule-internal",
+        signalKey: "schedule_density_7d_home",
+        signalValue: homeDensity.gamesLast7,
+        fetchedAt: new Date(),
+        trustLevel: 1.0,
+        isBootstrap,
+      },
+      update: {
+        signalValue: homeDensity.gamesLast7,
+        fetchedAt: new Date(),
+      },
+    }),
+    prisma.gameSignal.upsert({
+      where: {
+        gameId_sourceName_signalKey: {
+          gameId,
+          sourceName: "schedule-internal",
+          signalKey: "schedule_density_7d_away",
+        },
+      },
+      create: {
+        gameId,
+        sourceCategory: "SCHEDULE",
+        sourceName: "schedule-internal",
+        signalKey: "schedule_density_7d_away",
+        signalValue: awayDensity.gamesLast7,
+        fetchedAt: new Date(),
+        trustLevel: 1.0,
+        isBootstrap,
+      },
+      update: {
+        signalValue: awayDensity.gamesLast7,
+        fetchedAt: new Date(),
+      },
+    }),
+  ]);
+
+  // 4. Data quality score — formula must exactly mirror computeDataQuality() in
   //    packages/prediction-engine/src/game-context.ts so that game.dataQualityScore
   //    matches factorBreakdown.dataQualityScore when used as a fallback in the picks API.
   const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
@@ -259,7 +361,7 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
     (effectiveHasH2H ? 10 : 0);
   const dataQualityScore = Math.round(Math.min(coverageScore + freshnessScore + marketScore, 100));
 
-  // 4. Update game record
+  // 5. Update game record
   // IMPORTANT: openingSpread/openingTotal must only be written on first sight.
   // The real opening line is tracked in the OpeningLine model by trackOpeningLines.
   // We conditionally set them here only when not yet stored on the game record.
@@ -275,6 +377,9 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
       restDaysAway: awayRest.restDays,
       isBackToBackHome: homeRest.isBackToBack,
       isBackToBackAway: awayRest.isBackToBack,
+      // Schedule density (v5) — refreshed each cycle as history grows
+      scheduleDensityHome: homeDensity.gamesLast7,
+      scheduleDensityAway: awayDensity.gamesLast7,
       // Only set on first ingestion — never overwrite with current line
       ...(existingGame?.openingSpread == null && avgSpread !== null && { openingSpread: avgSpread }),
       ...(existingGame?.openingTotal == null && avgTotal !== null && { openingTotal: avgTotal }),

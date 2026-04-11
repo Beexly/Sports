@@ -32,6 +32,8 @@ export interface FactorBreakdown {
   venueFormScore?: number;     // ±5: picked team's venue-specific ATS record
   uncertaintyPenalty?: number; // -8–0: conflicting signals reduce confidence
   crossMarketScore?: number;   // -3–+4: spread and ML markets agree/disagree
+  // Schedule density (v5)
+  scheduleStressScore?: number; // ±5: compressed schedule fatigue signal
   dataQualityScore?: number;   // 0–100: overall data trust score (always public)
   factors: FactorDetail[];     // human-readable factor list
 }
@@ -218,12 +220,39 @@ export interface GameContextInput {
   headToHeadForm?: AtsFormBucket | null;     // picked team's H2H ATS vs this opponent
   // Cross-market validation (v4)
   mlFairProbHome?: number | null;            // H2H fair prob for home team (0–1)
+  // Schedule density — games in last 7 days (v5)
+  // Computed from TeamGameLog regardless of bootstrap state (physical reality, not ATS trend).
+  // Null when no game history exists; scoring returns 0 (neutral) when null.
+  scheduleDensityHome?: number | null;
+  scheduleDensityAway?: number | null;
   // Data coverage
   bookmakerCoverageMax?: number;
   dataFreshnessMinutes?: number;
   hasSpreadMarket?: boolean;
   hasTotalMarket?: boolean;
   hasH2HMarket?: boolean;
+}
+
+// ============================================================
+// Signal source types (v5)
+// ============================================================
+
+// Categories mirror the SignalCategory enum in Prisma schema.
+// Keep in sync — TS type is the authoritative source.
+export type SignalCategory =
+  | "ODDS"
+  | "SCHEDULE"
+  | "WEATHER"
+  | "INJURIES"
+  | "RATINGS"
+  | "MARKET_SENTIMENT";
+
+export interface SignalSourceMetadata {
+  sourceCategory: SignalCategory;
+  sourceName: string;     // e.g. "schedule-internal", "openweather"
+  fetchedAt: Date;
+  trustLevel: number;     // 0.0–1.0
+  isBootstrap: boolean;
 }
 
 export interface OddsInput {

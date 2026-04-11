@@ -88,6 +88,29 @@ export interface PlatformConfig {
    * Default: 40 (requires meaningful bookmaker coverage)
    */
   minDataQualityForGameLog: number;
+
+  /**
+   * OUTCOME_LEARNING_ENABLED
+   * When true: settled canonical pick snapshots are marked eligibleForLearning=true
+   * and become queryable for calibration analysis.
+   * This does NOT automatically change scoring — it only gates data collection.
+   * Scoring adjustments from learning require a separate explicit process.
+   * Enable only after 100+ canonical picks have settled and outcomes are verified.
+   * The model may ONLY learn from: real settlement results, signal conditions at
+   * prediction time, and bookmaker market state — never from its own prior confidence
+   * or reasoning text alone.
+   * Default: false
+   */
+  outcomeLearningEnabled: boolean;
+
+  /**
+   * MIN_SETTLED_PICKS_FOR_LEARNING
+   * Minimum number of canonical settled picks required before outcome-anchored
+   * calibration analysis is meaningful. Below this, sample size is too small
+   * to distinguish signal from noise.
+   * Default: 100
+   */
+  minSettledPicksForLearning: number;
 }
 
 function parseBool(val: string | undefined, defaultVal: boolean): boolean {
@@ -116,5 +139,7 @@ export function getPlatformConfig(): PlatformConfig {
     confidenceDisplayMode:        parseConfidenceMode(process.env["CONFIDENCE_DISPLAY_MODE"]),
     featuredPickPromotionEnabled: parseBool(process.env["FEATURED_PICK_PROMOTION_ENABLED"], false),
     minDataQualityForGameLog:     parseIntSafe(process.env["MIN_DATA_QUALITY_FOR_GAME_LOG"], 40),
+    outcomeLearningEnabled:       parseBool(process.env["OUTCOME_LEARNING_ENABLED"],        false),
+    minSettledPicksForLearning:   parseIntSafe(process.env["MIN_SETTLED_PICKS_FOR_LEARNING"], 100),
   };
 }

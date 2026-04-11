@@ -15,6 +15,7 @@ import {
   computeVenueFormScore,
   computeCrossMarketScore,
   computeUncertaintyPenalty,
+  computeScheduleStressScore,
 } from "../game-context.js";
 import type { OddsInput } from "@sports/types";
 import { MODEL_VERSION } from "../constants.js";
@@ -435,9 +436,9 @@ describe("scoreGame — context integration", () => {
     }
   });
 
-  it("modelVersion is v4.0.0", () => {
+  it("modelVersion is v5.0.0", () => {
     const picks = scoreGame(makeOddsInput());
-    expect(picks[0]?.modelVersion).toBe("v4.0.0");
+    expect(picks[0]?.modelVersion).toBe("v5.0.0");
   });
 });
 
@@ -464,6 +465,67 @@ describe("scoreGames", () => {
     for (const pick of picks) {
       expect(pick.dataFreshnessAt).toEqual(at);
     }
+  });
+});
+
+// ============================================================
+// v5: Schedule density / stress
+// ============================================================
+
+describe("computeScheduleStressScore", () => {
+  it("returns 0 when both densities are null", () => {
+    const { score, factor } = computeScheduleStressScore(null, null, "HOME");
+    expect(score).toBe(0);
+    expect(factor).toBeNull();
+  });
+
+  it("returns 0 when one density is null (incomplete data)", () => {
+    const { score } = computeScheduleStressScore(3, null, "HOME");
+    expect(score).toBe(0);
+  });
+
+  it("returns 0 when densities are equal (no asymmetry)", () => {
+    const { score } = computeScheduleStressScore(3, 3, "HOME");
+    expect(score).toBe(0);
+  });
+
+  it("returns 0 when density difference is less than 2 (below threshold)", () => {
+    const { score } = computeScheduleStressScore(2, 1, "HOME");
+    expect(score).toBe(0);
+  });
+
+  it("returns 0 for OVER/UNDER picks (totals are side-agnostic)", () => {
+    const { score } = computeScheduleStressScore(4, 1, "OVER");
+    expect(score).toBe(0);
+  });
+
+  it("penalizes HOME pick when home team is on denser schedule", () => {
+    // Home played 4 games in last 7 days, away played 1 — home more fatigued
+    const { score, factor } = computeScheduleStressScore(4, 1, "HOME");
+    expect(score).toBeLessThan(0);
+    expect(factor?.impact).toBe("negative");
+  });
+
+  it("rewards HOME pick when away team is on denser schedule", () => {
+    // Away played 4 games in last 7 days, home played 1 — away more fatigued
+    const { score, factor } = computeScheduleStressScore(1, 4, "HOME");
+    expect(score).toBeGreaterThan(0);
+    expect(factor?.impact).toBe("positive");
+  });
+
+  it("flips sign for AWAY pick (symmetric)", () => {
+    const homeScore = computeScheduleStressScore(1, 4, "HOME").score;
+    const awayScore = computeScheduleStressScore(1, 4, "AWAY").score;
+    expect(homeScore).toBeGreaterThan(0);
+    expect(awayScore).toBeLessThan(0);
+    expect(homeScore).toBe(-awayScore);
+  });
+
+  it("caps score at ±5", () => {
+    const { score: highHome } = computeScheduleStressScore(7, 0, "HOME");
+    const { score: highAway } = computeScheduleStressScore(0, 7, "HOME");
+    expect(Math.abs(highHome)).toBeLessThanOrEqual(5);
+    expect(Math.abs(highAway)).toBeLessThanOrEqual(5);
   });
 });
 

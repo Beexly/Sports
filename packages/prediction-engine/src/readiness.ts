@@ -74,6 +74,34 @@ export interface ReadinessGates {
   /** Minimum dataQualityScore for a game's TeamGameLog entry to be written. */
   readonly minDataQualityForGameLog: number;
 
+  /**
+   * When true: settled canonical PickSignalSnapshots are marked eligibleForLearning=true.
+   * This gates DATA COLLECTION for outcome-anchored calibration only.
+   * It does NOT automatically adjust scoring weights or confidence values.
+   *
+   * The model may ONLY learn from:
+   *   - Real settlement results (WIN/LOSS/PUSH from actual game outcomes)
+   *   - Signal state recorded at prediction time (bookmaker count, line movement, etc.)
+   *   - External source conditions (bookmaker market depth, coverage)
+   *
+   * The model MUST NOT learn from:
+   *   - Its own prior confidence scores without outcome validation
+   *   - Its own prior reasoning text
+   *   - Its own prior pick grades in isolation from real outcomes
+   *   - Bootstrap-era snapshots (these are excluded by isBootstrap=false filter)
+   */
+  readonly canLearnFromOutcomes: boolean;
+
+  /**
+   * Always false — confidence weight adjustments require explicit human review
+   * and a deliberate model version bump, not automatic activation.
+   * This constant gate makes the calibration boundary explicit and auditable.
+   */
+  readonly canApplyCalibrationAdjustments: false;
+
+  /** Minimum settled canonical picks needed for learning data to be meaningful. */
+  readonly minSettledPicksForLearning: number;
+
   /** The underlying config for callers that need specific values. */
   readonly config: PlatformConfig;
 }
@@ -81,17 +109,20 @@ export interface ReadinessGates {
 export function getReadinessGates(): ReadinessGates {
   const config = getPlatformConfig();
   return {
-    canScore:                   true,
-    canPersistPicks:            true,
-    canPersistCanonicalHistory: config.canonicalHistoryEnabled,
-    canUseDerivedHistory:       config.derivedModelHistoryEnabled,
-    canExposePublicPicks:       config.publicPicksEnabled,
-    canPromoteFeaturedPicks:    config.featuredPickPromotionEnabled,
-    canPublishContent:          config.publicBlogEnabled,
-    canExposePerformanceStats:  config.performanceStatsEnabled,
-    isBootstrapMode:            !config.canonicalHistoryEnabled,
-    confidenceDisplayMode:      config.confidenceDisplayMode,
-    minDataQualityForGameLog:   config.minDataQualityForGameLog,
+    canScore:                        true,
+    canPersistPicks:                 true,
+    canPersistCanonicalHistory:      config.canonicalHistoryEnabled,
+    canUseDerivedHistory:            config.derivedModelHistoryEnabled,
+    canExposePublicPicks:            config.publicPicksEnabled,
+    canPromoteFeaturedPicks:         config.featuredPickPromotionEnabled,
+    canPublishContent:               config.publicBlogEnabled,
+    canExposePerformanceStats:       config.performanceStatsEnabled,
+    isBootstrapMode:                 !config.canonicalHistoryEnabled,
+    confidenceDisplayMode:           config.confidenceDisplayMode,
+    minDataQualityForGameLog:        config.minDataQualityForGameLog,
+    canLearnFromOutcomes:            config.outcomeLearningEnabled,
+    canApplyCalibrationAdjustments:  false,
+    minSettledPicksForLearning:      config.minSettledPicksForLearning,
     config,
   };
 }

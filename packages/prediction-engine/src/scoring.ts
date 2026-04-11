@@ -305,6 +305,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const venueFormScore = ctx?.venueFormScore ?? 0;
   const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
   const crossMarketScore = ctx?.crossMarketScore ?? 0;
+  const scheduleStressScore = ctx?.scheduleStressScore ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
 
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
@@ -321,7 +322,8 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     clamp(
       consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
-      headToHeadScore + venueFormScore + uncertaintyPenalty + crossMarketScore + 10,
+      headToHeadScore + venueFormScore + uncertaintyPenalty + crossMarketScore +
+      scheduleStressScore + 10,
       0, 100
     )
   );
@@ -341,6 +343,8 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const contextClauses: string[] = [];
   if (restAdvantageScore > 3) contextClauses.push("rest advantage");
   else if (restAdvantageScore < -3) contextClauses.push("rest disadvantage");
+  if (scheduleStressScore > 2) contextClauses.push("opponent on compressed schedule");
+  else if (scheduleStressScore < -2) contextClauses.push("compressed schedule stress");
   if (headToHeadScore > 0) contextClauses.push("favorable H2H history");
   else if (headToHeadScore < 0) contextClauses.push("poor H2H history");
   if (venueFormScore > 0) contextClauses.push("strong venue form");
@@ -373,6 +377,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     venueFormScore: venueFormScore !== 0 ? venueFormScore : undefined,
     uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
     crossMarketScore: crossMarketScore !== 0 ? crossMarketScore : undefined,
+    scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
     dataQualityScore,
     factors,
   };
@@ -611,6 +616,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const headToHeadScore = ctx?.headToHeadScore ?? 0;
   const venueFormScore = ctx?.venueFormScore ?? 0;
   const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
+  const scheduleStressScore = ctx?.scheduleStressScore ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
 
@@ -626,7 +632,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     clamp(
       consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
-      headToHeadScore + venueFormScore + uncertaintyPenalty + 10,
+      headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore + 10,
       0, 100
     )
   );
@@ -646,6 +652,8 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const contextClauses: string[] = [];
   if (restAdvantageScore > 3) contextClauses.push("rest advantage");
   else if (restAdvantageScore < -3) contextClauses.push("rest disadvantage");
+  if (scheduleStressScore > 2) contextClauses.push("opponent on compressed schedule");
+  else if (scheduleStressScore < -2) contextClauses.push("compressed schedule stress");
   if (headToHeadScore > 0) contextClauses.push("favorable H2H history");
   else if (headToHeadScore < 0) contextClauses.push("poor H2H history");
   if (venueFormScore > 0) contextClauses.push("strong venue form");
@@ -674,6 +682,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,
     venueFormScore: venueFormScore !== 0 ? venueFormScore : undefined,
     uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
+    scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
     dataQualityScore,
     factors,
   };

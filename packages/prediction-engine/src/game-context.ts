@@ -38,6 +38,8 @@ export interface GameContextScores {
   venueFormScore: number;           // –5 to +5 (venue-specific ATS)
   uncertaintyPenalty: number;       // –8 to 0 (conflicting signals)
   crossMarketScore: number;         // –3 to +4 (spread/ML agreement)
+  // v5 additions
+  scheduleStressScore: number;      // –5 to +5 (schedule density fatigue)
   factors: FactorDetail[];
 }
 
@@ -466,6 +468,68 @@ export function computeCrossMarketScore(
 }
 
 // ============================================================
+// Schedule density / stress signal (v5)
+// ============================================================
+
+/**
+ * Returns a score from –5 to +5 based on schedule density asymmetry.
+ * A team that played 3+ games in the last 7 days while the opponent played 1
+ * is under material fatigue pressure — this is separate from back-to-back
+ * detection (which only flags the most extreme case).
+ *
+ * Signal is symmetric: we score from the PICKED SIDE's perspective.
+ * When null/null → returns 0 (neutral). No penalty when densities are equal.
+ * This signal reads from real game history (TeamGameLog dates), not ATS results,
+ * so it is active even before DERIVED_MODEL_HISTORY_ENABLED is true.
+ */
+export function computeScheduleStressScore(
+  scheduleDensityHome: number | null | undefined,
+  scheduleDensityAway: number | null | undefined,
+  pickedSide: "HOME" | "AWAY" | "OVER" | "UNDER"
+): { score: number; factor: FactorDetail | null } {
+  // Totals are not side-specific; schedule stress is directional
+  if (pickedSide === "OVER" || pickedSide === "UNDER") {
+    return { score: 0, factor: null };
+  }
+  if (scheduleDensityHome == null || scheduleDensityAway == null) {
+    return { score: 0, factor: null };
+  }
+
+  const home = scheduleDensityHome;
+  const away = scheduleDensityAway;
+
+  // Only fire when there is a 2+ game asymmetry in the 7-day window
+  const diff = home - away; // positive = home team played more recently
+  if (Math.abs(diff) < 2) return { score: 0, factor: null };
+
+  // Normalize: 2-game diff = half score, 3+-game diff = full signal
+  const magnitude = clamp(Math.abs(diff) / 3, 0, 1);
+  const maxScore = WEIGHTS.SCHEDULE_STRESS_COMPONENT_MAX; // 5
+
+  // diff > 0: home is more fatigued → negative for HOME pick, positive for AWAY pick
+  const rawHomeScore = diff > 0 ? -(magnitude * maxScore) : magnitude * maxScore;
+  const sideScore = pickedSide === "HOME" ? rawHomeScore : -rawHomeScore;
+  const score = clamp(Math.round(sideScore), -maxScore, maxScore);
+
+  if (score === 0) return { score: 0, factor: null };
+
+  const stressed = diff > 0 ? "Home" : "Away";
+  const fresh = diff > 0 ? "Away" : "Home";
+  const description =
+    `${stressed} team played ${Math.max(home, away)} games in last 7 days vs ${Math.min(home, away)} for ${fresh} — schedule density asymmetry`;
+
+  return {
+    score,
+    factor: {
+      name: "Schedule Density",
+      impact: score > 0 ? "positive" : "negative",
+      description,
+      weight: score,
+    },
+  };
+}
+
+// ============================================================
 // Uncertainty penalty — conflicting signal detector
 // ============================================================
 
@@ -622,7 +686,17 @@ export function computeGameContext(
   const uncertaintyPenalty = up.penalty;
   if (up.factor) factors.push(up.factor);
 
-  // 8. Data quality
+  // 8. Schedule density / stress (v5) — fatigue asymmetry from game frequency
+  // Active even in bootstrap mode — reads real game schedule, not ATS results.
+  const ss = computeScheduleStressScore(
+    context.scheduleDensityHome,
+    context.scheduleDensityAway,
+    pickedSide
+  );
+  const scheduleStressScore = ss.score;
+  if (ss.factor) factors.push(ss.factor);
+
+  // 9. Data quality
   const dq = computeDataQuality(
     context.bookmakerCoverageMax,
     context.dataFreshnessMinutes,
@@ -644,6 +718,8 @@ export function computeGameContext(
     venueFormScore,
     uncertaintyPenalty,
     crossMarketScore,
+    // v5
+    scheduleStressScore,
     factors,
   };
 }
