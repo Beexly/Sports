@@ -77,6 +77,12 @@ export default async function AdminPage() {
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
           <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
           <div className="flex flex-wrap gap-3">
+            <a
+              href="/admin/dashboard"
+              className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
+            >
+              ⚡ Operator Dashboard
+            </a>
             <TriggerRefreshButton />
             <a
               href="/admin/picks"
