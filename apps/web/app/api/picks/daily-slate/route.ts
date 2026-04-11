@@ -2,12 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
+import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import type { DailySlate, PublicPick, PickGrade, RiskLevel } from "@sports/types";
 import { startOfDay, endOfDay, subDays } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  const gates = getReadinessGates();
+  if (!gates.canExposePublicPicks) {
+    return NextResponse.json(bootstrapGateResponse("Daily slate"), { status: 503 });
+  }
+
   const session = await auth();
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)
@@ -33,6 +39,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     db.pick.findMany({
       where: {
         isPublished: true,
+        isBootstrap: false, // never surface bootstrap-era picks on public slate
         generatedAt: { gte: dayStart, lte: dayEnd },
       },
       include: {
@@ -40,10 +47,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       },
       orderBy: [{ isFeatured: "desc" }, { confidence: "desc" }],
     }),
-    // Last 7 days settled picks for record
+    // Last 7 days settled picks for record — canonical only
     db.pick.findMany({
       where: {
         isPublished: true,
+        isBootstrap: false,
         result: { in: ["WIN", "LOSS", "PUSH"] },
         settledAt: { gte: subDays(new Date(), 7) },
       },

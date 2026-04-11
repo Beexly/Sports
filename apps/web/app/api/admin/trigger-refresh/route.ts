@@ -10,7 +10,7 @@ import {
   getAtsForm,
   getHeadToHeadForm,
 } from "@sports/data-ingestion";
-import { scoreGames } from "@sports/prediction-engine";
+import { scoreGames, getReadinessGates } from "@sports/prediction-engine";
 import type { OddsInput, GameContextInput } from "@sports/types";
 
 export async function POST(): Promise<NextResponse> {
@@ -23,6 +23,9 @@ export async function POST(): Promise<NextResponse> {
   if (!apiKey) {
     return NextResponse.json({ error: "THE_ODDS_API_KEY not configured" }, { status: 503 });
   }
+
+  const gates = getReadinessGates();
+  const isBootstrap = !gates.canPersistCanonicalHistory;
 
   const results: Array<{ sport: string; status: string; games: number; picks: number }> = [];
 
@@ -142,13 +145,15 @@ export async function POST(): Promise<NextResponse> {
         const enrichedGame = await db.game.findUnique({ where: { id: gameRecord.id } });
 
         const [homeAtsForm, awayAtsForm, homeAtsFormAtHome, awayAtsFormAway, homeH2HForm] =
-          await Promise.all([
-            getAtsForm(game.homeTeam, sport.key).catch(() => null),
-            getAtsForm(game.awayTeam, sport.key).catch(() => null),
-            getAtsForm(game.homeTeam, sport.key, 15, "HOME").catch(() => null),
-            getAtsForm(game.awayTeam, sport.key, 15, "AWAY").catch(() => null),
-            getHeadToHeadForm(game.homeTeam, game.awayTeam, sport.key).catch(() => null),
-          ]);
+          gates.canUseDerivedHistory
+            ? await Promise.all([
+                getAtsForm(game.homeTeam, sport.key, 15, undefined, true).catch(() => null),
+                getAtsForm(game.awayTeam, sport.key, 15, undefined, true).catch(() => null),
+                getAtsForm(game.homeTeam, sport.key, 15, "HOME", true).catch(() => null),
+                getAtsForm(game.awayTeam, sport.key, 15, "AWAY", true).catch(() => null),
+                getHeadToHeadForm(game.homeTeam, game.awayTeam, sport.key, 10, true).catch(() => null),
+              ])
+            : [null, null, null, null, null];
 
         const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
 
@@ -198,9 +203,17 @@ export async function POST(): Promise<NextResponse> {
       const scoredPicks = scoreGames(oddsInputs, fetchedAt);
       let picksGenerated = 0;
 
+      // Featured promotion gate: only auto-promote when explicitly enabled.
+      // In bootstrap mode, no pick is featured — grades are uncalibrated.
+      const isFeatured = (pick: typeof scoredPicks[0]) =>
+        gates.canPromoteFeaturedPicks &&
+        (pick.pickGrade === "ELITE_PLAY" ||
+          (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80));
+
       for (const pick of scoredPicks) {
         // result and settledAt are intentionally absent — never overwritten by refresh.
-        // ingestionRunId is intentionally absent from update — keeps the creation run ID.
+        // ingestionRunId intentionally absent from update — preserves creation run ID.
+        // isFeatured intentionally absent from update — re-evaluated below via gate.
         const pickUpdateData = {
           selection: pick.selection,
           line: pick.line,
@@ -216,15 +229,22 @@ export async function POST(): Promise<NextResponse> {
           factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
           modelVersion: pick.modelVersion,
           dataFreshnessAt: pick.dataFreshnessAt,
-          isFeatured:
-            pick.pickGrade === "ELITE_PLAY" ||
-            (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80),
         };
 
         await db.pick.upsert({
           where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-          create: { gameId: pick.gameId, pickType: pick.pickType, ingestionRunId: run.id, ...pickUpdateData },
-          update: pickUpdateData,
+          create: {
+            gameId: pick.gameId,
+            pickType: pick.pickType,
+            ingestionRunId: run.id,
+            isBootstrap,
+            isFeatured: isFeatured(pick),
+            ...pickUpdateData,
+          },
+          update: {
+            ...pickUpdateData,
+            isFeatured: isFeatured(pick),
+          },
         });
         picksGenerated++;
       }

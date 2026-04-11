@@ -2,12 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
+import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown } from "@sports/types";
 import { startOfDay, endOfDay } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  const gates = getReadinessGates();
+  if (!gates.canExposePublicPicks) {
+    return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
+  }
+
   const session = await auth();
 
   const entitlements = session?.user?.id
@@ -32,6 +38,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const picks = await db.pick.findMany({
     where: {
       isPublished: true,
+      isBootstrap: false, // never expose bootstrap-era picks publicly
       generatedAt: {
         gte: startOfDay(targetDate),
         lte: endOfDay(targetDate),

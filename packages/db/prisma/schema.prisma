@@ -262,6 +262,11 @@ model TeamGameLog {
   atsResult     AtsResult      @default(TBD)  // did team cover?
   createdAt     DateTime       @default(now())
 
+  // Bootstrap safety — true for all logs written before CANONICAL_HISTORY_ENABLED=true.
+  // Bootstrap logs are stored for reference but excluded from ATS/H2H scoring.
+  // Set to false only when canonical history mode is explicitly active at write time.
+  isBootstrap   Boolean        @default(true)
+
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
   @@unique([gameId, teamName])
@@ -358,6 +363,11 @@ model Pick {
   settledAt      DateTime?
   isPublished    Boolean    @default(true)
   isFeatured     Boolean    @default(false)
+
+  // Bootstrap safety — true for all picks written before CANONICAL_HISTORY_ENABLED=true.
+  // Bootstrap picks are stored for admin review and settlement but excluded from
+  // canonical performance metrics and public performance stats.
+  isBootstrap    Boolean    @default(true)
 
   game     Game @relation(fields: [gameId], references: [id])
 

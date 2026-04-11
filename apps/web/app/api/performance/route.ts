@@ -1,16 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
+import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  const gates = getReadinessGates();
+  if (!gates.canExposePerformanceStats) {
+    return NextResponse.json(bootstrapGateResponse("Performance stats"), { status: 503 });
+  }
+
   const { searchParams } = new URL(req.url);
   const period = searchParams.get("period") ?? "all-time";
   const sport = searchParams.get("sport");
 
-  // Aggregate real win/loss/push data from settled picks
+  // Aggregate real win/loss/push data from settled canonical picks only.
+  // Bootstrap-era picks are excluded — their win rates are uncalibrated and
+  // would produce misleading public performance stats.
   const picks = await db.pick.findMany({
     where: {
       result: { in: ["WIN", "LOSS", "PUSH"] },
       isPublished: true,
+      isBootstrap: false,
       ...(sport ? { game: { sport: { name: { contains: sport, mode: "insensitive" as const } } } } : {}),
     },
     include: {

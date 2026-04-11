@@ -21,3 +21,7 @@ export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-
 export { calculatePickResult } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
 export * from "./constants.js";
+export { getPlatformConfig } from "./platform-config.js";
+export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
+export { getReadinessGates, bootstrapGateResponse } from "./readiness.js";
+export type { ReadinessGates } from "./readiness.js";

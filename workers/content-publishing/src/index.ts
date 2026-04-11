@@ -5,6 +5,7 @@
  */
 
 import { db } from "@sports/db";
+import { getReadinessGates } from "@sports/prediction-engine";
 import type { ContentGenerationInput } from "@sports/types";
 import { format } from "date-fns";
 
@@ -16,6 +17,12 @@ const GAMBLING_DISCLAIMER =
   "Please gamble responsibly and only bet what you can afford to lose.";
 
 async function generateAndPublishContent(): Promise<void> {
+  const gates = getReadinessGates();
+  if (!gates.canPublishContent) {
+    console.log("[content-worker] Content publishing disabled (bootstrap mode). Set PUBLIC_BLOG_ENABLED=true to enable.");
+    return;
+  }
+
   const apiKey = process.env["ANTHROPIC_API_KEY"];
   if (!apiKey) {
     console.warn("[content-worker] ANTHROPIC_API_KEY not set — skipping content generation");
@@ -27,10 +34,13 @@ async function generateAndPublishContent(): Promise<void> {
   const todayEnd = new Date(today.setHours(23, 59, 59, 999));
   const dateStr = format(new Date(), "yyyy-MM-dd");
 
-  // Get today's picks grouped by sport
+  // Get today's canonical (non-bootstrap) picks grouped by sport.
+  // Bootstrap-era picks are excluded — content must only cite picks that
+  // count toward real performance history.
   const picks = await db.pick.findMany({
     where: {
       isPublished: true,
+      isBootstrap: false,
       generatedAt: { gte: todayStart, lte: todayEnd },
       confidence: { gte: 60 }, // Only high-quality picks in content
     },

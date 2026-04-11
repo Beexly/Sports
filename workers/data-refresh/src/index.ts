@@ -1,7 +1,15 @@
 /**
- * Data Refresh Worker — v3
+ * Data Refresh Worker — v4
+ *
  * Fetches live odds every 30 minutes, enriches with game context
  * (opening lines, rest days, ATS form), then scores picks.
+ *
+ * Bootstrap safety: reads PlatformConfig on every cycle. Behavior gates:
+ *   - DERIVED_MODEL_HISTORY_ENABLED: controls whether ATS/H2H/venue form
+ *     influence scoring. When false, only canonical market signals are used.
+ *   - CANONICAL_HISTORY_ENABLED: controls isBootstrap flag on new picks and
+ *     TeamGameLog entries. When false, all writes are marked bootstrap.
+ *   - FEATURED_PICK_PROMOTION_ENABLED: when false, isFeatured=false for all picks.
  */
 
 import { db } from "@sports/db";
@@ -15,7 +23,7 @@ import {
   getHeadToHeadForm,
   settleGameLogs,
 } from "@sports/data-ingestion";
-import { scoreGames, calculatePickResult } from "@sports/prediction-engine";
+import { scoreGames, calculatePickResult, getReadinessGates } from "@sports/prediction-engine";
 import type { OddsInput, GameContextInput } from "@sports/types";
 
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
@@ -24,10 +32,22 @@ async function runRefreshCycle(): Promise<void> {
   const apiKey = process.env["THE_ODDS_API_KEY"];
   if (!apiKey) throw new Error("THE_ODDS_API_KEY not set");
 
+  // Read readiness gates fresh every cycle — env vars may change across deploys
+  const gates = getReadinessGates();
+
   const client = new OddsApiClient(apiKey);
   const normalizer = new DataNormalizer();
 
-  console.log(`[data-refresh] Cycle start ${new Date().toISOString()}`);
+  const bootstrapLabel = gates.isBootstrapMode ? " [BOOTSTRAP MODE]" : "";
+  console.log(`[data-refresh] Cycle start ${new Date().toISOString()}${bootstrapLabel}`);
+
+  if (gates.isBootstrapMode) {
+    console.log(
+      "[data-refresh] Bootstrap mode active: picks marked isBootstrap=true, " +
+      "derived history (ATS/H2H/venue) excluded from scoring. " +
+      "Set CANONICAL_HISTORY_ENABLED=true to begin accumulating canonical history."
+    );
+  }
 
   for (const sport of SUPPORTED_SPORTS) {
     const run = await db.ingestionRun.create({
@@ -121,6 +141,7 @@ async function runRefreshCycle(): Promise<void> {
           totalOdds.length > 0
             ? totalOdds.reduce((s, o) => s + (o.total ?? 0), 0) / totalOdds.length
             : null;
+        const hasH2HMarket = gameOdds.some((o) => o.market === "H2H");
 
         // Run context enrichment (opening lines, rest days, data quality)
         try {
@@ -136,7 +157,7 @@ async function runRefreshCycle(): Promise<void> {
             fetchedAt,
             hasSpreadMarket: spreadOdds.length > 0,
             hasTotalMarket: totalOdds.length > 0,
-            hasH2HMarket: gameOdds.some((o) => o.market === "H2H"),
+            hasH2HMarket,
           });
         } catch (enrichErr) {
           // Non-fatal — picks still generated without context
@@ -146,21 +167,24 @@ async function runRefreshCycle(): Promise<void> {
         // Reload game record to get updated context fields
         const enrichedGame = await db.game.findUnique({ where: { id: gameRecord.id } });
 
-        // Fetch all ATS forms in parallel: overall + venue splits + H2H
+        // Derived history gate: only fetch ATS/H2H form when the flag is on.
+        // When off, all historical factors are null → scoring treats them as 0 (neutral).
+        // When on, use canonicalOnly=true so bootstrap-era logs never enter canonical scoring.
         const [
           homeAtsForm,
           awayAtsForm,
           homeAtsFormAtHome,
           awayAtsFormAway,
           homeH2HForm,
-        ] = await Promise.all([
-          getAtsForm(game.homeTeam, sport.key).catch(() => null),
-          getAtsForm(game.awayTeam, sport.key).catch(() => null),
-          getAtsForm(game.homeTeam, sport.key, 15, "HOME").catch(() => null),
-          getAtsForm(game.awayTeam, sport.key, 15, "AWAY").catch(() => null),
-          // H2H from home team's perspective (away team flipped in scoring)
-          getHeadToHeadForm(game.homeTeam, game.awayTeam, sport.key).catch(() => null),
-        ]);
+        ] = gates.canUseDerivedHistory
+          ? await Promise.all([
+              getAtsForm(game.homeTeam, sport.key, 15, undefined, true).catch(() => null),
+              getAtsForm(game.awayTeam, sport.key, 15, undefined, true).catch(() => null),
+              getAtsForm(game.homeTeam, sport.key, 15, "HOME", true).catch(() => null),
+              getAtsForm(game.awayTeam, sport.key, 15, "AWAY", true).catch(() => null),
+              getHeadToHeadForm(game.homeTeam, game.awayTeam, sport.key, 10, true).catch(() => null),
+            ])
+          : [null, null, null, null, null];
 
         const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
 
@@ -173,6 +197,8 @@ async function runRefreshCycle(): Promise<void> {
           restDaysAway: enrichedGame?.restDaysAway ?? null,
           isBackToBackHome: enrichedGame?.isBackToBackHome ?? false,
           isBackToBackAway: enrichedGame?.isBackToBackAway ?? false,
+          // Historical signals — only wired in when derived history is enabled.
+          // When null, computeGameContext returns 0 for these factors (neutral).
           homeAtsForm: homeAtsForm ?? null,
           awayAtsForm: awayAtsForm ?? null,
           // Venue-specific splits (v4)
@@ -184,7 +210,7 @@ async function runRefreshCycle(): Promise<void> {
           dataFreshnessMinutes: freshnessMinutes,
           hasSpreadMarket: spreadOdds.length > 0,
           hasTotalMarket: totalOdds.length > 0,
-          hasH2HMarket: gameOdds.some((o) => o.market === "H2H"),
+          hasH2HMarket,
         };
 
         oddsInputs.push({
@@ -212,11 +238,15 @@ async function runRefreshCycle(): Promise<void> {
       const scoredPicks = scoreGames(oddsInputs, fetchedAt);
       let picksGenerated = 0;
 
+      // Bootstrap flag for picks written this cycle
+      const isBootstrap = !gates.canPersistCanonicalHistory;
+
       for (const pick of scoredPicks) {
         // Fields refreshed on every cycle (confidence, odds, reasoning).
         // result and settledAt are intentionally absent — never overwritten by refresh.
-        // ingestionRunId is intentionally absent from update — keeps the creation run ID
-        // so admins can trace which run originally generated this pick.
+        // ingestionRunId is intentionally absent from update — preserves creation run ID.
+        // isFeatured is intentionally absent from update — promotion is set only on create
+        //   and re-evaluated below; we don't downgrade featured status mid-life.
         const pickUpdateData = {
           selection: pick.selection,
           line: pick.line,
@@ -232,17 +262,34 @@ async function runRefreshCycle(): Promise<void> {
           factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
           modelVersion: pick.modelVersion,
           dataFreshnessAt: pick.dataFreshnessAt,
-          isFeatured:
-            pick.pickGrade === "ELITE_PLAY" ||
-            (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80),
         };
 
+        // Featured promotion gate: only auto-promote when explicitly enabled.
+        // In bootstrap mode, no pick is featured — grades are uncalibrated.
+        const isFeatured =
+          gates.canPromoteFeaturedPicks &&
+          (pick.pickGrade === "ELITE_PLAY" ||
+            (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80));
+
         // Upsert by the DB-enforced unique key [gameId, pickType].
-        // Create sets ingestionRunId to track origin; update never changes it.
+        // Create sets origin fields (ingestionRunId, isBootstrap, isFeatured).
+        // Update never changes isBootstrap — creation era is immutable.
         await db.pick.upsert({
           where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-          create: { gameId: pick.gameId, pickType: pick.pickType, ingestionRunId: run.id, ...pickUpdateData },
-          update: pickUpdateData,
+          create: {
+            gameId: pick.gameId,
+            pickType: pick.pickType,
+            ingestionRunId: run.id,
+            isBootstrap,
+            isFeatured,
+            ...pickUpdateData,
+          },
+          update: {
+            ...pickUpdateData,
+            // Re-evaluate featured status on each refresh when promotion is enabled.
+            // If promotion is disabled, clear featured status on existing picks.
+            isFeatured,
+          },
         });
         picksGenerated++;
       }
@@ -252,7 +299,7 @@ async function runRefreshCycle(): Promise<void> {
         data: { status: "SUCCESS", gamesUpserted: Object.keys(gameRecords).length, oddsInserted, completedAt: new Date() },
       });
 
-      console.log(`[data-refresh] ${sport.key}: ${Object.keys(gameRecords).length} games, ${oddsInserted} odds, ${picksGenerated} new picks`);
+      console.log(`[data-refresh] ${sport.key}: ${Object.keys(gameRecords).length} games, ${oddsInserted} odds, ${picksGenerated} picks (bootstrap=${isBootstrap})`);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error(`[data-refresh] ${sport.key} failed: ${msg}`);
@@ -271,6 +318,9 @@ async function runRefreshCycle(): Promise<void> {
 async function settleResults(): Promise<void> {
   const apiKey = process.env["THE_ODDS_API_KEY"];
   if (!apiKey) return;
+
+  const gates = getReadinessGates();
+  const isBootstrap = !gates.canPersistCanonicalHistory;
 
   const client = new OddsApiClient(apiKey);
   const normalizer = new DataNormalizer();
@@ -294,7 +344,8 @@ async function settleResults(): Promise<void> {
         });
 
         if (score.homeScore !== null && score.awayScore !== null) {
-          // Settle pick results
+          // Settle pick results — always runs, regardless of bootstrap mode.
+          // Real game outcomes are source truth and must be recorded.
           for (const pick of game.picks) {
             const result = calculatePickResult(
               pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
@@ -311,7 +362,9 @@ async function settleResults(): Promise<void> {
             });
           }
 
-          // Write TeamGameLog entries for ATS form tracking
+          // Write TeamGameLog entries for ATS form tracking.
+          // isBootstrap propagated from current mode — marks creation era.
+          // Data quality gate prevents corrupt ATS data from thin-coverage games.
           const openingSpreadOdds = await db.openingLine.findUnique({
             where: { gameId_market: { gameId: game.id, market: "SPREADS" } },
           });
@@ -326,6 +379,9 @@ async function settleResults(): Promise<void> {
               homeScore: score.homeScore,
               awayScore: score.awayScore,
               spread: openingSpreadOdds?.spread ?? null,
+              isBootstrap,
+              gameDataQualityScore: game.dataQualityScore,
+              minDataQualityThreshold: gates.minDataQualityForGameLog,
             });
           } catch (settleErr) {
             console.warn(`[settlement] GameLog failed for ${game.id}: ${settleErr instanceof Error ? settleErr.message : settleErr}`);
@@ -338,10 +394,13 @@ async function settleResults(): Promise<void> {
   }
 }
 
-// calculatePickResult is imported from @sports/prediction-engine/settlement
-
 async function main(): Promise<void> {
-  console.log("[data-refresh] Worker v3 starting...");
+  const gates = getReadinessGates();
+  console.log("[data-refresh] Worker v4 starting...");
+  console.log(`[data-refresh] Bootstrap mode: ${gates.isBootstrapMode}`);
+  console.log(`[data-refresh] Derived history enabled: ${gates.canUseDerivedHistory}`);
+  console.log(`[data-refresh] Featured promotion enabled: ${gates.canPromoteFeaturedPicks}`);
+
   await runRefreshCycle();
   await settleResults();
   setInterval(async () => {

@@ -112,23 +112,28 @@ export async function computeRestDays(
  * Fetches the last N TeamGameLogs for a team and computes their ATS record.
  * Returns null if fewer than MIN_SAMPLE games are settled.
  *
- * @param venueFilter - If "HOME", only count games where team was home.
- *                      If "AWAY", only count games where team was away.
- *                      If omitted, count all games.
+ * @param venueFilter    - If "HOME", only games where team was home.
+ *                         If "AWAY", only games where team was away.
+ *                         If omitted, all games.
+ * @param canonicalOnly  - If true, exclude bootstrap-era logs (isBootstrap=false only).
+ *                         Use when DERIVED_MODEL_HISTORY_ENABLED=true to prevent
+ *                         bootstrap contamination from ever entering canonical scoring.
  */
 export async function getAtsForm(
   teamName: string,
   sport: string,
   windowGames: number = 15,
-  venueFilter?: "HOME" | "AWAY"
+  venueFilter?: "HOME" | "AWAY",
+  canonicalOnly: boolean = false
 ): Promise<{ wins: number; losses: number; pushes: number; sampleSize: number } | null> {
   const logs = await prisma.teamGameLog.findMany({
     where: {
       teamName,
       sport,
       atsResult: { in: ["WIN", "LOSS", "PUSH"] },
-      ...(venueFilter === "HOME" && { isHome: true }),
-      ...(venueFilter === "AWAY" && { isHome: false }),
+      ...(venueFilter === "HOME" ? { isHome: true } : {}),
+      ...(venueFilter === "AWAY" ? { isHome: false } : {}),
+      ...(canonicalOnly ? { isBootstrap: false } : {}),
     },
     orderBy: { gameDate: "desc" },
     take: windowGames,
@@ -152,12 +157,15 @@ export async function getAtsForm(
  * `opponentName`. Uses `opponentName` field stored in TeamGameLog.
  *
  * Returns null if fewer than 5 H2H matchups are settled.
+ *
+ * @param canonicalOnly - If true, exclude bootstrap-era logs (isBootstrap=false only).
  */
 export async function getHeadToHeadForm(
   teamName: string,
   opponentName: string,
   sport: string,
-  windowGames: number = 10
+  windowGames: number = 10,
+  canonicalOnly: boolean = false
 ): Promise<{ wins: number; losses: number; pushes: number; sampleSize: number } | null> {
   const logs = await prisma.teamGameLog.findMany({
     where: {
@@ -165,6 +173,7 @@ export async function getHeadToHeadForm(
       opponentName,
       sport,
       atsResult: { in: ["WIN", "LOSS", "PUSH"] },
+      ...(canonicalOnly ? { isBootstrap: false } : {}),
     },
     orderBy: { gameDate: "desc" },
     take: windowGames,
@@ -291,11 +300,41 @@ interface SettledGameInput {
   homeScore: number;
   awayScore: number;
   spread: number | null;   // the consensus spread (negative = home favored)
+
+  // Bootstrap safety fields. Caller reads these from PlatformConfig / ReadinessGates.
+  /**
+   * When true, logs are marked isBootstrap=true and excluded from canonical
+   * scoring even after DERIVED_MODEL_HISTORY_ENABLED is turned on.
+   * Set to !gates.canPersistCanonicalHistory in the worker.
+   */
+  isBootstrap: boolean;
+
+  /**
+   * Minimum dataQualityScore required to write this game log.
+   * Games with poor bookmaker coverage have unreliable spread data, making
+   * ATS tracking inaccurate even with real final scores.
+   * Pass gates.minDataQualityForGameLog from the worker.
+   */
+  minDataQualityThreshold?: number;
+
+  /**
+   * The game's dataQualityScore at settlement time (from game.dataQualityScore).
+   * Compared against minDataQualityThreshold to gate the write.
+   */
+  gameDataQualityScore?: number;
 }
 
 /**
  * Called when a game is marked completed from scores API.
  * Writes TeamGameLog entries for both teams.
+ *
+ * Data quality gate: if gameDataQualityScore < minDataQualityThreshold, skips
+ * the write entirely. Poor-coverage games have unreliable opening lines which
+ * make ATS tracking inaccurate even when scores are real.
+ *
+ * Bootstrap gate: writes isBootstrap=true when caller is in bootstrap mode
+ * (canonicalHistoryEnabled=false). Bootstrap logs are stored but not used for
+ * ATS/H2H scoring until DERIVED_MODEL_HISTORY_ENABLED=true.
  */
 export async function settleGameLogs(input: SettledGameInput): Promise<void> {
   const {
@@ -307,7 +346,24 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
     homeScore,
     awayScore,
     spread,
+    isBootstrap,
+    minDataQualityThreshold,
+    gameDataQualityScore,
   } = input;
+
+  // Data quality gate: skip if coverage was too thin to trust the spread data
+  if (
+    minDataQualityThreshold !== undefined &&
+    gameDataQualityScore !== undefined &&
+    gameDataQualityScore < minDataQualityThreshold
+  ) {
+    console.warn(
+      `[settle] Skipping TeamGameLog for game ${gameId}: ` +
+      `dataQualityScore ${gameDataQualityScore} < threshold ${minDataQualityThreshold}. ` +
+      `ATS tracking requires reliable spread coverage.`
+    );
+    return;
+  }
 
   const homeWon = homeScore > awayScore;
   const awayWon = awayScore > homeScore;
@@ -332,7 +388,9 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
     }
   }
 
-  // Upsert TeamGameLog for both teams using the @@unique([gameId, teamName]) constraint
+  // Upsert TeamGameLog for both teams using the @@unique([gameId, teamName]) constraint.
+  // isBootstrap is immutable — creation era is never changed on update.
+  // A bootstrap log stays bootstrap even if the system is later upgraded to canonical mode.
   await prisma.$transaction([
     prisma.teamGameLog.upsert({
       where: { gameId_teamName: { gameId, teamName: homeTeam } },
@@ -341,6 +399,7 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
         opponentScore: awayScore,
         result: homeWon ? "WIN" : awayWon ? "LOSS" : "TBD",
         atsResult: homeAts,
+        // isBootstrap intentionally absent — creation era is immutable
       },
       create: {
         gameId,
@@ -354,6 +413,7 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
         result: homeWon ? "WIN" : awayWon ? "LOSS" : "TBD",
         spread,
         atsResult: homeAts,
+        isBootstrap,
       },
     }),
     prisma.teamGameLog.upsert({
@@ -363,6 +423,7 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
         opponentScore: homeScore,
         result: awayWon ? "WIN" : homeWon ? "LOSS" : "TBD",
         atsResult: awayAts,
+        // isBootstrap intentionally absent — creation era is immutable
       },
       create: {
         gameId,
@@ -376,6 +437,7 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
         result: awayWon ? "WIN" : homeWon ? "LOSS" : "TBD",
         spread: spread !== null ? -spread : null,
         atsResult: awayAts,
+        isBootstrap,
       },
     }),
   ]);
