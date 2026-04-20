@@ -109,6 +109,23 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           </button>
         </form>
 
+        {/* Dev-only credentials login */}
+        {process.env["NODE_ENV"] !== "production" && (
+          <>
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-800" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-gray-900 px-3 text-yellow-600 font-mono">
+                  DEV ONLY
+                </span>
+              </div>
+            </div>
+            <DevLoginForm callbackUrl={searchParams.callbackUrl} />
+          </>
+        )}
+
         {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
@@ -149,6 +166,50 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         &larr; Back to SportsPicks Pro
       </Link>
     </div>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Dev credentials form (development only)
+// ─────────────────────────────────────────────
+
+function DevLoginForm({ callbackUrl }: { callbackUrl?: string }) {
+  return (
+    <form
+      action={async (formData: FormData) => {
+        "use server";
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+        await signIn("dev-credentials", {
+          email,
+          password,
+          redirectTo: callbackUrl ?? "/admin",
+        });
+      }}
+      className="space-y-3"
+    >
+      <input
+        name="email"
+        type="email"
+        placeholder="admin@local.dev"
+        defaultValue="admin@local.dev"
+        required
+        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+      />
+      <input
+        name="password"
+        type="password"
+        placeholder="admin123"
+        required
+        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+      />
+      <button
+        type="submit"
+        className="w-full rounded-xl bg-yellow-600 px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-yellow-500"
+      >
+        Dev Sign In (admin123)
+      </button>
+    </form>
   );
 }
 
