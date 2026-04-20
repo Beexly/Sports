@@ -1,0 +1,667 @@
+// Sports Prediction Platform — Prisma Schema
+// Generated: 2026-04-07
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================
+// AUTH (NextAuth.js compatible)
+// ============================================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  subscription  Subscription?
+  alerts        Alert[]
+
+  @@index([email])
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================================
+// SUBSCRIPTIONS
+// ============================================================
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String             @unique
+  stripeCustomerId     String             @unique
+  stripeSubscriptionId String?            @unique
+  stripePriceId        String?
+  tier                 SubscriptionTier   @default(FREE)
+  status               SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  canceledAt           DateTime?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  webhookEvents    WebhookEvent[]
+
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
+  @@map("subscriptions")
+}
+
+model WebhookEvent {
+  id             String   @id @default(cuid())
+  stripeEventId  String   @unique
+  type           String
+  subscriptionId String?
+  payload        Json
+  processedAt    DateTime @default(now())
+
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  @@index([stripeEventId])
+  @@map("webhook_events")
+}
+
+// ============================================================
+// SPORTS / LEAGUES / TEAMS
+// ============================================================
+
+model Sport {
+  id          String   @id @default(cuid())
+  key         String   @unique  // e.g. "americanfootball_nfl"
+  name        String             // e.g. "NFL"
+  displayName String             // e.g. "National Football League"
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  leagues League[]
+  games   Game[]
+
+  @@map("sports")
+}
+
+model League {
+  id          String   @id @default(cuid())
+  sportId     String
+  key         String   @unique
+  name        String
+  displayName String
+  country     String?
+  season      String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  sport   Sport    @relation(fields: [sportId], references: [id])
+  games   Game[]
+  teams   Team[]
+
+  @@index([sportId])
+  @@map("leagues")
+}
+
+model Team {
+  id           String   @id @default(cuid())
+  leagueId     String?
+  name         String
+  abbreviation String?
+  city         String?
+  logoUrl      String?
+  createdAt    DateTime @default(now())
+
+  league     League? @relation(fields: [leagueId], references: [id])
+  homeGames  Game[]  @relation("HomeTeam")
+  awayGames  Game[]  @relation("AwayTeam")
+
+  @@index([leagueId])
+  @@index([name])
+  @@map("teams")
+}
+
+// ============================================================
+// GAMES AND ODDS
+// ============================================================
+
+model Game {
+  id             String     @id @default(cuid())
+  externalId     String     @unique  // ID from The Odds API
+  sportId        String
+  leagueId       String?
+  homeTeamId     String?
+  awayTeamId     String?
+  homeTeamName   String               // denormalized for speed
+  awayTeamName   String
+  commenceTime   DateTime
+  status         GameStatus @default(SCHEDULED)
+  homeScore      Int?
+  awayScore      Int?
+  resultFetched  Boolean    @default(false)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  // ── Scheduling / fatigue context (computed from game history) ──
+  restDaysHome        Int?     // calendar days since home team's prior game
+  restDaysAway        Int?     // calendar days since away team's prior game
+  isBackToBackHome    Boolean  @default(false)
+  isBackToBackAway    Boolean  @default(false)
+  scheduleDensityHome Int?     // canonical games in last 7 days (home team)
+  scheduleDensityAway Int?     // canonical games in last 7 days (away team)
+
+  // ── Line movement (populated on repeat ingestion) ──
+  openingSpread       Float?   // spread at first ingestion
+  openingTotal        Float?   // total at first ingestion
+  lineMovementSpread  Float?   // current avg spread − opening (negative = home favored more)
+  lineMovementTotal   Float?   // current avg total − opening
+
+  // ── Data quality ──
+  bookmakerCoverageMax Int      @default(0)  // highest bookmaker count seen for this game
+  dataQualityScore     Float    @default(0)  // 0–100 composite at last computation
+  contextComputedAt    DateTime?              // when scheduling context was last computed
+
+  sport    Sport   @relation(fields: [sportId], references: [id])
+  league   League? @relation(fields: [leagueId], references: [id])
+  homeTeam Team?   @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam Team?   @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  odds                Odds[]
+  picks               Pick[]
+  openingLines        OpeningLine[]
+  teamGameLogs        TeamGameLog[]
+  gameSignals         GameSignal[]
+  pickSignalSnapshots PickSignalSnapshot[]
+
+  @@index([sportId])
+  @@index([commenceTime])
+  @@index([status])
+  @@map("games")
+}
+
+// Stores the first-seen odds snapshot per game+market for line movement tracking
+model OpeningLine {
+  id          String     @id @default(cuid())
+  gameId      String
+  market      OddsMarket
+  spread      Float?     // opening spread (home perspective)
+  total       Float?     // opening total
+  homePrice   Float?     // opening moneyline home
+  awayPrice   Float?     // opening moneyline away
+  firstSeenAt DateTime   @default(now())
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, market])
+  @@index([gameId])
+  @@map("opening_lines")
+}
+
+// Stores each team's game log for form computation (populated when games settle)
+model TeamGameLog {
+  id            String         @id @default(cuid())
+  teamName      String         // denormalized team identifier (homeTeamName / awayTeamName)
+  sport         String
+  gameId        String
+  opponentName  String
+  isHome        Boolean
+  gameDate      DateTime       // commenceTime of the game
+  teamScore     Int?
+  opponentScore Int?
+  result        GameLogResult  @default(TBD)
+  // ATS tracking
+  spread        Float?         // spread from team perspective (negative = team was favored)
+  atsResult     AtsResult      @default(TBD)  // did team cover?
+  createdAt     DateTime       @default(now())
+
+  // Bootstrap safety — true for all logs written before CANONICAL_HISTORY_ENABLED=true.
+  // Bootstrap logs are stored for reference but excluded from ATS/H2H scoring.
+  // Set to false only when canonical history mode is explicitly active at write time.
+  isBootstrap   Boolean        @default(true)
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, teamName])
+  @@index([teamName, sport, gameDate])
+  @@index([gameId])
+  @@map("team_game_logs")
+}
+
+model Odds {
+  id              String      @id @default(cuid())
+  gameId          String
+  ingestionRunId  String
+  bookmaker       String
+  market          OddsMarket
+  homePrice       Float?
+  awayPrice       Float?
+  drawPrice       Float?
+  spread          Float?
+  homeSpreadPrice Float?
+  awaySpreadPrice Float?
+  total           Float?
+  overPrice       Float?
+  underPrice      Float?
+  fetchedAt       DateTime
+  createdAt       DateTime    @default(now())
+
+  game         Game         @relation(fields: [gameId], references: [id])
+  ingestionRun IngestionRun @relation(fields: [ingestionRunId], references: [id])
+
+  @@index([gameId])
+  @@index([ingestionRunId])
+  @@index([fetchedAt])
+  @@map("odds")
+}
+
+// ============================================================
+// INGESTION
+// ============================================================
+
+model IngestionRun {
+  id            String            @id @default(cuid())
+  sport         String?
+  status        IngestionStatus   @default(RUNNING)
+  gamesUpserted Int               @default(0)
+  oddsInserted  Int               @default(0)
+  errorMessage  String?
+  startedAt     DateTime          @default(now())
+  completedAt   DateTime?
+
+  odds Odds[]
+
+  @@index([status])
+  @@index([startedAt])
+  @@map("ingestion_runs")
+}
+
+// ============================================================
+// PICKS
+// ============================================================
+
+model Pick {
+  id             String    @id @default(cuid())
+  gameId         String
+  ingestionRunId String?
+
+  // Core pick fields
+  pickType       PickType
+  selection      String    // e.g. "Chiefs -3.5" or "OVER 48.5"
+  line           Float
+
+  // Scoring precision fields
+  confidence     Int       // 0–100 overall score
+  edgeScore      Float     @default(0)  // net bookmaker edge (0–100)
+  consensusPct   Float     @default(0)  // bookmaker consensus 0.0–1.0
+  bookmakerCount Int       @default(0)  // number of sources used
+
+  // Classification
+  tier           PickTier   @default(FREE)
+  pickGrade      PickGrade  @default(LEAN)    // A+/A/B/C label
+  riskLevel      RiskLevel  @default(MODERATE) // volatility classification
+
+  // Explainability
+  reasoning         String @db.Text          // short plain-English summary
+  reasoningShort    String @default("")       // 1-sentence teaser (free users)
+  factorBreakdown   Json?                     // structured scoring factors
+
+  // Metadata
+  modelVersion   String
+  generatedAt    DateTime   @default(now())
+  dataFreshnessAt DateTime? // when the underlying odds data was fetched
+
+  // Outcome
+  result         PickResult @default(PENDING)
+  settledAt      DateTime?
+  isPublished    Boolean    @default(true)
+  isFeatured     Boolean    @default(false)
+
+  // Bootstrap safety — true for all picks written before CANONICAL_HISTORY_ENABLED=true.
+  // Bootstrap picks are stored for admin review and settlement but excluded from
+  // canonical performance metrics and public performance stats.
+  isBootstrap    Boolean    @default(true)
+
+  game           Game @relation(fields: [gameId], references: [id])
+  signalSnapshot PickSignalSnapshot?
+
+  // One active pick per game per pick type — enforced at DB level to prevent
+  // duplicate inserts from concurrent worker runs (TOCTOU race prevention).
+  @@unique([gameId, pickType])
+  @@index([tier])
+  @@index([pickGrade])
+  @@index([generatedAt])
+  @@index([result])
+  @@index([isFeatured])
+  @@map("picks")
+}
+
+// ============================================================
+// SIGNAL ARCHITECTURE
+// ============================================================
+
+// GameSignal — source-aware signal store for any external or derived input.
+// Every signal carries: source identity, category, trust level, freshness,
+// and bootstrap provenance. This enables future multi-source intelligence
+// without schema sprawl and makes source trust explicit and queryable.
+// Current signals: SCHEDULE density (from TeamGameLog).
+// Future: WEATHER, INJURIES, RATINGS, MARKET_SENTIMENT.
+// @@unique([gameId, sourceName, signalKey]) — one current value per (source, signal) per game.
+model GameSignal {
+  id             String        @id @default(cuid())
+  gameId         String
+  sourceCategory SignalCategory
+  sourceName     String        // provider key e.g. "schedule-internal", "openweather"
+  signalKey      String        // e.g. "schedule_density_7d_home", "wind_mph"
+  signalValue    Json          // number | string | object — flexible for all signal types
+  fetchedAt      DateTime
+  expiresAt      DateTime?     // null = valid until game commences
+  trustLevel     Float         @default(1.0)   // 0.0–1.0: source reliability weight
+  isBootstrap    Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, sourceName, signalKey])
+  @@index([gameId, sourceCategory])
+  @@index([fetchedAt])
+  @@map("game_signals")
+}
+
+// PickSignalSnapshot — immutable record of which signals were active when a pick was scored.
+// Foundation for outcome-anchored learning and calibration.
+// Created ONCE at pick time (update is always empty).
+// settlementResult/settledAt filled when pick settles.
+// eligibleForLearning set only when: canLearnFromOutcomes=true, isBootstrap=false, settled.
+model PickSignalSnapshot {
+  id         String   @id @default(cuid())
+  pickId     String   @unique
+  gameId     String
+  capturedAt DateTime @default(now())
+
+  // Active signal categories at prediction time (all boolean flags)
+  hadOddsSignal         Boolean @default(false)  // always true — primary input
+  hadLineMovementSignal Boolean @default(false)  // opening line existed
+  hadRestSignal         Boolean @default(false)  // restDays or B2B data present
+  hadScheduleSignal     Boolean @default(false)  // scheduleDensity data present
+  hadAtsFormSignal      Boolean @default(false)  // canonical ATS form used
+  hadH2HSignal          Boolean @default(false)  // canonical H2H form used
+  hadVenueSignal        Boolean @default(false)  // venue-specific ATS form used
+  hadWeatherSignal      Boolean @default(false)  // weather data present (future)
+  hadInjurySignal       Boolean @default(false)  // injury data present (future)
+  hadRatingsSignal      Boolean @default(false)  // team ratings present (future)
+
+  // Key quantitative values at prediction time (queryable for calibration regression)
+  bookmakerCount         Int    @default(0)
+  dataQualityScore       Float  @default(0)
+  confidenceAtPrediction Int    @default(0)  // raw confidence at creation — immutable
+  lineMovementDelta      Float?              // current_spread − opening_spread at pick time
+  restAdvantageNet       Int?               // restDaysHome − restDaysAway (positive = home more rested)
+  atsFormSampleSize      Int?               // largest canonical ATS sample used (0 if none)
+  h2hSampleSize          Int?               // H2H matchup sample size (null if not used)
+  scheduleDensityHome    Int?               // home team games in last 7 days
+  scheduleDensityAway    Int?               // away team games in last 7 days
+
+  // Provenance — immutable creation-era flags
+  isBootstrap          Boolean @default(true)   // mirrors pick.isBootstrap at creation
+  usedDerivedHistory   Boolean @default(false)  // ATS/H2H signals were active
+  usedScheduleSignal   Boolean @default(false)  // schedule density signal was active
+  modelVersion         String  @default("")     // prediction engine version at prediction time
+
+  // Outcome — filled in when the underlying pick settles (never before)
+  // settlementResult: "WIN" | "LOSS" | "PUSH" — mirrors pick.result
+  settlementResult     String?
+  settledAt            DateTime?
+
+  // Learning eligibility — set by settlement flow when all eligibility conditions met:
+  // (1) canLearnFromOutcomes=true, (2) isBootstrap=false, (3) settlement recorded
+  eligibleForLearning  Boolean   @default(false)
+  learningEligibleAt   DateTime?
+
+  pick Pick @relation(fields: [pickId], references: [id], onDelete: Cascade)
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId])
+  @@index([capturedAt])
+  @@index([eligibleForLearning])
+  @@index([isBootstrap])
+  @@map("pick_signal_snapshots")
+}
+
+// ============================================================
+// BLOG / CONTENT
+// ============================================================
+
+model BlogPost {
+  id             String        @id @default(cuid())
+  title          String
+  slug           String        @unique
+  excerpt        String        @db.Text  // free preview
+  content        String        @db.Text  // full content (premium)
+  sport          String?
+  tags           String[]
+  seoTitle       String?
+  seoDescription String?
+  isFeatured     Boolean       @default(false)
+  status         ContentStatus @default(DRAFT)
+  relatedPickIds String[]
+  generatedBy    String        @default("system")
+  modelVersion   String?
+  publishedAt    DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([status])
+  @@index([publishedAt])
+  @@index([sport])
+  @@map("blog_posts")
+}
+
+// ============================================================
+// ALERTS
+// ============================================================
+
+model Alert {
+  id        String      @id @default(cuid())
+  userId    String
+  sport     String?
+  league    String?
+  threshold Int         @default(70) // min confidence
+  channel   AlertChannel @default(EMAIL)
+  active    Boolean     @default(true)
+  createdAt DateTime    @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("alerts")
+}
+
+// ============================================================
+// PERFORMANCE TRACKING
+// ============================================================
+
+model PerformanceSummary {
+  id           String   @id @default(cuid())
+  sport        String
+  league       String?
+  pickType     PickType?
+  tier         PickTier?
+  modelVersion String
+  totalPicks   Int      @default(0)
+  wins         Int      @default(0)
+  losses       Int      @default(0)
+  pushes       Int      @default(0)
+  winRate      Float    @default(0)
+  period       String   // e.g. "2026-04", "2026-Q1", "all-time"
+  computedAt   DateTime @default(now())
+
+  @@unique([sport, pickType, tier, modelVersion, period])
+  @@index([sport])
+  @@map("performance_summaries")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum SubscriptionTier {
+  FREE
+  PRO
+  ELITE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  PAUSED
+}
+
+enum GameStatus {
+  SCHEDULED
+  LIVE
+  FINAL
+  POSTPONED
+  CANCELED
+}
+
+enum OddsMarket {
+  H2H
+  SPREADS
+  TOTALS
+}
+
+enum PickType {
+  SPREAD
+  MONEYLINE
+  TOTAL
+}
+
+enum PickTier {
+  FREE
+  PREMIUM
+}
+
+// Pick quality grade — visible on card
+enum PickGrade {
+  ELITE_PLAY  // confidence 85+, edge 80+
+  STRONG_PLAY // confidence 75+, edge 65+
+  SOLID_PLAY  // confidence 65+, edge 50+
+  LEAN        // confidence 50+
+}
+
+// Risk classification based on volatility factors
+enum RiskLevel {
+  LOW_RISK       // High bookmaker consensus, deep market
+  MODERATE       // Decent consensus, normal market
+  HIGH_VARIANCE  // Low consensus or thin market
+  INJURY_RISK    // Game-time decision or key injury impact
+  LINE_STEAM     // Fast-moving line (high movement detected)
+}
+
+enum PickResult {
+  PENDING
+  WIN
+  LOSS
+  PUSH
+  VOID
+}
+
+enum IngestionStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+  PARTIAL
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AlertChannel {
+  EMAIL
+  PUSH
+}
+
+enum GameLogResult {
+  WIN
+  LOSS
+  TBD
+}
+
+enum SignalCategory {
+  ODDS
+  SCHEDULE
+  WEATHER
+  INJURIES
+  RATINGS
+  MARKET_SENTIMENT
+}
+
+enum AtsResult {
+  WIN
+  LOSS
+  PUSH
+  TBD
+}

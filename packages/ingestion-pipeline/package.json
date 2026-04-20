@@ -1,0 +1,20 @@
+{
+  "name": "@sports/ingestion-pipeline",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sports/db": "*",
+    "@sports/data-ingestion": "*",
+    "@sports/prediction-engine": "*",
+    "@sports/types": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^22.5.5"
+  }
+}
