@@ -306,6 +306,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
   const crossMarketScore = ctx?.crossMarketScore ?? 0;
   const scheduleStressScore = ctx?.scheduleStressScore ?? 0;
+  const playoffContextScore = ctx?.playoffContextScore ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
 
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
@@ -323,7 +324,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
       consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
       headToHeadScore + venueFormScore + uncertaintyPenalty + crossMarketScore +
-      scheduleStressScore + 10,
+      scheduleStressScore + playoffContextScore + 10,
       0, 100
     )
   );
@@ -341,6 +342,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   // Build contextual reasoning clauses
   const contextClauses: string[] = [];
+  if (playoffContextScore > 3) contextClauses.push("playoff desperation (trailing in series)");
+  else if (playoffContextScore > 0) contextClauses.push("playoff series context");
+  else if (playoffContextScore < -1) contextClauses.push("series lead complacency risk");
   if (restAdvantageScore > 3) contextClauses.push("rest advantage");
   else if (restAdvantageScore < -3) contextClauses.push("rest disadvantage");
   if (scheduleStressScore > 2) contextClauses.push("opponent on compressed schedule");
@@ -378,6 +382,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
     crossMarketScore: crossMarketScore !== 0 ? crossMarketScore : undefined,
     scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
+    playoffContextScore: playoffContextScore !== 0 ? playoffContextScore : undefined,
     dataQualityScore,
     factors,
   };
@@ -617,6 +622,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const venueFormScore = ctx?.venueFormScore ?? 0;
   const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
   const scheduleStressScore = ctx?.scheduleStressScore ?? 0;
+  const playoffContextScore = ctx?.playoffContextScore ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
 
@@ -632,7 +638,8 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     clamp(
       consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
-      headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore + 10,
+      headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore +
+      playoffContextScore + 10,
       0, 100
     )
   );
@@ -650,6 +657,9 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
 
   // Context-aware reasoning
   const contextClauses: string[] = [];
+  if (playoffContextScore > 3) contextClauses.push("playoff desperation (trailing in series)");
+  else if (playoffContextScore > 0) contextClauses.push("playoff series context");
+  else if (playoffContextScore < -1) contextClauses.push("series lead complacency risk");
   if (restAdvantageScore > 3) contextClauses.push("rest advantage");
   else if (restAdvantageScore < -3) contextClauses.push("rest disadvantage");
   if (scheduleStressScore > 2) contextClauses.push("opponent on compressed schedule");
@@ -683,6 +693,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     venueFormScore: venueFormScore !== 0 ? venueFormScore : undefined,
     uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
     scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
+    playoffContextScore: playoffContextScore !== 0 ? playoffContextScore : undefined,
     dataQualityScore,
     factors,
   };

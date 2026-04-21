@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
-import { processSport } from "@sports/ingestion-pipeline";
+import { processSport, settlePicks } from "@sports/ingestion-pipeline";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
 
@@ -18,12 +18,18 @@ export default async function AdminPage() {
     todayPicks,
     lastIngestionRun,
     publishedPosts,
+    pendingPicks,
+    settledPicks,
+    lastSettledPick,
   ] = await Promise.all([
     db.user.count(),
     db.subscription.count({ where: { status: { in: ["ACTIVE", "TRIALING"] }, tier: { not: "FREE" } } }),
     db.pick.count({ where: { generatedAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } } }),
     db.ingestionRun.findFirst({ orderBy: { startedAt: "desc" } }),
     db.blogPost.count({ where: { status: "PUBLISHED" } }),
+    db.pick.count({ where: { result: "PENDING" } }),
+    db.pick.count({ where: { result: { in: ["WIN", "LOSS", "PUSH"] } } }),
+    db.pick.findFirst({ where: { result: { in: ["WIN", "LOSS", "PUSH"] } }, orderBy: { settledAt: "desc" } }),
   ]);
 
   const cards = [
@@ -74,6 +80,38 @@ export default async function AdminPage() {
           ) : (
             <p className="text-gray-400">No ingestion runs yet</p>
           )}
+        </div>
+
+        {/* Settlement Status */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
+          <h2 className="text-xl font-semibold text-white mb-4">Settlement Status</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <div className="bg-gray-800 rounded-lg p-4">
+              <p className="text-2xl font-bold text-yellow-400">{pendingPicks.toLocaleString()}</p>
+              <p className="text-gray-400 text-sm mt-1">Pending Picks</p>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <p className="text-2xl font-bold text-green-400">{settledPicks.toLocaleString()}</p>
+              <p className="text-gray-400 text-sm mt-1">Settled Picks</p>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <p className="text-sm font-medium text-white">
+                {lastSettledPick?.settledAt
+                  ? lastSettledPick.settledAt.toLocaleString()
+                  : "Never"}
+              </p>
+              <p className="text-gray-400 text-sm mt-1">Last Settlement</p>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <p className="text-2xl font-bold text-blue-400">
+                {settledPicks + pendingPicks > 0
+                  ? Math.round((settledPicks / (settledPicks + pendingPicks)) * 100)
+                  : 0}%
+              </p>
+              <p className="text-gray-400 text-sm mt-1">Settlement Rate</p>
+            </div>
+          </div>
+          <SettlePicksButton />
         </div>
 
         {/* Quick Actions */}
@@ -130,6 +168,30 @@ function TriggerRefreshButton() {
         className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
       >
         Trigger Data Refresh
+      </button>
+    </form>
+  );
+}
+
+function SettlePicksButton() {
+  return (
+    <form
+      action={async () => {
+        "use server";
+        const apiKey = process.env["THE_ODDS_API_KEY"];
+        if (!apiKey) { console.error("[admin-settle] No API key"); return; }
+        const summary = await settlePicks(apiKey, 3, "[admin-settle]");
+        console.log(
+          `[admin-settle] Done: ${summary.totalGamesSettled} games, ` +
+          `${summary.totalPicksSettled} picks settled`
+        );
+      }}
+    >
+      <button
+        type="submit"
+        className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium"
+      >
+        Settle Picks Now
       </button>
     </form>
   );

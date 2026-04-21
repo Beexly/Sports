@@ -30,6 +30,7 @@ import {
   enrichGameContext,
   getAtsForm,
   getHeadToHeadForm,
+  detectPlayoffContext,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey } from "@sports/data-ingestion";
 import {
@@ -215,6 +216,29 @@ export async function processSport(
 
       const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
 
+      // Playoff/series context (v6): detect if this is part of an active series.
+      // Non-fatal — null when no prior series games exist in our DB.
+      let playoffContext = null;
+      try {
+        playoffContext = await detectPlayoffContext(
+          game.homeTeam,
+          game.awayTeam,
+          game.commenceTime
+        );
+        if (playoffContext) {
+          console.log(
+            `${logPrefix} ${sport.key} series detected: ${game.homeTeam} vs ${game.awayTeam} ` +
+            `(${playoffContext.seriesHomeWins}-${playoffContext.seriesAwayWins}, ` +
+            `elimination=${playoffContext.isEliminationGame})`
+          );
+        }
+      } catch (playoffErr) {
+        console.warn(
+          `${logPrefix} Playoff context failed for ${game.externalId}: ` +
+          `${playoffErr instanceof Error ? playoffErr.message : playoffErr}`
+        );
+      }
+
       const context: GameContextInput = {
         openingSpread: enrichedGame?.openingSpread ?? avgSpread,
         currentSpread: avgSpread,
@@ -235,6 +259,8 @@ export async function processSport(
         homeAtsFormAtHome: homeAtsFormAtHome ?? null,
         awayAtsFormAway: awayAtsFormAway ?? null,
         headToHeadForm: homeH2HForm ?? null,
+        // Playoff/series context (v6): present when same teams played 2+ times recently.
+        playoffContext: playoffContext ?? null,
         bookmakerCoverageMax,
         dataFreshnessMinutes: freshnessMinutes,
         hasSpreadMarket: spreadOdds.length > 0,

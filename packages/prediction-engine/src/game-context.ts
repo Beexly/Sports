@@ -16,7 +16,7 @@
 // ============================================================
 
 // Import shared types from @sports/types — single source of truth
-import type { FactorDetail, GameContextInput, AtsFormBucket } from "@sports/types";
+import type { FactorDetail, GameContextInput, AtsFormBucket, PlayoffContext } from "@sports/types";
 import { WEIGHTS } from "./constants.js";
 import { clamp } from "./scoring.js";
 
@@ -30,16 +30,18 @@ export type { GameContextInput, AtsFormBucket };
 export interface GameContextScores {
   lineMovementScore: number;        // –15 to +15 (enhanced with sharp proxy)
   restAdvantageScore: number;       // –10 to +10
-  historicalFormScore: number;      // –10 to +10 (overall ATS form)
+  historicalFormScore: number;      // –10 to +10 (overall ATS form, after playoff discount)
   dataQualityPenalty: number;       // –20 to 0
   dataQualityScore: number;         // 0–100 (overall data quality, stored on game)
   // v4 additions
-  headToHeadScore: number;          // –5 to +5 (H2H ATS record)
-  venueFormScore: number;           // –5 to +5 (venue-specific ATS)
+  headToHeadScore: number;          // –5 to +5 (H2H ATS record, after playoff discount)
+  venueFormScore: number;           // –5 to +5 (venue-specific ATS, after playoff discount)
   uncertaintyPenalty: number;       // –8 to 0 (conflicting signals)
   crossMarketScore: number;         // –3 to +4 (spread/ML agreement)
   // v5 additions
   scheduleStressScore: number;      // –5 to +5 (schedule density fatigue)
+  // v6 additions
+  playoffContextScore: number;      // –8 to +8 (series desperation/complacency)
   factors: FactorDetail[];
 }
 
@@ -530,6 +532,86 @@ export function computeScheduleStressScore(
 }
 
 // ============================================================
+// Playoff / series context (v6)
+// ============================================================
+
+/**
+ * Returns a score from –8 to +8 based on series deficit/surplus.
+ *
+ * Two mechanisms:
+ *   1. Direct score: desperation boost for trailing team, mild complacency penalty
+ *      for the team with the lead.
+ *   2. Historical discount: regular-season ATS form is less reliable in playoffs.
+ *      Returned as `historicalDiscount` (0.0–1.0 multiplier applied to form scores).
+ *
+ * The bigger the deficit, the more desperation — and the LESS reliable the
+ * historical regular-season trends become. Down 3-1 in a playoff series,
+ * a team's regular-season H2H record means much less than the immediate
+ * situational pressure.
+ */
+export function computePlayoffContextScore(
+  playoffContext: PlayoffContext | null | undefined,
+  pickedSide: "HOME" | "AWAY" | "OVER" | "UNDER"
+): { score: number; factor: FactorDetail | null; historicalDiscount: number } {
+  if (!playoffContext?.isPlayoffGame) {
+    return { score: 0, factor: null, historicalDiscount: 1.0 };
+  }
+
+  // Historical form signals lose reliability as desperation rises.
+  // desperationMultiplier 1.0 = full reliability, 1.9 = ~53% reliability.
+  const historicalDiscount = 1.0 / playoffContext.desperationMultiplier;
+
+  const MAX = WEIGHTS.PLAYOFF_CONTEXT_COMPONENT_MAX; // 8
+  const { seriesHomeWins, seriesAwayWins, isEliminationGame, seriesDeficit, trailingTeam } = playoffContext;
+  const seriesStr = `${seriesHomeWins}-${seriesAwayWins}`;
+
+  const trailingIsPickedSide = trailingTeam === pickedSide;
+  const leadingIsPickedSide = trailingTeam !== null && trailingTeam !== pickedSide;
+
+  let score = 0;
+  let description = "";
+
+  if (trailingTeam === null) {
+    // Tied series: high-stakes parity — slight boost to both sides (neutral net)
+    const stakes = seriesHomeWins + seriesAwayWins;
+    score = Math.min(stakes, 3); // escalating from 2-2 (2pts) to 3-3 (3pts)
+    description = `Series tied ${seriesStr} — must-win stakes`;
+  } else if (trailingIsPickedSide) {
+    // Picking the desperate team — desperation historically boosts covers
+    score = clamp(seriesDeficit * 3, 0, MAX);
+    description = `${pickedSide === "HOME" ? "Home" : "Away"} trailing ${seriesStr} — desperation mode`;
+  } else if (leadingIsPickedSide) {
+    // Picking the team with the series lead — slight complacency risk
+    score = -2;
+    description = `${pickedSide === "HOME" ? "Home" : "Away"} leads series ${seriesStr} — complacency risk`;
+  }
+
+  if (isEliminationGame) {
+    // Amplify: elimination games intensify both effects
+    score = trailingIsPickedSide
+      ? clamp(score + 3, 0, MAX)
+      : score - 1;
+    description += " (elimination game)";
+  }
+
+  const clampedScore = clamp(score, -MAX, MAX);
+
+  return {
+    score: clampedScore,
+    factor:
+      clampedScore !== 0
+        ? {
+            name: "Playoff Series Context",
+            impact: clampedScore > 0 ? "positive" : "negative",
+            description,
+            weight: clampedScore,
+          }
+        : null,
+    historicalDiscount,
+  };
+}
+
+// ============================================================
 // Uncertainty penalty — conflicting signal detector
 // ============================================================
 
@@ -696,7 +778,26 @@ export function computeGameContext(
   const scheduleStressScore = ss.score;
   if (ss.factor) factors.push(ss.factor);
 
-  // 9. Data quality
+  // 9. Playoff/series context (v6)
+  // Must run AFTER historical form scores are computed so it can apply discounts.
+  const pc = computePlayoffContextScore(context.playoffContext, pickedSide);
+  const playoffContextScore = pc.score;
+  if (pc.factor) factors.push(pc.factor);
+
+  // Apply historical discount: regular-season ATS/H2H/venue trends are less
+  // reliable when teams are in desperation mode mid-series. The discount scales
+  // the already-computed form scores DOWN proportionally to the multiplier.
+  let adjustedHistoricalFormScore = historicalFormScore;
+  let adjustedHeadToHeadScore = headToHeadScore;
+  let adjustedVenueFormScore = venueFormScore;
+
+  if (pc.historicalDiscount < 1.0 && (historicalFormScore !== 0 || headToHeadScore !== 0 || venueFormScore !== 0)) {
+    adjustedHistoricalFormScore = Math.round(historicalFormScore * pc.historicalDiscount);
+    adjustedHeadToHeadScore = Math.round(headToHeadScore * pc.historicalDiscount);
+    adjustedVenueFormScore = Math.round(venueFormScore * pc.historicalDiscount);
+  }
+
+  // 10. Data quality
   const dq = computeDataQuality(
     context.bookmakerCoverageMax,
     context.dataFreshnessMinutes,
@@ -710,16 +811,18 @@ export function computeGameContext(
   return {
     lineMovementScore,
     restAdvantageScore,
-    historicalFormScore,
+    historicalFormScore: adjustedHistoricalFormScore,
     dataQualityPenalty,
     dataQualityScore: dq.qualityScore,
     // v4
-    headToHeadScore,
-    venueFormScore,
+    headToHeadScore: adjustedHeadToHeadScore,
+    venueFormScore: adjustedVenueFormScore,
     uncertaintyPenalty,
     crossMarketScore,
     // v5
     scheduleStressScore,
+    // v6
+    playoffContextScore,
     factors,
   };
 }

@@ -63,6 +63,13 @@ export const WEIGHTS = {
   // how fatigue translates to ATS outcomes until calibrated.
   // Fires only when home/away game count diverges by 2+ in last 7 days.
   SCHEDULE_STRESS_COMPONENT_MAX: 5,
+
+  // ── Playoff/series context (v6) ───────────────────────────────
+  // Direct score contribution from series deficit / desperation.
+  // Historical form signals (ATS/H2H/venue) are discounted proportionally
+  // to desperationMultiplier, since regular-season trends are less reliable
+  // in playoff series with heightened intensity and adjusted game plans.
+  PLAYOFF_CONTEXT_COMPONENT_MAX: 8,
 } as const;
 
 // ============================================================

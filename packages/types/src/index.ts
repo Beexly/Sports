@@ -34,6 +34,8 @@ export interface FactorBreakdown {
   crossMarketScore?: number;   // -3–+4: spread and ML markets agree/disagree
   // Schedule density (v5)
   scheduleStressScore?: number; // ±5: compressed schedule fatigue signal
+  // Playoff/series context (v6)
+  playoffContextScore?: number; // ±8: desperation/complacency from series deficit
   dataQualityScore?: number;   // 0–100: overall data trust score (always public)
   factors: FactorDetail[];     // human-readable factor list
 }
@@ -201,6 +203,23 @@ export interface AtsFormBucket {
   sampleSize: number;
 }
 
+// ============================================================
+// Playoff / series context (v6)
+// Populated by detectPlayoffContext() when two teams have played
+// 2+ completed games against each other within the last 28 days.
+// ============================================================
+
+export interface PlayoffContext {
+  isPlayoffGame: boolean;
+  seriesHomeWins: number;    // wins by the home team (for this upcoming game) in the series
+  seriesAwayWins: number;    // wins by the away team in the series
+  seriesGamesPlayed: number; // total series games completed so far
+  isEliminationGame: boolean; // if picked side loses, they are eliminated
+  trailingTeam: "HOME" | "AWAY" | null; // null = tied
+  seriesDeficit: number;     // wins gap: 0 when tied, >0 for trailing team
+  desperationMultiplier: number; // 1.0–1.9: how much desperation amplifies context
+}
+
 export interface GameContextInput {
   openingSpread?: number | null;
   currentSpread?: number | null;
@@ -225,6 +244,8 @@ export interface GameContextInput {
   // Null when no game history exists; scoring returns 0 (neutral) when null.
   scheduleDensityHome?: number | null;
   scheduleDensityAway?: number | null;
+  // Playoff/series context (v6) — null when not in a detected series
+  playoffContext?: PlayoffContext | null;
   // Data coverage
   bookmakerCoverageMax?: number;
   dataFreshnessMinutes?: number;

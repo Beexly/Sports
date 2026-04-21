@@ -18,6 +18,8 @@ export {
   computeUncertaintyPenalty,
   // v5
   computeScheduleStressScore,
+  // v6
+  computePlayoffContextScore,
 } from "./game-context.js";
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export { calculatePickResult } from "./settlement.js";
