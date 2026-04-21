@@ -78,7 +78,7 @@ function makeGates(overrides: Partial<ReadinessGates> = {}): ReadinessGates {
     canPublishContent: false,
     canExposePerformanceStats: false,
     isBootstrapMode: false,
-    confidenceDisplayMode: "numbers",
+    confidenceDisplayMode: "precision",
     minDataQualityForGameLog: 40,
     canLearnFromOutcomes: false,
     canApplyCalibrationAdjustments: false,

@@ -1,15 +1,15 @@
 /**
- * settlePicks — on-demand settlement orchestration.
+ * settlePicks — canonical settlement entry point.
  *
  * Fetches final scores from The Odds API for the last `daysFrom` days,
  * then settles all PENDING picks for completed games.
  *
- * This is the same logic as settleResults() in the data-refresh worker,
- * extracted into a shared function so the admin UI can trigger it directly
- * without going through an HTTP route (which would lose the session cookie).
+ * Called by:
+ *   - workers/data-refresh   (every 30-minute refresh cycle)
+ *   - apps/web/app/admin     (on-demand admin trigger)
  *
- * Additionally supplements settlement with TheSportsDB data for games that
- * may have slipped past The Odds API's coverage window.
+ * Phase 1: The Odds API scores (primary — last N days).
+ * Phase 2: TheSportsDB supplement for games past the Odds API 3-day window.
  */
 
 import { db } from "@sports/db";
