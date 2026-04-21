@@ -2,7 +2,7 @@
  * TheSportsDB client — historical scores for settlement beyond The Odds API's 2-day window.
  *
  * Free key: "3" (public tier, ~30 req/min)
- * Override via THESPORTSDB_API_KEY environment variable.
+ * Override via THESPORTSDB_API_KEY or THE_SPORTS_DB_KEY environment variables.
  *
  * Sport key → League ID mapping mirrors SUPPORTED_SPORTS from config.ts.
  */
@@ -19,6 +19,27 @@ export const THESPORTSDB_LEAGUE_IDS: Record<string, number> = {
   basketball_ncaab:       4479,
 };
 
+// Common team name aliases — maps Odds API names → TheSportsDB names
+// Only needed where they diverge in practice
+const TEAM_NAME_ALIASES: Record<string, string[]> = {
+  "Los Angeles Lakers":    ["LA Lakers", "Lakers"],
+  "Los Angeles Clippers":  ["LA Clippers", "Clippers"],
+  "Los Angeles Rams":      ["LA Rams"],
+  "Los Angeles Chargers":  ["LA Chargers"],
+  "Los Angeles Dodgers":   ["LA Dodgers"],
+  "Los Angeles Angels":    ["LA Angels", "Angels"],
+  "Golden State Warriors": ["Golden State", "Warriors"],
+  "Oklahoma City Thunder": ["OKC Thunder", "Oklahoma City"],
+  "Portland Trail Blazers":["Portland"],
+  "San Antonio Spurs":     ["San Antonio"],
+  "New Orleans Saints":    ["New Orleans"],
+  "New York Knicks":       ["NY Knicks", "Knicks"],
+  "New York Giants":       ["NY Giants", "Giants"],
+  "New York Jets":         ["NY Jets", "Jets"],
+  "New York Yankees":      ["NY Yankees", "Yankees"],
+  "New York Mets":         ["NY Mets", "Mets"],
+};
+
 interface TheSportsDbEvent {
   idEvent: string;
   strEvent: string;
@@ -28,7 +49,7 @@ interface TheSportsDbEvent {
   strTime: string | null;   // "HH:MM:SS" or null
   intHomeScore: string | null;
   intAwayScore: string | null;
-  strStatus: string | null; // "Match Finished", "FT", "Not Started", etc.
+  strStatus: string | null; // "Match Finished", "FT", "Not Started", "Final", etc.
   strRound?: string | null;
   idLeague: string;
   strLeague: string;
@@ -54,7 +75,11 @@ function formatDate(date: Date): string {
 }
 
 function getApiKey(): string {
-  return process.env["THESPORTSDB_API_KEY"] ?? "3";
+  return (
+    process.env["THESPORTSDB_API_KEY"] ??
+    process.env["THE_SPORTS_DB_KEY"] ??
+    "3"
+  );
 }
 
 async function fetchEvents(path: string, params: Record<string, string>): Promise<TheSportsDbEvent[]> {
@@ -74,27 +99,37 @@ async function fetchEvents(path: string, params: Record<string, string>): Promis
   return data.events ?? [];
 }
 
+function parseScore(val: string | null): number | null {
+  if (val === null || val === "" || val === "-") return null;
+  const n = parseInt(val, 10);
+  return isNaN(n) ? null : n;
+}
+
 function normalizeEvent(e: TheSportsDbEvent): SportsDbEvent {
   const timeStr = e.strTime ?? "00:00:00";
   const dateStr = `${e.dateEvent}T${timeStr}Z`;
 
-  const homeScore =
-    e.intHomeScore !== null && e.intHomeScore !== ""
-      ? parseInt(e.intHomeScore, 10)
-      : null;
-  const awayScore =
-    e.intAwayScore !== null && e.intAwayScore !== ""
-      ? parseInt(e.intAwayScore, 10)
-      : null;
+  const homeScore = parseScore(e.intHomeScore);
+  const awayScore = parseScore(e.intAwayScore);
 
-  const status = (e.strStatus ?? "").toLowerCase();
+  const status = (e.strStatus ?? "").toLowerCase().trim();
   const isCompleted =
     status === "match finished" ||
     status === "ft" ||
     status === "aet" ||
     status === "pen" ||
     status === "final" ||
-    (homeScore !== null && awayScore !== null && status !== "not started" && status !== "");
+    status === "finished" ||
+    status === "complete" ||
+    status === "completed" ||
+    // Score present and game clearly started (not just "Not Started" or blank)
+    (homeScore !== null && awayScore !== null &&
+      status !== "not started" &&
+      status !== "ns" &&
+      status !== "" &&
+      status !== "postponed" &&
+      status !== "canceled" &&
+      status !== "cancelled");
 
   return {
     id: e.idEvent,
@@ -106,6 +141,71 @@ function normalizeEvent(e: TheSportsDbEvent): SportsDbEvent {
     isCompleted,
     round: e.strRound ?? null,
   };
+}
+
+/**
+ * Normalizes a team name to a canonical form for matching.
+ * Strips city prefixes, common suffixes, and handles known aliases.
+ */
+export function normalizeTeamName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Returns all candidate names for a given team (including aliases).
+ */
+function getCandidateNames(name: string): string[] {
+  const canonical = normalizeTeamName(name);
+  const candidates = [canonical];
+
+  // Add known aliases
+  for (const [primary, aliases] of Object.entries(TEAM_NAME_ALIASES)) {
+    if (normalizeTeamName(primary) === canonical) {
+      candidates.push(...aliases.map(normalizeTeamName));
+    }
+    for (const alias of aliases) {
+      if (normalizeTeamName(alias) === canonical) {
+        candidates.push(normalizeTeamName(primary));
+        candidates.push(...aliases.filter(a => a !== alias).map(normalizeTeamName));
+      }
+    }
+  }
+
+  // Also add the last word (city teams often go by last word: "Lakers", "Bulls")
+  const parts = canonical.split(" ");
+  if (parts.length > 1 && parts[parts.length - 1]) {
+    candidates.push(parts[parts.length - 1]!);
+  }
+
+  return [...new Set(candidates)];
+}
+
+/**
+ * Returns true if dbTeam (from Odds API) matches sdbTeam (from TheSportsDB).
+ * Uses substring matching with alias expansion.
+ */
+export function teamsMatch(dbTeam: string, sdbTeam: string): boolean {
+  const dbCandidates = getCandidateNames(dbTeam);
+  const sdbNorm = normalizeTeamName(sdbTeam);
+  const sdbParts = sdbNorm.split(" ");
+
+  for (const candidate of dbCandidates) {
+    if (
+      sdbNorm.includes(candidate) ||
+      candidate.includes(sdbNorm) ||
+      // Match by last word (team nickname)
+      (sdbParts.length > 0 && candidate.includes(sdbParts[sdbParts.length - 1]!)) ||
+      (sdbParts.length > 0 && sdbParts[sdbParts.length - 1] !== undefined &&
+        sdbNorm.includes(candidate.split(" ").pop()!))
+    ) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -124,7 +224,14 @@ export async function getEventsByDate(
       d: formatDate(date),
       l: leagueId.toString(),
     });
-    return events.map(normalizeEvent);
+    const normalized = events.map(normalizeEvent);
+    if (normalized.length > 0) {
+      console.log(
+        `[thesportsdb] ${sportKey} on ${formatDate(date)}: ` +
+        `${normalized.length} events, ${normalized.filter(e => e.isCompleted).length} completed`
+      );
+    }
+    return normalized;
   } catch (err) {
     console.warn(
       `[thesportsdb] getEventsByDate failed for ${sportKey} on ${formatDate(date)}: ` +

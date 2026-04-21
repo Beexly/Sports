@@ -19,6 +19,7 @@ import {
   DataNormalizer,
   settleGameLogs,
   getEventsByDate,
+  teamsMatch,
 } from "@sports/data-ingestion";
 import { getReadinessGates, calculatePickResult } from "@sports/prediction-engine";
 
@@ -199,18 +200,20 @@ async function settlePicksForSport(
         for (const event of sportsDbEvents) {
           if (!event.isCompleted || event.homeScore === null || event.awayScore === null) continue;
 
-          // Match by team names (case-insensitive partial match)
-          const matchedGame = pendingGames.find((g) => {
-            const homeMatch =
-              g.homeTeamName.toLowerCase().includes(event.homeTeam.toLowerCase()) ||
-              event.homeTeam.toLowerCase().includes(g.homeTeamName.toLowerCase());
-            const awayMatch =
-              g.awayTeamName.toLowerCase().includes(event.awayTeam.toLowerCase()) ||
-              event.awayTeam.toLowerCase().includes(g.awayTeamName.toLowerCase());
-            return homeMatch && awayMatch;
-          });
+          // Match by team names using alias-aware normalization
+          const matchedGame = pendingGames.find((g) =>
+            teamsMatch(g.homeTeamName, event.homeTeam) &&
+            teamsMatch(g.awayTeamName, event.awayTeam)
+          );
 
-          if (!matchedGame) continue;
+          if (!matchedGame) {
+            console.log(
+              `${logPrefix} ${sportKey} TheSportsDB unmatched: ` +
+              `${event.awayTeam} @ ${event.homeTeam} on ${dateStr} ` +
+              `(pending games: ${pendingGames.map(g => `${g.awayTeamName}@${g.homeTeamName}`).join(", ")})`
+            );
+            continue;
+          }
           if (matchedGame.picks.length === 0) continue;
 
           await db.game.update({
@@ -305,11 +308,10 @@ async function settlePicksForSport(
   }
 
   console.log(
-    `${logPrefix} ${sportKey}: checked=${result.gamesChecked}, ` +
+    `${logPrefix} ${sportName} (${sportKey}): checked=${result.gamesChecked}, ` +
     `settled=${result.gamesSettled}, picks=${result.picksSettled}`
   );
 
-  void sportName; // used for logging context only
   return result;
 }
 

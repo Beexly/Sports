@@ -57,7 +57,7 @@ export function PickCard({
         : `${shortTeamName(ctx.trailingTeam === "AWAY" ? pick.game.homeTeam : pick.game.awayTeam)} leads ${Math.max(ctx.seriesHomeWins, ctx.seriesAwayWins)}-${Math.min(ctx.seriesHomeWins, ctx.seriesAwayWins)}`;
       lines.push(lead);
     }
-    lines.push(`via A14 Sports · a14.sports`);
+    lines.push(`via SportsPicks Pro`);
     navigator.clipboard.writeText(lines.join("\n")).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

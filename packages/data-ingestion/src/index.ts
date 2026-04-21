@@ -9,7 +9,7 @@ export {
   getHeadToHeadForm,
   settleGameLogs,
 } from "./context-enrichment.js";
-export { getEventsByDate, getEventsByDateRange, THESPORTSDB_LEAGUE_IDS } from "./sports-db-client.js";
+export { getEventsByDate, getEventsByDateRange, THESPORTSDB_LEAGUE_IDS, teamsMatch, normalizeTeamName } from "./sports-db-client.js";
 export type { SportsDbEvent } from "./sports-db-client.js";
 export { detectPlayoffContext } from "./playoff-context.js";
 export type { PlayoffContext } from "./playoff-context.js";
