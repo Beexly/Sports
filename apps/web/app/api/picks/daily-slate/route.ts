@@ -126,6 +126,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         ? topEdgeDbPick.reasoning
         : (topEdgeDbPick.reasoningShort || topEdgeDbPick.reasoning.split(".")[0] + "."),
       reasoningShort: topEdgeDbPick.reasoningShort || topEdgeDbPick.reasoning.split(".")[0] + ".",
+      trends: null, // daily slate does not fetch trend data
       isFeatured: topEdgeDbPick.isFeatured,
       generatedAt: topEdgeDbPick.generatedAt.toISOString(),
       dataFreshnessAt: topEdgeDbPick.dataFreshnessAt?.toISOString() ?? null,

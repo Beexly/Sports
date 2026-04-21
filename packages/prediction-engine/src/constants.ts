@@ -1,5 +1,5 @@
 // Model version — bump when scoring logic changes
-export const MODEL_VERSION = "v5.0.0";
+export const MODEL_VERSION = "v6.0.0";
 
 // ============================================================
 // Confidence thresholds

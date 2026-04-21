@@ -351,8 +351,37 @@ export interface PaginatedResponse<T> {
 }
 
 // ============================================================
-// Public Pick — server-side gated for client consumption
+// Trend data — scores24.live style historical stats per pick
+// Fetched fresh at query time from TeamGameLog.
+// Null in bootstrap mode (no settled game history yet).
+// ATS trends gated to Pro+ tier; seriesContext shown to all.
 // ============================================================
+
+export interface AtsRecord {
+  wins: number;
+  losses: number;
+  pushes: number;
+  window: number; // actual sample size used
+}
+
+export interface PickTrends {
+  // Overall ATS form (last 10 games, any venue)
+  homeTeamAts: AtsRecord | null;
+  awayTeamAts: AtsRecord | null;
+  // Venue-specific splits
+  homeTeamAtsAtHome: AtsRecord | null;
+  awayTeamAtsAway: AtsRecord | null;
+  // Head-to-head ATS between these exact opponents
+  headToHead: AtsRecord | null;
+  // Playoff/series context — shown to all tiers when detected
+  seriesContext: {
+    seriesHomeWins: number;
+    seriesAwayWins: number;
+    isEliminationGame: boolean;
+    trailingTeam: "HOME" | "AWAY" | null;
+    desperationMultiplier: number;
+  } | null;
+}
 
 export interface PublicPick {
   id: string;
@@ -380,6 +409,9 @@ export interface PublicPick {
   riskLevel: RiskLevel;
   reasoning: string;                 // full (PRO) or short teaser (FREE)
   reasoningShort: string;
+
+  // Trend data — null for FREE, null when no history in DB
+  trends: PickTrends | null;
 
   isFeatured: boolean;
   generatedAt: string;

@@ -3,10 +3,18 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
-import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown } from "@sports/types";
+import { getAtsForm, getHeadToHeadForm, detectPlayoffContext } from "@sports/data-ingestion";
+import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown, PickTrends, AtsRecord } from "@sports/types";
 import { startOfDay, endOfDay } from "date-fns";
 
 export const dynamic = "force-dynamic";
+
+function toAtsRecord(
+  form: { wins: number; losses: number; pushes: number; sampleSize: number } | null
+): AtsRecord | null {
+  if (!form) return null;
+  return { wins: form.wins, losses: form.losses, pushes: form.pushes, window: form.sampleSize };
+}
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
@@ -72,6 +80,68 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     take: entitlements.dailyPickLimit ?? 200,
   });
 
+  // ── Fetch trend data ──────────────────────────────────────────
+  // Pro+ users get full ATS/H2H trends; all users get series context.
+  const isPro = entitlements.canSeeConfidence;
+
+  // Deduplicate games to avoid redundant fetches
+  const uniqueGames = new Map<
+    string,
+    { homeTeam: string; awayTeam: string; sportKey: string; commenceTime: Date }
+  >();
+  for (const pick of picks) {
+    if (!uniqueGames.has(pick.game.id)) {
+      uniqueGames.set(pick.game.id, {
+        homeTeam: pick.game.homeTeamName,
+        awayTeam: pick.game.awayTeamName,
+        sportKey: pick.game.sport.key,
+        commenceTime: pick.game.commenceTime,
+      });
+    }
+  }
+
+  const trendsMap = new Map<string, PickTrends>();
+  await Promise.all(
+    Array.from(uniqueGames.entries()).map(async ([gameId, g]) => {
+      const [homeAts, awayAts, homeAtHome, awayAway, h2h, series] = await Promise.all([
+        isPro
+          ? getAtsForm(g.homeTeam, g.sportKey, 10, undefined, true).catch(() => null)
+          : Promise.resolve(null),
+        isPro
+          ? getAtsForm(g.awayTeam, g.sportKey, 10, undefined, true).catch(() => null)
+          : Promise.resolve(null),
+        isPro
+          ? getAtsForm(g.homeTeam, g.sportKey, 10, "HOME", true).catch(() => null)
+          : Promise.resolve(null),
+        isPro
+          ? getAtsForm(g.awayTeam, g.sportKey, 10, "AWAY", true).catch(() => null)
+          : Promise.resolve(null),
+        isPro
+          ? getHeadToHeadForm(g.homeTeam, g.awayTeam, g.sportKey, 10, true).catch(() => null)
+          : Promise.resolve(null),
+        detectPlayoffContext(g.homeTeam, g.awayTeam, g.commenceTime).catch(() => null),
+      ]);
+
+      trendsMap.set(gameId, {
+        homeTeamAts: toAtsRecord(homeAts),
+        awayTeamAts: toAtsRecord(awayAts),
+        homeTeamAtsAtHome: toAtsRecord(homeAtHome),
+        awayTeamAtsAway: toAtsRecord(awayAway),
+        headToHead: toAtsRecord(h2h),
+        seriesContext: series
+          ? {
+              seriesHomeWins: series.seriesHomeWins,
+              seriesAwayWins: series.seriesAwayWins,
+              isEliminationGame: series.isEliminationGame,
+              trailingTeam: series.trailingTeam,
+              desperationMultiplier: series.desperationMultiplier,
+            }
+          : null,
+      });
+    })
+  );
+  // ─────────────────────────────────────────────────────────────
+
   const publicPicks: PublicPick[] = picks.map((pick) => {
     // Parse factorBreakdown from JSON storage
     let factorBreakdown: FactorBreakdown | null = null;
@@ -120,6 +190,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         ? pick.reasoning
         : pick.reasoningShort || pick.reasoning.split(".")[0] + ".",
       reasoningShort: pick.reasoningShort,
+      // Trend data: ATS fields null for FREE, series context for all tiers
+      trends: trendsMap.get(pick.game.id) ?? null,
       isFeatured: pick.isFeatured,
       generatedAt: pick.generatedAt.toISOString(),
       dataFreshnessAt: pick.dataFreshnessAt?.toISOString() ?? null,

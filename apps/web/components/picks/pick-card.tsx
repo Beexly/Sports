@@ -1,4 +1,4 @@
-import type { PublicPick, PickType, PickGrade, PickResult, FactorBreakdown } from "@sports/types";
+import type { PublicPick, PickType, PickGrade, PickResult, FactorBreakdown, PickTrends, AtsRecord } from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
 
 // ─────────────────────────────────────────────
@@ -125,6 +125,9 @@ export function PickCard({
         {canSeeConfidence ? pick.reasoning : pick.reasoningShort}
       </p>
 
+      {/* Trend stats: series context (all tiers) + ATS form (PRO+) */}
+      <TrendsPanel pick={pick} canSeeTrends={canSeeConfidence} />
+
       {/* Factor breakdown (PRO+ only) */}
       {canSeeFactorBreakdown && pick.factorBreakdown && (
         <FactorBreakdownPanel breakdown={pick.factorBreakdown} />
@@ -144,6 +147,143 @@ export function PickCard({
       </div>
     </article>
   );
+}
+
+// ─────────────────────────────────────────────
+// Trends Panel — series context + ATS form
+// ─────────────────────────────────────────────
+
+function TrendsPanel({ pick, canSeeTrends }: { pick: PublicPick; canSeeTrends: boolean }) {
+  const trends = pick.trends;
+  const hasSeriesContext = !!trends?.seriesContext;
+  const hasAtsData = !!(
+    trends?.homeTeamAts ||
+    trends?.awayTeamAts ||
+    trends?.homeTeamAtsAtHome ||
+    trends?.awayTeamAtsAway ||
+    trends?.headToHead
+  );
+
+  // Pro+ with no data and no series context — nothing to render
+  if (canSeeTrends && !hasSeriesContext && !hasAtsData) return null;
+
+  return (
+    <div className="space-y-2">
+      {hasSeriesContext && trends?.seriesContext && (
+        <SeriesContextBadge
+          homeTeam={pick.game.homeTeam}
+          awayTeam={pick.game.awayTeam}
+          ctx={trends.seriesContext}
+        />
+      )}
+      {canSeeTrends ? (
+        hasAtsData && trends ? (
+          <AtsTrendsPanel
+            trends={trends}
+            homeTeam={pick.game.homeTeam}
+            awayTeam={pick.game.awayTeam}
+          />
+        ) : null
+      ) : (
+        <div className="rounded-lg border border-dashed border-gray-700/50 px-4 py-3">
+          <p className="flex items-center gap-1.5 text-xs text-gray-600">
+            <svg className="h-3 w-3 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
+            </svg>
+            Recent form trends available on Pro &amp; Elite
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SeriesContextBadge({
+  homeTeam,
+  awayTeam,
+  ctx,
+}: {
+  homeTeam: string;
+  awayTeam: string;
+  ctx: NonNullable<PickTrends["seriesContext"]>;
+}) {
+  const isTied = ctx.trailingTeam === null;
+  const leader = ctx.trailingTeam === "AWAY" ? homeTeam : awayTeam;
+  const leadWins = Math.max(ctx.seriesHomeWins, ctx.seriesAwayWins);
+  const trailWins = Math.min(ctx.seriesHomeWins, ctx.seriesAwayWins);
+  const seriesLine = isTied
+    ? `Series tied ${ctx.seriesHomeWins}-${ctx.seriesAwayWins}`
+    : `${shortTeamName(leader)} leads ${leadWins}-${trailWins}`;
+
+  return (
+    <div className="flex items-center gap-2 rounded-lg border border-yellow-800/30 bg-yellow-950/30 px-3 py-2">
+      <span className="text-sm leading-none" aria-hidden="true">🏆</span>
+      <span className="text-xs font-medium text-yellow-300">{seriesLine}</span>
+      {ctx.isEliminationGame && (
+        <span className="ml-auto rounded bg-red-900/60 px-1.5 py-0.5 text-[10px] font-bold text-red-400">
+          ELIM
+        </span>
+      )}
+    </div>
+  );
+}
+
+function AtsTrendsPanel({
+  trends,
+  homeTeam,
+  awayTeam,
+}: {
+  trends: PickTrends;
+  homeTeam: string;
+  awayTeam: string;
+}) {
+  const homeName = shortTeamName(homeTeam);
+  const awayName = shortTeamName(awayTeam);
+
+  const stats: Array<{ label: string; record: AtsRecord }> = [
+    trends.homeTeamAts && { label: `${homeName} Last 10`, record: trends.homeTeamAts },
+    trends.homeTeamAtsAtHome && { label: `${homeName} At Home`, record: trends.homeTeamAtsAtHome },
+    trends.awayTeamAts && { label: `${awayName} Last 10`, record: trends.awayTeamAts },
+    trends.awayTeamAtsAway && { label: `${awayName} Away`, record: trends.awayTeamAtsAway },
+    trends.headToHead && { label: "H2H ATS", record: trends.headToHead },
+  ].filter((s): s is { label: string; record: AtsRecord } => !!s);
+
+  if (stats.length === 0) return null;
+
+  return (
+    <div className="rounded-lg border border-gray-800/60 bg-gray-950/40 p-3">
+      <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+        Recent Form
+      </p>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+        {stats.map((stat) => (
+          <AtsStatRow key={stat.label} label={stat.label} record={stat.record} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AtsStatRow({ label, record }: { label: string; record: AtsRecord }) {
+  const total = record.wins + record.losses;
+  const winPct = total > 0 ? record.wins / total : 0;
+  const valueColor =
+    winPct >= 0.6 ? "text-green-400" : winPct <= 0.4 ? "text-red-400" : "text-gray-300";
+
+  return (
+    <div>
+      <p className="mb-0.5 text-[10px] text-gray-600">{label}</p>
+      <p className={`text-xs font-bold ${valueColor}`}>
+        {record.wins}W-{record.losses}L{record.pushes > 0 ? `-${record.pushes}P` : ""}
+        <span className="ml-1 text-[10px] font-normal text-gray-600">({record.window})</span>
+      </p>
+    </div>
+  );
+}
+
+function shortTeamName(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  return parts[parts.length - 1] ?? name;
 }
 
 // ─────────────────────────────────────────────
