@@ -1,0 +1,20 @@
+{
+  "name": "@sports/scores24-collector",
+  "version": "1.0.0",
+  "description": "Discovery + collection pipeline for scores24.live computer-generated predictions",
+  "type": "module",
+  "scripts": {
+    "discover": "tsx src/discovery.ts",
+    "collect": "tsx src/collector.ts",
+    "collect:sport": "tsx src/collector.ts --sport",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "playwright": "^1.44.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.15.0",
+    "typescript": "^5.4.0"
+  }
+}
