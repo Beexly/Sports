@@ -254,7 +254,11 @@ async function settlePicksForSport(
                   ...(eligible ? { learningEligibleAt: settledAt } : {}),
                 },
               });
-            } catch {}
+            } catch (snapshotErr) {
+              const msg = snapshotErr instanceof Error ? snapshotErr.message : String(snapshotErr);
+              console.warn(`${logPrefix} ${sportKey} snapshot update failed for pick ${pick.id}: ${msg}`);
+              result.errors.push(`snapshot:${pick.id}: ${msg}`);
+            }
 
             result.picksSettled++;
           }
@@ -276,7 +280,14 @@ async function settlePicksForSport(
               gameDataQualityScore: matchedGame.dataQualityScore,
               minDataQualityThreshold: gates.minDataQualityForGameLog,
             });
-          } catch {}
+          } catch (gameLogErr) {
+            const msg = gameLogErr instanceof Error ? gameLogErr.message : String(gameLogErr);
+            console.warn(
+              `${logPrefix} ${sportKey} game log write failed for ` +
+              `${matchedGame.homeTeamName} vs ${matchedGame.awayTeamName}: ${msg}`
+            );
+            result.errors.push(`game-log:${matchedGame.id}: ${msg}`);
+          }
 
           result.gamesSettled++;
           console.log(
