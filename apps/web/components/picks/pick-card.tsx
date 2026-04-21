@@ -541,7 +541,6 @@ function ScoreBar({
 
 function GradeBadge({ grade }: { grade: PickGrade }) {
   const info = PICK_GRADE_LABELS[grade];
-  if (grade === "LEAN") return null;
   return (
     <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${info.color} ${info.bgColor}`}>
       {info.label}

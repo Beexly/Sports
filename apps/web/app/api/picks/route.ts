@@ -208,6 +208,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       date: targetDate.toISOString().split("T")[0],
       canSeeConfidence: entitlements.canSeeConfidence,
       canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
+      dailyPickLimit: entitlements.dailyPickLimit,
     },
   });
 }
