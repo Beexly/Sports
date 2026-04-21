@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
+import { processSport } from "@sports/ingestion-pipeline";
+import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
+import { getReadinessGates } from "@sports/prediction-engine";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -114,11 +117,12 @@ function TriggerRefreshButton() {
     <form
       action={async () => {
         "use server";
-        const response = await fetch(
-          `${process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000"}/api/admin/trigger-refresh`,
-          { method: "POST" }
-        );
-        if (!response.ok) console.error("Refresh failed");
+        const apiKey = process.env["THE_ODDS_API_KEY"];
+        if (!apiKey) { console.error("No API key"); return; }
+        const gates = getReadinessGates();
+        for (const sport of SUPPORTED_SPORTS) {
+          await processSport(sport, apiKey, gates, "[admin-trigger]");
+        }
       }}
     >
       <button
