@@ -24,7 +24,7 @@ interface PicksResponse {
 // Data fetching
 // ─────────────────────────────────────────────
 
-async function fetchPicks(
+async function fetchAllPicks(
   sport?: string,
   date?: string,
   grade?: string
@@ -34,6 +34,8 @@ async function fetchPicks(
   if (sport) params.set("sport", sport);
   if (date) params.set("date", date);
   if (grade) params.set("grade", grade);
+  // Request all picks for the page (limit is server-enforced per entitlement)
+  params.set("limit", "200");
   const url = `${appUrl}/api/picks${params.toString() ? `?${params}` : ""}`;
   const res = await fetch(url, { next: { revalidate: 1800 } });
   if (!res.ok) throw new Error(`Failed to fetch picks: ${res.status}`);
@@ -80,7 +82,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
   const [slateResult, picksResult] = await Promise.allSettled([
     fetchSlate(),
-    fetchPicks(sport, date, grade),
+    fetchAllPicks(sport, date, grade),
   ]);
 
   const slate = slateResult.status === "fulfilled" ? slateResult.value : null;
@@ -96,6 +98,14 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
     picksResult.status === "fulfilled"
       ? picksResult.value.meta.date
       : (date ?? new Date().toISOString().split("T")[0]!);
+
+  // For free tier, only show 1 pick (limit enforced server-side in API too)
+  const visiblePicks = isFreeTier ? picks.slice(0, 1) : picks;
+
+  // High-confidence section: picks with confidence ≥ 70 (only PRO+ see actual scores)
+  const highConfPicks = isPro
+    ? picks.filter((p) => p.confidence !== null && p.confidence >= 70).slice(0, 4)
+    : [];
 
   const SPORTS = [
     { key: "", label: "All" },
@@ -119,27 +129,60 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
       <Nav />
 
       <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-5xl space-y-8">
 
-          {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold tracking-tight text-white">
-              Today&apos;s Picks
-            </h1>
-            <p className="mt-1.5 text-sm text-gray-400">
-              Algorithmic picks ranked by confidence — updated every 30 minutes.
-            </p>
+          {/* Page header */}
+          <div>
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight text-white">
+                  Today&apos;s Picks
+                </h1>
+                <p className="mt-1.5 text-sm text-gray-400">
+                  Algorithmic picks scored by consensus, edge, and market depth — updated every 30 minutes.
+                </p>
+              </div>
+              {slate && (
+                <div className="hidden shrink-0 text-right sm:block">
+                  <p className="text-2xl font-bold text-white">{slate.totalPicks}</p>
+                  <p className="text-xs text-gray-500">picks today</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Daily Slate Bar */}
           {slate && <SlateBar slate={slate} />}
 
+          {/* High Confidence section — PRO+ only, shown when data exists */}
+          {isPro && highConfPicks.length > 0 && (
+            <section>
+              <div className="mb-4 flex items-center gap-2">
+                <span className="h-4 w-0.5 rounded-full bg-blue-500" aria-hidden="true" />
+                <h2 className="text-sm font-semibold text-white">High Confidence</h2>
+                <span className="rounded-full bg-blue-900/30 px-2 py-0.5 text-[10px] font-semibold text-blue-400">
+                  {highConfPicks.length} picks · 70+ confidence
+                </span>
+              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {highConfPicks.map((pick) => (
+                  <PickCard
+                    key={pick.id}
+                    pick={pick}
+                    canSeeConfidence={entitlements.canSeeConfidence}
+                    canSeeEdgeScore={entitlements.canSeeEdgeScore ?? false}
+                    canSeeFactorBreakdown={entitlements.canSeeFactorBreakdown ?? false}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Paywall Banner */}
-          {isFreeTier && <PaywallBanner hasAccount={!!session?.user} />}
+          {isFreeTier && <PaywallBanner hasAccount={!!session?.user} totalPicks={slate?.totalPicks ?? picks.length} />}
 
           {/* Filters row */}
-          <div className="mb-6 flex flex-col gap-3">
-            {/* Sport tabs */}
+          <div className="flex flex-col gap-3">
             <div className="flex flex-wrap gap-2">
               {SPORTS.map(({ key, label }) => {
                 const isActive = (sport ?? "") === key;
@@ -164,9 +207,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               })}
             </div>
 
-            {/* Grade filter + date picker */}
             <div className="flex flex-wrap items-center gap-2">
-              {GRADES.map(({ key, label }) => {
+              {isPro && GRADES.map(({ key, label }) => {
                 const isActive = (grade ?? "") === key;
                 const p = new URLSearchParams();
                 if (sport) p.set("sport", sport);
@@ -198,9 +240,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {fetchError && (
             <div className="rounded-xl border border-red-800/60 bg-red-950/40 p-6 text-center">
               <p className="text-sm font-medium text-red-400">{fetchError}</p>
-              <p className="mt-1 text-xs text-red-500/70">
-                Please refresh the page or try again shortly.
-              </p>
+              <p className="mt-1 text-xs text-red-500/70">Please refresh or try again shortly.</p>
             </div>
           )}
 
@@ -208,68 +248,72 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {!fetchError && picks.length === 0 && (
             <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-12 text-center">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-800">
-                <svg
-                  className="h-7 w-7 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
-                  />
+                <svg className="h-7 w-7 text-gray-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                 </svg>
               </div>
               <h3 className="text-base font-semibold text-white">No picks for this date</h3>
-              <p className="mt-2 text-sm text-gray-500">
-                Picks are generated daily based on available games and odds.
-              </p>
+              <p className="mt-2 text-sm text-gray-500">Picks are generated daily based on available games and odds.</p>
             </div>
           )}
 
-          {/* Picks grid */}
-          {!fetchError && picks.length > 0 && (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {picks.map((pick) => (
-                <PickCard
-                  key={pick.id}
-                  pick={pick}
-                  canSeeConfidence={entitlements.canSeeConfidence}
-                  canSeeEdgeScore={entitlements.canSeeEdgeScore ?? false}
-                  canSeeFactorBreakdown={entitlements.canSeeFactorBreakdown ?? false}
-                />
-              ))}
-            </div>
+          {/* All picks section header */}
+          {!fetchError && visiblePicks.length > 0 && (
+            <section>
+              {isPro && (
+                <div className="mb-4 flex items-center gap-2">
+                  <span className="h-4 w-0.5 rounded-full bg-gray-500" aria-hidden="true" />
+                  <h2 className="text-sm font-semibold text-white">All Picks</h2>
+                  <span className="text-[10px] text-gray-500">{picks.length} total</span>
+                </div>
+              )}
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                {visiblePicks.map((pick) => (
+                  <PickCard
+                    key={pick.id}
+                    pick={pick}
+                    canSeeConfidence={entitlements.canSeeConfidence}
+                    canSeeEdgeScore={entitlements.canSeeEdgeScore ?? false}
+                    canSeeFactorBreakdown={entitlements.canSeeFactorBreakdown ?? false}
+                  />
+                ))}
+              </div>
+            </section>
           )}
 
-          {/* Bottom upgrade CTA for free users */}
+          {/* Upgrade CTA for free users */}
           {isFreeTier && picks.length > 0 && (
-            <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
-              <p className="text-sm font-semibold text-blue-200">
-                You&apos;re seeing {entitlements.dailyPickLimit ?? 1} free pick per day.
+            <div className="rounded-xl border border-blue-800/40 bg-gradient-to-b from-blue-950/30 to-gray-900/20 p-8 text-center">
+              <p className="text-base font-semibold text-white">
+                {(slate?.totalPicks ?? picks.length) - 1} more picks available today
               </p>
-              <p className="mt-1 text-xs text-blue-400/70">
-                Upgrade to unlock all picks, confidence scores, factor breakdowns, and edge scores.
+              <p className="mt-1.5 text-sm text-gray-400">
+                Upgrade to Pro to unlock all picks, confidence scores, factor breakdowns, and edge scores.
               </p>
-              <Link
-                href="/pricing"
-                className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
-              >
-                Upgrade to Pro — $19/mo
-              </Link>
+              <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                <Link
+                  href="/pricing"
+                  className="rounded-lg bg-blue-600 px-8 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+                >
+                  Upgrade to Pro — $19/mo
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+                >
+                  See all plans
+                </Link>
+              </div>
             </div>
           )}
 
-          {/* PRO conversion teaser for elite features */}
+          {/* PRO → Elite upsell */}
           {isPro && entitlements.tier === "PRO" && picks.length > 0 && (
-            <div className="mt-8 rounded-xl border border-purple-800/30 bg-purple-950/10 p-4 text-center">
+            <div className="rounded-xl border border-purple-800/30 bg-purple-950/10 p-4 text-center">
               <p className="text-xs text-purple-400">
-                Want early access, daily alerts, and advanced analytics?{" "}
+                Early access, daily alerts, and advanced analytics —{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
-                  Upgrade to Elite — $49/mo
+                  Upgrade to Elite
                 </Link>
               </p>
             </div>
@@ -297,52 +341,44 @@ function SlateBar({ slate }: { slate: DailySlate }) {
     : null;
 
   return (
-    <div className="mb-6 rounded-xl border border-gray-800 bg-gray-900/60 px-5 py-4">
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        {/* Games / picks */}
+    <div className="rounded-xl border border-gray-800 bg-gray-900/60 px-5 py-4">
+      <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
         <StatPill label="Games Today" value={String(slate.totalGames)} />
         <StatPill label="Total Picks" value={String(slate.totalPicks)} />
-        <StatPill
-          label="Premium Picks"
-          value={String(slate.premiumPickCount)}
-          highlight
-        />
+        <StatPill label="Premium" value={String(slate.premiumPickCount)} highlight />
 
-        {/* Recent record */}
         {record && (
           <div className="flex items-center gap-1.5">
             <span className="text-xs text-gray-500">{record.period}:</span>
             <span className="text-xs font-bold text-green-400">{record.wins}W</span>
-            <span className="text-xs text-gray-600">-</span>
+            <span className="text-xs text-gray-600">–</span>
             <span className="text-xs font-bold text-red-400">{record.losses}L</span>
             {record.pushes > 0 && (
               <>
-                <span className="text-xs text-gray-600">-</span>
+                <span className="text-xs text-gray-600">–</span>
                 <span className="text-xs font-semibold text-gray-400">{record.pushes}P</span>
               </>
             )}
           </div>
         )}
 
-        {/* Last updated */}
         {lastUpdated && (
           <div className="ml-auto flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-green-400" aria-hidden="true" />
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" aria-hidden="true" />
             <span className="text-[10px] text-gray-500">Updated {lastUpdated}</span>
           </div>
         )}
       </div>
 
-      {/* Sport breakdown */}
       {slate.sportBreakdown.length > 1 && (
         <div className="mt-3 flex flex-wrap gap-2 border-t border-gray-800/60 pt-3">
           {slate.sportBreakdown.map(({ sport, pickCount }) => (
             <Link
               key={sport}
               href={`/picks?sport=${sport.toLowerCase()}`}
-              className="rounded-full bg-gray-800/60 px-2.5 py-0.5 text-[10px] font-medium text-gray-400 hover:text-white transition-colors"
+              className="rounded-full bg-gray-800/60 px-2.5 py-0.5 text-[10px] font-medium text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
             >
-              {sport} &middot; {pickCount}
+              {sport} · {pickCount}
             </Link>
           ))}
         </div>
@@ -361,8 +397,8 @@ function StatPill({
   highlight?: boolean;
 }) {
   return (
-    <div className="text-center">
-      <p className={`text-lg font-bold ${highlight ? "text-yellow-400" : "text-white"}`}>
+    <div>
+      <p className={`text-xl font-bold ${highlight ? "text-yellow-400" : "text-white"}`}>
         {value}
       </p>
       <p className="text-[10px] text-gray-500">{label}</p>
@@ -374,13 +410,14 @@ function StatPill({
 // Paywall Banner
 // ─────────────────────────────────────────────
 
-function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
+function PaywallBanner({ hasAccount, totalPicks }: { hasAccount: boolean; totalPicks: number }) {
   return (
-    <div className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/50 bg-yellow-950/30 p-5 sm:flex-row sm:items-center">
+    <div className="flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/40 bg-gradient-to-r from-yellow-950/40 to-gray-900/40 p-5 sm:flex-row sm:items-center">
       <div>
-        <p className="text-sm font-semibold text-yellow-300">You&apos;re on the Free plan</p>
-        <p className="mt-0.5 text-xs text-yellow-600">
-          Upgrade to Pro or Elite to unlock all picks, confidence scores, and factor breakdowns.
+        <p className="text-sm font-semibold text-yellow-200">Free plan · 1 pick per day</p>
+        <p className="mt-0.5 text-xs text-yellow-700">
+          {totalPicks > 1 ? `${totalPicks - 1} more picks available today — ` : ""}
+          Upgrade to see confidence scores, factor breakdowns, and all picks.
         </p>
       </div>
       <div className="flex shrink-0 items-center gap-3">
@@ -396,7 +433,7 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
           href="/pricing"
           className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
         >
-          Upgrade Now
+          Upgrade — $19/mo
         </Link>
       </div>
     </div>
@@ -404,7 +441,7 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
 }
 
 // ─────────────────────────────────────────────
-// Date picker
+// Date picker form
 // ─────────────────────────────────────────────
 
 function DatePickerForm({
@@ -420,7 +457,7 @@ function DatePickerForm({
     <form method="get" action="/picks" className="flex items-center gap-2">
       {currentSport && <input type="hidden" name="sport" value={currentSport} />}
       {currentGrade && <input type="hidden" name="grade" value={currentGrade} />}
-      <label htmlFor="date" className="sr-only text-xs text-gray-500">Date</label>
+      <label htmlFor="date" className="sr-only">Date</label>
       <input
         id="date"
         type="date"
