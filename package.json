@@ -20,6 +20,7 @@
     "db:migrate": "npm run db:migrate --workspace=packages/db",
     "db:seed": "npm run db:seed --workspace=packages/db",
     "db:studio": "npm run db:studio --workspace=packages/db",
+    "build:packages": "npm run build --workspace=packages/types && npm run build --workspace=packages/db && npm run build --workspace=packages/prediction-engine && npm run build --workspace=packages/data-ingestion && npm run build --workspace=packages/ingestion-pipeline",
     "build:workers": "npm run build --workspace=workers/data-refresh && npm run build --workspace=workers/content-publishing",
     "workers:refresh": "node workers/data-refresh/dist/index.js",
     "workers:picks": "node workers/pick-generation/dist/index.js",
