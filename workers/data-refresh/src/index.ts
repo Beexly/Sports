@@ -108,10 +108,14 @@ async function settleResults(): Promise<void> {
               score.awayScore,
               sport.key
             );
-            await db.pick.update({
-              where: { id: pick.id },
+            // Guard against double-settlement: only update if still PENDING.
+            // If a concurrent cycle already settled this pick, updateMany returns
+            // count=0 and we skip the snapshot update below.
+            const { count: settledCount } = await db.pick.updateMany({
+              where: { id: pick.id, result: "PENDING" },
               data: { result, settledAt },
             });
+            if (settledCount === 0) continue;
 
             // Record settlement outcome in the PickSignalSnapshot.
             // This is the outcome-anchored learning data: real result tied to the
@@ -187,16 +191,25 @@ async function main(): Promise<void> {
   console.log(`[data-refresh] Derived history enabled: ${gates.canUseDerivedHistory}`);
   console.log(`[data-refresh] Featured promotion enabled: ${gates.canPromoteFeaturedPicks}`);
 
-  await runRefreshCycle();
-  await settleResults();
-  setInterval(async () => {
+  // Recursive setTimeout rather than setInterval so cycles NEVER overlap.
+  // If a cycle takes longer than REFRESH_INTERVAL_MS (rare but possible under
+  // API throttling), the next cycle waits for the current one to finish. This
+  // avoids concurrent ingestionRun rows and double-settlement races.
+  const runAndSchedule = async (): Promise<void> => {
     try {
       await runRefreshCycle();
       await settleResults();
     } catch (err) {
-      console.error("[data-refresh] Unhandled error:", err instanceof Error ? err.message : err);
+      console.error(
+        "[data-refresh] Unhandled error:",
+        err instanceof Error ? err.message : err
+      );
+    } finally {
+      setTimeout(runAndSchedule, REFRESH_INTERVAL_MS);
     }
-  }, REFRESH_INTERVAL_MS);
+  };
+
+  await runAndSchedule();
 }
 
 main().catch((err) => {

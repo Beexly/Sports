@@ -7,7 +7,7 @@
 import { db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import type { ContentGenerationInput } from "@sports/types";
-import { format } from "date-fns";
+import { endOfDay, format, startOfDay } from "date-fns";
 
 const PUBLISH_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6 hours
 
@@ -29,10 +29,12 @@ async function generateAndPublishContent(): Promise<void> {
     return;
   }
 
-  const today = new Date();
-  const todayStart = new Date(today.setHours(0, 0, 0, 0));
-  const todayEnd = new Date(today.setHours(23, 59, 59, 999));
-  const dateStr = format(new Date(), "yyyy-MM-dd");
+  // Use immutable helpers — `Date.prototype.setHours` mutates in place, which
+  // caused `todayEnd` to be computed off a Date already truncated to midnight.
+  const now = new Date();
+  const todayStart = startOfDay(now);
+  const todayEnd = endOfDay(now);
+  const dateStr = format(now, "yyyy-MM-dd");
 
   // Get today's canonical (non-bootstrap) picks grouped by sport.
   // Bootstrap-era picks are excluded — content must only cite picks that
@@ -69,8 +71,8 @@ async function generateAndPublishContent(): Promise<void> {
   for (const [sportName, sportPicks] of Object.entries(bySport)) {
     const slug = `${sportName.toLowerCase()}-picks-${dateStr}`;
 
-    // Check if post already exists for today
-    const existing = await db.blogPost.findFirst({
+    // Check if post already exists for today (slug is @unique in the schema)
+    const existing = await db.blogPost.findUnique({
       where: { slug },
     });
     if (existing) {
@@ -218,15 +220,21 @@ Respond ONLY with valid JSON:
 async function main(): Promise<void> {
   console.log("[content-worker] Worker starting...");
 
-  await generateAndPublishContent();
-
-  setInterval(async () => {
+  // Recursive setTimeout prevents overlapping runs if Claude requests run long.
+  const runAndSchedule = async (): Promise<void> => {
     try {
       await generateAndPublishContent();
     } catch (err) {
-      console.error("[content-worker] Error:", err instanceof Error ? err.message : err);
+      console.error(
+        "[content-worker] Error:",
+        err instanceof Error ? err.message : err
+      );
+    } finally {
+      setTimeout(runAndSchedule, PUBLISH_INTERVAL_MS);
     }
-  }, PUBLISH_INTERVAL_MS);
+  };
+
+  await runAndSchedule();
 }
 
 main().catch((err) => {

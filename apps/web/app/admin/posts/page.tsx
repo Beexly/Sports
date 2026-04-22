@@ -1,7 +1,10 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
 import { formatDate } from "@/lib/utils";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminPostsPage() {
   const session = await auth();
@@ -32,9 +35,9 @@ export default async function AdminPostsPage() {
             <h1 className="text-3xl font-bold text-white">Blog Posts</h1>
             <p className="text-gray-400 mt-1">{posts.length} posts</p>
           </div>
-          <a href="/admin" className="text-gray-400 hover:text-white text-sm transition-colors">
+          <Link href="/admin" className="text-gray-400 hover:text-white text-sm transition-colors">
             ← Back to Admin
-          </a>
+          </Link>
         </div>
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">

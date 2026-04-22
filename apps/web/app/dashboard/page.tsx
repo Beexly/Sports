@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { Nav } from "@/components/ui/nav";
+import { Footer } from "@/components/ui/footer";
 import { ManageSubscriptionButton } from "@/components/ui/manage-subscription-button";
 import type { PickResult, PickType } from "@sports/types";
 import { startOfDay, endOfDay, subDays, format } from "date-fns";
@@ -173,18 +174,15 @@ export default async function DashboardPage() {
           <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <StatCard label="Today's Picks" value={todayPicksCount.toString()} />
             <StatCard
-              label="14-Day Record"
+              label="Platform 14d"
               value={`${wins}W–${losses}L${pushes > 0 ? `–${pushes}P` : ""}`}
             />
             <StatCard
-              label="Win Rate (14d)"
+              label="Platform Win Rate (14d)"
               value={winRate !== null ? `${winRate}%` : "—"}
               highlight={winRate !== null && winRate >= 55}
             />
-            <StatCard
-              label="Tier"
-              value={tierLabel}
-            />
+            <StatCard label="Tier" value={tierLabel} />
           </div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -349,6 +347,7 @@ export default async function DashboardPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

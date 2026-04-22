@@ -10,11 +10,15 @@ export { getEntitlements };
 export type { Entitlements };
 
 export async function getUserEntitlements(userId: string): Promise<Entitlements> {
+  // Deterministic ordering in case a user somehow has multiple active rows
+  // (shouldn't happen under normal Stripe flow but is theoretically possible
+  // with historical data). Always pick the most recently-renewing subscription.
   const subscription = await db.subscription.findFirst({
     where: {
       userId,
       status: { in: ["ACTIVE", "TRIALING"] },
     },
+    orderBy: { currentPeriodEnd: "desc" },
     select: { tier: true },
   });
 

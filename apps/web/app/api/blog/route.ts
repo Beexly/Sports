@@ -4,7 +4,10 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import type { PublicBlogPost } from "@sports/types";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  try {
   const session = await auth();
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)
@@ -20,8 +23,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
   const pageSize = 10;
-  const sportFilter = searchParams.get("sport");
-  const slug = searchParams.get("slug");
+  const sportFilter = searchParams.get("sport")?.slice(0, 32) ?? null;
+  const slug = searchParams.get("slug")?.slice(0, 128) ?? null;
 
   if (slug) {
     // Single post
@@ -90,4 +93,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     data: publicPosts,
     meta: { total, page, pageSize, hasMore: page * pageSize < total },
   });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[api/blog] ${message}`);
+    return NextResponse.json(
+      { success: false, error: "Failed to load blog posts" },
+      { status: 500 }
+    );
+  }
 }

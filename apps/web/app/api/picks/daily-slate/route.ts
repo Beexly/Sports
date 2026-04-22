@@ -8,7 +8,10 @@ import { startOfDay, endOfDay, subDays } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
+const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  try {
   const gates = getReadinessGates();
   if (!gates.canExposePublicPicks) {
     return NextResponse.json(bootstrapGateResponse("Daily slate"), { status: 503 });
@@ -30,7 +33,24 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const { searchParams } = new URL(req.url);
   const dateParam = searchParams.get("date");
-  const targetDate = dateParam ? new Date(dateParam) : new Date();
+  let targetDate: Date;
+  if (dateParam) {
+    if (!DATE_REGEX.test(dateParam)) {
+      return NextResponse.json(
+        { success: false, error: "Invalid date — expected YYYY-MM-DD" },
+        { status: 400 }
+      );
+    }
+    targetDate = new Date(`${dateParam}T00:00:00.000Z`);
+    if (Number.isNaN(targetDate.getTime())) {
+      return NextResponse.json(
+        { success: false, error: "Invalid date — expected YYYY-MM-DD" },
+        { status: 400 }
+      );
+    }
+  } else {
+    targetDate = new Date();
+  }
   const dayStart = startOfDay(targetDate);
   const dayEnd = endOfDay(targetDate);
 
@@ -145,4 +165,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   };
 
   return NextResponse.json({ success: true, data: slate });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[api/picks/daily-slate] ${message}`);
+    return NextResponse.json(
+      { success: false, error: "Failed to load daily slate" },
+      { status: 500 }
+    );
+  }
 }

@@ -55,6 +55,7 @@ const TESTIMONIALS = [
 
 export default async function HomePage() {
   const featuredPicks = await fetchHomepagePicks();
+  const fallbackPicks = buildFallbackPicks();
   return (
     <div className="flex min-h-screen flex-col bg-gray-950">
       <Nav />
@@ -273,7 +274,7 @@ export default async function HomePage() {
                 ? featuredPicks.map((pick) => (
                     <LockedPickCard key={pick.id} pick={pick} />
                   ))
-                : FALLBACK_PICKS.map((pick) => (
+                : fallbackPicks.map((pick) => (
                     <LockedPickCard key={pick.id} pick={pick} />
                   ))}
             </div>
@@ -364,70 +365,90 @@ export default async function HomePage() {
 
 // ─────────────────────────────────────────────
 // Fallback picks (shown only when DB is empty)
+// Built on every render so timestamps stay fresh — if we built this at module
+// load, server processes would render stale `commenceTime` values for hours.
 // ─────────────────────────────────────────────
 
-const FALLBACK_PICKS: PublicPick[] = [
-  {
-    id: "f1",
-    game: { homeTeam: "Baltimore Ravens", awayTeam: "Kansas City Chiefs", commenceTime: new Date().toISOString(), sport: "NFL" },
-    pickType: "SPREAD",
-    selection: "— upgrade to see —",
-    line: 0,
-    confidence: null,
-    edgeScore: null,
-    factorBreakdown: null,
-    dataQualityScore: 85,
-    tier: "PREMIUM",
-    pickGrade: "STRONG_PLAY",
-    riskLevel: "MODERATE",
-    reasoning: "Unlock with Pro to see full reasoning.",
-    reasoningShort: "Upgrade to see this pick.",
-    isFeatured: false,
-    generatedAt: new Date().toISOString(),
-    dataFreshnessAt: null,
-    result: "PENDING",
-  },
-  {
-    id: "f2",
-    game: { homeTeam: "Golden State Warriors", awayTeam: "Boston Celtics", commenceTime: new Date().toISOString(), sport: "NBA" },
-    pickType: "TOTAL",
-    selection: "— upgrade to see —",
-    line: 0,
-    confidence: null,
-    edgeScore: null,
-    factorBreakdown: null,
-    dataQualityScore: 78,
-    tier: "PREMIUM",
-    pickGrade: "SOLID_PLAY",
-    riskLevel: "LOW_RISK",
-    reasoning: "Unlock with Pro to see full reasoning.",
-    reasoningShort: "Upgrade to see this pick.",
-    isFeatured: false,
-    generatedAt: new Date().toISOString(),
-    dataFreshnessAt: null,
-    result: "PENDING",
-  },
-  {
-    id: "f3",
-    game: { homeTeam: "Houston Astros", awayTeam: "New York Yankees", commenceTime: new Date().toISOString(), sport: "MLB" },
-    pickType: "MONEYLINE",
-    selection: "Yankees ML",
-    line: -140,
-    confidence: null,
-    edgeScore: null,
-    factorBreakdown: null,
-    dataQualityScore: 72,
-    tier: "FREE",
-    pickGrade: "LEAN",
-    riskLevel: "MODERATE",
-    reasoning: "Sign up for free to see today's picks.",
-    reasoningShort: "Sign up for free to see today's picks.",
-    isFeatured: false,
-    generatedAt: new Date().toISOString(),
-    dataFreshnessAt: null,
-    result: "PENDING",
-  },
-];
+function buildFallbackPicks(): PublicPick[] {
+  const now = new Date().toISOString();
+  return [
+    {
+      id: "f1",
+      game: {
+        homeTeam: "Baltimore Ravens",
+        awayTeam: "Kansas City Chiefs",
+        commenceTime: now,
+        sport: "NFL",
+      },
+      pickType: "SPREAD",
+      selection: "— upgrade to see —",
+      line: 0,
+      confidence: null,
+      edgeScore: null,
+      factorBreakdown: null,
+      dataQualityScore: 85,
+      tier: "PREMIUM",
+      pickGrade: "STRONG_PLAY",
+      riskLevel: "MODERATE",
+      reasoning: "Unlock with Pro to see full reasoning.",
+      reasoningShort: "Upgrade to see this pick.",
+      isFeatured: false,
+      generatedAt: now,
+      dataFreshnessAt: null,
+      result: "PENDING",
+    },
+    {
+      id: "f2",
+      game: {
+        homeTeam: "Golden State Warriors",
+        awayTeam: "Boston Celtics",
+        commenceTime: now,
+        sport: "NBA",
+      },
+      pickType: "TOTAL",
+      selection: "— upgrade to see —",
+      line: 0,
+      confidence: null,
+      edgeScore: null,
+      factorBreakdown: null,
+      dataQualityScore: 78,
+      tier: "PREMIUM",
+      pickGrade: "SOLID_PLAY",
+      riskLevel: "LOW_RISK",
+      reasoning: "Unlock with Pro to see full reasoning.",
+      reasoningShort: "Upgrade to see this pick.",
+      isFeatured: false,
+      generatedAt: now,
+      dataFreshnessAt: null,
+      result: "PENDING",
+    },
+    {
+      id: "f3",
+      game: {
+        homeTeam: "Houston Astros",
+        awayTeam: "New York Yankees",
+        commenceTime: now,
+        sport: "MLB",
+      },
+      pickType: "MONEYLINE",
+      selection: "Yankees ML",
+      line: -140,
+      confidence: null,
+      edgeScore: null,
+      factorBreakdown: null,
+      dataQualityScore: 72,
+      tier: "FREE",
+      pickGrade: "LEAN",
+      riskLevel: "MODERATE",
+      reasoning: "Sign up for free to see today's picks.",
+      reasoningShort: "Sign up for free to see today's picks.",
+      isFeatured: false,
+      generatedAt: now,
+      dataFreshnessAt: null,
+      result: "PENDING",
+    },
+  ];
+}
 
 // ─────────────────────────────────────────────
 // Sub-components

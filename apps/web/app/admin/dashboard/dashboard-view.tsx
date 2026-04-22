@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { formatDistanceToNow, format } from "date-fns";
 import type {
   DashboardData,
@@ -302,14 +302,42 @@ function PickDetailPanel({ pick }: { pick: PickSummary }) {
 
 // ─── Main dashboard view ──────────────────────────────────────────────────
 
+type RefreshState =
+  | { status: "idle" }
+  | { status: "running"; elapsedSec: number }
+  | {
+      status: "done";
+      games: number;
+      picks: number;
+      sportsSucceeded: number;
+      sportsFailed: number;
+      failedSports: string[];
+      elapsedSec: number;
+    }
+  | { status: "error"; message: string };
+
+type TriggerRefreshResult = {
+  success?: boolean;
+  error?: string;
+  results?: Array<{
+    sport?: string;
+    status?: "success" | "failed";
+    games?: number;
+    picks?: number;
+    error?: string;
+  }>;
+};
+
 export function DashboardView() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPickId, setSelectedPickId] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(60);
+  const [refresh, setRefresh] = useState<RefreshState>({ status: "idle" });
   const countdownRef = useRef(60);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const refreshTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchData = useCallback(async () => {
     try {
@@ -328,6 +356,64 @@ export function DashboardView() {
     }
   }, []);
 
+  const triggerRefresh = useCallback(async () => {
+    if (refreshTimerRef.current) clearInterval(refreshTimerRef.current);
+    const started = Date.now();
+    setRefresh({ status: "running", elapsedSec: 0 });
+    refreshTimerRef.current = setInterval(() => {
+      setRefresh((prev) =>
+        prev.status === "running"
+          ? { status: "running", elapsedSec: Math.floor((Date.now() - started) / 1000) }
+          : prev
+      );
+      // Live-refresh the dashboard while the sync runs so rows appear as they land.
+      void fetchData();
+    }, 3000);
+
+    try {
+      const res = await fetch("/api/admin/trigger-refresh", { method: "POST" });
+      const body = (await res.json().catch(() => ({}))) as TriggerRefreshResult;
+      if (!res.ok) {
+        throw new Error(body.error ?? `HTTP ${res.status}`);
+      }
+      const results = body.results ?? [];
+      let games = 0;
+      let picks = 0;
+      let sportsSucceeded = 0;
+      let sportsFailed = 0;
+      const failedSports: string[] = [];
+      for (const r of results) {
+        games += r.games ?? 0;
+        picks += r.picks ?? 0;
+        if (r.status === "success") sportsSucceeded += 1;
+        if (r.status === "failed") {
+          sportsFailed += 1;
+          if (r.sport) failedSports.push(r.sport);
+        }
+      }
+      setRefresh({
+        status: "done",
+        games,
+        picks,
+        sportsSucceeded,
+        sportsFailed,
+        failedSports,
+        elapsedSec: Math.floor((Date.now() - started) / 1000),
+      });
+      await fetchData();
+    } catch (e) {
+      setRefresh({
+        status: "error",
+        message: e instanceof Error ? e.message : "Refresh failed",
+      });
+    } finally {
+      if (refreshTimerRef.current) {
+        clearInterval(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
+    }
+  }, [fetchData]);
+
   useEffect(() => {
     void fetchData();
     // countdown tick
@@ -341,6 +427,7 @@ export function DashboardView() {
     }, 1000);
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
+      if (refreshTimerRef.current) clearInterval(refreshTimerRef.current);
     };
   }, [fetchData]);
 
@@ -363,7 +450,6 @@ export function DashboardView() {
   if (!data) return null;
 
   const { systemHealth: h, recentRuns, upcomingGames, currentPicks, recentlySettled, performance: perf, signalCoverage: sig } = data;
-  const selectedPick = selectedPickId ? currentPicks.find((p) => p.id === selectedPickId) ?? null : null;
 
   const gateEntries: Array<{ key: string; label: string; on: boolean }> = [
     { key: "canonical", label: "Canonical History", on: h.gates.canPersistCanonicalHistory },
@@ -398,11 +484,76 @@ export function DashboardView() {
             >
               {loading ? "Refreshing…" : "↻ Refresh"}
             </button>
+            <button
+              onClick={() => void triggerRefresh()}
+              disabled={refresh.status === "running"}
+              className="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white text-xs rounded-lg border border-brand-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              title="Fetch fresh odds and regenerate picks across all sports"
+            >
+              {refresh.status === "running"
+                ? `⟳ Syncing… ${refresh.elapsedSec}s`
+                : "⚡ Trigger Sync"}
+            </button>
             <a href="/admin" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
               ← Admin
             </a>
           </div>
         </div>
+
+        {/* ── Sync status banner ── */}
+        {refresh.status !== "idle" && (
+          <div
+            className={`rounded-lg border px-4 py-2.5 text-xs flex items-center justify-between ${
+              refresh.status === "running"
+                ? "bg-brand-500/5 border-brand-500/30 text-brand-300"
+                : refresh.status === "done"
+                ? "bg-green-500/5 border-green-500/30 text-green-300"
+                : "bg-red-500/5 border-red-500/30 text-red-300"
+            }`}
+          >
+            {refresh.status === "running" && (
+              <>
+                <span className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
+                  Syncing odds across all sports — live updates every 3s · {refresh.elapsedSec}s elapsed
+                </span>
+                <span className="text-gray-500">Runs can take 1–2 minutes</span>
+              </>
+            )}
+            {refresh.status === "done" && (
+              <>
+                <span>
+                  ✓ Sync complete in {refresh.elapsedSec}s · {refresh.sportsSucceeded} sport
+                  {refresh.sportsSucceeded === 1 ? "" : "s"} ok
+                  {refresh.sportsFailed > 0
+                    ? `, ${refresh.sportsFailed} failed (${refresh.failedSports.join(", ")})`
+                    : ""}
+                  {" · "}
+                  {refresh.games} games · {refresh.picks} picks
+                </span>
+                <button
+                  onClick={() => setRefresh({ status: "idle" })}
+                  className="text-gray-500 hover:text-gray-300 ml-4"
+                  aria-label="Dismiss"
+                >
+                  ✕
+                </button>
+              </>
+            )}
+            {refresh.status === "error" && (
+              <>
+                <span>✗ Sync failed: {refresh.message}</span>
+                <button
+                  onClick={() => setRefresh({ status: "idle" })}
+                  className="text-gray-500 hover:text-gray-300 ml-4"
+                  aria-label="Dismiss"
+                >
+                  ✕
+                </button>
+              </>
+            )}
+          </div>
+        )}
 
         {/* ── System Health ── */}
         <SectionCard title="System Health">
@@ -690,9 +841,8 @@ export function DashboardView() {
                   {currentPicks.map((pick) => {
                     const isSelected = selectedPickId === pick.id;
                     return (
-                      <>
+                      <Fragment key={pick.id}>
                         <tr
-                          key={pick.id}
                           className={`border-t border-gray-800/50 cursor-pointer transition-colors ${
                             isSelected ? "bg-gray-800/50" : "hover:bg-gray-800/20"
                           }`}
@@ -753,14 +903,14 @@ export function DashboardView() {
                             {isSelected ? "▲" : "▼"}
                           </td>
                         </tr>
-                        {isSelected && selectedPick && (
-                          <tr key={`${pick.id}-detail`} className="border-t border-gray-700">
+                        {isSelected && (
+                          <tr className="border-t border-gray-700">
                             <td colSpan={10} className="p-0">
-                              <PickDetailPanel pick={selectedPick} />
+                              <PickDetailPanel pick={pick} />
                             </td>
                           </tr>
                         )}
-                      </>
+                      </Fragment>
                     );
                   })}
                 </tbody>

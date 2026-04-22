@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
+import { startOfDay } from "date-fns";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -17,8 +21,15 @@ export default async function AdminPage() {
     publishedPosts,
   ] = await Promise.all([
     db.user.count(),
-    db.subscription.count({ where: { status: { in: ["ACTIVE", "TRIALING"] }, tier: { not: "FREE" } } }),
-    db.pick.count({ where: { generatedAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } } }),
+    db.subscription.count({
+      where: {
+        status: { in: ["ACTIVE", "TRIALING"] },
+        tier: { not: "FREE" },
+      },
+    }),
+    db.pick.count({
+      where: { generatedAt: { gte: startOfDay(new Date()) } },
+    }),
     db.ingestionRun.findFirst({ orderBy: { startedAt: "desc" } }),
     db.blogPost.count({ where: { status: "PUBLISHED" } }),
   ]);
@@ -53,12 +64,18 @@ export default async function AdminPage() {
           {lastIngestionRun ? (
             <div className="space-y-2">
               <div className="flex items-center gap-3">
-                <div className={`w-3 h-3 rounded-full ${
-                  lastIngestionRun.status === "SUCCESS" ? "bg-green-500" :
-                  lastIngestionRun.status === "RUNNING" ? "bg-yellow-500" : "bg-red-500"
-                }`} />
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    lastIngestionRun.status === "SUCCESS"
+                      ? "bg-green-500"
+                      : lastIngestionRun.status === "RUNNING"
+                      ? "bg-yellow-500 animate-pulse"
+                      : "bg-red-500"
+                  }`}
+                />
                 <span className="text-gray-300">
-                  Last ingestion: <strong className="text-white">{lastIngestionRun.status}</strong>
+                  Last ingestion:{" "}
+                  <strong className="text-white">{lastIngestionRun.status}</strong>
                 </span>
                 <span className="text-gray-500 text-sm">
                   {lastIngestionRun.startedAt.toLocaleString()}
@@ -76,57 +93,39 @@ export default async function AdminPage() {
         {/* Quick Actions */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
           <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            To trigger a data refresh with live progress, use the Operator
+            Dashboard &rarr; Trigger Sync button. The button runs with your
+            admin session and streams status updates while picks generate.
+          </p>
           <div className="flex flex-wrap gap-3">
-            <a
+            <Link
               href="/admin/dashboard"
               className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
             >
-              ⚡ Operator Dashboard
-            </a>
-            <TriggerRefreshButton />
-            <a
+              ⚡ Operator Dashboard (Sync & Monitor)
+            </Link>
+            <Link
               href="/admin/picks"
               className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
             >
               Manage Picks
-            </a>
-            <a
+            </Link>
+            <Link
               href="/admin/posts"
               className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
             >
               Manage Posts
-            </a>
-            <a
+            </Link>
+            <Link
               href="/admin/users"
               className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
             >
               Manage Users
-            </a>
+            </Link>
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-function TriggerRefreshButton() {
-  return (
-    <form
-      action={async () => {
-        "use server";
-        const response = await fetch(
-          `${process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000"}/api/admin/trigger-refresh`,
-          { method: "POST" }
-        );
-        if (!response.ok) console.error("Refresh failed");
-      }}
-    >
-      <button
-        type="submit"
-        className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
-      >
-        Trigger Data Refresh
-      </button>
-    </form>
   );
 }

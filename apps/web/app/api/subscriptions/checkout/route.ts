@@ -17,7 +17,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await req.json();
+  if (!session.user.email) {
+    return NextResponse.json(
+      { error: "Your account has no email address on file. Please contact support." },
+      { status: 400 }
+    );
+  }
+
+  const body = await req.json().catch(() => null);
   const parsed = CheckoutSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid tier" }, { status: 400 });
@@ -25,11 +32,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const { tier } = parsed.data;
   const priceId = STRIPE_PRICE_IDS[tier];
+  if (!priceId) {
+    console.error(`[checkout] Price ID not configured for tier ${tier}`);
+    return NextResponse.json(
+      { error: "This plan is not available right now. Please try again later." },
+      { status: 503 }
+    );
+  }
 
   try {
     const customerId = await getOrCreateStripeCustomer(
       session.user.id,
-      session.user.email!,
+      session.user.email,
       session.user.name
     );
 
@@ -44,8 +58,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Checkout failed";
-    console.error(`Checkout error: ${message}`);
-    return NextResponse.json({ error: message }, { status: 500 });
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[checkout] ${message}`);
+    // Don't leak Stripe internal details to the client
+    return NextResponse.json(
+      { error: "We couldn't start checkout. Please try again." },
+      { status: 500 }
+    );
   }
 }

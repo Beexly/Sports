@@ -6,6 +6,11 @@ import { db } from "@sports/db";
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
 // Next.js App Router does not parse the body automatically for route handlers.
 
+export const dynamic = "force-dynamic";
+
+// Prisma error code for unique constraint violation — used as our idempotency lock.
+const PRISMA_UNIQUE_VIOLATION = "P2002";
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const body = await req.text();
   const signature = req.headers.get("stripe-signature");
@@ -28,18 +33,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: `Webhook error: ${message}` }, { status: 400 });
   }
 
-  // Idempotency: skip already-processed events
-  const alreadyProcessed = await db.webhookEvent.findUnique({
-    where: { stripeEventId: event.id },
-  });
-  if (alreadyProcessed) {
-    return NextResponse.json({ received: true, skipped: true });
-  }
-
+  // Idempotency lock: create the WebhookEvent row FIRST, using the unique
+  // stripeEventId constraint as our lock. If two webhook deliveries race, only
+  // one succeeds here; the second hits P2002 and returns 200 skipped without
+  // re-processing. This prevents double-syncSubscription on retries.
   try {
-    await handleStripeEvent(event);
-
-    // Record processed event
     await db.webhookEvent.create({
       data: {
         stripeEventId: event.id,
@@ -48,8 +46,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       },
     });
   } catch (err) {
+    const code = (err as { code?: string })?.code;
+    if (code === PRISMA_UNIQUE_VIOLATION) {
+      return NextResponse.json({ received: true, skipped: true });
+    }
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error(`[stripe-webhook] failed to record event ${event.id}: ${message}`);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
+
+  try {
+    await handleStripeEvent(event);
+  } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`Error handling Stripe event ${event.type}: ${message}`);
+    // Release the idempotency lock so Stripe can retry. If this delete fails
+    // we log but don't mask the original error.
+    try {
+      await db.webhookEvent.delete({ where: { stripeEventId: event.id } });
+    } catch (cleanupErr) {
+      console.error(
+        `[stripe-webhook] failed to release lock for event ${event.id}: ` +
+        (cleanupErr instanceof Error ? cleanupErr.message : cleanupErr)
+      );
+    }
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
