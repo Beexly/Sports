@@ -3,6 +3,8 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import type { PickType, PickTier } from "@sports/types";
 
+export const dynamic = "force-dynamic";
+
 // ─────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────

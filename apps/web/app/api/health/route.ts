@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@sports/db";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(): Promise<NextResponse> {
   const checks: Record<string, { status: "ok" | "error"; detail?: string }> =
     {};

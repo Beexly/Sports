@@ -4,7 +4,8 @@ import { Footer } from "@/components/ui/footer";
 import { db } from "@sports/db";
 import { formatDate } from "@/lib/utils";
 
-export const revalidate = 300; // 5 min
+// DB unavailable during build; render dynamically per-request.
+export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
   let posts: Array<{

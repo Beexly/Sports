@@ -8,6 +8,8 @@ import { db } from "@sports/db";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {

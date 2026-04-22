@@ -4,6 +4,9 @@ import { Footer } from "@/components/ui/footer";
 import type { PublicPick } from "@sports/types";
 import { PICK_GRADE_LABELS } from "@sports/types";
 
+// Picks come from a per-request API call — never prerender.
+export const dynamic = "force-dynamic";
+
 // ─────────────────────────────────────────────
 // Fetch real picks for homepage preview
 // ─────────────────────────────────────────────
