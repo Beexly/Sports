@@ -3,8 +3,13 @@ import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
-import type { PublicPick, DailySlate } from "@sports/types";
+import { loadPicks, validatePickGrade } from "@/lib/picks-data";
+import { loadDailySlate } from "@/lib/slate-data";
+import { getReadinessGates } from "@sports/prediction-engine";
+import type { PublicPick, DailySlate, PickGrade } from "@sports/types";
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
 
 // ─────────────────────────────────────────────
 // Types
@@ -12,46 +17,6 @@ import Link from "next/link";
 
 interface PicksPageProps {
   searchParams: { sport?: string; date?: string; grade?: string };
-}
-
-interface PicksResponse {
-  success: boolean;
-  data: PublicPick[];
-  meta: { tier: string; total: number; date: string };
-}
-
-// ─────────────────────────────────────────────
-// Data fetching
-// ─────────────────────────────────────────────
-
-async function fetchPicks(
-  sport?: string,
-  date?: string,
-  grade?: string
-): Promise<PicksResponse> {
-  const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
-  const params = new URLSearchParams();
-  if (sport) params.set("sport", sport);
-  if (date) params.set("date", date);
-  if (grade) params.set("grade", grade);
-  const url = `${appUrl}/api/picks${params.toString() ? `?${params}` : ""}`;
-  const res = await fetch(url, { next: { revalidate: 1800 } });
-  if (!res.ok) throw new Error(`Failed to fetch picks: ${res.status}`);
-  return res.json() as Promise<PicksResponse>;
-}
-
-async function fetchSlate(): Promise<DailySlate | null> {
-  try {
-    const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
-    const res = await fetch(`${appUrl}/api/picks/daily-slate`, {
-      next: { revalidate: 1800 },
-    });
-    if (!res.ok) return null;
-    const body = await res.json() as { success: boolean; data: DailySlate };
-    return body.data ?? null;
-  } catch {
-    return null;
-  }
 }
 
 // ─────────────────────────────────────────────
@@ -78,23 +43,44 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
   const isPro = entitlements.tier === "PRO" || entitlements.tier === "ELITE";
   const isFreeTier = entitlements.tier === "FREE";
 
+  // Gate: public picks may be disabled in bootstrap mode.
+  const gates = getReadinessGates();
+  const picksGated = !gates.canExposePublicPicks;
+
+  // Validate grade filter. Invalid values get dropped silently here —
+  // the UI only offers valid options, so this is a defense-in-depth check.
+  const gradeResult = validatePickGrade(grade ?? null);
+  const safeGrade =
+    gradeResult && typeof gradeResult === "object" && "error" in gradeResult
+      ? null
+      : (gradeResult as PickGrade | null);
+
   const [slateResult, picksResult] = await Promise.allSettled([
-    fetchSlate(),
-    fetchPicks(sport, date, grade),
+    picksGated ? Promise.resolve(null) : loadDailySlate({ entitlements, date: date ?? null }),
+    picksGated
+      ? Promise.resolve({ picks: [], date: date ?? new Date().toISOString().split("T")[0]! })
+      : loadPicks({
+          entitlements,
+          sport: sport ?? null,
+          date: date ?? null,
+          grade: safeGrade,
+        }),
   ]);
 
-  const slate = slateResult.status === "fulfilled" ? slateResult.value : null;
+  const slate: DailySlate | null =
+    slateResult.status === "fulfilled" ? slateResult.value : null;
   const picks: PublicPick[] =
-    picksResult.status === "fulfilled" ? picksResult.value.data : [];
-  const fetchError =
-    picksResult.status === "rejected"
-      ? (picksResult.reason instanceof Error
-          ? picksResult.reason.message
-          : "Failed to load picks.")
+    picksResult.status === "fulfilled" ? picksResult.value.picks : [];
+  const fetchError = picksGated
+    ? "Public picks are not available yet — bootstrap mode."
+    : picksResult.status === "rejected"
+      ? picksResult.reason instanceof Error
+        ? picksResult.reason.message
+        : "Failed to load picks."
       : null;
   const metaDate =
     picksResult.status === "fulfilled"
-      ? picksResult.value.meta.date
+      ? picksResult.value.date
       : (date ?? new Date().toISOString().split("T")[0]!);
 
   const SPORTS = [

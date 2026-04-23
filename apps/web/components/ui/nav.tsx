@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { auth } from "@/lib/auth";
+import { signOutAction } from "@/lib/auth-actions";
 import { MobileNav } from "./mobile-nav";
 
 export async function Nav() {
@@ -128,6 +129,15 @@ function AuthenticatedMenu({
           )}
         </div>
       </Link>
+      <form action={signOutAction}>
+        <button
+          type="submit"
+          className="rounded-lg px-3 py-2 text-sm font-medium text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+          aria-label="Sign out"
+        >
+          Sign out
+        </button>
+      </form>
     </div>
   );
 }

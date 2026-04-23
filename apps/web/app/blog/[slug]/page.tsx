@@ -15,7 +15,11 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const post = await db.blogPost.findUnique({
+  // findFirst — NOT findUnique — so the status filter is enforced. On Prisma
+  // 5+, findUnique technically accepts extra where fields but can produce
+  // subtle bugs (a DRAFT row with the same slug could leak). findFirst is
+  // the safe form for compound where with non-unique conditions.
+  const post = await db.blogPost.findFirst({
     where: { slug: params.slug, status: "PUBLISHED" },
     select: { title: true, seoTitle: true, seoDescription: true, excerpt: true },
   });
@@ -38,7 +42,7 @@ export default async function BlogPostPage({
     ? await getUserEntitlements(session.user.id)
     : { tier: "FREE" as const, canSeePremiumPicks: false, canSeeConfidence: false, canSeeLineMovement: false, canGetAlerts: false, dailyPickLimit: 1 };
 
-  const post = await db.blogPost.findUnique({
+  const post = await db.blogPost.findFirst({
     where: { slug: params.slug, status: "PUBLISHED" },
   });
 

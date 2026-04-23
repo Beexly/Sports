@@ -1,25 +1,49 @@
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { auth } from "@/lib/auth";
+import { getUserEntitlements } from "@/lib/entitlements";
+import { loadPicks } from "@/lib/picks-data";
+import { getReadinessGates } from "@sports/prediction-engine";
 import type { PublicPick } from "@sports/types";
 import { PICK_GRADE_LABELS } from "@sports/types";
 
-// Picks come from a per-request API call — never prerender.
+// Picks come from a per-request DB lookup — never prerender.
 export const dynamic = "force-dynamic";
 
 // ─────────────────────────────────────────────
-// Fetch real picks for homepage preview
+// Fetch real picks for homepage preview. Calls loadPicks() directly instead
+// of self-fetching /api/picks — a server-to-server fetch drops the session
+// cookie, which would silently collapse every visitor to the FREE path.
 // ─────────────────────────────────────────────
 
 async function fetchHomepagePicks(): Promise<PublicPick[]> {
   try {
-    const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
-    const res = await fetch(`${appUrl}/api/picks?limit=3`, {
-      next: { revalidate: 1800 },
+    const gates = getReadinessGates();
+    if (!gates.canExposePublicPicks) return [];
+
+    const session = await auth();
+    const entitlements = session?.user?.id
+      ? await getUserEntitlements(session.user.id)
+      : {
+          tier: "FREE" as const,
+          canSeePremiumPicks: false,
+          canSeeConfidence: false,
+          canSeeLineMovement: false,
+          canSeeFactorBreakdown: false,
+          canSeeEdgeScore: false,
+          canGetAlerts: false,
+          dailyPickLimit: 1,
+        };
+
+    const { picks } = await loadPicks({
+      entitlements,
+      sport: null,
+      date: null,
+      grade: null,
+      limit: 3,
     });
-    if (!res.ok) return [];
-    const body = await res.json() as { success: boolean; data: PublicPick[] };
-    return (body.data ?? []).slice(0, 3);
+    return picks;
   } catch {
     return [];
   }

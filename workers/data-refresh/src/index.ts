@@ -6,6 +6,7 @@
  *
  * Pick generation is delegated to processSport() from @sports/ingestion-pipeline,
  * which is the single source of truth shared with the admin trigger-refresh route.
+ * Settlement is delegated to settleResults() from the same package.
  *
  * Bootstrap safety: reads PlatformConfig on every cycle. Behavior gates:
  *   - DERIVED_MODEL_HISTORY_ENABLED: controls whether ATS/H2H/venue form
@@ -24,18 +25,9 @@
  *             future calibration reads snapshots joined to settled outcomes.
  */
 
-import { db } from "@sports/db";
-import {
-  SUPPORTED_SPORTS,
-  OddsApiClient,
-  DataNormalizer,
-  settleGameLogs,
-} from "@sports/data-ingestion";
-import {
-  getReadinessGates,
-  calculatePickResult,
-} from "@sports/prediction-engine";
-import { processSport } from "@sports/ingestion-pipeline";
+import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
+import { getReadinessGates } from "@sports/prediction-engine";
+import { processSport, settleResults } from "@sports/ingestion-pipeline";
 
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
 
@@ -66,122 +58,16 @@ async function runRefreshCycle(): Promise<void> {
   console.log(`[data-refresh] Cycle complete ${new Date().toISOString()}`);
 }
 
-async function settleResults(): Promise<void> {
+async function runSettlementCycle(): Promise<void> {
   const apiKey = process.env["THE_ODDS_API_KEY"];
   if (!apiKey) return;
-
   const gates = getReadinessGates();
-  const isBootstrap = !gates.canPersistCanonicalHistory;
-
-  const client = new OddsApiClient(apiKey);
-  const normalizer = new DataNormalizer();
-
-  for (const sport of SUPPORTED_SPORTS) {
-    try {
-      const { data: scores } = await client.getScores(sport.key, 2);
-      const normalized = normalizer.normalizeScores(scores);
-
-      for (const score of normalized) {
-        if (!score.completed) continue;
-        const game = await db.game.findUnique({
-          where: { externalId: score.externalId },
-          include: { picks: { where: { result: "PENDING" } } },
-        });
-        if (!game) continue;
-
-        await db.game.update({
-          where: { id: game.id },
-          data: { homeScore: score.homeScore, awayScore: score.awayScore, status: "FINAL" },
-        });
-
-        if (score.homeScore !== null && score.awayScore !== null) {
-          // Settle pick results — always runs, regardless of bootstrap mode.
-          // Real game outcomes are source truth and must be recorded.
-          const settledAt = new Date();
-          for (const pick of game.picks) {
-            const result = calculatePickResult(
-              pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
-              pick.selection,
-              pick.line,
-              game.homeTeamName,
-              score.homeScore,
-              score.awayScore,
-              sport.key
-            );
-            // Guard against double-settlement: only update if still PENDING.
-            // If a concurrent cycle already settled this pick, updateMany returns
-            // count=0 and we skip the snapshot update below.
-            const { count: settledCount } = await db.pick.updateMany({
-              where: { id: pick.id, result: "PENDING" },
-              data: { result, settledAt },
-            });
-            if (settledCount === 0) continue;
-
-            // Record settlement outcome in the PickSignalSnapshot.
-            // This is the outcome-anchored learning data: real result tied to the
-            // signal conditions that were present at prediction time.
-            // eligibleForLearning is set ONLY when:
-            //   (1) canLearnFromOutcomes=true
-            //   (2) pick was canonical (isBootstrap=false)
-            //   (3) result is a decisive outcome (WIN/LOSS/PUSH — not VOID)
-            const isDecisiveResult = result === "WIN" || result === "LOSS" || result === "PUSH";
-            const isEligibleForLearning =
-              gates.canLearnFromOutcomes &&
-              !pick.isBootstrap &&
-              isDecisiveResult;
-
-            try {
-              await db.pickSignalSnapshot.updateMany({
-                where: { pickId: pick.id, settlementResult: null },
-                data: {
-                  settlementResult: result,
-                  settledAt,
-                  eligibleForLearning: isEligibleForLearning,
-                  ...(isEligibleForLearning ? { learningEligibleAt: settledAt } : {}),
-                },
-              });
-            } catch (snapErr) {
-              // Non-fatal: snapshot update failure must never kill settlement
-              console.warn(
-                `[settlement] Snapshot outcome update failed for pick ${pick.id}: ` +
-                `${snapErr instanceof Error ? snapErr.message : snapErr}`
-              );
-            }
-          }
-
-          // Write TeamGameLog entries for ATS form tracking.
-          // isBootstrap propagated from current mode — marks creation era.
-          // Data quality gate prevents corrupt ATS data from thin-coverage games.
-          const openingSpreadOdds = await db.openingLine.findUnique({
-            where: { gameId_market: { gameId: game.id, market: "SPREADS" } },
-          });
-
-          try {
-            await settleGameLogs({
-              gameId: game.id,
-              homeTeam: game.homeTeamName,
-              awayTeam: game.awayTeamName,
-              sport: sport.key,
-              gameDate: game.commenceTime,
-              homeScore: score.homeScore,
-              awayScore: score.awayScore,
-              spread: openingSpreadOdds?.spread ?? null,
-              isBootstrap,
-              gameDataQualityScore: game.dataQualityScore,
-              minDataQualityThreshold: gates.minDataQualityForGameLog,
-            });
-          } catch (settleErr) {
-            console.warn(
-              `[settlement] GameLog failed for ${game.id}: ` +
-              `${settleErr instanceof Error ? settleErr.message : settleErr}`
-            );
-          }
-        }
-      }
-    } catch (err) {
-      console.error(`[settlement] ${sport.key}: ${err instanceof Error ? err.message : err}`);
-    }
-  }
+  await settleResults({
+    sports: SUPPORTED_SPORTS,
+    apiKey,
+    gates,
+    logPrefix: "[data-refresh][settlement]",
+  });
 }
 
 async function main(): Promise<void> {
@@ -198,7 +84,7 @@ async function main(): Promise<void> {
   const runAndSchedule = async (): Promise<void> => {
     try {
       await runRefreshCycle();
-      await settleResults();
+      await runSettlementCycle();
     } catch (err) {
       console.error(
         "[data-refresh] Unhandled error:",

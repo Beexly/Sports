@@ -54,10 +54,12 @@ export default async function DashboardPage() {
           stripeCustomerId: true,
         },
       }),
-      // last 14 days of picks — for pick history
+      // last 14 days of picks — for pick history (canonical only; bootstrap-era
+      // picks are excluded per the "no fake data on public surfaces" rule).
       db.pick.findMany({
         where: {
           isPublished: true,
+          isBootstrap: false,
           result: { not: "PENDING" },
           generatedAt: {
             gte: subDays(new Date(), 14),
@@ -71,10 +73,11 @@ export default async function DashboardPage() {
         orderBy: { generatedAt: "desc" },
         take: 10,
       }) as Promise<RecentPick[]>,
-      // today's picks count
+      // today's picks count (canonical only)
       db.pick.count({
         where: {
           isPublished: true,
+          isBootstrap: false,
           generatedAt: {
             gte: startOfDay(new Date()),
             lte: endOfDay(new Date()),

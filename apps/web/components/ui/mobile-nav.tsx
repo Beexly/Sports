@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { signOutAction } from "@/lib/auth-actions";
 
 interface MobileNavProps {
   user: {
@@ -94,6 +95,15 @@ export function MobileNav({ user }: MobileNavProps) {
                 <MobileLink href="/dashboard" onClick={() => setOpen(false)}>
                   Dashboard
                 </MobileLink>
+                <form action={signOutAction}>
+                  <button
+                    type="submit"
+                    onClick={() => setOpen(false)}
+                    className="w-full rounded-lg px-4 py-3 text-left text-base font-medium text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                  >
+                    Sign out
+                  </button>
+                </form>
               </>
             ) : (
               <>

@@ -52,7 +52,7 @@ export default async function AdminPicksPage() {
               {picks.map((pick) => (
                 <tr key={pick.id} className="border-b border-gray-800/50 hover:bg-gray-800/30">
                   <td className="px-4 py-3 text-white">
-                    <div>{pick.game.homeTeamName} vs {pick.game.awayTeamName}</div>
+                    <div>{pick.game.awayTeamName} @ {pick.game.homeTeamName}</div>
                     <div className="text-xs text-gray-500">{pick.game.sport.name}</div>
                   </td>
                   <td className="px-4 py-3 text-gray-300">{pick.pickType}</td>

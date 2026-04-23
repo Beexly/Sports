@@ -10,12 +10,25 @@ interface SignInPageProps {
   searchParams: { callbackUrl?: string; error?: string };
 }
 
+// Only accept callback URLs that are relative paths on our own origin.
+// A raw searchParams.callbackUrl could be "https://evil.example/..." — feeding
+// that to `redirect()` would be a textbook open-redirect phishing primitive.
+function safeCallbackUrl(raw: string | undefined): string {
+  if (!raw) return "/dashboard";
+  // Must start with "/" and not "//" (protocol-relative) or "/\\" (trick).
+  if (!raw.startsWith("/") || raw.startsWith("//") || raw.startsWith("/\\")) {
+    return "/dashboard";
+  }
+  return raw;
+}
+
 export default async function SignInPage({ searchParams }: SignInPageProps) {
   const session = await auth();
+  const callbackUrl = safeCallbackUrl(searchParams.callbackUrl);
 
   // Already signed in — redirect to callbackUrl or dashboard
   if (session?.user) {
-    redirect(searchParams.callbackUrl ?? "/dashboard");
+    redirect(callbackUrl);
   }
 
   const errorMessage = getErrorMessage(searchParams.error);
@@ -74,7 +87,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           action={async () => {
             "use server";
             await signIn("google", {
-              redirectTo: searchParams.callbackUrl ?? "/dashboard",
+              redirectTo: callbackUrl,
             });
           }}
         >

@@ -157,11 +157,6 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <div className="mt-10 border-t border-gray-800 pt-6 text-xs text-gray-600">
-            This page is a general-purpose template. Before launching
-            commercially, have these Terms reviewed by qualified legal counsel
-            in every jurisdiction where the Service is offered.
-          </div>
         </article>
       </main>
       <Footer />

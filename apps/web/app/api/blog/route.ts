@@ -27,8 +27,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const slug = searchParams.get("slug")?.slice(0, 128) ?? null;
 
   if (slug) {
-    // Single post
-    const post = await db.blogPost.findUnique({
+    // findFirst — compound where with non-unique `status` is only safely
+    // enforced via findFirst on Prisma 5+. findUnique would make `slug`
+    // alone sufficient, potentially leaking DRAFT posts by known slug.
+    const post = await db.blogPost.findFirst({
       where: { slug, status: "PUBLISHED" },
     });
 

@@ -298,22 +298,54 @@ export async function processSport(
       // Upsert by DB-enforced unique key [gameId, pickType].
       // Create sets origin fields (ingestionRunId, isBootstrap, isFeatured).
       // Update never changes isBootstrap — creation era is immutable.
-      const upsertedPick = await db.pick.upsert({
-        where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-        create: {
-          gameId: pick.gameId,
-          pickType: pick.pickType,
-          ingestionRunId: run.id,
-          isBootstrap,
-          isFeatured,
-          ...pickUpdateData,
-        },
-        update: {
-          ...pickUpdateData,
-          // Re-evaluate featured status on each refresh when promotion is enabled.
-          isFeatured,
-        },
-      });
+      // Do NOT overwrite picks that have already been settled — keeping the
+      // original scoring rationale is essential for outcome-anchored learning.
+      // The DB unique constraint protects the final state but not against a
+      // transient P2002 if two concurrent cycles race the create; catch and
+      // fall back to an update.
+      let upsertedPick;
+      try {
+        upsertedPick = await db.pick.upsert({
+          where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
+          create: {
+            gameId: pick.gameId,
+            pickType: pick.pickType,
+            ingestionRunId: run.id,
+            isBootstrap,
+            isFeatured,
+            ...pickUpdateData,
+          },
+          update: {},  // no-op placeholder; real update below is result-guarded
+        });
+
+        // Only rewrite pick fields while the pick is still PENDING. Once the
+        // game settles, the scoring/reasoning at prediction time is the
+        // historical truth and must not be mutated by a subsequent odds cycle.
+        const { count: updated } = await db.pick.updateMany({
+          where: { id: upsertedPick.id, result: "PENDING" },
+          data: { ...pickUpdateData, isFeatured },
+        });
+        if (updated === 0) {
+          // Pick exists but is settled — skip the update silently.
+        }
+      } catch (err) {
+        const code = (err as { code?: string })?.code;
+        if (code === "P2002") {
+          // Concurrent create race — another worker/route created the row first.
+          // Fall back to find + guarded update.
+          const existing = await db.pick.findUnique({
+            where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
+          });
+          if (!existing) throw err;
+          upsertedPick = existing;
+          await db.pick.updateMany({
+            where: { id: existing.id, result: "PENDING" },
+            data: { ...pickUpdateData, isFeatured },
+          });
+        } else {
+          throw err;
+        }
+      }
       picksGenerated++;
 
       // Capture PickSignalSnapshot — immutable record of signal state at prediction time.

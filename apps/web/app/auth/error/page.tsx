@@ -9,6 +9,16 @@ export default function AuthErrorPage({
     Configuration: "Server configuration error. Please try again later.",
     AccessDenied: "Access was denied. You may not have permission to sign in.",
     Verification: "The sign-in link has expired or was already used.",
+    OAuthSignin: "There was a problem starting Google sign-in. Please try again.",
+    OAuthCallback: "Google sign-in was canceled or failed. Please try again.",
+    OAuthCreateAccount: "We couldn't create your account from Google. Please try again.",
+    OAuthAccountNotLinked:
+      "This email is already associated with a different sign-in method. Use the original method.",
+    EmailCreateAccount: "We couldn't create your account. Please try again.",
+    EmailSignin: "The sign-in email could not be sent. Please try again.",
+    Callback: "Sign-in callback failed. Please try again.",
+    CredentialsSignin: "The sign-in credentials were invalid.",
+    SessionRequired: "Please sign in to access this page.",
     Default: "An error occurred during sign-in. Please try again.",
   };
 

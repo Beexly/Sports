@@ -1,13 +1,47 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]!, {
-  apiVersion: "2024-06-20",
-  typescript: true,
+// Lazy Stripe client. Instantiating Stripe eagerly at module load crashes the
+// entire app if STRIPE_SECRET_KEY isn't set, even on routes that don't touch
+// Stripe (admin dashboard, picks, etc). This proxy defers construction until
+// the first actual call site — that call site is always a subscription or
+// webhook route, so if the key is missing the failure is routed there with
+// a clean error instead of a startup crash.
+class StripeNotConfiguredError extends Error {
+  constructor() {
+    super(
+      "Stripe is not configured. Set STRIPE_SECRET_KEY in .env to enable billing."
+    );
+    this.name = "StripeNotConfiguredError";
+  }
+}
+
+let _stripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (_stripe) return _stripe;
+  const key = process.env["STRIPE_SECRET_KEY"];
+  if (!key) throw new StripeNotConfiguredError();
+  _stripe = new Stripe(key, { apiVersion: "2024-06-20", typescript: true });
+  return _stripe;
+}
+
+// Proxy keeps the existing `import { stripe }` call sites working transparently.
+export const stripe = new Proxy({} as Stripe, {
+  get(_target, prop) {
+    const client = getStripe();
+    const value = (client as unknown as Record<string | symbol, unknown>)[prop];
+    return typeof value === "function"
+      ? (value as (...args: unknown[]) => unknown).bind(client)
+      : value;
+  },
 });
 
 export const STRIPE_PRICE_IDS = {
-  PRO: process.env["STRIPE_PRO_PRICE_ID"]!,
-  ELITE: process.env["STRIPE_ELITE_PRICE_ID"]!,
+  get PRO() {
+    return process.env["STRIPE_PRO_PRICE_ID"] ?? "";
+  },
+  get ELITE() {
+    return process.env["STRIPE_ELITE_PRICE_ID"] ?? "";
+  },
 } as const;
 
 export const PRICE_DISPLAY = {

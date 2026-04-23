@@ -64,8 +64,8 @@ docker/             — Docker configs
 | Tier | Access |
 |---|---|
 | Free | 1 pick/day, no confidence scores |
-| Pro ($19/mo) | All picks, confidence scores, line movement |
-| Elite ($49/mo) | All Pro + early access, analytics, alerts |
+| Pro ($9.99/week) | All picks, confidence scores, line movement |
+| Elite ($13.99/week) | All Pro + early access, analytics, alerts |
 
 ## Environment Variables Required
 
