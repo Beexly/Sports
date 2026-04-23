@@ -35,8 +35,8 @@ const PLANS = [
   {
     id: "PRO" as const,
     name: "Pro",
-    price: 19,
-    period: "month",
+    price: 9.99,
+    period: "week",
     description: "Unlimited picks with confidence scores and full reasoning.",
     badge: "Most Popular",
     cta: "Subscribe to Pro",
@@ -56,8 +56,8 @@ const PLANS = [
   {
     id: "ELITE" as const,
     name: "Elite",
-    price: 49,
-    period: "month",
+    price: 13.99,
+    period: "week",
     description: "Everything in Pro, plus real-time alerts and priority access.",
     badge: "Best Value",
     cta: "Subscribe to Elite",
@@ -347,7 +347,7 @@ export default function PricingPage() {
                         {plan.name}
                         {plan.price > 0 && (
                           <span className="ml-1 text-xs font-normal text-gray-500">
-                            ${plan.price}/mo
+                            ${plan.price}/{plan.period}
                           </span>
                         )}
                       </th>
@@ -385,7 +385,7 @@ export default function PricingPage() {
 
           {/* Money back note */}
           <p className="mt-8 text-center text-xs text-gray-600">
-            All paid plans include a 7-day money-back guarantee. Billed monthly.
+            All paid plans include a 7-day money-back guarantee. Billed weekly.
             Cancel any time from your dashboard.
           </p>
         </div>
