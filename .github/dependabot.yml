@@ -1,0 +1,74 @@
+# Dependabot configuration.
+#
+# GitHub will open PRs against this repo when security advisories or version
+# updates are available. Grouping related ecosystems together so the inbox
+# stays small.
+#
+# Security updates run regardless of schedule — version updates are throttled
+# to weekly to avoid PR noise during active development.
+
+version: 2
+updates:
+  # npm at the repo root (covers all workspaces — apps/web, packages/*, workers/*)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    groups:
+      next:
+        patterns:
+          - "next"
+          - "@next/*"
+          - "eslint-config-next"
+      prisma:
+        patterns:
+          - "prisma"
+          - "@prisma/*"
+      stripe:
+        patterns:
+          - "stripe"
+      auth:
+        patterns:
+          - "next-auth"
+          - "@auth/*"
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "@testing-library/*"
+      types:
+        patterns:
+          - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # GitHub Actions used in .github/workflows/
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+  # Docker base images in docker/docker-compose.yml
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "docker"
