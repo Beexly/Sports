@@ -1,0 +1,42 @@
+import type { MetadataRoute } from "next";
+
+/**
+ * sitemap.xml
+ *
+ * Static list of public-facing URLs. Blog post URLs are intentionally
+ * omitted while PUBLIC_BLOG_ENABLED is false; once the gate flips, swap
+ * this for a dynamic generator that reads published ContentDraft slugs.
+ */
+
+const ROUTES: ReadonlyArray<{
+  path: string;
+  priority: number;
+  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
+}> = [
+  { path: "/", priority: 1.0, changeFrequency: "daily" },
+  { path: "/picks", priority: 0.9, changeFrequency: "hourly" },
+  { path: "/methodology", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/performance", priority: 0.7, changeFrequency: "daily" },
+  { path: "/pricing", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/observatory", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/vault", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/about", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/press", priority: 0.4, changeFrequency: "monthly" },
+  { path: "/contact", priority: 0.4, changeFrequency: "yearly" },
+  { path: "/responsible-play", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
+  { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
+];
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl =
+    process.env["NEXT_PUBLIC_APP_URL"] ?? "https://pickpilotapp.bet";
+  const now = new Date();
+
+  return ROUTES.map(({ path, priority, changeFrequency }) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: now,
+    changeFrequency,
+    priority,
+  }));
+}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Spacing & radii · PickPilot</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; background: var(--void); }
+  .card {
+    width: 700px; min-height: 240px;
+    padding: 22px 24px;
+    background:
+      radial-gradient(ellipse 50% 40% at 80% 20%, rgba(255, 45, 138,0.06), transparent 65%),
+      linear-gradient(180deg, var(--obsidian) 0%, var(--carbon) 100%);
+    color: var(--fg-1);
+    box-sizing: border-box;
+  }
+  .eyebrow {
+    font: 500 10px/1 var(--f-mono);
+    text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--fg-muted); margin: 0 0 4px;
+  }
+  .eyebrow .dot { color: var(--plasma); }
+  .title {
+    font: 600 18px/1.2 var(--f-display);
+    color: var(--fg); letter-spacing: -0.01em;
+    margin: 0 0 18px;
+  }
+
+  .col2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 22px; }
+
+  .sub { font: 500 9px/1 var(--f-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 12px; }
+
+  /* spacing ladder */
+  .ladder { display: flex; flex-direction: column; gap: 6px; }
+  .step { display: flex; align-items: center; gap: 12px; font: 500 10px/1 var(--f-mono); color: var(--ion-1); }
+  .step .num { width: 30px; color: var(--plasma); }
+  .step .bar { height: 8px; background: var(--ion-1); border-radius: 2px; }
+  .step .px { color: var(--fg-meta); margin-left: auto; }
+  .step.s1 .bar { width: 4px; }   .step.s2 .bar { width: 8px; }
+  .step.s3 .bar { width: 12px; }  .step.s4 .bar { width: 16px; }
+  .step.s5 .bar { width: 20px; }  .step.s6 .bar { width: 24px; }
+  .step.s8 .bar { width: 32px; }  .step.s10 .bar { width: 40px; }
+  .step.s12 .bar { width: 48px; } .step.s16 .bar { width: 64px; }
+  .step.s20 .bar { width: 80px; } .step.s24 .bar { width: 96px; }
+
+  /* radii row */
+  .radii { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 16px; }
+  .r {
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--mineral);
+    background: var(--titanium);
+    display: flex; align-items: center; justify-content: center;
+    font: 500 9px/1 var(--f-mono); color: var(--fg-meta);
+    text-align: center; padding: 4px;
+    letter-spacing: 0.06em;
+  }
+  .r.xs { border-radius: var(--r-xs); }
+  .r.sm { border-radius: var(--r-sm); }
+  .r.md { border-radius: var(--r-md); }
+  .r.lg { border-radius: var(--r-lg); }
+  .r.pl { border-radius: var(--r-pill); }
+  .r .px { color: var(--plasma); display: block; margin-top: 4px; }
+
+  .rule {
+    font: 400 11px/1.5 var(--f-body); color: var(--ion-1);
+    border-left: 1px solid var(--plasma);
+    padding-left: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow"><span class="dot">●</span> SPACING / 01 — RHYTHM</p>
+  <h2 class="title">4-px base · no intermediate values</h2>
+
+  <div class="col2">
+    <div>
+      <div class="sub">Spacing scale</div>
+      <div class="ladder">
+        <div class="step s1"><span class="num">s-1</span><span class="bar"></span><span class="px">4px</span></div>
+        <div class="step s2"><span class="num">s-2</span><span class="bar"></span><span class="px">8px</span></div>
+        <div class="step s3"><span class="num">s-3</span><span class="bar"></span><span class="px">12px</span></div>
+        <div class="step s4"><span class="num">s-4</span><span class="bar"></span><span class="px">16px</span></div>
+        <div class="step s5"><span class="num">s-5</span><span class="bar"></span><span class="px">20px</span></div>
+        <div class="step s6"><span class="num">s-6</span><span class="bar"></span><span class="px">24px</span></div>
+        <div class="step s8"><span class="num">s-8</span><span class="bar"></span><span class="px">32px</span></div>
+        <div class="step s12"><span class="num">s-12</span><span class="bar"></span><span class="px">48px</span></div>
+        <div class="step s16"><span class="num">s-16</span><span class="bar"></span><span class="px">64px</span></div>
+        <div class="step s24"><span class="num">s-24</span><span class="bar"></span><span class="px">96px</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sub">Corner radii</div>
+      <div class="radii">
+        <div class="r xs">XS<span class="px">3</span></div>
+        <div class="r sm">SM<span class="px">6</span></div>
+        <div class="r md">MD<span class="px">10</span></div>
+        <div class="r lg">LG<span class="px">14</span></div>
+        <div class="r pl">PILL<span class="px">∞</span></div>
+      </div>
+      <div class="rule">
+        Cards = MD (10px). Buttons = SM (6px). Pills = status / live chips only. Never 20px+ pillowy radii — PickPilot reads structural, not soft.
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

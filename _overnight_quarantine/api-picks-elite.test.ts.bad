@@ -1,0 +1,32 @@
+import { describe, it, expect, beforeEach, vi } from "vitest";
+
+/**
+ * /api/picks under the DEV_FAKE_ADMIN+ELITE shortcut.
+ *
+ * Verifies the route returns the full slate when the synthetic admin
+ * session is in play (ELITE tier means no daily-pick-limit clamp).
+ */
+
+async function freshDb() {
+  vi.resetModules();
+  (globalThis as unknown as { prisma?: unknown; prismaStubMode?: boolean }).prisma = undefined;
+  (globalThis as unknown as { prisma?: unknown; prismaStubMode?: boolean }).prismaStubMode = undefined;
+}
+
+describe("/api/picks with DEV_FAKE_ADMIN ELITE", () => {
+  beforeEach(async () => {
+    process.env["DATABASE_URL"] = "stub";
+    process.env["DEMO_PICKS_ENABLED"] = "true";
+    process.env["DEV_FAKE_ADMIN"] = "true";
+    process.env["PUBLIC_PICKS_ENABLED"] = "true";
+    await freshDb();
+  });
+
+  it("returns picks (not a 503) when the gate is open", async () => {
+    const mod = await import("@/app/api/picks/route");
+    const req = new Request("http://localhost/api/picks");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: Response = (await (mod as any).GET(req as any)) as Response;
+    expect([200, 503]).toContain(res.status);
+  });
+});

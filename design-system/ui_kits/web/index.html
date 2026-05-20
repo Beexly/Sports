@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PickPilot · Web UI kit</title>
+<link rel="stylesheet" href="kit.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ─── NAV ─────────────────────────────────────────── -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="nav-left">
+        <a href="#" class="nav-logo">
+          PICKPIL<span class="ret"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt">
+            <circle cx="24" cy="24" r="22"/>
+            <circle cx="24" cy="24" r="12" opacity="0.5"/>
+            <line x1="24" y1="-2" x2="24" y2="8"/>
+            <line x1="24" y1="40" x2="24" y2="50"/>
+            <line x1="-2" y1="24" x2="8" y2="24"/>
+            <line x1="40" y1="24" x2="50" y2="24"/>
+            <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+          </svg></span>T
+        </a>
+        <nav class="nav-links">
+          <a href="#picks" class="active">Picks</a>
+          <a href="#observatory">Observatory</a>
+          <a href="#vault">The Vault</a>
+          <a href="#performance">Performance</a>
+          <a href="#methodology">Methodology</a>
+        </nav>
+      </div>
+      <div class="nav-right">
+        <span class="live-chip"><span class="dot"></span>Live · Odds 30 min</span>
+        <a href="#signin" class="btn btn-ghost btn-sm">Sign in</a>
+        <a href="#pricing" class="btn btn-primary btn-sm">Get free picks <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── HERO ────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container">
+      <span class="hero-eyebrow"><span class="dot"></span>Intelligence over noise · v4.0</span>
+
+      <h1>
+        Perspective,<br>
+        <em>not picks.</em>
+      </h1>
+
+      <p class="hero-tag">
+        PickPilot ingests live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and surfaces a calibrated, fully-reasoned signal. <em>You make the call.</em>
+      </p>
+
+      <div class="hero-ctas">
+        <a href="#" class="btn btn-primary btn-lg">Enter the observatory <span class="arrow">→</span></a>
+        <a href="#" class="btn btn-ghost btn-lg">See methodology</a>
+      </div>
+
+      <!-- atmospheric orbital -->
+      <div class="hero-stage">
+        <svg viewBox="0 0 600 600" fill="none">
+          <defs>
+            <radialGradient id="hg" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FF2D8A" stop-opacity="0.55"/>
+              <stop offset="60%" stop-color="#4FA8FF" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#04060A" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="300" cy="300" r="280" fill="url(#hg)"/>
+          <g stroke="#3C4961" stroke-width="0.8" fill="none">
+            <ellipse cx="300" cy="300" rx="270" ry="120" transform="rotate(-12 300 300)"/>
+            <ellipse cx="300" cy="300" rx="220" ry="100" transform="rotate(10 300 300)"/>
+            <ellipse cx="300" cy="300" rx="170" ry="80" transform="rotate(-30 300 300)"/>
+          </g>
+          <g stroke="#FF2D8A" stroke-width="1.2" fill="none" opacity="0.55">
+            <ellipse cx="300" cy="300" rx="250" ry="110" transform="rotate(-22 300 300)"/>
+          </g>
+          <g stroke="#4FA8FF" stroke-width="1.2" fill="none" opacity="0.55">
+            <ellipse cx="300" cy="300" rx="195" ry="90" transform="rotate(8 300 300)"/>
+          </g>
+          <g fill="#FF2D8A">
+            <circle cx="540" cy="200" r="4"/>
+            <circle cx="120" cy="380" r="3"/>
+          </g>
+          <g fill="#4FA8FF">
+            <circle cx="450" cy="380" r="3"/>
+            <circle cx="180" cy="220" r="4"/>
+          </g>
+          <g fill="#4FA8FF">
+            <circle cx="320" cy="120" r="3"/>
+          </g>
+          <g fill="#9B7BFA">
+            <circle cx="280" cy="500" r="3"/>
+          </g>
+          <!-- reticle target -->
+          <g transform="translate(300 300)" stroke="#FF2D8A" stroke-width="1.5" opacity="0.4" fill="none">
+            <circle r="60"/>
+            <circle r="30" opacity="0.5"/>
+            <line x1="-80" y1="0" x2="-65" y2="0"/>
+            <line x1="65" y1="0" x2="80" y2="0"/>
+            <line x1="0" y1="-80" x2="0" y2="-65"/>
+            <line x1="0" y1="65" x2="0" y2="80"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="hero-foot">
+        <div class="stat"><span class="v p">12,847</span><span class="l">Picks tracked · L90</span></div>
+        <div class="stat"><span class="v c">+11.4%</span><span class="l">ROI · published</span></div>
+        <div class="stat"><span class="v g">7</span><span class="l">Sports covered</span></div>
+        <div class="stat"><span class="v">30 min</span><span class="l">Refresh cadence</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SLATE BAR ───────────────────────────────────── -->
+  <div class="slate">
+    <div class="container slate-inner">
+      <span class="head"><span class="dot"></span>Today's slate</span>
+      <div class="slate-divide"></div>
+      <span class="item">NBA <span class="v">8</span></span>
+      <span class="item">NFL <span class="v">3</span></span>
+      <span class="item">NHL <span class="v">5</span></span>
+      <span class="item">MLB <span class="v">—</span></span>
+      <div class="slate-divide"></div>
+      <span class="item">Strong plays <span class="v p">4</span></span>
+      <span class="item">Elite <span class="v u">1</span></span>
+      <span class="item">Updated <span class="v">14:32 ET</span></span>
+    </div>
+  </div>
+
+  <!-- ─── PICKS GRID ──────────────────────────────────── -->
+  <section class="section" id="picks">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-eyebrow">▸ TODAY · NOV 14</p>
+          <h2>Today's <em>signal</em>.</h2>
+        </div>
+        <div class="meta">
+          14 GAMES · 6 SIGNALS · UPDATED 14:32 ET<br>
+          DATA · LIVE · NEXT REFRESH 14:42
+        </div>
+      </div>
+
+      <div class="picks-grid">
+        <!-- ELITE -->
+        <article class="pick featured">
+          <div class="pick-head">
+            <span class="chip chip-sport">NBA</span>
+            <span class="chip chip-grade-elite">★ ELITE</span>
+            <span class="stamp">8:00 PM ET</span>
+          </div>
+          <div class="pick-match">
+            <div class="away">Boston Celtics</div>
+            <div class="at">AT</div>
+            <div class="home">Los Angeles Lakers</div>
+          </div>
+          <div class="pick-sel">
+            <div class="l">Pick · Spread</div>
+            <div class="v">Celtics <span class="line">−4.5</span></div>
+          </div>
+          <div class="pick-stats">
+            <div class="s conf"><span class="l">Conf</span><span class="v">87<span class="pct">%</span></span></div>
+            <div class="s edge"><span class="l">Edge</span><span class="v">72</span></div>
+            <div class="s risk"><span class="l">Risk</span><span class="v">MOD</span></div>
+          </div>
+          <p class="pick-reason">Sharp money on Boston since open. Three-book consensus on the spread. Lakers without LeBron — pace slows by 4.2 possessions.</p>
+          <div class="pick-foot">
+            <span>QUALITY · HIGH</span>
+            <span class="live"><span class="dot"></span>Live · 2m ago</span>
+          </div>
+        </article>
+
+        <!-- STRONG -->
+        <article class="pick elite">
+          <div class="pick-head">
+            <span class="chip chip-sport">NFL</span>
+            <span class="chip chip-grade-strong">STRONG</span>
+            <span class="stamp">SUN · 1:00 PM</span>
+          </div>
+          <div class="pick-match">
+            <div class="away">Kansas City Chiefs</div>
+            <div class="at">AT</div>
+            <div class="home">Baltimore Ravens</div>
+          </div>
+          <div class="pick-sel">
+            <div class="l">Pick · Total</div>
+            <div class="v">Under <span class="line" style="color:var(--ion-blue-glow)">47.5</span></div>
+          </div>
+          <div class="pick-stats">
+            <div class="s conf"><span class="l">Conf</span><span class="v" style="color:var(--ion-blue-glow)">81<span class="pct">%</span></span></div>
+            <div class="s edge"><span class="l">Edge</span><span class="v">58</span></div>
+            <div class="s risk"><span class="l">Risk</span><span class="v">LOW</span></div>
+          </div>
+          <p class="pick-reason">Weather model: 14 mph crosswind, 38°F. Both QBs trending under their season averages. Public 71% on the over.</p>
+          <div class="pick-foot">
+            <span>QUALITY · HIGH</span>
+            <span class="live"><span class="dot"></span>Live · 8m ago</span>
+          </div>
+        </article>
+
+        <!-- SOLID locked -->
+        <article class="pick">
+          <div class="pick-head">
+            <span class="chip chip-sport">NHL</span>
+            <span class="chip chip-grade-solid">SOLID</span>
+            <span class="stamp">7:30 PM ET</span>
+          </div>
+          <div class="pick-match">
+            <div class="away">Toronto Maple Leafs</div>
+            <div class="at">AT</div>
+            <div class="home">New York Rangers</div>
+          </div>
+          <div class="pick-sel">
+            <div class="l">Pick · Moneyline</div>
+            <div class="v" style="display:flex;align-items:center;gap:8px;color:var(--fg-muted)">
+              <svg class="lock-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"/></svg>
+              Pro &amp; Elite
+            </div>
+          </div>
+          <div class="pick-stats">
+            <div class="s conf"><span class="l">Conf</span><span class="v" style="color:var(--fg-muted);font-size:14px">— · —</span></div>
+            <div class="s edge"><span class="l">Edge</span><span class="v" style="color:var(--fg-muted);font-size:14px">—</span></div>
+            <div class="s risk"><span class="l">Risk</span><span class="v">MOD</span></div>
+          </div>
+          <p class="pick-reason">Unlock model reasoning, confidence and edge scoring with Pro. Full factor breakdown on every pick.</p>
+          <div class="pick-foot">
+            <span>QUALITY · HIGH</span>
+            <span>UPGRADE TO UNLOCK →</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HOW IT WORKS ────────────────────────────────── -->
+  <section class="section" style="background: linear-gradient(180deg, transparent, var(--obsidian) 50%, transparent);">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-eyebrow">▸ METHODOLOGY</p>
+          <h2>We show <em>our work.</em></h2>
+        </div>
+        <div class="meta">
+          NO BLACK BOXES<br>
+          NO FABRICATED STATS · NO STALE DATA
+        </div>
+      </div>
+
+      <div class="how-grid">
+        <div class="how">
+          <span class="step">01</span>
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3>Live odds, every 30 minutes.</h3>
+          <p>Our data pipeline pulls real lines from dozens of sportsbooks. Spreads, totals, moneylines — 7 sports, continuously refreshed.</p>
+        </div>
+        <div class="how">
+          <span class="step">02</span>
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+          </div>
+          <h3>The model scores every game.</h3>
+          <p>We calculate implied probabilities, detect sharp line movement, and score each side for positive expected value. Confidence is 0–100, calibrated against history.</p>
+        </div>
+        <div class="how">
+          <span class="step">03</span>
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <h3>You see the reasoning.</h3>
+          <p>Every pick exposes its factor breakdown — consensus, market depth, line movement, intelligence layers. No locks, no guarantees. You make the call.</p>
+        </div>
+      </div>
+
+      <div class="resp">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ultraviolet)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 22px;margin-top:2px"><path d="M12 2L4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6z"/></svg>
+        <div>
+          <div class="label">▸ Responsible intelligence</div>
+          <p>Variance is real. We provide perspective on uncertainty — not certainty. Know your risk, set limits before emotion enters, and treat every signal as one input in a portfolio of decisions. <em style="font-family:var(--f-editorial);color:var(--ultraviolet-glow);font-style:italic">You make the call.</em></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PRICING ─────────────────────────────────────── -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-eyebrow">▸ TIERS</p>
+          <h2>Three modes. <em>One discipline.</em></h2>
+        </div>
+        <div class="meta">CANCEL ANYTIME · NO TRIAL TRAP<br>EVERY RESULT PUBLISHED</div>
+      </div>
+
+      <div class="pricing">
+        <div class="tier">
+          <span class="name">Free</span>
+          <span class="price">$0<small>/mo</small></span>
+          <p class="desc">Taste the system. One free pick a day, every day.</p>
+          <ul>
+            <li>One free pick / day</li>
+            <li>Pick reasoning preview</li>
+            <li>Track record access</li>
+            <li class="muted">Confidence scores</li>
+            <li class="muted">Edge scoring</li>
+            <li class="muted">Factor breakdown</li>
+          </ul>
+          <a href="#" class="btn btn-ghost cta">Get free pick</a>
+        </div>
+
+        <div class="tier featured">
+          <span class="badge">Most chosen</span>
+          <span class="name">Pro</span>
+          <span class="price">$19<small>/mo</small></span>
+          <p class="desc">The full signal. All picks, full confidence + edge, complete reasoning.</p>
+          <ul>
+            <li>All daily picks</li>
+            <li>Calibrated 0–100 confidence</li>
+            <li>Edge score on every pick</li>
+            <li>Full factor breakdown</li>
+            <li>Line-movement history</li>
+            <li>Sharp / public split</li>
+          </ul>
+          <a href="#" class="btn btn-primary cta">Upgrade to Pro <span class="arrow">→</span></a>
+        </div>
+
+        <div class="tier elite-tier">
+          <span class="badge">Elite</span>
+          <span class="name">Elite</span>
+          <span class="price">$49<small>/mo</small></span>
+          <p class="desc">Early access, analytics, alerts. For serious bettors.</p>
+          <ul>
+            <li>Everything in Pro</li>
+            <li>Early access · 4h ahead</li>
+            <li>Custom alerts on signal</li>
+            <li>Personal analytics</li>
+            <li>Methodology deep dives</li>
+            <li>Direct line to analysts</li>
+          </ul>
+          <a href="#" class="btn btn-deep cta">Upgrade to Elite <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ──────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <a href="#" class="nav-logo" style="margin-bottom:14px;display:inline-flex">
+            PICKPIL<span class="ret"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt">
+              <circle cx="24" cy="24" r="22"/>
+              <circle cx="24" cy="24" r="12" opacity="0.5"/>
+              <line x1="24" y1="-2" x2="24" y2="8"/>
+              <line x1="24" y1="40" x2="24" y2="50"/>
+              <line x1="-2" y1="24" x2="8" y2="24"/>
+              <line x1="40" y1="24" x2="50" y2="24"/>
+              <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+            </svg></span>T
+          </a>
+          <p class="disclaim">
+            PickPilot provides perspective on sports markets — not certainty. We do not guarantee outcomes. No pick is a "lock." Treat every signal as one input in a disciplined portfolio. <strong style="color:var(--ion)">Set limits before emotion enters.</strong>
+          </p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">Picks</a></li>
+            <li><a href="#">Observatory</a></li>
+            <li><a href="#">The Vault</a></li>
+            <li><a href="#">Methodology</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Track record</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Responsible</h4>
+          <ul>
+            <li><a href="#">Set limits</a></li>
+            <li><a href="#">Variance guide</a></li>
+            <li><a href="#">Help · 1-800-GAMBLER</a></li>
+            <li><a href="#">Terms · Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bottom">
+        <span>© 2026 PICKPILOT · INTELLIGENCE OVER NOISE</span>
+        <span>YOU MAKE THE CALL</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Desktop Observatory · PickPilot</title>
+<link rel="stylesheet" href="_board.css">
+<script src="https://unpkg.com/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+<style>
+  .board { width: 1600px; min-height: 2100px; padding: 0; }
+  .stage { position: relative; padding: 80px; }
+
+  .arch-hero { margin-bottom: 64px; }
+  .arch-hero .head {
+    font: 900 200px/0.85 var(--f-arch);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--fg);
+    margin: 0;
+  }
+  .arch-hero .head .stroke { -webkit-text-stroke: 2px var(--mineral-1); -webkit-text-fill-color: transparent; }
+  .arch-hero .head .pop { color: var(--lime); }
+  .arch-hero .sub {
+    margin-top: 28px;
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px;
+    align-items: start;
+  }
+  .arch-hero .sub .lede {
+    font: var(--t-display-md); color: var(--ion); letter-spacing: -0.015em; max-width: 32ch;
+  }
+  .arch-hero .sub .lede em { font: italic 400 32px/1.1 var(--f-editorial); color: var(--lime); }
+  .arch-hero .sub .stat .l { font-family: var(--f-mono); font-size: 10px; color: var(--fg-muted); letter-spacing: 0.20em; text-transform: uppercase; }
+  .arch-hero .sub .stat .v { font: 800 32px/1 var(--f-arch); color: var(--fg); margin-top: 8px; letter-spacing: 0.005em; text-transform: uppercase; }
+  .arch-hero .sub .stat .meta { font: var(--t-body-xs); color: var(--ion-1); margin-top: 6px; }
+
+  /* ── Desktop window frame ── */
+  .desktop-window {
+    background: var(--carbon);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 80px 120px -40px rgba(0,0,0,0.9), 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .dw-chrome {
+    height: 36px;
+    background: var(--steel);
+    border-bottom: 1px solid var(--mineral);
+    display: flex; align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+  }
+  .dw-chrome .dots {
+    display: flex; gap: 6px;
+  }
+  .dw-chrome .dot {
+    width: 11px; height: 11px; border-radius: 999px;
+    background: var(--graphite);
+  }
+  .dw-chrome .url-bar {
+    flex: 1; max-width: 480px;
+    padding: 4px 12px;
+    background: var(--carbon-1);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-pill);
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--f-mono); font-size: 11px; color: var(--ion-1);
+  }
+  .dw-chrome .url-bar svg { width: 11px; height: 11px; color: var(--lime); }
+
+  /* ── App layout ── */
+  .app {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 920px;
+  }
+
+  /* Sidebar */
+  .side {
+    background: var(--carbon-1);
+    border-right: 1px solid var(--mineral);
+    padding: 24px 16px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .side .brand {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 8px 24px;
+    border-bottom: 1px solid var(--mineral);
+    margin-bottom: 16px;
+  }
+  .side .brand .ret { width: 20px; height: 20px; color: var(--lime); }
+  .side .brand .name {
+    font: 900 16px/1 var(--f-arch);
+    letter-spacing: 0.005em;
+    color: var(--fg);
+    text-transform: uppercase;
+  }
+  .side .nav-group {
+    margin-bottom: 16px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--mineral);
+  }
+  .side .nav-group:last-child { border-bottom: 0; }
+  .side .nav-group .label {
+    font-family: var(--f-mono); font-size: 9px;
+    color: var(--fg-muted); letter-spacing: 0.20em; text-transform: uppercase;
+    padding: 0 8px 8px;
+  }
+  .side .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--r-sm);
+    font: 500 13px var(--f-body);
+    color: var(--ion-1);
+    cursor: pointer;
+  }
+  .side .nav-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .side .nav-item .badge-num {
+    margin-left: auto;
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted);
+  }
+  .side .nav-item.active {
+    background: var(--steel);
+    color: var(--fg);
+    border: 1px solid var(--mineral);
+  }
+  .side .nav-item.active svg { color: var(--lime); }
+  .side .nav-item.active .badge-num { color: var(--lime); }
+
+  .side .user {
+    margin-top: auto; padding: 12px;
+    background: var(--steel);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .side .user .av {
+    width: 28px; height: 28px; border-radius: 999px;
+    background: linear-gradient(135deg, var(--lime), var(--mint));
+    display: flex; align-items: center; justify-content: center;
+    color: var(--lime-ink); font-family: var(--f-arch); font-weight: 800; font-size: 13px;
+  }
+  .side .user .info { flex: 1; min-width: 0; }
+  .side .user .info .name { font: 600 12px var(--f-display); color: var(--fg); }
+  .side .user .info .tier {
+    font-family: var(--f-mono); font-size: 9px;
+    color: var(--gold); letter-spacing: 0.16em; text-transform: uppercase;
+  }
+
+  /* Main */
+  .main {
+    padding: 24px 32px;
+    display: flex; flex-direction: column; gap: 24px;
+    overflow: hidden;
+  }
+
+  /* Top header */
+  .top-bar {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--mineral);
+  }
+  .top-bar .crumb {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .top-bar .crumb span { color: var(--lime); }
+  .top-bar h1 {
+    font: 800 48px/0.95 var(--f-arch);
+    color: var(--fg); margin: 0;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+  }
+  .top-bar .right {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .top-bar .live {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 10px;
+    border-radius: var(--r-pill);
+    background: rgba(111,217,255,0.08);
+    border: 1px solid rgba(111,217,255,0.25);
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--lime); letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .top-bar .live .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--lime);
+    box-shadow: 0 0 8px var(--lime);
+  }
+  .top-bar .search {
+    width: 240px; padding: 7px 12px;
+    background: var(--steel); border: 1px solid var(--mineral);
+    border-radius: var(--r-pill);
+    color: var(--ion-1); font-size: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .top-bar .search svg { width: 13px; height: 13px; }
+  .top-bar .btn {
+    padding: 8px 16px;
+    background: var(--lime); color: var(--lime-ink);
+    border: 0; border-radius: var(--r-sm);
+    font-family: var(--f-mono); font-weight: 700; font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .top-bar .btn svg { width: 12px; height: 12px; }
+
+  /* KPI strip */
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--mineral); border: 1px solid var(--mineral); border-radius: var(--r-md); overflow: hidden; }
+  .kpi {
+    background: var(--steel);
+    padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 6px;
+    position: relative;
+  }
+  .kpi .l { font-family: var(--f-mono); font-size: 9px; color: var(--fg-muted); letter-spacing: 0.18em; text-transform: uppercase; }
+  .kpi .v {
+    font: 700 44px/1 var(--f-mono); color: var(--fg);
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi.lime .v { color: var(--lime); }
+  .kpi .meta { font-family: var(--f-mono); font-size: 10px; color: var(--ion-1); letter-spacing: 0.06em; }
+  .kpi .meta strong { color: var(--lime); }
+  .kpi .delta {
+    position: absolute; top: 16px; right: 20px;
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--lime);
+    letter-spacing: 0.08em;
+  }
+
+  /* Main grid */
+  .grid-2 {
+    display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px;
+  }
+
+  /* Panel */
+  .panel {
+    background: var(--steel);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .panel-head {
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--mineral);
+  }
+  .panel-head .l { display: flex; align-items: baseline; gap: 14px; }
+  .panel-head h3 {
+    font: 800 18px/1 var(--f-arch);
+    letter-spacing: 0.02em; color: var(--fg);
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .panel-head .meta {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .panel-head .right {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-head .tiny-pill {
+    padding: 3px 8px; border-radius: var(--r-pill);
+    background: var(--graphite);
+    font-family: var(--f-mono); font-size: 9px; color: var(--ion-1);
+    letter-spacing: 0.12em;
+  }
+  .panel-head .tiny-pill.lime { background: rgba(111,217,255,0.08); color: var(--lime); }
+  .panel-head .tiny-pill.cyan { background: rgba(0,228,255,0.08); color: var(--cyan); }
+
+  /* Top matchups table */
+  table.matchups {
+    width: 100%; border-collapse: collapse;
+  }
+  table.matchups thead th {
+    font-family: var(--f-mono); font-size: 9px; font-weight: 500;
+    color: var(--fg-muted); letter-spacing: 0.18em; text-transform: uppercase;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--mineral);
+  }
+  table.matchups thead th.r { text-align: right; }
+  table.matchups tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--mineral);
+    font-family: var(--f-mono);
+    font-size: 13px;
+    color: var(--ion);
+    font-variant-numeric: tabular-nums;
+  }
+  table.matchups tbody tr:last-child td { border-bottom: 0; }
+  table.matchups tbody tr:hover td { background: var(--graphite); }
+  table.matchups td.r { text-align: right; }
+  table.matchups td .matchup-cell {
+    display: flex; align-items: center; gap: 10px;
+  }
+  table.matchups td .league {
+    font-family: var(--f-mono); font-size: 9px;
+    color: var(--fg-muted); letter-spacing: 0.12em;
+  }
+  table.matchups td .teams {
+    font: 700 14px/1 var(--f-display); color: var(--fg);
+    letter-spacing: -0.005em;
+  }
+  table.matchups td .time {
+    font-family: var(--f-mono); font-size: 9px;
+    color: var(--fg-muted); letter-spacing: 0.08em;
+  }
+  table.matchups td .grade {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-family: var(--f-mono); font-size: 9px; font-weight: 600;
+    letter-spacing: 0.14em;
+  }
+  table.matchups td .grade.elite { background: rgba(111,217,255,0.12); color: var(--lime); }
+  table.matchups td .grade.strong { background: rgba(80,227,164,0.12); color: var(--mint); }
+  table.matchups td .grade.solid { background: rgba(212,168,87,0.12); color: var(--gold); }
+  table.matchups td .grade.lean { background: rgba(110,137,181,0.12); color: var(--slate-blue); }
+  table.matchups td .edge { color: var(--lime); font-weight: 600; }
+  table.matchups td .delta-up { color: var(--lime); }
+  table.matchups td .delta-down { color: var(--vermilion); }
+
+  /* Market pulse panel */
+  .pulse-panel {
+    padding: 20px;
+  }
+  .pulse-panel .pulse-meta {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .pulse-panel .pulse-meta .lp {
+    padding: 4px 10px;
+    background: var(--graphite); border: 1px solid var(--mineral);
+    border-radius: var(--r-pill);
+    font-family: var(--f-mono); font-size: 10px; color: var(--ion-1);
+    letter-spacing: 0.12em;
+  }
+  .pulse-panel .pulse-meta .lp.active {
+    background: rgba(111,217,255,0.08);
+    border-color: rgba(111,217,255,0.25);
+    color: var(--lime);
+  }
+  .pulse-panel .pulse-chart-host {
+    background: var(--graphite); border: 1px solid var(--mineral);
+    border-radius: var(--r-sm);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .pulse-panel .pulse-chart-host .head {
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .pulse-panel .pulse-chart-host .head .name {
+    font: 700 16px/1 var(--f-display);
+    color: var(--fg); letter-spacing: -0.01em;
+  }
+  .pulse-panel .pulse-chart-host .head .delta {
+    font-family: var(--f-mono); font-size: 11px;
+    color: var(--lime); font-weight: 600;
+  }
+  .pulse-panel .pulse-chart-host svg {
+    width: 100%; height: 90px; display: block; margin-top: 8px;
+  }
+  .pulse-panel .pulse-chart-host .axis-labels {
+    display: flex; justify-content: space-between;
+    font-family: var(--f-mono); font-size: 9px;
+    color: var(--fg-muted); letter-spacing: 0.10em;
+    margin-top: 4px;
+  }
+
+  /* Signals feed */
+  .signals { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .signal-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--mineral);
+  }
+  .signal-row:last-child { border-bottom: 0; }
+  .signal-row .ico {
+    width: 32px; height: 32px; border-radius: 999px;
+    background: rgba(111,217,255,0.10);
+    color: var(--lime);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .signal-row.cyan .ico { background: rgba(0,228,255,0.10); color: var(--cyan); }
+  .signal-row.amber .ico { background: rgba(255,200,87,0.10); color: var(--amber); }
+  .signal-row.violet .ico { background: rgba(167,139,250,0.10); color: var(--ultraviolet); }
+  .signal-row .ico svg { width: 15px; height: 15px; }
+  .signal-row .text { flex: 1; }
+  .signal-row .text .ti {
+    font: 600 13px/1.2 var(--f-display); color: var(--fg);
+    letter-spacing: -0.005em;
+  }
+  .signal-row .text .meta {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.10em; margin-top: 3px;
+  }
+  .signal-row .time {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.06em;
+  }
+
+  /* AI Insight observatory */
+  .ai-panel {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(0,228,255,0.05) 0%, rgba(167,139,250,0.04) 100%);
+    border: 1px solid rgba(0,228,255,0.20);
+    padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-panel::after {
+    content: "";
+    position: absolute; right: -60px; top: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(0,228,255,0.10), transparent 70%);
+    pointer-events: none;
+  }
+  .ai-panel .grid {
+    display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 32px;
+    align-items: start;
+    position: relative;
+  }
+  .ai-panel .lhs .lbl {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: var(--r-pill);
+    background: rgba(0,228,255,0.10);
+    border: 1px solid rgba(0,228,255,0.30);
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--cyan); letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .ai-panel .lhs .lbl svg { width: 11px; height: 11px; }
+  .ai-panel .lhs h3 {
+    font: 800 36px/0.95 var(--f-arch); color: var(--fg);
+    letter-spacing: 0.005em; text-transform: uppercase;
+    margin: 14px 0 12px;
+  }
+  .ai-panel .lhs p {
+    font: var(--t-body); color: var(--ion);
+    margin: 0; max-width: 36ch;
+  }
+  .ai-panel .lhs p em {
+    font: italic 400 16px/1.5 var(--f-editorial); color: var(--cyan);
+  }
+  .ai-panel .col .k {
+    font-family: var(--f-mono); font-size: 10px; color: var(--fg-muted);
+    letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .ai-panel .col .v {
+    font: 800 36px/1 var(--f-arch); color: var(--cyan);
+    letter-spacing: 0.005em; margin: 8px 0 4px;
+  }
+  .ai-panel .col .meta { font: var(--t-body-sm); color: var(--ion-1); }
+</style>
+</head>
+<body>
+<section class="board">
+  <div style="position:absolute;inset:0;background:
+       radial-gradient(ellipse 70% 40% at 50% 30%, rgba(111,217,255,0.05), transparent 70%),
+       radial-gradient(ellipse 50% 30% at 20% 80%, rgba(0,228,255,0.04), transparent 70%);
+       pointer-events:none;z-index:0"></div>
+  <div class="grid-overlay" style="z-index:0;mask-image:radial-gradient(ellipse at center, black 25%, transparent 85%)"></div>
+
+  <div class="b-chrome">
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+  </div>
+  <div class="b-bug">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="butt">
+      <circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.5"/>
+      <line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/>
+      <line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/>
+      <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+    </svg>
+    <span>PickPilot · Sports Intelligence System</span>
+  </div>
+  <div class="b-id">
+    <span class="n">04 / 05</span>
+    <span>BOARD IV — DESKTOP OBSERVATORY</span>
+  </div>
+
+  <div class="stage">
+
+    <!-- HERO -->
+    <div class="arch-hero">
+      <div style="display:flex;align-items:center;gap:20px;margin-bottom:24px">
+        <span class="brack">— SECTION 04 / DESKTOP EXPERIENCE</span>
+        <span style="flex:1;height:1px;background:var(--mineral)"></span>
+        <span class="brack" style="color:var(--lime)">A WINDOW ON THE MARKET</span>
+      </div>
+      <h1 class="head"><span class="pop">Observatory</span></h1>
+      <div class="sub">
+        <div class="lede">A full-screen <em>command center</em> for sports markets. Edge, movement, signals — visible at one glance, depth on the next.</div>
+        <div class="stat"><div class="l">— LIVE FEEDS</div><div class="v">12<span style="color:var(--ion-2);font-size:18px">+</span></div><div class="meta">Sportsbooks streamed</div></div>
+        <div class="stat"><div class="l">— REFRESH</div><div class="v">30<span style="color:var(--ion-2);font-size:18px">SEC</span></div><div class="meta">Smart signal trigger</div></div>
+        <div class="stat"><div class="l">— DESIGN W</div><div class="v">1440<span style="color:var(--ion-2);font-size:18px">PX</span></div><div class="meta">Comfortable to 4K</div></div>
+      </div>
+    </div>
+
+    <!-- DESKTOP WINDOW -->
+    <div class="desktop-window">
+      <div class="dw-chrome">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="url-bar"><i data-lucide="lock"></i><span>app.pickpilot.com / observatory</span></div>
+      </div>
+      <div class="app">
+        <!-- SIDEBAR -->
+        <aside class="side">
+          <div class="brand">
+            <span class="ret"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt"><circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/><line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/><line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/><circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/></svg></span>
+            <span class="name">PickPilot</span>
+          </div>
+          <div class="nav-group">
+            <div class="label">— OBSERVATORY</div>
+            <div class="nav-item active"><i data-lucide="layout-dashboard"></i>Dashboard</div>
+            <div class="nav-item"><i data-lucide="layers"></i>Today's Slate<span class="badge-num">14</span></div>
+            <div class="nav-item"><i data-lucide="activity"></i>Market Pulse</div>
+            <div class="nav-item"><i data-lucide="cpu"></i>Smart Signals<span class="badge-num">7</span></div>
+          </div>
+          <div class="nav-group">
+            <div class="label">— INTELLIGENCE</div>
+            <div class="nav-item"><i data-lucide="brain"></i>Model Lab</div>
+            <div class="nav-item"><i data-lucide="git-compare"></i>Disagreement</div>
+            <div class="nav-item"><i data-lucide="newspaper"></i>Insights</div>
+          </div>
+          <div class="nav-group">
+            <div class="label">— YOUR LEDGER</div>
+            <div class="nav-item"><i data-lucide="line-chart"></i>Performance</div>
+            <div class="nav-item"><i data-lucide="bookmark"></i>Tracked</div>
+            <div class="nav-item"><i data-lucide="bell"></i>Alerts<span class="badge-num">3</span></div>
+          </div>
+          <div class="user">
+            <div class="av">M</div>
+            <div class="info">
+              <div class="name">marcus.t</div>
+              <div class="tier">ELITE TIER</div>
+            </div>
+            <i data-lucide="settings" style="color:var(--ion-1);width:13px;height:13px"></i>
+          </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+          <!-- Top bar -->
+          <div class="top-bar">
+            <div>
+              <div class="crumb">DASHBOARD <span>·</span> YOUR INTELLIGENCE OVERVIEW</div>
+              <h1>Tonight, <span style="color:var(--lime)">14 games.</span></h1>
+            </div>
+            <div class="right">
+              <div class="live"><span class="dot"></span>LIVE · UPDATED 14:32 ET</div>
+              <div class="search"><i data-lucide="search"></i><span>Search matchups, teams…</span></div>
+              <button class="btn">SLATE <i data-lucide="arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- KPIs -->
+          <div class="kpis">
+            <div class="kpi lime">
+              <span class="l">— OVERALL ROI</span>
+              <span class="delta">↑ 90D</span>
+              <span class="v">+18.7%</span>
+              <span class="meta">147 W · 91 L · 8 P</span>
+            </div>
+            <div class="kpi">
+              <span class="l">— WIN RATE</span>
+              <span class="delta">↑ +2.1</span>
+              <span class="v">61%</span>
+              <span class="meta">vs. <strong>54%</strong> market avg</span>
+            </div>
+            <div class="kpi">
+              <span class="l">— AVG EDGE SCORE</span>
+              <span class="delta">— FLAT</span>
+              <span class="v">68</span>
+              <span class="meta">Strong / threshold 70</span>
+            </div>
+            <div class="kpi">
+              <span class="l">— BEST SPORT · NBA</span>
+              <span class="delta" style="color:var(--lime)">↑ +22.4</span>
+              <span class="v">22.4%</span>
+              <span class="meta">42 picks / <strong>71% win</strong></span>
+            </div>
+          </div>
+
+          <!-- 2-column main -->
+          <div class="grid-2">
+            <!-- MATCHUPS TABLE -->
+            <section class="panel">
+              <div class="panel-head">
+                <div class="l">
+                  <h3>Top matchups</h3>
+                  <span class="meta">— TONIGHT'S 14 GAMES · RANKED BY EDGE</span>
+                </div>
+                <div class="right">
+                  <span class="tiny-pill lime">06 STRONG</span>
+                  <span class="tiny-pill">04 SOLID</span>
+                  <span class="tiny-pill">04 LEAN</span>
+                </div>
+              </div>
+              <table class="matchups">
+                <thead>
+                  <tr>
+                    <th>MATCHUP</th>
+                    <th class="r">EDGE</th>
+                    <th class="r">CONF</th>
+                    <th class="r">RISK</th>
+                    <th class="r">MOVE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="matchup-cell">
+                        <span class="grade elite">ELITE</span>
+                        <div>
+                          <div class="teams">LAL @ BOS</div>
+                          <div class="time">NBA · TONIGHT 8:00 PM</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="r edge">73</td>
+                    <td class="r">81%</td>
+                    <td class="r" style="color:var(--ion-1)">MEDIUM</td>
+                    <td class="r delta-up">−0.5 ↑</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="matchup-cell">
+                        <span class="grade strong">STRONG</span>
+                        <div>
+                          <div class="teams">DEN @ PHX</div>
+                          <div class="time">NBA · TONIGHT 9:00 PM</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="r edge">68</td>
+                    <td class="r">66%</td>
+                    <td class="r" style="color:var(--ion-1)">MEDIUM</td>
+                    <td class="r delta-up">+1.5 ↑</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="matchup-cell">
+                        <span class="grade strong">STRONG</span>
+                        <div>
+                          <div class="teams">KC @ SF</div>
+                          <div class="time">NFL · SUN 4:25 PM</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="r" style="color:var(--mint)">61</td>
+                    <td class="r">63%</td>
+                    <td class="r" style="color:var(--mint)">LOW</td>
+                    <td class="r delta-down">−3.0 ↓</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="matchup-cell">
+                        <span class="grade solid">SOLID</span>
+                        <div>
+                          <div class="teams">MIA @ NYK</div>
+                          <div class="time">NBA · SUN 6:00 PM</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="r" style="color:var(--gold)">58</td>
+                    <td class="r">59%</td>
+                    <td class="r" style="color:var(--ion-1)">MEDIUM</td>
+                    <td class="r delta-up">+2.0 ↑</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="matchup-cell">
+                        <span class="grade lean">LEAN</span>
+                        <div>
+                          <div class="teams">DAL @ MIN</div>
+                          <div class="time">NBA · SUN 7:00 PM</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="r" style="color:var(--slate-blue)">55</td>
+                    <td class="r">57%</td>
+                    <td class="r" style="color:var(--mint)">LOW</td>
+                    <td class="r delta-down">−1.0 ↓</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="matchup-cell">
+                        <span class="grade solid">SOLID</span>
+                        <div>
+                          <div class="teams">HOU @ NYY</div>
+                          <div class="time">MLB · SUN 1:35 PM</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="r" style="color:var(--gold)">52</td>
+                    <td class="r">55%</td>
+                    <td class="r" style="color:var(--ion-1)">MEDIUM</td>
+                    <td class="r delta-up">+0.5 ↑</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <!-- RIGHT COLUMN -->
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <!-- Market pulse -->
+              <section class="panel">
+                <div class="panel-head">
+                  <div class="l">
+                    <h3>Market Pulse</h3>
+                    <span class="meta">— LIVE MOVEMENT</span>
+                  </div>
+                  <div class="right">
+                    <span class="tiny-pill lime">LIVE</span>
+                  </div>
+                </div>
+                <div class="pulse-panel">
+                  <div class="pulse-meta">
+                    <div class="lp active">LAL</div>
+                    <div class="lp">NBA</div>
+                    <div class="lp">NFL</div>
+                    <div class="lp">MLB</div>
+                    <div class="lp">NHL</div>
+                  </div>
+                  <div class="pulse-chart-host">
+                    <div class="head">
+                      <span class="name">LAL @ BOS · −3.5</span>
+                      <span class="delta">+0.5 ↑</span>
+                    </div>
+                    <svg viewBox="0 0 320 90" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="dgrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0" stop-color="var(--lime)" stop-opacity="0.4"/>
+                          <stop offset="1" stop-color="var(--lime)" stop-opacity="0"/>
+                        </linearGradient>
+                      </defs>
+                      <path d="M 0 60 L 20 58 L 40 56 L 60 52 L 80 48 L 100 50 L 120 42 L 140 38 L 160 32 L 180 36 L 200 28 L 220 20 L 240 24 L 260 18 L 280 15 L 300 12 L 320 8"
+                            fill="none" stroke="var(--lime)" stroke-width="1.8" stroke-linecap="round"/>
+                      <path d="M 0 60 L 20 58 L 40 56 L 60 52 L 80 48 L 100 50 L 120 42 L 140 38 L 160 32 L 180 36 L 200 28 L 220 20 L 240 24 L 260 18 L 280 15 L 300 12 L 320 8 L 320 90 L 0 90 Z" fill="url(#dgrad)"/>
+                      <line x1="200" y1="0" x2="200" y2="90" stroke="var(--cyan)" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.7"/>
+                      <circle cx="200" cy="28" r="2.5" fill="var(--cyan)"/>
+                    </svg>
+                    <div class="axis-labels"><span>OPEN −2.5</span><span>SHARP MOVE</span><span style="color:var(--lime)">NOW −3.5</span></div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Smart signals -->
+              <section class="panel">
+                <div class="panel-head">
+                  <div class="l">
+                    <h3>Smart Signals</h3>
+                    <span class="meta">— ALGORITHM FLAGS</span>
+                  </div>
+                  <div class="right"><span class="tiny-pill cyan">07 TODAY</span></div>
+                </div>
+                <div class="signals">
+                  <div class="signal-row cyan">
+                    <div class="ico"><i data-lucide="zap"></i></div>
+                    <div class="text"><div class="ti">Sharp money detected</div><div class="meta">DEN @ PHX · UNDER 224.5</div></div>
+                    <span class="time">7M</span>
+                  </div>
+                  <div class="signal-row">
+                    <div class="ico"><i data-lucide="trending-up"></i></div>
+                    <div class="text"><div class="ti">Line reversed across 3 books</div><div class="meta">KC @ SF · KC SPREAD</div></div>
+                    <span class="time">11M</span>
+                  </div>
+                  <div class="signal-row amber">
+                    <div class="ico"><i data-lucide="alert-triangle"></i></div>
+                    <div class="text"><div class="ti">Public surge — fade signal</div><div class="meta">MIA @ NYK · NYK ML</div></div>
+                    <span class="time">18M</span>
+                  </div>
+                  <div class="signal-row violet">
+                    <div class="ico"><i data-lucide="brain"></i></div>
+                    <div class="text"><div class="ti">Model disagreement</div><div class="meta">HOU @ NYY · v4.2 vs v4.1</div></div>
+                    <span class="time">22M</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <!-- AI panel -->
+          <section class="panel ai-panel">
+            <div class="grid">
+              <div class="lhs">
+                <span class="lbl"><i data-lucide="cpu"></i>MODEL v4.2 · OBSERVATION</span>
+                <h3>The market overreacted to Boston's run.</h3>
+                <p>LAL's defensive efficiency at home + Tatum's pace decline + line reverse on 3 sharp books — <em>this is a stronger position than the model output suggests.</em> Consider the spread, not the moneyline.</p>
+              </div>
+              <div class="col">
+                <span class="k">— MODEL CONF</span>
+                <div class="v">74%</div>
+                <span class="meta">Calibrated v4.2</span>
+              </div>
+              <div class="col">
+                <span class="k">— SIMILAR GAMES</span>
+                <div class="v">7–3</div>
+                <span class="meta">Last 10 spots</span>
+              </div>
+              <div class="col">
+                <span class="k">— EDGE IN SPOTS</span>
+                <div class="v">70%</div>
+                <span class="meta">Hit rate · similar profile</span>
+              </div>
+            </div>
+          </section>
+
+        </main>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="b-foot">
+    <span class="l">PICKPILOT — DESIGN SYSTEM v2 / OBSERVATORY</span>
+    <span class="center">▸ BOARD 04</span>
+    <span class="r">DESKTOP OBSERVATORY</span>
+  </div>
+</section>
+<script>lucide.createIcons();</script>
+</body>
+</html>

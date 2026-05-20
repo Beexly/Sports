@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pick card · PickPilot</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; background: var(--void); }
+  .card-frame {
+    width: 700px; min-height: 380px;
+    padding: 24px;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 30%, rgba(255, 45, 138,0.05), transparent 70%),
+      linear-gradient(180deg, var(--obsidian) 0%, var(--carbon) 100%);
+    color: var(--fg-1);
+    box-sizing: border-box;
+  }
+  .eyebrow { font: 500 10px/1 var(--f-mono); text-transform: uppercase; letter-spacing: 0.22em; color: var(--fg-muted); margin: 0 0 4px; }
+  .eyebrow .dot { color: var(--plasma); }
+  .title { font: 600 18px/1.2 var(--f-display); color: var(--fg); letter-spacing: -0.01em; margin: 0 0 18px; }
+
+  /* Pick card */
+  .pick {
+    background: var(--eclipse);
+    border: 1px solid rgba(255, 45, 138,0.35);
+    border-radius: var(--r-md);
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 24px -8px rgba(255, 45, 138,0.18);
+  }
+  .pick::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(255, 45, 138,0.08), transparent 70%);
+    pointer-events: none;
+  }
+  .pick > * { position: relative; z-index: 2; }
+
+  .meta-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .chip-sport {
+    background: var(--titanium); color: var(--ion);
+    border: 1px solid var(--mineral);
+    padding: 4px 9px;
+    border-radius: var(--r-xs);
+    font: 600 9px/1 var(--f-mono); letter-spacing: 0.2em;
+  }
+  .chip-grade {
+    background: rgba(255, 45, 138,0.12); color: var(--plasma);
+    border: 1px solid rgba(255, 45, 138,0.35);
+    padding: 4px 9px;
+    border-radius: var(--r-xs);
+    font: 600 9px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .stamp { margin-left: auto; font: 400 10px/1 var(--f-mono); color: var(--fg-meta); letter-spacing: 0.1em; }
+
+  .matchup .away, .matchup .home {
+    font: 700 22px/1.1 var(--f-display);
+    color: var(--ion-white);
+    letter-spacing: -0.02em;
+  }
+  .matchup .at { font: 400 11px/1 var(--f-mono); color: var(--fg-muted); margin: 2px 0; letter-spacing: 0.18em; }
+
+  .selection {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border: 1px solid var(--mineral);
+    background: var(--obsidian);
+    border-radius: var(--r-sm);
+  }
+  .selection .lbl { font: 500 9px/1 var(--f-mono); color: var(--fg-muted); letter-spacing: 0.22em; text-transform: uppercase; }
+  .selection .pick-val { font: 600 20px/1.1 var(--f-display); color: var(--ion-white); margin-top: 4px; }
+  .selection .pick-val .line { font-family: var(--f-numerals); color: var(--plasma); margin-left: 8px; font-weight: 700; }
+
+  .stats {
+    display: flex; flex-direction: column; gap: 14px;
+    align-items: flex-end;
+    padding-left: 18px;
+    border-left: 1px solid var(--mineral);
+  }
+  .stat { text-align: right; }
+  .stat .l { font: 500 9px/1 var(--f-mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-muted); }
+  .stat .v { font: 700 48px/1 var(--f-numerals); letter-spacing: -0.03em; color: var(--plasma); margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .stat .v .pct { color: var(--fg-meta); font-size: 22px; }
+  .stat.edge .v { font-size: 32px; color: var(--ion-white); }
+  .stat.risk .v { font-size: 16px; color: var(--ion-blue); }
+
+  .reasoning {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--mineral);
+    padding-top: 14px;
+    margin-top: 4px;
+    display: flex; justify-content: space-between; gap: 24px; align-items: center;
+  }
+  .reasoning p {
+    margin: 0;
+    font: 400 12px/1.5 var(--f-body);
+    color: var(--ion-1);
+    max-width: 70%;
+  }
+  .live {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 500 10px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--plasma);
+  }
+  .live .dot {
+    width: 6px; height: 6px; border-radius: 999px;
+    background: var(--plasma);
+    animation: pp-pulse 2.4s var(--ease-out) infinite;
+  }
+</style>
+</head>
+<body>
+<div class="card-frame">
+  <p class="eyebrow"><span class="dot">●</span> PATTERN / 01 — PICK CARD</p>
+  <h2 class="title">Signature surface · grade · selection · edge</h2>
+
+  <article class="pick">
+    <div class="left">
+      <div class="meta-row">
+        <span class="chip-sport">NBA</span>
+        <span class="chip-grade">★ Elite Play</span>
+        <span class="stamp">FRI · NOV 14 · 8:00 PM ET</span>
+      </div>
+      <div class="matchup">
+        <div class="away">Boston Celtics</div>
+        <div class="at">AT</div>
+        <div class="home">Los Angeles Lakers</div>
+      </div>
+      <div class="selection">
+        <div class="lbl">Pick · Spread</div>
+        <div class="pick-val">Celtics <span class="line">−4.5</span></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat conf">
+        <div class="l">Confidence</div>
+        <div class="v">87<span class="pct">%</span></div>
+      </div>
+      <div class="stat edge">
+        <div class="l">Edge score</div>
+        <div class="v">72</div>
+      </div>
+      <div class="stat risk">
+        <div class="l">Risk</div>
+        <div class="v">Moderate</div>
+      </div>
+    </div>
+    <div class="reasoning">
+      <p>Sharp money on Boston since open. Three-book consensus on the spread. Lakers without LeBron — pace slows by 4.2 possessions.</p>
+      <span class="live"><span class="dot"></span>Live · 14:32 ET</span>
+    </div>
+  </article>
+</div>
+</body>
+</html>

@@ -1,0 +1,116 @@
+/* Shared chrome for PickPilot pitch boards · v3 "Cinematic Intelligence" */
+@import url("../colors_and_type.css");
+
+html, body { margin: 0; padding: 0; background: var(--void); color: var(--fg-1); }
+
+.board {
+  background: var(--carbon);
+  color: var(--fg-1);
+  position: relative;
+  overflow: hidden;
+}
+
+.b-chrome {
+  position: absolute; inset: 24px;
+  pointer-events: none;
+  z-index: 5;
+}
+.b-chrome .corner {
+  position: absolute; width: 24px; height: 24px;
+  border: 1px solid var(--signal);
+  opacity: 0.5;
+}
+.b-chrome .corner.tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.b-chrome .corner.tr { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.b-chrome .corner.bl { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.b-chrome .corner.br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+.b-id {
+  position: absolute; top: 32px; right: 40px;
+  font: var(--t-eyebrow);
+  text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--fg-muted);
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+  z-index: 10;
+}
+.b-id .n {
+  color: var(--signal);
+  font-family: var(--f-mono); font-weight: 600; font-size: 11px;
+  letter-spacing: 0.20em;
+}
+
+.b-bug {
+  position: absolute; top: 32px; left: 40px;
+  display: flex; align-items: center; gap: 10px;
+  font: var(--t-eyebrow);
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--fg-meta);
+  z-index: 10;
+}
+.b-bug svg { width: 16px; height: 16px; color: var(--signal); }
+
+.b-foot {
+  position: absolute; bottom: 28px; left: 40px; right: 40px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  z-index: 10;
+}
+.b-foot .l { color: var(--ion-1); }
+.b-foot .r { color: var(--fg-muted); }
+.b-foot .center { color: var(--signal); }
+
+/* Integrated wordmark (reticle replaces 'o') */
+.wordmark {
+  display: inline-flex; align-items: baseline;
+  font-family: var(--f-arch);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+  white-space: nowrap;
+}
+.wordmark .ret {
+  display: inline-block;
+  position: relative;
+  width: 0.78em;
+  height: 0.78em;
+  align-self: center;
+  margin: 0 -0.04em;
+  transform: translateY(0.04em);
+}
+.wordmark .ret svg { width: 100%; height: 100%; }
+
+/* Bracketed eyebrow */
+.brack {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--fg-meta);
+}
+.brack::before { content: "[ "; color: var(--signal); }
+.brack::after  { content: " ]"; color: var(--signal); }
+
+/* Section dividers */
+.divider {
+  position: relative;
+  height: 1px;
+  background: var(--mineral);
+  margin: 32px 0;
+}
+.divider .lbl {
+  position: absolute; left: 0; top: 50%;
+  transform: translateY(-50%);
+  background: var(--carbon);
+  padding-right: 12px;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.divider .lbl::before { content: "▸ "; color: var(--signal); }

@@ -4,6 +4,8 @@ import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { processSport } from "@sports/ingestion-pipeline";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {

@@ -44,3 +44,17 @@ coverage/
 # Turbo
 .turbo
 apps/web/tsconfig.tsbuildinfo
+
+# Sandbox / launch-night debris — these get created when the operator
+# runs the recovery recipe and should never land in a commit.
+_speedtest/
+_speedtest.bad/
+_disktest
+_disktest.bad
+node_modules.bad/
+node_modules.partial/
+
+
+# Local launch secrets — never commit
+.launch-secrets/
+VERCEL_ENV.txt

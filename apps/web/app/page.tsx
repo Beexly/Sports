@@ -1,12 +1,26 @@
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { MethodologySection } from "@/components/ui/methodology-section";
 import type { PublicPick } from "@sports/types";
 import { PICK_GRADE_LABELS } from "@sports/types";
+import { isStubMode, isDemoPicksEnabled } from "@sports/db";
+import { BRAND_NAME } from "@/lib/brand";
 
-// ─────────────────────────────────────────────
-// Fetch real picks for homepage preview
-// ─────────────────────────────────────────────
+/**
+ * Homepage.
+ *
+ * Ports the canonical PickPilot Design System composed surface
+ * (design-system/ui_kits/web/index.html) to the production Next.js app.
+ * Uses the kit.css component classes — see apps/web/styles/pickpilot-kit.css.
+ *
+ * Trust invariants preserved:
+ *   - MethodologySection (registry-driven) renders below the marketing methodology block.
+ *   - RiskDisclosure appears in the responsible-play band.
+ *   - EmptyPicksState renders when /api/picks returns nothing.
+ *   - No banned phrases (the public-copy scanner test still applies).
+ */
 
 async function fetchHomepagePicks(): Promise<PublicPick[]> {
   try {
@@ -15,514 +29,467 @@ async function fetchHomepagePicks(): Promise<PublicPick[]> {
       next: { revalidate: 1800 },
     });
     if (!res.ok) return [];
-    const body = await res.json() as { success: boolean; data: PublicPick[] };
+    const body = (await res.json()) as { success: boolean; data: PublicPick[] };
     return (body.data ?? []).slice(0, 3);
   } catch {
     return [];
   }
 }
 
-const TESTIMONIALS = [
-  {
-    quote:
-      "Finally a picks service that shows its work. The confidence scores and reasoning actually explain why each pick was made.",
-    name: "Marcus T.",
-    handle: "@marcust_bets",
-    tier: "Pro Member",
-  },
-  {
-    quote:
-      "The track record is published publicly so you can verify every result. That transparency is what separates SportsPicks Pro from the noise.",
-    name: "Jennifer R.",
-    handle: "@jr_sportsfan",
-    tier: "Elite Member",
-  },
-  {
-    quote:
-      "The odds are updated every 30 minutes so I always know when there's line movement worth acting on.",
-    name: "Derek M.",
-    handle: "@derekm",
-    tier: "Pro Member",
-  },
-];
-
-// ─────────────────────────────────────────────
-// Page
-// ─────────────────────────────────────────────
-
 export default async function HomePage() {
   const featuredPicks = await fetchHomepagePicks();
+  const hasFeaturedPicks = featuredPicks.length > 0;
+  const demoActive = isStubMode() && isDemoPicksEnabled();
+
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="app">
       <Nav />
 
-      <main className="flex-1">
-        {/* ── Hero ──────────────────────────────── */}
-        <section className="relative overflow-hidden px-4 pb-24 pt-20 sm:px-6 lg:px-8">
-          {/* background glow */}
-          <div
-            className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl"
-            aria-hidden="true"
-          >
-            <div
-              className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-brand-600 to-brand-400 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-            />
+      {demoActive && <SampleDataBanner />}
+
+      {/* ──────────────────────────────────────────────────────
+       * HERO — atmospheric orbital + editorial display headline
+       * ────────────────────────────────────────────────────── */}
+      <section className="hero">
+        <div className="container">
+          <span className="hero-eyebrow">
+            <span className="dot" aria-hidden="true" />
+            Intelligence over noise · v5.0
+          </span>
+
+          <h1>
+            Perspective,<br />
+            <em>not picks.</em>
+          </h1>
+
+          <p className="hero-tag">
+            {BRAND_NAME} ingests live odds from dozens of sportsbooks every 30
+            minutes, scores every matchup for edge, and surfaces a calibrated,
+            fully-reasoned signal. <em>You make the call.</em>
+          </p>
+
+          <div className="hero-ctas">
+            <Link href="/picks" className="btn btn-primary btn-lg">
+              See today&apos;s picks <span className="arrow">→</span>
+            </Link>
+            <Link href="/methodology" className="btn btn-ghost btn-lg">
+              See methodology
+            </Link>
           </div>
 
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-800 bg-brand-950/50 px-4 py-1.5 text-xs font-medium text-brand-300">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-400" />
-              </span>
-              Odds updated every 30 minutes
+          {/* Atmospheric orbital — pulled from design-system/ui_kits/web/index.html */}
+          <div className="hero-stage" aria-hidden="true">
+            <HeroOrbital />
+          </div>
+
+          <div className="hero-foot">
+            <div className="stat">
+              <span className="v p">07</span>
+              <span className="l">Sports covered</span>
             </div>
-
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Data-Driven Sports Picks,{" "}
-              <span className="bg-gradient-to-r from-brand-400 to-blue-300 bg-clip-text text-transparent">
-                Powered by Real Odds
-              </span>
-            </h1>
-
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-400">
-              Our algorithm ingests live lines from dozens of sportsbooks, scores
-              every matchup for edge, and surfaces the highest-confidence picks
-              — with full reasoning published for every selection.
-            </p>
-
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link
-                href="/picks"
-                className="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-center text-base font-semibold text-white shadow-lg shadow-brand-900/40 transition-colors hover:bg-brand-500 sm:w-auto"
-              >
-                Get Free Picks
-              </Link>
-              <Link
-                href="/pricing"
-                className="w-full rounded-xl border border-gray-700 bg-gray-900 px-8 py-3.5 text-center text-base font-semibold text-gray-200 transition-colors hover:border-gray-600 hover:bg-gray-800 sm:w-auto"
-              >
-                View Pricing
-              </Link>
+            <div className="stat">
+              <span className="v c">30 min</span>
+              <span className="l">Refresh cadence</span>
+            </div>
+            <div className="stat">
+              <span className="v u">v5.0</span>
+              <span className="l">Model version</span>
+            </div>
+            <div className="stat">
+              <span className="v">Gated</span>
+              <span className="l">Public stats · collecting</span>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ── Stats bar ─────────────────────────── */}
-        <section className="border-y border-gray-800 bg-gray-900/50">
-          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <dl className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-              {[
-                {
-                  label: "Sports Covered",
-                  value: "7",
-                  description: "NFL, NBA, MLB, NHL, NCAAF, NCAAB, Soccer",
-                },
-                {
-                  label: "Updated Every",
-                  value: "30 Min",
-                  description: "Live line movement tracked continuously",
-                },
-                {
-                  label: "Track Record",
-                  value: "Published",
-                  description: "Every result documented publicly",
-                },
-              ].map(({ label, value, description }) => (
-                <div
-                  key={label}
-                  className="flex flex-col items-center gap-1 text-center"
-                >
-                  <dt className="text-sm font-medium text-gray-500">{label}</dt>
-                  <dd className="text-3xl font-extrabold text-white">{value}</dd>
-                  <p className="text-xs text-gray-500">{description}</p>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </section>
+      {/* ──────────────────────────────────────────────────────
+       * SLATE BAR — live mission-control telemetry strip
+       * ────────────────────────────────────────────────────── */}
+      <div className="slate">
+        <div className="container slate-inner">
+          <span className="head">
+            <span className="dot" aria-hidden="true" />
+            Today&apos;s slate
+          </span>
+          <div className="slate-divide" />
+          <span className="item">
+            NBA <span className="v">—</span>
+          </span>
+          <span className="item">
+            NFL <span className="v">—</span>
+          </span>
+          <span className="item">
+            NHL <span className="v">—</span>
+          </span>
+          <span className="item">
+            MLB <span className="v">—</span>
+          </span>
+          <div className="slate-divide" />
+          <span className="item">
+            Strong plays <span className="v p">—</span>
+          </span>
+          <span className="item">
+            Elite <span className="v u">—</span>
+          </span>
+          <span className="item">
+            Updated <span className="v">Collecting</span>
+          </span>
+        </div>
+      </div>
 
-        {/* ── How It Works ──────────────────────── */}
-        <section className="px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                How It Works
+      {/* ──────────────────────────────────────────────────────
+       * PICKS GRID — runway / today's signal
+       * ────────────────────────────────────────────────────── */}
+      <section className="section" id="picks">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="section-eyebrow">▸ Today&apos;s signal</p>
+              <h2>
+                Today&apos;s <em>signal.</em>
               </h2>
-              <p className="mt-3 text-gray-400">
-                No black boxes — every step of our process is transparent.
-              </p>
             </div>
-
-            <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3">
-              {[
-                {
-                  step: "01",
-                  title: "We Ingest Real Odds",
-                  description:
-                    "Our data pipeline pulls live lines from dozens of sportsbooks every 30 minutes — spreads, totals, and moneylines across 7 sports. No simulated data, no stale numbers.",
-                  icon: (
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-                      />
-                    </svg>
-                  ),
-                },
-                {
-                  step: "02",
-                  title: "Algorithm Scores Every Game",
-                  description:
-                    "Our model calculates implied probabilities, detects sharp line movement, and scores each side for positive expected value. Confidence is expressed as a 0–100 score.",
-                  icon: (
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"
-                      />
-                    </svg>
-                  ),
-                },
-                {
-                  step: "03",
-                  title: "You Get Ranked Picks",
-                  description:
-                    "Picks are ranked by confidence and delivered to your dashboard daily. Free users see one pick per day; Pro and Elite subscribers get unlimited access with full reasoning.",
-                  icon: (
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                      />
-                    </svg>
-                  ),
-                },
-              ].map(({ step, title, description, icon }) => (
-                <div
-                  key={step}
-                  className="relative flex flex-col gap-4 rounded-2xl border border-gray-800 bg-gray-900/60 p-6"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-600/20 text-brand-400">
-                      {icon}
-                    </div>
-                    <span className="text-4xl font-extrabold text-gray-800 select-none">
-                      {step}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-white">{title}</h3>
-                  <p className="text-sm leading-relaxed text-gray-400">
-                    {description}
-                  </p>
-                </div>
-              ))}
+            <div className="meta">
+              Live odds · published with reasoning
+              <br />
+              Public picks open when the readiness gate clears
             </div>
           </div>
-        </section>
 
-        {/* ── Featured Picks Preview ─────────────── */}
-        <section className="bg-gray-900/40 px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-              <div>
-                <h2 className="text-3xl font-bold tracking-tight text-white">
-                  Today&apos;s Top Picks
-                </h2>
-                <p className="mt-2 text-gray-400">
-                  Unlock all picks with a Pro or Elite subscription.
-                </p>
+          {hasFeaturedPicks ? (
+            <div className="picks-grid">
+              {featuredPicks.map((pick, i) => (
+                <PickCard key={pick.id} pick={pick} variant={["featured", "elite", "solid"][i] ?? "solid"} />
+              ))}
+            </div>
+          ) : (
+            <EmptyPicksState />
+          )}
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────────────
+       * METHODOLOGY — how the model thinks
+       * ────────────────────────────────────────────────────── */}
+      <section
+        className="section"
+        style={{
+          background:
+            "linear-gradient(180deg, transparent, var(--obsidian) 50%, transparent)",
+        }}
+      >
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="section-eyebrow">▸ Methodology</p>
+              <h2>
+                We show <em>our work.</em>
+              </h2>
+            </div>
+            <div className="meta">
+              No black boxes
+              <br />
+              No fabricated stats · No stale data
+            </div>
+          </div>
+
+          <div className="how-grid">
+            <div className="how">
+              <span className="step">01</span>
+              <div className="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
               </div>
-              <Link
-                href="/picks"
-                className="shrink-0 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-medium text-gray-200 transition-colors hover:bg-gray-700"
-              >
-                View All Picks →
-              </Link>
-            </div>
-
-            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {featuredPicks.length > 0
-                ? featuredPicks.map((pick) => (
-                    <LockedPickCard key={pick.id} pick={pick} />
-                  ))
-                : FALLBACK_PICKS.map((pick) => (
-                    <LockedPickCard key={pick.id} pick={pick} />
-                  ))}
-            </div>
-
-            <div className="mt-8 rounded-xl border border-brand-800 bg-brand-950/30 p-6 text-center">
-              <p className="text-sm font-medium text-brand-300">
-                Unlock unlimited picks, confidence scores, and full reasoning
+              <h3>Live odds, every 30 minutes.</h3>
+              <p>
+                Our data pipeline pulls real lines from dozens of sportsbooks.
+                Spreads, totals, moneylines — 7 sports, continuously refreshed.
               </p>
-              <Link
-                href="/pricing"
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
-              >
-                Upgrade to Pro — from $19/mo
-              </Link>
+            </div>
+            <div className="how">
+              <span className="step">02</span>
+              <div className="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="20" x2="12" y2="10" />
+                  <line x1="18" y1="20" x2="18" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="16" />
+                </svg>
+              </div>
+              <h3>The model scores every game.</h3>
+              <p>
+                We calculate implied probabilities, detect sharp line movement,
+                and score each side for positive expected value. Confidence is
+                0–100, calibrated against history.
+              </p>
+            </div>
+            <div className="how">
+              <span className="step">03</span>
+              <div className="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="9 12 11 14 15 10" />
+                </svg>
+              </div>
+              <h3>You see the reasoning.</h3>
+              <p>
+                Every pick exposes its factor breakdown — consensus, market
+                depth, line movement, intelligence layers. You make the call.
+              </p>
             </div>
           </div>
-        </section>
 
-        {/* ── Social Proof ──────────────────────── */}
-        <section className="px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <h2 className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Trusted by Serious Bettors
-            </h2>
-            <p className="mt-3 text-center text-gray-400">
-              Thousands of sports bettors rely on our data-driven analysis.
-            </p>
-
-            <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-              {TESTIMONIALS.map(({ quote, name, handle, tier }) => (
-                <figure
-                  key={handle}
-                  className="flex flex-col gap-4 rounded-2xl border border-gray-800 bg-gray-900/60 p-6"
+          <div className="resp">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--ultraviolet)"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ flex: "0 0 22px", marginTop: 2 }}
+              aria-hidden="true"
+            >
+              <path d="M12 2L4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6z" />
+            </svg>
+            <div>
+              <div className="label">▸ Responsible intelligence</div>
+              <p>
+                Variance is real. We provide perspective on uncertainty — not
+                certainty. Know your risk, set limits before emotion enters,
+                and treat every signal as one input in a portfolio of decisions.{" "}
+                <em
+                  style={{
+                    fontFamily: "var(--f-editorial)",
+                    color: "var(--ultraviolet-glow)",
+                    fontStyle: "italic",
+                  }}
                 >
-                  <blockquote className="flex-1 text-sm leading-relaxed text-gray-300">
-                    &ldquo;{quote}&rdquo;
-                  </blockquote>
-                  <figcaption className="flex items-center gap-3 border-t border-gray-800 pt-4">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-700 text-sm font-bold text-white">
-                      {name[0]}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-white">{name}</p>
-                      <p className="text-xs text-gray-500">
-                        {handle} &middot;{" "}
-                        <span className="text-brand-400">{tier}</span>
-                      </p>
-                    </div>
-                  </figcaption>
-                </figure>
-              ))}
+                  You make the call.
+                </em>
+              </p>
+              <RiskDisclosure variant="compact" className="mt-3" />
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ── Final CTA ─────────────────────────── */}
-        <section className="border-t border-gray-800 bg-gray-900/40 px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Start with a free pick today
-            </h2>
-            <p className="mt-4 text-gray-400">
-              No credit card required. Get one free pick per day, or upgrade for
-              unlimited access.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link
-                href="/auth/signin"
-                className="w-full rounded-xl bg-brand-600 px-8 py-3.5 text-center text-base font-semibold text-white transition-colors hover:bg-brand-500 sm:w-auto"
-              >
-                Get Free Picks
-              </Link>
-              <Link
-                href="/pricing"
-                className="w-full rounded-xl border border-gray-700 px-8 py-3.5 text-center text-base font-semibold text-gray-300 transition-colors hover:border-gray-600 hover:text-white sm:w-auto"
-              >
-                See All Plans
-              </Link>
-            </div>
-          </div>
-        </section>
-      </main>
+      {/* The registry-driven methodology breakdown lives below the marketing
+       * block. It pulls from the Trust Claim Registry so every assertion is
+       * traceable to an APPROVED entry. */}
+      <MethodologySection />
 
       <Footer />
     </div>
   );
 }
 
-// ─────────────────────────────────────────────
-// Fallback picks (shown only when DB is empty)
-// ─────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────
+// Hero atmospheric orbital — pulled verbatim from the design system
+// ──────────────────────────────────────────────────────────────
 
-const FALLBACK_PICKS: PublicPick[] = [
-  {
-    id: "f1",
-    game: { homeTeam: "Baltimore Ravens", awayTeam: "Kansas City Chiefs", commenceTime: new Date().toISOString(), sport: "NFL" },
-    pickType: "SPREAD",
-    selection: "— upgrade to see —",
-    line: 0,
-    confidence: null,
-    edgeScore: null,
-    factorBreakdown: null,
-    dataQualityScore: 85,
-    tier: "PREMIUM",
-    pickGrade: "STRONG_PLAY",
-    riskLevel: "MODERATE",
-    reasoning: "Unlock with Pro to see full reasoning.",
-    reasoningShort: "Upgrade to see this pick.",
-    isFeatured: false,
-    generatedAt: new Date().toISOString(),
-    dataFreshnessAt: null,
-    result: "PENDING",
-  },
-  {
-    id: "f2",
-    game: { homeTeam: "Golden State Warriors", awayTeam: "Boston Celtics", commenceTime: new Date().toISOString(), sport: "NBA" },
-    pickType: "TOTAL",
-    selection: "— upgrade to see —",
-    line: 0,
-    confidence: null,
-    edgeScore: null,
-    factorBreakdown: null,
-    dataQualityScore: 78,
-    tier: "PREMIUM",
-    pickGrade: "SOLID_PLAY",
-    riskLevel: "LOW_RISK",
-    reasoning: "Unlock with Pro to see full reasoning.",
-    reasoningShort: "Upgrade to see this pick.",
-    isFeatured: false,
-    generatedAt: new Date().toISOString(),
-    dataFreshnessAt: null,
-    result: "PENDING",
-  },
-  {
-    id: "f3",
-    game: { homeTeam: "Houston Astros", awayTeam: "New York Yankees", commenceTime: new Date().toISOString(), sport: "MLB" },
-    pickType: "MONEYLINE",
-    selection: "Yankees ML",
-    line: -140,
-    confidence: null,
-    edgeScore: null,
-    factorBreakdown: null,
-    dataQualityScore: 72,
-    tier: "FREE",
-    pickGrade: "LEAN",
-    riskLevel: "MODERATE",
-    reasoning: "Sign up for free to see today's picks.",
-    reasoningShort: "Sign up for free to see today's picks.",
-    isFeatured: false,
-    generatedAt: new Date().toISOString(),
-    dataFreshnessAt: null,
-    result: "PENDING",
-  },
-];
+function HeroOrbital() {
+  return (
+    <svg viewBox="0 0 600 600" fill="none">
+      <defs>
+        <radialGradient id="pp-hg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#FF2D8A" stopOpacity="0.55" />
+          <stop offset="60%" stopColor="#4FA8FF" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="#04060A" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="300" cy="300" r="280" fill="url(#pp-hg)" />
+      <g stroke="#3C4961" strokeWidth="0.8" fill="none">
+        <ellipse cx="300" cy="300" rx="270" ry="120" transform="rotate(-12 300 300)" />
+        <ellipse cx="300" cy="300" rx="220" ry="100" transform="rotate(10 300 300)" />
+        <ellipse cx="300" cy="300" rx="170" ry="80" transform="rotate(-30 300 300)" />
+      </g>
+      <g stroke="#FF2D8A" strokeWidth="1.2" fill="none" opacity="0.55">
+        <ellipse cx="300" cy="300" rx="250" ry="110" transform="rotate(-22 300 300)" />
+      </g>
+      <g stroke="#4FA8FF" strokeWidth="1.2" fill="none" opacity="0.55">
+        <ellipse cx="300" cy="300" rx="195" ry="90" transform="rotate(8 300 300)" />
+      </g>
+      <g fill="#FF2D8A">
+        <circle cx="540" cy="200" r="4" />
+        <circle cx="120" cy="380" r="3" />
+      </g>
+      <g fill="#4FA8FF">
+        <circle cx="450" cy="380" r="3" />
+        <circle cx="180" cy="220" r="4" />
+        <circle cx="320" cy="120" r="3" />
+      </g>
+      <g fill="#9B7BFA">
+        <circle cx="280" cy="500" r="3" />
+      </g>
+      {/* Reticle target */}
+      <g transform="translate(300 300)" stroke="#FF2D8A" strokeWidth="1.5" opacity="0.4" fill="none">
+        <circle r="60" />
+        <circle r="30" opacity="0.5" />
+        <line x1="-80" y1="0" x2="-65" y2="0" />
+        <line x1="65" y1="0" x2="80" y2="0" />
+        <line x1="0" y1="-80" x2="0" y2="-65" />
+        <line x1="0" y1="65" x2="0" y2="80" />
+      </g>
+    </svg>
+  );
+}
 
-// ─────────────────────────────────────────────
-// Sub-components
-// ─────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────
+// PickCard — uses kit.css .pick, .pick-head, .chip, etc.
+// ──────────────────────────────────────────────────────────────
 
-function LockedPickCard({ pick }: { pick: PublicPick }) {
+function PickCard({
+  pick,
+  variant,
+}: {
+  pick: PublicPick;
+  variant: string;
+}) {
   const isPremium = pick.tier === "PREMIUM";
   const gradeInfo = PICK_GRADE_LABELS[pick.pickGrade];
-  const showGrade = pick.pickGrade !== "LEAN";
-
   const gameTime = new Date(pick.game.commenceTime).toLocaleString("en-US", {
     weekday: "short",
-    month: "short",
-    day: "numeric",
     hour: "numeric",
     minute: "2-digit",
   });
 
+  // Map design-system pick grades to chip class
+  const chipClass =
+    pick.pickGrade === "ELITE_PLAY" ? "chip-grade-elite" :
+    pick.pickGrade === "STRONG_PLAY" ? "chip-grade-strong" :
+    "chip-grade-solid";
+
   return (
-    <div className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 p-5">
-      {/* Sport + grade badges */}
-      <div className="flex items-center justify-between">
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs font-semibold text-gray-300">
-          {pick.game.sport}
-        </span>
-        <div className="flex items-center gap-1.5">
-          {showGrade && (
-            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${gradeInfo.color} ${gradeInfo.bgColor}`}>
-              {gradeInfo.label}
-            </span>
-          )}
-          {isPremium ? (
-            <span className="flex items-center gap-1 rounded-full bg-yellow-900/40 px-2.5 py-0.5 text-xs font-semibold text-yellow-400">
-              <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  fillRule="evenodd"
-                  d="M10 1a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L10 13.187l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L2.818 7.125a.75.75 0 01.416-1.28l4.21-.61L9.327 1.42A.75.75 0 0110 1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Premium
-            </span>
-          ) : (
-            <span className="rounded-full bg-green-900/40 px-2.5 py-0.5 text-xs font-semibold text-green-400">
-              Free
-            </span>
-          )}
-        </div>
+    <article className={`pick ${variant}`}>
+      <div className="pick-head">
+        <span className="chip chip-sport">{pick.game.sport}</span>
+        {pick.pickGrade !== "LEAN" && (
+          <span className={`chip ${chipClass}`}>{gradeInfo.label}</span>
+        )}
+        <span className="stamp">{gameTime}</span>
       </div>
-
-      {/* Matchup */}
-      <div>
-        <p className="text-xs text-gray-500">{gameTime}</p>
-        <p className="mt-1 text-sm font-medium text-gray-200">{pick.game.awayTeam}</p>
-        <p className="text-xs text-gray-500">@</p>
-        <p className="text-sm font-medium text-gray-200">{pick.game.homeTeam}</p>
+      <div className="pick-match">
+        <div className="away">{pick.game.awayTeam}</div>
+        <div className="at">AT</div>
+        <div className="home">{pick.game.homeTeam}</div>
       </div>
-
-      {/* Pick details */}
-      <div className="rounded-lg bg-gray-800/60 p-3">
-        <p className="text-xs text-gray-500">{pick.pickType}</p>
+      <div className="pick-sel">
+        <div className="l">Pick · {pick.pickType}</div>
         {isPremium ? (
-          <div className="mt-1 flex items-center gap-2">
-            <svg className="h-4 w-4 shrink-0 text-gray-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path
-                fillRule="evenodd"
-                d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
-                clipRule="evenodd"
-              />
+          <div
+            className="v"
+            style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--fg-muted)" }}
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16" aria-hidden="true">
+              <path d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" />
             </svg>
-            <span className="text-sm font-semibold text-gray-500">Unlock with Pro</span>
+            Pro &amp; Elite
           </div>
         ) : (
-          <p className="mt-1 text-base font-bold text-white">{pick.selection}</p>
+          <div className="v">
+            {pick.selection}
+            {pick.line !== 0 && (
+              <span className="line">
+                {pick.line > 0 ? "+" : ""}{pick.line}
+              </span>
+            )}
+          </div>
         )}
       </div>
-
-      {/* Teaser reasoning */}
-      <p className="text-xs leading-relaxed text-gray-500">{pick.reasoningShort}</p>
-
-      {/* Confidence (locked) */}
-      <div className="flex items-center justify-between text-xs text-gray-600">
-        <span>Confidence</span>
-        <span className="flex items-center gap-1">
-          <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-            <path
-              fillRule="evenodd"
-              d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
-              clipRule="evenodd"
-            />
-          </svg>
-          Pro only
+      <p className="pick-reason">{pick.reasoningShort}</p>
+      <div className="pick-foot">
+        <span>{isPremium ? "Premium" : "Free"}</span>
+        <span className="live">
+          <span className="dot" />
+          Live
         </span>
       </div>
+    </article>
+  );
+}
 
-      {isPremium && (
-        <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-yellow-800/30" />
-      )}
+// ──────────────────────────────────────────────────────────────
+// Honest empty state — required by homepage-content.test.ts
+// ──────────────────────────────────────────────────────────────
+
+function EmptyPicksState() {
+  return (
+    <div
+      data-testid="homepage-empty-picks-state"
+      className="pick"
+      style={{
+        gridColumn: "1 / -1",
+        textAlign: "center",
+        padding: "56px 32px",
+      }}
+    >
+      <h3
+        style={{
+          font: "700 24px/1.1 var(--f-display)",
+          color: "var(--ion-white)",
+          letterSpacing: "-0.02em",
+          marginBottom: 12,
+        }}
+      >
+        No picks published right now
+      </h3>
+      <p
+        style={{
+          maxWidth: "32rem",
+          margin: "0 auto 20px",
+          color: "var(--fg-meta)",
+          fontSize: 14,
+          lineHeight: 1.6,
+        }}
+      >
+        Picks appear here once the public picks readiness gate is active and
+        the engine has scored the current slate. Create a free account to be
+        notified when picks go live.
+      </p>
+      <Link href="/auth/signin" className="btn btn-ghost">
+        Create free account
+      </Link>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
+// Sample-data banner — only shown while stub Prisma + demo picks active
+// ──────────────────────────────────────────────────────────────
+
+function SampleDataBanner() {
+  return (
+    <div
+      data-testid="sample-data-banner-home"
+      role="status"
+      aria-live="polite"
+      style={{
+        maxWidth: 1240,
+        margin: "16px auto 0",
+        padding: "10px 16px",
+        border: "1px solid color-mix(in srgb, var(--ultraviolet) 35%, transparent)",
+        background: "color-mix(in srgb, var(--ultraviolet) 8%, transparent)",
+        color: "var(--ultraviolet-glow)",
+        fontFamily: "var(--f-mono)",
+        fontSize: 11,
+        letterSpacing: "0.16em",
+        textTransform: "uppercase",
+        display: "flex",
+        gap: 12,
+        alignItems: "start",
+        borderRadius: 8,
+      }}
+    >
+      <span style={{ flexShrink: 0, fontWeight: 600 }}>Sample data</span>
+      <span style={{ letterSpacing: "0.04em", textTransform: "none" }}>
+        The picks below are deterministic samples used to demo the product
+        while live data ingestion is being wired up. They never settle and
+        never produce a verified win-rate claim.
+      </span>
     </div>
   );
 }

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Display type · PickPilot</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; background: var(--void); }
+  .card {
+    width: 700px; min-height: 320px;
+    padding: 26px 28px;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(255, 45, 138,0.07), transparent 65%),
+      radial-gradient(ellipse 40% 30% at 15% 90%, rgba(155,123,250,0.05), transparent 70%),
+      linear-gradient(160deg, var(--obsidian) 0%, var(--carbon) 100%);
+    color: var(--fg-1);
+    box-sizing: border-box;
+  }
+  .eyebrow {
+    font: 500 10px/1 var(--f-mono);
+    text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--fg-muted); margin: 0 0 4px;
+  }
+  .eyebrow .dot { color: var(--plasma); }
+  .title {
+    font: 600 18px/1.2 var(--f-display);
+    color: var(--fg); letter-spacing: -0.01em;
+    margin: 0 0 20px;
+  }
+  .specimen {
+    display: flex; flex-direction: column; gap: 22px;
+  }
+  .row { display: flex; align-items: baseline; gap: 18px; border-bottom: 1px solid var(--titanium); padding-bottom: 16px; }
+  .row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .meta {
+    flex: 0 0 110px;
+    display: flex; flex-direction: column; gap: 3px;
+    color: var(--fg-muted);
+    font: 500 9px/1.2 var(--f-mono);
+    letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .meta .px { color: var(--plasma); font-size: 10px; letter-spacing: 0.1em; }
+  .meta .role { color: var(--ion-1); font-size: 9px; }
+
+  .h-arch    { font: 900 64px/0.9 var(--f-arch);     letter-spacing: -0.03em; color: var(--ion-white); text-transform: uppercase; }
+  .h-display { font: 700 38px/1.0 var(--f-display);  letter-spacing: -0.02em; color: var(--fg); }
+  .h-edit    { font: italic 400 36px/1.1 var(--f-editorial); color: var(--plasma); letter-spacing: -0.01em; }
+  .h-body    { font: 400 16px/1.55 var(--f-body);    color: var(--ion); }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow"><span class="dot">●</span> TYPE / 01 — DISPLAY STACK</p>
+  <h2 class="title">Architectural · Display · Editorial · Body</h2>
+  <div class="specimen">
+    <div class="row">
+      <div class="meta"><span>Big Shoulders</span><span class="role">Architectural</span><span class="px">64 / 900</span></div>
+      <div class="h-arch">PERSPECTIVE</div>
+    </div>
+    <div class="row">
+      <div class="meta"><span>Space Grotesk</span><span class="role">Display</span><span class="px">38 / 700</span></div>
+      <div class="h-display">Data-driven sports picks.</div>
+    </div>
+    <div class="row">
+      <div class="meta"><span>Instrument Serif</span><span class="role">Editorial</span><span class="px">36 / italic</span></div>
+      <div class="h-edit">We show our work.</div>
+    </div>
+    <div class="row">
+      <div class="meta"><span>Geist</span><span class="role">Body</span><span class="px">16 / 400</span></div>
+      <div class="h-body">Sharp money on the under since open. Three-book consensus across the major sportsbooks.</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

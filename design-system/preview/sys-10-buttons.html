@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Buttons · PickPilot</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; background: var(--void); }
+  .card {
+    width: 700px; min-height: 240px;
+    padding: 22px 24px;
+    background: linear-gradient(180deg, var(--obsidian) 0%, var(--carbon) 100%);
+    color: var(--fg-1);
+    box-sizing: border-box;
+  }
+  .eyebrow { font: 500 10px/1 var(--f-mono); text-transform: uppercase; letter-spacing: 0.22em; color: var(--fg-muted); margin: 0 0 4px; }
+  .eyebrow .dot { color: var(--plasma); }
+  .title { font: 600 18px/1.2 var(--f-display); color: var(--fg); letter-spacing: -0.01em; margin: 0 0 20px; }
+
+  .row { display: grid; grid-template-columns: 70px 1fr; gap: 14px; align-items: center; margin-bottom: 14px; }
+  .row:last-child { margin-bottom: 0; }
+  .row .label { font: 500 10px/1 var(--f-mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-muted); }
+  .row .cluster { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+  .btn {
+    font: 600 13px/1 var(--f-body);
+    padding: 10px 18px;
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    border: 1px solid transparent;
+    display: inline-flex; align-items: center; gap: 8px;
+    letter-spacing: -0.005em;
+    transition: all .15s var(--ease-out);
+  }
+  .btn .arrow { font-family: var(--f-mono); font-weight: 500; }
+
+  /* Primary — lime */
+  .btn-primary { background: var(--plasma); color: var(--plasma-ink); box-shadow: var(--glow-plasma); }
+  .btn-primary.hover { background: var(--plasma-glow); }
+  .btn-primary.press { background: var(--plasma-deep); transform: scale(0.98); box-shadow: none; }
+  .btn-primary.disabled { background: var(--ion-3); color: var(--ion-2); box-shadow: none; cursor: not-allowed; }
+
+  /* Secondary — outline */
+  .btn-ghost { background: var(--titanium); color: var(--ion); border-color: var(--mineral); }
+  .btn-ghost.hover { background: var(--slate); border-color: var(--mineral-hi); color: var(--ion-white); }
+
+  /* Tertiary — amber */
+  .btn-amber { background: var(--ion-blue); color: var(--ion-blue-ink); }
+  .btn-amber.hover { background: var(--ion-blue-glow); }
+
+  /* Quiet text link */
+  .btn-link { background: transparent; padding: 6px 0; color: var(--ion); font-weight: 500; border-radius: 0; }
+  .btn-link:hover { color: var(--ion-white); }
+
+  /* Sizes */
+  .btn-sm { padding: 7px 12px; font-size: 12px; }
+  .btn-lg { padding: 14px 24px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow"><span class="dot">●</span> COMPONENTS / 01 — BUTTONS</p>
+  <h2 class="title">Lime primary · ghost · amber · quiet link</h2>
+
+  <div class="row">
+    <span class="label">Primary</span>
+    <div class="cluster">
+      <button class="btn btn-primary">Get free picks <span class="arrow">→</span></button>
+      <button class="btn btn-primary hover">Hover</button>
+      <button class="btn btn-primary press">Pressed</button>
+      <button class="btn btn-primary disabled" disabled>Disabled</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="label">Ghost</span>
+    <div class="cluster">
+      <button class="btn btn-ghost">View pricing</button>
+      <button class="btn btn-ghost hover">Hover</button>
+      <button class="btn btn-ghost btn-sm">Compact</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="label">Premium</span>
+    <div class="cluster">
+      <button class="btn btn-amber">Upgrade to Elite <span class="arrow">→</span></button>
+      <button class="btn btn-amber hover">Hover</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="label">Quiet</span>
+    <div class="cluster">
+      <a href="#" class="btn btn-link">See methodology <span class="arrow">→</span></a>
+      <a href="#" class="btn btn-link" style="color: var(--plasma)">Live now</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

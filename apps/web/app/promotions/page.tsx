@@ -1,0 +1,229 @@
+import { Nav } from "@/components/ui/nav";
+import { Footer } from "@/components/ui/footer";
+import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { db } from "@sports/db";
+import {
+  buildPublicPromotionsResponse,
+  PUBLIC_PROMOTIONS_NOTICE,
+  type PublicPromotion,
+} from "@/lib/promotions/public-payload";
+
+export const dynamic = "force-dynamic";
+
+interface PromotionsPageProps {
+  searchParams: { state?: string };
+}
+
+function parseState(raw: string | undefined): string | null {
+  if (!raw) return null;
+  const up = raw.toUpperCase();
+  return /^[A-Z]{2}$/.test(up) ? up : null;
+}
+
+export default async function PromotionsPage({
+  searchParams,
+}: PromotionsPageProps) {
+  const state = parseState(searchParams.state);
+
+  // Server-render directly from the DB — no internal HTTP round-trip needed.
+  const rows = await db.promotion
+    .findMany({
+      where: { status: "ACTIVE", complianceStatus: "APPROVED" },
+      orderBy: { updatedAt: "desc" },
+      take: 50,
+    })
+    .catch(() => [] as Awaited<ReturnType<typeof db.promotion.findMany>>);
+
+  const payload = buildPublicPromotionsResponse(rows, { state });
+  const promotions = payload.data;
+
+  return (
+    <div className="flex min-h-screen flex-col bg-gray-950">
+      <Nav />
+
+      <main className="flex-1">
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mb-8 max-w-3xl">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-brand-400">
+              Sportsbook Promotions
+            </p>
+            <h1 className="text-3xl font-bold text-white sm:text-4xl">
+              Promotions marketplace
+            </h1>
+            <p className="mt-3 text-sm text-gray-400">
+              A directory of sportsbook offers we have reviewed for transparency
+              and basic eligibility coverage. Listings here do not endorse any
+              operator. Terms and conditions apply at the operator&apos;s site.
+              21+ where applicable.
+            </p>
+          </div>
+
+          {/* State selector */}
+          <form
+            action="/promotions"
+            method="GET"
+            className="mb-8 flex flex-col gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-5 sm:flex-row sm:items-end"
+          >
+            <label
+              htmlFor="state"
+              className="flex flex-col gap-1 text-xs uppercase tracking-widest text-gray-500"
+            >
+              <span>Your state</span>
+              <input
+                type="text"
+                name="state"
+                id="state"
+                defaultValue={state ?? ""}
+                maxLength={2}
+                placeholder="e.g. NJ"
+                className="rounded-md border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-white placeholder-gray-600 focus:border-brand-500 focus:outline-none"
+              />
+            </label>
+            <button
+              type="submit"
+              className="rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
+            >
+              Apply
+            </button>
+            {state && (
+              <a
+                href="/promotions"
+                className="text-xs text-gray-500 underline-offset-2 hover:text-gray-300 hover:underline"
+              >
+                Clear state
+              </a>
+            )}
+          </form>
+
+          {promotions.length === 0 ? (
+            <PromotionsEmptyState state={state} />
+          ) : (
+            <ul
+              data-testid="promotions-list"
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {promotions.map((promo) => (
+                <li key={promo.id}>
+                  <PromotionCard promo={promo} />
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div className="mt-10 space-y-4">
+            <p
+              data-testid="promotions-notice"
+              className="rounded-lg border border-gray-800 bg-gray-900/40 p-4 text-xs leading-relaxed text-gray-400"
+            >
+              {PUBLIC_PROMOTIONS_NOTICE}
+            </p>
+            <RiskDisclosure />
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
+
+function PromotionCard({ promo }: { promo: PublicPromotion }) {
+  return (
+    <article
+      data-testid="promotion-card"
+      className="flex h-full flex-col gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-5"
+    >
+      <header className="flex items-center justify-between">
+        <span className="rounded bg-brand-900/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-brand-300">
+          {promo.offerCategory.replaceAll("_", " ")}
+        </span>
+        <span className="text-[10px] uppercase tracking-widest text-gray-600">
+          {promo.sportsbookKey}
+        </span>
+      </header>
+      <h2 className="text-base font-semibold text-white">{promo.headline}</h2>
+      <p className="text-sm text-gray-400">{promo.offerSummary}</p>
+
+      <dl className="grid grid-cols-2 gap-2 text-[11px] text-gray-500">
+        <div>
+          <dt className="uppercase tracking-widest">Operator</dt>
+          <dd className="text-gray-300">{promo.operatorName}</dd>
+        </div>
+        <div>
+          <dt className="uppercase tracking-widest">Min age</dt>
+          <dd className="text-gray-300">{promo.minimumAge}+</dd>
+        </div>
+        {promo.promoCode && (
+          <div className="col-span-2">
+            <dt className="uppercase tracking-widest">Promo code</dt>
+            <dd className="text-gray-300">{promo.promoCode}</dd>
+          </div>
+        )}
+        <div className="col-span-2">
+          <dt className="uppercase tracking-widest">Eligible states</dt>
+          <dd className="text-gray-300">
+            {promo.eligibleStates.length > 0
+              ? promo.eligibleStates.join(", ")
+              : "Not specified"}
+          </dd>
+        </div>
+      </dl>
+
+      <div className="mt-auto flex flex-col gap-2 border-t border-gray-800 pt-3">
+        <a
+          href={promo.termsUrl}
+          target="_blank"
+          rel="nofollow noopener noreferrer"
+          className="text-xs text-brand-400 underline-offset-2 hover:underline"
+        >
+          Read operator terms
+        </a>
+        {promo.affiliateUrl && (
+          <a
+            href={promo.affiliateUrl}
+            target="_blank"
+            rel="nofollow sponsored noopener noreferrer"
+            className="inline-flex w-full items-center justify-center rounded-md bg-brand-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-brand-500"
+          >
+            Visit operator
+          </a>
+        )}
+        <p
+          data-testid="promotion-disclosure"
+          className="text-[10px] leading-snug text-gray-500"
+        >
+          {promo.disclosureText}
+        </p>
+        <p
+          data-testid="promotion-rg"
+          className="text-[10px] leading-snug text-gray-500"
+        >
+          {promo.responsibleGamingText}
+        </p>
+      </div>
+    </article>
+  );
+}
+
+function PromotionsEmptyState({ state }: { state: string | null }) {
+  return (
+    <div
+      data-testid="promotions-empty"
+      className="rounded-xl border border-gray-800 bg-gray-900/40 p-8 text-center"
+    >
+      <h2 className="text-base font-semibold text-white">
+        No promotions available right now
+      </h2>
+      <p className="mt-2 text-sm text-gray-400">
+        {state
+          ? `We do not have any reviewed promotions cleared for ${state} at the moment.`
+          : "We do not have any reviewed promotions cleared for public display at the moment."}
+      </p>
+      <p className="mt-3 text-xs text-gray-500">
+        Listings here only appear after a manual compliance review. We never
+        surface promotions without operator terms, disclosure, or eligibility
+        evidence.
+      </p>
+    </div>
+  );
+}

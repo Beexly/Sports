@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Trust & Vault · PickPilot</title>
+<link rel="stylesheet" href="_board.css">
+<script src="https://unpkg.com/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+<style>
+  .board { width: 1600px; min-height: 2400px; padding: 0; }
+  .stage { position: relative; padding: 80px; }
+
+  .arch-hero { margin-bottom: 56px; }
+  .arch-hero .crumb-line { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; }
+  .arch-hero .crumb-line .line { flex: 1; height: 1px; background: var(--mineral); }
+  .arch-hero .head {
+    font: 900 200px/0.85 var(--f-arch);
+    letter-spacing: -0.03em; text-transform: uppercase; color: var(--fg);
+    margin: 0;
+  }
+  .arch-hero .head .stroke { -webkit-text-stroke: 2px var(--mineral-hi); -webkit-text-fill-color: transparent; }
+  .arch-hero .head .pop { color: var(--signal); }
+  .arch-hero .head em { font: italic 400 200px/0.88 var(--f-editorial); color: var(--signal); letter-spacing: -0.01em; }
+  .arch-hero .sub {
+    margin-top: 28px;
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px; align-items: start;
+  }
+  .arch-hero .sub .lede {
+    font: var(--t-display-md); color: var(--ion); letter-spacing: -0.015em; max-width: 34ch;
+  }
+  .arch-hero .sub .lede em { font: italic 400 32px/1.1 var(--f-editorial); color: var(--signal); }
+  .arch-hero .sub .stat .l { font-family: var(--f-mono); font-size: 10px; color: var(--fg-muted); letter-spacing: 0.20em; text-transform: uppercase; }
+  .arch-hero .sub .stat .v {
+    font: 800 32px/1 var(--f-arch); color: var(--fg); margin-top: 8px;
+    letter-spacing: 0.005em; text-transform: uppercase;
+  }
+  .arch-hero .sub .stat .meta { font: var(--t-body-xs); color: var(--ion-1); margin-top: 6px; }
+
+  /* ── VAULT WINDOW ── */
+  .vault {
+    background: var(--obsidian);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--shadow-modal);
+  }
+  .vault-chrome {
+    height: 56px;
+    background: var(--eclipse);
+    border-bottom: 1px solid var(--mineral);
+    padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .vault-chrome .l {
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--f-mono); font-size: 11px;
+    color: var(--fg-muted); letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .vault-chrome .l .ret { width: 18px; height: 18px; color: var(--signal); }
+  .vault-chrome .l .name {
+    color: var(--fg); font-family: var(--f-arch); font-weight: 900;
+    font-size: 14px; letter-spacing: 0.01em;
+  }
+  .vault-chrome .l .div { width: 1px; height: 14px; background: var(--mineral-hi); }
+  .vault-chrome .r {
+    display: flex; align-items: center; gap: 24px;
+  }
+  .vault-chrome .r .tab {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 4px 0; position: relative;
+  }
+  .vault-chrome .r .tab.active { color: var(--signal); }
+  .vault-chrome .r .tab.active::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -16px;
+    height: 2px; background: var(--signal); border-radius: 2px;
+  }
+
+  /* Headline strip */
+  .vault-head {
+    padding: 36px 40px 24px;
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px;
+    border-bottom: 1px solid var(--mineral);
+    align-items: end;
+  }
+  .vault-head .lhs .crumb {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.20em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .vault-head .lhs .crumb span { color: var(--signal); }
+  .vault-head .lhs h2 {
+    font: 800 64px/0.9 var(--f-arch);
+    color: var(--fg); letter-spacing: 0.005em; text-transform: uppercase;
+    margin: 0;
+  }
+  .vault-head .lhs h2 em {
+    font: italic 400 64px/0.95 var(--f-editorial);
+    color: var(--signal); letter-spacing: -0.01em;
+  }
+  .vault-head .kpi {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .vault-head .kpi .l {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .vault-head .kpi .v {
+    font: 800 56px/1 var(--f-arch);
+    color: var(--fg); letter-spacing: 0.005em;
+  }
+  .vault-head .kpi.signal .v { color: var(--signal); }
+  .vault-head .kpi.amber .v { color: var(--amber); }
+  .vault-head .kpi.uv .v { color: var(--ultraviolet); }
+  .vault-head .kpi .meta {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--ion-1); letter-spacing: 0.10em;
+  }
+
+  /* Equity curve */
+  .equity {
+    padding: 32px 40px;
+    border-bottom: 1px solid var(--mineral);
+  }
+  .equity .head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 16px;
+  }
+  .equity .head h3 {
+    font: 800 22px/1 var(--f-arch); color: var(--fg);
+    letter-spacing: 0.005em; text-transform: uppercase; margin: 0;
+  }
+  .equity .head .meta {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .equity .head .meta span { color: var(--signal); }
+  .equity .chart {
+    background: var(--eclipse);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    padding: 24px;
+    position: relative; overflow: hidden;
+  }
+  .equity .chart::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(111,217,255,0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(111,217,255,0.04) 1px, transparent 1px);
+    background-size: 60px 32px;
+    mask-image: linear-gradient(to bottom, black 0%, transparent 90%);
+    pointer-events: none;
+  }
+  .equity svg { width: 100%; height: 240px; display: block; position: relative; }
+  .equity .axis-labels {
+    display: flex; justify-content: space-between;
+    margin-top: 8px;
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.10em; text-transform: uppercase;
+  }
+  .equity .axis-labels span.now { color: var(--signal); }
+
+  /* Sport rows */
+  .sports-block {
+    padding: 32px 40px;
+    border-bottom: 1px solid var(--mineral);
+  }
+  .sports-block .head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 20px;
+  }
+  .sports-block h3 {
+    font: 800 22px/1 var(--f-arch); color: var(--fg);
+    letter-spacing: 0.005em; text-transform: uppercase; margin: 0;
+  }
+  .sports-block .meta {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .sport-table {
+    display: grid; grid-template-columns: 80px 1fr 100px 100px 100px 100px; gap: 0;
+    background: var(--eclipse);
+    border: 1px solid var(--mineral); border-radius: var(--r-md); overflow: hidden;
+  }
+  .sport-table .h, .sport-table .c {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--mineral);
+    font-family: var(--f-mono);
+    font-size: 13px; color: var(--ion);
+    font-variant-numeric: tabular-nums;
+  }
+  .sport-table .h {
+    font-size: 10px; color: var(--fg-muted);
+    letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
+    background: var(--carbon);
+  }
+  .sport-table .c {
+    display: flex; align-items: center;
+  }
+  .sport-table .sp {
+    font: 800 18px/1 var(--f-arch); color: var(--fg);
+    letter-spacing: 0.01em; text-transform: uppercase;
+  }
+  .sport-table .r { justify-content: flex-end; }
+  .sport-table .bar-row { display: flex; align-items: center; gap: 12px; }
+  .sport-table .bar-row .bar {
+    flex: 1; height: 4px; background: var(--slate);
+    border-radius: 999px; overflow: hidden;
+  }
+  .sport-table .bar-row .bar > div { height: 100%; border-radius: 999px; }
+  .sport-table .last-row .h, .sport-table .last-row .c { border-bottom: 0; }
+
+  /* Calibration & Streaks 2-col */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .panel {
+    padding: 32px 40px;
+    border-bottom: 1px solid var(--mineral);
+  }
+  .panel.left { border-right: 1px solid var(--mineral); }
+  .panel .head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 20px;
+  }
+  .panel h3 {
+    font: 800 22px/1 var(--f-arch); color: var(--fg);
+    letter-spacing: 0.005em; text-transform: uppercase; margin: 0;
+  }
+  .panel .meta {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .panel .meta span { color: var(--signal); }
+  /* Calibration plot */
+  .calibration {
+    background: var(--eclipse); border: 1px solid var(--mineral);
+    border-radius: var(--r-md); padding: 24px; height: 280px;
+    position: relative;
+  }
+  .calibration svg { width: 100%; height: 100%; }
+  .calibration .legend {
+    position: absolute; top: 16px; right: 20px;
+    display: flex; flex-direction: column; gap: 6px;
+    font-family: var(--f-mono); font-size: 10px;
+    letter-spacing: 0.10em;
+  }
+  .calibration .legend .row { display: flex; align-items: center; gap: 8px; color: var(--ion-1); }
+  .calibration .legend .row .swatch {
+    width: 10px; height: 2px; border-radius: 2px;
+  }
+
+  /* Streak ledger */
+  .streak {
+    background: var(--eclipse); border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .streak-row {
+    display: grid; grid-template-columns: 60px 1fr 80px 80px 90px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--mineral);
+    align-items: center;
+    font-family: var(--f-mono); font-size: 12px;
+    color: var(--ion);
+    font-variant-numeric: tabular-nums;
+  }
+  .streak-row:last-child { border-bottom: 0; }
+  .streak-row.head {
+    background: var(--carbon);
+    font-size: 9px; color: var(--fg-muted);
+    letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
+  }
+  .streak-row .date { color: var(--fg-muted); }
+  .streak-row .play {
+    color: var(--ion); display: flex; align-items: center; gap: 8px;
+  }
+  .streak-row .play .league {
+    background: var(--slate); padding: 2px 6px; border-radius: 3px;
+    font-size: 9px; color: var(--ion-1); letter-spacing: 0.10em;
+  }
+  .streak-row .play .pick { color: var(--fg); }
+  .streak-row .r { text-align: right; }
+  .streak-row .res { text-align: center; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; }
+  .streak-row .res.win { background: rgba(95,217,163,0.10); color: var(--verify); }
+  .streak-row .res.loss { background: rgba(255,100,112,0.10); color: var(--alert); }
+  .streak-row .res.push { background: var(--slate); color: var(--ion-1); }
+
+  /* Methodology */
+  .methodology {
+    padding: 32px 40px;
+    border-bottom: 1px solid var(--mineral);
+  }
+  .methodology .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+  .methodology .head h3 {
+    font: 800 22px/1 var(--f-arch); color: var(--fg);
+    letter-spacing: 0.005em; text-transform: uppercase; margin: 0;
+  }
+  .method-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  }
+  .method-card {
+    background: var(--eclipse);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    padding: 22px 20px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .method-card .id {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--signal); letter-spacing: 0.20em; text-transform: uppercase;
+  }
+  .method-card h4 {
+    font: 700 18px/1.15 var(--f-display);
+    color: var(--fg); margin: 0;
+    letter-spacing: -0.005em;
+  }
+  .method-card p {
+    font: var(--t-body-sm); color: var(--ion-1); margin: 0;
+  }
+  .method-card .telem {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.10em; text-transform: uppercase;
+    padding-top: 12px; margin-top: auto;
+    border-top: 1px solid var(--mineral);
+  }
+  .method-card .telem span { color: var(--ion); }
+
+  /* Responsible intelligence strip */
+  .resp-strip {
+    padding: 36px 40px;
+    background: linear-gradient(180deg, transparent, rgba(255,179,71,0.04));
+  }
+  .resp-strip .head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 24px;
+  }
+  .resp-strip h3 {
+    font: 800 32px/0.95 var(--f-arch); color: var(--fg);
+    letter-spacing: 0.005em; text-transform: uppercase; margin: 0;
+  }
+  .resp-strip h3 em { font: italic 400 32px/1 var(--f-editorial); color: var(--amber); }
+  .resp-strip .head-meta {
+    display: flex; align-items: center; gap: 12px;
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--amber); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .resp-strip .head-meta svg { width: 14px; height: 14px; }
+  .resp-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .resp-card {
+    background: var(--eclipse);
+    border: 1px solid rgba(255,179,71,0.20);
+    border-radius: var(--r-md);
+    padding: 24px;
+    display: flex; flex-direction: column; gap: 12px;
+    position: relative; overflow: hidden;
+  }
+  .resp-card .ico {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(255,179,71,0.30);
+    border-radius: var(--r-sm);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--amber);
+  }
+  .resp-card .ico svg { width: 18px; height: 18px; }
+  .resp-card .id {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--amber); letter-spacing: 0.20em; text-transform: uppercase;
+  }
+  .resp-card h4 {
+    font: 700 20px/1.1 var(--f-display);
+    color: var(--fg); margin: 0; letter-spacing: -0.005em;
+  }
+  .resp-card p { font: var(--t-body-sm); color: var(--ion-1); margin: 0; }
+
+  .resp-strip .helpline {
+    margin-top: 20px; padding-top: 18px;
+    border-top: 1px solid rgba(255,179,71,0.15);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .resp-strip .helpline .l {
+    display: flex; align-items: center; gap: 14px;
+    font: var(--t-body-sm); color: var(--ion-1);
+  }
+  .resp-strip .helpline .l strong { color: var(--amber); font-family: var(--f-mono); font-weight: 600; }
+  .resp-strip .helpline svg { width: 14px; height: 14px; color: var(--amber); }
+  .resp-strip .helpline .r {
+    font-family: var(--f-mono); font-size: 10px; color: var(--fg-muted);
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+
+  /* Closing tagline */
+  .closing {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--mineral);
+    display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 40px;
+  }
+  .closing .tag {
+    font: 800 80px/0.92 var(--f-arch);
+    color: var(--fg); letter-spacing: 0.005em; text-transform: uppercase;
+  }
+  .closing .tag .pop { color: var(--signal); }
+  .closing .tag em { font: italic 400 80px/0.95 var(--f-editorial); color: var(--signal); letter-spacing: -0.01em; }
+  .closing .meta {
+    text-align: right;
+    font-family: var(--f-mono); font-size: 11px;
+    color: var(--fg-muted); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .closing .meta span { color: var(--signal); }
+</style>
+</head>
+<body>
+<section class="board">
+  <div class="atmo-environment" style="z-index:0"></div>
+  <div class="grid-overlay" style="z-index:0;mask-image:radial-gradient(ellipse at center, black 25%, transparent 80%)"></div>
+
+  <div class="b-chrome">
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+  </div>
+  <div class="b-bug">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="butt">
+      <circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.5"/>
+      <line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/>
+      <line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/>
+      <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+    </svg>
+    <span>PickPilot · Sports Intelligence System</span>
+  </div>
+  <div class="b-id">
+    <span class="n">07 / 07</span>
+    <span>BOARD VII — TRUST & VAULT</span>
+  </div>
+
+  <div class="stage">
+
+    <div class="arch-hero">
+      <div class="crumb-line">
+        <span class="brack">— SECTION 07 / TRUST · VAULT · RESPONSIBILITY</span>
+        <span class="line"></span>
+        <span class="brack" style="color:var(--signal)">SHOW THE WORK</span>
+      </div>
+      <h1 class="head"><span class="stroke">Track</span><br>record. <em>Public.</em></h1>
+      <div class="sub">
+        <div class="lede">Every pick is logged. Every result is documented. Wins, losses, pushes, methodology, calibration drift — <em>all of it</em>, in the open.</div>
+        <div class="stat"><div class="l">— RESOLVED PICKS</div><div class="v">246</div><div class="meta">Last 90 days · all tiers</div></div>
+        <div class="stat"><div class="l">— LOSING STREAKS</div><div class="v">VISIBLE</div><div class="meta">Worst: L4 · Aug 2026</div></div>
+        <div class="stat"><div class="l">— METHODOLOGY</div><div class="v">v4.2</div><div class="meta">Calibrated · documented</div></div>
+      </div>
+    </div>
+
+    <!-- ── VAULT WINDOW ── -->
+    <div class="vault">
+      <!-- Tab bar -->
+      <div class="vault-chrome">
+        <div class="l">
+          <span class="ret"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt"><circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/><line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/><line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/><circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/></svg></span>
+          <span class="name">PickPilot</span>
+          <span class="div"></span>
+          <span>THE VAULT · PUBLIC PERFORMANCE LEDGER</span>
+        </div>
+        <div class="r">
+          <span class="tab active">OVERVIEW</span>
+          <span class="tab">BY SPORT</span>
+          <span class="tab">CALIBRATION</span>
+          <span class="tab">LEDGER</span>
+          <span class="tab">METHODOLOGY</span>
+        </div>
+      </div>
+
+      <!-- Headline -->
+      <div class="vault-head">
+        <div class="lhs">
+          <div class="crumb">VAULT <span>·</span> ROLLING 90 DAY</div>
+          <h2>The work,<br><em>in the open.</em></h2>
+        </div>
+        <div class="kpi signal">
+          <span class="l">— OVERALL ROI</span>
+          <span class="v">+18.7%</span>
+          <span class="meta">90D · NET OF UNITS</span>
+        </div>
+        <div class="kpi">
+          <span class="l">— WIN RATE</span>
+          <span class="v">61%</span>
+          <span class="meta">147 W · 91 L · 8 P</span>
+        </div>
+        <div class="kpi amber">
+          <span class="l">— WORST DRAWDOWN</span>
+          <span class="v">−6.4%</span>
+          <span class="meta">L4 · 14–17 AUG '26</span>
+        </div>
+      </div>
+
+      <!-- Equity curve -->
+      <div class="equity">
+        <div class="head">
+          <h3>Equity curve · last 90 days</h3>
+          <span class="meta">UNIT-NORMALIZED · <span>+18.7% NET</span></span>
+        </div>
+        <div class="chart">
+          <svg viewBox="0 0 1320 240" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="eqGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="rgba(111,217,255,0.35)"/>
+                <stop offset="1" stop-color="rgba(111,217,255,0)"/>
+              </linearGradient>
+            </defs>
+            <!-- baseline -->
+            <line x1="0" y1="180" x2="1320" y2="180" stroke="rgba(213,221,233,0.10)" stroke-width="1" stroke-dasharray="2 6"/>
+            <!-- equity path with realistic drawdowns -->
+            <path d="M 0 180
+                     L 40 178 L 70 176 L 100 172 L 130 170
+                     L 160 165 L 190 160 L 220 158 L 250 152
+                     L 280 156 L 310 162 L 340 168 L 370 174 L 400 178
+                     L 430 175 L 460 170 L 490 168 L 520 160
+                     L 550 158 L 580 150 L 610 142 L 640 138
+                     L 670 132 L 700 138 L 730 144 L 760 152 L 790 156
+                     L 820 162 L 850 160 L 880 155 L 910 148
+                     L 940 140 L 970 130 L 1000 120 L 1030 110
+                     L 1060 105 L 1090 98 L 1120 92 L 1150 84
+                     L 1180 78 L 1210 74 L 1240 68 L 1270 62 L 1300 56 L 1320 50"
+                  fill="none" stroke="var(--signal)" stroke-width="2"/>
+            <path d="M 0 180
+                     L 40 178 L 70 176 L 100 172 L 130 170
+                     L 160 165 L 190 160 L 220 158 L 250 152
+                     L 280 156 L 310 162 L 340 168 L 370 174 L 400 178
+                     L 430 175 L 460 170 L 490 168 L 520 160
+                     L 550 158 L 580 150 L 610 142 L 640 138
+                     L 670 132 L 700 138 L 730 144 L 760 152 L 790 156
+                     L 820 162 L 850 160 L 880 155 L 910 148
+                     L 940 140 L 970 130 L 1000 120 L 1030 110
+                     L 1060 105 L 1090 98 L 1120 92 L 1150 84
+                     L 1180 78 L 1210 74 L 1240 68 L 1270 62 L 1300 56 L 1320 50
+                     L 1320 240 L 0 240 Z" fill="url(#eqGrad)"/>
+
+            <!-- Drawdown marker -->
+            <line x1="370" y1="0" x2="370" y2="240" stroke="rgba(255,179,71,0.4)" stroke-width="1" stroke-dasharray="2 4"/>
+            <circle cx="370" cy="174" r="4" fill="var(--amber)"/>
+            <text x="380" y="166" font-family="JetBrains Mono" font-size="11" fill="var(--amber)" letter-spacing="1.2">DRAWDOWN · L4 · −6.4%</text>
+
+            <!-- Now marker -->
+            <line x1="1320" y1="0" x2="1320" y2="240" stroke="rgba(111,217,255,0.4)" stroke-width="1"/>
+            <circle cx="1320" cy="50" r="5" fill="var(--signal)"/>
+            <text x="1310" y="42" font-family="JetBrains Mono" font-size="11" fill="var(--signal)" letter-spacing="1.2" text-anchor="end">NOW · +18.7%</text>
+          </svg>
+        </div>
+        <div class="axis-labels">
+          <span>— FEB 20</span>
+          <span>MAR 06</span>
+          <span>MAR 20</span>
+          <span>APR 03</span>
+          <span>APR 17</span>
+          <span>MAY 01</span>
+          <span class="now">NOW · MAY 20</span>
+        </div>
+      </div>
+
+      <!-- By sport -->
+      <div class="sports-block">
+        <div class="head">
+          <h3>By sport</h3>
+          <span class="meta">— RANKED BY ROI · 90D · COMPLETE</span>
+        </div>
+        <div class="sport-table">
+          <div class="h">SPORT</div>
+          <div class="h">PERFORMANCE</div>
+          <div class="h r">PICKS</div>
+          <div class="h r">WIN %</div>
+          <div class="h r">ROI</div>
+          <div class="h r">CONFIDENCE</div>
+
+          <div class="c"><span class="sp">NBA</span></div>
+          <div class="c"><div class="bar-row" style="width:100%"><div class="bar"><div style="width:88%;background:var(--signal)"></div></div></div></div>
+          <div class="c r">42</div>
+          <div class="c r">71%</div>
+          <div class="c r" style="color:var(--signal)">+22.4%</div>
+          <div class="c r" style="color:var(--ion-1)">CALIBRATED</div>
+
+          <div class="c"><span class="sp">NFL</span></div>
+          <div class="c"><div class="bar-row" style="width:100%"><div class="bar"><div style="width:62%;background:var(--signal)"></div></div></div></div>
+          <div class="c r">36</div>
+          <div class="c r">64%</div>
+          <div class="c r" style="color:var(--signal)">+14.1%</div>
+          <div class="c r" style="color:var(--ion-1)">CALIBRATED</div>
+
+          <div class="c"><span class="sp">MLB</span></div>
+          <div class="c"><div class="bar-row" style="width:100%"><div class="bar"><div style="width:50%;background:var(--verify)"></div></div></div></div>
+          <div class="c r">58</div>
+          <div class="c r">57%</div>
+          <div class="c r" style="color:var(--verify)">+8.2%</div>
+          <div class="c r" style="color:var(--ion-1)">CALIBRATED</div>
+
+          <div class="c"><span class="sp">NHL</span></div>
+          <div class="c"><div class="bar-row" style="width:100%"><div class="bar"><div style="width:32%;background:var(--amber)"></div></div></div></div>
+          <div class="c r">28</div>
+          <div class="c r">52%</div>
+          <div class="c r" style="color:var(--amber)">+2.1%</div>
+          <div class="c r" style="color:var(--amber)">VOLATILE</div>
+
+          <div class="last-row">
+            <div class="c"><span class="sp">SOC</span></div>
+          </div>
+          <div class="last-row">
+            <div class="c"><div class="bar-row" style="width:100%"><div class="bar"><div style="width:18%;background:var(--alert)"></div></div></div></div>
+          </div>
+          <div class="last-row"><div class="c r">12</div></div>
+          <div class="last-row"><div class="c r">42%</div></div>
+          <div class="last-row"><div class="c r" style="color:var(--alert)">−4.8%</div></div>
+          <div class="last-row"><div class="c r" style="color:var(--alert)">UNDER REVIEW</div></div>
+        </div>
+      </div>
+
+      <!-- Calibration & Streak -->
+      <div class="grid-2">
+        <div class="panel left">
+          <div class="head">
+            <h3>Calibration</h3>
+            <span class="meta">CONFIDENCE BUCKETS <span>·</span> 246 RESOLVED</span>
+          </div>
+          <div class="calibration">
+            <svg viewBox="0 0 600 280" preserveAspectRatio="xMidYMid meet">
+              <!-- Grid -->
+              <g stroke="rgba(213,221,233,0.06)" stroke-width="1">
+                <line x1="50" y1="40" x2="50" y2="240"/>
+                <line x1="50" y1="240" x2="580" y2="240"/>
+                <line x1="50" y1="200" x2="580" y2="200" stroke-dasharray="2 4"/>
+                <line x1="50" y1="160" x2="580" y2="160" stroke-dasharray="2 4"/>
+                <line x1="50" y1="120" x2="580" y2="120" stroke-dasharray="2 4"/>
+                <line x1="50" y1="80" x2="580" y2="80" stroke-dasharray="2 4"/>
+              </g>
+              <!-- Y axis labels -->
+              <g font-family="JetBrains Mono" font-size="10" fill="rgba(152,163,181,0.7)">
+                <text x="38" y="244" text-anchor="end">0%</text>
+                <text x="38" y="204" text-anchor="end">25%</text>
+                <text x="38" y="164" text-anchor="end">50%</text>
+                <text x="38" y="124" text-anchor="end">75%</text>
+                <text x="38" y="84" text-anchor="end">100%</text>
+              </g>
+              <!-- X axis labels (confidence buckets) -->
+              <g font-family="JetBrains Mono" font-size="10" fill="rgba(152,163,181,0.7)" text-anchor="middle">
+                <text x="100" y="258">50%</text>
+                <text x="180" y="258">60%</text>
+                <text x="260" y="258">70%</text>
+                <text x="340" y="258">80%</text>
+                <text x="420" y="258">90%</text>
+              </g>
+              <!-- Perfect calibration line (45deg) -->
+              <line x1="60" y1="232" x2="500" y2="56" stroke="rgba(155,123,250,0.5)" stroke-width="1" stroke-dasharray="4 6"/>
+              <!-- Actual calibration dots -->
+              <g>
+                <circle cx="100" cy="230" r="6" fill="var(--signal)" opacity="0.9"/>
+                <circle cx="180" cy="195" r="7" fill="var(--signal)" opacity="0.9"/>
+                <circle cx="260" cy="155" r="9" fill="var(--signal)" opacity="0.9"/>
+                <circle cx="340" cy="115" r="8" fill="var(--signal)" opacity="0.9"/>
+                <circle cx="420" cy="80" r="6" fill="var(--signal)" opacity="0.9"/>
+              </g>
+              <!-- Connecting line through dots -->
+              <path d="M 100 230 L 180 195 L 260 155 L 340 115 L 420 80"
+                    fill="none" stroke="var(--signal)" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- bucket labels -->
+              <g font-family="JetBrains Mono" font-size="9" fill="var(--ion-1)">
+                <text x="100" y="218" text-anchor="middle">n=22</text>
+                <text x="180" y="183" text-anchor="middle">n=58</text>
+                <text x="260" y="143" text-anchor="middle">n=91</text>
+                <text x="340" y="103" text-anchor="middle">n=54</text>
+                <text x="420" y="68" text-anchor="middle">n=21</text>
+              </g>
+              <!-- Axis titles -->
+              <text x="320" y="276" font-family="JetBrains Mono" font-size="9" fill="var(--fg-muted)" letter-spacing="2" text-anchor="middle">PREDICTED CONFIDENCE</text>
+              <text x="20" y="140" font-family="JetBrains Mono" font-size="9" fill="var(--fg-muted)" letter-spacing="2" text-anchor="middle" transform="rotate(-90 20 140)">ACTUAL WIN %</text>
+            </svg>
+            <div class="legend">
+              <div class="row"><span class="swatch" style="background:var(--signal)"></span>ACTUAL</div>
+              <div class="row"><span class="swatch" style="background:var(--ultraviolet);opacity:0.6"></span>IDEAL</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;font:var(--t-body-sm);color:var(--ion-1);max-width:48ch">
+            Calibration sits within <strong style="color:var(--signal);font-family:var(--f-mono)">±3pts</strong> of ideal across all confidence buckets. When we say 80%, we mean it.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="head">
+            <h3>Recent ledger</h3>
+            <span class="meta">LAST 10 RESOLVED <span>·</span> ALL LOGGED</span>
+          </div>
+          <div class="streak">
+            <div class="streak-row head">
+              <div>DATE</div><div>PICK</div><div class="r">CONF</div><div class="r">LINE</div><div class="r">RESULT</div>
+            </div>
+            <div class="streak-row">
+              <span class="date">5/19</span>
+              <span class="play"><span class="league">NBA</span><span class="pick">DEN −5.5</span></span>
+              <span class="r">82%</span>
+              <span class="r">−110</span>
+              <span class="res win">WIN</span>
+            </div>
+            <div class="streak-row">
+              <span class="date">5/19</span>
+              <span class="play"><span class="league">NBA</span><span class="pick">BOS u224</span></span>
+              <span class="r">74%</span>
+              <span class="r">−108</span>
+              <span class="res win">WIN</span>
+            </div>
+            <div class="streak-row">
+              <span class="date">5/18</span>
+              <span class="play"><span class="league">MLB</span><span class="pick">NYY ML</span></span>
+              <span class="r">68%</span>
+              <span class="r">−140</span>
+              <span class="res win">WIN</span>
+            </div>
+            <div class="streak-row">
+              <span class="date">5/18</span>
+              <span class="play"><span class="league">NHL</span><span class="pick">TOR +1.5</span></span>
+              <span class="r">61%</span>
+              <span class="r">−165</span>
+              <span class="res loss">LOSS</span>
+            </div>
+            <div class="streak-row">
+              <span class="date">5/17</span>
+              <span class="play"><span class="league">NBA</span><span class="pick">LAL −3.5</span></span>
+              <span class="r">79%</span>
+              <span class="r">−110</span>
+              <span class="res win">WIN</span>
+            </div>
+            <div class="streak-row">
+              <span class="date">5/17</span>
+              <span class="play"><span class="league">NFL</span><span class="pick">KC −7</span></span>
+              <span class="r">65%</span>
+              <span class="r">−105</span>
+              <span class="res push">PUSH</span>
+            </div>
+            <div class="streak-row">
+              <span class="date">5/16</span>
+              <span class="play"><span class="league">NBA</span><span class="pick">PHX +6</span></span>
+              <span class="r">72%</span>
+              <span class="r">−110</span>
+              <span class="res win">WIN</span>
+            </div>
+            <div class="streak-row">
+              <span class="date">5/16</span>
+              <span class="play"><span class="league">SOC</span><span class="pick">ARS ML</span></span>
+              <span class="r">58%</span>
+              <span class="r">+140</span>
+              <span class="res loss">LOSS</span>
+            </div>
+            <div class="streak-row">
+              <span class="date">5/15</span>
+              <span class="play"><span class="league">MLB</span><span class="pick">HOU u8.5</span></span>
+              <span class="r">70%</span>
+              <span class="r">−115</span>
+              <span class="res win">WIN</span>
+            </div>
+            <div class="streak-row">
+              <span class="date">5/15</span>
+              <span class="play"><span class="league">NBA</span><span class="pick">GSW −2</span></span>
+              <span class="r">66%</span>
+              <span class="r">−110</span>
+              <span class="res win">WIN</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Methodology -->
+      <div class="methodology">
+        <div class="head">
+          <h3>Methodology, in plain text.</h3>
+          <span class="meta" style="font-family:var(--f-mono);font-size:10px;color:var(--fg-muted);letter-spacing:0.18em;text-transform:uppercase">v4.2 · LAST AUDIT 5/14</span>
+        </div>
+        <div class="method-grid">
+          <div class="method-card">
+            <span class="id">— 01</span>
+            <h4>Ingest real odds, every 30 min</h4>
+            <p>12+ sportsbooks. Spreads, totals, ML. No simulated lines. Stale data is flagged on every pick.</p>
+            <span class="telem">SOURCES <span>12 BOOKS</span> · TICK <span>30 MIN</span></span>
+          </div>
+          <div class="method-card">
+            <span class="id">— 02</span>
+            <h4>Score for edge, not certainty</h4>
+            <p>Consensus, depth, line movement, head-to-head, venue, model agreement. Each factor weighted, each weight published.</p>
+            <span class="telem">FACTORS <span>11</span> · WEIGHTS <span>PUBLIC</span></span>
+          </div>
+          <div class="method-card">
+            <span class="id">— 03</span>
+            <h4>Confidence is a calibrated number</h4>
+            <p>0–100 on every pick. Bucketed against historical outcomes. Drift monitored weekly; documented when re-calibrated.</p>
+            <span class="telem">CALIBRATION <span>±3PTS</span> · v4.2</span>
+          </div>
+          <div class="method-card">
+            <span class="id">— 04</span>
+            <h4>Publish everything that loses</h4>
+            <p>Every losing streak appears in the ledger. Worst drawdown is on the equity curve. We don't quietly delete bad calls.</p>
+            <span class="telem">RESOLVED <span>246 · 91 LOSSES</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Responsible -->
+      <div class="resp-strip">
+        <div class="head">
+          <h3>Responsible <em>intelligence.</em></h3>
+          <span class="head-meta"><i data-lucide="shield"></i>FIRST-CLASS UI · NOT A FOOTNOTE</span>
+        </div>
+        <div class="resp-grid">
+          <div class="resp-card">
+            <div class="ico"><i data-lucide="info"></i></div>
+            <span class="id">— 01 · KNOW</span>
+            <h4>Know the risk.</h4>
+            <p>Variance is real. Confidence is calibrated, not guaranteed. We surface risk <em>before</em> upside on every pick card.</p>
+          </div>
+          <div class="resp-card">
+            <div class="ico"><i data-lucide="sliders-horizontal"></i></div>
+            <span class="id">— 02 · CONTROL</span>
+            <h4>Control your exposure.</h4>
+            <p>Set personal limits in-app. We'll warn — never nag — when patterns suggest tilt. Discipline compounds.</p>
+          </div>
+          <div class="resp-card">
+            <div class="ico"><i data-lucide="heart"></i></div>
+            <span class="id">— 03 · PURPOSE</span>
+            <h4>Play with purpose.</h4>
+            <p>Make decisions that support your future, not your impulse. The interface is calm so the user can be too.</p>
+          </div>
+        </div>
+        <div class="helpline">
+          <div class="l">
+            <i data-lucide="phone"></i>
+            <span>National Problem Gambling Helpline · 24/7 · <strong>1-800-522-4700</strong></span>
+          </div>
+          <div class="r">OUTCOMES NEVER GUARANTEED · NOT INVESTMENT ADVICE</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CLOSING -->
+    <div class="closing">
+      <div class="tag">We show the work.<br><em>You make</em> <span class="pop">the call.</span></div>
+      <div class="meta">PERSPECTIVE <span>·</span> DISCIPLINE <span>·</span> ADVANTAGE</div>
+    </div>
+
+  </div>
+
+  <div class="b-foot">
+    <span class="l">PICKPILOT — DESIGN SYSTEM v3 / CINEMATIC INTELLIGENCE</span>
+    <span class="center">▸ BOARD 07</span>
+    <span class="r">TRUST · VAULT · RESPONSIBILITY</span>
+  </div>
+</section>
+<script>lucide.createIcons();</script>
+</body>
+</html>

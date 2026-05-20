@@ -1,133 +1,92 @@
 import Link from "next/link";
 import Image from "next/image";
 import { auth } from "@/lib/auth";
-import { MobileNav } from "./mobile-nav";
+import { BRAND_NAME } from "@/lib/brand";
+
+/**
+ * Primary site navigation — uses the PickPilot Design System nav surface
+ * (see `apps/web/styles/pickpilot-kit.css` → .nav, .nav-logo, .nav-links).
+ *
+ * The reticle inside the wordmark is the brand mark from `design-system/assets/logo-mark.svg`,
+ * inlined so the wordmark renders as a single typographic lockup ("PICKPIL[reticle]T").
+ */
+
+const NAV_LINKS = [
+  { label: "Picks", href: "/picks", active: false },
+  { label: "Observatory", href: "/observatory", active: false },
+  { label: "The Vault", href: "/vault", active: false },
+  { label: "Performance", href: "/performance", active: false },
+  { label: "Methodology", href: "/methodology", active: false },
+] as const;
+
+function ReticleMark() {
+  return (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="butt" aria-hidden="true">
+      <circle cx="24" cy="24" r="22" />
+      <circle cx="24" cy="24" r="12" opacity="0.5" />
+      <line x1="24" y1="-2" x2="24" y2="8" />
+      <line x1="24" y1="40" x2="24" y2="50" />
+      <line x1="-2" y1="24" x2="8" y2="24" />
+      <line x1="40" y1="24" x2="50" y2="24" />
+      <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
 
 export async function Nav() {
-  const session = await auth();
+  const session = await auth().catch(() => null);
   const user = session?.user ?? null;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-gray-950/90 backdrop-blur-sm">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <div className="flex shrink-0 items-center">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 transition-colors group-hover:bg-brand-500">
-              <svg
-                className="h-5 w-5 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"
-                />
-              </svg>
-            </div>
-            <span className="text-lg font-bold tracking-tight text-white">
-              SportsPicks <span className="text-brand-400">Pro</span>
+    <header className="nav">
+      <div className="container nav-inner">
+        <div className="nav-left">
+          <Link href="/" className="nav-logo" aria-label={`${BRAND_NAME} — home`}>
+            PICKPIL
+            <span className="ret">
+              <ReticleMark />
             </span>
+            T
           </Link>
+          <nav className="nav-links" aria-label="Primary">
+            {NAV_LINKS.map(({ href, label }) => (
+              <Link key={href} href={href}>
+                {label}
+              </Link>
+            ))}
+          </nav>
         </div>
 
-        {/* Center nav links — desktop */}
-        <div className="hidden items-center gap-1 md:flex">
-          <NavLink href="/picks">Picks</NavLink>
-          <NavLink href="/performance">Performance</NavLink>
-          <NavLink href="/blog">Blog</NavLink>
-        </div>
-
-        {/* Right: auth — desktop */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="nav-right">
+          <span className="live-chip">
+            <span className="dot" />
+            Live · Odds 30 min
+          </span>
           {user ? (
-            <AuthenticatedMenu user={user} />
+            <Link href="/dashboard" className="btn btn-ghost btn-sm" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <span style={{ display: "inline-flex", width: 22, height: 22, borderRadius: "50%", overflow: "hidden", background: "var(--titanium)" }}>
+                {user.image ? (
+                  <Image src={user.image} alt={user.name ?? "User avatar"} width={22} height={22} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <span style={{ display: "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center", color: "var(--ion-white)", fontSize: 11, fontWeight: 600 }}>
+                    {user.name?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? "U"}
+                  </span>
+                )}
+              </span>
+              <span>{user.name ?? user.email}</span>
+            </Link>
           ) : (
             <>
-              <Link
-                href="/auth/signin"
-                className="rounded-lg px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"
-              >
-                Sign In
+              <Link href="/auth/signin" className="btn btn-ghost btn-sm">
+                Sign in
               </Link>
-              <Link
-                href="/pricing"
-                className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
-              >
-                Get Started
+              <Link href="/pricing" className="btn btn-primary btn-sm">
+                Get free picks <span className="arrow">→</span>
               </Link>
             </>
           )}
         </div>
-
-        {/* Mobile hamburger */}
-        <MobileNav user={user} />
-      </nav>
+      </div>
     </header>
-  );
-}
-
-function NavLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="rounded-lg px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"
-    >
-      {children}
-    </Link>
-  );
-}
-
-function AuthenticatedMenu({
-  user,
-}: {
-  user: {
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-  };
-}) {
-  return (
-    <div className="flex items-center gap-3">
-      <Link
-        href="/dashboard"
-        className="rounded-lg px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"
-      >
-        Dashboard
-      </Link>
-      <Link
-        href="/dashboard"
-        className="group relative flex items-center gap-2"
-        aria-label="Go to dashboard"
-      >
-        <div className="h-8 w-8 overflow-hidden rounded-full ring-2 ring-gray-700 transition group-hover:ring-brand-500">
-          {user.image ? (
-            <Image
-              src={user.image}
-              alt={user.name ?? "User avatar"}
-              width={32}
-              height={32}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-brand-700 text-sm font-semibold text-white">
-              {user.name?.[0]?.toUpperCase() ??
-                user.email?.[0]?.toUpperCase() ??
-                "U"}
-            </div>
-          )}
-        </div>
-      </Link>
-    </div>
   );
 }

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth, signIn } from "@/lib/auth";
 import Link from "next/link";
+import { BRAND_NAME } from "@/lib/brand";
 
 // ─────────────────────────────────────────────
 // Page
@@ -146,7 +147,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         href="/"
         className="mt-8 text-sm text-gray-600 transition-colors hover:text-gray-400"
       >
-        &larr; Back to SportsPicks Pro
+        &larr; Back to {BRAND_NAME}
       </Link>
     </div>
   );

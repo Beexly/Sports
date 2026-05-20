@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Environment palette · PickPilot</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; background: var(--void); }
+  .card {
+    width: 700px; min-height: 220px;
+    padding: 22px 24px;
+    background:
+      radial-gradient(ellipse 65% 50% at 18% 30%, rgba(255, 45, 138,0.06), transparent 60%),
+      radial-gradient(ellipse 40% 30% at 90% 90%, rgba(155,123,250,0.05), transparent 70%),
+      linear-gradient(160deg, var(--obsidian) 0%, var(--carbon) 55%, var(--eclipse) 100%);
+    color: var(--fg-1);
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255, 45, 138,0.022) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 45, 138,0.022) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at 80% 20%, black 0%, transparent 75%);
+    pointer-events: none;
+  }
+  .eyebrow {
+    font: 500 10px/1 var(--f-mono);
+    text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--fg-muted);
+    margin: 0 0 4px;
+  }
+  .eyebrow .dot { color: var(--plasma); }
+  .title {
+    font: 600 18px/1.2 var(--f-display);
+    color: var(--fg);
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+  }
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    position: relative; z-index: 2;
+  }
+  .sw {
+    aspect-ratio: 1 / 1.15;
+    border-radius: var(--r-sm);
+    border: 1px solid rgba(255,255,255,0.04);
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sw .name {
+    font: 500 9px/1.2 var(--f-mono);
+    color: var(--ion);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .sw .hex {
+    font: 400 8px/1.3 var(--f-mono);
+    color: var(--fg-muted);
+    margin-top: 2px;
+  }
+  .legend {
+    margin-top: 18px;
+    display: flex; gap: 24px;
+    font: 400 11px/1.4 var(--f-body);
+    color: var(--fg-meta);
+    position: relative; z-index: 2;
+  }
+  .legend b { color: var(--fg); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow"><span class="dot">●</span> PALETTE / 01 — ENVIRONMENT</p>
+  <h2 class="title">Layered cinematic depth · never flat black</h2>
+  <div class="swatches">
+    <div class="sw" style="background:var(--void)">      <div class="name">Void</div><div class="hex">#04060A</div></div>
+    <div class="sw" style="background:var(--obsidian)">  <div class="name">Obsidian</div><div class="hex">#070A11</div></div>
+    <div class="sw" style="background:var(--carbon)">    <div class="name">Carbon</div><div class="hex">#0B0F18</div></div>
+    <div class="sw" style="background:var(--eclipse)">   <div class="name">Eclipse</div><div class="hex">#11161F</div></div>
+    <div class="sw" style="background:var(--titanium)">  <div class="name">Titanium</div><div class="hex">#181E28</div></div>
+    <div class="sw" style="background:var(--slate)">     <div class="name">Slate</div><div class="hex">#20283A</div></div>
+    <div class="sw" style="background:var(--mineral)">   <div class="name">Mineral</div><div class="hex">#2E3849</div></div>
+    <div class="sw" style="background:var(--mineral-hi)"><div class="name">Mineral·Hi</div><div class="hex">#3C4961</div></div>
+  </div>
+  <div class="legend">
+    <span><b>Default page</b> · Carbon</span>
+    <span><b>Card surface</b> · Eclipse → Titanium</span>
+    <span><b>Border</b> · Mineral</span>
+  </div>
+</div>
+</body>
+</html>

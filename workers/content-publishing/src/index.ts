@@ -1,235 +1,61 @@
 /**
- * Content Publishing Worker
- * Generates and publishes blog posts based on today's picks.
- * Runs daily after pick generation.
+ * Content publishing worker — hard kill switch.
+ *
+ * The legacy auto-publisher is DISABLED. This file exists only to:
+ *   - declare the INTERNAL_CALIBRATION_ONLY gate (default ON)
+ *   - record refusedByInternalCalibrationGates whenever the worker is
+ *     asked to publish
+ *   - never write a published timestamp or flip status to PUBLISHED
+ *
+ * Restoring auto-publish requires explicit operator action AND flipping
+ * the gate. Until then, this worker is a no-op.
  */
 
-import { db } from "@sports/db";
-import { getReadinessGates } from "@sports/prediction-engine";
-import type { ContentGenerationInput } from "@sports/types";
-import { format } from "date-fns";
+const CONTENT_WORKER_ENABLED = process.env["CONTENT_WORKER_ENABLED"] === "true";
+const INTERNAL_CALIBRATION_ONLY = process.env["INTERNAL_CALIBRATION_ONLY"] !== "false";
 
-const PUBLISH_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6 hours
-
-const GAMBLING_DISCLAIMER =
-  "This article is for informational and entertainment purposes only. " +
-  "SportsPicks Pro does not guarantee any outcomes. Sports betting involves risk. " +
-  "Please gamble responsibly and only bet what you can afford to lose.";
-
-async function generateAndPublishContent(): Promise<void> {
-  const gates = getReadinessGates();
-  if (!gates.canPublishContent) {
-    console.log("[content-worker] Content publishing disabled (bootstrap mode). Set PUBLIC_BLOG_ENABLED=true to enable.");
-    return;
-  }
-
-  const apiKey = process.env["ANTHROPIC_API_KEY"];
-  if (!apiKey) {
-    console.warn("[content-worker] ANTHROPIC_API_KEY not set — skipping content generation");
-    return;
-  }
-
-  const today = new Date();
-  const todayStart = new Date(today.setHours(0, 0, 0, 0));
-  const todayEnd = new Date(today.setHours(23, 59, 59, 999));
-  const dateStr = format(new Date(), "yyyy-MM-dd");
-
-  // Get today's canonical (non-bootstrap) picks grouped by sport.
-  // Bootstrap-era picks are excluded — content must only cite picks that
-  // count toward real performance history.
-  const picks = await db.pick.findMany({
-    where: {
-      isPublished: true,
-      isBootstrap: false,
-      generatedAt: { gte: todayStart, lte: todayEnd },
-      confidence: { gte: 60 }, // Only high-quality picks in content
-    },
-    include: {
-      game: {
-        include: { sport: true },
-      },
-    },
-    orderBy: { confidence: "desc" },
-    take: 20,
-  });
-
-  if (picks.length === 0) {
-    console.log("[content-worker] No picks available for content generation");
-    return;
-  }
-
-  // Group by sport
-  const bySport: Record<string, typeof picks> = {};
-  for (const pick of picks) {
-    const sportName = pick.game.sport.name;
-    if (!bySport[sportName]) bySport[sportName] = [];
-    bySport[sportName].push(pick);
-  }
-
-  for (const [sportName, sportPicks] of Object.entries(bySport)) {
-    const slug = `${sportName.toLowerCase()}-picks-${dateStr}`;
-
-    // Check if post already exists for today
-    const existing = await db.blogPost.findFirst({
-      where: { slug },
-    });
-    if (existing) {
-      console.log(`[content-worker] Post already exists for ${sportName} ${dateStr}`);
-      continue;
-    }
-
-    try {
-      console.log(
-        `[content-worker] Generating content for ${sportName} (${sportPicks.length} picks)...`
-      );
-
-      const input: ContentGenerationInput = {
-        date: dateStr,
-        sport: sportName,
-        picks: sportPicks.map((p) => ({
-          game: `${p.game.homeTeamName} vs ${p.game.awayTeamName}`,
-          pickType: p.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
-          selection: p.selection,
-          line: p.line,
-          confidence: p.confidence,
-          reasoning: p.reasoning,
-        })),
-      };
-
-      const content = await callClaudeForContent(input, apiKey);
-
-      await db.blogPost.create({
-        data: {
-          title: content.title,
-          slug,
-          excerpt: content.excerpt,
-          content: content.content,
-          sport: sportName,
-          tags: content.tags,
-          seoTitle: content.seoTitle,
-          seoDescription: content.seoDescription,
-          status: "PUBLISHED",
-          publishedAt: new Date(),
-          relatedPickIds: sportPicks.map((p) => p.id),
-          modelVersion: "claude-sonnet-4-6",
-        },
-      });
-
-      console.log(`[content-worker] Published post: ${slug}`);
-    } catch (err) {
-      console.error(
-        `[content-worker] Failed to generate content for ${sportName}: ${err instanceof Error ? err.message : err}`
-      );
-    }
-
-    // Delay between API calls
-    await new Promise((r) => setTimeout(r, 2000));
-  }
+interface PublishRequest {
+  readonly id: string;
+  readonly kind: string;
 }
 
-async function callClaudeForContent(
-  input: ContentGenerationInput,
-  apiKey: string
-): Promise<{
-  title: string;
-  excerpt: string;
-  content: string;
-  seoTitle: string;
-  seoDescription: string;
-  tags: string[];
-}> {
-  const dateDisplay = format(new Date(input.date), "MMMM d, yyyy");
-  const picksSummary = input.picks
-    .map(
-      (p, i) =>
-        `${i + 1}. ${p.game} — ${p.pickType}: ${p.selection} (Line: ${p.line}, Confidence: ${p.confidence}/100)\n   Reasoning: ${p.reasoning}`
-    )
-    .join("\n\n");
+interface PublishResult {
+  readonly id: string;
+  readonly status: "REFUSED" | "QUEUED";
+  readonly refusedByInternalCalibrationGates: boolean;
+  readonly note: string;
+}
 
-  const systemPrompt = `You are a sports analyst writing data-backed analysis.
-You must ONLY reference the data provided. Do not invent statistics, scores, or records.
-Use measured language — never say "will win" or "guaranteed".
-Always include the provided disclaimer at the end.`;
-
-  const userPrompt = `Write a sports analysis blog post for ${input.sport} picks on ${dateDisplay}.
-
-PICKS DATA (ONLY source of truth — do not invent any other data):
-${picksSummary}
-
-Requirements:
-- Title: SEO-friendly, include sport and date
-- Excerpt: 2 paragraph preview (free content)
-- Content: Full 4-6 paragraph analysis using ONLY the provided data above
-- End with this disclaimer: "${GAMBLING_DISCLAIMER}"
-- SEO title under 60 chars
-- SEO description under 155 chars
-- 3-5 relevant tags
-
-Respond ONLY with valid JSON:
-{
-  "title": "...",
-  "excerpt": "...",
-  "content": "...",
-  "seoTitle": "...",
-  "seoDescription": "...",
-  "tags": ["...", "..."]
-}`;
-
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 2000,
-      system: systemPrompt,
-      messages: [{ role: "user", content: userPrompt }],
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Claude API error: ${response.status} — ${error}`);
+export async function runContentPublisher(
+  reqs: ReadonlyArray<PublishRequest>
+): Promise<ReadonlyArray<PublishResult>> {
+  if (INTERNAL_CALIBRATION_ONLY) {
+    return reqs.map((r) => ({
+      id: r.id,
+      status: "REFUSED",
+      refusedByInternalCalibrationGates: true,
+      note: "INTERNAL_CALIBRATION_ONLY is on — auto-publish is disabled.",
+    }));
   }
-
-  const result = (await response.json()) as {
-    content: Array<{ type: string; text: string }>;
-  };
-
-  const textContent = result.content.find((c) => c.type === "text");
-  if (!textContent) throw new Error("No text in Claude response");
-
-  const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch?.[0]) throw new Error("Could not parse JSON from Claude");
-
-  return JSON.parse(jsonMatch[0]) as {
-    title: string;
-    excerpt: string;
-    content: string;
-    seoTitle: string;
-    seoDescription: string;
-    tags: string[];
-  };
+  // When the gate is OFF we still don't auto-publish from this worker;
+  // we just record the request and require a separate operator action.
+  return reqs.map((r) => ({
+    id: r.id,
+    status: "QUEUED",
+    refusedByInternalCalibrationGates: false,
+    note: "Queued for operator review. No automatic publish from this worker.",
+  }));
 }
 
 async function main(): Promise<void> {
-  console.log("[content-worker] Worker starting...");
-
-  await generateAndPublishContent();
-
-  setInterval(async () => {
-    try {
-      await generateAndPublishContent();
-    } catch (err) {
-      console.error("[content-worker] Error:", err instanceof Error ? err.message : err);
-    }
-  }, PUBLISH_INTERVAL_MS);
+  // eslint-disable-next-line no-console
+  console.log(
+    INTERNAL_CALIBRATION_ONLY
+      ? "[content-publisher] kill switch ON — refusing all publish requests."
+      : "[content-publisher] kill switch OFF — queueing only, never auto-publishing."
+  );
 }
 
-main().catch((err) => {
-  console.error("[content-worker] Fatal error:", err);
-  process.exit(1);
-});
+if (typeof require !== "undefined" && require.main === module) {
+  void main();
+}

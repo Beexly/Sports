@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Badges & chips · PickPilot</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; background: var(--void); }
+  .card {
+    width: 700px; min-height: 240px;
+    padding: 22px 24px;
+    background: linear-gradient(180deg, var(--obsidian) 0%, var(--carbon) 100%);
+    color: var(--fg-1);
+    box-sizing: border-box;
+  }
+  .eyebrow { font: 500 10px/1 var(--f-mono); text-transform: uppercase; letter-spacing: 0.22em; color: var(--fg-muted); margin: 0 0 4px; }
+  .eyebrow .dot { color: var(--plasma); }
+  .title { font: 600 18px/1.2 var(--f-display); color: var(--fg); letter-spacing: -0.01em; margin: 0 0 20px; }
+
+  .group { margin-bottom: 16px; }
+  .group:last-child { margin-bottom: 0; }
+  .sub { font: 500 9px/1 var(--f-mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 8px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  .badge {
+    font: 600 10px/1 var(--f-mono);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .b-elite   { background: rgba(255, 45, 138,0.12); color: var(--plasma); border: 1px solid rgba(255, 45, 138,0.35); }
+  .b-strong  { background: rgba(79,168,255,0.12); color: var(--ion-blue); border: 1px solid rgba(79,168,255,0.35); }
+  .b-solid   { background: rgba(155,123,250,0.12); color: var(--ultraviolet); border: 1px solid rgba(155,123,250,0.35); }
+  .b-lean    { background: var(--titanium); color: var(--ion-1); border: 1px solid var(--mineral); }
+
+  .b-win  { background: rgba(95,217,163,0.12); color: var(--verify); border: 1px solid rgba(95,217,163,0.4); }
+  .b-loss { background: rgba(255,100,112,0.10); color: var(--alert); border: 1px solid rgba(255,100,112,0.35); }
+  .b-push { background: var(--titanium); color: var(--ion-1); border: 1px solid var(--mineral); }
+
+  .b-free    { background: var(--titanium); color: var(--ion); border: 1px solid var(--mineral); }
+  .b-pro     { background: rgba(255, 45, 138,0.10); color: var(--plasma); border: 1px solid rgba(255, 45, 138,0.3); }
+  .b-elite-t { background: rgba(79,168,255,0.10); color: var(--ion-blue); border: 1px solid rgba(79,168,255,0.3); }
+
+  .chip-live {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    background: rgba(255, 45, 138,0.08);
+    border: 1px solid rgba(255, 45, 138,0.3);
+    border-radius: 999px;
+    color: var(--plasma);
+    font: 500 11px/1 var(--f-mono);
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .chip-live .dot {
+    width: 7px; height: 7px; border-radius: 999px; background: var(--plasma);
+    box-shadow: 0 0 8px var(--plasma);
+    animation: pp-pulse 2.4s var(--ease-out) infinite;
+  }
+  .chip-sport {
+    background: var(--titanium); color: var(--ion);
+    border: 1px solid var(--mineral);
+    padding: 5px 10px;
+    border-radius: var(--r-sm);
+    font: 600 10px/1 var(--f-mono); letter-spacing: 0.18em;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow"><span class="dot">●</span> COMPONENTS / 02 — BADGES & CHIPS</p>
+  <h2 class="title">Grades · results · tiers · live signal</h2>
+
+  <div class="group">
+    <div class="sub">Pick grade</div>
+    <div class="row">
+      <span class="badge b-elite">★ Elite Play</span>
+      <span class="badge b-strong">Strong Play</span>
+      <span class="badge b-solid">Solid Play</span>
+      <span class="badge b-lean">Lean</span>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="sub">Result</div>
+    <div class="row">
+      <span class="badge b-win">WIN</span>
+      <span class="badge b-loss">LOSS</span>
+      <span class="badge b-push">PUSH</span>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="sub">Subscription tier</div>
+    <div class="row">
+      <span class="badge b-free">Free</span>
+      <span class="badge b-pro">Pro · $19/mo</span>
+      <span class="badge b-elite-t">★ Elite · $49/mo</span>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="sub">Live · sport chips</div>
+    <div class="row">
+      <span class="chip-live"><span class="dot"></span>Live · 30 min refresh</span>
+      <span class="chip-sport">NFL</span>
+      <span class="chip-sport">NBA</span>
+      <span class="chip-sport">MLB</span>
+      <span class="chip-sport">NHL</span>
+      <span class="chip-sport">NCAAF</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

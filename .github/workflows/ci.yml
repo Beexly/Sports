@@ -2,13 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [main, "claude/*"]
+    branches: [main, "claude/*", "sports-intelligence-os-*"]
   pull_request:
     branches: [main]
 
 jobs:
+  # --------------------------------------------------------------
+  # 1. install + lint + typecheck + test + prisma generate
+  # --------------------------------------------------------------
   test:
-    name: Test & Type Check
+    name: Test, type-check, lint, Prisma
     runs-on: ubuntu-latest
 
     services:
@@ -42,23 +45,29 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: Generate Prisma Client
         run: npm run db:generate
 
-      - name: Push database schema
+      - name: Prisma schema validate (no migrations)
+        run: npx prisma validate --schema packages/db/prisma/schema.prisma
+
+      - name: Push database schema (test DB)
         run: npm run db:push
-
-      - name: Run tests
-        run: npm test
-
-      - name: Type check
-        run: npm run typecheck
 
       - name: Lint
         run: npm run lint
 
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Run tests (all workspaces)
+        run: npm test
+
+  # --------------------------------------------------------------
+  # 2. Build
+  # --------------------------------------------------------------
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -74,7 +83,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: Generate Prisma Client
         run: npm run db:generate
@@ -87,3 +96,137 @@ jobs:
           NEXTAUTH_SECRET: "build-placeholder"
           NEXTAUTH_URL: "http://localhost:3000"
           SKIP_ENV_VALIDATION: "true"
+
+  # --------------------------------------------------------------
+  # 3. Trust gate — public-copy scanner banned-phrase regression
+  # --------------------------------------------------------------
+  trust-gate:
+    name: Trust gate (banned phrases on public copy)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Generate Prisma Client (types only)
+        run: npm run db:generate
+
+      - name: Run public-copy scanner test
+        working-directory: apps/web
+        run: npx vitest run __tests__/public-copy-scanner.test.ts
+
+      - name: Run banned-phrase guardrail script
+        run: node scripts/guardrails/trust-gate.mjs
+
+  # --------------------------------------------------------------
+  # 4. Model-freeze — MODEL_VERSION cannot move without an IMPLEMENTED
+  #    CalibrationProposal landing in the same change.
+  # --------------------------------------------------------------
+  model-freeze:
+    name: Model freeze (MODEL_VERSION guardrail)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Run model-freeze guardrail
+        run: node scripts/guardrails/model-freeze.mjs
+
+  # --------------------------------------------------------------
+  # 5. Draft-only — no API/page surface may write publishedAt or
+  #    flip a draft to PUBLISHED status outside the explicit (and
+  #    currently non-existent) publish boundary.
+  # --------------------------------------------------------------
+  draft-only:
+    name: Draft-only (no auto-publish)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Run draft-only guardrail
+        run: node scripts/guardrails/draft-only.mjs
+
+  # --------------------------------------------------------------
+  # 6. Composite guardrails job — convenience target for local + branch
+  #    protection rules.
+  # --------------------------------------------------------------
+  guardrails:
+    name: All guardrails
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies (minimal)
+        run: npm ci --no-audit --no-fund
+
+      - name: Run all guardrails
+        run: npm run guardrails
+
+  # --------------------------------------------------------------
+  # 7. Brand-safety — fast, focused job that fences the customer-
+  #    facing copy invariants. Runs the public-copy scanner plus the
+  #    policy / dashboard / Jarvis tests that gate visible claims.
+  #    Designed to fail in under a minute if a PR introduces a
+  #    customer-copy regression — without waiting for the full test
+  #    matrix.
+  # --------------------------------------------------------------
+  brand-safety:
+    name: Brand safety (customer copy invariants)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Generate Prisma Client (types only)
+        run: npm run db:generate
+
+      - name: Run customer-surface invariant tests
+        working-directory: apps/web
+        run: |
+          npx vitest run \
+            __tests__/public-copy-scanner.test.ts \
+            __tests__/public-performance-policy.test.ts \
+            __tests__/dashboard-performance-gate.test.ts \
+            __tests__/history-eligibility.test.ts \
+            __tests__/jarvis.test.ts \
+            __tests__/cockpit-routes.test.ts \
+            __tests__/trust-claims.test.ts

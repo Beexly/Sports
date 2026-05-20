@@ -127,6 +127,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     };
   });
 
+  // Demo-mode detection: when any of the returned picks were created by
+  // the dev seed (modelVersion === "v5.0.0-seed"), surface a flag so the
+  // page can render a "demo mode" badge. Real model output never uses
+  // this string — synthetic seed picks are the only producer.
+  const containsSeedData = picks.some((p) => p.modelVersion === "v5.0.0-seed");
+
   return NextResponse.json({
     success: true,
     data: publicPicks,
@@ -136,6 +142,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       date: targetDate.toISOString().split("T")[0],
       canSeeConfidence: entitlements.canSeeConfidence,
       canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
+      containsSeedData,
     },
   });
 }

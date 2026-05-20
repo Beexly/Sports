@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Galaxy Navigation · PickPilot</title>
+<link rel="stylesheet" href="_board.css">
+<script src="https://unpkg.com/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+<style>
+  .board { width: 1600px; min-height: 2400px; padding: 0; }
+  .stage { position: relative; padding: 80px; }
+
+  /* Hero */
+  .arch-hero { margin-bottom: 48px; }
+  .arch-hero .crumb-line { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; }
+  .arch-hero .crumb-line .line { flex: 1; height: 1px; background: var(--mineral); }
+  .arch-hero .head {
+    font: 900 200px/0.85 var(--f-arch);
+    letter-spacing: -0.03em; text-transform: uppercase; color: var(--fg);
+    margin: 0;
+  }
+  .arch-hero .head .stroke { -webkit-text-stroke: 2px var(--mineral-hi); -webkit-text-fill-color: transparent; }
+  .arch-hero .head .pop { color: var(--signal); }
+  .arch-hero .head em { font: italic 400 200px/0.88 var(--f-editorial); color: var(--signal); letter-spacing: -0.01em; }
+  .arch-hero .sub {
+    margin-top: 28px;
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px; align-items: start;
+  }
+  .arch-hero .sub .lede {
+    font: var(--t-display-md); color: var(--ion); letter-spacing: -0.015em; max-width: 34ch;
+  }
+  .arch-hero .sub .lede em { font: italic 400 32px/1.1 var(--f-editorial); color: var(--signal); }
+  .arch-hero .sub .stat .l { font-family: var(--f-mono); font-size: 10px; color: var(--fg-muted); letter-spacing: 0.20em; text-transform: uppercase; }
+  .arch-hero .sub .stat .v {
+    font: 800 32px/1 var(--f-arch); color: var(--fg); margin-top: 8px;
+    letter-spacing: 0.005em; text-transform: uppercase;
+  }
+  .arch-hero .sub .stat .meta { font: var(--t-body-xs); color: var(--ion-1); margin-top: 6px; }
+
+  /* ── COSMOS ENTRY SCREEN ── */
+  .cosmos {
+    position: relative;
+    margin: 24px -80px 64px;
+    height: 1000px;
+    width: calc(100% + 160px);
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 50%, rgba(111,217,255,0.06), transparent 65%),
+      radial-gradient(ellipse 60% 40% at 20% 30%, rgba(155,123,250,0.05), transparent 70%),
+      radial-gradient(ellipse 40% 30% at 80% 70%, rgba(255,179,71,0.03), transparent 70%),
+      linear-gradient(180deg, var(--void), var(--obsidian) 50%, var(--void));
+    overflow: hidden;
+    border-top: 1px solid var(--mineral);
+    border-bottom: 1px solid var(--mineral);
+  }
+
+  /* Window-style frame inside */
+  .cosmos-window {
+    position: absolute; inset: 24px;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: transparent;
+  }
+
+  /* Top tab bar inside cosmos window */
+  .cosmos-chrome {
+    position: absolute; top: 16px; left: 24px; right: 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 20;
+    padding: 12px 20px;
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-pill);
+    background: rgba(11,15,24,0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .cosmos-chrome .l {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .cosmos-chrome .l .ret { width: 18px; height: 18px; color: var(--signal); }
+  .cosmos-chrome .l .name {
+    font-family: var(--f-arch); font-weight: 900; font-size: 16px;
+    color: var(--fg); letter-spacing: 0.01em; text-transform: uppercase;
+  }
+  .cosmos-chrome .l .div { width: 1px; height: 14px; background: var(--mineral-hi); }
+  .cosmos-chrome .l .url {
+    font-family: var(--f-mono); font-size: 11px;
+    color: var(--ion-1); letter-spacing: 0.06em;
+  }
+  .cosmos-chrome .l .url span { color: var(--signal); }
+  .cosmos-chrome .r {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .cosmos-chrome .r .live {
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--signal); letter-spacing: 0.14em;
+  }
+  .cosmos-chrome .r .ttl {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.14em;
+  }
+
+  /* SVG galaxy */
+  .galaxy-svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+  }
+
+  /* Center identity */
+  .cosmos-center {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%,-50%);
+    width: 200px; height: 200px;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10;
+  }
+  .cosmos-center::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle, var(--signal) 0%, transparent 60%);
+    opacity: 0.20; filter: blur(20px);
+  }
+  .cosmos-center svg { width: 110px; height: 110px; color: var(--signal); position: relative; }
+
+  /* Constellation labels */
+  .const {
+    position: absolute;
+    display: flex; flex-direction: column; gap: 2px;
+    z-index: 10;
+    cursor: pointer;
+  }
+  .const::before {
+    content: "";
+    position: absolute;
+    width: 12px; height: 12px;
+    border: 1px solid var(--signal);
+    border-radius: 999px;
+    background: rgba(111,217,255,0.10);
+    box-shadow: 0 0 16px var(--signal);
+  }
+  .const.tl::before { top: -22px; left: 0; }
+  .const.tr::before { top: -22px; right: 0; }
+  .const.bl::before { bottom: -22px; left: 0; }
+  .const.br::before { bottom: -22px; right: 0; }
+  .const.tc::before { top: -22px; left: 50%; transform: translateX(-50%); }
+  .const.bc::before { bottom: -22px; left: 50%; transform: translateX(-50%); }
+  .const::after {
+    content: "";
+    position: absolute;
+    width: 24px; height: 24px;
+    border: 1px solid var(--signal);
+    border-radius: 999px;
+    opacity: 0.35;
+  }
+  .const.tl::after { top: -28px; left: -6px; }
+  .const.tr::after { top: -28px; right: -6px; }
+  .const.bl::after { bottom: -28px; left: -6px; }
+  .const.br::after { bottom: -28px; right: -6px; }
+  .const.tc::after { top: -28px; left: 50%; transform: translateX(-50%); }
+  .const.bc::after { bottom: -28px; left: 50%; transform: translateX(-50%); }
+  .const .telem {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .const .telem span { color: var(--signal); }
+  .const .name {
+    font: 800 28px/1 var(--f-arch);
+    color: var(--fg); letter-spacing: 0.005em; text-transform: uppercase;
+  }
+  .const .name em { font: italic 400 24px/1 var(--f-editorial); color: var(--signal); letter-spacing: -0.01em; }
+  .const .desc {
+    font: var(--t-body-xs); color: var(--ion-1);
+    max-width: 22ch;
+    margin-top: 2px;
+  }
+  .const .stat {
+    margin-top: 6px;
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--signal); letter-spacing: 0.10em;
+  }
+  /* Use amber for caution clusters */
+  .const.amber::before { border-color: var(--amber); background: rgba(255,179,71,0.10); box-shadow: 0 0 16px var(--amber); }
+  .const.amber::after { border-color: var(--amber); }
+  .const.amber .telem span, .const.amber .stat { color: var(--amber); }
+  .const.uv::before { border-color: var(--ultraviolet); background: rgba(155,123,250,0.10); box-shadow: 0 0 16px var(--ultraviolet); }
+  .const.uv::after { border-color: var(--ultraviolet); }
+  .const.uv .telem span, .const.uv .stat { color: var(--ultraviolet); }
+
+  /* Reticle cursor concept */
+  .cursor-mark {
+    position: absolute;
+    width: 36px; height: 36px;
+    pointer-events: none;
+  }
+  .cursor-mark svg { width: 100%; height: 100%; color: var(--signal); opacity: 0.85; }
+  .cursor-mark .telem {
+    position: absolute; left: calc(100% + 8px); top: 8px;
+    font-family: var(--f-mono); font-size: 9px;
+    color: var(--signal); letter-spacing: 0.16em; white-space: nowrap;
+    background: rgba(11,15,24,0.85);
+    border: 1px solid var(--mineral-hi);
+    padding: 3px 7px; border-radius: 3px;
+    backdrop-filter: blur(8px);
+  }
+
+  /* Bottom overlay HUD */
+  .cosmos-hud {
+    position: absolute; left: 24px; right: 24px; bottom: 24px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding: 20px 24px;
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    background: rgba(11,15,24,0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 20;
+  }
+  .cosmos-hud .l {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .cosmos-hud .l .crumb-mini {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .cosmos-hud .l .crumb-mini span { color: var(--signal); }
+  .cosmos-hud .l .head {
+    font: 800 36px/0.95 var(--f-arch);
+    color: var(--fg); letter-spacing: 0.005em; text-transform: uppercase;
+  }
+  .cosmos-hud .l .head em { font: italic 400 36px/1 var(--f-editorial); color: var(--signal); letter-spacing: -0.01em; }
+  .cosmos-hud .r {
+    display: flex; align-items: center; gap: 24px;
+  }
+  .cosmos-hud .telem-block { display: flex; flex-direction: column; gap: 2px; }
+  .cosmos-hud .telem-block .k {
+    font-family: var(--f-mono); font-size: 9px;
+    color: var(--fg-muted); letter-spacing: 0.20em; text-transform: uppercase;
+  }
+  .cosmos-hud .telem-block .v {
+    font-family: var(--f-mono); font-weight: 700; font-size: 18px;
+    color: var(--fg); letter-spacing: -0.01em;
+  }
+  .cosmos-hud .telem-block.signal .v { color: var(--signal); }
+  .cosmos-hud .enter {
+    padding: 14px 24px;
+    background: var(--signal); color: var(--signal-ink);
+    font-family: var(--f-mono); font-weight: 700; font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    border: 0; border-radius: var(--r-sm);
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: var(--glow-signal);
+  }
+  .cosmos-hud .enter svg { width: 14px; height: 14px; }
+
+  /* ── 4-LAYER COSMOS MODEL ── */
+  .layers {
+    display: grid; grid-template-columns: 220px 1fr; gap: 48px;
+    padding: 56px 0;
+    border-top: 1px solid var(--mineral);
+  }
+  .layers .lhs { display: flex; flex-direction: column; gap: 12px; }
+  .layers .lhs .id { font-family: var(--f-mono); font-size: 11px; color: var(--signal); letter-spacing: 0.22em; text-transform: uppercase; }
+  .layers .lhs .title { font: 800 56px/0.9 var(--f-arch); text-transform: uppercase; color: var(--fg); letter-spacing: 0.005em; }
+  .layers .lhs .desc { font: var(--t-body-sm); color: var(--fg-meta); max-width: 28ch; }
+
+  .layer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .layer-card {
+    background: var(--eclipse);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    padding: 24px;
+    min-height: 360px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .layer-card .h-id {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--signal); letter-spacing: 0.22em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .layer-card .scope {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.14em;
+  }
+  .layer-card .scope span { color: var(--ion); }
+  .layer-card h3 {
+    font: 800 32px/0.95 var(--f-arch);
+    color: var(--fg); letter-spacing: 0.005em; text-transform: uppercase;
+    margin: 14px 0 8px;
+  }
+  .layer-card p { font: var(--t-body-sm); color: var(--ion-1); margin: 0 0 18px; }
+
+  /* Tiny galaxy thumbs in cards */
+  .thumb {
+    margin-top: auto;
+    height: 130px;
+    background: var(--obsidian);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-sm);
+    position: relative; overflow: hidden;
+  }
+  .thumb svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .thumb .corner-label {
+    position: absolute; bottom: 8px; left: 10px;
+    font-family: var(--f-mono); font-size: 9px;
+    color: var(--ion-1); letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .thumb .corner-label span { color: var(--signal); }
+
+  /* Interaction grammar */
+  .interactions {
+    display: grid; grid-template-columns: 220px 1fr; gap: 48px;
+    padding: 56px 0;
+    border-top: 1px solid var(--mineral);
+  }
+  .int-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .int-card {
+    background: var(--eclipse);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    padding: 24px;
+    min-height: 200px;
+    display: flex; flex-direction: column; gap: 12px;
+    position: relative; overflow: hidden;
+  }
+  .int-card .ico {
+    width: 36px; height: 36px;
+    border: 1px solid var(--mineral-hi);
+    border-radius: var(--r-sm);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--signal);
+  }
+  .int-card .ico svg { width: 18px; height: 18px; }
+  .int-card .verb {
+    font: 800 22px/0.95 var(--f-arch);
+    color: var(--fg); letter-spacing: 0.005em; text-transform: uppercase;
+  }
+  .int-card p { font: var(--t-body-sm); color: var(--ion-1); margin: 0; }
+  .int-card .telem {
+    margin-top: auto;
+    font-family: var(--f-mono); font-size: 9px;
+    color: var(--fg-muted); letter-spacing: 0.14em; text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<section class="board">
+
+  <!-- atmospheric environment -->
+  <div class="atmo-environment" style="z-index:0"></div>
+  <div class="grid-overlay" style="z-index:0;mask-image:radial-gradient(ellipse at center, black 20%, transparent 80%)"></div>
+
+  <div class="b-chrome">
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+  </div>
+  <div class="b-bug">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="butt">
+      <circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.5"/>
+      <line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/>
+      <line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/>
+      <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+    </svg>
+    <span>PickPilot · Sports Intelligence System</span>
+  </div>
+  <div class="b-id">
+    <span class="n">06 / 07</span>
+    <span>BOARD VI — GALAXY NAVIGATION</span>
+  </div>
+
+  <div class="stage">
+
+    <div class="arch-hero">
+      <div class="crumb-line">
+        <span class="brack">— SECTION 06 / NAVIGATION COSMOS</span>
+        <span class="line"></span>
+        <span class="brack" style="color:var(--signal)">THE UNIVERSE IS THE SITEMAP</span>
+      </div>
+      <h1 class="head"><span class="stroke">Enter</span><br>the <em>signal.</em></h1>
+      <div class="sub">
+        <div class="lede">The homepage is a navigable intelligence universe. Constellations are sectors. Solar systems are matchups. You don't open tabs — you <em>travel</em>.</div>
+        <div class="stat"><div class="l">— LAYERS</div><div class="v">04</div><div class="meta">Universe → Constellation → System → Surface</div></div>
+        <div class="stat"><div class="l">— CONSTELLATIONS</div><div class="v">07</div><div class="meta">Live sectors</div></div>
+        <div class="stat"><div class="l">— SCREEN</div><div class="v">1440 → 4K</div><div class="meta">Cinematic scaling</div></div>
+      </div>
+    </div>
+
+    <!-- ── COSMOS ── -->
+    <div class="cosmos">
+      <div class="cosmos-window">
+
+        <!-- top chrome bar -->
+        <div class="cosmos-chrome">
+          <div class="l">
+            <span class="ret"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt"><circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/><line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/><line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/><circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/></svg></span>
+            <span class="name">PickPilot</span>
+            <span class="div"></span>
+            <span class="url">app.pickpilot.com<span> / cosmos</span></span>
+          </div>
+          <div class="r">
+            <span class="live"><span class="pp-live-dot"></span>LIVE · 14 MARKETS</span>
+            <span class="ttl">14:32 ET</span>
+          </div>
+        </div>
+
+        <!-- SVG galaxy -->
+        <svg class="galaxy-svg" viewBox="0 0 1500 950" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(111,217,255,0.30)"/>
+              <stop offset="40%" stop-color="rgba(111,217,255,0.08)"/>
+              <stop offset="100%" stop-color="rgba(111,217,255,0)"/>
+            </radialGradient>
+            <linearGradient id="orbitFade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"  stop-color="rgba(111,217,255,0)"/>
+              <stop offset="30%" stop-color="rgba(111,217,255,0.25)"/>
+              <stop offset="70%" stop-color="rgba(111,217,255,0.25)"/>
+              <stop offset="100%" stop-color="rgba(111,217,255,0)"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Core glow -->
+          <circle cx="750" cy="475" r="380" fill="url(#coreGrad)"/>
+
+          <!-- Concentric orbital rings — tilted -->
+          <g transform="translate(750,475) rotate(-14)">
+            <ellipse cx="0" cy="0" rx="850" ry="190" fill="none" stroke="rgba(111,217,255,0.08)" stroke-width="0.8"/>
+            <ellipse cx="0" cy="0" rx="720" ry="160" fill="none" stroke="rgba(111,217,255,0.10)" stroke-width="0.8"/>
+            <ellipse cx="0" cy="0" rx="600" ry="135" fill="none" stroke="rgba(111,217,255,0.13)" stroke-width="0.8"/>
+            <ellipse cx="0" cy="0" rx="480" ry="108" fill="none" stroke="rgba(111,217,255,0.17)" stroke-width="0.8"/>
+            <ellipse cx="0" cy="0" rx="360" ry="80" fill="none" stroke="rgba(111,217,255,0.22)" stroke-width="0.8"/>
+            <ellipse cx="0" cy="0" rx="240" ry="54" fill="none" stroke="rgba(111,217,255,0.30)" stroke-width="0.8"/>
+            <ellipse cx="0" cy="0" rx="140" ry="32" fill="none" stroke="rgba(111,217,255,0.40)" stroke-width="0.8"/>
+
+            <!-- secondary tilt arc (subtle violet for depth) -->
+            <ellipse cx="0" cy="0" rx="930" ry="220" fill="none" stroke="rgba(155,123,250,0.08)" stroke-width="0.6" stroke-dasharray="2 6"/>
+
+            <!-- data nodes (sport markets) -->
+            <circle cx="700"  cy="-30" r="3.5" fill="var(--signal)"/>
+            <circle cx="-540" cy="50"  r="2.5" fill="var(--signal)" opacity="0.8"/>
+            <circle cx="180"  cy="-150" r="2.5" fill="var(--ultraviolet)" opacity="0.8"/>
+            <circle cx="-300" cy="-100" r="3" fill="var(--signal)"/>
+            <circle cx="430"  cy="70" r="3" fill="var(--amber)"/>
+            <circle cx="-700" cy="-20" r="2" fill="var(--ion-1)" opacity="0.6"/>
+            <circle cx="320"  cy="-50" r="2.5" fill="var(--signal)" opacity="0.7"/>
+            <circle cx="-180" cy="40"  r="2.5" fill="var(--signal)"/>
+            <circle cx="560"  cy="40"  r="2" fill="var(--signal)" opacity="0.6"/>
+            <circle cx="-420" cy="-60" r="2.5" fill="var(--ultraviolet)" opacity="0.7"/>
+            <circle cx="80"   cy="100" r="2" fill="var(--signal)"/>
+            <circle cx="100"  cy="-25" r="2" fill="var(--amber)" opacity="0.8"/>
+            <circle cx="-80"  cy="20" r="2" fill="var(--signal)"/>
+            <circle cx="200"  cy="35" r="2" fill="var(--signal)" opacity="0.6"/>
+            <circle cx="-600" cy="70" r="2" fill="var(--signal)" opacity="0.5"/>
+
+            <!-- atmospheric trails -->
+            <path d="M -200 -45 Q 0 -10 250 60" fill="none" stroke="rgba(111,217,255,0.20)" stroke-width="0.8" stroke-linecap="round"/>
+            <path d="M -500 30 Q -300 80 -120 60" fill="none" stroke="rgba(111,217,255,0.15)" stroke-width="0.6" stroke-linecap="round"/>
+          </g>
+
+          <!-- starfield -->
+          <g fill="rgba(213,221,233,0.4)">
+            <circle cx="80" cy="120" r="0.8"/>
+            <circle cx="160" cy="80"  r="0.6"/>
+            <circle cx="240" cy="180" r="0.9"/>
+            <circle cx="380" cy="60"  r="0.6"/>
+            <circle cx="460" cy="200" r="0.7"/>
+            <circle cx="120" cy="340" r="0.6"/>
+            <circle cx="320" cy="280" r="0.8"/>
+            <circle cx="80"  cy="660" r="0.6"/>
+            <circle cx="200" cy="820" r="0.8"/>
+            <circle cx="320" cy="760" r="0.6"/>
+            <circle cx="900"  cy="120" r="0.6"/>
+            <circle cx="1080" cy="180" r="0.8"/>
+            <circle cx="1240" cy="60"  r="0.6"/>
+            <circle cx="1380" cy="200" r="0.9"/>
+            <circle cx="1440" cy="340" r="0.6"/>
+            <circle cx="1340" cy="280" r="0.7"/>
+            <circle cx="1100" cy="720" r="0.6"/>
+            <circle cx="1280" cy="780" r="0.8"/>
+            <circle cx="1400" cy="860" r="0.6"/>
+            <circle cx="1180" cy="860" r="0.6"/>
+            <circle cx="500"  cy="700" r="0.6"/>
+            <circle cx="640"  cy="820" r="0.6"/>
+            <circle cx="780"  cy="900" r="0.8"/>
+          </g>
+        </svg>
+
+        <!-- center reticle -->
+        <div class="cosmos-center">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="butt">
+            <circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/>
+            <line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/>
+            <line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/>
+            <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+
+        <!-- Constellation labels -->
+        <div class="const tl" style="left:11%;top:16%">
+          <div class="telem">— CONSTELLATION <span>/ 01</span></div>
+          <div class="name">Market Pulse</div>
+          <div class="desc">Live line movement &amp; sharp signal density.</div>
+          <div class="stat">14 ACTIVE · 7 SHARP MOVES</div>
+        </div>
+
+        <div class="const tr" style="right:8%;top:18%;text-align:right">
+          <div class="telem">— CONSTELLATION <span>/ 02</span></div>
+          <div class="name">Observatory</div>
+          <div class="desc" style="margin-left:auto">Your dashboard. Overview &amp; alerts.</div>
+          <div class="stat">3 NEW SIGNALS</div>
+        </div>
+
+        <div class="const bl uv" style="left:9%;bottom:24%">
+          <div class="telem">— CONSTELLATION <span>/ 03</span></div>
+          <div class="name">Model Lab</div>
+          <div class="desc">Model output &amp; disagreement zones.</div>
+          <div class="stat">v4.2 · 2 DISAGREEMENTS</div>
+        </div>
+
+        <div class="const br" style="right:9%;bottom:24%">
+          <div class="telem">— CONSTELLATION <span>/ 04</span></div>
+          <div class="name">Edge Tracker</div>
+          <div class="desc">Highest-edge plays across markets.</div>
+          <div class="stat">6 STRONG · 4 SOLID</div>
+        </div>
+
+        <div class="const amber" style="left:30%;top:30%">
+          <div class="telem">— CONSTELLATION <span>/ 05</span></div>
+          <div class="name">Volatility</div>
+          <div class="desc">Markets in flux. Approach with discipline.</div>
+          <div class="stat">3 ZONES · CAUTION</div>
+        </div>
+
+        <div class="const" style="right:30%;top:32%">
+          <div class="telem">— CONSTELLATION <span>/ 06</span></div>
+          <div class="name">Matchups</div>
+          <div class="desc">Tonight's slate as solar systems.</div>
+          <div class="stat">14 SCHEDULED</div>
+        </div>
+
+        <div class="const uv" style="left:50%;top:60%;transform:translateX(-50%)">
+          <div class="telem">— CONSTELLATION <span>/ 07</span></div>
+          <div class="name">The Vault</div>
+          <div class="desc">Public track record &amp; methodology.</div>
+          <div class="stat">+18.7% · 246 RESOLVED</div>
+        </div>
+
+        <!-- Reticle cursor floating -->
+        <div class="cursor-mark" style="left:32%;top:52%">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="butt">
+            <circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/>
+            <line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/>
+            <line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/>
+            <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+          </svg>
+          <div class="telem">EDGE 73 · LAL @ BOS</div>
+        </div>
+
+        <!-- Bottom HUD -->
+        <div class="cosmos-hud">
+          <div class="l">
+            <div class="crumb-mini">UNIVERSE <span>·</span> ENTRY POINT <span>·</span> 14:32 ET</div>
+            <div class="head">14 markets live. <em>Where to?</em></div>
+          </div>
+          <div class="r">
+            <div class="telem-block signal">
+              <span class="k">— SHARP MOVES</span>
+              <span class="v">+7</span>
+            </div>
+            <div class="telem-block">
+              <span class="k">— STRONG PLAYS</span>
+              <span class="v">06</span>
+            </div>
+            <div class="telem-block">
+              <span class="k">— MODEL CONF</span>
+              <span class="v">74%</span>
+            </div>
+            <button class="enter">ENTER OBSERVATORY <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── 4 LAYERS ── -->
+    <div class="layers">
+      <div class="lhs">
+        <span class="id">— 06.1 / SPATIAL MODEL</span>
+        <span class="title">Four<br>layers</span>
+        <span class="desc">The cosmos is structured. Zoom is meaning: surface → deep. Each layer changes the grammar of the interface.</span>
+      </div>
+      <div class="layer-grid">
+
+        <div class="layer-card">
+          <div class="h-id">— LAYER 01</div>
+          <div class="scope">ZOOM <span>1×</span> · SCOPE <span>UNIVERSE</span></div>
+          <h3>The<br>Universe</h3>
+          <p>Entry point. League-wide signal density, public sentiment, volatility zones. You feel small inside a massive system.</p>
+          <div class="thumb">
+            <svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet">
+              <g transform="translate(100,65) rotate(-10)">
+                <ellipse cx="0" cy="0" rx="92" ry="20" fill="none" stroke="rgba(111,217,255,0.20)" stroke-width="0.6"/>
+                <ellipse cx="0" cy="0" rx="70" ry="16" fill="none" stroke="rgba(111,217,255,0.28)" stroke-width="0.6"/>
+                <ellipse cx="0" cy="0" rx="46" ry="10" fill="none" stroke="rgba(111,217,255,0.40)" stroke-width="0.6"/>
+                <circle cx="0" cy="0" r="2" fill="var(--signal)"/>
+                <circle cx="60" cy="-5" r="1.5" fill="var(--signal)"/>
+                <circle cx="-50" cy="6" r="1.5" fill="var(--signal)" opacity="0.8"/>
+                <circle cx="30" cy="-10" r="1" fill="var(--ultraviolet)"/>
+                <circle cx="-80" cy="0" r="1" fill="var(--amber)"/>
+              </g>
+            </svg>
+            <span class="corner-label">— ENTRY · <span>HOME</span></span>
+          </div>
+        </div>
+
+        <div class="layer-card">
+          <div class="h-id">— LAYER 02</div>
+          <div class="scope">ZOOM <span>4×</span> · SCOPE <span>CONSTELLATION</span></div>
+          <h3>Constella-<br>tions</h3>
+          <p>Sectors: NFL, NBA, Market Pulse, Model Lab. Each has its own motion language and internal density.</p>
+          <div class="thumb">
+            <svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet">
+              <g transform="translate(100,65)">
+                <circle cx="-30" cy="-15" r="2" fill="var(--signal)"/>
+                <circle cx="20" cy="-25" r="2.5" fill="var(--signal)"/>
+                <circle cx="35" cy="10" r="2" fill="var(--signal)"/>
+                <circle cx="-10" cy="20" r="2.5" fill="var(--signal)"/>
+                <circle cx="-50" cy="5" r="2" fill="var(--signal)"/>
+                <line x1="-30" y1="-15" x2="20" y2="-25" stroke="rgba(111,217,255,0.4)" stroke-width="0.5"/>
+                <line x1="20" y1="-25" x2="35" y2="10" stroke="rgba(111,217,255,0.4)" stroke-width="0.5"/>
+                <line x1="35" y1="10" x2="-10" y2="20" stroke="rgba(111,217,255,0.4)" stroke-width="0.5"/>
+                <line x1="-10" y1="20" x2="-50" y2="5" stroke="rgba(111,217,255,0.4)" stroke-width="0.5"/>
+                <line x1="-50" y1="5" x2="-30" y2="-15" stroke="rgba(111,217,255,0.4)" stroke-width="0.5"/>
+              </g>
+            </svg>
+            <span class="corner-label">— NBA · <span>5 SYSTEMS</span></span>
+          </div>
+        </div>
+
+        <div class="layer-card">
+          <div class="h-id">— LAYER 03</div>
+          <div class="scope">ZOOM <span>16×</span> · SCOPE <span>MATCHUP</span></div>
+          <h3>Solar<br>systems</h3>
+          <p>A matchup is alive. Orbiting it: injuries, line moves, public/sharp money, AI commentary, edge score.</p>
+          <div class="thumb">
+            <svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet">
+              <g transform="translate(100,65)">
+                <circle cx="0" cy="0" r="40" fill="none" stroke="rgba(111,217,255,0.25)" stroke-width="0.6"/>
+                <circle cx="0" cy="0" r="24" fill="none" stroke="rgba(111,217,255,0.35)" stroke-width="0.6"/>
+                <circle cx="0" cy="0" r="5" fill="var(--signal)"/>
+                <circle cx="40" cy="0" r="2" fill="var(--amber)"/>
+                <circle cx="-24" cy="0" r="2" fill="var(--signal)"/>
+                <circle cx="0" cy="-40" r="2" fill="var(--ultraviolet)"/>
+                <circle cx="17" cy="17" r="2" fill="var(--signal)"/>
+              </g>
+            </svg>
+            <span class="corner-label">— LAL @ BOS · <span>EDGE 73</span></span>
+          </div>
+        </div>
+
+        <div class="layer-card">
+          <div class="h-id">— LAYER 04</div>
+          <div class="scope">ZOOM <span>64×</span> · SCOPE <span>SURFACE</span></div>
+          <h3>Planetary<br>surface</h3>
+          <p>Deep analysis. Factor bars, model output, similar games, methodology. Atmosphere becomes explanation.</p>
+          <div class="thumb">
+            <svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet">
+              <g transform="translate(20,30)" fill="none" stroke="var(--signal)" stroke-width="1">
+                <line x1="0" y1="0" x2="40" y2="0" stroke-opacity="0.5"/>
+                <line x1="0" y1="14" x2="80" y2="14"/>
+                <line x1="0" y1="28" x2="60" y2="28" stroke-opacity="0.7"/>
+                <line x1="0" y1="42" x2="100" y2="42" stroke-opacity="0.4"/>
+                <line x1="0" y1="56" x2="50" y2="56" stroke="var(--amber)" stroke-opacity="0.7"/>
+                <line x1="0" y1="70" x2="90" y2="70" stroke-opacity="0.5"/>
+                <g transform="translate(120,10)" stroke="var(--ion-1)" stroke-width="0.4" stroke-opacity="0.6">
+                  <line x1="0" y1="0" x2="40" y2="0"/>
+                  <line x1="0" y1="6" x2="40" y2="6"/>
+                  <line x1="0" y1="12" x2="40" y2="12"/>
+                  <line x1="0" y1="18" x2="40" y2="18"/>
+                  <line x1="0" y1="24" x2="40" y2="24"/>
+                  <line x1="0" y1="30" x2="40" y2="30"/>
+                </g>
+              </g>
+            </svg>
+            <span class="corner-label">— BREAKDOWN · <span>FACTORS</span></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── INTERACTION GRAMMAR ── -->
+    <div class="interactions">
+      <div class="lhs">
+        <span class="id">— 06.2 / INTERACTION</span>
+        <span class="title">Travel,<br>don't tab.</span>
+        <span class="desc">No abrupt page changes. Movement through space is the navigation. Reticle is your cursor.</span>
+      </div>
+      <div class="int-row">
+        <div class="int-card">
+          <div class="ico"><i data-lucide="zoom-in"></i></div>
+          <div class="verb">Travel-in</div>
+          <p>Click any constellation and the universe zooms past it. Cinematic 880ms — fast-out, settled-in. Subsequent space loads behind it.</p>
+          <span class="telem">— DUR 880MS · CUBIC-BEZIER(.2,0,0,1)</span>
+        </div>
+        <div class="int-card">
+          <div class="ico"><i data-lucide="mouse-pointer-2"></i></div>
+          <div class="verb">Reticle cursor</div>
+          <p>The pointer becomes a tiny reticle anywhere in cosmos space. On hover, it locks to the nearest node and surfaces telemetry.</p>
+          <span class="telem">— TARGETING · 36PX · CURRENTCOLOR</span>
+        </div>
+        <div class="int-card">
+          <div class="ico"><i data-lucide="rotate-3d"></i></div>
+          <div class="verb">Orbital pan</div>
+          <p>Hold space + drag to rotate the universe slightly — never a 360 spin. Subtle 12° parallax for spatial awareness.</p>
+          <span class="telem">— MAX ±12° · DAMPED · 320MS</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="b-foot">
+    <span class="l">PICKPILOT — DESIGN SYSTEM v3 / CINEMATIC INTELLIGENCE</span>
+    <span class="center">▸ BOARD 06</span>
+    <span class="r">GALAXY NAVIGATION</span>
+  </div>
+</section>
+<script>lucide.createIcons();</script>
+</body>
+</html>

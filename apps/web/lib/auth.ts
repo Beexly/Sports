@@ -9,28 +9,22 @@ const config: NextAuthConfig = {
   adapter: PrismaAdapter(db),
   providers: [
     GoogleProvider({
-      clientId: process.env["GOOGLE_CLIENT_ID"]!,
-      clientSecret: process.env["GOOGLE_CLIENT_SECRET"]!,
+      clientId: process.env["GOOGLE_CLIENT_ID"] ?? "dev-noop",
+      clientSecret: process.env["GOOGLE_CLIENT_SECRET"] ?? "dev-noop",
     }),
   ],
-  session: {
-    strategy: "database",
-  },
+  session: { strategy: "database" },
   callbacks: {
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        // PrismaAdapter extends AdapterUser with our User model fields
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         session.user.role = ((user as any).role as UserRole) ?? "USER";
       }
       return session;
     },
   },
-  pages: {
-    signIn: "/auth/signin",
-    error: "/auth/error",
-  },
+  pages: { signIn: "/auth/signin", error: "/auth/error" },
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,11 +35,46 @@ export const handlers = nextAuth.handlers as {
   POST: (req: Request) => Promise<Response>;
 };
 
-export const auth = nextAuth.auth as () => Promise<Session | null>;
+const realAuth = nextAuth.auth as () => Promise<Session | null>;
+
+/**
+ * Dev-mode admin bypass.
+ *
+ * When DEV_FAKE_ADMIN=true, every auth() call returns a synthetic ADMIN
+ * session. This is the launch-night escape hatch — it lets the operator
+ * open /dashboard and /cockpit without OAuth or a real Postgres session
+ * table. NEVER set this in production.
+ */
+export const auth: () => Promise<Session | null> = async () => {
+  if (process.env["DEV_FAKE_ADMIN"] === "true") {
+    return {
+      user: {
+        id: "dev-admin",
+        name: "Dev Admin",
+        email: "dev-admin@local",
+        image: null,
+        role: "ADMIN",
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any as Session;
+  }
+  try {
+    return await realAuth();
+  } catch (err) {
+    if (process.env["NODE_ENV"] !== "production") {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[auth] realAuth() failed in non-prod:",
+        err instanceof Error ? err.message : err
+      );
+    }
+    return null;
+  }
+};
+
 export const signIn = nextAuth.signIn as (...args: unknown[]) => Promise<void>;
 export const signOut = nextAuth.signOut as (...args: unknown[]) => Promise<void>;
 
-// Type augmentation for NextAuth session
 declare module "next-auth" {
   interface Session {
     user: {
@@ -57,3 +86,5 @@ declare module "next-auth" {
     };
   }
 }
+
+export const DEV_FAKE_ADMIN = process.env["DEV_FAKE_ADMIN"] === "true";

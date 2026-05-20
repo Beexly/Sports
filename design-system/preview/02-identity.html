@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Visual Identity · PickPilot</title>
+<link rel="stylesheet" href="_board.css">
+<script src="https://unpkg.com/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+<style>
+  .board { width: 1600px; min-height: 2400px; padding: 0; }
+  .stage { position: relative; padding: 80px; }
+
+  /* ── Section heading pattern ── */
+  .sec {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 48px;
+    padding: 56px 0;
+    border-top: 1px solid var(--mineral);
+    align-items: start;
+  }
+  .sec.first { border-top: 0; padding-top: 0; }
+  .sec .lhs {
+    display: flex; flex-direction: column; gap: 12px;
+    position: sticky; top: 80px;
+  }
+  .sec .lhs .id {
+    font-family: var(--f-mono);
+    font-size: 11px; color: var(--lime);
+    letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .sec .lhs .title {
+    font: 800 56px/0.9 var(--f-arch);
+    text-transform: uppercase;
+    color: var(--fg);
+    letter-spacing: 0.005em;
+  }
+  .sec .lhs .desc {
+    font: var(--t-body-sm);
+    color: var(--fg-meta);
+    max-width: 28ch;
+  }
+  .sec .rhs { display: flex; flex-direction: column; gap: 32px; }
+
+  /* ── Architectural hero ── */
+  .arch-hero {
+    margin-bottom: 80px;
+  }
+  .arch-hero .head {
+    font: 900 200px/0.85 var(--f-arch);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--fg);
+    margin: 0;
+  }
+  .arch-hero .head .stroke {
+    -webkit-text-stroke: 2px var(--mineral-1);
+    -webkit-text-fill-color: transparent;
+  }
+  .arch-hero .head .pop { color: var(--lime); }
+  .arch-hero .sub {
+    margin-top: 28px;
+    font: var(--t-display-md);
+    color: var(--ion);
+    letter-spacing: -0.015em;
+    max-width: 50ch;
+  }
+
+  /* ── LOGO SECTION ── */
+  .logo-hero {
+    background: var(--steel);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    padding: 80px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    min-height: 280px;
+  }
+  .logo-hero::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(111,217,255,0.10), transparent 60%);
+    pointer-events: none;
+  }
+  .logo-mark-big {
+    display: inline-flex; align-items: baseline;
+    font-family: var(--f-arch); font-weight: 900;
+    font-size: 132px; line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--fg);
+    position: relative;
+  }
+  .logo-mark-big .ret {
+    display: inline-block;
+    width: 100px; height: 100px;
+    align-self: center;
+    margin: 0 -2px 0 0;
+    transform: translateY(2px);
+  }
+  .logo-mark-big .ret svg { width: 100%; height: 100%; color: var(--lime); }
+  .corner-tag {
+    position: absolute; top: 20px; left: 24px;
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--fg-muted); letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .corner-id {
+    position: absolute; bottom: 20px; right: 24px;
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--lime); letter-spacing: 0.16em;
+  }
+
+  .logo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  .logo-card {
+    background: var(--steel);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    padding: 32px;
+    display: flex; flex-direction: column; gap: 12px;
+    min-height: 220px;
+    position: relative;
+  }
+  .logo-card .preview {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-card .preview svg { width: 80px; height: 80px; }
+  .logo-card .name {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--lime); letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .logo-card .desc { font: var(--t-body-sm); color: var(--fg-meta); }
+
+  /* On-surface variants */
+  .surf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .surf {
+    height: 140px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--mineral);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .surf.dark { background: var(--carbon); }
+  .surf.steel { background: var(--steel); }
+  .surf.lime { background: var(--lime); }
+  .surf.ion { background: var(--ion-white); }
+  .surf .wm {
+    display: inline-flex; align-items: baseline;
+    font-family: var(--f-arch); font-weight: 900;
+    font-size: 36px; letter-spacing: -0.03em; line-height: 1;
+  }
+  .surf .wm .ret { width: 28px; height: 28px; align-self: center; }
+  .surf .wm .ret svg { width: 100%; height: 100%; }
+  .surf .corner-tag { color: var(--fg-muted); font-size: 9px; }
+  .surf.lime .corner-tag, .surf.ion .corner-tag { color: var(--lime-ink); opacity: 0.7; }
+
+  /* ── COLOR SECTION ── */
+  .swatch-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+  }
+  .swatch {
+    height: 180px;
+    border-radius: var(--r-sm);
+    padding: 16px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    border: 1px solid rgba(255,255,255,0.04);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    position: relative;
+  }
+  .swatch .row1 .name {
+    font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .swatch .row1 .hex {
+    margin-top: 4px; font-size: 11px; opacity: 0.6;
+  }
+  .swatch .row2 .role {
+    font-size: 10px; letter-spacing: 0.10em; opacity: 0.7;
+    text-transform: uppercase;
+  }
+  .swatch.fg-dark { color: var(--ion-2); }
+  .swatch.fg-dark .row1 .name { color: var(--ion); }
+  .swatch.fg-light { color: rgba(0,0,0,0.55); }
+  .swatch.fg-light .row1 .name { color: var(--lime-ink); }
+
+  .row-label {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 12px;
+  }
+  .row-label .id {
+    font-family: var(--f-mono); font-size: 11px;
+    color: var(--lime); letter-spacing: 0.18em;
+  }
+  .row-label .title {
+    font: 800 24px/1 var(--f-arch);
+    color: var(--fg); letter-spacing: 0.01em; text-transform: uppercase;
+  }
+  .row-label .role {
+    font: var(--t-body-xs); color: var(--fg-muted);
+    margin-left: auto;
+  }
+
+  /* Lime hero */
+  .lime-hero {
+    background: var(--lime);
+    border-radius: var(--r-md);
+    padding: 56px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    align-items: center;
+    position: relative; overflow: hidden;
+    margin-top: 16px;
+  }
+  .lime-hero .name {
+    font: 900 152px/0.85 var(--f-arch);
+    color: var(--lime-ink);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+  }
+  .lime-hero .meta {
+    display: flex; flex-direction: column; gap: 12px;
+    padding: 24px 0; border-top: 1px solid rgba(26,39,0,0.25);
+  }
+  .lime-hero .meta .pair {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(26,39,0,0.10);
+  }
+  .lime-hero .meta .k {
+    font-family: var(--f-mono); font-size: 10px;
+    color: rgba(26,39,0,0.55); letter-spacing: 0.20em; text-transform: uppercase;
+  }
+  .lime-hero .meta .v {
+    font-family: var(--f-mono); font-size: 12px; font-weight: 600;
+    color: var(--lime-ink);
+  }
+
+  /* Cyan strip */
+  .cyan-strip {
+    background: linear-gradient(90deg, rgba(0,228,255,0.10) 0%, rgba(0,228,255,0.04) 100%);
+    border: 1px solid rgba(0,228,255,0.25);
+    border-radius: var(--r-md);
+    padding: 28px 32px;
+    display: grid; grid-template-columns: 220px 1fr 240px; gap: 32px;
+    align-items: center;
+  }
+  .cyan-strip h3 {
+    font: 800 36px/0.95 var(--f-arch);
+    color: var(--cyan); letter-spacing: 0.01em; text-transform: uppercase;
+    margin: 0;
+  }
+  .cyan-strip p {
+    font: var(--t-body-sm); color: var(--ion); margin: 0;
+  }
+  .cyan-strip .stats {
+    font-family: var(--f-mono); font-size: 11px;
+    color: var(--fg-muted); letter-spacing: 0.14em; text-transform: uppercase;
+    text-align: right;
+  }
+  .cyan-strip .stats span { color: var(--cyan); }
+
+  /* ── TYPOGRAPHY ── */
+  .type-row {
+    background: var(--steel);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    padding: 40px 40px;
+    display: grid;
+    grid-template-columns: 200px 1fr 240px;
+    gap: 32px;
+    align-items: start;
+  }
+  .type-row .meta {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .type-row .role-id {
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--lime); letter-spacing: 0.20em; text-transform: uppercase;
+  }
+  .type-row .role-name {
+    font: 700 22px/1.1 var(--f-display);
+    color: var(--fg);
+    letter-spacing: -0.01em;
+  }
+  .type-row .role-note {
+    font: var(--t-body-xs); color: var(--fg-muted); margin-top: 4px;
+  }
+  .type-row .specimen {
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .type-row .specimen .big {
+    color: var(--fg); line-height: 0.95;
+  }
+  .type-row .specimen .sentence {
+    color: var(--ion);
+    line-height: 1.3;
+  }
+  .type-row .weights {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .type-row .weights .wt {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--mineral);
+    font-family: var(--f-mono); font-size: 11px;
+    color: var(--fg-muted);
+  }
+  .type-row .weights .wt.active { color: var(--lime); }
+
+  /* ── ICONS ── */
+  .icon-grid {
+    background: var(--steel);
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+  }
+  .icon-cell {
+    padding: 18px 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    border-right: 1px solid var(--mineral);
+    border-bottom: 1px solid var(--mineral);
+    color: var(--ion);
+    min-height: 96px;
+  }
+  .icon-cell:nth-child(10n) { border-right: 0; }
+  .icon-cell.last { border-bottom: 0; }
+  .icon-cell svg { width: 22px; height: 22px; }
+  .icon-cell.lime { color: var(--lime); }
+  .icon-cell.cyan { color: var(--cyan); }
+  .icon-cell .name {
+    font-family: var(--f-mono); font-size: 9px;
+    color: var(--fg-muted); letter-spacing: 0.06em; text-transform: lowercase;
+  }
+</style>
+</head>
+<body>
+<section class="board">
+  <!-- atmospheric ground -->
+  <div style="position:absolute;inset:0;background:
+       radial-gradient(ellipse 60% 30% at 50% 20%, rgba(111,217,255,0.05), transparent 70%);
+       pointer-events:none;z-index:0"></div>
+  <div class="grid-overlay" style="z-index:0;mask-image:radial-gradient(ellipse at center, black 30%, transparent 85%)"></div>
+
+  <!-- Chrome -->
+  <div class="b-chrome">
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+  </div>
+  <div class="b-bug">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="butt">
+      <circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.5"/>
+      <line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/>
+      <line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/>
+      <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+    </svg>
+    <span>PickPilot · Sports Intelligence System</span>
+  </div>
+  <div class="b-id">
+    <span class="n">02 / 05</span>
+    <span>BOARD II — VISUAL IDENTITY</span>
+  </div>
+
+  <div class="stage">
+
+    <!-- ARCHITECTURAL HERO -->
+    <div class="arch-hero">
+      <div style="display:flex;align-items:center;gap:20px;margin-bottom:24px">
+        <span class="brack">— SECTION 02 / VISUAL IDENTITY</span>
+        <span style="flex:1;height:1px;background:var(--mineral)"></span>
+        <span class="brack" style="color:var(--lime)">LOGO · COLOR · TYPE · ICONS</span>
+      </div>
+      <h1 class="head"><span class="stroke">Built</span> for the <span class="pop">unseen.</span></h1>
+      <div class="sub">A visual system engineered for sports intelligence. Not loud. Not safe. Built like an instrument — every part with a job.</div>
+    </div>
+
+    <!-- LOGO SECTION -->
+    <div class="sec first">
+      <div class="lhs">
+        <span class="id">— 02.1 / LOGO SYSTEM</span>
+        <span class="title">The<br>Reticle</span>
+        <span class="desc">A pilot's scope, embedded as the second "o" in Pilot. The wordmark <em>is</em> the mark.</span>
+      </div>
+      <div class="rhs">
+        <div class="logo-hero">
+          <span class="corner-tag">PRIMARY LOCKUP — Big Shoulders 900</span>
+          <span class="corner-id">PP/IDENT/01</span>
+          <div class="logo-mark-big">
+            <span>PickPil</span>
+            <span class="ret">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt">
+                <circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/>
+                <line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/>
+                <line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/>
+                <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+              </svg>
+            </span>
+            <span>t</span>
+          </div>
+        </div>
+
+        <div class="logo-grid">
+          <div class="logo-card">
+            <span class="name">— MARK ONLY</span>
+            <div class="preview">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt" style="color:var(--lime)">
+                <circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/>
+                <line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/>
+                <line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/>
+                <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+              </svg>
+            </div>
+            <div class="desc">Favicon · app icon · loading state. Use ≥20px.</div>
+          </div>
+          <div class="logo-card">
+            <span class="name">— LOADING / PING</span>
+            <div class="preview" style="position:relative">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="butt" style="color:var(--lime);position:absolute">
+                <circle cx="24" cy="24" r="22"/>
+              </svg>
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="butt" style="color:var(--lime);opacity:0.4;position:absolute;transform:scale(1.3)">
+                <circle cx="24" cy="24" r="22"/>
+              </svg>
+              <svg viewBox="0 0 48 48" fill="currentColor" stroke="none" style="color:var(--lime)">
+                <circle cx="24" cy="24" r="3"/>
+              </svg>
+            </div>
+            <div class="desc">Outer ring pings outward. Never a spinner.</div>
+          </div>
+          <div class="logo-card">
+            <span class="name">— OVERLAY · IN-FOCUS</span>
+            <div class="preview" style="position:relative">
+              <div style="font-family:var(--f-mono);font-weight:600;color:var(--ion);font-size:18px;position:relative;z-index:1">+150</div>
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="butt" style="color:var(--lime);position:absolute;opacity:0.25;width:80px;height:80px">
+                <circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12"/>
+                <line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/>
+                <line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/>
+              </svg>
+            </div>
+            <div class="desc">Reticle overlay at 20% on tracked lines.</div>
+          </div>
+        </div>
+
+        <div class="surf-grid">
+          <div class="surf dark">
+            <span class="corner-tag">— ON CARBON</span>
+            <div class="wm" style="color:var(--fg)">PickPil<span class="ret"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt" style="color:var(--lime)"><circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/><line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/><line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/><circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/></svg></span>t</div>
+          </div>
+          <div class="surf steel">
+            <span class="corner-tag">— ON STEEL</span>
+            <div class="wm" style="color:var(--fg)">PickPil<span class="ret"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt" style="color:var(--lime)"><circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/><line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/><line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/><circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/></svg></span>t</div>
+          </div>
+          <div class="surf lime">
+            <span class="corner-tag">— ON LIME</span>
+            <div class="wm" style="color:var(--lime-ink)">PickPil<span class="ret"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt" style="color:var(--lime-ink)"><circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/><line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/><line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/><circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/></svg></span>t</div>
+          </div>
+          <div class="surf ion">
+            <span class="corner-tag">— ON ION</span>
+            <div class="wm" style="color:var(--carbon)">PickPil<span class="ret"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt" style="color:var(--carbon)"><circle cx="24" cy="24" r="22"/><circle cx="24" cy="24" r="12" opacity="0.45"/><line x1="24" y1="-2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="50"/><line x1="-2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="50" y2="24"/><circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/></svg></span>t</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLOR SECTION -->
+    <div class="sec">
+      <div class="lhs">
+        <span class="id">— 02.2 / COLOR SYSTEM</span>
+        <span class="title">Carbon<br>&amp; Acid</span>
+        <span class="desc">Engineered graphite. One hero accent. One atmospheric signal. No esports neon.</span>
+      </div>
+      <div class="rhs">
+        <!-- Carbon row -->
+        <div>
+          <div class="row-label">
+            <span class="id">▸ A</span>
+            <span class="title">Carbon</span>
+            <span class="role">Engineered graphite · backgrounds · surfaces · borders</span>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch fg-dark" style="background:#050609"><div class="row1"><div class="name">void</div><div class="hex">#050609</div></div><div class="row2"><div class="role">— Deep space</div></div></div>
+            <div class="swatch fg-dark" style="background:#0A0C10"><div class="row1"><div class="name">carbon</div><div class="hex">#0A0C10</div></div><div class="row2"><div class="role">— Primary canvas</div></div></div>
+            <div class="swatch fg-dark" style="background:#14181F"><div class="row1"><div class="name">steel</div><div class="hex">#14181F</div></div><div class="row2"><div class="role">— Raised surface</div></div></div>
+            <div class="swatch fg-dark" style="background:#1A1E26"><div class="row1"><div class="name">steel-1</div><div class="hex">#1A1E26</div></div><div class="row2"><div class="role">— Elevated</div></div></div>
+            <div class="swatch fg-dark" style="background:#20252F"><div class="row1"><div class="name">graphite</div><div class="hex">#20252F</div></div><div class="row2"><div class="role">— Hover · menu</div></div></div>
+            <div class="swatch fg-dark" style="background:#2B313D"><div class="row1"><div class="name">mineral</div><div class="hex">#2B313D</div></div><div class="row2"><div class="role">— Border</div></div></div>
+          </div>
+        </div>
+
+        <!-- Ion row -->
+        <div>
+          <div class="row-label">
+            <span class="id">▸ B</span>
+            <span class="title">Ion</span>
+            <span class="role">Mineral silver to soft ion-white · text + foreground · never pure #FFF</span>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch fg-light" style="background:#F4F6F8"><div class="row1"><div class="name">ion-white</div><div class="hex">#F4F6F8</div></div><div class="row2"><div class="role">— Hero text</div></div></div>
+            <div class="swatch fg-light" style="background:#DCE0E6"><div class="row1"><div class="name">ion</div><div class="hex">#DCE0E6</div></div><div class="row2"><div class="role">— Primary text</div></div></div>
+            <div class="swatch fg-light" style="background:#A5ABB6"><div class="row1"><div class="name">ion-1</div><div class="hex">#A5ABB6</div></div><div class="row2"><div class="role">— Secondary</div></div></div>
+            <div class="swatch fg-dark" style="background:#6E737E"><div class="row1"><div class="name">ion-2</div><div class="hex">#6E737E</div></div><div class="row2"><div class="role">— Tertiary · meta</div></div></div>
+            <div class="swatch fg-dark" style="background:#474C56"><div class="row1"><div class="name">ion-3</div><div class="hex">#474C56</div></div><div class="row2"><div class="role">— Muted</div></div></div>
+            <div class="swatch fg-dark" style="background:#2B313D"><div class="row1"><div class="name">—</div><div class="hex">·</div></div><div class="row2"><div class="role">— Returns to carbon</div></div></div>
+          </div>
+        </div>
+
+        <!-- Lime hero -->
+        <div class="lime-hero">
+          <div>
+            <div class="name">A8FF<br>16</div>
+          </div>
+          <div>
+            <div style="font-family:var(--f-mono);font-size:10px;color:rgba(26,39,0,0.6);letter-spacing:0.22em;text-transform:uppercase;margin-bottom:8px">— THE HERO ACCENT</div>
+            <div style="font:600 22px/1.2 var(--f-display);color:var(--lime-ink);margin-bottom:8px;max-width:30ch">Acid lime. Stadium floodlight. Edge.</div>
+            <div style="font:var(--t-body-sm);color:rgba(26,39,0,0.65);margin-bottom:16px;max-width:38ch">The only saturated color on the canvas. Reserved for live state, CTAs, the mark, and edge moments.</div>
+            <div class="meta">
+              <div class="pair"><span class="k">Token</span><span class="v">lime</span></div>
+              <div class="pair"><span class="k">Hover</span><span class="v">lime-glow #C8FF5A</span></div>
+              <div class="pair"><span class="k">Press</span><span class="v">lime-deep #6FB200</span></div>
+              <div class="pair"><span class="k">FG on lime</span><span class="v">#001824</span></div>
+              <div class="pair"><span class="k">Use ratio</span><span class="v">≤ 6% of canvas</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cyan signal -->
+        <div class="cyan-strip">
+          <h3>00E4<br>FF</h3>
+          <p><strong style="color:var(--cyan)">Atmospheric cyan</strong> — the intelligence accent. Reserved for AI-driven moments: smart signals, model output, "we saw this."  Never used as a UI primary; never paired with lime in the same component.</p>
+          <div class="stats">— RESERVED<br><span>INTELLIGENCE</span></div>
+        </div>
+
+        <!-- Engineered semantic -->
+        <div>
+          <div class="row-label">
+            <span class="id">▸ D</span>
+            <span class="title">Engineered</span>
+            <span class="role">Reserved hues — confidence, risk, results. Never decoration.</span>
+          </div>
+          <div class="swatch-row" style="grid-template-columns:repeat(7,1fr)">
+            <div class="swatch fg-dark" style="background:rgba(111,217,255,0.10);border:1px solid rgba(111,217,255,0.30);color:var(--lime)"><div class="row1"><div class="name">lime</div><div class="hex">#6FD9FF</div></div><div class="row2"><div class="role">— Edge · live</div></div></div>
+            <div class="swatch fg-dark" style="background:rgba(0,228,255,0.10);border:1px solid rgba(0,228,255,0.30);color:var(--cyan)"><div class="row1"><div class="name">cyan</div><div class="hex">#00E4FF</div></div><div class="row2"><div class="role">— Smart signal</div></div></div>
+            <div class="swatch fg-dark" style="background:rgba(80,227,164,0.10);border:1px solid rgba(80,227,164,0.30);color:var(--mint)"><div class="row1"><div class="name">mint</div><div class="hex">#50E3A4</div></div><div class="row2"><div class="role">— Win</div></div></div>
+            <div class="swatch fg-dark" style="background:rgba(212,168,87,0.10);border:1px solid rgba(212,168,87,0.30);color:var(--gold)"><div class="row1"><div class="name">gold</div><div class="hex">#D4A857</div></div><div class="row2"><div class="role">— Premium</div></div></div>
+            <div class="swatch fg-dark" style="background:rgba(255,200,87,0.10);border:1px solid rgba(255,200,87,0.30);color:var(--amber)"><div class="row1"><div class="name">amber</div><div class="hex">#FFC857</div></div><div class="row2"><div class="role">— Alert</div></div></div>
+            <div class="swatch fg-dark" style="background:rgba(255,92,92,0.10);border:1px solid rgba(255,92,92,0.30);color:var(--vermilion)"><div class="row1"><div class="name">vermilion</div><div class="hex">#FF5C5C</div></div><div class="row2"><div class="role">— Loss · risk</div></div></div>
+            <div class="swatch fg-dark" style="background:rgba(167,139,250,0.10);border:1px solid rgba(167,139,250,0.30);color:var(--ultraviolet)"><div class="row1"><div class="name">ultraviolet</div><div class="hex">#A78BFA</div></div><div class="row2"><div class="role">— Model</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TYPOGRAPHY SECTION -->
+    <div class="sec">
+      <div class="lhs">
+        <span class="id">— 02.3 / TYPOGRAPHY</span>
+        <span class="title">Type as<br>architecture</span>
+        <span class="desc">Big Shoulders builds the walls. Space Grotesk runs the floor. Geist writes. Mono counts. Serif italics break the room.</span>
+      </div>
+      <div class="rhs">
+
+        <div class="type-row">
+          <div class="meta">
+            <span class="role-id">— TYPE / 01</span>
+            <span class="role-name" style="font-family:'Big Shoulders Display';font-weight:900;font-size:32px">Big Shoulders<br>Display</span>
+            <span class="role-note">Architectural. Hero, single words, manifesto type. Druk-like.</span>
+          </div>
+          <div class="specimen">
+            <div style="font:900 132px/0.88 'Big Shoulders Display',Anton,sans-serif;letter-spacing:-0.025em;text-transform:uppercase;color:var(--fg)">Edge.</div>
+            <div style="font:800 48px/0.95 'Big Shoulders Display',sans-serif;letter-spacing:0.005em;text-transform:uppercase;color:var(--lime)">MARKET PULSE / MOVEMENT / RISK</div>
+          </div>
+          <div class="weights">
+            <div class="wt"><span>WEIGHT 500</span><span>Light</span></div>
+            <div class="wt"><span>WEIGHT 700</span><span>Bold</span></div>
+            <div class="wt active"><span>WEIGHT 800</span><span>★ Display</span></div>
+            <div class="wt active"><span>WEIGHT 900</span><span>★ Hero</span></div>
+          </div>
+        </div>
+
+        <div class="type-row">
+          <div class="meta">
+            <span class="role-id">— TYPE / 02</span>
+            <span class="role-name" style="font-family:'Space Grotesk'">Space Grotesk</span>
+            <span class="role-note">Display + UI headings. Geometric, futuristic, hard-working.</span>
+          </div>
+          <div class="specimen">
+            <div class="big" style="font:700 72px/0.95 'Space Grotesk',sans-serif;letter-spacing:-0.03em">Today's slate</div>
+            <div class="sentence" style="font:500 24px/1.3 'Space Grotesk',sans-serif;letter-spacing:-0.01em">Algorithmic picks ranked by confidence — updated every 30 minutes.</div>
+          </div>
+          <div class="weights">
+            <div class="wt"><span>WEIGHT 400</span><span>Regular</span></div>
+            <div class="wt active"><span>WEIGHT 500</span><span>★ UI</span></div>
+            <div class="wt active"><span>WEIGHT 600</span><span>★ Display</span></div>
+            <div class="wt active"><span>WEIGHT 700</span><span>★ Hero</span></div>
+          </div>
+        </div>
+
+        <div class="type-row">
+          <div class="meta">
+            <span class="role-id">— TYPE / 03</span>
+            <span class="role-name" style="font-family:'Geist'">Geist</span>
+            <span class="role-note">All running UI text, paragraphs, buttons.</span>
+          </div>
+          <div class="specimen">
+            <div class="big" style="font:600 52px/1 'Geist',sans-serif;letter-spacing:-0.025em">Aa Bb 123</div>
+            <div class="sentence" style="font:400 17px/1.6 'Geist',sans-serif">Every pick exposes its factor breakdown so you can see why, not just what. We don't shout — we publish reasoning.</div>
+          </div>
+          <div class="weights">
+            <div class="wt"><span>WEIGHT 300</span><span>Light</span></div>
+            <div class="wt active"><span>WEIGHT 400</span><span>★ Body</span></div>
+            <div class="wt active"><span>WEIGHT 500</span><span>★ UI</span></div>
+            <div class="wt"><span>WEIGHT 600</span><span>Strong</span></div>
+            <div class="wt"><span>WEIGHT 700</span><span>Display</span></div>
+          </div>
+        </div>
+
+        <div class="type-row">
+          <div class="meta">
+            <span class="role-id">— TYPE / 04</span>
+            <span class="role-name" style="font-family:'JetBrains Mono';font-weight:600">JetBrains Mono</span>
+            <span class="role-note">Every number, line, odd, eyebrow. Tabular numerals always on.</span>
+          </div>
+          <div class="specimen">
+            <div class="big" style="font:700 64px/1 'JetBrains Mono',monospace;letter-spacing:-0.04em;color:var(--lime)">+12.4%</div>
+            <div class="sentence" style="font:500 18px/1.4 'JetBrains Mono',monospace;letter-spacing:0.02em">EDGE 72 · CONF 81% · UPDATED 14:32 ET · −3.5</div>
+          </div>
+          <div class="weights">
+            <div class="wt"><span>WEIGHT 400</span><span>Regular</span></div>
+            <div class="wt active"><span>WEIGHT 500</span><span>★ Eyebrow</span></div>
+            <div class="wt active"><span>WEIGHT 600</span><span>★ Number</span></div>
+            <div class="wt active"><span>WEIGHT 700</span><span>★ Hero num</span></div>
+          </div>
+        </div>
+
+        <div class="type-row">
+          <div class="meta">
+            <span class="role-id">— TYPE / 05</span>
+            <span class="role-name" style="font-family:'Instrument Serif';font-style:italic">Instrument Serif</span>
+            <span class="role-note">One italic moment per page. Editorial break.</span>
+          </div>
+          <div class="specimen">
+            <div class="big" style="font:italic 400 80px/1 'Instrument Serif',serif;color:var(--lime);letter-spacing:-0.02em">perspective</div>
+            <div class="sentence" style="font:italic 400 28px/1.3 'Instrument Serif',serif">"The market overreacted."</div>
+          </div>
+          <div class="weights">
+            <div class="wt active"><span>WEIGHT 400</span><span>★ Italic</span></div>
+            <div class="wt"><span>USE</span><span>1 per page</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ICONS SECTION -->
+    <div class="sec">
+      <div class="lhs">
+        <span class="id">— 02.4 / ICONOGRAPHY</span>
+        <span class="title">Lucide<br>+ glyphs</span>
+        <span class="desc">Line icons at 1.5px stroke. The reticle is identity only. Unicode arrows for data.</span>
+      </div>
+      <div class="rhs">
+        <div class="icon-grid">
+          <div class="icon-cell lime"><i data-lucide="target"></i><span class="name">target</span></div>
+          <div class="icon-cell"><i data-lucide="trending-up"></i><span class="name">tr-up</span></div>
+          <div class="icon-cell"><i data-lucide="trending-down"></i><span class="name">tr-down</span></div>
+          <div class="icon-cell"><i data-lucide="bar-chart-3"></i><span class="name">chart</span></div>
+          <div class="icon-cell"><i data-lucide="activity"></i><span class="name">activity</span></div>
+          <div class="icon-cell cyan"><i data-lucide="radar"></i><span class="name">radar</span></div>
+          <div class="icon-cell cyan"><i data-lucide="cpu"></i><span class="name">cpu</span></div>
+          <div class="icon-cell cyan"><i data-lucide="brain"></i><span class="name">brain</span></div>
+          <div class="icon-cell"><i data-lucide="zap"></i><span class="name">zap</span></div>
+          <div class="icon-cell"><i data-lucide="signal"></i><span class="name">signal</span></div>
+
+          <div class="icon-cell"><i data-lucide="lock"></i><span class="name">lock</span></div>
+          <div class="icon-cell"><i data-lucide="unlock"></i><span class="name">unlock</span></div>
+          <div class="icon-cell"><i data-lucide="shield"></i><span class="name">shield</span></div>
+          <div class="icon-cell"><i data-lucide="bell"></i><span class="name">bell</span></div>
+          <div class="icon-cell"><i data-lucide="filter"></i><span class="name">filter</span></div>
+          <div class="icon-cell"><i data-lucide="search"></i><span class="name">search</span></div>
+          <div class="icon-cell"><i data-lucide="calendar"></i><span class="name">cal</span></div>
+          <div class="icon-cell"><i data-lucide="settings"></i><span class="name">settings</span></div>
+          <div class="icon-cell"><i data-lucide="clock"></i><span class="name">clock</span></div>
+          <div class="icon-cell"><i data-lucide="external-link"></i><span class="name">ext</span></div>
+
+          <div class="icon-cell lime last"><i data-lucide="check"></i><span class="name">check</span></div>
+          <div class="icon-cell last" style="color:var(--vermilion)"><i data-lucide="x"></i><span class="name">x</span></div>
+          <div class="icon-cell last"><i data-lucide="info"></i><span class="name">info</span></div>
+          <div class="icon-cell last" style="color:var(--amber)"><i data-lucide="alert-triangle"></i><span class="name">alert</span></div>
+          <div class="icon-cell last"><i data-lucide="arrow-right"></i><span class="name">arrow</span></div>
+          <div class="icon-cell last"><i data-lucide="chevron-right"></i><span class="name">chev</span></div>
+          <div class="icon-cell last"><i data-lucide="user"></i><span class="name">user</span></div>
+          <div class="icon-cell last"><i data-lucide="users"></i><span class="name">users</span></div>
+          <div class="icon-cell last"><i data-lucide="dollar-sign"></i><span class="name">dollar</span></div>
+          <div class="icon-cell last"><i data-lucide="newspaper"></i><span class="name">news</span></div>
+        </div>
+
+        <!-- Unicode glyph row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+          <div style="background:var(--steel);border:1px solid var(--mineral);border-radius:var(--r-md);padding:24px;display:flex;flex-direction:column;gap:8px">
+            <span style="font-family:var(--f-mono);font-size:10px;color:var(--lime);letter-spacing:0.22em">— ↑ LINE UP</span>
+            <div style="font-family:var(--f-mono);font-weight:700;font-size:56px;color:var(--lime);line-height:0.9">↑</div>
+            <span style="font-family:var(--f-mono);font-size:11px;color:var(--ion-1)">+0.5 from open</span>
+          </div>
+          <div style="background:var(--steel);border:1px solid var(--mineral);border-radius:var(--r-md);padding:24px;display:flex;flex-direction:column;gap:8px">
+            <span style="font-family:var(--f-mono);font-size:10px;color:var(--vermilion);letter-spacing:0.22em">— ↓ LINE DOWN</span>
+            <div style="font-family:var(--f-mono);font-weight:700;font-size:56px;color:var(--vermilion);line-height:0.9">↓</div>
+            <span style="font-family:var(--f-mono);font-size:11px;color:var(--ion-1)">−1.0 in 2 hours</span>
+          </div>
+          <div style="background:var(--steel);border:1px solid var(--mineral);border-radius:var(--r-md);padding:24px;display:flex;flex-direction:column;gap:8px">
+            <span style="font-family:var(--f-mono);font-size:10px;color:var(--fg-muted);letter-spacing:0.22em">— − REAL MINUS</span>
+            <div style="font-family:var(--f-mono);font-weight:700;font-size:56px;color:var(--ion);line-height:0.9">−</div>
+            <span style="font-family:var(--f-mono);font-size:11px;color:var(--ion-1)">U+2212 not hyphen</span>
+          </div>
+          <div style="background:var(--steel);border:1px solid var(--mineral);border-radius:var(--r-md);padding:24px;display:flex;flex-direction:column;gap:8px">
+            <span style="font-family:var(--f-mono);font-size:10px;color:var(--fg-muted);letter-spacing:0.22em">— · MIDDLE DOT</span>
+            <div style="font-family:var(--f-mono);font-weight:700;font-size:56px;color:var(--ion);line-height:0.9">·</div>
+            <span style="font-family:var(--f-mono);font-size:11px;color:var(--ion-1)">Separator U+00B7</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="b-foot">
+    <span class="l">PICKPILOT — DESIGN SYSTEM v2 / OBSERVATORY</span>
+    <span class="center">▸ BOARD 02</span>
+    <span class="r">VISUAL IDENTITY</span>
+  </div>
+</section>
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -12,6 +12,8 @@ import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 
+export const dynamic = "force-dynamic";
+
 // ─── Shared types (imported by dashboard-view.tsx) ────────────────────────
 
 export type DepthLabel = "THIN" | "MEDIUM" | "DEEP";

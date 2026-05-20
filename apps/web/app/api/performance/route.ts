@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
   if (!gates.canExposePerformanceStats) {
@@ -15,11 +17,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // Aggregate real win/loss/push data from settled canonical picks only.
   // Bootstrap-era picks are excluded — their win rates are uncalibrated and
   // would produce misleading public performance stats.
+  //
+  // Synthetic seed picks (modelVersion === "v5.0.0-seed") are also
+  // excluded so a dev-only seed never inflates customer-facing stats
+  // when an operator flips PERFORMANCE_STATS_ENABLED in a non-prod
+  // environment to test the surface.
   const picks = await db.pick.findMany({
     where: {
       result: { in: ["WIN", "LOSS", "PUSH"] },
       isPublished: true,
       isBootstrap: false,
+      NOT: { modelVersion: "v5.0.0-seed" },
       ...(sport ? { game: { sport: { name: { contains: sport, mode: "insensitive" as const } } } } : {}),
     },
     include: {

@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PickPilot — Sports intelligence at the controls</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════════════
+ *  PICKPILOT — v4 (editorial / sculptural / restrained)
+ *
+ *  The directive: less chrome, more art. A single sculptural centerpiece
+ *  rendered in WebGL drives the hero; editorial serif typography overlaps
+ *  and breaks around it. Every section gets one idea and a lot of room
+ *  to breathe.
+ * ════════════════════════════════════════════════════════════════════ */
+:root {
+  --void:        #000000;
+  --void-2:      #050608;
+  --panel:       #0a0c12;
+  --line:        rgba(255,255,255,0.06);
+  --line-bright: rgba(255,255,255,0.14);
+  --ink-100:     #f4f3ef;
+  --ink-200:     #c8c4ba;
+  --ink-300:     #807a6e;
+  --ink-400:     #4f4a42;
+  --ink-500:     #2e2c27;
+  --accent:      #00e5ff;
+  --accent-soft: rgba(0,229,255,0.6);
+  --accent-dim:  rgba(0,229,255,0.18);
+  --warm:        #f5a623;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: "Instrument Serif", "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; background: var(--void); }
+
+body {
+  background: var(--void);
+  color: var(--ink-100);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+::selection { background: var(--accent); color: var(--void); }
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: transparent; border: 0; cursor: pointer; }
+
+/* Subtle grain — soft, not crunchy */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+.container {
+  max-width: 92rem;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+  position: relative;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ════════════════════════════════════════════════════════════
+ *  NAV — barely there
+ * ════════════════════════════════════════════════════════════ */
+nav.top {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  background: linear-gradient(180deg, rgba(0,0,0,0.7), transparent);
+  backdrop-filter: blur(8px);
+}
+.top-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  color: white;
+  font-weight: 400;
+}
+.brand-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent);
+  animation: brand-pulse 3s ease-in-out infinite;
+}
+@keyframes brand-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.brand em {
+  font-style: italic;
+  color: var(--ink-200);
+  font-weight: 400;
+}
+
+.top-nav {
+  display: flex;
+  gap: 2.5rem;
+}
+.top-nav a {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+  transition: color 0.25s ease;
+  position: relative;
+}
+.top-nav a:hover { color: white; }
+.top-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 1px;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.top-nav a:hover::after { width: 100%; }
+
+.top-cta {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--void);
+  background: var(--ink-100);
+  padding: 0.625rem 1.25rem;
+  border-radius: 999px;
+  transition: all 0.25s ease;
+}
+.top-cta:hover { background: var(--accent); }
+
+/* ════════════════════════════════════════════════════════════
+ *  HERO — sculptural centerpiece + overlapping type
+ * ════════════════════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 8rem 0 4rem;
+}
+
+.hero-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+#hero-canvas {
+  width: min(70vh, 80%);
+  height: min(70vh, 80vmin);
+  max-height: 80vh;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.hero-headline {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(4rem, 13vw, 12rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: white;
+  text-wrap: balance;
+  mix-blend-mode: difference;
+}
+.hero-headline .row { display: block; }
+.hero-headline .row-1 { text-align: left; }
+.hero-headline .row-2 {
+  text-align: right;
+  margin-top: -0.1em;
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-headline .row-3 {
+  text-align: left;
+  margin-top: 0.1em;
+  padding-left: 8vw;
+}
+
+.hero-meta {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.hero-meta-tl {
+  top: 9rem;
+  left: 2.5rem;
+}
+.hero-meta-br {
+  bottom: 4rem;
+  right: 2.5rem;
+  text-align: right;
+}
+.hero-meta .k {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+}
+.hero-meta .v {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-100);
+}
+.hero-meta .v .accent { color: var(--accent); }
+
+.hero-foot {
+  position: absolute;
+  bottom: 3rem;
+  left: 2.5rem;
+  z-index: 3;
+  display: flex;
+  align-items: end;
+  gap: 4rem;
+  max-width: 32rem;
+}
+.hero-lede {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--ink-200);
+  max-width: 22rem;
+}
+.hero-actions {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.hero-actions a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink-100);
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+.hero-actions a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 1px;
+  width: 100%;
+  background: var(--ink-400);
+  transition: background 0.3s ease;
+}
+.hero-actions a:hover { color: var(--accent); }
+.hero-actions a:hover::after { background: var(--accent); }
+.hero-actions .arrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hero-actions a:hover .arrow { transform: translateX(4px); }
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+.scroll-indicator .line {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(180deg, transparent, var(--ink-300));
+  animation: scroll-line 2.4s ease-in-out infinite;
+  transform-origin: top;
+}
+@keyframes scroll-line {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+/* ════════════════════════════════════════════════════════════
+ *  STATEMENT — single oversized claim, restrained
+ * ════════════════════════════════════════════════════════════ */
+.statement {
+  padding: 16rem 0;
+  position: relative;
+}
+.statement-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2rem;
+}
+.statement-mark {
+  grid-column: 1 / span 2;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+  padding-top: 1rem;
+  position: relative;
+}
+.statement-mark::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 1px;
+  background: var(--accent);
+}
+.statement-body {
+  grid-column: 3 / span 9;
+}
+.statement-body h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(2.75rem, 6.5vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: white;
+  text-wrap: balance;
+  max-width: 22ch;
+}
+.statement-body h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.statement-body h2 .strike {
+  color: var(--ink-400);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(255,255,255,0.15);
+}
+.statement-body p {
+  margin-top: 4rem;
+  max-width: 32rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--ink-200);
+}
+
+/* ════════════════════════════════════════════════════════════
+ *  FLIGHT PLAN — four steps as a vertical editorial list
+ * ════════════════════════════════════════════════════════════ */
+.flight {
+  padding: 10rem 0 16rem;
+  position: relative;
+  border-top: 1px solid var(--line);
+}
+.flight-head {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2rem;
+  margin-bottom: 8rem;
+}
+.flight-head .mark {
+  grid-column: 1 / span 2;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+  padding-top: 1rem;
+  position: relative;
+}
+.flight-head .mark::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 1px;
+  background: var(--accent);
+}
+.flight-head h2 {
+  grid-column: 3 / span 8;
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: white;
+}
+.flight-head h2 em { font-style: italic; color: var(--accent); }
+
+.flight-steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+.flight-step {
+  display: grid;
+  grid-template-columns: 6rem 1fr 14rem;
+  gap: 3rem;
+  align-items: start;
+  padding: 4rem 0;
+  border-top: 1px solid var(--line);
+  transition: background 0.4s ease;
+  position: relative;
+}
+.flight-step:last-child { border-bottom: 1px solid var(--line); }
+.flight-step:hover {
+  background: rgba(255,255,255,0.012);
+}
+.flight-step::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  height: 1px;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.flight-step:hover::after { width: 100%; }
+.flight-step .num {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+  padding-top: 0.75rem;
+}
+.flight-step .num .digit {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 4rem;
+  font-style: italic;
+  color: white;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  margin-top: 0.25rem;
+}
+.flight-step .body h3 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 3.5vw, 3rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: white;
+  text-wrap: balance;
+}
+.flight-step .body h3 em { font-style: italic; color: var(--accent); }
+.flight-step .body p {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: var(--ink-200);
+  line-height: 1.65;
+  max-width: 36rem;
+}
+.flight-step .gate {
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.flight-step .gate .k {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.flight-step .gate .v {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  word-break: break-all;
+}
+
+/* ════════════════════════════════════════════════════════════
+ *  PICK CARDS — floating, gallery-like
+ * ════════════════════════════════════════════════════════════ */
+.picks {
+  padding: 12rem 0;
+  position: relative;
+  border-top: 1px solid var(--line);
+  overflow: hidden;
+}
+.picks::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(0,229,255,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+.picks-head {
+  text-align: center;
+  margin-bottom: 6rem;
+}
+.picks-head .mark {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+.picks-head .mark::before,
+.picks-head .mark::after {
+  content: "";
+  width: 2.5rem;
+  height: 1px;
+  background: var(--accent);
+}
+.picks-head h2 {
+  margin-top: 2rem;
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  color: white;
+  text-wrap: balance;
+  max-width: 24ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+.picks-head h2 em { font-style: italic; color: var(--accent); }
+
+.picks-shelf {
+  position: relative;
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  perspective: 1800px;
+  min-height: 32rem;
+}
+.pick-card {
+  position: relative;
+  width: 22rem;
+  background: linear-gradient(180deg, var(--panel), var(--void-2));
+  border: 1px solid var(--line-bright);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+}
+.pick-card.left  { transform: rotateY(8deg) translateZ(-40px); }
+.pick-card.right { transform: rotateY(-8deg) translateZ(-40px); }
+.pick-card.center {
+  transform: rotateY(0) translateZ(0);
+  box-shadow: 0 30px 80px -20px rgba(0,229,255,0.18), 0 0 0 1px rgba(0,229,255,0.2);
+  border-color: var(--accent-dim);
+}
+.pick-card:hover {
+  transform: rotateY(0) translateZ(20px);
+  border-color: var(--accent-soft);
+}
+
+.pick-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pick-card-sport {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-200);
+}
+.pick-card-grade {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--accent);
+}
+.pick-card-grade.locked { color: var(--warm); }
+.pick-card-grade.muted { color: var(--ink-300); }
+
+.pick-card-matchup .when {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+}
+.pick-card-matchup .teams {
+  margin-top: 0.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  line-height: 1.15;
+  color: white;
+  letter-spacing: -0.015em;
+}
+.pick-card-matchup .teams .vs {
+  font-style: italic;
+  color: var(--ink-300);
+  font-size: 1.1rem;
+  display: inline-block;
+  padding: 0 0.25rem;
+}
+
+.pick-card-line {
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+.pick-card-line .k {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+}
+.pick-card-line .v {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: white;
+  margin-top: 0.375rem;
+}
+.pick-card-line .v.muted { color: var(--ink-400); font-family: var(--font-serif); font-style: italic; font-size: 1rem; font-weight: 400; }
+.pick-card-conf {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+.pick-card-conf .label {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+}
+.pick-card-conf .value {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 2.5rem;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-top: 0.25rem;
+}
+.pick-card-conf .value sup {
+  font-size: 50%;
+  vertical-align: top;
+  margin-left: 2px;
+}
+.pick-card-conf .value.muted { color: var(--ink-400); }
+
+.pick-card-reason {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-200);
+}
+
+.pick-card-foot {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+}
+
+/* ════════════════════════════════════════════════════════════
+ *  FINAL CTA — single line, single button, pure stop
+ * ════════════════════════════════════════════════════════════ */
+.final {
+  padding: 18rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+}
+.final::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0,229,255,0.10) 0%, transparent 60%);
+  z-index: 0;
+  pointer-events: none;
+}
+.final .mark {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+.final .mark::before,
+.final .mark::after {
+  content: "";
+  width: 2.5rem;
+  height: 1px;
+  background: var(--accent);
+}
+.final h2 {
+  position: relative;
+  z-index: 1;
+  margin-top: 3rem;
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 9vw, 8rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+  color: white;
+  text-wrap: balance;
+}
+.final h2 em { font-style: italic; color: var(--accent); }
+.final p {
+  position: relative;
+  z-index: 1;
+  margin: 3rem auto 0;
+  max-width: 34rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: var(--ink-200);
+}
+.final .btn {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 3.5rem;
+  padding: 1rem 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--void);
+  background: var(--ink-100);
+  border-radius: 999px;
+  transition: all 0.3s ease;
+}
+.final .btn:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -10px var(--accent-dim);
+}
+.final .disclosure {
+  position: relative;
+  z-index: 1;
+  margin-top: 5rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+/* ════════════════════════════════════════════════════════════
+ *  FOOTER — minimal
+ * ════════════════════════════════════════════════════════════ */
+footer.bottom {
+  padding: 6rem 0 3rem;
+  border-top: 1px solid var(--line);
+}
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 5rem;
+}
+.bottom-brand p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: var(--ink-200);
+  margin-top: 1.5rem;
+  max-width: 22rem;
+}
+.bottom-col h3 {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+  margin-bottom: 1.5rem;
+}
+.bottom-col ul { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+.bottom-col a {
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  color: var(--ink-100);
+  transition: color 0.25s;
+}
+.bottom-col a:hover { color: var(--accent); }
+.bottom-col a .alt {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+  margin-left: 0.5rem;
+}
+
+.responsible-band {
+  padding: 2rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink-200);
+}
+.responsible-band strong { font-style: normal; color: white; font-weight: 500; }
+.responsible-band a { color: var(--accent); font-style: normal; }
+
+.bottom-tag {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+/* ════════════════════════════════════════════════════════════
+ *  REVEAL
+ * ════════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.in-view { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ════════════════════════════════════════════════════════════
+ *  RESPONSIVE
+ * ════════════════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .hero-headline .row-3 { padding-left: 4vw; }
+  .picks-shelf { flex-direction: column; gap: 1.25rem; }
+  .pick-card.left, .pick-card.right { transform: none; }
+  .pick-card { width: 100%; max-width: 28rem; }
+  .flight-step { grid-template-columns: 4rem 1fr; gap: 1.5rem; }
+  .flight-step .gate { grid-column: 1 / -1; padding-top: 2rem; padding-left: 4rem; }
+  .bottom-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
+}
+@media (max-width: 720px) {
+  .container { padding: 0 1.5rem; }
+  .top-nav { display: none; }
+  .hero-meta { display: none; }
+  .hero-foot { position: static; flex-direction: column; align-items: start; gap: 2rem; margin-top: 4rem; }
+  .statement-grid { grid-template-columns: 1fr; }
+  .statement-body { grid-column: 1; }
+  .statement-mark { grid-column: 1; margin-bottom: 2rem; }
+  .flight-head h2 { grid-column: 1 / -1; }
+  .flight-head .mark { grid-column: 1 / -1; margin-bottom: 1rem; }
+  .bottom-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav class="top">
+  <div class="container top-inner">
+    <a href="#" class="brand">
+      <span class="brand-dot"></span>
+      PickPilot <em>— intelligence at the controls</em>
+    </a>
+    <div class="top-nav">
+      <a href="#orbit">Orbit</a>
+      <a href="#runway">Runway</a>
+      <a href="#ascent">Ascent</a>
+      <a href="#navigator">Navigator</a>
+    </div>
+    <a class="top-cta" href="#">Clearance →</a>
+  </div>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+  <!-- 3D centerpiece -->
+  <div class="hero-stage">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  </div>
+
+  <!-- HUD corner meta -->
+  <div class="hero-meta hero-meta-tl">
+    <span class="k">PickPilot · System ID</span>
+    <span class="v">PP-047 · <span class="accent">live</span></span>
+  </div>
+  <div class="hero-meta hero-meta-br">
+    <span class="k">Coverage / Refresh / Model</span>
+    <span class="v">07 sports · 30m · v5.0</span>
+  </div>
+
+  <!-- Type that overlaps the centerpiece -->
+  <div class="container hero-content">
+    <h1 class="hero-headline">
+      <span class="row row-1">Sports</span>
+      <span class="row row-2"><em>intelligence</em></span>
+      <span class="row row-3">at the controls.</span>
+    </h1>
+  </div>
+
+  <!-- Foot row -->
+  <div class="container">
+    <div class="hero-foot">
+      <p class="hero-lede">
+        Every pick on a flight plan. Matchup, line, confidence, risk, and
+        the math behind the call — never autopilot for variance, never
+        flying blind.
+      </p>
+      <div class="hero-actions">
+        <a href="#runway">Today's Runway <span class="arrow">→</span></a>
+        <a href="#navigator">How it flies</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Continue</span>
+    <span class="line"></span>
+  </div>
+</section>
+
+<!-- ══════════════ STATEMENT ══════════════ -->
+<section class="statement">
+  <div class="container">
+    <div class="statement-grid">
+      <div class="statement-mark reveal">001 / Thesis</div>
+      <div class="statement-body reveal" style="transition-delay: 80ms;">
+        <h2>
+          Tout sites compete on <span class="strike">volume of bold claims.</span><br>
+          We compete on the <em>math you can audit</em>.
+        </h2>
+        <p>
+          Every PickPilot pick ships with the model version, the
+          confidence range, the risk profile, the matchup context, the
+          factor breakdown, and the timestamp on the data we used.
+          The Ascent surface exposes the same record the model
+          calibrates on — gated until enough canonical outcomes have
+          settled to make a record mean something.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FLIGHT PLAN ══════════════ -->
+<section class="flight" id="navigator">
+  <div class="container">
+    <div class="flight-head">
+      <div class="mark reveal">002 / Navigator</div>
+      <h2 class="reveal" style="transition-delay: 80ms;">
+        Four phases.<br>
+        <em>Every one visible.</em>
+      </h2>
+    </div>
+
+    <ol class="flight-steps">
+      <li class="flight-step reveal">
+        <div class="num">Phase<span class="digit">01</span>Ingest</div>
+        <div class="body">
+          <h3>Pull <em>live markets</em> from multiple books.</h3>
+          <p>The pipeline runs on a 30-minute cadence, faster as kickoff approaches. Every odds row is stamped with bookmaker coverage so the pick card can show how thin or deep the consensus actually is.</p>
+        </div>
+        <div class="gate">
+          <span class="k">Gate</span>
+          <span class="v">Ungated</span>
+        </div>
+      </li>
+
+      <li class="flight-step reveal" style="transition-delay: 60ms;">
+        <div class="num">Phase<span class="digit">02</span>Score</div>
+        <div class="body">
+          <h3>Project the edge with <em>explicit uncertainty</em>.</h3>
+          <p>The engine computes implied probabilities, weighs sharp line movement, evaluates head-to-head context, and looks at venue form. Every contributor is exposed in the factor breakdown so a serious reviewer can see what moved the dial.</p>
+        </div>
+        <div class="gate">
+          <span class="k">Gate</span>
+          <span class="v">DERIVED_MODEL_<br>HISTORY</span>
+        </div>
+      </li>
+
+      <li class="flight-step reveal" style="transition-delay: 120ms;">
+        <div class="num">Phase<span class="digit">03</span>Publish</div>
+        <div class="body">
+          <h3>Ship the pick — <em>with its reasoning attached</em>.</h3>
+          <p>A pick is only published when the public gate is open. Until calibration completes, confidence is a label, not a number. The Ascent surface stays at Collecting until ≥100 canonical outcomes have settled.</p>
+        </div>
+        <div class="gate">
+          <span class="k">Gate</span>
+          <span class="v">PUBLIC_PICKS_<br>ENABLED</span>
+        </div>
+      </li>
+
+      <li class="flight-step reveal" style="transition-delay: 180ms;">
+        <div class="num">Phase<span class="digit">04</span>Calibrate</div>
+        <div class="body">
+          <h3>Learn from <em>outcomes</em>, not from prior reasoning.</h3>
+          <p>The model only learns from real settlement results paired with the signal state at prediction time. When a proposed weight change improves out-of-sample calibration, it lands as a versioned model bump — human-reviewed, then surfaced on every future card.</p>
+        </div>
+        <div class="gate">
+          <span class="k">Gate</span>
+          <span class="v">OUTCOME_<br>LEARNING</span>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ══════════════ PICKS — gallery ══════════════ -->
+<section class="picks" id="runway">
+  <div class="container">
+    <div class="picks-head reveal">
+      <div class="mark">003 / Runway</div>
+      <h2>Three picks for departure.<br><em>Reasoning on every one</em>.</h2>
+    </div>
+
+    <div class="picks-shelf">
+      <!-- Left card -->
+      <article class="pick-card left reveal" style="transition-delay: 80ms;">
+        <div class="pick-card-head">
+          <span class="pick-card-sport">NFL · WK 12</span>
+          <span class="pick-card-grade muted">Lean</span>
+        </div>
+        <div class="pick-card-matchup">
+          <p class="when">Sun · Nov 17 · 16:25Z</p>
+          <p class="teams">Kansas City <span class="vs">at</span><br>Buffalo</p>
+        </div>
+        <div class="pick-card-line">
+          <div>
+            <p class="k">Spread</p>
+            <p class="v">BUF +2.5</p>
+          </div>
+          <div class="pick-card-conf">
+            <span class="label">Confidence</span>
+            <span class="value">73<sup>%</sup></span>
+          </div>
+        </div>
+        <p class="pick-card-reason">"Sharp money has moved this line a full point toward Buffalo over 48 hours. Bills are 7–2 ATS at home; KC's road defensive splits do not support a cover."</p>
+        <div class="pick-card-foot">
+          <span>Free pick</span><span>Edge · +4.2</span><span>Risk · Low</span>
+        </div>
+      </article>
+
+      <!-- Center card (featured) -->
+      <article class="pick-card center reveal" style="transition-delay: 160ms;">
+        <div class="pick-card-head">
+          <span class="pick-card-sport">NBA · Reg</span>
+          <span class="pick-card-grade">Strong play</span>
+        </div>
+        <div class="pick-card-matchup">
+          <p class="when">Mon · Nov 18 · 22:00Z</p>
+          <p class="teams">Denver <span class="vs">at</span><br>LA Lakers</p>
+        </div>
+        <div class="pick-card-line">
+          <div>
+            <p class="k">Total</p>
+            <p class="v muted">Unlock with Pro</p>
+          </div>
+          <div class="pick-card-conf">
+            <span class="label">Confidence</span>
+            <span class="value muted">Pro</span>
+          </div>
+        </div>
+        <p class="pick-card-reason">"Both teams in the top 5 for pace; weighted-by-recent-form scoring projects the true line ~2 points above market consensus."</p>
+        <div class="pick-card-foot">
+          <span>Premium</span><span>Edge · Pro</span><span>Risk · Med</span>
+        </div>
+      </article>
+
+      <!-- Right card -->
+      <article class="pick-card right reveal" style="transition-delay: 240ms;">
+        <div class="pick-card-head">
+          <span class="pick-card-sport">MLB · Post</span>
+          <span class="pick-card-grade muted">Lean</span>
+        </div>
+        <div class="pick-card-matchup">
+          <p class="when">Wed · Nov 20 · 19:08Z</p>
+          <p class="teams">NY Yankees <span class="vs">at</span><br>Houston</p>
+        </div>
+        <div class="pick-card-line">
+          <div>
+            <p class="k">Moneyline</p>
+            <p class="v">HOU −135</p>
+          </div>
+          <div class="pick-card-conf">
+            <span class="label">Confidence</span>
+            <span class="value">58<sup>%</sup></span>
+          </div>
+        </div>
+        <p class="pick-card-reason">"Yankees on a 4-game road trip with a tired bullpen; Astros' starter at 1.84 ERA at home over last 8 outings."</p>
+        <div class="pick-card-foot">
+          <span>Free pick</span><span>Edge · +1.8</span><span>Risk · Med</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FINAL CTA ══════════════ -->
+<section class="final">
+  <div class="container">
+    <div class="reveal">
+      <div class="mark">004 / Pre-flight</div>
+      <h2>One free pick a day.<br><em>Clear for takeoff.</em></h2>
+      <p>
+        Create a free account to see the daily release. Upgrade for the
+        full Runway, Ascent telemetry, and factor breakdowns when you're
+        ready. No credit card to start.
+      </p>
+      <a class="btn" href="#">Get clearance →</a>
+      <p class="disclosure">
+        Informational analysis only · Outcomes uncertain · Bet responsibly
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="bottom">
+  <div class="container">
+    <div class="bottom-grid">
+      <div class="bottom-brand">
+        <a href="#" class="brand">
+          <span class="brand-dot"></span>
+          PickPilot
+        </a>
+        <p>
+          Sports intelligence at the controls. Every pick on a flight plan — matchup, line, confidence, risk, and the math behind the call.
+        </p>
+      </div>
+      <div class="bottom-col">
+        <h3>Surfaces</h3>
+        <ul>
+          <li><a href="#">Orbit <span class="alt">/ slate</span></a></li>
+          <li><a href="#">Runway <span class="alt">/ picks</span></a></li>
+          <li><a href="#">Ascent <span class="alt">/ record</span></a></li>
+          <li><a href="#">Navigator <span class="alt">/ method</span></a></li>
+        </ul>
+      </div>
+      <div class="bottom-col">
+        <h3>Operate</h3>
+        <ul>
+          <li><a href="#">Cockpit <span class="alt">/ admin</span></a></li>
+          <li><a href="#">Crashpad <span class="alt">/ play safe</span></a></li>
+          <li><a href="#">Nought <span class="alt">/ bootstrap</span></a></li>
+          <li><a href="#">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="bottom-col">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="responsible-band">
+      <strong>Bet responsibly.</strong>
+      If you or someone you know is struggling with gambling, the National Problem Gambling Helpline is available 24/7 at <a href="tel:1-800-522-4700">1-800-522-4700</a>. You must be of legal age to wager in your jurisdiction.
+    </div>
+
+    <div class="bottom-tag">
+      <span>© 2026 PickPilot · All rights reserved</span>
+      <span>Informational service · Not affiliated with any sportsbook</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════ THREE.JS SCULPTURAL CENTERPIECE ══════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function buildSculpture() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas || typeof THREE === 'undefined') return;
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function rect() {
+    return canvas.getBoundingClientRect();
+  }
+
+  const scene = new THREE.Scene();
+  const r0 = rect();
+  const camera = new THREE.PerspectiveCamera(38, r0.width / r0.height, 0.1, 100);
+  camera.position.set(0, 0, 4.4);
+
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    alpha: true,
+    antialias: true,
+    powerPreference: 'high-performance',
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(r0.width, r0.height, false);
+
+  // ── Faceted geodesic core ────────────────────────────────
+  const detail = 2;
+  const radius = 1.05;
+  const geo = new THREE.IcosahedronGeometry(radius, detail);
+
+  // Subtle vertex jitter so the form doesn't feel mechanical
+  const pos = geo.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const j = i * 3;
+    const offset = 0.04 * (Math.random() - 0.5);
+    pos.array[j]     += offset;
+    pos.array[j + 1] += offset;
+    pos.array[j + 2] += offset;
+  }
+  pos.needsUpdate = true;
+  geo.computeVertexNormals();
+
+  const coreMat = new THREE.MeshBasicMaterial({
+    color: 0x000a12,
+    transparent: true,
+    opacity: 0.92,
+    side: THREE.DoubleSide,
+  });
+  const core = new THREE.Mesh(geo, coreMat);
+  scene.add(core);
+
+  // Edges (the glowing wireframe overlay)
+  const edges = new THREE.EdgesGeometry(geo, 1);
+  const edgeMat = new THREE.LineBasicMaterial({
+    color: 0x00e5ff,
+    transparent: true,
+    opacity: 0.85,
+  });
+  const wire = new THREE.LineSegments(edges, edgeMat);
+  scene.add(wire);
+
+  // A subtle inner "core" sphere for the central pulse
+  const inner = new THREE.Mesh(
+    new THREE.SphereGeometry(0.42, 32, 32),
+    new THREE.MeshBasicMaterial({
+      color: 0x00e5ff,
+      transparent: true,
+      opacity: 0.18,
+    })
+  );
+  scene.add(inner);
+
+  // ── Particle field around the sculpture ──────────────────
+  const pCount = 320;
+  const pGeo = new THREE.BufferGeometry();
+  const pPositions = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount; i++) {
+    // Distribute on a spherical shell with some thickness
+    const t = Math.random() * Math.PI * 2;
+    const u = Math.random() * 2 - 1;
+    const r = 2.0 + Math.random() * 1.6;
+    pPositions[i * 3]     = r * Math.sqrt(1 - u * u) * Math.cos(t);
+    pPositions[i * 3 + 1] = r * Math.sqrt(1 - u * u) * Math.sin(t);
+    pPositions[i * 3 + 2] = r * u;
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+  const pMat = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.012,
+    transparent: true,
+    opacity: 0.55,
+    sizeAttenuation: true,
+  });
+  const particles = new THREE.Points(pGeo, pMat);
+  scene.add(particles);
+
+  // ── Animation loop ───────────────────────────────────────
+  let t0 = performance.now();
+  let mouseX = 0;
+  let mouseY = 0;
+  let targetMouseX = 0;
+  let targetMouseY = 0;
+
+  window.addEventListener('mousemove', (e) => {
+    targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
+    targetMouseY = (e.clientY / window.innerHeight) * 2 - 1;
+  });
+
+  function tick(now) {
+    const dt = (now - t0) / 1000;
+    t0 = now;
+
+    if (!reduced) {
+      // Slow auto-rotate
+      core.rotation.y += 0.0023;
+      core.rotation.x += 0.0008;
+      wire.rotation.x = core.rotation.x;
+      wire.rotation.y = core.rotation.y;
+      particles.rotation.y -= 0.0006;
+
+      // Pulse the inner sphere
+      const pulse = 0.95 + Math.sin(now * 0.001) * 0.08;
+      inner.scale.setScalar(pulse);
+      inner.material.opacity = 0.16 + Math.sin(now * 0.0014) * 0.06;
+
+      // Gentle parallax follow on the camera
+      mouseX += (targetMouseX - mouseX) * 0.025;
+      mouseY += (targetMouseY - mouseY) * 0.025;
+      camera.position.x = mouseX * 0.35;
+      camera.position.y = -mouseY * 0.35;
+      camera.lookAt(0, 0, 0);
+    }
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // ── Resize ────────────────────────────────────────────────
+  window.addEventListener('resize', () => {
+    const r = rect();
+    camera.aspect = r.width / r.height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(r.width, r.height, false);
+  });
+})();
+
+// ── Scroll reveal ─────────────────────────────────────────
+(function reveals() {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const items = document.querySelectorAll('.reveal');
+  if (reduced) {
+    items.forEach((el) => el.classList.add('in-view'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    }
+  }, { threshold: 0.12 });
+  items.forEach((el) => io.observe(el));
+})();
+</script>
+</body>
+</html>

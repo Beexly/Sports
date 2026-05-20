@@ -665,3 +665,795 @@ enum AtsResult {
   PUSH
   TBD
 }
+
+// ============================================================
+// OPERATOR COCKPIT (Phase 2B)
+//
+// Internal-only models. Power the Jarvis-style operator surface
+// that routes sports-research, content drafts, support reviews,
+// and engineering tasks through an explicit task queue with an
+// allow-listed status machine and an append-only decision log.
+//
+// Safety rules baked into the data model:
+//   - CockpitTask.status transitions are validated in the
+//     transitions service (apps/web/lib/cockpit/transitions.ts).
+//     The schema permits any string value; the service refuses
+//     anything outside the allow-list and writes a CockpitDecision
+//     row for every successful transition.
+//   - CockpitMediaItem.scheduledFor is metadata only. There is
+//     no worker that reads it. Publishing remains out of scope.
+//   - No direct relation to NextAuth User. The reviewer field on
+//     CockpitDecision is a free-text identifier ("manual:garrett",
+//     "system", "agent:tal") so seed data and worker-attributed
+//     decisions work without requiring a User row.
+// ============================================================
+
+enum OperatorAgent {
+  JARVIS   // orchestration / dashboard / next-actions
+  SARAH    // support / review queue
+  TAL      // engineering / repo / bug tasks
+  SCOUT    // sports research, line movement, news intake
+  AVA      // sports content / media workflow
+  BOBBY    // funnel / subscription / analytics insights
+}
+
+enum CockpitTaskStatus {
+  NEW
+  ROUTED
+  DRAFTED
+  NEEDS_REVIEW
+  APPROVED
+  REJECTED
+  BLOCKED
+  ARCHIVED
+}
+
+enum CockpitRiskLevel {
+  LOW
+  MODERATE
+  HIGH
+  COMPLIANCE_HOLD
+}
+
+enum CockpitComplianceStatus {
+  NOT_APPLICABLE
+  CLEAR
+  REVIEW_REQUIRED
+  HOLD
+  REJECTED
+}
+
+model CockpitTask {
+  id               String                  @id @default(cuid())
+  title            String
+  description      String                  @db.Text
+  assignedAgent    OperatorAgent
+  status           CockpitTaskStatus       @default(NEW)
+  priority         Int                     @default(50)
+  riskLevel        CockpitRiskLevel        @default(LOW)
+  complianceStatus CockpitComplianceStatus @default(NOT_APPLICABLE)
+  source           String
+  payload          Json?
+  decisionNotes    String?                 @db.Text
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  decisions        CockpitDecision[]
+
+  @@index([assignedAgent])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+  @@map("cockpit_tasks")
+}
+
+model CockpitDecision {
+  id        String            @id @default(cuid())
+  taskId    String
+  toStatus  CockpitTaskStatus
+  reviewer  String
+  note      String?           @db.Text
+  evidence  Json?
+  createdAt DateTime          @default(now())
+
+  task      CockpitTask       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId, createdAt])
+  @@map("cockpit_decisions")
+}
+
+model CockpitMediaItem {
+  id               String                  @id @default(cuid())
+  briefTitle       String
+  briefBody        String                  @db.Text
+  channel          String
+  draftBody        String?                 @db.Text
+  qaStatus         String                  @default("DRAFT")
+  complianceStatus CockpitComplianceStatus @default(REVIEW_REQUIRED)
+  approved         Boolean                 @default(false)
+  scheduledFor     DateTime?
+  relatedTaskId    String?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  @@index([qaStatus])
+  @@index([complianceStatus])
+  @@map("cockpit_media_items")
+}
+
+// ============================================================
+// PROMOTIONS / AFFILIATE MARKETPLACE (Phase 4)
+//
+// Sportsbook promotions surfaced as a regulated, compliance-gated
+// marketplace. Every promotion that renders publicly must:
+//   - have a non-empty `disclosureText`
+//   - have a `termsUrl`
+//   - be `status=ACTIVE` AND `complianceStatus=APPROVED`
+//   - not be past `expiresAt`
+//
+// The public payload helpers in apps/web/lib/promotions/* enforce
+// these rules. The schema accepts any combination — runtime validation
+// keeps the data model permissive for editorial workflow while the
+// service layer refuses to publish anything noncompliant.
+//
+// State gating: `eligibleStates` is the authoritative allow-list.
+// `restrictedStates` is a redundant deny-list for hard blocks. The
+// public selector reads both and renders an honest "not available in
+// your state" message rather than fabricating availability.
+// ============================================================
+
+enum PromotionStatus {
+  DRAFT
+  NEEDS_REVIEW
+  ACTIVE
+  PAUSED
+  EXPIRED
+  ARCHIVED
+  BLOCKED
+}
+
+enum PromotionComplianceStatus {
+  UNREVIEWED
+  APPROVED
+  NEEDS_TERMS
+  NEEDS_STATE_REVIEW
+  NEEDS_DISCLOSURE
+  BLOCKED
+}
+
+enum PromotionOfferCategory {
+  DEPOSIT_MATCH
+  RISK_FREE_BET    // legacy industry term — display copy must NOT use "risk free"
+  ODDS_BOOST
+  BONUS_BET
+  SIGNUP_BONUS
+  REFERRAL
+  OTHER
+}
+
+enum PromotionAffiliateType {
+  CPA           // cost-per-acquisition
+  REVSHARE      // revenue share
+  HYBRID
+  NONE          // editorial-only listing
+}
+
+model Promotion {
+  id                 String                    @id @default(cuid())
+  slug               String                    @unique
+  sportsbookKey      String                    // e.g. "draftkings", "fanduel"
+  operatorName       String                    // e.g. "DraftKings Sportsbook"
+  headline           String                    // short marketing line (auditable)
+  offerSummary       String                    @db.Text
+  offerCategory      PromotionOfferCategory
+  affiliateType      PromotionAffiliateType    @default(NONE)
+  affiliateUrl       String?
+  termsUrl           String?
+  promoCode          String?
+
+  // Geo gating — store JSON arrays of US state codes (e.g. ["NY","NJ"]).
+  // Stored as Json (not String[]) so older Postgres dialects without array
+  // support still work and so we can extend to country-state pairs later.
+  eligibleStates     Json                      @default("[]")
+  restrictedStates   Json                      @default("[]")
+  country            String                    @default("US")
+  minimumAge         Int                       @default(21)
+
+  status             PromotionStatus           @default(DRAFT)
+  complianceStatus   PromotionComplianceStatus @default(UNREVIEWED)
+
+  // Required for public render — both must be non-empty or the public
+  // selector refuses to surface the promo.
+  disclosureText        String?                @db.Text
+  responsibleGamingText String?                @db.Text
+
+  lastReviewedAt     DateTime?
+  reviewedBy         String?                   // free-text reviewer id (matches cockpit pattern)
+  expiresAt          DateTime?
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+
+  @@index([status])
+  @@index([complianceStatus])
+  @@index([sportsbookKey])
+  @@index([expiresAt])
+  @@map("promotions")
+}
+
+// ============================================================
+// SOURCE INTELLIGENCE (Phase 5)
+//
+// SourceCoverageReport captures the evidence backing a publishable
+// artifact (pick, promotion, brief, content draft). The reports are
+// computed by services in apps/web/lib/source-intelligence/* and the
+// row exists primarily as an audit log — runtime "is this publish
+// ready?" decisions are made by recomputing the report against live
+// data so a stale row never gates a fresh decision.
+// ============================================================
+
+enum SourceArtifactKind {
+  PICK
+  PROMOTION
+  BRIEF
+  CONTENT_DRAFT
+}
+
+enum SourceFreshnessStatus {
+  FRESH       // within the per-category freshness budget
+  AGING       // exceeded soft TTL but within hard TTL
+  STALE       // exceeded hard TTL — blocks publish-ready
+  MISSING     // source category required but no evidence exists
+  CONTRADICTORY
+}
+
+enum PublishReadinessStatus {
+  PUBLISH_READY
+  HOLD          // recoverable — needs fresher data
+  REVIEW        // requires manual judgement
+  BLOCKED       // hard-failed a compliance gate
+}
+
+model SourceCoverageReport {
+  id              String                  @id @default(cuid())
+  artifactKind    SourceArtifactKind
+  artifactId      String                  // matches Pick.id / Promotion.id / etc.
+  readiness       PublishReadinessStatus
+  qualityScore    Int                     // 0..100
+  generatedAt     DateTime                @default(now())
+  /**
+   * Snapshot of per-category status: { ODDS: "FRESH", INJURIES: "AGING", ... }
+   * Stored as JSON so categories can evolve without a migration.
+   */
+  categories      Json
+  /**
+   * Free-text rationale: which sources backed the readiness decision,
+   * what is missing, and what the operator should do next.
+   */
+  rationale       String                  @db.Text
+  blockers        Json                    @default("[]")
+
+  @@index([artifactKind, artifactId])
+  @@index([readiness])
+  @@index([generatedAt])
+  @@map("source_coverage_reports")
+}
+
+// ============================================================
+// MODEL CALIBRATION (Phase 4)
+//
+// Calibration proposals from the calibration dashboard. Recording a
+// proposal NEVER mutates scoring weights. A human operator must
+// review the proposal, bump the engine's MODEL_VERSION constant, and
+// land a code change for any weight adjustment to take effect.
+// ============================================================
+
+enum CalibrationProposalKind {
+  CONFIDENCE_BUCKET_DRIFT
+  GRADE_DRIFT
+  PICK_TYPE_DRIFT
+  SPORT_DRIFT
+  DATA_QUALITY_DRIFT
+  RISK_LEVEL_DRIFT
+}
+
+enum CalibrationProposalStatus {
+  OPEN
+  ACKNOWLEDGED
+  IMPLEMENTED
+  REJECTED
+}
+
+// ============================================================
+// DAILY BRIEF (Phase 5)
+//
+// The daily brief is composed at request time from live tables in
+// `apps/web/lib/brief/compose.ts`. These persistence models exist so
+// reviewers can:
+//   - snapshot the brief that was published for a given day (audit log)
+//   - park a review draft with section-level notes
+//   - track which sections required manual judgement before publish
+// ============================================================
+
+enum BriefStatus {
+  DRAFT
+  NEEDS_REVIEW
+  APPROVED
+  PUBLISHED
+  ARCHIVED
+  BLOCKED
+}
+
+enum BriefVisibility {
+  INTERNAL
+  PUBLIC
+  PREMIUM
+}
+
+enum BriefSectionType {
+  SLATE_OVERVIEW
+  TOP_PICKS
+  DATA_QUALITY
+  LINE_MOVEMENT
+  SCHEDULE_REST
+  PERFORMANCE_CONTEXT
+  PROMOTIONS
+  MANUAL_REVIEW
+  CONTENT_IDEAS
+  RESPONSIBLE_GAMING
+  WHAT_CHANGED
+}
+
+model DailyBrief {
+  id                    String          @id @default(cuid())
+  briefDate             DateTime        // UTC date snapshot (00:00:00Z)
+  status                BriefStatus     @default(DRAFT)
+  visibility            BriefVisibility @default(INTERNAL)
+  title                 String
+  summary               String          @db.Text
+  slateSummary          String          @db.Text
+  dataQualitySummary    String?         @db.Text
+  manualReviewNotes     String?         @db.Text
+  responsibleGamingText String          @db.Text
+  generatedBy           String          // free-text id, matches cockpit pattern
+  reviewedBy            String?
+  reviewedAt            DateTime?
+  publishedAt           DateTime?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  sections DailyBriefSection[]
+  items    DailyBriefItem[]
+
+  @@unique([briefDate])
+  @@index([status])
+  @@index([visibility])
+  @@map("daily_briefs")
+}
+
+model DailyBriefSection {
+  id              String           @id @default(cuid())
+  briefId         String
+  sectionType     BriefSectionType
+  title           String
+  content         String           @db.Text
+  sortOrder       Int              @default(0)
+  visibility      BriefVisibility  @default(INTERNAL)
+  sourceStatus    String           @default("PENDING") // FRESH | AGING | STALE | MISSING | PENDING
+  requiresReview  Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  brief DailyBrief @relation(fields: [briefId], references: [id], onDelete: Cascade)
+
+  @@index([briefId, sortOrder])
+  @@map("daily_brief_sections")
+}
+
+model DailyBriefItem {
+  id          String           @id @default(cuid())
+  briefId     String
+  itemType    String           // GAME | PICK | PROMOTION | WATCH | TASK
+  label       String
+  value       String           @db.Text
+  metadata    Json?
+  sourceId    String?
+  riskLevel   String           @default("LOW")
+  visibility  BriefVisibility  @default(INTERNAL)
+  sortOrder   Int              @default(0)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  brief DailyBrief @relation(fields: [briefId], references: [id], onDelete: Cascade)
+
+  @@index([briefId, sortOrder])
+  @@map("daily_brief_items")
+}
+
+model CalibrationProposal {
+  id            String                    @id @default(cuid())
+  modelVersion  String                    // version observed when the proposal was generated
+  kind          CalibrationProposalKind
+  observation   String                    @db.Text
+  proposedChange String                   @db.Text
+  evidence      Json                      // bucket stats, sample size, etc.
+  status        CalibrationProposalStatus @default(OPEN)
+  createdAt     DateTime                  @default(now())
+  acknowledgedBy String?
+  acknowledgedAt DateTime?
+
+  @@index([modelVersion])
+  @@index([status])
+  @@index([createdAt])
+  @@map("calibration_proposals")
+}
+
+// ============================================================
+// CONTENT ENGINE (Phase 8) — DRAFT-ONLY
+//
+// Source-backed, draft-only sports content. Every row is an
+// internal artifact. There is no publish endpoint, no scheduler,
+// and no automation that turns a row into a live page. Approval
+// in the cockpit only means a human reviewer signed off on the
+// draft; surfacing it on the public blog still requires a
+// deliberate code/data change outside this surface.
+//
+// Coupling notes:
+//   - ContentDraft loosely references existing Pick / Promotion /
+//     DailyBrief rows via id arrays stored as Json. The schema
+//     does NOT cascade — content rows are evidence, not source of
+//     truth, and the referenced data is allowed to evolve.
+//   - ContentSource captures the per-source coverage that the
+//     `evaluateContentSourceCoverage` service needs at review
+//     time. The same service can be run live without DB rows.
+//   - ContentReview is an append-only audit log of operator
+//     decisions, identical pattern to CockpitDecision.
+// ============================================================
+
+enum ContentDraftStatus {
+  DRAFT
+  NEEDS_SOURCE
+  NEEDS_REVIEW
+  NEEDS_COMPLIANCE
+  APPROVED
+  REJECTED
+  ARCHIVED
+  BLOCKED
+}
+
+enum ContentDraftVisibility {
+  INTERNAL
+  PUBLIC
+  PREMIUM
+}
+
+enum ContentDraftType {
+  DAILY_BRIEF
+  MATCHUP_PREVIEW
+  METHODOLOGY_EDUCATION
+  PROMOTION_ROUNDUP
+  WEEKLY_RECAP
+  PERFORMANCE_TRANSPARENCY
+  RESPONSIBLE_BETTING_EDUCATION
+  MODEL_ACCOUNTABILITY_NOTE
+  LINE_MOVEMENT_WATCH
+  BLOG_POST
+  SOCIAL_DRAFT
+  NEWSLETTER_DRAFT
+}
+
+enum ContentSourceType {
+  ODDS
+  PICK
+  PERFORMANCE
+  PROMOTION_TERMS
+  RESPONSIBLE_GAMING
+  METHODOLOGY
+  CALIBRATION
+  DAILY_BRIEF
+  INTERNAL_REVIEW
+}
+
+enum ContentSourceTrustLevel {
+  AUTHORITATIVE   // first-party / regulator / sportsbook official terms
+  PLATFORM        // generated by our own engine / policy
+  REVIEWED        // third-party but reviewed by an operator
+  UNVERIFIED      // pending verification — cannot back a regulated claim
+  BLOCKED         // operator has explicitly rejected this source
+}
+
+enum ContentSourceStatus {
+  FRESH
+  AGING
+  STALE
+  MISSING
+  PENDING
+}
+
+enum ContentSourceCoverageStatus {
+  COVERED
+  PARTIAL
+  NEEDS_SOURCE
+  BLOCKED
+}
+
+enum ContentComplianceStatus {
+  NOT_APPLICABLE
+  CLEAR
+  REVIEW_REQUIRED
+  NEEDS_DISCLOSURE
+  NEEDS_RG_LANGUAGE
+  BLOCKED
+}
+
+enum ContentPerformanceGateStatus {
+  NOT_APPLICABLE
+  GATE_ON
+  GATE_OFF_REQUIRED
+  GATE_OFF_BLOCKED
+}
+
+enum ContentReviewDecision {
+  APPROVED
+  CHANGES_REQUESTED
+  REJECTED
+  ESCALATED
+  INTERNAL_ONLY
+}
+
+model ContentDraft {
+  id                          String                       @id @default(cuid())
+  title                       String
+  slug                        String                       @unique
+  contentType                 ContentDraftType
+  status                      ContentDraftStatus           @default(DRAFT)
+  visibility                  ContentDraftVisibility       @default(INTERNAL)
+
+  sport                       String?
+  league                      String?
+
+  // Loose JSON references (no FK cascade — content is evidence, not source).
+  relatedPickIds              Json                         @default("[]")
+  relatedPromotionIds         Json                         @default("[]")
+  relatedBriefIds             Json                         @default("[]")
+
+  sourceCoverageStatus        ContentSourceCoverageStatus  @default(NEEDS_SOURCE)
+  complianceStatus            ContentComplianceStatus      @default(REVIEW_REQUIRED)
+  responsibleGamingIncluded   Boolean                      @default(false)
+  affiliateDisclosureIncluded Boolean                      @default(false)
+  performanceGateStatus       ContentPerformanceGateStatus @default(NOT_APPLICABLE)
+  bannedPhraseScanClean       Boolean                      @default(false)
+
+  draftBody                   String                       @db.Text
+  excerpt                     String?                      @db.Text
+  metadata                    Json?
+
+  generatedBy                 String                       // free-text agent or operator id
+  reviewedBy                  String?
+  reviewedAt                  DateTime?
+  publishedAt                 DateTime?                    // never set by the engine — operator-only
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime                     @updatedAt
+
+  sources                     ContentSource[]
+  reviews                     ContentReview[]
+
+  @@index([status])
+  @@index([contentType])
+  @@index([visibility])
+  @@index([sourceCoverageStatus])
+  @@index([complianceStatus])
+  @@index([createdAt])
+  @@map("content_drafts")
+}
+
+model ContentSource {
+  id           String                  @id @default(cuid())
+  draftId      String
+  sourceType   ContentSourceType
+  sourceLabel  String
+  sourceUrl    String?
+  sourceStatus ContentSourceStatus     @default(PENDING)
+  trustLevel   ContentSourceTrustLevel @default(UNVERIFIED)
+  fetchedAt    DateTime?
+  notes        String?                 @db.Text
+  createdAt    DateTime                @default(now())
+
+  draft        ContentDraft            @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@index([draftId])
+  @@index([sourceType])
+  @@index([trustLevel])
+  @@map("content_sources")
+}
+
+model ContentReview {
+  id        String                 @id @default(cuid())
+  draftId   String
+  reviewer  String                 // free-text id, matches cockpit pattern
+  decision  ContentReviewDecision
+  notes     String?                @db.Text
+  evidence  Json?
+  createdAt DateTime               @default(now())
+
+  draft     ContentDraft           @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@index([draftId, createdAt])
+  @@map("content_reviews")
+}
+            @updatedAt
+
+  @@index([qaStatus])
+  @@index([complianceStatus])
+  @@map("cockpit_media_items")
+}
+
+// ============================================================
+// PROMOTIONS / AFFILIATE MARKETPLACE (Phase 4)
+// ============================================================
+
+enum PromotionStatus {
+  DRAFT
+  NEEDS_REVIEW
+  ACTIVE
+  PAUSED
+  EXPIRED
+  ARCHIVED
+  BLOCKED
+}
+
+enum PromotionComplianceStatus {
+  UNREVIEWED
+  APPROVED
+  NEEDS_TERMS
+  NEEDS_STATE_REVIEW
+  REJECTED
+}
+
+model Promotion {
+  id                String                    @id @default(cuid())
+  slug              String                    @unique
+  title             String
+  description       String                    @db.Text
+  sportsbookName    String
+  sportsbookSlug    String
+  offerType         String
+  offerValue        String?
+  status            PromotionStatus           @default(DRAFT)
+  complianceStatus  PromotionComplianceStatus @default(UNREVIEWED)
+  disclosureText    String                    @db.Text
+  termsUrl          String
+  ctaUrl            String
+  ctaLabel          String                    @default("Claim Offer")
+  eligibleStates    String[]                  @default([])
+  restrictedStates  String[]                  @default([])
+  startsAt          DateTime?
+  expiresAt         DateTime?
+  priority          Int                       @default(0)
+  isFeatured        Boolean                   @default(false)
+  notes             String?                   @db.Text
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+
+  @@index([status])
+  @@index([complianceStatus])
+  @@index([sportsbookSlug])
+  @@index([priority])
+  @@map("promotions")
+}
+
+// ============================================================
+// DAILY BRIEF (Phase 5)
+// ============================================================
+
+enum BriefStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum BriefVisibility {
+  INTERNAL
+  PUBLIC
+  PREMIUM
+}
+
+enum BriefSectionType {
+  SLATE_OVERVIEW
+  RESPONSIBLE_GAMING
+  PROMOTIONS
+  MANUAL_REVIEW
+  CONTENT_IDEAS
+  WHAT_CHANGED
+}
+
+model DailyBrief {
+  id                    String              @id @default(cuid())
+  briefDate             DateTime
+  status                BriefStatus         @default(DRAFT)
+  visibility            BriefVisibility     @default(INTERNAL)
+  responsibleGamingText String              @db.Text
+  summary               String              @db.Text
+  publishedAt           DateTime?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  sections              DailyBriefSection[]
+
+  @@unique([briefDate])
+  @@index([status])
+  @@index([visibility])
+  @@map("daily_briefs")
+}
+
+model DailyBriefSection {
+  id          String           @id @default(cuid())
+  briefId     String
+  sectionType BriefSectionType
+  title       String
+  body        String           @db.Text
+  position    Int              @default(0)
+  createdAt   DateTime         @default(now())
+
+  brief       DailyBrief       @relation(fields: [briefId], references: [id], onDelete: Cascade)
+
+  @@index([briefId, position])
+  @@map("daily_brief_sections")
+}
+
+// ============================================================
+// CALIBRATION (Phase 6)
+// ============================================================
+
+enum CalibrationProposalStatus {
+  OPEN
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum CalibrationProposalKind {
+  CONFIDENCE_SHIFT
+  WEIGHT_ADJUSTMENT
+  THRESHOLD_CHANGE
+  FEATURE_DEPRECATION
+}
+
+model CalibrationProposal {
+  id           String                    @id @default(cuid())
+  kind         CalibrationProposalKind
+  status       CalibrationProposalStatus @default(OPEN)
+  title        String
+  rationale    String                    @db.Text
+  proposedJson Json
+  sampleSize   Int                       @default(0)
+  evidenceUrl  String?
+  reviewer     String?
+  reviewedAt   DateTime?
+  reviewNote   String?                   @db.Text
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+
+  @@index([status])
+  @@index([kind])
+  @@map("calibration_proposals")
+}
+
+// ============================================================
+// SOURCE COVERAGE REPORT (data ingestion observability)
+// ============================================================
+
+model SourceCoverageReport {
+  id              String   @id @default(cuid())
+  sportSlug       String
+  source          String
+  coveragePct     Float    @default(0)
+  expectedCount   Int      @default(0)
+  observedCount   Int      @default(0)
+  windowStart     DateTime
+  windowEnd       DateTime
+  notes           String?  @db.Text
+  createdAt       DateTime @default(now())
+
+  @@index([sportSlug, source, windowEnd])
+  @@map("source_coverage_reports")
+}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Confidence ladder · PickPilot</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; background: var(--void); }
+  .card {
+    width: 700px; min-height: 240px;
+    padding: 22px 24px;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255, 45, 138,0.06), transparent 70%),
+      linear-gradient(180deg, var(--obsidian) 0%, var(--carbon) 100%);
+    color: var(--fg-1);
+    box-sizing: border-box;
+  }
+  .eyebrow {
+    font: 500 10px/1 var(--f-mono);
+    text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--fg-muted); margin: 0 0 4px;
+  }
+  .eyebrow .dot { color: var(--plasma); }
+  .title {
+    font: 600 18px/1.2 var(--f-display);
+    color: var(--fg); letter-spacing: -0.01em;
+    margin: 0 0 20px;
+  }
+  .ladder { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .tier {
+    border: 1px solid var(--mineral);
+    border-radius: var(--r-md);
+    padding: 16px 18px;
+    background: rgba(17,22,31,0.7);
+    display: flex; flex-direction: column; gap: 8px;
+    position: relative; overflow: hidden;
+  }
+  .tier .grade {
+    font: 500 9px/1 var(--f-mono);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+  .tier .num {
+    font: 700 44px/1 var(--f-numerals);
+    letter-spacing: -0.04em;
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+  }
+  .tier .num .pct { font-size: 18px; color: var(--fg-meta); margin-left: 2px; }
+  .tier .label { font: 600 15px/1.1 var(--f-display); }
+  .tier .desc { font: 400 11px/1.4 var(--f-body); color: var(--ion-1); }
+  .tier .bar {
+    height: 3px; border-radius: 999px;
+    background: var(--titanium);
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .tier .bar i { display: block; height: 100%; }
+
+  .tier.elite  { border-color: rgba(255, 45, 138,0.4); box-shadow: 0 0 32px -12px rgba(255, 45, 138,0.35); }
+  .tier.elite  .label { color: var(--plasma); }
+  .tier.elite  .bar i { background: var(--plasma); width: 92%; box-shadow: 0 0 8px var(--plasma); }
+
+  .tier.strong .label { color: var(--ion-blue); }
+  .tier.strong .bar i { background: var(--ion-blue); width: 75%; }
+
+  .tier.solid  .label { color: var(--ultraviolet); }
+  .tier.solid  .bar i { background: var(--ultraviolet); width: 60%; }
+
+  .tier.lean   .label { color: var(--ion-1); }
+  .tier.lean   .bar i { background: var(--ion-1); width: 48%; }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow"><span class="dot">●</span> PALETTE / 04 — CONFIDENCE LADDER</p>
+  <h2 class="title">Color maps to grade · cyan = highest, never red</h2>
+  <div class="ladder">
+    <div class="tier elite">
+      <span class="grade">Grade</span>
+      <span class="num">92<span class="pct">%</span></span>
+      <span class="label">Elite Play</span>
+      <span class="desc">Top conviction · acid lime reserved.</span>
+      <div class="bar"><i></i></div>
+    </div>
+    <div class="tier strong">
+      <span class="grade">Grade</span>
+      <span class="num">81<span class="pct">%</span></span>
+      <span class="label">Strong Play</span>
+      <span class="desc">Solid edge · ion blue confidence.</span>
+      <div class="bar"><i></i></div>
+    </div>
+    <div class="tier solid">
+      <span class="grade">Grade</span>
+      <span class="num">67<span class="pct">%</span></span>
+      <span class="label">Solid Play</span>
+      <span class="desc">Ultraviolet · model-driven workable edge.</span>
+      <div class="bar"><i></i></div>
+    </div>
+    <div class="tier lean">
+      <span class="grade">Grade</span>
+      <span class="num">54<span class="pct">%</span></span>
+      <span class="label">Lean</span>
+      <span class="desc">Silver · informational, low conviction.</span>
+      <div class="bar"><i></i></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PickPilot — Design System Entry</title>
+<link rel="stylesheet" href="../design-system/colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--carbon);
+    color: var(--ion);
+    font-family: var(--f-body);
+    padding: 5rem 2rem;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255,45,138,0.06), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(79,168,255,0.04), transparent 60%);
+  }
+  .wrap { max-width: 64rem; margin: 0 auto; }
+  .mark {
+    font: var(--t-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--plasma);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .mark::before { content: ""; width: 2rem; height: 1px; background: var(--plasma); }
+  h1 {
+    font: var(--t-display-2xl);
+    font-family: var(--f-display);
+    color: var(--ion-white);
+    letter-spacing: -0.03em;
+    margin: 1.5rem 0 2rem;
+    line-height: 0.92;
+  }
+  h1 em { font-family: var(--f-editorial); color: var(--plasma); font-style: italic; font-weight: 400; }
+  .lede {
+    font-size: 1.125rem;
+    color: var(--ion-1);
+    max-width: 36rem;
+    line-height: 1.6;
+    margin-bottom: 4rem;
+  }
+  .lede strong { color: var(--ion); font-weight: 500; }
+
+  h2 {
+    font-family: var(--f-display);
+    font-size: 1.5rem;
+    color: var(--ion-white);
+    margin: 4rem 0 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  h2 .meta {
+    font-family: var(--f-mono);
+    font-size: 0.6875rem;
+    color: var(--ion-2);
+    margin-left: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .panel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.875rem;
+  }
+  .panel {
+    display: block;
+    padding: 1.25rem;
+    border: 1px solid var(--mineral);
+    background: linear-gradient(180deg, var(--titanium), var(--eclipse));
+    border-radius: 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .panel:hover {
+    border-color: var(--plasma);
+    transform: translateY(-2px);
+    box-shadow: var(--glow-plasma);
+  }
+  .panel .id {
+    font-family: var(--f-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    color: var(--ion-2);
+    text-transform: uppercase;
+  }
+  .panel .title {
+    font-family: var(--f-display);
+    font-size: 1.125rem;
+    color: var(--ion-white);
+    margin-top: 0.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .panel .desc {
+    font-size: 0.8125rem;
+    color: var(--ion-1);
+    margin-top: 0.625rem;
+    line-height: 1.5;
+  }
+  .panel.feature {
+    border-color: var(--plasma-deep);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--plasma) 12%, var(--eclipse)), var(--carbon));
+    box-shadow: var(--glow-plasma);
+  }
+  .panel.feature:hover { transform: translateY(-4px); box-shadow: 0 0 60px -8px rgba(255,45,138,0.55); }
+  .panel.feature .title { color: white; }
+  .panel.feature .id { color: var(--plasma-glow); }
+
+  .panel.legacy {
+    opacity: 0.55;
+    border-color: var(--mineral);
+  }
+  .panel.legacy:hover { opacity: 1; }
+  .panel.legacy .title { color: var(--ion-1); }
+
+  .row {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--mineral);
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    color: var(--ion-2);
+    letter-spacing: 0.08em;
+    line-height: 1.7;
+  }
+  .row em {
+    font-family: var(--f-editorial);
+    color: var(--plasma);
+    font-style: italic;
+    letter-spacing: 0;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mark">PickPilot · Design System v3</div>
+  <h1>Perspective, <em>not picks.</em></h1>
+  <p class="lede">
+    The canonical PickPilot design system is in <strong>../design-system/</strong>. This page is the entry point — it links to the composed product surface, the cinematic pitch boards, and every system specimen card.
+    Everything I built before this (v1–v4 below) was guesswork that drifted from the brand; treat them as a paper trail, not a reference.
+  </p>
+
+  <h2>The canonical surface <span class="meta">↗ One file, full product</span></h2>
+  <div class="panel-grid">
+    <a class="panel feature" href="../design-system/ui_kits/web/index.html">
+      <span class="id">UI · WEB</span>
+      <span class="title">Composed product page</span>
+      <span class="desc">Nav · hero · slate bar · picks grid · methodology · pricing · footer. Built on kit.css. Open this first.</span>
+    </a>
+    <a class="panel" href="../design-system/ui_kits/web/observatory.html">
+      <span class="id">UI · OBSERVATORY</span>
+      <span class="title">Observatory surface</span>
+      <span class="desc">The live-market intelligence screen — line movement, sharp/public, depth.</span>
+    </a>
+  </div>
+
+  <h2>Cinematic pitch boards <span class="meta">↗ Manifesto, identity, voice</span></h2>
+  <div class="panel-grid">
+    <a class="panel" href="../design-system/preview/01-manifesto.html">
+      <span class="id">BOARD · 01</span>
+      <span class="title">Manifesto</span>
+      <span class="desc">Perspective over picks — the thesis.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/02-identity.html">
+      <span class="id">BOARD · 02</span>
+      <span class="title">Identity</span>
+      <span class="desc">Logo, wordmark, mark in atmosphere.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/03-mobile.html">
+      <span class="id">BOARD · 03</span>
+      <span class="title">Mobile</span>
+      <span class="desc">Phone surface composition.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/04-desktop.html">
+      <span class="id">BOARD · 04</span>
+      <span class="title">Desktop</span>
+      <span class="desc">Cinematic desktop composition.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/05-voice.html">
+      <span class="id">BOARD · 05</span>
+      <span class="title">Voice</span>
+      <span class="desc">Copy specimens — eyebrow, body, disclaimer.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/06-galaxy.html">
+      <span class="id">BOARD · 06</span>
+      <span class="title">Galaxy</span>
+      <span class="desc">Atmospheric hero exploration.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/07-trust.html">
+      <span class="id">BOARD · 07</span>
+      <span class="title">Trust</span>
+      <span class="desc">Methodology + responsibility framing.</span>
+    </a>
+  </div>
+
+  <h2>System specimens <span class="meta">↗ Tokens in use</span></h2>
+  <div class="panel-grid">
+    <a class="panel" href="../design-system/preview/sys-00-logo.html">
+      <span class="id">SYS · 00</span>
+      <span class="title">Logo</span>
+      <span class="desc">Reticle mark + wordmark.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-01-palette-environment.html">
+      <span class="id">SYS · 01</span>
+      <span class="title">Palette — environment</span>
+      <span class="desc">Carbon scale (void → mineral-hi).</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-02-palette-ion.html">
+      <span class="id">SYS · 02</span>
+      <span class="title">Palette — ion neutrals</span>
+      <span class="desc">Cool whites + silvers (ion-white → ion-3).</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-03-palette-signal.html">
+      <span class="id">SYS · 03</span>
+      <span class="title">Palette — signal trio</span>
+      <span class="desc">Plasma · ion-blue · ultraviolet.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-04-confidence-ladder.html">
+      <span class="id">SYS · 04</span>
+      <span class="title">Confidence ladder</span>
+      <span class="desc">Elite · Strong · Solid · Lean.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-05-type-display.html">
+      <span class="id">SYS · 05</span>
+      <span class="title">Type — display</span>
+      <span class="desc">Syne, Big Shoulders, Instrument Serif.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-06-type-numerals.html">
+      <span class="id">SYS · 06</span>
+      <span class="title">Type — numerals</span>
+      <span class="desc">JetBrains Mono, tabular figures.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-07-spacing-radii.html">
+      <span class="id">SYS · 07</span>
+      <span class="title">Spacing & radii</span>
+      <span class="desc">4px base grid, radii xs–lg.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-08-glow-elevation.html">
+      <span class="id">SYS · 08</span>
+      <span class="title">Glow & elevation</span>
+      <span class="desc">Atmospheric shadow + signal glow.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-09-iconography.html">
+      <span class="id">SYS · 09</span>
+      <span class="title">Iconography</span>
+      <span class="desc">Lucide, 1.5px stroke, current color.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-10-buttons.html">
+      <span class="id">SYS · 10</span>
+      <span class="title">Buttons</span>
+      <span class="desc">Primary, ghost, deep, sizes.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-11-badges.html">
+      <span class="id">SYS · 11</span>
+      <span class="title">Badges</span>
+      <span class="desc">Sport chips, grade chips, status.</span>
+    </a>
+    <a class="panel" href="../design-system/preview/sys-12-pick-card.html">
+      <span class="id">SYS · 12</span>
+      <span class="title">Pick card</span>
+      <span class="desc">The atomic unit of the product.</span>
+    </a>
+  </div>
+
+  <h2>Earlier explorations <span class="meta">↗ Superseded — kept as paper trail</span></h2>
+  <div class="panel-grid">
+    <a class="panel legacy" href="./helm-homepage.html">
+      <span class="id">v1 · HELM</span>
+      <span class="title">Helm homepage</span>
+      <span class="desc">First take. Wrong brand, generic Tailwind feel.</span>
+    </a>
+    <a class="panel legacy" href="./pickpilot-v3.html">
+      <span class="id">v3 · HUD</span>
+      <span class="title">PickPilot v3 — HUD</span>
+      <span class="desc">Cockpit / mission-control direction. Cyan-only, no plasma.</span>
+    </a>
+    <a class="panel legacy" href="./pickpilot-v4.html">
+      <span class="id">v4 · EDITORIAL</span>
+      <span class="title">PickPilot v4 — Editorial</span>
+      <span class="desc">Three.js sculpture + serif. Still off-brand from the system.</span>
+    </a>
+  </div>
+
+  <p class="row">
+    <em>Perspective, not picks.</em>  ·  PickPilot · Intelligence over noise  ·  You make the call
+  </p>
+
+</div>
+</body>
+</html>

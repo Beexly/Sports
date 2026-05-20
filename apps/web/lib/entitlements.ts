@@ -9,7 +9,19 @@ import { getEntitlements, type Entitlements, type SubscriptionTier } from "@spor
 export { getEntitlements };
 export type { Entitlements };
 
+/**
+ * Dev-mode shortcut: when DEV_FAKE_ADMIN=true the fake admin session has
+ * no real Subscription row, so the DB lookup returns FREE. Treat the
+ * fake admin as ELITE so the dashboard / picks pages render the full
+ * paid slate during launch-night demos. Never active in production.
+ */
+const DEV_FAKE_ADMIN_TIER: SubscriptionTier = "ELITE";
+
 export async function getUserEntitlements(userId: string): Promise<Entitlements> {
+  if (process.env["DEV_FAKE_ADMIN"] === "true" && userId === "dev-admin") {
+    return getEntitlements(DEV_FAKE_ADMIN_TIER);
+  }
+
   const subscription = await db.subscription.findFirst({
     where: {
       userId,

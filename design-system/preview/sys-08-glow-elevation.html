@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Glow & elevation · PickPilot</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; background: var(--void); }
+  .card {
+    width: 700px; min-height: 240px;
+    padding: 22px 24px;
+    background: linear-gradient(180deg, var(--obsidian) 0%, var(--carbon) 100%);
+    color: var(--fg-1);
+    box-sizing: border-box;
+  }
+  .eyebrow { font: 500 10px/1 var(--f-mono); text-transform: uppercase; letter-spacing: 0.22em; color: var(--fg-muted); margin: 0 0 4px; }
+  .eyebrow .dot { color: var(--plasma); }
+  .title { font: 600 18px/1.2 var(--f-display); color: var(--fg); letter-spacing: -0.01em; margin: 0 0 22px; }
+
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .tile {
+    aspect-ratio: 1.05/1;
+    border: 1px solid var(--mineral);
+    background: var(--titanium);
+    border-radius: var(--r-md);
+    position: relative;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 14px;
+  }
+  .tile .lbl { font: 500 9px/1 var(--f-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-muted); }
+  .tile .nm  { font: 600 13px/1.2 var(--f-display); color: var(--fg); margin-top: 4px; }
+  .tile .vl  { font: 400 9px/1.2 var(--f-mono); color: var(--fg-meta); margin-top: 2px; }
+  .tile .dot {
+    position: absolute; top: 14px; right: 14px;
+    width: 10px; height: 10px; border-radius: 999px;
+  }
+
+  .tile.t1 { box-shadow: none; }
+  .tile.t1 .dot { background: var(--ion-3); }
+
+  .tile.t2 { box-shadow: var(--glow-plasma); }
+  .tile.t2 .dot { background: var(--plasma); box-shadow: 0 0 12px var(--plasma); }
+
+  .tile.t3 { box-shadow: var(--glow-ion-blue); }
+  .tile.t3 .dot { background: var(--ion-blue); box-shadow: 0 0 12px var(--ion-blue); }
+
+  .tile.t4 { box-shadow: var(--glow-uv); }
+  .tile.t4 .dot { background: var(--ultraviolet); box-shadow: 0 0 12px var(--ultraviolet); }
+
+  .rule {
+    margin-top: 18px;
+    font: 400 11px/1.5 var(--f-body); color: var(--ion-1);
+    border-left: 1px solid var(--plasma);
+    padding-left: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow"><span class="dot">●</span> ELEVATION / 01 — GLOW SYSTEM</p>
+  <h2 class="title">Cards don't float · they power on</h2>
+
+  <div class="grid">
+    <div class="tile t1">
+      <span class="dot"></span>
+      <span class="lbl">Rest</span>
+      <span class="nm">No shadow</span>
+      <span class="vl">Default · structural</span>
+    </div>
+    <div class="tile t2">
+      <span class="dot"></span>
+      <span class="lbl">Live · Lime</span>
+      <span class="nm">--glow-lime</span>
+      <span class="vl">Active picks, fresh data</span>
+    </div>
+    <div class="tile t3">
+      <span class="dot"></span>
+      <span class="lbl">Premium · Amber</span>
+      <span class="nm">--glow-amber</span>
+      <span class="vl">Elite tier, featured</span>
+    </div>
+    <div class="tile t4">
+      <span class="dot"></span>
+      <span class="lbl">Model · UV</span>
+      <span class="nm">--glow-uv</span>
+      <span class="vl">Hidden pattern, insight</span>
+    </div>
+  </div>
+
+  <div class="rule">
+    No default drop shadow. Glow is reserved for <em>state</em> — cards sit on ink, they don't float. Glow turns on when intelligence is active.
+  </div>
+</div>
+</body>
+</html>

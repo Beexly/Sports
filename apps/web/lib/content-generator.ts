@@ -7,10 +7,11 @@
 import type { ContentGenerationInput, GeneratedContent } from "@sports/types";
 import { generateSlug } from "./utils.js";
 import { format } from "date-fns";
+import { BRAND_NAME } from "./brand.js";
 
 const GAMBLING_DISCLAIMER =
   "This article is for informational and entertainment purposes only. " +
-  "SportsPicks Pro does not guarantee any outcomes. Sports betting involves risk. " +
+  `${BRAND_NAME} does not guarantee any outcomes. Sports betting involves risk. ` +
   "Please gamble responsibly and only bet what you can afford to lose.";
 
 export async function generateBlogPost(

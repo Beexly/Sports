@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ion neutrals · PickPilot</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; background: var(--void); }
+  .card {
+    width: 700px; min-height: 220px;
+    padding: 22px 24px;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 30%, rgba(213,221,233,0.04), transparent 65%),
+      linear-gradient(160deg, var(--carbon) 0%, var(--obsidian) 100%);
+    color: var(--fg-1);
+    box-sizing: border-box;
+    position: relative;
+  }
+  .eyebrow {
+    font: 500 10px/1 var(--f-mono);
+    text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--fg-muted); margin: 0 0 4px;
+  }
+  .eyebrow .dot { color: var(--plasma); }
+  .title {
+    font: 600 18px/1.2 var(--f-display);
+    color: var(--fg);
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+  }
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  .item {
+    border: 1px solid var(--mineral);
+    background: var(--obsidian);
+    border-radius: var(--r-sm);
+    padding: 14px 14px 12px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .item .chip {
+    height: 56px;
+    border-radius: var(--r-xs);
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .item .meta { display: flex; flex-direction: column; gap: 2px; }
+  .item .role {
+    font: 500 9px/1 var(--f-mono);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+  .item .name {
+    font: 500 12px/1.2 var(--f-body);
+    color: var(--fg);
+  }
+  .item .hex {
+    font: 400 9px/1.2 var(--f-mono);
+    color: var(--fg-meta);
+  }
+  .specimen {
+    margin-top: 18px;
+    border-top: 1px solid var(--mineral);
+    padding-top: 14px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .specimen .l1 { font: 600 22px/1.15 var(--f-display); letter-spacing: -0.02em; color: var(--ion-white); }
+  .specimen .l2 { font: 400 14px/1.4 var(--f-body); color: var(--ion); }
+  .specimen .l3 { font: 400 12px/1.4 var(--f-body); color: var(--ion-1); }
+  .specimen .l4 { font: 500 10px/1 var(--f-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ion-2); }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow"><span class="dot">●</span> PALETTE / 02 — ION NEUTRALS</p>
+  <h2 class="title">Cool mineral whites · never warm beige</h2>
+  <div class="strip">
+    <div class="item">
+      <div class="chip" style="background:var(--ion-white)"></div>
+      <div class="meta"><span class="role">Hero</span><span class="name">Ion White</span><span class="hex">#EDF2F7</span></div>
+    </div>
+    <div class="item">
+      <div class="chip" style="background:var(--ion)"></div>
+      <div class="meta"><span class="role">Primary</span><span class="name">Ion</span><span class="hex">#D5DDE9</span></div>
+    </div>
+    <div class="item">
+      <div class="chip" style="background:var(--ion-1)"></div>
+      <div class="meta"><span class="role">Secondary</span><span class="name">Silver</span><span class="hex">#98A3B5</span></div>
+    </div>
+    <div class="item">
+      <div class="chip" style="background:var(--ion-2)"></div>
+      <div class="meta"><span class="role">Meta</span><span class="name">Tertiary</span><span class="hex">#5E6878</span></div>
+    </div>
+    <div class="item">
+      <div class="chip" style="background:var(--ion-3)"></div>
+      <div class="meta"><span class="role">Muted</span><span class="name">Disabled</span><span class="hex">#3D4555</span></div>
+    </div>
+  </div>
+  <div class="specimen">
+    <span class="l1">Edge detected on opener</span>
+    <span class="l2">Sharp money on the under since open · three-book consensus</span>
+    <span class="l3">14 games tracked · 6 strong plays · updated 14:32 ET</span>
+    <span class="l4">DATA · LIVE · 30 MIN REFRESH</span>
+  </div>
+</div>
+</body>
+</html>

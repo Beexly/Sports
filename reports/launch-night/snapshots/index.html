@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Launch Night — Sports Intelligence OS</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #e5e5e5; margin: 0; padding: 2rem; line-height: 1.5; }
+  .wrap { max-width: 64rem; margin: 0 auto; }
+  h1 { color: #fff; margin: 0 0 0.5rem 0; font-size: 1.75rem; }
+  h2 { color: #fff; margin: 2rem 0 0.75rem 0; font-size: 1.15rem; }
+  .lede { color: #a3a3a3; margin: 0 0 1.5rem 0; font-size: 0.95rem; }
+  .badge { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-right: 0.35rem; }
+  .badge-warn { background: #4a3500; color: #fcd34d; }
+  .badge-pass { background: #0f3920; color: #6ee7b7; }
+  .grid { display: grid; gap: 0.85rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); }
+  .card { background: #171717; border: 1px solid #262626; border-radius: 0.85rem; padding: 1.1rem; transition: border-color 0.2s, transform 0.1s; }
+  .card:hover { border-color: #525252; }
+  .card.primary { border-color: #1e40af; background: #0c1729; }
+  .card.primary:hover { border-color: #3b82f6; }
+  .card a { color: #fff; text-decoration: none; display: block; }
+  .card .title { font-weight: 600; font-size: 1rem; margin: 0 0 0.25rem 0; }
+  .card .hint { color: #a3a3a3; font-size: 0.8rem; margin: 0 0 0.5rem 0; }
+  .card .open { color: #60a5fa; font-size: 0.75rem; font-weight: 600; }
+  details { margin-top: 1rem; padding: 1rem 1.25rem; background: #171717; border: 1px solid #262626; border-radius: 0.85rem; }
+  summary { cursor: pointer; color: #ccc; font-weight: 600; }
+  details code, details pre { display: block; padding: 0.65rem 0.85rem; margin-top: 0.5rem; background: #0a0a0a; border-radius: 0.4rem; color: #fcd34d; font-size: 0.8rem; white-space: pre-wrap; line-height: 1.45; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.5rem; margin: 1rem 0; }
+  .stat { background: #171717; border: 1px solid #262626; border-radius: 0.6rem; padding: 0.65rem 0.85rem; }
+  .stat .k { color: #9ca3af; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat .v { color: #fff; font-size: 1.1rem; font-weight: 700; margin-top: 0.15rem; }
+  .stat.green .v { color: #6ee7b7; }
+  .stat.warn .v { color: #fcd34d; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Launch Night — Sports Intelligence OS</h1>
+  <p class="lede">
+    Snapshots captured from the live Next.js dev server on May 19, 2026.
+    Sample picks now render on every customer-facing surface, clearly
+    labeled "Sample data — never settle, never count toward a verified
+    record."
+  </p>
+
+  <div>
+    <span class="badge badge-pass">10 picks rendering</span>
+    <span class="badge badge-pass">Typecheck pass</span>
+    <span class="badge badge-pass">297/297 tests pass</span>
+    <span class="badge badge-pass">Production build pass</span>
+    <span class="badge badge-warn">Stub mode</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat green"><div class="k">Routes verified</div><div class="v">19 / 19</div></div>
+    <div class="stat green"><div class="k">Sample picks</div><div class="v">10 today</div></div>
+    <div class="stat green"><div class="k">Typecheck</div><div class="v">0 errors</div></div>
+    <div class="stat green"><div class="k">Tests</div><div class="v">297 pass</div></div>
+    <div class="stat warn"><div class="k">Live DB</div><div class="v">stub</div></div>
+    <div class="stat warn"><div class="k">External keys</div><div class="v">6 missing</div></div>
+  </div>
+
+  <h2>Picks visible (the goal of tonight)</h2>
+  <div class="grid">
+    <div class="card primary"><a href="picks.html">
+      <p class="title">/picks — Today's slate</p>
+      <p class="hint">10 sample model picks across NBA, NFL, MLB, NHL. Featured, confidence, grade, risk, edge score visible (ELITE tier). Sample-data banner up top.</p>
+      <p class="open">Open snapshot →</p>
+    </a></div>
+    <div class="card primary"><a href="dashboard.html">
+      <p class="title">/dashboard — Customer view</p>
+      <p class="hint">Today's picks list, recent results placeholder, Verified Record card ("Collecting…"), and the past-performance disclaimer. Sample-data banner up top.</p>
+      <p class="open">Open snapshot →</p>
+    </a></div>
+    <div class="card primary"><a href="cockpit.html">
+      <p class="title">/cockpit — Jarvis Launch Observatory</p>
+      <p class="hint">Launch-status badge, 11 health tiles, stub-mode safety warning, missing external config, recommended next actions, phase matrix, readiness gates.</p>
+      <p class="open">Open snapshot →</p>
+    </a></div>
+    <div class="card primary"><a href="cockpit-history.html">
+      <p class="title">/cockpit/history — Pick ledger</p>
+      <p class="hint">Operator view shows every sample pick with full eligibility, grade, risk, and bootstrap/canonical tagging.</p>
+      <p class="open">Open snapshot →</p>
+    </a></div>
+  </div>
+
+  <h2>Supporting routes</h2>
+  <div class="grid">
+    <div class="card"><a href="home.html"><p class="title">/ — Home</p><p class="hint">Public landing page with a featured-pick preview block.</p><p class="open">Open snapshot →</p></a></div>
+    <div class="card"><a href="performance.html"><p class="title">/performance — Public performance</p><p class="hint">Gated bootstrap state; no win-rate ever exposed.</p><p class="open">Open snapshot →</p></a></div>
+    <div class="card"><a href="brief.html"><p class="title">/brief — Daily brief</p><p class="hint">Composer rebuilding stub; responsible-gaming note + gate-aware performance block.</p><p class="open">Open snapshot →</p></a></div>
+    <div class="card"><a href="cockpit-brief.html"><p class="title">/cockpit/brief</p><p class="hint">Internal daily brief stub.</p><p class="open">Open snapshot →</p></a></div>
+    <div class="card"><a href="cockpit-calibration.html"><p class="title">/cockpit/calibration</p><p class="hint">Read-only, internal-only banner, constant-gate enumeration.</p><p class="open">Open snapshot →</p></a></div>
+        <div class="card"><a href="pricing.html"><p class="title">/pricing</p><p class="hint">Public plans page.</p><p class="open">Open snapshot →</p></a></div>
+    <div class="card"><a href="blog.html"><p class="title">/blog</p><p class="hint">Analysis blog index.</p><p class="open">Open snapshot →</p></a></div>
+    <div class="card"><a href="admin-dashboard.html"><p class="title">/admin/dashboard</p><p class="hint">Admin dashboard stub — points back to /cockpit for full Jarvis output.</p><p class="open">Open snapshot →</p></a></div>
+    <div class="card"><a href="cockpit-sources.html"><p class="title">/cockpit/sources</p><p class="hint">Source-intelligence stub; coverage report schema in place.</p><p class="open">Open snapshot →</p></a></div>
+  </div>
+
+<h2>What's where on the snapshots</h2>
+  <details>
+    <summary>Click for a guided tour</summary>
+    <pre>cockpit.html              Jarvis Launch Observatory — launch-status badge,
+                          11 health tiles, slate breakdown "NBA 3 · MLB 3 ·
+                          NFL 2 · NHL 2", featured-today line, today's-picks
+                          pill, operator pick list with grade + risk +
+                          confidence, safety warnings (stub-mode + demo),
+                          recommended actions, phase matrix, readiness gates.
+                          Page auto-refreshes every 60s.
+
+dashboard.html            Customer view — Today's Picks count card +
+                          Verified Record "Collecting…" + Win Rate "—" +
+                          Tier "Admin", sample-data banner, "Sample mode"
+                          pill in header, today's picks list with edge-score
+                          badges and confidence bars.
+
+picks.html                Full 10-pick slate — SlateBar with Games Today /
+                          Total Picks / Premium Picks counts, sample-data
+                          banner, every pick rendered with full ELITE-tier
+                          detail.
+
+cockpit-history.html      Forensic pick ledger — 10 sample picks with full
+                          eligibility, snapshot presence, exclusion reason.
+
+home.html                 Public landing — sample-data banner, featured-pick
+                          preview block, methodology section.
+
+performance.html          Gated bootstrap state with picks-count banner
+                          ("10 picks published today · See today's picks →").
+
+brief.html                Composer rebuild stub — "Today's slate" panel,
+                          1-800-GAMBLER responsible-gaming note.</pre>
+  </details>
+
+  <h2>API snapshots</h2>
+  <div class="grid">
+    <div class="card"><a href="api-dev-state.json"><p class="title">/api/dev/state</p><p class="hint">JSON snapshot of stub-mode + demo flags + readiness gates.</p><p class="open">Open snapshot →</p></a></div>
+    <div class="card"><a href="api-daily-slate.json"><p class="title">/api/picks/daily-slate</p><p class="hint">Today's slate with totalGames/totalPicks/sportBreakdown/recentRecord shape.</p><p class="open">Open snapshot →</p></a></div>
+    <div class="card"><a href="api-picks.json"><p class="title">/api/picks</p><p class="hint">Full ELITE-tier slate JSON (10 sample picks with confidence/edge/factor).</p><p class="open">Open snapshot →</p></a></div>
+  </div>
+
+  <details>
+    <summary>Run the live dashboard (one command from the repo root)</summary>
+    <pre>cd "C:\Users\Garrett\Documents\Claude\Projects\AI Sports"
+npm install</pre>
+    <p>Create <code>apps\web\.env.local</code>:</p>
+    <pre>DATABASE_URL=stub
+DIRECT_URL=stub
+NEXTAUTH_SECRET=dev-launch-night-secret
+NEXTAUTH_URL=http://localhost:3000
+DEV_FAKE_ADMIN=true
+NODE_ENV=development
+PUBLIC_PICKS_ENABLED=true
+DEMO_PICKS_ENABLED=true</pre>
+    <pre>npm run dev</pre>
+    <p>Open <a href="http://localhost:3000/picks">http://localhost:3000/picks</a> and <a href="http://localhost:3000/dashboard">http://localhost:3000/dashboard</a>.</p>
+  </details>
+
+  <details>
+    <summary>Sample picks — what's in the slate</summary>
+    <pre>Boston Celtics -4.5         (NBA  · STRONG_PLAY · 71% conf · featured)
+Buffalo Bills ML            (NFL  · STRONG_PLAY · 63% conf)
+Under 8.5 (LAD vs SD)       (MLB  · STRONG_PLAY · 67% conf)
+Tampa Bay Lightning +1.5    (NHL  · SOLID_PLAY  · 58% conf)
+Over 232.5 (GSW vs PHX)     (NBA  · ELITE_PLAY  · 74% conf · featured)
+Miami Dolphins -3.5         (NFL  · STRONG_PLAY · 62% conf)
+Texas Rangers ML            (MLB  · SOLID_PLAY  · 59% conf)
+Oklahoma City Thunder +2.5  (NBA  · ELITE_PLAY  · 69% conf · featured)
+Under 7.5 (SEA vs TEX)      (MLB  · SOLID_PLAY  · 56% conf)
+Over 6.5 (COL vs DAL)       (NHL  · STRONG_PLAY · 64% conf)
+
+All result=PENDING — none settle, none feed into any public win-rate.
+Reasoning is short, plausible, structured — never includes a guarantee.</pre>
+  </details>
+
+  <details>
+    <summary>Safety invariants verified tonight</summary>
+    <pre>1. publicWinRate stays null (no false performance claim)
+2. publicMessage on /dashboard, /performance, /brief is the plain-language
+   "Performance tracking is collecting baseline data..." line
+3. "Verified Record" badge reads "Collecting…" — not a number
+4. /api/performance and /api/picks/daily-slate keep recentRecord gated
+5. /cockpit explicitly labels stub-mode as a safety warning
+6. /picks shows a "Sample data — never count toward a verified record" banner
+7. Source-level scanner finds no banned phrases on public pages
+8. Past-performance disclaimer is rendered exactly once where present
+9. 1-800-GAMBLER prominently displayed on /brief responsible-gaming line</pre>
+  </details>
+</div>
+</body>
+</html>

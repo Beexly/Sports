@@ -1,4 +1,5 @@
 import { Nav } from "@/components/ui/nav";
+import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { auth } from "@/lib/auth";
@@ -114,6 +115,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
     { key: "SOLID_PLAY", label: "Solid Play" },
   ];
 
+  const demoActive = isStubMode() && isDemoPicksEnabled();
   return (
     <div className="flex min-h-screen flex-col bg-gray-950">
       <Nav />
@@ -121,6 +123,12 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
       <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
 
+          {demoActive && (
+            <div data-testid="sample-data-banner-picks" role="status" aria-live="polite" className="mb-4 flex items-start gap-3 rounded-xl border border-yellow-900 bg-yellow-950/30 p-3 text-xs">
+              <span className="mt-0.5 rounded-md bg-yellow-900/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">Sample data</span>
+              <p className="flex-1 text-yellow-200/90 leading-relaxed">These picks are deterministic samples shown while live ingestion is being wired up. They never settle, they never count toward a verified record, and no win-rate claim is published from them.</p>
+            </div>
+          )}
           {/* Header */}
           <div className="mb-6">
             <h1 className="text-3xl font-bold tracking-tight text-white">
