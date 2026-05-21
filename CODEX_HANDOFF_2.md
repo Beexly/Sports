@@ -121,7 +121,9 @@ git push origin sports-intelligence-os-phase-9-ci
 # Open these URLs and verify each:
 #  - https://galaxysportsedge.com (hero shows EDGE backdrop, founder byline)
 #  - https://galaxysportsedge.com (scroll: SignalPreviewQueue animates,
-#    ToutComparison renders, methodology icons show bespoke marks)
+#    AnnotatedSampleSignal renders the sample pick card flanked by 6 callouts,
+#    ToutComparison renders, methodology icons show bespoke marks, footer
+#    shows ambient outlined "GALAXY SPORTS EDGE" wordmark behind columns)
 #  - https://galaxysportsedge.com/about (first-person founder voice)
 #  - https://galaxysportsedge.com/methodology (per-page <title>)
 #  - https://galaxysportsedge.com/pricing (FAQ section renders, server-side
@@ -131,11 +133,14 @@ git push origin sports-intelligence-os-phase-9-ci
 #  - https://galaxysportsedge.com/vault
 #  - https://galaxysportsedge.com/performance (H1 says "Calibration Report")
 #  - https://galaxysportsedge.com/picks
+#  - https://galaxysportsedge.com/vs/tout-services (NEW SEO landing —
+#    verify metadata, ToutComparison renders, 4-watchlist section renders)
 #  - https://galaxysportsedge.com/opengraph-image (renders the new founder-
 #    signed OG card)
 #  - https://galaxysportsedge.com/robots.txt (verify /admin /cockpit
 #    /dashboard /brief still disallowed)
-#  - https://galaxysportsedge.com/sitemap.xml (verify public pages listed)
+#  - https://galaxysportsedge.com/sitemap.xml (verify public pages listed;
+#    ideally add /vs/tout-services to the sitemap if not auto-discovered)
 #  - View-source the homepage and confirm Organization and WebSite JSON-LD
 #    scripts appear inside <head>
 
@@ -327,13 +332,21 @@ Documented for the next pass. None are launch-blockers.
 - `apps/web/app/dashboard/layout.tsx` (noindex)
 - `apps/web/app/brief/layout.tsx` (noindex)
 - `apps/web/app/auth/layout.tsx` (noindex)
+- `apps/web/app/vs/tout-services/page.tsx` (standalone SEO landing — reuses ToutComparison + adds keyword-rich expansion sections)
 - `apps/web/components/hero/signal-preview-queue.tsx` (live scoring preview)
 - `apps/web/components/home/tout-comparison.tsx` (vs tout services section)
+- `apps/web/components/home/annotated-sample-signal.tsx` (anatomy-of-a-signal — annotated sample pick card with 6 callouts)
 - `apps/web/components/pricing/subscribe-button.tsx` (isolated client subscribe)
 - `docs/email-sequences/welcome-flow.md` (5-email founder welcome sequence)
 - `docs/launch-prep/30-day-campaign-plan.md` (week-by-week content plan)
+- `docs/launch-prep/founder-outreach-onepager.md` (DM templates + objection handling + targeting list)
 - `docs/brand/brand-guidelines.md` (single-source-of-truth brand spec)
 - `CODEX_HANDOFF_2.md` (this file)
+
+**Additional modifications (post-initial-handoff pass):**
+- `apps/web/app/page.tsx` — wired AnnotatedSampleSignal between Methodology and ToutComparison
+- `apps/web/styles/pickpilot-kit.css` — added `.footer-wordmark` ambient signature (240px outlined "GALAXY SPORTS EDGE" behind footer columns; clamped responsive)
+- `apps/web/components/ui/footer.tsx` — rendered the wordmark div
 
 ---
 

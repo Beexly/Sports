@@ -39,7 +39,7 @@ const PUBLIC_PAGES = [
   { path: "/vault", mustContain: ["Vault"] },
   { path: "/about", mustContain: ["About"] },
   { path: "/press", mustContain: ["Press"] },
-  { path: "/contact", mustContain: ["Contact", "support@"] },
+  { path: "/contact", mustContain: ["Contact", "hq@"] },
   { path: "/responsible-play", mustContain: ["Responsible"] },
   { path: "/terms", mustContain: ["Terms"] },
   { path: "/privacy", mustContain: ["Privacy"] },
