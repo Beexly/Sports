@@ -50,7 +50,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           </svg>
         </div>
         <span className="text-xl font-bold tracking-tight text-white">
-          SportsPicks <span className="text-brand-400">Pro</span>
+          {BRAND_NAME}
         </span>
       </Link>
 

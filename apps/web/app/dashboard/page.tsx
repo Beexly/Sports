@@ -4,6 +4,7 @@ import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { BRAND_NAME } from "@/lib/brand";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
 
 export const dynamic = "force-dynamic";
@@ -144,7 +145,7 @@ export default async function DashboardPage() {
       <header className="border-b border-gray-800 bg-gray-950/80 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-sm font-semibold text-white">
-            SportsPicks Pro
+            {BRAND_NAME}
           </Link>
           <nav className="flex items-center gap-4 text-xs text-gray-400">
             <Link href="/picks" className="hover:text-white">Picks</Link>
