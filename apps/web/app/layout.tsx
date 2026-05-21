@@ -1,6 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { BRAND_META, BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand";
+import {
+  BRAND_META,
+  BRAND_NAME,
+  BRAND_TAGLINE,
+  SOCIAL,
+  SUPPORT_EMAIL,
+} from "@/lib/brand";
 
 export const viewport: Viewport = {
   themeColor: "#04060a",
@@ -16,38 +22,64 @@ export const viewport: Viewport = {
  * `styles/design-tokens.css` to keep one source of truth with the standalone
  * design-system CSS. If we ever swap to `next/font` for layout-shift wins,
  * remove the @import there and mirror the variables here.
+ *
+ * SEO foundation:
+ *  - Per-page <title>/<description> override the defaults below via each
+ *    page.tsx exporting its own `metadata`.
+ *  - JSON-LD (Organization + WebSite) is rendered in <head> so search engines
+ *    have a verified entity to attach signals to from day one.
+ *  - X handle wired in twitter.site/creator so attribution survives reshares.
  */
 
+const SITE_URL =
+  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://www.galaxysportsedge.com";
+
+const ORG_HANDLE = "@GalaxySportsAI";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: BRAND_META.defaultTitle,
     template: BRAND_META.titleTemplate,
   },
   description: BRAND_META.description,
   keywords: [
-    "sports picks",
-    "sports analysis",
-    "NFL picks",
-    "NBA picks",
-    "MLB picks",
-    "NHL picks",
-    "transparent sports model",
-    "sports intelligence",
+    "sports betting model",
+    "sports analytics platform",
+    "transparent sports picks",
+    "audited sports picks",
+    "calibrated betting confidence",
+    "sports betting intelligence",
+    "sports pick reasoning",
+    "sharp sports analytics",
+    "anti-tout sports model",
   ],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     title: BRAND_META.defaultTitle,
     description: BRAND_TAGLINE,
     siteName: BRAND_NAME,
+    url: SITE_URL,
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: `${BRAND_NAME} — ${BRAND_TAGLINE}`,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: BRAND_META.defaultTitle,
     description: BRAND_TAGLINE,
+    site: ORG_HANDLE,
+    creator: ORG_HANDLE,
+    images: ["/opengraph-image"],
   },
-  metadataBase: process.env["NEXT_PUBLIC_APP_URL"]
-    ? new URL(process.env["NEXT_PUBLIC_APP_URL"])
-    : undefined,
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -58,6 +90,48 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 };
 
+// ──────────────────────────────────────────────────────────────────────────
+// JSON-LD — Organization + WebSite
+// ──────────────────────────────────────────────────────────────────────────
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: BRAND_NAME,
+  alternateName: "GSE",
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo-mark.svg`,
+  description: BRAND_META.description,
+  founder: {
+    "@type": "Person",
+    name: "Garrett Baxley",
+  },
+  sameAs: [
+    SOCIAL.x,
+    SOCIAL.instagram,
+    SOCIAL.threads,
+    SOCIAL.facebook,
+  ].filter(Boolean),
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    email: SUPPORT_EMAIL,
+    availableLanguage: ["en"],
+  },
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: BRAND_NAME,
+  url: SITE_URL,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${SITE_URL}/picks?q={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -65,6 +139,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
+          }}
+        />
+      </head>
       <body className="min-h-screen antialiased">{children}</body>
     </html>
   );

@@ -6,10 +6,11 @@ export default function AuthErrorPage({
   searchParams: { error?: string };
 }) {
   const errorMessages: Record<string, string> = {
-    Configuration: "Server configuration error. Please try again later.",
-    AccessDenied: "Access was denied. You may not have permission to sign in.",
-    Verification: "The sign-in link has expired or was already used.",
-    Default: "An error occurred during sign-in. Please try again.",
+    Configuration:
+      "Something's misconfigured on my side. Try again in a minute, or email hq@galaxysportsedge.com if it sticks.",
+    AccessDenied: "You don't have access to that page yet.",
+    Verification: "That sign-in link's expired. Request a fresh one.",
+    Default: "Sign-in didn't go through. Give it another shot.",
   };
 
   const message =
@@ -35,13 +36,13 @@ export default function AuthErrorPage({
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-3">Sign-In Error</h1>
+          <h1 className="text-2xl font-bold text-white mb-3">Sign-in didn&apos;t go through</h1>
           <p className="text-gray-400 mb-6">{message}</p>
           <Link
             href="/auth/signin"
             className="inline-block w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl transition-colors"
           >
-            Try Again
+            Try sign-in again
           </Link>
           <Link
             href="/"

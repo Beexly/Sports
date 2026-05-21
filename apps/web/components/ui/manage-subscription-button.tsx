@@ -13,12 +13,15 @@ export function ManageSubscriptionButton() {
       const res = await fetch("/api/subscriptions/portal", { method: "POST" });
       const data = (await res.json()) as { url?: string; error?: string };
       if (!res.ok || !data.url) {
-        setError(data.error ?? "Failed to open billing portal.");
+        setError(
+          data.error ??
+            "Couldn't open the billing portal. Try again, or email hq@galaxysportsedge.com if it sticks.",
+        );
         return;
       }
       window.location.href = data.url;
     } catch {
-      setError("Network error. Please try again.");
+      setError("Network blip on my end. Check your connection and retry.");
     } finally {
       setLoading(false);
     }
@@ -57,7 +60,7 @@ export function ManageSubscriptionButton() {
             Opening portal…
           </span>
         ) : (
-          "Manage Subscription"
+          "Manage billing"
         )}
       </button>
       {error && (

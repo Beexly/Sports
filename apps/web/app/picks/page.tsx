@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
@@ -6,6 +7,13 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import type { PublicPick, DailySlate } from "@sports/types";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Today's Signal Feed — Sports Picks With Reasoning Attached",
+  description:
+    "Live sports signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No locks, no certainty — just the reasoning.",
+  alternates: { canonical: "/picks" },
+};
 
 // ─────────────────────────────────────────────
 // Types
@@ -161,11 +169,15 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           )}
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-3xl font-bold tracking-tight text-white">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
               Signal Feed
+            </p>
+            <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
+              Today&apos;s sports signals.
             </h1>
             <p className="mt-1.5 text-sm text-gray-400">
-              Ranked signals with price, timing, risk, and the reason attached.
+              Every signal published today, with price, timing, risk, and the
+              reason I let it ship.
             </p>
           </div>
 
@@ -308,9 +320,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold text-white">No picks for this date</h3>
+              <h3 className="text-base font-semibold text-white">No signals published for this date</h3>
               <p className="mt-2 text-sm text-gray-500">
-                Picks are generated daily based on available games and odds.
+                I only publish when the stack earns it. Some slates don&apos;t
+                clear the gates — that&apos;s the point.
               </p>
             </div>
           )}
@@ -337,7 +350,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 You&apos;re seeing {entitlements.dailyPickLimit ?? 1} free pick per day.
               </p>
               <p className="mt-1 text-xs text-blue-400/70">
-                Upgrade to unlock all picks, confidence scores, factor breakdowns, and edge scores.
+                Pro unlocks every signal, the confidence rating, factor trail,
+                and Edge Index for each one.
               </p>
               <Link
                 href="/pricing"
@@ -463,9 +477,10 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
   return (
     <div className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/50 bg-yellow-950/30 p-5 sm:flex-row sm:items-center">
       <div>
-        <p className="text-sm font-semibold text-yellow-300">You&apos;re on the Free plan</p>
+        <p className="text-sm font-semibold text-yellow-300">You&apos;re on Free — one signal a day</p>
         <p className="mt-0.5 text-xs text-yellow-600">
-          Upgrade to Pro or Elite to unlock all picks, confidence scores, and factor breakdowns.
+          Pro and Elite unlock every signal, the confidence rating, and the
+          factor trail behind each one.
         </p>
       </div>
       <div className="flex shrink-0 items-center gap-3">
@@ -474,14 +489,14 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
             href="/auth/signin"
             className="rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:bg-gray-700"
           >
-            Sign In
+            Sign in
           </Link>
         )}
         <Link
           href="/pricing"
           className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
         >
-          Upgrade Now
+          See plans
         </Link>
       </div>
     </div>
@@ -517,7 +532,7 @@ function DatePickerForm({
         type="submit"
         className="rounded-lg bg-gray-800 px-3 py-1.5 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
       >
-        Go
+        Apply date
       </button>
     </form>
   );

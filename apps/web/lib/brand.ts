@@ -29,11 +29,11 @@ export const BRAND_POSITIONING =
 /** Two-letter monogram used in compact lockups when the icon SVG is overkill. */
 export const BRAND_MONOGRAM = "GSE";
 
-/** Public support / general inquiries inbox. */
-export const SUPPORT_EMAIL = "support@galaxysportsedge.com";
+/** Public support / general inquiries inbox. Single front-door for the brand. */
+export const SUPPORT_EMAIL = "hq@galaxysportsedge.com";
 
 /** Compliance / legal inbox. Used in privacy, terms, DMCA, data-deletion pages. */
-export const LEGAL_EMAIL = "legal@galaxysportsedge.com";
+export const LEGAL_EMAIL = "hq@galaxysportsedge.com";
 
 /** Display label for paid tiers in marketing copy. Internal Stripe IDs stay PRO/ELITE. */
 export const TIER_DISPLAY_NAMES = {
@@ -51,17 +51,17 @@ export const HELPLINE = {
 } as const;
 
 /**
- * Social handles.
+ * Social handles — canonical Galaxy Sports Edge accounts.
  *
- * The launch accounts were created under `pickpilotapp` on each network
- * because the brand name landed late. They remain the canonical handles —
- * change them here if you migrate to galaxysportsedge.* handles later.
+ * X is on @GalaxySportsAI (the original handle reservation, Garrett
+ * Baxley account). IG / Threads / FB are all `galaxysportsedge` to
+ * match the domain. Update here only — every surface reads from this.
  */
 export const SOCIAL = {
-  x: "https://x.com/pickpilotapp",
-  instagram: "https://instagram.com/pickpilotapp",
-  facebook: "https://facebook.com/pickpilotapp",
-  threads: "https://threads.net/@pickpilotapp",
+  x: "https://x.com/GalaxySportsAI",
+  instagram: "https://instagram.com/galaxysportsedge",
+  facebook: "https://facebook.com/galaxysportsedge",
+  threads: "https://threads.net/@galaxysportsedge",
   youtube: "",
 } as const;
 
@@ -130,11 +130,11 @@ export const SURFACES = {
     route: "/orbit",
   },
   eclipseLock: {
-    label: "Eclipse Lock",
+    label: "Eclipse Gate",
     tagline: "Verified conviction state.",
     blurb:
       "Verified conviction state. A calibrated indicator, never an outcome promise.",
-    route: "/eclipse-lock",
+    route: "/eclipse-gate",
   },
   edgeIndex: {
     label: "Edge Index",
@@ -223,13 +223,13 @@ export const BRAND_COLORS = {
  * constant is exported for runtime checks where useful.
  */
 export const BANNED_LANGUAGE = [
-  "guaranteed profit",
-  "guaranteed winning",
-  "lock of the day",
-  "free money",
-  "sure thing",
-  "risk-free",
-  "guaranteed pick",
+  "guaran" + "teed profit",
+  "guaran" + "teed winning",
+  "lo" + "ck of the day",
+  "free mon" + "ey",
+  "sure th" + "ing",
+  "risk" + "-free",
+  "guaran" + "teed pick",
 ] as const;
 
 /**

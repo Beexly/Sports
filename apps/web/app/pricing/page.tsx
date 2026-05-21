@@ -1,13 +1,28 @@
-"use client";
-
-import { useState } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { SubscribeButton } from "@/components/pricing/subscribe-button";
+import { BRAND_NAME } from "@/lib/brand";
 
 // ─────────────────────────────────────────────
-// Plan data
+// Metadata — SEO-critical surface
+// ─────────────────────────────────────────────
+
+export const metadata: Metadata = {
+  title: "Pricing — One Person. Three Tiers. No Upsell Games.",
+  description:
+    "Free for one signal a day. $19/mo for every signal with the reasoning attached. $49/mo for the alerts I'd want on a live slate. Cancel any time from your dashboard.",
+  alternates: { canonical: "/pricing" },
+  openGraph: {
+    title: `Pricing — ${BRAND_NAME}`,
+    description:
+      "Free, Pro ($19/mo), Elite ($49/mo). Every paid plan ships with a 7-day refund window.",
+  },
+};
+
+// ─────────────────────────────────────────────
+// Plan data — copy is founder-voiced, not SaaS templated
 // ─────────────────────────────────────────────
 
 const PLANS = [
@@ -16,18 +31,19 @@ const PLANS = [
     name: "Free",
     price: 0,
     period: null,
-    description: "Get started with one free pick per day.",
+    description:
+      "One signal a day, so you can sample the discipline before you spend a dollar.",
     badge: null,
-    cta: "Get Started Free",
+    cta: "Start free",
     ctaHref: "/auth/signin",
     features: [
-      { label: "1 pick per day", included: true },
+      { label: "1 signal per day", included: true },
       { label: "Game matchup info", included: true },
-      { label: "Basic pick type (spread / ML / total)", included: true },
-      { label: "Confidence scores", included: false },
-      { label: "Premium picks (highest confidence)", included: false },
-      { label: "Full reasoning & analysis", included: false },
-      { label: "Line movement alerts", included: false },
+      { label: "Pick type (spread / ML / total)", included: true },
+      { label: "Confidence rating on every signal", included: false },
+      { label: "Highest-Edge-Index signals", included: false },
+      { label: "Full factor trail & reasoning", included: false },
+      { label: "Line-movement alerts", included: false },
       { label: "Email + push notifications", included: false },
       { label: "All 7 sports", included: false },
     ],
@@ -37,18 +53,18 @@ const PLANS = [
     name: "Pro",
     price: 19,
     period: "month",
-    description: "Unlimited picks with confidence scores and full reasoning.",
-    badge: "Most Popular",
+    description:
+      "Every signal I publish, with the confidence rating and factor trail attached.",
+    badge: "Where most start",
     cta: "Subscribe to Pro",
-    ctaHref: null,
     features: [
-      { label: "Unlimited picks per day", included: true },
+      { label: "Every signal, every day", included: true },
       { label: "Game matchup info", included: true },
-      { label: "Basic pick type (spread / ML / total)", included: true },
-      { label: "Confidence scores", included: true },
-      { label: "Premium picks (highest confidence)", included: true },
-      { label: "Full reasoning & analysis", included: true },
-      { label: "Line movement alerts", included: true },
+      { label: "Pick type (spread / ML / total)", included: true },
+      { label: "Confidence rating on every signal", included: true },
+      { label: "Highest-Edge-Index signals", included: true },
+      { label: "Full factor trail & reasoning", included: true },
+      { label: "Line-movement alerts", included: true },
       { label: "Email + push notifications", included: false },
       { label: "All 7 sports", included: true },
     ],
@@ -58,18 +74,18 @@ const PLANS = [
     name: "Elite",
     price: 49,
     period: "month",
-    description: "Everything in Pro, plus real-time alerts and priority access.",
-    badge: "Best Value",
+    description:
+      "Pro plus the alerts I'd want if I were the one on the line.",
+    badge: "All signals, all alerts",
     cta: "Subscribe to Elite",
-    ctaHref: null,
     features: [
-      { label: "Unlimited picks per day", included: true },
+      { label: "Every signal, every day", included: true },
       { label: "Game matchup info", included: true },
-      { label: "Basic pick type (spread / ML / total)", included: true },
-      { label: "Confidence scores", included: true },
-      { label: "Premium picks (highest confidence)", included: true },
-      { label: "Full reasoning & analysis", included: true },
-      { label: "Line movement alerts", included: true },
+      { label: "Pick type (spread / ML / total)", included: true },
+      { label: "Confidence rating on every signal", included: true },
+      { label: "Highest-Edge-Index signals", included: true },
+      { label: "Full factor trail & reasoning", included: true },
+      { label: "Line-movement alerts", included: true },
       { label: "Email + push notifications", included: true },
       { label: "All 7 sports", included: true },
     ],
@@ -78,92 +94,93 @@ const PLANS = [
 
 type PlanId = (typeof PLANS)[number]["id"];
 
-// Feature comparison rows (same order as feature list above)
 const COMPARISON_FEATURES = [
-  "Picks per day",
+  "Signals per day",
   "Game matchup info",
   "Pick type",
-  "Confidence scores",
-  "Premium picks",
-  "Full reasoning",
-  "Line movement alerts",
+  "Confidence rating",
+  "Highest-Edge-Index signals",
+  "Full factor trail",
+  "Line-movement alerts",
   "Notifications",
   "Sports covered",
 ] as const;
 
-const COMPARISON_CELLS: Record<
-  PlanId,
-  (string | boolean)[]
-> = {
-  FREE: ["1", true, true, false, false, false, false, false, "3 of 7"],
+const COMPARISON_CELLS: Record<PlanId, (string | boolean)[]> = {
+  FREE: ["1", true, true, false, false, false, false, false, "Sampler"],
   PRO: ["Unlimited", true, true, true, true, true, true, false, "All 7"],
   ELITE: ["Unlimited", true, true, true, true, true, true, true, "All 7"],
 };
 
 // ─────────────────────────────────────────────
-// Page (Client Component — handles Stripe redirect)
+// FAQ — JSON-LD eligible
+// ─────────────────────────────────────────────
+
+const FAQ = [
+  {
+    q: "Is there a free trial on Pro or Elite?",
+    a: "Every paid plan ships with a 7-day refund window. Cancel any time from your dashboard.",
+  },
+  {
+    q: "How is this different from a tout service?",
+    a: "Tout services publish their wins and quietly delete the losses. I publish every signal's full factor trail and refuse to show a public win-rate until enough canonical settled history exists to support one honestly.",
+  },
+  {
+    q: "Why is the Performance page empty right now?",
+    a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to make the published number statistically defensible. If I have to wait, I wait. That's the whole point.",
+  },
+  {
+    q: "Which sports are covered?",
+    a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. The slate runs on a 30-minute refresh loop during games.",
+  },
+  {
+    q: "What happens after I sign up?",
+    a: "Free plan gets one signal a day as soon as the readiness gate opens. Pro and Elite unlock immediately — every signal with full reasoning, plus the Edge Index and factor trail behind each one.",
+  },
+] as const;
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.a,
+    },
+  })),
+};
+
+// ─────────────────────────────────────────────
+// Page
 // ─────────────────────────────────────────────
 
 export default function PricingPage() {
-  const router = useRouter();
-  const [loadingTier, setLoadingTier] = useState<PlanId | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleSubscribe(tier: "PRO" | "ELITE") {
-    setError(null);
-    setLoadingTier(tier);
-
-    try {
-      const res = await fetch("/api/subscriptions/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier }),
-      });
-
-      if (res.status === 401) {
-        // Not signed in — redirect to sign in, come back to pricing
-        router.push("/auth/signin?callbackUrl=/pricing");
-        return;
-      }
-
-      const data = (await res.json()) as { url?: string; error?: string };
-
-      if (!res.ok || !data.url) {
-        setError(data.error ?? "Something went wrong. Please try again.");
-        return;
-      }
-
-      // Redirect to Stripe Checkout
-      window.location.href = data.url;
-    } catch {
-      setError("Network error. Please check your connection and try again.");
-    } finally {
-      setLoadingTier(null);
-    }
-  }
-
   return (
     <div className="flex min-h-screen flex-col bg-gray-950">
       <Nav />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           {/* Header */}
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              Simple, Transparent Pricing
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent-300">
+              Pricing
+            </p>
+            <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+              One person. Three tiers. No upsell games.
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-lg text-gray-400">
-              Start free. Upgrade when you&apos;re ready. Cancel any time.
+              Start free. Upgrade when the signal earns it. Cancel any time
+              from your dashboard.
             </p>
           </div>
-
-          {/* Error banner */}
-          {error && (
-            <div className="mx-auto mt-6 max-w-md rounded-xl border border-red-800/60 bg-red-950/40 p-4 text-center">
-              <p className="text-sm text-red-400">{error}</p>
-            </div>
-          )}
 
           {/* Plan cards */}
           <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -179,9 +196,8 @@ export default function PricingPage() {
                       : "border-gray-800 bg-gray-900/60",
                   ].join(" ")}
                 >
-                  {/* Badge */}
                   {plan.badge && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
                       <span
                         className={[
                           "rounded-full px-3 py-0.5 text-xs font-semibold",
@@ -195,7 +211,6 @@ export default function PricingPage() {
                     </div>
                   )}
 
-                  {/* Plan name + price */}
                   <div className="mb-4">
                     <h2 className="text-xl font-bold text-white">
                       {plan.name}
@@ -215,46 +230,17 @@ export default function PricingPage() {
                     </p>
                   </div>
 
-                  {/* Features */}
                   <ul className="mb-6 flex flex-col gap-3">
                     {plan.features.map(({ label, included }) => (
                       <li
                         key={label}
                         className="flex items-center gap-2 text-sm"
                       >
-                        {included ? (
-                          <svg
-                            className="h-4 w-4 shrink-0 text-green-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2.5}
-                            stroke="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m4.5 12.75 6 6 9-13.5"
-                            />
-                          </svg>
-                        ) : (
-                          <svg
-                            className="h-4 w-4 shrink-0 text-gray-700"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M6 18 18 6M6 6l12 12"
-                            />
-                          </svg>
-                        )}
+                        {included ? <CheckIcon /> : <DashIcon />}
                         <span
-                          className={included ? "text-gray-200" : "text-gray-600"}
+                          className={
+                            included ? "text-gray-200" : "text-gray-600"
+                          }
                         >
                           {label}
                         </span>
@@ -262,57 +248,20 @@ export default function PricingPage() {
                     ))}
                   </ul>
 
-                  {/* CTA */}
                   <div className="mt-auto">
-                    {plan.ctaHref ? (
+                    {plan.id === "FREE" ? (
                       <Link
-                        href={plan.ctaHref}
+                        href="/auth/signin"
                         className="block w-full rounded-xl border border-gray-700 bg-gray-800 py-2.5 text-center text-sm font-semibold text-gray-200 transition-colors hover:bg-gray-700"
                       >
                         {plan.cta}
                       </Link>
                     ) : (
-                      <button
-                        type="button"
-                        disabled={loadingTier !== null}
-                        onClick={() =>
-                          handleSubscribe(plan.id as "PRO" | "ELITE")
-                        }
-                        className={[
-                          "w-full rounded-xl py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60",
-                          isHighlighted
-                            ? "bg-brand-600 text-white hover:bg-brand-500"
-                            : "border border-yellow-700/60 bg-yellow-900/20 text-yellow-300 hover:bg-yellow-900/40",
-                        ].join(" ")}
-                      >
-                        {loadingTier === plan.id ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <svg
-                              className="h-4 w-4 animate-spin"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              />
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                              />
-                            </svg>
-                            Redirecting to checkout…
-                          </span>
-                        ) : (
-                          plan.cta
-                        )}
-                      </button>
+                      <SubscribeButton
+                        tier={plan.id}
+                        label={plan.cta}
+                        variant={plan.id === "PRO" ? "primary" : "ghost"}
+                      />
                     )}
                   </div>
                 </div>
@@ -323,7 +272,7 @@ export default function PricingPage() {
           {/* Feature comparison table */}
           <div className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">
-              Full Feature Comparison
+              Side by side
             </h2>
             <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-800">
               <table className="w-full text-sm">
@@ -340,8 +289,8 @@ export default function PricingPage() {
                           plan.id === "PRO"
                             ? "text-brand-400"
                             : plan.id === "ELITE"
-                            ? "text-yellow-400"
-                            : "text-gray-300",
+                              ? "text-yellow-400"
+                              : "text-gray-300",
                         ].join(" ")}
                       >
                         {plan.name}
@@ -383,9 +332,34 @@ export default function PricingPage() {
             </div>
           </div>
 
-          {/* Money back note */}
-          <p className="mt-8 text-center text-xs text-gray-600">
-            All paid plans include a 7-day money-back guarantee. Billed monthly.
+          {/* FAQ */}
+          <section className="mt-20">
+            <h2 className="text-center text-2xl font-bold text-white">
+              Questions I&apos;ve already been asked
+            </h2>
+            <div className="mx-auto mt-8 max-w-3xl divide-y divide-gray-800/60 rounded-2xl border border-gray-800 bg-gray-900/40">
+              {FAQ.map((item) => (
+                <details
+                  key={item.q}
+                  className="group px-5 py-4 [&_summary::-webkit-details-marker]:hidden"
+                >
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-gray-100">
+                    <span>{item.q}</span>
+                    <span className="text-gray-500 transition-transform group-open:rotate-45">
+                      +
+                    </span>
+                  </summary>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-400">
+                    {item.a}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </section>
+
+          {/* Refund note */}
+          <p className="mt-12 text-center text-xs text-gray-600">
+            Every paid plan ships with a 7-day refund window. Billed monthly.
             Cancel any time from your dashboard.
           </p>
         </div>
@@ -399,6 +373,40 @@ export default function PricingPage() {
 // ─────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────
+
+function CheckIcon() {
+  return (
+    <svg
+      className="h-4 w-4 shrink-0 text-green-400"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={2.5}
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m4.5 12.75 6 6 9-13.5"
+      />
+    </svg>
+  );
+}
+
+function DashIcon() {
+  return (
+    <svg
+      className="h-4 w-4 shrink-0 text-gray-700"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={2}
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+    </svg>
+  );
+}
 
 function ComparisonCell({ value }: { value: string | boolean }) {
   if (typeof value === "boolean") {
@@ -426,11 +434,7 @@ function ComparisonCell({ value }: { value: string | boolean }) {
         stroke="currentColor"
         aria-label="Not included"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M6 18 18 6M6 6l12 12"
-        />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
       </svg>
     );
   }

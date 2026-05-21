@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import Link from "next/link";
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -6,6 +7,13 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { PerformanceBootstrapState } from "@/components/performance/bootstrap-state";
 import type { PickType, PickTier } from "@sports/types";
+
+export const metadata: Metadata = {
+  title: "Calibration Report — Settled-Pick Audit Trail",
+  description:
+    "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
+  alternates: { canonical: "/performance" },
+};
 
 // Types
 
@@ -173,11 +181,12 @@ export default async function PerformancePage() {
         <div className="mx-auto max-w-5xl">
           <div className="mb-10 text-center">
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              Performance
+              Calibration Report
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-gray-400">
-              Every settled canonical pick is included. Bootstrap-era picks are
-              excluded by design.
+              Every settled canonical pick is included. Bootstrap-era picks
+              are excluded by design — they don&apos;t get to inflate the
+              record.
             </p>
             <p className="mt-3 text-xs text-gray-600">
               Past performance does not guarantee future results.

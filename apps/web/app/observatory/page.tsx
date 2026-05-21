@@ -5,8 +5,10 @@ import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME, SURFACES } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: SURFACES.observatory.label,
-  description: SURFACES.observatory.blurb,
+  title: "Edge Map — Live Market Intelligence by Sport, Slate, Matchup",
+  description:
+    "Real-time line movement, sharp/public splits, and market depth across every active matchup. The same view the model is reading from. Opens after the readiness gate clears.",
+  alternates: { canonical: "/observatory" },
 };
 
 /**
@@ -32,17 +34,17 @@ export default function ObservatoryPage() {
             <p className="mt-5 max-w-2xl text-lg text-ink-300">
               {SURFACES.observatory.blurb} When the readiness gate opens, the
               Observatory streams line movement, sharp/public splits, and
-              market depth across every active matchup — the same view the
-              model is reading from.
+              market depth across every active matchup — the same view
+              I&apos;m reading from when the model proposes a signal.
             </p>
 
             <div className="mt-10 surface-card flex flex-col gap-3 p-6">
               <p className="eyebrow">Status · Pre-launch</p>
               <p className="text-sm leading-relaxed text-ink-300">
-                The Observatory opens after {BRAND_NAME} accumulates enough
-                canonical settled picks to publish a calibrated live signal.
-                In the meantime, the methodology page explains exactly what
-                feeds into it.
+                I keep the Observatory dark until {BRAND_NAME} has enough
+                settled history to publish a calibrated live read. In the
+                meantime, the methodology page explains exactly what feeds
+                into it.
               </p>
               <div className="mt-2 flex flex-wrap gap-3">
                 <Link href="/methodology" className="btn btn-primary">

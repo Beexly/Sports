@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { BRAND_NAME, BRAND_TAGLINE, CLOSING_LINE } from "@/lib/brand";
+import { BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand";
 
 /**
  * Default OpenGraph image — Galaxy Sports Edge.
@@ -103,7 +103,7 @@ export default async function Image() {
           </div>
         </div>
 
-        {/* Eyebrow with live signal dot */}
+        {/* Eyebrow — founder anchor instead of product chrome */}
         <div
           style={{
             marginTop: 80,
@@ -126,7 +126,7 @@ export default async function Image() {
               display: "flex",
             }}
           />
-          Sports intelligence platform · v5.0
+          Built by Garrett Baxley · Founder
         </div>
 
         {/* Tagline — locked copy from Brand Use Pack §7 */}
@@ -145,7 +145,24 @@ export default async function Image() {
           {BRAND_TAGLINE}
         </div>
 
-        {/* Footer rule */}
+        {/* Personal subhead — the reason it exists, in my voice */}
+        <div
+          style={{
+            marginTop: 18,
+            display: "flex",
+            fontSize: 26,
+            fontWeight: 400,
+            lineHeight: 1.35,
+            color: "#C7CCD9",
+            maxWidth: 920,
+            fontStyle: "italic",
+          }}
+        >
+          Because I&apos;m tired of paying for &ldquo;locks&rdquo; from people
+          who quietly delete the losses.
+        </div>
+
+        {/* Footer — a principle, signed */}
         <div
           style={{
             marginTop: "auto",
@@ -161,8 +178,8 @@ export default async function Image() {
             paddingTop: 28,
           }}
         >
-          <span>Calibrated · confidence-rated · disciplined</span>
-          <span style={{ color: "#00E5FF" }}>{CLOSING_LINE}</span>
+          <span>If we can&apos;t show our work, we don&apos;t publish.</span>
+          <span style={{ color: "#00E5FF" }}>— Garrett</span>
         </div>
       </div>
     ),

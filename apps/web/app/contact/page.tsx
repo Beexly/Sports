@@ -36,10 +36,10 @@ export default function ContactPage() {
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Get in touch</p>
             <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              We answer real people, not bots.
+              I answer real people, not bots.
             </h1>
             <p className="mt-5 max-w-xl text-lg text-ink-300">
-              We aim to reply within one business day. Faster on weekday
+              I aim to reply within one business day. Faster on weekday
               afternoons, slower around major slates.
             </p>
 

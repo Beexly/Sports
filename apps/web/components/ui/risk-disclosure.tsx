@@ -19,8 +19,9 @@ export interface RiskDisclosureProps {
 }
 
 const BODY =
-  "Sports betting carries risk. Only wager what you can afford to lose. " +
-  "If you or someone you know has a gambling problem, call 1-800-GAMBLER.";
+  "Sports wagering is real risk. Only stake what you can afford to lose " +
+  "without changing your week. If you or someone you know has a gambling " +
+  "problem, call 1-800-GAMBLER.";
 
 const PAST = " Past performance does not guarantee future results.";
 

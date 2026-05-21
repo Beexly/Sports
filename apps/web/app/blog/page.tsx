@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { db } from "@sports/db";
 import { formatDate } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: "From the desk — Sports market analysis from Galaxy Sports Edge",
+  description:
+    "Pre-game reads, line-movement breakdowns, and methodology notes from the founder. Every post tied back to the live board.",
+  alternates: { canonical: "/blog" },
+};
 
 export const revalidate = 300; // 5 min
 
@@ -44,15 +52,22 @@ export default async function BlogPage() {
       <main className="min-h-screen bg-gray-950">
         <div className="max-w-5xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-white mb-4">Sports Analysis</h1>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300 mb-2">
+              From the desk
+            </p>
+            <h1 className="text-4xl font-bold text-white mb-4">Market notes & methodology reads.</h1>
             <p className="text-gray-400 text-lg">
-              Data-backed picks analysis updated daily
+              Pre-game reads, line-movement breakdowns, and methodology notes
+              — every post tied back to the live board.
             </p>
           </div>
 
           {posts.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">No posts yet. Check back after picks are generated.</p>
+              <p className="text-gray-500 text-lg">
+                Posts arrive once the board opens. The first reads will cover
+                methodology — how a signal gets scored, gated, and shipped.
+              </p>
             </div>
           ) : (
             <div className="grid gap-6">

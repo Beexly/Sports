@@ -33,6 +33,10 @@ const SOCIAL_LINKS = [
 export function Footer() {
   return (
     <footer className="footer">
+      {/* Ambient wordmark — closing brand statement under the link columns */}
+      <div className="footer-wordmark" aria-hidden="true">
+        GALAXY SPORTS EDGE
+      </div>
       <div className="container">
         <div className="footer-inner">
           <div>
@@ -40,8 +44,9 @@ export function Footer() {
               <BrandLockup />
             </div>
             <p className="disclaim">
-              {BRAND_NAME} delivers calibrated market signals, not certainty.
-              Treat each signal as one input in a disciplined decision process.{" "}
+              I built {BRAND_NAME} to deliver calibrated market signals, not
+              certainty. Treat each one as one input in a disciplined decision —
+              never the decision itself.{" "}
               <strong style={{ color: "var(--ion)" }}>
                 Set limits before emotion enters.
               </strong>

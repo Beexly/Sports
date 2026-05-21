@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
@@ -11,6 +12,10 @@ import { Footer } from "@/components/ui/footer";
  * to /auth/signin. There is no public link to /cockpit from the public
  * nav by design.
  */
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false, nocache: true },
+};
 
 const NAV: ReadonlyArray<{ href: string; label: string; hint: string }> = [
   { href: "/cockpit", label: "Overview", hint: "Jarvis launch assessment" },

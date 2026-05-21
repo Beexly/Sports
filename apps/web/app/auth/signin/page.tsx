@@ -57,9 +57,9 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       {/* Card */}
       <div className="w-full max-w-sm rounded-2xl border border-gray-800 bg-gray-900 p-8 shadow-2xl shadow-black/60">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-white">Sign in</h1>
+          <h1 className="text-2xl font-bold text-white">Sign in to Galaxy Sports Edge</h1>
           <p className="mt-1.5 text-sm text-gray-400">
-            Access your picks, track record, and subscription.
+            Pick up where you left the signal.
           </p>
         </div>
 
@@ -117,7 +117,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           </div>
           <div className="relative flex justify-center text-xs">
             <span className="bg-gray-900 px-3 text-gray-600">
-              More sign-in options coming soon
+              Email sign-in coming soon
             </span>
           </div>
         </div>
@@ -162,16 +162,16 @@ function getErrorMessage(error?: string): string | null {
     case "OAuthSignin":
     case "OAuthCallback":
     case "OAuthCreateAccount":
-      return "There was a problem with Google sign-in. Please try again.";
+      return "Google sign-in didn't go through. Give it another shot.";
     case "OAuthAccountNotLinked":
-      return "This email is already associated with a different sign-in method.";
+      return "That email's already linked to a different sign-in method.";
     case "SessionRequired":
-      return "Please sign in to access this page.";
+      return "Please sign in to keep going.";
     case "AccessDenied":
-      return "Access denied. You do not have permission to sign in.";
+      return "You don't have access to that page yet.";
     case "Verification":
-      return "The verification link has expired or has already been used.";
+      return "That sign-in link's expired. Request a fresh one.";
     default:
-      return error ? "An unexpected error occurred. Please try again." : null;
+      return error ? "Something didn't go through. Try again." : null;
   }
 }

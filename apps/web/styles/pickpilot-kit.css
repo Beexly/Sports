@@ -12,10 +12,12 @@ button { font-family: inherit; cursor: pointer; }
 .app {
   min-height: 100vh;
   position: relative;
+  /* Restraint: one subtle cyan ambient + one tight ultraviolet wash.
+     Magenta is reserved for the hero vignette + intentional live-state hits.
+     Reference: Linear / Stripe — 95% neutral, accent hits earn their pixels. */
   background:
-    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,45,138,0.10), transparent 65%),
-    radial-gradient(ellipse 50% 40% at 100% 30%, rgba(79,168,255,0.08), transparent 70%),
-    radial-gradient(ellipse 40% 30% at 0% 80%, rgba(155,123,250,0.06), transparent 70%),
+    radial-gradient(ellipse 55% 38% at 100% 18%, rgba(0,229,255,0.05), transparent 72%),
+    radial-gradient(ellipse 45% 32% at 0% 85%, rgba(122,92,255,0.05), transparent 72%),
     linear-gradient(180deg, var(--obsidian) 0%, var(--carbon) 30%, var(--obsidian) 100%);
 }
 
@@ -522,6 +524,34 @@ button { font-family: inherit; cursor: pointer; }
 .footer {
   border-top: 1px solid var(--mineral);
   padding: 56px 0 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Wordmark moment — giant ambient EDGE behind the footer columns.
+   Reference: linear.app, vercel.com — footers earn their pixels with
+   a closing brand statement, not just link columns. */
+.footer-wordmark {
+  position: absolute;
+  bottom: -42px;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 900 240px/0.85 "Exo 2", var(--f-arch);
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--ion-blue-glow) 18%, transparent);
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 0;
+  white-space: nowrap;
+  user-select: none;
+}
+.footer > .container { position: relative; z-index: 1; }
+@media (max-width: 860px) {
+  .footer-wordmark { font-size: 130px; bottom: -22px; }
+}
+@media (max-width: 480px) {
+  .footer-wordmark { font-size: 86px; bottom: -14px; }
 }
 .footer-inner {
   display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -661,11 +691,15 @@ button { font-family: inherit; cursor: pointer; }
   content: "";
   position: absolute;
   inset: 0;
+  /* Cinematic vignette: deep obsidian darkening on the left where the H1
+     reads, with one cyan-and-ultraviolet wash on the right to seat the
+     orbital canvas. Magenta hit is a single tight glow at the bottom-right
+     "signal acquired" anchor — used once, not sprayed. */
   background:
-    linear-gradient(90deg, rgba(5,7,11,0.96) 0%, rgba(5,7,11,0.78) 34%, rgba(5,7,11,0.34) 66%, rgba(5,7,11,0.78) 100%),
-    radial-gradient(circle at 74% 34%, rgba(167,139,250,0.24), transparent 34%),
-    radial-gradient(circle at 48% 18%, rgba(255,59,199,0.12), transparent 30%),
-    radial-gradient(circle at 82% 66%, rgba(0,229,255,0.14), transparent 34%);
+    linear-gradient(90deg, rgba(5,7,11,0.97) 0%, rgba(5,7,11,0.82) 38%, rgba(5,7,11,0.30) 72%, rgba(5,7,11,0.62) 100%),
+    radial-gradient(circle at 76% 36%, rgba(0,229,255,0.10), transparent 36%),
+    radial-gradient(circle at 64% 80%, rgba(255,45,214,0.08), transparent 28%),
+    radial-gradient(circle at 92% 18%, rgba(122,92,255,0.10), transparent 38%);
   z-index: 1;
   pointer-events: none;
 }

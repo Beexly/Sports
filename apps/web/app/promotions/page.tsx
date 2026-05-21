@@ -48,13 +48,13 @@ export default async function PromotionsPage({
               Sportsbook Promotions
             </p>
             <h1 className="text-3xl font-bold text-white sm:text-4xl">
-              Promotions marketplace
+              Promotions I&apos;ve reviewed.
             </h1>
             <p className="mt-3 text-sm text-gray-400">
-              A directory of sportsbook offers we have reviewed for transparency
-              and basic eligibility coverage. Listings here do not endorse any
-              operator. Terms and conditions apply at the operator&apos;s site.
-              21+ where applicable.
+              A directory of sportsbook offers I&apos;ve checked for transparency
+              and basic eligibility coverage. Listings here aren&apos;t an
+              endorsement of any operator. Terms and conditions apply at the
+              operator&apos;s site. 21+ where applicable.
             </p>
           </div>
 

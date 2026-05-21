@@ -5,8 +5,9 @@ import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Press",
-  description: `Press kit and media inquiries for ${BRAND_NAME}.`,
+  title: `Press Kit — Quote-Ready Soundbites & Founder Bio`,
+  description: `Press kit, ready-to-quote soundbites, and founder availability for ${BRAND_NAME}. Built by Garrett Baxley. ${BRAND_TAGLINE}`,
+  alternates: { canonical: "/press" },
 };
 
 const FACTS = [
@@ -19,10 +20,10 @@ const FACTS = [
 ];
 
 const SOUNDBITES = [
-  "We publish a calibrated, fully-reasoned signal — not a tout.",
-  "Outcomes are uncertain. We describe variance, we don't hide it.",
+  "I publish a calibrated, fully-reasoned signal — not a tout.",
+  "Outcomes are uncertain. I describe variance, I don't hide it.",
   "Every pick traces back to a real market line. No synthetic numbers.",
-  "Performance stats stay gated until the data can honestly support them.",
+  "I gate performance stats until the data can honestly support them.",
 ];
 
 export default function PressPage() {
@@ -38,9 +39,9 @@ export default function PressPage() {
               Press kit
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-ink-300">
-              Quick facts, founder availability, and ready-to-quote soundbites
-              for journalists, podcasters, and analysts covering the sports
-              intelligence space.
+              Quick facts, my availability, and ready-to-quote soundbites for
+              journalists, podcasters, and analysts covering the sports
+              intelligence space. — Garrett Baxley, founder.
             </p>
           </div>
         </section>
@@ -88,7 +89,7 @@ export default function PressPage() {
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Media inquiries</p>
             <h2 className="mt-3 font-display text-display-lg text-balance text-white">
-              Reach the founder directly.
+              Email me directly.
             </h2>
             <p className="mt-5 text-base text-ink-300">
               For interviews, embargoed coverage, or a deeper walkthrough of
@@ -99,8 +100,8 @@ export default function PressPage() {
               >
                 {SUPPORT_EMAIL}
               </a>
-              . Please include outlet, deadline, and your angle so we can
-              respond usefully.
+              . Include outlet, deadline, and your angle so I can respond
+              usefully.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/methodology" className="btn btn-primary">

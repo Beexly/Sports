@@ -4,6 +4,9 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
+import { SignalPreviewQueue } from "@/components/hero/signal-preview-queue";
+import { ToutComparison } from "@/components/home/tout-comparison";
+import { AnnotatedSampleSignal } from "@/components/home/annotated-sample-signal";
 import type { PublicPick } from "@sports/types";
 import { PICK_GRADE_LABELS } from "@sports/types";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
@@ -52,6 +55,7 @@ export default async function HomePage() {
        * ────────────────────────────────────────────────────── */}
       <section className="hero hero-galaxy">
         <InteractiveGalaxy />
+        <div className="hero-bg-word" aria-hidden="true">EDGE</div>
         <div className="hero-intro" aria-hidden="true">
           <div className="hero-intro-mark">GSE</div>
           <div className="hero-intro-line">Signal acquired</div>
@@ -63,9 +67,7 @@ export default async function HomePage() {
             Live edge engine
           </span>
 
-          <h1>
-            Find the <em>signal</em> before the market moves.
-          </h1>
+          <h1>Find the signal before the market moves.</h1>
 
           <p className="hero-tag">
             Most people react to the board. Galaxy Sports Edge watches price,
@@ -80,6 +82,33 @@ export default async function HomePage() {
               See Galaxy IQ
             </Link>
           </div>
+
+          <p
+            className="hero-byline"
+            style={{
+              marginTop: 22,
+              fontFamily: "var(--f-mono)",
+              fontSize: 12,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "var(--fg-muted)",
+              position: "relative",
+              zIndex: 2,
+            }}
+          >
+            Built by{" "}
+            <Link
+              href="/about"
+              style={{
+                color: "var(--ion-blue-glow)",
+                textDecoration: "none",
+                borderBottom: "1px solid color-mix(in srgb, var(--ion-blue-glow) 40%, transparent)",
+              }}
+            >
+              Garrett Baxley
+            </Link>
+            {" "}— because tout services don&apos;t show the losses.
+          </p>
 
           <div className="hero-foot">
             <div className="stat">
@@ -154,7 +183,10 @@ export default async function HomePage() {
               ))}
             </div>
           ) : (
-            <EmptyPicksState />
+            <>
+              <SignalPreviewQueue />
+              <EmptyPicksState />
+            </>
           )}
         </div>
       </section>
@@ -188,8 +220,13 @@ export default async function HomePage() {
             <div className="how">
               <span className="step">01</span>
               <div className="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                {/* Bespoke mark: orbital arc with a single price tick.
+                    The board is what the model reads first. */}
+                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 19 A 13 9 0 0 0 29 19" strokeWidth="1.4" opacity="0.5" />
+                  <path d="M3 19 A 13 9 0 0 0 29 19" strokeWidth="1.6" strokeDasharray="2 3" opacity="0.35" transform="translate(0 4)" />
+                  <line x1="18" y1="11" x2="18" y2="19" strokeWidth="2.2" stroke="var(--ion-blue-glow)" />
+                  <circle cx="18" cy="11" r="2.3" fill="var(--ion-blue-glow)" stroke="none" />
                 </svg>
               </div>
               <h3>Board first.</h3>
@@ -201,10 +238,12 @@ export default async function HomePage() {
             <div className="how">
               <span className="step">02</span>
               <div className="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="12" y1="20" x2="12" y2="10" />
-                  <line x1="18" y1="20" x2="18" y2="4" />
-                  <line x1="6" y1="20" x2="6" y2="16" />
+                {/* Bespoke mark: pressure-gauge wedge filling left to right. */}
+                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 22 A 11 11 0 0 1 27 22" strokeWidth="1.4" opacity="0.45" />
+                  <path d="M5 22 A 11 11 0 0 1 19 13.2" strokeWidth="2.4" stroke="var(--plasma)" />
+                  <line x1="16" y1="22" x2="20.5" y2="14.6" strokeWidth="1.8" stroke="var(--ion-blue-glow)" />
+                  <circle cx="16" cy="22" r="1.6" fill="var(--ion-blue-glow)" stroke="none" />
                 </svg>
               </div>
               <h3>Pressure gets measured.</h3>
@@ -216,9 +255,14 @@ export default async function HomePage() {
             <div className="how">
               <span className="step">03</span>
               <div className="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="9 12 11 14 15 10" />
+                {/* Bespoke mark: audit trail — three dots connected by a line,
+                    last one filled in plasma to mark the "publish" event. */}
+                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="6" y1="16" x2="26" y2="16" strokeWidth="1.4" opacity="0.5" />
+                  <circle cx="6" cy="16" r="2" fill="currentColor" stroke="none" opacity="0.55" />
+                  <circle cx="16" cy="16" r="2" fill="currentColor" stroke="none" opacity="0.75" />
+                  <circle cx="26" cy="16" r="3" fill="var(--plasma)" stroke="none" />
+                  <circle cx="26" cy="16" r="6" stroke="var(--plasma)" strokeWidth="1" opacity="0.4" />
                 </svg>
               </div>
               <h3>You see the trail.</h3>
@@ -264,6 +308,16 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ──────────────────────────────────────────────────────
+       * ANATOMY — what a published signal actually looks like
+       * ────────────────────────────────────────────────────── */}
+      <AnnotatedSampleSignal />
+
+      {/* ──────────────────────────────────────────────────────
+       * COMPARISON — vs typical tout services (category, not competitor)
+       * ────────────────────────────────────────────────────── */}
+      <ToutComparison />
 
       {/* The registry-driven methodology breakdown lives below the marketing
        * block. It pulls from the Trust Claim Registry so every assertion is
@@ -376,23 +430,22 @@ function EmptyPicksState() {
           marginBottom: 12,
         }}
       >
-        No picks published right now
+        The board is being scored. Get the open alert.
       </h3>
       <p
         style={{
-          maxWidth: "32rem",
+          maxWidth: "36rem",
           margin: "0 auto 20px",
           color: "var(--fg-meta)",
           fontSize: 14,
           lineHeight: 1.6,
         }}
       >
-        Picks appear here once the public picks readiness gate is active and
-        the engine has scored the current slate. Create a free account to be
-        notified when picks go live.
+        Signals only ship once Galaxy IQ&apos;s readiness gate clears the slate.
+        Create a free account and I&apos;ll tell you the moment the board opens.
       </p>
       <Link href="/auth/signin" className="btn btn-ghost">
-        Create free account
+        Get launch alerts
       </Link>
     </div>
   );

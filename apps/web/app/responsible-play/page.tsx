@@ -46,8 +46,8 @@ export default function ResponsiblePlayPage() {
               Sports betting carries real risk.
             </h1>
             <p className="mt-5 text-lg text-ink-300">
-              {BRAND_NAME} is an informational service. Outcomes are never
-              certain and no model — ours or anyone else&apos;s — eliminates
+              I built {BRAND_NAME} as an informational service. Outcomes are
+              never certain — no model, mine or anyone else&apos;s, eliminates
               variance. Wager only what you can afford to lose, and stop
               immediately if it stops feeling like a hobby.
             </p>
@@ -113,8 +113,8 @@ export default function ResponsiblePlayPage() {
               Resources and self-exclusion
             </h2>
             <p className="mt-3 text-ink-300">
-              External programs and organizations you can reach out to. None of
-              them are affiliated with {BRAND_NAME}; we list them as the
+              External programs and organizations you can reach out to. None
+              of them are affiliated with {BRAND_NAME}; I list them as the
               standard starting points for anyone who wants to slow down or
               stop.
             </p>
