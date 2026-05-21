@@ -19,6 +19,10 @@ interface PicksResponse {
   success: boolean;
   data: PublicPick[];
   meta: { tier: string; total: number; date: string };
+  bootstrap?: {
+    message: string;
+    hint?: string;
+  };
 }
 
 // ─────────────────────────────────────────────
@@ -37,7 +41,31 @@ async function fetchPicks(
   if (grade) params.set("grade", grade);
   const url = `${appUrl}/api/picks${params.toString() ? `?${params}` : ""}`;
   const res = await fetch(url, { next: { revalidate: 1800 } });
-  if (!res.ok) throw new Error(`Failed to fetch picks: ${res.status}`);
+  if (!res.ok) {
+    const body = await res.json().catch(() => null) as {
+      error?: string;
+      bootstrapMode?: boolean;
+      hint?: string;
+    } | null;
+
+    if (body?.bootstrapMode) {
+      return {
+        success: false,
+        data: [],
+        meta: {
+          tier: "FREE",
+          total: 0,
+          date: date ?? new Date().toISOString().split("T")[0]!,
+        },
+        bootstrap: {
+          message: body.error ?? "Signal Feed is collecting live history.",
+          hint: body.hint,
+        },
+      };
+    }
+
+    throw new Error(`Failed to fetch picks: ${res.status}`);
+  }
   return res.json() as Promise<PicksResponse>;
 }
 
@@ -87,6 +115,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
   const slate = slateResult.status === "fulfilled" ? slateResult.value : null;
   const picks: PublicPick[] =
     picksResult.status === "fulfilled" ? picksResult.value.data : [];
+  const bootstrapState =
+    picksResult.status === "fulfilled" ? picksResult.value.bootstrap : null;
   const fetchError =
     picksResult.status === "rejected"
       ? (picksResult.reason instanceof Error
@@ -213,7 +243,54 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           )}
 
           {/* Empty state */}
-          {!fetchError && picks.length === 0 && (
+          {!fetchError && bootstrapState && picks.length === 0 && (
+            <div className="rounded-xl border border-cyan-400/25 bg-cyan-950/10 p-8 text-center shadow-[0_0_28px_rgba(34,211,238,0.10)]">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-cyan-400/30 bg-cyan-400/10">
+                <svg
+                  className="h-7 w-7 text-cyan-200"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 13.5h4.5L10 6l4 12 2.5-4.5H21"
+                  />
+                </svg>
+              </div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200">
+                Signal gate collecting
+              </p>
+              <h3 className="mt-3 text-lg font-semibold text-white">
+                The board is live. Public picks are still gated.
+              </h3>
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-gray-400">
+                Galaxy Sports Edge is ingesting odds and settlement history
+                before publishing customer-facing picks. This keeps the record
+                clean and keeps weak signals off the board.
+              </p>
+              <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/methodology"
+                  className="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
+                >
+                  See Galaxy IQ
+                </Link>
+                <Link
+                  href="/vault"
+                  className="rounded-lg border border-gray-700 bg-gray-900 px-4 py-2 text-sm font-semibold text-gray-200 transition-colors hover:border-fuchsia-300 hover:text-white"
+                >
+                  View The Vault
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!fetchError && !bootstrapState && picks.length === 0 && (
             <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-12 text-center">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-800">
                 <svg
