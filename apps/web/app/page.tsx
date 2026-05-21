@@ -6,7 +6,7 @@ import { MethodologySection } from "@/components/ui/methodology-section";
 import type { PublicPick } from "@sports/types";
 import { PICK_GRADE_LABELS } from "@sports/types";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
-import { BRAND_NAME, HERO_SUBHEAD, CLOSING_LINE } from "@/lib/brand";
+import { HERO_SUBHEAD, CLOSING_LINE } from "@/lib/brand";
 
 /**
  * Homepage.
