@@ -7,6 +7,7 @@ export type UserRole = "USER" | "ADMIN";
 
 const config: NextAuthConfig = {
   adapter: PrismaAdapter(db),
+  trustHost: true,
   providers: [
     GoogleProvider({
       clientId: process.env["GOOGLE_CLIENT_ID"] ?? "dev-noop",
@@ -17,9 +18,22 @@ const config: NextAuthConfig = {
   callbacks: {
     async session({ session, user }) {
       if (session.user) {
-        session.user.id = user.id;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        session.user.role = ((user as any).role as UserRole) ?? "USER";
+        const dbUser =
+          user ??
+          (session.user.email
+            ? await db.user
+                .findUnique({
+                  where: { email: session.user.email },
+                  select: { id: true, role: true },
+                })
+                .catch(() => null)
+            : null);
+
+        if (dbUser) {
+          session.user.id = dbUser.id;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          session.user.role = ((dbUser as any).role as UserRole) ?? "USER";
+        }
       }
       return session;
     },
@@ -61,12 +75,14 @@ export const auth: () => Promise<Session | null> = async () => {
   try {
     return await realAuth();
   } catch (err) {
-    if (process.env["NODE_ENV"] !== "production") {
+    const message = err instanceof Error ? err.message : String(err);
+    const isStaticGenerationProbe =
+      message.includes("Dynamic server usage") ||
+      message.includes("couldn't be rendered statically");
+
+    if (!isStaticGenerationProbe) {
       // eslint-disable-next-line no-console
-      console.warn(
-        "[auth] realAuth() failed in non-prod:",
-        err instanceof Error ? err.message : err
-      );
+      console.warn("[auth] realAuth() failed:", message);
     }
     return null;
   }
