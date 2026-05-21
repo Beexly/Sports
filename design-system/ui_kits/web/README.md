@@ -1,6 +1,6 @@
 # UI kit · Web
 
-A faithful recreation of the PickPilot web product surface, built to demonstrate the design system in product context.
+A faithful recreation of the Galaxy Sports Edge web product surface, built to demonstrate the design system in product context.
 
 ## Files
 

@@ -724,3 +724,82 @@ claim has been published.
 
 The operator can now sleep, wake, click `OPEN_THIS_TONIGHT.html`, and
 see the system working.
+
+## Morning batch — edge cases + a11y + cheatsheet
+
+- New tests: `apps/web/__tests__/stub-prisma-edge-cases.test.ts` — 17 cases
+  covering take=0, take=3, isFeatured filter, result.in mixed sets,
+  isPublished=false, count without where, aggregate shape, groupBy=[],
+  write methods, deterministic re-reads, unique id/gameId across
+  the slate, commenceTime in the future of generatedAt, confidence
+  in [50,100], dataQualityScore in [0,100].
+- `packages/db/src/sample-picks.ts` — commenceTime is now always at
+  least 1 hour in the future of `now` so the demo dashboard never shows
+  games that have already started.
+- `apps/web/app/cockpit/page.tsx` HealthTile gets `role="status"` and a
+  composite `aria-label="{label}: {health}"`. Cockpit screen-reader
+  coverage went from 13 to 24 aria-labels.
+- `QUICKSTART.md` Path B env block now lists `PUBLIC_PICKS_ENABLED=true`
+  and `DEMO_PICKS_ENABLED=true` so the operator's copy-paste is
+  complete.
+- `/cockpit/history` smoke-tested across 6 filter combinations
+  (no filter, result=PENDING, result=WIN, bootstrap=false,
+  eligibility=eligible, result=ALL&bootstrap=any) — all return 200.
+
+Cumulative: **320 / 320 tests pass** across 33 files.
+
+## Cycle 55–58 — dead-code pruning
+
+- Removed two unused type imports (`BookmakerOddsInput`, `PickType`) from
+  `packages/prediction-engine/src/scoring.ts` — `tsc --noUnusedLocals
+  --noUnusedParameters` now clean for prediction-engine.
+- Wired `CONTENT_WORKER_ENABLED` env flag into the worker's `main()` so
+  the constant is actually used (previously only referenced in tests).
+  Worker now exits early with a clear log line if the flag isn't set.
+
+After morning batch:
+- 33 test files, 320 tests pass
+- typecheck (strict + noUnusedLocals) clean for app + prediction-engine + workers
+- ESLint clean
+- prod build clean
+- 24 aria-labels on /cockpit (up from 13)
+- QUICKSTART.md now lists the two missing env flags (`DEMO_PICKS_ENABLED`,
+  `PUBLIC_PICKS_ENABLED`) so copy-paste works on first try
+
+## Cycle 59–64 — a11y contracts + last-sync stamp
+
+- New file `apps/web/__tests__/cockpit-a11y.test.ts` — 8 cases locking
+  the role + aria-label attributes added in the morning pass:
+  HealthTile role/aria, today's-picks aria-label, slate-meta
+  aria-label, sample-mode pill aria-label, sample-data banner
+  role+aria-live, confidence-bar aria-label, edge-score aria-label.
+- /dashboard "As of" line now includes precise time (`MMM d, yyyy ·
+  h:mm a`) under `data-testid="dashboard-last-sync"` so the operator
+  sees freshness on each page load.
+
+After cycle 64:
+- **34 test files, 328 tests pass**
+- typecheck (strict) clean
+- ESLint clean
+- prod build clean
+- 24+ aria-labels rendered on /cockpit
+- All 20 routes return HTTP 200
+- Brand-safety scanner: 0 hits
+- 17 snapshot files in `reports/launch-night/snapshots/`
+
+State remains stable and the operator can wake up to the same one-click
+landing at `OPEN_THIS_TONIGHT.html`.
+
+## Cycle 65–70 — refresh link + sport pills
+
+- /cockpit "Last sync" line now includes an explicit "refresh now" link
+  (prefetch=false, data-testid="cockpit-refresh-link") so the operator
+  can recompute Jarvis without hitting browser reload.
+- /dashboard pick rows have a small sport pill ("NBA" / "NFL" / "MLB" /
+  "NHL") rendered before the selection text. Confirmed 6 sport pills
+  visible per render.
+
+Cumulative state remains:
+- 34 test files, 328 tests pass
+- typecheck clean, ESLint clean, prod build pass
+- 20 routes 200, brand-safety clean, 17 snapshots

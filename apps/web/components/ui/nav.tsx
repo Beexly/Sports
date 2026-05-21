@@ -4,31 +4,31 @@ import { auth } from "@/lib/auth";
 import { BRAND_NAME } from "@/lib/brand";
 
 /**
- * Primary site navigation — uses the PickPilot Design System nav surface
- * (see `apps/web/styles/pickpilot-kit.css` → .nav, .nav-logo, .nav-links).
+ * Primary site navigation — Galaxy Sports Edge.
  *
- * The reticle inside the wordmark is the brand mark from `design-system/assets/logo-mark.svg`,
- * inlined so the wordmark renders as a single typographic lockup ("PICKPIL[reticle]T").
+ * Wordmark = OrbitalMark + "GALAXY" / "SPORTS EDGE". The mark is
+ * intentionally NOT a circular letterform — orbit + signal point +
+ * edge vector, per Brand Use Pack §5 (Remove Google G Risk).
+ *
+ * Surface labels mirror the GSE ecosystem taxonomy. Route paths stay
+ * generic for SEO + test stability.
  */
 
 const NAV_LINKS = [
-  { label: "Picks", href: "/picks", active: false },
-  { label: "Observatory", href: "/observatory", active: false },
-  { label: "The Vault", href: "/vault", active: false },
-  { label: "Performance", href: "/performance", active: false },
-  { label: "Methodology", href: "/methodology", active: false },
+  { label: "Signal Feed",      href: "/picks",       active: false },
+  { label: "Edge Map",         href: "/observatory", active: false },
+  { label: "The Vault",        href: "/vault",       active: false },
+  { label: "Calibration",      href: "/performance", active: false },
+  { label: "Galaxy IQ",        href: "/methodology", active: false },
 ] as const;
 
-function ReticleMark() {
+function OrbitalMark() {
+  // Brand mark — orbit + signal point + edge vector.
   return (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="butt" aria-hidden="true">
-      <circle cx="24" cy="24" r="22" />
-      <circle cx="24" cy="24" r="12" opacity="0.5" />
-      <line x1="24" y1="-2" x2="24" y2="8" />
-      <line x1="24" y1="40" x2="24" y2="50" />
-      <line x1="-2" y1="24" x2="8" y2="24" />
-      <line x1="40" y1="24" x2="50" y2="24" />
-      <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none" />
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true">
+      <path d="M 8 30 A 16 16 0 1 0 40 27" />
+      <line x1="6" y1="10" x2="42" y2="38" />
+      <circle cx="25" cy="22" r="4" fill="currentColor" stroke="none" />
     </svg>
   );
 }
@@ -41,12 +41,30 @@ export async function Nav() {
     <header className="nav">
       <div className="container nav-inner">
         <div className="nav-left">
-          <Link href="/" className="nav-logo" aria-label={`${BRAND_NAME} — home`}>
-            PICKPIL
-            <span className="ret">
-              <ReticleMark />
+          <Link
+            href="/"
+            className="nav-logo"
+            aria-label={`${BRAND_NAME} — home`}
+            style={{ display: "inline-flex", alignItems: "center", gap: 10 }}
+          >
+            <span style={{ display: "inline-flex", width: 26, height: 26, color: "var(--ion-white)" }}>
+              <OrbitalMark />
             </span>
-            T
+            <span style={{ display: "inline-flex", flexDirection: "column", lineHeight: 1 }}>
+              <span style={{ font: "700 16px/1 var(--f-display)", letterSpacing: "0.10em", color: "var(--ion-white)" }}>
+                GALAXY
+              </span>
+              <span
+                style={{
+                  font: "500 10px/1 var(--f-display)",
+                  letterSpacing: "0.22em",
+                  color: "var(--orbital-cyan)",
+                  marginTop: 3,
+                }}
+              >
+                SPORTS EDGE
+              </span>
+            </span>
           </Link>
           <nav className="nav-links" aria-label="Primary">
             {NAV_LINKS.map(({ href, label }) => (
@@ -60,7 +78,7 @@ export async function Nav() {
         <div className="nav-right">
           <span className="live-chip">
             <span className="dot" />
-            Live · Odds 30 min
+            Signal · Live
           </span>
           {user ? (
             <Link href="/dashboard" className="btn btn-ghost btn-sm" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
@@ -81,7 +99,7 @@ export async function Nav() {
                 Sign in
               </Link>
               <Link href="/pricing" className="btn btn-primary btn-sm">
-                Get free picks <span className="arrow">→</span>
+                Get the signal <span className="arrow">→</span>
               </Link>
             </>
           )}

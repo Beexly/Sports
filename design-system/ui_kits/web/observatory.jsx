@@ -1,4 +1,4 @@
-// PickPilot Observatory — navigable intelligence cosmos
+// Galaxy Sports Edge Observatory — navigable intelligence cosmos
 // Three layers: Universe → Constellation → Solar System
 
 const { useState, useEffect, useRef, useMemo } = React;
@@ -178,7 +178,7 @@ function HUD({ level, target, matchup, onBack, signalsCount, picksCount }) {
       <div className="bl">
         {level === 'universe' && <>
           <span className="lbl">NAVIGATE</span>
-          <span className="hint">Click any constellation to enter. <em>Perspective, not picks.</em></span>
+          <span className="hint">Click any constellation to enter. <em>Find the signal before the market moves.</em></span>
         </>}
         {level === 'constellation' && <>
           <span className="lbl">CONSTELLATION</span>

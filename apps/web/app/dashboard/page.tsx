@@ -4,7 +4,6 @@ import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { BRAND_NAME } from "@/lib/brand";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
 
 export const dynamic = "force-dynamic";
@@ -145,7 +144,7 @@ export default async function DashboardPage() {
       <header className="border-b border-gray-800 bg-gray-950/80 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-sm font-semibold text-white">
-            {BRAND_NAME}
+            SportsPicks Pro
           </Link>
           <nav className="flex items-center gap-4 text-xs text-gray-400">
             <Link href="/picks" className="hover:text-white">Picks</Link>
@@ -270,8 +269,11 @@ export default async function DashboardPage() {
                 settle. We do not publish a win rate until we have a
                 meaningful sample.
               </p>
-              <p className="mt-3 text-[10px] uppercase tracking-widest text-gray-700">
-                As of {format(new Date(), "MMM d, yyyy")}
+              <p
+                data-testid="dashboard-last-sync"
+                className="mt-3 text-[10px] uppercase tracking-widest text-gray-700"
+              >
+                As of {format(new Date(), "MMM d, yyyy · h:mm a")}
               </p>
             </section>
           </div>
@@ -311,6 +313,12 @@ function PickRow({ pick }: { pick: TodayPick }) {
     <li className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium text-white">
+          <span
+            data-testid="dashboard-sport-pill"
+            className="mr-2 rounded bg-gray-800 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-gray-400"
+          >
+            {pick.game.sport.name}
+          </span>
           {pick.selection}
           {pick.isFeatured && (
             <span className="ml-2 rounded bg-brand-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-brand-300">

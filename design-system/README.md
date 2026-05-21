@@ -1,15 +1,15 @@
-# PickPilot — Design System
+# Galaxy Sports Edge — Design System
 
-> **Perspective, not picks.**
+> **Find the signal before the market moves.**
 > A cinematic sports intelligence platform — picks, confidence, risk, market movement, and methodology delivered with the clarity of a financial terminal and the energy of a stadium under floodlights.
 
 ---
 
 ## What this is
 
-This folder is the **PickPilot design system**: brand foundations, type, color, iconography, UI kit components, and reference layouts that any agent or designer can pull from to build on-brand artifacts (mocks, prototypes, slides, production code) for the PickPilot product.
+This folder is the **Galaxy Sports Edge design system**: brand foundations, type, color, iconography, UI kit components, and reference layouts that any agent or designer can pull from to build on-brand artifacts (mocks, prototypes, slides, production code) for the Galaxy Sports Edge product.
 
-PickPilot is a production-grade sports picks platform with:
+Galaxy Sports Edge is a production-grade sports picks platform with:
 
 - **Real odds ingestion** from dozens of sportsbooks (every 30 min)
 - **Algorithmic pick scoring** with calibrated 0–100 confidence + edge scoring
@@ -24,7 +24,7 @@ The product surface is a Next.js 14 web app today (`apps/web` in the source repo
 
 ## Brand position
 
-PickPilot is **not** a sportsbook, tout service, casino app, or generic dark-neon betting product. It is a **sports intelligence terminal** for serious bettors who want to understand *why*, not just *what*.
+Galaxy Sports Edge is **not** a sportsbook, tout service, casino app, or generic dark-neon betting product. It is a **sports intelligence terminal** for serious bettors who want to understand *why*, not just *what*.
 
 The voice is calm, factual, slightly cinematic. Numbers are heroes. Hype is the enemy. We never guarantee outcomes — we show our work and let the data speak.
 
@@ -38,7 +38,7 @@ This design system was developed from the following source materials. Reviewers 
 |---|---|
 | **Beexly/Sports** — Next.js codebase (functional product source-of-truth: features, IA, copy, terminology) | https://github.com/Beexly/Sports |
 
-> **Note on naming:** The source codebase ships under the working title *SportsPicks Pro*. The product brand owner has standardized on **PickPilot** — this design system uses *PickPilot* throughout. The codebase's IA, feature set, and copy patterns are unchanged; only the brand layer (name, logo, palette, typography) is reimagined.
+> **Note on naming:** The source codebase ships under the working title *SportsPicks Pro*. The product brand owner has standardized on **Galaxy Sports Edge** — this design system uses *Galaxy Sports Edge* throughout. The codebase's IA, feature set, and copy patterns are unchanged; only the brand layer (name, logo, palette, typography) is reimagined.
 
 ---
 
@@ -188,7 +188,7 @@ A **4px base grid**. Use the steps; never invent intermediate values.
 4  8  12  16  20  24  32  40  48  64  80  120
 ```
 
-Density rule: PickPilot UI is **comfortable, not cramped**. Card padding starts at 20px. Hero sections breathe at 64–120px vertical.
+Density rule: Galaxy Sports Edge UI is **comfortable, not cramped**. Card padding starts at 20px. Hero sections breathe at 64–120px vertical.
 
 ### Backgrounds
 
@@ -201,7 +201,7 @@ The system avoids gradient-fest aesthetics. Backgrounds are:
 
 ### Animation
 
-**Restrained and deliberate.** PickPilot is a terminal, not a toy.
+**Restrained and deliberate.** Galaxy Sports Edge is a terminal, not a toy.
 
 - **Easing:** `cubic-bezier(0.2, 0, 0, 1)` — fast-out, settled-in. Custom `--ease-out-quart` token.
 - **Durations:** 150ms for state changes (hover, focus), 300ms for layout shifts, 500ms only for page transitions.
@@ -234,11 +234,11 @@ The system avoids gradient-fest aesthetics. Backgrounds are:
 | `--radius-lg` | 16px | hero cards, modal sheets |
 | `--radius-pill` | 999px | pill badges, status chips |
 
-PickPilot never uses 20px+ pillowy radii. Cards feel **structural**, not soft.
+Galaxy Sports Edge never uses 20px+ pillowy radii. Cards feel **structural**, not soft.
 
 ### Cards
 
-The signature PickPilot card:
+The signature Galaxy Sports Edge card:
 
 - Background `--eclipse`
 - 1px border `--mineral`
@@ -291,7 +291,7 @@ Common icons: `target`, `trending-up`, `trending-down`, `lock`, `bar-chart-3`, `
 ```
 
 ### 2. **Custom mark — the Reticle**
-PickPilot's identity mark is a **reticle/crosshair** — a pilot's scope, fitting both the product name and the "command center" positioning. It is the only custom-drawn icon in the system. See `assets/logo-mark.svg`.
+Galaxy Sports Edge's identity mark is a **reticle/crosshair** — a pilot's scope, fitting both the product name and the "command center" positioning. It is the only custom-drawn icon in the system. See `assets/logo-mark.svg`.
 
 The reticle appears:
 - As the logo
@@ -327,7 +327,7 @@ These need your review:
 
 ## How to use this system
 
-When you're building anything for PickPilot:
+When you're building anything for Galaxy Sports Edge:
 
 1. Import `colors_and_type.css` first. It defines every token.
 2. Browse `preview/` for visual reference of each token in use.

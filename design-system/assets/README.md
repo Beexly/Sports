@@ -3,7 +3,7 @@
 | File | Use |
 |---|---|
 | `logo-mark.svg` | Reticle mark only. `currentColor` — set via CSS color. Use at 32–96px. |
-| `logo-lockup.svg` | Horizontal lockup: mark + "PickPilot" wordmark. Use in nav, marketing. |
+| `logo-lockup.svg` | Horizontal lockup: mark + "Galaxy Sports Edge" wordmark. Use in nav, marketing. |
 
 Both are vector and inherit `currentColor`, so they can be tinted bone, signal, or ink as needed.
 

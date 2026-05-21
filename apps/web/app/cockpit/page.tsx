@@ -123,7 +123,15 @@ export default async function CockpitOverview() {
             {assessment.oneSentenceAssessment}
           </p>
           <p data-testid="cockpit-generated-at" className="mt-2 text-[10px] uppercase tracking-widest text-gray-600">
-            Refresh to recompute · last sync {now.toLocaleString()}
+            Last sync {now.toLocaleString()} ·{" "}
+            <Link
+              href="/cockpit"
+              data-testid="cockpit-refresh-link"
+              prefetch={false}
+              className="text-brand-400 hover:text-brand-300"
+            >
+              refresh now
+            </Link>
           </p>
           <p className="mt-2 text-xs text-gray-500">
             Confidence:{" "}
@@ -418,6 +426,8 @@ function HealthTile({ label, health }: { label: string; health: JarvisHealth }) 
   };
   return (
     <div
+      role="status"
+      aria-label={`${label}: ${health.toLowerCase()}`}
       className={[
         "rounded-xl border px-3 py-2 text-xs",
         styles[health],

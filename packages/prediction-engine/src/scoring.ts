@@ -1,8 +1,6 @@
 import type {
   OddsInput,
-  BookmakerOddsInput,
   ScoredPick,
-  PickType,
   PickTier,
   PickGrade,
   RiskLevel,

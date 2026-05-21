@@ -1,19 +1,21 @@
 import type { Config } from "tailwindcss";
 
 /**
- * PickPilot Tailwind config — mirrors the canonical design system.
+ * Galaxy Sports Edge Tailwind config — cosmic intelligence palette.
  *
- * The source of truth for tokens is `design-system/colors_and_type.css`.
- * This file exposes the same values to Tailwind utilities so components
- * can use `bg-carbon`, `text-ion`, `border-mineral`, `text-plasma`, etc.
+ * Canonical palette (verbatim from Brand Use Pack §4):
+ *  - OBSIDIAN BLACK  #050608   — primary background
+ *  - ION WHITE       #F6F7FA   — primary text / monochrome mark
+ *  - ORBITAL CYAN    #00E5FF   — signal, data, active states
+ *  - ION MAGENTA     #FF2DD6   — alert signal / emphasis
+ *  - SOFT ULTRAVIOLET #7A5CFF  — depth, intelligence, secondary signal
+ *  - STEEL GRAY      #1A1D23   — panels, dividers, UI depth
  *
- * Hard rules from the design system that map into tokens:
- *  - PRIMARY signal is PLASMA MAGENTA (#FF2D8A), NOT cyan or blue.
- *  - SECONDARY is ion-blue (#4FA8FF).
- *  - DEPTH is ultraviolet (#9B7BFA).
- *  - NO gold or amber — explicit rejection of casino energy.
- *  - Lime and cyan are RARE tick accents only (live data, telemetry pings).
- *  - Backgrounds are layered carbon environment, never flat black.
+ * Typography: Exo 2 (display) + Inter (text). Legacy display/sans tokens
+ * point at these so existing components inherit the brand automatically.
+ *
+ * Legacy aliases (brand-*, accent-*, plasma-*, ion-blue-*) are kept and
+ * REPOINTED to the new palette. No component refactor required.
  */
 
 const config: Config = {
@@ -25,19 +27,27 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ── ENVIRONMENT — midnight carbon blue scale ─────
-        // Never pure black. Subtle navy undercurrent everywhere.
-        void:       "#04060A",
-        obsidian:   "#070A11",
-        carbon:     "#0B0F18",
+        // ── CANONICAL GALAXY SPORTS EDGE PALETTE ─────────
+        "obsidian-black":    "#050608",
+        "ion-white-2":       "#F6F7FA",   // distinct from the .ion-white alias
+        "orbital-cyan":      "#00E5FF",
+        "ion-magenta":       "#FF2DD6",
+        "soft-ultraviolet":  "#7A5CFF",
+        "steel-gray":        "#1A1D23",
+
+        // ── ENVIRONMENT — cosmic dark scale ───────────────
+        // Surfaces step from #050608 (deepest) up to #2E3849 (raised).
+        void:       "#050608",
+        obsidian:   "#080A0F",
+        carbon:     "#0D1117",
         eclipse:    "#11161F",
-        titanium:   "#181E28",
+        titanium:   "#1A1D23",        // Steel Gray sits here
         slate:      "#20283A",
         mineral:    "#2E3849",
         "mineral-hi": "#3C4961",
 
-        // ── ION — cool whites & mineral silvers ──────────
-        "ion-white": "#EDF2F7",
+        // ── ION — cool whites & mineral silvers ───────────
+        "ion-white": "#F6F7FA",
         ion: {
           DEFAULT: "#D5DDE9",
           1: "#98A3B5",
@@ -45,80 +55,77 @@ const config: Config = {
           3: "#3D4555",
         },
 
-        // ── PRIMARY SIGNAL — plasma magenta ──────────────
+        // ── PRIMARY SIGNAL — ion magenta ──────────────────
         plasma: {
-          DEFAULT: "#FF2D8A",
-          glow: "#FF5BA8",
-          deep: "#C81E68",
-          ink: "#1A0010",
+          DEFAULT: "#FF2DD6",
+          glow: "#FF66E0",
+          deep: "#C81EAA",
+          ink: "#1A0014",
         },
 
-        // ── SECONDARY — ion blue (cold telemetry) ────────
+        // ── SECONDARY — orbital cyan (live signal) ────────
         "ion-blue": {
-          DEFAULT: "#4FA8FF",
-          glow: "#7CBFFF",
-          deep: "#1F6FCC",
+          DEFAULT: "#00E5FF",
+          glow: "#5BEEFF",
+          deep: "#00A8BF",
           ink: "#001226",
         },
 
-        // ── DEPTH — soft ultraviolet (model layer) ───────
+        // ── DEPTH — soft ultraviolet (model layer) ────────
         ultraviolet: {
-          DEFAULT: "#9B7BFA",
-          glow: "#BCA4FF",
-          deep: "#5A3FCC",
+          DEFAULT: "#7A5CFF",
+          glow: "#9F87FF",
+          deep: "#5942CC",
         },
 
-        // ── RARE ACCENTS — data ticks only ───────────────
+        // ── ACCENT — orbital cyan (live telemetry pings) ──
+        "ds-cyan": {
+          DEFAULT: "#00E5FF",
+          glow: "#5BEEFF",
+          deep: "#00A8BF",
+        },
         lime: {
           DEFAULT: "#D4FF3D",
           glow: "#E8FF6B",
           deep: "#A8CC22",
-        },
-        "ds-cyan": {
-          DEFAULT: "#6FD9FF",
-          glow: "#A8E8FF",
-          deep: "#2A8FAF",
         },
 
         // ── INFORMATIONAL ─────────────────────────────────
         verify: "#5FD9A3",
         alert: "#FF6470",
 
-        // ── LEGACY ALIASES — keep older components working
-        // Components written before this file existed import `brand-*` and
-        // `accent-*`. We re-point those at the canonical signal so the rest
-        // of the app picks up the brand without a flag-day refactor.
+        // ── LEGACY ALIASES — repointed to GSE palette ─────
+        // Components written under prior brands use `brand-*` and `accent-*`.
+        // The scales below resolve to the new tokens automatically, so the
+        // whole app inherits Galaxy Sports Edge without a refactor.
         brand: {
-          50:  "#FFE5F0",
-          100: "#FFB8D5",
-          200: "#FF8ABA",
-          300: "#FF5BA8",
-          400: "#FF3F95",
-          500: "#FF2D8A",
-          600: "#E62277",
-          700: "#C81E68",
-          800: "#A11954",
-          900: "#7A1340",
-          950: "#1A0010",
+          50:  "#FFE3F6",
+          100: "#FFB8E8",
+          200: "#FF8ADA",
+          300: "#FF6FD8",
+          400: "#FF55D0",
+          500: "#FF3BC7",
+          600: "#E62EB1",
+          700: "#C81E9C",
+          800: "#A11578",
+          900: "#7A0E58",
+          950: "#1A0014",
         },
         accent: {
-          50:  "#E6F2FF",
-          100: "#B8D9FF",
-          200: "#8ABFFF",
-          300: "#7CBFFF",
-          400: "#4FA8FF",
-          500: "#3D95F2",
-          600: "#1F6FCC",
-          700: "#1858A8",
-          800: "#114080",
-          900: "#0B2D5C",
+          50:  "#E6F8FF",
+          100: "#B8EEFF",
+          200: "#8AE3FF",
+          300: "#5BD8FF",
+          400: "#33CEFF",
+          500: "#00E5FF",
+          600: "#00B8CC",
+          700: "#008CA0",
+          800: "#005F73",
+          900: "#003647",
           950: "#001226",
         },
         ink: {
-          // Tailwind-style ink scale that maps to the design system's
-          // carbon environment + ion ramps. Used by components written
-          // before the design system landed.
-          50:   "#EDF2F7",
+          50:   "#F5F7FF",
           100:  "#D5DDE9",
           200:  "#98A3B5",
           300:  "#98A3B5",
@@ -129,27 +136,27 @@ const config: Config = {
           800:  "#181E28",
           900:  "#11161F",
           950:  "#070A11",
-          1000: "#04060A",
+          1000: "#05070B",
         },
         confidence: {
-          high: "#FF2D8A",     // plasma — elite
-          mid:  "#4FA8FF",     // ion-blue — strong
+          high: "#FF3BC7",     // ion magenta — elite
+          mid:  "#7B61FF",     // ultraviolet — strong
           low:  "#98A3B5",     // ion-1 — lean
         },
         risk: {
           low:  "#5FD9A3",
-          mid:  "#9B7BFA",
+          mid:  "#7B61FF",
           high: "#FF6470",
         },
       },
       fontFamily: {
-        // Mirrors --f-* in colors_and_type.css.
-        arch:      ['"Big Shoulders Display"', "Anton", "Impact", "sans-serif"],
-        display:   ["Syne", '"Space Grotesk"', "system-ui", "sans-serif"],
-        sans:      ["Geist", "Inter", "system-ui", "sans-serif"],
-        mono:      ['"Geist Mono"', '"JetBrains Mono"', "ui-monospace", "monospace"],
-        numerals:  ['"JetBrains Mono"', '"Geist Mono"', "ui-monospace", "monospace"],
-        editorial: ['"Instrument Serif"', '"Iowan Old Style"', "Georgia", "serif"],
+        // Galaxy Sports Edge typography — Exo 2 + Inter.
+        arch:      ['"Exo 2"', '"Big Shoulders Display"', "Impact", "sans-serif"],
+        display:   ['"Exo 2"', "Inter", "system-ui", "sans-serif"],
+        sans:      ["Inter", '"Exo 2"', "system-ui", "sans-serif"],
+        mono:      ['"JetBrains Mono"', '"Geist Mono"', "ui-monospace", "monospace"],
+        numerals:  ['"JetBrains Mono"', '"Exo 2"', "ui-monospace", "monospace"],
+        editorial: ['"Exo 2"', "Inter", "system-ui", "sans-serif"],
       },
       fontSize: {
         "arch-3xl": ["220px", { lineHeight: "0.85" }],
@@ -191,25 +198,28 @@ const config: Config = {
         "2.5xl":  "1.25rem",
       },
       boxShadow: {
-        "glow-plasma":  "0 0 40px -8px rgba(255, 45, 138, 0.45)",
-        "glow-ion-blue":"0 0 36px -8px rgba(79, 168, 255, 0.42)",
-        "glow-uv":      "0 0 32px -6px rgba(155, 123, 250, 0.38)",
+        "glow-plasma":  "0 0 40px -8px rgba(255, 59, 199, 0.45)",
+        "glow-ion-blue":"0 0 36px -8px rgba(42, 107, 255, 0.42)",
+        "glow-uv":      "0 0 32px -6px rgba(123, 97, 255, 0.38)",
+        "glow-cyan":    "0 0 32px -6px rgba(0, 229, 255, 0.40)",
         "glow-lime":    "0 0 32px -8px rgba(212, 255, 61, 0.40)",
-        "glow-soft":    "0 0 80px -20px rgba(255, 45, 138, 0.18)",
+        "glow-soft":    "0 0 80px -20px rgba(0, 229, 255, 0.18)",
         glass:
           "0 1px 0 0 rgba(255,255,255,0.04) inset, 0 12px 32px -8px rgba(0,0,0,0.6)",
         pop:
-          "0 24px 48px -12px rgba(255,45,138,0.30), 0 0 0 1px rgba(255,45,138,0.20) inset",
+          "0 24px 48px -12px rgba(255,59,199,0.30), 0 0 0 1px rgba(0,229,255,0.20) inset",
         modal: "0 24px 64px -16px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.5)",
         float: "0 8px 32px -8px rgba(0,0,0,0.7)",
       },
       backgroundImage: {
         "stadium-glow":
-          "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255,45,138,0.18), transparent 70%)",
+          "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,229,255,0.16), rgba(255,59,199,0.10) 35%, transparent 70%)",
+        "cosmic-sweep":
+          "linear-gradient(135deg, rgba(0,229,255,0.18) 0%, rgba(123,97,255,0.18) 50%, rgba(255,59,199,0.18) 100%)",
         "rule-fade":
           "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)",
         "accent-stripe":
-          "linear-gradient(90deg, transparent 0%, rgba(255,45,138,0.6) 50%, transparent 100%)",
+          "linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.6) 30%, rgba(255,59,199,0.6) 70%, transparent 100%)",
       },
       animation: {
         "live-pulse": "live-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite",

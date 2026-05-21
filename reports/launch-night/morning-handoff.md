@@ -1,8 +1,9 @@
 # Morning Handoff — Read This First
 
-**Last refreshed:** 2026-05-19 (overnight loop continued through to
-~03:15 AM PT; 103 test files; gate-only seed safety; picks seeded;
-operator cheat sheet added.)
+**Last refreshed:** 2026-05-20 (afternoon loop; 107 test files;
+gate-only seed safety; picks seeded; operator cheat sheet added;
+new tripwires: hardened cheat-sheet contract, no-fake-percentages
+scanner, /picks policy-gate pin, Jarvis 11-tile coverage.)
 
 You wake up to a launch observatory that's been built, tested at the
 source level, and documented. What's still pending is anything that
@@ -23,7 +24,7 @@ on this branch, not committed yet — see the operator commands below).
 
 ## At-a-glance stats
 
-- Test files: 103 (up from ~17 at session start) — ~6.1x growth
+- Test files: 107 (up from ~17 at session start) — ~6.3x growth
 - Lib files under `apps/web/lib/`: 33
 - Docs under `docs/`: 14 (incl. 2 ADRs)
 - Launch-night reports under `reports/launch-night/`: 10 (incl. this one, the README index, and `CHEATSHEET.md`)

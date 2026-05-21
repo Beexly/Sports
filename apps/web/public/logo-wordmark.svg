@@ -1,28 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 96" width="480" height="96" role="img" aria-label="PickPilot wordmark">
-  <title>PickPilot</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 96" width="720" height="96" role="img" aria-label="Galaxy Sports Edge wordmark">
+  <title>Galaxy Sports Edge</title>
+  <defs>
+    <linearGradient id="gse-w-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"  stop-color="#00E5FF"/>
+      <stop offset="55%" stop-color="#7A5CFF"/>
+      <stop offset="100%" stop-color="#FF2DD6"/>
+    </linearGradient>
+  </defs>
 
-  <!-- "PICKPIL" -->
-  <text x="0" y="68" fill="#EDF2F7"
-        font-family="'Syne', 'Space Grotesk', system-ui, sans-serif"
-        font-weight="800"
-        font-size="64"
-        letter-spacing="-2">PICKPIL</text>
-
-  <!-- Reticle replacing the "O" -->
-  <g transform="translate(286, 32)">
-    <circle cx="32" cy="32" r="30" fill="none" stroke="#FF2D8A" stroke-width="3"/>
-    <circle cx="32" cy="32" r="16" fill="none" stroke="#FF2D8A" stroke-width="2" opacity="0.5"/>
-    <line x1="32" y1="-2" x2="32" y2="10" stroke="#FF2D8A" stroke-width="3"/>
-    <line x1="32" y1="54" x2="32" y2="66" stroke="#FF2D8A" stroke-width="3"/>
-    <line x1="-2" y1="32" x2="10" y2="32" stroke="#FF2D8A" stroke-width="3"/>
-    <line x1="54" y1="32" x2="66" y2="32" stroke="#FF2D8A" stroke-width="3"/>
-    <circle cx="32" cy="32" r="4" fill="#FF2D8A"/>
+  <!-- Compact mark on the left (orbit + edge vector + signal point) -->
+  <g transform="translate(8, 16)">
+    <!-- Broken arc — open at top -->
+    <path d="M 6 42 A 32 32 0 1 0 64 38"
+          fill="none" stroke="url(#gse-w-grad)" stroke-width="4" stroke-linecap="round"/>
+    <!-- Edge vector -->
+    <line x1="4" y1="14" x2="68" y2="54"
+          stroke="url(#gse-w-grad)" stroke-width="4" stroke-linecap="round"/>
+    <!-- Signal point -->
+    <circle cx="38" cy="30" r="6" fill="#FF2DD6"/>
+    <circle cx="38" cy="30" r="2.5" fill="#F6F7FA"/>
   </g>
 
-  <!-- "T" -->
-  <text x="358" y="68" fill="#EDF2F7"
-        font-family="'Syne', 'Space Grotesk', system-ui, sans-serif"
-        font-weight="800"
-        font-size="64"
-        letter-spacing="-2">T</text>
+  <!-- "GALAXY" — Exo 2 tracked tight, ion white -->
+  <text x="100" y="44"
+        fill="#F6F7FA"
+        font-family="'Exo 2', 'Inter', system-ui, sans-serif"
+        font-weight="700"
+        font-size="36"
+        letter-spacing="6">GALAXY</text>
+
+  <!-- "SPORTS EDGE" — secondary lockup, lighter weight, cyan eyebrow color -->
+  <text x="100" y="80"
+        fill="#00E5FF"
+        font-family="'Exo 2', 'Inter', system-ui, sans-serif"
+        font-weight="500"
+        font-size="22"
+        letter-spacing="8">SPORTS EDGE</text>
 </svg>

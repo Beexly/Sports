@@ -1,6 +1,6 @@
 # Fonts
 
-PickPilot uses four typefaces, all available on **Google Fonts**:
+Galaxy Sports Edge uses four typefaces, all available on **Google Fonts**:
 
 | Role | Family | Weights used |
 |---|---|---|

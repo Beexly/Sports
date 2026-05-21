@@ -264,7 +264,9 @@ function hashStringToInt(s: string): number {
 
 export function getSamplePicks(now: Date = new Date()): SamplePick[] {
   const dateKey = now.toISOString().slice(0, 10);
-  const baseTime = new Date(`${dateKey}T18:00:00Z`).getTime();
+  // Ensure commenceTime is always at least 1h in the future of `now` so the
+  // games haven't started yet on the demo dashboard, regardless of the time of day.
+  const baseTime = Math.max(new Date(`${dateKey}T18:00:00Z`).getTime(), now.getTime() + 60 * 60_000);
 
   return SEED_DATA.map((seed, i) => {
     const idSuffix = `${dateKey}-${i}`;

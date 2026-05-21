@@ -6,7 +6,7 @@ REM you can read the result.
 
 cd /d "C:\Users\Garrett\Documents\Claude\Projects\AI Sports"
 
-echo Starting PickPilot launch push... > push-now.log
+echo Starting Galaxy Sports Edge launch push... > push-now.log
 echo. >> push-now.log
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\push-now.ps1" 2>&1 | powershell.exe -NoProfile -Command "$input | Tee-Object -FilePath push-now.log -Append"

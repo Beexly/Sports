@@ -1,12 +1,12 @@
 ---
 name: pickpilot-design
-description: Use this skill to generate well-branded interfaces and assets for PickPilot, a cinematic sports intelligence platform. Contains essential design guidelines, the plasma/ion-blue/ultraviolet palette (no gold), type system, Syne / Big Shoulders / Geist / Instrument Serif fonts, reticle logo assets, and a web UI kit for prototyping. Use for production code, mocks, prototypes, slides, or any artifact carrying the PickPilot brand.
+description: Use this skill to generate well-branded interfaces and assets for Galaxy Sports Edge, a cinematic sports intelligence platform. Contains essential design guidelines, the plasma/ion-blue/ultraviolet palette (no gold), type system, Syne / Big Shoulders / Geist / Instrument Serif fonts, reticle logo assets, and a web UI kit for prototyping. Use for production code, mocks, prototypes, slides, or any artifact carrying the Galaxy Sports Edge brand.
 user-invocable: true
 ---
 
-# PickPilot Design Skill
+# Galaxy Sports Edge Design Skill
 
-PickPilot is a **cinematic operating system for probabilistic thinking** — a sports-intelligence platform built around perspective, not picks. The visual identity is layered carbon environment + plasma-magenta primary + ion-blue secondary + ultraviolet depth, with brutalist/editorial type (Syne + Big Shoulders + Instrument Serif Italic) and a reticle wordmark. It is explicitly **not** a casino, sportsbook, or generic dark-mode betting product. **No gold or amber** — those introduce casino/transactional psychology we reject.
+Galaxy Sports Edge is a **cinematic operating system for probabilistic thinking** — a sports-intelligence platform built around perspective, not picks. The visual identity is layered carbon environment + plasma-magenta primary + ion-blue secondary + ultraviolet depth, with brutalist/editorial type (Syne + Big Shoulders + Instrument Serif Italic) and a reticle wordmark. It is explicitly **not** a casino, sportsbook, or generic dark-mode betting product. **No gold or amber** — those introduce casino/transactional psychology we reject.
 
 ## How to use this skill
 

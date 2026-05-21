@@ -20,6 +20,8 @@ NEXTAUTH_SECRET=dev-launch-night-secret
 NEXTAUTH_URL=http://localhost:3000
 DEV_FAKE_ADMIN=true
 NODE_ENV=development
+PUBLIC_PICKS_ENABLED=true
+DEMO_PICKS_ENABLED=true
 ```
 
 Then:

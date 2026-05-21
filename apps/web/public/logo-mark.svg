@@ -1,47 +1,67 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="PickPilot reticle mark">
-  <title>PickPilot</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Galaxy Sports Edge mark">
+  <title>Galaxy Sports Edge</title>
   <defs>
-    <radialGradient id="pp-bg" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#221140"/>
-      <stop offset="60%" stop-color="#0a0612"/>
-      <stop offset="100%" stop-color="#04060a"/>
+    <linearGradient id="gse-edge-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"  stop-color="#00E5FF"/>
+      <stop offset="55%" stop-color="#7A5CFF"/>
+      <stop offset="100%" stop-color="#FF2DD6"/>
+    </linearGradient>
+    <radialGradient id="gse-bg" cx="50%" cy="42%" r="62%">
+      <stop offset="0%"  stop-color="#0F1424"/>
+      <stop offset="60%" stop-color="#070A11"/>
+      <stop offset="100%" stop-color="#050608"/>
     </radialGradient>
-    <radialGradient id="pp-glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#FF2D8A" stop-opacity="0.55"/>
-      <stop offset="60%" stop-color="#4FA8FF" stop-opacity="0.20"/>
-      <stop offset="100%" stop-color="#04060a" stop-opacity="0"/>
+    <radialGradient id="gse-signal-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#FF2DD6" stop-opacity="0.85"/>
+      <stop offset="60%" stop-color="#7A5CFF" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
     </radialGradient>
   </defs>
 
-  <!-- Carbon background tile (rounded square for social-avatar safe area) -->
-  <rect width="512" height="512" rx="96" fill="url(#pp-bg)"/>
+  <!-- Carbon background, social-avatar safe area -->
+  <rect width="512" height="512" rx="96" fill="url(#gse-bg)"/>
 
-  <!-- Atmospheric glow behind the reticle -->
-  <circle cx="256" cy="256" r="220" fill="url(#pp-glow)"/>
+  <!-- Faint outer orbit ring — depth field, never a letterform -->
+  <circle cx="256" cy="256" r="186" fill="none" stroke="#1A1D23" stroke-width="2" opacity="0.9"/>
 
-  <!-- Outer reticle ring -->
-  <circle cx="256" cy="256" r="160" fill="none" stroke="#FF2D8A" stroke-width="4" opacity="0.85"/>
+  <!--
+    Broken orbital arc — the "orbit" half of the mark.
+    Open at the TOP (not the right) to avoid Google-G memory.
+    Asymmetric: the arc sweeps from lower-left (240°) to right (350°),
+    leaving a wide gap across the top through which the edge vector enters.
+  -->
+  <path
+    d="M 95 311 A 161 161 0 1 0 414 290"
+    fill="none"
+    stroke="url(#gse-edge-grad)"
+    stroke-width="14"
+    stroke-linecap="round"
+  />
 
-  <!-- Inner reticle ring -->
-  <circle cx="256" cy="256" r="90" fill="none" stroke="#FF2D8A" stroke-width="3" opacity="0.55"/>
+  <!--
+    Edge vector — diagonal of advantage.
+    Enters from upper-left at 17°, crosses the orbital plane through the
+    signal point, exits lower-right. Slightly offset from the absolute
+    diagonal so it doesn't bisect the orbit symmetrically.
+  -->
+  <line
+    x1="90"
+    y1="146"
+    x2="446"
+    y2="362"
+    stroke="url(#gse-edge-grad)"
+    stroke-width="14"
+    stroke-linecap="round"
+  />
 
-  <!-- Crosshair ticks (top/bottom/left/right) -->
-  <g stroke="#FF2D8A" stroke-width="6" stroke-linecap="butt">
-    <line x1="256" y1="60" x2="256" y2="118"/>
-    <line x1="256" y1="394" x2="256" y2="452"/>
-    <line x1="60" y1="256" x2="118" y2="256"/>
-    <line x1="394" y1="256" x2="452" y2="256"/>
-  </g>
+  <!-- Signal point glow halo -->
+  <circle cx="272" cy="246" r="64" fill="url(#gse-signal-glow)"/>
 
-  <!-- Ion-blue diagonal tick marks -->
-  <g stroke="#4FA8FF" stroke-width="3" stroke-linecap="butt" opacity="0.7">
-    <line x1="118" y1="118" x2="142" y2="142"/>
-    <line x1="394" y1="118" x2="370" y2="142"/>
-    <line x1="118" y1="394" x2="142" y2="370"/>
-    <line x1="394" y1="394" x2="370" y2="370"/>
-  </g>
-
-  <!-- Center dot -->
-  <circle cx="256" cy="256" r="14" fill="#FF2D8A"/>
-  <circle cx="256" cy="256" r="6" fill="#FF5BA8"/>
+  <!--
+    Signal point — the memory hook.
+    Solid ion-magenta dot, sized to read at favicon scale.
+    Positioned slightly above/right of center to anchor the asymmetry.
+  -->
+  <circle cx="272" cy="246" r="22" fill="#FF2DD6"/>
+  <circle cx="272" cy="246" r="9"  fill="#F6F7FA"/>
 </svg>

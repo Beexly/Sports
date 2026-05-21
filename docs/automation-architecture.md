@@ -1,8 +1,8 @@
-# PickPilot Automation Architecture
+# Galaxy Sports Edge Automation Architecture
 
 **Decision: self-hosted n8n on Coolify. Week-1 setup.**
 
-This is the long-term answer to "how do I run social media, content, and ops automation for PickPilot." It replaces Buffer / Hootsuite / Zapier — costs ~$5/mo, owns its own data, integrates with everything.
+This is the long-term answer to "how do I run social media, content, and ops automation for Galaxy Sports Edge." It replaces Buffer / Hootsuite / Zapier — costs ~$5/mo, owns its own data, integrates with everything.
 
 ---
 
@@ -14,8 +14,8 @@ You uploaded 9 candidate tools. Here's why three of them win and six lose:
 |---|---|---|
 | **n8n** | ✅ Core | 400+ integrations, AI-native (LangChain), fair-code license, runs anywhere, has a real UI. Direct nodes for X, Twitter, Telegram, Discord, RSS, OpenAI/Anthropic, HTTP, webhooks, Postgres. |
 | **Coolify** | ✅ Platform | Self-hosted Heroku/Vercel alternative. One-click deploys n8n, Postgres, Redis, Ghost. Runs on a $5/mo Hetzner VPS. |
-| **Ghost** | 🟡 Optional | Newsletter platform. PickPilot already has a `/blog` route — Ghost only makes sense if you want to run a paid newsletter ("Weekly Edge — top 3 picks of the week, $5/mo"). |
-| Bridgy | ❌ Skip | IndieWeb POSSE — wrong use case for PickPilot. |
+| **Ghost** | 🟡 Optional | Newsletter platform. Galaxy Sports Edge already has a `/blog` route — Ghost only makes sense if you want to run a paid newsletter ("Weekly Edge — top 3 picks of the week, $5/mo"). |
+| Bridgy | ❌ Skip | IndieWeb POSSE — wrong use case for Galaxy Sports Edge. |
 | postwill | ❌ Skip | Ruby gem requiring custom glue code. n8n covers it with a UI. |
 | Automated-Socialmedia-Posting | ❌ Hard skip | Browser-scraping FB/IG/X via Selenium. Against ToS. Will get accounts banned within days. |
 | Social-Media-App | ❌ Wrong tool | A "build your own Facebook" tutorial. Not a posting tool. |
@@ -39,7 +39,7 @@ You uploaded 9 candidate tools. Here's why three of them win and six lose:
   │           ├── deploys ─→ Redis         (n8n queue)          │
   │           └── deploys ─→ Ghost (opt)   (newsletter, :2368)  │
   │                                                             │
-  │   Public: automate.pickpilotapp.bet  ← Caddy/Traefik (Coolify) │
+  │   Public: automate.galaxysportsedge.com  ← Caddy/Traefik (Coolify) │
   └─────────────────────────────────────────────────────────────┘
                                 │
                                 ▼
@@ -53,7 +53,7 @@ You uploaded 9 candidate tools. Here's why three of them win and six lose:
        │    Approved post → Buffer API → IG/FB/X/Threads   │
        │                                                    │
        │  • Pick-published webhook:                         │
-       │    pickpilotapp.bet/api/picks/published →         │
+       │    galaxysportsedge.com/api/picks/published →         │
        │    n8n → auto-draft post → Slack for approval     │
        │                                                    │
        │  • Performance gate watcher:                       │
@@ -61,7 +61,7 @@ You uploaded 9 candidate tools. Here's why three of them win and six lose:
        │    settled_at IS NOT NULL → Slack alert at 100    │
        │                                                    │
        │  • Health check:                                   │
-       │    Every 5 min → GET pickpilotapp.bet/api/health  │
+       │    Every 5 min → GET galaxysportsedge.com/api/health  │
        │    → Slack alert on failure                        │
        └────────────────────────────────────────────────────┘
 ```
@@ -92,16 +92,16 @@ Pays for itself in **3 days**. Over a year, ~$680 saved.
    curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
    ```
 3. Visit `http://<server-ip>:8000`, create admin account
-4. Point a subdomain at it: `automate.pickpilotapp.bet` → A record → `<server-ip>` in Cloudflare DNS, gray cloud (DNS only)
+4. Point a subdomain at it: `automate.galaxysportsedge.com` → A record → `<server-ip>` in Cloudflare DNS, gray cloud (DNS only)
 
 ### Day 2 — Deploy n8n
 
 In Coolify UI:
 1. **+ New Resource → Service → n8n** (one-click template)
-2. Domain: `n8n.pickpilotapp.bet`
+2. Domain: `n8n.galaxysportsedge.com`
 3. Set env vars: `N8N_BASIC_AUTH_ACTIVE=true`, `N8N_BASIC_AUTH_USER=<you>`, `N8N_BASIC_AUTH_PASSWORD=<strong>`
 4. Deploy. Coolify provisions Postgres + Redis automatically.
-5. Visit `https://n8n.pickpilotapp.bet`, sign in.
+5. Visit `https://n8n.galaxysportsedge.com`, sign in.
 
 ### Day 3 — Connect social APIs
 
@@ -123,7 +123,7 @@ For each platform, n8n has a built-in OAuth credential type. You do this ONCE pe
 
 **Workflow 1: Daily Anthropic-drafted post**
 ```
-[Cron 9am CT] → [Anthropic node: "Draft an on-brand PickPilot post about
+[Cron 9am CT] → [Anthropic node: "Draft an on-brand Galaxy Sports Edge post about
                   today's NBA slate. Voice: calm, technical, mission-control.
                   Banned: guaranteed, lock, sure thing. 280 char max."]
               → [Slack: "Approve daily post?" with Approve/Reject buttons]
@@ -132,8 +132,8 @@ For each platform, n8n has a built-in OAuth credential type. You do this ONCE pe
 
 **Workflow 2: Pick-published auto-draft**
 ```
-[Webhook: POST /pick-published]   ← PickPilot pings this on every pick
-              → [HTTP node: GET pickpilotapp.bet/api/picks/{id}]
+[Webhook: POST /pick-published]   ← Galaxy Sports Edge pings this on every pick
+              → [HTTP node: GET galaxysportsedge.com/api/picks/{id}]
               → [Anthropic: draft a teaser post]
               → [Slack: review/approve]
               → [Buffer: schedule]
@@ -141,7 +141,7 @@ For each platform, n8n has a built-in OAuth credential type. You do this ONCE pe
 
 **Workflow 3: Health monitor**
 ```
-[Cron every 5 min] → [HTTP: GET pickpilotapp.bet/api/health]
+[Cron every 5 min] → [HTTP: GET galaxysportsedge.com/api/health]
                   → [If status != 200] → [Slack alert]
 ```
 
@@ -149,7 +149,7 @@ For each platform, n8n has a built-in OAuth credential type. You do this ONCE pe
 
 If you want a newsletter:
 1. Coolify → + New Resource → Ghost (one-click)
-2. Domain: `newsletter.pickpilotapp.bet`
+2. Domain: `newsletter.galaxysportsedge.com`
 3. Connect Mailgun (free 1k emails/mo) for sending
 4. n8n workflow: every Sunday, draft "Weekly Edge" → review → publish via Ghost API
 
@@ -167,7 +167,7 @@ If you don't want a newsletter yet: skip.
 
 ## What to do tonight vs Week 1
 
-**Tonight:** finish the deploy of PickPilot itself. Don't touch n8n yet. Use Meta Business Suite (free, native IG + FB scheduling) and Buffer free tier (X + Threads).
+**Tonight:** finish the deploy of Galaxy Sports Edge itself. Don't touch n8n yet. Use Meta Business Suite (free, native IG + FB scheduling) and Buffer free tier (X + Threads).
 
 **Week 1 (after deploy is stable):** follow this doc to stand up the n8n + Coolify stack. Move all automation to it.
 

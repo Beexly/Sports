@@ -48,11 +48,18 @@ export async function runContentPublisher(
 }
 
 async function main(): Promise<void> {
+  if (!CONTENT_WORKER_ENABLED) {
+    // eslint-disable-next-line no-console
+    console.log(
+      "[content-publisher] CONTENT_WORKER_ENABLED is not 'true' — worker is idle."
+    );
+    return;
+  }
   // eslint-disable-next-line no-console
   console.log(
     INTERNAL_CALIBRATION_ONLY
-      ? "[content-publisher] kill switch ON — refusing all publish requests."
-      : "[content-publisher] kill switch OFF — queueing only, never auto-publishing."
+      ? "[content-publisher] CONTENT_WORKER_ENABLED=true but kill switch ON — refusing all publish requests."
+      : "[content-publisher] CONTENT_WORKER_ENABLED=true and kill switch OFF — queueing only, never auto-publishing."
   );
 }
 

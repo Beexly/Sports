@@ -30,7 +30,7 @@ const ROUTES: ReadonlyArray<{
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl =
-    process.env["NEXT_PUBLIC_APP_URL"] ?? "https://pickpilotapp.bet";
+    process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
   const now = new Date();
 
   return ROUTES.map(({ path, priority, changeFrequency }) => ({
@@ -39,4 +39,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency,
     priority,
   }));
-}

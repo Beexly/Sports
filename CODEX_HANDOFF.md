@@ -36,7 +36,7 @@ Write-Host "About to commit $count file changes"
 git add -A
 
 # 5. Commit
-git commit -m "Launch night: pickpilotapp.bet domain wiring, /about /press /observatory /vault, social row, SEO, OG image"
+git commit -m "Launch night: galaxysportsedge.com domain wiring, /about /press /observatory /vault, social row, SEO, OG image"
 
 # 6. Push to current branch
 git push origin sports-intelligence-os-phase-9-ci
@@ -97,7 +97,7 @@ After Block 3 + 4 are done:
 3. **Uncheck** "Use existing build cache" — env-var changes need a clean build
 4. Click **Redeploy**
 
-Watch the build log. If it goes green, hit `https://pickpilotapp.bet` and the site is live.
+Watch the build log. If it goes green, hit `https://galaxysportsedge.com` and the site is live.
 
 ---
 
@@ -105,18 +105,18 @@ Watch the build log. If it goes green, hit `https://pickpilotapp.bet` and the si
 
 Quick checklist:
 
-- [ ] `https://pickpilotapp.bet` → homepage loads with PickPilot wordmark + plasma gradient
+- [ ] `https://galaxysportsedge.com` → homepage loads with Galaxy Sports Edge wordmark + plasma gradient
 - [ ] Click "See methodology" → page renders
 - [ ] Click "Picks" in nav → page renders (will show "No picks published" — expected, ingestion hasn't run yet)
 - [ ] Click "Observatory" in nav → page renders with "Status · Pre-launch" card
 - [ ] Click "The Vault" in nav → page renders with "Status · Collecting" card
 - [ ] Footer shows X / IG / Threads / FB icons → click one → opens your real account
-- [ ] `https://pickpilotapp.bet/api/health` → returns JSON
+- [ ] `https://galaxysportsedge.com/api/health` → returns JSON
 - [ ] Click "Sign in" → Google OAuth flow → lands back on `/dashboard`
 
 If anything is red, paste the symptom into Codex with this prompt:
 
-> *"My Next.js 14 monorepo just deployed to Vercel at pickpilotapp.bet. This is happening: [symptom]. The relevant config is in the repo at apps/web. What's the most likely cause and the one-line fix?"*
+> *"My Next.js 14 monorepo just deployed to Vercel at galaxysportsedge.com. This is happening: [symptom]. The relevant config is in the repo at apps/web. What's the most likely cause and the one-line fix?"*
 
 ---
 

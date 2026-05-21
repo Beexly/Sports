@@ -174,7 +174,7 @@ Coordination with Session A is captured in
 
 ## Stat snapshot (final)
 
-- 103 test files (up from ~17 at session start — ~6.1x)
+- 107 test files (up from ~17 at session start — ~6.3x)
 - 33 lib files under `apps/web/lib/`
 - 14 docs files under `docs/` (incl. ADR 001 + ADR 002)
 - 10 launch-night reports under `reports/launch-night/` (incl. README

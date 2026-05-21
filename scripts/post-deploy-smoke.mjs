@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Post-deploy smoke test for PickPilot.
+ * Post-deploy smoke test for Galaxy Sports Edge.
  *
  * Hits every public route on production, plus a small set of API
  * endpoints, and reports a green/red checklist. Run this the moment
@@ -8,9 +8,9 @@
  *
  * Usage:
  *   node scripts/post-deploy-smoke.mjs
- *   node scripts/post-deploy-smoke.mjs --url=https://pickpilotapp.bet
+ *   node scripts/post-deploy-smoke.mjs --url=https://galaxysportsedge.com
  *
- * Defaults to https://pickpilotapp.bet. Exits non-zero on any failure.
+ * Defaults to https://galaxysportsedge.com. Exits non-zero on any failure.
  */
 
 const COLOR = process.stdout.isTTY
@@ -25,11 +25,13 @@ const COLOR = process.stdout.isTTY
   : { reset: "", red: "", green: "", yellow: "", cyan: "", dim: "" };
 
 const argUrl = process.argv.find((a) => a.startsWith("--url="));
-const BASE = (argUrl ? argUrl.split("=")[1] : "https://pickpilotapp.bet").replace(/\/$/, "");
+const BASE = (argUrl ? argUrl.split("=")[1] : "https://galaxysportsedge.com").replace(/\/$/, "");
 
 const PUBLIC_PAGES = [
-  { path: "/", mustContain: ["PickPilot", "Perspective, not picks"] },
-  { path: "/picks", mustContain: ["PickPilot"] },
+  // Homepage hero splits the tagline with <em>, so we check for the surrounding
+  // fragments rather than the full continuous string.
+  { path: "/", mustContain: ["Galaxy Sports Edge", "Find the", "before the market moves"] },
+  { path: "/picks", mustContain: ["Galaxy Sports Edge"] },
   { path: "/methodology", mustContain: ["Methodology"] },
   { path: "/performance", mustContain: ["Performance"] },
   { path: "/pricing", mustContain: ["Free", "Pro", "Elite"] },
@@ -45,7 +47,7 @@ const PUBLIC_PAGES = [
 
 const SEO_FILES = [
   { path: "/robots.txt", mustContain: ["Sitemap:", "User-agent: *"] },
-  { path: "/sitemap.xml", mustContain: ["<urlset", "pickpilotapp.bet"] },
+  { path: "/sitemap.xml", mustContain: ["<urlset", "galaxysportsedge.com"] },
   { path: "/opengraph-image", mustContainContentType: "image/png" },
 ];
 
@@ -53,14 +55,19 @@ const API_ENDPOINTS = [
   { path: "/api/health", expectJson: true, mustHaveKey: "ok" },
 ];
 
+// Per Galaxy Sports Edge Brand Use Pack §8.
+// NOTE: "lock" by itself is NOT banned — "Eclipse Lock" is a product
+// surface name. Only "lock of the day" (the touting cliché) is banned.
 const BANNED_PHRASES = [
-  /\bguaranteed\b/i,
-  /\block\b/i,
+  /\bguaranteed profit\b/i,
+  /\bguaranteed winning\b/i,
+  /\bguaranteed pick\b/i,
+  /\block of the day\b/i,
+  /\bfree money\b/i,
   /\bsure thing\b/i,
   /\brisk-free\b/i,
   /\beasy money\b/i,
   /\bcan't lose\b/i,
-  /\bverified track record\b/i,
 ];
 
 let failures = 0;

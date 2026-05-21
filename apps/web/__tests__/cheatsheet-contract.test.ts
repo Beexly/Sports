@@ -104,6 +104,73 @@ describe("CHEATSHEET.md contract", () => {
   it("references the launch runbook for deeper context", () => {
     expect(cheatsheet).toMatch(/docs\/launch-runbook\.md/);
   });
+
+  it("has exactly four numbered URLs (one per row of the URL table)", () => {
+    // The URL section is a markdown table; assert each canonical URL
+    // shows up exactly once in a backtick code-span (the table's first
+    // column). That's how we know "4 URLs" matches reality.
+    for (const url of ["/dashboard", "/cockpit", "/cockpit/history", "/picks"]) {
+      const tableRowPattern = new RegExp(`\\| \`${url}\` \\|`);
+      expect(cheatsheet, `cheat sheet table should have a row for ${url}`).toMatch(
+        tableRowPattern,
+      );
+    }
+  });
+
+  it("has exactly four numbered verifications (markdown ordered list 1-4)", () => {
+    // Extract the verifications block and count "N." lines.
+    const start = cheatsheet.indexOf("## 4 things to verify");
+    const end = cheatsheet.indexOf("## 4 invariants");
+    expect(start).toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(start);
+    const block = cheatsheet.slice(start, end);
+    const numbered = block.match(/^\d+\.\s+/gm) ?? [];
+    expect(numbered.length).toBe(4);
+  });
+
+  it("has exactly four numbered invariants (markdown ordered list 1-4)", () => {
+    const start = cheatsheet.indexOf("## 4 invariants");
+    const end = cheatsheet.indexOf("## When something looks wrong");
+    expect(start).toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(start);
+    const block = cheatsheet.slice(start, end);
+    const numbered = block.match(/^\d+\.\s+/gm) ?? [];
+    expect(numbered.length).toBe(4);
+  });
+
+  it("the troubleshooting section names the right env flags", () => {
+    const start = cheatsheet.indexOf("## When something looks wrong");
+    expect(start).toBeGreaterThan(-1);
+    const block = cheatsheet.slice(start);
+    expect(block).toMatch(/PERFORMANCE_STATS_ENABLED/);
+    expect(block).toMatch(/DEMO_PICKS_ENABLED/);
+    expect(block).toMatch(/isStubMode\(\)|DATABASE_URL/);
+    expect(block).toMatch(/npm run db:seed/);
+  });
+
+  it("never includes a banned phrase even inside example/troubleshooting copy", () => {
+    // The cheat sheet documents banned phrases but must not USE them on
+    // customer-facing surfaces. The cheat sheet is operator-internal so
+    // it may quote them; but it must not assert any of the customer-
+    // copy taboos as if speaking to a customer.
+    // We allow them to be present as quoted examples ("Verified Record"
+    // is fine — that's a phrase label, not a customer claim). What we
+    // forbid is the cheat sheet itself making a guarantee.
+    expect(cheatsheet).not.toMatch(/guaranteed wins?\b/i);
+    expect(cheatsheet).not.toMatch(/\brisk[-\s]free\b/i);
+    expect(cheatsheet).not.toMatch(/\bsure thing\b/i);
+    expect(cheatsheet).not.toMatch(/\beasy money\b/i);
+  });
+
+  it("uses fenced code blocks for shell commands so copy-paste works cleanly", () => {
+    // The "4 commands to run" block must use ```bash so the operator can
+    // paste it without grabbing markdown prose.
+    const commandsBlock = cheatsheet.slice(
+      cheatsheet.indexOf("## 4 commands to run"),
+      cheatsheet.indexOf("## 4 things to verify"),
+    );
+    expect(commandsBlock).toMatch(/```bash[\s\S]+```/);
+  });
 });
 
 describe("CHEATSHEET cross-link from README", () => {

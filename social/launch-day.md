@@ -1,9 +1,10 @@
-# PickPilot — Launch-Day Social Posts
+# Galaxy Sports Edge — Launch-Day Social Posts
 
-**Brand voice:** confident, calm, technical, mission-control register. Never panicked, never hype. Aviation/intelligence metaphors land naturally.
-**Banned phrases:** guaranteed, lock, sure thing, risk-free, easy money, can't lose. None of these appear below.
-**Tagline:** *Perspective, not picks.*
-**Domain to use:** `https://pickpilotapp.bet`
+**Brand voice (Brand Use Pack §2):** *Calibrated. Precise. Always acquiring. Intelligence isn't loud. It's on frequency.* Never hype-driven.
+**Locked H1:** Find the signal before the market moves.
+**Closer:** We detect. You decide. You win.
+**Domain:** https://galaxysportsedge.com
+**Banned phrases (Brand Use Pack §8):** guaranteed profit · guaranteed winning · lock of the day · free money · sure thing · risk-free. Use "confidence-rated signal" instead.
 
 ---
 
@@ -11,53 +12,51 @@
 
 ### X (280 char limit)
 
-> Today we open the doors on PickPilot.
+> Galaxy Sports Edge is live.
 >
-> Live odds, scored every 30 minutes. Every pick exposes the reasoning behind it. No black box. No hype.
+> A sports intelligence platform that detects market inefficiencies, measures edge, and delivers confidence-rated signals — before the world catches on.
 >
-> Perspective, not picks. You make the call.
+> Find the signal before the market moves.
 >
-> https://pickpilotapp.bet
+> https://galaxysportsedge.com
 
-### Instagram (caption — paired with OG-style graphic)
+### Instagram (caption — paired with brand-board graphic)
 
-> Today we open the doors on PickPilot.
+> Galaxy Sports Edge is live.
 >
-> A sports intelligence platform — not a tout service. We ingest live odds from dozens of sportsbooks every 30 minutes, score every matchup for edge, and surface a calibrated, fully-reasoned signal.
+> A next-generation sports intelligence platform that uses proprietary AI to detect market inefficiencies, measure edge, and surface confidence-rated signals — every one with full reasoning attached.
 >
-> No black boxes. No promised outcomes. Every pick exposes its factor breakdown — consensus, market depth, line movement, intelligence layers.
+> This isn't a tout service. No promised outcomes. Just calibrated market signals you can actually audit.
 >
-> Perspective, not picks. You make the call.
+> Find the signal before the market moves.
 >
-> Link in bio → pickpilotapp.bet
+> Link in bio → galaxysportsedge.com
 >
-> #SportsIntelligence #NFL #NBA #MLB #SportsAnalytics #DataDriven
+> #SportsIntelligence #SportsAnalytics #NFL #NBA #MLB #DataDriven
 
 ### Threads (500 char limit)
 
-> Today we open the doors on PickPilot.
+> Galaxy Sports Edge is live.
 >
-> Sports intelligence — not a tout service. Live odds ingested every 30 min, scored for edge, published with full reasoning.
+> Sports intelligence — not a tout service. Live market data scored every 30 minutes, surfaced with full reasoning. No promised outcomes. Just calibrated signals you can audit.
 >
-> No black boxes. No promised outcomes. You see every factor that drove the signal.
+> Find the signal before the market moves.
 >
-> Perspective, not picks. You make the call.
->
-> pickpilotapp.bet
+> galaxysportsedge.com
 
 ### Facebook
 
-> Today we open the doors on PickPilot — a sports intelligence platform built on a single principle: if we can't show our work, we don't publish.
+> Galaxy Sports Edge is live today — a next-generation sports intelligence platform built on a single principle: if we can't show our work, we don't publish.
 >
 > What that means in practice:
-> • Live odds ingested every 30 minutes from dozens of sportsbooks
-> • Every matchup scored for edge with a calibrated 0–100 confidence
-> • Every pick exposes its factor breakdown — consensus, market depth, line movement, intelligence layers
-> • No promised outcomes. Variance is described, not hidden.
+> • Live market data ingested across dozens of sportsbooks every 30 minutes
+> • Every matchup scored for edge with a calibrated 0–100 confidence index
+> • Every signal exposes its factor breakdown — consensus, market depth, line movement, intelligence layers
+> • Variance is described, not hidden. No promised outcomes.
 >
-> Perspective, not picks. You make the call.
+> Find the signal before the market moves. We detect. You decide. You win.
 >
-> Visit: https://pickpilotapp.bet
+> Visit: https://galaxysportsedge.com
 
 ---
 
@@ -65,123 +64,124 @@
 
 ### X
 
-> The reason PickPilot doesn't publish a win-rate yet:
+> The reason Galaxy Sports Edge doesn't publish a win-rate yet:
 >
-> We won't ship a number our settled-pick history can't honestly support. The "Performance" page reads "Collecting…" until enough canonical picks settle to make it statistically meaningful.
+> We won't ship a number our settled-signal history can't honestly support. The Calibration Report stays gated until the data renders it statistically meaningful.
 >
 > That's the whole point.
 >
-> https://pickpilotapp.bet/methodology
+> https://galaxysportsedge.com/methodology
 
 ### Instagram
 
-> Why PickPilot's "Performance" page says "Collecting…" instead of a win-rate.
+> Why Galaxy Sports Edge's Calibration Report reads "Collecting…" instead of a win-rate.
 >
-> Most sports services publish a record based on a curated subset of their picks. We don't.
+> Most sports services publish a record built on a curated subset of their picks. The numbers look great because they're chosen to look great.
 >
-> Our Performance page stays gated until enough canonical picks have settled to publish a statistically defensible number. Could be 100 picks. Could be 500. Whatever it takes for the number to be honest.
+> We built Galaxy Sports Edge to do the opposite. The Calibration Report stays gated until enough canonical signals have settled to render a statistically defensible number. Could be 100 settled signals. Could be 500. Whatever it takes for the number to be honest.
 >
 > If we have to wait, we wait. That's the whole point.
 >
-> Methodology page in bio.
+> Galaxy IQ link in bio.
 >
 > #SportsAnalytics #DataIntegrity
 
 ### Threads
 
-> Why PickPilot's Performance page says "Collecting…" instead of a win-rate:
+> Why Galaxy Sports Edge's Calibration Report reads "Collecting…" instead of a win-rate:
 >
 > Most services publish a curated record. We don't.
 >
-> Performance stays gated until enough canonical picks settle for the number to be statistically defensible. If we have to wait, we wait.
+> The page stays gated until enough canonical signals settle for the number to be statistically defensible. If we have to wait, we wait.
 >
 > That's the whole point.
 
 ### Facebook
 
-> Why PickPilot's "Performance" page reads "Collecting…" instead of a win-rate — and why that's intentional.
+> Why Galaxy Sports Edge's Calibration Report reads "Collecting…" instead of a win-rate — and why that's intentional.
 >
-> Most sports services publish a record based on a curated subset of their picks. The numbers look great because they're chosen to look great.
->
-> We built PickPilot to do the opposite. The Performance page stays gated until enough canonical settled picks exist to render a calibrated, statistically defensible number. Until then, the page is honest about the fact that the data isn't there yet.
+> Most sports services publish a record based on a curated subset of their picks. We built Galaxy Sports Edge to do the opposite. The Calibration Report stays gated until enough canonical settled signals exist to render a calibrated, statistically defensible number.
 >
 > If we have to wait, we wait.
 >
-> Read the methodology: https://pickpilotapp.bet/methodology
+> Read Galaxy IQ: https://galaxysportsedge.com/methodology
 
 ---
 
-## Round 3 — Differentiation post (~48 hrs after Round 1)
+## Round 3 — Five operating principles (~48 hrs after Round 1)
 
 ### X
 
-> Three things PickPilot will never do:
+> Five rules Galaxy Sports Edge runs on:
 >
-> 1. Promise you outcomes
-> 2. Hide our reasoning
-> 3. Show you a record we can't honestly back
+> · INTELLIGENCE · data with purpose
+> · PRECISION · measured, not guessed
+> · ADVANTAGE · see it first, use it better
+> · DISCIPLINE · process over emotion
+> · RESULTS · consistent long-term edge
 >
-> Perspective, not picks. You make the call.
+> Find the signal before the market moves.
 >
-> https://pickpilotapp.bet
+> https://galaxysportsedge.com
 
 ### Instagram
 
-> Three rules PickPilot doesn't break:
+> Five rules Galaxy Sports Edge doesn't break:
 >
-> 01 — We never promise an outcome.
-> Variance is real. A 64% confidence pick still loses 36 times out of 100.
+> 01 — INTELLIGENCE. Data with purpose.
+> 02 — PRECISION. Measured. Not guessed.
+> 03 — ADVANTAGE. See it first. Use it better.
+> 04 — DISCIPLINE. Process over emotion.
+> 05 — RESULTS. Consistent long-term edge.
 >
-> 02 — We never hide our reasoning.
-> Every pick exposes its factor breakdown. Consensus. Market depth. Line movement.
+> Find the signal before the market moves. We detect. You decide. You win.
 >
-> 03 — We never publish a record we can't back.
-> Performance stays gated until the data can honestly support it.
->
-> Perspective, not picks. You make the call.
->
-> pickpilotapp.bet
+> galaxysportsedge.com
 >
 > #SportsIntelligence #DataDriven
 
 ### Threads
 
-> Three rules PickPilot doesn't break:
+> Five rules Galaxy Sports Edge runs on:
 >
-> 1/ We never promise outcomes. A 64% confidence pick still loses 36 out of 100 times.
+> 1/ Intelligence — data with purpose
+> 2/ Precision — measured, not guessed
+> 3/ Advantage — see it first, use it better
+> 4/ Discipline — process over emotion
+> 5/ Results — consistent long-term edge
 >
-> 2/ We never hide reasoning. Every pick shows its factor breakdown.
->
-> 3/ We never publish a record we can't back. Performance stays gated until the data supports it.
->
-> pickpilotapp.bet
+> galaxysportsedge.com
 
 ### Facebook
 
-> Three things PickPilot will never do — and why each one matters.
+> Five operating principles that drive Galaxy Sports Edge — and why each one matters.
 >
-> 1. We never promise you outcomes. Sports are uncertain. A 64% confidence pick is still going to lose 36 times out of 100. We design every public surface around that reality.
+> INTELLIGENCE — Data with purpose. We don't ingest data we can't use. Every input is scored for relevance and weight before it touches the model.
 >
-> 2. We never hide our reasoning. Every pick exposes its full factor breakdown — consensus, market depth, line movement, intelligence layers. If we can't explain the call, we don't publish.
+> PRECISION — Measured. Not guessed. Every confidence-rated signal exposes its factor breakdown. Consensus. Market depth. Line movement.
 >
-> 3. We never show you a record we can't back. The Performance page stays gated until enough canonical picks have settled to render a statistically defensible number.
+> ADVANTAGE — See it first. Use it better. We don't wait for the public to catch on — but we also don't promise outcomes. Sports are uncertain.
 >
-> Perspective, not picks. You make the call.
+> DISCIPLINE — Process over emotion. The platform was built to enforce its own readiness gates. The Calibration Report stays closed until the data can honestly support a number.
 >
-> https://pickpilotapp.bet
+> RESULTS — Consistent long-term edge. We optimize for cumulative ROI across a calibrated sample, not for a hot streak.
+>
+> Find the signal before the market moves. We detect. You decide. You win.
+>
+> https://galaxysportsedge.com
 
 ---
 
 ## Reply / engagement bank — use when someone asks "how is this different from [X]?"
 
 > Two things make us different:
-> 1) Every pick is published with its full factor breakdown — you see the inputs.
-> 2) We don't publish a win-rate until the canonical settled-pick history can honestly support one.
-> Perspective, not picks.
+> 1) Every signal is published with its full factor breakdown — you see the inputs.
+> 2) We don't publish a win-rate until the canonical settled history can honestly support one.
+> Find the signal before the market moves.
 
 > Reasonable question. The short answer: we publish the reasoning, and we don't show you a record we can't back. Most services do the opposite of both.
 
-> Honest answer: we won't be able to tell you that for a while. PickPilot's Performance page stays gated until enough canonical picks settle to publish a statistically defensible record. The whole architecture is built around not lying to you.
+> Honest answer: we won't be able to tell you that for a while. Galaxy Sports Edge's Calibration Report stays gated until enough canonical signals settle to publish a statistically defensible record. The whole architecture is built around not lying to you.
 
 ---
 
@@ -190,29 +190,35 @@
 | Day | Time (CT) | Platform | Content |
 |---|---|---|---|
 | 1 | 6:00 PM | All four | Round 1 — Launch announcement |
-| 2 | 10:00 AM | X + Threads | Quote-graphic: "Perspective, not picks." |
+| 2 | 10:00 AM | X + Threads | Quote-graphic: "Find the signal before the market moves." |
 | 2 | 6:00 PM | All four | Round 2 — Methodology teaser |
-| 3 | 10:00 AM | IG + FB | Behind-the-scenes: what "ingesting odds" actually means (carousel) |
-| 4 | 6:00 PM | All four | Round 3 — Three rules differentiation |
+| 3 | 10:00 AM | IG + FB | Behind-the-scenes carousel: what "ingesting market data" actually means |
+| 4 | 6:00 PM | All four | Round 3 — Five operating principles |
 | 5 | 10:00 AM | X + Threads | Single line: "We don't publish a record we can't back. That's the whole point." |
-| 6 | 12:00 PM | IG + FB | Operating principle 01 — "Data is source of truth" (carousel) |
+| 6 | 12:00 PM | IG + FB | Galaxy IQ deep dive (carousel) — the proprietary engine |
 | 7 | 6:00 PM | All four | Week-1 recap: what shipped, what's next |
-| 8–14 | 1 post/day rotating | Mix | Variance education, methodology deep-dives, single-line truth bombs |
+| 8–14 | 1 post/day rotating | Mix | Variance education, Edge Index breakdowns, Eclipse Lock explainers, brand-pillar single-line drops |
 
 ---
 
 ## Asset checklist (Canva, free tier — ~15 min each)
 
-- [ ] **Round 1 quote card** (1080×1080): plasma magenta gradient, white wordmark "PickPilot", italic serif tagline "Perspective, not picks.", small "pickpilotapp.bet" footer
-- [ ] **Methodology diagram** (1080×1350): four numbered phases — Ingest → Score → Publish → Calibrate — as cards stacked vertically
-- [ ] **Three rules graphic** (1080×1080): three stacked rule chips, magenta accent on numbers, deep navy background
-- [ ] **Single-line truth bomb template** (1080×1080): one bold sentence centered, plasma gradient corner glow, reusable for ongoing posts
+- [ ] **Round 1 launch card** (1080×1080): radial cosmic gradient (orbital cyan upper-left, ion magenta lower-right), orbital mark + "GALAXY SPORTS EDGE" wordmark, "Find the signal before the market moves." footer
+- [ ] **Calibration Report diagram** (1080×1350): five operating phases stacked vertically — Ingest → Score → Calibrate → Publish → Settle
+- [ ] **Five-pillar graphic** (1080×1080): INTELLIGENCE / PRECISION / ADVANTAGE / DISCIPLINE / RESULTS — each with its one-line definition
+- [ ] **Single-line truth bomb template** (1080×1080): one bold sentence centered, orbital-cyan corner glow, magenta accent stripe, reusable
 
-Brand colors for Canva:
-- Plasma magenta: `#FF2D8A`
-- Ion blue: `#4FA8FF`
-- Ultraviolet: `#9B7BFA`
-- Carbon background: `#0B0F18`
-- Ion white text: `#EDF2F7`
+### Brand colors for Canva (verbatim from Brand Use Pack §4)
+- Obsidian Black: `#050608`
+- Ion White: `#F6F7FA`
+- Orbital Cyan: `#00E5FF`
+- Ion Magenta: `#FF2DD6`
+- Soft Ultraviolet: `#7A5CFF`
+- Steel Gray: `#1A1D23`
 
-Fonts available free in Canva: **Syne** (display), **Space Grotesk** (sans), **Instrument Serif** (italic). All three are in the actual product, so the visual identity stays consistent end-to-end.
+### Fonts (free in Canva)
+- **Exo 2** — primary display (headlines, the wordmark, eyebrows)
+- **Inter** — primary text (paragraphs, captions)
+- **JetBrains Mono** — code and telemetry only (rare)
+
+All three are in the live product, so the visual identity stays consistent end-to-end.

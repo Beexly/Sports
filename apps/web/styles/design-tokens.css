@@ -1,19 +1,19 @@
 /* ============================================================
-   PickPilot — Foundation tokens · v3 "Cinematic Intelligence"
-   F1 telemetry × Apple Vision Pro × NASA × A24 × luxury EV cockpit
+   Galaxy Sports Edge — Foundation tokens · "Cosmic Intelligence"
+   Orbital cyan signal · ion magenta energy · ultraviolet depth
    ============================================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Syne:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 
 :root {
-  /* ── ENVIRONMENT — midnight carbon blue scale ─────────── */
+  /* ── ENVIRONMENT — cosmic dark scale ──────────────────── */
   /* Never pure black. Subtle navy undercurrent everywhere. */
-  --void:        #04060A;   /* deep environment ground */
-  --obsidian:    #070A11;   /* default canvas */
-  --carbon:      #0B0F18;   /* page bg — midnight carbon blue */
-  --eclipse:     #11161F;   /* raised surface — eclipse navy */
-  --titanium:    #181E28;   /* elevated — blackened titanium */
-  --slate:       #20283A;   /* hover · smoked slate */
+  --void:        #05070B;   /* obsidian black — deepest ground */
+  --obsidian:    #05070B;   /* default canvas */
+  --carbon:      #0D1117;   /* cosmic gray — page background */
+  --eclipse:     #11161F;   /* raised surface */
+  --titanium:    #181E28;   /* elevated */
+  --slate:       #20283A;   /* hover */
   --mineral:     #2E3849;   /* default border */
   --mineral-hi:  #3C4961;   /* border hover · strong divider */
 
@@ -24,30 +24,36 @@
   --graphite:    var(--slate);
 
   /* ── ION — cool whites & mineral silvers ──────────────── */
-  --ion-white:   #EDF2F7;   /* hero text — cool, never #FFF */
+  --ion-white:   #F5F7FF;   /* starlight white — hero text */
   --ion:         #D5DDE9;   /* primary text */
   --ion-1:       #98A3B5;   /* secondary · mineral silver */
   --ion-2:       #5E6878;   /* tertiary · meta */
   --ion-3:       #3D4555;   /* muted */
 
-  /* ── PRIMARY SIGNAL — plasma magenta ──────────────────── */
-  /* Brand-defining. Cultural, editorial, emotionally alive. */
-  /* Rare and alive — never decoration. */
-  --plasma:        #FF2D8A;
-  --plasma-glow:   #FF5BA8;
-  --plasma-deep:   #C81E68;
-  --plasma-ink:    #1A0010;
+  /* ── PRIMARY SIGNAL — ion magenta ─────────────────────── */
+  /* Brand-defining. Energy, conviction, "high confidence" alerts. */
+  --plasma:        #FF3BC7;
+  --plasma-glow:   #FF6FD8;
+  --plasma-deep:   #C81E9C;
+  --plasma-ink:    #1A0014;
 
-  /* ── SECONDARY — ion blue (cold telemetry) ────────────── */
-  /* Computational, calm, calibrated. */
-  --ion-blue:      #4FA8FF;
-  --ion-blue-glow: #7CBFFF;
-  --ion-blue-deep: #1F6FCC;
+  /* ── SECONDARY — electric blue (market telemetry) ─────── */
+  --ion-blue:      #2A6BFF;
+  --ion-blue-glow: #5E91FF;
+  --ion-blue-deep: #1A48CC;
   --ion-blue-ink:  #001226;
 
-  /* ── DEPTH — soft ultraviolet (model / hidden insight) ─ */
-  /* Atmospheric, mysterious, advanced. */
-  --ultraviolet:      #9B7BFA;
+  /* ── ORBITAL CYAN — live signals, telemetry pings ─────── */
+  /* The brand's signature accent. Rare, alive, never decoration. */
+  --orbital-cyan:      #00E5FF;
+  --orbital-cyan-glow: #5BEEFF;
+  --orbital-cyan-deep: #00A8BF;
+
+  /* ── NEBULA PURPLE — gradient anchor ──────────────────── */
+  --nebula-purple:     #A855F7;
+
+  /* ── DEPTH — ultraviolet (model layer / hidden insight) ─ */
+  --ultraviolet:      #7B61FF;
   --ultraviolet-glow: #BCA4FF;
   --ultraviolet-deep: #5A3FCC;
 

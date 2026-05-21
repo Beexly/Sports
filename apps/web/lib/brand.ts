@@ -1,35 +1,40 @@
 /**
- * Centralized brand configuration.
+ * Centralized brand configuration — Galaxy Sports Edge.
  *
- * Aligned with the canonical PickPilot Design System (in `design-system/`):
- *   - Voice: "Perspective, not picks." — calm, factual, slightly cinematic.
- *   - Palette: plasma magenta primary, ion-blue secondary, ultraviolet depth.
- *   - IA: Picks / Observatory / The Vault / Performance / Methodology.
+ *   Brand:    Galaxy Sports Edge
+ *   Tagline:  Find the signal before the market moves.
+ *   Voice:    Calibrated. Precise. Always acquiring.
+ *             Intelligence isn't loud. It's on frequency.
+ *   Closer:   We detect. You decide. You win.
  *
- * The design system is the source of truth. This file extracts the strings
- * the Next.js app needs at compile time. If anything here drifts from
- * `design-system/README.md`, the README wins.
+ * This file is the single source of truth for the customer-facing brand.
+ * If you need to change a name, tagline, email, surface label, or
+ * positioning paragraph — change it HERE, not in components. Every
+ * UI surface reads from these constants.
  */
 
-export const BRAND_NAME = "PickPilot";
+export const BRAND_NAME = "Galaxy Sports Edge";
+
+/** Short form for compact lockups. */
+export const BRAND_SHORT_NAME = "Galaxy Sports Edge";
 
 /** The brand-defining headline. Used everywhere we need one line. */
-export const BRAND_TAGLINE = "Perspective, not picks.";
+export const BRAND_TAGLINE = "Find the signal before the market moves.";
 
 /** Long-form positioning used in hero subheads and OG descriptions. */
 export const BRAND_POSITIONING =
-  "PickPilot ingests live odds from dozens of sportsbooks every 30 minutes, " +
-  "scores every matchup for edge, and surfaces a calibrated, fully-reasoned signal. " +
-  "You make the call.";
+  "Galaxy Sports Edge is a next-generation sports intelligence platform that " +
+  "uses proprietary AI to detect market inefficiencies, measure edge, and " +
+  "deliver high-confidence plays before the world catches on.";
 
-/** Two-letter monogram used in compact lockups when the reticle SVG is overkill. */
-export const BRAND_MONOGRAM = "PP";
+/** Two-letter monogram used in compact lockups when the icon SVG is overkill. */
+export const BRAND_MONOGRAM = "GSE";
 
-/** Public support / general inquiries inbox. Used in footer + transactional email. */
-export const SUPPORT_EMAIL = "support@pickpilotapp.bet";
+/** Public support / general inquiries inbox. */
+export const SUPPORT_EMAIL = "support@galaxysportsedge.com";
 
 /** Compliance / legal inbox. Used in privacy, terms, DMCA, data-deletion pages. */
-export const LEGAL_EMAIL = "legal@pickpilotapp.bet";
+export const LEGAL_EMAIL = "legal@galaxysportsedge.com";
 
 /** Display label for paid tiers in marketing copy. Internal Stripe IDs stay PRO/ELITE. */
 export const TIER_DISPLAY_NAMES = {
@@ -47,14 +52,11 @@ export const HELPLINE = {
 } as const;
 
 /**
- * Social handles. Empty string disables that icon in the footer.
+ * Social handles.
  *
- * Defaults assume the `pickpilot` handle on each network. If your actual
- * handle differs, edit the value here — the footer reads from this object
- * and nothing else.
- *
- * Threads and X are intentionally separate: Threads uses `@handle` URLs at
- * threads.net, X uses x.com.
+ * The launch accounts were created under `pickpilotapp` on each network
+ * because the brand name landed late. They remain the canonical handles —
+ * change them here if you migrate to galaxysportsedge.* handles later.
  */
 export const SOCIAL = {
   x: "https://x.com/pickpilotapp",
@@ -65,50 +67,116 @@ export const SOCIAL = {
 } as const;
 
 /**
- * Product information architecture (per the design system).
+ * Brand pillars — five-word distillations of what the product is for.
+ * Used in About, Press, footer, marketing prose. Imported anywhere you
+ * need to enumerate "what we stand for".
+ */
+export const BRAND_PILLARS = [
+  {
+    title: "Intelligence",
+    body: "Data with purpose.",
+  },
+  {
+    title: "Precision",
+    body: "Measured. Not guessed.",
+  },
+  {
+    title: "Advantage",
+    body: "See it first. Use it better.",
+  },
+  {
+    title: "Discipline",
+    body: "Process over emotion.",
+  },
+  {
+    title: "Results",
+    body: "Consistent long-term edge.",
+  },
+] as const;
+
+/**
+ * Product information architecture — the Galaxy Sports Edge ecosystem.
  *
- * The route paths stay generic for SEO + existing test stability; the
- * label is the customer-facing surface name.
+ * Route paths stay generic (`/picks`, `/methodology`, etc.) for SEO and
+ * existing test stability. The customer-facing label is what changed.
+ * Heading copy on each page reads from `.label`, `.blurb`, and `.tagline`.
  */
 export const SURFACES = {
   picks: {
-    label: "Picks",
-    blurb: "Today's signal — every active matchup, every line, every reason.",
+    label: "Signal Feed",
+    tagline: "Daily AI-backed plays.",
+    blurb:
+      "Daily AI-backed plays and recommendations — the picks the model is willing to publish.",
     route: "/picks",
   },
   observatory: {
-    label: "Observatory",
+    label: "Edge Map",
+    tagline: "Market movement, visualized.",
     blurb:
-      "Live market intelligence — line movement, sharp/public split, market depth.",
+      "Market movement and opportunity visualization by sport, slate, matchup, and region.",
     route: "/observatory",
+  },
+  marketGravity: {
+    label: "Market Gravity",
+    tagline: "Public pressure & line movement.",
+    blurb:
+      "Where the money is — public pressure, line movement, and market imbalance tracking across every book.",
+    route: "/market-gravity",
+  },
+  orbitView: {
+    label: "Orbit View",
+    tagline: "Full-slate command center.",
+    blurb:
+      "Full-slate command center — browse games, props, public pressure, and movement in one orbital view.",
+    route: "/orbit",
+  },
+  eclipseLock: {
+    label: "Eclipse Lock",
+    tagline: "Verified high-confidence state.",
+    blurb:
+      "Verified high-confidence state. A calibrated indicator — never a guaranteed-win claim.",
+    route: "/eclipse-lock",
+  },
+  edgeIndex: {
+    label: "Edge Index",
+    tagline: "Composite confidence score.",
+    blurb:
+      "Composite confidence score that quantifies signal strength, volatility, and expected-value context.",
+    route: "/edge-index",
   },
   vault: {
     label: "The Vault",
+    tagline: "Every published pick. Reasoning attached.",
     blurb:
-      "Every pick we've ever published, with its full reasoning and outcome.",
+      "Every pick we've ever published, with its full reasoning and outcome. The long-form receipt.",
     route: "/vault",
   },
   performance: {
-    label: "Performance",
+    label: "Calibration Report",
+    tagline: "Performance, model accuracy, methodology.",
     blurb:
-      "The published record — wins, losses, pushes, ROI. Gated until calibrated.",
+      "The published record — wins, losses, pushes, ROI, model calibration. Gated until the data can honestly support a number.",
     route: "/performance",
   },
   methodology: {
-    label: "Methodology",
+    label: "Galaxy IQ",
+    tagline: "The intelligence engine.",
     blurb:
-      "How the model thinks — pipeline, scoring, calibration, readiness gates.",
+      "How the model thinks — pipeline, scoring, calibration, readiness gates. The intelligence engine powering every insight.",
     route: "/methodology",
   },
   cockpit: {
     label: "Cockpit",
+    tagline: "Operator controls.",
     blurb:
       "Operator controls — ingestion health, gates, calibration proposals.",
     route: "/cockpit",
   },
   responsible: {
     label: "Responsible play",
-    blurb: "Set limits before emotion enters. Resources, helplines, recovery.",
+    tagline: "Set limits before emotion enters.",
+    blurb:
+      "Set limits before emotion enters. Resources, helplines, recovery options.",
     route: "/responsible-play",
   },
 } as const;
@@ -122,10 +190,57 @@ export const BRAND_META = {
   defaultTitle: `${BRAND_NAME} — ${BRAND_TAGLINE}`,
   titleTemplate: `%s · ${BRAND_NAME}`,
   description:
-    "Perspective, not picks. Live odds ingested every 30 minutes, " +
-    "scored for edge, surfaced with full reasoning. No locks, no guarantees — " +
-    "a calibrated signal you can audit.",
+    "Galaxy Sports Edge turns market movement, projections, and confidence " +
+    "scoring into sharper sports decisions. Calibrated market signals, " +
+    "confidence-rated insights, and disciplined decision support — " +
+    "before the market moves.",
 } as const;
 
 /** Canonical phrase used as the closing reminder on every CTA cluster. */
-export const CLOSING_LINE = "You make the call.";
+export const CLOSING_LINE = "We detect. You decide. You win.";
+
+/** Hero positioning phrase used on landing surfaces (per Brand Use Pack §7). */
+export const HERO_KICKER = "Find the SIGNAL before the market moves.";
+
+/** Hero subhead — locked copy from Brand Use Pack §7. */
+export const HERO_SUBHEAD =
+  "Galaxy Sports Edge turns market movement, projections, and confidence " +
+  "scoring into sharper sports decisions.";
+
+/**
+ * Canonical brand colors — exact hex from the Galaxy Sports Edge
+ * Brand Use Pack. Mirrors `tailwind.config.ts`.
+ */
+export const BRAND_COLORS = {
+  obsidianBlack: "#050608",   // primary background
+  ionWhite: "#F6F7FA",        // primary text / monochrome mark
+  orbitalCyan: "#00E5FF",     // signal, data, active states
+  ionMagenta: "#FF2DD6",      // alert signal / emphasis
+  softUltraviolet: "#7A5CFF", // depth, intelligence, secondary signal
+  steelGray: "#1A1D23",       // panels, dividers, UI depth
+} as const;
+
+/**
+ * Compliance guardrails — language we cannot use, per the Brand Use Pack
+ * (section 8). The trust-claims scanner enforces these at build time; this
+ * constant is exported for runtime checks where useful.
+ */
+export const BANNED_LANGUAGE = [
+  "guaranteed profit",
+  "guaranteed winning",
+  "lock of the day",
+  "free money",
+  "sure thing",
+  "risk-free",
+  "guaranteed pick",
+] as const;
+
+/**
+ * Approved replacement language for "high-confidence" framing.
+ * Use these phrases rather than the banned alternatives.
+ */
+export const APPROVED_LANGUAGE = {
+  highConfidence: "confidence-rated signal",
+  bestPick: "highest-Edge-Index signal",
+  modelEdge: "calibrated edge",
+} as const;

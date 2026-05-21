@@ -2,7 +2,7 @@
 
 **Read this first if you're the operator opening the laptop in the morning.**
 
-**Snapshot:** 103 test files (from ~17), 8 new operator npm scripts,
+**Snapshot:** 107 test files (from ~17), 8 new operator npm scripts,
 3 new cockpit-only API routes, 2 new cockpit pages, 1 new CI
 `brand-safety` job, 2 ADRs, full operator runbook, db-seeded picks so
 the dashboard renders rows in the morning. All validation + git push

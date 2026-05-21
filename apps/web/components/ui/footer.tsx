@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { BRAND_NAME, HELPLINE, SOCIAL } from "@/lib/brand";
+import { BRAND_NAME, HELPLINE, SOCIAL, CLOSING_LINE } from "@/lib/brand";
 
 /**
- * Site footer — matches the PickPilot Design System footer surface
- * (see `apps/web/styles/pickpilot-kit.css` → .footer).
+ * Site footer — Galaxy Sports Edge.
  *
- * The reticle wordmark from `design-system/assets/logo-lockup.svg` is
- * inlined as a typographic lockup ("PICKPIL[reticle]T").
+ * Wordmark is the canonical orbital lockup: the GSE mark + "GALAXY" /
+ * "SPORTS EDGE" stacked. The mark is the broken orbit + signal point +
+ * edge vector (NOT a Google G — see Brand Use Pack §5).
  */
 
 const PRODUCT_LINKS = [
@@ -30,16 +30,17 @@ const RESPONSIBLE_LINKS = [
   { label: "Terms · Privacy", href: "/terms" },
 ] as const;
 
-function ReticleMark() {
+function OrbitalMark() {
+  // Galaxy Sports Edge mark — orbit + signal point + edge vector.
+  // Intentionally asymmetric to avoid any letterform memory.
   return (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="butt" aria-hidden="true">
-      <circle cx="24" cy="24" r="22" />
-      <circle cx="24" cy="24" r="12" opacity="0.5" />
-      <line x1="24" y1="-2" x2="24" y2="8" />
-      <line x1="24" y1="40" x2="24" y2="50" />
-      <line x1="-2" y1="24" x2="8" y2="24" />
-      <line x1="40" y1="24" x2="50" y2="24" />
-      <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none" />
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true">
+      {/* Broken arc — open at top */}
+      <path d="M 8 30 A 16 16 0 1 0 40 27" />
+      {/* Edge vector — diagonal */}
+      <line x1="6" y1="10" x2="42" y2="38" />
+      {/* Signal point — the memory hook */}
+      <circle cx="25" cy="22" r="4" fill="currentColor" stroke="none" />
     </svg>
   );
 }
@@ -50,17 +51,26 @@ export function Footer() {
       <div className="container">
         <div className="footer-inner">
           <div>
-            <Link href="/" className="nav-logo" style={{ marginBottom: 14, display: "inline-flex" }} aria-label={`${BRAND_NAME} — home`}>
-              PICKPIL
-              <span className="ret">
-                <ReticleMark />
+            <Link
+              href="/"
+              className="nav-logo"
+              style={{ marginBottom: 14, display: "inline-flex", alignItems: "center", gap: 12 }}
+              aria-label={`${BRAND_NAME} — home`}
+            >
+              <span style={{ display: "inline-flex", width: 28, height: 28 }}>
+                <OrbitalMark />
               </span>
-              T
+              <span style={{ display: "inline-flex", flexDirection: "column", lineHeight: 1 }}>
+                <span style={{ font: "700 18px/1 var(--f-display)", letterSpacing: "0.10em" }}>GALAXY</span>
+                <span style={{ font: "500 11px/1 var(--f-display)", letterSpacing: "0.22em", color: "var(--orbital-cyan)", marginTop: 4 }}>
+                  SPORTS EDGE
+                </span>
+              </span>
             </Link>
             <p className="disclaim">
-              {BRAND_NAME} provides perspective on sports markets — not certainty.
-              We do not promise outcomes. No pick is a sure win. Treat every signal
-              as one input in a disciplined portfolio.{" "}
+              {BRAND_NAME} delivers calibrated market signals — not certainty.
+              We do not promise outcomes. Treat every confidence-rated signal as
+              one input in a disciplined portfolio.{" "}
               <strong style={{ color: "var(--ion)" }}>
                 Set limits before emotion enters.
               </strong>
@@ -75,8 +85,8 @@ export function Footer() {
         <SocialRow />
 
         <div className="bottom">
-          <span>© {new Date().getFullYear()} {BRAND_NAME.toUpperCase()} · INTELLIGENCE OVER NOISE</span>
-          <span>YOU MAKE THE CALL</span>
+          <span>© {new Date().getFullYear()} {BRAND_NAME.toUpperCase()} · FIND THE SIGNAL BEFORE THE MARKET MOVES</span>
+          <span>{CLOSING_LINE.toUpperCase()}</span>
         </div>
       </div>
     </footer>

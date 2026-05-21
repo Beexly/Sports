@@ -6,12 +6,12 @@ import { MethodologySection } from "@/components/ui/methodology-section";
 import type { PublicPick } from "@sports/types";
 import { PICK_GRADE_LABELS } from "@sports/types";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
-import { BRAND_NAME } from "@/lib/brand";
+import { BRAND_NAME, HERO_SUBHEAD, CLOSING_LINE } from "@/lib/brand";
 
 /**
  * Homepage.
  *
- * Ports the canonical PickPilot Design System composed surface
+ * Ports the canonical Galaxy Sports Edge Design System composed surface
  * (design-system/ui_kits/web/index.html) to the production Next.js app.
  * Uses the kit.css component classes — see apps/web/styles/pickpilot-kit.css.
  *
@@ -54,26 +54,24 @@ export default async function HomePage() {
         <div className="container">
           <span className="hero-eyebrow">
             <span className="dot" aria-hidden="true" />
-            Intelligence over noise · v5.0
+            Sports intelligence platform · v5.0
           </span>
 
           <h1>
-            Perspective,<br />
-            <em>not picks.</em>
+            Find the <em>signal</em><br />
+            before the market moves.
           </h1>
 
           <p className="hero-tag">
-            {BRAND_NAME} ingests live odds from dozens of sportsbooks every 30
-            minutes, scores every matchup for edge, and surfaces a calibrated,
-            fully-reasoned signal. <em>You make the call.</em>
+            {HERO_SUBHEAD} <em>{CLOSING_LINE}</em>
           </p>
 
           <div className="hero-ctas">
             <Link href="/picks" className="btn btn-primary btn-lg">
-              See today&apos;s picks <span className="arrow">→</span>
+              Today&apos;s Signal Feed <span className="arrow">→</span>
             </Link>
             <Link href="/methodology" className="btn btn-ghost btn-lg">
-              See methodology
+              Inside Galaxy IQ
             </Link>
           </div>
 

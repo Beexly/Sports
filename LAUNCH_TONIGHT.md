@@ -1,4 +1,4 @@
-# LAUNCH TONIGHT — PickPilot
+# LAUNCH TONIGHT — Galaxy Sports Edge
 
 **Date:** 2026-05-20
 **Goal:** site live at a real domain by end of night.
@@ -8,7 +8,7 @@
 
 ## ▶ Status as of last update
 
-✅ Step 1 — Domain registered (pickpilotapp.bet, Cloudflare)
+✅ Step 1 — Domain registered (galaxysportsedge.com, Cloudflare)
 ✅ Step 2 — Vercel project created (Beexly/Sports connected, domain configured)
 ✅ Step 3 — Anthropic API key obtained (rotate tomorrow)
 ✅ Step 4 — Google Cloud project + OAuth client created (verify URIs are saved)
@@ -33,7 +33,7 @@
 
 You don't need to touch any of this. It's in the repo, tests pass, build succeeds.
 
-- **Brand:** PickPilot, "Perspective, not picks." — wired in `apps/web/lib/brand.ts`.
+- **Brand:** Galaxy Sports Edge, "Find the signal before the market moves." — wired in `apps/web/lib/brand.ts`.
 - **Design system:** plasma magenta / ion blue / ultraviolet — applied to homepage, nav, footer, all surfaces.
 - **Routes that exist and render 200:** `/`, `/picks`, `/methodology`, `/performance`, `/pricing`, `/observatory`, `/vault`, `/about`, `/press`, `/contact`, `/responsible-play`, `/terms`, `/privacy`, `/dashboard`, `/cockpit`, `/promotions`, `/brief`, `/blog`.
 - **Footer:** social row with X / Instagram / Threads / Facebook icons, all defaulted to `pickpilot` handle. **If your actual handle differs, edit one file:** `apps/web/lib/brand.ts` → `SOCIAL`.
@@ -53,13 +53,13 @@ You don't need to touch any of this. It's in the repo, tests pass, build succeed
 
 ### Step 1 — Buy a domain ✅ DONE
 
-Registered: **pickpilotapp.bet** at Cloudflare. Expires 2027-05-20. Public WHOIS is redacted by Cloudflare.
+Registered: **galaxysportsedge.com** at Cloudflare. Expires 2027-05-20. Public WHOIS is redacted by Cloudflare.
 
 ### Step 2 — Vercel (10 min, free)
 
 1. Sign up at `vercel.com` with GitHub.
 2. Import this repo. Framework: Next.js. Root directory: `apps/web`. **Don't deploy yet.**
-3. Settings → Domains → add `pickpilotapp.bet`. Add the DNS records Vercel shows you at Cloudflare.
+3. Settings → Domains → add `galaxysportsedge.com`. Add the DNS records Vercel shows you at Cloudflare.
 
 ### Step 3 — Neon Postgres (10 min, free tier)
 
@@ -69,10 +69,10 @@ Registered: **pickpilotapp.bet** at Cloudflare. Expires 2027-05-20. Public WHOIS
 
 ### Step 4 — Google OAuth (10 min, free)
 
-1. `console.cloud.google.com` → new project → OAuth consent screen → External. Add `pickpilotapp.bet` to authorized domains.
+1. `console.cloud.google.com` → new project → OAuth consent screen → External. Add `galaxysportsedge.com` to authorized domains.
 2. Credentials → OAuth client ID → Web app.
-   - Authorized origin: `https://pickpilotapp.bet`
-   - Redirect URI: `https://pickpilotapp.bet/api/auth/callback/google`
+   - Authorized origin: `https://galaxysportsedge.com`
+   - Redirect URI: `https://galaxysportsedge.com/api/auth/callback/google`
 3. Copy the client ID + secret.
 
 ### Step 5 — Secrets (1 min)
@@ -117,7 +117,7 @@ Vercel project → Settings → Environment Variables. Add for **Production + Pr
 DATABASE_URL=<pooled neon string>
 DIRECT_URL=<direct neon string>
 NEXTAUTH_SECRET=<openssl output 1>
-NEXTAUTH_URL=https://pickpilotapp.bet
+NEXTAUTH_URL=https://galaxysportsedge.com
 GOOGLE_CLIENT_ID=<from step 4>
 GOOGLE_CLIENT_SECRET=<from step 4>
 THE_ODDS_API_KEY=<from step 6>
@@ -128,7 +128,7 @@ STRIPE_WEBHOOK_SECRET=whsec_placeholder
 STRIPE_PRO_PRICE_ID=price_placeholder
 STRIPE_ELITE_PRICE_ID=price_placeholder
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-NEXT_PUBLIC_APP_URL=https://pickpilotapp.bet
+NEXT_PUBLIC_APP_URL=https://galaxysportsedge.com
 CRON_SECRET=<openssl output 2>
 NODE_ENV=production
 CANONICAL_HISTORY_ENABLED=true
@@ -148,14 +148,14 @@ DEMO_PICKS_ENABLED=false
 ### Step 11 — Push and deploy (5 min)
 
 1. From your local repo: `git push origin main` (after committing this session's changes — see "Commit checklist" below).
-2. Vercel auto-deploys. Watch the build log. If it goes green, visit `https://pickpilotapp.bet`.
+2. Vercel auto-deploys. Watch the build log. If it goes green, visit `https://galaxysportsedge.com`.
 3. If anything is red, **paste the error into ChatGPT/Codex** with the prompt: *"Vercel Next.js 14 build failed with this error — what's the fix?"*
 
 ### Step 12 — Smoke test live (5 min)
 
-1. Visit `https://pickpilotapp.bet` → homepage renders, design loads.
+1. Visit `https://galaxysportsedge.com` → homepage renders, design loads.
 2. Click through Picks, Methodology, Performance, About, Press — every link should 200.
-3. Hit `https://pickpilotapp.bet/api/health` → should return `{ ok: true }` (or similar — confirms the API layer is alive).
+3. Hit `https://galaxysportsedge.com/api/health` → should return `{ ok: true }` (or similar — confirms the API layer is alive).
 4. Sign in with Google → should land on `/dashboard`.
 
 ---
@@ -212,10 +212,10 @@ These tasks are the ones I can't do for you because they require browser/account
 > "Neon gave me two connection strings. I need to set DATABASE_URL (pooled) and DIRECT_URL (direct). Which is which on Neon's dashboard, and what does the URL format look like?"
 
 **Google OAuth redirect:**
-> "I'm setting up Google OAuth for a Next.js app using NextAuth v5 (Auth.js). My domain is `pickpilotapp.bet`. What exact Authorized JavaScript origins and Authorized redirect URIs do I need?"
+> "I'm setting up Google OAuth for a Next.js app using NextAuth v5 (Auth.js). My domain is `galaxysportsedge.com`. What exact Authorized JavaScript origins and Authorized redirect URIs do I need?"
 
 **Stripe webhook setup later:**
-> "I have a Next.js app at `https://pickpilotapp.bet/api/webhooks/stripe`. I need to set up a Stripe webhook in Test mode that listens for subscription lifecycle events. Walk me through exactly which events to enable."
+> "I have a Next.js app at `https://galaxysportsedge.com/api/webhooks/stripe`. I need to set up a Stripe webhook in Test mode that listens for subscription lifecycle events. Walk me through exactly which events to enable."
 
 ---
 

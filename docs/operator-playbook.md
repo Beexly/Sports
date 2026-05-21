@@ -1,4 +1,4 @@
-# PickPilot Operator Playbook — Days 1–30
+# Galaxy Sports Edge Operator Playbook — Days 1–30
 
 The site is live. Now you operate it. This is what to actually do each day.
 
@@ -71,7 +71,7 @@ This is the platform's own architecture. Don't skip steps under FOMO.
 
 ### Symptom: NextAuth says "Configuration"
 - Cause: Almost always `NEXTAUTH_URL` mismatch with what Google OAuth has registered.
-- Fix: Google Cloud Console → OAuth client → confirm `https://pickpilotapp.bet/api/auth/callback/google` is in Authorized redirect URIs.
+- Fix: Google Cloud Console → OAuth client → confirm `https://galaxysportsedge.com/api/auth/callback/google` is in Authorized redirect URIs.
 
 ### Symptom: Social post got 3 likes and you're spiraling
 - Read this: **engagement is a settled-picks problem.** You haven't earned the right to be loud yet. Stay consistent. Day 1 looks identical to day 30 except the compound rate.

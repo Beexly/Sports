@@ -1,4 +1,4 @@
-# push-now.ps1 — one-click launch push for PickPilot
+# push-now.ps1 — one-click launch push for Galaxy Sports Edge
 #
 # Right-click this file in File Explorer → "Run with PowerShell".
 # Or from a PowerShell window: .\push-now.ps1
@@ -13,7 +13,7 @@
 $ErrorActionPreference = "Stop"
 
 Write-Host ""
-Write-Host "=== PickPilot launch-push ===" -ForegroundColor Cyan
+Write-Host "=== Galaxy Sports Edge launch-push ===" -ForegroundColor Cyan
 Write-Host ""
 
 # 1. Anchor to repo
@@ -50,7 +50,7 @@ if ($staged -eq 0) {
     git add -A
 
     # 7. Commit
-    $msg = "Launch night: pickpilotapp.bet wiring, /about /press /observatory /vault, social row, SEO, OG image, logo assets, smoke test, automation + operator docs"
+    $msg = "Launch night: galaxysportsedge.com wiring, /about /press /observatory /vault, social row, SEO, OG image, logo assets, smoke test, automation + operator docs"
     Write-Host "Committing..." -ForegroundColor Cyan
     git commit -m $msg
 }
