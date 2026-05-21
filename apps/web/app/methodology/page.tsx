@@ -20,7 +20,7 @@ export default function MethodologyPage() {
       <main className="flex-1">
         <section className="border-b border-ink-800/60 bg-stadium-glow px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
-            <p className="eyebrow">Galaxy IQ</p>
+            <p className="eyebrow">Galaxy IQ methodology</p>
             <h1 className="mt-3 font-display text-display-xl text-balance text-white">
               A signal is not a hunch. It is a decision stack.
             </h1>

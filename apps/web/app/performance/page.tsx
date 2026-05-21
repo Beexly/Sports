@@ -81,7 +81,10 @@ function BootstrapShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen flex-col bg-gray-950">
       <Nav />
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl">{children}</div>
+        <div className="mx-auto max-w-5xl">
+          <span className="sr-only">Performance</span>
+          {children}
+        </div>
       </main>
       <Footer />
     </div>
@@ -121,7 +124,7 @@ export default async function PerformancePage() {
               href="/picks"
               className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60"
             >
-              See today\'s picks →
+              See today&apos;s picks
             </Link>
           </div>
         )}
