@@ -10,14 +10,14 @@ import { BRAND_NAME, HELPLINE, SOCIAL, CLOSING_LINE } from "@/lib/brand";
  */
 
 const PRODUCT_LINKS = [
-  { label: "Picks", href: "/picks" },
-  { label: "Observatory", href: "/observatory" },
+  { label: "Signal Feed", href: "/picks" },
+  { label: "Edge Map", href: "/observatory" },
+  { label: "Galaxy IQ", href: "/methodology" },
   { label: "The Vault", href: "/vault" },
-  { label: "Methodology", href: "/methodology" },
 ] as const;
 
 const COMPANY_LINKS = [
-  { label: "Performance", href: "/performance" },
+  { label: "Calibration Report", href: "/performance" },
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Press", href: "/press" },
@@ -68,7 +68,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="disclaim">
-              {BRAND_NAME} delivers calibrated market signals — not certainty.
+              {BRAND_NAME} delivers calibrated market signals, not certainty.
               We do not promise outcomes. Treat every confidence-rated signal as
               one input in a disciplined portfolio.{" "}
               <strong style={{ color: "var(--ion)" }}>

@@ -5,7 +5,7 @@
  *   Tagline:  Find the signal before the market moves.
  *   Voice:    Calibrated. Precise. Always acquiring.
  *             Intelligence isn't loud. It's on frequency.
- *   Closer:   We detect. You decide. You win.
+ *   Closer:   We detect. You decide.
  *
  * This file is the single source of truth for the customer-facing brand.
  * If you need to change a name, tagline, email, surface label, or
@@ -23,9 +23,8 @@ export const BRAND_TAGLINE = "Find the signal before the market moves.";
 
 /** Long-form positioning used in hero subheads and OG descriptions. */
 export const BRAND_POSITIONING =
-  "Galaxy Sports Edge is a next-generation sports intelligence platform that " +
-  "uses proprietary AI to detect market inefficiencies, measure edge, and " +
-  "deliver high-confidence plays before the world catches on.";
+  "Galaxy Sports Edge reads market movement, price, timing, and volatility " +
+  "to surface disciplined signals with the reasoning attached.";
 
 /** Two-letter monogram used in compact lockups when the icon SVG is overkill. */
 export const BRAND_MONOGRAM = "GSE";
@@ -104,9 +103,9 @@ export const BRAND_PILLARS = [
 export const SURFACES = {
   picks: {
     label: "Signal Feed",
-    tagline: "Daily AI-backed plays.",
+    tagline: "Published signals with reasoning attached.",
     blurb:
-      "Daily AI-backed plays and recommendations — the picks the model is willing to publish.",
+      "Published signals that cleared the board, price, timing, and discipline checks.",
     route: "/picks",
   },
   observatory: {
@@ -132,9 +131,9 @@ export const SURFACES = {
   },
   eclipseLock: {
     label: "Eclipse Lock",
-    tagline: "Verified high-confidence state.",
+    tagline: "Verified conviction state.",
     blurb:
-      "Verified high-confidence state. A calibrated indicator — never a guaranteed-win claim.",
+      "Verified conviction state. A calibrated indicator, never an outcome promise.",
     route: "/eclipse-lock",
   },
   edgeIndex: {
@@ -162,7 +161,7 @@ export const SURFACES = {
     label: "Galaxy IQ",
     tagline: "The intelligence engine.",
     blurb:
-      "How the model thinks — pipeline, scoring, calibration, readiness gates. The intelligence engine powering every insight.",
+      "How the signal is built: pipeline, scoring, calibration, and readiness gates.",
     route: "/methodology",
   },
   cockpit: {
@@ -190,22 +189,20 @@ export const BRAND_META = {
   defaultTitle: `${BRAND_NAME} — ${BRAND_TAGLINE}`,
   titleTemplate: `%s · ${BRAND_NAME}`,
   description:
-    "Galaxy Sports Edge turns market movement, projections, and confidence " +
-    "scoring into sharper sports decisions. Calibrated market signals, " +
-    "confidence-rated insights, and disciplined decision support — " +
-    "before the market moves.",
+    "Galaxy Sports Edge reads market movement, price, timing, and volatility " +
+    "to surface disciplined sports signals with the reasoning attached.",
 } as const;
 
 /** Canonical phrase used as the closing reminder on every CTA cluster. */
-export const CLOSING_LINE = "We detect. You decide. You win.";
+export const CLOSING_LINE = "We detect. You decide.";
 
 /** Hero positioning phrase used on landing surfaces (per Brand Use Pack §7). */
 export const HERO_KICKER = "Find the SIGNAL before the market moves.";
 
 /** Hero subhead — locked copy from Brand Use Pack §7. */
 export const HERO_SUBHEAD =
-  "Galaxy Sports Edge turns market movement, projections, and confidence " +
-  "scoring into sharper sports decisions.";
+  "Galaxy Sports Edge watches the board, scores market drift, and turns " +
+  "pricing gaps into auditable signals.";
 
 /**
  * Canonical brand colors — exact hex from the Galaxy Sports Edge

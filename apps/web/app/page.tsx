@@ -3,10 +3,10 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
+import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
 import type { PublicPick } from "@sports/types";
 import { PICK_GRADE_LABELS } from "@sports/types";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
-import { HERO_SUBHEAD, CLOSING_LINE } from "@/lib/brand";
 
 /**
  * Homepage.
@@ -50,52 +50,48 @@ export default async function HomePage() {
       {/* ──────────────────────────────────────────────────────
        * HERO — atmospheric orbital + editorial display headline
        * ────────────────────────────────────────────────────── */}
-      <section className="hero">
-        <div className="container">
+      <section className="hero hero-galaxy">
+        <InteractiveGalaxy />
+        <div className="container hero-copy">
           <span className="hero-eyebrow">
             <span className="dot" aria-hidden="true" />
-            Sports intelligence platform · v5.0
+            Live edge engine
           </span>
 
           <h1>
-            Find the <em>signal</em><br />
-            before the market moves.
+            Find the <em>signal</em> before the market moves.
           </h1>
 
           <p className="hero-tag">
-            {HERO_SUBHEAD} <em>{CLOSING_LINE}</em>
+            Markets whisper before they move. Galaxy Sports Edge watches the
+            board, scores the drift, and shows the reasoning before you act.
           </p>
 
           <div className="hero-ctas">
             <Link href="/picks" className="btn btn-primary btn-lg">
-              Today&apos;s Signal Feed <span className="arrow">→</span>
+              Open Signal Feed <span className="arrow">-&gt;</span>
             </Link>
             <Link href="/methodology" className="btn btn-ghost btn-lg">
-              Inside Galaxy IQ
+              See Galaxy IQ
             </Link>
-          </div>
-
-          {/* Atmospheric orbital — pulled from design-system/ui_kits/web/index.html */}
-          <div className="hero-stage" aria-hidden="true">
-            <HeroOrbital />
           </div>
 
           <div className="hero-foot">
             <div className="stat">
-              <span className="v p">07</span>
-              <span className="l">Sports covered</span>
+              <span className="v p">Live</span>
+              <span className="l">Market watch</span>
             </div>
             <div className="stat">
               <span className="v c">30 min</span>
-              <span className="l">Refresh cadence</span>
+              <span className="l">Refresh loop</span>
             </div>
             <div className="stat">
               <span className="v u">v5.0</span>
-              <span className="l">Model version</span>
+              <span className="l">Galaxy IQ</span>
             </div>
             <div className="stat">
               <span className="v">Gated</span>
-              <span className="l">Public stats · collecting</span>
+              <span className="l">Record integrity</span>
             </div>
           </div>
         </div>
@@ -108,30 +104,21 @@ export default async function HomePage() {
         <div className="container slate-inner">
           <span className="head">
             <span className="dot" aria-hidden="true" />
-            Today&apos;s slate
+            Board state
           </span>
           <div className="slate-divide" />
           <span className="item">
-            NBA <span className="v">—</span>
+            Odds <span className="v c">Watching</span>
           </span>
           <span className="item">
-            NFL <span className="v">—</span>
+            Signals <span className="v p">Gated</span>
           </span>
           <span className="item">
-            NHL <span className="v">—</span>
-          </span>
-          <span className="item">
-            MLB <span className="v">—</span>
+            Record <span className="v u">Collecting</span>
           </span>
           <div className="slate-divide" />
           <span className="item">
-            Strong plays <span className="v p">—</span>
-          </span>
-          <span className="item">
-            Elite <span className="v u">—</span>
-          </span>
-          <span className="item">
-            Updated <span className="v">Collecting</span>
+            Decision rule <span className="v">Show the work</span>
           </span>
         </div>
       </div>
@@ -143,15 +130,15 @@ export default async function HomePage() {
         <div className="container">
           <div className="section-head">
             <div>
-              <p className="section-eyebrow">▸ Today&apos;s signal</p>
+              <p className="section-eyebrow">▸ Signal Feed</p>
               <h2>
-                Today&apos;s <em>signal.</em>
+                Publish less. <em>Mean more.</em>
               </h2>
             </div>
             <div className="meta">
-              Live odds · published with reasoning
+              No filler cards
               <br />
-              Public picks open when the readiness gate clears
+              Every pick needs a reason
             </div>
           </div>
 
@@ -182,13 +169,13 @@ export default async function HomePage() {
             <div>
               <p className="section-eyebrow">▸ Methodology</p>
               <h2>
-                We show <em>our work.</em>
+                The engine <em>earns the pick.</em>
               </h2>
             </div>
             <div className="meta">
-              No black boxes
+              No black box
               <br />
-              No fabricated stats · No stale data
+              No borrowed confidence
             </div>
           </div>
 
@@ -202,8 +189,8 @@ export default async function HomePage() {
               </div>
               <h3>Live odds, every 30 minutes.</h3>
               <p>
-                Our data pipeline pulls real lines from dozens of sportsbooks.
-                Spreads, totals, moneylines — 7 sports, continuously refreshed.
+                Lines, totals, and moneylines keep moving. The platform keeps
+                score while the market is still forming.
               </p>
             </div>
             <div className="how">
@@ -215,11 +202,10 @@ export default async function HomePage() {
                   <line x1="6" y1="20" x2="6" y2="16" />
                 </svg>
               </div>
-              <h3>The model scores every game.</h3>
+              <h3>Every game gets scored.</h3>
               <p>
-                We calculate implied probabilities, detect sharp line movement,
-                and score each side for positive expected value. Confidence is
-                0–100, calibrated against history.
+                It weighs price, movement, market depth, volatility, and timing
+                before a signal is allowed onto the board.
               </p>
             </div>
             <div className="how">
@@ -232,8 +218,8 @@ export default async function HomePage() {
               </div>
               <h3>You see the reasoning.</h3>
               <p>
-                Every pick exposes its factor breakdown — consensus, market
-                depth, line movement, intelligence layers. You make the call.
+                A signal without a trail is just noise. Every published pick
+                carries the factors that put it there.
               </p>
             </div>
           </div>
@@ -256,9 +242,8 @@ export default async function HomePage() {
             <div>
               <div className="label">▸ Responsible intelligence</div>
               <p>
-                Variance is real. We provide perspective on uncertainty — not
-                certainty. Know your risk, set limits before emotion enters,
-                and treat every signal as one input in a portfolio of decisions.{" "}
+                Variance does not care how confident anyone sounds. Set limits
+                first. Use the signal as input, not permission.{" "}
                 <em
                   style={{
                     fontFamily: "var(--f-editorial)",
@@ -266,7 +251,7 @@ export default async function HomePage() {
                     fontStyle: "italic",
                   }}
                 >
-                  You make the call.
+                  You decide.
                 </em>
               </p>
               <RiskDisclosure variant="compact" className="mt-3" />
@@ -288,53 +273,6 @@ export default async function HomePage() {
 // ──────────────────────────────────────────────────────────────
 // Hero atmospheric orbital — pulled verbatim from the design system
 // ──────────────────────────────────────────────────────────────
-
-function HeroOrbital() {
-  return (
-    <svg viewBox="0 0 600 600" fill="none">
-      <defs>
-        <radialGradient id="pp-hg" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#FF2D8A" stopOpacity="0.55" />
-          <stop offset="60%" stopColor="#4FA8FF" stopOpacity="0.18" />
-          <stop offset="100%" stopColor="#04060A" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <circle cx="300" cy="300" r="280" fill="url(#pp-hg)" />
-      <g stroke="#3C4961" strokeWidth="0.8" fill="none">
-        <ellipse cx="300" cy="300" rx="270" ry="120" transform="rotate(-12 300 300)" />
-        <ellipse cx="300" cy="300" rx="220" ry="100" transform="rotate(10 300 300)" />
-        <ellipse cx="300" cy="300" rx="170" ry="80" transform="rotate(-30 300 300)" />
-      </g>
-      <g stroke="#FF2D8A" strokeWidth="1.2" fill="none" opacity="0.55">
-        <ellipse cx="300" cy="300" rx="250" ry="110" transform="rotate(-22 300 300)" />
-      </g>
-      <g stroke="#4FA8FF" strokeWidth="1.2" fill="none" opacity="0.55">
-        <ellipse cx="300" cy="300" rx="195" ry="90" transform="rotate(8 300 300)" />
-      </g>
-      <g fill="#FF2D8A">
-        <circle cx="540" cy="200" r="4" />
-        <circle cx="120" cy="380" r="3" />
-      </g>
-      <g fill="#4FA8FF">
-        <circle cx="450" cy="380" r="3" />
-        <circle cx="180" cy="220" r="4" />
-        <circle cx="320" cy="120" r="3" />
-      </g>
-      <g fill="#9B7BFA">
-        <circle cx="280" cy="500" r="3" />
-      </g>
-      {/* Reticle target */}
-      <g transform="translate(300 300)" stroke="#FF2D8A" strokeWidth="1.5" opacity="0.4" fill="none">
-        <circle r="60" />
-        <circle r="30" opacity="0.5" />
-        <line x1="-80" y1="0" x2="-65" y2="0" />
-        <line x1="65" y1="0" x2="80" y2="0" />
-        <line x1="0" y1="-80" x2="0" y2="-65" />
-        <line x1="0" y1="65" x2="0" y2="80" />
-      </g>
-    </svg>
-  );
-}
 
 // ──────────────────────────────────────────────────────────────
 // PickCard — uses kit.css .pick, .pick-head, .chip, etc.

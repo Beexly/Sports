@@ -76,11 +76,11 @@ export function MethodologySection() {
             id="methodology-heading"
             className="text-3xl font-bold tracking-tight text-white sm:text-4xl"
           >
-            How we evaluate picks
+            The audit trail behind every signal
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-gray-400">
-            No social proof. No fabricated testimonials. Just a plain description
-            of what the engine does and what we choose to show you.
+            Every published card is tied back to live markets, timestamped data,
+            factor scoring, and the gates that keep weak signals off the board.
           </p>
         </div>
 
@@ -89,7 +89,7 @@ export function MethodologySection() {
             <article
               key={item.claimId}
               data-claim-id={item.claimId}
-              className="flex flex-col gap-3 rounded-2xl border border-gray-800 bg-gray-900/60 p-6"
+              className="flex flex-col gap-3 rounded-lg border border-gray-800 bg-gray-900/60 p-6"
             >
               <h3 className="text-base font-semibold text-white">{item.title}</h3>
               <p className="text-sm leading-relaxed text-gray-400">

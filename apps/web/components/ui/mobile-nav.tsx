@@ -1,35 +1,38 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
 
 const LINKS = [
-  { label: "Picks", href: "/picks" },
-  { label: "Performance", href: "/performance" },
+  { label: "Signal Feed", href: "/picks" },
+  { label: "Edge Map", href: "/observatory" },
+  { label: "Galaxy IQ", href: "/methodology" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Blog", href: "/blog" },
+  { label: "Dashboard", href: "/dashboard" },
 ] as const;
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="md:hidden">
+    <div className="mobile-nav">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="rounded-lg border border-gray-800 px-3 py-1 text-xs text-gray-300"
+        className="mobile-nav-trigger"
         aria-expanded={open}
         aria-controls="mobile-nav-panel"
+        aria-label={open ? "Close menu" : "Open menu"}
       >
-        Menu
+        {open ? <X size={18} strokeWidth={1.8} /> : <Menu size={18} strokeWidth={1.8} />}
       </button>
       {open && (
-        <div id="mobile-nav-panel" className="absolute right-2 top-12 z-30 w-56 rounded-xl border border-gray-800 bg-gray-950 p-2 shadow-xl">
+        <div id="mobile-nav-panel" className="mobile-nav-panel">
           {LINKS.map(({ label, href }) => (
             <Link
               key={href}
               href={href}
               onClick={() => setOpen(false)}
-              className="block rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-900"
+              className="mobile-nav-link"
             >
               {label}
             </Link>
