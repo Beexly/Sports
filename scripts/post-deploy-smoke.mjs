@@ -46,7 +46,7 @@ const PUBLIC_PAGES = [
 ];
 
 const SEO_FILES = [
-  { path: "/robots.txt", mustContain: ["Sitemap:", "User-agent: *"] },
+  { path: "/robots.txt", mustContain: ["Sitemap:", "User-Agent: *"] },
   { path: "/sitemap.xml", mustContain: ["<urlset", "galaxysportsedge.com"] },
   { path: "/opengraph-image", mustContainContentType: "image/png" },
 ];
