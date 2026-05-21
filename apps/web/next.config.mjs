@@ -1,3 +1,5 @@
+import path from "node:path";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: [
@@ -10,6 +12,11 @@ const nextConfig = {
     serverComponentsExternalPackages: ["@prisma/client"],
   },
   webpack: (config) => {
+    config.resolve.alias = {
+      ...(config.resolve.alias ?? {}),
+      "@": path.resolve(process.cwd()),
+    };
+
     // Resolve .js extension imports to .ts source files for transpiled workspace packages.
     // Workspace packages use ESM-style `.js` extension imports in TypeScript source,
     // which webpack can't find without this alias.
