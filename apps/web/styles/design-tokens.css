@@ -8,14 +8,14 @@
 :root {
   /* ── ENVIRONMENT — cosmic dark scale ──────────────────── */
   /* Never pure black. Subtle navy undercurrent everywhere. */
-  --void:        #05070B;   /* obsidian black — deepest ground */
-  --obsidian:    #05070B;   /* default canvas */
-  --carbon:      #0D1117;   /* cosmic gray — page background */
-  --eclipse:     #11161F;   /* raised surface */
-  --titanium:    #181E28;   /* elevated */
-  --slate:       #20283A;   /* hover */
-  --mineral:     #2E3849;   /* default border */
-  --mineral-hi:  #3C4961;   /* border hover · strong divider */
+  --void:        #030511;   /* obsidian black — deepest ground */
+  --obsidian:    #030511;   /* default canvas */
+  --carbon:      #070B16;   /* cosmic gray — page background */
+  --eclipse:     #0B1224;   /* raised surface */
+  --titanium:    #121B31;   /* elevated */
+  --slate:       #1A2744;   /* hover */
+  --mineral:     #31405F;   /* default border */
+  --mineral-hi:  #4D6A9B;   /* border hover · strong divider */
 
   /* Legacy aliases — older boards use these names */
   --carbon-1:    var(--obsidian);
@@ -32,30 +32,30 @@
 
   /* ── PRIMARY SIGNAL — ion magenta ─────────────────────── */
   /* Brand-defining. Energy, conviction, "high confidence" alerts. */
-  --plasma:        #FF3BC7;
-  --plasma-glow:   #FF6FD8;
-  --plasma-deep:   #C81E9C;
+  --plasma:        #FF2DD6;
+  --plasma-glow:   #FF7AEB;
+  --plasma-deep:   #D600A9;
   --plasma-ink:    #1A0014;
 
   /* ── SECONDARY — electric blue (market telemetry) ─────── */
-  --ion-blue:      #2A6BFF;
-  --ion-blue-glow: #5E91FF;
+  --ion-blue:      #3B82FF;
+  --ion-blue-glow: #7DB2FF;
   --ion-blue-deep: #1A48CC;
   --ion-blue-ink:  #001226;
 
   /* ── ORBITAL CYAN — live signals, telemetry pings ─────── */
   /* The brand's signature accent. Rare, alive, never decoration. */
-  --orbital-cyan:      #00E5FF;
-  --orbital-cyan-glow: #5BEEFF;
+  --orbital-cyan:      #00F0FF;
+  --orbital-cyan-glow: #8AFAFF;
   --orbital-cyan-deep: #00A8BF;
 
   /* ── NEBULA PURPLE — gradient anchor ──────────────────── */
   --nebula-purple:     #A855F7;
 
   /* ── DEPTH — ultraviolet (model layer / hidden insight) ─ */
-  --ultraviolet:      #A78BFA;
-  --ultraviolet-glow: #E1D2FF;
-  --ultraviolet-deep: #6D4DFF;
+  --ultraviolet:      #C084FC;
+  --ultraviolet-glow: #F0D7FF;
+  --ultraviolet-deep: #8B5CF6;
 
   /* ── RARE ACCENTS — use sparingly, never as surface ──── */
   --lime:          #D4FF3D;    /* live tick / fresh-data ping only */
@@ -156,9 +156,9 @@
   --dur-cinematic: 880ms;
 
   /* ── Shadows · atmospheric glows ─────────────────────── */
-  --glow-plasma:    0 0 40px -8px rgba(255, 45, 138, 0.45);
-  --glow-ion-blue:  0 0 36px -8px rgba(79, 168, 255, 0.42);
-  --glow-uv:        0 0 38px -6px rgba(167, 139, 250, 0.52);
+  --glow-plasma:    0 0 48px -8px rgba(255, 45, 214, 0.58);
+  --glow-ion-blue:  0 0 42px -8px rgba(59, 130, 255, 0.52);
+  --glow-uv:        0 0 46px -6px rgba(192, 132, 252, 0.58);
   --glow-lime:      0 0 32px -8px rgba(212, 255, 61, 0.40);
   --glow-cyan:      0 0 36px -8px rgba(111, 217, 255, 0.40);
   --glow-soft:      0 0 80px -20px rgba(255, 45, 138, 0.18);

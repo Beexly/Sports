@@ -2,21 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME, SURFACES } from "@/lib/brand";
+import { SURFACES } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: SURFACES.vault.label,
   description: SURFACES.vault.blurb,
 };
 
-/**
- * The Vault — placeholder for the launch window.
- *
- * The full historical archive of every published pick — with its full
- * reasoning and final outcome — opens after the canonical history gate has
- * accumulated enough settled picks to render an honest record. Until then,
- * this page explains the structure and points readers to the methodology.
- */
 export default function VaultPage() {
   return (
     <div className="flex min-h-screen flex-col">
@@ -30,23 +22,22 @@ export default function VaultPage() {
               Every pick. Every reason. Every outcome.
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-ink-300">
-              {SURFACES.vault.blurb} The Vault is the long-form receipt — a
-              public archive of every pick {BRAND_NAME} has ever published,
-              the factor breakdown that produced it, and the eventual win,
-              loss, or push.
+              {SURFACES.vault.blurb} It is the receipt: every published pick,
+              the factor trail behind it, and the final result when the game is
+              settled.
             </p>
 
             <div className="mt-10 surface-card flex flex-col gap-3 p-6">
-              <p className="eyebrow">Status · Collecting</p>
+              <p className="eyebrow">Status: Collecting</p>
               <p className="text-sm leading-relaxed text-ink-300">
                 The Vault opens once enough canonical picks have settled to
-                render a calibrated record. We do not publish a Vault built on
-                a handful of games — that&apos;s the kind of selective history
-                we&apos;re built to avoid.
+                render a calibrated record. We do not publish a Vault built on a
+                handful of games. Selective history is exactly what this product
+                is built to avoid.
               </p>
               <div className="mt-2 flex flex-wrap gap-3">
                 <Link href="/methodology" className="btn btn-primary">
-                  How calibration works →
+                  How calibration works
                 </Link>
                 <Link href="/performance" className="btn btn-ghost">
                   Performance gate

@@ -119,14 +119,14 @@ export const SURFACES = {
     label: "Market Gravity",
     tagline: "Public pressure & line movement.",
     blurb:
-      "Where the money is — public pressure, line movement, and market imbalance tracking across every book.",
+      "Public pressure, line movement, and market imbalance tracking across every book.",
     route: "/market-gravity",
   },
   orbitView: {
     label: "Orbit View",
     tagline: "Full-slate command center.",
     blurb:
-      "Full-slate command center — browse games, props, public pressure, and movement in one orbital view.",
+      "Full-slate command center for games, props, public pressure, and movement.",
     route: "/orbit",
   },
   eclipseLock: {
@@ -154,7 +154,7 @@ export const SURFACES = {
     label: "Calibration Report",
     tagline: "Performance, model accuracy, methodology.",
     blurb:
-      "The published record — wins, losses, pushes, ROI, model calibration. Gated until the data can honestly support a number.",
+      "The published record: wins, losses, pushes, ROI, and model calibration. Gated until the data can honestly support a number.",
     route: "/performance",
   },
   methodology: {
@@ -168,7 +168,7 @@ export const SURFACES = {
     label: "Cockpit",
     tagline: "Operator controls.",
     blurb:
-      "Operator controls — ingestion health, gates, calibration proposals.",
+      "Operator controls for ingestion health, gates, and calibration proposals.",
     route: "/cockpit",
   },
   responsible: {
@@ -186,8 +186,8 @@ export const SURFACES = {
  * BRAND_TAGLINE changes.
  */
 export const BRAND_META = {
-  defaultTitle: `${BRAND_NAME} — ${BRAND_TAGLINE}`,
-  titleTemplate: `%s · ${BRAND_NAME}`,
+  defaultTitle: `${BRAND_NAME} | ${BRAND_TAGLINE}`,
+  titleTemplate: `%s | ${BRAND_NAME}`,
   description:
     "Galaxy Sports Edge reads market movement, price, timing, and volatility " +
     "to surface disciplined sports signals with the reasoning attached.",

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { auth } from "@/lib/auth";
-import { BRAND_NAME } from "@/lib/brand";
 import { MobileNav } from "@/components/ui/mobile-nav";
+import { BrandLockup } from "@/components/brand/brand-lockup";
 
 const NAV_LINKS = [
   { label: "Signal Feed", href: "/picks" },
@@ -10,16 +10,6 @@ const NAV_LINKS = [
   { label: "Galaxy IQ", href: "/methodology" },
   { label: "Pricing", href: "/pricing" },
 ] as const;
-
-function OrbitalMark() {
-  return (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true">
-      <path d="M 8 30 A 16 16 0 1 0 40 27" />
-      <line x1="6" y1="10" x2="42" y2="38" />
-      <circle cx="25" cy="22" r="4" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
 
 export async function Nav() {
   const session = await auth().catch(() => null);
@@ -29,31 +19,7 @@ export async function Nav() {
     <header className="nav">
       <div className="container nav-inner">
         <div className="nav-left">
-          <Link
-            href="/"
-            className="nav-logo"
-            aria-label={`${BRAND_NAME} home`}
-            style={{ display: "inline-flex", alignItems: "center", gap: 10 }}
-          >
-            <span style={{ display: "inline-flex", width: 26, height: 26, color: "var(--ion-white)" }}>
-              <OrbitalMark />
-            </span>
-            <span style={{ display: "inline-flex", flexDirection: "column", lineHeight: 1 }}>
-              <span style={{ font: "700 16px/1 var(--f-display)", letterSpacing: "0.10em", color: "var(--ion-white)" }}>
-                GALAXY
-              </span>
-              <span
-                style={{
-                  font: "500 10px/1 var(--f-display)",
-                  letterSpacing: "0.22em",
-                  color: "var(--orbital-cyan)",
-                  marginTop: 3,
-                }}
-              >
-                SPORTS EDGE
-              </span>
-            </span>
-          </Link>
+          <BrandLockup />
 
           <nav className="nav-links" aria-label="Primary">
             {NAV_LINKS.map(({ href, label }) => (
@@ -67,7 +33,7 @@ export async function Nav() {
         <div className="nav-right">
           <span className="live-chip">
             <span className="dot" />
-            Signal / Live
+            Live Board
           </span>
 
           <div className="desktop-auth">
@@ -90,7 +56,7 @@ export async function Nav() {
                   Sign in
                 </Link>
                 <Link href="/pricing" className="btn btn-primary btn-sm">
-                  Get the signal <span className="arrow">-&gt;</span>
+                  Get the signal
                 </Link>
               </>
             )}

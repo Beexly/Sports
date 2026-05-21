@@ -55,7 +55,7 @@ export function InteractiveGalaxy() {
     let disposed = false;
     const reduced = prefersReducedMotion();
     const isMobile = window.innerWidth < 720;
-    const particleCount = isMobile ? 950 : 2200;
+    const particleCount = isMobile ? 1500 : 3600;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 2000);
@@ -72,16 +72,16 @@ export function InteractiveGalaxy() {
     mount.appendChild(renderer.domElement);
 
     const geometry = new THREE.BufferGeometry();
-    const { positions, colors } = buildGalaxy(particleCount, isMobile ? 170 : 230);
+    const { positions, colors } = buildGalaxy(particleCount, isMobile ? 190 : 265);
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
     const material = new THREE.PointsMaterial({
-      size: isMobile ? 2.4 : 2.1,
+      size: isMobile ? 2.8 : 2.35,
       sizeAttenuation: true,
       vertexColors: true,
       transparent: true,
-      opacity: 0.92,
+      opacity: 0.96,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
@@ -94,7 +94,7 @@ export function InteractiveGalaxy() {
     const coreMaterial = new THREE.MeshBasicMaterial({
       color: 0xff2dd6,
       transparent: true,
-      opacity: 0.18,
+      opacity: 0.26,
       blending: THREE.AdditiveBlending,
     });
     const core = new THREE.Mesh(coreGeometry, coreMaterial);
@@ -104,13 +104,25 @@ export function InteractiveGalaxy() {
     const ringMaterial = new THREE.MeshBasicMaterial({
       color: 0x00e5ff,
       transparent: true,
-      opacity: 0.16,
+      opacity: 0.26,
       side: THREE.DoubleSide,
       blending: THREE.AdditiveBlending,
     });
     const ring = new THREE.Mesh(ringGeometry, ringMaterial);
     ring.rotation.set(1.18, 0.22, -0.72);
     scene.add(ring);
+
+    const outerRingGeometry = new THREE.RingGeometry(isMobile ? 128 : 168, isMobile ? 130 : 171, 192);
+    const outerRingMaterial = new THREE.MeshBasicMaterial({
+      color: 0xc084fc,
+      transparent: true,
+      opacity: 0.18,
+      side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
+    });
+    const outerRing = new THREE.Mesh(outerRingGeometry, outerRingMaterial);
+    outerRing.rotation.set(1.04, -0.28, 0.48);
+    scene.add(outerRing);
 
     const setSize = () => {
       if (disposed) return;
@@ -143,17 +155,19 @@ export function InteractiveGalaxy() {
 
     const render = () => {
       const pointer = pointerRef.current;
-      stars.rotation.y += reduced ? 0 : 0.0012;
+      const motion = reduced ? 0.0014 : 0.0038;
+      stars.rotation.y += motion;
       stars.rotation.x += (0.34 + pointer.y * 0.1 - stars.rotation.x) * 0.035;
       stars.rotation.z += (-0.16 + pointer.x * 0.08 - stars.rotation.z) * 0.035;
-      ring.rotation.z += reduced ? 0 : 0.0022;
-      core.scale.setScalar(1 + Math.sin(Date.now() * 0.0018) * 0.08);
+      ring.rotation.z += reduced ? 0.002 : 0.006;
+      outerRing.rotation.z -= reduced ? 0.0014 : 0.0045;
+      core.scale.setScalar(1 + Math.sin(Date.now() * (reduced ? 0.0012 : 0.0026)) * 0.12);
       camera.position.x += (pointer.x * 18 - camera.position.x) * 0.035;
       camera.position.y += (78 - pointer.y * 14 - camera.position.y) * 0.035;
       camera.lookAt(0, 0, 0);
       renderer.render(scene, camera);
 
-      if (!reduced && !disposed) {
+      if (!disposed) {
         frame = window.requestAnimationFrame(render);
       }
     };
@@ -172,6 +186,8 @@ export function InteractiveGalaxy() {
       coreMaterial.dispose();
       ringGeometry.dispose();
       ringMaterial.dispose();
+      outerRingGeometry.dispose();
+      outerRingMaterial.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };

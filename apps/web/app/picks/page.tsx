@@ -132,10 +132,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* Header */}
           <div className="mb-6">
             <h1 className="text-3xl font-bold tracking-tight text-white">
-              Today&apos;s Picks
+              Signal Feed
             </h1>
             <p className="mt-1.5 text-sm text-gray-400">
-              Algorithmic picks ranked by confidence — updated every 30 minutes.
+              Ranked signals with price, timing, risk, and the reason attached.
             </p>
           </div>
 
@@ -160,10 +160,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     key={key}
                     href={`/picks${p.toString() ? `?${p}` : ""}`}
                     className={[
-                      "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+                      "rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors",
                       isActive
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white",
+                        ? "border-cyan-300 bg-cyan-400 text-slate-950 shadow-[0_0_18px_rgba(34,211,238,0.35)]"
+                        : "border-gray-700 bg-gray-900 text-gray-200 hover:border-cyan-400 hover:text-white",
                     ].join(" ")}
                   >
                     {label}
@@ -185,10 +185,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     key={key}
                     href={`/picks${p.toString() ? `?${p}` : ""}`}
                     className={[
-                      "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
+                      "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                       isActive
-                        ? "bg-yellow-400/20 text-yellow-300 ring-1 ring-yellow-600/40"
-                        : "bg-gray-800/60 text-gray-500 hover:text-gray-300",
+                        ? "border-fuchsia-300 bg-fuchsia-400 text-slate-950 shadow-[0_0_18px_rgba(217,70,239,0.35)]"
+                        : "border-gray-700 bg-gray-900 text-gray-200 hover:border-fuchsia-400 hover:text-white",
                     ].join(" ")}
                   >
                     {label}
@@ -266,7 +266,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 href="/pricing"
                 className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
               >
-                Upgrade to Pro — $19/mo
+                Upgrade to Pro / $19/mo
               </Link>
             </div>
           )}
@@ -277,7 +277,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <p className="text-xs text-purple-400">
                 Want early access, daily alerts, and advanced analytics?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
-                  Upgrade to Elite — $49/mo
+                  Upgrade to Elite / $49/mo
                 </Link>
               </p>
             </div>
@@ -305,8 +305,8 @@ function SlateBar({ slate }: { slate: DailySlate }) {
     : null;
 
   return (
-    <div className="mb-6 rounded-xl border border-gray-800 bg-gray-900/60 px-5 py-4">
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+    <div className="mb-6 rounded-xl border border-cyan-400/20 bg-slate-950/80 px-5 py-4 shadow-[0_0_28px_rgba(8,145,178,0.12)]">
+      <div className="flex flex-wrap items-center gap-3">
         {/* Games / picks */}
         <StatPill label="Games Today" value={String(slate.totalGames)} />
         <StatPill label="Total Picks" value={String(slate.totalPicks)} />
@@ -318,14 +318,14 @@ function SlateBar({ slate }: { slate: DailySlate }) {
 
         {/* Recent record */}
         {record && (
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs text-gray-500">{record.period}:</span>
+          <div className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-2">
+            <span className="mr-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-400">{record.period}</span>
             <span className="text-xs font-bold text-green-400">{record.wins}W</span>
-            <span className="text-xs text-gray-600">-</span>
+            <span className="mx-1 text-xs text-gray-500">/</span>
             <span className="text-xs font-bold text-red-400">{record.losses}L</span>
             {record.pushes > 0 && (
               <>
-                <span className="text-xs text-gray-600">-</span>
+                <span className="mx-1 text-xs text-gray-500">/</span>
                 <span className="text-xs font-semibold text-gray-400">{record.pushes}P</span>
               </>
             )}
@@ -335,22 +335,22 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {/* Last updated */}
         {lastUpdated && (
           <div className="ml-auto flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-green-400" aria-hidden="true" />
-            <span className="text-[10px] text-gray-500">Updated {lastUpdated}</span>
+            <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.9)]" aria-hidden="true" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-100">Updated {lastUpdated}</span>
           </div>
         )}
       </div>
 
       {/* Sport breakdown */}
       {slate.sportBreakdown.length > 1 && (
-        <div className="mt-3 flex flex-wrap gap-2 border-t border-gray-800/60 pt-3">
+        <div className="mt-3 flex flex-wrap gap-2 border-t border-cyan-400/10 pt-3">
           {slate.sportBreakdown.map(({ sport, pickCount }) => (
             <Link
               key={sport}
               href={`/picks?sport=${sport.toLowerCase()}`}
-              className="rounded-full bg-gray-800/60 px-2.5 py-0.5 text-[10px] font-medium text-gray-400 hover:text-white transition-colors"
+              className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
             >
-              {sport} &middot; {pickCount}
+              {sport} {pickCount}
             </Link>
           ))}
         </div>
@@ -369,11 +369,11 @@ function StatPill({
   highlight?: boolean;
 }) {
   return (
-    <div className="text-center">
-      <p className={`text-lg font-bold ${highlight ? "text-yellow-400" : "text-white"}`}>
+    <div className="min-w-[108px] rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-left">
+      <p className={`text-lg font-bold ${highlight ? "text-fuchsia-300" : "text-white"}`}>
         {value}
       </p>
-      <p className="text-[10px] text-gray-500">{label}</p>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">{label}</p>
     </div>
   );
 }

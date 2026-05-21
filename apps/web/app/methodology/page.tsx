@@ -7,97 +7,85 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Methodology",
+  title: "Galaxy IQ",
   description:
-    "How the model evaluates matchups: live odds ingestion, factor scoring, calibrated confidence, and a public performance gate that opens only after enough canonical picks have settled.",
+    "The Galaxy Sports Edge decision stack: market inputs, pressure scoring, signal gates, and calibration rules.",
 };
 
-/**
- * Methodology page.
- *
- * The brief asks for elegant diagrams rather than walls of text. This page
- * is structured as four numbered phases — Ingest, Score, Publish, Calibrate —
- * each rendered as its own card with explicit input/output language. The
- * shared `MethodologySection` (registry-driven) appears below as the
- * canonical claim list.
- */
 export default function MethodologyPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Nav />
 
       <main className="flex-1">
-        {/* Hero */}
         <section className="border-b border-ink-800/60 bg-stadium-glow px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
-            <p className="eyebrow">Methodology</p>
+            <p className="eyebrow">Galaxy IQ</p>
             <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              How {BRAND_NAME} actually evaluates a matchup.
+              A signal is not a hunch. It is a decision stack.
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-ink-300">
-              No black box. The pipeline is four phases — Ingest, Score,
-              Publish, Calibrate — and every public surface is gated by what
-              the data can honestly support.
+              {BRAND_NAME} separates noise from action with four checks: market
+              shape, price pressure, risk, and evidence quality. If the stack is
+              weak, nothing gets published.
             </p>
           </div>
         </section>
 
-        {/* Four-phase pipeline */}
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <ol className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <PhaseCard
                 step="01"
-                title="Ingest"
-                inputs="Live lines from multiple sportsbooks, on a schedule."
-                outputs="Normalized markets — spread, total, moneyline — timestamped per fetch."
-                body="The data pipeline runs on a regular cadence (every 30 minutes during peak hours, more often as a slate approaches kickoff). Every odds row is stamped with bookmaker count and a freshness timestamp. If a market is thin, the data-quality score reflects that on the pick card."
+                title="Read the board"
+                inputs="Spread, total, moneyline, bookmaker count, timestamp."
+                outputs="A clean market snapshot for each matchup."
+                body="The system starts with the board, not a story. It records price, freshness, and market depth before any opinion is allowed to form."
               />
               <PhaseCard
                 step="02"
-                title="Score"
-                inputs="Normalized markets + historical team-game logs (after the model-history gate opens)."
-                outputs="A confidence range, an edge projection, and a risk profile per side."
-                body="The scoring engine computes implied probabilities, weighs sharp line movement, evaluates head-to-head context, and looks at venue form. Each contributor is exposed in the factor breakdown so a serious reviewer can see exactly what moved the dial."
+                title="Measure pressure"
+                inputs="Movement, consensus, volatility, and matchup context."
+                outputs="A pressure map showing where the board is tightening or drifting."
+                body="Most bettors see a number. Galaxy IQ studies how that number got there: who moved, how far, how fast, and whether the market is deep enough to trust."
               />
               <PhaseCard
                 step="03"
-                title="Publish"
-                inputs="Engine output + the readiness gates."
-                outputs="The pick card you see — selection, confidence band, risk, reasoning, freshness, and factor breakdown."
-                body="A pick is only published when the public-picks gate is open, and a numeric confidence value is only shown when the calibration gate is open. Until then, confidence is presented as a label (Lean / Strong / Top Pick) and the page surfaces a &quot;collecting baseline data&quot; note."
+                title="Gate the signal"
+                inputs="Score, risk, freshness, and confidence policy."
+                outputs="Selection, risk label, reasoning, and factor trail."
+                body="A card only ships when the edge is explainable. Weak inputs, stale prices, or thin markets stay off the customer surface."
               />
               <PhaseCard
                 step="04"
-                title="Calibrate"
-                inputs="Settled outcomes from real games, paired with the engine state at prediction time."
-                outputs="A calibration proposal. Not a silent weight change."
-                body="The model only learns from real outcomes paired with the signal state at the moment a pick was made — never from its own prior reasoning text. When a proposed weight change improves out-of-sample calibration, it lands in a versioned model bump that a human reviews and merges. Customers see the model version on every pick card."
+                title="Learn slowly"
+                inputs="Settled outcomes paired with the engine state at pick time."
+                outputs="A reviewed calibration change, never a silent rewrite."
+                body="Outcomes matter, but overreacting is expensive. Galaxy IQ learns from settled history only after enough data exists to make the lesson meaningful."
               />
             </ol>
           </div>
         </section>
 
-        {/* Registry-driven claim grid */}
         <MethodologySection />
 
-        {/* Trust gates */}
         <section className="border-t border-ink-800/60 px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
-            <p className="eyebrow">Readiness gates</p>
+            <p className="eyebrow">Control gates</p>
             <h2 className="mt-3 font-display text-display-lg text-white">
-              The customer surface is gated by what the data supports.
+              The interface says what the data can support.
             </h2>
             <p className="mt-4 text-ink-300">
-              These flags are public-facing on purpose. They&apos;re the
-              difference between a tout site and a system you can audit.
+              The gates keep the product honest. They control what can appear,
+              what stays hidden, and when performance numbers are mature enough
+              to show.
             </p>
 
-            <dl className="mt-10 flex flex-col divide-y divide-ink-800/60 overflow-hidden rounded-2xl border border-ink-800">
+            <dl className="mt-10 grid grid-cols-1 gap-3">
               {GATES.map((gate) => (
                 <div
                   key={gate.flag}
-                  className="grid grid-cols-1 gap-2 bg-ink-950/60 px-6 py-5 sm:grid-cols-3 sm:gap-6"
+                  className="grid grid-cols-1 gap-2 rounded-lg border border-ink-800 bg-ink-950/60 px-5 py-4 sm:grid-cols-3 sm:gap-6"
                 >
                   <dt className="flex flex-col gap-1">
                     <span className="font-mono text-xs uppercase tracking-wide text-accent-300">
@@ -113,33 +101,27 @@ export default function MethodologyPage() {
                 </div>
               ))}
             </dl>
-
-            <p className="mt-6 text-xs text-ink-500">
-              The full gate sequence and its prerequisites are documented in
-              the operator runbook in this repo, not just in marketing copy.
-            </p>
           </div>
         </section>
 
-        {/* CTA */}
         <section className="border-t border-ink-800/60 bg-ink-1000/80 px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
             <h2 className="font-display text-display-lg text-white">
-              See how it looks on a real card.
+              See the stack on today&apos;s board.
             </h2>
             <p className="text-ink-300">
-              The Picks page is the same engine, the same calibration policy,
-              and the same disclosure stack — just one slate at a time.
+              The Signal Feed turns the same checks into a card you can scan in
+              seconds: pick, risk, freshness, and the reason.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link href="/picks" className="btn-primary px-7 py-3.5 text-base">
-                View today&apos;s picks
+                Open Signal Feed
               </Link>
               <Link
                 href="/performance"
                 className="btn-secondary px-7 py-3.5 text-base"
               >
-                See the public performance page
+                View Calibration Report
               </Link>
             </div>
             <RiskDisclosure variant="compact" className="text-center" />
@@ -157,31 +139,31 @@ const GATES = [
     flag: "CANONICAL_HISTORY_ENABLED",
     title: "Canonical history",
     description:
-      "Once on, every new pick and team-game log is recorded as canonical — eligible to count toward the public record. Bootstrap-era rows stay flagged and never enter customer-visible stats.",
+      "Only verified pick and game logs become eligible for the public record.",
   },
   {
     flag: "DERIVED_MODEL_HISTORY_ENABLED",
-    title: "Derived model history",
+    title: "Derived history",
     description:
-      "Once on, the scoring engine starts using head-to-head, venue-form, and ATS-form signals. Only canonical logs feed in — never bootstrap rows.",
+      "Historical matchup signals stay off until the canonical data is mature.",
   },
   {
     flag: "PUBLIC_PICKS_ENABLED",
     title: "Public picks",
     description:
-      "Once on, the /api/picks endpoints return picks publicly. Until then, the picks endpoints respond honestly with a not-yet-ready state instead of fabricated data.",
+      "The Signal Feed opens only when the readiness gate says the current slate can be shown honestly.",
   },
   {
     flag: "PERFORMANCE_STATS_ENABLED",
     title: "Performance stats",
     description:
-      "Once on, the dashboard and the public Performance page display the record and win-rate. Requires at least 100 canonical settled picks before the operator may even consider flipping it.",
+      "Record and win-rate stay hidden until enough canonical settled picks exist.",
   },
   {
     flag: "OUTCOME_LEARNING_ENABLED",
     title: "Outcome learning",
     description:
-      "Once on, settled canonical picks become eligible data for the next calibration cycle. This gates data collection only — weight changes still require an explicit model version bump and a human review.",
+      "Settled outcomes can inform calibration, but weight changes still require review.",
   },
 ] as const;
 
@@ -209,11 +191,11 @@ function PhaseCard({
       <h3 className="font-display text-2xl font-semibold text-white">{title}</h3>
       <p className="text-sm leading-relaxed text-ink-300">{body}</p>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div className="rounded-xl border border-ink-800 bg-ink-950/60 px-4 py-3">
+        <div className="rounded-lg border border-ink-800 bg-ink-950/60 px-4 py-3">
           <p className="eyebrow text-ink-500">Inputs</p>
           <p className="mt-1.5 text-xs leading-relaxed text-ink-300">{inputs}</p>
         </div>
-        <div className="rounded-xl border border-ink-800 bg-ink-950/60 px-4 py-3">
+        <div className="rounded-lg border border-ink-800 bg-ink-950/60 px-4 py-3">
           <p className="eyebrow text-ink-500">Outputs</p>
           <p className="mt-1.5 text-xs leading-relaxed text-ink-300">
             {outputs}

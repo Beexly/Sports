@@ -52,6 +52,11 @@ export default async function HomePage() {
        * ────────────────────────────────────────────────────── */}
       <section className="hero hero-galaxy">
         <InteractiveGalaxy />
+        <div className="hero-intro" aria-hidden="true">
+          <div className="hero-intro-mark">GSE</div>
+          <div className="hero-intro-line">Signal acquired</div>
+          <div className="hero-intro-scan" />
+        </div>
         <div className="container hero-copy">
           <span className="hero-eyebrow">
             <span className="dot" aria-hidden="true" />
@@ -63,13 +68,13 @@ export default async function HomePage() {
           </h1>
 
           <p className="hero-tag">
-            Markets whisper before they move. Galaxy Sports Edge watches the
-            board, scores the drift, and shows the reasoning before you act.
+            Most people react to the board. Galaxy Sports Edge watches price,
+            timing, and volatility while the market is still forming.
           </p>
 
           <div className="hero-ctas">
             <Link href="/picks" className="btn btn-primary btn-lg">
-              Open Signal Feed <span className="arrow">-&gt;</span>
+              Open Signal Feed
             </Link>
             <Link href="/methodology" className="btn btn-ghost btn-lg">
               See Galaxy IQ
@@ -107,18 +112,18 @@ export default async function HomePage() {
             Board state
           </span>
           <div className="slate-divide" />
-          <span className="item">
-            Odds <span className="v c">Watching</span>
+          <span className="item slate-chip">
+            Odds <span className="v c">watching</span>
           </span>
-          <span className="item">
-            Signals <span className="v p">Gated</span>
+          <span className="item slate-chip">
+            Signals <span className="v p">gated</span>
           </span>
-          <span className="item">
-            Record <span className="v u">Collecting</span>
+          <span className="item slate-chip">
+            Record <span className="v u">collecting</span>
           </span>
           <div className="slate-divide" />
-          <span className="item">
-            Decision rule <span className="v">Show the work</span>
+          <span className="item slate-chip">
+            Rule <span className="v">show the work</span>
           </span>
         </div>
       </div>
@@ -169,7 +174,7 @@ export default async function HomePage() {
             <div>
               <p className="section-eyebrow">▸ Methodology</p>
               <h2>
-                The engine <em>earns the pick.</em>
+                The stack <em>earns the signal.</em>
               </h2>
             </div>
             <div className="meta">
@@ -187,10 +192,10 @@ export default async function HomePage() {
                   <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                 </svg>
               </div>
-              <h3>Live odds, every 30 minutes.</h3>
+              <h3>Board first.</h3>
               <p>
-                Lines, totals, and moneylines keep moving. The platform keeps
-                score while the market is still forming.
+                Lines, totals, and moneylines move before most people notice.
+                The board is the first signal.
               </p>
             </div>
             <div className="how">
@@ -202,10 +207,10 @@ export default async function HomePage() {
                   <line x1="6" y1="20" x2="6" y2="16" />
                 </svg>
               </div>
-              <h3>Every game gets scored.</h3>
+              <h3>Pressure gets measured.</h3>
               <p>
-                It weighs price, movement, market depth, volatility, and timing
-                before a signal is allowed onto the board.
+                Galaxy IQ weighs price, depth, volatility, and timing before a
+                signal is allowed onto the board.
               </p>
             </div>
             <div className="how">
@@ -216,10 +221,10 @@ export default async function HomePage() {
                   <polyline points="9 12 11 14 15 10" />
                 </svg>
               </div>
-              <h3>You see the reasoning.</h3>
+              <h3>You see the trail.</h3>
               <p>
-                A signal without a trail is just noise. Every published pick
-                carries the factors that put it there.
+                A signal without a trail is noise. Every published pick carries
+                the factors that put it there.
               </p>
             </div>
           </div>
@@ -314,7 +319,7 @@ function PickCard({
         <div className="home">{pick.game.homeTeam}</div>
       </div>
       <div className="pick-sel">
-        <div className="l">Pick · {pick.pickType}</div>
+        <div className="l">Pick / {pick.pickType}</div>
         {isPremium ? (
           <div
             className="v"
