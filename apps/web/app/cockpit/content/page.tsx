@@ -321,6 +321,3 @@ export default async function CockpitContentPage() {
     </div>
   );
 }
-    </div>
-  );
-}

@@ -58,10 +58,10 @@ export async function GET(request: Request) {
   for (const sport of SUPPORTED_SPORTS) {
     try {
       await processSport(sport, apiKey, gates, "[cron:refresh-odds]");
-      sportResults.push({ sport, ok: true });
+      sportResults.push({ sport: sport.key, ok: true });
     } catch (err) {
       sportResults.push({
-        sport,
+        sport: sport.key,
         ok: false,
         error: err instanceof Error ? err.message : String(err),
       });
