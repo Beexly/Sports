@@ -107,7 +107,7 @@ These are the brand's internal nouns. Use them consistently.
 | The Vault | Pick archive / History |
 | Calibration Report | Performance / Win-rate page / Track record |
 | Edge Index | Confidence score (use Edge Index in marketing, "confidence rating" in customer copy is also acceptable) |
-| Eclipse Lock | Highest-confidence pick / Best pick |
+| Eclipse Gate | Highest-confidence pick / Best pick |
 | confidence-rated signal | high-confidence pick / lock |
 | signal | pick / play / wager |
 | settled signal | settled bet / settled wager |
@@ -133,7 +133,7 @@ Source of truth: `apps/web/lib/brand.ts` (BRAND_COLORS) and
 **Restraint rule (from web-design audit):** Magenta is the brand's strongest
 signal and reads as cheap when used decoratively. Reserve for:
 - Live state indicators (the pulsing dot)
-- Eclipse Lock callouts
+- Eclipse Gate callouts
 - One vignette anchor per hero composition
 Use cyan as the default data accent. Use ultraviolet as the depth wash.
 The .app background and most surfaces should be 95% obsidian/carbon with
@@ -191,7 +191,7 @@ These are the canonical surface labels. Route paths stay generic for SEO.
 | Galaxy IQ | /methodology | The intelligence engine |
 | The Vault | /vault | Every published pick, reasoning attached |
 | Calibration Report | /performance | Settled-pick record (gated until honest) |
-| Eclipse Lock | /eclipse-lock | Verified conviction state |
+| Eclipse Gate | /eclipse-gate | Verified conviction state |
 | Edge Index | /edge-index | Composite confidence score |
 | Market Gravity | /market-gravity | Public pressure & line movement |
 | Orbit View | /orbit | Full-slate command center |

@@ -116,7 +116,7 @@ export function SignalPreviewQueue() {
     <div
       data-testid="signal-preview-queue"
       role="region"
-      aria-label="Preview of the live signal scoring queue"
+      aria-label="Preview of the live signal scoring queue. This is an illustrative animation, not real picks."
       style={{
         gridColumn: "1 / -1",
         background:

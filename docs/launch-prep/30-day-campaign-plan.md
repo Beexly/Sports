@@ -115,7 +115,7 @@ Themes for the week:
 - **Mon:** "What I built when I lost money on a tout" (founder origin story)
 - **Tue:** "How a signal becomes a pick" — annotated screenshot
 - **Wed:** "The 4 gates" deep-dive thread
-- **Thu:** "Why Eclipse Lock isn't what you think it is"
+- **Thu:** "Why Eclipse Gate isn't what you think it is"
 - **Fri:** "Friday recap — settled signals so far, what the model got right and wrong"
 - **Sat:** Live slate commentary
 - **Sun:** Variance education — "a 64% confidence signal still loses 36 times in 100"
@@ -136,7 +136,7 @@ Themes for the week:
 - **Wed:** "Why I'm charging $19 instead of $99" — pricing philosophy
 - **Thu:** "I'd rather you cancel than complain" — refund policy as a feature
 - **Fri:** "Week 3 recap — first paid subscribers + what I'm learning"
-- **Sat:** Live slate commentary with Eclipse Lock callouts
+- **Sat:** Live slate commentary with Eclipse Gate callouts
 - **Sun:** Variance recap — the week's losses, framed honestly
 
 Day 21 milestone: First paid conversion target hit (~10 paid customers).
@@ -165,7 +165,7 @@ Day 30 milestone: `PERFORMANCE_STATS_ENABLED=true` flips when ≥100 settled sig
 
 1. **Show your work.** "If I can't explain why, I don't publish."
 2. **Wait for the data.** "Performance stats stay gated until they're honest."
-3. **No locks.** "Variance is described, not hidden."
+3. **No false certainty.** "Variance is described, not hidden."
 4. **One person.** "I built this because I was tired of paying for picks people can't back."
 5. **Calibration over conviction.** "A 64% signal still loses 36 of 100. That's the whole point."
 
@@ -237,7 +237,7 @@ WEEK 2 (Trust building)
 [ ] Day 8: Founder origin story
 [ ] Day 9: Annotated signal screenshot
 [ ] Day 10: 4 gates deep-dive thread
-[ ] Day 11: Eclipse Lock explainer
+[ ] Day 11: Eclipse Gate explainer
 [ ] Day 12: Friday settled-signals recap
 [ ] Day 13: Live slate commentary
 [ ] Day 14: Variance education + BOARD OPENS
@@ -248,7 +248,7 @@ WEEK 3 (Conversion)
 [ ] Day 17: Pricing philosophy post
 [ ] Day 18: Refund policy as feature
 [ ] Day 19: Week-3 recap + first paid milestone
-[ ] Day 20: Live slate + Eclipse Lock callouts
+[ ] Day 20: Live slate + Eclipse Gate callouts
 [ ] Day 21: Variance recap
 
 WEEK 4 (Calibration)

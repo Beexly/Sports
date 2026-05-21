@@ -14,6 +14,8 @@ const COMPANY_LINKS = [
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Press", href: "/press" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Changelog", href: "/changelog" },
 ] as const;
 
 const RESPONSIBLE_LINKS = [

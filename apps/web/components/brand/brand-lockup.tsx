@@ -16,7 +16,11 @@ function GalaxyMark() {
 
 export function BrandLockup({ compact = false }: { compact?: boolean }) {
   return (
-    <Link href="/" className="brand-lockup" aria-label={`${BRAND_NAME} home`}>
+    <Link
+      href="/"
+      className={`brand-lockup${compact ? " brand-lockup-compact" : ""}`}
+      aria-label={`${BRAND_NAME} home`}
+    >
       <span className="brand-mark">
         <GalaxyMark />
       </span>

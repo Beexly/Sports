@@ -46,7 +46,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Who built this?",
-        a: "Garrett Baxley. One person, one model. I built Galaxy Sports Edge because I was tired of paying for \"locks\" from people who quietly delete the losses.",
+        a: "Garrett Baxley. One person, one model. I built Galaxy Sports Edge because I was tired of paying for picks from people who quietly delete the losses.",
       },
     ],
   },
@@ -62,8 +62,8 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
         a: "A calibrated 0–100 confidence rating on every signal. Not a probability the pick wins — a measure of how much the market is offering vs. what the model thinks the matchup is worth. A 71 Edge Index still loses ~29 times in 100. Variance is described, not hidden.",
       },
       {
-        q: "What's Eclipse Lock?",
-        a: "Verified conviction state — the rarest grade. Only signals where every gate cleared by a wide margin earn it. It's the model's strongest honest signal, not a guarantee of outcome. The name reclaims the tout-service word \"lock\" on purpose. It still loses sometimes.",
+        q: "What's Eclipse Gate?",
+        a: "Verified conviction state: the rarest grade. Only signals where every gate cleared by a wide margin earn it. It's the model's strongest honest signal, not a promise about the outcome. It still loses sometimes.",
       },
       {
         q: "Can I see the factor trail on every signal?",
@@ -205,7 +205,10 @@ export default function FaqPage() {
                   >
                     <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-ink-100">
                       <span>{item.q}</span>
-                      <span className="text-ink-500 transition-transform group-open:rotate-45">
+                      <span
+                        aria-hidden="true"
+                        className="text-ink-500 transition-transform group-open:rotate-45"
+                      >
                         +
                       </span>
                     </summary>

@@ -196,6 +196,7 @@ export default async function PerformancePage() {
           {fetchError && (
             <div
               data-testid="performance-error"
+              role="alert"
               className="rounded-xl border border-red-800/60 bg-red-950/40 p-6 text-center"
             >
               <p className="text-sm text-red-400">{fetchError}</p>

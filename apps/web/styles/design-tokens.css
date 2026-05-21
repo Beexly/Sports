@@ -122,9 +122,14 @@
   --bg-hover:     var(--slate);
   --fg:           var(--ion-white);
   --fg-1:         var(--ion);
-  --fg-meta:      var(--ion-1);
-  --fg-muted:     var(--ion-2);
-  --fg-disabled:  var(--ion-3);
+  --fg-meta:      var(--ion-1);    /* #98A3B5 — AA pass at 6.7:1 on carbon */
+  /* WCAG 2.1 AA: --fg-muted bumped from ion-2 (#5E6878, 3.05:1, FAIL) to
+     ion-1 (#98A3B5, 6.7:1, PASS). Restores AA contrast across every meta
+     label, eyebrow, stamp, and footer header that reads `var(--fg-muted)`. */
+  --fg-muted:     var(--ion-1);
+  /* --fg-disabled stays muted but should never be used for prose. Reserve
+     for decorative strokes only; never for text content. */
+  --fg-disabled:  var(--ion-2);
   --border:       var(--mineral);
   --border-strong:var(--mineral-hi);
   --accent:       var(--plasma);

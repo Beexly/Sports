@@ -54,8 +54,8 @@ export interface Entitlements {
   canSeePremiumPicks: boolean;
   canSeeConfidence: boolean;
   canSeeLineMovement: boolean;
-  canSeeFactorBreakdown: boolean;  // NEW: PRO+ only
-  canSeeEdgeScore: boolean;         // NEW: PRO+ only
+  canSeeFactorBreakdown: boolean;  // PRO+ only
+  canSeeEdgeScore: boolean;         // PRO+ only
   canGetAlerts: boolean;
   dailyPickLimit: number | null;
 }

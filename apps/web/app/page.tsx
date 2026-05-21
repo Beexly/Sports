@@ -7,6 +7,7 @@ import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
 import { SignalPreviewQueue } from "@/components/hero/signal-preview-queue";
 import { ToutComparison } from "@/components/home/tout-comparison";
 import { AnnotatedSampleSignal } from "@/components/home/annotated-sample-signal";
+import { StartInSixty } from "@/components/home/start-in-sixty";
 import type { PublicPick } from "@sports/types";
 import { PICK_GRADE_LABELS } from "@sports/types";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
@@ -130,6 +131,12 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ──────────────────────────────────────────────────────
+       * START IN 60 — three reassurance promises that reduce signup friction
+       * (no card, refund window, founder-replies). Sits below hero, above slate.
+       * ────────────────────────────────────────────────────── */}
+      <StartInSixty />
 
       {/* ──────────────────────────────────────────────────────
        * SLATE BAR — live mission-control telemetry strip

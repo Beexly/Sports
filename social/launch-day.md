@@ -197,7 +197,7 @@
 | 5 | 10:00 AM | X + Threads | Single line: "We don't publish a record we can't back. That's the whole point." |
 | 6 | 12:00 PM | IG + FB | Galaxy IQ deep dive (carousel) — the proprietary engine |
 | 7 | 6:00 PM | All four | Week-1 recap: what shipped, what's next |
-| 8–14 | 1 post/day rotating | Mix | Variance education, Edge Index breakdowns, Eclipse Lock explainers, brand-pillar single-line drops |
+| 8–14 | 1 post/day rotating | Mix | Variance education, Edge Index breakdowns, Eclipse Gate explainers, brand-pillar single-line drops |
 
 ---
 

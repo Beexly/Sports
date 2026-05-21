@@ -16,7 +16,7 @@ during the silent-collection phase (before `PUBLIC_PICKS_ENABLED=true`).
 
 **Subject (A):** Welcome to Galaxy Sports Edge — what happens next
 **Subject (B):** You're in. Here's why the picks aren't live yet.
-**Preheader:** I built this because I was tired of paying for "locks" from people who delete the losses.
+**Preheader:** I built this because I was tired of paying for picks from people who delete the losses.
 
 ---
 
@@ -135,10 +135,10 @@ with its reasoning and outcome attached.
 
 ---
 
-## Email 4 — Eclipse Lock + Edge Index (Day 9)
+## Email 4 — Eclipse Gate + Edge Index (Day 9)
 
 **Subject (A):** The two scores you'll see on every signal
-**Subject (B):** Eclipse Lock isn't what you think it is
+**Subject (B):** Eclipse Gate isn't what you think it is
 **Preheader:** Confidence is a calibration, not a promise.
 
 ---
@@ -153,22 +153,21 @@ It's not a probability the pick wins. It's a calibrated measure of how
 much the market is offering vs. what the model thinks the matchup is
 worth.
 
-**Eclipse Lock** — verified conviction state. The name sounds like
-"lock of the day" on purpose — it's the opposite. Eclipse Lock isn't a
-guarantee of outcome. It's a flag that says: "every gate cleared by a
-significant margin, factor agreement is high, the market depth is solid."
-It's the model's strongest honest signal — and it still loses sometimes.
+**Eclipse Gate** — verified conviction state. It is not a promise about
+the outcome. It is a flag that says: "every gate cleared by a significant
+margin, factor agreement is high, and the market depth is solid." It is
+the model's strongest honest signal — and it still loses sometimes.
 
 A 64% calibrated confidence still loses 36 out of 100 times. I designed
 every surface around that reality. Variance is described, not hidden.
 
-When you see Eclipse Lock, you're not seeing certainty. You're seeing the
+When you see Eclipse Gate, you're not seeing certainty. You're seeing the
 model's most disciplined read.
 
 — Garrett
 
-PS: If "Eclipse Lock" reminds you of every tout's "premium lock," that's
-the joke. The brand reclaims the word.
+PS: The name matters. It says a signal cleared the gates. It does not say
+the future is settled.
 
 ---
 

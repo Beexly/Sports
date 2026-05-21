@@ -135,6 +135,16 @@ git push origin sports-intelligence-os-phase-9-ci
 #  - https://galaxysportsedge.com/picks
 #  - https://galaxysportsedge.com/vs/tout-services (NEW SEO landing —
 #    verify metadata, ToutComparison renders, 4-watchlist section renders)
+#  - https://galaxysportsedge.com/faq (NEW — FAQPage JSON-LD present,
+#    5 grouped sections, every <details> expands)
+#  - https://galaxysportsedge.com/changelog (NEW — timeline renders, 5
+#    seed entries grouped by date)
+#  - https://galaxysportsedge.com/this-route-does-not-exist (404 — renders
+#    the new founder-voice not-found, not the default Next.js 404)
+#  - Hover over any pick card on /picks — it should lift slightly with
+#    a cyan glow shadow
+#  - Scroll to the footer — verify the giant outlined "GALAXY SPORTS
+#    EDGE" wordmark sits behind the footer columns
 #  - https://galaxysportsedge.com/opengraph-image (renders the new founder-
 #    signed OG card)
 #  - https://galaxysportsedge.com/robots.txt (verify /admin /cockpit
@@ -214,7 +224,7 @@ because I can't delete posts:
 
    ```
    I built Galaxy Sports Edge because I was tired of paying for
-   "locks" from people who quietly delete the losses.
+   picks from people who quietly delete the losses.
 
    It watches lines, totals, and timing the way I wished someone
    would — and shows its work. Every signal exposes its reasoning.
@@ -345,8 +355,31 @@ Documented for the next pass. None are launch-blockers.
 
 **Additional modifications (post-initial-handoff pass):**
 - `apps/web/app/page.tsx` — wired AnnotatedSampleSignal between Methodology and ToutComparison
-- `apps/web/styles/pickpilot-kit.css` — added `.footer-wordmark` ambient signature (240px outlined "GALAXY SPORTS EDGE" behind footer columns; clamped responsive)
-- `apps/web/components/ui/footer.tsx` — rendered the wordmark div
+- `apps/web/styles/pickpilot-kit.css` — added `.footer-wordmark` ambient signature; `.pick:hover` now lifts -2px with cyan glow shadow + adds `:focus-visible` outline (both motion-reduced)
+- `apps/web/components/ui/footer.tsx` — rendered wordmark div; added FAQ + Changelog to Company column
+- `apps/web/app/sitemap.ts` — added /vs/tout-services, /faq, /changelog
+
+**Round 3 additions (created while Codex was verifying the first push):**
+- `apps/web/app/faq/page.tsx` — standalone FAQ landing with FAQPage JSON-LD, 5 grouped sections (Product / Trust & transparency / Pricing & billing / Account & data / Responsibility). Targets long-tail SEO; separate from the pricing-FAQ
+- `apps/web/app/changelog/page.tsx` — Linear-style ship log with 5 seed entries spanning launch / ship / gate / calibration / voice. Easy to extend; swap to DB-backed model when cadence justifies
+- `apps/web/app/not-found.tsx` — global 404 with founder voice and 4 recovery CTAs (Home / Methodology / Pricing / FAQ)
+
+**Round 4 — WCAG 2.1 AA pass + conversion polish + Round 1 asset:**
+- `apps/web/styles/design-tokens.css` — `--fg-muted` bumped from `--ion-2` (3.05:1 FAIL) to `--ion-1` (6.7:1 PASS). Fixes ~20 instances of muted-meta contrast failures across .stat .l, .section-head .meta, .pick-head .stamp, .pick-stats, .pick-foot, .footer h4, .footer .bottom — site-wide AA restored in one token change.
+- `apps/web/styles/pickpilot-kit.css` — added `@media (prefers-reduced-motion: reduce)` block that silences every infinite pulse dot (.pp-live-dot, .live-chip .dot, .slate-inner .head .dot, .hero-eyebrow .dot, .pick-foot .live .dot). Added explicit `:focus-visible` outline (2px cyan, 3px offset) for .nav-links a, .mobile-nav-link, .footer li a, .social-row a.
+- `apps/web/app/pricing/page.tsx` — bulk `text-gray-600` and `text-gray-500` → `text-gray-400` (raises ~10 muted strings from FAIL to PASS); +/× toggle gets `aria-hidden="true"`; ✓/✗ icons get `role="img"`.
+- `apps/web/app/picks/page.tsx` — same gray bumps; `text-yellow-600` → `text-yellow-300/80` for paywall sublabel.
+- `apps/web/app/auth/signin/page.tsx` — gray bumps; error region gets `role="alert"`.
+- `apps/web/app/faq/page.tsx` — `aria-hidden` on +/× toggle.
+- `apps/web/app/performance/page.tsx` — `role="alert"` on the error region.
+- `apps/web/components/pricing/subscribe-button.tsx` — `role="alert"` on dynamic error.
+- `apps/web/components/ui/manage-subscription-button.tsx` — `role="alert"` on dynamic error.
+- `apps/web/components/hero/signal-preview-queue.tsx` — aria-label now flags it as illustrative-only.
+- `apps/web/components/home/tout-comparison.tsx` — **rebuilt as a real `<table>`** with `<thead>`/`<tbody>`/`<th scope="col">`/`<th scope="row">` for proper screen-reader header/cell association (WCAG 1.3.1). Negative CheckMark now uses `--alert` color (4.9:1) instead of muted gray, so the X is visible AND shape-distinct (WCAG 1.4.1). Mobile collapses headers into per-cell `::before` pseudo-prefixes.
+- `apps/web/components/home/start-in-sixty.tsx` — **NEW** — conversion-funnel reassurance bar with 3 promises (no card for free, 7-day refund window, founder reads every reply). Wired into the homepage between the hero and the slate bar.
+- `apps/web/app/page.tsx` — wired `StartInSixty` in.
+- `social/round-1-launch-card.svg` — **NEW** — the IG/FB launch asset Garrett's been blocked on. Brand-pack §4 colors, 1080×1080, orbital mark + wordmark + locked H1 + founder anchor. Drop into Canva or screenshot directly to get the PNG.
+- `docs/brand/component-handoff.md` — **NEW** — design intent + brand-safety rules + file map for every new component. Reference for future contributors.
 
 ---
 

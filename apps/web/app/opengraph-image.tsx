@@ -158,8 +158,8 @@ export default async function Image() {
             fontStyle: "italic",
           }}
         >
-          Because I&apos;m tired of paying for &ldquo;locks&rdquo; from people
-          who quietly delete the losses.
+          Because I&apos;m tired of paying for picks from people who quietly
+          delete the losses.
         </div>
 
         {/* Footer — a principle, signed */}

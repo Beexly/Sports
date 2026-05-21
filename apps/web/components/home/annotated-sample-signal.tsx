@@ -17,7 +17,7 @@ const CALLOUTS_LEFT = [
   },
   {
     label: "02 · Grade chip",
-    body: "Eclipse Lock is the rarest grade — only signals where every gate cleared by a wide margin. Strong / Solid / Lean are the rest of the ladder. Never used as a promise.",
+    body: "Eclipse Gate is the rarest grade — only signals where every gate cleared by a wide margin. Strong / Solid / Lean are the rest of the ladder. Never used as a promise.",
   },
   {
     label: "03 · Selection + line",
@@ -224,7 +224,7 @@ function SampleCard() {
             border: "1px solid color-mix(in srgb, var(--plasma) 35%, transparent)",
           }}
         >
-          Eclipse Lock
+          Eclipse Gate
         </span>
         <span
           style={{

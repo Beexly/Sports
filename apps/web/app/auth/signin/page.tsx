@@ -116,14 +116,14 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
             <div className="w-full border-t border-gray-800" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="bg-gray-900 px-3 text-gray-600">
+            <span className="bg-gray-900 px-3 text-gray-400">
               Email sign-in coming soon
             </span>
           </div>
         </div>
 
         {/* Legal */}
-        <p className="text-center text-xs leading-relaxed text-gray-600">
+        <p className="text-center text-xs leading-relaxed text-gray-400">
           By signing in you agree to our{" "}
           <Link
             href="/terms"
@@ -145,7 +145,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       {/* Back to home */}
       <Link
         href="/"
-        className="mt-8 text-sm text-gray-600 transition-colors hover:text-gray-400"
+        className="mt-8 text-sm text-gray-400 transition-colors hover:text-gray-400"
       >
         &larr; Back to {BRAND_NAME}
       </Link>

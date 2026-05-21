@@ -4,6 +4,12 @@
  * Brand-safe by construction: names no specific competitor and compares
  * category to category. Makes the anti-tout positioning visible as data,
  * not assertion.
+ *
+ * Accessibility: rendered as a real <table> with <thead>/<tbody>/<th>/<td>
+ * so screen readers programmatically associate the column header with
+ * each cell (WCAG 1.3.1 Info & Relationships). The negative CheckMark
+ * uses --alert color (≈ 4.9:1 contrast) so the X is visible to all users,
+ * not just decorated muted gray.
  */
 
 const ROWS = [
@@ -73,127 +79,159 @@ export function ToutComparison() {
           </div>
         </div>
 
-        <div
-          role="table"
-          aria-label="Galaxy Sports Edge compared with typical tout services"
-          style={{
-            marginTop: 32,
-            border:
-              "1px solid color-mix(in srgb, var(--ion-blue-glow) 18%, transparent)",
-            borderRadius: 16,
-            overflow: "hidden",
-            background:
-              "linear-gradient(180deg, rgba(7,10,17,0.72) 0%, rgba(7,10,17,0.45) 100%)",
-          }}
-        >
-          <div
-            role="row"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1.1fr) minmax(0, 1.4fr) minmax(0, 1.4fr)",
-              gap: 0,
-              padding: "16px 20px",
-              borderBottom:
-                "1px solid color-mix(in srgb, var(--ion-1) 10%, transparent)",
-              font: "600 11px/1 var(--f-mono)",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: "var(--fg-muted)",
-            }}
+        <div className="tout-table-wrap">
+          <table
+            className="tout-table"
+            aria-label="Galaxy Sports Edge compared with typical tout services"
           >
-            <span role="columnheader">Dimension</span>
-            <span role="columnheader" style={{ color: "var(--ion-blue-glow)" }}>
-              Galaxy Sports Edge
-            </span>
-            <span role="columnheader" style={{ color: "var(--fg-muted)" }}>
-              Typical tout service
-            </span>
-          </div>
-
-          {ROWS.map((row, i) => (
-            <div
-              key={row.feature}
-              role="row"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "minmax(0, 1.1fr) minmax(0, 1.4fr) minmax(0, 1.4fr)",
-                gap: 0,
-                padding: "20px",
-                borderBottom:
-                  i === ROWS.length - 1
-                    ? "none"
-                    : "1px solid color-mix(in srgb, var(--ion-1) 5%, transparent)",
-                font: "400 14px/1.5 var(--f-body)",
-              }}
-            >
-              <span
-                role="cell"
-                style={{
-                  color: "var(--ion-white)",
-                  fontWeight: 600,
-                  paddingRight: 20,
-                }}
-              >
-                {row.feature}
-              </span>
-              <span
-                role="cell"
-                style={{
-                  color: "var(--ion-1)",
-                  paddingRight: 20,
-                  display: "flex",
-                  gap: 10,
-                  alignItems: "flex-start",
-                }}
-              >
-                <CheckMark ok={row.galaxyOk} />
-                <span>{row.galaxy}</span>
-              </span>
-              <span
-                role="cell"
-                style={{
-                  color: "var(--fg-muted)",
-                  display: "flex",
-                  gap: 10,
-                  alignItems: "flex-start",
-                }}
-              >
-                <CheckMark ok={row.toutOk} />
-                <span>{row.tout}</span>
-              </span>
-            </div>
-          ))}
+            <thead>
+              <tr>
+                <th scope="col">Dimension</th>
+                <th scope="col" className="tout-th-galaxy">
+                  Galaxy Sports Edge
+                </th>
+                <th scope="col" className="tout-th-other">
+                  Typical tout service
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {ROWS.map((row) => (
+                <tr key={row.feature}>
+                  <th scope="row" className="tout-td-feature">
+                    {row.feature}
+                  </th>
+                  <td className="tout-td-galaxy">
+                    <span className="tout-cell-inner">
+                      <CheckMark ok={row.galaxyOk} />
+                      <span>{row.galaxy}</span>
+                    </span>
+                  </td>
+                  <td className="tout-td-other">
+                    <span className="tout-cell-inner">
+                      <CheckMark ok={row.toutOk} />
+                      <span>{row.tout}</span>
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        <p
-          style={{
-            marginTop: 22,
-            font: "400 13px/1.5 var(--f-body)",
-            color: "var(--fg-muted)",
-            maxWidth: "60ch",
-          }}
-        >
+        <p className="tout-footnote">
           I&apos;m not naming a specific competitor here. This is the category
           contrast. If you&apos;ve been around the picks industry, you know the
           pattern. I built Galaxy Sports Edge to do the opposite of it.
         </p>
       </div>
+
+      {/* Scoped styling so the table inherits the brand surface without
+          fighting the kit's generic table resets. */}
+      <style>{`
+        .tout-table-wrap {
+          margin-top: 32px;
+          border: 1px solid color-mix(in srgb, var(--ion-blue-glow) 18%, transparent);
+          border-radius: 16px;
+          overflow: hidden;
+          background: linear-gradient(180deg, rgba(7,10,17,0.72) 0%, rgba(7,10,17,0.45) 100%);
+        }
+        .tout-table {
+          width: 100%;
+          border-collapse: collapse;
+          font: 400 14px/1.5 var(--f-body);
+          color: var(--ion-1);
+        }
+        .tout-table thead th {
+          padding: 16px 20px;
+          font: 600 11px/1 var(--f-mono);
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--fg-muted);
+          border-bottom: 1px solid color-mix(in srgb, var(--ion-1) 10%, transparent);
+          text-align: left;
+        }
+        .tout-table thead th.tout-th-galaxy { color: var(--ion-blue-glow); }
+        .tout-table thead th.tout-th-other { color: var(--fg-muted); }
+        .tout-table tbody tr {
+          border-bottom: 1px solid color-mix(in srgb, var(--ion-1) 5%, transparent);
+        }
+        .tout-table tbody tr:last-child { border-bottom: none; }
+        .tout-table tbody th,
+        .tout-table tbody td {
+          padding: 20px;
+          vertical-align: top;
+          text-align: left;
+          font-weight: 400;
+        }
+        .tout-table tbody th.tout-td-feature {
+          color: var(--ion-white);
+          font-weight: 600;
+          padding-right: 20px;
+          width: 26%;
+        }
+        .tout-table tbody td.tout-td-galaxy { color: var(--ion-1); padding-right: 20px; width: 37%; }
+        .tout-table tbody td.tout-td-other  { color: var(--fg-muted); width: 37%; }
+        .tout-cell-inner {
+          display: flex;
+          gap: 10px;
+          align-items: flex-start;
+        }
+        .tout-footnote {
+          margin-top: 22px;
+          font: 400 13px/1.5 var(--f-body);
+          color: var(--fg-muted);
+          max-width: 60ch;
+        }
+        @media (max-width: 720px) {
+          .tout-table thead { display: none; }
+          .tout-table tbody tr {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            padding: 18px 16px;
+          }
+          .tout-table tbody th,
+          .tout-table tbody td { padding: 6px 0; width: auto; }
+          .tout-table tbody td.tout-td-galaxy::before {
+            content: "Galaxy Sports Edge";
+            display: block;
+            font: 600 10px/1 var(--f-mono);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ion-blue-glow);
+            margin-bottom: 6px;
+          }
+          .tout-table tbody td.tout-td-other::before {
+            content: "Typical tout service";
+            display: block;
+            font: 600 10px/1 var(--f-mono);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--fg-muted);
+            margin-bottom: 6px;
+          }
+        }
+      `}</style>
     </section>
   );
 }
 
 function CheckMark({ ok }: { ok: boolean }) {
+  // WCAG 1.4.1 (use of color) — the negative state now uses --alert
+  // (≈ 4.9:1 on dark), not muted gray, so it's visible AND shape-distinct.
   return (
     <svg
       width="18"
       height="18"
       viewBox="0 0 24 24"
       fill="none"
-      stroke={ok ? "var(--ion-blue-glow)" : "var(--fg-muted)"}
+      stroke={ok ? "var(--ion-blue-glow)" : "var(--alert)"}
       strokeWidth="2.4"
       strokeLinecap="round"
       strokeLinejoin="round"
-      aria-hidden="true"
+      role="img"
+      aria-label={ok ? "Galaxy Sports Edge does this" : "Tout services do this"}
       style={{ flexShrink: 0, marginTop: 3 }}
     >
       {ok ? (

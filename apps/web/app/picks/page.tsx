@@ -11,7 +11,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Today's Signal Feed — Sports Picks With Reasoning Attached",
   description:
-    "Live sports signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No locks, no certainty — just the reasoning.",
+    "Live sports signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater — just the reasoning.",
   alternates: { canonical: "/picks" },
 };
 
@@ -306,7 +306,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-12 text-center">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-800">
                 <svg
-                  className="h-7 w-7 text-gray-600"
+                  className="h-7 w-7 text-gray-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
@@ -478,7 +478,7 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
     <div className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/50 bg-yellow-950/30 p-5 sm:flex-row sm:items-center">
       <div>
         <p className="text-sm font-semibold text-yellow-300">You&apos;re on Free — one signal a day</p>
-        <p className="mt-0.5 text-xs text-yellow-600">
+        <p className="mt-0.5 text-xs text-yellow-300/80">
           Pro and Elite unlock every signal, the confidence rating, and the
           factor trail behind each one.
         </p>

@@ -220,7 +220,7 @@ export default function PricingPage() {
                         ${plan.price}
                       </span>
                       {plan.period && (
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-400">
                           /{plan.period}
                         </span>
                       )}
@@ -239,7 +239,7 @@ export default function PricingPage() {
                         {included ? <CheckIcon /> : <DashIcon />}
                         <span
                           className={
-                            included ? "text-gray-200" : "text-gray-600"
+                            included ? "text-gray-200" : "text-gray-400"
                           }
                         >
                           {label}
@@ -278,7 +278,7 @@ export default function PricingPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-800">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
                       Feature
                     </th>
                     {PLANS.map((plan) => (
@@ -295,7 +295,7 @@ export default function PricingPage() {
                       >
                         {plan.name}
                         {plan.price > 0 && (
-                          <span className="ml-1 text-xs font-normal text-gray-500">
+                          <span className="ml-1 text-xs font-normal text-gray-400">
                             ${plan.price}/mo
                           </span>
                         )}
@@ -345,7 +345,10 @@ export default function PricingPage() {
                 >
                   <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-gray-100">
                     <span>{item.q}</span>
-                    <span className="text-gray-500 transition-transform group-open:rotate-45">
+                    <span
+                      aria-hidden="true"
+                      className="text-gray-400 transition-transform group-open:rotate-45"
+                    >
                       +
                     </span>
                   </summary>
@@ -358,7 +361,7 @@ export default function PricingPage() {
           </section>
 
           {/* Refund note */}
-          <p className="mt-12 text-center text-xs text-gray-600">
+          <p className="mt-12 text-center text-xs text-gray-400">
             Every paid plan ships with a 7-day refund window. Billed monthly.
             Cancel any time from your dashboard.
           </p>
@@ -417,6 +420,7 @@ function ComparisonCell({ value }: { value: string | boolean }) {
         viewBox="0 0 24 24"
         strokeWidth={2.5}
         stroke="currentColor"
+        role="img"
         aria-label="Included"
       >
         <path
@@ -432,6 +436,7 @@ function ComparisonCell({ value }: { value: string | boolean }) {
         viewBox="0 0 24 24"
         strokeWidth={2}
         stroke="currentColor"
+        role="img"
         aria-label="Not included"
       >
         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />

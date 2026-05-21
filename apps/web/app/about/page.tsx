@@ -26,7 +26,7 @@ const PRINCIPLES = [
     eyebrow: "03 · Outcomes are uncertain",
     title: "I'm selling perspective, not certainty.",
     body:
-      "No locks. No guarantees. A signal with a 64% calibrated confidence still loses 36 out of 100 times. I designed every public surface around that reality — variance is described, not hidden.",
+      "No certainty theater. No guarantees. A signal with a 64% calibrated confidence still loses 36 out of 100 times. I designed every public surface around that reality — variance is described, not hidden.",
   },
   {
     eyebrow: "04 · Trust is earned slowly",
@@ -46,8 +46,8 @@ export default function AboutPage() {
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Why I built this</p>
             <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              I was tired of paying for &ldquo;locks&rdquo; from people
-              who quietly delete the losses.
+              I was tired of paying for picks from people who quietly delete
+              the losses.
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-ink-300">
               I&apos;m Garrett Baxley. I built {BRAND_NAME} because the sports

@@ -1,4 +1,10 @@
-import type { PublicPick, PickType, PickGrade, PickResult, FactorBreakdown } from "@sports/types";
+import type {
+  PublicPick,
+  PickType,
+  PickGrade,
+  PickResult,
+  FactorBreakdown,
+} from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
 
 // ─────────────────────────────────────────────
