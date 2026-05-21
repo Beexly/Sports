@@ -14,26 +14,35 @@ const config: NextAuthConfig = {
       clientSecret: process.env["GOOGLE_CLIENT_SECRET"] ?? "dev-noop",
     }),
   ],
-  session: { strategy: "database" },
+  session: { strategy: "jwt" },
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        const dbUser =
-          user ??
-          (session.user.email
-            ? await db.user
-                .findUnique({
-                  where: { email: session.user.email },
-                  select: { id: true, role: true },
-                })
-                .catch(() => null)
-            : null);
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        token.role = ((user as any).role as UserRole) ?? "USER";
+      }
+
+      if (!token.role && token.email) {
+        const dbUser = await db.user
+          .findUnique({
+            where: { email: token.email },
+            select: { id: true, role: true },
+          })
+          .catch(() => null);
 
         if (dbUser) {
-          session.user.id = dbUser.id;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          session.user.role = ((dbUser as any).role as UserRole) ?? "USER";
+          token.sub = dbUser.id;
+          token.role = dbUser.role;
         }
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.sub ?? "";
+        session.user.role = ((token.role as UserRole | undefined) ?? "USER");
       }
       return session;
     },
