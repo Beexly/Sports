@@ -1,0 +1,120 @@
+name: External Cron (Galaxy Sports Edge)
+
+# Why this exists:
+# Vercel Hobby caps cron frequency at once per day. The Vercel-declared
+# crons in `vercel.json` remain the daily backstop. This workflow gives
+# us a 30-minute refresh cadence without paying for Vercel Pro by
+# hitting the public cron routes with the same CRON_SECRET bearer token
+# Vercel uses.
+#
+# The routes themselves enforce auth and gate writes via
+# `getReadinessGates()`, so this is purely a scheduler — no business
+# logic lives here.
+#
+# Required repository secrets:
+#   CRON_SECRET       — must match production env
+#   CRON_TARGET_URL   — e.g. https://galaxysportsedge.com (no trailing slash)
+
+on:
+  schedule:
+    # Every 30 minutes — refresh odds across all supported sports.
+    - cron: "*/30 * * * *"
+    # Hourly on the :15 — settle picks whose games have completed.
+    - cron: "15 * * * *"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Which endpoint to hit"
+        required: true
+        default: "refresh-odds"
+        type: choice
+        options:
+          - refresh-odds
+          - settle-picks
+          - jarvis-snapshot
+
+concurrency:
+  group: external-cron-${{ github.event.schedule || github.event.inputs.target }}
+  cancel-in-progress: false
+
+jobs:
+  refresh-odds:
+    name: Refresh odds (all sports)
+    if: ${{ github.event.schedule == '*/30 * * * *' || github.event.inputs.target == 'refresh-odds' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Hit /api/cron/refresh-odds
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
+            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
+            exit 1
+          fi
+          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            --max-time 360 \
+            "${CRON_TARGET_URL}/api/cron/refresh-odds")
+          echo "HTTP ${response}"
+          # Pretty-print body when jq is present.
+          if command -v jq >/dev/null 2>&1; then
+            jq . /tmp/body.json || cat /tmp/body.json
+          else
+            cat /tmp/body.json
+          fi
+          test "${response}" = "200"
+
+  settle-picks:
+    name: Settle completed picks
+    if: ${{ github.event.schedule == '15 * * * *' || github.event.inputs.target == 'settle-picks' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Hit /api/cron/settle-picks
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
+            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
+            exit 1
+          fi
+          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            --max-time 300 \
+            "${CRON_TARGET_URL}/api/cron/settle-picks")
+          echo "HTTP ${response}"
+          if command -v jq >/dev/null 2>&1; then
+            jq . /tmp/body.json || cat /tmp/body.json
+          else
+            cat /tmp/body.json
+          fi
+          test "${response}" = "200"
+
+  jarvis-snapshot:
+    name: Jarvis snapshot (manual)
+    if: ${{ github.event.inputs.target == 'jarvis-snapshot' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Hit /api/cron/jarvis-snapshot
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+        run: |
+          set -euo pipefail
+          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            --max-time 300 \
+            "${CRON_TARGET_URL}/api/cron/jarvis-snapshot")
+          echo "HTTP ${response}"
+          if command -v jq >/dev/null 2>&1; then
+            jq . /tmp/body.json || cat /tmp/body.json
+          else
+            cat /tmp/body.json
+          fi
+          test "${response}" = "200"
