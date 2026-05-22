@@ -225,6 +225,7 @@ model Game {
   teamGameLogs        TeamGameLog[]
   gameSignals         GameSignal[]
   pickSignalSnapshots PickSignalSnapshot[]
+  gateDecisions       GateDecision[]
 
   @@index([sportId])
   @@index([commenceTime])
@@ -378,6 +379,7 @@ model Pick {
   game           Game @relation(fields: [gameId], references: [id])
   signalSnapshot PickSignalSnapshot?
   lossAutopsy    LossAutopsy?
+  gateDecisions  GateDecision[]
 
   // One active pick per game per pick type — enforced at DB level to prevent
   // duplicate inserts from concurrent worker runs (TOCTOU race prevention).
@@ -388,6 +390,30 @@ model Pick {
   @@index([result])
   @@index([isFeatured])
   @@map("picks")
+}
+
+model GateDecision {
+  id             String             @id @default(cuid())
+  gameId         String
+  pickId         String?
+  status         GateDecisionStatus
+  reason         String             @db.VarChar(240)
+  reasonCode     String             @db.VarChar(80)
+  edgeIndex      Float?
+  confidence     Int?
+  modelVersion   String
+  isBootstrap    Boolean            @default(true)
+  evaluatedAt    DateTime           @default(now())
+  evidenceRefs   Json?
+
+  game Game  @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  pick Pick? @relation(fields: [pickId], references: [id], onDelete: SetNull)
+
+  @@index([gameId])
+  @@index([pickId])
+  @@index([status, evaluatedAt])
+  @@index([isBootstrap])
+  @@map("gate_decisions")
 }
 
 model LossAutopsy {
@@ -707,6 +733,12 @@ enum PickResult {
   LOSS
   PUSH
   VOID
+}
+
+enum GateDecisionStatus {
+  SCORING
+  PUBLISHED
+  GATED
 }
 
 enum IngestionStatus {

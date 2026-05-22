@@ -19,3 +19,10 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: begin the cross-sport correlation engine with a typed query schema and validator, without adding database tables yet.
 - Rationale: Phase 2 needs a backend foundation, while saved queries and share/star behavior belong to the later UI phase. A pure contract lets us lock public aggregate gates and sample-size rules before introducing migrations.
 - Alternatives considered: add saved-query tables now. Deferred until the Phase 4/5 product surface needs persistence and entitlement gates.
+
+## 2026-05-22 - Gate Decisions Use A Separate Append-Only Table
+
+- Decision: add `GateDecision` as a separate table related to `Game` and optionally `Pick`, instead of extending `Pick` with nullable gate columns.
+- Rationale: Gate Cam and Pass List need a history of scoring, published, and gated decisions. A separate table preserves multiple evaluations per game, keeps existing pick semantics stable, and gives bootstrap-era decisions an explicit `isBootstrap` flag.
+- Rollback path: drop `gate_decisions` foreign keys and indexes, drop the `gate_decisions` table, then drop the `GateDecisionStatus` enum. No existing production table is rewritten by this migration.
+- Alternatives considered: extend `Pick` with pass reasons. Rejected because many evaluated games never become picks, and the pass ledger should not require fake pick rows.
