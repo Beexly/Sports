@@ -35,7 +35,7 @@ refresh still keeps the platform from going completely stale.
 Each job pulls two secrets from the repository's Actions secrets:
 
 - `CRON_SECRET` — must match the value in Vercel Production env
-- `CRON_TARGET_URL` — `https://galaxysportsedge.com` (no trailing slash)
+- `CRON_TARGET_URL` — `https://www.galaxysportsedge.com` (no trailing slash)
 
 A failed HTTP call fails the job, which shows up in the Actions tab.
 There is no retry loop — GitHub's next scheduled tick is the retry.
