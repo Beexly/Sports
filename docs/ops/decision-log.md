@@ -94,3 +94,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `/cockpit/journal` as an operator-only landing page backed by `ModelJournalEntry` rows.
 - Rationale: the Journal needs an internal review queue before drafting, publishing, RSS, and distribution actions are wired. The page lists draft/review, published, and retracted entries without adding any public body-edit route.
 - Deferred: entry editor, publish/retract actions, public `/journal` pages, RSS, and distribution queues remain follow-up slices.
+
+## 2026-05-22 - Model Journal Entry Editor Shell Added
+
+- Decision: add `/cockpit/journal/[entryId]` as the per-entry review shell with metadata, markdown body, preview, evidence references, and distribution state.
+- Rationale: operators need a concrete review surface before publish actions are wired. Body editing is enabled only for `DRAFT` and `REVIEW_PENDING`; published and retracted entries render as preserved records.
+- Deferred: save endpoint, compliance scan endpoint, publish/retract transition actions, RSS, email, teaser queue, and public `/journal` pages remain follow-up slices.

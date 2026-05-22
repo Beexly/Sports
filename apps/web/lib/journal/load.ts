@@ -23,6 +23,21 @@ export interface JournalDashboardData {
   readonly nextPublishLabel: string;
 }
 
+export interface JournalEntryDetail extends JournalEntryListItem {
+  readonly bodyMarkdown: string;
+  readonly referencedPickIds: readonly string[];
+  readonly referencedAutopsyIds: readonly string[];
+  readonly referencedFactorChanges: unknown;
+  readonly authorEmail: string;
+  readonly reviewedAt: string | null;
+  readonly emailedAt: string | null;
+  readonly twitterTeasedAt: string | null;
+  readonly retractionReason: string | null;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+  readonly isBodyEditable: boolean;
+}
+
 function wordCount(markdown: string): number {
   return markdown.trim().split(/\s+/).filter(Boolean).length;
 }
@@ -74,5 +89,31 @@ export async function loadJournalDashboard(): Promise<JournalDashboardData> {
     published: items.filter((item) => item.status === "PUBLISHED"),
     retracted: items.filter((item) => item.status === "RETRACTED"),
     nextPublishLabel: "Sunday 10:00 AM ET",
+  };
+}
+
+export async function loadJournalEntryDetail(entryId: string): Promise<JournalEntryDetail | null> {
+  const row = await db.modelJournalEntry
+    .findUnique({
+      where: { id: entryId },
+    })
+    .catch(() => null);
+
+  if (!row) return null;
+
+  return {
+    ...toListItem(row),
+    bodyMarkdown: row.bodyMarkdown,
+    referencedPickIds: row.referencedPickIds,
+    referencedAutopsyIds: row.referencedAutopsyIds,
+    referencedFactorChanges: row.referencedFactorChanges,
+    authorEmail: row.authorEmail,
+    reviewedAt: row.reviewedAt?.toISOString() ?? null,
+    emailedAt: row.emailedAt?.toISOString() ?? null,
+    twitterTeasedAt: row.twitterTeasedAt?.toISOString() ?? null,
+    retractionReason: row.retractionReason,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+    isBodyEditable: row.status === "DRAFT" || row.status === "REVIEW_PENDING",
   };
 }
