@@ -114,6 +114,58 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
   }
 
   const { start, end } = todayBounds();
+  const decisions = await db.gateDecision.findMany({
+    where: {
+      isBootstrap: false,
+      evaluatedAt: { gte: start, lt: end },
+    },
+    include: {
+      game: { include: { sport: { select: { name: true } } } },
+      pick: true,
+    },
+    orderBy: { evaluatedAt: "desc" },
+    take: 100,
+  });
+
+  if (decisions.length > 0) {
+    const decisionRows = decisions.map((decision): BoardStateRow => ({
+      id: decision.id,
+      gameId: decision.gameId,
+      matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
+      sport: decision.game.sport.name,
+      market: decision.pick?.selection ?? "ALL_MARKETS",
+      status:
+        decision.status === "PUBLISHED"
+          ? "PUBLISHED_TODAY"
+          : decision.status === "GATED"
+            ? "GATED_TODAY"
+            : "SCORING_NOW",
+      edgeIndex: decision.edgeIndex ?? decision.game.currentEdgeIndex,
+      confidence: decision.confidence ?? decision.pick?.confidence ?? null,
+      gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
+      updatedAt: decision.evaluatedAt.toISOString(),
+    }));
+    const scoringRows = decisionRows.filter((row) => row.status === "SCORING_NOW");
+    const publishedRows = decisionRows.filter((row) => row.status === "PUBLISHED_TODAY");
+    const gatedRows = decisionRows.filter((row) => row.status === "GATED_TODAY");
+
+    return {
+      data: {
+        sportsWatched: new Set(decisionRows.map((row) => row.sport)).size,
+        booksPolled: Math.max(0, ...decisions.map((decision) => decision.game.bookmakerCoverageMax)),
+        openPicks: publishedRows.length,
+        gatedToday: gatedRows.length,
+        lastRefresh: now.toISOString(),
+        modelVersion: decisions[0]?.modelVersion ?? "unknown",
+        bootstrap: gates.isBootstrapMode,
+        scoringNow: scoringRows,
+        publishedToday: publishedRows,
+        gatedTodayRows: gatedRows,
+      },
+      meta: { isSampleData: false },
+    };
+  }
+
   const [publishedToday, scoringNow, gatedToday] = await Promise.all([
     db.pick.findMany({
       where: {

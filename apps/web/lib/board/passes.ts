@@ -50,6 +50,35 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
   }
 
   const { start, end } = todayBounds();
+  const gateDecisions = await db.gateDecision.findMany({
+    where: {
+      status: "GATED",
+      isBootstrap: false,
+      evaluatedAt: { gte: start, lt: end },
+    },
+    include: { game: { include: { sport: { select: { name: true } } } } },
+    orderBy: { evaluatedAt: "desc" },
+    take: 100,
+  });
+
+  if (gateDecisions.length > 0) {
+    return {
+      data: {
+        date: now.toISOString().slice(0, 10),
+        passes: gateDecisions.map((decision): PassListRow => ({
+          id: decision.id,
+          gameId: decision.gameId,
+          matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
+          sport: decision.game.sport.name,
+          edgeIndex: decision.edgeIndex ?? decision.game.currentEdgeIndex,
+          reason: decision.reason,
+          evaluatedAt: decision.evaluatedAt.toISOString(),
+        })),
+      },
+      meta: { isSampleData: false },
+    };
+  }
+
   const games = await db.game.findMany({
     where: {
       commenceTime: { gte: start, lt: end },
