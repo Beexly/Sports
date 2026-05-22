@@ -112,3 +112,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `/journal/rss.xml` and include `/journal` in the sitemap.
 - Rationale: the public Journal archive needs a stable feed target before weekly distribution and synthetic monitoring are wired.
 - Deferred: per-entry sitemap expansion, publish-triggered feed invalidation, email digest delivery, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Draft Save Added
+
+- Decision: add `PATCH /api/cockpit/journal/[id]` and a client-side save control for editable Journal drafts.
+- Rationale: the cockpit editor must persist owner edits before compliance scan and publish transitions exist. The route is ADMIN-only and refuses updates outside `DRAFT` and `REVIEW_PENDING`.
+- Deferred: autosave, compliance scan endpoint, publish/retract transition actions, RSS invalidation, email digest delivery, and teaser queue remain follow-up slices.

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadJournalEntryDetail, type JournalEntryDetail } from "@/lib/journal/load";
+import { JournalEntryEditor } from "./journal-entry-editor";
 
 export const dynamic = "force-dynamic";
 
@@ -26,37 +27,6 @@ function formatDate(value: string | null): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Time unavailable";
   return date.toISOString().replace("T", " ").slice(0, 16);
-}
-
-function Preview({ markdown }: { readonly markdown: string }): JSX.Element {
-  const sections = markdown
-    .split(/\n{2,}/)
-    .map((section) => section.trim())
-    .filter(Boolean)
-    .slice(0, 8);
-
-  if (sections.length === 0) {
-    return <p className="text-sm text-gray-500">No draft body yet.</p>;
-  }
-
-  return (
-    <div className="space-y-3">
-      {sections.map((section, index) => {
-        if (section.startsWith("#")) {
-          return (
-            <h3 key={`${section}-${index}`} className="text-sm font-semibold text-white">
-              {section.replace(/^#+\s*/, "")}
-            </h3>
-          );
-        }
-        return (
-          <p key={`${section}-${index}`} className="whitespace-pre-wrap text-sm leading-6 text-gray-300">
-            {section}
-          </p>
-        );
-      })}
-    </div>
-  );
 }
 
 function MetaRail({ entry }: { readonly entry: JournalEntryDetail }): JSX.Element {
@@ -197,49 +167,12 @@ export default async function CockpitJournalEntryPage({
       <div className="grid gap-4 xl:grid-cols-[220px_minmax(0,1fr)_280px]">
         <MetaRail entry={entry} />
 
-        <main className="space-y-4 rounded-lg border border-gray-800 bg-gray-950/40 p-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h2 className="text-sm font-semibold text-white">Markdown editor</h2>
-              <p className="mt-1 text-xs text-gray-500">
-                {entry.isBodyEditable
-                  ? "Draft body can be edited before publication."
-                  : "Published and retracted entries are preserved. Body edits are disabled."}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                disabled
-                className="rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-500"
-              >
-                Run compliance scan
-              </button>
-              <button
-                type="button"
-                disabled
-                className="rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-500"
-              >
-                Submit for publish
-              </button>
-            </div>
-          </div>
-
-          <textarea
-            aria-label="Model Journal markdown body"
-            readOnly={!entry.isBodyEditable}
-            defaultValue={entry.bodyMarkdown}
-            className="min-h-[460px] w-full resize-y rounded-lg border border-gray-800 bg-black/40 p-3 font-mono text-xs leading-5 text-gray-200 outline-none focus:border-yellow-500/60"
-          />
-
-          <section className="rounded-lg border border-gray-800 bg-black/30 p-4">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <h2 className="text-sm font-semibold text-white">Preview</h2>
-              <span className="text-[10px] uppercase tracking-wide text-gray-600">First sections</span>
-            </div>
-            <Preview markdown={entry.bodyMarkdown} />
-          </section>
-        </main>
+        <JournalEntryEditor
+          entryId={entry.id}
+          initialTitle={entry.title}
+          initialBodyMarkdown={entry.bodyMarkdown}
+          isBodyEditable={entry.isBodyEditable}
+        />
 
         <WeekDataRail entry={entry} />
       </div>
