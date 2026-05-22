@@ -34,6 +34,9 @@ const CRITICAL_PAGES = [
 const CRITICAL_API_ROUTES = [
   "app/api/picks/route.ts",
   "app/api/picks/daily-slate/route.ts",
+  "app/api/board/state/route.ts",
+  "app/api/board/passes/route.ts",
+  "app/api/calibration/route.ts",
   "app/api/performance/route.ts",
   "app/api/brief/route.ts",
   "app/api/cockpit/brief/route.ts",
