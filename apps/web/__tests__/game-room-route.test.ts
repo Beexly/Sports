@@ -5,6 +5,8 @@ import { describe, expect, it } from "vitest";
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const page = fs.readFileSync(path.join(repoRoot, "apps/web/app/room/[gameId]/page.tsx"), "utf8");
 const loader = fs.readFileSync(path.join(repoRoot, "apps/web/lib/game-room/load.ts"), "utf8");
+const boardPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/board/page.tsx"), "utf8");
+const ledgerPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/ledger/page.tsx"), "utf8");
 
 describe("Game Intelligence Room v0", () => {
   it("ships the Phase 3 read-only panels without Model Court chat", () => {
@@ -29,5 +31,10 @@ describe("Game Intelligence Room v0", () => {
     expect(loader).toMatch(/isBootstrap:\s*false/);
     expect(loader).toMatch(/modelVersion:\s*"v5\.0\.0-seed"/);
     expect(loader).toMatch(/isPublished:\s*true/);
+  });
+
+  it("is discoverable from board and ledger surfaces", () => {
+    expect(boardPage).toContain("href={`/room/${row.gameId}`}");
+    expect(ledgerPage).toContain("href={`/room/${row.gameId}`}");
   });
 });

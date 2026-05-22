@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 
 interface LedgerRow {
   readonly id: string;
+  readonly gameId: string;
   readonly matchup: string;
   readonly sport: string;
   readonly selection: string;
@@ -69,6 +70,7 @@ async function loadLedgerRows(): Promise<LedgerRow[]> {
 
   return picks.map((pick) => ({
     id: pick.id,
+    gameId: pick.gameId,
     matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
     sport: pick.game.sport.name,
     selection: pick.selection,
@@ -131,7 +133,11 @@ export default async function LedgerPage(): Promise<JSX.Element> {
                 className="grid gap-3 border-b border-gray-800 bg-gray-950/50 px-4 py-4 last:border-b-0 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]"
               >
                 <div>
-                  <h2 className="font-semibold text-white">{row.matchup}</h2>
+                  <h2 className="font-semibold text-white">
+                    <Link href={`/room/${row.gameId}`} className="hover:text-cyan-100">
+                      {row.matchup}
+                    </Link>
+                  </h2>
                   <p className="mt-1 text-xs text-gray-500">
                     {row.sport} / {row.settledAt ? row.settledAt.toISOString().slice(0, 10) : "settled"}
                   </p>

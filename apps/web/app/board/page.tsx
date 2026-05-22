@@ -163,6 +163,9 @@ function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
         <p className="mt-3 text-sm text-gray-300">Confidence label available on the pick view.</p>
       )}
       {row.gateReason && <p className="mt-3 text-sm text-gray-400">{row.gateReason}</p>}
+      <Link href={`/room/${row.gameId}`} className="mt-4 inline-flex text-sm font-semibold text-cyan-200 hover:text-cyan-100">
+        Open room
+      </Link>
     </article>
   );
 }
@@ -170,7 +173,11 @@ function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
 function PassListItem({ row }: { row: PassListRow }): JSX.Element {
   return (
     <div className="grid gap-2 px-4 py-3 sm:grid-cols-[1fr_auto_1.4fr]">
-      <span className="font-semibold text-white">{row.matchup}</span>
+      <span>
+        <Link href={`/room/${row.gameId}`} className="font-semibold text-white hover:text-cyan-100">
+          {row.matchup}
+        </Link>
+      </span>
       <span className="font-mono text-xs text-cyan-200">{row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}</span>
       <span className="text-sm text-gray-400 sm:text-right">{row.reason}</span>
     </div>
