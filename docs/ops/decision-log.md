@@ -46,3 +46,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Rationale: Studio, Twitter/X bot, Discord bot, Model Journal, Model Court, and calibration-training work need locked voice rules, refusal templates, and compliance contracts before implementation.
 - Merge rule: additive template/spec files were copied directly; local append-only ops logs were merged instead of overwritten to preserve Codex's current decision history.
 - Alternatives considered: re-implement from memory/spec snippets. Rejected for now because the source files were available locally and copying preserves Claude's locked wording.
+
+## 2026-05-22 - Pass 16 Cockpit Specs and Journal Evals Synced
+
+- Decision: copy the Pass 16 scratch-clone additions into primary: cockpit API-cost UI spec, cockpit synthetic-monitoring UI spec, and three Model Journal evals.
+- Rationale: Phase 3 operator surfaces now have the same governance specs in primary that Claude produced in scratch, and Model Journal drafting has happy-path, banned-vocabulary, and thin-week honesty eval coverage before implementation.
+- Merge rule: additive files only; no existing product specs or evals were overwritten.
