@@ -376,6 +376,7 @@ model Pick {
 
   game           Game @relation(fields: [gameId], references: [id])
   signalSnapshot PickSignalSnapshot?
+  lossAutopsy    LossAutopsy?
 
   // One active pick per game per pick type — enforced at DB level to prevent
   // duplicate inserts from concurrent worker runs (TOCTOU race prevention).
@@ -386,6 +387,55 @@ model Pick {
   @@index([result])
   @@index([isFeatured])
   @@map("picks")
+}
+
+model LossAutopsy {
+  id             String            @id @default(cuid())
+  pickId         String            @unique
+  pick           Pick              @relation(fields: [pickId], references: [id])
+
+  authorEmail    String
+  authoredAt     DateTime          @default(now())
+  status         LossAutopsyStatus @default(DRAFT)
+
+  headline       String            @db.VarChar(140)
+  whatWeSaw      String            @db.Text
+  whatHappened   String            @db.Text
+  whatWeLearned  String            @db.Text
+
+  rootCause      LossRootCause
+  lessonTags     String[]
+  modelVersion   String?
+  isPublic       Boolean           @default(false)
+
+  evidenceRefs   Json?
+
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([authoredAt])
+  @@index([status])
+  @@index([rootCause])
+  @@map("loss_autopsies")
+}
+
+enum LossAutopsyStatus {
+  DRAFT
+  PEER_REVIEW
+  PUBLISHED
+  RETRACTED
+}
+
+enum LossRootCause {
+  DATA_GAP
+  STALE_LINE
+  INJURY_SHOCK
+  WEATHER
+  OFFICIATING
+  VARIANCE
+  MODEL_DRIFT
+  HUMAN_OVERRIDE
+  OTHER
 }
 
 // ============================================================

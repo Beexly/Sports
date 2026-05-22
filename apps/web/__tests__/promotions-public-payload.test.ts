@@ -38,12 +38,9 @@ function makePromotion(overrides: Partial<Promotion> = {}): Promotion {
 }
 
 describe("public payload builder", () => {
-  it("returns the public promotion when all gates pass", () => {
+  it("returns null while the operator registry has no approved partners", () => {
     const p = toPublicPromotion(makePromotion(), { now: TS_NOW });
-    expect(p).not.toBeNull();
-    expect(p?.termsUrl).toBe("https://example.com/terms");
-    expect(p?.disclosureText).toContain("Affiliate disclosure");
-    expect(p?.eligibleStates).toEqual(["NJ", "NY"]);
+    expect(p).toBeNull();
   });
 
   it("returns null when promotion fails any gate", () => {
@@ -58,7 +55,7 @@ describe("public payload builder", () => {
     ).toBeNull();
   });
 
-  it("filters out non-publishable rows in the response builder", () => {
+  it("filters out rows when no operator is approved for publishing", () => {
     const rows = [
       makePromotion({ id: "ok-1" }),
       makePromotion({ id: "blocked", termsUrl: null }),
@@ -69,8 +66,8 @@ describe("public payload builder", () => {
     ];
     const resp = buildPublicPromotionsResponse(rows, { now: TS_NOW });
     expect(resp.meta.total).toBe(3);
-    expect(resp.meta.filteredCount).toBe(1);
-    expect(resp.data[0]!.id).toBe("ok-1");
+    expect(resp.meta.filteredCount).toBe(0);
+    expect(resp.data).toEqual([]);
     expect(resp.meta.notice.toLowerCase()).toContain("21+");
   });
 

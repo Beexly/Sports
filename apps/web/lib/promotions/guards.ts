@@ -23,6 +23,11 @@ import type {
   PromotionStatus,
   PromotionComplianceStatus,
 } from "@prisma/client";
+import {
+  assertPromoPublishAllowed,
+  OperatorRegistryError,
+  summarizeRegistry,
+} from "@/lib/cockpit/operator-registry";
 import { scanForBannedPhrases } from "../trust-claims";
 
 export type PromotionBlockerCode =
@@ -34,7 +39,8 @@ export type PromotionBlockerCode =
   | "COMPLIANCE_NOT_APPROVED"
   | "BANNED_HYPE_LANGUAGE"
   | "NO_ELIGIBLE_STATES"
-  | "RESTRICTED_IN_STATE";
+  | "RESTRICTED_IN_STATE"
+  | "OPERATOR_NOT_APPROVED";
 
 export interface PromotionBlocker {
   readonly code: PromotionBlockerCode;
@@ -171,6 +177,29 @@ export function evaluatePromotionForPublish(
         message: `Promotion is not approved for display in ${normalized}.`,
         reviewable: false,
       });
+    }
+  }
+
+  try {
+    assertPromoPublishAllowed(promo.sportsbookKey);
+    const summary = summarizeRegistry();
+    if (summary.publishablePartners === 0) {
+      blockers.push({
+        code: "OPERATOR_NOT_APPROVED",
+        message:
+          "Operator registry has no approved publishing partners. Public promo rendering stays disabled until an APPROVED_PARTNER row is added by code review.",
+        reviewable: false,
+      });
+    }
+  } catch (err) {
+    if (err instanceof OperatorRegistryError) {
+      blockers.push({
+        code: "OPERATOR_NOT_APPROVED",
+        message: err.message,
+        reviewable: true,
+      });
+    } else {
+      throw err;
     }
   }
 

@@ -13,8 +13,8 @@ function makePromotion(overrides: Partial<Promotion> = {}): Promotion {
   const base: Promotion = {
     id: "promo_test",
     slug: "test-promo",
-    sportsbookKey: "draftkings",
-    operatorName: "DraftKings",
+    sportsbookKey: "stellar",
+    operatorName: "Stellar Sportsbook",
     headline: "Bonus bet up to $200 on first deposit",
     offerSummary: "Deposit and place a wager to qualify for a bonus bet match.",
     offerCategory: "DEPOSIT_MATCH" as Promotion["offerCategory"],
@@ -42,10 +42,48 @@ function makePromotion(overrides: Partial<Promotion> = {}): Promotion {
 }
 
 describe("promotion publish guard", () => {
-  it("approves a fully-compliant promotion", () => {
+  it("blocks a fully-compliant promotion while no approved partners exist", () => {
     const verdict = evaluatePromotionForPublish(makePromotion(), { now: TS_NOW });
-    expect(verdict.publishable).toBe(true);
-    expect(verdict.blockers).toHaveLength(0);
+    expect(verdict.publishable).toBe(false);
+    expect(verdict.blockers.map((b) => b.code)).toContain(
+      "OPERATOR_NOT_APPROVED"
+    );
+  });
+
+  it("blocks publish when sportsbookKey is unknown to the registry", () => {
+    const verdict = evaluatePromotionForPublish(
+      makePromotion({ sportsbookKey: "unknown-book" }),
+      { now: TS_NOW }
+    );
+    expect(verdict.publishable).toBe(false);
+    expect(verdict.blockers.map((b) => b.code)).toContain(
+      "OPERATOR_NOT_APPROVED"
+    );
+    expect(verdict.blockers.map((b) => b.message).join(" ")).toContain(
+      "not in the registry"
+    );
+  });
+
+  it("blocks publish when sportsbookKey resolves to a demo operator", () => {
+    const verdict = evaluatePromotionForPublish(
+      makePromotion({ sportsbookKey: "comet" }),
+      { now: TS_NOW }
+    );
+    expect(verdict.publishable).toBe(false);
+    expect(verdict.blockers.map((b) => b.code)).toContain(
+      "OPERATOR_NOT_APPROVED"
+    );
+    expect(verdict.blockers.map((b) => b.message).join(" ")).toContain("DEMO");
+  });
+
+  it("blocks publish when the registry summary has zero approved partners", () => {
+    const verdict = evaluatePromotionForPublish(makePromotion(), { now: TS_NOW });
+    expect(verdict.publishable).toBe(false);
+    expect(verdict.blockers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "OPERATOR_NOT_APPROVED" }),
+      ])
+    );
   });
 
   it("blocks when disclosure text is missing", () => {
@@ -142,7 +180,7 @@ describe("promotion publish guard", () => {
 
   it("isPromotionPublishable matches the verdict", () => {
     const promo = makePromotion();
-    expect(isPromotionPublishable(promo, { now: TS_NOW })).toBe(true);
+    expect(isPromotionPublishable(promo, { now: TS_NOW })).toBe(false);
     expect(
       isPromotionPublishable(makePromotion({ termsUrl: null }), { now: TS_NOW })
     ).toBe(false);

@@ -28,6 +28,8 @@ import { isStubMode, isDemoPicksEnabled } from "@sports/db";
  */
 
 async function fetchHomepagePicks(): Promise<PublicPick[]> {
+  if (process.env["DATABASE_URL"] === "stub") return [];
+
   try {
     const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
     const res = await fetch(`${appUrl}/api/picks?limit=3`, {
