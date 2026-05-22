@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { GET as getBoardPasses } from "@/app/api/board/passes/route";
-import { GET as getBoardState } from "@/app/api/board/state/route";
-import { GET as getCalibration } from "@/app/api/calibration/route";
+import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
+import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
+import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 
 export const metadata: Metadata = {
   title: "Today's Board - Galaxy Sports Edge",
@@ -13,58 +13,6 @@ export const metadata: Metadata = {
     "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.",
   alternates: { canonical: "/board" },
 };
-
-interface BoardRow {
-  id: string;
-  gameId: string;
-  matchup: string;
-  sport: string;
-  market: string;
-  status: "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
-  edgeIndex: number | null;
-  confidence: number | null;
-  gateReason: string | null;
-  updatedAt: string;
-}
-
-interface BoardState {
-  sportsWatched: number;
-  booksPolled: number;
-  openPicks: number;
-  gatedToday: number;
-  lastRefresh: string;
-  modelVersion: string;
-  bootstrap: boolean;
-  scoringNow: BoardRow[];
-  publishedToday: BoardRow[];
-  gatedTodayRows: BoardRow[];
-}
-
-interface PassRow {
-  id: string;
-  gameId: string;
-  matchup: string;
-  sport: string;
-  edgeIndex: number | null;
-  reason: string;
-  evaluatedAt: string;
-}
-
-interface CalibrationData {
-  sampleSize: number;
-  brierScore: number | null;
-  isCollecting: boolean;
-  publicMessage: string;
-  updatedAt: string;
-}
-
-async function jsonData<T>(response: Response): Promise<{ data: T; isSampleData: boolean }> {
-  const body = (await response.json()) as {
-    data: T;
-    meta?: { isSampleData?: boolean };
-  };
-  return { data: body.data, isSampleData: Boolean(body.meta?.isSampleData) };
-}
 
 function timeLabel(value: string): string {
   const date = new Date(value);
@@ -74,15 +22,18 @@ function timeLabel(value: string): string {
 
 export default async function BoardPage(): Promise<JSX.Element> {
   const [stateResult, passesResult, calibrationResult] = await Promise.all([
-    jsonData<BoardState>((await getBoardState()) as unknown as Response),
-    jsonData<{ date: string; passes: PassRow[] }>((await getBoardPasses()) as unknown as Response),
-    jsonData<CalibrationData>((await getCalibration()) as unknown as Response),
+    loadBoardState(),
+    loadBoardPasses(),
+    loadPublicCalibrationReport(),
   ]);
 
   const state = stateResult.data;
   const passes = passesResult.data.passes;
   const calibration = calibrationResult.data;
-  const isSampleData = stateResult.isSampleData || passesResult.isSampleData || calibrationResult.isSampleData;
+  const isSampleData =
+    stateResult.meta.isSampleData ||
+    passesResult.meta.isSampleData ||
+    calibrationResult.meta.isSampleData;
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
@@ -183,7 +134,7 @@ function StateTile({ label, value }: { label: string; value: string }): JSX.Elem
   );
 }
 
-function BoardLane({ title, rows, empty }: { title: string; rows: BoardRow[]; empty: string }): JSX.Element {
+function BoardLane({ title, rows, empty }: { title: string; rows: BoardStateRow[]; empty: string }): JSX.Element {
   return (
     <section className="border border-gray-800 bg-gray-900/45 p-4">
       <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">{title}</h2>
@@ -196,7 +147,7 @@ function BoardLane({ title, rows, empty }: { title: string; rows: BoardRow[]; em
   );
 }
 
-function BoardRowItem({ row }: { row: BoardRow }): JSX.Element {
+function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
   return (
     <article className="border border-gray-800 bg-gray-950/55 p-4">
       <div className="flex items-start justify-between gap-3">
@@ -216,7 +167,7 @@ function BoardRowItem({ row }: { row: BoardRow }): JSX.Element {
   );
 }
 
-function PassListItem({ row }: { row: PassRow }): JSX.Element {
+function PassListItem({ row }: { row: PassListRow }): JSX.Element {
   return (
     <div className="grid gap-2 px-4 py-3 sm:grid-cols-[1fr_auto_1.4fr]">
       <span className="font-semibold text-white">{row.matchup}</span>
