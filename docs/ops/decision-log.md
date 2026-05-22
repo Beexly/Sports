@@ -52,3 +52,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: copy the Pass 16 scratch-clone additions into primary: cockpit API-cost UI spec, cockpit synthetic-monitoring UI spec, and three Model Journal evals.
 - Rationale: Phase 3 operator surfaces now have the same governance specs in primary that Claude produced in scratch, and Model Journal drafting has happy-path, banned-vocabulary, and thin-week honesty eval coverage before implementation.
 - Merge rule: additive files only; no existing product specs or evals were overwritten.
+
+## 2026-05-22 - Galaxy Studio Runtime and Cockpit Surface Started
+
+- Decision: ship the first Galaxy Studio implementation slice as a template-backed cockpit surface with a pure runtime for prompt packaging, thin-evidence refusal, citations, and compliance scanning.
+- Rationale: Studio should consume the locked Claude-owned templates before adding persistence or Claude API calls. The route gives operators a visible workspace while keeping exports manual and omitting any external posting path.
+- Deferred: `CreatorAsset` persistence, Claude API generation, markdown export, and editable re-scan actions remain follow-up slices for Studio v0.
