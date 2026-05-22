@@ -976,6 +976,46 @@ model CreatorAsset {
   @@map("creator_assets")
 }
 
+enum ModelJournalEntryStatus {
+  DRAFT
+  REVIEW_PENDING
+  PUBLISHED
+  RETRACTED
+}
+
+model ModelJournalEntry {
+  id                      String                  @id @default(cuid())
+  isoWeek                 Int
+  isoYear                 Int
+  status                  ModelJournalEntryStatus @default(DRAFT)
+  title                   String
+  slug                    String                  @unique
+  body                    String                  @db.Text
+  bodyMarkdown            String                  @db.Text
+  modelVersion            String
+
+  referencedPickIds       String[]
+  referencedAutopsyIds    String[]
+  referencedFactorChanges Json?
+
+  authorEmail             String
+  draftedAt               DateTime                @default(now())
+  reviewedAt              DateTime?
+  publishedAt             DateTime?
+  emailedAt               DateTime?
+  twitterTeasedAt         DateTime?
+  retractedAt             DateTime?
+  retractionReason        String?                 @db.Text
+
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+
+  @@unique([isoYear, isoWeek])
+  @@index([status])
+  @@index([publishedAt])
+  @@map("model_journal_entries")
+}
+
 // ============================================================
 // PROMOTIONS / AFFILIATE MARKETPLACE (Phase 4)
 //

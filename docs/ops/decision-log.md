@@ -82,3 +82,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: persist generated Studio drafts as internal `CreatorAsset` records with markdown, citations, scanner flags, and compliance status.
 - Rationale: operators need a history of generated assets before Studio can support review queues or analytics. The model has no publishing fields and the generation route remains export-only.
 - Deferred: cockpit history filters and explicit exported/archive status transitions remain follow-up slices.
+
+## 2026-05-22 - Model Journal Schema Added
+
+- Decision: add `ModelJournalEntry` persistence for weekly draft, published, and retracted Journal essays.
+- Rationale: the Friday data pipe, Saturday Claude draft, Sunday operator review, and public `/journal/[slug]` route all need a stable row before implementation.
+- Deferred: data-pipe loader, Claude drafting route, cockpit editor, public journal pages, RSS, email, and Twitter teaser remain follow-up slices.
