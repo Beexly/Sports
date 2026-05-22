@@ -106,3 +106,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `/journal` and `/journal/[slug]` backed only by `ModelJournalEntry` rows with `status: PUBLISHED`.
 - Rationale: the public research archive needs to exist before publish automation, RSS, and digest distribution can point at stable URLs. Draft and retracted entries remain excluded from public loaders.
 - Deferred: RSS XML generation, retracted-entry 410 responses, email digest delivery, teaser queue, and rich markdown rendering remain follow-up slices.
+
+## 2026-05-22 - Model Journal RSS Added
+
+- Decision: add `/journal/rss.xml` and include `/journal` in the sitemap.
+- Rationale: the public Journal archive needs a stable feed target before weekly distribution and synthetic monitoring are wired.
+- Deferred: per-entry sitemap expansion, publish-triggered feed invalidation, email digest delivery, and teaser queue remain follow-up slices.

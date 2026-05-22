@@ -6,6 +6,8 @@ const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const loader = fs.readFileSync(path.join(repoRoot, "apps/web/lib/journal/load.ts"), "utf8");
 const indexPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/journal/page.tsx"), "utf8");
 const detailPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/journal/[slug]/page.tsx"), "utf8");
+const rssRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/journal/rss.xml/route.ts"), "utf8");
+const sitemap = fs.readFileSync(path.join(repoRoot, "apps/web/app/sitemap.ts"), "utf8");
 
 describe("public Model Journal routes", () => {
   it("loads only published entries for the public index", () => {
@@ -33,5 +35,16 @@ describe("public Model Journal routes", () => {
     expect(detailPage).toContain("ReferenceLinks");
     expect(detailPage).toContain("/journal/rss.xml");
     expect(detailPage).toContain("Weekly digest");
+  });
+
+  it("ships an RSS route for published Journal entries", () => {
+    expect(rssRoute).toContain("application/rss+xml");
+    expect(rssRoute).toContain("loadPublicJournalEntries");
+    expect(rssRoute).toContain("<rss version=\"2.0\">");
+    expect(rssRoute).toContain("escapeXml");
+  });
+
+  it("adds the Journal index to the public sitemap", () => {
+    expect(sitemap).toContain('path: "/journal"');
   });
 });
