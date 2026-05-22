@@ -58,3 +58,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: ship the first Galaxy Studio implementation slice as a template-backed cockpit surface with a pure runtime for prompt packaging, thin-evidence refusal, citations, and compliance scanning.
 - Rationale: Studio should consume the locked Claude-owned templates before adding persistence or Claude API calls. The route gives operators a visible workspace while keeping exports manual and omitting any external posting path.
 - Deferred: `CreatorAsset` persistence, Claude API generation, markdown export, and editable re-scan actions remain follow-up slices for Studio v0.
+
+## 2026-05-22 - Studio Draft Generation Boundary Added
+
+- Decision: add an admin-only Studio generation endpoint backed by the Claude API adapter, returning scanner-checked drafts only.
+- Rationale: Studio needs one controlled boundary between the operator UI and Claude-owned templates before persistence or export actions are added. The endpoint refuses without `ANTHROPIC_API_KEY`, validates template kind, and carries an explicit no-auto-post policy.
+- Deferred: persisted `CreatorAsset` records and UI-triggered generation history remain the next Studio slices.
