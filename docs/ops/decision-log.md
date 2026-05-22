@@ -100,3 +100,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `/cockpit/journal/[entryId]` as the per-entry review shell with metadata, markdown body, preview, evidence references, and distribution state.
 - Rationale: operators need a concrete review surface before publish actions are wired. Body editing is enabled only for `DRAFT` and `REVIEW_PENDING`; published and retracted entries render as preserved records.
 - Deferred: save endpoint, compliance scan endpoint, publish/retract transition actions, RSS, email, teaser queue, and public `/journal` pages remain follow-up slices.
+
+## 2026-05-22 - Public Model Journal Routes Added
+
+- Decision: add `/journal` and `/journal/[slug]` backed only by `ModelJournalEntry` rows with `status: PUBLISHED`.
+- Rationale: the public research archive needs to exist before publish automation, RSS, and digest distribution can point at stable URLs. Draft and retracted entries remain excluded from public loaders.
+- Deferred: RSS XML generation, retracted-entry 410 responses, email digest delivery, teaser queue, and rich markdown rendering remain follow-up slices.
