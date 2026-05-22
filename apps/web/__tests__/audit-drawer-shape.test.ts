@@ -87,6 +87,12 @@ describe("evidence audit drawer — brand safety", () => {
     expect(src).toMatch(/AuditPayloadDetailed/);
   });
 
+  it("API route includes the deterministic pre-mortem note", () => {
+    const src = readFileSync(apiRoutePath, "utf8");
+    expect(src).toMatch(/buildPickPremortemNote/);
+    expect(src).toMatch(/preMortem/);
+  });
+
   it("API route fails closed: 503 when canExposePublicPicks is off", () => {
     const src = readFileSync(apiRoutePath, "utf8");
     expect(src).toMatch(/canExposePublicPicks/);
