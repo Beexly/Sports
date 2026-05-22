@@ -18,6 +18,23 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/\/api\/health/);
   });
 
+  it("hits critical public routes for synthetic availability checks", () => {
+    expect(src).toMatch(/PUBLIC_ROUTE_PROBES/);
+    expect(src).toMatch(/path:\s*"\/"/);
+    expect(src).toMatch(/path:\s*"\/board"/);
+    expect(src).toMatch(/path:\s*"\/ledger"/);
+    expect(src).toMatch(/path:\s*"\/methodology"/);
+    expect(src).toMatch(/path:\s*"\/pricing"/);
+  });
+
+  it("scans public routes for banned positioning phrases", () => {
+    expect(src).toMatch(/BANNED_PUBLIC_PATTERNS/);
+    expect(src).toMatch(/AI-powered/);
+    expect(src).toMatch(/AI-driven/);
+    expect(src).toMatch(/Mission Control/);
+    expect(src).toMatch(/findBannedPublicPhrase/);
+  });
+
   it("hits /api/cockpit/jarvis when ADMIN_COOKIE is set", () => {
     expect(src).toMatch(/\/api\/cockpit\/jarvis/);
     expect(src).toMatch(/ADMIN_COOKIE/);
@@ -25,6 +42,11 @@ describe("scripts/prod-probe.mjs", () => {
 
   it("exits non-zero when /api/health is unhealthy", () => {
     expect(src).toMatch(/process\.exit\(1\)/);
+  });
+
+  it("exits non-zero when a critical public probe fails", () => {
+    expect(src).toMatch(/failPublic/);
+    expect(src).toMatch(/critical public probes failed/);
   });
 
   it("includes the Cookie header only on admin-gated probes", () => {
