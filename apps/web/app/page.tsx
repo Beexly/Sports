@@ -184,7 +184,7 @@ function LedgerPreview(): JSX.Element {
             </div>
           ))}
         </div>
-        <Link href="/performance" className="mt-5 inline-flex text-sm font-semibold text-cyan-200 hover:text-cyan-100">
+        <Link href="/ledger" className="mt-5 inline-flex text-sm font-semibold text-cyan-200 hover:text-cyan-100">
           Open the full ledger
         </Link>
       </div>

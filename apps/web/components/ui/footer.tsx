@@ -5,6 +5,7 @@ import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
 const PRODUCT_LINKS = [
   { label: "Today's Board", href: "/board" },
   { label: "Edge Map", href: "/observatory" },
+  { label: "Public Ledger", href: "/ledger" },
   { label: "Methodology", href: "/methodology" },
   { label: "The Vault", href: "/vault" },
 ] as const;
