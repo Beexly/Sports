@@ -26,3 +26,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Rationale: Gate Cam and Pass List need a history of scoring, published, and gated decisions. A separate table preserves multiple evaluations per game, keeps existing pick semantics stable, and gives bootstrap-era decisions an explicit `isBootstrap` flag.
 - Rollback path: drop `gate_decisions` foreign keys and indexes, drop the `gate_decisions` table, then drop the `GateDecisionStatus` enum. No existing production table is rewritten by this migration.
 - Alternatives considered: extend `Pick` with pass reasons. Rejected because many evaluated games never become picks, and the pass ledger should not require fake pick rows.
+
+## 2026-05-22 - Correlation Rows Load From Learning-Eligible Settled Picks
+
+- Decision: map cross-sport correlation inputs from published, non-bootstrap, settled picks that have non-bootstrap `PickSignalSnapshot.eligibleForLearning=true`.
+- Rationale: Phase 2 correlation work should reuse the same canonical-history discipline as calibration and learning. The query evaluator receives a stable row shape, while Prisma details stay behind a server loader.
+- Alternatives considered: load every non-bootstrap settled pick. Deferred because picks without learning-eligible snapshots may lack the immutable signal receipt needed for trustworthy hypothesis testing.
