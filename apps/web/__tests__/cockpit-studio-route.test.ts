@@ -10,6 +10,7 @@ const workspace = fs.readFileSync(
 );
 const loader = fs.readFileSync(path.join(repoRoot, "apps/web/lib/studio/load.ts"), "utf8");
 const runtime = fs.readFileSync(path.join(repoRoot, "apps/web/lib/studio/build-assets.ts"), "utf8");
+const exportUtils = fs.readFileSync(path.join(repoRoot, "apps/web/lib/studio/export.ts"), "utf8");
 const layout = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/layout.tsx"), "utf8");
 
 describe("Galaxy Studio cockpit surface", () => {
@@ -34,6 +35,8 @@ describe("Galaxy Studio cockpit surface", () => {
     expect(workspace).toContain("Save markdown");
     expect(workspace).toContain("navigator.clipboard.writeText");
     expect(workspace).toContain("URL.createObjectURL");
+    expect(workspace).toContain("markdownForStudioDraft");
+    expect(exportUtils).toContain("Compliance Scan");
     expect(page).not.toMatch(/publishToTwitter|postToSlack|sendgrid|mailchimp/i);
     expect(workspace).not.toMatch(/publishToTwitter|postToSlack|sendgrid|mailchimp/i);
     expect(runtime).not.toMatch(/publishToTwitter|postToSlack|sendgrid|mailchimp/i);

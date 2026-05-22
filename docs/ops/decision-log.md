@@ -76,3 +76,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add copy-to-markdown and save-to-markdown controls to generated Studio drafts without adding any external publishing path.
 - Rationale: Studio v0 should let an operator take a scanner-reviewed draft into a human publishing workflow while preserving the plan's no-auto-posting rule.
 - Deferred: persisted `CreatorAsset` records and generation history remain a schema-backed follow-up.
+
+## 2026-05-22 - Studio Creator Asset Persistence Added
+
+- Decision: persist generated Studio drafts as internal `CreatorAsset` records with markdown, citations, scanner flags, and compliance status.
+- Rationale: operators need a history of generated assets before Studio can support review queues or analytics. The model has no publishing fields and the generation route remains export-only.
+- Deferred: cockpit history filters and explicit exported/archive status transitions remain follow-up slices.

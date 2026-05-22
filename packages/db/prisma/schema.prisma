@@ -226,6 +226,7 @@ model Game {
   gameSignals         GameSignal[]
   pickSignalSnapshots PickSignalSnapshot[]
   gateDecisions       GateDecision[]
+  creatorAssets       CreatorAsset[]
 
   @@index([sportId])
   @@index([commenceTime])
@@ -380,6 +381,7 @@ model Pick {
   signalSnapshot PickSignalSnapshot?
   lossAutopsy    LossAutopsy?
   gateDecisions  GateDecision[]
+  creatorAssets  CreatorAsset[]
 
   // One active pick per game per pick type — enforced at DB level to prevent
   // duplicate inserts from concurrent worker runs (TOCTOU race prevention).
@@ -915,6 +917,63 @@ model CockpitMediaItem {
   @@index([qaStatus])
   @@index([complianceStatus])
   @@map("cockpit_media_items")
+}
+
+enum CreatorAssetKind {
+  FAN_EXPLAINER
+  FANTASY_ANGLE
+  BETTING_EDUCATION
+  X_THREAD
+  TIKTOK_REELS_SCRIPT
+  NEWSLETTER_BLOCK
+  SPONSOR_SAFE_BLURB
+  YOUTUBE_TITLE_IDEAS
+}
+
+enum CreatorAssetStatus {
+  DRAFT
+  EXPORTED
+  ARCHIVED
+  BLOCKED
+}
+
+enum CreatorAssetComplianceStatus {
+  GREEN
+  YELLOW
+  RED
+}
+
+model CreatorAsset {
+  id               String                       @id @default(cuid())
+  gameId           String
+  pickId           String?
+  templateKind     CreatorAssetKind
+  status           CreatorAssetStatus           @default(DRAFT)
+  complianceStatus CreatorAssetComplianceStatus @default(YELLOW)
+
+  title            String
+  body             String                       @db.Text
+  markdown         String                       @db.Text
+  gateState        String                       @db.VarChar(24)
+  citations        Json                         @default("[]")
+  complianceFlags  Json                         @default("[]")
+  modelVersion     String
+
+  generatedBy      String
+  generatedAt      DateTime                     @default(now())
+  exportedAt       DateTime?
+  createdAt        DateTime                     @default(now())
+  updatedAt        DateTime                     @updatedAt
+
+  game Game  @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  pick Pick? @relation(fields: [pickId], references: [id], onDelete: SetNull)
+
+  @@index([gameId, generatedAt])
+  @@index([pickId])
+  @@index([templateKind])
+  @@index([status])
+  @@index([complianceStatus])
+  @@map("creator_assets")
 }
 
 // ============================================================

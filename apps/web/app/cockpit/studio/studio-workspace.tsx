@@ -8,6 +8,10 @@ import type {
   StudioDashboardData,
   StudioGameOption,
 } from "@/lib/studio/build-assets";
+import {
+  fileNameForStudioDraft,
+  markdownForStudioDraft,
+} from "@/lib/studio/export";
 import type { CreatorAssetKind } from "@/lib/studio/templates";
 
 interface StudioNodeSummary {
@@ -67,32 +71,6 @@ function stateFor(
   return states[kind] ?? { status: "idle" };
 }
 
-function markdownForDraft(draft: StudioAssetDraft): string {
-  const citations = draft.citations
-    .map((citation) => `- ${citation.label}: ${citation.source}`)
-    .join("\n");
-  const scanLines = draft.compliance.flags
-    .map((flag) => `- ${flag.severity.toUpperCase()}: ${flag.message}`)
-    .join("\n");
-
-  return [
-    `# ${draft.templateName}`,
-    "",
-    draft.body ?? "",
-    "",
-    "## Citations",
-    citations || "- No citations attached.",
-    "",
-    "## Compliance Scan",
-    `Status: ${draft.compliance.status.toUpperCase()}`,
-    scanLines || "- No flags.",
-  ].join("\n");
-}
-
-function fileNameForDraft(draft: StudioAssetDraft): string {
-  return `galaxy-studio-${draft.templateKind.toLowerCase()}.md`;
-}
-
 export function StudioWorkspace({
   games,
   selectedGame,
@@ -140,7 +118,7 @@ export function StudioWorkspace({
   }
 
   async function copyDraft(draft: StudioAssetDraft): Promise<void> {
-    await navigator.clipboard.writeText(markdownForDraft(draft));
+    await navigator.clipboard.writeText(markdownForStudioDraft(draft));
     setStates((current) => ({
       ...current,
       [draft.templateKind]: { status: "done", draft, copied: true },
@@ -148,11 +126,11 @@ export function StudioWorkspace({
   }
 
   function saveDraftMarkdown(draft: StudioAssetDraft): void {
-    const blob = new Blob([markdownForDraft(draft)], { type: "text/markdown;charset=utf-8" });
+    const blob = new Blob([markdownForStudioDraft(draft)], { type: "text/markdown;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = fileNameForDraft(draft);
+    anchor.download = fileNameForStudioDraft(draft);
     anchor.click();
     URL.revokeObjectURL(url);
   }

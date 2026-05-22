@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { db, Prisma } from "@sports/db";
 import { auth } from "@/lib/auth";
 import { loadStudioDashboard } from "@/lib/studio/load";
 import { generateStudioAssetDraft, StudioGenerationError } from "@/lib/studio/claude";
 import { getStudioTemplate } from "@/lib/studio/build-assets";
+import { markdownForStudioDraft } from "@/lib/studio/export";
 import type { CreatorAssetKind } from "@/lib/studio/templates";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +22,10 @@ function isCreatorAssetKind(value: unknown): value is CreatorAssetKind {
   } catch {
     return false;
   }
+}
+
+function toPrismaJson(value: unknown): Prisma.InputJsonValue {
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -75,10 +81,29 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       },
       { apiKey }
     );
+    const asset = draft.body
+      ? await db.creatorAsset.create({
+          data: {
+            gameId: data.selectedNode.id,
+            pickId: data.selectedNode.picks[0]?.id ?? null,
+            templateKind: draft.templateKind,
+            title: draft.templateName,
+            body: draft.body,
+            markdown: markdownForStudioDraft(draft),
+            gateState: draft.gateState,
+            citations: toPrismaJson(draft.citations),
+            complianceFlags: toPrismaJson(draft.compliance.flags),
+            complianceStatus: draft.compliance.status.toUpperCase() as "GREEN" | "YELLOW" | "RED",
+            modelVersion: "current",
+            generatedBy: session.user.email ?? "admin",
+          },
+        })
+      : null;
 
     return NextResponse.json({
       success: true,
       draft,
+      assetId: asset?.id ?? null,
       policy: {
         autoPostEnabled: false,
         exportOnly: true,
