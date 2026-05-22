@@ -61,6 +61,13 @@ describe("evidence audit drawer — brand safety", () => {
     expect(src).not.toMatch(/winRate\s*=/);
   });
 
+  it("drawer renders the pre-mortem panel from the server response", () => {
+    const src = readFileSync(drawerPath, "utf8");
+    expect(src).toMatch(/PickPremortemNote/);
+    expect(src).toMatch(/PremortemPanel/);
+    expect(src).toMatch(/preMortem/);
+  });
+
   it("drawer is a client component", () => {
     const src = readFileSync(drawerPath, "utf8");
     expect(src.split(/\r?\n/)[0]).toContain("use client");

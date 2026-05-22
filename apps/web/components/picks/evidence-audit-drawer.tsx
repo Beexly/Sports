@@ -37,8 +37,17 @@ interface EvidenceAuditDrawerProps {
 type LoadState =
   | { status: "idle" }
   | { status: "loading" }
-  | { status: "loaded"; audit: AuditPayload }
+  | { status: "loaded"; audit: AuditPayload; preMortem: PickPremortemNote | null }
   | { status: "error"; message: string };
+
+interface PickPremortemNote {
+  readonly status: "READY" | "NEEDS_SNAPSHOT";
+  readonly headline: string;
+  readonly summary: string;
+  readonly riskDrivers: readonly string[];
+  readonly evidenceRefs: readonly string[];
+  readonly modelVersion: string;
+}
 
 export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps) {
   const [open, setOpen] = useState(false);
@@ -65,12 +74,17 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
       const body = (await res.json()) as {
         success?: boolean;
         audit?: AuditPayload;
+        preMortem?: PickPremortemNote;
       };
       if (!body.success || !body.audit) {
         setLoad({ status: "error", message: "Audit response malformed." });
         return;
       }
-      setLoad({ status: "loaded", audit: body.audit });
+      setLoad({
+        status: "loaded",
+        audit: body.audit,
+        preMortem: body.preMortem ?? null,
+      });
     } catch (err) {
       setLoad({
         status: "error",
@@ -172,10 +186,16 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
                 <p className="text-sm text-red-300/90">{load.message}</p>
               )}
               {load.status === "loaded" && load.audit.tier === "FREE" && (
-                <SummaryAudit audit={load.audit as AuditPayloadSummary} />
+                <SummaryAudit
+                  audit={load.audit as AuditPayloadSummary}
+                  preMortem={load.preMortem}
+                />
               )}
               {load.status === "loaded" && load.audit.tier !== "FREE" && (
-                <DetailedAudit audit={load.audit as AuditPayloadDetailed} />
+                <DetailedAudit
+                  audit={load.audit as AuditPayloadDetailed}
+                  preMortem={load.preMortem}
+                />
               )}
             </div>
 
@@ -227,9 +247,17 @@ function DrawerSkeleton() {
   );
 }
 
-function SummaryAudit({ audit }: { audit: AuditPayloadSummary }) {
+function SummaryAudit({
+  audit,
+  preMortem,
+}: {
+  audit: AuditPayloadSummary;
+  preMortem: PickPremortemNote | null;
+}) {
   return (
     <div className="space-y-6">
+      <PremortemPanel preMortem={preMortem} />
+
       <section>
         <SectionHeader title="Provenance topology" />
         <div className="mt-3 grid grid-cols-2 gap-3">
@@ -291,9 +319,17 @@ function SummaryAudit({ audit }: { audit: AuditPayloadSummary }) {
   );
 }
 
-function DetailedAudit({ audit }: { audit: AuditPayloadDetailed }) {
+function DetailedAudit({
+  audit,
+  preMortem,
+}: {
+  audit: AuditPayloadDetailed;
+  preMortem: PickPremortemNote | null;
+}) {
   return (
     <div className="space-y-6">
+      <PremortemPanel preMortem={preMortem} />
+
       {audit.isBootstrap && (
         <div className="rounded-md border border-orange-700/40 bg-orange-500/5 px-3 py-2 text-[11px] text-orange-200">
           Bootstrap-mode pick — recorded for review, not part of canonical
@@ -419,6 +455,36 @@ function DetailedAudit({ audit }: { audit: AuditPayloadDetailed }) {
         </dl>
       </section>
     </div>
+  );
+}
+
+function PremortemPanel({ preMortem }: { preMortem: PickPremortemNote | null }) {
+  if (!preMortem) return null;
+
+  return (
+    <section className="rounded-lg border border-cyan-700/35 bg-cyan-500/5 p-4">
+      <SectionHeader title="What would change the read" />
+      <h4 className="mt-3 text-sm font-semibold text-white">
+        {preMortem.headline}
+      </h4>
+      <p className="mt-2 text-xs leading-5 text-cyan-50/75">
+        {preMortem.summary}
+      </p>
+      {preMortem.riskDrivers.length > 0 && (
+        <ul className="mt-3 space-y-1.5">
+          {preMortem.riskDrivers.map((driver) => (
+            <li key={driver} className="text-xs leading-5 text-gray-300">
+              {driver}
+            </li>
+          ))}
+        </ul>
+      )}
+      {preMortem.status === "NEEDS_SNAPSHOT" && (
+        <p className="mt-3 text-[11px] text-yellow-200">
+          Signal snapshot is required before this note can publish.
+        </p>
+      )}
+    </section>
   );
 }
 
