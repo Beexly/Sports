@@ -5,9 +5,9 @@ import { MobileNav } from "@/components/ui/mobile-nav";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 
 const NAV_LINKS = [
-  { label: "Signal Feed", href: "/picks" },
+  { label: "Today's Board", href: "/board" },
   { label: "Edge Map", href: "/observatory" },
-  { label: "Galaxy IQ", href: "/methodology" },
+  { label: "Methodology", href: "/methodology" },
   { label: "Pricing", href: "/pricing" },
 ] as const;
 
@@ -56,7 +56,7 @@ export async function Nav() {
                   Sign in
                 </Link>
                 <Link href="/pricing" className="btn btn-primary btn-sm">
-                  Get the signal
+                  See plans
                 </Link>
               </>
             )}

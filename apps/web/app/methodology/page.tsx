@@ -6,202 +6,140 @@ import { MethodologySection } from "@/components/ui/methodology-section";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 
 export const metadata: Metadata = {
-  title: "Methodology — How Galaxy IQ Scores Every Signal",
+  title: "Methodology - Deterministic Scoring, Open Framework",
   description:
-    "The four-check decision stack behind every Galaxy Sports Edge signal: market shape, price pressure, risk, and evidence quality. Weak inputs don't get published.",
+    "How Galaxy Sports Edge reads the board, scores the math, and gates the slate without publishing proprietary weights or constants.",
   alternates: { canonical: "/methodology" },
 };
 
-export default function MethodologyPage() {
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Nav />
+const FACTORS = [
+  "Market consensus",
+  "Book depth",
+  "Line movement",
+  "Volatility",
+  "Head-to-head context",
+  "Venue form",
+  "Schedule stress",
+  "Rest differential",
+  "Cross-market agreement",
+  "Data quality",
+] as const;
 
+const STACK = [
+  {
+    title: "Read the board",
+    body: "The engine starts with observable market data: spread, total, moneyline, book count, price freshness, and line movement.",
+  },
+  {
+    title: "Score the math",
+    body: "A deterministic factor model scores the market and matchup context. The framework is public; weights, constants, and aggregation formula stay proprietary.",
+  },
+  {
+    title: "Gate the slate",
+    body: "Publish thresholds, freshness checks, and data-quality gates decide whether a pick reaches the board. Thin slates can produce zero picks.",
+  },
+] as const;
+
+const CHANGELOG = [
+  ["v5.0", "Bootstrap-canonical gating and settled-only learning policy."],
+  ["v4.0", "Expanded factor snapshot storage for public audit trails."],
+  ["v3.0", "Added schedule stress, rest, and cross-market checks."],
+] as const;
+
+export default function MethodologyPage(): JSX.Element {
+  return (
+    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-gray-950 text-gray-100">
+      <Nav />
       <main className="flex-1">
-        <section className="border-b border-ink-800/60 bg-stadium-glow px-4 py-22 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl">
-            <p className="eyebrow">Galaxy IQ Methodology</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              A signal is not a hunch. It is a decision stack.
+        <section className="border-b border-gray-800 px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+              Published framework
+            </p>
+            <h1 className="mt-4 max-w-4xl break-words text-4xl font-black tracking-tight text-white sm:text-5xl">
+              Deterministic scoring. Open method. Protected weights.
             </h1>
-            <p className="mt-5 max-w-2xl text-lg text-ink-300">
-              I separated noise from action with four checks: market shape,
-              price pressure, risk, and evidence quality. If the stack is
-              weak, nothing ships.
+            <p className="mt-6 max-w-2xl break-words text-lg leading-8 text-gray-300">
+              Galaxy Sports Edge publishes the factors and decision philosophy behind the model.
+              The exact weights, constants, and aggregation formula remain proprietary.
             </p>
           </div>
         </section>
 
-        <section className="px-4 py-22 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-6xl">
-            <ol className="grid grid-cols-1 gap-5 md:grid-cols-2">
-              <PhaseCard
-                step="01"
-                title="Read the board"
-                inputs="Spread, total, moneyline, bookmaker count, timestamp."
-                outputs="A clean market snapshot for each matchup."
-                body="I start with the board, not a story. The system records price, freshness, and market depth before any opinion is allowed to form."
-              />
-              <PhaseCard
-                step="02"
-                title="Measure pressure"
-                inputs="Movement, consensus, volatility, and matchup context."
-                outputs="A pressure map showing where the board is tightening or drifting."
-                body="Most bettors see a number. I'm studying how that number got there: who moved, how far, how fast, and whether the market is deep enough to trust."
-              />
-              <PhaseCard
-                step="03"
-                title="Gate the signal"
-                inputs="Score, risk, freshness, and confidence policy."
-                outputs="Selection, risk label, reasoning, and factor trail."
-                body="A card only ships when the edge is explainable. Weak inputs, stale prices, or thin markets stay off the customer surface. If it can't be defended, it doesn't get published."
-              />
-              <PhaseCard
-                step="04"
-                title="Learn slowly"
-                inputs="Settled outcomes paired with the engine state at pick time."
-                outputs="A reviewed calibration change, never a silent rewrite."
-                body="Outcomes matter, but overreacting is expensive. The system learns from settled history only after enough data exists to make the lesson meaningful — and every weight change goes through review."
-              />
-            </ol>
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-3">
+            {STACK.map((item, index) => (
+              <article key={item.title} className="border border-gray-800 bg-gray-900/65 p-6">
+                <span className="font-mono text-xs text-cyan-300">0{index + 1}</span>
+                <h2 className="mt-3 text-2xl font-bold text-white">{item.title}</h2>
+                <p className="mt-3 text-sm leading-6 text-gray-400">{item.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+                  Factor inventory
+                </p>
+                <h2 className="mt-2 text-3xl font-black text-white">What the model can read</h2>
+              </div>
+              <p className="max-w-sm text-sm text-gray-500 sm:text-right">
+                Factors are visible. Exact scoring weights are not published.
+              </p>
+            </div>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              {FACTORS.map((factor) => (
+                <div key={factor} className="min-h-20 border border-gray-800 bg-gray-950/70 p-4">
+                  <p className="text-sm font-semibold text-white">{factor}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
         <MethodologySection />
 
-        <section className="border-t border-ink-800/60 px-4 py-22 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl">
-            <p className="eyebrow">Control gates</p>
-            <h2 className="mt-3 font-display text-display-lg text-white">
-              The interface says what the data can support.
-            </h2>
-            <p className="mt-4 text-ink-300">
-              These gates keep the product honest. They decide what can appear,
-              what stays hidden, and when performance numbers are mature enough
-              to show.
+        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+              Version changelog
             </p>
-
-            <dl className="mt-10 grid grid-cols-1 gap-3">
-              {GATES.map((gate) => (
-                <div
-                  key={gate.flag}
-                  className="grid grid-cols-1 gap-2 rounded-lg border border-ink-800 bg-ink-950/60 px-5 py-4 sm:grid-cols-3 sm:gap-6"
-                >
-                  <dt className="flex flex-col gap-1">
-                    <span className="font-mono text-xs uppercase tracking-wide text-accent-300">
-                      {gate.flag}
-                    </span>
-                    <span className="text-sm font-semibold text-white">
-                      {gate.title}
-                    </span>
-                  </dt>
-                  <dd className="text-sm leading-relaxed text-ink-300 sm:col-span-2">
-                    {gate.description}
-                  </dd>
+            <h2 className="mt-2 text-3xl font-black text-white">Model changes are named.</h2>
+            <div className="mt-8 overflow-hidden border border-gray-800">
+              {CHANGELOG.map(([version, note]) => (
+                <div key={version} className="grid gap-2 border-b border-gray-800 px-4 py-4 last:border-b-0 sm:grid-cols-[120px_1fr]">
+                  <span className="font-mono text-sm text-cyan-200">{version}</span>
+                  <span className="text-sm text-gray-400">{note}</span>
                 </div>
               ))}
-            </dl>
+            </div>
           </div>
         </section>
 
-        <section className="border-t border-ink-800/60 bg-ink-1000/80 px-4 py-22 sm:px-6 lg:px-8">
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-            <h2 className="font-display text-display-lg text-white">
-              See the stack on today&apos;s board.
-            </h2>
-            <p className="text-ink-300">
-              My Signal Feed turns those four checks into a card you can scan
-              in seconds: pick, risk, freshness, and the reason.
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
+            <h2 className="text-3xl font-black text-white">See the framework on today&apos;s board.</h2>
+            <p className="text-sm leading-6 text-gray-400">
+              The public board shows every published pick and every free Edge Index.
+              Pro keeps the detailed factor breakdown.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link href="/picks" className="btn-primary px-7 py-3.5 text-base">
-                Open Signal Feed
+              <Link href="/board" className="inline-flex min-h-11 items-center justify-center rounded-lg bg-cyan-300 px-5 py-3 text-sm font-bold text-gray-950">
+                Open today&apos;s board
               </Link>
-              <Link
-                href="/performance"
-                className="btn-secondary px-7 py-3.5 text-base"
-              >
-                View Calibration Report
+              <Link href="/performance" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-bold text-gray-100">
+                View calibration
               </Link>
             </div>
             <RiskDisclosure variant="compact" className="text-center" />
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
-  );
-}
-
-const GATES = [
-  {
-    flag: "CANONICAL_HISTORY_ENABLED",
-    title: "Canonical history",
-    description:
-      "Only verified pick and game logs become eligible for the public record.",
-  },
-  {
-    flag: "DERIVED_MODEL_HISTORY_ENABLED",
-    title: "Derived history",
-    description:
-      "Historical matchup signals stay off until the canonical data is mature.",
-  },
-  {
-    flag: "PUBLIC_PICKS_ENABLED",
-    title: "Public picks",
-    description:
-      "The Signal Feed opens only when the readiness gate says the current slate can be shown honestly.",
-  },
-  {
-    flag: "PERFORMANCE_STATS_ENABLED",
-    title: "Performance stats",
-    description:
-      "Record and win-rate stay hidden until enough canonical settled picks exist.",
-  },
-  {
-    flag: "OUTCOME_LEARNING_ENABLED",
-    title: "Outcome learning",
-    description:
-      "Settled outcomes can inform calibration, but weight changes still require review.",
-  },
-] as const;
-
-function PhaseCard({
-  step,
-  title,
-  inputs,
-  outputs,
-  body,
-}: {
-  step: string;
-  title: string;
-  inputs: string;
-  outputs: string;
-  body: string;
-}) {
-  return (
-    <li className="surface-lifted flex flex-col gap-5 p-6 sm:p-7">
-      <div className="flex items-center gap-3">
-        <span className="font-mono text-eyebrow font-semibold uppercase text-accent-300">
-          Phase {step}
-        </span>
-        <div className="section-rule flex-1" />
-      </div>
-      <h3 className="font-display text-2xl font-semibold text-white">{title}</h3>
-      <p className="text-sm leading-relaxed text-ink-300">{body}</p>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div className="rounded-lg border border-ink-800 bg-ink-950/60 px-4 py-3">
-          <p className="eyebrow text-ink-500">Inputs</p>
-          <p className="mt-1.5 text-xs leading-relaxed text-ink-300">{inputs}</p>
-        </div>
-        <div className="rounded-lg border border-ink-800 bg-ink-950/60 px-4 py-3">
-          <p className="eyebrow text-ink-500">Outputs</p>
-          <p className="mt-1.5 text-xs leading-relaxed text-ink-300">
-            {outputs}
-          </p>
-        </div>
-      </div>
-    </li>
   );
 }

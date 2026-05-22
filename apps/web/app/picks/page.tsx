@@ -10,7 +10,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
-  title: "Today's Signal Feed — Sports Picks With Reasoning Attached",
+  title: "Today's Board - Sports Picks With Reasoning Attached",
   description:
     "Live sports signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater — just the reasoning.",
   alternates: { canonical: "/picks" },
@@ -79,7 +79,7 @@ async function fetchPicks(
           date: date ?? new Date().toISOString().split("T")[0]!,
         },
         bootstrap: {
-          message: body.error ?? "Signal Feed is collecting live history.",
+          message: body.error ?? "Today's Board is collecting live history.",
           hint: body.hint,
         },
       };
@@ -120,7 +120,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
         canSeeConfidence: false,
         canSeeLineMovement: false,
         canSeeFactorBreakdown: false,
-        canSeeEdgeScore: false,
+        canSeeEdgeScore: true,
         canGetAlerts: false,
         dailyPickLimit: 1 as number | null,
       };
@@ -183,14 +183,14 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* Header */}
           <div className="mb-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
-              Signal Feed
+              Today&apos;s Board
             </p>
             <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
               Today&apos;s sports signals.
             </h1>
             <p className="mt-1.5 text-sm text-gray-400">
               Every signal published today, with price, timing, risk, and the
-              reason I let it ship.
+              reason it cleared the gate.
             </p>
           </div>
 
@@ -302,7 +302,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   href="/methodology"
                   className="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
                 >
-                  See Galaxy IQ
+                  Read methodology
                 </Link>
                 <Link
                   href="/vault"
@@ -335,7 +335,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </div>
               <h3 className="text-base font-semibold text-white">No signals published for this date</h3>
               <p className="mt-2 text-sm text-gray-500">
-                I only publish when the stack earns it. Some slates don&apos;t
+                We only publish when the stack earns it. Some slates don&apos;t
                 clear the gates — that&apos;s the point.
               </p>
             </div>
@@ -363,8 +363,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 You&apos;re seeing {entitlements.dailyPickLimit ?? 1} free pick per day.
               </p>
               <p className="mt-1 text-xs text-blue-400/70">
-                Pro unlocks every signal, the confidence rating, factor trail,
-                and Edge Index for each one.
+                Pro unlocks every signal, the confidence rating, and factor
+                trail for each one. Edge Index is public.
               </p>
               <Link
                 href="/pricing"

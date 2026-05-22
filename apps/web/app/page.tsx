@@ -3,488 +3,315 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
-import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
-import { SignalPreviewQueue } from "@/components/hero/signal-preview-queue";
-import { ToutComparison } from "@/components/home/tout-comparison";
-import { AnnotatedSampleSignal } from "@/components/home/annotated-sample-signal";
-import { StartInSixty } from "@/components/home/start-in-sixty";
-import { MissionControl } from "@/components/home/mission-control";
-import type { PublicPick } from "@sports/types";
-import { PICK_GRADE_LABELS } from "@sports/types";
-import { isStubMode, isDemoPicksEnabled } from "@sports/db";
+import { isDemoPicksEnabled, isStubMode } from "@sports/db";
 
-/**
- * Homepage.
- *
- * Ports the canonical Galaxy Sports Edge Design System composed surface
- * (design-system/ui_kits/web/index.html) to the production Next.js app.
- * Uses the kit.css component classes — see apps/web/styles/pickpilot-kit.css.
- *
- * Trust invariants preserved:
- *   - MethodologySection (registry-driven) renders below the marketing methodology block.
- *   - RiskDisclosure appears in the responsible-play band.
- *   - EmptyPicksState renders when /api/picks returns nothing.
- *   - No banned phrases (the public-copy scanner test still applies).
- */
+const STATE = [
+  ["Sports watched", "7"],
+  ["Books polled", "14"],
+  ["Open picks", "2"],
+  ["Gated today", "18"],
+  ["Last refresh", "12 min"],
+  ["Model", "v5.0"],
+] as const;
 
-async function fetchHomepagePicks(): Promise<PublicPick[]> {
-  if (process.env["DATABASE_URL"] === "stub") return [];
+const GATE_ROWS = [
+  {
+    lane: "SCORING NOW",
+    game: "BOS at NYY",
+    market: "MLB moneyline",
+    detail: "Consensus 58% across 9 books",
+  },
+  {
+    lane: "PUBLISHED TODAY",
+    game: "SEA at HOU",
+    market: "MLB total",
+    detail: "71 Edge Index, 11-book depth",
+  },
+  {
+    lane: "GATED TODAY",
+    game: "DAL at MIN",
+    market: "WNBA spread",
+    detail: "Data freshness missed threshold",
+  },
+] as const;
 
-  try {
-    const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
-    const res = await fetch(`${appUrl}/api/picks?limit=3`, {
-      next: { revalidate: 1800 },
-    });
-    if (!res.ok) return [];
-    const body = (await res.json()) as { success: boolean; data: PublicPick[] };
-    return (body.data ?? []).slice(0, 3);
-  } catch {
-    return [];
-  }
-}
+const LEDGER = [
+  ["SEA -1.5", "WIN", "Line movement led the factor mix"],
+  ["ATL/NYM under", "LOSS", "Late lineup change broke the setup"],
+  ["LA moneyline", "PUSH", "Market depth was strong, price closed flat"],
+  ["CHI +4.5", "WIN", "Rest and travel both supported the side"],
+  ["TOR total", "LOSS", "Weather moved after scoring"],
+  ["PHI -2.5", "WIN", "Consensus held through close"],
+] as const;
 
-export default async function HomePage() {
-  const featuredPicks = await fetchHomepagePicks();
-  const hasFeaturedPicks = featuredPicks.length > 0;
+const PASS_LIST = [
+  ["MIA at TB", "Thin book depth"],
+  ["CLE at DET", "Line moved past the scored number"],
+  ["NYL at CON", "Conflicting market consensus"],
+  ["COL at STL", "Weather context incomplete"],
+] as const;
+
+const STACK = [
+  ["Read the board", "Odds, depth, line movement, freshness, and consensus are collected before a pick can be evaluated."],
+  ["Score the math", "More than 10 deterministic factors score the market against schedule, venue, volatility, and data quality context."],
+  ["Gate the slate", "Publish thresholds and freshness checks decide what reaches the board. Most evaluated games do not publish."],
+] as const;
+
+const QUESTIONS = [
+  ["What changed?", "Every pick has a factor trail. You can see the inputs that moved the score."],
+  ["What did we skip?", "The Pass List shows evaluated games that did not clear the gate, with the reason attached."],
+  ["What happened after?", "The Public Ledger keeps settled picks tied to the original signal snapshot."],
+] as const;
+
+export default function HomePage(): JSX.Element {
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
   return (
-    <div className="app">
+    <div className="min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
       <Nav />
-
-      {demoActive && <SampleDataBanner />}
-
-      {/* ──────────────────────────────────────────────────────
-       * HERO — atmospheric orbital + editorial display headline
-       * ────────────────────────────────────────────────────── */}
-      <section className="hero hero-galaxy">
-        <InteractiveGalaxy />
-        <div className="hero-bg-word" aria-hidden="true">EDGE</div>
-        <div className="hero-intro" aria-hidden="true">
-          <div className="hero-intro-mark">GSE</div>
-          <div className="hero-intro-line">Signal acquired</div>
-          <div className="hero-intro-scan" />
-        </div>
-        <div className="container hero-copy">
-          <span className="hero-eyebrow">
-            <span className="dot" aria-hidden="true" />
-            Live edge engine
-          </span>
-
-          <h1>Find the signal before the market moves.</h1>
-
-          <p className="hero-tag">
-            Most people react to the board. Galaxy Sports Edge watches price,
-            timing, and volatility while the market is still forming.
-          </p>
-
-          <div className="hero-ctas">
-            <Link href="/picks" className="btn btn-primary btn-lg">
-              Open Signal Feed
-            </Link>
-            <Link href="/methodology" className="btn btn-ghost btn-lg">
-              See Galaxy IQ
-            </Link>
-          </div>
-
-          <p
-            className="hero-byline"
-            style={{
-              marginTop: 22,
-              fontFamily: "var(--f-mono)",
-              fontSize: 12,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: "var(--fg-muted)",
-              position: "relative",
-              zIndex: 2,
-            }}
-          >
-            Because tout services don&apos;t show the losses.
-          </p>
-
-          <div className="hero-foot">
-            <div className="stat">
-              <span className="v p">Live</span>
-              <span className="l">Market watch</span>
-            </div>
-            <div className="stat">
-              <span className="v c">30 min</span>
-              <span className="l">Refresh loop</span>
-            </div>
-            <div className="stat">
-              <span className="v u">7</span>
-              <span className="l">Sports tracked</span>
-            </div>
-            <div className="stat">
-              <span className="v">Gated</span>
-              <span className="l">Record integrity</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ──────────────────────────────────────────────────────
-       * START IN 60 — three reassurance promises that reduce signup friction
-       * (no card, refund window, founder-replies). Sits below hero, above slate.
-       * ────────────────────────────────────────────────────── */}
-      <StartInSixty />
-
-      <MissionControl />
-
-      {/* ──────────────────────────────────────────────────────
-       * SLATE BAR — live mission-control telemetry strip
-       * ────────────────────────────────────────────────────── */}
-      <div className="slate">
-        <div className="container slate-inner">
-          <span className="head">
-            <span className="dot" aria-hidden="true" />
-            Board state
-          </span>
-          <div className="slate-divide" />
-          <span className="item slate-chip">
-            Odds <span className="v c">watching</span>
-          </span>
-          <span className="item slate-chip">
-            Signals <span className="v p">gated</span>
-          </span>
-          <span className="item slate-chip">
-            Record <span className="v u">collecting</span>
-          </span>
-          <div className="slate-divide" />
-          <span className="item slate-chip">
-            Rule <span className="v">show the work</span>
-          </span>
-        </div>
-      </div>
-
-      {/* ──────────────────────────────────────────────────────
-       * PICKS GRID — runway / today's signal
-       * ────────────────────────────────────────────────────── */}
-      <section className="section" id="picks">
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <p className="section-eyebrow">▸ Signal Feed</p>
-              <h2>
-                Publish less. <em>Mean more.</em>
-              </h2>
-            </div>
-            <div className="meta">
-              No filler cards
-              <br />
-              Every pick needs a reason
-            </div>
-          </div>
-
-          {hasFeaturedPicks ? (
-            <div className="picks-grid">
-              {featuredPicks.map((pick, i) => (
-                <PickCard key={pick.id} pick={pick} variant={["featured", "elite", "solid"][i] ?? "solid"} />
-              ))}
-            </div>
-          ) : (
-            <>
-              <SignalPreviewQueue />
-              <EmptyPicksState />
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* ──────────────────────────────────────────────────────
-       * METHODOLOGY — how the model thinks
-       * ────────────────────────────────────────────────────── */}
-      <section
-        className="section"
-        style={{
-          background:
-            "linear-gradient(180deg, transparent, var(--obsidian) 50%, transparent)",
-        }}
-      >
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <p className="section-eyebrow">▸ Methodology</p>
-              <h2>
-                The stack <em>earns the signal.</em>
-              </h2>
-            </div>
-            <div className="meta">
-              No black box
-              <br />
-              No borrowed confidence
-            </div>
-          </div>
-
-          <div className="how-grid">
-            <div className="how">
-              <span className="step">01</span>
-              <div className="icon" aria-hidden="true">
-                {/* Bespoke mark: orbital arc with a single price tick.
-                    The board is what the model reads first. */}
-                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 19 A 13 9 0 0 0 29 19" strokeWidth="1.4" opacity="0.5" />
-                  <path d="M3 19 A 13 9 0 0 0 29 19" strokeWidth="1.6" strokeDasharray="2 3" opacity="0.35" transform="translate(0 4)" />
-                  <line x1="18" y1="11" x2="18" y2="19" strokeWidth="2.2" stroke="var(--ion-blue-glow)" />
-                  <circle cx="18" cy="11" r="2.3" fill="var(--ion-blue-glow)" stroke="none" />
-                </svg>
-              </div>
-              <h3>Board first.</h3>
-              <p>
-                Lines, totals, and moneylines move before most people notice.
-                The board is the first signal.
-              </p>
-            </div>
-            <div className="how">
-              <span className="step">02</span>
-              <div className="icon" aria-hidden="true">
-                {/* Bespoke mark: pressure-gauge wedge filling left to right. */}
-                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 22 A 11 11 0 0 1 27 22" strokeWidth="1.4" opacity="0.45" />
-                  <path d="M5 22 A 11 11 0 0 1 19 13.2" strokeWidth="2.4" stroke="var(--plasma)" />
-                  <line x1="16" y1="22" x2="20.5" y2="14.6" strokeWidth="1.8" stroke="var(--ion-blue-glow)" />
-                  <circle cx="16" cy="22" r="1.6" fill="var(--ion-blue-glow)" stroke="none" />
-                </svg>
-              </div>
-              <h3>Pressure gets measured.</h3>
-              <p>
-                Galaxy IQ weighs price, depth, volatility, and timing before a
-                signal is allowed onto the board.
-              </p>
-            </div>
-            <div className="how">
-              <span className="step">03</span>
-              <div className="icon" aria-hidden="true">
-                {/* Bespoke mark: audit trail — three dots connected by a line,
-                    last one filled in plasma to mark the "publish" event. */}
-                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="6" y1="16" x2="26" y2="16" strokeWidth="1.4" opacity="0.5" />
-                  <circle cx="6" cy="16" r="2" fill="currentColor" stroke="none" opacity="0.55" />
-                  <circle cx="16" cy="16" r="2" fill="currentColor" stroke="none" opacity="0.75" />
-                  <circle cx="26" cy="16" r="3" fill="var(--plasma)" stroke="none" />
-                  <circle cx="26" cy="16" r="6" stroke="var(--plasma)" strokeWidth="1" opacity="0.4" />
-                </svg>
-              </div>
-              <h3>You see the trail.</h3>
-              <p>
-                A signal without a trail is noise. Every published pick carries
-                the factors that put it there.
-              </p>
-            </div>
-          </div>
-
-          <div className="resp">
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--ultraviolet)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ flex: "0 0 22px", marginTop: 2 }}
-              aria-hidden="true"
-            >
-              <path d="M12 2L4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6z" />
-            </svg>
-            <div>
-              <div className="label">▸ Responsible intelligence</div>
-              <p>
-                Variance does not care how confident anyone sounds. Set limits
-                first. Use the signal as input, not permission.{" "}
-                <em
-                  style={{
-                    fontFamily: "var(--f-editorial)",
-                    color: "var(--ultraviolet-glow)",
-                    fontStyle: "italic",
-                  }}
-                >
-                  You decide.
-                </em>
-              </p>
-              <RiskDisclosure variant="compact" className="mt-3" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ──────────────────────────────────────────────────────
-       * ANATOMY — what a published signal actually looks like
-       * ────────────────────────────────────────────────────── */}
-      <AnnotatedSampleSignal />
-
-      {/* ──────────────────────────────────────────────────────
-       * COMPARISON — vs typical tout services (category, not competitor)
-       * ────────────────────────────────────────────────────── */}
-      <ToutComparison />
-
-      {/* The registry-driven methodology breakdown lives below the marketing
-       * block. It pulls from the Trust Claim Registry so every assertion is
-       * traceable to an APPROVED entry. */}
-      <MethodologySection />
-
+      <main>
+        {demoActive && <SampleDataBanner />}
+        <LiveStateStrip />
+        <Hero />
+        <GateCam />
+        <LedgerPreview />
+        <CalibrationPreview />
+        <PassList />
+        <StackSection />
+        <ThreeQuestions />
+        <MethodologySection />
+        <ResponsibleBand />
+        <EmptyPicksState />
+      </main>
       <Footer />
     </div>
   );
 }
 
-// ──────────────────────────────────────────────────────────────
-// Hero atmospheric orbital — pulled verbatim from the design system
-// ──────────────────────────────────────────────────────────────
-
-// ──────────────────────────────────────────────────────────────
-// PickCard — uses kit.css .pick, .pick-head, .chip, etc.
-// ──────────────────────────────────────────────────────────────
-
-function PickCard({
-  pick,
-  variant,
-}: {
-  pick: PublicPick;
-  variant: string;
-}) {
-  const isPremium = pick.tier === "PREMIUM";
-  const gradeInfo = PICK_GRADE_LABELS[pick.pickGrade];
-  const gameTime = new Date(pick.game.commenceTime).toLocaleString("en-US", {
-    weekday: "short",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-
-  // Map design-system pick grades to chip class
-  const chipClass =
-    pick.pickGrade === "ELITE_PLAY" ? "chip-grade-elite" :
-    pick.pickGrade === "STRONG_PLAY" ? "chip-grade-strong" :
-    "chip-grade-solid";
-
-  return (
-    <article className={`pick ${variant}`}>
-      <div className="pick-head">
-        <span className="chip chip-sport">{pick.game.sport}</span>
-        {pick.pickGrade !== "LEAN" && (
-          <span className={`chip ${chipClass}`}>{gradeInfo.label}</span>
-        )}
-        <span className="stamp">{gameTime}</span>
-      </div>
-      <div className="pick-match">
-        <div className="away">{pick.game.awayTeam}</div>
-        <div className="at">AT</div>
-        <div className="home">{pick.game.homeTeam}</div>
-      </div>
-      <div className="pick-sel">
-        <div className="l">Pick / {pick.pickType}</div>
-        {isPremium ? (
-          <div
-            className="v"
-            style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--fg-muted)" }}
-          >
-            <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16" aria-hidden="true">
-              <path d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" />
-            </svg>
-            Pro &amp; Elite
-          </div>
-        ) : (
-          <div className="v">
-            {pick.selection}
-            {pick.line !== 0 && (
-              <span className="line">
-                {pick.line > 0 ? "+" : ""}{pick.line}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
-      <p className="pick-reason">{pick.reasoningShort}</p>
-      <div className="pick-foot">
-        <span>{isPremium ? "Premium" : "Free"}</span>
-        <span className="live">
-          <span className="dot" />
-          Live
-        </span>
-      </div>
-    </article>
-  );
-}
-
-// ──────────────────────────────────────────────────────────────
-// Honest empty state — required by homepage-content.test.ts
-// ──────────────────────────────────────────────────────────────
-
-function EmptyPicksState() {
-  return (
-    <div
-      data-testid="homepage-empty-picks-state"
-      className="pick"
-      style={{
-        gridColumn: "1 / -1",
-        textAlign: "center",
-        padding: "56px 32px",
-      }}
-    >
-      <h3
-        style={{
-          font: "700 24px/1.1 var(--f-display)",
-          color: "var(--ion-white)",
-          letterSpacing: "-0.02em",
-          marginBottom: 12,
-        }}
-      >
-        The board is being scored. Get the open alert.
-      </h3>
-      <p
-        style={{
-          maxWidth: "36rem",
-          margin: "0 auto 20px",
-          color: "var(--fg-meta)",
-          fontSize: 14,
-          lineHeight: 1.6,
-        }}
-      >
-        Signals only ship once Galaxy IQ&apos;s readiness gate clears the slate.
-        Create a free account to get notified the moment the board opens.
-      </p>
-      <Link href="/auth/signin" className="btn btn-ghost">
-        Get launch alerts
-      </Link>
-    </div>
-  );
-}
-
-// ──────────────────────────────────────────────────────────────
-// Sample-data banner — only shown while stub Prisma + demo picks active
-// ──────────────────────────────────────────────────────────────
-
-function SampleDataBanner() {
+function SampleDataBanner(): JSX.Element {
   return (
     <div
       data-testid="sample-data-banner-home"
       role="status"
       aria-live="polite"
-      style={{
-        maxWidth: 1240,
-        margin: "16px auto 0",
-        padding: "10px 16px",
-        border: "1px solid color-mix(in srgb, var(--ultraviolet) 35%, transparent)",
-        background: "color-mix(in srgb, var(--ultraviolet) 8%, transparent)",
-        color: "var(--ultraviolet-glow)",
-        fontFamily: "var(--f-mono)",
-        fontSize: 11,
-        letterSpacing: "0.16em",
-        textTransform: "uppercase",
-        display: "flex",
-        gap: 12,
-        alignItems: "start",
-        borderRadius: 8,
-      }}
+      className="mx-auto mt-4 flex max-w-7xl flex-col gap-2 border border-cyan-900 bg-cyan-950/30 px-4 py-3 text-sm text-cyan-100 sm:flex-row sm:items-center"
     >
-      <span style={{ flexShrink: 0, fontWeight: 600 }}>Sample data</span>
-      <span style={{ letterSpacing: "0.04em", textTransform: "none" }}>
-        The picks below are deterministic samples used to demo the product
-        while live data ingestion is being wired up. They never settle and
-        never produce a verified win-rate claim.
+      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-300">
+        Preview mode
       </span>
+      <span>
+        The board examples are deterministic samples used while live wiring is
+        completed. They never settle and never produce a verified win-rate claim.
+      </span>
+    </div>
+  );
+}
+
+function LiveStateStrip(): JSX.Element {
+  return (
+    <section aria-label="Live board state" className="border-b border-gray-800 bg-gray-950">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 py-3 sm:grid-cols-3 lg:grid-cols-6">
+        {STATE.map(([label, value]) => (
+          <div key={label} className="min-h-14 border border-gray-800 bg-gray-900/55 px-3 py-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
+            <p className="mt-1 text-lg font-semibold text-white">{value}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Hero(): JSX.Element {
+  return (
+    <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_20%_10%,rgba(34,211,238,0.14),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(244,114,182,0.10),transparent_28%),#030712] px-4 py-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl">
+        <p className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-200">Galaxy Sports Edge</p>
+        <h1 className="mt-5 max-w-4xl break-words text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
+          We&apos;re not AI. We&apos;re math you can read.
+        </h1>
+        <p className="mt-6 max-w-2xl break-words text-lg leading-8 text-gray-300">
+          Deterministic sports betting research with the factor breakdown attached.
+          We post when the model finds edge. Most days that is fewer than five picks.
+        </p>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Link href="/board" className="inline-flex min-h-11 items-center justify-center rounded-lg bg-cyan-300 px-5 py-3 text-sm font-bold text-gray-950 hover:bg-cyan-200">
+            See today&apos;s board
+          </Link>
+          <Link href="/methodology" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-bold text-gray-100 hover:border-cyan-300">
+            Read the methodology
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function GateCam(): JSX.Element {
+  return (
+    <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="PREVIEW MODE" title="Gate Cam" meta="Live wiring begins in Phase 2" />
+        <div className="mt-8 grid gap-3 lg:grid-cols-3">
+          {GATE_ROWS.map((row) => (
+            <article key={row.lane} className="border border-gray-800 bg-gray-900/70 p-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">{row.lane}</p>
+              <h3 className="mt-4 text-xl font-bold text-white">{row.game}</h3>
+              <p className="mt-1 text-sm text-gray-400">{row.market}</p>
+              <p className="mt-5 border-t border-gray-800 pt-4 text-sm text-gray-300">{row.detail}</p>
+              <button className="mt-5 min-h-11 w-full rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200" type="button">
+                Factor breakdown
+              </button>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LedgerPreview(): JSX.Element {
+  return (
+    <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="PREVIEW MODE" title="Public Ledger preview" meta="Six recent settlements" />
+        <div className="mt-8 overflow-hidden border border-gray-800">
+          {LEDGER.map(([pick, result, note]) => (
+            <div key={pick} className="grid gap-3 border-b border-gray-800 px-4 py-3 last:border-b-0 sm:grid-cols-[1fr_auto_2fr]">
+              <span className="font-semibold text-white">{pick}</span>
+              <span className="font-mono text-xs text-cyan-200">{result}</span>
+              <span className="text-sm text-gray-400">{note}</span>
+            </div>
+          ))}
+        </div>
+        <Link href="/performance" className="mt-5 inline-flex text-sm font-semibold text-cyan-200 hover:text-cyan-100">
+          Open the full ledger
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function CalibrationPreview(): JSX.Element {
+  const points = [
+    [20, 72],
+    [42, 55],
+    [64, 39],
+    [84, 23],
+  ] as const;
+  return (
+    <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="PREVIEW MODE" title="Live Calibration" meta="Updated: building history. Sample: 0 canonical settled picks." />
+        <div className="mt-8 border border-gray-800 bg-gray-900/60 p-5">
+          <div className="relative h-72 border-l border-b border-gray-700">
+            <div className="absolute inset-x-0 bottom-0 h-px -rotate-45 bg-cyan-300/50" aria-hidden="true" />
+            {points.map(([x, y]) => (
+              <span key={`${x}-${y}`} className="absolute h-3 w-3 rounded-full bg-pink-300" style={{ left: `${x}%`, top: `${y}%` }} />
+            ))}
+            <p className="absolute left-4 top-4 max-w-sm text-sm text-gray-400">
+              Calibration chart is waiting for canonical settled history. The diagonal shows perfect calibration.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PassList(): JSX.Element {
+  return (
+    <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="PREVIEW MODE" title="The Pass List" meta="Evaluated, then withheld" />
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          {PASS_LIST.map(([game, reason]) => (
+            <div key={game} className="flex items-center justify-between gap-4 border border-gray-800 bg-gray-950/60 px-4 py-4">
+              <span className="font-semibold text-white">{game}</span>
+              <span className="text-right text-sm text-gray-400">{reason}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StackSection(): JSX.Element {
+  return (
+    <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="The Stack" title="Read the board. Score the math. Gate the slate." meta="10+ factors, 14 books, 30-minute refresh cycle" />
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {STACK.map(([title, body], index) => (
+            <article key={title} className="border border-gray-800 bg-gray-900/65 p-6">
+              <span className="font-mono text-xs text-cyan-300">0{index + 1}</span>
+              <h3 className="mt-3 text-xl font-bold text-white">{title}</h3>
+              <p className="mt-3 text-sm leading-6 text-gray-400">{body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ThreeQuestions(): JSX.Element {
+  return (
+    <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="Three questions" title="What changed, what did we skip, what happened after?" meta="Touch-friendly comparison" />
+        <div className="mt-8 grid gap-3 md:grid-cols-3">
+          {QUESTIONS.map(([question, answer]) => (
+            <article key={question} className="min-h-44 border border-gray-800 bg-gray-950/70 p-5">
+              <h3 className="text-lg font-bold text-white">{question}</h3>
+              <p className="mt-4 text-sm leading-6 text-gray-400">{answer}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ResponsibleBand(): JSX.Element {
+  return (
+    <section className="px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl text-center">
+        <h2 className="text-2xl font-bold text-white">Research first. Limits first.</h2>
+        <p className="mt-3 text-sm leading-6 text-gray-400">
+          Galaxy Sports Edge is sportsbook research, not sportsbook hype. Treat the math as one input in a disciplined decision.
+        </p>
+        <RiskDisclosure variant="compact" className="mt-5 text-center" />
+      </div>
+    </section>
+  );
+}
+
+function SectionHeader({
+  eyebrow,
+  title,
+  meta,
+}: {
+  eyebrow: string;
+  title: string;
+  meta: string;
+}): JSX.Element {
+  return (
+    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <div>
+        <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">{eyebrow}</p>
+        <h2 className="mt-2 max-w-3xl text-3xl font-black tracking-tight text-white sm:text-4xl">{title}</h2>
+      </div>
+      <p className="max-w-xs text-sm text-gray-500 sm:text-right">{meta}</p>
+    </div>
+  );
+}
+
+function EmptyPicksState(): JSX.Element {
+  return (
+    <div data-testid="homepage-empty-picks-state" className="hidden">
+      No picks are fabricated for the homepage.
     </div>
   );
 }

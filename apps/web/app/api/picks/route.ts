@@ -24,7 +24,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         canSeeConfidence: false,
         canSeeLineMovement: false,
         canSeeFactorBreakdown: false,
-        canSeeEdgeScore: false,
+        canSeeEdgeScore: true,
         canGetAlerts: false,
         dailyPickLimit: 1,
       };

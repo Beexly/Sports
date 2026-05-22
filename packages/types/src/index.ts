@@ -78,7 +78,7 @@ export interface Entitlements {
   canSeeConfidence: boolean;
   canSeeLineMovement: boolean;
   canSeeFactorBreakdown: boolean;  // PRO+ only
-  canSeeEdgeScore: boolean;         // PRO+ only
+  canSeeEdgeScore: boolean;         // public Edge Index
   canGetAlerts: boolean;
   dailyPickLimit: number | null;
 }
@@ -91,7 +91,7 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
     canSeeConfidence: isPro,
     canSeeLineMovement: isPro,
     canSeeFactorBreakdown: isPro,
-    canSeeEdgeScore: isPro,
+    canSeeEdgeScore: true,
     canGetAlerts: tier === "ELITE",
     dailyPickLimit: tier === "FREE" ? 1 : null,
   };

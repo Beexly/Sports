@@ -212,6 +212,7 @@ model Game {
   // ── Data quality ──
   bookmakerCoverageMax Int      @default(0)  // highest bookmaker count seen for this game
   dataQualityScore     Float    @default(0)  // 0–100 composite at last computation
+  currentEdgeIndex     Float?                 // public 0-100 readout for every tracked game
   contextComputedAt    DateTime?              // when scheduling context was last computed
 
   sport    Sport   @relation(fields: [sportId], references: [id])

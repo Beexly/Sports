@@ -3,9 +3,9 @@ import { BrandLockup } from "@/components/brand/brand-lockup";
 import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
-  { label: "Signal Feed", href: "/picks" },
+  { label: "Today's Board", href: "/board" },
   { label: "Edge Map", href: "/observatory" },
-  { label: "Galaxy IQ", href: "/methodology" },
+  { label: "Methodology", href: "/methodology" },
   { label: "The Vault", href: "/vault" },
 ] as const;
 
@@ -72,7 +72,7 @@ export function Footer() {
         )}
 
         <div className="bottom">
-          <span>{new Date().getFullYear()} {BRAND_NAME.toUpperCase()} / FIND THE SIGNAL BEFORE THE MARKET MOVES</span>
+          <span>{new Date().getFullYear()} {BRAND_NAME.toUpperCase()} / MATH YOU CAN READ</span>
           <span>{CLOSING_LINE.toUpperCase()}</span>
         </div>
       </div>

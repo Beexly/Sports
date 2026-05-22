@@ -4,9 +4,9 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 const LINKS = [
-  { label: "Signal Feed", href: "/picks" },
+  { label: "Today's Board", href: "/board" },
   { label: "Edge Map", href: "/observatory" },
-  { label: "Galaxy IQ", href: "/methodology" },
+  { label: "Methodology", href: "/methodology" },
   { label: "Pricing", href: "/pricing" },
   { label: "Dashboard", href: "/dashboard" },
 ] as const;

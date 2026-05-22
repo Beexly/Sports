@@ -3,7 +3,7 @@ import { getClaim } from "@/lib/trust-claims";
 /**
  * Methodology / Trust Section
  *
- * Replaces the legacy hard-coded testimonials block on the homepage with
+ * Replaces the legacy hard-coded testimonials area on the homepage with
  * a factual explanation of how the platform actually evaluates picks.
  *
  * The bullets are sourced from the Trust Claim Registry — anything shown
@@ -79,8 +79,8 @@ export function MethodologySection() {
             The audit trail behind every signal
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-gray-400">
-            Every published card ties back to live markets, timestamped data,
-            factor scoring, and the gates that keep weak signals off the board.
+            Every published pick ties back to live markets, timestamped data,
+            factor scoring, and the gates that keep weak picks off the board.
           </p>
         </div>
 

@@ -94,7 +94,7 @@ export const BRAND_PILLARS = [
 ] as const;
 
 /**
- * Product information architecture — the Galaxy Sports Edge ecosystem.
+ * Product information architecture for Galaxy Sports Edge.
  *
  * Route paths stay generic (`/picks`, `/methodology`, etc.) for SEO and
  * existing test stability. The customer-facing label is what changed.
@@ -102,8 +102,8 @@ export const BRAND_PILLARS = [
  */
 export const SURFACES = {
   picks: {
-    label: "Signal Feed",
-    tagline: "Published signals with reasoning attached.",
+    label: "Today's Board",
+    tagline: "Published picks with reasoning attached.",
     blurb:
       "Published signals that cleared the board, price, timing, and discipline checks.",
     route: "/picks",
@@ -158,8 +158,8 @@ export const SURFACES = {
     route: "/performance",
   },
   methodology: {
-    label: "Galaxy IQ",
-    tagline: "The intelligence engine.",
+    label: "Methodology",
+    tagline: "The deterministic scoring framework.",
     blurb:
       "How the signal is built: pipeline, scoring, calibration, and readiness gates.",
     route: "/methodology",

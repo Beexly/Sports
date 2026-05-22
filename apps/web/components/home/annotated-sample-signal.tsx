@@ -2,9 +2,9 @@
  * Annotated Sample Signal — "this is what a published signal looks like."
  *
  * Concrete artifact. Replaces the abstract "we score every matchup" prose
- * with a real-shaped pick card flanked by labeled callouts explaining each
+ * with a real-shaped pick view flanked by labeled callouts explaining each
  * surface. Brand-safe: deterministic placeholder data, no team names, no
- * book-specific odds, the card is explicitly stamped PREVIEW.
+ * book-specific odds, and the preview is explicitly stamped PREVIEW.
  *
  * Composition pattern is the same one Stripe / Linear use to make abstract
  * product capabilities legible on the landing page.
@@ -21,7 +21,7 @@ const CALLOUTS_LEFT = [
   },
   {
     label: "03 · Selection + line",
-    body: "The actual pick: spread, total, or moneyline. The line value reflects the moment the signal was scored, not the moment you view the card.",
+    body: "The actual pick: spread, total, or moneyline. The line value reflects the moment the signal was scored, not the moment you view the pick.",
   },
 ] as const;
 
@@ -36,7 +36,7 @@ const CALLOUTS_RIGHT = [
   },
   {
     label: "06 · Variance line",
-    body: "Every card carries the reminder that even a 64% confidence signal still loses 36 of 100 times. Variance is described, not hidden.",
+    body: "Every pick carries the reminder that even a 64% confidence signal still loses 36 of 100 times. Variance is described, not hidden.",
   },
 ] as const;
 
@@ -79,7 +79,7 @@ export function AnnotatedSampleSignal() {
             ))}
           </div>
 
-          {/* CENTER — the actual sample card */}
+          {/* CENTER - the actual sample pick */}
           <SampleCard />
 
           {/* RIGHT — callouts 04–06 */}
@@ -91,7 +91,7 @@ export function AnnotatedSampleSignal() {
         </div>
       </div>
 
-      {/* Mobile fallback — stack the callouts above + below the card */}
+      {/* Mobile fallback - stack the callouts above and below the pick */}
       <style>{`
         @media (max-width: 1024px) {
           .anatomy-grid {

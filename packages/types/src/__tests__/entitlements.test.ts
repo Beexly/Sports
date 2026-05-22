@@ -10,7 +10,7 @@ describe("getEntitlements", () => {
     it("cannot see confidence", () => expect(ents.canSeeConfidence).toBe(false));
     it("cannot see line movement", () => expect(ents.canSeeLineMovement).toBe(false));
     it("cannot see factor breakdown", () => expect(ents.canSeeFactorBreakdown).toBe(false));
-    it("cannot see edge score", () => expect(ents.canSeeEdgeScore).toBe(false));
+    it("can see edge score", () => expect(ents.canSeeEdgeScore).toBe(true));
     it("cannot get alerts", () => expect(ents.canGetAlerts).toBe(false));
     it("daily limit is 1", () => expect(ents.dailyPickLimit).toBe(1));
   });

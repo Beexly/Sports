@@ -47,7 +47,7 @@ export function MissionControl() {
   return (
     <section
       className="section"
-      aria-labelledby="mission-control-title"
+      aria-labelledby="board-room-title"
       style={{
         background:
           "linear-gradient(180deg, rgba(0,229,255,0.035), rgba(5,6,8,0.95) 42%, rgba(122,92,255,0.04))",
@@ -56,8 +56,8 @@ export function MissionControl() {
       <div className="container">
         <div className="section-head">
           <div>
-            <p className="section-eyebrow">Mission Control</p>
-            <h2 id="mission-control-title">
+            <p className="section-eyebrow">Board Room</p>
+            <h2 id="board-room-title">
               The smartest move is sometimes <em>no move.</em>
             </h2>
           </div>
@@ -90,7 +90,7 @@ export function MissionControl() {
             </p>
             <div className="mission-verdict">
               <span>Verdict rule</span>
-              <strong>If the evidence is thin, the card stays quiet.</strong>
+              <strong>If the evidence is thin, we do not post.</strong>
             </div>
           </div>
 
