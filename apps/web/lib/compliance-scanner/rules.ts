@@ -238,6 +238,17 @@ export const TEMPLATE_SPECIFIC_RULES: Record<string, ComplianceRule[]> = {
       suggestion: "Use 'the model reads X' or 'the factor breakdown shows Y' without prescription.",
     },
   ],
+
+  MODEL_JOURNAL: [
+    {
+      id: "MJ-FIRST-PERSON-CONFIDENCE",
+      layer: 3,
+      severity: "block",
+      pattern: /\b(we believe|we think|we are confident|we're confident)\b/i,
+      message: "Model Journal blocks first-person confidence framing.",
+      suggestion: "State what the settled data showed, then cite the evidence.",
+    },
+  ],
 };
 
 /**

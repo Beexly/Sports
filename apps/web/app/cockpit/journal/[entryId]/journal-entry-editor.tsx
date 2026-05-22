@@ -19,6 +19,20 @@ interface SaveResponse {
   };
 }
 
+interface ScanResponse {
+  readonly success?: boolean;
+  readonly error?: string;
+  readonly data?: {
+    readonly status: "green" | "yellow" | "red";
+    readonly publishAllowed: boolean;
+    readonly flags: readonly {
+      readonly id: string;
+      readonly message: string;
+      readonly suggestion: string | null;
+    }[];
+  };
+}
+
 function Preview({ markdown }: { readonly markdown: string }): JSX.Element {
   const sections = useMemo(
     () =>
@@ -63,8 +77,11 @@ export function JournalEntryEditor({
   const [title, setTitle] = useState(initialTitle);
   const [bodyMarkdown, setBodyMarkdown] = useState(initialBodyMarkdown);
   const [isSaving, setIsSaving] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [scanResult, setScanResult] = useState<ScanResponse["data"] | null>(null);
+  const [scanError, setScanError] = useState<string | null>(null);
 
   async function saveDraft(): Promise<void> {
     if (!isBodyEditable || isSaving) return;
@@ -93,6 +110,33 @@ export function JournalEntryEditor({
     }
   }
 
+  async function runComplianceScan(): Promise<void> {
+    if (isScanning) return;
+    setIsScanning(true);
+    setScanResult(null);
+    setScanError(null);
+
+    try {
+      const response = await fetch(`/api/cockpit/journal/${entryId}/scan`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bodyMarkdown }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as ScanResponse;
+
+      if (!response.ok || !payload.success || !payload.data) {
+        setScanError(payload.error ?? "Compliance scan failed");
+        return;
+      }
+
+      setScanResult(payload.data);
+    } catch (error) {
+      setScanError(error instanceof Error ? error.message : "Compliance scan failed");
+    } finally {
+      setIsScanning(false);
+    }
+  }
+
   return (
     <main className="space-y-4 rounded-lg border border-gray-800 bg-gray-950/40 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -115,10 +159,11 @@ export function JournalEntryEditor({
           </button>
           <button
             type="button"
-            disabled
-            className="rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-500"
+            onClick={runComplianceScan}
+            disabled={isScanning}
+            className="rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 hover:bg-gray-900 disabled:text-gray-500"
           >
-            Run compliance scan
+            {isScanning ? "Scanning..." : "Run compliance scan"}
           </button>
           <button
             type="button"
@@ -138,6 +183,35 @@ export function JournalEntryEditor({
       {saveError ? (
         <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
           {saveError}
+        </p>
+      ) : null}
+      {scanResult ? (
+        <section className="rounded-lg border border-gray-800 bg-black/30 p-3 text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="font-semibold text-gray-200">
+              Compliance: {scanResult.status.toUpperCase()}
+            </p>
+            <p className={scanResult.publishAllowed ? "text-emerald-300" : "text-rose-300"}>
+              {scanResult.publishAllowed ? "Publish gate can proceed." : "Publish gate blocked."}
+            </p>
+          </div>
+          {scanResult.flags.length > 0 ? (
+            <ul className="mt-3 space-y-2 text-gray-400">
+              {scanResult.flags.map((flag) => (
+                <li key={flag.id} className="rounded border border-gray-800 bg-gray-950/70 p-2">
+                  <span className="font-semibold text-gray-200">{flag.id}:</span> {flag.message}
+                  {flag.suggestion ? <span className="block text-gray-500">{flag.suggestion}</span> : null}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-gray-500">No compliance flags found.</p>
+          )}
+        </section>
+      ) : null}
+      {scanError ? (
+        <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+          {scanError}
         </p>
       ) : null}
 

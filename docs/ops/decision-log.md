@@ -118,3 +118,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `PATCH /api/cockpit/journal/[id]` and a client-side save control for editable Journal drafts.
 - Rationale: the cockpit editor must persist owner edits before compliance scan and publish transitions exist. The route is ADMIN-only and refuses updates outside `DRAFT` and `REVIEW_PENDING`.
 - Deferred: autosave, compliance scan endpoint, publish/retract transition actions, RSS invalidation, email digest delivery, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Compliance Scan Added
+
+- Decision: add Journal-specific compliance scanning via `scanModelJournalMarkdown()` and `POST /api/cockpit/journal/[id]/scan`.
+- Rationale: publish transitions need a red/yellow/green scan result before they can be safely wired. The route is ADMIN-only, read-only, and uses `getRulesForTemplate("MODEL_JOURNAL")` including the first-person confidence block.
+- Deferred: inline span highlighting, compliance result persistence, publish/retract transition actions, RSS invalidation, email digest delivery, and teaser queue remain follow-up slices.

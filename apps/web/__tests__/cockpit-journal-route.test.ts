@@ -7,7 +7,10 @@ const page = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/p
 const entryPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/[entryId]/page.tsx"), "utf8");
 const editor = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/[entryId]/journal-entry-editor.tsx"), "utf8");
 const saveRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/route.ts"), "utf8");
+const scanRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/scan/route.ts"), "utf8");
 const loader = fs.readFileSync(path.join(repoRoot, "apps/web/lib/journal/load.ts"), "utf8");
+const compliance = fs.readFileSync(path.join(repoRoot, "apps/web/lib/journal/compliance.ts"), "utf8");
+const rules = fs.readFileSync(path.join(repoRoot, "apps/web/lib/compliance-scanner/rules.ts"), "utf8");
 const layout = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/layout.tsx"), "utf8");
 
 describe("Model Journal cockpit route", () => {
@@ -52,6 +55,18 @@ describe("Model Journal cockpit route", () => {
     expect(saveRoute).toContain("modelJournalEntry.update");
     expect(saveRoute).toContain("bodyMarkdown");
     expect(saveRoute).not.toMatch(/emailDigest|twitterClient|postToSlack|sendgrid|mailchimp/i);
+  });
+
+  it("wires Journal compliance scan before publish transitions exist", () => {
+    expect(editor).toContain("runComplianceScan");
+    expect(editor).toContain('method: "POST"');
+    expect(editor).toContain("Compliance:");
+    expect(scanRoute).toMatch(/from\s+["']@\/lib\/auth["']/);
+    expect(scanRoute).toMatch(/role\s*!==\s*"ADMIN"/);
+    expect(scanRoute).toContain("scanModelJournalMarkdown");
+    expect(scanRoute).not.toMatch(/modelJournalEntry\.update|twitterClient|sendgrid|mailchimp/i);
+    expect(compliance).toContain('getRulesForTemplate("MODEL_JOURNAL")');
+    expect(rules).toContain("MJ-FIRST-PERSON-CONFIDENCE");
   });
 
   it("adds the Journal route to cockpit navigation", () => {
