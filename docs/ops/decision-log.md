@@ -88,3 +88,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `ModelJournalEntry` persistence for weekly draft, published, and retracted Journal essays.
 - Rationale: the Friday data pipe, Saturday Claude draft, Sunday operator review, and public `/journal/[slug]` route all need a stable row before implementation.
 - Deferred: data-pipe loader, Claude drafting route, cockpit editor, public journal pages, RSS, email, and Twitter teaser remain follow-up slices.
+
+## 2026-05-22 - Model Journal Cockpit Landing Added
+
+- Decision: add `/cockpit/journal` as an operator-only landing page backed by `ModelJournalEntry` rows.
+- Rationale: the Journal needs an internal review queue before drafting, publishing, RSS, and distribution actions are wired. The page lists draft/review, published, and retracted entries without adding any public body-edit route.
+- Deferred: entry editor, publish/retract actions, public `/journal` pages, RSS, and distribution queues remain follow-up slices.

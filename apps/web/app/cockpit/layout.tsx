@@ -29,6 +29,7 @@ const NAV: ReadonlyArray<{ href: string; label: string; hint: string }> = [
   { href: "/cockpit/market-twin", label: "Market Twin", hint: "Upcoming board posture" },
   { href: "/cockpit/losses", label: "Losses", hint: "Autopsy authoring queue" },
   { href: "/cockpit/studio", label: "Studio", hint: "Creator asset workspace" },
+  { href: "/cockpit/journal", label: "Journal", hint: "Weekly model essay" },
   { href: "/cockpit/brief", label: "Daily brief", hint: "Today's slate snapshot" },
   { href: "/cockpit/calibration", label: "Calibration", hint: "Model accountability" },
   { href: "/cockpit/content", label: "Content", hint: "Ava · draft-only engine" },
