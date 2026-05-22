@@ -3,37 +3,9 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
-import { isDemoPicksEnabled, isStubMode } from "@sports/db";
-
-const STATE = [
-  ["Sports watched", "7"],
-  ["Books polled", "14"],
-  ["Open picks", "2"],
-  ["Gated today", "18"],
-  ["Last refresh", "12 min"],
-  ["Model", "v5.0"],
-] as const;
-
-const GATE_ROWS = [
-  {
-    lane: "SCORING NOW",
-    game: "BOS at NYY",
-    market: "MLB moneyline",
-    detail: "Consensus 58% across 9 books",
-  },
-  {
-    lane: "PUBLISHED TODAY",
-    game: "SEA at HOU",
-    market: "MLB total",
-    detail: "71 Edge Index, 11-book depth",
-  },
-  {
-    lane: "GATED TODAY",
-    game: "DAL at MIN",
-    market: "WNBA spread",
-    detail: "Data freshness missed threshold",
-  },
-] as const;
+import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
+import { loadBoardState, type BoardStateData, type BoardStateRow } from "@/lib/board/state";
+import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 
 const LEDGER = [
   ["SEA -1.5", "WIN", "Line movement led the factor mix"],
@@ -42,13 +14,6 @@ const LEDGER = [
   ["CHI +4.5", "WIN", "Rest and travel both supported the side"],
   ["TOR total", "LOSS", "Weather moved after scoring"],
   ["PHI -2.5", "WIN", "Consensus held through close"],
-] as const;
-
-const PASS_LIST = [
-  ["MIA at TB", "Thin book depth"],
-  ["CLE at DET", "Line moved past the scored number"],
-  ["NYL at CON", "Conflicting market consensus"],
-  ["COL at STL", "Weather context incomplete"],
 ] as const;
 
 const STACK = [
@@ -63,20 +28,36 @@ const QUESTIONS = [
   ["What happened after?", "The Public Ledger keeps settled picks tied to the original signal snapshot."],
 ] as const;
 
-export default function HomePage(): JSX.Element {
-  const demoActive = isStubMode() && isDemoPicksEnabled();
+type CalibrationData = Awaited<ReturnType<typeof loadPublicCalibrationReport>>["data"];
+
+function timeLabel(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Just now";
+  return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+}
+
+export default async function HomePage(): Promise<JSX.Element> {
+  const [stateResult, passesResult, calibrationResult] = await Promise.all([
+    loadBoardState(),
+    loadBoardPasses(),
+    loadPublicCalibrationReport(),
+  ]);
+  const demoActive =
+    stateResult.meta.isSampleData ||
+    passesResult.meta.isSampleData ||
+    calibrationResult.meta.isSampleData;
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
       <Nav />
       <main>
         {demoActive && <SampleDataBanner />}
-        <LiveStateStrip />
+        <LiveStateStrip state={stateResult.data} />
         <Hero />
-        <GateCam />
+        <GateCam state={stateResult.data} isSampleData={stateResult.meta.isSampleData} />
         <LedgerPreview />
-        <CalibrationPreview />
-        <PassList />
+        <CalibrationPreview calibration={calibrationResult.data} />
+        <PassList passes={passesResult.data.passes} isSampleData={passesResult.meta.isSampleData} />
         <StackSection />
         <ThreeQuestions />
         <MethodologySection />
@@ -107,11 +88,20 @@ function SampleDataBanner(): JSX.Element {
   );
 }
 
-function LiveStateStrip(): JSX.Element {
+function LiveStateStrip({ state }: { state: BoardStateData }): JSX.Element {
+  const stateRows = [
+    ["Sports watched", String(state.sportsWatched)],
+    ["Books polled", String(state.booksPolled)],
+    ["Open picks", String(state.openPicks)],
+    ["Gated today", String(state.gatedToday)],
+    ["Last refresh", timeLabel(state.lastRefresh)],
+    ["Model", state.modelVersion],
+  ] as const;
+
   return (
     <section aria-label="Live board state" className="border-b border-gray-800 bg-gray-950">
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 py-3 sm:grid-cols-3 lg:grid-cols-6">
-        {STATE.map(([label, value]) => (
+        {stateRows.map(([label, value]) => (
           <div key={label} className="min-h-14 border border-gray-800 bg-gray-900/55 px-3 py-2">
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
             <p className="mt-1 text-lg font-semibold text-white">{value}</p>
@@ -147,26 +137,50 @@ function Hero(): JSX.Element {
   );
 }
 
-function GateCam(): JSX.Element {
+function GateCam({ state, isSampleData }: { state: BoardStateData; isSampleData: boolean }): JSX.Element {
+  const lanes = [
+    ["SCORING NOW", state.scoringNow],
+    ["PUBLISHED TODAY", state.publishedToday],
+    ["GATED TODAY", state.gatedTodayRows],
+  ] as const;
+
   return (
     <section className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="PREVIEW MODE" title="Gate Cam" meta="Live wiring begins in Phase 2" />
+        <SectionHeader
+          eyebrow={isSampleData ? "PREVIEW MODE" : "LIVE BOARD"}
+          title="Gate Cam"
+          meta={isSampleData ? "Sample rows while live ingestion is unavailable" : "Scoring, published, and gated rows from today's board"}
+        />
         <div className="mt-8 grid gap-3 lg:grid-cols-3">
-          {GATE_ROWS.map((row) => (
-            <article key={row.lane} className="border border-gray-800 bg-gray-900/70 p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">{row.lane}</p>
-              <h3 className="mt-4 text-xl font-bold text-white">{row.game}</h3>
-              <p className="mt-1 text-sm text-gray-400">{row.market}</p>
-              <p className="mt-5 border-t border-gray-800 pt-4 text-sm text-gray-300">{row.detail}</p>
-              <button className="mt-5 min-h-11 w-full rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200" type="button">
-                Factor breakdown
-              </button>
-            </article>
+          {lanes.map(([lane, rows]) => (
+            <GateLane key={lane} lane={lane} rows={rows} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function GateLane({ lane, rows }: { lane: string; rows: BoardStateRow[] }): JSX.Element {
+  return (
+    <article className="border border-gray-800 bg-gray-900/70 p-5">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">{lane}</p>
+      <div className="mt-4 flex flex-col gap-3">
+        {rows.length > 0 ? rows.slice(0, 4).map((row) => (
+          <div key={row.id} className="border border-gray-800 bg-gray-950/45 p-3">
+            <h3 className="text-base font-bold text-white">{row.matchup}</h3>
+            <p className="mt-1 text-xs text-gray-500">{row.sport} / {row.market}</p>
+            <p className="mt-3 text-sm text-gray-300">
+              {row.edgeIndex === null ? "Edge Index pending" : `Edge Index ${row.edgeIndex}`}
+            </p>
+            {row.gateReason && <p className="mt-2 text-xs leading-5 text-gray-400">{row.gateReason}</p>}
+          </div>
+        )) : (
+          <p className="text-sm text-gray-500">No rows in this lane right now.</p>
+        )}
+      </div>
+    </article>
   );
 }
 
@@ -192,7 +206,7 @@ function LedgerPreview(): JSX.Element {
   );
 }
 
-function CalibrationPreview(): JSX.Element {
+function CalibrationPreview({ calibration }: { calibration: CalibrationData }): JSX.Element {
   const points = [
     [20, 72],
     [42, 55],
@@ -202,7 +216,11 @@ function CalibrationPreview(): JSX.Element {
   return (
     <section className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="PREVIEW MODE" title="Live Calibration" meta="Updated: building history. Sample: 0 canonical settled picks." />
+        <SectionHeader
+          eyebrow="LIVE CALIBRATION"
+          title="Live Calibration"
+          meta={`Updated: ${timeLabel(calibration.updatedAt)}. Sample: ${calibration.sampleSize} canonical settled picks.`}
+        />
         <div className="mt-8 border border-gray-800 bg-gray-900/60 p-5">
           <div className="relative h-72 border-l border-b border-gray-700">
             <div className="absolute inset-x-0 bottom-0 h-px -rotate-45 bg-cyan-300/50" aria-hidden="true" />
@@ -210,7 +228,7 @@ function CalibrationPreview(): JSX.Element {
               <span key={`${x}-${y}`} className="absolute h-3 w-3 rounded-full bg-pink-300" style={{ left: `${x}%`, top: `${y}%` }} />
             ))}
             <p className="absolute left-4 top-4 max-w-sm text-sm text-gray-400">
-              Calibration chart is waiting for canonical settled history. The diagonal shows perfect calibration.
+              {calibration.publicMessage} The diagonal shows perfect calibration.
             </p>
           </div>
         </div>
@@ -219,18 +237,26 @@ function CalibrationPreview(): JSX.Element {
   );
 }
 
-function PassList(): JSX.Element {
+function PassList({ passes, isSampleData }: { passes: PassListRow[]; isSampleData: boolean }): JSX.Element {
   return (
     <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="PREVIEW MODE" title="The Pass List" meta="Evaluated, then withheld" />
+        <SectionHeader
+          eyebrow={isSampleData ? "PREVIEW MODE" : "LIVE BOARD"}
+          title="The Pass List"
+          meta="Evaluated, then withheld"
+        />
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
-          {PASS_LIST.map(([game, reason]) => (
-            <div key={game} className="flex items-center justify-between gap-4 border border-gray-800 bg-gray-950/60 px-4 py-4">
-              <span className="font-semibold text-white">{game}</span>
-              <span className="text-right text-sm text-gray-400">{reason}</span>
+          {passes.length > 0 ? passes.slice(0, 6).map((row) => (
+            <div key={row.id} className="flex items-center justify-between gap-4 border border-gray-800 bg-gray-950/60 px-4 py-4">
+              <span className="font-semibold text-white">{row.matchup}</span>
+              <span className="text-right text-sm text-gray-400">{row.reason}</span>
             </div>
-          ))}
+          )) : (
+            <p className="border border-gray-800 bg-gray-950/60 px-4 py-5 text-sm text-gray-500 sm:col-span-2">
+              No passes recorded for this slate yet.
+            </p>
+          )}
         </div>
       </div>
     </section>
