@@ -36,7 +36,7 @@ type GenerationState =
   | { readonly status: "idle" }
   | { readonly status: "loading" }
   | { readonly status: "error"; readonly message: string }
-  | { readonly status: "done"; readonly draft: StudioAssetDraft };
+  | { readonly status: "done"; readonly draft: StudioAssetDraft; readonly copied?: boolean };
 
 function statusClass(status: string): string {
   switch (status) {
@@ -65,6 +65,32 @@ function stateFor(
   kind: CreatorAssetKind
 ): GenerationState {
   return states[kind] ?? { status: "idle" };
+}
+
+function markdownForDraft(draft: StudioAssetDraft): string {
+  const citations = draft.citations
+    .map((citation) => `- ${citation.label}: ${citation.source}`)
+    .join("\n");
+  const scanLines = draft.compliance.flags
+    .map((flag) => `- ${flag.severity.toUpperCase()}: ${flag.message}`)
+    .join("\n");
+
+  return [
+    `# ${draft.templateName}`,
+    "",
+    draft.body ?? "",
+    "",
+    "## Citations",
+    citations || "- No citations attached.",
+    "",
+    "## Compliance Scan",
+    `Status: ${draft.compliance.status.toUpperCase()}`,
+    scanLines || "- No flags.",
+  ].join("\n");
+}
+
+function fileNameForDraft(draft: StudioAssetDraft): string {
+  return `galaxy-studio-${draft.templateKind.toLowerCase()}.md`;
 }
 
 export function StudioWorkspace({
@@ -111,6 +137,24 @@ export function StudioWorkspace({
         },
       }));
     }
+  }
+
+  async function copyDraft(draft: StudioAssetDraft): Promise<void> {
+    await navigator.clipboard.writeText(markdownForDraft(draft));
+    setStates((current) => ({
+      ...current,
+      [draft.templateKind]: { status: "done", draft, copied: true },
+    }));
+  }
+
+  function saveDraftMarkdown(draft: StudioAssetDraft): void {
+    const blob = new Blob([markdownForDraft(draft)], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = fileNameForDraft(draft);
+    anchor.click();
+    URL.revokeObjectURL(url);
   }
 
   return (
@@ -254,6 +298,22 @@ export function StudioWorkspace({
                               ))}
                             </ul>
                           ) : null}
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <button
+                              type="button"
+                              onClick={() => void copyDraft(generatedDraft)}
+                              className="min-h-11 rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 transition-colors hover:bg-gray-900"
+                            >
+                              {generation.status === "done" && generation.copied ? "Copied" : "Copy markdown"}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => saveDraftMarkdown(generatedDraft)}
+                              className="min-h-11 rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 transition-colors hover:bg-gray-900"
+                            >
+                              Save markdown
+                            </button>
+                          </div>
                         </div>
                       ) : (
                         <p className="text-xs text-gray-400">
@@ -288,7 +348,7 @@ export function StudioWorkspace({
               <div className="rounded-lg border border-gray-800 bg-gray-950/60 p-3">
                 <p className="text-[10px] uppercase tracking-wide text-gray-600">Export</p>
                 <p className="mt-1 text-xs text-gray-500">
-                  Copy and markdown download unlock after generation and a clean scan.
+                  Copy and markdown save controls unlock after generation and scanner review.
                   External publishing is intentionally absent.
                 </p>
               </div>

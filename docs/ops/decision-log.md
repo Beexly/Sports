@@ -70,3 +70,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: move the Studio workspace into a client island that calls the admin-only draft generation endpoint and previews scanner-checked output inline.
 - Rationale: operators need a usable draft loop before persistence or export controls. The page keeps DB loading server-side, shows loading/error states per template, and still omits any external publishing action.
 - Deferred: copy/download controls and generated asset persistence remain follow-up slices.
+
+## 2026-05-22 - Studio Manual Export Controls Added
+
+- Decision: add copy-to-markdown and save-to-markdown controls to generated Studio drafts without adding any external publishing path.
+- Rationale: Studio v0 should let an operator take a scanner-reviewed draft into a human publishing workflow while preserving the plan's no-auto-posting rule.
+- Deferred: persisted `CreatorAsset` records and generation history remain a schema-backed follow-up.

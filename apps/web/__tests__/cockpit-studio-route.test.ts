@@ -30,6 +30,10 @@ describe("Galaxy Studio cockpit surface", () => {
   it("keeps Studio manually exported with no external posting path", () => {
     expect(workspace).toContain("External publishing is intentionally absent.");
     expect(workspace).toContain("/api/cockpit/studio/generate");
+    expect(workspace).toContain("Copy markdown");
+    expect(workspace).toContain("Save markdown");
+    expect(workspace).toContain("navigator.clipboard.writeText");
+    expect(workspace).toContain("URL.createObjectURL");
     expect(page).not.toMatch(/publishToTwitter|postToSlack|sendgrid|mailchimp/i);
     expect(workspace).not.toMatch(/publishToTwitter|postToSlack|sendgrid|mailchimp/i);
     expect(runtime).not.toMatch(/publishToTwitter|postToSlack|sendgrid|mailchimp/i);
