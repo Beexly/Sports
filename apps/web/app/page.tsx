@@ -6,6 +6,7 @@ import { MethodologySection } from "@/components/ui/methodology-section";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateData, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { isDemoPicksEnabled, isStubMode } from "@sports/db";
 
 const LEDGER = [
   ["SEA -1.5", "WIN", "Line movement led the factor mix"],
@@ -42,7 +43,8 @@ export default async function HomePage(): Promise<JSX.Element> {
     loadBoardPasses(),
     loadPublicCalibrationReport(),
   ]);
-  const demoActive =
+  const demoActive = isStubMode() && isDemoPicksEnabled();
+  const surfaceSampleActive =
     stateResult.meta.isSampleData ||
     passesResult.meta.isSampleData ||
     calibrationResult.meta.isSampleData;
@@ -51,7 +53,7 @@ export default async function HomePage(): Promise<JSX.Element> {
     <div className="min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
       <Nav />
       <main>
-        {demoActive && <SampleDataBanner />}
+        {(demoActive || surfaceSampleActive) && <SampleDataBanner />}
         <LiveStateStrip state={stateResult.data} />
         <Hero />
         <GateCam state={stateResult.data} isSampleData={stateResult.meta.isSampleData} />
