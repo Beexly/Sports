@@ -320,7 +320,8 @@ model IngestionRun {
   startedAt     DateTime          @default(now())
   completedAt   DateTime?
 
-  odds Odds[]
+  odds            Odds[]
+  sourceSnapshots SourceSnapshot[]
 
   @@index([status])
   @@index([startedAt])
@@ -391,6 +392,32 @@ model Pick {
 // SIGNAL ARCHITECTURE
 // ============================================================
 
+// SourceSnapshot stores the raw provider response before any normalization.
+// This is the forensic root for the Evidence Engine: every derived signal
+// should be traceable to a payload that existed at ingestion time.
+model SourceSnapshot {
+  id             String             @id @default(cuid())
+  provider       String
+  sourceKind     SourceSnapshotKind
+  sport          String?
+  externalId     String?
+  ingestionRunId String?
+  fetchedAt      DateTime
+  payload         Json
+  payloadHash    String
+  payloadBytes   Int                @default(0)
+  createdAt      DateTime           @default(now())
+
+  ingestionRun IngestionRun? @relation(fields: [ingestionRunId], references: [id], onDelete: SetNull)
+
+  @@index([provider, sourceKind])
+  @@index([sport])
+  @@index([externalId])
+  @@index([fetchedAt])
+  @@index([payloadHash])
+  @@map("source_snapshots")
+}
+
 // GameSignal — source-aware signal store for any external or derived input.
 // Every signal carries: source identity, category, trust level, freshness,
 // and bootstrap provenance. This enables future multi-source intelligence
@@ -441,6 +468,11 @@ model PickSignalSnapshot {
   hadWeatherSignal      Boolean @default(false)  // weather data present (future)
   hadInjurySignal       Boolean @default(false)  // injury data present (future)
   hadRatingsSignal      Boolean @default(false)  // team ratings present (future)
+  hadPlayerSignal       Boolean @default(false)  // player availability/lineup data present (future)
+  hadOfficialsSignal    Boolean @default(false)  // referee/umpire data present (future)
+  hadVenueEnvironmentSignal Boolean @default(false) // venue/park/dome/weather context present (future)
+  hadPaceSignal         Boolean @default(false)  // pace/team-rate context present (future)
+  hadMilestoneSignal    Boolean @default(false)  // team/player milestone context present (future)
 
   // Key quantitative values at prediction time (queryable for calibration regression)
   bookmakerCount         Int    @default(0)
@@ -657,6 +689,27 @@ enum SignalCategory {
   INJURIES
   RATINGS
   MARKET_SENTIMENT
+  PLAYER_AVAILABILITY
+  OFFICIALS
+  VENUE_ENVIRONMENT
+  TEAM_RATES
+  STANDINGS
+  DIVISION_CONTEXT
+  MILESTONES
+  PACE
+}
+
+enum SourceSnapshotKind {
+  ODDS_EVENTS
+  ODDS_SCORES
+  CONTEXT_FIXTURES
+  CONTEXT_TEAM_STATS
+  CONTEXT_PLAYER_AVAILABILITY
+  CONTEXT_OFFICIALS
+  CONTEXT_VENUE
+  CONTEXT_WEATHER
+  CONTEXT_STANDINGS
+  CONTEXT_MILESTONES
 }
 
 enum AtsResult {

@@ -22,6 +22,9 @@ export type RiskLevel =
 // ============================================================
 
 export interface FactorBreakdown {
+  marketPriceShapeScore?: number; // 0-25: no-vig market shape; not independent EV
+  trueEvScore?: number | null; // future: independent EV score once source-backed fair probability exists
+  fairProbability?: number | null; // future: independent model probability, never inferred from market alone
   consensusScore: number;      // 0–30: how aligned bookmakers are
   marketDepthScore: number;    // 0–20: how many bookmakers cover this
   edgeScore: number;           // 0–25: net pricing edge vs fair value
@@ -43,6 +46,26 @@ export interface FactorDetail {
   impact: "positive" | "negative" | "neutral";
   description: string;
   weight: number; // contribution to confidence
+  evidence?: FactorEvidenceMetadata;
+}
+
+export type EvidenceActivationStatus =
+  | "ACTIVE"
+  | "SHADOW_ONLY"
+  | "BLOCKED_MISSING_SOURCE"
+  | "BLOCKED_STALE"
+  | "BLOCKED_LOW_TRUST"
+  | "BLOCKED_SMALL_SAMPLE";
+
+export interface FactorEvidenceMetadata {
+  sourceCategory: SignalCategory;
+  sourceName: string;
+  fetchedAt?: Date | string | null;
+  freshnessStatus: "FRESH" | "AGING" | "STALE" | "MISSING";
+  sampleSize?: number | null;
+  trustLevel: number;
+  activationStatus: EvidenceActivationStatus;
+  whyUsedOrBlocked: string;
 }
 
 // ============================================================
@@ -231,6 +254,7 @@ export interface GameContextInput {
   hasSpreadMarket?: boolean;
   hasTotalMarket?: boolean;
   hasH2HMarket?: boolean;
+  shadowEvidence?: EvidenceRecord[];
 }
 
 // ============================================================
@@ -245,7 +269,27 @@ export type SignalCategory =
   | "WEATHER"
   | "INJURIES"
   | "RATINGS"
-  | "MARKET_SENTIMENT";
+  | "MARKET_SENTIMENT"
+  | "PLAYER_AVAILABILITY"
+  | "OFFICIALS"
+  | "VENUE_ENVIRONMENT"
+  | "TEAM_RATES"
+  | "STANDINGS"
+  | "DIVISION_CONTEXT"
+  | "MILESTONES"
+  | "PACE";
+
+export type SourceSnapshotKind =
+  | "ODDS_EVENTS"
+  | "ODDS_SCORES"
+  | "CONTEXT_FIXTURES"
+  | "CONTEXT_TEAM_STATS"
+  | "CONTEXT_PLAYER_AVAILABILITY"
+  | "CONTEXT_OFFICIALS"
+  | "CONTEXT_VENUE"
+  | "CONTEXT_WEATHER"
+  | "CONTEXT_STANDINGS"
+  | "CONTEXT_MILESTONES";
 
 export interface SignalSourceMetadata {
   sourceCategory: SignalCategory;
@@ -253,6 +297,14 @@ export interface SignalSourceMetadata {
   fetchedAt: Date;
   trustLevel: number;     // 0.0–1.0
   isBootstrap: boolean;
+}
+
+export interface EvidenceRecord extends SignalSourceMetadata {
+  signalKey: string;
+  activationStatus: EvidenceActivationStatus;
+  freshnessStatus: FactorEvidenceMetadata["freshnessStatus"];
+  sampleSize?: number | null;
+  whyUsedOrBlocked: string;
 }
 
 export interface OddsInput {
@@ -361,10 +413,88 @@ export interface PublicPick {
   reasoningShort: string;
 
   isFeatured: boolean;
+  isAuditAvailable: boolean;          // false for sample/demo rows with no SourceSnapshot chain
   generatedAt: string;
   dataFreshnessAt: string | null;
   result: PickResult;
 }
+
+// ============================================================
+// Evidence Audit — forensic trail per pick
+// ============================================================
+//
+// Server-side gated. The audit payload is the public, on-brand
+// proof of provenance: every pick can be traced to the SourceSnapshot
+// it was scored against, with payload hash, ingestion run timestamp,
+// and which signal categories were present at prediction time.
+//
+// Tier shape:
+//   FREE  → AuditPayloadSummary (counts + topology only, drives upgrade)
+//   PRO+  → AuditPayloadDetailed (full signal flags, line movement,
+//           confidence at prediction, every SourceSnapshot hash)
+//
+// This payload NEVER contains raw provider response data — only the
+// SHA-256 hash, payload byte count, and metadata. Raw payloads stay
+// in the database for operator forensics; the audit drawer surfaces
+// the *fact* that the data exists and is hashed, not the data itself.
+
+export interface AuditSourceSnapshotInfo {
+  id: string;
+  provider: string;       // e.g. "the-odds-api"
+  sourceKind: string;     // SourceSnapshotKind enum value
+  fetchedAt: string;      // ISO timestamp
+  payloadHashPrefix: string;  // first 12 chars of SHA-256
+  payloadBytes: number;
+  ingestionRunId: string | null;
+}
+
+export interface AuditSignalCategoryRow {
+  category: string;       // e.g. "Market", "Schedule", "Players", "Officials"
+  status: "LIVE" | "SHADOW" | "ABSENT";
+  // LIVE = signal was present AND contributed to scoring
+  // SHADOW = signal was present but in shadow mode (visible, not priced)
+  // ABSENT = signal was not present at prediction time
+  description: string;    // short human-readable line
+}
+
+export interface AuditPayloadSummary {
+  tier: "FREE";
+  pickId: string;
+  generatedAt: string;
+  modelVersion: string;
+  signalCategoryCount: number;       // total categories tracked
+  signalCategoryActiveCount: number; // how many were LIVE
+  sourceSnapshotCount: number;       // how many raw snapshots back this pick
+  mostRecentSnapshotAt: string | null;
+  mostRecentSnapshotProvider: string | null;
+  upgradeRequiredForDetail: true;
+}
+
+export interface AuditPayloadDetailed {
+  tier: "PRO" | "ELITE";
+  pickId: string;
+  generatedAt: string;
+  modelVersion: string;
+  isBootstrap: boolean;
+  confidenceAtPrediction: number;
+  dataQualityScore: number;
+  bookmakerCount: number;
+  lineMovementDelta: number | null;
+  restAdvantageNet: number | null;
+  atsFormSampleSize: number | null;
+  h2hSampleSize: number | null;
+  scheduleDensityHome: number | null;
+  scheduleDensityAway: number | null;
+  signalCategories: AuditSignalCategoryRow[];
+  sourceSnapshots: AuditSourceSnapshotInfo[];
+  gatesAtPrediction: {
+    canonicalHistory: boolean;
+    derivedModelHistory: boolean;
+    outcomeLearning: boolean;
+  };
+}
+
+export type AuditPayload = AuditPayloadSummary | AuditPayloadDetailed;
 
 // ============================================================
 // Daily Slate Summary

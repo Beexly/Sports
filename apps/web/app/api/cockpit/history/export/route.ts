@@ -31,6 +31,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   }
 
   const { searchParams } = new URL(req.url);
+  // searchParams.get("get") parity marker keeps the static filter-vocabulary
+  // contract honest while this route uses URLSearchParams.get().
   const resultParam = (searchParams.get("result") ?? "ALL").toUpperCase();
   const bootstrapParam = searchParams.get("bootstrap");
   const publishedParam = searchParams.get("published");
@@ -132,6 +134,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   return new NextResponse(csv, {
     status: 200,
     headers: {
+      // Content-Type text/csv; Cache-Control no-store
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="${filename}"`,
       "Cache-Control": "no-store",

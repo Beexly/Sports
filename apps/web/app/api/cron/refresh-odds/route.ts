@@ -52,10 +52,26 @@ export async function GET(request: Request) {
 
   const startedAt = Date.now();
   const gates = getReadinessGates();
+  const requestedSport = new URL(request.url).searchParams.get("sport");
+  const sportsToProcess = requestedSport
+    ? SUPPORTED_SPORTS.filter((sport) => sport.key === requestedSport)
+    : SUPPORTED_SPORTS;
+
+  if (requestedSport && sportsToProcess.length === 0) {
+    return NextResponse.json(
+      {
+        error: "Unsupported sport",
+        sport: requestedSport,
+        supportedSports: SUPPORTED_SPORTS.map((sport) => sport.key),
+      },
+      { status: 400 }
+    );
+  }
+
   const sportResults: Array<{ sport: string; ok: boolean; error?: string }> =
     [];
 
-  for (const sport of SUPPORTED_SPORTS) {
+  for (const sport of sportsToProcess) {
     try {
       await processSport(sport, apiKey, gates, "[cron:refresh-odds]");
       sportResults.push({ sport: sport.key, ok: true });
@@ -78,6 +94,7 @@ export async function GET(request: Request) {
     elapsedMs,
     okCount,
     totalCount: sportResults.length,
+    requestedSport: requestedSport ?? null,
     bootstrapMode: gates.isBootstrapMode,
     results: sportResults,
   });

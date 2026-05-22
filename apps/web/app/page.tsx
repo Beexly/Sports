@@ -8,6 +8,7 @@ import { SignalPreviewQueue } from "@/components/hero/signal-preview-queue";
 import { ToutComparison } from "@/components/home/tout-comparison";
 import { AnnotatedSampleSignal } from "@/components/home/annotated-sample-signal";
 import { StartInSixty } from "@/components/home/start-in-sixty";
+import { MissionControl } from "@/components/home/mission-control";
 import type { PublicPick } from "@sports/types";
 import { PICK_GRADE_LABELS } from "@sports/types";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
@@ -137,6 +138,8 @@ export default async function HomePage() {
        * (no card, refund window, founder-replies). Sits below hero, above slate.
        * ────────────────────────────────────────────────────── */}
       <StartInSixty />
+
+      <MissionControl />
 
       {/* ──────────────────────────────────────────────────────
        * SLATE BAR — live mission-control telemetry strip

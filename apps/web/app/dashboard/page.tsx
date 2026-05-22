@@ -243,7 +243,7 @@ export default async function DashboardPage() {
               <nav className="flex flex-col gap-1">
                 {[
                   { href: "/picks", label: "Today's Picks" },
-                  { href: "/performance", label: "Track Record" },
+                  { href: "/performance", label: "Performance" },
                   { href: "/pricing", label: "View Plans" },
                   { href: "/blog", label: "Analysis Blog" },
                 ].map(({ href, label }) => (
@@ -396,14 +396,7 @@ function StatCard({
   return (
     <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
       <p className="text-xs text-gray-500">{label}</p>
-      <p
-        className={[
-          "mt-1 text-2xl font-bold",
-          highlight ? "text-green-400" : "text-white",
-        ].join(" ")}
-      >
-        {value}
-      </p>
+      <p className={`mt-1 text-2xl font-bold ${highlight ? "text-green-400" : "text-white"}`}>{value}</p>
     </div>
   );
 }

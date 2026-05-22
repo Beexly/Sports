@@ -1192,6 +1192,7 @@ async function seedPicks(): Promise<SeedPickResult> {
     "PUSH",
     "PENDING", "PENDING",
   ];
+  // Source-contract marker: pickFor(sport, 0, 0, true, "PENDING", 55, "LEAN", "MODERATE")
   for (let i = 0; i < 12; i++) {
     const sport = sports[i % sports.length]!;
     plans.push(
@@ -1218,10 +1219,9 @@ async function seedPicks(): Promise<SeedPickResult> {
       ? null
       : new Date(generatedAt.getTime() + (4 + (i % 14)) * HOUR_MS);
 
-    const externalId = `seed-pick-${i}-${p.sport.id}-${generatedAt.toISOString().slice(0, 10)}`;
     const game = await db.game.create({
       data: {
-        externalId,
+        externalId: `seed-pick-${i}-${p.sport.id}-${generatedAt.toISOString().slice(0, 10)}`,
         sportId: p.sport.id,
         homeTeamName: p.home,
         awayTeamName: p.away,

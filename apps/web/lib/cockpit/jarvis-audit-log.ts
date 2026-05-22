@@ -31,6 +31,7 @@ function safe(s: string): string {
   return s.replace(/\t/g, " ");
 }
 
+// Serializes one Jarvis assessment into summary, verbose, and JSON formats.
 export function serializeJarvisAudit(assessment: JarvisAssessment): JarvisAuditEntry {
   const sectional = [
     `public=${assessment.publicSurfaceStatus}`,
@@ -44,7 +45,7 @@ export function serializeJarvisAudit(assessment: JarvisAssessment): JarvisAuditE
     `canon=${assessment.canonicalHistoryStatus}`,
     `boot=${assessment.bootstrapStatus}`,
     `signal=${assessment.signalCoverageStatus}`,
-  ].join("\t");
+  ];
 
   const gateSummary = `gates=${assessment.readinessGateSummary.openCount}/${assessment.readinessGateSummary.totalCount}`;
   const closed = `closed=[${assessment.readinessGateSummary.closed.join(",")}]`;
@@ -57,7 +58,7 @@ export function serializeJarvisAudit(assessment: JarvisAssessment): JarvisAuditE
     assessment.version,
     assessment.launchStatus,
     assessment.confidenceLevel.toLowerCase(),
-    sectional,
+    ...sectional,
     gateSummary,
     closed,
     safety,
@@ -73,7 +74,7 @@ export function serializeJarvisAudit(assessment: JarvisAssessment): JarvisAuditE
     `launchStatus=${assessment.launchStatus}`,
     `confidence=${assessment.confidenceLevel}`,
     `assessment="${safe(assessment.oneSentenceAssessment)}"`,
-    sectional.replace(/\t/g, " | "),
+    sectional.join(" | "),
     `${gateSummary} ${closed}`,
     ...assessment.safetyWarnings.map((w, i) => `safety[${i}]="${safe(w)}"`),
     ...assessment.missingPhaseWarnings.map((w, i) => `missing[${i}]="${safe(w)}"`),

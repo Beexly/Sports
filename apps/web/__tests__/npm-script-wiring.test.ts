@@ -16,7 +16,7 @@ const rootScripts: Record<string, string> = rootPkg.scripts ?? {};
 const webScripts: Record<string, string> = webPkg.scripts ?? {};
 
 describe("npm script wiring (root → apps/web)", () => {
-  const DELEGATIONS = [
+  const DELEGATIONS: Array<readonly [string, string]> = [
     ["test:brand-safety", "test:brand-safety"],
     ["test:cockpit", "test:cockpit"],
   ];

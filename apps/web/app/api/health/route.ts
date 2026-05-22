@@ -42,7 +42,7 @@ export async function GET(): Promise<NextResponse> {
   const allOk = Object.values(checks).every((c) => c.status === "ok");
 
   return NextResponse.json(
-    { status: allOk ? "healthy" : "degraded", checks },
+    { ok: allOk, status: allOk ? "healthy" : "degraded", checks },
     { status: allOk ? 200 : 503 }
   );
 }

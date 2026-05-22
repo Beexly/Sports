@@ -54,6 +54,7 @@ function externalConfigMissing(): string[] {
   return missing;
 }
 
+// Loads live cockpit evidence and returns the canonical Jarvis payload.
 export async function loadJarvisAssessment(): Promise<{
   assessment: JarvisAssessment;
   performancePolicy: PublicPerformancePolicy;
@@ -257,5 +258,8 @@ export async function loadJarvisAssessment(): Promise<{
     customerDashboardStatus,
   };
 
-  return { assessment, performancePolicy };
+  return {
+    assessment: assessment,
+    performancePolicy,
+  };
 }

@@ -76,6 +76,25 @@ function computeRiskLevel(
   return "MODERATE";
 }
 
+function buildShadowEvidenceFactors(input: OddsInput): FactorDetail[] {
+  return (input.context?.shadowEvidence ?? []).map((evidence) => ({
+    name: `Shadow ${evidence.sourceCategory.replace(/_/g, " ")}`,
+    impact: "neutral",
+    description: evidence.whyUsedOrBlocked,
+    weight: 0,
+    evidence: {
+      sourceCategory: evidence.sourceCategory,
+      sourceName: evidence.sourceName,
+      fetchedAt: evidence.fetchedAt,
+      freshnessStatus: evidence.freshnessStatus,
+      sampleSize: evidence.sampleSize ?? null,
+      trustLevel: evidence.trustLevel,
+      activationStatus: evidence.activationStatus,
+      whyUsedOrBlocked: evidence.whyUsedOrBlocked,
+    },
+  }));
+}
+
 // ============================================================
 // Compute consensus component score (0 to WEIGHTS.CONSENSUS_COMPONENT_MAX)
 // ============================================================
@@ -307,6 +326,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
 
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
+  const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
 
   const factors: FactorDetail[] = [
     consensusFactor,
@@ -314,6 +334,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     edgeFactor,
     ...(volatilityFactor ? [volatilityFactor] : []),
     ...contextFactors,
+    ...shadowEvidenceFactors,
   ];
 
   const confidence = Math.round(
@@ -369,6 +390,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     consensusScore,
     marketDepthScore: depthScore,
     edgeScore: edgeComponentScore,
+    marketPriceShapeScore: edgeComponentScore,
+    trueEvScore: null,
+    fairProbability: null,
     lineMovementScore,
     volatilityPenalty,
     headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,
@@ -483,6 +507,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const dataQualityPenalty = ctx?.dataQualityPenalty ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
+  const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
 
   const factors: FactorDetail[] = [
     consensusFactor,
@@ -490,6 +515,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     edgeFactor,
     ...(volatilityFactor ? [volatilityFactor] : []),
     ...contextFactors,
+    ...shadowEvidenceFactors,
   ];
 
   const confidence = Math.round(
@@ -527,6 +553,9 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     consensusScore,
     marketDepthScore: depthScore,
     edgeScore: edgeComponentScore,
+    marketPriceShapeScore: edgeComponentScore,
+    trueEvScore: null,
+    fairProbability: null,
     lineMovementScore,
     volatilityPenalty,
     dataQualityScore,
@@ -617,6 +646,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const scheduleStressScore = ctx?.scheduleStressScore ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
+  const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
 
   const factors: FactorDetail[] = [
     consensusFactor,
@@ -624,6 +654,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     edgeFactor,
     ...(volatilityFactor ? [volatilityFactor] : []),
     ...contextFactors,
+    ...shadowEvidenceFactors,
   ];
 
   const confidence = Math.round(
@@ -675,6 +706,9 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     consensusScore,
     marketDepthScore: depthScore,
     edgeScore: edgeComponentScore,
+    marketPriceShapeScore: edgeComponentScore,
+    trueEvScore: null,
+    fairProbability: null,
     lineMovementScore,
     volatilityPenalty,
     headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,

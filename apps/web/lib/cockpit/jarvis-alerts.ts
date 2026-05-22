@@ -34,6 +34,7 @@ export interface JarvisAlert {
 
 const PAGE_LAUNCH_STATUSES = new Set(["NOT_READY_DATA", "NOT_READY_SAFETY"]);
 
+// Converts a JarvisDiff into transport-neutral operator alerts.
 export function alertsFromDiff(diff: JarvisDiff): JarvisAlert[] {
   const alerts: JarvisAlert[] = [];
 
@@ -80,7 +81,7 @@ export function alertsFromDiff(diff: JarvisDiff): JarvisAlert[] {
   for (const w of diff.newSafetyWarnings) {
     alerts.push({
       severity: "page",
-      title: "Safety warning",
+      title: "New safety",
       detail: w,
       key: `jarvis.safety.new:${w.slice(0, 40)}`,
     });

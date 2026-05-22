@@ -121,6 +121,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         : pick.reasoningShort || pick.reasoning.split(".")[0] + ".",
       reasoningShort: pick.reasoningShort,
       isFeatured: pick.isFeatured,
+      isAuditAvailable:
+        !pick.id.startsWith("sample-pick-") &&
+        !(pick.modelVersion ?? "").startsWith("sample-"),
       generatedAt: pick.generatedAt.toISOString(),
       dataFreshnessAt: pick.dataFreshnessAt?.toISOString() ?? null,
       result: pick.result as PickResult,

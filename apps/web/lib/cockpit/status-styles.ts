@@ -9,6 +9,7 @@
 
 import type { JarvisHealth, JarvisLaunchStatus } from "@/lib/cockpit/jarvis";
 
+// Maps a launch status to its human label and visual tone.
 export function launchStatusStyle(status: JarvisLaunchStatus): { label: string; tone: string } {
   switch (status) {
     case "LAUNCH_READY":
@@ -33,6 +34,7 @@ export function launchStatusStyle(status: JarvisLaunchStatus): { label: string; 
   }
 }
 
+// Maps sectional health to a text-color tone.
 export function healthTone(h: JarvisHealth): string {
   switch (h) {
     case "GREEN":

@@ -785,6 +785,148 @@ button { font-family: inherit; cursor: pointer; }
   background: rgba(18,27,49,0.72);
   border-radius: var(--r-sm);
 }
+
+.mission-control-grid {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.35fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.mission-core,
+.mission-lane {
+  border: 1px solid color-mix(in srgb, var(--ion-blue-glow) 18%, transparent);
+  background: linear-gradient(180deg, rgba(13, 17, 23, 0.94), rgba(5, 6, 8, 0.92));
+  box-shadow:
+    0 30px 80px -45px color-mix(in srgb, var(--ion-blue-glow) 32%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--ion-white) 6%, transparent);
+}
+
+.mission-core {
+  border-radius: 18px;
+  padding: clamp(22px, 3vw, 34px);
+  position: relative;
+  overflow: hidden;
+}
+
+.mission-core::before {
+  content: "";
+  position: absolute;
+  inset: -30% -25% auto auto;
+  width: 240px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ion-blue-glow) 22%, transparent), transparent 68%);
+  pointer-events: none;
+}
+
+.mission-core-top,
+.mission-verdict {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+
+.mission-kicker,
+.mission-verdict span,
+.mission-lane-head {
+  font: 700 11px/1 var(--f-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.mission-core strong,
+.mission-verdict strong {
+  color: var(--ion-white);
+  font: 800 clamp(22px, 3vw, 34px)/1.02 var(--f-display);
+  letter-spacing: 0;
+}
+
+.mission-core p {
+  position: relative;
+  margin: 24px 0 0;
+  max-width: 54ch;
+  color: var(--ion-1);
+  font: 400 16px/1.65 var(--f-body);
+}
+
+.mission-flow {
+  position: relative;
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.mission-flow span {
+  color: var(--ion-white);
+  font: 700 12px/1 var(--f-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.mission-flow i {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, var(--ion-blue-glow), transparent);
+}
+
+.mission-verdict {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid color-mix(in srgb, var(--ion-1) 12%, transparent);
+}
+
+.mission-verdict strong {
+  font-size: clamp(18px, 2vw, 24px);
+  color: var(--ion-blue-glow);
+}
+
+.mission-lanes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.mission-lane {
+  border-radius: 14px;
+  padding: 18px;
+  min-height: 168px;
+}
+
+.mission-lane-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mission-lane-head b {
+  color: var(--ion-blue-glow);
+}
+
+.mission-lane-violet .mission-lane-head b {
+  color: var(--ultraviolet-glow);
+}
+
+.mission-lane-magenta .mission-lane-head b {
+  color: var(--plasma);
+}
+
+.mission-lane h3 {
+  margin: 18px 0 0;
+  color: var(--ion-white);
+  font: 800 22px/1.05 var(--f-display);
+  letter-spacing: 0;
+}
+
+.mission-lane p {
+  margin: 10px 0 0;
+  color: var(--ion-1);
+  font: 400 14px/1.55 var(--f-body);
+}
 .mobile-nav { display: none; position: relative; }
 .desktop-auth { display: inline-flex; align-items: center; gap: 10px; }
 .mobile-nav-trigger {
@@ -823,6 +965,7 @@ button { font-family: inherit; cursor: pointer; }
 @media (max-width: 1120px) {
   .nav-left { gap: 20px; }
   .nav-links a { padding: 8px 10px; }
+  .mission-control-grid { grid-template-columns: 1fr; }
   .picks-grid,
   .pricing { grid-template-columns: repeat(2, 1fr); }
   .hero h1 { font-size: 118px; }
@@ -831,6 +974,13 @@ button { font-family: inherit; cursor: pointer; }
 
 @media (max-width: 860px) {
   .container { padding: 0 20px; }
+  .mission-lanes { grid-template-columns: 1fr; }
+  .mission-flow { grid-template-columns: 1fr; gap: 12px; }
+  .mission-flow i {
+    width: 1px;
+    height: 18px;
+    background: linear-gradient(180deg, var(--ion-blue-glow), transparent);
+  }
   .nav-inner { height: 60px; }
   .nav-left { min-width: 0; }
   .nav-logo { flex-shrink: 0; }

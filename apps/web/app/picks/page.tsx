@@ -7,6 +7,7 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import type { PublicPick, DailySlate } from "@sports/types";
 import Link from "next/link";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Today's Signal Feed — Sports Picks With Reasoning Attached",
@@ -33,6 +34,18 @@ interface PicksResponse {
   };
 }
 
+function getRequestOrigin(): string {
+  const h = headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  if (!host) {
+    return process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
+  }
+  const proto =
+    h.get("x-forwarded-proto") ??
+    (host.startsWith("localhost") || host.startsWith("127.0.0.1") ? "http" : "https");
+  return `${proto}://${host}`;
+}
+
 // ─────────────────────────────────────────────
 // Data fetching
 // ─────────────────────────────────────────────
@@ -42,7 +55,7 @@ async function fetchPicks(
   date?: string,
   grade?: string
 ): Promise<PicksResponse> {
-  const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
+  const appUrl = getRequestOrigin();
   const params = new URLSearchParams();
   if (sport) params.set("sport", sport);
   if (date) params.set("date", date);
@@ -79,7 +92,7 @@ async function fetchPicks(
 
 async function fetchSlate(): Promise<DailySlate | null> {
   try {
-    const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
+    const appUrl = getRequestOrigin();
     const res = await fetch(`${appUrl}/api/picks/daily-slate`, {
       next: { revalidate: 1800 },
     });

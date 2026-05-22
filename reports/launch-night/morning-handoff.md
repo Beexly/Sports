@@ -77,6 +77,8 @@ on this branch, not committed yet — see the operator commands below).
 4. `docs/launch-runbook.md` — step-by-step recipe to take the platform
    to production.
 5. `docs/launch-observatory.md` — architecture + brand voice reference.
+6. `reports/launch-night/snapshots` — static HTML previews for the
+   critical public and cockpit routes.
 
 ## Next operator actions
 

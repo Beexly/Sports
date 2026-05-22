@@ -25,6 +25,10 @@ function listTsFiles(dir: string): string[] {
   return acc;
 }
 
+function slashPath(path: string): string {
+  return path.replace(/\\/g, "/");
+}
+
 const repoRoot = resolve(__dirname, "..");
 const cockpitPages = listTsFiles(resolve(repoRoot, "app/cockpit"));
 const cockpitApi = listTsFiles(resolve(repoRoot, "app/api/cockpit"));
@@ -40,7 +44,7 @@ describe("Cockpit routes — admin gating invariants", () => {
   it("every cockpit page file lives under app/cockpit (so it inherits the layout)", () => {
     expect(cockpitPages.length).toBeGreaterThanOrEqual(6); // layout + at least overview/agents/tasks/review/media
     for (const f of cockpitPages) {
-      expect(f).toContain("app/cockpit");
+      expect(slashPath(f)).toContain("app/cockpit");
     }
   });
 

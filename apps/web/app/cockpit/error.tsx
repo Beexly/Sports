@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 /**
  * Cockpit error boundary.
@@ -44,12 +45,12 @@ export default function CockpitError({
         >
           Try again
         </button>
-        <a
+        <Link
           href="/cockpit"
           className="rounded-lg border border-red-900 px-4 py-2 text-sm text-red-200 hover:bg-red-950/40"
         >
           Reload /cockpit
-        </a>
+        </Link>
       </div>
     </div>
   );

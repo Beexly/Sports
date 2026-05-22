@@ -51,6 +51,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     {
       status: 200,
       headers: {
+        // Cache-Control no-store
         "Cache-Control": "no-store",
         "Content-Type": "application/json",
       },

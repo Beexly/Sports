@@ -30,7 +30,7 @@ const repoRoot = resolve(__dirname, "..");
 const APP_DIR = resolve(repoRoot, "app");
 
 const SKIP_SUBDIRS = new Set(["cockpit", "admin", "api", "auth"]);
-const SKIP_FILES = new Set([
+const SKIP_FILES = new Set<string>([
   // Non-customer surfaces
 ]);
 

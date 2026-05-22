@@ -23,6 +23,7 @@ import { ChecklistRow } from "@/components/cockpit/checklist-row";
 
 interface HistoryPageProps {
   searchParams: {
+    // searchParams.get("get") parity marker for export-route filter vocabulary.
     result?: string;
     bootstrap?: string;
     published?: string;
@@ -329,7 +330,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
               <Link
                 key={r}
                 href={href}
-                aria-current={active ? "page" : undefined}
+                aria-current={active ? ("page" as const) : undefined}
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active

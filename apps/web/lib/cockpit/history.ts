@@ -34,6 +34,7 @@ export interface HistoryEligibilityContext {
   readonly canExposePerformanceStats: boolean;
 }
 
+// Computes public-performance and learning eligibility for one pick row.
 export function evaluatePickEligibility(
   pick: HistoricalPickRow,
   ctx: HistoryEligibilityContext
@@ -137,6 +138,7 @@ function csvCell(v: string | number | boolean | null): string {
   return s;
 }
 
+// Builds the forensic pick ledger CSV from already-filtered rows.
 export function buildHistoryCsv(rows: readonly CsvExportRow[]): string {
   const lines: string[] = [CSV_HEADER];
   for (const r of rows) {

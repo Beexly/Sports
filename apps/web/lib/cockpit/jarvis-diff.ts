@@ -63,6 +63,7 @@ function setDiff<T>(prev: readonly T[], curr: readonly T[]): { added: T[]; remov
   return { added, removed };
 }
 
+// Compares two Jarvis assessments and returns operator-readable drift.
 export function diffJarvis(
   previous: JarvisAssessment | null,
   current: JarvisAssessment

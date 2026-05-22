@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Seed Stripe products and prices for Helm.
+ * Seed Stripe products and prices for Galaxy Sports Edge.
  *
  * Idempotent: if a product or price already exists with the same lookup_key,
  * it's reused. Safe to re-run; safe to run in Test mode AND in Live mode.
@@ -24,17 +24,17 @@ const STRIPE_API = "https://api.stripe.com/v1";
 
 const PLANS = [
   {
-    productName: "Helm Pro",
-    productLookup: "helm-pro",
-    priceLookup: "helm-pro-monthly",
+    productName: "Galaxy Sports Edge Pro",
+    productLookup: "gse-pro",
+    priceLookup: "gse-pro-monthly",
     unitAmount: 1900, // $19.00
     interval: "month",
     envVar: "STRIPE_PRO_PRICE_ID",
   },
   {
-    productName: "Helm Elite",
-    productLookup: "helm-elite",
-    priceLookup: "helm-elite-monthly",
+    productName: "Galaxy Sports Edge Elite",
+    productLookup: "gse-elite",
+    priceLookup: "gse-elite-monthly",
     unitAmount: 4900, // $49.00
     interval: "month",
     envVar: "STRIPE_ELITE_PRICE_ID",

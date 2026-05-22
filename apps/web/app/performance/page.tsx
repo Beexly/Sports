@@ -225,7 +225,7 @@ export default async function PerformancePage() {
                     <dt className="text-gray-600">Win rate definition</dt>
                     <dd>
                       <code className="rounded bg-gray-800 px-1 py-0.5 font-mono text-[10px] text-gray-300">
-                        wins / (wins + losses)
+                        wins divided by decided outcomes
                       </code>
                     </dd>
                   </div>

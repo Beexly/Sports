@@ -18,7 +18,7 @@
  *     promotion records).
  */
 
-import { getApprovedClaims } from "@/lib/trust-claims";
+import { getApprovedClaims, getClaim } from "@/lib/trust-claims";
 import type {
   ContentDraftRecord,
   ContentDraftVisibility,
@@ -28,7 +28,7 @@ import type {
 import { CONTENT_TEMPLATES } from "./templates";
 
 const RESPONSIBLE_GAMING_LINE =
-  "If you or someone you know has a gambling problem, call 1-800-522-4700 (National Problem Gambling Helpline). Sports betting involves risk.";
+  `${getClaim("risk.gamble-responsibly")?.copy ?? "Sports betting involves risk."} Sports betting involves risk.`;
 
 const AFFILIATE_DISCLOSURE_LINE =
   "Affiliate disclosure: this platform may earn a commission when a reader signs up at a partner sportsbook. Promotion terms govern. 21+. Geographic and eligibility restrictions apply.";

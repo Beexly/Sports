@@ -54,7 +54,7 @@ describe("Performance page — gate enforcement (source-level)", () => {
   });
 
   it("includes methodology metadata (sample size, model version, win-rate definition) in the gated branch", () => {
-    expect(pageSource).toMatch(/wins\s*\/\s*\(wins\s*\+\s*losses\)/);
+    expect(pageSource).toMatch(/wins divided by decided outcomes/);
     expect(pageSource).toMatch(/model\s*version/i);
     expect(pageSource).toMatch(/sample\s*size/i);
   });

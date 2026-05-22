@@ -6,6 +6,7 @@ import type {
   FactorBreakdown,
 } from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
+import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
 
 // ─────────────────────────────────────────────
 // Main PickCard
@@ -147,6 +148,17 @@ export function PickCard({
       <div className="flex items-center justify-between border-t border-gray-800/60 pt-2">
         <DataQualityMeter score={pick.dataQualityScore} />
         {freshnessAge !== null && <FreshnessIndicator ageMinutes={freshnessAge} />}
+      </div>
+
+      {/* Evidence audit trigger — visible to ALL tiers for real picks (drives upgrade for FREE). */}
+      <div className="flex items-center justify-end">
+        {pick.isAuditAvailable ? (
+          <EvidenceAuditDrawer pickId={pick.id} />
+        ) : (
+          <span className="rounded-full border border-gray-800 bg-gray-900/50 px-3 py-1 text-[11px] font-medium tracking-wide text-gray-500">
+            Evidence opens on live picks
+          </span>
+        )}
       </div>
     </article>
   );

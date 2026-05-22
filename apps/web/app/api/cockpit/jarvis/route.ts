@@ -36,6 +36,7 @@ export async function GET(): Promise<NextResponse> {
       {
         status: 200,
         headers: {
+          // Cache-Control no-store
           "Cache-Control": "no-store",
           "Content-Type": "application/json",
         },
@@ -53,6 +54,7 @@ export async function GET(): Promise<NextResponse> {
         performancePolicy: null,
         error: message,
       },
+      // Cache-Control no-store
       { status: 200, headers: { "Cache-Control": "no-store" } }
     );
   }

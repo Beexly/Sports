@@ -40,6 +40,7 @@ const TRANSITIONS: Readonly<Record<CockpitTaskStatus, readonly CockpitTaskStatus
   ARCHIVED: [],
 };
 
+// Returns whether a cockpit task can move from one status to another.
 export function isAllowedTransition(
   from: CockpitTaskStatus,
   to: CockpitTaskStatus
@@ -48,6 +49,7 @@ export function isAllowedTransition(
   return TRANSITIONS[from].includes(to);
 }
 
+// Lists every allowed next status for a cockpit task.
 export function allowedTransitionsFrom(
   from: CockpitTaskStatus
 ): readonly CockpitTaskStatus[] {

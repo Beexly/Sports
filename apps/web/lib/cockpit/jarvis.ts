@@ -338,6 +338,7 @@ function buildPhaseMatrix(layers: JarvisLayerStatuses): JarvisAssessment["phaseM
   ];
 }
 
+// Synthesizes launch readiness from gates, evidence, and safety signals.
 export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
   const closedGates = gateLabels(input.gates);
 
@@ -453,6 +454,9 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
   let launchStatus: JarvisLaunchStatus = overall;
   if (safety.length > 0 && launchStatus === "LAUNCH_READY") {
     launchStatus = "NOT_READY_SAFETY";
+  }
+  if (externalConfig.length > 0 && launchStatus === "LAUNCH_READY") {
+    launchStatus = "LAUNCH_READY_PENDING_EXTERNAL_CONFIG";
   }
   if (overall === "LAUNCH_READY_PENDING_EXTERNAL_CONFIG" && externalConfig.length === 0 && missingPhase.length === 0 && safety.length === 0) {
     // Amber with no specific blocker reduces to launch-ready-pending-config.

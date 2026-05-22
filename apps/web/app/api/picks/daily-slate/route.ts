@@ -37,6 +37,10 @@ export async function GET() {
   const sportBreakdown = Array.from(sportCount.entries()).map(
     ([sport, pickCount]) => ({ sport, pickCount })
   );
+  let recentRecord: { wins: number; losses: number; pushes: number; period: string } | null = null;
+  if (gates.canExposePerformanceStats) {
+    recentRecord = { wins: 0, losses: 0, pushes: 0, period: "Last 7 days" };
+  }
 
   return NextResponse.json({
     success: true,
@@ -50,9 +54,7 @@ export async function GET() {
       lastUpdatedAt: new Date().toISOString(),
       sportBreakdown,
       // recentRecord stays null when stats are gated.
-      recentRecord: gates.canExposePerformanceStats
-        ? { wins: 0, losses: 0, pushes: 0, period: "Last 7 days" }
-        : null,
+      recentRecord,
       isSampleData: demoActive,
     },
     meta: { isSampleData: demoActive },

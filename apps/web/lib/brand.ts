@@ -45,8 +45,8 @@ export const TIER_DISPLAY_NAMES = {
 /** Helpline shown on every page footer per responsible-play obligations. */
 export const HELPLINE = {
   name: "National Problem Gambling Helpline",
-  number: "1-800-522-4700",
-  href: "tel:1-800-522-4700",
+  number: "1-800-GAMBLER",
+  href: "https://www.ncpgambling.org/help-treatment/",
   shortLabel: "1-800-GAMBLER",
 } as const;
 

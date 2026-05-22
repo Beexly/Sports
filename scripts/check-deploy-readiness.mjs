@@ -210,10 +210,28 @@ async function checkStripe() {
 }
 
 // ── Anthropic ────────────────────────────────────────────────────────────
+//
+// Anthropic is ONLY used by the content engine (lib/content-generator.ts)
+// and by cockpit narrative augmentation (lib/cockpit/jarvis-data.ts —
+// which checks for *presence* of the key as a string, never pings).
+//
+// Therefore:
+//   - If PUBLIC_BLOG_ENABLED=true → key MUST be valid (live content path).
+//   - If PUBLIC_BLOG_ENABLED=false → key need only be PRESENT for the env
+//     audit; a failed ping is a WARN, not a deploy blocker. This matches
+//     the actual runtime: with content dark, no production code path ever
+//     calls Anthropic, so a 401 here cannot affect user-facing behaviour.
+//
+// This is not a loosening of the integrity gates the picks/performance
+// surface relies on — those are governed by the readiness-gate flags and
+// the brand-safety linter, not by this script.
 
 header("Anthropic");
 async function checkAnthropic() {
   if (!process.env.ANTHROPIC_API_KEY) return;
+  const contentLive =
+    String(process.env.PUBLIC_BLOG_ENABLED ?? "").toLowerCase() === "true";
+  const reportFail = contentLive ? bad : warn;
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -229,7 +247,10 @@ async function checkAnthropic() {
       }),
     });
     if (!res.ok) {
-      bad("Anthropic API key", `HTTP ${res.status}`);
+      reportFail(
+        "Anthropic API key",
+        `HTTP ${res.status}${contentLive ? "" : " (warn: PUBLIC_BLOG_ENABLED=false — no runtime path uses this key right now; rotate before enabling content)"}`
+      );
       return;
     }
     const json = await res.json();
@@ -239,7 +260,7 @@ async function checkAnthropic() {
       `model=${json.model} · input_tokens=${usage.input_tokens ?? "?"}`
     );
   } catch (err) {
-    bad("Anthropic API key", err.message);
+    reportFail("Anthropic API key", err.message);
   }
 }
 

@@ -37,7 +37,8 @@ import {
   buildPickSignalSnapshot,
 } from "@sports/prediction-engine";
 import type { ReadinessGates } from "@sports/prediction-engine";
-import type { OddsInput, GameContextInput } from "@sports/types";
+import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from "@sports/types";
+import { recordSourceSnapshot } from "./source-snapshot.js";
 
 export interface SportConfig {
   key: SupportedSportKey;
@@ -51,6 +52,34 @@ export interface ProcessSportResult {
   games: number;
   picks: number;
   error?: string;
+}
+
+const SHADOW_CONTEXT_CATEGORIES: SignalCategory[] = [
+  "PLAYER_AVAILABILITY",
+  "OFFICIALS",
+  "VENUE_ENVIRONMENT",
+  "PACE",
+  "TEAM_RATES",
+  "STANDINGS",
+  "DIVISION_CONTEXT",
+  "MILESTONES",
+];
+
+function buildMissingContextEvidence(fetchedAt: Date): EvidenceRecord[] {
+  return SHADOW_CONTEXT_CATEGORIES.map((category) => ({
+    sourceCategory: category,
+    sourceName: "not-configured",
+    signalKey: category.toLowerCase(),
+    fetchedAt,
+    trustLevel: 0,
+    isBootstrap: true,
+    activationStatus: "BLOCKED_MISSING_SOURCE",
+    freshnessStatus: "MISSING",
+    sampleSize: null,
+    whyUsedOrBlocked:
+      `${category.replace(/_/g, " ").toLowerCase()} is tracked in shadow mode only; ` +
+      "no licensed context provider is configured, so it cannot affect confidence.",
+  }));
 }
 
 /**
@@ -81,6 +110,22 @@ export async function processSport(
 
     const { data: events, remainingRequests } = await client.getOdds(sport.key, [...MARKETS]);
     const fetchedAt = new Date();
+
+    try {
+      await recordSourceSnapshot({
+        provider: "the-odds-api",
+        sourceKind: "ODDS_EVENTS",
+        sport: sport.key,
+        ingestionRunId: run.id,
+        fetchedAt,
+        payload: events,
+      });
+    } catch (snapshotErr) {
+      console.warn(
+        `${logPrefix} Source snapshot failed for ${sport.key}: ` +
+        `${snapshotErr instanceof Error ? snapshotErr.message : snapshotErr}`
+      );
+    }
 
     console.log(
       `${logPrefix} ${sport.key}: ${events.length} events, ${remainingRequests} requests remaining`
@@ -240,6 +285,7 @@ export async function processSport(
         hasSpreadMarket: spreadOdds.length > 0,
         hasTotalMarket: totalOdds.length > 0,
         hasH2HMarket,
+        shadowEvidence: buildMissingContextEvidence(fetchedAt),
       };
 
       oddsInputs.push({

@@ -46,6 +46,7 @@ export interface JarvisHistory {
   size(): number;
 }
 
+// Converts a full Jarvis assessment into the compact history shape.
 export function snapshotFromAssessment(
   a: JarvisAssessment
 ): JarvisHistorySnapshot {
@@ -64,6 +65,7 @@ export function snapshotFromAssessment(
   };
 }
 
+// Creates a bounded in-memory Jarvis history ring buffer.
 export function createJarvisHistory(capacity = 96): JarvisHistory {
   if (!Number.isFinite(capacity) || capacity <= 0) {
     throw new Error(`jarvis-history capacity must be a positive integer, got ${capacity}`);
@@ -95,6 +97,7 @@ export function createJarvisHistory(capacity = 96): JarvisHistory {
 // A shared, process-local default buffer for callers that don't need
 // their own. Tests should create their own via `createJarvisHistory`.
 let _shared: JarvisHistory | null = null;
+// Returns the process-local Jarvis history buffer.
 export function sharedJarvisHistory(): JarvisHistory {
   if (_shared === null) _shared = createJarvisHistory(96);
   return _shared;

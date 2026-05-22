@@ -29,6 +29,19 @@ export { getReadinessGates, bootstrapGateResponse } from "./readiness.js";
 export type { ReadinessGates } from "./readiness.js";
 export { buildPickSignalSnapshot } from "./signal-snapshot.js";
 export type { PickSignalSnapshotData } from "./signal-snapshot.js";
+export {
+  EVIDENCE_FACTOR_DEFINITIONS,
+  buildEvidenceReadinessMatrix,
+  getEvidenceFactorDefinition,
+} from "./evidence-readiness-matrix.js";
+export type {
+  EvidenceFactorDefinition,
+  EvidenceFactorKey,
+  EvidenceMatrixRow,
+  EvidenceMatrixStatus,
+  EvidenceReadinessMatrix,
+  FailureHorizon,
+} from "./evidence-readiness-matrix.js";
 // v6 — bankroll math helpers. Exported for future model work; not wired to
 // the public API until price provenance and policy review are complete.
 export {

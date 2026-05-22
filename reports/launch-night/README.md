@@ -7,7 +7,7 @@
 `brand-safety` job, 2 ADRs, full operator runbook, db-seeded picks so
 the dashboard renders rows in the morning. All validation + git push
 blocked from inside the sandbox; the operator must run the recipe in
-`morning-handoff.md` outside the sandbox.
+the morning handoff outside the sandbox.
 
 ## Read in order
 

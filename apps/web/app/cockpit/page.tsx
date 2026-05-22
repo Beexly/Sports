@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic";
 export default async function CockpitOverview() {
   const gates = getReadinessGates();
   const stubMode = isStubMode();
-  const demoActive = stubMode && isDemoPicksEnabled();
+  const demoActive = isDemoPicksEnabled() && stubMode;
   const now = new Date();
 
   const todayPicksForOperator = await db.pick

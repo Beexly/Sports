@@ -55,8 +55,8 @@ if (ADMIN_COOKIE) {
 
 console.log(`APP_URL=${APP_URL}`);
 for (const r of results) {
-  const tag = r.ok ? "OK" : "FAIL";
-  console.log(`${tag.padEnd(5)} ${r.path.padEnd(28)} ${String(r.status).padEnd(4)} ${r.ms}ms`);
+  const statusLabel = r.ok ? "OK".padEnd(5) : "FAIL".padEnd(5);
+  console.log(`${statusLabel} ${r.path.padEnd(28)} ${String(r.status).padEnd(4)} ${r.ms}ms`);
   if (r.bodyHead && !r.ok) {
     console.log(`  body[0..200]: ${r.bodyHead.replace(/\s+/g, " ")}`);
   }

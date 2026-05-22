@@ -100,10 +100,12 @@ export const AGENTS: Readonly<Record<AgentKey, AgentDefinition>> = {
   },
 };
 
+// Lists every registered cockpit agent definition in display order.
 export function listAgents(): readonly AgentDefinition[] {
   return Object.values(AGENTS);
 }
 
+// Returns one registered cockpit agent by stable key.
 export function getAgent(key: AgentKey): AgentDefinition {
   return AGENTS[key];
 }

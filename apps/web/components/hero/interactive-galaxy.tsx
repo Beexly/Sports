@@ -3,23 +3,27 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Hero atmospheric layer — "Orbital Edge".
+ * Hero atmospheric layer — "Orbital Edge", interactive build.
  *
- * Intentionally restrained. Replaces the previous Three.js galaxy field
- * (3,600 particles, dual rings, pulsing magenta core) which read as
- * generic AI-startup template.
+ * Design intent — cinematic, high-fidelity, alive:
+ *   - Pure 2D canvas. No Three.js. Deterministic motion. Smaller bundle.
+ *   - Layered particle field with depth-of-field: ~140 particles at three
+ *     depth tiers, each scaling alpha + radius + parallax response.
+ *   - Constellation lines between near neighbors — hairline cyan, fades
+ *     by distance. Disabled on reduced-motion.
+ *   - Mouse parallax of the whole orbital system (whole scene shifts
+ *     toward the cursor at ~6px max). Adds a real "I'm in space" feel.
+ *   - Cursor attractor: nearby particles drift toward the cursor with
+ *     soft easing. Strong enough to be felt, gentle enough not to be a toy.
+ *   - Multi-orbital system: 3 elliptical orbits (UV, cyan, white) at
+ *     different rotations + radii + traveler speeds.
+ *   - On traveler ↔ evidence-node contact, the node emits a soft ripple.
+ *   - Three faint nebula clouds at deep tier for atmospheric haze.
+ *   - DPR-aware up to 3× on high-density displays.
  *
- * Design intent — quiet, cinematic, calibrated:
- *   - Pure 2D canvas. No Three.js. Lighter bundle, deterministic motion.
- *   - One primary orbit, one secondary orbit, one traveling signal point.
- *   - A faint horizon hairline crossing the frame.
- *   - One distant pulse every ~7s — the "signal acquired" beat.
- *   - The whole scene drifts a few degrees over 60s. Barely perceptible.
- *   - Subtle radial vignette to seat the orbit in deep space, not a
- *     bedroom-poster particle cloud.
- *
- * Reduced-motion: still renders the static composition (orbits + signal
- * dot at rest), but no animation loop runs.
+ * Reduced-motion fallback:
+ *   - Renders the static composition (orbits, particle field at rest,
+ *     evidence nodes labeled) without an animation loop. Still beautiful.
  */
 
 function prefersReducedMotion(): boolean {
@@ -34,7 +38,73 @@ const ORBITAL_CYAN = "0, 229, 255";
 const ION_MAGENTA = "255, 45, 214";
 const SOFT_ULTRAVIOLET = "122, 92, 255";
 
-/** Draw an ellipse outline with the given rotation (radians). */
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  baseAlpha: number;
+  radius: number;
+  /** depth tier: 0 = far (smallest parallax), 2 = near (largest parallax) */
+  depth: 0 | 1 | 2;
+  /** assigned color rgb string */
+  rgb: string;
+}
+
+interface OrbitDef {
+  rxScale: number;
+  ryScale: number;
+  rotation: number;
+  rgb: string;
+  alpha: number;
+  width: number;
+  /** seconds per full lap; 0 = no traveler */
+  lapPeriod: number;
+  /** angular offset so multiple travelers don't overlap */
+  thetaOffset: number;
+  /** traveler dot color rgb */
+  travRgb: string;
+}
+
+const ORBITS: OrbitDef[] = [
+  // Outer, slow, ultraviolet
+  {
+    rxScale: 1.55,
+    ryScale: 0.68,
+    rotation: -0.48,
+    rgb: SOFT_ULTRAVIOLET,
+    alpha: 0.10,
+    width: 1,
+    lapPeriod: 56,
+    thetaOffset: 0,
+    travRgb: SOFT_ULTRAVIOLET,
+  },
+  // Primary, medium, cyan
+  {
+    rxScale: 1.10,
+    ryScale: 0.46,
+    rotation: -0.32,
+    rgb: ORBITAL_CYAN,
+    alpha: 0.20,
+    width: 1.1,
+    lapPeriod: 28,
+    thetaOffset: Math.PI * 0.6,
+    travRgb: ORBITAL_CYAN,
+  },
+  // Inner, fast, white
+  {
+    rxScale: 0.74,
+    ryScale: 0.30,
+    rotation: -0.18,
+    rgb: ION_WHITE,
+    alpha: 0.14,
+    width: 0.9,
+    lapPeriod: 16,
+    thetaOffset: Math.PI * 1.2,
+    travRgb: ION_WHITE,
+  },
+];
+
 function strokeOrbit(
   ctx: CanvasRenderingContext2D,
   center: Vec2,
@@ -52,9 +122,56 @@ function strokeOrbit(
   ctx.stroke();
 }
 
+/**
+ * Pseudo-random deterministic generator so the initial particle field
+ * is the same across mounts (helps debugging). Mulberry32.
+ */
+function rng(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function spawnParticles(
+  widthCss: number,
+  heightCss: number,
+  count: number,
+): Particle[] {
+  const r = rng(0xc0ffee);
+  const arr: Particle[] = [];
+  for (let i = 0; i < count; i++) {
+    const depthRoll = r();
+    const depth: 0 | 1 | 2 = depthRoll < 0.45 ? 0 : depthRoll < 0.85 ? 1 : 2;
+    const radius =
+      depth === 0 ? 0.5 + r() * 0.5 : depth === 1 ? 0.7 + r() * 0.7 : 1.0 + r() * 1.1;
+    const baseAlpha =
+      depth === 0 ? 0.28 + r() * 0.22 : depth === 1 ? 0.42 + r() * 0.22 : 0.62 + r() * 0.28;
+    // Color: mostly white, occasional cyan, rare magenta sparkle (near tier only)
+    let rgb = ION_WHITE;
+    const colorRoll = r();
+    if (depth === 2 && colorRoll < 0.12) rgb = ION_MAGENTA;
+    else if (colorRoll < 0.28) rgb = ORBITAL_CYAN;
+    arr.push({
+      x: r() * widthCss,
+      y: r() * heightCss,
+      vx: (r() - 0.5) * 0.04,
+      vy: (r() - 0.5) * 0.04,
+      baseAlpha,
+      radius,
+      depth,
+      rgb,
+    });
+  }
+  return arr;
+}
+
 export function InteractiveGalaxy() {
   const mountRef = useRef<HTMLDivElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -65,7 +182,6 @@ export function InteractiveGalaxy() {
     canvas.style.display = "block";
     canvas.style.width = "100%";
     canvas.style.height = "100%";
-    canvasRef.current = canvas;
     mount.appendChild(canvas);
 
     const ctx = canvas.getContext("2d", { alpha: true });
@@ -80,46 +196,98 @@ export function InteractiveGalaxy() {
     let widthCss = 1;
     let heightCss = 1;
 
+    // Mouse state — drives parallax and the attractor.
+    const mouse = { x: 0, y: 0, has: false };
+    let parallaxX = 0;
+    let parallaxY = 0;
+
+    // Particle field — count scales with viewport area so mobile stays smooth.
+    let particles: Particle[] = [];
+    const rebuildParticles = () => {
+      const area = widthCss * heightCss;
+      // Tuned: ~1 particle per 8500 css-px², capped 60..160
+      const count = Math.max(60, Math.min(160, Math.round(area / 8500)));
+      particles = spawnParticles(widthCss, heightCss, count);
+    };
+
     const resize = () => {
       if (disposed) return;
       const rect = mount.getBoundingClientRect();
       widthCss = Math.max(1, rect.width);
       heightCss = Math.max(1, rect.height);
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Up to 3× DPR for crisp rendering on high-density displays.
+      dpr = Math.min(window.devicePixelRatio || 1, 3);
       canvas.width = Math.round(widthCss * dpr);
       canvas.height = Math.round(heightCss * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      rebuildParticles();
     };
 
     const observer = new ResizeObserver(resize);
     observer.observe(mount);
     resize();
 
+    const onPointerMove = (e: PointerEvent) => {
+      const rect = mount.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+      mouse.has = true;
+    };
+    const onPointerLeave = () => {
+      mouse.has = false;
+    };
+    if (!reduced) {
+      mount.addEventListener("pointermove", onPointerMove);
+      mount.addEventListener("pointerleave", onPointerLeave);
+    }
+
     const draw = (t: number) => {
       if (disposed) return;
-      // Elapsed seconds since mount.
       const elapsed = (t - startedAt) / 1000;
 
       ctx.clearRect(0, 0, widthCss, heightCss);
 
-      // ── Vignette background — deep space, not a particle pop-up.
-      const cx = widthCss * 0.62; // orbit anchored right of center
-      const cy = heightCss * 0.55;
+      // ── Parallax target — scene shifts toward the cursor up to ~6px.
+      const targetPX = mouse.has ? (mouse.x / widthCss - 0.5) * 12 : 0;
+      const targetPY = mouse.has ? (mouse.y / heightCss - 0.5) * 12 : 0;
+      // Easing toward target (low-pass filter — no jitter on idle cursor)
+      parallaxX += (targetPX - parallaxX) * 0.06;
+      parallaxY += (targetPY - parallaxY) * 0.06;
+
+      // ── Vignette background — deep space gradient anchored right of center.
+      const cxBase = widthCss * 0.62;
+      const cyBase = heightCss * 0.55;
+      const cx = cxBase + parallaxX;
+      const cy = cyBase + parallaxY;
       const maxR = Math.hypot(widthCss, heightCss);
 
-      const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 0.65);
-      bg.addColorStop(0, `rgba(${SOFT_ULTRAVIOLET}, 0.10)`);
-      bg.addColorStop(0.45, `rgba(${SOFT_ULTRAVIOLET}, 0.03)`);
+      const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 0.7);
+      bg.addColorStop(0, `rgba(${SOFT_ULTRAVIOLET}, 0.12)`);
+      bg.addColorStop(0.4, `rgba(${SOFT_ULTRAVIOLET}, 0.04)`);
       bg.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, widthCss, heightCss);
 
-      // ── Horizon hairline — a single thin meridian that suggests a horizon
-      //    crossing the orbit. Gives the frame a real-world reference.
-      const horizonY = Math.round(heightCss * 0.62) + 0.5;
+      // ── Atmospheric nebula clouds — three large, very faint magenta/UV blobs
+      //    at the deepest tier. Adds painterly depth.
+      const nebulas: Array<[number, number, string, number]> = [
+        [widthCss * 0.22, heightCss * 0.38, ION_MAGENTA, 0.045],
+        [widthCss * 0.78, heightCss * 0.72, ORBITAL_CYAN, 0.05],
+        [widthCss * 0.5, heightCss * 0.15, SOFT_ULTRAVIOLET, 0.055],
+      ];
+      for (const [nx, ny, rgb, a] of nebulas) {
+        const neb = ctx.createRadialGradient(nx, ny, 0, nx, ny, 280);
+        neb.addColorStop(0, `rgba(${rgb}, ${a})`);
+        neb.addColorStop(1, `rgba(${rgb}, 0)`);
+        ctx.fillStyle = neb;
+        ctx.fillRect(0, 0, widthCss, heightCss);
+      }
+
+      // ── Horizon hairline — single thin meridian.
+      const horizonY = Math.round(heightCss * 0.62) + parallaxY * 0.3 + 0.5;
       const horizon = ctx.createLinearGradient(0, horizonY, widthCss, horizonY);
       horizon.addColorStop(0, `rgba(${ION_WHITE}, 0)`);
-      horizon.addColorStop(0.5, `rgba(${ION_WHITE}, 0.06)`);
+      horizon.addColorStop(0.5, `rgba(${ION_WHITE}, 0.07)`);
       horizon.addColorStop(1, `rgba(${ION_WHITE}, 0)`);
       ctx.strokeStyle = horizon;
       ctx.lineWidth = 1;
@@ -128,74 +296,184 @@ export function InteractiveGalaxy() {
       ctx.lineTo(widthCss, horizonY);
       ctx.stroke();
 
-      // ── Scene drift — extremely slow rotation of the whole orbital system.
-      const drift = reduced ? 0 : Math.sin(elapsed * 0.018) * 0.04;
+      // ── Update + render particles (skip motion under reduced).
+      if (!reduced) {
+        for (const p of particles) {
+          // Cursor attractor — only near tier feels it strongly.
+          if (mouse.has) {
+            const dx = mouse.x - p.x;
+            const dy = mouse.y - p.y;
+            const d2 = dx * dx + dy * dy;
+            const range = 180 * 180;
+            if (d2 < range) {
+              const factor = (1 - d2 / range) * 0.0008 * (p.depth + 1);
+              p.vx += dx * factor;
+              p.vy += dy * factor;
+            }
+          }
+          // Drift + soft damping
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vx *= 0.985;
+          p.vy *= 0.985;
+          // Wrap edges
+          if (p.x < -4) p.x = widthCss + 4;
+          if (p.x > widthCss + 4) p.x = -4;
+          if (p.y < -4) p.y = heightCss + 4;
+          if (p.y > heightCss + 4) p.y = -4;
+        }
+      }
 
-      // Orbit dimensions, anchored to the right portion of the frame.
+      // Constellation lines — only when interactive and only for near tier.
+      if (!reduced) {
+        const linkRange = 90;
+        const linkRange2 = linkRange * linkRange;
+        ctx.lineWidth = 0.6;
+        for (let i = 0; i < particles.length; i++) {
+          const a = particles[i];
+          if (!a) continue;
+          if (a.depth < 1) continue;
+          for (let j = i + 1; j < particles.length; j++) {
+            const b = particles[j];
+            if (!b) continue;
+            if (b.depth < 1) continue;
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < linkRange2) {
+              const alpha = (1 - d2 / linkRange2) * 0.06;
+              ctx.strokeStyle = `rgba(${ORBITAL_CYAN}, ${alpha})`;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      // Particles
+      for (const p of particles) {
+        // Per-depth parallax — far tier almost still, near tier follows cursor most
+        const pxOff = parallaxX * (0.25 + p.depth * 0.35);
+        const pyOff = parallaxY * (0.25 + p.depth * 0.35);
+        // Subtle twinkle on near tier
+        const twinkle =
+          !reduced && p.depth === 2
+            ? 0.85 + 0.15 * Math.sin(elapsed * 1.6 + p.x * 0.013)
+            : 1;
+        ctx.fillStyle = `rgba(${p.rgb}, ${p.baseAlpha * twinkle})`;
+        ctx.beginPath();
+        ctx.arc(p.x + pxOff, p.y + pyOff, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // ── Scene drift — extremely slow rotation of the orbital system.
+      const drift = reduced ? 0 : Math.sin(elapsed * 0.018) * 0.04;
       const baseR = Math.min(widthCss, heightCss) * 0.42;
 
-      // ── Outer orbit — soft ultraviolet, very faint.
-      strokeOrbit(
-        ctx,
-        { x: cx, y: cy },
-        baseR * 1.45,
-        baseR * 0.62,
-        -0.42 + drift,
-        SOFT_ULTRAVIOLET,
-        0.10,
-        1,
-      );
+      // Draw orbits + travelers
+      const travelers: Array<{ x: number; y: number; rgb: string }> = [];
+      for (const orbit of ORBITS) {
+        const rx = baseR * orbit.rxScale;
+        const ry = baseR * orbit.ryScale;
+        const rot = orbit.rotation + drift;
+        strokeOrbit(ctx, { x: cx, y: cy }, rx, ry, rot, orbit.rgb, orbit.alpha, orbit.width);
 
-      // ── Primary orbit — cyan hairline.
-      strokeOrbit(
-        ctx,
-        { x: cx, y: cy },
-        baseR * 1.05,
-        baseR * 0.44,
-        -0.32 + drift,
-        ORBITAL_CYAN,
-        0.18,
-        1,
-      );
+        if (orbit.lapPeriod > 0) {
+          const theta = reduced
+            ? Math.PI * 0.85 + orbit.thetaOffset
+            : (elapsed / orbit.lapPeriod) * Math.PI * 2 + orbit.thetaOffset;
+          const cosR = Math.cos(rot);
+          const sinR = Math.sin(rot);
+          const lx = Math.cos(theta) * rx;
+          const ly = Math.sin(theta) * ry;
+          const tx = cx + lx * cosR - ly * sinR;
+          const ty = cy + lx * sinR + ly * cosR;
+          travelers.push({ x: tx, y: ty, rgb: orbit.travRgb });
 
-      // ── Traveler — one bright cyan signal point traversing the primary orbit.
-      //    One full lap every 28s. Cinematic, not frantic.
-      const lapPeriod = reduced ? 0 : 28;
-      const theta = lapPeriod > 0 ? (elapsed / lapPeriod) * Math.PI * 2 : Math.PI * 0.85;
-      const rx = baseR * 1.05;
-      const ry = baseR * 0.44;
-      const rot = -0.32 + drift;
-      const cosR = Math.cos(rot);
-      const sinR = Math.sin(rot);
-      const localX = Math.cos(theta) * rx;
-      const localY = Math.sin(theta) * ry;
-      const travX = cx + localX * cosR - localY * sinR;
-      const travY = cy + localX * sinR + localY * cosR;
+          // Halo
+          const halo = ctx.createRadialGradient(tx, ty, 0, tx, ty, 30);
+          halo.addColorStop(0, `rgba(${orbit.travRgb}, 0.6)`);
+          halo.addColorStop(0.55, `rgba(${orbit.travRgb}, 0.12)`);
+          halo.addColorStop(1, `rgba(${orbit.travRgb}, 0)`);
+          ctx.fillStyle = halo;
+          ctx.beginPath();
+          ctx.arc(tx, ty, 30, 0, Math.PI * 2);
+          ctx.fill();
+          // Core
+          ctx.fillStyle = `rgba(${ION_WHITE}, 0.95)`;
+          ctx.beginPath();
+          ctx.arc(tx, ty, 2.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
 
-      // Soft glow halo around the traveler.
-      const halo = ctx.createRadialGradient(travX, travY, 0, travX, travY, 26);
-      halo.addColorStop(0, `rgba(${ORBITAL_CYAN}, 0.55)`);
-      halo.addColorStop(0.5, `rgba(${ORBITAL_CYAN}, 0.10)`);
-      halo.addColorStop(1, `rgba(${ORBITAL_CYAN}, 0)`);
-      ctx.fillStyle = halo;
-      ctx.beginPath();
-      ctx.arc(travX, travY, 26, 0, Math.PI * 2);
-      ctx.fill();
+      // ── Evidence nodes — anchored at 4 angular positions around the
+      //    primary orbit, ripple when the primary traveler passes near.
+      const primary = ORBITS[1]!;
+      const primRx = baseR * primary.rxScale;
+      const primRy = baseR * primary.ryScale;
+      const primRot = primary.rotation + drift;
+      const cosP = Math.cos(primRot);
+      const sinP = Math.sin(primRot);
 
-      // The traveler itself.
-      ctx.fillStyle = `rgba(${ION_WHITE}, 0.95)`;
-      ctx.beginPath();
-      ctx.arc(travX, travY, 2.4, 0, Math.PI * 2);
-      ctx.fill();
+      const nodes: Array<[string, number, string, number]> = [
+        ["BOARD", 0.10, ORBITAL_CYAN, 0.9],
+        ["REST", 0.34, ORBITAL_CYAN, 0.72],
+        ["PLAYERS", 0.58, SOFT_ULTRAVIOLET, 0.45],
+        ["EV", 0.82, ION_MAGENTA, 0.42],
+      ];
+      const primTheta = reduced
+        ? Math.PI * 0.85 + primary.thetaOffset
+        : (elapsed / primary.lapPeriod) * Math.PI * 2 + primary.thetaOffset;
+      ctx.font = "600 10px JetBrains Mono, monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
 
-      // ── Distant pulse — one fixed point in the upper-left that pulses
-      //    once every ~7s. The "signal acquired" beat.
+      for (const [label, offset, rgb, alpha] of nodes) {
+        const nodeTheta = offset * Math.PI * 2;
+        const angleDist = Math.abs(
+          ((primTheta - nodeTheta) % (Math.PI * 2) + Math.PI * 3) % (Math.PI * 2) - Math.PI
+        );
+        const proximity = Math.max(0, 1 - angleDist / 0.35);
+        const ripple = reduced ? 0 : proximity;
+
+        const nx = Math.cos(nodeTheta) * primRx * 0.78;
+        const ny = Math.sin(nodeTheta) * primRy * 0.78;
+        const nodeX = cx + nx * cosP - ny * sinP;
+        const nodeY = cy + nx * sinP + ny * cosP;
+
+        // Ripple ring
+        if (ripple > 0) {
+          ctx.strokeStyle = `rgba(${rgb}, ${0.35 * ripple})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(nodeX, nodeY, 22 + ripple * 10, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        // Disc
+        ctx.fillStyle = `rgba(${rgb}, ${alpha * (0.14 + ripple * 0.18)})`;
+        ctx.beginPath();
+        ctx.arc(nodeX, nodeY, 18, 0, Math.PI * 2);
+        ctx.fill();
+        // Outline
+        ctx.strokeStyle = `rgba(${rgb}, ${alpha * (0.5 + ripple * 0.5)})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(nodeX, nodeY, 18, 0, Math.PI * 2);
+        ctx.stroke();
+        // Label
+        ctx.fillStyle = `rgba(${ION_WHITE}, ${alpha})`;
+        ctx.fillText(label, nodeX, nodeY);
+      }
+
+      // ── Distant pulse — magenta beacon, ~7s cadence.
       const pulseT = (elapsed % 7) / 7;
       const pulseAlpha = Math.max(0, 1 - pulseT) * 0.6;
-      const pulseR = 1.4 + pulseT * 22;
-      const pulseX = widthCss * 0.18;
-      const pulseY = heightCss * 0.32;
-
+      const pulseR = 1.4 + pulseT * 26;
+      const pulseX = widthCss * 0.18 + parallaxX * 0.5;
+      const pulseY = heightCss * 0.32 + parallaxY * 0.5;
       if (!reduced) {
         const pulse = ctx.createRadialGradient(pulseX, pulseY, 0, pulseX, pulseY, pulseR);
         pulse.addColorStop(0, `rgba(${ION_MAGENTA}, ${pulseAlpha * 0.7})`);
@@ -205,28 +483,10 @@ export function InteractiveGalaxy() {
         ctx.arc(pulseX, pulseY, pulseR, 0, Math.PI * 2);
         ctx.fill();
       }
-
-      // The pulse anchor point itself — always visible, just a single pixel.
       ctx.fillStyle = `rgba(${ION_MAGENTA}, 0.85)`;
       ctx.beginPath();
       ctx.arc(pulseX, pulseY, 1.4, 0, Math.PI * 2);
       ctx.fill();
-
-      // ── Three reference stars — barely-there, fixed positions. Just enough
-      //    to give the frame depth without becoming a particle field.
-      const stars: Array<[number, number, number]> = [
-        [widthCss * 0.84, heightCss * 0.22, 0.55],
-        [widthCss * 0.32, heightCss * 0.80, 0.40],
-        [widthCss * 0.92, heightCss * 0.78, 0.32],
-      ];
-      ctx.fillStyle = `rgba(${ION_WHITE}, 0.5)`;
-      for (const [sx, sy, alpha] of stars) {
-        ctx.globalAlpha = alpha;
-        ctx.beginPath();
-        ctx.arc(sx, sy, 0.9, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
 
       if (!reduced && !disposed) {
         frame = window.requestAnimationFrame(draw);
@@ -234,7 +494,6 @@ export function InteractiveGalaxy() {
     };
 
     if (reduced) {
-      // Single static draw at t=0 — composition intact, no animation.
       draw(performance.now());
     } else {
       frame = window.requestAnimationFrame(draw);
@@ -244,6 +503,8 @@ export function InteractiveGalaxy() {
       disposed = true;
       if (frame) window.cancelAnimationFrame(frame);
       observer.disconnect();
+      mount.removeEventListener("pointermove", onPointerMove);
+      mount.removeEventListener("pointerleave", onPointerLeave);
       if (canvas.parentNode === mount) mount.removeChild(canvas);
     };
   }, []);

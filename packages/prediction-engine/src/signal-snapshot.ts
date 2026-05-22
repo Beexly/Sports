@@ -35,6 +35,11 @@ export interface PickSignalSnapshotData {
   hadWeatherSignal: boolean;
   hadInjurySignal: boolean;
   hadRatingsSignal: boolean;
+  hadPlayerSignal: boolean;
+  hadOfficialsSignal: boolean;
+  hadVenueEnvironmentSignal: boolean;
+  hadPaceSignal: boolean;
+  hadMilestoneSignal: boolean;
 
   // Key quantities at prediction time
   bookmakerCount: number;
@@ -104,6 +109,12 @@ export function buildPickSignalSnapshot(
     usedDerivedHistory &&
     ((context?.homeAtsFormAtHome != null) || (context?.awayAtsFormAway != null));
 
+  const activeShadowCategories = new Set(
+    (context?.shadowEvidence ?? [])
+      .filter((signal) => signal.activationStatus === "ACTIVE")
+      .map((signal) => signal.sourceCategory)
+  );
+
   // Largest ATS sample used (home or away form, whichever is larger)
   const atsFormSampleSize = hadAtsFormSignal
     ? Math.max(
@@ -154,6 +165,13 @@ export function buildPickSignalSnapshot(
     hadWeatherSignal: false,            // not implemented yet
     hadInjurySignal: false,             // not implemented yet
     hadRatingsSignal: false,            // not implemented yet
+    hadPlayerSignal: activeShadowCategories.has("PLAYER_AVAILABILITY"),
+    hadOfficialsSignal: activeShadowCategories.has("OFFICIALS"),
+    hadVenueEnvironmentSignal: activeShadowCategories.has("VENUE_ENVIRONMENT"),
+    hadPaceSignal:
+      activeShadowCategories.has("PACE") ||
+      activeShadowCategories.has("TEAM_RATES"),
+    hadMilestoneSignal: activeShadowCategories.has("MILESTONES"),
 
     // Quantities
     bookmakerCount: pick.bookmakerCount,

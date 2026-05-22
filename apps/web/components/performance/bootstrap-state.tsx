@@ -116,7 +116,7 @@ export function PerformanceBootstrapState({
           <li>
             • Win rate computed as{" "}
             <code className="rounded bg-gray-800 px-1 py-0.5 font-mono text-xs text-gray-300">
-              wins / (wins + losses)
+              wins divided by decided outcomes
             </code>
             ; pushes are reported separately
           </li>
