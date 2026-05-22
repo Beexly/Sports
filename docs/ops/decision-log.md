@@ -64,3 +64,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add an admin-only Studio generation endpoint backed by the Claude API adapter, returning scanner-checked drafts only.
 - Rationale: Studio needs one controlled boundary between the operator UI and Claude-owned templates before persistence or export actions are added. The endpoint refuses without `ANTHROPIC_API_KEY`, validates template kind, and carries an explicit no-auto-post policy.
 - Deferred: persisted `CreatorAsset` records and UI-triggered generation history remain the next Studio slices.
+
+## 2026-05-22 - Studio Operator Generate Flow Wired
+
+- Decision: move the Studio workspace into a client island that calls the admin-only draft generation endpoint and previews scanner-checked output inline.
+- Rationale: operators need a usable draft loop before persistence or export controls. The page keeps DB loading server-side, shows loading/error states per template, and still omits any external publishing action.
+- Deferred: copy/download controls and generated asset persistence remain follow-up slices.
