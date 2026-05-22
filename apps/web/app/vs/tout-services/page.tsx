@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title:
       "Galaxy Sports Edge vs. Tout Services — The Category Contrast",
     description:
-      "Why I built an anti-tout sports model: every pick shows its work, losses are counted, and the public win-rate stays gated until it can be backed.",
+      "An anti-tout sports model: every pick shows its work, losses are counted, and the public win-rate stays gated until it can be backed.",
   },
 };
 
@@ -39,18 +39,15 @@ export default function VsToutServicesPage() {
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">vs. Tout services</p>
             <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              I built {BRAND_NAME} to do the opposite of a tout service.
+              {BRAND_NAME} is built to do the opposite of a tout service.
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-ink-300">
-              If you&apos;ve paid for a &ldquo;capper&rdquo; before, you already know
-              the pattern. The wins get screenshotted. The losses get scrubbed
-              from the timeline. The public record looks great because it was
-              chosen to look great. I built Galaxy Sports Edge because I lost
-              money to that pattern — and because the sports model space deserves
-              a product that can&apos;t play that game.
-            </p>
-            <p className="mt-5 max-w-2xl text-sm font-mono uppercase tracking-widest text-accent-300">
-              — Garrett Baxley, founder
+              If you&apos;ve paid for a &ldquo;capper&rdquo; before, you already
+              know the pattern. The wins get screenshotted. The losses get
+              scrubbed from the timeline. The public record looks great because
+              it was chosen to look great. {BRAND_NAME} exists because the
+              sports model space deserves a product that can&apos;t play that
+              game.
             </p>
           </div>
         </section>
@@ -63,12 +60,12 @@ export default function VsToutServicesPage() {
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">What makes a service a tout</p>
             <h2 className="mt-3 font-display text-display-lg text-balance text-white">
-              The four moves I watch for.
+              The four moves to watch for.
             </h2>
             <p className="mt-5 text-base text-ink-300">
-              When I evaluate a sports picks service, these are the four signals
-              I look for. Three or more, and it&apos;s a tout — regardless of
-              how the marketing sounds.
+              When evaluating a sports picks service, these are the four
+              signals to look for. Three or more, and it&apos;s a tout —
+              regardless of how the marketing sounds.
             </p>
 
             <ol className="mt-10 flex flex-col gap-6">
@@ -112,7 +109,7 @@ export default function VsToutServicesPage() {
                 The defensible position in a noisy market is not &ldquo;we win
                 more often than the others.&rdquo; The defensible position is:
                 <em className="text-ink-200">
-                  {" "}I show you the inputs, the reasoning, the gates, and the
+                  {" "}we show you the inputs, the reasoning, the gates, and the
                   outcomes. Every one. No curation. No delay between a losing
                   pick and its log entry.
                 </em>
@@ -121,12 +118,12 @@ export default function VsToutServicesPage() {
                 That&apos;s what {BRAND_NAME} is. The Calibration Report stays
                 gated until enough signals have settled to publish a defensible
                 number. The Vault holds every published pick, every reasoning
-                trail, every outcome. If I can&apos;t show my work, I don&apos;t
-                publish.
+                trail, every outcome. If the work can&apos;t be shown, it
+                doesn&apos;t get published.
               </p>
               <p>
                 That&apos;s a higher operating bar than the rest of the
-                category. It is also the reason I built it.
+                category. It is also the reason this exists.
               </p>
             </div>
           </div>
@@ -170,7 +167,7 @@ const WATCHLIST = [
   {
     number: "01",
     title: "They publish a win-rate from day one.",
-    body: "Any service that quotes a percentage in the first weeks of operating is either making it up or computing it on a sample too small to mean anything. A statistically defensible number takes at least 100 settled signals — usually more. If they have a number on day one, ask to see the canonical settled history that produced it. They won't have it.",
+    body: "Any service that quotes a percentage in the first weeks of operating is either making it up or computing it on a sample too small to mean anything. A statistically defensible number takes at least 100 settled signals — usually more. Ask to see the canonical settled history that produced it. They won't have it.",
   },
   {
     number: "02",

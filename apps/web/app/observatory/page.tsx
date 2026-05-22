@@ -34,14 +34,14 @@ export default function ObservatoryPage() {
             <p className="mt-5 max-w-2xl text-lg text-ink-300">
               {SURFACES.observatory.blurb} When the readiness gate opens, the
               Observatory streams line movement, sharp/public splits, and
-              market depth across every active matchup — the same view
-              I&apos;m reading from when the model proposes a signal.
+              market depth across every active matchup — the same view the
+              model reads from when proposing a signal.
             </p>
 
             <div className="mt-10 surface-card flex flex-col gap-3 p-6">
               <p className="eyebrow">Status · Pre-launch</p>
               <p className="text-sm leading-relaxed text-ink-300">
-                I keep the Observatory dark until {BRAND_NAME} has enough
+                The Observatory stays dark until {BRAND_NAME} has enough
                 settled history to publish a calibrated live read. In the
                 meantime, the methodology page explains exactly what feeds
                 into it.

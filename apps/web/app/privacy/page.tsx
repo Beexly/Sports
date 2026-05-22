@@ -6,6 +6,7 @@ import { BRAND_NAME, LEGAL_EMAIL } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: `How ${BRAND_NAME} collects, uses, and protects your information.`,
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

@@ -79,7 +79,7 @@ export function MethodologySection() {
             The audit trail behind every signal
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-gray-400">
-            Every card I publish ties back to live markets, timestamped data,
+            Every published card ties back to live markets, timestamped data,
             factor scoring, and the gates that keep weak signals off the board.
           </p>
         </div>

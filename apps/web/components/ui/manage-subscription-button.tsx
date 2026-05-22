@@ -21,7 +21,7 @@ export function ManageSubscriptionButton() {
       }
       window.location.href = data.url;
     } catch {
-      setError("Network blip on my end. Check your connection and retry.");
+      setError("Network blip. Check your connection and retry.");
     } finally {
       setLoading(false);
     }

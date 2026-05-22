@@ -33,8 +33,8 @@ export default function VaultPage() {
               <p className="eyebrow">Status: Collecting</p>
               <p className="text-sm leading-relaxed text-ink-300">
                 The Vault opens once enough canonical picks have settled to
-                render a calibrated record. I don&apos;t publish a Vault built on
-                a handful of games — selective history is exactly what this
+                render a calibrated record. No Vault gets published on a
+                handful of games — selective history is exactly what this
                 product is built to avoid.
               </p>
               <div className="mt-2 flex flex-wrap gap-3">

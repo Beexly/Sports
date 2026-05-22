@@ -98,18 +98,7 @@ export default async function HomePage() {
               zIndex: 2,
             }}
           >
-            Built by{" "}
-            <Link
-              href="/about"
-              style={{
-                color: "var(--ion-blue-glow)",
-                textDecoration: "none",
-                borderBottom: "1px solid color-mix(in srgb, var(--ion-blue-glow) 40%, transparent)",
-              }}
-            >
-              Garrett Baxley
-            </Link>
-            {" "}— because tout services don&apos;t show the losses.
+            Because tout services don&apos;t show the losses.
           </p>
 
           <div className="hero-foot">
@@ -122,8 +111,8 @@ export default async function HomePage() {
               <span className="l">Refresh loop</span>
             </div>
             <div className="stat">
-              <span className="v u">v5.0</span>
-              <span className="l">Galaxy IQ</span>
+              <span className="v u">7</span>
+              <span className="l">Sports tracked</span>
             </div>
             <div className="stat">
               <span className="v">Gated</span>
@@ -452,7 +441,7 @@ function EmptyPicksState() {
         }}
       >
         Signals only ship once Galaxy IQ&apos;s readiness gate clears the slate.
-        Create a free account and I&apos;ll tell you the moment the board opens.
+        Create a free account to get notified the moment the board opens.
       </p>
       <Link href="/auth/signin" className="btn btn-ghost">
         Get launch alerts

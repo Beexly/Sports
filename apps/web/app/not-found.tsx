@@ -56,7 +56,7 @@ export default function NotFound() {
             >
               hq@galaxysportsedge.com
             </a>{" "}
-            and I&apos;ll fix the broken link.
+            and the broken link will get fixed.
           </p>
         </div>
       </main>

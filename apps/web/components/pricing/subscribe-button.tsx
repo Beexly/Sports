@@ -25,7 +25,7 @@ type Props = {
 const PRIMARY_CLASSES =
   "w-full rounded-xl bg-brand-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:cursor-not-allowed disabled:opacity-60";
 const GHOST_CLASSES =
-  "w-full rounded-xl border border-yellow-700/60 bg-yellow-900/20 py-2.5 text-sm font-semibold text-yellow-300 transition-colors hover:bg-yellow-900/40 disabled:cursor-not-allowed disabled:opacity-60";
+  "w-full rounded-xl border border-ultraviolet/60 bg-ultraviolet/10 py-2.5 text-sm font-semibold text-ultraviolet-glow transition-colors hover:bg-ultraviolet/25 disabled:cursor-not-allowed disabled:opacity-60";
 
 export function SubscribeButton({ tier, label, variant }: Props) {
   const router = useRouter();
@@ -52,7 +52,7 @@ export function SubscribeButton({ tier, label, variant }: Props) {
       if (!res.ok || !data.url) {
         setError(
           data.error ??
-            "Checkout didn't open. Try again — and if it sticks, email me at hq@galaxysportsedge.com.",
+            "Checkout didn't open. Try again — if it sticks, contact hq@galaxysportsedge.com.",
         );
         return;
       }
@@ -60,7 +60,7 @@ export function SubscribeButton({ tier, label, variant }: Props) {
       window.location.href = data.url;
     } catch {
       setError(
-        "Network blip on my end. Check your connection and retry.",
+        "Network blip. Check your connection and retry.",
       );
     } finally {
       setLoading(false);

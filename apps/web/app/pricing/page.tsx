@@ -10,9 +10,9 @@ import { BRAND_NAME } from "@/lib/brand";
 // ─────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Pricing — One Person. Three Tiers. No Upsell Games.",
+  title: "Pricing — Three Tiers. No Upsell Games.",
   description:
-    "Free for one signal a day. $19/mo for every signal with the reasoning attached. $49/mo for the alerts I'd want on a live slate. Cancel any time from your dashboard.",
+    "Free for one signal a day. $19/mo for every signal with the reasoning attached. $49/mo for full alerts on every published signal. Cancel any time from your dashboard.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: `Pricing — ${BRAND_NAME}`,
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 // ─────────────────────────────────────────────
-// Plan data — copy is founder-voiced, not SaaS templated
+// Plan data
 // ─────────────────────────────────────────────
 
 const PLANS = [
@@ -32,7 +32,7 @@ const PLANS = [
     price: 0,
     period: null,
     description:
-      "One signal a day, so you can sample the discipline before you spend a dollar.",
+      "One signal a day — sample the discipline before committing.",
     badge: null,
     cta: "Start free",
     ctaHref: "/auth/signin",
@@ -54,7 +54,7 @@ const PLANS = [
     price: 19,
     period: "month",
     description:
-      "Every signal I publish, with the confidence rating and factor trail attached.",
+      "Every published signal, with the confidence rating and factor trail attached.",
     badge: "Where most start",
     cta: "Subscribe to Pro",
     features: [
@@ -75,7 +75,7 @@ const PLANS = [
     price: 49,
     period: "month",
     description:
-      "Pro plus the alerts I'd want if I were the one on the line.",
+      "Pro plus real-time alerts on every published signal — built for live slates.",
     badge: "All signals, all alerts",
     cta: "Subscribe to Elite",
     features: [
@@ -123,11 +123,11 @@ const FAQ = [
   },
   {
     q: "How is this different from a tout service?",
-    a: "Tout services publish their wins and quietly delete the losses. I publish every signal's full factor trail and refuse to show a public win-rate until enough canonical settled history exists to support one honestly.",
+    a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail and holds back a public win-rate until enough canonical settled history exists to support one honestly.",
   },
   {
     q: "Why is the Performance page empty right now?",
-    a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to make the published number statistically defensible. If I have to wait, I wait. That's the whole point.",
+    a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to make the published number statistically defensible. Patience over noise — that's the standard.",
   },
   {
     q: "Which sports are covered?",
@@ -174,7 +174,7 @@ export default function PricingPage() {
               Pricing
             </p>
             <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              One person. Three tiers. No upsell games.
+              Three tiers. No upsell games.
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-lg text-gray-400">
               Start free. Upgrade when the signal earns it. Cancel any time
@@ -186,6 +186,7 @@ export default function PricingPage() {
           <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
             {PLANS.map((plan) => {
               const isHighlighted = plan.id === "PRO";
+              const isElite = plan.id === "ELITE";
               return (
                 <div
                   key={plan.id}
@@ -193,7 +194,9 @@ export default function PricingPage() {
                     "relative flex flex-col rounded-2xl border p-6",
                     isHighlighted
                       ? "border-brand-600 bg-brand-950/30 shadow-xl shadow-brand-900/30"
-                      : "border-gray-800 bg-gray-900/60",
+                      : isElite
+                        ? "border-ultraviolet/60 bg-ultraviolet/5 shadow-xl shadow-ultraviolet/10"
+                        : "border-gray-800 bg-gray-900/60",
                   ].join(" ")}
                 >
                   {plan.badge && (
@@ -203,7 +206,7 @@ export default function PricingPage() {
                           "rounded-full px-3 py-0.5 text-xs font-semibold",
                           plan.id === "PRO"
                             ? "bg-brand-600 text-white"
-                            : "bg-yellow-500 text-yellow-950",
+                            : "bg-ultraviolet text-white",
                         ].join(" ")}
                       >
                         {plan.badge}
@@ -289,7 +292,7 @@ export default function PricingPage() {
                           plan.id === "PRO"
                             ? "text-brand-400"
                             : plan.id === "ELITE"
-                              ? "text-yellow-400"
+                              ? "text-ultraviolet-glow"
                               : "text-gray-300",
                         ].join(" ")}
                       >
@@ -335,7 +338,7 @@ export default function PricingPage() {
           {/* FAQ */}
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">
-              Questions I&apos;ve already been asked
+              Frequently asked
             </h2>
             <div className="mx-auto mt-8 max-w-3xl divide-y divide-gray-800/60 rounded-2xl border border-gray-800 bg-gray-900/40">
               {FAQ.map((item) => (

@@ -53,9 +53,9 @@ export const HELPLINE = {
 /**
  * Social handles — canonical Galaxy Sports Edge accounts.
  *
- * X is on @GalaxySportsAI (the original handle reservation, Garrett
- * Baxley account). IG / Threads / FB are all `galaxysportsedge` to
- * match the domain. Update here only — every surface reads from this.
+ * X is on @GalaxySportsAI (the original handle reservation).
+ * IG / Threads / FB are all `galaxysportsedge` to match the domain.
+ * Update here only — every surface reads from this.
  */
 export const SOCIAL = {
   x: "https://x.com/GalaxySportsAI",

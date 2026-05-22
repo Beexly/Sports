@@ -19,7 +19,7 @@ import { BRAND_NAME } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "FAQ — Common questions about Galaxy Sports Edge",
   description:
-    "Plain answers about how the model scores signals, why the Calibration Report is gated, what Pro and Elite get, and how this is different from a tout service. — Garrett",
+    "Plain answers about how the model scores signals, why the Calibration Report is gated, what Pro and Elite get, and how this is different from a tout service.",
   alternates: { canonical: "/faq" },
 };
 
@@ -34,19 +34,19 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. I ingest live odds from dozens of sportsbooks every 30 minutes, score every matchup for edge, and publish a calibrated signal with its full factor trail attached. Free plan gets one signal a day. Pro and Elite unlock every signal with the reasoning behind each one.",
+        a: "A sports intelligence platform. Galaxy Sports Edge ingests live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal with its full factor trail attached. Free plan gets one signal a day. Pro and Elite unlock every signal with the reasoning behind each one.",
       },
       {
         q: "How is this different from a tout service?",
-        a: "Tout services publish their wins and quietly delete the losses. I publish every signal's full factor trail — consensus, line movement, market depth, freshness, intelligence layers — and refuse to show a public win-rate until enough canonical settled signals exist to support one honestly. The page reads \"Collecting\" until that's true. If I have to wait, I wait.",
+        a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail — consensus, line movement, market depth, freshness, intelligence layers — and holds back a public win-rate until enough canonical settled signals exist to support one honestly. The page reads \"Collecting\" until that's true. Patience over noise.",
       },
       {
         q: "Which sports are covered?",
         a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. All seven on a 30-minute refresh loop during games.",
       },
       {
-        q: "Who built this?",
-        a: "Garrett Baxley. One person, one model. I built Galaxy Sports Edge because I was tired of paying for picks from people who quietly delete the losses.",
+        q: "What's the philosophy behind it?",
+        a: "One model, one standard. Galaxy Sports Edge was built because the sports picks industry runs on a quiet trick — services that publish their wins and scrub their losses. The opposite approach: show the work on every pick, gate the win-rate readout until it's statistically defensible, and let the data do the talking.",
       },
     ],
   },
@@ -92,11 +92,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Is there a refund window?",
-        a: "Every paid plan ships with a 7-day refund window. Cancel any time from your dashboard. I'd rather you cancel than complain.",
+        a: "Every paid plan ships with a 7-day refund window. Cancel any time from your dashboard — no questions.",
       },
       {
         q: "Will pricing change?",
-        a: "Free stays free. Pro is $19, Elite is $49 — those prices hold for the launch cohort. If I raise them later, anyone subscribed before the change is grandfathered at the original price.",
+        a: "Free stays free. Pro is $19, Elite is $49 — those prices hold for the launch cohort. If they go up later, anyone subscribed before the change is grandfathered at the original price.",
       },
     ],
   },
@@ -117,7 +117,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "How do I delete my account?",
-        a: "Email hq@galaxysportsedge.com from the address on the account and I'll process the deletion. The privacy page documents the full process.",
+        a: "Email hq@galaxysportsedge.com from the address on the account and the deletion will be processed. The privacy page documents the full process.",
       },
     ],
   },
@@ -171,7 +171,7 @@ export default function FaqPage() {
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">FAQ</p>
             <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              The questions I get most.
+              The questions that come up most.
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-ink-300">
               Plain answers about how {BRAND_NAME} works, what&apos;s gated,
@@ -183,7 +183,7 @@ export default function FaqPage() {
               >
                 hq@galaxysportsedge.com
               </a>{" "}
-              — I&apos;ll add it.
+              — it&apos;ll get added.
             </p>
           </div>
         </section>
@@ -229,14 +229,14 @@ export default function FaqPage() {
               Still have a question?
             </h2>
             <p className="text-ink-300">
-              Write to me at{" "}
+              Reach out at{" "}
               <a
                 href="mailto:hq@galaxysportsedge.com"
                 className="font-mono text-accent-300 underline-offset-4 hover:underline"
               >
                 hq@galaxysportsedge.com
               </a>
-              . Every reply is mine.
+              . Every reply is direct from the team.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link

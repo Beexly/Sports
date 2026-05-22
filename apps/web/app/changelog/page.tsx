@@ -14,7 +14,7 @@ import { BRAND_NAME } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Changelog - Ship log for Galaxy Sports Edge",
   description:
-    "What changed and when. Every model version, gate flip, and calibration update logged publicly. Built by Garrett Baxley.",
+    "What changed and when. Every model version, gate flip, and calibration update logged publicly.",
   alternates: { canonical: "/changelog" },
 };
 
@@ -45,9 +45,9 @@ const ENTRIES: ReadonlyArray<Entry> = [
   {
     date: "2026-05-21",
     type: "ship",
-    title: "Anatomy of a Signal, vs. Tout Services, and founder voice",
+    title: "Anatomy of a Signal, vs. Tout Services, and brand voice refresh",
     body:
-      "Added an annotated sample-signal card to the homepage so the product is visible, not just described. Added a /vs/tout-services SEO landing page, rewrote customer-facing surfaces to founder voice, added FAQ schema, Organization and WebSite schema, per-page metadata, and noindex layouts for operator pages.",
+      "Added an annotated sample-signal card to the homepage so the product is visible, not just described. Added a /vs/tout-services SEO landing page, refreshed customer-facing copy to a consistent brand voice, added FAQ schema, Organization and WebSite schema, per-page metadata, and noindex layouts for operator pages.",
   },
   {
     date: "2026-05-21",
@@ -61,7 +61,7 @@ const ENTRIES: ReadonlyArray<Entry> = [
     type: "launch",
     title: "Round 1 launch messaging prepared",
     body:
-      "Founder-voice launch copy is ready for @GalaxySportsAI and @galaxysportsedge. IG and FB follow once the Round 1 brand-board asset ships.",
+      "Launch copy is ready for @GalaxySportsAI and @galaxysportsedge. IG and FB follow once the Round 1 brand-board asset ships.",
   },
   {
     date: "2026-05-20",

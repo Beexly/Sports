@@ -5,8 +5,8 @@ import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: `Press Kit — Quote-Ready Soundbites & Founder Bio`,
-  description: `Press kit, ready-to-quote soundbites, and founder availability for ${BRAND_NAME}. Built by Garrett Baxley. ${BRAND_TAGLINE}`,
+  title: `Press Kit — Quote-Ready Soundbites & Brand Facts`,
+  description: `Press kit, ready-to-quote soundbites, and media availability for ${BRAND_NAME}. ${BRAND_TAGLINE}`,
   alternates: { canonical: "/press" },
 };
 
@@ -15,15 +15,14 @@ const FACTS = [
   { label: "Category", value: "Sports intelligence platform" },
   { label: "Coverage", value: "NFL · NBA · MLB · NHL · NCAAF · NCAAB · MLS" },
   { label: "Refresh cadence", value: "Live odds ingested every 30 minutes" },
-  { label: "Model version", value: "v5.0" },
   { label: "HQ", value: "United States" },
 ];
 
 const SOUNDBITES = [
-  "I publish a calibrated, fully-reasoned signal — not a tout.",
-  "Outcomes are uncertain. I describe variance, I don't hide it.",
+  "Galaxy Sports Edge publishes a calibrated, fully-reasoned signal — not a tout.",
+  "Outcomes are uncertain. Variance is described, not hidden.",
   "Every pick traces back to a real market line. No synthetic numbers.",
-  "I gate performance stats until the data can honestly support them.",
+  "Performance stats stay gated until the data can honestly support them.",
 ];
 
 export default function PressPage() {
@@ -39,9 +38,9 @@ export default function PressPage() {
               Press kit
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-ink-300">
-              Quick facts, my availability, and ready-to-quote soundbites for
-              journalists, podcasters, and analysts covering the sports
-              intelligence space. — Garrett Baxley, founder.
+              Quick facts, media availability, and ready-to-quote soundbites
+              for journalists, podcasters, and analysts covering the sports
+              intelligence space.
             </p>
           </div>
         </section>
@@ -89,7 +88,7 @@ export default function PressPage() {
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Media inquiries</p>
             <h2 className="mt-3 font-display text-display-lg text-balance text-white">
-              Email me directly.
+              Direct line to the desk.
             </h2>
             <p className="mt-5 text-base text-ink-300">
               For interviews, embargoed coverage, or a deeper walkthrough of
@@ -100,8 +99,7 @@ export default function PressPage() {
               >
                 {SUPPORT_EMAIL}
               </a>
-              . Include outlet, deadline, and your angle so I can respond
-              usefully.
+              . Include outlet, deadline, and angle for a useful reply.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/methodology" className="btn btn-primary">

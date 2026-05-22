@@ -1,0 +1,34 @@
+name: Daily Smoke Test
+
+# Runs the production smoke test every morning. Fails noisily so the
+# Actions tab surfaces any regression before customers do.
+#
+# The script (scripts/smoke-prod.sh) checks:
+#   - apex → www redirect
+#   - 19 critical routes return 200
+#   - homepage & pricing free of regression strings (founder name, v5.0, gold)
+#   - security headers (HSTS, X-Frame-Options, etc.)
+#   - canonical URLs match their own path
+#   - external-cron workflow state via GitHub API
+#
+# Exit codes: 0 SHIP / 1 WATCH (warning) / 2 FAIL (regression)
+
+on:
+  schedule:
+    - cron: "30 13 * * *"  # 13:30 UTC = ~9:30am ET / 6:30am PT
+  workflow_dispatch:
+
+concurrency:
+  group: daily-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run smoke test
+        run: bash scripts/smoke-prod.sh

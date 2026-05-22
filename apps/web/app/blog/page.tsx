@@ -8,7 +8,7 @@ import { formatDate } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "From the desk — Sports market analysis from Galaxy Sports Edge",
   description:
-    "Pre-game reads, line-movement breakdowns, and methodology notes from the founder. Every post tied back to the live board.",
+    "Pre-game reads, line-movement breakdowns, and methodology notes from the Galaxy Sports Edge desk. Every post tied back to the live board.",
   alternates: { canonical: "/blog" },
 };
 

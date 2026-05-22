@@ -6,6 +6,7 @@ import { BRAND_NAME, LEGAL_EMAIL } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: `Terms of service governing the use of ${BRAND_NAME}.`,
+  alternates: { canonical: "/terms" },
 };
 
 /**

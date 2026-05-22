@@ -102,10 +102,6 @@ const organizationJsonLd = {
   url: SITE_URL,
   logo: `${SITE_URL}/logo-mark.svg`,
   description: BRAND_META.description,
-  founder: {
-    "@type": "Person",
-    name: "Garrett Baxley",
-  },
   sameAs: [
     SOCIAL.x,
     SOCIAL.instagram,

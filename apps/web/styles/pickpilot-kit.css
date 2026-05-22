@@ -163,21 +163,21 @@ button { font-family: inherit; cursor: pointer; }
   animation: pp-pulse 2.4s var(--ease-out) infinite;
 }
 .hero h1 {
-  font: 900 156px/0.86 var(--f-arch);
-  letter-spacing: -0.045em;
+  font: 900 96px/0.92 var(--f-arch);
+  letter-spacing: -0.035em;
   color: var(--ion-white);
   text-transform: uppercase;
-  margin: 0 0 32px;
-  max-width: 12ch;
+  margin: 0 0 28px;
+  max-width: 16ch;
   position: relative; z-index: 2;
 }
 .hero h1 .pop { color: var(--plasma); }
 .hero h1 em {
   display: block;
-  font: italic 400 152px/0.86 var(--f-editorial);
+  font: italic 400 92px/0.92 var(--f-editorial);
   color: var(--plasma);
-  letter-spacing: -0.025em;
-  margin-left: 1.2ch;
+  letter-spacing: -0.02em;
+  margin-left: 1ch;
 }
 .hero-tag {
   font: 400 18px/1.55 var(--f-body);
@@ -968,8 +968,8 @@ button { font-family: inherit; cursor: pointer; }
   .mission-control-grid { grid-template-columns: 1fr; }
   .picks-grid,
   .pricing { grid-template-columns: repeat(2, 1fr); }
-  .hero h1 { font-size: 118px; }
-  .hero h1 em { font-size: 112px; margin-left: 0.6ch; }
+  .hero h1 { font-size: 80px; }
+  .hero h1 em { font-size: 78px; margin-left: 0.4ch; }
 }
 
 @media (max-width: 860px) {
@@ -1018,18 +1018,18 @@ button { font-family: inherit; cursor: pointer; }
   }
   .hero-eyebrow { margin-bottom: 22px; }
   .hero h1 {
-    font-size: 66px;
-    line-height: 0.92;
-    letter-spacing: -0.02em;
-    max-width: 9ch;
-    margin-bottom: 24px;
+    font-size: 54px;
+    line-height: 0.96;
+    letter-spacing: -0.018em;
+    max-width: 12ch;
+    margin-bottom: 22px;
     text-shadow:
       0 1px 0 rgba(255,255,255,0.06),
       0 18px 40px rgba(0,0,0,0.62);
   }
   .hero h1 em {
-    font-size: 70px;
-    line-height: 0.9;
+    font-size: 56px;
+    line-height: 0.94;
     margin-left: 0;
   }
   .hero-tag {
@@ -1118,8 +1118,8 @@ button { font-family: inherit; cursor: pointer; }
   }
   .hero-intro-mark { font-size: 66px; }
   .hero-intro-line { margin-top: 88px; font-size: 10px; letter-spacing: 0.26em; }
-  .hero h1 { font-size: 50px; max-width: 10ch; }
-  .hero h1 em { font-size: 56px; }
+  .hero h1 { font-size: 42px; max-width: 12ch; }
+  .hero h1 em { font-size: 44px; }
   .hero-tag { font-size: 15px; }
   .hero-ctas .btn {
     width: 100%;

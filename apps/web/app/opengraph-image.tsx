@@ -126,7 +126,7 @@ export default async function Image() {
               display: "flex",
             }}
           />
-          Built by Garrett Baxley · Founder
+          Sports intelligence · Live edge engine
         </div>
 
         {/* Tagline — locked copy from Brand Use Pack §7 */}
@@ -158,8 +158,7 @@ export default async function Image() {
             fontStyle: "italic",
           }}
         >
-          Because I&apos;m tired of paying for picks from people who quietly
-          delete the losses.
+          Because tout services don&apos;t show the losses.
         </div>
 
         {/* Footer — a principle, signed */}
@@ -178,8 +177,8 @@ export default async function Image() {
             paddingTop: 28,
           }}
         >
-          <span>If we can&apos;t show our work, we don&apos;t publish.</span>
-          <span style={{ color: "#00E5FF" }}>— Garrett</span>
+          <span>If the work can&apos;t be shown, it doesn&apos;t get published.</span>
+          <span style={{ color: "#00E5FF" }}>galaxysportsedge.com</span>
         </div>
       </div>
     ),

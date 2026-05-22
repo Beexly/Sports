@@ -6,6 +6,7 @@ import { BRAND_NAME, LEGAL_EMAIL, SUPPORT_EMAIL } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Contact",
   description: `Get in touch with the ${BRAND_NAME} team.`,
+  alternates: { canonical: "/contact" },
 };
 
 const INBOXES = [

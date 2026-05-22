@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Responsible play",
   description:
     "Sports betting carries real risk. Resources, helplines, and self-exclusion options for anyone who wants to slow down or stop.",
+  alternates: { canonical: "/responsible-play" },
 };
 
 const RESOURCES = [
@@ -46,10 +47,10 @@ export default function ResponsiblePlayPage() {
               Sports betting carries real risk.
             </h1>
             <p className="mt-5 text-lg text-ink-300">
-              I built {BRAND_NAME} as an informational service. Outcomes are
-              never certain — no model, mine or anyone else&apos;s, eliminates
-              variance. Wager only what you can afford to lose, and stop
-              immediately if it stops feeling like a hobby.
+              {BRAND_NAME} is an informational service. Outcomes are never
+              certain — no model eliminates variance. Wager only what you
+              can afford to lose, and stop immediately if it stops feeling
+              like a hobby.
             </p>
           </div>
         </section>

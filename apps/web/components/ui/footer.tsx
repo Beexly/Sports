@@ -46,9 +46,9 @@ export function Footer() {
               <BrandLockup />
             </div>
             <p className="disclaim">
-              I built {BRAND_NAME} to deliver calibrated market signals, not
-              certainty. Treat each one as one input in a disciplined decision —
-              never the decision itself.{" "}
+              {BRAND_NAME} delivers calibrated market signals, not certainty.
+              Treat each one as one input in a disciplined decision — never
+              the decision itself.{" "}
               <strong style={{ color: "var(--ion)" }}>
                 Set limits before emotion enters.
               </strong>

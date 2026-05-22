@@ -21,8 +21,8 @@ const PROMISES = [
     body: "Every paid plan. Cancel from your dashboard, no questions, no churn forms.",
   },
   {
-    title: "I read every reply.",
-    body: "hq@galaxysportsedge.com goes to me directly. Founder-built, founder-supported.",
+    title: "Every reply gets read.",
+    body: "hq@galaxysportsedge.com goes to the desk directly. Real support, real humans.",
   },
 ] as const;
 
