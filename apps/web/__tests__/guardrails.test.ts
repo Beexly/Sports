@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { spawnSync } from "node:child_process";
 import { resolve } from "node:path";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 /**
  * Guardrail integration tests.
@@ -43,6 +43,12 @@ describe("Phase 9 guardrails", () => {
       );
     }
     expect(r.stdout).toMatch(/\[trust-gate\] OK/);
+  });
+
+  it("trust-gate documents source-contract exceptions for scanner/template definitions", () => {
+    const src = readFileSync(resolve(REPO_ROOT, "scripts/guardrails/trust-gate.mjs"), "utf8");
+    expect(src).toContain('"apps/web/lib/compliance-scanner/"');
+    expect(src).toContain('"apps/web/lib/studio/templates/"');
   });
 
   it("model-freeze exits 0 with the FROZEN baseline marker in place", () => {

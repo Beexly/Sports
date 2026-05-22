@@ -32,3 +32,17 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: map cross-sport correlation inputs from published, non-bootstrap, settled picks that have non-bootstrap `PickSignalSnapshot.eligibleForLearning=true`.
 - Rationale: Phase 2 correlation work should reuse the same canonical-history discipline as calibration and learning. The query evaluator receives a stable row shape, while Prisma details stay behind a server loader.
 - Alternatives considered: load every non-bootstrap settled pick. Deferred because picks without learning-eligible snapshots may lack the immutable signal receipt needed for trustworthy hypothesis testing.
+
+## 2026-05-22 - Phase 3 Architectural Commit Batch Landed
+
+- Decision: continue Phase 3 by shipping code-owned architecture before template-dependent Studio and bot surfaces.
+- Commits covered: `241fd33` correlation rows from settled picks, `e0efec1` Loss Room public ledger archive, `8bb10e3` GateDecision loader coverage, `693b5c8` expanded production synthetic probe, `ac34713` read-only Game Intelligence Rooms, and `730c782` public links into Game Rooms.
+- Verification: lint, typecheck, build, and the full web test suite were green after the Game Room slice (`120` files, `1456` tests).
+- Rationale: these slices do not depend on missing scratch-clone voice templates and give Phase 3 surfaces stable data/navigation foundations.
+
+## 2026-05-22 - Scratch-to-Primary Parity Gap Resolved Locally
+
+- Decision: copy Claude's missing scratch-clone template code, product specs, evals, fixtures, and phase briefs from `C:\Users\Garrett\Documents\Claude\Projects\AI Sports` into the primary checkout.
+- Rationale: Studio, Twitter/X bot, Discord bot, Model Journal, Model Court, and calibration-training work need locked voice rules, refusal templates, and compliance contracts before implementation.
+- Merge rule: additive template/spec files were copied directly; local append-only ops logs were merged instead of overwritten to preserve Codex's current decision history.
+- Alternatives considered: re-implement from memory/spec snippets. Rejected for now because the source files were available locally and copying preserves Claude's locked wording.

@@ -60,6 +60,11 @@ const WHITELIST_PATHS = new Set([
   "packages/db/prisma/seed.ts",
 ]);
 
+const WHITELIST_PREFIXES = [
+  "apps/web/lib/compliance-scanner/",
+  "apps/web/lib/studio/templates/",
+];
+
 const WHITELIST_DIRS = new Set([
   "node_modules",
   ".next",
@@ -77,7 +82,9 @@ function shouldSkipDir(name) {
 }
 
 function isWhitelistedFile(relPath) {
-  if (WHITELIST_PATHS.has(relPath.split(sep).join("/"))) return true;
+  const normalized = relPath.split(sep).join("/");
+  if (WHITELIST_PATHS.has(normalized)) return true;
+  if (WHITELIST_PREFIXES.some((prefix) => normalized.startsWith(prefix))) return true;
   if (relPath.includes("__tests__")) return true;
   if (relPath.endsWith(".test.ts") || relPath.endsWith(".test.tsx")) return true;
   if (relPath.endsWith(".spec.ts") || relPath.endsWith(".spec.tsx")) return true;
