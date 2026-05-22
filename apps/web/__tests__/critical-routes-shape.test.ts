@@ -19,6 +19,7 @@ const CRITICAL_PAGES = [
   "app/performance/page.tsx",
   "app/picks/page.tsx",
   "app/board/page.tsx",
+  "app/ledger/page.tsx",
   "app/blog/page.tsx",
   "app/pricing/page.tsx",
   "app/brief/page.tsx",

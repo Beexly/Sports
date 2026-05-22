@@ -56,6 +56,14 @@ describe("stub Prisma pick — edge cases", () => {
     expect(n).toBe(0);
   });
 
+  it("findMany with result.in only settled statuses returns []", async () => {
+    const { db } = await freshDb();
+    const rows = await db.pick.findMany({
+      where: { result: { in: ["WIN", "LOSS", "PUSH"] } },
+    });
+    expect(rows).toEqual([]);
+  });
+
   it("count with isPublished: false returns 0 (samples are published)", async () => {
     const { db } = await freshDb();
     const n = await db.pick.count({ where: { isPublished: false } });

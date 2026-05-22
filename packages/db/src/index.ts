@@ -54,6 +54,11 @@ function pickStub() {
       if (where["result"] === "VOID" || where["result"] === "WIN" || where["result"] === "LOSS" || where["result"] === "PUSH") {
         return [];
       }
+      if (typeof where["result"] === "object" && where["result"] !== null) {
+        const res = where["result"] as Record<string, unknown>;
+        const inList = res["in"] as readonly string[] | undefined;
+        if (inList && inList.every((r) => r !== "PENDING")) return [];
+      }
       if (where["isFeatured"] === true) {
         picks = picks.filter((p) => p.isFeatured);
       }
