@@ -56,6 +56,7 @@ jobs:
           fi
           response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
             -H "Authorization: Bearer ${CRON_SECRET}" \
+            --location \
             --max-time 360 \
             "${CRON_TARGET_URL}/api/cron/refresh-odds")
           echo "HTTP ${response}"
@@ -85,6 +86,7 @@ jobs:
           fi
           response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
             -H "Authorization: Bearer ${CRON_SECRET}" \
+            --location \
             --max-time 300 \
             "${CRON_TARGET_URL}/api/cron/settle-picks")
           echo "HTTP ${response}"
@@ -109,6 +111,7 @@ jobs:
           set -euo pipefail
           response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
             -H "Authorization: Bearer ${CRON_SECRET}" \
+            --location \
             --max-time 300 \
             "${CRON_TARGET_URL}/api/cron/jarvis-snapshot")
           echo "HTTP ${response}"
