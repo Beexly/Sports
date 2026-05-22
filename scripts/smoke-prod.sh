@@ -97,19 +97,16 @@ done
 
 bold "6. External cron workflow state"
 wf_json=$(curl -sS --max-time 6 "https://api.github.com/repos/Beexly/Sports/actions/workflows" 2>/dev/null || echo "{}")
-state=$(printf "%s" "$wf_json" | python3 -c "
-import json,sys
-try:
-    d=json.load(sys.stdin)
-    for w in d.get('workflows', []):
-        if 'cron' in w.get('name','').lower() or 'cron' in w.get('path','').lower():
-            print(w.get('state','unknown'), '-', w.get('name',''))
-            break
-    else:
-        print('no-cron-workflow-found')
-except Exception as e:
-    print('parse-error', e)
-" 2>/dev/null || echo "unavailable")
+compact_wf_json=$(printf "%s" "$wf_json" | tr -d '\n\r\t ')
+if printf "%s" "$compact_wf_json" | grep -q '"path":".github/workflows/external-cron.yml"'; then
+  if printf "%s" "$compact_wf_json" | grep -q '"state":"active"[^}]*"path":".github/workflows/external-cron.yml"\|"path":".github/workflows/external-cron.yml"[^}]*"state":"active"'; then
+    state="active - External Cron (Galaxy Sports Edge)"
+  else
+    state="found - External Cron (Galaxy Sports Edge)"
+  fi
+else
+  state="no-cron-workflow-found"
+fi
 case "$state" in
   active*)              ok "external cron: $state" ;;
   disabled_inactivity*) fail "external cron: $state — GitHub disabled it. Re-enable in Actions tab." ;;
