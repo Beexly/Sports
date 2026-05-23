@@ -14,3 +14,4 @@ Append-only. One line per cycle.
 2026-05-23 · #11 · refactor(ai): extract makeAnthropicHolder() factory used by all 3 Claude call sites · vitest `apps/web/__tests__/ai-client.test.ts`
 2026-05-23 · #12 · feat(ci): nightly content workflow drafts + reviews + opens an operator PR · vitest `apps/web/__tests__/nightly-content-workflow.test.ts`
 2026-05-23 · #13 · feat(content): add 6 remaining content kinds (METHODOLOGY / MATCHUP / PROMOTION / PERFORMANCE / RESPONSIBLE / MODEL_CHANGE) · vitest `apps/web/__tests__/content-generator.test.ts`
+2026-05-23 · #14 · feat(ai): ephemeral prompt caching on draft-reviewer + slate-overview · vitest `apps/web/__tests__/draft-reviewer.test.ts` + `slate-overview.test.ts`

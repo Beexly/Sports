@@ -134,8 +134,14 @@ export async function reviewDraft(
   const bannedList = banned.map((b, i) => `${i + 1}. ${b}`).join("\n");
   const contextLine = input.context ? `\nCONTENT_KIND: ${input.context}\n` : "";
 
-  const userPrompt = `${contextLine}BANNED_LIST (semantic equivalents are also forbidden):
-${bannedList}
+  // The system prompt + banned-list prefix are stable across reviews — split
+  // into cacheable blocks so the operator iteration loop (review → edit →
+  // re-review) hits the ephemeral cache within its 5-minute window. Only the
+  // draft body changes per call.
+  const cachedPrefix = `${contextLine}BANNED_LIST (semantic equivalents are also forbidden):
+${bannedList}`;
+
+  const variableSuffix = `
 
 DRAFT:
 """
@@ -147,11 +153,29 @@ Return JSON matching the schema. At most ${MAX_FINDINGS} findings. Empty finding
   const response = await client.messages.create({
     model: REVIEWER_MODEL,
     max_tokens: 4000,
-    system: SYSTEM_PROMPT,
+    system: [
+      {
+        type: "text",
+        text: SYSTEM_PROMPT,
+        cache_control: { type: "ephemeral" },
+      },
+    ],
     output_config: {
       format: { type: "json_schema", schema: REPORT_SCHEMA },
     },
-    messages: [{ role: "user", content: userPrompt }],
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: cachedPrefix,
+            cache_control: { type: "ephemeral" },
+          },
+          { type: "text", text: variableSuffix },
+        ],
+      },
+    ],
   });
 
   const textBlock = response.content.find(

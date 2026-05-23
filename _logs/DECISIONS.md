@@ -28,3 +28,19 @@ Append-only.
 
 **Trade-off.** Lower task ceiling than Sonnet — if the reviewer ever has to handle multi-thousand-phrase banned lists or multi-page drafts, revisit. Today the bound is 100 phrases × 12k chars; Haiku 4.5 (200k context, 64k output) is far above that.
 
+## 2026-05-23 — Ephemeral prompt caching on draft-reviewer + slate-overview; content-generator left uncached
+
+**Context.** Master prompt Hard Rule §6 mandates prompt caching for any system prompt over ~2K tokens. The audit table in `plan-14-prompt-caching.md` shows all three current Claude call sites have system prompts well under that threshold (100–200 tokens each). This cycle adds caching where it pays despite not being mandatory.
+
+**Decision.**
+- `draft-reviewer.ts` — cache the SYSTEM_PROMPT (200 tokens) AND the BANNED_LIST user prefix (~150 tokens). Total ~350 tokens cached per call. Operator iteration loop (review → edit → re-review) is the win: the DRAFT body changes; everything else is stable within the 5-min cache window.
+- `slate-overview.ts` — cache the SYSTEM_PROMPT. Small savings today; forward investment for when the brief composer's sections context lands here (queued item 3).
+- `content-generator.ts` — **not cached**. System prompt is ~100 tokens; there is no stable user prefix (every blog has different picks data). Cache hit rate would be near zero. Adding caching here is structural noise.
+
+**Alternatives considered.**
+1. Cache everything for "consistency" — rejected; the content-generator cache would never hit.
+2. Wait until any prompt crosses the 2K threshold — rejected; the reviewer's iteration-loop win is real today, and adding caching infrastructure now means the brief composer (queued) doesn't need a follow-up cycle.
+
+**Trade-off.** Splitting the reviewer's user message into two blocks (`cachedPrefix` + `variableSuffix`) is slightly more code than one templated string. Worth it for the operational savings.
+
+

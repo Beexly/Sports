@@ -100,10 +100,20 @@ Write the slate overview paragraph for the brief lead. Open with the date.
 Reference the number of picks and the strongest grade present in measured language.
 Do not list every pick — give the operator a 1-2 paragraph read.`;
 
+  // Ephemeral caching on the system block — the system is identical across
+  // calls and the slate-overview composer will grow as the brief composer
+  // adds sections context. Cache is forward-investment as well as today's
+  // marginal savings on repeat-call days.
   const response = await client.messages.create({
     model: COMPOSER_MODEL,
     max_tokens: 800,
-    system: SYSTEM_PROMPT,
+    system: [
+      {
+        type: "text",
+        text: SYSTEM_PROMPT,
+        cache_control: { type: "ephemeral" },
+      },
+    ],
     output_config: {
       format: { type: "json_schema", schema: OVERVIEW_SCHEMA },
     },

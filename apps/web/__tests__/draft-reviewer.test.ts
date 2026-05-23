@@ -175,4 +175,34 @@ describe("reviewDraft", () => {
       reviewDraft({ content: SAMPLE_DRAFT, banned: SAMPLE_BANNED })
     ).rejects.toThrow("simulated reviewer API error");
   });
+
+  it("attaches ephemeral cache_control to the system block and the banned-list user prefix", async () => {
+    const create = vi.fn(async () => ({
+      content: [{ type: "text" as const, text: JSON.stringify({ findings: [] }) }],
+    }));
+    __setClientForTests({ messages: { create } } as unknown as Anthropic);
+
+    await reviewDraft({ content: SAMPLE_DRAFT, banned: SAMPLE_BANNED });
+
+    expect(create).toHaveBeenCalledTimes(1);
+    const args = create.mock.calls[0]![0] as {
+      system: Array<{ type: string; text: string; cache_control?: unknown }>;
+      messages: Array<{
+        role: string;
+        content: Array<{ type: string; text: string; cache_control?: unknown }>;
+      }>;
+    };
+
+    // system block is the array form (not a string) and has ephemeral caching
+    expect(Array.isArray(args.system)).toBe(true);
+    expect(args.system[0]!.cache_control).toEqual({ type: "ephemeral" });
+
+    // user content is two blocks: cached banned-list prefix + variable draft
+    const userBlocks = args.messages[0]!.content;
+    expect(userBlocks).toHaveLength(2);
+    expect(userBlocks[0]!.cache_control).toEqual({ type: "ephemeral" });
+    expect(userBlocks[0]!.text).toContain("BANNED_LIST");
+    expect(userBlocks[1]!.cache_control).toBeUndefined();
+    expect(userBlocks[1]!.text).toContain("DRAFT:");
+  });
 });

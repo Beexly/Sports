@@ -125,4 +125,18 @@ describe("composeSlateOverview", () => {
       composeSlateOverview({ date: "2026-05-23", picks: SAMPLE_PICKS })
     ).rejects.toThrow("simulated slate API error");
   });
+
+  it("attaches ephemeral cache_control to the system block", async () => {
+    const { client, create } = makeFakeClient({ slateOverview: "ok" });
+    __setClientForTests(client);
+
+    await composeSlateOverview({ date: "2026-05-23", picks: SAMPLE_PICKS });
+
+    const args = create.mock.calls[0]![0] as {
+      system: Array<{ type: string; text: string; cache_control?: unknown }>;
+    };
+    expect(Array.isArray(args.system)).toBe(true);
+    expect(args.system[0]!.type).toBe("text");
+    expect(args.system[0]!.cache_control).toEqual({ type: "ephemeral" });
+  });
 });
