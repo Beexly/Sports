@@ -1,16 +1,18 @@
-﻿# Codex Overnight Brief - 2026-05-23
+# Codex Overnight Brief - 2026-05-23
 
 ## What I Completed
 
-- Ran the monetization-v3 validator repeatedly and fixed every failing structural issue that surfaced: broken shorthand backtick references, missing CSV tracker, unindexed files, stale validation counts, and navigation drift.
-- Ran the last-24-hour brand-safety scan for the configured banned phrase set and applied mechanical substitutions only. No load-bearing phrase required escalation. See `docs/monetization-v3/audit/brand-safety-flags.md`.
-- Appended `CODEX_MONETIZATION_V3_MASTER_BRIEF.md` with "Recent additions (Pass 10-11)" so the root brief no longer reflects the stale 141-file state.
-- Rebuilt `docs/monetization-v3/README.md` as a real navigation surface organized by Master Plan + Brief, Audit, Engineering, Content/Copy, Launch Playbooks, Week-Minus-1 Sprint Pack, and Templates.
-- Audited DEC-NEXT references and documented that repeated IDs are expected templates/cross-references, not active collisions. See `docs/monetization-v3/audit/decision-log-collisions.md`.
-- Updated `docs/monetization-v3/product/vault-prd.md` to reference the newer canonical specs for Discord architecture, day-by-day onboarding, renewal emails, and Garrett-unavailability behavior.
-- Checked Vault integration scaffolds and filed Phase-N gaps because `apps/web/lib/vault/`, `apps/web/app/api/cron/`, and `scripts/smoke-prod.sh` are absent or not runnable in this clone.
-- Created `docs/ops/issue-queue.md` for launch-blocking smoke/scaffold issues.
-- Created branch `codex/monetization-v3-overnight` and committed the overnight work.
+- Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
+- Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
+- Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-024.
+- Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
+- Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
+- Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
+- Added website monetization R&D for public proof surfaces: quiet email capture, contextual Vault CTAs, UTM attribution, and issue sequencing.
+- Added a compileable Next.js scaffold in `apps/web` for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
+- Added read-only production smoke scripts: `scripts/smoke-prod.ps1` and `scripts/smoke-prod.sh`.
+- Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
 
@@ -19,34 +21,50 @@
 - `37b9252` - DEC-NEXT-012 lock monetization navigation surfaces
 - `816c1e4` - DEC-NEXT-013 DEC-NEXT-014 align Vault PRD and scaffold gaps
 - `89a3606` - DEC-NEXT-012 add monetization v3 operating pack baseline
+- `bfc9ef5` - DEC-NEXT-015 document synthetic media R&D lane
+- `1de1ad1` - DEC-NEXT-016 add synthetic host policy and tracker
+- `7bf808e` - DEC-NEXT-017 add platform policy baseline for synthetic hosts
+- `324152b` - DEC-NEXT-018 seed short form content lab assets
+- `5261686` - DEC-NEXT-019 map website monetization R&D options
+- `a13ac6c` - DEC-NEXT-020 specify proof surface monetization modules
+- `4c41a17` - DEC-NEXT-020 queue proof surface monetization issues
+- `182e7cb` - DEC-NEXT-021 shift media R&D to character-first path
+- `76265bf` - DEC-NEXT-022 add Vega video production storyboards
+- `4943b81` - DEC-NEXT-022 queue Vega production engineering issues
+- `b64cb18` - DEC-NEXT-023 scaffold web proof surfaces
+- `603ec9a` - DEC-NEXT-024 add production smoke scripts
 
 ## What I Flagged For Morning Triage
 
-- `OPS-2026-05-23-001`: production smoke script could not run because `scripts/smoke-prod.sh` is missing or WSL bash is unavailable.
-- `OPS-2026-05-23-002`: `apps/web/lib/vault/` is absent, so Vault checkout constants, entitlement helpers, member creation, and Discord repair hooks have no scaffold.
-- `OPS-2026-05-23-003`: `apps/web/app/api/cron/` is absent, so welcome/lifecycle/renewal cron scaffolding does not exist.
-- No package manifest or test harness exists in this clone, so the requested "497 tests" could not be run here. The monetization validator is the only available automated test surface in this workspace.
+- `OPS-2026-05-23-001`: production smoke scripts exist now, but a real production run still needs confirmed `PROD_BASE_URL`.
+- `OPS-2026-05-23-002`: `apps/web/lib/vault/` is still absent, so Stripe/Vault constants, entitlement helpers, member creation, and Discord repair hooks remain unimplemented.
+- `OPS-2026-05-23-003`: `apps/web/app/api/cron/` is still absent, so welcome/lifecycle/renewal cron scaffolding remains unimplemented.
+- The requested "497 tests" still do not exist in this clone. I added a package manifest and verified the new app with typecheck/build/runtime smoke, but there is no broader test harness here yet.
 
 ## What Surprised Me
 
-- The pack grew again during the pass: final validator state is `170` Markdown files and `21` CSV files, not the expected ~155.
-- The strongest engineering finding was not subtle misalignment. The Vault and cron scaffolds are missing entirely in this clone.
-- Claude's close-out file arrived with shorthand backticked filenames that broke validation after the baseline commit. I normalized the references without changing its substantive content.
+- The pack is no longer ~155 files. Current validator state is `182` Markdown files and `26` CSV files.
+- The monetization docs are far more complete than the app. The largest risk is now implementation absence, not strategic ambiguity.
+- Port 3000 was already occupied by a different Node/Next process from another local Claude project, and it timed out. I used port 3100 for a clean local smoke and shut it down afterward.
+- The photoreal synthetic host idea became stronger after rejecting it: Vega/character-first gives Galaxy a differentiated media asset without colliding visually with tout content.
 
 ## Validation State
 
-- Standard monetization validator: rerun after fixes.
-- Strict brand scan: passes with expected noisy warnings in internal/audit docs.
-- Last-24-hour banned phrase scan: clean after mechanical substitutions.
-- Index sweep: clean after README updates.
+- `npm audit`: clean, 0 vulnerabilities after a PostCSS override.
+- `npm run typecheck:web`: pass.
+- `npm run build:web`: pass.
+- Local runtime smoke on port 3100: pass for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
+- `docs/monetization-v3/tools/validate-monetization-v3.ps1`: pass.
+- Exact banned-phrase scan: clean.
+- Strict brand scan: pass with expected noisy warnings in internal/audit docs.
+- Production smoke: script guardrail tested; exits with code 2 when `PROD_BASE_URL` is absent. No production URL was inferred and no deploy was attempted.
 
 ## Recommended Morning Peak-Block Sequence
 
-1. Read `docs/ops/issue-queue.md` and decide whether this clone is the correct app implementation workspace.
-2. If yes, create `apps/web/lib/vault/` scaffold and `apps/web/app/api/cron/` scaffold behind the existing execution gates.
-3. Add or restore `scripts/smoke-prod.sh` before any launch/deploy decision.
-4. Re-run `docs/monetization-v3/tools/validate-monetization-v3.ps1`.
-5. Only after the app scaffold exists, sequence Stripe, Discord, and welcome-email implementation from `docs/monetization-v3/product/engineering-issue-pack.md`.
+1. Confirm the production hostname and run `npm run smoke:prod` with `PROD_BASE_URL` set.
+2. Review `docs/ops/issue-queue.md`, especially OPS-002 and OPS-003.
+3. If this clone is the implementation workspace, scaffold `apps/web/lib/vault/` and `apps/web/app/api/cron/` from `docs/monetization-v3/product/engineering-issue-pack.md`.
+4. Keep Stripe, Discord, email, and member gating behind the existing Vault execution gates.
+5. Review the Vega character path only after Vault engineering triage is sequenced; it is R&D, not a launch blocker.
 
 No production deploy was attempted.
-
