@@ -25,6 +25,10 @@ import {
   reviewDraft,
   type DraftReviewReport,
 } from "./content/draft-reviewer.js";
+import {
+  composeCounterNarrative,
+  type CounterNarrativeReport,
+} from "./content/counter-narrative.js";
 import { getBannedPhraseList } from "./trust-claims.js";
 
 const GENERATOR_MODEL = "claude-sonnet-4-6";
@@ -219,4 +223,50 @@ export async function generateAndReviewBlogPost(
   });
 
   return { post, review };
+}
+
+/**
+ * Full draft bundle: generates the post, then runs review + counter-narrative
+ * IN PARALLEL against the result. The cockpit surfaces all three together so
+ * an operator never sees the celebratory post without the skeptical take.
+ */
+export interface BlogPostBundle {
+  readonly post: GeneratedContent;
+  readonly review: DraftReviewReport;
+  readonly counterNarrative: CounterNarrativeReport;
+}
+
+export async function composeBlogPostBundle(
+  input: ContentGenerationInput
+): Promise<BlogPostBundle> {
+  const post = await generateBlogPost(input);
+
+  const reviewable = [
+    post.title,
+    post.excerpt,
+    post.content,
+    post.seoTitle,
+    post.seoDescription,
+  ].join("\n\n");
+
+  const [review, counterNarrative] = await Promise.all([
+    reviewDraft({
+      content: reviewable,
+      banned: getBannedPhraseList(),
+      context: "BLOG_POST",
+    }),
+    composeCounterNarrative({
+      picks: input.picks.map((p) => ({
+        game: p.game,
+        pickType: p.pickType,
+        selection: p.selection,
+        line: p.line,
+        confidence: p.confidence,
+      })),
+      draft: reviewable,
+      ...(input.sources ? { sources: input.sources } : {}),
+    }),
+  ]);
+
+  return { post, review, counterNarrative };
 }

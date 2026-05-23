@@ -4,10 +4,12 @@ import type { ContentGenerationInput } from "@sports/types";
 
 import {
   __setClientForTests,
+  composeBlogPostBundle,
   generateAndReviewBlogPost,
   generateBlogPost,
 } from "@/lib/content-generator";
 import { __setClientForTests as __setReviewerClientForTests } from "@/lib/content/draft-reviewer";
+import { __setClientForTests as __setCounterClientForTests } from "@/lib/content/counter-narrative";
 
 const VALID_RESPONSE = {
   title: "NBA Picks for May 23, 2026 — Sharps Like the Lakers",
@@ -312,5 +314,87 @@ describe("generateAndReviewBlogPost", () => {
       "simulated API error"
     );
     expect(reviewerCreate).not.toHaveBeenCalled();
+  });
+});
+
+describe("composeBlogPostBundle", () => {
+  beforeEach(() => {
+    process.env["ANTHROPIC_API_KEY"] = "sk-ant-test";
+    process.env["VERCEL"] = "1";
+  });
+
+  afterEach(() => {
+    __setClientForTests(undefined);
+    __setReviewerClientForTests(undefined);
+    __setCounterClientForTests(undefined);
+    delete process.env["ANTHROPIC_API_KEY"];
+    delete process.env["VERCEL"];
+  });
+
+  it("returns post + review + counterNarrative when all three succeed", async () => {
+    __setClientForTests(makeFakeClient(VALID_RESPONSE));
+    __setReviewerClientForTests(makeFakeClient({ findings: [] }));
+    __setCounterClientForTests(
+      makeFakeClient({
+        counterTake: "Slate is concentrated at the top end — single source.",
+        redFlags: [
+          {
+            pick: "Lakers -3.5",
+            concern: "single-source risk",
+            severity: "MEDIUM",
+          },
+        ],
+      })
+    );
+
+    const bundle = await composeBlogPostBundle(SAMPLE_INPUT);
+
+    expect(bundle.post.title).toBe(VALID_RESPONSE.title);
+    expect(bundle.review.summary.verdict).toBe("READY");
+    expect(bundle.counterNarrative.counterTake).toContain("concentrated");
+    expect(bundle.counterNarrative.redFlags).toHaveLength(1);
+  });
+
+  it("runs review + counter in parallel after a single generator call", async () => {
+    const generatorCreate = vi.fn(async () => ({
+      content: [{ type: "text" as const, text: JSON.stringify(VALID_RESPONSE) }],
+    }));
+    const reviewerCreate = vi.fn(async () => ({
+      content: [{ type: "text" as const, text: JSON.stringify({ findings: [] }) }],
+    }));
+    const counterCreate = vi.fn(async () => ({
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify({ counterTake: "ok", redFlags: [] }),
+        },
+      ],
+    }));
+
+    __setClientForTests({ messages: { create: generatorCreate } } as unknown as Anthropic);
+    __setReviewerClientForTests({ messages: { create: reviewerCreate } } as unknown as Anthropic);
+    __setCounterClientForTests({ messages: { create: counterCreate } } as unknown as Anthropic);
+
+    await composeBlogPostBundle(SAMPLE_INPUT);
+
+    expect(generatorCreate).toHaveBeenCalledTimes(1);
+    expect(reviewerCreate).toHaveBeenCalledTimes(1);
+    expect(counterCreate).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not call review or counter when generation fails", async () => {
+    __setClientForTests(makeFakeClient(VALID_RESPONSE, { kind: "throws" }));
+    const reviewerCreate = vi.fn();
+    const counterCreate = vi.fn();
+    __setReviewerClientForTests({
+      messages: { create: reviewerCreate },
+    } as unknown as Anthropic);
+    __setCounterClientForTests({
+      messages: { create: counterCreate },
+    } as unknown as Anthropic);
+
+    await expect(composeBlogPostBundle(SAMPLE_INPUT)).rejects.toThrow();
+    expect(reviewerCreate).not.toHaveBeenCalled();
+    expect(counterCreate).not.toHaveBeenCalled();
   });
 });

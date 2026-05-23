@@ -21,3 +21,4 @@ Append-only. One line per cycle.
 2026-05-23 · #18 · feat(ai): ioredis rate-limit + withTelemetry foundation, applied to both Claude routes + all 4 SDK call sites · vitest `apps/web/__tests__/rate-limit.test.ts` + `ai-telemetry.test.ts`
 2026-05-23 · #19 · feat(ci): DB-backed nightly content + self-documenting PR body · vitest `apps/web/__tests__/nightly-content-workflow.test.ts`
 2026-05-23 · #20 · feat(cockpit): brief preview UI at /cockpit/brief/preview · vitest `apps/web/__tests__/cockpit-brief-preview-page.test.ts`
+2026-05-23 · #21 · feat(content): counter-narrative companion (anti-slop pillar) · vitest `apps/web/__tests__/counter-narrative.test.ts` + `content-generator.test.ts`

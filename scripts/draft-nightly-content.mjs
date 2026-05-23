@@ -245,6 +245,11 @@ Flag any passage that means the same thing as a banned phrase — including para
 Quote EXACT substrings from the DRAFT. Never invent quotes. Severity: BLOCK or WARN only.
 Return at most 20 findings. Empty findings is a valid answer.`;
 
+const COUNTER_SYSTEM_PROMPT = `You are a skeptical sports analyst who challenges the celebratory framing of a draft post.
+You must ONLY reference the picks and sources provided. Do not invent skepticism — find concrete concerns in the actual data.
+Concerns to look for: confidence concentration, single-source dependence, line-movement contradictions, confidence-vs-grade mismatch, same-side concentration.
+If the slate is genuinely clean (no concerns), say so directly. Counter-take: 2-4 sentences. Up to 12 red flags.`;
+
 const DRAFT_SCHEMA = {
   type: "object",
   properties: {
@@ -279,6 +284,28 @@ const REVIEW_SCHEMA = {
     },
   },
   required: ["findings"],
+  additionalProperties: false,
+};
+
+const COUNTER_SCHEMA = {
+  type: "object",
+  properties: {
+    counterTake: { type: "string" },
+    redFlags: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          pick: { type: "string" },
+          concern: { type: "string" },
+          severity: { type: "string", enum: ["LOW", "MEDIUM", "HIGH"] },
+        },
+        required: ["pick", "concern", "severity"],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ["counterTake", "redFlags"],
   additionalProperties: false,
 };
 
@@ -408,6 +435,51 @@ const reviewReport = {
   reviewedAt: new Date().toISOString(),
 };
 
+// ── 2b. Counter-narrative ────────────────────────────────────────────
+console.log(`[nightly-content] composing counter-narrative`);
+
+const counterPicksBlock = slate.picks
+  .map(
+    (p, i) =>
+      `${i + 1}. ${p.game} — ${p.pickType}: ${p.selection} @ line ${p.line} (confidence ${p.confidence}/100)`
+  )
+  .join("\n");
+
+const counterPrompt = `PICKS:
+${counterPicksBlock}${
+  slate.sources.length > 0 ? `\nSOURCES CITED: ${slate.sources.join(", ")}\n` : ""
+}
+
+DRAFT:
+"""
+${reviewable.slice(0, 6_000)}
+"""
+
+Return JSON matching the schema. Counter-take should be 2-4 sentences. Up to 12 red flags. Empty redFlags array is a valid + honest answer when the slate is clean.`;
+
+const counterResponse = await callWithTelemetry(
+  "nightly-counter-narrative",
+  DRAFT_MODEL,
+  () =>
+    client.messages.create({
+      model: DRAFT_MODEL,
+      max_tokens: 2000,
+      system: COUNTER_SYSTEM_PROMPT,
+      output_config: { format: { type: "json_schema", schema: COUNTER_SCHEMA } },
+      messages: [{ role: "user", content: counterPrompt }],
+    })
+);
+const counterBlock = counterResponse.content.find((b) => b.type === "text");
+if (!counterBlock) abort("counter-narrative response had no text block");
+const counter = JSON.parse(counterBlock.text);
+
+const counterReport = {
+  counterTake: counter.counterTake,
+  redFlags: counter.redFlags,
+  model: DRAFT_MODEL,
+  composedAt: new Date().toISOString(),
+};
+
 // ── 3. Write outputs ──────────────────────────────────────────────────
 if (DRY_RUN) {
   console.log("[nightly-content] --dry-run — skipping write");
@@ -422,6 +494,7 @@ await mkdir(DRAFTS_DIR, { recursive: true });
 const slug = `${slate.date}-nightly`;
 const mdPath = resolve(DRAFTS_DIR, `${slug}.md`);
 const reviewPath = resolve(DRAFTS_DIR, `${slug}.review.json`);
+const counterPath = resolve(DRAFTS_DIR, `${slug}.counter.json`);
 const telemetryPath = resolve(DRAFTS_DIR, `${slug}.telemetry.json`);
 
 const tagsLine = draft.tags.join(", ");
@@ -484,9 +557,11 @@ const telemetryReport = {
 
 await writeFile(mdPath, md, "utf8");
 await writeFile(reviewPath, JSON.stringify(reviewReport, null, 2), "utf8");
+await writeFile(counterPath, JSON.stringify(counterReport, null, 2), "utf8");
 await writeFile(telemetryPath, JSON.stringify(telemetryReport, null, 2), "utf8");
 
 console.log(`[nightly-content] wrote ${mdPath}`);
 console.log(`[nightly-content] wrote ${reviewPath}`);
+console.log(`[nightly-content] wrote ${counterPath}`);
 console.log(`[nightly-content] wrote ${telemetryPath}`);
 console.log(`[nightly-content] verdict=${verdict} findings=${review.findings.length}`);
