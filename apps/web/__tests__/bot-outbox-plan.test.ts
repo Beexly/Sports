@@ -80,6 +80,21 @@ describe("bot outbox planner", () => {
     expect(items.every((item) => item.bodyText === null && item.embed === null)).toBe(true);
   });
 
+  it("blocks distribution drafts when rendered bot copy fails compliance", () => {
+    const items = planPickPublicationOutbox(
+      {
+        ...freePick,
+        matchup: "AI-powered BOS @ NYK",
+      },
+      publicUrl,
+    );
+
+    expect(items).toHaveLength(2);
+    expect(items.every((item) => item.shouldPost === false)).toBe(true);
+    expect(items.every((item) => item.blockedReason === "compliance-blocked")).toBe(true);
+    expect(items.every((item) => item.bodyText === null && item.embed === null)).toBe(true);
+  });
+
   it("plans settled loss drafts with a post-mortem thread", () => {
     const items = planSettlementOutbox(settledLoss, publicUrl);
 

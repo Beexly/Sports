@@ -11,6 +11,7 @@ import {
   buildSlateStateGatedEmbed,
   type DiscordEmbed,
 } from "@/lib/discord-bot/templates";
+import { getRulesForTemplate } from "@/lib/compliance-scanner/rules";
 
 export type BotOutboxChannel = "TWITTER" | "DISCORD";
 
@@ -25,7 +26,8 @@ export type BotOutboxBlockedReason =
   | "bootstrap-data"
   | "unpublished-pick"
   | "pending-settlement"
-  | "non-loss-post-mortem";
+  | "non-loss-post-mortem"
+  | "compliance-blocked";
 
 export interface PlannedBotOutboxItem {
   idempotencyKey: string;
@@ -138,6 +140,66 @@ function buildBlockedItem(params: {
   };
 }
 
+function scanBotCopyForBlock(content: string): boolean {
+  return getRulesForTemplate("BOT_OUTBOX").some((rule) => {
+    if (rule.severity !== "block") return false;
+    const pattern = new RegExp(rule.pattern.source, rule.pattern.flags.replace("g", ""));
+    return pattern.test(content);
+  });
+}
+
+function embedSearchText(embed: DiscordEmbed): string {
+  return [
+    embed.title,
+    embed.description ?? "",
+    ...embed.fields.flatMap((field) => [field.name, field.value]),
+    embed.footer.text,
+  ].join("\n");
+}
+
+function plannedItemSearchText(item: PlannedBotOutboxItem): string {
+  return [
+    item.bodyText ?? "",
+    ...(item.threadText ?? []),
+    item.embed ? embedSearchText(item.embed) : "",
+  ].join("\n");
+}
+
+function applyBotComplianceGate(item: PlannedBotOutboxItem): PlannedBotOutboxItem {
+  if (!item.shouldPost) return item;
+  if (!scanBotCopyForBlock(plannedItemSearchText(item))) return item;
+
+  return buildBlockedItem({
+    idempotencyKey: item.idempotencyKey,
+    channel: item.channel,
+    eventKind: item.eventKind,
+    gameId: item.gameId,
+    pickId: item.pickId,
+    linkUrl: item.linkUrl,
+    blockedReason: "compliance-blocked",
+  });
+}
+
+function applyBotComplianceGates(items: PlannedBotOutboxItem[]): PlannedBotOutboxItem[] {
+  const gatedItems = items.map(applyBotComplianceGate);
+  const hasBlockedItem = gatedItems.some((item) => item.blockedReason === "compliance-blocked");
+  if (!hasBlockedItem) return gatedItems;
+
+  return gatedItems.map((item) =>
+    item.blockedReason === "compliance-blocked" || item.shouldPost
+      ? buildBlockedItem({
+          idempotencyKey: item.idempotencyKey,
+          channel: item.channel,
+          eventKind: item.eventKind,
+          gameId: item.gameId,
+          pickId: item.pickId,
+          linkUrl: item.linkUrl,
+          blockedReason: "compliance-blocked",
+        })
+      : item
+  );
+}
+
 export function planPickPublicationOutbox(
   input: BotPickPublicationInput,
   publicUrl: string,
@@ -162,7 +224,7 @@ export function planPickPublicationOutbox(
   const tweet = buildPickPublicationTweet(input, publicUrl);
   const embed = buildPickPublicationEmbed(input, publicUrl);
 
-  return [
+  return applyBotComplianceGates([
     {
       idempotencyKey: `twitter:pick-publication:${input.pickId}:${input.modelVersion}`,
       channel: "TWITTER",
@@ -189,7 +251,7 @@ export function planPickPublicationOutbox(
       shouldPost: true,
       blockedReason: null,
     },
-  ];
+  ]);
 }
 
 export function planSettlementOutbox(
@@ -296,7 +358,7 @@ export function planSettlementOutbox(
     });
   }
 
-  return items;
+  return applyBotComplianceGates(items);
 }
 
 export function planGatedSlateOutbox(
@@ -322,7 +384,7 @@ export function planGatedSlateOutbox(
   const tweet = buildSlateStateGatedTweet(input, publicUrl);
   const embed = buildSlateStateGatedEmbed(input, publicUrl);
 
-  return [
+  return applyBotComplianceGates([
     {
       idempotencyKey: `twitter:slate-state-gated:${input.gateDecisionId}:${input.modelVersion}`,
       channel: "TWITTER",
@@ -349,5 +411,5 @@ export function planGatedSlateOutbox(
       shouldPost: true,
       blockedReason: null,
     },
-  ];
+  ]);
 }

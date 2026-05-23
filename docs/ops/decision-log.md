@@ -509,3 +509,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: run Claude-generated Model Journal markdown through the journal compliance scanner before recording success.
 - Rationale: submit/publish routes already block red compliance, but generated drafts should fail at the API boundary when they contain banned positioning or unsafe claims.
 - Guardrail: empty, oversized, or scanner-blocked Journal output raises `ModelJournalGenerationError` and records failed `MODEL_JOURNAL_DRAFT` usage with a `POLICY_*` error kind.
+
+## 2026-05-23 - Bot Outbox Applies Compliance Gates
+
+- Decision: scan rendered Twitter and Discord outbox drafts before marking them postable.
+- Rationale: template tests cover the normal voice path, but rendered data can still inject blocked language through matchup, cause, or gate-reason fields.
+- Guardrail: if any channel for an event fails a platform block rule, the entire event is converted into non-posting audit items with `compliance-blocked`.
