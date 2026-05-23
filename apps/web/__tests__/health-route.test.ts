@@ -28,6 +28,8 @@ describe("/api/health", () => {
   it("checks ingestion last-success freshness so a stuck pipeline reports unhealthy", () => {
     expect(src).toMatch(/ingestionRun/);
     expect(src).toMatch(/status:\s*["']SUCCESS["']/);
+    expect(src).toMatch(/ageMinutes/);
+    expect(src).toMatch(/lastSuccessAt/);
   });
 
   it("does not write to the DB (read-only probe)", () => {

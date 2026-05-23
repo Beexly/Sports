@@ -425,3 +425,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add a query-tagged `/api/board/state?check=edge-index` synthetic probe and hydrate `CHECK-E3` from it.
 - Rationale: `/api/board/state` already carries public Edge Index values on slate rows, so the production monitor can verify visibility without a new endpoint.
 - Guardrail: this checks that at least one tracked slate row exposes a numeric Edge Index. It does not publish factor breakdowns or change entitlement rules.
+
+## 2026-05-22 - Data Freshness Synthetic Probes
+
+- Decision: expose ingestion `lastSuccessAt` and `ageMinutes` on `/api/health`, then wire query-tagged synthetic probes for `CHECK-E1` and `CHECK-E2`.
+- Rationale: the production monitor can now verify ingestion freshness and minimum book depth using existing read-only surfaces.
+- Guardrail: these probes read health and board JSON only. They do not trigger ingestion, mutate picks, or relax bootstrap/canonical gates.

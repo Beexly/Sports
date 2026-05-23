@@ -89,6 +89,24 @@ describe("synthetic monitoring dashboard", () => {
           admin: false,
         },
         {
+          path: "/api/health?check=ingestion-freshness",
+          label: "ingestion freshness",
+          ok: true,
+          status: 200,
+          ms: 47,
+          bannedPattern: "",
+          admin: false,
+        },
+        {
+          path: "/api/board/state?check=book-depth",
+          label: "book depth",
+          ok: true,
+          status: 200,
+          ms: 50,
+          bannedPattern: "",
+          admin: false,
+        },
+        {
           path: "/api/board/state?check=edge-index",
           label: "public Edge Index",
           ok: true,
@@ -129,6 +147,8 @@ describe("synthetic monitoring dashboard", () => {
     expect(checks.find((check) => check.id === "CHECK-A2")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-A4")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-A4")?.detail).toContain("invalid response shape");
+    expect(checks.find((check) => check.id === "CHECK-E1")?.status).toBe("passing");
+    expect(checks.find((check) => check.id === "CHECK-E2")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-E3")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-B1")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-B3")?.status).toBe("passing");

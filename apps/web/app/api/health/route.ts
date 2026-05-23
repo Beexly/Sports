@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import { db } from "@sports/db";
 
+type HealthCheck = {
+  status: "ok" | "error";
+  detail?: string;
+  lastSuccessAt?: string;
+  ageMinutes?: number;
+};
+
 export async function GET(): Promise<NextResponse> {
-  const checks: Record<string, { status: "ok" | "error"; detail?: string }> =
-    {};
+  const checks: Record<string, HealthCheck> = {};
 
   // Database check
   try {
@@ -30,9 +36,12 @@ export async function GET(): Promise<NextResponse> {
     } else {
       const ageMs = Date.now() - lastSuccessRun.completedAt.getTime();
       const ageHours = ageMs / (1000 * 60 * 60);
+      const ageMinutes = Math.round(ageMs / (1000 * 60));
       checks["ingestion"] = {
         status: ageHours > 2 ? "error" : "ok",
-        detail: `Last success: ${lastSuccessRun.completedAt.toISOString()} (${Math.round(ageHours * 60)}m ago)`,
+        detail: `Last success: ${lastSuccessRun.completedAt.toISOString()} (${ageMinutes}m ago)`,
+        lastSuccessAt: lastSuccessRun.completedAt.toISOString(),
+        ageMinutes,
       };
     }
   } catch {

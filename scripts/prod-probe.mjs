@@ -90,7 +90,17 @@ const PUBLIC_ROUTE_PROBES = [
 ];
 
 const API_SHAPE_PROBES = [
+  {
+    path: "/api/health?check=ingestion-freshness",
+    label: "ingestion freshness",
+    validate: validateIngestionFreshness,
+  },
   { path: "/api/board/state", label: "board state", validate: validateBoardState },
+  {
+    path: "/api/board/state?check=book-depth",
+    label: "book depth",
+    validate: validateBookDepth,
+  },
   {
     path: "/api/board/state?check=edge-index",
     label: "public Edge Index",
@@ -265,6 +275,29 @@ function validateBoardEdgeIndex(json) {
   if (rows.length === 0) return "No tracked slate rows available for Edge Index visibility.";
   const withEdgeIndex = rows.filter((row) => typeof row.edgeIndex === "number");
   if (withEdgeIndex.length === 0) return "No slate rows expose a numeric Edge Index.";
+  return "";
+}
+
+function validateBookDepth(json) {
+  const baseError = validateBoardState(json);
+  if (baseError) return baseError;
+  if (json.data.booksPolled < 8) {
+    return `Expected at least 8 books reporting, got ${json.data.booksPolled}.`;
+  }
+  return "";
+}
+
+function validateIngestionFreshness(json) {
+  if (json?.checks?.ingestion?.status !== "ok") return "Ingestion health is not ok.";
+  if (typeof json.checks.ingestion.ageMinutes !== "number") {
+    return "Missing checks.ingestion.ageMinutes number.";
+  }
+  if (typeof json.checks.ingestion.lastSuccessAt !== "string") {
+    return "Missing checks.ingestion.lastSuccessAt string.";
+  }
+  if (json.checks.ingestion.ageMinutes > 60) {
+    return `Latest successful ingestion is ${json.checks.ingestion.ageMinutes} minutes old.`;
+  }
   return "";
 }
 
