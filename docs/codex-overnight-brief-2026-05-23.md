@@ -5,7 +5,7 @@
 - Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
 - Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
 - Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
-- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-051.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-052.
 - Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
 - Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
 - Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
@@ -37,6 +37,7 @@
 - Added a reusable research-archive audit script for future zip fingerprints, file inventories, and line counts.
 - Added an implementation-readiness gap register that separates P0/P1/P2 launch blockers from strategy completeness.
 - Added a Vault route-access decision helper for member-only routes; real auth remains unwired.
+- Added Vault referral attribution and refund-clawback decisioning; durable referral storage and payout mutations remain unwired.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -81,12 +82,14 @@
 - `2787230` - DEC-NEXT-049 add research archive audit script
 - `d6e947c` - DEC-NEXT-050 add implementation readiness gap register
 - `bd70924` - DEC-NEXT-051 add Vault route access helper
+- `98471b6` - DEC-NEXT-052 add Vault referral decisioning
 
 ## What I Flagged For Morning Triage
 
 - `OPS-2026-05-23-001`: production smoke scripts exist now, but a real production run still needs confirmed `PROD_BASE_URL`.
 - `OPS-2026-05-23-002`: `apps/web/lib/vault/` now has inert typed scaffolds, but Stripe, Discord, email, database, persistence, and repair-queue behavior remain unimplemented.
 - `OPS-2026-05-23-003`: `apps/web/app/api/cron/` now has scaffold-only Vault cron routes, but they intentionally return HTTP 501 until provider integrations are wired.
+- `OPS-2026-05-23-004`: referral attribution and clawback rules are now testable, but durable referral storage, checkout metadata, payout batches, and abuse review remain unwired.
 - The requested "497 tests" still do not exist in this clone. I added a package manifest and verified the new app with typecheck/build/runtime smoke, but there is no broader test harness here yet.
 
 ## What Surprised Me
@@ -99,7 +102,7 @@
 ## Validation State
 
 - `npm audit`: clean, 0 vulnerabilities after a PostCSS override.
-- `npm run test:web`: pass through `npm run audit:launch` (`16` test files, `54` tests).
+- `npm run test:web`: pass through `npm run audit:launch` (`17` test files, test count updated by latest referral scaffold).
 - `npm run typecheck:web`: pass.
 - `npm run build:web`: pass.
 - Local runtime smoke on port 3100: pass for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
