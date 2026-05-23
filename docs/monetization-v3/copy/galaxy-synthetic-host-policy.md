@@ -3,7 +3,7 @@
 **Status:** Internal R&D policy. Not public copy.
 **Applies to:** Any synthetic person, narrator, presenter, image, voice, video, or character used in Galaxy short-form content.
 **Pairs with:** `audit/galaxy-short-form-content-lab-rd.md`
-**Related decision:** DEC-NEXT-016
+**Related decisions:** DEC-NEXT-016, DEC-NEXT-017
 
 ---
 
@@ -16,6 +16,21 @@
 **Rationale:** The R&D lane has useful monetization upside, but it can create brand drift faster than text-only documentation work. A policy and tracker create the operating boundary before creative production starts.
 
 **Guardrail:** Public posting still requires a separate Garrett approval after current platform-policy review.
+
+### DEC-NEXT-017 - Verify platform synthetic-media rules before public tests
+
+**Decision:** Galaxy will treat synthetic-host clips as disclosure-sensitive on YouTube, TikTok, and X until proven otherwise by current platform policy at posting time.
+
+**Rationale:** The major platforms allow synthetic or altered media in some contexts, but require disclosure, prohibit deception, or label/manually enforce media that could confuse viewers or cause harm. Galaxy's host concept is realistic by design, so conservative disclosure is the correct default.
+
+**Sources checked on 2026-05-23:**
+
+- [YouTube altered or synthetic content disclosure](https://support.google.com/youtube/answer/14328491?hl=en)
+- [TikTok edited media and generated-content notice](https://support.tiktok.com/en/using-tiktok/creating-videos/ai-generated-content)
+- [X Rules](https://help.x.com/en/rules-and-policies/x-rules)
+- [X authenticity policy](https://help.x.com/en/rules-and-policies/twitter-impersonation-and-deceptive-identities-policy.html)
+
+**Guardrail:** If any platform policy is unreachable or materially changed at posting time, public posting pauses until the policy read is refreshed.
 
 ---
 
@@ -220,6 +235,43 @@ If the host becomes the focus of comments instead of the artifact, pause the tes
 If audience behavior pulls Galaxy toward personality-led content, pause the test.
 
 If the clips create more brand-safety work than artifact traffic, kill the lane.
+
+---
+
+## Platform baseline as of 2026-05-23
+
+This section is a baseline, not a permanent rule. Re-check before public posting.
+
+### YouTube Shorts
+
+YouTube requires creators to disclose realistic altered or synthetic content when it is meaningfully altered or generated and could be mistaken for reality. The upload flow includes an altered-content setting. YouTube also warns that repeated nondisclosure can create penalties, including monetization-program consequences.
+
+Galaxy default:
+
+- Mark synthetic-host Shorts with the altered-content disclosure when the host or scene is realistic.
+- Use video descriptions that make the host role clear.
+- Do not simulate real people, real events, or real sports footage that did not happen.
+
+### TikTok
+
+TikTok's creator guidance treats materially edited/generated content as notice-sensitive when realistic subjects are portrayed saying or doing things they did not say or do, or when synthetic images/video could mislead viewers. TikTok provides creator tools for generated-content labeling and directs users to report violations.
+
+Galaxy default:
+
+- Label realistic synthetic-host clips.
+- Avoid any implication that the host is a real Galaxy employee, analyst, or member.
+- Do not use the host for advice-like claims.
+
+### X
+
+X rules prohibit deceptive synthetic or manipulated media likely to cause harm and may label synthetic/manipulated media. X's authenticity policy also prohibits fake identities used for disruptive or deceptive behavior, including misleading use of generated profile photos or misleading profile information.
+
+Galaxy default:
+
+- Do not create a separate fake-person host account.
+- Post from an official Galaxy account or clearly branded media account.
+- Keep bios transparent about synthetic presenters.
+- Avoid mass posting or automation.
 
 ---
 
