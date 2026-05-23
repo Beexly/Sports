@@ -63,6 +63,7 @@ Runway determines which subset is active:
 - [audit/galaxy-vault-pre-mortem.md](audit/galaxy-vault-pre-mortem.md) - Vault failure pre-mortem and mitigation prompts.
 - [audit/kpi-operator-ritual.md](audit/kpi-operator-ritual.md) - Galaxy-voice operator layer for monthly KPI review.
 - [audit/synthetic-media-monetization-rd-2026-05-23.md](audit/synthetic-media-monetization-rd-2026-05-23.md) - Synthetic-media archive inspection and Galaxy monetization reuse audit.
+- [audit/website-monetization-rd-2026-05-23.md](audit/website-monetization-rd-2026-05-23.md) - Website monetization R&D map and rejected-options register.
 
 ## Engineering
 
