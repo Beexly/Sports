@@ -21,6 +21,8 @@ Both scripts require `PROD_BASE_URL` and perform read-only GET checks against:
 - `/loss-room`
 - `/passes`
 - `/ledger`
+- `/api/vault/seat-count`
+- `/api/proof/freshness`
 
 The scripts do not create Stripe sessions, mutate production data, assign Discord roles, send emails, or trigger any checkout side effects.
 
@@ -33,3 +35,11 @@ The scripts do not create Stripe sessions, mutate production data, assign Discor
 **Guardrail:** If `PROD_BASE_URL` is not set, the scripts exit with code 2 and do not infer a production hostname.
 
 **Follow-up:** Once Garrett confirms the production hostname, run `npm run smoke:prod` and append any failures to [issue-queue.md](../../../docs/ops/issue-queue.md).
+
+## DEC-NEXT-035 - Add read-only public API checks to production smoke
+
+**Decision:** Extend production smoke coverage to include the public Vault seat-count and proof freshness endpoints.
+
+**Rationale:** These endpoints are now safe, read-only launch surfaces. Smoke coverage should catch broken JSON routes before public traffic or proof-surface campaigns depend on them.
+
+**Guardrail:** Smoke scripts still use GET-only checks and do not hit validation-only POST routes, cron routes, webhooks, checkout, or member-only routes.

@@ -7,7 +7,8 @@
     "test:web": "vitest run --config apps/web/vitest.config.ts",
     "typecheck:web": "tsc -p apps/web/tsconfig.json --noEmit",
     "smoke:prod": "powershell -ExecutionPolicy Bypass -File ./scripts/smoke-prod.ps1",
-    "validate:monetization": "powershell -ExecutionPolicy Bypass -File ./docs/monetization-v3/tools/validate-monetization-v3.ps1"
+    "validate:monetization": "powershell -ExecutionPolicy Bypass -File ./docs/monetization-v3/tools/validate-monetization-v3.ps1",
+    "check:env": "powershell -ExecutionPolicy Bypass -File ./scripts/check-env-contract.ps1"
   },
   "dependencies": {
     "next": "^16.2.6",

@@ -1,0 +1,106 @@
+[
+  {
+    "name": "PROD_BASE_URL",
+    "category": "deployment",
+    "requiredFor": "production-smoke",
+    "type": "url",
+    "example": "https://galaxysportsedge.com",
+    "purpose": "Base URL used by read-only production smoke tests."
+  },
+  {
+    "name": "STRIPE_VAULT_PRICE_ID",
+    "category": "stripe",
+    "requiredFor": "vault-launch",
+    "type": "identifier",
+    "example": "price_...",
+    "purpose": "Stripe recurring annual price for Galaxy Vault at $200/year."
+  },
+  {
+    "name": "STRIPE_WEBHOOK_SECRET",
+    "category": "stripe",
+    "requiredFor": "vault-launch",
+    "type": "secret",
+    "example": "whsec_...",
+    "purpose": "Verifies Stripe webhook events before entitlement changes."
+  },
+  {
+    "name": "DISCORD_BOT_TOKEN",
+    "category": "discord",
+    "requiredFor": "vault-launch",
+    "type": "secret",
+    "example": "set-in-vercel-only",
+    "purpose": "Authenticates the Vault Discord role-assignment bot."
+  },
+  {
+    "name": "DISCORD_GALAXY_GUILD_ID",
+    "category": "discord",
+    "requiredFor": "vault-launch",
+    "type": "identifier",
+    "example": "123456789012345678",
+    "purpose": "Galaxy Discord server id for Vault role assignment."
+  },
+  {
+    "name": "DISCORD_VAULT_MEMBER_ROLE_ID",
+    "category": "discord",
+    "requiredFor": "vault-launch",
+    "type": "identifier",
+    "example": "123456789012345678",
+    "purpose": "Discord role granted to active Vault members."
+  },
+  {
+    "name": "DISCORD_VAULT_FOUNDING_MEMBER_ROLE_ID",
+    "category": "discord",
+    "requiredFor": "vault-launch",
+    "type": "identifier",
+    "example": "123456789012345678",
+    "purpose": "Discord role granted to founding Vault members."
+  },
+  {
+    "name": "TRANSACTIONAL_EMAIL_PROVIDER",
+    "category": "email",
+    "requiredFor": "vault-launch",
+    "type": "enum",
+    "example": "postmark",
+    "purpose": "Names the provider used for Vault welcome and renewal email sends."
+  },
+  {
+    "name": "TRANSACTIONAL_EMAIL_API_KEY",
+    "category": "email",
+    "requiredFor": "vault-launch",
+    "type": "secret",
+    "example": "set-in-vercel-only",
+    "purpose": "Authenticates Vault transactional email sends."
+  },
+  {
+    "name": "TRANSACTIONAL_EMAIL_FROM",
+    "category": "email",
+    "requiredFor": "vault-launch",
+    "type": "email",
+    "example": "garrett@galaxysportsedge.com",
+    "purpose": "From address for Vault welcome, retention, and billing-support emails."
+  },
+  {
+    "name": "VAULT_FOUNDING_FILLED",
+    "category": "vault",
+    "requiredFor": "temporary-scaffold",
+    "type": "number",
+    "example": "0",
+    "purpose": "Temporary static founding-seat count until persistent member storage is wired."
+  },
+  {
+    "name": "CONTEXTUAL_VAULT_CTA_ENABLED",
+    "category": "feature-flag",
+    "requiredFor": "optional",
+    "type": "boolean",
+    "example": "0",
+    "purpose": "Enables contextual Vault CTAs on proof surfaces."
+  },
+  {
+    "name": "PROOF_SURFACE_EMAIL_CAPTURE_ENABLED",
+    "category": "feature-flag",
+    "requiredFor": "optional",
+    "type": "boolean",
+    "example": "0",
+    "purpose": "Enables proof-surface email capture once storage is wired."
+  }
+]

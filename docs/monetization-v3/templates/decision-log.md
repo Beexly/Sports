@@ -358,3 +358,29 @@ Metric threshold: Parser rejects disallowed paid/ad values and accepts approved 
 Owner: Codex; Garrett review optional
 Next review date: Before storing attribution events or publishing short-form tests
 Notes: Parser only; no analytics SDK, tracking pixel, checkout route, or public posting automation.
+
+### DEC-NEXT-035 - Production Smoke Public API Coverage
+
+Date: 2026-05-23
+Decision: Add read-only public API checks for Vault seat count and proof freshness to the production smoke scripts.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: `/api/vault/seat-count` and `/api/proof/freshness` are safe public GET endpoints that future proof-surface and Vault surfaces depend on.
+Metric threshold: Smoke scripts include the two public API routes while avoiding POST routes, cron routes, webhooks, checkout, and member-only routes.
+Owner: Codex; Garrett confirms production hostname before running against production
+Next review date: First production smoke run
+Notes: Still no production hostname inferred and no production deploy authorized.
+
+### DEC-NEXT-036 - Environment Readiness Contract
+
+Date: 2026-05-23
+Decision: Add an explicit environment variable contract, examples, preflight script, and typed readiness helpers.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Vault launch depends on Stripe, Discord, transactional email, production smoke, scaffold values, and feature flags that should not live only in implementation memory.
+Metric threshold: Env contract tests pass; `.env.example` contains placeholders only; preflight script reports missing variables without printing secrets.
+Owner: Codex; Garrett supplies real environment values
+Next review date: Before Stripe, Discord, or email end-to-end tests
+Notes: Does not validate actual secret values or call third-party APIs.

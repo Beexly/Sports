@@ -18,7 +18,9 @@ $paths = @(
   "/methodology",
   "/loss-room",
   "/passes",
-  "/ledger"
+  "/ledger",
+  "/api/vault/seat-count",
+  "/api/proof/freshness"
 )
 
 $failures = @()

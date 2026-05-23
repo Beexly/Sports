@@ -74,6 +74,7 @@ Runway determines which subset is active:
 - [product/admin-operations-spec.md](product/admin-operations-spec.md) - Admin operations requirements for support, incidents, and internal views.
 - [product/almanac-export-prd.md](product/almanac-export-prd.md) - Almanac data-export product requirements.
 - [product/engineering-issue-pack.md](product/engineering-issue-pack.md) - GitHub/Linear-ready engineering epics and Phase-N scaffold gaps.
+- [product/env-readiness-contract.md](product/env-readiness-contract.md) - Environment variable readiness contract and DEC-NEXT-036 guardrails.
 - [product/kpi-cockpit-prd.md](product/kpi-cockpit-prd.md) - KPI cockpit requirements for monthly operating review.
 - [product/live-obs-prd.md](product/live-obs-prd.md) - Live OBS overlay product requirements.
 - [product/manual-longevity-instruments.md](product/manual-longevity-instruments.md) - Manual brand, capacity, and freshness trackers tied to DEC-NEXT-032.

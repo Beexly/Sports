@@ -20,6 +20,8 @@
 - Added manual longevity instruments: weekly brand-position smoke test, founder capacity ledger, and proof-surface freshness tracker.
 - Added proof-surface freshness metadata, public freshness JSON, and stale-window tests.
 - Added strict short-form UTM parser coverage without analytics SDKs or tracking pixels.
+- Extended read-only production smoke scripts to cover public Vault seat-count and proof freshness APIs.
+- Added explicit environment readiness contract, placeholder `.env.example`, typed helpers, tests, and a local preflight script.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -46,6 +48,11 @@
 - `ab183d0` - DEC-NEXT-026 add Vault route guards and tests
 - `913dcad` - DEC-NEXT-028 scaffold proof email capture
 - `7572096` - DEC-NEXT-030 DEC-NEXT-031 gate CTAs and add longevity audit
+- `ba3169f` - DEC-NEXT-031 add longevity instruments and freshness metadata
+
+## Still in flight after the first clean pass
+
+- Added an environment-readiness contract so the morning block can check Stripe, Discord, email, feature flags, and production smoke variables before Day -7 verification.
 
 ## What I Flagged For Morning Triage
 
