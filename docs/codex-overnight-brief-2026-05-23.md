@@ -13,6 +13,7 @@
 - Added a compileable Next.js scaffold in `apps/web` for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
 - Added read-only production smoke scripts: `scripts/smoke-prod.ps1` and `scripts/smoke-prod.sh`.
 - Added inert Vault integration scaffolds: typed config, entitlements, Discord planning, email schedules, seat-count API, validation-only application intake, and scaffold-only cron routes.
+- Added the first web regression-test harness around Vault pure helpers.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -35,6 +36,7 @@
 - `b64cb18` - DEC-NEXT-023 scaffold web proof surfaces
 - `603ec9a` - DEC-NEXT-024 add production smoke scripts
 - `9030a59` - DEC-NEXT-024 update overnight brief
+- `fae3e5d` - DEC-NEXT-025 scaffold Vault integrations
 
 ## What I Flagged For Morning Triage
 
@@ -53,10 +55,11 @@
 ## Validation State
 
 - `npm audit`: clean, 0 vulnerabilities after a PostCSS override.
+- `npm run test:web`: pass.
 - `npm run typecheck:web`: pass.
 - `npm run build:web`: pass.
 - Local runtime smoke on port 3100: pass for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
-- Local production-style runtime smoke on port 3102: pass for `/api/vault/seat-count`; expected HTTP 501 for validation-only `/api/vault/apply` and scaffold-only Vault cron routes.
+- Local production-style runtime smoke on port 3103: pass for `/api/vault/seat-count`; expected HTTP 400/401/501 guardrail responses for application intake, member-only routes, write-disabled routes, webhooks, and scaffold-only Vault cron routes.
 - `docs/monetization-v3/tools/validate-monetization-v3.ps1`: pass.
 - Exact banned-phrase scan: clean.
 - Strict brand scan: pass with expected noisy warnings in internal/audit docs.

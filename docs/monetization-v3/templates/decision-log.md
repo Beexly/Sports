@@ -254,3 +254,29 @@ Metric threshold: Typecheck, build, and monetization validation pass while Strip
 Owner: Codex; Garrett review optional
 Next review date: Before Vault execution gates clear
 Notes: This does not activate Vault, launch checkout, persist applications, or deploy production behavior.
+
+### DEC-NEXT-027 - Vault API Contract Route Anchors
+
+Date: 2026-05-23
+Decision: Add protected Vault API and webhook route anchors with consistent error shapes while keeping member data, webhooks, and writes disabled.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: `product/vault-api-contracts.md` specifies member, digest, office-hours, referral, quarterly-review, Stripe webhook, and Discord webhook surfaces that were not present in the app scaffold.
+Metric threshold: Routes compile and return server-side `VAULT_ACCESS_REQUIRED`, `VAULT_WRITE_NOT_ENABLED`, or `VAULT_WEBHOOK_NOT_ENABLED` responses instead of leaking placeholder data.
+Owner: Codex; Garrett review optional
+Next review date: Before wiring authentication, persistence, or provider SDKs
+Notes: This is a route-contract scaffold only. It does not add authentication, Stripe handling, Discord handling, referral payouts, or gated content.
+
+### DEC-NEXT-026 - Web Regression Test Harness
+
+Date: 2026-05-23
+Decision: Add a Vitest harness covering pure Vault helper behavior before live provider integrations are wired.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: The clone had build/typecheck validation but no app-level regression harness; the new Vault helpers include pure logic that can be tested safely.
+Metric threshold: `npm run test:web`, `npm run typecheck:web`, `npm run build:web`, `npm audit`, and monetization validation pass.
+Owner: Codex; Garrett review optional
+Next review date: When Stripe, Discord, email, or persistence adapters are implemented
+Notes: Test harness does not call external providers or production endpoints.
