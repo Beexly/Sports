@@ -14,6 +14,7 @@ import {
   buildJournalDraftPromptUser,
   JOURNAL_DRAFTING_SYSTEM_PROMPT,
 } from "@/lib/journal/prompts";
+import { scanModelJournalMarkdown } from "@/lib/journal/compliance";
 import type { JournalWeekData } from "@/lib/journal/week-data";
 
 export interface ModelJournalClaudeOptions {
@@ -73,6 +74,20 @@ export async function generateModelJournalDraftMarkdown(
       system: JOURNAL_DRAFTING_SYSTEM_PROMPT,
       user: buildJournalDraftPromptUser(weekData),
     });
+    const policyFailures = evaluateModelJournalDraftPolicy(result.text);
+    if (policyFailures.length > 0) {
+      await maybeRecordJournalUsage({
+        options,
+        modelName: result.modelName,
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        durationMs: result.durationMs,
+        success: false,
+        errorKind: `POLICY_${policyFailures[0]}`,
+      });
+      throw new ModelJournalGenerationError(`Model Journal draft failed policy validation: ${policyFailures.join(", ")}`);
+    }
+
     await maybeRecordJournalUsage({
       options,
       modelName: result.modelName,
@@ -97,6 +112,27 @@ export async function generateModelJournalDraftMarkdown(
     }
     throw new ModelJournalGenerationError(error instanceof Error ? error.message : "Model Journal draft failed.");
   }
+}
+
+export function evaluateModelJournalDraftPolicy(markdown: string): string[] {
+  const failures: string[] = [];
+  const text = markdown.trim();
+
+  if (text.length === 0) {
+    failures.push("EMPTY");
+  }
+  if (text.length > 12000) {
+    failures.push("TOO_LONG");
+  }
+
+  const scan = scanModelJournalMarkdown(text);
+  for (const flag of scan.flags) {
+    if (flag.severity === "block") {
+      failures.push(flag.id);
+    }
+  }
+
+  return failures;
 }
 
 async function maybeRecordJournalUsage(args: {

@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_CLAUDE_API_BUDGETS } from "@/lib/claude-api/cost-monitor";
-import { generateModelJournalDraftMarkdown } from "@/lib/journal/claude";
+import {
+  evaluateModelJournalDraftPolicy,
+  generateModelJournalDraftMarkdown,
+} from "@/lib/journal/claude";
 import type { JournalWeekData } from "@/lib/journal/week-data";
 
 const weekData: JournalWeekData = {
@@ -101,5 +104,47 @@ describe("Model Journal Claude generation", () => {
       success: true,
       errorKind: null,
     });
+  });
+
+  it("records a policy failure when Claude returns blocked Journal copy", async () => {
+    const fetchImpl = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          content: [{ type: "text", text: "## Week In Numbers\n\nThis was an AI-powered week." }],
+          usage: { input_tokens: 1200, output_tokens: 400 },
+        }),
+        { status: 200 }
+      )
+    );
+    const create = vi.fn().mockResolvedValue({ id: "record-policy" });
+
+    await expect(
+      generateModelJournalDraftMarkdown(weekData, {
+        apiKey: "test-key",
+        fetchImpl,
+        monthlySpendUsd: 0,
+        budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.MODEL_JOURNAL_DRAFT,
+        recordUsage: true,
+        usageClient: {
+          claudeApiCallRecord: {
+            aggregate: vi.fn(),
+            create,
+          },
+        },
+      })
+    ).rejects.toThrow("policy validation");
+
+    expect(create.mock.calls[0]?.[0].data).toMatchObject({
+      surface: "MODEL_JOURNAL_DRAFT",
+      success: false,
+      errorKind: "POLICY_L1-AI-POWERED",
+    });
+  });
+
+  it("exposes Journal draft policy checks for cockpit routes", () => {
+    expect(evaluateModelJournalDraftPolicy("")).toEqual(["EMPTY"]);
+    expect(evaluateModelJournalDraftPolicy("We believe this was a clean sample.")).toEqual(
+      expect.arrayContaining(["MJ-FIRST-PERSON-CONFIDENCE"])
+    );
   });
 });

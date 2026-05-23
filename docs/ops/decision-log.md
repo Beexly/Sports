@@ -503,3 +503,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: run Studio generated text through the template compliance scanner before recording a successful Claude usage event.
 - Rationale: Studio drafts already displayed scanner state, but the Claude boundary should not count blocked copy as successful generation.
 - Guardrail: empty, oversized, or scanner-blocked Studio output raises `StudioGenerationError` and records failed `STUDIO_GENERATION` usage with a `POLICY_*` error kind.
+
+## 2026-05-23 - Model Journal Drafts Fail Closed After Claude
+
+- Decision: run Claude-generated Model Journal markdown through the journal compliance scanner before recording success.
+- Rationale: submit/publish routes already block red compliance, but generated drafts should fail at the API boundary when they contain banned positioning or unsafe claims.
+- Guardrail: empty, oversized, or scanner-blocked Journal output raises `ModelJournalGenerationError` and records failed `MODEL_JOURNAL_DRAFT` usage with a `POLICY_*` error kind.
