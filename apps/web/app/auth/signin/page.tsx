@@ -8,18 +8,19 @@ import { BRAND_NAME } from "@/lib/brand";
 // ─────────────────────────────────────────────
 
 interface SignInPageProps {
-  searchParams: { callbackUrl?: string; error?: string };
+  searchParams: Promise<{ callbackUrl?: string; error?: string }>;
 }
 
 export default async function SignInPage({ searchParams }: SignInPageProps) {
+  const query = await searchParams;
   const session = await auth();
 
   // Already signed in — redirect to callbackUrl or dashboard
   if (session?.user) {
-    redirect(searchParams.callbackUrl ?? "/dashboard");
+    redirect(query.callbackUrl ?? "/dashboard");
   }
 
-  const errorMessage = getErrorMessage(searchParams.error);
+  const errorMessage = getErrorMessage(query.error);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-950 px-4">
@@ -75,7 +76,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           action={async () => {
             "use server";
             await signIn("google", {
-              redirectTo: searchParams.callbackUrl ?? "/dashboard",
+              redirectTo: query.callbackUrl ?? "/dashboard",
             });
           }}
         >

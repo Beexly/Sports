@@ -10,7 +10,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
-  title: "Today's Signal Feed — Sports Picks With Reasoning Attached",
+  title: "Today's Board - Sports Signals With Reasoning Attached",
   description:
     "Live sports signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater — just the reasoning.",
   alternates: { canonical: "/picks" },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 // ─────────────────────────────────────────────
 
 interface PicksPageProps {
-  searchParams: { sport?: string; date?: string; grade?: string };
+  searchParams: Promise<{ sport?: string; date?: string; grade?: string }>;
 }
 
 interface PicksResponse {
@@ -34,8 +34,8 @@ interface PicksResponse {
   };
 }
 
-function getRequestOrigin(): string {
-  const h = headers();
+async function getRequestOrigin(): Promise<string> {
+  const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host");
   if (!host) {
     return process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
@@ -55,7 +55,7 @@ async function fetchPicks(
   date?: string,
   grade?: string
 ): Promise<PicksResponse> {
-  const appUrl = getRequestOrigin();
+  const appUrl = await getRequestOrigin();
   const params = new URLSearchParams();
   if (sport) params.set("sport", sport);
   if (date) params.set("date", date);
@@ -92,7 +92,7 @@ async function fetchPicks(
 
 async function fetchSlate(): Promise<DailySlate | null> {
   try {
-    const appUrl = getRequestOrigin();
+    const appUrl = await getRequestOrigin();
     const res = await fetch(`${appUrl}/api/picks/daily-slate`, {
       next: { revalidate: 1800 },
     });
@@ -109,7 +109,7 @@ async function fetchSlate(): Promise<DailySlate | null> {
 // ─────────────────────────────────────────────
 
 export default async function PicksPage({ searchParams }: PicksPageProps) {
-  const { sport, date, grade } = searchParams;
+  const { sport, date, grade } = await searchParams;
 
   const session = await auth();
   const entitlements = session?.user?.id
@@ -183,14 +183,14 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* Header */}
           <div className="mb-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
-              Signal Feed
+              Today&apos;s Board
             </p>
             <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
-              Today&apos;s sports signals.
+              The signals that cleared today.
             </h1>
             <p className="mt-1.5 text-sm text-gray-400">
-              Every signal published today, with price, timing, risk, and the
-              reason I let it ship.
+              One clean board. Price, timing, risk, and the reason each card
+              was allowed to publish.
             </p>
           </div>
 
@@ -404,7 +404,7 @@ function SlateBar({ slate }: { slate: DailySlate }) {
     ? new Date(slate.lastUpdatedAt).toLocaleTimeString("en-US", {
         hour: "numeric",
         minute: "2-digit",
-        timeZoneName: "short",
+        timeZone: "America/Chicago",
       })
     : null;
 
@@ -412,10 +412,10 @@ function SlateBar({ slate }: { slate: DailySlate }) {
     <div className="mb-6 rounded-xl border border-cyan-400/20 bg-slate-950/80 px-5 py-4 shadow-[0_0_28px_rgba(8,145,178,0.12)]">
       <div className="flex flex-wrap items-center gap-3">
         {/* Games / picks */}
-        <StatPill label="Games Today" value={String(slate.totalGames)} />
-        <StatPill label="Total Picks" value={String(slate.totalPicks)} />
+        <StatPill label="Games" value={String(slate.totalGames)} />
+        <StatPill label="Signals" value={String(slate.totalPicks)} />
         <StatPill
-          label="Premium Picks"
+          label="Paid Signals"
           value={String(slate.premiumPickCount)}
           highlight
         />
@@ -440,7 +440,7 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {lastUpdated && (
           <div className="ml-auto flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.9)]" aria-hidden="true" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-100">Updated {lastUpdated}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-100">Updated {lastUpdated} CT</span>
           </div>
         )}
       </div>
@@ -490,10 +490,9 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
   return (
     <div className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/50 bg-yellow-950/30 p-5 sm:flex-row sm:items-center">
       <div>
-        <p className="text-sm font-semibold text-yellow-300">You&apos;re on Free — one signal a day</p>
+        <p className="text-sm font-semibold text-yellow-300">Free shows one signal today.</p>
         <p className="mt-0.5 text-xs text-yellow-300/80">
-          Pro and Elite unlock every signal, the confidence rating, and the
-          factor trail behind each one.
+          Upgrade when you want the full board and the reasoning trail.
         </p>
       </div>
       <div className="flex shrink-0 items-center gap-3">
@@ -509,7 +508,7 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
           href="/pricing"
           className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
         >
-          See plans
+          See packages
         </Link>
       </div>
     </div>

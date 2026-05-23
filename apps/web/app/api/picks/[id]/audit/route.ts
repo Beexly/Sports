@@ -40,7 +40,7 @@ import type {
 export const dynamic = "force-dynamic";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function GET(
@@ -54,7 +54,7 @@ export async function GET(
     });
   }
 
-  const pickId = context.params.id;
+  const { id: pickId } = await context.params;
   if (!pickId || typeof pickId !== "string") {
     return NextResponse.json({ error: "invalid pick id" }, { status: 400 });
   }

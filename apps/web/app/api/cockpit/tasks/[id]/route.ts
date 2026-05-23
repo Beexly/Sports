@@ -22,13 +22,14 @@ async function requireAdmin(): Promise<{ ok: true; email: string } | NextRespons
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const guard = await requireAdmin();
   if (guard instanceof NextResponse) return guard;
+  const { id } = await params;
 
   const task = await db.cockpitTask.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { decisions: { orderBy: { createdAt: "asc" } } },
   });
   if (!task) {
@@ -45,10 +46,11 @@ interface PatchBody {
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const guard = await requireAdmin();
   if (guard instanceof NextResponse) return guard;
+  const { id } = await params;
 
   const body = (await req.json().catch(() => ({}))) as PatchBody;
   if (typeof body.toStatus !== "string") {
@@ -65,7 +67,7 @@ export async function PATCH(
 
   try {
     const result = await transitionTask(db, {
-      taskId: params.id,
+      taskId: id,
       toStatus: body.toStatus as CockpitTaskStatus,
       reviewer,
       note: typeof body.note === "string" ? body.note : undefined,

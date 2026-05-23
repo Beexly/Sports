@@ -14,12 +14,13 @@ function isAgentKey(s: string): s is AgentKey {
 export default async function CockpitAgentDetail({
   params,
 }: {
-  params: Params;
+  params: Promise<Params>;
 }) {
-  if (!isAgentKey(params.agentKey)) {
+  const { agentKey } = await params;
+  if (!isAgentKey(agentKey)) {
     notFound();
   }
-  const agent = getAgent(params.agentKey);
+  const agent = getAgent(agentKey);
 
   const tasks = await db.cockpitTask.findMany({
     where: { assignedAgent: agent.key },

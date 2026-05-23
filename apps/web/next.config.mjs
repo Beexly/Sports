@@ -2,15 +2,14 @@ import path from "node:path";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingRoot: path.resolve(process.cwd(), "../.."),
   transpilePackages: [
     "@sports/db",
     "@sports/types",
     "@sports/prediction-engine",
     "@sports/data-ingestion",
   ],
-  experimental: {
-    serverComponentsExternalPackages: ["@prisma/client"],
-  },
+  serverExternalPackages: ["@prisma/client"],
   webpack: (config) => {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),

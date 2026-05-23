@@ -45,7 +45,7 @@ async function safeFindDraft(id: string) {
 
 export async function GET(
   _req: Request,
-  context: { params: { id: string } | Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
@@ -55,7 +55,7 @@ export async function GET(
     );
   }
 
-  const params = await Promise.resolve(context.params);
+  const params = await context.params;
   const draftRaw = await safeFindDraft(params.id);
   if (!draftRaw) {
     return NextResponse.json(

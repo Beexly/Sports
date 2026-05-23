@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
@@ -15,9 +15,10 @@ export async function GET(
       { status: 403 }
     );
   }
+  const { id } = await params;
 
   const decisions = await db.cockpitDecision.findMany({
-    where: { taskId: params.id },
+    where: { taskId: id },
     orderBy: { createdAt: "asc" },
   });
   return NextResponse.json({ success: true, data: decisions });
