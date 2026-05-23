@@ -94,7 +94,7 @@
 - `ddd558f` - DEC-NEXT-055 add durable storage env contract
 - `1e439ac` - DEC-NEXT-056 add Vault persistence contract
 - `81b0608` - DEC-NEXT-057 add Vault backup restore runbook
-- `TBD` - DEC-NEXT-058 refresh monetization README engineering nav
+- `e73b0fb` - DEC-NEXT-058 refresh monetization README engineering nav
 
 ## What I Flagged For Morning Triage
 
