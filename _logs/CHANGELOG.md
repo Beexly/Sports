@@ -29,3 +29,4 @@ Append-only. One line per cycle.
 2026-05-23 · #26 · feat(cockpit): POST /api/cockpit/pick-narrator + UI page at /cockpit/pick-narrator · vitest `apps/web/__tests__/cockpit-pick-narrator-page.test.ts`
 2026-05-23 · #27 · feat(brief): three more section composers (what-changed / content-ideas / promotions) wired into composeBriefAsync · vitest `apps/web/__tests__/brief-sections.test.ts` + `brief-compose-async.test.ts`
 2026-05-23 · #28 · feat(cockpit): source-health uses per-category FRESHNESS_BUDGETS thresholds from source-intelligence · vitest `apps/web/__tests__/source-health.test.ts`
+2026-05-23 · #29 · feat(cockpit): telemetry summary page at /cockpit/telemetry — per-call-site cache hit rate, tokens, latency, errors · vitest `apps/web/__tests__/telemetry-summary.test.ts`

@@ -33,6 +33,7 @@ const NAV: ReadonlyArray<{ href: string; label: string; hint: string }> = [
   { href: "/cockpit/sources", label: "Sources", hint: "Source intelligence" },
   { href: "/cockpit/source-health", label: "Source health", hint: "Freshness watch + alerts" },
   { href: "/cockpit/pick-narrator", label: "Pick narrator", hint: "Editorial gloss on a ScoredPick" },
+  { href: "/cockpit/telemetry", label: "Telemetry", hint: "Cache hit rate + token usage" },
 ];
 
 export default async function CockpitLayout({
