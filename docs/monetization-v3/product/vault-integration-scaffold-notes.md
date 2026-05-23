@@ -2,7 +2,7 @@
 
 **Status:** Inert engineering scaffold.
 **Created:** 2026-05-23
-**Related decision:** DEC-NEXT-025
+**Related decision:** DEC-NEXT-025, DEC-NEXT-061
 
 ## What changed
 
@@ -44,3 +44,18 @@ Every cron route returns HTTP 501 with a scaffold-only message. No Stripe, Disco
 - No production deploy.
 
 **Follow-up:** Replace scaffold-only cron responses with authenticated jobs after Vault execution gates clear.
+
+## DEC-NEXT-061 - Add Discord role sync decisioning
+
+**Decision:** Extend Discord planning from initial role grant to full managed-role sync: grant missing roles, remove managed roles when access ends, avoid re-granting existing roles, and preserve canceled members through their paid term.
+
+**Why now:** Discord role automation is one of the highest-risk partial-failure paths after payment. The bot should not spam welcomes, remove access early, or leave expired/refunded members in member-only channels. The behavior needs to be deterministic before a Discord API client is wired.
+
+## DEC-NEXT-061 Implemented
+
+- [discord.ts](../../../apps/web/lib/vault/discord.ts) now exposes `createDiscordRoleSyncPlan(member, currentRoleIds, now)`.
+- [discord.test.ts](../../../apps/web/lib/vault/discord.test.ts) covers missing Discord mapping, initial grants, no duplicate grants, removal after access ends, and canceled-paid-through access.
+
+## DEC-NEXT-061 Guardrail
+
+This remains a planning helper only. It does not call Discord, send DMs, remove roles, or expose Discord member data.
