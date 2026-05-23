@@ -23,6 +23,7 @@ const NAV: ReadonlyArray<{ href: string; label: string; hint: string }> = [
   { href: "/cockpit/agents", label: "Agents", hint: "Six operator roles" },
   { href: "/cockpit/tasks", label: "Tasks", hint: "Queue by status" },
   { href: "/cockpit/review", label: "Review", hint: "Needs-review + blocked" },
+  { href: "/cockpit/review-draft", label: "Draft review", hint: "Semantic compliance scan" },
   { href: "/cockpit/media", label: "Media", hint: "Draft content workflow" },
   { href: "/cockpit/promotions", label: "Promotions", hint: "Bobby · sportsbook offers" },
   { href: "/cockpit/brief", label: "Daily brief", hint: "Today's slate snapshot" },

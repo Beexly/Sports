@@ -17,3 +17,4 @@ Append-only. One line per cycle.
 2026-05-23 · #14 · feat(ai): ephemeral prompt caching on draft-reviewer + slate-overview · vitest `apps/web/__tests__/draft-reviewer.test.ts` + `slate-overview.test.ts`
 2026-05-23 · #15 · feat(brief): add composeBriefAsync that populates the brief via composeSlateOverview · vitest `apps/web/__tests__/brief-compose-async.test.ts`
 2026-05-23 · #16 · feat(cockpit): POST /api/cockpit/brief now composes a real preview via composeBriefAsync · vitest `apps/web/__tests__/cockpit-brief-compose-api.test.ts`
+2026-05-23 · #17 · feat(cockpit): UI page wires the semantic draft reviewer at /cockpit/review-draft · vitest `apps/web/__tests__/cockpit-review-draft-page.test.ts`
