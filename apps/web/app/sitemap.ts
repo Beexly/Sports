@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { loadPublicJournalEntries } from "@/lib/journal/load";
 
 /**
  * sitemap.xml
@@ -32,15 +33,25 @@ const ROUTES: ReadonlyArray<{
   { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
     process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
   const now = new Date();
+  const journalEntries = await loadPublicJournalEntries();
 
-  return ROUTES.map(({ path, priority, changeFrequency }) => ({
+  const staticRoutes = ROUTES.map(({ path, priority, changeFrequency }) => ({
     url: `${baseUrl}${path}`,
     lastModified: now,
     changeFrequency,
     priority,
   }));
+
+  const journalRoutes = journalEntries.map((entry) => ({
+    url: `${baseUrl}/journal/${entry.slug}`,
+    lastModified: new Date(entry.publishedAt),
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
+  }));
+
+  return [...staticRoutes, ...journalRoutes];
 }

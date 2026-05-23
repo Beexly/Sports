@@ -44,7 +44,10 @@ describe("public Model Journal routes", () => {
     expect(rssRoute).toContain("escapeXml");
   });
 
-  it("adds the Journal index to the public sitemap", () => {
+  it("adds the Journal index and published entries to the public sitemap", () => {
     expect(sitemap).toContain('path: "/journal"');
+    expect(sitemap).toContain("loadPublicJournalEntries");
+    expect(sitemap).toContain("journalEntries.map");
+    expect(sitemap).toContain("`${baseUrl}/journal/${entry.slug}`");
   });
 });

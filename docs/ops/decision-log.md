@@ -160,3 +160,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `composeJournalDraftMarkdown()` and use it as the default body for manual Journal draft creation.
 - Rationale: draft creation should start from the same deterministic evidence bundle the future Claude drafting step will consume. The composer creates an operator-editable markdown skeleton with weekly counts, held/missed pick references, and public loss-autopsy references without calling an LLM or publishing anything.
 - Deferred: Claude draft generation route, richer factor extraction, cockpit full evidence table, automatic draft creation, publish/retract feed invalidation, email digest delivery, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Sitemap Entries Added
+
+- Decision: include published Model Journal detail URLs in `sitemap.xml`.
+- Rationale: once a Journal entry is manually published, public discovery should not depend only on the index page or RSS feed. The sitemap reads the same published-only loader as `/journal`, so drafts and retracted entries remain excluded.
+- Deferred: retracted-slug 410 handling, per-entry sitemap freshness after manual publish, email digest delivery, and teaser queue remain follow-up slices.
