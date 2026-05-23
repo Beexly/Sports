@@ -18,6 +18,7 @@ The repo now has a minimal Vitest harness for pure Vault helpers:
 - Contextual Vault source-link tests.
 - Short-form UTM parser tests.
 - Proof-surface freshness stale-window tests.
+- Public health report tests.
 
 ## DEC-NEXT-026 - Add a first web regression-test harness around Vault pure helpers
 

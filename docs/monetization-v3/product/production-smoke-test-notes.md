@@ -13,6 +13,7 @@ The repo now includes a production smoke-test script pair:
 
 Both scripts require `PROD_BASE_URL` and perform read-only GET checks against:
 
+- `/api/health`
 - `/`
 - `/vault`
 - `/vault?cancel=true`
@@ -43,3 +44,11 @@ The scripts do not create Stripe sessions, mutate production data, assign Discor
 **Rationale:** These endpoints are now safe, read-only launch surfaces. Smoke coverage should catch broken JSON routes before public traffic or proof-surface campaigns depend on them.
 
 **Guardrail:** Smoke scripts still use GET-only checks and do not hit validation-only POST routes, cron routes, webhooks, checkout, or member-only routes.
+
+## DEC-NEXT-037 - Add public health endpoint
+
+**Decision:** Add `/api/health` as a read-only liveness contract and include it in production smoke.
+
+**Rationale:** Production checks should have a stable JSON endpoint in addition to page checks. The health endpoint reports service identity, timestamp, environment, and optional git SHA without exposing secrets.
+
+**Guardrail:** The endpoint does not inspect providers, mutate data, or validate customer-specific state.

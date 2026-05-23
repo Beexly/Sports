@@ -22,6 +22,7 @@
 - Added strict short-form UTM parser coverage without analytics SDKs or tracking pixels.
 - Extended read-only production smoke scripts to cover public Vault seat-count and proof freshness APIs.
 - Added explicit environment readiness contract, placeholder `.env.example`, typed helpers, tests, and a local preflight script.
+- Added read-only `/api/health` and included it in production smoke.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs

@@ -7,7 +7,7 @@ if [ -z "${PROD_BASE_URL:-}" ]; then
 fi
 
 BASE_URL=$(printf "%s" "$PROD_BASE_URL" | sed 's:/*$::')
-PATHS="/ /vault /vault?cancel=true /vault?source=smoke-prod /methodology /loss-room /passes /ledger /api/vault/seat-count /api/proof/freshness"
+PATHS="/api/health / /vault /vault?cancel=true /vault?source=smoke-prod /methodology /loss-room /passes /ledger /api/vault/seat-count /api/proof/freshness"
 FAILURES=""
 
 for PATHNAME in $PATHS; do

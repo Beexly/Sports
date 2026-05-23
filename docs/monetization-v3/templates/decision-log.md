@@ -384,3 +384,16 @@ Metric threshold: Env contract tests pass; `.env.example` contains placeholders 
 Owner: Codex; Garrett supplies real environment values
 Next review date: Before Stripe, Discord, or email end-to-end tests
 Notes: Does not validate actual secret values or call third-party APIs.
+
+### DEC-NEXT-037 - Public Health Endpoint
+
+Date: 2026-05-23
+Decision: Add a read-only `/api/health` endpoint and include it in production smoke.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Production smoke should have a stable JSON liveness contract in addition to page checks.
+Metric threshold: Health report tests pass; endpoint appears in the Next route manifest; smoke checks include `/api/health`.
+Owner: Codex; Garrett review optional
+Next review date: First production smoke run
+Notes: Does not inspect providers, mutate data, or expose secrets.

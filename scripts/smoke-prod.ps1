@@ -11,6 +11,7 @@ if ([string]::IsNullOrWhiteSpace($BaseUrl)) {
 
 $base = $BaseUrl.TrimEnd("/")
 $paths = @(
+  "/api/health",
   "/",
   "/vault",
   "/vault?cancel=true",
