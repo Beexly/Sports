@@ -1,4 +1,4 @@
-# Galaxy Sports Edge
+﻿# Galaxy Sports Edge
 
 This repository currently holds the Galaxy Sports Edge monetization v3 operating system and supporting execution artifacts.
 
@@ -19,8 +19,9 @@ powershell -ExecutionPolicy Bypass -File .\docs\monetization-v3\tools\validate-m
 
 Current validated footprint:
 
-- 169 Markdown files checked
+- 170 Markdown files checked
 - 21 CSV files checked
 - 15 targeted drift files checked
 
 Use `-StrictBrandScan` for the noisy full-doc vocabulary review.
+

@@ -145,7 +145,7 @@ Whether it lands or not, the autopsy will show the methodology in motion.
 
 ### What it avoids
 
-- No "Lock of the night."
+- No tout-certainty.
 - No "🎯" or fire-emoji framing.
 - No promotional pitch.
 - No suggestion the reader should bet alongside.

@@ -1,4 +1,4 @@
-# Claude Overnight Close-Out — 2026-05-23
+﻿# Claude Overnight Close-Out — 2026-05-23
 
 **Audience:** Garrett (morning brief).
 **Status:** Autonomous overnight pass complete. Codex executing in parallel.
@@ -11,21 +11,21 @@
 
 The 7-day customer-dev sprint that precedes founding-50 outreach now has hour-by-hour operational guidance:
 
-- `10-customer-dev-sprint-day-by-day.md` — Day -7 to Day 0 plan with outreach + interview targets per day
-- `11-customer-dev-outreach-emails.md` — 5 source-specific outreach templates (Twitter substantive engagers / warm intros / skeptics / landing-page signups / cold sport-following list) + follow-up sequence
-- `12-post-interview-thank-you-templates.md` — 6 templates by signal type (standard / GO / SKEPTIC / non-fit / pricing-resistant / referral)
-- `13-founding-50-outreach-by-source.md` — 5 templates by candidate source + post-acceptance flow + decline handling
-- `14-founding-50-scoring-rubric.md` — 6-dimension 1-5 scoring rubric with tier thresholds + cohort balance check
+- `week-minus-1/10-customer-dev-sprint-day-by-day.md` — Day -7 to Day 0 plan with outreach + interview targets per day
+- `week-minus-1/11-customer-dev-outreach-emails.md` — 5 source-specific outreach templates (Twitter substantive engagers / warm intros / skeptics / landing-page signups / cold sport-following list) + follow-up sequence
+- `week-minus-1/12-post-interview-thank-you-templates.md` — 6 templates by signal type (standard / GO / SKEPTIC / non-fit / pricing-resistant / referral)
+- `week-minus-1/13-founding-50-outreach-by-source.md` — 5 templates by candidate source + post-acceptance flow + decline handling
+- `week-minus-1/14-founding-50-scoring-rubric.md` — 6-dimension 1-5 scoring rubric with tier thresholds + cohort balance check
 
 ### Galaxy-voice sample content batch (`copy/`)
 
 Filled-in examples in Galaxy voice for every content surface, usable as voice-calibration references when writing the first real entries:
 
-- `galaxy-sample-loss-room-autopsies.md` — 3 worked autopsies (NFL playoff with methodology revision, NBA marginal-band loss, MLB variance-driven loss with NO revision)
-- `galaxy-sample-pass-list-entries.md` — 5 Pass List entries, one per category
-- `galaxy-sample-model-journal-entry.md` — Full ~1,500-word Model Journal entry
-- `galaxy-sample-almanac-essay-1-opener.md` — First ~1,000 words of Essay 1
-- `galaxy-sample-twitter-content-week.md` — 7-day Twitter week with 4 substantive tweets + 3 quiet days
+- `copy/galaxy-sample-loss-room-autopsies.md` — 3 worked autopsies (NFL playoff with methodology revision, NBA marginal-band loss, MLB variance-driven loss with NO revision)
+- `copy/galaxy-sample-pass-list-entries.md` — 5 Pass List entries, one per category
+- `copy/galaxy-sample-model-journal-entry.md` — Full ~1,500-word Model Journal entry
+- `copy/galaxy-sample-almanac-essay-1-opener.md` — First ~1,000 words of Essay 1
+- `copy/galaxy-sample-twitter-content-week.md` — 7-day Twitter week with 4 substantive tweets + 3 quiet days
 
 ### Operational artifacts
 
@@ -85,10 +85,10 @@ Codex executed the overnight prompt and visible work includes:
 - `15-vault-operations-integration.md` — Map from operating docs to engineering contracts
 - `17-current-state-handoff.md` — Short handoff for future sessions
 - `README.md` restructured into proper navigation surface with sections (master plan / audit / engineering / content/copy / launch / week-minus-1 / templates)
-- Linter normalized brand-safety vocabulary across pass-10 + pass-11 files in parallel ("AI-powered prediction" → "black-box prediction", "lock of the day" → "tout-certainty / outcome-promise")
-- Cross-reference paths normalized to canonical files (`copy/vault-landing-page.md` as canonical; `vault-prd.md` consolidated to `product/vault-prd.md`)
+- Linter normalized brand-safety vocabulary across pass-10 + pass-11 files in parallel (automation-positioning phrasing to "black-box prediction"; tout-certainty phrasing to outcome-promise language)
+- Cross-reference paths normalized to canonical files (`copy/vault-landing-page.md` as canonical; `product/vault-prd.md` consolidated to `product/vault-prd.md`)
 
-Codex morning brief expected at `docs/codex-overnight-brief-2026-05-23.md` per the overnight prompt structure.
+Codex morning brief expected at `../../codex-overnight-brief-2026-05-23.md` per the overnight prompt structure.
 
 ---
 
@@ -103,7 +103,7 @@ In priority order:
 
    Each surfaced a DEC-NEXT decision-log item that's queued for triage.
 
-2. **Codex morning brief** at `docs/codex-overnight-brief-2026-05-23.md` (if Codex shipped it) — what Codex completed, flagged, and recommends sequencing for the morning peak block.
+2. **Codex morning brief** at `../../codex-overnight-brief-2026-05-23.md` (if Codex shipped it) — what Codex completed, flagged, and recommends sequencing for the morning peak block.
 
 3. **`week-minus-1/10-customer-dev-sprint-day-by-day.md`** — Day-by-day plan for the next 7 days. The customer-dev sprint is the highest-leverage Week -1 activity. Outreach targets per day are concrete.
 
@@ -147,7 +147,7 @@ After 11 passes + parallel Codex execution, the foundation is:
 ## What I'd recommend Garrett do first thing in the morning
 
 1. Read this close-out (10 min).
-2. Skim Codex's morning brief at `docs/codex-overnight-brief-2026-05-23.md` (15 min).
+2. Skim Codex's morning brief at `../../codex-overnight-brief-2026-05-23.md` (15 min).
 3. Read `audit/galaxy-vault-pre-mortem.md` end-to-end (20 min).
 4. Decide which of the 6 surfaced DEC-NEXT-PREMORTEM-* items to triage first.
 5. Confirm runway scenario.
@@ -180,3 +180,6 @@ This was a one-time exception explicitly granted. Saturday discipline resumes.
 
 — Claude, overnight pass 11
 2026-05-23 ~02:30 ET
+
+
+

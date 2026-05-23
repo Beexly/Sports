@@ -57,6 +57,7 @@ Runway determines which subset is active:
 - [audit/03-almanac-positioning-challenge.md](audit/03-almanac-positioning-challenge.md) - Almanac positioning challenge and price-defense framing.
 - [audit/04-live-pitch-variants.md](audit/04-live-pitch-variants.md) - Live pitch variants, objections, and Sketch outreach shape.
 - [audit/brand-safety-flags.md](audit/brand-safety-flags.md) - Last-24-hour banned-vocabulary scan, substitutions, and escalation status.
+- [audit/claude-overnight-close-out-2026-05-23.md](audit/claude-overnight-close-out-2026-05-23.md) - Claude overnight Pass 11 close-out and morning reading order.
 - [audit/decision-log-collisions.md](audit/decision-log-collisions.md) - DEC-NEXT uniqueness audit and reserved-ID status.
 - [audit/galaxy-vault-pre-mortem.md](audit/galaxy-vault-pre-mortem.md) - Vault failure pre-mortem and mitigation prompts.
 - [audit/kpi-operator-ritual.md](audit/kpi-operator-ritual.md) - Galaxy-voice operator layer for monthly KPI review.

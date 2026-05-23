@@ -1,4 +1,4 @@
-# Decision-Log Collision Audit
+﻿# Decision-Log Collision Audit
 
 Date: 2026-05-23
 Auditor: Codex
@@ -26,10 +26,11 @@ Repeated IDs fall into three expected categories:
 
 - DEC-NEXT-001 through DEC-NEXT-010 are already reserved by the canonical decision-log templates.
 - DEC-NEXT-011 through DEC-NEXT-014 were assigned on 2026-05-23 for overnight maintenance decisions.
-- Latest validation state after this audit: 169 Markdown files and 21 CSV files.
+- Latest validation state after this audit: 170 Markdown files and 21 CSV files.
 
 ## Resolution
 
 No IDs were reassigned.
 
 If a future artifact introduces a real decision using an already-reserved ID with a different meaning, reassign the later-added artifact and update this audit file.
+
