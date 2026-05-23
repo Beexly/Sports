@@ -118,7 +118,7 @@
 - `48dfbec` - DEC-NEXT-067 add artifact merch R&D
 - `7f86e8f` - DEC-NEXT-068 refresh decision collision audit
 - `c1f5f3c` - DEC-NEXT-069 update master brief Pass 12-13 additions
-- `TBD` - DEC-NEXT-070 add fail-closed admin readiness route
+- `8d5582f` - DEC-NEXT-070 add fail-closed admin readiness route
 
 ## What I Flagged For Morning Triage
 
