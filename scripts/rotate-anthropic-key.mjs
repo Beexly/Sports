@@ -76,22 +76,20 @@ head("Verifying new Anthropic API key");
 
 async function verifyKey(key) {
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 1,
-        messages: [{ role: "user", content: "ping" }],
-      }),
+    const { default: Anthropic } = await import("@anthropic-ai/sdk");
+    const client = new Anthropic({ apiKey: key, maxRetries: 3 });
+    await client.messages.create({
+      model: "claude-haiku-4-5",
+      max_tokens: 1,
+      messages: [{ role: "user", content: "ping" }],
     });
-    return { ok: res.ok, status: res.status, body: await res.text() };
+    return { ok: true, status: 200, body: "ok" };
   } catch (err) {
-    return { ok: false, status: 0, body: err.message };
+    if (err && typeof err === "object" && "status" in err && typeof err.status === "number") {
+      const message = "message" in err && typeof err.message === "string" ? err.message : "(no message)";
+      return { ok: false, status: err.status, body: message };
+    }
+    return { ok: false, status: 0, body: err && err.message ? err.message : String(err) };
   }
 }
 

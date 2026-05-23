@@ -232,35 +232,31 @@ async function checkAnthropic() {
   const contentLive =
     String(process.env.PUBLIC_BLOG_ENABLED ?? "").toLowerCase() === "true";
   const reportFail = contentLive ? bad : warn;
+  const offDeployNote = contentLive
+    ? ""
+    : " (warn: PUBLIC_BLOG_ENABLED=false — no runtime path uses this key right now; rotate before enabling content)";
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 4,
-        messages: [{ role: "user", content: "ping" }],
-      }),
+    const { default: Anthropic } = await import("@anthropic-ai/sdk");
+    const client = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+      maxRetries: 3,
     });
-    if (!res.ok) {
-      reportFail(
-        "Anthropic API key",
-        `HTTP ${res.status}${contentLive ? "" : " (warn: PUBLIC_BLOG_ENABLED=false — no runtime path uses this key right now; rotate before enabling content)"}`
-      );
-      return;
-    }
-    const json = await res.json();
-    const usage = json.usage ?? {};
+    const message = await client.messages.create({
+      model: "claude-haiku-4-5",
+      max_tokens: 4,
+      messages: [{ role: "user", content: "ping" }],
+    });
+    const usage = message.usage ?? {};
     ok(
       "Anthropic API key",
-      `model=${json.model} · input_tokens=${usage.input_tokens ?? "?"}`
+      `model=${message.model} · input_tokens=${usage.input_tokens ?? "?"}`
     );
   } catch (err) {
-    reportFail("Anthropic API key", err.message);
+    if (err && typeof err === "object" && "status" in err && typeof err.status === "number") {
+      reportFail("Anthropic API key", `HTTP ${err.status}${offDeployNote}`);
+      return;
+    }
+    reportFail("Anthropic API key", err && err.message ? err.message : String(err));
   }
 }
 

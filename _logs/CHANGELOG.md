@@ -8,3 +8,4 @@ Append-only. One line per cycle.
 2026-05-23 · #4 · feat(content): pair generator with reviewer via generateAndReviewBlogPost wrapper · vitest `apps/web/__tests__/content-generator.test.ts`
 2026-05-23 · #5 · feat(prediction-engine): add extractPickSources for top-level sources[] aggregation · vitest `packages/prediction-engine/src/__tests__/pick-sources.test.ts`
 2026-05-23 · #6 · feat(content): cite pick sources in generated blog posts · vitest `apps/web/__tests__/content-generator.test.ts`
+2026-05-23 · #7 · chore(scripts): migrate operator scripts to @anthropic-ai/sdk · vitest `apps/web/__tests__/operator-scripts-sdk.test.ts`
