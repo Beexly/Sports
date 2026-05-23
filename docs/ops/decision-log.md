@@ -346,3 +346,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `PROD_PROBE_JSON=1` support to `scripts/prod-probe.mjs`, emitting sanitized structured probe results while keeping the existing one-line console output as the default.
 - Rationale: the synthetic monitoring runner needs machine-readable status before durable history exists. The JSON payload includes paths, status codes, latency, banned-phrase findings, and admin-probe flags without response bodies or cookies.
 - Deferred: storing probe output, deduplicating failures, and auto-filing issue-queue entries remain separate runner slices.
+
+## 2026-05-22 - Synthetic Runner Writes Latest Probe Artifact
+
+- Decision: add `scripts/synthetic-monitoring-runner.mjs` and the root `synthetic:run` script to execute the production probe in structured mode and write `.synthetic-monitoring/latest.json`.
+- Rationale: the monitoring loop now has a scheduler-friendly command that preserves probe exit codes while leaving a machine-readable artifact for later cockpit/history ingestion.
+- Deferred: database persistence, 24-hour history, issue-queue filing, and owner-channel notification remain separate runner slices.
