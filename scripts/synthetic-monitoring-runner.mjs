@@ -19,7 +19,10 @@ import { fileURLToPath } from "node:url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = resolve(ROOT, process.env.SYNTHETIC_MONITORING_OUTPUT_DIR ?? ".synthetic-monitoring");
 const latestPath = join(outputDir, "latest.json");
+const runsDir = join(outputDir, "runs");
 const shouldFileIssues = process.env.SYNTHETIC_MONITORING_FILE_ISSUES === "1";
+const runnerGeneratedAtIso = new Date().toISOString();
+const runPath = join(runsDir, `${toRunFileName(runnerGeneratedAtIso)}.json`);
 
 const result = spawnSync(process.execPath, [join(ROOT, "scripts", "prod-probe.mjs")], {
   cwd: ROOT,
@@ -48,22 +51,24 @@ try {
 const artifact = {
   ...payload,
   runner: {
-    generatedAtIso: new Date().toISOString(),
+    generatedAtIso: runnerGeneratedAtIso,
     exitCode: result.status ?? 1,
     outputPath: latestPath,
+    historyPath: runPath,
   },
 };
 
-await mkdir(outputDir, { recursive: true });
+await mkdir(runsDir, { recursive: true });
 await writeFile(latestPath, `${JSON.stringify(artifact, null, 2)}\n`, "utf8");
+await writeFile(runPath, `${JSON.stringify(artifact, null, 2)}\n`, "utf8");
 if (!artifact.ok && shouldFileIssues) {
   await fileIssueQueueEntry(artifact);
 }
 
 if (artifact.ok) {
-  console.log(`synthetic-monitoring OK - wrote ${latestPath}`);
+  console.log(`synthetic-monitoring OK - wrote ${latestPath} and ${runPath}`);
 } else {
-  console.error(`synthetic-monitoring FAIL - wrote ${latestPath}`);
+  console.error(`synthetic-monitoring FAIL - wrote ${latestPath} and ${runPath}`);
 }
 
 process.exit(result.status ?? 1);
@@ -115,4 +120,8 @@ async function fileIssueQueueEntry(artifact) {
 
 function isCriticalProbe(path) {
   return path === "/" || path === "/board" || path === "/ledger" || path === "/api/health";
+}
+
+function toRunFileName(value) {
+  return value.replaceAll(":", "-").replaceAll(".", "-");
 }

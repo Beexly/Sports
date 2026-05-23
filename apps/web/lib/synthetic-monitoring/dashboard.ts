@@ -1,5 +1,5 @@
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { readFile, readdir } from "node:fs/promises";
+import { join, resolve } from "node:path";
 
 export type SyntheticCheckStatus = "passing" | "warn" | "failing" | "pending";
 
@@ -73,6 +73,7 @@ export interface SyntheticProbeArtifact {
     readonly generatedAtIso: string;
     readonly exitCode: number;
     readonly outputPath: string;
+    readonly historyPath?: string;
   };
 }
 
@@ -273,20 +274,27 @@ const ARTIFACT_TO_VOICE_CHECK_ID: Readonly<Record<string, string>> = {
 export async function loadSyntheticMonitoringDashboardFromDisk(
   now = new Date()
 ): Promise<SyntheticMonitoringDashboard> {
-  const [artifact, issues] = await Promise.all([readLatestArtifact(), readSyntheticIssues()]);
-  return loadSyntheticMonitoringDashboard(now, artifact, issues);
+  const [artifact, history, issues] = await Promise.all([
+    readLatestArtifact(),
+    readHistoricalArtifacts(),
+    readSyntheticIssues(),
+  ]);
+  return loadSyntheticMonitoringDashboard(now, artifact, issues, history);
 }
 
 export function loadSyntheticMonitoringDashboard(
   now = new Date(),
   artifact: SyntheticProbeArtifact | null = null,
-  issues: readonly SyntheticMonitoringIssue[] = []
+  issues: readonly SyntheticMonitoringIssue[] = [],
+  history: readonly SyntheticProbeArtifact[] = []
 ): SyntheticMonitoringDashboard {
   const generatedAtIso = now.toISOString();
   const lastRunIso = artifact?.generatedAtIso ?? syntheticLastRun(now).toISOString();
   const categories = CHECK_DEFINITIONS.map((category) => ({
     ...category,
-    checks: category.checks.map((check) => hydrateCheckFromArtifact(check, artifact, lastRunIso)),
+    checks: category.checks.map((check) =>
+      hydrateCheckFromArtifact(check, artifact, lastRunIso, history)
+    ),
   }));
   const flatChecks = categories.flatMap((category) => category.checks);
 
@@ -316,7 +324,8 @@ export function loadSyntheticMonitoringDashboard(
 function hydrateCheckFromArtifact(
   check: Omit<SyntheticCheck, "lastRunIso" | "history">,
   artifact: SyntheticProbeArtifact | null,
-  lastRunIso: string
+  lastRunIso: string,
+  history: readonly SyntheticProbeArtifact[]
 ): SyntheticCheck {
   const probe = findProbeForCheck(check.id, artifact);
   const status = statusFromProbe(check, probe);
@@ -325,7 +334,7 @@ function hydrateCheckFromArtifact(
     status,
     lastRunIso: status === "pending" ? null : lastRunIso,
     detail: detailFromProbe(check, probe),
-    history: buildHistory(status),
+    history: buildHistoryFromArtifacts(check, history) ?? buildHistory(status),
   };
 }
 
@@ -372,12 +381,39 @@ function runnerStatusFromArtifact(
 }
 
 async function readLatestArtifact(): Promise<SyntheticProbeArtifact | null> {
-  const artifactPath = resolve(process.cwd(), ".synthetic-monitoring", "latest.json");
+  const artifactPath = join(artifactDirectory(), "latest.json");
   try {
     const text = await readFile(artifactPath, "utf8");
     return JSON.parse(text) as SyntheticProbeArtifact;
   } catch {
     return null;
+  }
+}
+
+async function readHistoricalArtifacts(): Promise<readonly SyntheticProbeArtifact[]> {
+  const runsPath = join(artifactDirectory(), "runs");
+  try {
+    const entries = await readdir(runsPath, { withFileTypes: true });
+    const files = entries
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+      .map((entry) => entry.name)
+      .sort()
+      .slice(-96);
+    const artifacts = await Promise.all(
+      files.map(async (fileName) => {
+        try {
+          const text = await readFile(join(runsPath, fileName), "utf8");
+          return JSON.parse(text) as SyntheticProbeArtifact;
+        } catch {
+          return null;
+        }
+      })
+    );
+    return artifacts
+      .filter((artifact): artifact is SyntheticProbeArtifact => artifact !== null)
+      .sort((left, right) => left.generatedAtIso.localeCompare(right.generatedAtIso));
+  } catch {
+    return [];
   }
 }
 
@@ -388,6 +424,13 @@ async function readSyntheticIssues(): Promise<readonly SyntheticMonitoringIssue[
   } catch {
     return [];
   }
+}
+
+function artifactDirectory(): string {
+  return resolve(
+    process.cwd(),
+    process.env.SYNTHETIC_MONITORING_OUTPUT_DIR ?? ".synthetic-monitoring"
+  );
 }
 
 export function parseSyntheticIssuesFromMarkdown(markdown: string): readonly SyntheticMonitoringIssue[] {
@@ -416,6 +459,21 @@ function buildHistory(status: SyntheticCheckStatus): readonly SyntheticCheckStat
     return Array.from({ length: 96 }, () => "pending");
   }
   return Array.from({ length: 96 }, (_, index) => (index % 31 === 0 ? "warn" : status));
+}
+
+function buildHistoryFromArtifacts(
+  check: Omit<SyntheticCheck, "lastRunIso" | "history">,
+  history: readonly SyntheticProbeArtifact[]
+): readonly SyntheticCheckStatus[] | null {
+  if (history.length === 0) return null;
+  const statuses = history.map((artifact) =>
+    statusFromProbe(check, findProbeForCheck(check.id, artifact))
+  );
+  const padding = Array.from(
+    { length: Math.max(0, 96 - statuses.length) },
+    () => "pending" as const
+  );
+  return [...padding, ...statuses].slice(-96);
 }
 
 function maskTarget(value: string | undefined): string {

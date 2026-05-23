@@ -16,6 +16,8 @@ describe("scripts/synthetic-monitoring-runner.mjs", () => {
   it("writes a latest synthetic monitoring artifact", () => {
     expect(src).toContain("SYNTHETIC_MONITORING_OUTPUT_DIR");
     expect(src).toContain("latest.json");
+    expect(src).toContain("runs");
+    expect(src).toContain("historyPath");
     expect(src).toContain("writeFile");
     expect(src).toContain("JSON.stringify(artifact, null, 2)");
   });

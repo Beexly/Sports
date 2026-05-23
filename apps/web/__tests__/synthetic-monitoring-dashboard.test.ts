@@ -94,6 +94,53 @@ describe("synthetic monitoring dashboard", () => {
     expect(checks.find((check) => check.id === "CHECK-V3")?.detail).toContain("banned pattern");
   });
 
+  it("hydrates check history from stored probe runs", () => {
+    const passingArtifact: SyntheticProbeArtifact = {
+      generatedAtIso: "2026-05-22T18:00:00.000Z",
+      ok: true,
+      failed: 0,
+      probes: [
+        {
+          path: "/board",
+          label: "board",
+          ok: true,
+          status: 200,
+          ms: 41,
+          bannedPattern: "",
+          admin: false,
+        },
+      ],
+    };
+    const failingArtifact: SyntheticProbeArtifact = {
+      generatedAtIso: "2026-05-22T18:15:00.000Z",
+      ok: false,
+      failed: 1,
+      probes: [
+        {
+          path: "/board",
+          label: "board",
+          ok: false,
+          status: 500,
+          ms: 300,
+          bannedPattern: "",
+          admin: false,
+        },
+      ],
+    };
+
+    const dashboard = loadSyntheticMonitoringDashboard(
+      new Date("2026-05-22T18:20:00.000Z"),
+      failingArtifact,
+      [],
+      [passingArtifact, failingArtifact]
+    );
+    const boardCheck = dashboard.categories
+      .flatMap((category) => category.checks)
+      .find((check) => check.id === "CHECK-A2");
+
+    expect(boardCheck?.history.slice(-3)).toEqual(["pending", "passing", "failing"]);
+  });
+
   it("parses synthetic issue-queue entries for cockpit display", () => {
     const issues = parseSyntheticIssuesFromMarkdown(`# Issue Queue
 

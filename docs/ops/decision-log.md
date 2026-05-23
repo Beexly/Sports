@@ -371,3 +371,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: parse synthetic-monitoring markers from `docs/ops/issue-queue.md` and show them on `/cockpit/synthetic-monitoring`.
 - Rationale: once the runner files an operational issue, operators should see it in the monitoring dashboard without opening the markdown queue first.
 - Deferred: richer issue detail cards, auto-close, and direct editor deep links remain future slices.
+
+## 2026-05-22 - Synthetic Runner Keeps Durable History
+
+- Decision: write each scheduled synthetic-monitoring run to `.synthetic-monitoring/runs/` while continuing to refresh `.synthetic-monitoring/latest.json`.
+- Rationale: the cockpit dashboard needs real 24-hour check history for sparklines and regression review, not generated trend placeholders.
+- Guardrail: artifacts stay ignored by git; only the runner and typed dashboard loader read or write this operational state.
