@@ -50,6 +50,24 @@ describe(".github/workflows/nightly-content.yml — operator-approved draft pipe
   it("references the draft script", () => {
     expect(src).toMatch(/scripts\/draft-nightly-content\.mjs/);
   });
+
+  it("injects DATABASE_URL + DIRECT_URL into the draft step env", () => {
+    const draftStep = src.slice(src.indexOf("- name: Draft + review"));
+    expect(draftStep).toMatch(/DATABASE_URL:\s*\$\{\{\s*secrets\.DATABASE_URL\s*\}\}/);
+    expect(draftStep).toMatch(/DIRECT_URL:\s*\$\{\{\s*secrets\.DIRECT_URL\s*\}\}/);
+  });
+
+  it("builds a self-documenting PR body from telemetry + review JSON", () => {
+    expect(src).toMatch(/id:\s*pr_body/);
+    expect(src).toMatch(/telemetry_path/);
+    expect(src).toMatch(/review_path/);
+    expect(src).toMatch(/Run summary/);
+    expect(src).toMatch(/Review verdict/);
+  });
+
+  it("uses the dynamic body output (not a hardcoded body)", () => {
+    expect(src).toMatch(/body:\s*\$\{\{\s*steps\.pr_body\.outputs\.body\s*\}\}/);
+  });
 });
 
 describe("scripts/draft-nightly-content.mjs — draft + review runner", () => {
@@ -99,5 +117,39 @@ describe("scripts/draft-nightly-content.mjs — draft + review runner", () => {
   it("does not write a publishedAt field anywhere", () => {
     expect(src).not.toMatch(/publishedAt\s*[:=]\s*new\s+Date/);
     expect(src).toMatch(/status:\s*DRAFT/);
+  });
+
+  it("uses Prisma when DATABASE_URL is set, fixture otherwise", () => {
+    expect(src).toMatch(/loadPicks/);
+    expect(src).toMatch(/DATABASE_URL/);
+    expect(src).toMatch(/from\s+["']@prisma\/client["']|import\(["']@prisma\/client["']\)/);
+    expect(src).toMatch(/falling back to fixture/i);
+  });
+
+  it("mirrors the picks-route shape: isPublished + isBootstrap:false + generatedAt window + game.sport include", () => {
+    expect(src).toMatch(/isPublished:\s*true/);
+    expect(src).toMatch(/isBootstrap:\s*false/);
+    expect(src).toMatch(/generatedAt:\s*\{[\s\S]*gte[\s\S]*lt/);
+    expect(src).toMatch(/include:\s*\{\s*game:\s*\{\s*include:\s*\{\s*sport:\s*true/);
+  });
+
+  it("extracts sources from each pick's factorBreakdown (ACTIVE-only)", () => {
+    expect(src).toMatch(/extractSourcesFromFactorBreakdown/);
+    expect(src).toMatch(/activationStatus\s*!==\s*["']ACTIVE["']/);
+    expect(src).toMatch(/freshnessStatus\s*===\s*["']MISSING["']/);
+  });
+
+  it("emits a per-run telemetry summary the workflow's PR body can read", () => {
+    expect(src).toMatch(/\.telemetry\.json/);
+    expect(src).toMatch(/telemetryReport/);
+    expect(src).toMatch(/totals/);
+    expect(src).toMatch(/cacheReadInputTokens/);
+    expect(src).toMatch(/cacheCreationInputTokens/);
+  });
+
+  it("disconnects Prisma cleanly even when the read throws", () => {
+    expect(src).toMatch(/prisma\.\$disconnect/);
+    // The disconnect lives in a finally so a throw in findMany doesn't leak a connection.
+    expect(src).toMatch(/try\s*\{[\s\S]*findMany[\s\S]*\}\s*finally\s*\{[\s\S]*\$disconnect/);
   });
 });

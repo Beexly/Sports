@@ -24,10 +24,17 @@ const REPO_ROOT = resolve(__dirname, "..");
 const DRAFTS_DIR = resolve(REPO_ROOT, "_drafts");
 const TELEMETRY_LOG = resolve(REPO_ROOT, "_logs", "claude-usage.log");
 
+// Aggregated per-run telemetry for the workflow's PR body.
+const RUN_TELEMETRY = {
+  calls: [],
+  startedAt: new Date().toISOString(),
+};
+
 // Minimal inline mirror of apps/web/lib/ai/telemetry.ts for this .mjs runner.
 async function recordTelemetry(record) {
   const line = JSON.stringify(record);
   console.log(line);
+  RUN_TELEMETRY.calls.push(record);
   if (process.env.VERCEL === "1") return;
   try {
     await mkdir(dirname(TELEMETRY_LOG), { recursive: true });
@@ -71,6 +78,38 @@ async function callWithTelemetry(callSite, model, fn) {
   }
 }
 
+// ── Source extraction (inline mirror of extractPickSources) ───────────
+// Flattens factorBreakdown.factors[i].evidence.sourceName into a deduped
+// ACTIVE-only list, preserving first-seen order. Matches the behavior
+// of packages/prediction-engine/src/pick-sources.ts.
+function extractSourcesFromFactorBreakdown(factorBreakdown) {
+  if (!factorBreakdown || !Array.isArray(factorBreakdown.factors)) return [];
+  const seen = new Set();
+  const ordered = [];
+  for (const factor of factorBreakdown.factors) {
+    const evidence = factor && factor.evidence;
+    if (!evidence) continue;
+    if (evidence.activationStatus !== "ACTIVE") continue;
+    if (evidence.freshnessStatus === "MISSING") continue;
+    const name = evidence.sourceName;
+    if (!name || seen.has(name)) continue;
+    seen.add(name);
+    ordered.push(name);
+  }
+  return ordered;
+}
+
+function dedupeStrings(values) {
+  const seen = new Set();
+  const out = [];
+  for (const v of values) {
+    if (typeof v !== "string" || !v || seen.has(v)) continue;
+    seen.add(v);
+    out.push(v);
+  }
+  return out;
+}
+
 const DRAFT_MODEL = "claude-sonnet-4-6";
 const REVIEW_MODEL = "claude-haiku-4-5";
 
@@ -78,7 +117,7 @@ const DRY_RUN = process.argv.includes("--dry-run");
 
 const today = new Date().toISOString().slice(0, 10);
 
-// ── Fixture picks (replace with DB read when DATABASE_URL is available) ──
+// ── Fixture picks (fallback when DATABASE_URL is not set or returns 0 rows) ──
 const FIXTURE = {
   date: today,
   sport: "NBA",
@@ -101,7 +140,86 @@ const FIXTURE = {
     },
   ],
   sources: ["the-odds-api", "schedule-internal"],
+  source: "fixture",
 };
+
+// ── Load picks: DB first when DATABASE_URL is set, fixture otherwise ──
+// Mirrors the query shape from apps/web/app/api/picks/route.ts:38-73
+// (same where + game.sport include), capped at 12 picks for the runner.
+async function loadPicks() {
+  if (!process.env.DATABASE_URL) {
+    console.log("[nightly-content] DATABASE_URL not set — using fixture");
+    return FIXTURE;
+  }
+
+  const { PrismaClient } = await import("@prisma/client");
+  const prisma = new PrismaClient();
+  try {
+    const start = new Date();
+    start.setUTCHours(0, 0, 0, 0);
+    const end = new Date(start);
+    end.setUTCDate(end.getUTCDate() + 1);
+
+    const sportFilter = process.env.NIGHTLY_SPORT;
+    const dbPicks = await prisma.pick.findMany({
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        generatedAt: { gte: start, lt: end },
+        ...(sportFilter
+          ? { game: { sport: { slug: sportFilter } } }
+          : {}),
+      },
+      include: { game: { include: { sport: true } } },
+      orderBy: [{ confidence: "desc" }],
+      take: 12,
+    });
+
+    if (dbPicks.length === 0) {
+      console.log("[nightly-content] DB returned 0 picks for today — falling back to fixture");
+      return FIXTURE;
+    }
+
+    // Group by sport — for MVP we draft one sport per run (the first one
+    // with picks, ranked by confidence per the orderBy above).
+    const bySport = new Map();
+    for (const p of dbPicks) {
+      const sportName = p.game.sport.displayName || p.game.sport.slug;
+      const bucket = bySport.get(sportName) ?? [];
+      bucket.push(p);
+      bySport.set(sportName, bucket);
+    }
+
+    const [sport, sportPicks] = bySport.entries().next().value;
+
+    const picks = sportPicks.map((p) => ({
+      game: `${p.game.awayTeamName} @ ${p.game.homeTeamName}`,
+      pickType: p.pickType,
+      selection: p.selection,
+      line: p.line,
+      confidence: p.confidence,
+      reasoning: p.reasoning,
+    }));
+
+    const sources = dedupeStrings(
+      sportPicks.flatMap((p) => extractSourcesFromFactorBreakdown(p.factorBreakdown))
+    );
+
+    console.log(
+      `[nightly-content] loaded ${picks.length} picks for ${sport} from DB (${sources.length} sources)`
+    );
+
+    return {
+      date: today,
+      sport,
+      picks,
+      sources,
+      source: "db",
+    };
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 
 const BANNED_PHRASES = [
   "lock",
@@ -180,20 +298,29 @@ const client = new Anthropic({
 });
 
 // ── 1. Draft the post ─────────────────────────────────────────────────
-console.log(`[nightly-content] drafting ${FIXTURE.sport} for ${FIXTURE.date}`);
+const slate = await loadPicks();
+console.log(
+  `[nightly-content] drafting ${slate.sport} for ${slate.date} (source=${slate.source}, picks=${slate.picks.length})`
+);
 
-const picksSummary = FIXTURE.picks
+const picksSummary = slate.picks
   .map(
     (p, i) =>
       `${i + 1}. ${p.game} — ${p.pickType}: ${p.selection} (Line: ${p.line}, Confidence: ${p.confidence}/100)\n   Reasoning: ${p.reasoning}`
   )
   .join("\n\n");
 
-const sourcesBlock = `\n\nSOURCES BACKING THIS SLATE (echo these verbatim; do not add others):\n${FIXTURE.sources
-  .map((s, i) => `${i + 1}. ${s}`)
-  .join("\n")}`;
+const sourcesBlock = slate.sources.length > 0
+  ? `\n\nSOURCES BACKING THIS SLATE (echo these verbatim; do not add others):\n${slate.sources
+      .map((s, i) => `${i + 1}. ${s}`)
+      .join("\n")}`
+  : "";
 
-const draftPrompt = `Write a sports analysis blog post for ${FIXTURE.sport} picks on ${FIXTURE.date}.
+const sourcesLine = slate.sources.length > 0
+  ? `- Append a single line "Sources: ${slate.sources.join(", ")}" immediately before the disclaimer\n`
+  : "";
+
+const draftPrompt = `Write a sports analysis blog post for ${slate.sport} picks on ${slate.date}.
 
 PICKS DATA (this is your ONLY source of truth — do not invent any other data):
 ${picksSummary}${sourcesBlock}
@@ -202,8 +329,7 @@ Requirements:
 - Title: SEO-friendly, include sport and date
 - Excerpt: 2 paragraph summary (free preview)
 - Content: Full analysis (4-6 paragraphs) referencing only the above data
-- Append a single line "Sources: ${FIXTURE.sources.join(", ")}" immediately before the disclaimer
-- Include this disclaimer at end: "This article is for informational and entertainment purposes only. Galaxy Sports Edge does not guarantee any outcomes. Sports betting involves risk. Please gamble responsibly and only bet what you can afford to lose."
+${sourcesLine}- Include this disclaimer at end: "This article is for informational and entertainment purposes only. Galaxy Sports Edge does not guarantee any outcomes. Sports betting involves risk. Please gamble responsibly and only bet what you can afford to lose."
 - SEO title (under 60 chars)
 - SEO description (under 155 chars)
 - Tags: 3-5 relevant tags`;
@@ -285,6 +411,7 @@ const reviewReport = {
 // ── 3. Write outputs ──────────────────────────────────────────────────
 if (DRY_RUN) {
   console.log("[nightly-content] --dry-run — skipping write");
+  console.log(`source: ${slate.source} · picks: ${slate.picks.length} · sport: ${slate.sport}`);
   console.log(`title: ${draft.title}`);
   console.log(`verdict: ${verdict} (${review.findings.length} findings)`);
   process.exit(0);
@@ -292,15 +419,16 @@ if (DRY_RUN) {
 
 await mkdir(DRAFTS_DIR, { recursive: true });
 
-const slug = `${FIXTURE.date}-nightly`;
+const slug = `${slate.date}-nightly`;
 const mdPath = resolve(DRAFTS_DIR, `${slug}.md`);
 const reviewPath = resolve(DRAFTS_DIR, `${slug}.review.json`);
+const telemetryPath = resolve(DRAFTS_DIR, `${slug}.telemetry.json`);
 
 const tagsLine = draft.tags.join(", ");
 const md = `---
 title: "${draft.title.replace(/"/g, '\\"')}"
-date: ${FIXTURE.date}
-sport: ${FIXTURE.sport}
+date: ${slate.date}
+sport: ${slate.sport}
 tags: [${draft.tags.map((t) => `"${t.replace(/"/g, '\\"')}"`).join(", ")}]
 seoTitle: "${draft.seoTitle.replace(/"/g, '\\"')}"
 seoDescription: "${draft.seoDescription.replace(/"/g, '\\"')}"
@@ -309,9 +437,12 @@ generator: scripts/draft-nightly-content.mjs
 generatorModel: ${DRAFT_MODEL}
 reviewerModel: ${REVIEW_MODEL}
 reviewVerdict: ${verdict}
+slateSource: ${slate.source}
+pickCount: ${slate.picks.length}
+sources: [${slate.sources.map((s) => `"${s}"`).join(", ")}]
 ---
 
-> **Auto-generated draft — operator approval required before publish.** This file is committed by the nightly content workflow. The companion \`${slug}.review.json\` contains the semantic-reviewer verdict and findings.
+> **Auto-generated draft — operator approval required before publish.** This file is committed by the nightly content workflow. The companion \`${slug}.review.json\` contains the semantic-reviewer verdict and findings; \`${slug}.telemetry.json\` records per-call Claude usage (cache hits, tokens, latency).
 
 ## Excerpt
 
@@ -326,9 +457,36 @@ ${draft.content}
 _Tags: ${tagsLine}_
 `;
 
+// Per-run telemetry summary the workflow's PR-body step can read.
+const telemetryReport = {
+  startedAt: RUN_TELEMETRY.startedAt,
+  finishedAt: new Date().toISOString(),
+  slateSource: slate.source,
+  pickCount: slate.picks.length,
+  sport: slate.sport,
+  sources: slate.sources,
+  verdict,
+  calls: RUN_TELEMETRY.calls,
+  totals: {
+    inputTokens: RUN_TELEMETRY.calls.reduce((a, c) => a + (c.inputTokens || 0), 0),
+    cacheCreationInputTokens: RUN_TELEMETRY.calls.reduce(
+      (a, c) => a + (c.cacheCreationInputTokens || 0),
+      0
+    ),
+    cacheReadInputTokens: RUN_TELEMETRY.calls.reduce(
+      (a, c) => a + (c.cacheReadInputTokens || 0),
+      0
+    ),
+    outputTokens: RUN_TELEMETRY.calls.reduce((a, c) => a + (c.outputTokens || 0), 0),
+    latencyMs: RUN_TELEMETRY.calls.reduce((a, c) => a + (c.latencyMs || 0), 0),
+  },
+};
+
 await writeFile(mdPath, md, "utf8");
 await writeFile(reviewPath, JSON.stringify(reviewReport, null, 2), "utf8");
+await writeFile(telemetryPath, JSON.stringify(telemetryReport, null, 2), "utf8");
 
 console.log(`[nightly-content] wrote ${mdPath}`);
 console.log(`[nightly-content] wrote ${reviewPath}`);
+console.log(`[nightly-content] wrote ${telemetryPath}`);
 console.log(`[nightly-content] verdict=${verdict} findings=${review.findings.length}`);
