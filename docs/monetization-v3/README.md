@@ -66,6 +66,7 @@ Runway determines which subset is active:
 - [audit/implementation-readiness-gap-register-2026-05-23.md](audit/implementation-readiness-gap-register-2026-05-23.md) - P0/P1/P2 implementation gaps, failure modes, and sequencing constraints.
 - [audit/kpi-operator-ritual.md](audit/kpi-operator-ritual.md) - Galaxy-voice operator layer for monthly KPI review.
 - [audit/synthetic-media-monetization-rd-2026-05-23.md](audit/synthetic-media-monetization-rd-2026-05-23.md) - Synthetic-media archive inspection and Galaxy monetization reuse audit.
+- [audit/short-form-funnel-economics-2026-05-23.md](audit/short-form-funnel-economics-2026-05-23.md) - Conservative short-form funnel economics and kill thresholds.
 - [audit/website-monetization-rd-2026-05-23.md](audit/website-monetization-rd-2026-05-23.md) - Website monetization R&D map and rejected-options register.
 - [audit/xxx-archive-galaxy-salvage-audit-2026-05-23.md](audit/xxx-archive-galaxy-salvage-audit-2026-05-23.md) - Archive salvage audit for `XXX-main (1).zip` with Galaxy-safe reuse decisions.
 
