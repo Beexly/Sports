@@ -128,7 +128,7 @@
 - `8cc63be` - DEC-NEXT-072 update risk register with launch hardening risks
 - `9aaf6a2` - DEC-NEXT-073 refresh master brief latest Pass 12-13 deltas
 - `71aa2e3` - DEC-NEXT-074 add env-file preflight support
-- `TBD` - DEC-NEXT-075 add Vault auth provider contract
+- `b228fd7` - DEC-NEXT-075 add Vault auth provider contract
 
 ## What I Flagged For Morning Triage
 
