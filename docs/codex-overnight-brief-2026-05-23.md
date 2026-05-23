@@ -117,6 +117,7 @@
 - `OPS-2026-05-23-005`: lifecycle email delivery decisions are testable, but durable lifecycle rows, provider sends, unsubscribe enforcement, and held-row repair remain unwired.
 - `OPS-2026-05-23-006`: persistence migration contract exists, but migrations, ORM models, database adapter, transactions, backups, and restore runbook remain unwired.
 - `OPS-2026-05-23-007`: backup/restore runbook exists, but provider backups, restore rehearsal environment, snapshot location, and private rehearsal log remain unwired.
+- `OPS-2026-05-23-008`: auth readiness is visible in env checks, but no auth provider/session lookup is wired to Vault member routes.
 - The requested "497 tests" still do not exist in this clone. I added a package manifest and verified the new app with typecheck/build/runtime smoke, but there is no broader test harness here yet.
 
 ## What Surprised Me
