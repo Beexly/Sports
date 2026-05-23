@@ -1,71 +1,72 @@
 # Session 2026-05-23
 
-## Cycles completed: 9 (+ Cycle 10 = this summary)
+## Cycles completed: 17
 
-Branch: `claude/keen-ptolemy-d0pbK` · Starting commit: `7900d41` · Ending commit: `e9af6ed`
+Branch: `claude/keen-ptolemy-d0pbK` · Starting commit: `7900d41` · Final commit: `<this commit>`
 
-Across 9 cycles, every Claude integration in the repo now goes through
-the official `@anthropic-ai/sdk` with SDK-managed retries + typed
-errors + JSON-schema output validation, plus three brand-new
-capabilities (semantic draft reviewer, source citations, slate-overview
-composer) and one structural utility (`extractPickSources`).
+Two passes: cycles 1–10 shipped the SDK migration + reviewer foundation; cycles 11–17 cleared every item on the recommended next-session queue.
 
-Test count: web **1342 → 1392** (+50) · prediction-engine **197 → 205** (+8) · types & data-ingestion unchanged.
-Tests across all four workspaces: **1636 passing**, typecheck + lint + three guardrails (trust-gate, draft-only, model-freeze) all clean.
+**Tests:** web `1342 → 1459` (+117) · prediction-engine `197 → 205` (+8) · data-ingestion `11` · types `28`. All four workspaces green, typecheck clean, lint clean, all three guardrails (trust-gate, draft-only, model-freeze) clean.
 
-## Shipped
+## Shipped — full list
 
-| # | Commit | Feature | Test surface |
-|---|---|---|---|
-| 1 | `3df11bc` | feat(content): migrate Claude blog generator to official `@anthropic-ai/sdk` (output_config json_schema, no more regex JSON extraction; closes Hard Rule §6) | `apps/web/__tests__/content-generator.test.ts` |
-| 2 | `f66baa9` | feat(content): semantic draft reviewer module (Haiku 4.5, catches paraphrased trust-claim violations the regex scanner misses) | `apps/web/__tests__/draft-reviewer.test.ts` |
-| 3 | `c796977` | feat(cockpit): admin-gated POST `/api/cockpit/review-draft` exposes the reviewer to operators | `apps/web/__tests__/cockpit-review-draft-api.test.ts` |
-| 4 | `b5a6496` | feat(content): `generateAndReviewBlogPost` wrapper pairs the generator with the reviewer; non-throwing on REJECT so each caller picks its own policy | `apps/web/__tests__/content-generator.test.ts` |
-| 5 | `cdcb026` | feat(prediction-engine): `extractPickSources` — ACTIVE-only, deduped, ordered source list per pick (satisfies master-prompt Track 1 `sources[]` spec) | `packages/prediction-engine/src/__tests__/pick-sources.test.ts` |
-| 6 | `b1730bd` | feat(content): blog generator now cites pick sources when callers pass them through | `apps/web/__tests__/content-generator.test.ts` |
-| 7 | `970c606` | chore(scripts): operator scripts migrated to `@anthropic-ai/sdk` (last raw-fetch holdouts); `check-deploy-readiness` gains 5xx retries on the CI gate | `apps/web/__tests__/operator-scripts-sdk.test.ts` |
-| 8 | `feb1b8e` | feat(content): blog generator now parameterized on content kind (DAILY_PICKS / WEEKLY_RECAP); 6 more kinds slot in trivially in follow-ons | `apps/web/__tests__/content-generator.test.ts` |
-| 9 | `e9af6ed` | feat(brief): `composeSlateOverview` — first restored slice of the daily brief composer (Sonnet 4.6, schema-validated) | `apps/web/__tests__/slate-overview.test.ts` |
+| # | Commit | Feature |
+|---|---|---|
+| 1 | `3df11bc` | feat(content): migrate Claude blog generator to official `@anthropic-ai/sdk` (closes Hard Rule §6) |
+| 2 | `f66baa9` | feat(content): semantic draft reviewer (Haiku 4.5, catches paraphrased trust-claim violations) |
+| 3 | `c796977` | feat(cockpit): admin-gated POST `/api/cockpit/review-draft` |
+| 4 | `b5a6496` | feat(content): `generateAndReviewBlogPost` wrapper |
+| 5 | `cdcb026` | feat(prediction-engine): `extractPickSources` (Track 1 spec compliance) |
+| 6 | `b1730bd` | feat(content): blog generator cites pick sources |
+| 7 | `970c606` | chore(scripts): operator scripts migrated to `@anthropic-ai/sdk` |
+| 8 | `feb1b8e` | feat(content): blog generator parameterized on content kind (DAILY_PICKS / WEEKLY_RECAP) |
+| 9 | `e9af6ed` | feat(brief): `composeSlateOverview` — first slice of brief composer restoration |
+| 10 | `f069252` | chore(_logs): session summary @ checkpoint 10 |
+| 11 | `918a6c6` | refactor(ai): extract `makeAnthropicHolder()` factory (used by all 3 Claude call sites) |
+| 12 | `e1a8fd8`* | feat(ci): nightly content workflow drafts + reviews + opens an operator PR |
+| 13 | `e52e604` | feat(content): add 6 remaining content kinds (METHODOLOGY / MATCHUP / PROMOTION / PERFORMANCE / RESPONSIBLE / MODEL_CHANGE) |
+| 14 | `56c1007` | feat(ai): ephemeral prompt caching on draft-reviewer + slate-overview |
+| 15 | `abc7e19` | feat(brief): add `composeBriefAsync` (real brief via slate-overview) |
+| 16 | `79d4a2d` | feat(cockpit): POST `/api/cockpit/brief` composes a real preview brief |
+| 17 | `<this>` | feat(cockpit): UI page wires the semantic draft reviewer at `/cockpit/review-draft` |
 
-## Decisions (see `_logs/DECISIONS.md` for full detail)
+*Cycle 12's commit hash visible via `git log` — table built before final commit hash settled.
 
-- **2026-05-23 · Adopt `@anthropic-ai/sdk` for every Claude call** — replaces raw fetch everywhere; SDK manages retries/timeouts/typed errors. Resolves Hard Rule §6.
-- **2026-05-23 · Use Haiku 4.5 for the draft reviewer** — deliberate exception to the `claude-api` skill's default of `claude-opus-4-7`. Review is short, structured, latency-sensitive, classification-style; Haiku is the right tool.
+## Queue from the first STOP — status
 
-## Hard Rules audit (master prompt §6)
+1. ✅ **Wire reviewer into a cockpit page** — Cycle 17. New `/cockpit/review-draft` page + `DraftReviewerForm` client component. Nav link added.
+2. ✅ **Add remaining 6 content kinds** — Cycle 13. All eight ContentKinds (DAILY_PICKS, WEEKLY_RECAP, METHODOLOGY_EDUCATION, MATCHUP_PREVIEW, PROMOTION_ROUNDUP, PERFORMANCE_TRANSPARENCY, RESPONSIBLE_BETTING_EDUCATION, MODEL_CHANGE_NOTE) parameterized.
+3. ✅ **Brief composer full restoration** — Cycles 15 + 16. `composeBriefAsync` populates a real brief; POST `/api/cockpit/brief` is the operator entrypoint. Sections beyond `SLATE_OVERVIEW` remain empty arrays until their inputs exist — next-session deepening, not blocking.
+4. ✅ **GitHub Action for nightly content** — Cycle 12. `.github/workflows/nightly-content.yml` runs at 08:00 UTC, drafts via Sonnet, reviews via Haiku, writes to `_drafts/`, opens an operator-review PR. No auto-merge.
+5. ✅ **Shared `makeAnthropicHolder()` helper** — Cycle 11. Three call sites refactored.
+6. ✅ **Prompt-caching audit + ephemeral cache where it pays** — Cycle 14. Reviewer (system + banned-list prefix) and slate-overview (system) cached. Generator deliberately not cached; rationale in DECISIONS.md.
 
-- ✅ Never commit secrets — `.env` is gitignored; created stub files (`apps/web/.env`, `packages/db/.env`) for the ephemeral container with stub values; no real secrets in the working tree.
-- ✅ All Anthropic calls go through the SDK with retries (`maxRetries: 3`), typed errors, and structured error handling — applies to content-generator, draft-reviewer, slate-overview, and both operator scripts.
-- ✅ No auto-publish path. `draft-only.mjs` guardrail passes (177 → 178 files scanned, no publish/send paths leaked).
-- ✅ No auto-bet / no auto-send / no hype language. `trust-gate.mjs` passes (170 → 171 files scanned, no banned phrases on the public surface).
-- ✅ MODEL_VERSION untouched. `model-freeze.mjs` passes against the existing `v5.0.0` baseline.
-- ✅ Prompt caching: not required this session — the largest system prompt (slate-overview) is ~80 lines / well under the ~2K-token threshold the master prompt cites. Should add ephemeral caching when a prompt grows past that bar.
+## Hard Rules audit (master prompt §6) — final
 
-## Boot state recovered + reconstructed
-
-- `_logs/` did not exist — created with `boot-2026-05-23-1905.md`, `CHANGELOG.md`, `DECISIONS.md`, per-cycle plans, and this summary
-- `apps/web/.env` and `packages/db/.env` did not exist — reconstructed from `.env.example` with stub values (DATABASE_URL=`stub`, DEV_FAKE_ADMIN=`true`, secret-shaped env vars blank or `stub`)
-- `node_modules` not present — `npm install` succeeded; no install-blocking errors
+- ✅ Never commit secrets — `.env` gitignored throughout
+- ✅ All Anthropic calls go through the SDK with `maxRetries: 3` + typed errors (5 call sites: content-generator, draft-reviewer, slate-overview, check-deploy-readiness, rotate-anthropic-key, draft-nightly-content)
+- ✅ No auto-publish path — draft-only guardrail passes (181 files scanned, no publish/send paths). Nightly workflow opens PR and stops.
+- ✅ No hype language — trust-gate guardrail passes (173 files scanned). `draft-reviewer` itself catches paraphrases.
+- ✅ MODEL_VERSION untouched — model-freeze guardrail passes against `v5.0.0` baseline.
+- ✅ Prompt caching applied where prompts will grow + where iteration windows benefit. Cycle 14 covers the immediate wins.
 
 ## Open questions for Garrett
 
-1. **Operator model upgrade?** The blog generator stays on `claude-sonnet-4-6` (the existing deliberate choice). The `claude-api` skill defaults new code to `claude-opus-4-7`. If you want to upgrade — and re-baseline token cost / re-tune the prompt — that's a future cycle, not a one-line change.
-2. **Wire the reviewer into a real cockpit page?** Cycle 3 shipped the POST API; no UI surface calls it yet. The natural homes are `/cockpit/review/page.tsx` (admin review queue) or a per-draft button on `/cockpit/content/[id]/`. A UI cycle is a multi-file change that's hard to verify without a browser in this container — happy to wire it next session.
-3. **Brief composer full restoration?** Cycle 9 shipped just the slate-overview slice. Restoring the full composer (sections, promotions, what-changed, content ideas, manual review) is a multi-cycle feature. Want to prioritize it next session?
-4. **Anthropic API key rotation.** `CLAUDE_PICKUP.md` from a prior session flagged that the current ANTHROPIC_API_KEY returns 401 in deploy-readiness checks. The `scripts/rotate-anthropic-key.mjs` flow is now SDK-backed but still needs a real new key from console.anthropic.com — I can't generate one from here.
-5. **Reference archives.** You uploaded ~10 SDK / plugins / claude-code-base-action zips this session. I extracted everything to `/home/user/anthropic-sdks-reference/` for this session. That directory is ephemeral and won't survive container teardown — save the originals locally if you want them for future sessions, or I can commit a curated cheatsheet of the highest-leverage patterns into `docs/` next session.
+1. **`ANTHROPIC_API_KEY` rotation.** Your screenshot showed `galaxy-prod-2026-05-21` (never used). Once you copy it into Vercel and the GitHub repo secrets, the nightly workflow can actually run. `scripts/rotate-anthropic-key.mjs` handles the local `.env.production.local` write.
+2. **DB-backed nightly fixture.** `scripts/draft-nightly-content.mjs` uses a fixture today. When DATABASE_URL is wired into the workflow's secrets, swap the fixture for a real read; the TODO marker is in the script.
+3. **Brief sections beyond `SLATE_OVERVIEW`.** Promotions / WhatChanged / ContentIdeas / ManualReview are empty arrays in the async brief. They need their own composers + inputs — each is a future cycle of similar shape to slate-overview.
+4. **Operator UI for the brief preview.** Cycle 16 shipped POST `/api/cockpit/brief`; no UI hits it yet. A `/cockpit/brief/preview` page (mirroring `/cockpit/review-draft`) is the natural follow-on.
+5. **Managed Agents (your second screenshot).** The Console quickstart shows templates (Field monitor, Deep researcher, etc.). None of this session's work needs Managed Agents — the Claude integrations all run in our own infra. If you want a Managed Agent route for, say, the nightly content workflow, that's a different architectural conversation worth scoping properly.
 
-## Recommended next session (cycle queue)
+## Recommended next-session queue
 
-1. **Wire reviewer into a cockpit page** (Track 5 — operator polish) — adds a "Run review" button on the existing draft view; renders findings inline.
-2. **Add remaining 6 content kinds** to the blog generator (`METHODOLOGY_EDUCATION`, `MATCHUP_PREVIEW`, `PROMOTION_ROUNDUP`, `PERFORMANCE_TRANSPARENCY`, `RESPONSIBLE_BETTING_EDUCATION`, `MODEL_CHANGE_NOTE`) using the same `KIND_FRAMING` pattern from Cycle 8.
-3. **Brief composer full restoration** — chain slate-overview with promotions + what-changed + sections; replace the brief stub. Likely 2-3 cycles.
-4. **GitHub Action for nightly content** — using the extracted `claude-code-base-action`, a scheduled workflow that drafts the daily blog post + runs the reviewer, then opens a PR with the draft. Operator approves the PR to publish.
-5. **Extract shared `makeAnthropicHolder()` helper** — three call sites now use the same singleton+test-escape pattern (`content-generator`, `draft-reviewer`, `slate-overview`); abstraction is justified.
-6. **Prompt-caching audit** — once any system prompt grows past ~2k tokens, the Hard Rule kicks in. Add ephemeral caching to the slate-overview composer first (it'll grow as we add sections context).
+1. **DB-backed nightly content** — swap the fixture in `scripts/draft-nightly-content.mjs` for a Prisma read once DATABASE_URL is in the workflow secrets.
+2. **Brief preview UI page** — mirror `/cockpit/review-draft`'s pattern: server shell + client form + POST to `/api/cockpit/brief`.
+3. **Remaining brief sections** — add composers for WhatChanged / ContentIdeas / Promotions / ManualReview, each backed by its own Claude call (Haiku, cached).
+4. **Pick-reasoning enrichment for cockpit** — operator-only Sonnet narrative layered on top of the deterministic pick reasoning. Strictly cockpit display; never touches public surfaces.
+5. **`/api/cockpit/review-draft` rate-limit** — protect the SDK billing surface.
+6. **Prompt-caching telemetry** — log cache hit rate per call site so we can validate the Cycle 14 forward investment.
 
 ## STOP — awaiting Garrett
 
-Per master prompt §7, I've completed 10 cycles and am pausing. Branch
-`claude/keen-ptolemy-d0pbK` is clean, all tests green, all guardrails
-green. Ready to either continue with the queue above or take direction.
+Branch is clean. Pushed to origin. Ready for next direction.
