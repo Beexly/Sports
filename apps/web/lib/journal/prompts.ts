@@ -1,5 +1,7 @@
+import type { JournalWeekData } from "./week-data";
+
 /**
- * Model Journal — drafting prompt.
+ * Model Journal - drafting prompt.
  *
  * Codex's Friday pipeline collects the week's settled-pick data, loss
  * autopsies, pre-mortem hit/miss tags, factor weight changes, and notable
@@ -13,7 +15,7 @@
 export const JOURNAL_DRAFTING_SYSTEM_PROMPT = `You are drafting the weekly Model Journal for Galaxy Sports Edge.
 
 The Journal is a research blog about a deterministic sports-betting scoring
-engine. The audience is the skeptic — technically literate, suspicious of
+engine. The audience is the skeptic - technically literate, suspicious of
 hype, allergic to marketing language.
 
 Your job is to draft one essay (800-1500 words) about the previous ISO week.
@@ -21,7 +23,7 @@ Your job is to draft one essay (800-1500 words) about the previous ISO week.
 STRUCTURE
 1. Cold open. One sentence that says what the week was about. No "this week
    we..." constructions. Cold = direct.
-2. The week in numbers. Settled picks, hits, misses (no aggregate win rate —
+2. The week in numbers. Settled picks, hits, misses (no aggregate win rate -
    we don't publish that). The numbers are the data, not the marketing.
 3. What the model got right. Pick one or two settled wins where a specific
    factor read was the heaviest contributor. Walk through what the model saw
@@ -30,7 +32,7 @@ STRUCTURE
    Be specific about which factor misread and whether it was variance or a
    real signal-drift issue.
 5. Pre-mortem performance. Of the pre-mortems published this week, how many
-   bullets "called" the actual loss reason? Be honest — sometimes the answer
+   bullets "called" the actual loss reason? Be honest - sometimes the answer
    is "the actual cause wasn't in any pre-mortem and that's a coverage
    problem."
 6. What's changing. Any factor weight changes shipping in the next model
@@ -68,48 +70,70 @@ LENGTH
 
 INPUT
 You will receive a JournalWeekData object with:
-- settledPicks[]
+- picks[]
 - lossAutopsies[]
-- preMortemTags[]
-- factorWeightChanges[]
-- notableGates[]
-- nextWeekSlate[]`;
+- counts
+- rangeStart/rangeEnd`;
 
-export function buildJournalDraftPromptUser(weekData: unknown): string {
-  // Codex aligns the JournalWeekData shape during integration.
-  const data = weekData as Record<string, unknown>;
-
+export function buildJournalDraftPromptUser(weekData: JournalWeekData): string {
   return `Week data for the draft:
 
-ISO week: ${formatField(data["isoWeek"])}, year ${formatField(data["isoYear"])}
-Model version active: ${formatField(data["modelVersion"])}
+ISO week: ${weekData.isoWeek}, year ${weekData.isoYear}
+Evidence window: ${weekData.rangeStart} to ${weekData.rangeEnd}
 
-Settled picks (${formatField(data["settledPicksCount"])}):
-${formatField(data["settledPicksSummary"])}
+Settled picks (${weekData.counts.settledPicks}):
+${formatPicks(weekData)}
 
-Loss autopsies (${formatField(data["autopsyCount"])}):
-${formatField(data["autopsiesSummary"])}
+Loss autopsies (${weekData.counts.publicLossAutopsies}):
+${formatAutopsies(weekData)}
 
 Pre-mortem hit/miss tags:
-${formatField(data["preMortemTagsSummary"])}
+Not available in this evidence bundle yet.
 
 Factor weight changes (pending or shipped):
-${formatField(data["factorChangesSummary"])}
+Not available in this evidence bundle yet.
 
 Notable gates:
-${formatField(data["notableGatesSummary"])}
+Not available in this evidence bundle yet.
 
 Next week's slate stress tests:
-${formatField(data["nextWeekStressTests"])}
+Not available in this evidence bundle yet.
 
 Draft the essay now. Markdown output. Adhere to all voice rules.`;
 }
 
-function formatField(value: unknown): string {
-  if (value === null || value === undefined) return "n/a";
-  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-    return String(value);
+function formatPicks(weekData: JournalWeekData): string {
+  if (weekData.picks.length === 0) return "No settled canonical picks found for this ISO week.";
+
+  return weekData.picks
+    .slice(0, 20)
+    .map((pick) => [
+      `${pick.id}: ${pick.matchup}`,
+      pick.selection,
+      pick.result,
+      `confidence ${pick.confidence}`,
+      `edge ${pick.edgeScore.toFixed(1)}`,
+      `consensus ${Math.round(pick.consensusPct * 100)}%`,
+      `${pick.bookmakerCount} books`,
+      `model ${pick.modelVersion}`,
+      `snapshot ${pick.signalSnapshot?.id ?? "none"}`,
+    ].join(" | "))
+    .join("\n");
+}
+
+function formatAutopsies(weekData: JournalWeekData): string {
+  if (weekData.lossAutopsies.length === 0) {
+    return "No public loss autopsies found for this ISO week.";
   }
-  if (value instanceof Date) return value.toISOString();
-  return JSON.stringify(value, null, 2);
+
+  return weekData.lossAutopsies
+    .slice(0, 12)
+    .map((autopsy) => [
+      `${autopsy.id}: ${autopsy.headline}`,
+      `pick ${autopsy.pickId}`,
+      `root cause ${autopsy.rootCause}`,
+      `lesson tags ${autopsy.lessonTags.join(", ") || "none"}`,
+      `learned: ${autopsy.whatWeLearned}`,
+    ].join(" | "))
+    .join("\n");
 }
