@@ -238,3 +238,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: Studio generation now loads the persisted budget policy and active override state before enforcing the monthly spend gate.
 - Rationale: the production budget rows seeded by migration should control runtime behavior, and an operator override must be honored without changing code.
 - Deferred: cockpit override mutation UI, owner-channel alerts, and wrapper migration for remaining Claude surfaces remain follow-up slices.
+
+## 2026-05-22 - Cockpit API Costs Read-Only Monitor
+
+- Decision: add `/cockpit/api-costs` as an admin-only read-only monitor for current-month Claude API spend, budgets, call counts, error counts, override state, and recent failures.
+- Rationale: operators need visibility before override mutation and alerting controls ship; the page also verifies that seeded budgets and persisted call records have a usable read model.
+- Deferred: budget override mutation UI, owner-channel alerts, 30-day trend chart, top consumers by user/game, and wrapper migration for remaining Claude surfaces remain follow-up slices.
