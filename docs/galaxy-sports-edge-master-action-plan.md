@@ -339,6 +339,62 @@ always reviewing or writing the next batch of briefs/content. Phase
 gates are quality checkpoints, not start/stop barriers. Cross-phase
 work happens in parallel.
 
+### Synthetic monitoring (production sanity)
+
+Codex builds automated checks against production that confirm the live
+site reflects the plan. Examples:
+
+- No banned words in homepage HTML
+- Edge Index renders for tracked games
+- Methodology page returns 200
+- Pricing page tier copy matches Part 0
+- No 5xx errors on critical paths (/, /board, /ledger, /room/[id])
+- Build size within budget
+
+These run continuously. Failure routes to `docs/ops/issue-queue.md`
+with severity auto-tagged.
+
+### Override protocol
+
+The owner can override and re-instruct at any time. Override patterns:
+
+- **"Skip the loop on this":** Claude/Codex pause and ask before
+  proceeding.
+- **STUCK queue item approved:** Claude/Codex resume with the unblock.
+- **Decision amended in Part 6:** both re-read the plan, adjust,
+  continue.
+- **New phase triggered:** Claude generates new brief, loop restarts.
+
+The owner does **NOT** need to be in the loop for:
+
+- Routine implementation against an existing brief
+- Test fixes
+- Voice/vocab fixes flagged by auto-review
+- Performance optimization
+- Refactoring within a surface
+- Documentation updates
+- Dependency updates within license + size budget
+
+These run autonomously.
+
+### Why this is the smarter play
+
+The prior plan put the owner inside every loop (review every PR,
+decide every detail, unblock every contention). That's a bottleneck
+the size of one human. The autonomous loop:
+
+- Minimizes human dependency on routine work
+- Catches problems faster via auto-review (machine speed > human
+  speed for spec compliance + voice scan)
+- Has explicit stuck criteria — things don't silently die in limbo
+- Documents itself via decision log + issue queue + stuck queue
+  (future Claude/Codex can rehydrate)
+- Works whether the owner is online or asleep
+- Surfaces real escalations clearly (stuck queue) instead of burying
+  them in chat history
+
+The owner manages by exception. The AIs run by default.
+
 ### Rehydration procedure (when context is lost)
 
 If a Claude or Codex session breaks or context is dropped, recover by
@@ -869,20 +925,78 @@ Before declaring a phase "done":
 
 -----
 
-## Closing
+## Closing — What happens next
 
 Decisions are locked (Part 6). The autonomous loop (Part 1.5) is the
 operating mode. Phase 0 starts on owner's "go."
 
-To start the loop, the owner says:
+**To start the loop, the owner does ONE thing:**
 
 > *"Go. Run Phase 0."*
 
-Everything else runs autonomously. The owner reads
-`docs/ops/stuck-queue.md` daily and resolves escalations. Otherwise
-the loop runs.
+Everything else runs autonomously:
+
+1. **Phase 0** — Codex executes housekeeping solo (stabilize branch,
+   clean nested `Sports/` clone, run verification suite, commit).
+   Claude has already written
+   [`docs/innovation-os-current-state.md`](innovation-os-current-state.md)
+   in parallel. Stuck if branch state is irrecoverable.
+2. **Phase 1 brief** — Claude generates a focused implementation
+   handoff distilling Part 2.B (homepage scope) + Part 3 (voice rules)
+   + Part 6 decisions 1-3. Reads from
+   [`docs/positioning.md`](positioning.md).
+3. **Phase 1 execution** — Codex implements, runs the self-test loop
+   (max 3 retries), opens a PR with screenshots. Claude auto-reviews
+   against the 10-point checklist (Part 1.5). Iterate (max 3 rounds).
+   Merge. Verification. Stuck only if something material conflicts.
+4. **In parallel during Phase 1** — the Phase 2-3 product specs
+   already exist for Codex to read when Phase 1 ships:
+   - [`docs/product/galaxy-intelligence-os.md`](product/galaxy-intelligence-os.md)
+     — business architecture, the five monetization streams
+   - [`docs/product/intelligence-graph-spec.md`](product/intelligence-graph-spec.md)
+     — Phase 2 foundation: typed primitives, pure functions, hard rules
+   - [`docs/product/galaxy-studio-spec.md`](product/galaxy-studio-spec.md)
+     — Phase 3 creator tool: asset taxonomy, no-auto-post rules
+   - [`docs/product/game-room-spec.md`](product/game-room-spec.md)
+     — Phase 3 read-only + Phase 4 Model Court conversational
+   - [`docs/product/monetization-map.md`](product/monetization-map.md)
+     — phase-by-phase revenue plan, open commercial decisions
+5. **Phase 1 verification gate passes → Phase 2 starts
+   automatically.** Codex wires real data into the new surfaces +
+   builds Intelligence Graph v0. Claude writes methodology page
+   content + Loss Room copy + fixtures.
+6. **Phase 3 starts automatically.** Galaxy Studio v0 + Game
+   Intelligence Rooms v0 + Twitter bot + Model Journal + creator
+   surface ship. This is where the "first joint mission" actually
+   fires — after the homepage is honest.
+7. **Phases 4-6+ unfold from there.** Each phase ends with a
+   verification gate retrospective. Stuck items surface to
+   [`docs/ops/stuck-queue.md`](ops/stuck-queue.md) for owner review.
+
+The owner reads `docs/ops/stuck-queue.md` daily (or when pinged) and
+resolves escalations. Otherwise the loop runs.
+
+Everything from every prior brief is consolidated above. If something
+feels missing, check:
+
+- Part 2.E (the wider brainstorm library queue)
+- Part 2.F (Sports Intelligence OS surfaces)
+- [`docs/corporate-structure.md`](corporate-structure.md) for the
+  parent/product relationship and open commercial actions
+- [`docs/ops/decision-log.md`](ops/decision-log.md) for decisions
+  made after this plan was last revised
+- [`docs/ops/issue-queue.md`](ops/issue-queue.md) for open bugs and
+  test-coverage gaps
+- [`docs/ops/improvement-backlog.md`](ops/improvement-backlog.md) for
+  non-urgent items
+
+Nothing got dropped. The plan is comprehensive. The loop is
+autonomous. Stuck means stuck — escalate immediately, don't grind.
+
+-----
 
 *Last revised by Claude. Decisions locked per autonomous authority
 granted by the product owner. Operating mode: autonomous loop per
 Part 1.5. Amend only by product owner override or by Claude with
-explicit reasoning logged in `docs/ops/decision-log.md`.*
+explicit reasoning logged in
+[`docs/ops/decision-log.md`](ops/decision-log.md).*
