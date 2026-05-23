@@ -1,9 +1,16 @@
 /**
- * Content generator using Claude API.
- * IMPORTANT: Claude is ONLY used for writing narrative content.
- * Pick data is the source of truth — Claude never generates picks.
+ * Content generator using the official Anthropic SDK.
+ *
+ * Claude is ONLY used for writing narrative content. Pick data is the source
+ * of truth — Claude never generates picks. The system prompt enforces this
+ * and the JSON schema below constrains output to a single editorial shape.
+ *
+ * Hard Rule §6 compliance: retries + timeouts + typed errors come from the
+ * SDK; output is validated by `output_config.format` instead of regex JSON
+ * extraction.
  */
 
+import Anthropic from "@anthropic-ai/sdk";
 import type { ContentGenerationInput, GeneratedContent } from "@sports/types";
 import { generateSlug } from "./utils.js";
 import { format } from "date-fns";
@@ -14,13 +21,62 @@ const GAMBLING_DISCLAIMER =
   `${BRAND_NAME} does not guarantee any outcomes. Sports betting involves risk. ` +
   "Please gamble responsibly and only bet what you can afford to lose.";
 
-export async function generateBlogPost(
-  input: ContentGenerationInput
-): Promise<GeneratedContent> {
+const SYSTEM_PROMPT = `You are a sports analyst writing data-backed analysis for a sports picks website.
+You must ONLY reference the data provided to you. Do not invent statistics, scores, or records.
+Use measured language — never say "will win" or "guaranteed". Use phrases like "our model favors" or "the data suggests".
+Always include the provided disclaimer at the end.`;
+
+const POST_SCHEMA = {
+  type: "object",
+  properties: {
+    title: { type: "string" },
+    excerpt: { type: "string" },
+    content: { type: "string" },
+    seoTitle: { type: "string" },
+    seoDescription: { type: "string" },
+    tags: { type: "array", items: { type: "string" } },
+  },
+  required: [
+    "title",
+    "excerpt",
+    "content",
+    "seoTitle",
+    "seoDescription",
+    "tags",
+  ],
+  additionalProperties: false,
+} as const;
+
+interface ParsedPost {
+  readonly title: string;
+  readonly excerpt: string;
+  readonly content: string;
+  readonly seoTitle: string;
+  readonly seoDescription: string;
+  readonly tags: readonly string[];
+}
+
+let clientSingleton: Anthropic | undefined;
+
+function getClient(): Anthropic {
+  if (clientSingleton) return clientSingleton;
   const apiKey = process.env["ANTHROPIC_API_KEY"];
   if (!apiKey) {
     throw new Error("ANTHROPIC_API_KEY is not configured");
   }
+  clientSingleton = new Anthropic({ apiKey, maxRetries: 3 });
+  return clientSingleton;
+}
+
+/** Test-only escape hatch so a vitest spec can swap in a mocked client. */
+export function __setClientForTests(client: Anthropic | undefined): void {
+  clientSingleton = client;
+}
+
+export async function generateBlogPost(
+  input: ContentGenerationInput
+): Promise<GeneratedContent> {
+  const client = getClient();
 
   const dateDisplay = format(new Date(input.date), "MMMM d, yyyy");
   const picksSummary = input.picks
@@ -29,11 +85,6 @@ export async function generateBlogPost(
         `${i + 1}. ${p.game} — ${p.pickType}: ${p.selection} (Line: ${p.line}, Confidence: ${p.confidence}/100)\n   Reasoning: ${p.reasoning}`
     )
     .join("\n\n");
-
-  const systemPrompt = `You are a sports analyst writing data-backed analysis for a sports picks website.
-You must ONLY reference the data provided to you. Do not invent statistics, scores, or records.
-Use measured language — never say "will win" or "guaranteed". Use phrases like "our model favors" or "the data suggests".
-Always include the provided disclaimer at the end.`;
 
   const userPrompt = `Write a sports analysis blog post for ${input.sport} picks on ${dateDisplay}.
 
@@ -47,61 +98,26 @@ Requirements:
 - Include this disclaimer at end: "${GAMBLING_DISCLAIMER}"
 - SEO title (under 60 chars)
 - SEO description (under 155 chars)
-- Tags: 3-5 relevant tags
+- Tags: 3-5 relevant tags`;
 
-Respond ONLY with valid JSON in this exact format:
-{
-  "title": "...",
-  "excerpt": "...",
-  "content": "...",
-  "seoTitle": "...",
-  "seoDescription": "...",
-  "tags": ["...", "..."]
-}`;
-
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
+  const response = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 4000,
+    system: SYSTEM_PROMPT,
+    output_config: {
+      format: { type: "json_schema", schema: POST_SCHEMA },
     },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 2000,
-      system: systemPrompt,
-      messages: [{ role: "user", content: userPrompt }],
-    }),
+    messages: [{ role: "user", content: userPrompt }],
   });
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Claude API error: ${response.status} — ${error}`);
-  }
-
-  const result = (await response.json()) as {
-    content: Array<{ type: string; text: string }>;
-  };
-
-  const textContent = result.content.find((c) => c.type === "text");
-  if (!textContent) {
+  const textBlock = response.content.find(
+    (b): b is Anthropic.TextBlock => b.type === "text"
+  );
+  if (!textBlock) {
     throw new Error("No text content in Claude response");
   }
 
-  // Extract JSON from response (handle potential markdown code blocks)
-  const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch?.[0]) {
-    throw new Error("Could not parse JSON from Claude response");
-  }
-
-  const parsed = JSON.parse(jsonMatch[0]) as {
-    title: string;
-    excerpt: string;
-    content: string;
-    seoTitle: string;
-    seoDescription: string;
-    tags: string[];
-  };
+  const parsed = JSON.parse(textBlock.text) as ParsedPost;
 
   return {
     title: parsed.title,
@@ -110,6 +126,6 @@ Respond ONLY with valid JSON in this exact format:
     content: parsed.content,
     seoTitle: parsed.seoTitle,
     seoDescription: parsed.seoDescription,
-    tags: parsed.tags,
+    tags: [...parsed.tags],
   };
 }
