@@ -98,7 +98,7 @@
 - `81b0608` - DEC-NEXT-057 add Vault backup restore runbook
 - `e73b0fb` - DEC-NEXT-058 refresh monetization README engineering nav
 - `621db90` - DEC-NEXT-059 enforce README navigation coverage
-- `TBD` - DEC-NEXT-060 add Stripe checkout acceptance decisioning
+- `6aa85c9` - DEC-NEXT-060 add Stripe checkout acceptance decisioning
 
 ## What I Flagged For Morning Triage
 
