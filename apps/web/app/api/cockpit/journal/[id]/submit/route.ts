@@ -61,10 +61,12 @@ export async function POST(
     where: { id: params.id },
     data: {
       status: "REVIEW_PENDING",
+      reviewedAt: new Date(),
     },
     select: {
       id: true,
       status: true,
+      reviewedAt: true,
       updatedAt: true,
     },
   });
@@ -73,6 +75,7 @@ export async function POST(
     success: true,
     data: {
       ...updated,
+      reviewedAt: updated.reviewedAt?.toISOString() ?? null,
       updatedAt: updated.updatedAt.toISOString(),
       compliance,
     },

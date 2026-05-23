@@ -124,6 +124,8 @@ describe("Model Journal cockpit route", () => {
     expect(submitRoute).toContain("scanModelJournalMarkdown");
     expect(submitRoute).toContain("compliance.publishAllowed");
     expect(submitRoute).toContain('status: "REVIEW_PENDING"');
+    expect(submitRoute).toContain("reviewedAt: new Date()");
+    expect(submitRoute).toContain("reviewedAt: updated.reviewedAt?.toISOString()");
     expect(submitRoute).not.toMatch(/publishedAt\s*:\s*new Date|status:\s*"PUBLISHED"|twitterClient|sendgrid|mailchimp/i);
   });
 

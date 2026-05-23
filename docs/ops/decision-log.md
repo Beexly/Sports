@@ -196,3 +196,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: the cockpit Journal editor refreshes server-rendered entry state after review submission and retraction succeed.
 - Rationale: status, immutability, and evidence rails should reflect the persisted transition immediately without requiring an operator reload.
 - Deferred: publish scheduling, RSS invalidation, email digest delivery, teaser queue, and Game Memory cross-reference updates remain follow-up slices.
+
+## 2026-05-22 - Model Journal Review Transition Stamps Audit Time
+
+- Decision: the compliance-gated review transition now sets `reviewedAt` when a Journal draft moves to `REVIEW_PENDING`.
+- Rationale: operator review actions need a durable timestamp before later publish scheduling exists.
+- Deferred: publish approval identity, RSS invalidation, email digest delivery, teaser queue, and Game Memory cross-reference updates remain follow-up slices.
