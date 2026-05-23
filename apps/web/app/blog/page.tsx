@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { db } from "@sports/db";
+import { getReadinessGates } from "@sports/prediction-engine";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 export const revalidate = 300; // 5 min
 
 export default async function BlogPage() {
+  const gates = getReadinessGates();
   let posts: Array<{
     id: string;
     title: string;
@@ -26,24 +28,26 @@ export default async function BlogPage() {
     isFeatured: boolean;
   }> = [];
 
-  try {
-    posts = await db.blogPost.findMany({
-      where: { status: "PUBLISHED" },
-      orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
-      take: 20,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        sport: true,
-        tags: true,
-        publishedAt: true,
-        isFeatured: true,
-      },
-    });
-  } catch {
-    // DB unavailable during build — renders empty state, revalidated at runtime
+  if (gates.canPublishContent) {
+    try {
+      posts = await db.blogPost.findMany({
+        where: { status: "PUBLISHED" },
+        orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
+        take: 20,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          excerpt: true,
+          sport: true,
+          tags: true,
+          publishedAt: true,
+          isFeatured: true,
+        },
+      });
+    } catch {
+      // DB unavailable during build — renders empty state, revalidated at runtime
+    }
   }
 
   return (

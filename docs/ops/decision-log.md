@@ -455,3 +455,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: require `scripts/eval-contracts.mjs` to enforce eval coverage for every Galaxy Studio template kind.
 - Rationale: Studio templates are Phase 3 AI-output surfaces; adding a template without a matching eval should fail the normal guardrail path.
 - Guardrail: enforcement is metadata-only and local. It does not call Claude, publish content, or score generated output.
+
+## 2026-05-22 - Public Blog Respects Content Gate
+
+- Decision: gate `/blog`, `/blog/[slug]`, and `/api/blog` behind `canPublishContent`.
+- Rationale: published content must not appear on public surfaces while `PUBLIC_BLOG_ENABLED=false`, even if rows exist in the database.
+- Guardrail: public pages render empty or 404 while gated; the API returns the standard bootstrap-gate 503 envelope.

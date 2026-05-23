@@ -2,9 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
+import { bootstrapGateResponse, getReadinessGates } from "@sports/prediction-engine";
 import type { PublicBlogPost } from "@sports/types";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  const gates = getReadinessGates();
+  if (!gates.canPublishContent) {
+    return NextResponse.json(bootstrapGateResponse("Public blog"), { status: 503 });
+  }
+
   const session = await auth();
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)

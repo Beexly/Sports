@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
+import { getReadinessGates } from "@sports/prediction-engine";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 
@@ -13,6 +14,9 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
+  const gates = getReadinessGates();
+  if (!gates.canPublishContent) return { title: "Not Found" };
+
   const post = await db.blogPost.findUnique({
     where: { slug: params.slug, status: "PUBLISHED" },
     select: { title: true, seoTitle: true, seoDescription: true, excerpt: true },
@@ -31,6 +35,9 @@ export default async function BlogPostPage({
 }: {
   params: { slug: string };
 }) {
+  const gates = getReadinessGates();
+  if (!gates.canPublishContent) notFound();
+
   const session = await auth();
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)
