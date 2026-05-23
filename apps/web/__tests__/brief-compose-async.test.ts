@@ -7,6 +7,9 @@ import {
   type SlatePickSnippet,
 } from "@/lib/brief/slate-overview";
 import { __setClientForTests as __setPreMortemClientForTests } from "@/lib/brief/pre-mortem";
+import { __setClientForTests as __setWhatChangedClientForTests } from "@/lib/brief/what-changed";
+import { __setClientForTests as __setContentIdeasClientForTests } from "@/lib/brief/content-ideas";
+import { __setClientForTests as __setPromotionsClientForTests } from "@/lib/brief/promotions";
 
 const SAMPLE_PICKS: readonly SlatePickSnippet[] = [
   {
@@ -37,6 +40,9 @@ describe("composeBriefAsync", () => {
   afterEach(() => {
     __setClientForTests(undefined);
     __setPreMortemClientForTests(undefined);
+    __setWhatChangedClientForTests(undefined);
+    __setContentIdeasClientForTests(undefined);
+    __setPromotionsClientForTests(undefined);
     delete process.env["ANTHROPIC_API_KEY"];
     delete process.env["VERCEL"];
   });
@@ -146,7 +152,7 @@ describe("composeBriefAsync", () => {
     expect((brief as unknown as Record<string, unknown>)["publishedAt"]).toBeUndefined();
   });
 
-  it("promotions / whatChanged / contentIdeas remain empty (filled by future cycles)", async () => {
+  it("promotions / whatChanged / contentIdeas stay empty when their inputs aren't supplied", async () => {
     __setClientForTests(makeFakeClient({ slateOverview: "ok" }));
     __setPreMortemClientForTests(makeFakeClient(CLEAN_PRE_MORTEM));
 
@@ -159,5 +165,59 @@ describe("composeBriefAsync", () => {
     expect(brief.promotions.items).toEqual([]);
     expect(brief.whatChanged.items).toEqual([]);
     expect(brief.contentIdeas.items).toEqual([]);
+    expect(brief.sections.map((s) => s.type)).toEqual(["SLATE_OVERVIEW"]);
+  });
+
+  it("populates WHAT_CHANGED + PROMOTIONS + CONTENT_IDEAS when caller supplies their inputs", async () => {
+    __setClientForTests(makeFakeClient({ slateOverview: "Slate text" }));
+    __setPreMortemClientForTests(makeFakeClient(CLEAN_PRE_MORTEM));
+    __setWhatChangedClientForTests(
+      makeFakeClient({
+        summary: "Two updates rolled in.",
+        items: [
+          { headline: "h", detail: "d", impact: "NEGATIVE" },
+        ],
+      })
+    );
+    __setContentIdeasClientForTests(
+      makeFakeClient({
+        ideas: [{ headline: "h", angle: "a", audienceFit: "PRO" }],
+      })
+    );
+    __setPromotionsClientForTests(
+      makeFakeClient({
+        summary: "Two offers.",
+        items: [
+          {
+            book: "DK",
+            headline: "x",
+            valueStatement: "x",
+            disclosure: "21+",
+          },
+        ],
+      })
+    );
+
+    const brief = await composeBriefAsync({
+      date: "2026-05-23",
+      picks: SAMPLE_PICKS,
+      changesContext: "LeBron ruled out at 17:30",
+      promotionOffers: [
+        { book: "DK", headline: "$200 in bonus bets", terms: "21+" },
+      ],
+      includeContentIdeas: true,
+    });
+
+    // sections grow: SLATE_OVERVIEW + WHAT_CHANGED + PROMOTIONS + CONTENT_IDEAS
+    // (pre-mortem is clean so no MANUAL_REVIEW)
+    const sectionTypes = brief.sections.map((s) => s.type);
+    expect(sectionTypes).toContain("SLATE_OVERVIEW");
+    expect(sectionTypes).toContain("WHAT_CHANGED");
+    expect(sectionTypes).toContain("PROMOTIONS");
+    expect(sectionTypes).toContain("CONTENT_IDEAS");
+    expect(brief.whatChanged.items).toHaveLength(1);
+    expect(brief.contentIdeas.items).toHaveLength(1);
+    expect(brief.promotions.count).toBe(1);
+    expect(brief.promotions.items).toHaveLength(1);
   });
 });

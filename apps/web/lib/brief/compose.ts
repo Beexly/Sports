@@ -21,6 +21,12 @@ import {
   actionableRisks,
   composePreMortem,
 } from "./pre-mortem.js";
+import { composeWhatChanged } from "./what-changed.js";
+import { composeContentIdeas } from "./content-ideas.js";
+import {
+  composePromotions,
+  type PromotionOffer,
+} from "./promotions.js";
 
 export const BRIEF_RESPONSIBLE_GAMING_NOTE =
   "Bet responsibly. Past performance does not guarantee future results.";
@@ -68,6 +74,12 @@ export function composeBrief(input: { date: Date; picks?: unknown; promotions?: 
 export interface ComposeBriefAsyncInput {
   readonly date: Date | string;
   readonly picks: readonly SlatePickSnippet[];
+  /** Operator-supplied free-form changes for the WHAT_CHANGED section. */
+  readonly changesContext?: string;
+  /** Operator-supplied promotional offers for the PROMOTIONS section. */
+  readonly promotionOffers?: readonly PromotionOffer[];
+  /** Whether to generate content ideas from the slate (default false — opt in). */
+  readonly includeContentIdeas?: boolean;
 }
 
 /**
@@ -104,11 +116,25 @@ export async function composeBriefAsync(
     };
   }
 
-  // Run slate-overview and pre-mortem in parallel — both are independent
-  // reads of the same picks data, no need to serialize them.
-  const [overview, preMortem] = await Promise.all([
+  // Build the parallel-call list. Slate-overview + pre-mortem always run
+  // when picks are present. The other three composers only run when their
+  // optional input is supplied — no spend on empty inputs.
+  const wantIdeas = input.includeContentIdeas === true;
+  const wantChanges = typeof input.changesContext === "string" && input.changesContext.trim().length > 0;
+  const wantPromos = Array.isArray(input.promotionOffers) && input.promotionOffers.length > 0;
+
+  const [overview, preMortem, contentIdeas, whatChanged, promotions] = await Promise.all([
     composeSlateOverview({ date: dateIso, picks: input.picks }),
     composePreMortem({ date: dateIso, picks: input.picks }),
+    wantIdeas
+      ? composeContentIdeas({ picks: input.picks })
+      : Promise.resolve(null),
+    wantChanges
+      ? composeWhatChanged({ changesContext: input.changesContext as string })
+      : Promise.resolve(null),
+    wantPromos
+      ? composePromotions({ offers: input.promotionOffers as readonly PromotionOffer[] })
+      : Promise.resolve(null),
   ]);
 
   const sections: BriefSection[] = [
@@ -119,9 +145,7 @@ export async function composeBriefAsync(
     },
   ];
 
-  // Pre-mortem becomes the MANUAL_REVIEW section when there's anything worth
-  // surfacing. Low-severity-only or empty-risks slates skip the section
-  // (operator doesn't want noise on clean nights).
+  // Pre-mortem → MANUAL_REVIEW section when anything actionable is present.
   const actionable = actionableRisks(preMortem);
   const manualReviewItems = actionable.map((r) => ({
     kind: r.kind,
@@ -129,12 +153,41 @@ export async function composeBriefAsync(
     observation: r.observation,
     affectedCount: r.affectedCount,
   }));
-
   if (actionable.length > 0) {
     sections.push({
       title: "Pre-mortem (operator review)",
       body: preMortem.summary,
       type: "MANUAL_REVIEW",
+    });
+  }
+
+  // What-changed → WHAT_CHANGED section when the operator supplied context.
+  const whatChangedItems = whatChanged ? whatChanged.items : [];
+  if (whatChanged) {
+    sections.push({
+      title: "What changed",
+      body: whatChanged.summary,
+      type: "WHAT_CHANGED",
+    });
+  }
+
+  // Promotions → PROMOTIONS section when offers were supplied.
+  const promotionItems = promotions ? promotions.items : [];
+  if (promotions) {
+    sections.push({
+      title: "Promotions",
+      body: promotions.summary,
+      type: "PROMOTIONS",
+    });
+  }
+
+  // Content ideas → CONTENT_IDEAS section when generated.
+  const contentIdeaItems = contentIdeas ? contentIdeas.ideas : [];
+  if (contentIdeas) {
+    sections.push({
+      title: "Content ideas",
+      body: `${contentIdeas.ideas.length} angle${contentIdeas.ideas.length === 1 ? "" : "s"} surfaced from tonight's slate.`,
+      type: "CONTENT_IDEAS",
     });
   }
 
@@ -145,9 +198,9 @@ export async function composeBriefAsync(
     responsibleGamingText: BRIEF_RESPONSIBLE_GAMING_NOTE,
     status: "DRAFT",
     slateOverview: { text: overview.text },
-    promotions: { count: 0, items: [] },
-    whatChanged: { items: [] },
-    contentIdeas: { items: [] },
+    promotions: { count: promotionItems.length, items: promotionItems as unknown[] },
+    whatChanged: { items: whatChangedItems as unknown[] },
+    contentIdeas: { items: contentIdeaItems as unknown[] },
     manualReview: { items: manualReviewItems },
   };
 }
