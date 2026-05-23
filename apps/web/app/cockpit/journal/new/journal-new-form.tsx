@@ -18,6 +18,20 @@ interface WeekDataResponse {
   readonly data?: {
     readonly rangeStart: string;
     readonly rangeEnd: string;
+    readonly picks: readonly {
+      readonly id: string;
+      readonly matchup: string;
+      readonly selection: string;
+      readonly result: string;
+      readonly confidence: number;
+      readonly edgeScore: number;
+    }[];
+    readonly lossAutopsies: readonly {
+      readonly id: string;
+      readonly pickId: string;
+      readonly headline: string;
+      readonly rootCause: string;
+    }[];
     readonly counts: {
       readonly settledPicks: number;
       readonly wins: number;
@@ -190,6 +204,49 @@ export function JournalNewForm(): JSX.Element {
               <dd className="mt-1 text-gray-100">{evidence.counts.publicLossAutopsies}</dd>
             </div>
           </dl>
+        ) : null}
+
+        {evidence && evidence.picks.length > 0 ? (
+          <div className="mt-4">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-600">
+              Settled pick references
+            </p>
+            <ul className="mt-2 grid gap-2">
+              {evidence.picks.slice(0, 6).map((pick) => (
+                <li key={pick.id} className="rounded-lg border border-gray-800 bg-gray-950/70 p-2 text-xs">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-semibold text-gray-200">{pick.matchup}</span>
+                    <span className="text-gray-500">{pick.result}</span>
+                  </div>
+                  <p className="mt-1 text-gray-400">
+                    {pick.selection} - confidence {pick.confidence} - edge {pick.edgeScore.toFixed(1)}
+                  </p>
+                  <p className="mt-1 font-mono text-[10px] text-gray-600">{pick.id}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {evidence && evidence.lossAutopsies.length > 0 ? (
+          <div className="mt-4">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-600">
+              Public loss autopsies
+            </p>
+            <ul className="mt-2 grid gap-2">
+              {evidence.lossAutopsies.slice(0, 4).map((autopsy) => (
+                <li key={autopsy.id} className="rounded-lg border border-gray-800 bg-gray-950/70 p-2 text-xs">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-semibold text-gray-200">{autopsy.headline}</span>
+                    <span className="text-gray-500">{autopsy.rootCause}</span>
+                  </div>
+                  <p className="mt-1 font-mono text-[10px] text-gray-600">
+                    {autopsy.id} - pick {autopsy.pickId}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : null}
 
         {evidenceError ? (

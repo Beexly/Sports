@@ -166,3 +166,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: include published Model Journal detail URLs in `sitemap.xml`.
 - Rationale: once a Journal entry is manually published, public discovery should not depend only on the index page or RSS feed. The sitemap reads the same published-only loader as `/journal`, so drafts and retracted entries remain excluded.
 - Deferred: retracted-slug 410 handling, per-entry sitemap freshness after manual publish, email digest delivery, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Evidence Detail Preview Added
+
+- Decision: expand the `/cockpit/journal/new` evidence preview to show concrete settled pick and public loss-autopsy references.
+- Rationale: counts alone are not enough for operator review. The draft creator now surfaces the first settled pick references and loss-autopsy references from the read-only week-data endpoint before the draft row is created.
+- Deferred: full evidence table with filters, cited-factor extraction, Claude draft generation route, publish/retract feed invalidation, email digest delivery, and teaser queue remain follow-up slices.

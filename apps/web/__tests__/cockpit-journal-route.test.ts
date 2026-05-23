@@ -88,6 +88,10 @@ describe("Model Journal cockpit route", () => {
     expect(newForm).toContain("Load evidence");
     expect(newForm).toContain("settledPicks");
     expect(newForm).toContain("publicLossAutopsies");
+    expect(newForm).toContain("Settled pick references");
+    expect(newForm).toContain("Public loss autopsies");
+    expect(newForm).toContain("evidence.picks.slice");
+    expect(newForm).toContain("evidence.lossAutopsies.slice");
     expect(weekDataRoute).toMatch(/from\s+["']@\/lib\/auth["']/);
     expect(weekDataRoute).toMatch(/role\s*!==\s*"ADMIN"/);
     expect(weekDataRoute).toContain("loadModelJournalWeekData");
