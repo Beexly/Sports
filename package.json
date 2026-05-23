@@ -1,0 +1,24 @@
+{
+  "name": "galaxy-sports-edge",
+  "private": true,
+  "scripts": {
+    "dev:web": "next dev apps/web",
+    "build:web": "next build apps/web",
+    "typecheck:web": "tsc -p apps/web/tsconfig.json --noEmit",
+    "validate:monetization": "powershell -ExecutionPolicy Bypass -File ./docs/monetization-v3/tools/validate-monetization-v3.ps1"
+  },
+  "dependencies": {
+    "next": "^16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "typescript": "^5.8.0"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
+  }
+}

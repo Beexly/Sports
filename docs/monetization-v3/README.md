@@ -81,6 +81,7 @@ Runway determines which subset is active:
 - [product/vault-data-model.md](product/vault-data-model.md) - Vault data model for members, applications, digests, events, referrals, and audits.
 - [product/vault-prd.md](product/vault-prd.md) - Vault product requirements and source operating docs.
 - [product/vault-test-plan.md](product/vault-test-plan.md) - Vault test plan and launch verification coverage.
+- [product/web-app-scaffold-notes.md](product/web-app-scaffold-notes.md) - Next.js proof-surface scaffold notes and DEC-NEXT-023 rationale.
 - [product/webhook-and-integrations-spec.md](product/webhook-and-integrations-spec.md) - Stripe, Discord, email, and webhook integration requirements.
 
 ## Content/Copy
