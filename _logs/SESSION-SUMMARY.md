@@ -1,81 +1,66 @@
 # Session 2026-05-23
 
-## Cycles completed: 23
+## Cycles completed: 29
 
-Branch: `claude/keen-ptolemy-d0pbK` · Starting commit: `7900d41` · Ending commit at this snapshot: ahead by 23 commits.
+Branch: `claude/keen-ptolemy-d0pbK` · Starting commit: `7900d41` · This snapshot ahead by 29 commits.
 
-Three waves: cycles 1–10 shipped the SDK migration + reviewer foundation. Cycles 11–17 cleared the leftover queue items. Cycles 18–23 made the platform's anti-slop posture **structural** — self-aware (rate-limit + telemetry), self-checking (counter-narrative + pre-mortem), and self-monitoring (source-health agent).
+Four waves: cycles 1–10 shipped SDK migration + reviewer foundation. Cycles 11–17 cleared the leftover queue. Cycles 18–23 made the anti-slop posture **structural** (self-aware, self-checking, self-monitoring). Cycles 24–29 closed every remaining queue item except the deferred vector-embedded Pick Memory architectural work (Codex prompt below).
 
-**Tests:** web `1342 → 1557` (+215) · prediction-engine `197 → 205` (+8) · data-ingestion `11` · types `28`. All four workspaces green, typecheck clean, lint clean, all three guardrails (trust-gate, draft-only, model-freeze) clean.
+**Tests:** web `1342 → 1658` (+316) · prediction-engine `197 → 205` (+8) · data-ingestion `11` · types `28`. All workspaces green, typecheck clean, lint clean, all three guardrails (trust-gate, draft-only, model-freeze) clean.
 
-## Shipped — full list
+## Wave 4 — Cycles 24–29
 
-| # | Commit | Feature |
-|---|---|---|
-| 1 | `3df11bc` | feat(content): migrate Claude blog generator to official `@anthropic-ai/sdk` |
-| 2 | `f66baa9` | feat(content): semantic draft reviewer (Haiku 4.5) |
-| 3 | `c796977` | feat(cockpit): admin-gated POST `/api/cockpit/review-draft` |
-| 4 | `b5a6496` | feat(content): `generateAndReviewBlogPost` wrapper |
-| 5 | `cdcb026` | feat(prediction-engine): `extractPickSources` |
-| 6 | `b1730bd` | feat(content): blog generator cites pick sources |
-| 7 | `970c606` | chore(scripts): operator scripts migrated to `@anthropic-ai/sdk` |
-| 8 | `feb1b8e` | feat(content): blog generator parameterized on content kind |
-| 9 | `e9af6ed` | feat(brief): `composeSlateOverview` — first slice of brief composer |
-| 10 | `f069252` | chore(_logs): session summary checkpoint |
-| 11 | `918a6c6` | refactor(ai): extract `makeAnthropicHolder()` factory |
-| 12 | `d6cd75e`* | feat(ci): nightly content workflow opens an operator PR |
-| 13 | `e52e604` | feat(content): add 6 remaining content kinds |
-| 14 | `56c1007` | feat(ai): ephemeral prompt caching on draft-reviewer + slate-overview |
-| 15 | `abc7e19` | feat(brief): `composeBriefAsync` |
-| 16 | `79d4a2d` | feat(cockpit): POST `/api/cockpit/brief` composes a real preview |
-| 17 | `cd6c1aa` | feat(cockpit): UI page wires the semantic draft reviewer |
-| 18 | `<this>` | **feat(ai): ioredis rate-limit + withTelemetry foundation** |
-| 19 | `<this>` | **feat(ci): DB-backed nightly + self-documenting PR body** |
-| 20 | `<this>` | **feat(cockpit): brief preview UI at /cockpit/brief/preview** |
-| 21 | `<this>` | **feat(content): counter-narrative companion (anti-slop pillar)** |
-| 22 | `<this>` | **feat(brief): pre-mortem on the pick slate (self-checking pillar)** |
-| 23 | `<this>` | **feat(cockpit): source-health agent (self-monitoring pillar)** |
+| # | Feature |
+|---|---|
+| 24 | feat(ci): source-health alarm — 30-min cron polls + GH Action failure as alert |
+| 25 | feat(cockpit): pick-narrator — Sonnet editorial gloss on ScoredPick (lib only) |
+| 26 | feat(cockpit): POST /api/cockpit/pick-narrator + UI page |
+| 27 | feat(brief): composeWhatChanged + composeContentIdeas + composePromotions wired into composeBriefAsync |
+| 28 | feat(cockpit): source-health uses per-category FRESHNESS_BUDGETS thresholds from source-intelligence |
+| 29 | feat(cockpit): telemetry summary page at /cockpit/telemetry — per-call-site cache hit rate, tokens, latency, errors |
 
-*Commit hashes for 11+ visible via `git log --oneline`.
+## The cockpit operator now has
 
-## Anti-slop pillar status check
+- `/cockpit/jarvis` — launch readiness assessment (existed)
+- `/cockpit/calibration` — model accountability (existed)
+- `/cockpit/review-draft` — semantic compliance scan on operator-pasted text (Cycle 17)
+- `/cockpit/brief/preview` — async brief composer preview (Cycle 20)
+- `/cockpit/source-health` — always-current freshness watch (Cycle 23, deepened in 28)
+- `/cockpit/pick-narrator` — editorial gloss on a ScoredPick (Cycle 26)
+- **`/cockpit/telemetry` — Claude cache hit rate + tokens + latency by call site (Cycle 29)**
 
-- ✅ **Self-aware** — Cycle 18. Rate-limit on every credit-burning admin route (10/min per user, fail-closed). Telemetry on every Claude call (4 sites + nightly script) capturing cache hit rate, latency, token usage.
-- ✅ **Self-checking** — Cycle 21 (counter-narrative) + Cycle 22 (pre-mortem). Every generated draft surfaces alongside a skeptical counter-take with redFlags. Every brief surfaces a MANUAL_REVIEW section when slate-level systemic risks are detected.
-- ✅ **Self-monitoring** — Cycle 23. `/cockpit/source-health` page renders always-current per-source freshness + Claude-narrated operator read + structured alerts when sources degrade.
+Plus push-based alarm via Source Health Alarm workflow (Cycle 24) that fires a GitHub notification when source health hits HIGH severity.
 
-The platform now observes its own behavior, challenges its own celebratory framing, and watches its data sources — at the structural level, not as policy.
+## Anti-slop pillars — final status
+
+- ✅ **Self-aware** — rate-limit on every credit-burning admin route (10/min, fail-closed, Cycle 18). Telemetry on every Claude call (Cycle 18), summarized for the operator on `/cockpit/telemetry` (Cycle 29).
+- ✅ **Self-checking** — every generated draft ships with a counter-narrative (Cycle 21). Every brief surfaces a MANUAL_REVIEW section when slate-level systemic risks are detected (Cycle 22). The brief now has all 5 section composers (slate-overview, pre-mortem, what-changed, content-ideas, promotions) — feature-complete on the schema's BriefSectionType enum (Cycle 27).
+- ✅ **Self-monitoring** — `/cockpit/source-health` page + scheduled HIGH-severity alarm + per-category FRESHNESS_BUDGETS for accurate per-source thresholds (Cycles 23 + 24 + 28).
 
 ## Hard Rules audit — final
 
-- ✅ Never commit secrets — `.env` gitignored; stub `.env` files in apps/web + packages/db never tracked
-- ✅ All Anthropic calls go through the SDK (now 5 call sites: content-generator, draft-reviewer, slate-overview, counter-narrative, pre-mortem, source-health-narrative + 2 operator scripts + nightly runner = 8 total). Every one of them uses `maxRetries: 3` and the `makeAnthropicHolder()` factory or its inline mirror.
-- ✅ No auto-publish path. `draft-only.mjs` passes (190 files scanned). Nightly workflow opens PR + stops; operator clicks merge.
-- ✅ No hype language. `trust-gate.mjs` passes (182 files scanned). Two source files whitelisted for legitimate banned-phrase mentions in their system prompts.
-- ✅ MODEL_VERSION untouched. `model-freeze.mjs` passes against `v5.0.0` baseline.
-- ✅ Prompt caching applied — reviewer (system + banned-list prefix), slate-overview (system), counter-narrative (system), pre-mortem (system), source-health-narrative (system). Generator deliberately uncached (no stable user prefix; per-pick data varies); rationale in DECISIONS.md.
-- ✅ Rate-limit fail-closed on credit-burning routes — `/api/cockpit/review-draft`, `/api/cockpit/brief`, `/api/cockpit/source-health` all 10/min per user, fail-closed.
+- ✅ Never commit secrets — `.env` gitignored
+- ✅ All Anthropic calls go through SDK with `maxRetries: 3` (12 call sites + 2 operator scripts + nightly runner). `withTelemetry` (Cycle 18) wraps each one
+- ✅ No auto-publish path. `draft-only.mjs` passes (197 files scanned). Both scheduled workflows (nightly content + source-health alarm) READ only or open a draft PR
+- ✅ No hype language. `trust-gate.mjs` passes (185 files scanned). 4 source files whitelisted for legitimate banned-phrase mentions in negation system prompts
+- ✅ MODEL_VERSION untouched. `model-freeze.mjs` passes against v5.0.0 baseline
+- ✅ Prompt caching applied — reviewer, slate-overview, counter-narrative, pre-mortem, source-health-narrative, pick-narrator, what-changed, content-ideas, promotions (9 cached system prompts; generator deliberately uncached, rationale in DECISIONS.md)
+- ✅ Rate-limit fail-closed on every Claude route — `/api/cockpit/review-draft`, `/api/cockpit/brief`, `/api/cockpit/source-health`, `/api/cockpit/pick-narrator` all 10/min per user, fail-closed
 
 ## Open questions for Garrett
 
-1. **Provision the secrets to bring the runtime paths live.** Code is sandbox-runnable today but the live paths don't activate until:
+1. **Provision the secrets to bring runtime paths live.** Code is sandbox-runnable today but:
    - `ANTHROPIC_API_KEY` (the `galaxy-prod-2026-05-21` key) in Vercel + GitHub repo secrets
-   - `REDIS_URL` (Upstash) in Vercel — without it, both Claude-route POSTs return 503 (fail-closed)
-   - `DATABASE_URL` + `DIRECT_URL` in the GitHub Action's secrets — without them, the nightly workflow uses the fixture
-2. **Pre-mortem severity calibration.** The "should this be a MANUAL_REVIEW section" gate is "any HIGH or MEDIUM risk." Tighter (HIGH only) or looser (any non-empty risks) might fit your operator pace better. Easy to tune.
-3. **Source-health thresholds.** FRESH ≤ 30min, AGING ≤ 4h, STALE > 4h are sensible global defaults. Per-category thresholds (e.g. INJURY_NEWS = 6h, ODDS = 30min) are wired into source-intelligence already; surfacing them as the source-health thresholds is a future cycle.
-4. **The `/cockpit/source-health` cron.** No automated alerting yet — operators visit the page. A future cycle adds a workflow that posts to Slack/PR when an alert hits HIGH severity. Wanted next session?
-5. **Pick-narrator library + audit-drawer wiring.** Pushed out of this batch (tactical capability, non-foundational). Top of the queue for next session.
+   - `REDIS_URL` (Upstash) in Vercel — Claude routes return 503 (fail-closed) without it
+   - `DATABASE_URL` + `DIRECT_URL` in GitHub Action secrets — nightly workflow uses fixture without them
+   - `SOURCE_HEALTH_URL` + `SOURCE_HEALTH_TOKEN` in GitHub repo secrets — source-health alarm workflow polls these
+2. **Telemetry page on Vercel** — `_logs/claude-usage.log` is ephemeral on Vercel; the telemetry page returns empty there. The page works against local dev + the GitHub Action's filesystem. To make it work in prod, promote telemetry to a Prisma model in a future cycle.
+3. **Operator-tunable rate-limit + threshold UI** — limits are hardcoded today (10/min, FRESH_THRESHOLD_MS, MAX_INPUT_CHARS). A future cycle could surface them via cockpit settings stored in DB.
 
-## Recommended next-session queue
+## Deferred — Pick Memory (Codex prompt below)
 
-1. **Cron alerting on source-health HIGH severity** — small GitHub Action that polls the endpoint and posts to Slack/PR when alerts fire. The push-based half of self-monitoring.
-2. **Pick-narrator library + audit-drawer wiring** — operator-only Sonnet narrative layered on top of the deterministic pick reasoning. Strictly cockpit display.
-3. **Remaining brief sections — `composeWhatChanged`, `composeContentIdeas`, `composePromotions`** — each mirrors `composePreMortem` shape. Three small cycles or one batched cycle.
-4. **Per-category source-health thresholds** — surface the existing `FRESHNESS_BUDGETS` per category from `source-intelligence` into the agent's threshold logic. Currently global defaults only.
-5. **Prompt-caching telemetry surface in cockpit** — Cycle 18 captures the data; build a `/cockpit/telemetry` page that summarizes cache hit rate per call site by reading `_logs/claude-usage.log`. Validates the Cycle 14 forward investment.
-6. **Vector-embedded "Pick Memory"** — multi-batch architectural cycle. Historical similar-pick retrieval with embeddings so any future Claude call can ground reasoning in actual precedent. Real new capability worth scoping properly.
+The vector-embedded historical-similar-pick retrieval layer is multi-batch architectural work — embeddings provider decision, vector store choice, embed pipeline, Prisma migration, multi-cycle implementation. Not safely shippable in a single Claude Code session. **Codex prompt for the architectural cycle is in the chat reply that includes this summary.**
 
 ## STOP — awaiting Garrett
 
-Branch is clean. Pushing to origin. Ready for next direction.
+Branch is clean. Pushing to origin.
