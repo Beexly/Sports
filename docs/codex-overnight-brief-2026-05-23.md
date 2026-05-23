@@ -100,7 +100,7 @@
 - `e73b0fb` - DEC-NEXT-058 refresh monetization README engineering nav
 - `621db90` - DEC-NEXT-059 enforce README navigation coverage
 - `6aa85c9` - DEC-NEXT-060 add Stripe checkout acceptance decisioning
-- `TBD` - DEC-NEXT-061 add Discord role sync decisioning
+- `c6d3d5f` - DEC-NEXT-061 add Discord role sync decisioning
 
 ## What I Flagged For Morning Triage
 
