@@ -78,11 +78,16 @@ describe("Model Journal draft composer", () => {
 
     expect(markdown).toContain("# Model Journal: Week 21, 2026");
     expect(markdown).toContain("Settled picks: 2");
-    expect(markdown).toContain("## Signals That Held");
+    expect(markdown).toContain("Thin-week note: 2 settled picks");
+    expect(markdown).toContain("## What the Model Got Right");
     expect(markdown).toContain("BOS @ NYY");
-    expect(markdown).toContain("## Signals That Missed");
+    expect(markdown).toContain("## What the Model Got Wrong");
     expect(markdown).toContain("DAL @ PHX");
+    expect(markdown).toContain("## Pre-Mortem Performance");
     expect(markdown).toContain("Rest read did not survive late rotation news");
+    expect(markdown).toContain("## What's Changing");
+    expect(markdown).toContain("## Forward Look");
     expect(markdown).toContain("pick pick-loss");
+    expect(markdown).not.toContain("strategic restraint");
   });
 });

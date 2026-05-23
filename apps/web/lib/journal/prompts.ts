@@ -26,8 +26,8 @@ STRUCTURE
 2. The week in numbers. Settled picks, hits, misses (no aggregate win rate -
    we don't publish that). The numbers are the data, not the marketing.
 3. What the model got right. Pick one or two settled wins where a specific
-   factor read was the heaviest contributor. Walk through what the model saw
-   and why.
+   factor read was the heaviest contributor. Walk through what the factor
+   inputs showed and why the pick held.
 4. What the model got wrong. Pick one or two losses. Reference the autopsy.
    Be specific about which factor misread and whether it was variance or a
    real signal-drift issue.

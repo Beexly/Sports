@@ -24,13 +24,24 @@ function sectionLines(title: string, picks: readonly JournalWeekPickEvidence[]):
   return [`## ${title}`, "", ...picks.slice(0, 6).map(pickLine)].join("\n");
 }
 
+function scopeNote(weekData: JournalWeekData): string {
+  if (weekData.counts.settledPicks >= 3) {
+    return "This draft should stay anchored to the settled-pick evidence below.";
+  }
+
+  return [
+    "Thin-week note:",
+    `${weekData.counts.settledPicks} settled picks are available in this evidence bundle.`,
+    "Do not pad the essay or describe the small sample as restraint.",
+  ].join(" ");
+}
+
 export function composeJournalDraftMarkdown(
   title: string,
   weekData: JournalWeekData
 ): string {
   const wins = weekData.picks.filter((pick) => pick.result === "WIN");
   const losses = weekData.picks.filter((pick) => pick.result === "LOSS");
-  const pushes = weekData.picks.filter((pick) => pick.result === "PUSH");
   const rangeStart = weekData.rangeStart.slice(0, 10);
   const rangeEnd = weekData.rangeEnd.slice(0, 10);
 
@@ -38,6 +49,8 @@ export function composeJournalDraftMarkdown(
     `# ${title}`,
     "",
     `ISO week ${weekData.isoWeek}, ${weekData.isoYear}. Evidence window: ${rangeStart} to ${rangeEnd}.`,
+    "",
+    scopeNote(weekData),
     "",
     "## Week In Numbers",
     "",
@@ -49,11 +62,13 @@ export function composeJournalDraftMarkdown(
       `Public loss autopsies: ${weekData.counts.publicLossAutopsies}`,
     ].map((line) => `- ${line}`).join("\n"),
     "",
-    sectionLines("Signals That Held", wins),
+    sectionLines("What the Model Got Right", wins),
     "",
-    sectionLines("Signals That Missed", losses),
+    sectionLines("What the Model Got Wrong", losses),
     "",
-    sectionLines("Pushes", pushes),
+    "## Pre-Mortem Performance",
+    "",
+    "Pre-mortem hit/miss tags are not attached to this evidence bundle yet. Keep this section short and explicit.",
     "",
     "## Loss Autopsies",
     "",
@@ -69,8 +84,12 @@ export function composeJournalDraftMarkdown(
         ].join(" - "))
         .join("\n"),
     "",
-    "## What Changes Next",
+    "## What's Changing",
     "",
-    "Draft the operator-reviewed model note here. Cite factor names, pick IDs, and autopsy IDs before submitting for review.",
+    "Factor weight changes are not attached to this evidence bundle yet. Confirm the model-version changelog before publishing.",
+    "",
+    "## Forward Look",
+    "",
+    "Draft the operator-reviewed forward look here. Cite factor names, pick IDs, and autopsy IDs before submitting for review.",
   ].join("\n");
 }

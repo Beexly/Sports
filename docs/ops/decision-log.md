@@ -184,3 +184,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: Model Journal draft creation now stores weekly settled-pick and public loss-autopsy IDs from the deterministic evidence loader.
 - Rationale: the cockpit evidence rail, public Journal citations, and future Galaxy Memory links need durable references from the moment a draft is created.
 - Deferred: full evidence table with filters, cited-factor extraction, Claude draft generation route, publish/retract feed invalidation, email digest delivery, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Draft Skeleton Matches Seven-Section Eval
+
+- Decision: the deterministic Journal composer now mirrors the seven-section weekly draft structure and adds an explicit thin-week scope note when settled evidence is sparse.
+- Rationale: manual drafts should start from the same editorial contract as the Claude drafting evals, including honest handling of low-sample weeks.
+- Deferred: gate-count summaries, pre-mortem called/missed tags, factor-change summaries, Claude draft generation route, and cost tracking wrapper integration remain follow-up slices.

@@ -62,6 +62,7 @@ describe("Model Journal prompts", () => {
     expect(JOURNAL_DRAFTING_SYSTEM_PROMPT).toContain("lossAutopsies[]");
     expect(JOURNAL_DRAFTING_SYSTEM_PROMPT).toContain("counts");
     expect(JOURNAL_DRAFTING_SYSTEM_PROMPT).not.toContain("settledPicks[]");
+    expect(JOURNAL_DRAFTING_SYSTEM_PROMPT).not.toMatch(/model saw|engine saw/i);
   });
 
   it("builds the user prompt from typed week-data evidence", () => {
