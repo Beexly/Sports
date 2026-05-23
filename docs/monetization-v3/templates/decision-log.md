@@ -462,3 +462,16 @@ Metric threshold: Tests create a p1 repair task for stale proof surfaces and ign
 Owner: Codex maintains scaffold; Garrett owns proof-surface update cadence
 Next review date: Before routing short-form traffic to proof surfaces
 Notes: Logic only. No persistence, admin cockpit, public CTA, automated content update, or campaign blocking is wired.
+
+### DEC-NEXT-043 - Incident Threshold Logic
+
+Date: 2026-05-23
+Decision: Add pure incident-signal evaluation for onboarding repair rate, p0 repair tasks, and stale proof surfaces.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Repair queues need deterministic escalation rules before alerting is wired, especially during the founding-50 payment window.
+Metric threshold: Tests cover the 5 percent onboarding threshold, p0 repair task threshold, stale proof-surface signal, and quiet state.
+Owner: Codex maintains scaffold; Garrett defines alert routing before launch
+Next review date: Before Day -7 pre-launch verification
+Notes: Logic only. No alerts, paging, admin persistence, external incident creation, or data mutation is wired.

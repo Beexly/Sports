@@ -28,6 +28,7 @@
 - Added provider heartbeat status logic for Stripe, transactional email, Discord, private storage, and analytics; live checks remain unwired.
 - Added admin repair-task generation for onboarding and provider heartbeat failures; cockpit persistence remains unwired.
 - Added stale proof-surface repair-task generation so freshness drift can become internal operator work.
+- Added incident threshold logic for onboarding repair rate, p0 repair tasks, and stale proof surfaces; alert transport remains unwired.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs

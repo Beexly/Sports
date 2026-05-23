@@ -324,7 +324,7 @@ Acceptance criteria:
 - Signup creates or updates a member onboarding health record.
 - Health record tracks payment confirmation, member creation, Discord role grant, welcome email send, and first dashboard view timestamps.
 - Any missing post-payment step after 15 minutes creates an admin repair task.
-- Rolling 1-hour failure rate above 5 percent creates an incident-level alert.
+- Rolling 1-hour failure rate above 5 percent creates an incident-level alert. Pure incident signal logic exists from DEC-NEXT-043; alert transport remains unwired.
 - No member identity is exposed publicly.
 
 ### PHASE-N-012 - Provider Heartbeat Dashboard
@@ -340,6 +340,7 @@ Acceptance criteria:
 - Stale heartbeat status is visible before founding-50 invitations send.
 - Provider incidents can be linked from `docs/ops/issue-queue.md`.
 - Pure repair-task generation exists from DEC-NEXT-041; persistence, assignment, and resolution workflow remain unwired.
+- Pure incident signal logic exists from DEC-NEXT-043; cockpit display and alert transport remain unwired.
 
 ### PHASE-N-013 - Proof Surface Freshness Monitor
 
