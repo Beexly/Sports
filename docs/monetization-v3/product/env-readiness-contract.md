@@ -1,7 +1,7 @@
 # Environment Readiness Contract
 
 **Status:** Engineering-owned. Readiness layer before Vault launch.
-**Related decision:** DEC-NEXT-036, DEC-NEXT-055, DEC-NEXT-062
+**Related decision:** DEC-NEXT-036, DEC-NEXT-055, DEC-NEXT-062, DEC-NEXT-074
 
 ## DEC-NEXT-036 - Add an explicit environment contract
 
@@ -73,3 +73,17 @@ powershell -ExecutionPolicy Bypass -File .\scripts\check-env-contract.ps1 -Requi
 ```
 
 If it fails, fill the missing variables in the target environment before running Stripe or Discord end-to-end tests.
+
+To validate a specific local env-style file without printing values:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\check-env-contract.ps1 -RequiredFor vault-launch -EnvFile .env.example
+```
+
+## DEC-NEXT-074 - Add env-file support to readiness preflight
+
+**Decision:** Allow [check-env-contract.ps1](../../../scripts/check-env-contract.ps1) to validate a specified `.env`-style file in addition to process environment variables.
+
+**Why now:** Morning setup may need to check local, preview, or copied environment files before provider wiring. The preflight should support that without printing secrets or requiring values to be exported into the shell.
+
+**Guardrail:** The script checks presence only. It does not validate secret correctness, call providers, or load values into the app runtime.
