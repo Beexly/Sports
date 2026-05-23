@@ -49,6 +49,15 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/ADMIN_COOKIE/);
   });
 
+  it("validates authenticated bot outbox preview shapes when an admin cookie is set", () => {
+    expect(src).toMatch(/ADMIN_API_SHAPE_PROBES/);
+    expect(src).toMatch(/surface=twitter/);
+    expect(src).toMatch(/surface=discord/);
+    expect(src).toMatch(/validateBotOutboxPreview/);
+    expect(src).toMatch(/draftOnly/);
+    expect(src).toMatch(/externalDelivery/);
+  });
+
   it("exits non-zero when /api/health is unhealthy", () => {
     expect(src).toMatch(/process\.exit\(1\)/);
   });

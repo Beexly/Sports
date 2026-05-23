@@ -383,3 +383,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: extend the production probe to validate `/api/board/state` and `/api/calibration` JSON response shapes and surface shape errors in the cockpit dashboard.
 - Rationale: the Phase 2 public board and calibration surfaces are critical routes; a 200 response is not enough if the typed payload contract breaks.
 - Guardrail: validation checks for stable top-level fields only and does not expose private pick data or require production credentials.
+
+## 2026-05-22 - Synthetic Probe Covers Bot Outbox Health
+
+- Decision: when an admin cookie is supplied, production probes validate the draft-only Bot Outbox preview contract for Twitter/X and Discord surfaces.
+- Rationale: Phase 3 bot work must stay visible to operators without enabling external delivery; monitoring should catch auth, route, and draft-policy regressions.
+- Guardrail: the probe only reads the admin preview endpoint and asserts draft-only policy fields; it does not publish, persist, or call external bot providers.

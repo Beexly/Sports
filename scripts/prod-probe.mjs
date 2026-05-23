@@ -49,8 +49,8 @@ async function probe(path, { admin = false } = {}) {
   }
 }
 
-async function probeJsonShape(path, label, validate) {
-  const result = await probe(path);
+async function probeJsonShape(path, label, validate, options = {}) {
+  const result = await probe(path, options);
   let shapeError = "";
   if (result.ok) {
     try {
@@ -80,6 +80,19 @@ const PUBLIC_ROUTE_PROBES = [
 const API_SHAPE_PROBES = [
   { path: "/api/board/state", label: "board state", validate: validateBoardState },
   { path: "/api/calibration", label: "calibration", validate: validateCalibration },
+];
+
+const ADMIN_API_SHAPE_PROBES = [
+  {
+    path: "/api/cockpit/bot-outbox/preview?surface=twitter",
+    label: "Twitter/X outbox",
+    validate: validateBotOutboxPreview,
+  },
+  {
+    path: "/api/cockpit/bot-outbox/preview?surface=discord",
+    label: "Discord outbox",
+    validate: validateBotOutboxPreview,
+  },
 ];
 
 const BANNED_PUBLIC_PATTERNS = [
@@ -121,15 +134,22 @@ for (const route of API_SHAPE_PROBES) {
 }
 if (ADMIN_COOKIE) {
   results.push({ path: "/api/cockpit/jarvis", ...(await probe("/api/cockpit/jarvis", { admin: true })) });
+  for (const route of ADMIN_API_SHAPE_PROBES) {
+    const result = await probeJsonShape(route.path, route.label, route.validate, { admin: true });
+    results.push(result);
+  }
 }
 
 const failHealth = !results[0]?.ok;
 const failPublic = results.some((r) => PUBLIC_ROUTE_PROBES.some((route) => route.path === r.path) && !r.ok);
 const failApiShape = results.some((r) => API_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok);
+const failAdminShape = results.some((r) =>
+  ADMIN_API_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok
+);
 const payload = {
   appUrl: APP_URL,
   generatedAtIso,
-  ok: !failHealth && !failPublic && !failApiShape,
+  ok: !failHealth && !failPublic && !failApiShape && !failAdminShape,
   failed: results.filter((r) => !r.ok).length,
   probes: results.map((r) => ({
     path: r.path,
@@ -180,6 +200,12 @@ if (failApiShape) {
   }
   process.exit(1);
 }
+if (failAdminShape) {
+  if (!PROD_PROBE_JSON) {
+    console.error("\nOne or more authenticated cockpit probes failed. Deploy verification failed.");
+  }
+  process.exit(1);
+}
 if (!PROD_PROBE_JSON) {
   console.log("\nProduction probes passed.");
 }
@@ -205,5 +231,17 @@ function validateCalibration(json) {
   if (typeof json.data.updatedAt !== "string") return "Missing data.updatedAt string.";
   if (typeof json.data.isCollecting !== "boolean") return "Missing data.isCollecting boolean.";
   if (!json.meta || typeof json.meta.gated !== "boolean") return "Missing meta.gated boolean.";
+  return "";
+}
+
+function validateBotOutboxPreview(json) {
+  if (json?.success !== true) return "Missing success=true.";
+  if (!json.policy || json.policy.draftOnly !== true) return "Missing policy.draftOnly=true.";
+  if (json.policy.externalDelivery !== false) return "Missing policy.externalDelivery=false.";
+  if (json.policy.persistence !== false) return "Missing policy.persistence=false.";
+  if (!json.counts || typeof json.counts.outboxItems !== "number") {
+    return "Missing counts.outboxItems number.";
+  }
+  if (!Array.isArray(json.items)) return "Missing items array.";
   return "";
 }

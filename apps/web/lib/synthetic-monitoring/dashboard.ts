@@ -266,6 +266,8 @@ const ARTIFACT_TO_CHECK_ID: Readonly<Record<string, string>> = {
   "/ledger": "CHECK-A3",
   "/api/board/state": "CHECK-A4",
   "/api/calibration": "CHECK-A5",
+  "/api/cockpit/bot-outbox/preview?surface=twitter": "CHECK-B1",
+  "/api/cockpit/bot-outbox/preview?surface=discord": "CHECK-B2",
 };
 
 const ARTIFACT_TO_VOICE_CHECK_ID: Readonly<Record<string, string>> = {

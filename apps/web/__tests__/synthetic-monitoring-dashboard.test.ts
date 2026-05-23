@@ -88,6 +88,15 @@ describe("synthetic monitoring dashboard", () => {
           shapeError: "Missing data.scoringNow array.",
           admin: false,
         },
+        {
+          path: "/api/cockpit/bot-outbox/preview?surface=twitter",
+          label: "Twitter/X outbox",
+          ok: true,
+          status: 200,
+          ms: 68,
+          bannedPattern: "",
+          admin: true,
+        },
       ],
     };
 
@@ -102,6 +111,7 @@ describe("synthetic monitoring dashboard", () => {
     expect(checks.find((check) => check.id === "CHECK-A2")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-A4")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-A4")?.detail).toContain("invalid response shape");
+    expect(checks.find((check) => check.id === "CHECK-B1")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.detail).toContain("banned pattern");
   });
