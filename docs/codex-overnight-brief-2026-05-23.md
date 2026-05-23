@@ -84,7 +84,7 @@
 - `d6e947c` - DEC-NEXT-050 add implementation readiness gap register
 - `bd70924` - DEC-NEXT-051 add Vault route access helper
 - `517a800` - DEC-NEXT-052 add Vault referral decisioning
-- `TBD` - DEC-NEXT-053 add lifecycle email delivery decisioning
+- `992f358` - DEC-NEXT-053 add lifecycle email delivery decisioning
 
 ## What I Flagged For Morning Triage
 
