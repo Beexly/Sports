@@ -130,7 +130,7 @@
 - `9aaf6a2` - DEC-NEXT-073 refresh master brief latest Pass 12-13 deltas
 - `71aa2e3` - DEC-NEXT-074 add env-file preflight support
 - `b228fd7` - DEC-NEXT-075 add Vault auth provider contract
-- `TBD` - DEC-NEXT-076 enforce CSV header contract
+- `377f10b` - DEC-NEXT-076 enforce CSV header contract
 
 ## What I Flagged For Morning Triage
 
