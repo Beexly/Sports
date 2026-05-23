@@ -155,6 +155,7 @@
 - `npm run build:web`: pass.
 - Local runtime smoke on port 3100: pass for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
 - Local production-style runtime smoke: pass for the latest `scripts/smoke-prod.ps1` against `next start` on port 3106, including public route checks, JSON response-shape checks, and fail-closed admin/member/cron route checks.
+- `scripts/check-env-contract.ps1 -RequiredFor vault-launch -EnvFile .env.example`: pass.
 - `docs/monetization-v3/tools/validate-monetization-v3.ps1`: pass through `npm run audit:launch`.
 - Exact banned-phrase scan: clean.
 - Strict brand scan: pass with expected noisy warnings in internal/audit docs.
