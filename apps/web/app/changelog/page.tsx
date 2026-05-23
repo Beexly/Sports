@@ -43,6 +43,13 @@ const TYPE_COLOR: Record<Entry["type"], string> = {
 
 const ENTRIES: ReadonlyArray<Entry> = [
   {
+    date: "2026-05-23",
+    type: "ship",
+    title: "Corporate parent disclosed: Galaxy Sports Network LLC",
+    body:
+      "Galaxy Sports Network LLC (Texas, filed May 22) is now disclosed as the corporate parent on the footer copyright line, Terms of Service, Privacy Policy, and About page. Galaxy Sports Edge stays as the flagship consumer product everywhere users see the brand.",
+  },
+  {
     date: "2026-05-21",
     type: "ship",
     title: "Anatomy of a Signal, vs. Tout Services, and brand voice refresh",
