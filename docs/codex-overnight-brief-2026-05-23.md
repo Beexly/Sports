@@ -24,6 +24,7 @@
 - Added explicit environment readiness contract, placeholder `.env.example`, typed helpers, tests, and a local preflight script.
 - Added read-only `/api/health` and included it in production smoke.
 - Added a repeatable launch-readiness audit script that bundles docs validation, brand scan, DEC-NEXT uniqueness, web tests, typecheck, build, and dependency audit.
+- Added first-24-hour Vault onboarding health logic for the payment-to-access chain; storage and admin repair queues remain unwired.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs

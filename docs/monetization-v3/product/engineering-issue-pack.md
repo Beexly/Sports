@@ -317,7 +317,7 @@ Acceptance criteria:
 
 Gap:
 
-- Vault onboarding has route and provider scaffolds, but no first-24-hour health model that verifies payment, member creation, Discord role assignment, welcome email, and dashboard access stay aligned.
+- Vault onboarding has route and provider scaffolds. Pure first-24-hour health logic exists from DEC-NEXT-039, but there is still no durable storage, provider ingestion, admin repair queue, or incident alerting.
 
 Acceptance criteria:
 

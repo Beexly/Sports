@@ -31,6 +31,20 @@ function Invoke-ReadinessStep {
 
 Set-Location $repoRoot
 
+function Clear-WebBuildArtifact {
+  $nextPath = Join-Path $repoRoot "apps\web\.next"
+  if (-not (Test-Path -LiteralPath $nextPath)) {
+    return
+  }
+
+  $resolvedNextPath = (Resolve-Path -LiteralPath $nextPath).Path
+  if (-not $resolvedNextPath.StartsWith($repoRoot.Path, [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw "Refusing to remove build artifact outside repo: $resolvedNextPath"
+  }
+
+  Remove-Item -LiteralPath $resolvedNextPath -Recurse -Force
+}
+
 Invoke-ReadinessStep "monetization docs validator" {
   powershell -ExecutionPolicy Bypass -File .\docs\monetization-v3\tools\validate-monetization-v3.ps1
 }
@@ -82,6 +96,7 @@ Invoke-ReadinessStep "web typecheck" {
 }
 
 Invoke-ReadinessStep "web build" {
+  Clear-WebBuildArtifact
   npm.cmd run build:web
 }
 

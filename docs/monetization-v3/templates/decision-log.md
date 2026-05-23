@@ -410,3 +410,16 @@ Metric threshold: `npm run audit:launch` runs docs validation, exact brand scan,
 Owner: Codex maintains; Garrett runs before launch windows
 Next review date: Day -7 Vault pre-launch checklist
 Notes: Script does not deploy, mutate production data, create Stripe sessions, assign Discord roles, trigger cron routes, or infer production hostnames.
+
+### DEC-NEXT-039 - Vault Onboarding Health Logic
+
+Date: 2026-05-23
+Decision: Add pure first-24-hour onboarding health logic for the Vault post-payment access chain.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: The longevity audit and engineering issue pack both flag silent post-payment access failure as a P0 launch risk.
+Metric threshold: Tests cover the 15-minute repair window, day-one dashboard watch signal, and rolling repair failure-rate calculation.
+Owner: Codex maintains scaffold; Garrett verifies operational thresholds before launch
+Next review date: Before first paid Vault transaction
+Notes: Logic only. No provider calls, storage, admin queue, Discord mutation, email send, or production alerting is wired.
