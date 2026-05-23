@@ -274,3 +274,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: centralize Anthropic `/v1/messages` access in `apps/web/lib/claude-api/messages.ts` and move Studio plus blog generation onto that client.
 - Rationale: the direct-call guardrail should approve one application path, so every Phase 3 Claude surface inherits consistent request shape, error typing, token accounting, and review visibility.
 - Deferred: moving Model Journal, Model Court, calibration, and pre-mortem generation onto this client as each surface receives its runtime generator.
+
+## 2026-05-22 - Budgeted Model Journal Draft Generation
+
+- Decision: add an optional Model Journal Claude draft path that uses weekly evidence, the locked Journal prompt, the shared Claude messages client, and `MODEL_JOURNAL_DRAFT` budget accounting.
+- Rationale: the cockpit can now create either a deterministic outline or a Claude-authored first draft without changing the draft-only publication gate.
+- Deferred: publish scheduling, RSS/email distribution triggers, and Game Memory cross-references remain separate gated work.

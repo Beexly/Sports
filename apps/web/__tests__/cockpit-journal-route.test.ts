@@ -71,12 +71,14 @@ describe("Model Journal cockpit route", () => {
     expect(newPage).toContain("Create Draft");
     expect(newPage).toContain("JournalNewForm");
     expect(newForm).toContain('fetch("/api/cockpit/journal"');
+    expect(newForm).toContain("draftWithClaude");
     expect(newForm).toContain("Create draft");
     expect(createRoute).toMatch(/from\s+["']@\/lib\/auth["']/);
     expect(createRoute).toMatch(/role\s*!==\s*"ADMIN"/);
     expect(createRoute).toContain("MODEL_VERSION");
     expect(createRoute).toContain("loadModelJournalWeekData");
     expect(createRoute).toContain("composeJournalDraftMarkdown");
+    expect(createRoute).toContain("generateModelJournalDraftMarkdown");
     expect(createRoute).toContain("referencedPickIds = weekData.picks.map");
     expect(createRoute).toContain("referencedAutopsyIds = weekData.lossAutopsies.map");
     expect(createRoute).toContain("modelJournalEntry.create");

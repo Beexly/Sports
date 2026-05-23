@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { generateModelJournalDraftMarkdown } from "@/lib/journal/claude";
 import { composeJournalDraftMarkdown } from "@/lib/journal/compose";
 import { loadModelJournalWeekData } from "@/lib/journal/week-data";
 import { generateSlug } from "@/lib/utils";
@@ -13,6 +14,7 @@ interface CreateJournalBody {
   readonly isoWeek?: unknown;
   readonly isoYear?: unknown;
   readonly bodyMarkdown?: unknown;
+  readonly draftWithClaude?: unknown;
 }
 
 async function requireAdmin(): Promise<
@@ -50,6 +52,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   const isoWeek = parseInteger(body.isoWeek);
   const isoYear = parseInteger(body.isoYear);
   const submittedMarkdown = typeof body.bodyMarkdown === "string" ? body.bodyMarkdown.trim() : "";
+  const draftWithClaude = body.draftWithClaude === true;
 
   if (title.length === 0 || isoWeek === null || isoYear === null) {
     return NextResponse.json(
@@ -90,7 +93,39 @@ export async function POST(req: Request): Promise<NextResponse> {
   }
 
   const weekData = await loadModelJournalWeekData(isoYear, isoWeek);
-  const bodyMarkdown = submittedMarkdown || composeJournalDraftMarkdown(title, weekData);
+  let bodyMarkdown = submittedMarkdown;
+  if (!bodyMarkdown && draftWithClaude) {
+    const apiKey = process.env["ANTHROPIC_API_KEY"];
+    if (!apiKey) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "anthropic-key-missing",
+          message: "ANTHROPIC_API_KEY is not configured. Model Journal draft generation is paused.",
+        },
+        { status: 503 }
+      );
+    }
+    try {
+      bodyMarkdown = await generateModelJournalDraftMarkdown(weekData, {
+        apiKey,
+        recordUsage: true,
+        userId: guard.email,
+      });
+    } catch (error) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "journal-claude-draft-failed",
+          message: error instanceof Error ? error.message : "Model Journal draft failed.",
+        },
+        { status: 503 }
+      );
+    }
+  }
+  if (!bodyMarkdown) {
+    bodyMarkdown = composeJournalDraftMarkdown(title, weekData);
+  }
   const referencedPickIds = weekData.picks.map((pick) => pick.id);
   const referencedAutopsyIds = weekData.lossAutopsies.map((autopsy) => autopsy.id);
 

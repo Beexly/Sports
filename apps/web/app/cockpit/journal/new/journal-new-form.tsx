@@ -60,6 +60,7 @@ export function JournalNewForm(): JSX.Element {
   const [isoWeek, setIsoWeek] = useState(String(defaults.isoWeek));
   const [isoYear, setIsoYear] = useState(String(defaults.isoYear));
   const [bodyMarkdown, setBodyMarkdown] = useState("");
+  const [draftWithClaude, setDraftWithClaude] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingEvidence, setIsLoadingEvidence] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -97,7 +98,7 @@ export function JournalNewForm(): JSX.Element {
       const response = await fetch("/api/cockpit/journal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, isoWeek, isoYear, bodyMarkdown }),
+        body: JSON.stringify({ title, isoWeek, isoYear, bodyMarkdown, draftWithClaude }),
       });
       const payload = (await response.json().catch(() => ({}))) as CreateResponse;
 
@@ -159,6 +160,17 @@ export function JournalNewForm(): JSX.Element {
           className="min-h-[260px] rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 font-mono text-sm text-gray-100 outline-none focus:border-yellow-400"
           placeholder="Leave blank to create the standard weekly Journal draft outline."
         />
+      </label>
+
+      <label className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 text-sm text-gray-300">
+        <input
+          type="checkbox"
+          checked={draftWithClaude}
+          onChange={(event) => setDraftWithClaude(event.target.checked)}
+          disabled={bodyMarkdown.trim().length > 0}
+          className="h-4 w-4 rounded border-gray-700 bg-black"
+        />
+        Generate the first draft from weekly evidence
       </label>
 
       <section className="rounded-lg border border-gray-800 bg-black/30 p-3">
