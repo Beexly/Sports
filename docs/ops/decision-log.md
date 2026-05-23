@@ -148,3 +148,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add a deterministic week-data loader for Model Journal drafting.
 - Rationale: the Friday data pipe needs one server-side evidence bundle that includes settled canonical public picks, signal snapshot references, and public loss autopsies for an ISO week. The loader excludes bootstrap and seed data before any Claude drafting step can consume it.
 - Deferred: Claude draft generation route, cockpit evidence preview, automatic draft creation, publish/retract feed invalidation, email digest delivery, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Evidence Preview Added
+
+- Decision: add `GET /api/cockpit/journal/week-data` and wire `/cockpit/journal/new` to preview weekly Journal evidence counts.
+- Rationale: operators should see whether an ISO week has enough settled canonical evidence before creating a Journal draft. The endpoint is ADMIN-only and read-only, returning counts from the deterministic week-data loader without creating drafts or sending public output.
+- Deferred: full evidence table in cockpit, Claude draft generation route, automatic draft creation, publish/retract feed invalidation, email digest delivery, and teaser queue remain follow-up slices.

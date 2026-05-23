@@ -9,6 +9,7 @@ const newForm = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journa
 const entryPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/[entryId]/page.tsx"), "utf8");
 const editor = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/[entryId]/journal-entry-editor.tsx"), "utf8");
 const createRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/route.ts"), "utf8");
+const weekDataRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/week-data/route.ts"), "utf8");
 const saveRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/route.ts"), "utf8");
 const scanRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/scan/route.ts"), "utf8");
 const submitRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/submit/route.ts"), "utf8");
@@ -77,6 +78,19 @@ describe("Model Journal cockpit route", () => {
     expect(createRoute).toContain("referencedPickIds: []");
     expect(createRoute).toContain("externalDistribution: false");
     expect(createRoute).not.toMatch(/publishedAt\s*:\s*new Date|status:\s*"PUBLISHED"|twitterClient|sendgrid|mailchimp/i);
+  });
+
+  it("previews weekly Journal evidence from the draft creation form", () => {
+    expect(newForm).toContain("loadEvidencePreview");
+    expect(newForm).toContain("/api/cockpit/journal/week-data");
+    expect(newForm).toContain("Load evidence");
+    expect(newForm).toContain("settledPicks");
+    expect(newForm).toContain("publicLossAutopsies");
+    expect(weekDataRoute).toMatch(/from\s+["']@\/lib\/auth["']/);
+    expect(weekDataRoute).toMatch(/role\s*!==\s*"ADMIN"/);
+    expect(weekDataRoute).toContain("loadModelJournalWeekData");
+    expect(weekDataRoute).toContain("externalDistribution: false");
+    expect(weekDataRoute).not.toMatch(/modelJournalEntry\.create|modelJournalEntry\.update|twitterClient|sendgrid|mailchimp/i);
   });
 
   it("wires Journal compliance scan before publish transitions exist", () => {

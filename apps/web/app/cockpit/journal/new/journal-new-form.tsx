@@ -12,6 +12,22 @@ interface CreateResponse {
   };
 }
 
+interface WeekDataResponse {
+  readonly success?: boolean;
+  readonly error?: string;
+  readonly data?: {
+    readonly rangeStart: string;
+    readonly rangeEnd: string;
+    readonly counts: {
+      readonly settledPicks: number;
+      readonly wins: number;
+      readonly losses: number;
+      readonly pushes: number;
+      readonly publicLossAutopsies: number;
+    };
+  };
+}
+
 function currentIsoWeekParts(): { readonly isoWeek: number; readonly isoYear: number } {
   const now = new Date();
   const date = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
@@ -31,7 +47,33 @@ export function JournalNewForm(): JSX.Element {
   const [isoYear, setIsoYear] = useState(String(defaults.isoYear));
   const [bodyMarkdown, setBodyMarkdown] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingEvidence, setIsLoadingEvidence] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [evidence, setEvidence] = useState<WeekDataResponse["data"] | null>(null);
+  const [evidenceError, setEvidenceError] = useState<string | null>(null);
+
+  async function loadEvidencePreview(): Promise<void> {
+    setIsLoadingEvidence(true);
+    setEvidence(null);
+    setEvidenceError(null);
+
+    try {
+      const params = new URLSearchParams({ isoWeek, isoYear });
+      const response = await fetch(`/api/cockpit/journal/week-data?${params.toString()}`);
+      const payload = (await response.json().catch(() => ({}))) as WeekDataResponse;
+
+      if (!response.ok || !payload.success || !payload.data) {
+        setEvidenceError(payload.error ?? "journal-week-data-load-failed");
+        return;
+      }
+
+      setEvidence(payload.data);
+    } catch (err) {
+      setEvidenceError(err instanceof Error ? err.message : "journal-week-data-load-failed");
+    } finally {
+      setIsLoadingEvidence(false);
+    }
+  }
 
   async function createDraft(): Promise<void> {
     setIsSubmitting(true);
@@ -104,6 +146,58 @@ export function JournalNewForm(): JSX.Element {
           placeholder="Leave blank to create the standard weekly Journal draft outline."
         />
       </label>
+
+      <section className="rounded-lg border border-gray-800 bg-black/30 p-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Week evidence
+            </p>
+            <p className="mt-1 text-xs text-gray-400">
+              Preview settled canonical picks and public loss autopsies before creating the draft.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={loadEvidencePreview}
+            disabled={isLoadingEvidence}
+            className="min-h-11 rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 hover:bg-gray-900 disabled:text-gray-500"
+          >
+            {isLoadingEvidence ? "Loading evidence..." : "Load evidence"}
+          </button>
+        </div>
+
+        {evidence ? (
+          <dl className="mt-3 grid grid-cols-2 gap-3 text-xs text-gray-400 sm:grid-cols-5">
+            <div>
+              <dt className="text-[10px] uppercase tracking-wide text-gray-600">Settled</dt>
+              <dd className="mt-1 text-gray-100">{evidence.counts.settledPicks}</dd>
+            </div>
+            <div>
+              <dt className="text-[10px] uppercase tracking-wide text-gray-600">Wins</dt>
+              <dd className="mt-1 text-gray-100">{evidence.counts.wins}</dd>
+            </div>
+            <div>
+              <dt className="text-[10px] uppercase tracking-wide text-gray-600">Losses</dt>
+              <dd className="mt-1 text-gray-100">{evidence.counts.losses}</dd>
+            </div>
+            <div>
+              <dt className="text-[10px] uppercase tracking-wide text-gray-600">Pushes</dt>
+              <dd className="mt-1 text-gray-100">{evidence.counts.pushes}</dd>
+            </div>
+            <div>
+              <dt className="text-[10px] uppercase tracking-wide text-gray-600">Autopsies</dt>
+              <dd className="mt-1 text-gray-100">{evidence.counts.publicLossAutopsies}</dd>
+            </div>
+          </dl>
+        ) : null}
+
+        {evidenceError ? (
+          <p className="mt-3 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+            {evidenceError}
+          </p>
+        ) : null}
+      </section>
 
       {error ? (
         <p className="rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
