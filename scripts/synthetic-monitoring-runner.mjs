@@ -95,7 +95,8 @@ async function fileIssueQueueEntry(artifact) {
       ? failures
           .map((probe) => {
             const banned = probe.bannedPattern ? `, bannedPattern=${probe.bannedPattern}` : "";
-            return `  - ${probe.path}: HTTP ${probe.status}, ok=${probe.ok}${banned}`;
+            const shape = probe.shapeError ? `, shapeError=${probe.shapeError}` : "";
+            return `  - ${probe.path}: HTTP ${probe.status}, ok=${probe.ok}${banned}${shape}`;
           })
           .join("\n")
       : "  - Runner failed before probe records were available.";

@@ -78,6 +78,16 @@ describe("synthetic monitoring dashboard", () => {
           bannedPattern: "/AI-powered/i",
           admin: false,
         },
+        {
+          path: "/api/board/state",
+          label: "board state",
+          ok: false,
+          status: 200,
+          ms: 51,
+          bannedPattern: "",
+          shapeError: "Missing data.scoringNow array.",
+          admin: false,
+        },
       ],
     };
 
@@ -90,6 +100,8 @@ describe("synthetic monitoring dashboard", () => {
     expect(dashboard.runnerStatus).toBe("degraded");
     expect(checks.find((check) => check.id === "CHECK-A1")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-A2")?.status).toBe("failing");
+    expect(checks.find((check) => check.id === "CHECK-A4")?.status).toBe("failing");
+    expect(checks.find((check) => check.id === "CHECK-A4")?.detail).toContain("invalid response shape");
     expect(checks.find((check) => check.id === "CHECK-V3")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.detail).toContain("banned pattern");
   });

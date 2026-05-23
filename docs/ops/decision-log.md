@@ -377,3 +377,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: write each scheduled synthetic-monitoring run to `.synthetic-monitoring/runs/` while continuing to refresh `.synthetic-monitoring/latest.json`.
 - Rationale: the cockpit dashboard needs real 24-hour check history for sparklines and regression review, not generated trend placeholders.
 - Guardrail: artifacts stay ignored by git; only the runner and typed dashboard loader read or write this operational state.
+
+## 2026-05-22 - Synthetic Probe Validates Board API Shapes
+
+- Decision: extend the production probe to validate `/api/board/state` and `/api/calibration` JSON response shapes and surface shape errors in the cockpit dashboard.
+- Rationale: the Phase 2 public board and calibration surfaces are critical routes; a 200 response is not enough if the typed payload contract breaks.
+- Guardrail: validation checks for stable top-level fields only and does not expose private pick data or require production credentials.

@@ -27,6 +27,15 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/path:\s*"\/pricing"/);
   });
 
+  it("validates board and calibration API response shapes", () => {
+    expect(src).toMatch(/API_SHAPE_PROBES/);
+    expect(src).toMatch(/path:\s*"\/api\/board\/state"/);
+    expect(src).toMatch(/path:\s*"\/api\/calibration"/);
+    expect(src).toMatch(/validateBoardState/);
+    expect(src).toMatch(/validateCalibration/);
+    expect(src).toMatch(/shapeError/);
+  });
+
   it("scans public routes for banned positioning phrases", () => {
     expect(src).toMatch(/BANNED_PUBLIC_PATTERNS/);
     expect(src).toMatch(/AI-powered/);
@@ -62,6 +71,7 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/JSON\.stringify\(payload\)/);
     expect(src).toMatch(/generatedAtIso/);
     expect(src).toMatch(/bannedPattern/);
+    expect(src).toMatch(/shapeError/);
     expect(src).toMatch(/admin:\s*r\.path\.startsWith/);
   });
 });

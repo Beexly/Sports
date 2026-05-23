@@ -60,6 +60,7 @@ export interface SyntheticProbeRecord {
   readonly status: number;
   readonly ms: number;
   readonly bannedPattern: string;
+  readonly shapeError?: string;
   readonly admin: boolean;
 }
 
@@ -263,6 +264,8 @@ const ARTIFACT_TO_CHECK_ID: Readonly<Record<string, string>> = {
   "/": "CHECK-A1",
   "/board": "CHECK-A2",
   "/ledger": "CHECK-A3",
+  "/api/board/state": "CHECK-A4",
+  "/api/calibration": "CHECK-A5",
 };
 
 const ARTIFACT_TO_VOICE_CHECK_ID: Readonly<Record<string, string>> = {
@@ -368,6 +371,9 @@ function detailFromProbe(
   if (!probe) return check.detail;
   if (probe.bannedPattern) {
     return `Latest probe found banned pattern ${probe.bannedPattern}.`;
+  }
+  if (probe.shapeError) {
+    return `Latest probe found invalid response shape: ${probe.shapeError}`;
   }
   return `Latest probe: HTTP ${probe.status} in ${probe.ms}ms.`;
 }
