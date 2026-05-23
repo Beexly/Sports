@@ -401,3 +401,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: when `SYNTHETIC_MONITORING_FILE_ISSUES=1` and a runner pass is clean, mark open synthetic-monitoring issue entries as resolved.
 - Rationale: the issue queue should not keep stale production-monitoring failures open after the scheduled probe proves recovery.
 - Guardrail: auto-close uses the same explicit opt-in flag as issue filing; default local runs still never mutate `docs/ops/issue-queue.md`.
+
+## 2026-05-22 - Eval Contracts Get a Local Runner
+
+- Decision: add `npm run evals:contracts` to validate the append-only markdown eval library before the full model-output runner exists.
+- Rationale: Phase 3 and Phase 4 AI-output surfaces need enforceable contracts now; malformed eval files should fail locally and in CI before they become stale docs.
+- Guardrail: this runner only validates metadata and section structure. It does not call Claude or score generated outputs.
