@@ -142,3 +142,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `POST /api/cockpit/journal/[id]/retract` and a cockpit retraction control for published Journal entries.
 - Rationale: published Journal entries are preserved records, but operators need a controlled removal path when a public essay must leave the archive. Retraction requires an admin-authored reason, moves the entry to `RETRACTED`, and does not send external notices.
 - Deferred: public 410 response for retracted slugs, retraction notice feed, manual publish route, RSS invalidation, email digest delivery, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Week Data Loader Added
+
+- Decision: add a deterministic week-data loader for Model Journal drafting.
+- Rationale: the Friday data pipe needs one server-side evidence bundle that includes settled canonical public picks, signal snapshot references, and public loss autopsies for an ISO week. The loader excludes bootstrap and seed data before any Claude drafting step can consume it.
+- Deferred: Claude draft generation route, cockpit evidence preview, automatic draft creation, publish/retract feed invalidation, email digest delivery, and teaser queue remain follow-up slices.
