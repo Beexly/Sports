@@ -29,6 +29,7 @@ export { getReadinessGates, bootstrapGateResponse } from "./readiness.js";
 export type { ReadinessGates } from "./readiness.js";
 export { buildPickSignalSnapshot } from "./signal-snapshot.js";
 export type { PickSignalSnapshotData } from "./signal-snapshot.js";
+export { extractPickSources } from "./pick-sources.js";
 export {
   EVIDENCE_FACTOR_DEFINITIONS,
   buildEvidenceReadinessMatrix,
