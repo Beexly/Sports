@@ -275,6 +275,7 @@ const ARTIFACT_TO_CHECK_ID: Readonly<Record<string, string>> = {
   "/api/cockpit/bot-outbox/preview?surface=twitter": "CHECK-B1",
   "/api/cockpit/bot-outbox/preview?surface=discord": "CHECK-B2",
   "/journal/rss.xml": "CHECK-B3",
+  "local://build-size-budget": "CHECK-C1",
 };
 
 const ARTIFACT_TO_VOICE_CHECK_ID: Readonly<Record<string, string>> = {

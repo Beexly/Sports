@@ -23,8 +23,15 @@ describe("scripts/synthetic-monitoring-runner.mjs", () => {
   });
 
   it("preserves the probe exit code", () => {
-    expect(src).toContain("process.exit(result.status ?? 1)");
+    expect(src).toContain("result.status && result.status !== 0 ? result.status : 1");
     expect(src).toContain("exitCode: result.status ?? 1");
+  });
+
+  it("adds a local build-size probe when Next build artifacts exist", () => {
+    expect(src).toContain("readBuildSizeProbe");
+    expect(src).toContain("SYNTHETIC_BUILD_SIZE_BUDGET_BYTES");
+    expect(src).toContain("local://build-size-budget");
+    expect(src).toContain("directorySize");
   });
 
   it("can file deduplicated issue-queue entries behind an explicit flag", () => {

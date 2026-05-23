@@ -437,3 +437,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add trust-gate probes for public picks, performance stats, and the public blog publishing gate.
 - Rationale: bootstrap-gated 503 responses are valid when the gate is closed, so `prod-probe` now validates the gate response shape instead of treating all 503s as failures.
 - Guardrail: public picks and performance checks use public endpoints. The blog publishing gate reads cockpit readiness only when `ADMIN_COOKIE` is present.
+
+## 2026-05-22 - Build Size Synthetic Probe
+
+- Decision: add a local `local://build-size-budget` probe to `scripts/synthetic-monitoring-runner.mjs` and hydrate `CHECK-C1` from it.
+- Rationale: bundle size is best checked where `.next/static` exists, not from the deployed public URL.
+- Guardrail: when build artifacts are missing, the runner omits this probe and `CHECK-C1` remains pending. The default budget is 2 MB and can be overridden with `SYNTHETIC_BUILD_SIZE_BUDGET_BYTES`.

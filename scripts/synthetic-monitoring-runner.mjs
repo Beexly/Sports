@@ -11,7 +11,7 @@
  *   SYNTHETIC_MONITORING_OUTPUT_DIR=.synthetic-monitoring
  */
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -48,6 +48,19 @@ try {
   };
 }
 
+const buildSizeProbe = await readBuildSizeProbe();
+if (buildSizeProbe) {
+  payload = {
+    ...payload,
+    probes: [...(payload.probes ?? []), buildSizeProbe],
+  };
+  payload = {
+    ...payload,
+    ok: Boolean(payload.ok) && buildSizeProbe.ok,
+    failed: payload.probes.filter((probe) => !probe.ok).length,
+  };
+}
+
 const artifact = {
   ...payload,
   runner: {
@@ -74,7 +87,41 @@ if (artifact.ok) {
   console.error(`synthetic-monitoring FAIL - wrote ${latestPath} and ${runPath}`);
 }
 
-process.exit(result.status ?? 1);
+process.exit(artifact.ok ? 0 : result.status && result.status !== 0 ? result.status : 1);
+
+async function readBuildSizeProbe() {
+  const staticDir = join(ROOT, "apps", "web", ".next", "static");
+  try {
+    const bytes = await directorySize(staticDir);
+    const budgetBytes = Number(process.env.SYNTHETIC_BUILD_SIZE_BUDGET_BYTES ?? "2000000");
+    const ok = bytes <= budgetBytes;
+    return {
+      path: "local://build-size-budget",
+      label: "build size budget",
+      ok,
+      status: ok ? 200 : 413,
+      ms: 0,
+      bannedPattern: "",
+      shapeError: ok ? "" : `Next static assets total ${bytes} bytes; budget is ${budgetBytes} bytes.`,
+      admin: false,
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function directorySize(dir) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const sizes = await Promise.all(
+    entries.map(async (entry) => {
+      const entryPath = join(dir, entry.name);
+      if (entry.isDirectory()) return directorySize(entryPath);
+      if (!entry.isFile()) return 0;
+      return (await stat(entryPath)).size;
+    })
+  );
+  return sizes.reduce((sum, size) => sum + size, 0);
+}
 
 async function fileIssueQueueEntry(artifact) {
   const issueQueuePath = join(ROOT, "docs", "ops", "issue-queue.md");

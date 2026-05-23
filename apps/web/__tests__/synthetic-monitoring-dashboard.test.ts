@@ -160,6 +160,15 @@ describe("synthetic monitoring dashboard", () => {
           bannedPattern: "",
           admin: false,
         },
+        {
+          path: "local://build-size-budget",
+          label: "build size budget",
+          ok: true,
+          status: 200,
+          ms: 0,
+          bannedPattern: "",
+          admin: false,
+        },
       ],
     };
 
@@ -182,6 +191,7 @@ describe("synthetic monitoring dashboard", () => {
     expect(checks.find((check) => check.id === "CHECK-T3")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-B1")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-B3")?.status).toBe("passing");
+    expect(checks.find((check) => check.id === "CHECK-C1")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.detail).toContain("banned pattern");
   });
