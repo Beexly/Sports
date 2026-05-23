@@ -82,6 +82,7 @@ Runway determines which subset is active:
 - [product/proof-freshness-scaffold-notes.md](product/proof-freshness-scaffold-notes.md) - Proof-surface freshness metadata notes and DEC-NEXT-033 guardrails.
 - [product/production-smoke-test-notes.md](product/production-smoke-test-notes.md) - Read-only production smoke-test scripts and DEC-NEXT-024 guardrails.
 - [product/public-proof-surface-monetization-spec.md](product/public-proof-surface-monetization-spec.md) - Email capture, contextual Vault CTA, and UTM spec for public proof surfaces.
+- [product/short-form-attribution-scaffold-notes.md](product/short-form-attribution-scaffold-notes.md) - Parser-only short-form UTM attribution notes and DEC-NEXT-034 guardrails.
 - [product/vault-api-contracts.md](product/vault-api-contracts.md) - Vault API contracts for membership, seats, digests, and admin flows.
 - [product/vault-data-model.md](product/vault-data-model.md) - Vault data model for members, applications, digests, events, referrals, and audits.
 - [product/vault-integration-scaffold-notes.md](product/vault-integration-scaffold-notes.md) - Inert Vault integration scaffold notes and DEC-NEXT-025 guardrails.

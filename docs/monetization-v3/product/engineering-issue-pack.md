@@ -269,7 +269,7 @@ Gap:
 
 Acceptance criteria:
 
-- UTM parsing supports the allowed fields in `templates/short-form-utm-map.csv`.
+- UTM parsing supports the allowed fields in `templates/short-form-utm-map.csv`. Parser-only support exists from DEC-NEXT-034; event storage and reports remain unwired.
 - Short-form inbound sessions can be attributed to source artifact and draft ID.
 - Weekly report can output the fields in `product/public-proof-surface-monetization-spec.md`.
 - No third-party ad retargeting or social tracking pixels are added.

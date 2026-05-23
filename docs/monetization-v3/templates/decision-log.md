@@ -345,3 +345,16 @@ Metric threshold: Three usable templates exist and are indexed: weekly brand smo
 Owner: Garrett runs; Codex maintains templates
 Next review date: First Friday retrospective after Vault launch
 Notes: Creates visibility only; does not change launch gates or public commitments.
+
+### DEC-NEXT-034 - Short-Form UTM Parser
+
+Date: 2026-05-23
+Decision: Add strict parser coverage for allowed short-form UTM source, medium, campaign, and draft id values.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: `product/public-proof-surface-monetization-spec.md` and `templates/short-form-utm-map.csv` define allowed attribution fields, but the app only had a Vault source-link helper.
+Metric threshold: Parser rejects disallowed paid/ad values and accepts approved short-form campaign fields.
+Owner: Codex; Garrett review optional
+Next review date: Before storing attribution events or publishing short-form tests
+Notes: Parser only; no analytics SDK, tracking pixel, checkout route, or public posting automation.

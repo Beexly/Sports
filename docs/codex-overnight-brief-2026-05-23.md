@@ -19,6 +19,7 @@
 - Added longevity systems audit for slow-failure risks: onboarding health, provider heartbeats, proof-surface freshness, calibration drift, brand drift, founder capacity, R&D attention, renewal risk, and documentation rot.
 - Added manual longevity instruments: weekly brand-position smoke test, founder capacity ledger, and proof-surface freshness tracker.
 - Added proof-surface freshness metadata, public freshness JSON, and stale-window tests.
+- Added strict short-form UTM parser coverage without analytics SDKs or tracking pixels.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
