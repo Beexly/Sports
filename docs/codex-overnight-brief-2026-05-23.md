@@ -116,7 +116,7 @@
 - `4e0813b` - DEC-NEXT-066 add B2B data licensing R&D
 - `48dfbec` - DEC-NEXT-067 add artifact merch R&D
 - `7f86e8f` - DEC-NEXT-068 refresh decision collision audit
-- `TBD` - DEC-NEXT-069 update master brief Pass 12-13 additions
+- `c1f5f3c` - DEC-NEXT-069 update master brief Pass 12-13 additions
 
 ## What I Flagged For Morning Triage
 
