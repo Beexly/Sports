@@ -5,7 +5,7 @@
 - Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
 - Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
 - Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
-- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-071.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-072.
 - Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
 - Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
 - Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
@@ -57,6 +57,7 @@
 - Appended the root master brief with Pass 12-13 engineering, validation, and R&D additions.
 - Added a fail-closed admin launch-readiness API route and admin-required response helper.
 - Extended production smoke scripts with fail-closed checks for admin, member, and scaffold cron routes.
+- Added provider-wiring, static-proof-traffic, and R&D-distraction risks to the track risk register.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -121,6 +122,7 @@
 - `c1f5f3c` - DEC-NEXT-069 update master brief Pass 12-13 additions
 - `8d5582f` - DEC-NEXT-070 add fail-closed admin readiness route
 - `490f632` - DEC-NEXT-071 add smoke fail-closed route checks
+- `TBD` - DEC-NEXT-072 update risk register with launch hardening risks
 
 ## What I Flagged For Morning Triage
 
