@@ -102,7 +102,9 @@ Runway determines which subset is active:
 - [copy/galaxy-sample-model-journal-entry.md](copy/galaxy-sample-model-journal-entry.md) - Sample Model Journal entry.
 - [copy/galaxy-sample-pass-list-entries.md](copy/galaxy-sample-pass-list-entries.md) - Sample Pass List entries.
 - [copy/galaxy-sample-twitter-content-week.md](copy/galaxy-sample-twitter-content-week.md) - Sample Twitter content week.
+- [copy/galaxy-short-form-script-bank.md](copy/galaxy-short-form-script-bank.md) - Internal short-form script drafts sourced from Galaxy artifacts.
 - [copy/galaxy-synthetic-host-policy.md](copy/galaxy-synthetic-host-policy.md) - Internal R&D policy for SFW synthetic hosts and short-form video tests.
+- [copy/galaxy-synthetic-host-prompt-library.md](copy/galaxy-synthetic-host-prompt-library.md) - Private SFW synthetic-host prompt profiles for visual drafts.
 - [copy/galaxy-twitter-content-discipline.md](copy/galaxy-twitter-content-discipline.md) - Twitter content discipline and response rules.
 - [copy/galaxy-twitter-incident-response-protocol.md](copy/galaxy-twitter-incident-response-protocol.md) - Twitter incident response protocol.
 - [copy/galaxy-twitter-launch-thread.md](copy/galaxy-twitter-launch-thread.md) - Vault launch Twitter thread.
@@ -222,6 +224,7 @@ Runway determines which subset is active:
 - [templates/partnership-inbound-log.csv](templates/partnership-inbound-log.csv) - Partnership inbound log.
 - [templates/partnership-inquiries.csv](templates/partnership-inquiries.csv) - Partnership inquiry tracker.
 - [templates/short-form-content-drafts.csv](templates/short-form-content-drafts.csv) - Short-form content lab draft tracker.
+- [templates/short-form-experiment-scorecard.csv](templates/short-form-experiment-scorecard.csv) - Short-form content lab experiment scorecard.
 - [templates/track-risk-register.csv](templates/track-risk-register.csv) - Track risk register.
 - [templates/vault-feedback-themes.csv](templates/vault-feedback-themes.csv) - Vault feedback theme tracker.
 - [templates/vault-interview-tracker.csv](templates/vault-interview-tracker.csv) - Vault interview tracker.
