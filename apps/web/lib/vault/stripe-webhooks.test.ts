@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { getStripeWebhookDecision } from "./stripe-webhooks";
+import {
+  getStripeCheckoutSessionDecision,
+  getStripeWebhookDecision,
+  type StripeCheckoutSessionSnapshot,
+} from "./stripe-webhooks";
 
 describe("Stripe webhook decisioning", () => {
   it("skips already-processed events before action mapping", () => {
@@ -62,5 +66,56 @@ describe("Stripe webhook decisioning", () => {
       eventType: "payment_intent.created",
       action: null,
     });
+  });
+
+  it("accepts only paid Vault subscription checkout sessions", () => {
+    const session: StripeCheckoutSessionSnapshot = {
+      id: "cs_test",
+      mode: "subscription",
+      customerId: "cus_test",
+      subscriptionId: "sub_test",
+      customerEmail: "member@example.com",
+      priceId: "price_vault",
+      paymentStatus: "paid",
+    };
+
+    expect(getStripeCheckoutSessionDecision(session, "price_vault")).toEqual({
+      status: "accept",
+      reason: "vault_subscription_paid",
+      sessionId: "cs_test",
+    });
+  });
+
+  it("rejects checkout sessions that are not launch-safe Vault payments", () => {
+    const baseSession: StripeCheckoutSessionSnapshot = {
+      id: "cs_test",
+      mode: "subscription",
+      customerId: "cus_test",
+      subscriptionId: "sub_test",
+      customerEmail: "member@example.com",
+      priceId: "price_vault",
+      paymentStatus: "paid",
+    };
+
+    expect(
+      getStripeCheckoutSessionDecision(
+        { ...baseSession, mode: "payment" },
+        "price_vault",
+      ),
+    ).toMatchObject({ status: "reject", reason: "wrong_mode" });
+
+    expect(
+      getStripeCheckoutSessionDecision(
+        { ...baseSession, priceId: "price_elite" },
+        "price_vault",
+      ),
+    ).toMatchObject({ status: "reject", reason: "wrong_price" });
+
+    expect(
+      getStripeCheckoutSessionDecision(
+        { ...baseSession, paymentStatus: "unpaid" },
+        "price_vault",
+      ),
+    ).toMatchObject({ status: "reject", reason: "unpaid" });
   });
 });

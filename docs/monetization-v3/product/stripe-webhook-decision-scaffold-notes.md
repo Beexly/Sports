@@ -1,7 +1,7 @@
 # Stripe Webhook Decision Scaffold Notes
 
 **Status:** Engineering scaffold. No webhook verification or persistence yet.
-**Related decision:** DEC-NEXT-045
+**Related decision:** DEC-NEXT-045, DEC-NEXT-060
 
 ## DEC-NEXT-045 - Add Stripe webhook decision logic
 
@@ -31,6 +31,17 @@
 - Transactional founding number assignment.
 - Member mutation.
 - Referral attribution and clawbacks.
+
+## DEC-NEXT-060 - Add Stripe checkout session acceptance decisioning
+
+**Decision:** Add pure checkout-session acceptance checks before Vault member mutation can happen.
+
+**Why now:** Mapping `checkout.session.completed` to a member-create action is not sufficient. The handler also needs to reject non-subscription sessions, wrong products, missing customer/subscription/email fields, and unpaid sessions before touching entitlement state.
+
+## DEC-NEXT-060 Implemented
+
+- [stripe-webhooks.ts](../../../apps/web/lib/vault/stripe-webhooks.ts) now exposes `getStripeCheckoutSessionDecision(session, expectedVaultPriceId)`.
+- [stripe-webhooks.test.ts](../../../apps/web/lib/vault/stripe-webhooks.test.ts) covers accepting a paid Vault subscription and rejecting wrong mode, wrong price, and unpaid sessions.
 
 ## Guardrail
 
