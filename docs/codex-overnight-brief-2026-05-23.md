@@ -90,7 +90,7 @@
 - `992f358` - DEC-NEXT-053 add lifecycle email delivery decisioning
 - `32f4df8` - DEC-NEXT-054 add lifecycle email repair tasks
 - `ddd558f` - DEC-NEXT-055 add durable storage env contract
-- `TBD` - DEC-NEXT-056 add Vault persistence contract
+- `1e439ac` - DEC-NEXT-056 add Vault persistence contract
 
 ## What I Flagged For Morning Triage
 
