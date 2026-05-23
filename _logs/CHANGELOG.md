@@ -11,3 +11,4 @@ Append-only. One line per cycle.
 2026-05-23 · #7 · chore(scripts): migrate operator scripts to @anthropic-ai/sdk · vitest `apps/web/__tests__/operator-scripts-sdk.test.ts`
 2026-05-23 · #8 · feat(content): parameterize blog generator on content kind (DAILY_PICKS / WEEKLY_RECAP) · vitest `apps/web/__tests__/content-generator.test.ts`
 2026-05-23 · #9 · feat(brief): add Claude composeSlateOverview as first restored slice of the brief composer · vitest `apps/web/__tests__/slate-overview.test.ts`
+2026-05-23 · #11 · refactor(ai): extract makeAnthropicHolder() factory used by all 3 Claude call sites · vitest `apps/web/__tests__/ai-client.test.ts`

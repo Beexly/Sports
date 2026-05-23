@@ -15,6 +15,7 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import { makeAnthropicHolder } from "../ai/client.js";
 
 const REVIEWER_MODEL = "claude-haiku-4-5";
 const REVIEWER_VERSION = "draft-reviewer/v1";
@@ -104,22 +105,11 @@ interface RawReport {
   readonly findings: DraftReviewFinding[];
 }
 
-let clientSingleton: Anthropic | undefined;
-
-function getClient(): Anthropic {
-  if (clientSingleton) return clientSingleton;
-  const apiKey = process.env["ANTHROPIC_API_KEY"];
-  if (!apiKey) {
-    throw new Error("ANTHROPIC_API_KEY is not configured");
-  }
-  clientSingleton = new Anthropic({ apiKey, maxRetries: 3 });
-  return clientSingleton;
-}
+const holder = makeAnthropicHolder();
+const getClient = holder.get;
 
 /** Test-only escape hatch for vitest. */
-export function __setClientForTests(client: Anthropic | undefined): void {
-  clientSingleton = client;
-}
+export const __setClientForTests = holder.setForTests;
 
 function computeVerdict(findings: readonly DraftReviewFinding[]): DraftReviewVerdict {
   if (findings.length === 0) return "READY";

@@ -14,6 +14,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { format } from "date-fns";
 import type { PickGrade, PickType } from "@sports/types";
+import { makeAnthropicHolder } from "../ai/client.js";
 
 const COMPOSER_MODEL = "claude-sonnet-4-6";
 
@@ -56,22 +57,11 @@ interface RawOverview {
   readonly slateOverview: string;
 }
 
-let clientSingleton: Anthropic | undefined;
-
-function getClient(): Anthropic {
-  if (clientSingleton) return clientSingleton;
-  const apiKey = process.env["ANTHROPIC_API_KEY"];
-  if (!apiKey) {
-    throw new Error("ANTHROPIC_API_KEY is not configured");
-  }
-  clientSingleton = new Anthropic({ apiKey, maxRetries: 3 });
-  return clientSingleton;
-}
+const holder = makeAnthropicHolder();
+const getClient = holder.get;
 
 /** Test-only escape hatch for vitest. */
-export function __setClientForTests(client: Anthropic | undefined): void {
-  clientSingleton = client;
-}
+export const __setClientForTests = holder.setForTests;
 
 export async function composeSlateOverview(
   input: SlateOverviewInput

@@ -19,6 +19,7 @@ import type {
 import { generateSlug } from "./utils.js";
 import { format } from "date-fns";
 import { BRAND_NAME } from "./brand.js";
+import { makeAnthropicHolder } from "./ai/client.js";
 import {
   reviewDraft,
   type DraftReviewReport,
@@ -78,22 +79,11 @@ interface ParsedPost {
   readonly tags: readonly string[];
 }
 
-let clientSingleton: Anthropic | undefined;
-
-function getClient(): Anthropic {
-  if (clientSingleton) return clientSingleton;
-  const apiKey = process.env["ANTHROPIC_API_KEY"];
-  if (!apiKey) {
-    throw new Error("ANTHROPIC_API_KEY is not configured");
-  }
-  clientSingleton = new Anthropic({ apiKey, maxRetries: 3 });
-  return clientSingleton;
-}
+const holder = makeAnthropicHolder();
+const getClient = holder.get;
 
 /** Test-only escape hatch so a vitest spec can swap in a mocked client. */
-export function __setClientForTests(client: Anthropic | undefined): void {
-  clientSingleton = client;
-}
+export const __setClientForTests = holder.setForTests;
 
 export async function generateBlogPost(
   input: ContentGenerationInput
