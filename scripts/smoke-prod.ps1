@@ -38,6 +38,21 @@ $jsonChecks = @(
   }
 )
 
+$expectedStatusChecks = @(
+  @{
+    Path = "/api/admin/launch-readiness"
+    Status = 403
+  },
+  @{
+    Path = "/api/vault/member"
+    Status = 401
+  },
+  @{
+    Path = "/api/cron/vault-welcome-emails"
+    Status = 501
+  }
+)
+
 $failures = @()
 
 foreach ($path in $paths) {
@@ -89,6 +104,31 @@ foreach ($check in $jsonChecks) {
   } catch {
     $failures += "$url failed: $($_.Exception.Message)"
     Write-Host "FAIL $url"
+  }
+}
+
+foreach ($check in $expectedStatusChecks) {
+  $url = "$base$($check.Path)"
+  $expectedStatus = [int]$check.Status
+
+  try {
+    $response = Invoke-WebRequest -Uri $url -Method Get -MaximumRedirection 0 -TimeoutSec 20 -UseBasicParsing
+    $status = [int]$response.StatusCode
+  } catch {
+    if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+      $status = [int]$_.Exception.Response.StatusCode
+    } else {
+      $failures += "$url failed: $($_.Exception.Message)"
+      Write-Host "FAIL $url"
+      continue
+    }
+  }
+
+  if ($status -ne $expectedStatus) {
+    $failures += "$url returned HTTP $status; expected $expectedStatus"
+    Write-Host "FAIL expected $expectedStatus got $status $url"
+  } else {
+    Write-Host "PASS expected $expectedStatus $url"
   }
 }
 

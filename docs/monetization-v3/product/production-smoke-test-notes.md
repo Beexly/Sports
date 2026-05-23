@@ -2,7 +2,7 @@
 
 **Status:** Internal engineering scaffold.
 **Created:** 2026-05-23
-**Related decision:** DEC-NEXT-024, DEC-NEXT-064
+**Related decision:** DEC-NEXT-024, DEC-NEXT-064, DEC-NEXT-071
 
 ## What changed
 
@@ -67,3 +67,19 @@ The scripts do not create Stripe sessions, mutate production data, assign Discor
 ## DEC-NEXT-064 Guardrail
 
 The checks remain read-only. They validate public response shape only and do not infer provider readiness or launch approval.
+
+## DEC-NEXT-071 - Add smoke fail-closed route checks
+
+**Decision:** Extend production smoke scripts to verify selected private/scaffold routes remain closed.
+
+**Why now:** Pre-launch smoke should catch accidental exposure as well as outages. Admin readiness, member dashboard API, and scaffold cron endpoints must not silently become public 200s before auth/provider wiring is real.
+
+## DEC-NEXT-071 Implemented
+
+- `/api/admin/launch-readiness` must return HTTP 403.
+- `/api/vault/member` must return HTTP 401.
+- `/api/cron/vault-welcome-emails` must return HTTP 501.
+
+## DEC-NEXT-071 Guardrail
+
+These checks are GET-only and do not mutate production data.

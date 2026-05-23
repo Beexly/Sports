@@ -60,6 +60,25 @@ check_json_markers "/api/health" '"ok":true' '"service":"galaxy-sports-edge-web"
 check_json_markers "/api/vault/seat-count" '"cap":1000' '"remaining"'
 check_json_markers "/api/proof/freshness" '"surfaces"' '"methodology"'
 
+check_expected_status() {
+  PATHNAME="$1"
+  EXPECTED="$2"
+  URL="${BASE_URL}${PATHNAME}"
+  STATUS=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 20 "$URL") || STATUS="000"
+
+  if [ "$STATUS" = "$EXPECTED" ]; then
+    echo "PASS expected $EXPECTED $URL"
+  else
+    echo "FAIL expected $EXPECTED got $STATUS $URL"
+    FAILURES="${FAILURES}
+- ${URL} returned HTTP ${STATUS}; expected ${EXPECTED}"
+  fi
+}
+
+check_expected_status "/api/admin/launch-readiness" "403"
+check_expected_status "/api/vault/member" "401"
+check_expected_status "/api/cron/vault-welcome-emails" "501"
+
 if [ -n "$FAILURES" ]; then
   echo ""
   echo "Production smoke failures:"
