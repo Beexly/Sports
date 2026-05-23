@@ -23,3 +23,4 @@ Append-only. One line per cycle.
 2026-05-23 · #20 · feat(cockpit): brief preview UI at /cockpit/brief/preview · vitest `apps/web/__tests__/cockpit-brief-preview-page.test.ts`
 2026-05-23 · #21 · feat(content): counter-narrative companion (anti-slop pillar) · vitest `apps/web/__tests__/counter-narrative.test.ts` + `content-generator.test.ts`
 2026-05-23 · #22 · feat(brief): pre-mortem on the pick slate (self-checking pillar) · vitest `apps/web/__tests__/pre-mortem.test.ts` + `brief-compose-async.test.ts`
+2026-05-23 · #23 · feat(cockpit): source-health agent (self-monitoring pillar) at /cockpit/source-health · vitest `apps/web/__tests__/source-health.test.ts`
