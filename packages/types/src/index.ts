@@ -520,6 +520,13 @@ export interface DailySlate {
 // Content generation types
 // ============================================================
 
+/**
+ * Blog post editorial framings the generator knows about. Each framing
+ * maps to a different user-prompt opener; the JSON output shape is shared.
+ * Add a new kind when its prompt is meaningfully different from these.
+ */
+export type BlogPostKind = "DAILY_PICKS" | "WEEKLY_RECAP";
+
 export interface ContentGenerationInput {
   date: string;
   sport: string;
@@ -537,6 +544,11 @@ export interface ContentGenerationInput {
    * to cite them at the end of the post — operator-verifiable provenance.
    */
   sources?: readonly string[];
+  /**
+   * Editorial framing for the post. Defaults to "DAILY_PICKS".
+   * "WEEKLY_RECAP" frames the post as a look-back rather than a preview.
+   */
+  kind?: BlogPostKind;
 }
 
 export interface GeneratedContent {

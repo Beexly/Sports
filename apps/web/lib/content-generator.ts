@@ -11,7 +11,11 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
-import type { ContentGenerationInput, GeneratedContent } from "@sports/types";
+import type {
+  BlogPostKind,
+  ContentGenerationInput,
+  GeneratedContent,
+} from "@sports/types";
 import { generateSlug } from "./utils.js";
 import { format } from "date-fns";
 import { BRAND_NAME } from "./brand.js";
@@ -30,6 +34,19 @@ const SYSTEM_PROMPT = `You are a sports analyst writing data-backed analysis for
 You must ONLY reference the data provided to you. Do not invent statistics, scores, or records.
 Use measured language — never say "will win" or "guaranteed". Use phrases like "our model favors" or "the data suggests".
 Always include the provided disclaimer at the end.`;
+
+/**
+ * Per-kind user-prompt opener. Pick selection / sources / output schema
+ * are shared across kinds — only the framing changes.
+ */
+const KIND_FRAMING: Record<BlogPostKind, (sport: string, dateDisplay: string) => string> = {
+  DAILY_PICKS: (sport, dateDisplay) =>
+    `Write a sports analysis blog post for ${sport} picks on ${dateDisplay}.`,
+  WEEKLY_RECAP: (sport, dateDisplay) =>
+    `Write a weekly recap of ${sport} picks covering the period ending ${dateDisplay}. ` +
+    `Each pick below is provided with its reasoning at prediction time. ` +
+    `Frame the post as a look back at how the slate was called, not a forward-looking preview.`,
+};
 
 const POST_SCHEMA = {
   type: "object",
@@ -101,7 +118,10 @@ ${sources.map((s, i) => `${i + 1}. ${s}`).join("\n")}`
     ? `\n- Append a single line "Sources: ${sources.join(", ")}" immediately before the disclaimer`
     : "";
 
-  const userPrompt = `Write a sports analysis blog post for ${input.sport} picks on ${dateDisplay}.
+  const kind: BlogPostKind = input.kind ?? "DAILY_PICKS";
+  const framing = KIND_FRAMING[kind](input.sport, dateDisplay);
+
+  const userPrompt = `${framing}
 
 PICKS DATA (this is your ONLY source of truth — do not invent any other data):
 ${picksSummary}${sourcesBlock}

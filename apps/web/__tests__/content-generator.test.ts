@@ -159,6 +159,31 @@ describe("generateBlogPost", () => {
     const args = create.mock.calls[0]![0] as { messages: { content: string }[] };
     expect(args.messages[0]!.content).not.toContain("SOURCES BACKING THIS SLATE");
   });
+
+  it("uses WEEKLY_RECAP framing when kind=WEEKLY_RECAP", async () => {
+    const { client, create } = makeFakeClientWithSpy(VALID_RESPONSE);
+    __setClientForTests(client);
+
+    await generateBlogPost({ ...SAMPLE_INPUT, kind: "WEEKLY_RECAP" });
+
+    const args = create.mock.calls[0]![0] as { messages: { content: string }[] };
+    const userPrompt = args.messages[0]!.content;
+    expect(userPrompt).toContain("weekly recap of NBA picks");
+    expect(userPrompt).toContain("look back at how the slate was called");
+    expect(userPrompt).not.toContain("Write a sports analysis blog post for NBA picks on");
+  });
+
+  it("uses DAILY_PICKS framing by default (kind omitted)", async () => {
+    const { client, create } = makeFakeClientWithSpy(VALID_RESPONSE);
+    __setClientForTests(client);
+
+    await generateBlogPost(SAMPLE_INPUT);
+
+    const args = create.mock.calls[0]![0] as { messages: { content: string }[] };
+    const userPrompt = args.messages[0]!.content;
+    expect(userPrompt).toContain("Write a sports analysis blog post for NBA picks on");
+    expect(userPrompt).not.toContain("weekly recap");
+  });
 });
 
 describe("generateAndReviewBlogPost", () => {
