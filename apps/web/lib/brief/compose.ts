@@ -17,6 +17,10 @@ import {
   composeSlateOverview,
   type SlatePickSnippet,
 } from "./slate-overview.js";
+import {
+  actionableRisks,
+  composePreMortem,
+} from "./pre-mortem.js";
 
 export const BRIEF_RESPONSIBLE_GAMING_NOTE =
   "Bet responsibly. Past performance does not guarantee future results.";
@@ -100,10 +104,12 @@ export async function composeBriefAsync(
     };
   }
 
-  const overview = await composeSlateOverview({
-    date: dateIso,
-    picks: input.picks,
-  });
+  // Run slate-overview and pre-mortem in parallel — both are independent
+  // reads of the same picks data, no need to serialize them.
+  const [overview, preMortem] = await Promise.all([
+    composeSlateOverview({ date: dateIso, picks: input.picks }),
+    composePreMortem({ date: dateIso, picks: input.picks }),
+  ]);
 
   const sections: BriefSection[] = [
     {
@@ -112,6 +118,25 @@ export async function composeBriefAsync(
       type: "SLATE_OVERVIEW",
     },
   ];
+
+  // Pre-mortem becomes the MANUAL_REVIEW section when there's anything worth
+  // surfacing. Low-severity-only or empty-risks slates skip the section
+  // (operator doesn't want noise on clean nights).
+  const actionable = actionableRisks(preMortem);
+  const manualReviewItems = actionable.map((r) => ({
+    kind: r.kind,
+    severity: r.severity,
+    observation: r.observation,
+    affectedCount: r.affectedCount,
+  }));
+
+  if (actionable.length > 0) {
+    sections.push({
+      title: "Pre-mortem (operator review)",
+      body: preMortem.summary,
+      type: "MANUAL_REVIEW",
+    });
+  }
 
   return {
     date: dateIso,
@@ -123,6 +148,6 @@ export async function composeBriefAsync(
     promotions: { count: 0, items: [] },
     whatChanged: { items: [] },
     contentIdeas: { items: [] },
-    manualReview: { items: [] },
+    manualReview: { items: manualReviewItems },
   };
 }
