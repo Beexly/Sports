@@ -310,3 +310,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add pure bot outbox planners that render Twitter/X and Discord draft payloads with stable idempotency keys, entitlement blocks, bootstrap blocks, and no external delivery calls.
 - Rationale: schedulers need deterministic, testable payload planning before delivery clients, persistence, and rate limiting are introduced.
 - Deferred: persisted outbox tables, delivery clients, retry state, and channel-specific rate limiting remain separate Phase 3 runtime work.
+
+## 2026-05-22 - Bot Outbox Preview Starts Cockpit-Only
+
+- Decision: add an admin-only `/api/cockpit/bot-outbox/preview` endpoint that validates supplied event payloads and returns draft outbox items without persistence or external delivery.
+- Rationale: operators and tests need a safe way to inspect bot event rendering before the scheduler and delivery runtime exist.
+- Deferred: database-backed outbox rows, scheduled event discovery, delivery clients, and retry/rate-limit state remain separate Phase 3 runtime work.
