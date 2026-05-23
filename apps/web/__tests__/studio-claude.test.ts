@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { buildGameIntelligenceNode } from "@/lib/intelligence-graph";
 import {
   callClaudeForStudioAsset,
+  evaluateStudioGeneratedBodyPolicy,
   generateStudioAssetDraft,
   StudioGenerationError,
 } from "@/lib/studio/claude";
@@ -168,5 +169,47 @@ describe("Studio Claude generation", () => {
       )
     ).resolves.toContain("Draft body");
     expect(fetchImpl).toHaveBeenCalledOnce();
+  });
+
+  it("records a policy failure when Claude returns blocked Studio copy", async () => {
+    const fetchImpl = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          content: [{ type: "text", text: "This is an AI-powered lock. Source: PickSignalSnapshot #pick-bos-1" }],
+          usage: { input_tokens: 1000, output_tokens: 250 },
+        }),
+        { status: 200 }
+      )
+    );
+    const create = vi.fn().mockResolvedValue({ id: "record-policy" });
+
+    await expect(
+      callClaudeForStudioAsset(
+        { node: makeNode(), templateKind: "X_THREAD", context },
+        {
+          apiKey: "test-key",
+          fetchImpl,
+          recordUsage: true,
+          usageClient: {
+            claudeApiCallRecord: {
+              aggregate: vi.fn(),
+              create,
+            },
+          },
+        }
+      )
+    ).rejects.toThrow("policy validation");
+
+    expect(create.mock.calls[0]?.[0].data).toMatchObject({
+      surface: "STUDIO_GENERATION",
+      success: false,
+      errorKind: "POLICY_L1-AI-POWERED",
+    });
+  });
+
+  it("exposes Studio generated-body policy checks for route-level tests", () => {
+    expect(evaluateStudioGeneratedBodyPolicy("BETTING_EDUCATION", "You should bet this side.")).toEqual(
+      expect.arrayContaining(["BE-RECOMMENDATION"])
+    );
   });
 });

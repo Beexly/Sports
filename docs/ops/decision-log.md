@@ -497,3 +497,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: validate generated Model Court answers after Claude returns and before recording success.
 - Rationale: pre-refusal catches unsafe questions, but generated answers still need a final gate for citation format, betting certainty, personal stake advice, public EV/Kelly/win-rate claims, and competitor comparisons.
 - Guardrail: policy failures are recorded as failed `MODEL_COURT_ANSWER` usage events with `POLICY_*` error kinds and no answer is returned as successful.
+
+## 2026-05-23 - Studio Generation Fails Closed On Red Compliance
+
+- Decision: run Studio generated text through the template compliance scanner before recording a successful Claude usage event.
+- Rationale: Studio drafts already displayed scanner state, but the Claude boundary should not count blocked copy as successful generation.
+- Guardrail: empty, oversized, or scanner-blocked Studio output raises `StudioGenerationError` and records failed `STUDIO_GENERATION` usage with a `POLICY_*` error kind.
