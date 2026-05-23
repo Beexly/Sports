@@ -2,7 +2,7 @@
 
 **Status:** Internal engineering scaffold.
 **Created:** 2026-05-23
-**Related decision:** DEC-NEXT-024
+**Related decision:** DEC-NEXT-024, DEC-NEXT-064
 
 ## What changed
 
@@ -52,3 +52,18 @@ The scripts do not create Stripe sessions, mutate production data, assign Discor
 **Rationale:** Production checks should have a stable JSON endpoint in addition to page checks. The health endpoint reports service identity, timestamp, environment, and optional git SHA without exposing secrets.
 
 **Guardrail:** The endpoint does not inspect providers, mutate data, or validate customer-specific state.
+
+## DEC-NEXT-064 - Add smoke response-shape checks
+
+**Decision:** Extend production smoke scripts beyond HTTP status checks for critical JSON endpoints.
+
+**Why now:** A route can return HTTP 200 while its public response contract is wrong. Health, seat count, and proof freshness are small JSON contracts that should be checked for stable markers before launch.
+
+## DEC-NEXT-064 Implemented
+
+- [smoke-prod.ps1](../../../scripts/smoke-prod.ps1) checks JSON markers for `/api/health`, `/api/vault/seat-count`, and `/api/proof/freshness`.
+- [smoke-prod.sh](../../../scripts/smoke-prod.sh) performs the same marker checks with `curl` and `grep`.
+
+## DEC-NEXT-064 Guardrail
+
+The checks remain read-only. They validate public response shape only and do not infer provider readiness or launch approval.

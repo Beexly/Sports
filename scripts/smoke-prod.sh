@@ -7,7 +7,7 @@ if [ -z "${PROD_BASE_URL:-}" ]; then
 fi
 
 BASE_URL=$(printf "%s" "$PROD_BASE_URL" | sed 's:/*$::')
-PATHS="/api/health / /vault /vault?cancel=true /vault?source=smoke-prod /methodology /loss-room /passes /ledger /api/vault/seat-count /api/proof/freshness"
+PATHS="/ /vault /vault?cancel=true /vault?source=smoke-prod /methodology /loss-room /passes /ledger"
 FAILURES=""
 
 for PATHNAME in $PATHS; do
@@ -22,6 +22,43 @@ for PATHNAME in $PATHS; do
 - ${URL} returned HTTP ${STATUS}"
   fi
 done
+
+check_json_markers() {
+  PATHNAME="$1"
+  shift
+  URL="${BASE_URL}${PATHNAME}"
+  BODY=$(mktemp)
+  STATUS=$(curl -L -sS -o "$BODY" -w "%{http_code}" --max-time 20 "$URL") || STATUS="000"
+
+  if [ "$STATUS" -lt 200 ] || [ "$STATUS" -ge 400 ]; then
+    echo "FAIL $STATUS $URL"
+    FAILURES="${FAILURES}
+- ${URL} returned HTTP ${STATUS}"
+    rm -f "$BODY"
+    return
+  fi
+
+  MISSING=""
+  for MARKER in "$@"; do
+    if ! grep -Fq "$MARKER" "$BODY"; then
+      MISSING="${MISSING} ${MARKER}"
+    fi
+  done
+
+  if [ -n "$MISSING" ]; then
+    echo "FAIL JSON $URL"
+    FAILURES="${FAILURES}
+- ${URL} response missing marker(s):${MISSING}"
+  else
+    echo "PASS JSON $URL"
+  fi
+
+  rm -f "$BODY"
+}
+
+check_json_markers "/api/health" '"ok":true' '"service":"galaxy-sports-edge-web"'
+check_json_markers "/api/vault/seat-count" '"cap":1000' '"remaining"'
+check_json_markers "/api/proof/freshness" '"surfaces"' '"methodology"'
 
 if [ -n "$FAILURES" ]; then
   echo ""
