@@ -328,3 +328,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add a draft discovery loader for recent free/public/canonical pick publications, settlements, and gated slate states, and expose it through cockpit preview GET.
 - Rationale: operators need to inspect what the scheduler would consider before any outbox persistence or delivery clients exist.
 - Deferred: durable outbox records, deduplication storage, delivery clients, and retry/rate-limit state remain separate Phase 3 runtime work.
+
+## 2026-05-22 - Bot Outbox Gets A Read-Only Cockpit Surface
+
+- Decision: add `/cockpit/bot-outbox` as an admin-only read-only view over draft bot outbox discovery, including counts, item state, channel, event kind, preview text, and idempotency key.
+- Rationale: Phase 3 bot work needs operator visibility before any delivery controls exist.
+- Deferred: delivery controls, retry controls, persisted outbox rows, and channel health telemetry remain separate Phase 3 runtime work.
