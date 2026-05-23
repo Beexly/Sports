@@ -274,6 +274,45 @@ Acceptance criteria:
 - Weekly report can output the fields in `product/public-proof-surface-monetization-spec.md`.
 - No third-party ad retargeting or social tracking pixels are added.
 
+### PHASE-N-008 - Vega Character Asset Kit
+
+Gap:
+
+- Vega has a character brief and storyboards, but no production asset kit or design handoff package has been generated.
+
+Acceptance criteria:
+
+- Character asset kit includes primary Vega design, 5 expression states, transparent PNG exports, vector source file, and 9:16 title-card layout.
+- Asset rights and usage terms are documented before public use.
+- Visual QA confirms Vega is obviously synthetic, non-human, non-sportsbook, and readable at phone size.
+- Asset kit is stored in the future asset vault or a clearly named internal folder.
+
+### PHASE-N-009 - Vega Video Draft Assembly
+
+Gap:
+
+- First five Vega videos are storyboarded but not assembled into internal draft cuts.
+
+Acceptance criteria:
+
+- Draft cuts exist for the five videos in `copy/galaxy-vega-video-storyboards.md`.
+- Voice source, caption status, visual status, platform-policy status, and approval status are tracked in `templates/vega-video-production-tracker.csv`.
+- Videos use proof-surface CTAs and UTM destinations from `templates/short-form-utm-map.csv`.
+- No draft uses direct checkout routing.
+- No public posting occurs from this issue.
+
+### PHASE-N-010 - Vega Public Test Readout
+
+Gap:
+
+- The two-week Vega test needs a readout template and decision rule before any public test starts.
+
+Acceptance criteria:
+
+- Test readout captures platform, post URL, proof-surface clicks, email captures, Vault applications, qualitative comments, brand-safety flags, and manual review time.
+- Decision output is one of kill, continue one more 4-week test, or defer until after Vault stability.
+- Readout references `templates/character-media-test-plan.csv` kill and continue criteria.
+
 ## Almanac Epic
 
 ### ALM-001 - Confirm Data Sources
