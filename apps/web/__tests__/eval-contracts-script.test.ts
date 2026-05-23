@@ -21,6 +21,20 @@ describe("eval contract runner", () => {
     expect(src).toContain("expected at least 3 numbered pass criteria");
   });
 
+  it("enforces Galaxy Studio template coverage", () => {
+    expect(src).toContain("REQUIRED_SURFACE_TEMPLATE_COVERAGE");
+    expect(src).toContain('"galaxy-studio"');
+    expect(src).toContain("FAN_EXPLAINER");
+    expect(src).toContain("FANTASY_ANGLE");
+    expect(src).toContain("BETTING_EDUCATION");
+    expect(src).toContain("X_THREAD");
+    expect(src).toContain("NEWSLETTER_BLOCK");
+    expect(src).toContain("SPONSOR_SAFE_BLURB");
+    expect(src).toContain("TIKTOK_REELS_SCRIPT");
+    expect(src).toContain("YOUTUBE_TITLE_IDEAS");
+    expect(src).toContain("missing eval coverage for template");
+  });
+
   it("passes against the current eval library", () => {
     const output = execFileSync(process.execPath, [scriptPath], {
       cwd: repoRoot,

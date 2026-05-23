@@ -1,6 +1,6 @@
 ---
 surface: galaxy-studio
-template: YOUTUBE_TITLES
+template: YOUTUBE_TITLE_IDEAS
 scenario: no-clickbait
 created: 2026-05-22
 created_by: codex

@@ -449,3 +449,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add append-only eval contracts for the Newsletter Block, TikTok/Reels Script, and YouTube Title Ideas Studio templates.
 - Rationale: these templates existed in code but lacked dedicated eval coverage, leaving the Phase 3 Studio suite uneven.
 - Guardrail: evals are contract-only until the model-output runner lands; `npm run guardrails` validates their structure through `scripts/eval-contracts.mjs`.
+
+## 2026-05-22 - Studio Eval Coverage Is Enforced
+
+- Decision: require `scripts/eval-contracts.mjs` to enforce eval coverage for every Galaxy Studio template kind.
+- Rationale: Studio templates are Phase 3 AI-output surfaces; adding a template without a matching eval should fail the normal guardrail path.
+- Guardrail: enforcement is metadata-only and local. It does not call Claude, publish content, or score generated output.

@@ -16,12 +16,25 @@ const EVAL_DIR = join(ROOT, "docs", "ops", "evals");
 const REQUIRED_FRONTMATTER = ["surface", "scenario", "created", "created_by", "status"];
 const REQUIRED_SECTIONS = ["# Input", "# Expected behavior", "# Forbidden behavior", "# Pass criteria"];
 const VALID_STATUS = new Set(["pending-runner", "active", "retired"]);
+const REQUIRED_SURFACE_TEMPLATE_COVERAGE = {
+  "galaxy-studio": [
+    "FAN_EXPLAINER",
+    "FANTASY_ANGLE",
+    "BETTING_EDUCATION",
+    "X_THREAD",
+    "TIKTOK_REELS_SCRIPT",
+    "NEWSLETTER_BLOCK",
+    "SPONSOR_SAFE_BLURB",
+    "YOUTUBE_TITLE_IDEAS",
+  ],
+};
 
 const files = (await readdir(EVAL_DIR))
   .filter((fileName) => fileName.endsWith(".md") && fileName.toLowerCase() !== "readme.md")
   .sort();
 
 const failures = [];
+const contracts = [];
 
 for (const fileName of files) {
   const filePath = join(EVAL_DIR, fileName);
@@ -32,6 +45,8 @@ for (const fileName of files) {
     failures.push(`${fileName}: missing YAML-style frontmatter`);
     continue;
   }
+
+  contracts.push({ fileName, values: frontmatter.values });
 
   for (const key of REQUIRED_FRONTMATTER) {
     if (!frontmatter.values[key]) {
@@ -53,6 +68,21 @@ for (const fileName of files) {
   const criteriaCount = passCriteria.split(/\r?\n/).filter((line) => /^\d+\.\s+/.test(line)).length;
   if (criteriaCount < 3) {
     failures.push(`${fileName}: expected at least 3 numbered pass criteria`);
+  }
+}
+
+for (const [surface, requiredTemplates] of Object.entries(REQUIRED_SURFACE_TEMPLATE_COVERAGE)) {
+  const activeTemplates = new Set(
+    contracts
+      .filter((contract) => contract.values.surface === surface && contract.values.status !== "retired")
+      .map((contract) => contract.values.template)
+      .filter(Boolean),
+  );
+
+  for (const template of requiredTemplates) {
+    if (!activeTemplates.has(template)) {
+      failures.push(`${surface}: missing eval coverage for template "${template}"`);
+    }
   }
 }
 
