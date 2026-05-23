@@ -232,6 +232,48 @@ Acceptance criteria:
 - Script verifies the public health route, `/vault`, `/methodology`, `/loss-room`, `/passes`, and checkout-safe redirect behavior without mutating production data.
 - Failures write enough context for `docs/ops/issue-queue.md` triage.
 
+### PHASE-N-005 - Proof Surface Email Capture Module
+
+Gap:
+
+- Public proof surfaces do not yet have the quiet email capture module specified in `product/public-proof-surface-monetization-spec.md`.
+
+Acceptance criteria:
+
+- Feature flag `proof_surface_email_capture_enabled` gates production rendering.
+- `/loss-room`, `/loss-room/[slug]`, `/passes`, `/passes/[slug]`, `/methodology`, and `/ledger` support the module placement rules.
+- Submissions store source page, source slug, consent timestamp, and UTM parameters.
+- Success and error states match the spec copy.
+- No modal, pop-up, sticky bar, social-proof counter, or paid-ad tracking pixel is introduced.
+
+### PHASE-N-006 - Contextual Vault CTA Module
+
+Gap:
+
+- Public proof surfaces do not yet have contextual Vault CTAs that route high-intent readers to `/vault` without changing proof-page posture.
+
+Acceptance criteria:
+
+- Feature flag `contextual_vault_cta_enabled` gates production rendering.
+- CTA copy matches `product/public-proof-surface-monetization-spec.md`.
+- CTAs render below proof content only.
+- CTA links include source query param.
+- Events fire for view and click.
+- Mobile layout preserves proof content hierarchy.
+
+### PHASE-N-007 - Short-Form UTM and Event Reporting
+
+Gap:
+
+- The short-form R&D lane has scripts and a UTM map, but no application event taxonomy or report export.
+
+Acceptance criteria:
+
+- UTM parsing supports the allowed fields in `templates/short-form-utm-map.csv`.
+- Short-form inbound sessions can be attributed to source artifact and draft ID.
+- Weekly report can output the fields in `product/public-proof-surface-monetization-spec.md`.
+- No third-party ad retargeting or social tracking pixels are added.
+
 ## Almanac Epic
 
 ### ALM-001 - Confirm Data Sources
