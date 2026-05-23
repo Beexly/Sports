@@ -250,3 +250,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: the legacy blog content generator now checks the persisted BLOG_GENERATION budget, honors active overrides, and records successful and failed Claude calls.
 - Rationale: content generation was the remaining direct Claude path predating Studio, and it needs the same spend controls before Phase 3 traffic expands.
 - Deferred: a single shared wrapper abstraction, owner-channel alerts, and budget controls for future Model Journal, Model Court, calibration, and pre-mortem Claude surfaces remain follow-up slices.
+
+## 2026-05-22 - Claude Budget Override API
+
+- Decision: add an admin-only `/api/cockpit/api-costs/override` route that validates Claude surfaces, requires a decision-log reason, and updates only override state.
+- Rationale: red and hard-cap budget states need an auditable runtime escape hatch without redeploying or editing policy constants.
+- Deferred: cockpit override buttons, owner-channel alerts, and richer audit persistence beyond the response payload remain follow-up slices.
