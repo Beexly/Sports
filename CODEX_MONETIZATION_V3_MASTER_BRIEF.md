@@ -2272,7 +2272,7 @@ Everything else is reference content available as needed during execution.
 
 ## Recent additions (Pass 12-13)
 
-**Status:** Added after the Pass 10-11 brief addendum. Current local validation state: 214 Markdown files, 28 CSV files, and 229 README navigation targets checked. These additions do not authorize production deploy, Stripe activation, Discord mutation, email sends, public posting, paid traffic, runway decisions, or activation of a fourth monetization track.
+**Status:** Added after the Pass 10-11 brief addendum. Current local validation state: 215 Markdown files, 28 CSV files, and 230 README navigation targets checked. These additions do not authorize production deploy, Stripe activation, Discord mutation, email sends, public posting, paid traffic, runway decisions, or activation of a fourth monetization track.
 
 ### Engineering hardening
 
@@ -2283,6 +2283,8 @@ Everything else is reference content available as needed during execution.
 - `apps/web/lib/vault/discord.ts` and `discord.test.ts` - Discord managed-role sync planning for grant, remove, and no-duplicate behavior.
 - `apps/web/lib/launch-readiness.ts` and `launch-readiness.test.ts` - single verdict aggregator for env, provider heartbeat, repair task, docs audit, and production smoke signals.
 - `scripts/smoke-prod.ps1` and `scripts/smoke-prod.sh` - response-shape checks for health, seat-count, and proof-freshness JSON endpoints.
+- `scripts/smoke-prod.ps1` and `scripts/smoke-prod.sh` - fail-closed checks for admin readiness, member API, and scaffold cron routes.
+- `apps/web/app/api/admin/launch-readiness/route.ts` - fail-closed admin route anchor returning admin-required until auth exists.
 - `.env.example` and `apps/web/lib/env-contract.json` - launch env contract now includes durable storage and auth/session secret requirements.
 
 ### Engineering docs
@@ -2292,6 +2294,7 @@ Everything else is reference content available as needed during execution.
 - `docs/monetization-v3/product/vault-persistence-migration-contract.md`
 - `docs/monetization-v3/product/vault-backup-restore-runbook.md`
 - `docs/monetization-v3/product/launch-readiness-report-notes.md`
+- `docs/monetization-v3/product/admin-launch-readiness-route-notes.md`
 - `docs/monetization-v3/product/readme-coverage-validator-notes.md`
 - `docs/monetization-v3/product/monetization-readme-navigation-lock-notes.md`
 
@@ -2301,6 +2304,7 @@ Everything else is reference content available as needed during execution.
 - `docs/monetization-v3/README.md` is current through the newest engineering and R&D files.
 - `docs/monetization-v3/audit/decision-log-collisions.md` is refreshed through DEC-NEXT-068 and records DEC-NEXT-029 as intentionally unused.
 - `docs/ops/issue-queue.md` now tracks launch blockers through OPS-2026-05-23-008, including auth/member-gating.
+- `docs/monetization-v3/templates/track-risk-register.csv` now includes provider-wiring lag, static-proof campaign traffic, and R&D distraction risks.
 
 ### R&D additions
 
