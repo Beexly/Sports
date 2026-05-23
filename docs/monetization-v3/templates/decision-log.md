@@ -553,3 +553,16 @@ Metric threshold: Script outputs source path, SHA256, file count, text-file coun
 Owner: Codex
 Next review date: Before next external archive inspection
 Notes: Script does not execute, install, import, or copy archive code into Galaxy.
+
+### DEC-NEXT-050 - Implementation Readiness Gap Register
+
+Date: 2026-05-23
+Decision: Add a single implementation-readiness gap register that separates complete strategy from launch-ready implementation.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: The docs and app scaffold are substantial, but persistence, provider wiring, auth, admin repair workflows, and production environment setup remain launch-critical gaps.
+Metric threshold: Register names P0/P1/P2 gaps, failure modes, design responses, constraint forecast, and morning sequencing.
+Owner: Codex maintains; Garrett owns runway/customer-dev decisions
+Next review date: Start of next morning peak block
+Notes: Does not authorize deploy, provider activation, public posting, paid traffic, or track activation.
