@@ -397,3 +397,16 @@ Metric threshold: Health report tests pass; endpoint appears in the Next route m
 Owner: Codex; Garrett review optional
 Next review date: First production smoke run
 Notes: Does not inspect providers, mutate data, or expose secrets.
+
+### DEC-NEXT-038 - Launch Readiness Audit Script
+
+Date: 2026-05-23
+Decision: Add a repeatable local launch-readiness audit script that runs the core docs, brand, decision-log, web, build, and dependency gates.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Overnight validation required many separate commands; pre-launch needs a single repeatable gate that does not rely on operator memory.
+Metric threshold: `npm run audit:launch` runs docs validation, exact brand scan, DEC-NEXT uniqueness, web tests, typecheck, build, and npm audit. Optional flags cover env and production smoke.
+Owner: Codex maintains; Garrett runs before launch windows
+Next review date: Day -7 Vault pre-launch checklist
+Notes: Script does not deploy, mutate production data, create Stripe sessions, assign Discord roles, trigger cron routes, or infer production hostnames.

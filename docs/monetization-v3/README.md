@@ -76,6 +76,7 @@ Runway determines which subset is active:
 - [product/engineering-issue-pack.md](product/engineering-issue-pack.md) - GitHub/Linear-ready engineering epics and Phase-N scaffold gaps.
 - [product/env-readiness-contract.md](product/env-readiness-contract.md) - Environment variable readiness contract and DEC-NEXT-036 guardrails.
 - [product/kpi-cockpit-prd.md](product/kpi-cockpit-prd.md) - KPI cockpit requirements for monthly operating review.
+- [product/launch-readiness-audit-script.md](product/launch-readiness-audit-script.md) - Repeatable local launch-readiness gate script and DEC-NEXT-038 guardrails.
 - [product/live-obs-prd.md](product/live-obs-prd.md) - Live OBS overlay product requirements.
 - [product/manual-longevity-instruments.md](product/manual-longevity-instruments.md) - Manual brand, capacity, and freshness trackers tied to DEC-NEXT-032.
 - [product/pre-engineering-handoff.md](product/pre-engineering-handoff.md) - Pre-engineering handoff checklist and implementation posture.

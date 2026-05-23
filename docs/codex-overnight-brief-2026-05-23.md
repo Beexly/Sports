@@ -23,6 +23,7 @@
 - Extended read-only production smoke scripts to cover public Vault seat-count and proof freshness APIs.
 - Added explicit environment readiness contract, placeholder `.env.example`, typed helpers, tests, and a local preflight script.
 - Added read-only `/api/health` and included it in production smoke.
+- Added a repeatable launch-readiness audit script that bundles docs validation, brand scan, DEC-NEXT uniqueness, web tests, typecheck, build, and dependency audit.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
