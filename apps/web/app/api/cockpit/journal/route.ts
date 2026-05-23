@@ -89,10 +89,11 @@ export async function POST(req: Request): Promise<NextResponse> {
     );
   }
 
-  const bodyMarkdown = submittedMarkdown || composeJournalDraftMarkdown(
-    title,
-    await loadModelJournalWeekData(isoYear, isoWeek)
-  );
+  const weekData = await loadModelJournalWeekData(isoYear, isoWeek);
+  const bodyMarkdown = submittedMarkdown || composeJournalDraftMarkdown(title, weekData);
+  const referencedPickIds = weekData.picks.map((pick) => pick.id);
+  const referencedAutopsyIds = weekData.lossAutopsies.map((autopsy) => autopsy.id);
+
   const created = await db.modelJournalEntry.create({
     data: {
       title,
@@ -103,8 +104,8 @@ export async function POST(req: Request): Promise<NextResponse> {
       body: bodyMarkdown,
       bodyMarkdown,
       modelVersion: MODEL_VERSION,
-      referencedPickIds: [],
-      referencedAutopsyIds: [],
+      referencedPickIds,
+      referencedAutopsyIds,
       authorEmail: guard.email,
     },
     select: {

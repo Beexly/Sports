@@ -178,3 +178,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: update the Model Journal prompt helper to consume the typed `JournalWeekData` shape.
 - Rationale: the prompt builder still referenced an older ad hoc payload. Aligning it to `picks`, `lossAutopsies`, `counts`, and the evidence window removes translation risk before the Claude draft route is wired.
 - Deferred: Claude draft generation route, cost tracking wrapper integration, richer factor extraction, pre-mortem tag feed, factor-change feed, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Drafts Persist Evidence References
+
+- Decision: Model Journal draft creation now stores weekly settled-pick and public loss-autopsy IDs from the deterministic evidence loader.
+- Rationale: the cockpit evidence rail, public Journal citations, and future Galaxy Memory links need durable references from the moment a draft is created.
+- Deferred: full evidence table with filters, cited-factor extraction, Claude draft generation route, publish/retract feed invalidation, email digest delivery, and teaser queue remain follow-up slices.

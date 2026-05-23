@@ -75,9 +75,12 @@ describe("Model Journal cockpit route", () => {
     expect(createRoute).toContain("MODEL_VERSION");
     expect(createRoute).toContain("loadModelJournalWeekData");
     expect(createRoute).toContain("composeJournalDraftMarkdown");
+    expect(createRoute).toContain("referencedPickIds = weekData.picks.map");
+    expect(createRoute).toContain("referencedAutopsyIds = weekData.lossAutopsies.map");
     expect(createRoute).toContain("modelJournalEntry.create");
     expect(createRoute).toContain('status: "DRAFT"');
-    expect(createRoute).toContain("referencedPickIds: []");
+    expect(createRoute).toContain("referencedPickIds,");
+    expect(createRoute).toContain("referencedAutopsyIds,");
     expect(createRoute).toContain("externalDistribution: false");
     expect(createRoute).not.toMatch(/publishedAt\s*:\s*new Date|status:\s*"PUBLISHED"|twitterClient|sendgrid|mailchimp/i);
   });
