@@ -14,6 +14,7 @@ import {
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
+import { callClaudeMessages, ClaudeMessagesError } from "@/lib/claude-api/messages";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -24,14 +25,6 @@ const GAMBLING_DISCLAIMER =
   "This article is for informational and entertainment purposes only. " +
   `${BRAND_NAME} does not guarantee any outcomes. Sports betting involves risk. ` +
   "Please gamble responsibly and only bet what you can afford to lose.";
-
-interface AnthropicBlogResponse {
-  readonly content: Array<{ readonly type: string; readonly text: string }>;
-  readonly usage?: {
-    readonly input_tokens?: number;
-    readonly output_tokens?: number;
-  };
-}
 
 export interface BlogGenerationOptions {
   readonly fetchImpl?: typeof fetch;
@@ -111,55 +104,42 @@ Respond ONLY with valid JSON in this exact format:
     }
   }
 
-  const fetchImpl = options.fetchImpl ?? fetch;
-  const startedAt = Date.now();
-  const response = await fetchImpl("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
+  let text: string;
+  try {
+    const result = await callClaudeMessages({
+      apiKey,
+      fetchImpl: options.fetchImpl,
       model: modelName,
-      max_tokens: 2000,
+      maxTokens: 2000,
       system: systemPrompt,
-      messages: [{ role: "user", content: userPrompt }],
-    }),
-  });
-  const durationMs = Date.now() - startedAt;
-
-  if (!response.ok) {
-    const error = await response.text();
+      user: userPrompt,
+    });
+    text = result.text;
     await maybeRecordBlogUsage({
       options,
-      modelName,
-      inputTokens: 0,
-      outputTokens: 0,
-      durationMs,
-      success: false,
-      errorKind: `HTTP_${response.status}`,
+      modelName: result.modelName,
+      inputTokens: result.inputTokens,
+      outputTokens: result.outputTokens,
+      durationMs: result.durationMs,
+      success: true,
+      errorKind: null,
     });
-    throw new Error(`Claude API error: ${response.status} - ${error}`);
+  } catch (error) {
+    if (error instanceof ClaudeMessagesError) {
+      await maybeRecordBlogUsage({
+        options,
+        modelName: error.modelName,
+        inputTokens: 0,
+        outputTokens: 0,
+        durationMs: error.durationMs,
+        success: false,
+        errorKind: `HTTP_${error.status}`,
+      });
+    }
+    throw error;
   }
 
-  const result = (await response.json()) as AnthropicBlogResponse;
-  await maybeRecordBlogUsage({
-    options,
-    modelName,
-    inputTokens: result.usage?.input_tokens ?? 0,
-    outputTokens: result.usage?.output_tokens ?? 0,
-    durationMs,
-    success: true,
-    errorKind: null,
-  });
-
-  const textContent = result.content.find((c) => c.type === "text");
-  if (!textContent) {
-    throw new Error("No text content in Claude response");
-  }
-
-  const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch?.[0]) {
     throw new Error("Could not parse JSON from Claude response");
   }

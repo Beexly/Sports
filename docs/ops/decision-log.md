@@ -268,3 +268,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `scripts/guardrails/claude-api-usage.mjs` and include it in the root `guardrails` script to reject new direct Anthropic message calls outside approved paths.
 - Rationale: Phase 3 adds several content surfaces, and each Claude API path must be budget-gated, usage-recorded, and intentionally reviewed.
 - Deferred: consolidating Studio and blog generation onto a single shared wrapper remains a follow-up refactor.
+
+## 2026-05-22 - Shared Claude Messages Client
+
+- Decision: centralize Anthropic `/v1/messages` access in `apps/web/lib/claude-api/messages.ts` and move Studio plus blog generation onto that client.
+- Rationale: the direct-call guardrail should approve one application path, so every Phase 3 Claude surface inherits consistent request shape, error typing, token accounting, and review visibility.
+- Deferred: moving Model Journal, Model Court, calibration, and pre-mortem generation onto this client as each surface receives its runtime generator.

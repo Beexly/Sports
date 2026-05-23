@@ -7,6 +7,7 @@ import {
   evaluateClaudeBudgetUsage,
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
+import { callClaudeMessages, ClaudeMessagesError } from "@/lib/claude-api/messages";
 import {
   recordClaudeApiCall,
   type ClaudeUsageStoreDb,
@@ -16,19 +17,6 @@ import type {
   GenerationContext,
 } from "@/lib/studio/templates";
 import type { GameIntelligenceNode } from "@/lib/intelligence-graph";
-
-interface AnthropicTextBlock {
-  readonly type: string;
-  readonly text?: string;
-}
-
-interface AnthropicMessagesResponse {
-  readonly content?: readonly AnthropicTextBlock[];
-  readonly usage?: {
-    readonly input_tokens?: number;
-    readonly output_tokens?: number;
-  };
-}
 
 export interface StudioClaudeClientOptions {
   readonly apiKey: string;
@@ -55,14 +43,6 @@ export class StudioGenerationError extends Error {
   }
 }
 
-function extractText(response: AnthropicMessagesResponse): string {
-  const text = response.content?.find((block) => block.type === "text" && typeof block.text === "string")?.text;
-  if (!text?.trim()) {
-    throw new StudioGenerationError("Claude response did not include text content.");
-  }
-  return text.trim();
-}
-
 export async function callClaudeForStudioAsset(
   input: GenerateStudioAssetInput,
   options: StudioClaudeClientOptions
@@ -81,56 +61,43 @@ export async function callClaudeForStudioAsset(
     }
   }
 
-  const fetchImpl = options.fetchImpl ?? fetch;
   const modelName = options.model ?? "claude-sonnet-4-6";
-  const startedAt = Date.now();
-  const response = await fetchImpl("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": options.apiKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
+  try {
+    const result = await callClaudeMessages({
+      apiKey: options.apiKey,
+      fetchImpl: options.fetchImpl,
       model: modelName,
-      max_tokens: dryRun.prompt.maxTokens,
+      maxTokens: dryRun.prompt.maxTokens,
       temperature: dryRun.prompt.temperature,
       system: dryRun.prompt.system,
-      messages: [{ role: "user", content: dryRun.prompt.user }],
-    }),
-  });
-  const durationMs = Date.now() - startedAt;
-
-  if (!response.ok) {
-    const errorText = await response.text();
+      user: dryRun.prompt.user,
+    });
     await maybeRecordStudioUsage({
       input,
       options,
-      modelName,
-      inputTokens: 0,
-      outputTokens: 0,
-      durationMs,
-      success: false,
-      errorKind: `HTTP_${response.status}`,
+      modelName: result.modelName,
+      inputTokens: result.inputTokens,
+      outputTokens: result.outputTokens,
+      durationMs: result.durationMs,
+      success: true,
+      errorKind: null,
     });
-    throw new StudioGenerationError(`Claude API error: ${response.status} - ${errorText}`);
+    return result.text;
+  } catch (error) {
+    if (error instanceof ClaudeMessagesError) {
+      await maybeRecordStudioUsage({
+        input,
+        options,
+        modelName: error.modelName,
+        inputTokens: 0,
+        outputTokens: 0,
+        durationMs: error.durationMs,
+        success: false,
+        errorKind: `HTTP_${error.status}`,
+      });
+    }
+    throw new StudioGenerationError(error instanceof Error ? error.message : "Claude API error");
   }
-
-  const payload = (await response.json()) as AnthropicMessagesResponse;
-  const inputTokens = payload.usage?.input_tokens ?? 0;
-  const outputTokens = payload.usage?.output_tokens ?? 0;
-  await maybeRecordStudioUsage({
-    input,
-    options,
-    modelName,
-    inputTokens,
-    outputTokens,
-    durationMs,
-    success: true,
-    errorKind: null,
-  });
-
-  return extractText(payload);
 }
 
 async function maybeRecordStudioUsage(args: {

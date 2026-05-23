@@ -15,8 +15,7 @@ const SCAN_DIRS = ["apps", "packages", "workers", "scripts"];
 const SCAN_EXTS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"]);
 
 const WHITELIST_FILES = new Set([
-  "apps/web/lib/studio/claude.ts",
-  "apps/web/lib/content-generator.ts",
+  "apps/web/lib/claude-api/messages.ts",
   "scripts/check-deploy-readiness.mjs",
   "scripts/rotate-anthropic-key.mjs",
   "scripts/guardrails/claude-api-usage.mjs",
