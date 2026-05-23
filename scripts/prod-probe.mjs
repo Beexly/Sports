@@ -69,6 +69,24 @@ async function probeJsonShape(path, label, validate, options = {}) {
   };
 }
 
+async function probeStatusJsonShape(path, label, validate, options = {}) {
+  const result = await probe(path, options);
+  let shapeError = "";
+  try {
+    const json = JSON.parse(result.bodyText);
+    shapeError = validate(result.status, json);
+  } catch (error) {
+    shapeError = error instanceof Error ? error.message : "Response body is not valid JSON.";
+  }
+  return {
+    path,
+    label,
+    ...result,
+    ok: !shapeError,
+    shapeError,
+  };
+}
+
 async function probeTextShape(path, label, validate, options = {}) {
   const result = await probe(path, options);
   const shapeError = result.ok ? validate(result.bodyText) : "";
@@ -113,6 +131,19 @@ const TEXT_SHAPE_PROBES = [
   { path: "/journal/rss.xml", label: "Model Journal RSS", validate: validateJournalRss },
 ];
 
+const GATE_SHAPE_PROBES = [
+  {
+    path: "/api/picks?check=public-picks-gate",
+    label: "public picks gate",
+    validate: validatePublicPicksGate,
+  },
+  {
+    path: "/api/performance?check=performance-gate",
+    label: "performance stats gate",
+    validate: validatePerformanceGate,
+  },
+];
+
 const ADMIN_API_SHAPE_PROBES = [
   {
     path: "/api/cockpit/bot-outbox/preview?surface=twitter",
@@ -123,6 +154,11 @@ const ADMIN_API_SHAPE_PROBES = [
     path: "/api/cockpit/bot-outbox/preview?surface=discord",
     label: "Discord outbox",
     validate: validateBotOutboxPreview,
+  },
+  {
+    path: "/api/cockpit/readiness?check=public-blog-gate",
+    label: "public blog gate",
+    validate: validateReadinessGates,
   },
 ];
 
@@ -166,6 +202,9 @@ for (const route of API_SHAPE_PROBES) {
 for (const route of TEXT_SHAPE_PROBES) {
   results.push(await probeTextShape(route.path, route.label, route.validate));
 }
+for (const route of GATE_SHAPE_PROBES) {
+  results.push(await probeStatusJsonShape(route.path, route.label, route.validate));
+}
 if (ADMIN_COOKIE) {
   results.push({ path: "/api/cockpit/jarvis", ...(await probe("/api/cockpit/jarvis", { admin: true })) });
   for (const route of ADMIN_API_SHAPE_PROBES) {
@@ -178,13 +217,14 @@ const failHealth = !results[0]?.ok;
 const failPublic = results.some((r) => PUBLIC_ROUTE_PROBES.some((route) => route.path === r.path) && !r.ok);
 const failApiShape = results.some((r) => API_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok);
 const failTextShape = results.some((r) => TEXT_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok);
+const failGateShape = results.some((r) => GATE_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok);
 const failAdminShape = results.some((r) =>
   ADMIN_API_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok
 );
 const payload = {
   appUrl: APP_URL,
   generatedAtIso,
-  ok: !failHealth && !failPublic && !failApiShape && !failTextShape && !failAdminShape,
+  ok: !failHealth && !failPublic && !failApiShape && !failTextShape && !failGateShape && !failAdminShape,
   failed: results.filter((r) => !r.ok).length,
   probes: results.map((r) => ({
     path: r.path,
@@ -238,6 +278,12 @@ if (failApiShape) {
 if (failTextShape) {
   if (!PROD_PROBE_JSON) {
     console.error("\nOne or more content surface probes failed. Deploy verification failed.");
+  }
+  process.exit(1);
+}
+if (failGateShape) {
+  if (!PROD_PROBE_JSON) {
+    console.error("\nOne or more trust gate probes failed. Deploy verification failed.");
   }
   process.exit(1);
 }
@@ -301,6 +347,29 @@ function validateIngestionFreshness(json) {
   return "";
 }
 
+function validatePublicPicksGate(status, json) {
+  if (status === 503 && json?.bootstrapMode === true && typeof json.error === "string") {
+    return "";
+  }
+  if (status === 200 && json?.success === true && Array.isArray(json.data)) {
+    if (!json.meta || typeof json.meta.total !== "number") {
+      return "Missing meta.total number on public picks payload.";
+    }
+    return "";
+  }
+  return `Unexpected public picks gate response: HTTP ${status}.`;
+}
+
+function validatePerformanceGate(status, json) {
+  if (status === 503 && json?.bootstrapMode === true && typeof json.error === "string") {
+    return "";
+  }
+  if (status === 200 && json?.success === true && json.data?.overall) {
+    return "";
+  }
+  return `Unexpected performance gate response: HTTP ${status}.`;
+}
+
 function validateCalibration(json) {
   if (json?.success !== true) return "Missing success=true.";
   if (!json.data || typeof json.data !== "object") return "Missing data object.";
@@ -334,5 +403,21 @@ function validateBotOutboxPreview(json) {
     return "Missing counts.outboxItems number.";
   }
   if (!Array.isArray(json.items)) return "Missing items array.";
+  return "";
+}
+
+function validateReadinessGates(json) {
+  if (json?.success !== true) return "Missing success=true.";
+  const gates = json.data?.gates;
+  if (!gates || typeof gates !== "object") return "Missing data.gates object.";
+  if (typeof gates.canPublishContent !== "boolean") {
+    return "Missing data.gates.canPublishContent boolean.";
+  }
+  if (typeof gates.canExposePublicPicks !== "boolean") {
+    return "Missing data.gates.canExposePublicPicks boolean.";
+  }
+  if (typeof gates.canExposePerformanceStats !== "boolean") {
+    return "Missing data.gates.canExposePerformanceStats boolean.";
+  }
   return "";
 }

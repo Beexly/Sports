@@ -431,3 +431,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: expose ingestion `lastSuccessAt` and `ageMinutes` on `/api/health`, then wire query-tagged synthetic probes for `CHECK-E1` and `CHECK-E2`.
 - Rationale: the production monitor can now verify ingestion freshness and minimum book depth using existing read-only surfaces.
 - Guardrail: these probes read health and board JSON only. They do not trigger ingestion, mutate picks, or relax bootstrap/canonical gates.
+
+## 2026-05-22 - Trust Gate Synthetic Probes
+
+- Decision: add trust-gate probes for public picks, performance stats, and the public blog publishing gate.
+- Rationale: bootstrap-gated 503 responses are valid when the gate is closed, so `prod-probe` now validates the gate response shape instead of treating all 503s as failures.
+- Guardrail: public picks and performance checks use public endpoints. The blog publishing gate reads cockpit readiness only when `ADMIN_COOKIE` is present.

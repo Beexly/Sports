@@ -116,6 +116,33 @@ describe("synthetic monitoring dashboard", () => {
           admin: false,
         },
         {
+          path: "/api/picks?check=public-picks-gate",
+          label: "public picks gate",
+          ok: true,
+          status: 503,
+          ms: 31,
+          bannedPattern: "",
+          admin: false,
+        },
+        {
+          path: "/api/performance?check=performance-gate",
+          label: "performance stats gate",
+          ok: true,
+          status: 503,
+          ms: 33,
+          bannedPattern: "",
+          admin: false,
+        },
+        {
+          path: "/api/cockpit/readiness?check=public-blog-gate",
+          label: "public blog gate",
+          ok: true,
+          status: 200,
+          ms: 49,
+          bannedPattern: "",
+          admin: true,
+        },
+        {
           path: "/api/cockpit/bot-outbox/preview?surface=twitter",
           label: "Twitter/X outbox",
           ok: true,
@@ -150,6 +177,9 @@ describe("synthetic monitoring dashboard", () => {
     expect(checks.find((check) => check.id === "CHECK-E1")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-E2")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-E3")?.status).toBe("passing");
+    expect(checks.find((check) => check.id === "CHECK-T1")?.status).toBe("passing");
+    expect(checks.find((check) => check.id === "CHECK-T2")?.status).toBe("passing");
+    expect(checks.find((check) => check.id === "CHECK-T3")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-B1")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-B3")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.status).toBe("failing");

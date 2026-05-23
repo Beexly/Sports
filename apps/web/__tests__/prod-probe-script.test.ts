@@ -67,9 +67,21 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/ADMIN_API_SHAPE_PROBES/);
     expect(src).toMatch(/surface=twitter/);
     expect(src).toMatch(/surface=discord/);
+    expect(src).toMatch(/public-blog-gate/);
     expect(src).toMatch(/validateBotOutboxPreview/);
+    expect(src).toMatch(/validateReadinessGates/);
     expect(src).toMatch(/draftOnly/);
     expect(src).toMatch(/externalDelivery/);
+  });
+
+  it("validates public trust-gate responses without treating bootstrap 503 as probe failure", () => {
+    expect(src).toMatch(/GATE_SHAPE_PROBES/);
+    expect(src).toMatch(/public-picks-gate/);
+    expect(src).toMatch(/performance-gate/);
+    expect(src).toMatch(/probeStatusJsonShape/);
+    expect(src).toMatch(/validatePublicPicksGate/);
+    expect(src).toMatch(/validatePerformanceGate/);
+    expect(src).toMatch(/trust gate probes failed/);
   });
 
   it("exits non-zero when /api/health is unhealthy", () => {
