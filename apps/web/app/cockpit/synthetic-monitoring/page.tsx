@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {
-  loadSyntheticMonitoringDashboard,
+  loadSyntheticMonitoringDashboardFromDisk,
   type SyntheticCheck,
   type SyntheticCheckStatus,
   type SyntheticSeverity,
@@ -21,8 +21,8 @@ const SEVERITY_STYLES: Readonly<Record<SyntheticSeverity, string>> = {
   P3: "text-sky-300",
 };
 
-export default function CockpitSyntheticMonitoringPage(): JSX.Element {
-  const dashboard = loadSyntheticMonitoringDashboard();
+export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Element> {
+  const dashboard = await loadSyntheticMonitoringDashboardFromDisk();
 
   return (
     <div className="flex flex-col gap-6">

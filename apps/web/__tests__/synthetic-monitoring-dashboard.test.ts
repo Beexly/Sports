@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { loadSyntheticMonitoringDashboard } from "../lib/synthetic-monitoring/dashboard";
+import {
+  loadSyntheticMonitoringDashboard,
+  type SyntheticProbeArtifact,
+} from "../lib/synthetic-monitoring/dashboard";
 
 const repoRoot = resolve(__dirname, "..");
 
@@ -39,6 +42,56 @@ describe("synthetic monitoring dashboard", () => {
       }
     }
   });
+
+  it("hydrates covered checks from the latest probe artifact", () => {
+    const artifact: SyntheticProbeArtifact = {
+      appUrl: "https://example.test",
+      generatedAtIso: "2026-05-22T18:05:00.000Z",
+      ok: false,
+      failed: 1,
+      probes: [
+        {
+          path: "/",
+          label: "homepage",
+          ok: true,
+          status: 200,
+          ms: 42,
+          bannedPattern: "",
+          admin: false,
+        },
+        {
+          path: "/board",
+          label: "board",
+          ok: false,
+          status: 500,
+          ms: 330,
+          bannedPattern: "",
+          admin: false,
+        },
+        {
+          path: "/pricing",
+          label: "pricing",
+          ok: false,
+          status: 200,
+          ms: 44,
+          bannedPattern: "/AI-powered/i",
+          admin: false,
+        },
+      ],
+    };
+
+    const dashboard = loadSyntheticMonitoringDashboard(
+      new Date("2026-05-22T18:07:00.000Z"),
+      artifact
+    );
+    const checks = dashboard.categories.flatMap((category) => category.checks);
+
+    expect(dashboard.runnerStatus).toBe("degraded");
+    expect(checks.find((check) => check.id === "CHECK-A1")?.status).toBe("passing");
+    expect(checks.find((check) => check.id === "CHECK-A2")?.status).toBe("failing");
+    expect(checks.find((check) => check.id === "CHECK-V3")?.status).toBe("failing");
+    expect(checks.find((check) => check.id === "CHECK-V3")?.detail).toContain("banned pattern");
+  });
 });
 
 describe("/cockpit/synthetic-monitoring page", () => {
@@ -49,7 +102,7 @@ describe("/cockpit/synthetic-monitoring page", () => {
   const layout = readFileSync(resolve(repoRoot, "app/cockpit/layout.tsx"), "utf8");
 
   it("loads the typed dashboard and renders runner sections", () => {
-    expect(page).toContain("loadSyntheticMonitoringDashboard");
+    expect(page).toContain("loadSyntheticMonitoringDashboardFromDisk");
     expect(page).toContain("Production Verification Runner");
     expect(page).toContain("Auto-Filed Issues");
     expect(page).toContain("Configuration");

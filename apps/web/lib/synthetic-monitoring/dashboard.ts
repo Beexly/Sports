@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+
 export type SyntheticCheckStatus = "passing" | "warn" | "failing" | "pending";
 
 export type SyntheticSeverity = "P1" | "P2" | "P3";
@@ -47,6 +50,29 @@ export interface SyntheticMonitoringDashboard {
     readonly warn: number;
     readonly failing: number;
     readonly pending: number;
+  };
+}
+
+export interface SyntheticProbeRecord {
+  readonly path: string;
+  readonly label: string;
+  readonly ok: boolean;
+  readonly status: number;
+  readonly ms: number;
+  readonly bannedPattern: string;
+  readonly admin: boolean;
+}
+
+export interface SyntheticProbeArtifact {
+  readonly appUrl?: string;
+  readonly generatedAtIso: string;
+  readonly ok: boolean;
+  readonly failed: number;
+  readonly probes: readonly SyntheticProbeRecord[];
+  readonly runner?: {
+    readonly generatedAtIso: string;
+    readonly exitCode: number;
+    readonly outputPath: string;
   };
 }
 
@@ -232,22 +258,39 @@ const CHECK_DEFINITIONS: ReadonlyArray<
   },
 ];
 
-export function loadSyntheticMonitoringDashboard(now = new Date()): SyntheticMonitoringDashboard {
+const ARTIFACT_TO_CHECK_ID: Readonly<Record<string, string>> = {
+  "/": "CHECK-A1",
+  "/board": "CHECK-A2",
+  "/ledger": "CHECK-A3",
+};
+
+const ARTIFACT_TO_VOICE_CHECK_ID: Readonly<Record<string, string>> = {
+  "/": "CHECK-V1",
+  "/methodology": "CHECK-V2",
+  "/pricing": "CHECK-V3",
+};
+
+export async function loadSyntheticMonitoringDashboardFromDisk(
+  now = new Date()
+): Promise<SyntheticMonitoringDashboard> {
+  return loadSyntheticMonitoringDashboard(now, await readLatestArtifact());
+}
+
+export function loadSyntheticMonitoringDashboard(
+  now = new Date(),
+  artifact: SyntheticProbeArtifact | null = null
+): SyntheticMonitoringDashboard {
   const generatedAtIso = now.toISOString();
-  const lastRunIso = syntheticLastRun(now).toISOString();
+  const lastRunIso = artifact?.generatedAtIso ?? syntheticLastRun(now).toISOString();
   const categories = CHECK_DEFINITIONS.map((category) => ({
     ...category,
-    checks: category.checks.map((check) => ({
-      ...check,
-      lastRunIso: check.status === "pending" ? null : lastRunIso,
-      history: buildHistory(check.status),
-    })),
+    checks: category.checks.map((check) => hydrateCheckFromArtifact(check, artifact, lastRunIso)),
   }));
   const flatChecks = categories.flatMap((category) => category.checks);
 
   return {
     generatedAtIso,
-    runnerStatus: process.env.SYNTHETIC_MONITORING_ENABLED === "false" ? "paused" : "healthy",
+    runnerStatus: runnerStatusFromArtifact(artifact),
     activeEnvironment: process.env.VERCEL_ENV ?? process.env.NODE_ENV ?? "local",
     lastRunIso,
     categories,
@@ -266,6 +309,74 @@ export function loadSyntheticMonitoringDashboard(now = new Date()): SyntheticMon
       pending: flatChecks.filter((check) => check.status === "pending").length,
     },
   };
+}
+
+function hydrateCheckFromArtifact(
+  check: Omit<SyntheticCheck, "lastRunIso" | "history">,
+  artifact: SyntheticProbeArtifact | null,
+  lastRunIso: string
+): SyntheticCheck {
+  const probe = findProbeForCheck(check.id, artifact);
+  const status = statusFromProbe(check, probe);
+  return {
+    ...check,
+    status,
+    lastRunIso: status === "pending" ? null : lastRunIso,
+    detail: detailFromProbe(check, probe),
+    history: buildHistory(status),
+  };
+}
+
+function findProbeForCheck(
+  checkId: string,
+  artifact: SyntheticProbeArtifact | null
+): SyntheticProbeRecord | null {
+  if (!artifact) return null;
+  const path = Object.entries(ARTIFACT_TO_CHECK_ID).find(([, id]) => id === checkId)?.[0];
+  const voicePath = Object.entries(ARTIFACT_TO_VOICE_CHECK_ID).find(([, id]) => id === checkId)?.[0];
+  const targetPath = path ?? voicePath;
+  if (!targetPath) return null;
+  return artifact.probes.find((probe) => probe.path === targetPath) ?? null;
+}
+
+function statusFromProbe(
+  check: Omit<SyntheticCheck, "lastRunIso" | "history">,
+  probe: SyntheticProbeRecord | null
+): SyntheticCheckStatus {
+  if (!probe) return check.status;
+  if (check.id.startsWith("CHECK-V")) {
+    return probe.bannedPattern ? "failing" : probe.ok ? "passing" : "warn";
+  }
+  return probe.ok ? "passing" : "failing";
+}
+
+function detailFromProbe(
+  check: Omit<SyntheticCheck, "lastRunIso" | "history">,
+  probe: SyntheticProbeRecord | null
+): string {
+  if (!probe) return check.detail;
+  if (probe.bannedPattern) {
+    return `Latest probe found banned pattern ${probe.bannedPattern}.`;
+  }
+  return `Latest probe: HTTP ${probe.status} in ${probe.ms}ms.`;
+}
+
+function runnerStatusFromArtifact(
+  artifact: SyntheticProbeArtifact | null
+): SyntheticMonitoringDashboard["runnerStatus"] {
+  if (process.env.SYNTHETIC_MONITORING_ENABLED === "false") return "paused";
+  if (!artifact) return "healthy";
+  return artifact.ok ? "healthy" : "degraded";
+}
+
+async function readLatestArtifact(): Promise<SyntheticProbeArtifact | null> {
+  const artifactPath = resolve(process.cwd(), ".synthetic-monitoring", "latest.json");
+  try {
+    const text = await readFile(artifactPath, "utf8");
+    return JSON.parse(text) as SyntheticProbeArtifact;
+  } catch {
+    return null;
+  }
 }
 
 function syntheticLastRun(now: Date): Date {

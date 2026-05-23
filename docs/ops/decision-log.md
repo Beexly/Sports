@@ -352,3 +352,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `scripts/synthetic-monitoring-runner.mjs` and the root `synthetic:run` script to execute the production probe in structured mode and write `.synthetic-monitoring/latest.json`.
 - Rationale: the monitoring loop now has a scheduler-friendly command that preserves probe exit codes while leaving a machine-readable artifact for later cockpit/history ingestion.
 - Deferred: database persistence, 24-hour history, issue-queue filing, and owner-channel notification remain separate runner slices.
+
+## 2026-05-22 - Cockpit Synthetic Monitoring Reads Latest Artifact
+
+- Decision: update the synthetic monitoring dashboard loader to read `.synthetic-monitoring/latest.json` when present and hydrate covered checks from the latest probe result.
+- Rationale: the cockpit page now reflects runner output instead of only static expectations, while still keeping unsupported checks pending until the scheduled runner captures those signals.
+- Deferred: historical sparklines from durable runs, issue cards from auto-filed queue entries, and manual rerun controls remain separate slices.
