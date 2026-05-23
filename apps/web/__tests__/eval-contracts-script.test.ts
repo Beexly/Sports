@@ -35,6 +35,16 @@ describe("eval contract runner", () => {
     expect(src).toContain("missing eval coverage for template");
   });
 
+  it("enforces calibration training scenario coverage", () => {
+    expect(src).toContain("REQUIRED_SURFACE_SCENARIO_COVERAGE");
+    expect(src).toContain('"calibration-training"');
+    expect(src).toContain("WEEKLY_INSIGHT");
+    expect(src).toContain("happy-path");
+    expect(src).toContain("policy-block");
+    expect(src).toContain("thin-week-fallback");
+    expect(src).toContain("missing eval coverage for scenario");
+  });
+
   it("passes against the current eval library", () => {
     const output = execFileSync(process.execPath, [scriptPath], {
       cwd: repoRoot,

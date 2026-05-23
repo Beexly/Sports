@@ -17,6 +17,9 @@ const REQUIRED_FRONTMATTER = ["surface", "scenario", "created", "created_by", "s
 const REQUIRED_SECTIONS = ["# Input", "# Expected behavior", "# Forbidden behavior", "# Pass criteria"];
 const VALID_STATUS = new Set(["pending-runner", "active", "retired"]);
 const REQUIRED_SURFACE_TEMPLATE_COVERAGE = {
+  "calibration-training": [
+    "WEEKLY_INSIGHT",
+  ],
   "galaxy-studio": [
     "FAN_EXPLAINER",
     "FANTASY_ANGLE",
@@ -26,6 +29,13 @@ const REQUIRED_SURFACE_TEMPLATE_COVERAGE = {
     "NEWSLETTER_BLOCK",
     "SPONSOR_SAFE_BLURB",
     "YOUTUBE_TITLE_IDEAS",
+  ],
+};
+const REQUIRED_SURFACE_SCENARIO_COVERAGE = {
+  "calibration-training": [
+    "happy-path",
+    "policy-block",
+    "thin-week-fallback",
   ],
 };
 
@@ -82,6 +92,21 @@ for (const [surface, requiredTemplates] of Object.entries(REQUIRED_SURFACE_TEMPL
   for (const template of requiredTemplates) {
     if (!activeTemplates.has(template)) {
       failures.push(`${surface}: missing eval coverage for template "${template}"`);
+    }
+  }
+}
+
+for (const [surface, requiredScenarios] of Object.entries(REQUIRED_SURFACE_SCENARIO_COVERAGE)) {
+  const activeScenarios = new Set(
+    contracts
+      .filter((contract) => contract.values.surface === surface && contract.values.status !== "retired")
+      .map((contract) => contract.values.scenario)
+      .filter(Boolean),
+  );
+
+  for (const scenario of requiredScenarios) {
+    if (!activeScenarios.has(scenario)) {
+      failures.push(`${surface}: missing eval coverage for scenario "${scenario}"`);
     }
   }
 }

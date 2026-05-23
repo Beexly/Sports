@@ -467,3 +467,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: validate Claude-generated weekly calibration insight text before returning or persisting it.
 - Rationale: the calibration training surface must remain descriptive; generated text cannot become betting advice, a CTA, a comparison to other users, or banned positioning.
 - Guardrail: policy failures are recorded as failed Claude API calls with `POLICY_*` error kinds.
+
+## 2026-05-22 - Calibration Training Eval Coverage
+
+- Decision: add eval contracts for weekly calibration insight happy path, thin-week fallback, and policy-block behavior.
+- Rationale: calibration training is a Claude-backed Phase 4 surface now present in code, so the eval library should cover the key success and refusal modes before broader rollout.
+- Guardrail: `scripts/eval-contracts.mjs` now enforces the required calibration training template and scenario coverage.
