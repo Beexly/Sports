@@ -488,3 +488,16 @@ Metric threshold: Tests cover active/trialing/past-due access, canceled paid-thr
 Owner: Codex maintains scaffold; Garrett confirms support-policy wording
 Next review date: Before refund and cancellation webhook implementation
 Notes: Logic only. No Stripe calls, refund decisions, Discord role changes, subscription mutation, or support sends are wired.
+
+### DEC-NEXT-045 - Stripe Webhook Decision Logic
+
+Date: 2026-05-23
+Decision: Add pure Stripe webhook duplicate-event and action-mapping logic before real webhook mutation.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Stripe duplicate events can otherwise create duplicate founding numbers, incorrect refunds, or repeated referral clawbacks.
+Metric threshold: Tests cover duplicate-event skipping, supported action mapping, and unsupported-event ignore behavior.
+Owner: Codex maintains scaffold; Garrett confirms Stripe event list before launch
+Next review date: Before Stripe webhook implementation
+Notes: Logic only. No signature verification, durable event log, member mutation, refund action, founding seat assignment, or referral payout behavior is wired.

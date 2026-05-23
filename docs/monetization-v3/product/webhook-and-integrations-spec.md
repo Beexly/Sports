@@ -17,6 +17,7 @@ Events:
 Required behavior:
 
 - Idempotent handling.
+- Pure idempotency/action decisioning exists from DEC-NEXT-045; signature verification, durable processed-event logs, and mutations remain unwired.
 - Durable logs for each event.
 - No duplicate founding numbers.
 - Access follows paid-term policy.
