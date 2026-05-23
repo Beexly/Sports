@@ -132,7 +132,7 @@
 - `71aa2e3` - DEC-NEXT-074 add env-file preflight support
 - `b228fd7` - DEC-NEXT-075 add Vault auth provider contract
 - `377f10b` - DEC-NEXT-076 enforce CSV header contract
-- `TBD` - DEC-NEXT-077 sync master brief CSV contract counts
+- `d8733ab` - DEC-NEXT-077 sync master brief CSV contract counts
 
 ## What I Flagged For Morning Triage
 
