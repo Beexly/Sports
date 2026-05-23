@@ -82,7 +82,7 @@
 - `2787230` - DEC-NEXT-049 add research archive audit script
 - `d6e947c` - DEC-NEXT-050 add implementation readiness gap register
 - `bd70924` - DEC-NEXT-051 add Vault route access helper
-- `98471b6` - DEC-NEXT-052 add Vault referral decisioning
+- `517a800` - DEC-NEXT-052 add Vault referral decisioning
 
 ## What I Flagged For Morning Triage
 
