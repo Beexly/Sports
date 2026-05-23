@@ -11,6 +11,7 @@ const pkg = JSON.parse(readFileSync(resolve(repoRoot, "package.json"), "utf8"));
 describe("eval contract runner", () => {
   it("is wired through the root package scripts", () => {
     expect(pkg.scripts["evals:contracts"]).toBe("node scripts/eval-contracts.mjs");
+    expect(pkg.scripts.guardrails).toContain("node scripts/eval-contracts.mjs");
   });
 
   it("validates frontmatter, required sections, and numbered pass criteria", () => {

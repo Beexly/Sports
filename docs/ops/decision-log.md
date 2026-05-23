@@ -407,3 +407,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `npm run evals:contracts` to validate the append-only markdown eval library before the full model-output runner exists.
 - Rationale: Phase 3 and Phase 4 AI-output surfaces need enforceable contracts now; malformed eval files should fail locally and in CI before they become stale docs.
 - Guardrail: this runner only validates metadata and section structure. It does not call Claude or score generated outputs.
+
+## 2026-05-22 - Eval Contracts Join Guardrails
+
+- Decision: include `scripts/eval-contracts.mjs` in the root `npm run guardrails` chain.
+- Rationale: the autonomous loop already runs guardrails after implementation; eval metadata drift should fail through the normal verification path instead of relying on a separate manual command.
+- Guardrail: this remains a structural contract check only and does not add external API calls to CI.
