@@ -2272,7 +2272,7 @@ Everything else is reference content available as needed during execution.
 
 ## Recent additions (Pass 12-13)
 
-**Status:** Added after the Pass 10-11 brief addendum. Current local validation state: 215 Markdown files, 28 CSV files, and 230 README navigation targets checked. These additions do not authorize production deploy, Stripe activation, Discord mutation, email sends, public posting, paid traffic, runway decisions, or activation of a fourth monetization track.
+**Status:** Added after the Pass 10-11 brief addendum. Current local validation state: 217 Markdown files, 28 CSV files, 28 CSV header contracts, and 232 README navigation targets checked. These additions do not authorize production deploy, Stripe activation, Discord mutation, email sends, public posting, paid traffic, runway decisions, or activation of a fourth monetization track.
 
 ### Engineering hardening
 
@@ -2301,6 +2301,7 @@ Everything else is reference content available as needed during execution.
 ### Validation and navigation
 
 - `docs/monetization-v3/tools/validate-monetization-v3.ps1` now enforces README navigation coverage for Markdown/CSV pack files.
+- `docs/monetization-v3/tools/validate-monetization-v3.ps1` now enforces CSV header contracts for all monetization CSVs.
 - `docs/monetization-v3/README.md` is current through the newest engineering and R&D files.
 - `docs/monetization-v3/audit/decision-log-collisions.md` is refreshed through DEC-NEXT-068 and records DEC-NEXT-029 as intentionally unused.
 - `docs/ops/issue-queue.md` now tracks launch blockers through OPS-2026-05-23-008, including auth/member-gating.
