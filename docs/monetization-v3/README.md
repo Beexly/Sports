@@ -75,6 +75,7 @@ Runway determines which subset is active:
 - [product/kpi-cockpit-prd.md](product/kpi-cockpit-prd.md) - KPI cockpit requirements for monthly operating review.
 - [product/live-obs-prd.md](product/live-obs-prd.md) - Live OBS overlay product requirements.
 - [product/pre-engineering-handoff.md](product/pre-engineering-handoff.md) - Pre-engineering handoff checklist and implementation posture.
+- [product/public-proof-surface-monetization-spec.md](product/public-proof-surface-monetization-spec.md) - Email capture, contextual Vault CTA, and UTM spec for public proof surfaces.
 - [product/vault-api-contracts.md](product/vault-api-contracts.md) - Vault API contracts for membership, seats, digests, and admin flows.
 - [product/vault-data-model.md](product/vault-data-model.md) - Vault data model for members, applications, digests, events, referrals, and audits.
 - [product/vault-prd.md](product/vault-prd.md) - Vault product requirements and source operating docs.
@@ -226,6 +227,7 @@ Runway determines which subset is active:
 - [templates/partnership-inquiries.csv](templates/partnership-inquiries.csv) - Partnership inquiry tracker.
 - [templates/short-form-content-drafts.csv](templates/short-form-content-drafts.csv) - Short-form content lab draft tracker.
 - [templates/short-form-experiment-scorecard.csv](templates/short-form-experiment-scorecard.csv) - Short-form content lab experiment scorecard.
+- [templates/short-form-utm-map.csv](templates/short-form-utm-map.csv) - Short-form content destination and UTM map.
 - [templates/track-risk-register.csv](templates/track-risk-register.csv) - Track risk register.
 - [templates/vault-feedback-themes.csv](templates/vault-feedback-themes.csv) - Vault feedback theme tracker.
 - [templates/vault-interview-tracker.csv](templates/vault-interview-tracker.csv) - Vault interview tracker.
