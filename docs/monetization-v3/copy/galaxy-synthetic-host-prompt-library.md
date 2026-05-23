@@ -1,8 +1,16 @@
 # Galaxy Synthetic Host Prompt Library
 
 **Status:** Internal R&D. Draft-only.
-**Related decision:** DEC-NEXT-018
+**Related decisions:** DEC-NEXT-018, DEC-NEXT-021
 **Pairs with:** `copy/galaxy-synthetic-host-policy.md`, `copy/galaxy-short-form-script-bank.md`
+
+---
+
+## DEC-NEXT-021 update
+
+V1 is now Vega-first. The human-presenting profiles remain deferred references, not the first public test path.
+
+Use `copy/galaxy-vega-character-brief.md` as the creative source of truth for the first character test.
 
 ---
 
@@ -40,7 +48,40 @@ underage, teen, school, student, dorm, celebrity, public figure, real person lik
 
 ---
 
-## Profile 1 - Desk analyst
+## Profile 0 - Vega character guide
+
+### Identity lock
+
+Vega is a stylized telescope/lens character with constellation and calibration accents. Vega is obviously synthetic, non-human, method-led, and owned by Galaxy. Vega points viewers to public artifacts.
+
+### Still image prompt
+
+```
+Stylized non-human Galaxy sports research character named Vega, compact telescope and camera-lens inspired body, constellation-map faceplate, subtle calibration dial accents, near-black and off-white palette with restrained blue and muted star-gold accents, readable at phone size, simple silhouette, calm precise expression, transparent background, no sportsbook imagery, no casino motifs, no team logos, no humanoid glamour, not childish, not cute-first
+```
+
+### Video shot prompt
+
+```
+Vertical 9:16 short-form composition with Vega, a stylized telescope/lens Galaxy character, positioned beside a clean artifact card layout, subtle lens glint, small calibration dial movement, star-map faceplate animation, restrained sports research aesthetic, space for captions, no logos, no casino colors, no hype graphics, no reaction thumbnail style
+```
+
+### Best scripts
+
+- Loss Room in 30 Seconds.
+- Why We Passed.
+- Methodology Minute.
+- Model Journal excerpt.
+
+### QA focus
+
+- Is the synthetic identity obvious from the design itself?
+- Does Vega guide attention to the artifact?
+- Could Vega sit beside the Loss Room without weakening it?
+
+---
+
+## Profile 1 - Desk analyst - deferred
 
 ### Identity lock
 
@@ -73,7 +114,7 @@ Vertical phone-native sports research explainer shot, adult-presenting fictional
 
 ---
 
-## Profile 2 - Domestic-lifestyle explainer
+## Profile 2 - Domestic-lifestyle explainer - deferred
 
 ### Identity lock
 
@@ -106,7 +147,7 @@ Vertical phone-native explainer shot in a real-looking home kitchen, adult-prese
 
 ---
 
-## Profile 3 - Field correspondent
+## Profile 3 - Field correspondent - deferred
 
 ### Identity lock
 
@@ -190,9 +231,9 @@ She knows what hits.
 
 ## First private generation queue
 
-1. Script 2 with Domestic-lifestyle explainer.
-2. Script 8 with Desk analyst.
-3. Script 4 with Field correspondent.
+1. Script 1 with Vega.
+2. Script 4 with Vega.
+3. Script 8 with Vega.
 
 Generate one still per script first. Do not generate motion until stills pass:
 

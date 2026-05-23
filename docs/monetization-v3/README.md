@@ -60,6 +60,7 @@ Runway determines which subset is active:
 - [audit/claude-overnight-close-out-2026-05-23.md](audit/claude-overnight-close-out-2026-05-23.md) - Claude overnight Pass 11 close-out and morning reading order.
 - [audit/decision-log-collisions.md](audit/decision-log-collisions.md) - DEC-NEXT uniqueness audit and reserved-ID status.
 - [audit/galaxy-short-form-content-lab-rd.md](audit/galaxy-short-form-content-lab-rd.md) - Short-form video R&D lab plan with scripts, synthetic-host profiles, and approval gates.
+- [audit/galaxy-character-media-strategy-2026-05-23.md](audit/galaxy-character-media-strategy-2026-05-23.md) - Character-first media strategy and Vega mascot test plan.
 - [audit/galaxy-vault-pre-mortem.md](audit/galaxy-vault-pre-mortem.md) - Vault failure pre-mortem and mitigation prompts.
 - [audit/kpi-operator-ritual.md](audit/kpi-operator-ritual.md) - Galaxy-voice operator layer for monthly KPI review.
 - [audit/synthetic-media-monetization-rd-2026-05-23.md](audit/synthetic-media-monetization-rd-2026-05-23.md) - Synthetic-media archive inspection and Galaxy monetization reuse audit.
@@ -107,6 +108,7 @@ Runway determines which subset is active:
 - [copy/galaxy-short-form-script-bank.md](copy/galaxy-short-form-script-bank.md) - Internal short-form script drafts sourced from Galaxy artifacts.
 - [copy/galaxy-synthetic-host-policy.md](copy/galaxy-synthetic-host-policy.md) - Internal R&D policy for SFW synthetic hosts and short-form video tests.
 - [copy/galaxy-synthetic-host-prompt-library.md](copy/galaxy-synthetic-host-prompt-library.md) - Private SFW synthetic-host prompt profiles for visual drafts.
+- [copy/galaxy-vega-character-brief.md](copy/galaxy-vega-character-brief.md) - Vega character design brief for mascot-first short-form tests.
 - [copy/galaxy-twitter-content-discipline.md](copy/galaxy-twitter-content-discipline.md) - Twitter content discipline and response rules.
 - [copy/galaxy-twitter-incident-response-protocol.md](copy/galaxy-twitter-incident-response-protocol.md) - Twitter incident response protocol.
 - [copy/galaxy-twitter-launch-thread.md](copy/galaxy-twitter-launch-thread.md) - Vault launch Twitter thread.
@@ -228,6 +230,7 @@ Runway determines which subset is active:
 - [templates/short-form-content-drafts.csv](templates/short-form-content-drafts.csv) - Short-form content lab draft tracker.
 - [templates/short-form-experiment-scorecard.csv](templates/short-form-experiment-scorecard.csv) - Short-form content lab experiment scorecard.
 - [templates/short-form-utm-map.csv](templates/short-form-utm-map.csv) - Short-form content destination and UTM map.
+- [templates/character-media-test-plan.csv](templates/character-media-test-plan.csv) - Character media test plan and kill criteria.
 - [templates/track-risk-register.csv](templates/track-risk-register.csv) - Track risk register.
 - [templates/vault-feedback-themes.csv](templates/vault-feedback-themes.csv) - Vault feedback theme tracker.
 - [templates/vault-interview-tracker.csv](templates/vault-interview-tracker.csv) - Vault interview tracker.

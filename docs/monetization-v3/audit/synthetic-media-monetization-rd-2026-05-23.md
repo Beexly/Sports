@@ -81,22 +81,25 @@ Recommended series:
 
 The user idea has commercial energy, but it needs a brand-safe shape.
 
-Recommended framing: **Galaxy synthetic desk hosts**, not "sexy housewives."
+Updated recommendation after DEC-NEXT-021: **Galaxy character guide first**, not photoreal synthetic desk hosts.
 
-Allowed V1 host style:
+The earlier host framing is superseded for V1 because disclosure solves compliance but not visual brand collision. Galaxy should test an obvious character, then revisit human-presenting hosts only if the character path fails for reasons unrelated to character format.
 
-- Adult-presenting, SFW, fictional, non-celebrity, non-real-person.
-- Natural domestic, studio, office, gym, or sports-bar-adjacent settings.
-- Wardrobe can be attractive but not explicit: fitted casual clothing, sports-network desk look, sweater/jeans, neutral dress, team-color accents without implying league affiliation.
-- The host never claims to be Garrett, never claims betting success, never implies personal expertise as a real analyst, and never answers member-specific questions.
-- The host introduces or narrates Galaxy artifacts: "A pass from today's board," "One autopsy worth reading," "What calibration means."
-- Disclosure is built into profile bios and platform descriptions. On-screen disclosure can be lightweight if platform policy permits, but should never be hidden if asked.
+Allowed V1 character style:
+
+- Obviously synthetic.
+- Not human-presenting in V1.
+- Visual identity built from Galaxy, astronomy, calibration, and record-keeping motifs.
+- Garrett voice or clearly branded voice treatment.
+- The character never claims to be Garrett, never claims betting success, never implies personal expertise as a real analyst, and never answers member-specific questions.
+- The character introduces or narrates Galaxy artifacts: "A pass from today's board," "One autopsy worth reading," "What calibration means."
+- Disclosure is visual by design and still documented in profile/platform metadata.
 
 Disallowed V1 host style:
 
-- Real-person likenesses, celebrity lookalikes, face swaps, or "make her look like X."
+- Real-person likenesses, celebrity lookalikes, face swaps, or "make this look like X."
 - Underage-coded terms, school/teen framing, or ambiguous age presentation.
-- Explicit sexual positioning, lingerie-first creative, adult-platform funneling, or "lonely DM" parasocial hooks.
+- Explicit sexual positioning, adult-platform funneling, or parasocial hooks.
 - Sportsbook affiliate promotion.
 - Outcome-promise language.
 - Non-public-information framing.
@@ -183,15 +186,15 @@ Start text-only:
 - Garrett approves or rejects.
 - No images yet.
 
-### Phase 3 - Synthetic host prompt library
+### Phase 3 - Character prompt library
 
-Build 3 SFW host prompt profiles:
+Build the obvious-character prompt library first:
 
-- Desk analyst.
-- Domestic-lifestyle explainer.
-- Field correspondent.
+- Vega mascot/character.
+- Optional later Vtuber profile.
+- Optional later stylized-human profile.
 
-Each profile gets camera grammar, wardrobe grammar, negative prompts, disclosure metadata, and QA checklist.
+Each profile gets visual grammar, motion grammar, negative prompts, disclosure metadata, and QA checklist.
 
 ### Phase 4 - Video assembly
 

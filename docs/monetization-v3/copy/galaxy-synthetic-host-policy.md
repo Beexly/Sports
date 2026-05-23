@@ -3,7 +3,7 @@
 **Status:** Internal R&D policy. Not public copy.
 **Applies to:** Any synthetic person, narrator, presenter, image, voice, video, or character used in Galaxy short-form content.
 **Pairs with:** `audit/galaxy-short-form-content-lab-rd.md`
-**Related decisions:** DEC-NEXT-016, DEC-NEXT-017
+**Related decisions:** DEC-NEXT-016, DEC-NEXT-017, DEC-NEXT-021
 
 ---
 
@@ -39,6 +39,21 @@
 Galaxy may test synthetic hosts for short-form education and distribution. A realistic synthetic host can help explain public Galaxy artifacts, but it also creates brand risk: deception, personality creep, adult/SFW contamination, platform-policy violations, and drift toward sports-betting hype.
 
 This policy keeps the test inside Galaxy's operating discipline.
+
+---
+
+## V1 strategic posture
+
+As of DEC-NEXT-021, Galaxy's V1 short-form media test is character-first, not photoreal-human-first.
+
+The recommended V1 path is Vega: an obviously synthetic Galaxy character that explains artifacts. Photoreal human-presenting hosts are deferred because their visual category collides with low-quality tout and synthetic-content patterns even when labeled.
+
+This policy still governs any future human-presenting synthetic tests, but the default implementation path is now:
+
+1. obvious character,
+2. Garrett voice,
+3. proof-surface CTA,
+4. two-week killable test.
 
 ---
 
@@ -167,7 +182,17 @@ The host can say:
 
 ## Host profiles approved for R&D
 
-### Desk analyst
+### Vega - recommended V1
+
+Use for all first public tests.
+
+Default form: stylized telescope/lens character with constellation and calibration accents.
+
+Default voice: Garrett's real voice.
+
+Default role: artifact guide.
+
+### Desk analyst - deferred
 
 Use for methodology and ledger explainers.
 
@@ -175,9 +200,9 @@ Default setting: neutral desk, laptop, muted sports-research backdrop.
 
 Default wardrobe: blazer, simple top, button-down, or knitwear.
 
-### Domestic-lifestyle explainer
+### Domestic-lifestyle explainer - deferred
 
-Use for the brand-safe version of the user's domestic-host concept.
+Use only if separately reauthorized. The domestic human-presenting concept is not the V1 path because it creates visual category collision with the tout ecosystem.
 
 Default setting: kitchen, living room, home office, or porch.
 
@@ -185,7 +210,7 @@ Default wardrobe: sweater, casual dress, jeans, neutral jewelry, team-color acce
 
 Boundary: attractive is allowed. Explicit is not. The host explains the artifact; the host is not the product.
 
-### Field correspondent
+### Field correspondent - deferred
 
 Use for handheld vertical clips.
 

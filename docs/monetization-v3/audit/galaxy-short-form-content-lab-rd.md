@@ -53,7 +53,33 @@ Do not create clips from generalized sports commentary. Galaxy does not need a t
 
 ## Synthetic host profiles
 
+**DEC-NEXT-021 update:** V1 is now character-first. The human-presenting profiles below remain useful as deferred reference, but the first public test should use Vega or another obvious Galaxy character.
+
 These are prompt-policy profiles, not final characters.
+
+### Profile 0 - Vega character guide
+
+Purpose: obvious synthetic Galaxy artifact guide.
+
+Visual grammar:
+
+- Stylized telescope/lens/constellation character.
+- Clearly not human.
+- Calm, precise, method-led.
+- Small enough to work as a corner host beside artifact screenshots.
+- No sportsbook, casino, or team-logo motifs.
+
+Voice:
+
+- Garrett real voice preferred.
+- Character points at the artifact and does not speak as a real analyst.
+
+Best series:
+
+- Loss Room in 30 Seconds.
+- Why We Passed.
+- Methodology Minute.
+- Model Journal excerpt.
 
 ### Profile 1 - Desk analyst
 
@@ -303,7 +329,7 @@ Do not test multiple hosts, formats, and platforms at once. The first test shoul
 ### Week 2 - Visual draft only
 
 - Produce 2 vertical drafts.
-- Use one host profile only.
+- Use Vega only.
 - Run brand-safety scan.
 - Garrett reviews manually.
 
