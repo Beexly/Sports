@@ -10,6 +10,7 @@ The proof surfaces now expose freshness metadata without adding marketing pressu
 
 - [proof-freshness.ts](../../../apps/web/lib/proof-freshness.ts) - typed surface metadata, stale-window calculation, and list helper.
 - [proof-surface-freshness.tsx](../../../apps/web/components/proof-surface-freshness.tsx) - restrained "last updated" line for public proof pages.
+- [admin-repair-tasks.ts](../../../apps/web/lib/admin-repair-tasks.ts) can convert stale proof surfaces into internal repair tasks.
 - [freshness route](../../../apps/web/app/api/proof/freshness/route.ts) - public JSON projection for synthetic monitoring and future cockpit warnings.
 - [proof-freshness.test.ts](../../../apps/web/lib/proof-freshness.test.ts) - regression coverage for fresh/stale status.
 

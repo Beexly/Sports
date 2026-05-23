@@ -351,6 +351,7 @@ Acceptance criteria:
 
 - Methodology, Loss Room, Pass List, and Ledger expose freshness metadata. Static metadata exists from DEC-NEXT-033; replace with source-of-truth update times when persistence is wired.
 - Admin cockpit warns when a proof surface exceeds its allowed stale window.
+- Stale proof-surface repair-task generation exists from DEC-NEXT-042; cockpit display and persistence remain unwired.
 - Short-form R&D checklist blocks public traffic campaigns to stale proof surfaces.
 - Freshness metadata does not create a marketing CTA or distract from proof content.
 

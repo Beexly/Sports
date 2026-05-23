@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getOnboardingRepairTasks,
+  getProofSurfaceRepairTasks,
   getProviderRepairTasks,
 } from "./admin-repair-tasks";
 
@@ -75,6 +76,37 @@ describe("admin repair tasks", () => {
         title: "Check provider: Discord bot permissions",
         entityKey: "discord_bot",
         reason: "Discord bot permissions heartbeat is not configured.",
+      },
+    ]);
+  });
+
+  it("creates proof-surface tasks only for stale proof surfaces", () => {
+    expect(
+      getProofSurfaceRepairTasks([
+        {
+          surface: "methodology",
+          label: "Methodology",
+          updatedAt: "2026-05-01T00:00:00.000Z",
+          maxStaleDays: 30,
+          ageDays: 5,
+          status: "fresh",
+        },
+        {
+          surface: "loss-room",
+          label: "Loss Room",
+          updatedAt: "2026-05-01T00:00:00.000Z",
+          maxStaleDays: 7,
+          ageDays: 8,
+          status: "stale",
+        },
+      ]),
+    ).toEqual([
+      {
+        source: "proof_surface_freshness",
+        severity: "p1",
+        title: "Refresh proof surface: Loss Room",
+        entityKey: "loss-room",
+        reason: "Loss Room is 8 days old; max stale window is 7 days.",
       },
     ]);
   });

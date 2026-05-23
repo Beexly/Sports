@@ -12,13 +12,13 @@
 ## Implemented
 
 - [admin-repair-tasks.ts](../../../apps/web/lib/admin-repair-tasks.ts) creates normalized repair task objects from onboarding health and provider heartbeat status.
-- [admin-repair-tasks.test.ts](../../../apps/web/lib/admin-repair-tasks.test.ts) covers p0 onboarding tasks, watch-only suppression, and provider stale/unconfigured tasks.
+- [admin-repair-tasks.test.ts](../../../apps/web/lib/admin-repair-tasks.test.ts) covers p0 onboarding tasks, watch-only suppression, provider stale/unconfigured tasks, and stale proof-surface tasks.
 
 ## Task Sources
 
 - `vault_onboarding`
 - `provider_heartbeat`
-- `proof_surface_freshness` (reserved for the future proof freshness monitor)
+- `proof_surface_freshness`
 
 ## Still Unwired
 

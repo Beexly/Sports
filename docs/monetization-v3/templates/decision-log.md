@@ -449,3 +449,16 @@ Metric threshold: Tests cover p0 onboarding tasks, watch-only suppression, and p
 Owner: Codex maintains scaffold; Garrett defines admin cockpit operating cadence
 Next review date: Before admin cockpit implementation
 Notes: Model only. No persistence, alerts, provider calls, member mutation, assignment workflow, or public exposure is wired.
+
+### DEC-NEXT-042 - Proof Surface Repair Tasks
+
+Date: 2026-05-23
+Decision: Convert stale public proof-surface freshness status into internal admin repair tasks.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Proof surfaces are the trust layer for Vault and short-form traffic; stale proof surfaces should become visible operator work before campaigns point traffic at them.
+Metric threshold: Tests create a p1 repair task for stale proof surfaces and ignore fresh surfaces.
+Owner: Codex maintains scaffold; Garrett owns proof-surface update cadence
+Next review date: Before routing short-form traffic to proof surfaces
+Notes: Logic only. No persistence, admin cockpit, public CTA, automated content update, or campaign blocking is wired.

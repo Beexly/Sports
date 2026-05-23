@@ -1,4 +1,5 @@
 import type { ProviderHeartbeat } from "./provider-heartbeats";
+import type { ProofSurfaceFreshness } from "./proof-freshness";
 import type { VaultOnboardingHealth } from "./vault/onboarding-health";
 
 export type AdminRepairTaskSource =
@@ -46,5 +47,19 @@ export function getProviderRepairTasks(
         heartbeat.status === "stale"
           ? `${heartbeat.label} heartbeat is ${heartbeat.ageMinutes} minutes old.`
           : `${heartbeat.label} heartbeat is not configured.`,
+    }));
+}
+
+export function getProofSurfaceRepairTasks(
+  surfaces: readonly ProofSurfaceFreshness[],
+): AdminRepairTask[] {
+  return surfaces
+    .filter((surface) => surface.status === "stale")
+    .map((surface) => ({
+      source: "proof_surface_freshness",
+      severity: "p1",
+      title: `Refresh proof surface: ${surface.label}`,
+      entityKey: surface.surface,
+      reason: `${surface.label} is ${surface.ageDays} days old; max stale window is ${surface.maxStaleDays} days.`,
     }));
 }
