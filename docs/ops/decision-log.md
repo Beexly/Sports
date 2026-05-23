@@ -443,3 +443,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add a local `local://build-size-budget` probe to `scripts/synthetic-monitoring-runner.mjs` and hydrate `CHECK-C1` from it.
 - Rationale: bundle size is best checked where `.next/static` exists, not from the deployed public URL.
 - Guardrail: when build artifacts are missing, the runner omits this probe and `CHECK-C1` remains pending. The default budget is 2 MB and can be overridden with `SYNTHETIC_BUILD_SIZE_BUDGET_BYTES`.
+
+## 2026-05-22 - Studio Late-Template Eval Coverage
+
+- Decision: add append-only eval contracts for the Newsletter Block, TikTok/Reels Script, and YouTube Title Ideas Studio templates.
+- Rationale: these templates existed in code but lacked dedicated eval coverage, leaving the Phase 3 Studio suite uneven.
+- Guardrail: evals are contract-only until the model-output runner lands; `npm run guardrails` validates their structure through `scripts/eval-contracts.mjs`.
