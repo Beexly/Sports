@@ -31,6 +31,57 @@
 
 ## Open issues
 
+### 2026-05-23 — [P1] Trust-claims scanner doesn't yet enforce master plan Part 3 vocabulary
+
+**Found by:** Claude (audit pass on 2026-05-23)
+**Surface:** `apps/web/lib/trust-claims.ts` banned list + the brand-safety
+test suite
+**Symptom:** the trust-claims registry only bans tout-style language
+("guaranteed," "lock," "sure thing," "risk-free," "easy money," "can't
+lose," "verified track record," "thousands of bettors," "trusted by
+serious bettors," "guaranteed profit"). It does NOT yet enforce master
+plan Part 3's expanded vocabulary: "Mission Control," "ecosystem,"
+"transform/unlock your/level up," "AI-powered / AI-driven / powered by
+AI," "intelligence platform" (as proper noun), "card" (in pick-card
+sense, not credit-card or HTML/CSS sense), first-person algorithm voice
+patterns, personification patterns.
+
+**Root cause:** the registry predates the master plan vocabulary
+expansion.
+
+**Proposed fix:** extend `TRUST_CLAIMS` with new BANNED entries for
+each Part 3 phrase. Context-aware exclusions needed for "card" (must
+allow `<card>` JSX, `variant="card"` props, `card: "summary_large_image"`
+Twitter OG meta key, "credit card" literal references). Add a new
+banned-vocabulary test scoped to homepage + marketing surfaces only
+(not cockpit/admin where some internal-vocabulary terms are legitimate).
+This is a Phase 1 deliverable per master plan Part 5; lands with the
+homepage reposition.
+
+**Status:** open (Phase 1 work)
+**Owner:** Codex with Claude-supplied entries
+
+### 2026-05-23 — [P2] No dedicated tests for the Stripe webhook handler
+
+**Found by:** Claude (audit pass on 2026-05-23)
+**Surface:** `apps/web/app/api/webhooks/stripe/route.ts`
+**Symptom:** the webhook handler does signature verification,
+idempotency, subscription sync, and tier transitions — but has no
+direct test coverage. The webhook is security-critical (handles
+billing state transitions) and a regression could silently downgrade
+users or fail to provision new subscriptions.
+**Root cause:** the webhook was built before the brand-safety test
+infrastructure matured.
+**Proposed fix:** add `__tests__/stripe-webhook.test.ts` covering:
+(1) missing signature returns 400, (2) bad signature returns 400,
+(3) replayed event ID returns `skipped: true`, (4) checkout.session.
+completed creates / updates the subscription row, (5) subscription.
+deleted downgrades tier to FREE, (6) tier maps correctly from price IDs
+(via env injection in the test). Mock the Stripe client; the existing
+`syncSubscription` is testable as a pure function.
+**Status:** open
+**Owner:** Codex
+
 ### 2026-05-23 — [P2] TypeScript `baseUrl` deprecation in apps/web/tsconfig.json
 
 **Found by:** Claude (during corporate-structure branch verification)

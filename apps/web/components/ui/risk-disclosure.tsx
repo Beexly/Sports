@@ -10,6 +10,8 @@
  *   - "card"    — bordered block with heading
  */
 
+import { HELPLINE } from "@/lib/brand";
+
 export interface RiskDisclosureProps {
   variant?: "inline" | "compact" | "card";
   /** Append the canonical past-performance line. */
@@ -21,7 +23,7 @@ export interface RiskDisclosureProps {
 const BODY =
   "Sports wagering is real risk. Only stake what you can afford to lose " +
   "without changing your week. If you or someone you know has a gambling " +
-  "problem, call 1-800-GAMBLER.";
+  `problem, call ${HELPLINE.shortLabel}.`;
 
 const PAST = " Past performance does not guarantee future results.";
 
