@@ -27,6 +27,7 @@ describe("env contract", () => {
         "TRANSACTIONAL_EMAIL_PROVIDER",
         "TRANSACTIONAL_EMAIL_API_KEY",
         "TRANSACTIONAL_EMAIL_FROM",
+        "DATABASE_URL",
       ]),
     );
   });
@@ -43,6 +44,7 @@ describe("env contract", () => {
     expect(report.missing.map((item) => item.name)).toContain(
       "DISCORD_BOT_TOKEN",
     );
+    expect(report.missing.map((item) => item.name)).toContain("DATABASE_URL");
     expect(report.missing.map((item) => item.name)).not.toContain(
       "STRIPE_VAULT_PRICE_ID",
     );
