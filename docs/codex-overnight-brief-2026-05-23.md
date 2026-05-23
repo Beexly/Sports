@@ -104,7 +104,7 @@
 - `6aa85c9` - DEC-NEXT-060 add Stripe checkout acceptance decisioning
 - `c6d3d5f` - DEC-NEXT-061 add Discord role sync decisioning
 - `6df2508` - DEC-NEXT-062 add auth env readiness
-- `TBD` - DEC-NEXT-063 add launch readiness verdict aggregation
+- `57bd063` - DEC-NEXT-063 add launch readiness verdict aggregation
 
 ## What I Flagged For Morning Triage
 
