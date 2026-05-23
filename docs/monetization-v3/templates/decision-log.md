@@ -423,3 +423,16 @@ Metric threshold: Tests cover the 15-minute repair window, day-one dashboard wat
 Owner: Codex maintains scaffold; Garrett verifies operational thresholds before launch
 Next review date: Before first paid Vault transaction
 Notes: Logic only. No provider calls, storage, admin queue, Discord mutation, email send, or production alerting is wired.
+
+### DEC-NEXT-040 - Provider Heartbeat Status Logic
+
+Date: 2026-05-23
+Decision: Add pure provider heartbeat status logic for Stripe, transactional email, Discord, private storage, and analytics.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: The longevity audit and engineering issue pack both flag provider drift as a launch risk that would otherwise surface through customer complaints.
+Metric threshold: Tests cover healthy, stale, unconfigured, and launch-critical provider-set behavior.
+Owner: Codex maintains scaffold; Garrett verifies provider choices before launch
+Next review date: Before founding-50 invitations send
+Notes: Logic only. No live provider calls, storage, admin cockpit, alerts, Discord mutation, or email sends are wired.

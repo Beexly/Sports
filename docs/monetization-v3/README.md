@@ -80,6 +80,7 @@ Runway determines which subset is active:
 - [product/live-obs-prd.md](product/live-obs-prd.md) - Live OBS overlay product requirements.
 - [product/manual-longevity-instruments.md](product/manual-longevity-instruments.md) - Manual brand, capacity, and freshness trackers tied to DEC-NEXT-032.
 - [product/pre-engineering-handoff.md](product/pre-engineering-handoff.md) - Pre-engineering handoff checklist and implementation posture.
+- [product/provider-heartbeat-scaffold-notes.md](product/provider-heartbeat-scaffold-notes.md) - Provider heartbeat status logic and DEC-NEXT-040 guardrails.
 - [product/proof-email-capture-scaffold-notes.md](product/proof-email-capture-scaffold-notes.md) - Validation-only proof email capture scaffold notes and DEC-NEXT-028 guardrails.
 - [product/proof-freshness-scaffold-notes.md](product/proof-freshness-scaffold-notes.md) - Proof-surface freshness metadata notes and DEC-NEXT-033 guardrails.
 - [product/production-smoke-test-notes.md](product/production-smoke-test-notes.md) - Read-only production smoke-test scripts and DEC-NEXT-024 guardrails.

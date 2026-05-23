@@ -331,7 +331,7 @@ Acceptance criteria:
 
 Gap:
 
-- Stripe, email, Discord, storage, and analytics provider failures would currently surface through customer complaints or manual inspection.
+- Provider heartbeat status logic exists from DEC-NEXT-040, but Stripe, email, Discord, storage, and analytics checks are not live and no admin dashboard or incident alerting exists.
 
 Acceptance criteria:
 
