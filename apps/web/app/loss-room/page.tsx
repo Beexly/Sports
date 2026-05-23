@@ -1,6 +1,9 @@
 import { ContextualVaultCta } from "@/components/contextual-vault-cta";
 import { ProofSurfaceEmailCapture } from "@/components/proof-surface-email-capture";
-import { proofSurfaceEmailCaptureEnabled } from "@/lib/feature-flags";
+import {
+  contextualVaultCtaEnabled,
+  proofSurfaceEmailCaptureEnabled,
+} from "@/lib/feature-flags";
 
 const sampleAutopsies = [
   {
@@ -55,7 +58,9 @@ export default function LossRoomPage() {
         </div>
       </section>
 
-      <ContextualVaultCta surface="loss-room" />
+      {contextualVaultCtaEnabled() ? (
+        <ContextualVaultCta surface="loss-room" />
+      ) : null}
       {proofSurfaceEmailCaptureEnabled() ? (
         <ProofSurfaceEmailCapture variant="loss-room" />
       ) : null}

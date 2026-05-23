@@ -1,6 +1,9 @@
 import { ContextualVaultCta } from "@/components/contextual-vault-cta";
 import { ProofSurfaceEmailCapture } from "@/components/proof-surface-email-capture";
-import { proofSurfaceEmailCaptureEnabled } from "@/lib/feature-flags";
+import {
+  contextualVaultCtaEnabled,
+  proofSurfaceEmailCaptureEnabled,
+} from "@/lib/feature-flags";
 
 const samplePasses = [
   {
@@ -56,7 +59,9 @@ export default function PassesPage() {
         </div>
       </section>
 
-      <ContextualVaultCta surface="passes" />
+      {contextualVaultCtaEnabled() ? (
+        <ContextualVaultCta surface="passes" />
+      ) : null}
       {proofSurfaceEmailCaptureEnabled() ? (
         <ProofSurfaceEmailCapture variant="passes" />
       ) : null}

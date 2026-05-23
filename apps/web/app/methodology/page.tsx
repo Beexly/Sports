@@ -1,5 +1,8 @@
 import { ContextualVaultCta } from "@/components/contextual-vault-cta";
-import { proofSurfaceEmailCaptureEnabled } from "@/lib/feature-flags";
+import {
+  contextualVaultCtaEnabled,
+  proofSurfaceEmailCaptureEnabled,
+} from "@/lib/feature-flags";
 import { ProofSurfaceEmailCapture } from "@/components/proof-surface-email-capture";
 
 const sections = [
@@ -72,7 +75,9 @@ export default function MethodologyPage() {
         ))}
       </section>
 
-      <ContextualVaultCta surface="methodology" />
+      {contextualVaultCtaEnabled() ? (
+        <ContextualVaultCta surface="methodology" />
+      ) : null}
       {proofSurfaceEmailCaptureEnabled() ? (
         <ProofSurfaceEmailCapture variant="default" />
       ) : null}

@@ -15,6 +15,8 @@
 - Added inert Vault integration scaffolds: typed config, entitlements, Discord planning, email schedules, seat-count API, validation-only application intake, and scaffold-only cron routes.
 - Added the first web regression-test harness around Vault pure helpers.
 - Added validation-only proof-surface email capture plumbing and tests; subscriber storage remains disabled.
+- Gated contextual Vault CTAs behind the production feature flag and added source-link tests.
+- Added longevity systems audit for slow-failure risks: onboarding health, provider heartbeats, proof-surface freshness, calibration drift, brand drift, founder capacity, R&D attention, renewal risk, and documentation rot.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -39,6 +41,7 @@
 - `9030a59` - DEC-NEXT-024 update overnight brief
 - `fae3e5d` - DEC-NEXT-025 scaffold Vault integrations
 - `ab183d0` - DEC-NEXT-026 add Vault route guards and tests
+- `913dcad` - DEC-NEXT-028 scaffold proof email capture
 
 ## What I Flagged For Morning Triage
 

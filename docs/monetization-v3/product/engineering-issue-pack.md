@@ -250,7 +250,7 @@ Acceptance criteria:
 
 Gap:
 
-- Public proof surfaces do not yet have contextual Vault CTAs that route high-intent readers to `/vault` without changing proof-page posture.
+- Public proof surfaces have contextual Vault CTA components behind `CONTEXTUAL_VAULT_CTA_ENABLED`, but click analytics and qualified-view reporting are not implemented.
 
 Acceptance criteria:
 
@@ -312,6 +312,46 @@ Acceptance criteria:
 - Test readout captures platform, post URL, proof-surface clicks, email captures, Vault applications, qualitative comments, brand-safety flags, and manual review time.
 - Decision output is one of kill, continue one more 4-week test, or defer until after Vault stability.
 - Readout references `templates/character-media-test-plan.csv` kill and continue criteria.
+
+### PHASE-N-011 - Member Onboarding Health Model
+
+Gap:
+
+- Vault onboarding has route and provider scaffolds, but no first-24-hour health model that verifies payment, member creation, Discord role assignment, welcome email, and dashboard access stay aligned.
+
+Acceptance criteria:
+
+- Signup creates or updates a member onboarding health record.
+- Health record tracks payment confirmation, member creation, Discord role grant, welcome email send, and first dashboard view timestamps.
+- Any missing post-payment step after 15 minutes creates an admin repair task.
+- Rolling 1-hour failure rate above 5 percent creates an incident-level alert.
+- No member identity is exposed publicly.
+
+### PHASE-N-012 - Provider Heartbeat Dashboard
+
+Gap:
+
+- Stripe, email, Discord, storage, and analytics provider failures would currently surface through customer complaints or manual inspection.
+
+Acceptance criteria:
+
+- Admin cockpit shows heartbeat status for Stripe webhook receipt, transactional email provider, Discord bot role permissions, private storage access, and analytics ingestion.
+- Heartbeats do not mutate customer data.
+- Stale heartbeat status is visible before founding-50 invitations send.
+- Provider incidents can be linked from `docs/ops/issue-queue.md`.
+
+### PHASE-N-013 - Proof Surface Freshness Monitor
+
+Gap:
+
+- Proof surfaces can become stale without an automated warning, especially once short-form traffic starts routing to them.
+
+Acceptance criteria:
+
+- Methodology, Loss Room, Pass List, and Ledger expose freshness metadata.
+- Admin cockpit warns when a proof surface exceeds its allowed stale window.
+- Short-form R&D checklist blocks public traffic campaigns to stale proof surfaces.
+- Freshness metadata does not create a marketing CTA or distract from proof content.
 
 ## Almanac Epic
 

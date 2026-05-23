@@ -1,4 +1,5 @@
 import { ContextualVaultCta } from "@/components/contextual-vault-cta";
+import { contextualVaultCtaEnabled } from "@/lib/feature-flags";
 
 const sampleLedger = [
   {
@@ -54,7 +55,9 @@ export default function LedgerPage() {
         </div>
       </section>
 
-      <ContextualVaultCta surface="ledger" />
+      {contextualVaultCtaEnabled() ? (
+        <ContextualVaultCta surface="ledger" />
+      ) : null}
     </main>
   );
 }

@@ -61,6 +61,7 @@ Runway determines which subset is active:
 - [audit/decision-log-collisions.md](audit/decision-log-collisions.md) - DEC-NEXT uniqueness audit and reserved-ID status.
 - [audit/galaxy-short-form-content-lab-rd.md](audit/galaxy-short-form-content-lab-rd.md) - Short-form video R&D lab plan with scripts, synthetic-host profiles, and approval gates.
 - [audit/galaxy-character-media-strategy-2026-05-23.md](audit/galaxy-character-media-strategy-2026-05-23.md) - Character-first media strategy and Vega mascot test plan.
+- [audit/galaxy-longevity-systems-audit-2026-05-23.md](audit/galaxy-longevity-systems-audit-2026-05-23.md) - Longevity systems audit covering sensors, failure forecasts, and hardening backlog.
 - [audit/galaxy-vault-pre-mortem.md](audit/galaxy-vault-pre-mortem.md) - Vault failure pre-mortem and mitigation prompts.
 - [audit/kpi-operator-ritual.md](audit/kpi-operator-ritual.md) - Galaxy-voice operator layer for monthly KPI review.
 - [audit/synthetic-media-monetization-rd-2026-05-23.md](audit/synthetic-media-monetization-rd-2026-05-23.md) - Synthetic-media archive inspection and Galaxy monetization reuse audit.

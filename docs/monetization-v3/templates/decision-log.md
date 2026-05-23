@@ -293,3 +293,29 @@ Metric threshold: Payload validation tests pass; endpoint returns HTTP 501 for v
 Owner: Codex; Garrett review optional
 Next review date: Before enabling `PROOF_SURFACE_EMAIL_CAPTURE_ENABLED`
 Notes: Does not store emails, send emails, route to checkout, or add paid tracking.
+
+### DEC-NEXT-030 - Contextual Vault CTA Feature Gate
+
+Date: 2026-05-23
+Decision: Gate contextual Vault CTA rendering behind `CONTEXTUAL_VAULT_CTA_ENABLED` and add source-link regression coverage.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: `product/public-proof-surface-monetization-spec.md` requires contextual CTAs to stay quiet, reversible, and disabled in production until Vault GO.
+Metric threshold: Public proof pages compile with CTAs off by default; source-link tests pass.
+Owner: Codex; Garrett review optional
+Next review date: Before enabling contextual Vault CTAs in production
+Notes: This does not add click analytics, checkout routing, or paid tracking.
+
+### DEC-NEXT-031 - Longevity Systems Audit
+
+Date: 2026-05-23
+Decision: Add a longevity audit layer that converts slow-failure risks into sensors, thresholds, and hardening backlog items.
+Track: Portfolio / operations
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Vault pre-mortem named underprepared risks around onboarding, brand drift, calibration, founder capacity, and operating cadence.
+Metric threshold: Audit creates hardening backlog with P0/P1 items and engineering issue-pack entries for onboarding health, provider heartbeat, and proof-surface freshness.
+Owner: Codex; Garrett review optional
+Next review date: Before Vault launch checklist Day -7
+Notes: Does not authorize deploy, paid integrations, pricing changes, or track activation.
