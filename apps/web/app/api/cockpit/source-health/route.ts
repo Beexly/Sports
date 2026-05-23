@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { assessSourceHealth, type SourceProbe } from "@/lib/cockpit/source-health";
+import type { SourceCategory } from "@/lib/source-intelligence";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 /**
@@ -32,6 +33,30 @@ interface SourceSnapshotRowShape {
   fetchedAt: Date;
 }
 
+// Map the runtime SourceSnapshotKind enum values to the
+// source-intelligence SourceCategory used for FRESHNESS_BUDGETS lookup.
+// Any unmapped kind falls through to the global default thresholds.
+const SOURCE_KIND_TO_CATEGORY: Readonly<Record<string, SourceCategory>> = {
+  ODDS: "ODDS",
+  GAME: "TEAM_SCHEDULE",
+  GAMES: "TEAM_SCHEDULE",
+  SCHEDULE: "TEAM_SCHEDULE",
+  INJURY: "INJURY_NEWS",
+  INJURY_NEWS: "INJURY_NEWS",
+  WEATHER: "WEATHER",
+  PLAYER_STATS: "PLAYER_STATS",
+  TEAM_STATS: "TEAM_STATS",
+  PROMO: "BOOK_PROMO_TERMS",
+  PROMO_TERMS: "BOOK_PROMO_TERMS",
+  POLICY: "PLATFORM_POLICY",
+  PERFORMANCE: "PERFORMANCE_SUMMARY",
+  MODEL: "MODEL_SNAPSHOT",
+};
+
+function categoryForKind(kind: string): SourceCategory | undefined {
+  return SOURCE_KIND_TO_CATEGORY[kind.toUpperCase()];
+}
+
 async function loadProbesFromDb(): Promise<SourceProbe[]> {
   if (!process.env["DATABASE_URL"]) return [];
   try {
@@ -48,11 +73,15 @@ async function loadProbesFromDb(): Promise<SourceProbe[]> {
       take: 200,
       select: { provider: true, sourceKind: true, fetchedAt: true },
     });
-    return rows.map((r) => ({
-      provider: r.provider,
-      sourceKind: r.sourceKind,
-      fetchedAt: r.fetchedAt,
-    }));
+    return rows.map((r) => {
+      const category = categoryForKind(r.sourceKind);
+      return {
+        provider: r.provider,
+        sourceKind: r.sourceKind,
+        fetchedAt: r.fetchedAt,
+        ...(category ? { category } : {}),
+      };
+    });
   } catch {
     // Stub DB or unreachable — return empty; assessSourceHealth handles it.
     return [];

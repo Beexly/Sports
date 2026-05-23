@@ -6,6 +6,7 @@ import { resolve } from "node:path";
 import {
   __setClientForTests,
   assessSourceHealth,
+  resolveThresholds,
   type SourceProbe,
 } from "@/lib/cockpit/source-health";
 
@@ -155,6 +156,85 @@ describe("assessSourceHealth", () => {
       now: NOW,
     });
     expect(report.alerts[0]!.message).toMatch(/90 minutes ago/);
+  });
+
+  it("uses per-category FRESHNESS_BUDGETS when probe.category is set (PLATFORM_POLICY is days-long)", async () => {
+    __setClientForTests(makeFakeClient("ok").client);
+    const report = await assessSourceHealth({
+      probes: [
+        {
+          provider: "policy-feed",
+          sourceKind: "POLICY",
+          fetchedAt: new Date(NOW.getTime() - 24 * 60 * MIN), // 24h old
+          category: "PLATFORM_POLICY",
+        },
+      ],
+      now: NOW,
+    });
+    // 24h is well within PLATFORM_POLICY's 30d soft TTL → still FRESH
+    expect(report.sources[0]!.status).toBe("FRESH");
+  });
+
+  it("inline freshThresholdMs / agingThresholdMs override category + global defaults", async () => {
+    __setClientForTests(makeFakeClient("ok").client);
+    const report = await assessSourceHealth({
+      probes: [
+        {
+          provider: "custom",
+          sourceKind: "WHATEVER",
+          fetchedAt: new Date(NOW.getTime() - 10 * MIN),
+          category: "PLATFORM_POLICY", // would normally say FRESH for days
+          freshThresholdMs: 5 * MIN, // override to 5 min
+          agingThresholdMs: 6 * MIN, // override to 6 min
+        },
+      ],
+      now: NOW,
+    });
+    // 10min > both overrides → STALE
+    expect(report.sources[0]!.status).toBe("STALE");
+  });
+});
+
+describe("resolveThresholds", () => {
+  const baseProbe = {
+    provider: "x",
+    sourceKind: "y",
+    fetchedAt: new Date(),
+  };
+
+  it("returns global defaults when no category + no override", () => {
+    const { freshMs, agingMs } = resolveThresholds(baseProbe);
+    expect(freshMs).toBe(30 * 60 * 1000);
+    expect(agingMs).toBe(4 * 60 * 60 * 1000);
+  });
+
+  it("returns category budget when category is supplied (ODDS = 30min/4h)", () => {
+    const { freshMs, agingMs } = resolveThresholds({
+      ...baseProbe,
+      category: "ODDS",
+    });
+    expect(freshMs).toBe(30 * 60 * 1000);
+    expect(agingMs).toBe(4 * 60 * 60 * 1000);
+  });
+
+  it("returns category budget for INJURY_NEWS (6h/24h)", () => {
+    const { freshMs, agingMs } = resolveThresholds({
+      ...baseProbe,
+      category: "INJURY_NEWS",
+    });
+    expect(freshMs).toBe(6 * 60 * 60 * 1000);
+    expect(agingMs).toBe(24 * 60 * 60 * 1000);
+  });
+
+  it("inline override wins over both category + global defaults", () => {
+    const { freshMs, agingMs } = resolveThresholds({
+      ...baseProbe,
+      category: "INJURY_NEWS",
+      freshThresholdMs: 1000,
+      agingThresholdMs: 2000,
+    });
+    expect(freshMs).toBe(1000);
+    expect(agingMs).toBe(2000);
   });
 });
 

@@ -17,14 +17,21 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import {
+  FRESHNESS_BUDGETS,
+  type SourceCategory,
+} from "../source-intelligence/index.js";
 import { makeAnthropicHolder } from "../ai/client.js";
 import { withTelemetry } from "../ai/telemetry.js";
 
 const NARRATIVE_MODEL = "claude-haiku-4-5";
 
-const SOURCE_HEALTH_VERSION = "source-health/v1";
+const SOURCE_HEALTH_VERSION = "source-health/v2";
 
-// Default thresholds (operator-tunable per category in a future cycle).
+// Global defaults — used only when a probe carries no category and provides
+// no inline override. Per-category thresholds from the source-intelligence
+// FRESHNESS_BUDGETS map take precedence when probe.category is supplied
+// (e.g. ODDS gets 30min/4h; PLATFORM_POLICY gets 30d/90d).
 const FRESH_THRESHOLD_MS = 30 * 60 * 1000; // 30 minutes
 const AGING_THRESHOLD_MS = 4 * 60 * 60 * 1000; // 4 hours
 
@@ -35,7 +42,9 @@ export interface SourceProbe {
   readonly provider: string;
   readonly sourceKind: string;
   readonly fetchedAt: Date;
-  /** Optional override for per-category thresholds. */
+  /** When supplied, FRESHNESS_BUDGETS[category] supplies the thresholds. */
+  readonly category?: SourceCategory;
+  /** Inline override — wins over both category-derived and global defaults. */
   readonly freshThresholdMs?: number;
   readonly agingThresholdMs?: number;
 }
@@ -73,15 +82,40 @@ You receive a JSON summary of source probes (provider, status, age). Speak in pl
 If everything is FRESH, say so — don't invent risk. If anything is STALE, name the provider and call it out.
 Do not invent numbers; use only what's in the summary. Maximum 3 sentences.`;
 
+/**
+ * Resolve the thresholds for a probe, in precedence order:
+ *   1. inline freshThresholdMs / agingThresholdMs (operator override)
+ *   2. FRESHNESS_BUDGETS[probe.category] when category supplied
+ *   3. global defaults (FRESH_THRESHOLD_MS / AGING_THRESHOLD_MS)
+ */
+export function resolveThresholds(probe: SourceProbe): {
+  freshMs: number;
+  agingMs: number;
+} {
+  if (probe.freshThresholdMs != null && probe.agingThresholdMs != null) {
+    return { freshMs: probe.freshThresholdMs, agingMs: probe.agingThresholdMs };
+  }
+  if (probe.category && FRESHNESS_BUDGETS[probe.category]) {
+    const budget = FRESHNESS_BUDGETS[probe.category];
+    return {
+      freshMs: probe.freshThresholdMs ?? budget.softTtlMs,
+      agingMs: probe.agingThresholdMs ?? budget.hardTtlMs,
+    };
+  }
+  return {
+    freshMs: probe.freshThresholdMs ?? FRESH_THRESHOLD_MS,
+    agingMs: probe.agingThresholdMs ?? AGING_THRESHOLD_MS,
+  };
+}
+
 function classifyAge(
   ageMs: number,
   probe: SourceProbe
 ): SourceHealthStatus {
   if (ageMs < 0) return "FRESH";
-  const fresh = probe.freshThresholdMs ?? FRESH_THRESHOLD_MS;
-  const aging = probe.agingThresholdMs ?? AGING_THRESHOLD_MS;
-  if (ageMs <= fresh) return "FRESH";
-  if (ageMs <= aging) return "AGING";
+  const { freshMs, agingMs } = resolveThresholds(probe);
+  if (ageMs <= freshMs) return "FRESH";
+  if (ageMs <= agingMs) return "AGING";
   return "STALE";
 }
 
