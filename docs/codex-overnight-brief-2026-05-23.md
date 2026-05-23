@@ -33,6 +33,7 @@
 - Added Stripe webhook duplicate-event and action-mapping logic; real webhook verification and mutations remain unwired.
 - Added founding-seat assignment decisioning for next-seat, cap-reached, and manual-review states; database transaction remains unwired.
 - Expanded Vault lifecycle email schedule logic across welcome, retention, and renewal timing; provider sends remain unwired.
+- Inspected `XXX-main (1).zip` and documented Galaxy-safe salvage patterns without importing adult, scraping, generator, or platform-risk code.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs

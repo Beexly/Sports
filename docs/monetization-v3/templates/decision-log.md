@@ -527,3 +527,16 @@ Metric threshold: Tests cover welcome days, retention days, renewal offsets, due
 Owner: Codex maintains scaffold; Garrett approves copy before provider load
 Next review date: Before transactional email provider implementation
 Notes: Schedule only. No email sends, provider calls, durable lifecycle rows, engagement inference, unsubscribe handling, or customer messaging is wired.
+
+### DEC-NEXT-048 - XXX Archive Galaxy Salvage Audit
+
+Date: 2026-05-23
+Decision: Treat `XXX-main (1).zip` as reference-only and extract only Galaxy-safe operating-system patterns.
+Track: Portfolio / R&D
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: The archive contains strong operating-system patterns but also adult, scraping, generator, and platform-risk material that should not be imported into Galaxy.
+Metric threshold: Audit records all contained files, line counts, reuse decisions, non-transferable categories, and Galaxy-safe follow-up backlog.
+Owner: Codex
+Next review date: Before any future research-intake utility is implemented
+Notes: No archive code imported. Future reuse requires license review, brand-safety review, and a new decision-log entry.

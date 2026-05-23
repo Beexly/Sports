@@ -66,6 +66,7 @@ Runway determines which subset is active:
 - [audit/kpi-operator-ritual.md](audit/kpi-operator-ritual.md) - Galaxy-voice operator layer for monthly KPI review.
 - [audit/synthetic-media-monetization-rd-2026-05-23.md](audit/synthetic-media-monetization-rd-2026-05-23.md) - Synthetic-media archive inspection and Galaxy monetization reuse audit.
 - [audit/website-monetization-rd-2026-05-23.md](audit/website-monetization-rd-2026-05-23.md) - Website monetization R&D map and rejected-options register.
+- [audit/xxx-archive-galaxy-salvage-audit-2026-05-23.md](audit/xxx-archive-galaxy-salvage-audit-2026-05-23.md) - Archive salvage audit for `XXX-main (1).zip` with Galaxy-safe reuse decisions.
 
 ## Engineering
 
