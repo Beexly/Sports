@@ -101,6 +101,7 @@ Runway determines which subset is active:
 - [product/short-form-attribution-scaffold-notes.md](product/short-form-attribution-scaffold-notes.md) - Parser-only short-form UTM attribution notes and DEC-NEXT-034 guardrails.
 - [product/stripe-webhook-decision-scaffold-notes.md](product/stripe-webhook-decision-scaffold-notes.md) - Stripe webhook idempotency decision table and DEC-NEXT-045 guardrails.
 - [product/vault-api-contracts.md](product/vault-api-contracts.md) - Vault API contracts for membership, seats, digests, and admin flows.
+- [product/vault-auth-provider-contract.md](product/vault-auth-provider-contract.md) - Provider-neutral Vault auth/session requirements and DEC-NEXT-075 guardrails.
 - [product/vault-backup-restore-runbook.md](product/vault-backup-restore-runbook.md) - Provider-neutral backup and restore rehearsal runbook and DEC-NEXT-057 guardrails.
 - [product/vault-data-model.md](product/vault-data-model.md) - Vault data model for members, applications, digests, events, referrals, and audits.
 - [product/vault-entitlement-access-state-notes.md](product/vault-entitlement-access-state-notes.md) - Explainable Vault entitlement access-state logic and DEC-NEXT-044 guardrails.
