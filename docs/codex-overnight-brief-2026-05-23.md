@@ -5,7 +5,7 @@
 - Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
 - Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
 - Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
-- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-055.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-056.
 - Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
 - Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
 - Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
@@ -41,6 +41,7 @@
 - Added lifecycle email delivery decisioning; durable lifecycle rows, provider sends, unsubscribe enforcement, and held-row repair remain unwired.
 - Added lifecycle email admin repair-task generation so held rows become visible operator work.
 - Added durable storage to the Vault launch environment contract; no database vendor or client was selected.
+- Added an adapter-neutral Vault persistence migration contract covering tables, constraints, idempotency, transactions, and launch tests.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -89,6 +90,7 @@
 - `992f358` - DEC-NEXT-053 add lifecycle email delivery decisioning
 - `32f4df8` - DEC-NEXT-054 add lifecycle email repair tasks
 - `ddd558f` - DEC-NEXT-055 add durable storage env contract
+- `TBD` - DEC-NEXT-056 add Vault persistence contract
 
 ## What I Flagged For Morning Triage
 
@@ -97,6 +99,7 @@
 - `OPS-2026-05-23-003`: `apps/web/app/api/cron/` now has scaffold-only Vault cron routes, but they intentionally return HTTP 501 until provider integrations are wired.
 - `OPS-2026-05-23-004`: referral attribution and clawback rules are now testable, but durable referral storage, checkout metadata, payout batches, and abuse review remain unwired.
 - `OPS-2026-05-23-005`: lifecycle email delivery decisions are testable, but durable lifecycle rows, provider sends, unsubscribe enforcement, and held-row repair remain unwired.
+- `OPS-2026-05-23-006`: persistence migration contract exists, but migrations, ORM models, database adapter, transactions, backups, and restore runbook remain unwired.
 - The requested "497 tests" still do not exist in this clone. I added a package manifest and verified the new app with typecheck/build/runtime smoke, but there is no broader test harness here yet.
 
 ## What Surprised Me
