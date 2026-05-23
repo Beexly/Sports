@@ -316,3 +316,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add an admin-only `/api/cockpit/bot-outbox/preview` endpoint that validates supplied event payloads and returns draft outbox items without persistence or external delivery.
 - Rationale: operators and tests need a safe way to inspect bot event rendering before the scheduler and delivery runtime exist.
 - Deferred: database-backed outbox rows, scheduled event discovery, delivery clients, and retry/rate-limit state remain separate Phase 3 runtime work.
+
+## 2026-05-22 - Bot Outbox Uses Record Mappers
+
+- Decision: add structural mappers that convert pick and gate-decision records into bot outbox planner inputs, including factor-breakdown normalization into approved factor keys.
+- Rationale: the scheduler should depend on one tested translation layer instead of reconstructing bot payloads inside cron code.
+- Deferred: live database discovery windows, persisted outbox rows, and channel delivery remain separate Phase 3 runtime work.
