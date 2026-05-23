@@ -4,8 +4,10 @@ import type { ContentGenerationInput } from "@sports/types";
 
 import {
   __setClientForTests,
+  generateAndReviewBlogPost,
   generateBlogPost,
 } from "@/lib/content-generator";
+import { __setClientForTests as __setReviewerClientForTests } from "@/lib/content/draft-reviewer";
 
 const VALID_RESPONSE = {
   title: "NBA Picks for May 23, 2026 — Sharps Like the Lakers",
@@ -102,5 +104,89 @@ describe("generateBlogPost", () => {
     await expect(generateBlogPost(SAMPLE_INPUT)).rejects.toThrow(
       "simulated API error"
     );
+  });
+});
+
+describe("generateAndReviewBlogPost", () => {
+  beforeEach(() => {
+    process.env["ANTHROPIC_API_KEY"] = "sk-ant-test";
+  });
+
+  afterEach(() => {
+    __setClientForTests(undefined);
+    __setReviewerClientForTests(undefined);
+    delete process.env["ANTHROPIC_API_KEY"];
+  });
+
+  it("returns post + READY review when the reviewer finds nothing", async () => {
+    __setClientForTests(makeFakeClient(VALID_RESPONSE));
+    __setReviewerClientForTests(makeFakeClient({ findings: [] }));
+
+    const { post, review } = await generateAndReviewBlogPost(SAMPLE_INPUT);
+
+    expect(post.title).toBe(VALID_RESPONSE.title);
+    expect(review.summary.verdict).toBe("READY");
+    expect(review.summary.totalFindings).toBe(0);
+    expect(review.summary.blockingFindings).toBe(0);
+  });
+
+  it("returns post + REVISE review when reviewer reports only WARNs", async () => {
+    __setClientForTests(makeFakeClient(VALID_RESPONSE));
+    __setReviewerClientForTests(
+      makeFakeClient({
+        findings: [
+          {
+            severity: "WARN",
+            quote: "the data suggests",
+            bannedPhraseSemantic: "guaranteed",
+            explanation: "borderline",
+            suggestion: "our model favors",
+          },
+        ],
+      })
+    );
+
+    const { post, review } = await generateAndReviewBlogPost(SAMPLE_INPUT);
+
+    expect(post.slug).toBe("nba-picks-2026-05-23");
+    expect(review.summary.verdict).toBe("REVISE");
+    expect(review.summary.blockingFindings).toBe(0);
+  });
+
+  it("returns post + REJECT review when reviewer reports a BLOCK", async () => {
+    __setClientForTests(makeFakeClient(VALID_RESPONSE));
+    __setReviewerClientForTests(
+      makeFakeClient({
+        findings: [
+          {
+            severity: "BLOCK",
+            quote: "lock of the night",
+            bannedPhraseSemantic: "lock",
+            explanation: "direct banned phrase",
+            suggestion: "our model's highest-confidence read",
+          },
+        ],
+      })
+    );
+
+    const { post, review } = await generateAndReviewBlogPost(SAMPLE_INPUT);
+
+    // We DO return the post — the wrapper is non-throwing by design.
+    expect(post.title).toBe(VALID_RESPONSE.title);
+    expect(review.summary.verdict).toBe("REJECT");
+    expect(review.summary.blockingFindings).toBe(1);
+  });
+
+  it("does not call the reviewer when generation fails", async () => {
+    __setClientForTests(makeFakeClient(VALID_RESPONSE, { kind: "throws" }));
+    const reviewerCreate = vi.fn();
+    __setReviewerClientForTests({
+      messages: { create: reviewerCreate },
+    } as unknown as Anthropic);
+
+    await expect(generateAndReviewBlogPost(SAMPLE_INPUT)).rejects.toThrow(
+      "simulated API error"
+    );
+    expect(reviewerCreate).not.toHaveBeenCalled();
   });
 });

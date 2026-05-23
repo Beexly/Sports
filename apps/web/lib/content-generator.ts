@@ -15,6 +15,11 @@ import type { ContentGenerationInput, GeneratedContent } from "@sports/types";
 import { generateSlug } from "./utils.js";
 import { format } from "date-fns";
 import { BRAND_NAME } from "./brand.js";
+import {
+  reviewDraft,
+  type DraftReviewReport,
+} from "./content/draft-reviewer.js";
+import { getBannedPhraseList } from "./trust-claims.js";
 
 const GAMBLING_DISCLAIMER =
   "This article is for informational and entertainment purposes only. " +
@@ -128,4 +133,42 @@ Requirements:
     seoDescription: parsed.seoDescription,
     tags: [...parsed.tags],
   };
+}
+
+/**
+ * Generated post bundled with the reviewer's verdict + findings.
+ * Callers decide what to do per verdict (operator queue, log, reject).
+ */
+export interface BlogPostWithReview {
+  readonly post: GeneratedContent;
+  readonly review: DraftReviewReport;
+}
+
+/**
+ * Generate a blog post and immediately scan it with the semantic reviewer.
+ *
+ * Does not throw on REJECT — returns the report so each caller can choose
+ * its own policy (cockpit shows findings, batch worker logs and continues,
+ * tests inspect the report directly).
+ */
+export async function generateAndReviewBlogPost(
+  input: ContentGenerationInput
+): Promise<BlogPostWithReview> {
+  const post = await generateBlogPost(input);
+
+  const reviewable = [
+    post.title,
+    post.excerpt,
+    post.content,
+    post.seoTitle,
+    post.seoDescription,
+  ].join("\n\n");
+
+  const review = await reviewDraft({
+    content: reviewable,
+    banned: getBannedPhraseList(),
+    context: "BLOG_POST",
+  });
+
+  return { post, review };
 }
