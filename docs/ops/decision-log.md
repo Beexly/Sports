@@ -340,3 +340,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: implement `/cockpit/synthetic-monitoring` as a read-only operator dashboard backed by typed check definitions, plus `/api/health/synthetic-monitoring` as a runner heartbeat.
 - Rationale: the production probe already checks critical public routes and banned positioning phrases. Before wiring durable scheduled history, operators need one place to see the expected check map, pending runner-owned checks, cadence, and safe configuration.
 - Deferred: manual run controls, pause/resume controls, durable history, issue-queue auto-filing, and owner-channel alerts remain separate synthetic-runner slices.
+
+## 2026-05-22 - Production Probe Emits Structured Results
+
+- Decision: add `PROD_PROBE_JSON=1` support to `scripts/prod-probe.mjs`, emitting sanitized structured probe results while keeping the existing one-line console output as the default.
+- Rationale: the synthetic monitoring runner needs machine-readable status before durable history exists. The JSON payload includes paths, status codes, latency, banned-phrase findings, and admin-probe flags without response bodies or cookies.
+- Deferred: storing probe output, deduplicating failures, and auto-filing issue-queue entries remain separate runner slices.

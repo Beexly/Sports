@@ -56,4 +56,12 @@ describe("scripts/prod-probe.mjs", () => {
   it("logs a one-line result per probe", () => {
     expect(src).toMatch(/OK.*\.padEnd\(5\)|FAIL.*\.padEnd\(5\)/);
   });
+
+  it("can emit structured JSON for synthetic monitoring ingestion", () => {
+    expect(src).toMatch(/PROD_PROBE_JSON/);
+    expect(src).toMatch(/JSON\.stringify\(payload\)/);
+    expect(src).toMatch(/generatedAtIso/);
+    expect(src).toMatch(/bannedPattern/);
+    expect(src).toMatch(/admin:\s*r\.path\.startsWith/);
+  });
 });
