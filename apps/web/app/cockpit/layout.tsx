@@ -32,6 +32,7 @@ const NAV: ReadonlyArray<{ href: string; label: string; hint: string }> = [
   { href: "/cockpit/content", label: "Content", hint: "Ava · draft-only engine" },
   { href: "/cockpit/sources", label: "Sources", hint: "Source intelligence" },
   { href: "/cockpit/source-health", label: "Source health", hint: "Freshness watch + alerts" },
+  { href: "/cockpit/pick-narrator", label: "Pick narrator", hint: "Editorial gloss on a ScoredPick" },
 ];
 
 export default async function CockpitLayout({

@@ -26,3 +26,4 @@ Append-only. One line per cycle.
 2026-05-23 · #23 · feat(cockpit): source-health agent (self-monitoring pillar) at /cockpit/source-health · vitest `apps/web/__tests__/source-health.test.ts`
 2026-05-23 · #24 · feat(ci): source-health alarm — 30-min cron polls the endpoint and fails the run on HIGH alerts · vitest `apps/web/__tests__/source-health-alarm.test.ts`
 2026-05-23 · #25 · feat(cockpit): pick-narrator — Sonnet editorial gloss on ScoredPick for operator review (lib only) · vitest `apps/web/__tests__/pick-narrator.test.ts`
+2026-05-23 · #26 · feat(cockpit): POST /api/cockpit/pick-narrator + UI page at /cockpit/pick-narrator · vitest `apps/web/__tests__/cockpit-pick-narrator-page.test.ts`
