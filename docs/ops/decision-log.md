@@ -286,3 +286,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add a backend Model Court answer runtime that enforces deterministic refusals and `MODEL_COURT_ANSWER` budget accounting before any Claude call.
 - Rationale: the conversational Game Room layer needs evidence, certainty, personal-advice, competitor, and budget gates before UI wiring begins.
 - Deferred: `/room/[gameId]` chat UI, request persistence, and slate-wide Model Court routing remain Phase 4 implementation slices.
+
+## 2026-05-22 - Model Court API Is Game-Scoped First
+
+- Decision: add `/api/room/[gameId]/model-court` as a Pro-or-Elite, game-scoped POST endpoint backed by the Game Room evidence loader and Model Court answer runtime.
+- Rationale: the first route should prove server-side entitlement, evidence loading, deterministic refusals, API-key gating, and usage accounting before any public chat UI is exposed.
+- Deferred: room-page chat controls, slate-wide questions, stored Model Court cases, and lens-specific UI affordances remain future slices.
