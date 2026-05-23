@@ -256,3 +256,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add an admin-only `/api/cockpit/api-costs/override` route that validates Claude surfaces, requires a decision-log reason, and updates only override state.
 - Rationale: red and hard-cap budget states need an auditable runtime escape hatch without redeploying or editing policy constants.
 - Deferred: cockpit override buttons, owner-channel alerts, and richer audit persistence beyond the response payload remain follow-up slices.
+
+## 2026-05-22 - Cockpit Claude Budget Override Control
+
+- Decision: expose the Claude API budget override route from `/cockpit/api-costs` with a per-surface reason field and 24-hour enable action.
+- Rationale: the operator should be able to resolve a legitimate budget block from the same monitor that shows the block, while preserving an explicit decision-log rationale.
+- Deferred: durable audit rows for override decisions and owner-channel notification remain follow-up slices.

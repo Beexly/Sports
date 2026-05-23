@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BudgetOverrideControl } from "./budget-override-control";
 import {
   loadClaudeApiCostsDashboard,
   type ClaudeApiCostSurfaceSummary,
@@ -66,6 +67,7 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
                 <th className="px-4 py-3">Calls</th>
                 <th className="px-4 py-3">Errors</th>
                 <th className="px-4 py-3">State</th>
+                <th className="px-4 py-3">Override</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-900">
@@ -92,9 +94,9 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
                   </p>
                 </div>
                 <p className="mt-1 text-xs text-gray-500">
-                  {error.errorKind ?? "unknown"} · {error.modelName}
-                  {error.gameId ? ` · game ${error.gameId}` : ""}
-                  {error.templateKind ? ` · ${error.templateKind}` : ""}
+                  {error.errorKind ?? "unknown"} - {error.modelName}
+                  {error.gameId ? ` - game ${error.gameId}` : ""}
+                  {error.templateKind ? ` - ${error.templateKind}` : ""}
                 </p>
               </div>
             ))}
@@ -128,6 +130,9 @@ function SurfaceRow({ surface }: { readonly surface: ClaudeApiCostSurfaceSummary
         <span className={`inline-flex rounded-full border px-2 py-1 text-[11px] ${STATUS_STYLES[surface.status]}`}>
           {surface.overrideActive ? "override" : surface.requestAllowed ? surface.status : "blocked"}
         </span>
+      </td>
+      <td className="min-w-[340px] px-4 py-3">
+        <BudgetOverrideControl surface={surface.surface} overrideActive={surface.overrideActive} />
       </td>
     </tr>
   );
