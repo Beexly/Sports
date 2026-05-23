@@ -86,7 +86,7 @@
 - `bd70924` - DEC-NEXT-051 add Vault route access helper
 - `517a800` - DEC-NEXT-052 add Vault referral decisioning
 - `992f358` - DEC-NEXT-053 add lifecycle email delivery decisioning
-- `TBD` - DEC-NEXT-054 add lifecycle email repair tasks
+- `32f4df8` - DEC-NEXT-054 add lifecycle email repair tasks
 
 ## What I Flagged For Morning Triage
 
