@@ -120,7 +120,7 @@
 - `7f86e8f` - DEC-NEXT-068 refresh decision collision audit
 - `c1f5f3c` - DEC-NEXT-069 update master brief Pass 12-13 additions
 - `8d5582f` - DEC-NEXT-070 add fail-closed admin readiness route
-- `TBD` - DEC-NEXT-071 add smoke fail-closed route checks
+- `490f632` - DEC-NEXT-071 add smoke fail-closed route checks
 
 ## What I Flagged For Morning Triage
 
