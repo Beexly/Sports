@@ -5,7 +5,7 @@
 - Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
 - Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
 - Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
-- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-061.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-062.
 - Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
 - Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
 - Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
@@ -47,6 +47,7 @@
 - Hardened the monetization validator so README navigation coverage is enforced for all Markdown/CSV pack files.
 - Added Stripe checkout session acceptance decisioning for paid Vault subscription sessions before member mutation.
 - Added Discord role sync decisioning for grant/remove/no-duplicate behavior while preserving paid-term access.
+- Added auth/session secret to the Vault launch environment contract without selecting an auth vendor.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -101,6 +102,7 @@
 - `621db90` - DEC-NEXT-059 enforce README navigation coverage
 - `6aa85c9` - DEC-NEXT-060 add Stripe checkout acceptance decisioning
 - `c6d3d5f` - DEC-NEXT-061 add Discord role sync decisioning
+- `TBD` - DEC-NEXT-062 add auth env readiness
 
 ## What I Flagged For Morning Triage
 

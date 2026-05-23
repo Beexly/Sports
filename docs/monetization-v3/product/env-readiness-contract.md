@@ -1,7 +1,7 @@
 # Environment Readiness Contract
 
 **Status:** Engineering-owned. Readiness layer before Vault launch.
-**Related decision:** DEC-NEXT-036, DEC-NEXT-055
+**Related decision:** DEC-NEXT-036, DEC-NEXT-055, DEC-NEXT-062
 
 ## DEC-NEXT-036 - Add an explicit environment contract
 
@@ -40,6 +40,10 @@
 
 - `DATABASE_URL`
 
+**Auth**
+
+- `AUTH_SECRET`
+
 ## DEC-NEXT-055 - Add durable storage to launch env contract
 
 **Decision:** Add `DATABASE_URL` as a launch-critical environment variable.
@@ -47,6 +51,14 @@
 **Why now:** Vault cannot safely open without durable member state, webhook idempotency, lifecycle email rows, repair tasks, and referral attribution. The implementation can still choose the actual database adapter later, but the launch-readiness contract should not pretend storage is optional.
 
 **Guardrail:** This does not choose a database vendor, initialize a client, run migrations, or write records. It only makes durable storage visible in environment preflight checks.
+
+## DEC-NEXT-062 - Add auth secret to launch env contract
+
+**Decision:** Add `AUTH_SECRET` as a launch-critical environment variable.
+
+**Why now:** Vault member routes currently fail closed. Before they can unlock, the app needs a server-side session/auth secret or equivalent provider secret. Auth is a P0 launch blocker alongside persistence because entitlement checks need a trustworthy user identity.
+
+**Guardrail:** This does not choose an auth vendor, initialize sessions, or expose member routes. It only makes auth readiness visible in preflight checks.
 
 ## Guardrail
 

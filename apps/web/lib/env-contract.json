@@ -88,6 +88,14 @@
     "purpose": "Durable storage connection for Vault members, webhook idempotency, lifecycle emails, repair tasks, and referral attribution."
   },
   {
+    "name": "AUTH_SECRET",
+    "category": "auth",
+    "requiredFor": "vault-launch",
+    "type": "secret",
+    "example": "set-in-vercel-only",
+    "purpose": "Server-side session signing or equivalent auth secret required before Vault member routes can unlock."
+  },
+  {
     "name": "VAULT_FOUNDING_FILLED",
     "category": "vault",
     "requiredFor": "temporary-scaffold",
