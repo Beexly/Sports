@@ -148,7 +148,7 @@
 - `npm run typecheck:web`: pass.
 - `npm run build:web`: pass.
 - Local runtime smoke on port 3100: pass for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
-- Local production-style runtime smoke on port 3103: pass for `/api/vault/seat-count`; expected HTTP 400/401/501 guardrail responses for application intake, member-only routes, write-disabled routes, webhooks, and scaffold-only Vault cron routes.
+- Local production-style runtime smoke: pass for the latest `scripts/smoke-prod.ps1` against `next start` on port 3106, including public route checks, JSON response-shape checks, and fail-closed admin/member/cron route checks.
 - `docs/monetization-v3/tools/validate-monetization-v3.ps1`: pass through `npm run audit:launch`.
 - Exact banned-phrase scan: clean.
 - Strict brand scan: pass with expected noisy warnings in internal/audit docs.
