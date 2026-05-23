@@ -28,6 +28,14 @@ export function vaultAccessRequiredResponse() {
   );
 }
 
+export function vaultAdminRequiredResponse() {
+  return vaultErrorResponse(
+    "VAULT_ADMIN_REQUIRED",
+    "Vault admin access is required.",
+    403,
+  );
+}
+
 export function vaultWebhookNotEnabledResponse() {
   return vaultErrorResponse(
     "VAULT_WEBHOOK_NOT_ENABLED",

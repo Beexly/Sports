@@ -5,7 +5,7 @@
 - Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
 - Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
 - Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
-- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-069.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-070.
 - Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
 - Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
 - Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
@@ -55,6 +55,7 @@
 - Added artifact-led merch R&D with demand gates, economics filters, and brand-drift constraints.
 - Refreshed the decision-log collision audit to reflect DEC-NEXT-015 through DEC-NEXT-067 and the current pack counts.
 - Appended the root master brief with Pass 12-13 engineering, validation, and R&D additions.
+- Added a fail-closed admin launch-readiness API route and admin-required response helper.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -117,6 +118,7 @@
 - `48dfbec` - DEC-NEXT-067 add artifact merch R&D
 - `7f86e8f` - DEC-NEXT-068 refresh decision collision audit
 - `c1f5f3c` - DEC-NEXT-069 update master brief Pass 12-13 additions
+- `TBD` - DEC-NEXT-070 add fail-closed admin readiness route
 
 ## What I Flagged For Morning Triage
 
