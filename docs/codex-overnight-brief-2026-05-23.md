@@ -102,7 +102,7 @@
 - `621db90` - DEC-NEXT-059 enforce README navigation coverage
 - `6aa85c9` - DEC-NEXT-060 add Stripe checkout acceptance decisioning
 - `c6d3d5f` - DEC-NEXT-061 add Discord role sync decisioning
-- `TBD` - DEC-NEXT-062 add auth env readiness
+- `6df2508` - DEC-NEXT-062 add auth env readiness
 
 ## What I Flagged For Morning Triage
 
