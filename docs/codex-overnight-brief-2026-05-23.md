@@ -29,6 +29,7 @@
 - Added admin repair-task generation for onboarding and provider heartbeat failures; cockpit persistence remains unwired.
 - Added stale proof-surface repair-task generation so freshness drift can become internal operator work.
 - Added incident threshold logic for onboarding repair rate, p0 repair tasks, and stale proof surfaces; alert transport remains unwired.
+- Made Vault entitlement decisions explainable with access-state reason codes for support and repair flows.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs

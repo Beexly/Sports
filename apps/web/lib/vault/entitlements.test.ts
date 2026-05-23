@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { hasVaultAccess, isFoundingVaultMember } from "./entitlements";
+import {
+  getVaultAccessState,
+  hasVaultAccess,
+  isFoundingVaultMember,
+} from "./entitlements";
 import type { VaultMembershipSnapshot } from "./types";
 
 function member(
@@ -21,15 +25,64 @@ describe("Vault entitlements", () => {
   });
 
   it("keeps canceled members active through paid term", () => {
-    const future = new Date(Date.now() + 60_000).toISOString();
-    const past = new Date(Date.now() - 60_000).toISOString();
+    const now = new Date("2026-05-23T10:00:00.000Z");
+    const future = "2026-05-23T10:01:00.000Z";
+    const past = "2026-05-23T09:59:00.000Z";
 
-    expect(hasVaultAccess(member({ status: "canceled", paidThrough: future }))).toBe(
-      true,
-    );
-    expect(hasVaultAccess(member({ status: "canceled", paidThrough: past }))).toBe(
-      false,
-    );
+    expect(
+      hasVaultAccess(member({ status: "canceled", paidThrough: future }), now),
+    ).toBe(true);
+    expect(
+      hasVaultAccess(member({ status: "canceled", paidThrough: past }), now),
+    ).toBe(false);
+  });
+
+  it("returns explainable access-state reasons", () => {
+    const now = new Date("2026-05-23T10:00:00.000Z");
+
+    expect(getVaultAccessState(null, now)).toEqual({
+      hasAccess: false,
+      reason: "no_member",
+    });
+    expect(getVaultAccessState(member({ status: "active" }), now)).toEqual({
+      hasAccess: true,
+      reason: "status_grants_access",
+    });
+    expect(
+      getVaultAccessState(
+        member({
+          status: "active",
+          paidThrough: "2026-05-23T09:59:00.000Z",
+        }),
+        now,
+      ),
+    ).toEqual({
+      hasAccess: false,
+      reason: "paid_term_expired",
+    });
+    expect(
+      getVaultAccessState(member({ status: "refunded" }), now),
+    ).toEqual({
+      hasAccess: false,
+      reason: "status_denies_access",
+    });
+  });
+
+  it("denies malformed canceled paid-through timestamps", () => {
+    expect(
+      getVaultAccessState(
+        member({ status: "canceled", paidThrough: "not-a-date" }),
+        new Date("2026-05-23T10:00:00.000Z"),
+      ),
+    ).toEqual({
+      hasAccess: false,
+      reason: "paid_term_expired",
+    });
+  });
+
+  it("denies expired and refunded members", () => {
+    expect(hasVaultAccess(member({ status: "expired" }))).toBe(false);
+    expect(hasVaultAccess(member({ status: "refunded" }))).toBe(false);
   });
 
   it("identifies founding members by founding number", () => {

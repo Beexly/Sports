@@ -90,6 +90,7 @@ Runway determines which subset is active:
 - [product/short-form-attribution-scaffold-notes.md](product/short-form-attribution-scaffold-notes.md) - Parser-only short-form UTM attribution notes and DEC-NEXT-034 guardrails.
 - [product/vault-api-contracts.md](product/vault-api-contracts.md) - Vault API contracts for membership, seats, digests, and admin flows.
 - [product/vault-data-model.md](product/vault-data-model.md) - Vault data model for members, applications, digests, events, referrals, and audits.
+- [product/vault-entitlement-access-state-notes.md](product/vault-entitlement-access-state-notes.md) - Explainable Vault entitlement access-state logic and DEC-NEXT-044 guardrails.
 - [product/vault-integration-scaffold-notes.md](product/vault-integration-scaffold-notes.md) - Inert Vault integration scaffold notes and DEC-NEXT-025 guardrails.
 - [product/vault-onboarding-health-scaffold-notes.md](product/vault-onboarding-health-scaffold-notes.md) - First-24-hour Vault onboarding health logic and DEC-NEXT-039 guardrails.
 - [product/vault-prd.md](product/vault-prd.md) - Vault product requirements and source operating docs.

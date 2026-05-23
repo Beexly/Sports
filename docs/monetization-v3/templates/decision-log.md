@@ -475,3 +475,16 @@ Metric threshold: Tests cover the 5 percent onboarding threshold, p0 repair task
 Owner: Codex maintains scaffold; Garrett defines alert routing before launch
 Next review date: Before Day -7 pre-launch verification
 Notes: Logic only. No alerts, paging, admin persistence, external incident creation, or data mutation is wired.
+
+### DEC-NEXT-044 - Explainable Vault Entitlement Decisions
+
+Date: 2026-05-23
+Decision: Extend Vault entitlement checks with explainable access-state reasons and deterministic time injection.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Support, cancellation, refund, and Discord role repair flows need to know why access is granted or denied, not just the Boolean outcome.
+Metric threshold: Tests cover active/trialing/past-due access, canceled paid-through access, expired/refunded denial, malformed timestamps, no-member state, and founding-member checks.
+Owner: Codex maintains scaffold; Garrett confirms support-policy wording
+Next review date: Before refund and cancellation webhook implementation
+Notes: Logic only. No Stripe calls, refund decisions, Discord role changes, subscription mutation, or support sends are wired.
