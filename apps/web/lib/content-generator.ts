@@ -47,6 +47,27 @@ const KIND_FRAMING: Record<BlogPostKind, (sport: string, dateDisplay: string) =>
     `Write a weekly recap of ${sport} picks covering the period ending ${dateDisplay}. ` +
     `Each pick below is provided with its reasoning at prediction time. ` +
     `Frame the post as a look back at how the slate was called, not a forward-looking preview.`,
+  METHODOLOGY_EDUCATION: (sport, dateDisplay) =>
+    `Explain in plain English how this site's model arrives at ${sport} picks like the ones below for ${dateDisplay}. ` +
+    `Educate the reader on what goes into a confidence score and how to read one. ` +
+    `Do not pretend to predict outcomes — explain methodology.`,
+  MATCHUP_PREVIEW: (sport, dateDisplay) =>
+    `Write a deep ${sport} matchup preview for ${dateDisplay} centered on the single game below. ` +
+    `Use only the data provided. Discuss the line, the confidence read, and the reasoning at prediction time.`,
+  PROMOTION_ROUNDUP: (sport, dateDisplay) =>
+    `Write a roundup post for ${dateDisplay} tying the ${sport} slate below to today's responsible promotional context. ` +
+    `Promotions are introduced separately by the operator — reference the picks only as the on-slate context.`,
+  PERFORMANCE_TRANSPARENCY: (sport, dateDisplay) =>
+    `Write a transparency post about how our ${sport} calls landed in the period ending ${dateDisplay}. ` +
+    `Each pick below lists its reasoning at prediction time. ` +
+    `Be honest about what worked, what didn't, and what we'd watch next time.`,
+  RESPONSIBLE_BETTING_EDUCATION: (sport, dateDisplay) =>
+    `Write an educational post about responsible betting practices, dated ${dateDisplay}. ` +
+    `Anchor the discussion in the ${sport} slate below as an illustration of measured exposure. ` +
+    `Center the reader's wellbeing — never the upside of any specific pick.`,
+  MODEL_CHANGE_NOTE: (sport, dateDisplay) =>
+    `Write an operator-facing model change note dated ${dateDisplay} describing what changed in the model ` +
+    `and how it affects today's ${sport} slate. Reference only the picks below as concrete examples.`,
 };
 
 const POST_SCHEMA = {

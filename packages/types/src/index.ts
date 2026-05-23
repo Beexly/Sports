@@ -524,8 +524,18 @@ export interface DailySlate {
  * Blog post editorial framings the generator knows about. Each framing
  * maps to a different user-prompt opener; the JSON output shape is shared.
  * Add a new kind when its prompt is meaningfully different from these.
+ *
+ * Kinds align with `ContentKind` in apps/web/lib/content/workflow.ts.
  */
-export type BlogPostKind = "DAILY_PICKS" | "WEEKLY_RECAP";
+export type BlogPostKind =
+  | "DAILY_PICKS"
+  | "WEEKLY_RECAP"
+  | "METHODOLOGY_EDUCATION"
+  | "MATCHUP_PREVIEW"
+  | "PROMOTION_ROUNDUP"
+  | "PERFORMANCE_TRANSPARENCY"
+  | "RESPONSIBLE_BETTING_EDUCATION"
+  | "MODEL_CHANGE_NOTE";
 
 export interface ContentGenerationInput {
   date: string;

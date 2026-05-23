@@ -184,6 +184,51 @@ describe("generateBlogPost", () => {
     expect(userPrompt).toContain("Write a sports analysis blog post for NBA picks on");
     expect(userPrompt).not.toContain("weekly recap");
   });
+
+  describe("KIND_FRAMING — additional kinds", () => {
+    const cases = [
+      {
+        kind: "METHODOLOGY_EDUCATION" as const,
+        expect: "Explain in plain English how this site's model arrives at NBA",
+      },
+      {
+        kind: "MATCHUP_PREVIEW" as const,
+        expect: "Write a deep NBA matchup preview",
+      },
+      {
+        kind: "PROMOTION_ROUNDUP" as const,
+        expect: "Write a roundup post",
+      },
+      {
+        kind: "PERFORMANCE_TRANSPARENCY" as const,
+        expect: "Write a transparency post about how our NBA calls landed",
+      },
+      {
+        kind: "RESPONSIBLE_BETTING_EDUCATION" as const,
+        expect: "responsible betting practices",
+      },
+      {
+        kind: "MODEL_CHANGE_NOTE" as const,
+        expect: "operator-facing model change note",
+      },
+    ];
+
+    for (const { kind, expect: phrase } of cases) {
+      it(`uses ${kind} framing when kind=${kind}`, async () => {
+        const { client, create } = makeFakeClientWithSpy(VALID_RESPONSE);
+        __setClientForTests(client);
+
+        await generateBlogPost({ ...SAMPLE_INPUT, kind });
+
+        const args = create.mock.calls[0]![0] as { messages: { content: string }[] };
+        const userPrompt = args.messages[0]!.content;
+        expect(userPrompt).toContain(phrase);
+        expect(userPrompt).not.toContain(
+          "Write a sports analysis blog post for NBA picks on"
+        );
+      });
+    }
+  });
 });
 
 describe("generateAndReviewBlogPost", () => {

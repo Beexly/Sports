@@ -13,3 +13,4 @@ Append-only. One line per cycle.
 2026-05-23 · #9 · feat(brief): add Claude composeSlateOverview as first restored slice of the brief composer · vitest `apps/web/__tests__/slate-overview.test.ts`
 2026-05-23 · #11 · refactor(ai): extract makeAnthropicHolder() factory used by all 3 Claude call sites · vitest `apps/web/__tests__/ai-client.test.ts`
 2026-05-23 · #12 · feat(ci): nightly content workflow drafts + reviews + opens an operator PR · vitest `apps/web/__tests__/nightly-content-workflow.test.ts`
+2026-05-23 · #13 · feat(content): add 6 remaining content kinds (METHODOLOGY / MATCHUP / PROMOTION / PERFORMANCE / RESPONSIBLE / MODEL_CHANGE) · vitest `apps/web/__tests__/content-generator.test.ts`
