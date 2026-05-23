@@ -31,6 +31,7 @@ describe("Studio Claude generation", () => {
       new Response(
         JSON.stringify({
           content: [{ type: "text", text: "Draft body with Source: PickSignalSnapshot #pick-bos-1" }],
+          usage: { input_tokens: 1000, output_tokens: 250 },
         }),
         { status: 200 }
       )
@@ -50,6 +51,49 @@ describe("Studio Claude generation", () => {
     };
     expect(requestBody.system).toContain("X (Twitter) thread");
     expect(requestBody.messages[0]?.content).toContain("https://galaxysportsedge.com");
+  });
+
+  it("records Studio Claude usage with game and template context", async () => {
+    const fetchImpl = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          content: [{ type: "text", text: "Draft body with Source: PickSignalSnapshot #pick-bos-1" }],
+          usage: { input_tokens: 1000, output_tokens: 250 },
+        }),
+        { status: 200 }
+      )
+    );
+    const create = vi.fn().mockResolvedValue({ id: "record-1" });
+
+    await callClaudeForStudioAsset(
+      { node: makeNode(), templateKind: "X_THREAD", context },
+      {
+        apiKey: "test-key",
+        fetchImpl,
+        recordUsage: true,
+        userId: "user-1",
+        usageClient: {
+          claudeApiCallRecord: {
+            aggregate: vi.fn(),
+            create,
+          },
+        },
+      }
+    );
+
+    expect(create).toHaveBeenCalledOnce();
+    expect(create.mock.calls[0]?.[0].data).toMatchObject({
+      surface: "STUDIO_GENERATION",
+      modelName: "claude-sonnet-4-6",
+      inputTokens: 1000,
+      outputTokens: 250,
+      estimatedCostUsd: 0.00675,
+      userId: "user-1",
+      gameId: fixtureGame.id,
+      templateKind: "X_THREAD",
+      success: true,
+      errorKind: null,
+    });
   });
 
   it("returns a scanner-checked draft from generated content", async () => {

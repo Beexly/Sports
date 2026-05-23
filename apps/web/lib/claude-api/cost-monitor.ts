@@ -30,6 +30,11 @@ export interface ClaudeBudgetUsage {
   readonly fallbackMessage: string | null;
 }
 
+export interface ClaudeTokenPricing {
+  readonly inputUsdPerMillionTokens: number;
+  readonly outputUsdPerMillionTokens: number;
+}
+
 export const CLAUDE_API_SURFACES: readonly ClaudeApiSurface[] = [
   "BLOG_GENERATION",
   "STUDIO_GENERATION",
@@ -114,6 +119,11 @@ export const CLAUDE_BUDGET_FALLBACKS: Readonly<Record<ClaudeApiSurface, string>>
     "This generation surface is at capacity for this billing cycle. Existing deterministic data remains available.",
 };
 
+export const DEFAULT_CLAUDE_TOKEN_PRICING: ClaudeTokenPricing = {
+  inputUsdPerMillionTokens: 3,
+  outputUsdPerMillionTokens: 15,
+};
+
 export function evaluateClaudeBudgetUsage(
   surface: ClaudeApiSurface,
   spentUsd: number,
@@ -133,6 +143,16 @@ export function evaluateClaudeBudgetUsage(
     requestAllowed,
     fallbackMessage: requestAllowed ? null : CLAUDE_BUDGET_FALLBACKS[surface],
   };
+}
+
+export function estimateClaudeCostUsd(
+  inputTokens: number,
+  outputTokens: number,
+  pricing: ClaudeTokenPricing = DEFAULT_CLAUDE_TOKEN_PRICING
+): number {
+  const inputCost = (inputTokens / 1_000_000) * pricing.inputUsdPerMillionTokens;
+  const outputCost = (outputTokens / 1_000_000) * pricing.outputUsdPerMillionTokens;
+  return Number((inputCost + outputCost).toFixed(6));
 }
 
 function statusFromRatio(

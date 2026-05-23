@@ -82,7 +82,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           },
         },
       },
-      { apiKey, monthlySpendUsd }
+      {
+        apiKey,
+        monthlySpendUsd,
+        recordUsage: true,
+        userId: session.user.id === "dev-admin" ? null : session.user.id,
+      }
     );
     const asset = draft.body
       ? await db.creatorAsset.create({

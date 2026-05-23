@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   getCurrentMonthClaudeSpendUsd,
   getUtcMonthWindow,
+  recordClaudeApiCall,
   type ClaudeUsageStoreDb,
 } from "@/lib/claude-api/usage-store";
 
@@ -20,7 +21,7 @@ describe("Claude API usage store", () => {
       },
     });
     const client: ClaudeUsageStoreDb = {
-      claudeApiCallRecord: { aggregate },
+      claudeApiCallRecord: { aggregate, create: vi.fn() },
     };
 
     const spend = await getCurrentMonthClaudeSpendUsd(
@@ -46,9 +47,54 @@ describe("Claude API usage store", () => {
     const client: ClaudeUsageStoreDb = {
       claudeApiCallRecord: {
         aggregate: vi.fn().mockResolvedValue({ _sum: { estimatedCostUsd: null } }),
+        create: vi.fn(),
       },
     };
 
     await expect(getCurrentMonthClaudeSpendUsd("MODEL_JOURNAL_DRAFT", new Date(), client)).resolves.toBe(0);
+  });
+
+  it("persists a Claude API call record", async () => {
+    const create = vi.fn().mockResolvedValue({ id: "record-1" });
+    const client: ClaudeUsageStoreDb = {
+      claudeApiCallRecord: {
+        aggregate: vi.fn(),
+        create,
+      },
+    };
+
+    await recordClaudeApiCall(
+      {
+        surface: "STUDIO_GENERATION",
+        modelName: "claude-sonnet-4-6",
+        inputTokens: 1200,
+        outputTokens: 300,
+        estimatedCostUsd: 0.0081,
+        userId: "user-1",
+        gameId: "game-1",
+        templateKind: "X_THREAD",
+        durationMs: 480,
+        success: true,
+        observedAt: new Date("2026-05-22T18:30:00.000Z"),
+      },
+      client
+    );
+
+    expect(create).toHaveBeenCalledWith({
+      data: {
+        surface: "STUDIO_GENERATION",
+        modelName: "claude-sonnet-4-6",
+        inputTokens: 1200,
+        outputTokens: 300,
+        estimatedCostUsd: 0.0081,
+        userId: "user-1",
+        gameId: "game-1",
+        templateKind: "X_THREAD",
+        durationMs: 480,
+        success: true,
+        errorKind: null,
+        observedAt: new Date("2026-05-22T18:30:00.000Z"),
+      },
+    });
   });
 });

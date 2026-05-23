@@ -220,3 +220,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `ClaudeApiCallRecord` and `ClaudeApiBudget` persistence with a UTC current-month spend loader, and wire Studio generation to read persisted Studio spend before calling Claude.
 - Rationale: budget enforcement needs a database-backed aggregation point before Phase 3 Studio traffic grows and before the full shared wrapper migration is complete.
 - Deferred: automatic call-record writes, seeded budget rows, cockpit API-costs page, owner-channel alerts, budget override controls, and wrapper migration for blog, Model Journal, Model Court, calibration, and pre-mortem surfaces remain follow-up slices.
+
+## 2026-05-22 - Studio Claude Usage Is Recorded
+
+- Decision: Studio Claude generation now records successful and failed Claude calls with surface, model, token counts, estimated cost, user, game, template, duration, and error state.
+- Rationale: the monthly spend gate needs fresh call records from the highest-priority Phase 3 generation surface before the cockpit API-costs page can show useful data.
+- Deferred: seeded budget rows, budget override controls, owner-channel alerts, and wrapper migration for blog, Model Journal, Model Court, calibration, and pre-mortem surfaces remain follow-up slices.

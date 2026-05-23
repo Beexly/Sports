@@ -3,6 +3,7 @@ import {
   CLAUDE_API_SURFACES,
   CLAUDE_BUDGET_FALLBACKS,
   DEFAULT_CLAUDE_API_BUDGETS,
+  estimateClaudeCostUsd,
   evaluateClaudeBudgetUsage,
 } from "@/lib/claude-api/cost-monitor";
 
@@ -39,5 +40,10 @@ describe("Claude API cost monitor policy", () => {
     expect(usage.fallbackMessage).toContain("The Model Court is at capacity for this billing cycle.");
     expect(usage.fallbackMessage).toContain("The factor breakdown.");
     expect(usage.fallbackMessage).not.toMatch(/AI-powered|unlock|level up/i);
+  });
+
+  it("estimates token cost with the shared pricing policy", () => {
+    expect(estimateClaudeCostUsd(1_000_000, 1_000_000)).toBe(18);
+    expect(estimateClaudeCostUsd(500, 250)).toBe(0.00525);
   });
 });

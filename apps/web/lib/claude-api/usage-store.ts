@@ -23,6 +23,22 @@ export interface ClaudeUsageStoreDb {
         };
       };
     }) => Promise<SumResult>;
+    readonly create: (args: {
+      readonly data: {
+        readonly surface: ClaudeApiSurface;
+        readonly modelName: string;
+        readonly inputTokens: number;
+        readonly outputTokens: number;
+        readonly estimatedCostUsd: number;
+        readonly userId: string | null;
+        readonly gameId: string | null;
+        readonly templateKind: string | null;
+        readonly durationMs: number;
+        readonly success: boolean;
+        readonly errorKind: string | null;
+        readonly observedAt: Date;
+      };
+    }) => Promise<unknown>;
   };
 }
 
@@ -55,6 +71,43 @@ export async function getCurrentMonthClaudeSpendUsd(
   });
 
   return toUsdNumber(aggregate._sum.estimatedCostUsd);
+}
+
+export interface ClaudeApiCallRecordInput {
+  readonly surface: ClaudeApiSurface;
+  readonly modelName: string;
+  readonly inputTokens: number;
+  readonly outputTokens: number;
+  readonly estimatedCostUsd: number;
+  readonly userId?: string | null;
+  readonly gameId?: string | null;
+  readonly templateKind?: string | null;
+  readonly durationMs: number;
+  readonly success: boolean;
+  readonly errorKind?: string | null;
+  readonly observedAt?: Date;
+}
+
+export async function recordClaudeApiCall(
+  input: ClaudeApiCallRecordInput,
+  client: ClaudeUsageStoreDb = defaultDb as unknown as ClaudeUsageStoreDb
+): Promise<void> {
+  await client.claudeApiCallRecord.create({
+    data: {
+      surface: input.surface,
+      modelName: input.modelName,
+      inputTokens: input.inputTokens,
+      outputTokens: input.outputTokens,
+      estimatedCostUsd: input.estimatedCostUsd,
+      userId: input.userId ?? null,
+      gameId: input.gameId ?? null,
+      templateKind: input.templateKind ?? null,
+      durationMs: input.durationMs,
+      success: input.success,
+      errorKind: input.errorKind ?? null,
+      observedAt: input.observedAt ?? new Date(),
+    },
+  });
 }
 
 function toUsdNumber(value: DecimalLike | number | string | null | undefined): number {

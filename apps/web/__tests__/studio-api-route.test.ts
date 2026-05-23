@@ -19,6 +19,8 @@ describe("Studio generation API route", () => {
     expect(route).toContain("generateStudioAssetDraft");
     expect(route).toContain("getCurrentMonthClaudeSpendUsd");
     expect(route).toContain("monthlySpendUsd");
+    expect(route).toContain("recordUsage: true");
+    expect(route).toContain('session.user.id === "dev-admin" ? null : session.user.id');
     expect(route).toContain("db.creatorAsset.create");
     expect(route).toContain("assetId");
     expect(route).toContain("autoPostEnabled");
