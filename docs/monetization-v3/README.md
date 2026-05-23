@@ -84,6 +84,7 @@ Runway determines which subset is active:
 - [product/launch-readiness-audit-script.md](product/launch-readiness-audit-script.md) - Repeatable local launch-readiness gate script and DEC-NEXT-038 guardrails.
 - [product/live-obs-prd.md](product/live-obs-prd.md) - Live OBS overlay product requirements.
 - [product/manual-longevity-instruments.md](product/manual-longevity-instruments.md) - Manual brand, capacity, and freshness trackers tied to DEC-NEXT-032.
+- [product/monetization-readme-navigation-lock-notes.md](product/monetization-readme-navigation-lock-notes.md) - README navigation maintenance note and DEC-NEXT-058 rationale.
 - [product/pre-engineering-handoff.md](product/pre-engineering-handoff.md) - Pre-engineering handoff checklist and implementation posture.
 - [product/provider-heartbeat-scaffold-notes.md](product/provider-heartbeat-scaffold-notes.md) - Provider heartbeat status logic and DEC-NEXT-040 guardrails.
 - [product/proof-email-capture-scaffold-notes.md](product/proof-email-capture-scaffold-notes.md) - Validation-only proof email capture scaffold notes and DEC-NEXT-028 guardrails.
@@ -94,12 +95,16 @@ Runway determines which subset is active:
 - [product/short-form-attribution-scaffold-notes.md](product/short-form-attribution-scaffold-notes.md) - Parser-only short-form UTM attribution notes and DEC-NEXT-034 guardrails.
 - [product/stripe-webhook-decision-scaffold-notes.md](product/stripe-webhook-decision-scaffold-notes.md) - Stripe webhook idempotency decision table and DEC-NEXT-045 guardrails.
 - [product/vault-api-contracts.md](product/vault-api-contracts.md) - Vault API contracts for membership, seats, digests, and admin flows.
+- [product/vault-backup-restore-runbook.md](product/vault-backup-restore-runbook.md) - Provider-neutral backup and restore rehearsal runbook and DEC-NEXT-057 guardrails.
 - [product/vault-data-model.md](product/vault-data-model.md) - Vault data model for members, applications, digests, events, referrals, and audits.
 - [product/vault-entitlement-access-state-notes.md](product/vault-entitlement-access-state-notes.md) - Explainable Vault entitlement access-state logic and DEC-NEXT-044 guardrails.
 - [product/vault-integration-scaffold-notes.md](product/vault-integration-scaffold-notes.md) - Inert Vault integration scaffold notes and DEC-NEXT-025 guardrails.
+- [product/vault-lifecycle-email-delivery-notes.md](product/vault-lifecycle-email-delivery-notes.md) - Lifecycle email delivery-state decisioning and DEC-NEXT-053 guardrails.
 - [product/vault-lifecycle-email-schedule-notes.md](product/vault-lifecycle-email-schedule-notes.md) - Vault welcome, retention, and renewal email scheduling logic and DEC-NEXT-047 guardrails.
 - [product/vault-onboarding-health-scaffold-notes.md](product/vault-onboarding-health-scaffold-notes.md) - First-24-hour Vault onboarding health logic and DEC-NEXT-039 guardrails.
+- [product/vault-persistence-migration-contract.md](product/vault-persistence-migration-contract.md) - Adapter-neutral persistence tables, constraints, transactions, and DEC-NEXT-056 guardrails.
 - [product/vault-prd.md](product/vault-prd.md) - Vault product requirements and source operating docs.
+- [product/vault-referral-decision-scaffold-notes.md](product/vault-referral-decision-scaffold-notes.md) - Referral attribution, accrual, and clawback decisioning with DEC-NEXT-052 guardrails.
 - [product/vault-route-access-scaffold-notes.md](product/vault-route-access-scaffold-notes.md) - Vault member-route access decision helper and DEC-NEXT-051 guardrails.
 - [product/vault-test-plan.md](product/vault-test-plan.md) - Vault test plan and launch verification coverage.
 - [product/web-app-scaffold-notes.md](product/web-app-scaffold-notes.md) - Next.js proof-surface scaffold notes and DEC-NEXT-023 rationale.

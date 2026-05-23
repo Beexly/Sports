@@ -5,7 +5,7 @@
 - Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
 - Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
 - Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
-- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-057.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-058.
 - Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
 - Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
 - Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
@@ -43,6 +43,7 @@
 - Added durable storage to the Vault launch environment contract; no database vendor or client was selected.
 - Added an adapter-neutral Vault persistence migration contract covering tables, constraints, idempotency, transactions, and launch tests.
 - Added a provider-neutral Vault backup and restore runbook with restore rehearsal requirements.
+- Re-locked the monetization README navigation so the newest engineering docs are discoverable.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -93,6 +94,7 @@
 - `ddd558f` - DEC-NEXT-055 add durable storage env contract
 - `1e439ac` - DEC-NEXT-056 add Vault persistence contract
 - `81b0608` - DEC-NEXT-057 add Vault backup restore runbook
+- `TBD` - DEC-NEXT-058 refresh monetization README engineering nav
 
 ## What I Flagged For Morning Triage
 
