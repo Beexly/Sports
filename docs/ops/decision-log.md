@@ -130,3 +130,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `POST /api/cockpit/journal/[id]/submit` and wire the editor's submit control to move compliant drafts into `REVIEW_PENDING`.
 - Rationale: the current draft-only guardrail forbids non-null `publishedAt` writes and `PUBLISHED` status writes. A compliance-gated review transition advances the workflow without weakening that safety policy.
 - Deferred: manual publish route, retraction route, RSS invalidation, email digest delivery, teaser queue, and any guardrail amendment for explicit manual publishing remain follow-up slices.
+
+## 2026-05-22 - Model Journal Draft Creation Added
+
+- Decision: add `POST /api/cockpit/journal` and `/cockpit/journal/new` for manual Journal draft creation.
+- Rationale: operators need a safe way to start weekly research entries from the cockpit before automated drafting exists. Creation is ADMIN-only, initializes `DRAFT` rows with the current `MODEL_VERSION`, and triggers no public distribution.
+- Deferred: automated Friday data pipe, Claude draft generation, evidence prefill, manual publish route, retraction route, RSS invalidation, email digest delivery, and teaser queue remain follow-up slices.

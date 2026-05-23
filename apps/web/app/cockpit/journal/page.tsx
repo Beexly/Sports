@@ -124,9 +124,17 @@ export default async function CockpitJournalPage(): Promise<JSX.Element> {
             Published entries are preserved; retraction is the only removal path.
           </p>
         </div>
-        <div className="rounded-lg border border-gray-800 bg-gray-950/60 p-3 text-sm">
-          <p className="text-[10px] uppercase tracking-wide text-gray-600">Next publish</p>
-          <p className="mt-1 font-semibold text-gray-100">{data.nextPublishLabel}</p>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/cockpit/journal/new"
+            className="min-h-11 rounded-lg border border-yellow-400/60 bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-950 hover:bg-yellow-300"
+          >
+            Create draft
+          </Link>
+          <div className="rounded-lg border border-gray-800 bg-gray-950/60 p-3 text-sm">
+            <p className="text-[10px] uppercase tracking-wide text-gray-600">Next publish</p>
+            <p className="mt-1 font-semibold text-gray-100">{data.nextPublishLabel}</p>
+          </div>
         </div>
       </header>
 

@@ -4,8 +4,11 @@ import { describe, expect, it } from "vitest";
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const page = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/page.tsx"), "utf8");
+const newPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/new/page.tsx"), "utf8");
+const newForm = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/new/journal-new-form.tsx"), "utf8");
 const entryPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/[entryId]/page.tsx"), "utf8");
 const editor = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/[entryId]/journal-entry-editor.tsx"), "utf8");
+const createRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/route.ts"), "utf8");
 const saveRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/route.ts"), "utf8");
 const scanRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/scan/route.ts"), "utf8");
 const submitRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/submit/route.ts"), "utf8");
@@ -21,6 +24,8 @@ describe("Model Journal cockpit route", () => {
     expect(page).toContain("Drafts Pending Review");
     expect(page).toContain("Published Entries");
     expect(page).toContain("Retracted Entries");
+    expect(page).toContain('href="/cockpit/journal/new"');
+    expect(page).toContain("Create draft");
   });
 
   it("loads journal entries from the new persistence model", () => {
@@ -56,6 +61,21 @@ describe("Model Journal cockpit route", () => {
     expect(saveRoute).toContain("modelJournalEntry.update");
     expect(saveRoute).toContain("bodyMarkdown");
     expect(saveRoute).not.toMatch(/emailDigest|twitterClient|postToSlack|sendgrid|mailchimp/i);
+  });
+
+  it("creates manual draft Journal entries without public distribution", () => {
+    expect(newPage).toContain("Create Draft");
+    expect(newPage).toContain("JournalNewForm");
+    expect(newForm).toContain('fetch("/api/cockpit/journal"');
+    expect(newForm).toContain("Create draft");
+    expect(createRoute).toMatch(/from\s+["']@\/lib\/auth["']/);
+    expect(createRoute).toMatch(/role\s*!==\s*"ADMIN"/);
+    expect(createRoute).toContain("MODEL_VERSION");
+    expect(createRoute).toContain("modelJournalEntry.create");
+    expect(createRoute).toContain('status: "DRAFT"');
+    expect(createRoute).toContain("referencedPickIds: []");
+    expect(createRoute).toContain("externalDistribution: false");
+    expect(createRoute).not.toMatch(/publishedAt\s*:\s*new Date|status:\s*"PUBLISHED"|twitterClient|sendgrid|mailchimp/i);
   });
 
   it("wires Journal compliance scan before publish transitions exist", () => {
