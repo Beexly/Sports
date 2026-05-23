@@ -26,7 +26,17 @@ Repeated IDs fall into three expected categories:
 
 - DEC-NEXT-001 through DEC-NEXT-010 are already reserved by the canonical decision-log templates.
 - DEC-NEXT-011 through DEC-NEXT-014 were assigned on 2026-05-23 for overnight maintenance decisions.
-- Latest validation state after this audit: 170 Markdown files and 21 CSV files.
+- DEC-NEXT-015 through DEC-NEXT-067 were assigned on 2026-05-23 for overnight R&D, engineering scaffolds, validation hardening, and launch-readiness guardrails.
+- DEC-NEXT-029 is not currently used in the active pack. Leave it unused unless Garrett explicitly wants backfill; do not renumber later decisions.
+- Latest validation state after this audit: 214 Markdown files, 28 CSV files, and 229 README navigation targets.
+
+## 2026-05-23 Refresh - DEC-NEXT-068
+
+**Decision:** Refresh this collision audit after the overnight engineering/R&D pass.
+
+**Why now:** The decision sequence advanced substantially after the original audit. The audit file needed to reflect current IDs so future agents do not mistakenly reuse a later overnight ID.
+
+**Result:** No collision requiring reassignment was found. Repeated IDs are still cross-references, template references, or same-decision documentation across notes, README, brief, and source docs.
 
 ## Resolution
 

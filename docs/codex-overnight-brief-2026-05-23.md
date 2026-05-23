@@ -5,7 +5,7 @@
 - Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
 - Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
 - Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
-- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-067.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-068.
 - Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
 - Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
 - Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
@@ -53,6 +53,7 @@
 - Added conservative short-form funnel economics so video R&D is judged by qualified proof-surface traffic, not views.
 - Added gated B2B data licensing R&D with allowed surfaces, rejection boundaries, inquiry fields, and activation gates.
 - Added artifact-led merch R&D with demand gates, economics filters, and brand-drift constraints.
+- Refreshed the decision-log collision audit to reflect DEC-NEXT-015 through DEC-NEXT-067 and the current pack counts.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -113,6 +114,7 @@
 - `28c8f52` - DEC-NEXT-065 add short-form funnel economics
 - `4e0813b` - DEC-NEXT-066 add B2B data licensing R&D
 - `48dfbec` - DEC-NEXT-067 add artifact merch R&D
+- `TBD` - DEC-NEXT-068 refresh decision collision audit
 
 ## What I Flagged For Morning Triage
 
