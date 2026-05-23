@@ -531,6 +531,12 @@ export interface ContentGenerationInput {
     confidence: number;
     reasoning: string;
   }>;
+  /**
+   * Optional deduplicated source names (e.g. from extractPickSources())
+   * that backed the picks. When present, the generator instructs Claude
+   * to cite them at the end of the post — operator-verifiable provenance.
+   */
+  sources?: readonly string[];
 }
 
 export interface GeneratedContent {

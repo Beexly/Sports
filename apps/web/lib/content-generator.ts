@@ -91,15 +91,25 @@ export async function generateBlogPost(
     )
     .join("\n\n");
 
+  const sources = input.sources ?? [];
+  const sourcesBlock = sources.length > 0
+    ? `\n\nSOURCES BACKING THIS SLATE (echo these verbatim; do not add others):
+${sources.map((s, i) => `${i + 1}. ${s}`).join("\n")}`
+    : "";
+
+  const sourcesRequirement = sources.length > 0
+    ? `\n- Append a single line "Sources: ${sources.join(", ")}" immediately before the disclaimer`
+    : "";
+
   const userPrompt = `Write a sports analysis blog post for ${input.sport} picks on ${dateDisplay}.
 
 PICKS DATA (this is your ONLY source of truth — do not invent any other data):
-${picksSummary}
+${picksSummary}${sourcesBlock}
 
 Requirements:
 - Title: Make it SEO-friendly, include sport and date
 - Excerpt: 2 paragraph summary (free preview)
-- Content: Full analysis (4-6 paragraphs) referencing only the above data
+- Content: Full analysis (4-6 paragraphs) referencing only the above data${sourcesRequirement}
 - Include this disclaimer at end: "${GAMBLING_DISCLAIMER}"
 - SEO title (under 60 chars)
 - SEO description (under 155 chars)

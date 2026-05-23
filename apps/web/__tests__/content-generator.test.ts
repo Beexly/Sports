@@ -41,6 +41,17 @@ function makeFakeClient(
   return { messages: { create } } as unknown as Anthropic;
 }
 
+/** Like makeFakeClient but also returns the spy so callers can inspect arguments. */
+function makeFakeClientWithSpy(body: unknown): {
+  client: Anthropic;
+  create: ReturnType<typeof vi.fn>;
+} {
+  const create = vi.fn(async () => ({
+    content: [{ type: "text" as const, text: JSON.stringify(body) }],
+  }));
+  return { client: { messages: { create } } as unknown as Anthropic, create };
+}
+
 const SAMPLE_INPUT: ContentGenerationInput = {
   date: "2026-05-23",
   sport: "NBA",
@@ -104,6 +115,49 @@ describe("generateBlogPost", () => {
     await expect(generateBlogPost(SAMPLE_INPUT)).rejects.toThrow(
       "simulated API error"
     );
+  });
+
+  it("injects the SOURCES block + citation requirement when sources are provided", async () => {
+    const { client, create } = makeFakeClientWithSpy(VALID_RESPONSE);
+    __setClientForTests(client);
+
+    await generateBlogPost({
+      ...SAMPLE_INPUT,
+      sources: ["the-odds-api", "schedule-internal"],
+    });
+
+    expect(create).toHaveBeenCalledTimes(1);
+    const args = create.mock.calls[0]![0] as { messages: { content: string }[] };
+    const userPrompt = args.messages[0]!.content;
+    expect(userPrompt).toContain("SOURCES BACKING THIS SLATE");
+    expect(userPrompt).toContain("1. the-odds-api");
+    expect(userPrompt).toContain("2. schedule-internal");
+    expect(userPrompt).toContain(
+      'Sources: the-odds-api, schedule-internal" immediately before the disclaimer'
+    );
+  });
+
+  it("omits the SOURCES block when no sources are provided (backward compat)", async () => {
+    const { client, create } = makeFakeClientWithSpy(VALID_RESPONSE);
+    __setClientForTests(client);
+
+    await generateBlogPost(SAMPLE_INPUT);
+
+    expect(create).toHaveBeenCalledTimes(1);
+    const args = create.mock.calls[0]![0] as { messages: { content: string }[] };
+    const userPrompt = args.messages[0]!.content;
+    expect(userPrompt).not.toContain("SOURCES BACKING THIS SLATE");
+    expect(userPrompt).not.toContain("immediately before the disclaimer");
+  });
+
+  it("omits the SOURCES block when an empty sources array is provided", async () => {
+    const { client, create } = makeFakeClientWithSpy(VALID_RESPONSE);
+    __setClientForTests(client);
+
+    await generateBlogPost({ ...SAMPLE_INPUT, sources: [] });
+
+    const args = create.mock.calls[0]![0] as { messages: { content: string }[] };
+    expect(args.messages[0]!.content).not.toContain("SOURCES BACKING THIS SLATE");
   });
 });
 
