@@ -108,7 +108,7 @@
 - `6df2508` - DEC-NEXT-062 add auth env readiness
 - `57bd063` - DEC-NEXT-063 add launch readiness verdict aggregation
 - `98fa867` - DEC-NEXT-064 add smoke response shape checks
-- `TBD` - DEC-NEXT-065 add short-form funnel economics
+- `28c8f52` - DEC-NEXT-065 add short-form funnel economics
 
 ## What I Flagged For Morning Triage
 
