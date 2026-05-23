@@ -292,3 +292,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `/api/room/[gameId]/model-court` as a Pro-or-Elite, game-scoped POST endpoint backed by the Game Room evidence loader and Model Court answer runtime.
 - Rationale: the first route should prove server-side entitlement, evidence loading, deterministic refusals, API-key gating, and usage accounting before any public chat UI is exposed.
 - Deferred: room-page chat controls, slate-wide questions, stored Model Court cases, and lens-specific UI affordances remain future slices.
+
+## 2026-05-22 - Calibration Insight Generation Is Budgeted
+
+- Decision: add a `CALIBRATION_WEEKLY_INSIGHT` Claude wrapper with a deterministic thin-week fallback, shared messages client usage, and call-record accounting.
+- Rationale: calibration training needs weekly feedback without spending on insufficient samples or bypassing the Claude API budget monitor.
+- Deferred: persistence to user calibration snapshots and the on-site calibration curve UI remain Phase 4 slices.
