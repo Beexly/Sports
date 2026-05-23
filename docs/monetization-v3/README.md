@@ -109,6 +109,7 @@ Runway determines which subset is active:
 - [copy/galaxy-synthetic-host-policy.md](copy/galaxy-synthetic-host-policy.md) - Internal R&D policy for SFW synthetic hosts and short-form video tests.
 - [copy/galaxy-synthetic-host-prompt-library.md](copy/galaxy-synthetic-host-prompt-library.md) - Private SFW synthetic-host prompt profiles for visual drafts.
 - [copy/galaxy-vega-character-brief.md](copy/galaxy-vega-character-brief.md) - Vega character design brief for mascot-first short-form tests.
+- [copy/galaxy-vega-video-storyboards.md](copy/galaxy-vega-video-storyboards.md) - Five Vega video storyboards and production checklist.
 - [copy/galaxy-twitter-content-discipline.md](copy/galaxy-twitter-content-discipline.md) - Twitter content discipline and response rules.
 - [copy/galaxy-twitter-incident-response-protocol.md](copy/galaxy-twitter-incident-response-protocol.md) - Twitter incident response protocol.
 - [copy/galaxy-twitter-launch-thread.md](copy/galaxy-twitter-launch-thread.md) - Vault launch Twitter thread.
@@ -238,6 +239,7 @@ Runway determines which subset is active:
 - [templates/vault-press-outreach-tracker.csv](templates/vault-press-outreach-tracker.csv) - Vault press outreach tracker.
 - [templates/vault-referral-payout-review.csv](templates/vault-referral-payout-review.csv) - Vault referral payout review tracker.
 - [templates/vault-retention-review.csv](templates/vault-retention-review.csv) - Vault retention review tracker.
+- [templates/vega-video-production-tracker.csv](templates/vega-video-production-tracker.csv) - Vega video production tracker.
 - [templates/vocabulary-log.csv](templates/vocabulary-log.csv) - Customer vocabulary log.
 - [templates/week-1-command-center.md](templates/week-1-command-center.md) - Week-1 command center checklist.
 
