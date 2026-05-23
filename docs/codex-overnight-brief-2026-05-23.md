@@ -36,6 +36,7 @@
 - Inspected `XXX-main (1).zip` and documented Galaxy-safe salvage patterns without importing adult, scraping, generator, or platform-risk code.
 - Added a reusable research-archive audit script for future zip fingerprints, file inventories, and line counts.
 - Added an implementation-readiness gap register that separates P0/P1/P2 launch blockers from strategy completeness.
+- Added a Vault route-access decision helper for member-only routes; real auth remains unwired.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs

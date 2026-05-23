@@ -100,6 +100,7 @@ Runway determines which subset is active:
 - [product/vault-lifecycle-email-schedule-notes.md](product/vault-lifecycle-email-schedule-notes.md) - Vault welcome, retention, and renewal email scheduling logic and DEC-NEXT-047 guardrails.
 - [product/vault-onboarding-health-scaffold-notes.md](product/vault-onboarding-health-scaffold-notes.md) - First-24-hour Vault onboarding health logic and DEC-NEXT-039 guardrails.
 - [product/vault-prd.md](product/vault-prd.md) - Vault product requirements and source operating docs.
+- [product/vault-route-access-scaffold-notes.md](product/vault-route-access-scaffold-notes.md) - Vault member-route access decision helper and DEC-NEXT-051 guardrails.
 - [product/vault-test-plan.md](product/vault-test-plan.md) - Vault test plan and launch verification coverage.
 - [product/web-app-scaffold-notes.md](product/web-app-scaffold-notes.md) - Next.js proof-surface scaffold notes and DEC-NEXT-023 rationale.
 - [product/web-test-harness-notes.md](product/web-test-harness-notes.md) - Initial Vitest harness notes and DEC-NEXT-026 rationale.

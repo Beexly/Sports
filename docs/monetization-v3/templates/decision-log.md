@@ -566,3 +566,16 @@ Metric threshold: Register names P0/P1/P2 gaps, failure modes, design responses,
 Owner: Codex maintains; Garrett owns runway/customer-dev decisions
 Next review date: Start of next morning peak block
 Notes: Does not authorize deploy, provider activation, public posting, paid traffic, or track activation.
+
+### DEC-NEXT-051 - Vault Route Access Decision Helper
+
+Date: 2026-05-23
+Decision: Add a reusable Vault member-route access decision helper that inherits explainable entitlement reasons.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Member routes must share server-side authorization logic once auth is wired; route-by-route entitlement drift would create access bugs.
+Metric threshold: Tests cover allowed active access and denied refunded access.
+Owner: Codex maintains scaffold; Garrett confirms auth provider before implementation
+Next review date: Before member dashboard auth integration
+Notes: Helper only. No auth provider, session lookup, database query, route unlock, redirect, or member-content exposure is wired.

@@ -13,6 +13,8 @@ Use existing app API conventions when implementing. These contracts define behav
 
 All member/admin routes must check server-side authorization. Client-side hiding is not enough.
 
+Pure member-route access decisioning exists from DEC-NEXT-051. It still needs a real auth provider, user lookup, and route-handler integration before any member content is exposed.
+
 ## GET `/api/vault/seat-count`
 
 Purpose: live founding seat counter.
