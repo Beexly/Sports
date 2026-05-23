@@ -479,3 +479,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: parse and policy-check Claude blog generation output before recording a successful usage event.
 - Rationale: malformed JSON or missing required responsible-gambling language should fail closed and show up in the Claude API usage log as a failed generation.
 - Guardrail: parse failures use `PARSE_ERROR`; policy failures use `POLICY_*` error kinds.
+
+## 2026-05-22 - Blog Generation Eval Coverage
+
+- Decision: add eval contracts for blog-generation happy path, policy-block, and parse-error behavior.
+- Rationale: the older Claude blog generator now has runtime output validation and should be covered by the same append-only eval contract system as newer Phase 3 surfaces.
+- Guardrail: `scripts/eval-contracts.mjs` enforces `BLOG_POST` template coverage and the three required scenarios.

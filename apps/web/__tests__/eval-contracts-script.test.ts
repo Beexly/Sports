@@ -45,6 +45,13 @@ describe("eval contract runner", () => {
     expect(src).toContain("missing eval coverage for scenario");
   });
 
+  it("enforces blog generation eval coverage", () => {
+    expect(src).toContain('"blog-generation"');
+    expect(src).toContain("BLOG_POST");
+    expect(src).toContain("parse-error");
+    expect(src).toContain("policy-block");
+  });
+
   it("passes against the current eval library", () => {
     const output = execFileSync(process.execPath, [scriptPath], {
       cwd: repoRoot,

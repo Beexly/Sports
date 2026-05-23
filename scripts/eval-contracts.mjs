@@ -17,6 +17,9 @@ const REQUIRED_FRONTMATTER = ["surface", "scenario", "created", "created_by", "s
 const REQUIRED_SECTIONS = ["# Input", "# Expected behavior", "# Forbidden behavior", "# Pass criteria"];
 const VALID_STATUS = new Set(["pending-runner", "active", "retired"]);
 const REQUIRED_SURFACE_TEMPLATE_COVERAGE = {
+  "blog-generation": [
+    "BLOG_POST",
+  ],
   "calibration-training": [
     "WEEKLY_INSIGHT",
   ],
@@ -32,6 +35,11 @@ const REQUIRED_SURFACE_TEMPLATE_COVERAGE = {
   ],
 };
 const REQUIRED_SURFACE_SCENARIO_COVERAGE = {
+  "blog-generation": [
+    "happy-path",
+    "policy-block",
+    "parse-error",
+  ],
   "calibration-training": [
     "happy-path",
     "policy-block",
