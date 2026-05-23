@@ -30,8 +30,10 @@ describe("scripts/prod-probe.mjs", () => {
   it("validates board and calibration API response shapes", () => {
     expect(src).toMatch(/API_SHAPE_PROBES/);
     expect(src).toMatch(/path:\s*"\/api\/board\/state"/);
+    expect(src).toMatch(/path:\s*"\/api\/board\/state\?check=edge-index"/);
     expect(src).toMatch(/path:\s*"\/api\/calibration"/);
     expect(src).toMatch(/validateBoardState/);
+    expect(src).toMatch(/validateBoardEdgeIndex/);
     expect(src).toMatch(/validateCalibration/);
     expect(src).toMatch(/shapeError/);
   });

@@ -89,6 +89,15 @@ describe("synthetic monitoring dashboard", () => {
           admin: false,
         },
         {
+          path: "/api/board/state?check=edge-index",
+          label: "public Edge Index",
+          ok: true,
+          status: 200,
+          ms: 53,
+          bannedPattern: "",
+          admin: false,
+        },
+        {
           path: "/api/cockpit/bot-outbox/preview?surface=twitter",
           label: "Twitter/X outbox",
           ok: true,
@@ -120,6 +129,7 @@ describe("synthetic monitoring dashboard", () => {
     expect(checks.find((check) => check.id === "CHECK-A2")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-A4")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-A4")?.detail).toContain("invalid response shape");
+    expect(checks.find((check) => check.id === "CHECK-E3")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-B1")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-B3")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.status).toBe("failing");

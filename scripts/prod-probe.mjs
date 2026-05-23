@@ -91,6 +91,11 @@ const PUBLIC_ROUTE_PROBES = [
 
 const API_SHAPE_PROBES = [
   { path: "/api/board/state", label: "board state", validate: validateBoardState },
+  {
+    path: "/api/board/state?check=edge-index",
+    label: "public Edge Index",
+    validate: validateBoardEdgeIndex,
+  },
   { path: "/api/calibration", label: "calibration", validate: validateCalibration },
 ];
 
@@ -246,6 +251,20 @@ function validateBoardState(json) {
   if (!Array.isArray(json.data.publishedToday)) return "Missing data.publishedToday array.";
   if (!Array.isArray(json.data.gatedTodayRows)) return "Missing data.gatedTodayRows array.";
   if (!json.meta || typeof json.meta.isSampleData !== "boolean") return "Missing meta.isSampleData boolean.";
+  return "";
+}
+
+function validateBoardEdgeIndex(json) {
+  const baseError = validateBoardState(json);
+  if (baseError) return baseError;
+  const rows = [
+    ...json.data.scoringNow,
+    ...json.data.publishedToday,
+    ...json.data.gatedTodayRows,
+  ];
+  if (rows.length === 0) return "No tracked slate rows available for Edge Index visibility.";
+  const withEdgeIndex = rows.filter((row) => typeof row.edgeIndex === "number");
+  if (withEdgeIndex.length === 0) return "No slate rows expose a numeric Edge Index.";
   return "";
 }
 

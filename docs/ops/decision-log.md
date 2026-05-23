@@ -419,3 +419,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: wire the public Model Journal RSS feed into `scripts/prod-probe.mjs` and hydrate Synthetic Monitoring `CHECK-B3` from that artifact.
 - Rationale: the Journal cadence surface can be checked without credentials or external delivery, and the cockpit dashboard already reserved `CHECK-B3` for Journal health.
 - Guardrail: the probe validates RSS structure and channel visibility only. It does not require a published item during bootstrap or sample-history periods.
+
+## 2026-05-22 - Edge Index Synthetic Probe
+
+- Decision: add a query-tagged `/api/board/state?check=edge-index` synthetic probe and hydrate `CHECK-E3` from it.
+- Rationale: `/api/board/state` already carries public Edge Index values on slate rows, so the production monitor can verify visibility without a new endpoint.
+- Guardrail: this checks that at least one tracked slate row exposes a numeric Edge Index. It does not publish factor breakdowns or change entitlement rules.
