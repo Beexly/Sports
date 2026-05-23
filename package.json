@@ -5,6 +5,7 @@
     "dev:web": "next dev apps/web",
     "build:web": "next build apps/web",
     "typecheck:web": "tsc -p apps/web/tsconfig.json --noEmit",
+    "smoke:prod": "powershell -ExecutionPolicy Bypass -File ./scripts/smoke-prod.ps1",
     "validate:monetization": "powershell -ExecutionPolicy Bypass -File ./docs/monetization-v3/tools/validate-monetization-v3.ps1"
   },
   "dependencies": {

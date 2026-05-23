@@ -76,6 +76,7 @@ Runway determines which subset is active:
 - [product/kpi-cockpit-prd.md](product/kpi-cockpit-prd.md) - KPI cockpit requirements for monthly operating review.
 - [product/live-obs-prd.md](product/live-obs-prd.md) - Live OBS overlay product requirements.
 - [product/pre-engineering-handoff.md](product/pre-engineering-handoff.md) - Pre-engineering handoff checklist and implementation posture.
+- [product/production-smoke-test-notes.md](product/production-smoke-test-notes.md) - Read-only production smoke-test scripts and DEC-NEXT-024 guardrails.
 - [product/public-proof-surface-monetization-spec.md](product/public-proof-surface-monetization-spec.md) - Email capture, contextual Vault CTA, and UTM spec for public proof surfaces.
 - [product/vault-api-contracts.md](product/vault-api-contracts.md) - Vault API contracts for membership, seats, digests, and admin flows.
 - [product/vault-data-model.md](product/vault-data-model.md) - Vault data model for members, applications, digests, events, referrals, and audits.
