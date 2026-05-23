@@ -17,6 +17,8 @@ describe("Studio generation API route", () => {
 
   it("returns drafts only and exposes no external publisher", () => {
     expect(route).toContain("generateStudioAssetDraft");
+    expect(route).toContain("getCurrentMonthClaudeSpendUsd");
+    expect(route).toContain("monthlySpendUsd");
     expect(route).toContain("db.creatorAsset.create");
     expect(route).toContain("assetId");
     expect(route).toContain("autoPostEnabled");

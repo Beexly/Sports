@@ -214,3 +214,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: Studio Claude generation now checks the shared cost policy when a monthly spend value is supplied, refusing before the external API call at the red threshold.
 - Rationale: the Phase 3 Studio path can adopt budget behavior before the persistent cost-record schema lands, and tests can verify no request is sent when capacity is exhausted.
 - Deferred: database-backed spend lookup, call-record persistence, cockpit API-costs page, owner-channel alerts, and budget override controls remain follow-up slices.
+
+## 2026-05-22 - Claude API Cost Records Reach Schema
+
+- Decision: add `ClaudeApiCallRecord` and `ClaudeApiBudget` persistence with a UTC current-month spend loader, and wire Studio generation to read persisted Studio spend before calling Claude.
+- Rationale: budget enforcement needs a database-backed aggregation point before Phase 3 Studio traffic grows and before the full shared wrapper migration is complete.
+- Deferred: automatic call-record writes, seeded budget rows, cockpit API-costs page, owner-channel alerts, budget override controls, and wrapper migration for blog, Model Journal, Model Court, calibration, and pre-mortem surfaces remain follow-up slices.

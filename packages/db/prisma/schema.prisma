@@ -29,6 +29,7 @@ model User {
   sessions      Session[]
   subscription  Subscription?
   alerts        Alert[]
+  claudeApiCalls ClaudeApiCallRecord[]
 
   @@index([email])
   @@map("users")
@@ -227,6 +228,7 @@ model Game {
   pickSignalSnapshots PickSignalSnapshot[]
   gateDecisions       GateDecision[]
   creatorAssets       CreatorAsset[]
+  claudeApiCalls      ClaudeApiCallRecord[]
 
   @@index([sportId])
   @@index([commenceTime])
@@ -1014,6 +1016,44 @@ model ModelJournalEntry {
   @@index([status])
   @@index([publishedAt])
   @@map("model_journal_entries")
+}
+
+model ClaudeApiCallRecord {
+  id               String   @id @default(cuid())
+  surface          String
+  modelName        String
+  inputTokens      Int
+  outputTokens     Int
+  estimatedCostUsd Decimal  @db.Decimal(10, 6)
+  userId           String?
+  gameId           String?
+  templateKind     String?
+  durationMs       Int
+  success          Boolean
+  errorKind        String?
+  observedAt       DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  game Game? @relation(fields: [gameId], references: [id], onDelete: SetNull)
+
+  @@index([observedAt])
+  @@index([surface, observedAt])
+  @@index([userId])
+  @@index([gameId])
+  @@map("claude_api_call_records")
+}
+
+model ClaudeApiBudget {
+  id                String   @id @default(cuid())
+  surface           String   @unique
+  monthlyBudgetUsd  Decimal  @db.Decimal(10, 2)
+  alertThresholds   Json
+  overrideActive    Boolean  @default(false)
+  overrideExpiresAt DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("claude_api_budgets")
 }
 
 // ============================================================
