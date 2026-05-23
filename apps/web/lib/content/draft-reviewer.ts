@@ -16,6 +16,7 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 import { makeAnthropicHolder } from "../ai/client.js";
+import { withTelemetry } from "../ai/telemetry.js";
 
 const REVIEWER_MODEL = "claude-haiku-4-5";
 const REVIEWER_VERSION = "draft-reviewer/v1";
@@ -150,33 +151,37 @@ ${content}
 
 Return JSON matching the schema. At most ${MAX_FINDINGS} findings. Empty findings array is fine when the draft is clean.`;
 
-  const response = await client.messages.create({
-    model: REVIEWER_MODEL,
-    max_tokens: 4000,
-    system: [
-      {
-        type: "text",
-        text: SYSTEM_PROMPT,
-        cache_control: { type: "ephemeral" },
-      },
-    ],
-    output_config: {
-      format: { type: "json_schema", schema: REPORT_SCHEMA },
-    },
-    messages: [
-      {
-        role: "user",
-        content: [
+  const response = await withTelemetry(
+    { callSite: "draft-reviewer", model: REVIEWER_MODEL },
+    () =>
+      client.messages.create({
+        model: REVIEWER_MODEL,
+        max_tokens: 4000,
+        system: [
           {
             type: "text",
-            text: cachedPrefix,
+            text: SYSTEM_PROMPT,
             cache_control: { type: "ephemeral" },
           },
-          { type: "text", text: variableSuffix },
         ],
-      },
-    ],
-  });
+        output_config: {
+          format: { type: "json_schema", schema: REPORT_SCHEMA },
+        },
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: cachedPrefix,
+                cache_control: { type: "ephemeral" },
+              },
+              { type: "text", text: variableSuffix },
+            ],
+          },
+        ],
+      })
+  );
 
   const textBlock = response.content.find(
     (b): b is Anthropic.TextBlock => b.type === "text"

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { reviewDraft } from "@/lib/content/draft-reviewer";
 import { getBannedPhraseList } from "@/lib/trust-claims";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 /**
  * Cockpit semantic draft reviewer — admin-gated POST.
@@ -39,6 +40,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return jsonNoStore(
       { error: "Admin role required for cockpit endpoints" },
       403
+    );
+  }
+
+  const userId = session.user.email ?? session.user.id ?? "anon-admin";
+  const limit = await checkRateLimit(userId, {
+    route: "cockpit-review-draft",
+    windowMs: 60_000,
+    maxRequests: 10,
+    failureMode: "fail-closed",
+  });
+  if (!limit.allowed) {
+    return jsonNoStore(
+      { error: "rate-limit-exceeded", resetAt: limit.resetAt, source: limit.source },
+      429
     );
   }
 

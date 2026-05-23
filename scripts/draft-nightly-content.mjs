@@ -15,13 +15,61 @@
  * smoke the SDK round-trip nightly without needing CI DB access.
  */
 
-import { mkdir, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, writeFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const REPO_ROOT = resolve(__dirname, "..");
 const DRAFTS_DIR = resolve(REPO_ROOT, "_drafts");
+const TELEMETRY_LOG = resolve(REPO_ROOT, "_logs", "claude-usage.log");
+
+// Minimal inline mirror of apps/web/lib/ai/telemetry.ts for this .mjs runner.
+async function recordTelemetry(record) {
+  const line = JSON.stringify(record);
+  console.log(line);
+  if (process.env.VERCEL === "1") return;
+  try {
+    await mkdir(dirname(TELEMETRY_LOG), { recursive: true });
+    await appendFile(TELEMETRY_LOG, line + "\n", "utf8");
+  } catch {
+    // best-effort: never let telemetry IO break the runner
+  }
+}
+
+async function callWithTelemetry(callSite, model, fn) {
+  const start = Date.now();
+  try {
+    const result = await fn();
+    const usage = result.usage ?? {};
+    await recordTelemetry({
+      ts: new Date().toISOString(),
+      callSite,
+      model,
+      inputTokens: usage.input_tokens ?? 0,
+      cacheCreationInputTokens: usage.cache_creation_input_tokens ?? 0,
+      cacheReadInputTokens: usage.cache_read_input_tokens ?? 0,
+      outputTokens: usage.output_tokens ?? 0,
+      latencyMs: Date.now() - start,
+      status: "ok",
+    });
+    return result;
+  } catch (err) {
+    await recordTelemetry({
+      ts: new Date().toISOString(),
+      callSite,
+      model,
+      inputTokens: 0,
+      cacheCreationInputTokens: 0,
+      cacheReadInputTokens: 0,
+      outputTokens: 0,
+      latencyMs: Date.now() - start,
+      status: "error",
+      errorClass: err && err.constructor ? err.constructor.name : "Unknown",
+    });
+    throw err;
+  }
+}
 
 const DRAFT_MODEL = "claude-sonnet-4-6";
 const REVIEW_MODEL = "claude-haiku-4-5";
@@ -160,13 +208,18 @@ Requirements:
 - SEO description (under 155 chars)
 - Tags: 3-5 relevant tags`;
 
-const draftResponse = await client.messages.create({
-  model: DRAFT_MODEL,
-  max_tokens: 4000,
-  system: DRAFT_SYSTEM_PROMPT,
-  output_config: { format: { type: "json_schema", schema: DRAFT_SCHEMA } },
-  messages: [{ role: "user", content: draftPrompt }],
-});
+const draftResponse = await callWithTelemetry(
+  "nightly-draft",
+  DRAFT_MODEL,
+  () =>
+    client.messages.create({
+      model: DRAFT_MODEL,
+      max_tokens: 4000,
+      system: DRAFT_SYSTEM_PROMPT,
+      output_config: { format: { type: "json_schema", schema: DRAFT_SCHEMA } },
+      messages: [{ role: "user", content: draftPrompt }],
+    })
+);
 const draftBlock = draftResponse.content.find((b) => b.type === "text");
 if (!draftBlock) abort("draft response had no text block");
 const draft = JSON.parse(draftBlock.text);
@@ -194,13 +247,18 @@ ${reviewable.slice(0, 12_000)}
 
 Return JSON matching the schema. At most 20 findings.`;
 
-const reviewResponse = await client.messages.create({
-  model: REVIEW_MODEL,
-  max_tokens: 4000,
-  system: REVIEW_SYSTEM_PROMPT,
-  output_config: { format: { type: "json_schema", schema: REVIEW_SCHEMA } },
-  messages: [{ role: "user", content: reviewPrompt }],
-});
+const reviewResponse = await callWithTelemetry(
+  "nightly-review",
+  REVIEW_MODEL,
+  () =>
+    client.messages.create({
+      model: REVIEW_MODEL,
+      max_tokens: 4000,
+      system: REVIEW_SYSTEM_PROMPT,
+      output_config: { format: { type: "json_schema", schema: REVIEW_SCHEMA } },
+      messages: [{ role: "user", content: reviewPrompt }],
+    })
+);
 const reviewBlock = reviewResponse.content.find((b) => b.type === "text");
 if (!reviewBlock) abort("review response had no text block");
 const review = JSON.parse(reviewBlock.text);

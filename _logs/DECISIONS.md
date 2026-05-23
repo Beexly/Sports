@@ -43,4 +43,38 @@ Append-only.
 
 **Trade-off.** Splitting the reviewer's user message into two blocks (`cachedPrefix` + `variableSuffix`) is slightly more code than one templated string. Worth it for the operational savings.
 
+## 2026-05-23 — Rate-limit: ioredis sliding-window, fail-closed, 10/min on credit-burning admin routes
+
+**Context.** No rate-limit infrastructure existed in the repo. Two cockpit routes (`/api/cockpit/review-draft`, `/api/cockpit/brief`) hit Claude per request; an admin with a loop in their iteration could exhaust credits fast. $5 in Console at start of session.
+
+**Decision.**
+- Roll our own with `ioredis` (already a root dep, `REDIS_URL` already in `.env.example`). Sliding-window via a single atomic Redis pipeline: `ZREMRANGEBYSCORE` → `ZADD` → `ZCARD` → `PEXPIRE`. MULTI atomicity on the server means no read-then-write race.
+- **Fail-closed** on credit-burning routes. Cost asymmetry: a short Redis outage that fails open could exhaust the Anthropic balance. A 503 is recoverable; a $0 balance is not.
+- **10/min per user** on both routes. Realistic single-operator iteration is well under 1/min; 10 is human-tier headroom. 30/min would be bot-tier and undermine the safety motive.
+- Over-deny on the simultaneous-callers edge case is documented and accepted (safe direction).
+
+**Alternatives considered.**
+1. `@upstash/ratelimit` — hardcoded to `@upstash/redis` (REST client). Adopting it means a second Redis client + auth surface for ~40 lines of saved logic. Rejected.
+2. In-memory rate-limit — broken on Vercel's serverless model (each cold-start function is its own process). Rejected.
+3. Fail-open default — favors uptime over cost. Wrong tradeoff for admin-only credit-burning routes. Rejected.
+
+**Trade-off.** Local dev without `REDIS_URL` set is fail-closed too — operator must set REDIS_URL to use these routes locally. Documented in `.env.example`.
+
+## 2026-05-23 — Per-call Claude telemetry: stdout always + file when not on Vercel
+
+**Context.** Cycle 14 added ephemeral caching; without telemetry we can't validate hit rate. Anthropic returns `usage.cache_creation_input_tokens` + `usage.cache_read_input_tokens` per response.
+
+**Decision.**
+- New `apps/web/lib/ai/telemetry.ts` with `withTelemetry({callSite, model}, fn)` higher-order helper. Captures `{ts, callSite, model, inputTokens, cacheCreationInputTokens, cacheReadInputTokens, outputTokens, latencyMs, status, errorClass?}`. Error path records `{status:"error", errorClass}` then re-throws — never swallows.
+- Always emits structured JSON to stdout (Vercel captures it, so does GitHub Actions).
+- **Also** appends to `_logs/claude-usage.log` when `process.env.VERCEL !== "1"` (Vercel filesystem is ephemeral; local + GH Action paths get the queryable file). `*.log` already gitignored, so the file doesn't pollute commits.
+- Applied to all four call sites: `content-generator`, `draft-reviewer`, `slate-overview`, and `scripts/draft-nightly-content.mjs` (inline minimal mirror — `.mjs` can't import the TS module).
+
+**Alternatives considered.**
+1. New Prisma `ClaudeUsageLog` model + migration — over-investment for MVP. Promote when an operator query surface is actually needed.
+2. Wire OpenTelemetry (already in deps, dormant) — too much infrastructure for the first telemetry signal we need. Plain JSON-per-line is grep-friendly today.
+3. Inline telemetry at each call site — guaranteed drift in field names + units across 4 sites. Helper is the right shape.
+
+**Trade-off.** Vercel runtime gets stdout only (file-append silently no-ops). Operators querying "cache hit rate this week" must read from Vercel log drain OR the GitHub Action's `_logs/claude-usage.log` (which is the nightly workflow's source of truth).
+
 

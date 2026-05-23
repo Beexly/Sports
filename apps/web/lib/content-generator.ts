@@ -20,11 +20,14 @@ import { generateSlug } from "./utils.js";
 import { format } from "date-fns";
 import { BRAND_NAME } from "./brand.js";
 import { makeAnthropicHolder } from "./ai/client.js";
+import { withTelemetry } from "./ai/telemetry.js";
 import {
   reviewDraft,
   type DraftReviewReport,
 } from "./content/draft-reviewer.js";
 import { getBannedPhraseList } from "./trust-claims.js";
+
+const GENERATOR_MODEL = "claude-sonnet-4-6";
 
 const GAMBLING_DISCLAIMER =
   "This article is for informational and entertainment purposes only. " +
@@ -146,15 +149,19 @@ Requirements:
 - SEO description (under 155 chars)
 - Tags: 3-5 relevant tags`;
 
-  const response = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 4000,
-    system: SYSTEM_PROMPT,
-    output_config: {
-      format: { type: "json_schema", schema: POST_SCHEMA },
-    },
-    messages: [{ role: "user", content: userPrompt }],
-  });
+  const response = await withTelemetry(
+    { callSite: "content-generator", model: GENERATOR_MODEL },
+    () =>
+      client.messages.create({
+        model: GENERATOR_MODEL,
+        max_tokens: 4000,
+        system: SYSTEM_PROMPT,
+        output_config: {
+          format: { type: "json_schema", schema: POST_SCHEMA },
+        },
+        messages: [{ role: "user", content: userPrompt }],
+      })
+  );
 
   const textBlock = response.content.find(
     (b): b is Anthropic.TextBlock => b.type === "text"

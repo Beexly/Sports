@@ -18,3 +18,4 @@ Append-only. One line per cycle.
 2026-05-23 · #15 · feat(brief): add composeBriefAsync that populates the brief via composeSlateOverview · vitest `apps/web/__tests__/brief-compose-async.test.ts`
 2026-05-23 · #16 · feat(cockpit): POST /api/cockpit/brief now composes a real preview via composeBriefAsync · vitest `apps/web/__tests__/cockpit-brief-compose-api.test.ts`
 2026-05-23 · #17 · feat(cockpit): UI page wires the semantic draft reviewer at /cockpit/review-draft · vitest `apps/web/__tests__/cockpit-review-draft-page.test.ts`
+2026-05-23 · #18 · feat(ai): ioredis rate-limit + withTelemetry foundation, applied to both Claude routes + all 4 SDK call sites · vitest `apps/web/__tests__/rate-limit.test.ts` + `ai-telemetry.test.ts`

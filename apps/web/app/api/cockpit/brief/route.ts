@@ -5,6 +5,7 @@ import {
   composeBriefAsync,
 } from "@/lib/brief/compose";
 import type { SlatePickSnippet } from "@/lib/brief/slate-overview";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 /**
  * Internal cockpit brief API — admin-gated.
@@ -52,6 +53,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  const userId = session.user.email ?? session.user.id ?? "anon-admin";
+  const limit = await checkRateLimit(userId, {
+    route: "cockpit-brief",
+    windowMs: 60_000,
+    maxRequests: 10,
+    failureMode: "fail-closed",
+  });
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "rate-limit-exceeded", resetAt: limit.resetAt, source: limit.source },
+      { status: 429 }
+    );
   }
 
   const body = (await req.json().catch(() => ({}))) as BriefComposeBody;

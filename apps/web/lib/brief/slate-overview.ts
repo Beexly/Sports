@@ -15,6 +15,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { format } from "date-fns";
 import type { PickGrade, PickType } from "@sports/types";
 import { makeAnthropicHolder } from "../ai/client.js";
+import { withTelemetry } from "../ai/telemetry.js";
 
 const COMPOSER_MODEL = "claude-sonnet-4-6";
 
@@ -104,21 +105,25 @@ Do not list every pick — give the operator a 1-2 paragraph read.`;
   // calls and the slate-overview composer will grow as the brief composer
   // adds sections context. Cache is forward-investment as well as today's
   // marginal savings on repeat-call days.
-  const response = await client.messages.create({
-    model: COMPOSER_MODEL,
-    max_tokens: 800,
-    system: [
-      {
-        type: "text",
-        text: SYSTEM_PROMPT,
-        cache_control: { type: "ephemeral" },
-      },
-    ],
-    output_config: {
-      format: { type: "json_schema", schema: OVERVIEW_SCHEMA },
-    },
-    messages: [{ role: "user", content: userPrompt }],
-  });
+  const response = await withTelemetry(
+    { callSite: "slate-overview", model: COMPOSER_MODEL },
+    () =>
+      client.messages.create({
+        model: COMPOSER_MODEL,
+        max_tokens: 800,
+        system: [
+          {
+            type: "text",
+            text: SYSTEM_PROMPT,
+            cache_control: { type: "ephemeral" },
+          },
+        ],
+        output_config: {
+          format: { type: "json_schema", schema: OVERVIEW_SCHEMA },
+        },
+        messages: [{ role: "user", content: userPrompt }],
+      })
+  );
 
   const textBlock = response.content.find(
     (b): b is Anthropic.TextBlock => b.type === "text"
