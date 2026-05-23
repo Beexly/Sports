@@ -1,5 +1,6 @@
 import { ContextualVaultCta } from "@/components/contextual-vault-cta";
 import { ProofSurfaceEmailCapture } from "@/components/proof-surface-email-capture";
+import { ProofSurfaceFreshness } from "@/components/proof-surface-freshness";
 import {
   contextualVaultCtaEnabled,
   proofSurfaceEmailCaptureEnabled,
@@ -36,6 +37,7 @@ export default function LossRoomPage() {
           This scaffold establishes the public archive shape. Production entries
           will be permanent, filterable, and linked to model versions.
         </p>
+        <ProofSurfaceFreshness surface="loss-room" />
       </section>
 
       <section className="section">

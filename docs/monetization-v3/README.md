@@ -76,8 +76,10 @@ Runway determines which subset is active:
 - [product/engineering-issue-pack.md](product/engineering-issue-pack.md) - GitHub/Linear-ready engineering epics and Phase-N scaffold gaps.
 - [product/kpi-cockpit-prd.md](product/kpi-cockpit-prd.md) - KPI cockpit requirements for monthly operating review.
 - [product/live-obs-prd.md](product/live-obs-prd.md) - Live OBS overlay product requirements.
+- [product/manual-longevity-instruments.md](product/manual-longevity-instruments.md) - Manual brand, capacity, and freshness trackers tied to DEC-NEXT-032.
 - [product/pre-engineering-handoff.md](product/pre-engineering-handoff.md) - Pre-engineering handoff checklist and implementation posture.
 - [product/proof-email-capture-scaffold-notes.md](product/proof-email-capture-scaffold-notes.md) - Validation-only proof email capture scaffold notes and DEC-NEXT-028 guardrails.
+- [product/proof-freshness-scaffold-notes.md](product/proof-freshness-scaffold-notes.md) - Proof-surface freshness metadata notes and DEC-NEXT-033 guardrails.
 - [product/production-smoke-test-notes.md](product/production-smoke-test-notes.md) - Read-only production smoke-test scripts and DEC-NEXT-024 guardrails.
 - [product/public-proof-surface-monetization-spec.md](product/public-proof-surface-monetization-spec.md) - Email capture, contextual Vault CTA, and UTM spec for public proof surfaces.
 - [product/vault-api-contracts.md](product/vault-api-contracts.md) - Vault API contracts for membership, seats, digests, and admin flows.
@@ -225,6 +227,7 @@ Runway determines which subset is active:
 - [templates/decision-log.md](templates/decision-log.md) - Decision log and overnight integration entries.
 - [templates/founding-50-cohort.csv](templates/founding-50-cohort.csv) - Founding-50 cohort tracker.
 - [templates/founding-50-candidate-scoring.csv](templates/founding-50-candidate-scoring.csv) - Founding-50 candidate scoring sheet.
+- [templates/founder-capacity-ledger.csv](templates/founder-capacity-ledger.csv) - Weekly founder capacity and structural-rest trigger tracker.
 - [templates/incidents.csv](templates/incidents.csv) - Incident tracker.
 - [templates/interview-synthesis.md](templates/interview-synthesis.md) - Interview synthesis template.
 - [templates/kpi-dashboard.csv](templates/kpi-dashboard.csv) - KPI dashboard CSV template.
@@ -234,6 +237,7 @@ Runway determines which subset is active:
 - [templates/outreach-tracker.csv](templates/outreach-tracker.csv) - General outreach tracker.
 - [templates/partnership-inbound-log.csv](templates/partnership-inbound-log.csv) - Partnership inbound log.
 - [templates/partnership-inquiries.csv](templates/partnership-inquiries.csv) - Partnership inquiry tracker.
+- [templates/proof-surface-freshness-tracker.csv](templates/proof-surface-freshness-tracker.csv) - Manual freshness tracker for methodology, Loss Room, Pass List, and Ledger.
 - [templates/short-form-content-drafts.csv](templates/short-form-content-drafts.csv) - Short-form content lab draft tracker.
 - [templates/short-form-experiment-scorecard.csv](templates/short-form-experiment-scorecard.csv) - Short-form content lab experiment scorecard.
 - [templates/short-form-utm-map.csv](templates/short-form-utm-map.csv) - Short-form content destination and UTM map.
@@ -248,6 +252,7 @@ Runway determines which subset is active:
 - [templates/vega-video-production-tracker.csv](templates/vega-video-production-tracker.csv) - Vega video production tracker.
 - [templates/vocabulary-log.csv](templates/vocabulary-log.csv) - Customer vocabulary log.
 - [templates/week-1-command-center.md](templates/week-1-command-center.md) - Week-1 command center checklist.
+- [templates/weekly-brand-position-smoke-test.md](templates/weekly-brand-position-smoke-test.md) - Friday brand-position drift smoke test.
 
 ## Expansion Rule
 

@@ -4,6 +4,7 @@ import {
   proofSurfaceEmailCaptureEnabled,
 } from "@/lib/feature-flags";
 import { ProofSurfaceEmailCapture } from "@/components/proof-surface-email-capture";
+import { ProofSurfaceFreshness } from "@/components/proof-surface-freshness";
 
 const sections = [
   {
@@ -64,6 +65,7 @@ export default function MethodologyPage() {
           hydrate calibration and model-version data from the Ledger and
           changelog.
         </p>
+        <ProofSurfaceFreshness surface="methodology" />
       </section>
 
       <section className="section">

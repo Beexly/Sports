@@ -1,5 +1,6 @@
 import { ContextualVaultCta } from "@/components/contextual-vault-cta";
 import { ProofSurfaceEmailCapture } from "@/components/proof-surface-email-capture";
+import { ProofSurfaceFreshness } from "@/components/proof-surface-freshness";
 import {
   contextualVaultCtaEnabled,
   proofSurfaceEmailCaptureEnabled,
@@ -37,6 +38,7 @@ export default function PassesPage() {
           archive. Production will add filters, permalinks, and hindsight
           calibration.
         </p>
+        <ProofSurfaceFreshness surface="passes" />
       </section>
 
       <section className="section">

@@ -307,6 +307,19 @@ Owner: Codex; Garrett review optional
 Next review date: Before enabling contextual Vault CTAs in production
 Notes: This does not add click analytics, checkout routing, or paid tracking.
 
+### DEC-NEXT-033 - Proof Surface Freshness Metadata
+
+Date: 2026-05-23
+Decision: Add static freshness metadata, public freshness JSON, and stale-window tests for Methodology, Loss Room, Pass List, and Ledger.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: The longevity audit flagged stale proof surfaces as a slow trust failure, especially once short-form traffic starts routing to them.
+Metric threshold: Public proof pages expose restrained freshness text; `/api/proof/freshness` returns all tracked surfaces; stale-window tests pass.
+Owner: Codex; Garrett review optional
+Next review date: Before routing public short-form traffic to proof surfaces
+Notes: Static timestamps are placeholders until source-of-truth update times exist.
+
 ### DEC-NEXT-031 - Longevity Systems Audit
 
 Date: 2026-05-23
@@ -319,3 +332,16 @@ Metric threshold: Audit creates hardening backlog with P0/P1 items and engineeri
 Owner: Codex; Garrett review optional
 Next review date: Before Vault launch checklist Day -7
 Notes: Does not authorize deploy, paid integrations, pricing changes, or track activation.
+
+### DEC-NEXT-032 - Manual Longevity Instruments
+
+Date: 2026-05-23
+Decision: Add manual trackers for brand-position drift, founder capacity, and proof-surface freshness before automation exists.
+Track: Portfolio / operations
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Longevity systems audit identified high-risk slow failures that need immediate sensors before a cockpit is built.
+Metric threshold: Three usable templates exist and are indexed: weekly brand smoke test, founder capacity ledger, and proof-surface freshness tracker.
+Owner: Garrett runs; Codex maintains templates
+Next review date: First Friday retrospective after Vault launch
+Notes: Creates visibility only; does not change launch gates or public commitments.

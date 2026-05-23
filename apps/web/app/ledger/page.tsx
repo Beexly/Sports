@@ -1,4 +1,5 @@
 import { ContextualVaultCta } from "@/components/contextual-vault-cta";
+import { ProofSurfaceFreshness } from "@/components/proof-surface-freshness";
 import { contextualVaultCtaEnabled } from "@/lib/feature-flags";
 
 const sampleLedger = [
@@ -33,6 +34,7 @@ export default function LedgerPage() {
           connect this surface to settlement data, calibration bands, and
           permanent publication pages.
         </p>
+        <ProofSurfaceFreshness surface="ledger" />
       </section>
 
       <section className="section">
