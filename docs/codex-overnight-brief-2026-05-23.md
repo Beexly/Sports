@@ -124,7 +124,7 @@
 - `8d5582f` - DEC-NEXT-070 add fail-closed admin readiness route
 - `490f632` - DEC-NEXT-071 add smoke fail-closed route checks
 - `8cc63be` - DEC-NEXT-072 update risk register with launch hardening risks
-- `TBD` - DEC-NEXT-073 refresh master brief latest Pass 12-13 deltas
+- `9aaf6a2` - DEC-NEXT-073 refresh master brief latest Pass 12-13 deltas
 
 ## What I Flagged For Morning Triage
 
