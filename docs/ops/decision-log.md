@@ -244,3 +244,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `/cockpit/api-costs` as an admin-only read-only monitor for current-month Claude API spend, budgets, call counts, error counts, override state, and recent failures.
 - Rationale: operators need visibility before override mutation and alerting controls ship; the page also verifies that seeded budgets and persisted call records have a usable read model.
 - Deferred: budget override mutation UI, owner-channel alerts, 30-day trend chart, top consumers by user/game, and wrapper migration for remaining Claude surfaces remain follow-up slices.
+
+## 2026-05-22 - Blog Generator Uses Claude Budget Controls
+
+- Decision: the legacy blog content generator now checks the persisted BLOG_GENERATION budget, honors active overrides, and records successful and failed Claude calls.
+- Rationale: content generation was the remaining direct Claude path predating Studio, and it needs the same spend controls before Phase 3 traffic expands.
+- Deferred: a single shared wrapper abstraction, owner-channel alerts, and budget controls for future Model Journal, Model Court, calibration, and pre-mortem Claude surfaces remain follow-up slices.
