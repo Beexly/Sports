@@ -2,6 +2,7 @@ import {
   buildStudioAssetDraft,
   type StudioAssetDraft,
 } from "@/lib/studio/build-assets";
+import { evaluateClaudeBudgetUsage } from "@/lib/claude-api/cost-monitor";
 import type {
   CreatorAssetKind,
   GenerationContext,
@@ -21,6 +22,7 @@ export interface StudioClaudeClientOptions {
   readonly apiKey: string;
   readonly fetchImpl?: typeof fetch;
   readonly model?: string;
+  readonly monthlySpendUsd?: number;
 }
 
 export interface GenerateStudioAssetInput {
@@ -54,6 +56,12 @@ export async function callClaudeForStudioAsset(
   }
   if (!dryRun.prompt) {
     throw new StudioGenerationError("Studio template did not produce a prompt.");
+  }
+  if (typeof options.monthlySpendUsd === "number") {
+    const budget = evaluateClaudeBudgetUsage("STUDIO_GENERATION", options.monthlySpendUsd);
+    if (!budget.requestAllowed) {
+      throw new StudioGenerationError(budget.fallbackMessage ?? "Studio generation is at capacity.");
+    }
   }
 
   const fetchImpl = options.fetchImpl ?? fetch;

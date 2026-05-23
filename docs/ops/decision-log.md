@@ -208,3 +208,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add a shared typed Claude API cost policy module with surfaces, initial budgets, threshold evaluation, and locked budget fallback copy.
 - Rationale: Phase 3 Studio and Model Journal generation need one policy source before schema persistence and wrapper rewrites land.
 - Deferred: Prisma cost-tracking migration, persistent call records, wrapper enforcement at every Claude call site, cockpit API-costs page, owner-channel alerts, and budget override controls remain follow-up slices.
+
+## 2026-05-22 - Studio Claude Calls Respect Budget Policy Hook
+
+- Decision: Studio Claude generation now checks the shared cost policy when a monthly spend value is supplied, refusing before the external API call at the red threshold.
+- Rationale: the Phase 3 Studio path can adopt budget behavior before the persistent cost-record schema lands, and tests can verify no request is sent when capacity is exhausted.
+- Deferred: database-backed spend lookup, call-record persistence, cockpit API-costs page, owner-channel alerts, and budget override controls remain follow-up slices.

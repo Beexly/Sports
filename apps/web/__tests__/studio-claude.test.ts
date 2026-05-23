@@ -88,4 +88,16 @@ describe("Studio Claude generation", () => {
     ).rejects.toBeInstanceOf(StudioGenerationError);
     expect(fetchImpl).not.toHaveBeenCalled();
   });
+
+  it("refuses before calling Claude when Studio generation budget is exhausted", async () => {
+    const fetchImpl = vi.fn();
+
+    await expect(
+      callClaudeForStudioAsset(
+        { node: makeNode(), templateKind: "X_THREAD", context },
+        { apiKey: "test-key", fetchImpl: fetchImpl as unknown as typeof fetch, monthlySpendUsd: 500 }
+      )
+    ).rejects.toThrow("Studio is at generation capacity for this billing cycle.");
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
 });
