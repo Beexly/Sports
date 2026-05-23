@@ -31,6 +31,46 @@
 
 ## Open issues
 
+### 2026-05-23 — [P0] Silent priceId-downgrade bug in Stripe webhook tier mapping
+
+**Found by:** owner Pass 13 (verified by Claude 2026-05-23 in the cloud
+sandbox primary clone)
+**Surface:** `apps/web/app/api/webhooks/stripe/route.ts:184-188`
+**Symptom:** `getTierFromPriceId(priceId)` silently returns `"FREE"`
+for any priceId that doesn't equal `STRIPE_ELITE_PRICE_ID` or
+`STRIPE_PRO_PRICE_ID`. If the Stripe dashboard issues a new priceId
+(admin updates pricing, new tier ladder, A/B price test) and the env
+vars are stale, every paid customer who hits a webhook event after
+that point gets downgraded to FREE without warning. The webhook
+handler then writes `tier: "FREE"` into `Subscription`, propagating
+through entitlements to gate paid content.
+
+Secondary hole at line 185: if `STRIPE_ELITE_PRICE_ID` is unset
+(returns `undefined`) AND the incoming `priceId` is `undefined`
+(payload edge case), `undefined === undefined` evaluates true and
+the function returns `"ELITE"` for a user with no actual price.
+
+**Root cause:** treating "no matching env var" the same as "user is
+on the FREE tier" instead of "this is an unknown state, refuse to
+mutate user tier and flag for review."
+
+**Proposed fix (Codex's `getStripeCheckoutSessionDecision` shape, per
+owner Pass 13):** return a structured decision object
+`{ tier, action: "downgrade" | "upgrade" | "noop" | "review-required",
+reason, requiresOwnerReview: boolean }`. Unknown priceIds flip
+`requiresOwnerReview: true` and the webhook persists the event as
+`WebhookEvent.status: "review-required"` without mutating
+`Subscription.tier`. An admin/cockpit surface lists review-required
+events and lets the operator either map the new priceId (updating env
+or DB) or confirm the downgrade was intentional.
+
+**Status:** documented; FIX NOT YET LANDED. Per owner Pass 13 port
+plan, this lands as Tier-1 commit 1.3. Spec scaffold in
+`docs/product/stripe-webhook-decisioning-spec.md`.
+
+**Owner:** Codex (per Pass 13 port plan) OR Claude (if owner
+re-routes to autonomous fix) — owner decision pending.
+
 ### 2026-05-23 — [P1] Trust-claims scanner doesn't yet enforce master plan Part 3 vocabulary
 
 **Found by:** Claude (audit pass on 2026-05-23)

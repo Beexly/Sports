@@ -24,6 +24,24 @@
 
 ## Open improvements
 
+### Add AbortController timeout + retry to OddsApiClient
+
+**Found by:** Claude (data-ingestion package audit, 2026-05-23)
+**Surface:** `packages/data-ingestion/src/odds-api-client.ts` —
+the `fetch<T>()` private method
+**Suggestion:** wrap `globalThis.fetch(url.toString())` with an
+`AbortController` (default 15s timeout, configurable per call), and
+add an exponential-backoff retry on 5xx + 429 responses (max 3
+attempts, jitter to avoid thundering-herd against The Odds API
+rate-limit window).
+**Estimated effort:** small (~30-60 min including tests against a
+mocked fetch that simulates 503 then 200, and a 16-second hang)
+**Risk if we skip:** a slow upstream call could hang the
+data-refresh worker indefinitely; transient 5xx makes the worker
+silently skip a refresh cycle when a retry would have succeeded.
+Affects ingestion freshness, which the health endpoint uses to
+report degraded vs healthy. Not customer-facing yet but operational.
+
 ### Replace `package.json` workspace `name` strings with brand-aligned names
 
 **Found by:** Claude (during corporate-structure scan)

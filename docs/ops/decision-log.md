@@ -34,6 +34,47 @@ lost.
 
 ## Entries (newest first)
 
+### 2026-05-23 — Retraction of "Stripe webhook clean" claim from earlier audit pass
+
+**Decided by:** Claude (self-correction)
+**Status:** locked
+**Decision:** retract the "Stripe webhook is secure and idempotent. This
+is well-built." claim from this branch's earlier audit pass. Owner
+Pass 13 verified a P0 silent priceId-downgrade bug at
+`apps/web/app/api/webhooks/stripe/route.ts:184-188` that this branch's
+audit missed. The audit was correct on the signature-verification,
+idempotency, raw-body, and error-handling layers — but missed the
+`getTierFromPriceId` correctness hole.
+
+**Context:** Pass 13 surfaced the bug as the top finding in the
+primary clone. Verified in this tree:
+`getTierFromPriceId(priceId)` returns `"FREE"` silently for any
+priceId that doesn't equal the two known env vars. A new Stripe
+priceId + stale env vars = silent paid-user downgrade on every
+webhook event. Secondary hole: `undefined === undefined` returns true
+when the elite env var and incoming priceId are both unset, wrongly
+tagging as ELITE.
+
+**Alternatives considered:**
+
+- Quietly update the issue queue without retraction. Rejected —
+  decision log honesty matters more than appearing thorough. Future
+  Claude sessions reading this log need to know what the earlier
+  audit got wrong.
+
+**Rationale:** the prior audit's "clean" verdict on the Stripe
+webhook was scoped to the structural layer (signature / idempotency /
+errors). It did not analyze the priceId mapping function semantics.
+The retraction preserves the structural-layer findings but flags the
+semantic-layer gap.
+
+**Reversibility:** irrelevant — this is a self-correction, not a
+forward decision.
+
+**Touched:** `docs/ops/issue-queue.md` (P0 entry added),
+`docs/product/stripe-webhook-decisioning-spec.md` (spec scaffold
+added), this entry.
+
 ### 2026-05-23 — Galaxy Sports Network LLC as corporate parent
 
 **Decided by:** owner (locked May 22, 2026 with the LLC filing) + Claude
