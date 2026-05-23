@@ -106,7 +106,7 @@
 - `c6d3d5f` - DEC-NEXT-061 add Discord role sync decisioning
 - `6df2508` - DEC-NEXT-062 add auth env readiness
 - `57bd063` - DEC-NEXT-063 add launch readiness verdict aggregation
-- `TBD` - DEC-NEXT-064 add smoke response shape checks
+- `98fa867` - DEC-NEXT-064 add smoke response shape checks
 
 ## What I Flagged For Morning Triage
 
