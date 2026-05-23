@@ -55,6 +55,7 @@ Sequences:
 - Vault retention emails, days 30, 60 when engagement is low, 90, 180, 335, 365.
 - Vault referral soft mentions, day 30 and optional day 90, separate from retention emails.
 - Renewal reminder 30 days before renewal.
+- Typed lifecycle schedule scaffolding exists from DEC-NEXT-047; provider sends, durable rows, and engagement inference remain unwired.
 - Cancellation confirmation.
 - Re-engagement 90 days after compatible term-end cancellation.
 

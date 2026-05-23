@@ -514,3 +514,16 @@ Metric threshold: Tests cover next assignment, cap reached, duplicate existing n
 Owner: Codex maintains scaffold; Garrett approves cap and waitlist language
 Next review date: Before Stripe checkout cap gating
 Notes: Logic only. No database transaction, unique constraint, member creation, checkout gating, or waitlist claim flow is wired.
+
+### DEC-NEXT-047 - Vault Lifecycle Email Schedule Logic
+
+Date: 2026-05-23
+Decision: Expand Vault lifecycle email schedule logic to cover welcome, retention, and renewal timing with skip rules.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Welcome, retention, and renewal copy exists in separate docs; implementation needs one timing contract to avoid cadence drift.
+Metric threshold: Tests cover welcome days, retention days, renewal offsets, due-date calculation, inactive-member skips, and healthy-engagement Day 60 skip.
+Owner: Codex maintains scaffold; Garrett approves copy before provider load
+Next review date: Before transactional email provider implementation
+Notes: Schedule only. No email sends, provider calls, durable lifecycle rows, engagement inference, unsubscribe handling, or customer messaging is wired.

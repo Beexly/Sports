@@ -94,6 +94,7 @@ Runway determines which subset is active:
 - [product/vault-data-model.md](product/vault-data-model.md) - Vault data model for members, applications, digests, events, referrals, and audits.
 - [product/vault-entitlement-access-state-notes.md](product/vault-entitlement-access-state-notes.md) - Explainable Vault entitlement access-state logic and DEC-NEXT-044 guardrails.
 - [product/vault-integration-scaffold-notes.md](product/vault-integration-scaffold-notes.md) - Inert Vault integration scaffold notes and DEC-NEXT-025 guardrails.
+- [product/vault-lifecycle-email-schedule-notes.md](product/vault-lifecycle-email-schedule-notes.md) - Vault welcome, retention, and renewal email scheduling logic and DEC-NEXT-047 guardrails.
 - [product/vault-onboarding-health-scaffold-notes.md](product/vault-onboarding-health-scaffold-notes.md) - First-24-hour Vault onboarding health logic and DEC-NEXT-039 guardrails.
 - [product/vault-prd.md](product/vault-prd.md) - Vault product requirements and source operating docs.
 - [product/vault-test-plan.md](product/vault-test-plan.md) - Vault test plan and launch verification coverage.

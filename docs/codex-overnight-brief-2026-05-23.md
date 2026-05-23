@@ -32,6 +32,7 @@
 - Made Vault entitlement decisions explainable with access-state reason codes for support and repair flows.
 - Added Stripe webhook duplicate-event and action-mapping logic; real webhook verification and mutations remain unwired.
 - Added founding-seat assignment decisioning for next-seat, cap-reached, and manual-review states; database transaction remains unwired.
+- Expanded Vault lifecycle email schedule logic across welcome, retention, and renewal timing; provider sends remain unwired.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
