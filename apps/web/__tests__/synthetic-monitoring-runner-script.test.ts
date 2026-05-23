@@ -25,6 +25,14 @@ describe("scripts/synthetic-monitoring-runner.mjs", () => {
     expect(src).toContain("exitCode: result.status ?? 1");
   });
 
+  it("can file deduplicated issue-queue entries behind an explicit flag", () => {
+    expect(src).toContain("SYNTHETIC_MONITORING_FILE_ISSUES");
+    expect(src).toContain("fileIssueQueueEntry");
+    expect(src).toContain("synthetic-monitoring:${fingerprint}");
+    expect(src).toContain("No open issues.");
+    expect(src).toContain("isCriticalProbe");
+  });
+
   it("is wired through the root package scripts", () => {
     expect(pkg.scripts["synthetic:run"]).toBe("node scripts/synthetic-monitoring-runner.mjs");
   });

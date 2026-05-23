@@ -358,3 +358,10 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: update the synthetic monitoring dashboard loader to read `.synthetic-monitoring/latest.json` when present and hydrate covered checks from the latest probe result.
 - Rationale: the cockpit page now reflects runner output instead of only static expectations, while still keeping unsupported checks pending until the scheduled runner captures those signals.
 - Deferred: historical sparklines from durable runs, issue cards from auto-filed queue entries, and manual rerun controls remain separate slices.
+
+## 2026-05-22 - Synthetic Runner Can File Issue Queue Entries
+
+- Decision: add `SYNTHETIC_MONITORING_FILE_ISSUES=1` support to the synthetic monitoring runner. When enabled, failed runs add a deduplicated entry to `docs/ops/issue-queue.md`.
+- Rationale: production monitoring needs a path from failing probe to visible operational queue without silently creating duplicate tickets on every run.
+- Guardrail: issue filing is opt-in; default local runs only write the ignored `latest.json` artifact.
+- Deferred: auto-close logic and cockpit issue cards from the queue remain follow-up slices.
