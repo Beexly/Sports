@@ -322,3 +322,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add structural mappers that convert pick and gate-decision records into bot outbox planner inputs, including factor-breakdown normalization into approved factor keys.
 - Rationale: the scheduler should depend on one tested translation layer instead of reconstructing bot payloads inside cron code.
 - Deferred: live database discovery windows, persisted outbox rows, and channel delivery remain separate Phase 3 runtime work.
+
+## 2026-05-22 - Bot Outbox Discovery Is Previewable
+
+- Decision: add a draft discovery loader for recent free/public/canonical pick publications, settlements, and gated slate states, and expose it through cockpit preview GET.
+- Rationale: operators need to inspect what the scheduler would consider before any outbox persistence or delivery clients exist.
+- Deferred: durable outbox records, deduplication storage, delivery clients, and retry/rate-limit state remain separate Phase 3 runtime work.

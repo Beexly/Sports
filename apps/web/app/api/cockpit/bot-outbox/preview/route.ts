@@ -8,6 +8,7 @@ import {
   type BotPickPublicationInput,
   type BotSettlementInput,
 } from "@/lib/bot-outbox/plan";
+import { loadBotOutboxDrafts } from "@/lib/bot-outbox/load";
 import type { FactorKey } from "@/lib/twitter-bot/templates";
 
 export const dynamic = "force-dynamic";
@@ -83,6 +84,12 @@ function parseOutcome(value: string | null): "W" | "L" | "PUSH" | "PENDING" | nu
   return value === "W" || value === "L" || value === "PUSH" || value === "PENDING"
     ? value
     : null;
+}
+
+function parsePositiveInteger(value: string | null): number | null {
+  if (value === null || !/^\d+$/.test(value)) return null;
+  const parsed = Number.parseInt(value, 10);
+  return parsed > 0 ? parsed : null;
 }
 
 function parseTopFactors(value: unknown): Array<{ factor: FactorKey; score: number }> {
@@ -294,11 +301,40 @@ function parseGatedSlatePayload(payload: unknown): BotGatedSlateInput | null {
   };
 }
 
-export async function POST(request: Request): Promise<NextResponse> {
+async function requireAdmin(): Promise<NextResponse | null> {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ success: false, error: "unauthorized" }, { status: 401 });
   }
+  return null;
+}
+
+export async function GET(request: Request): Promise<NextResponse> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const url = new URL(request.url);
+  const lookbackMinutes = parsePositiveInteger(url.searchParams.get("lookbackMinutes")) ?? 60;
+  const limitPerKind = parsePositiveInteger(url.searchParams.get("limitPerKind")) ?? 25;
+  const publicUrl = url.searchParams.get("publicUrl")?.startsWith("https://")
+    ? url.searchParams.get("publicUrl")?.replace(/\/$/, "")
+    : undefined;
+
+  const payload = await loadBotOutboxDrafts({
+    lookbackMinutes,
+    limitPerKind,
+    publicUrl,
+  });
+
+  return NextResponse.json({
+    success: true,
+    ...payload,
+  });
+}
+
+export async function POST(request: Request): Promise<NextResponse> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
 
   const body = (await request.json().catch(() => ({}))) as BotOutboxPreviewBody;
   const eventKind = parseEventKind(body.eventKind);

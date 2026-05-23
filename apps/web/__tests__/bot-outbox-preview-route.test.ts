@@ -19,6 +19,7 @@ describe("bot outbox preview route", () => {
   });
 
   it("uses the draft-only outbox planners and exposes no delivery client", () => {
+    expect(route).toContain("loadBotOutboxDrafts");
     expect(route).toContain("planPickPublicationOutbox");
     expect(route).toContain("planSettlementOutbox");
     expect(route).toContain("planGatedSlateOutbox");
@@ -29,6 +30,8 @@ describe("bot outbox preview route", () => {
   });
 
   it("validates payload shapes before rendering drafts", () => {
+    expect(route).toContain("lookbackMinutes");
+    expect(route).toContain("limitPerKind");
     expect(route).toContain("parsePickPublicationPayload");
     expect(route).toContain("parseSettlementPayload");
     expect(route).toContain("parseGatedSlatePayload");

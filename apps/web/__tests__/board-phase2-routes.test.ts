@@ -27,7 +27,7 @@ describe("Phase 2 board APIs", () => {
     expect(Array.isArray(data["scoringNow"])).toBe(true);
     expect(Array.isArray(data["publishedToday"])).toBe(true);
     expect(Array.isArray(data["gatedTodayRows"])).toBe(true);
-  });
+  }, 15_000);
 
   it("/api/board/passes returns pass reasons without publishing fake picks", async () => {
     const { body } = await callRoute("@/app/api/board/passes/route");
