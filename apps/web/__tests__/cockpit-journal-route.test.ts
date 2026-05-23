@@ -12,6 +12,7 @@ const createRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpi
 const saveRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/route.ts"), "utf8");
 const scanRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/scan/route.ts"), "utf8");
 const submitRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/submit/route.ts"), "utf8");
+const retractRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/retract/route.ts"), "utf8");
 const loader = fs.readFileSync(path.join(repoRoot, "apps/web/lib/journal/load.ts"), "utf8");
 const compliance = fs.readFileSync(path.join(repoRoot, "apps/web/lib/journal/compliance.ts"), "utf8");
 const rules = fs.readFileSync(path.join(repoRoot, "apps/web/lib/compliance-scanner/rules.ts"), "utf8");
@@ -99,6 +100,21 @@ describe("Model Journal cockpit route", () => {
     expect(submitRoute).toContain("compliance.publishAllowed");
     expect(submitRoute).toContain('status: "REVIEW_PENDING"');
     expect(submitRoute).not.toMatch(/publishedAt\s*:\s*new Date|status:\s*"PUBLISHED"|twitterClient|sendgrid|mailchimp/i);
+  });
+
+  it("wires published-entry retraction without outbound distribution", () => {
+    expect(entryPage).toContain("status={entry.status}");
+    expect(editor).toContain("retractEntry");
+    expect(editor).toContain("/retract");
+    expect(editor).toContain("Retraction reason");
+    expect(retractRoute).toMatch(/from\s+["']@\/lib\/auth["']/);
+    expect(retractRoute).toMatch(/role\s*!==\s*"ADMIN"/);
+    expect(retractRoute).toContain('entry.status !== "PUBLISHED"');
+    expect(retractRoute).toContain('status: "RETRACTED"');
+    expect(retractRoute).toContain("retractedAt: new Date()");
+    expect(retractRoute).toContain("retractionReason: reason");
+    expect(retractRoute).toContain("externalDistribution: false");
+    expect(retractRoute).not.toMatch(/publishedAt\s*:\s*new Date|status:\s*"PUBLISHED"|twitterClient|sendgrid|mailchimp/i);
   });
 
   it("adds the Journal route to cockpit navigation", () => {

@@ -7,6 +7,7 @@ interface JournalEntryEditorProps {
   readonly initialTitle: string;
   readonly initialBodyMarkdown: string;
   readonly isBodyEditable: boolean;
+  readonly status: string;
 }
 
 interface SaveResponse {
@@ -39,6 +40,15 @@ interface SubmitResponse {
   readonly data?: {
     readonly status?: string;
     readonly updatedAt?: string;
+  };
+}
+
+interface RetractResponse {
+  readonly success?: boolean;
+  readonly error?: string;
+  readonly data?: {
+    readonly status?: string;
+    readonly retractedAt?: string | null;
   };
 }
 
@@ -82,18 +92,23 @@ export function JournalEntryEditor({
   initialTitle,
   initialBodyMarkdown,
   isBodyEditable,
+  status,
 }: JournalEntryEditorProps): JSX.Element {
   const [title, setTitle] = useState(initialTitle);
   const [bodyMarkdown, setBodyMarkdown] = useState(initialBodyMarkdown);
   const [isSaving, setIsSaving] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRetracting, setIsRetracting] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [scanResult, setScanResult] = useState<ScanResponse["data"] | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
   const [submitMessage, setSubmitMessage] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [retractionReason, setRetractionReason] = useState("");
+  const [retractMessage, setRetractMessage] = useState<string | null>(null);
+  const [retractError, setRetractError] = useState<string | null>(null);
 
   async function saveDraft(): Promise<void> {
     if (!isBodyEditable || isSaving) return;
@@ -174,6 +189,33 @@ export function JournalEntryEditor({
     }
   }
 
+  async function retractEntry(): Promise<void> {
+    if (status !== "PUBLISHED" || isRetracting) return;
+    setIsRetracting(true);
+    setRetractMessage(null);
+    setRetractError(null);
+
+    try {
+      const response = await fetch(`/api/cockpit/journal/${entryId}/retract`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason: retractionReason }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as RetractResponse;
+
+      if (!response.ok || !payload.success) {
+        setRetractError(payload.error ?? "Retraction failed");
+        return;
+      }
+
+      setRetractMessage(`Retracted ${payload.data?.retractedAt ?? "just now"}`);
+    } catch (error) {
+      setRetractError(error instanceof Error ? error.message : "Retraction failed");
+    } finally {
+      setIsRetracting(false);
+    }
+  }
+
   return (
     <main className="space-y-4 rounded-lg border border-gray-800 bg-gray-950/40 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -210,6 +252,16 @@ export function JournalEntryEditor({
           >
             {isSubmitting ? "Submitting..." : "Submit for review"}
           </button>
+          {status === "PUBLISHED" ? (
+            <button
+              type="button"
+              onClick={retractEntry}
+              disabled={isRetracting || retractionReason.trim().length < 12}
+              className="rounded-lg border border-rose-500/50 px-3 py-2 text-xs font-semibold text-rose-200 hover:bg-rose-950/30 disabled:text-gray-500"
+            >
+              {isRetracting ? "Retracting..." : "Retract entry"}
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -261,6 +313,30 @@ export function JournalEntryEditor({
         <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
           {submitError}
         </p>
+      ) : null}
+      {status === "PUBLISHED" ? (
+        <section className="rounded-lg border border-rose-500/30 bg-rose-950/10 p-3">
+          <label className="block text-xs font-semibold text-rose-100">
+            Retraction reason
+            <textarea
+              value={retractionReason}
+              onChange={(event) => setRetractionReason(event.target.value)}
+              rows={3}
+              className="mt-2 w-full rounded-lg border border-rose-500/30 bg-black/40 p-3 text-xs leading-5 text-gray-100 outline-none focus:border-rose-400"
+              placeholder="Required before retracting a published Journal entry."
+            />
+          </label>
+          {retractMessage ? (
+            <p className="mt-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200">
+              {retractMessage}
+            </p>
+          ) : null}
+          {retractError ? (
+            <p className="mt-2 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+              {retractError}
+            </p>
+          ) : null}
+        </section>
       ) : null}
 
       <label className="block text-xs font-semibold text-gray-300">

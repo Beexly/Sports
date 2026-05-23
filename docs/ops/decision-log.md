@@ -136,3 +136,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `POST /api/cockpit/journal` and `/cockpit/journal/new` for manual Journal draft creation.
 - Rationale: operators need a safe way to start weekly research entries from the cockpit before automated drafting exists. Creation is ADMIN-only, initializes `DRAFT` rows with the current `MODEL_VERSION`, and triggers no public distribution.
 - Deferred: automated Friday data pipe, Claude draft generation, evidence prefill, manual publish route, retraction route, RSS invalidation, email digest delivery, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Retraction Added
+
+- Decision: add `POST /api/cockpit/journal/[id]/retract` and a cockpit retraction control for published Journal entries.
+- Rationale: published Journal entries are preserved records, but operators need a controlled removal path when a public essay must leave the archive. Retraction requires an admin-authored reason, moves the entry to `RETRACTED`, and does not send external notices.
+- Deferred: public 410 response for retracted slugs, retraction notice feed, manual publish route, RSS invalidation, email digest delivery, and teaser queue remain follow-up slices.

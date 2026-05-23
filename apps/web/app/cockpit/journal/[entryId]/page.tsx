@@ -172,6 +172,7 @@ export default async function CockpitJournalEntryPage({
           initialTitle={entry.title}
           initialBodyMarkdown={entry.bodyMarkdown}
           isBodyEditable={entry.isBodyEditable}
+          status={entry.status}
         />
 
         <WeekDataRail entry={entry} />
