@@ -447,6 +447,12 @@ export function parseSyntheticIssuesFromMarkdown(markdown: string): readonly Syn
     /<!--\s*synthetic-monitoring:([^>]+)\s*-->\s*##\s+(P[123])\s+-\s+([^\n]+)/g;
   let match: RegExpExecArray | null;
   while ((match = issuePattern.exec(markdown)) !== null) {
+    const nextMarkerIndex = markdown.indexOf("<!-- synthetic-monitoring:", issuePattern.lastIndex);
+    const block = markdown.slice(
+      match.index,
+      nextMarkerIndex === -1 ? undefined : nextMarkerIndex
+    );
+    if (block.includes("- **Status:** RESOLVED")) continue;
     issues.push({
       id: `synthetic-monitoring:${match[1]?.trim() ?? "unknown"}`,
       severity: (match[2] ?? "P2") as SyntheticSeverity,

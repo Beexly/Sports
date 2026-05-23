@@ -64,6 +64,9 @@ await writeFile(runPath, `${JSON.stringify(artifact, null, 2)}\n`, "utf8");
 if (!artifact.ok && shouldFileIssues) {
   await fileIssueQueueEntry(artifact);
 }
+if (artifact.ok && shouldFileIssues) {
+  await closeSyntheticIssueQueueEntries(artifact);
+}
 
 if (artifact.ok) {
   console.log(`synthetic-monitoring OK - wrote ${latestPath} and ${runPath}`);
@@ -77,7 +80,7 @@ async function fileIssueQueueEntry(artifact) {
   const issueQueuePath = join(ROOT, "docs", "ops", "issue-queue.md");
   const failures = artifact.probes?.filter((probe) => !probe.ok) ?? [];
   const fingerprint = failures
-    .map((probe) => `${probe.path}:${probe.status}:${probe.bannedPattern ?? ""}`)
+    .map((probe) => `${probe.path}:${probe.status}:${probe.bannedPattern ?? ""}:${probe.shapeError ?? ""}`)
     .sort()
     .join("|") || `runner:${artifact.runner?.exitCode ?? "unknown"}`;
   const marker = `<!-- synthetic-monitoring:${fingerprint} -->`;
@@ -116,6 +119,34 @@ async function fileIssueQueueEntry(artifact) {
   const next = existing.includes("No open issues.")
     ? existing.replace("No open issues.", entry.trim())
     : `${existing.trimEnd()}\n\n${entry}`;
+  await writeFile(issueQueuePath, `${next.trimEnd()}\n`, "utf8");
+}
+
+async function closeSyntheticIssueQueueEntries(artifact) {
+  const issueQueuePath = join(ROOT, "docs", "ops", "issue-queue.md");
+  let existing = "";
+  try {
+    existing = await readFile(issueQueuePath, "utf8");
+  } catch {
+    return;
+  }
+
+  const resolvedLine = `- **Resolved:** ${artifact.generatedAtIso} Â· **By:** synthetic-monitoring`;
+  let changed = false;
+  const next = existing
+    .split(/(?=<!--\s*synthetic-monitoring:)/g)
+    .map((block) => {
+      if (!block.startsWith("<!-- synthetic-monitoring:") || !block.includes("- **Status:** OPEN")) {
+        return block;
+      }
+      changed = true;
+      const resolved = block.replace("- **Status:** OPEN", "- **Status:** RESOLVED");
+      return resolved.includes("- **Resolved:**")
+        ? resolved
+        : resolved.replace("- **Status:** RESOLVED", `- **Status:** RESOLVED\n${resolvedLine}`);
+    })
+    .join("");
+  if (!changed) return;
   await writeFile(issueQueuePath, `${next.trimEnd()}\n`, "utf8");
 }
 

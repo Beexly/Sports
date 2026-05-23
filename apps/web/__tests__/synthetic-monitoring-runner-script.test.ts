@@ -35,6 +35,13 @@ describe("scripts/synthetic-monitoring-runner.mjs", () => {
     expect(src).toContain("isCriticalProbe");
   });
 
+  it("can auto-close synthetic issue entries on a clean opt-in run", () => {
+    expect(src).toContain("closeSyntheticIssueQueueEntries");
+    expect(src).toContain("artifact.ok && shouldFileIssues");
+    expect(src).toContain("**Status:** RESOLVED");
+    expect(src).toContain("**Resolved:**");
+  });
+
   it("is wired through the root package scripts", () => {
     expect(pkg.scripts["synthetic:run"]).toBe("node scripts/synthetic-monitoring-runner.mjs");
   });

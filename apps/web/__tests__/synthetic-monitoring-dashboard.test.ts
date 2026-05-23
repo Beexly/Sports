@@ -173,18 +173,14 @@ describe("synthetic monitoring dashboard", () => {
 
 <!-- synthetic-monitoring:/pricing:200:/AI-powered/i -->
 ## P2 - Synthetic monitoring failure
+
+- **Status:** RESOLVED
 `);
 
     expect(issues).toEqual([
       {
         id: "synthetic-monitoring:/board:500:",
         severity: "P1",
-        title: "Synthetic monitoring failure",
-        sourcePath: "/docs/ops/issue-queue.md",
-      },
-      {
-        id: "synthetic-monitoring:/pricing:200:/AI-powered/i",
-        severity: "P2",
         title: "Synthetic monitoring failure",
         sourcePath: "/docs/ops/issue-queue.md",
       },

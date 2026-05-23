@@ -395,3 +395,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: update `/api/health/synthetic-monitoring` to load the persisted runner artifact instead of constructing an in-memory default dashboard.
 - Rationale: monitoring health should reflect the latest scheduled run, including degraded status from failed probes and stored issue context.
 - Guardrail: the endpoint still returns only status, cadence, and timestamps; owner-channel targets remain masked away from the health response.
+
+## 2026-05-22 - Synthetic Issue Auto-Close Is Opt-In
+
+- Decision: when `SYNTHETIC_MONITORING_FILE_ISSUES=1` and a runner pass is clean, mark open synthetic-monitoring issue entries as resolved.
+- Rationale: the issue queue should not keep stale production-monitoring failures open after the scheduled probe proves recovery.
+- Guardrail: auto-close uses the same explicit opt-in flag as issue filing; default local runs still never mutate `docs/ops/issue-queue.md`.
