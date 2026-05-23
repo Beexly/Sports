@@ -12,6 +12,8 @@
 
 I extracted the archive to a temporary local folder and inspected all contained files by file count, line count, headings, and structured JSON summaries.
 
+Machine-readable inventory: [xxx-main-archive-inventory-2026-05-23.json](xxx-main-archive-inventory-2026-05-23.json).
+
 | File | Lines | Decision |
 |---|---:|---|
 | README.md | 2 | Reference only; identifies archive theme. |

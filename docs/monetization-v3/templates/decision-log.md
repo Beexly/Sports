@@ -540,3 +540,16 @@ Metric threshold: Audit records all contained files, line counts, reuse decision
 Owner: Codex
 Next review date: Before any future research-intake utility is implemented
 Notes: No archive code imported. Future reuse requires license review, brand-safety review, and a new decision-log entry.
+
+### DEC-NEXT-049 - Research Archive Audit Script
+
+Date: 2026-05-23
+Decision: Add a reusable local script for zip fingerprinting, file inventory, text-line counts, and temporary extraction cleanup.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Archive inspection is becoming recurring R&D work; it needs a repeatable safety wrapper before future zips are inspected.
+Metric threshold: Script outputs source path, SHA256, file count, text-file count, total text lines, and per-file metadata without importing code.
+Owner: Codex
+Next review date: Before next external archive inspection
+Notes: Script does not execute, install, import, or copy archive code into Galaxy.
