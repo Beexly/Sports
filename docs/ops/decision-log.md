@@ -473,3 +473,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add eval contracts for weekly calibration insight happy path, thin-week fallback, and policy-block behavior.
 - Rationale: calibration training is a Claude-backed Phase 4 surface now present in code, so the eval library should cover the key success and refusal modes before broader rollout.
 - Guardrail: `scripts/eval-contracts.mjs` now enforces the required calibration training template and scenario coverage.
+
+## 2026-05-22 - Blog Generation Validates Output Before Success
+
+- Decision: parse and policy-check Claude blog generation output before recording a successful usage event.
+- Rationale: malformed JSON or missing required responsible-gambling language should fail closed and show up in the Claude API usage log as a failed generation.
+- Guardrail: parse failures use `PARSE_ERROR`; policy failures use `POLICY_*` error kinds.

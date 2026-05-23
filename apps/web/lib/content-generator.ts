@@ -36,6 +36,26 @@ export interface BlogGenerationOptions {
   readonly userId?: string | null;
 }
 
+type ParsedBlogGeneration = {
+  title: string;
+  excerpt: string;
+  content: string;
+  seoTitle: string;
+  seoDescription: string;
+  tags: string[];
+};
+
+type BlogGenerationPolicyReason =
+  | "MISSING_FIELD"
+  | "MISSING_DISCLAIMER"
+  | "CERTAINTY_LANGUAGE"
+  | "INVALID_TAGS";
+
+export interface BlogGenerationPolicyResult {
+  readonly allowed: boolean;
+  readonly reason: BlogGenerationPolicyReason | null;
+}
+
 export async function generateBlogPost(
   input: ContentGenerationInput,
   options: BlogGenerationOptions = {}
@@ -104,7 +124,7 @@ Respond ONLY with valid JSON in this exact format:
     }
   }
 
-  let text: string;
+  let parsed: ParsedBlogGeneration;
   try {
     const result = await callClaudeMessages({
       apiKey,
@@ -114,7 +134,35 @@ Respond ONLY with valid JSON in this exact format:
       system: systemPrompt,
       user: userPrompt,
     });
-    text = result.text;
+    try {
+      parsed = parseGeneratedBlogResponse(result.text);
+    } catch {
+      await maybeRecordBlogUsage({
+        options,
+        modelName: result.modelName,
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        durationMs: result.durationMs,
+        success: false,
+        errorKind: "PARSE_ERROR",
+      });
+      throw new Error("Could not parse JSON from Claude response");
+    }
+
+    const policy = evaluateGeneratedBlogPolicy(parsed);
+    if (!policy.allowed) {
+      await maybeRecordBlogUsage({
+        options,
+        modelName: result.modelName,
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        durationMs: result.durationMs,
+        success: false,
+        errorKind: `POLICY_${policy.reason ?? "UNKNOWN"}`,
+      });
+      throw new Error("Generated blog post failed policy validation.");
+    }
+
     await maybeRecordBlogUsage({
       options,
       modelName: result.modelName,
@@ -139,6 +187,18 @@ Respond ONLY with valid JSON in this exact format:
     throw error;
   }
 
+  return {
+    title: parsed.title,
+    slug: generateSlug(`${input.sport}-picks-${input.date}`),
+    excerpt: parsed.excerpt,
+    content: parsed.content,
+    seoTitle: parsed.seoTitle,
+    seoDescription: parsed.seoDescription,
+    tags: parsed.tags,
+  };
+}
+
+function parseGeneratedBlogResponse(text: string): ParsedBlogGeneration {
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch?.[0]) {
     throw new Error("Could not parse JSON from Claude response");
@@ -153,15 +213,50 @@ Respond ONLY with valid JSON in this exact format:
     tags: string[];
   };
 
-  return {
-    title: parsed.title,
-    slug: generateSlug(`${input.sport}-picks-${input.date}`),
-    excerpt: parsed.excerpt,
-    content: parsed.content,
-    seoTitle: parsed.seoTitle,
-    seoDescription: parsed.seoDescription,
-    tags: parsed.tags,
-  };
+  return parsed;
+}
+
+export function evaluateGeneratedBlogPolicy(
+  post: ParsedBlogGeneration,
+): BlogGenerationPolicyResult {
+  const fields = [
+    post.title,
+    post.excerpt,
+    post.content,
+    post.seoTitle,
+    post.seoDescription,
+  ];
+
+  if (fields.some((field) => typeof field !== "string" || field.trim().length === 0)) {
+    return { allowed: false, reason: "MISSING_FIELD" };
+  }
+
+  if (!Array.isArray(post.tags) || post.tags.length < 3 || post.tags.length > 5) {
+    return { allowed: false, reason: "INVALID_TAGS" };
+  }
+
+  if (post.tags.some((tag) => typeof tag !== "string" || tag.trim().length === 0)) {
+    return { allowed: false, reason: "INVALID_TAGS" };
+  }
+
+  if (!post.content.includes("Please gamble responsibly and only bet what you can afford to lose.")) {
+    return { allowed: false, reason: "MISSING_DISCLAIMER" };
+  }
+
+  const certaintyPatterns = [
+    /\bwill win\b/i,
+    /\bfree money\b/i,
+    /\bcannot miss\b/i,
+    /\bsure thing\b/i,
+    new RegExp(`\\b${"lo"}${"ck"}\\b`, "i"),
+    /\bhammer\b/i,
+  ];
+  const publicText = [post.title, post.excerpt, post.content, post.seoTitle, post.seoDescription].join("\n");
+  if (certaintyPatterns.some((pattern) => pattern.test(publicText))) {
+    return { allowed: false, reason: "CERTAINTY_LANGUAGE" };
+  }
+
+  return { allowed: true, reason: null };
 }
 
 async function maybeRecordBlogUsage(args: {

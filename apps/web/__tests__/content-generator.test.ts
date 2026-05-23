@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { generateBlogPost } from "@/lib/content-generator";
+import { evaluateGeneratedBlogPolicy, generateBlogPost } from "@/lib/content-generator";
 import { DEFAULT_CLAUDE_API_BUDGETS } from "@/lib/claude-api/cost-monitor";
 
 const input = {
@@ -18,6 +18,19 @@ const input = {
 };
 
 describe("blog content generator", () => {
+  it("blocks generated blog content missing the responsible-gambling disclaimer", () => {
+    expect(
+      evaluateGeneratedBlogPolicy({
+        title: "NBA Picks for May 22",
+        excerpt: "A measured preview.",
+        content: "Full analysis without the required footer.",
+        seoTitle: "NBA Picks May 22",
+        seoDescription: "Measured NBA pick analysis.",
+        tags: ["NBA", "picks", "analysis"],
+      })
+    ).toEqual({ allowed: false, reason: "MISSING_DISCLAIMER" });
+  });
+
   it("enforces the blog generation budget before calling Claude", async () => {
     process.env["ANTHROPIC_API_KEY"] = "test-key";
     const fetchImpl = vi.fn();
@@ -84,6 +97,54 @@ describe("blog content generator", () => {
       templateKind: null,
       success: true,
       errorKind: null,
+    });
+  });
+
+  it("records policy failures after Claude returns unsafe blog JSON", async () => {
+    process.env["ANTHROPIC_API_KEY"] = "test-key";
+    const fetchImpl = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                title: "NBA Picks for May 22",
+                excerpt: "A measured preview.",
+                content: "Full analysis without the required footer.",
+                seoTitle: "NBA Picks May 22",
+                seoDescription: "Measured NBA pick analysis.",
+                tags: ["NBA", "picks", "analysis"],
+              }),
+            },
+          ],
+          usage: { input_tokens: 1000, output_tokens: 250 },
+        }),
+        { status: 200 }
+      )
+    );
+    const create = vi.fn().mockResolvedValue({ id: "record-1" });
+
+    await expect(
+      generateBlogPost(input, {
+        fetchImpl,
+        monthlySpendUsd: 0,
+        budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.BLOG_GENERATION,
+        recordUsage: true,
+        usageClient: {
+          claudeApiCallRecord: {
+            aggregate: vi.fn(),
+            create,
+          },
+        },
+      })
+    ).rejects.toThrow("Generated blog post failed policy validation.");
+
+    expect(create).toHaveBeenCalledOnce();
+    expect(create.mock.calls[0]?.[0].data).toMatchObject({
+      surface: "BLOG_GENERATION",
+      success: false,
+      errorKind: "POLICY_MISSING_DISCLAIMER",
     });
   });
 });
