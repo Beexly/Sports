@@ -413,3 +413,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: include `scripts/eval-contracts.mjs` in the root `npm run guardrails` chain.
 - Rationale: the autonomous loop already runs guardrails after implementation; eval metadata drift should fail through the normal verification path instead of relying on a separate manual command.
 - Guardrail: this remains a structural contract check only and does not add external API calls to CI.
+
+## 2026-05-22 - Model Journal Synthetic Probe
+
+- Decision: wire the public Model Journal RSS feed into `scripts/prod-probe.mjs` and hydrate Synthetic Monitoring `CHECK-B3` from that artifact.
+- Rationale: the Journal cadence surface can be checked without credentials or external delivery, and the cockpit dashboard already reserved `CHECK-B3` for Journal health.
+- Guardrail: the probe validates RSS structure and channel visibility only. It does not require a published item during bootstrap or sample-history periods.

@@ -36,6 +36,14 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/shapeError/);
   });
 
+  it("validates the public Model Journal RSS surface", () => {
+    expect(src).toMatch(/TEXT_SHAPE_PROBES/);
+    expect(src).toMatch(/path:\s*"\/journal\/rss\.xml"/);
+    expect(src).toMatch(/validateJournalRss/);
+    expect(src).toMatch(/Galaxy Sports Edge Model Journal/);
+    expect(src).toMatch(/content surface probes failed/);
+  });
+
   it("scans public routes for banned positioning phrases", () => {
     expect(src).toMatch(/BANNED_PUBLIC_PATTERNS/);
     expect(src).toMatch(/AI-powered/);

@@ -69,6 +69,18 @@ async function probeJsonShape(path, label, validate, options = {}) {
   };
 }
 
+async function probeTextShape(path, label, validate, options = {}) {
+  const result = await probe(path, options);
+  const shapeError = result.ok ? validate(result.bodyText) : "";
+  return {
+    path,
+    label,
+    ...result,
+    ok: result.ok && !shapeError,
+    shapeError,
+  };
+}
+
 const PUBLIC_ROUTE_PROBES = [
   { path: "/", label: "homepage" },
   { path: "/board", label: "board" },
@@ -80,6 +92,10 @@ const PUBLIC_ROUTE_PROBES = [
 const API_SHAPE_PROBES = [
   { path: "/api/board/state", label: "board state", validate: validateBoardState },
   { path: "/api/calibration", label: "calibration", validate: validateCalibration },
+];
+
+const TEXT_SHAPE_PROBES = [
+  { path: "/journal/rss.xml", label: "Model Journal RSS", validate: validateJournalRss },
 ];
 
 const ADMIN_API_SHAPE_PROBES = [
@@ -132,6 +148,9 @@ for (const route of PUBLIC_ROUTE_PROBES) {
 for (const route of API_SHAPE_PROBES) {
   results.push(await probeJsonShape(route.path, route.label, route.validate));
 }
+for (const route of TEXT_SHAPE_PROBES) {
+  results.push(await probeTextShape(route.path, route.label, route.validate));
+}
 if (ADMIN_COOKIE) {
   results.push({ path: "/api/cockpit/jarvis", ...(await probe("/api/cockpit/jarvis", { admin: true })) });
   for (const route of ADMIN_API_SHAPE_PROBES) {
@@ -143,13 +162,14 @@ if (ADMIN_COOKIE) {
 const failHealth = !results[0]?.ok;
 const failPublic = results.some((r) => PUBLIC_ROUTE_PROBES.some((route) => route.path === r.path) && !r.ok);
 const failApiShape = results.some((r) => API_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok);
+const failTextShape = results.some((r) => TEXT_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok);
 const failAdminShape = results.some((r) =>
   ADMIN_API_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok
 );
 const payload = {
   appUrl: APP_URL,
   generatedAtIso,
-  ok: !failHealth && !failPublic && !failApiShape && !failAdminShape,
+  ok: !failHealth && !failPublic && !failApiShape && !failTextShape && !failAdminShape,
   failed: results.filter((r) => !r.ok).length,
   probes: results.map((r) => ({
     path: r.path,
@@ -200,6 +220,12 @@ if (failApiShape) {
   }
   process.exit(1);
 }
+if (failTextShape) {
+  if (!PROD_PROBE_JSON) {
+    console.error("\nOne or more content surface probes failed. Deploy verification failed.");
+  }
+  process.exit(1);
+}
 if (failAdminShape) {
   if (!PROD_PROBE_JSON) {
     console.error("\nOne or more authenticated cockpit probes failed. Deploy verification failed.");
@@ -231,6 +257,19 @@ function validateCalibration(json) {
   if (typeof json.data.updatedAt !== "string") return "Missing data.updatedAt string.";
   if (typeof json.data.isCollecting !== "boolean") return "Missing data.isCollecting boolean.";
   if (!json.meta || typeof json.meta.gated !== "boolean") return "Missing meta.gated boolean.";
+  return "";
+}
+
+function validateJournalRss(text) {
+  if (!text.includes('<?xml version="1.0" encoding="UTF-8"?>')) {
+    return "Missing XML declaration.";
+  }
+  if (!text.includes('<rss version="2.0">')) return "Missing RSS 2.0 root.";
+  if (!text.includes("<channel>")) return "Missing RSS channel.";
+  if (!text.includes("<title>Galaxy Sports Edge Model Journal</title>")) {
+    return "Missing Model Journal channel title.";
+  }
+  if (!text.includes("<lastBuildDate>")) return "Missing lastBuildDate.";
   return "";
 }
 

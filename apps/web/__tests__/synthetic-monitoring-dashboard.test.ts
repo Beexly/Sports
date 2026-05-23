@@ -97,6 +97,15 @@ describe("synthetic monitoring dashboard", () => {
           bannedPattern: "",
           admin: true,
         },
+        {
+          path: "/journal/rss.xml",
+          label: "Model Journal RSS",
+          ok: true,
+          status: 200,
+          ms: 57,
+          bannedPattern: "",
+          admin: false,
+        },
       ],
     };
 
@@ -112,6 +121,7 @@ describe("synthetic monitoring dashboard", () => {
     expect(checks.find((check) => check.id === "CHECK-A4")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-A4")?.detail).toContain("invalid response shape");
     expect(checks.find((check) => check.id === "CHECK-B1")?.status).toBe("passing");
+    expect(checks.find((check) => check.id === "CHECK-B3")?.status).toBe("passing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.detail).toContain("banned pattern");
   });
