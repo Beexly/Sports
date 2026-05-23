@@ -144,4 +144,29 @@ describe("Studio Claude generation", () => {
     ).rejects.toThrow("Studio is at generation capacity for this billing cycle.");
     expect(fetchImpl).not.toHaveBeenCalled();
   });
+
+  it("allows Studio generation when an operator budget override is active", async () => {
+    const fetchImpl = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          content: [{ type: "text", text: "Draft body with Source: PickSignalSnapshot #pick-bos-1" }],
+          usage: { input_tokens: 1000, output_tokens: 250 },
+        }),
+        { status: 200 }
+      )
+    );
+
+    await expect(
+      callClaudeForStudioAsset(
+        { node: makeNode(), templateKind: "X_THREAD", context },
+        {
+          apiKey: "test-key",
+          fetchImpl,
+          monthlySpendUsd: 500,
+          budgetOverrideActive: true,
+        }
+      )
+    ).resolves.toContain("Draft body");
+    expect(fetchImpl).toHaveBeenCalledOnce();
+  });
 });

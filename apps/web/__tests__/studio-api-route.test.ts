@@ -18,7 +18,10 @@ describe("Studio generation API route", () => {
   it("returns drafts only and exposes no external publisher", () => {
     expect(route).toContain("generateStudioAssetDraft");
     expect(route).toContain("getCurrentMonthClaudeSpendUsd");
+    expect(route).toContain("loadClaudeBudgetPolicy");
     expect(route).toContain("monthlySpendUsd");
+    expect(route).toContain("budgetPolicy: budget.policy");
+    expect(route).toContain("budgetOverrideActive: budget.overrideActive");
     expect(route).toContain("recordUsage: true");
     expect(route).toContain('session.user.id === "dev-admin" ? null : session.user.id');
     expect(route).toContain("db.creatorAsset.create");

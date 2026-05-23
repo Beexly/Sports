@@ -6,6 +6,7 @@ import { generateStudioAssetDraft, StudioGenerationError } from "@/lib/studio/cl
 import { getStudioTemplate } from "@/lib/studio/build-assets";
 import { markdownForStudioDraft } from "@/lib/studio/export";
 import { getCurrentMonthClaudeSpendUsd } from "@/lib/claude-api/usage-store";
+import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
 import type { CreatorAssetKind } from "@/lib/studio/templates";
 
 export const dynamic = "force-dynamic";
@@ -66,7 +67,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ success: false, error: "game-not-found" }, { status: 404 });
   }
 
-  const monthlySpendUsd = await getCurrentMonthClaudeSpendUsd("STUDIO_GENERATION");
+  const [monthlySpendUsd, budget] = await Promise.all([
+    getCurrentMonthClaudeSpendUsd("STUDIO_GENERATION"),
+    loadClaudeBudgetPolicy("STUDIO_GENERATION"),
+  ]);
 
   try {
     const draft = await generateStudioAssetDraft(
@@ -85,6 +89,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         apiKey,
         monthlySpendUsd,
+        budgetPolicy: budget.policy,
+        budgetOverrideActive: budget.overrideActive,
         recordUsage: true,
         userId: session.user.id === "dev-admin" ? null : session.user.id,
       }

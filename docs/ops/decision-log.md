@@ -232,3 +232,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: seed the initial per-surface Claude API monthly budgets through an idempotent Prisma migration instead of the local demo seed file.
 - Rationale: budgets are production policy, not local demo data, and deploy-time rows keep cockpit API-costs wiring independent of optional seed runs.
 - Deferred: runtime budget override reads, owner-channel alerts, and wrapper migration for remaining Claude surfaces remain follow-up slices.
+
+## 2026-05-22 - Studio Reads Claude Budget Rows
+
+- Decision: Studio generation now loads the persisted budget policy and active override state before enforcing the monthly spend gate.
+- Rationale: the production budget rows seeded by migration should control runtime behavior, and an operator override must be honored without changing code.
+- Deferred: cockpit override mutation UI, owner-channel alerts, and wrapper migration for remaining Claude surfaces remain follow-up slices.

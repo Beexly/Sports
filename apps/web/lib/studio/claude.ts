@@ -5,6 +5,7 @@ import {
 import {
   estimateClaudeCostUsd,
   evaluateClaudeBudgetUsage,
+  type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
 import {
   recordClaudeApiCall,
@@ -34,6 +35,8 @@ export interface StudioClaudeClientOptions {
   readonly fetchImpl?: typeof fetch;
   readonly model?: string;
   readonly monthlySpendUsd?: number;
+  readonly budgetPolicy?: ClaudeApiBudgetPolicy;
+  readonly budgetOverrideActive?: boolean;
   readonly recordUsage?: boolean;
   readonly usageClient?: ClaudeUsageStoreDb;
   readonly userId?: string | null;
@@ -71,8 +74,8 @@ export async function callClaudeForStudioAsset(
   if (!dryRun.prompt) {
     throw new StudioGenerationError("Studio template did not produce a prompt.");
   }
-  if (typeof options.monthlySpendUsd === "number") {
-    const budget = evaluateClaudeBudgetUsage("STUDIO_GENERATION", options.monthlySpendUsd);
+  if (typeof options.monthlySpendUsd === "number" && !options.budgetOverrideActive) {
+    const budget = evaluateClaudeBudgetUsage("STUDIO_GENERATION", options.monthlySpendUsd, options.budgetPolicy);
     if (!budget.requestAllowed) {
       throw new StudioGenerationError(budget.fallbackMessage ?? "Studio generation is at capacity.");
     }
