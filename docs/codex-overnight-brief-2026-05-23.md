@@ -96,7 +96,7 @@
 - `1e439ac` - DEC-NEXT-056 add Vault persistence contract
 - `81b0608` - DEC-NEXT-057 add Vault backup restore runbook
 - `e73b0fb` - DEC-NEXT-058 refresh monetization README engineering nav
-- `TBD` - DEC-NEXT-059 enforce README navigation coverage
+- `621db90` - DEC-NEXT-059 enforce README navigation coverage
 
 ## What I Flagged For Morning Triage
 
