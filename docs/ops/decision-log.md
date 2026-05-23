@@ -304,3 +304,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: normalize Twitter/X and Discord bot templates so settlement symbols, separators, and footers render as clean public text instead of mojibake.
 - Rationale: bot posts are public trust surfaces; a broken glyph in a settlement or gated-slate update makes the feed look automated in the wrong way.
 - Deferred: schedulers, delivery clients, rate limiting, and outbox persistence remain separate Phase 3 runtime work.
+
+## 2026-05-22 - Bot Outbox Planning Is Draft-Only
+
+- Decision: add pure bot outbox planners that render Twitter/X and Discord draft payloads with stable idempotency keys, entitlement blocks, bootstrap blocks, and no external delivery calls.
+- Rationale: schedulers need deterministic, testable payload planning before delivery clients, persistence, and rate limiting are introduced.
+- Deferred: persisted outbox tables, delivery clients, retry state, and channel-specific rate limiting remain separate Phase 3 runtime work.

@@ -2,8 +2,6 @@
  * Twitter bot template: post-mortem thread (multi-post, losses only).
  *
  * Spec: docs/product/twitter-bot-voice-spec.md section "Free pick post-mortems (extended thread)"
- *
- * Returns an array of post bodies. The runtime posts them as a thread.
  */
 
 import type { PostMortemThreadInput, FactorKey } from "./types";
@@ -28,7 +26,7 @@ export function buildPostMortemThread(
 ): string[] {
   const linkUrl = `${publicUrl}/room/${input.gameId}`;
 
-  const post1 = `Settled ${input.pickLine} ❌ LOSS. Here's what the model saw and what it missed.`;
+  const post1 = `Settled ${input.pickLine} \u274C LOSS. Here's what the model saw and what it missed.`;
 
   const topFactorsLines = input.topFactorsAtPublish
     .slice(0, 3)
@@ -36,7 +34,6 @@ export function buildPostMortemThread(
     .join("\n");
 
   const post2 = `At publish, the heaviest signals were:\n${topFactorsLines}`;
-
   const post3 = `What changed: ${input.whatChanged}`;
 
   const missFactor = input.biggestMissFactor
@@ -44,9 +41,7 @@ export function buildPostMortemThread(
     : "the read";
 
   const post4 = `What we got wrong: the ${missFactor} signal ${input.oneLineCause ?? "misread the picture"}.`;
-
   const post5 = `What this updates: ${input.whatThisUpdates}`;
-
   const post6 = `Full breakdown + autopsy: ${linkUrl}`;
 
   return [post1, post2, post3, post4, post5, post6];

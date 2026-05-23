@@ -24,12 +24,12 @@ describe("Twitter bot templates", () => {
         gameId: "game-1",
         modelVersion: "v5.0.0",
       },
-      publicUrl
+      publicUrl,
     );
 
     expect(output.text).toContain("Just gated MIA @ NYY - spread balanced");
     expect(output.text).toContain("#MLB");
-    expect(output.text).not.toMatch(/â|Â/);
+    expect(output.text).not.toMatch(/Ã¢|Ã‚|â/);
   });
 
   it("formats settlement outcomes with the approved settlement symbols", () => {
@@ -45,7 +45,7 @@ describe("Twitter bot templates", () => {
         gameId: "game-2",
         modelVersion: "v5.0.0",
       },
-      publicUrl
+      publicUrl,
     );
     const loss = buildSettlementTweet(
       {
@@ -59,12 +59,12 @@ describe("Twitter bot templates", () => {
         gameId: "game-3",
         modelVersion: "v5.0.0",
       },
-      publicUrl
+      publicUrl,
     );
 
-    expect(win.text).toContain("✅ WIN - schedule stress signal was the heaviest contributor.");
-    expect(loss.text).toContain("❌ LOSS - rest advantage signal misread.");
-    expect(`${win.text}\n${loss.text}`).not.toMatch(/â|Â/);
+    expect(win.text).toContain("\u2705 WIN - schedule stress signal was the heaviest contributor.");
+    expect(loss.text).toContain("\u274C LOSS - rest advantage signal misread.");
+    expect(`${win.text}\n${loss.text}`).not.toMatch(/Ã¢|Ã‚|â/);
   });
 
   it("builds loss post-mortem threads with a clean opening post", () => {
@@ -83,11 +83,11 @@ describe("Twitter bot templates", () => {
         whatChanged: "Detroit's injury report cleared before kickoff.",
         whatThisUpdates: "The rest factor needs an availability cross-check.",
       },
-      publicUrl
+      publicUrl,
     );
 
-    expect(thread[0]).toBe("Settled MIN +6 ❌ LOSS. Here's what the model saw and what it missed.");
-    expect(thread.join("\n")).not.toMatch(/â|Â/);
+    expect(thread[0]).toBe("Settled MIN +6 \u274C LOSS. Here's what the model saw and what it missed.");
+    expect(thread.join("\n")).not.toMatch(/Ã¢|Ã‚|â/);
   });
 });
 
@@ -107,7 +107,7 @@ describe("Discord bot templates", () => {
         modelVersion: "v5.0.0",
         gameStartsAt: new Date("2026-05-22T23:00:00.000Z"),
       },
-      publicUrl
+      publicUrl,
     );
 
     expect(embed.color).toBe(BRAND_COLORS.ULTRAVIOLET);
@@ -131,12 +131,12 @@ describe("Discord bot templates", () => {
         modelVersion: "v5.0.0",
         settledAt: new Date("2026-05-23T03:30:00.000Z"),
       },
-      publicUrl
+      publicUrl,
     );
 
-    expect(embed.title).toBe("Settled MIN +6 ❌ LOSS");
+    expect(embed.title).toBe("Settled MIN +6 \u274C LOSS");
     expect(embed.color).toBe(BRAND_COLORS.LOSS_RED);
-    expect(JSON.stringify(embed)).not.toMatch(/â|Â/);
+    expect(JSON.stringify(embed)).not.toMatch(/Ã¢|Ã‚|â/);
   });
 
   it("formats gated slate embeds with a clean footer", () => {
@@ -151,10 +151,10 @@ describe("Discord bot templates", () => {
         modelVersion: "v5.0.0",
         gateDecisionAt: new Date("2026-05-22T18:00:00.000Z"),
       },
-      publicUrl
+      publicUrl,
     );
 
     expect(embed.footer.text).toBe("Model v5.0.0 | galaxysportsedge.com");
-    expect(JSON.stringify(embed)).not.toMatch(/â|Â/);
+    expect(JSON.stringify(embed)).not.toMatch(/Ã¢|Ã‚|â/);
   });
 });

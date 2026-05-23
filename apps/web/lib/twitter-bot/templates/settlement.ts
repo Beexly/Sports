@@ -2,14 +2,6 @@
  * Twitter bot template: settlement (win/loss/push).
  *
  * Spec: docs/product/twitter-bot-voice-spec.md section "Free pick settlements"
- *
- * WIN format:
- *   Settled CLE -7 ✅ WIN - schedule stress signal was the heaviest contributor.
- *   Full snapshot: https://galaxysportsedge.com/room/<gameId>
- *
- * LOSS format:
- *   Settled MIN +6 ❌ LOSS - rest advantage signal misread. MIN was more fatigued than projected.
- *   Post-mortem: https://galaxysportsedge.com/room/<gameId>
  */
 
 import type { SettlementInput, TweetOutput, FactorKey } from "./types";
@@ -49,32 +41,32 @@ export function buildSettlementTweet(
   const linkUrl = `${publicUrl}/room/${input.gameId}`;
   const hashtag = SPORT_HASHTAGS[input.sport];
 
-  let outcomeEmoji = "";
+  let outcomeSymbol = "";
   let outcomeLabel = "";
   let bodyLine = "";
   let linkLabel = "";
 
   if (input.outcome === "W") {
-    outcomeEmoji = "✅";
+    outcomeSymbol = "\u2705";
     outcomeLabel = "WIN";
     bodyLine = `${friendlyFactor(input.heaviestContributorFactor)} signal was the heaviest contributor.`;
     linkLabel = "Full snapshot";
   } else if (input.outcome === "L") {
-    outcomeEmoji = "❌";
+    outcomeSymbol = "\u274C";
     outcomeLabel = "LOSS";
     const factor = friendlyFactor(input.biggestMissFactor);
     const cause = input.oneLineCause ?? "factor read did not hold";
     bodyLine = `${factor} signal misread. ${cause}.`;
     linkLabel = "Post-mortem";
   } else {
-    outcomeEmoji = "⚖️";
+    outcomeSymbol = "\u2696\uFE0F";
     outcomeLabel = "PUSH";
     bodyLine = "Line landed on the number.";
     linkLabel = "Full snapshot";
   }
 
   const text = [
-    `Settled ${input.pickLine} ${outcomeEmoji} ${outcomeLabel} - ${bodyLine}`,
+    `Settled ${input.pickLine} ${outcomeSymbol} ${outcomeLabel} - ${bodyLine}`,
     "",
     `${linkLabel}: ${linkUrl}`,
     hashtag ? `#${hashtag}` : "",

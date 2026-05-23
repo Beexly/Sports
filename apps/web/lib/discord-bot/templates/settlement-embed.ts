@@ -43,13 +43,13 @@ export function buildSettlementEmbed(
   let footerSuffix: string;
 
   if (input.outcome === "W") {
-    title = `Settled ${input.pickLine} ✅ WIN`;
+    title = `Settled ${input.pickLine} \u2705 WIN`;
     description = `${friendlyFactor(input.heaviestContributorFactor)} signal was the heaviest contributor.`;
     outcomeField = "WIN - covered";
     color = BRAND_COLORS.WIN_GREEN;
     footerSuffix = "Full snapshot";
   } else if (input.outcome === "L") {
-    title = `Settled ${input.pickLine} ❌ LOSS`;
+    title = `Settled ${input.pickLine} \u274C LOSS`;
     const factor = friendlyFactor(input.biggestMissFactor);
     const cause = input.oneLineCause ?? "factor read did not hold";
     description = `${factor} signal misread. ${cause}.`;
@@ -57,7 +57,7 @@ export function buildSettlementEmbed(
     color = BRAND_COLORS.LOSS_RED;
     footerSuffix = "Post-mortem";
   } else {
-    title = `Settled ${input.pickLine} ⚖️ PUSH`;
+    title = `Settled ${input.pickLine} \u2696\uFE0F PUSH`;
     description = "Line landed on the number.";
     outcomeField = "PUSH - line landed on the number";
     color = BRAND_COLORS.PUSH_AMBER;
