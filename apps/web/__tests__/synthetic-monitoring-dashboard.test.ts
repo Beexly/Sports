@@ -207,8 +207,10 @@ describe("/cockpit/synthetic-monitoring page", () => {
     expect(page).toContain("Manual Actions");
   });
 
-  it("keeps manual actions disabled until durable history exists", () => {
+  it("keeps manual actions disabled until server actions can log decisions", () => {
     expect(page).toContain("disabled");
+    expect(page).toContain("scheduled runner writes durable history");
+    expect(page).toContain("server");
     expect(page).toContain("Pausing will require a decision-log entry");
   });
 
@@ -225,7 +227,8 @@ describe("/api/health/synthetic-monitoring", () => {
   );
 
   it("exposes a heartbeat without leaking owner-channel targets", () => {
-    expect(route).toContain("loadSyntheticMonitoringDashboard");
+    expect(route).toContain("loadSyntheticMonitoringDashboardFromDisk");
+    expect(route).toContain("await loadSyntheticMonitoringDashboardFromDisk");
     expect(route).toContain('dynamic = "force-dynamic"');
     expect(route).toContain("cadenceMinutes");
     expect(route).not.toContain("ownerTarget");

@@ -114,7 +114,8 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
       <section className="rounded-lg border border-gray-800 bg-gray-950 p-4">
         <h2 className="text-sm font-semibold text-white">Manual Actions</h2>
         <p className="mt-2 text-sm text-gray-500">
-          Manual runs and pause controls are held until the scheduled runner writes durable history.
+          The scheduled runner writes durable history. Manual controls stay disabled until a server
+          action can append a decision-log entry and run checks with the production environment.
           Pausing will require a decision-log entry before the control becomes active.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">

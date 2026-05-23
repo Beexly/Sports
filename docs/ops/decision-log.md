@@ -389,3 +389,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: when an admin cookie is supplied, production probes validate the draft-only Bot Outbox preview contract for Twitter/X and Discord surfaces.
 - Rationale: Phase 3 bot work must stay visible to operators without enabling external delivery; monitoring should catch auth, route, and draft-policy regressions.
 - Guardrail: the probe only reads the admin preview endpoint and asserts draft-only policy fields; it does not publish, persist, or call external bot providers.
+
+## 2026-05-22 - Synthetic Health Route Reads Runner Artifacts
+
+- Decision: update `/api/health/synthetic-monitoring` to load the persisted runner artifact instead of constructing an in-memory default dashboard.
+- Rationale: monitoring health should reflect the latest scheduled run, including degraded status from failed probes and stored issue context.
+- Guardrail: the endpoint still returns only status, cadence, and timestamps; owner-channel targets remain masked away from the health response.
