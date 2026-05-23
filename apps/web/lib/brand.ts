@@ -1,7 +1,8 @@
 /**
  * Centralized brand configuration — Galaxy Sports Edge.
  *
- *   Brand:    Galaxy Sports Edge
+ *   Brand:    Galaxy Sports Edge          (flagship consumer product)
+ *   Parent:   Galaxy Sports Network LLC   (corporate operator)
  *   Tagline:  Find the signal before the market moves.
  *   Voice:    Calibrated. Precise. Always acquiring.
  *             Intelligence isn't loud. It's on frequency.
@@ -17,6 +18,24 @@ export const BRAND_NAME = "Galaxy Sports Edge";
 
 /** Short form for compact lockups. */
 export const BRAND_SHORT_NAME = "Galaxy Sports Edge";
+
+/**
+ * Corporate parent — the legal entity that owns and operates the brand.
+ *
+ * Galaxy Sports Edge is the flagship consumer product; Galaxy Sports
+ * Network LLC is the company behind it. Surface the LLC in footer
+ * copyright lines, terms-of-service operator language, privacy
+ * data-controller disclosures, and any other legal/contractual context.
+ * Surface the product name (BRAND_NAME) everywhere else.
+ */
+export const PARENT_COMPANY = {
+  legalName: "Galaxy Sports Network LLC",
+  shortName: "Galaxy Sports Network",
+  jurisdiction: "Texas",
+  relationship: "Galaxy Sports Edge is a product of Galaxy Sports Network LLC.",
+  copyrightLine: (year: number) =>
+    `© ${year} Galaxy Sports Network LLC. All rights reserved.`,
+} as const;
 
 /** The brand-defining headline. Used everywhere we need one line. */
 export const BRAND_TAGLINE = "Find the signal before the market moves.";

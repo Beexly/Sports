@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME, LEGAL_EMAIL } from "@/lib/brand";
+import { BRAND_NAME, LEGAL_EMAIL, PARENT_COMPANY } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -30,7 +30,17 @@ export default function PrivacyPage() {
               })}
             </p>
 
-            <Heading>1. What we collect</Heading>
+            <Heading>1. Who we are</Heading>
+            <Para>
+              {BRAND_NAME} is operated by {PARENT_COMPANY.legalName}, a{" "}
+              {PARENT_COMPANY.jurisdiction} limited liability company.{" "}
+              {PARENT_COMPANY.legalName} is the data controller for the
+              personal information described in this policy. References to
+              &quot;we,&quot; &quot;us,&quot; or &quot;our&quot; mean{" "}
+              {PARENT_COMPANY.legalName}.
+            </Para>
+
+            <Heading>2. What we collect</Heading>
             <Para>
               When you create an account, we collect your name, email address,
               and (if you sign in with Google) your Google profile image. When
@@ -43,7 +53,7 @@ export default function PrivacyPage() {
               not use third-party advertising trackers.
             </Para>
 
-            <Heading>2. How we use it</Heading>
+            <Heading>3. How we use it</Heading>
             <Para>
               We use your account information to operate the Service:
               authenticate you, deliver picks, manage your subscription, and
@@ -52,7 +62,7 @@ export default function PrivacyPage() {
               feature usage and improve the model.
             </Para>
 
-            <Heading>3. What we share</Heading>
+            <Heading>4. What we share</Heading>
             <Para>
               We share data only with the subprocessors who help us run the
               Service: hosting (Vercel), database (managed Postgres),
@@ -61,7 +71,7 @@ export default function PrivacyPage() {
               we do not share data with advertisers.
             </Para>
 
-            <Heading>4. Your choices</Heading>
+            <Heading>5. Your choices</Heading>
             <Para>
               You can delete your account at any time from the dashboard. When
               you do, we delete your profile information within 30 days,
@@ -81,7 +91,7 @@ export default function PrivacyPage() {
               and we will respond within 30 days.
             </Para>
 
-            <Heading>5. Security</Heading>
+            <Heading>6. Security</Heading>
             <Para>
               We use TLS in transit, encrypted database storage at rest, and
               role-scoped database access. Authentication uses standard
@@ -89,20 +99,20 @@ export default function PrivacyPage() {
               if we ever experience a breach affecting their account data.
             </Para>
 
-            <Heading>6. Children</Heading>
+            <Heading>7. Children</Heading>
             <Para>
               The Service is not directed to children. We do not knowingly
               collect data from anyone under the legal wagering age in their
               jurisdiction.
             </Para>
 
-            <Heading>7. Changes</Heading>
+            <Heading>8. Changes</Heading>
             <Para>
               If we change this policy materially, we&apos;ll notify you on the
               Service or by email before the change takes effect.
             </Para>
 
-            <Heading>8. Contact</Heading>
+            <Heading>9. Contact</Heading>
             <Para>
               Email{" "}
               <a

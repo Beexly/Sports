@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BrandLockup } from "@/components/brand/brand-lockup";
-import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
+import { BRAND_NAME, CLOSING_LINE, HELPLINE, PARENT_COMPANY, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
   { label: "Signal Feed", href: "/picks" },
@@ -72,7 +72,11 @@ export function Footer() {
         )}
 
         <div className="bottom">
-          <span>{new Date().getFullYear()} {BRAND_NAME.toUpperCase()} / FIND THE SIGNAL BEFORE THE MARKET MOVES</span>
+          <span>
+            {PARENT_COMPANY.copyrightLine(new Date().getFullYear()).toUpperCase()}{" "}
+            / {BRAND_NAME.toUpperCase()} IS A PRODUCT OF{" "}
+            {PARENT_COMPANY.shortName.toUpperCase()}
+          </span>
           <span>{CLOSING_LINE.toUpperCase()}</span>
         </div>
       </div>

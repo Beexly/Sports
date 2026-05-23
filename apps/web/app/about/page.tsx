@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL } from "@/lib/brand";
+import { BRAND_NAME, BRAND_TAGLINE, PARENT_COMPANY, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "About",
@@ -120,6 +120,10 @@ export default function AboutPage() {
                 All inboxes
               </Link>
             </div>
+            <p className="mt-10 text-xs uppercase tracking-widest text-ink-500">
+              {BRAND_NAME} is a product of {PARENT_COMPANY.legalName}, a{" "}
+              {PARENT_COMPANY.jurisdiction} limited liability company.
+            </p>
           </div>
         </section>
       </main>

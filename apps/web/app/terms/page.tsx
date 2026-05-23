@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME, LEGAL_EMAIL } from "@/lib/brand";
+import { BRAND_NAME, LEGAL_EMAIL, PARENT_COMPANY } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -32,19 +32,23 @@ export default function TermsPage() {
 
             <Heading>1. Acceptance of these terms</Heading>
             <Para>
-              By creating an account or otherwise using {BRAND_NAME}
-              (&quot;the Service&quot;), you agree to be bound by these terms.
-              If you do not agree, you must not use the Service.
+              These terms govern your use of {BRAND_NAME} (&quot;the
+              Service&quot;), a product of {PARENT_COMPANY.legalName}, a{" "}
+              {PARENT_COMPANY.jurisdiction} limited liability company
+              (&quot;{PARENT_COMPANY.shortName},&quot; &quot;we,&quot;
+              &quot;us,&quot; or &quot;our&quot;). By creating an account or
+              otherwise using the Service, you agree to be bound by these
+              terms. If you do not agree, you must not use the Service.
             </Para>
 
             <Heading>2. What the Service is</Heading>
             <Para>
-              {BRAND_NAME} is an informational service that publishes
-              algorithmic analysis of sporting events using publicly available
-              odds data. The Service is not a sportsbook, does not accept
-              wagers, and does not facilitate any wager. Nothing on the
-              Service constitutes gambling advice, investment advice, or a
-              promise of any outcome.
+              {BRAND_NAME} is an informational service operated by{" "}
+              {PARENT_COMPANY.shortName} that publishes algorithmic analysis
+              of sporting events using publicly available odds data. The
+              Service is not a sportsbook, does not accept wagers, and does
+              not facilitate any wager. Nothing on the Service constitutes
+              gambling advice, investment advice, or a promise of any outcome.
             </Para>
 
             <Heading>3. No guarantees</Heading>
@@ -96,13 +100,24 @@ export default function TermsPage() {
               THE SERVICE IS PROVIDED &quot;AS IS&quot; WITHOUT WARRANTIES OF
               ANY KIND, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
               MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
-              NON-INFRINGEMENT. TO THE EXTENT PERMITTED BY LAW, {BRAND_NAME}
-              IS NOT LIABLE FOR ANY INDIRECT, CONSEQUENTIAL, SPECIAL,
-              INCIDENTAL, OR PUNITIVE DAMAGES, OR FOR LOST WAGERS, LOST
-              PROFITS, OR LOST DATA.
+              NON-INFRINGEMENT. TO THE EXTENT PERMITTED BY LAW,{" "}
+              {PARENT_COMPANY.legalName} IS NOT LIABLE FOR ANY INDIRECT,
+              CONSEQUENTIAL, SPECIAL, INCIDENTAL, OR PUNITIVE DAMAGES, OR FOR
+              LOST WAGERS, LOST PROFITS, OR LOST DATA.
             </Para>
 
-            <Heading>9. Changes</Heading>
+            <Heading>9. Operating entity</Heading>
+            <Para>
+              The Service is operated by {PARENT_COMPANY.legalName}, a{" "}
+              {PARENT_COMPANY.jurisdiction} limited liability company.{" "}
+              {PARENT_COMPANY.legalName} holds all intellectual property
+              associated with {BRAND_NAME}, including the Edge Index, Gate Cam,
+              Galaxy IQ, and related product names. Any reference to{" "}
+              {BRAND_NAME} in these terms means the Service as offered by{" "}
+              {PARENT_COMPANY.legalName}.
+            </Para>
+
+            <Heading>10. Changes</Heading>
             <Para>
               We may update these terms from time to time. If a change is
               material, we will notify you on the Service or by email. Your
@@ -110,7 +125,7 @@ export default function TermsPage() {
               constitutes acceptance.
             </Para>
 
-            <Heading>10. Contact</Heading>
+            <Heading>11. Contact</Heading>
             <Para>
               Questions about these terms should be sent to{" "}
               <a
