@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { composeJournalDraftMarkdown } from "@/lib/journal/compose";
+import { loadModelJournalWeekData } from "@/lib/journal/week-data";
 import { generateSlug } from "@/lib/utils";
 import { db } from "@sports/db";
 import { MODEL_VERSION } from "@sports/prediction-engine";
@@ -37,30 +39,6 @@ function parseInteger(value: unknown): number | null {
   const trimmed = value.trim();
   if (!/^\d+$/.test(trimmed)) return null;
   return Number.parseInt(trimmed, 10);
-}
-
-function initialMarkdown(title: string, isoWeek: number, isoYear: number): string {
-  return [
-    `# ${title}`,
-    "",
-    `Week ${isoWeek}, ${isoYear}.`,
-    "",
-    "## What The Week Showed",
-    "",
-    "Draft the settled-pick evidence here before submitting for review.",
-    "",
-    "## Signals That Held",
-    "",
-    "- ",
-    "",
-    "## Signals That Missed",
-    "",
-    "- ",
-    "",
-    "## What Changes Next",
-    "",
-    "- ",
-  ].join("\n");
 }
 
 export async function POST(req: Request): Promise<NextResponse> {
@@ -111,7 +89,10 @@ export async function POST(req: Request): Promise<NextResponse> {
     );
   }
 
-  const bodyMarkdown = submittedMarkdown || initialMarkdown(title, isoWeek, isoYear);
+  const bodyMarkdown = submittedMarkdown || composeJournalDraftMarkdown(
+    title,
+    await loadModelJournalWeekData(isoYear, isoWeek)
+  );
   const created = await db.modelJournalEntry.create({
     data: {
       title,

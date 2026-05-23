@@ -73,6 +73,8 @@ describe("Model Journal cockpit route", () => {
     expect(createRoute).toMatch(/from\s+["']@\/lib\/auth["']/);
     expect(createRoute).toMatch(/role\s*!==\s*"ADMIN"/);
     expect(createRoute).toContain("MODEL_VERSION");
+    expect(createRoute).toContain("loadModelJournalWeekData");
+    expect(createRoute).toContain("composeJournalDraftMarkdown");
     expect(createRoute).toContain("modelJournalEntry.create");
     expect(createRoute).toContain('status: "DRAFT"');
     expect(createRoute).toContain("referencedPickIds: []");

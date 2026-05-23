@@ -154,3 +154,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `GET /api/cockpit/journal/week-data` and wire `/cockpit/journal/new` to preview weekly Journal evidence counts.
 - Rationale: operators should see whether an ISO week has enough settled canonical evidence before creating a Journal draft. The endpoint is ADMIN-only and read-only, returning counts from the deterministic week-data loader without creating drafts or sending public output.
 - Deferred: full evidence table in cockpit, Claude draft generation route, automatic draft creation, publish/retract feed invalidation, email digest delivery, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Draft Composer Added
+
+- Decision: add `composeJournalDraftMarkdown()` and use it as the default body for manual Journal draft creation.
+- Rationale: draft creation should start from the same deterministic evidence bundle the future Claude drafting step will consume. The composer creates an operator-editable markdown skeleton with weekly counts, held/missed pick references, and public loss-autopsy references without calling an LLM or publishing anything.
+- Deferred: Claude draft generation route, richer factor extraction, cockpit full evidence table, automatic draft creation, publish/retract feed invalidation, email digest delivery, and teaser queue remain follow-up slices.
