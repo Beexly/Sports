@@ -339,6 +339,7 @@ Acceptance criteria:
 - Heartbeats do not mutate customer data.
 - Stale heartbeat status is visible before founding-50 invitations send.
 - Provider incidents can be linked from `docs/ops/issue-queue.md`.
+- Pure repair-task generation exists from DEC-NEXT-041; persistence, assignment, and resolution workflow remain unwired.
 
 ### PHASE-N-013 - Proof Surface Freshness Monitor
 

@@ -26,6 +26,7 @@
 - Added a repeatable launch-readiness audit script that bundles docs validation, brand scan, DEC-NEXT uniqueness, web tests, typecheck, build, and dependency audit.
 - Added first-24-hour Vault onboarding health logic for the payment-to-access chain; storage and admin repair queues remain unwired.
 - Added provider heartbeat status logic for Stripe, transactional email, Discord, private storage, and analytics; live checks remain unwired.
+- Added admin repair-task generation for onboarding and provider heartbeat failures; cockpit persistence remains unwired.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs

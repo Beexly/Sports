@@ -72,6 +72,7 @@ Runway determines which subset is active:
 - [app-repo-locator-checklist.md](app-repo-locator-checklist.md) - Checklist for locating real app implementation surfaces before engineering.
 - [brand-safety-checklist.md](brand-safety-checklist.md) - Brand-safety scan checklist for public and member-facing surfaces.
 - [product/admin-operations-spec.md](product/admin-operations-spec.md) - Admin operations requirements for support, incidents, and internal views.
+- [product/admin-repair-task-scaffold-notes.md](product/admin-repair-task-scaffold-notes.md) - Admin repair task model and DEC-NEXT-041 guardrails.
 - [product/almanac-export-prd.md](product/almanac-export-prd.md) - Almanac data-export product requirements.
 - [product/engineering-issue-pack.md](product/engineering-issue-pack.md) - GitHub/Linear-ready engineering epics and Phase-N scaffold gaps.
 - [product/env-readiness-contract.md](product/env-readiness-contract.md) - Environment variable readiness contract and DEC-NEXT-036 guardrails.

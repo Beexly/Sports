@@ -436,3 +436,16 @@ Metric threshold: Tests cover healthy, stale, unconfigured, and launch-critical 
 Owner: Codex maintains scaffold; Garrett verifies provider choices before launch
 Next review date: Before founding-50 invitations send
 Notes: Logic only. No live provider calls, storage, admin cockpit, alerts, Discord mutation, or email sends are wired.
+
+### DEC-NEXT-041 - Admin Repair Task Model
+
+Date: 2026-05-23
+Decision: Add pure admin repair-task generation for onboarding health and provider heartbeat failures.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: The launch hardening backlog needs silent partial failures to become visible repair work before they become member complaints.
+Metric threshold: Tests cover p0 onboarding tasks, watch-only suppression, and provider stale/unconfigured tasks.
+Owner: Codex maintains scaffold; Garrett defines admin cockpit operating cadence
+Next review date: Before admin cockpit implementation
+Notes: Model only. No persistence, alerts, provider calls, member mutation, assignment workflow, or public exposure is wired.
