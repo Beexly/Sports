@@ -461,3 +461,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: gate `/blog`, `/blog/[slug]`, and `/api/blog` behind `canPublishContent`.
 - Rationale: published content must not appear on public surfaces while `PUBLIC_BLOG_ENABLED=false`, even if rows exist in the database.
 - Guardrail: public pages render empty or 404 while gated; the API returns the standard bootstrap-gate 503 envelope.
+
+## 2026-05-22 - Calibration Insights Get Output Policy Validation
+
+- Decision: validate Claude-generated weekly calibration insight text before returning or persisting it.
+- Rationale: the calibration training surface must remain descriptive; generated text cannot become betting advice, a CTA, a comparison to other users, or banned positioning.
+- Guardrail: policy failures are recorded as failed Claude API calls with `POLICY_*` error kinds.

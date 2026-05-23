@@ -36,6 +36,21 @@ export interface CalibrationInsightResult {
   readonly modelName: string | null;
 }
 
+export type CalibrationInsightPolicyReason =
+  | "EMPTY"
+  | "TOO_LONG"
+  | "MULTI_SENTENCE"
+  | "EMOJI"
+  | "BETTING_ADVICE"
+  | "CTA"
+  | "COMPARISON"
+  | "BANNED_POSITIONING";
+
+export interface CalibrationInsightPolicyResult {
+  readonly allowed: boolean;
+  readonly reason: CalibrationInsightPolicyReason | null;
+}
+
 export class CalibrationInsightGenerationError extends Error {
   constructor(message: string) {
     super(message);
@@ -89,6 +104,22 @@ export async function generateCalibrationWeeklyInsight(
       system: CALIBRATION_INSIGHT_SYSTEM_PROMPT,
       user: buildCalibrationInsightUserPrompt(input),
     });
+    const insightText = normalizeInsightText(result.text);
+    const policy = evaluateCalibrationInsightPolicy(insightText);
+    if (!policy.allowed) {
+      await maybeRecordCalibrationUsage({
+        input,
+        options,
+        modelName: result.modelName,
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        durationMs: result.durationMs,
+        success: false,
+        errorKind: `POLICY_${policy.reason ?? "UNKNOWN"}`,
+      });
+      throw new CalibrationInsightGenerationError("Calibration insight failed policy validation.");
+    }
+
     await maybeRecordCalibrationUsage({
       input,
       options,
@@ -101,7 +132,7 @@ export async function generateCalibrationWeeklyInsight(
     });
 
     return {
-      insightText: normalizeInsightText(result.text),
+      insightText,
       usedClaude: true,
       modelName: result.modelName,
     };
@@ -131,6 +162,55 @@ function normalizeInsightText(text: string): string {
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)[0] ?? "";
+}
+
+export function evaluateCalibrationInsightPolicy(
+  text: string,
+): CalibrationInsightPolicyResult {
+  const trimmed = text.trim();
+  if (!trimmed) return { allowed: false, reason: "EMPTY" };
+
+  const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
+  if (wordCount > 25) return { allowed: false, reason: "TOO_LONG" };
+
+  const sentenceMarks = trimmed.match(/[.!?]/g)?.length ?? 0;
+  if (sentenceMarks > 1) return { allowed: false, reason: "MULTI_SENTENCE" };
+
+  if (/[\u{1F300}-\u{1F9FF}]/u.test(trimmed)) {
+    return { allowed: false, reason: "EMOJI" };
+  }
+
+  if (/\b(?:bet|wager|stake)\s+(?:more|less)\b/i.test(trimmed)) {
+    return { allowed: false, reason: "BETTING_ADVICE" };
+  }
+
+  if (/\b(?:increase|decrease|raise|lower)\s+your\s+(?:bet|bets|stake|stakes|unit|units|bankroll)\b/i.test(trimmed)) {
+    return { allowed: false, reason: "BETTING_ADVICE" };
+  }
+
+  if (/\b(?:keep it up|try again next week|upgrade|subscribe|tap|click|join)\b/i.test(trimmed)) {
+    return { allowed: false, reason: "CTA" };
+  }
+
+  if (/\b(?:other users|everyone else|most users|average user|bettors like you)\b/i.test(trimmed)) {
+    return { allowed: false, reason: "COMPARISON" };
+  }
+
+  const bannedPositioningPatterns = [
+    /\bAI-(?:powered|driven)\b/i,
+    new RegExp(`\\bpowered by ${"AI"}\\b`, "i"),
+    new RegExp(`\\bun${"lo"}${"ck"} your\\b`, "i"),
+    /\blevel up\b/i,
+    new RegExp(`\\bguaran${"tee"}d?\\b`, "i"),
+    new RegExp(`\\b${"lo"}${"ck"}\\b`, "i"),
+    /\bhammer\b/i,
+  ];
+
+  if (bannedPositioningPatterns.some((pattern) => pattern.test(trimmed))) {
+    return { allowed: false, reason: "BANNED_POSITIONING" };
+  }
+
+  return { allowed: true, reason: null };
 }
 
 async function maybeRecordCalibrationUsage(args: {

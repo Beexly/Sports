@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_CLAUDE_API_BUDGETS } from "@/lib/claude-api/cost-monitor";
 import {
+  evaluateCalibrationInsightPolicy,
   generateCalibrationWeeklyInsight,
   MIN_CALIBRATION_INSIGHT_ESTIMATES,
 } from "@/lib/calibration-training/claude";
@@ -26,6 +27,21 @@ const input: CalibrationInsightInput = {
 };
 
 describe("Calibration weekly insight Claude generation", () => {
+  it("blocks calibration insight text that becomes betting advice or a CTA", () => {
+    expect(evaluateCalibrationInsightPolicy("You should bet less on NBA spreads next week.")).toEqual({
+      allowed: false,
+      reason: "BETTING_ADVICE",
+    });
+    expect(evaluateCalibrationInsightPolicy("You were calibrated on NFL spreads; upgrade for more insights.")).toEqual({
+      allowed: false,
+      reason: "CTA",
+    });
+    expect(evaluateCalibrationInsightPolicy("You were 9% overconfident on NBA spreads while MLB totals stayed calibrated.")).toEqual({
+      allowed: true,
+      reason: null,
+    });
+  });
+
   it("returns a deterministic thin-week sentence without calling Claude", async () => {
     const fetchImpl = vi.fn();
 
@@ -110,6 +126,48 @@ describe("Calibration weekly insight Claude generation", () => {
       templateKind: "CALIBRATION_WEEKLY_INSIGHT",
       success: true,
       errorKind: null,
+    });
+  });
+
+  it("records a policy failure when Claude returns invalid calibration advice", async () => {
+    const fetchImpl = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          content: [
+            {
+              type: "text",
+              text: "You should bet less on NBA spreads next week.",
+            },
+          ],
+          usage: { input_tokens: 700, output_tokens: 12 },
+        }),
+        { status: 200 }
+      )
+    );
+    const create = vi.fn().mockResolvedValue({ id: "record-1" });
+
+    await expect(
+      generateCalibrationWeeklyInsight(input, {
+        apiKey: "test-key",
+        fetchImpl,
+        monthlySpendUsd: 0,
+        budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.CALIBRATION_WEEKLY_INSIGHT,
+        recordUsage: true,
+        usageClient: {
+          claudeApiCallRecord: {
+            aggregate: vi.fn(),
+            create,
+          },
+        },
+      })
+    ).rejects.toThrow("Calibration insight failed policy validation.");
+
+    expect(create).toHaveBeenCalledOnce();
+    expect(create.mock.calls[0]?.[0].data).toMatchObject({
+      surface: "CALIBRATION_WEEKLY_INSIGHT",
+      success: false,
+      errorKind: "POLICY_BETTING_ADVICE",
+      templateKind: "CALIBRATION_WEEKLY_INSIGHT",
     });
   });
 });
