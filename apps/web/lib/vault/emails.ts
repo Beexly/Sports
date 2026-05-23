@@ -6,6 +6,54 @@ export type VaultEmailScheduleItem = {
   skipWhenEngagementHealthy?: boolean;
 };
 
+export type VaultLifecycleEmailStatus =
+  | "scheduled"
+  | "sent"
+  | "skipped"
+  | "paused"
+  | "failed";
+
+export type VaultLifecycleEmailRow = {
+  id: string;
+  templateId: string;
+  scheduledFor: string;
+  status: VaultLifecycleEmailStatus;
+  sentAt?: string | null;
+  sendAttempts?: number | null;
+};
+
+export type VaultLifecycleEmailDeliveryDecision =
+  | {
+      status: "send";
+      reason: "due";
+      lifecycleEmailId: string;
+      templateId: string;
+    }
+  | {
+      status: "wait";
+      reason: "not_due";
+      lifecycleEmailId: string;
+      templateId: string;
+    }
+  | {
+      status: "skip";
+      reason: "membership_inactive" | "engagement_healthy";
+      lifecycleEmailId: string;
+      templateId: string;
+    }
+  | {
+      status: "hold";
+      reason: "paused" | "max_attempts_reached" | "invalid_schedule" | "unknown_template";
+      lifecycleEmailId: string;
+      templateId: string;
+    }
+  | {
+      status: "noop";
+      reason: "already_sent" | "already_skipped";
+      lifecycleEmailId: string;
+      templateId: string;
+    };
+
 export const vaultWelcomeEmailSchedule: VaultEmailScheduleItem[] = [
   {
     templateId: "vault-welcome-day-0",
@@ -155,4 +203,108 @@ export function shouldSkipLifecycleEmail(
   }
 
   return false;
+}
+
+export function getLifecycleEmailScheduleItem(templateId: string) {
+  return (
+    vaultLifecycleEmailSchedule.find((item) => item.templateId === templateId) ??
+    null
+  );
+}
+
+export function getLifecycleEmailDeliveryDecision(
+  row: VaultLifecycleEmailRow,
+  context: {
+    now?: Date;
+    membershipActive: boolean;
+    engagementHealthy?: boolean;
+    maxAttempts?: number;
+  },
+): VaultLifecycleEmailDeliveryDecision {
+  const base = {
+    lifecycleEmailId: row.id,
+    templateId: row.templateId,
+  };
+
+  if (row.status === "sent") {
+    return {
+      ...base,
+      status: "noop",
+      reason: "already_sent",
+    };
+  }
+
+  if (row.status === "skipped") {
+    return {
+      ...base,
+      status: "noop",
+      reason: "already_skipped",
+    };
+  }
+
+  if (row.status === "paused") {
+    return {
+      ...base,
+      status: "hold",
+      reason: "paused",
+    };
+  }
+
+  const maxAttempts = context.maxAttempts ?? 3;
+  if ((row.sendAttempts ?? 0) >= maxAttempts) {
+    return {
+      ...base,
+      status: "hold",
+      reason: "max_attempts_reached",
+    };
+  }
+
+  const scheduleItem = getLifecycleEmailScheduleItem(row.templateId);
+  if (!scheduleItem) {
+    return {
+      ...base,
+      status: "hold",
+      reason: "unknown_template",
+    };
+  }
+
+  if (scheduleItem.requiresActiveMembership && !context.membershipActive) {
+    return {
+      ...base,
+      status: "skip",
+      reason: "membership_inactive",
+    };
+  }
+
+  if (scheduleItem.skipWhenEngagementHealthy && context.engagementHealthy) {
+    return {
+      ...base,
+      status: "skip",
+      reason: "engagement_healthy",
+    };
+  }
+
+  const scheduledTime = new Date(row.scheduledFor).getTime();
+  if (!Number.isFinite(scheduledTime)) {
+    return {
+      ...base,
+      status: "hold",
+      reason: "invalid_schedule",
+    };
+  }
+
+  const now = context.now ?? new Date();
+  if (scheduledTime > now.getTime()) {
+    return {
+      ...base,
+      status: "wait",
+      reason: "not_due",
+    };
+  }
+
+  return {
+    ...base,
+    status: "send",
+    reason: "due",
+  };
 }
