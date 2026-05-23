@@ -110,7 +110,7 @@
 - `57bd063` - DEC-NEXT-063 add launch readiness verdict aggregation
 - `98fa867` - DEC-NEXT-064 add smoke response shape checks
 - `28c8f52` - DEC-NEXT-065 add short-form funnel economics
-- `TBD` - DEC-NEXT-066 add B2B data licensing R&D
+- `4e0813b` - DEC-NEXT-066 add B2B data licensing R&D
 
 ## What I Flagged For Morning Triage
 
