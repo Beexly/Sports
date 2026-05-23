@@ -202,3 +202,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: the compliance-gated review transition now sets `reviewedAt` when a Journal draft moves to `REVIEW_PENDING`.
 - Rationale: operator review actions need a durable timestamp before later publish scheduling exists.
 - Deferred: publish approval identity, RSS invalidation, email digest delivery, teaser queue, and Game Memory cross-reference updates remain follow-up slices.
+
+## 2026-05-22 - Claude API Cost Policy Module Added
+
+- Decision: add a shared typed Claude API cost policy module with surfaces, initial budgets, threshold evaluation, and locked budget fallback copy.
+- Rationale: Phase 3 Studio and Model Journal generation need one policy source before schema persistence and wrapper rewrites land.
+- Deferred: Prisma cost-tracking migration, persistent call records, wrapper enforcement at every Claude call site, cockpit API-costs page, owner-channel alerts, and budget override controls remain follow-up slices.
