@@ -112,7 +112,7 @@
 - `98fa867` - DEC-NEXT-064 add smoke response shape checks
 - `28c8f52` - DEC-NEXT-065 add short-form funnel economics
 - `4e0813b` - DEC-NEXT-066 add B2B data licensing R&D
-- `TBD` - DEC-NEXT-067 add artifact merch R&D
+- `48dfbec` - DEC-NEXT-067 add artifact merch R&D
 
 ## What I Flagged For Morning Triage
 
