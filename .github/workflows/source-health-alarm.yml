@@ -1,0 +1,40 @@
+name: Source Health Alarm
+
+# Polls /api/cockpit/source-health every 30 minutes. A non-zero exit
+# from check-source-health.mjs surfaces as a workflow-run failure,
+# which routes through whatever GitHub notification rules the operator
+# already has set (email, mobile push, Slack via GitHub app, etc.).
+#
+# Hard Rule §6 compatible: this workflow READS only. No PR, no publish,
+# no external surface. The failure event is the alert.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"  # every 30 minutes
+  workflow_dispatch:
+
+concurrency:
+  group: source-health-alarm
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Poll source-health
+        env:
+          SOURCE_HEALTH_URL: ${{ secrets.SOURCE_HEALTH_URL }}
+          SOURCE_HEALTH_TOKEN: ${{ secrets.SOURCE_HEALTH_TOKEN }}
+          ALERT_FAIL_LEVEL: HIGH
+        run: node scripts/check-source-health.mjs
