@@ -501,3 +501,16 @@ Metric threshold: Tests cover duplicate-event skipping, supported action mapping
 Owner: Codex maintains scaffold; Garrett confirms Stripe event list before launch
 Next review date: Before Stripe webhook implementation
 Notes: Logic only. No signature verification, durable event log, member mutation, refund action, founding seat assignment, or referral payout behavior is wired.
+
+### DEC-NEXT-046 - Founding Seat Assignment Decisioning
+
+Date: 2026-05-23
+Decision: Add pure founding-seat assignment decisioning for next-seat, cap-reached, and manual-review states.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Founding numbers are a trust artifact; duplicate or client-computed numbers would damage the founding-1000 promise.
+Metric threshold: Tests cover next assignment, cap reached, duplicate existing numbers, and invalid existing numbers.
+Owner: Codex maintains scaffold; Garrett approves cap and waitlist language
+Next review date: Before Stripe checkout cap gating
+Notes: Logic only. No database transaction, unique constraint, member creation, checkout gating, or waitlist claim flow is wired.

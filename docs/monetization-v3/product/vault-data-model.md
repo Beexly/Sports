@@ -248,6 +248,8 @@ Seat assignment must be transactionally safe:
 
 Never compute founding number client-side.
 
+Pure assignment decisioning exists in app scaffold code from DEC-NEXT-046. It still requires a durable database transaction and unique constraint before any real checkout flow can rely on it.
+
 ## Audit Events
 
 At minimum log:

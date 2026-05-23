@@ -76,6 +76,7 @@ Runway determines which subset is active:
 - [product/almanac-export-prd.md](product/almanac-export-prd.md) - Almanac data-export product requirements.
 - [product/engineering-issue-pack.md](product/engineering-issue-pack.md) - GitHub/Linear-ready engineering epics and Phase-N scaffold gaps.
 - [product/env-readiness-contract.md](product/env-readiness-contract.md) - Environment variable readiness contract and DEC-NEXT-036 guardrails.
+- [product/founding-seat-assignment-scaffold-notes.md](product/founding-seat-assignment-scaffold-notes.md) - Founding-seat assignment decisioning and DEC-NEXT-046 guardrails.
 - [product/incident-threshold-scaffold-notes.md](product/incident-threshold-scaffold-notes.md) - Incident signal thresholds and DEC-NEXT-043 guardrails.
 - [product/kpi-cockpit-prd.md](product/kpi-cockpit-prd.md) - KPI cockpit requirements for monthly operating review.
 - [product/launch-readiness-audit-script.md](product/launch-readiness-audit-script.md) - Repeatable local launch-readiness gate script and DEC-NEXT-038 guardrails.

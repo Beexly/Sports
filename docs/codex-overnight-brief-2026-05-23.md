@@ -31,6 +31,7 @@
 - Added incident threshold logic for onboarding repair rate, p0 repair tasks, and stale proof surfaces; alert transport remains unwired.
 - Made Vault entitlement decisions explainable with access-state reason codes for support and repair flows.
 - Added Stripe webhook duplicate-event and action-mapping logic; real webhook verification and mutations remain unwired.
+- Added founding-seat assignment decisioning for next-seat, cap-reached, and manual-review states; database transaction remains unwired.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
