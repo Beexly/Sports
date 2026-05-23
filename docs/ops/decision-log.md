@@ -280,3 +280,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add an optional Model Journal Claude draft path that uses weekly evidence, the locked Journal prompt, the shared Claude messages client, and `MODEL_JOURNAL_DRAFT` budget accounting.
 - Rationale: the cockpit can now create either a deterministic outline or a Claude-authored first draft without changing the draft-only publication gate.
 - Deferred: publish scheduling, RSS/email distribution triggers, and Game Memory cross-references remain separate gated work.
+
+## 2026-05-22 - Model Court Answer Runtime Starts Backend-Only
+
+- Decision: add a backend Model Court answer runtime that enforces deterministic refusals and `MODEL_COURT_ANSWER` budget accounting before any Claude call.
+- Rationale: the conversational Game Room layer needs evidence, certainty, personal-advice, competitor, and budget gates before UI wiring begins.
+- Deferred: `/room/[gameId]` chat UI, request persistence, and slate-wide Model Court routing remain Phase 4 implementation slices.
