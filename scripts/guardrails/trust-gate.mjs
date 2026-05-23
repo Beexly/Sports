@@ -58,6 +58,7 @@ const WHITELIST_PATHS = new Set([
   "apps/web/lib/promotions/copy-rules.ts",
   "apps/web/lib/content-generator.ts",
   "apps/web/lib/brief/slate-overview.ts",
+  "apps/web/lib/cockpit/pick-narrator.ts",
   "packages/db/prisma/seed.ts",
 ]);
 
