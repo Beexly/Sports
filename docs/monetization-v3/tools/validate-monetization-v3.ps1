@@ -178,6 +178,20 @@ if ($StrictBrandScan) {
     Write-Host "6. Strict brand scan skipped (run with -StrictBrandScan for noisy full-doc scan)"
 }
 
+Write-Host "7. README navigation coverage"
+$MonetizationReadme = Join-Path $DocsRoot "README.md"
+$readmeText = [System.IO.File]::ReadAllText($MonetizationReadme)
+$navigableFiles = Get-ChildItem $DocsRoot -Recurse -File -Include *.md,*.csv | Where-Object {
+    $_.FullName -notlike "*\tools\*" -and $_.Name -ne "README.md"
+}
+foreach ($navFile in $navigableFiles) {
+    $relativePath = Resolve-Path -Relative $navFile.FullName
+    $relativePath = $relativePath.Replace(".\docs\monetization-v3\", "").Replace("\", "/")
+    if ($readmeText.IndexOf($relativePath, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+        Add-Failure "README navigation missing: $relativePath"
+    }
+}
+
 if ($failures.Count -gt 0) {
     Write-Host ""
     Write-Host "Validation failed:" -ForegroundColor Red
@@ -191,4 +205,5 @@ Write-Host ""
 Write-Host "Validation passed." -ForegroundColor Green
 Write-Host "Markdown files checked: $($markdownFiles.Count)"
 Write-Host "CSV files checked: $($csvFiles.Count)"
+Write-Host "README navigation files checked: $($navigableFiles.Count)"
 Write-Host "Targeted drift files checked: $($targetedScanFiles.Count)"
