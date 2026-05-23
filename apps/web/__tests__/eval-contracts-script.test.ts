@@ -52,6 +52,28 @@ describe("eval contract runner", () => {
     expect(src).toContain("policy-block");
   });
 
+  it("enforces Phase 3 distribution and review surface coverage", () => {
+    expect(src).toContain('"twitter-bot"');
+    expect(src).toContain("free-pick-publication");
+    expect(src).toContain("paid-pick-refusal");
+    expect(src).toContain('"discord-bot"');
+    expect(src).toContain("pick-publication-embed");
+    expect(src).toContain("unauthenticated-free-projection");
+    expect(src).toContain('"model-journal"');
+    expect(src).toContain("weekly-draft");
+    expect(src).toContain("thin-week-honest-acknowledgment");
+  });
+
+  it("enforces Model Court and pre-mortem pipeline coverage", () => {
+    expect(src).toContain('"model-court"');
+    expect(src).toContain("happy-path-with-citations");
+    expect(src).toContain("betting-certainty-refusal");
+    expect(src).toContain("personal-advice-refusal");
+    expect(src).toContain('"pre-mortem-pipeline"');
+    expect(src).toContain("composer");
+    expect(src).toContain("called-vs-missed");
+  });
+
   it("passes against the current eval library", () => {
     const output = execFileSync(process.execPath, [scriptPath], {
       cwd: repoRoot,

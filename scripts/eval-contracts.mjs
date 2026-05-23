@@ -33,6 +33,30 @@ const REQUIRED_SURFACE_TEMPLATE_COVERAGE = {
     "SPONSOR_SAFE_BLURB",
     "YOUTUBE_TITLE_IDEAS",
   ],
+  "discord-bot": [
+    "pick-publication-embed",
+    "settlement-embed",
+    "slash-command",
+  ],
+  "model-court": [
+    "answer",
+    "refusal",
+  ],
+  "model-journal": [
+    "compliance-scan",
+    "weekly-draft",
+  ],
+  "pre-mortem-pipeline": [
+    "composer",
+    "comparator",
+  ],
+  "twitter-bot": [
+    "COMPLIANCE_SCAN",
+    "REFUSAL",
+    "free-pick-publication",
+    "free-pick-settlement-loss",
+    "free-pick-settlement-win",
+  ],
 };
 const REQUIRED_SURFACE_SCENARIO_COVERAGE = {
   "blog-generation": [
@@ -44,6 +68,35 @@ const REQUIRED_SURFACE_SCENARIO_COVERAGE = {
     "happy-path",
     "policy-block",
     "thin-week-fallback",
+  ],
+  "discord-bot": [
+    "happy-path",
+    "loss-outcome",
+    "pick-today-happy",
+    "unauthenticated-free-projection",
+  ],
+  "model-court": [
+    "betting-certainty-refusal",
+    "happy-path-with-citations",
+    "personal-advice-refusal",
+    "thin-evidence-refusal",
+  ],
+  "model-journal": [
+    "banned-vocab-block",
+    "happy-path",
+    "thin-week-honest-acknowledgment",
+  ],
+  "pre-mortem-pipeline": [
+    "called-vs-missed",
+    "happy-path",
+    "thin-coverage-warning",
+  ],
+  "twitter-bot": [
+    "banned-vocab-block",
+    "paid-pick-refusal",
+    "publication-happy",
+    "settlement-loss",
+    "settlement-win",
   ],
 };
 

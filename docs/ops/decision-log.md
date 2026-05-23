@@ -485,3 +485,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add eval contracts for blog-generation happy path, policy-block, and parse-error behavior.
 - Rationale: the older Claude blog generator now has runtime output validation and should be covered by the same append-only eval contract system as newer Phase 3 surfaces.
 - Guardrail: `scripts/eval-contracts.mjs` enforces `BLOG_POST` template coverage and the three required scenarios.
+
+## 2026-05-22 - Phase 3 Eval Coverage Is Enforced
+
+- Decision: require `scripts/eval-contracts.mjs` to enforce template and scenario coverage for Twitter bot, Discord bot, Model Court, Model Journal, and pre-mortem pipeline eval contracts.
+- Rationale: these Phase 3/4 AI-output and distribution surfaces already had eval files, but coverage could drift silently as templates changed.
+- Guardrail: enforcement remains metadata-only and local. It validates the append-only eval library without calling Claude, posting to external services, or publishing generated content.
