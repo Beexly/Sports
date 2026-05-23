@@ -4,11 +4,11 @@
  * Spec: docs/product/twitter-bot-voice-spec.md section "Free pick settlements"
  *
  * WIN format:
- *   Settled CLE -7 ✅ WIN — schedule stress signal was the heaviest contributor.
+ *   Settled CLE -7 ✅ WIN - schedule stress signal was the heaviest contributor.
  *   Full snapshot: https://galaxysportsedge.com/room/<gameId>
  *
  * LOSS format:
- *   Settled MIN +6 ❌ LOSS — rest advantage signal misread. MIN was more fatigued than projected.
+ *   Settled MIN +6 ❌ LOSS - rest advantage signal misread. MIN was more fatigued than projected.
  *   Post-mortem: https://galaxysportsedge.com/room/<gameId>
  */
 
@@ -69,12 +69,12 @@ export function buildSettlementTweet(
   } else {
     outcomeEmoji = "⚖️";
     outcomeLabel = "PUSH";
-    bodyLine = `Line landed on the number.`;
+    bodyLine = "Line landed on the number.";
     linkLabel = "Full snapshot";
   }
 
   const text = [
-    `Settled ${input.pickLine} ${outcomeEmoji} ${outcomeLabel} — ${bodyLine}`,
+    `Settled ${input.pickLine} ${outcomeEmoji} ${outcomeLabel} - ${bodyLine}`,
     "",
     `${linkLabel}: ${linkUrl}`,
     hashtag ? `#${hashtag}` : "",

@@ -1,5 +1,5 @@
 /**
- * Discord bot template: slate state — gated game embed.
+ * Discord bot template: slate state - gated game embed.
  *
  * Spec: docs/product/discord-bot-spec.md section "Slate state (gated) embed"
  */
@@ -37,7 +37,7 @@ export function buildSlateStateGatedEmbed(
       },
     ],
     footer: {
-      text: `Model ${input.modelVersion} · ${publicUrl.replace(/^https?:\/\//, "")}`,
+      text: `Model ${input.modelVersion} | ${publicUrl.replace(/^https?:\/\//, "")}`,
     },
     color: BRAND_COLORS.GATED_GREY,
     timestamp: input.gateDecisionAt.toISOString(),

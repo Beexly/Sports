@@ -45,7 +45,7 @@ export function buildSettlementEmbed(
   if (input.outcome === "W") {
     title = `Settled ${input.pickLine} ✅ WIN`;
     description = `${friendlyFactor(input.heaviestContributorFactor)} signal was the heaviest contributor.`;
-    outcomeField = `WIN — covered`;
+    outcomeField = "WIN - covered";
     color = BRAND_COLORS.WIN_GREEN;
     footerSuffix = "Full snapshot";
   } else if (input.outcome === "L") {
@@ -53,13 +53,13 @@ export function buildSettlementEmbed(
     const factor = friendlyFactor(input.biggestMissFactor);
     const cause = input.oneLineCause ?? "factor read did not hold";
     description = `${factor} signal misread. ${cause}.`;
-    outcomeField = `LOSS — did not cover`;
+    outcomeField = "LOSS - did not cover";
     color = BRAND_COLORS.LOSS_RED;
     footerSuffix = "Post-mortem";
   } else {
     title = `Settled ${input.pickLine} ⚖️ PUSH`;
-    description = `Line landed on the number.`;
-    outcomeField = `PUSH — line landed on the number`;
+    description = "Line landed on the number.";
+    outcomeField = "PUSH - line landed on the number";
     color = BRAND_COLORS.PUSH_AMBER;
     footerSuffix = "Full snapshot";
   }
@@ -85,7 +85,7 @@ export function buildSettlementEmbed(
       },
     ],
     footer: {
-      text: `Model ${input.modelVersion} · ${publicUrl.replace(/^https?:\/\//, "")} · ${footerSuffix}`,
+      text: `Model ${input.modelVersion} | ${publicUrl.replace(/^https?:\/\//, "")} | ${footerSuffix}`,
     },
     color,
     timestamp: input.settledAt.toISOString(),

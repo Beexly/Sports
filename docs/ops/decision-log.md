@@ -298,3 +298,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add a `CALIBRATION_WEEKLY_INSIGHT` Claude wrapper with a deterministic thin-week fallback, shared messages client usage, and call-record accounting.
 - Rationale: calibration training needs weekly feedback without spending on insufficient samples or bypassing the Claude API budget monitor.
 - Deferred: persistence to user calibration snapshots and the on-site calibration curve UI remain Phase 4 slices.
+
+## 2026-05-22 - Bot Templates Must Render Clean Public Text
+
+- Decision: normalize Twitter/X and Discord bot templates so settlement symbols, separators, and footers render as clean public text instead of mojibake.
+- Rationale: bot posts are public trust surfaces; a broken glyph in a settlement or gated-slate update makes the feed look automated in the wrong way.
+- Deferred: schedulers, delivery clients, rate limiting, and outbox persistence remain separate Phase 3 runtime work.

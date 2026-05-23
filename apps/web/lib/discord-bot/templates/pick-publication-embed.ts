@@ -17,7 +17,6 @@ const PICK_GRADE_LABELS: Record<string, string> = {
 };
 
 function formatGameTime(date: Date): string {
-  // Codex: replace with the brand's preferred timezone formatter.
   return date.toLocaleString("en-US", {
     hour: "numeric",
     minute: "2-digit",
@@ -54,7 +53,7 @@ export function buildPickPublicationEmbed(
       },
     ],
     footer: {
-      text: `Model ${input.modelVersion} · ${publicUrl.replace(/^https?:\/\//, "")}`,
+      text: `Model ${input.modelVersion} | ${publicUrl.replace(/^https?:\/\//, "")}`,
     },
     color: BRAND_COLORS.ULTRAVIOLET,
     timestamp: new Date().toISOString(),

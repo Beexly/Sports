@@ -1,10 +1,10 @@
 /**
- * Twitter bot template: slate state — gated game.
+ * Twitter bot template: slate state - gated game.
  *
  * Spec: docs/product/twitter-bot-voice-spec.md section "Slate state updates"
  *
  * Format:
- *   Just gated MIA @ NYY — spread balanced at 51% consensus across 8 books.
+ *   Just gated MIA @ NYY - spread balanced at 51% consensus across 8 books.
  *
  *   Edge Index: 0.4 (below publish threshold).
  *   https://galaxysportsedge.com/room/<gameId>
@@ -33,7 +33,7 @@ export function buildSlateStateGatedTweet(
       : "Edge Index: n/a (data still settling).";
 
   const text = [
-    `Just gated ${input.matchup} — ${input.gateReasonText}`,
+    `Just gated ${input.matchup} - ${input.gateReasonText}`,
     "",
     edgeIndexText,
     linkUrl,
