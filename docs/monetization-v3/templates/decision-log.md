@@ -280,3 +280,16 @@ Metric threshold: `npm run test:web`, `npm run typecheck:web`, `npm run build:we
 Owner: Codex; Garrett review optional
 Next review date: When Stripe, Discord, email, or persistence adapters are implemented
 Notes: Test harness does not call external providers or production endpoints.
+
+### DEC-NEXT-028 - Proof Email Capture Validation Scaffold
+
+Date: 2026-05-23
+Decision: Add validation-only proof-surface email capture plumbing while keeping subscriber persistence disabled.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Public proof surface monetization spec calls for quiet email capture, but storage and consent handling are not yet implemented.
+Metric threshold: Payload validation tests pass; endpoint returns HTTP 501 for valid payloads until persistence is intentionally wired.
+Owner: Codex; Garrett review optional
+Next review date: Before enabling `PROOF_SURFACE_EMAIL_CAPTURE_ENABLED`
+Notes: Does not store emails, send emails, route to checkout, or add paid tracking.

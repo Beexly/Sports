@@ -14,6 +14,7 @@ The repo now has a minimal Vitest harness for pure Vault helpers:
 - Vault seat-count tests.
 - Vault application-validation tests.
 - Vault Discord role-planning tests.
+- Proof-surface email-capture validation tests.
 
 ## DEC-NEXT-026 - Add a first web regression-test harness around Vault pure helpers
 

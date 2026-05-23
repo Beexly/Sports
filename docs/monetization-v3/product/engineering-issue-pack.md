@@ -236,7 +236,7 @@ Acceptance criteria:
 
 Gap:
 
-- Public proof surfaces do not yet have the quiet email capture module specified in `product/public-proof-surface-monetization-spec.md`.
+- Public proof surfaces have a validation-only email capture endpoint from DEC-NEXT-028, but subscriber persistence, consent timestamping, duplicate handling, and failure logging are not implemented.
 
 Acceptance criteria:
 
