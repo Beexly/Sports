@@ -226,3 +226,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: Studio Claude generation now records successful and failed Claude calls with surface, model, token counts, estimated cost, user, game, template, duration, and error state.
 - Rationale: the monthly spend gate needs fresh call records from the highest-priority Phase 3 generation surface before the cockpit API-costs page can show useful data.
 - Deferred: seeded budget rows, budget override controls, owner-channel alerts, and wrapper migration for blog, Model Journal, Model Court, calibration, and pre-mortem surfaces remain follow-up slices.
+
+## 2026-05-22 - Claude API Budgets Seed Via Migration
+
+- Decision: seed the initial per-surface Claude API monthly budgets through an idempotent Prisma migration instead of the local demo seed file.
+- Rationale: budgets are production policy, not local demo data, and deploy-time rows keep cockpit API-costs wiring independent of optional seed runs.
+- Deferred: runtime budget override reads, owner-channel alerts, and wrapper migration for remaining Claude surfaces remain follow-up slices.
