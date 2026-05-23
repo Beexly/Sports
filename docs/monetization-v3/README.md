@@ -80,6 +80,7 @@ Runway determines which subset is active:
 - [product/admin-operations-spec.md](product/admin-operations-spec.md) - Admin operations requirements for support, incidents, and internal views.
 - [product/admin-repair-task-scaffold-notes.md](product/admin-repair-task-scaffold-notes.md) - Admin repair task model and DEC-NEXT-041 guardrails.
 - [product/almanac-export-prd.md](product/almanac-export-prd.md) - Almanac data-export product requirements.
+- [product/csv-header-contract-notes.md](product/csv-header-contract-notes.md) - CSV header drift validator and DEC-NEXT-076 rationale.
 - [product/engineering-issue-pack.md](product/engineering-issue-pack.md) - GitHub/Linear-ready engineering epics and Phase-N scaffold gaps.
 - [product/env-readiness-contract.md](product/env-readiness-contract.md) - Environment variable readiness contract and DEC-NEXT-036 guardrails.
 - [product/founding-seat-assignment-scaffold-notes.md](product/founding-seat-assignment-scaffold-notes.md) - Founding-seat assignment decisioning and DEC-NEXT-046 guardrails.

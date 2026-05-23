@@ -5,7 +5,7 @@
 - Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
 - Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
 - Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
-- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-075.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-076.
 - Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
 - Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
 - Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
@@ -61,6 +61,7 @@
 - Refreshed the root master brief Pass 12-13 addendum after admin route, fail-closed smoke, and risk-register updates.
 - Added env-file support to the environment readiness preflight script.
 - Added provider-neutral Vault auth requirements before any auth provider is selected.
+- Added a generated CSV header contract and validator checks for header drift.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -129,6 +130,7 @@
 - `9aaf6a2` - DEC-NEXT-073 refresh master brief latest Pass 12-13 deltas
 - `71aa2e3` - DEC-NEXT-074 add env-file preflight support
 - `b228fd7` - DEC-NEXT-075 add Vault auth provider contract
+- `TBD` - DEC-NEXT-076 enforce CSV header contract
 
 ## What I Flagged For Morning Triage
 
@@ -145,7 +147,7 @@
 
 ## What Surprised Me
 
-- The pack is no longer ~155 files. Current validator state is `215` Markdown files and `28` CSV files, with `230` README navigation targets checked.
+- The pack is no longer ~155 files. Current validator state is `217` Markdown files, `28` CSV files, `28` CSV header contracts, and `232` README navigation targets checked.
 - The monetization docs are far more complete than the app. The largest risk is now provider integration absence, not strategic ambiguity.
 - Port 3000 was already occupied by a different Node/Next process from another local Claude project, and it timed out. I used port 3100 for a clean local smoke and shut it down afterward.
 - The photoreal synthetic host idea became stronger after rejecting it: Vega/character-first gives Galaxy a differentiated media asset without colliding visually with tout content.

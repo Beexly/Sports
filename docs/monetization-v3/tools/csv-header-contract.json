@@ -1,0 +1,114 @@
+﻿[
+    {
+        "path":  "templates/absences.csv",
+        "header":  "date,category,duration_days,communication_sent,member_responses,issues_arising,return_date,notes"
+    },
+    {
+        "path":  "templates/almanac-interview-tracker.csv",
+        "header":  "id,name,source,status,request_date,scheduled_date,completed_date,owns_reference_books,last_sports_analytics_book,hardcover_or_digital,reaction_to_99,buy_intent_99,buy_intent_79,buy_intent_digital_29,section_most_interested,primary_blocker,preorder_interest,referrals,next_step,owner,notes"
+    },
+    {
+        "path":  "templates/character-media-test-plan.csv",
+        "header":  "test_id,character,variant,cost_estimate,voice_source,video_count,platforms,cadence,primary_cta,kill_criterion,continue_criterion,status,notes"
+    },
+    {
+        "path":  "templates/founder-capacity-ledger.csv",
+        "header":  "week_ending,hours_worked,sleep_quality_1_5,saturday_protected,stress_1_5,digest_quality_1_5,missed_commitments_count,red_indicators_count,structural_rest_triggered,notes"
+    },
+    {
+        "path":  "templates/founding-50-candidate-scoring.csv",
+        "header":  "candidate_name,d1_brand,d2_engagement,d3_skepticism,d4_public,d5_renewal,d6_fit,total,tier,notes"
+    },
+    {
+        "path":  "templates/founding-50-cohort.csv",
+        "header":  "founding_number,name,email,payment_date,source_template,interview_context,vault_renewal_status,notes"
+    },
+    {
+        "path":  "templates/incidents.csv",
+        "header":  "incident_id,reported_at,track,severity,source,summary,status,owner,resolution,linked_issue,notes"
+    },
+    {
+        "path":  "templates/investor-inbound-log.csv",
+        "header":  "date,name,firm,channel,shape,response_template,follow_up,notes"
+    },
+    {
+        "path":  "templates/kpi-dashboard.csv",
+        "header":  "review_date,track,metric,target,actual,percent_of_target,rule_result,decision,next_action,owner,next_review,vault_discord_active_30d"
+    },
+    {
+        "path":  "templates/live-bd-pipeline.csv",
+        "header":  "id,partner_name,partner_type,platform,audience_size,outreach_path,status,intro_source,first_contact_date,meeting_date,beta_interest,launch_commitment,revenue_share_terms,utm_plan,technical_requirements,primary_objection,next_step,owner,notes"
+    },
+    {
+        "path":  "templates/outreach-tracker.csv",
+        "header":  "date,source,candidate_name,template_used,subject_variant,response,interview_scheduled,interview_date,notes"
+    },
+    {
+        "path":  "templates/partnership-inbound-log.csv",
+        "header":  "date,name,company,shape,response_template,follow_up,notes"
+    },
+    {
+        "path":  "templates/partnership-inquiries.csv",
+        "header":  "date,inquirer_name,inquirer_company,inquirer_role,category,decision,framework_score,response_template_used,notes,status"
+    },
+    {
+        "path":  "templates/proof-surface-freshness-tracker.csv",
+        "header":  "surface,last_updated_at,allowed_stale_days,is_stale,stale_reason,next_refresh_owner,next_refresh_due,short_form_traffic_allowed,notes"
+    },
+    {
+        "path":  "templates/short-form-content-drafts.csv",
+        "header":  "draft_id,source_artifact_url,series,platform,host_profile,script_version,synthetic_disclosure,brand_safety_status,approval_status,posted_url,clicks_to_galaxy,email_captures,paid_conversions,notes"
+    },
+    {
+        "path":  "templates/short-form-experiment-scorecard.csv",
+        "header":  "experiment_id,week,platform,series,host_profile,drafts_created,public_posts,clicks_to_galaxy,email_captures,vault_applications,almanac_preorders,partner_inquiries,brand_safety_failures,manual_review_minutes,decision,notes"
+    },
+    {
+        "path":  "templates/short-form-utm-map.csv",
+        "header":  "draft_id,series,source_artifact_path,destination_url,utm_source,utm_medium,utm_campaign,utm_content,notes"
+    },
+    {
+        "path":  "templates/track-risk-register.csv",
+        "header":  "id,track,risk,likelihood,impact,owner,mitigation,trigger,contingency,status,notes"
+    },
+    {
+        "path":  "templates/vault-feedback-themes.csv",
+        "header":  "theme_id,first_seen_at,last_seen_at,source_channel,theme,member_count,example_quote,related_surface,status,next_action,owner,notes"
+    },
+    {
+        "path":  "templates/vault-interview-tracker.csv",
+        "header":  "respondent_id,name,email_or_handle,source_pool,referred_by,interview_scheduled_at,interview_completed_at,recording_link,frequency_tier,spend_tier,tenure_years,sports_primary,existing_subscriptions,never_paid_for_research,current_research_mode,top_frustration_category,top_frustration_verbatim,churn_driver,positioning_recognition,transparency_reaction,transparency_verbatim,trust_gap,relative_trust_vs_existing,initial_reaction,lead_benefit,secondary_benefits_cited,overprice_risk,scarcity_reaction,intent_to_join,intent_reasoning,blocker_category,blocker_verbatim,referral_message,pitch_feedback,early_commit,referrals_offered,politeness_suspected,energy_signal,notes,quote_1,quote_2,quote_3"
+    },
+    {
+        "path":  "templates/vault-office-hours-followup-log.csv",
+        "header":  "session_id,event_date,question_or_commitment,owner,due_date,status,followup_channel,followup_url,notes"
+    },
+    {
+        "path":  "templates/vault-press-outreach-tracker.csv",
+        "header":  "outlet,journalist_name,tier,outreach_sent_date,outreach_variant_used,personalization_detail,response_status,response_date,placement_published_date,placement_url,placement_quality_score,notes"
+    },
+    {
+        "path":  "templates/vault-referral-payout-review.csv",
+        "header":  "period,referrer_user_id,referrer_email,active_referrals,gross_referred_revenue_cents,accrued_commission_cents,clawback_cents,net_payout_cents,payout_destination,status,risk_flags,reviewed_by,reviewed_at,notes"
+    },
+    {
+        "path":  "templates/vault-retention-review.csv",
+        "header":  "member_id,email,lifecycle_day,next_template_key,next_scheduled_for,digest_open_rate,posted_in_vault_lounge,attended_office_hours,cancellation_status,send_decision,manual_followup_needed,notes"
+    },
+    {
+        "path":  "templates/vega-video-production-tracker.csv",
+        "header":  "video_id,title,source_script,source_artifact_url,destination_url,platforms,voice_status,visual_status,caption_status,brand_safety_status,platform_policy_status,approval_status,posted_urls,notes"
+    },
+    {
+        "path":  "templates/vocabulary-log.csv",
+        "header":  "respondent_id,phrase,context,is_galaxy_phrase,frequency_count,landing_page_candidate,notes"
+    },
+    {
+        "path":  "week-minus-1/01-vault-interview-tracker-template.csv",
+        "header":  "respondent_id,name,email_or_handle,source_pool,referred_by,interview_scheduled_at,interview_completed_at,interview_duration_min,recording_link,frequency_tier,spend_tier,tenure_years,sports_primary,existing_subscriptions,never_paid_for_research,current_research_mode,top_frustration_category,top_frustration_verbatim,churn_driver,positioning_recognition,transparency_reaction,transparency_verbatim,trust_gap,relative_trust_vs_existing,initial_reaction,lead_benefit,secondary_benefits_cited,overprice_risk,scarcity_reaction,intent_to_join,intent_reasoning,blocker_category,blocker_verbatim,referral_message,pitch_feedback,early_commit,referrals_offered,politeness_suspected,energy_signal,notes,quote_1,quote_2,quote_3"
+    },
+    {
+        "path":  "week-minus-1/02-vocabulary-log-template.csv",
+        "header":  "respondent_id,phrase,context,is_galaxy_phrase"
+    }
+]

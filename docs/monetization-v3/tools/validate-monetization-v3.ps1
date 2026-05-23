@@ -60,6 +60,34 @@ foreach ($csv in $csvFiles) {
     }
 }
 
+Write-Host "2a. CSV header contract"
+$csvHeaderContractPath = Join-Path $ScriptDir "csv-header-contract.json"
+if (Test-Path $csvHeaderContractPath) {
+    $csvHeaderContract = Get-Content -LiteralPath $csvHeaderContractPath -Raw | ConvertFrom-Json
+    foreach ($contractEntry in $csvHeaderContract) {
+        $csvPath = Join-Path $DocsRoot ($contractEntry.path.Replace("/", "\"))
+        if (-not (Test-Path $csvPath)) {
+            Add-Failure "CSV header contract target missing: $($contractEntry.path)"
+            continue
+        }
+
+        $actualHeader = [System.IO.File]::ReadLines($csvPath) | Select-Object -First 1
+        if ($actualHeader -ne $contractEntry.header) {
+            Add-Failure "CSV header drift: $($contractEntry.path)"
+        }
+    }
+
+    $contractPaths = @($csvHeaderContract | ForEach-Object { $_.path })
+    foreach ($csv in $csvFiles) {
+        $relativeCsvPath = $csv.FullName.Substring($DocsRoot.Length + 1).Replace("\", "/")
+        if ($contractPaths -notcontains $relativeCsvPath) {
+            Add-Failure "CSV missing from header contract: $relativeCsvPath"
+        }
+    }
+} else {
+    Add-Failure "CSV header contract missing: $csvHeaderContractPath"
+}
+
 Write-Host "3. Backticked local file references"
 $knownRootPrefixes = @(
     "docs/",
@@ -205,5 +233,6 @@ Write-Host ""
 Write-Host "Validation passed." -ForegroundColor Green
 Write-Host "Markdown files checked: $($markdownFiles.Count)"
 Write-Host "CSV files checked: $($csvFiles.Count)"
+Write-Host "CSV header contracts checked: $(@($csvHeaderContract).Count)"
 Write-Host "README navigation files checked: $($navigableFiles.Count)"
 Write-Host "Targeted drift files checked: $($targetedScanFiles.Count)"
