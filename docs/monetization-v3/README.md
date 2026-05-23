@@ -80,6 +80,7 @@ Runway determines which subset is active:
 - [product/public-proof-surface-monetization-spec.md](product/public-proof-surface-monetization-spec.md) - Email capture, contextual Vault CTA, and UTM spec for public proof surfaces.
 - [product/vault-api-contracts.md](product/vault-api-contracts.md) - Vault API contracts for membership, seats, digests, and admin flows.
 - [product/vault-data-model.md](product/vault-data-model.md) - Vault data model for members, applications, digests, events, referrals, and audits.
+- [product/vault-integration-scaffold-notes.md](product/vault-integration-scaffold-notes.md) - Inert Vault integration scaffold notes and DEC-NEXT-025 guardrails.
 - [product/vault-prd.md](product/vault-prd.md) - Vault product requirements and source operating docs.
 - [product/vault-test-plan.md](product/vault-test-plan.md) - Vault test plan and launch verification coverage.
 - [product/web-app-scaffold-notes.md](product/web-app-scaffold-notes.md) - Next.js proof-surface scaffold notes and DEC-NEXT-023 rationale.

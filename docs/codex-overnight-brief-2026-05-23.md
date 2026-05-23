@@ -12,6 +12,7 @@
 - Added website monetization R&D for public proof surfaces: quiet email capture, contextual Vault CTAs, UTM attribution, and issue sequencing.
 - Added a compileable Next.js scaffold in `apps/web` for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
 - Added read-only production smoke scripts: `scripts/smoke-prod.ps1` and `scripts/smoke-prod.sh`.
+- Added inert Vault integration scaffolds: typed config, entitlements, Discord planning, email schedules, seat-count API, validation-only application intake, and scaffold-only cron routes.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -33,18 +34,19 @@
 - `4943b81` - DEC-NEXT-022 queue Vega production engineering issues
 - `b64cb18` - DEC-NEXT-023 scaffold web proof surfaces
 - `603ec9a` - DEC-NEXT-024 add production smoke scripts
+- `9030a59` - DEC-NEXT-024 update overnight brief
 
 ## What I Flagged For Morning Triage
 
 - `OPS-2026-05-23-001`: production smoke scripts exist now, but a real production run still needs confirmed `PROD_BASE_URL`.
-- `OPS-2026-05-23-002`: `apps/web/lib/vault/` is still absent, so Stripe/Vault constants, entitlement helpers, member creation, and Discord repair hooks remain unimplemented.
-- `OPS-2026-05-23-003`: `apps/web/app/api/cron/` is still absent, so welcome/lifecycle/renewal cron scaffolding remains unimplemented.
+- `OPS-2026-05-23-002`: `apps/web/lib/vault/` now has inert typed scaffolds, but Stripe, Discord, email, database, persistence, and repair-queue behavior remain unimplemented.
+- `OPS-2026-05-23-003`: `apps/web/app/api/cron/` now has scaffold-only Vault cron routes, but they intentionally return HTTP 501 until provider integrations are wired.
 - The requested "497 tests" still do not exist in this clone. I added a package manifest and verified the new app with typecheck/build/runtime smoke, but there is no broader test harness here yet.
 
 ## What Surprised Me
 
 - The pack is no longer ~155 files. Current validator state is `182` Markdown files and `26` CSV files.
-- The monetization docs are far more complete than the app. The largest risk is now implementation absence, not strategic ambiguity.
+- The monetization docs are far more complete than the app. The largest risk is now provider integration absence, not strategic ambiguity.
 - Port 3000 was already occupied by a different Node/Next process from another local Claude project, and it timed out. I used port 3100 for a clean local smoke and shut it down afterward.
 - The photoreal synthetic host idea became stronger after rejecting it: Vega/character-first gives Galaxy a differentiated media asset without colliding visually with tout content.
 
@@ -54,6 +56,7 @@
 - `npm run typecheck:web`: pass.
 - `npm run build:web`: pass.
 - Local runtime smoke on port 3100: pass for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
+- Local production-style runtime smoke on port 3102: pass for `/api/vault/seat-count`; expected HTTP 501 for validation-only `/api/vault/apply` and scaffold-only Vault cron routes.
 - `docs/monetization-v3/tools/validate-monetization-v3.ps1`: pass.
 - Exact banned-phrase scan: clean.
 - Strict brand scan: pass with expected noisy warnings in internal/audit docs.
@@ -63,7 +66,7 @@
 
 1. Confirm the production hostname and run `npm run smoke:prod` with `PROD_BASE_URL` set.
 2. Review `docs/ops/issue-queue.md`, especially OPS-002 and OPS-003.
-3. If this clone is the implementation workspace, scaffold `apps/web/lib/vault/` and `apps/web/app/api/cron/` from `docs/monetization-v3/product/engineering-issue-pack.md`.
+3. If this clone is the implementation workspace, replace the inert Vault scaffolds with authenticated Stripe, Discord, email, database, and cron implementations from `docs/monetization-v3/product/engineering-issue-pack.md`.
 4. Keep Stripe, Discord, email, and member gating behind the existing Vault execution gates.
 5. Review the Vega character path only after Vault engineering triage is sequenced; it is R&D, not a launch blocker.
 

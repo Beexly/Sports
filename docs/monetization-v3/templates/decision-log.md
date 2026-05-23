@@ -215,3 +215,42 @@ Metric threshold: Morning peak block has explicit issue queue and engineering is
 Owner: Codex after execution gates clear
 Next review date: Morning engineering triage
 Notes: No implementation and no deploy were performed.
+
+### DEC-NEXT-023 - Web Proof-Surface Scaffold
+
+Date: 2026-05-23
+Decision: Add a compileable Next.js scaffold for Galaxy public proof surfaces before wiring paid Vault integrations.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: The monetization docs define `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault` strongly enough to create implementation anchors.
+Metric threshold: `npm run typecheck:web`, `npm run build:web`, `npm audit`, and local route smoke pass without deploying.
+Owner: Codex; Garrett review optional
+Next review date: Before any production deploy
+Notes: This scaffold does not replace DEC-NEXT-003 canonical Vault landing copy and does not implement checkout, Discord, email, or member gating.
+
+### DEC-NEXT-024 - Read-Only Production Smoke Scripts
+
+Date: 2026-05-23
+Decision: Add read-only production smoke scripts gated by explicit `PROD_BASE_URL`.
+Track: Portfolio / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: The overnight issue queue flagged that `scripts/smoke-prod.sh` was missing or not runnable from this Windows workspace.
+Metric threshold: Smoke scripts exist for PowerShell and bash; dry run without `PROD_BASE_URL` exits safely with code 2.
+Owner: Codex; Garrett confirms production hostname
+Next review date: Morning production-smoke triage
+Notes: No production URL was inferred and no production deploy was attempted.
+
+### DEC-NEXT-025 - Vault Integration Scaffold
+
+Date: 2026-05-23
+Decision: Add inert Vault integration scaffolds, public seat-count projection, validation-only application intake, and scaffold-only cron routes without live provider side effects.
+Track: Vault / engineering
+Runway scenario: TBD by Garrett
+Decision type: maintain
+Evidence: Issue queue OPS-2026-05-23-002 and OPS-2026-05-23-003 flagged missing Vault integration and cron scaffolds; `apps/web/lib/vault/`, `apps/web/app/api/vault/`, and `apps/web/app/api/cron/` now provide typed implementation anchors.
+Metric threshold: Typecheck, build, and monetization validation pass while Stripe, Discord, email, database writes, member gating, and application persistence remain disabled.
+Owner: Codex; Garrett review optional
+Next review date: Before Vault execution gates clear
+Notes: This does not activate Vault, launch checkout, persist applications, or deploy production behavior.

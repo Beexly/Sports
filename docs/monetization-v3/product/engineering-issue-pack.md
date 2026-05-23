@@ -187,7 +187,7 @@ These issues come from the 2026-05-23 overnight scaffold sanity check. They do n
 
 Gap:
 
-- `apps/web/lib/vault/` is missing in this clone.
+- [apps/web/lib/vault](../../../apps/web/lib/vault) now contains inert typed scaffolds from DEC-NEXT-025, but live Stripe, Discord, email, and database integrations are still unimplemented.
 
 Acceptance criteria:
 
@@ -199,7 +199,7 @@ Acceptance criteria:
 
 Gap:
 
-- `apps/web/app/api/cron/` is missing in this clone.
+- [apps/web/app/api/cron](../../../apps/web/app/api/cron) now contains scaffold-only Vault cron endpoints from DEC-NEXT-025. They return HTTP 501 and do not send email, touch Discord, or mutate data.
 
 Acceptance criteria:
 
@@ -211,7 +211,7 @@ Acceptance criteria:
 
 Gap:
 
-- No Vault Discord bot/webhook scaffold is present under `apps/web/lib/vault/`.
+- A deterministic Discord role-assignment planning helper exists at [discord.ts](../../../apps/web/lib/vault/discord.ts), but no Discord API client, webhook handler, or repair queue is implemented.
 
 Acceptance criteria:
 
@@ -224,7 +224,7 @@ Acceptance criteria:
 
 Gap:
 
-- `scripts/smoke-prod.sh` is missing or not executable from this Windows/WSL environment.
+- [smoke-prod.sh](../../../scripts/smoke-prod.sh) and [smoke-prod.ps1](../../../scripts/smoke-prod.ps1) exist from DEC-NEXT-024. A real production run still requires confirmed `PROD_BASE_URL`.
 
 Acceptance criteria:
 
