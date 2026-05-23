@@ -136,7 +136,7 @@
 
 ## What Surprised Me
 
-- The pack is no longer ~155 files. Current validator state is `214` Markdown files and `28` CSV files, with `229` README navigation targets checked.
+- The pack is no longer ~155 files. Current validator state is `215` Markdown files and `28` CSV files, with `230` README navigation targets checked.
 - The monetization docs are far more complete than the app. The largest risk is now provider integration absence, not strategic ambiguity.
 - Port 3000 was already occupied by a different Node/Next process from another local Claude project, and it timed out. I used port 3100 for a clean local smoke and shut it down afterward.
 - The photoreal synthetic host idea became stronger after rejecting it: Vega/character-first gives Galaxy a differentiated media asset without colliding visually with tout content.
@@ -144,7 +144,7 @@
 ## Validation State
 
 - `npm audit`: clean, 0 vulnerabilities after a PostCSS override.
-- `npm run test:web`: pass through `npm run audit:launch` (`18` test files, `78` tests).
+- `npm run test:web`: pass through `npm run audit:launch` (`19` test files, `80` tests).
 - `npm run typecheck:web`: pass.
 - `npm run build:web`: pass.
 - Local runtime smoke on port 3100: pass for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
