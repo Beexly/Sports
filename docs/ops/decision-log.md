@@ -491,3 +491,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: require `scripts/eval-contracts.mjs` to enforce template and scenario coverage for Twitter bot, Discord bot, Model Court, Model Journal, and pre-mortem pipeline eval contracts.
 - Rationale: these Phase 3/4 AI-output and distribution surfaces already had eval files, but coverage could drift silently as templates changed.
 - Guardrail: enforcement remains metadata-only and local. It validates the append-only eval library without calling Claude, posting to external services, or publishing generated content.
+
+## 2026-05-23 - Model Court Answers Fail Closed After Claude
+
+- Decision: validate generated Model Court answers after Claude returns and before recording success.
+- Rationale: pre-refusal catches unsafe questions, but generated answers still need a final gate for citation format, betting certainty, personal stake advice, public EV/Kelly/win-rate claims, and competitor comparisons.
+- Guardrail: policy failures are recorded as failed `MODEL_COURT_ANSWER` usage events with `POLICY_*` error kinds and no answer is returned as successful.

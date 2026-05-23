@@ -93,6 +93,8 @@ const COMPETITOR_PATTERNS = [
   /\bfanduel\b.*\bdraftkings\b/i,
 ] as const;
 
+const ANSWER_CITATION_PATTERN = /\(source:\s+[a-z0-9_-]+\s+at\s+\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z\)/i;
+
 export async function answerModelCourtQuestion(
   input: ModelCourtAnswerInput,
   options: ModelCourtAnswerOptions
@@ -141,6 +143,21 @@ export async function answerModelCourtQuestion(
       system: SYSTEM_PROMPT,
       user: buildPromptUser(input),
     });
+    const policyFailures = evaluateModelCourtAnswerPolicy(result.text);
+    if (policyFailures.length > 0) {
+      await maybeRecordModelCourtUsage({
+        input,
+        options,
+        modelName: result.modelName,
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        durationMs: result.durationMs,
+        success: false,
+        errorKind: `POLICY_${policyFailures[0]}`,
+      });
+      throw new ModelCourtAnswerError(`Model Court answer failed policy validation: ${policyFailures.join(", ")}`);
+    }
+
     await maybeRecordModelCourtUsage({
       input,
       options,
@@ -204,6 +221,35 @@ export function detectModelCourtRefusal(input: ModelCourtAnswerInput): RefusalKi
   }
 
   return null;
+}
+
+export function evaluateModelCourtAnswerPolicy(bodyMarkdown: string): string[] {
+  const failures: string[] = [];
+  const text = bodyMarkdown.trim();
+
+  if (text.length === 0) {
+    failures.push("EMPTY");
+  }
+  if (text.length > 4000) {
+    failures.push("TOO_LONG");
+  }
+  if (!ANSWER_CITATION_PATTERN.test(text)) {
+    failures.push("MISSING_CITATION");
+  }
+  if (matchesAny(text, CERTAINTY_PATTERNS)) {
+    failures.push("BETTING_CERTAINTY");
+  }
+  if (matchesAny(text, PERSONAL_ADVICE_PATTERNS)) {
+    failures.push("PERSONAL_ADVICE");
+  }
+  if (matchesAny(text, EV_PATTERNS)) {
+    failures.push("EV_KELLY_WINRATE");
+  }
+  if (matchesAny(text, COMPETITOR_PATTERNS)) {
+    failures.push("COMPETITOR_COMPARE");
+  }
+
+  return failures;
 }
 
 function buildPromptUser(input: ModelCourtAnswerInput): string {

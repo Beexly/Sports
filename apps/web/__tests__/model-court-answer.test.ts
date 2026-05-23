@@ -3,6 +3,7 @@ import { DEFAULT_CLAUDE_API_BUDGETS } from "@/lib/claude-api/cost-monitor";
 import {
   answerModelCourtQuestion,
   detectModelCourtRefusal,
+  evaluateModelCourtAnswerPolicy,
 } from "@/lib/intelligence-graph/model-court/answer";
 import { buildGameIntelligenceNode } from "@/lib/intelligence-graph";
 import { fixtureGame, fixturePick, fixtureSignals } from "@/__fixtures__/intelligence-graph/game-node";
@@ -146,5 +147,55 @@ describe("Model Court answer runtime", () => {
       success: true,
       errorKind: null,
     });
+  });
+
+  it("rejects Claude output that omits evidence citations", async () => {
+    const fetchImpl = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          content: [{ type: "text", text: "Line movement is the clearest change." }],
+          usage: { input_tokens: 900, output_tokens: 120 },
+        }),
+        { status: 200 }
+      )
+    );
+    const create = vi.fn().mockResolvedValue({ id: "record-policy" });
+
+    await expect(
+      answerModelCourtQuestion(
+        {
+          mode: "ASK_THIS_GAME",
+          node,
+          question: "Which factor changed most since open?",
+        },
+        {
+          apiKey: "test-key",
+          fetchImpl,
+          monthlySpendUsd: 0,
+          budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.MODEL_COURT_ANSWER,
+          recordUsage: true,
+          usageClient: {
+            claudeApiCallRecord: {
+              aggregate: vi.fn(),
+              create,
+            },
+          },
+        }
+      )
+    ).rejects.toThrow("MISSING_CITATION");
+
+    expect(create.mock.calls[0]?.[0].data).toMatchObject({
+      surface: "MODEL_COURT_ANSWER",
+      success: false,
+      errorKind: "POLICY_MISSING_CITATION",
+    });
+  });
+
+  it("flags unsafe generated Model Court answer text", () => {
+    expect(
+      evaluateModelCourtAnswerPolicy(
+        "Boston will cover, so stake one unit. (source: market at 2026-05-22T18:00:00.000Z)"
+      )
+    ).toEqual(expect.arrayContaining(["BETTING_CERTAINTY", "PERSONAL_ADVICE"]));
   });
 });
