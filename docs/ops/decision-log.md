@@ -365,3 +365,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Rationale: production monitoring needs a path from failing probe to visible operational queue without silently creating duplicate tickets on every run.
 - Guardrail: issue filing is opt-in; default local runs only write the ignored `latest.json` artifact.
 - Deferred: auto-close logic and cockpit issue cards from the queue remain follow-up slices.
+
+## 2026-05-22 - Synthetic Dashboard Surfaces Queue Entries
+
+- Decision: parse synthetic-monitoring markers from `docs/ops/issue-queue.md` and show them on `/cockpit/synthetic-monitoring`.
+- Rationale: once the runner files an operational issue, operators should see it in the monitoring dashboard without opening the markdown queue first.
+- Deferred: richer issue detail cards, auto-close, and direct editor deep links remain future slices.

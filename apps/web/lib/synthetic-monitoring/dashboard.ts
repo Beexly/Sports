@@ -273,12 +273,14 @@ const ARTIFACT_TO_VOICE_CHECK_ID: Readonly<Record<string, string>> = {
 export async function loadSyntheticMonitoringDashboardFromDisk(
   now = new Date()
 ): Promise<SyntheticMonitoringDashboard> {
-  return loadSyntheticMonitoringDashboard(now, await readLatestArtifact());
+  const [artifact, issues] = await Promise.all([readLatestArtifact(), readSyntheticIssues()]);
+  return loadSyntheticMonitoringDashboard(now, artifact, issues);
 }
 
 export function loadSyntheticMonitoringDashboard(
   now = new Date(),
-  artifact: SyntheticProbeArtifact | null = null
+  artifact: SyntheticProbeArtifact | null = null,
+  issues: readonly SyntheticMonitoringIssue[] = []
 ): SyntheticMonitoringDashboard {
   const generatedAtIso = now.toISOString();
   const lastRunIso = artifact?.generatedAtIso ?? syntheticLastRun(now).toISOString();
@@ -294,7 +296,7 @@ export function loadSyntheticMonitoringDashboard(
     activeEnvironment: process.env.VERCEL_ENV ?? process.env.NODE_ENV ?? "local",
     lastRunIso,
     categories,
-    issues: [],
+    issues,
     config: {
       enabled: process.env.SYNTHETIC_MONITORING_ENABLED !== "false",
       checks: flatChecks.map((check) => check.id),
@@ -377,6 +379,31 @@ async function readLatestArtifact(): Promise<SyntheticProbeArtifact | null> {
   } catch {
     return null;
   }
+}
+
+async function readSyntheticIssues(): Promise<readonly SyntheticMonitoringIssue[]> {
+  const issueQueuePath = resolve(process.cwd(), "docs", "ops", "issue-queue.md");
+  try {
+    return parseSyntheticIssuesFromMarkdown(await readFile(issueQueuePath, "utf8"));
+  } catch {
+    return [];
+  }
+}
+
+export function parseSyntheticIssuesFromMarkdown(markdown: string): readonly SyntheticMonitoringIssue[] {
+  const issues: SyntheticMonitoringIssue[] = [];
+  const issuePattern =
+    /<!--\s*synthetic-monitoring:([^>]+)\s*-->\s*##\s+(P[123])\s+-\s+([^\n]+)/g;
+  let match: RegExpExecArray | null;
+  while ((match = issuePattern.exec(markdown)) !== null) {
+    issues.push({
+      id: `synthetic-monitoring:${match[1]?.trim() ?? "unknown"}`,
+      severity: (match[2] ?? "P2") as SyntheticSeverity,
+      title: match[3]?.trim() ?? "Synthetic monitoring failure",
+      sourcePath: "/docs/ops/issue-queue.md",
+    });
+  }
+  return issues;
 }
 
 function syntheticLastRun(now: Date): Date {

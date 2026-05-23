@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
   loadSyntheticMonitoringDashboard,
+  parseSyntheticIssuesFromMarkdown,
   type SyntheticProbeArtifact,
 } from "../lib/synthetic-monitoring/dashboard";
 
@@ -91,6 +92,34 @@ describe("synthetic monitoring dashboard", () => {
     expect(checks.find((check) => check.id === "CHECK-A2")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.status).toBe("failing");
     expect(checks.find((check) => check.id === "CHECK-V3")?.detail).toContain("banned pattern");
+  });
+
+  it("parses synthetic issue-queue entries for cockpit display", () => {
+    const issues = parseSyntheticIssuesFromMarkdown(`# Issue Queue
+
+<!-- synthetic-monitoring:/board:500: -->
+## P1 - Synthetic monitoring failure
+
+- **Filed:** 2026-05-22T18:05:00.000Z · **By:** synthetic-monitoring
+
+<!-- synthetic-monitoring:/pricing:200:/AI-powered/i -->
+## P2 - Synthetic monitoring failure
+`);
+
+    expect(issues).toEqual([
+      {
+        id: "synthetic-monitoring:/board:500:",
+        severity: "P1",
+        title: "Synthetic monitoring failure",
+        sourcePath: "/docs/ops/issue-queue.md",
+      },
+      {
+        id: "synthetic-monitoring:/pricing:200:/AI-powered/i",
+        severity: "P2",
+        title: "Synthetic monitoring failure",
+        sourcePath: "/docs/ops/issue-queue.md",
+      },
+    ]);
   });
 });
 
