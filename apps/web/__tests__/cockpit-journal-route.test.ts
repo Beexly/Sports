@@ -8,6 +8,7 @@ const entryPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/jour
 const editor = fs.readFileSync(path.join(repoRoot, "apps/web/app/cockpit/journal/[entryId]/journal-entry-editor.tsx"), "utf8");
 const saveRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/route.ts"), "utf8");
 const scanRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/scan/route.ts"), "utf8");
+const submitRoute = fs.readFileSync(path.join(repoRoot, "apps/web/app/api/cockpit/journal/[id]/submit/route.ts"), "utf8");
 const loader = fs.readFileSync(path.join(repoRoot, "apps/web/lib/journal/load.ts"), "utf8");
 const compliance = fs.readFileSync(path.join(repoRoot, "apps/web/lib/journal/compliance.ts"), "utf8");
 const rules = fs.readFileSync(path.join(repoRoot, "apps/web/lib/compliance-scanner/rules.ts"), "utf8");
@@ -35,7 +36,7 @@ describe("Model Journal cockpit route", () => {
     expect(entryPage).toContain("JournalEntryEditor");
     expect(editor).toContain("Markdown editor");
     expect(editor).toContain("Run compliance scan");
-    expect(editor).toContain("Submit for publish");
+    expect(editor).toContain("Submit for review");
     expect(entryPage).toContain("Referenced Picks");
     expect(entryPage).toContain("Cited Autopsies");
     expect(editor).toContain("Body edits are disabled");
@@ -67,6 +68,17 @@ describe("Model Journal cockpit route", () => {
     expect(scanRoute).not.toMatch(/modelJournalEntry\.update|twitterClient|sendgrid|mailchimp/i);
     expect(compliance).toContain('getRulesForTemplate("MODEL_JOURNAL")');
     expect(rules).toContain("MJ-FIRST-PERSON-CONFIDENCE");
+  });
+
+  it("wires a compliance-gated review-pending transition without public distribution", () => {
+    expect(editor).toContain("submitForReview");
+    expect(editor).toContain("/submit");
+    expect(submitRoute).toMatch(/from\s+["']@\/lib\/auth["']/);
+    expect(submitRoute).toMatch(/role\s*!==\s*"ADMIN"/);
+    expect(submitRoute).toContain("scanModelJournalMarkdown");
+    expect(submitRoute).toContain("compliance.publishAllowed");
+    expect(submitRoute).toContain('status: "REVIEW_PENDING"');
+    expect(submitRoute).not.toMatch(/publishedAt\s*:\s*new Date|status:\s*"PUBLISHED"|twitterClient|sendgrid|mailchimp/i);
   });
 
   it("adds the Journal route to cockpit navigation", () => {

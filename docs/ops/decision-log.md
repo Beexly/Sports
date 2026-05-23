@@ -124,3 +124,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add Journal-specific compliance scanning via `scanModelJournalMarkdown()` and `POST /api/cockpit/journal/[id]/scan`.
 - Rationale: publish transitions need a red/yellow/green scan result before they can be safely wired. The route is ADMIN-only, read-only, and uses `getRulesForTemplate("MODEL_JOURNAL")` including the first-person confidence block.
 - Deferred: inline span highlighting, compliance result persistence, publish/retract transition actions, RSS invalidation, email digest delivery, and teaser queue remain follow-up slices.
+
+## 2026-05-22 - Model Journal Review Submission Added
+
+- Decision: add `POST /api/cockpit/journal/[id]/submit` and wire the editor's submit control to move compliant drafts into `REVIEW_PENDING`.
+- Rationale: the current draft-only guardrail forbids non-null `publishedAt` writes and `PUBLISHED` status writes. A compliance-gated review transition advances the workflow without weakening that safety policy.
+- Deferred: manual publish route, retraction route, RSS invalidation, email digest delivery, teaser queue, and any guardrail amendment for explicit manual publishing remain follow-up slices.

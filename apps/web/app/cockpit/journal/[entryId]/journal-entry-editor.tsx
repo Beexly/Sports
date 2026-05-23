@@ -33,6 +33,15 @@ interface ScanResponse {
   };
 }
 
+interface SubmitResponse {
+  readonly success?: boolean;
+  readonly error?: string;
+  readonly data?: {
+    readonly status?: string;
+    readonly updatedAt?: string;
+  };
+}
+
 function Preview({ markdown }: { readonly markdown: string }): JSX.Element {
   const sections = useMemo(
     () =>
@@ -78,10 +87,13 @@ export function JournalEntryEditor({
   const [bodyMarkdown, setBodyMarkdown] = useState(initialBodyMarkdown);
   const [isSaving, setIsSaving] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [scanResult, setScanResult] = useState<ScanResponse["data"] | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
+  const [submitMessage, setSubmitMessage] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   async function saveDraft(): Promise<void> {
     if (!isBodyEditable || isSaving) return;
@@ -137,6 +149,31 @@ export function JournalEntryEditor({
     }
   }
 
+  async function submitForReview(): Promise<void> {
+    if (!isBodyEditable || isSubmitting || !scanResult?.publishAllowed) return;
+    setIsSubmitting(true);
+    setSubmitMessage(null);
+    setSubmitError(null);
+
+    try {
+      const response = await fetch(`/api/cockpit/journal/${entryId}/submit`, {
+        method: "POST",
+      });
+      const payload = (await response.json().catch(() => ({}))) as SubmitResponse;
+
+      if (!response.ok || !payload.success) {
+        setSubmitError(payload.error ?? "Submit failed");
+        return;
+      }
+
+      setSubmitMessage(`Submitted for review ${payload.data?.updatedAt ?? "just now"}`);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Submit failed");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <main className="space-y-4 rounded-lg border border-gray-800 bg-gray-950/40 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -167,10 +204,11 @@ export function JournalEntryEditor({
           </button>
           <button
             type="button"
-            disabled
-            className="rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-500"
+            onClick={submitForReview}
+            disabled={!isBodyEditable || !scanResult?.publishAllowed || isSubmitting}
+            className="rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 hover:bg-gray-900 disabled:text-gray-500"
           >
-            Submit for publish
+            {isSubmitting ? "Submitting..." : "Submit for review"}
           </button>
         </div>
       </div>
@@ -212,6 +250,16 @@ export function JournalEntryEditor({
       {scanError ? (
         <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
           {scanError}
+        </p>
+      ) : null}
+      {submitMessage ? (
+        <p className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200">
+          {submitMessage}
+        </p>
+      ) : null}
+      {submitError ? (
+        <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+          {submitError}
         </p>
       ) : null}
 
