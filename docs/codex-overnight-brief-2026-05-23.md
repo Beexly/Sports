@@ -92,7 +92,7 @@
 - `32f4df8` - DEC-NEXT-054 add lifecycle email repair tasks
 - `ddd558f` - DEC-NEXT-055 add durable storage env contract
 - `1e439ac` - DEC-NEXT-056 add Vault persistence contract
-- `TBD` - DEC-NEXT-057 add Vault backup restore runbook
+- `81b0608` - DEC-NEXT-057 add Vault backup restore runbook
 
 ## What I Flagged For Morning Triage
 
