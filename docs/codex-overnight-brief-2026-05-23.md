@@ -5,7 +5,7 @@
 - Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
 - Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
 - Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
-- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-053.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-054.
 - Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
 - Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
 - Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
@@ -39,6 +39,7 @@
 - Added a Vault route-access decision helper for member-only routes; real auth remains unwired.
 - Added Vault referral attribution and refund-clawback decisioning; durable referral storage and payout mutations remain unwired.
 - Added lifecycle email delivery decisioning; durable lifecycle rows, provider sends, unsubscribe enforcement, and held-row repair remain unwired.
+- Added lifecycle email admin repair-task generation so held rows become visible operator work.
 - Created and updated `docs/ops/issue-queue.md` for launch-blocking or morning-triage engineering gaps.
 
 ## Commit Refs
@@ -85,6 +86,7 @@
 - `bd70924` - DEC-NEXT-051 add Vault route access helper
 - `517a800` - DEC-NEXT-052 add Vault referral decisioning
 - `992f358` - DEC-NEXT-053 add lifecycle email delivery decisioning
+- `TBD` - DEC-NEXT-054 add lifecycle email repair tasks
 
 ## What I Flagged For Morning Triage
 

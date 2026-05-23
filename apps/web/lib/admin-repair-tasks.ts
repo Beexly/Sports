@@ -1,11 +1,13 @@
 import type { ProviderHeartbeat } from "./provider-heartbeats";
 import type { ProofSurfaceFreshness } from "./proof-freshness";
+import type { VaultLifecycleEmailDeliveryDecision } from "./vault/emails";
 import type { VaultOnboardingHealth } from "./vault/onboarding-health";
 
 export type AdminRepairTaskSource =
   | "vault_onboarding"
   | "provider_heartbeat"
-  | "proof_surface_freshness";
+  | "proof_surface_freshness"
+  | "vault_lifecycle_email";
 
 export type AdminRepairTask = {
   source: AdminRepairTaskSource;
@@ -61,5 +63,24 @@ export function getProofSurfaceRepairTasks(
       title: `Refresh proof surface: ${surface.label}`,
       entityKey: surface.surface,
       reason: `${surface.label} is ${surface.ageDays} days old; max stale window is ${surface.maxStaleDays} days.`,
+    }));
+}
+
+export function getLifecycleEmailRepairTasks(
+  decisions: readonly VaultLifecycleEmailDeliveryDecision[],
+): AdminRepairTask[] {
+  return decisions
+    .filter((decision) => decision.status === "hold")
+    .map((decision) => ({
+      source: "vault_lifecycle_email",
+      severity:
+        decision.reason === "max_attempts_reached" ||
+        decision.reason === "invalid_schedule" ||
+        decision.reason === "unknown_template"
+          ? "p1"
+          : "p2",
+      title: `Repair Vault lifecycle email: ${decision.templateId}`,
+      entityKey: decision.lifecycleEmailId,
+      reason: `Lifecycle email ${decision.lifecycleEmailId} is held because ${decision.reason}.`,
     }));
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getOnboardingRepairTasks,
+  getLifecycleEmailRepairTasks,
   getProofSurfaceRepairTasks,
   getProviderRepairTasks,
 } from "./admin-repair-tasks";
@@ -107,6 +108,47 @@ describe("admin repair tasks", () => {
         title: "Refresh proof surface: Loss Room",
         entityKey: "loss-room",
         reason: "Loss Room is 8 days old; max stale window is 7 days.",
+      },
+    ]);
+  });
+
+  it("creates lifecycle email tasks only for held rows", () => {
+    expect(
+      getLifecycleEmailRepairTasks([
+        {
+          status: "send",
+          reason: "due",
+          lifecycleEmailId: "email_send",
+          templateId: "vault-welcome-day-0",
+        },
+        {
+          status: "hold",
+          reason: "max_attempts_reached",
+          lifecycleEmailId: "email_failed",
+          templateId: "vault-welcome-day-0",
+        },
+        {
+          status: "hold",
+          reason: "paused",
+          lifecycleEmailId: "email_paused",
+          templateId: "vault-renewal-day-minus-7",
+        },
+      ]),
+    ).toEqual([
+      {
+        source: "vault_lifecycle_email",
+        severity: "p1",
+        title: "Repair Vault lifecycle email: vault-welcome-day-0",
+        entityKey: "email_failed",
+        reason:
+          "Lifecycle email email_failed is held because max_attempts_reached.",
+      },
+      {
+        source: "vault_lifecycle_email",
+        severity: "p2",
+        title: "Repair Vault lifecycle email: vault-renewal-day-minus-7",
+        entityKey: "email_paused",
+        reason: "Lifecycle email email_paused is held because paused.",
       },
     ]);
   });

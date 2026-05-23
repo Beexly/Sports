@@ -1,7 +1,7 @@
 # Admin Repair Task Scaffold Notes
 
 **Status:** Engineering scaffold. No persistence or admin UI yet.
-**Related decision:** DEC-NEXT-041
+**Related decision:** DEC-NEXT-041, DEC-NEXT-054
 
 ## DEC-NEXT-041 - Add admin repair task model
 
@@ -19,6 +19,18 @@
 - `vault_onboarding`
 - `provider_heartbeat`
 - `proof_surface_freshness`
+- `vault_lifecycle_email`
+
+## DEC-NEXT-054 - Add lifecycle email repair tasks
+
+**Decision:** Treat held Vault lifecycle email rows as admin repair tasks.
+
+**Why now:** A lifecycle email row can be correct in the schedule but unsafe to send because it is paused, invalid, unknown, or exhausted after provider retries. Those states need to reach an operator queue before launch, not disappear inside a cron job.
+
+## DEC-NEXT-054 Implemented
+
+- [admin-repair-tasks.ts](../../../apps/web/lib/admin-repair-tasks.ts) now exposes `getLifecycleEmailRepairTasks(decisions)`.
+- [admin-repair-tasks.test.ts](../../../apps/web/lib/admin-repair-tasks.test.ts) covers max-attempt and paused lifecycle email repair tasks.
 
 ## Still Unwired
 
@@ -26,6 +38,7 @@
 - Admin cockpit list.
 - Assignment, status, and resolution timestamps.
 - Incident escalation when p0 tasks breach threshold.
+- Lifecycle email provider retry worker.
 
 ## Guardrail
 
