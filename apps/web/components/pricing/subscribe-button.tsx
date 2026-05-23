@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SUPPORT_EMAIL } from "@/lib/brand";
 
 /**
  * Subscribe button — isolates the Stripe checkout side-effect so the
@@ -52,7 +53,7 @@ export function SubscribeButton({ tier, label, variant }: Props) {
       if (!res.ok || !data.url) {
         setError(
           data.error ??
-            "Checkout didn't open. Try again — if it sticks, contact hq@galaxysportsedge.com.",
+            `Checkout didn't open. Try again — if it sticks, contact ${SUPPORT_EMAIL}.`,
         );
         return;
       }

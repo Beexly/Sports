@@ -11,9 +11,11 @@
  * the codebase (free-tier entitlements, Stripe refund policy, hq@ inbox).
  */
 
+import { SUPPORT_EMAIL } from "@/lib/brand";
+
 const PROMISES = [
   {
-    title: "No card for free.",
+    title: "No credit card for free.",
     body: "Google sign-in and you're in. The Free tier never asks for billing.",
   },
   {
@@ -22,7 +24,7 @@ const PROMISES = [
   },
   {
     title: "Every reply gets read.",
-    body: "hq@galaxysportsedge.com goes to the desk directly. Real support, real humans.",
+    body: `${SUPPORT_EMAIL} goes to the desk directly. Real support, real humans.`,
   },
 ] as const;
 

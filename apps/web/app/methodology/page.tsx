@@ -25,7 +25,7 @@ export default function MethodologyPage() {
               A signal is not a hunch. It is a decision stack.
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-ink-300">
-              I separated noise from action with four checks: market shape,
+              Noise gets separated from action by four checks: market shape,
               price pressure, risk, and evidence quality. If the stack is
               weak, nothing ships.
             </p>
@@ -40,28 +40,28 @@ export default function MethodologyPage() {
                 title="Read the board"
                 inputs="Spread, total, moneyline, bookmaker count, timestamp."
                 outputs="A clean market snapshot for each matchup."
-                body="I start with the board, not a story. The system records price, freshness, and market depth before any opinion is allowed to form."
+                body="The work starts with the board, not a story. Price, freshness, and market depth are recorded before any opinion forms."
               />
               <PhaseCard
                 step="02"
                 title="Measure pressure"
                 inputs="Movement, consensus, volatility, and matchup context."
                 outputs="A pressure map showing where the board is tightening or drifting."
-                body="Most bettors see a number. I'm studying how that number got there: who moved, how far, how fast, and whether the market is deep enough to trust."
+                body="Most bettors see a number. The model studies how that number got there: who moved, how far, how fast, and whether the market is deep enough to trust."
               />
               <PhaseCard
                 step="03"
                 title="Gate the signal"
                 inputs="Score, risk, freshness, and confidence policy."
                 outputs="Selection, risk label, reasoning, and factor trail."
-                body="A card only ships when the edge is explainable. Weak inputs, stale prices, or thin markets stay off the customer surface. If it can't be defended, it doesn't get published."
+                body="A signal only ships when the edge is explainable. Weak inputs, stale prices, or thin markets stay off the customer surface. If it can't be defended, it doesn't get published."
               />
               <PhaseCard
                 step="04"
                 title="Learn slowly"
                 inputs="Settled outcomes paired with the engine state at pick time."
                 outputs="A reviewed calibration change, never a silent rewrite."
-                body="Outcomes matter, but overreacting is expensive. The system learns from settled history only after enough data exists to make the lesson meaningful — and every weight change goes through review."
+                body="Outcomes matter, but overreacting is expensive. Calibration draws on settled history only after enough data exists to make the lesson meaningful — and every weight change goes through review."
               />
             </ol>
           </div>
@@ -110,7 +110,7 @@ export default function MethodologyPage() {
               See the stack on today&apos;s board.
             </h2>
             <p className="text-ink-300">
-              My Signal Feed turns those four checks into a card you can scan
+              The Signal Feed turns those four checks into a ticket you can scan
               in seconds: pick, risk, freshness, and the reason.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">

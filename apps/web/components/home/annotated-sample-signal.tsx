@@ -21,7 +21,7 @@ const CALLOUTS_LEFT = [
   },
   {
     label: "03 · Selection + line",
-    body: "The actual pick: spread, total, or moneyline. The line value reflects the moment the signal was scored, not the moment you view the card.",
+    body: "The actual pick: spread, total, or moneyline. The line value reflects the moment the signal was scored, not the moment you view it.",
   },
 ] as const;
 
@@ -36,7 +36,7 @@ const CALLOUTS_RIGHT = [
   },
   {
     label: "06 · Variance line",
-    body: "Every card carries the reminder that even a 64% confidence signal still loses 36 of 100 times. Variance is described, not hidden.",
+    body: "Every signal carries the reminder that even a 64% confidence pick still loses 36 of 100 times. Variance is described, not hidden.",
   },
 ] as const;
 

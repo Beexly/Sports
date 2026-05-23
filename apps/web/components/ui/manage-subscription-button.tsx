@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { SUPPORT_EMAIL } from "@/lib/brand";
 
 export function ManageSubscriptionButton() {
   const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ export function ManageSubscriptionButton() {
       if (!res.ok || !data.url) {
         setError(
           data.error ??
-            "Couldn't open the billing portal. Try again, or email hq@galaxysportsedge.com if it sticks.",
+            `Couldn't open the billing portal. Try again, or email ${SUPPORT_EMAIL} if it sticks.`,
         );
         return;
       }

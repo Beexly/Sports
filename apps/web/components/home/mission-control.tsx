@@ -56,7 +56,7 @@ export function MissionControl() {
       <div className="container">
         <div className="section-head">
           <div>
-            <p className="section-eyebrow">Mission Control</p>
+            <p className="section-eyebrow">Today&apos;s Board</p>
             <h2 id="mission-control-title">
               The smartest move is sometimes <em>no move.</em>
             </h2>
@@ -84,13 +84,13 @@ export function MissionControl() {
               <span>Gate</span>
             </div>
             <p>
-              Galaxy Sports Edge is allowed to score what it can prove. Missing
-              player, official, venue, pace, and milestone feeds are not guessed;
-              they are marked shadow-only until real evidence arrives.
+              Galaxy Sports Edge scores what it can prove. Missing player,
+              official, venue, pace, and milestone feeds are not guessed; they
+              are marked shadow-only until real evidence arrives.
             </p>
             <div className="mission-verdict">
               <span>Verdict rule</span>
-              <strong>If the evidence is thin, the card stays quiet.</strong>
+              <strong>If the evidence is thin, we don&apos;t post.</strong>
             </div>
           </div>
 

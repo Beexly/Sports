@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SUPPORT_EMAIL } from "@/lib/brand";
 
 export default function AuthErrorPage({
   searchParams,
@@ -6,8 +7,7 @@ export default function AuthErrorPage({
   searchParams: { error?: string };
 }) {
   const errorMessages: Record<string, string> = {
-    Configuration:
-      "Something's misconfigured on my side. Try again in a minute, or email hq@galaxysportsedge.com if it sticks.",
+    Configuration: `Something's misconfigured on our side. Try again in a minute, or email ${SUPPORT_EMAIL} if it sticks.`,
     AccessDenied: "You don't have access to that page yet.",
     Verification: "That sign-in link's expired. Request a fresh one.",
     Default: "Sign-in didn't go through. Give it another shot.",

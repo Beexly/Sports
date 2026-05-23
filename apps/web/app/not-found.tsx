@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { SUPPORT_EMAIL } from "@/lib/brand";
 
 /**
  * Brand-voiced global not-found page. No default framework 404.
@@ -51,10 +52,10 @@ export default function NotFound() {
           <p className="mt-10 font-mono text-xs uppercase tracking-widest text-ink-500">
             If you got here from a link inside the site, write to{" "}
             <a
-              href="mailto:hq@galaxysportsedge.com"
+              href={`mailto:${SUPPORT_EMAIL}`}
               className="text-accent-300 underline-offset-4 hover:underline"
             >
-              hq@galaxysportsedge.com
+              {SUPPORT_EMAIL}
             </a>{" "}
             and the broken link will get fixed.
           </p>

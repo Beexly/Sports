@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME } from "@/lib/brand";
+import { BRAND_NAME, SUPPORT_EMAIL } from "@/lib/brand";
 
 /**
  * /faq — Standalone FAQ landing page with FAQPage JSON-LD.
@@ -12,8 +12,9 @@ import { BRAND_NAME } from "@/lib/brand";
  * cluster ("what is galaxy sports edge", "how do sports signals work",
  * "is galaxy sports edge legit", etc.).
  *
- * Voice: first-person founder. Same brand-safety rules as everywhere
- * else — no banned phrases, no win-rate claims, no curated record.
+ * Voice: brand voice (system / team), not founder first-person. Same
+ * brand-safety rules as everywhere else — no banned phrases, no
+ * win-rate claims, no curated record.
  */
 
 export const metadata: Metadata = {
@@ -34,7 +35,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. Galaxy Sports Edge ingests live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal with its full factor trail attached. Free plan gets one signal a day. Pro and Elite unlock every signal with the reasoning behind each one.",
+        a: "A transparent scoring engine for sports betting. Galaxy Sports Edge ingests live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal with its full factor trail attached. Free plan gets one signal a day. Pro and Elite unlock every signal with the reasoning behind each one.",
       },
       {
         q: "How is this different from a tout service?",
@@ -117,7 +118,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "How do I delete my account?",
-        a: "Email hq@galaxysportsedge.com from the address on the account and the deletion will be processed. The privacy page documents the full process.",
+        a: `Email ${SUPPORT_EMAIL} from the address on the account and the deletion will be processed. The privacy page documents the full process.`,
       },
     ],
   },
@@ -178,10 +179,10 @@ export default function FaqPage() {
               what&apos;s open, and how this is different from the rest of the
               category. If your question isn&apos;t here, write to{" "}
               <a
-                href="mailto:hq@galaxysportsedge.com"
+                href={`mailto:${SUPPORT_EMAIL}`}
                 className="font-mono text-accent-300 underline-offset-4 hover:underline"
               >
-                hq@galaxysportsedge.com
+                {SUPPORT_EMAIL}
               </a>{" "}
               — it&apos;ll get added.
             </p>
@@ -231,10 +232,10 @@ export default function FaqPage() {
             <p className="text-ink-300">
               Reach out at{" "}
               <a
-                href="mailto:hq@galaxysportsedge.com"
+                href={`mailto:${SUPPORT_EMAIL}`}
                 className="font-mono text-accent-300 underline-offset-4 hover:underline"
               >
-                hq@galaxysportsedge.com
+                {SUPPORT_EMAIL}
               </a>
               . Every reply is direct from the team.
             </p>

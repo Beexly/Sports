@@ -247,8 +247,8 @@ export default async function HomePage() {
               </div>
               <h3>Pressure gets measured.</h3>
               <p>
-                Galaxy IQ weighs price, depth, volatility, and timing before a
-                signal is allowed onto the board.
+                Galaxy IQ weighs price, depth, volatility, and timing before any
+                signal publishes to the board.
               </p>
             </div>
             <div className="how">
