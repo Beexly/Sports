@@ -3,3 +3,4 @@
 Append-only. One line per cycle.
 
 2026-05-23 · #1 · feat(content): migrate Claude blog generator to official @anthropic-ai/sdk · vitest `apps/web/__tests__/content-generator.test.ts`
+2026-05-23 · #2 · feat(content): add Claude semantic draft reviewer for trust-claim paraphrases · vitest `apps/web/__tests__/draft-reviewer.test.ts`
