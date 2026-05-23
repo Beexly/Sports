@@ -70,4 +70,14 @@ describe("Phase 9 guardrails", () => {
     }
     expect(r.stdout).toMatch(/\[draft-only\] OK/);
   });
+
+  it("claude-api-usage exits 0 with direct calls limited to approved paths", () => {
+    const r = runGuard("scripts/guardrails/claude-api-usage.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `claude-api-usage failed (status=${r.status}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[claude-api-usage\] OK/);
+  });
 });

@@ -262,3 +262,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: expose the Claude API budget override route from `/cockpit/api-costs` with a per-surface reason field and 24-hour enable action.
 - Rationale: the operator should be able to resolve a legitimate budget block from the same monitor that shows the block, while preserving an explicit decision-log rationale.
 - Deferred: durable audit rows for override decisions and owner-channel notification remain follow-up slices.
+
+## 2026-05-22 - Claude API Direct-Call Guardrail
+
+- Decision: add `scripts/guardrails/claude-api-usage.mjs` and include it in the root `guardrails` script to reject new direct Anthropic message calls outside approved paths.
+- Rationale: Phase 3 adds several content surfaces, and each Claude API path must be budget-gated, usage-recorded, and intentionally reviewed.
+- Deferred: consolidating Studio and blog generation onto a single shared wrapper remains a follow-up refactor.
