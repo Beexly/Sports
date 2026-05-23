@@ -31,6 +31,7 @@ const NAV: ReadonlyArray<{ href: string; label: string; hint: string }> = [
   { href: "/cockpit/studio", label: "Studio", hint: "Creator asset workspace" },
   { href: "/cockpit/journal", label: "Journal", hint: "Weekly model essay" },
   { href: "/cockpit/api-costs", label: "API Costs", hint: "Claude budget monitor" },
+  { href: "/cockpit/synthetic-monitoring", label: "Synthetic Monitoring", hint: "Production probes" },
   { href: "/cockpit/bot-outbox", label: "Bot Outbox", hint: "Draft event planner" },
   { href: "/cockpit/brief", label: "Daily brief", hint: "Today's slate snapshot" },
   { href: "/cockpit/calibration", label: "Calibration", hint: "Model accountability" },

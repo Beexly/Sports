@@ -334,3 +334,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: add `/cockpit/bot-outbox` as an admin-only read-only view over draft bot outbox discovery, including counts, item state, channel, event kind, preview text, and idempotency key.
 - Rationale: Phase 3 bot work needs operator visibility before any delivery controls exist.
 - Deferred: delivery controls, retry controls, persisted outbox rows, and channel health telemetry remain separate Phase 3 runtime work.
+
+## 2026-05-22 - Synthetic Monitoring Starts As Read-Only Cockpit Visibility
+
+- Decision: implement `/cockpit/synthetic-monitoring` as a read-only operator dashboard backed by typed check definitions, plus `/api/health/synthetic-monitoring` as a runner heartbeat.
+- Rationale: the production probe already checks critical public routes and banned positioning phrases. Before wiring durable scheduled history, operators need one place to see the expected check map, pending runner-owned checks, cadence, and safe configuration.
+- Deferred: manual run controls, pause/resume controls, durable history, issue-queue auto-filing, and owner-channel alerts remain separate synthetic-runner slices.
