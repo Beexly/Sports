@@ -114,7 +114,7 @@
 - `28c8f52` - DEC-NEXT-065 add short-form funnel economics
 - `4e0813b` - DEC-NEXT-066 add B2B data licensing R&D
 - `48dfbec` - DEC-NEXT-067 add artifact merch R&D
-- `TBD` - DEC-NEXT-068 refresh decision collision audit
+- `7f86e8f` - DEC-NEXT-068 refresh decision collision audit
 
 ## What I Flagged For Morning Triage
 
