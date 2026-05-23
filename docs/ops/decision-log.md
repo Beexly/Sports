@@ -190,3 +190,9 @@ Append-only operating log for Galaxy Sports Edge autonomous work.
 - Decision: the deterministic Journal composer now mirrors the seven-section weekly draft structure and adds an explicit thin-week scope note when settled evidence is sparse.
 - Rationale: manual drafts should start from the same editorial contract as the Claude drafting evals, including honest handling of low-sample weeks.
 - Deferred: gate-count summaries, pre-mortem called/missed tags, factor-change summaries, Claude draft generation route, and cost tracking wrapper integration remain follow-up slices.
+
+## 2026-05-22 - Model Journal Editor Refreshes After Status Transitions
+
+- Decision: the cockpit Journal editor refreshes server-rendered entry state after review submission and retraction succeed.
+- Rationale: status, immutability, and evidence rails should reflect the persisted transition immediately without requiring an operator reload.
+- Deferred: publish scheduling, RSS invalidation, email digest delivery, teaser queue, and Game Memory cross-reference updates remain follow-up slices.

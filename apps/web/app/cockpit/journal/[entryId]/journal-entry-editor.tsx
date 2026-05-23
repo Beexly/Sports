@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 interface JournalEntryEditorProps {
@@ -94,6 +95,7 @@ export function JournalEntryEditor({
   isBodyEditable,
   status,
 }: JournalEntryEditorProps): JSX.Element {
+  const router = useRouter();
   const [title, setTitle] = useState(initialTitle);
   const [bodyMarkdown, setBodyMarkdown] = useState(initialBodyMarkdown);
   const [isSaving, setIsSaving] = useState(false);
@@ -182,6 +184,7 @@ export function JournalEntryEditor({
       }
 
       setSubmitMessage(`Submitted for review ${payload.data?.updatedAt ?? "just now"}`);
+      router.refresh();
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Submit failed");
     } finally {
@@ -209,6 +212,7 @@ export function JournalEntryEditor({
       }
 
       setRetractMessage(`Retracted ${payload.data?.retractedAt ?? "just now"}`);
+      router.refresh();
     } catch (error) {
       setRetractError(error instanceof Error ? error.message : "Retraction failed");
     } finally {

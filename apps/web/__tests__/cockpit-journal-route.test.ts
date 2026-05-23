@@ -47,6 +47,8 @@ describe("Model Journal cockpit route", () => {
     expect(entryPage).toContain("Referenced Picks");
     expect(entryPage).toContain("Cited Autopsies");
     expect(editor).toContain("Body edits are disabled");
+    expect(editor).toContain("useRouter");
+    expect(editor).toContain("router.refresh()");
   });
 
   it("prevents body edits after publication or retraction", () => {
