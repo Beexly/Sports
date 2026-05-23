@@ -59,8 +59,10 @@ Runway determines which subset is active:
 - [audit/brand-safety-flags.md](audit/brand-safety-flags.md) - Last-24-hour banned-vocabulary scan, substitutions, and escalation status.
 - [audit/claude-overnight-close-out-2026-05-23.md](audit/claude-overnight-close-out-2026-05-23.md) - Claude overnight Pass 11 close-out and morning reading order.
 - [audit/decision-log-collisions.md](audit/decision-log-collisions.md) - DEC-NEXT uniqueness audit and reserved-ID status.
+- [audit/galaxy-short-form-content-lab-rd.md](audit/galaxy-short-form-content-lab-rd.md) - Short-form video R&D lab plan with scripts, synthetic-host profiles, and approval gates.
 - [audit/galaxy-vault-pre-mortem.md](audit/galaxy-vault-pre-mortem.md) - Vault failure pre-mortem and mitigation prompts.
 - [audit/kpi-operator-ritual.md](audit/kpi-operator-ritual.md) - Galaxy-voice operator layer for monthly KPI review.
+- [audit/synthetic-media-monetization-rd-2026-05-23.md](audit/synthetic-media-monetization-rd-2026-05-23.md) - Synthetic-media archive inspection and Galaxy monetization reuse audit.
 
 ## Engineering
 
