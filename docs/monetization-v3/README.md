@@ -82,6 +82,7 @@ Runway determines which subset is active:
 - [product/incident-threshold-scaffold-notes.md](product/incident-threshold-scaffold-notes.md) - Incident signal thresholds and DEC-NEXT-043 guardrails.
 - [product/kpi-cockpit-prd.md](product/kpi-cockpit-prd.md) - KPI cockpit requirements for monthly operating review.
 - [product/launch-readiness-audit-script.md](product/launch-readiness-audit-script.md) - Repeatable local launch-readiness gate script and DEC-NEXT-038 guardrails.
+- [product/launch-readiness-report-notes.md](product/launch-readiness-report-notes.md) - Launch-readiness verdict aggregator and DEC-NEXT-063 rationale.
 - [product/live-obs-prd.md](product/live-obs-prd.md) - Live OBS overlay product requirements.
 - [product/manual-longevity-instruments.md](product/manual-longevity-instruments.md) - Manual brand, capacity, and freshness trackers tied to DEC-NEXT-032.
 - [product/monetization-readme-navigation-lock-notes.md](product/monetization-readme-navigation-lock-notes.md) - README navigation maintenance note and DEC-NEXT-058 rationale.
