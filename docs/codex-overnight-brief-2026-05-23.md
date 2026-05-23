@@ -5,7 +5,7 @@
 - Ran the monetization-v3 validator repeatedly and fixed every structural issue that surfaced during the overnight pass.
 - Ran exact banned-phrase scans for the required brand-safety substitutions. The exact scan is clean; strict scan only reports expected noisy internal references.
 - Updated the root master brief and rebuilt `docs/monetization-v3/README.md` into the current navigation surface.
-- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-024.
+- Audited DEC-NEXT references, documented collision status, and continued using unique decision IDs through DEC-NEXT-051.
 - Aligned `docs/monetization-v3/product/vault-prd.md` with the newer Discord, onboarding, renewal, and founder-unavailability specs.
 - Inspected the uploaded archive and translated the reusable idea into Galaxy-safe R&D rather than copying code or content.
 - Shifted short-form R&D away from photoreal human hosts and into a character-first Vega path with policy, prompts, storyboards, trackers, and engineering issues.
@@ -64,10 +64,23 @@
 - `913dcad` - DEC-NEXT-028 scaffold proof email capture
 - `7572096` - DEC-NEXT-030 DEC-NEXT-031 gate CTAs and add longevity audit
 - `ba3169f` - DEC-NEXT-031 add longevity instruments and freshness metadata
-
-## Still in flight after the first clean pass
-
-- Added an environment-readiness contract so the morning block can check Stripe, Discord, email, feature flags, and production smoke variables before Day -7 verification.
+- `b743bac` - DEC-NEXT-034 add short-form UTM parser
+- `205e2d2` - DEC-NEXT-035 extend smoke and env readiness
+- `7d98b7d` - DEC-NEXT-037 add public health endpoint
+- `410ae29` - DEC-NEXT-038 add launch readiness audit
+- `284a4f6` - DEC-NEXT-039 add Vault onboarding health logic
+- `0d422b0` - DEC-NEXT-040 add provider heartbeat logic
+- `931b089` - DEC-NEXT-041 add admin repair task model
+- `5cc535f` - DEC-NEXT-042 add proof surface repair tasks
+- `dd5da9c` - DEC-NEXT-043 add incident threshold logic
+- `26096ca` - DEC-NEXT-044 make Vault entitlements explainable
+- `edcff9d` - DEC-NEXT-045 add Stripe webhook decisioning
+- `ee0f1bd` - DEC-NEXT-046 add founding seat assignment decisioning
+- `cafa3de` - DEC-NEXT-047 expand Vault lifecycle email schedule
+- `38fd613` - DEC-NEXT-048 audit XXX archive salvage patterns
+- `2787230` - DEC-NEXT-049 add research archive audit script
+- `d6e947c` - DEC-NEXT-050 add implementation readiness gap register
+- `bd70924` - DEC-NEXT-051 add Vault route access helper
 
 ## What I Flagged For Morning Triage
 
@@ -78,7 +91,7 @@
 
 ## What Surprised Me
 
-- The pack is no longer ~155 files. Current validator state is `182` Markdown files and `26` CSV files.
+- The pack is no longer ~155 files. Current validator state is `204` Markdown files and `28` CSV files.
 - The monetization docs are far more complete than the app. The largest risk is now provider integration absence, not strategic ambiguity.
 - Port 3000 was already occupied by a different Node/Next process from another local Claude project, and it timed out. I used port 3100 for a clean local smoke and shut it down afterward.
 - The photoreal synthetic host idea became stronger after rejecting it: Vega/character-first gives Galaxy a differentiated media asset without colliding visually with tout content.
@@ -86,15 +99,15 @@
 ## Validation State
 
 - `npm audit`: clean, 0 vulnerabilities after a PostCSS override.
-- `npm run test:web`: pass.
+- `npm run test:web`: pass through `npm run audit:launch` (`16` test files, `54` tests).
 - `npm run typecheck:web`: pass.
 - `npm run build:web`: pass.
 - Local runtime smoke on port 3100: pass for `/`, `/methodology`, `/loss-room`, `/passes`, `/ledger`, and `/vault`.
 - Local production-style runtime smoke on port 3103: pass for `/api/vault/seat-count`; expected HTTP 400/401/501 guardrail responses for application intake, member-only routes, write-disabled routes, webhooks, and scaffold-only Vault cron routes.
-- `docs/monetization-v3/tools/validate-monetization-v3.ps1`: pass.
+- `docs/monetization-v3/tools/validate-monetization-v3.ps1`: pass through `npm run audit:launch`.
 - Exact banned-phrase scan: clean.
 - Strict brand scan: pass with expected noisy warnings in internal/audit docs.
-- Production smoke: script guardrail tested; exits with code 2 when `PROD_BASE_URL` is absent. No production URL was inferred and no deploy was attempted.
+- Production smoke: script guardrail exists and remains skipped until `PROD_BASE_URL` is explicitly confirmed. No production URL was inferred and no deploy was attempted.
 
 ## Recommended Morning Peak-Block Sequence
 
