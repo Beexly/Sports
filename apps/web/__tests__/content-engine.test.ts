@@ -5,9 +5,11 @@ import {
   buildContentDraft,
   buildDailyBriefDraft,
   buildMethodologyEducationDraft,
+  buildPerformanceTransparencyDraft,
   buildPromotionRoundupDraft,
   buildResponsibleBettingEducationDraft,
   buildWeeklyRecapDraft,
+  createCockpitContentTask,
   CONTENT_TEMPLATES,
   evaluateContentCompliance,
   evaluateContentReadiness,
@@ -378,6 +380,30 @@ describe("content engine — readiness", () => {
     expect(f.statusLine).toContain("readiness=");
   });
 
+  it("formatDraftForReview uses excerpt when provided", () => {
+    const draft = makeDraft({
+      contentType: "METHODOLOGY_EDUCATION",
+      draftBody: "Full body text here.",
+      excerpt: "Short excerpt text.",
+      sources: [makeSource("METHODOLOGY")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    const f = formatDraftForReview(draft, v);
+    expect(f.summary).toBe("Short excerpt text.");
+  });
+
+  it("formatDraftForReview falls back to first body line when excerpt is null", () => {
+    const draft = makeDraft({
+      contentType: "METHODOLOGY_EDUCATION",
+      draftBody: "First line of body.\nSecond line.",
+      excerpt: null,
+      sources: [makeSource("METHODOLOGY")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    const f = formatDraftForReview(draft, v);
+    expect(f.summary).toBe("First line of body.");
+  });
+
   it("NEEDS_AFFILIATE_DISCLOSURE when promotion content lacks disclosure", () => {
     const draft = makeDraft({
       contentType: "PROMOTION_ROUNDUP",
@@ -514,6 +540,45 @@ describe("content engine — build helpers (draft-only)", () => {
       sources: [makeSource("RESPONSIBLE_GAMING"), makeSource("METHODOLOGY")],
     });
     expect(draft.responsibleGamingIncluded).toBe(true);
+  });
+
+  it("performance transparency builder notes gate-off state", () => {
+    const draft = buildPerformanceTransparencyDraft({
+      slug: "perf-transparency-off",
+      generatedBy: "test",
+      performanceGateOn: false,
+      settledCount: 0,
+      sources: [makeSource("PERFORMANCE"), makeSource("METHODOLOGY")],
+    });
+    expect(draft.draftBody.toLowerCase()).toContain("performance gate is currently off");
+    expect(draft.visibility).toBe("INTERNAL");
+  });
+
+  it("performance transparency builder includes settled count when gate is on", () => {
+    const draft = buildPerformanceTransparencyDraft({
+      slug: "perf-transparency-on",
+      generatedBy: "test",
+      performanceGateOn: true,
+      settledCount: 142,
+      sources: [makeSource("PERFORMANCE"), makeSource("METHODOLOGY")],
+    });
+    expect(draft.draftBody).toContain("142");
+    expect(draft.visibility).toBe("PUBLIC");
+  });
+
+  it("createCockpitContentTask returns a task for AVA review", () => {
+    const draft = {
+      ...makeDraft({ contentType: "METHODOLOGY_EDUCATION", draftBody: "How the model works." }),
+      id: "draft-xyz",
+    };
+    const task = createCockpitContentTask({
+      draft,
+      nextRecommendedAction: "Route to AVA",
+    });
+    expect(task.draftId).toBe("draft-xyz");
+    expect(task.title).toContain("Test draft");
+    expect(task.assignedAgent).toBe("AVA");
+    expect(task.nextRecommendedAction).toBe("Route to AVA");
   });
 });
 
