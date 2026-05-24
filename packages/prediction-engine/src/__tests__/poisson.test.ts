@@ -52,6 +52,11 @@ describe("poissonPmf", () => {
     expect(poissonPmf(3, -1)).toBe(0);
   });
 
+  it("returns 0 for non-finite lambda (Infinity or NaN)", () => {
+    expect(poissonPmf(3, Infinity)).toBe(0);
+    expect(poissonPmf(3, NaN)).toBe(0);
+  });
+
   it("returns 0 for non-integer k", () => {
     expect(poissonPmf(2.5, 2)).toBe(0);
   });
@@ -83,6 +88,16 @@ describe("poissonCdf", () => {
 
   it("returns 0 for negative k", () => {
     expect(poissonCdf(-1, 2)).toBe(0);
+  });
+
+  it("returns 1 when lambda <= 0 and k >= 0 (degenerate zero-rate distribution)", () => {
+    expect(poissonCdf(5, 0)).toBe(1);
+    expect(poissonCdf(0, 0)).toBe(1);
+  });
+
+  it("returns 0 when lambda <= 0 and k < 0", () => {
+    expect(poissonCdf(-2, 0)).toBe(0);
+    expect(poissonCdf(-1, -1)).toBe(0);
   });
 });
 

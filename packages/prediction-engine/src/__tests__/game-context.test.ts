@@ -549,6 +549,33 @@ describe("computeGameContext", () => {
     const result = computeGameContext(ctx, "SPREAD", "HOME");
     expect(result.lineMovementScore).toBe(0);
   });
+
+  it("MONEYLINE market type skips line movement (returns 0)", () => {
+    // Neither SPREAD nor TOTAL branch executes for MONEYLINE → lineMovementScore stays 0
+    const result = computeGameContext(BASE_CONTEXT, "MONEYLINE", "HOME");
+    expect(result.lineMovementScore).toBe(0);
+  });
+
+  it("AWAY pickedSide routes historical form to awayAtsForm branch", () => {
+    // BASE_CONTEXT has awayAtsForm = form(4,6) → 40% ATS → score=-5
+    const result = computeGameContext(BASE_CONTEXT, "SPREAD", "AWAY");
+    expect(result.historicalFormScore).toBe(-5);
+  });
+
+  it("AWAY pickedSide routes venue form to awayAtsFormAway branch", () => {
+    // BASE_CONTEXT has awayAtsFormAway = form(4,6) → 40% ATS → score=-3 (below-average venue form)
+    const result = computeGameContext(BASE_CONTEXT, "SPREAD", "AWAY");
+    expect(result.venueFormScore).toBeLessThan(0);
+  });
+
+  it("AWAY pickedSide applies rest advantage from AWAY perspective", () => {
+    // BASE_CONTEXT has restDaysHome=4, restDaysAway=2 → home has more rest
+    // For HOME pick: restScore > 0. For AWAY pick: restScore < 0 (opponent better rested)
+    const homeResult = computeGameContext(BASE_CONTEXT, "SPREAD", "HOME");
+    const awayResult = computeGameContext(BASE_CONTEXT, "SPREAD", "AWAY");
+    expect(homeResult.restAdvantageScore).toBeGreaterThan(0);
+    expect(awayResult.restAdvantageScore).toBeLessThan(0);
+  });
 });
 
 describe("computeVenueFormScore — neutral zone and decided=0 branches", () => {

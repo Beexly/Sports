@@ -1182,4 +1182,131 @@ describe("scoreGame — spread reasoning context clauses", () => {
       expect(spreadPick.reasoning).toContain("rest disadvantage");
     }
   });
+
+  it("reasoning includes 'opponent on compressed schedule' when away team has denser recent schedule", () => {
+    // scheduleDensityHome=1, scheduleDensityAway=4 → diff=−3 → rawHome=+5 → HOME sideScore=+5 > 2
+    const input = makeOddsInput({
+      bookmakerOdds: tenSpreadBooks,
+      context: {
+        scheduleDensityHome: 1,
+        scheduleDensityAway: 4,
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.reasoning).toContain("opponent on compressed schedule");
+    }
+  });
+
+  it("reasoning includes 'compressed schedule stress' when home team has denser recent schedule", () => {
+    // scheduleDensityHome=4, scheduleDensityAway=1 → diff=+3 → rawHome=−5 → HOME sideScore=−5 < −2
+    const input = makeOddsInput({
+      bookmakerOdds: tenSpreadBooks,
+      context: {
+        scheduleDensityHome: 4,
+        scheduleDensityAway: 1,
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.reasoning).toContain("compressed schedule stress");
+    }
+  });
+
+  it("reasoning includes 'favorable H2H history' when picked team has dominant H2H ATS record", () => {
+    // headToHeadForm 7-3 (70%) → score=5 > 0 → "favorable H2H history"
+    const input = makeOddsInput({
+      bookmakerOdds: tenSpreadBooks,
+      context: {
+        headToHeadForm: { wins: 7, losses: 3, pushes: 0, sampleSize: 10 },
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.reasoning).toContain("favorable H2H history");
+    }
+  });
+
+  it("reasoning includes 'poor H2H history' when picked team has losing H2H ATS record", () => {
+    // headToHeadForm 2-8 (20%) → score=−5 < 0 → "poor H2H history"
+    // 10 books give base ≈ 66 which survives −5 penalty (61 > 50)
+    const input = makeOddsInput({
+      bookmakerOdds: tenSpreadBooks,
+      context: {
+        headToHeadForm: { wins: 2, losses: 8, pushes: 0, sampleSize: 10 },
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.reasoning).toContain("poor H2H history");
+    }
+  });
+
+  it("reasoning includes 'strong venue form' when home team covers well at home", () => {
+    // homeAtsFormAtHome 8-2 (80%) → venueFormScore=5 > 0 → "strong venue form"
+    const input = makeOddsInput({
+      bookmakerOdds: tenSpreadBooks,
+      context: {
+        homeAtsFormAtHome: { wins: 8, losses: 2, pushes: 0, sampleSize: 10 },
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.reasoning).toContain("strong venue form");
+    }
+  });
+
+  it("reasoning includes 'conflicting signals noted' when line fades a historically strong pick", () => {
+    // Fading line (openingSpread −3.5 → −1.5, lineMovementScore ≈ −10) combined with
+    // strong H2H (7-3, headToHeadScore=5 > 2) → Conflict 1 triggers uncertainty penalty=−4 < −3
+    // 10 books provide base ≈ 66; after −10 + 5 − 4 = −9 → confidence ≈ 57 > 50
+    const input = makeOddsInput({
+      bookmakerOdds: tenSpreadBooks,
+      context: {
+        openingSpread: -3.5,
+        currentSpread: -1.5,
+        headToHeadForm: { wins: 7, losses: 3, pushes: 0, sampleSize: 10 },
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.reasoning).toContain("conflicting signals noted");
+    }
+  });
 });
