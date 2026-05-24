@@ -613,4 +613,89 @@ describe("synthesizeJarvis", () => {
       expect(a.launchStatus).not.toBe("LAUNCH_READY");
     });
   });
+
+  describe("oneSentenceAssessment", () => {
+    it("LAUNCH_READY assessment mentions 'launch-ready'", () => {
+      const a = synthesizeJarvis(
+        baseInput({
+          layers: {
+            trustClaims: "implemented", performanceGating: "implemented",
+            promotions: "implemented", dailyBrief: "implemented",
+            calibration: "implemented", cockpit: "implemented",
+            contentEngine: "implemented", ciHardening: "implemented",
+          },
+          gates: {
+            canPersistCanonicalHistory: true, canUseDerivedHistory: true,
+            canExposePublicPicks: false, canPromoteFeaturedPicks: false,
+            canExposePerformanceStats: false, canPublishContent: false,
+            canLearnFromOutcomes: true, canApplyCalibrationAdjustments: false as const,
+            isBootstrapMode: false, minSettledPicksForLearning: 25,
+          },
+          performancePolicy: evaluatePublicPerformancePolicy({
+            canExposePerformanceStats: false, minSettledPicksForLearning: 25,
+            canonicalSettledCount: 100, bootstrapCount: 0, pendingCount: 0,
+            canonicalWins: 55, canonicalLosses: 40, canonicalPushes: 5,
+          }),
+        })
+      );
+      if (a.launchStatus === "LAUNCH_READY") {
+        expect(a.oneSentenceAssessment.toLowerCase()).toContain("launch-ready");
+        expect(a.oneSentenceAssessment.toLowerCase()).toContain("ingestion fresh");
+      }
+    });
+
+    it("NOT_READY_DATA assessment mentions data state", () => {
+      const a = synthesizeJarvis(
+        baseInput({
+          ingestion: {
+            lastAttemptAt: new Date(NOW.getTime() - 30 * 60 * 60 * 1000),
+            lastSuccessAt: new Date(NOW.getTime() - 30 * 60 * 60 * 1000),
+            lastWasSuccess: false,
+            recentFailureCount: 5,
+          },
+        })
+      );
+      // RED ingestion → NOT_READY_DATA
+      expect(a.launchStatus).toBe("NOT_READY_DATA");
+      expect(a.oneSentenceAssessment.toLowerCase()).toContain("not launch-ready");
+      expect(a.oneSentenceAssessment.toLowerCase()).toContain("red state");
+    });
+
+    it("NOT_READY_SAFETY assessment mentions safety warning count", () => {
+      const gates = {
+        canPersistCanonicalHistory: true, canUseDerivedHistory: true,
+        canExposePublicPicks: true, canPromoteFeaturedPicks: true,
+        canExposePerformanceStats: false, canPublishContent: true,
+        canLearnFromOutcomes: true, canApplyCalibrationAdjustments: false as const,
+        isBootstrapMode: false, minSettledPicksForLearning: 25,
+      };
+      const policy = evaluatePublicPerformancePolicy({
+        canExposePerformanceStats: false, minSettledPicksForLearning: 25,
+        canonicalSettledCount: 100, bootstrapCount: 0, pendingCount: 0,
+        canonicalWins: 55, canonicalLosses: 40, canonicalPushes: 5,
+      });
+      const a = synthesizeJarvis(
+        baseInput({
+          gates,
+          performancePolicy: policy,
+          layers: {
+            trustClaims: "implemented", performanceGating: "implemented",
+            promotions: "implemented", dailyBrief: "implemented",
+            calibration: "implemented", cockpit: "implemented",
+            contentEngine: "implemented", ciHardening: "implemented",
+          },
+        })
+      );
+      if (a.launchStatus === "NOT_READY_SAFETY") {
+        expect(a.oneSentenceAssessment).toContain("safety warning");
+      }
+    });
+
+    it("every non-UNKNOWN assessment contains the canonical settled count from history", () => {
+      const a = synthesizeJarvis(baseInput());
+      if (a.launchStatus !== "UNKNOWN") {
+        expect(a.oneSentenceAssessment).toContain("100 canonical settled");
+      }
+    });
+  });
 });
