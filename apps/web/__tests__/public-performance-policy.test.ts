@@ -234,5 +234,17 @@ describe("evaluatePublicPerformancePolicy", () => {
       }).operatorMessage;
       expect(/PERFORMANCE_STATS_ENABLED|gate/i.test(op)).toBe(true);
     });
+
+    it("ALL_RECENT_PICKS_BOOTSTRAP operatorMessage identifies the bootstrap window issue", () => {
+      // When gate is open and sample is sufficient but all recent picks are bootstrap,
+      // the operatorMessage should describe the bootstrap window problem specifically.
+      const op = evaluatePublicPerformancePolicy({
+        ...base,
+        recentTotalCount: 10,
+        recentBootstrapCount: 10, // ALL_RECENT_PICKS_BOOTSTRAP
+      }).operatorMessage;
+      expect(/bootstrap/i.test(op)).toBe(true);
+      expect(/canonical/i.test(op)).toBe(true);
+    });
   });
 });
