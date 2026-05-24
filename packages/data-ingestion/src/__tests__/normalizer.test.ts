@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { DataNormalizer } from "../normalizer";
+import { OddsApiError } from "../odds-api-client";
 import type { OddsApiEvent } from "@sports/types";
 
 const mockEvent: OddsApiEvent = {
@@ -251,5 +252,48 @@ describe("DataNormalizer", () => {
       expect(scores[0]!.homeScore).toBeNull();
       expect(scores[0]!.awayScore).toBeNull();
     });
+  });
+});
+
+describe("OddsApiError", () => {
+  it("has name='OddsApiError' (not plain 'Error')", () => {
+    const err = new OddsApiError("something went wrong");
+    expect(err.name).toBe("OddsApiError");
+  });
+
+  it("is instanceof Error", () => {
+    const err = new OddsApiError("something went wrong");
+    expect(err).toBeInstanceOf(Error);
+  });
+
+  it("carries message on the standard Error message field", () => {
+    const err = new OddsApiError("quota exceeded");
+    expect(err.message).toBe("quota exceeded");
+  });
+
+  it("carries optional status property when provided", () => {
+    const err = new OddsApiError("not found", 404);
+    expect(err.status).toBe(404);
+  });
+
+  it("status is undefined when not provided", () => {
+    const err = new OddsApiError("network failure");
+    expect(err.status).toBeUndefined();
+  });
+
+  it("carries optional remainingRequests property", () => {
+    const err = new OddsApiError("rate limited", 429, 0);
+    expect(err.remainingRequests).toBe(0);
+  });
+
+  it("remainingRequests is undefined when not provided", () => {
+    const err = new OddsApiError("server error", 500);
+    expect(err.remainingRequests).toBeUndefined();
+  });
+
+  it("can be caught as an Error in a try/catch", () => {
+    expect(() => {
+      throw new OddsApiError("test", 500, 100);
+    }).toThrow("test");
   });
 });

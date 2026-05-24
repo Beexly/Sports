@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { getUserEntitlements } from "@/lib/entitlements";
+import { getUserEntitlements, EntitlementError } from "@/lib/entitlements";
 
 describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
   beforeEach(() => {
@@ -26,5 +26,33 @@ describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
     process.env["DEV_FAKE_ADMIN"] = "false";
     const ent = await getUserEntitlements("dev-admin");
     expect(ent.tier).toBe("FREE");
+  });
+});
+
+describe("EntitlementError", () => {
+  it("has name='EntitlementError' (not plain 'Error')", () => {
+    const err = new EntitlementError("subscription required");
+    expect(err.name).toBe("EntitlementError");
+  });
+
+  it("is instanceof Error", () => {
+    const err = new EntitlementError("subscription required");
+    expect(err).toBeInstanceOf(Error);
+  });
+
+  it("carries the message on the standard Error.message field", () => {
+    const err = new EntitlementError("access denied");
+    expect(err.message).toBe("access denied");
+  });
+
+  it("can be caught in a catch block and identified by name", () => {
+    let caught: unknown;
+    try {
+      throw new EntitlementError("paywall");
+    } catch (e) {
+      caught = e;
+    }
+    expect(caught).toBeInstanceOf(EntitlementError);
+    expect((caught as EntitlementError).name).toBe("EntitlementError");
   });
 });
