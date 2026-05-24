@@ -34,6 +34,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const dateParam = searchParams.get("date");
   const gradeFilter = searchParams.get("grade") as PickGrade | null;
   const targetDate = dateParam ? new Date(dateParam) : new Date();
+  if (dateParam && isNaN(targetDate.getTime())) {
+    return NextResponse.json({ error: "invalid date parameter" }, { status: 400 });
+  }
 
   const picks = await db.pick.findMany({
     where: {

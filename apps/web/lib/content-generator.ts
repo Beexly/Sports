@@ -159,7 +159,9 @@ Requirements:
       client.messages.create({
         model: GENERATOR_MODEL,
         max_tokens: 4000,
-        system: SYSTEM_PROMPT,
+        system: [
+          { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
+        ],
         output_config: {
           format: { type: "json_schema", schema: POST_SCHEMA },
         },
