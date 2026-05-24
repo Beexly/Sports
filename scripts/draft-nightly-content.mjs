@@ -221,6 +221,52 @@ async function loadPicks() {
   }
 }
 
+// ── Cost pre-flight: skip generation if today's DB spend is at ceiling ───────
+// Inline pricing mirror — keep in sync with apps/web/lib/cockpit/ai-cost.ts
+// and scripts/guardrails/ai-daily-cost.mjs.
+const INLINE_PRICING = {
+  "claude-haiku-4-5":     { input: 1.00, cacheRead: 0.10, cacheCreation: 1.25, output: 5.00 },
+  "claude-sonnet-4-6":    { input: 3.00, cacheRead: 0.30, cacheCreation: 3.75, output: 15.0 },
+  "claude-opus-4-7":      { input: 15.0, cacheRead: 1.50, cacheCreation: 18.75, output: 75.0 },
+  "claude-sonnet-4-5":    { input: 3.00, cacheRead: 0.30, cacheCreation: 3.75, output: 15.0 },
+};
+
+function estimateRowCostUsd(row) {
+  const p = INLINE_PRICING[row.model] ?? INLINE_PRICING["claude-sonnet-4-6"];
+  return (
+    (row.inputTokens            ?? 0) * p.input          / 1_000_000 +
+    (row.cacheReadInputTokens   ?? 0) * p.cacheRead       / 1_000_000 +
+    (row.cacheCreationInputTokens ?? 0) * p.cacheCreation / 1_000_000 +
+    (row.outputTokens           ?? 0) * p.output          / 1_000_000
+  );
+}
+
+async function estimateTodayCostFromDb() {
+  if (!process.env.DATABASE_URL) return null;
+  const { PrismaClient } = await import("@prisma/client");
+  const prisma = new PrismaClient();
+  try {
+    const todayStart = new Date();
+    todayStart.setUTCHours(0, 0, 0, 0);
+    const rows = await prisma.claudeUsageLog.findMany({
+      where: { ts: { gte: todayStart } },
+      select: {
+        model: true,
+        inputTokens: true,
+        cacheReadInputTokens: true,
+        cacheCreationInputTokens: true,
+        outputTokens: true,
+      },
+    });
+    return rows.reduce((sum, r) => sum + estimateRowCostUsd(r), 0);
+  } catch {
+    // Best-effort: if DB query fails, allow generation to proceed.
+    return null;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 const BANNED_PHRASES = [
   "lock",
   "guaranteed",
@@ -323,6 +369,40 @@ const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
   maxRetries: 3,
 });
+
+// ── 0. Cost ceiling pre-flight ───────────────────────────────────────
+// Skip generation if today's DB spend already exceeds the daily ceiling.
+// This makes the AI_DAILY_COST_CEILING_USD guardrail structural rather than
+// advisory — the nightly run bows out gracefully instead of piling onto
+// an already-over-budget day.
+const COST_CEILING_USD = Number(process.env.AI_DAILY_COST_CEILING_USD ?? 2);
+if (Number.isFinite(COST_CEILING_USD) && COST_CEILING_USD > 0) {
+  const todayCostUsd = await estimateTodayCostFromDb();
+  if (todayCostUsd !== null && todayCostUsd >= COST_CEILING_USD) {
+    await mkdir(DRAFTS_DIR, { recursive: true });
+    const skipPath = resolve(DRAFTS_DIR, `${today}-nightly.ceiling-skip.json`);
+    await writeFile(
+      skipPath,
+      JSON.stringify({
+        skippedAt: new Date().toISOString(),
+        reason: "daily_cost_ceiling_breached",
+        todayCostUsd,
+        ceilingUsd: COST_CEILING_USD,
+        message: `Today's estimated spend ($${todayCostUsd.toFixed(4)}) already meets or exceeds the $${COST_CEILING_USD} ceiling. Generation skipped for this run.`,
+      }, null, 2),
+      "utf8"
+    );
+    console.log(
+      `[nightly-content] CEILING BREACH: today=${todayCostUsd.toFixed(4)} ceiling=${COST_CEILING_USD} — skipping generation, wrote ${skipPath}`
+    );
+    process.exit(0);
+  }
+  if (todayCostUsd !== null) {
+    console.log(
+      `[nightly-content] cost pre-flight OK: today=$${todayCostUsd.toFixed(4)} ceiling=$${COST_CEILING_USD}`
+    );
+  }
+}
 
 // ── 1. Draft the post ─────────────────────────────────────────────────
 const slate = await loadPicks();

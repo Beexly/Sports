@@ -152,4 +152,37 @@ describe("scripts/draft-nightly-content.mjs — draft + review runner", () => {
     // The disconnect lives in a finally so a throw in findMany doesn't leak a connection.
     expect(src).toMatch(/try\s*\{[\s\S]*findMany[\s\S]*\}\s*finally\s*\{[\s\S]*\$disconnect/);
   });
+
+  it("has a cost pre-flight that queries claudeUsageLog for today's spend", () => {
+    expect(src).toMatch(/estimateTodayCostFromDb/);
+    expect(src).toMatch(/claudeUsageLog\.findMany/);
+    expect(src).toMatch(/AI_DAILY_COST_CEILING_USD/);
+  });
+
+  it("writes a ceiling-skip sentinel file and exits 0 when ceiling is breached (no Claude calls)", () => {
+    expect(src).toMatch(/ceiling-skip\.json/);
+    expect(src).toMatch(/daily_cost_ceiling_breached/);
+    expect(src).toMatch(/CEILING BREACH/);
+    // Ceiling breach path must call process.exit(0) — graceful, not a failure.
+    const breachIdx = src.indexOf("CEILING BREACH");
+    const exitIdx = src.indexOf("process.exit(0)", breachIdx);
+    expect(exitIdx).toBeGreaterThan(breachIdx);
+  });
+
+  it("has an inline pricing table mirroring ai-cost.ts (Haiku + Sonnet + Opus)", () => {
+    expect(src).toMatch(/INLINE_PRICING/);
+    expect(src).toMatch(/claude-haiku-4-5/);
+    expect(src).toMatch(/claude-sonnet-4-6/);
+    expect(src).toMatch(/claude-opus-4-7/);
+    expect(src).toMatch(/cacheRead/);
+    expect(src).toMatch(/cacheCreation/);
+  });
+
+  it("never calls Claude when the ceiling is already breached", () => {
+    // The cost pre-flight and process.exit(0) must precede the Claude client
+    // init + first messages.create call.
+    const ceilingIdx = src.indexOf("CEILING BREACH");
+    const claudeCallIdx = src.indexOf("client.messages.create");
+    expect(ceilingIdx).toBeLessThan(claudeCallIdx);
+  });
 });
