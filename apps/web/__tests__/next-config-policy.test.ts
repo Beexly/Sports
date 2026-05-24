@@ -63,4 +63,12 @@ describe("next.config.mjs — security policy", () => {
       expect(m[1]).not.toMatch(/\*/);
     }
   });
+
+  it("emits HSTS header with long max-age (smoke test requires it)", () => {
+    // The daily smoke test (scripts/smoke-prod.sh) checks for
+    // strict-transport-security. If missing, smoke fails on header check.
+    expect(src).toMatch(/Strict-Transport-Security/);
+    expect(src).toMatch(/max-age=6307200/);
+    expect(src).toMatch(/includeSubDomains/);
+  });
 });

@@ -1,0 +1,48 @@
+{
+  "run": 2,
+  "started": "2026-05-24T07:38Z",
+  "completed": "2026-05-24T07:48Z",
+  "branch": "claude/magical-volta-yiUwL",
+  "commits": [
+    {
+      "sha": "a113b71",
+      "msg": "test(security): adversarial API auth contract + tighten CVE gates",
+      "stream": "adversarial-tests + ci-health + bug-fix"
+    }
+  ],
+  "streams_executed": [
+    "adversarial-tests",
+    "ci-health",
+    "deps-drift",
+    "bug-fix"
+  ],
+  "tests": {
+    "before": 1350,
+    "after": 1596,
+    "delta": 246,
+    "status": "all-green"
+  },
+  "high_cves": 0,
+  "moderate_cves": 8,
+  "new_test_files": [
+    "apps/web/__tests__/api-auth-gating-contract.test.ts",
+    "apps/web/__tests__/cron-route-auth-contract.test.ts"
+  ],
+  "findings": 6,
+  "findings_cumulative": 15,
+  "gaps_closed": [
+    "security-audit.yml was informational-only (never failed) — now fails on HIGH/CRITICAL",
+    "CI pipeline had no CVE gate — now gates with --audit-level=high on every push",
+    "No contract test for cockpit API auth — 18 new tests pin the 13-route auth requirement",
+    "No contract test for cron CRON_SECRET — 6 new tests pin 3-route CRON_SECRET requirement",
+    "@testing-library/dom missing (peer dep) caused 1 of 111 test files to fail",
+    "security-audit.yml baseline comment referenced stale next@14 (now next@16)"
+  ],
+  "blocked": [],
+  "next_cycle_candidates": [
+    "vitest@4 migration (eliminates 5 MODERATE CVEs, breaking change)",
+    "Content-Security-Policy header (next.config.mjs)",
+    "Worker package ESM migration (commonjs → node16 when ready)",
+    "GitHub Actions SHA pinning (Dependabot will handle weekly)"
+  ]
+}
