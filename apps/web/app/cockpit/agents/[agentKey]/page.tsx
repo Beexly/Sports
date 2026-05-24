@@ -3,10 +3,6 @@ import { notFound } from "next/navigation";
 import { db } from "@sports/db";
 import { AGENTS, getAgent, type AgentKey } from "@/lib/cockpit/agents";
 
-interface Params {
-  agentKey: string;
-}
-
 function isAgentKey(s: string): s is AgentKey {
   return s in AGENTS;
 }
@@ -14,12 +10,13 @@ function isAgentKey(s: string): s is AgentKey {
 export default async function CockpitAgentDetail({
   params,
 }: {
-  params: Params;
+  params: Promise<{ agentKey: string }>;
 }) {
-  if (!isAgentKey(params.agentKey)) {
+  const { agentKey } = await params;
+  if (!isAgentKey(agentKey)) {
     notFound();
   }
-  const agent = getAgent(params.agentKey);
+  const agent = getAgent(agentKey);
 
   const tasks = await db.cockpitTask.findMany({
     where: { assignedAgent: agent.key },

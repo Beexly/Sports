@@ -13,6 +13,8 @@ import { Footer } from "@/components/ui/footer";
  * nav by design.
  */
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };

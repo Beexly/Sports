@@ -7,10 +7,11 @@ import { allowedTransitionsFrom } from "@/lib/cockpit/transitions";
 export default async function CockpitTaskDetail({
   params,
 }: {
-  params: { taskId: string };
+  params: Promise<{ taskId: string }>;
 }) {
+  const { taskId } = await params;
   const task = await db.cockpitTask.findUnique({
-    where: { id: params.taskId },
+    where: { id: taskId },
     include: {
       decisions: { orderBy: { createdAt: "asc" } },
     },

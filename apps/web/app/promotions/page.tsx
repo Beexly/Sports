@@ -11,7 +11,7 @@ import {
 export const dynamic = "force-dynamic";
 
 interface PromotionsPageProps {
-  searchParams: { state?: string };
+  searchParams: Promise<{ state?: string }>;
 }
 
 function parseState(raw: string | undefined): string | null {
@@ -23,7 +23,8 @@ function parseState(raw: string | undefined): string | null {
 export default async function PromotionsPage({
   searchParams,
 }: PromotionsPageProps) {
-  const state = parseState(searchParams.state);
+  const { state: stateParam } = await searchParams;
+  const state = parseState(stateParam);
 
   // Server-render directly from the DB — no internal HTTP round-trip needed.
   const rows = await db.promotion

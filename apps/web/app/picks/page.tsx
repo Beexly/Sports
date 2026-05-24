@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 // ─────────────────────────────────────────────
 
 interface PicksPageProps {
-  searchParams: { sport?: string; date?: string; grade?: string };
+  searchParams: Promise<{ sport?: string; date?: string; grade?: string }>;
 }
 
 interface PicksResponse {
@@ -34,8 +34,8 @@ interface PicksResponse {
   };
 }
 
-function getRequestOrigin(): string {
-  const h = headers();
+async function getRequestOrigin(): Promise<string> {
+  const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host");
   if (!host) {
     return process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
@@ -55,7 +55,7 @@ async function fetchPicks(
   date?: string,
   grade?: string
 ): Promise<PicksResponse> {
-  const appUrl = getRequestOrigin();
+  const appUrl = await getRequestOrigin();
   const params = new URLSearchParams();
   if (sport) params.set("sport", sport);
   if (date) params.set("date", date);
@@ -92,7 +92,7 @@ async function fetchPicks(
 
 async function fetchSlate(): Promise<DailySlate | null> {
   try {
-    const appUrl = getRequestOrigin();
+    const appUrl = await getRequestOrigin();
     const res = await fetch(`${appUrl}/api/picks/daily-slate`, {
       next: { revalidate: 1800 },
     });
@@ -109,7 +109,7 @@ async function fetchSlate(): Promise<DailySlate | null> {
 // ─────────────────────────────────────────────
 
 export default async function PicksPage({ searchParams }: PicksPageProps) {
-  const { sport, date, grade } = searchParams;
+  const { sport, date, grade } = await searchParams;
 
   const session = await auth();
   const entitlements = session?.user?.id

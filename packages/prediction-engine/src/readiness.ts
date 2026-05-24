@@ -14,8 +14,8 @@
  *   }
  */
 
-import { getPlatformConfig } from "./platform-config.js";
-import type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
+import { getPlatformConfig } from "./platform-config";
+import type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config";
 
 export interface ReadinessGates {
   /** Scoring is always permitted — the engine never goes offline. */

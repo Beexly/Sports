@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 /**
- * apps/web/middleware.ts route-protection contract.
+ * apps/web/proxy.ts route-protection contract.
  *
  * The middleware does a cheap cookie check for /dashboard and /admin
  * routes; full auth + role check still happens at the page level. Pin
@@ -11,7 +11,7 @@ import { resolve } from "node:path";
  */
 
 const repoRoot = resolve(__dirname, "..");
-const src = readFileSync(resolve(repoRoot, "middleware.ts"), "utf8");
+const src = readFileSync(resolve(repoRoot, "proxy.ts"), "utf8");
 
 describe("middleware route protection", () => {
   it("protects /dashboard and /admin", () => {

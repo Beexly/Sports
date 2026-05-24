@@ -8,9 +8,9 @@ import {
   MAX_UNITS_PER_PICK,
   MIN_CONFIDENCE_FOR_STAKE,
   MIN_EDGE_FOR_STAKE,
-} from "../kelly.js";
+} from "../kelly";
 import type { ScoredPick } from "@sports/types";
-import { MODEL_VERSION } from "../constants.js";
+import { MODEL_VERSION } from "../constants";
 
 // Build a minimal ScoredPick for testing
 function makePick(overrides: Partial<ScoredPick> = {}): ScoredPick {

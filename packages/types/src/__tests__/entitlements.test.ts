@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getEntitlements, computePickGrade, PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "../index.js";
+import { getEntitlements, computePickGrade, PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "../index";
 
 describe("getEntitlements", () => {
   describe("FREE tier", () => {

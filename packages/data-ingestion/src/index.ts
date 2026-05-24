@@ -1,5 +1,5 @@
-export { OddsApiClient, OddsApiError } from "./odds-api-client.js";
-export { DataNormalizer } from "./normalizer.js";
+export { OddsApiClient, OddsApiError } from "./odds-api-client";
+export { DataNormalizer } from "./normalizer";
 export {
   enrichGameContext,
   trackOpeningLines,
@@ -8,5 +8,5 @@ export {
   getAtsForm,
   getHeadToHeadForm,
   settleGameLogs,
-} from "./context-enrichment.js";
-export * from "./config.js";
+} from "./context-enrichment";
+export * from "./config";

@@ -1,10 +1,11 @@
 import Link from "next/link";
 
-export default function AuthErrorPage({
+export default async function AuthErrorPage({
   searchParams,
 }: {
-  searchParams: { error?: string };
+  searchParams: Promise<{ error?: string }>;
 }) {
+  const { error } = await searchParams;
   const errorMessages: Record<string, string> = {
     Configuration:
       "Something's misconfigured on my side. Try again in a minute, or email hq@galaxysportsedge.com if it sticks.",
@@ -14,7 +15,7 @@ export default function AuthErrorPage({
   };
 
   const message =
-    errorMessages[searchParams.error ?? "Default"] ??
+    errorMessages[error ?? "Default"] ??
     errorMessages["Default"]!;
 
   return (

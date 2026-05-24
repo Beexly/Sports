@@ -8,14 +8,15 @@ import {
 export const dynamic = "force-dynamic";
 
 interface CockpitPromotionDetailProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function CockpitPromotionDetail({
   params,
 }: CockpitPromotionDetailProps) {
+  const { slug } = await params;
   const promo = await db.promotion
-    .findUnique({ where: { slug: params.slug } })
+    .findUnique({ where: { slug } })
     .catch(() => null);
   if (!promo) {
     notFound();

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculatePickResult } from "../settlement.js";
+import { calculatePickResult } from "../settlement";
 
 const NFL = "americanfootball_nfl";
 const MLS = "soccer_usa_mls";

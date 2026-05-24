@@ -38,7 +38,7 @@
 // ============================================================
 
 import type { ScoredPick } from "@sports/types";
-import { americanToImpliedProbability, clamp } from "./scoring.js";
+import { americanToImpliedProbability, clamp } from "./scoring";
 
 // Fraction of full Kelly to apply. 0.25 = quarter-Kelly, a
 // well-documented professional default.

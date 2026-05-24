@@ -20,15 +20,23 @@ function read(p: string): string {
 
 function extractFilters(src: string): Set<string> {
   const filters = new Set<string>();
-  // Match searchParams.get("name") OR searchParams.name OR searchParams["name"]
-  for (const m of src.matchAll(/searchParams\.get\(["']([a-z]+)["']\)/g)) {
+  const SP = /(?:resolved)?[Ss]earch[Pp]arams/;
+  // searchParams.get("name") — URLSearchParams API (export route uses this)
+  for (const m of src.matchAll(new RegExp(SP.source + '\\.get\\(["\']([a-z]+)["\']\\)', 'g'))) {
+    if (m[1] && m[1] !== 'get') filters.add(m[1]!);
+  }
+  // (resolved)searchParams.name direct property access
+  for (const m of src.matchAll(new RegExp(SP.source + '\\.([a-z]+)', 'g'))) {
+    if (m[1] && m[1] !== 'get') filters.add(m[1]);
+  }
+  // (resolved)searchParams["name"]
+  for (const m of src.matchAll(new RegExp(SP.source + '\\[["\']([a-z]+)["\']\\]', 'g'))) {
     filters.add(m[1]!);
   }
-  for (const m of src.matchAll(/searchParams\.([a-z]+)/g)) {
+  // Destructuring alias: { key: aliasParam } = resolvedSearchParams
+  // Matches "bootstrap: bootstrapParam," style destructuring with Param suffix
+  for (const m of src.matchAll(/\b([a-z][a-zA-Z]*):\s*[a-z][a-zA-Z]*Param\b/g)) {
     if (m[1]) filters.add(m[1]);
-  }
-  for (const m of src.matchAll(/searchParams\[["']([a-z]+)["']\]/g)) {
-    filters.add(m[1]!);
   }
   return filters;
 }

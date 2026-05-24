@@ -8,7 +8,7 @@ import {
   overUnderProbabilities,
   poissonConsistencyScore,
   assertTeamRatesAvailable,
-} from "../poisson.js";
+} from "../poisson";
 
 describe("factorial", () => {
   it("computes small factorials", () => {

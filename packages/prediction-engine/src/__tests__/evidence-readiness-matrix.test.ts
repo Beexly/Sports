@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildEvidenceReadinessMatrix,
   getEvidenceFactorDefinition,
-} from "../evidence-readiness-matrix.js";
+} from "../evidence-readiness-matrix";
 import type { EvidenceRecord, SignalCategory } from "@sports/types";
 
 const NOW = new Date("2026-05-21T18:00:00.000Z");

@@ -9,7 +9,7 @@ import {
   ODDS_FORMAT,
   type Market,
   type SupportedSportKey,
-} from "./config.js";
+} from "./config";
 
 export class OddsApiError extends Error {
   constructor(

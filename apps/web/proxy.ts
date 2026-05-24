@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * Middleware for route protection.
+ * Proxy (formerly middleware) for route protection.
  *
  * NOTE: Session checking requires a DB query which is expensive in middleware.
  * Instead, we use a lighter pattern: protect routes via redirect at the page level
  * (checking auth() in Server Components), and use middleware only for basic routing.
  *
- * Admin routes are protected at both middleware level (basic check) and page level
+ * Admin routes are protected at both proxy level (basic check) and page level
  * (full auth + role check).
  */
 
@@ -22,7 +22,7 @@ const AUTH_COOKIE_NAMES = [
   "__Secure-next-auth.session-token",
 ];
 
-export function middleware(req: NextRequest): NextResponse {
+export function proxy(req: NextRequest): NextResponse {
   const { pathname } = req.nextUrl;
 
   // Check if route requires auth
@@ -33,8 +33,7 @@ export function middleware(req: NextRequest): NextResponse {
   if (requiresAuth) {
     // Dev-mode bypass: when DEV_FAKE_ADMIN=true, the auth() helper returns
     // a synthetic admin session, so we must NOT redirect here. Without this
-    // bypass, the middleware would 307 to /auth/signin before the page
-    // even runs.
+    // bypass, the proxy would 307 to /auth/signin before the page even runs.
     if (process.env["DEV_FAKE_ADMIN"] === "true") {
       return NextResponse.next();
     }

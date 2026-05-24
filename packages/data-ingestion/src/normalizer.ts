@@ -4,7 +4,7 @@ import type {
   NormalizedGame,
   NormalizedOdds,
 } from "@sports/types";
-import { FRESHNESS_THRESHOLD_MS } from "./config.js";
+import { FRESHNESS_THRESHOLD_MS } from "./config";
 
 export class DataNormalizer {
   normalizeGames(events: OddsApiEvent[]): NormalizedGame[] {

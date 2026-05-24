@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { DataNormalizer } from "../normalizer.js";
+import { DataNormalizer } from "../normalizer";
 import type { OddsApiEvent } from "@sports/types";
 
 const mockEvent: OddsApiEvent = {

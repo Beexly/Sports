@@ -3,7 +3,7 @@ import {
   getSamplePicks,
   isDemoPicksEnabled,
   SAMPLE_PICK_COUNT,
-} from "./sample-picks.js";
+} from "./sample-picks";
 
 /**
  * @sports/db — Prisma client with a graceful "no DB available" fallback.
@@ -183,6 +183,6 @@ export function isStubMode(): boolean {
 }
 
 export { isDemoPicksEnabled, getSamplePicks, SAMPLE_PICK_COUNT };
-export type { SamplePick } from "./sample-picks.js";
+export type { SamplePick } from "./sample-picks";
 
 export * from "@prisma/client";

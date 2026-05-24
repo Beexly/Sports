@@ -22,8 +22,7 @@ import { ChecklistRow } from "@/components/cockpit/checklist-row";
  */
 
 interface HistoryPageProps {
-  searchParams: {
-    // searchParams.get("get") parity marker for export-route filter vocabulary.
+  searchParams: Promise<{
     result?: string;
     bootstrap?: string;
     published?: string;
@@ -31,7 +30,7 @@ interface HistoryPageProps {
     model?: string;
     eligible?: string;
     learning?: string;
-  };
+  }>;
 }
 
 const RESULT_FILTERS = ["ALL", "PENDING", "WIN", "LOSS", "PUSH", "VOID"] as const;
@@ -39,15 +38,19 @@ const RESULT_FILTERS = ["ALL", "PENDING", "WIN", "LOSS", "PUSH", "VOID"] as cons
 const TAKE = 100;
 
 export default async function CockpitHistoryPage({ searchParams }: HistoryPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const {
+    result,
+    bootstrap: bootstrapParam,
+    published: publishedParam,
+    sport: sportParam,
+    model: modelParam,
+    eligible: eligibleParam,
+    learning: learningParam,
+  } = resolvedSearchParams;
   const gates = getReadinessGates();
 
-  const resultParam = (searchParams.result ?? "ALL").toUpperCase();
-  const bootstrapParam = searchParams.bootstrap; // "true" | "false" | undefined
-  const publishedParam = searchParams.published; // "true" | "false" | undefined
-  const sportParam = searchParams.sport;
-  const modelParam = searchParams.model;
-  const eligibleParam = searchParams.eligible; // "true" | "false" | undefined
-  const learningParam = searchParams.learning; // "true" | "false" | undefined
+  const resultParam = (result ?? "ALL").toUpperCase();
 
   const where: Record<string, unknown> = {};
   if (RESULT_FILTERS.includes(resultParam as (typeof RESULT_FILTERS)[number]) && resultParam !== "ALL") {
@@ -198,7 +201,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
           <a
             data-testid="history-export-csv"
             href={(() => {
-              const qs = new URLSearchParams(searchParams as Record<string, string>);
+              const qs = new URLSearchParams(resolvedSearchParams as Record<string, string>);
               return `/api/cockpit/history/export${qs.toString() ? `?${qs.toString()}` : ""}`;
             })()}
             className="self-start rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-1.5 text-xs font-semibold text-gray-200 transition-colors hover:border-brand-700 hover:bg-brand-900/40 hover:text-brand-100 sm:self-end focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950"
@@ -321,11 +324,11 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         <div role="group" aria-label="Filter by result" className="flex flex-wrap items-center gap-2">
           <span className="text-gray-500">Result:</span>
           {RESULT_FILTERS.map((r) => {
-            const params = new URLSearchParams(searchParams as Record<string, string>);
+            const params = new URLSearchParams(resolvedSearchParams as Record<string, string>);
             if (r === "ALL") params.delete("result");
             else params.set("result", r);
             const href = `/cockpit/history${params.toString() ? `?${params.toString()}` : ""}`;
-            const active = (searchParams.result ?? "ALL").toUpperCase() === r;
+            const active = (resolvedSearchParams.result ?? "ALL").toUpperCase() === r;
             return (
               <Link
                 key={r}
@@ -347,11 +350,11 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         <div role="group" aria-label="Filter by bootstrap flag" className="ml-3 flex flex-wrap items-center gap-2">
           <span className="text-gray-500">Bootstrap:</span>
           {(["any", "true", "false"] as const).map((v) => {
-            const params = new URLSearchParams(searchParams as Record<string, string>);
+            const params = new URLSearchParams(resolvedSearchParams as Record<string, string>);
             if (v === "any") params.delete("bootstrap");
             else params.set("bootstrap", v);
             const href = `/cockpit/history${params.toString() ? `?${params.toString()}` : ""}`;
-            const active = (searchParams.bootstrap ?? "any") === v;
+            const active = (resolvedSearchParams.bootstrap ?? "any") === v;
             return (
               <Link
                 key={`b-${v}`}
@@ -373,11 +376,11 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         <div role="group" aria-label="Filter by public-performance eligibility" className="ml-3 flex flex-wrap items-center gap-2">
           <span className="text-gray-500">Eligible:</span>
           {(["any", "true", "false"] as const).map((v) => {
-            const params = new URLSearchParams(searchParams as Record<string, string>);
+            const params = new URLSearchParams(resolvedSearchParams as Record<string, string>);
             if (v === "any") params.delete("eligible");
             else params.set("eligible", v);
             const href = `/cockpit/history${params.toString() ? `?${params.toString()}` : ""}`;
-            const active = (searchParams.eligible ?? "any") === v;
+            const active = (resolvedSearchParams.eligible ?? "any") === v;
             return (
               <Link
                 key={`e-${v}`}
@@ -399,11 +402,11 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         <div role="group" aria-label="Filter by learning eligibility" className="ml-3 flex flex-wrap items-center gap-2">
           <span className="text-gray-500">Learning:</span>
           {(["any", "true", "false"] as const).map((v) => {
-            const params = new URLSearchParams(searchParams as Record<string, string>);
+            const params = new URLSearchParams(resolvedSearchParams as Record<string, string>);
             if (v === "any") params.delete("learning");
             else params.set("learning", v);
             const href = `/cockpit/history${params.toString() ? `?${params.toString()}` : ""}`;
-            const active = (searchParams.learning ?? "any") === v;
+            const active = (resolvedSearchParams.learning ?? "any") === v;
             return (
               <Link
                 key={`l-${v}`}
@@ -434,13 +437,13 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
               { v: "seed", label: "seed", model: "v5.0.0-seed" },
             ] as const
           ).map((entry) => {
-            const params = new URLSearchParams(searchParams as Record<string, string>);
+            const params = new URLSearchParams(resolvedSearchParams as Record<string, string>);
             if (entry.model === undefined) params.delete("model");
             else params.set("model", entry.model);
             const href = `/cockpit/history${params.toString() ? `?${params.toString()}` : ""}`;
             const active = entry.v === "any"
-              ? !searchParams.model
-              : searchParams.model === entry.model;
+              ? !resolvedSearchParams.model
+              : resolvedSearchParams.model === entry.model;
             return (
               <Link
                 key={`src-${entry.v}`}

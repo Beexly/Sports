@@ -15,8 +15,8 @@ import {
   WEIGHTS,
   RISK_THRESHOLDS,
   MIN_BOOKMAKERS,
-} from "./constants.js";
-import { computeGameContext } from "./game-context.js";
+} from "./constants";
+import { computeGameContext } from "./game-context";
 
 // ============================================================
 // Utility: convert American odds to implied probability

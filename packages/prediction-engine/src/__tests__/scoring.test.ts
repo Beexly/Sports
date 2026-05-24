@@ -5,7 +5,7 @@ import {
   clamp,
   scoreGame,
   scoreGames,
-} from "../scoring.js";
+} from "../scoring";
 import {
   computeLineMovementScore,
   computeRestAdvantageScore,
@@ -16,9 +16,9 @@ import {
   computeCrossMarketScore,
   computeUncertaintyPenalty,
   computeScheduleStressScore,
-} from "../game-context.js";
+} from "../game-context";
 import type { OddsInput } from "@sports/types";
-import { MODEL_VERSION } from "../constants.js";
+import { MODEL_VERSION } from "../constants";
 
 // ============================================================
 // Utility functions

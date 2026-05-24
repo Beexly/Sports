@@ -40,13 +40,14 @@ import type {
 export const dynamic = "force-dynamic";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function GET(
   _req: NextRequest,
   context: RouteContext
 ): Promise<NextResponse> {
+  const { id: pickId } = await context.params;
   const gates = getReadinessGates();
   if (!gates.canExposePublicPicks) {
     return NextResponse.json(bootstrapGateResponse("Evidence audit"), {
@@ -54,11 +55,9 @@ export async function GET(
     });
   }
 
-  const pickId = context.params.id;
   if (!pickId || typeof pickId !== "string") {
     return NextResponse.json({ error: "invalid pick id" }, { status: 400 });
   }
-
   const session = await auth();
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)

@@ -1,5 +1,3 @@
-import path from "node:path";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: [
@@ -8,26 +6,17 @@ const nextConfig = {
     "@sports/prediction-engine",
     "@sports/data-ingestion",
   ],
-  experimental: {
-    serverComponentsExternalPackages: ["@prisma/client"],
-  },
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...(config.resolve.alias ?? {}),
-      "@": path.resolve(process.cwd()),
-    };
-
-    // Resolve .js extension imports to .ts source files for transpiled workspace packages.
-    // Workspace packages use ESM-style `.js` extension imports in TypeScript source,
-    // which webpack can't find without this alias.
-    config.resolve.extensionAlias = {
-      ".js": [".ts", ".tsx", ".js"],
-      ".jsx": [".tsx", ".jsx"],
-    };
-    return config;
-  },
+  // Moved from experimental.serverComponentsExternalPackages in Next.js 15+
+  serverExternalPackages: ["@prisma/client"],
+  // Explicitly opt in to Turbopack (default in Next.js 16).
+  // Turbopack resolves @/* paths from tsconfig automatically and handles
+  // .js→.ts extension aliasing for workspace packages natively.
+  turbopack: {},
   images: {
-    domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
+    remotePatterns: [
+      { hostname: "avatars.githubusercontent.com" },
+      { hostname: "lh3.googleusercontent.com" },
+    ],
   },
   async headers() {
     return [

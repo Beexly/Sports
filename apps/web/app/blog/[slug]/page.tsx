@@ -11,10 +11,11 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const { slug } = await params;
   const post = await db.blogPost.findUnique({
-    where: { slug: params.slug, status: "PUBLISHED" },
+    where: { slug, status: "PUBLISHED" },
     select: { title: true, seoTitle: true, seoDescription: true, excerpt: true },
   });
 
@@ -29,15 +30,16 @@ export async function generateMetadata({
 export default async function BlogPostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const { slug } = await params;
   const session = await auth();
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)
     : { tier: "FREE" as const, canSeePremiumPicks: false, canSeeConfidence: false, canSeeLineMovement: false, canGetAlerts: false, dailyPickLimit: 1 };
 
   const post = await db.blogPost.findUnique({
-    where: { slug: params.slug, status: "PUBLISHED" },
+    where: { slug, status: "PUBLISHED" },
   });
 
   if (!post) notFound();

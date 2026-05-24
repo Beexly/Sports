@@ -38,7 +38,7 @@ import {
 } from "@sports/prediction-engine";
 import type { ReadinessGates } from "@sports/prediction-engine";
 import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from "@sports/types";
-import { recordSourceSnapshot } from "./source-snapshot.js";
+import { recordSourceSnapshot } from "./source-snapshot";
 
 export interface SportConfig {
   key: SupportedSportKey;

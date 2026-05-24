@@ -17,8 +17,8 @@
 
 // Import shared types from @sports/types — single source of truth
 import type { FactorDetail, GameContextInput, AtsFormBucket } from "@sports/types";
-import { WEIGHTS } from "./constants.js";
-import { clamp } from "./scoring.js";
+import { WEIGHTS } from "./constants";
+import { clamp } from "./scoring";
 
 // Re-export so consumers can import GameContextInput/AtsFormBucket from this module
 export type { GameContextInput, AtsFormBucket };
