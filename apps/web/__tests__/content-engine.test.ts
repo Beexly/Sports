@@ -299,6 +299,22 @@ describe("content engine — source coverage", () => {
     expect(v.missing).toHaveLength(0);
     expect(v.blockers).toHaveLength(0);
   });
+
+  it("NEEDS_SOURCE (not BLOCKED) when gate is OFF and ALL required sources are absent", () => {
+    // The gate-off blocker is only added inside the for-loop AFTER the 'records.length === 0
+    // → continue' guard. When a source type has no records, it's added to missing and the loop
+    // continues immediately — no blocker is added for that type. So when ALL required sources
+    // are absent, blockers stays empty and the result is NEEDS_SOURCE, not BLOCKED.
+    const v = evaluateContentSourceCoverage({
+      contentType: "PERFORMANCE_TRANSPARENCY",
+      sources: [],
+      performanceGateOn: false,
+    });
+    expect(v.status).toBe("NEEDS_SOURCE");
+    expect(v.missing).toContain("PERFORMANCE");
+    expect(v.missing).toContain("METHODOLOGY");
+    expect(v.blockers).toHaveLength(0); // gate blocker is skipped for absent sources
+  });
 });
 
 describe("content engine — compliance", () => {
