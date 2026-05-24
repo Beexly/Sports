@@ -111,6 +111,82 @@ describe("DataNormalizer", () => {
       expect(total.overPrice).toBe(-110);
       expect(total.underPrice).toBe(-110);
     });
+
+    it("returns empty array for event with no bookmakers", () => {
+      const noBooks: OddsApiEvent = { ...mockEvent, bookmakers: [] };
+      const odds = normalizer.normalizeOdds([noBooks], new Date());
+      expect(odds).toHaveLength(0);
+    });
+
+    it("throws on unknown market key", () => {
+      const badMarket: OddsApiEvent = {
+        ...mockEvent,
+        bookmakers: [
+          {
+            key: "fanduel",
+            title: "FanDuel",
+            last_update: new Date().toISOString(),
+            markets: [{ key: "unknown_market", last_update: "", outcomes: [] }],
+          },
+        ],
+      };
+      expect(() => normalizer.normalizeOdds([badMarket], new Date())).toThrow(
+        "Unknown market key: unknown_market"
+      );
+    });
+
+    it("includes draw price for H2H markets that have a Draw outcome", () => {
+      const soccerEvent: OddsApiEvent = {
+        ...mockEvent,
+        sport_key: "soccer_usa_mls",
+        bookmakers: [
+          {
+            key: "fanduel",
+            title: "FanDuel",
+            last_update: new Date().toISOString(),
+            markets: [
+              {
+                key: "h2h",
+                last_update: new Date().toISOString(),
+                outcomes: [
+                  { name: "Kansas City Chiefs", price: -110 },
+                  { name: "Philadelphia Eagles", price: 200 },
+                  { name: "Draw", price: 280 },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+      const odds = normalizer.normalizeOdds([soccerEvent], new Date());
+      const h2h = odds.find((o) => o.market === "H2H");
+      expect(h2h?.drawPrice).toBe(280);
+    });
+
+    it("produces one row per bookmaker per market", () => {
+      const twoBookEvent: OddsApiEvent = {
+        ...mockEvent,
+        bookmakers: [
+          {
+            key: "fanduel",
+            title: "FanDuel",
+            last_update: new Date().toISOString(),
+            markets: [{ key: "h2h", last_update: "", outcomes: [] }],
+          },
+          {
+            key: "draftkings",
+            title: "DraftKings",
+            last_update: new Date().toISOString(),
+            markets: [{ key: "h2h", last_update: "", outcomes: [] }],
+          },
+        ],
+      };
+      const odds = normalizer.normalizeOdds([twoBookEvent], new Date());
+      const books = new Set(odds.map((o) => o.bookmaker));
+      expect(books.has("fanduel")).toBe(true);
+      expect(books.has("draftkings")).toBe(true);
+      expect(odds).toHaveLength(2);
+    });
   });
 
   describe("validateFreshness", () => {
