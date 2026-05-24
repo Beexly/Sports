@@ -1,0 +1,33 @@
+name: Daily Digest
+on:
+  schedule:
+    - cron: "0 6 * * *"    # 6 AM UTC = 1 AM Chicago
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: npm ci --no-audit --no-fund
+      - name: Generate digest
+        run: node scripts/generate-digest.mjs
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: Set digest date
+        run: echo "DIGEST_DATE=$(date +%Y-%m-%d)" >> $GITHUB_ENV
+      - name: Open PR with digest
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "digest: ${{ env.DIGEST_DATE }}"
+          branch: "digest/${{ env.DIGEST_DATE }}"
+          title: "Daily Digest — ${{ env.DIGEST_DATE }}"
+          body: "Auto-generated daily session digest. Review and merge."
+          base: sports-intelligence-os-phase-9-ci
+          add-paths: "_logs/digests/*.md"

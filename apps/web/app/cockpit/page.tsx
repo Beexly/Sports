@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CockpitPulse from "@/components/cockpit/cockpit-pulse";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { loadJarvisAssessment } from "@/lib/cockpit/jarvis-data";
 import type { JarvisAssessment, JarvisHealth, JarvisLaunchStatus } from "@/lib/cockpit/jarvis";
@@ -75,6 +76,7 @@ export default async function CockpitOverview() {
 
   return (
     <div className="flex flex-col gap-8">
+      <CockpitPulse />
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-2xl font-bold text-white">Jarvis Launch Observatory</h1>

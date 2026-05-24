@@ -66,12 +66,27 @@ jobs:
         run: npm test
 
   # --------------------------------------------------------------
-  # 2. Build
+  # 2. AI cost ceiling check
+  # --------------------------------------------------------------
+  cost-ceiling:
+    name: AI cost ceiling check
+    runs-on: ubuntu-latest
+    needs: test
+    env:
+      AI_DAILY_COST_CEILING_USD: "5.00"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: node scripts/guardrails/cost-ceiling.mjs
+
+  # --------------------------------------------------------------
+  # 3. Build
   # --------------------------------------------------------------
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: test
+    needs: cost-ceiling
 
     steps:
       - uses: actions/checkout@v4
@@ -127,7 +142,20 @@ jobs:
         run: node scripts/guardrails/trust-gate.mjs
 
   # --------------------------------------------------------------
-  # 4. Model-freeze — MODEL_VERSION cannot move without an IMPLEMENTED
+  # 4. Brand voice — public surface scan for banned copy patterns
+  # --------------------------------------------------------------
+  brand-voice:
+    name: Brand voice public surface
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: node scripts/guardrails/public-surface-scanner.mjs
+
+  # --------------------------------------------------------------
+  # 5. Model-freeze — MODEL_VERSION cannot move without an IMPLEMENTED
   #    CalibrationProposal landing in the same change.
   # --------------------------------------------------------------
   model-freeze:
