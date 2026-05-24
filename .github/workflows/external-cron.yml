@@ -33,6 +33,8 @@ on:
           - settle-picks
           - jarvis-snapshot
 
+permissions: {}
+
 concurrency:
   group: external-cron-${{ github.event.schedule || github.event.inputs.target }}
   cancel-in-progress: false

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Overnight Operator Dashboard — Run 1 (2026-05-24)</title>
+<style>
+  body { font-family: monospace; background: #0d1117; color: #c9d1d9; margin: 2rem; }
+  h1 { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: .5rem; }
+  h2 { color: #79c0ff; margin-top: 2rem; }
+  .badge { display: inline-block; padding: .2rem .6rem; border-radius: 4px; font-size: .85rem; font-weight: bold; }
+  .pass { background: #1a4b1a; color: #3fb950; }
+  .fail { background: #4b1a1a; color: #f85149; }
+  .warn { background: #4b3a1a; color: #e3b341; }
+  .info { background: #1a2f4b; color: #79c0ff; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th { background: #161b22; color: #8b949e; text-align: left; padding: .5rem; border: 1px solid #30363d; }
+  td { padding: .5rem; border: 1px solid #30363d; }
+  .high { color: #f85149; }
+  .medium { color: #e3b341; }
+  .low { color: #3fb950; }
+  pre { background: #161b22; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; }
+</style>
+</head>
+<body>
+<h1>🌙 Overnight Operator — Run 1</h1>
+<p><strong>Date:</strong> 2026-05-24 | <strong>Branch:</strong> claude/magical-volta-yiUwL | <strong>Mode:</strong> git-WRITE (no GitHub PAT)</p>
+
+<h2>Health Summary</h2>
+<table>
+  <tr><th>Check</th><th>Before</th><th>After</th></tr>
+  <tr><td>TypeScript errors</td><td><span class="badge fail">40 errors</span></td><td><span class="badge pass">0 errors</span></td></tr>
+  <tr><td>Test suite</td><td><span class="badge fail">BROKEN (vitest not found)</span></td><td><span class="badge pass">1578 / 1578 pass</span></td></tr>
+  <tr><td>ESLint</td><td><span class="badge fail">BROKEN (eslint not installed)</span></td><td><span class="badge pass">0 warnings</span></td></tr>
+  <tr><td>Guardrails</td><td><span class="badge pass">PASS</span></td><td><span class="badge pass">PASS</span></td></tr>
+  <tr><td>Calibration gates</td><td><span class="badge pass">INTACT</span></td><td><span class="badge pass">INTACT</span></td></tr>
+  <tr><td>npm audit HIGH</td><td><span class="badge fail">4 packages (14 CVEs)</span></td><td><span class="badge warn">4 packages (requires major upgrade)</span></td></tr>
+</table>
+
+<h2>Actions Taken</h2>
+<table>
+  <tr><th>Category</th><th>Action</th><th>Files Changed</th></tr>
+  <tr><td><span class="badge info">REPAIR</span></td><td>npm install + prisma generate (eliminated 40 TS errors, unblocked 1578 tests)</td><td>node_modules (not committed)</td></tr>
+  <tr><td><span class="badge info">REPAIR</span></td><td>Added <code>prepare: npm run db:generate</code> to root package.json</td><td>package.json</td></tr>
+  <tr><td><span class="badge warn">IMPROVE</span></td><td>Added <code>permissions: contents: read</code> to ci.yml and daily-smoke.yml</td><td>.github/workflows/ci.yml, daily-smoke.yml</td></tr>
+  <tr><td><span class="badge warn">IMPROVE</span></td><td>Added <code>permissions: {}</code> to external-cron.yml (no checkout needed)</td><td>.github/workflows/external-cron.yml</td></tr>
+  <tr><td><span class="badge warn">IMPROVE</span></td><td>Added <code>ignoreDeprecations: "5.0"</code> to workers tsconfig (TypeScript 7 future-proofing)</td><td>workers/content-publishing/tsconfig.json, workers/data-refresh/tsconfig.json</td></tr>
+  <tr><td><span class="badge low">GROW</span></td><td>Created security-audit.yml — weekly automated CVE monitoring</td><td>.github/workflows/security-audit.yml</td></tr>
+</table>
+
+<h2>Open Risk: Next.js CVEs (BLOCKED — needs human decision)</h2>
+<pre>
+next@14.2.35 — 14 HIGH CVEs:
+  • DoS via Image Optimizer remotePatterns
+  • HTTP request deserialization DoS (Server Components)
+  • HTTP request smuggling via rewrites
+  • Unbounded image disk cache (storage exhaustion)
+  • Multiple cache poisoning vectors
+  • XSS in App Router (CSP nonces)
+  • SSRF via WebSocket upgrades
+  • Middleware/Proxy bypass (Pages Router + i18n)
+
+Fix: upgrade to next@^16.0.0 (semver major — requires testing)
+See: BLOCKED_NEED_G.md for human decision gate
+</pre>
+
+<h2>Top 5 Findings by Leverage</h2>
+<table>
+  <tr><th>Rank</th><th>Title</th><th>Leverage</th><th>Blast</th><th>Status</th></tr>
+  <tr><td>1</td><td>node_modules absent — full dev env broken on fresh clone</td><td>45</td><td class="high">HIGH</td><td><span class="badge pass">FIXED</span></td></tr>
+  <tr><td>2</td><td>Next.js 14 has 14 active HIGH CVEs</td><td>45</td><td class="high">HIGH</td><td><span class="badge warn">BLOCKED (needs upgrade)</span></td></tr>
+  <tr><td>3</td><td>Prisma client not generated → 40 TS errors</td><td>36</td><td class="high">HIGH</td><td><span class="badge pass">FIXED (prepare script)</span></td></tr>
+  <tr><td>4</td><td>GitHub Actions missing permissions: blocks</td><td>36</td><td class="high">HIGH</td><td><span class="badge pass">FIXED</span></td></tr>
+  <tr><td>5</td><td>deploy-time friction: no automation from install→types→typecheck</td><td>36</td><td class="high">HIGH</td><td><span class="badge pass">FIXED (prepare script)</span></td></tr>
+</table>
+
+<h2>Calibration Gate Invariants</h2>
+<pre>PUBLIC_PICKS_ENABLED     → GATED ✓
+PUBLIC_BLOG_ENABLED      → GATED ✓
+PERFORMANCE_STATS_ENABLED → GATED ✓
+CANONICAL_HISTORY_ENABLED → GATED ✓</pre>
+
+</body>
+</html>

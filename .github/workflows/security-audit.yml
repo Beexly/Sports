@@ -1,0 +1,64 @@
+name: Security Audit
+
+# Weekly automated dependency vulnerability scan.
+# Runs as informational (allow-failure) because current HIGH findings require
+# a Next.js major-version upgrade (14 → 16). Until that upgrade lands, this
+# workflow surfaces regression without blocking development.
+#
+# Tracked HIGH/CRITICAL baseline (2026-05-24):
+#   next@14.2.35 — 14 CVEs including DoS, HTTP smuggling, cache poisoning,
+#                  SSRF, XSS. Fix: upgrade to next@^16.0.0
+#   glob CLI     — Command injection via --cmd flag (not used in this repo)
+#
+# When all HIGH/CRITICAL are resolved this job should be changed to
+# fail on exit-code > 0.
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"  # Every Monday 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: npm audit (informational)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Run security audit
+        # continue-on-error until next@^16.0.0 upgrade is complete
+        continue-on-error: true
+        run: |
+          echo "::group::Full audit report"
+          npm audit
+          echo "::endgroup::"
+
+      - name: Summarize HIGH/CRITICAL findings
+        continue-on-error: true
+        run: |
+          echo "## High/Critical Vulnerabilities" >> $GITHUB_STEP_SUMMARY
+          npm audit --json | python3 -c "
+          import sys, json
+          data = json.load(sys.stdin)
+          vulns = data.get('vulnerabilities', {})
+          high = {k: v for k, v in vulns.items() if v.get('severity') in ('high', 'critical')}
+          if not high:
+              print('No HIGH or CRITICAL vulnerabilities found.')
+          for name, v in high.items():
+              via = v.get('via', [])
+              titles = [x.get('title','') for x in via if isinstance(x, dict) and x.get('title')]
+              print(f'- **{name}** ({v[\"severity\"]}): {chr(10).join(titles[:3]) if titles else \"transitive\"}')
+          " >> $GITHUB_STEP_SUMMARY

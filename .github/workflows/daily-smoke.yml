@@ -18,6 +18,9 @@ on:
     - cron: "30 13 * * *"  # 13:30 UTC = ~9:30am ET / 6:30am PT
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: daily-smoke
   cancel-in-progress: false

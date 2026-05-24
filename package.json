@@ -37,7 +37,8 @@
     "smoke:prod": "node scripts/post-deploy-smoke.mjs",
     "prod:probe": "node scripts/prod-probe.mjs",
     "jarvis:diff": "node scripts/jarvis-diff.mjs",
-    "morning:setup": "node scripts/morning-setup.mjs"
+    "morning:setup": "node scripts/morning-setup.mjs",
+    "prepare": "npm run db:generate"
   },
   "devDependencies": {
     "typescript": "^5.4.5"
