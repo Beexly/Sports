@@ -12,7 +12,7 @@ export interface SourceSnapshotInput {
   payload: unknown;
 }
 
-function stableStringify(value: unknown): string {
+export function stableStringify(value: unknown): string {
   return JSON.stringify(value, (_key, nested) => {
     if (!nested || typeof nested !== "object" || Array.isArray(nested)) {
       return nested;
