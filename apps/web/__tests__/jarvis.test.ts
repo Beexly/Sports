@@ -836,3 +836,106 @@ describe("synthesizeJarvis — safety warnings", () => {
     expect(a.safetyWarnings.some((w) => /bootstrap/i.test(w))).toBe(true);
   });
 });
+
+describe("synthesizeJarvis — recommended actions branches", () => {
+  const NOW = new Date("2026-05-18T12:00:00Z");
+
+  function base(overrides: Partial<JarvisInput> = {}): JarvisInput {
+    return {
+      now: NOW,
+      gates: {
+        canPersistCanonicalHistory: true,
+        canUseDerivedHistory: true,
+        canExposePublicPicks: true,
+        canPromoteFeaturedPicks: true,
+        canExposePerformanceStats: true,
+        canPublishContent: true,
+        canLearnFromOutcomes: true,
+        canApplyCalibrationAdjustments: false as const,
+        isBootstrapMode: false,
+        minSettledPicksForLearning: 25,
+      },
+      performancePolicy: evaluatePublicPerformancePolicy({
+        canExposePerformanceStats: true,
+        minSettledPicksForLearning: 25,
+        canonicalSettledCount: 100,
+        bootstrapCount: 0,
+        pendingCount: 0,
+        canonicalWins: 55,
+        canonicalLosses: 40,
+        canonicalPushes: 5,
+      }),
+      ingestion: {
+        lastAttemptAt: new Date(NOW.getTime() - 60 * 60 * 1000),
+        lastSuccessAt: new Date(NOW.getTime() - 60 * 60 * 1000),
+        lastWasSuccess: true,
+        recentFailureCount: 0,
+      },
+      settlement: {
+        lastSettlementAt: new Date(NOW.getTime() - 2 * 60 * 60 * 1000),
+        settledIn24h: 12,
+        pendingPickCount: 0,
+      },
+      history: {
+        canonicalSettledCount: 100,
+        bootstrapSettledCount: 0,
+        canonicalPendingCount: 0,
+        winCount: 55,
+        lossCount: 40,
+        pushCount: 5,
+        voidCount: 0,
+        publishedCount: 100,
+        featuredCount: 8,
+        canonicalEligibleForPublic: 100,
+        canonicalExcludedFromPublic: 0,
+      },
+      signal: {
+        snapshotCoveragePct: 0.95,
+        signalCoveragePct: 0.92,
+        averageDataQualityScore: 0.9,
+        modelVersionsActive: ["v5"],
+      },
+      layers: {
+        trustClaims: "implemented",
+        performanceGating: "implemented",
+        promotions: "implemented",
+        dailyBrief: "implemented",
+        calibration: "implemented",
+        cockpit: "implemented",
+        contentEngine: "implemented",
+        ciHardening: "implemented",
+      },
+      externalConfigMissing: [],
+      ...overrides,
+    };
+  }
+
+  it("includes 'Inspect ingestion errors' action when ingestion is AMBER and lastSuccessAt is not null", () => {
+    const a = synthesizeJarvis(
+      base({
+        ingestion: {
+          lastAttemptAt: new Date(NOW.getTime() - 8 * 60 * 60 * 1000), // 8h ago → AMBER
+          lastSuccessAt: new Date(NOW.getTime() - 8 * 60 * 60 * 1000),
+          lastWasSuccess: true,
+          recentFailureCount: 0,
+        },
+      })
+    );
+    expect(a.ingestionStatus).toBe("AMBER");
+    expect(a.recommendedNextActions.some((x) => /Inspect ingestion errors/i.test(x))).toBe(true);
+  });
+
+  it("includes 'Settle N pending picks' action when pendingPickCount > 0 and settlement is not GREEN", () => {
+    const a = synthesizeJarvis(
+      base({
+        settlement: {
+          lastSettlementAt: new Date(NOW.getTime() - 40 * 60 * 60 * 1000), // 40h ago → RED
+          settledIn24h: 0,
+          pendingPickCount: 7,
+        },
+      })
+    );
+    expect(a.settlementStatus).toBe("RED");
+    expect(a.recommendedNextActions.some((x) => /Settle 7 pending picks/i.test(x))).toBe(true);
+  });
+});
