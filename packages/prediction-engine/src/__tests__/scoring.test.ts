@@ -1082,6 +1082,46 @@ describe("scoreGame — TOTAL reasoning movement note", () => {
 });
 
 // ============================================================
+// UNDER pick path in scoreTotalPick
+// ============================================================
+
+describe("scoreGame — TOTAL UNDER pick (overIsChosen=false path)", () => {
+  it("selects UNDER when all books show over at a more negative price than under", () => {
+    // |overPrice|=120 > |underPrice|=105 → NOT overFavored → overFavoredPct=0 → UNDER chosen
+    const underFavoredBooks = Array.from({ length: 5 }, (_, i) => ({
+      bookmaker: `book${i + 1}`,
+      market: "TOTALS" as const,
+      total: 48.5,
+      overPrice: -120 as number,
+      underPrice: -105 as number,
+    }));
+    const input = makeOddsInput({ bookmakerOdds: underFavoredBooks });
+    const picks = scoreGame(input);
+    const totalPick = picks.find((p) => p.pickType === "TOTAL");
+    if (totalPick) {
+      expect(totalPick.selection).toMatch(/^UNDER/);
+      expect(totalPick.selection).toContain("48.5");
+    }
+  });
+
+  it("UNDER pick reasoning contains 'UNDER' direction prefix", () => {
+    const underFavoredBooks = Array.from({ length: 5 }, (_, i) => ({
+      bookmaker: `book${i + 1}`,
+      market: "TOTALS" as const,
+      total: 51.0,
+      overPrice: -125 as number,
+      underPrice: -100 as number,
+    }));
+    const input = makeOddsInput({ bookmakerOdds: underFavoredBooks });
+    const picks = scoreGame(input);
+    const totalPick = picks.find((p) => p.pickType === "TOTAL");
+    if (totalPick) {
+      expect(totalPick.reasoning).toMatch(/^UNDER/);
+    }
+  });
+});
+
+// ============================================================
 // Spread reasoning context clauses
 // ============================================================
 
