@@ -597,6 +597,121 @@ describe("content engine — build helpers (draft-only)", () => {
     expect(task.assignedAgent).toBe("AVA");
     expect(task.nextRecommendedAction).toBe("Route to AVA");
   });
+
+  it("daily brief builder includes published pick count when > 0", () => {
+    const draft = buildDailyBriefDraft({
+      slate: {
+        briefDate: new Date("2026-05-18"),
+        gameCount: 4,
+        publishedPickCount: 3,
+        dataQualityWarnings: [],
+        lineMovementNotes: [],
+      },
+      generatedBy: "test",
+      slug: "daily-with-picks",
+      sources: [makeSource("ODDS"), makeSource("DAILY_BRIEF")],
+    });
+    expect(draft.draftBody).toContain("3");
+    expect(draft.draftBody.toLowerCase()).toContain("picks published");
+  });
+
+  it("daily brief builder includes data-quality warnings section when present", () => {
+    const draft = buildDailyBriefDraft({
+      slate: {
+        briefDate: new Date("2026-05-18"),
+        gameCount: 2,
+        publishedPickCount: 0,
+        dataQualityWarnings: ["Stale ODDS data for Game A"],
+        lineMovementNotes: [],
+      },
+      generatedBy: "test",
+      slug: "daily-dq-warnings",
+      sources: [makeSource("ODDS"), makeSource("DAILY_BRIEF")],
+    });
+    expect(draft.draftBody).toContain("Data-quality notes");
+    expect(draft.draftBody).toContain("Stale ODDS data for Game A");
+  });
+
+  it("daily brief builder includes line movement notes section when present", () => {
+    const draft = buildDailyBriefDraft({
+      slate: {
+        briefDate: new Date("2026-05-18"),
+        gameCount: 3,
+        publishedPickCount: 0,
+        dataQualityWarnings: [],
+        lineMovementNotes: ["Chiefs -3.5 moved to -6"],
+      },
+      generatedBy: "test",
+      slug: "daily-lm-notes",
+      sources: [makeSource("ODDS"), makeSource("DAILY_BRIEF")],
+    });
+    expect(draft.draftBody).toContain("Line movement we're watching");
+    expect(draft.draftBody).toContain("Chiefs -3.5 moved to -6");
+  });
+
+  it("weekly recap gate-on includes settled count and win/loss/push numbers", () => {
+    const draft = buildWeeklyRecapDraft({
+      summary: {
+        weekStart: new Date("2026-05-11"),
+        weekEnd: new Date("2026-05-17"),
+        settledCount: 15,
+        winCount: 9,
+        lossCount: 5,
+        pushCount: 1,
+        bootstrapExcluded: false,
+        performanceGateOn: true,
+      },
+      generatedBy: "test",
+      slug: "weekly-gate-on",
+      sources: [makeSource("PERFORMANCE"), makeSource("PICK")],
+    });
+    expect(draft.draftBody).toContain("15");
+    expect(draft.draftBody).toContain("9");
+    expect(draft.draftBody).toContain("5");
+    expect(draft.draftBody).toContain("1");
+  });
+
+  it("weekly recap gate-on with bootstrapExcluded adds exclusion note", () => {
+    const draft = buildWeeklyRecapDraft({
+      summary: {
+        weekStart: new Date("2026-05-11"),
+        weekEnd: new Date("2026-05-17"),
+        settledCount: 5,
+        winCount: 3,
+        lossCount: 2,
+        pushCount: 0,
+        bootstrapExcluded: true,
+        performanceGateOn: true,
+      },
+      generatedBy: "test",
+      slug: "weekly-bootstrap-excl",
+      sources: [makeSource("PERFORMANCE"), makeSource("PICK")],
+    });
+    expect(draft.draftBody.toLowerCase()).toContain("bootstrap");
+  });
+
+  it("methodology builder CONFIDENCE subject produces confidence-focused body", () => {
+    const draft = buildMethodologyEducationDraft({
+      subject: "CONFIDENCE",
+      generatedBy: "test",
+      slug: "methodology-confidence",
+      sources: [makeSource("METHODOLOGY")],
+    });
+    expect(draft.draftBody.toLowerCase()).toContain("confidence");
+    // The title heading distinguishes the CONFIDENCE path from FRESHNESS
+    expect(draft.draftBody).toContain("How confidence labels work");
+  });
+
+  it("methodology builder GENERAL subject produces generic methodology body", () => {
+    const draft = buildMethodologyEducationDraft({
+      subject: "GENERAL",
+      generatedBy: "test",
+      slug: "methodology-general",
+      sources: [makeSource("METHODOLOGY")],
+    });
+    expect(draft.draftBody).toContain("# Methodology");
+    expect(draft.draftBody).toContain("ranked picks");
+  });
 });
 
 function readRel(rel: string): string {
