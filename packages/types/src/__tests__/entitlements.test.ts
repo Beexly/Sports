@@ -74,6 +74,38 @@ describe("computePickGrade", () => {
   });
 });
 
+describe("computePickGrade — boundary conditions", () => {
+  it("confidence 84 (just below ELITE threshold) with high edge → STRONG_PLAY", () => {
+    // conf=84 < 85 → not ELITE; conf >= 75 and edge >= 65 → STRONG_PLAY
+    expect(computePickGrade(84, 80)).toBe("STRONG_PLAY");
+  });
+
+  it("edge 79 (just below ELITE threshold) with high confidence → STRONG_PLAY", () => {
+    // conf=85 but edge=79 < 80 → not ELITE; conf >= 75 and edge >= 65 → STRONG_PLAY
+    expect(computePickGrade(85, 79)).toBe("STRONG_PLAY");
+  });
+
+  it("confidence 64 (just below SOLID threshold) with sufficient edge → LEAN", () => {
+    // conf=64 < 65 → cannot reach SOLID regardless of edge
+    expect(computePickGrade(64, 50)).toBe("LEAN");
+  });
+
+  it("edge 49 (just below SOLID threshold) with sufficient confidence → LEAN", () => {
+    // conf=65 but edge=49 < 50 → does not satisfy SOLID
+    expect(computePickGrade(65, 49)).toBe("LEAN");
+  });
+
+  it("confidence 74 (just below STRONG threshold) with sufficient edge → SOLID_PLAY", () => {
+    // conf=74 < 75 → not STRONG; conf >= 65 and edge >= 50 → SOLID_PLAY
+    expect(computePickGrade(74, 65)).toBe("SOLID_PLAY");
+  });
+
+  it("edge 64 (just below STRONG threshold) with high confidence → SOLID_PLAY", () => {
+    // conf=80 but edge=64 < 65 → not STRONG; conf >= 65 and edge >= 50 → SOLID_PLAY
+    expect(computePickGrade(80, 64)).toBe("SOLID_PLAY");
+  });
+});
+
 describe("PICK_GRADE_LABELS", () => {
   it("all grades have label, color, bgColor", () => {
     for (const grade of ["ELITE_PLAY", "STRONG_PLAY", "SOLID_PLAY", "LEAN"] as const) {
