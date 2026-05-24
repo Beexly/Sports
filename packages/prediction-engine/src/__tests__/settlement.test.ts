@@ -163,3 +163,20 @@ describe("calculatePickResult — home/away symmetry", () => {
     });
   }
 });
+
+describe("calculatePickResult — fallthrough guard", () => {
+  it("returns PUSH for any unrecognized pickType (exhaustive fallthrough)", () => {
+    // TypeScript normally prevents this at compile time; the runtime guard
+    // ensures the function never silently omits a result.
+    const result = calculatePickResult(
+      "FUTURES" as "MONEYLINE",
+      "Kansas City Chiefs",
+      0,
+      "Kansas City Chiefs",
+      28,
+      21,
+      NFL
+    );
+    expect(result).toBe("PUSH");
+  });
+});

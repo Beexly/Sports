@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { cn, formatDate, formatDateTime, formatGameTime, formatCurrency, generateSlug, truncate, confidenceLabel } from "@/lib/utils";
+import { cn, formatDate, formatDateTime, formatGameTime, formatCurrency, formatRelative, generateSlug, truncate, confidenceLabel } from "@/lib/utils";
 
 describe("cn", () => {
   it("merges class names correctly", () => {
@@ -158,5 +158,27 @@ describe("formatCurrency", () => {
 
   it("formats sub-dollar amounts (99 cents = $0.99)", () => {
     expect(formatCurrency(99)).toBe("$0.99");
+  });
+});
+
+describe("formatRelative", () => {
+  it("returns a string with 'ago' for a past date", () => {
+    // 1 hour ago
+    const past = new Date(Date.now() - 60 * 60 * 1000);
+    expect(formatRelative(past)).toContain("ago");
+  });
+
+  it("accepts an ISO string as input", () => {
+    // A date far in the past — stable "years ago" output
+    const result = formatRelative("2020-01-01T00:00:00Z");
+    expect(typeof result).toBe("string");
+    expect(result.length).toBeGreaterThan(0);
+    expect(result).toContain("ago");
+  });
+
+  it("returns a non-empty string for a recent date", () => {
+    const recent = new Date(Date.now() - 5 * 60 * 1000);
+    const result = formatRelative(recent);
+    expect(result.length).toBeGreaterThan(0);
   });
 });
