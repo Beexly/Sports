@@ -34,3 +34,4 @@ Append-only. One line per cycle.
 2026-05-23 · #31 · feat(cockpit): pulse strip at top of /cockpit — calls 24h, cache hit rate, today USD, active sites + nav to new pages · vitest `apps/web/__tests__/cockpit-pulse.test.ts`
 2026-05-23 · #32 · feat(ui): error.tsx + loading.tsx across 6 public segments + global app/loading.tsx · vitest `apps/web/__tests__/route-boundaries.test.ts`
 2026-05-23 · #33 · feat(ci): daily digest workflow — pure-template, zero-Claude-spend operator skim of what shipped · vitest `apps/web/__tests__/daily-digest.test.ts`
+2026-05-24 · #34 · feat(telemetry): persist Claude usage to Postgres via ClaudeUsageLog — cockpit telemetry now live on Vercel · vitest `apps/web/__tests__/claude-usage-log.test.ts`
