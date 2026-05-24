@@ -1038,3 +1038,148 @@ describe("synthesizeJarvis — recommended actions branches", () => {
     expect(a.recommendedNextActions.some((x) => /Settle 7 pending picks/i.test(x))).toBe(true);
   });
 });
+
+describe("synthesizeJarvis — picksStatus (classifyPicks) branches", () => {
+  it("picksStatus is GREEN when gate is open and publishedCount > 0", () => {
+    // classifyPicks: canExposePublicPicks=true AND publishedCount > 0 → GREEN
+    const a = synthesizeJarvis(
+      baseInput({
+        gates: {
+          canPersistCanonicalHistory: true,
+          canUseDerivedHistory: true,
+          canExposePublicPicks: true,
+          canPromoteFeaturedPicks: true,
+          canExposePerformanceStats: true,
+          canPublishContent: true,
+          canLearnFromOutcomes: true,
+          canApplyCalibrationAdjustments: false as const,
+          isBootstrapMode: false,
+          minSettledPicksForLearning: 25,
+        },
+        history: {
+          canonicalSettledCount: 100,
+          bootstrapSettledCount: 10,
+          canonicalPendingCount: 4,
+          winCount: 55,
+          lossCount: 40,
+          pushCount: 5,
+          voidCount: 1,
+          publishedCount: 42,
+          featuredCount: 8,
+          canonicalEligibleForPublic: 100,
+          canonicalExcludedFromPublic: 10,
+        },
+      })
+    );
+    expect(a.picksStatus).toBe("GREEN");
+  });
+
+  it("picksStatus is RED when gate is open but publishedCount is 0", () => {
+    // classifyPicks: canExposePublicPicks=true BUT publishedCount === 0 → RED
+    const a = synthesizeJarvis(
+      baseInput({
+        gates: {
+          canPersistCanonicalHistory: true,
+          canUseDerivedHistory: true,
+          canExposePublicPicks: true,
+          canPromoteFeaturedPicks: true,
+          canExposePerformanceStats: true,
+          canPublishContent: true,
+          canLearnFromOutcomes: true,
+          canApplyCalibrationAdjustments: false as const,
+          isBootstrapMode: false,
+          minSettledPicksForLearning: 25,
+        },
+        history: {
+          canonicalSettledCount: 0,
+          bootstrapSettledCount: 0,
+          canonicalPendingCount: 0,
+          winCount: 0,
+          lossCount: 0,
+          pushCount: 0,
+          voidCount: 0,
+          publishedCount: 0,
+          featuredCount: 0,
+          canonicalEligibleForPublic: 0,
+          canonicalExcludedFromPublic: 0,
+        },
+      })
+    );
+    expect(a.picksStatus).toBe("RED");
+  });
+
+  it("picksStatus is AMBER when canExposePublicPicks gate is closed", () => {
+    // classifyPicks: !canExposePublicPicks → AMBER (gate check is first)
+    const gates = {
+      canPersistCanonicalHistory: true,
+      canUseDerivedHistory: true,
+      canExposePublicPicks: false,
+      canPromoteFeaturedPicks: false,
+      canExposePerformanceStats: false,
+      canPublishContent: true,
+      canLearnFromOutcomes: true,
+      canApplyCalibrationAdjustments: false as const,
+      isBootstrapMode: false,
+      minSettledPicksForLearning: 25,
+    };
+    const policy = evaluatePublicPerformancePolicy({
+      canExposePerformanceStats: false,
+      minSettledPicksForLearning: 25,
+      canonicalSettledCount: 100,
+      bootstrapCount: 0,
+      pendingCount: 0,
+      canonicalWins: 55,
+      canonicalLosses: 40,
+      canonicalPushes: 5,
+      recentTotalCount: 20,
+      recentBootstrapCount: 0,
+    });
+    const a = synthesizeJarvis({
+      now: NOW,
+      gates,
+      performancePolicy: policy,
+      ingestion: {
+        lastAttemptAt: new Date(NOW.getTime() - 60 * 60 * 1000),
+        lastSuccessAt: new Date(NOW.getTime() - 60 * 60 * 1000),
+        lastWasSuccess: true,
+        recentFailureCount: 0,
+      },
+      settlement: {
+        lastSettlementAt: new Date(NOW.getTime() - 2 * 60 * 60 * 1000),
+        settledIn24h: 12,
+        pendingPickCount: 4,
+      },
+      history: {
+        canonicalSettledCount: 100,
+        bootstrapSettledCount: 10,
+        canonicalPendingCount: 4,
+        winCount: 55,
+        lossCount: 40,
+        pushCount: 5,
+        voidCount: 1,
+        publishedCount: 110, // non-zero, but gate is closed → still AMBER
+        featuredCount: 8,
+        canonicalEligibleForPublic: 100,
+        canonicalExcludedFromPublic: 10,
+      },
+      signal: {
+        snapshotCoveragePct: 0.95,
+        signalCoveragePct: 0.92,
+        averageDataQualityScore: 0.9,
+        modelVersionsActive: ["v5"],
+      },
+      layers: {
+        trustClaims: "implemented",
+        performanceGating: "implemented",
+        promotions: "implemented",
+        dailyBrief: "implemented",
+        calibration: "implemented",
+        cockpit: "implemented",
+        contentEngine: "implemented",
+        ciHardening: "partial",
+      },
+      externalConfigMissing: [],
+    });
+    expect(a.picksStatus).toBe("AMBER");
+  });
+});
