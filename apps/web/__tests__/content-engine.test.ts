@@ -421,6 +421,32 @@ describe("content engine — readiness", () => {
     expect(f.summary).toBe("First line of body.");
   });
 
+  it("formatDraftForReview returns '(no body)' when excerpt is null and body is all whitespace", () => {
+    const draft = makeDraft({
+      contentType: "METHODOLOGY_EDUCATION",
+      draftBody: "   \n  \n",
+      excerpt: null,
+      sources: [makeSource("METHODOLOGY")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    const f = formatDraftForReview(draft, v);
+    expect(f.summary).toBe("(no body)");
+  });
+
+  it("LINE_MOVEMENT_WATCH readiness is INTERNAL_ONLY and nextAction mentions public-safe variant", () => {
+    const draft = makeDraft({
+      contentType: "LINE_MOVEMENT_WATCH",
+      // LINE_MOVEMENT_WATCH requires RG (REQUIRES_RG includes it) and ODDS source
+      draftBody: "Line watch content with responsible-gaming note.",
+      responsibleGamingIncluded: true,
+      sources: [makeSource("ODDS")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.readiness).toBe("INTERNAL_ONLY");
+    expect(v.safeVisibility).toBe("INTERNAL");
+    expect(v.nextRecommendedAction.toLowerCase()).toContain("public-safe");
+  });
+
   it("NEEDS_AFFILIATE_DISCLOSURE when promotion content lacks disclosure", () => {
     const draft = makeDraft({
       contentType: "PROMOTION_ROUNDUP",
