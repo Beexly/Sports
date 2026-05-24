@@ -243,3 +243,40 @@ describe("buildHistoryCsv", () => {
     expect(csv).toMatch(/Pending — no outcome yet; Bootstrap pick/);
   });
 });
+
+describe("evaluatePickEligibility — learningEligible LOSS and PUSH branches", () => {
+  const BASE = {
+    id: "p",
+    isBootstrap: false,
+    isPublished: true,
+    settledAt: new Date("2026-05-01T00:00:00Z"),
+    hasSnapshot: true,
+    snapshotEligibleForLearning: true as const,
+  };
+
+  it("learningEligible is true for a LOSS result (losses inform calibration)", () => {
+    const e = evaluatePickEligibility(
+      { ...BASE, result: "LOSS" },
+      { canExposePerformanceStats: true }
+    );
+    expect(e.learningEligible).toBe(true);
+    expect(e.publicPerformanceEligible).toBe(true);
+  });
+
+  it("learningEligible is true for a PUSH result (pushes included in learning)", () => {
+    const e = evaluatePickEligibility(
+      { ...BASE, result: "PUSH" },
+      { canExposePerformanceStats: true }
+    );
+    expect(e.learningEligible).toBe(true);
+  });
+
+  it("learningEligible is false for a VOID result (VOID not in WIN/LOSS/PUSH)", () => {
+    const e = evaluatePickEligibility(
+      { ...BASE, result: "VOID" },
+      { canExposePerformanceStats: true }
+    );
+    expect(e.learningEligible).toBe(false);
+    expect(e.exclusionReasons.some((r) => /void/i.test(r))).toBe(true);
+  });
+});

@@ -153,4 +153,78 @@ describe("promotion publish guard", () => {
     expect(parseStateList(null)).toEqual([]);
     expect(parseStateList(undefined)).toEqual([]);
   });
+
+  it("blocks when disclosure text is whitespace-only", () => {
+    // disclosureText.trim().length === 0 also triggers MISSING_DISCLOSURE
+    const verdict = evaluatePromotionForPublish(
+      makePromotion({ disclosureText: "   " }),
+      { now: TS_NOW }
+    );
+    expect(verdict.blockers.map((b) => b.code)).toContain("MISSING_DISCLOSURE");
+  });
+
+  it("blocks when termsUrl is whitespace-only", () => {
+    // termsUrl.trim().length === 0 also triggers MISSING_TERMS_URL
+    const verdict = evaluatePromotionForPublish(
+      makePromotion({ termsUrl: "  " }),
+      { now: TS_NOW }
+    );
+    expect(verdict.blockers.map((b) => b.code)).toContain("MISSING_TERMS_URL");
+  });
+
+  it("does not add EXPIRED blocker when expiresAt is null", () => {
+    // null expiresAt = no expiry date set — should not be blocked
+    const verdict = evaluatePromotionForPublish(
+      makePromotion({ expiresAt: null }),
+      { now: TS_NOW }
+    );
+    expect(verdict.blockers.map((b) => b.code)).not.toContain("EXPIRED");
+  });
+
+  it("reviewable is false for BLOCKED status (hard block — not operator-fixable)", () => {
+    const verdict = evaluatePromotionForPublish(
+      makePromotion({ status: "BLOCKED" as Promotion["status"] }),
+      { now: TS_NOW }
+    );
+    const blocker = verdict.blockers.find((b) => b.code === "STATUS_NOT_ACTIVE");
+    expect(blocker?.reviewable).toBe(false);
+  });
+
+  it("reviewable is true for PAUSED status (operator can reactivate)", () => {
+    const verdict = evaluatePromotionForPublish(
+      makePromotion({ status: "PAUSED" as Promotion["status"] }),
+      { now: TS_NOW }
+    );
+    const blocker = verdict.blockers.find((b) => b.code === "STATUS_NOT_ACTIVE");
+    expect(blocker?.reviewable).toBe(true);
+  });
+
+  it("reviewable is false for BLOCKED compliance status", () => {
+    // complianceStatus !== "BLOCKED" → reviewable: true; "BLOCKED" → reviewable: false
+    const verdict = evaluatePromotionForPublish(
+      makePromotion({ complianceStatus: "BLOCKED" as Promotion["complianceStatus"] }),
+      { now: TS_NOW }
+    );
+    const blocker = verdict.blockers.find((b) => b.code === "COMPLIANCE_NOT_APPROVED");
+    expect(blocker?.reviewable).toBe(false);
+  });
+
+  it("passes state check when state is in eligible list", () => {
+    // State "NJ" is in the default eligibleStates ["NJ", "NY"] — no RESTRICTED_IN_STATE blocker
+    const verdict = evaluatePromotionForPublish(
+      makePromotion(),
+      { now: TS_NOW, state: "NJ" }
+    );
+    expect(verdict.blockers.map((b) => b.code)).not.toContain("RESTRICTED_IN_STATE");
+    expect(verdict.publishable).toBe(true);
+  });
+
+  it("parseStateList returns empty array for empty array input", () => {
+    expect(parseStateList([])).toEqual([]);
+  });
+
+  it("parseStateList returns empty array for non-array objects", () => {
+    expect(parseStateList({ NJ: true })).toEqual([]);
+    expect(parseStateList(42)).toEqual([]);
+  });
 });
