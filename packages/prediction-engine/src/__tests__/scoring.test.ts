@@ -792,3 +792,394 @@ describe("computeUncertaintyPenalty", () => {
     expect(factor).toBeNull();
   });
 });
+
+// ============================================================
+// AWAY-chosen spread pick (homeIsChosen = false)
+// ============================================================
+
+describe("scoreGame — AWAY-chosen spread pick", () => {
+  it("selects AWAY team when all books list home as underdog (positive home spread)", () => {
+    // Positive home spread → away is the favorite; homeFavoredCount = 0, homeIsChosen = false
+    const input = makeOddsInput({
+      bookmakerOdds: [
+        { bookmaker: "book1", market: "SPREADS", spread: 3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book2", market: "SPREADS", spread: 3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book3", market: "SPREADS", spread: 4.0, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book4", market: "SPREADS", spread: 3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book5", market: "SPREADS", spread: 3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      ],
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.selection).toContain("Eagles");
+      expect(spreadPick.selection).not.toContain("Chiefs");
+    }
+  });
+
+  it("AWAY spread pick has negative line (away favored)", () => {
+    const input = makeOddsInput({
+      bookmakerOdds: [
+        { bookmaker: "book1", market: "SPREADS", spread: 3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book2", market: "SPREADS", spread: 3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book3", market: "SPREADS", spread: 3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book4", market: "SPREADS", spread: 3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book5", market: "SPREADS", spread: 3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      ],
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      // chosenSpread = -avgSpread = -3.5 (away is the favorite, hence negative spread)
+      expect(spreadPick.line).toBeLessThan(0);
+    }
+  });
+});
+
+// ============================================================
+// Moneyline — fairProb < 0.58 threshold returns null
+// ============================================================
+
+describe("scoreGame — moneyline null when fairProb < 0.58", () => {
+  it("produces no moneyline pick when the market shows no clear favorite", () => {
+    // -115/-105 gives home fair prob ≈ 50.7% — well below the 0.58 threshold
+    const input = makeOddsInput({
+      bookmakerOdds: [
+        { bookmaker: "book1", market: "H2H", homePrice: -115, awayPrice: -105 },
+        { bookmaker: "book2", market: "H2H", homePrice: -115, awayPrice: -105 },
+        { bookmaker: "book3", market: "H2H", homePrice: -110, awayPrice: -110 },
+      ],
+    });
+    const picks = scoreGame(input);
+    const mlPick = picks.find((p) => p.pickType === "MONEYLINE");
+    expect(mlPick).toBeUndefined();
+  });
+});
+
+// ============================================================
+// Moneyline — AWAY chosen + positive price display
+// ============================================================
+
+describe("scoreGame — moneyline AWAY chosen and positive-odds display", () => {
+  it("selects AWAY team when away has stronger implied probability", () => {
+    // Away at -180 → fair away ≈ 62% > 58% threshold; home at +155
+    const input = makeOddsInput({
+      bookmakerOdds: [
+        { bookmaker: "book1", market: "H2H", homePrice: 155, awayPrice: -180 },
+        { bookmaker: "book2", market: "H2H", homePrice: 155, awayPrice: -180 },
+        { bookmaker: "book3", market: "H2H", homePrice: 160, awayPrice: -185 },
+        { bookmaker: "book4", market: "H2H", homePrice: 155, awayPrice: -180 },
+        { bookmaker: "book5", market: "H2H", homePrice: 158, awayPrice: -183 },
+      ],
+    });
+    const picks = scoreGame(input);
+    const mlPick = picks.find((p) => p.pickType === "MONEYLINE");
+    if (mlPick) {
+      expect(mlPick.selection).toContain("Eagles");
+      expect(mlPick.selection).toContain("ML");
+      expect(mlPick.selection).not.toContain("Chiefs");
+      expect(mlPick.pickType).toBe("MONEYLINE");
+    }
+  });
+
+  it("selection uses '+' prefix for positive avgPrice (home underdog chosen)", () => {
+    // home at +100, away at +200: fair home ≈ 60% → homeIsChosen = true with positive odds
+    // 5 books needed to clear the MIN_PUBLISH_CONFIDENCE after limited-coverage penalty
+    const input = makeOddsInput({
+      bookmakerOdds: [
+        { bookmaker: "book1", market: "H2H", homePrice: 100, awayPrice: 200 },
+        { bookmaker: "book2", market: "H2H", homePrice: 100, awayPrice: 200 },
+        { bookmaker: "book3", market: "H2H", homePrice: 100, awayPrice: 200 },
+        { bookmaker: "book4", market: "H2H", homePrice: 100, awayPrice: 200 },
+        { bookmaker: "book5", market: "H2H", homePrice: 100, awayPrice: 200 },
+      ],
+    });
+    const picks = scoreGame(input);
+    const mlPick = picks.find((p) => p.pickType === "MONEYLINE");
+    if (mlPick) {
+      // avgPrice = 100 > 0 → display includes '+'
+      expect(mlPick.selection).toMatch(/\+\d+/);
+      expect(mlPick.selection).toContain("Chiefs");
+    }
+  });
+});
+
+// ============================================================
+// Shadow evidence factors propagate into factorBreakdown
+// ============================================================
+
+describe("scoreGame — shadow evidence factors", () => {
+  it("shadow evidence appears in factorBreakdown.factors when context.shadowEvidence is populated", () => {
+    const input = makeOddsInput({
+      context: {
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 5,
+        dataFreshnessMinutes: 5,
+        shadowEvidence: [
+          {
+            sourceCategory: "PLAYER_AVAILABILITY",
+            sourceName: "shadow-adapter",
+            fetchedAt: new Date(),
+            trustLevel: 0.8,
+            isBootstrap: false,
+            signalKey: "player_avail",
+            activationStatus: "SHADOW_ONLY",
+            freshnessStatus: "FRESH",
+            whyUsedOrBlocked: "Monitoring player availability for calibration",
+          },
+        ],
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      const shadowFactor = spreadPick.factorBreakdown.factors.find(
+        (f) => f.name.startsWith("Shadow")
+      );
+      expect(shadowFactor).toBeDefined();
+      expect(shadowFactor?.name).toBe("Shadow PLAYER AVAILABILITY");
+      expect(shadowFactor?.impact).toBe("neutral");
+      expect(shadowFactor?.weight).toBe(0);
+    }
+  });
+
+  it("multiple shadow records produce one shadow factor each", () => {
+    const input = makeOddsInput({
+      context: {
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 5,
+        dataFreshnessMinutes: 5,
+        shadowEvidence: [
+          {
+            sourceCategory: "PLAYER_AVAILABILITY",
+            sourceName: "shadow-1",
+            fetchedAt: new Date(),
+            trustLevel: 0.8,
+            isBootstrap: false,
+            signalKey: "player_avail",
+            activationStatus: "SHADOW_ONLY",
+            freshnessStatus: "FRESH",
+            whyUsedOrBlocked: "Monitoring players",
+          },
+          {
+            sourceCategory: "OFFICIALS",
+            sourceName: "shadow-2",
+            fetchedAt: new Date(),
+            trustLevel: 0.7,
+            isBootstrap: false,
+            signalKey: "officials",
+            activationStatus: "SHADOW_ONLY",
+            freshnessStatus: "FRESH",
+            whyUsedOrBlocked: "Monitoring officials",
+          },
+        ],
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      const shadowFactors = spreadPick.factorBreakdown.factors.filter(
+        (f) => f.name.startsWith("Shadow")
+      );
+      expect(shadowFactors).toHaveLength(2);
+    }
+  });
+
+  it("shadow factor description comes from evidence.whyUsedOrBlocked", () => {
+    const whyMsg = "Player availability in shadow monitoring phase";
+    const input = makeOddsInput({
+      context: {
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 5,
+        dataFreshnessMinutes: 5,
+        shadowEvidence: [
+          {
+            sourceCategory: "PLAYER_AVAILABILITY",
+            sourceName: "shadow-adapter",
+            fetchedAt: new Date(),
+            trustLevel: 0.8,
+            isBootstrap: false,
+            signalKey: "player_avail",
+            activationStatus: "SHADOW_ONLY",
+            freshnessStatus: "FRESH",
+            whyUsedOrBlocked: whyMsg,
+          },
+        ],
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      const shadowFactor = spreadPick.factorBreakdown.factors.find(
+        (f) => f.name.startsWith("Shadow")
+      );
+      expect(shadowFactor?.description).toBe(whyMsg);
+    }
+  });
+});
+
+// ============================================================
+// TOTAL pick movement note in reasoning string
+// ============================================================
+
+describe("scoreGame — TOTAL reasoning movement note", () => {
+  // 10 balanced books so depth + consensus overcome any movement score
+  const tenTotalBooks = Array.from({ length: 10 }, (_, i) => ({
+    bookmaker: `book${i + 1}`,
+    market: "TOTALS" as const,
+    total: 48.5,
+    overPrice: -110 as number,
+    underPrice: -110 as number,
+  }));
+
+  it("includes 'Total line moving in pick direction' when total rises sharply for OVER pick", () => {
+    const input = makeOddsInput({
+      bookmakerOdds: tenTotalBooks,
+      context: {
+        openingTotal: 47.5,
+        currentTotal: 49.5, // +2 pt move up → confirms OVER → lineMovementScore ≈ +10
+        hasSpreadMarket: false,
+        hasTotalMarket: true,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const totalPick = picks.find((p) => p.pickType === "TOTAL");
+    if (totalPick) {
+      expect(totalPick.factorBreakdown.lineMovementScore).toBeGreaterThan(5);
+      expect(totalPick.reasoning).toContain("Total line moving in pick direction");
+    }
+  });
+
+  it("includes 'Total line moving against pick direction' when total drops for OVER pick", () => {
+    const input = makeOddsInput({
+      bookmakerOdds: tenTotalBooks,
+      context: {
+        openingTotal: 49.5,
+        currentTotal: 47.5, // −2 pt drop → fades OVER → lineMovementScore ≈ −10
+        hasSpreadMarket: false,
+        hasTotalMarket: true,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const totalPick = picks.find((p) => p.pickType === "TOTAL");
+    if (totalPick) {
+      expect(totalPick.factorBreakdown.lineMovementScore).toBeLessThan(-5);
+      expect(totalPick.reasoning).toContain("Total line moving against pick direction");
+    }
+  });
+});
+
+// ============================================================
+// Spread reasoning context clauses
+// ============================================================
+
+describe("scoreGame — spread reasoning context clauses", () => {
+  // 10 spread books provide enough depth to survive negative context signals
+  const tenSpreadBooks = Array.from({ length: 10 }, (_, i) => ({
+    bookmaker: `book${i + 1}`,
+    market: "SPREADS" as const,
+    spread: -3.5,
+    homeSpreadPrice: -110 as number,
+    awaySpreadPrice: -110 as number,
+  }));
+
+  it("reasoning includes 'confirming line movement' when line moves toward pick (> 5 pts score)", () => {
+    const input = makeOddsInput({
+      bookmakerOdds: tenSpreadBooks,
+      context: {
+        openingSpread: -3.5,
+        currentSpread: -8.5, // −5 pt move further negative → confirms HOME → score ≈ +15
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.reasoning).toContain("confirming line movement");
+    }
+  });
+
+  it("reasoning includes 'fading line movement' when line moves against pick (< −5 pts score)", () => {
+    // delta = +2.0 from -3.5 to -1.5 → fades HOME → lineMovementScore ≈ −10
+    // 10 books ensure base confidence (≈ 66) survives the −10 penalty
+    const input = makeOddsInput({
+      bookmakerOdds: tenSpreadBooks,
+      context: {
+        openingSpread: -3.5,
+        currentSpread: -1.5, // +2 pt move → fades HOME pick → score ≈ −10
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.reasoning).toContain("fading line movement");
+    }
+  });
+
+  it("reasoning includes 'rest advantage' when home has significantly more rest days", () => {
+    // restDaysHome=7, restDaysAway=1 → diff=6 → restScore=6 > 3 → "rest advantage" clause
+    const input = makeOddsInput({
+      context: {
+        restDaysHome: 7,
+        restDaysAway: 1,
+        isBackToBackHome: false,
+        isBackToBackAway: false,
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 5,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.reasoning).toContain("rest advantage");
+    }
+  });
+
+  it("reasoning includes 'rest disadvantage' when home has much less rest (10 books for safety margin)", () => {
+    // restDaysHome=1, restDaysAway=7 → diff=−6 → restScore=−6 < −3 → "rest disadvantage" clause
+    // 10 books give base confidence ≈ 66 which survives the −6 penalty
+    const input = makeOddsInput({
+      bookmakerOdds: tenSpreadBooks,
+      context: {
+        restDaysHome: 1,
+        restDaysAway: 7,
+        isBackToBackHome: false,
+        isBackToBackAway: false,
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+        hasH2HMarket: false,
+        bookmakerCoverageMax: 10,
+        dataFreshnessMinutes: 5,
+      },
+    });
+    const picks = scoreGame(input);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    if (spreadPick) {
+      expect(spreadPick.reasoning).toContain("rest disadvantage");
+    }
+  });
+});
