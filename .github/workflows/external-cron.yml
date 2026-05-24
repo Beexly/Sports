@@ -111,6 +111,10 @@ jobs:
           CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
         run: |
           set -euo pipefail
+          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
+            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
+            exit 1
+          fi
           response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
             -H "Authorization: Bearer ${CRON_SECRET}" \
             --location \
