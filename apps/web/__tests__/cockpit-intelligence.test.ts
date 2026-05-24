@@ -334,6 +334,94 @@ describe("computeOperatorPulse", () => {
   });
 });
 
+describe("computeOperatorPulse — nextBestActions singular/plural wording", () => {
+  function pulse(overrides: Partial<Parameters<typeof computeOperatorPulse>[0]>) {
+    return computeOperatorPulse({
+      now: NOW,
+      taskCountsByStatus: new Map(),
+      taskCountsByAgent: new Map(),
+      tasksByRisk: new Map(),
+      mediaDraftsPending: 0,
+      mediaApprovedPending: 0,
+      promoCounts: EMPTY_PROMO,
+      readinessGatesOn: 7,
+      readinessGatesTotal: 7,
+      calibrationProposalCount: 0,
+      agingTasks: [],
+      staleSourceCount: 0,
+      ...overrides,
+    });
+  }
+
+  it("singular 'cockpit item' when reviewCount is 1", () => {
+    const p = pulse({ taskCountsByStatus: new Map([["NEEDS_REVIEW", 1]]) });
+    expect(p.nextBestActions.some((a) => a.includes("1 cockpit item "))).toBe(true);
+  });
+
+  it("plural 'cockpit items' when reviewCount > 1", () => {
+    const p = pulse({ taskCountsByStatus: new Map([["NEEDS_REVIEW", 2]]) });
+    expect(p.nextBestActions.some((a) => a.includes("cockpit items"))).toBe(true);
+  });
+
+  it("singular 'promotion' when needsReview is 1", () => {
+    const p = pulse({ promoCounts: { ...EMPTY_PROMO, needsReview: 1 } });
+    expect(p.nextBestActions.some((a) => /1 promotion /.test(a))).toBe(true);
+  });
+
+  it("plural 'promotions' when needsReview > 1", () => {
+    const p = pulse({ promoCounts: { ...EMPTY_PROMO, needsReview: 2 } });
+    expect(p.nextBestActions.some((a) => /promotions/.test(a))).toBe(true);
+  });
+
+  it("singular 'calibration proposal' when proposalCount is 1", () => {
+    const p = pulse({ calibrationProposalCount: 1 });
+    expect(p.nextBestActions.some((a) => /1 calibration proposal /.test(a))).toBe(true);
+  });
+
+  it("plural 'calibration proposals' when proposalCount > 1", () => {
+    const p = pulse({ calibrationProposalCount: 2 });
+    expect(p.nextBestActions.some((a) => /calibration proposals/.test(a))).toBe(true);
+  });
+
+  it("singular 'source category is' when staleSourceCount is 1", () => {
+    const p = pulse({ staleSourceCount: 1 });
+    expect(p.nextBestActions.some((a) => /source category is/.test(a))).toBe(true);
+  });
+
+  it("plural 'source categories are' when staleSourceCount > 1", () => {
+    const p = pulse({ staleSourceCount: 2 });
+    expect(p.nextBestActions.some((a) => /ies are/.test(a))).toBe(true);
+  });
+
+  it("singular 'task aged' when aging72 is 1", () => {
+    const p = pulse({
+      agingTasks: [{ id: "x", title: "old", status: "BLOCKED", assignedAgent: "TAL", ageHours: 80 }],
+    });
+    expect(p.nextBestActions.some((a) => /^1 task aged/.test(a))).toBe(true);
+  });
+
+  it("plural 'tasks aged' when aging72 > 1", () => {
+    const p = pulse({
+      agingTasks: [
+        { id: "x", title: "old1", status: "BLOCKED", assignedAgent: "TAL", ageHours: 80 },
+        { id: "y", title: "old2", status: "BLOCKED", assignedAgent: "TAL", ageHours: 90 },
+      ],
+    });
+    expect(p.nextBestActions.some((a) => /tasks aged/.test(a))).toBe(true);
+  });
+
+  it("readinessGatesTotal=0 produces readinessScore of 40 (only queue health counts)", () => {
+    const p = pulse({ readinessGatesOn: 0, readinessGatesTotal: 0 });
+    // gatesPct = 0 (guarded), queueHealth = 1 (empty queue), score = round(0*0.6 + 1*0.4) * 100 = 40
+    expect(p.readinessScore).toBe(40);
+  });
+
+  it("promotionsReviewQueue reflects promoCounts.needsReview", () => {
+    const p = pulse({ promoCounts: { ...EMPTY_PROMO, needsReview: 5 } });
+    expect(p.promotionsReviewQueue).toBe(5);
+  });
+});
+
 describe("computeTaskAge", () => {
   it("returns exact hours between createdAt and now", () => {
     const now = new Date("2026-05-24T10:00:00Z");

@@ -89,4 +89,31 @@ describe("public payload builder", () => {
     );
     expect(resp.meta.state).toBe("NJ");
   });
+
+  it("meta.state is null when no state option is provided", () => {
+    const resp = buildPublicPromotionsResponse([makePromotion()], { now: TS_NOW });
+    expect(resp.meta.state).toBeNull();
+  });
+
+  it("expiresAt is null in payload when promotion has no expiry", () => {
+    const p = toPublicPromotion(makePromotion({ expiresAt: null }), { now: TS_NOW });
+    expect(p).not.toBeNull();
+    expect(p?.expiresAt).toBeNull();
+  });
+
+  it("expiresAt is an ISO string in payload when promotion has an expiry", () => {
+    const exp = new Date("2026-12-31T23:59:59Z");
+    const p = toPublicPromotion(makePromotion({ expiresAt: exp }), { now: TS_NOW });
+    expect(p?.expiresAt).toBe(exp.toISOString());
+  });
+
+  it("promoCode is surfaced when set on the promotion", () => {
+    const p = toPublicPromotion(makePromotion({ promoCode: "SAVE20" }), { now: TS_NOW });
+    expect(p?.promoCode).toBe("SAVE20");
+  });
+
+  it("affiliateUrl is null when not configured", () => {
+    const p = toPublicPromotion(makePromotion({ affiliateUrl: null }), { now: TS_NOW });
+    expect(p?.affiliateUrl).toBeNull();
+  });
 });

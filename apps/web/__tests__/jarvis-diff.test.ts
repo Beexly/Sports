@@ -170,3 +170,50 @@ describe("diffJarvis", () => {
     expect(summary).toMatch(/sectional|launchStatus/);
   });
 });
+
+describe("summarizeJarvisDiff — branch coverage", () => {
+  function fakeDiff(overrides: Partial<import("@/lib/cockpit/jarvis-diff").JarvisDiff>): import("@/lib/cockpit/jarvis-diff").JarvisDiff {
+    return {
+      hasChanges: true,
+      launchStatusChanged: false,
+      sectionalChanges: [],
+      warningCountChanges: [],
+      newSafetyWarnings: [],
+      clearedSafetyWarnings: [],
+      newExternalConfig: [],
+      clearedExternalConfig: [],
+      ...overrides,
+    };
+  }
+
+  it("includes '+N safety' when new safety warnings appear", () => {
+    const summary = summarizeJarvisDiff(fakeDiff({ newSafetyWarnings: ["warn-a", "warn-b"] }));
+    expect(summary).toContain("+2 safety");
+  });
+
+  it("includes '-N safety' when safety warnings are cleared", () => {
+    const summary = summarizeJarvisDiff(fakeDiff({ clearedSafetyWarnings: ["warn-old"] }));
+    expect(summary).toContain("-1 safety");
+  });
+
+  it("includes '+N config' when new external config keys become required", () => {
+    const summary = summarizeJarvisDiff(fakeDiff({ newExternalConfig: ["STRIPE_SECRET_KEY", "THE_ODDS_API_KEY"] }));
+    expect(summary).toContain("+2 config");
+  });
+
+  it("includes '-N config' when external config keys are resolved", () => {
+    const summary = summarizeJarvisDiff(fakeDiff({ clearedExternalConfig: ["STRIPE_SECRET_KEY"] }));
+    expect(summary).toContain("-1 config");
+  });
+
+  it("joins all active branches with ' · ' separator", () => {
+    const summary = summarizeJarvisDiff(
+      fakeDiff({
+        launchStatusChanged: true,
+        newSafetyWarnings: ["w1"],
+        clearedExternalConfig: ["k1"],
+      })
+    );
+    expect(summary).toBe("launchStatus changed · +1 safety · -1 config");
+  });
+});
