@@ -232,6 +232,47 @@ describe("content engine — source coverage", () => {
     expect(v.status).toBe("NEEDS_SOURCE");
     expect(v.missing).toHaveLength(2);
   });
+
+  it("SOCIAL_DRAFT with METHODOLOGY source is COVERED", () => {
+    const v = evaluateContentSourceCoverage({
+      contentType: "SOCIAL_DRAFT",
+      sources: [makeSource("METHODOLOGY")],
+      performanceGateOn: false,
+    });
+    expect(v.status).toBe("COVERED");
+    expect(v.missing).toHaveLength(0);
+  });
+
+  it("SOCIAL_DRAFT with no sources is NEEDS_SOURCE", () => {
+    const v = evaluateContentSourceCoverage({
+      contentType: "SOCIAL_DRAFT",
+      sources: [],
+      performanceGateOn: false,
+    });
+    expect(v.status).toBe("NEEDS_SOURCE");
+    expect(v.missing).toContain("METHODOLOGY");
+  });
+
+  it("NEWSLETTER_DRAFT requires METHODOLOGY and DAILY_BRIEF sources", () => {
+    const v = evaluateContentSourceCoverage({
+      contentType: "NEWSLETTER_DRAFT",
+      sources: [makeSource("METHODOLOGY")],
+      performanceGateOn: false,
+    });
+    // Missing DAILY_BRIEF → PARTIAL (some but not all required sources present)
+    expect(v.status).toBe("PARTIAL");
+    expect(v.missing).toContain("DAILY_BRIEF");
+  });
+
+  it("NEWSLETTER_DRAFT with all required sources is COVERED", () => {
+    const v = evaluateContentSourceCoverage({
+      contentType: "NEWSLETTER_DRAFT",
+      sources: [makeSource("METHODOLOGY"), makeSource("DAILY_BRIEF")],
+      performanceGateOn: false,
+    });
+    expect(v.status).toBe("COVERED");
+    expect(v.covered).toBe(true);
+  });
 });
 
 describe("content engine — compliance", () => {
