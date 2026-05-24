@@ -7,6 +7,8 @@ import {
   createCheckoutSession,
 } from "@/lib/stripe";
 
+export const dynamic = "force-dynamic";
+
 const CheckoutSchema = z.object({
   tier: z.enum(["PRO", "ELITE"]),
 });

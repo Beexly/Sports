@@ -3,6 +3,8 @@ import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { db } from "@sports/db";
 
+export const dynamic = "force-dynamic";
+
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
 // Next.js App Router does not parse the body automatically for route handlers.
 

@@ -4,6 +4,8 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import type { PublicBlogPost } from "@sports/types";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const session = await auth();
   const entitlements = session?.user?.id

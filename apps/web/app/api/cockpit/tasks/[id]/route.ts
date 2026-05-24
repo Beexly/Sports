@@ -9,6 +9,14 @@ import type { CockpitTaskStatus } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
+const VALID_TASK_STATUSES = [
+  "NEW", "ROUTED", "DRAFTED", "NEEDS_REVIEW", "APPROVED", "REJECTED", "BLOCKED", "ARCHIVED",
+] as const;
+
+function isValidTaskStatus(value: unknown): value is CockpitTaskStatus {
+  return typeof value === "string" && (VALID_TASK_STATUSES as readonly string[]).includes(value);
+}
+
 async function requireAdmin(): Promise<{ ok: true; email: string } | NextResponse> {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
@@ -57,6 +65,12 @@ export async function PATCH(
       { status: 400 }
     );
   }
+  if (!isValidTaskStatus(body.toStatus)) {
+    return NextResponse.json(
+      { error: `Invalid toStatus. Valid values: ${VALID_TASK_STATUSES.join(", ")}` },
+      { status: 400 }
+    );
+  }
 
   const reviewer =
     typeof body.reviewer === "string" && body.reviewer.length > 0
@@ -66,7 +80,7 @@ export async function PATCH(
   try {
     const result = await transitionTask(db, {
       taskId: params.id,
-      toStatus: body.toStatus as CockpitTaskStatus,
+      toStatus: body.toStatus,
       reviewer,
       note: typeof body.note === "string" ? body.note : undefined,
     });

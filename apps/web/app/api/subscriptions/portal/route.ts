@@ -3,6 +3,8 @@ import { auth } from "@/lib/auth";
 import { createPortalSession } from "@/lib/stripe";
 import { db } from "@sports/db";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(_req: NextRequest): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user?.id) {
