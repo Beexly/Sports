@@ -1,6 +1,6 @@
 # OVERNIGHT OPERATOR STATE
 
-- run: 2 (final summary for this session)
+- run: 3 (active)
 - mode: git-WRITE (no GitHub PAT — PR creation blocked, git push active)
 - branch: claude/magical-volta-yiUwL
 - session_start: 2026-05-24T06:42Z
@@ -8,8 +8,16 @@
 - environment: Linux remote (beexly/sports)
 - status: ACTIVE — ready for next cycle
 
-## Final Baseline (End of Session)
-- tests: 1,657 / 1,657 PASS (was 1,578 at Run 1 start, +79 net new tests)
+## Run 3 Baseline (Current)
+- tests: 1,714 / 1,714 PASS (+47 from run-2 baseline of 1,667)
+- test_files: 118 apps/web + 2 data-ingestion + 1 ingestion-pipeline + 6 prediction-engine + 1 types = 128 total
+- typecheck: 0 errors
+- guardrails: PASS
+- security HIGH CVEs: 0
+- security MODERATE CVEs: 3 (next/postcss/next-auth chain)
+
+## Run 2 Final Baseline
+- tests: 1,667 / 1,667 PASS (was 1,578 at Run 1 start, +89 net new tests)
 - test_files: 117 apps/web + 1 db + 5 prediction-engine + 1 types = 124 total
 - typecheck: 0 errors
 - eslint: 0 warnings
