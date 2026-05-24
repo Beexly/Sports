@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { getReadinessGates } from "../readiness";
+import { getReadinessGates, bootstrapGateResponse } from "../readiness";
 
 /**
  * Unit tests for getReadinessGates() — pins the mapping from PlatformConfig
@@ -154,5 +154,27 @@ describe("getReadinessGates — env → gate mapping", () => {
       expect(gates.canLearnFromOutcomes).toBe(false);
       expect(gates.isBootstrapMode).toBe(true);
     });
+  });
+});
+
+describe("bootstrapGateResponse", () => {
+  it("returns error message containing the feature name", () => {
+    const r = bootstrapGateResponse("Public picks");
+    expect(r.error).toContain("Public picks");
+  });
+
+  it("always sets bootstrapMode to true", () => {
+    expect(bootstrapGateResponse("Blog").bootstrapMode).toBe(true);
+    expect(bootstrapGateResponse("Performance stats").bootstrapMode).toBe(true);
+  });
+
+  it("includes a hint about the env flag", () => {
+    const r = bootstrapGateResponse("Evidence audit");
+    expect(r.hint).toMatch(/environment flag|env/i);
+  });
+
+  it("returns a stable shape for any feature name", () => {
+    const r = bootstrapGateResponse("Test feature");
+    expect(Object.keys(r).sort()).toEqual(["bootstrapMode", "error", "hint"]);
   });
 });

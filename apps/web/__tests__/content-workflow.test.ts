@@ -109,4 +109,69 @@ describe("content workflow policy", () => {
       true
     );
   });
+
+  it("approves a complete DAILY_BRIEF_DRAFT", () => {
+    const v = evaluateDraftReadiness({
+      kind: "DAILY_BRIEF_DRAFT",
+      coveredCategories: ["ODDS", "TEAM_SCHEDULE"],
+      performanceGateOn: false,
+      contentBody: "Tonight's slate.",
+      includesPromotion: false,
+      includesRgNote: true,
+    });
+    expect(v.canApprove).toBe(true);
+    expect(v.blockers).toHaveLength(0);
+  });
+
+  it("approves a MODEL_CHANGE_NOTE without RG requirement", () => {
+    const v = evaluateDraftReadiness({
+      kind: "MODEL_CHANGE_NOTE",
+      coveredCategories: ["MODEL_SNAPSHOT", "PLATFORM_POLICY"],
+      performanceGateOn: false,
+      contentBody: "Model version bumped to v6.",
+      includesPromotion: false,
+      includesRgNote: false,
+    });
+    expect(v.canApprove).toBe(true);
+    expect(v.blockers).toHaveLength(0);
+  });
+
+  it("approves RESPONSIBLE_BETTING_EDUCATION with RG note", () => {
+    const v = evaluateDraftReadiness({
+      kind: "RESPONSIBLE_BETTING_EDUCATION",
+      coveredCategories: ["PLATFORM_POLICY"],
+      performanceGateOn: false,
+      contentBody: "Bet within your means.",
+      includesPromotion: false,
+      includesRgNote: true,
+    });
+    expect(v.canApprove).toBe(true);
+    expect(v.blockers).toHaveLength(0);
+  });
+
+  it("approves WEEKLY_RECAP when performance gate is on", () => {
+    const v = evaluateDraftReadiness({
+      kind: "WEEKLY_RECAP",
+      coveredCategories: ["PERFORMANCE_SUMMARY", "MODEL_SNAPSHOT"],
+      performanceGateOn: true,
+      contentBody: "This week's recap.",
+      includesPromotion: false,
+      includesRgNote: true,
+    });
+    expect(v.canApprove).toBe(true);
+    expect(v.blockers).toHaveLength(0);
+  });
+
+  it("blocks whitespace-only body", () => {
+    const v = evaluateDraftReadiness({
+      kind: "METHODOLOGY_EDUCATION",
+      coveredCategories: ["PLATFORM_POLICY"],
+      performanceGateOn: false,
+      contentBody: "   \t  ",
+      includesPromotion: false,
+      includesRgNote: false,
+    });
+    expect(v.canApprove).toBe(false);
+    expect(v.blockers.some((b) => b.includes("empty"))).toBe(true);
+  });
 });

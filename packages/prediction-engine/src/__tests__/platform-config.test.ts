@@ -162,4 +162,28 @@ describe("getPlatformConfig — fail closed defaults", () => {
       expect(getPlatformConfig().minDataQualityForGameLog).toBe(40);
     });
   });
+
+  it("minSettledPicksForLearning parses integer from env", () => {
+    withEnv({ MIN_SETTLED_PICKS_FOR_LEARNING: "200" }, () => {
+      expect(getPlatformConfig().minSettledPicksForLearning).toBe(200);
+    });
+  });
+
+  it("minSettledPicksForLearning falls back to 100 on NaN", () => {
+    withEnv({ MIN_SETTLED_PICKS_FOR_LEARNING: "bad" }, () => {
+      expect(getPlatformConfig().minSettledPicksForLearning).toBe(100);
+    });
+  });
+
+  it("parseBool treats explicit 'false' string as false", () => {
+    withEnv({ PUBLIC_PICKS_ENABLED: "false" }, () => {
+      expect(getPlatformConfig().publicPicksEnabled).toBe(false);
+    });
+  });
+
+  it("parseBool treats '0' as false", () => {
+    withEnv({ PUBLIC_PICKS_ENABLED: "0" }, () => {
+      expect(getPlatformConfig().publicPicksEnabled).toBe(false);
+    });
+  });
 });
