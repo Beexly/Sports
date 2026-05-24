@@ -1,12 +1,16 @@
 /**
- * Telemetry summary — reads `_logs/claude-usage.log` and produces a
- * cockpit-renderable summary of per-call-site cache hit rate, token
- * usage, latency, and error rate.
+ * Telemetry summary — reads `_logs/claude-usage.log` (file path) or the
+ * `claude_usage_logs` Prisma table (DB path) and produces a cockpit-renderable
+ * summary of per-call-site cache hit rate, token usage, latency, and error rate.
+ *
+ * When a real database is present (non-stub mode), `readTelemetryFromDb` is the
+ * authoritative source — it works on Vercel where the filesystem is ephemeral.
+ * The file path is used for local dev and GitHub Actions.
  *
  * Pure-logic; the cockpit page handles file IO + admin gating.
- * Operators get to verify the Cycle 14 caching forward-investment
- * (and the Cycle 18 telemetry investment) is actually paying off.
  */
+
+import { db } from "@sports/db";
 
 export type TelemetryStatus = "ok" | "error";
 
@@ -85,6 +89,36 @@ export function parseTelemetryLog(text: string): TelemetryRow[] {
     }
   }
   return out;
+}
+
+/**
+ * Read telemetry rows from the Postgres `claude_usage_logs` table.
+ * Returns an empty array when the DB is unavailable or the table is empty.
+ * The caller must decide whether to fall back to the file path.
+ */
+export async function readTelemetryFromDb(sinceMs?: number): Promise<TelemetryRow[]> {
+  const cutoff = sinceMs ? new Date(Date.now() - sinceMs) : undefined;
+  try {
+    const rows = await db.claudeUsageLog.findMany({
+      where: cutoff ? { ts: { gte: cutoff } } : undefined,
+      orderBy: { ts: "asc" },
+      take: 50_000,
+    });
+    return rows.map((r) => ({
+      ts: r.ts.toISOString(),
+      callSite: r.callSite,
+      model: r.model,
+      inputTokens: r.inputTokens,
+      cacheCreationInputTokens: r.cacheCreationInputTokens,
+      cacheReadInputTokens: r.cacheReadInputTokens,
+      outputTokens: r.outputTokens,
+      latencyMs: r.latencyMs,
+      status: r.status === "error" ? ("error" as const) : ("ok" as const),
+      ...(r.errorClass ? { errorClass: r.errorClass } : {}),
+    }));
+  } catch {
+    return [];
+  }
 }
 
 function numericOr(value: unknown, fallback = 0): number {

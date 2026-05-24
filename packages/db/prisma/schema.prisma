@@ -1329,3 +1329,25 @@ model ContentReview {
   @@index([draftId, createdAt])
   @@map("content_reviews")
 }
+
+// Persisted telemetry for every Claude SDK call so the cockpit stays live
+// on Vercel (filesystem is ephemeral there). withTelemetry writes here in
+// addition to _logs/claude-usage.log when a real DB is present.
+model ClaudeUsageLog {
+  id                       String   @id @default(cuid())
+  ts                       DateTime
+  callSite                 String
+  model                    String
+  inputTokens              Int      @default(0)
+  cacheCreationInputTokens Int      @default(0)
+  cacheReadInputTokens     Int      @default(0)
+  outputTokens             Int      @default(0)
+  latencyMs                Int      @default(0)
+  status                   String   // "ok" | "error"
+  errorClass               String?
+  createdAt                DateTime @default(now())
+
+  @@index([ts])
+  @@index([callSite, ts])
+  @@map("claude_usage_logs")
+}

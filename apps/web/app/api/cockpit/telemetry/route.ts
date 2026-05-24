@@ -2,26 +2,26 @@ import { NextResponse } from "next/server";
 import { readFile, stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import { auth } from "@/lib/auth";
+import { isStubMode } from "@sports/db";
 import {
   parseTelemetryLog,
+  readTelemetryFromDb,
   summarizeTelemetry,
 } from "@/lib/cockpit/telemetry-summary";
 
 /**
  * Cockpit telemetry summary API — admin-gated, force-dynamic, no-store.
  *
- * Reads `_logs/claude-usage.log` (Cycle 18 writes it) and returns a
- * per-call-site summary the cockpit page renders. Honors a ?sinceMs
- * query param to clip the window.
+ * Primary source: `claude_usage_logs` Postgres table (works on Vercel where
+ * the filesystem is ephemeral). Falls back to `_logs/claude-usage.log`
+ * when running in stub/no-DB mode (local dev, GitHub Actions).
  *
  * Source-level invariants enforced by tests:
  *   - dynamic = "force-dynamic"
  *   - imports auth() and rejects non-admins with 403
- *   - no DB writes; no publishedAt
- *   - Cache-Control: no-store (each refresh re-parses the log)
- *   - File read is best-effort; missing log returns an empty summary
- *     rather than throwing
- *   - No write path of any kind (the log is owned by withTelemetry)
+ *   - Cache-Control: no-store (each refresh re-reads)
+ *   - Missing data returns an empty summary rather than throwing
+ *   - No write path of any kind (writes are owned by withTelemetry)
  */
 export const dynamic = "force-dynamic";
 
@@ -49,12 +49,22 @@ export async function GET(req: Request): Promise<NextResponse> {
   const safeSince =
     Number.isFinite(sinceMs) && sinceMs > 0 ? sinceMs : DEFAULT_WINDOW_MS;
 
+  // DB path: preferred on Vercel where the filesystem is ephemeral.
+  if (!isStubMode()) {
+    const dbRows = await readTelemetryFromDb(safeSince);
+    const summary = summarizeTelemetry(dbRows, { sinceMs: safeSince });
+    return jsonNoStore(
+      { ...summary, meta: { source: "db", sinceMs: safeSince } },
+      200
+    );
+  }
+
+  // File fallback: local dev + GitHub Actions.
   let logText = "";
   let logBytes = 0;
   try {
     const s = await stat(LOG_PATH);
     if (s.size > MAX_LOG_BYTES) {
-      // Read only the tail to stay within the cap.
       const { open } = await import("node:fs/promises");
       const fh = await open(LOG_PATH, "r");
       try {
@@ -70,7 +80,6 @@ export async function GET(req: Request): Promise<NextResponse> {
       logBytes = s.size;
     }
   } catch {
-    // No log file yet (telemetry has never run, or VERCEL=1 elsewhere).
     return jsonNoStore(
       {
         windowStart: null,
@@ -80,7 +89,7 @@ export async function GET(req: Request): Promise<NextResponse> {
         bySite: [],
         modelsSeen: [],
         errorClasses: [],
-        meta: { logPath: LOG_PATH, logBytes: 0, sinceMs: safeSince },
+        meta: { source: "file", logPath: LOG_PATH, logBytes: 0, sinceMs: safeSince },
       },
       200
     );
@@ -92,7 +101,7 @@ export async function GET(req: Request): Promise<NextResponse> {
   return jsonNoStore(
     {
       ...summary,
-      meta: { logPath: LOG_PATH, logBytes, sinceMs: safeSince },
+      meta: { source: "file", logPath: LOG_PATH, logBytes, sinceMs: safeSince },
     },
     200
   );

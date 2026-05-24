@@ -17,6 +17,7 @@
 
 import { appendFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { db, isStubMode } from "@sports/db";
 
 const LOG_PATH = resolve(process.cwd(), "_logs", "claude-usage.log");
 
@@ -66,9 +67,32 @@ async function emit(record: TelemetryRecord): Promise<void> {
     console.log(line);
   }
 
+  // Best-effort DB write — works on Vercel where the filesystem is ephemeral.
+  if (!isStubMode()) {
+    try {
+      await db.claudeUsageLog.create({
+        data: {
+          ts: new Date(record.ts),
+          callSite: record.callSite,
+          model: record.model,
+          inputTokens: record.inputTokens,
+          cacheCreationInputTokens: record.cacheCreationInputTokens,
+          cacheReadInputTokens: record.cacheReadInputTokens,
+          outputTokens: record.outputTokens,
+          latencyMs: record.latencyMs,
+          status: record.status,
+          errorClass: record.errorClass ?? null,
+        },
+      });
+    } catch {
+      // Intentionally swallowed: DB telemetry failures must never crash
+      // the caller. The stdout line is still captured upstream.
+    }
+  }
+
   if (process.env["VERCEL"] === "1") return;
 
-  // Best-effort file append — don't let log errors break the wrapped call.
+  // Best-effort file append — local dev + GitHub Actions.
   try {
     await mkdir(dirname(LOG_PATH), { recursive: true });
     await appendFile(LOG_PATH, line + "\n", "utf8");
