@@ -11,9 +11,12 @@
 
 import { readFile, stat } from "node:fs/promises";
 import { resolve } from "node:path";
+import { isStubMode } from "@sports/db";
 import {
   parseTelemetryLog,
+  readTelemetryFromDb,
   summarizeTelemetry,
+  type TelemetryRow,
 } from "./telemetry-summary.js";
 import { aggregateDailyCost } from "./ai-cost.js";
 
@@ -83,26 +86,7 @@ async function readLogTail(): Promise<{ text: string; bytes: number } | null> {
   return { text: await readFile(path, "utf8"), bytes: s.size };
 }
 
-/**
- * Compose the pulse from disk. Never throws — telemetry IO failures
- * collapse to an empty pulse so the cockpit landing page always renders.
- */
-export async function loadCockpitPulse(now: Date = new Date()): Promise<CockpitPulse> {
-  let payload;
-  try {
-    payload = await readLogTail();
-  } catch {
-    return emptyPulse(now);
-  }
-  if (!payload) return emptyPulse(now);
-
-  let rows;
-  try {
-    rows = parseTelemetryLog(payload.text);
-  } catch {
-    return { ...emptyPulse(now), telemetryLogPresent: true, telemetryLogBytes: payload.bytes };
-  }
-
+function buildPulse(rows: TelemetryRow[], now: Date, logBytes = 0): CockpitPulse {
   const summary = summarizeTelemetry(rows, { sinceMs: TODAY_WINDOW_MS, now });
   const daily = aggregateDailyCost(rows);
 
@@ -126,8 +110,8 @@ export async function loadCockpitPulse(now: Date = new Date()): Promise<CockpitP
 
   return {
     computedAt: now.toISOString(),
-    telemetryLogPresent: true,
-    telemetryLogBytes: payload.bytes,
+    telemetryLogPresent: rows.length > 0 || logBytes > 0,
+    telemetryLogBytes: logBytes,
     callsLast24h: summary.totalCalls,
     errorsLast24h: summary.totalErrors,
     todayUsd,
@@ -135,4 +119,40 @@ export async function loadCockpitPulse(now: Date = new Date()): Promise<CockpitP
     cacheHitRate24h,
     activeCallSites: summary.bySite.map((s) => s.callSite),
   };
+}
+
+/**
+ * Compose the pulse. Never throws — IO or DB failures collapse to an empty
+ * pulse so the cockpit landing page always renders.
+ *
+ * DB is preferred when a real database is present (non-stub mode). Falls
+ * back to the local `_logs/claude-usage.log` for dev + GitHub Actions.
+ */
+export async function loadCockpitPulse(now: Date = new Date()): Promise<CockpitPulse> {
+  if (!isStubMode()) {
+    try {
+      const rows = await readTelemetryFromDb(TODAY_WINDOW_MS * 2);
+      return buildPulse(rows, now, 0);
+    } catch {
+      return emptyPulse(now);
+    }
+  }
+
+  // File fallback: local dev + GitHub Actions.
+  let payload;
+  try {
+    payload = await readLogTail();
+  } catch {
+    return emptyPulse(now);
+  }
+  if (!payload) return emptyPulse(now);
+
+  let rows: TelemetryRow[];
+  try {
+    rows = parseTelemetryLog(payload.text);
+  } catch {
+    return { ...emptyPulse(now), telemetryLogPresent: true, telemetryLogBytes: payload.bytes };
+  }
+
+  return buildPulse(rows, now, payload.bytes);
 }
