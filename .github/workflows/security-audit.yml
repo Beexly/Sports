@@ -12,12 +12,13 @@ name: Security Audit
 #
 # Current MODERATE baseline (2026-05-24):
 #   next@16.2.6 via postcss     — fix requires next@16.3.0+ (not yet stable)
-#   vitest@2.x / vite / esbuild — fix requires vitest@4 major upgrade (dev-only)
 #   next-auth                   — transitive through next; no standalone fix
 #
-# Action: upgrade vitest to 4.x once stable; watch next@16.3.0 release.
-# This job should fail on HIGH/CRITICAL exit-code > 0 (add --audit-level=high
-# once the informational period is no longer needed for MODERATE tracking).
+# Resolved MODERATE:
+#   vitest@2.x / vite@5 / esbuild — FIXED by upgrading to vitest@4.1.7 + vite@6.3.0
+#
+# Action: watch next@16.3.0 release (fixes postcss MODERATE).
+# This job fails on HIGH/CRITICAL; MODERATE is informational-only.
 
 on:
   schedule:
