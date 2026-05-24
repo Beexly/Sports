@@ -1,0 +1,17 @@
+REQUEST: GET /api/cockpit/picks/test-id/provenance
+STATUS: 403
+HEADERS:
+X-Frame-Options
+X-Content-Type-Options
+Referrer-Policy
+Permissions-Policy
+vary
+Connection
+Keep-Alive
+Transfer-Encoding
+Cache-Control
+Content-Type
+Date
+
+BODY:
+{"error":"Admin role required for cockpit endpoints"}

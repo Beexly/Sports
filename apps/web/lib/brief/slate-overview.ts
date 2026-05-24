@@ -64,6 +64,17 @@ const getClient = holder.get;
 /** Test-only escape hatch for vitest. */
 export const __setClientForTests = holder.setForTests;
 
+function parsePromptDate(input: string): Date {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(input);
+  if (m) {
+    const year = Number(m[1]);
+    const month = Number(m[2]);
+    const day = Number(m[3]);
+    return new Date(year, month - 1, day);
+  }
+  return new Date(input);
+}
+
 export async function composeSlateOverview(
   input: SlateOverviewInput
 ): Promise<SlateOverviewResult> {
@@ -72,7 +83,7 @@ export async function composeSlateOverview(
   }
 
   const client = getClient();
-  const dateDisplay = format(new Date(input.date), "MMMM d, yyyy");
+  const dateDisplay = format(parsePromptDate(input.date), "MMMM d, yyyy");
 
   const picksByeSport = new Map<string, SlatePickSnippet[]>();
   for (const p of input.picks) {

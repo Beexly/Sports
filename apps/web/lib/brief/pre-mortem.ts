@@ -120,6 +120,17 @@ export interface PreMortemInput {
   readonly sources?: readonly string[];
 }
 
+function parsePromptDate(input: string): Date {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(input);
+  if (m) {
+    const year = Number(m[1]);
+    const month = Number(m[2]);
+    const day = Number(m[3]);
+    return new Date(year, month - 1, day);
+  }
+  return new Date(input);
+}
+
 export async function composePreMortem(
   input: PreMortemInput
 ): Promise<PreMortemReport> {
@@ -131,7 +142,7 @@ export async function composePreMortem(
 
   const picks = input.picks.slice(0, MAX_PICKS);
   const sources = input.sources ?? [];
-  const dateDisplay = format(new Date(input.date), "MMMM d, yyyy");
+  const dateDisplay = format(parsePromptDate(input.date), "MMMM d, yyyy");
 
   const picksBlock = picks
     .map(
