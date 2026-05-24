@@ -1,0 +1,39 @@
+version: 2
+updates:
+  # Pin GitHub Actions to their commit SHAs and keep them current.
+  # Dependabot will open weekly PRs upgrading @v4 tags to commit-SHA pins,
+  # which protects against tag-override supply chain attacks.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+  # npm workspace dependencies (root + apps/web)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    # Group minor+patch together to reduce PR noise
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "npm"
+    # Ignore major version upgrades that require manual migration
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
