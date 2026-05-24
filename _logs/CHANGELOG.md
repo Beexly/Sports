@@ -30,3 +30,4 @@ Append-only. One line per cycle.
 2026-05-23 · #27 · feat(brief): three more section composers (what-changed / content-ideas / promotions) wired into composeBriefAsync · vitest `apps/web/__tests__/brief-sections.test.ts` + `brief-compose-async.test.ts`
 2026-05-23 · #28 · feat(cockpit): source-health uses per-category FRESHNESS_BUDGETS thresholds from source-intelligence · vitest `apps/web/__tests__/source-health.test.ts`
 2026-05-23 · #29 · feat(cockpit): telemetry summary page at /cockpit/telemetry — per-call-site cache hit rate, tokens, latency, errors · vitest `apps/web/__tests__/telemetry-summary.test.ts`
+2026-05-23 · #30 · feat(guardrails): AI daily cost ceiling — fails CI when est. daily Anthropic spend exceeds $2 (configurable) · vitest `apps/web/__tests__/ai-cost.test.ts`
