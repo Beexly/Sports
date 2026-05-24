@@ -80,6 +80,19 @@ describe("computeCalibration — bucket assignment", () => {
     expect(emptyBucket.delta).toBe(0);
     expect(emptyBucket.brierScore).toBe(0);
   });
+
+  it("confidence below 50 falls back to the 50-59 bucket via the ?? guard", () => {
+    // bucketFor(40) finds no matching bucket (all min>=50), so falls back to BUCKETS[0] (50-59)
+    const report = computeCalibration([{ id: "a", confidence: 40, result: "WIN" }]);
+    const first = report.buckets.find((b) => b.label === "50-59")!;
+    expect(first.sampleSize).toBe(1);
+  });
+
+  it("confidence exactly 100 lands in the 90-100 bucket", () => {
+    const report = computeCalibration([{ id: "a", confidence: 100, result: "WIN" }]);
+    const bucket = report.buckets.find((b) => b.label === "90-100")!;
+    expect(bucket.sampleSize).toBe(1);
+  });
 });
 
 describe("computeCalibration — Brier score", () => {

@@ -132,6 +132,28 @@ describe("createJarvisHistory ring buffer", () => {
     expect(h.recent()).toEqual([]);
   });
 
+  it("recent(0) returns all entries (0 is not a positive n — falls back to buf.length)", () => {
+    const h = createJarvisHistory(10);
+    h.push(synthesizeJarvis(input(0)));
+    h.push(synthesizeJarvis(input(30)));
+    h.push(synthesizeJarvis(input(60)));
+    // n=0 fails the `n > 0` check so take = buf.length = 3
+    expect(h.recent(0).length).toBe(3);
+  });
+
+  it("float capacity is floored: createJarvisHistory(2.7) keeps at most 2 entries", () => {
+    const h = createJarvisHistory(2.7);
+    h.push(synthesizeJarvis(input(0)));
+    h.push(synthesizeJarvis(input(30)));
+    h.push(synthesizeJarvis(input(60)));
+    // capacity is Math.floor(2.7) = 2
+    expect(h.size()).toBe(2);
+  });
+
+  it("rejects Infinity capacity", () => {
+    expect(() => createJarvisHistory(Infinity)).toThrow();
+  });
+
   it("snapshotFromAssessment captures the headline fields and counts", () => {
     const a = synthesizeJarvis(input(0));
     const s = snapshotFromAssessment(a);
