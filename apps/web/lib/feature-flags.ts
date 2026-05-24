@@ -7,3 +7,14 @@ export const proofSurfaceEmailCaptureEnabled = () =>
 
 export const contextualVaultCtaEnabled = () =>
   isFeatureEnabled("CONTEXTUAL_VAULT_CTA_ENABLED");
+
+export const publicPicksEnabled = () =>
+  isFeatureEnabled("PUBLIC_PICKS_ENABLED");
+
+export const publicBlogEnabled = () => isFeatureEnabled("PUBLIC_BLOG_ENABLED");
+
+export const performanceStatsEnabled = () =>
+  isFeatureEnabled("PERFORMANCE_STATS_ENABLED");
+
+export const canonicalHistoryEnabled = () =>
+  isFeatureEnabled("CANONICAL_HISTORY_ENABLED");
