@@ -1379,4 +1379,38 @@ describe("synthesizeJarvis — publicSurfaceStatus (classifyPublicSurface worst-
     expect(a.performanceStatus).toBe("AMBER");
     expect(a.publicSurfaceStatus).toBe("RED");
   });
+
+  it("publicSurfaceStatus is AMBER when picks gate is closed (picks=AMBER) and performance/customerDash are GREEN", () => {
+    // classifyPublicSurface worst-of [AMBER, GREEN, GREEN] → AMBER
+    // Gate closed → picks=AMBER; full canonical sample → performance=GREEN, customerDash=GREEN
+    const policy = evaluatePublicPerformancePolicy({
+      canExposePerformanceStats: true,
+      minSettledPicksForLearning: 25,
+      canonicalSettledCount: 100,
+      bootstrapCount: 0,
+      pendingCount: 0,
+      canonicalWins: 55,
+      canonicalLosses: 40,
+      canonicalPushes: 5,
+      recentTotalCount: 20,
+      recentBootstrapCount: 0,
+    });
+    const gates = {
+      canPersistCanonicalHistory: true,
+      canUseDerivedHistory: true,
+      canExposePublicPicks: false, // picks gate OFF → picks=AMBER
+      canPromoteFeaturedPicks: false,
+      canExposePerformanceStats: true,
+      canPublishContent: true,
+      canLearnFromOutcomes: true,
+      canApplyCalibrationAdjustments: false as const,
+      isBootstrapMode: false,
+      minSettledPicksForLearning: 25,
+    };
+    const a = synthesizeJarvis(baseInput({ gates, performancePolicy: policy }));
+    expect(a.picksStatus).toBe("AMBER");
+    expect(a.performanceStatus).toBe("GREEN");
+    expect(a.customerDashboardStatus).toBe("GREEN");
+    expect(a.publicSurfaceStatus).toBe("AMBER");
+  });
 });

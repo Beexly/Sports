@@ -420,6 +420,21 @@ describe("computeOperatorPulse — nextBestActions singular/plural wording", () 
     const p = pulse({ promoCounts: { ...EMPTY_PROMO, needsReview: 5 } });
     expect(p.promotionsReviewQueue).toBe(5);
   });
+
+  it("nextBestActions includes 'Archive' message when expired promotions exist", () => {
+    const p = pulse({ promoCounts: { ...EMPTY_PROMO, expired: 3 } });
+    expect(p.nextBestActions.some((a) => /archive/i.test(a) && /expired/i.test(a))).toBe(true);
+  });
+
+  it("singular 'expired promotion' when expired is 1", () => {
+    const p = pulse({ promoCounts: { ...EMPTY_PROMO, expired: 1 } });
+    expect(p.nextBestActions.some((a) => /1 expired promotion\./.test(a))).toBe(true);
+  });
+
+  it("plural 'expired promotions' when expired > 1", () => {
+    const p = pulse({ promoCounts: { ...EMPTY_PROMO, expired: 2 } });
+    expect(p.nextBestActions.some((a) => /expired promotions/.test(a))).toBe(true);
+  });
 });
 
 describe("computeTaskAge", () => {
