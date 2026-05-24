@@ -127,7 +127,7 @@ describe("DataNormalizer", () => {
             key: "fanduel",
             title: "FanDuel",
             last_update: new Date().toISOString(),
-            markets: [{ key: "unknown_market", last_update: "", outcomes: [] }],
+            markets: [{ key: "unknown_market" as "h2h", last_update: "", outcomes: [] }],
           },
         ],
       };
