@@ -1183,3 +1183,200 @@ describe("synthesizeJarvis — picksStatus (classifyPicks) branches", () => {
     expect(a.picksStatus).toBe("AMBER");
   });
 });
+
+describe("synthesizeJarvis — performanceStatus / customerDashboardStatus branches", () => {
+  it("performanceStatus is GREEN when canExposePerformanceStats is true and sample is sufficient", () => {
+    // classifyPerformance: policy.canExposePerformanceStats → "GREEN"
+    // classifyCustomerDashboard: policy.canExposePerformanceStats → "GREEN"
+    const a = synthesizeJarvis(baseInput()); // default: 100 canonical picks, gate open
+    expect(a.performanceStatus).toBe("GREEN");
+    expect(a.customerDashboardStatus).toBe("GREEN");
+  });
+
+  it("performanceStatus is AMBER when gate is GATE_OFF_PERFORMANCE_STATS", () => {
+    // classifyPerformance: primaryReason === "GATE_OFF_PERFORMANCE_STATS" → "AMBER"
+    // classifyCustomerDashboard: !canExposePerformanceStats → "AMBER"
+    const gates = {
+      canPersistCanonicalHistory: true,
+      canUseDerivedHistory: true,
+      canExposePublicPicks: true,
+      canPromoteFeaturedPicks: true,
+      canExposePerformanceStats: false, // gate off
+      canPublishContent: true,
+      canLearnFromOutcomes: true,
+      canApplyCalibrationAdjustments: false as const,
+      isBootstrapMode: false,
+      minSettledPicksForLearning: 25,
+    };
+    const policy = evaluatePublicPerformancePolicy({
+      canExposePerformanceStats: false,
+      minSettledPicksForLearning: 25,
+      canonicalSettledCount: 100,
+      bootstrapCount: 0,
+      pendingCount: 0,
+      canonicalWins: 55,
+      canonicalLosses: 40,
+      canonicalPushes: 5,
+      recentTotalCount: 20,
+      recentBootstrapCount: 0,
+    });
+    const a = synthesizeJarvis(
+      baseInput({ gates, performancePolicy: policy })
+    );
+    expect(a.performanceStatus).toBe("AMBER");
+    expect(a.customerDashboardStatus).toBe("AMBER");
+  });
+
+  it("performanceStatus is AMBER when gate is open but sample is insufficient (INSUFFICIENT_CANONICAL_SAMPLE)", () => {
+    // classifyPerformance: policy.canExposePerformanceStats=false (blocked by INSUFFICIENT_CANONICAL_SAMPLE),
+    // primaryReason !== "GATE_OFF_PERFORMANCE_STATS" → falls through to final "AMBER"
+    const gates = {
+      canPersistCanonicalHistory: true,
+      canUseDerivedHistory: true,
+      canExposePublicPicks: true,
+      canPromoteFeaturedPicks: true,
+      canExposePerformanceStats: true, // gate is on
+      canPublishContent: true,
+      canLearnFromOutcomes: true,
+      canApplyCalibrationAdjustments: false as const,
+      isBootstrapMode: false,
+      minSettledPicksForLearning: 25,
+    };
+    const policy = evaluatePublicPerformancePolicy({
+      canExposePerformanceStats: true, // gate is on
+      minSettledPicksForLearning: 25,
+      canonicalSettledCount: 5, // below minimum → INSUFFICIENT_CANONICAL_SAMPLE blocker
+      bootstrapCount: 0,
+      pendingCount: 0,
+      canonicalWins: 3,
+      canonicalLosses: 2,
+      canonicalPushes: 0,
+      recentTotalCount: 5,
+      recentBootstrapCount: 0,
+    });
+    const a = synthesizeJarvis(
+      baseInput({ gates, performancePolicy: policy })
+    );
+    expect(a.performanceStatus).toBe("AMBER");
+  });
+});
+
+describe("synthesizeJarvis — cockpitStatus branches", () => {
+  it("cockpitStatus is GREEN when cockpit layer is implemented", () => {
+    // classifyCockpit: layers.cockpit === "implemented" → "GREEN"
+    const a = synthesizeJarvis(
+      baseInput({
+        layers: {
+          trustClaims: "implemented",
+          performanceGating: "implemented",
+          promotions: "implemented",
+          dailyBrief: "implemented",
+          calibration: "implemented",
+          cockpit: "implemented",
+          contentEngine: "implemented",
+          ciHardening: "implemented",
+        },
+      })
+    );
+    expect(a.cockpitStatus).toBe("GREEN");
+  });
+
+  it("cockpitStatus is AMBER when cockpit layer is partial", () => {
+    // classifyCockpit: layers.cockpit === "partial" → "AMBER"
+    const a = synthesizeJarvis(
+      baseInput({
+        layers: {
+          trustClaims: "implemented",
+          performanceGating: "implemented",
+          promotions: "implemented",
+          dailyBrief: "implemented",
+          calibration: "implemented",
+          cockpit: "partial",
+          contentEngine: "implemented",
+          ciHardening: "implemented",
+        },
+      })
+    );
+    expect(a.cockpitStatus).toBe("AMBER");
+  });
+
+  it("cockpitStatus is RED when cockpit layer is missing", () => {
+    // classifyCockpit: not "implemented" and not "partial" → "RED"
+    const a = synthesizeJarvis(
+      baseInput({
+        layers: {
+          trustClaims: "implemented",
+          performanceGating: "implemented",
+          promotions: "implemented",
+          dailyBrief: "implemented",
+          calibration: "implemented",
+          cockpit: "missing",
+          contentEngine: "implemented",
+          ciHardening: "implemented",
+        },
+      })
+    );
+    expect(a.cockpitStatus).toBe("RED");
+  });
+});
+
+describe("synthesizeJarvis — publicSurfaceStatus (classifyPublicSurface worst-of)", () => {
+  it("publicSurfaceStatus is GREEN when picks, performance, and customerDashboard are all GREEN", () => {
+    // classifyPublicSurface takes the worst of the three; all GREEN → GREEN
+    const a = synthesizeJarvis(baseInput()); // default: all green
+    expect(a.publicSurfaceStatus).toBe("GREEN");
+    expect(a.picksStatus).toBe("GREEN");
+    expect(a.performanceStatus).toBe("GREEN");
+    expect(a.customerDashboardStatus).toBe("GREEN");
+  });
+
+  it("publicSurfaceStatus is RED when picks is RED (picks RED beats performance AMBER)", () => {
+    // classifyPublicSurface: worst of [RED, AMBER, AMBER] → RED
+    const gates = {
+      canPersistCanonicalHistory: true,
+      canUseDerivedHistory: true,
+      canExposePublicPicks: true,
+      canPromoteFeaturedPicks: true,
+      canExposePerformanceStats: false, // gives AMBER performance
+      canPublishContent: true,
+      canLearnFromOutcomes: true,
+      canApplyCalibrationAdjustments: false as const,
+      isBootstrapMode: false,
+      minSettledPicksForLearning: 25,
+    };
+    const policy = evaluatePublicPerformancePolicy({
+      canExposePerformanceStats: false,
+      minSettledPicksForLearning: 25,
+      canonicalSettledCount: 100,
+      bootstrapCount: 0,
+      pendingCount: 0,
+      canonicalWins: 55,
+      canonicalLosses: 40,
+      canonicalPushes: 5,
+      recentTotalCount: 20,
+      recentBootstrapCount: 0,
+    });
+    const a = synthesizeJarvis(
+      baseInput({
+        gates,
+        performancePolicy: policy,
+        history: {
+          canonicalSettledCount: 100,
+          bootstrapSettledCount: 10,
+          canonicalPendingCount: 4,
+          winCount: 55,
+          lossCount: 40,
+          pushCount: 5,
+          voidCount: 1,
+          publishedCount: 0, // picks RED (gate open but no published picks)
+          featuredCount: 0,
+          canonicalEligibleForPublic: 100,
+          canonicalExcludedFromPublic: 10,
+        },
+      })
+    );
+    expect(a.picksStatus).toBe("RED");
+    expect(a.performanceStatus).toBe("AMBER");
+    expect(a.publicSurfaceStatus).toBe("RED");
+  });
+});
