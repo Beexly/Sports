@@ -31,3 +31,4 @@ Append-only. One line per cycle.
 2026-05-23 · #28 · feat(cockpit): source-health uses per-category FRESHNESS_BUDGETS thresholds from source-intelligence · vitest `apps/web/__tests__/source-health.test.ts`
 2026-05-23 · #29 · feat(cockpit): telemetry summary page at /cockpit/telemetry — per-call-site cache hit rate, tokens, latency, errors · vitest `apps/web/__tests__/telemetry-summary.test.ts`
 2026-05-23 · #30 · feat(guardrails): AI daily cost ceiling — fails CI when est. daily Anthropic spend exceeds $2 (configurable) · vitest `apps/web/__tests__/ai-cost.test.ts`
+2026-05-23 · #31 · feat(cockpit): pulse strip at top of /cockpit — calls 24h, cache hit rate, today USD, active sites + nav to new pages · vitest `apps/web/__tests__/cockpit-pulse.test.ts`

@@ -5,6 +5,8 @@ import type { JarvisAssessment, JarvisHealth, JarvisLaunchStatus } from "@/lib/c
 import type { PublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { startOfDay, endOfDay } from "date-fns";
+import { loadCockpitPulse } from "@/lib/cockpit/pulse";
+import { CockpitPulse } from "@/components/cockpit/cockpit-pulse";
 
 /**
  * Cockpit Overview — the Jarvis launch observatory.
@@ -70,6 +72,9 @@ export default async function CockpitOverview() {
     jarvisError = err instanceof Error ? err.message : "Jarvis synthesis failed.";
   }
 
+  // Pulse is best-effort and never throws — render-side safe.
+  const pulse = await loadCockpitPulse(now);
+
   const assessment = jarvis?.assessment;
   const policy = jarvis?.performancePolicy;
 
@@ -102,6 +107,8 @@ export default async function CockpitOverview() {
           <span className="text-gray-600">Last computed: {now.toLocaleTimeString()}</span>
         </p>
       </header>
+
+      <CockpitPulse pulse={pulse} />
 
       {jarvisError && (
         <section className="rounded-xl border border-red-900 bg-red-950/30 p-4 text-sm text-red-300">
