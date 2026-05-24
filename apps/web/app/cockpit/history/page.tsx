@@ -488,6 +488,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
               <th className="px-3 py-2">Learning</th>
               <th className="px-3 py-2">Snapshot</th>
               <th className="px-3 py-2">Exclusion reasons</th>
+              <th className="px-3 py-2">Narrate</th>
             </tr>
           </thead>
           <tbody>
@@ -552,6 +553,15 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                     {eligibility.exclusionReasons.length === 0
                       ? <span className="text-gray-600">—</span>
                       : eligibility.exclusionReasons.join("; ")}
+                  </td>
+                  <td className="px-3 py-2">
+                    <Link
+                      href={`/api/cockpit/pick-narrator/${encodeURIComponent(p.id)}`}
+                      className="text-[10px] text-cyan-400/70 underline-offset-2 hover:text-cyan-300 hover:underline"
+                      prefetch={false}
+                    >
+                      Narrate →
+                    </Link>
                   </td>
                 </tr>
               ))

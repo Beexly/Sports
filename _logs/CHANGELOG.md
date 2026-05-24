@@ -37,3 +37,4 @@ Append-only. One line per cycle.
 2026-05-24 · #34 · feat(telemetry): persist Claude usage to Postgres via ClaudeUsageLog — cockpit telemetry now live on Vercel · vitest `apps/web/__tests__/claude-usage-log.test.ts`
 2026-05-24 · #35 · feat(guardrails): DB-backed cost pre-flight in nightly runner — exits 0 gracefully when ceiling breached · vitest `apps/web/__tests__/nightly-content-workflow.test.ts`
 2026-05-24 · #36 · feat(ops): telemetry log retention — prune-claude-usage-logs.mjs + weekly GitHub Actions workflow · vitest `apps/web/__tests__/telemetry-prune.test.ts`
+2026-05-24 · #37 · feat(cockpit): GET /api/cockpit/pick-narrator/[id] — narrate pick by DB ID + Narrate links in history page · vitest `apps/web/__tests__/cockpit-pick-narrator-by-id.test.ts`
