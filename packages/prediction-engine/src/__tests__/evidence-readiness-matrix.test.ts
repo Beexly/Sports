@@ -135,4 +135,33 @@ describe("evidence readiness matrix", () => {
     expect(playerDefinition.failureHorizon).toBe("TWO_WEEKS");
     expect(playerDefinition.failureMode).toContain("Late scratches");
   });
+
+  it("getEvidenceFactorDefinition throws on an unknown factor key", () => {
+    expect(() =>
+      getEvidenceFactorDefinition("nonexistent.factor" as "market.odds")
+    ).toThrow(/Unknown evidence factor/);
+  });
+
+  it("buildEvidenceReadinessMatrix reports shadow-ready count correctly", () => {
+    const matrix = buildEvidenceReadinessMatrix({
+      now: NOW,
+      evidence: [
+        evidence("ODDS"),
+        evidence("PLAYER_AVAILABILITY", {
+          activationStatus: "SHADOW_ONLY",
+          sampleSize: 3,
+        }),
+      ],
+    });
+    expect(matrix.shadowReadyFactors).toBeGreaterThan(0);
+  });
+
+  it("buildEvidenceReadinessMatrix activeContributingFactors counts ACTIVE rows that canContributeToScore", () => {
+    const matrix = buildEvidenceReadinessMatrix({
+      now: NOW,
+      evidence: [evidence("ODDS")],
+    });
+    // market.odds is ACTIVE and should canContributeToScore = true
+    expect(matrix.activeContributingFactors).toBeGreaterThanOrEqual(1);
+  });
 });
