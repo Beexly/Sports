@@ -550,3 +550,39 @@ describe("computeGameContext", () => {
     expect(result.lineMovementScore).toBe(0);
   });
 });
+
+describe("computeVenueFormScore — neutral zone and decided=0 branches", () => {
+  it("returns 0 and null factor for neutral venue form (43–57% ATS)", () => {
+    // 5W–5L = 50% ATS — falls in the neutral zone (43–57%), score=0, factor=null
+    const result = computeVenueFormScore({ wins: 5, losses: 5, pushes: 0, sampleSize: 10 }, "Home");
+    expect(result.score).toBe(0);
+    expect(result.factor).toBeNull();
+  });
+
+  it("returns 0 and null factor when all games are pushes (decided=0)", () => {
+    // sampleSize >= 5 but wins + losses = 0 → decided=0 branch → early return
+    const result = computeVenueFormScore({ wins: 0, losses: 0, pushes: 6, sampleSize: 6 }, "Away");
+    expect(result.score).toBe(0);
+    expect(result.factor).toBeNull();
+  });
+});
+
+describe("computeHeadToHeadScore — decided=0 branch", () => {
+  it("returns 0 and null atsPct when all H2H games are pushes (decided=0)", () => {
+    // sampleSize >= 5 but wins + losses = 0 → decided=0 branch
+    const result = computeHeadToHeadScore({ wins: 0, losses: 0, pushes: 5, sampleSize: 5 });
+    expect(result.score).toBe(0);
+    expect(result.atsPct).toBeNull();
+    expect(result.factor).toBeNull();
+  });
+});
+
+describe("computeRestAdvantageScore — both-B2B-active branch (net zero)", () => {
+  it("returns 0 when both teams are on back-to-back (restScore cancels to zero)", () => {
+    // isBackToBackHome=true → restScore -=8; isBackToBackAway=true → restScore +=8
+    // net restScore=0 → returns { score: 0, factor: null }
+    const result = computeRestAdvantageScore(null, null, true, true, "HOME");
+    expect(result.score).toBe(0);
+    expect(result.factor).toBeNull();
+  });
+});
