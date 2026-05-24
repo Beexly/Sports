@@ -557,6 +557,70 @@ describe("content engine — readiness", () => {
   });
 });
 
+describe("content engine — readiness nextRecommendedAction text per status", () => {
+  it("BLOCKED → action prompts resolving banned-phrase findings", () => {
+    const draft = makeDraft({
+      contentType: "METHODOLOGY_EDUCATION",
+      draftBody: "We offer a guaranteed lock pick.",
+      sources: [makeSource("METHODOLOGY")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.readiness).toBe("BLOCKED");
+    expect(v.nextRecommendedAction.toLowerCase()).toContain("banned");
+  });
+
+  it("NEEDS_AFFILIATE_DISCLOSURE → action prompts inserting disclosure block", () => {
+    const draft = makeDraft({
+      contentType: "PROMOTION_ROUNDUP",
+      draftBody: "DraftKings has an offer. Bet responsibly.",
+      responsibleGamingIncluded: true,
+      affiliateDisclosureIncluded: false,
+      sources: [
+        makeSource("PROMOTION_TERMS", { sourceUrl: "https://example.com/terms" }),
+        makeSource("RESPONSIBLE_GAMING"),
+      ],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.readiness).toBe("NEEDS_AFFILIATE_DISCLOSURE");
+    expect(v.nextRecommendedAction.toLowerCase()).toContain("affiliate");
+  });
+
+  it("NEEDS_RESPONSIBLE_GAMING → action prompts inserting RG line", () => {
+    const draft = makeDraft({
+      contentType: "DAILY_BRIEF",
+      draftBody: "Tonight there are six games on the slate.",
+      responsibleGamingIncluded: false,
+      sources: [makeSource("ODDS"), makeSource("DAILY_BRIEF")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.readiness).toBe("NEEDS_RESPONSIBLE_GAMING");
+    expect(v.nextRecommendedAction.toLowerCase()).toContain("responsible");
+  });
+
+  it("NEEDS_COMPLIANCE → action routes to compliance review team", () => {
+    const draft = makeDraft({
+      contentType: "DAILY_BRIEF",
+      draftBody: "   ",
+      responsibleGamingIncluded: true,
+      sources: [makeSource("ODDS"), makeSource("DAILY_BRIEF")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.readiness).toBe("NEEDS_COMPLIANCE");
+    expect(v.nextRecommendedAction.toLowerCase()).toContain("compliance");
+  });
+
+  it("READY_FOR_REVIEW → action routes to AVA for final review", () => {
+    const draft = makeDraft({
+      contentType: "METHODOLOGY_EDUCATION",
+      draftBody: "How the model works.",
+      sources: [makeSource("METHODOLOGY")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.readiness).toBe("READY_FOR_REVIEW");
+    expect(v.nextRecommendedAction.toLowerCase()).toContain("ava");
+  });
+});
+
 describe("content engine — build helpers (draft-only)", () => {
   it("buildContentDraft never sets publishedAt", () => {
     const draft = buildContentDraft({
