@@ -393,6 +393,43 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
 }
 
 // ============================================================
+// ATS result computation — pure helper, no DB dependency
+// ============================================================
+
+export type AtsResult = "WIN" | "LOSS" | "PUSH";
+
+/**
+ * Computes the ATS (against-the-spread) results for home and away teams.
+ *
+ * spread is from the home team's perspective:
+ *   -7 = home favored by 7 (home must win by >7 to cover)
+ *   +3 = away favored by 3 (home covers by winning or losing by <3)
+ *
+ * Push zone: |coverMargin| < 0.5 (half-point spreads eliminate true pushes
+ * but integer spreads can push; 0.5 guards against floating-point noise).
+ */
+export function computeAtsResults(
+  homeScore: number,
+  awayScore: number,
+  spread: number | null
+): { homeAts: AtsResult; awayAts: AtsResult } {
+  if (spread === null) {
+    return { homeAts: "PUSH", awayAts: "PUSH" };
+  }
+
+  const actualMargin = homeScore - awayScore;
+  const coverMargin = actualMargin + spread;
+
+  if (Math.abs(coverMargin) < 0.5) {
+    return { homeAts: "PUSH", awayAts: "PUSH" };
+  }
+  if (coverMargin > 0) {
+    return { homeAts: "WIN", awayAts: "LOSS" };
+  }
+  return { homeAts: "LOSS", awayAts: "WIN" };
+}
+
+// ============================================================
 // Settle game — write TeamGameLog entries when game completes
 // ============================================================
 
@@ -473,25 +510,7 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
   const homeWon = homeScore > awayScore;
   const awayWon = awayScore > homeScore;
 
-  // ATS result: home covers if actual margin > spread
-  // spread is from home's perspective (e.g. -7 = home favored by 7)
-  let homeAts: "WIN" | "LOSS" | "PUSH" = "PUSH";
-  let awayAts: "WIN" | "LOSS" | "PUSH" = "PUSH";
-
-  if (spread !== null) {
-    const actualMargin = homeScore - awayScore; // positive = home won
-    const coverMargin = actualMargin + spread;  // home covers if > 0 (spread is negative for fav)
-    if (Math.abs(coverMargin) < 0.5) {
-      homeAts = "PUSH";
-      awayAts = "PUSH";
-    } else if (coverMargin > 0) {
-      homeAts = "WIN";
-      awayAts = "LOSS";
-    } else {
-      homeAts = "LOSS";
-      awayAts = "WIN";
-    }
-  }
+  const { homeAts, awayAts } = computeAtsResults(homeScore, awayScore, spread);
 
   // Upsert TeamGameLog for both teams using the @@unique([gameId, teamName]) constraint.
   // isBootstrap is immutable — creation era is never changed on update.

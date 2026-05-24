@@ -8,5 +8,7 @@ export {
   getAtsForm,
   getHeadToHeadForm,
   settleGameLogs,
+  computeAtsResults,
+  type AtsResult,
 } from "./context-enrichment";
 export * from "./config";
