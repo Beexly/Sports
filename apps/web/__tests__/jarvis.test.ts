@@ -1320,6 +1320,143 @@ describe("synthesizeJarvis — cockpitStatus branches", () => {
   });
 });
 
+describe("synthesizeJarvis — canonicalHistoryStatus branches", () => {
+  it("canonicalHistoryStatus is RED when count=0 and NOT in bootstrap mode", () => {
+    // classifyCanonicalHistory: count === 0 AND !isBootstrapMode → "RED"
+    const a = synthesizeJarvis(
+      baseInput({
+        gates: {
+          canPersistCanonicalHistory: true,
+          canUseDerivedHistory: true,
+          canExposePublicPicks: true,
+          canPromoteFeaturedPicks: true,
+          canExposePerformanceStats: true,
+          canPublishContent: true,
+          canLearnFromOutcomes: true,
+          canApplyCalibrationAdjustments: false as const,
+          isBootstrapMode: false, // NOT bootstrap mode
+          minSettledPicksForLearning: 25,
+        },
+        history: {
+          canonicalSettledCount: 0, // zero + !bootstrap → RED
+          bootstrapSettledCount: 0,
+          canonicalPendingCount: 0,
+          winCount: 0,
+          lossCount: 0,
+          pushCount: 0,
+          voidCount: 0,
+          publishedCount: 10,
+          featuredCount: 0,
+          canonicalEligibleForPublic: 0,
+          canonicalExcludedFromPublic: 0,
+        },
+      })
+    );
+    expect(a.canonicalHistoryStatus).toBe("RED");
+  });
+
+  it("canonicalHistoryStatus is AMBER when count > 0 but below minSettledPicksForLearning", () => {
+    // classifyCanonicalHistory: 0 < count < minSettledPicksForLearning → "AMBER"
+    const a = synthesizeJarvis(
+      baseInput({
+        gates: {
+          canPersistCanonicalHistory: true,
+          canUseDerivedHistory: true,
+          canExposePublicPicks: true,
+          canPromoteFeaturedPicks: true,
+          canExposePerformanceStats: true,
+          canPublishContent: true,
+          canLearnFromOutcomes: true,
+          canApplyCalibrationAdjustments: false as const,
+          isBootstrapMode: false,
+          minSettledPicksForLearning: 25,
+        },
+        history: {
+          canonicalSettledCount: 10, // 0 < 10 < 25 → AMBER
+          bootstrapSettledCount: 0,
+          canonicalPendingCount: 0,
+          winCount: 6,
+          lossCount: 4,
+          pushCount: 0,
+          voidCount: 0,
+          publishedCount: 10,
+          featuredCount: 0,
+          canonicalEligibleForPublic: 10,
+          canonicalExcludedFromPublic: 0,
+        },
+      })
+    );
+    expect(a.canonicalHistoryStatus).toBe("AMBER");
+  });
+
+  it("canonicalHistoryStatus is AMBER (not RED) when count=0 AND isBootstrapMode", () => {
+    // classifyCanonicalHistory: count === 0 AND isBootstrapMode → "AMBER" (not RED)
+    const a = synthesizeJarvis(
+      baseInput({
+        gates: {
+          canPersistCanonicalHistory: false,
+          canUseDerivedHistory: false,
+          canExposePublicPicks: false,
+          canPromoteFeaturedPicks: false,
+          canExposePerformanceStats: false,
+          canPublishContent: false,
+          canLearnFromOutcomes: false,
+          canApplyCalibrationAdjustments: false as const,
+          isBootstrapMode: true, // bootstrap mode → AMBER not RED
+          minSettledPicksForLearning: 25,
+        },
+        history: {
+          canonicalSettledCount: 0,
+          bootstrapSettledCount: 0,
+          canonicalPendingCount: 0,
+          winCount: 0,
+          lossCount: 0,
+          pushCount: 0,
+          voidCount: 0,
+          publishedCount: 0,
+          featuredCount: 0,
+          canonicalEligibleForPublic: 0,
+          canonicalExcludedFromPublic: 0,
+        },
+      })
+    );
+    expect(a.canonicalHistoryStatus).toBe("AMBER");
+  });
+});
+
+describe("synthesizeJarvis — toDate string-parsing branch", () => {
+  it("accepts ISO string timestamps for lastSuccessAt and classifies ingestion correctly", () => {
+    // toDate: value is a string (not Date, not null) → parsed via new Date(value)
+    const recentIso = new Date(NOW.getTime() - 60 * 60 * 1000).toISOString();
+    const a = synthesizeJarvis(
+      baseInput({
+        ingestion: {
+          lastAttemptAt: recentIso, // string, not Date
+          lastSuccessAt: recentIso, // string, not Date
+          lastWasSuccess: true,
+          recentFailureCount: 0,
+        },
+      })
+    );
+    expect(a.ingestionStatus).toBe("GREEN");
+  });
+
+  it("treats an invalid ISO string for lastSuccessAt as UNKNOWN ingestion", () => {
+    // toDate: new Date("invalid") → NaN → returns null → classifyIngestion sees null → UNKNOWN
+    const a = synthesizeJarvis(
+      baseInput({
+        ingestion: {
+          lastAttemptAt: "not-a-date",
+          lastSuccessAt: "not-a-date", // invalid string → toDate returns null
+          lastWasSuccess: false,
+          recentFailureCount: 0,
+        },
+      })
+    );
+    expect(a.ingestionStatus).toBe("UNKNOWN");
+  });
+});
+
 describe("synthesizeJarvis — publicSurfaceStatus (classifyPublicSurface worst-of)", () => {
   it("publicSurfaceStatus is GREEN when picks, performance, and customerDashboard are all GREEN", () => {
     // classifyPublicSurface takes the worst of the three; all GREEN → GREEN
