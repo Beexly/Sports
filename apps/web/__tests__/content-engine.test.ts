@@ -338,6 +338,48 @@ describe("content engine — readiness", () => {
     expect(f.statusLine).toContain("METHODOLOGY_EDUCATION");
     expect(f.statusLine).toContain("readiness=");
   });
+
+  it("NEEDS_AFFILIATE_DISCLOSURE when promotion content lacks disclosure", () => {
+    const draft = makeDraft({
+      contentType: "PROMOTION_ROUNDUP",
+      draftBody: "DraftKings has an offer. Please bet responsibly.",
+      responsibleGamingIncluded: true,
+      affiliateDisclosureIncluded: false,
+      sources: [
+        makeSource("PROMOTION_TERMS", {
+          sourceUrl: "https://example.com/terms",
+          trustLevel: "AUTHORITATIVE",
+        }),
+        makeSource("RESPONSIBLE_GAMING", { trustLevel: "AUTHORITATIVE" }),
+      ],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.readiness).toBe("NEEDS_AFFILIATE_DISCLOSURE");
+  });
+
+  it("NEEDS_RESPONSIBLE_GAMING for betting content missing RG line", () => {
+    const draft = makeDraft({
+      contentType: "DAILY_BRIEF",
+      draftBody: "Tonight there are six games on the slate.",
+      responsibleGamingIncluded: false,
+      affiliateDisclosureIncluded: false,
+      sources: [makeSource("ODDS"), makeSource("DAILY_BRIEF")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.readiness).toBe("NEEDS_RESPONSIBLE_GAMING");
+  });
+
+  it("safeVisibility is INTERNAL when readiness is NEEDS_SOURCE", () => {
+    const draft = makeDraft({
+      contentType: "MATCHUP_PREVIEW",
+      draftBody: "Preview. RG included.",
+      responsibleGamingIncluded: true,
+      sources: [makeSource("ODDS")],
+      visibility: "PUBLIC",
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.safeVisibility).toBe("INTERNAL");
+  });
 });
 
 describe("content engine — build helpers (draft-only)", () => {
