@@ -181,4 +181,32 @@ describe("launchStatusAlert", () => {
   it("returns null on LAUNCH_READY_PENDING_EXTERNAL_CONFIG", () => {
     expect(launchStatusAlert("LAUNCH_READY_PENDING_EXTERNAL_CONFIG")).toBeNull();
   });
+
+  it("returns null on NOT_READY_VALIDATION (not a paging condition)", () => {
+    expect(launchStatusAlert("NOT_READY_VALIDATION")).toBeNull();
+  });
+
+  it("returns null on UNKNOWN (not a paging condition)", () => {
+    expect(launchStatusAlert("UNKNOWN")).toBeNull();
+  });
+});
+
+describe("alertsFromDiff — RED recovery branches", () => {
+  it("emits an info alert when a section recovers from RED to AMBER", () => {
+    const alerts = alertsFromDiff({
+      ...EMPTY_DIFF,
+      sectionalChanges: [{ key: "ingestionStatus", previous: "RED", current: "AMBER" }],
+    });
+    expect(alerts.some((a) => a.severity === "info")).toBe(true);
+    expect(alerts.some((a) => /recover/i.test(a.title))).toBe(true);
+  });
+
+  it("does not emit a page when settlement recovers from RED", () => {
+    const alerts = alertsFromDiff({
+      ...EMPTY_DIFF,
+      sectionalChanges: [{ key: "settlementStatus", previous: "RED", current: "GREEN" }],
+    });
+    expect(alerts.some((a) => a.severity === "info")).toBe(true);
+    expect(alerts.every((a) => a.severity !== "page")).toBe(true);
+  });
 });

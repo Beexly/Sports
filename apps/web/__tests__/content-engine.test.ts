@@ -229,6 +229,42 @@ describe("content engine — compliance", () => {
     expect(v.status).toBe("NOT_APPLICABLE");
     expect(v.bannedPhraseScanClean).toBe(true);
   });
+
+  it("returns CLEAR when betting content has RG and no banned phrases", () => {
+    const v = evaluateContentCompliance({
+      contentType: "DAILY_BRIEF",
+      draftBody: "Tonight's slate has six games. Please bet responsibly.",
+      affiliateDisclosureIncluded: false,
+      responsibleGamingIncluded: true,
+    });
+    expect(v.status).toBe("CLEAR");
+    expect(v.bannedPhraseScanClean).toBe(true);
+    expect(v.blockers).toHaveLength(0);
+  });
+
+  it("returns REVIEW_REQUIRED when betting content has RG but empty body", () => {
+    // Empty body blocker fires even though RG is included — status is REVIEW_REQUIRED
+    // (the empty-body path reaches the catch-all blockers.length > 0 branch)
+    const v = evaluateContentCompliance({
+      contentType: "DAILY_BRIEF",
+      draftBody: "   ",
+      affiliateDisclosureIncluded: false,
+      responsibleGamingIncluded: true,
+    });
+    expect(v.status).toBe("REVIEW_REQUIRED");
+    expect(v.blockers.some((b) => b.toLowerCase().includes("empty"))).toBe(true);
+  });
+
+  it("adds a calibration note for MODEL_ACCOUNTABILITY_NOTE content type", () => {
+    const v = evaluateContentCompliance({
+      contentType: "MODEL_ACCOUNTABILITY_NOTE",
+      draftBody: "Calibration drift detected in the 70-79 bucket.",
+      affiliateDisclosureIncluded: false,
+      responsibleGamingIncluded: false,
+    });
+    expect(v.status).toBe("NOT_APPLICABLE");
+    expect(v.notes.some((n) => n.toLowerCase().includes("internal"))).toBe(true);
+  });
 });
 
 describe("content engine — readiness", () => {
