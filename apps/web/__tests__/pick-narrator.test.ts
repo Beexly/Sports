@@ -35,7 +35,7 @@ const SAMPLE_PICK: ScoredPick = {
         description: "78% bookmaker consensus on Lakers",
         weight: 24,
         evidence: {
-          sourceCategory: "MARKET_PRICE",
+          sourceCategory: "ODDS",
           sourceName: "the-odds-api",
           freshnessStatus: "FRESH",
           trustLevel: 90,
@@ -142,7 +142,7 @@ describe("narratePick", () => {
             description: "shadow only",
             weight: 0,
             evidence: {
-              sourceCategory: "OTHER",
+              sourceCategory: "STANDINGS",
               sourceName: "shadow-source",
               freshnessStatus: "FRESH",
               trustLevel: 50,

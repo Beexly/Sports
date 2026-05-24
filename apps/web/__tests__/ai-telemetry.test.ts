@@ -84,7 +84,7 @@ describe("withTelemetry", () => {
     try {
       await withTelemetry(
         { callSite: "minimal", model: "claude-sonnet-4-6" },
-        async () => ({ content: [] })
+        async () => ({ content: [] } as unknown as { usage?: null })
       );
       expect(cap.logs).toHaveLength(1);
       const rec = cap.logs[0]!;

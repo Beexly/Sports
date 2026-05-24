@@ -185,7 +185,7 @@ describe("reviewDraft", () => {
     await reviewDraft({ content: SAMPLE_DRAFT, banned: SAMPLE_BANNED });
 
     expect(create).toHaveBeenCalledTimes(1);
-    const args = create.mock.calls[0]![0] as {
+    const args = (create.mock.calls as unknown[][])[0]![0] as {
       system: Array<{ type: string; text: string; cache_control?: unknown }>;
       messages: Array<{
         role: string;

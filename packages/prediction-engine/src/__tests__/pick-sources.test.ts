@@ -17,7 +17,7 @@ function factor(
     sourceCategory?: SignalCategory;
   } | null
 ): FactorDetail {
-  if (evidence === null) {
+  if (evidence === null || evidence === undefined) {
     return {
       name,
       impact: "neutral",
