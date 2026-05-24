@@ -174,6 +174,45 @@ describe("content engine — source coverage", () => {
     const types = Object.keys(REQUIRED_SOURCE_TYPES);
     expect(types.length).toBeGreaterThanOrEqual(12);
   });
+
+  it("STALE source adds a blocker even when present", () => {
+    const v = evaluateContentSourceCoverage({
+      contentType: "METHODOLOGY_EDUCATION",
+      sources: [makeSource("METHODOLOGY", { sourceStatus: "STALE" })],
+      performanceGateOn: false,
+    });
+    expect(v.status).toBe("BLOCKED");
+    expect(v.blockers.some((b) => b.includes("STALE"))).toBe(true);
+  });
+
+  it("LINE_MOVEMENT_WATCH with fresh ODDS source is COVERED", () => {
+    const v = evaluateContentSourceCoverage({
+      contentType: "LINE_MOVEMENT_WATCH",
+      sources: [makeSource("ODDS")],
+      performanceGateOn: false,
+    });
+    expect(v.status).toBe("COVERED");
+    expect(v.covered).toBe(true);
+  });
+
+  it("BLOG_POST with METHODOLOGY source is COVERED", () => {
+    const v = evaluateContentSourceCoverage({
+      contentType: "BLOG_POST",
+      sources: [makeSource("METHODOLOGY")],
+      performanceGateOn: false,
+    });
+    expect(v.status).toBe("COVERED");
+  });
+
+  it("all-missing sources yields NEEDS_SOURCE (not BLOCKED)", () => {
+    const v = evaluateContentSourceCoverage({
+      contentType: "MATCHUP_PREVIEW",
+      sources: [],
+      performanceGateOn: false,
+    });
+    expect(v.status).toBe("NEEDS_SOURCE");
+    expect(v.missing).toHaveLength(2);
+  });
 });
 
 describe("content engine — compliance", () => {
