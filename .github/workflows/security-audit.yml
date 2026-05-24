@@ -1,17 +1,23 @@
 name: Security Audit
 
 # Weekly automated dependency vulnerability scan.
-# Runs as informational (allow-failure) because current HIGH findings require
-# a Next.js major-version upgrade (14 → 16). Until that upgrade lands, this
-# workflow surfaces regression without blocking development.
+# Runs as informational (allow-failure) for MODERATE findings that cannot be
+# fixed without waiting on upstream maintainers or a Vitest 4.x major upgrade.
 #
-# Tracked HIGH/CRITICAL baseline (2026-05-24):
-#   next@14.2.35 — 14 CVEs including DoS, HTTP smuggling, cache poisoning,
-#                  SSRF, XSS. Fix: upgrade to next@^16.0.0
-#   glob CLI     — Command injection via --cmd flag (not used in this repo)
+# Resolved HIGH/CRITICAL (2026-05-24):
+#   next@14.2.35 — 14 CVEs (DoS, HTTP smuggling, cache poisoning, SSRF, XSS)
+#                  FIXED by upgrading to next@16.2.6
+#   glob CLI     — command injection via --cmd flag
+#                  FIXED as transitive dep eliminated by next@16
 #
-# When all HIGH/CRITICAL are resolved this job should be changed to
-# fail on exit-code > 0.
+# Current MODERATE baseline (2026-05-24):
+#   next@16.2.6 via postcss     — fix requires next@16.3.0+ (not yet stable)
+#   vitest@2.x / vite / esbuild — fix requires vitest@4 major upgrade (dev-only)
+#   next-auth                   — transitive through next; no standalone fix
+#
+# Action: upgrade vitest to 4.x once stable; watch next@16.3.0 release.
+# This job should fail on HIGH/CRITICAL exit-code > 0 (add --audit-level=high
+# once the informational period is no longer needed for MODERATE tracking).
 
 on:
   schedule:
@@ -38,27 +44,41 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
-      - name: Run security audit
-        # continue-on-error until next@^16.0.0 upgrade is complete
+      - name: Run security audit (HIGH/CRITICAL must be 0)
+        # Fail on high/critical; MODERATE tracked informally below.
+        # Change `--audit-level=moderate` to remove the informational-only period.
+        continue-on-error: false
+        run: npm audit --audit-level=high
+
+      - name: Run security audit (full report, informational)
         continue-on-error: true
         run: |
           echo "::group::Full audit report"
           npm audit
           echo "::endgroup::"
 
-      - name: Summarize HIGH/CRITICAL findings
+      - name: Summarize findings
         continue-on-error: true
         run: |
-          echo "## High/Critical Vulnerabilities" >> $GITHUB_STEP_SUMMARY
+          echo "## Vulnerability Summary" >> $GITHUB_STEP_SUMMARY
           npm audit --json | python3 -c "
           import sys, json
           data = json.load(sys.stdin)
           vulns = data.get('vulnerabilities', {})
-          high = {k: v for k, v in vulns.items() if v.get('severity') in ('high', 'critical')}
-          if not high:
-              print('No HIGH or CRITICAL vulnerabilities found.')
-          for name, v in high.items():
-              via = v.get('via', [])
-              titles = [x.get('title','') for x in via if isinstance(x, dict) and x.get('title')]
-              print(f'- **{name}** ({v[\"severity\"]}): {chr(10).join(titles[:3]) if titles else \"transitive\"}')
+          by_sev = {}
+          for name, v in vulns.items():
+              s = v.get('severity', 'unknown')
+              by_sev.setdefault(s, []).append(name)
+          if not vulns:
+              print('No vulnerabilities found.')
+          else:
+              for sev in ('critical', 'high', 'moderate', 'low'):
+                  names = by_sev.get(sev, [])
+                  if names:
+                      print(f'### {sev.upper()} ({len(names)})')
+                      for n in names:
+                          v = vulns[n]
+                          via = v.get('via', [])
+                          titles = [x.get('title','') for x in via if isinstance(x, dict) and x.get('title')]
+                          print(f'- **{n}**: {titles[0] if titles else \"transitive\"}')
           " >> $GITHUB_STEP_SUMMARY
