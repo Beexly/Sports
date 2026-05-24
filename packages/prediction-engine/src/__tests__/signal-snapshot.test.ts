@@ -488,4 +488,20 @@ describe("buildPickSignalSnapshot", () => {
       expect(snap.h2hSampleSize).toBe(5);
     });
   });
+
+  describe("atsFormSampleSize — zero-sample guard", () => {
+    it("returns null when both ATS form records have sampleSize 0 (|| null guard)", () => {
+      // hadAtsFormSignal=true (usedDerivedHistory=true + homeAtsForm present),
+      // but Math.max(0, 0) = 0, and 0 || null = null — the || null guard fires.
+      const snap = buildPickSignalSnapshot(
+        "p", makePick(),
+        makeContext({
+          homeAtsForm: { wins: 0, losses: 0, pushes: 0, sampleSize: 0 },
+        }),
+        false, true
+      );
+      expect(snap.hadAtsFormSignal).toBe(true);
+      expect(snap.atsFormSampleSize).toBeNull();
+    });
+  });
 });

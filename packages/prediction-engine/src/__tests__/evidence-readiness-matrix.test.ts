@@ -269,6 +269,21 @@ describe("evidence matrix — factorBlockers edge cases", () => {
     const row = matrix.rows.find((r) => r.key === "market.odds")!;
     expect(row.blockers.some((b) => b.includes("insufficient sample size"))).toBe(true);
   });
+
+  it("blockedActivationReason — BLOCKED_STALE returns the stale-evidence message", () => {
+    // This exercises the BLOCKED_STALE case in the blockedActivationReason switch.
+    // The evidence is fresh by timestamp (avoids the ageMs blocker) but its
+    // activationStatus is BLOCKED_STALE — a source adapter's own staleness flag.
+    const matrix = buildEvidenceReadinessMatrix({
+      now: NOW,
+      evidence: [
+        evidence("ODDS", { activationStatus: "BLOCKED_STALE" }),
+      ],
+    });
+    const row = matrix.rows.find((r) => r.key === "market.odds")!;
+    expect(row.status).toBe("BLOCKED");
+    expect(row.blockers.some((b) => b.includes("Activation is blocked by stale evidence"))).toBe(true);
+  });
 });
 
 describe("evidence matrix — nextBestActions non-critical path", () => {
