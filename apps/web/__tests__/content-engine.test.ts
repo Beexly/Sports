@@ -779,6 +779,64 @@ describe("content engine — build helpers (draft-only)", () => {
     expect(draft.draftBody).toContain("# Methodology");
     expect(draft.draftBody).toContain("ranked picks");
   });
+
+  it("promotion roundup with no promotions emits the empty-state message", () => {
+    const draft = buildPromotionRoundupDraft({
+      promotions: [],
+      generatedBy: "test",
+      slug: "promo-roundup-empty",
+      sources: [makeSource("PROMOTION_TERMS", { trustLevel: "AUTHORITATIVE" })],
+    });
+    expect(draft.draftBody.toLowerCase()).toContain("no compliance-approved promotions");
+  });
+
+  it("promotion roundup with expiresAt set includes the expiry date line", () => {
+    const expiry = new Date("2026-12-31T23:59:59Z");
+    const draft = buildPromotionRoundupDraft({
+      promotions: [
+        {
+          id: "promo-exp",
+          operatorName: "DraftKings",
+          offerSummary: "Get a bonus bet.",
+          termsUrl: "https://example.com/terms",
+          eligibleStates: ["NJ"],
+          expiresAt: expiry,
+        },
+      ],
+      generatedBy: "test",
+      slug: "promo-roundup-with-expiry",
+      sources: [makeSource("PROMOTION_TERMS", { trustLevel: "AUTHORITATIVE" })],
+    });
+    expect(draft.draftBody).toContain("Offer expires: 2026-12-31");
+  });
+
+  it("promotion roundup with no eligible states omits the states line", () => {
+    const draft = buildPromotionRoundupDraft({
+      promotions: [
+        {
+          id: "promo-no-states",
+          operatorName: "FanDuel",
+          offerSummary: "Offer details.",
+          termsUrl: "https://example.com/terms",
+          eligibleStates: [],
+          expiresAt: null,
+        },
+      ],
+      generatedBy: "test",
+      slug: "promo-roundup-no-states",
+      sources: [makeSource("PROMOTION_TERMS", { trustLevel: "AUTHORITATIVE" })],
+    });
+    expect(draft.draftBody).not.toContain("Eligible states:");
+  });
+
+  it("createCockpitContentTask assigns SARAH for RESPONSIBLE_BETTING_EDUCATION content", () => {
+    const draft = {
+      ...makeDraft({ contentType: "RESPONSIBLE_BETTING_EDUCATION", draftBody: "Responsible betting." }),
+      id: "draft-rg",
+    };
+    const task = createCockpitContentTask({ draft, nextRecommendedAction: "Route to SARAH" });
+    expect(task.assignedAgent).toBe("SARAH");
+  });
 });
 
 function readRel(rel: string): string {

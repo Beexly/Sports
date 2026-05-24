@@ -123,6 +123,17 @@ describe("evaluatePublicPerformancePolicy", () => {
     expect(p.publicWinRate).toBeNull();
   });
 
+  it("publicRecord omits the push segment when canonicalPushes is 0", () => {
+    const p = evaluatePublicPerformancePolicy({
+      ...base,
+      canonicalWins: 60,
+      canonicalLosses: 40,
+      canonicalPushes: 0,
+    });
+    expect(p.publicRecord).toBe("60W–40L");
+    expect(p.publicRecord).not.toContain("P");
+  });
+
   // ── Brand-safety invariants ───────────────────────────────────────────────
   // These cover every code path of publicMessage. The customer-facing
   // string must always carry the past-performance disclaimer and must
