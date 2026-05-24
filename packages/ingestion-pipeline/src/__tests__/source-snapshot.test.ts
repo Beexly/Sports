@@ -78,4 +78,11 @@ describe("stableStringify", () => {
     const h2 = createHash("sha256").update(stableStringify(p2)).digest("hex");
     expect(h1).not.toBe(h2);
   });
+
+  it("sorts keys inside objects that are array elements", () => {
+    // Arrays are returned as-is, but JSON.stringify still calls the replacer
+    // on each element — so object elements inside arrays also get key-sorted.
+    const result = stableStringify([{ b: 2, a: 1 }, { d: 4, c: 3 }]);
+    expect(result).toBe('[{"a":1,"b":2},{"c":3,"d":4}]');
+  });
 });

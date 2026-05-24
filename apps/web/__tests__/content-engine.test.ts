@@ -273,6 +273,32 @@ describe("content engine — source coverage", () => {
     expect(v.status).toBe("COVERED");
     expect(v.covered).toBe(true);
   });
+
+  it("blocks promotion content with a blank (whitespace-only) terms URL", () => {
+    // sourceUrl.trim().length === 0 also triggers the missing-terms blocker
+    const v = evaluateContentSourceCoverage({
+      contentType: "PROMOTION_ROUNDUP",
+      sources: [
+        makeSource("PROMOTION_TERMS", { sourceUrl: "   " }),
+        makeSource("RESPONSIBLE_GAMING"),
+      ],
+      performanceGateOn: false,
+    });
+    expect(v.status).toBe("BLOCKED");
+    expect(v.blockers.some((b) => b.toLowerCase().includes("terms url"))).toBe(true);
+  });
+
+  it("clears PERFORMANCE_TRANSPARENCY when gate is ON and both sources are present", () => {
+    const v = evaluateContentSourceCoverage({
+      contentType: "PERFORMANCE_TRANSPARENCY",
+      sources: [makeSource("PERFORMANCE"), makeSource("METHODOLOGY")],
+      performanceGateOn: true,
+    });
+    expect(v.status).toBe("COVERED");
+    expect(v.covered).toBe(true);
+    expect(v.missing).toHaveLength(0);
+    expect(v.blockers).toHaveLength(0);
+  });
 });
 
 describe("content engine — compliance", () => {
