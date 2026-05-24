@@ -76,6 +76,40 @@ describe("Cockpit status transitions — allow-list", () => {
     expect(err.message).toContain("Allowed targets");
   });
 
+  it("CockpitTransitionRefused.name is 'CockpitTransitionRefused' (not plain 'Error')", () => {
+    const err = new CockpitTransitionRefused("t", "NEW", "APPROVED");
+    expect(err.name).toBe("CockpitTransitionRefused");
+  });
+
+  it("CockpitTransitionRefused is instanceof Error", () => {
+    expect(new CockpitTransitionRefused("t", "NEW", "APPROVED")).toBeInstanceOf(Error);
+  });
+
+  it("CockpitTransitionRefused message mentions 'none' for terminal ARCHIVED state", () => {
+    const err = new CockpitTransitionRefused("t", "ARCHIVED", "NEW");
+    expect(err.message).toMatch(/none/i);
+  });
+
+  it("permits REJECTED task to be re-routed (REJECTED → ROUTED)", () => {
+    expect(isAllowedTransition("REJECTED", "ROUTED")).toBe(true);
+  });
+
+  it("permits REJECTED task to be archived (REJECTED → ARCHIVED)", () => {
+    expect(isAllowedTransition("REJECTED", "ARCHIVED")).toBe(true);
+  });
+
+  it("permits BLOCKED task to be re-routed (BLOCKED → ROUTED)", () => {
+    expect(isAllowedTransition("BLOCKED", "ROUTED")).toBe(true);
+  });
+
+  it("permits BLOCKED task to be archived (BLOCKED → ARCHIVED)", () => {
+    expect(isAllowedTransition("BLOCKED", "ARCHIVED")).toBe(true);
+  });
+
+  it("permits DRAFTED task to be re-routed (DRAFTED → ROUTED)", () => {
+    expect(isAllowedTransition("DRAFTED", "ROUTED")).toBe(true);
+  });
+
   it("every status has a deterministic, finite outgoing edge set (allow-list integrity)", () => {
     for (const s of ALL_STATUSES) {
       const out = allowedTransitionsFrom(s);
