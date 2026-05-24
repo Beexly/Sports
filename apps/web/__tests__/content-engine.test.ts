@@ -15,6 +15,7 @@ import {
   evaluateContentReadiness,
   evaluateContentSourceCoverage,
   formatDraftForReview,
+  getTemplate,
   listTemplates,
   REQUIRED_SOURCE_TYPES,
   type ContentDraftRecord,
@@ -93,6 +94,22 @@ describe("content engine — templates", () => {
     expect(CONTENT_TEMPLATES.MODEL_ACCOUNTABILITY_NOTE!.defaultVisibility).toBe(
       "INTERNAL"
     );
+  });
+
+  it("getTemplate returns the template for a known key", () => {
+    const t = getTemplate("DAILY_SLATE_BRIEF");
+    expect(t).toBeDefined();
+    expect(t?.key).toBe("DAILY_SLATE_BRIEF");
+  });
+
+  it("getTemplate returns undefined for an unknown key", () => {
+    expect(getTemplate("NONEXISTENT_TEMPLATE")).toBeUndefined();
+  });
+
+  it("every template from listTemplates is retrievable by getTemplate", () => {
+    for (const t of listTemplates()) {
+      expect(getTemplate(t.key)).toBe(t);
+    }
   });
 });
 
