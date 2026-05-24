@@ -445,4 +445,31 @@ describe("buildPublishReadinessReport — artifact kind variants", () => {
     });
     expect(report.generatedAt).toBe(NOW);
   });
+
+  it("rationale uses singular 'category' when exactly one required source exists (CONTENT_DRAFT)", () => {
+    // CONTENT_DRAFT requires exactly 1 category (PLATFORM_POLICY). The
+    // buildRationale helper has a plural/singular branch: categories.length === 1
+    // emits "category" while > 1 emits "categories".
+    const report = buildPublishReadinessReport({
+      artifactKind: "CONTENT_DRAFT",
+      artifactId: "draft_singular",
+      evidence: [ev("PLATFORM_POLICY", 60_000)],
+      now: NOW,
+    });
+    expect(report.readiness).toBe("PUBLISH_READY");
+    expect(report.rationale).toContain("1 required source category.");
+    expect(report.rationale).not.toContain("categories");
+  });
+
+  it("rationale uses plural 'categories' when multiple required sources exist (BRIEF)", () => {
+    const report = buildPublishReadinessReport({
+      artifactKind: "BRIEF",
+      artifactId: "brief_plural",
+      evidence: [ev("ODDS", 60_000), ev("TEAM_SCHEDULE", 60_000)],
+      now: NOW,
+    });
+    expect(report.readiness).toBe("PUBLISH_READY");
+    expect(report.rationale).toContain("2 required source categories.");
+    expect(report.rationale).not.toMatch(/\b1 required source categor(?:y|ies)/);
+  });
 });

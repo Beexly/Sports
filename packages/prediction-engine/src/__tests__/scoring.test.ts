@@ -266,6 +266,54 @@ describe("scoreGame — risk level", () => {
       expect(spread.riskLevel).toBe("HIGH_VARIANCE");
     }
   });
+
+  it("low consensus (≈55.6%) with sufficient books = HIGH_VARIANCE via consensus path", () => {
+    // 9 books, 5 favor home (spread < 0) and 4 favor away (spread > 0).
+    // consensusPct = 5/9 ≈ 0.556 — above CONSENSUS_MIN_PCT (0.55) so a pick
+    // is generated, but below HIGH_VARIANCE_CONSENSUS_THRESHOLD (0.58) so
+    // computeRiskLevel returns HIGH_VARIANCE via the consensus branch (not the
+    // thin-market branch).
+    const input = makeOddsInput({
+      bookmakerOdds: [
+        { bookmaker: "book1", market: "SPREADS", spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book2", market: "SPREADS", spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book3", market: "SPREADS", spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book4", market: "SPREADS", spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book5", market: "SPREADS", spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        // 4 books favor away (positive spread)
+        { bookmaker: "book6", market: "SPREADS", spread:  3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book7", market: "SPREADS", spread:  3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book8", market: "SPREADS", spread:  3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "book9", market: "SPREADS", spread:  3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      ],
+    });
+    const picks = scoreGame(input);
+    const spread = picks.find((p) => p.pickType === "SPREAD");
+    if (spread) {
+      expect(spread.riskLevel).toBe("HIGH_VARIANCE");
+    }
+  });
+
+  it("large line movement (7-point shift) yields LINE_STEAM risk level", () => {
+    // openingSpread=-3.5 → currentSpread=-10.5 is a 7-point home move.
+    // computeLineMovementScore produces score≥12 (capped at 15), which
+    // triggers the LINE_STEAM branch in computeRiskLevel.
+    const input = makeOddsInput({
+      context: {
+        openingSpread: -3.5,
+        currentSpread: -10.5,
+        dataFreshnessMinutes: 5,
+        bookmakerCoverageMax: 5,
+        hasSpreadMarket: true,
+        hasTotalMarket: false,
+      },
+    });
+    const picks = scoreGame(input);
+    const spread = picks.find((p) => p.pickType === "SPREAD");
+    if (spread) {
+      expect(spread.riskLevel).toBe("LINE_STEAM");
+    }
+  });
 });
 
 // ============================================================

@@ -837,6 +837,38 @@ describe("content engine — build helpers (draft-only)", () => {
     const task = createCockpitContentTask({ draft, nextRecommendedAction: "Route to SARAH" });
     expect(task.assignedAgent).toBe("SARAH");
   });
+
+  it("MODEL_ACCOUNTABILITY_NOTE nextRecommendedAction mentions deliberate operator decision", () => {
+    // The INTERNAL_ONLY branch in computeNextAction has two sub-paths:
+    // MODEL_ACCOUNTABILITY_NOTE → "deliberate operator decision"
+    // (LINE_MOVEMENT_WATCH is covered by another test → "public-safe variant")
+    const draft = makeDraft({
+      contentType: "MODEL_ACCOUNTABILITY_NOTE",
+      draftBody: "Calibration drift notes.",
+      sources: [makeSource("CALIBRATION"), makeSource("METHODOLOGY")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.readiness).toBe("INTERNAL_ONLY");
+    expect(v.nextRecommendedAction.toLowerCase()).toContain("deliberate operator decision");
+  });
+
+  it("NEEDS_COMPLIANCE readiness forces safeVisibility to INTERNAL even when draft.visibility is PUBLIC", () => {
+    // REVIEW_REQUIRED compliance fires when: body is empty, RG IS included (no
+    // NEEDS_RG_LANGUAGE), content type requires RG (DAILY_BRIEF), and
+    // bannedPhraseScanClean is true.  Coverage must also be COVERED so we
+    // don't short-circuit at NEEDS_SOURCE.
+    const draft = makeDraft({
+      contentType: "DAILY_BRIEF",
+      draftBody: "   ",        // empty body → triggers "Draft body is empty" blocker
+      responsibleGamingIncluded: true,
+      affiliateDisclosureIncluded: false,
+      visibility: "PUBLIC",
+      sources: [makeSource("ODDS"), makeSource("DAILY_BRIEF")],
+    });
+    const v = evaluateContentReadiness({ draft, performanceGateOn: false });
+    expect(v.readiness).toBe("NEEDS_COMPLIANCE");
+    expect(v.safeVisibility).toBe("INTERNAL");
+  });
 });
 
 function readRel(rel: string): string {

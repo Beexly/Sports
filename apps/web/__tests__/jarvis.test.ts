@@ -837,6 +837,105 @@ describe("synthesizeJarvis — safety warnings", () => {
   });
 });
 
+describe("synthesizeJarvis — signal/historical/bootstrap UNKNOWN branches", () => {
+  it("signalCoverageStatus is UNKNOWN when all signal metrics are 0", () => {
+    // classifySignal returns UNKNOWN when snapshotCoveragePct, signalCoveragePct,
+    // and averageDataQualityScore are all exactly 0.
+    const a = synthesizeJarvis(
+      baseInput({
+        signal: {
+          snapshotCoveragePct: 0,
+          signalCoveragePct: 0,
+          averageDataQualityScore: 0,
+          modelVersionsActive: [],
+        },
+      })
+    );
+    expect(a.signalCoverageStatus).toBe("UNKNOWN");
+  });
+
+  it("historicalPickStatus is UNKNOWN when all history counts are 0", () => {
+    // classifyHistorical returns UNKNOWN when canonicalSettledCount +
+    // bootstrapSettledCount + canonicalPendingCount === 0.
+    const a = synthesizeJarvis(
+      baseInput({
+        history: {
+          canonicalSettledCount: 0,
+          bootstrapSettledCount: 0,
+          canonicalPendingCount: 0,
+          winCount: 0,
+          lossCount: 0,
+          pushCount: 0,
+          voidCount: 0,
+          publishedCount: 0,
+          featuredCount: 0,
+          canonicalEligibleForPublic: 0,
+          canonicalExcludedFromPublic: 0,
+        },
+      })
+    );
+    expect(a.historicalPickStatus).toBe("UNKNOWN");
+  });
+
+  it("historicalPickStatus is AMBER when only bootstrap picks exist (no canonical)", () => {
+    // classifyHistorical: canonicalSettledCount === 0 but bootstrapSettledCount > 0
+    const a = synthesizeJarvis(
+      baseInput({
+        history: {
+          canonicalSettledCount: 0,
+          bootstrapSettledCount: 15, // bootstrap exists
+          canonicalPendingCount: 0,
+          winCount: 0,
+          lossCount: 0,
+          pushCount: 0,
+          voidCount: 0,
+          publishedCount: 0,
+          featuredCount: 0,
+          canonicalEligibleForPublic: 0,
+          canonicalExcludedFromPublic: 0,
+        },
+      })
+    );
+    expect(a.historicalPickStatus).toBe("AMBER");
+  });
+
+  it("bootstrapStatus is UNKNOWN when isBootstrapMode but no settled bootstrap picks", () => {
+    // classifyBootstrap: isBootstrapMode and bootstrapSettledCount === 0 → UNKNOWN.
+    // (The AMBER case — isBootstrapMode with bootstrapSettledCount > 0 — is covered
+    // by the safety-warning test above.)
+    const a = synthesizeJarvis(
+      baseInput({
+        gates: {
+          canPersistCanonicalHistory: false,
+          canUseDerivedHistory: false,
+          canExposePublicPicks: false,
+          canPromoteFeaturedPicks: false,
+          canExposePerformanceStats: false,
+          canPublishContent: false,
+          canLearnFromOutcomes: false,
+          canApplyCalibrationAdjustments: false as const,
+          isBootstrapMode: true,
+          minSettledPicksForLearning: 25,
+        },
+        history: {
+          canonicalSettledCount: 0,
+          bootstrapSettledCount: 0, // no bootstrap picks settled yet
+          canonicalPendingCount: 0,
+          winCount: 0,
+          lossCount: 0,
+          pushCount: 0,
+          voidCount: 0,
+          publishedCount: 0,
+          featuredCount: 0,
+          canonicalEligibleForPublic: 0,
+          canonicalExcludedFromPublic: 0,
+        },
+      })
+    );
+    expect(a.bootstrapStatus).toBe("UNKNOWN");
+  });
+});
+
 describe("synthesizeJarvis — recommended actions branches", () => {
   const NOW = new Date("2026-05-18T12:00:00Z");
 
