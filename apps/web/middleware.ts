@@ -12,7 +12,9 @@ import { NextRequest, NextResponse } from "next/server";
  */
 
 // Routes that require authentication (redirect to signin if no cookie)
-const PROTECTED_ROUTES = ["/dashboard", "/admin"];
+// /cockpit is also protected here as defence-in-depth; the cockpit layout
+// performs the full ADMIN role check which is the authoritative gate.
+const PROTECTED_ROUTES = ["/dashboard", "/admin", "/cockpit"];
 
 // Auth cookie name (NextAuth.js v5)
 const AUTH_COOKIE_NAMES = [

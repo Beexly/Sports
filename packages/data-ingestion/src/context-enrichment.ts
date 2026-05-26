@@ -11,7 +11,10 @@
 // ============================================================
 
 import { db as prisma } from "@sports/db";
-import type { OddsMarket } from "@prisma/client";
+
+// Mirror of the Prisma OddsMarket enum — avoids importing from @prisma/client
+// which requires a generated client that may not be present in CI.
+type OddsMarket = "H2H" | "SPREADS" | "TOTALS";
 
 // ============================================================
 // Opening line tracking
@@ -181,9 +184,9 @@ export async function getAtsForm(
 
   if (logs.length < 5) return null;
 
-  const wins = logs.filter((l) => l.atsResult === "WIN").length;
-  const losses = logs.filter((l) => l.atsResult === "LOSS").length;
-  const pushes = logs.filter((l) => l.atsResult === "PUSH").length;
+  const wins = logs.filter((l: { atsResult: string | null }) => l.atsResult === "WIN").length;
+  const losses = logs.filter((l: { atsResult: string | null }) => l.atsResult === "LOSS").length;
+  const pushes = logs.filter((l: { atsResult: string | null }) => l.atsResult === "PUSH").length;
 
   return { wins, losses, pushes, sampleSize: logs.length };
 }
@@ -221,9 +224,9 @@ export async function getHeadToHeadForm(
 
   if (logs.length < 5) return null;
 
-  const wins = logs.filter((l) => l.atsResult === "WIN").length;
-  const losses = logs.filter((l) => l.atsResult === "LOSS").length;
-  const pushes = logs.filter((l) => l.atsResult === "PUSH").length;
+  const wins = logs.filter((l: { atsResult: string | null }) => l.atsResult === "WIN").length;
+  const losses = logs.filter((l: { atsResult: string | null }) => l.atsResult === "LOSS").length;
+  const pushes = logs.filter((l: { atsResult: string | null }) => l.atsResult === "PUSH").length;
 
   return { wins, losses, pushes, sampleSize: logs.length };
 }

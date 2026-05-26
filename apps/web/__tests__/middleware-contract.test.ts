@@ -14,10 +14,11 @@ const repoRoot = resolve(__dirname, "..");
 const src = readFileSync(resolve(repoRoot, "middleware.ts"), "utf8");
 
 describe("middleware route protection", () => {
-  it("protects /dashboard and /admin", () => {
+  it("protects /dashboard, /admin, and /cockpit", () => {
     expect(src).toMatch(/PROTECTED_ROUTES/);
     expect(src).toMatch(/"\/dashboard"/);
     expect(src).toMatch(/"\/admin"/);
+    expect(src).toMatch(/"\/cockpit"/);
   });
 
   it("recognises the NextAuth.js v5 session cookies", () => {
