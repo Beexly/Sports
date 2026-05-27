@@ -1,0 +1,10 @@
+{
+  "inject_prefix": "[STATUS: queue={pick_queue_size} picks pending, last ingestion={last_ingestion.ended_at} status={last_ingestion.status}, drift_open={calibration_drift_open}]",
+  "status_sources": {
+    "pick_queue_size": "select count(*) from picks where status in ('draft','reviewed')",
+    "last_ingestion": "select ended_at, status from ingestion_runs order by ended_at desc limit 1",
+    "calibration_drift_open": "select count(*) from calibration_drift where resolved_at is null"
+  },
+  "skip_if_unreachable": true,
+  "max_age_seconds": 60
+}

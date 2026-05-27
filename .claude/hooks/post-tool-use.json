@@ -1,0 +1,14 @@
+{
+  "log_to": "_logs/tool-trace-{date}.jsonl",
+  "include_tools": ["Bash", "Edit", "Write", "WebFetch", "Agent"],
+  "exclude_tools": ["Read", "Grep", "Glob", "TodoWrite"],
+  "fields": ["tool", "args_summary", "result_summary", "ms", "ts"],
+  "redact_patterns": [
+    "(?i)anthropic[_-]?api[_-]?key",
+    "(?i)stripe[_-]?(secret|webhook)[_-]?key",
+    "(?i)nextauth[_-]?secret",
+    "(?i)database[_-]?url",
+    "sk-[A-Za-z0-9]{20,}",
+    "whsec_[A-Za-z0-9]+"
+  ]
+}

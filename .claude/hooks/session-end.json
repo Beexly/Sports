@@ -1,0 +1,20 @@
+{
+  "actions": [
+    {"type": "write_session_summary", "path": "_logs/SESSION-SUMMARY.md"},
+    {"type": "append_changelog", "path": "_logs/CHANGELOG.md"},
+    {"type": "suggest_next_focus", "embed_in": "_logs/SESSION-SUMMARY.md"}
+  ],
+  "session_summary_template": [
+    "# Session {date}",
+    "## Cycles completed: {n}",
+    "## Shipped",
+    "- {pick_one_line_per_cycle}",
+    "## Decisions",
+    "- {decision_one_line_per_entry_added_this_session}",
+    "## Open questions for Garrett",
+    "- {open_questions}",
+    "## Recommended next focus",
+    "- {top_3_priorities}"
+  ],
+  "skip_if_no_commits_this_session": true
+}

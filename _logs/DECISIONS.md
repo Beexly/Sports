@@ -21,3 +21,27 @@ Append-only, ADR-lite. Each entry: context / decision / alternatives / tradeoff.
 - Approve the §4.2 + §4.3 plugin install list (settings.json declares them as `plugins_required` but they are not installed by this commit).
 - Confirm MCP server URLs in `mcp.json` (current values are the §16.7 defaults — wire creds in next session).
 - §14 STOP items still outstanding: Track 2 data-source choice (ESPN-unofficial vs. TheSportsDB vs. SportsDataIO/OddsAPI); Sentry-vs-equivalent observability vendor; accent color (deep burgundy vs. electric indigo per §12).
+
+---
+
+## 2026-05-27 — Hooks use declarative shape (not Claude Code event-handler shape)
+
+**Context.** §16.6 specifies the `pre-tool-use.json` shape as `{block_patterns, require_confirmation, log_to}` — a declarative document, not the Claude Code native hook event format (`{hooks: {PreToolUse: [{matcher, hooks: [{type: "command", command}]}]}}`). The 4 remaining hooks (§5.5 lists them by behavior only) needed a shape.
+
+**Decision.** All 5 hook files (`pre-tool-use`, `post-tool-use`, `session-start`, `session-end`, `user-prompt-submit`) use the same declarative shape: human-readable JSON describing intent + parameters, no shell commands. The `aport-guardrails`, `hookify`, and `agentops` plugins (declared in `settings.json`) are the intended consumers — they translate this shape into the actual enforcement layer. When those plugins are installed in a future cycle, no rewrite is needed; only a wiring step.
+
+**Alternatives considered.**
+- *Write native Claude Code hooks now.* Rejected — the plugin layer (per §4.3) is the canonical interpreter, and embedding shell commands directly would duplicate logic the plugins already provide and would not be portable.
+- *Skip the 4 remaining hooks until a plugin is installed.* Rejected — the structural contract from §5 is the deliverable for this branch; downstream plugins need targets to read from on first install.
+
+**Tradeoff.** Hooks are inert until a plugin consumes them. We trade immediate enforcement for a consistent, plugin-friendly contract. The pre-tool-use guard listed in §16.6 is therefore advisory until `aport-guardrails` is installed — Cycle 3 candidate work.
+
+---
+
+## 2026-05-27 — Defer health pass to Cycle 3
+
+**Context.** §2.4 mandates `pnpm typecheck / lint / test` + a brief dev-server route pass during every boot. Cycle 1 deferred this because the branch scope was CLAUDE.md + `.claude/` setup, not app-code changes; Cycle 2 followed the same logic to finish the `.claude/` structure as a clean atomic unit.
+
+**Decision.** Run the health pass in Cycle 3 as a stand-alone diagnostic cycle. Capture output to `_logs/boot-{ts}.md`, do not fix failures inline — failures inform the next prioritization pass, not this branch's commits.
+
+**Tradeoff.** Two setup cycles ship before any app verification runs. Acceptable because the setup itself touches zero application code; the risk of a regression from these commits is bounded to "Claude Code can't read the `.claude/` files we just wrote", which is locally falsifiable.
