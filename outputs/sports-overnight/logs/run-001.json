@@ -1,0 +1,33 @@
+{
+  "run": 1,
+  "status": "completed",
+  "ts_start": "2026-05-27T07:03:00Z",
+  "ts_end": "2026-05-27T07:15:00Z",
+  "branch": "claude/magical-volta-8aaB4",
+  "commit": "6a7a1d3",
+  "mode": "WRITE",
+  "streams_completed": [
+    "repair-deps",
+    "repair-ts",
+    "security-sweep",
+    "grow-security-audit",
+    "synthesis"
+  ],
+  "streams_blocked": [],
+  "leverage_total": 153,
+  "metrics_delta": {
+    "test_files_failing": -1,
+    "ts_errors": -96,
+    "tests_total": "+11"
+  },
+  "top_priorities_next_run": [
+    "Next.js 14→15 upgrade (SSRF CVE GHSA-c4j6-fc7j-m34r, deadline 2026-06-10)",
+    "Remove eslint-disable @typescript-eslint/no-explicit-any in auth.ts (3 instances)",
+    "Suppress Vite CJS deprecation in test output (cosmetic but noisy)",
+    "Add weekly standalone security scan workflow (separate from per-PR CI)"
+  ],
+  "blocked_questions": [
+    "BQ-001: Should overnight agent autonomously attempt Next.js 14→15 upgrade? YES/NO (see BLOCKED_NEED_G.md)"
+  ],
+  "next_action": "repair"
+}
