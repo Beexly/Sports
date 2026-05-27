@@ -1,0 +1,18 @@
+{
+  "block_patterns": [
+    "rm -rf /",
+    "rm -rf ~",
+    "prisma migrate reset",
+    "DROP TABLE",
+    "DROP DATABASE",
+    "git push.*--force",
+    "git reset --hard origin"
+  ],
+  "require_confirmation": [
+    "prisma migrate dev",
+    "prisma db push",
+    "DELETE FROM",
+    "TRUNCATE"
+  ],
+  "log_to": "_logs/tool-trace-{date}.jsonl"
+}

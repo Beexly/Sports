@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-4-6",
+  "permission_mode": "acceptEdits",
+  "allowed_tools": ["Read","Write","Edit","Bash","Grep","Glob","WebFetch","WebSearch","TodoWrite"],
+  "mcp_servers": ["notion","google-drive","gmail","higgsfield","canva","figma"],
+  "plugins_required": [
+    "feature-dev","skill-creator","frontend-design","pr-review-toolkit","commit-commands",
+    "hookify","session-report","security-guidance","claude-md-management",
+    "clawback","db-migration-guard","anti-slop-ui","forge","ai-guard","agentops",
+    "aport-guardrails","agnix","claude-bot","alley-oop","agent-memory","gnosis-mcp",
+    "claude-blog","e2e-runner","framecraft","markgrab"
+  ]
+}
