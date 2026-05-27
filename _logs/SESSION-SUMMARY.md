@@ -1,12 +1,13 @@
 # Session 2026-05-27
 
-## Cycles completed: 2
+## Cycles completed: 3
 
 ## Shipped
 - [Cycle 1] v2 GSN CLAUDE.md installed at repo root
 - [Cycle 1] .claude/ scaffold (partial): settings.json, 10 agents (2 full + 8 stubs), 2 slash commands, pre-tool-use hook, mcp.json
 - [Cycle 1] _logs/ scaffold: CHANGELOG.md, DECISIONS.md, SESSION-SUMMARY.md, boot snapshot
-- [Cycle 2] .claude/ scaffold (complete): 4 remaining slash commands (gsn-ship, gsn-pick, gsn-settle, gsn-calibration); 4 remaining hooks (post-tool-use, session-start, session-end, user-prompt-submit)
+- [Cycle 2] .claude/ scaffold (complete): 4 remaining slash commands; 4 remaining hooks
+- [Cycle 3] §2.4 health pass: lint + 1578 tests pass; typecheck fails on stale Prisma client. Results in `_logs/boot-2026-05-27.md`.
 
 ## Decisions
 - 2026-05-27 Adopt v2 GSN CLAUDE.md + .claude/ scaffold (→ DECISIONS.md)
@@ -16,9 +17,10 @@
 ## Open questions for Garrett
 - Install the §4.2 + §4.3 plugin set declared in `.claude/settings.json`?
 - Confirm/replace placeholder MCP server URLs in `.claude/mcp.json`.
-- npm vs pnpm: repo uses npm, CLAUDE.md v2 references pnpm — pick one before Cycle 3 health pass.
-- §14 STOP-gates still open: sports data source (Track 2), observability vendor, accent color (§12).
+- npm vs pnpm: repo uses npm (lock present, 1578 tests pass via npm). v2 CLAUDE.md and an observed parallel agent use pnpm. Pick one canonical tool before any cross-branch work.
+- §14 STOP-gates still open: sports data source (a parallel agent on `work-ingestion` proposed `the-odds-api` but that branch is not pushed to origin); observability vendor; accent color (§12).
+- Approve a follow-up cycle to run `npm run db:generate` and re-typecheck — that's the obvious first fix for the Cycle 3 failures.
 
 ## Recommended next focus
-- Cycle 3: health pass per §2.4 — `git status`, `npm run typecheck`, `npm run lint`, `npm run test`, route smoke. Capture output to `_logs/boot-{ts}.md`, do not fix inline.
-- Cycle 4 candidates: (a) Pillar 2 — wire pick-engine state machine + DB schema for `{model, prompt_version, raw_response, parsed_pick, confidence, sources[], created_at}`; (b) Pillar 3 — `/calibration` page scaffold (this is the marketing); (c) install `aport-guardrails`/`hookify` to make the declarative hooks active.
+- Cycle 4: regenerate Prisma client (`npm run db:generate`) and re-run typecheck. Expect TS2305 errors to disappear and ~80 TS7006 implicit-any errors to drop substantially. Any remaining errors are real work.
+- Cycle 5 candidates: (a) ask the parallel agent to push `work-ingestion` so Track 2 work survives the container lifecycle; (b) Pillar 2 pick-engine state machine + DB schema; (c) Pillar 3 `/calibration` route scaffold; (d) install `aport-guardrails`/`hookify` to activate the declarative hooks.
