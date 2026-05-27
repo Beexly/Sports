@@ -230,3 +230,28 @@ jobs:
             __tests__/jarvis.test.ts \
             __tests__/cockpit-routes.test.ts \
             __tests__/trust-claims.test.ts
+
+  # --------------------------------------------------------------
+  # 8. Dependency security audit — fails on any unaccepted HIGH or
+  #    CRITICAL vulnerability. Known/tracked CVEs are listed in the
+  #    accepted-exception registry inside the script with expiry
+  #    dates; exceptions must be renewed or the CVE resolved.
+  # --------------------------------------------------------------
+  security-audit:
+    name: Dependency security audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Run security audit guardrail
+        run: node scripts/guardrails/security-audit.mjs

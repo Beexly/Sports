@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Overnight APEX Dashboard — Sports Prediction Platform</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #c9d1d9; margin: 0; padding: 24px; }
+  h1 { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 12px; }
+  h2 { color: #79c0ff; margin-top: 32px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 16px 0; }
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+  .card .label { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; }
+  .card .value { font-size: 28px; font-weight: 700; margin-top: 4px; }
+  .green { color: #3fb950; }
+  .red { color: #f85149; }
+  .yellow { color: #d29922; }
+  .blue { color: #58a6ff; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  th { text-align: left; padding: 8px 12px; background: #161b22; border: 1px solid #30363d; color: #8b949e; font-size: 12px; }
+  td { padding: 8px 12px; border: 1px solid #21262d; font-size: 13px; }
+  tr:nth-child(even) td { background: #161b22; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .badge-green { background: #1f3a1f; color: #3fb950; }
+  .badge-red { background: #3a1f1f; color: #f85149; }
+  .badge-yellow { background: #3a2f1f; color: #d29922; }
+  .ts { color: #8b949e; font-size: 11px; }
+</style>
+</head>
+<body>
+<h1>⚡ Overnight APEX Dashboard</h1>
+<p class="ts">Last updated: 2026-05-27T07:14:00Z &nbsp;|&nbsp; Branch: claude/magical-volta-8aaB4 &nbsp;|&nbsp; Run 1/8</p>
+
+<div class="grid">
+  <div class="card">
+    <div class="label">Test Files</div>
+    <div class="value green">110/110</div>
+  </div>
+  <div class="card">
+    <div class="label">Tests Passing</div>
+    <div class="value green">1343</div>
+  </div>
+  <div class="card">
+    <div class="label">TS Errors</div>
+    <div class="value green">0</div>
+  </div>
+  <div class="card">
+    <div class="label">Unaccepted CVEs</div>
+    <div class="value green">0</div>
+  </div>
+  <div class="card">
+    <div class="label">Tracked CVEs</div>
+    <div class="value yellow">14</div>
+  </div>
+  <div class="card">
+    <div class="label">Blocked Questions</div>
+    <div class="value blue">1</div>
+  </div>
+</div>
+
+<h2>Run 1 — Completed Streams</h2>
+<table>
+  <tr><th>Stream</th><th>Type</th><th>Action</th><th>Status</th></tr>
+  <tr><td>repair-deps</td><td>REPAIR</td><td>Added @testing-library/dom@^10.4.0 — fixed performance-gate test failure</td><td><span class="badge badge-green">DONE</span></td></tr>
+  <tr><td>repair-ts</td><td>REPAIR</td><td>ignoreDeprecations + Prisma generate → 0 TS errors (was 96)</td><td><span class="badge badge-green">DONE</span></td></tr>
+  <tr><td>security-sweep</td><td>IMPROVE</td><td>DEV_FAKE_ADMIN gated by NODE_ENV !== "production" in 3 files</td><td><span class="badge badge-green">DONE</span></td></tr>
+  <tr><td>grow-security-audit</td><td>GROW</td><td>security-audit.mjs guardrail + CI job + npm shortcut</td><td><span class="badge badge-green">DONE</span></td></tr>
+</table>
+
+<h2>Open CVE Deadlines</h2>
+<table>
+  <tr><th>GHSA</th><th>Severity</th><th>CVSS</th><th>Title</th><th>Deadline</th></tr>
+  <tr><td>GHSA-c4j6-fc7j-m34r</td><td><span class="badge badge-red">HIGH</span></td><td>8.6</td><td>SSRF via WebSocket upgrades</td><td>2026-06-10</td></tr>
+  <tr><td>GHSA-36qx-fr4f-26g5</td><td><span class="badge badge-red">HIGH</span></td><td>7.5</td><td>Middleware/proxy bypass i18n</td><td>2026-06-10</td></tr>
+  <tr><td>GHSA-q4gf-8mx6-v5v3</td><td><span class="badge badge-red">HIGH</span></td><td>7.5</td><td>DoS via Server Components</td><td>2026-06-26</td></tr>
+  <tr><td>GHSA-8h8q-6873-q5fj</td><td><span class="badge badge-red">HIGH</span></td><td>7.5</td><td>DoS via Server Components (v2)</td><td>2026-06-26</td></tr>
+</table>
+
+<h2>Next Run Priorities</h2>
+<ol>
+  <li><strong>REPAIR:</strong> Next.js 14 → 15 upgrade (SSRF deadline 2026-06-10) — BQ-001 pending</li>
+  <li><strong>IMPROVE:</strong> Remove eslint-disable @typescript-eslint/no-explicit-any from auth.ts (3 instances)</li>
+  <li><strong>IMPROVE:</strong> Suppress Vite CJS deprecation in test output</li>
+  <li><strong>GROW:</strong> Weekly standalone security scan workflow</li>
+</ol>
+</body>
+</html>
