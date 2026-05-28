@@ -1,0 +1,36 @@
+# Cross-platform line endings - end the CRLF/LF churn forever.
+# Apply this to BOTH repos: Sports and Galaxy Sports Edge.
+
+# Default: auto-detect text, normalize to LF in repo, render LF on checkout.
+* text=auto eol=lf
+
+# Keep Windows-native tools happy.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files - never touch.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tar binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.mp4 binary
+*.mov binary
+*.webm binary
+
+# Generated lockfiles - let merges work, but treat as text.
+package-lock.json text eol=lf
+yarn.lock text eol=lf
+
+# Don't diff these (huge or noisy).
+package-lock.json -diff
+*.lock -diff
