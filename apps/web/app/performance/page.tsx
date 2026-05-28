@@ -427,6 +427,37 @@ export default async function PerformancePage() {
         </div>
       </main>
       <Footer />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: "Calibration Report — Settled-Pick Audit Trail",
+            description:
+              "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
+            url: "https://galaxysportsedge.com/performance",
+            dateModified: "2026-05-28",
+            breadcrumb: {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Home",
+                  item: "https://galaxysportsedge.com",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: "Performance",
+                  item: "https://galaxysportsedge.com/performance",
+                },
+              ],
+            },
+          }),
+        }}
+      />
     </div>
   );
 }
