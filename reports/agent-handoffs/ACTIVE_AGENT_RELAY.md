@@ -1,5 +1,5 @@
 # ACTIVE AGENT RELAY
-_Last updated: 2026-05-28 (Codex follow-up complete)_
+_Last updated: 2026-05-28 (master plan status refresh complete)_
 
 ## Branch
 `claude/determined-keller-dUcdG`
@@ -16,7 +16,8 @@ deployment readiness. **STATUS: COMPLETE.**
 1. **Claude Code (initial ship)** — Shipped 5 new surfaces: `/fantasy`, `/market-gravity`, `/brain`, `/rumor-radar`, `/developer`. Updated nav. Added `scripts/smoke-launch.mjs`. Commits `3595be3`, `2a2b5ee`.
 2. **Codex Wave 1 (structural integrity)** — Sitemap, public-copy tests, openGraph, smoke section 6. Commit `800a641`.
 3. **Codex Wave 2 (innovation surface)** — `/intelligence` landing + `StateBadge` primitive + 5-page refactor. Commit `8942f94`.
-4. **Codex Wave 3 (validation report + handoff)** — This file + `reports/launch/CODEX_LAUNCH_VALIDATION_REPORT_2026-05-28.md`. Pending commit.
+4. **Codex Wave 3 (validation report + handoff)** — This file + `reports/launch/CODEX_LAUNCH_VALIDATION_REPORT_2026-05-28.md`. Commit `f688da6`.
+5. **Master plan status refresh** — Section 6 of master plan updated with strikethrough/status; new `reports/launch/MASTER_PLAN_STATUS_2026-05-28.md` created. This commit.
 
 ## What Shipped This Session (Codex)
 
@@ -80,11 +81,34 @@ deployment readiness. **STATUS: COMPLETE.**
 - Manual QA on preview URL per checklist
 - Promote with `vercel --prod --project=sports`
 
-## Deferred to Future Sessions (documented in Codex report Section 6)
-- Brand-token sweep (--plasma / --orbital-cyan / --ultraviolet CSS vars on new pages)
-- Componentize 5 remaining signature UI patterns (Pick Provenance Timeline, Source Health Panel, standalone Contradiction Alert, Fantasy War Room Card, Rumor Radar Card)
-- Routes-catalog single-source refactor
-- Live data integration for Fantasy / Market Gravity / Brain / Rumor Radar
+## Master Plan Alignment (2026-05-28 status pass)
+
+Source of truth for phase-by-phase status: Section 6 of
+`docs/intelligence/SPORTS_OS_INTELLIGENCE_NETWORK_MASTER_PLAN.md`.
+
+**Headline:** ~15% shipped (public launch surface), ~25% complete as proposals,
+~60% blocked on owner approval or env config. The public surfaces are correctly
+labeled PREVIEW/BETA/WAITLIST. No intelligence core architecture is yet implemented.
+
+See `reports/launch/MASTER_PLAN_STATUS_2026-05-28.md` for the full one-page view.
+
+## Deferred to Future Sessions (ordered by leverage)
+
+1. **Live data integration** — unblocks Fantasy / Market Gravity / Brain / Rumor Radar from
+   PREVIEW → LIVE. Requires provider contracts + API keys + governance review.
+2. **Evidence Vault schema migration** — owner approval gate; unblocks Phases 4–9 in the
+   master plan. Proposal at `docs/brain/evidence-vault.md`.
+3. **Claim Governance engine** — owner approval gate; required before public Brain ships.
+   Proposal at `docs/brain/claim-governance.md`.
+4. **Componentize 5 remaining signature UI patterns** — Pick Provenance Timeline,
+   Source Health Panel, standalone Contradiction Alert, Fantasy War Room Card, Rumor Radar Card.
+   Waiting on live data integration.
+5. **Routes-catalog single-source refactor** — `apps/web/lib/routes-catalog.ts` to centralize
+   route metadata, sitemap, and nav. DX win, ~3h, no approvals needed.
+6. **Brand-token sweep** — replace generic Tailwind `cyan-300 / gray-950 / gray-800` on new
+   pages with `ion-blue / carbon / mineral` brand aliases. Code-only, ~3h, no approvals needed.
+   NOTE: All existing pages (including homepage, methodology) also use generic Tailwind — so this
+   is a site-wide consistency pass, not a fix specific to the new pages.
 
 ## Files NOT Touched (preserved)
 - `packages/db/` schema — no migration this session

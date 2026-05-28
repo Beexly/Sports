@@ -181,19 +181,43 @@ Design principle: **one cinematic brand layer. many disciplined data layers.**
 
 ## 6. Implementation Sequence
 
+_Last refreshed: 2026-05-28_
+
 | Phase | Name | Status | Approval required |
 |---|---|---|---|
-| 0 | R&D Extraction | Complete | No |
-| 1 | Architecture Docs Only | In progress | No |
-| 2 | Operator Skills | Pending | No |
-| 3 | Evidence Schema Proposal | Pending | No (proposal only) |
-| 4 | Evidence Vault MVP | Blocked | **Yes — schema implementation** |
-| 5 | Source Hierarchy + Source Health | Blocked | **Yes — cockpit route changes** |
-| 6 | Signal Ledger MVP | Blocked | **Yes — schema implementation** |
-| 7 | Internal Ask the Brain | Blocked | **Yes — route creation** |
-| 8 | Fantasy War Room MVP | Blocked | **Yes — schema + route** |
-| 9 | Public Brain Beta | Blocked | **Yes — requires Phases 4–8 complete** |
-| 10 | Developer / Methodology Layer | Blocked | **Yes — public route creation** |
+| 0 | R&D Extraction | ~~Complete~~ ✅ | No |
+| 1 | Architecture Docs Only | ~~In progress~~ ✅ (all 16 docs in `docs/brain/` + `docs/intelligence/` written) | No |
+| 2 | Operator Skills | ~~Pending~~ ✅ (cockpit foundational layer: Loss Autopsy, Promo Desk, Market Twin under `/cockpit/*`) | No |
+| 3 | Evidence Schema Proposal | ~~Pending~~ ✅ (proposal at `docs/brain/evidence-vault.md`) | No (proposal only) |
+| 4 | Evidence Vault MVP | **BLOCKED — owner schema approval required** | **Yes — schema implementation** |
+| 5 | Source Hierarchy + Source Health | **BLOCKED — cockpit route changes pending owner approval** | **Yes — cockpit route changes** |
+| 6 | Signal Ledger MVP | **BLOCKED — owner schema approval required** | **Yes — schema implementation** |
+| 7 | Internal Ask the Brain | **BLOCKED — depends on Phases 4 + 6** | **Yes — route creation** |
+| 8 | Fantasy War Room MVP | **PARTIAL** (PREVIEW surface at `/fantasy`, demo data only; full MVP blocked on Phase 4) | **Yes — schema + route** |
+| 9 | Public Brain Beta | **PARTIAL** (gated BETA surface at `/brain`; unrestricted public access blocked on Phases 4–8) | **Yes — requires Phases 4–8 complete** |
+| 10 | Developer / Methodology Layer | **PARTIAL** (WAITLIST surface at `/developer`, `/methodology` LIVE; API contracts blocked on Phases 4–8) | **Yes — public route creation** |
+
+### 6a. Public Launch Surface Shipped 2026-05-28
+
+The following were delivered as preview/waitlist gated surfaces on branch
+`claude/determined-keller-dUcdG`. These are public-facing UI only; none
+of the intelligence core architecture (Phases 4–9) is implemented.
+
+- ~~`/intelligence` — Sports OS Intelligence Network unified landing~~ ✅ (commit `8942f94`)
+- ~~`/fantasy` — Fantasy Intelligence PREVIEW surface~~ ✅ (commit `3595be3`)
+- ~~`/market-gravity` — Market Gravity PREVIEW surface~~ ✅ (commit `3595be3`)
+- ~~`/brain` — Research Brain BETA/GATED surface~~ ✅ (commit `3595be3`)
+- ~~`/rumor-radar` — Rumor Radar PREVIEW surface~~ ✅ (commit `3595be3`)
+- ~~`/developer` — Developer & API WAITLIST surface~~ ✅ (commit `3595be3`)
+- ~~`StateBadge` primitive (`apps/web/components/ui/state-badge.tsx`)~~ ✅ (commit `8942f94`)
+- ~~Sitemap + public-copy scanner + openGraph on all new surfaces~~ ✅ (commit `800a641`)
+- ~~`scripts/smoke-launch.mjs` extended to 40 assertions~~ ✅ (commit `800a641`)
+- ~~FAQ JSON-LD on `/faq`~~ ✅ (commit `800a641`)
+- ~~Validation green: lint / typecheck / build / 749 brand-safety / 40 smoke / guard:trust 0 hits~~ ✅ (commit `f688da6`)
+
+**What is NOT shipped:** Evidence Vault, Entity Graph, Signal Ledger, Claim Governance,
+Source Acquisition Mesh, live data integrations — all remain proposals only. The public
+surfaces are correctly labeled PREVIEW/BETA/WAITLIST to reflect this.
 
 ---
 
