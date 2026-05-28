@@ -469,6 +469,20 @@ export default function IntelligencePage(): JSX.Element {
         </section>
       </main>
       <Footer />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "The Sports OS Intelligence Network — Galaxy Sports Edge",
+        description: "One governed sports intelligence ecosystem. Six surfaces: Picks, Fantasy, Market Gravity, Research Brain, Rumor Radar, Developer API. Source-traceable end to end.",
+        url: "https://galaxysportsedge.com/intelligence",
+        breadcrumb: {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://galaxysportsedge.com" },
+            { "@type": "ListItem", position: 2, name: "Intelligence Network", item: "https://galaxysportsedge.com/intelligence" },
+          ],
+        },
+      }) }} />
     </div>
   );
 }

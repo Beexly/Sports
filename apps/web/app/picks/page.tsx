@@ -390,6 +390,20 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
       </main>
 
       <Footer />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: "Today's Board — Sports Picks With Reasoning Attached",
+        description: "Live sports signals scored against the live board with the full factor trail behind every pick.",
+        url: "https://galaxysportsedge.com/picks",
+        breadcrumb: {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://galaxysportsedge.com" },
+            { "@type": "ListItem", position: 2, name: "Picks", item: "https://galaxysportsedge.com/picks" },
+          ],
+        },
+      }) }} />
     </div>
   );
 }
