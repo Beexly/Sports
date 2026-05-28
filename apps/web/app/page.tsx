@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
@@ -7,6 +8,56 @@ import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateData, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { isDemoPicksEnabled, isStubMode } from "@sports/db";
+import { BRAND_NAME } from "@/lib/brand";
+
+export const metadata: Metadata = {
+  title: `${BRAND_NAME} — Deterministic Sports Intelligence`,
+  description:
+    "Sports betting research backed by deterministic scoring, tiered evidence, and a factor trail on every pick. Ten factors. A publish gate. Every settled pick recorded.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: `${BRAND_NAME} — Deterministic Sports Intelligence`,
+    description:
+      "We post when the model finds edge. Most days that is fewer than five picks. Factor trail attached to every one.",
+  },
+};
+
+const HOMEPAGE_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://galaxysportsedge.com/#website",
+      name: BRAND_NAME,
+      description: "Deterministic sports betting research with factor trails, tiered evidence, and calibrated confidence scores.",
+      url: "https://galaxysportsedge.com",
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://galaxysportsedge.com/#organization",
+      name: BRAND_NAME,
+      url: "https://galaxysportsedge.com",
+      sameAs: [],
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://galaxysportsedge.com/#app",
+      name: `${BRAND_NAME} Intelligence Platform`,
+      applicationCategory: "SportsApplication",
+      description:
+        "Multi-surface sports intelligence platform: Market Gravity, Rumor Radar, Fantasy War Room, Research Brain, and a deterministic picks engine with ten scoring factors.",
+      featureList: [
+        "Deterministic ten-factor pick scoring",
+        "Market Gravity — line movement and book disagreement analysis",
+        "Rumor Radar — five-state weak signal watchlist",
+        "Fantasy War Room — start/sit, usage trends, scheme fit",
+        "Research Brain — structured Q&A backed by the Evidence Vault",
+        "Calibrated 0–100 confidence scores",
+        "Append-only Public Ledger for settled picks",
+      ],
+    },
+  ],
+} as const;
 
 const LEDGER = [
   ["SEA -1.5", "WIN", "Line movement led the factor mix"],
@@ -61,12 +112,14 @@ export default async function HomePage(): Promise<JSX.Element> {
         <CalibrationPreview calibration={calibrationResult.data} />
         <PassList passes={passesResult.data.passes} isSampleData={passesResult.meta.isSampleData} />
         <StackSection />
+        <IntelligenceSurfaces />
         <ThreeQuestions />
         <MethodologySection />
         <ResponsibleBand />
         <EmptyPicksState />
       </main>
       <Footer />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOMEPAGE_LD) }} />
     </div>
   );
 }
@@ -294,6 +347,90 @@ function ThreeQuestions(): JSX.Element {
             <article key={question} className="min-h-44 border border-mineral bg-carbon/70 p-5">
               <h3 className="text-lg font-bold text-white">{question}</h3>
               <p className="mt-4 text-sm leading-6 text-gray-400">{answer}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const SURFACES = [
+  {
+    href: "/market-gravity",
+    title: "Market Gravity",
+    state: "Preview",
+    description: "Line movement, book disagreement, and market depth scored across four inputs. The difference between informative movement and noise.",
+    links: [
+      { href: "/market-gravity/how-it-works", label: "How it works" },
+      { href: "/market-gravity/line-movement", label: "Line movement" },
+      { href: "/market-gravity/book-disagreement", label: "Book disagreement" },
+    ],
+  },
+  {
+    href: "/rumor-radar",
+    title: "Rumor Radar",
+    state: "Preview",
+    description: "Weak signals, unverified chatter, and watchlist items — separated by source tier and never published as fact.",
+    links: [
+      { href: "/rumor-radar/how-it-works", label: "How it works" },
+      { href: "/rumor-radar/source-tiers", label: "Source tiers" },
+    ],
+  },
+  {
+    href: "/fantasy",
+    title: "Fantasy War Room",
+    state: "Preview",
+    description: "Start/sit, usage trends, and scheme fit — structured fantasy intelligence built on the same tiered evidence as picks.",
+    links: [
+      { href: "/fantasy/how-start-sit-works", label: "How start/sit works" },
+      { href: "/fantasy/usage-trends", label: "Usage trends" },
+      { href: "/fantasy/scheme-fit", label: "Scheme fit" },
+    ],
+  },
+  {
+    href: "/brain",
+    title: "Research Brain",
+    state: "Beta",
+    description: "Structured sports intelligence Q&A backed by the Evidence Vault. Cites source tiers. Refuses to answer when evidence is insufficient.",
+    links: [
+      { href: "/brain/how-brain-works", label: "How it works" },
+      { href: "/brain/evidence-vault-explained", label: "Evidence Vault" },
+    ],
+  },
+] as const;
+
+function IntelligenceSurfaces(): JSX.Element {
+  return (
+    <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader
+          eyebrow="The platform"
+          title="Four intelligence surfaces."
+          meta="Every surface is backed by the same tiered evidence and publish-gate rules."
+        />
+        <div className="mt-8 grid gap-5 md:grid-cols-2">
+          {SURFACES.map(({ href, title, state, description, links }) => (
+            <article key={href} className="border border-mineral bg-carbon/60 p-6">
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-bold text-white">{title}</h3>
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-500 border border-mineral px-1.5 py-0.5">{state}</span>
+              </div>
+              <p className="mt-3 text-sm leading-7 text-gray-400">{description}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {links.map(({ href: linkHref, label }) => (
+                  <Link
+                    key={linkHref}
+                    href={linkHref}
+                    className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-blue hover:text-cyan-200"
+                  >
+                    {label} →
+                  </Link>
+                ))}
+              </div>
+              <Link href={href} className="mt-4 block text-xs text-gray-500 hover:text-gray-300">
+                Open {title} surface →
+              </Link>
             </article>
           ))}
         </div>
