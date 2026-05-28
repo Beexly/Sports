@@ -5,9 +5,15 @@ import { Menu, X } from "lucide-react";
 
 const LINKS = [
   { label: "Today's Board", href: "/board" },
+  { label: "Fantasy Intelligence", href: "/fantasy" },
+  { label: "Market Gravity", href: "/market-gravity" },
+  { label: "Research Brain", href: "/brain" },
+  { label: "Rumor Radar", href: "/rumor-radar" },
   { label: "Edge Map", href: "/observatory" },
+  { label: "Journal", href: "/journal" },
   { label: "Methodology", href: "/methodology" },
   { label: "Pricing", href: "/pricing" },
+  { label: "Developer & API", href: "/developer" },
   { label: "Dashboard", href: "/dashboard" },
 ] as const;
 

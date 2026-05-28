@@ -40,7 +40,8 @@
     "prod:probe": "node scripts/prod-probe.mjs",
     "synthetic:run": "node scripts/synthetic-monitoring-runner.mjs",
     "jarvis:diff": "node scripts/jarvis-diff.mjs",
-    "morning:setup": "node scripts/morning-setup.mjs"
+    "morning:setup": "node scripts/morning-setup.mjs",
+    "test:smoke": "node scripts/smoke-launch.mjs"
   },
   "devDependencies": {
     "typescript": "^5.4.5"

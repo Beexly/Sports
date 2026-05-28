@@ -5,9 +5,11 @@ import { MobileNav } from "@/components/ui/mobile-nav";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 
 const NAV_LINKS = [
-  { label: "Today's Board", href: "/board" },
-  { label: "Edge Map", href: "/observatory" },
-  { label: "Methodology", href: "/methodology" },
+  { label: "Board", href: "/board" },
+  { label: "Fantasy", href: "/fantasy" },
+  { label: "Market Gravity", href: "/market-gravity" },
+  { label: "Rumor Radar", href: "/rumor-radar" },
+  { label: "Journal", href: "/journal" },
   { label: "Pricing", href: "/pricing" },
 ] as const;
 
