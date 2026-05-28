@@ -3,6 +3,7 @@
 **Branch:** `claude/determined-keller-dUcdG`
 **Doctrine source:** `docs/intelligence/SPORTS_OS_INTELLIGENCE_NETWORK_MASTER_PLAN.md`
 **Validation source:** `reports/launch/CODEX_LAUNCH_VALIDATION_REPORT_2026-05-28.md`
+**Latest commits:** `5d591a8` (GEO timestamps) · `4a826bc` (GEO cluster) · `befe039` (routes catalog) · `3a6f376` (status refresh)
 
 ---
 
@@ -30,6 +31,11 @@
 | ~~Architecture docs: all 16 component specs written~~ | `docs/brain/` (11 docs), `docs/intelligence/` (5 docs) |
 | ~~Nav updated: `/intelligence` as lead item (desktop + mobile)~~ | `nav.tsx`, `mobile-nav.tsx` |
 | ~~Codex launch validation report~~ | `reports/launch/CODEX_LAUNCH_VALIDATION_REPORT_2026-05-28.md` |
+| ~~Routes catalog as single source of truth~~ | `apps/web/lib/routes-catalog.ts`, commit `befe039` |
+| ~~`/intelligence/how-it-works` — pipeline GEO hub~~ | TechArticle JSON-LD, commit `4a826bc` |
+| ~~`/intelligence/source-hierarchy` — six-tier taxonomy GEO hub~~ | TechArticle JSON-LD, commit `4a826bc` |
+| ~~`/intelligence/glossary` — 20 canonical terms~~ | FAQPage JSON-LD per term, commit `4a826bc` |
+| ~~Last-updated timestamps on existing GEO pages~~ | methodology, observatory, responsible-play, vs/tout-services — commit `5d591a8` |
 
 ---
 
@@ -84,24 +90,29 @@ approval. Ordered by leverage:
 
 | Item | Effort | Leverage | Notes |
 |---|---|---|---|
-| **Routes-catalog refactor** | ~3h | DX | `apps/web/lib/routes-catalog.ts` as single source for sitemap, nav, and smoke targets |
-| **Brand-token sweep** | ~3h | Visual polish | Replace `bg-gray-950 / border-gray-800 / text-cyan-300` with `bg-carbon / border-mineral / text-ion-blue` across new pages. Note: existing pages (homepage, methodology) also use generic Tailwind — site-wide pass required for full consistency |
-| **Signature-component extraction** | ~8h+ | DX + reuse | Pick Provenance Timeline, Source Health Panel, standalone Contradiction Alert, Fantasy War Room Card, Rumor Radar Card — defer until live data integration justifies the abstraction |
-| **Topical authority cluster pages** | ~4h | AI-search / GEO | Per `docs/intelligence/ai-search-geo-strategy.md`: hub pages for sports betting research, DFS research, injury analysis — drives 2026 GEO / AI-search visibility |
+| ~~**Routes-catalog refactor**~~ | ~~~3h~~ | ~~DX~~ | ✅ Shipped in commit `befe039` — `apps/web/lib/routes-catalog.ts` is now single source for sitemap, nav, and smoke. |
+| ~~**Topical authority cluster pages**~~ | ~~~4h~~ | ~~AI-search / GEO~~ | ✅ Shipped in commit `4a826bc` — `/intelligence/how-it-works`, `/source-hierarchy`, `/glossary` with TechArticle + FAQPage JSON-LD. |
+| ~~**Last-updated timestamps on existing GEO pages**~~ | ~~~30m~~ | ~~GEO freshness~~ | ✅ Shipped in commit `5d591a8` — methodology, observatory, responsible-play, vs/tout-services. |
+| **Brand-token sweep** | ~3h site-wide | Visual polish | Replace `bg-gray-950 / border-gray-800 / text-cyan-300` with `bg-carbon / border-mineral / text-ion-blue` across ALL pages. Risky (1,338+ lines), pure visual — defer to a dedicated polish session. |
+| **Signature-component extraction** | ~8h+ | DX + reuse | Pick Provenance Timeline, Source Health Panel, standalone Contradiction Alert, Fantasy War Room Card, Rumor Radar Card — defer until live data integration justifies the abstraction. |
+| **Fantasy intelligence sub-cluster** | ~4h | GEO + topical authority | `/fantasy/how-start-sit-works`, `/fantasy/usage-trends`, `/fantasy/scheme-fit` — extends the GEO cluster into fantasy. Block: /fantasy itself is PREVIEW with demo data; expanding it risks looking further along than it is. |
+| **Calibration transparency page** | blocked | High | `/intelligence/calibration` needs real model accuracy data → requires Evidence Vault + settled-pick history. |
 
 ---
 
 ## 6. Suggested next move
 
-**If no owner action yet:** Start the **routes-catalog refactor** — no approvals needed,
-removes duplication across `sitemap.ts`, `nav.tsx`, `mobile-nav.tsx`, and smoke script,
-and creates the foundation for every future surface addition.
-
 **If owner has set env vars:** **Production deploy** — run `vercel --project=sports` for
 preview QA, then `vercel --prod --project=sports`.
 
-**For "best website 2026" visual push:** **Brand-token sweep** — aligns all surfaces
-(new + existing) to the Galaxy Sports Edge design palette as a site-wide pass.
-
 **For next intelligence milestone:** **Evidence Vault pre-implementation change proposal** —
-write the ADR, get owner approval, then Phase 4 can start.
+write the ADR (`docs/adr/pre-implementation-change-proposal-template.md`), get owner
+approval, then Phase 4 can start. This unblocks Phases 4–9 in cascade.
+
+**For visual polish push:** **Brand-token sweep** — aligns all surfaces (new + existing)
+to the Galaxy Sports Edge design palette as a single site-wide pass. Recommended only
+in a dedicated session because the regression surface spans 1,338+ lines.
+
+**For continued GEO push:** **Fantasy sub-cluster pages** — only after the /fantasy
+surface has at least one live data path, to avoid looking further along than the
+actual data supports.

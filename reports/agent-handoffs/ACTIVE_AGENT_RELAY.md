@@ -1,5 +1,5 @@
 # ACTIVE AGENT RELAY
-_Last updated: 2026-05-28 (master plan status refresh complete)_
+_Last updated: 2026-05-28 (autonomous push: routes catalog + GEO cluster + timestamps)_
 
 ## Branch
 `claude/determined-keller-dUcdG`
@@ -17,7 +17,10 @@ deployment readiness. **STATUS: COMPLETE.**
 2. **Codex Wave 1 (structural integrity)** — Sitemap, public-copy tests, openGraph, smoke section 6. Commit `800a641`.
 3. **Codex Wave 2 (innovation surface)** — `/intelligence` landing + `StateBadge` primitive + 5-page refactor. Commit `8942f94`.
 4. **Codex Wave 3 (validation report + handoff)** — This file + `reports/launch/CODEX_LAUNCH_VALIDATION_REPORT_2026-05-28.md`. Commit `f688da6`.
-5. **Master plan status refresh** — Section 6 of master plan updated with strikethrough/status; new `reports/launch/MASTER_PLAN_STATUS_2026-05-28.md` created. This commit.
+5. **Master plan status refresh** — Section 6 of master plan updated with strikethrough/status; new `reports/launch/MASTER_PLAN_STATUS_2026-05-28.md` created. Commit `3a6f376`.
+6. **Routes-catalog refactor** — `apps/web/lib/routes-catalog.ts` as single source for sitemap, nav, mobile-nav, smoke. Commit `befe039`.
+7. **GEO methodology cluster** — Three new hub pages (`/intelligence/how-it-works`, `/intelligence/source-hierarchy`, `/intelligence/glossary`) with TechArticle + FAQPage JSON-LD. Commit `4a826bc`.
+8. **GEO timestamps on existing anchor pages** — methodology, observatory, responsible-play, vs/tout-services. Commit `5d591a8`.
 
 ## What Shipped This Session (Codex)
 
