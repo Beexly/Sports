@@ -20,6 +20,7 @@ import {
   recordClaudeApiCall,
   type ClaudeUsageStoreDb,
 } from "@/lib/claude-api/usage-store";
+import { systemPrompt as ANALYSIS_POST_SYSTEM_PROMPT, model as ANALYSIS_POST_MODEL } from "@/lib/prompts/content/analysis-post";
 
 const GAMBLING_DISCLAIMER =
   "This article is for informational and entertainment purposes only. " +
@@ -73,11 +74,6 @@ export async function generateBlogPost(
     )
     .join("\n\n");
 
-  const systemPrompt = `You are a sports analyst writing data-backed analysis for a sports picks website.
-You must ONLY reference the data provided to you. Do not invent statistics, scores, or records.
-Use measured language; never say "will win" or "guaranteed". Use phrases like "our model favors" or "the data suggests".
-Always include the provided disclaimer at the end.`;
-
   const userPrompt = `Write a sports analysis blog post for ${input.sport} picks on ${dateDisplay}.
 
 PICKS DATA (this is your ONLY source of truth; do not invent any other data):
@@ -102,7 +98,7 @@ Respond ONLY with valid JSON in this exact format:
   "tags": ["...", "..."]
 }`;
 
-  const modelName = "claude-sonnet-4-6";
+  const modelName = ANALYSIS_POST_MODEL;
   const [monthlySpendUsd, budget] =
     typeof options.monthlySpendUsd === "number" && options.budgetPolicy
       ? [
@@ -131,7 +127,7 @@ Respond ONLY with valid JSON in this exact format:
       fetchImpl: options.fetchImpl,
       model: modelName,
       maxTokens: 2000,
-      system: systemPrompt,
+      system: ANALYSIS_POST_SYSTEM_PROMPT,
       user: userPrompt,
     });
     try {

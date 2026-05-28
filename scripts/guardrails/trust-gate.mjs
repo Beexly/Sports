@@ -64,6 +64,7 @@ const WHITELIST_PREFIXES = [
   "apps/web/lib/compliance-scanner/",
   "apps/web/lib/studio/templates/",
   "apps/web/lib/galaxy/kernel/",
+  "apps/web/lib/prompts/",
 ];
 
 const WHITELIST_DIRS = new Set([

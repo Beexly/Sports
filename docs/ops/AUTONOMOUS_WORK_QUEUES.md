@@ -35,17 +35,19 @@ source-map risks, exposed admin routes, competitor inference risks.
       — **verified C8**: not set, defaults to false ✅
 - [x] Verify `robots.ts` disallows `/cockpit`, `/admin`, `/api`,
       `/auth`, `/dashboard`, `/brief` — **verified C8** ✅
-- [~] Centralize Claude/Codex prompts under `apps/web/lib/prompts/`
-      (server-only) — **partial C8**: directory scaffolded with README,
-      migration backlog documented, target folder layout published.
-      Per-prompt migration deferred to focused cycle to preserve test
-      coverage on each move.
+- [x] Centralize Claude/Codex prompts under `apps/web/lib/prompts/`
+      (server-only) — **resolved C10**: `analysis-post.ts` prompt
+      module created with version/lastReviewed/model metadata; imported
+      by `content-generator.ts`; 5-test coverage in
+      `__tests__/prompts-content-analysis-post.test.ts`; prompts dir
+      added to trust-gate whitelist. `claude-api/messages.ts` confirmed
+      as a pure HTTP wrapper with no inline prompts.
 - [x] Add `/.well-known/security.txt` for vulnerability disclosure
       — **resolved C8**: `apps/web/public/.well-known/security.txt`
 
 ## Queue C — Broken Build / Type / Test
 
-- _(none — last validation 2026-05-28: 107 routes build, 2106 tests pass,
+- _(none — last validation 2026-05-28 C10: build clean, 2365 tests pass,
   typecheck clean)_
 
 ## Queue D — Product Coherence
