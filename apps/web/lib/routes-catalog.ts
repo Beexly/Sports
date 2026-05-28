@@ -165,6 +165,32 @@ export const ROUTES: ReadonlyArray<RouteEntry> = [
     summary: "Intelligence layer API for approved developer partners.",
   },
 
+  // ── Fantasy intelligence sub-cluster (GEO authority) ────────
+  {
+    path: "/fantasy/how-start-sit-works",
+    label: "How Start/Sit Works",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Four-input start/sit methodology: injury status, matchup grade, usage trend, scheme fit.",
+  },
+  {
+    path: "/fantasy/usage-trends",
+    label: "Usage Trends",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Target share, snap count, route participation — what each metric means and how they are weighted.",
+  },
+  {
+    path: "/fantasy/scheme-fit",
+    label: "Scheme Fit",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Five offensive scheme classifications and how each affects fantasy value at WR, RB, TE.",
+  },
+
   // ── Intelligence methodology cluster (GEO authority) ──────
   {
     path: "/intelligence/how-it-works",

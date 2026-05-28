@@ -43,6 +43,9 @@ const SCAN_TARGETS = [
   "app/intelligence/how-it-works/page.tsx",
   "app/intelligence/source-hierarchy/page.tsx",
   "app/intelligence/glossary/page.tsx",
+  "app/fantasy/how-start-sit-works/page.tsx",
+  "app/fantasy/usage-trends/page.tsx",
+  "app/fantasy/scheme-fit/page.tsx",
 ];
 
 describe("Strong public-copy scan — registry-driven", () => {
