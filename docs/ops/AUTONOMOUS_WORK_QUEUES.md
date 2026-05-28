@@ -101,12 +101,14 @@ Missing source, freshness, model version, citation, or proof on data
 cards or analytical claims.
 
 - [~] Adopt `EVIDENCE_CHAIN_STANDARD.md` per-card requirements across
-      all data-rendering components — **partial C9**: canonical
-      `<EvidenceCard />` primitive shipped at
-      `components/ui/evidence-card.tsx` with TS-enforced
-      `failureCase` on `kind="pick"`; freshness/source pill anatomy
-      matches the Standard. Migration of existing PickCard /
-      BoardCard / AutopsyRow to compose this primitive queued.
+      all data-rendering components — **partial C10**: `PickCard` and
+      `FullPickCard` updated to display "Galaxy model" source label in
+      footer (Evidence Chain source requirement). AutopsyRow table
+      updated with source note. `failureCase` on picks and
+      `modelVersion` field blocked on Prisma schema — full enforcement
+      deferred to schema migration cycle. `EvidenceCard` children
+      type fixed from required to optional for correct TS overload
+      resolution in tests.
 
 ## Queue G — Design Quality
 

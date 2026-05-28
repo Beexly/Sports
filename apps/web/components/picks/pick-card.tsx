@@ -321,16 +321,21 @@ export function PickCard({
         </div>
       )}
 
-      {/* ── Footer row: risk grade + factor trail ────────────────────── */}
-      {!isCompact && (pick.riskGrade ?? pick.factorTrailHref) && (
+      {/* ── Footer row: source + risk grade + factor trail ──────────── */}
+      {!isCompact && (
         <div className="flex items-center justify-between border-t border-mineral/60 pt-3">
-          {pick.riskGrade && (
-            <span
-              className={`font-mono text-[10px] font-semibold ${riskGradeStyles(pick.riskGrade)}`}
-            >
-              {riskGradeLabel(pick.riskGrade)}
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-gray-700">
+              Galaxy model
             </span>
-          )}
+            {pick.riskGrade && (
+              <span
+                className={`font-mono text-[10px] font-semibold ${riskGradeStyles(pick.riskGrade)}`}
+              >
+                {riskGradeLabel(pick.riskGrade)}
+              </span>
+            )}
+          </div>
           {pick.factorTrailHref && (
             <Link
               href={pick.factorTrailHref}
@@ -482,9 +487,14 @@ export function FullPickCard({
         </div>
       )}
 
-      {/* Data quality + freshness footer */}
+      {/* Evidence row: source + model + freshness — Evidence Chain Standard */}
       <div className="flex items-center justify-between border-t border-mineral/60 pt-2">
-        <DataQualityMeter score={pick.dataQualityScore} />
+        <div className="flex items-center gap-3">
+          <DataQualityMeter score={pick.dataQualityScore} />
+          <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-gray-700">
+            Galaxy model
+          </span>
+        </div>
         {freshnessAge !== null && <FreshnessIndicator ageMinutes={freshnessAge} />}
       </div>
 

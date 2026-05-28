@@ -266,6 +266,11 @@ export default async function AutopsyPage(): Promise<JSX.Element> {
                     })}
                   </tbody>
                 </table>
+                <div className="border-t border-mineral px-4 py-2">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-gray-700">
+                    Source: Galaxy model · Scores from prediction-engine at pick time
+                  </p>
+                </div>
               </div>
             )}
           </div>
