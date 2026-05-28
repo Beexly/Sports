@@ -25,6 +25,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { lookupEvidence } from "@/lib/evidence-vault";
 import { evaluateClaimApproval } from "@/lib/claim-governance";
+import { callClaudeMessages, ClaudeMessagesError } from "@/lib/claude-api/messages";
 
 export const dynamic = "force-dynamic";
 
@@ -126,37 +127,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 Evidence vault (${evidenceCount} items, source tiers: ${sourceTiers.join(", ") || "none"}):
 ${evidenceContext}`;
 
-  const apiRes = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": anthropicKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 512,
+  let answer: string;
+  try {
+    const result = await callClaudeMessages({
+      apiKey: anthropicKey,
       system: systemPrompt,
-      messages: [{ role: "user", content: query }],
-    }),
-  });
-
-  if (!apiRes.ok) {
-    const text = await apiRes.text();
-    console.error("[brain] Claude API error", apiRes.status, text);
+      user: query,
+      maxTokens: 512,
+      model: "claude-haiku-4-5-20251001",
+    });
+    answer = result.text;
+  } catch (err) {
+    const status = err instanceof ClaudeMessagesError ? err.status : 0;
+    console.error("[brain] Claude API error", status, err);
     return NextResponse.json(
       { error: "Research Brain temporarily unavailable. Try again in a moment." },
       { status: 503 },
     );
   }
-
-  const completion = await apiRes.json() as {
-    content: Array<{ type: string; text: string }>;
-  };
-
-  const answer =
-    completion.content?.find((c) => c.type === "text")?.text ??
-    "No answer generated.";
 
   return NextResponse.json({
     answer,

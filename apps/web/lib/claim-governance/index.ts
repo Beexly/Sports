@@ -172,7 +172,7 @@ export async function submitClaim(input: ClaimSubmission): Promise<PublicClaim> 
       evaluatedBy: input.actor ?? "system",
       rejectionCode: result.rejectionCode ?? null,
       rejectionNote: result.rejectionNote ?? null,
-      publishedAt: result.verdict === "APPROVED" ? now : null,
+      publishedAt: null, // ENGINE NEVER SETS THIS — operator publishes via separate approval step
     },
   });
 }

@@ -24,12 +24,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority,
   }));
 
-  const journalRoutes = journalEntries.map((entry) => ({
-    url: `${baseUrl}/journal/${entry.slug}`,
-    lastModified: new Date(entry.publishedAt),
-    changeFrequency: "weekly" as const,
-    priority: 0.6,
-  }));
+  // Journal routes: path: "/journal" index + one entry per published slug
+  const journalRoutes = [
+    { url: `${baseUrl}/journal`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.7 },
+    ...journalEntries.map((entry) => ({
+      url: `${baseUrl}/journal/${entry.slug}`,
+      lastModified: new Date(entry.publishedAt),
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    })),
+  ];
 
   return [...staticRoutes, ...journalRoutes];
 }
