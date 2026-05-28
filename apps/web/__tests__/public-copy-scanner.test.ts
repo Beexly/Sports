@@ -17,6 +17,10 @@ const PUBLIC_FILES = [
   "app/brain/page.tsx",
   "app/rumor-radar/page.tsx",
   "app/developer/page.tsx",
+  "app/intelligence/page.tsx",
+  "app/intelligence/how-it-works/page.tsx",
+  "app/intelligence/source-hierarchy/page.tsx",
+  "app/intelligence/glossary/page.tsx",
 ];
 
 describe("public copy scanner", () => {

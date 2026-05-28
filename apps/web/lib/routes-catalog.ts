@@ -165,6 +165,32 @@ export const ROUTES: ReadonlyArray<RouteEntry> = [
     summary: "Intelligence layer API for approved developer partners.",
   },
 
+  // ── Intelligence methodology cluster (GEO authority) ──────
+  {
+    path: "/intelligence/how-it-works",
+    label: "How It Works",
+    state: "live",
+    priority: 0.8,
+    changeFrequency: "monthly",
+    summary: "Full intelligence pipeline: six tiers, weighting, governance, scoring, settlement.",
+  },
+  {
+    path: "/intelligence/source-hierarchy",
+    label: "Source Hierarchy",
+    state: "live",
+    priority: 0.8,
+    changeFrequency: "monthly",
+    summary: "Canonical six-tier source taxonomy with TTL, public-safety, and citation rules.",
+  },
+  {
+    path: "/intelligence/glossary",
+    label: "Intelligence Glossary",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Canonical sports intelligence terminology with FAQPage schema.",
+  },
+
   // ── Secondary surfaces (sitemap only) ─────────────────────
   {
     path: "/performance",

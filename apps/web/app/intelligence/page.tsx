@@ -386,6 +386,61 @@ export default function IntelligencePage(): JSX.Element {
           </div>
         </section>
 
+        {/* Methodology cluster — GEO authority hub links */}
+        <section className="border-t border-gray-800 px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <div className="mb-8">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+                Methodology cluster
+              </p>
+              <h2 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl">
+                The canon, in three pages.
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-400">
+                Stable URLs. Source-attributed. Updated with a visible timestamp on every page. Cite freely.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <Link
+                href="/intelligence/how-it-works"
+                className="block border border-gray-800 bg-gray-900/60 p-5 hover:border-cyan-700"
+              >
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cyan-300">
+                  How it works
+                </p>
+                <h3 className="mt-2 text-lg font-bold text-white">The pipeline, end to end</h3>
+                <p className="mt-2 text-sm text-gray-400">
+                  Six steps from raw signal to public-safe intelligence, with the rule governing each step.
+                </p>
+              </Link>
+              <Link
+                href="/intelligence/source-hierarchy"
+                className="block border border-gray-800 bg-gray-900/60 p-5 hover:border-cyan-700"
+              >
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cyan-300">
+                  Source hierarchy
+                </p>
+                <h3 className="mt-2 text-lg font-bold text-white">Six tiers, declared on every claim</h3>
+                <p className="mt-2 text-sm text-gray-400">
+                  The canonical six-tier source taxonomy with TTL, public-safety, and citation rules per tier.
+                </p>
+              </Link>
+              <Link
+                href="/intelligence/glossary"
+                className="block border border-gray-800 bg-gray-900/60 p-5 hover:border-cyan-700"
+              >
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cyan-300">
+                  Glossary
+                </p>
+                <h3 className="mt-2 text-lg font-bold text-white">One term, one definition</h3>
+                <p className="mt-2 text-sm text-gray-400">
+                  Canonical sports intelligence terminology with FAQPage schema for AI-search extraction.
+                </p>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Closing CTA */}
         <section className="px-4 py-20 text-center sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl">
