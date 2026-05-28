@@ -4,13 +4,42 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { BRAND_NAME } from "@/lib/brand";
+
+const LAST_UPDATED = "2026-05-28";
 
 export const metadata: Metadata = {
-  title: "Methodology - Deterministic Scoring, Open Framework",
+  title: `Methodology — Deterministic Scoring, Open Framework | ${BRAND_NAME}`,
   description:
-    "How Galaxy Sports Edge reads the board, scores the math, and gates the slate without publishing proprietary weights or constants.",
+    "How Galaxy Sports Edge reads the board, scores ten deterministic factors, and gates the slate. The framework is public. Weights are proprietary.",
   alternates: { canonical: "/methodology" },
+  openGraph: {
+    title: `Methodology — ${BRAND_NAME}`,
+    description:
+      "Ten factors. Three phases. A publish gate that refuses when the math does not support it. The framework is public; weights stay proprietary.",
+  },
 };
+
+const METHODOLOGY_LD = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  headline: "Galaxy Sports Edge Methodology — Deterministic Scoring, Open Framework",
+  description:
+    "How the ten-factor scoring pipeline works: read the board, score the math, gate the slate. The factor inventory is public; the aggregation weights are proprietary.",
+  dateModified: LAST_UPDATED,
+  author: { "@type": "Organization", name: BRAND_NAME },
+  publisher: { "@type": "Organization", name: BRAND_NAME },
+} as const;
+
+const CLUSTER_LINKS = [
+  { href: "/picks/how-picks-are-scored", label: "How Picks Are Scored — the ten factors and publish gate" },
+  { href: "/picks/confidence-scores", label: "Confidence Scores — what 0–100 means and calibration" },
+  { href: "/market-gravity/how-it-works", label: "How Market Gravity Works — four scored inputs" },
+  { href: "/market-gravity/line-movement", label: "Line Movement Explained" },
+  { href: "/intelligence/source-hierarchy", label: "Source Hierarchy — six-tier evidence taxonomy" },
+  { href: "/intelligence/how-it-works", label: "How the Intelligence Network Works" },
+  { href: "/performance", label: "Performance — settled-pick calibration record" },
+];
 
 const FACTORS = [
   "Market consensus",
@@ -139,15 +168,32 @@ export default function MethodologyPage(): JSX.Element {
           </div>
         </section>
 
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">Methodology cluster</p>
+            <h2 className="mt-2 text-2xl font-bold text-white">Deep dives on each component.</h2>
+            <ul className="mt-6 flex flex-col gap-2">
+              {CLUSTER_LINKS.map(({ href, label }) => (
+                <li key={href}>
+                  <Link href={href} className="block border border-mineral bg-carbon/60 px-4 py-3 text-sm text-gray-200 hover:border-cyan-700 hover:text-ion-blue">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         <section className="px-4 py-10 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-600">
-              Last updated: 2026-05-28 · Methodology canon
+              Last updated: {LAST_UPDATED} · {BRAND_NAME} methodology canon
             </p>
           </div>
         </section>
       </main>
       <Footer />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(METHODOLOGY_LD) }} />
     </div>
   );
 }
