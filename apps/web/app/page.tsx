@@ -21,6 +21,11 @@ const surfaces = [
     title: "Vault",
     body: "The private rationale layer for readers who want more context.",
   },
+  {
+    href: "/fantasy",
+    title: "Fantasy",
+    body: "Methodology pages for start/sit logic, usage trends, and scheme fit.",
+  },
 ];
 
 export default function HomePage() {

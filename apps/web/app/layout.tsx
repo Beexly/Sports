@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/loss-room">Loss Room</Link>
               <Link href="/passes">Pass List</Link>
               <Link href="/ledger">Ledger</Link>
+              <Link href="/fantasy">Fantasy</Link>
               <Link href="/vault">Vault</Link>
             </nav>
           </header>
