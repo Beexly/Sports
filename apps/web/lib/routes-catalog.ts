@@ -191,6 +191,50 @@ export const ROUTES: ReadonlyArray<RouteEntry> = [
     summary: "Five offensive scheme classifications and how each affects fantasy value at WR, RB, TE.",
   },
 
+  // ── Market Gravity sub-cluster (GEO authority) ──────────────
+  {
+    path: "/market-gravity/how-it-works",
+    label: "How Market Gravity Works",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Four scored inputs: movement size, speed, book disagreement, market depth. Noise vs. signal classification.",
+  },
+  {
+    path: "/market-gravity/line-movement",
+    label: "Line Movement Explained",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Spread, total, moneyline movement — five causes ranked by informativeness.",
+  },
+  {
+    path: "/market-gravity/book-disagreement",
+    label: "Book Disagreement",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "What price divergence between sportsbooks signals: Consensus, Uneven Info, Volatile, Stale Outlier.",
+  },
+
+  // ── Picks methodology sub-cluster (GEO authority) ────────────
+  {
+    path: "/picks/how-picks-are-scored",
+    label: "How Picks Are Scored",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Ten deterministic factors, the publish gate, and the factor trail attached to every published pick.",
+  },
+  {
+    path: "/picks/confidence-scores",
+    label: "Confidence Scores",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "What the 0–100 confidence scale means, how it is calibrated against settled results, and confidence bands.",
+  },
+
   // ── Intelligence methodology cluster (GEO authority) ──────
   {
     path: "/intelligence/how-it-works",

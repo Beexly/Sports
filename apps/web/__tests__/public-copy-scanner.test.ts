@@ -24,6 +24,11 @@ const PUBLIC_FILES = [
   "app/fantasy/how-start-sit-works/page.tsx",
   "app/fantasy/usage-trends/page.tsx",
   "app/fantasy/scheme-fit/page.tsx",
+  "app/market-gravity/how-it-works/page.tsx",
+  "app/market-gravity/line-movement/page.tsx",
+  "app/market-gravity/book-disagreement/page.tsx",
+  "app/picks/how-picks-are-scored/page.tsx",
+  "app/picks/confidence-scores/page.tsx",
 ];
 
 describe("public copy scanner", () => {
