@@ -94,22 +94,65 @@ const PLANS = [
 
 type PlanId = (typeof PLANS)[number]["id"];
 
-const COMPARISON_FEATURES = [
-  "Signals per day",
-  "Game matchup info",
-  "Pick type",
-  "Confidence rating",
-  "Highest-Edge-Index signals",
-  "Full factor trail",
-  "Line-movement alerts",
-  "Notifications",
-  "Sports covered",
-] as const;
+type FeatureRow = {
+  readonly group?: string;
+  readonly label: string;
+  readonly free: string | boolean;
+  readonly pro: string | boolean;
+  readonly elite: string | boolean;
+};
+
+const FEATURE_MATRIX: ReadonlyArray<FeatureRow> = [
+  // ── Picks & Signals ──────────────────────────────
+  { group: "Picks & Signals", label: "Published picks per day", free: "1", pro: "Unlimited", elite: "Unlimited" },
+  { label: "Sports covered", free: "Sampler", pro: "All 7", elite: "All 7" },
+  { label: "Spread / Moneyline / Total picks", free: true, pro: true, elite: true },
+  { label: "Confidence score (0–100)", free: false, pro: true, elite: true },
+  { label: "Full 10-factor trail", free: false, pro: true, elite: true },
+  { label: "Edge Index score", free: false, pro: true, elite: true },
+  { label: "Featured / high-conviction picks", free: false, pro: true, elite: true },
+  { label: "Board passes list (what we skipped)", free: true, pro: true, elite: true },
+  // ── Market Intelligence ──────────────────────────
+  { group: "Market Intelligence", label: "Today's Board (daily brief)", free: true, pro: true, elite: true },
+  { label: "Market Gravity surface", free: "Preview", pro: true, elite: true },
+  { label: "Line movement alerts", free: false, pro: true, elite: true },
+  { label: "Book disagreement signals", free: false, pro: true, elite: true },
+  { label: "Steam move detection", free: false, pro: false, elite: "Coming" },
+  { label: "Props Intelligence surface", free: false, pro: "Beta", elite: "Beta" },
+  // ── Research & Brain ─────────────────────────────
+  { group: "Research & Brain", label: "Research Brain Q&A", free: "3/day", pro: "20/day", elite: "Unlimited" },
+  { label: "Evidence Vault citations", free: false, pro: true, elite: true },
+  { label: "Rumor Radar (weak signals)", free: "Preview", pro: true, elite: true },
+  { label: "Fantasy War Room", free: "Preview", pro: true, elite: true },
+  { label: "Intelligence glossary", free: true, pro: true, elite: true },
+  // ── Galaxy Academy ───────────────────────────────
+  { group: "Galaxy Academy", label: "Foundation Track (basics)", free: true, pro: true, elite: true },
+  { label: "Signal Track (CLV, line movement, +EV)", free: false, pro: true, elite: true },
+  { label: "Edge Track (bankroll, tilt, portfolio)", free: false, pro: false, elite: true },
+  { label: "Methodology access", free: true, pro: true, elite: true },
+  // ── Reports ──────────────────────────────────────
+  { group: "Reports", label: "Orbit Report (weekly)", free: "1/month", pro: true, elite: true },
+  { label: "Edge Reports", free: false, pro: true, elite: true },
+  { label: "Market Mirage Report", free: false, pro: true, elite: true },
+  { label: "Signal Reports (per sport)", free: false, pro: false, elite: true },
+  { label: "Season Preview Reports", free: false, pro: false, elite: true },
+  // ── Command Center ────────────────────────────────
+  { group: "Command Center", label: "Manual bet log", free: false, pro: true, elite: true },
+  { label: "Watchlist (games, players, markets)", free: false, pro: true, elite: true },
+  { label: "Exposure monitor", free: false, pro: false, elite: true },
+  { label: "Tilt detection flags", free: false, pro: false, elite: true },
+  { label: "Real-time push alerts", free: false, pro: false, elite: true },
+  // ── Performance & Calibration ─────────────────────
+  { group: "Performance & Calibration", label: "Public Ledger access", free: true, pro: true, elite: true },
+  { label: "Calibration report (when gated)", free: true, pro: true, elite: true },
+  { label: "Per-sport performance breakdown", free: false, pro: true, elite: true },
+  { label: "Loss Autopsy reports", free: false, pro: true, elite: true },
+];
 
 const COMPARISON_CELLS: Record<PlanId, (string | boolean)[]> = {
-  FREE: ["1", true, true, false, false, false, false, false, "Sampler"],
-  PRO: ["Unlimited", true, true, true, true, true, true, false, "All 7"],
-  ELITE: ["Unlimited", true, true, true, true, true, true, true, "All 7"],
+  FREE: FEATURE_MATRIX.map((f) => f.free),
+  PRO: FEATURE_MATRIX.map((f) => f.pro),
+  ELITE: FEATURE_MATRIX.map((f) => f.elite),
 };
 
 // ─────────────────────────────────────────────
@@ -334,20 +377,23 @@ export default function PricingPage() {
           {/* Feature comparison table */}
           <div className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">
-              Side by side
+              Everything, side by side
             </h2>
+            <p className="mt-2 text-center text-sm text-gray-500">
+              {FEATURE_MATRIX.length} features across {new Set(FEATURE_MATRIX.filter((f) => f.group).map((f) => f.group)).size} categories
+            </p>
             <div className="mt-8 overflow-x-auto rounded-2xl border border-mineral">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-mineral">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  <tr className="border-b border-mineral bg-gray-950">
+                    <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
                       Feature
                     </th>
                     {PLANS.map((plan) => (
                       <th
                         key={plan.id}
                         className={[
-                          "px-4 py-3 text-center text-sm font-bold",
+                          "px-4 py-4 text-center text-sm font-bold",
                           plan.id === "PRO"
                             ? "text-brand-400"
                             : plan.id === "ELITE"
@@ -357,7 +403,7 @@ export default function PricingPage() {
                       >
                         {plan.name}
                         {plan.price > 0 && (
-                          <span className="ml-1 text-xs font-normal text-gray-400">
+                          <span className="ml-1 text-xs font-normal text-gray-500">
                             ${plan.price}/mo
                           </span>
                         )}
@@ -366,28 +412,34 @@ export default function PricingPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {COMPARISON_FEATURES.map((feature, i) => (
-                    <tr
-                      key={feature}
-                      className={[
-                        "border-b border-mineral/60",
-                        i % 2 === 0 ? "bg-gray-900/20" : "",
-                      ].join(" ")}
-                    >
-                      <td className="px-4 py-3 text-gray-400">{feature}</td>
-                      {(["FREE", "PRO", "ELITE"] as PlanId[]).map((planId) => {
-                        const cell: string | boolean =
-                          COMPARISON_CELLS[planId][i] ?? false;
-                        return (
-                          <td
-                            key={planId}
-                            className="px-4 py-3 text-center"
-                          >
-                            <ComparisonCell value={cell} />
+                  {FEATURE_MATRIX.map((feature, i) => (
+                    <>
+                      {feature.group && (
+                        <tr key={`group-${feature.group}`} className="border-b border-mineral bg-gray-950/80">
+                          <td colSpan={4} className="px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-ion-blue">
+                            {feature.group}
                           </td>
-                        );
-                      })}
-                    </tr>
+                        </tr>
+                      )}
+                      <tr
+                        key={feature.label}
+                        className={[
+                          "border-b border-mineral/40 transition-colors hover:bg-gray-900/30",
+                          i % 2 === 0 ? "bg-gray-900/10" : "",
+                        ].join(" ")}
+                      >
+                        <td className="px-4 py-3 text-gray-300">{feature.label}</td>
+                        {(["FREE", "PRO", "ELITE"] as PlanId[]).map((planId) => {
+                          const cell: string | boolean =
+                            COMPARISON_CELLS[planId][i] ?? false;
+                          return (
+                            <td key={planId} className="px-4 py-3 text-center">
+                              <ComparisonCell value={cell} />
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    </>
                   ))}
                 </tbody>
               </table>

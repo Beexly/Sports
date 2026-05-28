@@ -34,6 +34,7 @@ const NAV: ReadonlyArray<{ href: string; label: string; hint: string }> = [
   { href: "/cockpit/synthetic-monitoring", label: "Synthetic Monitoring", hint: "Production probes" },
   { href: "/cockpit/bot-outbox", label: "Bot Outbox", hint: "Draft event planner" },
   { href: "/cockpit/brief", label: "Daily brief", hint: "Today's slate snapshot" },
+  { href: "/cockpit/picks", label: "Pick Engine", hint: "Win/loss performance" },
   { href: "/cockpit/calibration", label: "Calibration", hint: "Model accountability" },
   { href: "/cockpit/content", label: "Content", hint: "Ava · draft-only engine" },
   { href: "/cockpit/sources", label: "Sources", hint: "Source intelligence" },

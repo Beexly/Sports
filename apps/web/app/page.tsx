@@ -169,23 +169,89 @@ function LiveStateStrip({ state }: { state: BoardStateData }): JSX.Element {
 
 function Hero(): JSX.Element {
   return (
-    <section className="border-b border-mineral bg-[radial-gradient(circle_at_20%_10%,rgba(34,211,238,0.14),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(244,114,182,0.10),transparent_28%),#030712] px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <p className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-200">Galaxy Sports Edge</p>
-        <h1 className="mt-5 max-w-4xl break-words text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
-          We&apos;re not AI. We&apos;re math you can read.
+    <section
+      className="relative isolate overflow-hidden border-b border-mineral px-4 pb-24 pt-20 sm:px-6 sm:pb-32 sm:pt-28 lg:px-8 lg:pb-40 lg:pt-36"
+      style={{
+        background:
+          "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(34,211,238,0.18), transparent)," +
+          "radial-gradient(ellipse 60% 40% at 80% 60%, rgba(139,92,246,0.12), transparent)," +
+          "radial-gradient(ellipse 50% 50% at 10% 80%, rgba(244,114,182,0.09), transparent)," +
+          "#030712",
+      }}
+    >
+      {/* Dot-grid texture overlay */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
+      {/* Glow ring */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent"
+      />
+
+      <div className="relative mx-auto max-w-6xl">
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-800/50 bg-cyan-950/60 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400" />
+            Galaxy Sports Edge
+          </span>
+          <span className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-gray-600 sm:inline">
+            Intelligence Platform
+          </span>
+        </div>
+
+        <h1 className="mt-8 max-w-5xl break-words text-5xl font-black leading-[1.05] tracking-tight text-white sm:text-7xl lg:text-8xl">
+          See the game{" "}
+          <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-400 bg-clip-text text-transparent">
+            differently.
+          </span>
         </h1>
-        <p className="mt-6 max-w-2xl break-words text-lg leading-8 text-gray-300">
-          Deterministic sports betting research with the factor breakdown attached.
-          We post when the model finds edge. Most days that is fewer than five picks.
+
+        <p className="mt-7 max-w-2xl text-lg leading-8 text-gray-400">
+          Deterministic sports intelligence — line movement, market gravity, sharp signals,
+          and calibrated confidence scores. Not a picks feed. An analytical edge.
         </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Link href="/board" className="inline-flex min-h-11 items-center justify-center rounded-lg bg-cyan-300 px-5 py-3 text-sm font-bold text-gray-950 hover:bg-cyan-200">
-            See today&apos;s board
+
+        <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Link
+            href="/today"
+            className="inline-flex min-h-12 items-center justify-center rounded-xl bg-cyan-300 px-6 py-3 text-sm font-bold text-gray-950 shadow-lg shadow-cyan-500/20 transition-all hover:bg-cyan-200 hover:shadow-cyan-400/30"
+          >
+            Open Today&apos;s Board
           </Link>
-          <Link href="/methodology" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-bold text-gray-100 hover:border-cyan-300">
+          <Link
+            href="/picks"
+            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-gray-700 px-6 py-3 text-sm font-bold text-gray-200 transition-colors hover:border-cyan-700 hover:text-white"
+          >
+            Explore picks →
+          </Link>
+          <Link
+            href="/methodology"
+            className="font-mono text-xs uppercase tracking-[0.16em] text-gray-500 hover:text-gray-300 sm:ml-2"
+          >
             Read the methodology
           </Link>
+        </div>
+
+        {/* Trust signals */}
+        <div className="mt-12 flex flex-wrap items-center gap-5 border-t border-mineral/50 pt-8">
+          {[
+            ["10+ factors", "per pick scored"],
+            ["14 books", "polled every 30 min"],
+            ["Evidence Vault", "every claim cited"],
+            ["No fabricated stats", "ever"],
+          ].map(([label, sub]) => (
+            <div key={label} className="flex flex-col">
+              <span className="font-mono text-sm font-bold text-white">{label}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-600">{sub}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -357,80 +423,136 @@ function ThreeQuestions(): JSX.Element {
 
 const SURFACES = [
   {
-    href: "/market-gravity",
-    title: "Market Gravity",
-    state: "Preview",
-    description: "Line movement, book disagreement, and market depth scored across four inputs. The difference between informative movement and noise.",
-    links: [
-      { href: "/market-gravity/how-it-works", label: "How it works" },
-      { href: "/market-gravity/line-movement", label: "Line movement" },
-      { href: "/market-gravity/book-disagreement", label: "Book disagreement" },
-    ],
+    href: "/today",
+    title: "Today's Board",
+    eyebrow: "Daily brief",
+    badge: "Live",
+    badgeColor: "text-green-300 border-green-800/50 bg-green-950/40",
+    accent: "from-cyan-500/20 to-blue-600/10",
+    description: "Every morning's intelligence brief — scored picks, board passes, market signals, and what the model skipped. Open it before the first game.",
+    links: [],
   },
   {
-    href: "/rumor-radar",
-    title: "Rumor Radar",
-    state: "Preview",
-    description: "Weak signals, unverified chatter, and watchlist items — separated by source tier and never published as fact.",
-    links: [
-      { href: "/rumor-radar/how-it-works", label: "How it works" },
-      { href: "/rumor-radar/source-tiers", label: "Source tiers" },
-    ],
+    href: "/picks",
+    title: "Picks Engine",
+    eyebrow: "Core product",
+    badge: "Beta",
+    badgeColor: "text-cyan-300 border-cyan-800/50 bg-cyan-950/40",
+    accent: "from-blue-500/15 to-indigo-600/10",
+    description: "Deterministic 10-factor scoring. Spread, moneyline, total. Gated by freshness and data quality. Factor trail on every published pick.",
+    links: [{ href: "/picks/how-picks-are-scored", label: "How scoring works" }, { href: "/picks/confidence-scores", label: "Confidence scores" }],
+  },
+  {
+    href: "/props",
+    title: "Props Intelligence",
+    eyebrow: "Player props",
+    badge: "Coming soon",
+    badgeColor: "text-gray-400 border-gray-700 bg-gray-900/40",
+    accent: "from-violet-500/15 to-purple-600/10",
+    description: "Player props graded on role stability, line value, matchup fit, and volatility — not just hit rate. Props markets price slower. The edge is real.",
+    links: [],
+  },
+  {
+    href: "/market-gravity",
+    title: "Market Gravity",
+    eyebrow: "Market intelligence",
+    badge: "Preview",
+    badgeColor: "text-yellow-300 border-yellow-800/50 bg-yellow-950/30",
+    accent: "from-orange-500/15 to-yellow-600/10",
+    description: "Line movement, book disagreement, and market depth scored across four inputs. The difference between informative movement and noise.",
+    links: [{ href: "/market-gravity/line-movement", label: "Line movement" }, { href: "/market-gravity/book-disagreement", label: "Book disagreement" }],
   },
   {
     href: "/fantasy",
     title: "Fantasy War Room",
-    state: "Preview",
-    description: "Start/sit, usage trends, and scheme fit — structured fantasy intelligence built on the same tiered evidence as picks.",
-    links: [
-      { href: "/fantasy/how-start-sit-works", label: "How start/sit works" },
-      { href: "/fantasy/usage-trends", label: "Usage trends" },
-      { href: "/fantasy/scheme-fit", label: "Scheme fit" },
-    ],
+    eyebrow: "Fantasy",
+    badge: "Preview",
+    badgeColor: "text-yellow-300 border-yellow-800/50 bg-yellow-950/30",
+    accent: "from-green-500/15 to-emerald-600/10",
+    description: "Start/sit decisions, usage trends, and scheme fit — structured fantasy intelligence on the same tiered evidence as picks.",
+    links: [{ href: "/fantasy/usage-trends", label: "Usage trends" }, { href: "/fantasy/scheme-fit", label: "Scheme fit" }],
   },
   {
     href: "/brain",
     title: "Research Brain",
-    state: "Beta",
-    description: "Structured sports intelligence Q&A backed by the Evidence Vault. Cites source tiers. Refuses to answer when evidence is insufficient.",
-    links: [
-      { href: "/brain/how-brain-works", label: "How it works" },
-      { href: "/brain/evidence-vault-explained", label: "Evidence Vault" },
-    ],
+    eyebrow: "AI analyst",
+    badge: "Beta",
+    badgeColor: "text-pink-300 border-pink-800/50 bg-pink-950/30",
+    accent: "from-pink-500/15 to-rose-600/10",
+    description: "Structured sports Q&A backed by the Evidence Vault. Cites source tiers. Refuses to speculate when evidence is insufficient.",
+    links: [{ href: "/brain/how-brain-works", label: "How it works" }, { href: "/brain/evidence-vault-explained", label: "Evidence Vault" }],
+  },
+  {
+    href: "/academy",
+    title: "Galaxy Academy",
+    eyebrow: "Education",
+    badge: "New",
+    badgeColor: "text-indigo-300 border-indigo-700/50 bg-indigo-950/30",
+    accent: "from-indigo-500/15 to-blue-600/10",
+    description: "From odds basics to CLV, bankroll theory, and the No-Bet Doctrine. Three tracks: Foundation, Signal, Edge. Learn the framework behind every pick.",
+    links: [{ href: "/academy", label: "Start learning" }],
   },
 ] as const;
 
 function IntelligenceSurfaces(): JSX.Element {
+  const [featured, ...rest] = SURFACES;
   return (
-    <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+    <section className="border-y border-mineral bg-gray-900/20 px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeader
           eyebrow="The platform"
-          title="Four intelligence surfaces."
-          meta="Every surface is backed by the same tiered evidence and publish-gate rules."
+          title="Seven intelligence surfaces."
+          meta="One engine. Every surface backed by the same tiered evidence and publish-gate rules."
         />
-        <div className="mt-8 grid gap-5 md:grid-cols-2">
-          {SURFACES.map(({ href, title, state, description, links }) => (
-            <article key={href} className="border border-mineral bg-carbon/60 p-6">
-              <div className="flex items-center gap-3">
-                <h3 className="text-lg font-bold text-white">{title}</h3>
-                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-500 border border-mineral px-1.5 py-0.5">{state}</span>
+
+        {/* Featured card — Today's Board */}
+        <Link
+          href={featured.href}
+          className="group mt-10 flex flex-col overflow-hidden rounded-2xl border border-mineral bg-gray-900/60 transition-all hover:border-cyan-800/50 hover:shadow-lg hover:shadow-cyan-900/20 sm:flex-row"
+        >
+          <div className={`flex-1 bg-gradient-to-br ${featured.accent} p-8 sm:p-10`}>
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-gray-500">{featured.eyebrow}</span>
+              <span className={`rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] ${featured.badgeColor}`}>{featured.badge}</span>
+            </div>
+            <h3 className="mt-4 text-3xl font-black text-white group-hover:text-cyan-100 sm:text-4xl">{featured.title}</h3>
+            <p className="mt-4 max-w-lg text-base leading-7 text-gray-400">{featured.description}</p>
+            <span className="mt-6 inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.16em] text-ion-blue group-hover:text-cyan-300">
+              Open today&apos;s board <span aria-hidden>→</span>
+            </span>
+          </div>
+          <div className="hidden w-72 items-center justify-center border-l border-mineral bg-carbon/60 p-8 sm:flex">
+            <div className="space-y-3 text-center">
+              {["Scored", "Gated", "Published"].map((s) => (
+                <div key={s} className="rounded border border-mineral bg-gray-950/80 px-4 py-2">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-600">{s}</p>
+                  <p className="mt-1 text-xl font-bold text-white">—</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Link>
+
+        {/* 3-col grid for remaining surfaces */}
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {rest.map(({ href, title, eyebrow, badge, badgeColor, accent, description, links }) => (
+            <article key={href} className={`group flex flex-col overflow-hidden rounded-xl border border-mineral bg-gradient-to-br ${accent} bg-gray-900/50 p-6 transition-all hover:border-gray-600`}>
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-gray-600">{eyebrow}</span>
+                <span className={`rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] ${badgeColor}`}>{badge}</span>
               </div>
-              <p className="mt-3 text-sm leading-7 text-gray-400">{description}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {links.map(({ href: linkHref, label }) => (
-                  <Link
-                    key={linkHref}
-                    href={linkHref}
-                    className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-blue hover:text-cyan-200"
-                  >
+              <h3 className="mt-3 text-xl font-bold text-white">{title}</h3>
+              <p className="mt-2 flex-1 text-sm leading-6 text-gray-500">{description}</p>
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                {links.map(({ href: lhref, label }) => (
+                  <Link key={lhref} href={lhref} className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-500 hover:text-gray-300">
                     {label} →
                   </Link>
                 ))}
+                <Link href={href} className="ml-auto font-mono text-[10px] uppercase tracking-[0.14em] text-ion-blue hover:text-cyan-300">
+                  Open →
+                </Link>
               </div>
-              <Link href={href} className="mt-4 block text-xs text-gray-500 hover:text-gray-300">
-                Open {title} surface →
-              </Link>
             </article>
           ))}
         </div>
