@@ -38,6 +38,9 @@ Constitution's priority order.
 | C10 | 2026-05-28 | Compliance gap | Methodology links on all 7 analytical surfaces missing them | E | RESOLVED — C10: `eb58972` |
 | C10 | 2026-05-28 | Compliance gap | Audit every page using sample/mock/demo data for visible label | E | RESOLVED — C10: `eb58972` (all surfaces labeled) |
 | C10 | 2026-05-28 | Evidence Chain | Source labels on PickCard/FullPickCard/AutopsyRow | F | PARTIAL — C10: `46b0596`; failureCase+modelVersion blocked on schema |
+| C11 | 2026-05-28 | Design gap | Apply DESIGN_QA_RUBRIC; lime/cyan audit; animated-background audit | G | RESOLVED — C11 |
+| C11 | 2026-05-28 | Accessibility gap | focus-visible coverage + prefers-reduced-motion respect | H | RESOLVED — C11; LCP/axe measurement is owner action |
+| C11 | 2026-05-28 | Conversion gap | Pricing feature matrix maps to live surfaces | I | RESOLVED — C11 |
 | C7 | 2026-05-28 | Documentation gap | Adopt the Product Kernel — typed configs under `apps/web/lib/galaxy/kernel/` | D | RESOLVED — kernel scaffold committed |
 | C7 | 2026-05-28 | Performance gap | Measure Core Web Vitals on top 5 routes against 2.5s/200ms/0.1 targets | H | OPEN |
 | C7 | 2026-05-28 | Competitive moat | Galaxy Orbit View — spatial intelligence map concept page | J | OPEN |
@@ -59,7 +62,8 @@ Constitution's priority order.
 | C7 | 2026-05-28 | Galaxy Constitution + ops/scoring/design docs + Product Kernel scaffold | `d282267` |
 | C8 | 2026-05-28 | Queue B drain: security.txt + robots/sourcemap verification + board/today disambiguation + prompts scaffold + /picks RiskDisclosure | `9044a0b` → `503bb06` |
 | C9 | 2026-05-28 | Queue F drain: EvidenceCard primitive — typed Evidence Chain compliance at the component level, with required failure-case on `kind="pick"` enforced by TS | `2d2be00` |
-| C10 | 2026-05-28 | Queue B resolved: prompt migration; Queue D resolved: coherence audit; Queue E resolved: methodology links + demo-data audit; Queue F partial: evidence source labels on PickCard/FullPickCard/AutopsyRow | _this cycle_ |
+| C10 | 2026-05-28 | Queue B resolved: prompt migration; Queue D resolved: coherence audit; Queue E resolved: methodology links + demo-data audit; Queue F partial: evidence source labels on PickCard/FullPickCard/AutopsyRow | `873d18a` → `7ea6be8` |
+| C11 | 2026-05-28 | Queue G resolved (rubric audit, lime/cyan, animation backgrounds); Queue H code-side resolved (focus-visible, reduced-motion) with LCP/axe deferred to owner; Queue I pricing matrix verified — every promised feature maps to a live surface | _this cycle_ |
 
 ## Selection rule
 

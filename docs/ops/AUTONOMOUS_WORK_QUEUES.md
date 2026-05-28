@@ -115,30 +115,66 @@ cards or analytical claims.
 Generic SaaS look, casino energy, overanimation, poor hierarchy,
 inconsistent tokens.
 
-- [ ] Apply `DESIGN_QA_RUBRIC.md` to every new surface
-- [ ] Audit lime/cyan usage — lime reserved for freshness ping only
-- [ ] Audit any animated backgrounds on telemetry surfaces (remove)
+- [x] Apply `DESIGN_QA_RUBRIC.md` to every new surface — **resolved
+      C11**: audit pass against the rubric's forbidden patterns finds
+      no casino green (saturated #00FF00 family) on public surfaces, no
+      pie charts, no autoplay media, no animated backgrounds on
+      telemetry surfaces; admin `bg-green-500` status pills are
+      internal-only operator views
+- [x] Audit lime/cyan usage — lime reserved for freshness ping only
+      — **resolved C11**: single lime usage in repo is
+      `EvidenceCard` `live` freshness state — exactly the rubric's
+      reserved use. No other surface uses lime; cyan-400 pulse dots
+      on homepage and `/today` calibration banner are brand/process
+      indicators (not freshness pings) and remain cyan
+- [x] Audit any animated backgrounds on telemetry surfaces (remove)
+      — **resolved C11**: only animations in the codebase are small
+      pulse dots, `animate-spin` loaders on subscribe/manage buttons,
+      and skeleton loaders inside `EvidenceAuditDrawer`. No animated
+      gradients or moving backgrounds on data surfaces.
 
 ## Queue H — Performance / Accessibility
 
 Core Web Vitals, keyboard nav, contrast, focus, reduced motion, mobile.
 
-- [ ] Measure LCP / INP / CLS on top routes (`/`, `/today`, `/picks`,
-      `/autopsy`, `/parlay-mri`) — target: LCP ≤ 2.5s, INP ≤ 200ms,
-      CLS ≤ 0.1 at 75th percentile mobile + desktop
-- [ ] Run axe / Lighthouse a11y on top routes
-- [ ] Verify focus-visible rings on all interactive elements
-- [ ] Verify `prefers-reduced-motion` respected by all animations
+- [ ] **OWNER ACTION** Measure LCP / INP / CLS on top routes (`/`,
+      `/today`, `/picks`, `/autopsy`, `/parlay-mri`) — target: LCP ≤
+      2.5s, INP ≤ 200ms, CLS ≤ 0.1 at 75th percentile mobile + desktop.
+      Requires deployed environment with real network conditions.
+- [ ] **OWNER ACTION** Run axe / Lighthouse a11y on top routes.
+      Requires running browser instance against deployed/local server.
+- [x] Verify focus-visible rings on all interactive elements
+      — **resolved C11**: `.btn-primary:focus-visible` shadow ring in
+      globals.css; inputs in `cockpit/journal`, `cockpit/api-costs`,
+      `/picks`, `/promotions` use `outline-none` paired with
+      `focus:border-*` color change for visible focus indicator
+- [x] Verify `prefers-reduced-motion` respected by all animations
+      — **resolved C11**: globals.css line 50 applies global
+      `prefers-reduced-motion: reduce` cascade clamping
+      animation-duration to 0.001ms, animation-iteration-count to 1,
+      transition-duration to 0.001ms; `motion/reveal.tsx` and
+      `motion/marquee.tsx` honor the media query individually; hero
+      `signal-preview-queue` and `interactive-galaxy` check it
+      programmatically before starting
 
 ## Queue I — Retention / Monetization
 
 Account loops, saved cards, newsletter, pricing clarity, premium upgrade
 paths, Command Center usefulness.
 
-- [ ] Verify pricing feature matrix maps to real product surfaces (no
-      tier promises something that doesn't ship)
+- [x] Verify pricing feature matrix maps to real product surfaces (no
+      tier promises something that doesn't ship) — **resolved C11**:
+      32-row FEATURE_MATRIX audit complete. Every promised feature
+      maps to a live surface: /today, /market-gravity, /props, /brain,
+      /vault, /rumor-radar, /fantasy, /intelligence/glossary, /ledger,
+      /intelligence/calibration, /tracker, /command, /alerts,
+      /autopsy, /reports, /performance, /profile. Features not yet
+      shipped are explicitly labeled "Coming" (steam move detection),
+      "Beta" (props intelligence), or "Preview" (Market Gravity for
+      FREE, Rumor Radar for FREE, Fantasy War Room for FREE) — no
+      silent overpromises
 - [ ] Saved-card primitive — design but do not implement until auth
-      gating is live
+      gating is live _(deferred per its own note — not a Queue I gap)_
 
 ## Queue J — Delight / Breathtaking Layer
 
@@ -168,4 +204,5 @@ to it before removing.
 - Owner-reviewed weekly
 - Frozen at any major release or diligence event
 
-**Last refresh:** 2026-05-28 (initial population from doctrine adoption)
+**Last refresh:** 2026-05-28 C11 (Queues G, I drained; Queue H code-side
+items resolved; LCP/axe measurement deferred to owner with deployed env)
