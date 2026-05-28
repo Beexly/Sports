@@ -49,24 +49,24 @@ export interface GovernanceResult {
 
 const REJECTION = {
   WINRATE_GATE_NOT_CLEARED: {
-    code: "WINRATE_GATE_NOT_CLEARED",
-    note: "Win-rate claims are blocked until ≥30 picks settle per model version. This is an anti-tout guardrail.",
+    rejectionCode: "WINRATE_GATE_NOT_CLEARED",
+    rejectionNote: "Win-rate claims are blocked until ≥30 picks settle per model version. This is an anti-tout guardrail.",
   },
   ACCURACY_GATE_NOT_CLEARED: {
-    code: "ACCURACY_GATE_NOT_CLEARED",
-    note: "Accuracy claims require calibration gate clearance (≥30 settled picks per model version).",
+    rejectionCode: "ACCURACY_GATE_NOT_CLEARED",
+    rejectionNote: "Accuracy claims require calibration gate clearance (≥30 settled picks per model version).",
   },
   SHARP_ACTION_TIER_INSUFFICIENT: {
-    code: "SHARP_ACTION_TIER_INSUFFICIENT",
-    note: "Sharp-action claims must be backed by Tier 1 or Tier 2 source evidence.",
+    rejectionCode: "SHARP_ACTION_TIER_INSUFFICIENT",
+    rejectionNote: "Sharp-action claims must be backed by Tier 1 or Tier 2 source evidence.",
   },
   RUMOR_TIER_INSUFFICIENT: {
-    code: "RUMOR_TIER_INSUFFICIENT",
-    note: "Rumor claims must be backed by Tier 1 or Tier 2 source evidence before surface exposure.",
+    rejectionCode: "RUMOR_TIER_INSUFFICIENT",
+    rejectionNote: "Rumor claims must be backed by Tier 1 or Tier 2 source evidence before surface exposure.",
   },
   NO_EVIDENCE: {
-    code: "NO_EVIDENCE",
-    note: "This claim has no backing evidence IDs. All surfaced claims must reference EvidenceItem rows.",
+    rejectionCode: "NO_EVIDENCE",
+    rejectionNote: "This claim has no backing evidence IDs. All surfaced claims must reference EvidenceItem rows.",
   },
 } as const;
 
