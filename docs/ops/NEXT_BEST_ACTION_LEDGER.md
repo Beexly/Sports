@@ -32,10 +32,13 @@ Constitution's priority order.
 | C8 | 2026-05-28 | Product coherence | Differentiate `/board` (raw operator view) from `/today` (curated habit-loop entry) so they are not perceived as duplicates | D | RESOLVED — catalog summary updated |
 | C8 | 2026-05-28 | Product coherence | Add `<DecisionQualityNav />` homepage section linking all 7 decision-quality surfaces | D | RESOLVED — no more orphan surfaces |
 | C8 | 2026-05-28 | Compliance gap | Audit responsible-play link coverage on all betting-adjacent surfaces; upgrade /picks with inline RiskDisclosure | E | RESOLVED |
-| C8 | 2026-05-28 | Security gap | Scaffold `apps/web/lib/prompts/` server-only registry with migration backlog for inline prompts in content-generator and claude-api/messages | B | PARTIAL — scaffold + README; per-prompt migration queued |
-| C7 | 2026-05-28 | Product gap | Centralize AI prompts under `apps/web/lib/prompts/` (server-only) | B | OPEN |
-| C7 | 2026-05-28 | Documentation gap | Adopt the Product Kernel — typed configs under `apps/web/lib/galaxy/kernel/` | D | OPEN |
-| C7 | 2026-05-28 | Compliance gap | Add responsible-play link to every betting-adjacent surface | E | OPEN |
+| C8 | 2026-05-28 | Security gap | Scaffold `apps/web/lib/prompts/` server-only registry with migration backlog for inline prompts in content-generator and claude-api/messages | B | RESOLVED — C10: `analysis-post.ts` prompt module + 5 tests + trust-gate whitelist |
+| C10 | 2026-05-28 | Product gap | Centralize AI prompts under `apps/web/lib/prompts/` (server-only) | B | RESOLVED — C10: `873d18a` |
+| C10 | 2026-05-28 | Product coherence | Route audit, nav audit, 8-surface interlinking, DailyRoutine/SportNav verification | D | RESOLVED — C10: `eb58972` |
+| C10 | 2026-05-28 | Compliance gap | Methodology links on all 7 analytical surfaces missing them | E | RESOLVED — C10: `eb58972` |
+| C10 | 2026-05-28 | Compliance gap | Audit every page using sample/mock/demo data for visible label | E | RESOLVED — C10: `eb58972` (all surfaces labeled) |
+| C10 | 2026-05-28 | Evidence Chain | Source labels on PickCard/FullPickCard/AutopsyRow | F | PARTIAL — C10: `46b0596`; failureCase+modelVersion blocked on schema |
+| C7 | 2026-05-28 | Documentation gap | Adopt the Product Kernel — typed configs under `apps/web/lib/galaxy/kernel/` | D | RESOLVED — kernel scaffold committed |
 | C7 | 2026-05-28 | Performance gap | Measure Core Web Vitals on top 5 routes against 2.5s/200ms/0.1 targets | H | OPEN |
 | C7 | 2026-05-28 | Competitive moat | Galaxy Orbit View — spatial intelligence map concept page | J | OPEN |
 | C7 | 2026-05-28 | Design gap | Apply `DESIGN_QA_RUBRIC.md` rules retroactively across all new surfaces | G | OPEN |
@@ -55,7 +58,8 @@ Constitution's priority order.
 | C6 | 2026-05-28 | Decision-quality spine — typed shared config | `0289047` |
 | C7 | 2026-05-28 | Galaxy Constitution + ops/scoring/design docs + Product Kernel scaffold | `d282267` |
 | C8 | 2026-05-28 | Queue B drain: security.txt + robots/sourcemap verification + board/today disambiguation + prompts scaffold + /picks RiskDisclosure | `9044a0b` → `503bb06` |
-| C9 | 2026-05-28 | Queue F drain: EvidenceCard primitive — typed Evidence Chain compliance at the component level, with required failure-case on `kind="pick"` enforced by TS | _this cycle_ |
+| C9 | 2026-05-28 | Queue F drain: EvidenceCard primitive — typed Evidence Chain compliance at the component level, with required failure-case on `kind="pick"` enforced by TS | `2d2be00` |
+| C10 | 2026-05-28 | Queue B resolved: prompt migration; Queue D resolved: coherence audit; Queue E resolved: methodology links + demo-data audit; Queue F partial: evidence source labels on PickCard/FullPickCard/AutopsyRow | _this cycle_ |
 
 ## Selection rule
 
