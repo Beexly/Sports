@@ -4,11 +4,28 @@ import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME, HELPLINE } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Responsible play",
+  title: `Responsible Play — ${BRAND_NAME}`,
   description:
     "Sports betting carries real risk. Resources, helplines, and self-exclusion options for anyone who wants to slow down or stop.",
   alternates: { canonical: "/responsible-play" },
+  openGraph: {
+    title: `Responsible Play — ${BRAND_NAME}`,
+    description: "Helplines, warning signs, self-exclusion options. Real risk disclosure — no hype.",
+  },
 };
+
+const RESPONSIBLE_PLAY_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: `Responsible Play — ${BRAND_NAME}`,
+  description: "Sports betting carries real risk. Resources, helplines, and self-exclusion options.",
+  url: "https://galaxysportsedge.com/responsible-play",
+  significantLink: [
+    "https://www.ncpgambling.org/",
+    "https://www.gamtalk.org/",
+    "https://www.gamblersanonymous.org/",
+  ],
+} as const;
 
 const RESOURCES = [
   {
@@ -153,6 +170,7 @@ export default function ResponsiblePlayPage() {
       </main>
 
       <Footer />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(RESPONSIBLE_PLAY_LD) }} />
     </div>
   );
 }

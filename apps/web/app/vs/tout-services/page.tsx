@@ -167,6 +167,15 @@ export default function VsToutServicesPage() {
       </main>
 
       <Footer />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: `${BRAND_NAME} vs. Tout Services — The Category Contrast`,
+        description: "How transparent sports picks with full factor trails differ from tout services that publish only curated wins. Four red flags that identify a tout service.",
+        dateModified: "2026-05-28",
+        author: { "@type": "Organization", name: BRAND_NAME },
+        publisher: { "@type": "Organization", name: BRAND_NAME },
+      }) }} />
     </div>
   );
 }
