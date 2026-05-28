@@ -50,6 +50,30 @@ const ENTRIES: ReadonlyArray<Entry> = [
   {
     date: "2026-05-28",
     type: "ship",
+    title: "Intelligence core service layer shipped — Evidence Vault, Signal Ledger, Claim Governance, Entity Registry, Source Mesh",
+    body: "Five core intelligence service layers are now implemented and unit-tested (37 new tests, 2004 total passing). Evidence Vault stores append-only intelligence with public-safety gating (tier 1-2 + non-rumor/non-sharp_action = publicSafe). Signal Ledger tracks pick settlement with a 30-pick calibration gate per model version. Claim Governance enforces source tier requirements and calibration gates before any performance claim can be made public. Entity Registry provides canonical entity resolution across sources. Source Acquisition Mesh adds a circuit-breaker registry for all data sources — circuit opens after 5 consecutive poll failures, license-approval gate blocks unauthorized polling.",
+  },
+  {
+    date: "2026-05-28",
+    type: "ship",
+    title: "Cockpit calibration page upgraded — live DB-backed stats",
+    body: "The /cockpit/calibration page now pulls live counts from the database: total games, completed games, total predictions, resolved predictions (WIN/LOSS/PUSH), and pending predictions. When DATABASE_URL is connected, these numbers reflect the actual model state. The Signal Ledger calibration report (confidence bands, gate status, Brier score) is wired alongside the live counts.",
+  },
+  {
+    date: "2026-05-28",
+    type: "ship",
+    title: "Source registration script — idempotent DataSource seeding",
+    body: "Added scripts/register-sources.mjs for idempotent DataSource registration. Pre-registers The Odds API (Tier 1), ESPN Injuries (Tier 2), and RotoWire (Tier 2). Each source starts with licenseApproved: false — an operator must explicitly approve each source via the cockpit before any polling begins. This is the correct gate for a platform that has made commitments about data provenance.",
+  },
+  {
+    date: "2026-05-28",
+    type: "ship",
+    title: "Model Journal launched — 3 seed methodology essays",
+    body: "The /journal surface now has three published seed essays seeded into the database: 'How the Model Generates Signals' (Week 1), 'The Calibration Gate — Why 30 Picks' (Week 2), and 'The Factor Registry — How Weights Are Set' (Week 3). These establish the cadence and voice for the research log. New essays can be composed via the cockpit Studio and published through the same approval workflow as picks.",
+  },
+  {
+    date: "2026-05-28",
+    type: "ship",
     title: "GEO sub-cluster expansion — 15 deep-dive pages",
     body: "Published 15 GEO sub-cluster pages across all six intelligence surfaces: Market Gravity (how-it-works, line-movement, book-disagreement), Picks (how-picks-are-scored, confidence-scores), Rumor Radar (how-it-works, source-tiers), Research Brain (how-brain-works, evidence-vault-explained), Fantasy (how-start-sit-works, usage-trends, scheme-fit), and Intelligence (how-it-works, source-hierarchy, glossary). Each page carries JSON-LD TechArticle or FAQPage schema and links back through the GEO cluster.",
   },
@@ -203,6 +227,17 @@ export default function ChangelogPage() {
               "Every model version, gate flip, and calibration update logged publicly.",
             url: "https://galaxysportsedge.com/changelog",
             dateModified: "2026-05-28",
+            mainEntity: {
+              "@type": "ItemList",
+              name: "Platform changelog",
+              numberOfItems: ENTRIES.length,
+              itemListElement: ENTRIES.map((entry, i) => ({
+                "@type": "ListItem",
+                position: i + 1,
+                name: entry.title,
+                description: entry.body,
+              })),
+            },
           }),
         }}
       />

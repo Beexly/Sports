@@ -21,6 +21,8 @@ import {
   SIGNAL_LEDGER_EVENT_TYPES,
   getCalibrationReport,
   listModelVersions,
+  recordSettlement,
+  appendLedgerEvent,
 } from "@/lib/signal-ledger";
 
 describe("Signal Ledger constants", () => {
@@ -123,5 +125,89 @@ describe("listModelVersions", () => {
     mocks.groupBy.mockResolvedValueOnce([]);
     const versions = await listModelVersions();
     expect(versions).toEqual([]);
+  });
+});
+
+describe("recordSettlement", () => {
+  beforeEach(() => {
+    mocks.create.mockReset();
+  });
+
+  it("writes settled_win event with resultBinary=true for win outcome", async () => {
+    const entry = { id: "le-1", eventType: "settled_win", resultBinary: true };
+    mocks.create.mockResolvedValueOnce(entry);
+
+    await recordSettlement("pick-1", "v5.0.0", "win", 82);
+
+    const call = mocks.create.mock.calls[0]![0]! as { data: Record<string, unknown> };
+    expect(call.data.eventType).toBe("settled_win");
+    expect(call.data.resultBinary).toBe(true);
+    expect(call.data.confidenceAt).toBe(82);
+    expect(call.data.pickId).toBe("pick-1");
+    expect(call.data.modelVersion).toBe("v5.0.0");
+  });
+
+  it("writes settled_loss event with resultBinary=false for loss outcome", async () => {
+    mocks.create.mockResolvedValueOnce({ id: "le-2", eventType: "settled_loss" });
+
+    await recordSettlement("pick-2", "v5.0.0", "loss", 65);
+
+    const call = mocks.create.mock.calls[0]![0]! as { data: Record<string, unknown> };
+    expect(call.data.eventType).toBe("settled_loss");
+    expect(call.data.resultBinary).toBe(false);
+  });
+
+  it("writes settled_push event with resultBinary=undefined for push outcome", async () => {
+    mocks.create.mockResolvedValueOnce({ id: "le-3", eventType: "settled_push" });
+
+    await recordSettlement("pick-3", "v5.0.0", "push", 70);
+
+    const call = mocks.create.mock.calls[0]![0]! as { data: Record<string, unknown> };
+    expect(call.data.eventType).toBe("settled_push");
+    expect(call.data.resultBinary).toBeUndefined();
+  });
+
+  it("writes settled_void event for void outcome", async () => {
+    mocks.create.mockResolvedValueOnce({ id: "le-4", eventType: "settled_void" });
+
+    await recordSettlement("pick-4", "v5.0.0", "void", 55);
+
+    const call = mocks.create.mock.calls[0]![0]! as { data: Record<string, unknown> };
+    expect(call.data.eventType).toBe("settled_void");
+  });
+});
+
+describe("appendLedgerEvent", () => {
+  beforeEach(() => {
+    mocks.create.mockReset();
+  });
+
+  it("sets actor to 'system' when not provided", async () => {
+    mocks.create.mockResolvedValueOnce({ id: "le-5" });
+
+    await appendLedgerEvent({
+      pickId: "pick-5",
+      modelVersion: "v5.0.0",
+      eventType: "published",
+    });
+
+    const call = mocks.create.mock.calls[0]![0]! as { data: Record<string, unknown> };
+    expect(call.data.actor).toBe("system");
+  });
+
+  it("passes custom actor when provided", async () => {
+    mocks.create.mockResolvedValueOnce({ id: "le-6" });
+
+    await appendLedgerEvent({
+      pickId: "pick-6",
+      modelVersion: "v5.0.0",
+      eventType: "operator_override",
+      actor: "operator@example.com",
+      notes: "Manual override for testing",
+    });
+
+    const call = mocks.create.mock.calls[0]![0]! as { data: Record<string, unknown> };
+    expect(call.data.actor).toBe("operator@example.com");
+    expect(call.data.notes).toBe("Manual override for testing");
   });
 });

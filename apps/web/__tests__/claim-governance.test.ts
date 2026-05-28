@@ -1,8 +1,13 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
+const dbMocks = vi.hoisted(() => ({
+  create: vi.fn(),
+  updateMany: vi.fn(),
+}));
 
 vi.mock("@sports/db", () => ({
   db: {
-    publicClaim: { create: vi.fn(), updateMany: vi.fn() },
+    publicClaim: { create: dbMocks.create, updateMany: dbMocks.updateMany },
   },
   Prisma: {},
 }));
@@ -18,6 +23,7 @@ vi.mock("@/lib/signal-ledger", () => ({
 
 import {
   evaluateClaimApproval,
+  submitClaim,
   type ClaimEvidenceSummary,
 } from "@/lib/claim-governance";
 import type { CalibrationReport } from "@/lib/signal-ledger";
@@ -141,5 +147,77 @@ describe("evaluateClaimApproval — pure governance function", () => {
         evaluateClaimApproval(ev({ claimType: "rumor", sourceTiers: [2] })).verdict
       ).toBe("APPROVED");
     });
+  });
+});
+
+describe("submitClaim — DB persistence", () => {
+  beforeEach(() => {
+    dbMocks.create.mockReset();
+  });
+
+  it("persists APPROVED verdict with governanceStatus=APPROVED and publishedAt=null", async () => {
+    dbMocks.create.mockResolvedValueOnce({ id: "pc-1", governanceStatus: "APPROVED" });
+
+    await submitClaim({
+      surfacePath: "/picks",
+      claimType: "informational",
+      claimText: "We publish picks daily.",
+      evidenceIds: ["ev-1"],
+      sourceTiers: [1],
+    });
+
+    const call = dbMocks.create.mock.calls[0]![0]! as { data: Record<string, unknown> };
+    expect(call.data.governanceStatus).toBe("APPROVED");
+    expect(call.data.publishedAt).toBeNull();
+    expect(call.data.surfacePath).toBe("/picks");
+    expect(call.data.claimType).toBe("informational");
+  });
+
+  it("persists REJECTED verdict with rejectionCode populated", async () => {
+    dbMocks.create.mockResolvedValueOnce({ id: "pc-2", governanceStatus: "REJECTED" });
+
+    await submitClaim({
+      surfacePath: "/performance",
+      claimType: "win_rate",
+      claimText: "Win rate claims require calibration.",
+      evidenceIds: ["ev-2"],
+      sourceTiers: [1],
+    });
+
+    const call = dbMocks.create.mock.calls[0]![0]! as { data: Record<string, unknown> };
+    expect(call.data.governanceStatus).toBe("REJECTED");
+    expect(call.data.rejectionCode).toBe("WINRATE_GATE_NOT_CLEARED");
+    expect(call.data.publishedAt).toBeNull();
+  });
+
+  it("sets evaluatedBy to system when actor not provided", async () => {
+    dbMocks.create.mockResolvedValueOnce({ id: "pc-3" });
+
+    await submitClaim({
+      surfacePath: "/picks",
+      claimType: "informational",
+      claimText: "System claim.",
+      evidenceIds: ["ev-3"],
+      sourceTiers: [1],
+    });
+
+    const call = dbMocks.create.mock.calls[0]![0]! as { data: Record<string, unknown> };
+    expect(call.data.evaluatedBy).toBe("system");
+  });
+
+  it("sets evaluatedBy to custom actor when provided", async () => {
+    dbMocks.create.mockResolvedValueOnce({ id: "pc-4" });
+
+    await submitClaim({
+      surfacePath: "/picks",
+      claimType: "informational",
+      claimText: "Operator claim.",
+      evidenceIds: ["ev-4"],
+      sourceTiers: [1],
+      actor: "admin@example.com",
+    });
+
+    const call = dbMocks.create.mock.calls[0]![0]! as { data: Record<string, unknown> };
+    expect(call.data.evaluatedBy).toBe("admin@example.com");
   });
 });

@@ -70,7 +70,7 @@ describe("Entity Registry", () => {
       league: "NFL",
     });
 
-    const call = mocks.upsert.mock.calls[0][0] as { where: { slug: string } };
+    const call = mocks.upsert.mock.calls[0]![0]! as { where: { slug: string } };
     expect(call.where.slug).toBe("patrick-mahomes");
   });
 
@@ -99,7 +99,7 @@ describe("Entity Registry", () => {
     const entities = [makeEntity(), makeEntity({ slug: "travis-kelce", displayName: "Travis Kelce" })];
     mocks.findMany.mockResolvedValueOnce(entities);
 
-    const result = await searchEntities({ entityType: "player" });
+    const result = await searchEntities("mahomes", "player");
     expect(result).toHaveLength(2);
   });
 });
