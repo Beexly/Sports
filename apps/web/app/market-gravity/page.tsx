@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { StateBadge } from "@/components/ui/state-badge";
 import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -90,9 +91,8 @@ export default function MarketGravityPage(): JSX.Element {
         {/* Hero */}
         <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_80%_20%,rgba(122,92,255,0.12),transparent_35%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <div className="mb-4 inline-flex items-center gap-2 border border-purple-900 bg-purple-950/40 px-3 py-1">
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-purple-300">Preview</span>
-              <span className="text-xs text-purple-200">Live data integration in progress</span>
+            <div className="mb-4">
+              <StateBadge state="preview" detail="Live data integration in progress" />
             </div>
             <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Market Gravity</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">

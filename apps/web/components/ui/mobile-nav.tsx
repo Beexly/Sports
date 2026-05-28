@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 const LINKS = [
+  { label: "The Network", href: "/intelligence" },
   { label: "Today's Board", href: "/board" },
   { label: "Fantasy Intelligence", href: "/fantasy" },
   { label: "Market Gravity", href: "/market-gravity" },

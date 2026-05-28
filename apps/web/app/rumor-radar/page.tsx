@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { StateBadge } from "@/components/ui/state-badge";
 import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -85,9 +86,12 @@ export default function RumorRadarPage(): JSX.Element {
         {/* Hero */}
         <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_70%_30%,rgba(255,100,112,0.10),transparent_35%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <div className="mb-4 inline-flex items-center gap-2 border border-yellow-900 bg-yellow-950/40 px-3 py-1">
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-yellow-300">Preview</span>
-              <span className="text-xs text-yellow-200">Weak-signal detection layer in development</span>
+            <div className="mb-4">
+              <StateBadge
+                state="demo"
+                label="Preview"
+                detail="Weak-signal detection layer in development"
+              />
             </div>
             <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Rumor Radar</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">

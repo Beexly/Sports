@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { StateBadge } from "@/components/ui/state-badge";
 import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -54,9 +55,12 @@ export default function BrainPage(): JSX.Element {
         {/* Hero */}
         <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_50%_0%,rgba(122,92,255,0.14),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <div className="mb-4 inline-flex items-center gap-2 border border-purple-900 bg-purple-950/40 px-3 py-1">
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-purple-300">Beta · Gated</span>
-              <span className="text-xs text-purple-200">Evidence governance required before public access</span>
+            <div className="mb-4">
+              <StateBadge
+                state="beta"
+                label="Beta · Gated"
+                detail="Evidence governance required before public access"
+              />
             </div>
             <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Research Brain</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
