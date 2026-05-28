@@ -122,6 +122,31 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     ],
   },
   {
+    heading: "Intelligence surfaces",
+    items: [
+      {
+        q: "What is Market Gravity?",
+        a: "Market Gravity is the platform's line-movement intelligence layer. It scores four inputs for every active market: the size of opening-to-current price movement, the speed of that movement, the level of disagreement between sportsbooks, and market depth (how many books are pricing the market). A large, fast, uniform movement across many books is informative. A large movement in a shallow market with high book disagreement is treated as volatile. See /market-gravity/how-it-works for the full methodology.",
+      },
+      {
+        q: "What is Rumor Radar?",
+        a: "Rumor Radar is a weak-signal watchlist — not a picks surface. It collects unverified chatter, beat-reporter speculation, and social volume spikes and assigns each signal one of five states: WATCHLIST, ELEVATED, CONTRADICTED, STALE, or GRADUATED. Only Tier 1 or Tier 2 source confirmation can graduate a signal to the picks pipeline. Unverified signals never become picks.",
+      },
+      {
+        q: "What is the Fantasy War Room?",
+        a: "The Fantasy War Room is the platform's fantasy sports intelligence surface — currently in Preview. It scores start/sit decisions across four inputs: injury status, matchup grade, usage-trend direction, and scheme fit. The same tiered evidence and publish-gate rules used for picks apply to fantasy recommendations. See /fantasy/how-start-sit-works for the methodology.",
+      },
+      {
+        q: "What is the Research Brain?",
+        a: "The Research Brain is a structured sports intelligence Q&A surface — currently in gated Beta. It does not generate free-form answers from a general language model. It queries the Evidence Vault — a structured store of observed, tiered facts — and assembles responses with source-tier citations and freshness timestamps. When evidence is insufficient, it says so rather than fabricating a plausible answer.",
+      },
+      {
+        q: "What is the Evidence Vault?",
+        a: "The Evidence Vault is the central store for every observed intelligence fact on the platform. Each item is tagged with a source tier (1–6), a time-to-live (TTL), a public-safety flag, and an entity link. The vault is append-only — items can expire but cannot be deleted or altered. Every claim the Brain surfaces is traceable to a vault item with its source and timestamp.",
+      },
+    ],
+  },
+  {
     heading: "Responsibility",
     items: [
       {

@@ -5,10 +5,34 @@ import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: `About — ${BRAND_NAME}`,
   description: `${BRAND_NAME} — ${BRAND_TAGLINE}. The story, the model, the operating principles.`,
   alternates: { canonical: "/about" },
+  openGraph: {
+    title: `About — ${BRAND_NAME}`,
+    description: `${BRAND_TAGLINE}. Built for people tired of paying for picks from services that only publish their wins.`,
+  },
 };
+
+const ABOUT_LD = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  name: `About ${BRAND_NAME}`,
+  description: `${BRAND_TAGLINE}. Deterministic sports intelligence with the factor trail on every pick.`,
+  url: "https://galaxysportsedge.com/about",
+  mainEntity: {
+    "@type": "Organization",
+    name: BRAND_NAME,
+    description:
+      "Deterministic sports betting research platform. Ten scoring factors. A publish gate. Factor trail on every pick. Win-rate gated until statistically defensible.",
+    url: "https://galaxysportsedge.com",
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: SUPPORT_EMAIL,
+      contactType: "customer support",
+    },
+  },
+} as const;
 
 const PRINCIPLES = [
   {
@@ -125,6 +149,7 @@ export default function AboutPage() {
       </main>
 
       <Footer />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ABOUT_LD) }} />
     </div>
   );
 }
