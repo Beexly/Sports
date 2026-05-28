@@ -1,5 +1,5 @@
 # ACTIVE AGENT RELAY
-_Last updated: 2026-05-28 (autonomous push: routes catalog + GEO cluster + timestamps)_
+_Last updated: 2026-05-28 (autonomous push: ADRs 004 + 005 + llms.txt parallel track)_
 
 ## Branch
 `claude/determined-keller-dUcdG`
@@ -21,6 +21,7 @@ deployment readiness. **STATUS: COMPLETE.**
 6. **Routes-catalog refactor** — `apps/web/lib/routes-catalog.ts` as single source for sitemap, nav, mobile-nav, smoke. Commit `befe039`.
 7. **GEO methodology cluster** — Three new hub pages (`/intelligence/how-it-works`, `/intelligence/source-hierarchy`, `/intelligence/glossary`) with TechArticle + FAQPage JSON-LD. Commit `4a826bc`.
 8. **GEO timestamps on existing anchor pages** — methodology, observatory, responsible-play, vs/tout-services. Commit `5d591a8`.
+9. **ADR 004 + ADR 005 + llms.txt parallel track** — Signal Ledger and Claim Governance change proposals written; `apps/web/public/llms.txt` published as canonical AI-crawler index. Codex working ADR 003 / brand-token sweep / Fantasy GEO sub-cluster concurrently.
 
 ## What Shipped This Session (Codex)
 

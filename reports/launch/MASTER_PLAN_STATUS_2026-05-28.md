@@ -36,20 +36,21 @@
 | ~~`/intelligence/source-hierarchy` — six-tier taxonomy GEO hub~~ | TechArticle JSON-LD, commit `4a826bc` |
 | ~~`/intelligence/glossary` — 20 canonical terms~~ | FAQPage JSON-LD per term, commit `4a826bc` |
 | ~~Last-updated timestamps on existing GEO pages~~ | methodology, observatory, responsible-play, vs/tout-services — commit `5d591a8` |
+| ~~ADR 004 — Signal Ledger MVP change proposal~~ | `docs/adr/004-signal-ledger-mvp.md` (Proposed — awaiting owner approval) |
+| ~~ADR 005 — Claim Governance change proposal~~ | `docs/adr/005-claim-governance.md` (Proposed — awaiting owner approval) |
+| ~~`/llms.txt` AI-crawler index~~ | `apps/web/public/llms.txt` — canonical content map for ChatGPT / Perplexity / Claude crawlers |
 
 ---
 
 ## 2. Outstanding — blocked on owner approval
 
-These require a completed pre-implementation change proposal
-(`docs/adr/pre-implementation-change-proposal-template.md`) and
-owner sign-off before any code is written.
+These require an Accepted ADR before any code is written.
 
-| Item | Blocking what | Proposal |
+| Item | Blocking what | Change proposal |
 |---|---|---|
-| **Evidence Vault MVP** (Phase 4) | Fantasy live, Brain, Signal Ledger | `docs/brain/evidence-vault.md` |
-| **Signal Ledger MVP** (Phase 6) | Brain Q&A, pick provenance v2 | `docs/brain/signal-ledger.md` |
-| **Claim Governance engine** | Public unrestricted Brain access | `docs/brain/claim-governance.md` |
+| **Evidence Vault MVP** (Phase 4) | Fantasy live, Brain, Signal Ledger | ADR 003 (Codex in flight) — doctrine `docs/brain/evidence-vault.md` |
+| **Signal Ledger MVP** (Phase 6) | Brain Q&A, pick provenance, calibration page | ADR 004 (Proposed) — doctrine `docs/brain/signal-ledger.md` |
+| **Claim Governance engine** | Public unrestricted Brain access, runtime claim gating | ADR 005 (Proposed) — doctrine `docs/brain/claim-governance.md` |
 | **Source Acquisition Mesh** | Rumor Radar live data, weak-signal engine | `docs/brain/source-acquisition-mesh.md` — also blocked on source-policy approval |
 | **Entity Graph** | Fantasy War Room live, Brain cross-entity answers | `docs/brain/entity-graph.md` |
 | **Internal Ask the Brain route** (Phase 7) | Gated Q&A testing | Depends on Phases 4 + 6 |
