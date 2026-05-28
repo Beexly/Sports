@@ -142,6 +142,14 @@ export default function ResponsiblePlayPage() {
             </div>
           </div>
         </section>
+
+        <section className="px-4 py-10 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-600">
+              Last updated: 2026-05-28 · Responsible-use canon
+            </p>
+          </div>
+        </section>
       </main>
 
       <Footer />
