@@ -109,6 +109,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         <StackSection />
         <IntelligenceSurfaces />
         <SportNav />
+        <DecisionQualityNav />
         <DailyRoutine />
         <ThreeQuestions />
         <MethodologySection />
@@ -658,6 +659,53 @@ function DailyRoutine(): JSX.Element {
                 <p className="mt-0.5 text-sm font-bold text-white group-hover:text-cyan-100">{action}</p>
                 <p className="mt-1 text-xs leading-5 text-gray-500">{sub}</p>
               </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DecisionQualityNav(): JSX.Element {
+  const SURFACES = [
+    { href: "/no-bet", label: "No-Bet Engine", sub: "Why a pass is the call." },
+    { href: "/parlay-mri", label: "Parlay MRI", sub: "Structure, correlation, EV." },
+    { href: "/market-mirage", label: "Market Mirage", sub: "Real signal vs noise." },
+    { href: "/roster-shock", label: "Roster Shock", sub: "Lineup-change timing." },
+    { href: "/coaching-edge", label: "Coaching Edge", sub: "The stable signal." },
+    { href: "/autopsy", label: "Post-Bet Autopsy", sub: "Process over outcome." },
+    { href: "/profile", label: "Betting Brain", sub: "Know your failure mode." },
+  ] as const;
+
+  return (
+    <section className="border-y border-mineral bg-gray-900/15 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
+              Decision quality
+            </p>
+            <h2 className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">
+              The discipline layer.
+            </h2>
+          </div>
+          <p className="max-w-md text-xs text-gray-500">
+            Seven surfaces that score the bet you almost made and the bet you
+            already made. Process is the only signal that survives the sample.
+          </p>
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
+          {SURFACES.map(({ href, label, sub }) => (
+            <Link
+              key={href}
+              href={href}
+              className="group flex flex-col rounded-lg border border-mineral bg-gray-900/40 p-4 transition-colors hover:border-cyan-800/50 hover:bg-gray-900/70"
+            >
+              <span className="text-sm font-bold text-white group-hover:text-cyan-100">
+                {label}
+              </span>
+              <span className="mt-1 text-[11px] leading-4 text-gray-500">{sub}</span>
             </Link>
           ))}
         </div>

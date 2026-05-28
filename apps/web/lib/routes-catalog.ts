@@ -70,13 +70,13 @@ export const ROUTES: ReadonlyArray<RouteEntry> = [
   },
   {
     path: "/board",
-    label: "Board",
-    mobileLabel: "Gate Cam",
+    label: "Raw Board",
+    mobileLabel: "Raw board state",
     state: "live",
-    priority: 0.9,
+    priority: 0.8,
     changeFrequency: "hourly",
     inMobileNav: true,
-    summary: "Today's gated pick slate with confidence and factor trail.",
+    summary: "Operator-grade view of the gated slate, board state, and pass list. /today is the curated entry; /board is the raw underlying data.",
   },
   {
     path: "/picks",

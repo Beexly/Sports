@@ -28,13 +28,17 @@ Anything that violates the Galaxy Constitution. Stops all other work.
 Repo privacy, secrets in code or logs, client-side methodology leaks,
 source-map risks, exposed admin routes, competitor inference risks.
 
-- [ ] Verify GitHub repo visibility is `private` (doctrine flagged
-      possible `public` exposure)
-- [ ] Confirm `productionBrowserSourceMaps: false` in `next.config.js`
-- [ ] Verify `robots.ts` disallows `/cockpit`, `/admin`
+- [ ] **OWNER ACTION** Verify GitHub repo visibility is `private` (only
+      the owner can confirm in GitHub Settings → Danger Zone → Change
+      visibility). Doctrine flagged possible public exposure.
+- [x] Confirm `productionBrowserSourceMaps: false` in `next.config.js`
+      — **verified C8**: not set, defaults to false ✅
+- [x] Verify `robots.ts` disallows `/cockpit`, `/admin`, `/api`,
+      `/auth`, `/dashboard`, `/brief` — **verified C8** ✅
 - [ ] Centralize Claude/Codex prompts under `apps/web/lib/prompts/`
       (server-only) so they are not scattered across feature code
-- [ ] Add `/.well-known/security.txt` for vulnerability disclosure
+- [x] Add `/.well-known/security.txt` for vulnerability disclosure
+      — **resolved C8**: `apps/web/public/.well-known/security.txt`
 
 ## Queue C — Broken Build / Type / Test
 
