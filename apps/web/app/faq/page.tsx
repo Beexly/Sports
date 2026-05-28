@@ -144,6 +144,14 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
         q: "What is the Evidence Vault?",
         a: "The Evidence Vault is the central store for every observed intelligence fact on the platform. Each item is tagged with a source tier (1–6), a time-to-live (TTL), a public-safety flag, and an entity link. The vault is append-only — items can expire but cannot be deleted or altered. Every claim the Brain surfaces is traceable to a vault item with its source and timestamp.",
       },
+      {
+        q: "What is the Model Journal?",
+        a: "The Model Journal is a weekly research log published at /journal. Each entry covers what the model observed that week — settled picks, factor behavior, confidence-band accuracy, and any version changes. It is a research record, not a pick newsletter. Entries are published after the weekly data pipe has enough settled-pick evidence for a meaningful review.",
+      },
+      {
+        q: "What is the calibration gate and why does it exist?",
+        a: "The calibration gate prevents publishing win-rate or accuracy claims before the numbers mean anything statistically. The gate requires at least 30 settled picks per model version before any confidence-band win rate is disclosed. Below 30, a 60% win rate could be random noise. The gate clears automatically when the threshold is reached. Until then, the Calibration Report shows only a progress indicator — no percentages.",
+      },
     ],
   },
   {
