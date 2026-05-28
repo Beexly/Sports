@@ -4,6 +4,8 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { StateBadge } from "@/components/ui/state-badge";
 import { BRAND_NAME } from "@/lib/brand";
+import { auth } from "@/lib/auth";
+import { BrainQuery } from "@/components/brain/brain-query";
 
 export const metadata: Metadata = {
   title: "Research Brain — Sports Intelligence Q&A | Galaxy Sports Edge",
@@ -47,7 +49,10 @@ const ANATOMY = [
   { label: "Public-safe status", desc: "Whether this answer meets our standard for public publication without additional human review." },
 ] as const;
 
-export default function BrainPage(): JSX.Element {
+export default async function BrainPage(): Promise<JSX.Element> {
+  const session = await auth();
+  const isSignedIn = Boolean(session?.user?.id);
+
   return (
     <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
@@ -80,6 +85,23 @@ export default function BrainPage(): JSX.Element {
                 Evidence standards
               </Link>
             </div>
+          </div>
+        </section>
+
+        {/* Live Q&A — shown to all signed-in users */}
+        <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <div className="mb-6">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
+                {isSignedIn ? "Ask the Brain" : "Access gated"}
+              </p>
+              <h2 className="mt-2 text-2xl font-bold text-white">
+                {isSignedIn
+                  ? "Submit a structured intelligence question."
+                  : "Sign in to access the Research Brain."}
+              </h2>
+            </div>
+            <BrainQuery isSignedIn={isSignedIn} />
           </div>
         </section>
 
