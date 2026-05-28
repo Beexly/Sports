@@ -129,6 +129,145 @@ export default function VsToutServicesPage() {
           </div>
         </section>
 
+        {/* THE 7 DECEPTIONS */}
+        <section className="border-t border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <p className="eyebrow">Pattern recognition</p>
+            <h2 className="mt-3 font-display text-display-lg text-balance text-white">
+              The 7 deceptions of tout services.
+            </h2>
+            <p className="mt-5 text-base text-ink-300">
+              None of these are new. They exist because they work on people who
+              don&apos;t know to look for them. Now you do.
+            </p>
+
+            <ol className="mt-10 flex flex-col gap-4">
+              {DECEPTIONS.map((item) => (
+                <li
+                  key={item.title}
+                  className="surface-card flex gap-4 p-6"
+                >
+                  <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-red-800/60 font-mono text-sm font-bold text-red-400">
+                    {item.number}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-white">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                      {item.body}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* WHAT GALAXY DOES INSTEAD */}
+        <section className="border-t border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl">
+            <p className="eyebrow">The contrast table</p>
+            <h2 className="mt-3 font-display text-display-lg text-balance text-white">
+              What Galaxy does instead.
+            </h2>
+            <p className="mt-5 max-w-2xl text-base text-ink-300">
+              Every tout claim has a standard tout method behind it. Here&apos;s
+              the row-by-row contrast — what they claim, how they deliver it, and
+              how Galaxy handles the same question.
+            </p>
+
+            <div className="mt-10 overflow-x-auto rounded-2xl border border-ink-800/60">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-ink-800/60 bg-ink-950/60">
+                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-ink-500">
+                      Their claim
+                    </th>
+                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-red-500/70">
+                      Tout method
+                    </th>
+                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-accent-400">
+                      Galaxy method
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {CONTRAST_ROWS.map((row, i) => (
+                    <tr
+                      key={row.claim}
+                      className={[
+                        "border-b border-ink-800/40 transition-colors hover:bg-ink-900/20",
+                        i % 2 === 0 ? "bg-ink-900/10" : "",
+                      ].join(" ")}
+                    >
+                      <td className="px-5 py-4 font-medium text-ink-200">
+                        {row.claim}
+                      </td>
+                      <td className="px-5 py-4 text-red-400/80">
+                        {row.tout}
+                      </td>
+                      <td className="px-5 py-4 text-accent-300">
+                        {row.galaxy}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* HOW TO AUDIT A TOUT */}
+        <section className="border-t border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <p className="eyebrow">Due diligence</p>
+            <h2 className="mt-3 font-display text-display-lg text-balance text-white">
+              How to audit a tout.
+            </h2>
+            <p className="mt-5 text-base text-ink-300">
+              Five questions. Ask any picks service. The answers will tell you
+              everything you need to know before you pay them a dollar.
+            </p>
+
+            <ul className="mt-10 flex flex-col gap-3">
+              {AUDIT_QUESTIONS.map((question) => (
+                <li
+                  key={question}
+                  className="surface-card flex items-start gap-4 p-5"
+                >
+                  <span
+                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border border-accent-700"
+                    aria-hidden="true"
+                  >
+                    <svg
+                      className="h-3 w-3 text-accent-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2.5}
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m4.5 12.75 6 6 9-13.5"
+                      />
+                    </svg>
+                  </span>
+                  <span className="text-sm leading-relaxed text-ink-200">
+                    {question}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-8 text-sm text-ink-500 italic">
+              If a service refuses any of these questions or gives you a vague
+              answer — that is the answer.
+            </p>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="border-t border-ink-800/60 bg-ink-1000/80 px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
@@ -179,6 +318,96 @@ export default function VsToutServicesPage() {
     </div>
   );
 }
+
+// ─────────────────────────────────────────────
+// The 7 Deceptions data
+// ─────────────────────────────────────────────
+
+const DECEPTIONS = [
+  {
+    number: "01",
+    title: "Selective record-keeping",
+    body: "They publish wins. They quietly delete losses. Their 'record' is hand-curated. The only way to verify a picks service's track record is to watch every pick in real time, before the game, and log the outcome yourself. They're counting on you not doing that.",
+  },
+  {
+    number: "02",
+    title: "Free pick bait",
+    body: "The 'free pick' is always a winner. The premium pick package is the product. The free pick isn't free — it's a marketing expense designed to create belief in a record that doesn't exist. Ask to see the free picks they got wrong. They won't show you.",
+  },
+  {
+    number: "03",
+    title: "Fake scarcity",
+    body: "'Only 3 spots left at this price' — refreshes daily. Artificial urgency is a pressure tactic designed to short-circuit your due diligence. A real sports model doesn't have 'spots.' It has picks. Take your time.",
+  },
+  {
+    number: "04",
+    title: "The certainty claim",
+    body: "No pick is certain. Anyone calling a pick a 'can't miss' or using certainty language is describing narrative, not probability. Even an 80-confidence pick loses. The language of certainty is either a misunderstanding of variance or a deliberate manipulation.",
+  },
+  {
+    number: "05",
+    title: "Sharp money theater",
+    body: "'Sharp action on X' — cited with no source, no methodology, no data. Sharp money claims without a specific mechanism (which books, what line move, what timing, what depth) are narrative, not intelligence. Treat them accordingly.",
+  },
+  {
+    number: "06",
+    title: "Proof by result",
+    body: "They show you their best month. Never their worst quarter. Cherry-picked time windows are not performance records. A real performance record includes every pick, every result, no omissions, over a long enough window to be statistically meaningful.",
+  },
+  {
+    number: "07",
+    title: "Subscription creep",
+    body: "The base package never includes the 'game of the year.' There's always a VIP add-on, a premium package, a season-long offer. The entry price was never meant to be the real price — it was meant to get you in the door.",
+  },
+] as const;
+
+// ─────────────────────────────────────────────
+// Contrast table data
+// ─────────────────────────────────────────────
+
+const CONTRAST_ROWS = [
+  {
+    claim: '"Verified record"',
+    tout: "Select wins, omit losses",
+    galaxy: "Append-only ledger, every pick recorded",
+  },
+  {
+    claim: '"Sharp action detected"',
+    tout: "Anonymous source",
+    galaxy: "Specific tier-tagged evidence required",
+  },
+  {
+    claim: '"Can\'t miss of the century"',
+    tout: "Zero accountability",
+    galaxy: "No picks described with certainty language",
+  },
+  {
+    claim: '"Model says X"',
+    tout: "Black box",
+    galaxy: "Factor trail attached to every pick",
+  },
+  {
+    claim: '"Win rate: 67%"',
+    tout: "Unverified, unaudited",
+    galaxy: "Gated until 30+ canonical settled picks",
+  },
+] as const;
+
+// ─────────────────────────────────────────────
+// Audit checklist data
+// ─────────────────────────────────────────────
+
+const AUDIT_QUESTIONS = [
+  "Can I see every pick they've published, including the losses?",
+  "Is their win rate based on all picks or just premium ones?",
+  "Do they publish a pick BEFORE the game (not after)?",
+  "Is their 'sharp money' claim backed by a specific source?",
+  "What happens if you ask for a refund?",
+] as const;
+
+// ─────────────────────────────────────────────
+// Original watchlist (four tout red flags)
+// ─────────────────────────────────────────────
 
 const WATCHLIST = [
   {

@@ -384,19 +384,82 @@ function PassList({ passes, isSampleData }: { passes: PassListRow[]; isSampleDat
   );
 }
 
+const WORKFLOW_STEPS = [
+  {
+    step: "01",
+    phase: "Collect",
+    title: "14 books. Every 30 minutes.",
+    body: "The engine polls live odds, lines, market depth, and line movement across 14 sportsbooks. Data freshness is validated on every cycle. Stale data fails the gate before scoring begins.",
+    detail: "Sources: The Odds API, Tier 1-2 data partners. Sports: NFL · NCAAF · NBA · NCAAB · MLB · NHL · MLS.",
+    accent: "border-l-cyan-500",
+  },
+  {
+    step: "02",
+    phase: "Score",
+    title: "10 factors. Deterministic math.",
+    body: "Each game is scored across ten factors: line movement velocity, book disagreement, market depth, rest days, schedule density, venue, ATS form, opening line divergence, data quality, and consensus. Every number is auditable.",
+    detail: "Output: Edge Index (0–100). Factor trail attached. No black box.",
+    accent: "border-l-blue-500",
+  },
+  {
+    step: "03",
+    phase: "Gate",
+    title: "Most games don't publish.",
+    body: "A publish gate checks confidence threshold, data freshness, and Edge Index minimum. Most evaluated games fail the gate — intentionally. The pass list shows exactly why each game was withheld.",
+    detail: "Gate criteria: confidence ≥ threshold · data fresh ≤ 30 min · Edge Index ≥ floor.",
+    accent: "border-l-violet-500",
+  },
+  {
+    step: "04",
+    phase: "Settle",
+    title: "Every result recorded.",
+    body: "When a game ends, the settlement worker calculates the result and records it to the Signal Ledger — an append-only log that cannot be edited. The calibration report updates automatically.",
+    detail: "Signal Ledger: append-only. No edits. No deletions. Every win and loss committed.",
+    accent: "border-l-pink-500",
+  },
+] as const;
+
 function StackSection(): JSX.Element {
   return (
-    <section className="px-4 py-16 sm:px-6 lg:px-8">
+    <section className="px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="The Stack" title="Read the board. Score the math. Gate the slate." meta="10+ factors, 14 books, 30-minute refresh cycle" />
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {STACK.map(([title, body], index) => (
-            <article key={title} className="border border-mineral bg-gray-900/65 p-6">
-              <span className="font-mono text-xs text-ion-blue">0{index + 1}</span>
-              <h3 className="mt-3 text-xl font-bold text-white">{title}</h3>
-              <p className="mt-3 text-sm leading-6 text-gray-400">{body}</p>
+        <div className="text-center">
+          <p className="font-mono text-xs uppercase tracking-[0.24em] text-ion-blue">How Galaxy Works</p>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Four stages. No shortcuts.
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base text-gray-500">
+            Every published pick has passed through all four stages. The factor trail shows you which inputs moved the score at each one.
+          </p>
+        </div>
+
+        <div className="mt-14 grid gap-5 md:grid-cols-2">
+          {WORKFLOW_STEPS.map(({ step, phase, title, body, detail, accent }) => (
+            <article
+              key={step}
+              className={`flex flex-col rounded-2xl border border-mineral bg-gray-900/50 p-7 border-l-4 ${accent}`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-gray-600">{step}</span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-blue">{phase}</span>
+              </div>
+              <h3 className="mt-4 text-xl font-bold text-white lg:text-2xl">{title}</h3>
+              <p className="mt-3 flex-1 text-sm leading-7 text-gray-400">{body}</p>
+              <p className="mt-4 rounded border border-mineral/50 bg-carbon/60 px-3 py-2 font-mono text-[11px] leading-5 text-gray-500">{detail}</p>
             </article>
           ))}
+        </div>
+
+        <div className="mt-8 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-6">
+          <Link href="/methodology" className="font-mono text-xs uppercase tracking-[0.16em] text-ion-blue hover:text-cyan-300">
+            Full methodology →
+          </Link>
+          <Link href="/picks/how-picks-are-scored" className="font-mono text-xs uppercase tracking-[0.16em] text-gray-500 hover:text-gray-300">
+            How picks are scored →
+          </Link>
+          <Link href="/intelligence/source-hierarchy" className="font-mono text-xs uppercase tracking-[0.16em] text-gray-500 hover:text-gray-300">
+            Source hierarchy →
+          </Link>
         </div>
       </div>
     </section>
@@ -405,12 +468,12 @@ function StackSection(): JSX.Element {
 
 function ThreeQuestions(): JSX.Element {
   return (
-    <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+    <section className="border-y border-mineral bg-gray-900/25 px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="Three questions" title="What changed, what did we skip, what happened after?" meta="Touch-friendly comparison" />
+        <SectionHeader eyebrow="Transparency" title="Three things most picks sites hide." meta="Galaxy publishes all three." />
         <div className="mt-8 grid gap-3 md:grid-cols-3">
           {QUESTIONS.map(([question, answer]) => (
-            <article key={question} className="min-h-44 border border-mineral bg-carbon/70 p-5">
+            <article key={question} className="min-h-44 rounded-xl border border-mineral bg-carbon/70 p-6">
               <h3 className="text-lg font-bold text-white">{question}</h3>
               <p className="mt-4 text-sm leading-6 text-gray-400">{answer}</p>
             </article>
