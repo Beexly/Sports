@@ -1,10 +1,12 @@
-import { db, Prisma } from "@sports/db";
+import { db } from "@sports/db";
+import type { Prisma } from "@sports/db";
 import { evaluateCorrelationQuery, type CorrelationEvaluation, type CorrelationPickRow } from "@/lib/correlation/evaluate";
 import type { CorrelationQuery } from "@/lib/correlation/query-schema";
 
 const CORRELATION_HISTORY_LIMIT = 5000;
 
-const settledPickSelect = Prisma.validator<Prisma.PickSelect>()({
+// Prisma.validator was removed in Prisma v5; define the select shape directly.
+const settledPickSelect = {
   id: true,
   pickType: true,
   riskLevel: true,
@@ -25,7 +27,7 @@ const settledPickSelect = Prisma.validator<Prisma.PickSelect>()({
       },
     },
   },
-});
+} as const;
 
 export type CorrelationSettledPick = Prisma.PickGetPayload<{
   select: typeof settledPickSelect;

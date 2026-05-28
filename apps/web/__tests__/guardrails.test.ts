@@ -80,4 +80,14 @@ describe("Phase 9 guardrails", () => {
     }
     expect(r.stdout).toMatch(/\[claude-api-usage\] OK/);
   });
+
+  it("prisma-compat exits 0 with no deprecated Prisma v4 APIs in codebase", () => {
+    const r = runGuard("scripts/guardrails/prisma-compat-check.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `prisma-compat failed (status=${r.status}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[prisma-compat\] OK/);
+  });
 });
