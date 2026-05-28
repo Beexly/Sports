@@ -201,6 +201,64 @@ check(
 );
 
 // ─────────────────────────────────────────────
+// Section 6: Sitemap and openGraph coverage on new surfaces
+// ─────────────────────────────────────────────
+console.log("\n── Section 6: Sitemap and openGraph coverage ──\n");
+
+const sitemapPath = join(WEB_APP, "sitemap.ts");
+const sitemapContent = existsSync(sitemapPath) ? readFileSync(sitemapPath, "utf8") : "";
+
+const NEW_SURFACES = [
+  "/fantasy",
+  "/market-gravity",
+  "/brain",
+  "/rumor-radar",
+  "/developer",
+  "/intelligence",
+];
+
+for (const route of NEW_SURFACES) {
+  check(
+    `Sitemap registers ${route}`,
+    sitemapContent.includes(`"${route}"`),
+    `Add { path: "${route}", priority: ..., changeFrequency: ... } to ROUTES in sitemap.ts`
+  );
+}
+
+const OG_SURFACES = [
+  "fantasy",
+  "market-gravity",
+  "brain",
+  "rumor-radar",
+  "developer",
+];
+
+for (const route of OG_SURFACES) {
+  const filePath = join(WEB_APP, route, "page.tsx");
+  if (!existsSync(filePath)) {
+    check(`openGraph on /${route}`, false, "Page does not exist");
+    continue;
+  }
+  const content = readFileSync(filePath, "utf8");
+  check(
+    `openGraph metadata on /${route}`,
+    content.includes("openGraph:"),
+    "Add openGraph: { title, description } block to metadata export"
+  );
+}
+
+// FAQPage JSON-LD on /faq (already implemented; we assert it remains).
+const faqPath = join(WEB_APP, "faq", "page.tsx");
+const faqContent = existsSync(faqPath) ? readFileSync(faqPath, "utf8") : "";
+check(
+  "FAQ page has FAQPage JSON-LD",
+  faqContent.includes('"@type": "FAQPage"') ||
+    faqContent.includes("'@type': 'FAQPage'") ||
+    faqContent.includes('"@type":"FAQPage"'),
+  "Inject FAQPage schema via <script type='application/ld+json'>"
+);
+
+// ─────────────────────────────────────────────
 // Summary
 // ─────────────────────────────────────────────
 console.log("\n────────────────────────────────────────\n");

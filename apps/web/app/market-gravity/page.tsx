@@ -2,12 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Market Gravity — Line Movement Intelligence | Galaxy Sports Edge",
   description:
     "Watch opening-to-current line movement, sportsbook disagreement, volatility, and risk-adjustment signals — not sharp-money theater.",
   alternates: { canonical: "/market-gravity" },
+  openGraph: {
+    title: `Market Gravity — ${BRAND_NAME}`,
+    description:
+      "Opening vs. current price, movement speed, book disagreement, volatility. Line movement you can read.",
+  },
 };
 
 const DEMO_GAMES = [

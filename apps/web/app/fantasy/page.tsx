@@ -2,12 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Fantasy Intelligence — Start/Sit, Waiver, Trade | Galaxy Sports Edge",
   description:
     "Fantasy War Room: role changes, usage trends, injury risk, matchup context, and scheme fit — all in one intelligence view. Preview launching soon.",
   alternates: { canonical: "/fantasy" },
+  openGraph: {
+    title: `Fantasy War Room — ${BRAND_NAME}`,
+    description:
+      "Role clarity, usage trend, injury risk, matchup context, scheme fit. Fantasy decisions with the reasoning shown.",
+  },
 };
 
 const DEMO_PLAYERS = [

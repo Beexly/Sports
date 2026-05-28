@@ -2,12 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Research Brain — Sports Intelligence Q&A | Galaxy Sports Edge",
   description:
     "Ask the Research Brain a structured sports intelligence question. Source-traceable, confidence-weighted answers — not fabricated outputs.",
   alternates: { canonical: "/brain" },
+  openGraph: {
+    title: `Research Brain — ${BRAND_NAME}`,
+    description:
+      "Structured sports intelligence answers with confidence, sources, and what's missing shown — not hidden.",
+  },
 };
 
 const DEMO_ANSWERS = [

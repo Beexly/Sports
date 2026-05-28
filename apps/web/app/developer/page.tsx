@@ -2,12 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Developer & API — Galaxy Sports Edge Intelligence Layer",
   description:
     "Access the Galaxy Sports Edge intelligence layer via API. Market signals, pick provenance, confidence scores, and line movement — structured and source-traceable.",
   alternates: { canonical: "/developer" },
+  openGraph: {
+    title: `Developer & API — ${BRAND_NAME}`,
+    description:
+      "Structured, source-traceable sports intelligence via API. For approved developer and media partners.",
+  },
 };
 
 const ENDPOINTS_PREVIEW = [

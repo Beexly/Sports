@@ -2,12 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Rumor Radar — Weak Signal Watchlist | Galaxy Sports Edge",
   description:
     "Unverified chatter, watchlist signals, and contradicted rumors — separated from verified news and clearly labeled.",
   alternates: { canonical: "/rumor-radar" },
+  openGraph: {
+    title: `Rumor Radar — ${BRAND_NAME}`,
+    description:
+      "Source-tiered weak-signal watchlist. Watchlist only. Rumors are never published as fact.",
+  },
 };
 
 const DEMO_SIGNALS = [
