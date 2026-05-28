@@ -78,6 +78,7 @@ const CROSS_LINKS = [
   { label: "Intelligence", href: "/intelligence" },
   { label: "Market Gravity", href: "/market-gravity" },
   { label: "Academy", href: "/academy" },
+  { label: "Methodology", href: "/methodology" },
 ] as const;
 
 export default function CoachingEdgePage(): JSX.Element {

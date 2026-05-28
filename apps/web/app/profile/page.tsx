@@ -376,6 +376,12 @@ export default async function ProfilePage(): Promise<JSX.Element> {
               >
                 Read the No-Bet Doctrine
               </Link>
+              <Link
+                href="/methodology"
+                className="rounded-lg border border-mineral px-6 py-3 text-sm font-semibold text-gray-300 hover:border-gray-500"
+              >
+                Scoring Methodology
+              </Link>
             </div>
           </div>
         </section>

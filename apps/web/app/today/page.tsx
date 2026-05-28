@@ -466,6 +466,15 @@ export default async function TodayPage(): Promise<JSX.Element> {
           </div>
         </section>
 
+        <div className="flex justify-center pb-4 pt-2">
+          <Link
+            href="/methodology"
+            className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600 hover:text-ion-blue"
+          >
+            Scoring methodology →
+          </Link>
+        </div>
+
         <RiskDisclosure variant="compact" className="text-center" />
       </main>
 

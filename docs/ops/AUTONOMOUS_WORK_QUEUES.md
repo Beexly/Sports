@@ -55,15 +55,22 @@ source-map risks, exposed admin routes, competitor inference risks.
 Orphan pages, duplicate concepts, inconsistent naming, pages without a
 next action.
 
-- [ ] Audit every public route for "next action" presence (every page
-      must answer: what should the user do next?)
-- [ ] Audit nav for duplicate concepts (e.g., `/brief` vs `/briefing`,
-      `/board` vs `/today`)
-- [ ] Ensure `/today`, `/no-bet`, `/parlay-mri`, `/market-mirage`,
+- [x] Audit every public route for "next action" presence — **resolved
+      C10**: all 8 decision-quality surfaces contain forward navigation;
+      no dead-end pages found across 25+ public routes
+- [x] Audit nav for duplicate concepts — **resolved C10**: no conflicts;
+      `/board` (raw operator gated view) vs `/today` (curated habit
+      loop) distinguished; `/briefing` vs `/today` serve distinct
+      purposes
+- [x] Ensure `/today`, `/no-bet`, `/parlay-mri`, `/market-mirage`,
       `/roster-shock`, `/coaching-edge`, `/autopsy`, `/profile` all
-      link to one another where related
-- [ ] Verify homepage `<DailyRoutine />` and `<SportNav />` route to
-      live destinations
+      link to one another where related — **resolved C10**: all 8
+      reachable from homepage `<DecisionQualityNav />`; each page
+      contains context-appropriate cross-links to related surfaces
+- [x] Verify homepage `<DailyRoutine />` and `<SportNav />` route to
+      live destinations — **resolved C10**: all 19 href values in
+      DailyRoutine, SportNav, and DecisionQualityNav are live routes
+      with no placeholder `#` or `javascript:void` links
 
 ## Queue E — Trust / Compliance
 
@@ -74,8 +81,19 @@ links, unsupported claims, mock data ambiguity.
       — **resolved C8**: audit pass confirmed every betting-adjacent
       route inherits responsible-play via Footer; `/picks` upgraded with
       inline `<RiskDisclosure includePastPerformance />` for parity
-- [ ] Add methodology link to every analytical surface
-- [ ] Audit every page using sample/mock/demo data for visible label
+- [x] Add methodology link to every analytical surface — **resolved
+      C10**: added to 7 surfaces that were missing it (/autopsy,
+      /parlay-mri, /market-mirage, /roster-shock, /coaching-edge,
+      /today, /profile) via CROSS_LINKS arrays or inline link before
+      RiskDisclosure; every analytical surface now has a `/methodology`
+      forward link
+- [x] Audit every page using sample/mock/demo data for visible label
+      — **resolved C10**: all demo/illustrative surfaces carry visible
+      labels (SampleDataBanner on /, /today, /dashboard; "Sample data"
+      badge on /picks, /performance, /brief; "Demo · Illustrative only"
+      on /brain, /rumor-radar; "PREVIEW" StateBadge on /market-gravity,
+      /fantasy; "Coming soon" ribbon on /command, /reports, /tracker,
+      /alerts)
 
 ## Queue F — Evidence Chain
 

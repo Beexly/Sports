@@ -145,6 +145,7 @@ const CROSS_LINKS = [
   { label: "Today's Picks", href: "/picks" },
   { label: "Academy", href: "/academy" },
   { label: "Intelligence", href: "/intelligence" },
+  { label: "Methodology", href: "/methodology" },
 ] as const;
 
 // ─── Page ─────────────────────────────────────────────────────────────────────

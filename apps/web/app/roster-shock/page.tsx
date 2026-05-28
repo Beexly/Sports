@@ -85,6 +85,7 @@ const CROSS_LINKS = [
   { label: "Picks", href: "/picks" },
   { label: "Market Gravity", href: "/market-gravity" },
   { label: "Rumor Radar", href: "/rumor-radar" },
+  { label: "Methodology", href: "/methodology" },
 ] as const;
 
 export default function RosterShockPage(): JSX.Element {

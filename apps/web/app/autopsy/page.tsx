@@ -344,6 +344,12 @@ export default async function AutopsyPage(): Promise<JSX.Element> {
               >
                 Open Tracker →
               </Link>
+              <Link
+                href="/methodology"
+                className="font-mono text-xs uppercase tracking-[0.14em] text-gray-500 hover:text-gray-300"
+              >
+                Methodology →
+              </Link>
             </div>
           </div>
         </section>

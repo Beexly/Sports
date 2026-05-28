@@ -104,6 +104,7 @@ const CROSS_LINKS = [
   { label: "Today's Board", href: "/today" },
   { label: "Pass List", href: "/no-bet" },
   { label: "Market Gravity", href: "/market-gravity" },
+  { label: "Methodology", href: "/methodology" },
 ] as const;
 
 // ─── Page ─────────────────────────────────────────────────────────────────────

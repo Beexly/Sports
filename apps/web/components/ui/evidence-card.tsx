@@ -80,7 +80,7 @@ interface BaseProps {
   readonly header: string;
   readonly subject: string;
   readonly evidence: EvidenceMeta;
-  readonly children: ReactNode;
+  readonly children?: ReactNode;
   readonly nextAction?: { readonly href: string; readonly label: string };
   readonly className?: string;
 }
