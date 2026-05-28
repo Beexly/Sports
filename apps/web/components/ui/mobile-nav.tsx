@@ -2,21 +2,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { MOBILE_NAV_ROUTES } from "@/lib/routes-catalog";
 
 const LINKS = [
-  { label: "The Network", href: "/intelligence" },
-  { label: "Today's Board", href: "/board" },
-  { label: "Fantasy Intelligence", href: "/fantasy" },
-  { label: "Market Gravity", href: "/market-gravity" },
-  { label: "Research Brain", href: "/brain" },
-  { label: "Rumor Radar", href: "/rumor-radar" },
-  { label: "Edge Map", href: "/observatory" },
-  { label: "Journal", href: "/journal" },
-  { label: "Methodology", href: "/methodology" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Developer & API", href: "/developer" },
+  ...MOBILE_NAV_ROUTES.map((r) => ({
+    label: r.mobileLabel ?? r.label,
+    href: r.path,
+  })),
   { label: "Dashboard", href: "/dashboard" },
-] as const;
+];
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);

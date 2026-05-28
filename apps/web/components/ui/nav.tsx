@@ -3,15 +3,9 @@ import Image from "next/image";
 import { auth } from "@/lib/auth";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { BrandLockup } from "@/components/brand/brand-lockup";
+import { DESKTOP_NAV_ROUTES } from "@/lib/routes-catalog";
 
-const NAV_LINKS = [
-  { label: "Network", href: "/intelligence" },
-  { label: "Board", href: "/board" },
-  { label: "Fantasy", href: "/fantasy" },
-  { label: "Market Gravity", href: "/market-gravity" },
-  { label: "Rumor Radar", href: "/rumor-radar" },
-  { label: "Pricing", href: "/pricing" },
-] as const;
+const NAV_LINKS = DESKTOP_NAV_ROUTES.map((r) => ({ label: r.label, href: r.path }));
 
 export async function Nav() {
   const session = await auth().catch(() => null);

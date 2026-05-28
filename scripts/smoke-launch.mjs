@@ -20,6 +20,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = join(__dirname, "..");
 const WEB_APP = join(ROOT, "apps", "web", "app");
+const ROUTES_CATALOG = join(ROOT, "apps", "web", "lib", "routes-catalog.ts");
 
 let passed = 0;
 let failed = 0;
@@ -201,12 +202,17 @@ check(
 );
 
 // ─────────────────────────────────────────────
-// Section 6: Sitemap and openGraph coverage on new surfaces
+// Section 6: Routes-catalog, sitemap, and openGraph coverage on new surfaces
 // ─────────────────────────────────────────────
-console.log("\n── Section 6: Sitemap and openGraph coverage ──\n");
+console.log("\n── Section 6: Routes-catalog and openGraph coverage ──\n");
 
-const sitemapPath = join(WEB_APP, "sitemap.ts");
-const sitemapContent = existsSync(sitemapPath) ? readFileSync(sitemapPath, "utf8") : "";
+const catalogContent = existsSync(ROUTES_CATALOG) ? readFileSync(ROUTES_CATALOG, "utf8") : "";
+
+check(
+  "Routes catalog exists",
+  catalogContent.length > 0,
+  "Missing: apps/web/lib/routes-catalog.ts"
+);
 
 const NEW_SURFACES = [
   "/fantasy",
@@ -219,11 +225,19 @@ const NEW_SURFACES = [
 
 for (const route of NEW_SURFACES) {
   check(
-    `Sitemap registers ${route}`,
-    sitemapContent.includes(`"${route}"`),
-    `Add { path: "${route}", priority: ..., changeFrequency: ... } to ROUTES in sitemap.ts`
+    `Routes catalog registers ${route}`,
+    catalogContent.includes(`path: "${route}"`),
+    `Add { path: "${route}", ... } to ROUTES in apps/web/lib/routes-catalog.ts`
   );
 }
+
+const sitemapPath = join(WEB_APP, "sitemap.ts");
+const sitemapContent = existsSync(sitemapPath) ? readFileSync(sitemapPath, "utf8") : "";
+check(
+  "Sitemap derives from routes catalog",
+  sitemapContent.includes("SITEMAP_ROUTES") || sitemapContent.includes("routes-catalog"),
+  "sitemap.ts should import from @/lib/routes-catalog instead of hardcoding routes"
+);
 
 const OG_SURFACES = [
   "fantasy",
