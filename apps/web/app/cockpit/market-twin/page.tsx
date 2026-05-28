@@ -90,7 +90,7 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-3">
           <h1 className="text-2xl font-bold text-white">Market Twin</h1>
-          <Link href="/cockpit" className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60">
+          <Link href="/cockpit" className="rounded-lg border border-mineral px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60">
             Back to Jarvis
           </Link>
         </div>
@@ -106,13 +106,13 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
       </header>
 
       {rows.length === 0 ? (
-        <div className="rounded-lg border border-gray-800 bg-gray-950/40 p-6 text-sm text-gray-400">
+        <div className="rounded-lg border border-mineral bg-carbon/40 p-6 text-sm text-gray-400">
           No upcoming games in the next 7 days.
         </div>
       ) : (
         <ul className="flex flex-col gap-3">
           {rows.map((row) => (
-            <li key={row.gameId} className="flex flex-col gap-3 rounded-lg border border-gray-800 bg-gray-950/40 p-4">
+            <li key={row.gameId} className="flex flex-col gap-3 rounded-lg border border-mineral bg-carbon/40 p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">

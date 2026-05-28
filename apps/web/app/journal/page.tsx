@@ -16,7 +16,7 @@ export const revalidate = 300;
 
 function JournalEntryCard({ entry }: { readonly entry: PublicJournalEntry }): JSX.Element {
   return (
-    <article className="rounded-lg border border-gray-800 bg-gray-900/60 p-6 transition-colors hover:border-gray-700">
+    <article className="rounded-lg border border-mineral bg-gray-900/60 p-6 transition-colors hover:border-gray-700">
       <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-yellow-300">
         Week {entry.isoWeek}, {entry.isoYear} - {entry.modelVersion}
       </p>
@@ -41,7 +41,7 @@ export default async function JournalPage(): Promise<JSX.Element> {
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-gray-950">
+      <main className="min-h-screen bg-carbon">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
           <header className="mb-12">
             <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-yellow-300">
@@ -54,7 +54,7 @@ export default async function JournalPage(): Promise<JSX.Element> {
           </header>
 
           {entries.length === 0 ? (
-            <section className="rounded-lg border border-gray-800 bg-gray-900/50 p-8">
+            <section className="rounded-lg border border-mineral bg-gray-900/50 p-8">
               <h2 className="text-lg font-semibold text-white">No Journal entries published yet.</h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-400">
                 The Journal starts once the weekly data pipe has enough settled-pick evidence for a useful review.

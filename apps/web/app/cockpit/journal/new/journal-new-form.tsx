@@ -126,7 +126,7 @@ export function JournalNewForm(): JSX.Element {
         <input
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          className="min-h-11 rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
+          className="min-h-11 rounded-lg border border-mineral bg-carbon px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
         />
       </label>
 
@@ -137,7 +137,7 @@ export function JournalNewForm(): JSX.Element {
             value={isoWeek}
             inputMode="numeric"
             onChange={(event) => setIsoWeek(event.target.value)}
-            className="min-h-11 rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
+            className="min-h-11 rounded-lg border border-mineral bg-carbon px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
           />
         </label>
         <label className="grid gap-2 text-sm">
@@ -146,7 +146,7 @@ export function JournalNewForm(): JSX.Element {
             value={isoYear}
             inputMode="numeric"
             onChange={(event) => setIsoYear(event.target.value)}
-            className="min-h-11 rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
+            className="min-h-11 rounded-lg border border-mineral bg-carbon px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
           />
         </label>
       </div>
@@ -157,12 +157,12 @@ export function JournalNewForm(): JSX.Element {
           value={bodyMarkdown}
           onChange={(event) => setBodyMarkdown(event.target.value)}
           rows={12}
-          className="min-h-[260px] rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 font-mono text-sm text-gray-100 outline-none focus:border-yellow-400"
+          className="min-h-[260px] rounded-lg border border-mineral bg-carbon px-3 py-2 font-mono text-sm text-gray-100 outline-none focus:border-yellow-400"
           placeholder="Leave blank to create the standard weekly Journal draft outline."
         />
       </label>
 
-      <label className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 text-sm text-gray-300">
+      <label className="flex min-h-11 items-center gap-3 rounded-lg border border-mineral bg-carbon px-3 py-2 text-sm text-gray-300">
         <input
           type="checkbox"
           checked={draftWithClaude}
@@ -173,7 +173,7 @@ export function JournalNewForm(): JSX.Element {
         Generate the first draft from weekly evidence
       </label>
 
-      <section className="rounded-lg border border-gray-800 bg-black/30 p-3">
+      <section className="rounded-lg border border-mineral bg-black/30 p-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -225,7 +225,7 @@ export function JournalNewForm(): JSX.Element {
             </p>
             <ul className="mt-2 grid gap-2">
               {evidence.picks.slice(0, 6).map((pick) => (
-                <li key={pick.id} className="rounded-lg border border-gray-800 bg-gray-950/70 p-2 text-xs">
+                <li key={pick.id} className="rounded-lg border border-mineral bg-carbon/70 p-2 text-xs">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-semibold text-gray-200">{pick.matchup}</span>
                     <span className="text-gray-500">{pick.result}</span>
@@ -247,7 +247,7 @@ export function JournalNewForm(): JSX.Element {
             </p>
             <ul className="mt-2 grid gap-2">
               {evidence.lossAutopsies.slice(0, 4).map((autopsy) => (
-                <li key={autopsy.id} className="rounded-lg border border-gray-800 bg-gray-950/70 p-2 text-xs">
+                <li key={autopsy.id} className="rounded-lg border border-mineral bg-carbon/70 p-2 text-xs">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-semibold text-gray-200">{autopsy.headline}</span>
                     <span className="text-gray-500">{autopsy.rootCause}</span>

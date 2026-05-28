@@ -158,7 +158,7 @@ const faqJsonLd = {
 
 export default function PricingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-carbon">
       <Nav />
 
       <script
@@ -196,7 +196,7 @@ export default function PricingPage() {
                       ? "border-brand-600 bg-brand-950/30 shadow-xl shadow-brand-900/30"
                       : isElite
                         ? "border-ultraviolet/60 bg-ultraviolet/5 shadow-xl shadow-ultraviolet/10"
-                        : "border-gray-800 bg-gray-900/60",
+                        : "border-mineral bg-gray-900/60",
                   ].join(" ")}
                 >
                   {plan.badge && (
@@ -277,10 +277,10 @@ export default function PricingPage() {
             <h2 className="text-center text-2xl font-bold text-white">
               Side by side
             </h2>
-            <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-800">
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-mineral">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-800">
+                  <tr className="border-b border-mineral">
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
                       Feature
                     </th>
@@ -311,7 +311,7 @@ export default function PricingPage() {
                     <tr
                       key={feature}
                       className={[
-                        "border-b border-gray-800/60",
+                        "border-b border-mineral/60",
                         i % 2 === 0 ? "bg-gray-900/20" : "",
                       ].join(" ")}
                     >
@@ -340,7 +340,7 @@ export default function PricingPage() {
             <h2 className="text-center text-2xl font-bold text-white">
               Frequently asked
             </h2>
-            <div className="mx-auto mt-8 max-w-3xl divide-y divide-gray-800/60 rounded-2xl border border-gray-800 bg-gray-900/40">
+            <div className="mx-auto mt-8 max-w-3xl divide-y divide-gray-800/60 rounded-2xl border border-mineral bg-gray-900/40">
               {FAQ.map((item) => (
                 <details
                   key={item.q}

@@ -50,8 +50,8 @@ export default async function CockpitLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
-      <header className="border-b border-gray-800 bg-gray-950/95 backdrop-blur-sm">
+    <div className="flex min-h-screen flex-col bg-carbon">
+      <header className="border-b border-mineral bg-carbon/95 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <span
@@ -77,7 +77,7 @@ export default async function CockpitLayout({
             <Link
               key={href}
               href={href}
-              className="group rounded-lg border border-transparent px-3 py-2 transition-colors hover:border-gray-800 hover:bg-gray-900/60"
+              className="group rounded-lg border border-transparent px-3 py-2 transition-colors hover:border-mineral hover:bg-gray-900/60"
             >
               <p className="text-sm font-medium text-gray-200 group-hover:text-white">
                 {label}

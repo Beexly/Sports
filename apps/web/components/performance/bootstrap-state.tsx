@@ -30,7 +30,7 @@ export function PerformanceBootstrapState({
   return (
     <div data-testid="performance-bootstrap-state" className="mx-auto max-w-3xl">
       {/* Honest empty header */}
-      <div className="rounded-2xl border border-gray-800 bg-gray-900/50 p-8">
+      <div className="rounded-2xl border border-mineral bg-gray-900/50 p-8">
         <p
           data-testid="bootstrap-status-label"
           className="text-xs font-semibold uppercase tracking-widest text-yellow-500"
@@ -62,7 +62,7 @@ export function PerformanceBootstrapState({
       {/* Readiness ladder */}
       <section
         data-testid="readiness-ladder"
-        className="mt-8 rounded-2xl border border-gray-800 bg-gray-900/30 p-6"
+        className="mt-8 rounded-2xl border border-mineral bg-gray-900/30 p-6"
         aria-labelledby="ladder-heading"
       >
         <h3
@@ -104,7 +104,7 @@ export function PerformanceBootstrapState({
       {/* What we will show once unlocked */}
       <section
         data-testid="bootstrap-what-we-show"
-        className="mt-8 rounded-2xl border border-gray-800 bg-gray-900/30 p-6"
+        className="mt-8 rounded-2xl border border-mineral bg-gray-900/30 p-6"
       >
         <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
           What you'll see once data is published

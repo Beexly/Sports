@@ -26,7 +26,7 @@ export default async function CockpitCalibrationStub() {
       >
         Internal calibration only. No auto-publish. No auto-send. No automated betting.
       </p>
-      <section data-testid="calibration-history" className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4 text-xs">
+      <section data-testid="calibration-history" className="rounded-2xl border border-mineral bg-gray-900/40 p-4 text-xs">
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Game / prediction history
         </h2>
@@ -38,7 +38,7 @@ export default async function CockpitCalibrationStub() {
           <li>Predictions (pending): 0</li>
         </ul>
       </section>
-      <section data-testid="calibration-readiness" className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4 text-xs">
+      <section data-testid="calibration-readiness" className="rounded-2xl border border-mineral bg-gray-900/40 p-4 text-xs">
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Readiness
         </h2>
@@ -55,7 +55,7 @@ export default async function CockpitCalibrationStub() {
           <li>automatedBetting — ALWAYS BLOCKED (constant gate)</li>
         </ul>
       </section>
-      <Link href="/cockpit" className="w-fit rounded-lg border border-gray-800 px-3 py-2 text-xs text-gray-300 hover:bg-gray-900/60">
+      <Link href="/cockpit" className="w-fit rounded-lg border border-mineral px-3 py-2 text-xs text-gray-300 hover:bg-gray-900/60">
         ← Back to Jarvis
       </Link>
     </div>

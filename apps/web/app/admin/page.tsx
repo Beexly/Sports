@@ -31,7 +31,7 @@ export default async function AdminPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 p-8">
+    <div className="min-h-screen bg-carbon p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
         <p className="text-gray-400 mb-8">Platform overview and controls</p>
@@ -39,7 +39,7 @@ export default async function AdminPage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {cards.map((card) => (
-            <div key={card.label} className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+            <div key={card.label} className="bg-gray-900 border border-mineral rounded-xl p-6">
               <div className={`w-10 h-10 ${card.color} rounded-lg mb-3 opacity-80`} />
               <p className="text-3xl font-bold text-white">{card.value.toLocaleString()}</p>
               <p className="text-gray-400 text-sm mt-1">{card.label}</p>
@@ -48,7 +48,7 @@ export default async function AdminPage() {
         </div>
 
         {/* System Status */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
+        <div className="bg-gray-900 border border-mineral rounded-xl p-6 mb-8">
           <h2 className="text-xl font-semibold text-white mb-4">System Status</h2>
           {lastIngestionRun ? (
             <div className="space-y-2">
@@ -74,7 +74,7 @@ export default async function AdminPage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-gray-900 border border-mineral rounded-xl p-6">
           <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
           <div className="flex flex-wrap gap-3">
             <a

@@ -77,7 +77,7 @@ const SPEED_COLORS: Record<string, string> = {
   SLOW: "text-emerald-300",
 };
 const SIGNAL_COLORS: Record<string, string> = {
-  WATCH: "text-cyan-300 border-cyan-700 bg-cyan-950/30",
+  WATCH: "text-ion-blue border-cyan-700 bg-cyan-950/30",
   LEAN: "text-emerald-300 border-emerald-800 bg-emerald-950/30",
   VOLATILE: "text-yellow-300 border-yellow-800 bg-yellow-950/30",
   AVOID: "text-red-300 border-red-900 bg-red-950/30",
@@ -85,16 +85,16 @@ const SIGNAL_COLORS: Record<string, string> = {
 
 export default function MarketGravityPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
+    <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
         {/* Hero */}
-        <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_80%_20%,rgba(122,92,255,0.12),transparent_35%)] px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral bg-[radial-gradient(circle_at_80%_20%,rgba(122,92,255,0.12),transparent_35%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-4">
               <StateBadge state="preview" detail="Live data integration in progress" />
             </div>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Market Gravity</p>
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">Market Gravity</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
               Line movement you can read.
             </h1>
@@ -130,7 +130,7 @@ export default function MarketGravityPage(): JSX.Element {
 
             <div className="flex flex-col gap-4">
               {DEMO_GAMES.map((g) => (
-                <article key={g.matchup} className="border border-gray-800 bg-gray-900/60 p-5">
+                <article key={g.matchup} className="border border-mineral bg-gray-900/60 p-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500">{g.sport}</p>
@@ -141,19 +141,19 @@ export default function MarketGravityPage(): JSX.Element {
                     </span>
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    <div className="border border-gray-800 bg-gray-950/50 p-3">
+                    <div className="border border-mineral bg-carbon/50 p-3">
                       <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-500">Open</p>
                       <p className="mt-1 font-bold text-white">{g.open}</p>
                     </div>
-                    <div className="border border-gray-800 bg-gray-950/50 p-3">
+                    <div className="border border-mineral bg-carbon/50 p-3">
                       <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-500">Current</p>
                       <p className="mt-1 font-bold text-white">{g.current}</p>
                     </div>
-                    <div className="border border-gray-800 bg-gray-950/50 p-3">
+                    <div className="border border-mineral bg-carbon/50 p-3">
                       <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-500">Movement</p>
-                      <p className={`mt-1 font-bold ${g.movement.startsWith("+") ? "text-cyan-300" : "text-red-300"}`}>{g.movement}</p>
+                      <p className={`mt-1 font-bold ${g.movement.startsWith("+") ? "text-ion-blue" : "text-red-300"}`}>{g.movement}</p>
                     </div>
-                    <div className="border border-gray-800 bg-gray-950/50 p-3">
+                    <div className="border border-mineral bg-carbon/50 p-3">
                       <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-500">Speed</p>
                       <p className={`mt-1 font-bold ${SPEED_COLORS[g.speed] ?? "text-white"}`}>{g.speed}</p>
                     </div>
@@ -171,15 +171,15 @@ export default function MarketGravityPage(): JSX.Element {
         </section>
 
         {/* Framework */}
-        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="mb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Framework</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">Framework</p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white">What Market Gravity measures</h2>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {CONCEPTS.map(([title, body]) => (
-                <div key={title} className="border border-gray-800 bg-gray-950/60 p-5">
+                <div key={title} className="border border-mineral bg-carbon/60 p-5">
                   <h3 className="text-base font-bold text-white">{title}</h3>
                   <p className="mt-2 text-sm leading-6 text-gray-400">{body}</p>
                 </div>
@@ -191,7 +191,7 @@ export default function MarketGravityPage(): JSX.Element {
         {/* CTA */}
         <section className="px-4 py-20 text-center sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Live data integration</p>
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">Live data integration</p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-white">Market Gravity goes live with the Pro plan.</h2>
             <p className="mt-4 text-base text-gray-400">
               Real-time line movement across 14 books, scored and classified. Available to Pro and Elite subscribers.

@@ -35,7 +35,7 @@ export default async function CockpitTasksPage() {
             <section
               key={group.label}
               data-testid={`task-group-${group.label}`}
-              className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4"
+              className="rounded-2xl border border-mineral bg-gray-900/40 p-4"
             >
               <header className="mb-3 flex items-center justify-between">
                 <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400">
@@ -50,7 +50,7 @@ export default async function CockpitTasksPage() {
                   {items.map((t) => (
                     <li
                       key={t.id}
-                      className="rounded-lg border border-gray-800 bg-gray-950/40 p-3"
+                      className="rounded-lg border border-mineral bg-carbon/40 p-3"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <Link

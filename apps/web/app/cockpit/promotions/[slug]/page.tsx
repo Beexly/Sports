@@ -35,7 +35,7 @@ export default async function CockpitPromotionDetail({
         <p className="mt-1 text-sm text-gray-400">{promo.offerSummary}</p>
       </header>
 
-      <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
+      <section className="rounded-xl border border-mineral bg-gray-900/40 p-5">
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Publish verdict
         </h2>
@@ -98,7 +98,7 @@ export default async function CockpitPromotionDetail({
         />
       </section>
 
-      <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
+      <section className="rounded-xl border border-mineral bg-gray-900/40 p-5">
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Disclosure copy
         </h2>
@@ -118,7 +118,7 @@ export default async function CockpitPromotionDetail({
 
 function Field({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900/40 p-3">
+    <div className="rounded-lg border border-mineral bg-gray-900/40 p-3">
       <p className="text-[10px] uppercase tracking-widest text-gray-500">
         {label}
       </p>

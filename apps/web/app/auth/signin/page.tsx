@@ -22,7 +22,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const errorMessage = getErrorMessage(searchParams.error);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-950 px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-carbon px-4">
       {/* Background glow */}
       <div
         className="pointer-events-none fixed inset-x-0 top-0 -z-10 overflow-hidden blur-3xl"
@@ -55,7 +55,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       </Link>
 
       {/* Card */}
-      <div className="w-full max-w-sm rounded-2xl border border-gray-800 bg-gray-900 p-8 shadow-2xl shadow-black/60">
+      <div className="w-full max-w-sm rounded-2xl border border-mineral bg-gray-900 p-8 shadow-2xl shadow-black/60">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-white">Sign in to Galaxy Sports Edge</h1>
           <p className="mt-1.5 text-sm text-gray-400">
@@ -113,7 +113,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-800" />
+            <div className="w-full border-t border-mineral" />
           </div>
           <div className="relative flex justify-center text-xs">
             <span className="bg-gray-900 px-3 text-gray-400">

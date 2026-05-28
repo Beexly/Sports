@@ -65,7 +65,7 @@ function MarkdownBody({ markdown }: { readonly markdown: string }): JSX.Element 
 
 function ReferenceLinks({ entry }: { readonly entry: PublicJournalEntry }): JSX.Element {
   return (
-    <section className="rounded-lg border border-gray-800 bg-gray-900/50 p-5">
+    <section className="rounded-lg border border-mineral bg-gray-900/50 p-5">
       <h2 className="text-sm font-semibold text-white">References</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div>
@@ -116,14 +116,14 @@ export default async function JournalEntryPage({
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-gray-950">
+      <main className="min-h-screen bg-carbon">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
           <Link href="/journal" className="text-sm text-gray-500 transition-colors hover:text-gray-300">
             Back to Model Journal
           </Link>
 
           <article className="mt-8">
-            <header className="border-b border-gray-800 pb-8">
+            <header className="border-b border-mineral pb-8">
               <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-yellow-300">
                 Week {entry.isoWeek}, {entry.isoYear} - {entry.modelVersion}
               </p>
@@ -144,7 +144,7 @@ export default async function JournalEntryPage({
 
           <div className="mt-12 grid gap-6">
             <ReferenceLinks entry={entry} />
-            <section className="rounded-lg border border-gray-800 bg-gray-900/50 p-5">
+            <section className="rounded-lg border border-mineral bg-gray-900/50 p-5">
               <h2 className="text-sm font-semibold text-white">Weekly digest</h2>
               <p className="mt-2 text-sm leading-6 text-gray-400">
                 Elite members receive the full Journal by email after publication. Free readers can follow the public archive here or use the RSS feed.

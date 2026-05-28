@@ -98,13 +98,13 @@ const CLUSTER_LINKS = [
 
 export default function HowItWorksPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
+    <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
         {/* Hero with direct-answer block (GEO contract §5) */}
-        <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_30%_0%,rgba(0,229,255,0.10),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral bg-[radial-gradient(circle_at_30%_0%,rgba(0,229,255,0.10),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
               How it works · The intelligence pipeline
             </p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -116,7 +116,7 @@ export default function HowItWorksPage(): JSX.Element {
 
             {/* Direct-answer block — first content AI engines extract */}
             <div className="mt-10 border-l-2 border-cyan-700 bg-gray-900/60 p-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-cyan-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-blue">
                 Direct answer
               </p>
               <p className="mt-2 text-base font-semibold text-white">{ANSWER_BLOCK.question}</p>
@@ -143,7 +143,7 @@ export default function HowItWorksPage(): JSX.Element {
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-10">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
                 The pipeline
               </p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white">
@@ -152,14 +152,14 @@ export default function HowItWorksPage(): JSX.Element {
             </div>
             <ol className="flex flex-col gap-4">
               {PIPELINE.map(({ step, name, body, rule }) => (
-                <li key={step} className="border border-gray-800 bg-gray-900/60 p-6">
+                <li key={step} className="border border-mineral bg-gray-900/60 p-6">
                   <div className="flex flex-wrap items-baseline gap-4">
-                    <span className="font-mono text-sm text-cyan-300">{step}</span>
+                    <span className="font-mono text-sm text-ion-blue">{step}</span>
                     <h3 className="text-lg font-bold text-white">{name}</h3>
                   </div>
                   <p className="mt-3 text-sm leading-7 text-gray-300">{body}</p>
                   <p className="mt-3 border-l-2 border-cyan-800 pl-3 text-xs leading-6 text-cyan-200">
-                    <span className="font-mono uppercase tracking-[0.14em] text-cyan-300">Rule:</span>{" "}
+                    <span className="font-mono uppercase tracking-[0.14em] text-ion-blue">Rule:</span>{" "}
                     {rule}
                   </p>
                 </li>
@@ -169,9 +169,9 @@ export default function HowItWorksPage(): JSX.Element {
         </section>
 
         {/* Cluster links — internal authority graph */}
-        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
               Continue reading
             </p>
             <h2 className="mt-2 text-2xl font-bold text-white">
@@ -185,7 +185,7 @@ export default function HowItWorksPage(): JSX.Element {
                 <li key={href}>
                   <Link
                     href={href}
-                    className="block border border-gray-800 bg-gray-950/60 px-4 py-3 text-sm text-gray-200 hover:border-cyan-700 hover:text-cyan-200"
+                    className="block border border-mineral bg-carbon/60 px-4 py-3 text-sm text-gray-200 hover:border-cyan-700 hover:text-cyan-200"
                   >
                     {label}
                   </Link>

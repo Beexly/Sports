@@ -121,7 +121,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
         className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/5 px-3 py-1 text-[11px] font-medium tracking-wide text-cyan-200/90 transition hover:border-cyan-400/50 hover:bg-cyan-500/10 hover:text-cyan-100 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 focus:ring-offset-2 focus:ring-offset-gray-950"
         aria-label="Open evidence audit for this pick"
       >
-        <span aria-hidden="true" className="text-cyan-300/80">⌬</span>
+        <span aria-hidden="true" className="text-ion-blue/80">⌬</span>
         {label ?? "View evidence"}
       </button>
 
@@ -142,11 +142,11 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
 
           {/* Drawer */}
           <aside
-            className="relative ml-auto flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-gray-800 bg-gray-950 text-gray-100 shadow-2xl motion-safe:animate-[slideInRight_180ms_ease-out]"
+            className="relative ml-auto flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-mineral bg-carbon text-gray-100 shadow-2xl motion-safe:animate-[slideInRight_180ms_ease-out]"
           >
-            <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-gray-800 bg-gray-950/95 px-6 py-5 backdrop-blur">
+            <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-mineral bg-carbon/95 px-6 py-5 backdrop-blur">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-cyan-300/80">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-ion-blue/80">
                   Galaxy Sports Edge
                 </p>
                 <h2 className="mt-1 text-xl font-semibold tracking-tight text-white">
@@ -199,7 +199,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
               )}
             </div>
 
-            <footer className="border-t border-gray-800 px-6 py-4 text-[11px] leading-relaxed text-gray-500">
+            <footer className="border-t border-mineral px-6 py-4 text-[11px] leading-relaxed text-gray-500">
               Snapshots are SHA-256 hashed at ingestion. Hash prefixes are
               shown for operator verification; raw payload bytes remain
               server-side.
@@ -379,7 +379,7 @@ function DetailedAudit({
           {audit.signalCategories.map((row) => (
             <li
               key={row.category}
-              className="flex items-start justify-between gap-3 rounded-md border border-gray-800 bg-gray-900/50 px-3 py-2"
+              className="flex items-start justify-between gap-3 rounded-md border border-mineral bg-gray-900/50 px-3 py-2"
             >
               <div>
                 <p className="text-[13px] font-medium text-gray-100">
@@ -404,13 +404,13 @@ function DetailedAudit({
             {audit.sourceSnapshots.map((snap) => (
               <li
                 key={snap.id}
-                className="rounded-md border border-gray-800 bg-gray-900/50 px-3 py-2 text-[11px] leading-relaxed"
+                className="rounded-md border border-mineral bg-gray-900/50 px-3 py-2 text-[11px] leading-relaxed"
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-medium text-gray-200">
                     {snap.provider}
                   </span>
-                  <span className="text-[10px] uppercase tracking-wider text-cyan-300/70">
+                  <span className="text-[10px] uppercase tracking-wider text-ion-blue/70">
                     {snap.sourceKind}
                   </span>
                 </div>
@@ -490,7 +490,7 @@ function PremortemPanel({ preMortem }: { preMortem: PickPremortemNote | null }) 
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-300/80">
+    <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ion-blue/80">
       {title}
     </h3>
   );
@@ -506,7 +506,7 @@ function Stat({
   accent?: "cyan";
 }) {
   return (
-    <div className="rounded-md border border-gray-800 bg-gray-900/50 px-3 py-2">
+    <div className="rounded-md border border-mineral bg-gray-900/50 px-3 py-2">
       <p className="text-[10px] uppercase tracking-wider text-gray-500">
         {label}
       </p>
@@ -546,7 +546,7 @@ function SignalStatusBadge({
       ? "border-emerald-700/50 bg-emerald-500/10 text-emerald-200"
       : status === "SHADOW"
       ? "border-violet-700/50 bg-violet-500/10 text-violet-200"
-      : "border-gray-800 bg-gray-900 text-gray-500";
+      : "border-mineral bg-gray-900 text-gray-500";
 
   const label =
     status === "LIVE" ? "Live" : status === "SHADOW" ? "Shadow" : "Absent";

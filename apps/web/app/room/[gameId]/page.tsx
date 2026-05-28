@@ -22,14 +22,14 @@ export default async function GameRoomPage({
   if (!room) notFound();
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-carbon text-gray-100">
       <Nav />
       <main className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
-        <header className="border-b border-gray-800 pb-8">
-          <Link href="/board" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">
+        <header className="border-b border-mineral pb-8">
+          <Link href="/board" className="text-sm font-semibold text-ion-blue hover:text-cyan-200">
             Today&apos;s Board
           </Link>
-          <p className="mt-5 font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+          <p className="mt-5 font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
             Game Intelligence Room
           </p>
           <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">{room.node.matchup}</h1>
@@ -71,7 +71,7 @@ export default async function GameRoomPage({
             {room.timeline.length === 0 ? (
               <p className="text-sm text-gray-500">No source-aware signals have been attached to this game yet.</p>
             ) : (
-              <ol className="divide-y divide-gray-800 border border-gray-800">
+              <ol className="divide-y divide-gray-800 border border-mineral">
                 {room.timeline.map((item) => (
                   <li key={item.id} className="grid gap-2 px-4 py-3 text-sm sm:grid-cols-[1fr_auto]">
                     <div>
@@ -106,7 +106,7 @@ export default async function GameRoomPage({
           <Panel title="Lens Switcher">
             <div className="grid gap-3 sm:grid-cols-2">
               {room.lenses.map((lens) => (
-                <article key={lens.lens} className="border border-gray-800 bg-gray-950/55 p-4">
+                <article key={lens.lens} className="border border-mineral bg-carbon/55 p-4">
                   <h2 className="font-mono text-xs font-semibold text-cyan-200">{lens.lens}</h2>
                   <p className="mt-3 text-sm leading-6 text-gray-400">{lens.visibleSummary}</p>
                 </article>
@@ -132,8 +132,8 @@ export default async function GameRoomPage({
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }): JSX.Element {
   return (
-    <section className="border border-gray-800 bg-gray-900/45 p-5">
-      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">{title}</h2>
+    <section className="border border-mineral bg-gray-900/45 p-5">
+      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-ion-blue">{title}</h2>
       <div className="mt-5">{children}</div>
     </section>
   );
@@ -141,7 +141,7 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="min-h-20 border border-gray-800 bg-gray-900/60 p-4">
+    <div className="min-h-20 border border-mineral bg-gray-900/60 p-4">
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
       <p className="mt-2 break-words text-xl font-bold text-white">{value}</p>
     </div>
@@ -150,7 +150,7 @@ function Metric({ label, value }: { label: string; value: string }): JSX.Element
 
 function Fact({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="border border-gray-800 bg-gray-950/55 p-3">
+    <div className="border border-mineral bg-carbon/55 p-3">
       <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</dt>
       <dd className="mt-1 text-gray-200">{value}</dd>
     </div>

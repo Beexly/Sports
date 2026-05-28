@@ -43,11 +43,11 @@ export default async function CockpitAgentDetail({
       </header>
 
       {tasks.length === 0 ? (
-        <p className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 text-sm text-gray-500">
+        <p className="rounded-xl border border-mineral bg-gray-900/40 p-6 text-sm text-gray-500">
           No tasks assigned to {agent.displayName} yet.
         </p>
       ) : (
-        <ul className="divide-y divide-gray-800 rounded-2xl border border-gray-800">
+        <ul className="divide-y divide-gray-800 rounded-2xl border border-mineral">
           {tasks.map((t) => (
             <li key={t.id} className="flex items-center justify-between gap-3 p-4">
               <div className="min-w-0">

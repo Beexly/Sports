@@ -144,7 +144,7 @@ export default async function CockpitContentPage() {
         </p>
       </header>
 
-      <section data-testid="content-draft-queue" className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
+      <section data-testid="content-draft-queue" className="rounded-xl border border-mineral bg-gray-900/40 p-5">
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Draft queue · Phase 8 content engine
         </h2>
@@ -167,7 +167,7 @@ export default async function CockpitContentPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px] text-left text-xs">
-              <thead className="border-b border-gray-800 text-[10px] uppercase tracking-widest text-gray-500">
+              <thead className="border-b border-mineral text-[10px] uppercase tracking-widest text-gray-500">
                 <tr>
                   <th className="py-2 pr-3">Title</th>
                   <th className="py-2 pr-3">Type</th>
@@ -215,12 +215,12 @@ export default async function CockpitContentPage() {
         )}
       </section>
 
-      <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
+      <section className="rounded-xl border border-mineral bg-gray-900/40 p-5">
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Templates the engine is allowed to emit
         </h2>
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-gray-800 text-[10px] uppercase tracking-widest text-gray-500">
+          <thead className="border-b border-mineral text-[10px] uppercase tracking-widest text-gray-500">
             <tr>
               <th className="py-2 pr-3">Template</th>
               <th className="py-2 pr-3">Type</th>
@@ -249,12 +249,12 @@ export default async function CockpitContentPage() {
         </table>
       </section>
 
-      <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
+      <section className="rounded-xl border border-mineral bg-gray-900/40 p-5">
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Legacy content policy
         </h2>
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-gray-800 text-[10px] uppercase tracking-widest text-gray-500">
+          <thead className="border-b border-mineral text-[10px] uppercase tracking-widest text-gray-500">
             <tr>
               <th className="py-2 pr-3">Kind</th>
               <th className="py-2 pr-3">Required sources</th>
@@ -280,7 +280,7 @@ export default async function CockpitContentPage() {
         </table>
       </section>
 
-      <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
+      <section className="rounded-xl border border-mineral bg-gray-900/40 p-5">
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Legacy media queue (CockpitMediaItem)
         </h2>
@@ -288,7 +288,7 @@ export default async function CockpitContentPage() {
           <p className="text-xs text-gray-500">No legacy media items.</p>
         ) : (
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-gray-800 text-[10px] uppercase tracking-widest text-gray-500">
+            <thead className="border-b border-mineral text-[10px] uppercase tracking-widest text-gray-500">
               <tr>
                 <th className="py-2 pr-3">Title</th>
                 <th className="py-2 pr-3">Channel</th>

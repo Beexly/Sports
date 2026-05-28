@@ -53,7 +53,7 @@ const STATE_CONFIG: Record<
     label: "Preview",
     border: "border-cyan-900",
     bg: "bg-cyan-950/40",
-    text: "text-cyan-300",
+    text: "text-ion-blue",
     detailText: "text-cyan-200",
   },
   beta: {
@@ -74,7 +74,7 @@ const STATE_CONFIG: Record<
     label: "Waitlist",
     border: "border-cyan-900",
     bg: "bg-cyan-950/40",
-    text: "text-cyan-300",
+    text: "text-ion-blue",
     detailText: "text-cyan-200",
   },
   internal: {

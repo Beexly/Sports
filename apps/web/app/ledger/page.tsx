@@ -87,11 +87,11 @@ export default async function LedgerPage(): Promise<JSX.Element> {
   const rows = await loadLedgerRows();
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
+    <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-gray-100">
       <Nav />
       <main className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
-        <header className="border-b border-gray-800 pb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Public Ledger</p>
+        <header className="border-b border-mineral pb-8">
+          <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">Public Ledger</p>
           <div className="mt-4 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
             <div>
               <h1 className="max-w-4xl break-words text-3xl font-black tracking-tight text-white sm:text-5xl">
@@ -112,7 +112,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
         </header>
 
         {rows.length === 0 ? (
-          <section className="border border-gray-800 bg-gray-900/45 p-6">
+          <section className="border border-mineral bg-gray-900/45 p-6">
             <h2 className="text-xl font-bold text-white">Building ledger history</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-400">
               No settled canonical picks are available yet. The ledger will populate after
@@ -120,8 +120,8 @@ export default async function LedgerPage(): Promise<JSX.Element> {
             </p>
           </section>
         ) : (
-          <section className="overflow-hidden border border-gray-800">
-            <div className="grid grid-cols-[1fr_auto] gap-3 border-b border-gray-800 bg-gray-900/70 px-4 py-3 text-xs uppercase tracking-[0.16em] text-gray-500 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]">
+          <section className="overflow-hidden border border-mineral">
+            <div className="grid grid-cols-[1fr_auto] gap-3 border-b border-mineral bg-gray-900/70 px-4 py-3 text-xs uppercase tracking-[0.16em] text-gray-500 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]">
               <span>Pick</span>
               <span className="hidden md:block">Market</span>
               <span>Result</span>
@@ -130,7 +130,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
             {rows.map((row) => (
               <article
                 key={row.id}
-                className="grid gap-3 border-b border-gray-800 bg-gray-950/50 px-4 py-4 last:border-b-0 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]"
+                className="grid gap-3 border-b border-mineral bg-carbon/50 px-4 py-4 last:border-b-0 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]"
               >
                 <div>
                   <h2 className="font-semibold text-white">

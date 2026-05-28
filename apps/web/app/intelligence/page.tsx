@@ -129,7 +129,7 @@ const EVIDENCE_TIERS: ReadonlyArray<EvidenceTier> = [
     label: "Beat verified",
     example: "Credentialed beat reporter with direct access, on record",
     weight: "Strong evidence weight",
-    textColor: "text-cyan-300",
+    textColor: "text-ion-blue",
   },
   {
     tier: "Tier 3",
@@ -160,18 +160,18 @@ const ROUTING: ReadonlyArray<readonly [string, string, string]> = [
 
 export default function IntelligencePage(): JSX.Element {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
+    <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
         {/* Hero */}
-        <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_20%_10%,rgba(0,229,255,0.12),transparent_38%),radial-gradient(circle_at_80%_30%,rgba(122,92,255,0.10),transparent_32%)] px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral bg-[radial-gradient(circle_at_20%_10%,rgba(0,229,255,0.12),transparent_38%),radial-gradient(circle_at_80%_30%,rgba(122,92,255,0.10),transparent_32%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <p className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-200">
               The Sports OS Intelligence Network
             </p>
             <h1 className="mt-5 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
               One ecosystem. Six surfaces.<br />
-              <span className="text-cyan-300">Source-traceable end to end.</span>
+              <span className="text-ion-blue">Source-traceable end to end.</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-300">
               Galaxy Sports Edge is not a stack of disconnected features.
@@ -213,7 +213,7 @@ export default function IntelligencePage(): JSX.Element {
           <div className="mx-auto max-w-7xl">
             <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
                   Six surfaces
                 </p>
                 <h2 className="mt-2 max-w-3xl text-3xl font-black tracking-tight text-white sm:text-4xl">
@@ -232,12 +232,12 @@ export default function IntelligencePage(): JSX.Element {
                 <article
                   key={surface.name}
                   data-testid={`network-surface-${surface.name.toLowerCase().replace(/\W+/g, "-")}`}
-                  className="flex h-full flex-col justify-between border border-gray-800 bg-gray-900/60 p-6 transition hover:border-cyan-700"
+                  className="flex h-full flex-col justify-between border border-mineral bg-gray-900/60 p-6 transition hover:border-cyan-700"
                 >
                   <div>
                     <StateBadge state={surface.state} label={surface.stateLabel} />
                     <h3 className="mt-4 text-xl font-bold text-white">{surface.name}</h3>
-                    <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-cyan-300">
+                    <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-blue">
                       {surface.tagline}
                     </p>
                     <p className="mt-4 text-sm leading-6 text-gray-400">{surface.blurb}</p>
@@ -267,10 +267,10 @@ export default function IntelligencePage(): JSX.Element {
         </section>
 
         {/* Evidence chain */}
-        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
                 Evidence chain
               </p>
               <h2 className="mt-2 max-w-3xl text-3xl font-black tracking-tight text-white sm:text-4xl">
@@ -288,7 +288,7 @@ export default function IntelligencePage(): JSX.Element {
               {EVIDENCE_TIERS.map((tier) => (
                 <div
                   key={tier.tier}
-                  className="flex flex-col gap-3 border border-gray-800 bg-gray-950/60 p-5 sm:flex-row sm:items-center sm:gap-6"
+                  className="flex flex-col gap-3 border border-mineral bg-carbon/60 p-5 sm:flex-row sm:items-center sm:gap-6"
                 >
                   <div className="sm:min-w-[160px]">
                     <p className={`font-mono text-sm font-bold ${tier.textColor}`}>
@@ -313,7 +313,7 @@ export default function IntelligencePage(): JSX.Element {
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
                 Which surface for which question
               </p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl">
@@ -321,17 +321,17 @@ export default function IntelligencePage(): JSX.Element {
               </h2>
             </div>
 
-            <div className="overflow-hidden border border-gray-800">
+            <div className="overflow-hidden border border-mineral">
               {ROUTING.map(([question, surface, href], idx) => (
                 <Link
                   key={question}
                   href={href}
                   className={`grid grid-cols-1 items-center gap-2 px-4 py-4 transition hover:bg-gray-900/60 sm:grid-cols-[1fr_auto_auto] sm:gap-6 ${
-                    idx < ROUTING.length - 1 ? "border-b border-gray-800" : ""
+                    idx < ROUTING.length - 1 ? "border-b border-mineral" : ""
                   }`}
                 >
                   <p className="text-sm text-gray-200">{question}</p>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-cyan-300">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ion-blue">
                     {surface}
                   </p>
                   <span className="text-sm font-semibold text-cyan-200">→</span>
@@ -342,10 +342,10 @@ export default function IntelligencePage(): JSX.Element {
         </section>
 
         {/* Refusal rules */}
-        <section className="border-t border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
                 Network-wide refusal rules
               </p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl">
@@ -387,10 +387,10 @@ export default function IntelligencePage(): JSX.Element {
         </section>
 
         {/* Methodology cluster — GEO authority hub links */}
-        <section className="border-t border-gray-800 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
                 Methodology cluster
               </p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl">
@@ -403,9 +403,9 @@ export default function IntelligencePage(): JSX.Element {
             <div className="grid gap-4 md:grid-cols-3">
               <Link
                 href="/intelligence/how-it-works"
-                className="block border border-gray-800 bg-gray-900/60 p-5 hover:border-cyan-700"
+                className="block border border-mineral bg-gray-900/60 p-5 hover:border-cyan-700"
               >
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cyan-300">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-blue">
                   How it works
                 </p>
                 <h3 className="mt-2 text-lg font-bold text-white">The pipeline, end to end</h3>
@@ -415,9 +415,9 @@ export default function IntelligencePage(): JSX.Element {
               </Link>
               <Link
                 href="/intelligence/source-hierarchy"
-                className="block border border-gray-800 bg-gray-900/60 p-5 hover:border-cyan-700"
+                className="block border border-mineral bg-gray-900/60 p-5 hover:border-cyan-700"
               >
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cyan-300">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-blue">
                   Source hierarchy
                 </p>
                 <h3 className="mt-2 text-lg font-bold text-white">Six tiers, declared on every claim</h3>
@@ -427,9 +427,9 @@ export default function IntelligencePage(): JSX.Element {
               </Link>
               <Link
                 href="/intelligence/glossary"
-                className="block border border-gray-800 bg-gray-900/60 p-5 hover:border-cyan-700"
+                className="block border border-mineral bg-gray-900/60 p-5 hover:border-cyan-700"
               >
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cyan-300">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-blue">
                   Glossary
                 </p>
                 <h3 className="mt-2 text-lg font-bold text-white">One term, one definition</h3>
@@ -444,7 +444,7 @@ export default function IntelligencePage(): JSX.Element {
         {/* Closing CTA */}
         <section className="px-4 py-20 text-center sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
               Start anywhere
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-white">

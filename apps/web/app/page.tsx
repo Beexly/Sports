@@ -50,7 +50,7 @@ export default async function HomePage(): Promise<JSX.Element> {
     calibrationResult.meta.isSampleData;
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
+    <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-gray-100">
       <Nav />
       <main>
         {(demoActive || surfaceSampleActive) && <SampleDataBanner />}
@@ -79,7 +79,7 @@ function SampleDataBanner(): JSX.Element {
       aria-live="polite"
       className="mx-auto mt-4 flex max-w-7xl flex-col gap-2 border border-cyan-900 bg-cyan-950/30 px-4 py-3 text-sm text-cyan-100 sm:flex-row sm:items-center"
     >
-      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-300">
+      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-ion-blue">
         Preview mode
       </span>
       <span>
@@ -101,10 +101,10 @@ function LiveStateStrip({ state }: { state: BoardStateData }): JSX.Element {
   ] as const;
 
   return (
-    <section aria-label="Live board state" className="border-b border-gray-800 bg-gray-950">
+    <section aria-label="Live board state" className="border-b border-mineral bg-carbon">
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 py-3 sm:grid-cols-3 lg:grid-cols-6">
         {stateRows.map(([label, value]) => (
-          <div key={label} className="min-h-14 border border-gray-800 bg-gray-900/55 px-3 py-2">
+          <div key={label} className="min-h-14 border border-mineral bg-gray-900/55 px-3 py-2">
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
             <p className="mt-1 text-lg font-semibold text-white">{value}</p>
           </div>
@@ -116,7 +116,7 @@ function LiveStateStrip({ state }: { state: BoardStateData }): JSX.Element {
 
 function Hero(): JSX.Element {
   return (
-    <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_20%_10%,rgba(34,211,238,0.14),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(244,114,182,0.10),transparent_28%),#030712] px-4 py-20 sm:px-6 lg:px-8">
+    <section className="border-b border-mineral bg-[radial-gradient(circle_at_20%_10%,rgba(34,211,238,0.14),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(244,114,182,0.10),transparent_28%),#030712] px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <p className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-200">Galaxy Sports Edge</p>
         <h1 className="mt-5 max-w-4xl break-words text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
@@ -166,11 +166,11 @@ function GateCam({ state, isSampleData }: { state: BoardStateData; isSampleData:
 
 function GateLane({ lane, rows }: { lane: string; rows: BoardStateRow[] }): JSX.Element {
   return (
-    <article className="border border-gray-800 bg-gray-900/70 p-5">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">{lane}</p>
+    <article className="border border-mineral bg-gray-900/70 p-5">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-blue">{lane}</p>
       <div className="mt-4 flex flex-col gap-3">
         {rows.length > 0 ? rows.slice(0, 4).map((row) => (
-          <div key={row.id} className="border border-gray-800 bg-gray-950/45 p-3">
+          <div key={row.id} className="border border-mineral bg-carbon/45 p-3">
             <h3 className="text-base font-bold text-white">{row.matchup}</h3>
             <p className="mt-1 text-xs text-gray-500">{row.sport} / {row.market}</p>
             <p className="mt-3 text-sm text-gray-300">
@@ -188,12 +188,12 @@ function GateLane({ lane, rows }: { lane: string; rows: BoardStateRow[] }): JSX.
 
 function LedgerPreview(): JSX.Element {
   return (
-    <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+    <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeader eyebrow="PREVIEW MODE" title="Public Ledger preview" meta="Six recent settlements" />
-        <div className="mt-8 overflow-hidden border border-gray-800">
+        <div className="mt-8 overflow-hidden border border-mineral">
           {LEDGER.map(([pick, result, note]) => (
-            <div key={pick} className="grid gap-3 border-b border-gray-800 px-4 py-3 last:border-b-0 sm:grid-cols-[1fr_auto_2fr]">
+            <div key={pick} className="grid gap-3 border-b border-mineral px-4 py-3 last:border-b-0 sm:grid-cols-[1fr_auto_2fr]">
               <span className="font-semibold text-white">{pick}</span>
               <span className="font-mono text-xs text-cyan-200">{result}</span>
               <span className="text-sm text-gray-400">{note}</span>
@@ -223,7 +223,7 @@ function CalibrationPreview({ calibration }: { calibration: CalibrationData }): 
           title="Live Calibration"
           meta={`Updated: ${timeLabel(calibration.updatedAt)}. Sample: ${calibration.sampleSize} canonical settled picks.`}
         />
-        <div className="mt-8 border border-gray-800 bg-gray-900/60 p-5">
+        <div className="mt-8 border border-mineral bg-gray-900/60 p-5">
           <div className="relative h-72 border-l border-b border-gray-700">
             <div className="absolute inset-x-0 bottom-0 h-px -rotate-45 bg-cyan-300/50" aria-hidden="true" />
             {points.map(([x, y]) => (
@@ -241,7 +241,7 @@ function CalibrationPreview({ calibration }: { calibration: CalibrationData }): 
 
 function PassList({ passes, isSampleData }: { passes: PassListRow[]; isSampleData: boolean }): JSX.Element {
   return (
-    <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+    <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeader
           eyebrow={isSampleData ? "PREVIEW MODE" : "LIVE BOARD"}
@@ -250,12 +250,12 @@ function PassList({ passes, isSampleData }: { passes: PassListRow[]; isSampleDat
         />
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
           {passes.length > 0 ? passes.slice(0, 6).map((row) => (
-            <div key={row.id} className="flex items-center justify-between gap-4 border border-gray-800 bg-gray-950/60 px-4 py-4">
+            <div key={row.id} className="flex items-center justify-between gap-4 border border-mineral bg-carbon/60 px-4 py-4">
               <span className="font-semibold text-white">{row.matchup}</span>
               <span className="text-right text-sm text-gray-400">{row.reason}</span>
             </div>
           )) : (
-            <p className="border border-gray-800 bg-gray-950/60 px-4 py-5 text-sm text-gray-500 sm:col-span-2">
+            <p className="border border-mineral bg-carbon/60 px-4 py-5 text-sm text-gray-500 sm:col-span-2">
               No passes recorded for this slate yet.
             </p>
           )}
@@ -272,8 +272,8 @@ function StackSection(): JSX.Element {
         <SectionHeader eyebrow="The Stack" title="Read the board. Score the math. Gate the slate." meta="10+ factors, 14 books, 30-minute refresh cycle" />
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {STACK.map(([title, body], index) => (
-            <article key={title} className="border border-gray-800 bg-gray-900/65 p-6">
-              <span className="font-mono text-xs text-cyan-300">0{index + 1}</span>
+            <article key={title} className="border border-mineral bg-gray-900/65 p-6">
+              <span className="font-mono text-xs text-ion-blue">0{index + 1}</span>
               <h3 className="mt-3 text-xl font-bold text-white">{title}</h3>
               <p className="mt-3 text-sm leading-6 text-gray-400">{body}</p>
             </article>
@@ -286,12 +286,12 @@ function StackSection(): JSX.Element {
 
 function ThreeQuestions(): JSX.Element {
   return (
-    <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+    <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeader eyebrow="Three questions" title="What changed, what did we skip, what happened after?" meta="Touch-friendly comparison" />
         <div className="mt-8 grid gap-3 md:grid-cols-3">
           {QUESTIONS.map(([question, answer]) => (
-            <article key={question} className="min-h-44 border border-gray-800 bg-gray-950/70 p-5">
+            <article key={question} className="min-h-44 border border-mineral bg-carbon/70 p-5">
               <h3 className="text-lg font-bold text-white">{question}</h3>
               <p className="mt-4 text-sm leading-6 text-gray-400">{answer}</p>
             </article>
@@ -328,7 +328,7 @@ function SectionHeader({
   return (
     <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
       <div>
-        <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">{eyebrow}</p>
+        <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">{eyebrow}</p>
         <h2 className="mt-2 max-w-3xl text-3xl font-black tracking-tight text-white sm:text-4xl">{title}</h2>
       </div>
       <p className="max-w-xs text-sm text-gray-500 sm:text-right">{meta}</p>

@@ -35,16 +35,16 @@ const USE_CASES = [
 
 export default function DeveloperPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
+    <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
         {/* Hero */}
-        <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_40%_0%,rgba(0,229,255,0.10),transparent_35%)] px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral bg-[radial-gradient(circle_at_40%_0%,rgba(0,229,255,0.10),transparent_35%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-4">
               <StateBadge state="waitlist" detail="API access opening to approved partners" />
             </div>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Developer & API</p>
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">Developer & API</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
               Intelligence layer. Structured. Source-traceable.
             </h1>
@@ -66,7 +66,7 @@ export default function DeveloperPage(): JSX.Element {
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Endpoint preview</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">Endpoint preview</p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white">What the API exposes</h2>
               <p className="mt-3 text-sm text-gray-400">
                 The following endpoints are planned for the v1 API. Access requires an approved partner account.
@@ -75,10 +75,10 @@ export default function DeveloperPage(): JSX.Element {
 
             <div className="flex flex-col gap-3">
               {ENDPOINTS_PREVIEW.map((ep) => (
-                <div key={ep.path} className="border border-gray-800 bg-gray-900/60 p-4">
+                <div key={ep.path} className="border border-mineral bg-gray-900/60 p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <span className="font-mono text-xs font-bold text-cyan-300">{ep.method}</span>
+                      <span className="font-mono text-xs font-bold text-ion-blue">{ep.method}</span>
                       <code className="font-mono text-sm text-white">{ep.path}</code>
                     </div>
                     <span className="border border-gray-700 bg-gray-800/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-gray-400">
@@ -93,15 +93,15 @@ export default function DeveloperPage(): JSX.Element {
         </section>
 
         {/* Use cases */}
-        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Use cases</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">Use cases</p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white">Who the API is for</h2>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {USE_CASES.map(({ title, body }) => (
-                <div key={title} className="border border-gray-800 bg-gray-950/60 p-5">
+                <div key={title} className="border border-mineral bg-carbon/60 p-5">
                   <h3 className="text-base font-bold text-white">{title}</h3>
                   <p className="mt-2 text-sm leading-6 text-gray-400">{body}</p>
                 </div>
@@ -113,7 +113,7 @@ export default function DeveloperPage(): JSX.Element {
         {/* API principles */}
         <section className="px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">API principles</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">API principles</p>
             <h2 className="mt-2 text-2xl font-bold text-white">What the API will never do</h2>
             <ul className="mt-4 flex flex-col gap-2 text-sm text-gray-400">
               {[
@@ -133,9 +133,9 @@ export default function DeveloperPage(): JSX.Element {
         </section>
 
         {/* CTA */}
-        <section className="border-t border-gray-800 bg-gray-900/35 px-4 py-16 text-center sm:px-6 lg:px-8">
+        <section className="border-t border-mineral bg-gray-900/35 px-4 py-16 text-center sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Partner access</p>
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">Partner access</p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-white">Join the API waitlist.</h2>
             <p className="mt-4 text-base text-gray-400">
               API access is opening to approved developer and media partners. Contact us to join the waitlist and discuss use cases.

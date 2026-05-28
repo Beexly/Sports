@@ -49,11 +49,11 @@ const ANATOMY = [
 
 export default function BrainPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
+    <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
         {/* Hero */}
-        <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_50%_0%,rgba(122,92,255,0.14),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral bg-[radial-gradient(circle_at_50%_0%,rgba(122,92,255,0.14),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-4">
               <StateBadge
@@ -62,7 +62,7 @@ export default function BrainPage(): JSX.Element {
                 detail="Evidence governance required before public access"
               />
             </div>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Research Brain</p>
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">Research Brain</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
               Sports intelligence that shows its work.
             </h1>
@@ -84,15 +84,15 @@ export default function BrainPage(): JSX.Element {
         </section>
 
         {/* Answer anatomy */}
-        <section className="border-b border-gray-800 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="mb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Answer anatomy</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">Answer anatomy</p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white">Every Brain answer shows its structure.</h2>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {ANATOMY.map(({ label, desc }) => (
-                <div key={label} className="border border-gray-800 bg-gray-900/60 p-5">
+                <div key={label} className="border border-mineral bg-gray-900/60 p-5">
                   <h3 className="text-sm font-bold text-cyan-200">{label}</h3>
                   <p className="mt-2 text-sm leading-6 text-gray-400">{desc}</p>
                 </div>
@@ -116,7 +116,7 @@ export default function BrainPage(): JSX.Element {
 
             <div className="flex flex-col gap-6">
               {DEMO_ANSWERS.map((a) => (
-                <article key={a.question} className="border border-gray-800 bg-gray-900/60 p-6">
+                <article key={a.question} className="border border-mineral bg-gray-900/60 p-6">
                   <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-gray-500">Question</p>
                   <p className="mt-2 text-lg font-semibold text-white">{a.question}</p>
 
@@ -126,15 +126,15 @@ export default function BrainPage(): JSX.Element {
                   </div>
 
                   <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    <div className="border border-gray-800 bg-gray-950/50 p-3">
+                    <div className="border border-mineral bg-carbon/50 p-3">
                       <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gray-500">Confidence</p>
                       <p className="mt-1 text-xl font-bold text-white">{a.confidence}</p>
                     </div>
-                    <div className="border border-gray-800 bg-gray-950/50 p-3 sm:col-span-2">
+                    <div className="border border-mineral bg-carbon/50 p-3 sm:col-span-2">
                       <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gray-500">Sources used</p>
                       <p className="mt-1 text-sm text-gray-300">{a.sources.join(", ")}</p>
                     </div>
-                    <div className="border border-gray-800 bg-gray-950/50 p-3">
+                    <div className="border border-mineral bg-carbon/50 p-3">
                       <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-gray-500">Public safe</p>
                       <p className="mt-1 text-sm font-bold text-emerald-300">{a.publicSafe ? "YES" : "NO"}</p>
                     </div>
@@ -155,9 +155,9 @@ export default function BrainPage(): JSX.Element {
         </section>
 
         {/* Rules */}
-        <section className="border-t border-gray-800 bg-gray-900/35 px-4 py-12 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral bg-gray-900/35 px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Refusal rules</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">Refusal rules</p>
             <h2 className="mt-2 text-2xl font-bold text-white">What the Brain will not claim</h2>
             <ul className="mt-4 flex flex-col gap-2 text-sm text-gray-400">
               {[

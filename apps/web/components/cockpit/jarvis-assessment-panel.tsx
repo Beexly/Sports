@@ -78,7 +78,7 @@ export function JarvisAssessmentPanel({
     <section
       data-testid="jarvis-assessment-panel"
       className={[
-        "rounded-2xl border border-gray-800 bg-gray-900/50 p-5",
+        "rounded-2xl border border-mineral bg-gray-900/50 p-5",
         className ?? "",
       ].join(" ")}
     >
@@ -107,7 +107,7 @@ export function JarvisAssessmentPanel({
         {sectional.map(([label, health]) => (
           <div
             key={label}
-            className="rounded-lg border border-gray-800 bg-gray-950/40 px-3 py-2"
+            className="rounded-lg border border-mineral bg-carbon/40 px-3 py-2"
           >
             <p className="text-[10px] uppercase tracking-widest text-gray-500">{label}</p>
             <p className={["mt-1 font-bold", healthTone(health)].join(" ")}>{health}</p>

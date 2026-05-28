@@ -27,7 +27,7 @@ export default async function BriefStub() {
     .catch(() => 0);
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-carbon">
       <main className="mx-auto max-w-3xl px-4 py-12">
         <h1 className="text-2xl font-bold text-white">Daily brief</h1>
         <p className="mt-2 text-sm text-gray-400">
@@ -38,7 +38,7 @@ export default async function BriefStub() {
         {todayPickCount > 0 && (
           <div
             data-testid="brief-pick-count"
-            className="mt-4 rounded-xl border border-gray-800 bg-gray-900/40 p-4"
+            className="mt-4 rounded-xl border border-mineral bg-gray-900/40 p-4"
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
               Today's slate
@@ -74,7 +74,7 @@ export default async function BriefStub() {
             Performance data is gated until canonical sample is sufficient.
           </p>
         )}
-        <p className="mt-6 rounded-lg border border-gray-800 bg-gray-900/40 px-4 py-3 text-xs text-gray-400">
+        <p className="mt-6 rounded-lg border border-mineral bg-gray-900/40 px-4 py-3 text-xs text-gray-400">
           {BRIEF_RESPONSIBLE_GAMING_NOTE} For problem-gambling help in the US,
           call <strong>1-800-GAMBLER</strong>.
         </p>

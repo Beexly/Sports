@@ -86,7 +86,7 @@ function latestModelVersion(summaries: PerformanceSummary[]): string | null {
 // <PerformanceBootstrapState> with minimal JSX between it and the gate check.
 function BootstrapShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-carbon">
       <Nav />
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
@@ -116,7 +116,7 @@ export default async function PerformancePage() {
         {todayPickCount > 0 && (
           <div
             data-testid="performance-pick-count-banner"
-            className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-4 text-xs"
+            className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-mineral bg-gray-900/40 p-4 text-xs"
           >
             <p className="text-gray-300">
               {todayPickCount} pick{todayPickCount === 1 ? "" : "s"} published
@@ -130,7 +130,7 @@ export default async function PerformancePage() {
             </p>
             <Link
               href="/picks"
-              className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60"
+              className="rounded-lg border border-mineral px-3 py-1.5 text-gray-300 hover:bg-gray-900/60"
             >
               See today&apos;s picks
             </Link>
@@ -175,7 +175,7 @@ export default async function PerformancePage() {
   const isEmpty = !fetchError && summaries.length === 0;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-carbon">
       <Nav />
       <main className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
@@ -215,7 +215,7 @@ export default async function PerformancePage() {
               {/* Methodology summary card */}
               <section
                 data-testid="performance-methodology"
-                className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+                className="mb-8 rounded-2xl border border-mineral bg-gray-900/40 p-5"
               >
                 <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
                   Methodology
@@ -255,8 +255,8 @@ export default async function PerformancePage() {
               </section>
 
               <section className="mb-12">
-                <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900 to-gray-900/60">
-                  <div className="border-b border-gray-800 px-6 py-4">
+                <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-gray-900 to-gray-900/60">
+                  <div className="border-b border-mineral px-6 py-4">
                     <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
                       All-Time Overall
                     </h2>
@@ -292,7 +292,7 @@ export default async function PerformancePage() {
                       accent="text-gray-400"
                     />
                   </div>
-                  <div className="border-t border-gray-800 px-6 py-3">
+                  <div className="border-t border-mineral px-6 py-3">
                     <p className="text-xs text-gray-600">
                       Based on {overall.totalPicks} canonical settled picks. Win
                       rate excludes pushes.
@@ -339,10 +339,10 @@ export default async function PerformancePage() {
                   <h2 className="mb-5 text-xl font-bold text-white">
                     Recent periods
                   </h2>
-                  <div className="overflow-x-auto rounded-2xl border border-gray-800">
+                  <div className="overflow-x-auto rounded-2xl border border-mineral">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b border-gray-800 text-left">
+                        <tr className="border-b border-mineral text-left">
                           <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
                             Period
                           </th>
@@ -375,7 +375,7 @@ export default async function PerformancePage() {
                             <tr
                               key={s.id}
                               className={[
-                                "border-b border-gray-800/60",
+                                "border-b border-mineral/60",
                                 i % 2 === 0 ? "bg-gray-900/20" : "",
                               ].join(" ")}
                             >
@@ -478,7 +478,7 @@ function SportCard({
   winRate: number | null;
 }) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-5">
+    <div className="rounded-2xl border border-mineral bg-gray-900/60 p-5">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-lg font-bold text-white">{sport}</h3>
         {winRate !== null && (

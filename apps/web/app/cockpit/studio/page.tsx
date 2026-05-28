@@ -22,7 +22,7 @@ export default async function CockpitStudioPage({
           </div>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
+            className="rounded-lg border border-mineral px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
           >
             Back to Jarvis
           </Link>

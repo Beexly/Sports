@@ -33,7 +33,7 @@ export default function PromoDeskPage(): JSX.Element {
           <h1 className="text-2xl font-bold text-white">Promo Desk Operator Registry</h1>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
+            className="rounded-lg border border-mineral px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
           >
             Back to Jarvis
           </Link>
@@ -70,7 +70,7 @@ export default function PromoDeskPage(): JSX.Element {
 
 function SummaryCard({ label, value }: { label: string; value: number }): JSX.Element {
   return (
-    <div className="flex flex-col gap-1 rounded-lg border border-gray-800 bg-gray-950/40 p-3">
+    <div className="flex flex-col gap-1 rounded-lg border border-mineral bg-carbon/40 p-3">
       <span className="text-[10px] uppercase tracking-wide text-gray-500">{label}</span>
       <span className="text-xl font-bold text-white">{value}</span>
     </div>
@@ -79,7 +79,7 @@ function SummaryCard({ label, value }: { label: string; value: number }): JSX.El
 
 function OperatorRow({ entry }: { entry: OperatorRegistryEntry }): JSX.Element {
   return (
-    <li className="flex flex-col gap-2 rounded-lg border border-gray-800 bg-gray-950/40 p-3">
+    <li className="flex flex-col gap-2 rounded-lg border border-mineral bg-carbon/40 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <span className="text-sm font-semibold text-white">{entry.displayName}</span>

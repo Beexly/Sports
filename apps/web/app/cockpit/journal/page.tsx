@@ -25,7 +25,7 @@ function formatDate(value: string | null): string {
 
 function JournalEntryRow({ entry }: { readonly entry: JournalEntryListItem }): JSX.Element {
   return (
-    <article className="rounded-lg border border-gray-800 bg-gray-950/60 p-4">
+    <article className="rounded-lg border border-mineral bg-carbon/60 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-600">
@@ -87,7 +87,7 @@ function JournalSection({
   readonly empty: string;
 }): JSX.Element {
   return (
-    <section className="rounded-lg border border-gray-800 bg-gray-950/40 p-4">
+    <section className="rounded-lg border border-mineral bg-carbon/40 p-4">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-sm font-semibold text-white">{title}</h2>
         <span className="text-[10px] uppercase tracking-wide text-gray-600">
@@ -131,7 +131,7 @@ export default async function CockpitJournalPage(): Promise<JSX.Element> {
           >
             Create draft
           </Link>
-          <div className="rounded-lg border border-gray-800 bg-gray-950/60 p-3 text-sm">
+          <div className="rounded-lg border border-mineral bg-carbon/60 p-3 text-sm">
             <p className="text-[10px] uppercase tracking-wide text-gray-600">Next publish</p>
             <p className="mt-1 font-semibold text-gray-100">{data.nextPublishLabel}</p>
           </div>

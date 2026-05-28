@@ -9,7 +9,7 @@ export default function CockpitSourcesStub() {
         model now exists in the schema; the page that lists rows is queued for
         rewrite.
       </p>
-      <Link href="/cockpit" className="w-fit rounded-lg border border-gray-800 px-3 py-2 text-xs text-gray-300 hover:bg-gray-900/60">
+      <Link href="/cockpit" className="w-fit rounded-lg border border-mineral px-3 py-2 text-xs text-gray-300 hover:bg-gray-900/60">
         ← Back to Jarvis
       </Link>
     </div>

@@ -70,7 +70,7 @@ const DIMENSIONS = [
 ] as const;
 
 const SIGNAL_COLORS: Record<string, string> = {
-  "LEAN START": "text-cyan-300 border-cyan-700 bg-cyan-950/30",
+  "LEAN START": "text-ion-blue border-cyan-700 bg-cyan-950/30",
   WATCHLIST: "text-yellow-300 border-yellow-800 bg-yellow-950/30",
   SIT: "text-red-300 border-red-900 bg-red-950/30",
 };
@@ -82,16 +82,16 @@ const RISK_COLORS: Record<string, string> = {
 
 export default function FantasyPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
+    <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
         {/* Hero */}
-        <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_15%_20%,rgba(34,211,238,0.10),transparent_35%)] px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral bg-[radial-gradient(circle_at_15%_20%,rgba(34,211,238,0.10),transparent_35%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-4">
               <StateBadge state="preview" detail="Early access launching soon" />
             </div>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Fantasy Intelligence</p>
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">Fantasy Intelligence</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
               Fantasy War Room.
             </h1>
@@ -117,7 +117,7 @@ export default function FantasyPage(): JSX.Element {
           <div className="mx-auto max-w-7xl">
             <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Demo · Sample data only</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">Demo · Sample data only</p>
                 <h2 className="mt-2 text-3xl font-black tracking-tight text-white">War Room demo</h2>
               </div>
               <p className="max-w-xs text-sm text-gray-500 sm:text-right">
@@ -127,7 +127,7 @@ export default function FantasyPage(): JSX.Element {
 
             <div className="grid gap-4 sm:grid-cols-2">
               {DEMO_PLAYERS.map((p) => (
-                <article key={p.name} className="border border-gray-800 bg-gray-900/60 p-5">
+                <article key={p.name} className="border border-mineral bg-gray-900/60 p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500">{p.pos} · {p.team}</p>
@@ -157,15 +157,15 @@ export default function FantasyPage(): JSX.Element {
         </section>
 
         {/* Dimensions */}
-        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="mb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Framework</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">Framework</p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white">What Fantasy War Room scores</h2>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {DIMENSIONS.map(([title, body]) => (
-                <div key={title} className="border border-gray-800 bg-gray-950/60 p-5">
+                <div key={title} className="border border-mineral bg-carbon/60 p-5">
                   <h3 className="text-base font-bold text-white">{title}</h3>
                   <p className="mt-2 text-sm leading-6 text-gray-400">{body}</p>
                 </div>
@@ -177,7 +177,7 @@ export default function FantasyPage(): JSX.Element {
         {/* CTA */}
         <section className="px-4 py-20 sm:px-6 lg:px-8 text-center">
           <div className="mx-auto max-w-2xl">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Early access</p>
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">Early access</p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-white">Fantasy War Room is in preview.</h2>
             <p className="mt-4 text-base text-gray-400">
               Subscribers on the Pro and Elite tiers get first access when Fantasy War Room launches. Sign up now to hold your spot.

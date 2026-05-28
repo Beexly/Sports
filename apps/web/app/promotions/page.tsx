@@ -38,7 +38,7 @@ export default async function PromotionsPage({
   const promotions = payload.data;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-carbon">
       <Nav />
 
       <main className="flex-1">
@@ -62,7 +62,7 @@ export default async function PromotionsPage({
           <form
             action="/promotions"
             method="GET"
-            className="mb-8 flex flex-col gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-5 sm:flex-row sm:items-end"
+            className="mb-8 flex flex-col gap-3 rounded-xl border border-mineral bg-gray-900/40 p-5 sm:flex-row sm:items-end"
           >
             <label
               htmlFor="state"
@@ -76,7 +76,7 @@ export default async function PromotionsPage({
                 defaultValue={state ?? ""}
                 maxLength={2}
                 placeholder="e.g. NJ"
-                className="rounded-md border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-white placeholder-gray-600 focus:border-brand-500 focus:outline-none"
+                className="rounded-md border border-gray-700 bg-carbon px-3 py-2 text-sm text-white placeholder-gray-600 focus:border-brand-500 focus:outline-none"
               />
             </label>
             <button
@@ -113,7 +113,7 @@ export default async function PromotionsPage({
           <div className="mt-10 space-y-4">
             <p
               data-testid="promotions-notice"
-              className="rounded-lg border border-gray-800 bg-gray-900/40 p-4 text-xs leading-relaxed text-gray-400"
+              className="rounded-lg border border-mineral bg-gray-900/40 p-4 text-xs leading-relaxed text-gray-400"
             >
               {PUBLIC_PROMOTIONS_NOTICE}
             </p>
@@ -131,7 +131,7 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
   return (
     <article
       data-testid="promotion-card"
-      className="flex h-full flex-col gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-5"
+      className="flex h-full flex-col gap-3 rounded-xl border border-mineral bg-gray-900/40 p-5"
     >
       <header className="flex items-center justify-between">
         <span className="rounded bg-brand-900/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-brand-300">
@@ -169,7 +169,7 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
         </div>
       </dl>
 
-      <div className="mt-auto flex flex-col gap-2 border-t border-gray-800 pt-3">
+      <div className="mt-auto flex flex-col gap-2 border-t border-mineral pt-3">
         <a
           href={promo.termsUrl}
           target="_blank"
@@ -209,7 +209,7 @@ function PromotionsEmptyState({ state }: { state: string | null }) {
   return (
     <div
       data-testid="promotions-empty"
-      className="rounded-xl border border-gray-800 bg-gray-900/40 p-8 text-center"
+      className="rounded-xl border border-mineral bg-gray-900/40 p-8 text-center"
     >
       <h2 className="text-base font-semibold text-white">
         No promotions available right now

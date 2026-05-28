@@ -25,7 +25,7 @@ export default async function AdminPostsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-950 p-8">
+    <div className="min-h-screen bg-carbon p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -37,10 +37,10 @@ export default async function AdminPostsPage() {
           </a>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+        <div className="bg-gray-900 border border-mineral rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-800 text-gray-400 text-xs uppercase">
+              <tr className="border-b border-mineral text-gray-400 text-xs uppercase">
                 <th className="text-left px-4 py-3">Title</th>
                 <th className="text-left px-4 py-3">Sport</th>
                 <th className="text-left px-4 py-3">Status</th>
@@ -51,7 +51,7 @@ export default async function AdminPostsPage() {
             </thead>
             <tbody>
               {posts.map((post) => (
-                <tr key={post.id} className="border-b border-gray-800/50 hover:bg-gray-800/30">
+                <tr key={post.id} className="border-b border-mineral/50 hover:bg-gray-800/30">
                   <td className="px-4 py-3">
                     <div className="text-white font-medium line-clamp-1 max-w-xs">{post.title}</div>
                     <div className="text-xs text-gray-500">/blog/{post.slug}</div>

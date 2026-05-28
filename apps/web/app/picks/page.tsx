@@ -168,7 +168,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
   const demoActive = isStubMode() && isDemoPicksEnabled();
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-carbon">
       <Nav />
 
       <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
@@ -316,7 +316,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Empty state */}
           {!fetchError && !bootstrapState && picks.length === 0 && (
-            <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-12 text-center">
+            <div className="rounded-xl border border-mineral bg-gray-900/60 p-12 text-center">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-800">
                 <svg
                   className="h-7 w-7 text-gray-400"

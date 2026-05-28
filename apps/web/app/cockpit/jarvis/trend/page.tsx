@@ -45,7 +45,7 @@ export default async function JarvisTrendPage() {
 
       <section
         data-testid="jarvis-trend-strip"
-        className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4"
+        className="rounded-2xl border border-mineral bg-gray-900/40 p-4"
       >
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Launch status (oldest → newest)
@@ -55,10 +55,10 @@ export default async function JarvisTrendPage() {
 
       <section
         data-testid="jarvis-trend-table"
-        className="overflow-x-auto rounded-2xl border border-gray-800 bg-gray-900/40"
+        className="overflow-x-auto rounded-2xl border border-mineral bg-gray-900/40"
       >
         <table className="w-full min-w-[900px] text-[11px]">
-          <thead className="border-b border-gray-800 bg-gray-950/40 text-left text-[10px] uppercase tracking-widest text-gray-500">
+          <thead className="border-b border-mineral bg-carbon/40 text-left text-[10px] uppercase tracking-widest text-gray-500">
             <tr>
               <th className="px-3 py-2">Assessed at</th>
               <th className="px-3 py-2">Launch status</th>
@@ -85,7 +85,7 @@ export default async function JarvisTrendPage() {
               snapshots.map((s, i) => (
                 <tr
                   key={`${s.assessedAt}-${i}`}
-                  className="border-b border-gray-800/60 hover:bg-gray-900/30"
+                  className="border-b border-mineral/60 hover:bg-gray-900/30"
                 >
                   <td className="px-3 py-2 font-mono text-gray-400">{s.assessedAt}</td>
                   <td className="px-3 py-2 text-white">{s.launchStatus}</td>

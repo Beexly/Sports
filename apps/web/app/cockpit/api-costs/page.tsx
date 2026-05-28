@@ -31,7 +31,7 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
           </div>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
+            className="rounded-lg border border-mineral px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
           >
             Back to Jarvis
           </Link>
@@ -48,8 +48,8 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
         <Metric label="Generated" value={new Date(dashboard.generatedAtIso).toLocaleString("en-US")} />
       </section>
 
-      <section className="overflow-hidden rounded-lg border border-gray-800 bg-gray-950">
-        <div className="border-b border-gray-800 px-4 py-3">
+      <section className="overflow-hidden rounded-lg border border-mineral bg-carbon">
+        <div className="border-b border-mineral px-4 py-3">
           <h2 className="text-sm font-semibold text-white">Surface Budgets</h2>
           <p className="mt-1 text-xs text-gray-500">
             Window: {new Date(dashboard.monthStartIso).toLocaleDateString("en-US")} to{" "}
@@ -79,14 +79,14 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
         </div>
       </section>
 
-      <section className="rounded-lg border border-gray-800 bg-gray-950 p-4">
+      <section className="rounded-lg border border-mineral bg-carbon p-4">
         <h2 className="text-sm font-semibold text-white">Recent Errors</h2>
         {dashboard.recentErrors.length === 0 ? (
           <p className="mt-3 text-sm text-gray-500">No Claude API errors recorded.</p>
         ) : (
           <div className="mt-3 grid gap-2">
             {dashboard.recentErrors.map((error) => (
-              <div key={error.id} className="rounded-md border border-gray-800 bg-gray-900/60 p-3">
+              <div key={error.id} className="rounded-md border border-mineral bg-gray-900/60 p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="text-sm font-medium text-gray-200">{error.surface}</p>
                   <p className="text-xs text-gray-500">
@@ -109,7 +109,7 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
 
 function Metric({ label, value }: { readonly label: string; readonly value: string }): JSX.Element {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-950 p-4">
+    <div className="rounded-lg border border-mineral bg-carbon p-4">
       <p className="text-[11px] uppercase tracking-wider text-gray-500">{label}</p>
       <p className="mt-2 text-xl font-semibold text-white">{value}</p>
     </div>

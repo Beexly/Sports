@@ -221,7 +221,7 @@ export function JournalEntryEditor({
   }
 
   return (
-    <main className="space-y-4 rounded-lg border border-gray-800 bg-gray-950/40 p-4">
+    <main className="space-y-4 rounded-lg border border-mineral bg-carbon/40 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-sm font-semibold text-white">Markdown editor</h2>
@@ -280,7 +280,7 @@ export function JournalEntryEditor({
         </p>
       ) : null}
       {scanResult ? (
-        <section className="rounded-lg border border-gray-800 bg-black/30 p-3 text-xs">
+        <section className="rounded-lg border border-mineral bg-black/30 p-3 text-xs">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="font-semibold text-gray-200">
               Compliance: {scanResult.status.toUpperCase()}
@@ -292,7 +292,7 @@ export function JournalEntryEditor({
           {scanResult.flags.length > 0 ? (
             <ul className="mt-3 space-y-2 text-gray-400">
               {scanResult.flags.map((flag) => (
-                <li key={flag.id} className="rounded border border-gray-800 bg-gray-950/70 p-2">
+                <li key={flag.id} className="rounded border border-mineral bg-carbon/70 p-2">
                   <span className="font-semibold text-gray-200">{flag.id}:</span> {flag.message}
                   {flag.suggestion ? <span className="block text-gray-500">{flag.suggestion}</span> : null}
                 </li>
@@ -349,7 +349,7 @@ export function JournalEntryEditor({
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           readOnly={!isBodyEditable}
-          className="mt-2 w-full rounded-lg border border-gray-800 bg-black/40 p-3 text-sm text-gray-100 outline-none focus:border-yellow-500/60"
+          className="mt-2 w-full rounded-lg border border-mineral bg-black/40 p-3 text-sm text-gray-100 outline-none focus:border-yellow-500/60"
         />
       </label>
 
@@ -358,10 +358,10 @@ export function JournalEntryEditor({
         readOnly={!isBodyEditable}
         value={bodyMarkdown}
         onChange={(event) => setBodyMarkdown(event.target.value)}
-        className="min-h-[460px] w-full resize-y rounded-lg border border-gray-800 bg-black/40 p-3 font-mono text-xs leading-5 text-gray-200 outline-none focus:border-yellow-500/60"
+        className="min-h-[460px] w-full resize-y rounded-lg border border-mineral bg-black/40 p-3 font-mono text-xs leading-5 text-gray-200 outline-none focus:border-yellow-500/60"
       />
 
-      <section className="rounded-lg border border-gray-800 bg-black/30 p-4">
+      <section className="rounded-lg border border-mineral bg-black/30 p-4">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="text-sm font-semibold text-white">Preview</h2>
           <span className="text-[10px] uppercase tracking-wide text-gray-600">First sections</span>

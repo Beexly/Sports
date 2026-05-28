@@ -33,7 +33,7 @@ export default async function CockpitTaskDetail({
         </p>
       </header>
 
-      <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
+      <section className="rounded-2xl border border-mineral bg-gray-900/40 p-5">
         <dl className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-4">
           <Field label="Status" value={task.status} />
           <Field label="Priority" value={String(task.priority)} />
@@ -44,13 +44,13 @@ export default async function CockpitTaskDetail({
           {task.description}
         </p>
         {task.decisionNotes && (
-          <p className="mt-3 rounded-lg border border-gray-800 bg-gray-950/40 p-3 text-xs text-gray-400">
+          <p className="mt-3 rounded-lg border border-mineral bg-carbon/40 p-3 text-xs text-gray-400">
             <span className="text-gray-600">Latest note:</span> {task.decisionNotes}
           </p>
         )}
       </section>
 
-      <section data-testid="allowed-transitions" className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
+      <section data-testid="allowed-transitions" className="rounded-2xl border border-mineral bg-gray-900/40 p-5">
         <h2 className="mb-2 text-sm font-semibold text-white">Allowed transitions</h2>
         {allowed.length === 0 ? (
           <p className="text-xs text-gray-500">
@@ -78,11 +78,11 @@ export default async function CockpitTaskDetail({
       <section>
         <h2 className="mb-3 text-sm font-semibold text-white">Decision history</h2>
         {task.decisions.length === 0 ? (
-          <p className="rounded-lg border border-gray-800 bg-gray-900/40 p-4 text-xs text-gray-500">
+          <p className="rounded-lg border border-mineral bg-gray-900/40 p-4 text-xs text-gray-500">
             No decisions yet.
           </p>
         ) : (
-          <ol className="space-y-3 border-l-2 border-gray-800 pl-4">
+          <ol className="space-y-3 border-l-2 border-mineral pl-4">
             {task.decisions.map((d) => (
               <li key={d.id}>
                 <div className="flex items-baseline gap-3">

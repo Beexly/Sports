@@ -89,7 +89,7 @@ export function MethodologySection() {
             <article
               key={item.claimId}
               data-claim-id={item.claimId}
-              className="flex flex-col gap-3 rounded-lg border border-gray-800 bg-gray-900/60 p-6"
+              className="flex flex-col gap-3 rounded-lg border border-mineral bg-gray-900/60 p-6"
             >
               <h3 className="text-base font-semibold text-white">{item.title}</h3>
               <p className="text-sm leading-relaxed text-gray-400">

@@ -67,7 +67,7 @@ const DEMO_SIGNALS = [
 
 const SOURCE_TIERS = [
   { tier: "1 — Official", desc: "Team / league press release, official injury report, manager/coach press conference on record.", color: "text-emerald-300" },
-  { tier: "2 — Beat verified", desc: "Credentialed beat reporter with direct access, confirmed on record.", color: "text-cyan-300" },
+  { tier: "2 — Beat verified", desc: "Credentialed beat reporter with direct access, confirmed on record.", color: "text-ion-blue" },
   { tier: "3 — National unverified", desc: "National media report without primary-source attribution. Requires Tier 1/2 confirmation.", color: "text-yellow-300" },
   { tier: "4 — Social / chatter", desc: "Social media, forums, podcasts without sourcing. Watchlist only — not actionable.", color: "text-red-300" },
 ] as const;
@@ -80,11 +80,11 @@ const STATUS_STYLES: Record<string, string> = {
 
 export default function RumorRadarPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
+    <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
         {/* Hero */}
-        <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_70%_30%,rgba(255,100,112,0.10),transparent_35%)] px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral bg-[radial-gradient(circle_at_70%_30%,rgba(255,100,112,0.10),transparent_35%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-4">
               <StateBadge
@@ -93,7 +93,7 @@ export default function RumorRadarPage(): JSX.Element {
                 detail="Weak-signal detection layer in development"
               />
             </div>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Rumor Radar</p>
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">Rumor Radar</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
               Rumors separated from facts.
             </h1>
@@ -129,7 +129,7 @@ export default function RumorRadarPage(): JSX.Element {
 
             <div className="flex flex-col gap-4">
               {DEMO_SIGNALS.map((s) => (
-                <article key={s.id} className="border border-gray-800 bg-gray-900/60 p-5">
+                <article key={s.id} className="border border-mineral bg-gray-900/60 p-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{s.sport} · {s.team}</p>
@@ -157,10 +157,10 @@ export default function RumorRadarPage(): JSX.Element {
         </section>
 
         {/* Source tiers */}
-        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Source hierarchy</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">Source hierarchy</p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white">Not all sources are equal.</h2>
               <p className="mt-3 max-w-2xl text-sm text-gray-400">
                 Every signal is labeled with its source tier. A Tier 4 watchlist signal is never published alongside a Tier 1 verified fact without clear separation.
@@ -168,7 +168,7 @@ export default function RumorRadarPage(): JSX.Element {
             </div>
             <div className="flex flex-col gap-3">
               {SOURCE_TIERS.map(({ tier, desc, color }) => (
-                <div key={tier} className="flex gap-4 border border-gray-800 bg-gray-950/60 p-4">
+                <div key={tier} className="flex gap-4 border border-mineral bg-carbon/60 p-4">
                   <span className={`font-mono text-sm font-bold ${color} min-w-[120px]`}>{tier}</span>
                   <span className="text-sm text-gray-400">{desc}</span>
                 </div>
@@ -180,7 +180,7 @@ export default function RumorRadarPage(): JSX.Element {
         {/* Language rules */}
         <section className="px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Language policy</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">Language policy</p>
             <h2 className="mt-2 text-2xl font-bold text-white">What Rumor Radar says — and does not say</h2>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <div className="border border-emerald-900 bg-emerald-950/20 p-4">

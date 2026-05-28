@@ -57,7 +57,7 @@ export default async function CockpitLossesPage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-3">
           <h1 className="text-2xl font-bold text-white">Loss Autopsies</h1>
-          <Link href="/cockpit" className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60">
+          <Link href="/cockpit" className="rounded-lg border border-mineral px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60">
             Back to Jarvis
           </Link>
         </div>
@@ -67,13 +67,13 @@ export default async function CockpitLossesPage(): Promise<JSX.Element> {
       </header>
 
       {rows.length === 0 ? (
-        <div className="rounded-lg border border-gray-800 bg-gray-950/40 p-6 text-sm text-gray-400">
+        <div className="rounded-lg border border-mineral bg-carbon/40 p-6 text-sm text-gray-400">
           No loss autopsies have been authored yet.
         </div>
       ) : (
         <ul className="flex flex-col gap-2">
           {rows.map((row) => (
-            <li key={row.id} className="rounded-lg border border-gray-800 bg-gray-950/40 p-4">
+            <li key={row.id} className="rounded-lg border border-mineral bg-carbon/40 p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-gray-500">

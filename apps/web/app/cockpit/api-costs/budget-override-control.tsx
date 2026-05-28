@@ -69,7 +69,7 @@ export function BudgetOverrideControl({
         <input
           value={reason}
           onChange={(event) => setReason(event.target.value)}
-          className="mt-1 h-11 w-full rounded-md border border-gray-800 bg-black/40 px-3 text-xs text-gray-100 outline-none focus:border-yellow-500/60"
+          className="mt-1 h-11 w-full rounded-md border border-mineral bg-black/40 px-3 text-xs text-gray-100 outline-none focus:border-yellow-500/60"
           placeholder="Decision-log reason"
         />
       </label>
@@ -78,7 +78,7 @@ export function BudgetOverrideControl({
           type="button"
           onClick={() => void submitOverride(true)}
           disabled={!canSubmit || overrideActive}
-          className="min-h-11 rounded-md border border-yellow-500/40 px-3 text-xs font-semibold text-yellow-100 hover:bg-yellow-950/30 disabled:border-gray-800 disabled:text-gray-600"
+          className="min-h-11 rounded-md border border-yellow-500/40 px-3 text-xs font-semibold text-yellow-100 hover:bg-yellow-950/30 disabled:border-mineral disabled:text-gray-600"
         >
           Enable 24h
         </button>

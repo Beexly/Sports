@@ -19,7 +19,7 @@ const COCKPIT_LINKS: ReadonlyArray<{ href: string; label: string; hint: string }
 
 export function DashboardView() {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 p-8 text-gray-200">
+    <div className="flex min-h-screen flex-col bg-carbon p-8 text-gray-200">
       <div className="mx-auto w-full max-w-3xl">
         <header className="mb-6">
           <h1 className="text-2xl font-bold text-white">Admin dashboard</h1>
@@ -33,7 +33,7 @@ export function DashboardView() {
             <Link
               key={href}
               href={href}
-              className="rounded-2xl border border-gray-800 bg-gray-900/60 p-4 transition-colors hover:border-gray-700 hover:bg-gray-900"
+              className="rounded-2xl border border-mineral bg-gray-900/60 p-4 transition-colors hover:border-gray-700 hover:bg-gray-900"
             >
               <p className="font-semibold text-white">{label}</p>
               <p className="mt-1 text-xs text-gray-500">{hint}</p>

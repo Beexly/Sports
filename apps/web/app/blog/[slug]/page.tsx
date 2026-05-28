@@ -54,7 +54,7 @@ export default async function BlogPostPage({
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-gray-950">
+      <main className="min-h-screen bg-carbon">
         <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6">
           {/* Back link */}
           <Link href="/blog" className="text-gray-500 hover:text-gray-300 text-sm transition-colors mb-8 inline-flex items-center gap-1">

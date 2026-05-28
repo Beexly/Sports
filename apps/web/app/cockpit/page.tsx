@@ -116,7 +116,7 @@ export default async function CockpitOverview() {
       {assessment && (
         <section
           data-testid="jarvis-assessment"
-          className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6"
+          className="rounded-2xl border border-mineral bg-gray-900/40 p-6"
         >
           <p className="text-sm text-gray-300">
             <span className="font-semibold text-white">Assessment:</span>{" "}
@@ -171,7 +171,7 @@ export default async function CockpitOverview() {
       {policy && (
         <section
           data-testid="cockpit-public-performance"
-          className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+          className="rounded-2xl border border-mineral bg-gray-900/40 p-5"
         >
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
             Public performance policy
@@ -232,7 +232,7 @@ export default async function CockpitOverview() {
       )}
 
       {assessment && assessment.recommendedNextActions.length > 0 && (
-        <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
+        <section className="rounded-2xl border border-mineral bg-gray-900/40 p-5">
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
             Recommended next actions
           </h2>
@@ -245,7 +245,7 @@ export default async function CockpitOverview() {
       )}
 
       {assessment && (
-        <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
+        <section className="rounded-2xl border border-mineral bg-gray-900/40 p-5">
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
             Phase matrix
           </h2>
@@ -253,7 +253,7 @@ export default async function CockpitOverview() {
             {assessment.phaseMatrix.map((p) => (
               <div
                 key={p.key}
-                className="rounded-lg border border-gray-800 bg-gray-950/60 px-3 py-2"
+                className="rounded-lg border border-mineral bg-carbon/60 px-3 py-2"
               >
                 <p className="text-xs font-semibold text-gray-300">{p.label}</p>
                 <p className="text-[10px] uppercase tracking-widest text-gray-600">
@@ -265,7 +265,7 @@ export default async function CockpitOverview() {
         </section>
       )}
 
-      <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
+      <section className="rounded-2xl border border-mineral bg-gray-900/40 p-5">
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Readiness gates
         </h2>
@@ -289,7 +289,7 @@ export default async function CockpitOverview() {
         <section
           data-testid="cockpit-slate-meta"
           aria-label="Today's slate breakdown by sport"
-          className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4"
+          className="rounded-2xl border border-mineral bg-gray-900/40 p-4"
         >
           <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
             Today's slate
@@ -316,7 +316,7 @@ export default async function CockpitOverview() {
       {todaysOperatorPicks.length > 0 && (
         <section
           data-testid="cockpit-today-picks-list"
-          className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+          className="rounded-2xl border border-mineral bg-gray-900/40 p-5"
         >
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
@@ -375,19 +375,19 @@ export default async function CockpitOverview() {
       <nav className="flex flex-wrap gap-2 text-xs">
         <Link
           href="/cockpit/history"
-          className="rounded-lg border border-gray-800 px-3 py-2 text-gray-300 hover:border-gray-700 hover:bg-gray-900/60"
+          className="rounded-lg border border-mineral px-3 py-2 text-gray-300 hover:border-gray-700 hover:bg-gray-900/60"
         >
           Pick history →
         </Link>
         <Link
           href="/dashboard"
-          className="rounded-lg border border-gray-800 px-3 py-2 text-gray-300 hover:border-gray-700 hover:bg-gray-900/60"
+          className="rounded-lg border border-mineral px-3 py-2 text-gray-300 hover:border-gray-700 hover:bg-gray-900/60"
         >
           Customer dashboard →
         </Link>
         <Link
           href="/performance"
-          className="rounded-lg border border-gray-800 px-3 py-2 text-gray-300 hover:border-gray-700 hover:bg-gray-900/60"
+          className="rounded-lg border border-mineral px-3 py-2 text-gray-300 hover:border-gray-700 hover:bg-gray-900/60"
         >
           Performance →
         </Link>
@@ -422,7 +422,7 @@ function HealthTile({ label, health }: { label: string; health: JarvisHealth }) 
     GREEN: "border-green-900 bg-green-950/30 text-green-300",
     AMBER: "border-yellow-900 bg-yellow-950/30 text-yellow-300",
     RED: "border-red-900 bg-red-950/30 text-red-300",
-    UNKNOWN: "border-gray-800 bg-gray-900/40 text-gray-400",
+    UNKNOWN: "border-mineral bg-gray-900/40 text-gray-400",
   };
   return (
     <div
@@ -443,7 +443,7 @@ function HealthTile({ label, health }: { label: string; health: JarvisHealth }) 
 
 function GateRow({ label, value }: { label: string; value: boolean }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-950/60 px-3 py-1.5">
+    <div className="flex items-center justify-between rounded-lg border border-mineral bg-carbon/60 px-3 py-1.5">
       <span className="font-mono">{label}</span>
       <span
         className={value ? "font-bold text-green-400" : "text-gray-500"}

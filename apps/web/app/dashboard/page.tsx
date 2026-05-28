@@ -35,8 +35,8 @@ export default async function DashboardPage() {
 
   if (!session?.user?.id) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-950 text-gray-200">
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-8 text-center">
+      <div className="flex min-h-screen items-center justify-center bg-carbon text-gray-200">
+        <div className="rounded-2xl border border-mineral bg-gray-900/60 p-8 text-center">
           <h1 className="text-2xl font-bold text-white">Sign in required</h1>
           <p className="mt-2 text-sm text-gray-400">
             The customer dashboard requires an authenticated session.
@@ -141,8 +141,8 @@ export default async function DashboardPage() {
     performancePolicy.publicWinRate >= 55;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
-      <header className="border-b border-gray-800 bg-gray-950/80 backdrop-blur-sm">
+    <div className="flex min-h-screen flex-col bg-carbon">
+      <header className="border-b border-mineral bg-carbon/80 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-sm font-semibold text-white">
             {BRAND_NAME}
@@ -195,7 +195,7 @@ export default async function DashboardPage() {
           {!performanceVisible && (
             <p
               data-testid="dashboard-performance-collecting"
-              className="mb-6 rounded-lg border border-gray-800 bg-gray-900/40 px-4 py-3 text-xs text-gray-400"
+              className="mb-6 rounded-lg border border-mineral bg-gray-900/40 px-4 py-3 text-xs text-gray-400"
             >
               {performancePolicy.publicMessage}
             </p>
@@ -209,7 +209,7 @@ export default async function DashboardPage() {
           )}
 
           {/* Today's picks list */}
-          <section className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/60 p-6">
+          <section className="mb-6 rounded-2xl border border-mineral bg-gray-900/60 p-6">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
                 Today's picks
@@ -236,7 +236,7 @@ export default async function DashboardPage() {
           </section>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <section className="rounded-2xl border border-gray-800 bg-gray-900/60 p-6">
+            <section className="rounded-2xl border border-mineral bg-gray-900/60 p-6">
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-gray-500">
                 Quick Links
               </h2>
@@ -259,7 +259,7 @@ export default async function DashboardPage() {
               </nav>
             </section>
 
-            <section className="rounded-2xl border border-gray-800 bg-gray-900/60 p-6">
+            <section className="rounded-2xl border border-mineral bg-gray-900/60 p-6">
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-gray-500">
                 Where we are
               </h2>
@@ -394,7 +394,7 @@ function StatCard({
   highlight?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
+    <div className="rounded-xl border border-mineral bg-gray-900/60 p-4">
       <p className="text-xs text-gray-500">{label}</p>
       <p className={`mt-1 text-2xl font-bold ${highlight ? "text-green-400" : "text-white"}`}>{value}</p>
     </div>

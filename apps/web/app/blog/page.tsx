@@ -53,7 +53,7 @@ export default async function BlogPage() {
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-gray-950">
+      <main className="min-h-screen bg-carbon">
         <div className="max-w-5xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300 mb-2">
@@ -78,7 +78,7 @@ export default async function BlogPage() {
               {posts.map((post) => (
                 <article
                   key={post.id}
-                  className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-colors"
+                  className="bg-gray-900 border border-mineral rounded-xl p-6 hover:border-gray-700 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">

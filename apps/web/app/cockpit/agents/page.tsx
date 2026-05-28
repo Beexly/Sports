@@ -29,7 +29,7 @@ export default async function CockpitAgentsPage() {
           <article
             key={agent.key}
             data-testid={`agent-card-${agent.key}`}
-            className="flex flex-col gap-3 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+            className="flex flex-col gap-3 rounded-2xl border border-mineral bg-gray-900/40 p-5"
           >
             <header className="flex items-start justify-between gap-3">
               <div>

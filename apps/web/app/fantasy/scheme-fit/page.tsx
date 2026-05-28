@@ -50,7 +50,7 @@ const SCHEMES = [
   {
     name: "Air Raid",
     color: "border-cyan-700 bg-cyan-950/20",
-    badge: "text-cyan-300 border-cyan-700 bg-cyan-950/30",
+    badge: "text-ion-blue border-cyan-700 bg-cyan-950/30",
     description:
       "Vertical passing attack with four or five receivers on most snaps. Designed to create high throw volumes and spread coverages horizontally and vertically.",
     targetDistribution: "WR-heavy. Slot receiver and Z-receiver target shares are elevated. TE usage depends on coordinator variation — some run TE-heavy Air Raid, most do not.",
@@ -93,7 +93,7 @@ const SCHEMES = [
   },
   {
     name: "Pro-Style",
-    color: "border-gray-600 bg-gray-950/20",
+    color: "border-gray-600 bg-carbon/20",
     badge: "text-gray-300 border-gray-600 bg-gray-900/60",
     description:
       "Balanced, multiple-formation offense that draws from all other systems. Designed to be unpredictable and to keep defensive coordinators from committing to a single scheme.",
@@ -115,13 +115,13 @@ const CLUSTER_LINKS = [
 
 export default function SchemeFitPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
+    <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
         {/* Hero with direct-answer block */}
-        <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_30%_0%,rgba(34,211,238,0.08),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral bg-[radial-gradient(circle_at_30%_0%,rgba(34,211,238,0.08),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
               Fantasy Intelligence · Scheme Fit
             </p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -133,7 +133,7 @@ export default function SchemeFitPage(): JSX.Element {
 
             {/* Direct-answer block */}
             <div className="mt-10 border-l-2 border-cyan-700 bg-gray-900/60 p-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-cyan-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-blue">
                 Direct answer
               </p>
               <p className="mt-2 text-base font-semibold text-white">{ANSWER_BLOCK.question}</p>
@@ -160,7 +160,7 @@ export default function SchemeFitPage(): JSX.Element {
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="mb-10">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
                 Five scheme types
               </p>
               <h2 className="mt-2 text-3xl font-black tracking-tight text-white">
@@ -204,9 +204,9 @@ export default function SchemeFitPage(): JSX.Element {
         </section>
 
         {/* Cluster links */}
-        <section className="border-t border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
               Continue reading
             </p>
             <h2 className="mt-2 text-2xl font-bold text-white">
@@ -217,7 +217,7 @@ export default function SchemeFitPage(): JSX.Element {
                 <li key={href}>
                   <Link
                     href={href}
-                    className="block border border-gray-800 bg-gray-950/60 px-4 py-3 text-sm text-gray-200 hover:border-cyan-700 hover:text-cyan-200"
+                    className="block border border-mineral bg-carbon/60 px-4 py-3 text-sm text-gray-200 hover:border-cyan-700 hover:text-cyan-200"
                   >
                     {label}
                   </Link>

@@ -20,7 +20,7 @@ export default function NewJournalEntryPage(): JSX.Element {
         </p>
       </header>
 
-      <section className="rounded-lg border border-gray-800 bg-gray-950/50 p-4">
+      <section className="rounded-lg border border-mineral bg-carbon/50 p-4">
         <JournalNewForm />
       </section>
     </div>

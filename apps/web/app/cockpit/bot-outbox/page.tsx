@@ -26,7 +26,7 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
           </div>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
+            className="rounded-lg border border-mineral px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
           >
             Back to Jarvis
           </Link>
@@ -44,8 +44,8 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
         <Metric label="Lookback" value={`${drafts.lookbackMinutes} min`} />
       </section>
 
-      <section className="overflow-hidden rounded-lg border border-gray-800 bg-gray-950">
-        <div className="border-b border-gray-800 px-4 py-3">
+      <section className="overflow-hidden rounded-lg border border-mineral bg-carbon">
+        <div className="border-b border-mineral px-4 py-3">
           <h2 className="text-sm font-semibold text-white">Draft Items</h2>
           <p className="mt-1 text-xs text-gray-500">
             Generated {new Date(drafts.generatedAt).toLocaleString("en-US")}
@@ -81,7 +81,7 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
 
 function Metric({ label, value }: { readonly label: string; readonly value: string }): JSX.Element {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-950 p-4">
+    <div className="rounded-lg border border-mineral bg-carbon p-4">
       <p className="text-[11px] uppercase tracking-wider text-gray-500">{label}</p>
       <p className="mt-2 text-xl font-semibold text-white">{value}</p>
     </div>

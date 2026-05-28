@@ -140,12 +140,12 @@ export default async function LossDetailPage({
   if (!loss) notFound();
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-carbon text-gray-100">
       <Nav />
       <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
       <article className="flex flex-col gap-8">
         <header className="flex flex-col gap-3">
-          <Link href="/performance/losses" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">
+          <Link href="/performance/losses" className="text-sm font-semibold text-ion-blue hover:text-cyan-200">
             Loss Room
           </Link>
           <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-gray-500">
@@ -157,7 +157,7 @@ export default async function LossDetailPage({
           <p className="text-sm text-gray-500">{loss.matchup}</p>
         </header>
 
-        <section className="grid gap-3 border border-gray-800 bg-gray-900/40 p-4 text-sm text-gray-300 sm:grid-cols-3">
+        <section className="grid gap-3 border border-mineral bg-gray-900/40 p-4 text-sm text-gray-300 sm:grid-cols-3">
           <span>{loss.selection}</span>
           <span>Confidence {loss.confidence}</span>
           <span>Edge {loss.edgeScore.toFixed(1)}</span>

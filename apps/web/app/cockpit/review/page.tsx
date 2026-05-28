@@ -22,12 +22,12 @@ export default async function CockpitReviewPage() {
       {items.length === 0 ? (
         <p
           data-testid="review-empty"
-          className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 text-sm text-gray-500"
+          className="rounded-xl border border-mineral bg-gray-900/40 p-6 text-sm text-gray-500"
         >
           Nothing in review. Operator queue is clear.
         </p>
       ) : (
-        <ul data-testid="review-list" className="divide-y divide-gray-800 rounded-2xl border border-gray-800">
+        <ul data-testid="review-list" className="divide-y divide-gray-800 rounded-2xl border border-mineral">
           {items.map((t) => (
             <li key={t.id} className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">

@@ -100,11 +100,11 @@ export default async function LossRoomPage(): Promise<JSX.Element> {
   const rows = await loadLossRows();
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-carbon text-gray-100">
       <Nav />
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
-        <header className="border-b border-gray-800 pb-8">
-          <Link href="/ledger" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">
+        <header className="border-b border-mineral pb-8">
+          <Link href="/ledger" className="text-sm font-semibold text-ion-blue hover:text-cyan-200">
             Public Ledger
           </Link>
           <h1 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-5xl">Loss Room</h1>
@@ -115,7 +115,7 @@ export default async function LossRoomPage(): Promise<JSX.Element> {
         </header>
 
         {rows.length === 0 ? (
-          <section className="border border-gray-800 bg-gray-900/45 p-6">
+          <section className="border border-mineral bg-gray-900/45 p-6">
             <h2 className="text-xl font-bold text-white">No canonical losses yet</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-400">
               The Loss Room opens once a published, non-bootstrap pick settles as a loss.
@@ -124,7 +124,7 @@ export default async function LossRoomPage(): Promise<JSX.Element> {
         ) : (
           <ul className="flex flex-col gap-3">
             {rows.map((row) => (
-              <li key={row.id} className="border border-gray-800 bg-gray-900/40 p-4">
+              <li key={row.id} className="border border-mineral bg-gray-900/40 p-4">
                 <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-gray-500">
                   <span>{row.sport}</span>
                   <span>{row.rootCause.replace(/_/g, " ")}</span>

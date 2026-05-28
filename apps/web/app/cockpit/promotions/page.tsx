@@ -63,7 +63,7 @@ export default async function CockpitPromotionsPage() {
       </section>
 
       {promos.length === 0 ? (
-        <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-8 text-center">
+        <div className="rounded-xl border border-mineral bg-gray-900/40 p-8 text-center">
           <h2 className="text-base font-semibold text-white">
             No promotions yet
           </h2>
@@ -74,7 +74,7 @@ export default async function CockpitPromotionsPage() {
         </div>
       ) : (
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-gray-800 text-[10px] uppercase tracking-widest text-gray-500">
+          <thead className="border-b border-mineral text-[10px] uppercase tracking-widest text-gray-500">
             <tr>
               <th className="py-2 pr-3">Operator</th>
               <th className="py-2 pr-3">Headline</th>
@@ -133,7 +133,7 @@ export default async function CockpitPromotionsPage() {
 
 function CountCard({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900/40 p-3">
+    <div className="rounded-lg border border-mineral bg-gray-900/40 p-3">
       <p className="text-[10px] uppercase tracking-widest text-gray-500">
         {label}
       </p>

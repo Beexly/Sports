@@ -216,7 +216,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       {/* Roll-up bar */}
       <section
         data-testid="history-rollup"
-        className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4"
+        className="rounded-2xl border border-mineral bg-gray-900/40 p-4"
       >
         <div className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-6">
           <Stat label="Showing" value={String(visibleCount)} />
@@ -238,7 +238,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       {/* Publish-readiness checklist */}
       <section
         data-testid="history-publish-readiness"
-        className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4"
+        className="rounded-2xl border border-mineral bg-gray-900/40 p-4"
       >
         <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
           Publish-readiness checklist
@@ -273,7 +273,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 label="Bootstrap mode disabled"
                 detail={gates.isBootstrapMode ? "Still writing isBootstrap=true picks" : "All new picks canonical"}
               />
-              <div className="rounded bg-gray-950/40 px-3 py-2">
+              <div className="rounded bg-carbon/40 px-3 py-2">
                 <div className="flex items-center justify-between text-[10px] uppercase tracking-widest text-gray-500">
                   <span>Progress to sample minimum</span>
                   <span>{pct}%</span>
@@ -463,10 +463,10 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       {/* Ledger table */}
       <section
         data-testid="history-ledger"
-        className="overflow-x-auto rounded-2xl border border-gray-800 bg-gray-900/40"
+        className="overflow-x-auto rounded-2xl border border-mineral bg-gray-900/40"
       >
         <table className="w-full min-w-[1200px] text-[11px]">
-          <thead className="border-b border-gray-800 bg-gray-950/40 text-left text-[10px] uppercase tracking-widest text-gray-500">
+          <thead className="border-b border-mineral bg-carbon/40 text-left text-[10px] uppercase tracking-widest text-gray-500">
             <tr>
               <th className="px-3 py-2">Generated</th>
               <th className="px-3 py-2">Game</th>
@@ -502,7 +502,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 <tr
                   key={p.id}
                   data-testid={`history-row-${p.id}`}
-                  className="border-b border-gray-800/60 align-top hover:bg-gray-900/30"
+                  className="border-b border-mineral/60 align-top hover:bg-gray-900/30"
                 >
                   <td className="px-3 py-2 font-mono text-gray-400">
                     {p.generatedAt.toISOString().replace("T", " ").slice(0, 16)}

@@ -37,7 +37,7 @@ export function RiskDisclosure({
       <div
         data-testid="risk-disclosure"
         className={[
-          "rounded-xl border border-gray-800 bg-gray-900/40 p-4 text-xs text-gray-400",
+          "rounded-xl border border-mineral bg-gray-900/40 p-4 text-xs text-gray-400",
           className ?? "",
         ].join(" ")}
       >

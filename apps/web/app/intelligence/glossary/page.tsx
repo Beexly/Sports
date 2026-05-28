@@ -188,13 +188,13 @@ const CLUSTER_LINKS = [
 
 export default function GlossaryPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
+    <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
         {/* Hero */}
-        <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_50%_0%,rgba(0,229,255,0.10),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral bg-[radial-gradient(circle_at_50%_0%,rgba(0,229,255,0.10),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
               Intelligence glossary · canonical terminology
             </p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -205,7 +205,7 @@ export default function GlossaryPage(): JSX.Element {
             </p>
 
             <div className="mt-10 border-l-2 border-cyan-700 bg-gray-900/60 p-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-cyan-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-blue">
                 Direct answer
               </p>
               <p className="mt-2 text-base font-semibold text-white">
@@ -240,7 +240,7 @@ export default function GlossaryPage(): JSX.Element {
                 <div
                   key={t.term}
                   id={t.term.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
-                  className="border border-gray-800 bg-gray-900/60 p-5"
+                  className="border border-mineral bg-gray-900/60 p-5"
                 >
                   <dt className="flex flex-wrap items-baseline justify-between gap-3">
                     <span className="text-lg font-bold text-white">{t.term}</span>
@@ -253,7 +253,7 @@ export default function GlossaryPage(): JSX.Element {
                   <dd className="mt-3 text-sm leading-7 text-gray-300">{t.definition}</dd>
                   {t.example && (
                     <p className="mt-2 border-l-2 border-cyan-800 pl-3 text-xs leading-6 text-cyan-200">
-                      <span className="font-mono uppercase tracking-[0.14em] text-cyan-300">Example:</span>{" "}
+                      <span className="font-mono uppercase tracking-[0.14em] text-ion-blue">Example:</span>{" "}
                       {t.example}
                     </p>
                   )}
@@ -264,9 +264,9 @@ export default function GlossaryPage(): JSX.Element {
         </section>
 
         {/* Cluster links */}
-        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-blue">
               Continue reading
             </p>
             <h2 className="mt-2 text-2xl font-bold text-white">
@@ -277,7 +277,7 @@ export default function GlossaryPage(): JSX.Element {
                 <li key={href}>
                   <Link
                     href={href}
-                    className="block border border-gray-800 bg-gray-950/60 px-4 py-3 text-sm text-gray-200 hover:border-cyan-700 hover:text-cyan-200"
+                    className="block border border-mineral bg-carbon/60 px-4 py-3 text-sm text-gray-200 hover:border-cyan-700 hover:text-cyan-200"
                   >
                     {label}
                   </Link>

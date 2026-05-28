@@ -48,7 +48,7 @@ export function PickCard({
         "relative flex flex-col gap-4 rounded-2xl border p-5 transition-shadow hover:shadow-lg hover:shadow-black/40",
         isFeatured
           ? "border-yellow-700/50 bg-gray-900 shadow-yellow-900/20"
-          : "border-gray-800 bg-gray-900",
+          : "border-mineral bg-gray-900",
       ].join(" ")}
     >
       {/* Featured ribbon */}
@@ -145,7 +145,7 @@ export function PickCard({
       )}
 
       {/* Data quality + freshness footer */}
-      <div className="flex items-center justify-between border-t border-gray-800/60 pt-2">
+      <div className="flex items-center justify-between border-t border-mineral/60 pt-2">
         <DataQualityMeter score={pick.dataQualityScore} />
         {freshnessAge !== null && <FreshnessIndicator ageMinutes={freshnessAge} />}
       </div>
@@ -155,7 +155,7 @@ export function PickCard({
         {pick.isAuditAvailable ? (
           <EvidenceAuditDrawer pickId={pick.id} />
         ) : (
-          <span className="rounded-full border border-gray-800 bg-gray-900/50 px-3 py-1 text-[11px] font-medium tracking-wide text-gray-500">
+          <span className="rounded-full border border-mineral bg-gray-900/50 px-3 py-1 text-[11px] font-medium tracking-wide text-gray-500">
             Evidence opens on live picks
           </span>
         )}
@@ -175,7 +175,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
     (breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore !== 0);
 
   return (
-    <div className="rounded-lg border border-gray-800/60 bg-gray-950/40 p-3">
+    <div className="rounded-lg border border-mineral/60 bg-carbon/40 p-3">
       <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
         Factor Breakdown
       </p>

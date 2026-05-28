@@ -48,12 +48,12 @@ const CHANGELOG = [
 
 export default function MethodologyPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-gray-950 text-gray-100">
+    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
-        <section className="border-b border-gray-800 px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
               Published framework
             </p>
             <h1 className="mt-4 max-w-4xl break-words text-4xl font-black tracking-tight text-white sm:text-5xl">
@@ -69,8 +69,8 @@ export default function MethodologyPage(): JSX.Element {
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-3">
             {STACK.map((item, index) => (
-              <article key={item.title} className="border border-gray-800 bg-gray-900/65 p-6">
-                <span className="font-mono text-xs text-cyan-300">0{index + 1}</span>
+              <article key={item.title} className="border border-mineral bg-gray-900/65 p-6">
+                <span className="font-mono text-xs text-ion-blue">0{index + 1}</span>
                 <h2 className="mt-3 text-2xl font-bold text-white">{item.title}</h2>
                 <p className="mt-3 text-sm leading-6 text-gray-400">{item.body}</p>
               </article>
@@ -78,11 +78,11 @@ export default function MethodologyPage(): JSX.Element {
           </div>
         </section>
 
-        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+                <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
                   Factor inventory
                 </p>
                 <h2 className="mt-2 text-3xl font-black text-white">What the model can read</h2>
@@ -93,7 +93,7 @@ export default function MethodologyPage(): JSX.Element {
             </div>
             <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
               {FACTORS.map((factor) => (
-                <div key={factor} className="min-h-20 border border-gray-800 bg-gray-950/70 p-4">
+                <div key={factor} className="min-h-20 border border-mineral bg-carbon/70 p-4">
                   <p className="text-sm font-semibold text-white">{factor}</p>
                 </div>
               ))}
@@ -103,15 +103,15 @@ export default function MethodologyPage(): JSX.Element {
 
         <MethodologySection />
 
-        <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
               Version changelog
             </p>
             <h2 className="mt-2 text-3xl font-black text-white">Model changes are named.</h2>
-            <div className="mt-8 overflow-hidden border border-gray-800">
+            <div className="mt-8 overflow-hidden border border-mineral">
               {CHANGELOG.map(([version, note]) => (
-                <div key={version} className="grid gap-2 border-b border-gray-800 px-4 py-4 last:border-b-0 sm:grid-cols-[120px_1fr]">
+                <div key={version} className="grid gap-2 border-b border-mineral px-4 py-4 last:border-b-0 sm:grid-cols-[120px_1fr]">
                   <span className="font-mono text-sm text-cyan-200">{version}</span>
                   <span className="text-sm text-gray-400">{note}</span>
                 </div>

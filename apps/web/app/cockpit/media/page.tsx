@@ -25,7 +25,7 @@ export default async function CockpitMediaPage() {
       {items.length === 0 ? (
         <p
           data-testid="media-empty"
-          className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 text-sm text-gray-500"
+          className="rounded-xl border border-mineral bg-gray-900/40 p-6 text-sm text-gray-500"
         >
           No media items yet. Seed the cockpit_media_items table to populate a demo state.
         </p>
@@ -34,7 +34,7 @@ export default async function CockpitMediaPage() {
           {items.map((m) => (
             <li
               key={m.id}
-              className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4"
+              className="rounded-2xl border border-mineral bg-gray-900/40 p-4"
             >
               <header className="flex items-start justify-between gap-3">
                 <div className="min-w-0">

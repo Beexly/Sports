@@ -31,7 +31,7 @@ function formatDate(value: string | null): string {
 
 function MetaRail({ entry }: { readonly entry: JournalEntryDetail }): JSX.Element {
   return (
-    <aside className="space-y-4 rounded-lg border border-gray-800 bg-gray-950/50 p-4">
+    <aside className="space-y-4 rounded-lg border border-mineral bg-carbon/50 p-4">
       <div>
         <p className="text-[10px] uppercase tracking-wide text-gray-600">Entry meta</p>
         <h2 className="mt-1 text-sm font-semibold text-white">
@@ -68,7 +68,7 @@ function MetaRail({ entry }: { readonly entry: JournalEntryDetail }): JSX.Elemen
 
 function WeekDataRail({ entry }: { readonly entry: JournalEntryDetail }): JSX.Element {
   return (
-    <aside className="space-y-4 rounded-lg border border-gray-800 bg-gray-950/50 p-4">
+    <aside className="space-y-4 rounded-lg border border-mineral bg-carbon/50 p-4">
       <div>
         <p className="text-[10px] uppercase tracking-wide text-gray-600">Week data</p>
         <h2 className="mt-1 text-sm font-semibold text-white">Evidence attached</h2>
@@ -85,7 +85,7 @@ function WeekDataRail({ entry }: { readonly entry: JournalEntryDetail }): JSX.El
       </dl>
       <ReferenceList title="Referenced Picks" values={entry.referencedPickIds} />
       <ReferenceList title="Cited Autopsies" values={entry.referencedAutopsyIds} />
-      <div className="rounded-lg border border-gray-800 bg-gray-950/70 p-3">
+      <div className="rounded-lg border border-mineral bg-carbon/70 p-3">
         <p className="text-[10px] uppercase tracking-wide text-gray-600">Distribution</p>
         <dl className="mt-2 space-y-2 text-xs text-gray-400">
           <div className="flex justify-between gap-3">
@@ -121,7 +121,7 @@ function ReferenceList({
       ) : (
         <ul className="mt-2 space-y-1 text-xs text-gray-400">
           {values.slice(0, 8).map((value) => (
-            <li key={value} className="truncate rounded border border-gray-800 bg-gray-950/70 px-2 py-1">
+            <li key={value} className="truncate rounded border border-mineral bg-carbon/70 px-2 py-1">
               {value}
             </li>
           ))}

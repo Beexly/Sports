@@ -36,7 +36,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
           </div>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
+            className="rounded-lg border border-mineral px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
           >
             Back to Jarvis
           </Link>
@@ -57,8 +57,8 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
 
       <section className="grid gap-4">
         {dashboard.categories.map((category) => (
-          <div key={category.id} className="rounded-lg border border-gray-800 bg-gray-950">
-            <div className="border-b border-gray-800 px-4 py-3">
+          <div key={category.id} className="rounded-lg border border-mineral bg-carbon">
+            <div className="border-b border-mineral px-4 py-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h2 className="text-sm font-semibold text-white">{category.name}</h2>
                 <p className="text-[11px] uppercase tracking-wider text-gray-500">
@@ -77,7 +77,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-lg border border-gray-800 bg-gray-950 p-4">
+        <div className="rounded-lg border border-mineral bg-carbon p-4">
           <h2 className="text-sm font-semibold text-white">Auto-Filed Issues</h2>
           {dashboard.issues.length === 0 ? (
             <p className="mt-3 text-sm text-gray-500">No synthetic monitoring issues filed.</p>
@@ -87,7 +87,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
                 <Link
                   key={issue.id}
                   href={issue.sourcePath}
-                  className="rounded-md border border-gray-800 bg-gray-900/60 p-3 hover:bg-gray-900"
+                  className="rounded-md border border-mineral bg-gray-900/60 p-3 hover:bg-gray-900"
                 >
                   <p className={`text-xs font-semibold ${SEVERITY_STYLES[issue.severity]}`}>
                     {issue.severity}
@@ -99,7 +99,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
           )}
         </div>
 
-        <div className="rounded-lg border border-gray-800 bg-gray-950 p-4">
+        <div className="rounded-lg border border-mineral bg-carbon p-4">
           <h2 className="text-sm font-semibold text-white">Configuration</h2>
           <dl className="mt-3 grid gap-2 text-sm">
             <ConfigRow label="Enabled" value={dashboard.config.enabled ? "true" : "false"} />
@@ -111,7 +111,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
         </div>
       </section>
 
-      <section className="rounded-lg border border-gray-800 bg-gray-950 p-4">
+      <section className="rounded-lg border border-mineral bg-carbon p-4">
         <h2 className="text-sm font-semibold text-white">Manual Actions</h2>
         <p className="mt-2 text-sm text-gray-500">
           The scheduled runner writes durable history. Manual controls stay disabled until a server
@@ -124,7 +124,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
               key={label}
               type="button"
               disabled
-              className="rounded-lg border border-gray-800 px-3 py-2 text-xs text-gray-500"
+              className="rounded-lg border border-mineral px-3 py-2 text-xs text-gray-500"
             >
               {label}
             </button>
@@ -137,7 +137,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
 
 function Metric({ label, value }: { readonly label: string; readonly value: string }): JSX.Element {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-950 p-4">
+    <div className="rounded-lg border border-mineral bg-carbon p-4">
       <p className="text-[11px] uppercase tracking-wider text-gray-500">{label}</p>
       <p className="mt-2 truncate text-xl font-semibold text-white">{value}</p>
     </div>

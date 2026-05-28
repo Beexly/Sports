@@ -20,7 +20,7 @@ export default function CockpitBriefStub() {
       </p>
       <Link
         href="/cockpit"
-        className="w-fit rounded-lg border border-gray-800 px-3 py-2 text-xs text-gray-300 hover:bg-gray-900/60"
+        className="w-fit rounded-lg border border-mineral px-3 py-2 text-xs text-gray-300 hover:bg-gray-900/60"
       >
         ← Back to Jarvis
       </Link>
