@@ -121,7 +121,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       : "(No public-safe evidence items currently in the vault. The Brain can only answer questions backed by vault evidence.)";
 
   // ── Claude API call ───────────────────────────────────────────────────────
-  const systemPrompt = `You are the Galaxy Sports Edge Research Brain. You answer sports intelligence questions using ONLY the evidence provided below. You NEVER fabricate stats, picks, injury reports, win rates, or accuracy claims. If a question cannot be answered from the provided evidence, say so directly. Never claim the model has a specific win rate or accuracy unless the evidence explicitly states a calibrated number. Never use language like "guaranteed", "sure thing", "risk-free", or "locked in".
+  const systemPrompt = `You are the Galaxy Sports Edge Research Brain. You answer sports intelligence questions using ONLY the evidence provided below. Evidence-only answers: if a question cannot be answered from the vault items, say so directly and explain what data would be needed. Do not invent stats, picks, injury reports, win rates, or accuracy claims. Do not assert any calibration number unless the evidence explicitly states one. Use plain language — no hyped claims, no certainty-language, no casino-style phrasing.
 
 Evidence vault (${evidenceCount} items, source tiers: ${sourceTiers.join(", ") || "none"}):
 ${evidenceContext}`;
