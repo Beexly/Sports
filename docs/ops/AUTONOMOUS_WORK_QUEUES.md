@@ -80,9 +80,13 @@ links, unsupported claims, mock data ambiguity.
 Missing source, freshness, model version, citation, or proof on data
 cards or analytical claims.
 
-- [ ] Adopt `EVIDENCE_CHAIN_STANDARD.md` per-card requirements across
-      all data-rendering components (PickCard, AutopsyRow, BoardCard,
-      future ShareCards)
+- [~] Adopt `EVIDENCE_CHAIN_STANDARD.md` per-card requirements across
+      all data-rendering components — **partial C9**: canonical
+      `<EvidenceCard />` primitive shipped at
+      `components/ui/evidence-card.tsx` with TS-enforced
+      `failureCase` on `kind="pick"`; freshness/source pill anatomy
+      matches the Standard. Migration of existing PickCard /
+      BoardCard / AutopsyRow to compose this primitive queued.
 
 ## Queue G — Design Quality
 

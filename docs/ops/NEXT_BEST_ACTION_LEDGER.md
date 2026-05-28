@@ -54,7 +54,8 @@ Constitution's priority order.
 | C5 | 2026-05-28 | IP/Security binder — 12 documents | `02c411b` |
 | C6 | 2026-05-28 | Decision-quality spine — typed shared config | `0289047` |
 | C7 | 2026-05-28 | Galaxy Constitution + ops/scoring/design docs + Product Kernel scaffold | `d282267` |
-| C8 | 2026-05-28 | Queue B drain: security.txt + robots/sourcemap verification + board/today disambiguation | _this cycle_ |
+| C8 | 2026-05-28 | Queue B drain: security.txt + robots/sourcemap verification + board/today disambiguation + prompts scaffold + /picks RiskDisclosure | `9044a0b` → `503bb06` |
+| C9 | 2026-05-28 | Queue F drain: EvidenceCard primitive — typed Evidence Chain compliance at the component level, with required failure-case on `kind="pick"` enforced by TS | _this cycle_ |
 
 ## Selection rule
 
