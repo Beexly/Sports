@@ -1,3 +1,5 @@
+"use client";
+
 import type {
   PublicPick,
   PickType,
@@ -7,24 +9,360 @@ import type {
 } from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
 import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
+import Link from "next/link";
 
-// ─────────────────────────────────────────────
-// Main PickCard
-// ─────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Surface-Agnostic PickCard — PickCardData interface
+// Used by: Today's Board, Pick Feed, any surface that renders picks
+// ─────────────────────────────────────────────────────────────────────────────
 
-interface PickCardProps {
+export type PickCardData = {
+  id: string;
+  sport: string;
+  homeTeam: string;
+  awayTeam: string;
+  selection: string;
+  pickType: "SPREAD" | "MONEYLINE" | "TOTAL";
+  confidence: number; // 0–100
+  tier: "FREE" | "PRO" | "ELITE";
+  signalGrade?: "A" | "B" | "C" | "D" | "F";
+  riskGrade?: "low" | "moderate" | "elevated" | "high";
+  isFeatured?: boolean;
+  publishedAt?: string;
+  result?: "WIN" | "LOSS" | "PUSH" | "PENDING" | "VOID";
+  factorTrailHref?: string;
+};
+
+type PickCardProps = {
+  pick: PickCardData;
+  variant?: "compact" | "full";
+  showResult?: boolean;
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function pickTypeStyles(
+  type: "SPREAD" | "MONEYLINE" | "TOTAL",
+): { pill: string; label: string; text: string } {
+  switch (type) {
+    case "SPREAD":
+      return {
+        pill: "bg-blue-950/30 border border-blue-800/40",
+        label: "Spread",
+        text: "text-blue-400",
+      };
+    case "MONEYLINE":
+      return {
+        pill: "bg-purple-950/30 border border-purple-800/40",
+        label: "Moneyline",
+        text: "text-purple-400",
+      };
+    case "TOTAL":
+      return {
+        pill: "bg-orange-950/30 border border-orange-800/40",
+        label: "Total",
+        text: "text-orange-400",
+      };
+  }
+}
+
+function confidenceStyles(score: number): {
+  label: string;
+  textColor: string;
+  fillColor: string;
+} {
+  if (score >= 80)
+    return {
+      label: "Elite",
+      textColor: "text-green-400",
+      fillColor: "bg-green-400",
+    };
+  if (score >= 65)
+    return {
+      label: "High",
+      textColor: "text-cyan-400",
+      fillColor: "bg-cyan-400",
+    };
+  if (score >= 50)
+    return {
+      label: "Moderate",
+      textColor: "text-yellow-400",
+      fillColor: "bg-yellow-400",
+    };
+  return {
+    label: "Low",
+    textColor: "text-gray-400",
+    fillColor: "bg-gray-500",
+  };
+}
+
+function tierStyles(tier: "FREE" | "PRO" | "ELITE"): {
+  classes: string;
+  label: string;
+} {
+  switch (tier) {
+    case "FREE":
+      return {
+        classes:
+          "bg-gray-800/60 text-gray-300 border border-gray-700/40",
+        label: "FREE",
+      };
+    case "PRO":
+      return {
+        classes:
+          "bg-cyan-950/40 text-cyan-300 border border-cyan-800/40",
+        label: "PRO",
+      };
+    case "ELITE":
+      return {
+        classes:
+          "bg-purple-950/40 text-purple-300 border border-purple-800/40",
+        label: "ELITE",
+      };
+  }
+}
+
+function resultStyles(result: NonNullable<PickCardData["result"]>): string {
+  switch (result) {
+    case "WIN":
+      return "text-green-400 bg-green-950/30 border border-green-800/40";
+    case "LOSS":
+      return "text-red-400 bg-red-950/30 border border-red-800/40";
+    case "PUSH":
+      return "text-yellow-400 bg-yellow-950/30 border border-yellow-800/40";
+    case "PENDING":
+      return "text-gray-400 bg-gray-800/40 border border-gray-700/40";
+    case "VOID":
+      return "text-gray-500 bg-gray-900/40 border border-gray-800/40";
+  }
+}
+
+function signalGradeStyles(grade: NonNullable<PickCardData["signalGrade"]>): string {
+  switch (grade) {
+    case "A":
+      return "text-green-400 bg-green-950/30 border border-green-800/40";
+    case "B":
+      return "text-cyan-400 bg-cyan-950/30 border border-cyan-800/40";
+    case "C":
+      return "text-yellow-400 bg-yellow-950/30 border border-yellow-800/40";
+    case "D":
+      return "text-orange-400 bg-orange-950/30 border border-orange-800/40";
+    case "F":
+      return "text-red-400 bg-red-950/30 border border-red-800/40";
+  }
+}
+
+function riskGradeStyles(grade: NonNullable<PickCardData["riskGrade"]>): string {
+  switch (grade) {
+    case "low":
+      return "text-green-400";
+    case "moderate":
+      return "text-yellow-400";
+    case "elevated":
+      return "text-orange-400";
+    case "high":
+      return "text-red-400";
+  }
+}
+
+function riskGradeLabel(grade: NonNullable<PickCardData["riskGrade"]>): string {
+  switch (grade) {
+    case "low":
+      return "Low risk";
+    case "moderate":
+      return "Moderate risk";
+    case "elevated":
+      return "Elevated risk";
+    case "high":
+      return "High risk";
+  }
+}
+
+function sportBadgeColor(sport: string): string {
+  const s = sport.toUpperCase();
+  if (s === "NFL" || s.includes("NCAAF")) return "bg-amber-950/40 text-amber-300 border border-amber-800/30";
+  if (s === "NBA" || s.includes("NCAAB")) return "bg-blue-950/40 text-blue-300 border border-blue-800/30";
+  if (s === "MLB") return "bg-red-950/40 text-red-300 border border-red-800/30";
+  if (s === "NHL") return "bg-sky-950/40 text-sky-300 border border-sky-800/30";
+  if (s === "SOCCER" || s === "MLS") return "bg-emerald-950/40 text-emerald-300 border border-emerald-800/30";
+  return "bg-gray-800/60 text-gray-300 border border-gray-700/40";
+}
+
+function formatPublishedAt(ts: string): string {
+  const d = new Date(ts);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+}
+
+// ─── PickCard component ───────────────────────────────────────────────────────
+
+export function PickCard({
+  pick,
+  variant = "full",
+  showResult = false,
+}: PickCardProps): JSX.Element {
+  const typeStyle = pickTypeStyles(pick.pickType);
+  const conf = confidenceStyles(pick.confidence);
+  const tier = tierStyles(pick.tier);
+  const confPct = Math.min(100, Math.max(0, pick.confidence));
+  const isCompact = variant === "compact";
+
+  const articleClasses = [
+    "relative flex flex-col rounded-xl border bg-gray-900/60",
+    pick.isFeatured
+      ? "border-l-4 border-l-cyan-500 border-mineral bg-gradient-to-r from-cyan-950/20"
+      : "border-mineral",
+    isCompact ? "gap-3 p-4" : "gap-4 p-5",
+  ].join(" ");
+
+  return (
+    <article className={articleClasses}>
+      {/* ── Featured ribbon ─────────────────────────────────────────── */}
+      {pick.isFeatured && (
+        <span className="absolute right-3 top-3 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-cyan-400">
+          Featured
+        </span>
+      )}
+
+      {/* ── Header row: sport badge + tier + result ──────────────────── */}
+      <div className="flex items-center gap-2 flex-wrap pr-12">
+        <span
+          className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold ${sportBadgeColor(pick.sport)}`}
+        >
+          {pick.sport.toUpperCase()}
+        </span>
+
+        <span
+          className={`rounded-full px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider ${tier.classes}`}
+        >
+          {tier.label}
+        </span>
+
+        {pick.signalGrade && (
+          <span
+            className={`rounded-full px-2 py-0.5 font-mono text-[9px] font-bold ${signalGradeStyles(pick.signalGrade)}`}
+            title="Signal grade"
+          >
+            {pick.signalGrade}
+          </span>
+        )}
+
+        {showResult && pick.result && pick.result !== "PENDING" && (
+          <span
+            className={`rounded-full px-2 py-0.5 font-mono text-[9px] font-bold ${resultStyles(pick.result)}`}
+          >
+            {pick.result}
+          </span>
+        )}
+      </div>
+
+      {/* ── Matchup header ───────────────────────────────────────────── */}
+      <div className={isCompact ? "" : "pr-4"}>
+        <p className="text-xs font-semibold leading-snug text-white">
+          {pick.awayTeam}{" "}
+          <span className="text-gray-500">@</span>{" "}
+          {pick.homeTeam}
+        </p>
+        {pick.publishedAt && (
+          <p className="mt-0.5 font-mono text-[10px] text-gray-500">
+            {formatPublishedAt(pick.publishedAt)}
+          </p>
+        )}
+      </div>
+
+      {/* ── Selection pill ───────────────────────────────────────────── */}
+      <div
+        className={`inline-flex self-start items-center gap-2 rounded-lg px-3 py-2 ${typeStyle.pill}`}
+      >
+        <div>
+          <p
+            className={`font-mono text-[9px] uppercase tracking-widest ${typeStyle.text}`}
+          >
+            {typeStyle.label}
+          </p>
+          <p className="mt-0.5 text-sm font-bold text-white leading-snug">
+            {pick.selection}
+          </p>
+        </div>
+      </div>
+
+      {/* ── Confidence bar ───────────────────────────────────────────── */}
+      {!isCompact && (
+        <div>
+          <div className="mb-1.5 flex items-center justify-between">
+            <span className="font-mono text-[9px] uppercase tracking-wider text-gray-500">
+              Confidence
+            </span>
+            <span className={`font-mono text-[10px] font-semibold ${conf.textColor}`}>
+              {conf.label} · {pick.confidence}
+            </span>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-gray-800">
+            <div
+              className={`h-full rounded-full ${conf.fillColor}`}
+              style={{ width: `${confPct}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ── Compact confidence display ───────────────────────────────── */}
+      {isCompact && (
+        <div className="flex items-center gap-2">
+          <div className="h-1 flex-1 rounded-full bg-gray-800">
+            <div
+              className={`h-full rounded-full ${conf.fillColor}`}
+              style={{ width: `${confPct}%` }}
+            />
+          </div>
+          <span className={`font-mono text-[10px] font-bold tabular-nums ${conf.textColor}`}>
+            {pick.confidence}
+          </span>
+        </div>
+      )}
+
+      {/* ── Footer row: risk grade + factor trail ────────────────────── */}
+      {!isCompact && (pick.riskGrade ?? pick.factorTrailHref) && (
+        <div className="flex items-center justify-between border-t border-mineral/60 pt-3">
+          {pick.riskGrade && (
+            <span
+              className={`font-mono text-[10px] font-semibold ${riskGradeStyles(pick.riskGrade)}`}
+            >
+              {riskGradeLabel(pick.riskGrade)}
+            </span>
+          )}
+          {pick.factorTrailHref && (
+            <Link
+              href={pick.factorTrailHref}
+              className="ml-auto text-xs font-semibold text-ion-blue hover:underline"
+            >
+              View trail →
+            </Link>
+          )}
+        </div>
+      )}
+    </article>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FullPickCard — full-featured card backed by PublicPick from @sports/types
+// Used by: /picks page (server-rendered, auth-gated entitlements)
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface FullPickCardProps {
   pick: PublicPick;
   canSeeConfidence: boolean;
   canSeeEdgeScore: boolean;
   canSeeFactorBreakdown: boolean;
 }
 
-export function PickCard({
+export function FullPickCard({
   pick,
   canSeeConfidence,
   canSeeEdgeScore,
   canSeeFactorBreakdown,
-}: PickCardProps) {
+}: FullPickCardProps) {
   const gameTime = new Date(pick.game.commenceTime).toLocaleString("en-US", {
     weekday: "short",
     month: "short",
@@ -303,7 +641,7 @@ function ScoreBar({
 }
 
 // ─────────────────────────────────────────────
-// Badge sub-components
+// Badge sub-components (used by FullPickCard)
 // ─────────────────────────────────────────────
 
 function GradeBadge({ grade }: { grade: PickGrade }) {

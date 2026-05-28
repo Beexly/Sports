@@ -68,11 +68,6 @@ const LEDGER = [
   ["PHI -2.5", "WIN", "Consensus held through close"],
 ] as const;
 
-const STACK = [
-  ["Read the board", "Odds, depth, line movement, freshness, and consensus are collected before a pick can be evaluated."],
-  ["Score the math", "More than 10 deterministic factors score the market against schedule, venue, volatility, and data quality context."],
-  ["Gate the slate", "Publish thresholds and freshness checks decide what reaches the board. Most evaluated games do not publish."],
-] as const;
 
 const QUESTIONS = [
   ["What changed?", "Every pick has a factor trail. You can see the inputs that moved the score."],
@@ -113,6 +108,8 @@ export default async function HomePage(): Promise<JSX.Element> {
         <PassList passes={passesResult.data.passes} isSampleData={passesResult.meta.isSampleData} />
         <StackSection />
         <IntelligenceSurfaces />
+        <SportNav />
+        <DailyRoutine />
         <ThreeQuestions />
         <MethodologySection />
         <ResponsibleBand />
@@ -617,6 +614,82 @@ function IntelligenceSurfaces(): JSX.Element {
                 </Link>
               </div>
             </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DailyRoutine(): JSX.Element {
+  const ROUTINE = [
+    { time: "Pre-game", icon: "01", action: "Open Today's Board", href: "/today", sub: "Check what published and what the model skipped." },
+    { time: "Before betting", icon: "02", action: "Read the Pass List", href: "/no-bet", sub: "If the model didn't publish on a game you like, understand why." },
+    { time: "On a pick", icon: "03", action: "Check Market Gravity", href: "/market-gravity", sub: "Line moved? Is it signal or noise? Check before you act." },
+    { time: "Post-game", icon: "04", action: "Log the result", href: "/tracker", sub: "Track CLV, not just outcome. Was the process good?" },
+    { time: "Weekly", icon: "05", action: "Review your process", href: "/command", sub: "Command Center audit: exposure, discipline, behavior patterns." },
+    { time: "Always", icon: "06", action: "Study the doctrine", href: "/academy", sub: "Sharper thinking beats more picks. The Academy builds the framework." },
+  ] as const;
+
+  return (
+    <section className="border-y border-mineral bg-gray-900/20 px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="text-center">
+          <p className="font-mono text-xs uppercase tracking-[0.24em] text-ion-blue">The Routine</p>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
+            How Galaxy fits your day.
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-gray-500">
+            Every surface is designed for a specific moment in your decision process. This is the sequence.
+          </p>
+        </div>
+        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {ROUTINE.map(({ time, icon, action, href, sub }) => (
+            <Link
+              key={href}
+              href={href}
+              className="group flex items-start gap-4 rounded-xl border border-mineral bg-gray-900/40 p-5 transition-colors hover:border-gray-700 hover:bg-gray-900/60"
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-mineral bg-carbon">
+                <span className="font-mono text-[10px] font-bold text-ion-blue">{icon}</span>
+              </div>
+              <div>
+                <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-gray-600">{time}</p>
+                <p className="mt-0.5 text-sm font-bold text-white group-hover:text-cyan-100">{action}</p>
+                <p className="mt-1 text-xs leading-5 text-gray-500">{sub}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SportNav(): JSX.Element {
+  const SPORTS = [
+    { href: "/nfl", label: "NFL", sub: "Rest · schedule · ATS" },
+    { href: "/nba", label: "NBA", sub: "B2B · usage · pace" },
+    { href: "/mlb", label: "MLB", sub: "Pitcher · park · weather" },
+    { href: "/props", label: "Props", sub: "Role · line value · fit" },
+    { href: "/market-gravity", label: "Markets", sub: "Movement · depth · books" },
+    { href: "/fantasy", label: "Fantasy", sub: "Usage · scheme · injury" },
+  ] as const;
+
+  return (
+    <section className="px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-gray-600">Research by sport</p>
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          {SPORTS.map(({ href, label, sub }) => (
+            <Link
+              key={href}
+              href={href}
+              className="group flex flex-col rounded-lg border border-mineral bg-gray-900/40 p-4 transition-colors hover:border-gray-600"
+            >
+              <span className="text-sm font-bold text-white group-hover:text-cyan-100">{label}</span>
+              <span className="mt-1 font-mono text-[10px] text-gray-600">{sub}</span>
+            </Link>
           ))}
         </div>
       </div>

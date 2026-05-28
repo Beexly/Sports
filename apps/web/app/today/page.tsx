@@ -417,6 +417,55 @@ export default async function TodayPage(): Promise<JSX.Element> {
           </div>
         </section>
 
+        {/* ── Intelligence Hub Nav ──────────────────────────────────────── */}
+        <section className="border-t border-mineral pt-10">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-gray-600">
+            Where to go next
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                href: "/no-bet",
+                title: "No-Bet Engine",
+                desc: "What the model skipped today and why. Read the passes before any bet.",
+                accent: "text-amber-400",
+              },
+              {
+                href: "/market-gravity",
+                title: "Market Gravity",
+                desc: "Line movement, book disagreement, and market signals — live.",
+                accent: "text-orange-400",
+              },
+              {
+                href: "/academy",
+                title: "Galaxy Academy",
+                desc: "Learn the doctrine behind the picks. Signal, risk, and discipline.",
+                accent: "text-indigo-400",
+              },
+              {
+                href: "/tracker",
+                title: "Bet Tracker",
+                desc: "Log your bets. Track CLV. Review your process, not just your results.",
+                accent: "text-emerald-400",
+              },
+            ].map(({ href, title, desc, accent }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group flex flex-col rounded-xl border border-mineral bg-gray-900/40 p-4 transition-colors hover:border-gray-600"
+              >
+                <span className={`font-mono text-[10px] uppercase tracking-[0.2em] ${accent}`}>
+                  {title}
+                </span>
+                <p className="mt-2 flex-1 text-xs leading-5 text-gray-500 group-hover:text-gray-400">
+                  {desc}
+                </p>
+                <span className="mt-3 font-mono text-[10px] text-ion-blue">Open →</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
         <RiskDisclosure variant="compact" className="text-center" />
       </main>
 

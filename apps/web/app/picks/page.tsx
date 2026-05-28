@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
-import { PickCard } from "@/components/picks/pick-card";
+import { FullPickCard } from "@/components/picks/pick-card";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import type { PublicPick, DailySlate } from "@sports/types";
@@ -345,7 +345,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {!fetchError && picks.length > 0 && (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {picks.map((pick) => (
-                <PickCard
+                <FullPickCard
                   key={pick.id}
                   pick={pick}
                   canSeeConfidence={entitlements.canSeeConfidence}
