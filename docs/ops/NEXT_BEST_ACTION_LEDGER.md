@@ -30,6 +30,9 @@ Constitution's priority order.
 | C7 | 2026-05-28 | Security gap | Verify repo visibility is `private`; confirm no proprietary methodology in public bundles | B | PARTIAL — `productionBrowserSourceMaps` defaults false ✅; `robots.ts` disallows `/cockpit`, `/admin`, `/api`, `/auth`, `/dashboard`, `/brief` ✅; repo visibility must be confirmed in GitHub UI by owner |
 | C8 | 2026-05-28 | Security gap | Add `/.well-known/security.txt` for coordinated disclosure | B | RESOLVED — `d282267`+ |
 | C8 | 2026-05-28 | Product coherence | Differentiate `/board` (raw operator view) from `/today` (curated habit-loop entry) so they are not perceived as duplicates | D | RESOLVED — catalog summary updated |
+| C8 | 2026-05-28 | Product coherence | Add `<DecisionQualityNav />` homepage section linking all 7 decision-quality surfaces | D | RESOLVED — no more orphan surfaces |
+| C8 | 2026-05-28 | Compliance gap | Audit responsible-play link coverage on all betting-adjacent surfaces; upgrade /picks with inline RiskDisclosure | E | RESOLVED |
+| C8 | 2026-05-28 | Security gap | Scaffold `apps/web/lib/prompts/` server-only registry with migration backlog for inline prompts in content-generator and claude-api/messages | B | PARTIAL — scaffold + README; per-prompt migration queued |
 | C7 | 2026-05-28 | Product gap | Centralize AI prompts under `apps/web/lib/prompts/` (server-only) | B | OPEN |
 | C7 | 2026-05-28 | Documentation gap | Adopt the Product Kernel — typed configs under `apps/web/lib/galaxy/kernel/` | D | OPEN |
 | C7 | 2026-05-28 | Compliance gap | Add responsible-play link to every betting-adjacent surface | E | OPEN |

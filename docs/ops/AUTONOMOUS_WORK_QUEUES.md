@@ -35,8 +35,11 @@ source-map risks, exposed admin routes, competitor inference risks.
       — **verified C8**: not set, defaults to false ✅
 - [x] Verify `robots.ts` disallows `/cockpit`, `/admin`, `/api`,
       `/auth`, `/dashboard`, `/brief` — **verified C8** ✅
-- [ ] Centralize Claude/Codex prompts under `apps/web/lib/prompts/`
-      (server-only) so they are not scattered across feature code
+- [~] Centralize Claude/Codex prompts under `apps/web/lib/prompts/`
+      (server-only) — **partial C8**: directory scaffolded with README,
+      migration backlog documented, target folder layout published.
+      Per-prompt migration deferred to focused cycle to preserve test
+      coverage on each move.
 - [x] Add `/.well-known/security.txt` for vulnerability disclosure
       — **resolved C8**: `apps/web/public/.well-known/security.txt`
 
@@ -65,8 +68,10 @@ next action.
 Unsafe copy, missing responsible-gaming links, missing methodology
 links, unsupported claims, mock data ambiguity.
 
-- [ ] Add responsible-play link to every betting-adjacent surface (all
-      decision-quality surfaces, all sport pages, Tracker, Leaderboard)
+- [x] Add responsible-play link to every betting-adjacent surface
+      — **resolved C8**: audit pass confirmed every betting-adjacent
+      route inherits responsible-play via Footer; `/picks` upgraded with
+      inline `<RiskDisclosure includePastPerformance />` for parity
 - [ ] Add methodology link to every analytical surface
 - [ ] Audit every page using sample/mock/demo data for visible label
 
