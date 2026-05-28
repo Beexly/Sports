@@ -191,6 +191,42 @@ export const ROUTES: ReadonlyArray<RouteEntry> = [
     summary: "Five offensive scheme classifications and how each affects fantasy value at WR, RB, TE.",
   },
 
+  // ── Rumor Radar sub-cluster (GEO authority) ──────────────────
+  {
+    path: "/rumor-radar/how-it-works",
+    label: "How Rumor Radar Works",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Five signal states (WATCHLIST, ELEVATED, CONTRADICTED, STALE, GRADUATED) and the graduation gate to picks pipeline.",
+  },
+  {
+    path: "/rumor-radar/source-tiers",
+    label: "Rumor Radar Source Tiers",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Six-tier source taxonomy applied to rumor signals. Only Tier 1–2 can graduate a signal to picks.",
+  },
+
+  // ── Brain / Research sub-cluster (GEO authority) ─────────────
+  {
+    path: "/brain/how-brain-works",
+    label: "How the Research Brain Works",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Six-step pipeline: query parsing → Evidence Vault lookup → source-tier assembly → confidence scoring → governance check → surface.",
+  },
+  {
+    path: "/brain/evidence-vault-explained",
+    label: "Evidence Vault Explained",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "Append-only structured store for every observed intelligence fact: source tier, TTL, public-safety flag, provenance.",
+  },
+
   // ── Market Gravity sub-cluster (GEO authority) ──────────────
   {
     path: "/market-gravity/how-it-works",
