@@ -68,6 +68,37 @@ export default function ObservatoryPage() {
       </main>
 
       <Footer />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: "Edge Map — Live Market Intelligence",
+            description:
+              "Real-time line movement, sharp/public splits, and market depth across every active matchup. Pre-launch — opens after the readiness gate clears.",
+            url: "https://galaxysportsedge.com/observatory",
+            dateModified: "2026-05-28",
+            breadcrumb: {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Home",
+                  item: "https://galaxysportsedge.com",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: "Edge Map",
+                  item: "https://galaxysportsedge.com/observatory",
+                },
+              ],
+            },
+          }),
+        }}
+      />
     </div>
   );
 }

@@ -1551,3 +1551,202 @@ model ContentReview {
   @@index([draftId, createdAt])
   @@map("content_reviews")
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADR 003 — Evidence Vault
+//
+// Append-only store for every structured intelligence fact observed by the
+// Source Acquisition Mesh. Each row is immutable after insert. Updates are
+// modeled as new rows with the same entityId. TTL expiry is enforced by a
+// background worker (not a DB trigger) to avoid silent deletes.
+// ─────────────────────────────────────────────────────────────────────────────
+
+model EvidenceItem {
+  id          String   @id @default(cuid())
+  sourceId    String   // FK into DataSource.id (string, not enforced — mesh may pre-date registry)
+  sourceTier  Int      // 1–6 matching source-hierarchy canon
+  entityType  String   // "player" | "team" | "game" | "market" | "league"
+  entityId    String   // canonical slug or cuid from Entity table
+  claimType   String   // "injury_status" | "line_movement" | "sharp_action" | "rumor" | etc.
+  observedAt  DateTime
+  content     Json     // structured payload; schema varies by claimType
+  ttlSeconds  Int      // seconds after observedAt before this row is considered stale
+  confidence  Float    @default(1.0) // 0–1, source-tier-derived default
+  publicSafe  Boolean  @default(false) // true = may surface to unpaid users
+  expiredAt   DateTime? // set by settlement worker when TTL lapses
+  auditLog    Json     @default("[]") // array of {at, actor, action, note}
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId, claimType])
+  @@index([sourceTier])
+  @@index([publicSafe])
+  @@index([observedAt])
+  @@index([expiredAt])
+  @@map("evidence_items")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADR 004 — Signal Ledger
+//
+// Append-only accounting ledger for every pick lifecycle event. One row per
+// event. Settlement, gate decisions, manual overrides, and autopsy findings
+// each produce a new row. The ledger is the canonical source for calibration
+// calculations — the Calibration Report reads from this table, not from picks.
+// ─────────────────────────────────────────────────────────────────────────────
+
+model SignalLedgerEntry {
+  id           String   @id @default(cuid())
+  pickId       String   // FK into Pick.id — string, cascade-aware
+  modelVersion String   // e.g. "1.0.0" — used to isolate calibration counts per version
+  eventType    String   // see SIGNAL_LEDGER_EVENT_TYPES below
+  eventAt      DateTime @default(now())
+  actor        String   @default("system") // "system" | "operator:<id>" | "worker:<name>"
+  payload      Json     @default("{}") // event-specific structured data
+  confidenceAt Float?   // confidence score at event time (for pre-settlement snapshots)
+  resultBinary Boolean? // true = win, false = loss, null = not yet settled / push / void
+  notes        String?  @db.Text
+
+  @@index([pickId])
+  @@index([modelVersion])
+  @@index([eventType])
+  @@index([eventAt])
+  @@map("signal_ledger_entries")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADR 005 — Claim Governance
+//
+// Every claim that is eligible to appear on a public-facing surface must pass
+// through the governance engine before rendering. PublicClaim rows are created
+// by the content pipeline and evaluated by evaluateClaimApproval() before
+// any surface renders the claim. Rejected claims never reach the UI.
+// ─────────────────────────────────────────────────────────────────────────────
+
+model PublicClaim {
+  id            String            @id @default(cuid())
+  surfacePath   String            // e.g. "/picks" | "/performance" | "/brain"
+  claimType     String            // "win_rate" | "accuracy" | "confidence" | "sharp_action" | "rumor" | etc.
+  claimText     String            @db.Text
+  evidenceIds   Json              @default("[]") // array of EvidenceItem.id strings
+  sourceTiers   Json              @default("[]") // array of Int — tiers of backing evidence
+  governanceStatus ClaimGovernanceStatus @default(PENDING)
+  evaluatedAt   DateTime?
+  evaluatedBy   String?           // "system" | "operator:<id>"
+  rejectionCode String?           // coded reason for rejection
+  rejectionNote String?           @db.Text
+  publishedAt   DateTime?         // set when status moves to APPROVED and surface renders
+  retiredAt     DateTime?         // set when claim is superseded or expires
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([surfacePath])
+  @@index([governanceStatus])
+  @@index([claimType])
+  @@index([createdAt])
+  @@map("public_claims")
+}
+
+enum ClaimGovernanceStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  RETIRED
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADR 006 — Entity Graph
+//
+// Canonical entity registry. Every EvidenceItem, Pick, and GameSignal
+// references an entity by entityId. This table is the authoritative source
+// for entity names, slugs, and type. EntityRef stores the mapping from an
+// external source ID (e.g. ESPN player ID) to our canonical entity.
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Entity {
+  id          String      @id @default(cuid())
+  slug        String      @unique // URL-safe canonical identifier: "chiefs-mahomes-patrick"
+  entityType  String      // "player" | "team" | "game" | "market" | "league" | "coach"
+  displayName String
+  sport       String?
+  league      String?
+  metadata    Json        @default("{}") // type-specific fields (position, jersey, etc.)
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  refs        EntityRef[]
+
+  @@index([entityType])
+  @@index([sport, league])
+  @@index([isActive])
+  @@map("entities")
+}
+
+model EntityRef {
+  id         String   @id @default(cuid())
+  entityId   String
+  sourceId   String   // DataSource.id that owns this external ID namespace
+  externalId String   // the raw ID from the external source
+  createdAt  DateTime @default(now())
+
+  entity     Entity   @relation(fields: [entityId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, externalId])
+  @@index([entityId])
+  @@map("entity_refs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADR 007 — Source Acquisition Mesh
+//
+// Registry of every data source the platform polls. Each source has a health
+// circuit breaker (circuitOpen), TTL, rate limits, and a license gate
+// (licenseApproved must be true before any worker polls). SourceHealthEvent
+// provides the time-series health log for monitoring and alerting.
+// ─────────────────────────────────────────────────────────────────────────────
+
+model DataSource {
+  id               String             @id @default(cuid())
+  slug             String             @unique // e.g. "the-odds-api" | "espn-injuries"
+  displayName      String
+  tier             Int                // 1–6 matching source-hierarchy canon
+  pollIntervalMs   Int                @default(30000)
+  ttlSeconds       Int                @default(300)
+  rateLimitRpm     Int                @default(60)
+  crawlDelayMs     Int                @default(0)
+  authType         String             @default("api_key") // "api_key" | "oauth2" | "none"
+  licenseApproved  Boolean            @default(false) // gate: must be true before polling
+  isActive         Boolean            @default(false)
+  circuitOpen      Boolean            @default(false) // true = breaker tripped, stop polling
+  lastPolledAt     DateTime?
+  lastSuccessAt    DateTime?
+  consecutiveFails Int                @default(0)
+  metadata         Json               @default("{}") // source-specific config
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  healthEvents     SourceHealthEvent[]
+
+  @@index([tier])
+  @@index([isActive])
+  @@index([circuitOpen])
+  @@map("data_sources")
+}
+
+model SourceHealthEvent {
+  id           String     @id @default(cuid())
+  sourceId     String
+  eventType    String     // "poll_ok" | "timeout" | "error" | "circuit_opened" | "circuit_closed" | "license_denied"
+  statusCode   Int?
+  latencyMs    Int?
+  errorMessage String?    @db.Text
+  recordCount  Int?       // number of records returned for poll_ok events
+  eventAt      DateTime   @default(now())
+
+  source       DataSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@index([sourceId, eventAt])
+  @@index([eventType])
+  @@index([eventAt])
+  @@map("source_health_events")
+}

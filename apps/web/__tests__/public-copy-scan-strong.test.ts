@@ -55,6 +55,7 @@ const SCAN_TARGETS = [
   "app/market-gravity/book-disagreement/page.tsx",
   "app/picks/how-picks-are-scored/page.tsx",
   "app/picks/confidence-scores/page.tsx",
+  "app/intelligence/calibration/page.tsx",
 ];
 
 describe("Strong public-copy scan — registry-driven", () => {

@@ -273,6 +273,14 @@ export const ROUTES: ReadonlyArray<RouteEntry> = [
 
   // ── Intelligence methodology cluster (GEO authority) ──────
   {
+    path: "/intelligence/calibration",
+    label: "Calibration Report",
+    state: "live",
+    priority: 0.7,
+    changeFrequency: "monthly",
+    summary: "What calibration means, the 30-settled-pick gate, and confidence-band accuracy tracking per model version.",
+  },
+  {
     path: "/intelligence/how-it-works",
     label: "How It Works",
     state: "live",

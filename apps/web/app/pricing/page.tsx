@@ -152,6 +152,61 @@ const faqJsonLd = {
   })),
 };
 
+const productJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: BRAND_NAME,
+  applicationCategory: "SportsApplication",
+  operatingSystem: "Web",
+  description:
+    "Transparent sports intelligence platform. Every pick ships with its full reasoning chain and a settlement record. No win-rate published until 30+ settled signals per model version.",
+  url: "https://galaxysportsedge.com",
+  offers: [
+    {
+      "@type": "Offer",
+      name: "Free",
+      price: "0",
+      priceCurrency: "USD",
+      description:
+        "One signal per day — sample the discipline before committing.",
+      url: "https://galaxysportsedge.com/auth/signin",
+      availability: "https://schema.org/InStock",
+    },
+    {
+      "@type": "Offer",
+      name: "Pro",
+      price: "19.00",
+      priceCurrency: "USD",
+      description:
+        "Every published signal with the confidence rating and full factor trail attached.",
+      url: "https://galaxysportsedge.com/pricing",
+      availability: "https://schema.org/InStock",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: "19.00",
+        priceCurrency: "USD",
+        unitCode: "MON",
+      },
+    },
+    {
+      "@type": "Offer",
+      name: "Elite",
+      price: "49.00",
+      priceCurrency: "USD",
+      description:
+        "Pro plus real-time alerts on every published signal — built for live slates.",
+      url: "https://galaxysportsedge.com/pricing",
+      availability: "https://schema.org/InStock",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: "49.00",
+        priceCurrency: "USD",
+        unitCode: "MON",
+      },
+    },
+  ],
+};
+
 // ─────────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────────
@@ -164,6 +219,10 @@ export default function PricingPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
 
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">

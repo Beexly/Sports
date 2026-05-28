@@ -12,10 +12,15 @@ import { BRAND_NAME } from "@/lib/brand";
  */
 
 export const metadata: Metadata = {
-  title: "Changelog - Ship log for Galaxy Sports Edge",
+  title: `Changelog — ${BRAND_NAME}`,
   description:
     "What changed and when. Every model version, gate flip, and calibration update logged publicly.",
   alternates: { canonical: "/changelog" },
+  openGraph: {
+    title: `Changelog — ${BRAND_NAME}`,
+    description:
+      "Every model version, gate flip, and calibration update logged publicly. Transparency is the product.",
+  },
 };
 
 type Entry = {
@@ -42,6 +47,30 @@ const TYPE_COLOR: Record<Entry["type"], string> = {
 };
 
 const ENTRIES: ReadonlyArray<Entry> = [
+  {
+    date: "2026-05-28",
+    type: "ship",
+    title: "GEO sub-cluster expansion — 15 deep-dive pages",
+    body: "Published 15 GEO sub-cluster pages across all six intelligence surfaces: Market Gravity (how-it-works, line-movement, book-disagreement), Picks (how-picks-are-scored, confidence-scores), Rumor Radar (how-it-works, source-tiers), Research Brain (how-brain-works, evidence-vault-explained), Fantasy (how-start-sit-works, usage-trends, scheme-fit), and Intelligence (how-it-works, source-hierarchy, glossary). Each page carries JSON-LD TechArticle or FAQPage schema and links back through the GEO cluster.",
+  },
+  {
+    date: "2026-05-28",
+    type: "ship",
+    title: "ADR 004–007 proposed: Signal Ledger, Claim Governance, Entity Graph, Source Acquisition Mesh",
+    body: "Four architecture decision records authored and placed in docs/adr/. These define the Prisma schema changes and service contracts for the intelligence core — the structures that will back the Evidence Vault, settlement ledger, entity resolution, and source health monitoring. Owner review gating these changes; implementation follows approval.",
+  },
+  {
+    date: "2026-05-28",
+    type: "ship",
+    title: "llms.txt expanded to 20 canonical AI-crawler entries",
+    body: "Updated /llms.txt per the llmstxt.org spec with all 15 new sub-cluster pages added alongside correct canonical URLs, topic annotations, and citation guidance for AI answer engines (ChatGPT, Perplexity, Google AI Overview, Claude).",
+  },
+  {
+    date: "2026-05-28",
+    type: "voice",
+    title: "Homepage intelligence surfaces grid added",
+    body: "Added an Intelligence Surfaces grid to the homepage above the ThreeQuestions section. Shows Market Gravity, Rumor Radar, Fantasy War Room, and Research Brain with their current state (PREVIEW / BETA / WAITLIST) and cluster deep-link cards so first-time visitors can navigate directly into methodology content.",
+  },
   {
     date: "2026-05-21",
     type: "ship",
@@ -163,6 +192,20 @@ export default function ChangelogPage() {
       </main>
 
       <Footer />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: `Changelog — ${BRAND_NAME}`,
+            description:
+              "Every model version, gate flip, and calibration update logged publicly.",
+            url: "https://galaxysportsedge.com/changelog",
+            dateModified: "2026-05-28",
+          }),
+        }}
+      />
     </div>
   );
 }
