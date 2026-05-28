@@ -62,6 +62,19 @@ export default async function CockpitOverview() {
 
   const featuredOperatorPicks = todaysOperatorPicks.filter((p) => p.isFeatured);
 
+  // Source Mesh health pulse — counts only, never blocks render.
+  const [
+    sourceTotalCount,
+    sourceHealthyCount,
+    sourceCircuitOpenCount,
+    sourceAwaitingLicenseCount,
+  ] = await Promise.all([
+    db.dataSource.count().catch(() => 0),
+    db.dataSource.count({ where: { isActive: true, circuitOpen: false, licenseApproved: true, consecutiveFails: 0 } }).catch(() => 0),
+    db.dataSource.count({ where: { circuitOpen: true } }).catch(() => 0),
+    db.dataSource.count({ where: { licenseApproved: false } }).catch(() => 0),
+  ]);
+
   let jarvis: { assessment: JarvisAssessment; performancePolicy: PublicPerformancePolicy } | null = null;
   let jarvisError: string | null = null;
   try {
@@ -265,6 +278,62 @@ export default async function CockpitOverview() {
         </section>
       )}
 
+      <section
+        data-testid="cockpit-source-mesh-pulse"
+        className={[
+          "rounded-2xl border p-5",
+          sourceCircuitOpenCount > 0
+            ? "border-red-900/60 bg-red-950/20"
+            : sourceAwaitingLicenseCount > 0
+              ? "border-yellow-900/60 bg-yellow-950/20"
+              : sourceTotalCount === 0
+                ? "border-mineral bg-gray-900/40"
+                : "border-emerald-900/60 bg-emerald-950/10",
+        ].join(" ")}
+      >
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            Source mesh
+          </h2>
+          <Link
+            href="/cockpit/sources"
+            className="text-[11px] text-gray-500 hover:text-gray-300"
+          >
+            Full registry →
+          </Link>
+        </div>
+        {sourceTotalCount === 0 ? (
+          <p className="mt-2 text-sm text-gray-500">
+            No sources registered. Run{" "}
+            <code className="font-mono text-[11px] text-gray-400">node scripts/register-sources.mjs</code>{" "}
+            to seed the initial source list.
+          </p>
+        ) : (
+          <div className="mt-3 flex flex-wrap gap-4 text-sm">
+            <span className="text-gray-300">
+              <span className="font-bold">{sourceTotalCount}</span>{" "}
+              <span className="text-gray-500">registered</span>
+            </span>
+            <span className={sourceHealthyCount > 0 ? "text-emerald-300" : "text-gray-500"}>
+              <span className="font-bold">{sourceHealthyCount}</span>{" "}
+              <span className="text-gray-500">healthy</span>
+            </span>
+            {sourceCircuitOpenCount > 0 && (
+              <span className="text-red-300">
+                <span className="font-bold">{sourceCircuitOpenCount}</span>{" "}
+                <span className="text-red-400">circuit open</span>
+              </span>
+            )}
+            {sourceAwaitingLicenseCount > 0 && (
+              <span className="text-yellow-300">
+                <span className="font-bold">{sourceAwaitingLicenseCount}</span>{" "}
+                <span className="text-yellow-400">awaiting license</span>
+              </span>
+            )}
+          </div>
+        )}
+      </section>
+
       <section className="rounded-2xl border border-mineral bg-gray-900/40 p-5">
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
           Readiness gates
@@ -378,6 +447,12 @@ export default async function CockpitOverview() {
           className="rounded-lg border border-mineral px-3 py-2 text-gray-300 hover:border-gray-700 hover:bg-gray-900/60"
         >
           Pick history →
+        </Link>
+        <Link
+          href="/cockpit/sources"
+          className="rounded-lg border border-mineral px-3 py-2 text-gray-300 hover:border-gray-700 hover:bg-gray-900/60"
+        >
+          Source mesh →
         </Link>
         <Link
           href="/dashboard"
