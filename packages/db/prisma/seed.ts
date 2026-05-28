@@ -1667,6 +1667,139 @@ async function seedContentDrafts(): Promise<void> {
       );
     }
   }
+
+  if (dbAny.modelJournalEntry) {
+    try {
+      const existing = await dbAny.modelJournalEntry.count();
+      if (existing === 0) {
+        const journalDates = {
+          w1Drafted: new Date("2026-01-03T10:00:00Z"),
+          w1Published: new Date("2026-01-05T10:00:00Z"),
+          w2Drafted: new Date("2026-01-10T10:00:00Z"),
+          w2Published: new Date("2026-01-12T10:00:00Z"),
+          w3Drafted: new Date("2026-01-17T10:00:00Z"),
+          w3Published: new Date("2026-01-19T10:00:00Z"),
+        };
+        const JOURNAL_SEED = [
+          {
+            isoWeek: 1,
+            isoYear: 2026,
+            slug: "how-signals-are-generated-week-1-2026",
+            title: "How the Model Generates Signals — Week 1, 2026",
+            status: "PUBLISHED",
+            modelVersion: "v5.0.0",
+            authorEmail: "model@galaxysportsedge.com",
+            draftedAt: journalDates.w1Drafted,
+            publishedAt: journalDates.w1Published,
+            bodyMarkdown: `## What a Signal Is
+
+A signal is a pick with a confidence score and a factor trail. It is not a recommendation to bet. It is a structured hypothesis about which outcome a set of weighted inputs favors, given the available evidence.
+
+The model does not claim wins. It claims confidence bands — High (80–100), Strong (65–79), Moderate (50–64), Exploratory (40–49). Each band has different expected accuracy at baseline; calibration across settled picks tells us whether the model's bands are honest.
+
+## How a Signal Is Built
+
+1. **Odds ingestion**: The Odds API provides spread, moneyline, and totals from up to a dozen bookmakers. Consensus lines, line movement, and bookmaker disagreement are all signal-bearing.
+2. **Contextual weighting**: Injury status, home/away splits, weather (where available), and rest days are factored according to the Factor Registry.
+3. **Edge scoring**: The model computes an Edge Index — the gap between where the model prices the outcome and where the market prices it. High Edge = more deviation from consensus.
+4. **Confidence calibration**: Raw scores are mapped to bands. Bands are auditable in the Calibration Report once 30 settled picks per model version exist.
+
+## What Changed This Week
+
+No model updates this week. The baseline v5.0.0 is frozen pending sufficient calibration data. All new picks are canonical and non-bootstrap.
+
+_Next entry: the calibration gate and what 30 picks means statistically._`,
+          },
+          {
+            isoWeek: 2,
+            isoYear: 2026,
+            slug: "calibration-gate-thirty-picks-week-2-2026",
+            title: "The Calibration Gate — Why 30 Picks — Week 2, 2026",
+            status: "PUBLISHED",
+            modelVersion: "v5.0.0",
+            authorEmail: "model@galaxysportsedge.com",
+            draftedAt: journalDates.w2Drafted,
+            publishedAt: journalDates.w2Published,
+            bodyMarkdown: `## The Statistical Reason
+
+30 is not arbitrary. It is the standard minimum for the Central Limit Theorem to apply in practice — the sample mean begins to approach the population mean, and confidence intervals become meaningful. Below 30, a win rate of 60% could be random noise. Above 30, the same win rate starts to carry information.
+
+In a calibration context this matters because we track win rate by confidence band, not overall. Each band needs its own 30-pick floor. A model that publishes "High-confidence picks win 70% of the time" based on 5 resolved picks is misinforming users. The gate prevents that.
+
+## What the Gate Does
+
+When fewer than 30 picks have settled for the current model version, the Calibration Report page shows only a progress indicator. No percentages. No win rates. The Brain (AI research assistant) refuses to answer win-rate questions and explains why.
+
+When 30 picks settle, the gate clears automatically. The report publishes the actual distribution: how many picks fell in each confidence band, how many won and lost, and what the realized win rate was versus what the band implied.
+
+## This Week's Numbers
+
+- Total canonical picks: still collecting.
+- Settled canonical picks: checking in through the week.
+- Gate status: not yet cleared.
+
+Patience is the feature. Next entry: how the Factor Registry works.`,
+          },
+          {
+            isoWeek: 3,
+            isoYear: 2026,
+            slug: "factor-registry-weights-week-3-2026",
+            title: "The Factor Registry — How Weights Are Set — Week 3, 2026",
+            status: "PUBLISHED",
+            modelVersion: "v5.0.0",
+            authorEmail: "model@galaxysportsedge.com",
+            draftedAt: journalDates.w3Drafted,
+            publishedAt: journalDates.w3Published,
+            bodyMarkdown: `## Current Factors (v5.0.0 Frozen Baseline)
+
+| Factor | Weight | Notes |
+|---|---|---|
+| Consensus line movement (spread) | High | Bookmaker disagreement is the strongest single signal |
+| Bookmaker coverage count | Medium | More books = more efficient market |
+| Injury report status | Medium | Only applies when status is confirmed, not rumored |
+| Home/Away | Low | Small in most sports, larger in NBA |
+| Rest days differential | Low | Meaningful in back-to-backs; negligible otherwise |
+
+## How Weights Are Set
+
+The v5.0.0 weights are a literature-informed prior, not a fitted model. They were set before any live data was collected. This is intentional: fitting weights to historical outcomes introduces backtest bias. The frozen baseline is honest about what it knows and doesn't know.
+
+After calibration data accumulates (30+ settled picks per band), the model can propose weight updates via CalibrationProposal records. Each proposal must clear the governance review before a new model version is tagged.
+
+## What Would Trigger a Version Change
+
+- A confidence band's realized win rate diverges from its implied win rate by more than 5 percentage points for 30+ picks
+- A new factor source comes online (new API, new data tier)
+- A structural change in how a sport operates (rule changes, season format)
+
+## This Week's Observation
+
+Line movement on the spread remains the most reliable proxy for sharp action across all four major sports sampled. The model continues to weight it highest.
+
+_Next entry: how picks are settled and what counts as a WIN._`,
+          },
+        ];
+
+        for (const entry of JOURNAL_SEED) {
+          await dbAny.modelJournalEntry.create({
+            data: {
+              ...entry,
+              body: entry.bodyMarkdown,
+              referencedPickIds: [],
+              referencedAutopsyIds: [],
+            },
+          } as unknown as never);
+          console.log(`  ✓ Journal entry seeded: ${entry.slug}`);
+        }
+      } else {
+        console.log(`  - ModelJournalEntry already has ${existing} rows — skipping.`);
+      }
+    } catch (err) {
+      console.log(
+        `  ! ModelJournalEntry seed skipped: ${err instanceof Error ? err.message : "unknown"}`
+      );
+    }
+  }
 }
 
 main()
