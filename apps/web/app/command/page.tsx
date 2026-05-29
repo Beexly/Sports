@@ -65,6 +65,45 @@ async function loadCommandData() {
 
 type WiringStatus = "wired" | "sample" | "pending";
 
+type WidgetStatus = "live" | "demo" | "historical" | "user-entered";
+
+function WidgetProvenance({
+  status,
+  source,
+  freshness,
+  actionability,
+}: {
+  status: WidgetStatus;
+  source: string;
+  freshness: string;
+  actionability?: string;
+}): JSX.Element {
+  const statusConfig: Record<WidgetStatus, { dot: string; label: string; text: string }> = {
+    live: { dot: "bg-emerald-500", label: "LIVE", text: "text-emerald-400" },
+    demo: { dot: "bg-violet-500", label: "DEMO", text: "text-violet-400" },
+    historical: { dot: "bg-blue-500", label: "HISTORICAL", text: "text-blue-400" },
+    "user-entered": { dot: "bg-cyan-500", label: "USER", text: "text-cyan-400" },
+  };
+  const cfg = statusConfig[status];
+  return (
+    <div className="mt-auto space-y-1">
+      <div className="flex items-center gap-2">
+        <span className={["h-1.5 w-1.5 shrink-0 rounded-full", cfg.dot].join(" ")} aria-hidden="true" />
+        <span className={["font-mono text-[8px] uppercase tracking-widest", cfg.text].join(" ")}>
+          {cfg.label}
+        </span>
+        <span className="font-mono text-[8px] text-gray-600">·</span>
+        <span className="font-mono text-[8px] uppercase tracking-widest text-gray-600">{source}</span>
+        <span className="font-mono text-[8px] text-gray-600">·</span>
+        <span className="font-mono text-[8px] uppercase tracking-widest text-gray-600">{freshness}</span>
+      </div>
+      {actionability && (
+        <p className="font-mono text-[8px] text-gray-600">{actionability}</p>
+      )}
+    </div>
+  );
+}
+
 function WiringBadge({ status }: { status: WiringStatus }) {
   const config = {
     wired: { label: "Wired", dotClass: "bg-emerald-500", textClass: "text-emerald-400" },
@@ -166,18 +205,38 @@ export default async function CommandPage() {
               </Link>
             </div>
 
-            {/* 2. What Changed — SAMPLE */}
+            {/* 2. What Changed — WIRED */}
             <div className="flex flex-col gap-3 rounded-2xl border border-mineral bg-gray-900/60 p-5">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500">
                   What Changed
                 </span>
-                <WiringBadge status="sample" />
+                <WiringBadge status={board.bootstrap ? "sample" : "wired"} />
               </div>
-              <p className="text-sm text-gray-400">
-                Line movement, roster updates, and weather flags since your last visit.
-              </p>
-              <SourceFreshnessLabel source="aggregate" freshness="sample" className="mt-auto" />
+              {board.bootstrap ? (
+                <p className="text-sm text-gray-400">
+                  Bootstrap mode — no live line data. Figures update when odds feed connects.
+                </p>
+              ) : (
+                <div>
+                  <p className="text-sm font-semibold text-white">
+                    {publishedCount} published · {board.scoringNow.length} scoring now
+                  </p>
+                  <p className="mt-1 text-xs text-gray-400">
+                    {publishedCount > board.scoringNow.length
+                      ? `${publishedCount - board.scoringNow.length} more picks published than scoring`
+                      : board.scoringNow.length > 0
+                        ? "Games in progress — lines may move"
+                        : "No significant slate change detected"}
+                  </p>
+                </div>
+              )}
+              <WidgetProvenance
+                status={board.bootstrap ? "demo" : "live"}
+                source="galaxy-model"
+                freshness={isSample ? "sample" : "fresh"}
+                actionability="Line delta updates each scoring cycle"
+              />
             </div>
 
             {/* 3. What to Ignore — WIRED */}
@@ -204,49 +263,91 @@ export default async function CommandPage() {
               </Link>
             </div>
 
-            {/* 4. Saved Cards — SAMPLE */}
+            {/* 4. Saved Cards */}
             <div className="flex flex-col gap-3 rounded-2xl border border-mineral bg-gray-900/60 p-5">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500">
                   Saved Cards
                 </span>
-                <WiringBadge status="sample" />
+                <WiringBadge status={session ? "sample" : "pending"} />
               </div>
               <p className="text-sm text-gray-400">
-                Picks and no-bets you bookmarked for later review.
+                {session
+                  ? "Picks and no-bets you bookmarked for later review."
+                  : "Sign in to save picks and no-bets for later review."}
               </p>
-              <UncertaintyState kind="pending" detail="Requires auth wiring" className="mt-auto" />
+              <WidgetProvenance
+                status={session ? "user-entered" : "demo"}
+                source="user-data"
+                freshness="user-entered"
+                actionability="Save picks and no-bets for later review"
+              />
+              <Link
+                href="/picks"
+                className="font-mono text-[9px] uppercase tracking-widest text-accent-300 hover:text-accent-200 transition-colors"
+              >
+                Browse picks →
+              </Link>
             </div>
 
-            {/* 5. Open Decisions — SAMPLE */}
+            {/* 5. Open Decisions */}
             <div className="flex flex-col gap-3 rounded-2xl border border-mineral bg-gray-900/60 p-5">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500">
                   Open Decisions
                 </span>
-                <WiringBadge status="sample" />
+                <WiringBadge status={session ? "sample" : "pending"} />
               </div>
               <p className="text-sm text-gray-400">
-                Picks you&apos;ve noted but haven&apos;t acted on. Reminder before game time.
+                {session
+                  ? "Picks you've noted but haven't acted on. Check before game time."
+                  : "Sign in to track decisions you're considering before game time."}
               </p>
-              <UncertaintyState kind="pending" detail="Requires schema" className="mt-auto" />
+              <WidgetProvenance
+                status={session ? "user-entered" : "demo"}
+                source="user-data"
+                freshness="user-entered"
+                actionability="Note which picks you're tracking before game time"
+              />
+              <Link
+                href="/autopsy"
+                className="font-mono text-[9px] uppercase tracking-widest text-accent-300 hover:text-accent-200 transition-colors"
+              >
+                Grade past decisions →
+              </Link>
             </div>
 
-            {/* 6. No-Bet Credits — SAMPLE */}
+            {/* 6. No-Bet Credits — WIRED */}
             <div className="flex flex-col gap-3 rounded-2xl border border-mineral bg-gray-900/60 p-5">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500">
                   No-Bet Credits
                 </span>
-                <WiringBadge status="sample" />
+                <WiringBadge status="wired" />
               </div>
-              <p className="text-sm text-gray-400">
-                Times you passed on a gated game. Good discipline is tracked too.
-              </p>
-              <UncertaintyState kind="sample" className="mt-auto" />
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  {passCount} credit{passCount !== 1 ? "s" : ""} earned today
+                </p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Each model pass you respected = 1 discipline credit.
+                </p>
+              </div>
+              <WidgetProvenance
+                status="live"
+                source="galaxy-model"
+                freshness={isSample ? "sample" : "fresh"}
+                actionability="Track discipline over time"
+              />
+              <Link
+                href="/no-bet"
+                className="font-mono text-[9px] uppercase tracking-widest text-accent-300 hover:text-accent-200 transition-colors"
+              >
+                Pass list →
+              </Link>
             </div>
 
-            {/* 7. Parlay MRI Warnings — SAMPLE */}
+            {/* 7. Parlay MRI Warnings — DEMO */}
             <div className="flex flex-col gap-3 rounded-2xl border border-mineral bg-gray-900/60 p-5">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500">
@@ -254,12 +355,21 @@ export default async function CommandPage() {
                 </span>
                 <WiringBadge status="sample" />
               </div>
-              <p className="text-sm text-gray-400">
-                Correlation alerts on open parlay legs you&apos;re tracking.
-              </p>
+              <div>
+                <p className="text-sm font-semibold text-white">0 active warnings</p>
+                <p className="mt-1 text-xs text-gray-400">
+                  No correlated parlay legs flagged. Run MRI before combining picks.
+                </p>
+              </div>
+              <WidgetProvenance
+                status="demo"
+                source="galaxy-model"
+                freshness="sample"
+                actionability="Run Parlay MRI before combining legs"
+              />
               <Link
                 href="/parlay-mri"
-                className="mt-auto font-mono text-[9px] uppercase tracking-widest text-accent-300 hover:text-accent-200 transition-colors"
+                className="font-mono text-[9px] uppercase tracking-widest text-accent-300 hover:text-accent-200 transition-colors"
               >
                 Parlay MRI →
               </Link>
@@ -323,7 +433,7 @@ export default async function CommandPage() {
               </Link>
             </div>
 
-            {/* 10. Risk Pattern — SAMPLE */}
+            {/* 10. Risk Pattern — DEMO */}
             <div className="flex flex-col gap-3 rounded-2xl border border-mineral bg-gray-900/60 p-5">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500">
@@ -331,14 +441,31 @@ export default async function CommandPage() {
                 </span>
                 <WiringBadge status="sample" />
               </div>
-              <p className="text-sm text-gray-400">
-                Behavioral flags from your recent session: tilt, evidence bypass, over-parlaying.
-              </p>
+              {board.bootstrap ? (
+                <p className="text-sm text-gray-400">
+                  Bootstrap mode — behavioral pattern analysis requires live data history.
+                </p>
+              ) : (
+                <div>
+                  <p className="text-sm font-semibold text-white">
+                    {board.openPicks} open pick{board.openPicks !== 1 ? "s" : ""} on slate
+                  </p>
+                  <p className="mt-1 text-xs text-gray-400">
+                    Review your last 5 decisions for process quality before acting.
+                  </p>
+                </div>
+              )}
+              <WidgetProvenance
+                status="demo"
+                source="galaxy-model"
+                freshness={isSample ? "sample" : "today"}
+                actionability="Review your last 5 decisions for process quality"
+              />
               <Link
-                href="/profile"
-                className="mt-auto font-mono text-[9px] uppercase tracking-widest text-accent-300 hover:text-accent-200 transition-colors"
+                href="/autopsy"
+                className="font-mono text-[9px] uppercase tracking-widest text-accent-300 hover:text-accent-200 transition-colors"
               >
-                Betting Brain →
+                Grade decisions →
               </Link>
             </div>
 
