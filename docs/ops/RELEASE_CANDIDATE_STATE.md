@@ -1,8 +1,8 @@
 # Release Candidate State — Galaxy Sports Edge
 
-Declared at: **C53 — 2026-05-29**
+Declared at: **C53 — 2026-05-29**, validated through **C60 — 2026-05-29**
 Branch: `claude/determined-keller-dUcdG`
-HEAD: `d0fb18e`
+HEAD: see latest `git log` — RC validated through C60
 
 ## RC posture
 
@@ -21,9 +21,10 @@ Academy/NextBestSurface — is runtime-proven and acceptance-tested end to end.
 | Check | Status |
 |---|---|
 | `npx tsc --noEmit` | PASS |
-| `npx vitest run` | PASS — 179 test files, 2535 tests |
-| `node scripts/guardrails/trust-gate.mjs` | PENDING (script path not present in this env) |
-| `npm run build` | DEFERRED — build requires env vars; typecheck is the proxy in this environment |
+| `npx vitest run` | PASS — 180 test files, 2562 tests |
+| `node scripts/guardrails/trust-gate.mjs` | PASS — 381 files scanned, 0 banned phrases |
+| `npm run build` | PASS — 119/119 static pages generated, all routes compiled |
+| `node scripts/probes/golden-path-probe.mjs` | PENDING (requires preview URL — owner action) |
 | Golden path acceptance (`tests/runtime-convergence/golden-path.test.ts`) | PASS — 33 tests |
 | Telemetry ingest (`tests/runtime-convergence/telemetry-ingest.test.ts`) | PASS — 10 tests |
 | Coach boundaries (`tests/runtime-convergence/coach-boundaries.test.ts`) | PASS |
@@ -44,6 +45,14 @@ Academy/NextBestSurface — is runtime-proven and acceptance-tested end to end.
 | C50 | Galaxy Demo Tour — `/galaxy-demo` noindex guided walkthrough |
 | C51 | Runtime acceptance tests + ops docs update |
 | C52 | Golden Path UX Pass — Decision Room verdict hierarchy + actions grid |
+| C53 | Release Candidate State declaration (this doc) |
+| C54 | Contingency Infrastructure Docs — 12-file resilience matrix |
+| C55 | Release Candidate State Machine — `lib/release/release-state.ts` typed state + capability map |
+| C56 | Feature Flag / Kill Switch Registry — `lib/release/feature-flags.ts` 19 flags |
+| C57 | Degraded Mode System — `lib/degraded-mode/` typed fallback decisions + copy registry |
+| C58 | Observability + Synthetic Probe — `scripts/probes/golden-path-probe.mjs` + perf/a11y gate docs |
+| C59 | Status + User Trust Recovery Templates (delivered in C54 contingency batch) |
+| C60 | Release Candidate Validation — typecheck, tests, trust gate, build all green |
 
 ## Constitutional guardrail status
 

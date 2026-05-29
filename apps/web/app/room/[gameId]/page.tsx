@@ -8,7 +8,7 @@ import { TrustStrip, SourceFreshnessLabel } from "@/components/trust";
 import { RelatedIntelligencePanel, GraphRelationshipList, RelatedLessons, RelatedReports } from "@/components/graph";
 import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 import { NextBestSurface } from "@/components/experience/NextBestSurface";
-import { PickEvidenceSection, ageToFreshness } from "@/components/picks/PickEvidenceSection";
+import { PickEvidenceSection } from "@/components/picks/PickEvidenceSection";
 import { getOutboundEdges } from "@/lib/galaxy/kernel/graph";
 import { loadGameRoom } from "@/lib/game-room/load";
 

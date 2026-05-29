@@ -12,27 +12,27 @@ operating doctrine is **Golden Path + Failure Path + Recovery Path**.
 
 | Cycle | Capability | Status |
 |---|---|---|
-| C55 | Release Candidate State Machine — `lib/release/release-state.ts` typed state enum + per-state capability map + `getReleaseState()` reader | Pending |
-| C56 | Feature Flag / Kill Switch Registry — `lib/release/feature-flags.ts` typed flag registry + default by release state + reader; tests | Pending |
-| C57 | Degraded Mode System — `lib/degraded-mode/degraded-state.ts` + `lib/degraded-mode/fallback-copy.ts`; per-dependency fallback policy | Pending |
-| C58 | Observability and Synthetic Probes — `scripts/probes/golden-path-probe.mjs`; verifies status, no banned phrases, demo labels, trust strip presence | Pending |
-| C59 | Performance and Accessibility Gate — `docs/performance/DEPLOYED_PERFORMANCE_GATE.md`, `docs/accessibility/AXE_AUDIT_PROTOCOL.md`; preview-URL-dependent | Pending |
-| C60 | Release Candidate Validation — typecheck, full tests, build, trust gate, route audit, golden-path probe; update RC state doc | Pending |
-| C61 | Codex Constitutional Audit prompt prep | Pending |
-| C62 | Security / IP Audit checklist | Pending |
-| C63 | Data Rights and Provider Readiness checklist | Pending |
-| C64 | Payment Readiness checklist | Pending |
-| C65 | Live AI Readiness checklist | Pending |
-| C66 | Preview Deployment preparation (owner gate) | Pending |
-| C67 | Visual QA review (screenshot protocol) | Pending |
-| C68 | Beta Readiness Packet | Pending |
-| C69 | Feedback Intake System | Pending |
-| C70 | User Journey Review | Pending |
-| C71 | Conversion Without Exploitation Review | Pending |
-| C72 | Retention Loop Review | Pending |
-| C73 | Competitive Moat Review | Pending |
-| C74 | Launch Decision Memo | Pending |
-| C75 | Post-Launch Monitoring Plan | Pending |
+| C55 | Release Candidate State Machine — `lib/release/release-state.ts` typed state enum + per-state capability map + `getReleaseState()` reader | DONE |
+| C56 | Feature Flag / Kill Switch Registry — `lib/release/feature-flags.ts` typed flag registry + default by release state + reader; tests | DONE |
+| C57 | Degraded Mode System — `lib/degraded-mode/degraded-state.ts` + `lib/degraded-mode/fallback-copy.ts`; per-dependency fallback policy | DONE |
+| C58 | Observability and Synthetic Probes — `scripts/probes/golden-path-probe.mjs`; verifies status, no banned phrases, demo labels, trust strip presence | DONE |
+| C59 | Performance and Accessibility Gate — `docs/performance/DEPLOYED_PERFORMANCE_GATE.md`, `docs/accessibility/AXE_AUDIT_PROTOCOL.md`; preview-URL-dependent | DONE (gate docs); measurements pending owner |
+| C60 | Release Candidate Validation — typecheck, full tests, build, trust gate, route audit, golden-path probe; update RC state doc | DONE — 180 files, 2562 tests, build green, trust gate clean |
+| C61 | Codex Constitutional Audit prompt prep | see below |
+| C62 | Security / IP Audit checklist | see below |
+| C63 | Data Rights and Provider Readiness checklist | see below |
+| C64 | Payment Readiness checklist | see below |
+| C65 | Live AI Readiness checklist | see below |
+| C66 | Preview Deployment preparation (owner gate) | see below |
+| C67 | Visual QA review (screenshot protocol) | see below |
+| C68 | Beta Readiness Packet | see below |
+| C69 | Feedback Intake System | see below |
+| C70 | User Journey Review | see below |
+| C71 | Conversion Without Exploitation Review | see below |
+| C72 | Retention Loop Review | see below |
+| C73 | Competitive Moat Review | see below |
+| C74 | Launch Decision Memo | see below |
+| C75 | Post-Launch Monitoring Plan | see below |
 
 ## Permanent hard constraints across the queue
 

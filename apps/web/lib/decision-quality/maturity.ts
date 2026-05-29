@@ -75,7 +75,7 @@ function weight(value: number, w: number, target: number): number {
   return ratio * w;
 }
 
-function nextLiftFor(stage: MaturityStage, inputs: MaturityInputs): string {
+function nextLiftFor(stage: MaturityStage, _inputs: MaturityInputs): string {
   if (stage === "spectator") return "Read one No-Bet entry today and one Academy foundation module this week.";
   if (stage === "learner") return "Open the Autopsy on your next settled pick and acknowledge the process grade.";
   if (stage === "operator") return "Run Parlay MRI before any settled parlay this week; CLV is the signal.";

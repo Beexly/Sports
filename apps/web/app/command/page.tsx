@@ -8,7 +8,7 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { loadBoardState } from "@/lib/board/state";
 import { loadBoardPasses } from "@/lib/board/passes";
 import { db, isStubMode } from "@sports/db";
-import { TrustStrip, SourceFreshnessLabel, UncertaintyState } from "@/components/trust";
+import { TrustStrip, SourceFreshnessLabel } from "@/components/trust";
 import { NextBestSurface } from "@/components/experience/NextBestSurface";
 import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 import { recommendNextModule } from "@/lib/understanding/learning-state";

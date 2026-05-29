@@ -805,31 +805,3 @@ function DataQualityMeter({ score }: { score: number }) {
   );
 }
 
-function FreshnessIndicator({ ageMinutes }: { ageMinutes: number }) {
-  let color = "text-green-400";
-  let label = "Live";
-  if (ageMinutes >= 60) {
-    color = "text-red-400";
-    label = `${Math.round(ageMinutes / 60)}h old`;
-  } else if (ageMinutes >= 30) {
-    color = "text-yellow-400";
-    label = `${ageMinutes}m old`;
-  } else if (ageMinutes >= 10) {
-    color = "text-gray-400";
-    label = `${ageMinutes}m ago`;
-  }
-
-  return (
-    <>
-      <span
-        className={`h-1.5 w-1.5 rounded-full ${
-          ageMinutes < 10 ? "bg-green-400" : ageMinutes < 30 ? "bg-gray-400" : "bg-yellow-400"
-        }`}
-        aria-hidden="true"
-      />
-      <span className={`text-[10px] ${color}`}>
-        Data: {label}
-      </span>
-    </>
-  );
-}
