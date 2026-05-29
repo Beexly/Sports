@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { REPORT_TYPES } from "@/lib/galaxy/kernel/reports";
 
 // ─────────────────────────────────────────────
 // Metadata
@@ -16,71 +17,8 @@ export const metadata: Metadata = {
 };
 
 // ─────────────────────────────────────────────
-// Data
+// Data — report types sourced from kernel registry
 // ─────────────────────────────────────────────
-
-const REPORT_TYPES = [
-  {
-    id: "orbit",
-    name: "Orbit Report",
-    cadence: "Weekly",
-    description:
-      "Weekly intelligence synthesis. What the model saw, what it skipped, what changed.",
-    accentClass: "border-blue-600/40 bg-blue-950/10",
-    labelClass: "text-blue-400",
-    dotClass: "bg-blue-500",
-  },
-  {
-    id: "edge",
-    name: "Edge Report",
-    cadence: "Signal-triggered",
-    description:
-      "When a significant market opportunity appears that the model scored highly.",
-    accentClass: "border-emerald-600/40 bg-emerald-950/10",
-    labelClass: "text-emerald-400",
-    dotClass: "bg-emerald-500",
-  },
-  {
-    id: "mirage",
-    name: "Market Mirage",
-    cadence: "Irregular",
-    description:
-      "Identifying when public narrative diverges from actual market signals.",
-    accentClass: "border-amber-600/40 bg-amber-950/10",
-    labelClass: "text-amber-400",
-    dotClass: "bg-amber-500",
-  },
-  {
-    id: "signal",
-    name: "Signal Report",
-    cadence: "Monthly per sport",
-    description:
-      "Sport-specific deep dives: a single factor, explained with data.",
-    accentClass: "border-violet-600/40 bg-violet-950/10",
-    labelClass: "text-violet-400",
-    dotClass: "bg-violet-500",
-  },
-  {
-    id: "season",
-    name: "Season Preview",
-    cadence: "Pre-season",
-    description:
-      "Pre-season analysis: team changes, coaching shifts, market implications.",
-    accentClass: "border-slate-600/40 bg-slate-900/40",
-    labelClass: "text-slate-300",
-    dotClass: "bg-slate-500",
-  },
-  {
-    id: "nobet",
-    name: "No-Bet Report",
-    cadence: "As warranted",
-    description:
-      "Why the model passed. Transparent about what didn't clear the gate.",
-    accentClass: "border-rose-600/30 bg-rose-950/10",
-    labelClass: "text-rose-400",
-    dotClass: "bg-rose-500",
-  },
-] as const;
 
 const LATEST_REPORTS = [
   {
@@ -164,10 +102,11 @@ export default function ReportsPage() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {REPORT_TYPES.map((report) => (
-                <div
+                <Link
                   key={report.id}
+                  href={`/reports/${report.id}`}
                   className={[
-                    "flex flex-col gap-3 rounded-2xl border p-6",
+                    "flex flex-col gap-3 rounded-2xl border p-6 transition-opacity hover:opacity-90",
                     report.accentClass,
                   ].join(" ")}
                 >
@@ -199,7 +138,7 @@ export default function ReportsPage() {
                       {report.description}
                     </p>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </section>

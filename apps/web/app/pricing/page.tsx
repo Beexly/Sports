@@ -4,6 +4,8 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { SubscribeButton } from "@/components/pricing/subscribe-button";
 import { BRAND_NAME } from "@/lib/brand";
+import { PLANS, FEATURE_MATRIX } from "@/lib/galaxy/kernel/pricing";
+import type { PlanId } from "@/lib/galaxy/kernel/pricing";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
@@ -22,132 +24,8 @@ export const metadata: Metadata = {
 };
 
 // ─────────────────────────────────────────────
-// Plan data
+// Plan data — sourced from kernel registry
 // ─────────────────────────────────────────────
-
-const PLANS = [
-  {
-    id: "FREE" as const,
-    name: "Free",
-    price: 0,
-    period: null,
-    description:
-      "One signal a day — sample the discipline before committing.",
-    badge: null,
-    cta: "Start free",
-    ctaHref: "/auth/signin",
-    features: [
-      { label: "1 signal per day", included: true },
-      { label: "Game matchup info", included: true },
-      { label: "Pick type (spread / ML / total)", included: true },
-      { label: "Confidence rating on every signal", included: false },
-      { label: "Highest-Edge-Index signals", included: false },
-      { label: "Full factor trail & reasoning", included: false },
-      { label: "Line-movement alerts", included: false },
-      { label: "Email + push notifications", included: false },
-      { label: "All 7 sports", included: false },
-    ],
-  },
-  {
-    id: "PRO" as const,
-    name: "Pro",
-    price: 19,
-    period: "month",
-    description:
-      "Every published signal, with the confidence rating and factor trail attached.",
-    badge: "Where most start",
-    cta: "Subscribe to Pro",
-    features: [
-      { label: "Every signal, every day", included: true },
-      { label: "Game matchup info", included: true },
-      { label: "Pick type (spread / ML / total)", included: true },
-      { label: "Confidence rating on every signal", included: true },
-      { label: "Highest-Edge-Index signals", included: true },
-      { label: "Full factor trail & reasoning", included: true },
-      { label: "Line-movement alerts", included: true },
-      { label: "Email + push notifications", included: false },
-      { label: "All 7 sports", included: true },
-    ],
-  },
-  {
-    id: "ELITE" as const,
-    name: "Elite",
-    price: 49,
-    period: "month",
-    description:
-      "Pro plus real-time alerts on every published signal — built for live slates.",
-    badge: "All signals, all alerts",
-    cta: "Subscribe to Elite",
-    features: [
-      { label: "Every signal, every day", included: true },
-      { label: "Game matchup info", included: true },
-      { label: "Pick type (spread / ML / total)", included: true },
-      { label: "Confidence rating on every signal", included: true },
-      { label: "Highest-Edge-Index signals", included: true },
-      { label: "Full factor trail & reasoning", included: true },
-      { label: "Line-movement alerts", included: true },
-      { label: "Email + push notifications", included: true },
-      { label: "All 7 sports", included: true },
-    ],
-  },
-] as const;
-
-type PlanId = (typeof PLANS)[number]["id"];
-
-type FeatureRow = {
-  readonly group?: string;
-  readonly label: string;
-  readonly free: string | boolean;
-  readonly pro: string | boolean;
-  readonly elite: string | boolean;
-};
-
-const FEATURE_MATRIX: ReadonlyArray<FeatureRow> = [
-  // ── Picks & Signals ──────────────────────────────
-  { group: "Picks & Signals", label: "Published picks per day", free: "1", pro: "Unlimited", elite: "Unlimited" },
-  { label: "Sports covered", free: "Sampler", pro: "All 7", elite: "All 7" },
-  { label: "Spread / Moneyline / Total picks", free: true, pro: true, elite: true },
-  { label: "Confidence score (0–100)", free: false, pro: true, elite: true },
-  { label: "Full 10-factor trail", free: false, pro: true, elite: true },
-  { label: "Edge Index score", free: false, pro: true, elite: true },
-  { label: "Featured / high-conviction picks", free: false, pro: true, elite: true },
-  { label: "Board passes list (what we skipped)", free: true, pro: true, elite: true },
-  // ── Market Intelligence ──────────────────────────
-  { group: "Market Intelligence", label: "Today's Board (daily brief)", free: true, pro: true, elite: true },
-  { label: "Market Gravity surface", free: "Preview", pro: true, elite: true },
-  { label: "Line movement alerts", free: false, pro: true, elite: true },
-  { label: "Book disagreement signals", free: false, pro: true, elite: true },
-  { label: "Steam move detection", free: false, pro: false, elite: "Coming" },
-  { label: "Props Intelligence surface", free: false, pro: "Beta", elite: "Beta" },
-  // ── Research & Brain ─────────────────────────────
-  { group: "Research & Brain", label: "Research Brain Q&A", free: "3/day", pro: "20/day", elite: "Unlimited" },
-  { label: "Evidence Vault citations", free: false, pro: true, elite: true },
-  { label: "Rumor Radar (weak signals)", free: "Preview", pro: true, elite: true },
-  { label: "Fantasy War Room", free: "Preview", pro: true, elite: true },
-  { label: "Intelligence glossary", free: true, pro: true, elite: true },
-  // ── Galaxy Academy ───────────────────────────────
-  { group: "Galaxy Academy", label: "Foundation Track (basics)", free: true, pro: true, elite: true },
-  { label: "Signal Track (CLV, line movement, +EV)", free: false, pro: true, elite: true },
-  { label: "Edge Track (bankroll, tilt, portfolio)", free: false, pro: false, elite: true },
-  { label: "Methodology access", free: true, pro: true, elite: true },
-  // ── Reports ──────────────────────────────────────
-  { group: "Reports", label: "Orbit Report (weekly)", free: "1/month", pro: true, elite: true },
-  { label: "Edge Reports", free: false, pro: true, elite: true },
-  { label: "Market Mirage Report", free: false, pro: true, elite: true },
-  { label: "Signal Reports (per sport)", free: false, pro: false, elite: true },
-  { label: "Season Preview Reports", free: false, pro: false, elite: true },
-  // ── Command Center ────────────────────────────────
-  { group: "Command Center", label: "Manual bet log", free: false, pro: true, elite: true },
-  { label: "Watchlist (games, players, markets)", free: false, pro: true, elite: true },
-  { label: "Exposure monitor", free: false, pro: false, elite: true },
-  { label: "Tilt detection flags", free: false, pro: false, elite: true },
-  { label: "Real-time push alerts", free: false, pro: false, elite: true },
-  // ── Performance & Calibration ─────────────────────
-  { group: "Performance & Calibration", label: "Public Ledger access", free: true, pro: true, elite: true },
-  { label: "Calibration report (when gated)", free: true, pro: true, elite: true },
-  { label: "Per-sport performance breakdown", free: false, pro: true, elite: true },
-  { label: "Loss Autopsy reports", free: false, pro: true, elite: true },
-];
 
 const COMPARISON_CELLS: Record<PlanId, (string | boolean)[]> = {
   FREE: FEATURE_MATRIX.map((f) => f.free),
