@@ -3,6 +3,7 @@ import { Nav } from "@/components/ui/nav";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
+import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import type { PublicPick, DailySlate } from "@sports/types";
@@ -199,6 +200,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Paywall Banner */}
           {isFreeTier && <PaywallBanner hasAccount={!!session?.user} />}
+
+          <PicksTrustStrip />
 
           {/* Filters row */}
           <div className="mb-6 flex flex-col gap-3">
@@ -519,6 +522,43 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
 // ─────────────────────────────────────────────
 // Date picker
 // ─────────────────────────────────────────────
+
+function PicksTrustStrip() {
+  return (
+    <section
+      data-testid="picks-trust-strip"
+      aria-labelledby="picks-trust-heading"
+      className="mb-6 rounded-xl border border-gray-800 bg-gray-900/50 p-4"
+    >
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="max-w-2xl">
+          <p
+            id="picks-trust-heading"
+            className="text-xs font-semibold uppercase tracking-[0.18em] text-ion-1"
+          >
+            Trust context
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-gray-300">
+            Picks only appear after the gate clears. The methodology page
+            explains what enters the score, what stays hidden, and why some
+            slates publish no pick.
+          </p>
+        </div>
+        <Link
+          href="/methodology"
+          className="inline-flex shrink-0 rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
+        >
+          Read methodology
+        </Link>
+      </div>
+      <RiskDisclosure
+        variant="card"
+        includePastPerformance
+        className="mt-4 border-gray-800 bg-gray-950/50"
+      />
+    </section>
+  );
+}
 
 function DatePickerForm({
   currentDate,

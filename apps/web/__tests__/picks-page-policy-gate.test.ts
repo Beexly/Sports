@@ -72,6 +72,15 @@ describe("/picks policy-gate contract", () => {
     expect(src).toMatch(/fetchPicks/);
   });
 
+  it("surfaces in-content trust context near the paywall", () => {
+    expect(src).toMatch(/import\s+\{\s*RiskDisclosure\s*\}/);
+    expect(src).toMatch(/<PicksTrustStrip\s*\/>/);
+    expect(src).toMatch(/data-testid="picks-trust-strip"/);
+    expect(src).toMatch(/<RiskDisclosure[\s\S]{0,120}variant="card"/);
+    expect(src).toMatch(/<RiskDisclosure[\s\S]{0,160}includePastPerformance/);
+    expect(src).toMatch(/href="\/methodology"[\s\S]{0,300}Read methodology/);
+  });
+
   it("renders no PickCard array literal that would imply fake fixtures", () => {
     // Real picks flow through fetchPicks → PicksResponse.data. There must
     // not be a JSX array literal mounting hardcoded picks.
