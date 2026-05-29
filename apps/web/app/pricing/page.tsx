@@ -162,6 +162,45 @@ export default function PricingPage() {
             </p>
           </div>
 
+          {/* ── Why a price ──────────────────────────────────────────── */}
+          <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-mineral bg-gray-900/40 p-6 text-center">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber-400">
+              Why a price?
+            </p>
+            <p className="mt-3 text-base leading-7 text-gray-300">
+              We do not run sportsbook affiliate links. We do not take a cut of your wagers. We do not push promotions.
+              The subscription is the only revenue stream. It buys you the model, the evidence, and the discipline — not the picks.
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2">
+              <a href="/we-are-not" className="font-mono text-[10px] uppercase tracking-widest text-amber-400 hover:text-amber-300">
+                What we refuse to do →
+              </a>
+              <a href="/methodology" className="font-mono text-[10px] uppercase tracking-widest text-gray-500 hover:text-gray-300">
+                Read the methodology →
+              </a>
+            </div>
+          </div>
+
+          {/* ── Tier usage guide ─────────────────────────────────────── */}
+          <div className="mx-auto mt-8 grid max-w-4xl gap-4 sm:grid-cols-2">
+            <article className="border border-mineral bg-gray-900/30 p-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-400">
+                PRO — research before the slate
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-400">
+                Daily-use tier. Read the picks, the no-bet list, and the evidence chain before game time. Track your decisions.
+              </p>
+            </article>
+            <article className="border border-mineral bg-gray-900/30 p-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-violet-400">
+                ELITE — live operations during the slate
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-400">
+                Operational tier. Adds early access, alert tiers, and the full Decision Coach prompt set for game-day decisions.
+              </p>
+            </article>
+          </div>
+
           {/* Plan cards */}
           <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
             {PLANS.map((plan) => {
