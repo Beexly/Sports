@@ -10,6 +10,7 @@ import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 import { NextBestSurface } from "@/components/experience/NextBestSurface";
 import { PickEvidenceSection } from "@/components/picks/PickEvidenceSection";
 import { FactorAuditRadial } from "@/components/factor-audit/FactorAuditRadial";
+import { PressRTheater } from "@/components/factor-audit/PressRTheater";
 import { getOutboundEdges } from "@/lib/galaxy/kernel/graph";
 import { loadGameRoom } from "@/lib/game-room/load";
 
@@ -200,6 +201,24 @@ export default async function GameRoomPage({
           edgeAtPublication={room.node.marketPulse.edgeIndex ?? 0}
           currentEdge={room.node.marketPulse.edgeIndex ?? 0}
           modelVersion={room.premortem?.modelVersion}
+        />
+
+        {/* ── Press R Theater ─────────────────────────────────────────────── */}
+        <PressRTheater
+          steps={[
+            { key: "line-mvmt", label: "Line movement", score: 70 },
+            { key: "consensus", label: "Consensus", score: 64 },
+            { key: "depth", label: "Market depth", score: 80 },
+            { key: "rest", label: "Rest", score: 58 },
+            { key: "h2h", label: "H2H", score: 48 },
+            { key: "venue", label: "Venue", score: 62 },
+            { key: "cross-mkt", label: "Cross-market", score: 72 },
+            { key: "schedule", label: "Schedule", score: 55 },
+            { key: "form", label: "Form", score: 68 },
+            { key: "uncertainty", label: "Uncertainty", score: 60 },
+          ]}
+          finalEdgeIndex={room.node.marketPulse.edgeIndex}
+          finalConfidence={hasPublishedPick ? evidenceScore : null}
         />
 
         {/* ── What Changed / What to Ignore ──────────────────────────────── */}
