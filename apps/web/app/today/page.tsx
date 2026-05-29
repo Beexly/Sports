@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { startOfDay, endOfDay, format } from "date-fns";
@@ -10,8 +11,9 @@ import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 import { loadBoardState } from "@/lib/board/state";
 import { loadBoardPasses } from "@/lib/board/passes";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
-import { TrustStrip } from "@/components/trust";
+import { TrustStrip, SourceFreshnessLabel } from "@/components/trust";
 import { NextBestSurface } from "@/components/experience/NextBestSurface";
+import { ageToFreshness } from "@/components/picks/PickEvidenceSection";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +39,7 @@ interface TodayPick {
   isFeatured: boolean;
   pickGrade: string;
   commenceTime: Date;
+  dataFreshnessAt: string | null;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -152,6 +155,7 @@ async function loadTodayPicks(): Promise<TodayPick[]> {
     isFeatured: pick.isFeatured,
     pickGrade: pick.pickGrade,
     commenceTime: pick.game.commenceTime,
+    dataFreshnessAt: pick.dataFreshnessAt?.toISOString() ?? null,
   }));
 }
 
@@ -263,11 +267,15 @@ export default async function TodayPage(): Promise<JSX.Element> {
             valueClass={boardStatus.color}
             dot={boardStatus.dot}
           />
-          <StatChip
-            label="Last updated"
-            value={timeLabel(state.lastRefresh)}
-          />
+          <StatChip label="Last updated" value={timeLabel(state.lastRefresh)}>
+            <SourceFreshnessLabel source="galaxy-model" freshness={isSample ? "sample" : "fresh"} />
+          </StatChip>
         </section>
+
+        {/* ── Signal Summary Row ────────────────────────────────────────── */}
+        {todayPicks.length > 0 && (
+          <SignalSummaryRow picks={todayPicks} passes={passes} />
+        )}
 
         {/* ── Today's Picks ─────────────────────────────────────────────── */}
         <section aria-label="Today's picks">
@@ -372,7 +380,7 @@ export default async function TodayPage(): Promise<JSX.Element> {
 
             {passes.length > 0 && (
               <div className="mt-4 divide-y divide-gray-800 border border-mineral">
-                {passes.slice(0, 5).map((row) => (
+                {passes.slice(0, 5).map((row, i) => (
                   <div
                     key={row.id}
                     className="grid gap-1 px-3 py-3 sm:grid-cols-[1fr_auto]"
@@ -382,10 +390,17 @@ export default async function TodayPage(): Promise<JSX.Element> {
                         {row.matchup}
                       </p>
                       <p className="mt-0.5 text-xs text-gray-500">{row.sport}</p>
+                      <p className="mt-1 font-mono text-[9px] uppercase tracking-widest text-amber-600">
+                        Why this pass? — {row.reason}
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-400 sm:text-right">
-                      {row.reason}
-                    </p>
+                    <div className="text-right">
+                      {i < 3 && row.edgeIndex !== null && (
+                        <p className="font-mono text-[9px] text-gray-500">
+                          Edge {row.edgeIndex > 0 ? `+${row.edgeIndex}` : row.edgeIndex}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 ))}
                 {passes.length > 5 && (
@@ -508,11 +523,13 @@ function StatChip({
   value,
   valueClass,
   dot,
+  children,
 }: {
   label: string;
   value: string;
   valueClass?: string;
   dot?: string;
+  children?: React.ReactNode;
 }): JSX.Element {
   return (
     <div className="min-h-16 border border-mineral bg-gray-900/60 px-3 py-2.5">
@@ -529,6 +546,7 @@ function StatChip({
           {value}
         </p>
       </div>
+      {children && <div className="mt-1">{children}</div>}
     </div>
   );
 }
@@ -575,6 +593,11 @@ function PickCard({ pick }: { pick: TodayPick }): JSX.Element {
           <p className="mt-0.5 text-sm font-bold text-white">{pick.selection}</p>
         </div>
       </div>
+      <SourceFreshnessLabel source="galaxy-model" freshness={ageToFreshness(
+        pick.dataFreshnessAt
+          ? Math.round((Date.now() - new Date(pick.dataFreshnessAt).getTime()) / 60_000)
+          : null
+      )} />
 
       {/* Confidence bar */}
       <div>
@@ -598,12 +621,90 @@ function PickCard({ pick }: { pick: TodayPick }): JSX.Element {
         </span>
         <Link
           href={`/room/${pick.gameId}`}
-          className="text-xs font-semibold text-ion-blue hover:underline"
+          data-intent="decision-room"
+          className="inline-flex items-center gap-1 rounded border border-ion-blue/30 bg-cyan-950/20 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-ion-blue hover:border-ion-blue hover:bg-cyan-950/40 transition-colors"
         >
-          View room →
+          Decision Room →
         </Link>
       </div>
     </article>
+  );
+}
+
+import type { PassListRow } from "@/lib/board/passes";
+
+function SignalSummaryRow({
+  picks,
+  passes,
+}: {
+  picks: TodayPick[];
+  passes: PassListRow[];
+}): JSX.Element | null {
+  const topSignal = picks[0]; // already sorted by confidence desc
+  if (!topSignal) return null;
+  const bestPass = [...passes].sort((a, b) => (b.edgeIndex ?? 0) - (a.edgeIndex ?? 0))[0];
+  const now = Date.now();
+  const lateMovement = picks.find((p) => {
+    if (!p.dataFreshnessAt) return false;
+    return now - new Date(p.dataFreshnessAt).getTime() < 30 * 60_000;
+  });
+
+  return (
+    <section aria-label="Signal summary" className="grid gap-3 sm:grid-cols-3">
+      <SignalMiniCard
+        eyebrow="Top signal"
+        headline={topSignal.matchup}
+        sub={`${topSignal.selection} · ${topSignal.confidence} confidence`}
+        freshness={ageToFreshness(
+          topSignal.dataFreshnessAt
+            ? Math.round((now - new Date(topSignal.dataFreshnessAt).getTime()) / 60_000)
+            : null
+        )}
+        href={`/room/${topSignal.gameId}`}
+      />
+      <SignalMiniCard
+        eyebrow="Best pass"
+        headline={bestPass?.matchup ?? "No passes recorded"}
+        sub={bestPass ? `Edge ${bestPass.edgeIndex !== null ? (bestPass.edgeIndex > 0 ? `+${bestPass.edgeIndex}` : bestPass.edgeIndex) : "N/A"} · ${bestPass.reason}` : "Check back later"}
+        freshness="fresh"
+        href="/no-bet"
+      />
+      <SignalMiniCard
+        eyebrow="Late movement watch"
+        headline={lateMovement?.matchup ?? "No late signals"}
+        sub={lateMovement ? `${lateMovement.selection} — odds updated <30 min ago` : "No picks refreshed in the last 30 minutes"}
+        freshness={lateMovement ? "live" : "today"}
+        href={lateMovement ? `/room/${lateMovement.gameId}` : "/today"}
+      />
+    </section>
+  );
+}
+
+function SignalMiniCard({
+  eyebrow,
+  headline,
+  sub,
+  freshness,
+  href,
+}: {
+  eyebrow: string;
+  headline: string;
+  sub: string;
+  freshness: "live" | "fresh" | "today" | "stale" | "sample" | "unknown";
+  href: string;
+}): JSX.Element {
+  return (
+    <Link
+      href={href}
+      className="group flex flex-col gap-2 border border-mineral bg-gray-900/50 p-4 hover:border-gray-600 transition-colors"
+    >
+      <div className="flex items-center justify-between">
+        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-gray-500">{eyebrow}</p>
+        <SourceFreshnessLabel source="galaxy-model" freshness={freshness} />
+      </div>
+      <p className="text-sm font-semibold text-white group-hover:text-cyan-100 leading-snug">{headline}</p>
+      <p className="text-[11px] text-gray-500 leading-snug">{sub}</p>
+    </Link>
   );
 }
 
