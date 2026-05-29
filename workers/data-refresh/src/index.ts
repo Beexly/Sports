@@ -36,6 +36,7 @@ import {
   calculatePickResult,
 } from "@sports/prediction-engine";
 import { processSport } from "@sports/ingestion-pipeline";
+import { recordPickSettlementSnapshot } from "./settlement-snapshots.js";
 
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
 
@@ -127,15 +128,20 @@ async function settleResults(): Promise<void> {
               isDecisiveResult;
 
             try {
-              await db.pickSignalSnapshot.updateMany({
-                where: { pickId: pick.id, settlementResult: null },
-                data: {
-                  settlementResult: result,
-                  settledAt,
-                  eligibleForLearning: isEligibleForLearning,
-                  ...(isEligibleForLearning ? { learningEligibleAt: settledAt } : {}),
-                },
+              const snapshotStatus = await recordPickSettlementSnapshot({
+                db,
+                pick,
+                result,
+                settledAt,
+                isEligibleForLearning,
+                gameDataQualityScore: game.dataQualityScore,
               });
+              if (snapshotStatus === "created-fallback") {
+                console.warn(
+                  `[settlement] Created fallback PickSignalSnapshot for pick ${pick.id}; ` +
+                  "prediction-time snapshot was missing."
+                );
+              }
             } catch (snapErr) {
               // Non-fatal: snapshot update failure must never kill settlement
               console.warn(
