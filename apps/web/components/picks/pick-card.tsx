@@ -9,6 +9,8 @@ import type {
 } from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
 import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
+import { PickEvidenceSection, ageToFreshness } from "./PickEvidenceSection";
+import type { EvidenceSource } from "@/components/ui/evidence-card";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -31,6 +33,11 @@ export type PickCardData = {
   publishedAt?: string;
   result?: "WIN" | "LOSS" | "PUSH" | "PENDING" | "VOID";
   factorTrailHref?: string;
+  // Evidence provenance — canonical via PickEvidenceSection
+  source?: EvidenceSource;
+  dataFreshnessAt?: string | null;
+  modelVersion?: string;
+  failureCase?: string;
 };
 
 type PickCardProps = {
@@ -321,13 +328,21 @@ export function PickCard({
         </div>
       )}
 
-      {/* ── Footer row: source + risk grade + factor trail ──────────── */}
+      {/* ── Footer row: evidence provenance + risk grade + factor trail ── */}
       {!isCompact && (
-        <div className="flex items-center justify-between border-t border-mineral/60 pt-3">
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-gray-700">
-              Galaxy model
-            </span>
+        <>
+          <PickEvidenceSection
+            kind="pick"
+            source={pick.source ?? "galaxy-model"}
+            freshness={ageToFreshness(
+              pick.dataFreshnessAt
+                ? Math.round((Date.now() - new Date(pick.dataFreshnessAt).getTime()) / 60_000)
+                : null,
+            )}
+            modelVersion={pick.modelVersion}
+            failureCase={pick.failureCase ?? "Not available — snapshot pending."}
+          />
+          <div className="flex items-center justify-between">
             {pick.riskGrade && (
               <span
                 className={`font-mono text-[10px] font-semibold ${riskGradeStyles(pick.riskGrade)}`}
@@ -335,16 +350,16 @@ export function PickCard({
                 {riskGradeLabel(pick.riskGrade)}
               </span>
             )}
+            {pick.factorTrailHref && (
+              <Link
+                href={pick.factorTrailHref}
+                className="ml-auto text-xs font-semibold text-ion-blue hover:underline"
+              >
+                View trail →
+              </Link>
+            )}
           </div>
-          {pick.factorTrailHref && (
-            <Link
-              href={pick.factorTrailHref}
-              className="ml-auto text-xs font-semibold text-ion-blue hover:underline"
-            >
-              View trail →
-            </Link>
-          )}
-        </div>
+        </>
       )}
     </article>
   );
@@ -487,15 +502,20 @@ export function FullPickCard({
         </div>
       )}
 
-      {/* Evidence row: source + model + freshness — Evidence Chain Standard */}
-      <div className="flex items-center justify-between border-t border-mineral/60 pt-2">
-        <div className="flex items-center gap-3">
-          <DataQualityMeter score={pick.dataQualityScore} />
-          <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-gray-700">
-            Galaxy model
-          </span>
+      {/* Evidence row: canonical PickEvidenceSection — Evidence Chain Standard */}
+      <div className="flex items-center gap-3 border-t border-mineral/60 pt-2">
+        <DataQualityMeter score={pick.dataQualityScore} />
+        <div className="flex-1">
+          <PickEvidenceSection
+            kind="pick"
+            source="galaxy-model"
+            freshness={ageToFreshness(freshnessAge)}
+            failureCase={
+              (pick as { premortem?: { headline: string } }).premortem?.headline ??
+              "Not available — snapshot pending."
+            }
+          />
         </div>
-        {freshnessAge !== null && <FreshnessIndicator ageMinutes={freshnessAge} />}
       </div>
 
       {/* Evidence audit trigger — visible to ALL tiers for real picks (drives upgrade for FREE). */}
