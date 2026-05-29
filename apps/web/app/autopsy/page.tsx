@@ -6,6 +6,7 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
 import { TrustStrip } from "@/components/trust";
+import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 
 export const dynamic = "force-dynamic";
 
@@ -373,6 +374,7 @@ export default async function AutopsyPage(): Promise<JSX.Element> {
           </div>
         </section>
 
+        <CoachPromptHost surface="autopsy" className="mx-auto max-w-4xl px-4 pb-6" />
         <RiskDisclosure
           variant="card"
           includePastPerformance

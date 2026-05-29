@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 
 export const metadata: Metadata = {
   title: "Galaxy Brain Academy — Sports Betting Education",
@@ -278,6 +279,7 @@ export default function AcademyPage(): JSX.Element {
               See plans and pricing
             </Link>
             <div className="mt-8 mx-auto max-w-lg">
+              <CoachPromptHost surface="academy" className="mb-6" />
               <RiskDisclosure variant="compact" includePastPerformance />
             </div>
           </div>

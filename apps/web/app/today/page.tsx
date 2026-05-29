@@ -6,6 +6,7 @@ import type { PickType, PickTier } from "@sports/db";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 import { loadBoardState } from "@/lib/board/state";
 import { loadBoardPasses } from "@/lib/board/passes";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
@@ -487,6 +488,8 @@ export default async function TodayPage(): Promise<JSX.Element> {
             Scoring methodology →
           </Link>
         </div>
+
+        <CoachPromptHost surface="today" className="mx-auto max-w-2xl" />
 
         <RiskDisclosure variant="compact" className="text-center" />
 

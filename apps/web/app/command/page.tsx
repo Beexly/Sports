@@ -10,6 +10,7 @@ import { loadBoardPasses } from "@/lib/board/passes";
 import { db, isStubMode } from "@sports/db";
 import { TrustStrip, SourceFreshnessLabel, UncertaintyState } from "@/components/trust";
 import { NextBestSurface } from "@/components/experience/NextBestSurface";
+import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 import { recommendNextModule } from "@/lib/understanding/learning-state";
 import { emptySnapshot } from "@/lib/understanding/user-understanding";
 
@@ -382,6 +383,11 @@ export default async function CommandPage() {
               </div>
             </div>
 
+          </div>
+
+          {/* ── Decision Coach ───────────────────────────────── */}
+          <div className="mt-8">
+            <CoachPromptHost surface="command" />
           </div>
 
           {/* ── Access gate ───────────────────────────────────── */}

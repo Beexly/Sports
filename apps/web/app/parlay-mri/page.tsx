@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
 import { TrustStrip } from "@/components/trust";
+import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 
 export const dynamic = "force-dynamic";
 
@@ -311,6 +312,13 @@ export default function ParlayMRIPage(): JSX.Element {
                 <ChecklistItem key={i} number={i + 1} {...item} />
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ── Decision Coach ──────────────────────────────────────────────── */}
+        <section className="px-4 pb-6 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <CoachPromptHost surface="parlay-mri" />
           </div>
         </section>
 

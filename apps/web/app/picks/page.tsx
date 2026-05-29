@@ -3,6 +3,7 @@ import { Nav } from "@/components/ui/nav";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 import { FullPickCard } from "@/components/picks/pick-card";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
@@ -388,6 +389,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             </div>
           )}
         </div>
+        <CoachPromptHost surface="picks" className="mx-auto max-w-5xl px-4 pb-6" />
         <RiskDisclosure variant="card" includePastPerformance className="mx-auto max-w-5xl px-4 py-10" />
       </main>
 
