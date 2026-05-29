@@ -125,3 +125,34 @@ export const FORBIDDEN_EVENTS: ReadonlySet<string> = new Set([
 export function isForbiddenEvent(name: string): boolean {
   return FORBIDDEN_EVENTS.has(name);
 }
+
+/** All registered event names — used by the telemetry ingest route for validation. */
+export const TELEMETRY_EVENT_NAMES: ReadonlySet<TelemetryEventName> = new Set<TelemetryEventName>([
+  "surface.viewed",
+  "surface.left",
+  "explainer.opened",
+  "methodology.followed",
+  "academy.module_started",
+  "academy.module_completed",
+  "pick.viewed",
+  "pick.evidence_audit_opened",
+  "no_bet.viewed",
+  "autopsy.opened",
+  "autopsy.process_grade_acknowledged",
+  "parlay_mri.checked",
+  "restraint.disclosure_shown",
+  "restraint.responsible_play_followed",
+  "restraint.brain_q_refused",
+  "confusion.repeated_back",
+  "confusion.short_dwell",
+  "confusion.search_fallback",
+  "pricing.viewed",
+  "pricing.tier_compared",
+  "auth.sign_in_attempted",
+  "auth.sign_in_succeeded",
+  "experiment.exposed",
+]);
+
+export function isKnownEventName(name: string): name is TelemetryEventName {
+  return (TELEMETRY_EVENT_NAMES as ReadonlySet<string>).has(name);
+}

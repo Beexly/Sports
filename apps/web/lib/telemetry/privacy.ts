@@ -38,6 +38,14 @@ export function isForbiddenField(key: string): boolean {
   return FORBIDDEN_FIELD_KEYS.has(key);
 }
 
+/** Check a properties bag for any forbidden field keys (shallow check). Returns the first violation or null. */
+export function checkForbiddenFields(properties: Record<string, unknown>): string | null {
+  for (const key of Object.keys(properties)) {
+    if (isForbiddenField(key)) return key;
+  }
+  return null;
+}
+
 /**
  * Coarse retention buckets. The actual storage layer must enforce these.
  */
