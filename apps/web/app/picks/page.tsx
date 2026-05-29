@@ -218,7 +218,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     key={key}
                     href={`/picks${p.toString() ? `?${p}` : ""}`}
                     className={[
-                      "rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors",
+                      "inline-flex min-h-11 items-center rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors",
                       isActive
                         ? "border-cyan-300 bg-cyan-400 text-slate-950 shadow-[0_0_18px_rgba(34,211,238,0.35)]"
                         : "border-gray-700 bg-gray-900 text-gray-200 hover:border-cyan-400 hover:text-white",
@@ -243,7 +243,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     key={key}
                     href={`/picks${p.toString() ? `?${p}` : ""}`}
                     className={[
-                      "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
+                      "inline-flex min-h-11 items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                       isActive
                         ? "border-fuchsia-300 bg-fuchsia-400 text-slate-950 shadow-[0_0_18px_rgba(217,70,239,0.35)]"
                         : "border-gray-700 bg-gray-900 text-gray-200 hover:border-fuchsia-400 hover:text-white",
@@ -254,7 +254,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 );
               })}
 
-              <div className="ml-auto">
+              <div className="w-full sm:ml-auto sm:w-auto">
                 <DatePickerForm currentDate={metaDate} currentSport={sport} currentGrade={grade} />
               </div>
             </div>
@@ -499,18 +499,18 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
           factor trail behind each one.
         </p>
       </div>
-      <div className="flex shrink-0 items-center gap-3">
+      <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
         {!hasAccount && (
           <Link
             href="/auth/signin"
-            className="rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:bg-gray-700"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:bg-gray-700"
           >
             Sign in
           </Link>
         )}
         <Link
           href="/pricing"
-          className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
         >
           See plans
         </Link>
@@ -546,7 +546,7 @@ function PicksTrustStrip() {
         </div>
         <Link
           href="/methodology"
-          className="inline-flex shrink-0 rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
         >
           Read methodology
         </Link>
@@ -570,7 +570,7 @@ function DatePickerForm({
   currentGrade?: string;
 }) {
   return (
-    <form method="get" action="/picks" className="flex items-center gap-2">
+    <form method="get" action="/picks" className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
       {currentSport && <input type="hidden" name="sport" value={currentSport} />}
       {currentGrade && <input type="hidden" name="grade" value={currentGrade} />}
       <label htmlFor="date" className="sr-only text-xs text-gray-500">Date</label>
@@ -579,11 +579,11 @@ function DatePickerForm({
         type="date"
         name="date"
         defaultValue={currentDate}
-        className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm text-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="min-h-11 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm text-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
       <button
         type="submit"
-        className="rounded-lg bg-gray-800 px-3 py-1.5 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
+        className="min-h-11 rounded-lg bg-gray-800 px-3 py-1.5 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
       >
         Apply date
       </button>
