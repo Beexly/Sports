@@ -22,6 +22,6 @@ describe("Claude API budget override route", () => {
     expect(route).toContain("db.claudeApiBudget.upsert");
     expect(route).toContain("overrideActive");
     expect(route).toContain("overrideExpiresAt");
-    expect(route).not.toMatch(/monthlyBudgetUsd:\s*body/);
+    expect(route).not.toMatch(new RegExp(String.raw`monthlyBudgetUsd:\s*body`));
   });
 });

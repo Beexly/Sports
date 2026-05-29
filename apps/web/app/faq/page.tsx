@@ -84,11 +84,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What does Pro get?",
-        a: "$19/month. Every signal, every day, with the calibrated confidence rating and full factor trail on each one. Plus line-movement alerts.",
+        a: "$9.99/week. Every signal, every day, with the calibrated confidence rating and full factor trail on each one. Plus line-movement alerts.",
       },
       {
         q: "What does Elite get?",
-        a: "$49/month. Everything in Pro plus email and push notifications for high-Edge-Index signals as they ship.",
+        a: "$13.99/week. Everything in Pro plus email and push notifications for high-Edge-Index signals as they ship.",
       },
       {
         q: "Is there a refund window?",
@@ -96,7 +96,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Will pricing change?",
-        a: "Free stays free. Pro is $19, Elite is $49 — those prices hold for the launch cohort. If they go up later, anyone subscribed before the change is grandfathered at the original price.",
+        a: "Free stays free. Pro is $9.99/week, Elite is $13.99/week — those prices hold for the launch cohort. If they go up later, anyone subscribed before the change is grandfathered at the original price.",
       },
     ],
   },
