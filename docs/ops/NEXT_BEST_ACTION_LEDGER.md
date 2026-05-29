@@ -63,7 +63,8 @@ Constitution's priority order.
 | C8 | 2026-05-28 | Queue B drain: security.txt + robots/sourcemap verification + board/today disambiguation + prompts scaffold + /picks RiskDisclosure | `9044a0b` → `503bb06` |
 | C9 | 2026-05-28 | Queue F drain: EvidenceCard primitive — typed Evidence Chain compliance at the component level, with required failure-case on `kind="pick"` enforced by TS | `2d2be00` |
 | C10 | 2026-05-28 | Queue B resolved: prompt migration; Queue D resolved: coherence audit; Queue E resolved: methodology links + demo-data audit; Queue F partial: evidence source labels on PickCard/FullPickCard/AutopsyRow | `873d18a` → `7ea6be8` |
-| C11 | 2026-05-28 | Queue G resolved (rubric audit, lime/cyan, animation backgrounds); Queue H code-side resolved (focus-visible, reduced-motion) with LCP/axe deferred to owner; Queue I pricing matrix verified — every promised feature maps to a live surface | _this cycle_ |
+| C11 | 2026-05-28 | Queue G resolved (rubric audit, lime/cyan, animation backgrounds); Queue H code-side resolved (focus-visible, reduced-motion) with LCP/axe deferred to owner; Queue I pricing matrix verified — every promised feature maps to a live surface | `cbac6c0` |
+| C12 | 2026-05-29 | Queue J: Galaxy Orbit View concept page + 4 shareable OG artifact routes (pick, no-bet, autopsy, parlay-mri) | _this cycle_ |
 
 ## Selection rule
 

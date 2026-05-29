@@ -709,6 +709,15 @@ function DecisionQualityNav(): JSX.Element {
             </Link>
           ))}
         </div>
+        <div className="mt-6 flex items-center justify-between">
+          <Link
+            href="/orbit"
+            className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600 hover:text-ion-blue"
+          >
+            <span className="font-mono text-[9px] text-gray-800">◎</span>
+            How signals orbit a game →
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -181,9 +181,21 @@ paths, Command Center usefulness.
 Cinematic hero, Orbit View, shareable artifacts, premium report design,
 memorable interactions.
 
-- [ ] Galaxy Orbit View concept page
-- [ ] Shareable artifact components (PickCard share-image, No-Bet card,
-      Autopsy card, Parlay MRI verdict card)
+- [x] Galaxy Orbit View concept page — **resolved C12**: cinematic
+      concept page at `/orbit` explaining the four-layer orbital signal
+      architecture (market, personnel, tendency, structure layers). Pure
+      CSS orbital ring decorations, no animated backgrounds. Evidence
+      source note. Cross-links to all six intelligence surfaces. JSON-LD
+      WebPage schema. Linked from homepage DecisionQualityNav footer.
+- [x] Shareable artifact components (PickCard share-image, No-Bet card,
+      Autopsy card, Parlay MRI verdict card) — **resolved C12**: four
+      Edge-runtime `ImageResponse` OG artifact routes at
+      `/api/og/pick`, `/api/og/no-bet`, `/api/og/autopsy`,
+      `/api/og/parlay-mri`. Each accepts query-params for the
+      surface-observable data (selection, sport, tier, verdict, CLV).
+      Never exposes model weights, numeric confidence, or factor
+      breakdown. All include "Informational only · Gamble responsibly"
+      disclaimer footer.
 - [ ] Premium report design (Reports hub already exists; per-report-type
       polish pending)
 
