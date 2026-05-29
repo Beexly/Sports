@@ -216,5 +216,48 @@ to it before removing.
 - Owner-reviewed weekly
 - Frozen at any major release or diligence event
 
-**Last refresh:** 2026-05-28 C11 (Queues G, I drained; Queue H code-side
-items resolved; LCP/axe measurement deferred to owner with deployed env)
+**Last refresh:** 2026-05-29 C33 (Queues B–J drained or owner-action;
+Galaxy Operating Control Plane shipped — telemetry, understanding,
+maturity, experiments, AI governance, taste, orchestrator, restraint,
+trust UX, explainability, eval harness, science ledger, positioning
+firewall, presentation standard.)
+
+## Galaxy Operating Control Plane (C20–C33) — shipped
+
+- **C20** Product Telemetry Registry — typed events, surfaces, intent,
+  privacy. Server-only emit. FORBIDDEN_FIELD_KEYS enforced at boundary.
+- **C21** User Understanding Model — 15 concepts, monotonic bands, 6
+  confusion signals → 6 legal remediations, next-module recommender.
+- **C22** Decision Quality Maturity Model — 5 stages, ProcessGrade
+  A–F rubric (outcome-independent), 8 behavior patterns with
+  doctrine-aligned responses (never an upsell).
+- **C23** Experiment Engine — typed registry, deterministic variant
+  assignment, blocking guardrails, FORBIDDEN_EXPERIMENT_PATTERNS.
+- **C24** AI Governance — 10 OWASP-tagged risk controls, 6 assistant
+  boundaries with refusal patterns, allow-list + hard-forbidden agent
+  actions. NIST AI RMF / OWASP LLM / ISO 42001 alignment claimed
+  methodologically (not certified).
+- **C25** Taste Critic — 10 dimensions, 15 anti-patterns with detection
+  hints, fail-on-any-fail rule.
+- **C26** Experience Orchestrator — 8 modes, surface priority, next-best
+  surface, pure orchestrate() function. NEVER_SUPPRESS guarantees
+  /responsible-play and /methodology can never be demoted.
+- **C27** Responsible Intelligence — 7 friction prompts (every action is
+  legal — no bet/stake actions), 6 always-eligible restraint affordances,
+  isRestraintGatedByTier() returns false as literal type.
+- **C28** Trust UX — 7 trust signal dimensions, 9 canonical disclosures,
+  6 public source keys, internal-id → public-label mapping server-only.
+- **C29** Explainability Ladder — 6 levels (plain/standard/sharp/
+  technical-safe/academy/operator-only), public-tier scrubber for
+  forbidden terms (weights, thresholds, formulas, prompt text).
+- **C30** Intelligence Eval Harness — 5 test files, 88 tests covering
+  decision-quality, explainability, user safety, competitor inference,
+  personalization.
+- **C31** Product Science Ledger — append-only journal with hypothesis,
+  metric, guardrail, result, decision, next action.
+- **C32** Positioning Firewall — 5 forbidden positionings with
+  replacements, 3 required positionings per surface family, 5 tone
+  signatures, scanPositioning() detector.
+- **C33** Award-Level Presentation Standard — one signature moment per
+  major surface, performance budget (LCP ≤ 2.5s), reduced-motion
+  respect required.

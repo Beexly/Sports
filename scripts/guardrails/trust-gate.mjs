@@ -65,6 +65,12 @@ const WHITELIST_PREFIXES = [
   "apps/web/lib/studio/templates/",
   "apps/web/lib/galaxy/kernel/",
   "apps/web/lib/prompts/",
+  "apps/web/lib/design-review/",
+  "apps/web/lib/brand/positioning-firewall.ts",
+  "apps/web/lib/ai-governance/",
+  "apps/web/lib/explainability/",
+  "apps/web/lib/responsible-intelligence/",
+  "apps/web/tests/intelligence/",
 ];
 
 const WHITELIST_DIRS = new Set([

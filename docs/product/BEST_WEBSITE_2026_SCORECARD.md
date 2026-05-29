@@ -83,7 +83,27 @@ threshold block expansion until repaired.
 
 | Date | Cycle | Route | Avg | Notes |
 |---|---|---|---|---|
-| _(populate at first scoring pass)_ | | | | |
+| 2026-05-29 | C12 | /orbit | 8.6 | New surface. Hierarchy strong; performance not yet measured. |
+| 2026-05-29 | C20-C33 | _platform_ | n/a | Operating Control Plane shipped; 88 new intelligence evals pass; no public surface scores changed. |
+
+## Galaxy Operating Control Plane status (C20-C33)
+
+| Cycle | Layer | Files | Doc |
+|---|---|---|---|
+| C20 | Product Telemetry Registry | events.ts, surfaces.ts, intent.ts, privacy.ts | PRODUCT_TELEMETRY_STANDARD.md |
+| C21 | User Understanding Model | user-understanding.ts, confusion-signals.ts, learning-state.ts | USER_UNDERSTANDING_MODEL.md |
+| C22 | Decision Quality Maturity Model | maturity.ts, process-grades.ts, behavior-patterns.ts | DECISION_QUALITY_MATURITY_MODEL.md |
+| C23 | Experiment Engine | experiments.ts, variants.ts, metrics.ts, guardrails.ts | EXPERIMENT_ENGINE_STANDARD.md |
+| C24 | AI Governance System | risk-controls.ts, assistant-boundaries.ts, agent-actions.ts | AI_GOVERNANCE_SYSTEM.md + 3 docs |
+| C25 | Taste Critic System | taste-criteria.ts, anti-patterns.ts | TASTE_CRITIC_RUBRIC.md |
+| C26 | Experience Orchestrator | orchestrator.ts, user-modes.ts, surface-priority.ts, next-best-surface.ts | EXPERIENCE_ORCHESTRATOR.md |
+| C27 | Responsible Intelligence Layer | friction.ts, restraint.ts | RESPONSIBLE_INTELLIGENCE_LAYER.md |
+| C28 | Trust UX System | trust-signals.ts, disclosures.ts, source-labels.ts | TRUST_UX_STANDARD.md |
+| C29 | Explainability Ladder | levels.ts, renderers.ts | EXPLAINABILITY_LADDER.md |
+| C30 | Intelligence Eval Harness | 5 test files | 88 tests pass |
+| C31 | Product Science Ledger | — | PRODUCT_SCIENCE_LEDGER.md |
+| C32 | Positioning Firewall | positioning-firewall.ts | POSITIONING_FIREWALL.md |
+| C33 | Award-Level Presentation | moments.ts | AWARD_LEVEL_PRESENTATION_STANDARD.md |
 
 ## Owner
 
