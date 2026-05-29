@@ -6,6 +6,7 @@ import { MethodologySection } from "@/components/ui/methodology-section";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
 import { CalibrationConstellation } from "@/components/proof/CalibrationConstellation";
+import { SignatureMoment } from "@/components/marketing/SignatureMoment";
 
 const LAST_UPDATED = "2026-05-28";
 
@@ -87,7 +88,10 @@ export default function MethodologyPage(): JSX.Element {
               Published framework
             </p>
             <h1 className="mt-4 max-w-4xl break-words text-4xl font-black tracking-tight text-white sm:text-5xl">
-              Deterministic scoring. Open method. Protected weights.
+              <SignatureMoment
+                prefix="Deterministic scoring. Open method. Protected"
+                words={["weights", "constants", "thresholds", "internals"]}
+              />
             </h1>
             <p className="mt-6 max-w-2xl break-words text-lg leading-8 text-gray-300">
               Galaxy Sports Edge publishes the factors and decision philosophy behind the model.

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { SignatureMoment } from "@/components/marketing/SignatureMoment";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 
 export const metadata: Metadata = {
@@ -125,7 +126,10 @@ export default function GalaxyDemoPage(): JSX.Element {
             Guided walkthrough
           </p>
           <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
-            Galaxy Sports Edge
+            <SignatureMoment
+              prefix="Galaxy reads"
+              words={["evidence", "uncertainty", "discipline", "restraint"]}
+            />
           </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-gray-400">
             7 stops covering the full decision loop — from Today&apos;s Board to Command Center.
