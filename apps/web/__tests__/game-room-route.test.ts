@@ -37,4 +37,17 @@ describe("Game Intelligence Room v0", () => {
     expect(boardPage).toContain("href={`/room/${row.gameId}`}");
     expect(ledgerPage).toContain("href={`/room/${row.gameId}`}");
   });
+
+  it("offers an in-content onward path so the room is not a dead end", () => {
+    expect(page).toContain("Where This Goes Next");
+    expect(page).toContain('href="/ledger"');
+    expect(page).toContain('href="/performance"');
+    expect(page).toContain('href="/methodology"');
+    expect(page).toContain('href="/responsible-play"');
+  });
+
+  it("frames restraint without forced action or banned language", () => {
+    expect(page).toMatch(/No edge, no pick/);
+    expect(page).not.toMatch(/\bguaranteed\b|\block of the day\b|\brisk-free\b|\bsure thing\b/i);
+  });
 });
