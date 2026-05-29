@@ -9,10 +9,14 @@
 
 import type { CoachSurface } from "./prompts";
 
+export type CoachTone = "measured" | "direct" | "clinical" | "restraint";
+
 export interface CannedResponse {
   readonly promptId: string;
   readonly surface: CoachSurface | "all";
   readonly body: string;
+  /** Voice tone classification — tightened in C68. */
+  readonly tone: CoachTone;
 }
 
 export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
@@ -24,6 +28,7 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "consensus data, and model scoring — converge above the publication threshold. " +
       "The pick would be invalidated by sharp reverse movement, a key injury, or " +
       "significant weather impact. Check the evidence drawer on the card for sources.",
+    tone: "measured",
   },
   {
     promptId: "cp-002-what-makes-this-risky",
@@ -33,6 +38,7 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "key player availability, correlated weather conditions for outdoor games, and " +
       "short rest for one team. The model's confidence score reflects these factors — " +
       "signals below 60 carry more variance.",
+    tone: "clinical",
   },
   {
     promptId: "cp-003-should-i-pass",
@@ -42,6 +48,7 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "betting on hope, not evidence. Pass when: the line has moved against the signal, " +
       "you can't explain why the public is wrong, or your reasoning is emotional. " +
       "A disciplined pass is a win. Review today's pass list for games the model skipped.",
+    tone: "restraint",
   },
   {
     promptId: "cp-004-parlay-correlation",
@@ -52,6 +59,7 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "appear to have inflated payouts but carry worse expected value than their " +
       "independent probabilities suggest. The MRI score measures this: below 30 is " +
       "low correlation, above 70 is high. Prefer uncorrelated legs or single picks.",
+    tone: "clinical",
   },
   {
     promptId: "cp-005-grade-my-decision",
@@ -61,6 +69,7 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "identify what would make you wrong? Did you size appropriately? Did you act " +
       "on the model signal rather than media narrative? Outcome is noise in the short " +
       "term — process is the only thing you can control. Grade the process, not the result.",
+    tone: "direct",
   },
   {
     promptId: "cp-006-what-should-i-study",
@@ -70,6 +79,7 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "(2) line movement interpretation — sharp vs. public money, (3) the no-bet doctrine " +
       "and discipline tracking, (4) correlated parlay risk. Start with the Expected Value " +
       "module in Academy — it underpins every other concept.",
+    tone: "measured",
   },
   {
     promptId: "cp-007-explain-edge",
@@ -80,6 +90,7 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "+6%. Positive edge over a large sample produces positive expected value. The " +
       "model's edge score is a normalized measure — it doesn't expose the formula or " +
       "thresholds. See /methodology for the summary.",
+    tone: "clinical",
   },
   {
     promptId: "cp-008-am-i-tilting",
@@ -89,6 +100,7 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "checking evidence, chasing a game you passed on earlier, rationalizing a bet " +
       "you know is weak. If any of these apply, review the no-bet doctrine and your " +
       "last five decisions on the autopsy surface before acting today.",
+    tone: "restraint",
   },
   {
     promptId: "cp-009-what-does-evidence-tell-me",
@@ -99,6 +111,7 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "The Evidence Timeline shows when each signal arrived and its freshness status. " +
       "The premortem shows what would change the read — that is the honest uncertainty anchor. " +
       "If the evidence health score is below 60, treat the read as lower confidence.",
+    tone: "measured",
   },
   {
     promptId: "cp-010-pass-or-pick",
@@ -109,6 +122,59 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "premortem describe a failure case that currently applies? If yes, pass. (4) Did you " +
       "check the no-bet list? Games the model gated should not be acted on without a clear " +
       "reason the model was wrong. When in doubt, passing is the disciplined choice.",
+    tone: "direct",
+  },
+  // ── C68 additions: 5 prompts surfaced by the personality audit ──
+  {
+    promptId: "cp-011-why-this-game-gated",
+    surface: "decision-room",
+    body:
+      "A game is gated when the publish threshold is not met. The model evaluated the slate, " +
+      "computed edge, and the result fell below the bar. Common causes: bookmaker coverage " +
+      "below the depth threshold, line movement against the signal, evidence health below " +
+      "the publishable floor. Read the pass list for the gate reason on each skipped game.",
+    tone: "clinical",
+  },
+  {
+    promptId: "cp-012-was-autopsy-harsh-enough",
+    surface: "autopsy",
+    body:
+      "Honest autopsies are uncomfortable. If your grade flatters your process, recheck the " +
+      "four questions: did you read the evidence, did you name the failure case, did you " +
+      "size to your bankroll, did you act on signal not narrative. A 'B' on a process that " +
+      "skipped evidence is not a B. Grade against the standard, not the outcome.",
+    tone: "direct",
+  },
+  {
+    promptId: "cp-013-what-did-galaxy-get-wrong",
+    surface: "all",
+    body:
+      "See /we-were-wrong for the public model autopsy. We name the version, name the failure, " +
+      "name what changed. Short-run losing streaks are noise unless paired with a calibration " +
+      "drift signal — in which case the model version bumps. The retrospective is the " +
+      "trust deposit; the next version is the response.",
+    tone: "measured",
+  },
+  {
+    promptId: "cp-014-is-this-read-decaying",
+    surface: "decision-room",
+    body:
+      "Edge decays when the price moves toward fair value. If a pick was published at +6% edge " +
+      "and the line moved 2 cents against it, the live edge is lower than the published edge. " +
+      "The Factor-Audit Visualizer on this page shows edge-decay over time. A read that has " +
+      "decayed below the publish threshold is honestly stale — treat as no-bet.",
+    tone: "clinical",
+  },
+  {
+    promptId: "cp-015-should-i-be-in-restraint",
+    surface: "command",
+    body:
+      "Restraint mode is appropriate when: you've taken more than two losses today, you're " +
+      "considering picks the model gated, you're betting larger than your usual unit size, or " +
+      "the autopsy queue has unresolved settled picks. Restraint suppresses bet CTAs and routes " +
+      "you to the no-bet list and academy. It is not a punishment — it is a tool. You set it; " +
+      "you remove it.",
+    tone: "restraint",
   },
 ];
 

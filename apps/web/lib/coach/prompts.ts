@@ -83,6 +83,36 @@ export const COACH_PROMPTS: ReadonlyArray<CoachPrompt> = [
     label: "Pass or pick?",
     question: "Walk me through the decision framework for passing vs. acting on this game.",
   },
+  {
+    id: "cp-011-why-this-game-gated",
+    surfaces: ["decision-room"],
+    label: "Why is this game gated?",
+    question: "What caused the model to gate this game rather than publish a pick?",
+  },
+  {
+    id: "cp-012-was-autopsy-harsh-enough",
+    surfaces: ["autopsy"],
+    label: "Was my autopsy harsh enough?",
+    question: "Walk me through whether I graded the process honestly, not the outcome.",
+  },
+  {
+    id: "cp-013-what-did-galaxy-get-wrong",
+    surfaces: ["command", "autopsy"],
+    label: "What did Galaxy get wrong?",
+    question: "Where can I see the model's recent failures and what changed in response?",
+  },
+  {
+    id: "cp-014-is-this-read-decaying",
+    surfaces: ["decision-room"],
+    label: "Is this read decaying?",
+    question: "Has the published edge decayed since this pick was issued?",
+  },
+  {
+    id: "cp-015-should-i-be-in-restraint",
+    surfaces: ["command"],
+    label: "Should I be in restraint mode?",
+    question: "What behavioral signals suggest I should turn restraint mode on right now?",
+  },
 ];
 
 /** Return prompts available on a given surface. */
