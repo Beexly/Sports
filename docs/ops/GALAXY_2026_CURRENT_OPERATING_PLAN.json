@@ -1,0 +1,170 @@
+{
+  "version": "2026-05-28",
+  "mission": "Push Galaxy Sports Edge toward best overall website of 2026: a trust-first, intelligence-rich, emotionally aware decision system that does not feel like a sportsbook, SaaS dashboard, media site, or AI slop.",
+  "currentVerifiedState": {
+    "branch": "claude/determined-keller-dUcdG",
+    "commit": "9e4e47d975963b50d8185e26d9eca1f485f5a4df",
+    "reportedCommit": "ca7241d",
+    "reportedCommitVerified": false,
+    "repoPath": "C:/Users/Garrett/OneDrive/Documents/Galaxy Sports Edge",
+    "routeFileCount": 31,
+    "pageCount": 11,
+    "apiCount": 18,
+    "systemCount": 2,
+    "testFileCount": 19,
+    "dirtyState": "dirty before plan lock"
+  },
+  "goldenPath": [
+    "Homepage",
+    "Today's Board",
+    "Decision Room",
+    "Evidence/Trust",
+    "Coach",
+    "No-Bet/Parlay MRI",
+    "Autopsy",
+    "Command Center",
+    "Academy",
+    "Report",
+    "Demo"
+  ],
+  "productStandards": [
+    {
+      "name": "Worldview",
+      "definition": "Every surface must express Galaxy as restraint, transparent reasoning, and decision intelligence rather than betting hype."
+    },
+    {
+      "name": "Living Data",
+      "definition": "Freshness, source context, demo/live/historical/user-entered state, and stale/degraded behavior must be visible."
+    },
+    {
+      "name": "Signature Interactions",
+      "definition": "Core interactions should feel ownable by Galaxy, not generic cards, dashboards, or sportsbook patterns."
+    },
+    {
+      "name": "Introspection as Content",
+      "definition": "Losses, passes, what changed, what to ignore, and what could be wrong are product content, not footnotes."
+    },
+    {
+      "name": "Continuous Voice",
+      "definition": "Copy must remain disciplined across public, demo, member, empty, error, and degraded states."
+    },
+    {
+      "name": "Narrative Arc",
+      "definition": "A user should move from chaos to clarity to restraint or action to learning without dead ends."
+    },
+    {
+      "name": "Performance as Design",
+      "definition": "Speed, mobile readability, accessible focus, stable layout, and low cognitive load are part of the brand."
+    }
+  ],
+  "hardConstraints": [
+    "Do not publish",
+    "Do not deploy",
+    "Do not enable live AI",
+    "Do not enable payments",
+    "Do not enable public picks",
+    "Do not approve Prisma ADRs",
+    "Do not run destructive migrations",
+    "Do not spend money",
+    "Do not expose secrets",
+    "Do not weaken trust gates",
+    "Do not move confidential methodology client-side",
+    "Do not merge to main",
+    "Do not remove existing work",
+    "Do not fake live data",
+    "Do not use certainty, tout, casino, or loss-chasing language"
+  ],
+  "agentRoles": {
+    "Codex": "Truth, audit, release safety, safe patches, verdicts, owner firewall, validation, and autonomous requeueing.",
+    "Claude": "Ambitious product integration, missing surfaces, premium UX, signature interactions, runtime states, and builder repairs.",
+    "Owner": "Irreversible authority gates only.",
+    "Repo": "Source of truth; if not committed and pushed, it does not coordinate future agents."
+  },
+  "ownerGates": [
+    "repo private confirmation",
+    "environment variables",
+    "preview URL",
+    "Prisma ADRs 003-007",
+    "launch mode / release state flips",
+    "COACH_LIVE_AI_ENABLED",
+    "STRIPE_CHECKOUT_ENABLED",
+    "PUBLIC_PICKS_ENABLED",
+    "data rights approvals",
+    "production launch approval"
+  ],
+  "validationCommands": [
+    {
+      "command": "npm.cmd run typecheck:web",
+      "status": "available root script except owner-gated failures"
+    },
+    {
+      "command": "npm.cmd run test:web",
+      "status": "available root script except owner-gated failures"
+    },
+    {
+      "command": "npm.cmd run build:web",
+      "status": "available root script except owner-gated failures"
+    },
+    {
+      "command": "npm.cmd run validate:monetization",
+      "status": "available root script except owner-gated failures"
+    },
+    {
+      "command": "npm.cmd run audit:launch",
+      "status": "available root script except owner-gated failures"
+    },
+    {
+      "command": "npm.cmd run check:env",
+      "status": "available root script except owner-gated failures"
+    }
+  ],
+  "autonomousLoop": [
+    "SYNC",
+    "AUDIT",
+    "CLASSIFY",
+    "IMAGINE",
+    "PATCH",
+    "DELEGATE",
+    "VERIFY",
+    "SIMULATE",
+    "STRESS",
+    "SCORE",
+    "REQUEUE"
+  ],
+  "verdictRules": {
+    "safeToContinueBuilding": "yes unless safety blocks further work",
+    "safeToMerge": "no until state is clean, validation is green, gap matrix has no merge blockers, and owner approves merge policy",
+    "safeToDeployPreview": "no until local release gates and owner preview inputs are ready",
+    "safeToPublicLaunch": "no until preview, owner, data, privacy, rollback, monitoring, and public/private boundary evidence all pass",
+    "safeToEnablePayments": "no until owner approval, Stripe readiness, webhook tests, entitlement tests, and rollback pass",
+    "safeToEnableLiveAI": "no until owner approval and live AI readiness gates pass",
+    "safeToEnablePublicPicks": "no until owner approval, data freshness, canonical history, and public trust gates pass"
+  },
+  "supersessionRule": "This operating plan supersedes earlier conflicting local release-control instructions. Earlier docs remain evidence/reference unless explicitly marked ACTIVE or MERGED in PLAN_ALIGNMENT_AUDIT.md.",
+  "currentQueue": [
+    {
+      "id": "Q-001",
+      "owner": "Codex",
+      "item": "Lock release-control docs and reports",
+      "status": "now"
+    },
+    {
+      "id": "Q-002",
+      "owner": "Claude",
+      "item": "Repair missing golden-path surfaces after reading NEXT_CLAUDE_PROMPT_2026-05-28.md",
+      "status": "next"
+    },
+    {
+      "id": "Q-003",
+      "owner": "Owner",
+      "item": "Provide preview URL, repo privacy confirmation, env vars, and approval decisions only when ready",
+      "status": "owner-gated"
+    },
+    {
+      "id": "Q-004",
+      "owner": "Codex",
+      "item": "Re-audit after Claude builder repairs or remote state changes",
+      "status": "next"
+    }
+  ]
+}
