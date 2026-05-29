@@ -12,6 +12,7 @@ The working queue. Classification tags:
 | Decision Room onward wayfinding + No-Bet/restraint framing | CLAUDE-BUILD-REPAIR | `apps/web/app/room/[gameId]/page.tsx` + test |
 | Establish operating backbone (state sync, route contract, golden-path proof, scorecard, this board, next-loop, handoff) | CODEX-SAFE-PATCH (docs) | this directory + `reports/claude/` |
 | A11y quick win for picks evidence surfaces | CODEX-SAFE-PATCH | Removed drawer-local cyan focus rings so global plasma focus owns keyboard state; lifted small muted `PickCard` / `EvidenceAuditDrawer` copy to `ion-1`; pinned with `pick-card-a11y` + `audit-drawer-shape` tests. |
+| `/picks` in-content trust strip | CLAUDE-BUILD-REPAIR | Composed the shared `RiskDisclosure` card variant with a methodology link near the free-tier paywall; pinned in `picks-page-policy-gate`. |
 
 ## 🔜 Next unblocked (recommended order)
 | Pri | Item | Class | Why |
