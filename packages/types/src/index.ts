@@ -112,18 +112,18 @@ export function computePickGrade(
 }
 
 export const PICK_GRADE_LABELS: Record<PickGrade, { label: string; color: string; bgColor: string }> = {
-  ELITE_PLAY:  { label: "Elite Play",  color: "text-yellow-300", bgColor: "bg-yellow-400/10" },
-  STRONG_PLAY: { label: "Strong Play", color: "text-green-300",  bgColor: "bg-green-500/10"  },
-  SOLID_PLAY:  { label: "Solid Play",  color: "text-blue-300",   bgColor: "bg-blue-500/10"   },
+  ELITE_PLAY:  { label: "Elite Play",  color: "text-plasma",     bgColor: "bg-plasma/10"     },
+  STRONG_PLAY: { label: "Strong Play", color: "text-verify",     bgColor: "bg-verify/10"     },
+  SOLID_PLAY:  { label: "Solid Play",  color: "text-ion-blue",   bgColor: "bg-ion-blue/10"   },
   LEAN:        { label: "Lean",        color: "text-gray-400",   bgColor: "bg-gray-700/40"   },
 };
 
 export const RISK_LEVEL_LABELS: Record<RiskLevel, { label: string; color: string }> = {
-  LOW_RISK:      { label: "Low Risk",         color: "text-green-400"  },
-  MODERATE:      { label: "Moderate Risk",    color: "text-yellow-400" },
-  HIGH_VARIANCE: { label: "High Variance",    color: "text-orange-400" },
-  INJURY_RISK:   { label: "Injury Sensitive", color: "text-red-400"    },
-  LINE_STEAM:    { label: "Line Steam",       color: "text-purple-400" },
+  LOW_RISK:      { label: "Low Risk",         color: "text-verify"      },
+  MODERATE:      { label: "Moderate Risk",    color: "text-plasma"      },
+  HIGH_VARIANCE: { label: "High Variance",    color: "text-ultraviolet" },
+  INJURY_RISK:   { label: "Injury Sensitive", color: "text-alert"       },
+  LINE_STEAM:    { label: "Line Steam",       color: "text-ultraviolet" },
 };
 
 // ============================================================

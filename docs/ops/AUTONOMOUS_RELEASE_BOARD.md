@@ -14,6 +14,7 @@ The working queue. Classification tags:
 | A11y quick win for picks evidence surfaces | CODEX-SAFE-PATCH | Removed drawer-local cyan focus rings so global plasma focus owns keyboard state; lifted small muted `PickCard` / `EvidenceAuditDrawer` copy to `ion-1`; pinned with `pick-card-a11y` + `audit-drawer-shape` tests. |
 | `/picks` in-content trust strip | CLAUDE-BUILD-REPAIR | Composed the shared `RiskDisclosure` card variant with a methodology link near the free-tier paywall; pinned in `picks-page-policy-gate`. |
 | Weekly pricing alignment | CODEX-SAFE-PATCH | Replaced stale monthly public price copy with live Stripe sandbox weekly prices: Pro `$9.99/week`, Elite `$13.99/week`; pinned in `pricing-honesty`. |
+| Picks/evidence design-token color migration | CODEX-SAFE-PATCH | Migrated raw casino/off-system Tailwind color classes in `PickCard`, `EvidenceAuditDrawer`, and pick label metadata to GSE tokens; pinned in `picks-design-token-integrity`. |
 
 ## 🔜 Next unblocked (recommended order)
 | Pri | Item | Class | Why |
