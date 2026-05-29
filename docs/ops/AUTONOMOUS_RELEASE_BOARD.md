@@ -17,6 +17,7 @@ The working queue. Classification tags:
 | Picks/evidence design-token color migration | CODEX-SAFE-PATCH | Migrated raw casino/off-system Tailwind color classes in `PickCard`, `EvidenceAuditDrawer`, and pick label metadata to GSE tokens; pinned in `picks-design-token-integrity`. |
 | Picks/evidence mobile tap targets | CODEX-SAFE-PATCH | Added mobile-first stacking and >=44px tap targets for evidence drawer actions; pinned in `picks-mobile-tap-targets`. |
 | Odds API retry + public-picks quality floor | CODEX-SAFE-PATCH | Added bounded exponential backoff with jitter for 429/5xx Odds API responses while preserving the 15s timeout; public picks and daily-slate counts now require data quality >=70; pinned in `odds-api-client` and `public-picks-quality-floor`. |
+| Settlement snapshot durability | CODEX-SAFE-PATCH | Settlement now retries PickSignalSnapshot outcome writes, treats already-settled rows as idempotent, and creates a minimal fallback learning record when a prediction-time snapshot is missing; pinned in `settlement-snapshot-durability`. |
 
 ## 🔜 Next unblocked (recommended order)
 | Pri | Item | Class | Why |
