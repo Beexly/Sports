@@ -90,6 +90,26 @@ export const CANNED_RESPONSES: ReadonlyArray<CannedResponse> = [
       "you know is weak. If any of these apply, review the no-bet doctrine and your " +
       "last five decisions on the autopsy surface before acting today.",
   },
+  {
+    promptId: "cp-009-what-does-evidence-tell-me",
+    surface: "decision-room",
+    body:
+      "The evidence stack in this room shows what sources were available when the model " +
+      "evaluated this game: odds data, public consensus, market depth, and context signals. " +
+      "The Evidence Timeline shows when each signal arrived and its freshness status. " +
+      "The premortem shows what would change the read — that is the honest uncertainty anchor. " +
+      "If the evidence health score is below 60, treat the read as lower confidence.",
+  },
+  {
+    promptId: "cp-010-pass-or-pick",
+    surface: "decision-room",
+    body:
+      "The decision framework: (1) Is there a published pick? If yes, the model found positive " +
+      "edge. (2) Is the evidence fresh? Stale data weakens any edge claim. (3) Does the " +
+      "premortem describe a failure case that currently applies? If yes, pass. (4) Did you " +
+      "check the no-bet list? Games the model gated should not be acted on without a clear " +
+      "reason the model was wrong. When in doubt, passing is the disciplined choice.",
+  },
 ];
 
 /** Look up the canned response for a given prompt on a given surface. */

@@ -46,6 +46,7 @@ const FALLBACK_ROUTES: Record<string, { href: string; label: string }> = {
   "/academy": { href: "/picks", label: "Apply what you learned" },
   "/reports": { href: "/picks", label: "Published signals" },
   "/command": { href: "/today", label: "Today's Board" },
+  "/room": { href: "/today", label: "Today's Board" },
 };
 
 const SECONDARY_ROUTES: Record<string, { href: string; label: string }> = {
@@ -62,6 +63,7 @@ const SECONDARY_ROUTES: Record<string, { href: string; label: string }> = {
   "/academy": { href: "/autopsy", label: "Grade a past decision" },
   "/reports": { href: "/methodology", label: "How reports are scored" },
   "/command": { href: "/no-bet", label: "What we passed today" },
+  "/room": { href: "/no-bet", label: "What the model passed" },
 };
 
 export function resolveNextBest(input: RuntimeResolverInput): RuntimeResolverOutput {

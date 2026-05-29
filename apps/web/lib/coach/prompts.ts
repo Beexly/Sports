@@ -10,6 +10,7 @@ export const COACH_SURFACES = [
   "autopsy",
   "academy",
   "command",
+  "decision-room",
 ] as const;
 
 export type CoachSurface = (typeof COACH_SURFACES)[number];
@@ -69,6 +70,18 @@ export const COACH_PROMPTS: ReadonlyArray<CoachPrompt> = [
     surfaces: ["command", "autopsy"],
     label: "Am I tilting?",
     question: "What behavioral signals suggest I might be making reactive rather than disciplined decisions?",
+  },
+  {
+    id: "cp-009-what-does-evidence-tell-me",
+    surfaces: ["decision-room"],
+    label: "What does evidence say?",
+    question: "What does the game's evidence stack tell me about this matchup?",
+  },
+  {
+    id: "cp-010-pass-or-pick",
+    surfaces: ["decision-room"],
+    label: "Pass or pick?",
+    question: "Walk me through the decision framework for passing vs. acting on this game.",
   },
 ];
 

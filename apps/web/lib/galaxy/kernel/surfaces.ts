@@ -376,6 +376,21 @@ export const SURFACES: ReadonlyArray<SurfaceEntry> = [
     requiresMethodologyLink: false,
     requiresResponsiblePlayLink: false,
   },
+  // ── Decision Room ────────────────────────────────────────────────────────
+  {
+    id: "decision-room",
+    path: "/room",
+    label: "Decision Room",
+    kind: "decision-quality",
+    trustClass: "betting-adjacent",
+    status: "live",
+    tier: "all",
+    priority: 0.88,
+    summary: "Per-game intelligence room — evidence, verdict, related intel, coach.",
+    requiresTrustStrip: true,
+    requiresMethodologyLink: true,
+    requiresResponsiblePlayLink: true,
+  },
 ] as const;
 
 /** Surfaces that require compliance + trust score ≥ 9 before public launch. */
