@@ -219,28 +219,27 @@ function Hero(): JSX.Element {
         </h1>
 
         <p className="mt-7 max-w-2xl text-lg leading-8 text-gray-400">
-          Deterministic sports intelligence — line movement, market gravity, sharp signals,
-          and calibrated confidence scores. Not a picks feed. An analytical edge.
+          Read our public record before you read anyone else&apos;s. Every pick, every pass, every settled outcome — append-only. The evidence chain is the product.
         </p>
 
         <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Link
-            href="/today"
+            href="/ledger/canonical"
             className="inline-flex min-h-12 items-center justify-center rounded-xl bg-cyan-300 px-6 py-3 text-sm font-bold text-gray-950 shadow-lg shadow-cyan-500/20 transition-all hover:bg-cyan-200 hover:shadow-cyan-400/30"
           >
-            Open Today&apos;s Board
-          </Link>
-          <Link
-            href="/picks"
-            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-gray-700 px-6 py-3 text-sm font-bold text-gray-200 transition-colors hover:border-cyan-700 hover:text-white"
-          >
-            Explore picks →
+            Read our canonical ledger
           </Link>
           <Link
             href="/methodology"
+            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-gray-700 px-6 py-3 text-sm font-bold text-gray-200 transition-colors hover:border-cyan-700 hover:text-white"
+          >
+            See the methodology behind the record
+          </Link>
+          <Link
+            href="/today"
             className="font-mono text-xs uppercase tracking-[0.16em] text-gray-500 hover:text-gray-300 sm:ml-2"
           >
-            Read the methodology
+            Today&apos;s Board →
           </Link>
         </div>
 
