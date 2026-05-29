@@ -58,6 +58,11 @@ export const PRIORITY_BOOKMAKERS = [
 // Data freshness threshold (ms) — reject data older than this
 export const FRESHNESS_THRESHOLD_MS = 60 * 60 * 1000; // 1 hour
 
+// Upstream request timeout (ms) — a hung Odds API call must never block the
+// ingestion/settlement cron. Comfortably above normal latency (<1s) while
+// staying well under the cron's maxDuration so remaining sports still process.
+export const ODDS_API_TIMEOUT_MS = 15 * 1000; // 15 seconds
+
 // The Odds API base URL
 export const ODDS_API_BASE_URL = "https://api.the-odds-api.com/v4";
 
