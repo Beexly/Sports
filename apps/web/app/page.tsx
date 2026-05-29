@@ -11,6 +11,7 @@ import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { BRAND_NAME } from "@/lib/brand";
 import { KineticHeroWord } from "@/components/marketing/KineticHeroWord";
+import { EvidenceChainScroller } from "@/components/marketing/EvidenceChainScroller";
 
 export const metadata: Metadata = {
   title: `${BRAND_NAME} — Deterministic Sports Intelligence`,
@@ -108,6 +109,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         <LedgerPreview />
         <CalibrationPreview calibration={calibrationResult.data} />
         <PassList passes={passesResult.data.passes} isSampleData={passesResult.meta.isSampleData} />
+        <EvidenceChainScroller />
         <StackSection />
         <IntelligenceSurfaces />
         <SportNav />
