@@ -3,6 +3,7 @@ import type {
   PickType,
   PickGrade,
   PickResult,
+  RiskLevel,
   FactorBreakdown,
 } from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
@@ -18,6 +19,21 @@ interface PickCardProps {
   canSeeEdgeScore: boolean;
   canSeeFactorBreakdown: boolean;
 }
+
+const PICK_GRADE_STYLES: Record<PickGrade, string> = {
+  ELITE_PLAY: "text-plasma bg-plasma/10",
+  STRONG_PLAY: "text-verify bg-verify/10",
+  SOLID_PLAY: "text-ion-blue bg-ion-blue/10",
+  LEAN: "text-gray-400 bg-gray-700/40",
+};
+
+const RISK_LEVEL_STYLES: Record<RiskLevel, string> = {
+  LOW_RISK: "text-verify",
+  MODERATE: "text-plasma",
+  HIGH_VARIANCE: "text-ultraviolet",
+  INJURY_RISK: "text-alert",
+  LINE_STEAM: "text-ultraviolet",
+};
 
 export function PickCard({
   pick,
@@ -47,14 +63,14 @@ export function PickCard({
       className={[
         "relative flex flex-col gap-4 rounded-2xl border p-5 transition-shadow hover:shadow-lg hover:shadow-black/40",
         isFeatured
-          ? "border-yellow-700/50 bg-gray-900 shadow-yellow-900/20"
+          ? "border-plasma/50 bg-gray-900 shadow-plasma/20"
           : "border-gray-800 bg-gray-900",
       ].join(" ")}
     >
       {/* Featured ribbon */}
       {isFeatured && (
         <div className="absolute right-4 top-0 -translate-y-1/2">
-          <span className="rounded-full bg-yellow-400 px-2.5 py-0.5 text-xs font-bold text-yellow-900">
+          <span className="rounded-full bg-plasma px-2.5 py-0.5 text-xs font-bold text-plasma-ink">
             Top Pick
           </span>
         </div>
@@ -121,7 +137,7 @@ export function PickCard({
         {/* Risk */}
         <div className="flex-1">
           <p className="mb-1 text-[10px] font-medium text-ion-1">Risk</p>
-          <span className={`text-xs font-semibold ${riskInfo.color}`}>
+          <span className={`text-xs font-semibold ${RISK_LEVEL_STYLES[pick.riskLevel]}`}>
             {riskInfo.label}
           </span>
         </div>
@@ -182,10 +198,10 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
 
       {/* Core market score bars */}
       <div className="mb-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
-        <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-blue-500" />
-        <ScoreBar label="Market Depth" value={breakdown.marketDepthScore} max={20} color="bg-purple-500" />
-        <ScoreBar label="Pricing Edge" value={breakdown.edgeScore} max={25} color="bg-green-500" />
-        <ScoreBar label="Line Movement" value={Math.max(0, breakdown.lineMovementScore)} max={15} color="bg-yellow-500" />
+        <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-ion-blue" />
+        <ScoreBar label="Market Depth" value={breakdown.marketDepthScore} max={20} color="bg-ultraviolet" />
+        <ScoreBar label="Pricing Edge" value={breakdown.edgeScore} max={25} color="bg-verify" />
+        <ScoreBar label="Line Movement" value={Math.max(0, breakdown.lineMovementScore)} max={15} color="bg-plasma" />
       </div>
 
       {/* Intelligence layer signal chips (v4) */}
@@ -221,9 +237,9 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
                 className={[
                   "mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full",
                   factor.impact === "positive"
-                    ? "bg-green-400"
+                    ? "bg-verify"
                     : factor.impact === "negative"
-                    ? "bg-red-400"
+                    ? "bg-alert"
                     : "bg-gray-500",
                 ].join(" ")}
                 aria-hidden="true"
@@ -240,15 +256,15 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
       {(breakdown.volatilityPenalty < 0 || (breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0)) && (
         <div className="mt-1.5 flex flex-wrap gap-1.5">
           {breakdown.volatilityPenalty < 0 && (
-            <div className="flex items-center gap-1 rounded bg-red-950/30 px-2 py-0.5">
-              <span className="text-[10px] text-red-400">
+            <div className="flex items-center gap-1 rounded bg-alert/10 px-2 py-0.5">
+              <span className="text-[10px] text-alert">
                 Market risk: {breakdown.volatilityPenalty} pts
               </span>
             </div>
           )}
           {breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0 && (
-            <div className="flex items-center gap-1 rounded bg-orange-950/30 px-2 py-0.5">
-              <span className="text-[10px] text-orange-400">
+            <div className="flex items-center gap-1 rounded bg-ultraviolet/10 px-2 py-0.5">
+              <span className="text-[10px] text-ultraviolet">
                 Signal conflict: {breakdown.uncertaintyPenalty} pts
               </span>
             </div>
@@ -265,8 +281,8 @@ function IntelChip({ label, positive }: { label: string; positive: boolean }) {
       className={[
         "rounded-full px-2 py-0.5 text-[9px] font-semibold",
         positive
-          ? "bg-emerald-900/40 text-emerald-400"
-          : "bg-red-900/30 text-red-400",
+          ? "bg-verify/10 text-verify"
+          : "bg-alert/10 text-alert",
       ].join(" ")}
     >
       {label}
@@ -310,7 +326,7 @@ function GradeBadge({ grade }: { grade: PickGrade }) {
   const info = PICK_GRADE_LABELS[grade];
   if (grade === "LEAN") return null; // don't show lean badge — it's the default
   return (
-    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${info.color} ${info.bgColor}`}>
+    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${PICK_GRADE_STYLES[grade]}`}>
       {info.label}
     </span>
   );
@@ -319,13 +335,13 @@ function GradeBadge({ grade }: { grade: PickGrade }) {
 function TierBadge({ tier }: { tier: "FREE" | "PREMIUM" }) {
   if (tier === "FREE") {
     return (
-      <span className="rounded-full bg-green-900/40 px-2 py-0.5 text-xs font-semibold text-green-400">
+      <span className="rounded-full bg-verify/10 px-2 py-0.5 text-xs font-semibold text-verify">
         Free
       </span>
     );
   }
   return (
-    <span className="flex items-center gap-1 rounded-full bg-yellow-900/40 px-2 py-0.5 text-xs font-semibold text-yellow-400">
+    <span className="flex items-center gap-1 rounded-full bg-plasma/10 px-2 py-0.5 text-xs font-semibold text-plasma">
       <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
         <path
           fillRule="evenodd"
@@ -340,9 +356,9 @@ function TierBadge({ tier }: { tier: "FREE" | "PREMIUM" }) {
 
 function PickTypeBadge({ type }: { type: PickType }) {
   const colors: Record<PickType, string> = {
-    SPREAD: "bg-blue-900/40 text-blue-400",
-    MONEYLINE: "bg-purple-900/40 text-purple-400",
-    TOTAL: "bg-orange-900/40 text-orange-400",
+    SPREAD: "bg-ion-blue/10 text-ion-blue",
+    MONEYLINE: "bg-ultraviolet/10 text-ultraviolet",
+    TOTAL: "bg-ultraviolet/10 text-ultraviolet",
   };
   const labels: Record<PickType, string> = {
     SPREAD: "Spread",
@@ -358,9 +374,9 @@ function PickTypeBadge({ type }: { type: PickType }) {
 
 function ConfidenceBadge({ confidence }: { confidence: number }) {
   let color = "text-gray-400 bg-gray-800";
-  if (confidence >= 80) color = "text-green-400 bg-green-900/40";
-  else if (confidence >= 70) color = "text-blue-400 bg-blue-900/40";
-  else if (confidence >= 60) color = "text-yellow-400 bg-yellow-900/40";
+  if (confidence >= 80) color = "text-verify bg-verify/10";
+  else if (confidence >= 70) color = "text-ion-blue bg-ion-blue/10";
+  else if (confidence >= 60) color = "text-plasma bg-plasma/10";
 
   return (
     <span
@@ -374,9 +390,9 @@ function ConfidenceBadge({ confidence }: { confidence: number }) {
 
 function EdgeScoreBadge({ edgeScore }: { edgeScore: number }) {
   let color = "text-gray-400";
-  if (edgeScore >= 70) color = "text-green-400";
-  else if (edgeScore >= 50) color = "text-blue-400";
-  else if (edgeScore >= 30) color = "text-yellow-400";
+  if (edgeScore >= 70) color = "text-verify";
+  else if (edgeScore >= 50) color = "text-ion-blue";
+  else if (edgeScore >= 30) color = "text-plasma";
   else color = "text-ion-1";
 
   return (
@@ -392,8 +408,8 @@ function EdgeScoreBadge({ edgeScore }: { edgeScore: number }) {
 function ResultBadge({ result }: { result: PickResult }) {
   if (result === "PENDING") return null;
   const styles: Record<Exclude<PickResult, "PENDING">, string> = {
-    WIN: "bg-green-900/50 text-green-400",
-    LOSS: "bg-red-900/50 text-red-400",
+    WIN: "bg-verify/10 text-verify",
+    LOSS: "bg-alert/10 text-alert",
     PUSH: "bg-gray-800 text-gray-400",
     VOID: "bg-gray-800 text-ion-1",
   };
@@ -421,16 +437,16 @@ function LockedValue({ label }: { label: string }) {
 
 function DataQualityMeter({ score }: { score: number }) {
   const clamped = Math.max(0, Math.min(100, Math.round(score)));
-  let color = "bg-green-500";
-  let textColor = "text-green-400";
+  let color = "bg-verify";
+  let textColor = "text-verify";
   let label = "High";
   if (clamped < 40) {
-    color = "bg-red-500";
-    textColor = "text-red-400";
+    color = "bg-alert";
+    textColor = "text-alert";
     label = "Low";
   } else if (clamped < 70) {
-    color = "bg-yellow-500";
-    textColor = "text-yellow-400";
+    color = "bg-plasma";
+    textColor = "text-plasma";
     label = "Med";
   }
   return (
@@ -451,13 +467,13 @@ function DataQualityMeter({ score }: { score: number }) {
 }
 
 function FreshnessIndicator({ ageMinutes }: { ageMinutes: number }) {
-  let color = "text-green-400";
+  let color = "text-verify";
   let label = "Live";
   if (ageMinutes >= 60) {
-    color = "text-red-400";
+    color = "text-alert";
     label = `${Math.round(ageMinutes / 60)}h old`;
   } else if (ageMinutes >= 30) {
-    color = "text-yellow-400";
+    color = "text-plasma";
     label = `${ageMinutes}m old`;
   } else if (ageMinutes >= 10) {
     color = "text-gray-400";
@@ -468,7 +484,7 @@ function FreshnessIndicator({ ageMinutes }: { ageMinutes: number }) {
     <>
       <span
         className={`h-1.5 w-1.5 rounded-full ${
-          ageMinutes < 10 ? "bg-green-400" : ageMinutes < 30 ? "bg-gray-400" : "bg-yellow-400"
+          ageMinutes < 10 ? "bg-verify" : ageMinutes < 30 ? "bg-gray-400" : "bg-plasma"
         }`}
         aria-hidden="true"
       />

@@ -118,10 +118,10 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
       <button
         type="button"
         onClick={handleOpen}
-        className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/5 px-3 py-1 text-[11px] font-medium tracking-wide text-cyan-200/90 transition hover:border-cyan-400/50 hover:bg-cyan-500/10 hover:text-cyan-100"
+        className="inline-flex items-center gap-1.5 rounded-full border border-ion-blue/30 bg-ion-blue/5 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-blue/90 transition hover:border-ion-blue/50 hover:bg-ion-blue/10 hover:text-ion-blue-glow"
         aria-label="Open evidence audit for this pick"
       >
-        <span aria-hidden="true" className="text-cyan-300/80">⌬</span>
+        <span aria-hidden="true" className="text-ion-blue/80">⌬</span>
         {label ?? "View evidence"}
       </button>
 
@@ -146,7 +146,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
           >
             <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-gray-800 bg-gray-950/95 px-6 py-5 backdrop-blur">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-cyan-300/80">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-ion-blue/80">
                   Galaxy Sports Edge
                 </p>
                 <h2 className="mt-1 text-xl font-semibold tracking-tight text-white">
@@ -183,7 +183,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
             <div className="flex-1 px-6 py-5">
               {load.status === "loading" && <DrawerSkeleton />}
               {load.status === "error" && (
-                <p className="text-sm text-red-300/90">{load.message}</p>
+                <p className="text-sm text-alert/90">{load.message}</p>
               )}
               {load.status === "loaded" && load.audit.tier === "FREE" && (
                 <SummaryAudit
@@ -298,18 +298,18 @@ function SummaryAudit({
         )}
       </section>
 
-      <section className="rounded-lg border border-yellow-700/40 bg-yellow-500/5 p-4">
-        <p className="text-sm font-medium text-yellow-200">
+      <section className="rounded-lg border border-plasma/40 bg-plasma/5 p-4">
+        <p className="text-sm font-medium text-plasma-glow">
           Upgrade to see the full chain
         </p>
-        <p className="mt-1 text-xs text-yellow-100/70">
+        <p className="mt-1 text-xs text-plasma/70">
           Pro and Elite tiers see every signal flag at prediction time, line
           movement deltas, payload hashes, and the gates that were active
           when this pick was scored.
         </p>
         <Link
           href="/pricing"
-          className="mt-3 inline-flex items-center gap-1 rounded-full bg-yellow-400 px-3 py-1 text-xs font-semibold text-yellow-950 transition hover:bg-yellow-300"
+          className="mt-3 inline-flex items-center gap-1 rounded-full bg-plasma px-3 py-1 text-xs font-semibold text-plasma-ink transition hover:bg-plasma-glow"
         >
           See pricing
           <span aria-hidden="true">→</span>
@@ -331,7 +331,7 @@ function DetailedAudit({
       <PremortemPanel preMortem={preMortem} />
 
       {audit.isBootstrap && (
-        <div className="rounded-md border border-orange-700/40 bg-orange-500/5 px-3 py-2 text-[11px] text-orange-200">
+        <div className="rounded-md border border-ultraviolet/40 bg-ultraviolet/5 px-3 py-2 text-[11px] text-ultraviolet-glow">
           Bootstrap-mode pick — recorded for review, not part of canonical
           performance history.
         </div>
@@ -410,7 +410,7 @@ function DetailedAudit({
                   <span className="font-medium text-gray-200">
                     {snap.provider}
                   </span>
-                  <span className="text-[10px] uppercase tracking-wider text-cyan-300/70">
+                  <span className="text-[10px] uppercase tracking-wider text-ion-blue/70">
                     {snap.sourceKind}
                   </span>
                 </div>
@@ -462,12 +462,12 @@ function PremortemPanel({ preMortem }: { preMortem: PickPremortemNote | null }) 
   if (!preMortem) return null;
 
   return (
-    <section className="rounded-lg border border-cyan-700/35 bg-cyan-500/5 p-4">
+    <section className="rounded-lg border border-ion-blue/35 bg-ion-blue/5 p-4">
       <SectionHeader title="What would change the read" />
       <h4 className="mt-3 text-sm font-semibold text-white">
         {preMortem.headline}
       </h4>
-      <p className="mt-2 text-xs leading-5 text-cyan-50/75">
+      <p className="mt-2 text-xs leading-5 text-ion-blue/75">
         {preMortem.summary}
       </p>
       {preMortem.riskDrivers.length > 0 && (
@@ -480,7 +480,7 @@ function PremortemPanel({ preMortem }: { preMortem: PickPremortemNote | null }) 
         </ul>
       )}
       {preMortem.status === "NEEDS_SNAPSHOT" && (
-        <p className="mt-3 text-[11px] text-yellow-200">
+        <p className="mt-3 text-[11px] text-plasma-glow">
           Signal snapshot is required before this note can publish.
         </p>
       )}
@@ -490,7 +490,7 @@ function PremortemPanel({ preMortem }: { preMortem: PickPremortemNote | null }) 
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-300/80">
+    <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ion-blue/80">
       {title}
     </h3>
   );
@@ -512,7 +512,7 @@ function Stat({
       </p>
       <p
         className={`mt-1 text-lg font-semibold tracking-tight ${
-          accent === "cyan" ? "text-cyan-200" : "text-white"
+          accent === "cyan" ? "text-ion-blue-glow" : "text-white"
         }`}
       >
         {value}
@@ -543,9 +543,9 @@ function SignalStatusBadge({
 }) {
   const styles =
     status === "LIVE"
-      ? "border-emerald-700/50 bg-emerald-500/10 text-emerald-200"
+      ? "border-verify/50 bg-verify/10 text-verify"
       : status === "SHADOW"
-      ? "border-violet-700/50 bg-violet-500/10 text-violet-200"
+      ? "border-ultraviolet/50 bg-ultraviolet/10 text-ultraviolet-glow"
       : "border-gray-800 bg-gray-900 text-ion-1";
 
   const label =
