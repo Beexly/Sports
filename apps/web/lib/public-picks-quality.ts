@@ -1,0 +1,1 @@
+export const MIN_PUBLIC_PICK_DATA_QUALITY_SCORE = 70;

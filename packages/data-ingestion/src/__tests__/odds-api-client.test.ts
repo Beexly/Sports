@@ -44,4 +44,79 @@ describe("OddsApiClient upstream resilience", () => {
     await expect(client.getSports()).rejects.toBeInstanceOf(OddsApiError);
     await expect(client.getSports()).rejects.toThrow(/request failed/i);
   });
+
+  it("retries 5xx responses with exponential backoff and jitter before succeeding", async () => {
+    const delays: number[] = [];
+    const retryingClient = new OddsApiClient("test-key", {
+      baseDelayMs: 100,
+      maxDelayMs: 1_000,
+      maxRetries: 2,
+      jitterRatio: 0.5,
+      random: () => 0.5,
+      sleep: async (ms) => {
+        delays.push(ms);
+      },
+    });
+    const spy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response("upstream unavailable", { status: 503 }))
+      .mockResolvedValueOnce(new Response("gateway timeout", { status: 504 }))
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify([]), {
+          status: 200,
+          headers: { "x-requests-remaining": "98", "x-requests-used": "3" },
+        })
+      );
+
+    const result = await retryingClient.getSports();
+
+    expect(spy).toHaveBeenCalledTimes(3);
+    expect(delays).toEqual([125, 250]);
+    expect(result.remainingRequests).toBe(98);
+    expect(result.usedRequests).toBe(3);
+  });
+
+  it("honors Retry-After for 429 responses before retrying", async () => {
+    const delays: number[] = [];
+    const retryingClient = new OddsApiClient("test-key", {
+      baseDelayMs: 100,
+      maxRetries: 1,
+      jitterRatio: 0,
+      random: () => 0,
+      sleep: async (ms) => {
+        delays.push(ms);
+      },
+    });
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        new Response("rate limited", {
+          status: 429,
+          headers: { "retry-after": "2" },
+        })
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify([]), {
+          status: 200,
+          headers: { "x-requests-remaining": "10", "x-requests-used": "4" },
+        })
+      );
+
+    await retryingClient.getSports();
+
+    expect(delays).toEqual([2_000]);
+  });
+
+  it("does not retry non-retryable 4xx responses", async () => {
+    const retryingClient = new OddsApiClient("test-key", {
+      sleep: async () => {
+        throw new Error("sleep should not be called");
+      },
+    });
+    const spy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(new Response("bad key", { status: 401 }));
+
+    await expect(retryingClient.getSports()).rejects.toMatchObject({ status: 401 });
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 });
