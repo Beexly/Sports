@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { TrustStrip } from "@/components/trust";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { NO_BET_REASONS, type NoBetReason } from "@/lib/signal-types";
 
@@ -108,6 +109,17 @@ export default async function NoBetPage(): Promise<JSX.Element> {
       <Nav />
 
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-4 py-10 sm:px-6 lg:px-8">
+
+        <TrustStrip
+          surfaceId="no-bet"
+          source="galaxy-model"
+          freshness={isSample ? "sample" : "fresh"}
+          surfaceKind="habit-loop"
+          tier="all"
+          uncertainty={isSample ? "sample" : "live"}
+          showMethodology
+          showResponsiblePlay
+        />
 
         {/* ── Sample banner ─────────────────────────────────────────────── */}
         {isSample && (

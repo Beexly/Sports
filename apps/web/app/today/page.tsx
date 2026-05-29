@@ -9,6 +9,7 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadBoardState } from "@/lib/board/state";
 import { loadBoardPasses } from "@/lib/board/passes";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { TrustStrip } from "@/components/trust";
 
 export const dynamic = "force-dynamic";
 
@@ -206,6 +207,17 @@ export default async function TodayPage(): Promise<JSX.Element> {
       <Nav />
 
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+
+        <TrustStrip
+          surfaceId="today"
+          source="galaxy-model"
+          freshness={isSample ? "sample" : "fresh"}
+          surfaceKind="habit-loop"
+          tier="all"
+          uncertainty={isSample ? "sample" : "live"}
+          showMethodology
+          showResponsiblePlay
+        />
 
         {/* ── Demo / Preview Banner ─────────────────────────────────────── */}
         {isSample && (

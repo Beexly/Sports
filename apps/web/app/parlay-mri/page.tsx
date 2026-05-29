@@ -4,6 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
+import { TrustStrip } from "@/components/trust";
 
 export const dynamic = "force-dynamic";
 
@@ -115,6 +116,19 @@ export default function ParlayMRIPage(): JSX.Element {
       <Nav />
 
       <main className="flex-1">
+
+        <div className="mx-auto max-w-5xl px-4 pt-6 sm:px-6 lg:px-8">
+          <TrustStrip
+            surfaceId="parlay-mri"
+            source="galaxy-model"
+            freshness="sample"
+            surfaceKind="decision-quality"
+            tier="all"
+            uncertainty="sample"
+            showMethodology
+            showResponsiblePlay
+          />
+        </div>
 
         {/* ── Hero ───────────────────────────────────────────────────────── */}
         <section className="border-b border-mineral bg-[radial-gradient(circle_at_70%_20%,rgba(122,92,255,0.10),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">

@@ -5,6 +5,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
+import { TrustStrip } from "@/components/trust";
 
 export const dynamic = "force-dynamic";
 
@@ -127,6 +128,19 @@ export default async function AutopsyPage(): Promise<JSX.Element> {
     <div className="min-h-screen bg-carbon text-gray-100">
       <Nav />
       <main>
+        <div className="mx-auto max-w-4xl px-4 pt-6 sm:px-6 lg:px-8">
+          <TrustStrip
+            surfaceId="autopsy"
+            source="galaxy-model"
+            freshness={hasData ? "fresh" : "sample"}
+            surfaceKind="decision-quality"
+            tier="all"
+            uncertainty={hasData ? "live" : "sample"}
+            showMethodology
+            showResponsiblePlay
+          />
+        </div>
+
         {/* Hero */}
         <section className="border-b border-mineral px-4 pb-20 pt-20 sm:px-6 sm:pb-28 lg:px-8 lg:pt-28">
           <div className="mx-auto max-w-4xl text-center">

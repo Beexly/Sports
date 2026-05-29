@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { TrustStrip } from "@/components/trust";
 import { BRAND_NAME } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
@@ -86,6 +87,19 @@ export default function CoachingEdgePage(): JSX.Element {
     <div className="flex min-h-screen flex-col bg-carbon text-gray-100">
       <Nav />
       <main className="flex-1">
+        <div className="mx-auto max-w-5xl px-4 pt-6 sm:px-6 lg:px-8">
+          <TrustStrip
+            surfaceId="coaching-edge"
+            source="public-record"
+            freshness="sample"
+            surfaceKind="decision-quality"
+            tier="pro"
+            uncertainty="sample"
+            showMethodology
+            showResponsiblePlay
+          />
+        </div>
+
         {/* Hero */}
         <section className="border-b border-mineral bg-[radial-gradient(circle_at_20%_60%,rgba(122,92,255,0.10),transparent_40%)] px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">

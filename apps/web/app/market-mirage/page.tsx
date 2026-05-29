@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { TrustStrip } from "@/components/trust";
 import { BRAND_NAME } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
@@ -156,6 +157,19 @@ export default function MarketMiragePage(): JSX.Element {
       <Nav />
 
       <main className="flex-1">
+
+        <div className="mx-auto max-w-5xl px-4 pt-6 sm:px-6 lg:px-8">
+          <TrustStrip
+            surfaceId="market-mirage"
+            source="aggregate"
+            freshness="sample"
+            surfaceKind="decision-quality"
+            tier="pro"
+            uncertainty="sample"
+            showMethodology
+            showResponsiblePlay
+          />
+        </div>
 
         {/* ── Hero ───────────────────────────────────────────────────────── */}
         <section className="border-b border-mineral bg-[radial-gradient(circle_at_30%_20%,rgba(0,229,255,0.08),transparent_45%)] px-4 py-20 sm:px-6 lg:px-8">
