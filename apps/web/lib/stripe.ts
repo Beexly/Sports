@@ -11,8 +11,8 @@ export const STRIPE_PRICE_IDS = {
 } as const;
 
 export const PRICE_DISPLAY = {
-  PRO: { amount: 19, label: "Pro", period: "month" },
-  ELITE: { amount: 49, label: "Elite", period: "month" },
+  PRO: { amount: 9.99, label: "Pro", period: "week" },
+  ELITE: { amount: 13.99, label: "Elite", period: "week" },
 } as const;
 
 /**

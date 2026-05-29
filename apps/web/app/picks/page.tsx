@@ -373,7 +373,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 href="/pricing"
                 className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
               >
-                Upgrade to Pro / $19/mo
+                Upgrade to Pro / $9.99/wk
               </Link>
             </div>
           )}
@@ -384,7 +384,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <p className="text-xs text-purple-400">
                 Want early access, daily alerts, and advanced analytics?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
-                  Upgrade to Elite / $49/mo
+                  Upgrade to Elite / $13.99/wk
                 </Link>
               </p>
             </div>

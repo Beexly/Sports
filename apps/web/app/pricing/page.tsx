@@ -12,12 +12,12 @@ import { BRAND_NAME } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Pricing — Three Tiers. No Upsell Games.",
   description:
-    "Free for one signal a day. $19/mo for every signal with the reasoning attached. $49/mo for full alerts on every published signal. Cancel any time from your dashboard.",
+    "Free for one signal a day. $9.99/week for every signal with the reasoning attached. $13.99/week for full alerts on every published signal. Cancel any time from your dashboard.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: `Pricing — ${BRAND_NAME}`,
     description:
-      "Free, Pro ($19/mo), Elite ($49/mo). Every paid plan ships with a 7-day refund window.",
+      "Free, Pro ($9.99/week), Elite ($13.99/week). Every paid plan ships with a 7-day refund window.",
   },
 };
 
@@ -51,8 +51,8 @@ const PLANS = [
   {
     id: "PRO" as const,
     name: "Pro",
-    price: 19,
-    period: "month",
+    price: 9.99,
+    period: "week",
     description:
       "Every published signal, with the confidence rating and factor trail attached.",
     badge: "Where most start",
@@ -72,8 +72,8 @@ const PLANS = [
   {
     id: "ELITE" as const,
     name: "Elite",
-    price: 49,
-    period: "month",
+    price: 13.99,
+    period: "week",
     description:
       "Pro plus real-time alerts on every published signal — built for live slates.",
     badge: "All signals, all alerts",
@@ -299,7 +299,7 @@ export default function PricingPage() {
                         {plan.name}
                         {plan.price > 0 && (
                           <span className="ml-1 text-xs font-normal text-gray-400">
-                            ${plan.price}/mo
+                            ${plan.price}/week
                           </span>
                         )}
                       </th>
@@ -365,7 +365,7 @@ export default function PricingPage() {
 
           {/* Refund note */}
           <p className="mt-12 text-center text-xs text-gray-400">
-            Every paid plan ships with a 7-day refund window. Billed monthly.
+            Every paid plan ships with a 7-day refund window. Billed weekly.
             Cancel any time from your dashboard.
           </p>
         </div>
