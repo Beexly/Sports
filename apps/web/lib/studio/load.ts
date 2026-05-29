@@ -97,7 +97,7 @@ export async function loadStudioDashboard(
           gameId: selectedNode.id,
           modelVersion: selectedNode.picks[0]?.id ? "current" : "current",
           brandConfig: {
-            publicUrl: "https://galaxysportsedge.com",
+            publicUrl: process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com",
             voiceReferences: ["docs/positioning.md", "docs/product/galaxy-studio-spec.md"],
           },
         })

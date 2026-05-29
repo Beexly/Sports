@@ -28,6 +28,11 @@ describe("Galaxy Studio cockpit surface", () => {
     expect(runtime).toMatch(/getRulesForTemplate/);
   });
 
+  it("reads publicUrl from NEXT_PUBLIC_APP_URL env var for brand config", () => {
+    expect(loader).toContain("NEXT_PUBLIC_APP_URL");
+    expect(loader).toContain('"https://galaxysportsedge.com"');
+  });
+
   it("keeps Studio manually exported with no external posting path", () => {
     expect(workspace).toContain("External publishing is intentionally absent.");
     expect(workspace).toContain("/api/cockpit/studio/generate");

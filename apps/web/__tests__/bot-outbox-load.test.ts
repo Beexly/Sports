@@ -36,4 +36,9 @@ describe("bot outbox loader", () => {
     expect(loader).toContain("blockedItems");
     expect(loader).toContain("lookbackMinutes");
   });
+
+  it("reads publicUrl from NEXT_PUBLIC_APP_URL env var before the hardcoded fallback", () => {
+    expect(loader).toContain("NEXT_PUBLIC_APP_URL");
+    expect(loader).toContain('"https://galaxysportsedge.com"');
+  });
 });

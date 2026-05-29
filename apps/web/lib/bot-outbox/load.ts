@@ -46,7 +46,7 @@ export async function loadBotOutboxDrafts(
   const now = options.now ?? new Date();
   const lookbackMinutes = options.lookbackMinutes ?? 60;
   const limitPerKind = options.limitPerKind ?? 25;
-  const publicUrl = options.publicUrl ?? "https://galaxysportsedge.com";
+  const publicUrl = options.publicUrl ?? process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
   const since = windowStart(now, lookbackMinutes);
 
   const [pickPublications, settlements, gatedSlateStates] = await Promise.all([
