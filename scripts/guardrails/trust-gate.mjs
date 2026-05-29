@@ -58,6 +58,10 @@ const WHITELIST_PATHS = new Set([
   "apps/web/lib/promotions/copy-rules.ts",
   "apps/web/lib/content-generator.ts",
   "packages/db/prisma/seed.ts",
+  // Anti-tout page intentionally names the patterns Galaxy refuses to use.
+  // This is the only page allowed to contain banned-phrase strings; their
+  // appearance is editorial (refusal copy), not promotional.
+  "apps/web/app/we-are-not/page.tsx",
 ]);
 
 const WHITELIST_PREFIXES = [
