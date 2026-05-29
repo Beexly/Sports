@@ -32,3 +32,4 @@ export * from "./pricing";
 export * from "./reports";
 export * from "./academy";
 export * from "./artifacts";
+export * from "./graph";

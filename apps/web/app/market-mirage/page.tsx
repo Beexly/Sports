@@ -4,6 +4,8 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { TrustStrip } from "@/components/trust";
+import { RelatedIntelligencePanel, GraphRelationshipList, RelatedReports } from "@/components/graph";
+import { getOutboundEdges } from "@/lib/galaxy/kernel/graph";
 import { BRAND_NAME } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
@@ -296,6 +298,24 @@ export default function MarketMiragePage(): JSX.Element {
         <section className="px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <RiskDisclosure variant="card" includePastPerformance={true} />
+          </div>
+        </section>
+
+        {/* ── Related Intelligence ─────────────────────────────────────────── */}
+        <section className="px-4 pb-10 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <RelatedIntelligencePanel
+              sections={[
+                {
+                  eyebrow: "Next steps",
+                  children: <GraphRelationshipList edges={getOutboundEdges("market-mirage").filter(e => e.kind === "workflow" || e.kind === "decision-quality")} />,
+                },
+                {
+                  eyebrow: "Related reports",
+                  children: <RelatedReports typeIds={["mirage"]} />,
+                },
+              ]}
+            />
           </div>
         </section>
 
