@@ -10,6 +10,7 @@ import { loadBoardState, type BoardStateData, type BoardStateRow } from "@/lib/b
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { BRAND_NAME } from "@/lib/brand";
+import { KineticHeroWord } from "@/components/marketing/KineticHeroWord";
 
 export const metadata: Metadata = {
   title: `${BRAND_NAME} — Deterministic Sports Intelligence`,
@@ -212,9 +213,7 @@ function Hero(): JSX.Element {
 
         <h1 className="mt-8 max-w-5xl break-words text-5xl font-black leading-[1.05] tracking-tight text-white sm:text-7xl lg:text-8xl">
           See the game{" "}
-          <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-400 bg-clip-text text-transparent">
-            differently.
-          </span>
+          <KineticHeroWord />
         </h1>
 
         <p className="mt-7 max-w-2xl text-lg leading-8 text-gray-400">
