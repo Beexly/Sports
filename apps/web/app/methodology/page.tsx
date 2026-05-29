@@ -130,6 +130,46 @@ export default function MethodologyPage(): JSX.Element {
           </div>
         </section>
 
+        <section className="border-b border-mineral bg-gray-900/40 px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber-400">
+              Honest disclosure
+            </p>
+            <h2 className="mt-3 text-3xl font-black text-white">
+              What we publish vs. what we cannot publish yet.
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-gray-400">
+              Calibration credibility scales with sample size. We will not publish numbers we cannot defend. See the canonical history accumulation plan for the full standard.
+            </p>
+            <div className="mt-8 grid gap-4 md:grid-cols-2">
+              <article className="border border-emerald-800/40 bg-emerald-950/15 p-5">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-400">
+                  We publish today
+                </p>
+                <ul className="mt-3 space-y-2 text-sm text-gray-300">
+                  <li>· Every published pick, with its evidence chain.</li>
+                  <li>· Every pass the model gated, with the gate reason.</li>
+                  <li>· Every settled outcome.</li>
+                  <li>· Per-bucket calibration once a bucket meets the publish gate (30 settled per bucket).</li>
+                  <li>· The factor inventory and the changelog of model versions.</li>
+                </ul>
+              </article>
+              <article className="border border-amber-800/40 bg-amber-950/15 p-5">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-amber-400">
+                  We do not publish yet
+                </p>
+                <ul className="mt-3 space-y-2 text-sm text-gray-300">
+                  <li>· Aggregate ROI — requires units-risked accounting (ADR-008).</li>
+                  <li>· Per-sport calibration breakouts — requires 30+ per bucket per sport.</li>
+                  <li>· Long-horizon Brier — meaningful at 200+ settled picks.</li>
+                  <li>· Exact factor weights or scoring constants.</li>
+                  <li>· Anything that depends on canonical history not yet accumulated.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </section>
+
         <MethodologySection />
 
         <section className="border-y border-mineral bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
