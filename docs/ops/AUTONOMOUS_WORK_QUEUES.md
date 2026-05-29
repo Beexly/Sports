@@ -100,15 +100,17 @@ links, unsupported claims, mock data ambiguity.
 Missing source, freshness, model version, citation, or proof on data
 cards or analytical claims.
 
-- [~] Adopt `EVIDENCE_CHAIN_STANDARD.md` per-card requirements across
-      all data-rendering components — **partial C10**: `PickCard` and
-      `FullPickCard` updated to display "Galaxy model" source label in
-      footer (Evidence Chain source requirement). AutopsyRow table
-      updated with source note. `failureCase` on picks and
-      `modelVersion` field blocked on Prisma schema — full enforcement
-      deferred to schema migration cycle. `EvidenceCard` children
-      type fixed from required to optional for correct TS overload
-      resolution in tests.
+- [x] Adopt `EVIDENCE_CHAIN_STANDARD.md` per-card requirements across
+      all data-rendering components — **resolved C45**: `PickCard` and
+      `FullPickCard` now compose the shared `PickEvidenceSection`
+      primitive backed by `SourceFreshnessLabel` from the trust layer.
+      Discriminated union enforces `failureCase: string` required when
+      `kind="pick"`. Two truth systems eliminated. `ageToFreshness()`
+      helper converts `dataFreshnessAt` to freshness bucket.
+      Today's Board picks carry `SourceFreshnessLabel` trust mini-labels.
+      Decision Room uses `PickEvidenceSection` in verdict card.
+      Telemetry ingest route and browser client added (C48). Command
+      Center 6 widgets wired with WidgetProvenance (C49).
 
 ## Queue G — Design Quality
 

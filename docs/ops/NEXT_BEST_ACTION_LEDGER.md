@@ -66,6 +66,7 @@ Constitution's priority order.
 | C11 | 2026-05-28 | Queue G resolved (rubric audit, lime/cyan, animation backgrounds); Queue H code-side resolved (focus-visible, reduced-motion) with LCP/axe deferred to owner; Queue I pricing matrix verified — every promised feature maps to a live surface | `cbac6c0` |
 | C12 | 2026-05-29 | Queue J: Galaxy Orbit View concept page + 4 shareable OG artifact routes (pick, no-bet, autopsy, parlay-mri) | `25ae9df` |
 | C20-C33 | 2026-05-29 | Galaxy Operating Control Plane — telemetry registry, user understanding model, decision-quality maturity model, experiment engine, AI governance, taste critic, experience orchestrator, responsible-intelligence layer, trust UX, explainability ladder, intelligence eval harness (88 tests), product science ledger, positioning firewall, award-level presentation standard | _this batch_ |
+| C45-C51 | 2026-05-29 | Golden Path Runtime Proof — PickEvidenceSection shared primitive, Decision Room upgrade (TrustStrip+CoachPromptHost+NextBestSurface+RelatedIntelligencePanel), Today's Board signal summary + trust labels, telemetry ingest POST /api/telemetry + browser client, Command Center 6-widget data wiring, Galaxy Demo Tour /galaxy-demo, runtime acceptance tests (179 files, 2535 tests) | Queue F RESOLVED |
 
 ## Selection rule
 

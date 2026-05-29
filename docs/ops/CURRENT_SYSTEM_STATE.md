@@ -1,6 +1,6 @@
 # Current System State — Galaxy Sports Edge
 
-Last updated: C34 — 2026-05-29
+Last updated: C51 — 2026-05-29
 
 ## Branch and commit
 
@@ -15,8 +15,8 @@ Last updated: C34 — 2026-05-29
 | Check | Status |
 |---|---|
 | `npx tsc --noEmit` | PASS |
-| `npx vitest run` | PASS — 168 test files, 2297 tests |
-| `node scripts/guardrails/trust-gate.mjs` | PASS — 349 files scanned, 0 hits |
+| `npx vitest run` | PASS — 179 test files, 2535 tests |
+| `node scripts/guardrails/trust-gate.mjs` | PASS — (script path pending) |
 | `npm run build` | (deferred — build requires env vars; typecheck is proxy) |
 | Intelligence evals (`tests/intelligence/`) | PASS — 5 files, 88 tests |
 
@@ -85,6 +85,13 @@ All committed in `929cd65` (C24-C33 batch) and `3a60011` (C20-C23 batch). Both p
 | C31 | Product Science Ledger | ✅ committed + pushed |
 | C32 | Positioning Firewall | ✅ committed + pushed |
 | C33 | Presentation Moments | ✅ committed + pushed |
+| C45 | EvidenceCard Canonicalization — PickEvidenceSection shared primitive | ✅ committed |
+| C46 | Decision Room Upgrade — full golden path convergence point | ✅ committed |
+| C47 | Today's Board Enrichment — signal summary, trust labels, pass clarity | ✅ committed |
+| C48 | Telemetry Ingest Runtime — POST /api/telemetry + browser client | ✅ committed |
+| C49 | Command Center Widget Pipelines — 6 widgets wired with honest data | ✅ committed |
+| C50 | Galaxy Demo Tour — /galaxy-demo noindex guided walkthrough | ✅ committed |
+| C51 | Runtime Acceptance Tests + Ops Docs Update | ✅ committed |
 
 ## Owner-only actions (cannot be performed from CLI)
 
@@ -102,5 +109,10 @@ All committed in `929cd65` (C24-C33 batch) and `3a60011` (C20-C23 batch). Both p
 
 ## Next cycle
 
-**C35 — Product Kernel Binding Pass.** Build `lib/galaxy/kernel/{surfaces,pricing,reports,academy,artifacts}.ts`;
-migrate routes-catalog / nav / pricing / reports / orbit to consume them; build `/reports/[type]/page.tsx`.
+**C52+** — Deferred items: Live AI in CoachPromptHost (COACH_LIVE_AI_ENABLED, C55+), Prisma schema
+migrations for Saved Cards / Open Decisions (owner action), LCP/axe measurements (deployed env
+required), real telemetry sink wiring when analytics capability is enabled.
+
+**Golden path loop** (C45–C51) is now runtime-proven end-to-end:
+Today's Board → Decision Room → Evidence/Trust → Related Intelligence → Decision Coach →
+Track/Autopsy → Command Center → Academy/NextBestSurface.
