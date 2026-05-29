@@ -391,6 +391,20 @@ export const SURFACES: ReadonlyArray<SurfaceEntry> = [
     requiresMethodologyLink: true,
     requiresResponsiblePlayLink: true,
   },
+  {
+    id: "ledger-canonical",
+    path: "/ledger/canonical",
+    label: "Canonical Ledger",
+    kind: "decision-quality",
+    trustClass: "betting-adjacent",
+    status: "live",
+    tier: "all",
+    priority: 0.92,
+    summary: "Append-only public record of settled canonical picks. Honest empty state until canonical history accumulates.",
+    requiresTrustStrip: true,
+    requiresMethodologyLink: true,
+    requiresResponsiblePlayLink: true,
+  },
 ] as const;
 
 /** Surfaces that require compliance + trust score ≥ 9 before public launch. */

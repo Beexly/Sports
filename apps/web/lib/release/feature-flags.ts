@@ -30,7 +30,8 @@ export type FeatureFlagName =
   | "PERFORMANCE_STATS_ENABLED"
   | "PROMOTIONS_ENABLED"
   | "STRIPE_CHECKOUT_ENABLED"
-  | "STUDIO_ENABLED";
+  | "STUDIO_ENABLED"
+  | "CANONICAL_LEDGER_ENABLED";
 
 export interface FeatureFlag {
   readonly name: FeatureFlagName;
@@ -274,6 +275,18 @@ export const FEATURE_FLAGS: ReadonlyArray<FeatureFlag> = [
     premiumImpact: "Existing subscribers retain access",
     cockpitImpact: "None",
     defaults: defaultsFor((s) => RELEASE_STATE_CAPABILITIES[s].payments),
+  },
+  {
+    name: "CANONICAL_LEDGER_ENABLED",
+    owner: "trust",
+    protects: "/ledger/canonical public visibility (requires settled history)",
+    fallback: "Page renders honest accumulation banner; no fake settled rows",
+    envOnly: false,
+    requiresRedeploy: false,
+    publicImpact: "Hides the canonical ledger preview from public surfaces",
+    premiumImpact: "Same",
+    cockpitImpact: "None",
+    defaults: defaultsFor((s) => s === "release-candidate" || s === "production"),
   },
   {
     name: "STUDIO_ENABLED",
