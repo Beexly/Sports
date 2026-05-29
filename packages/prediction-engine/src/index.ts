@@ -22,6 +22,16 @@ export {
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export { calculatePickResult } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// Backtest harness — operator-only metric output. Not wired into any
+// public surface. See docs/ops/CANONICAL_HISTORY_ACCUMULATION.md (C62)
+// for the policy around when backtest output may be referenced publicly.
+export { runBacktest, replayGames, assertSummaryInvariants, BUCKET_ORDER } from "./backtest/index.js";
+export type {
+  BacktestGame,
+  BacktestPickRecord,
+  BacktestBucket,
+  BacktestSummary,
+} from "./backtest/index.js";
 export * from "./constants.js";
 export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
