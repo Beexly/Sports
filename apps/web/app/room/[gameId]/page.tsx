@@ -40,15 +40,18 @@ export default async function GameRoomPage({
 
         {/* ── Breadcrumb + header ─────────────────────────────────────────── */}
         <header className="border-b border-mineral pb-8">
-          <div className="flex flex-wrap items-center gap-3 text-sm">
-            <Link href="/today" className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-blue hover:text-cyan-200">
-              Today&apos;s Board
+          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-sm">
+            <Link
+              href="/today"
+              className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-blue hover:text-cyan-200 transition-colors"
+            >
+              <span aria-hidden="true">←</span> Today&apos;s Board
             </Link>
             <span aria-hidden="true" className="text-gray-700">›</span>
             <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">
               Decision Room
             </span>
-          </div>
+          </nav>
           <p className="mt-5 font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
             Game Intelligence Room
           </p>
@@ -71,22 +74,33 @@ export default async function GameRoomPage({
         />
 
         {/* ── Pick / No-Bet / Watch verdict ──────────────────────────────── */}
-        <section className="rounded-2xl border border-mineral bg-gray-900/60 p-5 space-y-3">
+        <section
+          aria-label="Model verdict"
+          className={[
+            "rounded-2xl border p-6 space-y-4",
+            hasPublishedPick
+              ? "border-ion-blue/40 bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-cyan-950/30"
+              : "border-amber-800/40 bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-amber-950/20",
+          ].join(" ")}
+        >
           <div className="flex items-center justify-between">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500">
-              Verdict
+            <p className={[
+              "font-mono text-[10px] uppercase tracking-[0.18em]",
+              hasPublishedPick ? "text-ion-blue" : "text-amber-500",
+            ].join(" ")}>
+              {hasPublishedPick ? "Model verdict — Signal" : "Model verdict — Pass"}
             </p>
             <SourceFreshnessLabel source="galaxy-model" freshness={freshness} />
           </div>
 
           {hasPublishedPick ? (
-            <div className="space-y-3">
-              <p className="text-sm font-semibold text-white">
-                Model published a pick for this game.
-              </p>
-              <p className="text-xs text-gray-400">
-                Edge index: {room.node.marketPulse.edgeIndex !== null ? String(room.node.marketPulse.edgeIndex) : "N/A"}
-                {" "}· Evidence health: {evidenceScore}/100 ({evidenceStatus})
+            <div className="space-y-4">
+              <h2 className="text-2xl font-bold leading-tight text-white sm:text-3xl">
+                Galaxy published a pick for this game.
+              </h2>
+              <p className="text-sm text-gray-400">
+                Edge index <span className="font-mono text-white">{room.node.marketPulse.edgeIndex !== null ? String(room.node.marketPulse.edgeIndex) : "N/A"}</span>
+                {" "}· Evidence health <span className="font-mono text-white">{evidenceScore}/100</span> ({evidenceStatus})
               </p>
               <PickEvidenceSection
                 kind="pick"
@@ -99,25 +113,28 @@ export default async function GameRoomPage({
               />
               <Link
                 href="/picks"
-                className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-widest text-accent-300 hover:text-accent-200 transition-colors"
+                className="inline-flex min-h-10 items-center justify-center rounded-lg bg-ion-blue px-5 text-sm font-bold text-carbon hover:opacity-90 transition-opacity"
               >
-                See published picks →
+                See the published pick →
               </Link>
             </div>
           ) : (
-            <div className="space-y-2">
-              <p className="text-sm font-semibold text-gray-300">
-                Model passed on this game.
+            <div className="space-y-4">
+              <h2 className="text-2xl font-bold leading-tight text-white sm:text-3xl">
+                Galaxy passed on this game.
+              </h2>
+              <p className="text-sm text-gray-400">
+                No published pick. Edge index <span className="font-mono text-white">{room.node.marketPulse.edgeIndex !== null ? String(room.node.marketPulse.edgeIndex) : "N/A"}</span>
+                {" "}· Evidence health <span className="font-mono text-white">{evidenceScore}/100</span> ({evidenceStatus})
               </p>
-              <p className="text-xs text-gray-500">
-                No published pick. Edge index: {room.node.marketPulse.edgeIndex !== null ? String(room.node.marketPulse.edgeIndex) : "N/A"}
-                {" "}· Evidence health: {evidenceScore}/100 ({evidenceStatus})
+              <p className="text-sm leading-relaxed text-amber-200/80">
+                A disciplined pass is a win. The model did not find an edge here — don&apos;t bet what Galaxy skipped without an independent thesis.
               </p>
               <Link
                 href="/no-bet"
-                className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-widest text-accent-300 hover:text-accent-200 transition-colors"
+                className="inline-flex min-h-10 items-center justify-center rounded-lg border border-amber-700/50 bg-amber-950/30 px-5 text-sm font-bold text-amber-200 hover:bg-amber-950/50 transition-colors"
               >
-                No-bet list →
+                Read today&apos;s pass list →
               </Link>
             </div>
           )}
@@ -301,30 +318,65 @@ export default async function GameRoomPage({
         <NextBestSurface route="/room" />
 
         {/* ── Track / Autopsy / Share row ─────────────────────────────────── */}
-        <div className="flex flex-wrap gap-4 border-t border-mineral pt-6">
-          <Link
-            href="/tracker"
-            className="font-mono text-[9px] uppercase tracking-widest text-gray-400 hover:text-gray-200 transition-colors"
-          >
-            Track this pick →
-          </Link>
-          <Link
-            href="/autopsy"
-            className="font-mono text-[9px] uppercase tracking-widest text-gray-400 hover:text-gray-200 transition-colors"
-          >
-            Open Autopsy →
-          </Link>
-          {hasPublishedPick && (
+        <section
+          aria-label="Decision actions"
+          className="border-t border-mineral pt-6"
+        >
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500">
+            Next actions
+          </p>
+          <div className="grid gap-3 sm:grid-cols-3">
             <Link
-              href={`/api/og/pick?gameId=${params.gameId}`}
-              className="font-mono text-[9px] uppercase tracking-widest text-gray-400 hover:text-gray-200 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/tracker"
+              className="group flex flex-col gap-1 rounded-lg border border-mineral bg-gray-900/55 px-4 py-3 hover:border-emerald-700/60 hover:bg-gray-900/80 transition-colors"
             >
-              Share artifact preview →
+              <span className="font-mono text-[9px] uppercase tracking-widest text-emerald-400">
+                Track this pick
+              </span>
+              <span className="text-xs text-gray-500 group-hover:text-gray-300">
+                Log your action and CLV
+              </span>
             </Link>
-          )}
-        </div>
+            <Link
+              href="/autopsy"
+              className="group flex flex-col gap-1 rounded-lg border border-mineral bg-gray-900/55 px-4 py-3 hover:border-amber-700/60 hover:bg-gray-900/80 transition-colors"
+            >
+              <span className="font-mono text-[9px] uppercase tracking-widest text-amber-400">
+                Open Autopsy
+              </span>
+              <span className="text-xs text-gray-500 group-hover:text-gray-300">
+                Grade your decision process
+              </span>
+            </Link>
+            {hasPublishedPick ? (
+              <Link
+                href={`/api/og/pick?gameId=${params.gameId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col gap-1 rounded-lg border border-mineral bg-gray-900/55 px-4 py-3 hover:border-cyan-700/60 hover:bg-gray-900/80 transition-colors"
+              >
+                <span className="font-mono text-[9px] uppercase tracking-widest text-cyan-400">
+                  Share artifact
+                </span>
+                <span className="text-xs text-gray-500 group-hover:text-gray-300">
+                  Open the OG preview image
+                </span>
+              </Link>
+            ) : (
+              <Link
+                href="/today"
+                className="group flex flex-col gap-1 rounded-lg border border-mineral bg-gray-900/55 px-4 py-3 hover:border-ion-blue/60 hover:bg-gray-900/80 transition-colors"
+              >
+                <span className="font-mono text-[9px] uppercase tracking-widest text-ion-blue">
+                  Back to Board
+                </span>
+                <span className="text-xs text-gray-500 group-hover:text-gray-300">
+                  See other games on the slate
+                </span>
+              </Link>
+            )}
+          </div>
+        </section>
 
         <RiskDisclosure variant="compact" className="text-center" />
       </main>
