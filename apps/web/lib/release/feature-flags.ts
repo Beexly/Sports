@@ -31,7 +31,9 @@ export type FeatureFlagName =
   | "PROMOTIONS_ENABLED"
   | "STRIPE_CHECKOUT_ENABLED"
   | "STUDIO_ENABLED"
-  | "CANONICAL_LEDGER_ENABLED";
+  | "CANONICAL_LEDGER_ENABLED"
+  | "MODEL_PULSE_ENABLED"
+  | "DECISION_STREAM_ENABLED";
 
 export interface FeatureFlag {
   readonly name: FeatureFlagName;
@@ -275,6 +277,30 @@ export const FEATURE_FLAGS: ReadonlyArray<FeatureFlag> = [
     premiumImpact: "Existing subscribers retain access",
     cockpitImpact: "None",
     defaults: defaultsFor((s) => RELEASE_STATE_CAPABILITIES[s].payments),
+  },
+  {
+    name: "MODEL_PULSE_ENABLED",
+    owner: "trust",
+    protects: "/model-pulse public visibility (requires live slate data)",
+    fallback: "Page renders honest 'pulse offline' empty state",
+    envOnly: false,
+    requiresRedeploy: false,
+    publicImpact: "Hides model metabolism visualization",
+    premiumImpact: "Same",
+    cockpitImpact: "None",
+    defaults: defaultsFor((s) => s === "release-candidate" || s === "production"),
+  },
+  {
+    name: "DECISION_STREAM_ENABLED",
+    owner: "trust",
+    protects: "/stream public decision timeline visibility",
+    fallback: "Page renders honest empty state",
+    envOnly: false,
+    requiresRedeploy: false,
+    publicImpact: "Hides the append-only decision timeline",
+    premiumImpact: "Same",
+    cockpitImpact: "None",
+    defaults: defaultsFor((s) => s === "release-candidate" || s === "production"),
   },
   {
     name: "CANONICAL_LEDGER_ENABLED",
