@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
+import { CalibrationConstellation } from "@/components/proof/CalibrationConstellation";
 
 const LAST_UPDATED = "2026-05-28";
 
@@ -166,6 +167,24 @@ export default function MethodologyPage(): JSX.Element {
                   <li>· Anything that depends on canonical history not yet accumulated.</li>
                 </ul>
               </article>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-mineral bg-gray-900/30 px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
+              The model&apos;s shape
+            </p>
+            <h2 className="mt-3 text-3xl font-black text-white">
+              Calibration constellation.
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-gray-400">
+              When canonical history accumulates, each settled pick becomes a point in this space.
+              The cyan diagonal is what perfect calibration looks like. Where the points settle is the model&apos;s honest shape.
+            </p>
+            <div className="mt-8">
+              <CalibrationConstellation points={[]} sampleSize={0} />
             </div>
           </div>
         </section>
