@@ -10,6 +10,7 @@ import { loadBoardState } from "@/lib/board/state";
 import { loadBoardPasses } from "@/lib/board/passes";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { TrustStrip } from "@/components/trust";
+import { NextBestSurface } from "@/components/experience/NextBestSurface";
 
 export const dynamic = "force-dynamic";
 
@@ -488,6 +489,8 @@ export default async function TodayPage(): Promise<JSX.Element> {
         </div>
 
         <RiskDisclosure variant="compact" className="text-center" />
+
+        <NextBestSurface route="/today" className="justify-center" />
       </main>
 
       <Footer />

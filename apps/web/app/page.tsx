@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { NextBestSurface } from "@/components/experience/NextBestSurface";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateData, type BoardStateRow } from "@/lib/board/state";
@@ -115,6 +116,11 @@ export default async function HomePage(): Promise<JSX.Element> {
         <MethodologySection />
         <ResponsibleBand />
         <EmptyPicksState />
+        <div className="border-t border-mineral px-4 py-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <NextBestSurface route="/" />
+          </div>
+        </div>
       </main>
       <Footer />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOMEPAGE_LD) }} />
