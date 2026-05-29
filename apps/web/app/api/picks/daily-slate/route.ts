@@ -6,6 +6,7 @@ import {
   isDemoPicksEnabled,
   getSamplePicks,
 } from "@sports/db";
+import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 
 /**
  * Daily slate API — stub-safe and demo-aware.
@@ -21,7 +22,14 @@ export async function GET() {
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
   const totalPicks = await db.pick
-    .count({ where: { isPublished: true, result: "PENDING" } })
+    .count({
+      where: {
+        isPublished: true,
+        result: "PENDING",
+        isBootstrap: false,
+        game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
+      },
+    })
     .catch(() => 0);
 
   const samples = demoActive ? getSamplePicks() : [];

@@ -6,6 +6,7 @@ import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-eng
 import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown } from "@sports/types";
 import { startOfDay, endOfDay } from "date-fns";
 import { parseDateParam } from "@/lib/parse-date-param";
+import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const gradeFilter = searchParams.get("grade") as PickGrade | null;
   // Guard against malformed `?date=` values producing an Invalid Date query.
   const targetDate = parseDateParam(dateParam);
+  const gameFilter = {
+    dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE },
+    ...(sportFilter
+      ? {
+          sport: {
+            key: { contains: sportFilter, mode: "insensitive" as const },
+          },
+        }
+      : {}),
+  };
 
   const picks = await db.pick.findMany({
     where: {
@@ -49,15 +60,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
       // Optional grade filter (only useful for PRO+ who can see premium)
       ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
-      ...(sportFilter
-        ? {
-            game: {
-              sport: {
-                key: { contains: sportFilter, mode: "insensitive" as const },
-              },
-            },
-          }
-        : {}),
+      game: gameFilter,
     },
     include: {
       game: {

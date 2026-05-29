@@ -29,14 +29,86 @@ export interface OddsApiFetchResult<T> {
   usedRequests: number;
 }
 
+interface OddsApiRetryOptions {
+  readonly maxRetries?: number;
+  readonly baseDelayMs?: number;
+  readonly maxDelayMs?: number;
+  readonly jitterRatio?: number;
+  readonly random?: () => number;
+  readonly sleep?: (ms: number) => Promise<void>;
+}
+
+interface ResolvedRetryOptions {
+  readonly maxRetries: number;
+  readonly baseDelayMs: number;
+  readonly maxDelayMs: number;
+  readonly jitterRatio: number;
+  readonly random: () => number;
+  readonly sleep: (ms: number) => Promise<void>;
+}
+
+const DEFAULT_RETRY_OPTIONS: ResolvedRetryOptions = {
+  maxRetries: 2,
+  baseDelayMs: 250,
+  maxDelayMs: 2_000,
+  jitterRatio: 0.35,
+  random: Math.random,
+  sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+};
+
+function resolveRetryOptions(options: OddsApiRetryOptions = {}): ResolvedRetryOptions {
+  return {
+    maxRetries: options.maxRetries ?? DEFAULT_RETRY_OPTIONS.maxRetries,
+    baseDelayMs: options.baseDelayMs ?? DEFAULT_RETRY_OPTIONS.baseDelayMs,
+    maxDelayMs: options.maxDelayMs ?? DEFAULT_RETRY_OPTIONS.maxDelayMs,
+    jitterRatio: options.jitterRatio ?? DEFAULT_RETRY_OPTIONS.jitterRatio,
+    random: options.random ?? DEFAULT_RETRY_OPTIONS.random,
+    sleep: options.sleep ?? DEFAULT_RETRY_OPTIONS.sleep,
+  };
+}
+
+function isRetryableStatus(status: number): boolean {
+  return status === 429 || (status >= 500 && status <= 599);
+}
+
+function retryAfterMs(response: Response): number | null {
+  const header = response.headers.get("retry-after");
+  if (!header) return null;
+
+  const seconds = Number(header);
+  if (Number.isFinite(seconds) && seconds >= 0) {
+    return Math.round(seconds * 1_000);
+  }
+
+  const date = Date.parse(header);
+  if (Number.isNaN(date)) return null;
+  return Math.max(0, date - Date.now());
+}
+
+function computeRetryDelayMs(
+  attemptIndex: number,
+  response: Response,
+  options: ResolvedRetryOptions
+): number {
+  const exponentialDelay = Math.min(
+    options.baseDelayMs * 2 ** attemptIndex,
+    options.maxDelayMs
+  );
+  const jitter = Math.round(exponentialDelay * options.jitterRatio * options.random());
+  const retryAfter = retryAfterMs(response);
+  return Math.max(retryAfter ?? 0, exponentialDelay + jitter);
+}
+
 export class OddsApiClient {
   private readonly apiKey: string;
+  private readonly retryOptions: ResolvedRetryOptions;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, retryOptions?: OddsApiRetryOptions) {
     if (!apiKey) {
       throw new Error("THE_ODDS_API_KEY is required");
     }
     this.apiKey = apiKey;
+    this.retryOptions = resolveRetryOptions(retryOptions);
   }
 
   private async fetch<T>(
@@ -49,22 +121,36 @@ export class OddsApiClient {
       url.searchParams.set(key, value);
     }
 
-    let response: Response;
-    try {
-      response = await globalThis.fetch(url.toString(), {
-        signal: AbortSignal.timeout(ODDS_API_TIMEOUT_MS),
-      });
-    } catch (err) {
-      const name = err instanceof Error ? err.name : "";
-      if (name === "TimeoutError" || name === "AbortError") {
+    let response: Response | null = null;
+
+    for (let attempt = 0; attempt <= this.retryOptions.maxRetries; attempt++) {
+      try {
+        response = await globalThis.fetch(url.toString(), {
+          signal: AbortSignal.timeout(ODDS_API_TIMEOUT_MS),
+        });
+      } catch (err) {
+        const name = err instanceof Error ? err.name : "";
+        if (name === "TimeoutError" || name === "AbortError") {
+          throw new OddsApiError(
+            `The Odds API request timed out after ${ODDS_API_TIMEOUT_MS}ms`,
+            408
+          );
+        }
         throw new OddsApiError(
-          `The Odds API request timed out after ${ODDS_API_TIMEOUT_MS}ms`,
-          408
+          `The Odds API request failed: ${err instanceof Error ? err.message : String(err)}`
         );
       }
-      throw new OddsApiError(
-        `The Odds API request failed: ${err instanceof Error ? err.message : String(err)}`
-      );
+
+      if (!isRetryableStatus(response.status) || attempt === this.retryOptions.maxRetries) {
+        break;
+      }
+
+      const delayMs = computeRetryDelayMs(attempt, response, this.retryOptions);
+      await this.retryOptions.sleep(delayMs);
+    }
+
+    if (!response) {
+      throw new OddsApiError("The Odds API request failed before a response was received");
     }
 
     const remainingRequests = parseInt(

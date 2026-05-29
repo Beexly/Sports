@@ -16,6 +16,7 @@ The working queue. Classification tags:
 | Weekly pricing alignment | CODEX-SAFE-PATCH | Replaced stale monthly public price copy with live Stripe sandbox weekly prices: Pro `$9.99/week`, Elite `$13.99/week`; pinned in `pricing-honesty`. |
 | Picks/evidence design-token color migration | CODEX-SAFE-PATCH | Migrated raw casino/off-system Tailwind color classes in `PickCard`, `EvidenceAuditDrawer`, and pick label metadata to GSE tokens; pinned in `picks-design-token-integrity`. |
 | Picks/evidence mobile tap targets | CODEX-SAFE-PATCH | Added mobile-first stacking and >=44px tap targets for evidence drawer actions; pinned in `picks-mobile-tap-targets`. |
+| Odds API retry + public-picks quality floor | CODEX-SAFE-PATCH | Added bounded exponential backoff with jitter for 429/5xx Odds API responses while preserving the 15s timeout; public picks and daily-slate counts now require data quality >=70; pinned in `odds-api-client` and `public-picks-quality-floor`. |
 
 ## 🔜 Next unblocked (recommended order)
 | Pri | Item | Class | Why |
