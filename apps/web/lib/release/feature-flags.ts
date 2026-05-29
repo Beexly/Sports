@@ -33,7 +33,10 @@ export type FeatureFlagName =
   | "STUDIO_ENABLED"
   | "CANONICAL_LEDGER_ENABLED"
   | "MODEL_PULSE_ENABLED"
-  | "DECISION_STREAM_ENABLED";
+  | "DECISION_STREAM_ENABLED"
+  | "COMMAND_PALETTE_ENABLED"
+  | "SLATE_CANVAS_ENABLED"
+  | "AMBIENT_SOUND_ENABLED";
 
 export interface FeatureFlag {
   readonly name: FeatureFlagName;
@@ -289,6 +292,42 @@ export const FEATURE_FLAGS: ReadonlyArray<FeatureFlag> = [
     premiumImpact: "Same",
     cockpitImpact: "None",
     defaults: defaultsFor((s) => s === "release-candidate" || s === "production"),
+  },
+  {
+    name: "COMMAND_PALETTE_ENABLED",
+    owner: "product",
+    protects: "Press-/ command palette across the site",
+    fallback: "Component renders null; navigation still works via standard links",
+    envOnly: false,
+    requiresRedeploy: false,
+    publicImpact: "Loses keyboard fuzzy search",
+    premiumImpact: "Same",
+    cockpitImpact: "None",
+    defaults: defaultsFor(() => true),
+  },
+  {
+    name: "SLATE_CANVAS_ENABLED",
+    owner: "product",
+    protects: "/canvas spatial slate visualization",
+    fallback: "Page redirects to /today",
+    envOnly: false,
+    requiresRedeploy: false,
+    publicImpact: "Loses spatial view option",
+    premiumImpact: "Same",
+    cockpitImpact: "None",
+    defaults: defaultsFor((s) => s === "release-candidate" || s === "production"),
+  },
+  {
+    name: "AMBIENT_SOUND_ENABLED",
+    owner: "product",
+    protects: "Ambient sound design (mute-by-default)",
+    fallback: "All sound playback disabled",
+    envOnly: false,
+    requiresRedeploy: false,
+    publicImpact: "Loses optional ambient tones",
+    premiumImpact: "Same",
+    cockpitImpact: "None",
+    defaults: defaultsFor(() => false),
   },
   {
     name: "DECISION_STREAM_ENABLED",

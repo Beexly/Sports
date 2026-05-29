@@ -7,6 +7,7 @@ import {
   SOCIAL,
   SUPPORT_EMAIL,
 } from "@/lib/brand";
+import { GlobalCommandPalette } from "@/components/command/GlobalCommandPalette";
 
 export const viewport: Viewport = {
   themeColor: "#04060a",
@@ -149,7 +150,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        {children}
+        <GlobalCommandPalette />
+      </body>
     </html>
   );
 }
