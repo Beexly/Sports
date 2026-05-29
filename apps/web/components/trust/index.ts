@@ -6,3 +6,4 @@ export type { UncertaintyStateKind } from "./UncertaintyState";
 export { EvidenceDrawer } from "./EvidenceDrawer";
 export { MethodologyLink } from "./MethodologyLink";
 export { ResponsiblePlayLink } from "./ResponsiblePlayLink";
+export { CalibrationTick } from "./CalibrationTick";

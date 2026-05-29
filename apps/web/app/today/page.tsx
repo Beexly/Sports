@@ -11,7 +11,7 @@ import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 import { loadBoardState } from "@/lib/board/state";
 import { loadBoardPasses } from "@/lib/board/passes";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
-import { TrustStrip, SourceFreshnessLabel } from "@/components/trust";
+import { TrustStrip, SourceFreshnessLabel, CalibrationTick } from "@/components/trust";
 import { NextBestSurface } from "@/components/experience/NextBestSurface";
 import { ageToFreshness } from "@/components/picks/PickEvidenceSection";
 
@@ -268,7 +268,10 @@ export default async function TodayPage(): Promise<JSX.Element> {
             dot={boardStatus.dot}
           />
           <StatChip label="Last updated" value={timeLabel(state.lastRefresh)}>
-            <SourceFreshnessLabel source="galaxy-model" freshness={isSample ? "sample" : "fresh"} />
+            <div className="flex flex-col gap-1">
+              <SourceFreshnessLabel source="galaxy-model" freshness={isSample ? "sample" : "fresh"} />
+              <CalibrationTick />
+            </div>
           </StatChip>
         </section>
 
