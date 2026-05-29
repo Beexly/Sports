@@ -74,11 +74,11 @@ export function PickCard({
 
       {/* Matchup */}
       <div>
-        <p className="text-xs text-gray-500">{gameTime}</p>
+        <p className="text-xs text-ion-1">{gameTime}</p>
         <div className="mt-1.5 flex items-center justify-between">
           <div>
             <p className="text-sm font-semibold text-white">{pick.game.awayTeam}</p>
-            <p className="text-[10px] text-gray-600">@</p>
+            <p className="text-[10px] text-ion-1">@</p>
             <p className="text-sm font-semibold text-white">{pick.game.homeTeam}</p>
           </div>
           <PickTypeBadge type={pick.pickType} />
@@ -87,10 +87,10 @@ export function PickCard({
 
       {/* Selection box */}
       <div className="rounded-lg bg-gray-800/60 px-4 py-3">
-        <p className="text-xs font-medium text-gray-500">Pick</p>
+        <p className="text-xs font-medium text-ion-1">Pick</p>
         <p className="mt-0.5 text-lg font-bold text-white">{pick.selection}</p>
         {pick.line !== 0 && (
-          <p className="mt-0.5 text-xs text-gray-500">
+          <p className="mt-0.5 text-xs text-ion-1">
             Line: {pick.line > 0 ? "+" : ""}{pick.line}
           </p>
         )}
@@ -100,7 +100,7 @@ export function PickCard({
       <div className="flex items-center gap-3">
         {/* Confidence */}
         <div className="flex-1">
-          <p className="mb-1 text-[10px] font-medium text-gray-600">Confidence</p>
+          <p className="mb-1 text-[10px] font-medium text-ion-1">Confidence</p>
           {canSeeConfidence && pick.confidence !== null ? (
             <ConfidenceBadge confidence={pick.confidence} />
           ) : (
@@ -110,7 +110,7 @@ export function PickCard({
 
         {/* Edge score */}
         <div className="flex-1">
-          <p className="mb-1 text-[10px] font-medium text-gray-600">Edge Score</p>
+          <p className="mb-1 text-[10px] font-medium text-ion-1">Edge Score</p>
           {canSeeEdgeScore && pick.edgeScore !== null ? (
             <EdgeScoreBadge edgeScore={pick.edgeScore} />
           ) : (
@@ -120,7 +120,7 @@ export function PickCard({
 
         {/* Risk */}
         <div className="flex-1">
-          <p className="mb-1 text-[10px] font-medium text-gray-600">Risk</p>
+          <p className="mb-1 text-[10px] font-medium text-ion-1">Risk</p>
           <span className={`text-xs font-semibold ${riskInfo.color}`}>
             {riskInfo.label}
           </span>
@@ -128,7 +128,7 @@ export function PickCard({
       </div>
 
       {/* Reasoning teaser / full */}
-      <p className="text-xs leading-relaxed text-gray-500">
+      <p className="text-xs leading-relaxed text-ion-1">
         {canSeeConfidence ? pick.reasoning : pick.reasoningShort}
       </p>
 
@@ -138,7 +138,7 @@ export function PickCard({
       )}
       {!canSeeFactorBreakdown && (
         <div className="rounded-lg border border-dashed border-gray-700/50 px-4 py-3">
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-ion-1">
             Factor breakdown available on Pro &amp; Elite
           </p>
         </div>
@@ -155,7 +155,7 @@ export function PickCard({
         {pick.isAuditAvailable ? (
           <EvidenceAuditDrawer pickId={pick.id} />
         ) : (
-          <span className="rounded-full border border-gray-800 bg-gray-900/50 px-3 py-1 text-[11px] font-medium tracking-wide text-gray-500">
+          <span className="rounded-full border border-gray-800 bg-gray-900/50 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-1">
             Evidence opens on live picks
           </span>
         )}
@@ -176,7 +176,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
 
   return (
     <div className="rounded-lg border border-gray-800/60 bg-gray-950/40 p-3">
-      <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+      <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-ion-1">
         Factor Breakdown
       </p>
 
@@ -289,7 +289,7 @@ function ScoreBar({
   return (
     <div>
       <div className="mb-0.5 flex justify-between text-[10px]">
-        <span className="text-gray-500">{label}</span>
+        <span className="text-ion-1">{label}</span>
         <span className="font-medium text-gray-400">{Math.round(value)}</span>
       </div>
       <div className="h-1 w-full overflow-hidden rounded-full bg-gray-800">
@@ -377,7 +377,7 @@ function EdgeScoreBadge({ edgeScore }: { edgeScore: number }) {
   if (edgeScore >= 70) color = "text-green-400";
   else if (edgeScore >= 50) color = "text-blue-400";
   else if (edgeScore >= 30) color = "text-yellow-400";
-  else color = "text-gray-500";
+  else color = "text-ion-1";
 
   return (
     <span
@@ -395,7 +395,7 @@ function ResultBadge({ result }: { result: PickResult }) {
     WIN: "bg-green-900/50 text-green-400",
     LOSS: "bg-red-900/50 text-red-400",
     PUSH: "bg-gray-800 text-gray-400",
-    VOID: "bg-gray-800 text-gray-500",
+    VOID: "bg-gray-800 text-ion-1",
   };
   return (
     <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${styles[result as Exclude<PickResult, "PENDING">]}`}>
@@ -406,7 +406,7 @@ function ResultBadge({ result }: { result: PickResult }) {
 
 function LockedValue({ label }: { label: string }) {
   return (
-    <span className="flex items-center gap-1 text-xs text-gray-600">
+    <span className="flex items-center gap-1 text-xs text-ion-1">
       <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
         <path
           fillRule="evenodd"
@@ -438,7 +438,7 @@ function DataQualityMeter({ score }: { score: number }) {
       className="flex items-center gap-2"
       aria-label={`Data quality: ${label}, ${clamped} out of 100`}
     >
-      <span className="text-[10px] text-gray-600">Data Quality</span>
+      <span className="text-[10px] text-ion-1">Data Quality</span>
       <div className="h-1 w-16 overflow-hidden rounded-full bg-gray-800" aria-hidden="true">
         <div
           className={`h-full rounded-full ${color}`}

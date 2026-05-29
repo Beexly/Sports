@@ -73,6 +73,18 @@ describe("evidence audit drawer — brand safety", () => {
     expect(src.split(/\r?\n/)[0]).toContain("use client");
   });
 
+  it("drawer delegates keyboard focus styling to the global plasma focus rule", () => {
+    const src = readFileSync(drawerPath, "utf8");
+    expect(src).not.toMatch(/focus:ring-cyan/);
+    expect(src).not.toMatch(/focus:outline-none/);
+    expect(src).not.toMatch(/focus:ring-offset/);
+  });
+
+  it("does not use low-contrast gray text for small drawer copy", () => {
+    const src = readFileSync(drawerPath, "utf8");
+    expect(src).not.toMatch(/text-gray-(500|600)\b/);
+  });
+
   it("drawer does not import server-only auth or DB", () => {
     const src = readFileSync(drawerPath, "utf8");
     expect(src).not.toMatch(/from\s+["']@sports\/db["']/);

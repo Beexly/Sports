@@ -23,4 +23,8 @@ describe("PickCard accessibility labels", () => {
   it("marks the decorative data-quality bar track as aria-hidden", () => {
     expect(src).toContain('aria-hidden="true"');
   });
+
+  it("does not use low-contrast gray text for small pick-card copy", () => {
+    expect(src).not.toMatch(/text-gray-(500|600)\b/);
+  });
 });
