@@ -118,7 +118,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
       <button
         type="button"
         onClick={handleOpen}
-        className="inline-flex items-center gap-1.5 rounded-full border border-ion-blue/30 bg-ion-blue/5 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-blue/90 transition hover:border-ion-blue/50 hover:bg-ion-blue/10 hover:text-ion-blue-glow"
+        className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full border border-ion-blue/30 bg-ion-blue/5 px-4 py-2 text-[11px] font-medium tracking-wide text-ion-blue/90 transition hover:border-ion-blue/50 hover:bg-ion-blue/10 hover:text-ion-blue-glow sm:w-auto"
         aria-label="Open evidence audit for this pick"
       >
         <span aria-hidden="true" className="text-ion-blue/80">⌬</span>
@@ -160,7 +160,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
                 ref={closeBtnRef}
                 type="button"
                 onClick={handleClose}
-                className="rounded-md p-1 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white"
                 aria-label="Close"
               >
                 <svg
@@ -309,7 +309,7 @@ function SummaryAudit({
         </p>
         <Link
           href="/pricing"
-          className="mt-3 inline-flex items-center gap-1 rounded-full bg-plasma px-3 py-1 text-xs font-semibold text-plasma-ink transition hover:bg-plasma-glow"
+          className="mt-3 inline-flex min-h-11 items-center justify-center gap-1 rounded-full bg-plasma px-4 py-2 text-xs font-semibold text-plasma-ink transition hover:bg-plasma-glow"
         >
           See pricing
           <span aria-hidden="true">→</span>

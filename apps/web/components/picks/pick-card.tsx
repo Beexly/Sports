@@ -77,11 +77,11 @@ export function PickCard({
       )}
 
       {/* Header: sport + badges */}
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
         <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs font-semibold text-gray-300">
           {pick.game.sport}
         </span>
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
           <GradeBadge grade={pick.pickGrade} />
           <TierBadge tier={pick.tier} />
           <ResultBadge result={pick.result} />
@@ -91,8 +91,8 @@ export function PickCard({
       {/* Matchup */}
       <div>
         <p className="text-xs text-ion-1">{gameTime}</p>
-        <div className="mt-1.5 flex items-center justify-between">
-          <div>
+        <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             <p className="text-sm font-semibold text-white">{pick.game.awayTeam}</p>
             <p className="text-[10px] text-ion-1">@</p>
             <p className="text-sm font-semibold text-white">{pick.game.homeTeam}</p>
@@ -113,9 +113,9 @@ export function PickCard({
       </div>
 
       {/* Scores row: confidence + edge + risk */}
-      <div className="flex items-center gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {/* Confidence */}
-        <div className="flex-1">
+        <div className="min-w-0">
           <p className="mb-1 text-[10px] font-medium text-ion-1">Confidence</p>
           {canSeeConfidence && pick.confidence !== null ? (
             <ConfidenceBadge confidence={pick.confidence} />
@@ -125,7 +125,7 @@ export function PickCard({
         </div>
 
         {/* Edge score */}
-        <div className="flex-1">
+        <div className="min-w-0">
           <p className="mb-1 text-[10px] font-medium text-ion-1">Edge Score</p>
           {canSeeEdgeScore && pick.edgeScore !== null ? (
             <EdgeScoreBadge edgeScore={pick.edgeScore} />
@@ -135,7 +135,7 @@ export function PickCard({
         </div>
 
         {/* Risk */}
-        <div className="flex-1">
+        <div className="min-w-0">
           <p className="mb-1 text-[10px] font-medium text-ion-1">Risk</p>
           <span className={`text-xs font-semibold ${RISK_LEVEL_STYLES[pick.riskLevel]}`}>
             {riskInfo.label}
@@ -161,13 +161,17 @@ export function PickCard({
       )}
 
       {/* Data quality + freshness footer */}
-      <div className="flex items-center justify-between border-t border-gray-800/60 pt-2">
+      <div className="flex flex-col gap-2 border-t border-gray-800/60 pt-2 sm:flex-row sm:items-center sm:justify-between">
         <DataQualityMeter score={pick.dataQualityScore} />
-        {freshnessAge !== null && <FreshnessIndicator ageMinutes={freshnessAge} />}
+        {freshnessAge !== null && (
+          <div className="flex items-center gap-1.5">
+            <FreshnessIndicator ageMinutes={freshnessAge} />
+          </div>
+        )}
       </div>
 
       {/* Evidence audit trigger — visible to ALL tiers for real picks (drives upgrade for FREE). */}
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-stretch sm:justify-end">
         {pick.isAuditAvailable ? (
           <EvidenceAuditDrawer pickId={pick.id} />
         ) : (
@@ -197,7 +201,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
       </p>
 
       {/* Core market score bars */}
-      <div className="mb-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+      <div className="mb-3 grid grid-cols-1 gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2">
         <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-ion-blue" />
         <ScoreBar label="Market Depth" value={breakdown.marketDepthScore} max={20} color="bg-ultraviolet" />
         <ScoreBar label="Pricing Edge" value={breakdown.edgeScore} max={25} color="bg-verify" />
