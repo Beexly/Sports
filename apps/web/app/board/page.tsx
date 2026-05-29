@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/board" },
 };
 
+// Reads live board state per request; never statically prerendered.
+export const dynamic = "force-dynamic";
+
 function timeLabel(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Just now";

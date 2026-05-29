@@ -2,6 +2,9 @@ import Link from "next/link";
 import { db } from "@sports/db";
 import { AGENTS } from "@/lib/cockpit/agents";
 
+// Operator data is read per request; never statically prerendered.
+export const dynamic = "force-dynamic";
+
 export default async function CockpitReviewPage() {
   const items = await db.cockpitTask.findMany({
     where: { status: { in: ["NEEDS_REVIEW", "BLOCKED"] } },

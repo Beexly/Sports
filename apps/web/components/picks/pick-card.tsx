@@ -363,7 +363,10 @@ function ConfidenceBadge({ confidence }: { confidence: number }) {
   else if (confidence >= 60) color = "text-yellow-400 bg-yellow-900/40";
 
   return (
-    <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${color}`}>
+    <span
+      className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${color}`}
+      aria-label={`Model confidence: ${confidence} out of 100`}
+    >
       {confidence}%
     </span>
   );
@@ -376,7 +379,14 @@ function EdgeScoreBadge({ edgeScore }: { edgeScore: number }) {
   else if (edgeScore >= 30) color = "text-yellow-400";
   else color = "text-gray-500";
 
-  return <span className={`text-xs font-bold ${color}`}>{edgeScore}</span>;
+  return (
+    <span
+      className={`text-xs font-bold ${color}`}
+      aria-label={`Edge score: ${edgeScore} out of 100`}
+    >
+      {edgeScore}
+    </span>
+  );
 }
 
 function ResultBadge({ result }: { result: PickResult }) {
@@ -424,9 +434,12 @@ function DataQualityMeter({ score }: { score: number }) {
     label = "Med";
   }
   return (
-    <div className="flex items-center gap-2">
+    <div
+      className="flex items-center gap-2"
+      aria-label={`Data quality: ${label}, ${clamped} out of 100`}
+    >
       <span className="text-[10px] text-gray-600">Data Quality</span>
-      <div className="h-1 w-16 overflow-hidden rounded-full bg-gray-800">
+      <div className="h-1 w-16 overflow-hidden rounded-full bg-gray-800" aria-hidden="true">
         <div
           className={`h-full rounded-full ${color}`}
           style={{ width: `${clamped}%` }}

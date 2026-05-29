@@ -5,6 +5,7 @@ import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown } from "@sports/types";
 import { startOfDay, endOfDay } from "date-fns";
+import { parseDateParam } from "@/lib/parse-date-param";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const sportFilter = searchParams.get("sport");
   const dateParam = searchParams.get("date");
   const gradeFilter = searchParams.get("grade") as PickGrade | null;
-  const targetDate = dateParam ? new Date(dateParam) : new Date();
+  // Guard against malformed `?date=` values producing an Invalid Date query.
+  const targetDate = parseDateParam(dateParam);
 
   const picks = await db.pick.findMany({
     where: {

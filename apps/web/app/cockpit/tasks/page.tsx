@@ -3,6 +3,9 @@ import { db } from "@sports/db";
 import { AGENTS } from "@/lib/cockpit/agents";
 import type { CockpitTaskStatus } from "@prisma/client";
 
+// Operator data is read per request; never statically prerendered.
+export const dynamic = "force-dynamic";
+
 const STATUS_GROUPS: ReadonlyArray<{
   label: string;
   statuses: readonly CockpitTaskStatus[];

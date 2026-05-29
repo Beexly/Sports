@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { BRIEF_RESPONSIBLE_GAMING_NOTE } from "@/lib/brief/compose";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
+
+// Composer is being rebuilt; keep the stub out of the index until it ships.
+export const metadata: Metadata = {
+  title: "Daily Brief",
+  description:
+    "The daily brief composer is being rebuilt. Published picks appear here after launch verification.",
+  alternates: { canonical: "/brief" },
+  robots: { index: false, follow: true },
+};
 
 /**
  * Public daily brief — stub during composer rebuild.

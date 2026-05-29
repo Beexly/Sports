@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -7,6 +8,13 @@ import {
   PUBLIC_PROMOTIONS_NOTICE,
   type PublicPromotion,
 } from "@/lib/promotions/public-payload";
+
+export const metadata: Metadata = {
+  title: "Promotions",
+  description:
+    "Active, compliance-reviewed sportsbook promotions and offers. Eligibility and terms vary by state.",
+  alternates: { canonical: "/promotions" },
+};
 
 export const dynamic = "force-dynamic";
 

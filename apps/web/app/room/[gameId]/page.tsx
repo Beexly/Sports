@@ -123,6 +123,20 @@ export default async function GameRoomPage({
           </Panel>
         </section>
 
+        <Panel title="Where This Goes Next">
+          <p className="text-sm leading-6 text-gray-400">
+            Galaxy declines more games than it publishes. No edge, no pick &mdash; that is the
+            process, not a gap. Treat this room as one input in a disciplined decision, never
+            the decision itself.
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <NextStep href="/ledger" label="Public Ledger" hint="Every settled pick — win or loss, fully auditable." />
+            <NextStep href="/performance" label="Calibration Report" hint="How the model has scored over time." />
+            <NextStep href="/methodology" label="Methodology" hint="The factors behind this room — math you can read." />
+            <NextStep href="/responsible-play" label="Set Your Limits" hint="Risk you can understand, before emotion enters." />
+          </div>
+        </Panel>
+
         <RiskDisclosure variant="compact" className="text-center" />
       </main>
       <Footer />
@@ -154,6 +168,18 @@ function Fact({ label, value }: { label: string; value: string }): JSX.Element {
       <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</dt>
       <dd className="mt-1 text-gray-200">{value}</dd>
     </div>
+  );
+}
+
+function NextStep({ href, label, hint }: { href: string; label: string; hint: string }): JSX.Element {
+  return (
+    <Link
+      href={href}
+      className="group block border border-gray-800 bg-gray-950/55 p-4 transition-colors hover:border-cyan-500/40"
+    >
+      <p className="font-mono text-xs font-semibold text-cyan-200 group-hover:text-cyan-100">{label}</p>
+      <p className="mt-2 text-sm leading-6 text-gray-400">{hint}</p>
+    </Link>
   );
 }
 

@@ -8,6 +8,9 @@ import { loadBoardState, type BoardStateData, type BoardStateRow } from "@/lib/b
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { isDemoPicksEnabled, isStubMode } from "@sports/db";
 
+// Reads live board state per request; never statically prerendered.
+export const dynamic = "force-dynamic";
+
 const LEDGER = [
   ["SEA -1.5", "WIN", "Line movement led the factor mix"],
   ["ATL/NYM under", "LOSS", "Late lineup change broke the setup"],

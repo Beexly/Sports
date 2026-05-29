@@ -5,6 +5,7 @@ import type {
 } from "@sports/types";
 import {
   ODDS_API_BASE_URL,
+  ODDS_API_TIMEOUT_MS,
   ODDS_REGION,
   ODDS_FORMAT,
   type Market,
@@ -48,7 +49,23 @@ export class OddsApiClient {
       url.searchParams.set(key, value);
     }
 
-    const response = await globalThis.fetch(url.toString());
+    let response: Response;
+    try {
+      response = await globalThis.fetch(url.toString(), {
+        signal: AbortSignal.timeout(ODDS_API_TIMEOUT_MS),
+      });
+    } catch (err) {
+      const name = err instanceof Error ? err.name : "";
+      if (name === "TimeoutError" || name === "AbortError") {
+        throw new OddsApiError(
+          `The Odds API request timed out after ${ODDS_API_TIMEOUT_MS}ms`,
+          408
+        );
+      }
+      throw new OddsApiError(
+        `The Odds API request failed: ${err instanceof Error ? err.message : String(err)}`
+      );
+    }
 
     const remainingRequests = parseInt(
       response.headers.get("x-requests-remaining") ?? "0",
