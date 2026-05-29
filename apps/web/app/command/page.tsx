@@ -13,6 +13,8 @@ import { NextBestSurface } from "@/components/experience/NextBestSurface";
 import { CoachPromptHost } from "@/components/coach/CoachPromptHost";
 import { recommendNextModule } from "@/lib/understanding/learning-state";
 import { emptySnapshot } from "@/lib/understanding/user-understanding";
+import { loadSinceLastVisit } from "@/lib/returning-user/since-last-visit";
+import { SinceLastVisitPanel } from "@/components/returning-user/SinceLastVisitPanel";
 
 export const metadata: Metadata = {
   title: "Command Center — Galaxy Sports Edge",
@@ -126,10 +128,11 @@ function WiringBadge({ status }: { status: WiringStatus }) {
 // ─────────────────────────────────────────────
 
 export default async function CommandPage() {
-  const [session, { board, passes, autopsyQueue, academyRec, isSample }] =
+  const [session, { board, passes, autopsyQueue, academyRec, isSample }, sinceLastVisit] =
     await Promise.all([
       auth().catch(() => null),
       loadCommandData(),
+      loadSinceLastVisit(),
     ]);
 
   const entitlements = session?.user?.id
@@ -172,6 +175,17 @@ export default async function CommandPage() {
               Your decision home for today. Briefing, discipline, academy, and risk — all in one view.
             </p>
           </header>
+
+          {/* ── Since your last visit ────────────────────────── */}
+          <div className="mb-8">
+            <SinceLastVisitPanel
+              isFirstVisit={sinceLastVisit.isFirstVisit}
+              lastSeenAt={sinceLastVisit.lastSeenAt}
+              picksPublishedSince={sinceLastVisit.picksPublishedSince}
+              picksSettledSince={sinceLastVisit.picksSettledSince}
+              autopsiesWaiting={sinceLastVisit.autopsiesWaiting}
+            />
+          </div>
 
           {/* ── 12-Widget Grid ───────────────────────────────── */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
