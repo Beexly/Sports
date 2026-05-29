@@ -2,6 +2,9 @@ import Link from "next/link";
 import { db } from "@sports/db";
 import { listAgents } from "@/lib/cockpit/agents";
 
+// Operator data is read per request; never statically prerendered.
+export const dynamic = "force-dynamic";
+
 export default async function CockpitAgentsPage() {
   const byAgent = await db.cockpitTask.groupBy({
     by: ["assignedAgent", "status"],

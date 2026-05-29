@@ -1,5 +1,8 @@
 import { db } from "@sports/db";
 
+// Operator data is read per request; never statically prerendered.
+export const dynamic = "force-dynamic";
+
 export default async function CockpitMediaPage() {
   const items = await db.cockpitMediaItem.findMany({
     orderBy: [{ updatedAt: "desc" }],
