@@ -44,8 +44,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Checkout failed";
-    console.error(`Checkout error: ${message}`);
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error(`Checkout error: ${err instanceof Error ? err.message : err}`);
+    return NextResponse.json({ error: "Checkout failed. Please try again." }, { status: 500 });
   }
 }

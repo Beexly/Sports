@@ -30,8 +30,7 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
     );
     return NextResponse.json({ url: portalSession.url });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Portal error";
-    console.error(`Portal session error: ${message}`);
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error(`Portal session error: ${err instanceof Error ? err.message : err}`);
+    return NextResponse.json({ error: "Could not open billing portal. Please try again." }, { status: 500 });
   }
 }
