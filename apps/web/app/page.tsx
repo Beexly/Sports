@@ -615,13 +615,67 @@ function AutopsyPanel({ label, body }: { label: string; body: string }): JSX.Ele
 
 function ResponsibleBand(): JSX.Element {
   return (
-    <section className="px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl text-center">
-        <h2 className="text-2xl font-bold text-ion-white">Research first. Limits first.</h2>
-        <p className="mt-3 text-sm leading-6 text-ion-1">
-          Galaxy Sports Edge is sportsbook research, not sportsbook hype. Treat the math as one input in a disciplined decision.
-        </p>
-        <RiskDisclosure variant="compact" className="mt-5 text-center" />
+    <section
+      data-testid="homepage-responsible-close"
+      className="relative isolate overflow-hidden bg-carbon px-4 py-20 sm:px-6 lg:px-8"
+      aria-labelledby="homepage-responsible-heading"
+    >
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule-fade" aria-hidden="true" />
+      <div className="mx-auto max-w-7xl">
+        <Reveal duration={880} distance={8}>
+          <div className="mx-auto max-w-4xl text-center">
+            <p className="eyebrow text-ion-1">Close / Responsible Intelligence</p>
+            <blockquote className="mt-5 font-editorial text-4xl italic leading-[1.08] text-ion-white sm:text-6xl">
+              The math can point. The decision stays yours.
+            </blockquote>
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-ion sm:text-lg">
+              Galaxy Sports Edge is sportsbook research, not sportsbook hype.
+              Treat the model as one input in a disciplined decision.
+            </p>
+          </div>
+        </Reveal>
+
+        <Reveal duration={880} distance={8}>
+          <div className="surface-lifted mx-auto mt-12 grid max-w-5xl gap-5 p-5 sm:p-7 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">
+                Research first / limits first
+              </p>
+              <h2
+                id="homepage-responsible-heading"
+                className="mt-3 text-2xl font-semibold text-ion-white"
+              >
+                The close is not a pitch. It is a boundary.
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-ion-1">
+                Every route should leave the same impression: understand the
+                signal, understand the uncertainty, and set limits before action.
+              </p>
+            </div>
+
+            <div className="surface-card p-4">
+              <RiskDisclosure
+                variant="compact"
+                includePastPerformance
+                className="text-ion-1"
+              />
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/methodology"
+                  className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-4 py-2 text-sm font-semibold text-ion transition-colors hover:border-orbital-cyan hover:text-ion-white"
+                >
+                  Read the methodology
+                </Link>
+                <Link
+                  href="/responsible-play"
+                  className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-4 py-2 text-sm font-semibold text-ion transition-colors hover:border-orbital-cyan hover:text-ion-white"
+                >
+                  Set limits
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

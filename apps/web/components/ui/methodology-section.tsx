@@ -1,4 +1,5 @@
 import { getClaim } from "@/lib/trust-claims";
+import { Reveal } from "@/components/motion/reveal";
 
 /**
  * Methodology / Trust Section
@@ -19,40 +20,60 @@ interface MethodologyItem {
   readonly title: string;
   readonly claimId: string;
   readonly hint?: string; // small explanatory text under the body
+  readonly lane: "data" | "model" | "gate";
 }
 
 const ITEMS: readonly MethodologyItem[] = [
   {
     title: "Live odds ingestion",
     claimId: "methodology.odds-ingestion",
+    lane: "data",
   },
   {
     title: "Bookmaker coverage as a transparency signal",
     claimId: "methodology.bookmaker-coverage",
+    lane: "data",
   },
   {
     title: "Data freshness on every pick",
     claimId: "methodology.data-freshness",
+    lane: "data",
   },
   {
     title: "Calibrated confidence presentation",
     claimId: "methodology.confidence-presentation",
     hint: "Until we have enough settled outcomes to calibrate against, confidence is shown as a label, not a number.",
+    lane: "model",
   },
   {
     title: "Risk level on every pick",
     claimId: "methodology.risk-levels",
+    lane: "model",
   },
   {
     title: "Factor breakdown for subscribers",
     claimId: "methodology.factor-breakdown",
+    lane: "model",
   },
   {
     title: "Public performance is gated, not advertised",
     claimId: "performance.public-stats-gated",
     hint: "When you see win-loss numbers on the Performance page, you'll also see the period, sample size, model version, and the exact win-rate definition.",
+    lane: "gate",
   },
 ];
+
+function laneAccent(lane: MethodologyItem["lane"]): string {
+  switch (lane) {
+    case "model":
+      return "text-ultraviolet";
+    case "gate":
+      return "text-plasma";
+    case "data":
+    default:
+      return "text-orbital-cyan";
+  }
+}
 
 export function MethodologySection() {
   // Resolve each item against the registry. We use getClaim() so both APPROVED
@@ -67,40 +88,52 @@ export function MethodologySection() {
   return (
     <section
       data-testid="methodology-section"
-      className="px-4 py-20 sm:px-6 lg:px-8"
+      className="relative isolate border-y border-mineral bg-carbon px-4 py-20 sm:px-6 lg:px-8"
       aria-labelledby="methodology-heading"
     >
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule-fade" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="mx-auto max-w-7xl">
-        <div className="text-center">
-          <h2
-            id="methodology-heading"
-            className="text-3xl font-bold tracking-tight text-white sm:text-4xl"
-          >
-            The audit trail behind every signal
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-gray-400">
-            Every published pick ties back to live markets, timestamped data,
-            factor scoring, and the gates that keep weak picks off the board.
-          </p>
-        </div>
-
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {resolved.map(({ item, claim }) => (
-            <article
-              key={item.claimId}
-              data-claim-id={item.claimId}
-              className="flex flex-col gap-3 rounded-lg border border-gray-800 bg-gray-900/60 p-6"
+        <Reveal duration={880} distance={8}>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="eyebrow text-ion-1">Methodology / Trust Surface</p>
+            <h2
+              id="methodology-heading"
+              className="mt-4 font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl"
             >
-              <h3 className="text-base font-semibold text-white">{item.title}</h3>
-              <p className="text-sm leading-relaxed text-gray-400">
-                {claim?.copy ?? ""}
-              </p>
-              {item.hint && (
-                <p className="text-xs leading-relaxed text-gray-500">
-                  {item.hint}
+              The audit trail behind every signal
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ion sm:text-lg">
+              Every published pick ties back to live markets, timestamped data,
+              factor scoring, and the gates that keep weak picks off the board.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {resolved.map(({ item, claim }) => (
+            <Reveal key={item.claimId} duration={700} distance={8}>
+              <article
+                data-claim-id={item.claimId}
+                className="surface-card flex min-h-full flex-col gap-4 p-5 transition-colors hover:border-mineral-hi"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <p className={`font-mono text-[10px] uppercase tracking-[0.16em] ${laneAccent(item.lane)}`}>
+                    {item.lane}
+                  </p>
+                  <span className="h-px flex-1 bg-mineral" aria-hidden="true" />
+                </div>
+                <h3 className="text-base font-semibold leading-snug text-ion-white">{item.title}</h3>
+                <p className="text-sm leading-6 text-ion">
+                  {claim?.copy ?? ""}
                 </p>
-              )}
-            </article>
+                {item.hint && (
+                  <p className="mt-auto border-t border-mineral pt-4 text-xs leading-5 text-ion-1">
+                    {item.hint}
+                  </p>
+                )}
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>
