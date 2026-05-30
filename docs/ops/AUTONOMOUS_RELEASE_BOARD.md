@@ -18,15 +18,16 @@ The working queue. Classification tags:
 | Picks/evidence mobile tap targets | CODEX-SAFE-PATCH | Added mobile-first stacking and >=44px tap targets for evidence drawer actions; pinned in `picks-mobile-tap-targets`. |
 | Odds API retry + public-picks quality floor | CODEX-SAFE-PATCH | Added bounded exponential backoff with jitter for 429/5xx Odds API responses while preserving the 15s timeout; public picks and daily-slate counts now require data quality >=70; pinned in `odds-api-client` and `public-picks-quality-floor`. |
 | Settlement snapshot durability | CODEX-SAFE-PATCH | Settlement now retries PickSignalSnapshot outcome writes, treats already-settled rows as idempotent, and creates a minimal fallback learning record when a prediction-time snapshot is missing; pinned in `settlement-snapshot-durability`. |
+| Homepage finish doctrine polish | CODEX-SAFE-PATCH | Tokenized the remaining homepage methodology/responsible close surfaces, removed old gray card styling, added reveal-on-scroll rhythm, and landed the page on an Instrument Serif responsible-play ethos; pinned in `homepage-finish-doctrine`. |
 
 ## 🔜 Next unblocked (recommended order)
 | Pri | Item | Class | Why |
 |---|---|---|---|
-| 1 | Surface in-content trust strip on `/picks` (compose existing `RiskDisclosure` + methodology link) | CLAUDE-BUILD-REPAIR | Scorecard trust 🟡 at highest commercial intent; keep restrained |
-| 2 | Consolidate a dedicated **Autopsy** view (process vs outcome) from existing room-memory + `/performance/losses` data | CLAUDE-BUILD-REPAIR | Golden-path role currently distributed |
-| 3 | Run CWV / axe / mobile audit, fix top regressions | PREVIEW-ONLY → CLAUDE-BUILD-REPAIR | Not measurable locally |
-| 4 | Author the remaining framework docs the prompt references (operating plan, definition-of-done, owner-gate firewall, agent/research protocols) | CODEX-SAFE-PATCH (docs) | Recorded missing; complete the backbone |
-| 5 | Guided **Demo** route (clearly labeled 90s tour, no live data) | DEFERRED-NONBLOCKING | Memorability |
+| 1 | Today's Board doctrine redesign: three telemetry lanes, visible No-Bet/restraint state, freshness/trust context | PREVIEW-ONLY → CLAUDE-BUILD-REPAIR | Next golden-path public decision surface; signature layout requires review |
+| 2 | Decision Room doctrine redesign: evidence timeline, Market Pulse, Lens Switcher, pre-mortem, Galaxy Memory close | PREVIEW-ONLY → CLAUDE-BUILD-REPAIR | Convergence dossier is the core confidence surface |
+| 3 | `/picks` conversion polish: premium card grid, tasteful tier gate, in-content trust strip maintained server-side | CLAUDE-BUILD-REPAIR | Commercial surface must feel premium without pressure |
+| 4 | Trust + conversion surfaces one by one: Methodology, Performance, Ledger, Pricing, Responsible-Play | CLAUDE-BUILD-REPAIR | Bring the full public path to the doctrine bar |
+| 5 | Global chrome doctrine pass after surface PRs stabilize | CODEX-SAFE-PATCH | Avoid nav/footer collision while route work is in flight |
 
 ## 🔒 Owner-gated (do NOT implement without approval)
 - Public **Coach** (implies live AI) · payments activation · public-picks activation ·
