@@ -1,5 +1,5 @@
 import { db, getSamplePicks, isDemoPicksEnabled, isStubMode } from "@sports/db";
-import { getReadinessGates } from "@sports/prediction-engine";
+import { getReadinessGates, MODEL_VERSION } from "@sports/prediction-engine";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -156,7 +156,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         openPicks: publishedRows.length,
         gatedToday: gatedRows.length,
         lastRefresh: now.toISOString(),
-        modelVersion: decisions[0]?.modelVersion ?? "unknown",
+        modelVersion: decisions[0]?.modelVersion ?? MODEL_VERSION,
         bootstrap: gates.isBootstrapMode,
         scoringNow: scoringRows,
         publishedToday: publishedRows,
@@ -246,7 +246,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
       openPicks: publishedRows.length,
       gatedToday: gatedRows.length,
       lastRefresh: now.toISOString(),
-      modelVersion: publishedToday[0]?.modelVersion ?? "unknown",
+      modelVersion: publishedToday[0]?.modelVersion ?? MODEL_VERSION,
       bootstrap: gates.isBootstrapMode,
       scoringNow: scoringRows,
       publishedToday: publishedRows,

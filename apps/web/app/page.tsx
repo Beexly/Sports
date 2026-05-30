@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
+import { Reveal } from "@/components/motion/reveal";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -53,12 +55,11 @@ export default async function HomePage(): Promise<JSX.Element> {
     calibrationResult.meta.isSampleData;
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
+    <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
       <Nav />
       <main>
         {(demoActive || surfaceSampleActive) && <SampleDataBanner />}
-        <LiveStateStrip state={stateResult.data} />
-        <Hero />
+        <Hero state={stateResult.data} />
         <GateCam state={stateResult.data} isSampleData={stateResult.meta.isSampleData} />
         <LedgerPreview />
         <CalibrationPreview calibration={calibrationResult.data} />
@@ -93,50 +94,89 @@ function SampleDataBanner(): JSX.Element {
   );
 }
 
-function LiveStateStrip({ state }: { state: BoardStateData }): JSX.Element {
-  const stateRows = [
+function Hero({ state }: { state: BoardStateData }): JSX.Element {
+  const modelVersion = state.modelVersion.trim();
+  const telemetryRows: Array<readonly [string, string]> = [
     ["Sports watched", String(state.sportsWatched)],
     ["Books polled", String(state.booksPolled)],
     ["Open picks", String(state.openPicks)],
-    ["Gated today", String(state.gatedToday)],
     ["Last refresh", timeLabel(state.lastRefresh)],
-    ["Model", state.modelVersion],
-  ] as const;
+  ];
+  if (modelVersion.length > 0 && modelVersion.toLowerCase() !== "unknown") {
+    telemetryRows.push(["Model", modelVersion]);
+  }
 
   return (
-    <section aria-label="Live board state" className="border-b border-gray-800 bg-gray-950">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 py-3 sm:grid-cols-3 lg:grid-cols-6">
-        {stateRows.map(([label, value]) => (
-          <div key={label} className="min-h-14 border border-gray-800 bg-gray-900/55 px-3 py-2">
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
-            <p className="mt-1 text-lg font-semibold text-white">{value}</p>
+    <section className="relative isolate min-h-[88vh] overflow-hidden border-b border-mineral bg-carbon px-4 sm:px-6 lg:px-8">
+      <InteractiveGalaxy />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(90deg,var(--carbon)_0%,rgba(13,17,23,0.84)_32%,rgba(13,17,23,0.20)_72%,rgba(13,17,23,0.58)_100%)]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-32 bg-[linear-gradient(180deg,transparent,var(--carbon))]" />
+
+      <div className="relative z-[2] mx-auto flex min-h-[88vh] w-full max-w-7xl flex-col justify-center py-24">
+        <Reveal duration={880} distance={4}>
+          <p className="eyebrow text-ion-1">
+            GALAXY SPORTS EDGE / SPORTS INTELLIGENCE
+          </p>
+        </Reveal>
+
+        <Reveal delay={80} duration={880} distance={4}>
+          <div className="relative mt-5 max-w-5xl">
+            <span
+              className="pointer-events-none absolute -inset-x-6 inset-y-4 -z-10 bg-[radial-gradient(ellipse_at_34%_48%,rgba(255,45,214,0.16),rgba(0,229,255,0.08)_38%,transparent_72%)] blur-2xl"
+              aria-hidden="true"
+            />
+            <h1
+              aria-label="Math you can read."
+              data-testid="homepage-arch-headline"
+              className="text-balance font-arch text-[clamp(2.5rem,9vw,8rem)] font-black uppercase leading-[0.86] tracking-normal text-ion-white drop-shadow-[0_0_34px_rgba(255,45,214,0.18)]"
+            >
+              <span>Math you can read</span>
+              <span className="text-plasma">.</span>
+            </h1>
           </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+        </Reveal>
 
-function Hero(): JSX.Element {
-  return (
-    <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_20%_10%,rgba(34,211,238,0.14),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(244,114,182,0.10),transparent_28%),#030712] px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <p className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-200">Galaxy Sports Edge</p>
-        <h1 className="mt-5 max-w-4xl break-words text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
-          We&apos;re not AI. We&apos;re math you can read.
-        </h1>
-        <p className="mt-6 max-w-2xl break-words text-lg leading-8 text-gray-300">
-          Deterministic sports betting research with the factor breakdown attached.
-          We post when the model finds edge. Most days that is fewer than five picks.
-        </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Link href="/board" className="inline-flex min-h-11 items-center justify-center rounded-lg bg-cyan-300 px-5 py-3 text-sm font-bold text-gray-950 hover:bg-cyan-200">
-            See today&apos;s board
-          </Link>
-          <Link href="/methodology" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-bold text-gray-100 hover:border-cyan-300">
-            Read the methodology
-          </Link>
-        </div>
+        <Reveal delay={160} duration={880} distance={4}>
+          <p className="mt-7 max-w-2xl text-pretty font-sans text-[17px] leading-[1.55] text-ion sm:text-xl">
+            Deterministic sports research with odds, market depth, schedule
+            context, and source freshness exposed before a pick reaches the board.
+          </p>
+        </Reveal>
+
+        <Reveal delay={240} duration={880} distance={4}>
+          <div
+            aria-label="Live board telemetry"
+            className="mt-10 w-full border-y border-mineral/80 py-4"
+          >
+            <div className="grid grid-cols-2 gap-y-4 sm:flex sm:min-w-max sm:items-stretch sm:gap-0">
+              {telemetryRows.map(([label, value]) => (
+                <div
+                  key={label}
+                  className="min-w-0 border-mineral/70 px-4 odd:border-r sm:min-w-[9.5rem] sm:border-r sm:px-5 sm:first:pl-0 sm:last:border-r-0"
+                >
+                  <p className="eyebrow text-ion-2">{label}</p>
+                  <p className="mt-2 font-numerals text-xl font-semibold tabular-nums text-orbital-cyan sm:text-2xl">
+                    {value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={320} duration={880} distance={4}>
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <Link href="/board" className="btn-primary min-h-11 px-6 py-3">
+              See today&apos;s board
+            </Link>
+            <Link
+              href="/methodology"
+              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-6 py-3 text-sm font-semibold text-ion transition-colors hover:border-orbital-cyan hover:text-ion-white"
+            >
+              Read the methodology
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

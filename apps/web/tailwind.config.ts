@@ -11,8 +11,8 @@ import type { Config } from "tailwindcss";
  *  - SOFT ULTRAVIOLET #7A5CFF  — depth, intelligence, secondary signal
  *  - STEEL GRAY      #1A1D23   — panels, dividers, UI depth
  *
- * Typography: Exo 2 (display) + Inter (text). Legacy display/sans tokens
- * point at these so existing components inherit the brand automatically.
+ * Typography is bound to the doctrine CSS variables loaded through
+ * next/font in `app/layout.tsx`.
  *
  * Legacy aliases (brand-*, accent-*, plasma-*, ion-blue-*) are kept and
  * REPOINTED to the new palette. No component refactor required.
@@ -150,13 +150,12 @@ const config: Config = {
         },
       },
       fontFamily: {
-        // Galaxy Sports Edge typography — Exo 2 + Inter.
-        arch:      ['"Exo 2"', '"Big Shoulders Display"', "Impact", "sans-serif"],
-        display:   ['"Exo 2"', "Inter", "system-ui", "sans-serif"],
-        sans:      ["Inter", '"Exo 2"', "system-ui", "sans-serif"],
-        mono:      ['"JetBrains Mono"', '"Geist Mono"', "ui-monospace", "monospace"],
-        numerals:  ['"JetBrains Mono"', '"Exo 2"', "ui-monospace", "monospace"],
-        editorial: ['"Exo 2"', "Inter", "system-ui", "sans-serif"],
+        arch: ["var(--f-arch)"],
+        display: ["var(--f-display)"],
+        sans: ["var(--f-body)"],
+        mono: ["var(--f-mono)"],
+        numerals: ["var(--f-numerals)"],
+        editorial: ["var(--f-editorial)"],
       },
       fontSize: {
         "arch-3xl": ["220px", { lineHeight: "0.85" }],

@@ -1,4 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import {
+  Big_Shoulders_Display,
+  Instrument_Serif,
+  Inter,
+  JetBrains_Mono,
+  Syne,
+} from "next/font/google";
 import "./globals.css";
 import {
   BRAND_META,
@@ -7,6 +14,47 @@ import {
   SOCIAL,
   SUPPORT_EMAIL,
 } from "@/lib/brand";
+
+const archFont = Big_Shoulders_Display({
+  subsets: ["latin"],
+  weight: ["800", "900"],
+  variable: "--f-arch",
+  display: "swap",
+});
+
+const displayFont = Syne({
+  subsets: ["latin"],
+  variable: "--f-display",
+  display: "swap",
+});
+
+// Next 14.2's Google font manifest does not expose Geist, so --f-body uses
+// the doctrine stack's first available Google fallback while preserving the var.
+const bodyFont = Inter({
+  subsets: ["latin"],
+  variable: "--f-body",
+  display: "swap",
+});
+
+const numeralsFont = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--f-numerals",
+  display: "swap",
+});
+
+const monoFont = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--f-mono",
+  display: "swap",
+});
+
+const editorialFont = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--f-editorial",
+  display: "swap",
+});
 
 export const viewport: Viewport = {
   themeColor: "#04060a",
@@ -17,11 +65,9 @@ export const viewport: Viewport = {
 /**
  * Root layout.
  *
- * Fonts (Syne, Big Shoulders Display, Geist, Geist Mono, Instrument Serif,
- * JetBrains Mono, Space Grotesk) are loaded via the @import at the top of
- * `styles/design-tokens.css` to keep one source of truth with the standalone
- * design-system CSS. If we ever swap to `next/font` for layout-shift wins,
- * remove the @import there and mirror the variables here.
+ * Fonts are loaded through next/font and bound directly to the design-system
+ * CSS variables consumed by `styles/design-tokens.css` and Tailwind:
+ *   --f-arch, --f-display, --f-body, --f-mono, --f-numerals, --f-editorial.
  *
  * SEO foundation:
  *  - Per-page <title>/<description> override the defaults below via each
@@ -133,9 +179,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const fontVariables = [
+    archFont.variable,
+    displayFont.variable,
+    bodyFont.variable,
+    numeralsFont.variable,
+    monoFont.variable,
+    editorialFont.variable,
+  ].join(" ");
+
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className={`scroll-smooth ${fontVariables}`}>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

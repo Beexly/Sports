@@ -725,10 +725,10 @@ button { font-family: inherit; cursor: pointer; }
 }
 .interactive-galaxy {
   position: absolute;
-  inset: -80px -40px -60px 20%;
+  inset: -110px -10% -90px -16%;
   z-index: 0;
-  opacity: 0.98;
-  pointer-events: auto;
+  opacity: 1;
+  pointer-events: none;
 }
 .interactive-galaxy canvas {
   display: block;
@@ -1009,8 +1009,8 @@ button { font-family: inherit; cursor: pointer; }
       radial-gradient(circle at 22% 70%, rgba(122,92,255,0.14), transparent 34%);
   }
   .interactive-galaxy {
-    inset: -120px -54% 26% -54%;
-    opacity: 0.66;
+    inset: -120px -64% 22% -64%;
+    opacity: 0.82;
   }
   .hero-bg-word {
     opacity: 0.035;
