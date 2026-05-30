@@ -37,6 +37,7 @@ const ION_WHITE = "246, 247, 250";
 const ORBITAL_CYAN = "0, 229, 255";
 const ION_MAGENTA = "255, 45, 214";
 const SOFT_ULTRAVIOLET = "122, 92, 255";
+const MAX_CURSOR_DISPLACEMENT = 30;
 
 interface Particle {
   x: number;
@@ -69,24 +70,24 @@ interface OrbitDef {
 const ORBITS: OrbitDef[] = [
   // Outer, slow, ultraviolet
   {
-    rxScale: 1.55,
-    ryScale: 0.68,
+    rxScale: 1.72,
+    ryScale: 0.74,
     rotation: -0.48,
     rgb: SOFT_ULTRAVIOLET,
-    alpha: 0.10,
-    width: 1,
+    alpha: 0.20,
+    width: 1.2,
     lapPeriod: 56,
     thetaOffset: 0,
     travRgb: SOFT_ULTRAVIOLET,
   },
   // Primary, medium, cyan
   {
-    rxScale: 1.10,
-    ryScale: 0.46,
+    rxScale: 1.22,
+    ryScale: 0.52,
     rotation: -0.32,
     rgb: ORBITAL_CYAN,
-    alpha: 0.20,
-    width: 1.1,
+    alpha: 0.34,
+    width: 1.45,
     lapPeriod: 28,
     thetaOffset: Math.PI * 0.6,
     travRgb: ORBITAL_CYAN,
@@ -97,8 +98,8 @@ const ORBITS: OrbitDef[] = [
     ryScale: 0.30,
     rotation: -0.18,
     rgb: ION_WHITE,
-    alpha: 0.14,
-    width: 0.9,
+    alpha: 0.24,
+    width: 1.05,
     lapPeriod: 16,
     thetaOffset: Math.PI * 1.2,
     travRgb: ION_WHITE,
@@ -148,9 +149,9 @@ function spawnParticles(
     const depthRoll = r();
     const depth: 0 | 1 | 2 = depthRoll < 0.45 ? 0 : depthRoll < 0.85 ? 1 : 2;
     const radius =
-      depth === 0 ? 0.5 + r() * 0.5 : depth === 1 ? 0.7 + r() * 0.7 : 1.0 + r() * 1.1;
+      depth === 0 ? 0.6 + r() * 0.6 : depth === 1 ? 0.85 + r() * 0.8 : 1.2 + r() * 1.35;
     const baseAlpha =
-      depth === 0 ? 0.28 + r() * 0.22 : depth === 1 ? 0.42 + r() * 0.22 : 0.62 + r() * 0.28;
+      depth === 0 ? 0.36 + r() * 0.24 : depth === 1 ? 0.52 + r() * 0.25 : 0.72 + r() * 0.28;
     // Color: mostly white, occasional cyan, rare magenta sparkle (near tier only)
     let rgb = ION_WHITE;
     const colorRoll = r();
@@ -205,8 +206,7 @@ export function InteractiveGalaxy() {
     let particles: Particle[] = [];
     const rebuildParticles = () => {
       const area = widthCss * heightCss;
-      // Tuned: ~1 particle per 8500 css-px², capped 60..160
-      const count = Math.max(60, Math.min(160, Math.round(area / 8500)));
+      const count = Math.max(78, Math.min(220, Math.round(area / 6200)));
       particles = spawnParticles(widthCss, heightCss, count);
     };
 
@@ -236,9 +236,10 @@ export function InteractiveGalaxy() {
     const onPointerLeave = () => {
       mouse.has = false;
     };
+    const pointerTarget = mount.parentElement ?? mount;
     if (!reduced) {
-      mount.addEventListener("pointermove", onPointerMove);
-      mount.addEventListener("pointerleave", onPointerLeave);
+      pointerTarget.addEventListener("pointermove", onPointerMove);
+      pointerTarget.addEventListener("pointerleave", onPointerLeave);
     }
 
     const draw = (t: number) => {
@@ -247,23 +248,23 @@ export function InteractiveGalaxy() {
 
       ctx.clearRect(0, 0, widthCss, heightCss);
 
-      // ── Parallax target — scene shifts toward the cursor up to ~6px.
-      const targetPX = mouse.has ? (mouse.x / widthCss - 0.5) * 12 : 0;
-      const targetPY = mouse.has ? (mouse.y / heightCss - 0.5) * 12 : 0;
+      // Cursor follow stays smooth and capped at the doctrine's 30px max.
+      const targetPX = mouse.has ? (mouse.x / widthCss - 0.5) * (MAX_CURSOR_DISPLACEMENT * 2) : 0;
+      const targetPY = mouse.has ? (mouse.y / heightCss - 0.5) * (MAX_CURSOR_DISPLACEMENT * 2) : 0;
       // Easing toward target (low-pass filter — no jitter on idle cursor)
       parallaxX += (targetPX - parallaxX) * 0.06;
       parallaxY += (targetPY - parallaxY) * 0.06;
 
       // ── Vignette background — deep space gradient anchored right of center.
-      const cxBase = widthCss * 0.62;
+      const cxBase = widthCss * 0.56;
       const cyBase = heightCss * 0.55;
       const cx = cxBase + parallaxX;
       const cy = cyBase + parallaxY;
       const maxR = Math.hypot(widthCss, heightCss);
 
       const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 0.7);
-      bg.addColorStop(0, `rgba(${SOFT_ULTRAVIOLET}, 0.12)`);
-      bg.addColorStop(0.4, `rgba(${SOFT_ULTRAVIOLET}, 0.04)`);
+      bg.addColorStop(0, `rgba(${SOFT_ULTRAVIOLET}, 0.20)`);
+      bg.addColorStop(0.4, `rgba(${SOFT_ULTRAVIOLET}, 0.07)`);
       bg.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, widthCss, heightCss);
@@ -271,9 +272,9 @@ export function InteractiveGalaxy() {
       // ── Atmospheric nebula clouds — three large, very faint magenta/UV blobs
       //    at the deepest tier. Adds painterly depth.
       const nebulas: Array<[number, number, string, number]> = [
-        [widthCss * 0.22, heightCss * 0.38, ION_MAGENTA, 0.045],
-        [widthCss * 0.78, heightCss * 0.72, ORBITAL_CYAN, 0.05],
-        [widthCss * 0.5, heightCss * 0.15, SOFT_ULTRAVIOLET, 0.055],
+        [widthCss * 0.18, heightCss * 0.36, ION_MAGENTA, 0.075],
+        [widthCss * 0.78, heightCss * 0.70, ORBITAL_CYAN, 0.09],
+        [widthCss * 0.48, heightCss * 0.18, SOFT_ULTRAVIOLET, 0.085],
       ];
       for (const [nx, ny, rgb, a] of nebulas) {
         const neb = ctx.createRadialGradient(nx, ny, 0, nx, ny, 280);
@@ -287,7 +288,7 @@ export function InteractiveGalaxy() {
       const horizonY = Math.round(heightCss * 0.62) + parallaxY * 0.3 + 0.5;
       const horizon = ctx.createLinearGradient(0, horizonY, widthCss, horizonY);
       horizon.addColorStop(0, `rgba(${ION_WHITE}, 0)`);
-      horizon.addColorStop(0.5, `rgba(${ION_WHITE}, 0.07)`);
+      horizon.addColorStop(0.5, `rgba(${ION_WHITE}, 0.12)`);
       horizon.addColorStop(1, `rgba(${ION_WHITE}, 0)`);
       ctx.strokeStyle = horizon;
       ctx.lineWidth = 1;
@@ -304,14 +305,19 @@ export function InteractiveGalaxy() {
             const dx = mouse.x - p.x;
             const dy = mouse.y - p.y;
             const d2 = dx * dx + dy * dy;
-            const range = 180 * 180;
+            const range = 240 * 240;
             if (d2 < range) {
-              const factor = (1 - d2 / range) * 0.0008 * (p.depth + 1);
+              const factor = (1 - d2 / range) * 0.001 * (p.depth + 1);
               p.vx += dx * factor;
               p.vy += dy * factor;
             }
           }
           // Drift + soft damping
+          const speed = Math.hypot(p.vx, p.vy);
+          if (speed > 1.35) {
+            p.vx = (p.vx / speed) * 1.35;
+            p.vy = (p.vy / speed) * 1.35;
+          }
           p.x += p.vx;
           p.y += p.vy;
           p.vx *= 0.985;
@@ -326,9 +332,9 @@ export function InteractiveGalaxy() {
 
       // Constellation lines — only when interactive and only for near tier.
       if (!reduced) {
-        const linkRange = 90;
+        const linkRange = 115;
         const linkRange2 = linkRange * linkRange;
-        ctx.lineWidth = 0.6;
+        ctx.lineWidth = 0.75;
         for (let i = 0; i < particles.length; i++) {
           const a = particles[i];
           if (!a) continue;
@@ -341,7 +347,7 @@ export function InteractiveGalaxy() {
             const dy = a.y - b.y;
             const d2 = dx * dx + dy * dy;
             if (d2 < linkRange2) {
-              const alpha = (1 - d2 / linkRange2) * 0.06;
+              const alpha = (1 - d2 / linkRange2) * 0.13;
               ctx.strokeStyle = `rgba(${ORBITAL_CYAN}, ${alpha})`;
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
@@ -360,7 +366,7 @@ export function InteractiveGalaxy() {
         // Subtle twinkle on near tier
         const twinkle =
           !reduced && p.depth === 2
-            ? 0.85 + 0.15 * Math.sin(elapsed * 1.6 + p.x * 0.013)
+            ? 0.78 + 0.22 * Math.sin(elapsed * 1.6 + p.x * 0.013)
             : 1;
         ctx.fillStyle = `rgba(${p.rgb}, ${p.baseAlpha * twinkle})`;
         ctx.beginPath();
@@ -369,7 +375,7 @@ export function InteractiveGalaxy() {
       }
 
       // ── Scene drift — extremely slow rotation of the orbital system.
-      const drift = reduced ? 0 : Math.sin(elapsed * 0.018) * 0.04;
+      const drift = reduced ? 0 : Math.sin(elapsed * 0.026) * 0.06 + elapsed * 0.006;
       const baseR = Math.min(widthCss, heightCss) * 0.42;
 
       // Draw orbits + travelers
@@ -393,18 +399,18 @@ export function InteractiveGalaxy() {
           travelers.push({ x: tx, y: ty, rgb: orbit.travRgb });
 
           // Halo
-          const halo = ctx.createRadialGradient(tx, ty, 0, tx, ty, 30);
-          halo.addColorStop(0, `rgba(${orbit.travRgb}, 0.6)`);
-          halo.addColorStop(0.55, `rgba(${orbit.travRgb}, 0.12)`);
+          const halo = ctx.createRadialGradient(tx, ty, 0, tx, ty, 48);
+          halo.addColorStop(0, `rgba(${orbit.travRgb}, 0.78)`);
+          halo.addColorStop(0.55, `rgba(${orbit.travRgb}, 0.18)`);
           halo.addColorStop(1, `rgba(${orbit.travRgb}, 0)`);
           ctx.fillStyle = halo;
           ctx.beginPath();
-          ctx.arc(tx, ty, 30, 0, Math.PI * 2);
+          ctx.arc(tx, ty, 48, 0, Math.PI * 2);
           ctx.fill();
           // Core
           ctx.fillStyle = `rgba(${ION_WHITE}, 0.95)`;
           ctx.beginPath();
-          ctx.arc(tx, ty, 2.4, 0, Math.PI * 2);
+          ctx.arc(tx, ty, 3, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -418,20 +424,16 @@ export function InteractiveGalaxy() {
       const cosP = Math.cos(primRot);
       const sinP = Math.sin(primRot);
 
-      const nodes: Array<[string, number, string, number]> = [
-        ["BOARD", 0.10, ORBITAL_CYAN, 0.9],
-        ["REST", 0.34, ORBITAL_CYAN, 0.72],
-        ["PLAYERS", 0.58, SOFT_ULTRAVIOLET, 0.45],
-        ["EV", 0.82, ION_MAGENTA, 0.42],
+      const nodes: Array<[number, string, number, number]> = [
+        [0.10, ORBITAL_CYAN, 0.95, 20],
+        [0.34, ORBITAL_CYAN, 0.78, 16],
+        [0.58, SOFT_ULTRAVIOLET, 0.66, 18],
+        [0.82, ION_MAGENTA, 0.72, 15],
       ];
       const primTheta = reduced
         ? Math.PI * 0.85 + primary.thetaOffset
         : (elapsed / primary.lapPeriod) * Math.PI * 2 + primary.thetaOffset;
-      ctx.font = "600 10px JetBrains Mono, monospace";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-
-      for (const [label, offset, rgb, alpha] of nodes) {
+      for (const [offset, rgb, alpha, radius] of nodes) {
         const nodeTheta = offset * Math.PI * 2;
         const angleDist = Math.abs(
           ((primTheta - nodeTheta) % (Math.PI * 2) + Math.PI * 3) % (Math.PI * 2) - Math.PI
@@ -449,23 +451,20 @@ export function InteractiveGalaxy() {
           ctx.strokeStyle = `rgba(${rgb}, ${0.35 * ripple})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.arc(nodeX, nodeY, 22 + ripple * 10, 0, Math.PI * 2);
+          ctx.arc(nodeX, nodeY, radius + 8 + ripple * 14, 0, Math.PI * 2);
           ctx.stroke();
         }
         // Disc
-        ctx.fillStyle = `rgba(${rgb}, ${alpha * (0.14 + ripple * 0.18)})`;
+        ctx.fillStyle = `rgba(${rgb}, ${alpha * (0.22 + ripple * 0.24)})`;
         ctx.beginPath();
-        ctx.arc(nodeX, nodeY, 18, 0, Math.PI * 2);
+        ctx.arc(nodeX, nodeY, radius, 0, Math.PI * 2);
         ctx.fill();
         // Outline
         ctx.strokeStyle = `rgba(${rgb}, ${alpha * (0.5 + ripple * 0.5)})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(nodeX, nodeY, 18, 0, Math.PI * 2);
+        ctx.arc(nodeX, nodeY, radius, 0, Math.PI * 2);
         ctx.stroke();
-        // Label
-        ctx.fillStyle = `rgba(${ION_WHITE}, ${alpha})`;
-        ctx.fillText(label, nodeX, nodeY);
       }
 
       // ── Distant pulse — magenta beacon, ~7s cadence.
@@ -503,8 +502,8 @@ export function InteractiveGalaxy() {
       disposed = true;
       if (frame) window.cancelAnimationFrame(frame);
       observer.disconnect();
-      mount.removeEventListener("pointermove", onPointerMove);
-      mount.removeEventListener("pointerleave", onPointerLeave);
+      pointerTarget.removeEventListener("pointermove", onPointerMove);
+      pointerTarget.removeEventListener("pointerleave", onPointerLeave);
       if (canvas.parentNode === mount) mount.removeChild(canvas);
     };
   }, []);

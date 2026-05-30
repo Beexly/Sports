@@ -11,6 +11,7 @@ describe("homepage doctrine hero", () => {
   const layout = readRepoFile("apps/web/app/layout.tsx");
   const tokens = readRepoFile("apps/web/styles/design-tokens.css");
   const tailwind = readRepoFile("apps/web/tailwind.config.ts");
+  const galaxy = readRepoFile("apps/web/components/hero/interactive-galaxy.tsx");
 
   it("loads the doctrine font families through next/font and binds the CSS vars", () => {
     expect(layout).toMatch(/Big_Shoulders_Display/);
@@ -35,7 +36,9 @@ describe("homepage doctrine hero", () => {
 
   it("uses one arch headline for the front-door hero", () => {
     expect(page).toContain("Math you can read.");
+    expect(page).toMatch(/<span className="text-plasma">\.<\/span>/);
     expect(page).not.toContain("We&apos;re not AI");
+    expect(page).not.toMatch(/<span className="eyebrow text-ion-1">Live board<\/span>/);
     expect(page.match(/font-arch/g) ?? []).toHaveLength(1);
     expect(page).toMatch(/data-testid="homepage-arch-headline"/);
   });
@@ -50,5 +53,12 @@ describe("homepage doctrine hero", () => {
     expect(page).toMatch(/modelVersion/);
     expect(page).toMatch(/font-numerals/);
     expect(page).toMatch(/text-orbital-cyan/);
+  });
+
+  it("keeps the galaxy alive without placeholder node labels", () => {
+    expect(galaxy).toMatch(/MAX_CURSOR_DISPLACEMENT = 30/);
+    expect(galaxy).toMatch(/pointerTarget\.addEventListener\("pointermove"/);
+    expect(galaxy).not.toMatch(/fillText/);
+    expect(galaxy).not.toMatch(/"BOARD"|"REST"|"PLAYERS"|"EV"/);
   });
 });

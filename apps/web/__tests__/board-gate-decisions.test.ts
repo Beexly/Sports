@@ -19,6 +19,7 @@ vi.mock("@sports/db", () => ({
 
 vi.mock("@sports/prediction-engine", () => ({
   getReadinessGates: () => ({ isBootstrapMode: false }),
+  MODEL_VERSION: "v5.0.0",
 }));
 
 import { loadBoardPasses } from "@/lib/board/passes";
@@ -129,5 +130,15 @@ describe("board loaders with persisted gate decisions", () => {
       reason: "Consensus below publish threshold.",
     });
     expect(mocks.gameFindMany).not.toHaveBeenCalled();
+  });
+
+  it("falls back to the active engine model version when no rows expose one", async () => {
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.pickFindMany.mockResolvedValue([]);
+    mocks.gameFindMany.mockResolvedValue([]);
+
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"));
+
+    expect(result.data.modelVersion).toBe("v5.0.0");
   });
 });

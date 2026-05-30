@@ -95,51 +95,55 @@ function SampleDataBanner(): JSX.Element {
 }
 
 function Hero({ state }: { state: BoardStateData }): JSX.Element {
-  const telemetryRows = [
+  const modelVersion = state.modelVersion.trim();
+  const telemetryRows: Array<readonly [string, string]> = [
     ["Sports watched", String(state.sportsWatched)],
     ["Books polled", String(state.booksPolled)],
     ["Open picks", String(state.openPicks)],
     ["Last refresh", timeLabel(state.lastRefresh)],
-    ["Model", state.modelVersion],
-  ] as const;
+  ];
+  if (modelVersion.length > 0 && modelVersion.toLowerCase() !== "unknown") {
+    telemetryRows.push(["Model", modelVersion]);
+  }
 
   return (
     <section className="relative isolate min-h-[88vh] overflow-hidden border-b border-mineral bg-carbon px-4 sm:px-6 lg:px-8">
       <InteractiveGalaxy />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(90deg,var(--carbon)_0%,rgba(13,17,23,0.88)_34%,rgba(13,17,23,0.42)_70%,var(--carbon)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(90deg,var(--carbon)_0%,rgba(13,17,23,0.84)_32%,rgba(13,17,23,0.20)_72%,rgba(13,17,23,0.58)_100%)]" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-32 bg-[linear-gradient(180deg,transparent,var(--carbon))]" />
 
       <div className="relative z-[2] mx-auto flex min-h-[88vh] w-full max-w-7xl flex-col justify-center py-24">
         <Reveal duration={880} distance={4}>
-          <div className="inline-flex items-center gap-3">
-            <span className="live-dot" aria-hidden="true" />
-            <span className="eyebrow text-ion-1">Live board</span>
-          </div>
-        </Reveal>
-
-        <Reveal delay={80} duration={880} distance={4}>
-          <p className="eyebrow mt-8 text-ion-1">
+          <p className="eyebrow text-ion-1">
             GALAXY SPORTS EDGE / SPORTS INTELLIGENCE
           </p>
         </Reveal>
 
-        <Reveal delay={160} duration={880} distance={4}>
-          <h1
-            data-testid="homepage-arch-headline"
-            className="mt-5 max-w-5xl text-balance font-arch text-[clamp(2.5rem,9vw,8rem)] font-black uppercase leading-[0.86] tracking-normal text-ion-white"
-          >
-            Math you can read.
-          </h1>
+        <Reveal delay={80} duration={880} distance={4}>
+          <div className="relative mt-5 max-w-5xl">
+            <span
+              className="pointer-events-none absolute -inset-x-6 inset-y-4 -z-10 bg-[radial-gradient(ellipse_at_34%_48%,rgba(255,45,214,0.16),rgba(0,229,255,0.08)_38%,transparent_72%)] blur-2xl"
+              aria-hidden="true"
+            />
+            <h1
+              aria-label="Math you can read."
+              data-testid="homepage-arch-headline"
+              className="text-balance font-arch text-[clamp(2.5rem,9vw,8rem)] font-black uppercase leading-[0.86] tracking-normal text-ion-white shadow-glow-soft"
+            >
+              <span>Math you can read</span>
+              <span className="text-plasma">.</span>
+            </h1>
+          </div>
         </Reveal>
 
-        <Reveal delay={240} duration={880} distance={4}>
+        <Reveal delay={160} duration={880} distance={4}>
           <p className="mt-7 max-w-2xl text-pretty font-sans text-[17px] leading-[1.55] text-ion sm:text-xl">
             Deterministic sports research with odds, market depth, schedule
             context, and source freshness exposed before a pick reaches the board.
           </p>
         </Reveal>
 
-        <Reveal delay={320} duration={880} distance={4}>
+        <Reveal delay={240} duration={880} distance={4}>
           <div
             aria-label="Live board telemetry"
             className="mt-10 w-full overflow-x-auto border-y border-mineral/80 py-4"
@@ -160,7 +164,7 @@ function Hero({ state }: { state: BoardStateData }): JSX.Element {
           </div>
         </Reveal>
 
-        <Reveal delay={400} duration={880} distance={4}>
+        <Reveal delay={320} duration={880} distance={4}>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link href="/board" className="btn-primary min-h-11 px-6 py-3">
               See today&apos;s board
