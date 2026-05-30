@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
+import { Reveal } from "@/components/motion/reveal";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -53,12 +55,11 @@ export default async function HomePage(): Promise<JSX.Element> {
     calibrationResult.meta.isSampleData;
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
+    <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
       <Nav />
       <main>
         {(demoActive || surfaceSampleActive) && <SampleDataBanner />}
-        <LiveStateStrip state={stateResult.data} />
-        <Hero />
+        <Hero state={stateResult.data} />
         <GateCam state={stateResult.data} isSampleData={stateResult.meta.isSampleData} />
         <LedgerPreview />
         <CalibrationPreview calibration={calibrationResult.data} />
@@ -93,50 +94,85 @@ function SampleDataBanner(): JSX.Element {
   );
 }
 
-function LiveStateStrip({ state }: { state: BoardStateData }): JSX.Element {
-  const stateRows = [
+function Hero({ state }: { state: BoardStateData }): JSX.Element {
+  const telemetryRows = [
     ["Sports watched", String(state.sportsWatched)],
     ["Books polled", String(state.booksPolled)],
     ["Open picks", String(state.openPicks)],
-    ["Gated today", String(state.gatedToday)],
     ["Last refresh", timeLabel(state.lastRefresh)],
     ["Model", state.modelVersion],
   ] as const;
 
   return (
-    <section aria-label="Live board state" className="border-b border-gray-800 bg-gray-950">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 py-3 sm:grid-cols-3 lg:grid-cols-6">
-        {stateRows.map(([label, value]) => (
-          <div key={label} className="min-h-14 border border-gray-800 bg-gray-900/55 px-3 py-2">
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
-            <p className="mt-1 text-lg font-semibold text-white">{value}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+    <section className="relative isolate min-h-[88vh] overflow-hidden border-b border-mineral bg-carbon px-4 sm:px-6 lg:px-8">
+      <InteractiveGalaxy />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(90deg,var(--carbon)_0%,rgba(13,17,23,0.88)_34%,rgba(13,17,23,0.42)_70%,var(--carbon)_100%)]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-32 bg-[linear-gradient(180deg,transparent,var(--carbon))]" />
 
-function Hero(): JSX.Element {
-  return (
-    <section className="border-b border-gray-800 bg-[radial-gradient(circle_at_20%_10%,rgba(34,211,238,0.14),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(244,114,182,0.10),transparent_28%),#030712] px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <p className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-200">Galaxy Sports Edge</p>
-        <h1 className="mt-5 max-w-4xl break-words text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
-          We&apos;re not AI. We&apos;re math you can read.
-        </h1>
-        <p className="mt-6 max-w-2xl break-words text-lg leading-8 text-gray-300">
-          Deterministic sports betting research with the factor breakdown attached.
-          We post when the model finds edge. Most days that is fewer than five picks.
-        </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Link href="/board" className="inline-flex min-h-11 items-center justify-center rounded-lg bg-cyan-300 px-5 py-3 text-sm font-bold text-gray-950 hover:bg-cyan-200">
-            See today&apos;s board
-          </Link>
-          <Link href="/methodology" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-bold text-gray-100 hover:border-cyan-300">
-            Read the methodology
-          </Link>
-        </div>
+      <div className="relative z-[2] mx-auto flex min-h-[88vh] w-full max-w-7xl flex-col justify-center py-24">
+        <Reveal duration={880} distance={4}>
+          <div className="inline-flex items-center gap-3">
+            <span className="live-dot" aria-hidden="true" />
+            <span className="eyebrow text-ion-1">Live board</span>
+          </div>
+        </Reveal>
+
+        <Reveal delay={80} duration={880} distance={4}>
+          <p className="eyebrow mt-8 text-ion-1">
+            GALAXY SPORTS EDGE / SPORTS INTELLIGENCE
+          </p>
+        </Reveal>
+
+        <Reveal delay={160} duration={880} distance={4}>
+          <h1
+            data-testid="homepage-arch-headline"
+            className="mt-5 max-w-5xl text-balance font-arch text-[clamp(2.5rem,9vw,8rem)] font-black uppercase leading-[0.86] tracking-normal text-ion-white"
+          >
+            Math you can read.
+          </h1>
+        </Reveal>
+
+        <Reveal delay={240} duration={880} distance={4}>
+          <p className="mt-7 max-w-2xl text-pretty font-sans text-[17px] leading-[1.55] text-ion sm:text-xl">
+            Deterministic sports research with odds, market depth, schedule
+            context, and source freshness exposed before a pick reaches the board.
+          </p>
+        </Reveal>
+
+        <Reveal delay={320} duration={880} distance={4}>
+          <div
+            aria-label="Live board telemetry"
+            className="mt-10 w-full overflow-x-auto border-y border-mineral/80 py-4"
+          >
+            <div className="flex min-w-max items-stretch gap-0">
+              {telemetryRows.map(([label, value]) => (
+                <div
+                  key={label}
+                  className="min-w-[9.5rem] border-r border-mineral/70 px-5 first:pl-0 last:border-r-0"
+                >
+                  <p className="eyebrow text-ion-2">{label}</p>
+                  <p className="mt-2 font-numerals text-xl font-semibold tabular-nums text-orbital-cyan sm:text-2xl">
+                    {value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={400} duration={880} distance={4}>
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <Link href="/board" className="btn-primary min-h-11 px-6 py-3">
+              See today&apos;s board
+            </Link>
+            <Link
+              href="/methodology"
+              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-6 py-3 text-sm font-semibold text-ion transition-colors hover:border-orbital-cyan hover:text-ion-white"
+            >
+              Read the methodology
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
