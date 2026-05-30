@@ -1,11 +1,19 @@
 # OVERNIGHT CLAUDE — STATE
 
-## Run 2 — 2026-05-30 07:32–08:00 UTC
+## Run 3 — 2026-05-30 08:00–08:20 UTC
 **Mode**: WRITE  
 **Branch**: `claude/magical-volta-wXkx2`  
 **Status**: IN_PROGRESS
 
-## Commits Pushed This Run
+## Commits Pushed This Run (run 3)
+| Commit | Message |
+|---|---|
+| `8b0ff1f` | test: add 57 unit tests for platform-config and readiness gates |
+| `5e11391` | test: add 33 tests for studio/export and source-coverage gaps |
+| `cdb4731` | test: add 19 unit tests for buildCalibrationInsightUserPrompt |
+| `ef3ddff` | test: add 13 unit tests for requireEntitlement and EntitlementError |
+
+## Commits Pushed Run 2
 | Commit | Message |
 |---|---|
 | `4a03454` | test: add unit tests for comparePreMortem and summarizeComparison |
@@ -29,11 +37,11 @@
 - Tests: 68 of 164 files FAILING (ERR_MODULE_NOT_FOUND)
 - Type errors: 30+ (missing Prisma model types)
 
-## End State (after run 2)
+## End State (after run 3)
 - node_modules: INSTALLED
 - Prisma client: GENERATED (prepare hook added)
-- Web tests: 170 files / 1951 tests — ALL PASSING
-- Prediction-engine tests: 6 files / 227 tests — ALL PASSING
+- Web tests: 174 files / 2016 tests — ALL PASSING
+- Prediction-engine tests: 8 files / 284 tests — ALL PASSING
 - Type errors: 0
 - Lint warnings: 0
 
@@ -56,6 +64,14 @@
 ## Key Growth (run 1)
 1. compliance-scanner-rules.test.ts added to `test:brand-safety` and CI brand-safety job
 2. journal-compliance-scan.test.ts (10 tests) for scanModelJournalMarkdown
+
+## Key Growth (run 3)
+1. platform-config.test.ts (27 tests): first coverage for getPlatformConfig env parsing
+2. readiness.test.ts (30 tests): first coverage for getReadinessGates + bootstrapGateResponse
+3. studio-export.test.ts (16 tests): first coverage for markdownForStudioDraft + fileNameForStudioDraft
+4. source-coverage-gaps.test.ts (17 tests): STALE-all → BLOCKED, NEEDS_SOURCE vs PARTIAL
+5. calibration-insight-prompt.test.ts (19 tests): first coverage for buildCalibrationInsightUserPrompt
+6. entitlements-require.test.ts (13 tests): first coverage for requireEntitlement + EntitlementError
 
 ## Key Growth (run 2)
 1. pre-mortem-compare.test.ts (12 tests) for comparePreMortem + summarizeComparison
@@ -81,4 +97,4 @@ None.
 2. Implement jarvis-snapshot cron (push a Jarvis assessment to the shared ring buffer)
 3. Consider rate limiting on public API routes (/api/picks, /api/promotions)
 4. Verify CI db:generate steps still work after root package.json change
-5. Continue expanding test coverage for uncovered pure logic modules
+5. Continue expanding test coverage — next targets: correlation/evaluate filter operators, calibration compute bucket edge cases, cockpit/jarvis.ts synthesizeJarvis gaps
