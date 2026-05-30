@@ -128,7 +128,7 @@ function Hero({ state }: { state: BoardStateData }): JSX.Element {
             <h1
               aria-label="Math you can read."
               data-testid="homepage-arch-headline"
-              className="text-balance font-arch text-[clamp(2.5rem,9vw,8rem)] font-black uppercase leading-[0.86] tracking-normal text-ion-white shadow-glow-soft"
+              className="text-balance font-arch text-[clamp(2.5rem,9vw,8rem)] font-black uppercase leading-[0.86] tracking-normal text-ion-white drop-shadow-[0_0_34px_rgba(255,45,214,0.18)]"
             >
               <span>Math you can read</span>
               <span className="text-plasma">.</span>

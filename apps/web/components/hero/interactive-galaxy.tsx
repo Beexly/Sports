@@ -10,9 +10,9 @@ import { useEffect, useRef } from "react";
  *   - Layered particle field with depth-of-field: ~140 particles at three
  *     depth tiers, each scaling alpha + radius + parallax response.
  *   - Constellation lines between near neighbors — hairline cyan, fades
- *     by distance. Disabled on reduced-motion.
+ *     by distance. Reduced motion keeps the static network without animation.
  *   - Mouse parallax of the whole orbital system (whole scene shifts
- *     toward the cursor at ~6px max). Adds a real "I'm in space" feel.
+ *     toward the cursor at 30px max). Adds a real "I'm in space" feel.
  *   - Cursor attractor: nearby particles drift toward the cursor with
  *     soft easing. Strong enough to be felt, gentle enough not to be a toy.
  *   - Multi-orbital system: 3 elliptical orbits (UV, cyan, white) at
@@ -23,7 +23,7 @@ import { useEffect, useRef } from "react";
  *
  * Reduced-motion fallback:
  *   - Renders the static composition (orbits, particle field at rest,
- *     evidence nodes labeled) without an animation loop. Still beautiful.
+ *     evidence nodes, constellation network) without an animation loop.
  */
 
 function prefersReducedMotion(): boolean {
@@ -330,30 +330,28 @@ export function InteractiveGalaxy() {
         }
       }
 
-      // Constellation lines — only when interactive and only for near tier.
-      if (!reduced) {
-        const linkRange = 115;
-        const linkRange2 = linkRange * linkRange;
-        ctx.lineWidth = 0.75;
-        for (let i = 0; i < particles.length; i++) {
-          const a = particles[i];
-          if (!a) continue;
-          if (a.depth < 1) continue;
-          for (let j = i + 1; j < particles.length; j++) {
-            const b = particles[j];
-            if (!b) continue;
-            if (b.depth < 1) continue;
-            const dx = a.x - b.x;
-            const dy = a.y - b.y;
-            const d2 = dx * dx + dy * dy;
-            if (d2 < linkRange2) {
-              const alpha = (1 - d2 / linkRange2) * 0.13;
-              ctx.strokeStyle = `rgba(${ORBITAL_CYAN}, ${alpha})`;
-              ctx.beginPath();
-              ctx.moveTo(a.x, a.y);
-              ctx.lineTo(b.x, b.y);
-              ctx.stroke();
-            }
+      // Constellation lines: reduced motion keeps a static network.
+      const linkRange = 115;
+      const linkRange2 = linkRange * linkRange;
+      ctx.lineWidth = 0.75;
+      for (let i = 0; i < particles.length; i++) {
+        const a = particles[i];
+        if (!a) continue;
+        if (a.depth < 1) continue;
+        for (let j = i + 1; j < particles.length; j++) {
+          const b = particles[j];
+          if (!b) continue;
+          if (b.depth < 1) continue;
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < linkRange2) {
+            const alpha = (1 - d2 / linkRange2) * 0.13;
+            ctx.strokeStyle = `rgba(${ORBITAL_CYAN}, ${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
           }
         }
       }
