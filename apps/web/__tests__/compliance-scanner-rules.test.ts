@@ -120,25 +120,23 @@ describe("LAYER_2 unsupported claims", () => {
     expect(hits(rule, "confidence: 72")).toBe(false);
   });
 
-  it("L2-PUBLIC-WIN-RATE catches rate claims by keyword", () => {
+  it("L2-PUBLIC-WIN-RATE catches all win-rate claim patterns", () => {
     const rule = LAYER_2_UNSUPPORTED_CLAIMS.find((r) => r.id === "L2-PUBLIC-WIN-RATE")!;
-    // "our win rate is" works because it ends in space (non-word) followed by digits (word) → \b fires
+    expect(hits(rule, "We hit 68% last month")).toBe(true);
+    expect(hits(rule, "we win 55% of games")).toBe(true);
     expect(hits(rule, "our win rate is 71%")).toBe(true);
-    // "72% accuracy" works because it ends in word char "y" → \b fires
     expect(hits(rule, "72% accuracy on spreads")).toBe(true);
+    expect(hits(rule, "60% hit rate over 30 days")).toBe(true);
     expect(hits(rule, "See the ledger for results")).toBe(false);
-    // NOTE: "We hit 68%" does NOT match because \b cannot follow % (non-word) when
-    // the next char is also non-word (space). This is a known limitation of the pattern.
-    // The "our win rate is" alternative provides coverage for that intent.
   });
 
-  it("L2-PUBLIC-EV catches EV-per-pick and EV-per-pick phrases", () => {
+  it("L2-PUBLIC-EV catches EV and expected-value phrases", () => {
     const rule = LAYER_2_UNSUPPORTED_CLAIMS.find((r) => r.id === "L2-PUBLIC-EV")!;
-    // "EV per pick" and "expected value per pick" end in word chars → \b fires
     expect(hits(rule, "EV per pick is high")).toBe(true);
     expect(hits(rule, "expected value per pick matters")).toBe(true);
-    // NOTE: "EV of " and "expected value of " end in space (non-word) and are usually
-    // followed by non-word (+/-), so \b does not fire. Use explicit alternatives.
+    expect(hits(rule, "EV of +3.2 units this week")).toBe(true);
+    expect(hits(rule, "expected value of +1.5 units per pick")).toBe(true);
+    expect(hits(rule, "scores +1.5 units per game")).toBe(true);
     expect(hits(rule, "use the Kelly sizer for your bankroll")).toBe(false);
   });
 
