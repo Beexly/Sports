@@ -53,11 +53,14 @@ describe("homepage doctrine hero", () => {
     expect(page).toMatch(/modelVersion/);
     expect(page).toMatch(/font-numerals/);
     expect(page).toMatch(/text-orbital-cyan/);
+    expect(page).toMatch(/grid grid-cols-2/);
+    expect(page).toMatch(/sm:flex sm:min-w-max/);
   });
 
   it("keeps the galaxy alive without placeholder node labels", () => {
     expect(galaxy).toMatch(/MAX_CURSOR_DISPLACEMENT = 30/);
     expect(galaxy).toMatch(/pointerTarget\.addEventListener\("pointermove"/);
+    expect(galaxy).toMatch(/reduced && drawFrame/);
     expect(galaxy).not.toMatch(/fillText/);
     expect(galaxy).not.toMatch(/"BOARD"|"REST"|"PLAYERS"|"EV"/);
   });

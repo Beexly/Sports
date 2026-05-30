@@ -146,13 +146,13 @@ function Hero({ state }: { state: BoardStateData }): JSX.Element {
         <Reveal delay={240} duration={880} distance={4}>
           <div
             aria-label="Live board telemetry"
-            className="mt-10 w-full overflow-x-auto border-y border-mineral/80 py-4"
+            className="mt-10 w-full border-y border-mineral/80 py-4"
           >
-            <div className="flex min-w-max items-stretch gap-0">
+            <div className="grid grid-cols-2 gap-y-4 sm:flex sm:min-w-max sm:items-stretch sm:gap-0">
               {telemetryRows.map(([label, value]) => (
                 <div
                   key={label}
-                  className="min-w-[9.5rem] border-r border-mineral/70 px-5 first:pl-0 last:border-r-0"
+                  className="min-w-0 border-mineral/70 px-4 odd:border-r sm:min-w-[9.5rem] sm:border-r sm:px-5 sm:first:pl-0 sm:last:border-r-0"
                 >
                   <p className="eyebrow text-ion-2">{label}</p>
                   <p className="mt-2 font-numerals text-xl font-semibold tabular-nums text-orbital-cyan sm:text-2xl">

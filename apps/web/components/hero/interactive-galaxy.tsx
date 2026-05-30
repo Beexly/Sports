@@ -196,6 +196,7 @@ export function InteractiveGalaxy() {
     let dpr = 1;
     let widthCss = 1;
     let heightCss = 1;
+    let drawFrame: ((t: number) => void) | null = null;
 
     // Mouse state — drives parallax and the attractor.
     const mouse = { x: 0, y: 0, has: false };
@@ -221,6 +222,9 @@ export function InteractiveGalaxy() {
       canvas.height = Math.round(heightCss * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       rebuildParticles();
+      if (reduced && drawFrame) {
+        window.requestAnimationFrame(drawFrame);
+      }
     };
 
     const observer = new ResizeObserver(resize);
@@ -489,6 +493,7 @@ export function InteractiveGalaxy() {
         frame = window.requestAnimationFrame(draw);
       }
     };
+    drawFrame = draw;
 
     if (reduced) {
       draw(performance.now());
