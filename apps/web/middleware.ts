@@ -7,12 +7,16 @@ import { NextRequest, NextResponse } from "next/server";
  * Instead, we use a lighter pattern: protect routes via redirect at the page level
  * (checking auth() in Server Components), and use middleware only for basic routing.
  *
- * Admin routes are protected at both middleware level (basic check) and page level
- * (full auth + role check).
+ * Admin/operator routes are protected at both middleware level (cheap cookie check)
+ * and page/layout level (full auth + role check). The middleware layer saves an
+ * unnecessary RSC render for unauthenticated visitors; the page-level role check
+ * is the authoritative gate and must not be removed.
  */
 
-// Routes that require authentication (redirect to signin if no cookie)
-const PROTECTED_ROUTES = ["/dashboard", "/admin"];
+// Routes that require authentication (redirect to signin if no cookie).
+// Keep this in sync with every operator/admin surface — the layout-level role
+// check is still required for all of these.
+const PROTECTED_ROUTES = ["/dashboard", "/admin", "/cockpit"];
 
 // Auth cookie name (NextAuth.js v5)
 const AUTH_COOKIE_NAMES = [
