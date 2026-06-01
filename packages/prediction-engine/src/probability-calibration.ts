@@ -73,7 +73,13 @@ export function isotonicCalibration(samples: readonly CalibrationSample[]): Isot
       weight: 1,
       xStart: s.p,
     };
-    while (blocks.length > 0 && blocks[blocks.length - 1]!.value > block.value) {
+    while (
+      blocks.length > 0 &&
+      (blocks[blocks.length - 1]!.value > block.value ||
+        // Pool samples that share the same forecast x, so a repeated confidence
+        // with mixed outcomes collapses to its observed rate (order-independent).
+        blocks[blocks.length - 1]!.xStart === block.xStart)
+    ) {
       const prev = blocks.pop()!;
       const mergedWeight = prev.weight + block.weight;
       block = {

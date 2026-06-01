@@ -99,7 +99,14 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
 }
 
 export async function CalibrationPanel() {
-  const report = await loadPublicCalibrationReport();
+  // Own error handling: a transient calibration read failure must not take down
+  // the whole /performance page (this renders outside the page's fetch try/catch).
+  let report: Awaited<ReturnType<typeof loadPublicCalibrationReport>>;
+  try {
+    report = await loadPublicCalibrationReport();
+  } catch {
+    return null;
+  }
   const data = report.data;
   const d = data.discrimination;
   const meta = VERDICT_META[d.trend];

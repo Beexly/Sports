@@ -102,4 +102,15 @@ describe("isotonicCalibration (PAVA)", () => {
     ]);
     expect(m.points.map((p) => p.calibrated)).toEqual([0, 0, 1, 1]);
   });
+
+  it("pools repeated forecasts with mixed outcomes to one observed-rate breakpoint", () => {
+    // Two picks both at p=0.65, outcomes 0 then 1 → one breakpoint at 0.5,
+    // not two order-dependent breakpoints (Codex P2).
+    const m = isotonicCalibration([
+      { p: 0.65, y: 0 },
+      { p: 0.65, y: 1 },
+    ]);
+    expect(m.points).toHaveLength(1);
+    expect(m.predict(0.65)).toBe(0.5);
+  });
 });

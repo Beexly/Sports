@@ -7,6 +7,7 @@ const nextConfig = {
     "@sports/types",
     "@sports/prediction-engine",
     "@sports/data-ingestion",
+    "@sports/ingestion-pipeline",
   ],
   experimental: {
     serverComponentsExternalPackages: ["@prisma/client"],
