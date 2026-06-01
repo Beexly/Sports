@@ -92,6 +92,56 @@ async function main() {
   const found = publicPicks.find((p) => p.id === pick.id);
   check("relation query returns the pick with nested game+sport", Boolean(found && found.game.sport.name === "NFL"));
 
+  // ── 3b. Server-side paywall tier gate (CLAUDE.md rule #3 — security-critical) ──
+  const premiumPick = await db.pick.create({
+    data: {
+      gameId: game.id,
+      pickType: "TOTAL",
+      selection: "OVER 44.5",
+      line: 44.5,
+      confidence: 82,
+      reasoning: "premium smoke",
+      modelVersion: "test",
+      tier: "PREMIUM",
+      isBootstrap: false,
+      isPublished: true,
+    },
+  });
+  const freeOnly = await db.pick.findMany({
+    where: { gameId: game.id, isPublished: true, isBootstrap: false, tier: "FREE" },
+  });
+  check(
+    "FREE-tier DB query excludes PREMIUM picks (paywall enforced at the query layer)",
+    freeOnly.some((p) => p.id === pick.id) && !freeOnly.some((p) => p.id === premiumPick.id),
+  );
+  const allTiers = await db.pick.findMany({
+    where: { gameId: game.id, isPublished: true, isBootstrap: false },
+  });
+  check("premium-entitled query (no tier filter) returns both FREE and PREMIUM", allTiers.length >= 2);
+
+  // ── 3c. Bootstrap fencing — bootstrap picks never leak to public queries ──
+  await db.pick.create({
+    data: {
+      gameId: game.id,
+      pickType: "MONEYLINE",
+      selection: "Away Favs ML",
+      line: -180,
+      confidence: 90,
+      reasoning: "bootstrap smoke",
+      modelVersion: "test",
+      tier: "FREE",
+      isBootstrap: true, // pre-canonical — must be excluded from public stats/picks
+      isPublished: true,
+    },
+  });
+  const publicCanonical = await db.pick.findMany({
+    where: { gameId: game.id, isPublished: true, isBootstrap: false },
+  });
+  check(
+    "isBootstrap=true picks are excluded from the public (canonical) query",
+    publicCanonical.every((p) => p.pickType !== "MONEYLINE"),
+  );
+
   // ── 4. Settlement write/read round-trip ──────────────────────────────────
   await db.pick.update({ where: { id: pick.id }, data: { result: "LOSS", settledAt: new Date() } });
   const settled = await db.pick.findUnique({ where: { id: pick.id } });
