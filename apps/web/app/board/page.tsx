@@ -4,8 +4,9 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
-import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
+import { loadBoardState } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { LiveBoard } from "@/components/board/live-board";
 
 export const metadata: Metadata = {
   title: "Today's Board - Galaxy Sports Edge",
@@ -74,20 +75,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        <section aria-label="Board state" className="grid gap-px sm:grid-cols-2 lg:grid-cols-6">
-          <StateTile label="Sports watched" value={String(state.sportsWatched)} />
-          <StateTile label="Books polled" value={String(state.booksPolled)} />
-          <StateTile label="Open picks" value={String(state.openPicks)} />
-          <StateTile label="Gated today" value={String(state.gatedToday)} />
-          <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} />
-          <StateTile label="Model" value={state.modelVersion} />
-        </section>
-
-        <section className="grid gap-4 lg:grid-cols-3">
-          <BoardLane title="Scoring Now" rows={state.scoringNow} empty="No games are currently scoring." />
-          <BoardLane title="Published Today" rows={state.publishedToday} empty="No picks have cleared today." />
-          <BoardLane title="Gated Today" rows={state.gatedTodayRows} empty="No passed games logged yet." />
-        </section>
+        <LiveBoard initialData={state} initialIsSample={isSampleData} />
 
         <section className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
           <div className="border border-gray-800 bg-gray-900/45 p-5">
@@ -125,51 +113,6 @@ export default async function BoardPage(): Promise<JSX.Element> {
       </main>
       <Footer />
     </div>
-  );
-}
-
-function StateTile({ label, value }: { label: string; value: string }): JSX.Element {
-  return (
-    <div className="min-h-16 border border-gray-800 bg-gray-900/60 px-3 py-2">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
-      <p className="mt-1 break-words text-lg font-semibold text-white">{value}</p>
-    </div>
-  );
-}
-
-function BoardLane({ title, rows, empty }: { title: string; rows: BoardStateRow[]; empty: string }): JSX.Element {
-  return (
-    <section className="border border-gray-800 bg-gray-900/45 p-4">
-      <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">{title}</h2>
-      <div className="mt-4 flex flex-col gap-3">
-        {rows.length > 0 ? rows.map((row) => <BoardRowItem key={row.id} row={row} />) : (
-          <p className="text-sm text-gray-500">{empty}</p>
-        )}
-      </div>
-    </section>
-  );
-}
-
-function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
-  return (
-    <article className="border border-gray-800 bg-gray-950/55 p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="font-semibold text-white">{row.matchup}</h3>
-          <p className="mt-1 text-xs text-gray-500">{row.sport} / {row.market}</p>
-        </div>
-        <span className="font-mono text-xs text-cyan-200">
-          {row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}
-        </span>
-      </div>
-      {row.confidence !== null && (
-        <p className="mt-3 text-sm text-gray-300">Confidence label available on the pick view.</p>
-      )}
-      {row.gateReason && <p className="mt-3 text-sm text-gray-400">{row.gateReason}</p>}
-      <Link href={`/room/${row.gameId}`} className="mt-4 inline-flex text-sm font-semibold text-cyan-200 hover:text-cyan-100">
-        Open room
-      </Link>
-    </article>
   );
 }
 
