@@ -181,7 +181,8 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   }
 }
 
-function getTierFromPriceId(priceId: string | undefined): "FREE" | "PRO" | "ELITE" {
+function getTierFromPriceId(priceId: string | undefined): "FREE" | "PRO" | "ELITE" | "VIP" {
+  if (priceId === process.env["STRIPE_VIP_PRICE_ID"]) return "VIP";
   if (priceId === process.env["STRIPE_ELITE_PRICE_ID"]) return "ELITE";
   if (priceId === process.env["STRIPE_PRO_PRICE_ID"]) return "PRO";
   return "FREE";

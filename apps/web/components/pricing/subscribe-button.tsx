@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
  *  - Renders friendly founder-voice errors with a recovery hint
  */
 
-type Tier = "PRO" | "ELITE";
+type Tier = "PRO" | "ELITE" | "VIP";
 
 type Props = {
   tier: Tier;

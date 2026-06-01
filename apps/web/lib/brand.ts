@@ -40,6 +40,7 @@ export const TIER_DISPLAY_NAMES = {
   FREE: "Free",
   PRO: "Pro",
   ELITE: "Elite",
+  VIP: "VIP",
 } as const;
 
 /** Helpline shown on every page footer per responsible-play obligations. */

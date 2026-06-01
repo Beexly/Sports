@@ -8,12 +8,13 @@ export const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]!, {
 export const STRIPE_PRICE_IDS = {
   PRO: process.env["STRIPE_PRO_PRICE_ID"]!,
   ELITE: process.env["STRIPE_ELITE_PRICE_ID"]!,
+  VIP: process.env["STRIPE_VIP_PRICE_ID"]!,
 } as const;
 
-export const PRICE_DISPLAY = {
-  PRO: { amount: 19, label: "Pro", period: "month" },
-  ELITE: { amount: 49, label: "Elite", period: "month" },
-} as const;
+// Customer-facing prices live in the pure `lib/pricing` module so they can be
+// imported by statically-rendered pages without pulling the Stripe SDK.
+// Re-exported here for the existing import surface.
+export { PRICE_DISPLAY, formatPrice, formatPricePerPeriod } from "./pricing";
 
 /**
  * Get or create a Stripe customer for a user.

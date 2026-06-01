@@ -34,13 +34,16 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
     return NextResponse.json({ success: false, error: "unauthorized" }, { status: 401 });
   }
 
+  // Model Court is the interactive "operate like the analyst" surface —
+  // gated to Elite (and VIP) via canSeeFullModel. Pro gets the full factor
+  // trail on every pick; Elite gets to interrogate the model directly.
   const entitlements = await getUserEntitlements(session.user.id);
-  if (!entitlements.canSeeFactorBreakdown) {
+  if (!entitlements.canSeeFullModel) {
     return NextResponse.json(
       {
         success: false,
         error: "subscription-required",
-        message: "Model Court answers require Pro or Elite access.",
+        message: "Model Court answers require Elite access.",
       },
       { status: 403 }
     );

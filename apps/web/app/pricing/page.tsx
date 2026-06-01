@@ -4,112 +4,159 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { SubscribeButton } from "@/components/pricing/subscribe-button";
 import { BRAND_NAME } from "@/lib/brand";
+import { PRICE_DISPLAY, formatPrice } from "@/lib/pricing";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
 // ─────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Pricing — Three Tiers. No Upsell Games.",
+  title: "Pricing — Priced on what we show you",
   description:
-    "Free for one signal a day. $19/mo for every signal with the reasoning attached. $49/mo for full alerts on every published signal. Cancel any time from your dashboard.",
+    "Free for one signal a day with the Edge Index public. Pro ($14.99/week) for every signal with the confidence rating and full factor trail. Elite ($21.99/week) to operate like the analyst — early access, the full model, custom alerts, and decision tools. Cancel any time.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: `Pricing — ${BRAND_NAME}`,
     description:
-      "Free, Pro ($19/mo), Elite ($49/mo). Every paid plan ships with a 7-day refund window.",
+      "Four tiers, priced on what we show you — not what we hide. Pro $14.99/week, Elite $21.99/week. Every paid plan ships with a 7-day refund window.",
   },
 };
 
 // ─────────────────────────────────────────────
-// Plan data
+// Plan data — the value ladder. Each tier sells a JOB, not a feature list.
+// Prices come from lib/pricing (single source of truth, lockstep with Stripe).
 // ─────────────────────────────────────────────
 
 const PLANS = [
   {
     id: "FREE" as const,
     name: "Free",
+    job: "See the discipline",
     price: 0,
     period: null,
     description:
-      "One signal a day — sample the discipline before committing.",
+      "Watch the engine work before you pay a cent. One signal a day, and every trust surface stays open.",
     badge: null,
     cta: "Start free",
-    ctaHref: "/auth/signin",
     features: [
       { label: "1 signal per day", included: true },
-      { label: "Game matchup info", included: true },
-      { label: "Pick type (spread / ML / total)", included: true },
-      { label: "Confidence rating on every signal", included: false },
-      { label: "Highest-Edge-Index signals", included: false },
+      { label: "Public Edge Index on every pick", included: true },
+      { label: "The Pass List — every game we declined", included: true },
+      { label: "Public calibration curve + ledger", included: true },
+      { label: "Confidence rating on each pick", included: false },
       { label: "Full factor trail & reasoning", included: false },
-      { label: "Line-movement alerts", included: false },
-      { label: "Email + push notifications", included: false },
-      { label: "All 7 sports", included: false },
+      { label: "Alerts", included: false },
+      { label: "Early access + analyst tools", included: false },
     ],
   },
   {
     id: "PRO" as const,
     name: "Pro",
-    price: 19,
-    period: "month",
+    job: "Math you can read",
+    price: PRICE_DISPLAY.PRO.amount,
+    period: PRICE_DISPLAY.PRO.period,
     description:
-      "Every published signal, with the confidence rating and factor trail attached.",
+      "Every published signal with the reasoning attached — the confidence, the factors, the movement.",
     badge: "Where most start",
     cta: "Subscribe to Pro",
     features: [
       { label: "Every signal, every day", included: true },
-      { label: "Game matchup info", included: true },
-      { label: "Pick type (spread / ML / total)", included: true },
-      { label: "Confidence rating on every signal", included: true },
-      { label: "Highest-Edge-Index signals", included: true },
+      { label: "Calibrated confidence on each pick", included: true },
       { label: "Full factor trail & reasoning", included: true },
-      { label: "Line-movement alerts", included: true },
-      { label: "Email + push notifications", included: false },
+      { label: "Line-movement history", included: true },
+      { label: "Standard alerts — new picks + key line moves", included: true },
       { label: "All 7 sports", included: true },
+      { label: "Early access before the market drifts", included: false },
+      { label: "Model Court + decision tools", included: false },
     ],
   },
   {
     id: "ELITE" as const,
     name: "Elite",
-    price: 49,
-    period: "month",
+    job: "Operate like the analyst",
+    price: PRICE_DISPLAY.ELITE.amount,
+    period: PRICE_DISPLAY.ELITE.period,
     description:
-      "Pro plus real-time alerts on every published signal — built for live slates.",
-    badge: "All signals, all alerts",
+      "Everything in Pro, plus the timing edge and the tooling: see the full model, get there first, and size with discipline.",
+    badge: "Most chosen",
     cta: "Subscribe to Elite",
     features: [
-      { label: "Every signal, every day", included: true },
-      { label: "Game matchup info", included: true },
-      { label: "Pick type (spread / ML / total)", included: true },
-      { label: "Confidence rating on every signal", included: true },
-      { label: "Highest-Edge-Index signals", included: true },
-      { label: "Full factor trail & reasoning", included: true },
-      { label: "Line-movement alerts", included: true },
-      { label: "Email + push notifications", included: true },
-      { label: "All 7 sports", included: true },
+      { label: "Everything in Pro", included: true },
+      { label: "Early access — picks at publish, before the market moves", included: true },
+      { label: "Full model breakdown + Model Court (ask the model)", included: true },
+      { label: "Custom alerts by sport / confidence / EV", included: true },
+      { label: "Calibration scorecard + model-audit log", included: true },
+      { label: "Decision tools — No-Bet check, parlay structure, sizing", included: true },
+      { label: "Line shopping across books", included: true },
+    ],
+  },
+  {
+    id: "VIP" as const,
+    name: "VIP",
+    job: "Founder",
+    price: PRICE_DISPLAY.VIP.amount,
+    period: PRICE_DISPLAY.VIP.period,
+    description:
+      "For the few who want the builder in the room. Everything in Elite, plus access and perks that don't scale.",
+    badge: null,
+    cta: "Become a Founder",
+    features: [
+      { label: "Everything in Elite", included: true },
+      { label: "Methodology deep-dives with the builder", included: true },
+      { label: "Priority support", included: true },
+      { label: "Founder badge", included: true },
+      { label: "Founder pricing — grandfathered for life", included: true },
     ],
   },
 ] as const;
 
 type PlanId = (typeof PLANS)[number]["id"];
 
+// ─────────────────────────────────────────────
+// Differentiation — why Galaxy, not the alternatives
+// ─────────────────────────────────────────────
+
+const DIFFERENTIATORS = [
+  {
+    vs: "vs black-box AI",
+    line: "You see the reasoning — the factors and the movement — not just a number.",
+  },
+  {
+    vs: "vs tout services",
+    line: "We publish the passes and the calibration, not only the winners.",
+  },
+  {
+    vs: "vs raw data tools",
+    line: "You get the pick and the story behind it — built, not just charted.",
+  },
+] as const;
+
+// ─────────────────────────────────────────────
+// Comparison matrix — full ladder, side by side
+// ─────────────────────────────────────────────
+
 const COMPARISON_FEATURES = [
   "Signals per day",
-  "Game matchup info",
-  "Pick type",
+  "Public Edge Index",
+  "Pass List + calibration",
   "Confidence rating",
-  "Highest-Edge-Index signals",
-  "Full factor trail",
-  "Line-movement alerts",
-  "Notifications",
-  "Sports covered",
+  "Factor trail & reasoning",
+  "Line-movement history",
+  "Standard alerts",
+  "Early access",
+  "Full model + Model Court",
+  "Custom alerts",
+  "Calibration scorecard",
+  "Decision tools",
+  "Line shopping",
+  "Founder perks",
 ] as const;
 
 const COMPARISON_CELLS: Record<PlanId, (string | boolean)[]> = {
-  FREE: ["1", true, true, false, false, false, false, false, "Sampler"],
-  PRO: ["Unlimited", true, true, true, true, true, true, false, "All 7"],
-  ELITE: ["Unlimited", true, true, true, true, true, true, true, "All 7"],
+  FREE:  ["1",       true, true, false, false, false, false, false, false, false, false, false, false, false],
+  PRO:   ["Every",   true, true, true,  true,  true,  true,  false, false, false, false, false, false, false],
+  ELITE: ["Every",   true, true, true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  false],
+  VIP:   ["Every",   true, true, true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true ],
 };
 
 // ─────────────────────────────────────────────
@@ -118,24 +165,28 @@ const COMPARISON_CELLS: Record<PlanId, (string | boolean)[]> = {
 
 const FAQ = [
   {
-    q: "Is there a free trial on Pro or Elite?",
-    a: "Every paid plan ships with a 7-day refund window. Cancel any time from your dashboard.",
+    q: "Is there a refund window on the paid plans?",
+    a: "Every paid plan ships with a 7-day refund window. Billing is weekly, and you can cancel any time from your dashboard.",
+  },
+  {
+    q: "What's the real difference between Pro and Elite?",
+    a: "Pro gives you the reasoning — every signal with its confidence rating and full factor trail. Elite gives you the timing edge and the tooling on top: early access before the market moves, the full model with Model Court, custom alerts, the calibration scorecard, and the decision tools (No-Bet check, parlay structure, sizing).",
   },
   {
     q: "How is this different from a tout service?",
-    a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail and holds back a public win-rate until enough canonical settled history exists to support one honestly.",
+    a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge shows every signal's factor trail, publishes the games it passed on, and holds back a public win-rate until enough settled results exist to support one honestly.",
   },
   {
     q: "Why is the Performance page empty right now?",
-    a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to make the published number statistically defensible. Patience over noise — that's the standard.",
+    a: "The Calibration Report stays gated until enough settled signals have accumulated to make the published number statistically defensible. Patience over noise — that's the standard.",
   },
   {
     q: "Which sports are covered?",
     a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. The slate runs on a 30-minute refresh loop during games.",
   },
   {
-    q: "What happens after I sign up?",
-    a: "Free plan gets one signal a day as soon as the readiness gate opens. Pro and Elite unlock immediately — every signal with full reasoning, plus the Edge Index and factor trail behind each one.",
+    q: "Will pricing change?",
+    a: "Free stays free. The launch-cohort weekly prices hold for anyone who subscribes now — if they rise later, you're grandfathered at the rate you joined on. VIP founders keep their rate for life.",
   },
 ] as const;
 
@@ -167,34 +218,51 @@ export default function PricingPage() {
       />
 
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-7xl">
           {/* Header */}
           <div className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent-300">
               Pricing
             </p>
             <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              Three tiers. No upsell games.
+              Priced on what we{" "}
+              <span className="text-accent-300">show you</span>.
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-lg text-gray-400">
-              Start free. Upgrade when the signal earns it. Cancel any time
-              from your dashboard.
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-400">
+              Free shows the rigor. Pro shows the reasoning. Elite gives you the
+              timing edge and the tools. Start free, upgrade when the signal
+              earns it, cancel any time.
             </p>
           </div>
 
+          {/* Differentiation strip */}
+          <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-3">
+            {DIFFERENTIATORS.map((d) => (
+              <div
+                key={d.vs}
+                className="rounded-xl border border-gray-800 bg-gray-900/40 p-4 text-left"
+              >
+                <p className="font-mono text-[11px] uppercase tracking-wider text-accent-300">
+                  {d.vs}
+                </p>
+                <p className="mt-1.5 text-sm text-gray-300">{d.line}</p>
+              </div>
+            ))}
+          </div>
+
           {/* Plan cards */}
-          <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {PLANS.map((plan) => {
-              const isHighlighted = plan.id === "PRO";
               const isElite = plan.id === "ELITE";
+              const isVip = plan.id === "VIP";
               return (
                 <div
                   key={plan.id}
                   className={[
                     "relative flex flex-col rounded-2xl border p-6",
-                    isHighlighted
-                      ? "border-brand-600 bg-brand-950/30 shadow-xl shadow-brand-900/30"
-                      : isElite
+                    isElite
+                      ? "border-brand-600 bg-brand-950/30 shadow-xl shadow-brand-900/30 lg:scale-[1.03]"
+                      : isVip
                         ? "border-ultraviolet/60 bg-ultraviolet/5 shadow-xl shadow-ultraviolet/10"
                         : "border-gray-800 bg-gray-900/60",
                   ].join(" ")}
@@ -204,9 +272,9 @@ export default function PricingPage() {
                       <span
                         className={[
                           "rounded-full px-3 py-0.5 text-xs font-semibold",
-                          plan.id === "PRO"
+                          isElite
                             ? "bg-brand-600 text-white"
-                            : "bg-ultraviolet text-white",
+                            : "bg-gray-700 text-gray-100",
                         ].join(" ")}
                       >
                         {plan.badge}
@@ -215,12 +283,22 @@ export default function PricingPage() {
                   )}
 
                   <div className="mb-4">
-                    <h2 className="text-xl font-bold text-white">
-                      {plan.name}
-                    </h2>
-                    <div className="mt-2 flex items-baseline gap-1">
+                    <h2 className="text-xl font-bold text-white">{plan.name}</h2>
+                    <p
+                      className={[
+                        "mt-0.5 font-mono text-[11px] uppercase tracking-wider",
+                        isElite
+                          ? "text-brand-400"
+                          : isVip
+                            ? "text-ultraviolet-glow"
+                            : "text-accent-300",
+                      ].join(" ")}
+                    >
+                      {plan.job}
+                    </p>
+                    <div className="mt-3 flex items-baseline gap-1">
                       <span className="text-4xl font-extrabold text-white">
-                        ${plan.price}
+                        {formatPrice(plan.price)}
                       </span>
                       {plan.period && (
                         <span className="text-sm text-gray-400">
@@ -228,7 +306,7 @@ export default function PricingPage() {
                         </span>
                       )}
                     </div>
-                    <p className="mt-2 text-sm text-gray-400">
+                    <p className="mt-3 text-sm text-gray-400">
                       {plan.description}
                     </p>
                   </div>
@@ -237,14 +315,10 @@ export default function PricingPage() {
                     {plan.features.map(({ label, included }) => (
                       <li
                         key={label}
-                        className="flex items-center gap-2 text-sm"
+                        className="flex items-start gap-2 text-sm"
                       >
                         {included ? <CheckIcon /> : <DashIcon />}
-                        <span
-                          className={
-                            included ? "text-gray-200" : "text-gray-400"
-                          }
-                        >
+                        <span className={included ? "text-gray-200" : "text-gray-500"}>
                           {label}
                         </span>
                       </li>
@@ -263,7 +337,7 @@ export default function PricingPage() {
                       <SubscribeButton
                         tier={plan.id}
                         label={plan.cta}
-                        variant={plan.id === "PRO" ? "primary" : "ghost"}
+                        variant={plan.id === "ELITE" ? "primary" : "ghost"}
                       />
                     )}
                   </div>
@@ -275,10 +349,10 @@ export default function PricingPage() {
           {/* Feature comparison table */}
           <div className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">
-              Side by side
+              The full ladder, side by side
             </h2>
             <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-800">
-              <table className="w-full text-sm">
+              <table className="w-full min-w-[640px] text-sm">
                 <thead>
                   <tr className="border-b border-gray-800">
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
@@ -289,17 +363,17 @@ export default function PricingPage() {
                         key={plan.id}
                         className={[
                           "px-4 py-3 text-center text-sm font-bold",
-                          plan.id === "PRO"
+                          plan.id === "ELITE"
                             ? "text-brand-400"
-                            : plan.id === "ELITE"
+                            : plan.id === "VIP"
                               ? "text-ultraviolet-glow"
                               : "text-gray-300",
                         ].join(" ")}
                       >
                         {plan.name}
                         {plan.price > 0 && (
-                          <span className="ml-1 text-xs font-normal text-gray-400">
-                            ${plan.price}/mo
+                          <span className="ml-1 block text-xs font-normal text-gray-400">
+                            {formatPrice(plan.price)}/{plan.period}
                           </span>
                         )}
                       </th>
@@ -316,14 +390,11 @@ export default function PricingPage() {
                       ].join(" ")}
                     >
                       <td className="px-4 py-3 text-gray-400">{feature}</td>
-                      {(["FREE", "PRO", "ELITE"] as PlanId[]).map((planId) => {
+                      {(["FREE", "PRO", "ELITE", "VIP"] as PlanId[]).map((planId) => {
                         const cell: string | boolean =
                           COMPARISON_CELLS[planId][i] ?? false;
                         return (
-                          <td
-                            key={planId}
-                            className="px-4 py-3 text-center"
-                          >
+                          <td key={planId} className="px-4 py-3 text-center">
                             <ComparisonCell value={cell} />
                           </td>
                         );
@@ -365,7 +436,7 @@ export default function PricingPage() {
 
           {/* Refund note */}
           <p className="mt-12 text-center text-xs text-gray-400">
-            Every paid plan ships with a 7-day refund window. Billed monthly.
+            Every paid plan ships with a 7-day refund window. Billed weekly.
             Cancel any time from your dashboard.
           </p>
         </div>
@@ -383,18 +454,14 @@ export default function PricingPage() {
 function CheckIcon() {
   return (
     <svg
-      className="h-4 w-4 shrink-0 text-green-400"
+      className="mt-0.5 h-4 w-4 shrink-0 text-green-400"
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={2.5}
       stroke="currentColor"
       aria-hidden="true"
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="m4.5 12.75 6 6 9-13.5"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
     </svg>
   );
 }
@@ -402,7 +469,7 @@ function CheckIcon() {
 function DashIcon() {
   return (
     <svg
-      className="h-4 w-4 shrink-0 text-gray-700"
+      className="mt-0.5 h-4 w-4 shrink-0 text-gray-700"
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={2}
@@ -426,11 +493,7 @@ function ComparisonCell({ value }: { value: string | boolean }) {
         role="img"
         aria-label="Included"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="m4.5 12.75 6 6 9-13.5"
-        />
+        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
       </svg>
     ) : (
       <svg

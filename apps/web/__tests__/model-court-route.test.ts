@@ -9,10 +9,10 @@ const route = fs.readFileSync(
 );
 
 describe("Model Court API route", () => {
-  it("is server-side gated by auth and Pro-or-Elite entitlement", () => {
+  it("is server-side gated by auth and Elite (full-model) entitlement", () => {
     expect(route).toMatch(/from\s+["']@\/lib\/auth["']/);
     expect(route).toMatch(/getUserEntitlements/);
-    expect(route).toMatch(/canSeeFactorBreakdown/);
+    expect(route).toMatch(/canSeeFullModel/);
     expect(route).toContain("subscription-required");
   });
 

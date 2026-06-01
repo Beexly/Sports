@@ -11,33 +11,50 @@
  * Output is the price IDs to paste back into Vercel:
  *   STRIPE_PRO_PRICE_ID=price_...
  *   STRIPE_ELITE_PRICE_ID=price_...
+ *   STRIPE_VIP_PRICE_ID=price_...
  *
  * Why a lookup_key matters: it lets the script (and humans in the Stripe
  * dashboard) recognize a previously-created price by stable name instead of
  * by Stripe's auto-generated price_id. Without it, re-running this script
  * would silently create duplicate prices.
  *
+ * Each price carries metadata.tier so the webhook can map a Stripe price
+ * back to a subscription tier even before the env vars are wired.
+ *
  * Pure Node — no external dependencies. Uses fetch + the Stripe REST API.
  */
 
 const STRIPE_API = "https://api.stripe.com/v1";
 
+// The value ladder. Weekly billing. Amounts are in cents and MUST match
+// PRICE_DISPLAY in apps/web/lib/pricing.ts.
 const PLANS = [
   {
     productName: "Galaxy Sports Edge Pro",
     productLookup: "gse-pro",
-    priceLookup: "gse-pro-monthly",
-    unitAmount: 1900, // $19.00
-    interval: "month",
+    priceLookup: "pro_weekly",
+    unitAmount: 1499, // $14.99
+    interval: "week",
+    tier: "PRO",
     envVar: "STRIPE_PRO_PRICE_ID",
   },
   {
     productName: "Galaxy Sports Edge Elite",
     productLookup: "gse-elite",
-    priceLookup: "gse-elite-monthly",
-    unitAmount: 4900, // $49.00
-    interval: "month",
+    priceLookup: "elite_weekly",
+    unitAmount: 2199, // $21.99
+    interval: "week",
+    tier: "ELITE",
     envVar: "STRIPE_ELITE_PRICE_ID",
+  },
+  {
+    productName: "Galaxy Sports Edge VIP",
+    productLookup: "gse-vip",
+    priceLookup: "vip_weekly",
+    unitAmount: 4999, // $49.99
+    interval: "week",
+    tier: "VIP",
+    envVar: "STRIPE_VIP_PRICE_ID",
   },
 ];
 
@@ -76,7 +93,7 @@ async function stripeRequest(key, method, path, body = null) {
   return json;
 }
 
-async function findOrCreateProduct(key, { productName, productLookup }) {
+async function findOrCreateProduct(key, { productName, productLookup, tier }) {
   // Search by metadata.lookup since Stripe products don't have native lookup_key.
   const search = await stripeRequest(
     key,
@@ -89,10 +106,11 @@ async function findOrCreateProduct(key, { productName, productLookup }) {
   return stripeRequest(key, "POST", "/products", {
     name: productName,
     "metadata[lookup]": productLookup,
+    "metadata[tier]": tier,
   });
 }
 
-async function findOrCreatePrice(key, product, { priceLookup, unitAmount, interval }) {
+async function findOrCreatePrice(key, product, { priceLookup, unitAmount, interval, tier }) {
   const search = await stripeRequest(
     key,
     "GET",
@@ -107,6 +125,7 @@ async function findOrCreatePrice(key, product, { priceLookup, unitAmount, interv
     currency: "usd",
     "recurring[interval]": interval,
     lookup_key: priceLookup,
+    "metadata[tier]": tier,
   });
 }
 
@@ -119,7 +138,8 @@ async function main() {
   const envOut = [];
 
   for (const plan of PLANS) {
-    process.stdout.write(`  ${plan.productName.padEnd(20, " ")}`);
+    const amount = `$${(plan.unitAmount / 100).toFixed(2)}/${plan.interval}`;
+    process.stdout.write(`  ${plan.productName.padEnd(26, " ")}${amount.padEnd(12, " ")}`);
     try {
       const product = await findOrCreateProduct(key, plan);
       const price = await findOrCreatePrice(key, product, plan);

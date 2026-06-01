@@ -4,7 +4,8 @@ import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { auth } from "@/lib/auth";
-import { getUserEntitlements } from "@/lib/entitlements";
+import { getUserEntitlements, getEntitlements } from "@/lib/entitlements";
+import { formatPricePerPeriod } from "@/lib/pricing";
 import type { PublicPick, DailySlate } from "@sports/types";
 import Link from "next/link";
 import { headers } from "next/headers";
@@ -114,16 +115,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
   const session = await auth();
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)
-    : {
-        tier: "FREE" as const,
-        canSeePremiumPicks: false,
-        canSeeConfidence: false,
-        canSeeLineMovement: false,
-        canSeeFactorBreakdown: false,
-        canSeeEdgeScore: true,
-        canGetAlerts: false,
-        dailyPickLimit: 1 as number | null,
-      };
+    : getEntitlements("FREE");
 
   const isPro = entitlements.tier === "PRO" || entitlements.tier === "ELITE";
   const isFreeTier = entitlements.tier === "FREE";
@@ -370,7 +362,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 href="/pricing"
                 className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
               >
-                Upgrade to Pro / $19/mo
+                Upgrade to Pro / {formatPricePerPeriod("PRO")}
               </Link>
             </div>
           )}
@@ -381,7 +373,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <p className="text-xs text-purple-400">
                 Want early access, daily alerts, and advanced analytics?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
-                  Upgrade to Elite / $49/mo
+                  Upgrade to Elite / {formatPricePerPeriod("ELITE")}
                 </Link>
               </p>
             </div>

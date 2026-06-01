@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME } from "@/lib/brand";
+import { formatPricePerPeriod } from "@/lib/pricing";
 
 /**
  * /faq — Standalone FAQ landing page with FAQPage JSON-LD.
@@ -84,19 +85,23 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What does Pro get?",
-        a: "$19/month. Every signal, every day, with the calibrated confidence rating and full factor trail on each one. Plus line-movement alerts.",
+        a: `${formatPricePerPeriod("PRO")} — "math you can read." Every signal, every day, with the calibrated confidence rating and full factor trail on each one, plus standard alerts on new picks and key line moves.`,
       },
       {
         q: "What does Elite get?",
-        a: "$49/month. Everything in Pro plus email and push notifications for high-Edge-Index signals as they ship.",
+        a: `${formatPricePerPeriod("ELITE")} — "operate like the analyst." Everything in Pro, plus the timing edge and the tooling: early access before the market moves, the full model breakdown with Model Court, custom alerts by sport / confidence / EV, the calibration scorecard, and the decision tools (No-Bet check, parlay structure, sizing).`,
+      },
+      {
+        q: "What is VIP?",
+        a: `${formatPricePerPeriod("VIP")} — the Founder tier. Everything in Elite plus methodology deep-dives with the builder, priority support, and a founder badge. It's mostly for the few who want the builder in the room — and it anchors the ladder so Elite reads as the sensible choice.`,
       },
       {
         q: "Is there a refund window?",
-        a: "Every paid plan ships with a 7-day refund window. Cancel any time from your dashboard — no questions.",
+        a: "Every paid plan ships with a 7-day refund window. Billing is weekly. Cancel any time from your dashboard — no questions.",
       },
       {
         q: "Will pricing change?",
-        a: "Free stays free. Pro is $19, Elite is $49 — those prices hold for the launch cohort. If they go up later, anyone subscribed before the change is grandfathered at the original price.",
+        a: `Free stays free. The launch-cohort weekly prices — Pro ${formatPricePerPeriod("PRO")}, Elite ${formatPricePerPeriod("ELITE")} — hold for anyone who subscribes now. If they rise later, you're grandfathered at the rate you joined on. VIP founders keep their rate for life.`,
       },
     ],
   },

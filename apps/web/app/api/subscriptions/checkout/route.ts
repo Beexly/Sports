@@ -8,7 +8,7 @@ import {
 } from "@/lib/stripe";
 
 const CheckoutSchema = z.object({
-  tier: z.enum(["PRO", "ELITE"]),
+  tier: z.enum(["PRO", "ELITE", "VIP"]),
 });
 
 export async function POST(req: NextRequest): Promise<NextResponse> {

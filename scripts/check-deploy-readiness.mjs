@@ -104,6 +104,7 @@ const REQUIRED = [
   "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
   "STRIPE_PRO_PRICE_ID",
   "STRIPE_ELITE_PRICE_ID",
+  "STRIPE_VIP_PRICE_ID",
   "NEXT_PUBLIC_APP_URL",
 ];
 
@@ -188,8 +189,8 @@ async function checkStripe() {
     bad("Stripe secret key", err.message);
   }
 
-  // Confirm the two price IDs resolve.
-  for (const which of ["STRIPE_PRO_PRICE_ID", "STRIPE_ELITE_PRICE_ID"]) {
+  // Confirm the three price IDs resolve.
+  for (const which of ["STRIPE_PRO_PRICE_ID", "STRIPE_ELITE_PRICE_ID", "STRIPE_VIP_PRICE_ID"]) {
     const id = process.env[which];
     if (!id) continue;
     try {

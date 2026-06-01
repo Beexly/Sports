@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { getUserEntitlements } from "@/lib/entitlements";
+import { getUserEntitlements, getEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown } from "@sports/types";
@@ -19,16 +19,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)
-    : {
-        tier: "FREE" as const,
-        canSeePremiumPicks: false,
-        canSeeConfidence: false,
-        canSeeLineMovement: false,
-        canSeeFactorBreakdown: false,
-        canSeeEdgeScore: true,
-        canGetAlerts: false,
-        dailyPickLimit: 1,
-      };
+    : getEntitlements("FREE");
 
   const { searchParams } = new URL(req.url);
   const sportFilter = searchParams.get("sport");

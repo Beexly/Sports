@@ -2,7 +2,7 @@
 // Shared Platform Types
 // ============================================================
 
-export type SubscriptionTier = "FREE" | "PRO" | "ELITE";
+export type SubscriptionTier = "FREE" | "PRO" | "ELITE" | "VIP";
 
 export type PickType = "SPREAD" | "MONEYLINE" | "TOTAL";
 export type PickTier = "FREE" | "PREMIUM";
@@ -72,28 +72,86 @@ export interface FactorEvidenceMetadata {
 // Entitlements
 // ============================================================
 
+/**
+ * Entitlements — the value ladder, expressed as what each tier can SEE.
+ *
+ * Galaxy's differentiation is transparency, so the ladder gates on the
+ * depth of reasoning a tier unlocks, not on hiding the product:
+ *
+ *   FREE   — "See the discipline"     · 1 pick/day + the public Edge Index.
+ *   PRO    — "Math you can read"       · every pick + confidence + line
+ *                                        movement + the factor trail +
+ *                                        standard alerts. (The reasoning.)
+ *   ELITE  — "Operate like the analyst"· all Pro + early access + the full
+ *                                        model breakdown + custom alerts +
+ *                                        calibration scorecard + decision
+ *                                        tools + line shopping. (The timing
+ *                                        edge + the tooling.)
+ *   VIP    — "Founder"                 · all Elite features + human perks
+ *                                        (methodology deep-dives, priority,
+ *                                        founder badge). Functionally equal
+ *                                        to Elite on gated features; the
+ *                                        delta is service + a price anchor.
+ *
+ * NOTE: trust surfaces — the Pass List, the public calibration curve, the
+ * public ledger, and the methodology — stay open to ALL tiers (including
+ * logged-out visitors). They are deliberately NOT gated here: free users
+ * must be able to watch the engine pass and grade itself. The
+ * `canSeeCalibrationScorecard` lever below gates the Elite *deep* scorecard
+ * + model-audit log, not the public calibration view.
+ */
 export interface Entitlements {
   tier: SubscriptionTier;
-  canSeePremiumPicks: boolean;
-  canSeeConfidence: boolean;
-  canSeeLineMovement: boolean;
-  canSeeFactorBreakdown: boolean;  // PRO+ only
-  canSeeEdgeScore: boolean;         // public Edge Index
-  canGetAlerts: boolean;
-  dailyPickLimit: number | null;
+
+  // ── Pick access ──────────────────────────────────────────────
+  canSeePremiumPicks: boolean;     // PRO+: every published pick (not just 1/day)
+  dailyPickLimit: number | null;   // FREE: 1; paid: null (unlimited)
+
+  // ── The reasoning (PRO+) ─────────────────────────────────────
+  canSeeConfidence: boolean;       // PRO+: calibrated confidence on each pick
+  canSeeLineMovement: boolean;     // PRO+: line-movement history
+  canSeeFactorBreakdown: boolean;  // PRO+: the factor trail on each pick
+
+  // ── Always public — trust transparency ───────────────────────
+  canSeeEdgeScore: boolean;        // ALL: the public Edge Index
+
+  // ── Alerts ───────────────────────────────────────────────────
+  canGetAlerts: boolean;           // PRO+: standard alerts (new picks + key line moves)
+  canGetCustomAlerts: boolean;     // ELITE+: custom alerts by sport / confidence / EV
+
+  // ── The analyst layer (ELITE+) ───────────────────────────────
+  canSeeEarlyAccess: boolean;          // ELITE+: picks at publish, before the market drifts
+  canSeeFullModel: boolean;            // ELITE+: full model breakdown + deep Decision Room / Model Court
+  canSeeCalibrationScorecard: boolean; // ELITE+: model calibration scorecard + model-audit log
+  canUseDecisionTools: boolean;        // ELITE+: No-Bet check, parlay structure, stake sizing
+  canSeeLineShop: boolean;             // ELITE+: best-price line shopping across books
 }
 
 export function getEntitlements(tier: SubscriptionTier): Entitlements {
-  const isPro = tier === "PRO" || tier === "ELITE";
+  const isPaid = tier === "PRO" || tier === "ELITE" || tier === "VIP";
+  // Elite tier and above unlock the analyst layer. VIP inherits every Elite
+  // feature flag (its premium is perks + anchor, not extra gated features).
+  const isAnalyst = tier === "ELITE" || tier === "VIP";
   return {
     tier,
-    canSeePremiumPicks: isPro,
-    canSeeConfidence: isPro,
-    canSeeLineMovement: isPro,
-    canSeeFactorBreakdown: isPro,
-    canSeeEdgeScore: true,
-    canGetAlerts: tier === "ELITE",
+
+    canSeePremiumPicks: isPaid,
     dailyPickLimit: tier === "FREE" ? 1 : null,
+
+    canSeeConfidence: isPaid,
+    canSeeLineMovement: isPaid,
+    canSeeFactorBreakdown: isPaid,
+
+    canSeeEdgeScore: true,
+
+    canGetAlerts: isPaid,
+    canGetCustomAlerts: isAnalyst,
+
+    canSeeEarlyAccess: isAnalyst,
+    canSeeFullModel: isAnalyst,
+    canSeeCalibrationScorecard: isAnalyst,
+    canUseDecisionTools: isAnalyst,
+    canSeeLineShop: isAnalyst,
   };
 }
 
