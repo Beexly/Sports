@@ -8,6 +8,7 @@ import type {
 } from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
 import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
+import Link from "next/link";
 
 // ─────────────────────────────────────────────
 // Main PickCard
@@ -157,11 +158,14 @@ export function PickCard({
         <FactorBreakdownPanel breakdown={pick.factorBreakdown} />
       )}
       {!canSeeFactorBreakdown && (
-        <div className="rounded-lg border border-dashed border-gray-700/50 px-4 py-3">
+        <Link
+          href="/pricing"
+          className="block rounded-lg border border-dashed border-gray-700/50 px-4 py-3 transition-colors hover:border-plasma/50"
+        >
           <p className="text-xs text-ion-1">
-            Factor breakdown available on Pro &amp; Elite
+            Factor breakdown unlocks on Pro &amp; Elite →
           </p>
-        </div>
+        </Link>
       )}
 
       {/* Data quality + freshness footer */}
@@ -428,9 +432,16 @@ function ResultBadge({ result }: { result: PickResult }) {
   );
 }
 
+// Locked confidence/edge is the highest-intent, most-rendered conversion atom for
+// FREE users — so it links to /pricing instead of dead-ending. Purely navigational
+// (no entitlement logic; the server gate in /api/picks stays authoritative).
 function LockedValue({ label }: { label: string }) {
   return (
-    <span className="flex items-center gap-1 text-xs text-ion-1">
+    <Link
+      href="/pricing"
+      aria-label={`${label} unlocks on Pro — see pricing`}
+      className="flex items-center gap-1 text-xs text-ion-1 transition-colors hover:text-plasma"
+    >
       <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
         <path
           fillRule="evenodd"
@@ -439,7 +450,7 @@ function LockedValue({ label }: { label: string }) {
         />
       </svg>
       {label}
-    </span>
+    </Link>
   );
 }
 
