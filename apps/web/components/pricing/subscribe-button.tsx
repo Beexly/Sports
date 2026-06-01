@@ -15,11 +15,13 @@ import { useRouter } from "next/navigation";
  */
 
 type Tier = "PRO" | "ELITE";
+type Interval = "month" | "year";
 
 type Props = {
   tier: Tier;
   label: string;
   variant: "primary" | "ghost";
+  interval?: Interval;
 };
 
 const PRIMARY_CLASSES =
@@ -27,7 +29,7 @@ const PRIMARY_CLASSES =
 const GHOST_CLASSES =
   "w-full rounded-xl border border-ultraviolet/60 bg-ultraviolet/10 py-2.5 text-sm font-semibold text-ultraviolet-glow transition-colors hover:bg-ultraviolet/25 disabled:cursor-not-allowed disabled:opacity-60";
 
-export function SubscribeButton({ tier, label, variant }: Props) {
+export function SubscribeButton({ tier, label, variant, interval = "month" }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +41,7 @@ export function SubscribeButton({ tier, label, variant }: Props) {
       const res = await fetch("/api/subscriptions/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier }),
+        body: JSON.stringify({ tier, interval }),
       });
 
       if (res.status === 401) {

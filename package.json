@@ -13,6 +13,8 @@
     "start": "npm run start --workspace=apps/web",
     "test": "npm run test --workspaces --if-present",
     "test:watch": "npm run test:watch --workspace=apps/web",
+    "test:integration:db": "node scripts/integration/db-smoke.mjs",
+    "db:disposable": "bash scripts/dev/disposable-postgres.sh",
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "db:generate": "npm run db:generate --workspace=packages/db",

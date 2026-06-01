@@ -4,6 +4,7 @@ export {
   americanToImpliedProbability,
   removeVig,
   clamp,
+  toEdgeIndex,
 } from "./scoring.js";
 export {
   computeGameContext,
@@ -22,6 +23,21 @@ export {
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export { calculatePickResult } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// Closing-Line Value — sharp-grade credibility metric (pure; not yet surfaced publicly)
+export {
+  computeSpreadClv,
+  computeTotalClv,
+  computeMoneylineClv,
+  summarizeClv,
+} from "./clv.js";
+export type {
+  ClvVerdict,
+  SpreadSide,
+  TotalSide,
+  PointsClvResult,
+  MoneylineClvResult,
+  ClvSummary,
+} from "./clv.js";
 export * from "./constants.js";
 export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
@@ -66,3 +82,16 @@ export {
   poissonConsistencyScore,
   assertTeamRatesAvailable,
 } from "./poisson.js";
+// R&D — probability calibration toolkit (isotonic/PAVA, Brier decomposition, ECE).
+// NOT wired into live scoring; built for the future human-gated MODEL_VERSION
+// calibration that turns the confidence score into a calibrated win probability.
+export {
+  isotonicCalibration,
+  brierDecomposition,
+  expectedCalibrationError,
+} from "./probability-calibration.js";
+export type {
+  CalibrationSample,
+  IsotonicModel,
+  BrierDecomposition,
+} from "./probability-calibration.js";

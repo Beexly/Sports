@@ -68,7 +68,8 @@ export default function TermsPage() {
 
             <Heading>5. Subscriptions and billing</Heading>
             <Para>
-              Paid plans renew weekly until canceled. You can cancel from your
+              Paid plans renew automatically on the interval you select
+              (monthly or annual) until canceled. You can cancel from your
               account dashboard at any time. Cancellation takes effect at the
               end of the current billing period; we do not pro-rate refunds for
               partial periods. We may offer occasional refunds at our

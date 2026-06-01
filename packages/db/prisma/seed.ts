@@ -1677,8 +1677,3 @@ main()
   .finally(async () => {
     await db.$disconnect();
   });
-
-// TINY append test
-
-// PYTHON TEST APPEND
-console.log("pytest");

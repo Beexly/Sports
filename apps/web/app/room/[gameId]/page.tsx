@@ -132,7 +132,7 @@ export default async function GameRoomPage({
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <NextStep href="/ledger" label="Public Ledger" hint="Every settled pick — win or loss, fully auditable." />
             <NextStep href="/performance" label="Calibration Report" hint="How the model has scored over time." />
-            <NextStep href="/methodology" label="Methodology" hint="The factors behind this room — math you can read." />
+            <NextStep href="/methodology" label="Methodology" hint="The exact factors behind this call — and how it was built." />
             <NextStep href="/responsible-play" label="Set Your Limits" hint="Risk you can understand, before emotion enters." />
           </div>
         </Panel>

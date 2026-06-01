@@ -182,8 +182,19 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
 }
 
 function getTierFromPriceId(priceId: string | undefined): "FREE" | "PRO" | "ELITE" {
-  if (priceId === process.env["STRIPE_ELITE_PRICE_ID"]) return "ELITE";
-  if (priceId === process.env["STRIPE_PRO_PRICE_ID"]) return "PRO";
+  if (!priceId) return "FREE";
+  const eliteIds = [
+    process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"],
+    process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"],
+    process.env["STRIPE_ELITE_PRICE_ID"], // legacy single-interval
+  ];
+  const proIds = [
+    process.env["STRIPE_PRO_MONTHLY_PRICE_ID"],
+    process.env["STRIPE_PRO_ANNUAL_PRICE_ID"],
+    process.env["STRIPE_PRO_PRICE_ID"], // legacy single-interval
+  ];
+  if (eliteIds.includes(priceId)) return "ELITE";
+  if (proIds.includes(priceId)) return "PRO";
   return "FREE";
 }
 

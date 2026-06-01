@@ -28,7 +28,7 @@ interface SamplePickSeed {
   readonly selection: string;
   readonly line: number;
   readonly confidence: number;
-  readonly edgeScore: number;
+  readonly edgeScore: number; // 0–100, same scale as ScoredPick.edgeScore (engine contract)
   readonly dataQualityScore: number;
   readonly tier: "FREE" | "PRO" | "ELITE";
   readonly pickGrade: "ELITE_PLAY" | "STRONG_PLAY" | "SOLID_PLAY" | "LEAN";
@@ -47,7 +47,7 @@ const SEED_DATA: ReadonlyArray<SamplePickSeed> = [
     selection: "Boston Celtics -4.5",
     line: -4.5,
     confidence: 71,
-    edgeScore: 3.8,
+    edgeScore: 78,
     dataQualityScore: 88,
     tier: "FREE",
     pickGrade: "STRONG_PLAY",
@@ -65,7 +65,7 @@ const SEED_DATA: ReadonlyArray<SamplePickSeed> = [
     selection: "Buffalo Bills ML",
     line: 165,
     confidence: 63,
-    edgeScore: 2.1,
+    edgeScore: 68,
     dataQualityScore: 91,
     tier: "FREE",
     pickGrade: "STRONG_PLAY",
@@ -83,7 +83,7 @@ const SEED_DATA: ReadonlyArray<SamplePickSeed> = [
     selection: "Under 8.5 runs",
     line: 8.5,
     confidence: 67,
-    edgeScore: 2.7,
+    edgeScore: 72,
     dataQualityScore: 84,
     tier: "PRO",
     pickGrade: "STRONG_PLAY",
@@ -101,7 +101,7 @@ const SEED_DATA: ReadonlyArray<SamplePickSeed> = [
     selection: "Tampa Bay Lightning +1.5",
     line: 1.5,
     confidence: 58,
-    edgeScore: 1.4,
+    edgeScore: 54,
     dataQualityScore: 79,
     tier: "FREE",
     pickGrade: "SOLID_PLAY",
@@ -119,7 +119,7 @@ const SEED_DATA: ReadonlyArray<SamplePickSeed> = [
     selection: "Over 232.5 points",
     line: 232.5,
     confidence: 74,
-    edgeScore: 4.2,
+    edgeScore: 88,
     dataQualityScore: 90,
     tier: "PRO",
     pickGrade: "ELITE_PLAY",
@@ -137,7 +137,7 @@ const SEED_DATA: ReadonlyArray<SamplePickSeed> = [
     selection: "Miami Dolphins -3.5",
     line: -3.5,
     confidence: 62,
-    edgeScore: 2.0,
+    edgeScore: 66,
     dataQualityScore: 86,
     tier: "FREE",
     pickGrade: "STRONG_PLAY",
@@ -155,7 +155,7 @@ const SEED_DATA: ReadonlyArray<SamplePickSeed> = [
     selection: "Texas Rangers ML",
     line: 135,
     confidence: 59,
-    edgeScore: 1.7,
+    edgeScore: 58,
     dataQualityScore: 82,
     tier: "PRO",
     pickGrade: "SOLID_PLAY",
@@ -173,7 +173,7 @@ const SEED_DATA: ReadonlyArray<SamplePickSeed> = [
     selection: "Oklahoma City Thunder +2.5",
     line: 2.5,
     confidence: 69,
-    edgeScore: 3.1,
+    edgeScore: 82,
     dataQualityScore: 87,
     tier: "ELITE",
     pickGrade: "ELITE_PLAY",
@@ -191,7 +191,7 @@ const SEED_DATA: ReadonlyArray<SamplePickSeed> = [
     selection: "Under 7.5 runs",
     line: 7.5,
     confidence: 56,
-    edgeScore: 1.1,
+    edgeScore: 51,
     dataQualityScore: 81,
     tier: "FREE",
     pickGrade: "SOLID_PLAY",
@@ -209,7 +209,7 @@ const SEED_DATA: ReadonlyArray<SamplePickSeed> = [
     selection: "Over 6.5 goals",
     line: 6.5,
     confidence: 64,
-    edgeScore: 2.4,
+    edgeScore: 70,
     dataQualityScore: 83,
     tier: "PRO",
     pickGrade: "STRONG_PLAY",

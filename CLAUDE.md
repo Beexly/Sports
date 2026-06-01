@@ -61,11 +61,19 @@ docker/             — Docker configs
 
 ## Subscription Tiers
 
-| Tier | Access |
-|---|---|
-| Free | 1 pick/day, no confidence scores |
-| Pro ($19/mo) | All picks, confidence scores, line movement |
-| Elite ($49/mo) | All Pro + early access, analytics, alerts |
+Pricing follows a **named, proof-gated ladder** (single source of truth:
+`apps/web/lib/pricing/pricing-phases.ts`). Founding rates are live; each step-up is
+triggered by a verified milestone and ships added value. Founding members are
+grandfathered for life. See `COMPETITIVE_PRICING_AND_PACKAGING.md`.
+
+| Tier | Founding rate (live) | Access |
+|---|---|---|
+| Free | $0 | 1 pick/day, no confidence scores; public calibration/track record |
+| Pro | $14.99/mo · $99/yr | All picks, confidence scores, factor trail, line movement, 7 sports |
+| Elite | $24.99/mo · $179/yr | All Pro + real-time email & push alerts |
+
+Ladder (named ahead of time): FOUNDING → PROVEN (≥100 settled + published calibration)
+→ ESTABLISHED (≥500 settled + verified CLV ≥52.4%) → AUTHORITY (multi-season ROI).
 
 ## Environment Variables Required
 

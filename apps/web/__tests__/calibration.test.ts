@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { computeCalibration, computeCalibrationProposals } from "@/lib/calibration/compute";
+import {
+  computeCalibration,
+  computeCalibrationProposals,
+  computeDiscrimination,
+} from "@/lib/calibration/compute";
 
 describe("computeCalibration", () => {
   it("returns a collecting report when no settled picks are provided", () => {
@@ -22,6 +26,85 @@ describe("computeCalibration", () => {
     expect(report.brierScore).toBeTypeOf("number");
     expect(bucket?.sampleSize).toBe(3);
     expect(bucket?.observedWinRate).toBe(0.5);
+  });
+
+  it("surfaces an insufficient-data discrimination signal below the sample floor", () => {
+    const report = computeCalibration([{ id: "a", confidence: 72, result: "WIN" }]);
+    expect(report.discrimination.trend).toBe("insufficient-data");
+  });
+});
+
+describe("computeDiscrimination", () => {
+  const bucket = (
+    label: string,
+    confidenceMin: number,
+    confidenceMax: number,
+    sampleSize: number,
+    observedWinRate: number
+  ) => ({
+    label,
+    confidenceMin,
+    confidenceMax,
+    sampleSize,
+    observedWinRate,
+    expectedWinRate: (confidenceMin + confidenceMax) / 200,
+    delta: 0,
+    brierScore: 0,
+  });
+
+  it("reports insufficient-data with fewer than two populated buckets", () => {
+    expect(computeDiscrimination([]).trend).toBe("insufficient-data");
+    expect(computeDiscrimination([bucket("70-79", 70, 79, 40, 0.6)]).trend).toBe(
+      "insufficient-data"
+    );
+    // A bucket below the sample floor does not count toward the trend.
+    expect(
+      computeDiscrimination([
+        bucket("50-59", 50, 59, 25, 0.5),
+        bucket("80-89", 80, 89, 10, 0.8),
+      ]).trend
+    ).toBe("insufficient-data");
+  });
+
+  it("flags improving discrimination when win rate rises with confidence", () => {
+    const d = computeDiscrimination([
+      bucket("50-59", 50, 59, 25, 0.5),
+      bucket("70-79", 70, 79, 30, 0.58),
+      bucket("80-89", 80, 89, 22, 0.66),
+    ]);
+    expect(d.trend).toBe("improving");
+    expect(d.monotonic).toBe(true);
+    expect(d.spread).toBeCloseTo(0.16, 5);
+    expect(d.populatedBucketCount).toBe(3);
+    expect(d.lowestBucketLabel).toBe("50-59");
+    expect(d.highestBucketLabel).toBe("80-89");
+  });
+
+  it("flags inverted discrimination when high confidence wins less", () => {
+    const d = computeDiscrimination([
+      bucket("50-59", 50, 59, 40, 0.62),
+      bucket("80-89", 80, 89, 40, 0.47),
+    ]);
+    expect(d.trend).toBe("inverted");
+    expect(d.spread).toBeLessThan(0);
+  });
+
+  it("flags flat discrimination when confidence does not separate outcomes", () => {
+    const d = computeDiscrimination([
+      bucket("50-59", 50, 59, 40, 0.55),
+      bucket("80-89", 80, 89, 40, 0.56),
+    ]);
+    expect(d.trend).toBe("flat");
+  });
+
+  it("detects a local dip (non-monotonic) while still improving overall", () => {
+    const d = computeDiscrimination([
+      bucket("50-59", 50, 59, 25, 0.5),
+      bucket("60-69", 60, 69, 25, 0.45), // dip below the prior bucket
+      bucket("80-89", 80, 89, 25, 0.62),
+    ]);
+    expect(d.trend).toBe("improving");
+    expect(d.monotonic).toBe(false);
   });
 });
 

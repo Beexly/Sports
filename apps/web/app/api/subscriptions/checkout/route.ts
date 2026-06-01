@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import {
-  STRIPE_PRICE_IDS,
+  getStripePriceId,
   getOrCreateStripeCustomer,
   createCheckoutSession,
 } from "@/lib/stripe";
 
 const CheckoutSchema = z.object({
   tier: z.enum(["PRO", "ELITE"]),
+  interval: z.enum(["month", "year"]).default("month"),
 });
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -23,8 +24,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Invalid tier" }, { status: 400 });
   }
 
-  const { tier } = parsed.data;
-  const priceId = STRIPE_PRICE_IDS[tier];
+  const { tier, interval } = parsed.data;
+  const priceId = getStripePriceId(tier, interval);
+  if (!priceId) {
+    return NextResponse.json(
+      { error: `Pricing for ${tier} (${interval}) is not configured yet.` },
+      { status: 503 }
+    );
+  }
 
   try {
     const customerId = await getOrCreateStripeCustomer(

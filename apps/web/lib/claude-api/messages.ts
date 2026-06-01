@@ -1,3 +1,5 @@
+import { pickModelForSurface, type ClaudeSurface } from "./model-router";
+
 interface AnthropicTextBlock {
   readonly type: string;
   readonly text?: string;
@@ -16,9 +18,18 @@ export interface ClaudeMessagesRequest {
   readonly system: string;
   readonly user: string;
   readonly maxTokens: number;
+  /** Explicit model id. If omitted, resolved from `surface` (else Sonnet). */
   readonly model?: string;
+  /** Logical surface — routes to the right model tier via pickModelForSurface(). */
+  readonly surface?: ClaudeSurface;
   readonly temperature?: number;
   readonly fetchImpl?: typeof fetch;
+  /**
+   * Opt-in prompt caching. When `{ system: true }`, the system prompt is sent as
+   * an ephemeral cache_control block so repeated calls reuse it at ~0.1× input
+   * cost. Off by default — the request body is then byte-identical to before.
+   */
+  readonly cache?: { readonly system?: boolean };
 }
 
 export interface ClaudeMessagesResult {
@@ -45,8 +56,17 @@ export class ClaudeMessagesError extends Error {
 
 export async function callClaudeMessages(request: ClaudeMessagesRequest): Promise<ClaudeMessagesResult> {
   const fetchImpl = request.fetchImpl ?? fetch;
-  const modelName = request.model ?? "claude-sonnet-4-6";
+  const modelName =
+    request.model ??
+    (request.surface ? pickModelForSurface(request.surface) : "claude-sonnet-4-6");
   const startedAt = Date.now();
+
+  // Optional prompt caching: send the (often long, static) system prompt as an
+  // ephemeral cache_control block so repeated calls reuse it at ~0.1× input cost.
+  // Off by default → body stays byte-identical to the prior behavior.
+  const systemField = request.cache?.system
+    ? [{ type: "text" as const, text: request.system, cache_control: { type: "ephemeral" as const } }]
+    : request.system;
 
   const response = await fetchImpl("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -59,7 +79,7 @@ export async function callClaudeMessages(request: ClaudeMessagesRequest): Promis
       model: modelName,
       max_tokens: request.maxTokens,
       temperature: request.temperature,
-      system: request.system,
+      system: systemField,
       messages: [{ role: "user", content: request.user }],
     }),
   });
