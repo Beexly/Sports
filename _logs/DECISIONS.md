@@ -9,6 +9,26 @@ Labels follow the Evidence Law: `verified` · `inferred` · `recommended` · `sp
 
 ---
 
+## 2026-06-01 — Best-of-2026 improvement wave (cross-department, all verified green)
+
+Acting on the 7 specialists + Codex digest, shipped a series of safe, verified
+improvements (each its own commit; full suite + build green throughout):
+- **Trust surface re-skin** — calibration panel off casino green/red onto brand
+  tokens (verify/alert/ion) + non-color glyphs (a11y).
+- **SEO** — bespoke proof-led homepage metadata; fixed www/apex canonical mismatch.
+- **Model orchestration** — `model-router.ts` (`pickModelForSurface`) + opt-in prompt
+  caching; zero behavior change today, flips become validated one-liners.
+- **Conversion** — locked confidence/edge + factor-breakdown now link to `/pricing`
+  (dead end → highest-intent CTA).
+- **Shareable proof** — `/performance` OG card so shared track-record renders the wedge.
+- **Hygiene** — scrubbed stray test cruft from `seed.ts` (verified whole, not truncated).
+- **Consolidation** — `CLAUDE_CODEX_HANDOFF.md` (15 prior docs deduped) +
+  `RISK_AND_FAILURE_REGISTER.md` (every finding, status, owner action).
+- **Key reconciliation:** shipping brand is **Galaxy Sports Edge (GSE)** in code/domain;
+  "GSN" is brief-only. Flagged for a founder naming decision (not renamed).
+
+---
+
 ## 2026-06-01 — Pricing & packaging: set Founding rates + a named proof-gated ladder
 
 - **Decision:** Replace weekly billing with **monthly + annual**, reprice to be
