@@ -11,10 +11,12 @@ import { loadPublicCalibrationReport } from "@/lib/calibration/report";
  *   2. The reliability curve — observed vs. expected win rate per confidence bucket.
  *   3. The Brier score — the single calibration number, with a plain-English read.
  *
- * Honesty rules this panel obeys:
+ * Honesty + brand rules this panel obeys:
  *   - Every number is rendered from `loadPublicCalibrationReport()` at request time;
- *     nothing is hardcoded. In bootstrap mode the report returns a collecting state
- *     and we show the methodology, never an invented record.
+ *     nothing is hardcoded. In bootstrap mode the report returns a collecting state.
+ *   - Colors use GSE design tokens (verify / alert / ultraviolet / ion), never
+ *     casino green/red — the trust surface must not look like a tout. Verdicts also
+ *     carry a non-color glyph so meaning never depends on color alone (a11y).
  *   - No win-rate math lives here — the engine computed it; we only display it.
  */
 
@@ -37,27 +39,31 @@ function brierRead(brier: number | null): string {
 
 const VERDICT_META: Record<
   Discrimination["trend"],
-  { label: string; tone: string; ring: string }
+  { label: string; tone: string; ring: string; glyph: string }
 > = {
   improving: {
     label: "Confidence ranks picks correctly",
-    tone: "text-green-400",
-    ring: "border-green-500/40 bg-green-500/5",
+    tone: "text-verify",
+    ring: "border-verify/40 bg-verify/5",
+    glyph: "▲",
   },
   inverted: {
     label: "Higher confidence is winning less — under review",
-    tone: "text-red-400",
-    ring: "border-red-500/40 bg-red-500/5",
+    tone: "text-alert",
+    ring: "border-alert/40 bg-alert/5",
+    glyph: "▼",
   },
   flat: {
     label: "Confidence is not separating outcomes yet",
-    tone: "text-yellow-400",
-    ring: "border-yellow-500/40 bg-yellow-500/5",
+    tone: "text-ultraviolet-glow",
+    ring: "border-ultraviolet/40 bg-ultraviolet/5",
+    glyph: "→",
   },
   "insufficient-data": {
     label: "Building discrimination history",
-    tone: "text-gray-400",
-    ring: "border-gray-700 bg-gray-900/40",
+    tone: "text-ion-1",
+    ring: "border-titanium bg-eclipse/40",
+    glyph: "◴",
   },
 };
 
@@ -67,27 +73,25 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
   const empty = bucket.sampleSize === 0;
   return (
     <div className="flex items-center gap-3 py-2" data-testid="reliability-row">
-      <span className="w-14 shrink-0 font-mono text-xs text-gray-400">
-        {bucket.label}
-      </span>
-      <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-gray-800">
+      <span className="w-14 shrink-0 font-mono text-xs text-ion-1">{bucket.label}</span>
+      <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-titanium">
         {!empty && (
           <div
-            className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400 transition-all"
+            className="h-full rounded-full bg-gradient-to-r from-accent-500 to-accent-400 transition-all"
             style={{ width: observedWidth }}
           />
         )}
         {/* Expected marker — where a perfectly calibrated bucket would land. */}
         <div
-          className="absolute top-0 h-full w-0.5 bg-white/70"
+          className="absolute top-0 h-full w-0.5 bg-ion-white/70"
           style={{ left: expectedLeft }}
           aria-hidden="true"
         />
       </div>
-      <span className="w-12 shrink-0 text-right text-xs font-semibold text-gray-200">
+      <span className="w-12 shrink-0 text-right text-xs font-semibold text-ion">
         {empty ? "—" : pct(bucket.observedWinRate)}
       </span>
-      <span className="w-16 shrink-0 text-right text-[11px] text-gray-600">
+      <span className="w-16 shrink-0 text-right text-[11px] text-ion-2">
         {empty ? "no data" : `n=${bucket.sampleSize}`}
       </span>
     </div>
@@ -104,13 +108,13 @@ export async function CalibrationPanel() {
   return (
     <section
       data-testid="calibration-panel"
-      className="mb-12 overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900 to-gray-900/50"
+      className="mb-12 overflow-hidden rounded-2xl border border-titanium bg-gradient-to-br from-eclipse to-carbon"
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-800 px-6 py-4">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-titanium px-6 py-4">
+        <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
           Calibration &amp; discrimination
         </h2>
-        <span className="text-[11px] uppercase tracking-widest text-gray-600">
+        <span className="text-[11px] uppercase tracking-widest text-ion-2">
           {collecting ? "Collecting" : `${data.sampleSize} settled picks`}
         </span>
       </div>
@@ -118,19 +122,22 @@ export async function CalibrationPanel() {
       {/* Discrimination verdict — the honest headline. */}
       <div className="px-6 pt-6">
         <div className={`rounded-xl border ${meta.ring} p-5`}>
-          <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+          <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
             Does higher confidence win more?
           </p>
-          <p className={`mt-2 text-xl font-bold ${meta.tone}`}>{meta.label}</p>
-          <p className="mt-2 text-sm leading-relaxed text-gray-400">{d.note}</p>
+          <p className={`mt-2 flex items-center gap-2 text-xl font-bold ${meta.tone}`}>
+            <span aria-hidden="true">{meta.glyph}</span>
+            {meta.label}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-ion-1">{d.note}</p>
           {d.spread !== null &&
             d.lowestBucketWinRate !== null &&
             d.highestBucketWinRate !== null && (
-              <div className="mt-4 flex items-center gap-3 text-xs text-gray-400">
+              <div className="mt-4 flex items-center gap-3 text-xs text-ion-1">
                 <span className="font-mono">
                   {d.lowestBucketLabel}: {pct(d.lowestBucketWinRate)}
                 </span>
-                <span className="flex-1 border-t border-dashed border-gray-700" />
+                <span className="flex-1 border-t border-dashed border-titanium" />
                 <span className="font-mono">
                   {d.highestBucketLabel}: {pct(d.highestBucketWinRate)}
                 </span>
@@ -142,14 +149,12 @@ export async function CalibrationPanel() {
       {/* Reliability curve. */}
       <div className="px-6 py-6">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
             Reliability by confidence bucket
           </h3>
-          <span className="text-[11px] text-gray-600">
-            bar = observed · marker = expected
-          </span>
+          <span className="text-[11px] text-ion-2">bar = observed · marker = expected</span>
         </div>
-        <div className="divide-y divide-gray-800/60">
+        <div className="divide-y divide-titanium/60">
           {data.buckets.map((b) => (
             <ReliabilityRow key={b.label} bucket={b} />
           ))}
@@ -157,20 +162,18 @@ export async function CalibrationPanel() {
       </div>
 
       {/* Brier score footer. */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-gray-800 px-6 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-titanium px-6 py-4">
         <div>
-          <span className="text-xs uppercase tracking-widest text-gray-600">
-            Brier score
-          </span>{" "}
-          <span className="ml-1 font-mono text-sm font-semibold text-gray-200">
+          <span className="text-xs uppercase tracking-widest text-ion-2">Brier score</span>{" "}
+          <span className="ml-1 font-mono text-sm font-semibold text-ion">
             {data.brierScore !== null ? data.brierScore.toFixed(3) : "—"}
           </span>
         </div>
-        <p className="text-xs text-gray-500">{brierRead(data.brierScore)}</p>
+        <p className="text-xs text-ion-2">{brierRead(data.brierScore)}</p>
       </div>
 
-      <div className="border-t border-gray-800 px-6 py-3">
-        <p className="text-[11px] leading-relaxed text-gray-600">
+      <div className="border-t border-titanium px-6 py-3">
+        <p className="text-[11px] leading-relaxed text-ion-2">
           {data.publicMessage} Calibration is evidence only — it never auto-adjusts
           the model. Past performance does not guarantee future results.
         </p>
