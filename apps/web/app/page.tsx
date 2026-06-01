@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { CalibrationCurve } from "@/components/home/calibration-curve";
 import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
@@ -13,6 +14,16 @@ import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 
 // Reads live board state per request; never statically prerendered.
 export const dynamic = "force-dynamic";
+
+// Homepage is the most-linked, highest-priority URL. Give it bespoke, proof-led
+// SEO copy instead of inheriting the generic brand default from the root layout.
+// (Title flows through the layout's "%s | Galaxy Sports Edge" template.)
+export const metadata: Metadata = {
+  title: "Graded in Public — Calibrated Sports Predictions",
+  description:
+    "Galaxy Sports Edge shows the full reasoning behind every pick, grades them in public, and posts its losses. Calibrated confidence, not tout hype. Start free.",
+  alternates: { canonical: "/" },
+};
 
 type CalibrationData = Awaited<ReturnType<typeof loadPublicCalibrationReport>>["data"];
 

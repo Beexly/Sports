@@ -77,8 +77,10 @@ export const viewport: Viewport = {
  *  - X handle wired in twitter.site/creator so attribution survives reshares.
  */
 
+// Apex host to match sitemap.ts / robots.ts — a mismatched fallback (www here,
+// apex there) splits canonical signals when NEXT_PUBLIC_APP_URL is unset.
 const SITE_URL =
-  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://www.galaxysportsedge.com";
+  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
 
 const ORG_HANDLE = "@GalaxySportsAI";
 
