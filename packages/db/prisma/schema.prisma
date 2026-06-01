@@ -22,6 +22,13 @@ model User {
   emailVerified DateTime?
   image         String?
   role          UserRole  @default(USER)
+  // Operator comp: a manually-granted access tier that overrides billing.
+  // When set, getUserEntitlements uses this regardless of Stripe status, and
+  // the Stripe webhook never touches it — so comps survive billing syncs.
+  compedTier    SubscriptionTier?
+  compedReason  String?
+  compedBy      String?
+  compedAt      DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -33,6 +40,24 @@ model User {
 
   @@index([email])
   @@map("users")
+}
+
+/// Append-only record of every operator (admin) mutation — comps, role
+/// changes, and other Mission Control actions. targetId is a loose string
+/// reference (not an FK) so the trail survives target deletion.
+model OperatorAuditLog {
+  id         String   @id @default(cuid())
+  actorEmail String
+  action     String   @db.VarChar(80)
+  targetType String   @db.VarChar(40)
+  targetId   String
+  summary    String   @db.VarChar(280)
+  detail     Json?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([targetType, targetId])
+  @@map("operator_audit_logs")
 }
 
 model Account {

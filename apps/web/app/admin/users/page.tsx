@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
+import { UsersTable, type AdminUserRow } from "./users-table";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminUsersPage() {
   const session = await auth();
@@ -8,80 +11,77 @@ export default async function AdminUsersPage() {
     redirect("/");
   }
 
-  const users = await db.user.findMany({
-    include: {
-      subscription: {
-        select: { tier: true, status: true, currentPeriodEnd: true },
+  const [users, audit] = await Promise.all([
+    db.user.findMany({
+      include: {
+        subscription: { select: { tier: true, status: true } },
       },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 100,
-  });
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    }),
+    db.operatorAuditLog
+      .findMany({ orderBy: { createdAt: "desc" }, take: 20 })
+      .catch(() => []),
+  ]);
+
+  const rows: AdminUserRow[] = users.map((u) => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    role: u.role,
+    compedTier: u.compedTier === "FREE" ? null : u.compedTier,
+    subscriptionTier: u.subscription?.tier ?? null,
+    subscriptionStatus: u.subscription?.status ?? null,
+    createdAt: u.createdAt.toLocaleDateString(),
+  }));
 
   return (
     <div className="min-h-screen bg-gray-950 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white">Users</h1>
-            <p className="text-gray-400 mt-1">{users.length} users (last 100)</p>
+            <p className="mt-1 text-gray-400">
+              {users.length} users (last 100). Comp grants paid access regardless
+              of billing; the Stripe webhook never overwrites a comp.
+            </p>
           </div>
-          <a href="/admin" className="text-gray-400 hover:text-white text-sm">← Back to Admin</a>
+          <div className="flex items-center gap-4 text-sm">
+            <a href="/cockpit" className="text-orbital-cyan hover:text-ion">
+              Cockpit →
+            </a>
+            <a href="/admin" className="text-gray-400 hover:text-white">
+              ← Admin
+            </a>
+          </div>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-800 text-gray-400 text-xs uppercase">
-                <th className="text-left px-4 py-3">User</th>
-                <th className="text-left px-4 py-3">Role</th>
-                <th className="text-left px-4 py-3">Subscription Tier</th>
-                <th className="text-left px-4 py-3">Status</th>
-                <th className="text-left px-4 py-3">Joined</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id} className="border-b border-gray-800/50 hover:bg-gray-800/30">
-                  <td className="px-4 py-3">
-                    <div className="text-white">{user.name ?? "—"}</div>
-                    <div className="text-xs text-gray-500">{user.email}</div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded text-xs ${
-                      user.role === "ADMIN"
-                        ? "bg-red-500/10 text-red-400"
-                        : "bg-gray-700 text-gray-400"
-                    }`}>
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                      user.subscription?.tier === "ELITE" ? "bg-yellow-400/10 text-yellow-400" :
-                      user.subscription?.tier === "PRO" ? "bg-blue-500/10 text-blue-400" :
-                      "bg-gray-700 text-gray-400"
-                    }`}>
-                      {user.subscription?.tier ?? "FREE"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-gray-400 text-xs">
-                    {user.subscription?.status ?? "—"}
-                  </td>
-                  <td className="px-4 py-3 text-gray-500 text-xs">
-                    {user.createdAt.toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-              {users.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
-                    No users yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+        <UsersTable users={rows} currentUserId={session.user.id} />
+
+        {/* Operator audit trail */}
+        <div className="mt-10">
+          <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[0.2em] text-orbital-cyan">
+            Operator audit trail
+          </h2>
+          <div className="divide-y divide-gray-800/60 rounded-xl border border-gray-800 bg-gray-900">
+            {audit.length === 0 ? (
+              <p className="px-4 py-5 text-sm text-gray-500">
+                No operator actions logged yet.
+              </p>
+            ) : (
+              audit.map((a) => (
+                <div
+                  key={a.id}
+                  className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <span className="text-sm text-gray-200">{a.summary}</span>
+                  <span className="font-mono text-[11px] text-gray-500">
+                    {a.actorEmail} · {a.createdAt.toLocaleString()}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

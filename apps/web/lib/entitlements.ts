@@ -17,20 +17,43 @@ export type { Entitlements };
  */
 const DEV_FAKE_ADMIN_TIER: SubscriptionTier = "ELITE";
 
+/**
+ * Resolve the effective access tier from comp + subscription state.
+ * Pure so it can be unit-tested without a DB.
+ *
+ * Precedence: an operator comp overrides billing entirely; otherwise paid
+ * access requires an ACTIVE/TRIALING subscription; everything else is FREE.
+ */
+export function resolveEntitlementTier(input: {
+  compedTier?: SubscriptionTier | null;
+  subscriptionTier?: SubscriptionTier | null;
+  subscriptionStatus?: string | null;
+}): SubscriptionTier {
+  if (input.compedTier) return input.compedTier;
+  const active =
+    input.subscriptionStatus === "ACTIVE" ||
+    input.subscriptionStatus === "TRIALING";
+  return active ? input.subscriptionTier ?? "FREE" : "FREE";
+}
+
 export async function getUserEntitlements(userId: string): Promise<Entitlements> {
   if (process.env["DEV_FAKE_ADMIN"] === "true" && userId === "dev-admin") {
     return getEntitlements(DEV_FAKE_ADMIN_TIER);
   }
 
-  const subscription = await db.subscription.findFirst({
-    where: {
-      userId,
-      status: { in: ["ACTIVE", "TRIALING"] },
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: {
+      compedTier: true,
+      subscription: { select: { tier: true, status: true } },
     },
-    select: { tier: true },
   });
 
-  const tier = (subscription?.tier ?? "FREE") as SubscriptionTier;
+  const tier = resolveEntitlementTier({
+    compedTier: user?.compedTier ?? null,
+    subscriptionTier: user?.subscription?.tier ?? null,
+    subscriptionStatus: user?.subscription?.status ?? null,
+  });
   return getEntitlements(tier);
 }
 

@@ -38,7 +38,13 @@ export async function Nav() {
 
           <div className="desktop-auth">
             {user ? (
-              <Link href="/dashboard" className="btn btn-ghost btn-sm" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <>
+                {user.role === "ADMIN" && (
+                  <Link href="/cockpit" className="btn btn-ghost btn-sm">
+                    Cockpit
+                  </Link>
+                )}
+                <Link href="/dashboard" className="btn btn-ghost btn-sm" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                 <span style={{ display: "inline-flex", width: 22, height: 22, borderRadius: "50%", overflow: "hidden", background: "var(--titanium)" }}>
                   {user.image ? (
                     <Image src={user.image} alt={user.name ?? "User avatar"} width={22} height={22} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -49,7 +55,8 @@ export async function Nav() {
                   )}
                 </span>
                 <span>{user.name ?? user.email}</span>
-              </Link>
+                </Link>
+              </>
             ) : (
               <>
                 <Link href="/auth/signin" className="btn btn-ghost btn-sm">
