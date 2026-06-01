@@ -9,6 +9,34 @@ Labels follow the Evidence Law: `verified` · `inferred` · `recommended` · `sp
 
 ---
 
+## 2026-06-01 — Settlement (R1): extract `settleSport()` to the shared pipeline; wire the Vercel cron
+
+- **Decision:** Eliminate the settlement single-point-of-failure. Extract the
+  worker's inline per-sport settlement loop into `settleSport()` in
+  `@sports/ingestion-pipeline` (mirroring `processSport`), move the snapshot
+  recorder into the same package, and make **both** the data-refresh worker and the
+  `settle-picks` Vercel cron call it. The cron was previously a documented no-op.
+- **Why:** Odds refresh ran on Vercel cron, but grading only happened inside a
+  separate long-running worker. A Vercel-only deploy would never settle a pick →
+  no graded track record → the calibrated-trust thesis silently collapses. The
+  codebase already solved drift for ingestion by sharing `processSport`; this
+  applies the identical pattern. `verified`.
+- **Evidence:** Settlement logic copied verbatim (no behavior change). Typecheck
+  green across all 9 workspaces; full test suite green (apps/web 1,861, engine 197,
+  ingestion 17, types 28); relocated `settlement-snapshot-durability` test passes
+  from `@sports/ingestion-pipeline`.
+- **Scope guard:** No hard stop touched. Settlement writes are normal app
+  operations (update `result`/`settledAt`, insert `TeamGameLog`), CRON_SECRET-gated,
+  idempotent (`already-settled`). **Enabling it in production is still a deploy
+  decision that remains the operator's** — this change only makes the capability
+  correct and drift-free. `verified` / `recommended`.
+- **Residual (`recommended`):** add a "stale unsettled picks" alert so a silent
+  cron failure is caught. Add an integration test against a disposable Postgres
+  (R3) to exercise the live settlement path (current tests use a stub Prisma).
+- **Status:** Done, verified green, committed to `claude/trusting-ramanujan-mYK6E`.
+
+---
+
 ## 2026-06-01 — Calibration: add a market-neutral "discrimination" metric (evidence only)
 
 - **Decision:** Add a `discrimination` signal to `computeCalibration` in

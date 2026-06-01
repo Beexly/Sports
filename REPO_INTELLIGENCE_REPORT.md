@@ -192,7 +192,7 @@ human/legal task, not a code task — flagged so it isn't silently assumed handl
 
 | # | Risk | Severity | Evidence | Recommendation |
 |---|---|---|---|---|
-| R1 | **Settlement depends on a long-running worker, not the Vercel cron.** `settle-picks` route is a documented no-op; grading lives in `workers/data-refresh`. If that box is down, picks never settle → no track record. | High (operational) | `app/api/cron/settle-picks/route.ts` is a stub; worker `settleResults()` is real | Either run the worker as a monitored service **or** finish the careful port into the cron. Add an alert if pending settled-eligible picks exceed a threshold. |
+| R1 | **Settlement single-point-of-failure** — `settle-picks` cron was a no-op; grading lived only in the long-running worker. **ADDRESSED 2026-06-01:** extracted shared `settleSport()` into `@sports/ingestion-pipeline`; both worker and cron now call it (zero-drift, like `processSport`). | High → mitigated | `settle-sport.ts`; functional `cron/settle-picks/route.ts`; tests green | **Residual:** add a "stale unsettled picks" alert; integration-test the live path (R3). Enabling in prod remains an operator deploy decision. |
 | R2 | **Confidence treated as probability in calibration** (public-facing). | High (trust) | §5 | Persist modeled win prob; market-aware proposals (human-gated). Discrimination metric added as interim. |
 | R3 | **apps/web tests use stub Prisma** — no live DB/migration coverage. | Med | §2 | Add a thin integration suite against a disposable Postgres (shadow DB) in CI. |
 | R4 | **13 npm vulns (1 critical, 4 high); EOL deps** (eslint 8, glob 7, rimraf 3). | Med | `npm install` audit output | Triage `npm audit`; plan eslint 9 / dependency refresh. |

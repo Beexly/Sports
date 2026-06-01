@@ -3,7 +3,7 @@ import {
   recordPickSettlementSnapshot,
   type RecordSettlementSnapshotInput,
   type SettlementSnapshotDb,
-} from "../../../workers/data-refresh/src/settlement-snapshots";
+} from "@sports/ingestion-pipeline";
 
 function makeInput(db: SettlementSnapshotDb): RecordSettlementSnapshotInput {
   return {
