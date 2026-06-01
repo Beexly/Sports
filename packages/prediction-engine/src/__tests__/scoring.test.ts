@@ -5,6 +5,7 @@ import {
   clamp,
   scoreGame,
   scoreGames,
+  toEdgeIndex,
 } from "../scoring.js";
 import {
   computeLineMovementScore,
@@ -79,6 +80,111 @@ describe("clamp", () => {
   it("passes through in-range values", () => expect(clamp(50, 0, 100)).toBe(50));
   it("handles boundary minimum", () => expect(clamp(0, 0, 100)).toBe(0));
   it("handles boundary maximum", () => expect(clamp(100, 0, 100)).toBe(100));
+});
+
+// ============================================================
+// toEdgeIndex — public Edge Index mapping (single source of truth)
+// Regression guard for the "Edge Index 100 on a real total" bug: the public
+// board / Gate Cam / Pass List must never surface an Edge Index outside 0–100,
+// regardless of an upstream scale mistake (e.g. a stray ×10, or a raw-edge
+// fraction persisted to currentEdgeIndex / gateDecision.edgeIndex).
+// ============================================================
+
+describe("toEdgeIndex", () => {
+  it("passes through an in-range engine edgeScore", () => {
+    expect(toEdgeIndex(26)).toBe(26);
+    expect(toEdgeIndex(0)).toBe(0);
+    expect(toEdgeIndex(100)).toBe(100);
+  });
+
+  it("rounds to a whole number", () => {
+    expect(toEdgeIndex(54.4)).toBe(54);
+    expect(toEdgeIndex(54.6)).toBe(55);
+  });
+
+  it("hard-clamps a stray ×10 overflow back to 100", () => {
+    // The old board bug: Math.round(edgeScore * 10). A legit edgeScore of 35
+    // became 350 and surfaced as "Edge Index 100" once displayed.
+    expect(toEdgeIndex(35 * 10)).toBe(100);
+    expect(toEdgeIndex(1000)).toBe(100);
+  });
+
+  it("clamps a negative value to 0", () => {
+    expect(toEdgeIndex(-5)).toBe(0);
+  });
+
+  it("returns null for nullish / non-finite input (renders as 'pending')", () => {
+    expect(toEdgeIndex(null)).toBeNull();
+    expect(toEdgeIndex(undefined)).toBeNull();
+    expect(toEdgeIndex(NaN)).toBeNull();
+    expect(toEdgeIndex(Infinity)).toBeNull();
+  });
+});
+
+// ============================================================
+// Edge score sanity: a consistent two-way market cannot fabricate a max edge.
+// A vanilla -110/-110 total de-vigs to ~0.5 fair vs ~0.524 offered → rawEdge
+// is slightly NEGATIVE, so the Edge Index lands near ~26, never 100.
+// ============================================================
+
+const makeTwoWayTotalInput = (
+  overPrice: number,
+  underPrice: number,
+): OddsInput => ({
+  gameId: "edge-total-1",
+  homeTeam: "St. Louis Cardinals",
+  awayTeam: "Texas Rangers",
+  commenceTime: new Date("2026-06-01T18:00:00Z"),
+  sport: "MLB",
+  bookmakerOdds: ["fanduel", "draftkings", "betmgm", "caesars", "pointsbet"].map(
+    (bookmaker) => ({
+      bookmaker,
+      market: "TOTALS" as const,
+      total: 7.5,
+      overPrice,
+      underPrice,
+    }),
+  ),
+});
+
+describe("scoreTotalPick — edge score of a realistic two-way total", () => {
+  it("a -110/-110 total scores a modest edge (~26), never the 100 max", () => {
+    const total = scoreGame(makeTwoWayTotalInput(-110, -110)).find(
+      (p) => p.pickType === "TOTAL",
+    );
+    expect(total).toBeTruthy();
+    expect(total!.edgeScore).toBeGreaterThan(0);
+    expect(total!.edgeScore).toBeLessThan(40);
+    // And the public Edge Index derived from it is well under 100.
+    expect(toEdgeIndex(total!.edgeScore)).toBeLessThan(40);
+  });
+
+  it("no two-way American price combo drives the Edge Index to 100", () => {
+    const prices = [-200, -150, -120, -110, 100, 120, 150, 170];
+    for (const over of prices) {
+      for (const under of prices) {
+        const total = scoreGame(makeTwoWayTotalInput(over, under)).find(
+          (p) => p.pickType === "TOTAL",
+        );
+        if (!total) continue;
+        // Whether the book is vigged (sum > 1, real) or sub-vig (sum < 1,
+        // inconsistent), the engine never fabricates a maxed-out edge.
+        expect(total.edgeScore).toBeLessThanOrEqual(50);
+      }
+    }
+  });
+
+  it("an inconsistent sub-vig book (-120/+170, implied sum 0.92) does NOT fabricate a max edge", () => {
+    // This is the exact shape behind the reported bug: de-vigging a negative-hold
+    // book inflated the chosen-side fair prob to +5% over the offered price and
+    // maxed the Edge Index. The overround guard now neutralizes the positive edge.
+    const total = scoreGame(makeTwoWayTotalInput(-120, 170)).find(
+      (p) => p.pickType === "TOTAL",
+    );
+    expect(total).toBeTruthy();
+    expect(total!.edgeScore).toBeLessThanOrEqual(50);
+    expect(toEdgeIndex(total!.edgeScore)).toBeLessThan(100);
+  });
 });
 
 // ============================================================

@@ -1,4 +1,5 @@
 import { db, getSamplePicks, isDemoPicksEnabled, isStubMode } from "@sports/db";
+import { toEdgeIndex } from "@sports/prediction-engine";
 
 export interface PassListRow {
   id: string;
@@ -38,7 +39,7 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
       gameId: pick.gameId,
       matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
       sport: pick.game.sport.name,
-      edgeIndex: Math.round(pick.edgeScore * 10),
+      edgeIndex: toEdgeIndex(pick.edgeScore),
       reason: index % 2 === 0 ? "Consensus below publish threshold." : "Market depth too thin.",
       evaluatedAt: pick.dataFreshnessAt.toISOString(),
     }));
@@ -70,7 +71,7 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
           gameId: decision.gameId,
           matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
           sport: decision.game.sport.name,
-          edgeIndex: decision.edgeIndex ?? decision.game.currentEdgeIndex,
+          edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
           reason: decision.reason,
           evaluatedAt: decision.evaluatedAt.toISOString(),
         })),
@@ -94,7 +95,7 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
     gameId: game.id,
     matchup: `${game.awayTeamName} @ ${game.homeTeamName}`,
     sport: game.sport.name,
-    edgeIndex: game.currentEdgeIndex,
+    edgeIndex: toEdgeIndex(game.currentEdgeIndex),
     reason: passReason(game.bookmakerCoverageMax, game.dataQualityScore),
     evaluatedAt: game.updatedAt.toISOString(),
   }));

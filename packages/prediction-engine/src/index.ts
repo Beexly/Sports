@@ -4,6 +4,7 @@ export {
   americanToImpliedProbability,
   removeVig,
   clamp,
+  toEdgeIndex,
 } from "./scoring.js";
 export {
   computeGameContext,

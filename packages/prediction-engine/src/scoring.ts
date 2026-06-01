@@ -48,6 +48,34 @@ export function clamp(value: number, min: number, max: number): number {
 }
 
 // ============================================================
+// Utility: canonical public "Edge Index" mapping
+// ============================================================
+
+/**
+ * Maps a pick's engine `edgeScore` (already on a 0–100 scale — see
+ * `ScoredPick.edgeScore`) to the public 0–100 "Edge Index" rendered on the
+ * board / Gate Cam / Pass List.
+ *
+ * This is the SINGLE source of truth for the Edge Index scale. The mapping is
+ * intentionally identity-with-clamp: the engine value is already normalized to
+ * 0–100 in `computeEdgeScore` callers, so the only job here is to:
+ *   1. Round to a whole number for display.
+ *   2. Hard-clamp to [0, 100] so no upstream scale mistake (e.g. a stray ×10,
+ *      or a raw-edge fraction persisted to `Game.currentEdgeIndex` /
+ *      `GateDecision.edgeIndex`) can ever surface an Edge Index above 100.
+ *
+ * Returns `null` for nullish input so callers can render "Edge Index pending".
+ *
+ * A two-way market that is internally consistent can only reach an Edge Index
+ * of 100 when the de-vigged fair edge is genuinely ≥ +5% (see computeEdgeScore);
+ * a vanilla -110/-110 total maps to ~26, never 100.
+ */
+export function toEdgeIndex(edgeScore: number | null | undefined): number | null {
+  if (edgeScore == null || !Number.isFinite(edgeScore)) return null;
+  return clamp(Math.round(edgeScore), 0, 100);
+}
+
+// ============================================================
 // Compute risk level from market signals
 // ============================================================
 
@@ -151,7 +179,15 @@ function computeMarketDepthScore(bookmakerCount: number): {
 
 function computeEdgeScore(
   pickedSideFairProb: number,
-  pickedSideAvgPrice: number
+  pickedSideAvgPrice: number,
+  // Sum of the two-way offered implied probabilities (the book's "overround").
+  // A real, internally-consistent market always charges vig, so this is > 1.0.
+  // When it is < 1.0 the market is inconsistent — mixed odds formats across
+  // books, a missing side at some books, or crossed/stale lines — and the
+  // de-vigged "fair" probability is inflated above what any honest market
+  // supports. Defaults to a value ≥ 1 so callers that don't pass it (and
+  // genuinely vigged markets) are unaffected.
+  twoSidedImpliedSum: number = 1
 ): {
   rawEdge: number;    // in probability units
   score: number;      // 0–EDGE_COMPONENT_MAX
@@ -161,7 +197,17 @@ function computeEdgeScore(
   const offeredProb = americanToImpliedProbability(pickedSideAvgPrice);
 
   // Edge = fair value - offered price (positive = we have value)
-  const rawEdge = pickedSideFairProb - offeredProb;
+  let rawEdge = pickedSideFairProb - offeredProb;
+
+  // Inconsistent-market guard: a negative-hold book (implied sum < 1.0) cannot
+  // exist from honest two-way pricing. De-vigging such inputs manufactures a
+  // spurious positive edge (this is the "Edge Index 100 on a real total" bug:
+  // e.g. -120/+170 implied sum 0.916 → fabricated +5% edge → max score). We
+  // never credit a *positive* pricing edge when the market is sub-vig; a true
+  // edge claim requires a consistent, fully-priced two-way market.
+  if (twoSidedImpliedSum < 1 && rawEdge > 0) {
+    rawEdge = 0;
+  }
 
   // Normalize: edge of +5% = full score, edge of 0% = half score
   const normalized = clamp((rawEdge + 0.05) / 0.10, 0, 1);
@@ -276,11 +322,13 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     spreadOdds.length;
   const fair = removeVig(homeImpliedAvg, awayImpliedAvg);
   const fairProb = homeIsChosen ? fair.home : fair.away;
+  // Overround for the inconsistent-market guard in computeEdgeScore.
+  const twoSidedImpliedSum = homeImpliedAvg + awayImpliedAvg;
 
   // Component scores
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct);
   const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(spreadOdds.length);
-  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice);
+  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice, twoSidedImpliedSum);
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
     computeVolatilityPenalty(spreadOdds.length, spreadOfSpreads);
 
@@ -482,6 +530,8 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const fair = removeVig(overImpliedAvg, underImpliedAvg);
   const fairProb = overIsChosen ? fair.home : fair.away;
+  // Overround for the inconsistent-market guard in computeEdgeScore.
+  const twoSidedImpliedSum = overImpliedAvg + underImpliedAvg;
 
   // Total dispersion
   const totalMean = avgTotal;
@@ -490,7 +540,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct);
   const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(totalOdds.length);
-  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice);
+  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice, twoSidedImpliedSum);
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
     computeVolatilityPenalty(totalOdds.length, totalDispersion);
 
@@ -623,7 +673,9 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
 
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct);
   const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(h2hOdds.length);
-  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice);
+  // Overround for the inconsistent-market guard in computeEdgeScore.
+  const twoSidedImpliedSum = avgHomeImplied + avgAwayImplied;
+  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice, twoSidedImpliedSum);
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
     computeVolatilityPenalty(h2hOdds.length, 0);
 

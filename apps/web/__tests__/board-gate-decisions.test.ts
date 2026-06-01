@@ -20,6 +20,9 @@ vi.mock("@sports/db", () => ({
 vi.mock("@sports/prediction-engine", () => ({
   getReadinessGates: () => ({ isBootstrapMode: false }),
   MODEL_VERSION: "v5.0.0",
+  // Real clamp behavior — the board must never surface an Edge Index > 100.
+  toEdgeIndex: (v: number | null | undefined) =>
+    v == null || !Number.isFinite(v) ? null : Math.max(0, Math.min(100, Math.round(v))),
 }));
 
 import { loadBoardPasses } from "@/lib/board/passes";
@@ -102,6 +105,30 @@ describe("board loaders with persisted gate decisions", () => {
     expect(result.data.scoringNow[0]?.status).toBe("SCORING_NOW");
     expect(mocks.pickFindMany).not.toHaveBeenCalled();
     expect(mocks.gameFindMany).not.toHaveBeenCalled();
+  });
+
+  it("clamps an out-of-range persisted edgeIndex to 0–100 (Edge Index 100 bug guard)", async () => {
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      {
+        id: "gd_overflow",
+        gameId: "game_x",
+        status: "PUBLISHED",
+        reason: "Cleared publish threshold.",
+        // Corrupt/mis-scaled upstream value (e.g. a stray ×10). Must NOT reach the UI as 350.
+        edgeIndex: 350,
+        confidence: 74,
+        evaluatedAt,
+        modelVersion: "v5.1.0",
+        game: game({ awayTeamName: "TEX", homeTeamName: "STL" }),
+        pick: { selection: "OVER 7.5", confidence: 74 },
+      },
+    ]);
+
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"));
+    const row = result.data.publishedToday[0];
+    expect(row?.edgeIndex).not.toBeNull();
+    expect(row!.edgeIndex!).toBeLessThanOrEqual(100);
+    expect(row!.edgeIndex!).toBe(100);
   });
 
   it("builds the Pass List from persisted gated decisions", async () => {

@@ -7,6 +7,26 @@ import type {
 import { FRESHNESS_THRESHOLD_MS } from "./config.js";
 
 export class DataNormalizer {
+  /**
+   * Guard the odds-format boundary.
+   *
+   * We request American odds (config.ODDS_FORMAT="american"), but nothing
+   * downstream validates that the upstream actually honored it. Valid American
+   * prices are integers with magnitude >= 100 (e.g. -110, +120). Decimal odds
+   * (e.g. 1.91, 2.05) and malformed values fall in (-100, 100). If a decimal
+   * value leaked through, `americanToImpliedProbability` would read 1.91 as
+   * "+1.91" → ~0.98 implied, corrupting de-vig math and fabricating a spurious
+   * pricing edge (the root of the "Edge Index 100" board bug). Drop any price
+   * that is not a valid American number so it never enters scoring; a market
+   * with too few usable prices is simply skipped by the engine.
+   */
+  private sanitizeAmericanPrice(price: number | undefined): number | undefined {
+    if (price === undefined || price === null) return undefined;
+    if (!Number.isFinite(price)) return undefined;
+    if (Math.abs(price) < 100) return undefined; // decimal / malformed — not American
+    return price;
+  }
+
   normalizeGames(events: OddsApiEvent[]): NormalizedGame[] {
     return events.map((event) => ({
       externalId: event.id,
@@ -52,9 +72,9 @@ export class DataNormalizer {
             results.push({
               ...base,
               market: "H2H",
-              homePrice: home?.price,
-              awayPrice: away?.price,
-              drawPrice: draw?.price,
+              homePrice: this.sanitizeAmericanPrice(home?.price),
+              awayPrice: this.sanitizeAmericanPrice(away?.price),
+              drawPrice: this.sanitizeAmericanPrice(draw?.price),
             });
           } else if (market.key === "spreads") {
             const home = market.outcomes.find(

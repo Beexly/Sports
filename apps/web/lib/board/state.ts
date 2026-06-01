@@ -1,5 +1,5 @@
 import { db, getSamplePicks, isDemoPicksEnabled, isStubMode } from "@sports/db";
-import { getReadinessGates, MODEL_VERSION } from "@sports/prediction-engine";
+import { getReadinessGates, MODEL_VERSION, toEdgeIndex } from "@sports/prediction-engine";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -55,7 +55,7 @@ function sampleRows(now: Date): {
     sport: pick.game.sport.name,
     market: pick.pickType,
     status: "SCORING_NOW",
-    edgeIndex: Math.round(pick.edgeScore * 10),
+    edgeIndex: toEdgeIndex(pick.edgeScore),
     confidence: null,
     gateReason: "PREVIEW MODE: scoring snapshot from sample slate.",
     updatedAt: pick.dataFreshnessAt.toISOString(),
@@ -68,7 +68,7 @@ function sampleRows(now: Date): {
     sport: pick.game.sport.name,
     market: pick.selection,
     status: "PUBLISHED_TODAY",
-    edgeIndex: Math.round(pick.edgeScore * 10),
+    edgeIndex: toEdgeIndex(pick.edgeScore),
     confidence: pick.confidence,
     gateReason: null,
     updatedAt: pick.generatedAt.toISOString(),
@@ -81,7 +81,7 @@ function sampleRows(now: Date): {
     sport: pick.game.sport.name,
     market: pick.pickType,
     status: "GATED_TODAY",
-    edgeIndex: Math.round(pick.edgeScore * 10),
+    edgeIndex: toEdgeIndex(pick.edgeScore),
     confidence: null,
     gateReason: index % 2 === 0 ? "Consensus below publish threshold." : "Market depth too thin.",
     updatedAt: pick.dataFreshnessAt.toISOString(),
@@ -140,7 +140,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
           : decision.status === "GATED"
             ? "GATED_TODAY"
             : "SCORING_NOW",
-      edgeIndex: decision.edgeIndex ?? decision.game.currentEdgeIndex,
+      edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
       confidence: decision.confidence ?? decision.pick?.confidence ?? null,
       gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
       updatedAt: decision.evaluatedAt.toISOString(),
@@ -204,7 +204,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     sport: pick.game.sport.name,
     market: pick.selection,
     status: "PUBLISHED_TODAY",
-    edgeIndex: pick.game.currentEdgeIndex ?? Math.round(pick.edgeScore),
+    edgeIndex: toEdgeIndex(pick.game.currentEdgeIndex ?? pick.edgeScore),
     confidence: pick.confidence,
     gateReason: null,
     updatedAt: pick.generatedAt.toISOString(),
@@ -217,7 +217,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     sport: game.sport.name,
     market: "ALL_MARKETS",
     status: "SCORING_NOW",
-    edgeIndex: game.currentEdgeIndex,
+    edgeIndex: toEdgeIndex(game.currentEdgeIndex),
     confidence: null,
     gateReason: null,
     updatedAt: game.updatedAt.toISOString(),
@@ -230,7 +230,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     sport: game.sport.name,
     market: "ALL_MARKETS",
     status: "GATED_TODAY",
-    edgeIndex: game.currentEdgeIndex,
+    edgeIndex: toEdgeIndex(game.currentEdgeIndex),
     confidence: null,
     gateReason:
       game.bookmakerCoverageMax < 3
