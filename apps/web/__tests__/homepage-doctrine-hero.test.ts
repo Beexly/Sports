@@ -35,7 +35,7 @@ describe("homepage doctrine hero", () => {
   });
 
   it("uses one arch headline for the front-door hero", () => {
-    expect(page).toContain("Math you can read.");
+    expect(page).toContain("We post our losses.");
     expect(page).toMatch(/<span className="text-plasma">\.<\/span>/);
     expect(page).not.toContain("We&apos;re not AI");
     expect(page).not.toMatch(/<span className="eyebrow text-ion-1">Live board<\/span>/);

@@ -195,11 +195,11 @@ function Hero({ state }: { state: BoardStateData }): JSX.Element {
               aria-hidden="true"
             />
             <h1
-              aria-label="Math you can read."
+              aria-label="We post our losses."
               data-testid="homepage-arch-headline"
               className="text-balance font-arch text-[clamp(2.5rem,9vw,8rem)] font-black uppercase leading-[0.86] tracking-normal text-ion-white drop-shadow-[0_0_34px_rgba(255,45,214,0.18)]"
             >
-              <span>Math you can read</span>
+              <span>We post our losses</span>
               <span className="text-plasma">.</span>
             </h1>
           </div>
@@ -207,8 +207,10 @@ function Hero({ state }: { state: BoardStateData }): JSX.Element {
 
         <Reveal delay={160} duration={880} distance={4}>
           <p className="mt-7 max-w-2xl text-pretty font-sans text-[17px] leading-[1.55] text-ion sm:text-xl">
-            Deterministic sports research with odds, market depth, schedule
-            context, and source freshness exposed before a pick reaches the board.
+            Every tout sells you winners and quietly deletes the losers. We do the
+            opposite: every pick shows its full reasoning, every result is graded in
+            the open, and when the model finds no edge we say nothing — most days,
+            fewer than five picks.
           </p>
         </Reveal>
 
