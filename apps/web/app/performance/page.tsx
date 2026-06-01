@@ -6,6 +6,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { PerformanceBootstrapState } from "@/components/performance/bootstrap-state";
+import { CalibrationPanel } from "@/components/performance/calibration-panel";
 import type { PickType, PickTier } from "@sports/types";
 
 export const metadata: Metadata = {
@@ -140,6 +141,12 @@ export default async function PerformancePage() {
           gateEnabled={false}
           minSettledPicksForLearning={gates.minSettledPicksForLearning}
         />
+        <div className="mt-12">
+          <h2 className="mb-4 text-center text-sm font-semibold uppercase tracking-widest text-gray-500">
+            How we&apos;ll prove it
+          </h2>
+          <CalibrationPanel />
+        </div>
       </BootstrapShell>
     );
   }
@@ -192,6 +199,9 @@ export default async function PerformancePage() {
               Past performance does not guarantee future results.
             </p>
           </div>
+
+          {/* Lead with the scoreboard: calibration + discrimination first. */}
+          <CalibrationPanel />
 
           {fetchError && (
             <div

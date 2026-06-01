@@ -9,6 +9,28 @@ Labels follow the Evidence Law: `verified` · `inferred` · `recommended` · `sp
 
 ---
 
+## 2026-06-01 — VISIBLE: public Calibration & Discrimination panel on /performance
+
+- **Decision:** Ship the "lead with the scoreboard" strategy as real UI. The
+  `/performance` page was titled "Calibration Report" but only rendered win/loss
+  tables. Added `components/performance/calibration-panel.tsx` — a polished server
+  component rendering the **reliability curve** (observed vs. expected per bucket),
+  the **Brier score** with a plain-English read, and the new **discrimination
+  verdict** as the honest headline. Mounted as the lead section on `/performance`
+  (gate-open) and as a "how we'll prove it" showcase in bootstrap mode.
+- **Why:** "Best website of 2026" = visible trust. This makes calibration the public
+  hero — the proof-not-promises wedge — and turns the bootstrap empty state into a
+  methodology showcase instead of a dead end. `verified`.
+- **Guardrails respected (`verified`):** numbers all rendered from
+  `loadPublicCalibrationReport()` at request time (none hardcoded); no win-rate math
+  in the component (policy-only-winrate clean); no banned vocabulary (trust-gate
+  clean, 269 files); component lives outside the page-scanned set. Typecheck green;
+  full suite green; 10 policy/copy-scan suites green.
+- **Status:** Done, verified green, committed to `claude/trusting-ramanujan-mYK6E`.
+  Follow-on: wire CLV into the same panel once lock-time closing-line capture lands.
+
+---
+
 ## 2026-06-01 — Competitive intelligence wave + Closing-Line Value (CLV) primitive
 
 - **Decision:** Research the 2026 competitive landscape live (not from memory) and
