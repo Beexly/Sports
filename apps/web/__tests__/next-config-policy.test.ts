@@ -33,6 +33,10 @@ describe("next.config.mjs — security policy", () => {
     expect(src).toMatch(/Referrer-Policy[\s\S]*strict-origin-when-cross-origin/);
   });
 
+  it("forces HTTPS via a long-lived Strict-Transport-Security header", () => {
+    expect(src).toMatch(/Strict-Transport-Security[\s\S]*max-age=63072000/);
+  });
+
   it("locks down camera/microphone/geolocation via Permissions-Policy", () => {
     expect(src).toMatch(/Permissions-Policy/);
     expect(src).toMatch(/camera=\(\)/);
