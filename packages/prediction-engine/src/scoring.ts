@@ -408,7 +408,13 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     gameId: input.gameId,
     pickType: "SPREAD",
     selection,
-    line: chosenSpread,
+    // `line` is stored in HOME-team perspective (= avgSpread), matching the
+    // settlement convention (settlement.ts: `homeCoverMargin = homeMargin + line`),
+    // the OpeningLine / Game.openingSpread fields, and the CLV helpers. The
+    // chosen-side display number lives in `selection` (e.g. "Away Favs -6.0").
+    // Storing chosenSpread here previously mis-graded AWAY-favored picks, because
+    // chosenSpread is away-perspective for away picks while settlement reads home.
+    line: avgSpread,
     confidence,
     edgeScore,
     consensusPct,

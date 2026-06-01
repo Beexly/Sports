@@ -105,7 +105,11 @@ export function PickCard({
       <div className="rounded-lg bg-gray-800/60 px-4 py-3">
         <p className="text-xs font-medium text-ion-1">Pick</p>
         <p className="mt-0.5 text-lg font-bold text-white">{pick.selection}</p>
-        {pick.line !== 0 && (
+        {/* SPREAD's chosen-side number already lives in `selection` (e.g.
+            "Away Favs -6.0"). `line` is stored in HOME-team perspective for
+            settlement, so rendering it raw here would contradict the selection
+            for away-favored picks. Show the explicit line for TOTAL/MONEYLINE only. */}
+        {pick.line !== 0 && pick.pickType !== "SPREAD" && (
           <p className="mt-0.5 text-xs text-ion-1">
             Line: {pick.line > 0 ? "+" : ""}{pick.line}
           </p>

@@ -9,6 +9,29 @@ Labels follow the Evidence Law: `verified` · `inferred` · `recommended` · `sp
 
 ---
 
+## 2026-06-01 — P0 BUG FIX: away-favored SPREAD picks were mis-graded
+
+- **Severity:** Critical (trust-fatal). Found via an end-to-end probe.
+- **Bug:** `scoring.ts` stored a SPREAD pick's `line` as `chosenSpread` — which is
+  AWAY-perspective for away-favored picks — but `settlement.ts`, `OpeningLine`,
+  `Game.openingSpread`, line-movement, and the CLV helpers all treat `line` as
+  HOME-perspective. Net effect: an away favorite that FAILED to cover was graded a
+  WIN. This silently corrupts win rate, calibration, and CLV — the entire public
+  track record the brand is built on. `verified` (probe: away -6 winning by only 3
+  returned WIN instead of LOSS).
+- **Fix:** store `line: avgSpread` (home-perspective) in scoring; the chosen-side
+  display number still lives in `selection`. Suppressed the now-redundant raw-line
+  row in `pick-card.tsx` for SPREAD (it would contradict the selection). Added
+  `spread-line-convention.test.ts` — an end-to-end score→settle regression (3 tests).
+- **Evidence:** engine suite 210→213 green; full suite green (apps/web 1,861, engine
+  213, ingestion 17, types 28); web typecheck clean; pick-card/picks suites green.
+- **Operator follow-up (`recommended`):** any away-favored SPREAD picks already
+  settled in a real DB under the old logic are mis-graded and would need re-grading.
+  Not touched here (no real DB access; re-grade is an operator action).
+- **Status:** Done, verified green, committed to `claude/trusting-ramanujan-mYK6E`.
+
+---
+
 ## 2026-06-01 — VISIBLE: public Calibration & Discrimination panel on /performance
 
 - **Decision:** Ship the "lead with the scoreboard" strategy as real UI. The
