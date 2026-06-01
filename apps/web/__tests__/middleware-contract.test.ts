@@ -30,6 +30,12 @@ describe("middleware route protection", () => {
     expect(src).toMatch(/dev-mode bypass|synthetic admin session/i);
   });
 
+  it("DEV_FAKE_ADMIN bypass is guarded against production (NODE_ENV check)", () => {
+    // The bypass MUST check NODE_ENV !== 'production' so that accidentally
+    // setting DEV_FAKE_ADMIN=true on a production host can't open /admin.
+    expect(src).toMatch(/NODE_ENV.*production|production.*NODE_ENV/);
+  });
+
   it("page-level role check is the source of truth (middleware is shallow)", () => {
     expect(src).toMatch(/role check|page level|page-level/i);
   });

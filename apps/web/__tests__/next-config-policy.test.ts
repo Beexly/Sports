@@ -55,12 +55,16 @@ describe("next.config.mjs — security policy", () => {
     }
   });
 
-  it("image domains are explicitly allow-listed (not wildcarded)", () => {
-    // We allow GitHub avatars + Google profile photos. Any unrelated
-    // wildcard or non-https domain would be a leak vector.
-    const m = src.match(/domains:\s*\[([^\]]+)\]/);
+  it("image remotePatterns are explicitly allow-listed (not wildcarded)", () => {
+    // We allow GitHub avatars + Google profile photos via remotePatterns
+    // (the images.domains approach is deprecated since Next.js 14.1).
+    // Any wildcard hostname would let arbitrary external images load.
+    const m = src.match(/remotePatterns\s*:\s*\[([\s\S]*?)\]/);
+    expect(m).not.toBeNull();
     if (m) {
-      expect(m[1]).not.toMatch(/\*/);
+      expect(m[1]).not.toMatch(/hostname\s*:\s*["']\*/);
+      expect(m[1]).toMatch(/avatars\.githubusercontent\.com/);
+      expect(m[1]).toMatch(/lh3\.googleusercontent\.com/);
     }
   });
 });

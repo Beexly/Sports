@@ -44,6 +44,7 @@ function externalConfigMissing(): string[] {
     "STRIPE_WEBHOOK_SECRET",
     "THE_ODDS_API_KEY",
     "ANTHROPIC_API_KEY",
+    "CRON_SECRET",
   ];
   for (const k of need) {
     const v = process.env[k];

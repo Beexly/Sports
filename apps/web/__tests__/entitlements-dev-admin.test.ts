@@ -1,4 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { getUserEntitlements } from "@/lib/entitlements";
 
 describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
@@ -26,5 +28,15 @@ describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
     process.env["DEV_FAKE_ADMIN"] = "false";
     const ent = await getUserEntitlements("dev-admin");
     expect(ent.tier).toBe("FREE");
+  });
+
+  it("disables the shortcut when NODE_ENV is production (source-level guard)", () => {
+    // Verify the source code contains the production guard so the bypass
+    // can't fire on a production host even if DEV_FAKE_ADMIN is mis-set.
+    const src = readFileSync(
+      resolve(__dirname, "../lib/entitlements.ts"),
+      "utf8"
+    );
+    expect(src).toMatch(/NODE_ENV.*production|production.*NODE_ENV/);
   });
 });

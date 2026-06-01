@@ -60,16 +60,23 @@ export const handlers = nextAuth.handlers as {
 
 const realAuth = nextAuth.auth as () => Promise<Session | null>;
 
+// Guard: DEV_FAKE_ADMIN bypass is hardcoded off in production regardless
+// of what the env var is set to, providing defense-in-depth if the var
+// is accidentally set on a production host.
+const IS_DEV_FAKE_ADMIN =
+  process.env["DEV_FAKE_ADMIN"] === "true" &&
+  process.env["NODE_ENV"] !== "production";
+
 /**
  * Dev-mode admin bypass.
  *
- * When DEV_FAKE_ADMIN=true, every auth() call returns a synthetic ADMIN
- * session. This is the launch-night escape hatch — it lets the operator
- * open /dashboard and /cockpit without OAuth or a real Postgres session
- * table. NEVER set this in production.
+ * When DEV_FAKE_ADMIN=true (and NODE_ENV !== production), every auth()
+ * call returns a synthetic ADMIN session. This is the launch-night escape
+ * hatch — it lets the operator open /dashboard and /cockpit without OAuth
+ * or a real Postgres session table.
  */
 export const auth: () => Promise<Session | null> = async () => {
-  if (process.env["DEV_FAKE_ADMIN"] === "true") {
+  if (IS_DEV_FAKE_ADMIN) {
     return {
       user: {
         id: "dev-admin",
@@ -112,4 +119,4 @@ declare module "next-auth" {
   }
 }
 
-export const DEV_FAKE_ADMIN = process.env["DEV_FAKE_ADMIN"] === "true";
+export const DEV_FAKE_ADMIN = IS_DEV_FAKE_ADMIN;

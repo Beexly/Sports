@@ -31,11 +31,14 @@ export function middleware(req: NextRequest): NextResponse {
   );
 
   if (requiresAuth) {
-    // Dev-mode bypass: when DEV_FAKE_ADMIN=true, the auth() helper returns
-    // a synthetic admin session, so we must NOT redirect here. Without this
-    // bypass, the middleware would 307 to /auth/signin before the page
-    // even runs.
-    if (process.env["DEV_FAKE_ADMIN"] === "true") {
+    // Dev-mode bypass: when DEV_FAKE_ADMIN=true (and NODE_ENV !== production),
+    // the auth() helper returns a synthetic admin session, so we must NOT
+    // redirect here. The NODE_ENV guard is defense-in-depth: even if the var
+    // is accidentally set on a production host, the bypass stays off.
+    if (
+      process.env["DEV_FAKE_ADMIN"] === "true" &&
+      process.env["NODE_ENV"] !== "production"
+    ) {
       return NextResponse.next();
     }
 
