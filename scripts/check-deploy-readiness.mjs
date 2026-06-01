@@ -189,7 +189,17 @@ async function checkStripe() {
     bad("Stripe secret key", err.message);
   }
 
-  // Confirm the three price IDs resolve.
+  // Confirm the three price IDs resolve AND match the advertised weekly
+  // ladder. The checkout route sends users straight to whatever price these
+  // env IDs point at, so a stale ID (e.g. a leftover monthly price) would
+  // charge a different amount than the pricing page/FAQ advertise. Existence
+  // alone is not enough — fail readiness on any amount/cadence mismatch.
+  // Keep in lockstep with apps/web/lib/pricing.ts + seed-stripe-prices.mjs.
+  const EXPECTED_PRICES = {
+    STRIPE_PRO_PRICE_ID: { unit_amount: 1499, interval: "week" },
+    STRIPE_ELITE_PRICE_ID: { unit_amount: 2199, interval: "week" },
+    STRIPE_VIP_PRICE_ID: { unit_amount: 4999, interval: "week" },
+  };
   for (const which of ["STRIPE_PRO_PRICE_ID", "STRIPE_ELITE_PRICE_ID", "STRIPE_VIP_PRICE_ID"]) {
     const id = process.env[which];
     if (!id) continue;
@@ -203,7 +213,21 @@ async function checkStripe() {
       }
       const price = await res.json();
       const amount = (price.unit_amount / 100).toFixed(2);
-      ok(which, `$${amount}/${price.recurring?.interval ?? "?"}`);
+      const interval = price.recurring?.interval ?? "?";
+      const exp = EXPECTED_PRICES[which];
+      const expLabel = `$${(exp.unit_amount / 100).toFixed(2)}/${exp.interval}`;
+      if (price.unit_amount !== exp.unit_amount || interval !== exp.interval) {
+        bad(
+          which,
+          `$${amount}/${interval} does NOT match advertised ${expLabel} — checkout would charge the wrong price. Re-run scripts/seed-stripe-prices.mjs and update this env var.`
+        );
+        continue;
+      }
+      if (price.active === false) {
+        bad(which, `$${amount}/${interval} is archived/inactive in Stripe`);
+        continue;
+      }
+      ok(which, `$${amount}/${interval} (matches advertised ladder)`);
     } catch (err) {
       bad(which, err.message);
     }

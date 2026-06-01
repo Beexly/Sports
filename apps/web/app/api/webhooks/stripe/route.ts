@@ -125,9 +125,29 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
       ? stripeSubscription.customer
       : stripeSubscription.customer.id;
 
-  const priceId = stripeSubscription.items.data[0]?.price.id;
-  const tier = getTierFromPriceId(priceId);
+  const price = stripeSubscription.items.data[0]?.price;
+  const priceId = price?.id;
+  const resolvedTier = resolveTierFromPrice(price);
   const status = mapStripeStatus(stripeSubscription.status);
+
+  // Never strip paid entitlements just because a subscription sits on a price
+  // we can't positively identify (e.g. a legacy price created before the
+  // metadata.tier convention, or after the env IDs were rotated to a new
+  // ladder). Preserve the customer's current tier in that case — genuine
+  // cancellations arrive via customer.subscription.deleted, handled above.
+  let tier: "FREE" | "PRO" | "ELITE" | "VIP";
+  if (resolvedTier) {
+    tier = resolvedTier;
+  } else {
+    const existing = await db.subscription.findUnique({
+      where: { stripeCustomerId: customerId },
+      select: { tier: true },
+    });
+    tier = existing?.tier ?? "FREE";
+    console.warn(
+      `[stripe] syncSubscription: unrecognized price ${priceId ?? "(none)"} for customer ${customerId}; preserving tier=${tier}`
+    );
+  }
 
   const periodStart = stripeSubscription.current_period_start
     ? new Date(stripeSubscription.current_period_start * 1000)
@@ -181,11 +201,27 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   }
 }
 
-function getTierFromPriceId(priceId: string | undefined): "FREE" | "PRO" | "ELITE" | "VIP" {
-  if (priceId === process.env["STRIPE_VIP_PRICE_ID"]) return "VIP";
-  if (priceId === process.env["STRIPE_ELITE_PRICE_ID"]) return "ELITE";
-  if (priceId === process.env["STRIPE_PRO_PRICE_ID"]) return "PRO";
-  return "FREE";
+/**
+ * Resolve the subscription tier from a Stripe price, preferring durable
+ * metadata over environment configuration so the mapping survives a price
+ * rotation:
+ *   1. price.metadata.tier — set on every price we create
+ *      (scripts/seed-stripe-prices.mjs). Durable; rotation-proof.
+ *   2. env-var price-ID match — the currently-configured ladder.
+ * Returns null when the price can't be positively identified, so the caller
+ * can preserve an existing paid subscriber rather than downgrade to FREE.
+ */
+function resolveTierFromPrice(
+  price: Stripe.Price | undefined
+): "PRO" | "ELITE" | "VIP" | null {
+  const meta = price?.metadata?.["tier"]?.toUpperCase();
+  if (meta === "PRO" || meta === "ELITE" || meta === "VIP") return meta;
+
+  const id = price?.id;
+  if (id && id === process.env["STRIPE_VIP_PRICE_ID"]) return "VIP";
+  if (id && id === process.env["STRIPE_ELITE_PRICE_ID"]) return "ELITE";
+  if (id && id === process.env["STRIPE_PRO_PRICE_ID"]) return "PRO";
+  return null;
 }
 
 function mapStripeStatus(

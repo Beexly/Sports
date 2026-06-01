@@ -529,7 +529,7 @@ export interface AuditPayloadSummary {
 }
 
 export interface AuditPayloadDetailed {
-  tier: "PRO" | "ELITE";
+  tier: "PRO" | "ELITE" | "VIP";
   pickId: string;
   generatedAt: string;
   modelVersion: string;

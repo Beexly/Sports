@@ -15,8 +15,10 @@
  *
  * Tier gating:
  *  - FREE → AuditPayloadSummary: counts + topology only, drives upgrade
- *  - PRO/ELITE → AuditPayloadDetailed: full signal flags, line movement,
- *    confidence at prediction, every SourceSnapshot hash
+ *  - Paid (PRO/ELITE/VIP) → AuditPayloadDetailed: full signal flags, line
+ *    movement, confidence at prediction, every SourceSnapshot hash.
+ *    Gated on the entitlement flag (canSeeFactorBreakdown), not tier names,
+ *    so new paid tiers inherit detail automatically.
  *
  * Fails closed:
  *  - 503 if canExposePublicPicks gate is off
@@ -66,7 +68,10 @@ export async function GET(
     : null;
 
   const tier = entitlements?.tier ?? "FREE";
-  const canSeeDetail = tier === "PRO" || tier === "ELITE";
+  // Gate on the entitlement flag so every paid tier (PRO/ELITE/VIP) gets the
+  // detailed forensic payload — not a hard-coded tier-name list that silently
+  // omits new tiers.
+  const canSeeDetail = entitlements?.canSeeFactorBreakdown ?? false;
 
   // Load pick + adjacent forensic rows.
   // We only audit picks that are (a) published, (b) non-bootstrap.
@@ -256,11 +261,13 @@ export async function GET(
   }
 
   // ──────────────────────────────────────────────────────────────────
-  // PRO / ELITE tier: full forensic detail. Still NO raw payload data,
-  // NO Kelly/stake math, NO true-EV — those remain hard-gated.
+  // Paid tier (PRO / ELITE / VIP): full forensic detail. Still NO raw
+  // payload data, NO Kelly/stake math, NO true-EV — those remain hard-gated.
   // ──────────────────────────────────────────────────────────────────
+  const detailTier: AuditPayloadDetailed["tier"] =
+    tier === "VIP" ? "VIP" : tier === "ELITE" ? "ELITE" : "PRO";
   const detailed: AuditPayloadDetailed = {
-    tier: tier === "ELITE" ? "ELITE" : "PRO",
+    tier: detailTier,
     pickId: pick.id,
     generatedAt: pick.generatedAt.toISOString(),
     modelVersion: snapshot?.modelVersion ?? "",
