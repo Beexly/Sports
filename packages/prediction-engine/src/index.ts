@@ -81,3 +81,16 @@ export {
   poissonConsistencyScore,
   assertTeamRatesAvailable,
 } from "./poisson.js";
+// R&D — probability calibration toolkit (isotonic/PAVA, Brier decomposition, ECE).
+// NOT wired into live scoring; built for the future human-gated MODEL_VERSION
+// calibration that turns the confidence score into a calibrated win probability.
+export {
+  isotonicCalibration,
+  brierDecomposition,
+  expectedCalibrationError,
+} from "./probability-calibration.js";
+export type {
+  CalibrationSample,
+  IsotonicModel,
+  BrierDecomposition,
+} from "./probability-calibration.js";
