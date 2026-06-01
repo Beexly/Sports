@@ -9,6 +9,29 @@ Labels follow the Evidence Law: `verified` · `inferred` · `recommended` · `sp
 
 ---
 
+## 2026-06-01 — Competitive intelligence wave + Closing-Line Value (CLV) primitive
+
+- **Decision:** Research the 2026 competitive landscape live (not from memory) and
+  build the single most on-strategy primitive it pointed to: **Closing-Line Value**.
+- **Why (research, `verified-ext`):** Prediction markets (Kalshi ~$23.8B volume, ~90%
+  sports; DraftKings investing $200–300M) are commoditizing the bet; AI pick sites
+  advertise unverifiable "60–72% accuracy / 8–16% monthly ROI"; verified trackers
+  (Pikkit) prove the market rewards "verified, not self-reported." GSN's durable wedge
+  is the **calibrated, tamper-evident, venue-agnostic trust layer** — win on proof.
+  CLV is the sharp's gold-standard proof metric and a *leading* indicator of edge
+  (beating the close predicts profitability before games settle). Full analysis in
+  `COMPETITIVE_INTELLIGENCE.md`.
+- **What was built (`verified`):** `packages/prediction-engine/src/clv.ts` — pure,
+  tested CLV for spread/total (points) and moneyline (implied-prob), plus `summarizeClv`
+  (beat-close rate = the headline credibility number). Conventions match `settlement.ts`
+  (home-perspective line). 13 tests; engine suite 197→210 green; exported from the package.
+- **Scope guard:** Pure engine primitive — no DB, no migration, no hard stop. Surfacing
+  CLV publicly (needs lock-time closing-line capture + a route/UI) is a deliberate
+  follow-on, not done here. `recommended` next step.
+- **Status:** Done, verified green, committed to `claude/trusting-ramanujan-mYK6E`.
+
+---
+
 ## 2026-06-01 — Settlement (R1): extract `settleSport()` to the shared pipeline; wire the Vercel cron
 
 - **Decision:** Eliminate the settlement single-point-of-failure. Extract the

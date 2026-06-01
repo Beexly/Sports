@@ -22,6 +22,21 @@ export {
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export { calculatePickResult } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// Closing-Line Value — sharp-grade credibility metric (pure; not yet surfaced publicly)
+export {
+  computeSpreadClv,
+  computeTotalClv,
+  computeMoneylineClv,
+  summarizeClv,
+} from "./clv.js";
+export type {
+  ClvVerdict,
+  SpreadSide,
+  TotalSide,
+  PointsClvResult,
+  MoneylineClvResult,
+  ClvSummary,
+} from "./clv.js";
 export * from "./constants.js";
 export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
