@@ -9,6 +9,34 @@ Labels follow the Evidence Law: `verified` · `inferred` · `recommended` · `sp
 
 ---
 
+## 2026-06-01 — Pricing & packaging: set Founding rates + a named proof-gated ladder
+
+- **Decision:** Replace weekly billing with **monthly + annual**, reprice to be
+  category-competitive for an unproven brand, and codify a **named price-escalation
+  ladder** (FOUNDING→PROVEN→ESTABLISHED→AUTHORITY) gated by proof milestones, with a
+  **lifetime grandfather guarantee** for early members. Live phase = FOUNDING.
+- **Why (data, `verified-ext`):** Dimers Pro (proven) is $24.99/mo; GSE shipped
+  $9.99/wk ≈ $43/mo — priced *above* proven incumbents while pre-record. Weekly billing
+  fires loss-aversion ~52×/yr and hides true cost. Grandfathering removes the 10–15%
+  price-increase churn spike; value-paired increases lift retention ~26%; documented
+  transition policies cut escalations ~25%. Full research: `COMPETITIVE_PRICING_AND_PACKAGING.md`.
+- **Live (FOUNDING):** Pro $14.99/mo · $99/yr; Elite $24.99/mo · $179/yr. Ladder rises
+  with proof (PROVEN $19.99/$29.99 @ ≥100 settled + published calibration; ESTABLISHED
+  $29.99/$49.99 @ ≥500 settled + verified CLV ≥52.4%; AUTHORITY $39.99/$69.99).
+- **What changed (`verified-code`):** `lib/pricing/pricing-phases.ts` (new single source of
+  truth) → `lib/stripe.ts` derives `PRICE_DISPLAY` from the live phase + 4 interval price
+  IDs + `getStripePriceId`; checkout accepts `interval`; new `pricing-plans.tsx` client
+  toggle; pricing/faq/picks copy + CLAUDE.md + .env.example updated; `pricing-honesty` test
+  rewritten + `pricing-phases` test added. Also fixed an Elite overpromise in the picks
+  upsell (claimed early access/analytics that don't exist yet).
+- **Scope guard:** No live Stripe / money touched. Operator must create the 4 **test-mode**
+  Stripe prices and set the env vars; advancing `PRICING_PHASE` is a deliberate human action.
+- **Evidence:** typecheck clean; full suite green (web 166 files); production build green
+  (`/pricing` compiles); trust-gate clean (271 files).
+- **Status:** Done, verified green, committed to `claude/trusting-ramanujan-mYK6E`.
+
+---
+
 ## 2026-06-01 — P0 BUG FIX: away-favored SPREAD picks were mis-graded
 
 - **Severity:** Critical (trust-fatal). Found via an end-to-end probe.

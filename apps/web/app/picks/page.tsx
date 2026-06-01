@@ -373,7 +373,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 href="/pricing"
                 className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
               >
-                Upgrade to Pro / $9.99/wk
+                Upgrade to Pro / $14.99/mo
               </Link>
             </div>
           )}
@@ -382,9 +382,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {isPro && entitlements.tier === "PRO" && picks.length > 0 && (
             <div className="mt-8 rounded-xl border border-purple-800/30 bg-purple-950/10 p-4 text-center">
               <p className="text-xs text-purple-400">
-                Want early access, daily alerts, and advanced analytics?{" "}
+                Want real-time email and push alerts on every signal?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
-                  Upgrade to Elite / $13.99/wk
+                  Upgrade to Elite / $24.99/mo
                 </Link>
               </p>
             </div>

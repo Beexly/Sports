@@ -1,18 +1,39 @@
 import Stripe from "stripe";
+import { getCurrentPricingPhase, type BillingInterval } from "@/lib/pricing/pricing-phases";
+
+export type { BillingInterval };
 
 export const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]!, {
   apiVersion: "2024-06-20",
   typescript: true,
 });
 
+// Stripe price IDs per tier × billing interval. The operator creates these prices
+// in Stripe (test mode) and wires the env vars. The dollar amounts shown to users
+// are NEVER hardcoded here — they derive from the current pricing phase
+// (pricing-phases.ts), the single source of truth, so display and intent can't drift.
 export const STRIPE_PRICE_IDS = {
-  PRO: process.env["STRIPE_PRO_PRICE_ID"]!,
-  ELITE: process.env["STRIPE_ELITE_PRICE_ID"]!,
+  PRO: {
+    month: process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] ?? "",
+    year: process.env["STRIPE_PRO_ANNUAL_PRICE_ID"] ?? "",
+  },
+  ELITE: {
+    month: process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"] ?? "",
+    year: process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"] ?? "",
+  },
 } as const;
 
+/** Resolve the Stripe price ID for a tier + billing interval. */
+export function getStripePriceId(tier: "PRO" | "ELITE", interval: BillingInterval): string {
+  return STRIPE_PRICE_IDS[tier][interval];
+}
+
+// Display prices derive from the current pricing phase (Founding by default).
+// Advancing PRICING_PHASE re-prices every public surface at once.
+const currentPhase = getCurrentPricingPhase();
 export const PRICE_DISPLAY = {
-  PRO: { amount: 9.99, label: "Pro", period: "week" },
-  ELITE: { amount: 13.99, label: "Elite", period: "week" },
+  PRO: { monthly: currentPhase.pro.monthly, annual: currentPhase.pro.annual, label: "Pro" },
+  ELITE: { monthly: currentPhase.elite.monthly, annual: currentPhase.elite.annual, label: "Elite" },
 } as const;
 
 /**

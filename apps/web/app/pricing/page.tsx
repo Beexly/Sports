@@ -1,98 +1,103 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { SubscribeButton } from "@/components/pricing/subscribe-button";
+import { PricingPlans, type PlanView } from "@/components/pricing/pricing-plans";
+import {
+  getCurrentPricingPhase,
+  annualSavingsPct,
+  annualMonthlyEquivalent,
+  GRANDFATHER_GUARANTEE,
+} from "@/lib/pricing/pricing-phases";
 import { BRAND_NAME } from "@/lib/brand";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
 // ─────────────────────────────────────────────
 
+const phase = getCurrentPricingPhase();
+
 export const metadata: Metadata = {
-  title: "Pricing — Three Tiers. No Upsell Games.",
+  title: "Pricing — Founding-Member Rates, Locked For Life",
   description:
-    "Free for one signal a day. $9.99/week for every signal with the reasoning attached. $13.99/week for full alerts on every published signal. Cancel any time from your dashboard.",
+    "Free for one signal a day. Founding-member pricing on Pro and Elite — the lowest price we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: `Pricing — ${BRAND_NAME}`,
     description:
-      "Free, Pro ($9.99/week), Elite ($13.99/week). Every paid plan ships with a 7-day refund window.",
+      "Founding-member pricing, locked for life. Monthly or annual, with a 7-day refund window.",
   },
 };
 
 // ─────────────────────────────────────────────
-// Plan data
+// Feature matrix (static) + phase-derived prices
 // ─────────────────────────────────────────────
 
-const PLANS = [
-  {
-    id: "FREE" as const,
-    name: "Free",
-    price: 0,
-    period: null,
-    description:
-      "One signal a day — sample the discipline before committing.",
-    badge: null,
-    cta: "Start free",
-    ctaHref: "/auth/signin",
-    features: [
-      { label: "1 signal per day", included: true },
-      { label: "Game matchup info", included: true },
-      { label: "Pick type (spread / ML / total)", included: true },
-      { label: "Confidence rating on every signal", included: false },
-      { label: "Highest-Edge-Index signals", included: false },
-      { label: "Full factor trail & reasoning", included: false },
-      { label: "Line-movement alerts", included: false },
-      { label: "Email + push notifications", included: false },
-      { label: "All 7 sports", included: false },
-    ],
-  },
-  {
-    id: "PRO" as const,
-    name: "Pro",
-    price: 9.99,
-    period: "week",
-    description:
-      "Every published signal, with the confidence rating and factor trail attached.",
-    badge: "Where most start",
-    cta: "Subscribe to Pro",
-    features: [
-      { label: "Every signal, every day", included: true },
-      { label: "Game matchup info", included: true },
-      { label: "Pick type (spread / ML / total)", included: true },
-      { label: "Confidence rating on every signal", included: true },
-      { label: "Highest-Edge-Index signals", included: true },
-      { label: "Full factor trail & reasoning", included: true },
-      { label: "Line-movement alerts", included: true },
-      { label: "Email + push notifications", included: false },
-      { label: "All 7 sports", included: true },
-    ],
-  },
-  {
-    id: "ELITE" as const,
-    name: "Elite",
-    price: 13.99,
-    period: "week",
-    description:
-      "Pro plus real-time alerts on every published signal — built for live slates.",
-    badge: "All signals, all alerts",
-    cta: "Subscribe to Elite",
-    features: [
-      { label: "Every signal, every day", included: true },
-      { label: "Game matchup info", included: true },
-      { label: "Pick type (spread / ML / total)", included: true },
-      { label: "Confidence rating on every signal", included: true },
-      { label: "Highest-Edge-Index signals", included: true },
-      { label: "Full factor trail & reasoning", included: true },
-      { label: "Line-movement alerts", included: true },
-      { label: "Email + push notifications", included: true },
-      { label: "All 7 sports", included: true },
-    ],
-  },
+const FREE_FEATURES = [
+  { label: "1 signal per day", included: true },
+  { label: "Game matchup info", included: true },
+  { label: "Pick type (spread / ML / total)", included: true },
+  { label: "Confidence rating on every signal", included: false },
+  { label: "Highest-Edge-Index signals", included: false },
+  { label: "Full factor trail & reasoning", included: false },
+  { label: "Line-movement alerts", included: false },
+  { label: "Email + push notifications", included: false },
+  { label: "All 7 sports", included: false },
 ] as const;
 
-type PlanId = (typeof PLANS)[number]["id"];
+const PRO_FEATURES = [
+  { label: "Every signal, every day", included: true },
+  { label: "Game matchup info", included: true },
+  { label: "Pick type (spread / ML / total)", included: true },
+  { label: "Confidence rating on every signal", included: true },
+  { label: "Highest-Edge-Index signals", included: true },
+  { label: "Full factor trail & reasoning", included: true },
+  { label: "Line-movement alerts", included: true },
+  { label: "Email + push notifications", included: false },
+  { label: "All 7 sports", included: true },
+] as const;
+
+const ELITE_FEATURES = PRO_FEATURES.map((f) =>
+  f.label === "Email + push notifications" ? { ...f, included: true } : f,
+);
+
+const PLANS: PlanView[] = [
+  {
+    id: "FREE",
+    name: "Free",
+    monthly: null,
+    annual: null,
+    annualSavingsPct: null,
+    annualMonthly: null,
+    description: "One signal a day — sample the discipline before committing.",
+    badge: null,
+    cta: "Start free",
+    features: [...FREE_FEATURES],
+  },
+  {
+    id: "PRO",
+    name: "Pro",
+    monthly: phase.pro.monthly,
+    annual: phase.pro.annual,
+    annualSavingsPct: annualSavingsPct(phase.pro),
+    annualMonthly: annualMonthlyEquivalent(phase.pro),
+    description: "Every published signal, with the confidence rating and factor trail attached.",
+    badge: "Where most start",
+    cta: "Subscribe to Pro",
+    features: [...PRO_FEATURES],
+  },
+  {
+    id: "ELITE",
+    name: "Elite",
+    monthly: phase.elite.monthly,
+    annual: phase.elite.annual,
+    annualSavingsPct: annualSavingsPct(phase.elite),
+    annualMonthly: annualMonthlyEquivalent(phase.elite),
+    description: "Pro plus real-time email & push alerts on every published signal — built for live slates.",
+    badge: "All signals, all alerts",
+    cta: "Subscribe to Elite",
+    features: [...ELITE_FEATURES],
+  },
+];
 
 const COMPARISON_FEATURES = [
   "Signals per day",
@@ -106,7 +111,7 @@ const COMPARISON_FEATURES = [
   "Sports covered",
 ] as const;
 
-const COMPARISON_CELLS: Record<PlanId, (string | boolean)[]> = {
+const COMPARISON_CELLS: Record<"FREE" | "PRO" | "ELITE", (string | boolean)[]> = {
   FREE: ["1", true, true, false, false, false, false, false, "Sampler"],
   PRO: ["Unlimited", true, true, true, true, true, true, false, "All 7"],
   ELITE: ["Unlimited", true, true, true, true, true, true, true, "All 7"],
@@ -122,6 +127,10 @@ const FAQ = [
     a: "Every paid plan ships with a 7-day refund window. Cancel any time from your dashboard.",
   },
   {
+    q: "What is founding-member pricing?",
+    a: "We are pre-track-record, so the launch cohort gets the lowest price we will ever offer — and it is locked for the life of your subscription. When prices rise for new members as the verified record grows, yours never does.",
+  },
+  {
     q: "How is this different from a tout service?",
     a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail and holds back a public win-rate until enough canonical settled history exists to support one honestly.",
   },
@@ -133,10 +142,6 @@ const FAQ = [
     q: "Which sports are covered?",
     a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. The slate runs on a 30-minute refresh loop during games.",
   },
-  {
-    q: "What happens after I sign up?",
-    a: "Free plan gets one signal a day as soon as the readiness gate opens. Pro and Elite unlock immediately — every signal with full reasoning, plus the Edge Index and factor trail behind each one.",
-  },
 ] as const;
 
 const faqJsonLd = {
@@ -145,10 +150,7 @@ const faqJsonLd = {
   mainEntity: FAQ.map((item) => ({
     "@type": "Question",
     name: item.q,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: item.a,
-    },
+    acceptedAnswer: { "@type": "Answer", text: item.a },
   })),
 };
 
@@ -157,6 +159,8 @@ const faqJsonLd = {
 // ─────────────────────────────────────────────
 
 export default function PricingPage() {
+  const grandfatherNote = `${phase.name}-member rate. ${GRANDFATHER_GUARANTEE}`;
+
   return (
     <div className="flex min-h-screen flex-col bg-gray-950">
       <Nav />
@@ -171,112 +175,25 @@ export default function PricingPage() {
           {/* Header */}
           <div className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent-300">
-              Pricing
+              {phase.name} pricing
             </p>
             <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              Three tiers. No upsell games.
+              Claim the founding rate.
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-lg text-gray-400">
-              Start free. Upgrade when the signal earns it. Cancel any time
-              from your dashboard.
+              Start free. Back us before the record exists and your price never moves —
+              even as it rises for everyone who joins later.
             </p>
           </div>
 
-          {/* Plan cards */}
-          <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
-            {PLANS.map((plan) => {
-              const isHighlighted = plan.id === "PRO";
-              const isElite = plan.id === "ELITE";
-              return (
-                <div
-                  key={plan.id}
-                  className={[
-                    "relative flex flex-col rounded-2xl border p-6",
-                    isHighlighted
-                      ? "border-brand-600 bg-brand-950/30 shadow-xl shadow-brand-900/30"
-                      : isElite
-                        ? "border-ultraviolet/60 bg-ultraviolet/5 shadow-xl shadow-ultraviolet/10"
-                        : "border-gray-800 bg-gray-900/60",
-                  ].join(" ")}
-                >
-                  {plan.badge && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                      <span
-                        className={[
-                          "rounded-full px-3 py-0.5 text-xs font-semibold",
-                          plan.id === "PRO"
-                            ? "bg-brand-600 text-white"
-                            : "bg-ultraviolet text-white",
-                        ].join(" ")}
-                      >
-                        {plan.badge}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="mb-4">
-                    <h2 className="text-xl font-bold text-white">
-                      {plan.name}
-                    </h2>
-                    <div className="mt-2 flex items-baseline gap-1">
-                      <span className="text-4xl font-extrabold text-white">
-                        ${plan.price}
-                      </span>
-                      {plan.period && (
-                        <span className="text-sm text-gray-400">
-                          /{plan.period}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      {plan.description}
-                    </p>
-                  </div>
-
-                  <ul className="mb-6 flex flex-col gap-3">
-                    {plan.features.map(({ label, included }) => (
-                      <li
-                        key={label}
-                        className="flex items-center gap-2 text-sm"
-                      >
-                        {included ? <CheckIcon /> : <DashIcon />}
-                        <span
-                          className={
-                            included ? "text-gray-200" : "text-gray-400"
-                          }
-                        >
-                          {label}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="mt-auto">
-                    {plan.id === "FREE" ? (
-                      <Link
-                        href="/auth/signin"
-                        className="block w-full rounded-xl border border-gray-700 bg-gray-800 py-2.5 text-center text-sm font-semibold text-gray-200 transition-colors hover:bg-gray-700"
-                      >
-                        {plan.cta}
-                      </Link>
-                    ) : (
-                      <SubscribeButton
-                        tier={plan.id}
-                        label={plan.cta}
-                        variant={plan.id === "PRO" ? "primary" : "ghost"}
-                      />
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+          {/* Plans with billing toggle */}
+          <div className="mt-14">
+            <PricingPlans plans={PLANS} grandfatherNote={grandfatherNote} />
           </div>
 
           {/* Feature comparison table */}
           <div className="mt-20">
-            <h2 className="text-center text-2xl font-bold text-white">
-              Side by side
-            </h2>
+            <h2 className="text-center text-2xl font-bold text-white">Side by side</h2>
             <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-800">
               <table className="w-full text-sm">
                 <thead>
@@ -297,9 +214,9 @@ export default function PricingPage() {
                         ].join(" ")}
                       >
                         {plan.name}
-                        {plan.price > 0 && (
+                        {plan.monthly !== null && (
                           <span className="ml-1 text-xs font-normal text-gray-400">
-                            ${plan.price}/week
+                            ${plan.monthly}/mo
                           </span>
                         )}
                       </th>
@@ -316,14 +233,10 @@ export default function PricingPage() {
                       ].join(" ")}
                     >
                       <td className="px-4 py-3 text-gray-400">{feature}</td>
-                      {(["FREE", "PRO", "ELITE"] as PlanId[]).map((planId) => {
-                        const cell: string | boolean =
-                          COMPARISON_CELLS[planId][i] ?? false;
+                      {(["FREE", "PRO", "ELITE"] as const).map((planId) => {
+                        const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
                         return (
-                          <td
-                            key={planId}
-                            className="px-4 py-3 text-center"
-                          >
+                          <td key={planId} className="px-4 py-3 text-center">
                             <ComparisonCell value={cell} />
                           </td>
                         );
@@ -337,9 +250,7 @@ export default function PricingPage() {
 
           {/* FAQ */}
           <section className="mt-20">
-            <h2 className="text-center text-2xl font-bold text-white">
-              Frequently asked
-            </h2>
+            <h2 className="text-center text-2xl font-bold text-white">Frequently asked</h2>
             <div className="mx-auto mt-8 max-w-3xl divide-y divide-gray-800/60 rounded-2xl border border-gray-800 bg-gray-900/40">
               {FAQ.map((item) => (
                 <details
@@ -355,9 +266,7 @@ export default function PricingPage() {
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-400">
-                    {item.a}
-                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-400">{item.a}</p>
                 </details>
               ))}
             </div>
@@ -365,8 +274,8 @@ export default function PricingPage() {
 
           {/* Refund note */}
           <p className="mt-12 text-center text-xs text-gray-400">
-            Every paid plan ships with a 7-day refund window. Billed weekly.
-            Cancel any time from your dashboard.
+            Every paid plan ships with a 7-day refund window. Cancel any time from your
+            dashboard. Prices shown are founding-member rates.
           </p>
         </div>
       </main>
@@ -380,45 +289,11 @@ export default function PricingPage() {
 // Helpers
 // ─────────────────────────────────────────────
 
-function CheckIcon() {
-  return (
-    <svg
-      className="h-4 w-4 shrink-0 text-green-400"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2.5}
-      stroke="currentColor"
-      aria-hidden="true"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="m4.5 12.75 6 6 9-13.5"
-      />
-    </svg>
-  );
-}
-
-function DashIcon() {
-  return (
-    <svg
-      className="h-4 w-4 shrink-0 text-gray-700"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2}
-      stroke="currentColor"
-      aria-hidden="true"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-    </svg>
-  );
-}
-
 function ComparisonCell({ value }: { value: string | boolean }) {
   if (typeof value === "boolean") {
     return value ? (
       <svg
-        className="mx-auto h-5 w-5 text-green-400"
+        className="mx-auto h-5 w-5 text-brand-400"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={2.5}
@@ -426,11 +301,7 @@ function ComparisonCell({ value }: { value: string | boolean }) {
         role="img"
         aria-label="Included"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="m4.5 12.75 6 6 9-13.5"
-        />
+        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
       </svg>
     ) : (
       <svg
