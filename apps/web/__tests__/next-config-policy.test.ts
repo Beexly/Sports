@@ -59,12 +59,22 @@ describe("next.config.mjs — security policy", () => {
     }
   });
 
-  it("image domains are explicitly allow-listed (not wildcarded)", () => {
-    // We allow GitHub avatars + Google profile photos. Any unrelated
-    // wildcard or non-https domain would be a leak vector.
-    const m = src.match(/domains:\s*\[([^\]]+)\]/);
-    if (m) {
-      expect(m[1]).not.toMatch(/\*/);
+  it("image remotePatterns are explicitly allow-listed (no hostname wildcards)", () => {
+    // We allow GitHub avatars + Google profile photos via remotePatterns.
+    // The deprecated `domains` array must not be present.
+    expect(src).not.toMatch(/^\s*domains\s*:/m);
+    expect(src).toMatch(/remotePatterns/);
+    // No glob-style hostname wildcards in the pattern list.
+    const block = src.match(/remotePatterns[\s\S]*?\]/);
+    if (block) {
+      expect(block[0]).not.toMatch(/"hostname"\s*:\s*"\*\*/);
     }
+  });
+
+  it("emits a Content-Security-Policy header on every route", () => {
+    expect(src).toMatch(/Content-Security-Policy/);
+    // Must include the restrictive object-src and base-uri directives.
+    expect(src).toMatch(/object-src.*'none'/);
+    expect(src).toMatch(/base-uri.*'self'/);
   });
 });

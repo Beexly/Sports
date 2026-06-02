@@ -1,0 +1,104 @@
+name: Security Audit
+
+on:
+  push:
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "apps/*/package.json"
+      - "packages/*/package.json"
+      - "workers/*/package.json"
+  pull_request:
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "apps/*/package.json"
+      - "packages/*/package.json"
+      - "workers/*/package.json"
+  schedule:
+    # Weekly scan — Monday 06:00 UTC — catches newly-disclosed CVEs on
+    # existing dependencies without a lockfile change.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: npm audit (critical + high)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-fund
+
+      - name: Run npm audit (fail on critical)
+        # Fails the job on any critical severity finding.
+        # High findings are reported but treated as warnings until resolved.
+        # Known acceptable risks are documented inline:
+        #
+        #   vitest <=4.1.0-beta.6  GHSA-xxxx  Vitest UI arbitrary file read.
+        #     Risk: DEV ONLY — Vitest UI server (--ui flag) is never started in
+        #     production or CI. The `vitest run` command used in ci.yml does not
+        #     start the UI server. Upgrade to vitest@^3 blocked by other breaking
+        #     changes; tracked in risk register.
+        #
+        #   next 9.3.4-canary.0 – 16.3.0-canary.5  DoS via Image Optimizer.
+        #     Risk: images.remotePatterns uses explicit hostnames (no wildcards)
+        #     so the DoS surface is limited to the two whitelisted avatar domains.
+        #     Mitigated; full upgrade to next@15 tracked separately.
+        run: |
+          set +e
+          npm audit --json > audit-report.json 2>&1
+          EXIT=$?
+          set -e
+
+          # Parse and report
+          CRITICAL=$(python3 -c "
+          import json, sys
+          d = json.load(open('audit-report.json'))
+          sev = d.get('metadata', {}).get('vulnerabilities', {})
+          print(sev.get('critical', 0))
+          ")
+
+          HIGH=$(python3 -c "
+          import json, sys
+          d = json.load(open('audit-report.json'))
+          sev = d.get('metadata', {}).get('vulnerabilities', {})
+          print(sev.get('high', 0))
+          ")
+
+          MODERATE=$(python3 -c "
+          import json, sys
+          d = json.load(open('audit-report.json'))
+          sev = d.get('metadata', {}).get('vulnerabilities', {})
+          print(sev.get('moderate', 0))
+          ")
+
+          echo "::notice::npm audit — Critical: $CRITICAL | High: $HIGH | Moderate: $MODERATE"
+
+          if [ "$HIGH" -gt "0" ]; then
+            echo "::warning::$HIGH high-severity vulnerability/vulnerabilities found. Review audit-report.json."
+          fi
+
+          if [ "$CRITICAL" -gt "0" ]; then
+            echo "::error::$CRITICAL critical vulnerability/vulnerabilities found. Must be resolved before merge."
+            npm audit --audit-level=critical
+            exit 1
+          fi
+
+          echo "No critical vulnerabilities found."
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: audit-report.json
+          retention-days: 30

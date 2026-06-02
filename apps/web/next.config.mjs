@@ -1,5 +1,23 @@
 import path from "node:path";
 
+// Content-Security-Policy for this app.
+// Script-src requires 'unsafe-inline' because Next.js 14 App Router injects
+// inline hydration scripts. Tighten to nonce-based once CSP middleware lands.
+// font-src / style-src allow Google Fonts (preconnect in layout.tsx).
+// img-src allows GitHub and Google avatar origins used by NextAuth providers.
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com",
+  "img-src 'self' data: https://avatars.githubusercontent.com https://lh3.googleusercontent.com",
+  "connect-src 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join("; ");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: [
@@ -28,7 +46,12 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
+    // remotePatterns replaces the deprecated `domains` array (Next.js 13.4+).
+    // Only https is allowed; no hostname wildcards.
+    remotePatterns: [
+      { protocol: "https", hostname: "avatars.githubusercontent.com" },
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+    ],
   },
   async headers() {
     return [
@@ -46,6 +69,7 @@ const nextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
+          { key: "Content-Security-Policy", value: CSP },
         ],
       },
     ];
