@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AnnotatedSampleSignal } from "@/components/home/annotated-sample-signal";
 import { CalibrationCurve } from "@/components/home/calibration-curve";
 import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
 import { Reveal } from "@/components/motion/reveal";
@@ -128,6 +129,7 @@ export default async function HomePage(): Promise<JSX.Element> {
       <main>
         {(demoActive || surfaceSampleActive) && <SampleDataBanner />}
         <Hero state={stateResult.data} />
+        <AnnotatedSampleSignal />
         <EngineCenterpiece
           state={stateResult.data}
           passes={passesResult.data.passes}
