@@ -98,6 +98,25 @@ export {
   poissonConsistencyScore,
   assertTeamRatesAvailable,
 } from "./poisson.js";
+// #11 — team scoring rates computed from REAL stored final scores (no new
+// provider, no fabricated λ) → an INDEPENDENT Poisson fair value that slots into
+// the edge engine as a 2nd estimator. Pure; the ingestion-cron wiring +
+// TEAM_RATES_AVAILABLE=true + MODEL_VERSION bump are founder-gated.
+export {
+  computeTeamScoringRates,
+  estimateMatchupLambdas,
+  poissonIndependentFairValue,
+  isPoissonValidSport,
+  MIN_GAMES_FOR_RATES,
+  DEFAULT_HOME_ADVANTAGE,
+} from "./team-rates.js";
+export type {
+  TeamGameRecord,
+  TeamScoringRates,
+  MatchupLambdas,
+  PoissonFairValueInput,
+  PoissonFairValue,
+} from "./team-rates.js";
 // R&D — probability calibration toolkit (isotonic/PAVA, Brier decomposition, ECE).
 // NOT wired into live scoring; built for the future human-gated MODEL_VERSION
 // calibration that turns the confidence score into a calibrated win probability.

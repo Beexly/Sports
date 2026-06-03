@@ -21,4 +21,9 @@ export {
   getHeadToHeadForm,
   settleGameLogs,
 } from "./context-enrichment.js";
+export {
+  getTeamScoringRecords,
+  getLeagueAverageScored,
+  type TeamScoringRecord,
+} from "./team-rates-source.js";
 export * from "./config.js";
