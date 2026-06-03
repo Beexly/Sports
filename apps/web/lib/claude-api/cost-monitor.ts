@@ -6,6 +6,7 @@ export type ClaudeApiSurface =
   | "CALIBRATION_WEEKLY_INSIGHT"
   | "PRE_MORTEM_SUMMARY"
   | "PICK_EXPLANATION"
+  | "LOSS_AUTOPSY_DRAFT"
   | "OTHER";
 
 export type ClaudeBudgetStatus = "green" | "yellow" | "orange" | "red" | "hard_cap";
@@ -44,6 +45,7 @@ export const CLAUDE_API_SURFACES: readonly ClaudeApiSurface[] = [
   "CALIBRATION_WEEKLY_INSIGHT",
   "PRE_MORTEM_SUMMARY",
   "PICK_EXPLANATION",
+  "LOSS_AUTOPSY_DRAFT",
   "OTHER",
 ];
 
@@ -90,6 +92,11 @@ export const DEFAULT_CLAUDE_API_BUDGETS: Readonly<Record<ClaudeApiSurface, Claud
     monthlyBudgetUsd: 200,
     thresholds: DEFAULT_THRESHOLDS,
   },
+  LOSS_AUTOPSY_DRAFT: {
+    surface: "LOSS_AUTOPSY_DRAFT",
+    monthlyBudgetUsd: 50,
+    thresholds: DEFAULT_THRESHOLDS,
+  },
   OTHER: {
     surface: "OTHER",
     monthlyBudgetUsd: 100,
@@ -124,6 +131,8 @@ export const CLAUDE_BUDGET_FALLBACKS: Readonly<Record<ClaudeApiSurface, string>>
     "Pre-mortem summaries are paused while the API budget recovers. The underlying factor data is still available.",
   PICK_EXPLANATION:
     "The plain-language explainer is at capacity for this billing cycle. The full factor breakdown and evidence audit for this pick are still available below.",
+  LOSS_AUTOPSY_DRAFT:
+    "Loss-autopsy drafting is paused while the API budget recovers. Operators can still author autopsies by hand; the underlying signal snapshot is preserved.",
   OTHER:
     "This generation surface is at capacity for this billing cycle. Existing deterministic data remains available.",
 };

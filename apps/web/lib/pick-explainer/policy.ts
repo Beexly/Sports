@@ -58,6 +58,20 @@ function matchesAny(text: string, patterns: readonly RegExp[]): boolean {
 }
 
 /**
+ * Shared no-fabrication / no-advice language check, reused by the loss-autopsy
+ * drafter. Returns the families that matched (empty = clean). Does NOT check
+ * citation/length — callers layer those on per surface.
+ */
+export function detectBannedLanguage(text: string): PickExplanationPolicyFailure[] {
+  const failures: PickExplanationPolicyFailure[] = [];
+  if (matchesAny(text, CERTAINTY_PATTERNS)) failures.push("BETTING_CERTAINTY");
+  if (matchesAny(text, PERSONAL_ADVICE_PATTERNS)) failures.push("PERSONAL_ADVICE");
+  if (matchesAny(text, EV_PATTERNS)) failures.push("EV_KELLY_WINRATE");
+  if (matchesAny(text, COMPETITOR_PATTERNS)) failures.push("COMPETITOR_COMPARE");
+  return failures;
+}
+
+/**
  * Returns the list of policy failures for an explanation. Empty array = passes.
  */
 export function evaluatePickExplanationPolicy(text: string): PickExplanationPolicyFailure[] {

@@ -17,6 +17,7 @@ describe("Claude API cost monitor policy", () => {
       "CALIBRATION_WEEKLY_INSIGHT",
       "PRE_MORTEM_SUMMARY",
       "PICK_EXPLANATION",
+      "LOSS_AUTOPSY_DRAFT",
       "OTHER",
     ]);
     for (const surface of CLAUDE_API_SURFACES) {

@@ -11,6 +11,6 @@ describe("Claude API costs dashboard loader", () => {
     expect(dashboard.monthStartIso).toBe("2026-05-01T00:00:00.000Z");
     expect(dashboard.monthEndIso).toBe("2026-06-01T00:00:00.000Z");
     expect(dashboard.surfaces.map((surface) => surface.surface)).toEqual(CLAUDE_API_SURFACES);
-    expect(dashboard.totalBudgetUsd).toBe(2950);
+    expect(dashboard.totalBudgetUsd).toBe(3000);
   });
 });
