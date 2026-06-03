@@ -26,4 +26,15 @@ export {
   getLeagueAverageScored,
   type TeamScoringRecord,
 } from "./team-rates-source.js";
+export {
+  mergeNormalizedOdds,
+  bookmakerCoverage,
+  gamesBelowThreshold,
+  resolveOddsWithFailover,
+  type OddsProvider,
+  type OddsProviderResult,
+  type FailoverInput,
+  type FailoverOutcome,
+  type FailoverReason,
+} from "./odds-failover.js";
 export * from "./config.js";
