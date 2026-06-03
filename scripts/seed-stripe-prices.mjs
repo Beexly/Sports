@@ -3,41 +3,47 @@
  * Seed Stripe products and prices for Galaxy Sports Edge.
  *
  * Idempotent: if a product or price already exists with the same lookup_key,
- * it's reused. Safe to re-run; safe to run in Test mode AND in Live mode.
+ * it's reused. Safe to re-run; safe to run in Test mode AND in Live mode
+ * (each mode keeps its own catalog).
  *
  * Usage:
  *   STRIPE_SECRET_KEY=sk_test_... node scripts/seed-stripe-prices.mjs
  *
- * Output is the price IDs to paste back into Vercel:
- *   STRIPE_PRO_PRICE_ID=price_...
- *   STRIPE_ELITE_PRICE_ID=price_...
+ * Output is the four price IDs to paste into Vercel / .env.production:
+ *   STRIPE_PRO_MONTHLY_PRICE_ID=price_...
+ *   STRIPE_PRO_ANNUAL_PRICE_ID=price_...
+ *   STRIPE_ELITE_MONTHLY_PRICE_ID=price_...
+ *   STRIPE_ELITE_ANNUAL_PRICE_ID=price_...
  *
- * Why a lookup_key matters: it lets the script (and humans in the Stripe
- * dashboard) recognize a previously-created price by stable name instead of
- * by Stripe's auto-generated price_id. Without it, re-running this script
- * would silently create duplicate prices.
+ * Amounts MUST match the FOUNDING phase in
+ * apps/web/lib/pricing/pricing-phases.ts (the single source of truth the
+ * public pricing page renders from). The page never charges; Stripe does —
+ * so if these drift from the page, customers see one price and pay another.
  *
  * Pure Node — no external dependencies. Uses fetch + the Stripe REST API.
  */
 
 const STRIPE_API = "https://api.stripe.com/v1";
 
-const PLANS = [
+// Founding phase, monthly + annual. Keep in lockstep with pricing-phases.ts.
+const CATALOG = [
   {
     productName: "Galaxy Sports Edge Pro",
     productLookup: "gse-pro",
-    priceLookup: "gse-pro-monthly",
-    unitAmount: 1900, // $19.00
-    interval: "month",
-    envVar: "STRIPE_PRO_PRICE_ID",
+    tier: "PRO",
+    prices: [
+      { priceLookup: "gse-pro-monthly", unitAmount: 1499, interval: "month", envVar: "STRIPE_PRO_MONTHLY_PRICE_ID" }, // $14.99/mo
+      { priceLookup: "gse-pro-annual", unitAmount: 9900, interval: "year", envVar: "STRIPE_PRO_ANNUAL_PRICE_ID" }, // $99/yr
+    ],
   },
   {
     productName: "Galaxy Sports Edge Elite",
     productLookup: "gse-elite",
-    priceLookup: "gse-elite-monthly",
-    unitAmount: 4900, // $49.00
-    interval: "month",
-    envVar: "STRIPE_ELITE_PRICE_ID",
+    tier: "ELITE",
+    prices: [
+      { priceLookup: "gse-elite-monthly", unitAmount: 2499, interval: "month", envVar: "STRIPE_ELITE_MONTHLY_PRICE_ID" }, // $24.99/mo
+      { priceLookup: "gse-elite-annual", unitAmount: 17900, interval: "year", envVar: "STRIPE_ELITE_ANNUAL_PRICE_ID" }, // $179/yr
+    ],
   },
 ];
 
@@ -76,8 +82,8 @@ async function stripeRequest(key, method, path, body = null) {
   return json;
 }
 
-async function findOrCreateProduct(key, { productName, productLookup }) {
-  // Search by metadata.lookup since Stripe products don't have native lookup_key.
+async function findOrCreateProduct(key, { productName, productLookup, tier }) {
+  // Search by metadata.lookup since Stripe products don't have a native lookup_key.
   const search = await stripeRequest(
     key,
     "GET",
@@ -89,10 +95,11 @@ async function findOrCreateProduct(key, { productName, productLookup }) {
   return stripeRequest(key, "POST", "/products", {
     name: productName,
     "metadata[lookup]": productLookup,
+    "metadata[tier]": tier,
   });
 }
 
-async function findOrCreatePrice(key, product, { priceLookup, unitAmount, interval }) {
+async function findOrCreatePrice(key, product, tier, { priceLookup, unitAmount, interval }) {
   const search = await stripeRequest(
     key,
     "GET",
@@ -107,6 +114,7 @@ async function findOrCreatePrice(key, product, { priceLookup, unitAmount, interv
     currency: "usd",
     "recurring[interval]": interval,
     lookup_key: priceLookup,
+    "metadata[tier]": tier, // webhook maps by env price-id; tier metadata is a durable backstop
   });
 }
 
@@ -118,16 +126,18 @@ async function main() {
 
   const envOut = [];
 
-  for (const plan of PLANS) {
-    process.stdout.write(`  ${plan.productName.padEnd(20, " ")}`);
-    try {
-      const product = await findOrCreateProduct(key, plan);
-      const price = await findOrCreatePrice(key, product, plan);
-      console.log(`✓  price=${price.id}`);
-      envOut.push(`${plan.envVar}=${price.id}`);
-    } catch (err) {
-      console.log(`✗  ${err.message}`);
-      process.exit(1);
+  for (const product of CATALOG) {
+    const created = await findOrCreateProduct(key, product);
+    for (const price of product.prices) {
+      process.stdout.write(`  ${price.priceLookup.padEnd(20, " ")}`);
+      try {
+        const p = await findOrCreatePrice(key, created, product.tier, price);
+        console.log(`✓  price=${p.id}`);
+        envOut.push(`${price.envVar}=${p.id}`);
+      } catch (err) {
+        console.log(`✗  ${err.message}`);
+        process.exit(1);
+      }
     }
   }
 
