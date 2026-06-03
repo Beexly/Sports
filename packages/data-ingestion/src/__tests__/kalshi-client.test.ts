@@ -5,7 +5,9 @@ import {
   toKalshiEventTicker,
   impliedYesProbability,
   devigTwoSided,
+  toIndependentFairValue,
 } from "../kalshi-client.js";
+import type { KalshiFairValue } from "../kalshi-client.js";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -178,5 +180,51 @@ describe("KalshiClient.getFairValue", () => {
     const fv = await retrying.getEventMarkets("KXNBAGAME-26JUN03NYKSAS");
     expect(fv).toEqual([]);
     expect(delays.length).toBeGreaterThanOrEqual(1);
+  });
+});
+
+describe("toIndependentFairValue — bridge into the engine's independent fair value", () => {
+  const fv: KalshiFairValue = {
+    eventTicker: "KXNBAGAME-26JUN03NYKSAS",
+    capturedAt: "2026-06-03T18:00:00.000Z",
+    overround: 1.0,
+    sides: [
+      { team: "New York", ticker: "KXNBAGAME-26JUN03NYKSAS-NYK", rawImpliedProb: 0.365, fairProb: 0.365 },
+      { team: "San Antonio", ticker: "KXNBAGAME-26JUN03NYKSAS-SAS", rawImpliedProb: 0.635, fairProb: 0.635 },
+    ],
+  };
+
+  it("resolves home/away from the YES-side ticker suffix (no fuzzy name matching)", () => {
+    // SAS is home, NYK is away (ticker grammar <AWAY><HOME>).
+    const out = toIndependentFairValue(fv, "SAS", "NYK");
+    expect(out.source).toBe("kalshi");
+    expect(out.homeFairProb).toBeCloseTo(0.635, 5);
+    expect(out.awayFairProb).toBeCloseTo(0.365, 5);
+    expect(out.capturedAt).toBe("2026-06-03T18:00:00.000Z");
+  });
+
+  it("is case-insensitive on abbreviations", () => {
+    const out = toIndependentFairValue(fv, "sas", "nyk");
+    expect(out.homeFairProb).toBeCloseTo(0.635, 5);
+    expect(out.awayFairProb).toBeCloseTo(0.365, 5);
+  });
+
+  it("yields null for a side with no Kalshi quote (thin/absent market), never a guess", () => {
+    const thin: KalshiFairValue = {
+      ...fv,
+      sides: [
+        { team: "New York", ticker: "KXNBAGAME-26JUN03NYKSAS-NYK", rawImpliedProb: null, fairProb: null },
+        { team: "San Antonio", ticker: "KXNBAGAME-26JUN03NYKSAS-SAS", rawImpliedProb: 0.6, fairProb: 0.6 },
+      ],
+    };
+    const out = toIndependentFairValue(thin, "SAS", "NYK");
+    expect(out.homeFairProb).toBeCloseTo(0.6, 5);
+    expect(out.awayFairProb).toBeNull();
+  });
+
+  it("returns nulls when the abbreviations don't match any side (no coverage)", () => {
+    const out = toIndependentFairValue(fv, "BOS", "LAL");
+    expect(out.homeFairProb).toBeNull();
+    expect(out.awayFairProb).toBeNull();
   });
 });

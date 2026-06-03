@@ -19,6 +19,8 @@
  * deliberate step (a schema field + computeMoneylineClv at settlement).
  */
 
+import type { IndependentMarketFairValue } from "@sports/types";
+
 // Public Trade API. Despite the host, this serves all Kalshi markets.
 const KALSHI_BASE_URL = "https://external-api.kalshi.com/trade-api/v2";
 // A hung exchange call must never block the ingestion cron.
@@ -266,4 +268,34 @@ export class KalshiClient {
       sides,
     };
   }
+}
+
+/**
+ * Bridge a Kalshi fair-value snapshot into the engine's independent-fair-value
+ * shape (the thing threaded through `OddsInput.context.independentFairValues`).
+ *
+ * Side → home/away is resolved deterministically from the market ticker, whose
+ * final segment is the YES-side team abbreviation (verified live: a market under
+ * event `KXNBAGAME-26JUN03NYKSAS` is `…-NYK`). The caller passes the same Kalshi
+ * abbreviations it used to build the event ticker, so no fuzzy name-matching is
+ * needed. A side with no quote stays null — a supplementary signal, never sole
+ * (honesty doctrine: never overclaim from a thin market).
+ *
+ * Pure: no I/O. Wiring this into the ingestion cron (with the team-abbreviation
+ * lookup table) is a separate, founder-gated step.
+ */
+export function toIndependentFairValue(
+  fairValue: KalshiFairValue,
+  homeAbbr: string,
+  awayAbbr: string,
+): IndependentMarketFairValue {
+  const tail = (ticker: string) => ticker.slice(ticker.lastIndexOf("-") + 1).toUpperCase();
+  const home = fairValue.sides.find((s) => tail(s.ticker) === homeAbbr.toUpperCase());
+  const away = fairValue.sides.find((s) => tail(s.ticker) === awayAbbr.toUpperCase());
+  return {
+    source: "kalshi",
+    homeFairProb: home?.fairProb ?? null,
+    awayFairProb: away?.fairProb ?? null,
+    capturedAt: fairValue.capturedAt,
+  };
 }

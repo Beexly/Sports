@@ -21,6 +21,41 @@ export type RiskLevel =
 // Factor Breakdown — structured scoring factors per pick
 // ============================================================
 
+export type IndependentEdgeDecision = "SPEAK" | "LEAN" | "PASS";
+export type IndependentEdgeAgreement =
+  | "CONFIRMS"
+  | "SPLIT"
+  | "SOLO"
+  | "CONTRADICTS"
+  | "NONE";
+
+/**
+ * The result of comparing INDEPENDENT fair-value estimators (e.g. the Kalshi
+ * exchange, and — once team rates are ingested — the Poisson model) against the
+ * sportsbook's own de-vigged fair value. This is the fix for "the engine grading
+ * itself": real edge is the gap between an estimate the market has NOT absorbed
+ * and the market price, refereed by a second independent market.
+ *
+ * `priced` is false in the current wire-in: the assessment is SURFACED in the
+ * glass box (and persisted for CLV grading) but does NOT yet move the confidence
+ * score. Letting it move confidence is a deliberate, founder-gated MODEL_VERSION
+ * step. The honest default with no independent estimate is no `independentEdge`
+ * at all — the scorer behaves exactly as before.
+ */
+export interface IndependentEdgeSummary {
+  decision: IndependentEdgeDecision;
+  agreement: IndependentEdgeAgreement;
+  marketFairProb: number;       // sportsbook de-vigged fair prob for the side, 0–1
+  trueProb: number | null;      // independent blended estimate, 0–1
+  rawEdge: number;              // trueProb − marketFairProb
+  shrunkEdge: number;           // rawEdge after evidence/agreement shrink
+  expectedClv: number;          // honest expectation of beating the close, prob pts
+  conviction: number;           // 0–100 glass-box conviction
+  sources: string[];            // independent estimators used, e.g. ["kalshi"]
+  priced: boolean;              // false = surfaced, not yet in the confidence math
+  rationale: string;            // plain-language "why"
+}
+
 export interface FactorBreakdown {
   marketPriceShapeScore?: number; // 0-25: no-vig market shape; not independent EV
   trueEvScore?: number | null; // future: independent EV score once source-backed fair probability exists
@@ -38,6 +73,8 @@ export interface FactorBreakdown {
   // Schedule density (v5)
   scheduleStressScore?: number; // ±5: compressed schedule fatigue signal
   dataQualityScore?: number;   // 0–100: overall data trust score (always public)
+  // Independent-edge layer — surfaced, not yet priced (see IndependentEdgeSummary)
+  independentEdge?: IndependentEdgeSummary | null;
   factors: FactorDetail[];     // human-readable factor list
 }
 
@@ -255,6 +292,23 @@ export interface GameContextInput {
   hasTotalMarket?: boolean;
   hasH2HMarket?: boolean;
   shadowEvidence?: EvidenceRecord[];
+  // Independent fair-value estimates that did NOT look at the sportsbook line
+  // (e.g. the Kalshi exchange). Pre-fetched in the ingestion layer (Kalshi reads
+  // are async I/O) so the PURE, synchronous scorer can run the edge engine
+  // against them. Home/away perspective. Absent → scorer is unchanged.
+  independentFairValues?: IndependentMarketFairValue[];
+}
+
+/**
+ * A de-vigged fair-value snapshot for one game from a source independent of the
+ * sportsbook (an exchange like Kalshi, or — later — the Poisson model). Probs are
+ * P(team wins), 0–1; null where the source has no quote (thin/absent market).
+ */
+export interface IndependentMarketFairValue {
+  source: string;                 // e.g. "kalshi"
+  homeFairProb?: number | null;
+  awayFairProb?: number | null;
+  capturedAt?: string;            // ISO; the CLV "as-of" timestamp
 }
 
 // ============================================================

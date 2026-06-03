@@ -5,6 +5,7 @@ export {
   toKalshiEventTicker,
   impliedYesProbability,
   devigTwoSided,
+  toIndependentFairValue,
   type KalshiLeague,
   type KalshiGameRef,
   type KalshiSideFairValue,

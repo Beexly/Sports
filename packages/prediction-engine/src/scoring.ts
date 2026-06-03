@@ -6,8 +6,11 @@ import type {
   RiskLevel,
   FactorBreakdown,
   FactorDetail,
+  IndependentMarketFairValue,
+  IndependentEdgeSummary,
 } from "@sports/types";
 import { computePickGrade } from "@sports/types";
+import { assessEdge, type IndependentEstimate } from "./edge-engine.js";
 import {
   MODEL_VERSION,
   PREMIUM_CONFIDENCE_THRESHOLD,
@@ -121,6 +124,58 @@ function buildShadowEvidenceFactors(input: OddsInput): FactorDetail[] {
       whyUsedOrBlocked: evidence.whyUsedOrBlocked,
     },
   }));
+}
+
+// ============================================================
+// Independent-edge assessment — the fix for "the engine grading itself".
+// Compares pre-fetched INDEPENDENT fair values (e.g. the Kalshi exchange,
+// threaded through context.independentFairValues) against the sportsbook's own
+// de-vigged fair probability, via the edge engine. SURFACED, NOT YET PRICED:
+// the result rides on the pick for the glass box and CLV grading, but does not
+// move the confidence score (a deliberate, founder-gated MODEL_VERSION step).
+// Returns null — and the scorer is byte-identical to before — when no
+// independent estimate is available. We never manufacture an edge from the
+// market's own price.
+// ============================================================
+
+function assessIndependentEdge(
+  fairValues: IndependentMarketFairValue[] | undefined,
+  homeIsChosen: boolean,
+  marketFairProb: number,
+  dataQualityScore: number,
+  marketConsistent: boolean
+): IndependentEdgeSummary | null {
+  if (!fairValues || fairValues.length === 0) return null;
+
+  const independents: IndependentEstimate[] = [];
+  for (const fv of fairValues) {
+    const prob = homeIsChosen ? fv.homeFairProb : fv.awayFairProb;
+    if (prob == null || !Number.isFinite(prob) || prob < 0 || prob > 1) continue;
+    independents.push({ source: fv.source, prob });
+  }
+  if (independents.length === 0) return null;
+
+  const a = assessEdge({
+    marketFairProb,
+    independents,
+    // Real evidence health shrinks the edge; absent → edge engine's full default.
+    evidenceScore: dataQualityScore > 0 ? dataQualityScore : undefined,
+    marketConsistent,
+  });
+
+  return {
+    decision: a.decision,
+    agreement: a.agreement,
+    marketFairProb: a.marketFairProb,
+    trueProb: a.trueProb,
+    rawEdge: a.rawEdge,
+    shrunkEdge: a.shrunkEdge,
+    expectedClv: a.expectedClv,
+    conviction: a.conviction,
+    sources: independents.map((e) => e.source),
+    priced: false, // surfaced in the glass box; not yet in the confidence math
+    rationale: a.rationale,
+  };
 }
 
 // ============================================================
@@ -706,6 +761,32 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
   const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
 
+  // Independent-edge assessment (Kalshi exchange, etc.). Surfaced, not priced:
+  // weight 0 so it appears in the glass-box factor trail without touching the
+  // confidence math. Null (and absent) when no independent estimate exists.
+  const independentEdge = assessIndependentEdge(
+    input.context?.independentFairValues,
+    homeIsChosen,
+    fairProb,
+    dataQualityScore,
+    twoSidedImpliedSum >= 1
+  );
+  const independentEdgeFactors: FactorDetail[] = independentEdge
+    ? [
+        {
+          name: `Independent Edge (${independentEdge.sources.join(", ")})`,
+          impact:
+            independentEdge.decision === "PASS"
+              ? "neutral"
+              : independentEdge.shrunkEdge > 0
+              ? "positive"
+              : "negative",
+          description: independentEdge.rationale,
+          weight: 0, // surfaced in the glass box; NOT yet priced into confidence
+        },
+      ]
+    : [];
+
   const factors: FactorDetail[] = [
     consensusFactor,
     depthFactor,
@@ -713,6 +794,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     ...(volatilityFactor ? [volatilityFactor] : []),
     ...contextFactors,
     ...shadowEvidenceFactors,
+    ...independentEdgeFactors,
   ];
 
   const confidence = Math.round(
@@ -774,6 +856,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
     scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
     dataQualityScore,
+    independentEdge: independentEdge ?? undefined,
     factors,
   };
 
