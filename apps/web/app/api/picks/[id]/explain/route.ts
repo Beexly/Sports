@@ -1,0 +1,161 @@
+/**
+ * "Ask the model why" — POST /api/picks/[id]/explain
+ *
+ * Returns a plain-language, strictly-grounded explanation of why the engine
+ * surfaced this pick, built ONLY from the pick's stored FactorBreakdown (incl.
+ * the independent-edge rationale) and its immutable PickSignalSnapshot. The
+ * model never sees anything else, and the output is policy-validated before it
+ * is returned (no betting advice, no certainty, must cite its grounding).
+ *
+ * Gating (fails closed):
+ *  - 503 if canExposePublicPicks is off
+ *  - 401 if not signed in; 403 unless PRO/ELITE (canSeeFactorBreakdown)
+ *  - 503 if ANTHROPIC_API_KEY is not configured
+ *  - 404 if the pick is missing, unpublished, or bootstrap-era
+ *  - 422 if the generated answer fails policy; 503 if the monthly budget is spent
+ */
+
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { getUserEntitlements } from "@/lib/entitlements";
+import { db } from "@sports/db";
+import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
+import type { FactorBreakdown } from "@sports/types";
+import { explainPick, PickExplanationError } from "@/lib/pick-explainer/explain";
+import type { GroundingSnapshot } from "@/lib/pick-explainer/grounding";
+
+export const dynamic = "force-dynamic";
+
+interface RouteContext {
+  params: { id: string };
+}
+
+const SIGNAL_KEYS = [
+  "hadOddsSignal",
+  "hadLineMovementSignal",
+  "hadRestSignal",
+  "hadScheduleSignal",
+  "hadAtsFormSignal",
+  "hadH2HSignal",
+  "hadVenueSignal",
+  "hadWeatherSignal",
+  "hadInjurySignal",
+  "hadRatingsSignal",
+  "hadPlayerSignal",
+  "hadOfficialsSignal",
+  "hadVenueEnvironmentSignal",
+  "hadPaceSignal",
+  "hadMilestoneSignal",
+] as const;
+
+export async function POST(
+  request: NextRequest,
+  context: RouteContext,
+): Promise<NextResponse> {
+  const gates = getReadinessGates();
+  if (!gates.canExposePublicPicks) {
+    return NextResponse.json(bootstrapGateResponse("Pick explanation"), { status: 503 });
+  }
+
+  const pickId = context.params.id;
+  if (!pickId || typeof pickId !== "string") {
+    return NextResponse.json({ error: "invalid pick id" }, { status: 400 });
+  }
+
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  const entitlements = await getUserEntitlements(session.user.id);
+  if (!entitlements.canSeeFactorBreakdown) {
+    return NextResponse.json(
+      { error: "Pro or Elite required to ask the model why." },
+      { status: 403 },
+    );
+  }
+
+  // Optional focused question (the grounded explanation is the default).
+  let question: string | null = null;
+  const body = await request.json().catch(() => ({}) as Record<string, unknown>);
+  if (typeof body?.question === "string") {
+    const q = body.question.trim();
+    if (q.length > 280) {
+      return NextResponse.json({ error: "question too long" }, { status: 400 });
+    }
+    if (q.length > 0) question = q;
+  }
+
+  const apiKey = process.env["ANTHROPIC_API_KEY"];
+  if (!apiKey) {
+    return NextResponse.json({ error: "claude-not-configured" }, { status: 503 });
+  }
+
+  const pick = await db.pick.findUnique({
+    where: { id: pickId },
+    include: {
+      signalSnapshot: true,
+      game: { include: { sport: { select: { key: true, name: true } } } },
+    },
+  });
+  if (!pick || !pick.isPublished || pick.isBootstrap) {
+    return NextResponse.json({ error: "pick not found" }, { status: 404 });
+  }
+
+  const snap = pick.signalSnapshot;
+  const groundingSnapshot: GroundingSnapshot | null = snap
+    ? {
+        capturedAt: snap.capturedAt,
+        confidenceAtPrediction: snap.confidenceAtPrediction,
+        dataQualityScore: snap.dataQualityScore,
+        bookmakerCount: snap.bookmakerCount,
+        lineMovementDelta: snap.lineMovementDelta,
+        settlementResult: snap.settlementResult,
+        signalFlags: Object.fromEntries(
+          SIGNAL_KEYS.map((k) => [k, Boolean((snap as unknown as Record<string, unknown>)[k])]),
+        ),
+      }
+    : null;
+
+  try {
+    const explanation = await explainPick({
+      apiKey,
+      question,
+      gameId: pick.gameId,
+      userId: session.user.id === "dev-admin" ? null : session.user.id,
+      grounding: {
+        game: {
+          homeTeamName: pick.game.homeTeamName,
+          awayTeamName: pick.game.awayTeamName,
+          sport: pick.game.sport?.key ?? pick.game.sport?.name ?? "sport",
+          commenceTime: pick.game.commenceTime,
+        },
+        pick: {
+          pickType: pick.pickType,
+          selection: pick.selection,
+          line: pick.line,
+          confidence: pick.confidence,
+          edgeScore: pick.edgeScore,
+          modelVersion: pick.modelVersion,
+          generatedAt: pick.generatedAt,
+          result: pick.result,
+          factorBreakdown: (pick.factorBreakdown as unknown as FactorBreakdown | null) ?? null,
+          clvKind: pick.clvKind,
+          clvValue: pick.clvValue,
+          clvVerdict: pick.clvVerdict,
+        },
+        snapshot: groundingSnapshot,
+      },
+    });
+    return NextResponse.json({
+      success: true,
+      explanation: explanation.text,
+      modelName: explanation.modelName,
+    });
+  } catch (err) {
+    if (err instanceof PickExplanationError) {
+      const status = err.kind === "BUDGET" ? 503 : 422;
+      return NextResponse.json({ error: err.message, kind: err.kind }, { status });
+    }
+    return NextResponse.json({ error: "explanation failed" }, { status: 500 });
+  }
+}

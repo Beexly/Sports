@@ -8,6 +8,7 @@ import type {
 } from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
 import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
+import { AskWhy } from "./ask-why";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -188,6 +189,9 @@ export function PickCard({
           </span>
         )}
       </div>
+
+      {/* Glass-box explainer — PRO+ only, on real picks (server enforces the gate too). */}
+      {canSeeFactorBreakdown && pick.isAuditAvailable && <AskWhy pickId={pick.id} />}
     </article>
   );
 }
@@ -261,6 +265,23 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
               </span>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Independent-edge layer (#10) — surfaced, not yet priced into confidence. */}
+      {breakdown.independentEdge && breakdown.independentEdge.decision !== "PASS" && (
+        <div className="mt-2 rounded-md border border-ion-blue/30 bg-ion-blue/5 p-2">
+          <div className="mb-0.5 flex items-center gap-1.5">
+            <span className="text-[10px] font-semibold uppercase tracking-wide text-ion-blue">
+              Independent edge
+            </span>
+            <span className="rounded-full bg-gray-800 px-1.5 py-0.5 text-[9px] text-gray-400">
+              {breakdown.independentEdge.sources.join(", ") || "—"} · not yet priced
+            </span>
+          </div>
+          <p className="text-[10px] leading-relaxed text-gray-400">
+            {breakdown.independentEdge.rationale}
+          </p>
         </div>
       )}
 

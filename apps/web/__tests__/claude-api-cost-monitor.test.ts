@@ -16,6 +16,7 @@ describe("Claude API cost monitor policy", () => {
       "MODEL_COURT_ANSWER",
       "CALIBRATION_WEEKLY_INSIGHT",
       "PRE_MORTEM_SUMMARY",
+      "PICK_EXPLANATION",
       "OTHER",
     ]);
     for (const surface of CLAUDE_API_SURFACES) {

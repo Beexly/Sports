@@ -7,19 +7,24 @@ import {
 } from "@/lib/claude-api/cost-monitor";
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
+const migrationsDir = path.join(repoRoot, "packages/db/prisma/migrations");
 const migration = fs.readFileSync(
-  path.join(
-    repoRoot,
-    "packages/db/prisma/migrations/20260523031000_seed_claude_api_budgets/migration.sql"
-  ),
+  path.join(migrationsDir, "20260523031000_seed_claude_api_budgets/migration.sql"),
   "utf8"
 );
+// Surfaces may be seeded across multiple migrations (each new surface ships its
+// own idempotent seed). Scan the union so additions only need a new migration.
+const allMigrations = fs
+  .readdirSync(migrationsDir)
+  .filter((d) => fs.existsSync(path.join(migrationsDir, d, "migration.sql")))
+  .map((d) => fs.readFileSync(path.join(migrationsDir, d, "migration.sql"), "utf8"))
+  .join("\n");
 
 describe("Claude API budget seed migration", () => {
   it("seeds every budgeted surface with the locked monthly budget", () => {
     for (const surface of CLAUDE_API_SURFACES) {
-      expect(migration).toContain(`'${surface}'`);
-      expect(migration).toContain(`${DEFAULT_CLAUDE_API_BUDGETS[surface].monthlyBudgetUsd}.00`);
+      expect(allMigrations).toContain(`'${surface}'`);
+      expect(allMigrations).toContain(`${DEFAULT_CLAUDE_API_BUDGETS[surface].monthlyBudgetUsd}.00`);
     }
   });
 
