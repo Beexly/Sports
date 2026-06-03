@@ -33,6 +33,12 @@ const LAYERS: JarvisLayerStatuses = {
   ciHardening: "partial",
 };
 
+// A published canonical pick still result=PENDING whose game began more than
+// this many hours ago is "stale" — every supported sport finishes well within
+// this window, so a still-ungraded pick means settlement is overdue, not that
+// the game is live. Drives settlementStatus → RED (the moat's life-support).
+const STALE_PICK_HOURS = 12;
+
 function externalConfigMissing(): string[] {
   const missing: string[] = [];
   const need = [
@@ -63,6 +69,7 @@ export async function loadJarvisAssessment(): Promise<{
   const gates = getReadinessGates();
   const recentSince = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
   const settlementSince = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  const stalePickCutoff = new Date(now.getTime() - STALE_PICK_HOURS * 60 * 60 * 1000);
 
   const [
     lastSuccessIngestion,
@@ -84,6 +91,7 @@ export async function loadJarvisAssessment(): Promise<{
     snapshotCoverageRaw,
     avgDqRaw,
     modelVersions,
+    stalePendingCount,
   ] = await Promise.all([
     db.ingestionRun
       .findFirst({
@@ -135,6 +143,16 @@ export async function loadJarvisAssessment(): Promise<{
     db.pick
       .findMany({ distinct: ["modelVersion"], select: { modelVersion: true }, take: 10 })
       .catch(() => []),
+    db.pick
+      .count({
+        where: {
+          result: "PENDING",
+          isPublished: true,
+          isBootstrap: false,
+          game: { commenceTime: { lt: stalePickCutoff } },
+        },
+      })
+      .catch(() => 0),
   ]);
 
   const performancePolicy = evaluatePublicPerformancePolicy({
@@ -179,6 +197,7 @@ export async function loadJarvisAssessment(): Promise<{
       lastSettlementAt: lastSettlement?.settledAt ?? null,
       settledIn24h,
       pendingPickCount: canonicalPending,
+      stalePendingCount,
     },
     history: {
       canonicalSettledCount,

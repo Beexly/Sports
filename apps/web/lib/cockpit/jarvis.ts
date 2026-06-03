@@ -69,6 +69,13 @@ export interface JarvisSettlementInput {
   readonly lastSettlementAt: Date | string | null;
   readonly settledIn24h: number;
   readonly pendingPickCount: number;
+  /**
+   * Published canonical picks still result=PENDING whose game began long enough
+   * ago that settlement is overdue (see STALE_PICK_HOURS in jarvis-data.ts). Any
+   * value > 0 forces settlementStatus → RED: a settled-honesty brand cannot leave
+   * a finished game ungraded. Optional so existing callers/fixtures are unaffected.
+   */
+  readonly stalePendingCount?: number;
 }
 
 export interface JarvisHistoryInput {
@@ -206,6 +213,10 @@ function classifySettlement(
   settlement: JarvisSettlementInput,
   now: Date
 ): JarvisHealth {
+  // A finished game left ungraded is the one failure a settled-honesty brand
+  // cannot tolerate — it silently corrupts the public record. Any stale pick is
+  // RED regardless of how recently the settlement job last *ran*.
+  if ((settlement.stalePendingCount ?? 0) > 0) return "RED";
   const last = toDate(settlement.lastSettlementAt);
   if (!last) {
     // No settlements yet at all — fine if there are no pending picks either.
@@ -377,6 +388,11 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
       `Ingestion has ${input.ingestion.recentFailureCount} recent failures — investigate the data adapter before public claims.`
     );
   }
+  if ((input.settlement.stalePendingCount ?? 0) > 0) {
+    safety.push(
+      `${input.settlement.stalePendingCount} published pick(s) remain unsettled past the settlement window — a finished game is ungraded. Settle them before any public performance claim; the public record must never omit a completed pick.`
+    );
+  }
 
   const missingPhase: string[] = [];
   const layerEntries: Array<[string, JarvisPhaseStatus]> = [
@@ -412,6 +428,11 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
   if (input.settlement.pendingPickCount > 0 && settlement !== "GREEN") {
     actions.push(
       `Settle ${input.settlement.pendingPickCount} pending picks (settlement worker has not run within tolerance).`
+    );
+  }
+  if ((input.settlement.stalePendingCount ?? 0) > 0) {
+    actions.push(
+      `Investigate ${input.settlement.stalePendingCount} stale unsettled pick(s): run /api/cron/settle-picks and check the upstream score feed for the affected games before the next public claim.`
     );
   }
   if (input.gates.isBootstrapMode) {

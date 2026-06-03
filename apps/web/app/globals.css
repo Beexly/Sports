@@ -57,6 +57,31 @@
       scroll-behavior: auto !important;
     }
   }
+
+  /* Accessibility: keyboard skip-link — visually hidden until focused, then
+   * slides into view as the first tab stop so keyboard/SR users can jump
+   * past the nav straight to #main-content. */
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    transform: translateY(-150%);
+    padding: 0.5rem 0.875rem;
+    border-radius: 0.5rem;
+    background: var(--ion-white, #ffffff);
+    color: var(--carbon, #04060a);
+    font-family: var(--f-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s ease;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+    outline: 2px solid var(--plasma, #ff2d8a);
+    outline-offset: 2px;
+  }
 }
 
 @layer components {

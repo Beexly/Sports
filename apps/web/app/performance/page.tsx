@@ -7,6 +7,7 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { PerformanceBootstrapState } from "@/components/performance/bootstrap-state";
 import { CalibrationPanel } from "@/components/performance/calibration-panel";
+import { BRAND_NAME } from "@/lib/brand";
 import type { PickType, PickTier } from "@sports/types";
 
 export const metadata: Metadata = {
@@ -15,6 +16,35 @@ export const metadata: Metadata = {
     "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
   alternates: { canonical: "/performance" },
 };
+
+// Structured data — Organization JSON-LD anchored to the public track-record
+// page so search/AI engines bind the calibration entity to the brand. Reuses
+// ONLY vetted constants (BRAND_NAME, the page's own metadata.description,
+// computed URLs) so it cannot trip the public-copy scanners that readFileSync
+// this exact file. Purely additive: no behavior, data flow, or gate is touched.
+// Apex host to match layout.tsx / sitemap.ts / robots.ts — a mismatched
+// fallback (www here, apex there) would split canonical signals.
+const SITE_URL =
+  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
+
+const performanceJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: BRAND_NAME,
+  url: SITE_URL,
+  description: metadata.description,
+  knowsAbout: ["sports analytics", "sports betting model calibration"],
+  mainEntityOfPage: `${SITE_URL}/performance`,
+};
+
+function PerformanceJsonLd() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(performanceJsonLd) }}
+    />
+  );
+}
 
 // Types
 
@@ -88,6 +118,7 @@ function latestModelVersion(summaries: PerformanceSummary[]): string | null {
 function BootstrapShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col bg-gray-950">
+      <PerformanceJsonLd />
       <Nav />
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
@@ -183,6 +214,7 @@ export default async function PerformancePage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-950">
+      <PerformanceJsonLd />
       <Nav />
       <main className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">

@@ -38,6 +38,10 @@ export type {
   MoneylineClvResult,
   ClvSummary,
 } from "./clv.js";
+// Per-pick CLV adapter — bridges the clv.ts primitives to a real Pick record
+// using settlement.ts's side convention. Pure; not yet persisted per pick.
+export { computePickClv } from "./pick-clv.js";
+export type { PickClvResult } from "./pick-clv.js";
 export * from "./constants.js";
 export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";

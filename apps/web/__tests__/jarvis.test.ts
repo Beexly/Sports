@@ -275,6 +275,43 @@ describe("synthesizeJarvis", () => {
     expect(a.settlementStatus).toBe("UNKNOWN");
   });
 
+  it("forces settlement RED when stale unsettled picks exist, even if settlement just ran", () => {
+    const a = synthesizeJarvis(
+      baseInput({
+        settlement: {
+          // Settlement job ran 2h ago — by age alone this would be GREEN...
+          lastSettlementAt: new Date(NOW.getTime() - 2 * 60 * 60 * 1000),
+          settledIn24h: 12,
+          pendingPickCount: 6,
+          stalePendingCount: 3, // ...but 3 finished games are still ungraded.
+        },
+      })
+    );
+    // The moat's life-support: a finished game left ungraded is always RED.
+    expect(a.settlementStatus).toBe("RED");
+    expect(
+      a.safetyWarnings.some((w) => /unsettled past the settlement window/i.test(w))
+    ).toBe(true);
+    expect(a.launchStatus).not.toBe("LAUNCH_READY");
+    expect(
+      a.recommendedNextActions.some((x) => /stale unsettled pick/i.test(x))
+    ).toBe(true);
+  });
+
+  it("leaves settlement classification unchanged when stalePendingCount is absent or zero", () => {
+    const fresh = synthesizeJarvis(
+      baseInput({
+        settlement: {
+          lastSettlementAt: new Date(NOW.getTime() - 2 * 60 * 60 * 1000),
+          settledIn24h: 12,
+          pendingPickCount: 4,
+          stalePendingCount: 0,
+        },
+      })
+    );
+    expect(fresh.settlementStatus).toBe("GREEN");
+  });
+
   it("classifies ingestion AMBER when last success is 6-24h old", () => {
     const stale = new Date(NOW.getTime() - 10 * 60 * 60 * 1000);
     const a = synthesizeJarvis(

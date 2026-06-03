@@ -14,6 +14,7 @@ import {
   SOCIAL,
   SUPPORT_EMAIL,
 } from "@/lib/brand";
+import { WebVitalsReporter } from "@/components/web-vitals-reporter";
 
 const archFont = Big_Shoulders_Display({
   subsets: ["latin"],
@@ -208,7 +209,13 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
+        <WebVitalsReporter />
+        <div id="main-content">{children}</div>
+      </body>
     </html>
   );
 }
