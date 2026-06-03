@@ -128,7 +128,9 @@ export const LAYER_2_UNSUPPORTED_CLAIMS: ComplianceRule[] = [
     id: "L2-PUBLIC-WIN-RATE",
     layer: 2,
     severity: "block",
-    pattern: /\b(we hit \d{2,}%|we win \d{2,}%|our win rate is|\d{2,}% accuracy|\d{2,}% hit rate)\b/i,
+    // No trailing \b: the %-ending alternatives ("we hit 70%") could never match
+    // with one — \b can't fire between "%" and a space/end. (Salvaged fix.)
+    pattern: /\b(we hit \d{2,}%|we win \d{2,}%|our win rate is|\d{2,}% accuracy|\d{2,}% hit rate)/i,
     message: "Banned: aggregate win-rate claim. The platform does not publish a marketing win rate.",
     suggestion: "Point users to /ledger and /board for the data instead.",
   },
@@ -136,7 +138,9 @@ export const LAYER_2_UNSUPPORTED_CLAIMS: ComplianceRule[] = [
     id: "L2-PUBLIC-EV",
     layer: 2,
     severity: "block",
-    pattern: /\b(expected value of |EV of |[+-]\d+(\.\d+)? units? per|EV per pick|expected value per pick)\b/i,
+    // No trailing \b: the space-ending alternatives ("EV of ") need a following
+    // word char to satisfy it, so they failed at string end / before punctuation.
+    pattern: /\b(expected value of |EV of |[+-]\d+(\.\d+)? units? per|EV per pick|expected value per pick)/i,
     message: "Banned: public EV claim. EV depends on user-specific inputs; the platform does not publish public EV.",
     suggestion: "If discussing EV, route the user to the Kelly sizer in the Edge Lab.",
   },

@@ -53,6 +53,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   } catch (err) {
     const message = err instanceof Error ? err.message : "Checkout failed";
     console.error(`Checkout error: ${message}`);
-    return NextResponse.json({ error: message }, { status: 500 });
+    // Log the real error server-side; never leak raw Stripe/internal text to the client.
+    return NextResponse.json(
+      { error: "Unable to start checkout. Please try again." },
+      { status: 500 }
+    );
   }
 }
