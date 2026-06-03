@@ -1,4 +1,15 @@
 export { OddsApiClient, OddsApiError } from "./odds-api-client.js";
+export {
+  KalshiClient,
+  KalshiError,
+  toKalshiEventTicker,
+  impliedYesProbability,
+  devigTwoSided,
+  type KalshiLeague,
+  type KalshiGameRef,
+  type KalshiSideFairValue,
+  type KalshiFairValue,
+} from "./kalshi-client.js";
 export { DataNormalizer } from "./normalizer.js";
 export {
   enrichGameContext,

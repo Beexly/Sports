@@ -69,6 +69,23 @@ SerpApi is a Google-results *scraper* (organic results, the sports one-box, AI M
 
 **Decision: do not adopt SerpApi.** (At most a far-future nice-to-have for SEO/trend research on the marketing side — not the prediction/settlement core, and not now.)
 
+## Polymarket (offered 2026-06-03) — EVALUATED, DEFERRED (secondary cross-check)
+
+Polymarket is the largest prediction market; its **Gamma / Data / CLOB-read** endpoints are fully public
+(no auth) and carry deep market-implied probabilities — a legitimate *secondary* fair-value cross-check for
+CLV, deeper than Kalshi on many events. **Not built now** — it is redundant with Kalshi until the CLV
+*pipeline* (persist → grade → publish) exists; a second price source adds no product value before then. The
+fair-value adapter is shaped so a Polymarket source can drop in later behind a shared `FairValueSource`
+interface (`getFairValue(game) → { sides: [{ fairProb }], capturedAt }`).
+
+Hard guardrails if/when added:
+- **PUBLIC READ price/midpoint/book endpoints ONLY.** NEVER the CLOB trading endpoints (`POST /order`,
+  cancels), NEVER L1/L2 auth, NEVER a private key, builder code, or onchain/custody flow. Those are automated
+  betting + self-custody — prohibited. The read endpoints need none of it.
+- **US is geoblocked for *trading*** on Polymarket; reading public prices is unaffected, but a US, trust-first
+  product should weigh the brand optics of leaning on it and treat it as a quiet backend cross-check, not a
+  surfaced source.
+
 ## Recommendation: STOP adding providers — this is the final stack
 
 Roughly half a dozen data providers were offered in one session (odds-api.io, Kalshi, API-Sports, api-football, SerpApi, plus the the-odds-api.com incumbent), with **two live keys leaked in cleartext**. For a product whose entire pitch is *trust and provenance*, bolting on more half-wired sources is the opposite of the moat. The stack is now **decided and closed**:
