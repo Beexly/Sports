@@ -5,6 +5,11 @@ import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { loadPublicJournalEntry, type PublicJournalEntry } from "@/lib/journal/load";
 import { formatDate } from "@/lib/utils";
+import { BRAND_NAME } from "@/lib/brand";
+
+// Apex host to match layout.tsx / sitemap.ts / robots.ts (unified canonical).
+const SITE_URL =
+  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
 
 export const revalidate = 300;
 
@@ -16,10 +21,19 @@ export async function generateMetadata({
   const entry = await loadPublicJournalEntry(params.slug);
   if (!entry) return { title: "Journal entry not found" };
 
+  const title = `${entry.title} - Model Journal`;
+  const description = entry.coldOpen.slice(0, 155);
   return {
-    title: `${entry.title} - Model Journal`,
-    description: entry.coldOpen.slice(0, 155),
+    title,
+    description,
     alternates: { canonical: `/journal/${entry.slug}` },
+    openGraph: {
+      type: "article",
+      title,
+      description,
+      url: `${SITE_URL}/journal/${entry.slug}`,
+    },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -113,8 +127,27 @@ export default async function JournalEntryPage({
   const entry = await loadPublicJournalEntry(params.slug);
   if (!entry) notFound();
 
+  const journalJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: entry.title,
+    description: entry.coldOpen.slice(0, 200),
+    datePublished: new Date(entry.publishedAt).toISOString(),
+    mainEntityOfPage: `${SITE_URL}/journal/${entry.slug}`,
+    author: { "@type": "Organization", name: BRAND_NAME, url: SITE_URL },
+    publisher: {
+      "@type": "Organization",
+      name: BRAND_NAME,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo-mark.svg` },
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(journalJsonLd) }}
+      />
       <Nav />
       <main className="min-h-screen bg-gray-950">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">

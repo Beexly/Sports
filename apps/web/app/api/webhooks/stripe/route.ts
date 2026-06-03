@@ -125,9 +125,10 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
       ? stripeSubscription.customer
       : stripeSubscription.customer.id;
 
-  const priceId = stripeSubscription.items.data[0]?.price.id;
-  const tier = getTierFromPriceId(priceId);
+  const price = stripeSubscription.items.data[0]?.price;
+  const priceId = price?.id;
   const status = mapStripeStatus(stripeSubscription.status);
+  const tier = await resolveTier(price, status, customerId);
 
   const periodStart = stripeSubscription.current_period_start
     ? new Date(stripeSubscription.current_period_start * 1000)
@@ -195,6 +196,48 @@ function getTierFromPriceId(priceId: string | undefined): "FREE" | "PRO" | "ELIT
   ];
   if (eliteIds.includes(priceId)) return "ELITE";
   if (proIds.includes(priceId)) return "PRO";
+  return "FREE";
+}
+
+function normalizeTier(value: string | undefined): "PRO" | "ELITE" | null {
+  const v = value?.toUpperCase();
+  return v === "PRO" || v === "ELITE" ? v : null;
+}
+
+/**
+ * Resolve the subscription tier with two safety layers beyond the env price-ID map:
+ *  1. price.metadata.tier — durable across Stripe price-ID rotation.
+ *  2. No-downgrade guard — for an ACTIVE/TRIALING subscription whose price we
+ *     cannot identify, preserve the customer's existing paid tier instead of
+ *     silently dropping them to FREE (which would un-entitle a paying customer).
+ * Salvaged from branch awesome-sagan-LOyCa (commit 21fc420); see
+ * docs/BRANCH_RECONCILIATION_2026-06-03.md.
+ */
+async function resolveTier(
+  price: Stripe.Price | undefined,
+  status: ReturnType<typeof mapStripeStatus>,
+  customerId: string,
+): Promise<"FREE" | "PRO" | "ELITE"> {
+  const mapped = getTierFromPriceId(price?.id);
+  if (mapped !== "FREE" || !price?.id) return mapped;
+
+  // Unrecognized price — try the durable metadata tag before doing anything.
+  const metaTier = normalizeTier(price.metadata?.["tier"]);
+  if (metaTier) return metaTier;
+
+  // Still unknown: never downgrade a paying customer on an unrecognized price.
+  if (status === "ACTIVE" || status === "TRIALING") {
+    const existing = await db.subscription.findUnique({
+      where: { stripeCustomerId: customerId },
+      select: { tier: true },
+    });
+    if (existing && existing.tier !== "FREE") {
+      console.warn(
+        `[stripe] unrecognized price ${price.id} on ${status} subscription for customer ${customerId}; preserving existing tier ${existing.tier} (no-downgrade guard)`,
+      );
+      return existing.tier;
+    }
+  }
   return "FREE";
 }
 

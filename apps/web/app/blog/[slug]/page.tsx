@@ -8,6 +8,11 @@ import { db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
+import { BRAND_NAME } from "@/lib/brand";
+
+// Apex host to match layout.tsx / sitemap.ts / robots.ts (unified canonical).
+const SITE_URL =
+  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
 
 export async function generateMetadata({
   params,
@@ -24,9 +29,19 @@ export async function generateMetadata({
 
   if (!post) return { title: "Not Found" };
 
+  const title = post.seoTitle ?? post.title;
+  const description = post.seoDescription ?? post.excerpt.slice(0, 155);
   return {
-    title: post.seoTitle ?? post.title,
-    description: post.seoDescription ?? post.excerpt.slice(0, 155),
+    title,
+    description,
+    alternates: { canonical: `/blog/${params.slug}` },
+    openGraph: {
+      type: "article",
+      title,
+      description,
+      url: `${SITE_URL}/blog/${params.slug}`,
+    },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -51,8 +66,37 @@ export default async function BlogPostPage({
 
   const showFullContent = entitlements.canSeePremiumPicks;
 
+  // BlogPosting structured data — one of the five rich-result-driving schema
+  // types. Built from the post's own vetted fields + computed URLs; no new
+  // marketing prose enters this copy-scanned file.
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt.slice(0, 200),
+    ...(post.publishedAt && {
+      datePublished: new Date(post.publishedAt).toISOString(),
+    }),
+    ...(post.updatedAt && {
+      dateModified: new Date(post.updatedAt).toISOString(),
+    }),
+    ...(post.sport && { articleSection: post.sport }),
+    keywords: post.tags,
+    mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+    author: { "@type": "Organization", name: BRAND_NAME, url: SITE_URL },
+    publisher: {
+      "@type": "Organization",
+      name: BRAND_NAME,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo-mark.svg` },
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <Nav />
       <main className="min-h-screen bg-gray-950">
         <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6">

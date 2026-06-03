@@ -5,6 +5,13 @@ import { db } from "@sports/db";
 
 export type UserRole = "USER" | "ADMIN";
 
+// Dev-only admin bypass — HARD-gated to non-production so a leaked DEV_FAKE_ADMIN
+// env var can never grant a synthetic ADMIN session in prod. (Salvaged hardening;
+// see docs/BRANCH_RECONCILIATION_2026-06-03.md.)
+const IS_DEV_FAKE_ADMIN =
+  process.env["DEV_FAKE_ADMIN"] === "true" &&
+  process.env["NODE_ENV"] !== "production";
+
 const config: NextAuthConfig = {
   adapter: PrismaAdapter(db),
   trustHost: true,
@@ -69,7 +76,7 @@ const realAuth = nextAuth.auth as () => Promise<Session | null>;
  * table. NEVER set this in production.
  */
 export const auth: () => Promise<Session | null> = async () => {
-  if (process.env["DEV_FAKE_ADMIN"] === "true") {
+  if (IS_DEV_FAKE_ADMIN) {
     return {
       user: {
         id: "dev-admin",
@@ -112,4 +119,4 @@ declare module "next-auth" {
   }
 }
 
-export const DEV_FAKE_ADMIN = process.env["DEV_FAKE_ADMIN"] === "true";
+export const DEV_FAKE_ADMIN = IS_DEV_FAKE_ADMIN;
