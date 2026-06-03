@@ -38,6 +38,22 @@ export type {
   MoneylineClvResult,
   ClvSummary,
 } from "./clv.js";
+// Edge engine — surfaces a pick only where INDEPENDENT estimators (Poisson model,
+// Kalshi exchange) diverge from the sportsbook fair value AND agree with each
+// other. The fix for "the market grading itself." Pure; not yet wired into live
+// scoring (a deliberate MODEL_VERSION step, founder-gated).
+export {
+  assessEdge,
+  SPEAK_EDGE,
+  LEAN_EDGE,
+} from "./edge-engine.js";
+export type {
+  IndependentEstimate,
+  EdgeInput,
+  EdgeDecision,
+  AnchorAgreement,
+  EdgeAssessment,
+} from "./edge-engine.js";
 export * from "./constants.js";
 export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
