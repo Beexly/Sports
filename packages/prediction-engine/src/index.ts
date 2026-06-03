@@ -38,6 +38,20 @@ export type {
   MoneylineClvResult,
   ClvSummary,
 } from "./clv.js";
+// CLV capture — derive the closing line from the timestamped odds history and
+// grade a pick's lock-time line/price against it. Pure; the settlement pipeline
+// supplies real rows and persists the graded result.
+export {
+  deriveClosingSnapshotFromOdds,
+  gradePickClv,
+} from "./clv-capture.js";
+export type {
+  PickKind,
+  ClosingOddsRow,
+  ClosingSnapshot,
+  ClvKind,
+  ClvGrade,
+} from "./clv-capture.js";
 // Edge engine — surfaces a pick only where INDEPENDENT estimators (Poisson model,
 // Kalshi exchange) diverge from the sportsbook fair value AND agree with each
 // other. The fix for "the market grading itself." Pure; not yet wired into live

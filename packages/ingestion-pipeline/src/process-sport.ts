@@ -352,6 +352,13 @@ export async function processSport(
           ingestionRunId: run.id,
           isBootstrap,
           isFeatured,
+          // CLV lock snapshot — the line/price we ACTUALLY published at, captured
+          // once at creation. Absent from `update` below, so the refresh cycle can
+          // never overwrite it (Pick.line itself IS mutated each cycle). Moneyline
+          // `pick.line` holds the American price; spread/total `pick.line` holds the
+          // points line. Graded against the closing line at settlement.
+          clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
+          clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
           ...pickUpdateData,
         },
         update: {

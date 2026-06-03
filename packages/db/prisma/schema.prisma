@@ -374,6 +374,21 @@ model Pick {
   isPublished    Boolean    @default(true)
   isFeatured     Boolean    @default(false)
 
+  // Closing-Line Value (CLV) — beat-the-close, the sharp credibility metric.
+  // Lock fields are captured ONCE at creation (absent from the refresh `update`,
+  // so they are immutable) and record the line/price we actually published at.
+  // Close + graded fields are filled at settlement by grading the lock against
+  // the closing line derived from the odds history. See clv-capture.ts.
+  clvLockLine    Float?     // points line at publish (spread/total); null for ML
+  clvLockPrice   Int?       // American price at publish (moneyline); null otherwise
+  clvCloseLine   Float?     // closing points line compared against (spread/total)
+  clvClosePrice  Int?       // closing American price for the chosen side (moneyline)
+  clvKind        String?    // "POINTS" | "PROBABILITY"
+  clvValue       Float?     // graded CLV — positive = beat the close
+  clvVerdict     String?    // "BEAT_CLOSE" | "MATCHED_CLOSE" | "LOST_TO_CLOSE"
+  clvCapturedAt  DateTime?  // fetchedAt of the closing snapshot used
+  clvGradedAt    DateTime?  // when CLV was graded at settlement
+
   // Bootstrap safety — true for all picks written before CANONICAL_HISTORY_ENABLED=true.
   // Bootstrap picks are stored for admin review and settlement but excluded from
   // canonical performance metrics and public performance stats.
@@ -393,6 +408,7 @@ model Pick {
   @@index([generatedAt])
   @@index([result])
   @@index([isFeatured])
+  @@index([clvVerdict])
   @@map("picks")
 }
 

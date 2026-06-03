@@ -31,8 +31,12 @@ import {
   settleGameLogs,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey } from "@sports/data-ingestion";
-import { calculatePickResult } from "@sports/prediction-engine";
-import type { ReadinessGates } from "@sports/prediction-engine";
+import {
+  calculatePickResult,
+  deriveClosingSnapshotFromOdds,
+  gradePickClv,
+} from "@sports/prediction-engine";
+import type { ReadinessGates, PickKind } from "@sports/prediction-engine";
 import { recordPickSettlementSnapshot } from "./settlement-snapshots.js";
 
 export interface SettleSportConfig {
@@ -93,6 +97,33 @@ export async function settleSport(
         // Settle pick results — always runs, regardless of bootstrap mode.
         // Real game outcomes are source truth and must be recorded.
         const settledAt = new Date();
+
+        // Closing-line snapshot for CLV grading — the last odds batch before
+        // kickoff, derived from the timestamped Odds history. Fetched once per
+        // game and guarded: a CLV failure must never block settlement.
+        let closingSnapshot: ReturnType<typeof deriveClosingSnapshotFromOdds> | null = null;
+        try {
+          const closingOdds = await db.odds.findMany({
+            where: { gameId: game.id, fetchedAt: { lte: game.commenceTime } },
+            orderBy: { fetchedAt: "desc" },
+            take: 80,
+            select: {
+              market: true,
+              fetchedAt: true,
+              spread: true,
+              total: true,
+              homePrice: true,
+              awayPrice: true,
+            },
+          });
+          closingSnapshot = deriveClosingSnapshotFromOdds(closingOdds, game.commenceTime);
+        } catch (clvErr) {
+          console.warn(
+            `${logPrefix} Closing-line fetch failed for game ${game.id}: ` +
+            `${clvErr instanceof Error ? clvErr.message : clvErr}`,
+          );
+        }
+
         for (const pick of game.picks) {
           const result = calculatePickResult(
             pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
@@ -107,6 +138,42 @@ export async function settleSport(
             where: { id: pick.id },
             data: { result, settledAt },
           });
+
+          // Grade Closing-Line Value against the immutable lock snapshot
+          // (clvLockLine/clvLockPrice, captured at publish). Additive and
+          // guarded — never blocks settlement. Returns null (and we skip) when
+          // there is no close or no lock to compare.
+          if (closingSnapshot?.capturedAt) {
+            try {
+              const grade = gradePickClv({
+                pickType: pick.pickType as PickKind,
+                selection: pick.selection,
+                homeTeamName: game.homeTeamName,
+                lockLine: pick.clvLockLine,
+                lockPrice: pick.clvLockPrice,
+                close: closingSnapshot,
+              });
+              if (grade) {
+                await db.pick.update({
+                  where: { id: pick.id },
+                  data: {
+                    clvCloseLine: grade.closeLine,
+                    clvClosePrice: grade.closePrice,
+                    clvKind: grade.kind,
+                    clvValue: grade.value,
+                    clvVerdict: grade.verdict,
+                    clvCapturedAt: closingSnapshot.capturedAt,
+                    clvGradedAt: settledAt,
+                  },
+                });
+              }
+            } catch (clvErr) {
+              console.warn(
+                `${logPrefix} CLV grading failed for pick ${pick.id}: ` +
+                `${clvErr instanceof Error ? clvErr.message : clvErr}`,
+              );
+            }
+          }
 
           // Record settlement outcome in the PickSignalSnapshot — real result tied
           // to the signal conditions present at prediction time. eligibleForLearning
