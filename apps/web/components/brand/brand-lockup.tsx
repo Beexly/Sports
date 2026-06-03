@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BRAND_NAME } from "@/lib/brand";
 
-function GalaxyMark() {
+export function GalaxyMark() {
   return (
     <svg className="brand-mark-svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
       <path className="brand-mark-orbit" d="M11 38C8 25 18 12 32 12c9.8 0 18 6.7 20.3 15.7" />

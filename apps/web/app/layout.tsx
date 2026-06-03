@@ -7,6 +7,7 @@ import {
   Syne,
 } from "next/font/google";
 import "./globals.css";
+import { BootSequence } from "@/components/intro/boot-sequence";
 import {
   BRAND_META,
   BRAND_NAME,
@@ -208,7 +209,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        <BootSequence />
+        {children}
+      </body>
     </html>
   );
 }

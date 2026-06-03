@@ -6,6 +6,7 @@ import { BrandLockup } from "@/components/brand/brand-lockup";
 
 const NAV_LINKS = [
   { label: "Today's Board", href: "/board" },
+  { label: "Trends", href: "/trends" },
   { label: "Edge Map", href: "/observatory" },
   { label: "Methodology", href: "/methodology" },
   { label: "Pricing", href: "/pricing" },

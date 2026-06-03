@@ -16,6 +16,7 @@ const ROUTES: ReadonlyArray<{
 }> = [
   { path: "/", priority: 1.0, changeFrequency: "daily" },
   { path: "/picks", priority: 0.9, changeFrequency: "hourly" },
+  { path: "/trends", priority: 0.8, changeFrequency: "daily" },
   { path: "/methodology", priority: 0.8, changeFrequency: "monthly" },
   { path: "/performance", priority: 0.7, changeFrequency: "daily" },
   { path: "/journal", priority: 0.7, changeFrequency: "weekly" },
