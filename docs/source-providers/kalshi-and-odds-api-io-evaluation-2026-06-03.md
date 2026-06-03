@@ -101,6 +101,22 @@ A generic news API. For a calibration product, scraped news is low-signal and no
 signal — the genuinely high-ROI add — should come from a **structured** feed (API-Sports / Sportradar injuries),
 not news text. At most a far-future enrichment, never a settlement or model input. **Rotate the leaked key.**
 
+## SportDB.dev (offered 2026-06-03) — DECLINED, same call as SerpApi
+
+SportDB.dev (`api.sportdb.dev`) is a **scraped aggregator** fronting Flashscore
+(scores/odds) and Transfermarkt (player market values / transfers). For GSE it is
+redundant and weaker on the only axis that matters — provenance:
+- Results/stats/settlement → Flashscore is *scraped*, not a licensed structured
+  feed. API-Sports is already the chosen real structured provider.
+- Odds → the Flashscore odds endpoint is scraped book odds, not a clean odds
+  aggregator. the-odds-api.com + odds-api.io already cover books; Kalshi covers
+  the independent fair-value anchor.
+- Transfermarkt market values → soccer transfer data, irrelevant to a US
+  calibration product.
+A scraped source is the **worst** settlement input for a tamper-evident,
+source-cited product (honesty doctrine). **Decision: do not adopt SportDB.** Its
+MCP server is likewise not added. This reaffirms the closed stack below.
+
 ## Recommendation: STOP adding providers — this is the final stack
 
 Roughly half a dozen data providers were offered in one session (odds-api.io, Kalshi, API-Sports, api-football, SerpApi, plus the the-odds-api.com incumbent), with **two live keys leaked in cleartext**. For a product whose entire pitch is *trust and provenance*, bolting on more half-wired sources is the opposite of the moat. The stack is now **decided and closed**:
@@ -113,4 +129,14 @@ Roughly half a dozen data providers were offered in one session (odds-api.io, Ka
 Sequencing: land Kalshi CLV (#2) → wire odds-api.io failover (#5) → evaluate API-Sports for settlement/evidence. One at a time, each verified, before the next.
 
 ## Secrets hygiene — ACTION REQUIRED
-Two live API keys were pasted in cleartext into the session transcript: **odds-api.io** and **api-football**. Treat both as compromised: **rotate them**, and store replacements only in env vars (`ODDS_API_IO_KEY`, `API_SPORTS_KEY`), never in code. (Kalshi needs no key; SerpApi not adopted.)
+Multiple live API keys were pasted in cleartext into the session transcript over 2026-06-03. **Treat every one as compromised and ROTATE it**, storing replacements only in env vars, never in code:
+
+| Leaked key (prefix) | Provider | Adopted? | Env var (if/when used) |
+|---------------------|----------|----------|------------------------|
+| `3864fc39…` | odds-api.io | Yes (#5, gated) | `ODDS_API_IO_KEY` |
+| `79044980…` | api-football / API-Sports | Yes (results) | `API_SPORTS_KEY` |
+| `pub_694e6f…` | NewsData.io | No (declined) | — |
+| `eLxqkT…` | SportDB.dev | No (declined) | — |
+| `xai-p30o…` | **x.ai (Grok)** — unrelated to GSE | n/a | rotate at x.ai now |
+
+Kalshi needs no key. The **x.ai key** is the most urgent: it is a high-value LLM-provider credential unrelated to this product and should be rotated in the x.ai console immediately. Going forward, paste keys only into a secrets manager / `.env`, never into chat.
