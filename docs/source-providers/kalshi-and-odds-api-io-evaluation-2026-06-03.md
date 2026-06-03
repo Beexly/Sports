@@ -86,6 +86,21 @@ Hard guardrails if/when added:
   product should weigh the brand optics of leaning on it and treat it as a quiet backend cross-check, not a
   surfaced source.
 
+## Sportradar (offered 2026-06-03) — DEFERRED premium upgrade, not now
+
+Sportradar is the gold-standard structured sports-data API (schedules, results, player stats, play-by-play,
+even model probabilities). It is genuinely *better* than API-Sports for the results/stats/settlement layer —
+**but it is a premium paid product, and it is not the bottleneck.** The engine wiring (independent estimators
+→ scoring) is. Decision: **note Sportradar as the eventual paid upgrade for the data layer once revenue
+justifies it; do not adopt pre-launch.** The trial 403s are just auth (the real key wasn't applied;
+`api_key=sports` is a placeholder) — not worth chasing now. API-Sports remains the chosen results provider.
+
+## NewsData.io (offered 2026-06-03) — DECLINED as a core source
+
+A generic news API. For a calibration product, scraped news is low-signal and noisy. Real injury/availability
+signal — the genuinely high-ROI add — should come from a **structured** feed (API-Sports / Sportradar injuries),
+not news text. At most a far-future enrichment, never a settlement or model input. **Rotate the leaked key.**
+
 ## Recommendation: STOP adding providers — this is the final stack
 
 Roughly half a dozen data providers were offered in one session (odds-api.io, Kalshi, API-Sports, api-football, SerpApi, plus the the-odds-api.com incumbent), with **two live keys leaked in cleartext**. For a product whose entire pitch is *trust and provenance*, bolting on more half-wired sources is the opposite of the moat. The stack is now **decided and closed**:
