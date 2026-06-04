@@ -6,7 +6,7 @@ import { Reveal, Stagger } from "@/components/motion/reveal";
 import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
 import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
-import { GalaxySlateTwin } from "@/components/slate-twin/galaxy-slate-twin";
+import { GalaxySlateTwinLazy } from "@/components/slate-twin/galaxy-slate-twin-lazy";
 import { getSlateTwin } from "@/lib/slate-twin/get-slate-twin";
 import { BRAND_NAME, SURFACES } from "@/lib/brand";
 import { BRAND_COLORS } from "@/lib/brand";
@@ -129,7 +129,7 @@ export default async function ObservatoryPage() {
               </p>
             </Reveal>
             <Reveal delay={140} className="mt-8">
-              <GalaxySlateTwin slate={slate} />
+              <GalaxySlateTwinLazy slate={slate} />
             </Reveal>
           </div>
         </section>

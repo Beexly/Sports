@@ -16,7 +16,7 @@ export function LineupOptimizer() {
   const [out, setOut] = useState<Set<string>>(new Set());
   const roster = useMemo(() => rosterFromIds(DEFAULT_ROSTER_IDS).filter((p) => !out.has(p.id)), [out]);
   const opt = useMemo(() => optimize(roster), [roster]);
-  const toggleOut = (id: string) => setOut((s) => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const toggleOut = (id: string) => setOut((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">

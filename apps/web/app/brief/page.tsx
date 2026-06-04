@@ -80,7 +80,7 @@ export default async function BriefStub() {
             Performance summary will render here once the composer is restored.
           </p>
         ) : (
-          <p data-testid="brief-performance-hidden" className="mt-3 text-xs text-gray-500">
+          <p data-testid="brief-performance-gated" className="mt-3 text-xs text-gray-500">
             Performance data is gated until canonical sample is sufficient.
           </p>
         )}

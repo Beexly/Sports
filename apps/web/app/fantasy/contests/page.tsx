@@ -22,7 +22,7 @@ const STATUS_HEX: Record<Status, string> = {
 type Contest = { title: string; status: Status; blurb: string; href?: string; cta?: string };
 
 const SKILL: Contest[] = [
-  { title: "Beat the Model", status: "Live · skill", blurb: "Free weekly pick'em against our own projections — climb the leaderboard, no entry fee, pure skill. The flagship engagement game.", href: "/fantasy", cta: "Play free" },
+  { title: "Beat the Model", status: "Live · skill", blurb: "Free weekly pick'em against our own projections — climb the leaderboard, no entry fee, pure skill. The flagship engagement game, in build.", },
   { title: "Season-long Best Ball", status: "Live · skill", blurb: "Draft, no in-season management — your best lineup auto-starts each week. Skill-first; entry fees gated.", },
   { title: "Survivor / Eliminator", status: "Live · skill", blurb: "One pick a week, can't reuse a team, last manager standing. Our edge engine flags the lowest-risk survivors and the save-it-for-later traps.", },
 ];

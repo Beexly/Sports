@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { personalizeBriefing, isValidPrefs, DEFAULT_PREFS, type Preferences } from "./preferences";
+import { personalizeBriefing, isValidPrefs, DEFAULT_PREFS } from "./preferences";
 import type { BriefingCard, BriefingKind } from "../cockpit/mission-control";
 
 const card = (kind: BriefingKind, priority: number): BriefingCard => ({
