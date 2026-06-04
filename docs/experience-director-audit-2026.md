@@ -93,7 +93,7 @@ applied it to the product that actually exists.
 | Route | Above the fold today | Verdict |
 |---|---|---|
 | `/` (home) | Galaxy + "We post our losses." + **CommandDeck** (new) | Now a command surface. ✓ |
-| `/observatory` (Edge Map) | Spatial market view | Strong concept; visual-fidelity pass deferred (§9) |
+| `/observatory` (Edge Map) | **Deliberate pre-launch placeholder** — text + status card, dark until settled history exists | Correct as-is; NOT a galaxy needing polish (see §9.1) |
 | `/board` | Today's evaluated slate | The real "slate"; primary destination |
 | `/ledger`, `/performance` | Receipts + autopsies | The proof layer; keep |
 | `/methodology` | How the gate works | The "how" — fine as a reading surface |
@@ -244,9 +244,17 @@ If a section answers none, cut it, collapse it, or make it an interaction.
 These are the brief's remaining prompts, re-scoped to reality. They are **not**
 done and should each be their own pass with their own foundations:
 
-1. **Observatory / Edge Map visual-fidelity pass** (brief Prompt 3). The route and
-   data doctrine exist; this is a rendering/interaction upgrade, not a new system.
-   Highest-leverage *next* visual pass.
+1. **Observatory / Edge Map** (brief Prompt 3) — **do not "polish the galaxy."**
+   The brief misreads reality: there is no galaxy on `/observatory`. That route is
+   a *deliberate placeholder* (`apps/web/app/observatory/page.tsx` says so) and is
+   intentionally dark until real settled history exists. The galaxy the brief
+   critiques is the **homepage hero** (`interactive-galaxy.tsx`), which is already
+   strong. Building a spatial market visualization now would manufacture a view
+   with no data behind it — a direct violation of non-negotiable rule #1 ("No fake
+   data"). The real Prompt-3 work happens **after** the readiness gate opens and
+   live market data exists; at that point the homepage galaxy + this pass's motion
+   system are the visual language to extend. Until then, the placeholder is the
+   honest surface.
 2. **Academy** (brief Prompt 5). Does not exist. Requires a curriculum/lab data
    model before any "hard-mode" UI. Net-new product.
 3. **Nova / Galaxy Studios** (brief Prompt 4). Does not exist as a route. Requires
