@@ -191,3 +191,100 @@
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.4; transform: scale(1.6); }
 }
+
+/* ============================================================
+ * Motion system — state-communicating tokens (2026 pass)
+ * ------------------------------------------------------------
+ * These are NOT decoration. Each token maps to a state change in the
+ * Observe -> Decide -> Prove loop so the interface *behaves* the doctrine
+ * instead of explaining it. Tailwind exposes them as `animate-<token>`
+ * (animation declared in tailwind.config.ts; the @keyframes live here as
+ * the single source of truth, matching the pp-live-pulse pattern above).
+ *
+ * Reduced motion: globals @layer base neutralises every animation to
+ * ~0ms, so the static end-state always renders. Author keyframes so the
+ * 100% frame is the correct resting state.
+ *
+ * Token            State it communicates
+ * boot             a surface coming online (settle from blur/offset)
+ * breach           a signal breaking in (fast, sharp entrance)
+ * scan             the engine actively reading (sweeping highlight)
+ * acquire          a read clearing the gate (the "lock-on" moment)
+ * hold             the gate holding / no-bet (firm settle, no celebration)
+ * pulse-ring       live attention without noise (expanding ring)
+ * orbit            ambient market motion (slow rotation)
+ * impact           a result landing (quick punch-in)
+ * autopsy          a post-result review unveiling (measured reveal)
+ * transmit         an on-air broadcast (breathing emit)
+ * ============================================================ */
+@keyframes boot {
+  0%   { opacity: 0; transform: translateY(6px); filter: blur(6px); }
+  60%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes breach {
+  0%   { opacity: 0; transform: scaleX(0.12); filter: brightness(2.2); }
+  55%  { opacity: 1; transform: scaleX(1.015); }
+  100% { opacity: 1; transform: scaleX(1); filter: brightness(1); }
+}
+@keyframes scan {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+@keyframes acquire {
+  0%   { opacity: 0; transform: scale(0.92); }
+  60%  { opacity: 1; transform: scale(1.012); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes hold {
+  0%   { opacity: 0; transform: translateY(-3px); }
+  100% { opacity: 0.92; transform: translateY(0); }
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.34); }
+  70%  { box-shadow: 0 0 0 10px rgba(0, 229, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+}
+@keyframes orbit {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes impact {
+  0%   { opacity: 0; transform: scale(0.7); }
+  55%  { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes autopsy {
+  0%   { opacity: 0; clip-path: inset(0 0 100% 0); }
+  100% { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+@keyframes transmit {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+/* Composable helpers built on the tokens. */
+
+/* A sweeping read-line: place inside a relatively-positioned, clipped band.
+ * Communicates "the engine is reading this surface right now." */
+.scan-line {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.scan-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 38%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 229, 255, 0.12) 45%,
+    rgba(0, 229, 255, 0.22) 50%,
+    rgba(0, 229, 255, 0.12) 55%,
+    transparent
+  );
+  animation: scan 4.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}

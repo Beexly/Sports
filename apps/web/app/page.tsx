@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AnnotatedSampleSignal } from "@/components/home/annotated-sample-signal";
 import { CalibrationCurve } from "@/components/home/calibration-curve";
 import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
+import { SignalBreachIntro } from "@/components/hero/signal-breach-intro";
 import { Reveal } from "@/components/motion/reveal";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
@@ -125,6 +126,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
+      <SignalBreachIntro />
       <Nav />
       <main>
         {(demoActive || surfaceSampleActive) && <SampleDataBanner />}
@@ -166,17 +168,6 @@ function SampleDataBanner(): JSX.Element {
 }
 
 function Hero({ state }: { state: BoardStateData }): JSX.Element {
-  const modelVersion = state.modelVersion.trim();
-  const telemetryRows: Array<readonly [string, string]> = [
-    ["Sports watched", String(state.sportsWatched)],
-    ["Books polled", String(state.booksPolled)],
-    ["Open picks", String(state.openPicks)],
-    ["Last refresh", timeLabel(state.lastRefresh)],
-  ];
-  if (modelVersion.length > 0 && modelVersion.toLowerCase() !== "unknown") {
-    telemetryRows.push(["Model", modelVersion]);
-  }
-
   return (
     <section className="relative isolate min-h-[88vh] overflow-hidden border-b border-mineral bg-carbon px-4 sm:px-6 lg:px-8">
       <InteractiveGalaxy />
@@ -217,41 +208,154 @@ function Hero({ state }: { state: BoardStateData }): JSX.Element {
         </Reveal>
 
         <Reveal delay={240} duration={880} distance={4}>
-          <div
-            aria-label="Live board telemetry"
-            className="mt-10 w-full border-y border-mineral/80 py-4"
-          >
-            <div className="grid grid-cols-2 gap-y-4 sm:flex sm:min-w-max sm:items-stretch sm:gap-0">
-              {telemetryRows.map(([label, value]) => (
-                <div
-                  key={label}
-                  className="min-w-0 border-mineral/70 px-4 odd:border-r sm:min-w-[9.5rem] sm:border-r sm:px-5 sm:first:pl-0 sm:last:border-r-0"
-                >
-                  <p className="eyebrow text-ion-2">{label}</p>
-                  <p className="mt-2 font-numerals text-xl font-semibold tabular-nums text-orbital-cyan sm:text-2xl">
-                    {value}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-
-        <Reveal delay={320} duration={880} distance={4}>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Link href="/board" className="btn-primary min-h-11 px-6 py-3">
-              See today&apos;s board
-            </Link>
-            <Link
-              href="/methodology"
-              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-6 py-3 text-sm font-semibold text-ion transition-colors hover:border-orbital-cyan hover:text-ion-white"
-            >
-              Read the methodology
-            </Link>
-          </div>
+          <CommandDeck state={state} />
         </Reveal>
       </div>
     </section>
+  );
+}
+
+/**
+ * CommandDeck — the hero's command surface.
+ *
+ * Replaces the old static telemetry row + button pair with one live band that
+ * answers the three questions a first-time visitor has in ten seconds:
+ *   1. Is anything happening?  -> status line (engine live, last run) + scan
+ *   2. What is the posture?    -> real board counts (under review / cleared /
+ *                                 held / sports / books) — nothing fabricated
+ *   3. Where do I go?          -> the loop: Observe -> Decide -> Prove, each a
+ *                                 real route. "Decide" (the board) is primary.
+ *
+ * Every number is read from live BoardStateData; an empty slate honestly shows
+ * zeros rather than inventing rows. Motion is state, not decoration: the
+ * scan-line says "the engine is reading," the live-dot says "it's on."
+ */
+function CommandDeck({ state }: { state: BoardStateData }): JSX.Element {
+  const modelVersion = state.modelVersion.trim();
+  const showModel =
+    modelVersion.length > 0 && modelVersion.toLowerCase() !== "unknown";
+  const underReview =
+    state.scoringNow.length + state.publishedToday.length + state.gatedTodayRows.length;
+
+  // Posture metrics — every value is real board state. Field names are kept
+  // verbatim (sportsWatched / booksPolled / openPicks / lastRefresh) so the
+  // hero doctrine stays auditable.
+  const telemetryRows: Array<readonly [string, string]> = [
+    ["Under review", String(underReview)],
+    ["Cleared", String(state.openPicks)],
+    ["Held", String(state.gatedToday)],
+    ["Sports", String(state.sportsWatched)],
+    ["Books", String(state.booksPolled)],
+  ];
+
+  const loop = [
+    {
+      phase: "Observe",
+      label: "Edge Map",
+      href: "/observatory",
+      desc: "Where the market is moving.",
+      primary: false,
+    },
+    {
+      phase: "Decide",
+      label: "Today's Board",
+      href: "/board",
+      desc: "What cleared. What we held.",
+      primary: true,
+    },
+    {
+      phase: "Prove",
+      label: "The Ledger",
+      href: "/ledger",
+      desc: "Every read keeps its receipt.",
+      primary: false,
+    },
+  ] as const;
+
+  return (
+    <div className="mt-10 overflow-hidden rounded-ds-lg border border-mineral/80 bg-eclipse/40 backdrop-blur-sm">
+      {/* Status line — the engine's heartbeat. */}
+      <div className="relative flex flex-wrap items-center justify-between gap-3 overflow-hidden border-b border-mineral/70 px-4 py-3 sm:px-5">
+        <div className="scan-line" aria-hidden="true" />
+        <div className="relative z-[1] flex items-center gap-3">
+          <span className="live-dot" aria-hidden="true" />
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-orbital-cyan">
+            Engine live
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+            Last run {timeLabel(state.lastRefresh)}
+          </span>
+        </div>
+        {showModel ? (
+          <span className="relative z-[1] font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+            {modelVersion}
+          </span>
+        ) : null}
+      </div>
+
+      {/* Posture metrics — live board telemetry, real counts only. */}
+      <div aria-label="Live board telemetry" className="px-4 py-4 sm:px-5">
+        <div className="grid grid-cols-2 gap-y-4 sm:flex sm:min-w-max sm:items-stretch sm:gap-0">
+          {telemetryRows.map(([label, value]) => (
+            <div
+              key={label}
+              className="min-w-0 border-mineral/70 px-4 odd:border-r sm:min-w-[8rem] sm:border-r sm:px-5 sm:first:pl-0 sm:last:border-r-0"
+            >
+              <p className="eyebrow text-ion-2">{label}</p>
+              <p className="mt-2 font-numerals text-xl font-semibold tabular-nums text-orbital-cyan sm:text-2xl">
+                {value}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* The loop — Observe / Decide / Prove. These are the hero's actions. */}
+      <div className="grid gap-px border-t border-mineral/70 bg-mineral/40 sm:grid-cols-3">
+        {loop.map((node) => (
+          <Link
+            key={node.phase}
+            href={node.href}
+            className={`group flex min-h-[5.5rem] flex-col gap-1 px-4 py-4 transition-colors sm:px-5 ${
+              node.primary
+                ? "bg-plasma/[0.07] hover:bg-plasma/[0.12]"
+                : "bg-eclipse/60 hover:bg-titanium/70"
+            }`}
+          >
+            <span
+              className={`font-mono text-[10px] uppercase tracking-[0.22em] ${
+                node.primary ? "text-plasma" : "text-ion-2"
+              }`}
+            >
+              {node.phase}
+            </span>
+            <span className="text-sm font-semibold text-ion-white">
+              {node.label}{" "}
+              <span
+                aria-hidden="true"
+                className="inline-block transition-transform group-hover:translate-x-0.5"
+              >
+                →
+              </span>
+            </span>
+            <span className="text-xs leading-5 text-ion-1">{node.desc}</span>
+          </Link>
+        ))}
+      </div>
+
+      {/* Proof microcopy + the way in to the method. */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-mineral/70 px-4 py-2.5 sm:px-5">
+        <span className="font-editorial text-base italic text-ion-1">
+          No edge, no pick.
+        </span>
+        <Link
+          href="/methodology"
+          className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-1 underline-offset-4 transition-colors hover:text-orbital-cyan hover:underline"
+        >
+          Read the methodology →
+        </Link>
+      </div>
+    </div>
   );
 }
 

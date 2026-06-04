@@ -228,6 +228,22 @@ const config: Config = {
         "ambient-drift": "ambient-drift 22s ease-in-out infinite alternate",
         "signature-spin": "signature-spin 90s linear infinite",
         "cursor-blink": "cursor-blink 1.1s steps(2, end) infinite",
+
+        // ── State-communicating motion system (2026 pass) ──
+        // Keyframes are defined once in app/globals.css (single source of
+        // truth, same pattern as pp-live-pulse) so raw-CSS / inline-style
+        // consumers and these utilities share identical timing. See the
+        // motion-system section of globals.css for what each state means.
+        boot: "boot 900ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        breach: "breach 620ms cubic-bezier(0.2, 0, 0, 1) both",
+        scan: "scan 4.6s cubic-bezier(0.45, 0, 0.55, 1) infinite",
+        acquire: "acquire 540ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        hold: "hold 520ms cubic-bezier(0.2, 0, 0, 1) both",
+        "pulse-ring": "pulse-ring 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        orbit: "orbit 48s linear infinite",
+        impact: "impact 460ms cubic-bezier(0.2, 0.8, 0.2, 1) both",
+        autopsy: "autopsy 760ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        transmit: "transmit 3.4s ease-in-out infinite",
       },
       keyframes: {
         "live-pulse": {
