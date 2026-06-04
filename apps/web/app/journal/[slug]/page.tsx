@@ -6,7 +6,7 @@ import { Nav } from "@/components/ui/nav";
 import { loadPublicJournalEntry, type PublicJournalEntry } from "@/lib/journal/load";
 import { formatDate } from "@/lib/utils";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

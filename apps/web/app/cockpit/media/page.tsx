@@ -1,5 +1,7 @@
 import { db } from "@sports/db";
 
+export const dynamic = "force-dynamic";
+
 export default async function CockpitMediaPage() {
   const items = await db.cockpitMediaItem.findMany({
     orderBy: [{ updatedAt: "desc" }],

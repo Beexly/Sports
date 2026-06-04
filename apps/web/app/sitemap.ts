@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { loadPublicJournalEntries } from "@/lib/journal/load";
 
+export const dynamic = "force-dynamic";
+
 /**
  * sitemap.xml
  *

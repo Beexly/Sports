@@ -53,23 +53,25 @@ export function mapSettledPickToCorrelationRow(pick: CorrelationSettledPick): Co
 
 export async function loadSettledCorrelationRows(limit = CORRELATION_HISTORY_LIMIT): Promise<CorrelationPickRow[]> {
   const take = Math.min(Math.max(Math.round(limit), 1), CORRELATION_HISTORY_LIMIT);
-  const picks = await db.pick.findMany({
-    where: {
-      isPublished: true,
-      isBootstrap: false,
-      result: { in: ["WIN", "LOSS", "PUSH"] },
-      NOT: { modelVersion: "v5.0.0-seed" },
-      signalSnapshot: {
-        is: {
-          eligibleForLearning: true,
-          isBootstrap: false,
+  const picks = await db.pick
+    .findMany({
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        result: { in: ["WIN", "LOSS", "PUSH"] },
+        NOT: { modelVersion: "v5.0.0-seed" },
+        signalSnapshot: {
+          is: {
+            eligibleForLearning: true,
+            isBootstrap: false,
+          },
         },
       },
-    },
-    orderBy: { settledAt: "desc" },
-    take,
-    select: settledPickSelect,
-  });
+      orderBy: { settledAt: "desc" },
+      take,
+      select: settledPickSelect,
+    })
+    .catch(() => []);
 
   return picks.map(mapSettledPickToCorrelationRow);
 }

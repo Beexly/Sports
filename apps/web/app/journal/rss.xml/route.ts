@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { loadPublicJournalEntries } from "@/lib/journal/load";
 
+export const dynamic = "force-dynamic";
+
 const SITE_URL = process.env["NEXT_PUBLIC_APP_URL"] ?? "https://www.galaxysportsedge.com";
 
 function escapeXml(value: string): string {

@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/board" },
 };
 
+export const dynamic = "force-dynamic";
+
 function timeLabel(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Just now";

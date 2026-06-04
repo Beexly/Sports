@@ -22,13 +22,15 @@ export async function getUserEntitlements(userId: string): Promise<Entitlements>
     return getEntitlements(DEV_FAKE_ADMIN_TIER);
   }
 
-  const subscription = await db.subscription.findFirst({
-    where: {
-      userId,
-      status: { in: ["ACTIVE", "TRIALING"] },
-    },
-    select: { tier: true },
-  });
+  const subscription = await db.subscription
+    .findFirst({
+      where: {
+        userId,
+        status: { in: ["ACTIVE", "TRIALING"] },
+      },
+      select: { tier: true },
+    })
+    .catch(() => null);
 
   const tier = (subscription?.tier ?? "FREE") as SubscriptionTier;
   return getEntitlements(tier);

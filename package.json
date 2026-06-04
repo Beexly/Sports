@@ -24,15 +24,17 @@
     "workers:picks": "node workers/pick-generation/dist/index.js",
     "workers:content": "node workers/content-publishing/dist/index.js",
     "guard:trust": "node scripts/guardrails/trust-gate.mjs",
+    "lint:brand": "node scripts/guardrails/brand-lint.mjs",
     "guard:model-freeze": "node scripts/guardrails/model-freeze.mjs",
     "guard:draft-only": "node scripts/guardrails/draft-only.mjs",
     "guard:claude-api": "node scripts/guardrails/claude-api-usage.mjs",
-    "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/eval-contracts.mjs",
+    "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/brand-lint.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/eval-contracts.mjs",
     "evals:contracts": "node scripts/eval-contracts.mjs",
     "snapshots:regen": "node scripts/regenerate-launch-snapshots.mjs",
     "deploy:ready": "node scripts/check-deploy-readiness.mjs",
     "stripe:seed": "node scripts/seed-stripe-prices.mjs",
     "test:brand-safety": "npm run test:brand-safety --workspace=apps/web",
+    "test:smoke": "node scripts/smoke-launch.mjs",
     "test:cockpit": "npm run test:cockpit --workspace=apps/web",
     "test:fast": "npm run test:brand-safety && npm run test:cockpit",
     "smoke:launch-night": "node scripts/launch-night-smoke.mjs",
@@ -52,5 +54,8 @@
   "dependencies": {
     "ioredis": "^5.10.1",
     "pg": "^8.21.0"
+  },
+  "overrides": {
+    "qs": "6.15.2"
   }
 }

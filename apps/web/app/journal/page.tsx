@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/journal" },
 };
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 function JournalEntryCard({ entry }: { readonly entry: PublicJournalEntry }): JSX.Element {
   return (
