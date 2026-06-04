@@ -21,6 +21,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/journal", priority: 0.7, changeFrequency: "weekly" },
   { path: "/pricing", priority: 0.7, changeFrequency: "monthly" },
   { path: "/observatory", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/airwave", priority: 0.6, changeFrequency: "weekly" },
   { path: "/vault", priority: 0.6, changeFrequency: "weekly" },
   { path: "/about", priority: 0.5, changeFrequency: "monthly" },
   { path: "/press", priority: 0.4, changeFrequency: "monthly" },

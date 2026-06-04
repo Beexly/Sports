@@ -15,6 +15,7 @@ const INTELLIGENCE_GROUP = [
   { label: "Inside the Signal", href: "/intelligence", desc: "How the engine reasons" },
   { label: "The Beat", href: "/the-beat", desc: "Breaking news, reliability-scored" },
   { label: "GSN", href: "/gsn", desc: "Daily intelligence transmission" },
+  { label: "The Airwave Ledger", href: "/airwave", desc: "Pundits, graded on the record" },
   { label: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's risk" },
   { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
   { label: "Trust Ledger", href: "/ledger", desc: "Tamper-evident record" },
