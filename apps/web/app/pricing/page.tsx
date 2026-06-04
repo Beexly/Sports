@@ -8,7 +8,8 @@ import {
   annualMonthlyEquivalent,
   GRANDFATHER_GUARANTEE,
 } from "@/lib/pricing/pricing-phases";
-import { BRAND_NAME } from "@/lib/brand";
+import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
+import { Reveal } from "@/components/motion/reveal";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
@@ -162,7 +163,7 @@ export default function PricingPage() {
   const grandfatherNote = `${phase.name}-member rate. ${GRANDFATHER_GUARANTEE}`;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
 
       <script
@@ -170,20 +171,33 @@ export default function PricingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
+      <main className="relative flex-1 px-4 py-20 sm:px-6 lg:px-8">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
+          style={{
+            background: `radial-gradient(60% 70% at 50% 0%, ${BRAND_COLORS.softUltraviolet}22, transparent 70%), radial-gradient(40% 50% at 72% 0%, ${BRAND_COLORS.orbitalCyan}14, transparent 70%)`,
+          }}
+        />
         <div className="mx-auto max-w-6xl">
           {/* Header */}
           <div className="text-center">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent-300">
-              {phase.name} pricing
-            </p>
-            <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              Claim the founding rate.
-            </h1>
-            <p className="mx-auto mt-4 max-w-xl text-lg text-gray-400">
-              Start free. Back us before the record exists and your price never moves —
-              even as it rises for everyone who joins later.
-            </p>
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                {phase.name} pricing
+              </p>
+            </Reveal>
+            <Reveal delay={90}>
+              <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+                Claim the founding rate.
+              </h1>
+            </Reveal>
+            <Reveal delay={180}>
+              <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">
+                Start free. Back us before the record exists and your price never moves —
+                even as it rises for everyone who joins later.
+              </p>
+            </Reveal>
           </div>
 
           {/* Plans with billing toggle */}

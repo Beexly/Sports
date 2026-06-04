@@ -1,0 +1,27 @@
+import type { Metadata } from "next";
+import { FantasyShell } from "@/components/fantasy/fantasy-shell";
+import { TradeAnalyzer } from "@/components/fantasy/trade-analyzer";
+import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
+import { BRAND_COLORS } from "@/lib/brand";
+
+export const metadata: Metadata = {
+  title: "Trade Analyzer — Galaxy Fantasy",
+  description:
+    "Value both sides of any trade on VOR, projection, trend, and injury risk — with fairness, a win-now vs. depth lean, consolidation detection, and the reasoning behind the verdict.",
+  alternates: { canonical: "/fantasy/trade" },
+};
+
+export default function TradePage() {
+  return (
+    <FantasyShell
+      eyebrow="Trade Analyzer"
+      accent={BRAND_COLORS.softUltraviolet}
+      title={<>Know who <span className="gse-editorial" style={{ fontSize: "1.08em" }}>wins</span> the deal.</>}
+      intro="Build both sides and the analyzer prices each on value over replacement, projection, trend, and injury risk — then tells you the part that matters: is it fair, does it consolidate your roster into a starter, are you buying risk at a discount, and which side wins the headliner."
+      note={ILLUSTRATIVE_NOTE}
+      wide
+    >
+      <TradeAnalyzer />
+    </FantasyShell>
+  );
+}

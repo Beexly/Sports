@@ -345,6 +345,55 @@ export type SourceSnapshotKind =
   | "CONTEXT_STANDINGS"
   | "CONTEXT_MILESTONES";
 
+// ============================================================
+// Narrative signal types (Tier-B media / morale context)
+// ============================================================
+// Produced by ingestion (Reddit / RSS / news adapters), consumed by the
+// prediction-engine narrative-signal analyzer. Internal SIGNAL only — a small,
+// capped edge nudge, NEVER a cited public provenance source.
+
+export type NarrativeTheme =
+  | "contract_incentive"
+  | "milestone_chase"
+  | "motivation_positive"
+  | "morale_negative"
+  | "role_elevated"
+  | "role_reduced";
+
+export interface NarrativeTextItem {
+  /** Tier-B source label — never cited publicly. e.g. "reddit:r/nfl", "rss:espn". */
+  readonly source: string;
+  readonly athleteId: string;
+  /** Headline / title / snippet to scan. */
+  readonly text: string;
+  /** ISO timestamp; enables recency decay. */
+  readonly publishedAt?: string;
+  /** Source trust weight in [0,1]; default 1. */
+  readonly weight?: number;
+}
+
+export interface ThemeHeat {
+  readonly theme: NarrativeTheme;
+  /** Recency- and trust-weighted hit mass for this theme. */
+  readonly heat: number;
+  /** Raw number of items that triggered it. */
+  readonly hits: number;
+}
+
+export interface NarrativeSignal {
+  readonly athleteId: string;
+  /** Net performance direction in [-1, 1] (+ = tailwind, − = headwind). */
+  readonly direction: number;
+  /** Strength of the narrative in [0, 1] regardless of sign. */
+  readonly intensity: number;
+  /** Trust in the read in [0, 1] (volume + source diversity). */
+  readonly confidence: number;
+  /** Number of contributing (theme-matching) items. */
+  readonly volume: number;
+  /** Per-theme heat map — the "atmosphere", sorted by heat desc. */
+  readonly themes: readonly ThemeHeat[];
+}
+
 export interface SignalSourceMetadata {
   sourceCategory: SignalCategory;
   sourceName: string;     // e.g. "schedule-internal", "openweather"

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AnnotatedSampleSignal } from "@/components/home/annotated-sample-signal";
+import { IntelligenceLayer } from "@/components/home/intelligence-layer";
 import { CalibrationCurve } from "@/components/home/calibration-curve";
 import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
 import { Reveal } from "@/components/motion/reveal";
@@ -126,7 +127,7 @@ export default async function HomePage(): Promise<JSX.Element> {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
       <Nav />
-      <main>
+      <main id="main-content">
         {(demoActive || surfaceSampleActive) && <SampleDataBanner />}
         <Hero state={stateResult.data} />
         <AnnotatedSampleSignal />
@@ -137,6 +138,8 @@ export default async function HomePage(): Promise<JSX.Element> {
           autopsy={autopsy}
           isSampleData={surfaceSampleActive}
         />
+        <IntelligenceLayer />
+        <ExploreThePlatform />
         <MethodologySection />
         <ResponsibleBand />
         <EmptyPicksState />
@@ -625,6 +628,52 @@ function AutopsyPanel({ label, body }: { label: string; body: string }): JSX.Ele
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">{label}</p>
       <p className="mt-3 text-sm leading-6 text-ion">{body}</p>
     </div>
+  );
+}
+
+function ExploreThePlatform(): JSX.Element {
+  const systems = [
+    { eyebrow: "Mission Control", title: "What matters now", body: "The whole platform — betting and fantasy — prioritized into one adaptive glance that links you straight to the move.", href: "/today", featured: true },
+    { eyebrow: "Galaxy Fantasy", title: "A decision OS for your roster", body: "Draft, waivers, lineups, DFS, trades — plus three first-of-kind systems: the GM Autopilot, the League Twin, and the GM Ledger.", href: "/fantasy", featured: true },
+    { eyebrow: "The Beat", title: "Breaking news, scored", body: "Every report weighed by source tier, mapped to the players and lines it moves, with the call to make before it's priced in.", href: "/the-beat" },
+    { eyebrow: "CLV Tracker", title: "Track the number, not the noise", body: "Log your bets, settle them with the close, and watch your real scoreboard — CLV, ROI, and calibration. Plus a Kelly staking calculator.", href: "/track" },
+    { eyebrow: "GM Autopilot", title: "Delegate as much as you trust", body: "A dial from advice to a fully remote GM — every move explained, ledgered, reversible, and teaching you as it goes.", href: "/fantasy/autopilot" },
+    { eyebrow: "The Academy", title: "Train the process", body: "Expert drills across market structure, analytics, and injury science — graded on reasoning, building a calibrated GM IQ.", href: "/fantasy/academy" },
+  ];
+  return (
+    <section className="relative isolate overflow-hidden bg-carbon px-4 py-20 sm:px-6 lg:px-8" aria-labelledby="homepage-explore-heading">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule-fade" aria-hidden="true" />
+      <div className="mx-auto max-w-7xl">
+        <Reveal duration={880} distance={8}>
+          <p className="eyebrow text-ion-1">The platform</p>
+          <h2 id="homepage-explore-heading" className="mt-3 max-w-3xl font-editorial text-4xl italic leading-[1.05] text-ion-white sm:text-5xl">
+            One intelligence layer. Every decision you make.
+          </h2>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">
+            From the closing line to your fantasy roster — the same glass-box engine, the same proof, applied across the board.
+          </p>
+        </Reveal>
+
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {systems.map((s) => (
+            <Reveal key={s.href} duration={820} distance={8}>
+              <Link
+                href={s.href}
+                className={`group relative flex h-full flex-col overflow-hidden p-6 transition-transform duration-300 hover:-translate-y-1 ${s.featured ? "surface-lifted lg:col-span-1" : "surface-card"}`}
+              >
+                <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule-fade opacity-70" />
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">{s.eyebrow}</p>
+                <h3 className="mt-2 text-xl font-semibold text-ion-white">{s.title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-6 text-ion-1">{s.body}</p>
+                <span aria-hidden className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-orbital-cyan transition-transform duration-200 group-hover:translate-x-1">
+                  Explore →
+                </span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 

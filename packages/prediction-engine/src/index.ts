@@ -73,6 +73,15 @@ export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
 export { getReadinessGates, bootstrapGateResponse } from "./readiness.js";
 export type { ReadinessGates } from "./readiness.js";
+// Proof-of-record — tamper-evident Merkle commitment over published picks.
+export {
+  hashLeaf,
+  merkleRoot,
+  inclusionProof,
+  verifyInclusion,
+  canonicalPickPayload,
+} from "./proof-of-record.js";
+export type { HashFn, PickRecord, MerkleSibling, MerkleProof } from "./proof-of-record.js";
 export { buildPickSignalSnapshot } from "./signal-snapshot.js";
 export type { PickSignalSnapshotData } from "./signal-snapshot.js";
 export {

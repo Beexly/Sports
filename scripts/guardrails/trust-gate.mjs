@@ -57,8 +57,21 @@ const WHITELIST_PATHS = new Set([
   "apps/web/lib/content/workflow.ts",
   "apps/web/lib/promotions/copy-rules.ts",
   "apps/web/lib/content-generator.ts",
+  // Enforcement-policy definition: contains the banned phrases as detection
+  // patterns (same rationale as trust-claims.ts above).
+  "apps/web/lib/pick-explainer/policy.ts",
+  // Content-safety lexicon: contains the banned phrases as detection terms.
+  "apps/web/lib/safety/content-safety.ts",
   "packages/db/prisma/seed.ts",
 ]);
+
+// "lock" is banned ONLY as betting slang for a guaranteed pick (a lock, lock of
+// the day). It has a legitimate TEMPORAL sense — the moment a line locks/closes
+// ("at lock", "lock time", "lock→close"). Same false-positive handling intent as
+// the word-boundary guard that already exempts block/unlock/clock: we blank the
+// safe temporal idioms, then a residual standalone "lock" is still a real hit.
+const LOCK_SAFE_CONTEXT =
+  /\b(?:at|before|by|after|until|since|the)\s+lock\b|\block\s*(?:time\b|→|->|→)/gi;
 
 const WHITELIST_PREFIXES = [
   "apps/web/lib/compliance-scanner/",
@@ -135,7 +148,10 @@ function scanText(text) {
     const re = buildRegex(entry);
     for (let i = 0; i < lines.length; i++) {
       if (lineIsCommentOnly(lines[i])) continue;
-      if (re.test(lines[i])) {
+      // For the "lock" slang ban, blank the legitimate temporal idioms first;
+      // a residual standalone "lock" (e.g. "a lock", "lock of the day") still hits.
+      const subject = entry.claim === "banned.lock" ? lines[i].replace(LOCK_SAFE_CONTEXT, " ") : lines[i];
+      if (re.test(subject)) {
         hits.push({
           line: i + 1,
           snippet: lines[i].trim().slice(0, 200),

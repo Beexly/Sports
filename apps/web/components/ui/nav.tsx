@@ -4,9 +4,45 @@ import { auth } from "@/lib/auth";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 
-const NAV_LINKS = [
+const PRIMARY_LINKS = [
+  { label: "Mission Control", href: "/today" },
   { label: "Today's Board", href: "/board" },
   { label: "Edge Map", href: "/observatory" },
+] as const;
+
+// The decision-OS surfaces, grouped under one "Intelligence ▾" menu.
+const INTELLIGENCE_GROUP = [
+  { label: "Inside the Signal", href: "/intelligence", desc: "How the engine reasons" },
+  { label: "The Beat", href: "/the-beat", desc: "Breaking news, reliability-scored" },
+  { label: "GSN", href: "/gsn", desc: "Daily intelligence transmission" },
+  { label: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's risk" },
+  { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
+  { label: "Trust Ledger", href: "/ledger", desc: "Tamper-evident record" },
+  { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
+  { label: "Data & Integrations", href: "/integrations", desc: "What's live, what's gated" },
+  { label: "The Cipher", href: "/cipher", desc: "Weekly hidden hunt" },
+] as const;
+
+// The fantasy-football OS surfaces, grouped under "Fantasy ▾".
+const FANTASY_GROUP = [
+  { label: "Fantasy Home", href: "/fantasy", desc: "A decision OS for your roster" },
+  { label: "Connect League", href: "/fantasy/connect", desc: "Read-only Sleeper sync" },
+  { label: "GM Autopilot", href: "/fantasy/autopilot", desc: "Delegate from advice to full remote" },
+  { label: "The League Twin", href: "/fantasy/league-twin", desc: "Your roster as a galaxy" },
+  { label: "The GM Ledger", href: "/fantasy/gm-ledger", desc: "Decisions graded on process" },
+  { label: "GM Academy", href: "/fantasy/academy", desc: "Drill the process, build GM IQ" },
+  { label: "Draft Assistant", href: "/fantasy/draft", desc: "Tiers, VOR, live guidance" },
+  { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Adds and bids, with the why" },
+  { label: "Lineup Optimizer", href: "/fantasy/lineup", desc: "Start-sit, floor vs. ceiling" },
+  { label: "DFS Optimizer", href: "/fantasy/dfs", desc: "Cash/GPP/leverage, glass-box" },
+  { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & Pick6 line edges" },
+  { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Value, fairness, win-now lean" },
+  { label: "Scheme Intelligence", href: "/fantasy/scheme", desc: "How a coaching change cascades" },
+  { label: "Contests", href: "/fantasy/contests", desc: "Best ball, survivor, DFS, squares" },
+  { label: "Galaxy Studios", href: "/fantasy/studio", desc: "The weekly brief, auto-composed" },
+] as const;
+
+const TAIL_LINKS = [
   { label: "Methodology", href: "/methodology" },
   { label: "Pricing", href: "/pricing" },
 ] as const;
@@ -22,7 +58,49 @@ export async function Nav() {
           <BrandLockup />
 
           <nav className="nav-links" aria-label="Primary">
-            {NAV_LINKS.map(({ href, label }) => (
+            {PRIMARY_LINKS.map(({ href, label }) => (
+              <Link key={href} href={href}>
+                {label}
+              </Link>
+            ))}
+
+            {/* Grouped decision-OS surfaces — hover or keyboard-focus to open */}
+            <div className="group relative">
+              <Link href="/intelligence" aria-haspopup="true" className="inline-flex items-center gap-1">
+                Intelligence
+                <span aria-hidden className="text-[9px] opacity-70 transition-transform duration-150 group-hover:rotate-180">▼</span>
+              </Link>
+              <div className="invisible absolute left-0 top-full z-50 pt-2 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div className="surface-card w-64 p-2">
+                  {INTELLIGENCE_GROUP.map((item) => (
+                    <Link key={item.href} href={item.href} className="block">
+                      <span className="block text-sm font-medium text-white">{item.label}</span>
+                      <span className="block text-xs text-ink-500">{item.desc}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Fantasy OS surfaces */}
+            <div className="group relative">
+              <Link href="/fantasy" aria-haspopup="true" className="inline-flex items-center gap-1">
+                Fantasy
+                <span aria-hidden className="text-[9px] opacity-70 transition-transform duration-150 group-hover:rotate-180">▼</span>
+              </Link>
+              <div className="invisible absolute left-0 top-full z-50 pt-2 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div className="surface-card w-64 p-2">
+                  {FANTASY_GROUP.map((item) => (
+                    <Link key={item.href} href={item.href} className="block">
+                      <span className="block text-sm font-medium text-white">{item.label}</span>
+                      <span className="block text-xs text-ink-500">{item.desc}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {TAIL_LINKS.map(({ href, label }) => (
               <Link key={href} href={href}>
                 {label}
               </Link>

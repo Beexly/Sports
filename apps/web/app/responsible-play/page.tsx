@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME, HELPLINE } from "@/lib/brand";
+import { BiasMirror } from "@/components/bias-mirror/bias-mirror";
+import { BRAND_NAME, HELPLINE, BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Responsible play",
@@ -73,6 +74,23 @@ export default function ResponsiblePlayPage() {
                 24/7. Free. Confidential. Available in English and Spanish.
                 Text and chat options as well.
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* The Bias Mirror — responsible play as a living, protective layer */}
+        <section className="px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <p className="eyebrow" style={{ color: BRAND_COLORS.softUltraviolet }}>The Bias Mirror</p>
+            <h2 className="mt-3 font-display text-display-lg text-white">A private check on how you decide.</h2>
+            <p className="mt-4 max-w-2xl text-ink-300">
+              Most products exploit bias. This one reflects it back — privately. Rate a few honest
+              tendencies and the Mirror surfaces the patterns worth watching, your real strengths,
+              and calm, protective moves. It&apos;s computed on your device from your own answers —
+              nothing is sent or stored.
+            </p>
+            <div className="mt-9">
+              <BiasMirror />
             </div>
           </div>
         </section>

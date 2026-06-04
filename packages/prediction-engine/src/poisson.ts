@@ -38,6 +38,8 @@
 //     practitioner-grade walkthrough of the Maher Poisson model.
 // ============================================================
 
+import type { IndependentMarketFairValue } from "@sports/types";
+
 // ============================================================
 // Runtime guard — refuse to participate in scoring without team
 // rates. When `enforce` is true (default), throws if the helper
@@ -208,4 +210,29 @@ export function poissonConsistencyScore(
   const ratio = Math.abs(poissonTotal - bookmakerTotal) / bookmakerTotal;
   // Normalise: a 5% divergence is "noticeable", a 25% divergence is "extreme"
   return Math.min(1, ratio / 0.25);
+}
+
+// ============================================================
+// Bridge the Poisson model into the engine's independent fair-value shape (a
+// referee, like Kalshi/Elo). Draw-no-bet basis: P(home | decisive) and
+// P(away | decisive), so the two sides sum to 1 and compare cleanly to a 2-way
+// win market (in 2-outcome sports draw≈0, so this is just the moneyline).
+// Requires REAL team rates — moneylineProbabilities enforces the
+// no-fabricated-stats guard, so this can never run on synthesized λ in prod.
+// ============================================================
+export function toPoissonFairValue(
+  lambdaHome: number,
+  lambdaAway: number,
+  options: { readonly maxGoals?: number; readonly now?: () => Date } = {}
+): IndependentMarketFairValue {
+  const { home, away } = moneylineProbabilities(lambdaHome, lambdaAway, options.maxGoals ?? 12);
+  const decisive = home + away;
+  const homeFairProb = decisive > 0 ? Number((home / decisive).toFixed(4)) : null;
+  const now = (options.now ?? (() => new Date()))();
+  return {
+    source: "poisson",
+    homeFairProb,
+    awayFairProb: homeFairProb != null ? Number((1 - homeFairProb).toFixed(4)) : null,
+    capturedAt: now.toISOString(),
+  };
 }

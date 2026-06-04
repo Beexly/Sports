@@ -191,3 +191,136 @@
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.4; transform: scale(1.6); }
 }
+
+/* ── Kinetic marquee / ticker ──────────────────────────────────────────
+ * A seamless horizontal scroll. The track holds the content TWICE; moving
+ * it -50% loops invisibly. Hovering the .gse-marquee pauses it. */
+@keyframes gse-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+.gse-marquee { overflow: hidden; }
+.gse-marquee-track {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  will-change: transform;
+  animation: gse-marquee var(--gse-marquee-dur, 38s) linear infinite;
+}
+.gse-marquee:hover .gse-marquee-track { animation-play-state: paused; }
+.gse-marquee-reverse .gse-marquee-track { animation-direction: reverse; }
+
+/* Sheen that sweeps across a "flasher" banner word. */
+@keyframes gse-sheen {
+  0%   { background-position: -150% 0; }
+  60%, 100% { background-position: 250% 0; }
+}
+.gse-sheen {
+  background: linear-gradient(
+    100deg,
+    var(--ion-white) 0%, var(--ion-white) 38%,
+    #cfeaff 48%, #ffffff 52%,
+    var(--ion-white) 62%, var(--ion-white) 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gse-sheen 5.5s ease-in-out infinite;
+}
+
+/* Soft attention pulse for the gate's enter ring. */
+@keyframes gse-ring {
+  0%   { transform: scale(0.92); opacity: 0.9; }
+  70%  { transform: scale(1.45); opacity: 0; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+.gse-enter-ring { animation: gse-ring 2.8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite; }
+
+/* Spotlight step entrance + segmented progress fill (ReasoningShowcase). */
+@keyframes gse-step {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Cinematic entrance (CinematicEntrance) ──────────────────────────── */
+@keyframes gse-in {
+  from { opacity: 0; transform: scale(1.05); filter: blur(6px); }
+  to   { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+@keyframes gse-flash-in {
+  0%   { opacity: 0; letter-spacing: 0.5em; transform: translateY(6px); }
+  18%  { opacity: 1; letter-spacing: 0.22em; transform: translateY(0); }
+  82%  { opacity: 1; letter-spacing: 0.22em; }
+  100% { opacity: 0; letter-spacing: 0.34em; }
+}
+@keyframes gse-sweep { to { transform: rotate(360deg); } }
+@keyframes gse-scan {
+  0% { transform: translateY(-120%); opacity: 0; }
+  10%, 90% { opacity: 0.6; }
+  100% { transform: translateY(120%); opacity: 0; }
+}
+@keyframes gse-signal-ping {
+  0%   { transform: scale(0.6); opacity: 0; }
+  10%  { opacity: 1; }
+  70%  { transform: scale(2.6); opacity: 0; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes gse-form-burst {
+  0%   { transform: scale(0); opacity: 1; }
+  100% { transform: scale(60); opacity: 0; }
+}
+@keyframes gse-boot-line {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes gse-bolt {
+  0% { stroke-dashoffset: 240; opacity: 0; }
+  20% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gse-cine-anim { animation: none !important; }
+}
+@keyframes gse-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ── Cinematic atmosphere — film grain + vignette ──────────────────────
+ * Lifts the dark scenes out of "flat black" into something photographed.
+ * Both layers are fixed, pointer-events-none, aria-hidden via the component. */
+.gse-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 70;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+.gse-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(130% 100% at 50% 38%, transparent 52%, rgba(2, 3, 5, 0.5) 100%),
+    linear-gradient(180deg, rgba(2, 3, 5, 0.35) 0%, transparent 18%);
+}
+
+/* Editorial serif accent — Instrument Serif italic against the geometric
+ * display face. The unexpected pairing is the "designed" signal. */
+.gse-editorial {
+  font-family: var(--f-editorial);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gse-marquee-track { animation: none !important; }
+  .gse-sheen { animation: none !important; color: var(--ion-white); -webkit-text-fill-color: var(--ion-white); }
+  .gse-enter-ring { animation: none !important; opacity: 0 !important; }
+}

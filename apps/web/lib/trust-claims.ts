@@ -281,7 +281,7 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
     evidence: "NONE",
     visibility: "INTERNAL",
     lastReviewedAt: LAST_REVIEW,
-    reviewNote: "Sports-betting slang for a 'guaranteed' pick. Scanner uses word boundaries to avoid matching 'block', 'unlock', 'clock'.",
+    reviewNote: "Sports-betting slang for a 'guaranteed' pick (a lock, lock of the day). Scanner uses word boundaries to avoid matching 'block', 'unlock', 'clock', and blanks the legitimate TEMPORAL idiom ('at lock', 'lock time', 'lock→close' — when the line locks/closes) before testing. Claim forms ('a lock', 'it's a lock') still fail.",
     safeReplacement: "high-confidence pick",
   },
   {

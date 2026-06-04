@@ -1,0 +1,42 @@
+/**
+ * Tests for the Mission Control briefing composer — verifies the cross-product
+ * cards are present, prioritized, actionable, and lead with breaking news.
+ */
+
+import { describe, it, expect } from "vitest";
+import { buildBriefing } from "./mission-control";
+
+describe("mission control briefing", () => {
+  const cards = buildBriefing();
+
+  it("composes a multi-source prioritized briefing", () => {
+    expect(cards.length).toBeGreaterThanOrEqual(4);
+    const kinds = new Set(cards.map((c) => c.kind));
+    expect(kinds.size).toBeGreaterThanOrEqual(4); // cross-product, not one source
+  });
+
+  it("is sorted by priority, highest first", () => {
+    for (let i = 1; i < cards.length; i++) {
+      expect(cards[i - 1]!.priority).toBeGreaterThanOrEqual(cards[i]!.priority);
+    }
+  });
+
+  it("every card is actionable with a deep link and copy", () => {
+    for (const c of cards) {
+      expect(c.href.startsWith("/")).toBe(true);
+      expect(c.action.length).toBeGreaterThan(3);
+      expect(c.headline.length).toBeGreaterThan(5);
+      expect(c.priority).toBeGreaterThanOrEqual(0);
+      expect(c.priority).toBeLessThanOrEqual(100);
+    }
+  });
+
+  it("always includes the CLV discipline nudge", () => {
+    expect(cards.some((c) => c.kind === "discipline" && c.href === "/track")).toBe(true);
+  });
+
+  it("leads with breaking news when the wire is hot", () => {
+    // the demo wire has a fresh insider 'ruled out' — it should top the briefing
+    expect(cards[0]!.kind).toBe("breaking");
+  });
+});
