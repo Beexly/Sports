@@ -69,6 +69,7 @@ export type {
   EdgeAssessment,
 } from "./edge-engine.js";
 export * from "./constants.js";
+export * from "./trend-discovery.js";
 export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
 export { getReadinessGates, bootstrapGateResponse } from "./readiness.js";
