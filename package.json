@@ -42,7 +42,8 @@
     "prod:probe": "node scripts/prod-probe.mjs",
     "synthetic:run": "node scripts/synthetic-monitoring-runner.mjs",
     "jarvis:diff": "node scripts/jarvis-diff.mjs",
-    "morning:setup": "node scripts/morning-setup.mjs"
+    "morning:setup": "node scripts/morning-setup.mjs",
+    "prepare": "npm run db:generate"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",

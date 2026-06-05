@@ -11,6 +11,8 @@
     "db:migrate:dev": "prisma migrate dev",
     "db:seed": "ts-node --esm prisma/seed.ts",
     "db:studio": "prisma studio",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
