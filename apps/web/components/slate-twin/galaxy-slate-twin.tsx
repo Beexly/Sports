@@ -230,9 +230,20 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
     })();
     disposables.push(ringGeo);
 
+    // Instrument palette: pull each verdict/accent colour toward monochrome
+    // steel, keeping only a faint hue cue — the slate reads as telemetry (value
+    // and intensity carry the signal), not rainbow-neon.
+    const INSTRUMENT_SAT = 0.3;
+    const toInstrument = (c: InstanceType<typeof THREE.Color>) => {
+      const hsl = { h: 0, s: 0, l: 0 };
+      c.getHSL(hsl);
+      c.setHSL(hsl.h, hsl.s * INSTRUMENT_SAT, hsl.l);
+      return c;
+    };
+
     const systems: System[] = [];
     for (const game of games) {
-      const color = new THREE.Color(VERDICT_HEX[game.verdict]);
+      const color = toInstrument(new THREE.Color(VERDICT_HEX[game.verdict]));
       const group = new THREE.Group();
       const p = layout.positions.get(game.id) ?? (game.pos as Vec3);
       group.position.set(p[0], p[1], p[2]);
@@ -261,7 +272,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       const satHalos: InstanceType<typeof THREE.Sprite>[] = [];
       for (let mi = 0; mi < game.markets.length; mi++) {
         const mk = game.markets[mi]!;
-        const haloM = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(mk.volatility > 0.55 ? 0xff2dd6 : 0x7a5cff), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+        const haloM = new THREE.SpriteMaterial({ map: soft, color: toInstrument(new THREE.Color(mk.volatility > 0.55 ? 0xff2dd6 : 0x7a5cff)), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
         const sh = new THREE.Sprite(haloM);
         const hs = 0.5 + mk.volatility * 1.3;
         sh.scale.set(hs, hs, 1);
@@ -300,7 +311,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       disposables.push(headMat);
 
       const pm = game.publicMoney ?? 0;
-      const pressMat = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(0xff2dd6), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+      const pressMat = new THREE.SpriteMaterial({ map: soft, color: toInstrument(new THREE.Color(0xff2dd6)), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
       const pressure = new THREE.Sprite(pressMat);
       const ps = 1.5 + pm * 1.9;
       pressure.scale.set(ps, ps, 1);
@@ -308,20 +319,20 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       disposables.push(pressMat);
 
       const sharp = game.sharp ?? 0;
-      const sharpMat = new THREE.SpriteMaterial({ map: glow, color: new THREE.Color(0x00e5ff), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+      const sharpMat = new THREE.SpriteMaterial({ map: glow, color: toInstrument(new THREE.Color(0x00e5ff)), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
       const sharpNode = new THREE.Sprite(sharpMat);
       const sns = 0.7 + sharp * 1.0;
       sharpNode.scale.set(sns, sns, 1);
       group.add(sharpNode);
       disposables.push(sharpMat);
 
-      const lensMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0x00e5ff), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const lensMat = new THREE.LineBasicMaterial({ color: toInstrument(new THREE.Color(0x00e5ff)), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const lensRing = new THREE.LineLoop(ringGeo, lensMat);
       group.add(lensRing);
       disposables.push(lensMat);
 
       const impact = game.impact ?? null;
-      const impMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0xff2dd6), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const impMat = new THREE.LineBasicMaterial({ color: toInstrument(new THREE.Color(0xff2dd6)), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const impactRing = new THREE.LineLoop(ringGeo, impMat);
       group.add(impactRing);
       disposables.push(impMat);
@@ -553,7 +564,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
         const dim = sel && sel !== g.id ? 0.12 : offLeague ? 0.07 : 1;
         const conf = g.confidence[ti] ?? g.confidence[g.confidence.length - 1] ?? 0.4;
         const held = conf < 0.3 && g.verdict !== "NO-BET";
-        const tint = new THREE.Color(held ? HOLD_HEX : s.baseHex);
+        const tint = toInstrument(new THREE.Color(held ? HOLD_HEX : s.baseHex));
 
         const targetFocus = sel === g.id ? 1 : 0;
         s.focus += reduced ? (targetFocus - s.focus) : (targetFocus - s.focus) * 0.12;
