@@ -164,11 +164,6 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
     mount.appendChild(canvas);
 
     const scene = new THREE.Scene();
-    // Atmospheric depth: distant systems and the back of the starfield fade into
-    // the dark, so the slate reads as real spatial depth instead of a flat sheet
-    // of equally-bright points. Negligible on a focused system (a few units from
-    // camera); strong on the far shell.
-    scene.fog = new THREE.FogExp2(0x05060a, 0.01);
     const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 240);
     camera.position.set(0, 4, 30);
 
@@ -188,9 +183,9 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
     const tierDefs = [
-      { count: budget.far, size: 0.5, opacity: 0.22, color: 0x6b7a92, rMin: 64, rMax: 96, spin: 0.006 },
-      { count: budget.mid, size: 0.8, opacity: 0.36, color: 0x9fb3c8, rMin: 50, rMax: 78, spin: 0.011 },
-      { count: budget.near, size: 1.2, opacity: 0.54, color: 0xcfe0f2, rMin: 40, rMax: 60, spin: 0.018 },
+      { count: budget.far, size: 0.55, opacity: 0.34, color: 0x6b7a92, rMin: 64, rMax: 96, spin: 0.006 },
+      { count: budget.mid, size: 0.9, opacity: 0.55, color: 0x9fb3c8, rMin: 50, rMax: 78, spin: 0.011 },
+      { count: budget.near, size: 1.5, opacity: 0.82, color: 0xcfe0f2, rMin: 40, rMax: 60, spin: 0.018 },
     ];
     const starTiers: StarTier[] = [];
     for (const def of tierDefs) {
@@ -332,9 +327,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
 
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    // Higher threshold = only the brightest cores bloom (mid-tones stay crisp);
-    // tighter radius keeps the glow from spilling across labels.
-    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), budget.bloom, 0.55, 0.34);
+    const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), budget.bloom, 0.7, 0.2);
     composer.addPass(bloom);
 
     // Label system: HTML overlay (crisp text + a11y), SVG layer for leader lines.
@@ -357,12 +350,8 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       Object.assign(el.style, {
         position: "absolute", transform: "translate(-50%,-50%)", whiteSpace: "nowrap",
         font: "600 11px var(--f-mono, monospace)", letterSpacing: "0.04em",
-        color: "#eaf6ff", padding: "3px 8px", borderRadius: "6px",
-        // Solid frosted chip + text-shadow so the label stays legible even when
-        // sitting on top of a bright, bloomed core at close zoom.
-        background: "rgba(3,4,6,0.88)", border: `1px solid ${VERDICT_HEX[s.game.verdict]}66`,
-        backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)",
-        textShadow: "0 1px 3px rgba(0,0,0,0.95)", boxShadow: "0 2px 10px rgba(0,0,0,0.55)",
+        color: "#cfe9ff", padding: "2px 7px", borderRadius: "6px",
+        background: "rgba(5,6,8,0.62)", border: `1px solid ${VERDICT_HEX[s.game.verdict]}55`,
         pointerEvents: "none", opacity: "0", transition: reduced ? "none" : "opacity 160ms",
       } as Partial<CSSStyleDeclaration>);
       overlay.appendChild(el);
@@ -535,16 +524,6 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       lookAt.lerp(camTarget, lerpL);
       camera.lookAt(lookAt);
 
-      // Zoom-aware bloom: the additive glow is lush on the wide galaxy view but
-      // blows out labels/HUD once the camera moves in on a system. Dial bloom
-      // DOWN with proximity — full strength out wide (dist ~30), ~40% when
-      // focused (dist ~5-7) — so a zoomed read stays legible. Smoothed to avoid
-      // flicker; honours the per-device bloom budget as the ceiling.
-      const camDist = camera.position.distanceTo(lookAt);
-      const zoomT = Math.min(1, Math.max(0, (camDist - 7) / 15)); // 0 = zoomed in, 1 = wide
-      const targetBloom = budget.bloom * (0.22 + 0.48 * zoomT);
-      bloom.strength += (targetBloom - bloom.strength) * (reduced ? 1 : 0.08);
-
       const hoverId = ptr.has ? nearest() : null;
 
       for (const s of systems) {
@@ -564,10 +543,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
         const cs = s.base * tw * (held ? 0.8 : 1);
         s.core.scale.set(cs, cs, 1);
         (s.core.material as InstanceType<typeof THREE.SpriteMaterial>).color.copy(tint);
-        // Cores read as restrained stars, not neon blobs; the focused one is
-        // damped further so its label reads on top (ring, group scale, leader
-        // line, and HUD still mark it as selected).
-        (s.core.material as InstanceType<typeof THREE.SpriteMaterial>).opacity = dim * (held ? 0.6 : 0.84) * (1 - focus * 0.5);
+        (s.core.material as InstanceType<typeof THREE.SpriteMaterial>).opacity = dim * (held ? 0.7 : 1);
         (s.halo.material as InstanceType<typeof THREE.SpriteMaterial>).color.copy(tint);
         (s.halo.material as InstanceType<typeof THREE.SpriteMaterial>).opacity = (0.06 + g.volatility * 0.16) * dim;
 
