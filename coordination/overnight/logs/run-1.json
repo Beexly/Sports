@@ -1,0 +1,40 @@
+{
+  "run": 1,
+  "status": "completed",
+  "ts_start": "2026-06-05T07:06:45Z",
+  "ts_end": "2026-06-05T07:19:00Z",
+  "branch": "claude/magical-volta-5uUdq",
+  "streams_completed": [
+    "security-sweep",
+    "repair/prepare-hook",
+    "repair/prisma-generate",
+    "repair/worker-tsconfig-deprecation",
+    "improve/test-scripts-5-packages",
+    "improve/test-files-content-publishing",
+    "improve/test-files-db-stub",
+    "synthesis/fresh-clone-pipeline"
+  ],
+  "streams_blocked": [],
+  "leverage_total": 684,
+  "findings_added": 8,
+  "type_errors_before": 175,
+  "type_errors_after": 0,
+  "tests_before": 0,
+  "tests_after": 2855,
+  "security_findings": {
+    "hardcoded_secrets": "NONE",
+    "calibration_gate_bypasses": "NONE",
+    "auth_missing": "NONE",
+    "all_gates_default_false": true
+  },
+  "top_priorities_next_run": [
+    "Add vitest with real tests to workers/data-refresh (integration test with mock DB adapter)",
+    "Add vitest with real tests to packages/ingestion-pipeline (mock processSport, settleSport)",
+    "Investigate esbuild/vite moderate vulnerability — confirm dev-only scope, document decision",
+    "Route drift audit: scan all cockpit pages for missing auth re-checks on POST mutations",
+    "Brand copy scanner coverage: verify recent Airwave Ledger pages pass public-copy-scanner"
+  ],
+  "blocked_questions": [],
+  "next_action": "grow",
+  "notes": "All repair and improve actions complete. No blockers. Security invariants intact. Night ended ahead of schedule — growth stream next."
+}
