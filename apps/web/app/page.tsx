@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { ShaderAuroraLazy } from "@/components/hero/shader-aurora-lazy";
+import { CountUp } from "@/components/ui/count-up";
 import { BRAND_COLORS } from "@/lib/brand";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
@@ -117,10 +118,10 @@ export default async function HomePage(): Promise<JSX.Element> {
                 </p>
               </div>
               <dl className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <Metric label="Sports" value={String(state.sportsWatched)} />
-                <Metric label="Books" value={String(state.booksPolled)} />
-                <Metric label="Open" value={String(state.openPicks)} />
-                <Metric label="Gated" value={String(state.gatedToday)} />
+                <Metric label="Sports" value={state.sportsWatched} />
+                <Metric label="Books" value={state.booksPolled} />
+                <Metric label="Open" value={state.openPicks} />
+                <Metric label="Gated" value={state.gatedToday} />
               </dl>
               {dbUnreachable ? (
                 <div className="mt-5 border border-mineral bg-carbon px-4 py-3">
@@ -164,25 +165,26 @@ export default async function HomePage(): Promise<JSX.Element> {
             <div className="grid gap-px overflow-hidden border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
               <StatusPanel
                 title="Public picks"
-                value={String(state.publishedToday.length)}
+                value={state.publishedToday.length}
                 detail={state.publishedToday.length > 0 ? "Published rows available." : "No fabricated picks."}
                 href="/board"
               />
               <StatusPanel
                 title="Trend observations"
-                value={String(trendWorkbench.observationCount)}
+                value={trendWorkbench.observationCount}
                 detail="Trend engine is ready; observations are waiting on real nflverse writes."
                 href="/trends"
               />
               <StatusPanel
                 title="Calibration sample"
-                value={String(calibration.sampleSize)}
+                value={calibration.sampleSize}
                 detail={calibration.publicMessage}
                 href="/performance"
               />
               <StatusPanel
                 title="Real NFL rows"
-                value={nflversePulse.status === "live" ? numberLabel(nflversePulse.sourceRows) : "0"}
+                value={nflversePulse.status === "live" ? nflversePulse.sourceRows : 0}
+                format={numberLabel}
                 detail={
                   nflversePulse.status === "live"
                     ? `nflverse usage pulse: ${nflversePulse.season} week ${nflversePulse.week ?? "N/A"}.`
@@ -324,11 +326,13 @@ export default async function HomePage(): Promise<JSX.Element> {
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }): JSX.Element {
+function Metric({ label, value }: { label: string; value: number }): JSX.Element {
   return (
     <div className="border border-mineral bg-carbon px-3 py-2">
       <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</dt>
-      <dd className="mt-1 font-numerals text-2xl font-semibold tabular-nums text-ion-white">{value}</dd>
+      <dd className="mt-1 font-numerals text-2xl font-semibold tabular-nums text-ion-white">
+        <CountUp value={value} />
+      </dd>
     </div>
   );
 }
@@ -338,16 +342,20 @@ function StatusPanel({
   value,
   detail,
   href,
+  format,
 }: {
   title: string;
-  value: string;
+  value: number;
   detail: string;
   href: string;
+  format?: (n: number) => string;
 }): JSX.Element {
   return (
     <Link href={href} className="block min-h-52 bg-eclipse p-5 transition-colors hover:bg-slate">
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{title}</p>
-      <p className="mt-4 font-numerals text-5xl font-semibold tabular-nums text-orbital-cyan">{value}</p>
+      <p className="mt-4 font-numerals text-5xl font-semibold tabular-nums text-orbital-cyan">
+        <CountUp value={value} format={format} />
+      </p>
       <p className="mt-4 text-sm leading-6 text-ion-1">{detail}</p>
     </Link>
   );
