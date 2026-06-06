@@ -74,6 +74,29 @@ function PositionTable({ pos, rows }: { pos: ModelPosition; rows: readonly Playe
   );
 }
 
+function MovesCard({ title, tone, rows }: { title: string; tone: string; rows: readonly PlayerProfile[] }): JSX.Element {
+  return (
+    <section className="border border-mineral bg-eclipse p-5">
+      <p className={`font-mono text-[10px] uppercase tracking-[0.18em] ${tone}`}>{title}</p>
+      <div className="mt-3 space-y-2.5">
+        {rows.length === 0 ? (
+          <p className="text-sm text-ion-2">None flagged this week.</p>
+        ) : (
+          rows.map((p) => (
+            <div key={p.playerId} className="border-l border-mineral pl-3">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-semibold text-ion-white">{p.name}</span>
+                <span className="font-mono text-[11px] text-ion-2">{p.position} · {p.team} · grade {p.processGrade}</span>
+              </div>
+              <p className="mt-0.5 text-[11px] leading-5 text-ion-1">{p.note}</p>
+            </div>
+          ))
+        )}
+      </div>
+    </section>
+  );
+}
+
 export default async function PlayerIntelligencePage(): Promise<JSX.Element> {
   const model = await loadPlayerModel();
 
@@ -121,6 +144,20 @@ export default async function PlayerIntelligencePage(): Promise<JSX.Element> {
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
               {model.season}{model.throughWeek ? ` · through week ${model.throughWeek}` : ""} · {model.profiles.length} profiles
             </p>
+
+            <div className="grid gap-4 lg:grid-cols-2">
+              <MovesCard
+                title="This week's buy-low adds"
+                tone="text-orbital-cyan"
+                rows={model.profiles.filter((p) => p.signal === "buy-low").slice(0, 8)}
+              />
+              <MovesCard
+                title="Sell-high / move off"
+                tone="text-plasma"
+                rows={model.profiles.filter((p) => p.signal === "sell-high").slice(0, 6)}
+              />
+            </div>
+
             {POSITIONS.map((pos) => {
               const rows = model.profiles.filter((p) => p.position === pos);
               return rows.length > 0 ? <PositionTable key={pos} pos={pos} rows={rows} /> : null;
