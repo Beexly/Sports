@@ -20,6 +20,7 @@ const SECTIONS: readonly Section[] = [
       { label: "Production Lab", href: "/players" },
       { label: "Snap Share", href: "/players/snaps" },
       { label: "Next Gen Stats", href: "/players/nextgen" },
+      { label: "Air Yards · WOPR", href: "/players/opportunity" },
       { label: "Pressure & Coverage", href: "/players/trenches" },
       { label: "Combine", href: "/players/combine" },
       { label: "Total QBR", href: "/players/qbr" },

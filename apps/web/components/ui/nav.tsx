@@ -17,6 +17,7 @@ const PLAYERS_GROUP: readonly NavItem[] = [
   { label: "Production Lab", href: "/players", desc: "Season + last-5 form, defense ranks" },
   { label: "Snap Share", href: "/players/snaps", desc: "Offensive workload leaders" },
   { label: "Next Gen Stats", href: "/players/nextgen", desc: "Separation, CPOE, RYOE" },
+  { label: "Air Yards · WOPR", href: "/players/opportunity", desc: "Opportunity vs production — buy-low/sell-high" },
   { label: "Pressure & Coverage", href: "/players/trenches", desc: "QB pressure, lockdown defenders" },
   { label: "Combine", href: "/players/combine", desc: "Athletic testing — 40, vert, cone" },
   { label: "Total QBR", href: "/players/qbr", desc: "ESPN QBR, independent QB estimate" },
