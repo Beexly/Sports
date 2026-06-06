@@ -1,5 +1,5 @@
 import { gunzipSync } from "node:zlib";
-import { assertIngestible, NFLVERSE_BASE, parseCsv } from "@sports/data-ingestion";
+import { assertIngestible, fetchWithFailover, NFLVERSE_BASE, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 
 type NgsVariant = "receiving" | "passing" | "rushing";
@@ -105,17 +105,10 @@ async function fetchNgsVariant({
   timeoutMs: number;
 }): Promise<{ readonly url: string; readonly records: readonly CsvRecord[] }> {
   const url = ngsCombinedUrl(variant);
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetcher(url, { signal: controller.signal });
-    if (!response.ok) throw new Error(`nflverse ngs ${variant} failed with HTTP ${response.status}`);
-    const buffer = Buffer.from(await response.arrayBuffer());
-    const text = gunzipSync(buffer).toString("utf8");
-    return { url, records: parseCsv(text).records };
-  } finally {
-    clearTimeout(timer);
-  }
+  const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs });
+  const buffer = Buffer.from(await response.arrayBuffer());
+  const text = gunzipSync(buffer).toString("utf8");
+  return { url, records: parseCsv(text).records };
 }
 
 /** Latest REG season that actually has season-aggregate (week 0) rows, at or before requested. */

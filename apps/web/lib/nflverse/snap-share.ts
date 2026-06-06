@@ -1,4 +1,4 @@
-import { assertIngestible, nflverseUrl, parseCsv } from "@sports/data-ingestion";
+import { assertIngestible, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 
 /**
@@ -58,15 +58,8 @@ function isSkill(value: string | undefined): value is SkillPosition {
 }
 
 async function fetchCsv(url: string, fetcher: FetchLike, timeoutMs: number): Promise<readonly CsvRecord[]> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetcher(url, { signal: controller.signal, cache: "no-store" });
-    if (!response.ok) throw new Error(`fetch failed (${response.status}) for ${url}`);
-    return parseCsv(await response.text()).records;
-  } finally {
-    clearTimeout(timer);
-  }
+  const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs, init: { cache: "no-store" } });
+  return parseCsv(await response.text()).records;
 }
 
 interface Agg {

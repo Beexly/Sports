@@ -294,3 +294,22 @@ The cleanest leading usage signal: share of team offensive snaps. Read-only nflv
 ### Validation Evidence (Snap Share)
 - typecheck PASS; web focused 3 tests PASS.
 - Live dev smoke `/api/nflverse/snap-share`: 200, status live, season 2025, 26,612 rows, 40/40/40 leaders, canPublishProjections=false. Top WR Tre Tucker (LV) 94.8% over 17g; top RB Christian McCaffrey 83.1%. `/players/snaps`: 200, clean.
+
+## DraftKings / DFS — legal, multi-source (Claude wave, 2026-06-06)
+
+Founder ask: "pull DraftKings" + "multiple drafting sources for accuracy since it's not official." Legal research (agent): DK hidden API = RISKY/FORBIDDEN for commercial (ToU bars automated+commercial collection+redistribution; uncopyrightable facts don't cure the contract breach per hiQ v. LinkedIn; DK enforces via C&D). So we route DK salaries through LICENSED feeds and refuse the scrape.
+
+- registry: + `sportsdataio`, `fantasydata` (paid-required = the legal route), `draftkings-unofficial` (forbidden; assertIngestible blocks it). Auto-surfaced on `/data`.
+- `apps/web/lib/dfs/salaries.ts`: pulls EVERY configured provider in parallel (SPORTSDATAIO_API_KEY / FANTASYDATA_API_KEY), reconciles per player — consensus=median, `agree` when within 2%, `disagree` flagged not hidden; fails over if a provider is down; gated honest empty state until a key is set; keys never surfaced. `canPublishPicks=false`.
+- `/api/dfs/salaries` + `/players/dfs` (per-feed status, reconciled table with agree/disagree + discrepancy count). Tests: registry (8), dfs reconcile/failover/gated (5).
+
+## Free-data failover/backups (Claude wave, 2026-06-06)
+
+Founder ask: "ingest more free data; make sure they have backups / multiple sources so if one goes down we keep ingesting." 
+
+- `packages/data-ingestion/src/fetch-failover.ts`: `fetchWithFailover(urls, fetcher, {timeoutMs, init})` tries an ordered host list, returns first OK + which served + collected errors; `nflverseMirror()`/`withMirrors()` add a VERIFIED community GitHub proxy (`ghproxy.net`, tested 200/6,264 rows on a nflverse asset) as a last-resort backup behind the primary GitHub CDN. Test (5): mirror mapping, primary-first, failover-to-mirror, all-fail-throws.
+- Retrofitted all six new nflverse loaders (usage-pulse, player-lab, next-gen-stats, edge-signals, snap-share, injury-report) to fetch via `withMirrors(primary)` → automatic host failover. Transparent to existing tests (primary URL matches first).
+
+### Validation Evidence (DFS + failover)
+- typecheck PASS; web suite 2,676 tests (DFS); data-ingestion 13 files / 93 tests (failover added); affected web libs 6 files / 18 tests PASS; build PASS.
+- Live dev smoke: `/players/dfs` 200 gated (no key) with refusal note; `/api/nflverse/snap-share` 200 live (26,612 rows) through the new failover path; mirror `ghproxy.net` verified reachable for nflverse assets.

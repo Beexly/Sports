@@ -1,5 +1,5 @@
 import { gunzipSync } from "node:zlib";
-import { assertIngestible, NFLVERSE_BASE, nflverseUrl, parseCsv } from "@sports/data-ingestion";
+import { assertIngestible, fetchWithFailover, NFLVERSE_BASE, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 
 /**
@@ -84,17 +84,10 @@ function stdev(values: readonly number[], avg: number): number {
 }
 
 async function fetchGz(url: string, fetcher: FetchLike, timeoutMs: number): Promise<readonly CsvRecord[]> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetcher(url, { signal: controller.signal });
-    if (!response.ok) throw new Error(`fetch failed (${response.status}) for ${url}`);
-    const buffer = Buffer.from(await response.arrayBuffer());
-    const text = url.endsWith(".gz") ? gunzipSync(buffer).toString("utf8") : buffer.toString("utf8");
-    return parseCsv(text).records;
-  } finally {
-    clearTimeout(timer);
-  }
+  const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs, init: { cache: "no-store" } });
+  const buffer = Buffer.from(await response.arrayBuffer());
+  const text = url.endsWith(".gz") ? gunzipSync(buffer).toString("utf8") : buffer.toString("utf8");
+  return parseCsv(text).records;
 }
 
 function ngsReceivingUrl(): string {

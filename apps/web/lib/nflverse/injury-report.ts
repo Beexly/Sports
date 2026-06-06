@@ -1,4 +1,4 @@
-import { assertIngestible, nflverseUrl, parseCsv } from "@sports/data-ingestion";
+import { assertIngestible, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 
 /**
@@ -57,16 +57,8 @@ function classifyStatus(raw: string): ReportStatus {
 }
 
 async function fetchCsv(url: string, fetcher: FetchLike, timeoutMs: number): Promise<readonly CsvRecord[]> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetcher(url, { signal: controller.signal });
-    if (!response.ok) throw new Error(`fetch failed (${response.status}) for ${url}`);
-    const text = await response.text();
-    return parseCsv(text).records;
-  } finally {
-    clearTimeout(timer);
-  }
+  const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs });
+  return parseCsv(await response.text()).records;
 }
 
 export function resetInjuryReportCacheForTests(): void {

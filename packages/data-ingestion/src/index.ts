@@ -58,6 +58,12 @@ export {
   type FailoverReason,
 } from "./odds-failover.js";
 export {
+  fetchWithFailover,
+  withMirrors,
+  nflverseMirror,
+  type FailoverResult,
+} from "./fetch-failover.js";
+export {
   SOURCE_REGISTRY,
   getSource,
   isIngestible,

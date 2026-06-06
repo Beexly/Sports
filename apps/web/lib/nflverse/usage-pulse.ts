@@ -1,5 +1,5 @@
 import { gunzipSync } from "node:zlib";
-import { nflverseUrl, parseCsv, type NflverseDatasetKey } from "@sports/data-ingestion";
+import { fetchWithFailover, nflverseUrl, parseCsv, withMirrors, type NflverseDatasetKey } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 
 export interface NflverseUsagePlayerRow {
@@ -104,17 +104,12 @@ async function fetchCsvTable({
   timeoutMs: number;
 }): Promise<{ readonly url: string; readonly records: readonly CsvRecord[] }> {
   const url = nflverseUrl(key, season);
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetcher(url, { signal: controller.signal });
-    if (!response.ok) throw new Error(`nflverse ${key} failed with HTTP ${response.status}`);
-    const buffer = Buffer.from(await response.arrayBuffer());
-    const text = url.endsWith(".gz") ? gunzipSync(buffer).toString("utf8") : buffer.toString("utf8");
-    return { url, records: parseCsv(text).records };
-  } finally {
-    clearTimeout(timer);
-  }
+  // Primary GitHub CDN with a community mirror fallback so a primary outage
+  // doesn't stop ingestion.
+  const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs });
+  const buffer = Buffer.from(await response.arrayBuffer());
+  const text = url.endsWith(".gz") ? gunzipSync(buffer).toString("utf8") : buffer.toString("utf8");
+  return { url, records: parseCsv(text).records };
 }
 
 function rosterMap(records: readonly CsvRecord[]): Map<string, RosterProfile> {
