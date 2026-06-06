@@ -57,4 +57,17 @@ export {
   type FailoverOutcome,
   type FailoverReason,
 } from "./odds-failover.js";
+export {
+  SOURCE_REGISTRY,
+  getSource,
+  isIngestible,
+  assertIngestible,
+  attributionFor,
+  allSources,
+  clearedSources,
+  forbiddenSources,
+  type LegalVerdict,
+  type SourceLicense,
+  type LegalSource,
+} from "./source-registry.js";
 export * from "./config.js";

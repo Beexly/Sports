@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import {
@@ -80,6 +81,12 @@ export default async function PlayersPage(): Promise<JSX.Element> {
                 className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
               >
                 Usage Pulse
+              </Link>
+              <Link
+                href="/players/nextgen"
+                className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
+              >
+                Next Gen Stats
               </Link>
               <Link
                 href="/fantasy/baseline"
@@ -172,6 +179,7 @@ export default async function PlayersPage(): Promise<JSX.Element> {
                 <SourceUrl label="Player stats (weekly)" href={lab.sourceUrls.playerStats} />
                 <SourceUrl label="Rosters" href={lab.sourceUrls.rosters} />
               </div>
+              <Attribution sourceIds={["nflverse"]} className="mt-4" />
             </section>
           </>
         )}

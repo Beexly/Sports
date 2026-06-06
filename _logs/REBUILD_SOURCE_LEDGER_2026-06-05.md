@@ -213,3 +213,30 @@ Goal from the master brief: close LineStar "❌ Missing" gaps with REAL data, no
 - Live dev smoke on `http://127.0.0.1:3000`:
   - `/api/nflverse/player-lab`: 200, success true, status `live`, season 2024 through week 18, sourceRows 134,470, `canPublishProjections=false`, 30/30/30 leaders. Cross-checked against reality: WR1 Ja'Marr Chase (23.7 PPR/g, last-5 26.1, Δ +2.4), RB1 Saquon Barkley (22.2 PPR/g), softest WR defense MIN (40.4 PPR/g allowed) across 32 defenses.
   - `/players`: 200, ~336 KB, contains `Production Lab`, all three position tables, `Softest matchups`, real player names, `Boundary`, `JSON lab`; no framework error overlay.
+
+## Legal Data-Ingestion Framework + Next Gen Stats (Claude overnight wave, 2026-06-05)
+
+Founder directive: be the most intelligent site; ingest much more data; figure out the legal *structure* for pulling data and build it; no fabricated data. Recon (3 agents) established the legal matrix and the real nflverse layout. No money spent, no prod/keys/DB-migrations touched.
+
+### Structure — legal source registry (governance layer)
+- New `packages/data-ingestion/src/source-registry.ts`: every external source declared with real license/ToS, commercial-use flag, attribution, rate limit, and a `LegalVerdict`. `assertIngestible(id)` throws for forbidden/paid sources, so ingestion code physically cannot wire a non-cleared feed. `attributionFor(id)` carries the credit line.
+  - Cleared: nflverse (CC-BY-4.0, attribute), the-odds-api (licensed), sleeper (public, attribute).
+  - Refused/gated: open-meteo (paid for commercial), espn-hidden-api (ToU bars commercial+automated), pro-football-reference (scraping forbidden), nfelo (no license).
+- New `/api/legal/sources` (JSON) + `/data` public page ("how we source data, legally" — cleared vs refused, with reasons) + reusable `<Attribution>` component (renders CC-BY credit; added to /players and NGS). Nav + mobile nav wired.
+- Tests: `source-registry.test.ts` (7, package) + `legal-sources.test.ts` (1, web).
+
+### Ingestion — NFL Next Gen Stats (tracking data no box score has)
+- New `apps/web/lib/nflverse/next-gen-stats.ts` (reads through `assertIngestible("nflverse")`): receiver separation/cushion/YAC-over-expected, QB CPOE/time-to-throw/aggressiveness, RB rush-yards-over-expected. Uses the NON-seasonal combined `ngs_{receiving,passing,rushing}.csv.gz` files (the per-season `ngs_2024_*` assets are broken 8-row upstream stubs — verified by row count, not just header) and resolves the latest season present. `canPublishProjections=false`, honest empty state.
+- New `/api/nflverse/next-gen-stats` + `/players/nextgen` page (three dense leader tables, color-coded deltas, attribution). Cross-linked from Production Lab + nav.
+- Tests: `next-gen-stats.test.ts` (3, offline fixtures: season-aggregate-only, threshold + sort correctness, API no-fabrication).
+
+### Validation Evidence (this wave)
+- `npm run typecheck --workspace=@sports/web`: PASS. `npm run lint --workspace=@sports/web`: PASS.
+- `npm run test --workspace=@sports/data-ingestion`: PASS, 12 files / 88 tests (registry added).
+- `npm run test --workspace=@sports/web`: PASS, 223 files / 2,615 tests (Wave 1); re-run after NGS covers the new suites.
+- Live dev smoke on `http://127.0.0.1:3000`:
+  - `/api/legal/sources`: cleared 3 (nflverse, the-odds-api, sleeper), blocked 4 (open-meteo, espn-hidden-api, pro-football-reference, nfelo).
+  - `/data`: 200, renders cleared vs refused, CC-BY-4.0, doctrine.
+  - `/api/nflverse/next-gen-stats`: 200, status live, season 2025, 26,723 source rows, 25/25/25 leaders, canPublishProjections=false. Cross-checked: separation leader Luther Burden (4.63yd), CPOE leader Drake Maye (+9.14%), RYOE/att leader Rhamondre Stevenson (1.36).
+  - `/players/nextgen`: 200, all three tables, real names, `Data via nflverse` attribution, no error overlay.
+- Diagnostic note: confirmed curl/node both fetch large nflverse gz fully (player_stats = 134,471 rows); the NGS per-season 2024 stub (651 bytes / 8 rows) is an upstream data issue, routed around via the combined files.

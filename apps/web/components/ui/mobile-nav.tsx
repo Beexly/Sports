@@ -13,6 +13,8 @@ const LINKS = [
   { label: "The Beat", href: "/the-beat" },
   { label: "NFLverse Pulse", href: "/nflverse" },
   { label: "Production Lab", href: "/players" },
+  { label: "Next Gen Stats", href: "/players/nextgen" },
+  { label: "Data Sourcing", href: "/data" },
   { label: "Parlay MRI", href: "/parlay-mri" },
   { label: "Ledger", href: "/ledger" },
   { label: "CLV Tracker", href: "/track" },

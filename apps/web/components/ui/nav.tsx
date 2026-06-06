@@ -19,11 +19,13 @@ const INTELLIGENCE_GROUP = [
   { label: "The Airwave Ledger", href: "/airwave", desc: "Pundits, graded on the record" },
   { label: "NFLverse Pulse", href: "/nflverse", desc: "Real player-week usage rows" },
   { label: "Production Lab", href: "/players", desc: "Season + last-5 form, defense ranks" },
+  { label: "Next Gen Stats", href: "/players/nextgen", desc: "Separation, CPOE, RYOE — tracking data" },
   { label: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's risk" },
   { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
   { label: "Trust Ledger", href: "/ledger", desc: "Tamper-evident record" },
   { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
   { label: "Data & Integrations", href: "/integrations", desc: "What's live, what's gated" },
+  { label: "Data Sourcing", href: "/data", desc: "How we legally source every feed" },
   { label: "The Cipher", href: "/cipher", desc: "Weekly hidden hunt" },
 ] as const;
 
