@@ -92,7 +92,7 @@ export function DfsOptimizer() {
 
       <DkImportPanel onImport={onImport} onReset={onReset} imported={imported} />
 
-      <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[1.35fr_1.05fr]">
         {/* lineups */}
         <div className="space-y-4">
           {result?.lineups.map((lu, idx) => {
@@ -103,9 +103,15 @@ export function DfsOptimizer() {
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-2.5" style={{ borderColor: BRAND_COLORS.steelGray }}>
                   <p className="text-xs uppercase tracking-[0.16em] text-ink-500">Lineup {idx + 1}{m.stacked > 0 && <span style={{ color: BRAND_COLORS.softUltraviolet }}> · {m.stackTeam} stack ×{m.stacked}</span>}</p>
                   <div className="flex items-center gap-4 font-mono text-[11px]">
-                    <span className="text-ink-400">${m.salary.toLocaleString()} <span className="text-ink-600">(${left} left)</span></span>
+                    <span className="text-ink-400">${m.salary.toLocaleString()} <span className={left < 0 ? "text-fuchsia-400" : "text-ink-600"}>(${left.toLocaleString()} left)</span></span>
                     <span style={{ color: BRAND_COLORS.orbitalCyan }}>{m.proj} proj</span>
                     <span style={{ color: BRAND_COLORS.softUltraviolet }}>{m.ceiling} ceil</span>
+                  </div>
+                </div>
+                {/* live salary-cap meter */}
+                <div className="px-4 pb-2 pt-2">
+                  <div className="h-1.5 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
+                    <div className="h-full rounded-full" style={{ width: `${Math.min(100, (m.salary / SALARY_CAP) * 100)}%`, background: left < 0 ? BRAND_COLORS.ionMagenta : BRAND_COLORS.orbitalCyan }} />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
@@ -139,8 +145,8 @@ export function DfsOptimizer() {
           {result && result.exposure.length > 0 && (
             <div className="surface-card p-5">
               <p className="mb-3 text-xs uppercase tracking-[0.16em] text-ink-500">Exposure across {result.lineups.length} lineups</p>
-              <div className="space-y-1.5">
-                {result.exposure.slice(0, 10).map((e) => (
+              <div className="max-h-[40vh] space-y-1.5 overflow-y-auto">
+                {result.exposure.map((e) => (
                   <div key={e.id} className="flex items-center gap-2">
                     <span className="w-28 shrink-0 truncate text-xs text-ink-300">{e.name}</span>
                     <div className="h-1.5 flex-1 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
@@ -154,19 +160,26 @@ export function DfsOptimizer() {
           )}
 
           <div className="surface-card p-5">
-            <p className="mb-2 text-xs uppercase tracking-[0.16em] text-ink-500">Slate · ★ pin · ✕ fade</p>
-            <div className="max-h-[44vh] space-y-0.5 overflow-y-auto">
+            <div className="mb-2 flex items-center justify-between">
+              <p className="text-xs uppercase tracking-[0.16em] text-ink-500">Slate ({pool.length})</p>
+              <p className="font-mono text-[10px] text-ink-500">
+                <span style={{ color: BRAND_COLORS.orbitalCyan }}>★ {locks.size} pinned</span>
+                {" · "}
+                <span style={{ color: BRAND_COLORS.ionMagenta }}>✕ {excludes.size} faded</span>
+              </p>
+            </div>
+            <div className="max-h-[60vh] space-y-0.5 overflow-y-auto">
               {pool.map((p: DfsPlayer) => {
                 const c = DFS_POS_HEX[p.pos];
                 const locked = locks.has(p.id); const fade = excludes.has(p.id);
                 return (
-                  <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1" style={{ opacity: fade ? 0.4 : 1 }}>
-                    <span className="rounded px-1 py-0.5 font-mono text-[9px] font-bold" style={{ color: c, background: `${c}18` }}>{p.pos}</span>
-                    <span className="flex-1 truncate text-xs text-white">{p.name}</span>
-                    <span className="font-mono text-[10px] text-ink-500">${p.salary}</span>
-                    <span className="w-8 text-right font-mono text-[10px]" style={{ color: BRAND_COLORS.ionMagenta }}>{leverage(p).toFixed(1)}</span>
-                    <button type="button" onClick={() => toggle(locks, setLocks, p.id)} title="pin" className="px-1 text-[11px]" style={{ color: locked ? BRAND_COLORS.orbitalCyan : "var(--ion-4,#4b5563)" }}>★</button>
-                    <button type="button" onClick={() => toggle(excludes, setExcludes, p.id)} title="fade" className="px-1 text-[11px]" style={{ color: fade ? BRAND_COLORS.ionMagenta : "var(--ion-4,#4b5563)" }}>✕</button>
+                  <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1.5" style={{ opacity: fade ? 0.4 : 1, background: locked ? `${BRAND_COLORS.orbitalCyan}12` : "transparent" }}>
+                    <span className="rounded px-1.5 py-0.5 font-mono text-[10px] font-bold" style={{ color: c, background: `${c}18` }}>{p.pos}</span>
+                    <span className="flex-1 truncate text-sm text-white">{p.name}</span>
+                    <span className="font-mono text-[11px] text-ink-500">${p.salary}</span>
+                    <span className="w-8 text-right font-mono text-[11px]" style={{ color: BRAND_COLORS.ionMagenta }}>{leverage(p).toFixed(1)}</span>
+                    <button type="button" onClick={() => toggle(locks, setLocks, p.id)} title="pin" className="px-1 text-sm" style={{ color: locked ? BRAND_COLORS.orbitalCyan : "var(--ion-4,#4b5563)" }}>★</button>
+                    <button type="button" onClick={() => toggle(excludes, setExcludes, p.id)} title="fade" className="px-1 text-sm" style={{ color: fade ? BRAND_COLORS.ionMagenta : "var(--ion-4,#4b5563)" }}>✕</button>
                   </div>
                 );
               })}
