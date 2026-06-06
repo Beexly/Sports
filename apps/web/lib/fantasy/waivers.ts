@@ -7,7 +7,8 @@
  * illustrative.
  */
 
-import { PLAYERS, vor, type Player } from "./players";
+import { vor, type Player } from "./players";
+import { activePlayerPool } from "@/lib/integrations/projections";
 
 /** The studs assumed already rostered (top value), excluded from the waiver pool. */
 const ROSTERED_COUNT = 14;
@@ -21,8 +22,8 @@ export function pickupScore(p: Player): number {
   return base * trend * usage * scheme * inj;
 }
 
-function rosteredIds(): Set<string> {
-  return new Set([...PLAYERS].sort((a, b) => vor(b) - vor(a)).slice(0, ROSTERED_COUNT).map((p) => p.id));
+function rosteredIds(pool: readonly Player[]): Set<string> {
+  return new Set([...pool].sort((a, b) => vor(b, pool) - vor(a, pool)).slice(0, ROSTERED_COUNT).map((p) => p.id));
 }
 
 export type FaabTier = "Priority" | "Target" | "Speculative" | "Dart";
@@ -37,9 +38,9 @@ export type WaiverRec = {
 
 const TIER_PCT: Record<FaabTier, number> = { Priority: 0.34, Target: 0.18, Speculative: 0.07, Dart: 0.02 };
 
-export function waiverTargets(): WaiverRec[] {
-  const rostered = rosteredIds();
-  const pool = PLAYERS.filter((p) => !rostered.has(p.id));
+export function waiverTargets(universe: readonly Player[] = activePlayerPool()): WaiverRec[] {
+  const rostered = rosteredIds(universe);
+  const pool = universe.filter((p) => !rostered.has(p.id));
   const scored = pool.map((p) => ({ p, s: pickupScore(p) })).sort((a, b) => b.s - a.s);
   const max = scored[0]?.s ?? 1;
 
@@ -61,9 +62,9 @@ export function bidDollars(rec: WaiverRec, budget: number): number {
 }
 
 /** Weakest rostered players — drop candidates to clear a roster spot. */
-export function dropCandidates(): Player[] {
-  const rostered = rosteredIds();
-  return PLAYERS.filter((p) => rostered.has(p.id))
-    .sort((a, b) => (vor(a) - vor(b)) + (a.trend === "down" ? -10 : 0) - (b.trend === "down" ? -10 : 0))
+export function dropCandidates(universe: readonly Player[] = activePlayerPool()): Player[] {
+  const rostered = rosteredIds(universe);
+  return universe.filter((p) => rostered.has(p.id))
+    .sort((a, b) => (vor(a, universe) - vor(b, universe)) + (a.trend === "down" ? -10 : 0) - (b.trend === "down" ? -10 : 0))
     .slice(0, 4);
 }

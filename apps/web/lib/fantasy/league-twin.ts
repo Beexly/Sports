@@ -15,6 +15,7 @@
 
 import { DEFAULT_ROSTER_IDS } from "./lineup";
 import { PLAYERS, POS_HEX, vor, volatility, playerById, correlated, type Player, type Pos } from "./players";
+import { activePlayerPool, isLiveProjections } from "@/lib/integrations/projections";
 
 export type Shock = "none" | "positive" | "caution" | "critical";
 
@@ -39,7 +40,8 @@ export type TwinNode = {
 export type TwinTie = { readonly a: string; readonly b: string; readonly team: string };
 
 export type LeagueTwin = {
-  readonly illustrative: true;
+  /** true unless a licensed live projections feed is active. */
+  readonly illustrative: boolean;
   readonly currentWeek: number;
   readonly nodes: readonly TwinNode[];
   readonly ties: readonly TwinTie[];
@@ -59,8 +61,11 @@ function shockFor(p: Player): { shock: Shock; note: string } {
   return { shock: "none", note: "Stable." };
 }
 
-export function buildLeagueTwin(rosterIds: readonly string[] = DEFAULT_ROSTER_IDS): LeagueTwin {
-  const roster = rosterIds.map(playerById).filter((p): p is Player => Boolean(p));
+export function buildLeagueTwin(
+  rosterIds: readonly string[] = DEFAULT_ROSTER_IDS,
+  pool: readonly Player[] = activePlayerPool(),
+): LeagueTwin {
+  const roster = rosterIds.map((id) => playerById(id, pool)).filter((p): p is Player => Boolean(p));
 
   const projs = roster.map((p) => p.proj);
   const maxProj = Math.max(...projs, 1);
@@ -90,7 +95,7 @@ export function buildLeagueTwin(rosterIds: readonly string[] = DEFAULT_ROSTER_ID
       halo: volatility(player),
       hex: POS_HEX[player.pos],
       pos: player.pos,
-      vor: vor(player),
+      vor: vor(player, pool),
       eclipsed: player.bye === currentWeek,
       shock,
       shockNote: note,
@@ -108,7 +113,7 @@ export function buildLeagueTwin(rosterIds: readonly string[] = DEFAULT_ROSTER_ID
   }
 
   return {
-    illustrative: true,
+    illustrative: !isLiveProjections(),
     currentWeek,
     nodes,
     ties,

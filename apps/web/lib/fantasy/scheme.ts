@@ -8,7 +8,8 @@
  * illustrative.
  */
 
-import { PLAYERS, type Player } from "./players";
+import { type Player } from "./players";
+import { activePlayerPool } from "@/lib/integrations/projections";
 import { TIER_WEIGHT, type Tier } from "../news/impact";
 
 export type SchemeScenario = {
@@ -89,8 +90,8 @@ export type SchemeCascade = {
   readonly faders: number;
 };
 
-export function applyScheme(scenario: SchemeScenario): SchemeCascade {
-  const teammates = PLAYERS.filter((p) => p.team === scenario.team);
+export function applyScheme(scenario: SchemeScenario, pool: readonly Player[] = activePlayerPool()): SchemeCascade {
+  const teammates = pool.filter((p) => p.team === scenario.team);
   const impacts: SchemeImpact[] = [];
   for (const p of teammates) {
     const r = scenario.rule(p, teammates);

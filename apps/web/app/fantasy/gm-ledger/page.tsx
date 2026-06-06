@@ -21,6 +21,7 @@ export default function GmLedgerPage() {
       intro="Every fantasy manager remembers the times they were right and forgets the times they got lucky. The GM Ledger commits each decision — and the reasoning behind it — to a real SHA-256 Merkle record before the games, then grades it on whether it was the right call given what was knowable. Good process that lost is rewarded; a lucky win isn't. The result is a GM Rating you earned, provably."
       note={GM_LEDGER_DISCLAIMER}
       wide
+      projectionsBadge={false}
     >
       <GmLedgerView data={data} />
     </FantasyShell>

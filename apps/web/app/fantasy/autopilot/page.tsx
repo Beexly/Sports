@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { GmAutopilot } from "@/components/fantasy/gm-autopilot";
-import { ProjectionsBadge } from "@/components/integrations/projections-badge";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -21,7 +20,6 @@ export default function AutopilotPage() {
       note="Illustrative. The Autopilot proposes and records; executing on a real ESPN/Yahoo/Sleeper account is gated behind your explicit consent, OAuth, and compliance review — there are no autonomous account actions or payments."
       wide
     >
-      <div className="mb-5"><ProjectionsBadge /></div>
       <GmAutopilot />
     </FantasyShell>
   );

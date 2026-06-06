@@ -9,7 +9,7 @@
  * env flag. Pure (env-injectable).
  */
 
-import { PLAYERS } from "../fantasy/players";
+import { PLAYERS, type Player } from "../fantasy/players";
 import { isConfigured } from "./providers";
 
 export type PlayerProjection = {
@@ -27,6 +27,13 @@ export interface ProjectionsProvider {
   readonly name: string;
   readonly live: boolean;
   list(): PlayerProjection[];
+  /**
+   * The rich player pool the fantasy engines consume (usage/scheme/trend/etc.).
+   * Optional so the thin `list()` contract stays backward-compatible; a live
+   * feed that drives the engines must implement it. The illustrative default
+   * returns the demo universe.
+   */
+  players?(): readonly Player[];
 }
 
 /** The default: the clearly-labelled illustrative pool. */
@@ -38,6 +45,7 @@ export const ILLUSTRATIVE_PROJECTIONS: ProjectionsProvider = {
       playerId: p.id, name: p.name, pos: p.pos, team: p.team,
       proj: p.proj, floor: p.floor, ceiling: p.ceiling, source: "illustrative" as const,
     })),
+  players: () => PLAYERS,
 };
 
 let liveProvider: ProjectionsProvider | null = null;
@@ -55,4 +63,18 @@ export function resolveProjectionsProvider(env: Record<string, string | undefine
 
 export function isLiveProjections(env: Record<string, string | undefined> = process.env): boolean {
   return Boolean(liveProvider) && isConfigured("projections", env);
+}
+
+/**
+ * The active rich player pool the fantasy engines should read from. Returns the
+ * live feed's players only when a provider is registered, reports `live`, exposes
+ * `players()`, AND the env flag is set; otherwise the clearly-labelled
+ * illustrative universe. This is the single swap point that makes every fantasy
+ * tool plug-in ready: flip the key and the same engines run on the real feed,
+ * with no fabricated data in the gated state.
+ */
+export function activePlayerPool(env: Record<string, string | undefined> = process.env): readonly Player[] {
+  const provider = resolveProjectionsProvider(env);
+  if (provider.live && provider.players) return provider.players();
+  return PLAYERS;
 }

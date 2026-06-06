@@ -18,6 +18,7 @@ export default function GmAcademyPage() {
       title={<>Train the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>process</span>.</>}
       intro="The GM Ledger grades your real decisions on process. The Academy is where you build that process — drill by drill, bias by bias: process over outcome, FAAB discipline, recency bias, bye planning, calibration, injury hedging. Each answer is graded on the reasoning, not the result, and your GM IQ rewards how you think."
       note="Illustrative training scenarios. Your GM IQ rewards sound process over lucky guesses — the same standard the GM Ledger holds your real decisions to."
+      projectionsBadge={false}
     >
       <GmAcademy />
     </FantasyShell>

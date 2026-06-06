@@ -98,19 +98,25 @@ export const POS_HEX: Record<Pos, string> = {
 /** Replacement-level baseline per position (the Nth starter across a 12-team league). */
 const REPLACEMENT_RANK: Record<Pos, number> = { QB: 12, RB: 30, WR: 36, TE: 12 };
 
-export function byPosition(pos: Pos): Player[] {
-  return PLAYERS.filter((pl) => pl.pos === pos).sort((a, b) => b.proj - a.proj);
+/**
+ * The pool-dependent helpers (VOR, tiers, board rank) accept an optional `pool`
+ * so they compute correctly against whatever player universe is active — the
+ * illustrative default OR a licensed live feed routed in via
+ * `activePlayerPool()`. The default keeps every existing caller/test unchanged.
+ */
+export function byPosition(pos: Pos, pool: readonly Player[] = PLAYERS): Player[] {
+  return pool.filter((pl) => pl.pos === pos).sort((a, b) => b.proj - a.proj);
 }
 
 /** Value Over Replacement — the true draft currency. */
-export function replacementProj(pos: Pos): number {
-  const ranked = byPosition(pos);
+export function replacementProj(pos: Pos, pool: readonly Player[] = PLAYERS): number {
+  const ranked = byPosition(pos, pool);
   const idx = Math.min(REPLACEMENT_RANK[pos], ranked.length) - 1;
   return ranked[Math.max(0, idx)]?.proj ?? ranked[ranked.length - 1]?.proj ?? 0;
 }
 
-export function vor(player: Player): number {
-  return Math.round(player.proj - replacementProj(player.pos));
+export function vor(player: Player, pool: readonly Player[] = PLAYERS): number {
+  return Math.round(player.proj - replacementProj(player.pos, pool));
 }
 
 /** Volatility 0..1 from the floor/ceiling band relative to the projection. */
@@ -120,23 +126,23 @@ export function volatility(player: Player): number {
 }
 
 /** Overall board ranked by VOR (cross-position draft value). */
-export function overallBoard(): Player[] {
-  return [...PLAYERS].sort((a, b) => vor(b) - vor(a));
+export function overallBoard(pool: readonly Player[] = PLAYERS): Player[] {
+  return [...pool].sort((a, b) => vor(b, pool) - vor(a, pool));
 }
 
 /** ADP-style overall rank (1-indexed) derived from VOR. */
-export function adpRank(player: Player): number {
-  return overallBoard().findIndex((pl) => pl.id === player.id) + 1;
+export function adpRank(player: Player, pool: readonly Player[] = PLAYERS): number {
+  return overallBoard(pool).findIndex((pl) => pl.id === player.id) + 1;
 }
 
 /** Tier within a position (1 = elite), from VOR gaps. */
-export function tier(player: Player): number {
-  const ranked = byPosition(player.pos).sort((a, b) => vor(b) - vor(a));
+export function tier(player: Player, pool: readonly Player[] = PLAYERS): number {
+  const ranked = byPosition(player.pos, pool).sort((a, b) => vor(b, pool) - vor(a, pool));
   const idx = ranked.findIndex((pl) => pl.id === player.id);
   // simple tiering: every ~25 VOR points is a tier break
   let t = 1;
   for (let i = 1; i <= idx; i++) {
-    if (vor(ranked[i - 1]!) - vor(ranked[i]!) >= 22) t++;
+    if (vor(ranked[i - 1]!, pool) - vor(ranked[i]!, pool) >= 22) t++;
   }
   return t;
 }
@@ -146,8 +152,8 @@ export function correlated(a: Player, b: Player): boolean {
   return a.id !== b.id && a.team === b.team;
 }
 
-export function playerById(id: string): Player | undefined {
-  return PLAYERS.find((pl) => pl.id === id);
+export function playerById(id: string, pool: readonly Player[] = PLAYERS): Player | undefined {
+  return pool.find((pl) => pl.id === id);
 }
 
 export const ILLUSTRATIVE_NOTE =

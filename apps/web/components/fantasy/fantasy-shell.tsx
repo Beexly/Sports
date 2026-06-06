@@ -8,10 +8,11 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
+import { ProjectionsBadge } from "@/components/integrations/projections-badge";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export function FantasyShell({
-  eyebrow, title, intro, accent = BRAND_COLORS.softUltraviolet, children, note, wide,
+  eyebrow, title, intro, accent = BRAND_COLORS.softUltraviolet, children, note, wide, projectionsBadge = true,
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -20,6 +21,8 @@ export function FantasyShell({
   children: ReactNode;
   note?: string;
   wide?: boolean;
+  /** Show the honest live/illustrative projections status in the hero (default on). */
+  projectionsBadge?: boolean;
 }) {
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
@@ -47,6 +50,13 @@ export function FantasyShell({
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">{intro}</p>
             </Reveal>
+            {projectionsBadge && (
+              <Reveal delay={230}>
+                <div className="mt-6">
+                  <ProjectionsBadge />
+                </div>
+              </Reveal>
+            )}
           </div>
         </section>
 

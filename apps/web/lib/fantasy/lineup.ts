@@ -6,7 +6,8 @@
  * by starting the next-best bench option instead). Pure functions, illustrative.
  */
 
-import { PLAYERS, volatility, type Player, type Pos } from "./players";
+import { volatility, type Player, type Pos } from "./players";
+import { activePlayerPool } from "@/lib/integrations/projections";
 
 export type Slot = "QB" | "RB" | "WR" | "TE" | "FLEX";
 export const SLOTS: readonly Slot[] = ["QB", "RB", "RB", "WR", "WR", "TE", "FLEX"];
@@ -36,9 +37,9 @@ export type Optimized = {
   readonly ceiling: number;
 };
 
-export function rosterFromIds(ids: readonly string[]): Player[] {
+export function rosterFromIds(ids: readonly string[], pool: readonly Player[] = activePlayerPool()): Player[] {
   const set = new Set(ids);
-  return PLAYERS.filter((p) => set.has(p.id));
+  return pool.filter((p) => set.has(p.id));
 }
 
 export function optimize(roster: readonly Player[]): Optimized {
