@@ -52,6 +52,7 @@ const FANTASY_GROUP: readonly NavItem[] = [
 // Intelligence ▾ — the decision-OS surfaces.
 const INTELLIGENCE_GROUP: readonly NavItem[] = [
   { label: "Inside the Signal", href: "/intelligence", desc: "How the engine reasons" },
+  { label: "How We Read Stats", href: "/intelligence/metrics", desc: "Metric methodology, glass-box" },
   { label: "Mission Control", href: "/today", desc: "Today's command deck" },
   { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
   { label: "Edge Map", href: "/observatory", desc: "The slate as a galaxy" },
