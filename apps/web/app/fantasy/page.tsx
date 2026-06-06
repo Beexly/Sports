@@ -35,16 +35,22 @@ const LIVE_FIRST = [
   },
 ] as const;
 
-const GATED_TOOLS = [
-  ["Draft Assistant", "Needs live ADP, projections, and league settings."],
-  ["Waiver & FAAB", "Needs roster sync, projections, injuries, and league market context."],
-  ["Lineup Optimizer", "Needs live projections and player availability."],
-  ["Trade Analyzer", "Needs live player values and roster context."],
-  ["DFS Optimizer", "Needs salaries, projections, contest rules, and ownership estimates."],
-  ["Pick'em Edge", "Needs live pick'em lines and alt-line pricing."],
-  ["League Twin", "Can render a real roster after sync; advice waits for projections."],
-  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events."],
+type ToolStatus = "live" | "partly live" | "gated";
+const TOOL_DIRECTORY: readonly (readonly [string, string, string, ToolStatus])[] = [
+  ["Optimizer — DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay gated; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the illustrative pool now.", "/optimizer", "partly live"],
+  ["Human Performance", "Public confidence-band layer — venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
+  ["Waiver & FAAB", "Needs roster sync, projections, injuries, and league market context.", "/fantasy/waivers", "gated"],
+  ["Trade Analyzer", "Needs live player values and roster context.", "/fantasy/trade", "gated"],
+  ["Pick'em Edge", "Needs live pick'em lines and alt-line pricing.", "/fantasy/props", "gated"],
+  ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", "gated"],
+  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events.", "/fantasy/gm-ledger", "gated"],
 ] as const;
+
+const STATUS_TONE: Record<ToolStatus, string> = {
+  live: "text-orbital-cyan",
+  "partly live": "text-soft-ultraviolet",
+  gated: "text-ion-2",
+};
 
 export default async function FantasyHubPage(): Promise<JSX.Element> {
   const evidence = await loadSourceLiveEvidence({ timeoutMs: 15000 });
@@ -74,6 +80,9 @@ export default async function FantasyHubPage(): Promise<JSX.Element> {
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Link href="/fantasy/connect" className="btn btn-primary">
                   Connect Sleeper
+                </Link>
+                <Link href="/optimizer" className="btn btn-ghost">
+                  Open the Optimizer
                 </Link>
                 <Link href="/trends" className="btn btn-ghost">
                   View Trend Lab
@@ -175,10 +184,10 @@ export default async function FantasyHubPage(): Promise<JSX.Element> {
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <h2 className="font-display text-3xl font-semibold text-white">Tool gates</h2>
+                <h2 className="font-display text-3xl font-semibold text-white">Every tool, with its honest status</h2>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-ink-300">
-                  These products can be excellent, but not on fictional inputs. Each gate is a data requirement,
-                  not a design delay.
+                  One directory, no dead ends. Each tool links straight through and shows whether it&apos;s
+                  live, partly live, or gated on a real data feed — never a design delay, never a fictional input.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 text-sm font-semibold">
@@ -191,14 +200,14 @@ export default async function FantasyHubPage(): Promise<JSX.Element> {
               </div>
             </div>
             <div className="mt-6 overflow-hidden border border-mineral">
-              {GATED_TOOLS.map(([tool, requirement]) => (
-                <div key={tool} className="grid gap-3 border-b border-mineral bg-eclipse px-4 py-3 last:border-b-0 sm:grid-cols-[0.42fr_1fr_auto] sm:items-center">
-                  <p className="font-semibold text-white">{tool}</p>
+              {TOOL_DIRECTORY.map(([tool, requirement, href, status]) => (
+                <Link key={tool} href={href} className="group grid gap-3 border-b border-mineral bg-eclipse px-4 py-3 transition-colors last:border-b-0 hover:bg-carbon sm:grid-cols-[0.42fr_1fr_auto] sm:items-center">
+                  <p className="font-semibold text-white group-hover:text-orbital-cyan">{tool}</p>
                   <p className="text-sm leading-6 text-ink-300">{requirement}</p>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
-                    gated
+                  <span className={`font-mono text-[10px] uppercase tracking-[0.16em] ${STATUS_TONE[status]}`}>
+                    {status}
                   </span>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
