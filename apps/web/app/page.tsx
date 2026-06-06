@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { ShaderAuroraLazy } from "@/components/hero/shader-aurora-lazy";
+import { BRAND_COLORS } from "@/lib/brand";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { loadBoardPasses } from "@/lib/board/passes";
@@ -65,13 +67,23 @@ export default async function HomePage(): Promise<JSX.Element> {
     <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
       <Nav />
       <main id="main-content">
-        <section className="border-b border-mineral px-4 py-10 sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-start">
+        <section className="relative isolate overflow-hidden border-b border-mineral">
+          <div aria-hidden="true" className="absolute inset-0 -z-20">
+            <ShaderAuroraLazy />
+          </div>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10"
+            style={{
+              background: `linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}d9 0%, ${BRAND_COLORS.obsidianBlack}80 44%, ${BRAND_COLORS.obsidianBlack}b3 72%, ${BRAND_COLORS.obsidianBlack} 100%)`,
+            }}
+          />
+          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:px-8">
             <div>
-              <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.01] text-ion-white sm:text-6xl">
+              <h1 className="max-w-4xl font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
                 The board is only as smart as the data behind it.
               </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
                 Galaxy Sports Edge is being rebuilt as a sports intelligence engine:
                 odds, nflverse, roster context, trend discovery, and public accountability
                 in one readable system. No public pick or projection appears unless the
