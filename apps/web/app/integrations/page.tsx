@@ -31,6 +31,7 @@ const CATEGORY_LABEL: Record<ProviderCategory, string> = {
   "avatar-tts": "Studio rendering",
   odds: "Odds and lines",
   pickem: "Pick'em lines",
+  dfs: "DFS slate",
 };
 
 const STATUS_ORDER: readonly SourceStatus[] = [

@@ -9,7 +9,8 @@
  * hill-climb; fast enough to run in the browser. Illustrative slate.
  */
 
-import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, leverage, type DfsPlayer, type DfsPos } from "./dfs-slate";
+import { DFS_SLOTS, SALARY_CAP, leverage, type DfsPlayer, type DfsPos } from "./dfs-slate";
+import { activeDfsSlate } from "@/lib/integrations/dfs";
 
 export type Mode = "cash" | "gpp" | "leverage";
 export type OptOpts = {
@@ -147,7 +148,7 @@ function enforceStack(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts
   return lu;
 }
 
-export function optimizeOne(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = DFS_SLATE): DfsPlayer[] | null {
+export function optimizeOne(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = activeDfsSlate()): DfsPlayer[] | null {
   let best: DfsPlayer[] | null = null;
   let bestObj = -Infinity;
   for (let r = 0; r < restarts; r++) {
@@ -193,7 +194,7 @@ export type GenResult = {
 };
 
 /** Generate N unique lineups with exposure control. */
-export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6, slate: readonly DfsPlayer[] = DFS_SLATE): GenResult {
+export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6, slate: readonly DfsPlayer[] = activeDfsSlate()): GenResult {
   const usage = new Map<string, number>();
   const seen = new Set<string>();
   const lineups: { players: Lineup; metrics: LineupMetrics }[] = [];
