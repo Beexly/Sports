@@ -4,8 +4,22 @@ import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { loadNflverseQbr } from "@/lib/nflverse/qbr";
+import { loadQbConsensus, type Divergence } from "@/lib/intelligence/qb-consensus";
 
 export const dynamic = "force-dynamic";
+
+const DIVERGENCE_LABEL: Record<Divergence, string> = {
+  aligned: "Aligned",
+  "results-over-accuracy": "Results › accuracy",
+  "accuracy-over-results": "Accuracy › results",
+  "single-source": "Single source",
+};
+function divergenceClass(d: Divergence): string {
+  if (d === "aligned") return "text-orbital-cyan";
+  if (d === "results-over-accuracy") return "text-ultraviolet";
+  if (d === "accuracy-over-results") return "text-plasma";
+  return "text-ion-2";
+}
 
 export const metadata: Metadata = {
   title: "Total QBR — ESPN via nflverse (independent QB estimate)",
@@ -19,7 +33,7 @@ function signed(value: number): string {
 }
 
 export default async function QbrPage(): Promise<JSX.Element> {
-  const q = await loadNflverseQbr();
+  const [q, consensus] = await Promise.all([loadNflverseQbr(), loadQbConsensus()]);
 
   return (
     <div className="min-h-screen bg-carbon text-ion">
@@ -108,6 +122,51 @@ export default async function QbrPage(): Promise<JSX.Element> {
                 QBR is play-weighted across the season; min {6} games. EPA = total expected points added.
               </p>
             </section>
+
+            {consensus.status !== "source-error" && consensus.rows.length > 0 && (
+              <section className="border border-mineral bg-eclipse/80">
+                <div className="border-b border-mineral px-5 py-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+                    Consensus · two independent lenses
+                  </p>
+                  <h2 className="mt-2 text-2xl font-semibold text-ion-white">Where the estimators agree — and where they don&apos;t</h2>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">{consensus.note}</p>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[720px] text-left text-sm">
+                    <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                      <tr>
+                        <th className="px-4 py-3">#</th>
+                        <th className="px-4 py-3">Player</th>
+                        <th className="px-4 py-3">Tm</th>
+                        <th className="px-4 py-3" title="QBR percentile within the qualified pool">QBR %ile</th>
+                        <th className="px-4 py-3" title="CPOE (Next Gen accuracy) percentile">CPOE %ile</th>
+                        <th className="px-4 py-3" title="Mean of the available percentiles">Consensus</th>
+                        <th className="px-4 py-3">The read</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-mineral bg-carbon">
+                      {consensus.rows.map((r, i) => (
+                        <tr key={`${r.name}-${i}`} title={r.note}>
+                          <td className="px-4 py-3 font-mono text-ion-2">{i + 1}</td>
+                          <td className="px-4 py-3 font-semibold text-ion-white">{r.name}</td>
+                          <td className="px-4 py-3 font-mono text-orbital-cyan">{r.team}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{r.qbrPct === null ? "—" : r.qbrPct.toFixed(0)}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{r.cpoePct === null ? "—" : r.cpoePct.toFixed(0)}</td>
+                          <td className="px-4 py-3 font-mono text-ion-white">{r.consensus}</td>
+                          <td className={`px-4 py-3 font-mono text-[11px] ${divergenceClass(r.divergence)}`}>{DIVERGENCE_LABEL[r.divergence]}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="px-5 py-3 font-mono text-[10px] leading-5 text-ion-2">
+                  Two independent estimators, each as a within-pool percentile. We surface disagreement
+                  (results vs. accuracy) instead of averaging it into false precision. Hover a row for the read.
+                  {!consensus.sources.ngs && " CPOE feed unavailable — single-source reads only."}
+                </p>
+              </section>
+            )}
 
             <section className="border border-mineral bg-eclipse p-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">Source</p>
