@@ -15,6 +15,7 @@ const LINKS = [
   { label: "Production Lab", href: "/players" },
   { label: "Next Gen Stats", href: "/players/nextgen" },
   { label: "Edge Signals", href: "/players/edge" },
+  { label: "Injury Report", href: "/players/injuries" },
   { label: "Data Sourcing", href: "/data" },
   { label: "Parlay MRI", href: "/parlay-mri" },
   { label: "Ledger", href: "/ledger" },

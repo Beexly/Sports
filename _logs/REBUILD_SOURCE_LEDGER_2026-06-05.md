@@ -257,3 +257,15 @@ The "intelligent + creative" centerpiece: fuse two real datasets into an insight
 
 ### Dev-server note
 Running `next build` against a live `next dev` corrupts the dev server's middleware chunk ("Cannot find the middleware module"), which 500s pages (middleware) while API routes (excluded) still 200. Not a code defect — clears on dev restart. Build and dev should not share `.next` simultaneously.
+
+## Injury Report — availability ingestion (Claude overnight wave, 2026-06-05)
+
+Availability is the top non-market driver of outcomes. Read-only from the nflverse `injuries` release (CC-BY-4.0).
+
+- New `apps/web/lib/nflverse/injury-report.ts` (via `assertIngestible("nflverse")`): per-season injuries CSV (verified real: injuries_2024 6,264 rows, injuries_2025 6,069; no non-seasonal combined — 404), name-keyed parse so the 2025 extra `season_type` column is handled; resolves latest week, classifies Out/Doubtful/Questionable, sorts by severity, keeps designations + practice notes, drops no-status/no-practice rows. Season fallback one year.
+- New `/api/nflverse/injuries` + `/players/injuries` page (severity-colored designations table + Out/Doubtful/Questionable counts, attribution). Nav wired.
+- Tests: `injury-report.test.ts` (3, offline: latest-week filter + severity sort + exclusion rules; empty state; API).
+
+### Validation Evidence (Injury Report)
+- typecheck PASS; lint PASS; web 226 files / 2,644 tests; production build PASS.
+- Live dev smoke `/api/nflverse/injuries`: 200, status live, season 2025, week 22, 6,068 rows, counts out 1 / questionable 3, real names (Joshua Farmer Out, Harold Landry III Questionable). `/players/injuries`: 200, clean.
