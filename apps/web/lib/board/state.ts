@@ -1,4 +1,4 @@
-import { db, getSamplePicks, isDemoPicksEnabled, isStubMode } from "@sports/db";
+import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, MODEL_VERSION, toEdgeIndex } from "@sports/prediction-engine";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
@@ -31,7 +31,7 @@ export interface BoardStateData {
 
 export interface BoardStatePayload {
   data: BoardStateData;
-  meta: { isSampleData: boolean };
+  meta: { isSampleData: boolean; suppressedDemoData?: boolean; dataError?: "DB_UNREACHABLE" };
 }
 
 function todayBounds(): { start: Date; end: Date } {
@@ -42,160 +42,112 @@ function todayBounds(): { start: Date; end: Date } {
   return { start, end };
 }
 
-function sampleRows(now: Date): {
-  scoringNow: BoardStateRow[];
-  publishedToday: BoardStateRow[];
-  gatedToday: BoardStateRow[];
-} {
-  const samples = getSamplePicks(now);
-  const scoringNow = samples.slice(0, 3).map((pick): BoardStateRow => ({
-    id: `scoring-${pick.gameId}`,
-    gameId: pick.gameId,
-    matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
-    sport: pick.game.sport.name,
-    market: pick.pickType,
-    status: "SCORING_NOW",
-    edgeIndex: toEdgeIndex(pick.edgeScore),
-    confidence: null,
-    gateReason: "PREVIEW MODE: scoring snapshot from sample slate.",
-    updatedAt: pick.dataFreshnessAt.toISOString(),
-  }));
-
-  const publishedToday = samples.slice(0, 5).map((pick): BoardStateRow => ({
-    id: pick.id,
-    gameId: pick.gameId,
-    matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
-    sport: pick.game.sport.name,
-    market: pick.selection,
-    status: "PUBLISHED_TODAY",
-    edgeIndex: toEdgeIndex(pick.edgeScore),
-    confidence: pick.confidence,
-    gateReason: null,
-    updatedAt: pick.generatedAt.toISOString(),
-  }));
-
-  const gatedToday = samples.slice(5, 9).map((pick, index): BoardStateRow => ({
-    id: `gate-${pick.gameId}`,
-    gameId: pick.gameId,
-    matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
-    sport: pick.game.sport.name,
-    market: pick.pickType,
-    status: "GATED_TODAY",
-    edgeIndex: toEdgeIndex(pick.edgeScore),
-    confidence: null,
-    gateReason: index % 2 === 0 ? "Consensus below publish threshold." : "Market depth too thin.",
-    updatedAt: pick.dataFreshnessAt.toISOString(),
-  }));
-
-  return { scoringNow, publishedToday, gatedToday };
-}
-
 export async function loadBoardState(now = new Date()): Promise<BoardStatePayload> {
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
   if (demoActive) {
-    const rows = sampleRows(now);
     return {
       data: {
-        sportsWatched: Array.from(new Set(getSamplePicks(now).map((pick) => pick.game.sport.name))).length,
-        booksPolled: 14,
-        openPicks: rows.publishedToday.length,
-        gatedToday: rows.gatedToday.length,
+        sportsWatched: 0,
+        booksPolled: 0,
+        openPicks: 0,
+        gatedToday: 0,
         lastRefresh: now.toISOString(),
-        modelVersion: "sample-v0.0.0",
+        modelVersion: MODEL_VERSION,
         bootstrap: gates.isBootstrapMode,
-        scoringNow: rows.scoringNow,
-        publishedToday: rows.publishedToday,
-        gatedTodayRows: rows.gatedToday,
+        scoringNow: [],
+        publishedToday: [],
+        gatedTodayRows: [],
       },
-      meta: { isSampleData: true },
+      meta: { isSampleData: false, suppressedDemoData: true },
     };
   }
 
   const { start, end } = todayBounds();
-  const decisions = await db.gateDecision.findMany({
-    where: {
-      isBootstrap: false,
-      evaluatedAt: { gte: start, lt: end },
-    },
-    include: {
-      game: { include: { sport: { select: { name: true } } } },
-      pick: true,
-    },
-    orderBy: { evaluatedAt: "desc" },
-    take: 100,
-  });
-
-  if (decisions.length > 0) {
-    const decisionRows = decisions.map((decision): BoardStateRow => ({
-      id: decision.id,
-      gameId: decision.gameId,
-      matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
-      sport: decision.game.sport.name,
-      market: decision.pick?.selection ?? "ALL_MARKETS",
-      status:
-        decision.status === "PUBLISHED"
-          ? "PUBLISHED_TODAY"
-          : decision.status === "GATED"
-            ? "GATED_TODAY"
-            : "SCORING_NOW",
-      edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
-      confidence: decision.confidence ?? decision.pick?.confidence ?? null,
-      gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
-      updatedAt: decision.evaluatedAt.toISOString(),
-    }));
-    const scoringRows = decisionRows.filter((row) => row.status === "SCORING_NOW");
-    const publishedRows = decisionRows.filter((row) => row.status === "PUBLISHED_TODAY");
-    const gatedRows = decisionRows.filter((row) => row.status === "GATED_TODAY");
-
-    return {
-      data: {
-        sportsWatched: new Set(decisionRows.map((row) => row.sport)).size,
-        booksPolled: Math.max(0, ...decisions.map((decision) => decision.game.bookmakerCoverageMax)),
-        openPicks: publishedRows.length,
-        gatedToday: gatedRows.length,
-        lastRefresh: now.toISOString(),
-        modelVersion: decisions[0]?.modelVersion ?? MODEL_VERSION,
-        bootstrap: gates.isBootstrapMode,
-        scoringNow: scoringRows,
-        publishedToday: publishedRows,
-        gatedTodayRows: gatedRows,
-      },
-      meta: { isSampleData: false },
-    };
-  }
-
-  const [publishedToday, scoringNow, gatedToday] = await Promise.all([
-    db.pick.findMany({
+  try {
+    const decisions = await db.gateDecision.findMany({
       where: {
-        isPublished: true,
         isBootstrap: false,
-        generatedAt: { gte: start, lt: end },
+        evaluatedAt: { gte: start, lt: end },
       },
-      include: { game: { include: { sport: { select: { name: true } } } } },
-      orderBy: [{ confidence: "desc" }, { generatedAt: "desc" }],
-      take: 12,
-    }),
-    db.game.findMany({
-      where: {
-        commenceTime: { gte: now },
-        status: "SCHEDULED",
+      include: {
+        game: { include: { sport: { select: { name: true } } } },
+        pick: true,
       },
-      include: { sport: { select: { name: true } } },
-      orderBy: { commenceTime: "asc" },
-      take: 8,
-    }),
-    db.game.findMany({
-      where: {
-        commenceTime: { gte: start, lt: end },
-        picks: { none: { isPublished: true, isBootstrap: false } },
-      },
-      include: { sport: { select: { name: true } } },
-      orderBy: { commenceTime: "asc" },
-      take: 12,
-    }),
-  ]);
+      orderBy: { evaluatedAt: "desc" },
+      take: 100,
+    });
+
+    if (decisions.length > 0) {
+      const decisionRows = decisions.map((decision): BoardStateRow => ({
+        id: decision.id,
+        gameId: decision.gameId,
+        matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
+        sport: decision.game.sport.name,
+        market: decision.pick?.selection ?? "ALL_MARKETS",
+        status:
+          decision.status === "PUBLISHED"
+            ? "PUBLISHED_TODAY"
+            : decision.status === "GATED"
+              ? "GATED_TODAY"
+              : "SCORING_NOW",
+        edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
+        confidence: decision.confidence ?? decision.pick?.confidence ?? null,
+        gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
+        updatedAt: decision.evaluatedAt.toISOString(),
+      }));
+      const scoringRows = decisionRows.filter((row) => row.status === "SCORING_NOW");
+      const publishedRows = decisionRows.filter((row) => row.status === "PUBLISHED_TODAY");
+      const gatedRows = decisionRows.filter((row) => row.status === "GATED_TODAY");
+
+      return {
+        data: {
+          sportsWatched: new Set(decisionRows.map((row) => row.sport)).size,
+          booksPolled: Math.max(0, ...decisions.map((decision) => decision.game.bookmakerCoverageMax)),
+          openPicks: publishedRows.length,
+          gatedToday: gatedRows.length,
+          lastRefresh: now.toISOString(),
+          modelVersion: decisions[0]?.modelVersion ?? MODEL_VERSION,
+          bootstrap: gates.isBootstrapMode,
+          scoringNow: scoringRows,
+          publishedToday: publishedRows,
+          gatedTodayRows: gatedRows,
+        },
+        meta: { isSampleData: false },
+      };
+    }
+
+    const [publishedToday, scoringNow, gatedToday] = await Promise.all([
+      db.pick.findMany({
+        where: {
+          isPublished: true,
+          isBootstrap: false,
+          generatedAt: { gte: start, lt: end },
+        },
+        include: { game: { include: { sport: { select: { name: true } } } } },
+        orderBy: [{ confidence: "desc" }, { generatedAt: "desc" }],
+        take: 12,
+      }),
+      db.game.findMany({
+        where: {
+          commenceTime: { gte: now },
+          status: "SCHEDULED",
+        },
+        include: { sport: { select: { name: true } } },
+        orderBy: { commenceTime: "asc" },
+        take: 8,
+      }),
+      db.game.findMany({
+        where: {
+          commenceTime: { gte: start, lt: end },
+          picks: { none: { isPublished: true, isBootstrap: false } },
+        },
+        include: { sport: { select: { name: true } } },
+        orderBy: { commenceTime: "asc" },
+        take: 12,
+      }),
+    ]);
 
   const publishedRows = publishedToday.map((pick): BoardStateRow => ({
     id: pick.id,
@@ -239,19 +191,36 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     updatedAt: game.updatedAt.toISOString(),
   }));
 
-  return {
-    data: {
-      sportsWatched: new Set([...scoringRows, ...publishedRows, ...gatedRows].map((row) => row.sport)).size,
-      booksPolled: Math.max(0, ...scoringNow.map((game) => game.bookmakerCoverageMax)),
-      openPicks: publishedRows.length,
-      gatedToday: gatedRows.length,
-      lastRefresh: now.toISOString(),
-      modelVersion: publishedToday[0]?.modelVersion ?? MODEL_VERSION,
-      bootstrap: gates.isBootstrapMode,
-      scoringNow: scoringRows,
-      publishedToday: publishedRows,
-      gatedTodayRows: gatedRows,
-    },
-    meta: { isSampleData: false },
-  };
+    return {
+      data: {
+        sportsWatched: new Set([...scoringRows, ...publishedRows, ...gatedRows].map((row) => row.sport)).size,
+        booksPolled: Math.max(0, ...scoringNow.map((game) => game.bookmakerCoverageMax)),
+        openPicks: publishedRows.length,
+        gatedToday: gatedRows.length,
+        lastRefresh: now.toISOString(),
+        modelVersion: publishedToday[0]?.modelVersion ?? MODEL_VERSION,
+        bootstrap: gates.isBootstrapMode,
+        scoringNow: scoringRows,
+        publishedToday: publishedRows,
+        gatedTodayRows: gatedRows,
+      },
+      meta: { isSampleData: false },
+    };
+  } catch {
+    return {
+      data: {
+        sportsWatched: 0,
+        booksPolled: 0,
+        openPicks: 0,
+        gatedToday: 0,
+        lastRefresh: now.toISOString(),
+        modelVersion: MODEL_VERSION,
+        bootstrap: gates.isBootstrapMode,
+        scoringNow: [],
+        publishedToday: [],
+        gatedTodayRows: [],
+      },
+      meta: { isSampleData: false, dataError: "DB_UNREACHABLE" },
+    };
+  }
 }

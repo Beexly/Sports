@@ -16,25 +16,30 @@ describe("Phase 2 board APIs", () => {
     process.env["PERFORMANCE_STATS_ENABLED"] = "false";
   });
 
-  it("/api/board/state returns live strip and Gate Cam lanes in demo mode", async () => {
+  it("/api/board/state suppresses demo rows in public demo mode", async () => {
     const { status, body } = await callRoute("@/app/api/board/state/route");
     expect(status).toBe(200);
     expect(body["success"]).toBe(true);
 
     const data = body["data"] as Record<string, unknown>;
-    expect(data["sportsWatched"]).toBeGreaterThan(0);
-    expect(data["booksPolled"]).toBe(14);
-    expect(Array.isArray(data["scoringNow"])).toBe(true);
-    expect(Array.isArray(data["publishedToday"])).toBe(true);
-    expect(Array.isArray(data["gatedTodayRows"])).toBe(true);
+    const meta = body["meta"] as Record<string, unknown>;
+    expect(meta["suppressedDemoData"]).toBe(true);
+    expect(data["sportsWatched"]).toBe(0);
+    expect(data["booksPolled"]).toBe(0);
+    expect(data["openPicks"]).toBe(0);
+    expect(data["gatedToday"]).toBe(0);
+    expect(data["scoringNow"]).toEqual([]);
+    expect(data["publishedToday"]).toEqual([]);
+    expect(data["gatedTodayRows"]).toEqual([]);
   }, 15_000);
 
-  it("/api/board/passes returns pass reasons without publishing fake picks", async () => {
+  it("/api/board/passes suppresses fake pass reasons in public demo mode", async () => {
     const { body } = await callRoute("@/app/api/board/passes/route");
     const data = body["data"] as Record<string, unknown>;
+    const meta = body["meta"] as Record<string, unknown>;
     const passes = data["passes"] as Array<Record<string, unknown>>;
-    expect(passes.length).toBeGreaterThan(0);
-    expect(passes.every((row) => typeof row["reason"] === "string")).toBe(true);
+    expect(meta["suppressedDemoData"]).toBe(true);
+    expect(passes).toEqual([]);
   });
 });
 

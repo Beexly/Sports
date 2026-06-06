@@ -1,69 +1,32 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { render, screen } from "@testing-library/react";
-import { AnnotatedSampleSignal } from "@/components/home/annotated-sample-signal";
 
-/**
- * Home — "Anatomy of a signal" wiring + render.
- *
- * The AnnotatedSampleSignal card is the clearest single explainer of what a
- * published signal (and the 0–100 Edge Index) looks like. It was previously
- * built but imported nowhere; this test guards two things:
- *
- *   1. SOURCE-LEVEL: the homepage actually imports and renders the component,
- *      so it never silently regresses back to an orphaned state.
- *   2. RENDER-LEVEL: the card renders its key surfaces and the Edge Index is
- *      shown on the calibrated 0–100 scale (never above 100 — the property the
- *      Edge Index clamp fix protects).
- */
+const pageSource = readFileSync(resolve(__dirname, "..", "app", "page.tsx"), "utf8");
 
-const pageSource = readFileSync(
-  resolve(__dirname, "..", "app", "page.tsx"),
-  "utf8"
-);
-
-describe("Homepage wires the signal-anatomy card (source-level)", () => {
-  it("imports AnnotatedSampleSignal from the home components", () => {
-    expect(pageSource).toMatch(
-      /import\s+\{[^}]*AnnotatedSampleSignal[^}]*\}\s+from\s+["']@\/components\/home\/annotated-sample-signal["']/
-    );
+describe("Homepage data-first signal contract", () => {
+  it("does not wire the legacy annotated sample signal into the public homepage", () => {
+    expect(pageSource).not.toMatch(/AnnotatedSampleSignal/);
+    expect(pageSource).not.toMatch(/annotated-sample-signal/);
   });
 
-  it("renders <AnnotatedSampleSignal /> in the page tree", () => {
-    expect(pageSource).toMatch(/<AnnotatedSampleSignal\s*\/>/);
-  });
-});
-
-describe("AnnotatedSampleSignal (render-level)", () => {
-  it("renders the anatomy eyebrow and heading", () => {
-    render(<AnnotatedSampleSignal />);
-    expect(screen.getByText("Anatomy of a signal")).toBeInTheDocument();
-    expect(
-      screen.getByText(/this is what a published signal looks like\./i)
-    ).toBeInTheDocument();
+  it("leads with data readiness instead of a fabricated pick example", () => {
+    expect(pageSource).toContain("The board is only as smart as the data behind it.");
+    expect(pageSource).toContain("No public rows yet");
+    expect(pageSource).toContain("Rows stay empty instead of blocking the experience or inventing data.");
   });
 
-  it("renders the sample pick card with grade and Edge Index surfaces", () => {
-    render(<AnnotatedSampleSignal />);
-    const card = screen.getByTestId("annotated-sample-signal-card");
-    expect(card).toBeInTheDocument();
-    expect(screen.getByText("Eclipse Gate")).toBeInTheDocument();
-    expect(screen.getByText("Edge Index")).toBeInTheDocument();
+  it("surfaces the live board lanes without requiring sample rows", () => {
+    expect(pageSource).toContain("state.scoringNow");
+    expect(pageSource).toContain("state.publishedToday");
+    expect(pageSource).toContain("state.gatedTodayRows");
+    expect(pageSource).toContain("No active scoring rows.");
+    expect(pageSource).toContain("No public pick has cleared.");
   });
 
-  it("shows the Edge Index on the 0–100 scale (never above 100)", () => {
-    render(<AnnotatedSampleSignal />);
-    const card = screen.getByTestId("annotated-sample-signal-card");
-    const match = card.textContent?.match(/(\d+)\s*\/\s*100/);
-    expect(match, "expected an N/100 Edge Index readout").not.toBeNull();
-    const value = Number(match![1]);
-    expect(value).toBeGreaterThanOrEqual(0);
-    expect(value).toBeLessThanOrEqual(100);
-  });
-
-  it("keeps the variance reminder so confidence is never read as certainty", () => {
-    render(<AnnotatedSampleSignal />);
-    expect(screen.getByText(/still loses ~29 of 100/i)).toBeInTheDocument();
+  it("points users to real data sources and Trend Lab instead of static sample anatomy", () => {
+    expect(pageSource).toContain("PUBLIC_DATA_SOURCES");
+    expect(pageSource).toContain("TREND_BACKLOG");
+    expect(pageSource).toContain("Open Trend Lab");
   });
 });

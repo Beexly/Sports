@@ -34,6 +34,7 @@
     "snapshots:regen": "node scripts/regenerate-launch-snapshots.mjs",
     "deploy:ready": "node scripts/check-deploy-readiness.mjs",
     "stripe:seed": "node scripts/seed-stripe-prices.mjs",
+    "lint:brand": "npm run test:brand-safety",
     "test:brand-safety": "npm run test:brand-safety --workspace=apps/web",
     "test:cockpit": "npm run test:cockpit --workspace=apps/web",
     "test:fast": "npm run test:brand-safety && npm run test:cockpit",

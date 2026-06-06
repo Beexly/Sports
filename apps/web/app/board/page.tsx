@@ -37,11 +37,25 @@ export default async function BoardPage(): Promise<JSX.Element> {
     stateResult.meta.isSampleData ||
     passesResult.meta.isSampleData ||
     calibrationResult.meta.isSampleData;
+  const dbUnreachable =
+    stateResult.meta.dataError === "DB_UNREACHABLE" ||
+    passesResult.meta.dataError === "DB_UNREACHABLE";
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+        {dbUnreachable && (
+          <div className="flex flex-col gap-2 border border-red-900 bg-red-950/25 px-4 py-3 text-sm text-red-100 sm:flex-row sm:items-center">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-red-300">
+              Data store unreachable
+            </span>
+            <span className="break-words sm:ml-3">
+              The local database did not respond, so this board is showing an empty nonblocking state.
+            </span>
+          </div>
+        )}
+
         {isSampleData && (
           <div className="flex flex-col gap-2 border border-cyan-900 bg-cyan-950/30 px-4 py-3 text-sm text-cyan-100 sm:flex-row sm:items-center">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-300">

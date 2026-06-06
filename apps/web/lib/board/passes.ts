@@ -1,4 +1,4 @@
-import { db, getSamplePicks, isDemoPicksEnabled, isStubMode } from "@sports/db";
+import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { toEdgeIndex } from "@sports/prediction-engine";
 
 export interface PassListRow {
@@ -13,7 +13,7 @@ export interface PassListRow {
 
 export interface BoardPassesPayload {
   data: { date: string; passes: PassListRow[] };
-  meta: { isSampleData: boolean };
+  meta: { isSampleData: boolean; suppressedDemoData?: boolean; dataError?: "DB_UNREACHABLE" };
 }
 
 function todayBounds(): { start: Date; end: Date } {
@@ -34,74 +34,71 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
   if (demoActive) {
-    const rows = getSamplePicks(now).slice(5, 10).map((pick, index): PassListRow => ({
-      id: `sample-pass-${pick.gameId}`,
-      gameId: pick.gameId,
-      matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
-      sport: pick.game.sport.name,
-      edgeIndex: toEdgeIndex(pick.edgeScore),
-      reason: index % 2 === 0 ? "Consensus below publish threshold." : "Market depth too thin.",
-      evaluatedAt: pick.dataFreshnessAt.toISOString(),
-    }));
-
     return {
-      data: { date: now.toISOString().slice(0, 10), passes: rows },
-      meta: { isSampleData: true },
+      data: { date: now.toISOString().slice(0, 10), passes: [] },
+      meta: { isSampleData: false, suppressedDemoData: true },
     };
   }
 
   const { start, end } = todayBounds();
-  const gateDecisions = await db.gateDecision.findMany({
-    where: {
-      status: "GATED",
-      isBootstrap: false,
-      evaluatedAt: { gte: start, lt: end },
-    },
-    include: { game: { include: { sport: { select: { name: true } } } } },
-    orderBy: { evaluatedAt: "desc" },
-    take: 100,
-  });
-
-  if (gateDecisions.length > 0) {
-    return {
-      data: {
-        date: now.toISOString().slice(0, 10),
-        passes: gateDecisions.map((decision): PassListRow => ({
-          id: decision.id,
-          gameId: decision.gameId,
-          matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
-          sport: decision.game.sport.name,
-          edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
-          reason: decision.reason,
-          evaluatedAt: decision.evaluatedAt.toISOString(),
-        })),
+  try {
+    const gateDecisions = await db.gateDecision.findMany({
+      where: {
+        status: "GATED",
+        isBootstrap: false,
+        evaluatedAt: { gte: start, lt: end },
       },
+      include: { game: { include: { sport: { select: { name: true } } } } },
+      orderBy: { evaluatedAt: "desc" },
+      take: 100,
+    });
+
+    if (gateDecisions.length > 0) {
+      return {
+        data: {
+          date: now.toISOString().slice(0, 10),
+          passes: gateDecisions.map((decision): PassListRow => ({
+            id: decision.id,
+            gameId: decision.gameId,
+            matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
+            sport: decision.game.sport.name,
+            edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
+            reason: decision.reason,
+            evaluatedAt: decision.evaluatedAt.toISOString(),
+          })),
+        },
+        meta: { isSampleData: false },
+      };
+    }
+
+    const games = await db.game.findMany({
+      where: {
+        commenceTime: { gte: start, lt: end },
+        picks: { none: { isPublished: true, isBootstrap: false } },
+      },
+      include: { sport: { select: { name: true } } },
+      orderBy: { commenceTime: "asc" },
+      take: 100,
+    });
+
+    const passes = games.map((game): PassListRow => ({
+      id: `pass-${game.id}`,
+      gameId: game.id,
+      matchup: `${game.awayTeamName} @ ${game.homeTeamName}`,
+      sport: game.sport.name,
+      edgeIndex: toEdgeIndex(game.currentEdgeIndex),
+      reason: passReason(game.bookmakerCoverageMax, game.dataQualityScore),
+      evaluatedAt: game.updatedAt.toISOString(),
+    }));
+
+    return {
+      data: { date: now.toISOString().slice(0, 10), passes },
       meta: { isSampleData: false },
     };
+  } catch {
+    return {
+      data: { date: now.toISOString().slice(0, 10), passes: [] },
+      meta: { isSampleData: false, dataError: "DB_UNREACHABLE" },
+    };
   }
-
-  const games = await db.game.findMany({
-    where: {
-      commenceTime: { gte: start, lt: end },
-      picks: { none: { isPublished: true, isBootstrap: false } },
-    },
-    include: { sport: { select: { name: true } } },
-    orderBy: { commenceTime: "asc" },
-    take: 100,
-  });
-
-  const passes = games.map((game): PassListRow => ({
-    id: `pass-${game.id}`,
-    gameId: game.id,
-    matchup: `${game.awayTeamName} @ ${game.homeTeamName}`,
-    sport: game.sport.name,
-    edgeIndex: toEdgeIndex(game.currentEdgeIndex),
-    reason: passReason(game.bookmakerCoverageMax, game.dataQualityScore),
-    evaluatedAt: game.updatedAt.toISOString(),
-  }));
-
-  return {
-    data: { date: now.toISOString().slice(0, 10), passes },
-    meta: { isSampleData: false },
-  };
 }

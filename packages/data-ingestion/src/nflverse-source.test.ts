@@ -37,7 +37,7 @@ describe("nflverse url builder", () => {
   it("builds seasonal asset urls", () => {
     expect(nflverseUrl("rosters", 2024)).toBe(`${NFLVERSE_BASE}/rosters/roster_2024.csv`);
     expect(nflverseUrl("snap_counts", 2023)).toBe(`${NFLVERSE_BASE}/snap_counts/snap_counts_2023.csv`);
-    expect(nflverseUrl("player_stats_week", 2022)).toBe(`${NFLVERSE_BASE}/player_stats/player_stats_2022.csv`);
+    expect(nflverseUrl("player_stats_week", 2022)).toBe(`${NFLVERSE_BASE}/player_stats/player_stats.csv.gz`);
   });
 
   it("applies dataset variants (NGS type, PFR unit) and gz extension", () => {

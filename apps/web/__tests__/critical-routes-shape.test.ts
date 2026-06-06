@@ -15,6 +15,7 @@ const repoRoot = resolve(__dirname, "..");
 
 const CRITICAL_PAGES = [
   "app/page.tsx",
+  "app/fantasy/baseline/page.tsx",
   "app/dashboard/page.tsx",
   "app/performance/page.tsx",
   "app/picks/page.tsx",

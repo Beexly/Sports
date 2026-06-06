@@ -6,9 +6,9 @@ import { resolve } from "node:path";
  * Source-level guarantees that the launch-night sample-mode UI cues are
  * present on the surfaces an operator and a customer will look at.
  *
- *   - /dashboard renders a "Sample mode" pill + sample-data banner
- *     gated by isStubMode() && isDemoPicksEnabled()
+ *   - /dashboard renders a "Sample mode" pill + sample-data banner for operators
  *   - /picks renders a sample-data banner with the same gate
+ *   - public board loaders suppress demo rows rather than rendering fake product data
  *   - /cockpit shows a "Today's picks: N (sample)" pill
  *
  * These are the visual contracts that keep sample data from being
@@ -40,10 +40,20 @@ describe("Sample-mode UI contracts", () => {
     expect(src).toMatch(/Sample mode/);
   });
 
-  it("/ (home) renders a sample-data banner under demo mode", () => {
+  it("/ (home) suppresses demo rows instead of rendering fake public data", () => {
     const src = read("app/page.tsx");
-    expect(src).toMatch(/data-testid="sample-data-banner-home"/);
-    expect(src).toMatch(/never produce a verified win-rate/);
+    expect(src).toMatch(/suppressedDemo/);
+    expect(src).toMatch(/Demo data suppressed/);
+    expect(src).not.toMatch(/sample-data-banner-home/);
+  });
+
+  it("public board loaders return empty readiness state when demo mode is active", () => {
+    const state = read("lib/board/state.ts");
+    const passes = read("lib/board/passes.ts");
+    expect(state).toMatch(/suppressedDemoData: true/);
+    expect(state).toMatch(/publishedToday: \[\]/);
+    expect(passes).toMatch(/suppressedDemoData: true/);
+    expect(passes).toMatch(/passes: \[\]/);
   });
 
   it("/picks renders a sample-data banner under demo mode", () => {

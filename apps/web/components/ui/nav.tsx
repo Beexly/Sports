@@ -7,6 +7,7 @@ import { BrandLockup } from "@/components/brand/brand-lockup";
 const PRIMARY_LINKS = [
   { label: "Mission Control", href: "/today" },
   { label: "Today's Board", href: "/board" },
+  { label: "Trend Lab", href: "/trends" },
   { label: "Edge Map", href: "/observatory" },
 ] as const;
 
@@ -16,6 +17,7 @@ const INTELLIGENCE_GROUP = [
   { label: "The Beat", href: "/the-beat", desc: "Breaking news, reliability-scored" },
   { label: "GSN", href: "/gsn", desc: "Daily intelligence transmission" },
   { label: "The Airwave Ledger", href: "/airwave", desc: "Pundits, graded on the record" },
+  { label: "NFLverse Pulse", href: "/nflverse", desc: "Real player-week usage rows" },
   { label: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's risk" },
   { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
   { label: "Trust Ledger", href: "/ledger", desc: "Tamper-evident record" },
@@ -26,7 +28,8 @@ const INTELLIGENCE_GROUP = [
 
 // The fantasy-football OS surfaces, grouped under "Fantasy ▾".
 const FANTASY_GROUP = [
-  { label: "Fantasy Home", href: "/fantasy", desc: "A decision OS for your roster" },
+  { label: "Fantasy Home", href: "/fantasy", desc: "Readiness and roadmap" },
+  { label: "Baseline Map", href: "/fantasy/baseline", desc: "LineStar and Elite feature floor" },
   { label: "Connect League", href: "/fantasy/connect", desc: "Read-only Sleeper sync" },
   { label: "GM Autopilot", href: "/fantasy/autopilot", desc: "Delegate from advice to full remote" },
   { label: "The League Twin", href: "/fantasy/league-twin", desc: "Your roster as a galaxy" },

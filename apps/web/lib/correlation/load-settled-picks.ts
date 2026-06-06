@@ -36,6 +36,12 @@ function settledResult(value: CorrelationSettledPick["result"]): CorrelationPick
   throw new Error(`Unsupported correlation pick result: ${value}`);
 }
 
+function isDatabaseUnreachable(error: unknown): boolean {
+  const code = typeof error === "object" && error !== null && "code" in error ? String(error.code) : "";
+  const message = error instanceof Error ? error.message : String(error);
+  return code === "P1001" || message.includes("Can't reach database server");
+}
+
 export function mapSettledPickToCorrelationRow(pick: CorrelationSettledPick): CorrelationPickRow {
   return {
     sport: pick.game.sport.name || pick.game.sport.key,
@@ -53,23 +59,29 @@ export function mapSettledPickToCorrelationRow(pick: CorrelationSettledPick): Co
 
 export async function loadSettledCorrelationRows(limit = CORRELATION_HISTORY_LIMIT): Promise<CorrelationPickRow[]> {
   const take = Math.min(Math.max(Math.round(limit), 1), CORRELATION_HISTORY_LIMIT);
-  const picks = await db.pick.findMany({
-    where: {
-      isPublished: true,
-      isBootstrap: false,
-      result: { in: ["WIN", "LOSS", "PUSH"] },
-      NOT: { modelVersion: "v5.0.0-seed" },
-      signalSnapshot: {
-        is: {
-          eligibleForLearning: true,
-          isBootstrap: false,
+  let picks: CorrelationSettledPick[];
+  try {
+    picks = await db.pick.findMany({
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        result: { in: ["WIN", "LOSS", "PUSH"] },
+        NOT: { modelVersion: "v5.0.0-seed" },
+        signalSnapshot: {
+          is: {
+            eligibleForLearning: true,
+            isBootstrap: false,
+          },
         },
       },
-    },
-    orderBy: { settledAt: "desc" },
-    take,
-    select: settledPickSelect,
-  });
+      orderBy: { settledAt: "desc" },
+      take,
+      select: settledPickSelect,
+    });
+  } catch (error) {
+    if (isDatabaseUnreachable(error)) return [];
+    throw error;
+  }
 
   return picks.map(mapSettledPickToCorrelationRow);
 }

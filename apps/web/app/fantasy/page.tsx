@@ -2,147 +2,237 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { Reveal } from "@/components/motion/reveal";
-import { Atmosphere } from "@/components/ui/atmosphere";
-import { ProjectionsBadge } from "@/components/integrations/projections-badge";
 import { BRAND_COLORS } from "@/lib/brand";
+import { loadSourceLiveEvidence } from "@/lib/data-sources/live-evidence";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Galaxy Fantasy — A Decision OS for Your Roster",
+  title: "Galaxy Fantasy - Real Roster First",
   description:
-    "Not a projections list with a waiver button. A glass-box fantasy-football operating system: draft, waivers, lineups, trades, DFS, and two first-of-kind systems — the League Twin and the GM Ledger.",
+    "Galaxy Fantasy starts with read-only roster sync and stays gated until live player projections are connected. No fictional projections are presented as live advice.",
   alternates: { canonical: "/fantasy" },
 };
 
-const FLAGSHIP = [
+const LIVE_FIRST = [
   {
-    title: "GM Autopilot",
-    href: "/fantasy/autopilot",
-    tag: "First of its kind",
-    desc: "A delegation dial from waiver suggestions to a fully remote GM — where every move is explained before it happens, committed to your tamper-evident ledger, reversible, and teaches you. Delegation with proof, not a black box.",
-    accent: BRAND_COLORS.orbitalCyan,
+    title: "Read-only roster sync",
+    href: "/fantasy/connect",
+    status: "Live path",
+    body: "Sleeper connect uses public read-only data. No league writes, no OAuth handoff, no autonomous moves.",
   },
   {
-    title: "The League Twin",
-    href: "/fantasy/league-twin",
-    tag: "First of its kind",
-    desc: "Your roster as a navigable galaxy — players as star systems, projection as brightness, volatility as the halo, byes as eclipses, scheme shocks as impact events. Nobody renders a roster this way.",
-    accent: BRAND_COLORS.softUltraviolet,
+    title: "Player projections provider",
+    href: "/integrations",
+    status: "Required",
+    body: "Lineups, waivers, DFS, and trades stay gated until a real projections source is enabled.",
   },
   {
-    title: "The GM Ledger",
-    href: "/fantasy/gm-ledger",
-    tag: "First of its kind",
-    desc: "Every roster decision committed before the games and graded on process, not luck — building a calibrated, un-cherry-pickable GM Rating. “I would've started him” becomes impossible to fake.",
-    accent: BRAND_COLORS.orbitalCyan,
+    title: "nflverse usage layer",
+    href: "/trends",
+    status: "Building",
+    body: "Snap share, player weeks, injuries, depth charts, and rosters become the free-first base layer.",
   },
-];
+] as const;
 
-const TOOLS = [
-  { title: "Draft Assistant", href: "/fantasy/draft", tag: "Draft", desc: "Tiers, VOR, best-available, bye conflicts, and live pick guidance.", accent: BRAND_COLORS.softUltraviolet },
-  { title: "Waiver & FAAB", href: "/fantasy/waivers", tag: "In-season", desc: "Ranked adds and FAAB bids by budget — with the why on every move.", accent: BRAND_COLORS.orbitalCyan },
-  { title: "Lineup Optimizer", href: "/fantasy/lineup", tag: "Start / Sit", desc: "Optimal lineup, start-sit calls, floor vs. ceiling, and call leverage.", accent: BRAND_COLORS.ionMagenta },
-  { title: "Trade Analyzer", href: "/fantasy/trade", tag: "Trades", desc: "Value both sides, fairness, roster fit, win-now vs. dynasty.", accent: BRAND_COLORS.softUltraviolet },
-  { title: "DFS Optimizer", href: "/fantasy/dfs", tag: "DFS", desc: "Cash / GPP / leverage objectives, stacking, exposure — every lineup glass-box.", accent: BRAND_COLORS.ionMagenta },
-  { title: "Pick'em Edge", href: "/fantasy/props", tag: "Props", desc: "Where our number beats Underdog & DK Pick6 lines — plus the best alt-line EV.", accent: BRAND_COLORS.softUltraviolet },
-  { title: "Scheme Intelligence", href: "/fantasy/scheme", tag: "Edge", desc: "How a single coaching or scheme change cascades through fantasy values.", accent: BRAND_COLORS.orbitalCyan },
-  { title: "Contests", href: "/fantasy/contests", tag: "Play", desc: "Best ball, survivor, pick'em, squares — skill-first, real money founder-gated.", accent: BRAND_COLORS.softUltraviolet },
-  { title: "Galaxy Studios", href: "/fantasy/studio", tag: "Media", desc: "The weekly Galaxy Brief and waiver transmission, generated from the OS.", accent: BRAND_COLORS.orbitalCyan },
-  { title: "GM Academy", href: "/fantasy/academy", tag: "Train", desc: "Drill the process behind great decisions — graded on reasoning, building your GM IQ.", accent: BRAND_COLORS.softUltraviolet },
-];
+const GATED_TOOLS = [
+  ["Draft Assistant", "Needs live ADP, projections, and league settings."],
+  ["Waiver & FAAB", "Needs roster sync, projections, injuries, and league market context."],
+  ["Lineup Optimizer", "Needs live projections and player availability."],
+  ["Trade Analyzer", "Needs live player values and roster context."],
+  ["DFS Optimizer", "Needs salaries, projections, contest rules, and ownership estimates."],
+  ["Pick'em Edge", "Needs live pick'em lines and alt-line pricing."],
+  ["League Twin", "Can render a real roster after sync; advice waits for projections."],
+  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events."],
+] as const;
 
-function Card({ title, href, tag, desc, accent, large }: { title: string; href: string; tag: string; desc: string; accent: string; large?: boolean }) {
-  return (
-    <Link
-      href={href}
-      className={`surface-card group relative flex flex-col overflow-hidden p-6 transition-transform duration-300 ease-out hover:-translate-y-1 ${large ? "sm:p-8" : ""}`}
-    >
-      <span aria-hidden className="absolute inset-x-0 top-0 h-px opacity-70" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
-      <span className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: accent }}>{tag}</span>
-      <h3 className={`mt-2 font-semibold text-white ${large ? "font-display text-2xl" : "text-lg"}`}>{title}</h3>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-300">{desc}</p>
-      <span aria-hidden className="mt-4 inline-flex items-center gap-1 text-sm font-medium transition-transform duration-200 group-hover:translate-x-1" style={{ color: accent }}>
-        Open →
-      </span>
-    </Link>
-  );
-}
+export default async function FantasyHubPage(): Promise<JSX.Element> {
+  const evidence = await loadSourceLiveEvidence({ timeoutMs: 15000 });
+  const qbAgeLift = evidence.summary.qbAge34Lift;
+  const qbAgeLiftLabel = typeof qbAgeLift === "number" ? `${formatPercent(qbAgeLift)} lift` : "UNKNOWN";
+  const latestWeek =
+    evidence.summary.latestUsageSeason && evidence.summary.latestUsageWeek
+      ? `${evidence.summary.latestUsageSeason} W${evidence.summary.latestUsageWeek}`
+      : "UNKNOWN";
 
-export default function FantasyHubPage() {
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
-      <Atmosphere />
       <Nav />
-
-      <main id="main-content" className="flex-1">
-        {/* Hero */}
-        <section className="relative isolate overflow-hidden px-4 pb-10 pt-24 sm:px-6 lg:px-8">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
-            style={{ background: `radial-gradient(60% 80% at 50% 0%, ${BRAND_COLORS.softUltraviolet}1c, transparent 70%), radial-gradient(40% 60% at 74% 8%, ${BRAND_COLORS.orbitalCyan}12, transparent 70%)` }}
-          />
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2" style={{ color: BRAND_COLORS.softUltraviolet }}>
-                <span className="live-dot" />
-                Galaxy Fantasy
-              </p>
-            </Reveal>
-            <Reveal delay={90}>
-              <h1
-                className="mt-5 max-w-3xl font-display text-balance text-white"
-                style={{ fontSize: "clamp(2.5rem, 7.5vw, 5.5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}
-              >
-                A decision OS for your{" "}
-                <span className="gse-editorial" style={{ fontSize: "1.08em" }}>roster</span>.
+      <main className="flex-1">
+        <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
+            <div>
+              <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-white sm:text-6xl">
+                Real roster first. No fake projections.
               </h1>
-            </Reveal>
-            <Reveal delay={170}>
-              <p className="mt-5 max-w-2xl text-lg text-ink-300">
-                Every fantasy app is a projections list with a waiver button. This is the glass box:
-                it shows the reasoning, models your league as a living system, and grades your
-                decisions on process — not luck.
+              <p className="mt-5 max-w-2xl text-base leading-7 text-ink-300">
+                Galaxy Fantasy is being rebuilt around the same rule as the picks product:
+                if the data is not real, the advice stays locked. You can connect a real
+                Sleeper roster now; projection-driven recommendations open only after the
+                live data layer clears.
               </p>
-            </Reveal>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <Link href="/fantasy/connect" className="btn btn-primary">
+                  Connect Sleeper
+                </Link>
+                <Link href="/trends" className="btn btn-ghost">
+                  View Trend Lab
+                </Link>
+              </div>
+            </div>
+            <div className="border border-mineral bg-eclipse p-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+                Fantasy readiness
+              </p>
+              <dl className="mt-5 grid grid-cols-3 gap-3">
+                <ReadinessMetric label="Roster" value="sync" />
+                <ReadinessMetric label="Projections" value="gated" />
+                <ReadinessMetric label="Actions" value="no-write" />
+              </dl>
+              <p className="mt-4 text-sm leading-6 text-ink-300">
+                This page no longer presents fictional player pools as the primary product.
+                Demo tools can remain internal methodology references, but the public path is data-first.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Flagship first-of-kind */}
-        <section className="px-4 pb-10 sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-5xl gap-5 lg:grid-cols-2">
-            {FLAGSHIP.map((f) => (
-              <Card key={f.href} {...f} large />
-            ))}
+        <section className="border-b border-mineral px-4 py-10 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+                Real NFL usage backbone
+              </p>
+              <h2 className="mt-2 font-display text-3xl font-semibold text-white">
+                Fantasy starts with rows, then earns recommendations.
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-ink-300">
+                The free-first layer is already reading nflverse player-week usage, roster, and
+                schedule files. It can prove usage context and reject weak narrative angles today;
+                it still cannot unlock projection-driven lineup, waiver, trade, DFS, or pick'em
+                advice until those provider feeds are live.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Link href="/nflverse" className="btn btn-ghost">
+                  NFLverse Pulse
+                </Link>
+                <Link href="/api/sources/catalog" className="btn btn-ghost">
+                  Source JSON
+                </Link>
+                <Link href="/fantasy/baseline" className="btn btn-ghost">
+                  Baseline map
+                </Link>
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <EvidenceMetric
+                label="Player-stat rows"
+                value={formatCount(evidence.summary.usagePlayerStatsRows)}
+                detail="Read-only nflverse player_stats.csv.gz."
+              />
+              <EvidenceMetric
+                label="Latest usage week"
+                value={latestWeek}
+                detail={`${formatCount(evidence.summary.latestWeekPlayerRows)} player rows in the latest REG week.`}
+              />
+              <EvidenceMetric
+                label="Accepted research"
+                value={qbAgeLiftLabel}
+                detail={`${formatCount(evidence.summary.cohortObservations)} team-week observations for QB-age/RB target share.`}
+              />
+              <EvidenceMetric
+                label="Rejected narratives"
+                value={evidence.summary.birthdayUsageConclusion ?? "UNKNOWN"}
+                detail={`${formatCount(evidence.summary.birthdayWindowObservations)} birthday-window and ${formatCount(evidence.summary.careerMilestone50Observations)} milestone observations.`}
+              />
+            </div>
           </div>
         </section>
 
-        {/* Tools */}
-        <section className="px-4 pb-24 sm:px-6 lg:px-8" aria-labelledby="tools-heading">
-          <div className="mx-auto max-w-6xl">
-            <Reveal>
-              <h2 id="tools-heading" className="font-display text-2xl text-white sm:text-3xl">The toolkit, done glass-box.</h2>
-            </Reveal>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {TOOLS.map((t) => (
-                <Card key={t.href} {...t} />
+        <section className="px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <h2 className="font-display text-3xl font-semibold text-white">Live-first build order</h2>
+            <div className="mt-6 grid gap-4 lg:grid-cols-3">
+              {LIVE_FIRST.map((item) => (
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  className="surface-card group flex min-h-56 flex-col p-5 transition-transform duration-200 hover:-translate-y-1"
+                >
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+                    {item.status}
+                  </p>
+                  <h3 className="mt-3 text-xl font-semibold text-white">{item.title}</h3>
+                  <p className="mt-3 flex-1 text-sm leading-6 text-ink-300">{item.body}</p>
+                  <span className="mt-5 text-sm font-semibold text-orbital-cyan">Open</span>
+                </Link>
               ))}
             </div>
-            <Reveal delay={120}>
-              <div className="mt-8 space-y-3">
-                <ProjectionsBadge />
-                <p className="text-xs leading-relaxed text-ink-500">
-                  Illustrative player universe — fictional players and illustrative projections,
-                  a demonstration of the intelligence. Real-money contests and league sync are
-                  founder-gated and activate behind compliance review.
+          </div>
+        </section>
+
+        <section className="px-4 pb-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <h2 className="font-display text-3xl font-semibold text-white">Tool gates</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-ink-300">
+                  These products can be excellent, but not on fictional inputs. Each gate is a data requirement,
+                  not a design delay.
                 </p>
               </div>
-            </Reveal>
+              <div className="flex flex-wrap gap-3 text-sm font-semibold">
+                <Link href="/fantasy/baseline" className="text-orbital-cyan hover:text-white">
+                  LineStar / Elite baseline
+                </Link>
+                <Link href="/integrations" className="text-orbital-cyan hover:text-white">
+                  Data requirements
+                </Link>
+              </div>
+            </div>
+            <div className="mt-6 overflow-hidden border border-mineral">
+              {GATED_TOOLS.map(([tool, requirement]) => (
+                <div key={tool} className="grid gap-3 border-b border-mineral bg-eclipse px-4 py-3 last:border-b-0 sm:grid-cols-[0.42fr_1fr_auto] sm:items-center">
+                  <p className="font-semibold text-white">{tool}</p>
+                  <p className="text-sm leading-6 text-ink-300">{requirement}</p>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+                    gated
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </main>
-
       <Footer />
+    </div>
+  );
+}
+
+function formatCount(value: number | null | undefined): string {
+  if (typeof value !== "number" || !Number.isFinite(value)) return "UNKNOWN";
+  return new Intl.NumberFormat("en-US").format(value);
+}
+
+function formatPercent(value: number): string {
+  return `${value > 0 ? "+" : ""}${(value * 100).toFixed(1)}%`;
+}
+
+function EvidenceMetric({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {
+  return (
+    <div className="border border-mineral bg-eclipse p-4">
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{label}</p>
+      <p className="mt-2 font-numerals text-2xl font-semibold text-white">{value}</p>
+      <p className="mt-2 text-xs leading-5 text-ink-400">{detail}</p>
+    </div>
+  );
+}
+
+function ReadinessMetric({ label, value }: { label: string; value: string }): JSX.Element {
+  return (
+    <div className="border border-mineral bg-carbon px-3 py-2">
+      <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</dt>
+      <dd className="mt-1 font-numerals text-lg font-semibold text-white">{value}</dd>
     </div>
   );
 }

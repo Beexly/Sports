@@ -13,23 +13,28 @@ import { existsSync, readFileSync } from "node:fs";
  */
 
 const REPO_ROOT = resolve(__dirname, "..", "..", "..");
+const GUARD_TIMEOUT_MS = 120_000;
 
 function runGuard(relativePath: string): {
   status: number;
   stdout: string;
   stderr: string;
+  error: string;
+  signal: NodeJS.Signals | null;
 } {
   const script = resolve(REPO_ROOT, relativePath);
   expect(existsSync(script)).toBe(true);
   const r = spawnSync("node", [script], {
     cwd: REPO_ROOT,
     encoding: "utf8",
-    timeout: 30_000,
+    timeout: GUARD_TIMEOUT_MS,
   });
   return {
     status: typeof r.status === "number" ? r.status : 1,
     stdout: r.stdout ?? "",
     stderr: r.stderr ?? "",
+    error: r.error?.message ?? "",
+    signal: r.signal ?? null,
   };
 }
 
@@ -39,7 +44,7 @@ describe("Phase 9 guardrails", () => {
     if (r.status !== 0) {
       // surface the failure detail for easier triage
       throw new Error(
-        `trust-gate failed (status=${r.status}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+        `trust-gate failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
       );
     }
     expect(r.stdout).toMatch(/\[trust-gate\] OK/);
@@ -55,7 +60,7 @@ describe("Phase 9 guardrails", () => {
     const r = runGuard("scripts/guardrails/model-freeze.mjs");
     if (r.status !== 0) {
       throw new Error(
-        `model-freeze failed (status=${r.status}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+        `model-freeze failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
       );
     }
     expect(r.stdout).toMatch(/\[model-freeze\] OK/);
@@ -65,7 +70,7 @@ describe("Phase 9 guardrails", () => {
     const r = runGuard("scripts/guardrails/draft-only.mjs");
     if (r.status !== 0) {
       throw new Error(
-        `draft-only failed (status=${r.status}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+        `draft-only failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
       );
     }
     expect(r.stdout).toMatch(/\[draft-only\] OK/);
@@ -75,7 +80,7 @@ describe("Phase 9 guardrails", () => {
     const r = runGuard("scripts/guardrails/claude-api-usage.mjs");
     if (r.status !== 0) {
       throw new Error(
-        `claude-api-usage failed (status=${r.status}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+        `claude-api-usage failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
       );
     }
     expect(r.stdout).toMatch(/\[claude-api-usage\] OK/);

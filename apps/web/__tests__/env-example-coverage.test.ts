@@ -83,7 +83,7 @@ describe(".env.example coverage", () => {
 
   it(".env.example documents the dev-mode bypass flags", () => {
     const exampleKeys = extractEnvExampleKeys();
-    for (const k of ["DEV_FAKE_ADMIN", "DEMO_PICKS_ENABLED"]) {
+    for (const k of ["DEV_FAKE_ADMIN", "DEMO_PICKS_ENABLED", "FANTASY_PUBLIC_TOOLS_ENABLED"]) {
       expect(
         exampleKeys.has(k),
         `.env.example should document ${k} (it's referenced by middleware/auth/dashboard).`

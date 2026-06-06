@@ -1,5 +1,4 @@
 import { getClaim } from "@/lib/trust-claims";
-import { Reveal } from "@/components/motion/reveal";
 
 /**
  * Methodology / Trust Section
@@ -94,46 +93,43 @@ export function MethodologySection() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="mx-auto max-w-7xl">
-        <Reveal duration={880} distance={8}>
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="eyebrow text-ion-1">Methodology / Trust Surface</p>
-            <h2
-              id="methodology-heading"
-              className="mt-4 font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl"
-            >
-              The audit trail behind every signal
-            </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ion sm:text-lg">
-              Every published pick ties back to live markets, timestamped data,
-              factor scoring, and the gates that keep weak picks off the board.
-            </p>
-          </div>
-        </Reveal>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="eyebrow text-ion-1">Methodology / Trust Surface</p>
+          <h2
+            id="methodology-heading"
+            className="mt-4 font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl"
+          >
+            The audit trail behind every signal
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ion sm:text-lg">
+            Every published pick ties back to live markets, timestamped data,
+            factor scoring, and the gates that keep weak picks off the board.
+          </p>
+        </div>
 
         <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {resolved.map(({ item, claim }) => (
-            <Reveal key={item.claimId} duration={700} distance={8}>
-              <article
-                data-claim-id={item.claimId}
-                className="surface-card flex min-h-full flex-col gap-4 p-5 transition-colors hover:border-mineral-hi"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <p className={`font-mono text-[10px] uppercase tracking-[0.16em] ${laneAccent(item.lane)}`}>
-                    {item.lane}
-                  </p>
-                  <span className="h-px flex-1 bg-mineral" aria-hidden="true" />
-                </div>
-                <h3 className="text-base font-semibold leading-snug text-ion-white">{item.title}</h3>
-                <p className="text-sm leading-6 text-ion">
-                  {claim?.copy ?? ""}
+            <article
+              key={item.claimId}
+              data-claim-id={item.claimId}
+              className="surface-card flex min-h-full flex-col gap-4 p-5 transition-colors hover:border-mineral-hi"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <p className={`font-mono text-[10px] uppercase tracking-[0.16em] ${laneAccent(item.lane)}`}>
+                  {item.lane}
                 </p>
-                {item.hint && (
-                  <p className="mt-auto border-t border-mineral pt-4 text-xs leading-5 text-ion-1">
-                    {item.hint}
-                  </p>
-                )}
-              </article>
-            </Reveal>
+                <span className="h-px flex-1 bg-mineral" aria-hidden="true" />
+              </div>
+              <h3 className="text-base font-semibold leading-snug text-ion-white">{item.title}</h3>
+              <p className="text-sm leading-6 text-ion">
+                {claim?.copy ?? ""}
+              </p>
+              {item.hint && (
+                <p className="mt-auto border-t border-mineral pt-4 text-xs leading-5 text-ion-1">
+                  {item.hint}
+                </p>
+              )}
+            </article>
           ))}
         </div>
       </div>

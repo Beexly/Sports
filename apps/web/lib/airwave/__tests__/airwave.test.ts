@@ -7,7 +7,9 @@ import {
   captureGate,
   planCapture,
   readAirwaveEnv,
+  readAirwaveControlPlane,
   isWithinAiringWindow,
+  AIRWAVE_SPREADSHEET_CONTRACT,
   ALL_ADAPTERS,
   YOUTUBE_ADAPTER,
   SATELLITE_RADIO_ADAPTER,
@@ -123,6 +125,59 @@ describe("airwave capture gate (refusal by default)", () => {
     expect(isWithinAiringWindow(5)).toBe(true);
     expect(isWithinAiringWindow(22)).toBe(true);
     expect(isWithinAiringWindow(23)).toBe(false);
+  });
+});
+
+describe("airwave control plane", () => {
+  it("defaults to an inert readiness report with no capture or publishing side effects", () => {
+    const control = readAirwaveControlPlane({}, new Date("2026-06-05T00:00:00.000Z"));
+
+    expect(control.generatedAt).toBe("2026-06-05T00:00:00.000Z");
+    expect(control.summary.open).toBe(0);
+    expect(control.summary.lanes).toBeGreaterThanOrEqual(5);
+    expect(control.policy.exposesSecretValues).toBe(false);
+    expect(control.policy.capturesOnRequest).toBe(false);
+    expect(control.policy.archivesRawAudio).toBe(false);
+    expect(control.policy.autoPublishes).toBe(false);
+    expect(control.policy.storesVerbatimQuotes).toBe(false);
+  });
+
+  it("opens public feed lanes only when the master switch and lane flag are enabled", () => {
+    const control = readAirwaveControlPlane(
+      {
+        AIRWAVE_ENABLED: "true",
+        AIRWAVE_YOUTUBE_FEEDS_ENABLED: "true",
+        AIRWAVE_PODCAST_RSS_ENABLED: "true",
+      },
+      new Date("2026-06-05T00:00:00.000Z"),
+    );
+
+    expect(control.lanes.find((lane) => lane.key === "public-youtube")?.status).toBe("open");
+    expect(control.lanes.find((lane) => lane.key === "podcast-rss")?.status).toBe("open");
+    expect(control.lanes.find((lane) => lane.key === "siriusxm-context")?.status).not.toBe("open");
+  });
+
+  it("keeps SiriusXM context on legal hold until explicit acknowledgement exists", () => {
+    const baseEnv = {
+      AIRWAVE_ENABLED: "true",
+      AIRWAVE_TRANSCRIPT_IMPORT_ENABLED: "true",
+      AIRWAVE_TRANSCRIPT_SHEET_ID: "sheet-id",
+    };
+
+    const held = readAirwaveControlPlane(baseEnv, new Date("2026-06-05T00:00:00.000Z"));
+    expect(held.lanes.find((lane) => lane.key === "siriusxm-context")?.status).toBe("legal-hold");
+
+    const open = readAirwaveControlPlane(
+      { ...baseEnv, AIRWAVE_SIRIUSXM_LEGAL_ACK: "true" },
+      new Date("2026-06-05T00:00:00.000Z"),
+    );
+    expect(open.lanes.find((lane) => lane.key === "siriusxm-context")?.status).toBe("open");
+  });
+
+  it("defines a spreadsheet contract that requires paraphrased claims and rights status", () => {
+    expect(AIRWAVE_SPREADSHEET_CONTRACT.some((field) => field.column === "paraphrased_claim" && field.required)).toBe(true);
+    expect(AIRWAVE_SPREADSHEET_CONTRACT.some((field) => field.column === "rights_status" && field.required)).toBe(true);
+    expect(AIRWAVE_SPREADSHEET_CONTRACT.some((field) => field.column === "source_pointer" && !field.required)).toBe(true);
   });
 });
 

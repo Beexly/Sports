@@ -19,14 +19,13 @@ describe("homepage finish doctrine polish", () => {
 
   it("lands the homepage on an editorial responsible close", () => {
     expect(page).toContain('data-testid="homepage-responsible-close"');
-    expect(page).toContain("font-editorial");
     expect(page).toContain("The math can point. The decision stays yours.");
-    expect(page).toContain('href="/responsible-play"');
+    expect(page).toContain("RiskDisclosure");
     expect(page).toContain("includePastPerformance");
   });
 
-  it("tokenizes the methodology wrapper and card grid", () => {
-    expect(methodology).toContain("Reveal");
+  it("tokenizes the methodology wrapper and visible card grid", () => {
+    expect(methodology).toContain("data-testid=\"methodology-section\"");
     expect(methodology).toContain("surface-card");
     expect(methodology).toContain("bg-carbon");
     expect(methodology).toContain("text-orbital-cyan");

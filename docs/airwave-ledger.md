@@ -107,6 +107,31 @@ is unset, and additionally holds satellite-radio / broadcast-TV sources until th
 legal acknowledgement is set. `planCapture` is a dry-run that reports what *would*
 run and why it is held — it never captures.
 
+The control plane also reads these optional lane flags. They do not capture by
+themselves; they only make readiness visible to `/cockpit/airwave` and
+`/api/airwave/readiness`:
+
+```
+AIRWAVE_TRANSCRIPT_IMPORT_ENABLED=true
+AIRWAVE_TRANSCRIPT_SHEET_ID=...
+AIRWAVE_TRANSCRIPT_WORKSHEET_NAME=...
+AIRWAVE_TRANSCRIPT_FILE_PATH=...
+AIRWAVE_YOUTUBE_FEEDS_ENABLED=true
+AIRWAVE_PODCAST_RSS_ENABLED=true
+AIRWAVE_BEAT_REPORTS_ENABLED=true
+AIRWAVE_STUDIO_HANDOFF_ENABLED=true
+```
+
+`/api/airwave/readiness` returns lane status, adapter holds, spreadsheet column
+contract, and policy flags. It exposes env var names and configured booleans
+only, never secret values or spreadsheet IDs.
+
+`/api/airwave/intake-readiness` optionally validates a configured local CSV/TSV
+at `AIRWAVE_TRANSCRIPT_FILE_PATH`. It reports contract coverage, row counts,
+rights/operator holds, and whether rows could be staged for review. It does not
+import rows, write the database, expose the local path, expose transcript text,
+or publish anything.
+
 ## File map
 
 | Path | Role |
@@ -115,10 +140,14 @@ run and why it is held — it never captures.
 | `apps/web/lib/airwave/grade.ts` | Accountability scoring (pure, tested) |
 | `apps/web/lib/airwave/redact.ts` | Internal → public boundary (strips clip refs) |
 | `apps/web/lib/airwave/pipeline.ts` | Inert, gated capture contracts |
+| `apps/web/lib/airwave/control-plane.ts` | Read-only intake lanes, spreadsheet contract, and policy status |
+| `apps/web/lib/airwave/intake-readiness.ts` | Local CSV/TSV transcript contract validator, read-only |
 | `apps/web/lib/airwave/demo-ledger.ts` | Illustrative fictional personas + claims |
 | `apps/web/components/airwave/pundit-ledger.tsx` | Interactive public board |
 | `apps/web/app/airwave/page.tsx` | Public surface |
-| `apps/web/app/cockpit/airwave/page.tsx` | Operator review queue (admin-gated) |
+| `apps/web/app/cockpit/airwave/page.tsx` | Operator control room + review queue (admin-gated) |
+| `apps/web/app/api/airwave/readiness/route.ts` | Read-only readiness JSON, no capture or secrets |
+| `apps/web/app/api/airwave/intake-readiness/route.ts` | Read-only local transcript validation JSON, no path/content leak |
 
 ## Recommended path to live
 

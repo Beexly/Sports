@@ -17,18 +17,32 @@ export type { Entitlements };
  */
 const DEV_FAKE_ADMIN_TIER: SubscriptionTier = "ELITE";
 
+function isDatabaseUnreachable(error: unknown): boolean {
+  const code = typeof error === "object" && error !== null && "code" in error ? String(error.code) : "";
+  const message = error instanceof Error ? error.message : String(error);
+  return code === "P1001" || message.includes("Can't reach database server");
+}
+
 export async function getUserEntitlements(userId: string): Promise<Entitlements> {
   if (process.env["DEV_FAKE_ADMIN"] === "true" && userId === "dev-admin") {
     return getEntitlements(DEV_FAKE_ADMIN_TIER);
   }
 
-  const subscription = await db.subscription.findFirst({
-    where: {
-      userId,
-      status: { in: ["ACTIVE", "TRIALING"] },
-    },
-    select: { tier: true },
-  });
+  let subscription: { tier: string } | null;
+  try {
+    subscription = await db.subscription.findFirst({
+      where: {
+        userId,
+        status: { in: ["ACTIVE", "TRIALING"] },
+      },
+      select: { tier: true },
+    });
+  } catch (error) {
+    if (isDatabaseUnreachable(error)) {
+      return getEntitlements("FREE");
+    }
+    throw error;
+  }
 
   const tier = (subscription?.tier ?? "FREE") as SubscriptionTier;
   return getEntitlements(tier);

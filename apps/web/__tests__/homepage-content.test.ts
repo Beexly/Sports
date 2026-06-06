@@ -12,7 +12,7 @@ import { resolve } from "node:path";
  *   - No "Trusted by Serious Bettors" / "Thousands of bettors" copy.
  *   - The Methodology section is present.
  *   - The RiskDisclosure component is present.
- *   - An honest empty-state component is referenced for when picks are absent.
+ *   - Honest empty-state copy is present for when public rows are absent.
  */
 
 const source = readFileSync(
@@ -61,9 +61,14 @@ describe("Homepage — Phase 2 trust invariants", () => {
     );
   });
 
-  it("renders an honest empty-picks state instead of fake fallbacks", () => {
-    expect(source).toMatch(/\bEmptyPicksState\b/);
-    expect(source).toMatch(/homepage-empty-picks-state/);
+  it("renders honest empty data states instead of fake fallbacks", () => {
+    expect(source).toContain("No public rows yet");
+    expect(source).toContain("No active scoring rows.");
+    expect(source).toContain("No public pick has cleared.");
+    expect(source).toContain("Rows stay empty instead of blocking the experience or inventing data.");
+    expect(source).toContain("Real NFL rows");
+    expect(source).toMatch(/loadNflverseUsagePulse/);
+    expect(source).toMatch(/suppressedDemoData/);
   });
 
   it("does NOT define fake game objects with hard-coded teams", () => {

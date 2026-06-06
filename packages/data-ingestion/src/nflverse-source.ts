@@ -70,10 +70,10 @@ export const NFLVERSE_CATALOG = {
     file: (s) => `pbp_participation_${s}.csv`,
   }),
   player_stats_week: ds({
-    key: "player_stats_week", tag: "player_stats", grain: "player-week", since: 1999, seasonal: true,
-    description: "Weekly offensive player stats: targets, receptions, air yards, EPA, attempts.",
+    key: "player_stats_week", tag: "player_stats", grain: "player-week", since: 1999, seasonal: false,
+    description: "Merged weekly offensive player stats: targets, receptions, air yards, EPA, attempts.",
     unlocks: "Usage & target share by player-week — the QB-age/RB-target-share class of trend.",
-    file: (s) => `player_stats_${s}.csv`,
+    file: () => "player_stats.csv.gz",
   }),
   snap_counts: ds({
     key: "snap_counts", tag: "snap_counts", grain: "player-week", since: 2012, seasonal: true,

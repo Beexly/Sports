@@ -12,6 +12,8 @@ export * from "./types";
 export * from "./grade";
 export * from "./redact";
 export * from "./pipeline";
+export * from "./control-plane";
+export * from "./intake-readiness";
 export {
   DEMO_PUNDITS,
   DEMO_CLAIMS,

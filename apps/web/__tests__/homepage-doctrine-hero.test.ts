@@ -34,27 +34,25 @@ describe("homepage doctrine hero", () => {
     expect(tokens).not.toMatch(/fonts\.googleapis\.com/);
   });
 
-  it("uses one arch headline for the front-door hero", () => {
-    expect(page).toContain("We post our losses.");
-    expect(page).toMatch(/<span className="text-plasma">\.<\/span>/);
+  it("uses a data-first front-door headline", () => {
+    expect(page).toContain("The board is only as smart as the data behind it.");
+    expect(page).toContain("No public pick or projection appears unless the");
     expect(page).not.toContain("We&apos;re not AI");
-    expect(page).not.toMatch(/<span className="eyebrow text-ion-1">Live board<\/span>/);
-    expect(page.match(/font-arch/g) ?? []).toHaveLength(1);
-    expect(page).toMatch(/data-testid="homepage-arch-headline"/);
+    expect(page).not.toMatch(/data-testid="homepage-arch-headline"/);
+    expect(page).not.toMatch(/AnnotatedSampleSignal/);
   });
 
-  it("renders the interactive galaxy and telemetry in the hero", () => {
-    expect(page).toMatch(/InteractiveGalaxy/);
-    expect(page).toMatch(/Live board telemetry/);
+  it("renders board telemetry, source health, and Trend Lab from the front door", () => {
+    expect(page).toMatch(/Board state/);
+    expect(page).toMatch(/Source health/);
+    expect(page).toMatch(/Trend Lab/);
+    expect(page).toMatch(/PUBLIC_DATA_SOURCES/);
+    expect(page).toMatch(/TREND_BACKLOG/);
     expect(page).toMatch(/sportsWatched/);
     expect(page).toMatch(/booksPolled/);
     expect(page).toMatch(/openPicks/);
     expect(page).toMatch(/lastRefresh/);
-    expect(page).toMatch(/modelVersion/);
     expect(page).toMatch(/font-numerals/);
-    expect(page).toMatch(/text-orbital-cyan/);
-    expect(page).toMatch(/grid grid-cols-2/);
-    expect(page).toMatch(/sm:flex sm:min-w-max/);
   });
 
   it("keeps the galaxy alive without placeholder node labels", () => {
