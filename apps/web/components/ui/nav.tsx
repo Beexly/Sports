@@ -22,6 +22,7 @@ const INTELLIGENCE_GROUP = [
   { label: "Next Gen Stats", href: "/players/nextgen", desc: "Separation, CPOE, RYOE — tracking data" },
   { label: "Edge Signals", href: "/players/edge", desc: "Buy-low / sell-high from tracking vs output" },
   { label: "Injury Report", href: "/players/injuries", desc: "Official availability designations" },
+  { label: "Market Signal", href: "/players/market", desc: "Live fantasy adds/drops (Sleeper)" },
   { label: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's risk" },
   { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
   { label: "Trust Ledger", href: "/ledger", desc: "Tamper-evident record" },

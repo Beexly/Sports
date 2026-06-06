@@ -269,3 +269,16 @@ Availability is the top non-market driver of outcomes. Read-only from the nflver
 ### Validation Evidence (Injury Report)
 - typecheck PASS; lint PASS; web 226 files / 2,644 tests; production build PASS.
 - Live dev smoke `/api/nflverse/injuries`: 200, status live, season 2025, week 22, 6,068 rows, counts out 1 / questionable 3, real names (Joshua Farmer Out, Harold Landry III Questionable). `/players/injuries`: 200, clean.
+
+## Sleeper Market Signal — second provider (Claude wave, 2026-06-06)
+
+Proves the legal ingestion framework generalizes beyond nflverse to a different PROVIDER and data type (JSON, not CSV): live fantasy add/drop crowd sentiment.
+
+- New `apps/web/lib/sleeper/market-signal.ts` (ingests through `assertIngestible("sleeper")`, carries `attributionFor("sleeper")`): fetches Sleeper `/v1/players/nfl/trending/{add,drop}` (small) + `/v1/players/nfl` (the ~14.6MB player map, 12,197 players) and joins trending sleeper-ids → names/team/pos/injury. `cache: "no-store"` on fetches (keeps the 14MB map out of Next's data cache) + in-process caches (trending 30m, player map 6h per Sleeper's guidance). `canPublishPicks=false`; honest empty state.
+- New `/api/sleeper/market-signal` + `/players/market` page (rising/falling tables, injury flags, attribution). Nav wired.
+- Tests: `sleeper-market-signal.test.ts` (3, offline JSON fixtures: join + unknown-id filtering + attribution; empty state; API).
+
+### Validation Evidence (Sleeper)
+- typecheck PASS; web focused 3 tests PASS.
+- Live dev smoke `/api/sleeper/market-signal`: 200, status live, lookback 24h, pool 12,197, 25 adds / 25 drops, attribution "Trending player data via Sleeper.", canPublishPicks=false. Top add Malik Davis (DAL) 18,468; top drop Darren Waller (FA) 5,436. `/players/market`: 200, clean, real names + attribution.
+- Recon caught the path/shape: trending returns `[{player_id,count}]` (sleeper ids), joined via the player map (full_name/team/position/injury_status).

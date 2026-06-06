@@ -16,6 +16,7 @@ const LINKS = [
   { label: "Next Gen Stats", href: "/players/nextgen" },
   { label: "Edge Signals", href: "/players/edge" },
   { label: "Injury Report", href: "/players/injuries" },
+  { label: "Market Signal", href: "/players/market" },
   { label: "Data Sourcing", href: "/data" },
   { label: "Parlay MRI", href: "/parlay-mri" },
   { label: "Ledger", href: "/ledger" },
