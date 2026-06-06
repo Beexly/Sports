@@ -233,6 +233,7 @@ model Game {
   @@index([sportId])
   @@index([commenceTime])
   @@index([status])
+  @@index([createdAt])
   @@map("games")
 }
 
@@ -540,6 +541,7 @@ model GameSignal {
   @@unique([gameId, sourceName, signalKey])
   @@index([gameId, sourceCategory])
   @@index([fetchedAt])
+  @@index([expiresAt])
   @@map("game_signals")
 }
 
@@ -654,6 +656,7 @@ model Alert {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([userId, active])
   @@map("alerts")
 }
 
@@ -898,6 +901,7 @@ model CockpitTask {
 
   @@index([assignedAgent])
   @@index([status])
+  @@index([assignedAgent, status])
   @@index([priority])
   @@index([createdAt])
   @@map("cockpit_tasks")

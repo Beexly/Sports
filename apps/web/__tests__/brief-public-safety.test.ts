@@ -47,8 +47,15 @@ describe("public daily brief API (/api/brief)", () => {
     expect(apiRoute).toMatch(/w\.kind !== "NEEDS_REVIEW"/);
   });
 
-  it("zeroes pick counts when canExposePublicPicks is false", () => {
+  it("zeroes pick counts when canExposePublicPicks is false, queries DB when true", () => {
+    // Gate is read
     expect(apiRoute).toMatch(/gates\.canExposePublicPicks/);
+    // The zero-out path is explicit — not just a default
+    expect(apiRoute).toMatch(/totalPickCount: 0/);
+    // Gate-open path queries the DB (not hardcoded zeros) — the pick table is referenced
+    expect(apiRoute).toMatch(/db\.pick/);
+    // And a count-style aggregate is used (may be chained on next line)
+    expect(apiRoute).toMatch(/\.count\s*\(\s*\{/);
   });
 
   it("nulls performance when canExposePerformanceStats is false", () => {
