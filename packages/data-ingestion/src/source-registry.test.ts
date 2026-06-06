@@ -39,6 +39,17 @@ describe("legal source registry", () => {
     expect(() => assertIngestible("open-meteo")).toThrow(/paid-required/);
   });
 
+  it("refuses the DraftKings hidden API and routes DK salaries through licensed feeds", () => {
+    // The unofficial DK scrape is hard-blocked in code.
+    expect(isIngestible("draftkings-unofficial")).toBe(false);
+    expect(() => assertIngestible("draftkings-unofficial")).toThrow(/Refusing to ingest/);
+    expect(getSource("draftkings-unofficial")?.verdict).toBe("forbidden");
+    // Licensed DFS feeds are the legal route — declared, but gated on a paid plan/key.
+    expect(getSource("sportsdataio")?.verdict).toBe("paid-required");
+    expect(getSource("sportsdataio")?.commercialUse).toBe(true);
+    expect(isIngestible("sportsdataio")).toBe(false); // not auto-ingestible until a key/plan is held
+  });
+
   it("throws on unknown sources so nothing is ingested without a declaration", () => {
     expect(isIngestible("totally-made-up")).toBe(false);
     expect(() => assertIngestible("totally-made-up")).toThrow(/Unknown data source/);

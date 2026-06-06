@@ -18,6 +18,7 @@ const LINKS = [
   { label: "Edge Signals", href: "/players/edge" },
   { label: "Injury Report", href: "/players/injuries" },
   { label: "Market Signal", href: "/players/market" },
+  { label: "DFS Salaries", href: "/players/dfs" },
   { label: "Data Sourcing", href: "/data" },
   { label: "Parlay MRI", href: "/parlay-mri" },
   { label: "Ledger", href: "/ledger" },
