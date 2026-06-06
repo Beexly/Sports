@@ -89,3 +89,108 @@ export function boardByPosition(taken: ReadonlySet<string>): Record<Pos, Player[
   for (const pos of POSITIONS) out[pos] = byPosition(pos).filter((p) => !taken.has(p.id));
   return out;
 }
+
+// ── Positional scarcity ──────────────────────────────────────────────────────
+
+export type ScarcityLevel = "critical" | "tight" | "ok";
+export type PositionScarcity = {
+  readonly pos: Pos;
+  readonly remaining: number;
+  /** Available players still above replacement value (startable). */
+  readonly startersLeft: number;
+  /** The best tier still on the board, and how many sit in it (a cliff if 1). */
+  readonly topTier: number;
+  readonly topTierLeft: number;
+  readonly level: ScarcityLevel;
+};
+
+/**
+ * How thin is each position right now? `topTierLeft <= 1` is a cliff (draft now
+ * or fall a tier); few startable players left is "tight". Pure.
+ */
+export function positionalScarcity(available: readonly Player[]): PositionScarcity[] {
+  return POSITIONS.map((pos) => {
+    const pool = available.filter((p) => p.pos === pos).sort((a, b) => vor(b) - vor(a));
+    const startersLeft = pool.filter((p) => vor(p) >= 0).length;
+    const topTier = pool.length ? tier(pool[0]!) : 0;
+    const topTierLeft = pool.filter((p) => tier(p) === topTier).length;
+    const level: ScarcityLevel =
+      pool.length === 0 ? "ok" : topTierLeft <= 1 ? "critical" : startersLeft <= 3 ? "tight" : "ok";
+    return { pos, remaining: pool.length, startersLeft, topTier, topTierLeft, level };
+  });
+}
+
+// ── Positional run alerts ────────────────────────────────────────────────────
+
+export type RunAlert = { readonly pos: Pos; readonly count: number; readonly window: number; readonly message: string };
+
+/**
+ * Detect a positional run from the recent pick order — e.g. "4 of the last 5
+ * picks were RB." Conservative: only flags positions hit at/above `threshold`
+ * inside the trailing `window`. Pure.
+ */
+export function detectRuns(recentPositions: readonly Pos[], window = 5, threshold = 3): RunAlert[] {
+  const slice = recentPositions.slice(-window);
+  if (slice.length === 0) return [];
+  const counts = {} as Record<Pos, number>;
+  for (const pos of POSITIONS) counts[pos] = 0;
+  for (const pos of slice) counts[pos] = (counts[pos] ?? 0) + 1;
+  return POSITIONS.filter((pos) => counts[pos] >= threshold)
+    .map((pos) => ({
+      pos,
+      count: counts[pos],
+      window: slice.length,
+      message: `${pos} run — ${counts[pos]} of the last ${slice.length} picks. The tier may break; draft ${pos} now or pivot to value.`,
+    }))
+    .sort((a, b) => b.count - a.count);
+}
+
+// ── ADP overlay (legal path: user CSV import) ────────────────────────────────
+
+/**
+ * Parse a user-provided ADP CSV. ADP feeds can't be scraped from the books that
+ * publish them, so the legal path is a CSV the user exports/owns. Tolerant of a
+ * header row and of `name,adp` or `adp,name` column order. Returns a map keyed
+ * by lowercased player name. Pure.
+ */
+export function parseAdpCsv(text: string): Map<string, number> {
+  const out = new Map<string, number>();
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  if (lines.length === 0) return out;
+
+  const cells = (line: string) => line.split(/[,\t]/).map((c) => c.trim().replace(/^"|"$/g, ""));
+  let nameCol = 0;
+  let adpCol = 1;
+  const header = cells(lines[0]!).map((c) => c.toLowerCase());
+  const looksLikeHeader = header.some((c) => /name|player|adp|rank|pick/.test(c)) && header.every((c) => !/^\d+(\.\d+)?$/.test(c));
+  if (looksLikeHeader) {
+    const ni = header.findIndex((c) => /name|player/.test(c));
+    const ai = header.findIndex((c) => /adp|rank|pick|avg/.test(c));
+    if (ni >= 0) nameCol = ni;
+    if (ai >= 0) adpCol = ai;
+  }
+
+  for (const line of lines.slice(looksLikeHeader ? 1 : 0)) {
+    const row = cells(line);
+    const name = row[nameCol]?.toLowerCase();
+    const adp = Number(row[adpCol]);
+    if (name && Number.isFinite(adp) && adp > 0) out.set(name, adp);
+  }
+  return out;
+}
+
+export type AdpLabel = "steal" | "value" | "on-time" | "reach" | "none";
+export type AdpValue = { readonly adp: number | null; readonly delta: number | null; readonly label: AdpLabel };
+
+/**
+ * Compare a player's imported ADP to the current overall pick. Positive delta =
+ * still available past ADP = a steal. Pure. `none` when no ADP was imported for
+ * the player.
+ */
+export function valueVsAdp(player: Player, adp: Map<string, number>, currentPick: number): AdpValue {
+  const a = adp.get(player.name.toLowerCase());
+  if (a == null) return { adp: null, delta: null, label: "none" };
+  const delta = Math.round(a - currentPick);
+  const label: AdpLabel = delta >= 10 ? "steal" : delta >= 3 ? "value" : delta <= -10 ? "reach" : "on-time";
+  return { adp: a, delta, label };
+}

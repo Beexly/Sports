@@ -11,6 +11,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
+import { DraftAssistant } from "@/components/fantasy/draft-assistant";
 import { BRAND_COLORS } from "@/lib/brand";
 
 type Tab = "dfs" | "startsit" | "draft";
@@ -51,15 +52,15 @@ export function OptimizerWorkspace() {
       {tab === "dfs" && <DfsOptimizer />}
       {tab === "startsit" && <LineupOptimizer />}
       {tab === "draft" && (
-        <div className="surface-card p-8 text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: BRAND_COLORS.orbitalCyan }}>Draft board</p>
-          <h3 className="mt-2 text-xl font-semibold text-white">The live draft board lives here.</h3>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-ink-400">
-            Tiers, value over replacement, positional scarcity, and run alerts as picks come off the
-            board — fed by real nflverse production, snaps, and Next Gen tracking. ADP overlays connect
-            via Sleeper league sync or a CSV import.
-          </p>
-          <Link href="/fantasy/draft" className="btn btn-primary mt-5 inline-flex">Open Draft Assistant</Link>
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-xs text-ink-400">
+              Live draft board — tiers, value over replacement, positional scarcity, run alerts, and your
+              own ADP overlay. Illustrative pool until a licensed projections feed is connected.
+            </p>
+            <Link href="/fantasy/draft" className="text-xs font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>Open full page →</Link>
+          </div>
+          <DraftAssistant />
         </div>
       )}
     </div>
