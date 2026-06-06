@@ -22,6 +22,7 @@ const SECTIONS: readonly Section[] = [
       { label: "Next Gen Stats", href: "/players/nextgen" },
       { label: "Pressure & Coverage", href: "/players/trenches" },
       { label: "Combine", href: "/players/combine" },
+      { label: "Total QBR", href: "/players/qbr" },
       { label: "Edge Signals", href: "/players/edge" },
       { label: "Injury Report", href: "/players/injuries" },
       { label: "Market Signal", href: "/players/market" },
