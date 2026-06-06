@@ -20,6 +20,7 @@ const INTELLIGENCE_GROUP = [
   { label: "NFLverse Pulse", href: "/nflverse", desc: "Real player-week usage rows" },
   { label: "Production Lab", href: "/players", desc: "Season + last-5 form, defense ranks" },
   { label: "Next Gen Stats", href: "/players/nextgen", desc: "Separation, CPOE, RYOE — tracking data" },
+  { label: "Edge Signals", href: "/players/edge", desc: "Buy-low / sell-high from tracking vs output" },
   { label: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's risk" },
   { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
   { label: "Trust Ledger", href: "/ledger", desc: "Tamper-evident record" },

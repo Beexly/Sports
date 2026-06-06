@@ -240,3 +240,20 @@ Founder directive: be the most intelligent site; ingest much more data; figure o
   - `/api/nflverse/next-gen-stats`: 200, status live, season 2025, 26,723 source rows, 25/25/25 leaders, canPublishProjections=false. Cross-checked: separation leader Luther Burden (4.63yd), CPOE leader Drake Maye (+9.14%), RYOE/att leader Rhamondre Stevenson (1.36).
   - `/players/nextgen`: 200, all three tables, real names, `Data via nflverse` attribution, no error overlay.
 - Diagnostic note: confirmed curl/node both fetch large nflverse gz fully (player_stats = 134,471 rows); the NGS per-season 2024 stub (651 bytes / 8 rows) is an upstream data issue, routed around via the combined files.
+
+## Edge Signals — buy-low / sell-high data fusion (Claude overnight wave, 2026-06-05)
+
+The "intelligent + creative" centerpiece: fuse two real datasets into an insight nobody else publishes the math on. Realizes the registry's own `ngs-separation-buy-low` backlog item. Read-only, no fabricated data, `canPublishPicks=false`.
+
+- New `apps/web/lib/nflverse/edge-signals.ts` (ingests through `assertIngestible("nflverse")`): joins NGS receiving (separation, YAC-over-expected, share of intended air yards) with player_stats production (PPR/game, target share) by `gsis_id` for the resolved season; standardizes underlying-signal z vs production z across the qualified pool; `gap = underlyingZ - productionZ` → buy-low (gap ≥ 0.75) / sell-high (≤ -0.75) / aligned.
+- New `/api/nflverse/edge-signals` + `/players/edge` page (buy-low and sell-high tables with the full z-score math shown; honest "research lens, not a pick" boundary; attribution). Cross-linked from Production Lab / NGS + nav.
+- Tests: `edge-signals.test.ts` (3, offline fixtures proving buy-low/sell-high classification + empty state + API no-pick).
+
+### Validation Evidence (Edge Signals)
+- `npm run typecheck --workspace=@sports/web`: PASS.
+- `npm run test --workspace=@sports/web -- __tests__/edge-signals.test.ts`: PASS, 3 tests.
+- Live dev smoke `/api/nflverse/edge-signals`: 200, status live, season 2024, 129 qualified WR/TE, 20 buy-low / 20 sell-high, canPublishPicks=false. Top buy-low Marvin Mims (5.21yd separation, 8.1 PPR/g, gap +2.33); top sell-high Ja'Marr Chase (production far above separation signal, gap -2.23) — the method's logic shown openly, not hidden.
+- `/players/edge`: 200 (clean dev restart), all tables + real names + attribution, no error.
+
+### Dev-server note
+Running `next build` against a live `next dev` corrupts the dev server's middleware chunk ("Cannot find the middleware module"), which 500s pages (middleware) while API routes (excluded) still 200. Not a code defect — clears on dev restart. Build and dev should not share `.next` simultaneously.

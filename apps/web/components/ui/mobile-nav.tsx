@@ -14,6 +14,7 @@ const LINKS = [
   { label: "NFLverse Pulse", href: "/nflverse" },
   { label: "Production Lab", href: "/players" },
   { label: "Next Gen Stats", href: "/players/nextgen" },
+  { label: "Edge Signals", href: "/players/edge" },
   { label: "Data Sourcing", href: "/data" },
   { label: "Parlay MRI", href: "/parlay-mri" },
   { label: "Ledger", href: "/ledger" },
