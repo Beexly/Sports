@@ -25,6 +25,7 @@ const INTELLIGENCE_GROUP = [
   { label: "Injury Report", href: "/players/injuries", desc: "Official availability designations" },
   { label: "Market Signal", href: "/players/market", desc: "Live fantasy adds/drops (Sleeper)" },
   { label: "DFS Salaries", href: "/players/dfs", desc: "DraftKings via licensed feeds, cross-checked" },
+  { label: "Game Weather", href: "/weather", desc: "Live conditions at outdoor NFL venues (NWS)" },
   { label: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's risk" },
   { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
   { label: "Trust Ledger", href: "/ledger", desc: "Tamper-evident record" },

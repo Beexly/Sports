@@ -55,6 +55,25 @@ describe("legal source registry", () => {
     expect(() => assertIngestible("totally-made-up")).toThrow(/Unknown data source/);
   });
 
+  it("clears the new open/public-domain sources", () => {
+    for (const id of ["nws-weather", "retrosheet", "lahman-db", "openfootball", "moneypuck", "cricsheet"]) {
+      expect(isIngestible(id)).toBe(true);
+    }
+    expect(getSource("nws-weather")?.commercialUse).toBe(true);
+    expect(getSource("openfootball")?.license.spdx).toBe("CC0-1.0");
+    expect(attributionFor("retrosheet")).toMatch(/Retrosheet/);
+  });
+
+  it("refuses scrape-/non-commercial sources from the source dumps", () => {
+    for (const id of ["sports-reference", "fangraphs", "pff", "statsbomb-free", "ergast", "understat"]) {
+      expect(isIngestible(id)).toBe(false);
+      expect(() => assertIngestible(id)).toThrow();
+    }
+    // The famous "free" traps are correctly non-commercial / forbidden.
+    expect(getSource("statsbomb-free")?.commercialUse).toBe(false);
+    expect(getSource("ergast")?.license.spdx).toBe("CC-BY-NC-4.0");
+  });
+
   it("partitions the registry into cleared vs forbidden/paid", () => {
     const cleared = clearedSources().map((s) => s.id);
     const blocked = forbiddenSources().map((s) => s.id);

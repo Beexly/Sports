@@ -19,6 +19,7 @@ const LINKS = [
   { label: "Injury Report", href: "/players/injuries" },
   { label: "Market Signal", href: "/players/market" },
   { label: "DFS Salaries", href: "/players/dfs" },
+  { label: "Game Weather", href: "/weather" },
   { label: "Data Sourcing", href: "/data" },
   { label: "Parlay MRI", href: "/parlay-mri" },
   { label: "Ledger", href: "/ledger" },

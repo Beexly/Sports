@@ -313,3 +313,14 @@ Founder ask: "ingest more free data; make sure they have backups / multiple sour
 ### Validation Evidence (DFS + failover)
 - typecheck PASS; web suite 2,676 tests (DFS); data-ingestion 13 files / 93 tests (failover added); affected web libs 6 files / 18 tests PASS; build PASS.
 - Live dev smoke: `/players/dfs` 200 gated (no key) with refusal note; `/api/nflverse/snap-share` 200 live (26,612 rows) through the new failover path; mirror `ghproxy.net` verified reachable for nflverse assets.
+
+## Source-list triage + NWS weather (Claude wave, 2026-06-06)
+
+Two R&D agents triaged the founder's ~230-URL source dump (legal verdicts) and produced an optimizer/UX redesign brief (see below). Encoded the verdicts into the registry and shipped the top clean free source.
+
+- registry: + FREE-legal `nws-weather` (US-gov public domain), `retrosheet`, `lahman-db` (CC-BY-SA), `openfootball` (CC0), `moneypuck`, `cricsheet` (ODC-BY), `football-data-uk` (use-with-caution); + FORBIDDEN `sports-reference` family, `fangraphs`, `pff`, `statsbomb-free` (non-commercial), `ergast` (CC-BY-NC), `understat`. Auto-surfaced on `/data`. Triage corrected two traps: StatsBomb + Ergast are non-commercial (not free for us).
+- Shipped **NWS Game Weather** (`apps/web/lib/weather/game-weather.ts`, via `assertIngestible("nws-weather")`): 2-step NWS (points → hourly) per outdoor NFL venue (19-stadium table), per-venue failover (one venue down ≠ board down), 1h cache, `canPublishPicks=false`. `/api/weather/game` + `/weather` page (windiest-first board). Tests (3): sort + per-venue degrade + API.
+- Verified: web + data-ingestion typecheck PASS; registry test 10; weather test 3; web suite (pending in this commit). Live dev smoke `/api/weather/game`: 200, status live, 19/19 venues, real conditions (CLE 12mph/76F, SEA 9mph/55F). `/weather` 200 clean.
+
+## Optimizer/UX redesign brief (R&D landed 2026-06-06 — NOT yet built)
+Agent audit found the core convolution: nav has **41 desktop / 37 mobile links**, **three** competing optimizers (`/fantasy/dfs`, `/fantasy/lineup`, `/players/dfs`), the player pool is buried in a cramped 44vh sidebar with 9px text, and FantasyShell ceremony pushes tools below the fold. Recommended fix: ONE canonical `/optimizer` (contest switch), **pool-as-hero** sortable table, sticky salary-cap + lineup rail, progressive-disclosure advanced settings, and a **5-item top nav** (Board · Optimizer · Players ▾ · Fantasy ▾ · Intelligence ▾) with the meta-pages (`/fantasy` gates list, `/fantasy/baseline`) demoted. Quick wins: add `/optimizer` entry, flip pool to wide column + bump text, add salary meter, promote DK CSV import, tab the pool (All/Locked/Faded), un-truncate exposure, group mobile nav. **This is the next build effort (multi-wave); not started yet.**
