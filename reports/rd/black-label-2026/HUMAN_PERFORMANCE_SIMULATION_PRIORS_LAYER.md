@@ -1,6 +1,6 @@
 # Human Performance + Simulation Priors Layer — R&D Design
 **Project:** Galaxy Sports Edge · Black Label 2026
-**Status:** Design / R&D (not yet built)
+**Status:** Phase 1 BUILT (2026-06-06) — Performance Environment Score, Human Availability Modifier, and the Biomechanics Readiness scaffold ship read-only at `/human` (`lib/human-performance/*`, `/api/human/*`). Simulation Prior remains design-only (gated, build last).
 **Author:** Claude (Opus 4.8) · 2026-06-06
 **One-line:** A confidence-band layer that turns public human-performance and game-simulation signals into *better questions about uncertainty* — never claims about a player's body, never a rating treated as truth.
 

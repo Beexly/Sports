@@ -59,6 +59,7 @@ const SECTIONS: readonly Section[] = [
       { label: "CLV Tracker", href: "/track" },
       { label: "Data Sourcing", href: "/data" },
       { label: "NHL xG", href: "/nhl" },
+      { label: "Human Performance", href: "/human" },
       { label: "Cipher", href: "/cipher" },
     ],
   },
