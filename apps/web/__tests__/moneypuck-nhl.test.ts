@@ -10,6 +10,13 @@ const SKATERS = [
   "1,Elite Eddie,BOS,C,5on5,30,18.0,20,45,180,0.60", // wrong situation -> excluded
 ].join("\n");
 
+const GOALIES = [
+  "playerId,name,team,situation,games_played,xGoals,goals",
+  "10,Wall Wally,NYR,all,40,120.0,100",
+  "11,Sieve Steve,SJS,all,40,90.0,110",
+  "12,Backup Benny,DAL,all,5,30.0,20", // < MIN_GOALIE_GAMES
+].join("\n");
+
 const TEAMS = [
   "team,situation,games_played,xGoalsPercentage",
   "BOS,all,82,0.55",
@@ -24,6 +31,7 @@ function mockFetch(): ReturnType<typeof vi.fn> {
   return vi.fn(async (input: string | URL | Request) => {
     const url = String(input);
     if (url.includes("skaters.csv")) return csv(SKATERS);
+    if (url.includes("goalies.csv")) return csv(GOALIES);
     if (url.includes("teams.csv")) return csv(TEAMS);
     return new Response("missing", { status: 404 });
   });
@@ -49,6 +57,10 @@ describe("moneypuck nhl", () => {
     const larry = nhl.skaters.find((s) => s.name === "Lucky Larry");
     expect(larry?.goalsOverExpected).toBe(15); // 25 goals - 10 xG
     expect(nhl.teams[0]?.team).toBe("BOS");
+
+    // Goalies ranked by GSAx (xGA - GA); the 5-game backup is excluded.
+    expect(nhl.goalies.map((g) => g.name)).toEqual(["Wall Wally", "Sieve Steve"]);
+    expect(nhl.goalies[0]?.gsax).toBe(20); // 120 xGA - 100 GA
   });
 
   it("guards against MoneyPuck's HTML error page for a missing season", async () => {

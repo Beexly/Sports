@@ -28,6 +28,16 @@ export interface NhlTeamRow {
   readonly xGoalsPct: number | null; // share of on-ice expected goals (all situations)
 }
 
+export interface NhlGoalieRow {
+  readonly playerId: string;
+  readonly name: string;
+  readonly team: string;
+  readonly games: number;
+  readonly xGoalsAgainst: number; // quality of chances faced
+  readonly goalsAgainst: number;
+  readonly gsax: number; // goals saved above expected = xGoalsAgainst - goalsAgainst
+}
+
 export interface MoneyPuckNhl {
   readonly generatedAt: string;
   readonly status: "live" | "source-error";
@@ -35,11 +45,12 @@ export interface MoneyPuckNhl {
   readonly seasonLabel: string;
   readonly sourceRows: number;
   readonly skaters: readonly NhlSkaterRow[];
+  readonly goalies: readonly NhlGoalieRow[];
   readonly teams: readonly NhlTeamRow[];
   readonly canPublishPicks: false;
   readonly note: string;
   readonly attribution: string | null;
-  readonly sourceUrls: Record<"skaters" | "teams", string>;
+  readonly sourceUrls: Record<"skaters" | "goalies" | "teams", string>;
   readonly error: string | null;
 }
 
@@ -74,8 +85,33 @@ function defaultSeason(now: Date): number {
 function skatersUrl(season: number): string {
   return `${BASE}/${season}/regular/skaters.csv`;
 }
+function goaliesUrl(season: number): string {
+  return `${BASE}/${season}/regular/goalies.csv`;
+}
 function teamsUrl(season: number): string {
   return `${BASE}/${season}/regular/teams.csv`;
+}
+
+const MIN_GOALIE_GAMES = 15;
+
+function buildGoalies(records: readonly CsvRecord[]): NhlGoalieRow[] {
+  return records
+    .filter((r) => r["situation"] === "all" && toNumber(r["games_played"]) >= MIN_GOALIE_GAMES)
+    .map((r): NhlGoalieRow => {
+      const xga = toNumber(r["xGoals"]);
+      const ga = toNumber(r["goals"]);
+      return {
+        playerId: r["playerId"] ?? "",
+        name: r["name"] ?? "UNKNOWN",
+        team: r["team"] ?? "",
+        games: toNumber(r["games_played"]),
+        xGoalsAgainst: round(xga),
+        goalsAgainst: ga,
+        gsax: round(xga - ga),
+      };
+    })
+    .sort((a, b) => b.gsax - a.gsax)
+    .slice(0, 20);
 }
 
 async function fetchCsv(
@@ -162,10 +198,12 @@ export async function loadMoneyPuckNhl({
   if (cacheTtlMs > 0 && live && cache && cache.expiresAt > nowMs) return cache.value;
 
   const sUrl = skatersUrl(resolved);
+  const gUrl = goaliesUrl(resolved);
   const tUrl = teamsUrl(resolved);
   try {
-    const [skaterRecords, teamRecords] = await Promise.all([
+    const [skaterRecords, goalieRecords, teamRecords] = await Promise.all([
       fetchCsv(sUrl, fetcher, timeoutMs, "name"),
+      fetchCsv(gUrl, fetcher, timeoutMs, "name").catch(() => [] as readonly CsvRecord[]),
       fetchCsv(tUrl, fetcher, timeoutMs, "team").catch(() => [] as readonly CsvRecord[]),
     ]);
     const value: MoneyPuckNhl = {
@@ -173,13 +211,14 @@ export async function loadMoneyPuckNhl({
       status: "live",
       season: resolved,
       seasonLabel: `${resolved}-${String((resolved + 1) % 100).padStart(2, "0")}`,
-      sourceRows: skaterRecords.length + teamRecords.length,
+      sourceRows: skaterRecords.length + goalieRecords.length + teamRecords.length,
       skaters: buildSkaters(skaterRecords),
+      goalies: buildGoalies(goalieRecords),
       teams: buildTeams(teamRecords),
       canPublishPicks: false,
       note: "NHL expected-goals leaders from MoneyPuck (all situations, regular season). Real advanced stats — context, not a betting pick.",
       attribution,
-      sourceUrls: { skaters: sUrl, teams: tUrl },
+      sourceUrls: { skaters: sUrl, goalies: gUrl, teams: tUrl },
       error: null,
     };
     if (cacheTtlMs > 0 && live) cache = { expiresAt: nowMs + cacheTtlMs, value };
@@ -192,11 +231,12 @@ export async function loadMoneyPuckNhl({
       seasonLabel: `${resolved}-${String((resolved + 1) % 100).padStart(2, "0")}`,
       sourceRows: 0,
       skaters: [],
+      goalies: [],
       teams: [],
       canPublishPicks: false,
       note: "MoneyPuck NHL data could not load. The product shows an empty state instead of fabricated stats.",
       attribution,
-      sourceUrls: { skaters: sUrl, teams: tUrl },
+      sourceUrls: { skaters: sUrl, goalies: gUrl, teams: tUrl },
       error: error instanceof Error ? error.message : "UNKNOWN",
     };
   }

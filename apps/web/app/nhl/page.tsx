@@ -116,10 +116,51 @@ export default async function NhlPage(): Promise<JSX.Element> {
               </p>
             </section>
 
+            {nhl.goalies.length > 0 && (
+              <section className="border border-mineral bg-eclipse/80">
+                <div className="border-b border-mineral px-5 py-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">Goalies · GSAx</p>
+                  <h2 className="mt-2 text-2xl font-semibold text-ion-white">Goals saved above expected</h2>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[560px] text-left text-sm">
+                    <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                      <tr>
+                        <th className="px-4 py-3">#</th>
+                        <th className="px-4 py-3">Goalie</th>
+                        <th className="px-4 py-3">Tm</th>
+                        <th className="px-4 py-3">GP</th>
+                        <th className="px-4 py-3">xGA</th>
+                        <th className="px-4 py-3">GA</th>
+                        <th className="px-4 py-3">GSAx</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-mineral bg-carbon">
+                      {nhl.goalies.map((g, i) => (
+                        <tr key={g.playerId}>
+                          <td className="px-4 py-3 font-mono text-ion-2">{i + 1}</td>
+                          <td className="px-4 py-3 font-semibold text-ion-white">{g.name}</td>
+                          <td className="px-4 py-3 font-mono text-orbital-cyan">{g.team}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{g.games}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{g.xGoalsAgainst.toFixed(1)}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{g.goalsAgainst}</td>
+                          <td className={`px-4 py-3 font-mono ${gxClass(g.gsax)}`}>{signed(g.gsax)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="px-5 py-3 font-mono text-[10px] leading-5 text-ion-2">
+                  GSAx = expected goals against minus actual goals allowed (positive = stopping more than expected).
+                </p>
+              </section>
+            )}
+
             <section className="border border-mineral bg-eclipse p-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">Source</p>
-              <div className="mt-4 grid gap-3 md:grid-cols-2">
+              <div className="mt-4 grid gap-3 md:grid-cols-3">
                 <SourceUrl label="Skaters" href={nhl.sourceUrls.skaters} />
+                <SourceUrl label="Goalies" href={nhl.sourceUrls.goalies} />
                 <SourceUrl label="Teams" href={nhl.sourceUrls.teams} />
               </div>
               <Attribution sourceIds={["moneypuck"]} className="mt-4" />
