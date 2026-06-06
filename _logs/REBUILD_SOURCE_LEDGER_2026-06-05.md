@@ -282,3 +282,15 @@ Proves the legal ingestion framework generalizes beyond nflverse to a different 
 - typecheck PASS; web focused 3 tests PASS.
 - Live dev smoke `/api/sleeper/market-signal`: 200, status live, lookback 24h, pool 12,197, 25 adds / 25 drops, attribution "Trending player data via Sleeper.", canPublishPicks=false. Top add Malik Davis (DAL) 18,468; top drop Darren Waller (FA) 5,436. `/players/market`: 200, clean, real names + attribution.
 - Recon caught the path/shape: trending returns `[{player_id,count}]` (sleeper ids), joined via the player map (full_name/team/position/injury_status).
+
+## Snap Share — workload primitive (Claude wave, 2026-06-06)
+
+The cleanest leading usage signal: share of team offensive snaps. Read-only nflverse `snap_counts` (CC-BY-4.0); no join needed (file carries player names directly).
+
+- New `apps/web/lib/nflverse/snap-share.ts` (via `assertIngestible("nflverse")`): per-season snap_counts CSV (verified real: 2025 26,613 / 2024 26,616 rows; `offense_pct` is a 0-1 fraction — Kincaid 0.84), aggregates REG offense-snap games per `pfr_player_id`, ranks RB/WR/TE by avg snap share (min 4 games). Season fallback; honest empty state.
+- New `/api/nflverse/snap-share` + `/players/snaps` page (per-position snap leaders, attribution). Nav wired.
+- Tests: `snap-share.test.ts` (3, offline: REG-only + min-games + non-offense exclusion; empty state; API).
+
+### Validation Evidence (Snap Share)
+- typecheck PASS; web focused 3 tests PASS.
+- Live dev smoke `/api/nflverse/snap-share`: 200, status live, season 2025, 26,612 rows, 40/40/40 leaders, canPublishProjections=false. Top WR Tre Tucker (LV) 94.8% over 17g; top RB Christian McCaffrey 83.1%. `/players/snaps`: 200, clean.

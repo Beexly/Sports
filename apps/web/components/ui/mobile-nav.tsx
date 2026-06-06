@@ -13,6 +13,7 @@ const LINKS = [
   { label: "The Beat", href: "/the-beat" },
   { label: "NFLverse Pulse", href: "/nflverse" },
   { label: "Production Lab", href: "/players" },
+  { label: "Snap Share", href: "/players/snaps" },
   { label: "Next Gen Stats", href: "/players/nextgen" },
   { label: "Edge Signals", href: "/players/edge" },
   { label: "Injury Report", href: "/players/injuries" },

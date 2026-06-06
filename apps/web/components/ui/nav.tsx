@@ -19,6 +19,7 @@ const INTELLIGENCE_GROUP = [
   { label: "The Airwave Ledger", href: "/airwave", desc: "Pundits, graded on the record" },
   { label: "NFLverse Pulse", href: "/nflverse", desc: "Real player-week usage rows" },
   { label: "Production Lab", href: "/players", desc: "Season + last-5 form, defense ranks" },
+  { label: "Snap Share", href: "/players/snaps", desc: "Offensive workload leaders" },
   { label: "Next Gen Stats", href: "/players/nextgen", desc: "Separation, CPOE, RYOE — tracking data" },
   { label: "Edge Signals", href: "/players/edge", desc: "Buy-low / sell-high from tracking vs output" },
   { label: "Injury Report", href: "/players/injuries", desc: "Official availability designations" },
