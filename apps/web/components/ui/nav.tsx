@@ -63,6 +63,7 @@ const INTELLIGENCE_GROUP: readonly NavItem[] = [
   { label: "Data & Integrations", href: "/integrations", desc: "What's live, what's gated" },
   { label: "Data Sourcing", href: "/data", desc: "How we legally source feeds" },
   { label: "NHL · xG", href: "/nhl", desc: "Expected goals (MoneyPuck)" },
+  { label: "MLB · run diff", href: "/mlb", desc: "Pythagorean wins (Lahman)" },
   { label: "Human Performance", href: "/human", desc: "Confidence bands, not body claims" },
   { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
   { label: "The Cipher", href: "/cipher", desc: "Weekly hidden hunt" },
