@@ -303,3 +303,84 @@ export async function loadAvailabilityModifier({
     return { generatedAt, status: "source-error", playerLabel: name, team: team ?? null, modifier: null, behavior: null, error: error instanceof Error ? error.message : "UNKNOWN" };
   }
 }
+
+export interface RosterAvailabilityRow {
+  readonly player: string;
+  readonly team: string | null;
+  readonly modifier: HumanAvailabilityModifier;
+  readonly behavior: GseOutputBehavior | null;
+}
+
+export interface RosterAvailabilityResult {
+  readonly generatedAt: string;
+  readonly status: "ok" | "source-error";
+  readonly rows: readonly RosterAvailabilityRow[];
+  readonly error: string | null;
+}
+
+/**
+ * Batch availability for a whole roster — loads the public injury feed + NWS
+ * weather ONCE and computes the conservative modifier for each real player.
+ * This is what turns a synced Sleeper roster into a real availability read
+ * (official designations + game weather), never a medical claim.
+ */
+export async function loadRosterAvailability({
+  players,
+  fetcher = fetch,
+  timeoutMs = 15000,
+}: {
+  players: readonly { readonly name: string; readonly team?: string | null }[];
+  fetcher?: FetchLike;
+  timeoutMs?: number;
+}): Promise<RosterAvailabilityResult> {
+  const generatedAt = new Date().toISOString();
+  const clean = players.filter((p) => p.name && p.name.trim());
+  if (clean.length === 0) {
+    return { generatedAt, status: "ok", rows: [], error: null };
+  }
+
+  try {
+    const [injuries, weather] = await Promise.all([
+      loadNflverseInjuryReport({ fetcher, timeoutMs }),
+      loadNflGameWeather({ fetcher, timeoutMs }),
+    ]);
+    if (injuries.status === "source-error") {
+      return { generatedAt, status: "source-error", rows: [], error: injuries.error ?? "injury feed unavailable" };
+    }
+    const weatherLive = weather.status === "live";
+
+    const rows = clean.map((p): RosterAvailabilityRow => {
+      const name = p.name.trim();
+      const lc = name.toLowerCase();
+      const matches = injuries.rows.filter((r) => r.playerName.toLowerCase() === lc);
+      const row = (p.team ? matches.find((r) => r.team.toUpperCase() === p.team!.toUpperCase()) : undefined) ?? matches[0] ?? null;
+      const resolvedTeam = (row?.team ?? p.team ?? null)?.toUpperCase() ?? null;
+      const venueEnv = resolvedTeam ? NFL_VENUE_ENV[resolvedTeam] : undefined;
+      const wx = resolvedTeam && weatherLive ? weatherForTeam(weather.venues, resolvedTeam) : null;
+
+      const modifier = computeAvailabilityModifier({
+        playerId: name,
+        injuryStatus: row?.reportStatus ?? "None",
+        primaryInjury: row?.primaryInjury ?? null,
+        practiceStatus: row?.practiceStatus ?? null,
+        windMph: wx?.windMph ?? null,
+        precipPct: wx?.precipPct ?? null,
+        tempF: wx?.tempF ?? null,
+        surface: venueEnv?.surface ?? null,
+        controlledRoof: venueEnv ? venueEnv.controlledRoof : null,
+        asOf: generatedAt,
+      });
+      return { player: name, team: resolvedTeam, modifier, behavior: availabilityOutputBehavior(modifier, name) };
+    });
+
+    // Most actionable first: no-bet, then watchlist, then by band width.
+    const rank: Record<string, number> = { "no-bet": 0, watchlist: 1, play: 2 };
+    const sorted = [...rows].sort(
+      (a, b) => (rank[a.modifier.recommendation]! - rank[b.modifier.recommendation]!) || (b.modifier.bandWidenPct - a.modifier.bandWidenPct),
+    );
+
+    return { generatedAt, status: "ok", rows: sorted, error: null };
+  } catch (error) {
+    return { generatedAt, status: "source-error", rows: [], error: error instanceof Error ? error.message : "UNKNOWN" };
+  }
+}

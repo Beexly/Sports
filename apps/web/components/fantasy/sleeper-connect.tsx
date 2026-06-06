@@ -12,7 +12,7 @@
  * states honestly what else can — and can't — be connected, and why.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SLEEPER_READONLY_NOTE, type League, type Team } from "@/lib/integrations/sleeper";
 import type { StandingRow } from "@/lib/integrations/sleeper-sync";
 import { connectorsByStatus, type ConnectorStatus } from "@/lib/integrations/connectors";
@@ -28,6 +28,8 @@ const STATUS_HEX: Record<ConnectorStatus, string> = {
 };
 
 type LeagueView = { league: League; standings: readonly StandingRow[]; you: Team | null };
+type Avail = Record<string, { rec: "play" | "watchlist" | "no-bet"; band: number }>;
+const AVAIL_HEX: Record<"play" | "watchlist" | "no-bet", string> = { play: BRAND_COLORS.orbitalCyan, watchlist: "#E0A800", "no-bet": BRAND_COLORS.ionMagenta };
 
 export function SleeperConnect() {
   const [username, setUsername] = useState("");
@@ -35,8 +37,35 @@ export function SleeperConnect() {
   const [userId, setUserId] = useState<string | null>(null);
   const [leagues, setLeagues] = useState<League[] | null>(null);
   const [view, setView] = useState<LeagueView | null>(null);
+  const [avail, setAvail] = useState<Avail>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Overlay the Human Performance availability read (real injury status + game
+  // weather) onto the synced roster, once it loads. Lazy + best-effort.
+  useEffect(() => {
+    const you = view?.you;
+    if (!you) { setAvail({}); return; }
+    const players = [...you.starters, ...you.bench].map((p) => ({ name: p.name, team: p.team }));
+    if (players.length === 0) return;
+    let active = true;
+    fetch("/api/human/roster-availability", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ players }),
+    })
+      .then((r) => r.json())
+      .then((j) => {
+        if (!active || !j?.data?.rows) return;
+        const map: Avail = {};
+        for (const row of j.data.rows as { player: string; modifier: { recommendation: Avail[string]["rec"]; bandWidenPct: number } }[]) {
+          map[row.player.toLowerCase()] = { rec: row.modifier.recommendation, band: row.modifier.bandWidenPct };
+        }
+        setAvail(map);
+      })
+      .catch(() => { if (active) setAvail({}); });
+    return () => { active = false; };
+  }, [view]);
 
   const connect = async () => {
     const handle = username.trim();
@@ -139,12 +168,13 @@ export function SleeperConnect() {
 
           {view.you ? (
             <>
-              <div className="mt-5 flex items-center gap-3">
+              <div className="mt-5 flex flex-wrap items-center gap-3">
                 <p className="text-sm font-semibold text-white">Your roster</p>
                 <span className="font-mono text-xs text-ink-400">{view.you.record} · {view.you.points} pts</span>
+                <span className="text-[10px] text-ink-600">availability overlay: real injury status + game weather (never a body claim)</span>
               </div>
-              <RosterGroup title="Starters" players={view.you.starters} />
-              <RosterGroup title="Bench" players={view.you.bench} dim />
+              <RosterGroup title="Starters" players={view.you.starters} avail={avail} />
+              <RosterGroup title="Bench" players={view.you.bench} avail={avail} dim />
             </>
           ) : (
             <p className="mt-4 text-sm text-ink-400">Standings imported. Enter the username that owns a team in this league to resolve your roster.</p>
@@ -197,7 +227,7 @@ function Standings({ rows }: { rows: readonly StandingRow[] }) {
   );
 }
 
-function RosterGroup({ title, players, dim }: { title: string; players: Team["starters"]; dim?: boolean }) {
+function RosterGroup({ title, players, avail, dim }: { title: string; players: Team["starters"]; avail: Avail; dim?: boolean }) {
   if (players.length === 0) return null;
   return (
     <div className="mt-4" style={{ opacity: dim ? 0.7 : 1 }}>
@@ -205,10 +235,17 @@ function RosterGroup({ title, players, dim }: { title: string; players: Team["st
       <div className="space-y-1">
         {players.map((p) => {
           const hex = POS_HEX[p.pos] ?? "#9fb3c8";
+          const a = avail[p.name.toLowerCase()];
+          const flag = a && a.rec !== "play" ? a : null;
           return (
             <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1">
               <span className="w-9 rounded px-1 py-0.5 text-center text-[9px] font-bold" style={{ color: hex, background: `${hex}1c` }}>{p.pos}</span>
               <span className="flex-1 truncate text-sm text-white">{p.name}</span>
+              {flag && (
+                <span className="rounded px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider" style={{ color: AVAIL_HEX[flag.rec], background: `${AVAIL_HEX[flag.rec]}1c` }} title={`Confidence band widened ~${Math.round(flag.band * 100)}% by public availability + conditions`}>
+                  {flag.rec} +{Math.round(flag.band * 100)}%
+                </span>
+              )}
               {p.injury && <span className="text-[10px] font-semibold uppercase" style={{ color: BRAND_COLORS.ionMagenta }}>{p.injury}</span>}
               <span className="font-mono text-[10px] text-ink-600">{p.team}</span>
             </div>

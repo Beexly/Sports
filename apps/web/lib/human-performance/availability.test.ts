@@ -3,6 +3,7 @@ import {
   computeAvailabilityModifier,
   availabilityOutputBehavior,
   loadAvailabilityModifier,
+  loadRosterAvailability,
   type AvailabilityInputs,
 } from "./availability";
 import { MAX_BAND_WIDEN } from "./types";
@@ -102,5 +103,19 @@ describe("loadAvailabilityModifier — orchestration", () => {
     expect(r.status).toBe("ok");
     expect(r.modifier).toBeNull();
     expect(r.error).toContain("player name");
+  });
+});
+
+describe("loadRosterAvailability — batch", () => {
+  it("returns ok with no rows for an empty roster, without fetching", async () => {
+    const r = await loadRosterAvailability({ players: [], fetcher: async () => { throw new Error("should not fetch"); } });
+    expect(r.status).toBe("ok");
+    expect(r.rows).toEqual([]);
+  });
+
+  it("degrades to source-error when the injury feed is unreachable", async () => {
+    const r = await loadRosterAvailability({ players: [{ name: "Some Player", team: "KC" }], fetcher: async () => { throw new Error("down") } });
+    expect(r.status).toBe("source-error");
+    expect(r.rows).toEqual([]);
   });
 });
