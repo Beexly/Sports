@@ -60,6 +60,7 @@ const INTELLIGENCE_GROUP: readonly NavItem[] = [
   { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
   { label: "Data & Integrations", href: "/integrations", desc: "What's live, what's gated" },
   { label: "Data Sourcing", href: "/data", desc: "How we legally source feeds" },
+  { label: "NHL · xG", href: "/nhl", desc: "Expected goals (MoneyPuck)" },
   { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
   { label: "The Cipher", href: "/cipher", desc: "Weekly hidden hunt" },
 ];

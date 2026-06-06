@@ -340,3 +340,7 @@ More free NFL data (per "don't forget data ingestion"). Read-only nflverse `pfr_
 - `/api/nflverse/pressure-coverage` + `/players/trenches` page. Nav wired (Players group).
 - Tests (3): QB+coverage ranking/exclusions, empty state, API.
 - Verified: typecheck PASS; focused test 3; live `/api/nflverse/pressure-coverage` 200 season 2025, 8,610 rows, most-pressured Shedeur Sanders 39.3%, lockdown James Pierre 51.2 rating allowed; `/players/trenches` 200 clean.
+
+## Optimizer quick-wins + NHL (MoneyPuck) — Claude, 2026-06-06
+- **Optimizer internals (wave 2, `0dd9b10`):** `components/fantasy/dfs-optimizer.tsx` — live salary-cap meter per lineup (magenta if over), pool readability (killed 9px text → sm, 60vh, pinned-row tint, ★pinned/✕faded counts), exposure un-truncated + scroll, wider pool column. Surgical; web 231/2,699 + build PASS.
+- **NHL via MoneyPuck (`/nhl`, new sport):** `lib/moneypuck/nhl.ts` via `assertIngestible("moneypuck")` + attribution. Skater xG leaders (situation=all, min 20 GP) + team xG. Quirk handled: MoneyPuck serves an HTML 200 page for a missing season → guard rejects non-CSV; default season computed (Sep+ → curr year else prior). `/api/moneypuck/nhl` + page. Tests (3) incl HTML-guard. Live: 2025-26, 4,860 rows, McDavid xG leader (43.6 xG / 48 G / +4.4). canPublishPicks=false. **First non-NFL sport — framework proven multi-sport.**

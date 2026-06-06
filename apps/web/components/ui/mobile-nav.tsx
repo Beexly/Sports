@@ -56,6 +56,7 @@ const SECTIONS: readonly Section[] = [
       { label: "Parlay MRI", href: "/parlay-mri" },
       { label: "CLV Tracker", href: "/track" },
       { label: "Data Sourcing", href: "/data" },
+      { label: "NHL xG", href: "/nhl" },
       { label: "Cipher", href: "/cipher" },
     ],
   },
