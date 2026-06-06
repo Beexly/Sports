@@ -9,7 +9,7 @@
  * a key is present. Pure (env-injectable), so it's fully testable.
  */
 
-export type ProviderCategory = "projections" | "image-safety" | "league-oauth" | "avatar-tts" | "odds";
+export type ProviderCategory = "projections" | "image-safety" | "league-oauth" | "avatar-tts" | "odds" | "pickem";
 
 export type ProviderStatus = {
   readonly key: string;
@@ -32,6 +32,7 @@ const PROVIDERS: readonly ProviderDef[] = [
   { key: "league-yahoo", name: "Yahoo league OAuth", category: "league-oauth", envVar: "YAHOO_OAUTH_CLIENT_ID", unlocks: "Read-only Yahoo roster sync", note: "Yahoo OAuth app credentials." },
   { key: "avatar-tts", name: "Nova avatar / TTS vendor", category: "avatar-tts", envVar: "AVATAR_TTS_VENDOR", unlocks: "Licensed avatar + voice rendering for Galaxy Studios", note: "A consented/licensed virtual-presenter vendor. Until set, Nova is a stylized brand mark only." },
   { key: "odds", name: "Live odds feed", category: "odds", envVar: "THE_ODDS_API_KEY", unlocks: "Real lines and closing-line value on the public board", note: "The Odds API key (already part of the platform's data layer)." },
+  { key: "pickem-lines", name: "Pick'em lines feed", category: "pickem", envVar: "PICKEM_LINES_PROVIDER", unlocks: "Live Underdog / DK Pick6 / PrizePicks line ingestion for the Pick'em Edge", note: "A licensed pick'em-lines feed (obtained under agreement, never scraped). Until set, the Pick'em Edge runs on illustrative lines." },
 ];
 
 /** Status of every external provider, given an environment. */

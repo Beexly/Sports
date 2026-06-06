@@ -30,6 +30,7 @@ const CATEGORY_LABEL: Record<ProviderCategory, string> = {
   "league-oauth": "League sync",
   "avatar-tts": "Studio rendering",
   odds: "Odds and lines",
+  pickem: "Pick'em lines",
 };
 
 const STATUS_ORDER: readonly SourceStatus[] = [

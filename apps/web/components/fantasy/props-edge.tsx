@@ -10,14 +10,26 @@
  */
 
 import { useMemo, useState } from "react";
-import { PROPS, readProp, evalEntry, type PropRead } from "@/lib/fantasy/props";
+import { PROPS, readProp, evalEntry, type Prop, type PropRead } from "@/lib/fantasy/props";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const sideHex = (side: "over" | "under") => (side === "over" ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta);
 
-export function PropsEdge() {
-  const reads = useMemo(() => PROPS.map(readProp).sort((a, b) => b.edge - a.edge), []);
+export function PropsEdge({ lines = PROPS }: { lines?: readonly Prop[] }) {
+  const reads = useMemo(() => lines.map(readProp).sort((a, b) => b.edge - a.edge), [lines]);
   const [entry, setEntry] = useState<Set<string>>(new Set());
+
+  if (reads.length === 0) {
+    return (
+      <div className="surface-card p-8 text-center">
+        <p className="text-sm text-ink-300">No pick&apos;em lines are connected right now.</p>
+        <p className="mx-auto mt-2 max-w-md text-[11px] leading-relaxed text-ink-500">
+          The Pick&apos;em Edge reads a licensed lines feed (obtained under agreement, never scraped). Until
+          one is connected it shows the illustrative slate — never fabricated live lines.
+        </p>
+      </div>
+    );
+  }
 
   const inEntry = (id: string) => entry.has(id);
   const toggle = (id: string) => {
