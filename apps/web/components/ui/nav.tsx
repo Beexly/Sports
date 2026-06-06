@@ -18,6 +18,7 @@ const INTELLIGENCE_GROUP = [
   { label: "GSN", href: "/gsn", desc: "Daily intelligence transmission" },
   { label: "The Airwave Ledger", href: "/airwave", desc: "Pundits, graded on the record" },
   { label: "NFLverse Pulse", href: "/nflverse", desc: "Real player-week usage rows" },
+  { label: "Production Lab", href: "/players", desc: "Season + last-5 form, defense ranks" },
   { label: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's risk" },
   { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
   { label: "Trust Ledger", href: "/ledger", desc: "Tamper-evident record" },

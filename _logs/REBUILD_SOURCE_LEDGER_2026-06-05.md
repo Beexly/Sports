@@ -195,3 +195,21 @@
   - `/fantasy/baseline`: 200, contains `LineStar plus Elite Sports is the floor`, `DFS lineup optimizer`, `Projected ownership`, `Props AI`, `Fantasy Guru / Elite Sports`, and `gated data`.
   - `/api/sources/catalog`: 200, success true, `liveEvidence.status=live`, usage player-stat rows 134,470, cohort observations 12,490, birthday conclusion `not-publishable`.
   - `/api/airwave/intake-readiness`: 200, success true, status `not-configured`, rows `UNKNOWN`, writes false, publishes false.
+
+## Production Lab Addendum (Claude wave, 2026-06-05)
+
+Goal from the master brief: close LineStar "❌ Missing" gaps with REAL data, not stubs — specifically last-5/last-10 form and positional defense ranks. No production access, DB writes, migrations, or live keys touched. Read-only nflverse only.
+
+- New lib `apps/web/lib/nflverse/player-lab.ts`: computes, from the real `player_stats.csv.gz` weekly release asset, per-position (RB/WR/TE) season leaders, last-5 recent-form splits (with `last5PprDelta` = recent minus season pace), and positional defense-allowed ranks (PPR + opportunity allowed per game, ranked across qualifying defenses). `canPublishProjections` hard-locked `false`; source failure returns an explicit empty state, never fabricated production.
+- New route `apps/web/app/api/nflverse/player-lab/route.ts` (`force-dynamic`) exposes the lab as JSON.
+- New page `apps/web/app/players/page.tsx` (`force-dynamic`): Bloomberg-density leader tables with color-coded recent-form deltas + defense-rank tables, honest boundary + source-error states, source URLs. Linked from Intelligence nav, mobile nav, and the page itself (Usage Pulse / Baseline map).
+- New tests `apps/web/__tests__/player-lab.test.ts` (3): offline injected-fetcher unit (season leaders order, last-5 delta sign, defense-rank ordering), empty-state boundary, and API no-fabrication contract.
+
+### Validation Evidence (Production Lab)
+- `npm run typecheck --workspace=@sports/web`: PASS.
+- `npm run lint --workspace=@sports/web`: PASS.
+- `npm run test --workspace=@sports/web -- __tests__/player-lab.test.ts`: PASS, 1 file / 3 tests.
+- `npm run test --workspace=@sports/web`: PASS, 222 files / 2,606 tests (new page auto-covered by per-file brand/policy scanners).
+- Live dev smoke on `http://127.0.0.1:3000`:
+  - `/api/nflverse/player-lab`: 200, success true, status `live`, season 2024 through week 18, sourceRows 134,470, `canPublishProjections=false`, 30/30/30 leaders. Cross-checked against reality: WR1 Ja'Marr Chase (23.7 PPR/g, last-5 26.1, Δ +2.4), RB1 Saquon Barkley (22.2 PPR/g), softest WR defense MIN (40.4 PPR/g allowed) across 32 defenses.
+  - `/players`: 200, ~336 KB, contains `Production Lab`, all three position tables, `Softest matchups`, real player names, `Boundary`, `JSON lab`; no framework error overlay.
