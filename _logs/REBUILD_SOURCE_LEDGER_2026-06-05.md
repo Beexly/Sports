@@ -333,3 +333,10 @@ First redesign wave (the "one door / stop being convoluted" fix):
 - Fixed: `fantasy-competitive-baseline` test requires `/fantasy/baseline` in BOTH navs — kept it in mobile.
 - Verified: typecheck PASS; web 230 files / 2,689 tests; lint PASS; build PASS; `/optimizer` 200, `/board` renders the 5-group nav.
 - NEXT WAVES (not yet done): merge the 3 optimizer internals into `/optimizer` with a contest switch + pool-as-hero sortable table + sticky salary meter + promote DK CSV import + pool tabs/exposure; demote `/fantasy` gates page; then tool-by-tool cleanup.
+
+## Pressure & Coverage — PFR advanced ingestion (Claude, 2026-06-06)
+More free NFL data (per "don't forget data ingestion"). Read-only nflverse `pfr_advstats` (CC-BY-4.0); per-season files verified real (pass 698/685, def 7,993/7,927 rows; `pfr_player_name` present so no ID join).
+- `apps/web/lib/nflverse/pressure-coverage.ts` (via `assertIngestible("nflverse")` + failover): QB pressure (mean times_pressured_pct, bad-throw%, sacks, blitzes; min 4 games) + defensive coverage (target-weighted passer-rating-allowed, cmp%, yds/tgt, missed-tackle%; min 25 targets, lockdown-first). pct fields are 0-1 fractions; rating on 0-158.3.
+- `/api/nflverse/pressure-coverage` + `/players/trenches` page. Nav wired (Players group).
+- Tests (3): QB+coverage ranking/exclusions, empty state, API.
+- Verified: typecheck PASS; focused test 3; live `/api/nflverse/pressure-coverage` 200 season 2025, 8,610 rows, most-pressured Shedeur Sanders 39.3%, lockdown James Pierre 51.2 rating allowed; `/players/trenches` 200 clean.
