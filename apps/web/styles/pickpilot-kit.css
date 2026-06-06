@@ -950,6 +950,18 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: var(--r-md);
   background: rgba(13, 17, 23, 0.98);
   box-shadow: var(--shadow-modal);
+  max-height: 72vh;
+  overflow-y: auto;
+}
+.mobile-nav-section { padding: 4px 0; border-top: 1px solid var(--mineral-hi); }
+.mobile-nav-section:first-child { border-top: 0; }
+.mobile-nav-heading {
+  margin: 0;
+  padding: 8px 12px 3px;
+  font: 700 10px/1.2 var(--f-mono, ui-monospace, monospace);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ion-2, #8b98a5);
 }
 .mobile-nav-link {
   display: flex;
