@@ -141,6 +141,16 @@ describe("nflverse player lab", () => {
     expect(pickens.last5PprDelta).toBeGreaterThan(1.5); // heating up
     expect(pickens.headshotUrl).toBe("https://example.com/wr1.png");
 
+    // Floor/ceiling from the real game distribution: 5 of 6 games >= 20 PPR,
+    // 1 of 6 <= 10 PPR (the week-1 dud).
+    expect(pickens.boomRate).toBeCloseTo(0.833, 2);
+    expect(pickens.bustRate).toBeCloseTo(0.167, 2);
+    expect(pickens.bestGamePpr).toBe(25);
+    expect(pickens.worstGamePpr).toBe(5);
+    // Flat 10-PPR WR is all floor, no ceiling.
+    expect(lab.leaders.WR[1]!.bustRate).toBe(1);
+    expect(lab.leaders.WR[1]!.boomRate).toBe(0);
+
     expect(lab.leaders.RB[0]?.playerName).toBe("Jaylen Warren");
     expect(lab.leaders.TE[0]?.playerName).toBe("Pat Freiermuth");
 

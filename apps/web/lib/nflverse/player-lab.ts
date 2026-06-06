@@ -37,6 +37,11 @@ export interface PlayerSeasonLine {
   readonly last5OpportunitiesPerGame: number;
   /** last5PprPerGame minus season pprPerGame — positive = heating up. */
   readonly last5PprDelta: number;
+  /** Real floor/ceiling distribution (historical, not a projected range). */
+  readonly boomRate: number; // share of games >= BOOM_PPR
+  readonly bustRate: number; // share of games <= BUST_PPR
+  readonly bestGamePpr: number;
+  readonly worstGamePpr: number;
   readonly headshotUrl: string | null;
 }
 
@@ -73,6 +78,9 @@ const SKILL_POSITIONS: readonly SkillPosition[] = ["RB", "WR", "TE"];
 const MIN_GAMES = 3;
 const LEADERS_PER_POSITION = 30;
 const FORM_WINDOW = 5;
+// Standard PPR flex thresholds: a "boom" is a startable ceiling game, a "bust" is a floor game.
+const BOOM_PPR = 20;
+const BUST_PPR = 10;
 
 let playerLabCache: { readonly expiresAt: number; readonly value: NflversePlayerLab } | null = null;
 
@@ -177,6 +185,10 @@ function buildLeaders(
     const last5Ppr = average(recent.map((r) => toNumber(r["fantasy_points_ppr"])));
     const pprPerGame = totalPpr / games;
 
+    const gamePprs = rows.map((r) => toNumber(r["fantasy_points_ppr"]));
+    const boomRate = gamePprs.filter((p) => p >= BOOM_PPR).length / games;
+    const bustRate = gamePprs.filter((p) => p <= BUST_PPR).length / games;
+
     const latest = recent[0]!;
     lines.push({
       playerId,
@@ -201,6 +213,10 @@ function buildLeaders(
       last5PprPerGame: round(last5Ppr),
       last5OpportunitiesPerGame: round(average(recent.map(opp))),
       last5PprDelta: round(last5Ppr - pprPerGame),
+      boomRate: round(boomRate, 3),
+      bustRate: round(bustRate, 3),
+      bestGamePpr: round(Math.max(...gamePprs)),
+      worstGamePpr: round(Math.min(...gamePprs)),
       headshotUrl: latest["headshot_url"] || headshots.get(playerId) || null,
     });
   }

@@ -208,7 +208,7 @@ function LeaderTable({
         <p className="px-5 py-6 text-sm text-ion-1">No qualifying players in the source window.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[1040px] text-left text-sm">
+          <table className="w-full min-w-[1180px] text-left text-sm">
             <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
               <tr>
                 <th className="px-4 py-3">#</th>
@@ -218,6 +218,8 @@ function LeaderTable({
                 <th className="px-4 py-3">PPR/G</th>
                 <th className="px-4 py-3">5g</th>
                 <th className="px-4 py-3">&Delta;</th>
+                <th className="px-4 py-3">Boom%</th>
+                <th className="px-4 py-3">Bust%</th>
                 <th className="px-4 py-3">Oppty/G</th>
                 <th className="px-4 py-3">Tgt/G</th>
                 <th className="px-4 py-3">Rec/G</th>
@@ -244,6 +246,8 @@ function LeaderTable({
                   <td className={`px-4 py-3 font-mono ${deltaClass(row.last5PprDelta)}`}>
                     {fmtSigned(row.last5PprDelta)}
                   </td>
+                  <td className="px-4 py-3 font-mono text-orbital-cyan">{fmtPercent(row.boomRate)}</td>
+                  <td className="px-4 py-3 font-mono text-alert">{fmtPercent(row.bustRate)}</td>
                   <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.opportunitiesPerGame)}</td>
                   <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.targetsPerGame)}</td>
                   <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.receptionsPerGame)}</td>
