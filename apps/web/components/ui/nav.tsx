@@ -18,6 +18,7 @@ const PLAYERS_GROUP: readonly NavItem[] = [
   { label: "Snap Share", href: "/players/snaps", desc: "Offensive workload leaders" },
   { label: "Next Gen Stats", href: "/players/nextgen", desc: "Separation, CPOE, RYOE" },
   { label: "Pressure & Coverage", href: "/players/trenches", desc: "QB pressure, lockdown defenders" },
+  { label: "Combine", href: "/players/combine", desc: "Athletic testing — 40, vert, cone" },
   { label: "Edge Signals", href: "/players/edge", desc: "Buy-low / sell-high vs output" },
   { label: "Injury Report", href: "/players/injuries", desc: "Official availability" },
   { label: "Market Signal", href: "/players/market", desc: "Live adds/drops (Sleeper)" },
