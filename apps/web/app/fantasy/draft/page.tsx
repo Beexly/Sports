@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DraftAssistant } from "@/components/fantasy/draft-assistant";
+import { resolveToolPool } from "@/lib/integrations/projections";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -10,17 +11,24 @@ export const metadata: Metadata = {
   alternates: { canonical: "/fantasy/draft" },
 };
 
+// Render per-request so the founder-gated live-projections status is reflected at
+// runtime (the provider is registered at server startup, not build time).
+export const dynamic = "force-dynamic";
+
 export default function DraftPage() {
+  const pool = resolveToolPool();
   return (
     <FantasyShell
       eyebrow="Draft Assistant"
       accent={BRAND_COLORS.softUltraviolet}
       title={<>Draft the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>value</span>, not the name.</>}
       intro="Mark players off the board and the engine recommends your next pick — and tells you exactly why: your biggest need, the tier about to break, the value over replacement, and the bye-week stack you're about to create."
-      note="Illustrative player universe — fictional players, illustrative projections. Value over replacement, tiers, and recommendations are computed live from this sample pool."
+      note={pool
+        ? "Live graded pool — real nflverse players with model-derived projections. Value over replacement, tiers, and recommendations are computed from real grades."
+        : "Illustrative player universe — fictional players, illustrative projections. Value over replacement, tiers, and recommendations are computed live from this sample pool."}
       wide
     >
-      <DraftAssistant />
+      <DraftAssistant pool={pool} />
     </FantasyShell>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { rosterFromIds, optimize, startReason, SLOTS } from "./lineup";
+import { rosterFromIds, sampleRoster, SAMPLE_ROSTER_SHAPE, optimize, startReason, SLOTS } from "./lineup";
 import type { Player } from "./players";
 
 function mk(id: string, pos: Player["pos"], proj: number, extra: Partial<Player> = {}): Player {
@@ -44,5 +44,33 @@ describe("lineup optimizer", () => {
     const anchor = o.starters.find((s) => s.verdict === "anchor");
     if (anchor) expect(startReason(anchor)).toContain("Anchor");
     for (const s of o.starters) expect(["anchor", "start", "close"]).toContain(s.verdict);
+  });
+});
+
+describe("sampleRoster — drawing a roster from a LIVE pool", () => {
+  // A pool with more than enough at each position; ids carry their proj for ordering.
+  const pool: Player[] = [
+    mk("qbA", "QB", 400), mk("qbB", "QB", 350), mk("qbC", "QB", 300),
+    mk("rbA", "RB", 320), mk("rbB", "RB", 300), mk("rbC", "RB", 280), mk("rbD", "RB", 260), mk("rbE", "RB", 240),
+    mk("wrA", "WR", 310), mk("wrB", "WR", 290), mk("wrC", "WR", 270), mk("wrD", "WR", 250), mk("wrE", "WR", 230), mk("wrF", "WR", 210),
+    mk("teA", "TE", 240), mk("teB", "TE", 200), mk("teC", "TE", 160),
+  ];
+
+  it("takes the top-projected players per position in the configured shape", () => {
+    const r = sampleRoster(pool);
+    const count = (pos: Player["pos"]) => r.filter((p) => p.pos === pos).length;
+    expect(count("QB")).toBe(SAMPLE_ROSTER_SHAPE.QB);
+    expect(count("RB")).toBe(SAMPLE_ROSTER_SHAPE.RB);
+    expect(count("WR")).toBe(SAMPLE_ROSTER_SHAPE.WR);
+    expect(count("TE")).toBe(SAMPLE_ROSTER_SHAPE.TE);
+    // top picks, never invented
+    expect(r.filter((p) => p.pos === "QB").map((p) => p.id)).toEqual(["qbA", "qbB"]);
+    expect(r.every((p) => pool.includes(p))).toBe(true);
+  });
+
+  it("never invents players — a thin pool yields a smaller roster, not fabricated names", () => {
+    const thin = sampleRoster([mk("onlyQb", "QB", 200)]);
+    expect(thin.map((p) => p.id)).toEqual(["onlyQb"]);
+    expect(sampleRoster([])).toEqual([]);
   });
 });

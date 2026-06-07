@@ -42,6 +42,25 @@ export function rosterFromIds(ids: readonly string[], pool: readonly Player[] = 
   return pool.filter((p) => set.has(p.id));
 }
 
+/** A sample startable roster's positional shape (mirrors DEFAULT_ROSTER_IDS). */
+export const SAMPLE_ROSTER_SHAPE: Record<Pos, number> = { QB: 2, RB: 4, WR: 5, TE: 2 };
+
+/**
+ * Build a sample roster from a pool by taking the top-projected players at each
+ * position. Used when a LIVE graded pool is active — the illustrative
+ * DEFAULT_ROSTER_IDS don't exist in the real feed, so we draw a "your team" from
+ * the live pool instead. The players, names, and projections are REAL; only the
+ * roster *selection* is a labelled sample (there's no league connection yet).
+ * Pure — never invents a player.
+ */
+export function sampleRoster(pool: readonly Player[], shape: Record<Pos, number> = SAMPLE_ROSTER_SHAPE): Player[] {
+  const out: Player[] = [];
+  for (const pos of Object.keys(shape) as Pos[]) {
+    out.push(...pool.filter((p) => p.pos === pos).sort((a, b) => b.proj - a.proj).slice(0, shape[pos]));
+  }
+  return out;
+}
+
 export function optimize(roster: readonly Player[]): Optimized {
   const used = new Set<string>();
   const pick = (poss: Pos[]): Player | undefined =>

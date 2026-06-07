@@ -7,7 +7,7 @@
  * not just a number. Pure functions; illustrative data.
  */
 
-import { POSITIONS, vor, tier, byPosition, type Player, type Pos } from "./players";
+import { PLAYERS, POSITIONS, vor, tier, byPosition, type Player, type Pos } from "./players";
 
 /** Standard 1-QB, 2-RB, 2-WR, 1-TE, 1-FLEX starting requirements. */
 export const STARTERS: Record<Pos, number> = { QB: 1, RB: 2, WR: 2, TE: 1 };
@@ -37,12 +37,17 @@ function needMultiplier(pos: Pos, roster: readonly Player[]): number {
   return 0.86; // depth pick
 }
 
-/** Is this the last player in their position-tier among the available pool? (a cliff) */
-function isTierCliff(player: Player, available: readonly Player[]): boolean {
-  const samePos = available.filter((p) => p.pos === player.pos).sort((a, b) => vor(b) - vor(a));
+/**
+ * Is this the last player in their position-tier among the available pool? (a
+ * cliff). `universe` is the full pool VOR/tiers are scored against — defaults to
+ * the illustrative PLAYERS so existing callers are unchanged; a live feed passes
+ * its own pool so the replacement baseline is correct.
+ */
+function isTierCliff(player: Player, available: readonly Player[], universe: readonly Player[] = PLAYERS): boolean {
+  const samePos = available.filter((p) => p.pos === player.pos).sort((a, b) => vor(b, universe) - vor(a, universe));
   const idx = samePos.findIndex((p) => p.id === player.id);
   const next = samePos[idx + 1];
-  return !next || tier(next) > tier(player);
+  return !next || tier(next, universe) > tier(player, universe);
 }
 
 function byeStackRisk(player: Player, roster: readonly Player[]): number {
@@ -56,11 +61,11 @@ export type PickRec = {
   readonly reasons: readonly string[];
 };
 
-export function recommend(available: readonly Player[], roster: readonly Player[], limit = 6): PickRec[] {
+export function recommend(available: readonly Player[], roster: readonly Player[], limit = 6, universe: readonly Player[] = PLAYERS): PickRec[] {
   const recs = available.map((player) => {
-    const base = Math.max(8, vor(player) + 40); // shift so depth picks stay positive
+    const base = Math.max(8, vor(player, universe) + 40); // shift so depth picks stay positive
     const need = needMultiplier(player.pos, roster);
-    const cliff = isTierCliff(player, available) ? 1.22 : 1;
+    const cliff = isTierCliff(player, available, universe) ? 1.22 : 1;
     const byeN = byeStackRisk(player, roster);
     const byePenalty = byeN >= 2 ? 0.86 : 1;
     const inj = player.injury === "out" ? 0.7 : player.injury === "questionable" ? 0.93 : 1;
@@ -68,10 +73,10 @@ export function recommend(available: readonly Player[], roster: readonly Player[
     const score = base * need * cliff * byePenalty * inj * trend;
 
     const reasons: string[] = [];
-    const v = vor(player);
+    const v = vor(player, universe);
     if (need >= 1.2) reasons.push(`Fills your biggest need at ${player.pos}.`);
     else if (need <= 0.7) reasons.push(`Depth/luxury — you've covered ${player.pos}.`);
-    if (cliff > 1) reasons.push(`Last player in Tier ${tier(player)} at ${player.pos} — a cliff after this.`);
+    if (cliff > 1) reasons.push(`Last player in Tier ${tier(player, universe)} at ${player.pos} — a cliff after this.`);
     reasons.push(`Value over replacement: ${v >= 0 ? "+" : ""}${v}.`);
     if (byeN >= 2) reasons.push(`Bye stack risk — you'd have ${byeN + 1} starters on Week ${player.bye}.`);
     if (player.injury !== "healthy") reasons.push(`Injury flag: ${player.injury}.`);
@@ -108,12 +113,12 @@ export type PositionScarcity = {
  * How thin is each position right now? `topTierLeft <= 1` is a cliff (draft now
  * or fall a tier); few startable players left is "tight". Pure.
  */
-export function positionalScarcity(available: readonly Player[]): PositionScarcity[] {
+export function positionalScarcity(available: readonly Player[], universe: readonly Player[] = PLAYERS): PositionScarcity[] {
   return POSITIONS.map((pos) => {
-    const pool = available.filter((p) => p.pos === pos).sort((a, b) => vor(b) - vor(a));
-    const startersLeft = pool.filter((p) => vor(p) >= 0).length;
-    const topTier = pool.length ? tier(pool[0]!) : 0;
-    const topTierLeft = pool.filter((p) => tier(p) === topTier).length;
+    const pool = available.filter((p) => p.pos === pos).sort((a, b) => vor(b, universe) - vor(a, universe));
+    const startersLeft = pool.filter((p) => vor(p, universe) >= 0).length;
+    const topTier = pool.length ? tier(pool[0]!, universe) : 0;
+    const topTierLeft = pool.filter((p) => tier(p, universe) === topTier).length;
     const level: ScarcityLevel =
       pool.length === 0 ? "ok" : topTierLeft <= 1 ? "critical" : startersLeft <= 3 ? "tight" : "ok";
     return { pos, remaining: pool.length, startersLeft, topTier, topTierLeft, level };

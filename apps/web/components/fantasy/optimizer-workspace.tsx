@@ -13,6 +13,7 @@ import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
 import { DraftAssistant } from "@/components/fantasy/draft-assistant";
 import { BRAND_COLORS } from "@/lib/brand";
+import type { Player } from "@/lib/fantasy/players";
 
 type Tab = "dfs" | "startsit" | "draft";
 
@@ -22,7 +23,13 @@ const TABS: { key: Tab; label: string; blurb: string }[] = [
   { key: "draft", label: "Draft", blurb: "Live draft board — tiers, value over replacement, positional scarcity, run alerts." },
 ];
 
-export function OptimizerWorkspace() {
+/**
+ * @param pool When provided, the LIVE graded pool resolved server-side — threaded
+ * into the season Start/Sit and Draft tools (real players). DFS uses its own
+ * licensed slate seam, so it's intentionally left on its own gate. When omitted,
+ * every tab runs on the illustrative default (unchanged).
+ */
+export function OptimizerWorkspace({ pool }: { pool?: readonly Player[] } = {}) {
   const [tab, setTab] = useState<Tab>("dfs");
   const active = TABS.find((t) => t.key === tab)!;
 
@@ -50,17 +57,17 @@ export function OptimizerWorkspace() {
       </div>
 
       {tab === "dfs" && <DfsOptimizer />}
-      {tab === "startsit" && <LineupOptimizer />}
+      {tab === "startsit" && <LineupOptimizer pool={pool} />}
       {tab === "draft" && (
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs text-ink-400">
               Live draft board — tiers, value over replacement, positional scarcity, run alerts, and your
-              own ADP overlay. Illustrative pool until a licensed projections feed is connected.
+              own ADP overlay. {pool ? "Live graded pool — real players." : "Illustrative pool until a licensed projections feed is connected."}
             </p>
             <Link href="/fantasy/draft" className="text-xs font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>Open full page →</Link>
           </div>
-          <DraftAssistant />
+          <DraftAssistant pool={pool} />
         </div>
       )}
     </div>

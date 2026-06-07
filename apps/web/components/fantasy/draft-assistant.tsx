@@ -12,20 +12,27 @@
  */
 
 import { useMemo, useRef, useState } from "react";
-import { PLAYERS, POSITIONS, POS_HEX, vor, tier, playerById, type Pos } from "@/lib/fantasy/players";
+import { PLAYERS, POSITIONS, POS_HEX, vor, tier, playerById, type Pos, type Player } from "@/lib/fantasy/players";
 import {
   recommend, rosterNeeds, STARTERS,
   positionalScarcity, detectRuns, parseAdpCsv, valueVsAdp,
   type AdpLabel, type ScarcityLevel,
 } from "@/lib/fantasy/draft";
 import { BRAND_COLORS } from "@/lib/brand";
+import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 
 type Filter = Pos | "ALL";
 
 const LEVEL_HEX: Record<ScarcityLevel, string> = { critical: BRAND_COLORS.ionMagenta, tight: "#E0A800", ok: "#6b7785" };
 const ADP_HEX: Record<AdpLabel, string> = { steal: BRAND_COLORS.orbitalCyan, value: BRAND_COLORS.softUltraviolet, "on-time": "#9fb3c8", reach: BRAND_COLORS.ionMagenta, none: "#6b7785" };
 
-export function DraftAssistant() {
+/**
+ * @param pool When provided, the LIVE graded pool resolved server-side (real
+ * players, real grades). When omitted, the tool runs on the illustrative default
+ * (the demo, unchanged). VOR/tier baselines are computed against this universe.
+ */
+export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
+  const universe = useMemo(() => pool ?? PLAYERS, [pool]);
   const [mine, setMine] = useState<Set<string>>(new Set());
   const [gone, setGone] = useState<Set<string>>(new Set());
   const [order, setOrder] = useState<string[]>([]); // every id removed, in pick order
@@ -34,20 +41,20 @@ export function DraftAssistant() {
   const [adpName, setAdpName] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const myPlayers = useMemo(() => [...mine].map((id) => playerById(id)!).filter(Boolean), [mine]);
-  const available = useMemo(() => PLAYERS.filter((p) => !mine.has(p.id) && !gone.has(p.id)), [mine, gone]);
-  const recs = useMemo(() => recommend(available, myPlayers, 4), [available, myPlayers]);
+  const myPlayers = useMemo(() => [...mine].map((id) => playerById(id, universe)!).filter(Boolean), [mine, universe]);
+  const available = useMemo(() => universe.filter((p) => !mine.has(p.id) && !gone.has(p.id)), [mine, gone, universe]);
+  const recs = useMemo(() => recommend(available, myPlayers, 4, universe), [available, myPlayers, universe]);
   const needs = useMemo(() => rosterNeeds(myPlayers), [myPlayers]);
-  const scarcity = useMemo(() => positionalScarcity(available), [available]);
+  const scarcity = useMemo(() => positionalScarcity(available, universe), [available, universe]);
   const runs = useMemo(
-    () => detectRuns(order.map((id) => playerById(id)?.pos).filter((p): p is Pos => Boolean(p))),
-    [order],
+    () => detectRuns(order.map((id) => playerById(id, universe)?.pos).filter((p): p is Pos => Boolean(p))),
+    [order, universe],
   );
   const currentPick = order.length + 1;
 
   const board = useMemo(
-    () => available.filter((p) => filter === "ALL" || p.pos === filter).sort((a, b) => vor(b) - vor(a)),
-    [available, filter],
+    () => available.filter((p) => filter === "ALL" || p.pos === filter).sort((a, b) => vor(b, universe) - vor(a, universe)),
+    [available, filter, universe],
   );
 
   const draftMine = (id: string) => { setMine((s) => new Set(s).add(id)); setOrder((o) => [...o, id]); };
@@ -66,6 +73,9 @@ export function DraftAssistant() {
     }
   };
   const clearAdp = () => { setAdp(new Map()); setAdpName(null); if (fileRef.current) fileRef.current.value = ""; };
+
+  // Live but the graded pool is empty/unavailable — honest empty state.
+  if (pool != null && pool.length === 0) return <LivePoolEmpty />;
 
   return (
     <div className="space-y-4">
@@ -145,8 +155,8 @@ export function DraftAssistant() {
                       <p className="mt-0.5 font-mono text-[10px] text-ink-500">{pl.team} · Bye {pl.bye} · {pl.role}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-mono text-sm" style={{ color: c }}>{vor(pl) >= 0 ? "+" : ""}{vor(pl)}</p>
-                      <p className="font-mono text-[10px] text-ink-500">T{tier(pl)}{av?.adp != null ? ` · ${av.adp}` : ""}</p>
+                      <p className="font-mono text-sm" style={{ color: c }}>{vor(pl, universe) >= 0 ? "+" : ""}{vor(pl, universe)}</p>
+                      <p className="font-mono text-[10px] text-ink-500">T{tier(pl, universe)}{av?.adp != null ? ` · ${av.adp}` : ""}</p>
                     </div>
                     <div className="flex shrink-0 gap-1.5">
                       <button type="button" onClick={() => draftMine(pl.id)} className="rounded-md px-2.5 py-1 text-[11px] font-semibold" style={{ color: BRAND_COLORS.obsidianBlack, background: BRAND_COLORS.orbitalCyan }}>Draft</button>
@@ -189,7 +199,7 @@ export function DraftAssistant() {
                     {recs.slice(1).map((r) => (
                       <button key={r.player.id} type="button" onClick={() => draftMine(r.player.id)} className="flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left hover:bg-white/5">
                         <span className="text-sm text-white">{r.player.name} <span className="font-mono text-[10px] text-ink-500">{r.player.pos}</span></span>
-                        <span className="font-mono text-[11px]" style={{ color: POS_HEX[r.player.pos] }}>+{vor(r.player)}</span>
+                        <span className="font-mono text-[11px]" style={{ color: POS_HEX[r.player.pos] }}>+{vor(r.player, universe)}</span>
                       </button>
                     ))}
                   </div>

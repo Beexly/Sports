@@ -10,8 +10,9 @@
 
 import { useMemo, useState } from "react";
 import { waiverTargets, bidDollars, dropCandidates, type FaabTier } from "@/lib/fantasy/waivers";
-import { POS_HEX } from "@/lib/fantasy/players";
+import { POS_HEX, type Player } from "@/lib/fantasy/players";
 import { BRAND_COLORS } from "@/lib/brand";
+import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 
 const TIER_HEX: Record<FaabTier, string> = {
   Priority: BRAND_COLORS.orbitalCyan,
@@ -22,10 +23,17 @@ const TIER_HEX: Record<FaabTier, string> = {
 
 const TREND_MARK = { up: "▲", flat: "—", down: "▼" } as const;
 
-export function WaiverBoard() {
-  const targets = useMemo(() => waiverTargets(), []);
-  const drops = useMemo(() => dropCandidates(), []);
+/**
+ * @param pool When provided, the LIVE graded pool resolved server-side (real
+ * players). When omitted, the tool runs on the illustrative default (unchanged).
+ */
+export function WaiverBoard({ pool }: { pool?: readonly Player[] } = {}) {
+  const targets = useMemo(() => waiverTargets(pool), [pool]);
+  const drops = useMemo(() => dropCandidates(pool), [pool]);
   const [budget, setBudget] = useState(100);
+
+  // Live but the graded pool is empty/unavailable — honest empty state.
+  if (pool != null && pool.length === 0) return <LivePoolEmpty />;
 
   return (
     <div className="space-y-6">

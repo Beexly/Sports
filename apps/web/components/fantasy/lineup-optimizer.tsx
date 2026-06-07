@@ -6,17 +6,32 @@
  */
 
 import { useMemo, useState } from "react";
-import { POS_HEX } from "@/lib/fantasy/players";
-import { DEFAULT_ROSTER_IDS, rosterFromIds, optimize, startReason } from "@/lib/fantasy/lineup";
+import { POS_HEX, type Player } from "@/lib/fantasy/players";
+import { DEFAULT_ROSTER_IDS, rosterFromIds, sampleRoster, optimize, startReason } from "@/lib/fantasy/lineup";
 import { BRAND_COLORS } from "@/lib/brand";
+import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 
 const VERDICT_HEX = { anchor: BRAND_COLORS.orbitalCyan, start: BRAND_COLORS.softUltraviolet, close: BRAND_COLORS.ionMagenta } as const;
 
-export function LineupOptimizer() {
+/**
+ * @param pool When provided, the LIVE graded pool resolved server-side — the
+ * roster is sampled from it and projections are real. When omitted, the tool runs
+ * on the illustrative default (the demo, unchanged).
+ */
+export function LineupOptimizer({ pool }: { pool?: readonly Player[] } = {}) {
+  const live = pool != null;
+  const fullRoster = useMemo(
+    () => (live ? sampleRoster(pool!) : rosterFromIds(DEFAULT_ROSTER_IDS)),
+    [live, pool],
+  );
   const [out, setOut] = useState<Set<string>>(new Set());
-  const roster = useMemo(() => rosterFromIds(DEFAULT_ROSTER_IDS).filter((p) => !out.has(p.id)), [out]);
+  const roster = useMemo(() => fullRoster.filter((p) => !out.has(p.id)), [fullRoster, out]);
   const opt = useMemo(() => optimize(roster), [roster]);
   const toggleOut = (id: string) => setOut((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
+
+  // Live but the graded pool came back empty/unavailable — be honest, never
+  // silently fall back to illustrative data presented as live.
+  if (live && fullRoster.length === 0) return <LivePoolEmpty />;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
@@ -60,7 +75,7 @@ export function LineupOptimizer() {
         <div className="surface-card p-5">
           <p className="mb-2 text-xs uppercase tracking-[0.16em] text-ink-500">Bench · tap any player to mark out</p>
           <div className="space-y-1.5">
-            {[...rosterFromIds(DEFAULT_ROSTER_IDS)].sort((a, b) => b.proj - a.proj).map((pl) => {
+            {[...fullRoster].sort((a, b) => b.proj - a.proj).map((pl) => {
               const isOut = out.has(pl.id);
               const isStarter = opt.starters.some((c) => c.player.id === pl.id);
               const c = POS_HEX[pl.pos];

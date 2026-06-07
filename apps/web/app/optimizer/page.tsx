@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { OptimizerWorkspace } from "@/components/fantasy/optimizer-workspace";
+import { resolveToolPool } from "@/lib/integrations/projections";
 
 export const metadata: Metadata = {
   title: "The Optimizer — One Workspace for Every Lineup",
@@ -11,7 +12,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "/optimizer" },
 };
 
+// Render per-request so the founder-gated live-projections status is reflected at
+// runtime (the provider is registered at server startup, not build time).
+export const dynamic = "force-dynamic";
+
 export default function OptimizerPage(): JSX.Element {
+  // Live graded pool for Start/Sit + Draft tabs when projections are on; DFS uses
+  // its own slate seam regardless.
+  const pool = resolveToolPool();
   return (
     <div className="min-h-screen bg-carbon text-ion">
       <Nav />
@@ -29,7 +37,7 @@ export default function OptimizerPage(): JSX.Element {
           </p>
         </section>
 
-        <OptimizerWorkspace />
+        <OptimizerWorkspace pool={pool} />
       </main>
       <Footer />
     </div>
