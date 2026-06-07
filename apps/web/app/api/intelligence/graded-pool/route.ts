@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { loadGradedPool } from "@/lib/integrations/graded-pool";
 
 export const dynamic = "force-dynamic";
+// The pool composes several multi-MB nflverse/ffverse assets; give the diagnostic
+// route headroom beyond the default so it returns 200 instead of timing out.
+export const maxDuration = 60;
 
 /**
  * Preview of the real graded player pool that drives every fantasy tool when the

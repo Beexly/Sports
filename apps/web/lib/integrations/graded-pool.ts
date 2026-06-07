@@ -234,34 +234,33 @@ export async function loadGradedPool({ fetcher = fetch }: { fetcher?: FetchLike 
   if (model.status === "source-error") {
     return { status: "source-error", season: 0, count: 0, players: [], error: model.error };
   }
-  // Season-consistent composition: the process grade, the expected-points basis,
-  // the team environment, and the QB forward prior must all describe the SAME
-  // season. These sources publish on different cadences (nflverse player_stats vs
-  // ffverse ff_opportunity vs nflverse pbp), so we pin each to the model's season
-  // and only let it feed the pool when both status === "live" AND the season
-  // matches exactly — otherwise we drop it (xFP basis falls back to the model's
-  // own per-game; schemeFit falls back to neutral; no QB nudge). We never pair a
-  // grade from one season with a signal from another.
+  // Season-consistent composition: the expected-points basis and the QB forward
+  // prior must describe the SAME season as the process grade. They publish on
+  // different cadences (nflverse player_stats vs ffverse ff_opportunity), so we
+  // pin each to the model's season and only feed it when status === "live" AND the
+  // season matches exactly — otherwise we drop it (xFP basis falls back to the
+  // model's own per-game; no QB nudge). We never pair a grade from one season with
+  // a signal from another.
   //
-  // Lazy-import team-environment + qb-forward loaders so this module's import
-  // graph stays light and the pure builders above remain independently testable.
-  const [{ loadTeamEnvironment }, { loadQbForward }] = await Promise.all([
-    import("../intelligence/team-environment"),
-    import("../intelligence/qb-forward"),
-  ]);
+  // DELIBERATELY NOT loaded here: team-environment (neutral-script EPA). It reads
+  // play-by-play (~40MB), which is far too heavy to fetch+parse on a serverless
+  // cold start / per request — it times out in production. schemeFit therefore
+  // falls back to its documented neutral default on the live path. The richer
+  // team-environment schemeFit returns via a precomputed snapshot refresh (where
+  // the heavy load runs with an extended budget), not on this hot path.
+  const { loadQbForward } = await import("../intelligence/qb-forward");
 
-  // Run the three downstream loads concurrently; each is independently guarded.
-  const [xfp, teamEnv, qbForward] = await Promise.all([
+  // Both remaining downstream loads are cheap; run them concurrently, each guarded.
+  const [xfp, qbForward] = await Promise.all([
     loadExpectedPoints({ fetcher, season: model.season }),
-    loadTeamEnvironment({ fetcher, season: model.season }),
     loadQbForward({ fetcher, season: model.season }),
   ]);
 
   const xfpRows = xfp.status === "live" && xfp.season === model.season ? xfp.rows : [];
-  const teamEnvRows = teamEnv.status === "live" && teamEnv.season === model.season ? teamEnv.rows : [];
   const qbForwardRows = qbForward.status === "live" && qbForward.season === model.season ? qbForward.rows : [];
 
-  const pool = buildGradedPool(model.profiles, xfpRows, teamEnvRows, qbForwardRows);
+  // teamEnv intentionally [] on the live path (see note above) -> neutral schemeFit.
+  const pool = buildGradedPool(model.profiles, xfpRows, [], qbForwardRows);
   return { status: "live", season: model.season, count: pool.length, players: pool, error: null };
 }
 

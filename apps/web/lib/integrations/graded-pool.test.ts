@@ -220,24 +220,16 @@ describe("loadGradedPool", () => {
     expect(wr.proj).toBe(170);
   });
 
-  it("composes a season-matched team environment into schemeFit (KC strong offense -> above neutral)", async () => {
-    // pbp served for 2024 (== model season) -> team environment is live & matched.
+  it("does NOT load team-environment on the live path — schemeFit stays neutral (cold-start budget)", async () => {
+    // Even with a season-matched play-by-play available, the runtime path skips it
+    // (pbp is ~40MB — too heavy for a serverless cold start; it 500s in prod). The
+    // pure buildGradedPool still composes team-environment when given rows (tested
+    // above); loadGradedPool just doesn't fetch it. schemeFit -> documented neutral.
     const r = await loadGradedPool({ fetcher: route(2024, 2024) });
     expect(r.status).toBe("live");
     expect(r.season).toBe(2024);
     const wr = r.players.find((p) => p.id === "WR1")!;
-    expect(wr.schemeFit).toBeGreaterThan(0.6); // KC ranks as the strong offense
-    expect(wr.role).toContain("off env");
-  });
-
-  it("ignores a season-mismatched team environment (falls back to neutral 0.6)", async () => {
-    // Model resolves to 2024 but pbp is only served at 2023; loadPbp falls back to
-    // 2023, so team environment's season (2023) != model season (2024) -> dropped.
-    const r = await loadGradedPool({ fetcher: route(2024, 2023) });
-    expect(r.status).toBe("live");
-    expect(r.season).toBe(2024);
-    const wr = r.players.find((p) => p.id === "WR1")!;
-    expect(wr.schemeFit).toBe(0.6); // off-season environment rejected, neutral fallback
+    expect(wr.schemeFit).toBe(0.6); // neutral — team environment not loaded on the hot path
     expect(wr.role).not.toContain("off env");
   });
 });
