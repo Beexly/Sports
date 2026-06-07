@@ -28,6 +28,7 @@ type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
 const POSITIONS: readonly ModelPosition[] = ["QB", "RB", "WR", "TE"];
 const MIN_HALF_GAMES = 3; // games required in EACH half for a stable per-game read
+const MIN_SEASON_GAMES = 6; // games required in EACH full season for the year-over-year test
 const MIN_PAIRS = 6; // below this a correlation is noise; report null instead
 
 export interface PredictivenessSplit {
@@ -55,6 +56,11 @@ export interface PredictivenessProof {
   readonly overall: PredictivenessSplit;
   readonly byPosition: readonly PredictivenessSplit[];
   readonly verdict: string;
+  /** Out-of-sample: grade built on the PRIOR season, tested on this season. The draft-relevant proof. */
+  readonly priorSeason: number | null;
+  readonly yearOverYear: PredictivenessSplit | null;
+  readonly yearOverYearByPosition: readonly PredictivenessSplit[];
+  readonly yearOverYearVerdict: string | null;
   readonly canPublishProjections: false;
   readonly note: string;
   readonly sourceUrl: string;
@@ -139,57 +145,48 @@ function verdictFor(overall: PredictivenessSplit): string {
   return `First-half process grade ranks second-half production at ρ≈${grade.toFixed(2)}${liftStr}. In-sample, single-season — a directional proof, not a guarantee.`;
 }
 
-/** Run the split-half backtest. Pure (records + season in, proof out). */
-export function buildPredictiveness(records: readonly CsvRecord[], activeSeason: number): Omit<PredictivenessProof, "generatedAt" | "status" | "sourceUrl" | "error"> {
-  const reg = records.filter((r) => r["season"] === String(activeSeason) && r["season_type"] === "REG");
-  const weeks = [...new Set(reg.map((r) => num(r["week"])).filter((w) => w > 0))].sort((a, b) => a - b);
-  const empty = {
-    season: activeSeason,
-    trainWeeks: [] as number[],
-    testWeeks: [] as number[],
-    sampleSize: 0,
-    overall: summarize("QB", []),
-    byPosition: [] as PredictivenessSplit[],
-    verdict: "Not enough weeks to split a season — the board stays honest and empty.",
-    canPublishProjections: false as const,
-    note: "",
-  };
-  if (weeks.length < 6) return empty;
+function yoyVerdictFor(overall: PredictivenessSplit, trainSeason: number, testSeason: number): string {
+  if (overall.gradeCorr == null) return `Not enough players carried over from ${trainSeason} to ${testSeason} for a confident out-of-sample read.`;
+  const lift = overall.lift;
+  const liftStr = lift == null ? "" : lift > 0 ? `, beating the past-production baseline by ${lift.toFixed(2)}` : ` (it does not beat raw ${trainSeason} production this pair)`;
+  return `Grade built on ${trainSeason} ranks ${testSeason} production at ρ≈${overall.gradeCorr.toFixed(2)}${liftStr}. Out-of-sample, across seasons — the real draft test.`;
+}
 
-  const mid = weeks[Math.floor(weeks.length / 2)]!;
-  const trainWeeks = weeks.filter((w) => w < mid);
-  const testWeeks = weeks.filter((w) => w >= mid);
-  if (trainWeeks.length < 2 || testWeeks.length < 2) return empty;
-  const trainSet = new Set(trainWeeks);
-  const testSet = new Set(testWeeks);
+/**
+ * Join a TRAIN set (process grade) to a TEST set (production) by player id and
+ * build the per-position + pooled splits. The two sets are already REG-filtered;
+ * the test set can be later weeks of the same season (in-sample) or a whole
+ * different season (out-of-sample). Pure.
+ */
+function buildPairs(
+  trainRecords: readonly CsvRecord[],
+  trainSeason: number,
+  testRecords: readonly CsvRecord[],
+  minTrainGames: number,
+  minTestGames: number,
+): { pooled: Pair[]; byPosition: PredictivenessSplit[] } {
+  const { profiles } = buildPlayerModel(trainRecords, trainSeason, { topPerPos: Infinity });
 
-  // First half: the REAL process grade, uncapped so the sample isn't biased to leaders.
-  const trainRecords = reg.filter((r) => trainSet.has(num(r["week"])));
-  const { profiles } = buildPlayerModel(trainRecords, activeSeason, { topPerPos: Infinity });
-
-  // Second half: raw per-game production per player.
-  const testAgg = new Map<string, { pts: number; games: number; position: ModelPosition }>();
-  for (const r of reg) {
-    if (!testSet.has(num(r["week"]))) continue;
+  const testAgg = new Map<string, { pts: number; games: number }>();
+  for (const r of testRecords) {
     const pos = (r["position"] ?? "").toUpperCase() as ModelPosition;
     if (!POSITIONS.includes(pos)) continue;
     const id = r["player_id"] || r["player_display_name"] || "";
     if (!id) continue;
-    const a = testAgg.get(id) ?? { pts: 0, games: 0, position: pos };
+    const a = testAgg.get(id) ?? { pts: 0, games: 0 };
     a.pts += num(r["fantasy_points_ppr"]);
     a.games += 1;
     testAgg.set(id, a);
   }
 
-  // Join on player id (same source, same id space) and compute within-position test percentiles.
   const byPosition: PredictivenessSplit[] = [];
   const pooled: Pair[] = [];
   for (const pos of POSITIONS) {
     const joined = profiles
-      .filter((p) => p.position === pos && p.games >= MIN_HALF_GAMES)
+      .filter((p) => p.position === pos && p.games >= minTrainGames)
       .map((p) => {
         const t = testAgg.get(p.playerId);
-        if (!t || t.games < MIN_HALF_GAMES) return null;
+        if (!t || t.games < minTestGames) return null;
         return { p, testFppg: t.pts / t.games };
       })
       .filter((x): x is { p: PlayerProfile; testFppg: number } => x !== null);
@@ -207,6 +204,57 @@ export function buildPredictiveness(records: readonly CsvRecord[], activeSeason:
     pooled.push(...pairs);
     byPosition.push(summarize(pos, pairs));
   }
+  return { pooled, byPosition };
+}
+
+/** Out-of-sample backtest: grade built on `trainSeason`, tested on `testSeason`. Pure. */
+export function buildSeasonOverSeason(
+  records: readonly CsvRecord[],
+  trainSeason: number,
+  testSeason: number,
+): { overall: PredictivenessSplit; byPosition: PredictivenessSplit[]; n: number } {
+  const trainRecords = records.filter((r) => r["season"] === String(trainSeason) && r["season_type"] === "REG");
+  const testRecords = records.filter((r) => r["season"] === String(testSeason) && r["season_type"] === "REG");
+  if (trainRecords.length === 0 || testRecords.length === 0) {
+    return { overall: summarize("QB", []), byPosition: [], n: 0 };
+  }
+  const { pooled, byPosition } = buildPairs(trainRecords, trainSeason, testRecords, MIN_SEASON_GAMES, MIN_SEASON_GAMES);
+  return { overall: summarize("QB", pooled), byPosition, n: pooled.length };
+}
+
+/** Run the split-half backtest. Pure (records + season in, proof out). */
+export function buildPredictiveness(records: readonly CsvRecord[], activeSeason: number): Omit<PredictivenessProof, "generatedAt" | "status" | "sourceUrl" | "error"> {
+  const reg = records.filter((r) => r["season"] === String(activeSeason) && r["season_type"] === "REG");
+  const weeks = [...new Set(reg.map((r) => num(r["week"])).filter((w) => w > 0))].sort((a, b) => a - b);
+  const empty = {
+    season: activeSeason,
+    trainWeeks: [] as number[],
+    testWeeks: [] as number[],
+    sampleSize: 0,
+    overall: summarize("QB", []),
+    byPosition: [] as PredictivenessSplit[],
+    verdict: "Not enough weeks to split a season — the board stays honest and empty.",
+    priorSeason: null,
+    yearOverYear: null,
+    yearOverYearByPosition: [] as PredictivenessSplit[],
+    yearOverYearVerdict: null,
+    canPublishProjections: false as const,
+    note: "",
+  };
+  if (weeks.length < 6) return empty;
+
+  const mid = weeks[Math.floor(weeks.length / 2)]!;
+  const trainWeeks = weeks.filter((w) => w < mid);
+  const testWeeks = weeks.filter((w) => w >= mid);
+  if (trainWeeks.length < 2 || testWeeks.length < 2) return empty;
+  const trainSet = new Set(trainWeeks);
+  const testSet = new Set(testWeeks);
+
+  // First half builds the grade (uncapped so the sample isn't biased to leaders);
+  // second half is the production we test it against.
+  const trainRecords = reg.filter((r) => trainSet.has(num(r["week"])));
+  const testRecords = reg.filter((r) => testSet.has(num(r["week"])));
+  const { pooled, byPosition } = buildPairs(trainRecords, activeSeason, testRecords, MIN_HALF_GAMES, MIN_HALF_GAMES);
 
   const overall = summarize("QB", pooled); // position label unused for the pooled row
   return {
@@ -217,6 +265,10 @@ export function buildPredictiveness(records: readonly CsvRecord[], activeSeason:
     overall,
     byPosition,
     verdict: verdictFor(overall),
+    priorSeason: null,
+    yearOverYear: null,
+    yearOverYearByPosition: [],
+    yearOverYearVerdict: null,
     canPublishProjections: false,
     note: "Split-half backtest on real nflverse weekly data: build the process grade on the first half of the season, then measure how it ranks second-half production vs the past-production baseline. Buy-low/sell-high calls are scored against the coin-flip line. In-sample, single-season — directional proof.",
   };
@@ -236,7 +288,24 @@ export async function loadPredictiveness({
     const hasSeason = records.some((r) => r["season"] === String(season) && r["season_type"] === "REG");
     const activeSeason = hasSeason ? season : records.reduce((m, r) => Math.max(m, num(r["season"])), 0);
     const body = buildPredictiveness(records, activeSeason);
-    return { generatedAt: new Date().toISOString(), status: "live", sourceUrl: url, error: null, ...body };
+
+    // Out-of-sample: if the prior season is present in the same asset, grade on it
+    // and test on the active season — the draft-relevant, across-seasons proof.
+    const priorSeason = activeSeason - 1;
+    const hasPrior = records.some((r) => r["season"] === String(priorSeason) && r["season_type"] === "REG");
+    const yoy = hasPrior ? buildSeasonOverSeason(records, priorSeason, activeSeason) : null;
+
+    return {
+      generatedAt: new Date().toISOString(),
+      status: "live",
+      sourceUrl: url,
+      error: null,
+      ...body,
+      priorSeason: yoy ? priorSeason : null,
+      yearOverYear: yoy ? yoy.overall : null,
+      yearOverYearByPosition: yoy ? yoy.byPosition : [],
+      yearOverYearVerdict: yoy ? yoyVerdictFor(yoy.overall, priorSeason, activeSeason) : null,
+    };
   } catch (error) {
     return {
       generatedAt: new Date().toISOString(),
@@ -248,6 +317,10 @@ export async function loadPredictiveness({
       overall: summarize("QB", []),
       byPosition: [],
       verdict: "The backtest could not load from nflverse. The board shows an empty state instead of an unverifiable claim.",
+      priorSeason: null,
+      yearOverYear: null,
+      yearOverYearByPosition: [],
+      yearOverYearVerdict: null,
       canPublishProjections: false,
       note: "Predictiveness backtest unavailable.",
       sourceUrl: url,

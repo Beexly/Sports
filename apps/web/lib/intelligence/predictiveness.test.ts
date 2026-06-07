@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildPredictiveness, loadPredictiveness } from "./predictiveness";
+import { buildPredictiveness, buildSeasonOverSeason, loadPredictiveness } from "./predictiveness";
 
 type Row = Record<string, string>;
 
@@ -76,6 +76,43 @@ describe("buildPredictiveness", () => {
   });
 });
 
+// One full season for 8 WRs (8 games each), anchors increasing in k so the grade
+// increases in k; production controlled by `ppr(k)`.
+function wrSeason(season: number, ppr: (k: number) => number, games = 8): Row[] {
+  const rows: Row[] = [];
+  for (let k = 0; k < 8; k++) {
+    const base: Row = {
+      season: String(season), season_type: "REG", position: "WR",
+      player_id: `WR${k}`, player_display_name: `WR ${k}`, recent_team: "KC",
+      attempts: "0", carries: "0", targets: "6",
+      passing_epa: "0", rushing_epa: "0", receiving_epa: String(k),
+      wopr: String(0.2 + k * 0.05), target_share: String(0.1 + k * 0.02), dakota: "", pacr: "",
+    };
+    for (let w = 1; w <= games; w++) rows.push({ ...base, week: String(w), fantasy_points_ppr: String(ppr(k)) });
+  }
+  return rows;
+}
+
+describe("buildSeasonOverSeason (out-of-sample)", () => {
+  // 2023 inputs grade players high→k; 2023 production decreasing (so high grade =
+  // buy-low); 2024 production increasing (the grade was right across seasons).
+  const records = [...wrSeason(2023, (k) => (8 - k) * 2), ...wrSeason(2024, (k) => (k + 1) * 3)];
+
+  it("grades on the prior season and ranks the next season's production", () => {
+    const yoy = buildSeasonOverSeason(records, 2023, 2024);
+    expect(yoy.n).toBeGreaterThanOrEqual(6);
+    expect(yoy.overall.gradeCorr).not.toBeNull();
+    expect(yoy.overall.gradeCorr!).toBeGreaterThan(0.5);
+    expect(yoy.overall.lift!).toBeGreaterThan(0); // beats prior-season production here by design
+  });
+
+  it("is empty when a season is missing (no fabrication)", () => {
+    const yoy = buildSeasonOverSeason(wrSeason(2024, (k) => k + 1), 2023, 2024);
+    expect(yoy.n).toBe(0);
+    expect(yoy.byPosition).toEqual([]);
+  });
+});
+
 describe("loadPredictiveness", () => {
   it("degrades to source-error when nflverse is unreachable", async () => {
     const r = await loadPredictiveness({ fetcher: async () => { throw new Error("blocked"); } });
@@ -90,5 +127,16 @@ describe("loadPredictiveness", () => {
     expect(r.status).toBe("live");
     expect(r.season).toBe(2024);
     expect(r.overall.gradeCorr).not.toBeNull();
+    expect(r.priorSeason).toBeNull(); // single-season asset -> no out-of-sample pair
+  });
+
+  it("computes the year-over-year backtest when the prior season is present", async () => {
+    const csv = toCsv([...wrSeason(2023, (k) => (8 - k) * 2), ...wrSeason(2024, (k) => (k + 1) * 3)]);
+    const r = await loadPredictiveness({ season: 2024, fetcher: async () => new Response(csv) });
+    expect(r.status).toBe("live");
+    expect(r.priorSeason).toBe(2023);
+    expect(r.yearOverYear).not.toBeNull();
+    expect(r.yearOverYear!.gradeCorr!).toBeGreaterThan(0.5);
+    expect(r.yearOverYearVerdict).toMatch(/2023/);
   });
 });

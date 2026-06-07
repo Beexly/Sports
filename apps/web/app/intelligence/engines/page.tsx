@@ -67,7 +67,7 @@ const GROUPS: readonly Group[] = [
   {
     category: "Proof & calibration",
     engines: [
-      { name: "Predictiveness Backtest", summary: "Split-half backtest: does the process grade rank next-half production better than past production? Grade ρ, lift over baseline, and buy/sell hit-rates — in-sample, stated honestly.", api: "/api/intelligence/predictiveness", board: "/intelligence/proof", status: "live" },
+      { name: "Predictiveness Backtest", summary: "Does the process grade actually predict? Split-half (in-season) AND out-of-sample year-over-year (last year's grade → this year's production): grade ρ, lift over the past-production baseline, and buy/sell hit-rates — stated honestly, including where it loses.", api: "/api/intelligence/predictiveness", board: "/intelligence/proof", status: "live" },
     ],
   },
 ];
