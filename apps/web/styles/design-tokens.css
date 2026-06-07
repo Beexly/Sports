@@ -22,13 +22,41 @@
   --graphite:    var(--slate);
 
   /* ── ION — cool whites & mineral silvers ──────────────── */
-  --ion-white:   #F6F7FA;   /* ION WHITE — Brand Use Pack §4 */
-  --ion:         #D5DDE9;   /* primary text */
-  --ion-1:       #98A3B5;   /* secondary · mineral silver */
-  --ion-2:       #5E6878;   /* tertiary · meta */
-  --ion-3:       #3D4555;   /* muted */
+  /* DARK SCALE = marketing / cinematic surfaces (canvas is carbon #0D1117).
+     Every value below is verified WCAG AA (>=4.5:1) as TEXT on carbon/eclipse
+     so existing text-ion-* / var(--ion-*) usages are legible without renaming. */
+  --ion-white:   #F6F7FA;   /* ION WHITE — 17.67:1 on carbon — PASS */
+  --ion:         #D5DDE9;   /* primary text — 13.83:1 on carbon — PASS */
+  --ion-1:       #98A3B5;   /* secondary · mineral silver — 7.43:1 on carbon — PASS */
+  /* WCAG AA fix: --ion-2 re-valued from #5E6878 (3.36:1, FAIL) to #9AA6B8
+     (7.68:1 on carbon, 7.36:1 on eclipse — PASS). Used as text in tables/nav/meta. */
+  --ion-2:       #9AA6B8;   /* tertiary · meta — 7.68:1 on carbon — PASS */
+  /* WCAG AA fix: --ion-3 re-valued from #3D4555 (1.97:1, FAIL) to #8B97AB
+     (6.41:1 on carbon, 6.14:1 on eclipse — PASS). Kept a touch darker than
+     ion-2 to preserve the muted hierarchy. Used as text in nav sublabels.
+     Decorative non-text uses (giant step numbers, muted bullet dots) were
+     moved to --mineral so this lighter value never over-weights them. */
+  --ion-3:       #8B97AB;   /* muted — 6.41:1 on carbon — PASS */
+
+  /* ── PAPER — LIGHT data-surface scale (ADDITIVE) ──────── */
+  /* LIGHT SCALE = data surfaces (tables, tools, boards) where dense numbers
+     must read like a spreadsheet. Never used on marketing/cinematic pages.
+     All TEXT tokens verified WCAG AA (>=4.5:1) on --paper / --paper-sunken. */
+  --paper:         #F7F8FB;   /* near-white page bg */
+  --paper-raised:  #FFFFFF;   /* cards / raised rows */
+  --paper-sunken:  #F0F2F6;   /* zebra / sunken wells */
+  --paper-border:  #D9DEE7;   /* hairline divider on light (border, not text) */
+  --ink:           #0E1320;   /* body text — 17.46:1 on paper — PASS */
+  --ink-1:         #3A4356;   /* secondary text — 9.34:1 on paper — PASS */
+  --ink-2:         #5B6678;   /* muted meta — 5.47:1 on paper — PASS */
+  /* Accent-on-light variants — darkened so brand accents pass AA as TEXT on
+     paper. Accents = highlights/links only, never long prose. */
+  --plasma-on-light:      #B0118C;   /* 5.98:1 on paper — PASS */
+  --orbital-cyan-on-light:#06748A;   /* 5.11:1 on paper — PASS */
+  --ultraviolet-on-light: #5B43C9;   /* 6.40:1 on paper — PASS */
 
   /* ── PRIMARY SIGNAL — ion magenta ─────────────────────── */
+  /* DARK SCALE accents — highlights only, never long prose. */
   /* ION MAGENTA from Brand Use Pack §4. */
   --plasma:        #FF2DD6;
   --plasma-glow:   #FF66E0;
@@ -197,12 +225,14 @@
   --t-display-md:  600 32px/1.1  var(--f-display);
   --t-display-sm:  600 24px/1.2  var(--f-display);
 
+  /* SIZE FLOORS — body >= 14px, body-sm >= 13px for legibility. */
   --t-body-lg: 400 17px/1.55 var(--f-body);
-  --t-body:    400 15px/1.55 var(--f-body);
-  --t-body-sm: 400 13px/1.5  var(--f-body);
+  --t-body:    400 15px/1.55 var(--f-body);  /* >= 14px floor — OK */
+  --t-body-sm: 400 13px/1.5  var(--f-body);  /* >= 13px floor — OK */
   --t-body-xs: 400 12px/1.4  var(--f-body);
 
-  --t-eyebrow:    500 11px/1.3 var(--f-mono);
+  /* Eyebrow bumped from 11px to 12px floor (was often rendered ~10px). */
+  --t-eyebrow:    500 12px/1.3 var(--f-mono);
   --t-eyebrow-lg: 500 13px/1.3 var(--f-mono);
 
   --t-num-3xl: 700 96px/0.95 var(--f-numerals);

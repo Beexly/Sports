@@ -46,14 +46,29 @@ const config: Config = {
         mineral:    "#2E3849",
         "mineral-hi": "#3C4961",
 
-        // ── ION — cool whites & mineral silvers ───────────
+        // ── ION — cool whites & mineral silvers (DARK SCALE) ──
+        // Marketing / cinematic text on carbon #0D1117. ion-2 / ion-3 were
+        // re-valued to pass WCAG AA (>=4.5:1) as text; see design-tokens.css.
         "ion-white": "#F6F7FA",
         ion: {
-          DEFAULT: "#D5DDE9",
-          1: "#98A3B5",
-          2: "#5E6878",
-          3: "#3D4555",
+          DEFAULT: "#D5DDE9", // 13.83:1 on carbon
+          1: "#98A3B5",       // 7.43:1 on carbon
+          2: "#9AA6B8",       // was #5E6878 (3.36:1 FAIL) → 7.68:1 PASS
+          3: "#8B97AB",       // was #3D4555 (1.97:1 FAIL) → 6.41:1 PASS
         },
+
+        // ── PAPER — LIGHT data-surface scale (ADDITIVE) ───
+        // Data surfaces (tables/tools/boards). All text tokens pass WCAG AA
+        // on paper; accents-on-light are darkened for AA text use only.
+        paper: {
+          DEFAULT: "#F7F8FB",  // page bg → bg-paper
+          raised:  "#FFFFFF",  // cards → bg-paper-raised
+          sunken:  "#F0F2F6",  // zebra → bg-paper-sunken
+          border:  "#D9DEE7",  // hairline → border-paper-border
+        },
+        "plasma-on-light":       "#B0118C", // 5.98:1 on paper — text accent
+        "orbital-cyan-on-light": "#06748A", // 5.11:1 on paper — text accent
+        "ultraviolet-on-light":  "#5B43C9", // 6.40:1 on paper — text accent
 
         // ── PRIMARY SIGNAL — ion magenta ──────────────────
         plasma: {
@@ -125,6 +140,13 @@ const config: Config = {
           950: "#001226",
         },
         ink: {
+          // LIGHT body inks for the PAPER data-surface scale (ADDITIVE).
+          // text-ink / text-ink-1 / text-ink-2 — all WCAG AA on --paper.
+          // (No prior usages of these names; numeric ramp below is untouched.)
+          DEFAULT: "#0E1320",  // body — 17.46:1 on paper
+          1:    "#3A4356",     // secondary — 9.34:1 on paper
+          2:    "#5B6678",     // muted meta — 5.47:1 on paper
+          // ── legacy DARK ramp (unchanged) — ink-50..ink-1000 ──
           50:   "#F5F7FF",
           100:  "#D5DDE9",
           200:  "#98A3B5",
@@ -165,7 +187,7 @@ const config: Config = {
         "display-2xl": ["clamp(3rem, 8vw, 6rem)", { lineHeight: "0.95", letterSpacing: "-0.02em" }],
         "display-xl":  ["clamp(2.5rem, 6vw, 4rem)", { lineHeight: "1.0", letterSpacing: "-0.02em" }],
         "display-lg":  ["clamp(2rem, 5vw, 3rem)", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
-        eyebrow:    ["11px", { lineHeight: "1.3", letterSpacing: "0.08em" }],
+        eyebrow:    ["12px", { lineHeight: "1.3", letterSpacing: "0.08em" }], // floor bumped 11→12px
         "eyebrow-lg": ["13px", { lineHeight: "1.3", letterSpacing: "0.08em" }],
       },
       letterSpacing: {

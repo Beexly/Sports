@@ -137,7 +137,9 @@ button { font-family: inherit; cursor: pointer; }
   bottom: -40px; left: -80px;
   font: 800 380px/0.82 "Syne", var(--f-display);
   letter-spacing: -0.05em;
-  color: var(--ion-3);
+  /* Decorative watermark (transparent fill). Pinned to --mineral so the
+     WCAG-driven lightening of --ion-3 doesn't over-weight this. */
+  color: var(--mineral);
   -webkit-text-stroke: 1px var(--mineral);
   -webkit-text-fill-color: transparent;
   opacity: 0.55;
@@ -437,10 +439,13 @@ button { font-family: inherit; cursor: pointer; }
 .how .step {
   font: 700 64px/0.95 var(--f-arch);
   letter-spacing: -0.04em;
-  color: var(--ion-3);
+  /* Decorative giant step numeral (outline only). Pinned to --mineral so the
+     WCAG-driven lightening of --ion-3 (now a legible text gray) doesn't make
+     this background ornament too loud. */
+  color: var(--mineral);
   position: absolute; right: 16px; top: 12px;
   user-select: none;
-  -webkit-text-stroke: 1px var(--ion-3);
+  -webkit-text-stroke: 1px var(--mineral);
   -webkit-text-fill-color: transparent;
 }
 .how .icon {
@@ -533,7 +538,9 @@ button { font-family: inherit; cursor: pointer; }
 .tier.featured li::before { background: var(--plasma); box-shadow: 0 0 8px var(--plasma); }
 .tier.elite-tier li::before { background: var(--ultraviolet); box-shadow: 0 0 8px var(--ultraviolet); }
 .tier li.muted { color: var(--fg-muted); }
-.tier li.muted::before { background: var(--ion-3); }
+/* Muted bullet dot — decorative background, kept on --mineral so the
+   lightened text-grade --ion-3 doesn't brighten this marker. */
+.tier li.muted::before { background: var(--mineral); }
 
 .tier .cta { margin-top: auto; }
 
