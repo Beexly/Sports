@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 // Render per-request so the founder-gated live-projections status is reflected at
 // runtime (the provider is registered at server startup, not build time).
 export const dynamic = "force-dynamic";
+export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs headroom beyond the default
 
 export default async function OptimizerPage(): Promise<JSX.Element> {
   // Live graded pool for Start/Sit + Draft tabs when projections are on; DFS uses
