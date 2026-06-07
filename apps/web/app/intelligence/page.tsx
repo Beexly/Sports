@@ -6,6 +6,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { ConsensusEngine3DLazy } from "@/components/hero/consensus-engine-3d-lazy";
 import { Ticker } from "@/components/ui/ticker";
 import { ReasoningShowcase } from "@/components/intelligence/reasoning-showcase";
+import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { Atmosphere } from "@/components/ui/atmosphere";
@@ -87,6 +88,119 @@ const CHAIN: ReadonlyArray<{
   },
 ];
 
+/**
+ * The Intelligence system, as one navigator. Each node is a real destination
+ * inside the system — the hub front door points to every surface so the section
+ * reads as one system with rooms, not a dumped list.
+ */
+const SYSTEM_NODES: ReadonlyArray<{
+  readonly title: string;
+  readonly href: string;
+  readonly desc: string;
+  readonly accent: string;
+}> = [
+  {
+    title: "Engines",
+    href: "/intelligence/engines",
+    desc: "Every advanced-data engine in one browsable surface.",
+    accent: BRAND_COLORS.orbitalCyan,
+  },
+  {
+    title: "Proof & Calibration",
+    href: "/intelligence/engines?engine=proof",
+    desc: "Does the process actually predict? The honest answer.",
+    accent: BRAND_COLORS.softUltraviolet,
+  },
+  {
+    title: "Trend Lab",
+    href: "/trends",
+    desc: "Significant trends, surfaced with their p-values.",
+    accent: BRAND_COLORS.orbitalCyan,
+  },
+  {
+    title: "Edge Map",
+    href: "/observatory",
+    desc: "The whole slate, read as a galaxy of edges.",
+    accent: BRAND_COLORS.ionMagenta,
+  },
+  {
+    title: "Airwave",
+    href: "/airwave",
+    desc: "Pundits, graded against the record they actually made.",
+    accent: BRAND_COLORS.softUltraviolet,
+  },
+  {
+    title: "CLV Tracker",
+    href: "/track",
+    desc: "Your glass-box ledger, graded against the close.",
+    accent: BRAND_COLORS.orbitalCyan,
+  },
+  {
+    title: "The Beat",
+    href: "/the-beat",
+    desc: "News, scored for reliability before it moves you.",
+    accent: BRAND_COLORS.ionMagenta,
+  },
+  {
+    title: "How we read metrics",
+    href: "/intelligence/metrics",
+    desc: "The glass box on every signal — and how we read it.",
+    accent: BRAND_COLORS.softUltraviolet,
+  },
+];
+
+function SystemNavigator() {
+  return (
+    <section className="px-4 py-16 sm:px-6 lg:px-8" aria-labelledby="system-heading">
+      <div className="mx-auto max-w-6xl">
+        <Reveal>
+          <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+            One system, many rooms
+          </p>
+        </Reveal>
+        <Reveal delay={90}>
+          <h2 id="system-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
+            The intelligence system.
+          </h2>
+        </Reveal>
+        <Reveal delay={150}>
+          <p className="mt-4 max-w-2xl text-ink-300">
+            Every surface below is the same engine, read through a different lens. Step into any room — the
+            tab bar carries you between them.
+          </p>
+        </Reveal>
+        <Reveal delay={120} className="mt-10">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {SYSTEM_NODES.map((node) => (
+              <Link
+                key={node.href}
+                href={node.href}
+                className="group relative flex flex-col overflow-hidden rounded-xl border border-white/10 bg-white/5 p-5 transition-colors duration-200 hover:border-white/25 hover:bg-white/[0.08]"
+              >
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-0.5 opacity-60 transition-opacity duration-200 group-hover:opacity-100"
+                  style={{ backgroundColor: node.accent }}
+                />
+                <span className="flex items-center justify-between gap-2">
+                  <span className="font-display text-lg text-white">{node.title}</span>
+                  <span
+                    aria-hidden="true"
+                    className="text-ink-300 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-white"
+                  >
+                    →
+                  </span>
+                </span>
+                <span className="mt-2 text-sm leading-6 text-ink-300">{node.desc}</span>
+              </Link>
+            ))}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 function ConsensusField() {
   // Decorative "referees converging on consensus" motif — the precise companion
   // to the ambient galaxy. Purely visual.
@@ -141,6 +255,7 @@ export default function IntelligencePage() {
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Atmosphere />
       <Nav />
+      <IntelligenceSubnav />
 
       <main className="flex-1">
         {/* Hero — the interactive engine itself, full-screen intro */}
@@ -204,6 +319,9 @@ export default function IntelligencePage() {
             </Reveal>
           </div>
         </section>
+
+        {/* The intelligence system — the hub navigator into every surface */}
+        <SystemNavigator />
 
         {/* Kinetic ticker — doctrine in motion */}
         <Ticker items={TICKER_PHRASES} durationSec={42} />

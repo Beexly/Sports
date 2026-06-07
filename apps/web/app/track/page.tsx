@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
+import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
@@ -19,8 +20,9 @@ export default function TrackPage() {
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Atmosphere />
       <Nav />
+      <IntelligenceSubnav />
       <main id="main-content" className="flex-1">
-        <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+        <section className="relative isolate overflow-hidden px-4 pb-8 pt-12 sm:px-6 sm:pt-16 lg:px-8">
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80" style={{ background: `radial-gradient(55% 80% at 50% 0%, ${BRAND_COLORS.softUltraviolet}16, transparent 70%)` }} />
           <div className="mx-auto max-w-5xl">
             <Reveal>

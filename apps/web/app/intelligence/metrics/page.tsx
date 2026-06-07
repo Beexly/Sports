@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
+import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Nav } from "@/components/ui/nav";
 import {
   metricsByCategory,
@@ -74,6 +75,7 @@ export default function MetricsMethodologyPage(): JSX.Element {
   return (
     <div className="min-h-screen bg-carbon text-ion">
       <Nav />
+      <IntelligenceSubnav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-8 sm:px-6 lg:px-8">
         <section className="border-b border-mineral pb-8">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">Methodology</p>

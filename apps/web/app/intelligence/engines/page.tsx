@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { EngineView } from "@/components/intelligence/engine-view";
+import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
 import { MetricExplainer } from "@/components/ui/metric-explainer";
@@ -143,6 +144,7 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
   return (
     <div className="min-h-screen bg-paper text-ink">
       <Nav />
+      <IntelligenceSubnav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <PageHero
           eyebrow="Intelligence engines"

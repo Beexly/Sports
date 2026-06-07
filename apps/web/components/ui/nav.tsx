@@ -16,7 +16,7 @@ const TAIL_LINKS = [
 type NavItem = { label: string; href: string; desc: string };
 type NavGroup = { heading?: string; items: readonly NavItem[] };
 
-// Players ▾ — the Lab plus a few high-value deep-link views. "See all in the Lab".
+// Players ▾ — hub-first: the Lab, then at most 3 curated quick views.
 const PLAYERS_MENU: readonly NavGroup[] = [
   {
     items: [
@@ -27,64 +27,43 @@ const PLAYERS_MENU: readonly NavGroup[] = [
     heading: "Quick views",
     items: [
       { label: "Opportunity", href: "/players?view=opportunity", desc: "Air yards · WOPR — buy-low / sell-high" },
-      { label: "Snap Share", href: "/players?view=snaps", desc: "Offensive workload leaders" },
       { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, CPOE, RYOE" },
-      { label: "Edge Signals", href: "/players?view=edge", desc: "Process grade vs output" },
       { label: "DFS Salaries", href: "/players?view=dfs", desc: "Licensed DraftKings feeds" },
     ],
   },
 ];
 
-// Intelligence ▾ — the engine browser, a few marquee engines, the standalone reads.
+// Intelligence ▾ — hub-first: the one system, then at most 3 curated entries.
+// Trend Lab / Airwave / CLV Tracker / The Beat / Mission Control / metrics now
+// live inside the Intelligence hub + its sub-nav + the ⌘K palette.
 const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
-      { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every advanced-data engine, browsable" },
+      { label: "Intelligence Hub", href: "/intelligence", desc: "The whole intelligence system, one place" },
     ],
   },
   {
-    heading: "Marquee engines",
     items: [
-      { label: "Proof", href: "/intelligence/engines?engine=proof", desc: "Does the process actually predict?" },
-      { label: "Player Model", href: "/intelligence/engines?engine=player-model", desc: "Process grade vs production" },
-      { label: "Expected Points", href: "/intelligence/engines?engine=expected-points", desc: "xFP vs actual, by position" },
-    ],
-  },
-  {
-    heading: "Surfaces",
-    items: [
-      { label: "Mission Control", href: "/today", desc: "Today's command deck" },
-      { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
+      { label: "Engines", href: "/intelligence/engines", desc: "Every advanced-data engine" },
+      { label: "Proof", href: "/intelligence/engines?engine=proof", desc: "Does the process predict?" },
       { label: "Edge Map", href: "/observatory", desc: "The slate as a galaxy" },
-      { label: "Airwave", href: "/airwave", desc: "Pundits, graded on the record" },
-      { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
-      { label: "The Beat", href: "/the-beat", desc: "News, reliability-scored" },
-    ],
-  },
-  {
-    items: [
-      { label: "How we read metrics", href: "/intelligence/metrics", desc: "Metric methodology, glass-box" },
     ],
   },
 ];
 
-// Fantasy ▾ — the core manager/DFS tools, plus Connect.
+// Fantasy ▾ — hub-first: the workspace, then at most 3 curated tools.
 const FANTASY_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "Fantasy Hub", href: "/fantasy", desc: "Draft, lineup, waivers, trade, DFS in one workspace" },
+    ],
+  },
   {
     heading: "Core tools",
     items: [
       { label: "Draft Assistant", href: "/fantasy/draft", desc: "Tiers, VOR, live guidance" },
       { label: "Lineup Optimizer", href: "/fantasy/lineup", desc: "Start-sit, floor vs ceiling" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Adds and bids, with the why" },
-      { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Value, fairness, win-now" },
-      { label: "DFS Optimizer", href: "/fantasy/dfs", desc: "Cash / GPP / leverage, glass-box" },
-      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & Pick6 line edges" },
-      { label: "Contests", href: "/fantasy/contests", desc: "Best ball, survivor, squares" },
-    ],
-  },
-  {
-    items: [
-      { label: "Connect League", href: "/fantasy/connect", desc: "Read-only Sleeper sync" },
     ],
   },
 ];
@@ -137,7 +116,7 @@ export async function Nav() {
             ))}
 
             <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
-            <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
+            <NavMenu label="Intelligence" href="/intelligence" groups={INTELLIGENCE_MENU} />
             <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
 
             {TAIL_LINKS.map(({ href, label }) => (

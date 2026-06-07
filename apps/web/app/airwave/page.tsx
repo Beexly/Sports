@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
+import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
@@ -42,10 +43,11 @@ export default async function AirwavePage() {
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Atmosphere />
       <Nav />
+      <IntelligenceSubnav />
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+        <section className="relative isolate overflow-hidden px-4 pb-8 pt-12 sm:px-6 sm:pt-16 lg:px-8">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"

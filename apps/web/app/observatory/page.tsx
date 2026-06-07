@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
+import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
@@ -54,6 +55,7 @@ export default async function ObservatoryPage() {
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
+      <IntelligenceSubnav />
 
       <main className="flex-1">
         {/* Hero */}
@@ -68,7 +70,7 @@ export default async function ObservatoryPage() {
               background: `linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}cc 0%, ${BRAND_COLORS.obsidianBlack}33 40%, ${BRAND_COLORS.obsidianBlack}55 72%, ${BRAND_COLORS.obsidianBlack} 100%)`,
             }}
           />
-          <div className="mx-auto flex min-h-[78vh] max-w-6xl flex-col justify-center px-4 py-24 sm:px-6 lg:px-8">
+          <div className="mx-auto flex min-h-[78vh] max-w-6xl flex-col justify-center px-4 pb-24 pt-12 sm:px-6 sm:pt-16 lg:px-8">
             <Reveal>
               <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
                 {SURFACES.observatory.label}
