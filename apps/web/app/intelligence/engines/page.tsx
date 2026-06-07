@@ -29,9 +29,9 @@ const GROUPS: readonly Group[] = [
     category: "Cross-position core",
     engines: [
       { name: "Player Intelligence", summary: "One position-aware process grade per player from the full advanced field set; process-vs-production buy/sell.", api: "/api/intelligence/player-model", board: "/intelligence/players", status: "live" },
-      { name: "Expected Fantasy Points (xFP)", summary: "What a player's real usage should have produced — the cleanest, most stable buy/sell lens.", api: "/api/intelligence/expected-points", status: "live" },
+      { name: "Expected Fantasy Points (xFP)", summary: "What a player's real usage should have produced — the cleanest, most stable buy/sell lens.", api: "/api/intelligence/expected-points", board: "/intelligence/expected-points", status: "live" },
       { name: "Roster Advice", summary: "Model → real add/drop/read decisions for a posted roster (composes with Sleeper sync).", api: "/api/intelligence/roster-advice", method: "POST", status: "live" },
-      { name: "Graded Pool", summary: "Composes the model + xFP into a real graded pool that drives every fantasy tool when the founder enables it.", api: "/api/intelligence/graded-pool", status: "gated" },
+      { name: "Graded Pool", summary: "Composes the model + xFP + team environment (real schemeFit from neutral-script offensive EPA) + QB-forward passing signal into a real graded pool that drives every fantasy tool when the founder enables it.", api: "/api/intelligence/graded-pool", status: "gated" },
     ],
   },
   {
@@ -45,7 +45,7 @@ const GROUPS: readonly Group[] = [
     category: "Running back",
     engines: [
       { name: "Rushing Efficiency", summary: "RYOE/att vs volume with stacked-box context — bell-cow / buy-low / volume-dependent.", api: "/api/intelligence/rushing-efficiency", board: "/players/opportunity", status: "live" },
-      { name: "Rushing Contact", summary: "PFR yards-after-contact/att (talent) vs yards-before-contact (line) — independent vs RYOE.", api: "/api/intelligence/rushing-contact", status: "live" },
+      { name: "Rushing Contact", summary: "PFR yards-after-contact/att (talent) vs yards-before-contact (line) — independent vs RYOE.", api: "/api/intelligence/rushing-contact", board: "/intelligence/rushing-contact", status: "live" },
       { name: "Scoring-Zone Equity", summary: "Red-zone & goal-line opportunity share with TD rate regressed to the positional mean.", api: "/api/intelligence/scoring-zone", board: "/intelligence/scoring-zone", status: "live" },
     ],
   },
@@ -62,12 +62,13 @@ const GROUPS: readonly Group[] = [
       { name: "Team Environment", summary: "Neutral-script off/def EPA per play, success rate, PROE, and pace — the top-down prior.", api: "/api/intelligence/team-environment", board: "/intelligence/team", status: "live" },
       { name: "Opportunity Transfer", summary: "Injury + depth chart + trailing usage → quantified vacated touches + ranked beneficiary.", api: "/api/intelligence/opportunity-transfer", board: "/intelligence/opportunity-transfer", status: "live" },
       { name: "CLV Calibration", summary: "Closing-line-value self-grading (backtest via nflverse schedules); forward odds gated.", api: "/api/intelligence/clv-calibration", board: "/intelligence/clv", status: "live" },
+      { name: "Waiver Trends (Sleeper)", summary: "League-wide waiver MOMENTUM (ownership velocity) from the Sleeper public API — which players the fantasy market is adding/dropping right now. Descriptive market data, not advice.", api: "/api/intelligence/sleeper-trending", board: "/intelligence/waiver-trends", status: "live" },
     ],
   },
   {
     category: "Proof & calibration",
     engines: [
-      { name: "Predictiveness Backtest", summary: "Does the process grade actually predict? Split-half (in-season) AND out-of-sample year-over-year (last year's grade → this year's production): grade ρ, lift over the past-production baseline, and buy/sell hit-rates — stated honestly, including where it loses.", api: "/api/intelligence/predictiveness", board: "/intelligence/proof", status: "live" },
+      { name: "Predictiveness Backtest", summary: "Does the process grade actually predict? Split-half (in-season), out-of-sample year-over-year (last year's grade → this year's production), AND a multi-year STACKED test that pools several consecutive train→test season-pairs for statistical power: grade ρ, lift over the past-production baseline, and buy/sell hit-rates — stated honestly, including where it loses.", api: "/api/intelligence/predictiveness", board: "/intelligence/proof", status: "live" },
     ],
   },
 ];

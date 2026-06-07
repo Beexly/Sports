@@ -10,7 +10,18 @@
  * wrappers are thin GET calls. Driving live RECOMMENDATIONS off real players
  * still needs a licensed projections source (founder-gated) — this layer proves
  * the sync and displays the roster.
+ *
+ * This file ALSO carries the league-wide TRENDING reader (waiver momentum) at
+ * the bottom — see loadSleeperTrending / buildTrending. Same provider, same
+ * read-only public API, same legal gate.
  */
+
+// Deep import from the registry module (not the package barrel) on purpose:
+// this file is transitively pulled into the SleeperConnect client bundle via the
+// SLEEPER_READONLY_NOTE constant, and the barrel re-exports nflverse-source.ts
+// which imports node:zlib (unresolvable in a client bundle). source-registry.ts
+// is pure with no imports, so this keeps the legal gate without dragging zlib in.
+import { assertIngestible, attributionFor } from "@sports/data-ingestion/src/source-registry";
 
 const BASE = "https://api.sleeper.app/v1";
 
@@ -141,3 +152,168 @@ export const sleeper = {
   getRosters: (leagueId: string) => getJson<SleeperRoster[]>(SLEEPER_URLS.rosters(leagueId)),
   getPlayers: () => getJson<SleeperPlayersMap>(SLEEPER_URLS.players()),
 } as const;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Sleeper TRENDING — league-wide waiver MOMENTUM (ownership velocity).
+//
+// Beyond syncing one user's league, Sleeper's public API exposes which NFL
+// players are being ADDED and DROPPED across all of its fantasy leagues over a
+// lookback window. That add/drop velocity is a real ownership-momentum signal:
+// it tells you what the broad fantasy market is DOING right now — descriptive
+// market data, NOT advice. Read-only, injectable fetcher, assertIngestible
+// before any fetch, honest discriminated source-error on failure.
+//
+// The trending endpoints return only { player_id, count }; we join against the
+// player map to resolve names. An id missing from the map is SKIPPED, never
+// invented. We filter to fantasy positions (QB/RB/WR/TE/K/DEF).
+// ─────────────────────────────────────────────────────────────────────────────
+
+type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
+
+/** Fantasy-relevant positions we keep; anything else (OL, etc.) is dropped. */
+const FANTASY_POSITIONS: ReadonlySet<string> = new Set(["QB", "RB", "WR", "TE", "K", "DEF"]);
+const SLEEPER_TRENDING_BASE = "https://api.sleeper.app";
+const DEFAULT_LOOKBACK_HOURS = 24;
+const DEFAULT_LIMIT = 25;
+
+export interface SleeperTrendingRaw {
+  readonly player_id: string;
+  readonly count: number;
+}
+
+export interface TrendingRow {
+  readonly playerId: string;
+  readonly name: string;
+  readonly position: string;
+  readonly team: string;
+  readonly count: number;
+}
+
+export interface SleeperTrending {
+  readonly status: "live" | "source-error";
+  readonly generatedAt: string;
+  readonly lookbackHours: number;
+  readonly adds: readonly TrendingRow[];
+  readonly drops: readonly TrendingRow[];
+  readonly sourceUrl: string;
+  readonly attribution: string | null;
+  readonly note: string;
+  readonly error: string | null;
+}
+
+function trendingName(p: SleeperPlayer): string | null {
+  if (p.full_name && p.full_name.trim()) return p.full_name.trim();
+  const joined = [p.first_name, p.last_name].filter((x) => x && x.trim()).join(" ").trim();
+  return joined || null;
+}
+
+/**
+ * Join raw trending ids+counts against the player map. Pure.
+ * - Skips ids absent from the map (never fabricates a name).
+ * - Skips entries with no resolvable name (defensive — never shows a bare id).
+ * - Filters to fantasy positions (QB/RB/WR/TE/K/DEF).
+ * Preserves the source ordering (Sleeper returns these descending by count).
+ */
+export function buildTrending(
+  addsRaw: readonly SleeperTrendingRaw[],
+  dropsRaw: readonly SleeperTrendingRaw[],
+  playersMap: SleeperPlayersMap,
+): { adds: TrendingRow[]; drops: TrendingRow[] } {
+  const join = (raw: readonly SleeperTrendingRaw[]): TrendingRow[] => {
+    const out: TrendingRow[] = [];
+    for (const r of raw) {
+      if (!r || typeof r.player_id !== "string") continue;
+      const p = playersMap[r.player_id];
+      if (!p) continue; // unknown id — skip, do not invent
+      const position = (p.position ?? "").toUpperCase();
+      if (!FANTASY_POSITIONS.has(position)) continue;
+      const name = trendingName(p);
+      if (!name) continue;
+      const count = Number(r.count);
+      out.push({
+        playerId: r.player_id,
+        name,
+        position,
+        team: (p.team ?? "").toUpperCase() || "FA",
+        count: Number.isFinite(count) ? count : 0,
+      });
+    }
+    return out;
+  };
+  return { adds: join(addsRaw), drops: join(dropsRaw) };
+}
+
+async function getTrendingJson<T>(fetcher: FetchLike, url: string, init: RequestInit): Promise<T> {
+  const res = await fetcher(url, init);
+  if (!res.ok) throw new Error(`Sleeper ${url} → HTTP ${res.status}`);
+  return (await res.json()) as T;
+}
+
+/**
+ * Load league-wide waiver momentum from Sleeper. Discriminated result:
+ * status "live" with rows, or "source-error" with an honest empty state.
+ */
+export async function loadSleeperTrending({
+  fetcher = fetch,
+  timeoutMs = 15000,
+  lookbackHours = DEFAULT_LOOKBACK_HOURS,
+  limit = DEFAULT_LIMIT,
+}: {
+  fetcher?: FetchLike;
+  timeoutMs?: number;
+  lookbackHours?: number;
+  limit?: number;
+} = {}): Promise<SleeperTrending> {
+  assertIngestible("sleeper");
+  const attribution = attributionFor("sleeper");
+  const trendingBase = `${SLEEPER_TRENDING_BASE}/v1/players/nfl/trending`;
+  const addUrl = `${trendingBase}/add?lookback_hours=${lookbackHours}&limit=${limit}`;
+  const dropUrl = `${trendingBase}/drop?lookback_hours=${lookbackHours}&limit=${limit}`;
+  const playersUrl = `${SLEEPER_TRENDING_BASE}/v1/players/nfl`;
+  const sourceUrl = addUrl;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    // no-store: the player map is several MB and refreshes ~daily; it must never
+    // enter Next's data cache (>2MB items error). Same posture as nflverse assets.
+    const init: RequestInit = { signal: controller.signal, cache: "no-store" };
+    const [addsRaw, dropsRaw, playersMap] = await Promise.all([
+      getTrendingJson<SleeperTrendingRaw[]>(fetcher, addUrl, init),
+      getTrendingJson<SleeperTrendingRaw[]>(fetcher, dropUrl, init),
+      getTrendingJson<SleeperPlayersMap>(fetcher, playersUrl, init),
+    ]);
+    if (!Array.isArray(addsRaw) || !Array.isArray(dropsRaw)) {
+      throw new Error("Sleeper trending response was not an array");
+    }
+    if (!playersMap || typeof playersMap !== "object") {
+      throw new Error("Sleeper player map was not an object");
+    }
+    const { adds, drops } = buildTrending(addsRaw, dropsRaw, playersMap);
+    return {
+      status: "live",
+      generatedAt: new Date().toISOString(),
+      lookbackHours,
+      adds,
+      drops,
+      sourceUrl,
+      attribution,
+      note: "League-wide waiver MOMENTUM from the Sleeper API — the add/drop velocity across fantasy leagues over the lookback window. This is what the market is DOING (ownership velocity), not advice. Names resolved from Sleeper's player map; unknown ids are skipped, never invented.",
+      error: null,
+    };
+  } catch (error) {
+    return {
+      status: "source-error",
+      generatedAt: new Date().toISOString(),
+      lookbackHours,
+      adds: [],
+      drops: [],
+      sourceUrl,
+      attribution,
+      note: "Sleeper trending could not load. The board shows an empty state instead of fabricated movement.",
+      error: error instanceof Error ? error.message : "UNKNOWN",
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}

@@ -186,6 +186,45 @@ export default async function ProofPage(): Promise<JSX.Element> {
                 </p>
               </section>
             ) : null}
+
+            {p.stacked && p.stackedPairs.length > 0 ? (
+              <section className="border border-soft-ultraviolet/40 bg-eclipse/80">
+                <div className="border-b border-mineral px-5 py-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-soft-ultraviolet">
+                    Multi-year stacked · out-of-sample · pooled pairs {p.stackedPairs.map(([train, test]) => `${train}→${test}`).join("  ·  ")}
+                  </p>
+                  <h2 className="mt-2 text-2xl font-semibold text-ion-white">The multi-year test: pool several seasons for real statistical power.</h2>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">{p.stackedVerdict}</p>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[760px] text-left text-sm">
+                    <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                      <tr>
+                        <th className="px-4 py-3">Group</th>
+                        <th className="px-4 py-3" title="player-seasons pooled across all train→test pairs">N</th>
+                        <th className="px-4 py-3" title="rank corr: prior-season grade -> next-season production, pooled">Grade ρ</th>
+                        <th className="px-4 py-3" title="rank corr: prior-season production -> next-season production, pooled">Baseline ρ</th>
+                        <th className="px-4 py-3" title="grade rho minus baseline rho">Lift</th>
+                        <th className="px-4 py-3" title="fraction of buy-low calls whose next-season per-game rose">Buy-low ✓</th>
+                        <th className="px-4 py-3" title="fraction of sell-high calls whose next-season per-game fell">Sell-high ✓</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-mineral bg-carbon">
+                      <Row s={p.stacked} label="Overall" />
+                      {p.stackedByPosition.map((s) => (
+                        <Row key={s.position} s={s} label={s.position} />
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="px-5 py-3 font-mono text-[10px] leading-5 text-ion-2">
+                  Each train→test pair is normalized within its own seasons (percentiles per pair), then the pairs are
+                  pooled — never re-ranked across seasons. More pairs means more paired players and a tighter, harder-to-fool
+                  read than any single year. Out-of-sample throughout; where it beats the baseline (positive lift), that is
+                  the strongest evidence the grade carries forward signal.
+                </p>
+              </section>
+            ) : null}
           </>
         )}
 

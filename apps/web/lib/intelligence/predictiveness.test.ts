@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildPredictiveness, buildSeasonOverSeason, loadPredictiveness } from "./predictiveness";
+import { buildPredictiveness, buildSeasonOverSeason, buildStackedSeasonOverSeason, loadPredictiveness } from "./predictiveness";
 
 type Row = Record<string, string>;
 
@@ -113,6 +113,56 @@ describe("buildSeasonOverSeason (out-of-sample)", () => {
   });
 });
 
+describe("buildStackedSeasonOverSeason (multi-year, pooled)", () => {
+  // Four consecutive seasons (2021..2024). In every season the inputs grade players
+  // high→k AND production rises in k, so in EVERY train→test transition the prior-season
+  // grade ranks the next season's production positively. Each season is both a test (of the
+  // pair before it) and a train (of the pair after it), so production must rise in k in all
+  // of them for every pooled pair to carry positive signal. Pooling must keep gradeCorr>0.5
+  // and grow n. (Buy-low/sell-high call coverage is exercised by the split-half tests above.)
+  const records = [
+    ...wrSeason(2021, (k) => (k + 1) * 3),
+    ...wrSeason(2022, (k) => (k + 1) * 3),
+    ...wrSeason(2023, (k) => (k + 1) * 3),
+    ...wrSeason(2024, (k) => (k + 1) * 3),
+  ];
+  const onePair: Array<[number, number]> = [[2023, 2024]];
+  const threePairs: Array<[number, number]> = [[2021, 2022], [2022, 2023], [2023, 2024]];
+
+  it("pools each pair's pairs and grows n with more pairs", () => {
+    const single = buildStackedSeasonOverSeason(records, onePair);
+    const stacked = buildStackedSeasonOverSeason(records, threePairs);
+    expect(single.n).toBeGreaterThanOrEqual(6);
+    expect(stacked.pairs).toEqual(threePairs);
+    expect(stacked.n).toBeGreaterThan(single.n); // pooling several pairs adds paired players
+    expect(stacked.n).toBe(single.n * 3); // 8 WRs join in each of the 3 pairs by design
+  });
+
+  it("keeps the pooled grade correlation strong out-of-sample", () => {
+    const stacked = buildStackedSeasonOverSeason(records, threePairs);
+    expect(stacked.overall.gradeCorr).not.toBeNull();
+    expect(stacked.overall.gradeCorr!).toBeGreaterThan(0.5);
+    const wr = stacked.byPosition.find((p) => p.position === "WR");
+    expect(wr).toBeTruthy();
+    expect(wr!.n).toBe(stacked.n);
+  });
+
+  it("skips pairs whose seasons are absent (no fabrication)", () => {
+    // 2021 and 2022 are missing here, so those candidate pairs drop out entirely.
+    const partial = buildStackedSeasonOverSeason(records, [[2019, 2020], [2023, 2024]]);
+    expect(partial.pairs).toEqual([[2023, 2024]]);
+    expect(partial.n).toBeGreaterThanOrEqual(6);
+  });
+
+  it("is empty when no pair has both seasons present", () => {
+    const empty = buildStackedSeasonOverSeason(records, [[2018, 2019]]);
+    expect(empty.n).toBe(0);
+    expect(empty.pairs).toEqual([]);
+    expect(empty.byPosition).toEqual([]);
+    expect(empty.overall.gradeCorr).toBeNull();
+  });
+});
+
 describe("loadPredictiveness", () => {
   it("degrades to source-error when nflverse is unreachable", async () => {
     const r = await loadPredictiveness({ fetcher: async () => { throw new Error("blocked"); } });
@@ -138,5 +188,29 @@ describe("loadPredictiveness", () => {
     expect(r.yearOverYear).not.toBeNull();
     expect(r.yearOverYear!.gradeCorr!).toBeGreaterThan(0.5);
     expect(r.yearOverYearVerdict).toMatch(/2023/);
+  });
+
+  it("leaves the stacked test empty with only two seasons present", async () => {
+    const csv = toCsv([...wrSeason(2023, (k) => (8 - k) * 2), ...wrSeason(2024, (k) => (k + 1) * 3)]);
+    const r = await loadPredictiveness({ season: 2024, fetcher: async () => new Response(csv) });
+    // Only the [2023,2024] pair has both seasons -> stacked still populates as a single pooled pair.
+    expect(r.stacked).not.toBeNull();
+    expect(r.stackedPairs).toEqual([[2023, 2024]]);
+  });
+
+  it("computes the stacked multi-year backtest when several consecutive seasons are present", async () => {
+    const csv = toCsv([
+      ...wrSeason(2021, (k) => (k + 1) * 3),
+      ...wrSeason(2022, (k) => (k + 1) * 3),
+      ...wrSeason(2023, (k) => (k + 1) * 3),
+      ...wrSeason(2024, (k) => (k + 1) * 3),
+    ]);
+    const r = await loadPredictiveness({ season: 2024, fetcher: async () => new Response(csv) });
+    expect(r.status).toBe("live");
+    expect(r.stacked).not.toBeNull();
+    expect(r.stackedPairs).toEqual([[2021, 2022], [2022, 2023], [2023, 2024]]);
+    expect(r.stacked!.gradeCorr!).toBeGreaterThan(0.5);
+    expect(r.stacked!.n).toBeGreaterThan(r.yearOverYear!.n); // pooling beats the single pair on sample size
+    expect(r.stackedVerdict).toMatch(/2021/);
   });
 });

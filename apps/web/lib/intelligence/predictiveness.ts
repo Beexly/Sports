@@ -61,6 +61,11 @@ export interface PredictivenessProof {
   readonly yearOverYear: PredictivenessSplit | null;
   readonly yearOverYearByPosition: readonly PredictivenessSplit[];
   readonly yearOverYearVerdict: string | null;
+  /** Stacked multi-year out-of-sample: several consecutive train→test pairs POOLED for statistical power. */
+  readonly stacked: PredictivenessSplit | null;
+  readonly stackedByPosition: readonly PredictivenessSplit[];
+  readonly stackedPairs: ReadonlyArray<readonly [number, number]>;
+  readonly stackedVerdict: string | null;
   readonly canPublishProjections: false;
   readonly note: string;
   readonly sourceUrl: string;
@@ -152,6 +157,22 @@ function yoyVerdictFor(overall: PredictivenessSplit, trainSeason: number, testSe
   return `Grade built on ${trainSeason} ranks ${testSeason} production at ρ≈${overall.gradeCorr.toFixed(2)}${liftStr}. Out-of-sample, across seasons — the real draft test.`;
 }
 
+function stackedVerdictFor(overall: PredictivenessSplit, pairs: ReadonlyArray<readonly [number, number]>): string {
+  const pairCount = pairs.length;
+  const pairLabel = pairs.map(([train, test]) => `${train}→${test}`).join(", ");
+  if (overall.gradeCorr == null) {
+    return `Not enough players carried across the ${pairCount} pooled season-pair${pairCount === 1 ? "" : "s"} (${pairLabel}) for a confident stacked read.`;
+  }
+  const lift = overall.lift;
+  const liftStr =
+    lift == null
+      ? ""
+      : lift > 0
+        ? `, beating the past-production baseline by ${lift.toFixed(2)}`
+        : ` — and it does NOT beat raw prior-season production over the pool`;
+  return `Pooling ${overall.n} player-seasons across ${pairCount} consecutive train→test pair${pairCount === 1 ? "" : "s"} (${pairLabel}), the prior-season grade ranks next-season production at ρ≈${overall.gradeCorr.toFixed(2)}${liftStr}. Multi-year, out-of-sample — the strongest, highest-power form of the draft test.`;
+}
+
 /**
  * Join a TRAIN set (process grade) to a TEST set (production) by player id and
  * build the per-position + pooled splits. The two sets are already REG-filtered;
@@ -222,6 +243,45 @@ export function buildSeasonOverSeason(
   return { overall: summarize("QB", pooled), byPosition, n: pooled.length };
 }
 
+/**
+ * STACKED multi-year out-of-sample backtest: run the full-season train→test join for
+ * each [train, test] pair and POOL all pairs' Pair[] together for statistical power.
+ *
+ * Pooling is valid across seasons because buildPairs already normalizes everything
+ * per-call WITHIN its own pair: trainGrade and trainProdPct are 0-100 within-position
+ * percentiles, testProdPct is a within-position percentile of that pair's test season,
+ * and the buy/sell hit-rate compares raw fppg INSIDE the same pair (testFppg vs
+ * trainFppg). summarize only reads those per-pair-normalized fields, so concatenating
+ * Pair[] across pairs and summarizing once keeps every comparison on a common scale —
+ * we never re-percentile across pooled pairs. Pure.
+ */
+export function buildStackedSeasonOverSeason(
+  records: readonly CsvRecord[],
+  pairs: ReadonlyArray<readonly [number, number]>,
+): { overall: PredictivenessSplit; byPosition: PredictivenessSplit[]; n: number; pairs: Array<[number, number]> } {
+  const pooled: Pair[] = [];
+  const byPosPool: Record<ModelPosition, Pair[]> = { QB: [], RB: [], WR: [], TE: [] };
+  const usedPairs: Array<[number, number]> = [];
+
+  for (const [trainSeason, testSeason] of pairs) {
+    const trainRecords = records.filter((r) => r["season"] === String(trainSeason) && r["season_type"] === "REG");
+    const testRecords = records.filter((r) => r["season"] === String(testSeason) && r["season_type"] === "REG");
+    if (trainRecords.length === 0 || testRecords.length === 0) continue;
+    const { pooled: pairPooled } = buildPairs(trainRecords, trainSeason, testRecords, MIN_SEASON_GAMES, MIN_SEASON_GAMES);
+    if (pairPooled.length === 0) continue;
+    pooled.push(...pairPooled);
+    for (const p of pairPooled) byPosPool[p.position].push(p);
+    usedPairs.push([trainSeason, testSeason]);
+  }
+
+  const byPosition: PredictivenessSplit[] = [];
+  for (const pos of POSITIONS) {
+    if (byPosPool[pos].length === 0) continue;
+    byPosition.push(summarize(pos, byPosPool[pos]));
+  }
+  return { overall: summarize("QB", pooled), byPosition, n: pooled.length, pairs: usedPairs };
+}
+
 /** Run the split-half backtest. Pure (records + season in, proof out). */
 export function buildPredictiveness(records: readonly CsvRecord[], activeSeason: number): Omit<PredictivenessProof, "generatedAt" | "status" | "sourceUrl" | "error"> {
   const reg = records.filter((r) => r["season"] === String(activeSeason) && r["season_type"] === "REG");
@@ -238,6 +298,10 @@ export function buildPredictiveness(records: readonly CsvRecord[], activeSeason:
     yearOverYear: null,
     yearOverYearByPosition: [] as PredictivenessSplit[],
     yearOverYearVerdict: null,
+    stacked: null,
+    stackedByPosition: [] as PredictivenessSplit[],
+    stackedPairs: [] as Array<[number, number]>,
+    stackedVerdict: null,
     canPublishProjections: false as const,
     note: "",
   };
@@ -269,6 +333,10 @@ export function buildPredictiveness(records: readonly CsvRecord[], activeSeason:
     yearOverYear: null,
     yearOverYearByPosition: [],
     yearOverYearVerdict: null,
+    stacked: null,
+    stackedByPosition: [],
+    stackedPairs: [],
+    stackedVerdict: null,
     canPublishProjections: false,
     note: "Split-half backtest on real nflverse weekly data: build the process grade on the first half of the season, then measure how it ranks second-half production vs the past-production baseline. Buy-low/sell-high calls are scored against the coin-flip line. In-sample, single-season — directional proof.",
   };
@@ -295,6 +363,19 @@ export async function loadPredictiveness({
     const hasPrior = records.some((r) => r["season"] === String(priorSeason) && r["season_type"] === "REG");
     const yoy = hasPrior ? buildSeasonOverSeason(records, priorSeason, activeSeason) : null;
 
+    // STACKED multi-year: pool the last up-to-3 consecutive transitions ending at the
+    // active season — but only the pairs where BOTH seasons actually carry REG rows in
+    // this asset, so the pool reflects real data, never an assumed season.
+    const seasonHasReg = (s: number): boolean => records.some((r) => r["season"] === String(s) && r["season_type"] === "REG");
+    const candidatePairs: Array<[number, number]> = [
+      [activeSeason - 3, activeSeason - 2],
+      [activeSeason - 2, activeSeason - 1],
+      [activeSeason - 1, activeSeason],
+    ];
+    const stackedInputPairs = candidatePairs.filter(([train, test]) => seasonHasReg(train) && seasonHasReg(test));
+    const stacked = stackedInputPairs.length > 0 ? buildStackedSeasonOverSeason(records, stackedInputPairs) : null;
+    const hasStacked = stacked != null && stacked.pairs.length > 0 && stacked.n > 0;
+
     return {
       generatedAt: new Date().toISOString(),
       status: "live",
@@ -305,6 +386,10 @@ export async function loadPredictiveness({
       yearOverYear: yoy ? yoy.overall : null,
       yearOverYearByPosition: yoy ? yoy.byPosition : [],
       yearOverYearVerdict: yoy ? yoyVerdictFor(yoy.overall, priorSeason, activeSeason) : null,
+      stacked: hasStacked ? stacked!.overall : null,
+      stackedByPosition: hasStacked ? stacked!.byPosition : [],
+      stackedPairs: hasStacked ? stacked!.pairs : [],
+      stackedVerdict: hasStacked ? stackedVerdictFor(stacked!.overall, stacked!.pairs) : null,
     };
   } catch (error) {
     return {
@@ -321,6 +406,10 @@ export async function loadPredictiveness({
       yearOverYear: null,
       yearOverYearByPosition: [],
       yearOverYearVerdict: null,
+      stacked: null,
+      stackedByPosition: [],
+      stackedPairs: [],
+      stackedVerdict: null,
       canPublishProjections: false,
       note: "Predictiveness backtest unavailable.",
       sourceUrl: url,
