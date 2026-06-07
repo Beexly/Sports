@@ -1,82 +1,122 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 
-type Section = { heading: string; links: ReadonlyArray<{ label: string; href: string }> };
+type NavLink = { label: string; href: string };
+// A section is either a flat list of links (no toggle) or a collapsible group.
+type Section = { heading: string; collapsible?: boolean; links: ReadonlyArray<NavLink> };
 
+// Mirrors the desktop top bar: six doors, three with a short grouped list.
 const SECTIONS: readonly Section[] = [
   {
     heading: "Start here",
     links: [
       { label: "Board", href: "/board" },
-      { label: "Optimizer", href: "/optimizer" },
-      { label: "Mission Control", href: "/today" },
+      { label: "Today — Mission Control", href: "/today" },
+      { label: "Pricing", href: "/pricing" },
     ],
   },
   {
     heading: "Players",
+    collapsible: true,
     links: [
-      { label: "Production Lab", href: "/players" },
-      { label: "Snap Share", href: "/players/snaps" },
-      { label: "Next Gen Stats", href: "/players/nextgen" },
-      { label: "Air Yards · WOPR", href: "/players/opportunity" },
-      { label: "Pressure & Coverage", href: "/players/trenches" },
-      { label: "Combine", href: "/players/combine" },
-      { label: "Total QBR", href: "/players/qbr" },
-      { label: "Edge Signals", href: "/players/edge" },
-      { label: "Injury Report", href: "/players/injuries" },
-      { label: "Market Signal", href: "/players/market" },
-      { label: "DFS Salaries", href: "/players/dfs" },
-      { label: "Game Weather", href: "/weather" },
-      { label: "NFLverse Pulse", href: "/nflverse" },
-    ],
-  },
-  {
-    heading: "Fantasy",
-    links: [
-      { label: "Fantasy Home", href: "/fantasy" },
-      { label: "Connect League", href: "/fantasy/connect" },
-      { label: "Draft Assistant", href: "/fantasy/draft" },
-      { label: "Waiver & FAAB", href: "/fantasy/waivers" },
-      { label: "Lineup Optimizer", href: "/fantasy/lineup" },
-      { label: "DFS Optimizer", href: "/fantasy/dfs" },
-      { label: "Pick'em Edge", href: "/fantasy/props" },
-      { label: "Trade Analyzer", href: "/fantasy/trade" },
-      { label: "Contests", href: "/fantasy/contests" },
-      { label: "Galaxy Studios", href: "/fantasy/studio" },
-      { label: "Baseline Map", href: "/fantasy/baseline" },
+      { label: "Player Lab", href: "/players" },
+      { label: "Opportunity", href: "/players?view=opportunity" },
+      { label: "Snap Share", href: "/players?view=snaps" },
+      { label: "Next Gen", href: "/players?view=nextgen" },
+      { label: "Edge Signals", href: "/players?view=edge" },
+      { label: "DFS Salaries", href: "/players?view=dfs" },
     ],
   },
   {
     heading: "Intelligence",
+    collapsible: true,
     links: [
-      { label: "Inside the Signal", href: "/intelligence" },
-      { label: "Player Intelligence", href: "/intelligence/players" },
       { label: "Intelligence Engines", href: "/intelligence/engines" },
-      { label: "How We Read Stats", href: "/intelligence/metrics" },
+      { label: "Proof", href: "/intelligence/engines?engine=proof" },
+      { label: "Player Model", href: "/intelligence/engines?engine=player-model" },
+      { label: "Expected Points", href: "/intelligence/engines?engine=expected-points" },
+      { label: "Mission Control", href: "/today" },
       { label: "Trend Lab", href: "/trends" },
       { label: "Edge Map", href: "/observatory" },
-      { label: "The Beat", href: "/the-beat" },
-      { label: "GSN", href: "/gsn" },
-      { label: "Parlay MRI", href: "/parlay-mri" },
+      { label: "Airwave", href: "/airwave" },
       { label: "CLV Tracker", href: "/track" },
-      { label: "Data Sourcing", href: "/data" },
-      { label: "NHL xG", href: "/nhl" },
-      { label: "MLB run diff", href: "/mlb" },
-      { label: "Human Performance", href: "/human" },
-      { label: "Cipher", href: "/cipher" },
+      { label: "The Beat", href: "/the-beat" },
+      { label: "How we read metrics", href: "/intelligence/metrics" },
+    ],
+  },
+  {
+    heading: "Fantasy",
+    collapsible: true,
+    links: [
+      { label: "Draft Assistant", href: "/fantasy/draft" },
+      { label: "Lineup Optimizer", href: "/fantasy/lineup" },
+      { label: "Waiver & FAAB", href: "/fantasy/waivers" },
+      { label: "Trade Analyzer", href: "/fantasy/trade" },
+      { label: "DFS Optimizer", href: "/fantasy/dfs" },
+      { label: "Pick'em Edge", href: "/fantasy/props" },
+      { label: "Contests", href: "/fantasy/contests" },
+      { label: "Connect League", href: "/fantasy/connect" },
     ],
   },
   {
     heading: "Account",
     links: [
-      { label: "Methodology", href: "/methodology" },
       { label: "Pricing", href: "/pricing" },
       { label: "Dashboard", href: "/dashboard" },
     ],
   },
 ];
+
+function MobileSection({ section, onNavigate }: { section: Section; onNavigate: () => void }) {
+  // Collapsible sections start open so everything stays one tap away, but can
+  // be folded to keep the panel scannable.
+  const [open, setOpen] = useState(true);
+
+  if (!section.collapsible) {
+    return (
+      <div className="mobile-nav-section">
+        <p className="mobile-nav-heading">{section.heading}</p>
+        {section.links.map(({ label, href }) => (
+          <Link key={href} href={href} onClick={onNavigate} className="mobile-nav-link">
+            {label}
+          </Link>
+        ))}
+      </div>
+    );
+  }
+
+  const panelId = `mnav-${section.heading.toLowerCase()}`;
+  return (
+    <div className="mobile-nav-section">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className="mobile-nav-heading flex w-full items-center justify-between"
+      >
+        <span>{section.heading}</span>
+        <ChevronDown
+          size={16}
+          strokeWidth={1.8}
+          aria-hidden
+          className={`transition-transform duration-150 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <div id={panelId}>
+          {section.links.map(({ label, href }) => (
+            <Link key={href} href={href} onClick={onNavigate} className="mobile-nav-link">
+              {label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -95,19 +135,7 @@ export function MobileNav() {
       {open && (
         <div id="mobile-nav-panel" className="mobile-nav-panel">
           {SECTIONS.map((section) => (
-            <div key={section.heading} className="mobile-nav-section">
-              <p className="mobile-nav-heading">{section.heading}</p>
-              {section.links.map(({ label, href }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setOpen(false)}
-                  className="mobile-nav-link"
-                >
-                  {label}
-                </Link>
-              ))}
-            </div>
+            <MobileSection key={section.heading} section={section} onNavigate={() => setOpen(false)} />
           ))}
         </div>
       )}

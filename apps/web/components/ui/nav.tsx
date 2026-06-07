@@ -4,81 +4,92 @@ import { auth } from "@/lib/auth";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 
-// Two direct top-level doors. Everything else lives under three tight menus.
-const PRIMARY_LINKS = [
-  { label: "Board", href: "/board" },
-  { label: "Optimizer", href: "/optimizer" },
-] as const;
-
-type NavItem = { label: string; href: string; desc: string };
-
-// Players ▾ — the real-data player surfaces (split out of the old mega-menu).
-const PLAYERS_GROUP: readonly NavItem[] = [
-  { label: "Production Lab", href: "/players", desc: "Season + last-5 form, defense ranks" },
-  { label: "Snap Share", href: "/players/snaps", desc: "Offensive workload leaders" },
-  { label: "Next Gen Stats", href: "/players/nextgen", desc: "Separation, CPOE, RYOE" },
-  { label: "Air Yards · WOPR", href: "/players/opportunity", desc: "Opportunity vs production — buy-low/sell-high" },
-  { label: "Pressure & Coverage", href: "/players/trenches", desc: "QB pressure, lockdown defenders" },
-  { label: "Combine", href: "/players/combine", desc: "Athletic testing — 40, vert, cone" },
-  { label: "Total QBR", href: "/players/qbr", desc: "ESPN QBR, independent QB estimate" },
-  { label: "Edge Signals", href: "/players/edge", desc: "Buy-low / sell-high vs output" },
-  { label: "Injury Report", href: "/players/injuries", desc: "Official availability" },
-  { label: "Market Signal", href: "/players/market", desc: "Live adds/drops (Sleeper)" },
-  { label: "DFS Salaries", href: "/players/dfs", desc: "DraftKings via licensed feeds" },
-  { label: "Game Weather", href: "/weather", desc: "Outdoor NFL venue conditions" },
-  { label: "NFLverse Pulse", href: "/nflverse", desc: "Real player-week usage rows" },
-];
-
-// Fantasy ▾ — the manager/DFS tools.
-const FANTASY_GROUP: readonly NavItem[] = [
-  { label: "Fantasy Home", href: "/fantasy", desc: "Readiness and roadmap" },
-  { label: "Connect League", href: "/fantasy/connect", desc: "Read-only Sleeper sync" },
-  { label: "Draft Assistant", href: "/fantasy/draft", desc: "Tiers, VOR, live guidance" },
-  { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Adds and bids, with the why" },
-  { label: "Lineup Optimizer", href: "/fantasy/lineup", desc: "Start-sit, floor vs. ceiling" },
-  { label: "DFS Optimizer", href: "/fantasy/dfs", desc: "Cash/GPP/leverage, glass-box" },
-  { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & Pick6 line edges" },
-  { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Value, fairness, win-now" },
-  { label: "Contests", href: "/fantasy/contests", desc: "Best ball, survivor, squares" },
-  { label: "Scheme Intel", href: "/fantasy/scheme", desc: "How a coaching change cascades" },
-  { label: "GM Autopilot", href: "/fantasy/autopilot", desc: "Advice to full-remote GM" },
-  { label: "League Twin", href: "/fantasy/league-twin", desc: "Your roster as a galaxy" },
-  { label: "GM Ledger", href: "/fantasy/gm-ledger", desc: "Decisions graded on process" },
-  { label: "GM Academy", href: "/fantasy/academy", desc: "Drill the process" },
-  { label: "Galaxy Studios", href: "/fantasy/studio", desc: "The weekly brief, auto-composed" },
-  { label: "Baseline Map", href: "/fantasy/baseline", desc: "LineStar/Elite feature floor" },
-];
-
-// Intelligence ▾ — the decision-OS surfaces.
-const INTELLIGENCE_GROUP: readonly NavItem[] = [
-  { label: "Inside the Signal", href: "/intelligence", desc: "How the engine reasons" },
-  { label: "Player Intelligence", href: "/intelligence/players", desc: "Process grade vs production — buy/sell" },
-  { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every advanced-data engine + API" },
-  { label: "How We Read Stats", href: "/intelligence/metrics", desc: "Metric methodology, glass-box" },
-  { label: "Mission Control", href: "/today", desc: "Today's command deck" },
-  { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
-  { label: "Edge Map", href: "/observatory", desc: "The slate as a galaxy" },
-  { label: "The Beat", href: "/the-beat", desc: "News, reliability-scored" },
-  { label: "GSN", href: "/gsn", desc: "Daily intelligence transmission" },
-  { label: "Airwave Ledger", href: "/airwave", desc: "Pundits, graded on the record" },
-  { label: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's risk" },
-  { label: "Trust Ledger", href: "/ledger", desc: "Tamper-evident record" },
-  { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
-  { label: "Data & Integrations", href: "/integrations", desc: "What's live, what's gated" },
-  { label: "Data Sourcing", href: "/data", desc: "How we legally source feeds" },
-  { label: "NHL · xG", href: "/nhl", desc: "Expected goals (MoneyPuck)" },
-  { label: "MLB · run diff", href: "/mlb", desc: "Pythagorean wins (Lahman)" },
-  { label: "Human Performance", href: "/human", desc: "Confidence bands, not body claims" },
-  { label: "The Academy", href: "/academy", desc: "Train on process, not luck" },
-  { label: "The Cipher", href: "/cipher", desc: "Weekly hidden hunt" },
-];
+// Small, clear top bar. Six top-level doors; three carry ONE tight, grouped
+// dropdown each. Everything dropped from here still lives in its section/footer.
+const PRIMARY_LINKS = [{ label: "Board", href: "/board" }] as const;
 
 const TAIL_LINKS = [
-  { label: "Methodology", href: "/methodology" },
+  { label: "Today", href: "/today" },
   { label: "Pricing", href: "/pricing" },
 ] as const;
 
-function NavMenu({ label, href, items }: { label: string; href: string; items: readonly NavItem[] }) {
+type NavItem = { label: string; href: string; desc: string };
+type NavGroup = { heading?: string; items: readonly NavItem[] };
+
+// Players ▾ — the Lab plus a few high-value deep-link views. "See all in the Lab".
+const PLAYERS_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "Player Lab", href: "/players", desc: "All player data in one tabbed surface" },
+    ],
+  },
+  {
+    heading: "Quick views",
+    items: [
+      { label: "Opportunity", href: "/players?view=opportunity", desc: "Air yards · WOPR — buy-low / sell-high" },
+      { label: "Snap Share", href: "/players?view=snaps", desc: "Offensive workload leaders" },
+      { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, CPOE, RYOE" },
+      { label: "Edge Signals", href: "/players?view=edge", desc: "Process grade vs output" },
+      { label: "DFS Salaries", href: "/players?view=dfs", desc: "Licensed DraftKings feeds" },
+    ],
+  },
+];
+
+// Intelligence ▾ — the engine browser, a few marquee engines, the standalone reads.
+const INTELLIGENCE_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every advanced-data engine, browsable" },
+    ],
+  },
+  {
+    heading: "Marquee engines",
+    items: [
+      { label: "Proof", href: "/intelligence/engines?engine=proof", desc: "Does the process actually predict?" },
+      { label: "Player Model", href: "/intelligence/engines?engine=player-model", desc: "Process grade vs production" },
+      { label: "Expected Points", href: "/intelligence/engines?engine=expected-points", desc: "xFP vs actual, by position" },
+    ],
+  },
+  {
+    heading: "Surfaces",
+    items: [
+      { label: "Mission Control", href: "/today", desc: "Today's command deck" },
+      { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
+      { label: "Edge Map", href: "/observatory", desc: "The slate as a galaxy" },
+      { label: "Airwave", href: "/airwave", desc: "Pundits, graded on the record" },
+      { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
+      { label: "The Beat", href: "/the-beat", desc: "News, reliability-scored" },
+    ],
+  },
+  {
+    items: [
+      { label: "How we read metrics", href: "/intelligence/metrics", desc: "Metric methodology, glass-box" },
+    ],
+  },
+];
+
+// Fantasy ▾ — the core manager/DFS tools, plus Connect.
+const FANTASY_MENU: readonly NavGroup[] = [
+  {
+    heading: "Core tools",
+    items: [
+      { label: "Draft Assistant", href: "/fantasy/draft", desc: "Tiers, VOR, live guidance" },
+      { label: "Lineup Optimizer", href: "/fantasy/lineup", desc: "Start-sit, floor vs ceiling" },
+      { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Adds and bids, with the why" },
+      { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Value, fairness, win-now" },
+      { label: "DFS Optimizer", href: "/fantasy/dfs", desc: "Cash / GPP / leverage, glass-box" },
+      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & Pick6 line edges" },
+      { label: "Contests", href: "/fantasy/contests", desc: "Best ball, survivor, squares" },
+    ],
+  },
+  {
+    items: [
+      { label: "Connect League", href: "/fantasy/connect", desc: "Read-only Sleeper sync" },
+    ],
+  },
+];
+
+function NavMenu({ label, href, groups }: { label: string; href: string; groups: readonly NavGroup[] }) {
   return (
     <div className="group relative">
       <Link href={href} aria-haspopup="true" className="inline-flex items-center gap-1">
@@ -86,12 +97,21 @@ function NavMenu({ label, href, items }: { label: string; href: string; items: r
         <span aria-hidden className="text-[9px] opacity-70 transition-transform duration-150 group-hover:rotate-180">▼</span>
       </Link>
       <div className="invisible absolute left-0 top-full z-50 pt-2 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-        <div className="surface-card grid w-[34rem] max-w-[90vw] grid-cols-2 gap-1 p-2">
-          {items.map((item) => (
-            <Link key={item.href} href={item.href} className="block rounded-md px-2 py-1.5 hover:bg-white/5">
-              <span className="block text-sm font-medium text-white">{item.label}</span>
-              <span className="block text-xs text-ink-500">{item.desc}</span>
-            </Link>
+        <div className="surface-card flex w-[20rem] max-w-[90vw] flex-col gap-2 p-2">
+          {groups.map((group, gi) => (
+            <div key={group.heading ?? `g${gi}`} className="flex flex-col gap-0.5">
+              {group.heading ? (
+                <p className="px-2 pb-0.5 pt-1 text-[10px] font-semibold uppercase tracking-wider text-ink-200">
+                  {group.heading}
+                </p>
+              ) : null}
+              {group.items.map((item) => (
+                <Link key={item.href} href={item.href} className="block rounded-md px-2 py-1.5 hover:bg-white/5">
+                  <span className="block text-sm font-medium text-white">{item.label}</span>
+                  <span className="block text-xs text-ink-200">{item.desc}</span>
+                </Link>
+              ))}
+            </div>
           ))}
         </div>
       </div>
@@ -116,9 +136,9 @@ export async function Nav() {
               </Link>
             ))}
 
-            <NavMenu label="Players" href="/players" items={PLAYERS_GROUP} />
-            <NavMenu label="Fantasy" href="/fantasy" items={FANTASY_GROUP} />
-            <NavMenu label="Intelligence" href="/intelligence" items={INTELLIGENCE_GROUP} />
+            <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
+            <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
+            <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
 
             {TAIL_LINKS.map(({ href, label }) => (
               <Link key={href} href={href}>

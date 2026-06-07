@@ -52,14 +52,15 @@ describe("Fantasy competitive baseline", () => {
   it("makes the baseline route and navigation discoverable", () => {
     const page = read("app/fantasy/baseline/page.tsx");
     const fantasy = read("app/fantasy/page.tsx");
-    const nav = read("components/ui/nav.tsx");
-    const mobile = read("components/ui/mobile-nav.tsx");
 
     expect(page).toMatch(/LineStar plus Elite Sports is the floor/);
     expect(page).toMatch(/FANTASY_BASELINE_MODULES/);
+    // The global nav was slimmed to ~6 top-level doors (Board, Players, Intelligence,
+    // Fantasy, Today, Pricing); the Fantasy ▾ dropdown now carries only the core
+    // manager/DFS tools plus Connect League. The /fantasy/baseline route stays
+    // discoverable from its own section (the /fantasy page), not the global chrome —
+    // so we assert discoverability there rather than re-adding a nav-bar deep link.
     expect(fantasy).toMatch(/href="\/fantasy\/baseline"/);
-    expect(nav).toMatch(/href: "\/fantasy\/baseline"/);
-    expect(mobile).toMatch(/href: "\/fantasy\/baseline"/);
   });
 
   it("does not convert gated features into fake live claims", () => {
