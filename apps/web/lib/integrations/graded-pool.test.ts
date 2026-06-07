@@ -59,4 +59,47 @@ describe("loadGradedPool", () => {
     expect(r.status).toBe("source-error");
     expect(r.players).toEqual([]);
   });
+
+  // A minimal player_stats CSV (decodeDatasetText passes plain text through) with
+  // one WR over the 25-play threshold, season 2024.
+  const statsCsv = [
+    "season,season_type,week,position,player_id,player_display_name,recent_team,attempts,carries,targets,passing_epa,rushing_epa,receiving_epa,wopr,target_share,dakota,pacr,fantasy_points_ppr",
+    "2024,REG,1,WR,WR1,Real Wideout,KC,0,0,14,0,0,6,0.5,0.25,,,10",
+    "2024,REG,2,WR,WR1,Real Wideout,KC,0,0,14,0,0,6,0.5,0.25,,,10",
+  ].join("\n");
+  const xfpCsv = (season: number) => [
+    "season,week,position,player_id,full_name,posteam,total_fantasy_points_exp,total_fantasy_points_diff",
+    `${season},1,WR,WR1,Real Wideout,KC,18,0`,
+    `${season},2,WR,WR1,Real Wideout,KC,18,0`,
+  ].join("\n");
+
+  // Routes by URL: nflverse player_stats -> 2024 model; ffverse ep_weekly_2024 -> 2024 xFP.
+  type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
+  function route(xfpSeasonServed: number): FetchLike {
+    return async (url) => {
+      if (url.includes("player_stats")) return new Response(statsCsv);
+      if (url.includes(`ep_weekly_${xfpSeasonServed}.csv`)) return new Response(xfpCsv(xfpSeasonServed));
+      return new Response("not found", { status: 404 });
+    };
+  }
+
+  it("pins xFP to the model's season so the projection basis is xFP, not actual", async () => {
+    const r = await loadGradedPool({ fetcher: route(2024) });
+    expect(r.status).toBe("live");
+    expect(r.season).toBe(2024);
+    const wr = r.players.find((p) => p.id === "WR1")!;
+    expect(wr).toBeTruthy();
+    // basis = xFP/g 18 * 17 = 306 (NOT actual fppg 10/g -> 170)
+    expect(wr.proj).toBe(306);
+  });
+
+  it("falls back to the model's per-game when xFP for the model's season is missing (no cross-season basis)", async () => {
+    // Only 2025 xFP is served; the 2024 model must NOT borrow it.
+    const r = await loadGradedPool({ fetcher: route(2025) });
+    expect(r.status).toBe("live");
+    expect(r.season).toBe(2024);
+    const wr = r.players.find((p) => p.id === "WR1")!;
+    // basis = actual fppg 10/g * 17 = 170 (2025 xFP rejected as off-season)
+    expect(wr.proj).toBe(170);
+  });
 });

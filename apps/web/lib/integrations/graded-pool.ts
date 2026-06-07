@@ -95,11 +95,19 @@ export interface GradedPoolResult {
 
 /** Load the model + xFP and build the graded pool (no registration). */
 export async function loadGradedPool({ fetcher = fetch }: { fetcher?: FetchLike } = {}): Promise<GradedPoolResult> {
-  const [model, xfp] = await Promise.all([loadPlayerModel({ fetcher }), loadExpectedPoints({ fetcher })]);
+  const model = await loadPlayerModel({ fetcher });
   if (model.status === "source-error") {
     return { status: "source-error", season: 0, count: 0, players: [], error: model.error };
   }
-  const pool = buildGradedPool(model.profiles, xfp.status === "live" ? xfp.rows : []);
+  // Season-consistent composition: the process grade and the expected-points
+  // basis must describe the SAME season. The two sources publish on different
+  // cadences (nflverse player_stats vs ffverse ff_opportunity), so we pin xFP to
+  // the model's season and only let it feed projections when the seasons match
+  // exactly — otherwise the basis falls back to the model's own per-game (still
+  // season-correct), never a 2024 grade paired with 2025 expected points.
+  const xfp = await loadExpectedPoints({ fetcher, season: model.season });
+  const xfpRows = xfp.status === "live" && xfp.season === model.season ? xfp.rows : [];
+  const pool = buildGradedPool(model.profiles, xfpRows);
   return { status: "live", season: model.season, count: pool.length, players: pool, error: null };
 }
 
