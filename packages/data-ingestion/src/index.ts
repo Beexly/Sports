@@ -31,6 +31,7 @@ export {
   NFLVERSE_BASE,
   nflverseUrl,
   parseCsv,
+  decodeDatasetText,
   fetchNflverseText,
   fetchNflverse,
   type CsvTable,

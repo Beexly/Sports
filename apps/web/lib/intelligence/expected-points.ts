@@ -17,7 +17,7 @@
  * canPublishProjections false — it's an opportunity read, not a point projection.
  */
 
-import { assertIngestible, fetchWithFailover, NFLVERSE_BASE, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { assertIngestible, decodeDatasetText, fetchWithFailover, NFLVERSE_BASE, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { percentileRanks } from "./qb-consensus";
 
 type CsvRecord = Readonly<Record<string, string>>;
@@ -158,8 +158,9 @@ export async function loadExpectedPoints({
 }: { season?: number; timeoutMs?: number; fetcher?: FetchLike } = {}): Promise<ExpectedPoints> {
   assertIngestible("nflverse");
   try {
-    const { response } = await fetchWithFailover(withMirrors(FF_OPP_URL), fetcher, { timeoutMs });
-    const { records } = parseCsv(await response.text());
+    // cache:no-store — multi-MB weekly asset; keep it out of Next's data cache.
+    const { response } = await fetchWithFailover(withMirrors(FF_OPP_URL), fetcher, { timeoutMs, init: { cache: "no-store" } });
+    const { records } = parseCsv(await decodeDatasetText(response));
     if (records.length === 0) throw new Error("empty ff_opportunity");
     const maxSeason = records.reduce((m, r) => Math.max(m, num(r["season"])), 0);
     const activeSeason = season && records.some((r) => num(r["season"]) === season) ? season : maxSeason;

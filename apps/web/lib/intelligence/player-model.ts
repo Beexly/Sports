@@ -19,7 +19,7 @@
  * point projection).
  */
 
-import { assertIngestible, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { assertIngestible, decodeDatasetText, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 import { percentileRanks } from "./qb-consensus";
 
@@ -215,8 +215,10 @@ export async function loadPlayerModel({
   assertIngestible("nflverse");
   const url = nflverseUrl("player_stats_week", season);
   try {
-    const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs });
-    const { records } = parseCsv(await response.text());
+    // cache:no-store — these assets are multi-MB and refresh weekly; they must
+    // never enter Next's data cache (>2MB items error and aren't cached anyway).
+    const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs, init: { cache: "no-store" } });
+    const { records } = parseCsv(await decodeDatasetText(response));
     if (records.length === 0) throw new Error("empty player_stats_week");
     const hasSeason = records.some((r) => r["season"] === String(season) && r["season_type"] === "REG");
     const activeSeason = hasSeason ? season : records.reduce((m, r) => Math.max(m, num(r["season"])), 0);

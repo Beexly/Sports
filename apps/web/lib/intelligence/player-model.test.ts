@@ -1,7 +1,13 @@
 import { describe, it, expect } from "vitest";
+import { gzipSync } from "node:zlib";
 import { buildPlayerModel, loadPlayerModel } from "./player-model";
 
 type Row = Record<string, string>;
+
+function toCsv(rows: Row[]): string {
+  const cols = Object.keys(rows[0]!);
+  return [cols.join(","), ...rows.map((r) => cols.map((c) => r[c] ?? "").join(","))].join("\n");
+}
 function wr(o: Partial<Row>): Row {
   return {
     season: "2025", season_type: "REG", week: "1", position: "WR",
@@ -64,5 +70,17 @@ describe("loadPlayerModel", () => {
     expect(r.status).toBe("source-error");
     expect(r.profiles).toEqual([]);
     expect(r.canPublishProjections).toBe(false);
+  });
+
+  // Regression: nflverse release assets are raw-gzip (.csv.gz) with no
+  // Content-Encoding, so the body MUST be gunzipped — calling response.text()
+  // directly parses gzip bytes as garbage CSV and yields zero profiles.
+  it("gunzips a real gzipped CSV body into live profiles (not garbage)", async () => {
+    const gz = gzipSync(Buffer.from(toCsv(RECORDS), "utf8"));
+    const r = await loadPlayerModel({ season: 2025, fetcher: async () => new Response(gz) });
+    expect(r.status).toBe("live");
+    expect(r.season).toBe(2025);
+    expect(r.profiles.length).toBeGreaterThan(0);
+    expect(r.profiles.map((p) => p.name)).toContain("Buy Low");
   });
 });

@@ -198,13 +198,27 @@ export function parseCsv(text: string): CsvTable {
   return { header, records };
 }
 
+/**
+ * Decode a fetched dataset response body to text, transparently gunzipping when
+ * the body is gzip. nflverse release assets are raw-gzip with NO Content-Encoding
+ * header, so fetch() won't auto-decompress them — calling `.text()` directly would
+ * yield gzip binary that parses to garbage. We detect gzip by its magic bytes
+ * (0x1f 0x8b) rather than the URL, so a plain-CSV body (an uncompressed asset, a
+ * mirror that pre-decompresses, or a test mock) still works unchanged. Node-only
+ * (Buffer / node:zlib); use on the Node.js runtime.
+ */
+export async function decodeDatasetText(response: Response): Promise<string> {
+  const buf = Buffer.from(await response.arrayBuffer());
+  const isGzip = buf.length > 1 && buf[0] === 0x1f && buf[1] === 0x8b;
+  return isGzip ? gunzipSync(buf).toString("utf8") : buf.toString("utf8");
+}
+
 /** Fetch a dataset asset as text, transparently gunzipping `.gz` assets. */
 export async function fetchNflverseText(key: NflverseDatasetKey, season: number, variant?: string): Promise<string> {
   const url = nflverseUrl(key, season, variant);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`nflverse fetch failed (${res.status}) for ${url}`);
-  const buf = Buffer.from(await res.arrayBuffer());
-  return url.endsWith(".gz") ? gunzipSync(buf).toString("utf8") : buf.toString("utf8");
+  return decodeDatasetText(res);
 }
 
 /** Fetch + parse a dataset asset into row records. */
