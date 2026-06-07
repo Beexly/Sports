@@ -17,7 +17,8 @@
  * canPublishProjections false — it's an opportunity read, not a point projection.
  */
 
-import { assertIngestible, decodeDatasetText, fetchWithFailover, NFLVERSE_BASE, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { assertIngestible, decodeDatasetText, fetchWithFailover, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 import { percentileRanks } from "./qb-consensus";
 
 type CsvRecord = Readonly<Record<string, string>>;
@@ -54,8 +55,14 @@ export interface ExpectedPoints {
   readonly error: string | null;
 }
 
-// ff_opportunity ships one combined, all-seasons asset.
-const FF_OPP_URL = `${NFLVERSE_BASE}/ff_opportunity/ff_opportunity_latest.csv.gz`;
+// ffverse ships ff_opportunity as per-season plain-CSV release assets on the
+// ffopportunity repo (tag `latest-data`, asset `ep_weekly_{season}.csv`), NOT a
+// single combined gzip on nflverse-data. We try the active inspection season,
+// then fall back one season so the board is never empty in the offseason gap.
+const FF_OPP_BASE = "https://github.com/ffverse/ffopportunity/releases/download/latest-data";
+function ffOppUrl(season: number): string {
+  return `${FF_OPP_BASE}/ep_weekly_${season}.csv`;
+}
 const POSITIONS = ["QB", "RB", "WR", "TE"];
 const MIN_GAMES = 2;
 const MIN_XFP = 15;
@@ -152,43 +159,53 @@ export function buildExpectedPoints(records: readonly CsvRecord[], activeSeason:
 }
 
 export async function loadExpectedPoints({
-  season,
+  season = latestNflverseInspectionSeason(),
   timeoutMs = 15000,
   fetcher = fetch,
 }: { season?: number; timeoutMs?: number; fetcher?: FetchLike } = {}): Promise<ExpectedPoints> {
   assertIngestible("nflverse");
-  try {
-    // cache:no-store — multi-MB weekly asset; keep it out of Next's data cache.
-    const { response } = await fetchWithFailover(withMirrors(FF_OPP_URL), fetcher, { timeoutMs, init: { cache: "no-store" } });
-    const { records } = parseCsv(await decodeDatasetText(response));
-    if (records.length === 0) throw new Error("empty ff_opportunity");
-    const maxSeason = records.reduce((m, r) => Math.max(m, num(r["season"])), 0);
-    const activeSeason = season && records.some((r) => num(r["season"]) === season) ? season : maxSeason;
-    const { rows, throughWeek } = buildExpectedPoints(records, activeSeason);
-    return {
-      generatedAt: new Date().toISOString(),
-      status: "live",
-      season: activeSeason,
-      throughWeek,
-      sourceRows: records.length,
-      rows,
-      canPublishProjections: false,
-      note: "Expected fantasy points from nflverse ff_opportunity — what a player's real usage should have produced. We surface expected-vs-actual as buy-low / sell-high. The opportunity backbone, not a point projection.",
-      sourceUrl: FF_OPP_URL,
-      error: null,
-    };
-  } catch (error) {
-    return {
-      generatedAt: new Date().toISOString(),
-      status: "source-error",
-      season: 0,
-      throughWeek: null,
-      sourceRows: 0,
-      rows: [],
-      canPublishProjections: false,
-      note: "Expected points could not load from nflverse ff_opportunity. The board shows an empty state instead of fabricated expectations.",
-      sourceUrl: FF_OPP_URL,
-      error: error instanceof Error ? error.message : "UNKNOWN",
-    };
+  // ff_opportunity is one plain-CSV asset PER season. Try the requested season,
+  // then fall back one season so the offseason gap (no current-season weeks yet)
+  // still renders the most recent completed season instead of an empty state.
+  const candidates = [season, season - 1];
+  let lastError = "no candidate seasons";
+  let lastUrl = ffOppUrl(season);
+  for (const candidate of candidates) {
+    const url = ffOppUrl(candidate);
+    lastUrl = url;
+    try {
+      // cache:no-store — multi-MB weekly asset; keep it out of Next's data cache.
+      const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs, init: { cache: "no-store" } });
+      const { records } = parseCsv(await decodeDatasetText(response));
+      if (records.length === 0) { lastError = `empty ff_opportunity ${candidate}`; continue; }
+      const { rows, throughWeek } = buildExpectedPoints(records, candidate);
+      if (rows.length === 0) { lastError = `no qualified rows for ${candidate}`; continue; }
+      return {
+        generatedAt: new Date().toISOString(),
+        status: "live",
+        season: candidate,
+        throughWeek,
+        sourceRows: records.length,
+        rows,
+        canPublishProjections: false,
+        note: "Expected fantasy points from ffverse ff_opportunity — what a player's real usage should have produced. We surface expected-vs-actual as buy-low / sell-high. The opportunity backbone, not a point projection.",
+        sourceUrl: url,
+        error: null,
+      };
+    } catch (error) {
+      lastError = error instanceof Error ? error.message : "UNKNOWN";
+    }
   }
+  return {
+    generatedAt: new Date().toISOString(),
+    status: "source-error",
+    season: 0,
+    throughWeek: null,
+    sourceRows: 0,
+    rows: [],
+    canPublishProjections: false,
+    note: "Expected points could not load from ffverse ff_opportunity. The board shows an empty state instead of fabricated expectations.",
+    sourceUrl: lastUrl,
+    error: lastError,
+  };
 }

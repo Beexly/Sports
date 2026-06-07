@@ -58,11 +58,52 @@ describe("buildExpectedPoints", () => {
   });
 });
 
+function toCsv(rows: Row[]): string {
+  const cols = Object.keys(rows[0]!);
+  return [cols.join(","), ...rows.map((r) => cols.map((c) => r[c] ?? "").join(","))].join("\n");
+}
+// A season's worth of qualified rows (plain CSV — ffverse assets are NOT gzipped).
+function seasonCsv(season: number): string {
+  return toCsv(RECORDS.map((r) => ({ ...r, season: String(season) })));
+}
+
 describe("loadExpectedPoints", () => {
   it("degrades to source-error when ff_opportunity is unreachable", async () => {
     const r = await loadExpectedPoints({ fetcher: async () => { throw new Error("blocked"); } });
     expect(r.status).toBe("source-error");
     expect(r.rows).toEqual([]);
     expect(r.canPublishProjections).toBe(false);
+  });
+
+  // Regression: the asset moved to ffverse/ffopportunity per-season plain-CSV
+  // releases (ep_weekly_{season}.csv). A plain (non-gzipped) body must parse to
+  // live rows for the requested season.
+  it("loads live rows from a per-season plain-CSV asset", async () => {
+    const r = await loadExpectedPoints({
+      season: 2025,
+      fetcher: async (url) => {
+        expect(url).toContain("ep_weekly_2025.csv");
+        return new Response(seasonCsv(2025));
+      },
+    });
+    expect(r.status).toBe("live");
+    expect(r.season).toBe(2025);
+    expect(r.rows.map((x) => x.name)).toContain("Buy Low");
+    expect(r.sourceUrl).toContain("ep_weekly_2025.csv");
+  });
+
+  // Regression: in the offseason the current season's asset 404s; the loader
+  // must fall back one season instead of showing an empty board.
+  it("falls back one season when the requested season's asset is missing", async () => {
+    const r = await loadExpectedPoints({
+      season: 2026,
+      fetcher: async (url) => {
+        if (url.includes("ep_weekly_2026.csv")) return new Response("not found", { status: 404 });
+        return new Response(seasonCsv(2025));
+      },
+    });
+    expect(r.status).toBe("live");
+    expect(r.season).toBe(2025);
+    expect(r.sourceUrl).toContain("ep_weekly_2025.csv");
   });
 });
