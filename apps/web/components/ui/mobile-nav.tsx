@@ -53,6 +53,7 @@ const SECTIONS: readonly Section[] = [
     links: [
       { label: "Inside the Signal", href: "/intelligence" },
       { label: "Player Intelligence", href: "/intelligence/players" },
+      { label: "Intelligence Engines", href: "/intelligence/engines" },
       { label: "How We Read Stats", href: "/intelligence/metrics" },
       { label: "Trend Lab", href: "/trends" },
       { label: "Edge Map", href: "/observatory" },
