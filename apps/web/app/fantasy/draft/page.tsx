@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DraftAssistant } from "@/components/fantasy/draft-assistant";
-import { resolveToolPool } from "@/lib/integrations/projections";
+import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 // runtime (the provider is registered at server startup, not build time).
 export const dynamic = "force-dynamic";
 
-export default function DraftPage() {
-  const pool = resolveToolPool();
+export default async function DraftPage() {
+  const pool = await resolveToolPoolAsync();
   return (
     <FantasyShell
       eyebrow="Draft Assistant"

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { WaiverBoard } from "@/components/fantasy/waiver-board";
 import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
-import { resolveToolPool } from "@/lib/integrations/projections";
+import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -19,8 +19,8 @@ export const dynamic = "force-dynamic";
 const LIVE_NOTE =
   "Live graded pool — real nflverse players with model-derived projections. Targets, FAAB tiers, and drop candidates are computed from real grades.";
 
-export default function WaiversPage() {
-  const pool = resolveToolPool();
+export default async function WaiversPage() {
+  const pool = await resolveToolPoolAsync();
   return (
     <FantasyShell
       eyebrow="Waiver & FAAB"

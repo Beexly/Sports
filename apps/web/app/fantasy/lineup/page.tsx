@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
-import { resolveToolPool } from "@/lib/integrations/projections";
+import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 // at runtime (the provider is registered at server startup, not build time).
 export const dynamic = "force-dynamic";
 
-export default function LineupPage() {
+export default async function LineupPage() {
   // Live graded pool when projections are on; otherwise undefined → illustrative.
-  const pool = resolveToolPool();
+  const pool = await resolveToolPoolAsync();
   return (
     <FantasyShell
       eyebrow="Lineup Optimizer"

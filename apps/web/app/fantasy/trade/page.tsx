@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { TradeAnalyzer } from "@/components/fantasy/trade-analyzer";
 import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
-import { resolveToolPool } from "@/lib/integrations/projections";
+import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -19,8 +19,8 @@ export const dynamic = "force-dynamic";
 const LIVE_NOTE =
   "Live graded pool — real nflverse players with model-derived projections. Trade values, fairness, and the lean are computed from real grades.";
 
-export default function TradePage() {
-  const pool = resolveToolPool();
+export default async function TradePage() {
+  const pool = await resolveToolPoolAsync();
   return (
     <FantasyShell
       eyebrow="Trade Analyzer"
