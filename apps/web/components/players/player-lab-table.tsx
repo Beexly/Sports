@@ -4,6 +4,12 @@ import type { ReactNode } from "react";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import type { SignalTone } from "@/lib/intelligence/colors";
 import { formatSigned, signedTone, buySellTone } from "@/lib/intelligence/colors";
+import {
+  ShareBar,
+  PercentileBar,
+  DivergingBar,
+  SignalChip,
+} from "@/components/ui/dataviz";
 import type {
   DefenseVsPositionRank,
   PlayerSeasonLine,
@@ -88,16 +94,16 @@ function productionLeaderColumns(): ReadonlyArray<Column<PlayerSeasonLine>> {
     { key: "games", label: "G", align: "right", numeric: true },
     { key: "pprPerGame", label: "PPR/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.pprPerGame) },
     { key: "last5PprPerGame", label: "5g", align: "right", numeric: true, tooltip: "last-5-game PPR/G", render: (r) => fmtDecimal(r.last5PprPerGame) },
-    { key: "last5PprDelta", label: "Δ", align: "right", numeric: true, tooltip: "recent form minus season pace", render: (r) => signedCell(r.last5PprDelta, 1) },
-    { key: "boomRate", label: "Boom%", align: "right", numeric: true, tooltip: "share of games ≥ 20 PPR", render: (r) => fmtPercent(r.boomRate) },
-    { key: "bustRate", label: "Bust%", align: "right", numeric: true, tooltip: "share of games ≤ 10 PPR", render: (r) => fmtPercent(r.bustRate) },
+    { key: "last5PprDelta", label: "Δ", align: "right", numeric: true, sortValue: (r) => r.last5PprDelta, tooltip: "recent form minus season pace", render: (r) => <DivergingBar value={r.last5PprDelta} domain={6} digits={1} /> },
+    { key: "boomRate", label: "Boom%", align: "right", numeric: true, sortValue: (r) => r.boomRate, tooltip: "share of games ≥ 20 PPR", render: (r) => <ShareBar value={r.boomRate} tone="good" format={(v) => fmtPercent(v)} /> },
+    { key: "bustRate", label: "Bust%", align: "right", numeric: true, sortValue: (r) => r.bustRate, tooltip: "share of games ≤ 10 PPR", render: (r) => <ShareBar value={r.bustRate} tone="bad" format={(v) => fmtPercent(v)} /> },
     { key: "opportunitiesPerGame", label: "Oppty/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.opportunitiesPerGame) },
     { key: "targetsPerGame", label: "Tgt/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.targetsPerGame) },
     { key: "receptionsPerGame", label: "Rec/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.receptionsPerGame) },
     { key: "receivingYardsPerGame", label: "RecYd/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.receivingYardsPerGame) },
     { key: "rushingYardsPerGame", label: "RushYd/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.rushingYardsPerGame) },
-    { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
-    { key: "wopr", label: "WOPR", align: "right", numeric: true, sortValue: (r) => r.wopr, render: (r) => fmtDecimal(r.wopr, 2) },
+    { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => <ShareBar value={r.targetShare} format={(v) => fmtPercent(v)} /> },
+    { key: "wopr", label: "WOPR", align: "right", numeric: true, sortValue: (r) => r.wopr, tooltip: "weighted opportunity rating (capped at 1.0 for the bar)", render: (r) => <ShareBar value={r.wopr} format={() => fmtDecimal(r.wopr, 2)} /> },
   ];
 }
 
@@ -118,7 +124,7 @@ function snapColumns(): ReadonlyArray<Column<SnapShareRow>> {
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, r.position) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "games", label: "G", align: "right", numeric: true },
-    { key: "snapSharePct", label: "Snap %", align: "right", numeric: true, render: (r) => fmtPercent(r.snapSharePct) },
+    { key: "snapSharePct", label: "Snap %", align: "right", numeric: true, sortValue: (r) => r.snapSharePct, render: (r) => <ShareBar value={r.snapSharePct} format={(v) => fmtPercent(v)} /> },
     { key: "snapsPerGame", label: "Snaps/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.snapsPerGame) },
   ];
 }
@@ -141,8 +147,8 @@ function opportunityColumns(): ReadonlyArray<Column<ReceivingOpportunityRow>> {
     { key: "position", label: "Pos" },
     { key: "targets", label: "Tgt", align: "right", numeric: true },
     { key: "wopr", label: "WOPR", align: "right", numeric: true, tooltip: "1.5·target share + 0.7·air-yards share", render: (r) => r.wopr.toFixed(2) },
-    { key: "targetShare", label: "Tgt%", align: "right", numeric: true, tooltip: "target share", render: (r) => fmtPctRounded(r.targetShare) },
-    { key: "airYardsShare", label: "AY%", align: "right", numeric: true, tooltip: "air-yards share", render: (r) => fmtPctRounded(r.airYardsShare) },
+    { key: "targetShare", label: "Tgt%", align: "right", numeric: true, sortValue: (r) => r.targetShare, tooltip: "target share", render: (r) => <ShareBar value={r.targetShare} format={(v) => fmtPctRounded(v)} /> },
+    { key: "airYardsShare", label: "AY%", align: "right", numeric: true, sortValue: (r) => r.airYardsShare, tooltip: "air-yards share", render: (r) => <ShareBar value={r.airYardsShare} format={(v) => fmtPctRounded(v)} /> },
     { key: "aDOT", label: "aDOT", align: "right", numeric: true, tooltip: "avg depth of target", render: (r) => r.aDOT.toFixed(1) },
     { key: "racr", label: "RACR", align: "right", numeric: true, tooltip: "receiver air conversion ratio", render: (r) => r.racr.toFixed(2) },
     {
@@ -150,11 +156,7 @@ function opportunityColumns(): ReadonlyArray<Column<ReceivingOpportunityRow>> {
       label: "The read",
       tooltip: "opportunity vs production divergence",
       sortValue: (r) => OPP_SIGNAL_LABEL[r.signal],
-      render: (r) => {
-        const tone = oppTone(r.signal);
-        const cls = tone === "good" ? "text-emerald-700" : tone === "bad" ? "text-rose-700" : "text-ink-1";
-        return <span className={`font-semibold ${cls}`}>{OPP_SIGNAL_LABEL[r.signal]}</span>;
-      },
+      render: (r) => <SignalChip label={OPP_SIGNAL_LABEL[r.signal]} tone={oppTone(r.signal)} title={r.note} />,
     },
   ];
 }
@@ -166,17 +168,19 @@ function rushingColumns(): ReadonlyArray<Column<RushingEfficiencyRow>> {
     "volume-dependent": "Volume-dep",
     limited: "Limited",
   };
+  const readTone = (read: RushingEfficiencyRow["read"]): SignalTone =>
+    read === "bell-cow" || read === "buy-low" ? "good" : read === "limited" ? "bad" : "neutral";
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "rush attempts (volume)" },
     { key: "ryoePerAtt", label: "RYOE/att", align: "right", numeric: true, tooltip: "rush yards over expected per attempt", render: (r) => signedCell(r.ryoePerAtt, 2) },
-    { key: "pctStackedBox", label: "Box%", align: "right", numeric: true, tooltip: "% of carries vs an 8+ man box", render: (r) => `${r.pctStackedBox.toFixed(0)}%` },
+    { key: "pctStackedBox", label: "Box%", align: "right", numeric: true, sortValue: (r) => r.pctStackedBox, tooltip: "% of carries vs an 8+ man box", render: (r) => <ShareBar value={r.pctStackedBox / 100} tone="bad" format={() => `${r.pctStackedBox.toFixed(0)}%`} /> },
     {
       key: "read",
       label: "The read",
       sortValue: (r) => READ_LABEL[r.read],
-      render: (r) => <span className="font-semibold text-ink-1">{READ_LABEL[r.read]}</span>,
+      render: (r) => <SignalChip label={READ_LABEL[r.read]} tone={readTone(r.read)} title={r.note} />,
     },
   ];
 }
@@ -190,9 +194,9 @@ function ngsReceivingColumns(): ReadonlyArray<Column<NgsReceivingLine>> {
     { key: "targets", label: "Tgt", align: "right", numeric: true },
     { key: "avgSeparation", label: "Sep", align: "right", numeric: true, tooltip: "yards of space at the catch point", render: (r) => r.avgSeparation.toFixed(2) },
     { key: "avgCushion", label: "Cush", align: "right", numeric: true, tooltip: "pre-snap cushion", render: (r) => r.avgCushion.toFixed(2) },
-    { key: "avgYacAboveExpectation", label: "YAC+/-", align: "right", numeric: true, tooltip: "yards after catch over expected", render: (r) => signedCell(r.avgYacAboveExpectation, 1) },
-    { key: "shareOfIntendedAirYards", label: "Air sh", align: "right", numeric: true, render: (r) => fmtPercent(r.shareOfIntendedAirYards) },
-    { key: "catchPct", label: "Catch%", align: "right", numeric: true, render: (r) => fmtPercent(r.catchPct) },
+    { key: "avgYacAboveExpectation", label: "YAC+/-", align: "right", numeric: true, sortValue: (r) => r.avgYacAboveExpectation, tooltip: "yards after catch over expected", render: (r) => <DivergingBar value={r.avgYacAboveExpectation} domain={3} digits={1} /> },
+    { key: "shareOfIntendedAirYards", label: "Air sh", align: "right", numeric: true, sortValue: (r) => r.shareOfIntendedAirYards, render: (r) => <ShareBar value={r.shareOfIntendedAirYards} format={(v) => fmtPercent(v)} /> },
+    { key: "catchPct", label: "Catch%", align: "right", numeric: true, sortValue: (r) => r.catchPct, render: (r) => <ShareBar value={r.catchPct} tone="good" format={(v) => fmtPercent(v)} /> },
   ];
 }
 function ngsPassingColumns(): ReadonlyArray<Column<NgsPassingLine>> {
@@ -200,7 +204,7 @@ function ngsPassingColumns(): ReadonlyArray<Column<NgsPassingLine>> {
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "attempts", label: "Att", align: "right", numeric: true },
-    { key: "cpoe", label: "CPOE", align: "right", numeric: true, tooltip: "completion % over expected", render: (r) => signedCell(r.cpoe, 1) },
+    { key: "cpoe", label: "CPOE", align: "right", numeric: true, sortValue: (r) => r.cpoe, tooltip: "completion % over expected", render: (r) => <DivergingBar value={r.cpoe} domain={8} digits={1} /> },
     { key: "completionPct", label: "Comp%", align: "right", numeric: true, render: (r) => r.completionPct.toFixed(1) },
     { key: "expectedCompletionPct", label: "xComp%", align: "right", numeric: true, render: (r) => r.expectedCompletionPct.toFixed(1) },
     { key: "avgTimeToThrow", label: "TT throw", align: "right", numeric: true, render: (r) => r.avgTimeToThrow.toFixed(2) },
@@ -213,9 +217,9 @@ function ngsRushingColumns(): ReadonlyArray<Column<NgsRushingLine>> {
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "rushAttempts", label: "Att", align: "right", numeric: true },
-    { key: "ryoePerAtt", label: "RYOE/att", align: "right", numeric: true, tooltip: "rush yards over expected per attempt", render: (r) => signedCell(r.ryoePerAtt, 2) },
+    { key: "ryoePerAtt", label: "RYOE/att", align: "right", numeric: true, sortValue: (r) => r.ryoePerAtt, tooltip: "rush yards over expected per attempt", render: (r) => <DivergingBar value={r.ryoePerAtt} domain={1.5} digits={2} /> },
     { key: "efficiency", label: "Eff", align: "right", numeric: true, render: (r) => r.efficiency.toFixed(2) },
-    { key: "pctStackedBox", label: "Stacked%", align: "right", numeric: true, tooltip: "% carries vs 8+ defenders", render: (r) => fmtPercent(r.pctStackedBox) },
+    { key: "pctStackedBox", label: "Stacked%", align: "right", numeric: true, sortValue: (r) => r.pctStackedBox, tooltip: "% carries vs 8+ defenders", render: (r) => <ShareBar value={r.pctStackedBox} tone="bad" format={(v) => fmtPercent(v)} /> },
     { key: "avgTimeToLos", label: "TT LOS", align: "right", numeric: true, render: (r) => r.avgTimeToLos.toFixed(2) },
   ];
 }
@@ -273,8 +277,8 @@ function qbrColumns(): ReadonlyArray<Column<QbrRow>> {
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "games", label: "G", align: "right", numeric: true },
     { key: "qbr", label: "QBR", align: "right", numeric: true, tooltip: "play-weighted Total QBR (0-100)", render: (r) => r.qbr.toFixed(1) },
-    { key: "epaTotal", label: "EPA", align: "right", numeric: true, tooltip: "total expected points added", render: (r) => signedCell(r.epaTotal, 1) },
-    { key: "ptsAdded", label: "Pts added", align: "right", numeric: true, render: (r) => signedCell(r.ptsAdded, 1) },
+    { key: "epaTotal", label: "EPA", align: "right", numeric: true, sortValue: (r) => r.epaTotal, tooltip: "total expected points added", render: (r) => <DivergingBar value={r.epaTotal} domain={60} digits={1} /> },
+    { key: "ptsAdded", label: "Pts added", align: "right", numeric: true, sortValue: (r) => r.ptsAdded, render: (r) => <DivergingBar value={r.ptsAdded} domain={60} digits={1} /> },
     { key: "plays", label: "Plays", align: "right", numeric: true },
   ];
 }
@@ -292,18 +296,14 @@ function consensusColumns(): ReadonlyArray<Column<QbConsensusRow>> {
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
-    { key: "qbrPct", label: "QBR %ile", align: "right", numeric: true, tooltip: "QBR percentile within the pool", sortValue: (r) => r.qbrPct, render: (r) => (r.qbrPct === null ? "—" : r.qbrPct.toFixed(0)) },
-    { key: "cpoePct", label: "CPOE %ile", align: "right", numeric: true, tooltip: "CPOE (Next Gen accuracy) percentile", sortValue: (r) => r.cpoePct, render: (r) => (r.cpoePct === null ? "—" : r.cpoePct.toFixed(0)) },
-    { key: "consensus", label: "Consensus", align: "right", numeric: true, tooltip: "mean of available percentiles", render: (r) => r.consensus.toFixed(0) },
+    { key: "qbrPct", label: "QBR %ile", align: "right", numeric: true, tooltip: "QBR percentile within the pool", sortValue: (r) => r.qbrPct, render: (r) => <PercentileBar pct={r.qbrPct} /> },
+    { key: "cpoePct", label: "CPOE %ile", align: "right", numeric: true, tooltip: "CPOE (Next Gen accuracy) percentile", sortValue: (r) => r.cpoePct, render: (r) => <PercentileBar pct={r.cpoePct} /> },
+    { key: "consensus", label: "Consensus", align: "right", numeric: true, tooltip: "mean of available percentiles", sortValue: (r) => r.consensus, render: (r) => <PercentileBar pct={r.consensus} /> },
     {
       key: "divergence",
       label: "The read",
       sortValue: (r) => DIVERGENCE_LABEL[r.divergence],
-      render: (r) => {
-        const tone = divergenceTone(r.divergence);
-        const cls = tone === "good" ? "text-emerald-700" : "text-ink-1";
-        return <span className={`font-semibold ${cls}`}>{DIVERGENCE_LABEL[r.divergence]}</span>;
-      },
+      render: (r) => <SignalChip label={DIVERGENCE_LABEL[r.divergence]} tone={divergenceTone(r.divergence)} title={r.note} />,
     },
   ];
 }
@@ -311,19 +311,19 @@ function consensusColumns(): ReadonlyArray<Column<QbConsensusRow>> {
 // ── EDGE ──────────────────────────────────────────────────────────────────────
 
 function edgeColumns(tone: "buy" | "sell"): ReadonlyArray<Column<EdgeSignalRow>> {
-  const gapCls = tone === "buy" ? "text-emerald-700" : "text-rose-700";
+  const gapTone: SignalTone = tone === "buy" ? "good" : "bad";
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, r.position) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "games", label: "G", align: "right", numeric: true },
     { key: "pprPerGame", label: "PPR/G", align: "right", numeric: true, render: (r) => r.pprPerGame.toFixed(1) },
-    { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
+    { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => <ShareBar value={r.targetShare} format={(v) => fmtPercent(v)} /> },
     { key: "avgSeparation", label: "Sep", align: "right", numeric: true, render: (r) => r.avgSeparation.toFixed(2) },
     { key: "yacAboveExpectation", label: "YAC+/-", align: "right", numeric: true, render: (r) => formatSigned(r.yacAboveExpectation, 2) },
-    { key: "shareIntendedAirYards", label: "Air sh", align: "right", numeric: true, render: (r) => fmtPercent(r.shareIntendedAirYards) },
+    { key: "shareIntendedAirYards", label: "Air sh", align: "right", numeric: true, sortValue: (r) => r.shareIntendedAirYards, render: (r) => <ShareBar value={r.shareIntendedAirYards} format={(v) => fmtPercent(v)} /> },
     { key: "underlyingZ", label: "Undr z", align: "right", numeric: true, tooltip: "z-score of the underlying tracking signal", render: (r) => formatSigned(r.underlyingZ, 2) },
     { key: "productionZ", label: "Prod z", align: "right", numeric: true, tooltip: "z-score of actual production", render: (r) => formatSigned(r.productionZ, 2) },
-    { key: "gap", label: "Gap", align: "right", numeric: true, tooltip: "underlying z minus production z", render: (r) => <span className={`font-semibold ${gapCls}`}>{formatSigned(r.gap, 2)}</span> },
+    { key: "gap", label: "Gap", align: "right", numeric: true, sortValue: (r) => r.gap, tooltip: "underlying z minus production z", render: (r) => <DivergingBar value={r.gap} domain={3} tone={gapTone} digits={2} /> },
   ];
 }
 
@@ -369,13 +369,10 @@ function marketColumns(): ReadonlyArray<Column<SleeperTrendingPlayer>> {
 
 function dfsColumns(): ReadonlyArray<Column<DfsSalaryRow>> {
   const agreementCell = (r: DfsSalaryRow): ReactNode => {
-    const cls: Record<DfsSalaryRow["agreement"], string> = {
-      agree: "border-emerald-300 text-emerald-700",
-      single: "border-paper-border text-ink-2",
-      disagree: "border-rose-300 text-rose-700",
-    };
+    const tone: SignalTone =
+      r.agreement === "agree" ? "good" : r.agreement === "disagree" ? "bad" : "neutral";
     const text = r.agreement === "disagree" ? `±$${fmtNumber(r.spread)}` : r.agreement;
-    return <span className={`rounded-ds-sm border px-2 py-0.5 font-mono text-xs uppercase tracking-wide ${cls[r.agreement]}`}>{text}</span>;
+    return <SignalChip label={text} tone={tone} title={`feeds ${r.agreement}`} />;
   };
   return [
     { key: "name", label: "Player", render: (r) => playerCell(r.name) },

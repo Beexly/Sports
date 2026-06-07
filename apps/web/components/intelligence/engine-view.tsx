@@ -5,12 +5,16 @@ import { DataTable, type Column } from "@/components/ui/data-table";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { SourceError } from "@/components/ui/source-error";
 import {
+  DivergingBar,
+  PercentileBar,
+  ShareBar,
+  SignalChip,
+} from "@/components/ui/dataviz";
+import {
   formatSigned,
-  hitRateClass,
   hitRateTone,
-  liftClass,
   liftTone,
-  signedClass,
+  signedTone,
   toneClass,
   type SignalTone,
 } from "@/lib/intelligence/colors";
@@ -108,8 +112,9 @@ function MovesCard({ title, tone, rows }: { title: string; tone: SignalTone; row
             <div key={p.playerId} className="border-l border-paper-border pl-3">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm font-semibold text-ink">{p.name}</span>
-                <span className="font-mono text-xs text-ink-2">
-                  {p.position} · {p.team} · grade {p.processGrade}
+                <span className="flex items-center gap-2 font-mono text-xs text-ink-2">
+                  <span>{p.position} · {p.team}</span>
+                  <PercentileBar pct={p.processGrade} tone={gradeTone(p.processGrade)} widthPx={36} />
                 </span>
               </div>
               <p className="mt-0.5 text-xs leading-5 text-ink-1">{p.note}</p>
@@ -132,7 +137,8 @@ function playerColumns(pos: ModelPosition): Column<PlayerProfile>[] {
       align: "right",
       numeric: true,
       tooltip: "position-aware composite of the predictive anchors",
-      render: (r) => <span className={`font-semibold ${toneClass(gradeTone(r.processGrade))}`}>{r.processGrade}</span>,
+      sortValue: (r) => r.processGrade,
+      render: (r) => <PercentileBar pct={r.processGrade} tone={gradeTone(r.processGrade)} />,
     },
     {
       key: "productionPct",
@@ -140,7 +146,8 @@ function playerColumns(pos: ModelPosition): Column<PlayerProfile>[] {
       align: "right",
       numeric: true,
       tooltip: "PPR production percentile in position",
-      render: (r) => r.productionPct,
+      sortValue: (r) => r.productionPct,
+      render: (r) => <PercentileBar pct={r.productionPct} />,
     },
     {
       key: "epaPerPlay",
@@ -149,7 +156,7 @@ function playerColumns(pos: ModelPosition): Column<PlayerProfile>[] {
       numeric: true,
       tooltip: "combined EPA per play",
       sortValue: (r) => r.epaPerPlay,
-      render: (r) => <span className={signedClass(r.epaPerPlay)}>{formatSigned(r.epaPerPlay, 2)}</span>,
+      render: (r) => <DivergingBar value={r.epaPerPlay} domain={0.5} digits={2} />,
     },
   ];
   if (isQb) {
@@ -168,7 +175,7 @@ function playerColumns(pos: ModelPosition): Column<PlayerProfile>[] {
     label: "The read",
     tooltip: "process vs production",
     sortValue: (r) => r.signal,
-    render: (r) => <span className={`font-mono text-xs ${toneClass(processTone(r.signal))}`}>{PROCESS_SIGNAL_LABEL[r.signal]}</span>,
+    render: (r) => <SignalChip label={PROCESS_SIGNAL_LABEL[r.signal]} tone={processTone(r.signal)} title="process vs production" />,
   });
   return cols;
 }
@@ -245,16 +252,17 @@ function ExpectedPointsView({ f }: { f: ExpectedPoints }): JSX.Element {
       numeric: true,
       tooltip: "actual minus expected (luck/efficiency)",
       sortValue: (r) => r.diff,
-      // actual over expected = hot (bad / sell), under = cold/coming (good / buy)
-      render: (r) => <span className={signedClass(r.diff)}>{formatSigned(r.diff, 1)}</span>,
+      // actual over expected = hot (bad / sell), under = cold/coming (good / buy);
+      // tone follows the read so color matches the call, not the raw sign.
+      render: (r) => <DivergingBar value={r.diff} domain={6} digits={1} tone={xfpReadTone(r)} />,
     },
-    { key: "xfpPct", label: "xFP%", align: "right", numeric: true, tooltip: "expected-points percentile within position", render: (r) => r.xfpPct.toFixed(0) },
-    { key: "prodPct", label: "Prod%", align: "right", numeric: true, tooltip: "actual-points percentile within position", render: (r) => r.prodPct.toFixed(0) },
+    { key: "xfpPct", label: "xFP%", align: "right", numeric: true, tooltip: "expected-points percentile within position", sortValue: (r) => r.xfpPct, render: (r) => <PercentileBar pct={r.xfpPct} /> },
+    { key: "prodPct", label: "Prod%", align: "right", numeric: true, tooltip: "actual-points percentile within position", sortValue: (r) => r.prodPct, render: (r) => <PercentileBar pct={r.prodPct} /> },
     {
       key: "signal",
       label: "The read",
       sortValue: (r) => r.signal,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(xfpReadTone(r))}`}>{xfpReadLabel(r)}</span>,
+      render: (r) => <SignalChip label={xfpReadLabel(r)} tone={xfpReadTone(r)} />,
     },
   ];
   return (
@@ -307,15 +315,15 @@ function QbForwardView({ f }: { f: QbForward }): JSX.Element {
     { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "pass attempts", render: (r) => r.attempts },
     { key: "dakota", label: "DAKOTA", align: "right", numeric: true, tooltip: "DAKOTA EPA + CPOE composite", render: (r) => r.dakota.toFixed(3) },
     { key: "anyA", label: "ANY/A", align: "right", numeric: true, tooltip: "adjusted net yards per attempt", render: (r) => r.anyA.toFixed(2) },
-    { key: "dakotaPct", label: "DAK%", align: "right", numeric: true, tooltip: "DAKOTA percentile within QB pool", render: (r) => r.dakotaPct.toFixed(0) },
-    { key: "anyaPct", label: "ANY/A%", align: "right", numeric: true, tooltip: "ANY/A percentile within QB pool", render: (r) => r.anyaPct.toFixed(0) },
-    { key: "forwardGrade", label: "Grade", align: "right", numeric: true, tooltip: "mean of the two percentiles", render: (r) => r.forwardGrade },
-    { key: "agreement", label: "Agmt", align: "right", numeric: true, tooltip: "how closely the two priors agree", render: (r) => r.agreement.toFixed(2) },
+    { key: "dakotaPct", label: "DAK%", align: "right", numeric: true, tooltip: "DAKOTA percentile within QB pool", sortValue: (r) => r.dakotaPct, render: (r) => <PercentileBar pct={r.dakotaPct} /> },
+    { key: "anyaPct", label: "ANY/A%", align: "right", numeric: true, tooltip: "ANY/A percentile within QB pool", sortValue: (r) => r.anyaPct, render: (r) => <PercentileBar pct={r.anyaPct} /> },
+    { key: "forwardGrade", label: "Grade", align: "right", numeric: true, tooltip: "mean of the two percentiles", sortValue: (r) => r.forwardGrade, render: (r) => <PercentileBar pct={r.forwardGrade} /> },
+    { key: "agreement", label: "Agmt", align: "right", numeric: true, tooltip: "how closely the two priors agree", sortValue: (r) => r.agreement, render: (r) => <ShareBar value={r.agreement} format={(v) => v.toFixed(2)} /> },
     {
       key: "read",
       label: "The read",
       sortable: false,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(qbReadTone(r))}`}>{qbReadLabel(r)}</span>,
+      render: (r) => <SignalChip label={qbReadLabel(r)} tone={qbReadTone(r)} />,
     },
   ];
   return (
@@ -382,12 +390,12 @@ function RushingContactView({ f }: { f: RushingContact }): JSX.Element {
     { key: "ybcPerAtt", label: "YBC/att", align: "right", numeric: true, tooltip: "yards before contact per attempt — the line/scheme", render: (r) => r.ybcPerAtt.toFixed(2) },
     { key: "brokenTackles", label: "Brk", align: "right", numeric: true, tooltip: "broken tackles, total", render: (r) => r.brokenTackles },
     { key: "brokenPerAtt", label: "Brk/att", align: "right", numeric: true, tooltip: "broken tackles per attempt", render: (r) => r.brokenPerAtt.toFixed(3) },
-    { key: "yacPct", label: "YAC%", align: "right", numeric: true, tooltip: "YAC/att percentile within the qualified pool", render: (r) => r.yacPct.toFixed(0) },
+    { key: "yacPct", label: "YAC%", align: "right", numeric: true, tooltip: "YAC/att percentile within the qualified pool", sortValue: (r) => r.yacPct, render: (r) => <PercentileBar pct={r.yacPct} tone={rcYacTone(r)} /> },
     {
       key: "read",
       label: "The read",
       sortable: false,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(rcReadTone(r))}`}>{rcReadLabel(r)}</span>,
+      render: (r) => <SignalChip label={rcReadLabel(r)} tone={rcReadTone(r)} />,
     },
   ];
   return (
@@ -435,12 +443,12 @@ function RouteRateView({ rr }: { rr: RouteRate }): JSX.Element {
     { key: "routes", label: "Routes", align: "right", numeric: true, tooltip: "approximate routes run (proxy)", render: (r) => r.routes },
     { key: "targets", label: "Tgt", align: "right", numeric: true, render: (r) => r.targets },
     { key: "tprr", label: "TPRR", align: "right", numeric: true, tooltip: "targets per route run (proxy)", render: (r) => r.tprr.toFixed(3) },
-    { key: "tprrPct", label: "TPRR%", align: "right", numeric: true, tooltip: "within-pool TPRR percentile", render: (r) => r.tprrPct },
+    { key: "tprrPct", label: "TPRR%", align: "right", numeric: true, tooltip: "within-pool TPRR percentile", sortValue: (r) => r.tprrPct, render: (r) => <PercentileBar pct={r.tprrPct} /> },
     {
       key: "signal",
       label: "The read",
       sortValue: (r) => r.signal,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(routeTone(r.signal))}`}>{ROUTE_SIGNAL_LABEL[r.signal]}</span>,
+      render: (r) => <SignalChip label={ROUTE_SIGNAL_LABEL[r.signal]} tone={routeTone(r.signal)} />,
     },
   ];
   return (
@@ -490,15 +498,15 @@ function ScoringZoneView({ z }: { z: ScoringZone }): JSX.Element {
     { key: "rzCarries", label: "RZ Car", align: "right", numeric: true, tooltip: "red-zone carries (inside the 20)", render: (r) => r.rzCarries },
     { key: "rzTargets", label: "RZ Tgt", align: "right", numeric: true, tooltip: "red-zone targets (inside the 20)", render: (r) => r.rzTargets },
     { key: "inside5", label: "In-5", align: "right", numeric: true, tooltip: "carries + targets inside the 5", render: (r) => r.inside5 },
-    { key: "rzShare", label: "RZ Share", align: "right", numeric: true, tooltip: "player's share of his team's scoring-zone opportunities", sortValue: (r) => r.rzShare, render: (r) => pct(r.rzShare) },
+    { key: "rzShare", label: "RZ Share", align: "right", numeric: true, tooltip: "player's share of his team's scoring-zone opportunities", sortValue: (r) => r.rzShare, render: (r) => <ShareBar value={r.rzShare} /> },
     { key: "rzTds", label: "RZ TD", align: "right", numeric: true, tooltip: "scoring-zone touchdowns", render: (r) => r.rzTds },
-    { key: "tdRate", label: "TD Rate", align: "right", numeric: true, tooltip: "raw TD per scoring-zone opportunity", sortValue: (r) => r.tdRate, render: (r) => pct(r.tdRate) },
-    { key: "expectedTdRate", label: "xTD Rate", align: "right", numeric: true, tooltip: "TD rate regressed toward the positional mean", sortValue: (r) => r.expectedTdRate, render: (r) => pct(r.expectedTdRate) },
+    { key: "tdRate", label: "TD Rate", align: "right", numeric: true, tooltip: "raw TD per scoring-zone opportunity", sortValue: (r) => r.tdRate, render: (r) => <ShareBar value={r.tdRate} /> },
+    { key: "expectedTdRate", label: "xTD Rate", align: "right", numeric: true, tooltip: "TD rate regressed toward the positional mean", sortValue: (r) => r.expectedTdRate, render: (r) => <ShareBar value={r.expectedTdRate} /> },
     {
       key: "signal",
       label: "The read",
       sortValue: (r) => r.signal,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(scoringTone(r.signal))}`}>{SCORING_SIGNAL_LABEL[r.signal]}</span>,
+      render: (r) => <SignalChip label={SCORING_SIGNAL_LABEL[r.signal]} tone={scoringTone(r.signal)} />,
     },
   ];
   return (
@@ -536,22 +544,23 @@ function TeamEnvironmentView({ t }: { t: TeamEnvironment }): JSX.Element {
   }
   const columns: Column<TeamEnvironmentRow>[] = [
     { key: "team", label: "Tm", render: (r) => <span className="font-mono font-semibold text-ink">{r.team}</span> },
-    { key: "offEpaPerPlay", label: "Off EPA", align: "right", numeric: true, tooltip: "offensive EPA per play (neutral script, early down)", sortValue: (r) => r.offEpaPerPlay, render: (r) => <span className={signedClass(r.offEpaPerPlay)}>{formatSigned(r.offEpaPerPlay, 3)}</span> },
-    { key: "offEpaPct", label: "Off%ile", align: "right", numeric: true, tooltip: "within-league offensive EPA percentile", sortValue: (r) => r.offEpaPct, render: (r) => pct(r.offEpaPct) },
-    { key: "offSuccessRate", label: "Off SR", align: "right", numeric: true, tooltip: "offensive success rate", sortValue: (r) => r.offSuccessRate, render: (r) => pct(r.offSuccessRate) },
-    { key: "defEpaPerPlay", label: "Def EPA", align: "right", numeric: true, tooltip: "defensive EPA per play (lower is better)", sortValue: (r) => r.defEpaPerPlay, render: (r) => <span className={signedClass(-r.defEpaPerPlay)}>{formatSigned(r.defEpaPerPlay, 3)}</span> },
-    { key: "defEpaPct", label: "Def%ile", align: "right", numeric: true, tooltip: "within-league defensive EPA percentile (EPA inverted)", sortValue: (r) => r.defEpaPct, render: (r) => pct(r.defEpaPct) },
-    { key: "defSuccessRate", label: "Def SR", align: "right", numeric: true, tooltip: "defensive success rate (lower is better)", sortValue: (r) => r.defSuccessRate, render: (r) => pct(r.defSuccessRate) },
-    { key: "proe", label: "PROE", align: "right", numeric: true, tooltip: "PROE — pass rate over expected", sortValue: (r) => r.proe, render: (r) => <span className={signedClass(r.proe)}>{formatSigned(r.proe, 1)}%</span> },
+    { key: "offEpaPerPlay", label: "Off EPA", align: "right", numeric: true, tooltip: "offensive EPA per play (neutral script, early down)", sortValue: (r) => r.offEpaPerPlay, render: (r) => <DivergingBar value={r.offEpaPerPlay} domain={0.3} digits={3} /> },
+    { key: "offEpaPct", label: "Off%ile", align: "right", numeric: true, tooltip: "within-league offensive EPA percentile", sortValue: (r) => r.offEpaPct, render: (r) => <PercentileBar pct={r.offEpaPct} /> },
+    { key: "offSuccessRate", label: "Off SR", align: "right", numeric: true, tooltip: "offensive success rate", sortValue: (r) => r.offSuccessRate, render: (r) => <ShareBar value={r.offSuccessRate} /> },
+    { key: "defEpaPerPlay", label: "Def EPA", align: "right", numeric: true, tooltip: "defensive EPA per play (lower is better)", sortValue: (r) => r.defEpaPerPlay, render: (r) => <DivergingBar value={r.defEpaPerPlay} domain={0.3} digits={3} tone={signedTone(-r.defEpaPerPlay)} /> },
+    { key: "defEpaPct", label: "Def%ile", align: "right", numeric: true, tooltip: "within-league defensive EPA percentile (EPA inverted)", sortValue: (r) => r.defEpaPct, render: (r) => <PercentileBar pct={r.defEpaPct} /> },
+    { key: "defSuccessRate", label: "Def SR", align: "right", numeric: true, tooltip: "defensive success rate (lower is better)", sortValue: (r) => r.defSuccessRate, render: (r) => <ShareBar value={r.defSuccessRate} /> },
+    { key: "proe", label: "PROE", align: "right", numeric: true, tooltip: "PROE — pass rate over expected", sortValue: (r) => r.proe, render: (r) => <DivergingBar value={r.proe} domain={10} digits={1} /> },
     { key: "noHuddleRate", label: "Pace", align: "right", numeric: true, tooltip: "no-huddle rate — pace proxy", sortValue: (r) => r.noHuddleRate, render: (r) => pct(r.noHuddleRate) },
     {
       key: "read",
       label: "The read",
       sortable: false,
       render: (r) => (
-        <span className={`font-mono text-xs ${signedClass(r.offEpaPerPlay)}`}>
-          {r.offEpaPerPlay > 0 ? "Buy offense" : r.offEpaPerPlay < 0 ? "Fade offense" : "Neutral"}
-        </span>
+        <SignalChip
+          label={r.offEpaPerPlay > 0 ? "Buy offense" : r.offEpaPerPlay < 0 ? "Fade offense" : "Neutral"}
+          tone={r.offEpaPerPlay > 0 ? "good" : r.offEpaPerPlay < 0 ? "bad" : "neutral"}
+        />
       ),
     },
   ];
@@ -605,7 +614,7 @@ function OpportunityTransferView({ transfer }: { transfer: OpportunityTransfer }
       key: "confidence",
       label: "Confidence",
       sortValue: (r) => r.confidence,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(transferTone(r.confidence))}`}>{TRANSFER_CONFIDENCE_LABEL[r.confidence]}</span>,
+      render: (r) => <SignalChip label={TRANSFER_CONFIDENCE_LABEL[r.confidence]} tone={transferTone(r.confidence)} />,
     },
   ];
   return (
@@ -665,13 +674,13 @@ function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
     { key: "side", label: "Side", render: (r) => <span className="font-mono text-ink">{r.side}</span> },
     { key: "modelProb", label: "Model", align: "right", numeric: true, tooltip: "model implied probability for the side taken", sortValue: (r) => r.modelProb, render: (r) => prob(r.modelProb) },
     { key: "closingProb", label: "Close", align: "right", numeric: true, tooltip: "implied probability from the closing line", sortValue: (r) => r.closingProb, render: (r) => prob(r.closingProb) },
-    { key: "clv", label: "CLV", align: "right", numeric: true, tooltip: "probability points beaten vs the close", sortValue: (r) => r.clv, render: (r) => <span className={toneClass(clvTone(r.clv))}>{formatSigned(r.clv, 4)}</span> },
+    { key: "clv", label: "CLV", align: "right", numeric: true, tooltip: "probability points beaten vs the close", sortValue: (r) => r.clv, render: (r) => <DivergingBar value={r.clv} domain={0.05} digits={4} tone={clvTone(r.clv)} /> },
     { key: "covered", label: "Covered", align: "center", tooltip: "did the side actually cover/win?", sortValue: (r) => (r.covered ? 1 : 0), render: (r) => <span className="font-mono text-ink-1">{r.covered ? "Yes" : "—"}</span> },
     {
       key: "read",
       label: "The read",
       sortable: false,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(clvTone(r.clv))}`}>{clvRead(r.clv)}</span>,
+      render: (r) => <SignalChip label={clvRead(r.clv)} tone={clvTone(r.clv)} />,
     },
   ];
   return (
@@ -764,8 +773,8 @@ function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
   return [
     { key: "label", label: "Group", render: (r) => <span className="font-semibold text-ink">{r.label}</span> },
     { key: "n", label: "N", align: "right", numeric: true, tooltip: "paired players", render: (r) => r.n },
-    { key: "gradeCorr", label: "Grade ρ", align: "right", numeric: true, tooltip: "rank corr: grade → future production", sortValue: (r) => r.gradeCorr, render: (r) => corr(r.gradeCorr) },
-    { key: "baselineCorr", label: "Baseline ρ", align: "right", numeric: true, tooltip: "rank corr: past production → future production", sortValue: (r) => r.baselineCorr, render: (r) => corr(r.baselineCorr) },
+    { key: "gradeCorr", label: "Grade ρ", align: "right", numeric: true, tooltip: "rank corr: grade → future production (signed, −1…1)", sortValue: (r) => r.gradeCorr, render: (r) => <DivergingBar value={r.gradeCorr} domain={1} digits={2} /> },
+    { key: "baselineCorr", label: "Baseline ρ", align: "right", numeric: true, tooltip: "rank corr: past production → future production (signed, −1…1)", sortValue: (r) => r.baselineCorr, render: (r) => <DivergingBar value={r.baselineCorr} domain={1} digits={2} /> },
     {
       key: "lift",
       label: "Lift",
@@ -773,7 +782,7 @@ function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
       numeric: true,
       tooltip: "grade rho minus baseline rho",
       sortValue: (r) => r.lift,
-      render: (r) => <span className={liftClass(r.lift)}>{r.lift == null ? "—" : formatSigned(r.lift, 2)}</span>,
+      render: (r) => <DivergingBar value={r.lift} domain={0.3} digits={2} tone={liftTone(r.lift)} />,
     },
     {
       key: "buyLowHitRate",
@@ -783,9 +792,9 @@ function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
       tooltip: "fraction of buy-low calls whose per-game rose",
       sortValue: (r) => r.buyLowHitRate,
       render: (r) => (
-        <span className={hitRateClass(r.buyLowHitRate)}>
-          {pctNullable(r.buyLowHitRate)}
-          <span className="ml-1 text-xs text-ink-2">n={r.buyLowN}</span>
+        <span className="inline-flex items-center gap-1">
+          <ShareBar value={r.buyLowHitRate} tone={hitRateTone(r.buyLowHitRate)} />
+          <span className="text-xs text-ink-2">n={r.buyLowN}</span>
         </span>
       ),
     },
@@ -797,9 +806,9 @@ function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
       tooltip: "fraction of sell-high calls whose per-game fell",
       sortValue: (r) => r.sellHighHitRate,
       render: (r) => (
-        <span className={hitRateClass(r.sellHighHitRate)}>
-          {pctNullable(r.sellHighHitRate)}
-          <span className="ml-1 text-xs text-ink-2">n={r.sellHighN}</span>
+        <span className="inline-flex items-center gap-1">
+          <ShareBar value={r.sellHighHitRate} tone={hitRateTone(r.sellHighHitRate)} />
+          <span className="text-xs text-ink-2">n={r.sellHighN}</span>
         </span>
       ),
     },
@@ -843,7 +852,12 @@ function ProofView({ p }: { p: PredictivenessProof }): JSX.Element {
           label="Lift over the past"
           value={p.overall.lift == null ? "—" : formatSigned(p.overall.lift, 2)}
           tone={liftTone(p.overall.lift)}
-          sublabel={`${p.sampleSize} players · ${p.season}`}
+          sublabel={
+            <span className="inline-flex items-center gap-2">
+              <DivergingBar value={p.overall.lift} domain={0.3} digits={2} tone={liftTone(p.overall.lift)} />
+              <span>{p.sampleSize} players · {p.season}</span>
+            </span>
+          }
         />
         <KpiCard
           label="Sell-high hit-rate"
