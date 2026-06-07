@@ -27,7 +27,7 @@
  * projection or a betting pick. Approximation is disclosed on every row.
  */
 
-import { assertIngestible, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { assertIngestible, decodeDatasetText, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 import { percentileRanks, normName } from "./qb-consensus";
 
@@ -243,8 +243,9 @@ export async function loadRouteRate({
   // Load player stats once (used to detect the active season and team dropbacks).
   let statRecords: readonly CsvRecord[] = [];
   try {
-    const { response } = await fetchWithFailover(withMirrors(statsUrl), fetcher, { timeoutMs });
-    statRecords = parseCsv(await response.text()).records;
+    // player_stats ships as a gzipped .csv.gz; decodeDatasetText gunzips by magic byte.
+    const { response } = await fetchWithFailover(withMirrors(statsUrl), fetcher, { timeoutMs, init: { cache: "no-store" } });
+    statRecords = parseCsv(await decodeDatasetText(response)).records;
     if (statRecords.length === 0) throw new Error("empty player_stats");
   } catch (error) {
     return sourceError(statsUrl, nflverseUrl("snap_counts", season), error);
@@ -260,8 +261,8 @@ export async function loadRouteRate({
   for (const candidate of candidates) {
     const snapsUrl = nflverseUrl("snap_counts", candidate);
     try {
-      const { response } = await fetchWithFailover(withMirrors(snapsUrl), fetcher, { timeoutMs });
-      const snapRecords = parseCsv(await response.text()).records;
+      const { response } = await fetchWithFailover(withMirrors(snapsUrl), fetcher, { timeoutMs, init: { cache: "no-store" } });
+      const snapRecords = parseCsv(await decodeDatasetText(response)).records;
       const regSnaps = snapRecords.filter((r) => (r["game_type"] ? r["game_type"] === "REG" : true));
       if (regSnaps.length === 0) throw new Error("no REG snap rows");
 

@@ -18,7 +18,7 @@
  * Read-only, real nflverse data, multi-host failover. canPublishProjections false.
  */
 
-import { assertIngestible, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { assertIngestible, decodeDatasetText, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 import { percentileRanks } from "./qb-consensus";
 
@@ -167,8 +167,9 @@ export async function loadReceivingOpportunity({
   assertIngestible("nflverse");
   const url = nflverseUrl("player_stats_week", season);
   try {
-    const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs });
-    const { records } = parseCsv(await response.text());
+    // player_stats ships as a gzipped .csv.gz; decodeDatasetText gunzips by magic byte.
+    const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs, init: { cache: "no-store" } });
+    const { records } = parseCsv(await decodeDatasetText(response));
     if (records.length === 0) throw new Error("empty player_stats_week");
 
     // Offseason fallback: if the requested season has no rows, use the latest present.
