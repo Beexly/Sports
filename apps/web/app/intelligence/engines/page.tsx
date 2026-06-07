@@ -64,6 +64,12 @@ const GROUPS: readonly Group[] = [
       { name: "CLV Calibration", summary: "Closing-line-value self-grading (backtest via nflverse schedules); forward odds gated.", api: "/api/intelligence/clv-calibration", board: "/intelligence/clv", status: "live" },
     ],
   },
+  {
+    category: "Proof & calibration",
+    engines: [
+      { name: "Predictiveness Backtest", summary: "Split-half backtest: does the process grade rank next-half production better than past production? Grade ρ, lift over baseline, and buy/sell hit-rates — in-sample, stated honestly.", api: "/api/intelligence/predictiveness", board: "/intelligence/proof", status: "live" },
+    ],
+  },
 ];
 
 const ENGINE_COUNT = GROUPS.reduce((n, g) => n + g.engines.length, 0);

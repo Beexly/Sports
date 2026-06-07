@@ -1,0 +1,94 @@
+import { describe, it, expect } from "vitest";
+import { buildPredictiveness, loadPredictiveness } from "./predictiveness";
+
+type Row = Record<string, string>;
+
+function toCsv(rows: Row[]): string {
+  const cols = Object.keys(rows[0]!);
+  return [cols.join(","), ...rows.map((r) => cols.map((c) => r[c] ?? "").join(","))].join("\n");
+}
+
+// 8 WRs, k = 0..7. Process inputs (wopr / target_share / receiving_epa) INCREASE
+// in k, so the process grade increases in k. Train production DECREASES in k (so
+// high-grade players are flagged buy-low), while test production INCREASES in k
+// (the grade was right). This is a designed case where the grade predicts the
+// future and past production does not — grade lift should be positive, buy-low
+// calls should mostly rise, sell-high calls should mostly fall.
+function designedRecords(): Row[] {
+  const rows: Row[] = [];
+  const trainWeeks = [1, 2, 3, 4, 5, 6];
+  const testWeeks = [7, 8, 9, 10, 11, 12];
+  for (let k = 0; k < 8; k++) {
+    const base: Row = {
+      season: "2024", season_type: "REG", position: "WR",
+      player_id: `WR${k}`, player_display_name: `WR ${k}`, recent_team: "KC",
+      attempts: "0", carries: "0", targets: "6",
+      passing_epa: "0", rushing_epa: "0", receiving_epa: String(k),
+      wopr: String(0.2 + k * 0.05), target_share: String(0.1 + k * 0.02),
+      dakota: "", pacr: "",
+    };
+    for (const w of trainWeeks) rows.push({ ...base, week: String(w), fantasy_points_ppr: String((8 - k) * 2) });
+    for (const w of testWeeks) rows.push({ ...base, week: String(w), fantasy_points_ppr: String((k + 1) * 3) });
+  }
+  return rows;
+}
+
+describe("buildPredictiveness", () => {
+  const proof = buildPredictiveness(designedRecords(), 2024);
+
+  it("splits the season into balanced train/test halves", () => {
+    expect(proof.trainWeeks).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(proof.testWeeks).toEqual([7, 8, 9, 10, 11, 12]);
+    expect(proof.sampleSize).toBeGreaterThanOrEqual(6);
+  });
+
+  it("shows the process grade ranks future production (positive corr)", () => {
+    expect(proof.overall.gradeCorr).not.toBeNull();
+    expect(proof.overall.gradeCorr!).toBeGreaterThan(0.5);
+  });
+
+  it("shows the grade adds lift over the past-production baseline", () => {
+    expect(proof.overall.lift).not.toBeNull();
+    expect(proof.overall.lift!).toBeGreaterThan(0); // grade beats raw past points here by design
+  });
+
+  it("scores buy-low / sell-high calls against the coin flip", () => {
+    expect(proof.overall.buyLowN).toBeGreaterThan(0);
+    expect(proof.overall.buyLowHitRate!).toBeGreaterThan(0.5); // buy-lows mostly rose
+    expect(proof.overall.sellHighN).toBeGreaterThan(0);
+    expect(proof.overall.sellHighHitRate!).toBeGreaterThan(0.5); // sell-highs mostly fell
+  });
+
+  it("emits a per-position WR split and a human verdict", () => {
+    const wr = proof.byPosition.find((p) => p.position === "WR");
+    expect(wr).toBeTruthy();
+    expect(wr!.n).toBeGreaterThanOrEqual(6);
+    expect(proof.verdict).toMatch(/process grade/i);
+  });
+
+  it("stays honest and empty when a season can't be split", () => {
+    const thin = buildPredictiveness(
+      [{ season: "2024", season_type: "REG", week: "1", position: "WR", player_id: "x", player_display_name: "X", recent_team: "KC", targets: "6", fantasy_points_ppr: "10" }],
+      2024,
+    );
+    expect(thin.sampleSize).toBe(0);
+    expect(thin.byPosition).toEqual([]);
+  });
+});
+
+describe("loadPredictiveness", () => {
+  it("degrades to source-error when nflverse is unreachable", async () => {
+    const r = await loadPredictiveness({ fetcher: async () => { throw new Error("blocked"); } });
+    expect(r.status).toBe("source-error");
+    expect(r.sampleSize).toBe(0);
+    expect(r.canPublishProjections).toBe(false);
+  });
+
+  it("loads live from a plain-CSV weekly asset (decodeDatasetText passthrough)", async () => {
+    const csv = toCsv(designedRecords());
+    const r = await loadPredictiveness({ season: 2024, fetcher: async () => new Response(csv) });
+    expect(r.status).toBe("live");
+    expect(r.season).toBe(2024);
+    expect(r.overall.gradeCorr).not.toBeNull();
+  });
+});

@@ -98,8 +98,14 @@ interface Agg {
   dakotaSum: number; dakotaN: number; pacrSum: number; pacrN: number;
 }
 
-/** Build comprehensive per-player profiles with position-aware composite grades. Pure. */
-export function buildPlayerModel(records: readonly CsvRecord[], activeSeason: number): { profiles: PlayerProfile[]; throughWeek: number | null } {
+/**
+ * Build comprehensive per-player profiles with position-aware composite grades. Pure.
+ * `topPerPos` caps each position for a scannable display board (default 24); pass a
+ * large value (e.g. Infinity) for statistical uses like the predictiveness backtest,
+ * where capping to the leaders would bias the sample.
+ */
+export function buildPlayerModel(records: readonly CsvRecord[], activeSeason: number, options: { topPerPos?: number } = {}): { profiles: PlayerProfile[]; throughWeek: number | null } {
+  const topPerPos = options.topPerPos ?? TOP_PER_POS;
   const rows = records.filter((r) => r["season"] === String(activeSeason) && r["season_type"] === "REG");
   if (rows.length === 0) return { profiles: [], throughWeek: null };
   const throughWeek = rows.reduce((m, r) => Math.max(m, num(r["week"])), 0) || null;
@@ -202,7 +208,7 @@ export function buildPlayerModel(records: readonly CsvRecord[], activeSeason: nu
   const ranked = profiles.sort((a, b) => b.processGrade - a.processGrade).filter((p) => {
     const n = (perPos.get(p.position) ?? 0) + 1;
     perPos.set(p.position, n);
-    return n <= TOP_PER_POS;
+    return n <= topPerPos;
   });
   return { profiles: ranked, throughWeek };
 }
