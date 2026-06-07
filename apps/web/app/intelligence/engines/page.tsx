@@ -38,7 +38,7 @@ const GROUPS: readonly Group[] = [
     category: "Quarterback",
     engines: [
       { name: "QB Consensus", summary: "ESPN QBR (results) vs Next Gen CPOE (accuracy), triangulated — disagreement surfaced, not averaged.", api: "/api/intelligence/qb-consensus", board: "/players/qbr", status: "live" },
-      { name: "QB Forward Prior", summary: "DAKOTA (EPA+CPOE) + computed ANY/A — the most forward-looking QB read, with agreement.", api: "/api/intelligence/qb-forward", status: "live" },
+      { name: "QB Forward Prior", summary: "DAKOTA (EPA+CPOE) + computed ANY/A — the most forward-looking QB read, with agreement.", api: "/api/intelligence/qb-forward", board: "/intelligence/qb-forward", status: "live" },
     ],
   },
   {
@@ -46,22 +46,22 @@ const GROUPS: readonly Group[] = [
     engines: [
       { name: "Rushing Efficiency", summary: "RYOE/att vs volume with stacked-box context — bell-cow / buy-low / volume-dependent.", api: "/api/intelligence/rushing-efficiency", board: "/players/opportunity", status: "live" },
       { name: "Rushing Contact", summary: "PFR yards-after-contact/att (talent) vs yards-before-contact (line) — independent vs RYOE.", api: "/api/intelligence/rushing-contact", status: "live" },
-      { name: "Scoring-Zone Equity", summary: "Red-zone & goal-line opportunity share with TD rate regressed to the positional mean.", api: "/api/intelligence/scoring-zone", status: "live" },
+      { name: "Scoring-Zone Equity", summary: "Red-zone & goal-line opportunity share with TD rate regressed to the positional mean.", api: "/api/intelligence/scoring-zone", board: "/intelligence/scoring-zone", status: "live" },
     ],
   },
   {
     category: "Receiver",
     engines: [
       { name: "Receiving Opportunity (WOPR)", summary: "Air-yards & target share → WOPR, with opportunity-vs-production buy/sell.", api: "/api/intelligence/receiving-opportunity", board: "/players/opportunity", status: "live" },
-      { name: "Route Rate (TPRR)", summary: "Targets per route run via a snaps×dropbacks proxy — breakout vs empty-volume. Labelled a proxy.", api: "/api/intelligence/route-rate", status: "live" },
+      { name: "Route Rate (TPRR)", summary: "Targets per route run via a snaps×dropbacks proxy — breakout vs empty-volume. Labelled a proxy.", api: "/api/intelligence/route-rate", board: "/intelligence/route-rate", status: "live" },
     ],
   },
   {
     category: "Team & market",
     engines: [
-      { name: "Team Environment", summary: "Neutral-script off/def EPA per play, success rate, PROE, and pace — the top-down prior.", api: "/api/intelligence/team-environment", status: "live" },
-      { name: "Opportunity Transfer", summary: "Injury + depth chart + trailing usage → quantified vacated touches + ranked beneficiary.", api: "/api/intelligence/opportunity-transfer", status: "live" },
-      { name: "CLV Calibration", summary: "Closing-line-value self-grading (backtest via nflverse schedules); forward odds gated.", api: "/api/intelligence/clv-calibration", status: "live" },
+      { name: "Team Environment", summary: "Neutral-script off/def EPA per play, success rate, PROE, and pace — the top-down prior.", api: "/api/intelligence/team-environment", board: "/intelligence/team", status: "live" },
+      { name: "Opportunity Transfer", summary: "Injury + depth chart + trailing usage → quantified vacated touches + ranked beneficiary.", api: "/api/intelligence/opportunity-transfer", board: "/intelligence/opportunity-transfer", status: "live" },
+      { name: "CLV Calibration", summary: "Closing-line-value self-grading (backtest via nflverse schedules); forward odds gated.", api: "/api/intelligence/clv-calibration", board: "/intelligence/clv", status: "live" },
     ],
   },
 ];
