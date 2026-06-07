@@ -1,0 +1,22 @@
+{
+  "run": 1,
+  "status": "completed",
+  "ts_start": "2026-06-07T07:08:00Z",
+  "ts_end": "2026-06-07T07:33:00Z",
+  "branch": "claude/magical-volta-sMbwH",
+  "commit": "624ad99",
+  "streams_completed": ["bootstrap", "security-sweep", "calibration-audit", "improve", "grow", "synthesis"],
+  "streams_blocked": [],
+  "leverage_total": 276,
+  "tests_delta": "+2299 (203 failing → 2502 passing)",
+  "files_changed": 13,
+  "top_priorities_next_run": [
+    "Investigate npm audit 10 vulnerabilities in Next.js 14.2.35 — verify if false positives given patch level",
+    "workers/data-refresh tsconfig: moduleResolution:node deprecated — upgrade to NodeNext",
+    "Document content-publishing worker resume path (currently disabled by design)"
+  ],
+  "blocked_questions": [],
+  "security_invariants_intact": true,
+  "calibration_gates_intact": true,
+  "next_action": "improve"
+}
