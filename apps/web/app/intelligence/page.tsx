@@ -4,7 +4,6 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { ConsensusEngine3DLazy } from "@/components/hero/consensus-engine-3d-lazy";
-import { CinematicEntrance } from "@/components/landing/cinematic-entrance";
 import { Ticker } from "@/components/ui/ticker";
 import { ReasoningShowcase } from "@/components/intelligence/reasoning-showcase";
 import { CipherShard } from "@/components/cipher/cipher-shard";
@@ -141,7 +140,6 @@ export default function IntelligencePage() {
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Atmosphere />
-      <CinematicEntrance />
       <Nav />
 
       <main className="flex-1">

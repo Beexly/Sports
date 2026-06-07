@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { ShaderAuroraLazy } from "@/components/hero/shader-aurora-lazy";
+import { CinematicEntrance } from "@/components/landing/cinematic-entrance";
 import { CountUp } from "@/components/ui/count-up";
 import { BRAND_COLORS } from "@/lib/brand";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -60,6 +61,10 @@ export default async function HomePage(): Promise<JSX.Element> {
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
+      {/* Site front door: the cinematic "SIGNAL ACQUIRED" cold open. Self-gating
+          (localStorage) so it plays once on arrival, ~3s on return, skippable,
+          reduced-motion safe — it dissolves to reveal the home behind it. */}
+      <CinematicEntrance />
       <Nav />
       <main id="main-content">
         <section className="relative isolate overflow-hidden border-b border-mineral">
