@@ -36,12 +36,6 @@ function timeLabel(value: string): string {
   return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 }
 
-const numberFormatter = new Intl.NumberFormat("en-US");
-
-function numberLabel(value: number): string {
-  return numberFormatter.format(value);
-}
-
 export default async function HomePage(): Promise<JSX.Element> {
   const [stateResult, passesResult, calibrationResult, nflversePulse] = await Promise.all([
     loadBoardState(),
@@ -184,7 +178,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               <StatusPanel
                 title="Real NFL rows"
                 value={nflversePulse.status === "live" ? nflversePulse.sourceRows : 0}
-                format={numberLabel}
+                group
                 detail={
                   nflversePulse.status === "live"
                     ? `nflverse usage pulse: ${nflversePulse.season} week ${nflversePulse.week ?? "N/A"}.`
@@ -342,19 +336,19 @@ function StatusPanel({
   value,
   detail,
   href,
-  format,
+  group,
 }: {
   title: string;
   value: number;
   detail: string;
   href: string;
-  format?: (n: number) => string;
+  group?: boolean;
 }): JSX.Element {
   return (
     <Link href={href} className="block min-h-52 bg-eclipse p-5 transition-colors hover:bg-slate">
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{title}</p>
       <p className="mt-4 font-numerals text-5xl font-semibold tabular-nums text-orbital-cyan">
-        <CountUp value={value} format={format} />
+        <CountUp value={value} group={group} />
       </p>
       <p className="mt-4 text-sm leading-6 text-ion-1">{detail}</p>
     </Link>

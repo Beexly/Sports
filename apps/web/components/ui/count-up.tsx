@@ -22,7 +22,7 @@ export function CountUp({
   value,
   durationMs = 1100,
   decimals = 0,
-  format,
+  group = false,
   prefix,
   suffix,
   className,
@@ -30,7 +30,9 @@ export function CountUp({
   value: number;
   durationMs?: number;
   decimals?: number;
-  format?: (n: number) => string;
+  /** Thousands-grouping (commas). A boolean, not a function — client components
+   *  can't receive function props from a server parent. */
+  group?: boolean;
   prefix?: string;
   suffix?: string;
   className?: string;
@@ -68,10 +70,12 @@ export function CountUp({
     return () => { io.disconnect(); cleanup(); };
   }, [value, durationMs]);
 
-  const rounded = format ? format(Math.round(display)) : display.toFixed(decimals);
+  const shown = group ? GROUP_FMT.format(Math.round(display)) : display.toFixed(decimals);
   return (
     <span ref={ref} className={className}>
-      {prefix}{rounded}{suffix}
+      {prefix}{shown}{suffix}
     </span>
   );
 }
+
+const GROUP_FMT = new Intl.NumberFormat("en-US");
