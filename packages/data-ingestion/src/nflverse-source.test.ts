@@ -31,6 +31,50 @@ describe("nflverse CSV parser", () => {
     const t = parseCsv("a,b,c\n1,2\n");
     expect(t.records[0]).toEqual({ a: "1", b: "2", c: "" });
   });
+
+  it("projects to an allowlist, keeping only requested columns and dropping the rest", () => {
+    // Wide row with a quoted field containing a comma in a DROPPED column — the
+    // projection must still tokenize quote-aware so alignment is preserved.
+    const t = parseCsv(
+      'season,posteam,desc,epa,wp\n2024,KC,"pass deep, complete",0.42,0.55\n',
+      { columns: ["season", "posteam", "epa"] },
+    );
+    // header is preserved in full regardless of projection.
+    expect(t.header).toEqual(["season", "posteam", "desc", "epa", "wp"]);
+    // Each record keeps ONLY the allowlisted keys — no `desc`, no `wp`.
+    expect(t.records[0]).toEqual({ season: "2024", posteam: "KC", epa: "0.42" });
+    expect(Object.keys(t.records[0]!).sort()).toEqual(["epa", "posteam", "season"]);
+    expect("desc" in t.records[0]!).toBe(false);
+    expect("wp" in t.records[0]!).toBe(false);
+  });
+
+  it("projection keeps values aligned when a quoted comma sits before a kept column", () => {
+    const t = parseCsv(
+      'a,note,b\n1,"x, y",2\n3,"p, q",4\n',
+      { columns: ["a", "b"] },
+    );
+    expect(t.records).toEqual([
+      { a: "1", b: "2" },
+      { a: "3", b: "4" },
+    ]);
+  });
+
+  it("ignores allowlist columns absent from the header (no error, no phantom keys)", () => {
+    const t = parseCsv("a,b\n1,2\n", { columns: ["a", "missing"] });
+    expect(t.records[0]).toEqual({ a: "1" });
+    expect("missing" in t.records[0]!).toBe(false);
+  });
+
+  it("an empty allowlist projects every record to {}", () => {
+    const t = parseCsv("a,b\n1,2\n", { columns: [] });
+    expect(t.records[0]).toEqual({});
+  });
+
+  it("omitting the option preserves full-record behavior exactly", () => {
+    const text = "a,b,c\n1,2,3\n";
+    expect(parseCsv(text)).toEqual(parseCsv(text, {}));
+    expect(parseCsv(text).records[0]).toEqual({ a: "1", b: "2", c: "3" });
+  });
 });
 
 describe("nflverse url builder", () => {

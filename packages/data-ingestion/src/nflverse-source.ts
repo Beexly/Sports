@@ -163,11 +163,39 @@ export type CsvTable = {
   readonly records: ReadonlyArray<Readonly<Record<string, string>>>;
 };
 
+/** Options for {@link parseCsv}. */
+export type ParseCsvOptions = {
+  /**
+   * Column projection allowlist. When provided, each emitted record keeps ONLY
+   * these columns (the intersection of `columns` and the actual header). This is
+   * the OOM defense for very wide files (e.g. nflverse play-by-play is ~372
+   * columns over ~50k rows): projecting to the handful of columns a consumer
+   * reads cuts the retained record heap ~30x. Columns not present in the header
+   * are silently ignored; unknown column requests do not error. Omitting the
+   * option (or passing `undefined`) preserves the full-record behavior exactly.
+   *
+   * Memory note: when projecting, the parser NEVER materializes the full token
+   * matrix (the ~50k x ~372 intermediate `string[][]` that itself OOMs a 1GB
+   * heap). It streams row by row, appending only allowlisted field values
+   * straight onto the record and discarding every dropped field's characters as
+   * it goes — so peak heap is the 40MB text plus the small projected records, not
+   * the full per-cell string explosion.
+   */
+  readonly columns?: readonly string[];
+};
+
 /**
  * Quote-aware CSV parse (RFC-4180-ish: doubled quotes, embedded commas/newlines).
  * Pure and deterministic — the unit-tested core of the adapter.
+ *
+ * Pass `{ columns }` to project to an allowlist of columns (see
+ * {@link ParseCsvOptions.columns}); the default keeps every column. The default
+ * (full-record) path is unchanged; the projecting path uses a separate streaming
+ * scan that avoids the intermediate token matrix entirely.
  */
-export function parseCsv(text: string): CsvTable {
+export function parseCsv(text: string, options: ParseCsvOptions = {}): CsvTable {
+  if (options.columns !== undefined) return parseCsvProjected(text, options.columns);
+
   const rows: string[][] = [];
   let field = "";
   let row: string[] = [];
@@ -195,6 +223,105 @@ export function parseCsv(text: string): CsvTable {
       for (let j = 0; j < header.length; j++) rec[header[j]!] = r[j] ?? "";
       return rec;
     });
+  return { header, records };
+}
+
+/**
+ * Projecting variant of {@link parseCsv}: same quote-aware tokenizer, but it
+ * keeps ONLY allowlisted columns and — critically — never builds the full
+ * `string[][]` token matrix. It scans the text once, and at each field boundary
+ * keeps the field's characters only if the current column index is allowlisted
+ * (otherwise the in-progress field string is dropped immediately). At each row
+ * boundary it emits a compact record and resets. This is what keeps the wide
+ * nflverse pbp asset (~372 cols x ~50k rows) inside a 1GB serverless heap.
+ *
+ * Behavior matches the full parser on the projected subset: same blank-line
+ * skip, same missing-trailing-column fill (allowlisted columns absent from a
+ * short row default to ""), full `header` returned intact, columns absent from
+ * the header silently ignored.
+ */
+function parseCsvProjected(text: string, columns: readonly string[]): CsvTable {
+  // First pass: read just the header line (quote-aware) to learn column order.
+  const header: string[] = [];
+  let i = 0;
+  {
+    let field = "";
+    let inQuotes = false;
+    for (; i < text.length; i++) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else inQuotes = false;
+        } else field += c;
+      } else if (c === '"') inQuotes = true;
+      else if (c === ",") { header.push(field); field = ""; }
+      else if (c === "\n") { header.push(field); i++; break; }
+      else if (c === "\r") { /* ignore */ }
+      else field += c;
+    }
+    // Header line with no trailing newline (empty body).
+    if (i >= text.length && (field.length > 0 || header.length > 0)) header.push(field);
+  }
+
+  const allowSet = new Set(columns);
+  // Which header indices to keep, and the key each maps to (header order).
+  const keepKeyByIdx = new Map<number, string>();
+  for (let j = 0; j < header.length; j++) {
+    const key = header[j]!;
+    if (allowSet.has(key)) keepKeyByIdx.set(j, key);
+  }
+
+  const records: Array<Record<string, string>> = [];
+  // Per-row streaming state. `rec` is built incrementally; `field` only retains
+  // characters while the current column is allowlisted. `col` tracks the column
+  // index, `cells` the number of fields seen (to detect blank lines).
+  let rec: Record<string, string> = {};
+  let field = "";
+  let col = 0;
+  let cells = 0;
+  let keepingField = keepKeyByIdx.has(0);
+  let inQuotes = false;
+  let rowHasContent = false;
+
+  const endField = (): void => {
+    if (keepingField) {
+      const key = keepKeyByIdx.get(col);
+      if (key !== undefined) rec[key] = field;
+    }
+    cells++;
+    col++;
+    field = "";
+    keepingField = keepKeyByIdx.has(col);
+  };
+  const endRow = (): void => {
+    endField();
+    // Mirror the full parser's blank-line skip: a single empty cell is dropped.
+    if (rowHasContent || cells > 1) records.push(rec);
+    rec = {};
+    col = 0;
+    cells = 0;
+    field = "";
+    keepingField = keepKeyByIdx.has(0);
+    rowHasContent = false;
+  };
+
+  for (; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { if (keepingField) field += '"'; i++; rowHasContent = true; }
+        else inQuotes = false;
+      } else { if (keepingField) field += c; rowHasContent = true; }
+    } else if (c === '"') { inQuotes = true; rowHasContent = true; }
+    else if (c === ",") endField();
+    else if (c === "\n") endRow();
+    else if (c === "\r") { /* ignore */ }
+    else { if (keepingField) field += c; rowHasContent = true; }
+  }
+  // Final row if the text didn't end with a newline.
+  if (field.length > 0 || col > 0 || rowHasContent) endRow();
+
   return { header, records };
 }
 

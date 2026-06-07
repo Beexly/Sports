@@ -17,6 +17,14 @@
  * alive. Reads `[season, season - 1]` so an empty current season falls back to
  * the most recent complete one.
  *
+ * MEMORY: the pbp asset is ~372 columns over ~50k rows. Materializing full
+ * record objects (50k x 372 keys) blows the 1GB Vercel serverless heap (OOM ->
+ * 500). Pass `columns` — the small allowlist of columns the reducer actually
+ * reads — to project each record to just those keys (~30x less heap). The 40MB
+ * CSV text is held only transiently during the parse; the projected records are
+ * what survive into the reducer. Omitting `columns` keeps the full-record
+ * behavior (fine for tests/fixtures, unsafe for the real asset).
+ *
  * Read-only, real nflverse data (CC-BY-4.0), multi-host failover, honest
  * source-error. Performs no writes and is not a scoring input.
  */
@@ -55,11 +63,19 @@ export interface PbpLoadResult<T> {
 export async function loadPbp<T>({
   season = latestNflverseInspectionSeason(),
   onRecords,
+  columns,
   timeoutMs = 20000,
   fetcher = fetch,
 }: {
   season?: number;
   onRecords: (records: readonly CsvRecord[], season: number) => T;
+  /**
+   * Allowlist of pbp columns to keep on each record (column projection). When
+   * provided, the parser sets ONLY these keys per record instead of all ~372 —
+   * the OOM defense. The reducer must read no column outside this list. Omit to
+   * keep every column.
+   */
+  columns?: readonly string[];
   timeoutMs?: number;
   fetcher?: FetchLike;
 }): Promise<PbpLoadResult<T>> {
@@ -74,7 +90,7 @@ export async function loadPbp<T>({
     lastUrl = url;
     try {
       const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs });
-      const { records } = parseCsv(await response.text());
+      const { records } = parseCsv(await response.text(), columns ? { columns } : {});
       if (records.length === 0) throw new Error(`empty play_by_play ${candidate}`);
       // Reduce in a single pass; do NOT retain `records` after this call.
       const value = onRecords(records, candidate);

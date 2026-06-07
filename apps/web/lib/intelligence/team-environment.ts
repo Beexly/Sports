@@ -110,6 +110,30 @@ interface Agg {
   defSuccessN: number;
 }
 
+/**
+ * The exact pbp columns `buildTeamEnvironment` / `isNeutralEarlyDown` read. This
+ * is the projection allowlist passed to `loadPbp` so the real ~372-column asset
+ * is reduced to ~12 keys per record (the OOM fix). Keep this in lockstep with the
+ * reducer: every `r["..."]` access below must appear here, or that column reads
+ * as missing and the data goes silently wrong.
+ *   filter (isNeutralEarlyDown): down, wp, qtr
+ *   reducer:                     posteam, defteam, pass, rush, epa, success,
+ *                                pass_oe, no_huddle
+ */
+export const TEAM_ENVIRONMENT_PBP_COLUMNS = [
+  "down",
+  "wp",
+  "qtr",
+  "posteam",
+  "defteam",
+  "pass",
+  "rush",
+  "epa",
+  "success",
+  "pass_oe",
+  "no_huddle",
+] as const;
+
 function emptyAgg(team: string): Agg {
   return {
     team,
@@ -238,6 +262,9 @@ export async function loadTeamEnvironment({
     season,
     timeoutMs,
     fetcher,
+    // Project to the handful of columns the reducer reads so the real ~372-column
+    // pbp asset doesn't blow the serverless heap (OOM -> 500).
+    columns: TEAM_ENVIRONMENT_PBP_COLUMNS,
     // Reduce the large records array to compact rows in one pass; never retained.
     onRecords: (records) => buildTeamEnvironment(records),
   });

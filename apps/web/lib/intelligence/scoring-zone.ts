@@ -68,6 +68,44 @@ export interface ScoringZone {
   readonly error: string | null;
 }
 
+/**
+ * The exact pbp columns `buildScoringZone` (and `loadScoringZone`'s active-season
+ * detection) read. Passed to `parseCsv` as a projection allowlist so the real
+ * ~372-column pbp asset is reduced to ~18 keys per record — the OOM fix (the full
+ * 50k x 372 objects blow the 1GB serverless heap -> 500). Keep this in lockstep
+ * with the builder: every `r["..."]` access must appear here (including the
+ * fallback alternates `pos_team`, `rusher_id`, `receiver_id`), or that column
+ * reads as missing and the data goes silently wrong.
+ *   season detection: season
+ *   filter:           season, season_type, yardline_100
+ *   week:             week
+ *   team:             posteam, pos_team
+ *   attribution:      rusher_player_id, rusher_id, receiver_player_id,
+ *                     receiver_id, play_type, rush_attempt, pass_attempt
+ *   names:            rusher_player_name, receiver_player_name
+ *   touchdowns:       td_player_id, rush_touchdown, pass_touchdown
+ */
+export const SCORING_ZONE_PBP_COLUMNS = [
+  "season",
+  "season_type",
+  "week",
+  "yardline_100",
+  "posteam",
+  "pos_team",
+  "play_type",
+  "rush_attempt",
+  "pass_attempt",
+  "rusher_player_id",
+  "rusher_id",
+  "receiver_player_id",
+  "receiver_id",
+  "rusher_player_name",
+  "receiver_player_name",
+  "rush_touchdown",
+  "pass_touchdown",
+  "td_player_id",
+] as const;
+
 const MIN_OPPS = 6; // minimum scoring-zone opportunities to qualify (so a share is meaningful)
 const TOP_N = 40;
 const DIVERGENCE = 18; // percentile points
@@ -284,7 +322,9 @@ export async function loadScoringZone({
     lastUrl = url;
     try {
       const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs });
-      const { records } = parseCsv(await response.text());
+      // Project to the columns the builder reads so the real ~372-column pbp asset
+      // doesn't blow the serverless heap (OOM -> 500).
+      const { records } = parseCsv(await response.text(), { columns: SCORING_ZONE_PBP_COLUMNS });
       if (records.length === 0) throw new Error(`empty pbp for ${candidate}`);
 
       // The file is single-season; if it isn't the season we asked for, read the
