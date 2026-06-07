@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PlayerLabTable } from "@/components/players/player-lab-table";
 import { Attribution } from "@/components/ui/attribution";
-import { DataTable, type Column } from "@/components/ui/data-table";
 import { Footer } from "@/components/ui/footer";
 import { MetricExplainer } from "@/components/ui/metric-explainer";
 import { Nav } from "@/components/ui/nav";
 import { PageHero } from "@/components/ui/page-hero";
 import { SourceError } from "@/components/ui/source-error";
 import { Tabs } from "@/components/ui/tabs";
-import {
-  PLAYER_VIEWS,
-  resolvePlayerView,
-  type TableSection,
-  type ViewResult,
-} from "@/lib/players/views";
+import { PLAYER_VIEWS, resolvePlayerView, type ViewResult } from "@/lib/players/views";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse loads need headroom
@@ -101,9 +96,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
               </p>
             ) : null}
 
-            {result.sections.map((s) => (
-              <SectionBlock key={s.id} section={s} />
-            ))}
+            <PlayerLabTable sections={result.sections} />
 
             {result.sourceIds.length > 0 ? (
               <Attribution sourceIds={result.sourceIds} className="!text-ink-2" />
@@ -113,44 +106,5 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
       </main>
       <Footer />
     </div>
-  );
-}
-
-function SectionBlock({ section }: { section: TableSection }): JSX.Element {
-  return (
-    <section className="flex flex-col gap-3">
-      {section.eyebrow || section.title || section.blurb ? (
-        <div>
-          {section.eyebrow ? (
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan-on-light">
-              {section.eyebrow}
-            </p>
-          ) : null}
-          <h2 className="mt-1 text-2xl font-semibold text-ink">{section.title}</h2>
-          {section.blurb ? (
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-ink-1">{section.blurb}</p>
-          ) : null}
-        </div>
-      ) : null}
-
-      <DataTable<unknown>
-        columns={section.columns as ReadonlyArray<Column<unknown>>}
-        rows={section.rows}
-        rowKey={section.rowKey}
-        searchable={Boolean(section.searchAccessor)}
-        searchAccessor={section.searchAccessor}
-        enumFilter={section.enumFilter}
-        rowTone={section.rowTone}
-        rowTitle={section.rowTitle}
-        showRank={section.showRank}
-        minWidth={section.minWidth}
-        emptyTitle={section.emptyTitle}
-        emptyHint={section.emptyHint}
-      />
-
-      {section.footnote ? (
-        <p className="text-xs leading-5 text-ink-2">{section.footnote}</p>
-      ) : null}
-    </section>
   );
 }

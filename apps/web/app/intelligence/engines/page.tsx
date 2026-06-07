@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { EngineView } from "@/components/intelligence/engine-view";
 import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
 import { MetricExplainer } from "@/components/ui/metric-explainer";
@@ -123,10 +124,14 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
   const groups = groupedEngines();
 
   // Load only the active engine's data — the browser is one engine at a time.
+  // The loader runs on the SERVER; we hand the plain, serializable result to the
+  // client <EngineView> keyed on the engine slug. The per-engine render fns
+  // (column render()/sortValue()) live in EngineView, never crossing the RSC
+  // boundary from here.
   let body: JSX.Element;
   try {
     const data = await active.load();
-    body = <>{active.render(data)}</>;
+    body = <EngineView engine={active.slug} data={data} />;
   } catch (error) {
     body = (
       <SourceError
