@@ -5,7 +5,9 @@ import { resolve, join } from "node:path";
 /**
  * Every public route should carry its own SEO metadata. Internal/operator
  * surfaces and the homepage (which intentionally inherits the root layout
- * metadata, canonical "/") are exempt. This guards against a new public page
+ * metadata, canonical "/") are exempt. Redirect-only stubs (which immediately
+ * `redirect()` to a canonical surface and never render HTML) are also exempt —
+ * they carry no content to describe. This guards against a new public page
  * shipping with only the generic default.
  */
 const repoRoot = resolve(__dirname, "..", "..", "..");
@@ -23,8 +25,17 @@ function findPageFiles(dir: string): string[] {
   return out;
 }
 
+/** A redirect-only stub calls next/navigation redirect() and renders no page body. */
+function isRedirectStub(file: string): boolean {
+  const src = readFileSync(file, "utf8");
+  return /from\s+["']next\/navigation["']/.test(src) && /\bredirect\(/.test(src);
+}
+
 const publicPages = findPageFiles(appDir).filter(
-  (f) => f !== HOMEPAGE && !EXEMPT.some((re) => re.test(f.replace(/\\/g, "/")))
+  (f) =>
+    f !== HOMEPAGE &&
+    !EXEMPT.some((re) => re.test(f.replace(/\\/g, "/"))) &&
+    !isRedirectStub(f)
 );
 
 describe("public route metadata coverage", () => {

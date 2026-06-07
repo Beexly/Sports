@@ -1,130 +1,197 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
+import { MetricExplainer } from "@/components/ui/metric-explainer";
 import { Nav } from "@/components/ui/nav";
+import { PageHero } from "@/components/ui/page-hero";
+import { SourceError } from "@/components/ui/source-error";
+import { Tabs } from "@/components/ui/tabs";
+import { getEngine, groupedEngines } from "./registry";
+
+export const dynamic = "force-dynamic";
+export const maxDuration = 60; // heavy nflverse loads (scoring-zone / team / proof) need headroom
 
 export const metadata: Metadata = {
-  title: "Intelligence Engines — the advanced-data layer",
+  title: "Intelligence Engines — the advanced-data layer, browsable",
   description:
-    "Every advanced-data engine GSE runs: QB, RB, WR/TE, team, and cross-position signals mined from cleared nflverse data, each read for the predictive edge and exposed as a live, glass-box API.",
+    "Every advanced-data engine GSE runs in one browsable surface: QB, RB, WR/TE, team, and cross-position signals mined from cleared nflverse data, each read for the predictive edge, each a live glass-box API with an honest empty state.",
   alternates: { canonical: "/intelligence/engines" },
 };
 
-type Status = "live" | "gated";
-interface Engine {
+const PATHNAME = "/intelligence/engines";
+
+interface EnginesBrowserProps {
+  searchParams?: { engine?: string };
+}
+
+/**
+ * Engines that have no in-browser board — POST-only or founder-gated endpoints,
+ * plus the three player engines whose boards live under /players/*. Listed here
+ * so every engine stays discoverable and indexed even though it can't render a
+ * standalone board in the ?engine= switcher. Names / summaries / links lifted
+ * from the original /intelligence/engines catalog (git HEAD).
+ */
+interface MoreEngine {
   readonly name: string;
   readonly summary: string;
   readonly api: string;
-  readonly method?: "GET" | "POST";
+  readonly apiLabel: string;
   readonly board?: string;
-  readonly status: Status;
 }
-interface Group {
-  readonly category: string;
-  readonly engines: readonly Engine[];
-}
-
-const GROUPS: readonly Group[] = [
+const MORE_ENGINES: readonly MoreEngine[] = [
   {
-    category: "Cross-position core",
-    engines: [
-      { name: "Player Intelligence", summary: "One position-aware process grade per player from the full advanced field set; process-vs-production buy/sell.", api: "/api/intelligence/player-model", board: "/intelligence/players", status: "live" },
-      { name: "Expected Fantasy Points (xFP)", summary: "What a player's real usage should have produced — the cleanest, most stable buy/sell lens.", api: "/api/intelligence/expected-points", board: "/intelligence/expected-points", status: "live" },
-      { name: "Roster Advice", summary: "Model → real add/drop/read decisions for a posted roster (composes with Sleeper sync).", api: "/api/intelligence/roster-advice", method: "POST", status: "live" },
-      { name: "Graded Pool", summary: "Composes the model + xFP + team environment (real schemeFit from neutral-script offensive EPA) + QB-forward passing signal into a real graded pool that drives every fantasy tool when the founder enables it.", api: "/api/intelligence/graded-pool", status: "gated" },
-    ],
+    name: "Roster Advice",
+    summary: "Model → real add/drop/read decisions for a posted roster (composes with Sleeper sync).",
+    api: "/api/intelligence/roster-advice",
+    apiLabel: "API (POST)",
   },
   {
-    category: "Quarterback",
-    engines: [
-      { name: "QB Consensus", summary: "ESPN QBR (results) vs Next Gen CPOE (accuracy), triangulated — disagreement surfaced, not averaged.", api: "/api/intelligence/qb-consensus", board: "/players/qbr", status: "live" },
-      { name: "QB Forward Prior", summary: "DAKOTA (EPA+CPOE) + computed ANY/A — the most forward-looking QB read, with agreement.", api: "/api/intelligence/qb-forward", board: "/intelligence/qb-forward", status: "live" },
-    ],
+    name: "Graded Pool",
+    summary:
+      "Composes the model + xFP + team environment (real schemeFit from neutral-script offensive EPA) + QB-forward passing signal into a real graded pool that drives every fantasy tool when the founder enables it.",
+    api: "/api/intelligence/graded-pool",
+    apiLabel: "API (gated)",
   },
   {
-    category: "Running back",
-    engines: [
-      { name: "Rushing Efficiency", summary: "RYOE/att vs volume with stacked-box context — bell-cow / buy-low / volume-dependent.", api: "/api/intelligence/rushing-efficiency", board: "/players/opportunity", status: "live" },
-      { name: "Rushing Contact", summary: "PFR yards-after-contact/att (talent) vs yards-before-contact (line) — independent vs RYOE.", api: "/api/intelligence/rushing-contact", board: "/intelligence/rushing-contact", status: "live" },
-      { name: "Scoring-Zone Equity", summary: "Red-zone & goal-line opportunity share with TD rate regressed to the positional mean.", api: "/api/intelligence/scoring-zone", board: "/intelligence/scoring-zone", status: "live" },
-    ],
+    name: "QB Consensus",
+    summary: "ESPN QBR (results) vs Next Gen CPOE (accuracy), triangulated — disagreement surfaced, not averaged.",
+    api: "/api/intelligence/qb-consensus",
+    apiLabel: "JSON",
+    board: "/players/qbr",
   },
   {
-    category: "Receiver",
-    engines: [
-      { name: "Receiving Opportunity (WOPR)", summary: "Air-yards & target share → WOPR, with opportunity-vs-production buy/sell.", api: "/api/intelligence/receiving-opportunity", board: "/players/opportunity", status: "live" },
-      { name: "Route Rate (TPRR)", summary: "Targets per route run via a snaps×dropbacks proxy — breakout vs empty-volume. Labelled a proxy.", api: "/api/intelligence/route-rate", board: "/intelligence/route-rate", status: "live" },
-    ],
+    name: "Rushing Efficiency",
+    summary: "RYOE/att vs volume with stacked-box context — bell-cow / buy-low / volume-dependent.",
+    api: "/api/intelligence/rushing-efficiency",
+    apiLabel: "JSON",
+    board: "/players/opportunity",
   },
   {
-    category: "Team & market",
-    engines: [
-      { name: "Team Environment", summary: "Neutral-script off/def EPA per play, success rate, PROE, and pace — the top-down prior.", api: "/api/intelligence/team-environment", board: "/intelligence/team", status: "live" },
-      { name: "Opportunity Transfer", summary: "Injury + depth chart + trailing usage → quantified vacated touches + ranked beneficiary.", api: "/api/intelligence/opportunity-transfer", board: "/intelligence/opportunity-transfer", status: "live" },
-      { name: "CLV Calibration", summary: "Closing-line-value self-grading (backtest via nflverse schedules); forward odds gated.", api: "/api/intelligence/clv-calibration", board: "/intelligence/clv", status: "live" },
-      { name: "Waiver Trends (Sleeper)", summary: "League-wide waiver MOMENTUM (ownership velocity) from the Sleeper public API — which players the fantasy market is adding/dropping right now. Descriptive market data, not advice.", api: "/api/intelligence/sleeper-trending", board: "/intelligence/waiver-trends", status: "live" },
-    ],
-  },
-  {
-    category: "Proof & calibration",
-    engines: [
-      { name: "Predictiveness Backtest", summary: "Does the process grade actually predict? Split-half (in-season), out-of-sample year-over-year (last year's grade → this year's production), AND a multi-year STACKED test that pools several consecutive train→test season-pairs for statistical power: grade ρ, lift over the past-production baseline, and buy/sell hit-rates — stated honestly, including where it loses.", api: "/api/intelligence/predictiveness", board: "/intelligence/proof", status: "live" },
-    ],
+    name: "Receiving Opportunity (WOPR)",
+    summary: "Air-yards & target share → WOPR, with opportunity-vs-production buy/sell.",
+    api: "/api/intelligence/receiving-opportunity",
+    apiLabel: "JSON",
+    board: "/players/opportunity",
   },
 ];
 
-const ENGINE_COUNT = GROUPS.reduce((n, g) => n + g.engines.length, 0);
-
-export default function EnginesIndexPage(): JSX.Element {
+function MoreEnginesSection(): JSX.Element {
   return (
-    <div className="min-h-screen bg-carbon text-ion">
-      <Nav />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-8 sm:px-6 lg:px-8">
-        <section className="border-b border-mineral pb-8">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">Intelligence engines</p>
-          <h1 className="mt-2 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
-            The advanced-data layer, in the open.
-          </h1>
-          <p className="mt-5 max-w-3xl text-base leading-7 text-ion-1">
-            {ENGINE_COUNT} engines mine cleared nflverse data into the signals that actually predict — each read
-            for the edge (predictive anchors vs noisy outputs), each a live, glass-box API, each degrading to an
-            honest empty state instead of a fabricated number. Together they feed one graded model that drives the
-            waiver tool, optimizer, draft board, and projections. <Link href="/intelligence/metrics" className="text-orbital-cyan hover:text-ion-white">How we read each metric</Link>.
-          </p>
-        </section>
-
-        {GROUPS.map((g) => (
-          <section key={g.category}>
-            <h2 className="font-display text-2xl font-semibold text-ion-white">{g.category}</h2>
-            <div className="mt-5 grid gap-4 lg:grid-cols-2">
-              {g.engines.map((e) => (
-                <article key={e.name} className="flex flex-col border border-mineral bg-eclipse p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="text-lg font-semibold leading-tight text-ion-white">{e.name}</h3>
-                    <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${e.status === "live" ? "text-orbital-cyan" : "text-ion-2"}`} style={{ background: "rgba(255,255,255,0.04)" }}>
-                      {e.status === "live" ? "live" : "gated"}
-                    </span>
-                  </div>
-                  <p className="mt-2 flex-1 text-sm leading-6 text-ion-1">{e.summary}</p>
-                  <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
-                    <Link href={e.api} className="text-orbital-cyan hover:text-ion-white">{e.method === "POST" ? "API (POST)" : "JSON"}</Link>
-                    {e.board ? <Link href={e.board} className="text-soft-ultraviolet hover:text-ion-white">Board →</Link> : null}
-                  </div>
-                </article>
-              ))}
+    <section className="flex flex-col gap-5 border-t border-paper-border pt-8">
+      <div className="flex flex-col gap-1">
+        <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan-on-light">
+          More engines &amp; APIs
+        </p>
+        <h2 className="text-xl font-semibold text-ink">Engines without a standalone board</h2>
+        <p className="mt-1 max-w-3xl text-sm leading-6 text-ink-1">
+          Some engines are POST-only or founder-gated, and three player engines render on the player boards under{" "}
+          <Link href="/players" className="font-semibold text-orbital-cyan-on-light hover:text-ink">
+            /players
+          </Link>
+          . They stay indexed and reachable here.
+        </p>
+      </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {MORE_ENGINES.map((e) => (
+          <article
+            key={e.name}
+            className="flex flex-col rounded-ds-md border border-paper-border bg-paper-raised p-5"
+          >
+            <h3 className="text-base font-semibold leading-tight text-ink">{e.name}</h3>
+            <p className="mt-2 flex-1 text-sm leading-6 text-ink-1">{e.summary}</p>
+            <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
+              <Link href={e.api} className="text-orbital-cyan-on-light hover:text-ink">
+                {e.apiLabel}
+              </Link>
+              {e.board ? (
+                <Link href={e.board} className="text-ultraviolet-on-light hover:text-ink">
+                  Board →
+                </Link>
+              ) : null}
             </div>
-          </section>
+          </article>
         ))}
+      </div>
+    </section>
+  );
+}
 
-        <section className="border border-mineral bg-eclipse p-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">The doctrine</p>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-ion-1">
-            Every engine reads independent signals and surfaces where they disagree rather than averaging into
-            false precision. Opportunity that outruns production is a buy-low; production that outruns it is a
-            sell-high. One discipline, applied across every position and the team layer — the spine of an
-            accurate, defensible model.
-          </p>
-        </section>
+export default async function EnginesBrowserPage({ searchParams }: EnginesBrowserProps): Promise<JSX.Element> {
+  const requested = searchParams?.engine;
+  const active = getEngine(requested);
+  const groups = groupedEngines();
+
+  // Load only the active engine's data — the browser is one engine at a time.
+  let body: JSX.Element;
+  try {
+    const data = await active.load();
+    body = <>{active.render(data)}</>;
+  } catch (error) {
+    body = (
+      <SourceError
+        reason={`This engine could not load. ${error instanceof Error ? error.message : "UNKNOWN"}`}
+      />
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-paper text-ink">
+      <Nav />
+      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+        <PageHero
+          eyebrow="Intelligence engines"
+          title={active.title}
+          description={active.description}
+          actions={
+            <>
+              <Link href={active.api} className="btn-primary min-h-11 px-5 py-3">
+                JSON
+              </Link>
+              <Link
+                href="/intelligence/metrics"
+                className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-paper-border px-5 py-3 text-sm font-semibold text-ink hover:border-ink-1"
+              >
+                How we read each metric
+              </Link>
+            </>
+          }
+          aside={
+            active.explainer && active.explainer.length > 0 ? (
+              <MetricExplainer terms={active.explainer} />
+            ) : undefined
+          }
+        />
+
+        <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
+          {/* Engine directory — grouped, discoverable, URL-driven via ?engine= */}
+          <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start" aria-label="Engine directory">
+            {groups.map((g) => (
+              <nav key={g.group} className="flex flex-col gap-2">
+                <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ink-2">{g.group}</p>
+                <Tabs
+                  param="engine"
+                  active={active.slug}
+                  pathname={PATHNAME}
+                  ariaLabel={g.group}
+                  className="!flex !flex-col !items-stretch"
+                  items={g.engines.map((e) => ({
+                    value: e.slug,
+                    label: e.label,
+                  }))}
+                />
+              </nav>
+            ))}
+          </aside>
+
+          {/* Active engine */}
+          <section className="flex min-w-0 flex-col gap-6">
+            {body}
+            <Attribution sourceIds={active.sourceIds} className="!text-ink-2" />
+          </section>
+        </div>
+
+        <MoreEnginesSection />
       </main>
       <Footer />
     </div>
