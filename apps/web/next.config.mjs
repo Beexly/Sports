@@ -11,6 +11,9 @@ const nextConfig = {
   ],
   experimental: {
     serverComponentsExternalPackages: ["@prisma/client"],
+    // Next 14.x: instrumentation.ts (server-startup hook that founder-gates the
+    // live graded projections provider) requires this flag. Stable in Next 15.
+    instrumentationHook: true,
   },
   webpack: (config) => {
     config.resolve.alias = {

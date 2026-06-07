@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { activePlayerPool, registerProjectionsProvider, ILLUSTRATIVE_PROJECTIONS } from "./projections";
+import { activePlayerPool, registerProjectionsProvider, resolveToolPool, ILLUSTRATIVE_PROJECTIONS } from "./projections";
 import { PLAYERS, vor, byPosition, type Player } from "../fantasy/players";
 
 function rb(id: string, proj: number): Player {
@@ -33,6 +33,21 @@ describe("activePlayerPool — the plug-in swap point", () => {
 
   it("the illustrative provider exposes the rich pool", () => {
     expect(ILLUSTRATIVE_PROJECTIONS.players?.()).toBe(PLAYERS);
+  });
+});
+
+describe("resolveToolPool — what a tool PAGE hands its client component", () => {
+  it("returns undefined when not live (client keeps its illustrative default → demo unchanged)", () => {
+    expect(resolveToolPool({})).toBeUndefined();
+    registerProjectionsProvider({ name: "Acme", live: true, list: () => [], players: () => [rb("a", 300)] });
+    // registered but env not set -> gate holds -> undefined
+    expect(resolveToolPool({})).toBeUndefined();
+  });
+
+  it("returns the live pool only when registered, live, AND keyed", () => {
+    const customPool = [rb("a", 300), rb("b", 100)];
+    registerProjectionsProvider({ name: "Acme", live: true, list: () => [], players: () => customPool });
+    expect(resolveToolPool({ PROJECTIONS_PROVIDER: "acme" })).toBe(customPool);
   });
 });
 
