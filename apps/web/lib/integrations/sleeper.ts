@@ -22,6 +22,17 @@
 // which imports node:zlib (unresolvable in a client bundle). source-registry.ts
 // is pure with no imports, so this keeps the legal gate without dragging zlib in.
 import { assertIngestible, attributionFor } from "@sports/data-ingestion/src/source-registry";
+// Trending endpoint fetches + the SHARED player-map cache live in ../sleeper/source.
+// That module is deliberately barrel-free (imports nothing from @sports/data-ingestion),
+// so pulling it in keeps this file zlib-free for the client bundle. The Fantasy Market
+// Signal reader (lib/sleeper/market-signal.ts) shares the same cache, so the multi-MB
+// player map is fetched once across both readers instead of once per reader.
+import {
+  fetchSleeperPlayers,
+  fetchSleeperTrendingEntries,
+  sleeperTrendingUrl,
+  type FetchLike,
+} from "../sleeper/source";
 
 const BASE = "https://api.sleeper.app/v1";
 
@@ -168,11 +179,8 @@ export const sleeper = {
 // invented. We filter to fantasy positions (QB/RB/WR/TE/K/DEF).
 // ─────────────────────────────────────────────────────────────────────────────
 
-type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
-
 /** Fantasy-relevant positions we keep; anything else (OL, etc.) is dropped. */
 const FANTASY_POSITIONS: ReadonlySet<string> = new Set(["QB", "RB", "WR", "TE", "K", "DEF"]);
-const SLEEPER_TRENDING_BASE = "https://api.sleeper.app";
 const DEFAULT_LOOKBACK_HOURS = 24;
 const DEFAULT_LIMIT = 25;
 
@@ -243,12 +251,6 @@ export function buildTrending(
   return { adds: join(addsRaw), drops: join(dropsRaw) };
 }
 
-async function getTrendingJson<T>(fetcher: FetchLike, url: string, init: RequestInit): Promise<T> {
-  const res = await fetcher(url, init);
-  if (!res.ok) throw new Error(`Sleeper ${url} → HTTP ${res.status}`);
-  return (await res.json()) as T;
-}
-
 /**
  * Load league-wide waiver momentum from Sleeper. Discriminated result:
  * status "live" with rows, or "source-error" with an honest empty state.
@@ -266,22 +268,16 @@ export async function loadSleeperTrending({
 } = {}): Promise<SleeperTrending> {
   assertIngestible("sleeper");
   const attribution = attributionFor("sleeper");
-  const trendingBase = `${SLEEPER_TRENDING_BASE}/v1/players/nfl/trending`;
-  const addUrl = `${trendingBase}/add?lookback_hours=${lookbackHours}&limit=${limit}`;
-  const dropUrl = `${trendingBase}/drop?lookback_hours=${lookbackHours}&limit=${limit}`;
-  const playersUrl = `${SLEEPER_TRENDING_BASE}/v1/players/nfl`;
-  const sourceUrl = addUrl;
+  const sourceUrl = sleeperTrendingUrl("add", lookbackHours, limit);
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    // no-store: the player map is several MB and refreshes ~daily; it must never
-    // enter Next's data cache (>2MB items error). Same posture as nflverse assets.
-    const init: RequestInit = { signal: controller.signal, cache: "no-store" };
+    // Trending lists + the SHARED (cached) player map, fetched concurrently.
+    // fetchSleeperPlayers reuses the one in-process map cache the Market Signal
+    // reader also uses, so the multi-MB payload isn't fetched twice.
     const [addsRaw, dropsRaw, playersMap] = await Promise.all([
-      getTrendingJson<SleeperTrendingRaw[]>(fetcher, addUrl, init),
-      getTrendingJson<SleeperTrendingRaw[]>(fetcher, dropUrl, init),
-      getTrendingJson<SleeperPlayersMap>(fetcher, playersUrl, init),
+      fetchSleeperTrendingEntries("add", { fetcher, lookbackHours, limit, timeoutMs }),
+      fetchSleeperTrendingEntries("drop", { fetcher, lookbackHours, limit, timeoutMs }),
+      fetchSleeperPlayers({ fetcher, timeoutMs }),
     ]);
     if (!Array.isArray(addsRaw) || !Array.isArray(dropsRaw)) {
       throw new Error("Sleeper trending response was not an array");
@@ -313,7 +309,5 @@ export async function loadSleeperTrending({
       note: "Sleeper trending could not load. The board shows an empty state instead of fabricated movement.",
       error: error instanceof Error ? error.message : "UNKNOWN",
     };
-  } finally {
-    clearTimeout(timer);
   }
 }

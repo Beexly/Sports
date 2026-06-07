@@ -1,4 +1,15 @@
 import { assertIngestible, getSource } from "@sports/data-ingestion";
+import {
+  SLEEPER_PLAYERS_URL,
+  fetchSleeperPlayers,
+  fetchSleeperTrendingEntries,
+  resetSleeperPlayersCacheForTests,
+  sleeperTrendingUrl,
+  type FetchLike,
+  type SleeperPlayerRaw,
+  type SleeperPlayersMap,
+  type SleeperTrendingEntry,
+} from "./source";
 
 /**
  * Sleeper market signal — live fantasy add/drop activity over a rolling window.
@@ -10,6 +21,12 @@ import { assertIngestible, getSource } from "@sports/data-ingestion";
  * player in the last N hours). It is market sentiment, NOT our projection or
  * betting pick — canPublishPicks stays false. Per Sleeper's guidance the large
  * player map is cached hard and we never poll aggressively.
+ *
+ * The endpoint fetches + the shared player-map cache live in ./source, so the
+ * Waiver Trends reader (lib/integrations/sleeper.ts) and this one fetch the
+ * multi-MB player map once between them. This module keeps its own rich row
+ * shape and its full-signal cache; the join below is intentionally unfiltered
+ * (every position) and carries injury + experience the momentum board omits.
  */
 
 export interface SleeperTrendingPlayer {
@@ -36,55 +53,17 @@ export interface SleeperMarketSignal {
   readonly error: string | null;
 }
 
-type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
-
-interface TrendingEntry {
-  readonly player_id: string;
-  readonly count: number;
-}
-
-interface SleeperPlayer {
-  readonly first_name?: string;
-  readonly last_name?: string;
-  readonly full_name?: string;
-  readonly team?: string | null;
-  readonly position?: string | null;
-  readonly injury_status?: string | null;
-  readonly years_exp?: number | null;
-}
-
-const BASE = "https://api.sleeper.app";
-const PLAYERS_URL = `${BASE}/v1/players/nfl`;
-
-function trendingUrl(kind: "add" | "drop", lookbackHours: number, limit: number): string {
-  return `${BASE}/v1/players/nfl/trending/${kind}?lookback_hours=${lookbackHours}&limit=${limit}`;
-}
-
+// Full-signal in-process cache (the player map is cached separately + shared by
+// ./source). Only the live `fetch` path writes it; injected fetchers re-compute.
 let cache: { readonly expiresAt: number; readonly value: SleeperMarketSignal } | null = null;
-// The 14MB player map rarely changes; cache it far longer than the trending lists.
-let playersCache: { readonly expiresAt: number; readonly value: Record<string, SleeperPlayer> } | null = null;
 
-async function fetchJson<T>(url: string, fetcher: FetchLike, timeoutMs: number): Promise<T> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    // no-store: these payloads (esp. the 14MB player map) must not enter Next's
-    // data cache; we manage our own in-process cache below.
-    const response = await fetcher(url, { signal: controller.signal, cache: "no-store" });
-    if (!response.ok) throw new Error(`Sleeper fetch failed (${response.status}) for ${url}`);
-    return (await response.json()) as T;
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-function playerName(player: SleeperPlayer): string {
+function playerName(player: SleeperPlayerRaw): string {
   return player.full_name || `${player.first_name ?? ""} ${player.last_name ?? ""}`.trim() || "UNKNOWN";
 }
 
 function buildRows(
-  entries: readonly TrendingEntry[],
-  players: Record<string, SleeperPlayer>,
+  entries: readonly SleeperTrendingEntry[],
+  players: SleeperPlayersMap,
 ): SleeperTrendingPlayer[] {
   return entries
     .map((entry): SleeperTrendingPlayer | null => {
@@ -107,7 +86,7 @@ function buildRows(
 
 export function resetSleeperMarketSignalCacheForTests(): void {
   cache = null;
-  playersCache = null;
+  resetSleeperPlayersCacheForTests();
 }
 
 export async function loadSleeperMarketSignal({
@@ -135,22 +114,17 @@ export async function loadSleeperMarketSignal({
     return cache.value;
   }
 
-  const addUrl = trendingUrl("add", lookbackHours, limit);
-  const dropUrl = trendingUrl("drop", lookbackHours, limit);
+  const addUrl = sleeperTrendingUrl("add", lookbackHours, limit);
+  const dropUrl = sleeperTrendingUrl("drop", lookbackHours, limit);
 
   try {
     const [addEntries, dropEntries] = await Promise.all([
-      fetchJson<TrendingEntry[]>(addUrl, fetcher, timeoutMs),
-      fetchJson<TrendingEntry[]>(dropUrl, fetcher, timeoutMs),
+      fetchSleeperTrendingEntries("add", { fetcher, lookbackHours, limit, timeoutMs }),
+      fetchSleeperTrendingEntries("drop", { fetcher, lookbackHours, limit, timeoutMs }),
     ]);
 
-    let players: Record<string, SleeperPlayer>;
-    if (playersTtlMs > 0 && live && playersCache && playersCache.expiresAt > now) {
-      players = playersCache.value;
-    } else {
-      players = await fetchJson<Record<string, SleeperPlayer>>(PLAYERS_URL, fetcher, timeoutMs);
-      if (playersTtlMs > 0 && live) playersCache = { expiresAt: now + playersTtlMs, value: players };
-    }
+    // Shared, cached player-map fetch (one map across both Sleeper readers).
+    const players = await fetchSleeperPlayers({ fetcher, timeoutMs, ttlMs: playersTtlMs });
 
     const value: SleeperMarketSignal = {
       generatedAt: new Date().toISOString(),
@@ -162,7 +136,7 @@ export async function loadSleeperMarketSignal({
       canPublishPicks: false,
       note: `Live fantasy add/drop activity across Sleeper leagues over the last ${lookbackHours} hours. This is crowd market sentiment, not our projection or a betting pick.`,
       attribution,
-      sourceUrls: { trendingAdd: addUrl, trendingDrop: dropUrl, players: PLAYERS_URL },
+      sourceUrls: { trendingAdd: addUrl, trendingDrop: dropUrl, players: SLEEPER_PLAYERS_URL },
       error: null,
     };
     if (cacheTtlMs > 0 && live) cache = { expiresAt: now + cacheTtlMs, value };
@@ -178,7 +152,7 @@ export async function loadSleeperMarketSignal({
       canPublishPicks: false,
       note: "The Sleeper market signal could not load. The product shows an empty state instead of fabricated activity.",
       attribution,
-      sourceUrls: { trendingAdd: addUrl, trendingDrop: dropUrl, players: PLAYERS_URL },
+      sourceUrls: { trendingAdd: addUrl, trendingDrop: dropUrl, players: SLEEPER_PLAYERS_URL },
       error: error instanceof Error ? error.message : "UNKNOWN",
     };
   }
