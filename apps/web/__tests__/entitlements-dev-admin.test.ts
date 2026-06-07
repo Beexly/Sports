@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { getUserEntitlements } from "@/lib/entitlements";
 
 describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
@@ -26,5 +26,24 @@ describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
     process.env["DEV_FAKE_ADMIN"] = "false";
     const ent = await getUserEntitlements("dev-admin");
     expect(ent.tier).toBe("FREE");
+  });
+
+  describe("production safety guard", () => {
+    let savedNodeEnv: string | undefined;
+
+    beforeEach(() => {
+      savedNodeEnv = process.env["NODE_ENV"];
+      process.env["NODE_ENV"] = "production";
+      process.env["DEV_FAKE_ADMIN"] = "true";
+    });
+
+    afterEach(() => {
+      process.env["NODE_ENV"] = savedNodeEnv;
+    });
+
+    it("is inactive when NODE_ENV=production even if DEV_FAKE_ADMIN=true", async () => {
+      const ent = await getUserEntitlements("dev-admin");
+      expect(ent.tier).toBe("FREE");
+    });
   });
 });

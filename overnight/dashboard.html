@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Overnight APEX Operator — Run 1</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#0f1117;color:#e2e8f0;padding:24px;max-width:960px;margin:0 auto}
+h1{color:#a78bfa;border-bottom:1px solid #2d3748;padding-bottom:8px}
+h2{color:#7dd3fc;margin-top:24px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600}
+.green{background:#064e3b;color:#6ee7b7}
+.amber{background:#451a03;color:#fcd34d}
+.red{background:#450a0a;color:#fca5a5}
+.blue{background:#1e3a5f;color:#93c5fd}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th{background:#1a1f2e;color:#94a3b8;padding:8px;text-align:left;font-size:12px;text-transform:uppercase}
+td{padding:8px;border-bottom:1px solid #1a1f2e;font-size:14px}
+.num{font-size:32px;font-weight:700;color:#a78bfa}
+.kpi-row{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0}
+.kpi{background:#1a1f2e;border-radius:8px;padding:16px;min-width:120px}
+.kpi-label{font-size:11px;color:#64748b;text-transform:uppercase;margin-bottom:4px}
+pre{background:#1a1f2e;padding:12px;border-radius:6px;font-size:12px;overflow:auto}
+</style>
+</head>
+<body>
+<h1>🌙 Overnight APEX Operator — Run 1</h1>
+<p><small>2026-06-07 · Branch: claude/magical-volta-sMbwH · Mode: WRITE</small></p>
+
+<h2>Health Dashboard</h2>
+<div class="kpi-row">
+  <div class="kpi"><div class="kpi-label">Tests</div><div class="num">2502</div><div><span class="badge green">204/204 files</span></div></div>
+  <div class="kpi"><div class="kpi-label">Typecheck</div><div class="num">0</div><div><span class="badge green">errors</span></div></div>
+  <div class="kpi"><div class="kpi-label">Lint</div><div class="num">0</div><div><span class="badge green">errors</span></div></div>
+  <div class="kpi"><div class="kpi-label">Security</div><div class="num">3/3</div><div><span class="badge green">guards active</span></div></div>
+  <div class="kpi"><div class="kpi-label">Findings</div><div class="num">9</div><div><span class="badge blue">logged</span></div></div>
+</div>
+
+<h2>Run Summary</h2>
+<table>
+  <tr><th>Category</th><th>Action</th><th>Impact</th><th>Status</th></tr>
+  <tr><td><span class="badge red">Repair</span></td><td>npm install + prisma generate — restored test suite from 203→204 files passing</td><td>5/5</td><td><span class="badge green">Done</span></td></tr>
+  <tr><td><span class="badge red">Repair</span></td><td>NODE_ENV guard added to DEV_FAKE_ADMIN in auth.ts, entitlements.ts, middleware.ts</td><td>4/5</td><td><span class="badge green">Done</span></td></tr>
+  <tr><td><span class="badge amber">Improve</span></td><td>packages/db/package.json: prepare script auto-runs prisma generate after npm install</td><td>4/5</td><td><span class="badge green">Done</span></td></tr>
+  <tr><td><span class="badge blue">Grow</span></td><td>4 new security regression tests cement NODE_ENV guard as CI invariant</td><td>4/5</td><td><span class="badge green">Done</span></td></tr>
+</table>
+
+<h2>Calibration Gate Status</h2>
+<table>
+  <tr><th>Gate</th><th>Default</th><th>Enforcement</th><th>Status</th></tr>
+  <tr><td>PUBLIC_PICKS_ENABLED</td><td>false</td><td>parseBool() env-var strict</td><td><span class="badge green">Locked</span></td></tr>
+  <tr><td>PUBLIC_BLOG_ENABLED</td><td>false</td><td>parseBool() env-var strict</td><td><span class="badge green">Locked</span></td></tr>
+  <tr><td>PERFORMANCE_STATS_ENABLED</td><td>false</td><td>parseBool() env-var strict</td><td><span class="badge green">Locked</span></td></tr>
+  <tr><td>CANONICAL_HISTORY_ENABLED</td><td>false</td><td>parseBool() env-var strict</td><td><span class="badge green">Locked</span></td></tr>
+</table>
+
+<h2>Security Invariants</h2>
+<table>
+  <tr><th>Invariant</th><th>Status</th></tr>
+  <tr><td>No hardcoded secrets in .ts/.tsx files</td><td><span class="badge green">Clean</span></td></tr>
+  <tr><td>DEV_FAKE_ADMIN bypass gated on NODE_ENV !== production</td><td><span class="badge green">Fixed this run</span></td></tr>
+  <tr><td>Admin pages use server-side auth() + role check</td><td><span class="badge green">Verified</span></td></tr>
+  <tr><td>Subscription paywall enforced server-side (DB query)</td><td><span class="badge green">Verified</span></td></tr>
+  <tr><td>Security headers: X-Frame-Options, HSTS, nosniff</td><td><span class="badge green">Present</span></td></tr>
+</table>
+
+<h2>Open Items for Next Run</h2>
+<table>
+  <tr><th>Priority</th><th>Item</th><th>Type</th></tr>
+  <tr><td>1</td><td>npm audit: 10 vulnerabilities in Next.js 14.2.35 — verify if patched in installed version</td><td><span class="badge amber">Investigate</span></td></tr>
+  <tr><td>2</td><td>workers/data-refresh tsconfig uses deprecated moduleResolution:node — update to bundler</td><td><span class="badge amber">Improve</span></td></tr>
+  <tr><td>3</td><td>Content publishing worker disabled by design — document resume path for operator</td><td><span class="badge blue">Grow</span></td></tr>
+</table>
+
+<p><small>Generated by overnight-claude · 2026-06-07T07:30Z</small></p>
+</body>
+</html>
