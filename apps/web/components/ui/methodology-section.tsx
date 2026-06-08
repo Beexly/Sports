@@ -1,89 +1,64 @@
-import { getClaim } from "@/lib/trust-claims";
-
 /**
  * Methodology / Trust Section
  *
- * Replaces the legacy hard-coded testimonials area on the homepage with
- * a factual explanation of how the platform actually evaluates picks.
+ * Outcome-framed trust surface for the homepage. Each card says what the
+ * customer GETS from a GSE Rating — not how the number is produced. The
+ * recipe (data sources, factor anchors, formulas) stays off the public
+ * surface by design.
  *
- * The bullets are sourced from the Trust Claim Registry — anything shown
- * here is either an APPROVED METHODOLOGY/DATA_TRANSPARENCY claim or a
- * GATED PERFORMANCE claim flagged with its readiness gate.
+ * Every card still maps to an APPROVED or GATED entry in the Trust Claim
+ * Registry via `data-claim-id`, so the public-copy scanner and source
+ * review can audit what we assert. The visible copy is written here,
+ * outcome-first, rather than echoing the registry's internal phrasing.
  *
- * This component never invents social proof. It exists specifically so
- * the homepage has substantive trust signal without making unsupported
- * claims about user count, verification, or track record.
+ * This component never invents social proof.
  */
 
-interface MethodologyItem {
+interface TrustCard {
   readonly title: string;
+  readonly body: string;
+  /** Registry claim this card is accountable to (for audit + scanner). */
   readonly claimId: string;
-  readonly hint?: string; // small explanatory text under the body
-  readonly lane: "data" | "model" | "gate";
+  /** Optional small line under the body. */
+  readonly hint?: string;
+  readonly accent: "score" | "proof" | "honest";
 }
 
-const ITEMS: readonly MethodologyItem[] = [
+const CARDS: readonly TrustCard[] = [
   {
-    title: "Live odds ingestion",
-    claimId: "methodology.odds-ingestion",
-    lane: "data",
-  },
-  {
-    title: "Bookmaker coverage as a transparency signal",
-    claimId: "methodology.bookmaker-coverage",
-    lane: "data",
-  },
-  {
-    title: "Data freshness on every pick",
-    claimId: "methodology.data-freshness",
-    lane: "data",
-  },
-  {
-    title: "Calibrated confidence presentation",
+    title: "One number you can act on",
+    body: "Every matchup gets a GSE Rating. You read the score and decide. No spreadsheet, no homework, no guessing what matters.",
     claimId: "methodology.confidence-presentation",
-    hint: "Until we have enough settled outcomes to calibrate against, confidence is shown as a label, not a number.",
-    lane: "model",
+    accent: "score",
   },
   {
-    title: "Risk level on every pick",
-    claimId: "methodology.risk-levels",
-    lane: "model",
-  },
-  {
-    title: "Factor breakdown for subscribers",
-    claimId: "methodology.factor-breakdown",
-    lane: "model",
-  },
-  {
-    title: "Public performance is gated, not advertised",
+    title: "Graded against the closing line",
+    body: "We hold our ratings up to where the market actually landed and show you how they held up. The proof lives on the record, not in a sales pitch.",
     claimId: "performance.public-stats-gated",
-    hint: "When you see win-loss numbers on the Performance page, you'll also see the period, sample size, model version, and the exact win-rate definition.",
-    lane: "gate",
+    hint: "When win-loss numbers appear on the Performance page, you also see the period, the sample size, and exactly how win rate is counted.",
+    accent: "proof",
+  },
+  {
+    title: "Dashes, never filler",
+    body: "If the inputs behind a game aren't real enough to defend, you get an honest blank instead of a made-up number. Nothing on the board is invented to look busy.",
+    claimId: "methodology.data-freshness",
+    accent: "honest",
   },
 ];
 
-function laneAccent(lane: MethodologyItem["lane"]): string {
-  switch (lane) {
-    case "model":
+function cardAccent(accent: TrustCard["accent"]): string {
+  switch (accent) {
+    case "proof":
       return "text-ultraviolet";
-    case "gate":
+    case "honest":
       return "text-plasma";
-    case "data":
+    case "score":
     default:
       return "text-orbital-cyan";
   }
 }
 
 export function MethodologySection() {
-  // Resolve each item against the registry. We use getClaim() so both APPROVED
-  // and GATED entries surface — the GATED ones (e.g. performance.public-stats-gated)
-  // describe the *policy* about when public stats appear, which is itself an
-  // approved methodology claim to make publicly.
-  const resolved = ITEMS.map((item) => ({
-    item,
-    claim: getClaim(item.claimId),
-  }));
-
   return (
     <section
       data-testid="methodology-section"
@@ -94,39 +69,34 @@ export function MethodologySection() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow text-ion-1">Methodology / Trust Surface</p>
           <h2
             id="methodology-heading"
-            className="mt-4 font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl"
+            className="font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl"
           >
-            The audit trail behind every signal
+            The score is the product
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ion sm:text-lg">
-            Every published pick ties back to live markets, timestamped data,
-            factor scoring, and the gates that keep weak picks off the board.
+            We do the work and hand you one rating per game. You see how it holds
+            up against the market, and a dash whenever the read isn&apos;t there.
           </p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {resolved.map(({ item, claim }) => (
+        <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {CARDS.map((card) => (
             <article
-              key={item.claimId}
-              data-claim-id={item.claimId}
+              key={card.claimId}
+              data-claim-id={card.claimId}
               className="surface-card flex min-h-full flex-col gap-4 p-5 transition-colors hover:border-mineral-hi"
             >
-              <div className="flex items-center justify-between gap-3">
-                <p className={`font-mono text-[10px] uppercase tracking-[0.16em] ${laneAccent(item.lane)}`}>
-                  {item.lane}
-                </p>
+              <div className="flex items-center gap-3">
+                <span className={`h-2 w-2 rounded-full bg-current ${cardAccent(card.accent)}`} aria-hidden="true" />
                 <span className="h-px flex-1 bg-mineral" aria-hidden="true" />
               </div>
-              <h3 className="text-base font-semibold leading-snug text-ion-white">{item.title}</h3>
-              <p className="text-sm leading-6 text-ion">
-                {claim?.copy ?? ""}
-              </p>
-              {item.hint && (
+              <h3 className="text-base font-semibold leading-snug text-ion-white">{card.title}</h3>
+              <p className="text-sm leading-6 text-ion">{card.body}</p>
+              {card.hint && (
                 <p className="mt-auto border-t border-mineral pt-4 text-xs leading-5 text-ion-1">
-                  {item.hint}
+                  {card.hint}
                 </p>
               )}
             </article>

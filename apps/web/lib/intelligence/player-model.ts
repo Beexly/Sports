@@ -44,7 +44,12 @@ export interface PlayerProfile {
   readonly targetShare: number | null;
   readonly dakota: number | null;
   readonly pacr: number | null;
-  /** Position-aware composite of the predictive anchors, 0-100. */
+  /**
+   * GSE Rating (0-100) — the canonical, branded player score. Position-aware:
+   * a player is graded against their own position, so 100 is best-in-class at
+   * that spot, not best in the league. This is THE number we publish; its
+   * component anchors are intentionally not surfaced.
+   */
   readonly processGrade: number;
   readonly productionPct: number;
   readonly signal: ProcessSignal;
@@ -175,10 +180,10 @@ export function buildPlayerModel(records: readonly CsvRecord[], activeSeason: nu
       const signal: ProcessSignal = gap >= DIVERGENCE ? "buy-low" : gap <= -DIVERGENCE ? "sell-high" : "in-line";
       const note =
         signal === "buy-low"
-          ? "Process grade outruns the box score — the underlying inputs say the production is coming. Acquire before the market reprices."
+          ? "Underpriced. Buy before the market catches up."
           : signal === "sell-high"
-            ? "Production outruns the process grade — it's running hotter than the inputs support. Sell into the value."
-            : "Process and production are aligned — the output is earned by the inputs.";
+            ? "Overpriced. Sell into the value."
+            : "Fairly priced.";
 
       profiles.push({
         playerId: p.id,
@@ -238,7 +243,7 @@ export async function loadPlayerModel({
       metricsPerPlayer: 10,
       profiles,
       canPublishProjections: false,
-      note: "One canonical advanced profile per player — EPA efficiency, opportunity, and volume combined into a position-aware process grade, with the process-vs-production gap surfaced (buy-low / sell-high). The data layer that drives the tools. Context, not a point projection.",
+      note: "One GSE Rating per player, graded against their position. The score that drives the tools.",
       sourceUrl: url,
       error: null,
     };

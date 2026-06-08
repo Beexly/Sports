@@ -4,7 +4,6 @@ import { EngineView } from "@/components/intelligence/engine-view";
 import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
-import { MetricExplainer } from "@/components/ui/metric-explainer";
 import { Nav } from "@/components/ui/nav";
 import { PageHero } from "@/components/ui/page-hero";
 import { SourceError } from "@/components/ui/source-error";
@@ -25,98 +24,6 @@ const PATHNAME = "/intelligence/engines";
 
 interface EnginesBrowserProps {
   searchParams?: { engine?: string };
-}
-
-/**
- * Engines that have no in-browser board — POST-only or founder-gated endpoints,
- * plus the three player engines whose boards live under /players/*. Listed here
- * so every engine stays discoverable and indexed even though it can't render a
- * standalone board in the ?engine= switcher. Names / summaries / links lifted
- * from the original /intelligence/engines catalog (git HEAD).
- */
-interface MoreEngine {
-  readonly name: string;
-  readonly summary: string;
-  readonly api: string;
-  readonly apiLabel: string;
-  readonly board?: string;
-}
-const MORE_ENGINES: readonly MoreEngine[] = [
-  {
-    name: "Roster Advice",
-    summary: "Model → real add/drop/read decisions for a posted roster (composes with Sleeper sync).",
-    api: "/api/intelligence/roster-advice",
-    apiLabel: "API (POST)",
-  },
-  {
-    name: "Graded Pool",
-    summary:
-      "Composes the model + xFP + team environment (real schemeFit from neutral-script offensive EPA) + QB-forward passing signal into a real graded pool that drives every fantasy tool when the founder enables it.",
-    api: "/api/intelligence/graded-pool",
-    apiLabel: "API (gated)",
-  },
-  {
-    name: "QB Consensus",
-    summary: "ESPN QBR (results) vs Next Gen CPOE (accuracy), triangulated — disagreement surfaced, not averaged.",
-    api: "/api/intelligence/qb-consensus",
-    apiLabel: "JSON",
-    board: "/players/qbr",
-  },
-  {
-    name: "Rushing Efficiency",
-    summary: "RYOE/att vs volume with stacked-box context — bell-cow / buy-low / volume-dependent.",
-    api: "/api/intelligence/rushing-efficiency",
-    apiLabel: "JSON",
-    board: "/players/opportunity",
-  },
-  {
-    name: "Receiving Opportunity (WOPR)",
-    summary: "Air-yards & target share → WOPR, with opportunity-vs-production buy/sell.",
-    api: "/api/intelligence/receiving-opportunity",
-    apiLabel: "JSON",
-    board: "/players/opportunity",
-  },
-];
-
-function MoreEnginesSection(): JSX.Element {
-  return (
-    <section className="flex flex-col gap-5 border-t border-surface-line pt-8">
-      <div className="flex flex-col gap-1">
-        <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan">
-          More engines &amp; APIs
-        </p>
-        <h2 className="text-xl font-semibold text-ion-white">Engines without a standalone board</h2>
-        <p className="mt-1 max-w-3xl text-sm leading-6 text-ion-1">
-          Some engines are POST-only or founder-gated, and three player engines render on the player boards under{" "}
-          <Link href="/players" className="font-semibold text-orbital-cyan hover:text-ion-white">
-            /players
-          </Link>
-          . They stay indexed and reachable here.
-        </p>
-      </div>
-      <div className="grid gap-4 lg:grid-cols-2">
-        {MORE_ENGINES.map((e) => (
-          <article
-            key={e.name}
-            className="flex flex-col rounded-ds-md border border-surface-line bg-surface-raised p-5"
-          >
-            <h3 className="text-base font-semibold leading-tight text-ion-white">{e.name}</h3>
-            <p className="mt-2 flex-1 text-sm leading-6 text-ion-1">{e.summary}</p>
-            <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
-              <Link href={e.api} className="text-orbital-cyan hover:text-ion-white">
-                {e.apiLabel}
-              </Link>
-              {e.board ? (
-                <Link href={e.board} className="text-ultraviolet hover:text-ion-white">
-                  Board →
-                </Link>
-              ) : null}
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
 }
 
 export default async function EnginesBrowserPage({ searchParams }: EnginesBrowserProps): Promise<JSX.Element> {
@@ -152,22 +59,12 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
           title={active.title}
           description={active.description}
           actions={
-            <>
-              <Link href={active.api} className="btn-primary min-h-11 px-5 py-3">
-                JSON
-              </Link>
-              <Link
-                href="/intelligence/metrics"
-                className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-surface-line px-5 py-3 text-sm font-semibold text-ion-white hover:border-surface-line-strong"
-              >
-                How we read each metric
-              </Link>
-            </>
-          }
-          aside={
-            active.explainer && active.explainer.length > 0 ? (
-              <MetricExplainer terms={active.explainer} />
-            ) : undefined
+            <Link
+              href={active.api}
+              className="inline-flex min-h-9 items-center justify-center rounded-ds-sm border border-surface-line px-3 py-2 text-xs font-semibold text-ion-2 hover:text-ion-white hover:border-surface-line-strong"
+            >
+              JSON
+            </Link>
           }
         />
 
@@ -198,8 +95,6 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
             <Attribution sourceIds={active.sourceIds} className="!text-ion-2" />
           </section>
         </div>
-
-        <MoreEnginesSection />
       </main>
       <Footer />
     </div>

@@ -26,8 +26,8 @@ const PLAYERS_MENU: readonly NavGroup[] = [
   {
     heading: "Quick views",
     items: [
-      { label: "Opportunity", href: "/players?view=opportunity", desc: "Air yards · WOPR — buy-low / sell-high" },
-      { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, CPOE, RYOE" },
+      { label: "Opportunity", href: "/players?view=opportunity", desc: "Who's earning the looks, before the points follow" },
+      { label: "Next Gen", href: "/players?view=nextgen", desc: "What the tracking sees that the box score misses" },
       { label: "DFS Salaries", href: "/players?view=dfs", desc: "Licensed DraftKings feeds" },
     ],
   },

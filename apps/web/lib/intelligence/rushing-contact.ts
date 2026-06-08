@@ -122,7 +122,7 @@ export async function loadRushingContact({
           sourceRows: records.length,
           rows,
           canPublishProjections: false,
-          note: "PFR advanced rushing: yards after contact per carry (the back's own talent, blocking-independent) vs yards before contact (the line). An independent estimator to triangulate against Next Gen RYOE. Context, not a pick.",
+          note: "How much each back creates on his own versus what the blocking hands him — the runner's own rushing talent, isolated. Context, not a pick.",
           sourceUrl: PFR_RUSH_SEASON_URL,
           error: null,
         };
@@ -137,7 +137,7 @@ export async function loadRushingContact({
       sourceRows: 0,
       rows: [],
       canPublishProjections: false,
-      note: "PFR rushing charting could not load from nflverse. The board shows an empty state instead of fabricated contact data.",
+      note: "This read is unavailable right now. We show an empty state instead of fabricated data.",
       sourceUrl: PFR_RUSH_SEASON_URL,
       error: error instanceof Error ? error.message : "UNKNOWN",
     };

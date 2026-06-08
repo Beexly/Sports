@@ -240,7 +240,7 @@ export async function loadOpportunityTransfer({
     sourceRows: injury.sourceRows + depth.sourceRows + stats.records.length,
     rows,
     canPublishProjections: false,
-    note: "Vacated-role opportunity transfer: when a starter is OUT, the targets + carries his role commanded transfer to the next man up. We quantify the vacated per-game usage and name the most likely beneficiary. No injuries means no transfer rows — we never fabricate a cascade. Context, not a point projection.",
+    note: "When a starter is OUT, the work doesn't vanish — it moves to the next man up. We name who inherits it and how much. No injuries means no rows; we never fabricate a cascade. Context, not a projection.",
     sourceUrl: statsUrl,
     error: null,
   };
@@ -255,7 +255,7 @@ function errorState(sourceUrl: string, error: string): OpportunityTransfer {
     sourceRows: 0,
     rows: [],
     canPublishProjections: false,
-    note: "Opportunity transfer could not load from nflverse (injuries, depth charts, or usage). The product shows an empty state instead of a fabricated cascade.",
+    note: "This read is unavailable right now. We show an empty state instead of a fabricated cascade.",
     sourceUrl,
     error,
   };

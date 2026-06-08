@@ -14,6 +14,7 @@ import {
   formatSigned,
   hitRateTone,
   liftTone,
+  ratingTier,
   signedTone,
   toneClass,
   type SignalTone,
@@ -31,7 +32,7 @@ import type { ScoringZone, ScoringZoneRow, ScoringZoneSignal } from "@/lib/intel
 import type { TeamEnvironment, TeamEnvironmentRow } from "@/lib/intelligence/team-environment";
 import type { OpportunityTransfer, OpportunityTransferRow, TransferConfidence } from "@/lib/intelligence/opportunity-transfer";
 import type { ClvBacktest, ClvBacktestRow } from "@/lib/intelligence/clv-calibration";
-import type { PredictivenessProof, PredictivenessSplit } from "@/lib/intelligence/predictiveness";
+import type { PredictivenessProof } from "@/lib/intelligence/predictiveness";
 import type { SleeperTrending, TrendingRow } from "@/lib/integrations/sleeper";
 import type { PlayDesign, PlayDesignQbRow, PlayDesignTeamRow } from "@/lib/intelligence/play-design";
 import type {
@@ -82,10 +83,6 @@ function pct(n: number): string {
 function pctNullable(v: number | null): string {
   return v == null ? "—" : `${Math.round(v * 100)}%`;
 }
-function corr(v: number | null): string {
-  return v == null ? "—" : v.toFixed(2);
-}
-
 // ─────────────────────────────────────────────────────────────────────────────
 // PLAYER MODEL — buy/sell move cards + per-position split tables (special)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -101,10 +98,24 @@ function processTone(s: ProcessSignal): SignalTone {
   if (s === "sell-high") return "bad";
   return "neutral";
 }
-function gradeTone(g: number): SignalTone {
-  if (g >= 70) return "good";
-  if (g >= 45) return "neutral";
-  return "neutral";
+
+// The public board leads with the GSE Rating: a large numeral + a small fill
+// bar (toned by the rating's own tier) + the tier chip. The component anchors
+// behind the rating (EPA/WOPR/DAKOTA/PACR/production) stay hidden — we publish
+// the score, not the recipe.
+function RatingCell({ grade }: { grade: number }): JSX.Element {
+  const { tone } = ratingTier(grade);
+  return (
+    <span className="inline-flex items-center gap-2">
+      <span className={`font-mono text-lg font-semibold tabular-nums ${toneClass(tone)}`}>{Math.round(grade)}</span>
+      <PercentileBar pct={grade} tone={tone} widthPx={40} />
+    </span>
+  );
+}
+
+function TierChip({ grade }: { grade: number }): JSX.Element {
+  const { label, tone } = ratingTier(grade);
+  return <SignalChip label={label} tone={tone} />;
 }
 
 function MovesCard({ title, tone, rows }: { title: string; tone: SignalTone; rows: readonly PlayerProfile[] }): JSX.Element {
@@ -116,15 +127,15 @@ function MovesCard({ title, tone, rows }: { title: string; tone: SignalTone; row
           <p className="text-sm text-ion-2">None flagged this week.</p>
         ) : (
           rows.map((p) => (
-            <div key={p.playerId} className="border-l border-surface-line pl-3">
-              <div className="flex items-center justify-between gap-2">
+            <div key={p.playerId} className="flex items-center justify-between gap-3 border-l border-surface-line pl-3">
+              <span className="flex flex-col">
                 <span className="text-sm font-semibold text-ion-white">{p.name}</span>
-                <span className="flex items-center gap-2 font-mono text-xs text-ion-2">
-                  <span>{p.position} · {p.team}</span>
-                  <PercentileBar pct={p.processGrade} tone={gradeTone(p.processGrade)} widthPx={36} />
-                </span>
-              </div>
-              <p className="mt-0.5 text-xs leading-5 text-ion-1">{p.note}</p>
+                <span className="font-mono text-xs text-ion-2">{p.position} · {p.team}</span>
+              </span>
+              <span className="flex items-center gap-2">
+                <RatingCell grade={p.processGrade} />
+                <TierChip grade={p.processGrade} />
+              </span>
             </div>
           ))
         )}
@@ -133,58 +144,34 @@ function MovesCard({ title, tone, rows }: { title: string; tone: SignalTone; row
   );
 }
 
-function playerColumns(pos: ModelPosition): Column<PlayerProfile>[] {
-  const isQb = pos === "QB";
-  const cols: Column<PlayerProfile>[] = [
+// Public table: Player, Tm, GSE Rating, Tier, The read. The anchor columns
+// (EPA/play, WOPR, DAKOTA, PACR, production %ile, touches) are deliberately
+// gone — the rating already carries them.
+function playerColumns(): Column<PlayerProfile>[] {
+  return [
     { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
     { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     {
       key: "processGrade",
-      label: "Process",
+      label: "GSE Rating",
       align: "right",
       numeric: true,
-      tooltip: "position-aware composite of the predictive anchors",
       sortValue: (r) => r.processGrade,
-      render: (r) => <PercentileBar pct={r.processGrade} tone={gradeTone(r.processGrade)} />,
+      render: (r) => <RatingCell grade={r.processGrade} />,
     },
     {
-      key: "productionPct",
-      label: "Prod %ile",
-      align: "right",
-      numeric: true,
-      tooltip: "PPR production percentile in position",
-      sortValue: (r) => r.productionPct,
-      render: (r) => <PercentileBar pct={r.productionPct} />,
+      key: "tier",
+      label: "Tier",
+      sortValue: (r) => r.processGrade,
+      render: (r) => <TierChip grade={r.processGrade} />,
     },
     {
-      key: "epaPerPlay",
-      label: "EPA/play",
-      align: "right",
-      numeric: true,
-      tooltip: "combined EPA per play",
-      sortValue: (r) => r.epaPerPlay,
-      render: (r) => <DivergingBar value={r.epaPerPlay} domain={0.5} digits={2} />,
+      key: "signal",
+      label: "The read",
+      sortValue: (r) => r.signal,
+      render: (r) => <SignalChip label={PROCESS_SIGNAL_LABEL[r.signal]} tone={processTone(r.signal)} />,
     },
   ];
-  if (isQb) {
-    cols.push(
-      { key: "dakota", label: "DAKOTA", align: "right", numeric: true, tooltip: "DAKOTA (EPA+CPOE composite)", sortValue: (r) => r.dakota, render: (r) => (r.dakota == null ? "—" : r.dakota.toFixed(2)) },
-      { key: "pacr", label: "PACR", align: "right", numeric: true, tooltip: "passing air conversion ratio", sortValue: (r) => r.pacr, render: (r) => (r.pacr == null ? "—" : r.pacr.toFixed(2)) },
-    );
-  } else {
-    cols.push(
-      { key: "wopr", label: "WOPR", align: "right", numeric: true, tooltip: "weighted opportunity rating", sortValue: (r) => r.wopr, render: (r) => (r.wopr == null ? "—" : r.wopr.toFixed(2)) },
-      { key: "touches", label: "Touch", align: "right", numeric: true, tooltip: "touches: carries + targets", render: (r) => r.touches },
-    );
-  }
-  cols.push({
-    key: "signal",
-    label: "The read",
-    tooltip: "process vs production",
-    sortValue: (r) => r.signal,
-    render: (r) => <SignalChip label={PROCESS_SIGNAL_LABEL[r.signal]} tone={processTone(r.signal)} title="process vs production" />,
-  });
-  return cols;
 }
 
 function PlayerModelView({ model }: { model: PlayerModel }): JSX.Element {
@@ -193,10 +180,6 @@ function PlayerModelView({ model }: { model: PlayerModel }): JSX.Element {
   }
   return (
     <div className="flex flex-col gap-6">
-      <Note>
-        {model.season}
-        {model.throughWeek ? ` · through week ${model.throughWeek}` : ""} · {model.profiles.length} profiles
-      </Note>
       <div className="grid gap-4 lg:grid-cols-2">
         <MovesCard title="This week's buy-low adds" tone="good" rows={model.profiles.filter((p) => p.signal === "buy-low").slice(0, 8)} />
         <MovesCard title="Sell-high / move off" tone="bad" rows={model.profiles.filter((p) => p.signal === "sell-high").slice(0, 6)} />
@@ -206,23 +189,21 @@ function PlayerModelView({ model }: { model: PlayerModel }): JSX.Element {
         if (rows.length === 0) return null;
         return (
           <div key={pos} className="flex flex-col gap-3">
-            <SubHead kicker={pos} title={`${pos} process grades`} />
+            <SubHead kicker={pos} title={`${pos} ratings`} />
             <DataTable
               rows={rows}
-              columns={playerColumns(pos)}
+              columns={playerColumns()}
               rowKey={(r) => r.playerId}
               showRank
               searchable
               searchAccessor={(r) => `${r.name} ${r.team}`}
-              rowTitle={(r) => r.note}
               rowTone={(r) => processTone(r.signal)}
               initialSort={{ key: "processGrade", dir: "desc" }}
-              minWidth={820}
+              minWidth={560}
             />
           </div>
         );
       })}
-      <Note>{model.note}</Note>
     </div>
   );
 }
@@ -257,14 +238,14 @@ function ExpectedPointsView({ f }: { f: ExpectedPoints }): JSX.Element {
       label: "Diff",
       align: "right",
       numeric: true,
-      tooltip: "actual minus expected (luck/efficiency)",
+      tooltip: "over vs under what the usage should have produced",
       sortValue: (r) => r.diff,
       // actual over expected = hot (bad / sell), under = cold/coming (good / buy);
       // tone follows the read so color matches the call, not the raw sign.
       render: (r) => <DivergingBar value={r.diff} domain={6} digits={1} tone={xfpReadTone(r)} />,
     },
-    { key: "xfpPct", label: "xFP%", align: "right", numeric: true, tooltip: "expected-points percentile within position", sortValue: (r) => r.xfpPct, render: (r) => <PercentileBar pct={r.xfpPct} /> },
-    { key: "prodPct", label: "Prod%", align: "right", numeric: true, tooltip: "actual-points percentile within position", sortValue: (r) => r.prodPct, render: (r) => <PercentileBar pct={r.prodPct} /> },
+    { key: "xfpPct", label: "xFP%", align: "right", numeric: true, sortValue: (r) => r.xfpPct, render: (r) => <PercentileBar pct={r.xfpPct} /> },
+    { key: "prodPct", label: "Prod%", align: "right", numeric: true, sortValue: (r) => r.prodPct, render: (r) => <PercentileBar pct={r.prodPct} /> },
     {
       key: "signal",
       label: "The read",
@@ -277,7 +258,6 @@ function ExpectedPointsView({ f }: { f: ExpectedPoints }): JSX.Element {
       <SubHead
         kicker={`Expected-points leaders${f.throughWeek ? ` · ${f.season} through week ${f.throughWeek}` : f.season ? ` · ${f.season}` : ""}`}
         title="What the usage should have produced"
-        note={f.note}
       />
       <DataTable
         rows={f.rows}
@@ -287,12 +267,10 @@ function ExpectedPointsView({ f }: { f: ExpectedPoints }): JSX.Element {
         searchable
         searchAccessor={(r) => `${r.name} ${r.team}`}
         enumFilter={{ label: "Pos", options: [{ value: "QB", label: "QB" }, { value: "RB", label: "RB" }, { value: "WR", label: "WR" }, { value: "TE", label: "TE" }], accessor: (r) => r.position }}
-        rowTitle={(r) => r.note}
         rowTone={(r) => xfpReadTone(r)}
         initialSort={{ key: "xfpTotal", dir: "desc" }}
         minWidth={920}
       />
-      <Note>{f.note}</Note>
     </div>
   );
 }
@@ -320,11 +298,11 @@ function QbForwardView({ f }: { f: QbForward }): JSX.Element {
     { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     { key: "games", label: "G", align: "right", numeric: true, tooltip: "games", render: (r) => r.games },
     { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "pass attempts", render: (r) => r.attempts },
-    { key: "dakota", label: "DAKOTA", align: "right", numeric: true, tooltip: "DAKOTA EPA + CPOE composite", render: (r) => r.dakota.toFixed(3) },
+    { key: "dakota", label: "DAKOTA", align: "right", numeric: true, render: (r) => r.dakota.toFixed(3) },
     { key: "anyA", label: "ANY/A", align: "right", numeric: true, tooltip: "adjusted net yards per attempt", render: (r) => r.anyA.toFixed(2) },
-    { key: "dakotaPct", label: "DAK%", align: "right", numeric: true, tooltip: "DAKOTA percentile within QB pool", sortValue: (r) => r.dakotaPct, render: (r) => <PercentileBar pct={r.dakotaPct} /> },
-    { key: "anyaPct", label: "ANY/A%", align: "right", numeric: true, tooltip: "ANY/A percentile within QB pool", sortValue: (r) => r.anyaPct, render: (r) => <PercentileBar pct={r.anyaPct} /> },
-    { key: "forwardGrade", label: "Grade", align: "right", numeric: true, tooltip: "mean of the two percentiles", sortValue: (r) => r.forwardGrade, render: (r) => <PercentileBar pct={r.forwardGrade} /> },
+    { key: "dakotaPct", label: "DAK%", align: "right", numeric: true, sortValue: (r) => r.dakotaPct, render: (r) => <PercentileBar pct={r.dakotaPct} /> },
+    { key: "anyaPct", label: "ANY/A%", align: "right", numeric: true, sortValue: (r) => r.anyaPct, render: (r) => <PercentileBar pct={r.anyaPct} /> },
+    { key: "forwardGrade", label: "Grade", align: "right", numeric: true, sortValue: (r) => r.forwardGrade, render: (r) => <PercentileBar pct={r.forwardGrade} /> },
     { key: "agreement", label: "Agmt", align: "right", numeric: true, tooltip: "how closely the two priors agree", sortValue: (r) => r.agreement, render: (r) => <ShareBar value={r.agreement} format={(v) => v.toFixed(2)} /> },
     {
       key: "read",
@@ -338,7 +316,6 @@ function QbForwardView({ f }: { f: QbForward }): JSX.Element {
       <SubHead
         kicker={`Forward prior leaders${f.throughWeek ? ` · ${f.season} through week ${f.throughWeek}` : f.season ? ` · ${f.season}` : ""}`}
         title="Who the forward lenses like"
-        note={f.note}
       />
       <DataTable
         rows={f.rows}
@@ -347,12 +324,10 @@ function QbForwardView({ f }: { f: QbForward }): JSX.Element {
         showRank
         searchable
         searchAccessor={(r) => `${r.name} ${r.team}`}
-        rowTitle={(r) => r.note}
         rowTone={(r) => qbReadTone(r)}
         initialSort={{ key: "forwardGrade", dir: "desc" }}
         minWidth={920}
       />
-      <Note>{f.note}</Note>
     </div>
   );
 }
@@ -391,13 +366,13 @@ function RushingContactView({ f }: { f: RushingContact }): JSX.Element {
       label: "YAC/att",
       align: "right",
       numeric: true,
-      tooltip: "yards after contact per attempt — the back's own talent",
+      tooltip: "yards after contact per attempt",
       render: (r) => <span className={toneClass(rcYacTone(r))}>{r.yacPerAtt.toFixed(2)}</span>,
     },
-    { key: "ybcPerAtt", label: "YBC/att", align: "right", numeric: true, tooltip: "yards before contact per attempt — the line/scheme", render: (r) => r.ybcPerAtt.toFixed(2) },
+    { key: "ybcPerAtt", label: "YBC/att", align: "right", numeric: true, tooltip: "yards before contact per attempt", render: (r) => r.ybcPerAtt.toFixed(2) },
     { key: "brokenTackles", label: "Brk", align: "right", numeric: true, tooltip: "broken tackles, total", render: (r) => r.brokenTackles },
     { key: "brokenPerAtt", label: "Brk/att", align: "right", numeric: true, tooltip: "broken tackles per attempt", render: (r) => r.brokenPerAtt.toFixed(3) },
-    { key: "yacPct", label: "YAC%", align: "right", numeric: true, tooltip: "YAC/att percentile within the qualified pool", sortValue: (r) => r.yacPct, render: (r) => <PercentileBar pct={r.yacPct} tone={rcYacTone(r)} /> },
+    { key: "yacPct", label: "YAC%", align: "right", numeric: true, sortValue: (r) => r.yacPct, render: (r) => <PercentileBar pct={r.yacPct} tone={rcYacTone(r)} /> },
     {
       key: "read",
       label: "The read",
@@ -410,7 +385,6 @@ function RushingContactView({ f }: { f: RushingContact }): JSX.Element {
       <SubHead
         kicker={`Yards after contact leaders${f.season ? ` · ${f.season}` : ""}`}
         title="Who creates yards on their own"
-        note={f.note}
       />
       <DataTable
         rows={f.rows}
@@ -423,7 +397,6 @@ function RushingContactView({ f }: { f: RushingContact }): JSX.Element {
         initialSort={{ key: "yacPerAtt", dir: "desc" }}
         minWidth={820}
       />
-      <Note>{f.note}</Note>
     </div>
   );
 }
@@ -447,10 +420,10 @@ function RouteRateView({ rr }: { rr: RouteRate }): JSX.Element {
     { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
     { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
-    { key: "routes", label: "Routes", align: "right", numeric: true, tooltip: "approximate routes run (proxy)", render: (r) => r.routes },
+    { key: "routes", label: "Routes", align: "right", numeric: true, tooltip: "approximate routes run", render: (r) => r.routes },
     { key: "targets", label: "Tgt", align: "right", numeric: true, render: (r) => r.targets },
-    { key: "tprr", label: "TPRR", align: "right", numeric: true, tooltip: "targets per route run (proxy)", render: (r) => r.tprr.toFixed(3) },
-    { key: "tprrPct", label: "TPRR%", align: "right", numeric: true, tooltip: "within-pool TPRR percentile", sortValue: (r) => r.tprrPct, render: (r) => <PercentileBar pct={r.tprrPct} /> },
+    { key: "tprr", label: "TPRR", align: "right", numeric: true, tooltip: "targets per route run", render: (r) => r.tprr.toFixed(3) },
+    { key: "tprrPct", label: "TPRR%", align: "right", numeric: true, sortValue: (r) => r.tprrPct, render: (r) => <PercentileBar pct={r.tprrPct} /> },
     {
       key: "signal",
       label: "The read",
@@ -462,8 +435,7 @@ function RouteRateView({ rr }: { rr: RouteRate }): JSX.Element {
     <div className="flex flex-col gap-4">
       <SubHead
         kicker={`Route-rate leaders${rr.throughWeek ? ` · ${rr.season} through week ${rr.throughWeek}` : ""}`}
-        title="Targets per route run (proxy)"
-        note={rr.note}
+        title="Who earns a target every time they run"
       />
       <DataTable
         rows={rr.rows}
@@ -473,12 +445,10 @@ function RouteRateView({ rr }: { rr: RouteRate }): JSX.Element {
         searchable
         searchAccessor={(r) => `${r.name} ${r.team}`}
         enumFilter={{ label: "Pos", options: [{ value: "WR", label: "WR" }, { value: "TE", label: "TE" }, { value: "RB", label: "RB" }], accessor: (r) => r.position }}
-        rowTitle={(r) => r.note}
         rowTone={(r) => routeTone(r.signal)}
         initialSort={{ key: "tprr", dir: "desc" }}
         minWidth={820}
       />
-      <Note>{rr.note}</Note>
     </div>
   );
 }
@@ -505,10 +475,10 @@ function ScoringZoneView({ z }: { z: ScoringZone }): JSX.Element {
     { key: "rzCarries", label: "RZ Car", align: "right", numeric: true, tooltip: "red-zone carries (inside the 20)", render: (r) => r.rzCarries },
     { key: "rzTargets", label: "RZ Tgt", align: "right", numeric: true, tooltip: "red-zone targets (inside the 20)", render: (r) => r.rzTargets },
     { key: "inside5", label: "In-5", align: "right", numeric: true, tooltip: "carries + targets inside the 5", render: (r) => r.inside5 },
-    { key: "rzShare", label: "RZ Share", align: "right", numeric: true, tooltip: "player's share of his team's scoring-zone opportunities", sortValue: (r) => r.rzShare, render: (r) => <ShareBar value={r.rzShare} /> },
+    { key: "rzShare", label: "RZ Share", align: "right", numeric: true, tooltip: "player's share of his team's scoring-zone looks", sortValue: (r) => r.rzShare, render: (r) => <ShareBar value={r.rzShare} /> },
     { key: "rzTds", label: "RZ TD", align: "right", numeric: true, tooltip: "scoring-zone touchdowns", render: (r) => r.rzTds },
-    { key: "tdRate", label: "TD Rate", align: "right", numeric: true, tooltip: "raw TD per scoring-zone opportunity", sortValue: (r) => r.tdRate, render: (r) => <ShareBar value={r.tdRate} /> },
-    { key: "expectedTdRate", label: "xTD Rate", align: "right", numeric: true, tooltip: "TD rate regressed toward the positional mean", sortValue: (r) => r.expectedTdRate, render: (r) => <ShareBar value={r.expectedTdRate} /> },
+    { key: "tdRate", label: "TD Rate", align: "right", numeric: true, sortValue: (r) => r.tdRate, render: (r) => <ShareBar value={r.tdRate} /> },
+    { key: "expectedTdRate", label: "xTD Rate", align: "right", numeric: true, tooltip: "expected scoring-zone TD rate", sortValue: (r) => r.expectedTdRate, render: (r) => <ShareBar value={r.expectedTdRate} /> },
     {
       key: "signal",
       label: "The read",
@@ -521,7 +491,6 @@ function ScoringZoneView({ z }: { z: ScoringZone }): JSX.Element {
       <SubHead
         kicker={`Scoring-zone leaders${z.throughWeek ? ` · ${z.season} through week ${z.throughWeek}` : ""}`}
         title="Who owns the looks inside the 20"
-        note={z.note}
       />
       <DataTable
         rows={z.rows}
@@ -531,12 +500,10 @@ function ScoringZoneView({ z }: { z: ScoringZone }): JSX.Element {
         searchable
         searchAccessor={(r) => `${r.name} ${r.team}`}
         enumFilter={{ label: "Pos", options: [{ value: "RB", label: "RB" }, { value: "WR", label: "WR" }, { value: "TE", label: "TE" }], accessor: (r) => r.position }}
-        rowTitle={(r) => r.note}
         rowTone={(r) => scoringTone(r.signal)}
         initialSort={{ key: "rzShare", dir: "desc" }}
         minWidth={960}
       />
-      <Note>{z.note}</Note>
     </div>
   );
 }
@@ -551,19 +518,18 @@ function TeamEnvironmentView({ t }: { t: TeamEnvironment }): JSX.Element {
   }
   const columns: Column<TeamEnvironmentRow>[] = [
     { key: "team", label: "Tm", render: (r) => <span className="font-mono font-semibold text-ion-white">{r.team}</span> },
-    { key: "offEpaPerPlay", label: "Off EPA", align: "right", numeric: true, tooltip: "offensive EPA per play (neutral script, early down)", sortValue: (r) => r.offEpaPerPlay, render: (r) => <DivergingBar value={r.offEpaPerPlay} domain={0.3} digits={3} /> },
-    { key: "offEpaPct", label: "Off%ile", align: "right", numeric: true, tooltip: "within-league offensive EPA percentile", sortValue: (r) => r.offEpaPct, render: (r) => <PercentileBar pct={r.offEpaPct} /> },
-    { key: "offSuccessRate", label: "Off SR", align: "right", numeric: true, tooltip: "offensive success rate (neutral-script, early down)", sortValue: (r) => r.offSuccessRate, render: (r) => <ShareBar value={r.offSuccessRate} /> },
-    // A1 situational reads, computed over the team's FULL offensive scrimmage sample.
-    { key: "successRate", label: "SR (all)", align: "right", numeric: true, tooltip: "success rate over all offensive scrimmage plays", sortValue: (r) => r.successRate ?? -1, render: (r) => <ShareBar value={r.successRate} /> },
-    { key: "explosiveRate", label: "Explosive", align: "right", numeric: true, tooltip: "explosive-play rate — EPA > 0.75, or a 15+ yd pass / 10+ yd rush", sortValue: (r) => r.explosiveRate ?? -1, render: (r) => <ShareBar value={r.explosiveRate} /> },
+    { key: "offEpaPerPlay", label: "Off EPA", align: "right", numeric: true, tooltip: "offensive EPA per play", sortValue: (r) => r.offEpaPerPlay, render: (r) => <DivergingBar value={r.offEpaPerPlay} domain={0.3} digits={3} /> },
+    { key: "offEpaPct", label: "Off%ile", align: "right", numeric: true, tooltip: "offensive EPA, ranked across the league", sortValue: (r) => r.offEpaPct, render: (r) => <PercentileBar pct={r.offEpaPct} /> },
+    { key: "offSuccessRate", label: "Off SR", align: "right", numeric: true, tooltip: "offensive success rate", sortValue: (r) => r.offSuccessRate, render: (r) => <ShareBar value={r.offSuccessRate} /> },
+    { key: "successRate", label: "SR (all)", align: "right", numeric: true, tooltip: "success rate over all offensive plays", sortValue: (r) => r.successRate ?? -1, render: (r) => <ShareBar value={r.successRate} /> },
+    { key: "explosiveRate", label: "Explosive", align: "right", numeric: true, tooltip: "explosive-play rate", sortValue: (r) => r.explosiveRate ?? -1, render: (r) => <ShareBar value={r.explosiveRate} /> },
     { key: "thirdDownConvRate", label: "3rd Dn", align: "right", numeric: true, tooltip: "3rd-down conversion rate", sortValue: (r) => r.thirdDownConvRate ?? -1, render: (r) => <ShareBar value={r.thirdDownConvRate} /> },
-    { key: "redZoneEpaPerPlay", label: "RZ EPA", align: "right", numeric: true, tooltip: "mean EPA on offensive plays snapped inside the 20", sortValue: (r) => r.redZoneEpaPerPlay ?? Number.NEGATIVE_INFINITY, render: (r) => <DivergingBar value={r.redZoneEpaPerPlay} domain={0.5} digits={3} /> },
+    { key: "redZoneEpaPerPlay", label: "RZ EPA", align: "right", numeric: true, tooltip: "EPA per play inside the 20", sortValue: (r) => r.redZoneEpaPerPlay ?? Number.NEGATIVE_INFINITY, render: (r) => <DivergingBar value={r.redZoneEpaPerPlay} domain={0.5} digits={3} /> },
     { key: "defEpaPerPlay", label: "Def EPA", align: "right", numeric: true, tooltip: "defensive EPA per play (lower is better)", sortValue: (r) => r.defEpaPerPlay, render: (r) => <DivergingBar value={r.defEpaPerPlay} domain={0.3} digits={3} tone={signedTone(-r.defEpaPerPlay)} /> },
-    { key: "defEpaPct", label: "Def%ile", align: "right", numeric: true, tooltip: "within-league defensive EPA percentile (EPA inverted)", sortValue: (r) => r.defEpaPct, render: (r) => <PercentileBar pct={r.defEpaPct} /> },
+    { key: "defEpaPct", label: "Def%ile", align: "right", numeric: true, tooltip: "defensive EPA, ranked across the league", sortValue: (r) => r.defEpaPct, render: (r) => <PercentileBar pct={r.defEpaPct} /> },
     { key: "defSuccessRate", label: "Def SR", align: "right", numeric: true, tooltip: "defensive success rate (lower is better)", sortValue: (r) => r.defSuccessRate, render: (r) => <ShareBar value={r.defSuccessRate} /> },
-    { key: "proe", label: "PROE", align: "right", numeric: true, tooltip: "PROE — pass rate over expected", sortValue: (r) => r.proe, render: (r) => <DivergingBar value={r.proe} domain={10} digits={1} /> },
-    { key: "noHuddleRate", label: "Pace", align: "right", numeric: true, tooltip: "no-huddle rate — pace proxy", sortValue: (r) => r.noHuddleRate, render: (r) => pct(r.noHuddleRate) },
+    { key: "proe", label: "PROE", align: "right", numeric: true, tooltip: "pass rate over expected", sortValue: (r) => r.proe, render: (r) => <DivergingBar value={r.proe} domain={10} digits={1} /> },
+    { key: "noHuddleRate", label: "Pace", align: "right", numeric: true, tooltip: "no-huddle rate", sortValue: (r) => r.noHuddleRate, render: (r) => pct(r.noHuddleRate) },
     {
       key: "read",
       label: "The read",
@@ -580,8 +546,7 @@ function TeamEnvironmentView({ t }: { t: TeamEnvironment }): JSX.Element {
     <div className="flex flex-col gap-4">
       <SubHead
         kicker={`Team scoring environment${t.season ? ` · ${t.season}` : ""}`}
-        title="The top-down team prior"
-        note={t.note}
+        title="The top-down team read"
       />
       <DataTable
         rows={t.rows}
@@ -595,7 +560,6 @@ function TeamEnvironmentView({ t }: { t: TeamEnvironment }): JSX.Element {
         initialSort={{ key: "offEpaPerPlay", dir: "desc" }}
         minWidth={1180}
       />
-      <Note>{t.note}</Note>
     </div>
   );
 }
@@ -634,7 +598,6 @@ function OpportunityTransferView({ transfer }: { transfer: OpportunityTransfer }
       <SubHead
         kicker={`Vacated-role transfers${transfer.week ? ` · ${transfer.season} week ${transfer.week}` : ` · ${transfer.season}`}`}
         title="Where the volume goes next"
-        note={transfer.note}
       />
       <DataTable
         rows={transfer.rows}
@@ -643,11 +606,9 @@ function OpportunityTransferView({ transfer }: { transfer: OpportunityTransfer }
         showRank
         searchable
         searchAccessor={(r) => `${r.team} ${r.outPlayer} ${r.beneficiary ?? ""}`}
-        rowTitle={(r) => r.note}
         rowTone={(r) => transferTone(r.confidence)}
         minWidth={820}
       />
-      <Note>{transfer.note}</Note>
     </div>
   );
 }
@@ -684,9 +645,9 @@ function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
     { key: "game", label: "Game", render: (r) => <span className="font-semibold text-ion-white">{r.game}</span> },
     { key: "market", label: "Market", render: (r) => <span className="font-mono text-ion-1">{r.market}</span> },
     { key: "side", label: "Side", render: (r) => <span className="font-mono text-ion-white">{r.side}</span> },
-    { key: "modelProb", label: "Model", align: "right", numeric: true, tooltip: "model implied probability for the side taken", sortValue: (r) => r.modelProb, render: (r) => prob(r.modelProb) },
-    { key: "closingProb", label: "Close", align: "right", numeric: true, tooltip: "implied probability from the closing line", sortValue: (r) => r.closingProb, render: (r) => prob(r.closingProb) },
-    { key: "clv", label: "CLV", align: "right", numeric: true, tooltip: "probability points beaten vs the close", sortValue: (r) => r.clv, render: (r) => <DivergingBar value={r.clv} domain={0.05} digits={4} tone={clvTone(r.clv)} /> },
+    { key: "modelProb", label: "Model", align: "right", numeric: true, tooltip: "the model's probability for the side taken", sortValue: (r) => r.modelProb, render: (r) => prob(r.modelProb) },
+    { key: "closingProb", label: "Close", align: "right", numeric: true, tooltip: "the closing line's probability", sortValue: (r) => r.closingProb, render: (r) => prob(r.closingProb) },
+    { key: "clv", label: "CLV", align: "right", numeric: true, tooltip: "how much the model beat the close", sortValue: (r) => r.clv, render: (r) => <DivergingBar value={r.clv} domain={0.05} digits={4} tone={clvTone(r.clv)} /> },
     { key: "covered", label: "Covered", align: "center", tooltip: "did the side actually cover/win?", sortValue: (r) => (r.covered ? 1 : 0), render: (r) => <span className="font-mono text-ion-1">{r.covered ? "Yes" : "—"}</span> },
     {
       key: "read",
@@ -700,7 +661,6 @@ function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
       <SubHead
         kicker={`CLV self-grade${c.seasonTo ? ` · ${c.seasonFrom}–${c.seasonTo}` : ""} · ${c.gamesGraded} games graded`}
         title="Did the model beat the close?"
-        note={c.note}
       />
       <DataTable
         rows={c.rows}
@@ -713,7 +673,6 @@ function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
         initialSort={{ key: "clv", dir: "desc" }}
         minWidth={920}
       />
-      <Note>{c.note}</Note>
     </div>
   );
 }
@@ -772,7 +731,6 @@ function WaiverTrendsView({ t }: { t: SleeperTrending }): JSX.Element {
           />
         </div>
       </div>
-      <Note>{t.note}</Note>
     </div>
   );
 }
@@ -781,87 +739,16 @@ function WaiverTrendsView({ t }: { t: SleeperTrending }): JSX.Element {
 // PROOF / PREDICTIVENESS — 3 KPI cards + up to 3 stacked backtest tables (special)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
-  return [
-    { key: "label", label: "Group", render: (r) => <span className="font-semibold text-ion-white">{r.label}</span> },
-    { key: "n", label: "N", align: "right", numeric: true, tooltip: "paired players", render: (r) => r.n },
-    { key: "gradeCorr", label: "Grade ρ", align: "right", numeric: true, tooltip: "rank corr: grade → future production (signed, −1…1)", sortValue: (r) => r.gradeCorr, render: (r) => <DivergingBar value={r.gradeCorr} domain={1} digits={2} /> },
-    { key: "baselineCorr", label: "Baseline ρ", align: "right", numeric: true, tooltip: "rank corr: past production → future production (signed, −1…1)", sortValue: (r) => r.baselineCorr, render: (r) => <DivergingBar value={r.baselineCorr} domain={1} digits={2} /> },
-    {
-      key: "lift",
-      label: "Lift",
-      align: "right",
-      numeric: true,
-      tooltip: "grade rho minus baseline rho",
-      sortValue: (r) => r.lift,
-      render: (r) => <DivergingBar value={r.lift} domain={0.3} digits={2} tone={liftTone(r.lift)} />,
-    },
-    {
-      key: "buyLowHitRate",
-      label: "Buy-low ✓",
-      align: "right",
-      numeric: true,
-      tooltip: "fraction of buy-low calls whose per-game rose",
-      sortValue: (r) => r.buyLowHitRate,
-      render: (r) => (
-        <span className="inline-flex items-center gap-1">
-          <ShareBar value={r.buyLowHitRate} tone={hitRateTone(r.buyLowHitRate)} />
-          <span className="text-xs text-ion-2">n={r.buyLowN}</span>
-        </span>
-      ),
-    },
-    {
-      key: "sellHighHitRate",
-      label: "Sell-high ✓",
-      align: "right",
-      numeric: true,
-      tooltip: "fraction of sell-high calls whose per-game fell",
-      sortValue: (r) => r.sellHighHitRate,
-      render: (r) => (
-        <span className="inline-flex items-center gap-1">
-          <ShareBar value={r.sellHighHitRate} tone={hitRateTone(r.sellHighHitRate)} />
-          <span className="text-xs text-ion-2">n={r.sellHighN}</span>
-        </span>
-      ),
-    },
-  ];
-}
-
-function ProofTable({
-  overall,
-  byPosition,
-}: {
-  overall: PredictivenessSplit;
-  byPosition: readonly PredictivenessSplit[];
-}): JSX.Element {
-  const rows: Array<PredictivenessSplit & { label: string }> = [
-    { ...overall, label: "Overall" },
-    ...byPosition.map((s) => ({ ...s, label: s.position })),
-  ];
-  return (
-    <DataTable
-      rows={rows}
-      columns={proofColumns()}
-      rowKey={(r) => r.label}
-      minWidth={760}
-    />
-  );
-}
-
 function ProofView({ p }: { p: PredictivenessProof }): JSX.Element {
   if (p.status === "source-error") {
     return <SourceError reason={p.error ?? "UNKNOWN"} />;
   }
   return (
     <div className="flex flex-col gap-6">
+      <SubHead kicker="Track record" title="Our record on the GSE Rating" />
       <section className="grid gap-4 sm:grid-cols-3">
         <KpiCard
-          label="Grade ρ (overall)"
-          value={corr(p.overall.gradeCorr)}
-          sublabel={`vs ${corr(p.overall.baselineCorr)} past-production baseline`}
-        />
-        <KpiCard
-          label="Lift over the past"
+          label="Lift over the field"
           value={p.overall.lift == null ? "—" : formatSigned(p.overall.lift, 2)}
           tone={liftTone(p.overall.lift)}
           sublabel={
@@ -872,53 +759,19 @@ function ProofView({ p }: { p: PredictivenessProof }): JSX.Element {
           }
         />
         <KpiCard
+          label="Buy-low hit-rate"
+          value={pctNullable(p.overall.buyLowHitRate)}
+          tone={hitRateTone(p.overall.buyLowHitRate)}
+          sublabel="how often our buy-low calls rose"
+        />
+        <KpiCard
           label="Sell-high hit-rate"
           value={pctNullable(p.overall.sellHighHitRate)}
           tone={hitRateTone(p.overall.sellHighHitRate)}
-          sublabel={`buy-low ${pctNullable(p.overall.buyLowHitRate)} · vs 50% coin flip`}
+          sublabel="how often our sell-high calls fell"
         />
       </section>
-
-      <div className="flex flex-col gap-3">
-        <SubHead
-          kicker={`${p.season} · trained on weeks ${p.trainWeeks[0]}–${p.trainWeeks[p.trainWeeks.length - 1]} · tested on weeks ${p.testWeeks[0]}–${p.testWeeks[p.testWeeks.length - 1]}`}
-          title="The backtest, by position"
-          note={p.verdict}
-        />
-        <ProofTable overall={p.overall} byPosition={p.byPosition} />
-        <Note>{p.note}</Note>
-      </div>
-
-      {p.yearOverYear && p.priorSeason ? (
-        <div className="flex flex-col gap-3">
-          <SubHead
-            kicker={`Out-of-sample · trained on ${p.priorSeason} · tested on ${p.season}`}
-            title="The draft test: does last year's grade predict this year?"
-            note={p.yearOverYearVerdict ?? undefined}
-          />
-          <ProofTable overall={p.yearOverYear} byPosition={p.yearOverYearByPosition} />
-          <Note>
-            Year-over-year is the harder, more honest test: players change teams, age, and get hurt. Where the grade
-            beats raw prior-season production (positive lift), it carries signal the box score didn&apos;t.
-          </Note>
-        </div>
-      ) : null}
-
-      {p.stacked && p.stackedPairs.length > 0 ? (
-        <div className="flex flex-col gap-3">
-          <SubHead
-            kicker={`Multi-year stacked · out-of-sample · pooled pairs ${p.stackedPairs.map(([train, test]) => `${train}→${test}`).join("  ·  ")}`}
-            title="The multi-year test: pool several seasons for real statistical power."
-            note={p.stackedVerdict ?? undefined}
-          />
-          <ProofTable overall={p.stacked} byPosition={p.stackedByPosition} />
-          <Note>
-            Each train→test pair is normalized within its own seasons (percentiles per pair), then the pairs are
-            pooled — never re-ranked across seasons. Out-of-sample throughout; where it beats the baseline (positive
-            lift), that is the strongest evidence the grade carries forward signal.
-          </Note>
-        </div>
-      ) : null}
+      {p.verdict ? <p className="max-w-3xl text-sm leading-6 text-ion-1">{p.verdict}</p> : null}
     </div>
   );
 }
@@ -959,7 +812,7 @@ function qbPressureColumns(): Column<QbPressureRow>[] {
       label: "Pocket",
       align: "right",
       numeric: true,
-      tooltip: "average time to throw / sack, seconds (pocket_time)",
+      tooltip: "average time to throw or sack, in seconds",
       sortValue: (r) => r.pocketTime ?? -1,
       render: (r) => (r.pocketTime == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-white">{r.pocketTime.toFixed(2)}s</span>),
     },
@@ -968,7 +821,7 @@ function qbPressureColumns(): Column<QbPressureRow>[] {
       label: "On-tgt%",
       align: "right",
       numeric: true,
-      tooltip: "on-target throw rate, accuracy divorced from completion% (on_tgt_pct)",
+      tooltip: "on-target throw rate",
       sortValue: (r) => r.onTgtPct ?? -1,
       render: (r) => <ShareBar value={r.onTgtPct} tone="good" />,
     },
@@ -977,7 +830,7 @@ function qbPressureColumns(): Column<QbPressureRow>[] {
       label: "Bad%",
       align: "right",
       numeric: true,
-      tooltip: "bad-throw rate (passing_bad_throw_pct)",
+      tooltip: "bad-throw rate",
       sortValue: (r) => r.badThrowPct,
       render: (r) => <ShareBar value={r.badThrowPct} tone="bad" />,
     },
@@ -986,7 +839,7 @@ function qbPressureColumns(): Column<QbPressureRow>[] {
       label: "PA att",
       align: "right",
       numeric: true,
-      tooltip: "play-action pass attempts (pa_pass_att)",
+      tooltip: "play-action pass attempts",
       render: (r) => r.paPassAtt,
     },
     {
@@ -994,7 +847,7 @@ function qbPressureColumns(): Column<QbPressureRow>[] {
       label: "RPO",
       align: "right",
       numeric: true,
-      tooltip: "run-pass-option plays (rpo_plays)",
+      tooltip: "run-pass-option plays",
       render: (r) => r.rpoPlays,
     },
     {
@@ -1009,7 +862,7 @@ function qbPressureColumns(): Column<QbPressureRow>[] {
       key: "read",
       label: "The read",
       sortable: false,
-      render: (r) => <SignalChip label={paLeanLabel(r)} tone="neutral" title="designed-play lean (RPO + play-action volume)" />,
+      render: (r) => <SignalChip label={paLeanLabel(r)} tone="neutral" title="designed-play lean" />,
     },
   ];
 }
@@ -1033,15 +886,15 @@ function coverageColumns(): Column<CoverageRow>[] {
       label: "ADOT",
       align: "right",
       numeric: true,
-      tooltip: "average depth of target conceded (def_adot)",
+      tooltip: "average depth of target conceded",
       sortValue: (r) => r.adotAllowed ?? -1,
       render: (r) => (r.adotAllowed == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-1">{r.adotAllowed.toFixed(1)}</span>),
     },
-    { key: "pressures", label: "Press", align: "right", numeric: true, tooltip: "pass-rush pressures (def_pressures)", render: (r) => r.pressures },
-    { key: "blitzes", label: "Blitz", align: "right", numeric: true, tooltip: "times blitzed (def_blitzes)", render: (r) => r.blitzes },
-    { key: "hurries", label: "Hur", align: "right", numeric: true, tooltip: "hurries (def_hurries)", render: (r) => r.hurries },
-    { key: "qbKnockdowns", label: "QBKD", align: "right", numeric: true, tooltip: "QB knockdowns (def_qbkd)", render: (r) => r.qbKnockdowns },
-    { key: "sacks", label: "Sk", align: "right", numeric: true, tooltip: "individual sacks (def_sacks)", render: (r) => r.sacks },
+    { key: "pressures", label: "Press", align: "right", numeric: true, tooltip: "pass-rush pressures", render: (r) => r.pressures },
+    { key: "blitzes", label: "Blitz", align: "right", numeric: true, tooltip: "times blitzed", render: (r) => r.blitzes },
+    { key: "hurries", label: "Hur", align: "right", numeric: true, tooltip: "hurries", render: (r) => r.hurries },
+    { key: "qbKnockdowns", label: "QBKD", align: "right", numeric: true, tooltip: "QB knockdowns", render: (r) => r.qbKnockdowns },
+    { key: "sacks", label: "Sk", align: "right", numeric: true, tooltip: "individual sacks", render: (r) => r.sacks },
     {
       key: "missedTacklePct",
       label: "MT%",
@@ -1065,21 +918,21 @@ function receivingAdvancedColumns(): Column<ReceivingAdvancedRow>[] {
       label: "ADOT",
       align: "right",
       numeric: true,
-      tooltip: "average depth of target — the route-tree signal (adot)",
+      tooltip: "average depth of target",
       sortValue: (r) => r.adot ?? -1,
       render: (r) => (r.adot == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-white">{r.adot.toFixed(1)}</span>),
     },
-    { key: "drops", label: "Drops", align: "right", numeric: true, tooltip: "true charted drops (drop)", render: (r) => r.drops },
+    { key: "drops", label: "Drops", align: "right", numeric: true, tooltip: "charted drops", render: (r) => r.drops },
     {
       key: "dropPct",
       label: "Drop%",
       align: "right",
       numeric: true,
-      tooltip: "drop rate (drop_pct)",
+      tooltip: "drop rate",
       sortValue: (r) => r.dropPct ?? -1,
       render: (r) => <ShareBar value={r.dropPct} tone="bad" />,
     },
-    { key: "brokenTackles", label: "Brk", align: "right", numeric: true, tooltip: "broken tackles after the catch (brk_tkl)", render: (r) => r.brokenTackles },
+    { key: "brokenTackles", label: "Brk", align: "right", numeric: true, tooltip: "broken tackles after the catch", render: (r) => r.brokenTackles },
     { key: "ybcPerRec", label: "YBC/rec", align: "right", numeric: true, tooltip: "yards before catch per reception", render: (r) => r.ybcPerRec.toFixed(2) },
     { key: "yacPerRec", label: "YAC/rec", align: "right", numeric: true, tooltip: "yards after catch per reception", render: (r) => r.yacPerRec.toFixed(2) },
     {
@@ -1087,7 +940,7 @@ function receivingAdvancedColumns(): Column<ReceivingAdvancedRow>[] {
       label: "Rate tgt",
       align: "right",
       numeric: true,
-      tooltip: "passer rating when this receiver is targeted (rat)",
+      tooltip: "passer rating when this receiver is targeted",
       sortValue: (r) => r.passerRatingWhenTargeted ?? -1,
       render: (r) => (r.passerRatingWhenTargeted == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-1">{r.passerRatingWhenTargeted.toFixed(1)}</span>),
     },
@@ -1104,7 +957,6 @@ function TrenchesView({ pc }: { pc: NflversePressureCoverage }): JSX.Element {
         <SubHead
           kicker={`QB pressure & pocket${pc.season ? ` · ${pc.season}` : ""}`}
           title="How much heat each QB takes — and how he handles it"
-          note="Pressure share, pocket time, on-target rate, bad-throw rate, and the play-action / RPO design lean — real PFR advanced charting (advstats_week_pass). Context, not a pick."
         />
         <DataTable
           rows={pc.qbPressure}
@@ -1123,7 +975,6 @@ function TrenchesView({ pc }: { pc: NflversePressureCoverage }): JSX.Element {
         <SubHead
           kicker="Coverage & pass rush"
           title="Who is throwable — and who gets home"
-          note="Passer rating allowed and ADOT conceded in coverage, plus individual pass-rush charting: pressures, blitzes, hurries, QB knockdowns and sacks (advstats_week_def). Lowest rating allowed is the lockdown read."
         />
         <DataTable
           rows={pc.coverage}
@@ -1143,7 +994,6 @@ function TrenchesView({ pc }: { pc: NflversePressureCoverage }): JSX.Element {
           <SubHead
             kicker="Receiver charting"
             title="Average depth of target, drops, and YAC quality"
-            note="PFR receiver charting (advstats_week_rec): ADOT (the route-tree signal), true drops and drop%, broken tackles, the YBC/YAC split, and passer rating when targeted. Deepest average target first."
           />
           <DataTable
             rows={pc.receivingAdvanced}
@@ -1157,7 +1007,6 @@ function TrenchesView({ pc }: { pc: NflversePressureCoverage }): JSX.Element {
           />
         </div>
       ) : null}
-      <Note>{pc.blockReason}</Note>
     </div>
   );
 }
@@ -1183,17 +1032,17 @@ function playDesignQbColumns(): Column<PlayDesignQbRow>[] {
     { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
     { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     { key: "plays", label: "Plays", align: "right", numeric: true, tooltip: "charted dropbacks attributed to this QB", render: (r) => r.plays },
-    { key: "playActionRate", label: "PA%", align: "right", numeric: true, tooltip: "play-action rate (is_play_action)", sortValue: (r) => r.playActionRate, render: (r) => <ShareBar value={r.playActionRate} /> },
-    { key: "rpoRate", label: "RPO%", align: "right", numeric: true, tooltip: "run-pass-option rate (is_rpo)", sortValue: (r) => r.rpoRate, render: (r) => <ShareBar value={r.rpoRate} /> },
-    { key: "screenRate", label: "Screen%", align: "right", numeric: true, tooltip: "screen-pass rate (is_screen_pass)", sortValue: (r) => r.screenRate, render: (r) => <ShareBar value={r.screenRate} /> },
-    { key: "motionRate", label: "Motion%", align: "right", numeric: true, tooltip: "pre-snap motion rate (is_motion)", sortValue: (r) => r.motionRate, render: (r) => <ShareBar value={r.motionRate} /> },
-    { key: "outOfPocketRate", label: "OOP%", align: "right", numeric: true, tooltip: "QB out-of-pocket rate (is_qb_out_of_pocket)", sortValue: (r) => r.outOfPocketRate, render: (r) => <ShareBar value={r.outOfPocketRate} /> },
+    { key: "playActionRate", label: "PA%", align: "right", numeric: true, tooltip: "play-action rate", sortValue: (r) => r.playActionRate, render: (r) => <ShareBar value={r.playActionRate} /> },
+    { key: "rpoRate", label: "RPO%", align: "right", numeric: true, tooltip: "run-pass-option rate", sortValue: (r) => r.rpoRate, render: (r) => <ShareBar value={r.rpoRate} /> },
+    { key: "screenRate", label: "Screen%", align: "right", numeric: true, tooltip: "screen-pass rate", sortValue: (r) => r.screenRate, render: (r) => <ShareBar value={r.screenRate} /> },
+    { key: "motionRate", label: "Motion%", align: "right", numeric: true, tooltip: "pre-snap motion rate", sortValue: (r) => r.motionRate, render: (r) => <ShareBar value={r.motionRate} /> },
+    { key: "outOfPocketRate", label: "OOP%", align: "right", numeric: true, tooltip: "QB out-of-pocket rate", sortValue: (r) => r.outOfPocketRate, render: (r) => <ShareBar value={r.outOfPocketRate} /> },
     {
       key: "avgBlitzersFaced",
       label: "Blitzers",
       align: "right",
       numeric: true,
-      tooltip: "average blitzers faced per charted play (n_blitzers)",
+      tooltip: "average blitzers faced per play",
       sortValue: (r) => r.avgBlitzersFaced ?? -1,
       render: (r) => (r.avgBlitzersFaced == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-white">{r.avgBlitzersFaced.toFixed(2)}</span>),
     },
@@ -1210,18 +1059,18 @@ function playDesignTeamColumns(): Column<PlayDesignTeamRow>[] {
   return [
     { key: "team", label: "Tm", render: (r) => <span className="font-mono font-semibold text-ion-white">{r.team}</span> },
     { key: "plays", label: "Plays", align: "right", numeric: true, tooltip: "charted offensive plays for this team", render: (r) => r.plays },
-    { key: "playActionRate", label: "PA%", align: "right", numeric: true, tooltip: "team play-action rate (is_play_action)", sortValue: (r) => r.playActionRate, render: (r) => <ShareBar value={r.playActionRate} /> },
-    { key: "rpoRate", label: "RPO%", align: "right", numeric: true, tooltip: "team RPO rate (is_rpo)", sortValue: (r) => r.rpoRate, render: (r) => <ShareBar value={r.rpoRate} /> },
-    { key: "screenRate", label: "Screen%", align: "right", numeric: true, tooltip: "team screen rate (is_screen_pass)", sortValue: (r) => r.screenRate, render: (r) => <ShareBar value={r.screenRate} /> },
-    { key: "motionRate", label: "Motion%", align: "right", numeric: true, tooltip: "team pre-snap motion rate (is_motion)", sortValue: (r) => r.motionRate, render: (r) => <ShareBar value={r.motionRate} /> },
-    { key: "noHuddleRate", label: "No-huddle%", align: "right", numeric: true, tooltip: "team no-huddle rate (is_no_huddle)", sortValue: (r) => r.noHuddleRate, render: (r) => <ShareBar value={r.noHuddleRate} /> },
-    { key: "outOfPocketRate", label: "OOP%", align: "right", numeric: true, tooltip: "team out-of-pocket rate (is_qb_out_of_pocket)", sortValue: (r) => r.outOfPocketRate, render: (r) => <ShareBar value={r.outOfPocketRate} /> },
+    { key: "playActionRate", label: "PA%", align: "right", numeric: true, tooltip: "team play-action rate", sortValue: (r) => r.playActionRate, render: (r) => <ShareBar value={r.playActionRate} /> },
+    { key: "rpoRate", label: "RPO%", align: "right", numeric: true, tooltip: "team RPO rate", sortValue: (r) => r.rpoRate, render: (r) => <ShareBar value={r.rpoRate} /> },
+    { key: "screenRate", label: "Screen%", align: "right", numeric: true, tooltip: "team screen rate", sortValue: (r) => r.screenRate, render: (r) => <ShareBar value={r.screenRate} /> },
+    { key: "motionRate", label: "Motion%", align: "right", numeric: true, tooltip: "team pre-snap motion rate", sortValue: (r) => r.motionRate, render: (r) => <ShareBar value={r.motionRate} /> },
+    { key: "noHuddleRate", label: "No-huddle%", align: "right", numeric: true, tooltip: "team no-huddle rate", sortValue: (r) => r.noHuddleRate, render: (r) => <ShareBar value={r.noHuddleRate} /> },
+    { key: "outOfPocketRate", label: "OOP%", align: "right", numeric: true, tooltip: "team out-of-pocket rate", sortValue: (r) => r.outOfPocketRate, render: (r) => <ShareBar value={r.outOfPocketRate} /> },
     {
       key: "avgBlitzersFaced",
       label: "Blitz faced",
       align: "right",
       numeric: true,
-      tooltip: "average blitzers the team's offense faced per charted play (n_blitzers)",
+      tooltip: "average blitzers the offense faced per play",
       sortValue: (r) => r.avgBlitzersFaced ?? -1,
       render: (r) => (r.avgBlitzersFaced == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-white">{r.avgBlitzersFaced.toFixed(2)}</span>),
     },
@@ -1235,8 +1084,7 @@ function PlayDesignView({ d }: { d: PlayDesign }): JSX.Element {
   if (d.qbs.length === 0 && d.teams.length === 0) {
     return (
       <div className="flex flex-col gap-4">
-        <SubHead kicker={`Play design${d.season ? ` · ${d.season}` : ""}`} title="Play-call DNA" note={d.note} />
-        <Note>{d.note}</Note>
+        <SubHead kicker={`Play design${d.season ? ` · ${d.season}` : ""}`} title="No charted play-design data for this season yet" />
       </div>
     );
   }
@@ -1246,7 +1094,6 @@ function PlayDesignView({ d }: { d: PlayDesign }): JSX.Element {
         <SubHead
           kicker={`QB play design${d.season ? ` · ${d.season}` : ""}`}
           title="The play-call DNA behind every QB"
-          note="Play-action, RPO, screen, motion and out-of-pocket rates, plus average blitzers faced — real nflverse FTN charting (2022+) joined to play-by-play for QB identity. Most play-action-reliant first. Design context, not a pick."
         />
         <DataTable
           rows={d.qbs}
@@ -1266,7 +1113,6 @@ function PlayDesignView({ d }: { d: PlayDesign }): JSX.Element {
           <SubHead
             kicker="Team play-design environment"
             title="Scheme tendencies, team by team"
-            note="The same six design rates plus no-huddle, over every charted offensive play a team ran, with the average blitz pressure its offense faced."
           />
           <DataTable
             rows={d.teams}
@@ -1281,7 +1127,6 @@ function PlayDesignView({ d }: { d: PlayDesign }): JSX.Element {
           />
         </div>
       ) : null}
-      <Note>{d.note}</Note>
     </div>
   );
 }

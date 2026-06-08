@@ -165,16 +165,16 @@ function signalFor(sharePct: number, tdRatePct: number): { signal: ScoringZoneSi
   if (gap >= DIVERGENCE)
     return {
       signal: "buy",
-      note: "High scoring-zone opportunity share, low TD conversion so far — the role is feeding him the looks and the scores are due to regress up. Buy the equity before the box score catches up.",
+      note: "Owns the scoring chances but hasn't cashed them yet — the touchdowns are due. Buy before the box score catches up.",
     };
   if (gap <= -DIVERGENCE)
     return {
       signal: "sell",
-      note: "TDs are outrunning the scoring-zone opportunity — the output is borrowed from conversion luck on a thin role. Sell into the touchdowns before they regress.",
+      note: "Scoring more than the role supports — borrowed output. Sell into the touchdowns before they regress.",
     };
   return {
     signal: "in-line",
-    note: "Touchdown output tracks the scoring-zone opportunity — the scores are earned by the role.",
+    note: "Touchdowns track the role — the scores are earned.",
   };
 }
 
@@ -380,7 +380,7 @@ export async function loadScoringZone({
         sourceRows: records.length,
         rows,
         canPublishProjections: false,
-        note: "Real nflverse play-by-play, filtered to the red zone and goal line. We read TD equity from OPPORTUNITY share (sticky), regress conversion rate toward the positional mean, and flag high-share/low-TD as buy and high-TD/low-share as sell. Each player also carries the mean EPA and success rate on their actual scoring-zone touches (real per-play fields, shown empty when absent). Context, not a pick.",
+        note: "Who owns the touchdown chances near the goal line — and whether they've cashed them yet. High chances with low scores is a buy; the reverse is a sell. Context, not a pick.",
         sourceUrl: url,
         error: null,
       };
@@ -397,7 +397,7 @@ export async function loadScoringZone({
     sourceRows: 0,
     rows: [],
     canPublishProjections: false,
-    note: "Scoring-zone opportunity could not load from nflverse play-by-play. The product shows an empty state instead of fabricated red-zone usage.",
+    note: "This read is unavailable right now. We show an empty state instead of fabricated usage.",
     sourceUrl: lastUrl,
     error: lastError instanceof Error ? lastError.message : "UNKNOWN",
   };

@@ -102,7 +102,7 @@ export function rollupClv(pairs: readonly ClvPair[]): ClvRollup {
       beatCloseCount: 0,
       beatCloseRate: 0,
       calibration: { meanModelProb: 0, meanClosingProb: 0, stdevClv: 0 },
-      note: "No gradeable pairs — empty self-grade rather than a fabricated CLV.",
+      note: "Nothing to grade yet — empty rather than fabricated.",
     };
   }
   const sum = (xs: readonly number[]): number => xs.reduce((s, v) => s + v, 0);
@@ -115,10 +115,10 @@ export function rollupClv(pairs: readonly ClvPair[]): ClvRollup {
 
   const note =
     meanClv > 0
-      ? "Model beat the close on average — positive CLV is the cleanest evidence of real edge. Self-grade, not a pick."
+      ? "We beat the closing line on average — the cleanest sign of real edge. Self-grade, not a pick."
       : meanClv < 0
-        ? "Model trailed the close on average — negative CLV says the edge isn't there yet. Self-grade, not a pick."
-        : "Model matched the close on average — no demonstrated edge. Self-grade, not a pick.";
+        ? "We trailed the closing line on average — the edge isn't there yet. Self-grade, not a pick."
+        : "We matched the closing line on average — no edge shown. Self-grade, not a pick.";
 
   return {
     count,
@@ -332,7 +332,7 @@ export async function loadClvBacktest({
       total,
       rows,
       canPublishProjections: false,
-      note: "Backtest CLV self-grade: a simple, transparent model edge graded against the CLOSING spread & total from nflverse schedules over completed games. CLV is how we keep ourselves honest. Self-grade, not a pick — no bets, no live odds.",
+      note: "Did our number beat the line the market closed at? That's how we keep ourselves honest. A self-grade, not a pick — no bets, no live odds.",
       sourceUrl: url,
       error: null,
     };
@@ -349,7 +349,7 @@ export async function loadClvBacktest({
       total: rollupClv([]),
       rows: [],
       canPublishProjections: false,
-      note: "CLV backtest could not load from nflverse schedules. The board shows an empty self-grade instead of fabricated CLV.",
+      note: "This self-grade is unavailable right now. We show an empty state instead of a fabricated one.",
       sourceUrl: url,
       error: error instanceof Error ? error.message : "UNKNOWN",
     };
@@ -371,7 +371,7 @@ export function loadClvForward({
     status: "gated",
     canPublishProjections: false,
     gateReason:
-      "Forward (pre-close) CLV is inert: live-odds grading requires a configured, legally-reviewed odds key and is founder-gated. Use the backtest self-grade against nflverse closing lines instead.",
+      "Forward (pre-close) CLV is inert: live-odds grading requires a configured, legally-reviewed odds key and is founder-gated. Use the backtest self-grade against closing lines instead.",
     error: null,
   };
 }

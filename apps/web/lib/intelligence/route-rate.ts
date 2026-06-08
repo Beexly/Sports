@@ -210,23 +210,22 @@ export function buildRouteRate(
 }
 
 function signalFor(tprrPct: number, routePct: number): { signal: RouteRateSignal; note: string } {
-  const proxy =
-    "PROXY: routes are approximated (snap-share × team dropbacks), not PFF-charted routes. Read as a usage tell, not a measured rate.";
+  const proxy = "Read as a usage tell, not a measured rate — it's an estimate.";
   if (tprrPct >= HIGH_TPRR_PCT && routePct <= LOW_ROUTE_PCT) {
     return {
       signal: "breakout",
-      note: `Efficient on limited route volume — high target-per-route on few routes. The role is the only cap; a breakout / buy if the snaps come. ${proxy}`,
+      note: `Efficient on light usage — the role is the only thing capping him. A breakout / buy if the snaps come. ${proxy}`,
     };
   }
   if (tprrPct <= LOW_TPRR_PCT && routePct >= HIGH_ROUTE_PCT) {
     return {
       signal: "fade",
-      note: `Empty volume — lots of routes, few targets per route. The offense runs him out but doesn't look his way; a fade. ${proxy}`,
+      note: `Empty volume — on the field a lot, but the offense doesn't look his way. A fade. ${proxy}`,
     };
   }
   return {
     signal: "steady",
-    note: `Target rate and route volume are in line — usage is what the role implies. ${proxy}`,
+    note: `Usage is what the role implies. ${proxy}`,
   };
 }
 
@@ -276,7 +275,7 @@ export async function loadRouteRate({
         rows,
         canPublishProjections: false,
         note:
-          "Targets per route run (TPRR) as an honest PROXY: routes ≈ snap-share × team dropbacks (true routes are PFF-gated). High TPRR on low routes is a breakout/buy; empty volume (low TPRR, high routes) is a fade. Usage context, not a point projection.",
+          "How efficiently a receiver earns targets for the routes he runs — efficient on light usage is a breakout/buy; empty volume is a fade. An estimate and usage context, not a projection.",
         sourceUrls: { snaps: snapsUrl, stats: statsUrl },
         error: null,
       };
@@ -297,7 +296,7 @@ function sourceError(statsUrl: string, snapsUrl: string, error: unknown): RouteR
     sourceRows: 0,
     rows: [],
     canPublishProjections: false,
-    note: "Route Rate (TPRR proxy) could not load from nflverse. The board shows an empty state instead of fabricated routes.",
+    note: "This read is unavailable right now. We show an empty state instead of fabricated usage.",
     sourceUrls: { snaps: snapsUrl, stats: statsUrl },
     error: error instanceof Error ? error.message : "UNKNOWN",
   };

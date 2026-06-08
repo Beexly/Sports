@@ -276,7 +276,7 @@ function sourceError(season: number, sourceUrl: string, error: string | null): P
     qbs: [],
     teams: [],
     canPublishProjections: false,
-    note: "Play design could not load from nflverse FTN charting. FTN charting only exists for 2022+, and an off-season file may not be published yet — the product shows an honest empty state instead of fabricated play-action / RPO rates.",
+    note: "This read is unavailable right now (it only covers recent seasons, and an off-season file may not be published yet). We show an empty state instead of fabricated rates.",
     sourceUrl,
     error,
   };
@@ -330,7 +330,7 @@ export async function loadPlayDesign({
       qbs: [],
       teams: [],
       canPublishProjections: false,
-      note: "FTN charting and play-by-play loaded, but no QB or team cleared the charted-play sample floor (likely an early-season or sparsely-charted file). Honest empty rather than thin-sample rates.",
+      note: "Not enough charted plays yet to read this confidently (likely early in the season). Honest empty rather than thin-sample rates.",
       sourceUrl: ftn.sourceUrl,
       error: null,
     };
@@ -344,7 +344,7 @@ export async function loadPlayDesign({
     qbs,
     teams,
     canPublishProjections: false,
-    note: "Real nflverse FTN charting (2022+) joined to play-by-play for QB/team identity. Per QB and per team: play-action, RPO, screen, motion, and no-huddle rates, QB out-of-pocket rate, and average blitzers faced — all computed from real per-play charted flags. Design context, not a projection or a pick.",
+    note: "The play-call DNA behind every snap — how each QB and offense is actually designed to attack. Design context, not a projection or a pick.",
     sourceUrl: ftn.sourceUrl,
     error: null,
   };

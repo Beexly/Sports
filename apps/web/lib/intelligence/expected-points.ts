@@ -141,10 +141,10 @@ export function buildExpectedPoints(records: readonly CsvRecord[], activeSeason:
         signal,
         note:
           signal === "buy-low"
-            ? "Expected points outrun actual — the usage says the production is coming. Buy-low before it corrects."
+            ? "Underpriced. The production is coming — buy before it corrects."
             : signal === "sell-high"
-              ? "Actual points outrun expected — running hot on conversion luck. Sell-high before it regresses."
-              : "Actual tracks expected — the points are earned by the opportunity.",
+              ? "Running hot. Sell before it regresses."
+              : "Fairly priced. The output is earned.",
       });
     });
   }
@@ -188,7 +188,7 @@ export async function loadExpectedPoints({
         sourceRows: records.length,
         rows,
         canPublishProjections: false,
-        note: "Expected fantasy points from ffverse ff_opportunity — what a player's real usage should have produced. We surface expected-vs-actual as buy-low / sell-high. The opportunity backbone, not a point projection.",
+        note: "Who's underpriced and who's running hot — buy-low and sell-high reads before the box score catches up. A read, not a projection.",
         sourceUrl: url,
         error: null,
       };
@@ -204,7 +204,7 @@ export async function loadExpectedPoints({
     sourceRows: 0,
     rows: [],
     canPublishProjections: false,
-    note: "Expected points could not load from ffverse ff_opportunity. The board shows an empty state instead of fabricated expectations.",
+    note: "This read is unavailable right now. We show an empty state rather than a fabricated one.",
     sourceUrl: lastUrl,
     error: lastError,
   };

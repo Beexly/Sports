@@ -94,11 +94,11 @@ export function adjustedNetYardsPerAttempt(t: {
 
 function noteFor(agreement: number, dakotaPct: number, anyaPct: number): string {
   if (agreement >= AGREEMENT_THRESHOLD) {
-    return "Both forward priors (DAKOTA composite + ANY/A efficiency) land in the same tier — higher confidence in the forward read.";
+    return "Our reads agree on this QB — a higher-confidence forward call.";
   }
   return dakotaPct > anyaPct
-    ? "The DAKOTA composite (EPA + accuracy) rates this QB higher than ANY/A efficiency does — the model sees forward value the box-score yardstick doesn't. A second look, not a clean number."
-    : "ANY/A efficiency rates this QB higher than the DAKOTA composite does — the yardstick is ahead of the EPA + accuracy model. A second look, not a clean number.";
+    ? "Our reads disagree — one rates him ahead of the other. A second look, not a clean call."
+    : "Our reads disagree — one rates him ahead of the other. A second look, not a clean call.";
 }
 
 interface Agg {
@@ -209,7 +209,7 @@ export async function loadQbForward({
       sourceRows: records.length,
       rows,
       canPublishProjections: false,
-      note: "Two independent forward QB priors from real nflverse weekly data — the DAKOTA EPA + CPOE composite and ANY/A efficiency — converted to percentiles, averaged into a forward grade, with their agreement surfaced rather than averaged away. A forward prior / context, not a point projection or pick.",
+      note: "A forward-looking read on each QB, with our confidence shown — where our reads agree, and where they don't. Context, not a projection or pick.",
       sourceUrl: url,
       error: null,
     };
@@ -222,7 +222,7 @@ export async function loadQbForward({
       sourceRows: 0,
       rows: [],
       canPublishProjections: false,
-      note: "The QB forward prior could not load from nflverse. The board shows an empty state instead of fabricated grades.",
+      note: "This read is unavailable right now. We show an empty state instead of fabricated grades.",
       sourceUrl: url,
       error: error instanceof Error ? error.message : "UNKNOWN",
     };

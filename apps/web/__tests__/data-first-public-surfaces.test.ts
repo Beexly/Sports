@@ -13,13 +13,23 @@ describe("data-first public surfaces", () => {
     const page = read("apps/web/app/page.tsx");
     expect(page).toMatch(/The board is only as smart as the data behind it/);
     expect(page).toMatch(/Demo data suppressed/);
-    expect(page).toMatch(/PUBLIC_DATA_SOURCES/);
-    expect(page).toMatch(/CONTEXT_INTELLIGENCE_SOURCES/);
-    expect(page).toMatch(/DATA_SOURCE_STACK/);
     expect(page).toMatch(/loadNflverseUsagePulse/);
     expect(page).toMatch(/Real NFL rows/);
     expect(page).not.toMatch(/AnnotatedSampleSignal/);
     expect(page).not.toMatch(/sample-data-banner-home/);
+  });
+
+  it("homepage no longer reveals the data-source catalog to competitors", () => {
+    // Strategic pivot (owner-locked): the public homepage shows OUR score and
+    // track record, not the ingestion recipe. The source-health table, context
+    // grid, and trend-backlog roadmap moved off the front door. The catalogs
+    // still power /trends and /integrations (covered by their own cases below).
+    const page = read("apps/web/app/page.tsx");
+    expect(page).not.toMatch(/PUBLIC_DATA_SOURCES/);
+    expect(page).not.toMatch(/CONTEXT_INTELLIGENCE_SOURCES/);
+    expect(page).not.toMatch(/DATA_SOURCE_STACK/);
+    expect(page).not.toMatch(/TREND_BACKLOG/);
+    expect(page).not.toMatch(/Free-first ingestion stack/);
   });
 
   it("Trend Lab is a real route wired to the trend workbench and source catalog", () => {

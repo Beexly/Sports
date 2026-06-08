@@ -143,34 +143,33 @@ function summarize(position: ModelPosition, pairs: readonly Pair[]): Predictiven
 }
 
 function verdictFor(overall: PredictivenessSplit): string {
-  if (overall.gradeCorr == null) return "Not enough paired players to make a confident claim — the board reports the sample honestly.";
+  if (overall.gradeCorr == null) return "Not enough sample to make a confident claim yet. We report it honestly rather than overstate.";
   const lift = overall.lift;
-  const grade = overall.gradeCorr;
-  const liftStr = lift == null ? "" : lift > 0 ? ` and adds ${lift.toFixed(2)} of rank-correlation lift over past production alone` : ` (no lift over past production this split)`;
-  return `First-half process grade ranks second-half production at ρ≈${grade.toFixed(2)}${liftStr}. In-sample, single-season — a directional proof, not a guarantee.`;
+  const liftStr = lift == null ? "" : lift > 0 ? " — and it beats betting on past production alone" : " — though it doesn't beat past production on this slice";
+  return `The grade forecasts what comes next${liftStr}. A directional read, not a guarantee.`;
 }
 
 function yoyVerdictFor(overall: PredictivenessSplit, trainSeason: number, testSeason: number): string {
-  if (overall.gradeCorr == null) return `Not enough players carried over from ${trainSeason} to ${testSeason} for a confident out-of-sample read.`;
+  if (overall.gradeCorr == null) return `Not enough carried over from ${trainSeason} to ${testSeason} for a confident read.`;
   const lift = overall.lift;
-  const liftStr = lift == null ? "" : lift > 0 ? `, beating the past-production baseline by ${lift.toFixed(2)}` : ` (it does not beat raw ${trainSeason} production this pair)`;
-  return `Grade built on ${trainSeason} ranks ${testSeason} production at ρ≈${overall.gradeCorr.toFixed(2)}${liftStr}. Out-of-sample, across seasons — the real draft test.`;
+  const liftStr = lift == null ? "" : lift > 0 ? ", and it beats betting on the prior year alone" : ", though it doesn't beat the prior year on this pair";
+  return `The ${trainSeason} grade forecasts ${testSeason}${liftStr}. The real draft test — graded a year ahead.`;
 }
 
 function stackedVerdictFor(overall: PredictivenessSplit, pairs: ReadonlyArray<readonly [number, number]>): string {
   const pairCount = pairs.length;
-  const pairLabel = pairs.map(([train, test]) => `${train}→${test}`).join(", ");
+  const seasonLabel = pairs.map(([, test]) => test).join(", ");
   if (overall.gradeCorr == null) {
-    return `Not enough players carried across the ${pairCount} pooled season-pair${pairCount === 1 ? "" : "s"} (${pairLabel}) for a confident stacked read.`;
+    return `Not enough sample across ${seasonLabel} for a confident multi-year read.`;
   }
   const lift = overall.lift;
   const liftStr =
     lift == null
       ? ""
       : lift > 0
-        ? `, beating the past-production baseline by ${lift.toFixed(2)}`
-        : ` — and it does NOT beat raw prior-season production over the pool`;
-  return `Pooling ${overall.n} player-seasons across ${pairCount} consecutive train→test pair${pairCount === 1 ? "" : "s"} (${pairLabel}), the prior-season grade ranks next-season production at ρ≈${overall.gradeCorr.toFixed(2)}${liftStr}. Multi-year, out-of-sample — the strongest, highest-power form of the draft test.`;
+        ? ", and it beats betting on the prior year alone"
+        : ", though it doesn't beat the prior year over this pool";
+  return `Across ${pairCount === 1 ? "one season" : `${pairCount} seasons`} (${seasonLabel}), the prior-year grade forecasts the year that follows${liftStr}. Our strongest evidence — years of out-of-sample results.`;
 }
 
 /**
@@ -293,7 +292,7 @@ export function buildPredictiveness(records: readonly CsvRecord[], activeSeason:
     sampleSize: 0,
     overall: summarize("QB", []),
     byPosition: [] as PredictivenessSplit[],
-    verdict: "Not enough weeks to split a season — the board stays honest and empty.",
+    verdict: "Not enough of the season has played out to grade it yet. We stay honest and empty.",
     priorSeason: null,
     yearOverYear: null,
     yearOverYearByPosition: [] as PredictivenessSplit[],
@@ -338,7 +337,7 @@ export function buildPredictiveness(records: readonly CsvRecord[], activeSeason:
     stackedPairs: [],
     stackedVerdict: null,
     canPublishProjections: false,
-    note: "Split-half backtest on real nflverse weekly data: build the process grade on the first half of the season, then measure how it ranks second-half production vs the past-production baseline. Buy-low/sell-high calls are scored against the coin-flip line. In-sample, single-season — directional proof.",
+    note: "Does our grade forecast what comes next? We check it against what actually happened — and against the obvious bet of just trusting last year. A directional proof.",
   };
 }
 
@@ -401,7 +400,7 @@ export async function loadPredictiveness({
       sampleSize: 0,
       overall: summarize("QB", []),
       byPosition: [],
-      verdict: "The backtest could not load from nflverse. The board shows an empty state instead of an unverifiable claim.",
+      verdict: "This proof is unavailable right now. We show an empty state instead of an unverifiable claim.",
       priorSeason: null,
       yearOverYear: null,
       yearOverYearByPosition: [],
@@ -411,7 +410,7 @@ export async function loadPredictiveness({
       stackedPairs: [],
       stackedVerdict: null,
       canPublishProjections: false,
-      note: "Predictiveness backtest unavailable.",
+      note: "This proof is unavailable right now.",
       sourceUrl: url,
       error: error instanceof Error ? error.message : "UNKNOWN",
     };

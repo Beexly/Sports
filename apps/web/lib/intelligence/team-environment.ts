@@ -517,7 +517,7 @@ export async function loadTeamEnvironment({
       sourceRows: 0,
       rows: [],
       canPublishProjections: false,
-      note: "Team scoring-environment could not load from nflverse play-by-play. The product shows an empty state instead of fabricated EPA.",
+      note: "This read is unavailable right now. We show an empty state instead of fabricated numbers.",
       sourceUrl: result.sourceUrl,
       error: result.error,
     };
@@ -530,7 +530,7 @@ export async function loadTeamEnvironment({
     sourceRows: result.sourceRows,
     rows: result.value,
     canPublishProjections: false,
-    note: "Early-down, neutral-script EPA/play (offense and defense), success rate, PROE (pass rate over expected), and a no-huddle pace proxy from real nflverse play-by-play. Plus full-sample situational reads: success rate, explosive-play rate, early-down pass rate, neutral-band PROE/EPA, shotgun rate, CPOE, 3rd-down conversion, red-zone EPA and drive-score rate — each computed from real per-play fields and shown empty when the source column is absent. Garbage time and obvious pass/run spots are stripped from the headline baseline. Context, not a point projection.",
+    note: "Each team's true offensive and defensive quality, with garbage time stripped out — the repeatable baseline, not the noisy scoreboard. Context, not a projection.",
     sourceUrl: result.sourceUrl,
     error: null,
   };

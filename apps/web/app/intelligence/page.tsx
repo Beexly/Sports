@@ -141,12 +141,6 @@ const SYSTEM_NODES: ReadonlyArray<{
     desc: "News, scored for reliability before it moves you.",
     accent: BRAND_COLORS.ionMagenta,
   },
-  {
-    title: "How we read metrics",
-    href: "/intelligence/metrics",
-    desc: "The glass box on every signal — and how we read it.",
-    accent: BRAND_COLORS.softUltraviolet,
-  },
 ];
 
 function SystemNavigator() {

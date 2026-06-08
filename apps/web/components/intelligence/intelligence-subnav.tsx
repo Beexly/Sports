@@ -38,7 +38,6 @@ const ITEMS: readonly SubnavItem[] = [
   { label: "Airwave", href: "/airwave", match: "startsWith" },
   { label: "CLV Tracker", href: "/track", match: "startsWith" },
   { label: "The Beat", href: "/the-beat", match: "startsWith" },
-  { label: "Metrics", href: "/intelligence/metrics", match: "startsWith" },
 ];
 
 function isActive(item: SubnavItem, pathname: string): boolean {

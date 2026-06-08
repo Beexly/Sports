@@ -3,7 +3,6 @@ import Link from "next/link";
 import { PlayerLabTable } from "@/components/players/player-lab-table";
 import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
-import { MetricExplainer } from "@/components/ui/metric-explainer";
 import { Nav } from "@/components/ui/nav";
 import { PageHero } from "@/components/ui/page-hero";
 import { SourceError } from "@/components/ui/source-error";
@@ -50,21 +49,19 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
           description={view.description}
           actions={
             <>
-              <Link href={view.jsonHref} className="btn-primary min-h-11 px-5 py-3">
-                JSON
-              </Link>
               <Link
                 href="/nflverse"
                 className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-surface-line px-5 py-3 text-sm font-semibold text-ion-white hover:border-surface-line-strong"
               >
                 Usage Pulse
               </Link>
+              <Link
+                href={view.jsonHref}
+                className="inline-flex min-h-9 items-center justify-center rounded-ds-sm border border-surface-line px-3 py-1.5 text-xs font-medium text-ion-2 hover:border-surface-line-strong hover:text-ion-1"
+              >
+                JSON
+              </Link>
             </>
-          }
-          aside={
-            view.explainer && view.explainer.length > 0 ? (
-              <MetricExplainer terms={view.explainer} />
-            ) : undefined
           }
         />
 

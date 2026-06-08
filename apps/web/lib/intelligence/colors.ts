@@ -16,6 +16,22 @@
  * trivially unit-testable.
  */
 
+/** GSE Rating tier band — a result-framed read of the 0-100 score. */
+export type RatingTierLabel = "Elite" | "High" | "Solid" | "Watch" | "Risk";
+
+/**
+ * Classify a GSE Rating (0-100) into its branded tier + display tone. Thresholds:
+ * Elite >=85, High 70-84, Solid 55-69, Watch 40-54, Risk <40. Pure + client-safe
+ * (no server/node imports) so it composes inside client components.
+ */
+export function ratingTier(grade: number): { label: RatingTierLabel; tone: SignalTone } {
+  if (grade >= 85) return { label: "Elite", tone: "good" };
+  if (grade >= 70) return { label: "High", tone: "good" };
+  if (grade >= 55) return { label: "Solid", tone: "neutral" };
+  if (grade >= 40) return { label: "Watch", tone: "bad" };
+  return { label: "Risk", tone: "bad" };
+}
+
 // ── Palette constants (Tailwind utility classes, DARK-surface safe) ───────────
 // Green / red are chosen to clear WCAG AA (>=4.5:1) on the dark canvas
 // (#0D1117) and the raised/sunken surfaces. emerald-300 (#6EE7B7) and
@@ -52,6 +68,28 @@ export function toneRowClass(tone: SignalTone): string {
       return "bg-rose-500/10";
     default:
       return "";
+  }
+}
+
+// ── GSE Rating tier (the branded 0-100 score) ─────────────────────────────────
+// Dark-AA text + chip classes for the flagship rating. Elite/High read green
+// (emerald-300 / -400), Solid stays muted ion-1 (via the neutral tone), Watch
+// flags amber-300, Risk reads rose-300. All clear AA on the dark canvas. The
+// tier band itself is owned by ratingTier() so thresholds live in one place.
+export function ratingTierClass(grade: number): string {
+  const { label, tone } = ratingTier(grade);
+  switch (label) {
+    case "Elite":
+      return SIGNAL_GOOD_CLASS; // emerald-300
+    case "High":
+      return "text-emerald-400";
+    case "Watch":
+      return "text-amber-300";
+    case "Risk":
+      return SIGNAL_BAD_CLASS; // rose-300
+    default:
+      // Solid → the neutral tone (ion-1).
+      return toneClass(tone);
   }
 }
 
