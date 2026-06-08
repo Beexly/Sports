@@ -9,8 +9,15 @@ interface Seed {
   name: string;
   position: string;
   team: string;
+  // offense snaps/pct
   pct: number;
   snaps: number;
+  // defense snaps/pct
+  defPct?: number;
+  defSnaps?: number;
+  // special-teams snaps/pct
+  stPct?: number;
+  stSnaps?: number;
   games: number;
   gameType?: string;
 }
@@ -20,7 +27,13 @@ const SEEDS: readonly Seed[] = [
   { id: "r1", name: "Rotational Rob", position: "RB", team: "BUF", pct: 0.5, snaps: 30, games: 4 },
   { id: "t1", name: "Tightend Tim", position: "TE", team: "SF", pct: 0.7, snaps: 45, games: 4 },
   { id: "b1", name: "Bench Bill", position: "WR", team: "NYJ", pct: 0.95, snaps: 62, games: 2 }, // < MIN_GAMES -> excluded
-  { id: "d1", name: "Corner Carl", position: "CB", team: "KC", pct: 0, snaps: 0, games: 4 }, // not skill / no off snaps
+  // Defensive starters: real defense snaps/pct, zero offense -> excluded from offense, present in defense.
+  { id: "d1", name: "Corner Carl", position: "CB", team: "KC", pct: 0, snaps: 0, defPct: 0.98, defSnaps: 65, games: 4 },
+  { id: "e1", name: "Edge Ed", position: "DE", team: "BUF", pct: 0, snaps: 0, defPct: 0.85, defSnaps: 55, games: 4 }, // -> DL group
+  { id: "l1", name: "Linebacker Lou", position: "ILB", team: "SF", pct: 0, snaps: 0, defPct: 0.9, defSnaps: 60, games: 4 }, // -> LB group
+  { id: "f1", name: "Free Fred", position: "FS", team: "DAL", pct: 0, snaps: 0, defPct: 0.92, defSnaps: 62, games: 4 }, // -> S group
+  // Special-teams ace: real ST snaps, no offense/defense -> only in specialTeams.
+  { id: "g1", name: "Gunner Gus", position: "CB", team: "MIA", pct: 0, snaps: 0, defPct: 0, defSnaps: 0, stPct: 0.8, stSnaps: 20, games: 4 },
 ];
 
 function buildCsv(): string {
@@ -28,7 +41,24 @@ function buildCsv(): string {
   for (const seed of SEEDS) {
     for (let week = 1; week <= seed.games; week++) {
       rows.push(
-        [`g${week}`, `pg${week}`, "2024", seed.gameType ?? "REG", String(week), seed.name, seed.id, seed.position, seed.team, "OPP", String(seed.snaps), String(seed.pct), "0", "0", "0", "0"].join(","),
+        [
+          `g${week}`,
+          `pg${week}`,
+          "2024",
+          seed.gameType ?? "REG",
+          String(week),
+          seed.name,
+          seed.id,
+          seed.position,
+          seed.team,
+          "OPP",
+          String(seed.snaps),
+          String(seed.pct),
+          String(seed.defSnaps ?? 0),
+          String(seed.defPct ?? 0),
+          String(seed.stSnaps ?? 0),
+          String(seed.stPct ?? 0),
+        ].join(","),
       );
     }
   }
@@ -66,8 +96,41 @@ describe("nflverse snap share", () => {
     expect(snap.leaders.WR.map((r) => r.playerName)).toEqual(["Snappy Sam"]); // Bench Bill (2 games) excluded
     expect(snap.leaders.WR[0]?.snapSharePct).toBe(0.9); // POST game excluded -> avg stays 0.9
     expect(snap.leaders.WR[0]?.games).toBe(4);
+    expect(snap.leaders.WR[0]?.positionGroup).toBe("offense");
     expect(snap.leaders.RB[0]?.playerName).toBe("Rotational Rob");
     expect(snap.leaders.TE[0]?.playerName).toBe("Tightend Tim");
+    // Defensive starters appear ONLY on the defense side (zero offense snaps).
+    expect(snap.leaders.WR.map((r) => r.playerName)).not.toContain("Corner Carl");
+  });
+
+  it("exposes defensive snap share grouped DL / LB / CB / S from the real columns", async () => {
+    const snap = await loadNflverseSnapShare({ season: 2024, fetcher: mockFetch(), cacheTtlMs: 0 });
+
+    expect(snap.defense.CB.map((r) => r.playerName)).toEqual(["Corner Carl"]);
+    expect(snap.defense.DL.map((r) => r.playerName)).toEqual(["Edge Ed"]); // DE -> DL
+    expect(snap.defense.LB.map((r) => r.playerName)).toEqual(["Linebacker Lou"]); // ILB -> LB
+    expect(snap.defense.S.map((r) => r.playerName)).toEqual(["Free Fred"]); // FS -> S
+
+    const carl = snap.defense.CB[0];
+    expect(carl?.snapSharePct).toBe(0.98);
+    expect(carl?.totalDefenseSnaps).toBe(65 * 4);
+    expect(carl?.snapsPerGame).toBe(65);
+    expect(carl?.games).toBe(4);
+    expect(carl?.group).toBe("CB");
+    expect(carl?.positionGroup).toBe("defense");
+    expect(carl?.position).toBe("CB");
+  });
+
+  it("exposes special-teams snap share from st_snaps / st_pct", async () => {
+    const snap = await loadNflverseSnapShare({ season: 2024, fetcher: mockFetch(), cacheTtlMs: 0 });
+
+    expect(snap.specialTeams.map((r) => r.playerName)).toEqual(["Gunner Gus"]);
+    const gus = snap.specialTeams[0];
+    expect(gus?.snapSharePct).toBe(0.8);
+    expect(gus?.totalStSnaps).toBe(20 * 4);
+    expect(gus?.positionGroup).toBe("specialTeams");
+    // Gunner Gus has no defense snaps -> must NOT appear on the defense side.
+    expect(snap.defense.CB.map((r) => r.playerName)).not.toContain("Gunner Gus");
   });
 
   it("returns an empty boundary state when sources fail", async () => {
@@ -75,6 +138,8 @@ describe("nflverse snap share", () => {
     const snap = await loadNflverseSnapShare({ season: 2024, fetcher, cacheTtlMs: 0 });
     expect(snap.status).toBe("source-error");
     expect(snap.leaders.WR).toHaveLength(0);
+    expect(snap.defense.CB).toHaveLength(0);
+    expect(snap.specialTeams).toHaveLength(0);
   });
 
   it("serves the snap-share API", async () => {

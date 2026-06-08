@@ -7,7 +7,7 @@ function qbr(name: string, q: number, team = "KC"): QbrRow {
   return { playerId: name, name, team, games: 10, plays: 400, qbr: q, epaTotal: 0, ptsAdded: 0 };
 }
 function ngs(name: string, cpoe: number, team = "KC"): NgsPassingLine {
-  return { playerId: name, playerName: name, team, attempts: 300, cpoe, completionPct: 67, expectedCompletionPct: 65, avgTimeToThrow: 2.7, aggressiveness: 16, passerRating: 95 };
+  return { playerId: name, playerName: name, team, attempts: 300, cpoe, completionPct: 67, expectedCompletionPct: 65, avgTimeToThrow: 2.7, aggressiveness: 16, passerRating: 95, avgAirYardsToSticks: null, avgAirYardsDifferential: null, maxAirDistance: null };
 }
 
 describe("normName", () => {

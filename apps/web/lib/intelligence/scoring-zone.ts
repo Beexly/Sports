@@ -53,6 +53,9 @@ export interface ScoringZoneRow {
   readonly tdRatePct: number; // raw-TD-rate percentile within the pool
   readonly signal: ScoringZoneSignal;
   readonly note: string;
+  // ── A1 RZ enrichment (real per-play fields; null when sample is empty) ──────
+  readonly rzEpaPerOpp: number | null; // mean EPA on the player's scoring-zone touches
+  readonly rzSuccessRate: number | null; // mean success on the player's scoring-zone touches
 }
 
 export interface ScoringZone {
@@ -84,6 +87,9 @@ export interface ScoringZone {
  *                     receiver_id, play_type, rush_attempt, pass_attempt
  *   names:            rusher_player_name, receiver_player_name
  *   touchdowns:       td_player_id, rush_touchdown, pass_touchdown
+ * Widened (A1) for real RZ enrichment from per-play fields:
+ *   epa context:      epa, success (mean EPA / success on a player's RZ touches)
+ *   depth context:    down, ydstogo, air_yards, yards_after_catch
  */
 export const SCORING_ZONE_PBP_COLUMNS = [
   "season",
@@ -104,6 +110,13 @@ export const SCORING_ZONE_PBP_COLUMNS = [
   "rush_touchdown",
   "pass_touchdown",
   "td_player_id",
+  // widened RZ enrichment (A1)
+  "epa",
+  "success",
+  "down",
+  "ydstogo",
+  "air_yards",
+  "yards_after_catch",
 ] as const;
 
 const MIN_OPPS = 6; // minimum scoring-zone opportunities to qualify (so a share is meaningful)
@@ -140,6 +153,11 @@ interface Agg {
   rzTargets: number;
   inside5: number;
   rzTds: number;
+  // A1 RZ enrichment accumulators (advance only when the field is present)
+  epaSum: number;
+  epaN: number;
+  successSum: number;
+  successN: number;
 }
 
 function signalFor(sharePct: number, tdRatePct: number): { signal: ScoringZoneSignal; note: string } {
@@ -222,11 +240,28 @@ export function buildScoringZone(records: readonly CsvRecord[], activeSeason: nu
         rzTargets: 0,
         inside5: 0,
         rzTds: 0,
+        epaSum: 0,
+        epaN: 0,
+        successSum: 0,
+        successN: 0,
       } satisfies Agg);
 
     if (isCarry) a.rzCarries += 1;
     if (isTarget) a.rzTargets += 1;
     if (y100 <= 5) a.inside5 += 1;
+
+    // A1: real EPA / success on this scoring-zone touch. Counts advance only when
+    // the field is present, so an absent column reads as null (honest dash).
+    const epa = finite(r["epa"]);
+    if (epa !== null) {
+      a.epaSum += epa;
+      a.epaN += 1;
+    }
+    const success = finite(r["success"]);
+    if (success !== null) {
+      a.successSum += success;
+      a.successN += 1;
+    }
 
     // TD credited only when this player's touch scored. Prefer the explicit
     // scorer id; otherwise use the rush/pass TD flag on this attributed play.
@@ -297,6 +332,8 @@ export function buildScoringZone(records: readonly CsvRecord[], activeSeason: nu
       tdRatePct: Math.round(tdRatePct),
       signal,
       note,
+      rzEpaPerOpp: e.a.epaN > 0 ? round(e.a.epaSum / e.a.epaN, 3) : null,
+      rzSuccessRate: e.a.successN > 0 ? round(e.a.successSum / e.a.successN, 3) : null,
     };
   });
 
@@ -343,7 +380,7 @@ export async function loadScoringZone({
         sourceRows: records.length,
         rows,
         canPublishProjections: false,
-        note: "Real nflverse play-by-play, filtered to the red zone and goal line. We read TD equity from OPPORTUNITY share (sticky), regress conversion rate toward the positional mean, and flag high-share/low-TD as buy and high-TD/low-share as sell. Context, not a pick.",
+        note: "Real nflverse play-by-play, filtered to the red zone and goal line. We read TD equity from OPPORTUNITY share (sticky), regress conversion rate toward the positional mean, and flag high-share/low-TD as buy and high-TD/low-share as sell. Each player also carries the mean EPA and success rate on their actual scoring-zone touches (real per-play fields, shown empty when absent). Context, not a pick.",
         sourceUrl: url,
         error: null,
       };

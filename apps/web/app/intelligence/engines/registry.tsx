@@ -13,6 +13,8 @@ import { loadPlayerModel } from "@/lib/intelligence/player-model";
 import { loadExpectedPoints } from "@/lib/intelligence/expected-points";
 import { loadQbForward } from "@/lib/intelligence/qb-forward";
 import { loadRushingContact } from "@/lib/intelligence/rushing-contact";
+import { loadNflversePressureCoverage } from "@/lib/nflverse/pressure-coverage";
+import { loadPlayDesign } from "@/lib/intelligence/play-design";
 import { loadRouteRate } from "@/lib/intelligence/route-rate";
 import { loadScoringZone } from "@/lib/intelligence/scoring-zone";
 import { loadTeamEnvironment } from "@/lib/intelligence/team-environment";
@@ -286,6 +288,104 @@ const RUSHING_CONTACT_ENGINE = engine({
     },
   ],
   load: loadRushingContact,
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TRENCHES — PFR advanced charting (pressure / coverage / receiver depth)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const TRENCHES_ENGINE = engine({
+  slug: "trenches",
+  group: "Team & market",
+  label: "Trenches (Pressure & Coverage)",
+  title: "Trenches — pressure, coverage & receiver charting",
+  description: (
+    <>
+      PFR advanced charting no box score carries: how much heat each QB takes and how he handles it (pocket time,
+      on-target rate, the play-action / RPO design lean), who is throwable in coverage and who gets home (ADOT allowed,
+      pressures, blitzes, hurries, sacks), and the receiver route-tree signal — average depth of target, true drops, and
+      YAC quality.
+    </>
+  ),
+  api: "/api/nflverse/pressure-coverage",
+  sourceIds: ["nflverse"],
+  explainer: [
+    {
+      term: "Pocket time & on-target — the QB under duress",
+      definition: (
+        <>
+          <span className="text-orbital-cyan">Pocket time</span> separates O-line protection from QB decision speed;
+          on-target rate is accuracy divorced from completion percentage. A clean, accurate QB behind a fast pocket reads
+          differently than one taking heat — real PFR charting, not inferred from the box.
+        </>
+      ),
+    },
+    {
+      term: "Coverage & pass rush — throwable vs lockdown",
+      definition:
+        "Passer rating allowed and average depth of target conceded read how throwable a defender is; individual pressures, blitzes, hurries, QB knockdowns and sacks read the pass-rush charting the team-level box score hides. Lowest rating allowed is the lockdown read.",
+    },
+    {
+      term: "Receiver ADOT & drops — the route-tree signal",
+      definition: (
+        <>
+          Average depth of target (<span className="text-orbital-cyan">ADOT</span>) is the primary route-tree signal —
+          who runs deep, who lives underneath. True charted drops and drop% are the real hands read; the YBC/YAC split
+          decomposes catch quality. Charting facts, context not a pick.
+        </>
+      ),
+    },
+  ],
+  load: loadNflversePressureCoverage,
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PLAY DESIGN — FTN charting (2022+) joined to pbp for QB / team identity
+// ─────────────────────────────────────────────────────────────────────────────
+
+const PLAY_DESIGN_ENGINE = engine({
+  slug: "play-design",
+  group: "Quarterback",
+  label: "Play Design (FTN)",
+  title: "Play Design — the play-call DNA behind every snap",
+  description: (
+    <>
+      Outside of EPA, the most-cited modern read of an offense is HOW it designs its dropbacks. nflverse FTN charting
+      (2022+) carries every design flag as a real per-play fact; we join it to play-by-play for QB and team identity and
+      surface, per QB and per team: <span className="font-semibold text-ion-white">play-action, RPO, screen, motion and
+      out-of-pocket rates</span>, plus the average blitz pressure faced. Design context, not a projection or a pick.
+    </>
+  ),
+  api: "/api/intelligence/play-design",
+  sourceIds: ["nflverse"],
+  explainer: [
+    {
+      term: "Play-action & RPO rate — designed decision-making",
+      definition: (
+        <>
+          <span className="text-orbital-cyan">Play-action rate</span> (is_play_action) is the single most-cited QB
+          context metric outside EPA; <span className="text-orbital-cyan">RPO rate</span> (is_rpo) separates designed
+          run-pass-option reads from scripted dropbacks. Both are real charted ratios over the QB's charted plays.
+        </>
+      ),
+    },
+    {
+      term: "Screen & motion rate — scheme fingerprints",
+      definition:
+        "Screen rate (is_screen_pass) is the volume inflator that poisons raw target share; pre-snap motion rate (is_motion) is a scheme-sophistication signal. Both are surfaced transparently from FTN charting — few public surfaces show them.",
+    },
+    {
+      term: "Out-of-pocket rate & blitzers faced",
+      definition: (
+        <>
+          QB out-of-pocket rate (is_qb_out_of_pocket) reads extension ability and scheme dependency; average blitzers
+          faced (n_blitzers) is the actual pressure design a QB / team saw — not inferred. A charted play with no pbp
+          identity is dropped, never guessed.
+        </>
+      ),
+    },
+  ],
+  load: loadPlayDesign,
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -593,10 +693,12 @@ export const ENGINES: readonly EngineEntry[] = [
   PLAYER_MODEL_ENGINE,
   EXPECTED_POINTS_ENGINE,
   QB_FORWARD_ENGINE,
+  PLAY_DESIGN_ENGINE,
   RUSHING_CONTACT_ENGINE,
   ROUTE_RATE_ENGINE,
   SCORING_ZONE_ENGINE,
   TEAM_ENVIRONMENT_ENGINE,
+  TRENCHES_ENGINE,
   OPPORTUNITY_TRANSFER_ENGINE,
   CLV_ENGINE,
   WAIVER_TRENDS_ENGINE,

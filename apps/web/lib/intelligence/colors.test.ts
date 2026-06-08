@@ -45,8 +45,8 @@ describe("toneClass", () => {
 
 describe("toneRowClass", () => {
   it("tints good/bad and leaves neutral untinted", () => {
-    expect(toneRowClass("good")).toBe("bg-emerald-50");
-    expect(toneRowClass("bad")).toBe("bg-rose-50");
+    expect(toneRowClass("good")).toBe("bg-emerald-500/10");
+    expect(toneRowClass("bad")).toBe("bg-rose-500/10");
     expect(toneRowClass("neutral")).toBe("");
   });
 });

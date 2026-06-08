@@ -22,6 +22,11 @@ function tenv(team: string, offEpaPerPlay: number, offSuccessRate: number): Team
     team, offPlays: 100, defPlays: 100, offEpaPerPlay, defEpaPerPlay: 0,
     offSuccessRate, defSuccessRate: 0.45, proe: 0, noHuddleRate: 0,
     offEpaPct: 50, defEpaPct: 50,
+    // A1 situational fields — not exercised by these scheme-fit tests.
+    offScrimmagePlays: 0, successRate: null, explosiveRate: null,
+    earlyDownPassRate: null, neutralProe: null, neutralEpaPerPlay: null,
+    shotgunRate: null, cpoe: null, thirdDownConvRate: null,
+    redZoneEpaPerPlay: null, redZonePlays: 0, driveScoreRate: null,
   };
 }
 function qbf(team: string, forwardGrade: number, name = `${team} QB`): QbForwardRow {

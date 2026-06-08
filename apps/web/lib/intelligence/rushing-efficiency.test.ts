@@ -3,7 +3,7 @@ import { buildRushingEfficiency, loadRushingEfficiency } from "./rushing-efficie
 import type { NgsRushingLine } from "@/lib/nflverse/next-gen-stats";
 
 function rb(name: string, ryoePerAtt: number, rushAttempts: number, pctStackedBox = 15): NgsRushingLine {
-  return { playerId: name, playerName: name, team: "ATL", rushAttempts, ryoePerAtt, efficiency: 4.0, pctStackedBox, avgTimeToLos: 2.9 };
+  return { playerId: name, playerName: name, team: "ATL", rushAttempts, ryoePerAtt, efficiency: 4.0, pctStackedBox, avgTimeToLos: 2.9, expectedRushYards: null, rushPctOverExpected: null };
 }
 
 const RBS: NgsRushingLine[] = [

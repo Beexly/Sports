@@ -7,10 +7,27 @@ import {
   type PlayerSeasonLine,
   type SkillPosition,
 } from "@/lib/nflverse/player-lab";
-import { loadNflverseSnapShare, type SnapShareRow } from "@/lib/nflverse/snap-share";
+import {
+  loadNflverseSnapShare,
+  type SnapShareRow,
+  type DefenseSnapShareRow,
+  type DefensePositionGroup,
+} from "@/lib/nflverse/snap-share";
 import { loadReceivingOpportunity } from "@/lib/intelligence/receiving-opportunity";
 import { loadRushingEfficiency } from "@/lib/intelligence/rushing-efficiency";
-import { loadNflverseNextGenStats } from "@/lib/nflverse/next-gen-stats";
+import {
+  loadNflverseNextGenStats,
+  type NgsReceivingLine,
+  type NgsPassingLine,
+  type NgsRushingLine,
+  type NgsTrailingReceiving,
+  type NgsTrailingPassing,
+  type NgsTrailingRushing,
+  type NgsReceivingWeek,
+  type NgsPassingWeek,
+  type NgsRushingWeek,
+} from "@/lib/nflverse/next-gen-stats";
+import { loadScheduleContext } from "@/lib/nflverse/schedule-context";
 import { loadNflversePressureCoverage } from "@/lib/nflverse/pressure-coverage";
 import { loadNflverseCombine } from "@/lib/nflverse/combine";
 import { loadNflverseQbr } from "@/lib/nflverse/qbr";
@@ -59,6 +76,8 @@ export type SectionKind =
   | "production-leaders"
   | "production-defense"
   | "snaps"
+  | "snaps-defense"
+  | "schedule-context"
   | "opportunity-receiving"
   | "opportunity-rushing"
   | "nextgen-receiving"
@@ -105,6 +124,50 @@ export interface SectionData {
   /** Empty-state copy. */
   readonly emptyTitle?: string;
   readonly emptyHint?: string;
+}
+
+// ── NGS recent-form rows (season + 4-week trailing, fully serializable) ───────
+//
+// The NextGen leader sections stay season-aggregate; these augmented rows JOIN
+// the player's 4-week trailing aggregate (recent form) and the weekly tracking
+// series onto the existing season line BY playerId. New columns render a
+// trailing value, a Δ (trailing minus season) DivergingBar, and a Sparkline of
+// the real weekly series. Every added field is real nflverse data — when a
+// player has no trailing row or a metric is blank for the season, the value is
+// `null` and the client shows an honest dash / omits the spark line. No season
+// column is dropped; the recent-form columns are additive.
+
+/** A NextGen receiving leader line + its recent-form join. */
+export interface NgsReceivingFormRow extends NgsReceivingLine {
+  /** Trailing 4-week separation mean (null when no recent weeks). */
+  readonly trailingSeparation: number | null;
+  /** Trailing minus season separation (recent-form delta). */
+  readonly separationDelta: number | null;
+  /** Trailing 4-week YAC-over-expected mean. */
+  readonly trailingYacAboveExpectation: number | null;
+  /** Weeks counted in the trailing window (0 when none). */
+  readonly trailingWeeks: number;
+  /** Real per-week separation series (oldest→newest) for the spark line. */
+  readonly separationSeries: readonly number[];
+}
+
+/** A NextGen passing leader line + its recent-form join. */
+export interface NgsPassingFormRow extends NgsPassingLine {
+  readonly trailingCpoe: number | null;
+  readonly cpoeDelta: number | null;
+  readonly trailingPasserRating: number | null;
+  readonly trailingWeeks: number;
+  /** Real per-week CPOE series (oldest→newest) for the spark line. */
+  readonly cpoeSeries: readonly number[];
+}
+
+/** A NextGen rushing leader line + its recent-form join. */
+export interface NgsRushingFormRow extends NgsRushingLine {
+  readonly trailingRyoePerAtt: number | null;
+  readonly ryoeDelta: number | null;
+  readonly trailingWeeks: number;
+  /** Real per-week RYOE/att series (oldest→newest) for the spark line. */
+  readonly ryoeSeries: readonly number[];
 }
 
 /** What a view's load() resolves to (fully serializable). */
@@ -166,6 +229,38 @@ function distinctOptions<Row>(
     .map((v) => ({ value: v, label: v }));
 }
 
+/** Round to `digits`, passing null through (so a missing metric stays a dash). */
+function roundOrNull(value: number | null, digits = 2): number | null {
+  if (value === null) return null;
+  const factor = 10 ** digits;
+  return Math.round(value * factor) / factor;
+}
+
+/** Build a playerId→trailing-row map for an O(1) join onto the season leaders. */
+function byPlayerId<T extends { playerId: string }>(rows: readonly T[]): Map<string, T> {
+  const map = new Map<string, T>();
+  for (const r of rows) if (r.playerId) map.set(r.playerId, r);
+  return map;
+}
+
+/**
+ * Group played-week rows by playerId so the leader join can pull the real
+ * weekly tracking series for a spark line. Weekly rows already arrive sorted by
+ * player then week; we keep that order (oldest→newest).
+ */
+function weeklySeriesByPlayer<T extends { playerId: string }>(
+  weekly: readonly T[],
+): Map<string, T[]> {
+  const map = new Map<string, T[]>();
+  for (const r of weekly) {
+    if (!r.playerId) continue;
+    const list = map.get(r.playerId) ?? [];
+    list.push(r);
+    map.set(r.playerId, list);
+  }
+  return map;
+}
+
 // ── PRODUCTION ────────────────────────────────────────────────────────────────
 
 async function loadProductionView(): Promise<ViewResult> {
@@ -218,30 +313,59 @@ async function loadProductionView(): Promise<ViewResult> {
 
 // ── SNAPS ─────────────────────────────────────────────────────────────────────
 
+const DEFENSE_GROUPS: readonly DefensePositionGroup[] = ["DL", "LB", "CB", "S"];
+const DEFENSE_GROUP_OPTIONS: ReadonlyArray<EnumOption> = [
+  { value: "DL", label: "DL" },
+  { value: "LB", label: "LB" },
+  { value: "CB", label: "CB" },
+  { value: "S", label: "S" },
+];
+
 async function loadSnapsView(): Promise<ViewResult> {
   const snap = await loadNflverseSnapShare();
   if (snap.status === "source-error") {
     return { status: "source-error", error: snap.error ?? snap.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
   }
   const rows: SnapShareRow[] = [...snap.leaders.RB, ...snap.leaders.WR, ...snap.leaders.TE];
+  // Flatten the four defensive groups into one list; the client's DL/LB/CB/S
+  // enum filter slices it, and each group stays internally ranked by snap share.
+  const defenseRows: DefenseSnapShareRow[] = DEFENSE_GROUPS.flatMap((g) => snap.defense[g]);
+
+  const sections: SectionData[] = [
+    {
+      id: "snaps",
+      kind: "snaps",
+      eyebrow: "Snap share · offense",
+      title: "Workload before box score",
+      blurb: "Share of team offensive snaps a player is on the field for, averaged across the season. Filter by position.",
+      footnote: "Snap share is the cleanest leading indicator of opportunity — it moves before targets and production do.",
+      rows,
+      enumOptions: POS_OPTIONS,
+      showRank: true,
+      minWidth: 560,
+    },
+  ];
+
+  if (defenseRows.length > 0) {
+    sections.push({
+      id: "snaps-defense",
+      kind: "snaps-defense",
+      eyebrow: "Snap share · defense",
+      title: "Who never leaves the field on defense",
+      blurb: "Defensive snap share — the share of team defensive snaps a player is on the field for, averaged across the season. Filter by group (DL / LB / CB / S).",
+      footnote: "Defensive snap share is the IDP workload signal: it leads tackle and pressure opportunity the same way offensive snaps lead targets.",
+      rows: defenseRows,
+      enumOptions: DEFENSE_GROUP_OPTIONS,
+      showRank: true,
+      minWidth: 620,
+    });
+  }
+
   return {
     status: "live",
     windowLabel: `Season ${snap.season}`,
     sourceIds: ["nflverse"],
-    sections: [
-      {
-        id: "snaps",
-        kind: "snaps",
-        eyebrow: "Snap share",
-        title: "Workload before box score",
-        blurb: "Share of team offensive snaps a player is on the field for, averaged across the season. Filter by position.",
-        footnote: "Snap share is the cleanest leading indicator of opportunity — it moves before targets and production do.",
-        rows,
-        enumOptions: POS_OPTIONS,
-        showRank: true,
-        minWidth: 560,
-      },
-    ],
+    sections,
   };
 }
 
@@ -289,47 +413,136 @@ async function loadOpportunityView(): Promise<ViewResult> {
 
 // ── NEXT GEN ──────────────────────────────────────────────────────────────────
 
+/**
+ * Join each season leader line to its 4-week trailing aggregate (recent form)
+ * and real weekly tracking series. Δ = trailing minus season (positive = heating
+ * up). When a player has no recent weeks (or the metric is blank for the season)
+ * the trailing/Δ value is null and the series is empty — honest dash / no spark.
+ */
+function buildNgsReceivingForm(ngs: Awaited<ReturnType<typeof loadNflverseNextGenStats>>): NgsReceivingFormRow[] {
+  const trailing = byPlayerId<NgsTrailingReceiving>(ngs.receivingTrailing);
+  const series = weeklySeriesByPlayer<NgsReceivingWeek>(ngs.receivingWeekly);
+  return ngs.receiving.map((line): NgsReceivingFormRow => {
+    const t = trailing.get(line.playerId) ?? null;
+    const ts = t?.avgSeparation ?? null;
+    return {
+      ...line,
+      trailingSeparation: ts,
+      separationDelta: roundOrNull(ts === null ? null : ts - line.avgSeparation),
+      trailingYacAboveExpectation: t?.avgYacAboveExpectation ?? null,
+      trailingWeeks: t?.weeks ?? 0,
+      separationSeries: (series.get(line.playerId) ?? []).map((w) => w.avgSeparation),
+    };
+  });
+}
+
+function buildNgsPassingForm(ngs: Awaited<ReturnType<typeof loadNflverseNextGenStats>>): NgsPassingFormRow[] {
+  const trailing = byPlayerId<NgsTrailingPassing>(ngs.passingTrailing);
+  const series = weeklySeriesByPlayer<NgsPassingWeek>(ngs.passingWeekly);
+  return ngs.passing.map((line): NgsPassingFormRow => {
+    const t = trailing.get(line.playerId) ?? null;
+    const tc = t?.cpoe ?? null;
+    return {
+      ...line,
+      trailingCpoe: tc,
+      cpoeDelta: roundOrNull(tc === null ? null : tc - line.cpoe),
+      trailingPasserRating: t?.passerRating ?? null,
+      trailingWeeks: t?.weeks ?? 0,
+      cpoeSeries: (series.get(line.playerId) ?? []).map((w) => w.cpoe),
+    };
+  });
+}
+
+function buildNgsRushingForm(ngs: Awaited<ReturnType<typeof loadNflverseNextGenStats>>): NgsRushingFormRow[] {
+  const trailing = byPlayerId<NgsTrailingRushing>(ngs.rushingTrailing);
+  const series = weeklySeriesByPlayer<NgsRushingWeek>(ngs.rushingWeekly);
+  return ngs.rushing.map((line): NgsRushingFormRow => {
+    const t = trailing.get(line.playerId) ?? null;
+    const tr = t?.ryoePerAtt ?? null;
+    return {
+      ...line,
+      trailingRyoePerAtt: tr,
+      ryoeDelta: roundOrNull(tr === null ? null : tr - line.ryoePerAtt),
+      trailingWeeks: t?.weeks ?? 0,
+      ryoeSeries: (series.get(line.playerId) ?? []).map((w) => w.ryoePerAtt),
+    };
+  });
+}
+
+/**
+ * A schedule-context section (rest / roof / surface / weather + closing line for
+ * the current scheduled week). Rendered as a compact header table above the NGS
+ * leaders. Returns null when the schedule feed is unavailable so the rest of the
+ * view still renders — schedule context is a header chip, not the view's spine.
+ */
+async function scheduleContextSection(): Promise<{ section: SectionData; windowLabel: string } | null> {
+  const sc = await loadScheduleContext();
+  if (sc.status === "source-error" || sc.rows.length === 0) return null;
+  return {
+    windowLabel: `season ${sc.season}, week ${sc.week}`,
+    section: {
+      id: "schedule-context",
+      kind: "schedule-context",
+      eyebrow: `Game context · season ${sc.season} week ${sc.week}`,
+      title: "Rest, roof & surface this week",
+      blurb:
+        "Per-game rest edge, dome/outdoor roof, playing surface, and kickoff weather for the upcoming slate — the environment behind every projection. Lines and weather not yet posted show a dash, never a fabricated number.",
+      footnote: sc.note,
+      rows: sc.rows,
+      minWidth: 760,
+      emptyTitle: "No scheduled games in the source window.",
+    },
+  };
+}
+
 async function loadNextGenView(): Promise<ViewResult> {
-  const ngs = await loadNflverseNextGenStats();
+  const [ngs, schedule] = await Promise.all([loadNflverseNextGenStats(), scheduleContextSection()]);
   if (ngs.status === "source-error") {
     return { status: "source-error", error: ngs.error ?? ngs.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
   }
+  const formNote = `Recent form is the last ${ngs.trailingWindow} played weeks (real weekly tracking rows). Δ = recent minus season; the spark line is the week-by-week series. A player with no recent weeks shows a dash.`;
+  const sections: SectionData[] = [];
+  if (schedule) sections.push(schedule.section);
+  sections.push(
+    {
+      id: "receiving",
+      kind: "nextgen-receiving",
+      eyebrow: "Receiving · tracking",
+      title: "Who gets open",
+      blurb: "Separation (space at the catch point), cushion (pre-snap space), and YAC over expected — with the last-4-week recent-form trend.",
+      footnote: formNote,
+      rows: buildNgsReceivingForm(ngs),
+      showRank: true,
+      minWidth: 1100,
+    },
+    {
+      id: "passing",
+      kind: "nextgen-passing",
+      eyebrow: "Passing · tracking",
+      title: "Who is accurate beyond expectation",
+      blurb: "CPOE (completion % over expected, given throw difficulty), time-to-throw, aggressiveness — with the last-4-week recent-form trend.",
+      footnote: formNote,
+      rows: buildNgsPassingForm(ngs),
+      showRank: true,
+      minWidth: 1120,
+    },
+    {
+      id: "rushing",
+      kind: "nextgen-rushing",
+      eyebrow: "Rushing · tracking",
+      title: "Who beats the blocking",
+      blurb: "Rush yards over expected per attempt — production above what the blocking and box gave them, with the last-4-week recent-form trend.",
+      footnote: formNote,
+      rows: buildNgsRushingForm(ngs),
+      showRank: true,
+      minWidth: 980,
+    },
+  );
   return {
     status: "live",
-    windowLabel: `Season ${ngs.season}`,
+    windowLabel: `Season ${ngs.season}${schedule ? ` · context ${schedule.windowLabel}` : ""}`,
     sourceIds: ["nflverse"],
-    sections: [
-      {
-        id: "receiving",
-        kind: "nextgen-receiving",
-        eyebrow: "Receiving · tracking",
-        title: "Who gets open",
-        blurb: "Separation (space at the catch point), cushion (pre-snap space), and YAC over expected.",
-        rows: ngs.receiving,
-        showRank: true,
-        minWidth: 860,
-      },
-      {
-        id: "passing",
-        kind: "nextgen-passing",
-        eyebrow: "Passing · tracking",
-        title: "Who is accurate beyond expectation",
-        blurb: "CPOE (completion % over expected, given throw difficulty), time-to-throw, aggressiveness.",
-        rows: ngs.passing,
-        showRank: true,
-        minWidth: 860,
-      },
-      {
-        id: "rushing",
-        kind: "nextgen-rushing",
-        eyebrow: "Rushing · tracking",
-        title: "Who beats the blocking",
-        blurb: "Rush yards over expected per attempt — production above what the blocking and box gave them.",
-        rows: ngs.rushing,
-        showRank: true,
-        minWidth: 760,
-      },
-    ],
+    sections,
   };
 }
 
@@ -621,14 +834,15 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
   {
     slug: "snaps",
     label: "Snaps",
-    tabTooltip: "Offensive snap-share leaders",
+    tabTooltip: "Offensive & defensive snap-share leaders",
     eyebrow: "Snap share",
     title: "Workload before box score.",
     description:
-      "The share of his team's offensive snaps a player is on the field for, averaged across the season — the cleanest leading indicator of opportunity. Real, settled workload from nflverse.",
+      "The share of his team's snaps a player is on the field for, averaged across the season — the cleanest leading indicator of opportunity. Offensive skill leaders plus the defensive snap share (DL / LB / CB / S) the source has always carried. Real, settled workload from nflverse.",
     explainer: [
-      { term: "Snap %", definition: "Average share of team offensive snaps the player is on the field for." },
-      { term: "Why it leads", definition: "Snap share moves before targets and production do — opportunity precedes the box score." },
+      { term: "Snap %", definition: "Average share of team snaps the player is on the field for (offense or defense)." },
+      { term: "Defense groups", definition: "Defensive leaders bucketed DL / LB / CB / S from the real PFR position code — the IDP workload signal." },
+      { term: "Why it leads", definition: "Snap share moves before targets, tackles, and production do — opportunity precedes the box score." },
     ],
     jsonHref: "/api/nflverse/snap-share",
     load: loadSnapsView,
@@ -652,15 +866,16 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
   {
     slug: "nextgen",
     label: "Next Gen",
-    tabTooltip: "Separation, CPOE, RYOE (tracking data)",
+    tabTooltip: "Separation, CPOE, RYOE + last-4-week recent form",
     eyebrow: "Next Gen Stats",
     title: "The metrics that aren't in the box score.",
     description:
-      "Player-tracking data from nflverse: how open a receiver gets (separation, YAC over expected), how accurate a QB is vs expectation (CPOE) and how fast he throws, and yards a back earns over the blocking (RYOE).",
+      "Player-tracking data from nflverse: how open a receiver gets (separation, YAC over expected), how accurate a QB is vs expectation (CPOE) and how fast he throws, and yards a back earns over the blocking (RYOE) — now with a last-4-week recent-form trend (Δ vs season + spark line) and the week's rest / roof / surface context.",
     explainer: [
       { term: "Separation / Cushion", definition: "Yards of space at the catch point, and pre-snap cushion the defense gives." },
       { term: "CPOE", definition: "Completion percentage over expected given throw difficulty — accuracy, not just results." },
       { term: "RYOE/att", definition: "Rush yards over expected per attempt — production above what the blocking and box gave." },
+      { term: "Recent form (4g)", definition: "The last 4 played weeks of the real weekly tracking rows. Δ = recent minus season; the spark line is the week-by-week series." },
     ],
     jsonHref: "/api/nflverse/next-gen-stats",
     load: loadNextGenView,

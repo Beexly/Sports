@@ -62,3 +62,110 @@ describe("buildTeamEnvironment", () => {
     expect(buildTeamEnvironment(PLAYS)).toEqual([]);
   });
 });
+
+/**
+ * A1 situational metrics. These accrue over ALL of a team's offensive scrimmage
+ * plays (posteam), not just the neutral-script slice, and each is null when its
+ * backing column is absent (honest dash, never fabricated).
+ */
+describe("buildTeamEnvironment — A1 situational metrics", () => {
+  // TMC takes EVERY offensive snap (so it clears minPlays on offense), and TMD
+  // both supplies the defensive sample TMC needs to qualify AND takes its own
+  // snaps. We give each row the widened A1 columns.
+  function offPlay(over: Record<string, string>): Record<string, string> {
+    return {
+      posteam: "TMC", defteam: "TMD", down: "1", wp: "0.5", qtr: "1",
+      pass: "1", rush: "0", epa: "0.1", success: "1", pass_oe: "0", no_huddle: "0",
+      ydstogo: "10", yardline_100: "50", yards_gained: "5", air_yards: "5",
+      yards_after_catch: "0", cpoe: "2", xpass: "0.5", qb_dropback: "1",
+      shotgun: "1", score_differential: "0", third_down_converted: "0",
+      third_down_failed: "0", series_success: "1", game_id: "G1",
+      fixed_drive: "1", fixed_drive_result: "Touchdown", play_type: "pass",
+      ...over,
+    };
+  }
+
+  function build(n: number, factory: (i: number) => Record<string, string>) {
+    return Array.from({ length: n }, (_, i) => factory(i));
+  }
+
+  it("computes explosive rate, success rate, shotgun rate, CPOE and red-zone EPA from real fields", () => {
+    // 40 offensive plays for TMC. Half are explosive (epa 1.0), half are not
+    // (epa 0.0, short gain). All shotgun, all carry cpoe=2, all success=1.
+    const plays = build(40, (i) =>
+      offPlay({
+        epa: i < 20 ? "1.0" : "0.0",
+        yards_gained: i < 20 ? "20" : "3",
+        success: i < 20 ? "1" : "0",
+        // 10 of them are red-zone snaps inside the 20.
+        yardline_100: i < 10 ? "10" : "50",
+      }),
+    );
+    // Defensive sample so TMC qualifies (TMD as posteam vs TMC defense).
+    const defSample = build(40, () => offPlay({ posteam: "TMD", defteam: "TMC" }));
+
+    const rows = buildTeamEnvironment([...plays, ...defSample], 30);
+    const tmc = rows.find((r) => r.team === "TMC")!;
+    expect(tmc).toBeDefined();
+
+    expect(tmc.offScrimmagePlays).toBe(40);
+    expect(tmc.explosiveRate).toBe(0.5); // 20 of 40 explosive
+    expect(tmc.successRate).toBe(0.5); // 20 of 40 success
+    expect(tmc.shotgunRate).toBe(1); // every play shotgun
+    expect(tmc.cpoe).toBe(2); // mean cpoe
+    // Red-zone EPA = mean epa over the 10 inside-20 snaps, all of which are epa 1.0.
+    expect(tmc.redZonePlays).toBe(10);
+    expect(tmc.redZoneEpaPerPlay).toBe(1);
+  });
+
+  it("computes 3rd-down conversion only from converted/failed plays and drive-score rate per unique drive", () => {
+    // 30 first-down plays + a handful of 3rd-down plays (3 converted, 1 failed).
+    const base = build(30, () => offPlay({ down: "1" }));
+    const thirdDowns = [
+      offPlay({ down: "3", third_down_converted: "1", third_down_failed: "0" }),
+      offPlay({ down: "3", third_down_converted: "1", third_down_failed: "0" }),
+      offPlay({ down: "3", third_down_converted: "1", third_down_failed: "0" }),
+      offPlay({ down: "3", third_down_converted: "0", third_down_failed: "1" }),
+    ];
+    // Two distinct drives: drive 1 = Touchdown (scored), drive 2 = Punt (not).
+    const driveTagged = [
+      offPlay({ game_id: "G1", fixed_drive: "1", fixed_drive_result: "Touchdown" }),
+      offPlay({ game_id: "G1", fixed_drive: "2", fixed_drive_result: "Punt" }),
+    ];
+    const defSample = build(30, () => offPlay({ posteam: "TMD", defteam: "TMC" }));
+
+    const rows = buildTeamEnvironment([...base, ...thirdDowns, ...driveTagged, ...defSample], 30);
+    const tmc = rows.find((r) => r.team === "TMC")!;
+
+    // 3rd-down conv = 3 of 4 plays that carried a converted/failed flag.
+    expect(tmc.thirdDownConvRate).toBe(0.75);
+    // base + driveTagged all share G1/drive 1 (Touchdown) → one scored drive;
+    // driveTagged adds G1/drive 2 (Punt). Two unique drives, one scored.
+    expect(tmc.driveScoreRate).toBe(0.5);
+  });
+
+  it("returns null situational metrics when the backing columns are absent (no fabrication)", () => {
+    // Plays with ONLY the neutral-script core columns — none of the A1 fields.
+    const core = (over: Record<string, string>): Record<string, string> => ({
+      posteam: "TME", defteam: "TMF", down: "1", wp: "0.5", qtr: "1",
+      pass: "1", rush: "0", epa: "0.1", success: "1", pass_oe: "0", no_huddle: "0",
+      ...over,
+    });
+    const off = build(30, () => core({}));
+    const def = build(30, () => core({ posteam: "TMF", defteam: "TME" }));
+
+    const rows = buildTeamEnvironment([...off, ...def], 30);
+    const tme = rows.find((r) => r.team === "TME")!;
+    expect(tme).toBeDefined();
+
+    // success exists in the core, so successRate is real; epa exists so explosive
+    // can be classified. But shotgun/cpoe/3rd-down/drive/red-zone columns are all
+    // absent → honest null, never a fabricated 0.
+    expect(tme.shotgunRate).toBeNull();
+    expect(tme.cpoe).toBeNull();
+    expect(tme.thirdDownConvRate).toBeNull();
+    expect(tme.driveScoreRate).toBeNull();
+    expect(tme.redZoneEpaPerPlay).toBeNull();
+    expect(tme.redZonePlays).toBe(0);
+  });
+});

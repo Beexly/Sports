@@ -8,20 +8,17 @@ import {
   ShareBar,
   PercentileBar,
   DivergingBar,
+  Sparkline,
   SignalChip,
 } from "@/components/ui/dataviz";
 import type {
   DefenseVsPositionRank,
   PlayerSeasonLine,
 } from "@/lib/nflverse/player-lab";
-import type { SnapShareRow } from "@/lib/nflverse/snap-share";
+import type { SnapShareRow, DefenseSnapShareRow } from "@/lib/nflverse/snap-share";
 import type { ReceivingOpportunityRow } from "@/lib/intelligence/receiving-opportunity";
 import type { RushingEfficiencyRow } from "@/lib/intelligence/rushing-efficiency";
-import type {
-  NgsPassingLine,
-  NgsReceivingLine,
-  NgsRushingLine,
-} from "@/lib/nflverse/next-gen-stats";
+import type { ScheduleContextRow } from "@/lib/nflverse/schedule-context";
 import type { CoverageRow, QbPressureRow } from "@/lib/nflverse/pressure-coverage";
 import type { CombineRow } from "@/lib/nflverse/combine";
 import type { QbrRow } from "@/lib/nflverse/qbr";
@@ -30,7 +27,13 @@ import type { EdgeSignalRow } from "@/lib/nflverse/edge-signals";
 import type { InjuryRow, ReportStatus } from "@/lib/nflverse/injury-report";
 import type { SleeperTrendingPlayer } from "@/lib/sleeper/market-signal";
 import type { DfsSalaryRow } from "@/lib/dfs/salaries";
-import type { EnumOption, SectionData } from "@/lib/players/views";
+import type {
+  EnumOption,
+  SectionData,
+  NgsReceivingFormRow,
+  NgsPassingFormRow,
+  NgsRushingFormRow,
+} from "@/lib/players/views";
 
 /**
  * Player Lab table (CLIENT).
@@ -129,6 +132,17 @@ function snapColumns(): ReadonlyArray<Column<SnapShareRow>> {
   ];
 }
 
+function defenseSnapColumns(): ReadonlyArray<Column<DefenseSnapShareRow>> {
+  return [
+    { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, r.position) },
+    { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
+    { key: "group", label: "Grp", tooltip: "defensive group (DL / LB / CB / S)", render: (r) => <span className="font-mono text-xs uppercase tracking-wide text-ion-2">{r.group}</span> },
+    { key: "games", label: "G", align: "right", numeric: true },
+    { key: "snapSharePct", label: "Def snap %", align: "right", numeric: true, tooltip: "share of team defensive snaps", sortValue: (r) => r.snapSharePct, render: (r) => <ShareBar value={r.snapSharePct} format={(v) => fmtPercent(v)} /> },
+    { key: "snapsPerGame", label: "Snaps/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.snapsPerGame) },
+  ];
+}
+
 // ── OPPORTUNITY ───────────────────────────────────────────────────────────────
 
 const OPP_SIGNAL_LABEL: Record<ReceivingOpportunityRow["signal"], string> = {
@@ -187,40 +201,67 @@ function rushingColumns(): ReadonlyArray<Column<RushingEfficiencyRow>> {
 
 // ── NEXT GEN ──────────────────────────────────────────────────────────────────
 
-function ngsReceivingColumns(): ReadonlyArray<Column<NgsReceivingLine>> {
+/**
+ * A recent-form Δ cell: a DivergingBar of (trailing minus season) — positive =
+ * heating up over the last weeks, negative = cooling. Null (no recent weeks)
+ * renders an honest dash via DivergingBar's own null handling.
+ */
+function formDeltaCell(delta: number | null, domain: number, digits: number): ReactNode {
+  return <DivergingBar value={delta} domain={domain} digits={digits} />;
+}
+/**
+ * A recent-form spark line of the real weekly series. <2 weeks → the Sparkline
+ * returns null, so we fall back to a dash (never a fabricated flat line).
+ */
+function formSparkCell(values: readonly number[], ariaLabel: string, tone: SignalTone = "neutral"): ReactNode {
+  const spark = Sparkline({ values, ariaLabel, tone });
+  if (spark === null) return <span className="font-mono tabular-nums text-ion-2">—</span>;
+  return spark;
+}
+
+function ngsReceivingColumns(): ReadonlyArray<Column<NgsReceivingFormRow>> {
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, r.position) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "targets", label: "Tgt", align: "right", numeric: true },
-    { key: "avgSeparation", label: "Sep", align: "right", numeric: true, tooltip: "yards of space at the catch point", render: (r) => r.avgSeparation.toFixed(2) },
+    { key: "avgSeparation", label: "Sep", align: "right", numeric: true, tooltip: "yards of space at the catch point (season)", render: (r) => r.avgSeparation.toFixed(2) },
     { key: "avgCushion", label: "Cush", align: "right", numeric: true, tooltip: "pre-snap cushion", render: (r) => r.avgCushion.toFixed(2) },
     { key: "avgYacAboveExpectation", label: "YAC+/-", align: "right", numeric: true, sortValue: (r) => r.avgYacAboveExpectation, tooltip: "yards after catch over expected", render: (r) => <DivergingBar value={r.avgYacAboveExpectation} domain={3} digits={1} /> },
     { key: "shareOfIntendedAirYards", label: "Air sh", align: "right", numeric: true, sortValue: (r) => r.shareOfIntendedAirYards, render: (r) => <ShareBar value={r.shareOfIntendedAirYards} format={(v) => fmtPercent(v)} /> },
     { key: "catchPct", label: "Catch%", align: "right", numeric: true, sortValue: (r) => r.catchPct, render: (r) => <ShareBar value={r.catchPct} tone="good" format={(v) => fmtPercent(v)} /> },
+    { key: "trailingSeparation", label: "Sep 4g", align: "right", numeric: true, tooltip: "separation over the last 4 played weeks", sortValue: (r) => r.trailingSeparation, render: (r) => fmtDecimal(r.trailingSeparation, 2) },
+    { key: "separationDelta", label: "Sep Δ", align: "right", numeric: true, tooltip: "recent-form separation minus season", sortValue: (r) => r.separationDelta, render: (r) => formDeltaCell(r.separationDelta, 1, 2) },
+    { key: "separationSeries", label: "Trend", sortable: false, tooltip: "weekly separation, oldest → newest", render: (r) => formSparkCell(r.separationSeries, `Weekly separation for ${r.playerName}`) },
   ];
 }
-function ngsPassingColumns(): ReadonlyArray<Column<NgsPassingLine>> {
+function ngsPassingColumns(): ReadonlyArray<Column<NgsPassingFormRow>> {
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "attempts", label: "Att", align: "right", numeric: true },
-    { key: "cpoe", label: "CPOE", align: "right", numeric: true, sortValue: (r) => r.cpoe, tooltip: "completion % over expected", render: (r) => <DivergingBar value={r.cpoe} domain={8} digits={1} /> },
+    { key: "cpoe", label: "CPOE", align: "right", numeric: true, sortValue: (r) => r.cpoe, tooltip: "completion % over expected (season)", render: (r) => <DivergingBar value={r.cpoe} domain={8} digits={1} /> },
     { key: "completionPct", label: "Comp%", align: "right", numeric: true, render: (r) => r.completionPct.toFixed(1) },
     { key: "expectedCompletionPct", label: "xComp%", align: "right", numeric: true, render: (r) => r.expectedCompletionPct.toFixed(1) },
     { key: "avgTimeToThrow", label: "TT throw", align: "right", numeric: true, render: (r) => r.avgTimeToThrow.toFixed(2) },
     { key: "aggressiveness", label: "Aggr", align: "right", numeric: true, render: (r) => r.aggressiveness.toFixed(1) },
     { key: "passerRating", label: "Rating", align: "right", numeric: true, render: (r) => r.passerRating.toFixed(1) },
+    { key: "trailingCpoe", label: "CPOE 4g", align: "right", numeric: true, tooltip: "CPOE over the last 4 played weeks", sortValue: (r) => r.trailingCpoe, render: (r) => fmtDecimal(r.trailingCpoe, 1) },
+    { key: "cpoeDelta", label: "CPOE Δ", align: "right", numeric: true, tooltip: "recent-form CPOE minus season", sortValue: (r) => r.cpoeDelta, render: (r) => formDeltaCell(r.cpoeDelta, 5, 1) },
+    { key: "cpoeSeries", label: "Trend", sortable: false, tooltip: "weekly CPOE, oldest → newest", render: (r) => formSparkCell(r.cpoeSeries, `Weekly CPOE for ${r.playerName}`) },
   ];
 }
-function ngsRushingColumns(): ReadonlyArray<Column<NgsRushingLine>> {
+function ngsRushingColumns(): ReadonlyArray<Column<NgsRushingFormRow>> {
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "rushAttempts", label: "Att", align: "right", numeric: true },
-    { key: "ryoePerAtt", label: "RYOE/att", align: "right", numeric: true, sortValue: (r) => r.ryoePerAtt, tooltip: "rush yards over expected per attempt", render: (r) => <DivergingBar value={r.ryoePerAtt} domain={1.5} digits={2} /> },
+    { key: "ryoePerAtt", label: "RYOE/att", align: "right", numeric: true, sortValue: (r) => r.ryoePerAtt, tooltip: "rush yards over expected per attempt (season)", render: (r) => <DivergingBar value={r.ryoePerAtt} domain={1.5} digits={2} /> },
     { key: "efficiency", label: "Eff", align: "right", numeric: true, render: (r) => r.efficiency.toFixed(2) },
     { key: "pctStackedBox", label: "Stacked%", align: "right", numeric: true, sortValue: (r) => r.pctStackedBox, tooltip: "% carries vs 8+ defenders", render: (r) => <ShareBar value={r.pctStackedBox} tone="bad" format={(v) => fmtPercent(v)} /> },
     { key: "avgTimeToLos", label: "TT LOS", align: "right", numeric: true, render: (r) => r.avgTimeToLos.toFixed(2) },
+    { key: "trailingRyoePerAtt", label: "RYOE 4g", align: "right", numeric: true, tooltip: "RYOE/att over the last 4 played weeks", sortValue: (r) => r.trailingRyoePerAtt, render: (r) => fmtDecimal(r.trailingRyoePerAtt, 2) },
+    { key: "ryoeDelta", label: "RYOE Δ", align: "right", numeric: true, tooltip: "recent-form RYOE/att minus season", sortValue: (r) => r.ryoeDelta, render: (r) => formDeltaCell(r.ryoeDelta, 1, 2) },
+    { key: "ryoeSeries", label: "Trend", sortable: false, tooltip: "weekly RYOE/att, oldest → newest", render: (r) => formSparkCell(r.ryoeSeries, `Weekly RYOE per attempt for ${r.playerName}`) },
   ];
 }
 
@@ -384,6 +425,43 @@ function dfsColumns(): ReadonlyArray<Column<DfsSalaryRow>> {
   ];
 }
 
+// ── SCHEDULE CONTEXT ──────────────────────────────────────────────────────────
+
+const ROOF_LABEL: Record<ScheduleContextRow["roof"], string> = {
+  dome: "Dome",
+  outdoors: "Outdoors",
+  closed: "Closed",
+  open: "Open",
+  retractable: "Retractable",
+  unknown: "—",
+};
+
+/** A rest-edge chip: home-minus-away rest days, toned + signed; dash when absent. */
+function restEdgeCell(r: ScheduleContextRow): ReactNode {
+  if (r.restEdge == null) return <span className="font-mono tabular-nums text-ion-2">—</span>;
+  if (r.restEdge === 0) return <span className="font-mono tabular-nums text-ion-2">even</span>;
+  const tone: SignalTone = r.restEdge > 0 ? "good" : "bad";
+  const who = r.restEdge > 0 ? r.homeTeam : r.awayTeam;
+  return <SignalChip label={`${who} +${Math.abs(r.restEdge)}d`} tone={tone} title="rest-days edge (home rest − away rest)" />;
+}
+
+function scheduleContextColumns(): ReadonlyArray<Column<ScheduleContextRow>> {
+  return [
+    { key: "game", label: "Game", render: (r) => <span className="font-mono font-medium text-ion-white">{r.game}</span> },
+    { key: "gameday", label: "Date", render: (r) => (r.gameday ? <span className="font-mono text-xs text-ion-1">{r.gameday}</span> : "—") },
+    { key: "homeRest", label: "Home rest", align: "right", numeric: true, tooltip: "home days of rest", render: (r) => (r.homeRest == null ? "—" : String(r.homeRest)) },
+    { key: "awayRest", label: "Away rest", align: "right", numeric: true, tooltip: "away days of rest", render: (r) => (r.awayRest == null ? "—" : String(r.awayRest)) },
+    { key: "restEdge", label: "Rest edge", sortValue: (r) => r.restEdge, tooltip: "home rest − away rest", render: (r) => restEdgeCell(r) },
+    { key: "roof", label: "Roof", sortValue: (r) => ROOF_LABEL[r.roof], render: (r) => <span className="text-ion-1">{ROOF_LABEL[r.roof]}</span> },
+    { key: "surface", label: "Surface", sortValue: (r) => r.surface, render: (r) => <span className="text-ion-1">{r.surface ?? "—"}</span> },
+    { key: "divGame", label: "Div", align: "center", sortValue: (r) => (r.divGame ? 1 : 0), tooltip: "divisional game", render: (r) => (r.divGame ? <span className="font-mono text-xs text-ion-1">DIV</span> : <span className="text-ion-2">—</span>) },
+    { key: "temp", label: "Temp", align: "right", numeric: true, tooltip: "kickoff temperature (°F); dash if not posted", render: (r) => (r.temp == null ? "—" : `${r.temp}°`) },
+    { key: "wind", label: "Wind", align: "right", numeric: true, tooltip: "kickoff wind (mph); dash if not posted", render: (r) => (r.wind == null ? "—" : `${r.wind}`) },
+    { key: "spreadLine", label: "Spread", align: "right", numeric: true, tooltip: "closing spread (+ = home favored); dash pre-posting", render: (r) => fmtDecimal(r.spreadLine, 1) },
+    { key: "totalLine", label: "Total", align: "right", numeric: true, tooltip: "closing total; dash pre-posting", render: (r) => fmtDecimal(r.totalLine, 1) },
+  ];
+}
+
 // ── Per-kind presentation binding ─────────────────────────────────────────────
 
 /**
@@ -451,6 +529,21 @@ function resolveBinding(section: SectionData): SectionBinding {
         enumLabel: POS_ENUM_LABEL,
       };
     }
+    case "snaps-defense": {
+      return {
+        columns: defenseSnapColumns() as ReadonlyArray<Column<unknown>>,
+        rowKey: (row) => {
+          const r = row as DefenseSnapShareRow;
+          return `${r.playerId}-${r.team}`;
+        },
+        searchAccessor: (row) => {
+          const r = row as DefenseSnapShareRow;
+          return `${r.playerName} ${r.team} ${r.position} ${r.group}`;
+        },
+        enumAccessor: (row) => (row as DefenseSnapShareRow).group,
+        enumLabel: "Group",
+      };
+    }
     case "opportunity-receiving": {
       return {
         columns: opportunityColumns() as ReadonlyArray<Column<unknown>>,
@@ -480,12 +573,16 @@ function resolveBinding(section: SectionData): SectionBinding {
       return {
         columns: ngsReceivingColumns() as ReadonlyArray<Column<unknown>>,
         rowKey: (row) => {
-          const r = row as NgsReceivingLine;
+          const r = row as NgsReceivingFormRow;
           return `${r.playerId}-${r.team}`;
         },
         searchAccessor: (row) => {
-          const r = row as NgsReceivingLine;
+          const r = row as NgsReceivingFormRow;
           return `${r.playerName} ${r.team} ${r.position}`;
+        },
+        rowTone: (row) => {
+          const r = row as NgsReceivingFormRow;
+          return r.separationDelta == null ? null : r.separationDelta >= 0.3 ? "good" : r.separationDelta <= -0.3 ? "bad" : null;
         },
       };
     }
@@ -493,12 +590,16 @@ function resolveBinding(section: SectionData): SectionBinding {
       return {
         columns: ngsPassingColumns() as ReadonlyArray<Column<unknown>>,
         rowKey: (row) => {
-          const r = row as NgsPassingLine;
+          const r = row as NgsPassingFormRow;
           return `${r.playerId}-${r.team}`;
         },
         searchAccessor: (row) => {
-          const r = row as NgsPassingLine;
+          const r = row as NgsPassingFormRow;
           return `${r.playerName} ${r.team}`;
+        },
+        rowTone: (row) => {
+          const r = row as NgsPassingFormRow;
+          return r.cpoeDelta == null ? null : r.cpoeDelta >= 1.5 ? "good" : r.cpoeDelta <= -1.5 ? "bad" : null;
         },
       };
     }
@@ -506,12 +607,16 @@ function resolveBinding(section: SectionData): SectionBinding {
       return {
         columns: ngsRushingColumns() as ReadonlyArray<Column<unknown>>,
         rowKey: (row) => {
-          const r = row as NgsRushingLine;
+          const r = row as NgsRushingFormRow;
           return `${r.playerId}-${r.team}`;
         },
         searchAccessor: (row) => {
-          const r = row as NgsRushingLine;
+          const r = row as NgsRushingFormRow;
           return `${r.playerName} ${r.team}`;
+        },
+        rowTone: (row) => {
+          const r = row as NgsRushingFormRow;
+          return r.ryoeDelta == null ? null : r.ryoeDelta >= 0.4 ? "good" : r.ryoeDelta <= -0.4 ? "bad" : null;
         },
       };
     }
@@ -634,6 +739,20 @@ function resolveBinding(section: SectionData): SectionBinding {
         enumAccessor: (row) => (row as DfsSalaryRow).position,
         enumLabel: POS_ENUM_LABEL,
         rowTone: (row) => ((row as DfsSalaryRow).agreement === "disagree" ? "bad" : null),
+      };
+    }
+    case "schedule-context": {
+      return {
+        columns: scheduleContextColumns() as ReadonlyArray<Column<unknown>>,
+        rowKey: (row) => (row as ScheduleContextRow).gameId,
+        searchAccessor: (row) => {
+          const r = row as ScheduleContextRow;
+          return `${r.game} ${r.awayTeam} ${r.homeTeam}`;
+        },
+        rowTone: (row) => {
+          const r = row as ScheduleContextRow;
+          return r.restEdge == null || r.restEdge === 0 ? null : r.restEdge > 0 ? "good" : "bad";
+        },
       };
     }
     default: {

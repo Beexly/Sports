@@ -33,6 +33,13 @@ import type { OpportunityTransfer, OpportunityTransferRow, TransferConfidence } 
 import type { ClvBacktest, ClvBacktestRow } from "@/lib/intelligence/clv-calibration";
 import type { PredictivenessProof, PredictivenessSplit } from "@/lib/intelligence/predictiveness";
 import type { SleeperTrending, TrendingRow } from "@/lib/integrations/sleeper";
+import type { PlayDesign, PlayDesignQbRow, PlayDesignTeamRow } from "@/lib/intelligence/play-design";
+import type {
+  NflversePressureCoverage,
+  QbPressureRow,
+  CoverageRow,
+  ReceivingAdvancedRow,
+} from "@/lib/nflverse/pressure-coverage";
 
 /**
  * EngineView — the CLIENT render layer for the /intelligence/engines browser.
@@ -546,7 +553,12 @@ function TeamEnvironmentView({ t }: { t: TeamEnvironment }): JSX.Element {
     { key: "team", label: "Tm", render: (r) => <span className="font-mono font-semibold text-ion-white">{r.team}</span> },
     { key: "offEpaPerPlay", label: "Off EPA", align: "right", numeric: true, tooltip: "offensive EPA per play (neutral script, early down)", sortValue: (r) => r.offEpaPerPlay, render: (r) => <DivergingBar value={r.offEpaPerPlay} domain={0.3} digits={3} /> },
     { key: "offEpaPct", label: "Off%ile", align: "right", numeric: true, tooltip: "within-league offensive EPA percentile", sortValue: (r) => r.offEpaPct, render: (r) => <PercentileBar pct={r.offEpaPct} /> },
-    { key: "offSuccessRate", label: "Off SR", align: "right", numeric: true, tooltip: "offensive success rate", sortValue: (r) => r.offSuccessRate, render: (r) => <ShareBar value={r.offSuccessRate} /> },
+    { key: "offSuccessRate", label: "Off SR", align: "right", numeric: true, tooltip: "offensive success rate (neutral-script, early down)", sortValue: (r) => r.offSuccessRate, render: (r) => <ShareBar value={r.offSuccessRate} /> },
+    // A1 situational reads, computed over the team's FULL offensive scrimmage sample.
+    { key: "successRate", label: "SR (all)", align: "right", numeric: true, tooltip: "success rate over all offensive scrimmage plays", sortValue: (r) => r.successRate ?? -1, render: (r) => <ShareBar value={r.successRate} /> },
+    { key: "explosiveRate", label: "Explosive", align: "right", numeric: true, tooltip: "explosive-play rate — EPA > 0.75, or a 15+ yd pass / 10+ yd rush", sortValue: (r) => r.explosiveRate ?? -1, render: (r) => <ShareBar value={r.explosiveRate} /> },
+    { key: "thirdDownConvRate", label: "3rd Dn", align: "right", numeric: true, tooltip: "3rd-down conversion rate", sortValue: (r) => r.thirdDownConvRate ?? -1, render: (r) => <ShareBar value={r.thirdDownConvRate} /> },
+    { key: "redZoneEpaPerPlay", label: "RZ EPA", align: "right", numeric: true, tooltip: "mean EPA on offensive plays snapped inside the 20", sortValue: (r) => r.redZoneEpaPerPlay ?? Number.NEGATIVE_INFINITY, render: (r) => <DivergingBar value={r.redZoneEpaPerPlay} domain={0.5} digits={3} /> },
     { key: "defEpaPerPlay", label: "Def EPA", align: "right", numeric: true, tooltip: "defensive EPA per play (lower is better)", sortValue: (r) => r.defEpaPerPlay, render: (r) => <DivergingBar value={r.defEpaPerPlay} domain={0.3} digits={3} tone={signedTone(-r.defEpaPerPlay)} /> },
     { key: "defEpaPct", label: "Def%ile", align: "right", numeric: true, tooltip: "within-league defensive EPA percentile (EPA inverted)", sortValue: (r) => r.defEpaPct, render: (r) => <PercentileBar pct={r.defEpaPct} /> },
     { key: "defSuccessRate", label: "Def SR", align: "right", numeric: true, tooltip: "defensive success rate (lower is better)", sortValue: (r) => r.defSuccessRate, render: (r) => <ShareBar value={r.defSuccessRate} /> },
@@ -581,7 +593,7 @@ function TeamEnvironmentView({ t }: { t: TeamEnvironment }): JSX.Element {
         searchAccessor={(r) => r.team}
         rowTone={(r) => (r.offEpaPerPlay > 0 ? "good" : r.offEpaPerPlay < 0 ? "bad" : null)}
         initialSort={{ key: "offEpaPerPlay", dir: "desc" }}
-        minWidth={920}
+        minWidth={1180}
       />
       <Note>{t.note}</Note>
     </div>
@@ -912,6 +924,369 @@ function ProofView({ p }: { p: PredictivenessProof }): JSX.Element {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// TRENCHES — PFR advanced charting (pressure faced, coverage allowed, receiver
+// depth/drops). Three stacked tables on one engine: QB pressure, coverage, and
+// receiving charting. All new L2 fields are real PFR columns; absent ones read
+// as an honest dash (the loader emits null / 0).
+// ─────────────────────────────────────────────────────────────────────────────
+
+// On-target rate is "accuracy is good"; a high pressure share is the QB under
+// duress (neutral context, not a value call). RPO + play-action lean is scheme,
+// shown as a tendency chip, not a buy/sell.
+function paLeanLabel(r: QbPressureRow): string {
+  const designed = r.rpoPlays + r.paPassAtt;
+  if (designed >= 80) return "Scheme-heavy";
+  if (designed >= 30) return "Some design";
+  return "Pure dropback";
+}
+
+function qbPressureColumns(): Column<QbPressureRow>[] {
+  return [
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "games", label: "G", align: "right", numeric: true, tooltip: "games", render: (r) => r.games },
+    {
+      key: "pressurePct",
+      label: "Press%",
+      align: "right",
+      numeric: true,
+      tooltip: "share of dropbacks under pressure",
+      sortValue: (r) => r.pressurePct,
+      render: (r) => <ShareBar value={r.pressurePct} tone="bad" />,
+    },
+    {
+      key: "pocketTime",
+      label: "Pocket",
+      align: "right",
+      numeric: true,
+      tooltip: "average time to throw / sack, seconds (pocket_time)",
+      sortValue: (r) => r.pocketTime ?? -1,
+      render: (r) => (r.pocketTime == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-white">{r.pocketTime.toFixed(2)}s</span>),
+    },
+    {
+      key: "onTgtPct",
+      label: "On-tgt%",
+      align: "right",
+      numeric: true,
+      tooltip: "on-target throw rate, accuracy divorced from completion% (on_tgt_pct)",
+      sortValue: (r) => r.onTgtPct ?? -1,
+      render: (r) => <ShareBar value={r.onTgtPct} tone="good" />,
+    },
+    {
+      key: "badThrowPct",
+      label: "Bad%",
+      align: "right",
+      numeric: true,
+      tooltip: "bad-throw rate (passing_bad_throw_pct)",
+      sortValue: (r) => r.badThrowPct,
+      render: (r) => <ShareBar value={r.badThrowPct} tone="bad" />,
+    },
+    {
+      key: "paPassAtt",
+      label: "PA att",
+      align: "right",
+      numeric: true,
+      tooltip: "play-action pass attempts (pa_pass_att)",
+      render: (r) => r.paPassAtt,
+    },
+    {
+      key: "rpoPlays",
+      label: "RPO",
+      align: "right",
+      numeric: true,
+      tooltip: "run-pass-option plays (rpo_plays)",
+      render: (r) => r.rpoPlays,
+    },
+    {
+      key: "sacks",
+      label: "Sk",
+      align: "right",
+      numeric: true,
+      tooltip: "times sacked",
+      render: (r) => r.sacks,
+    },
+    {
+      key: "read",
+      label: "The read",
+      sortable: false,
+      render: (r) => <SignalChip label={paLeanLabel(r)} tone="neutral" title="designed-play lean (RPO + play-action volume)" />,
+    },
+  ];
+}
+
+function coverageColumns(): Column<CoverageRow>[] {
+  return [
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "targets", label: "Tgt", align: "right", numeric: true, tooltip: "targets into this defender's coverage", render: (r) => r.targets },
+    {
+      key: "passerRatingAllowed",
+      label: "Rate allowed",
+      align: "right",
+      numeric: true,
+      tooltip: "passer rating allowed when targeted (lower = lockdown)",
+      sortValue: (r) => r.passerRatingAllowed,
+      render: (r) => <span className="font-mono tabular-nums text-ion-white">{r.passerRatingAllowed.toFixed(1)}</span>,
+    },
+    {
+      key: "adotAllowed",
+      label: "ADOT",
+      align: "right",
+      numeric: true,
+      tooltip: "average depth of target conceded (def_adot)",
+      sortValue: (r) => r.adotAllowed ?? -1,
+      render: (r) => (r.adotAllowed == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-1">{r.adotAllowed.toFixed(1)}</span>),
+    },
+    { key: "pressures", label: "Press", align: "right", numeric: true, tooltip: "pass-rush pressures (def_pressures)", render: (r) => r.pressures },
+    { key: "blitzes", label: "Blitz", align: "right", numeric: true, tooltip: "times blitzed (def_blitzes)", render: (r) => r.blitzes },
+    { key: "hurries", label: "Hur", align: "right", numeric: true, tooltip: "hurries (def_hurries)", render: (r) => r.hurries },
+    { key: "qbKnockdowns", label: "QBKD", align: "right", numeric: true, tooltip: "QB knockdowns (def_qbkd)", render: (r) => r.qbKnockdowns },
+    { key: "sacks", label: "Sk", align: "right", numeric: true, tooltip: "individual sacks (def_sacks)", render: (r) => r.sacks },
+    {
+      key: "missedTacklePct",
+      label: "MT%",
+      align: "right",
+      numeric: true,
+      tooltip: "missed-tackle rate (lower is better)",
+      sortValue: (r) => r.missedTacklePct,
+      render: (r) => <ShareBar value={r.missedTacklePct} tone="bad" />,
+    },
+  ];
+}
+
+function receivingAdvancedColumns(): Column<ReceivingAdvancedRow>[] {
+  return [
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "targets", label: "Tgt", align: "right", numeric: true, tooltip: "targets", render: (r) => r.targets },
+    { key: "receptions", label: "Rec", align: "right", numeric: true, tooltip: "receptions", render: (r) => r.receptions },
+    {
+      key: "adot",
+      label: "ADOT",
+      align: "right",
+      numeric: true,
+      tooltip: "average depth of target — the route-tree signal (adot)",
+      sortValue: (r) => r.adot ?? -1,
+      render: (r) => (r.adot == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-white">{r.adot.toFixed(1)}</span>),
+    },
+    { key: "drops", label: "Drops", align: "right", numeric: true, tooltip: "true charted drops (drop)", render: (r) => r.drops },
+    {
+      key: "dropPct",
+      label: "Drop%",
+      align: "right",
+      numeric: true,
+      tooltip: "drop rate (drop_pct)",
+      sortValue: (r) => r.dropPct ?? -1,
+      render: (r) => <ShareBar value={r.dropPct} tone="bad" />,
+    },
+    { key: "brokenTackles", label: "Brk", align: "right", numeric: true, tooltip: "broken tackles after the catch (brk_tkl)", render: (r) => r.brokenTackles },
+    { key: "ybcPerRec", label: "YBC/rec", align: "right", numeric: true, tooltip: "yards before catch per reception", render: (r) => r.ybcPerRec.toFixed(2) },
+    { key: "yacPerRec", label: "YAC/rec", align: "right", numeric: true, tooltip: "yards after catch per reception", render: (r) => r.yacPerRec.toFixed(2) },
+    {
+      key: "passerRatingWhenTargeted",
+      label: "Rate tgt",
+      align: "right",
+      numeric: true,
+      tooltip: "passer rating when this receiver is targeted (rat)",
+      sortValue: (r) => r.passerRatingWhenTargeted ?? -1,
+      render: (r) => (r.passerRatingWhenTargeted == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-1">{r.passerRatingWhenTargeted.toFixed(1)}</span>),
+    },
+  ];
+}
+
+function TrenchesView({ pc }: { pc: NflversePressureCoverage }): JSX.Element {
+  if (pc.status === "source-error") {
+    return <SourceError reason={pc.error ?? "UNKNOWN"} />;
+  }
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-3">
+        <SubHead
+          kicker={`QB pressure & pocket${pc.season ? ` · ${pc.season}` : ""}`}
+          title="How much heat each QB takes — and how he handles it"
+          note="Pressure share, pocket time, on-target rate, bad-throw rate, and the play-action / RPO design lean — real PFR advanced charting (advstats_week_pass). Context, not a pick."
+        />
+        <DataTable
+          rows={pc.qbPressure}
+          columns={qbPressureColumns()}
+          rowKey={(r) => r.playerId}
+          showRank
+          searchable
+          searchAccessor={(r) => `${r.name} ${r.team}`}
+          emptyTitle="No qualifying QB pressure rows for this season."
+          initialSort={{ key: "pressurePct", dir: "desc" }}
+          minWidth={1040}
+        />
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <SubHead
+          kicker="Coverage & pass rush"
+          title="Who is throwable — and who gets home"
+          note="Passer rating allowed and ADOT conceded in coverage, plus individual pass-rush charting: pressures, blitzes, hurries, QB knockdowns and sacks (advstats_week_def). Lowest rating allowed is the lockdown read."
+        />
+        <DataTable
+          rows={pc.coverage}
+          columns={coverageColumns()}
+          rowKey={(r) => r.playerId}
+          showRank
+          searchable
+          searchAccessor={(r) => `${r.name} ${r.team}`}
+          emptyTitle="No qualifying coverage rows for this season."
+          initialSort={{ key: "passerRatingAllowed", dir: "asc" }}
+          minWidth={1000}
+        />
+      </div>
+
+      {pc.receivingAdvanced.length > 0 ? (
+        <div className="flex flex-col gap-3">
+          <SubHead
+            kicker="Receiver charting"
+            title="Average depth of target, drops, and YAC quality"
+            note="PFR receiver charting (advstats_week_rec): ADOT (the route-tree signal), true drops and drop%, broken tackles, the YBC/YAC split, and passer rating when targeted. Deepest average target first."
+          />
+          <DataTable
+            rows={pc.receivingAdvanced}
+            columns={receivingAdvancedColumns()}
+            rowKey={(r) => r.playerId}
+            showRank
+            searchable
+            searchAccessor={(r) => `${r.name} ${r.team}`}
+            initialSort={{ key: "adot", dir: "desc" }}
+            minWidth={1040}
+          />
+        </div>
+      ) : null}
+      <Note>{pc.blockReason}</Note>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PLAY DESIGN — FTN charting (2022+) joined to pbp identity. Per-QB and per-team
+// play-call DNA: play-action / RPO / screen / motion / no-huddle / out-of-pocket
+// rates + average blitzers faced. All rates are real charted ratios; a tendency
+// chip flags the headline lean (no buy/sell — this is design context).
+// ─────────────────────────────────────────────────────────────────────────────
+
+const PA_HEAVY = 0.28; // a play-action rate at/above this is a heavy lean
+const RPO_HEAVY = 0.12;
+function playDesignLeanLabel(paRate: number, rpoRate: number): string {
+  if (paRate >= PA_HEAVY && rpoRate >= RPO_HEAVY) return "PA + RPO heavy";
+  if (paRate >= PA_HEAVY) return "Play-action heavy";
+  if (rpoRate >= RPO_HEAVY) return "RPO heavy";
+  return "Dropback-leaning";
+}
+
+function playDesignQbColumns(): Column<PlayDesignQbRow>[] {
+  return [
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "plays", label: "Plays", align: "right", numeric: true, tooltip: "charted dropbacks attributed to this QB", render: (r) => r.plays },
+    { key: "playActionRate", label: "PA%", align: "right", numeric: true, tooltip: "play-action rate (is_play_action)", sortValue: (r) => r.playActionRate, render: (r) => <ShareBar value={r.playActionRate} /> },
+    { key: "rpoRate", label: "RPO%", align: "right", numeric: true, tooltip: "run-pass-option rate (is_rpo)", sortValue: (r) => r.rpoRate, render: (r) => <ShareBar value={r.rpoRate} /> },
+    { key: "screenRate", label: "Screen%", align: "right", numeric: true, tooltip: "screen-pass rate (is_screen_pass)", sortValue: (r) => r.screenRate, render: (r) => <ShareBar value={r.screenRate} /> },
+    { key: "motionRate", label: "Motion%", align: "right", numeric: true, tooltip: "pre-snap motion rate (is_motion)", sortValue: (r) => r.motionRate, render: (r) => <ShareBar value={r.motionRate} /> },
+    { key: "outOfPocketRate", label: "OOP%", align: "right", numeric: true, tooltip: "QB out-of-pocket rate (is_qb_out_of_pocket)", sortValue: (r) => r.outOfPocketRate, render: (r) => <ShareBar value={r.outOfPocketRate} /> },
+    {
+      key: "avgBlitzersFaced",
+      label: "Blitzers",
+      align: "right",
+      numeric: true,
+      tooltip: "average blitzers faced per charted play (n_blitzers)",
+      sortValue: (r) => r.avgBlitzersFaced ?? -1,
+      render: (r) => (r.avgBlitzersFaced == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-white">{r.avgBlitzersFaced.toFixed(2)}</span>),
+    },
+    {
+      key: "read",
+      label: "The read",
+      sortable: false,
+      render: (r) => <SignalChip label={playDesignLeanLabel(r.playActionRate, r.rpoRate)} tone="neutral" title="play-design lean" />,
+    },
+  ];
+}
+
+function playDesignTeamColumns(): Column<PlayDesignTeamRow>[] {
+  return [
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono font-semibold text-ion-white">{r.team}</span> },
+    { key: "plays", label: "Plays", align: "right", numeric: true, tooltip: "charted offensive plays for this team", render: (r) => r.plays },
+    { key: "playActionRate", label: "PA%", align: "right", numeric: true, tooltip: "team play-action rate (is_play_action)", sortValue: (r) => r.playActionRate, render: (r) => <ShareBar value={r.playActionRate} /> },
+    { key: "rpoRate", label: "RPO%", align: "right", numeric: true, tooltip: "team RPO rate (is_rpo)", sortValue: (r) => r.rpoRate, render: (r) => <ShareBar value={r.rpoRate} /> },
+    { key: "screenRate", label: "Screen%", align: "right", numeric: true, tooltip: "team screen rate (is_screen_pass)", sortValue: (r) => r.screenRate, render: (r) => <ShareBar value={r.screenRate} /> },
+    { key: "motionRate", label: "Motion%", align: "right", numeric: true, tooltip: "team pre-snap motion rate (is_motion)", sortValue: (r) => r.motionRate, render: (r) => <ShareBar value={r.motionRate} /> },
+    { key: "noHuddleRate", label: "No-huddle%", align: "right", numeric: true, tooltip: "team no-huddle rate (is_no_huddle)", sortValue: (r) => r.noHuddleRate, render: (r) => <ShareBar value={r.noHuddleRate} /> },
+    { key: "outOfPocketRate", label: "OOP%", align: "right", numeric: true, tooltip: "team out-of-pocket rate (is_qb_out_of_pocket)", sortValue: (r) => r.outOfPocketRate, render: (r) => <ShareBar value={r.outOfPocketRate} /> },
+    {
+      key: "avgBlitzersFaced",
+      label: "Blitz faced",
+      align: "right",
+      numeric: true,
+      tooltip: "average blitzers the team's offense faced per charted play (n_blitzers)",
+      sortValue: (r) => r.avgBlitzersFaced ?? -1,
+      render: (r) => (r.avgBlitzersFaced == null ? <span className="font-mono text-ion-2">—</span> : <span className="font-mono tabular-nums text-ion-white">{r.avgBlitzersFaced.toFixed(2)}</span>),
+    },
+  ];
+}
+
+function PlayDesignView({ d }: { d: PlayDesign }): JSX.Element {
+  if (d.status === "source-error") {
+    return <SourceError reason={d.error ?? "UNKNOWN"} />;
+  }
+  if (d.qbs.length === 0 && d.teams.length === 0) {
+    return (
+      <div className="flex flex-col gap-4">
+        <SubHead kicker={`Play design${d.season ? ` · ${d.season}` : ""}`} title="Play-call DNA" note={d.note} />
+        <Note>{d.note}</Note>
+      </div>
+    );
+  }
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-3">
+        <SubHead
+          kicker={`QB play design${d.season ? ` · ${d.season}` : ""}`}
+          title="The play-call DNA behind every QB"
+          note="Play-action, RPO, screen, motion and out-of-pocket rates, plus average blitzers faced — real nflverse FTN charting (2022+) joined to play-by-play for QB identity. Most play-action-reliant first. Design context, not a pick."
+        />
+        <DataTable
+          rows={d.qbs}
+          columns={playDesignQbColumns()}
+          rowKey={(r) => r.playerId}
+          showRank
+          searchable
+          searchAccessor={(r) => `${r.name} ${r.team}`}
+          emptyTitle="No QB cleared the charted-play sample floor."
+          initialSort={{ key: "playActionRate", dir: "desc" }}
+          minWidth={980}
+        />
+      </div>
+
+      {d.teams.length > 0 ? (
+        <div className="flex flex-col gap-3">
+          <SubHead
+            kicker="Team play-design environment"
+            title="Scheme tendencies, team by team"
+            note="The same six design rates plus no-huddle, over every charted offensive play a team ran, with the average blitz pressure its offense faced."
+          />
+          <DataTable
+            rows={d.teams}
+            columns={playDesignTeamColumns()}
+            rowKey={(r) => r.team}
+            showRank
+            searchable
+            searchPlaceholder="Filter teams…"
+            searchAccessor={(r) => r.team}
+            initialSort={{ key: "playActionRate", dir: "desc" }}
+            minWidth={980}
+          />
+        </div>
+      ) : null}
+      <Note>{d.note}</Note>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // DISPATCH — slug → render. The server page passes only { engine, data }, both
 // serializable; this client component owns every render fn the columns need.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -933,6 +1308,10 @@ export function EngineView({ engine, data }: EngineViewProps): JSX.Element {
       return <QbForwardView f={data as QbForward} />;
     case "rushing-contact":
       return <RushingContactView f={data as RushingContact} />;
+    case "trenches":
+      return <TrenchesView pc={data as NflversePressureCoverage} />;
+    case "play-design":
+      return <PlayDesignView d={data as PlayDesign} />;
     case "route-rate":
       return <RouteRateView rr={data as RouteRate} />;
     case "scoring-zone":
