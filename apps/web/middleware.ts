@@ -60,7 +60,10 @@ export function middleware(req: NextRequest): NextResponse {
     // a synthetic admin session, so we must NOT redirect here. Without this
     // bypass, the middleware would 307 to /auth/signin before the page
     // even runs.
-    if (process.env["DEV_FAKE_ADMIN"] === "true") {
+    if (
+      process.env["NODE_ENV"] !== "production" &&
+      process.env["DEV_FAKE_ADMIN"] === "true"
+    ) {
       return NextResponse.next();
     }
 

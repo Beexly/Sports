@@ -69,7 +69,13 @@ const realAuth = nextAuth.auth as () => Promise<Session | null>;
  * table. NEVER set this in production.
  */
 export const auth: () => Promise<Session | null> = async () => {
-  if (process.env["DEV_FAKE_ADMIN"] === "true") {
+  // Hard-stop: the fake-admin bypass must never run in production even if the
+  // env var is set by accident. An exposed DEV_FAKE_ADMIN=true in prod would
+  // grant full ADMIN access to every unauthenticated request.
+  if (
+    process.env["NODE_ENV"] !== "production" &&
+    process.env["DEV_FAKE_ADMIN"] === "true"
+  ) {
     return {
       user: {
         id: "dev-admin",
