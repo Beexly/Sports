@@ -21,6 +21,25 @@
   --steel-1:     var(--titanium);
   --graphite:    var(--slate);
 
+  /* ── SURFACE — canonical UNIFIED dark elevation scale ─────
+     ONE black + a small premium elevation ladder (Sleeper/Underdog-grade).
+     This consolidates the three competing near-blacks (obsidianBlack #050608,
+     carbon #0D1117, gray-950 #030712) into a single base + raised/sunken steps.
+     ALL data surfaces (tables, cards, tracks) and re-themed pages use these.
+     Values verified visibly distinguishable; ion-white/ion/ion-1/ion-2 text
+     remain AA (>=4.5:1) on every step below.
+       base    — page background (also keeps `bg-carbon` pages identical)
+       raised  — cards / table rows / panels (one step up)
+       sunken  — insets, wells, bar TRACKS (one step down, sits under fills)
+       overlay — popovers / floating layers (highest)
+       line    — hairline borders / dividers on the dark canvas             */
+  --surface-base:    #0D1117;   /* the single canonical canvas (== carbon) */
+  --surface-raised:  #161B22;   /* cards / tables / panels */
+  --surface-sunken:  #0A0D12;   /* insets / wells / bar tracks (under base) */
+  --surface-overlay: #1C2128;   /* popovers / floating overlays */
+  --surface-line:    #30363D;   /* hairline border / divider on dark */
+  --surface-line-strong: #3C4961; /* stronger divider (== mineral-hi) */
+
   /* ── ION — cool whites & mineral silvers ──────────────── */
   /* DARK SCALE = marketing / cinematic surfaces (canvas is carbon #0D1117).
      Every value below is verified WCAG AA (>=4.5:1) as TEXT on carbon/eclipse
@@ -68,14 +87,25 @@
      aliased a true blue (#3B82FF); the spec only names cyan, so we
      unify both names to #00E5FF and let legacy classes inherit the
      correct brand color automatically. */
-  --ion-blue:      #00E5FF;
-  --ion-blue-glow: #5BEEFF;
-  --ion-blue-deep: #00A8BF;
+  /* Softened per audit Option B: the harsh full-saturation cyan
+     (hsl(191,100%,52%) = #00E5FF) caused long-session eye strain. The
+     working accent is now hsl(191,68%,52%) ≈ #2BC4DD — same hue, calmer.
+     `--accent-cyan-pure` keeps the full-saturation value for the ONE primary
+     CTA per screen the doc allows. Legacy `--ion-blue`/`--orbital-cyan` names
+     now resolve to the softened value so every existing usage calms down. */
+  --accent-cyan:        #2BC4DD;   /* hsl(191,68%,52%) — softened working accent */
+  --accent-cyan-glow:   #6FDDEE;
+  --accent-cyan-deep:   #1A93A8;
+  --accent-cyan-pure:   #00E5FF;   /* full-saturation — reserve for 1 CTA / screen */
+
+  --ion-blue:      var(--accent-cyan);
+  --ion-blue-glow: var(--accent-cyan-glow);
+  --ion-blue-deep: var(--accent-cyan-deep);
   --ion-blue-ink:  #001226;
 
-  --orbital-cyan:      #00E5FF;
-  --orbital-cyan-glow: #5BEEFF;
-  --orbital-cyan-deep: #00A8BF;
+  --orbital-cyan:      var(--accent-cyan);
+  --orbital-cyan-glow: var(--accent-cyan-glow);
+  --orbital-cyan-deep: var(--accent-cyan-deep);
 
   /* ── NEBULA PURPLE — gradient anchor (rare, decorative) ─ */
   --nebula-purple:     #7A5CFF;
@@ -123,6 +153,23 @@
   --alert:         #FF6470;
   --alert-deep:    #B53C45;
 
+  /* ── DATA PALETTE — "data is the color" on the dark canvas ─
+     Used by the viz kit + signal helpers AFTER the light→dark re-theme.
+     Two roles per tone:
+       *-fill  = NON-TEXT bar/dot/area fill (>=3:1 graphic contrast is enough;
+                 BRIGHTER than the light-theme equivalents so they pop on dark).
+       *-text  = SIGNAL TEXT — verified AA (>=4.5:1) on --surface-base AND
+                 --surface-raised so signed numbers/labels stay legible.
+     Neutral text uses ion-2 (#9AA6B8, AA on dark); neutral fill is a muted
+     ion so it reads as "no signal" without vibrating.                      */
+  --data-good-fill:   #34D399;   /* emerald-400 — positive bar/dot fill */
+  --data-good-text:   #6EE7B7;   /* emerald-300 — AA signal text on dark */
+  --data-bad-fill:    #FB7185;   /* rose-400 — negative bar/dot fill */
+  --data-bad-text:    #FDA4AF;   /* rose-300 — AA signal text on dark */
+  --data-neutral-fill:#5B6678;   /* muted slate — "no signal" fill */
+  --data-neutral-text:var(--ion-2); /* #9AA6B8 — AA muted meta on dark */
+  --data-track:       var(--surface-sunken); /* bar TRACK under every fill */
+
   /* ── DEPRECATED ALIASES — keep older boards working ──── */
   --mint:          var(--verify);
   --vermilion:     var(--alert);
@@ -142,9 +189,13 @@
   --risk-high:     var(--alert);
 
   /* ── SEMANTIC ALIASES ────────────────────────────────── */
-  --bg:           var(--carbon);
-  --bg-raised:    var(--eclipse);
-  --bg-elevated:  var(--titanium);
+  /* Point the semantic surface roles at the canonical surface scale. base
+     stays #0D1117 so existing `--bg`/`bg-carbon` pages are byte-identical;
+     raised/elevated now resolve through the unified ladder. */
+  --bg:           var(--surface-base);
+  --bg-raised:    var(--surface-raised);
+  --bg-elevated:  var(--surface-overlay);
+  --bg-sunken:    var(--surface-sunken);
   --bg-hover:     var(--slate);
   --fg:           var(--ion-white);
   --fg-1:         var(--ion);

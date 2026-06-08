@@ -40,10 +40,11 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
   }
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen bg-surface-base text-ion-white">
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <PageHero
+          variant="dark"
           eyebrow={view.eyebrow}
           title={view.title}
           description={view.description}
@@ -54,7 +55,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
               </Link>
               <Link
                 href="/nflverse"
-                className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-paper-border px-5 py-3 text-sm font-semibold text-ink hover:border-ink-1"
+                className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-surface-line px-5 py-3 text-sm font-semibold text-ion-white hover:border-surface-line-strong"
               >
                 Usage Pulse
               </Link>
@@ -91,7 +92,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
         ) : (
           <>
             {result.windowLabel ? (
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ink-2">
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ion-2">
                 Source window · {result.windowLabel}
               </p>
             ) : null}
@@ -99,7 +100,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
             <PlayerLabTable sections={result.sections} />
 
             {result.sourceIds.length > 0 ? (
-              <Attribution sourceIds={result.sourceIds} className="!text-ink-2" />
+              <Attribution sourceIds={result.sourceIds} className="!text-ion-2" />
             ) : null}
           </>
         )}

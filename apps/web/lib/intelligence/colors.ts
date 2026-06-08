@@ -1,34 +1,35 @@
 /**
- * Centralized signal -> className helpers for the LIGHT "paper" data surfaces.
+ * Centralized signal -> className helpers for the UNIFIED DARK data surfaces.
  *
  * Every board page (~14 of them) was hand-rolling its own buy-low / sell-high /
  * in-line / agree / diverge / lift / hit-rate color logic, and most of them
- * reached for the dark cosmic accents (text-orbital-cyan / text-plasma /
- * text-ion-2). On a light paper surface those fail contrast and read wrong.
+ * reached for inconsistent accents. This module is the single source of truth.
  *
- * This module is the single source of truth. It returns Tailwind classes built
- * from the AA-verified on-light accents and the ink scale:
- *   - positive / "good" signal  -> verify green, darkened for light  (emerald-700)
- *   - negative / "risk" signal  -> alert red, darkened for light     (rose-700)
- *   - neutral / unknown         -> text-ink-1 / text-ink-2 (muted, still AA)
+ * Re-themed from the old LIGHT "paper" scale to the unified dark canvas. It
+ * returns Tailwind classes built from the AA-verified dark data palette:
+ *   - positive / "good" signal  -> bright AA green text  (emerald-300, ~9:1 on dark)
+ *   - negative / "risk" signal  -> bright AA red text    (rose-300,   ~8:1 on dark)
+ *   - neutral / unknown         -> ion-1 / ion-2 (muted, still AA on dark)
  *
- * No helper here may emit text-ion-2 or text-ion-3 (the dark failing grays).
- * Numeric/semantic helpers are pure so they are trivially unit-testable.
+ * No helper here may emit text-ink / text-ink-1 / text-ink-2 (those were the
+ * light-only ink scale). Numeric/semantic helpers are pure so they are
+ * trivially unit-testable.
  */
 
-// ── Palette constants (Tailwind utility classes, paper-surface safe) ──────────
-// Green / red are chosen to clear WCAG AA (>=4.5:1) on bg-paper (#F7F8FB) and
-// bg-paper-sunken (#F0F2F6). emerald-700 (#047857 ~ 4.9:1) and rose-700
-// (#BE123C ~ 6.0:1) both pass; we keep `font-semibold` paired in callers.
-export const SIGNAL_GOOD_CLASS = "text-emerald-700" as const;
-export const SIGNAL_BAD_CLASS = "text-rose-700" as const;
-export const SIGNAL_NEUTRAL_CLASS = "text-ink-1" as const;
-export const SIGNAL_MUTED_CLASS = "text-ink-2" as const;
+// ── Palette constants (Tailwind utility classes, DARK-surface safe) ───────────
+// Green / red are chosen to clear WCAG AA (>=4.5:1) on the dark canvas
+// (#0D1117) and the raised/sunken surfaces. emerald-300 (#6EE7B7) and
+// rose-300 (#FDA4AF) both pass comfortably and pop against dark; we keep
+// `font-semibold` paired in callers. ion-1 / ion-2 carry the muted reads.
+export const SIGNAL_GOOD_CLASS = "text-emerald-300" as const;
+export const SIGNAL_BAD_CLASS = "text-rose-300" as const;
+export const SIGNAL_NEUTRAL_CLASS = "text-ion-1" as const;
+export const SIGNAL_MUTED_CLASS = "text-ion-2" as const;
 
 /** Tri-state direction a signal can carry on a data surface. */
 export type SignalTone = "good" | "bad" | "neutral";
 
-/** Map a tone to its paper-safe text class. */
+/** Map a tone to its dark-safe AA text class. */
 export function toneClass(tone: SignalTone): string {
   switch (tone) {
     case "good":
@@ -41,12 +42,14 @@ export function toneClass(tone: SignalTone): string {
 }
 
 /** Subtle row-tint background classes for an accented row (e.g. a top signal). */
+// Dark washes: a faint emerald / rose veil over the surface, never a light
+// paper tint. /10 alpha keeps the row legible while flagging the accent.
 export function toneRowClass(tone: SignalTone): string {
   switch (tone) {
     case "good":
-      return "bg-emerald-50";
+      return "bg-emerald-500/10";
     case "bad":
-      return "bg-rose-50";
+      return "bg-rose-500/10";
     default:
       return "";
   }

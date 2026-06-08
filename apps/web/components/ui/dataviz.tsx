@@ -1,9 +1,10 @@
 /**
  * dataviz — a tiny, dependency-light kit of accessible editorial data-viz
- * primitives for the LIGHT "paper" data surfaces (boards, Player Lab, engines).
+ * primitives for the UNIFIED DARK data surfaces (boards, Player Lab, engines).
  *
  * Aesthetic: bold editorial data-viz (The Athletic / FiveThirtyEight) — the
- * number is the hero, the bar is quiet and precise. One accent per surface.
+ * number is the hero, the bar is quiet and precise. "Data is the color":
+ * vivid grades/bars pop on the dark canvas, chrome stays restrained.
  *
  * These are PURE presentational components: no hooks, no state, no time-of-day
  * or randomness, and NO server-only imports. There is intentionally no
@@ -18,9 +19,10 @@
  *  • Pure-graphic elements (the SVG Sparkline) carry role="img" + a descriptive
  *    aria-label; decorative bars are aria-hidden because the number beside them
  *    is the text alternative.
- *  • Text stays AA on paper: only text-ink / text-ink-1 and emerald-700 /
- *    rose-700 are used for TEXT. emerald-500/600 & rose-500/600 are used only
- *    for non-text bar fills (3:1 is enough for graphics).
+ *  • Text stays AA on dark: only ion-white / ion-1 / ion-2 and emerald-300 /
+ *    rose-300 are used for TEXT. emerald-400/500 & rose-400/500 (the brighter
+ *    dark fills) are used only for non-text bars/dots (3:1 is enough for
+ *    graphics). Bar TRACKS use the dark sunken surface, never a paper tint.
  *
  * Width/scale math is deterministic (Math.min/Math.max only).
  */
@@ -46,11 +48,11 @@ export function normalize(value: number, lo: number, hi: number): number {
   return clamp((value - lo) / (hi - lo), 0, 1);
 }
 
-/** Non-text bar FILL class for a tone (>=3:1 graphic contrast on paper). */
+/** Non-text bar FILL class for a tone (>=3:1 graphic contrast on dark). */
 function toneFill(tone: SignalTone): string {
   if (tone === "good") return "bg-emerald-500";
   if (tone === "bad") return "bg-rose-500";
-  return "bg-ink-1/60";
+  return "bg-data-neutral";
 }
 
 // ── 1) ShareBar ───────────────────────────────────────────────────────────
@@ -68,14 +70,14 @@ export function ShareBar({
   widthPx?: number;
 }): ReactNode {
   if (value == null) {
-    return <span className="font-mono tabular-nums text-ink-2">{EM_DASH}</span>;
+    return <span className="font-mono tabular-nums text-ion-2">{EM_DASH}</span>;
   }
   const pct = clamp(value, 0, 1) * 100;
   const text = format ? format(value) : `${Math.round(pct)}%`;
   return (
     <span className="inline-flex flex-col items-end" style={{ width: widthPx }}>
-      <span className="font-mono tabular-nums text-ink leading-tight">{text}</span>
-      <span aria-hidden className="mt-0.5 h-1.5 w-full rounded-full bg-paper-sunken">
+      <span className="font-mono tabular-nums text-ion-white leading-tight">{text}</span>
+      <span aria-hidden className="mt-0.5 h-1.5 w-full rounded-full bg-surface-sunken">
         <span className={`block h-full rounded-full ${toneFill(tone)}`} style={{ width: `${pct}%` }} />
       </span>
     </span>
@@ -95,7 +97,7 @@ export function PercentileBar({
   widthPx?: number;
 }): ReactNode {
   if (pct == null) {
-    return <span className="font-mono tabular-nums text-ink-2">{EM_DASH}</span>;
+    return <span className="font-mono tabular-nums text-ion-2">{EM_DASH}</span>;
   }
   const v = clamp(pct, 0, 100);
   const fill =
@@ -104,18 +106,18 @@ export function PercentileBar({
         ? "bg-emerald-500"
         : v <= 33
           ? "bg-rose-400"
-          : "bg-ink-1/50"
+          : "bg-data-neutral"
       : toneFill(tone);
   return (
     <span className="inline-flex items-center gap-1.5">
       <span
         aria-hidden
-        className="h-2 rounded-full bg-paper-sunken overflow-hidden"
+        className="h-2 rounded-full bg-surface-sunken overflow-hidden"
         style={{ width: widthPx }}
       >
         <span className={`block h-full rounded-full ${fill}`} style={{ width: `${v}%` }} />
       </span>
-      <span className="font-mono tabular-nums text-ink-1 min-w-[2ch] text-right">{Math.round(v)}</span>
+      <span className="font-mono tabular-nums text-ion-1 min-w-[2ch] text-right">{Math.round(v)}</span>
     </span>
   );
 }
@@ -140,10 +142,10 @@ export function DivergingBar({
   if (value == null || value === 0) {
     return (
       <span className="inline-flex items-center gap-1.5" style={{ width: widthPx + 28 }}>
-        <span aria-hidden className="relative h-2 rounded-full bg-paper-sunken" style={{ width: widthPx }}>
-          <span className="absolute inset-y-0 left-1/2 w-px bg-paper-border" />
+        <span aria-hidden className="relative h-2 rounded-full bg-surface-sunken" style={{ width: widthPx }}>
+          <span className="absolute inset-y-0 left-1/2 w-px bg-surface-line" />
         </span>
-        <span className="font-mono tabular-nums text-ink-2 min-w-[3ch] text-right">
+        <span className="font-mono tabular-nums text-ion-2 min-w-[3ch] text-right">
           {value == null ? EM_DASH : "0"}
         </span>
       </span>
@@ -157,8 +159,8 @@ export function DivergingBar({
   const sign = positive ? "+" : "−"; // U+2212 minus for legible signed text
   return (
     <span className="inline-flex items-center gap-1.5" style={{ width: widthPx + 28 }}>
-      <span aria-hidden className="relative h-2 rounded-full bg-paper-sunken" style={{ width: widthPx }}>
-        <span className="absolute inset-y-0 left-1/2 w-px bg-paper-border" />
+      <span aria-hidden className="relative h-2 rounded-full bg-surface-sunken" style={{ width: widthPx }}>
+        <span className="absolute inset-y-0 left-1/2 w-px bg-surface-line" />
         <span
           className={`absolute inset-y-0 rounded-full ${toneFill(effTone)}`}
           style={
@@ -209,7 +211,7 @@ export function Sparkline({
   const last = points[points.length - 1] ?? { x: pad, y: pad };
   const first = points[0] ?? { x: pad, y: pad };
   const areaPts = `${first.x.toFixed(1)},${(heightPx - pad).toFixed(1)} ${linePts} ${last.x.toFixed(1)},${(heightPx - pad).toFixed(1)}`;
-  const stroke = tone === "good" ? "text-emerald-600" : tone === "bad" ? "text-rose-600" : "text-ink-1";
+  const stroke = tone === "good" ? "text-emerald-400" : tone === "bad" ? "text-rose-400" : "text-ion-1";
   return (
     <svg
       role="img"
@@ -249,10 +251,10 @@ export function SignalChip({
   const glyph = tone === "good" ? "▲" : tone === "bad" ? "▼" : "◆";
   const pill =
     tone === "good"
-      ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+      ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
       : tone === "bad"
-        ? "border-rose-300 bg-rose-50 text-rose-700"
-        : "border-paper-border bg-paper-sunken text-ink-1";
+        ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
+        : "border-surface-line bg-surface-raised text-ion-2";
   return (
     <span
       title={title}
@@ -279,15 +281,15 @@ export function MiniLollipop({
   tone?: SignalTone;
 }): ReactNode {
   if (value == null) {
-    return <span className="font-mono tabular-nums text-ink-2">{EM_DASH}</span>;
+    return <span className="font-mono tabular-nums text-ion-2">{EM_DASH}</span>;
   }
   const safeDomain = domain > 0 ? domain : 1;
   const frac = Math.min(Math.abs(value) / safeDomain, 1) * 100;
-  const dotColor = tone === "good" ? "bg-emerald-500" : tone === "bad" ? "bg-rose-500" : "bg-ink-1/70";
+  const dotColor = tone === "good" ? "bg-emerald-500" : tone === "bad" ? "bg-rose-500" : "bg-data-neutral";
   return (
     <span className="inline-flex items-center gap-1.5">
       <span aria-hidden className="relative h-2 w-10 self-center">
-        <span className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-paper-sunken" />
+        <span className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-surface-sunken" />
         <span
           className={`absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full ${dotColor}`}
           style={{ left: `calc(${frac}% - 4px)` }}

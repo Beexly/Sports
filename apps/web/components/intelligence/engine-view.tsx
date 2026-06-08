@@ -46,7 +46,7 @@ import type { SleeperTrending, TrendingRow } from "@/lib/integrations/sleeper";
  * The server page passes ONLY serializable data: the active engine `slug` and
  * the plain `data` object its loader returned (rows are plain string/number/enum
  * records — no functions). This component switches on `slug`, casts the data to
- * the matching loader type, and paints it on the LIGHT paper surface with the
+ * the matching loader type, and paints it on the unified dark surface with the
  * shared kit (DataTable / KpiCard / SourceError + lib/intelligence/colors).
  *
  * Nothing about the data, columns' meaning, or visuals changed in the move — only
@@ -56,15 +56,15 @@ import type { SleeperTrending, TrendingRow } from "@/lib/integrations/sleeper";
 // ── helpers ──────────────────────────────────────────────────────────────────
 
 function Note({ children }: { children: ReactNode }): JSX.Element {
-  return <p className="px-1 font-mono text-xs leading-5 text-ink-2">{children}</p>;
+  return <p className="px-1 font-mono text-xs leading-5 text-ion-2">{children}</p>;
 }
 
 function SubHead({ kicker, title, note }: { kicker: string; title: string; note?: ReactNode }): JSX.Element {
   return (
     <div className="flex flex-col gap-1">
-      <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan-on-light">{kicker}</p>
-      <h2 className="text-xl font-semibold text-ink">{title}</h2>
-      {note ? <p className="mt-1 max-w-3xl text-sm leading-6 text-ink-1">{note}</p> : null}
+      <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan">{kicker}</p>
+      <h2 className="text-xl font-semibold text-ion-white">{title}</h2>
+      {note ? <p className="mt-1 max-w-3xl text-sm leading-6 text-ion-1">{note}</p> : null}
     </div>
   );
 }
@@ -102,22 +102,22 @@ function gradeTone(g: number): SignalTone {
 
 function MovesCard({ title, tone, rows }: { title: string; tone: SignalTone; rows: readonly PlayerProfile[] }): JSX.Element {
   return (
-    <section className="rounded-ds-md border border-paper-border bg-paper-raised p-5">
+    <section className="rounded-ds-md border border-surface-line bg-surface-raised p-5">
       <p className={`font-mono text-xs font-semibold uppercase tracking-[0.16em] ${toneClass(tone)}`}>{title}</p>
       <div className="mt-3 space-y-2.5">
         {rows.length === 0 ? (
-          <p className="text-sm text-ink-2">None flagged this week.</p>
+          <p className="text-sm text-ion-2">None flagged this week.</p>
         ) : (
           rows.map((p) => (
-            <div key={p.playerId} className="border-l border-paper-border pl-3">
+            <div key={p.playerId} className="border-l border-surface-line pl-3">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-semibold text-ink">{p.name}</span>
-                <span className="flex items-center gap-2 font-mono text-xs text-ink-2">
+                <span className="text-sm font-semibold text-ion-white">{p.name}</span>
+                <span className="flex items-center gap-2 font-mono text-xs text-ion-2">
                   <span>{p.position} · {p.team}</span>
                   <PercentileBar pct={p.processGrade} tone={gradeTone(p.processGrade)} widthPx={36} />
                 </span>
               </div>
-              <p className="mt-0.5 text-xs leading-5 text-ink-1">{p.note}</p>
+              <p className="mt-0.5 text-xs leading-5 text-ion-1">{p.note}</p>
             </div>
           ))
         )}
@@ -129,8 +129,8 @@ function MovesCard({ title, tone, rows }: { title: string; tone: SignalTone; row
 function playerColumns(pos: ModelPosition): Column<PlayerProfile>[] {
   const isQb = pos === "QB";
   const cols: Column<PlayerProfile>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     {
       key: "processGrade",
       label: "Process",
@@ -238,9 +238,9 @@ function ExpectedPointsView({ f }: { f: ExpectedPoints }): JSX.Element {
     return <SourceError reason={f.error ?? "UNKNOWN"} />;
   }
   const columns: Column<ExpectedPointsRow>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
-    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ink-1">{r.position}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
     { key: "games", label: "G", align: "right", numeric: true, tooltip: "games", render: (r) => r.games },
     { key: "xfpTotal", label: "xFP", align: "right", numeric: true, tooltip: "expected PPR points, total", render: (r) => r.xfpTotal.toFixed(1) },
     { key: "xfpPerGame", label: "xFP/g", align: "right", numeric: true, tooltip: "expected PPR points per game", render: (r) => r.xfpPerGame.toFixed(1) },
@@ -309,8 +309,8 @@ function QbForwardView({ f }: { f: QbForward }): JSX.Element {
     return <SourceError reason={f.error ?? "UNKNOWN"} />;
   }
   const columns: Column<QbForwardRow>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     { key: "games", label: "G", align: "right", numeric: true, tooltip: "games", render: (r) => r.games },
     { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "pass attempts", render: (r) => r.attempts },
     { key: "dakota", label: "DAKOTA", align: "right", numeric: true, tooltip: "DAKOTA EPA + CPOE composite", render: (r) => r.dakota.toFixed(3) },
@@ -376,8 +376,8 @@ function RushingContactView({ f }: { f: RushingContact }): JSX.Element {
     return <SourceError reason={f.error ?? "UNKNOWN"} />;
   }
   const columns: Column<RushingContactRow>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "rushing attempts", render: (r) => r.attempts },
     {
       key: "yacPerAtt",
@@ -437,9 +437,9 @@ function RouteRateView({ rr }: { rr: RouteRate }): JSX.Element {
     return <SourceError reason={rr.error ?? "UNKNOWN"} />;
   }
   const columns: Column<RouteRateRow>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
-    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ink-1">{r.position}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
     { key: "routes", label: "Routes", align: "right", numeric: true, tooltip: "approximate routes run (proxy)", render: (r) => r.routes },
     { key: "targets", label: "Tgt", align: "right", numeric: true, render: (r) => r.targets },
     { key: "tprr", label: "TPRR", align: "right", numeric: true, tooltip: "targets per route run (proxy)", render: (r) => r.tprr.toFixed(3) },
@@ -492,9 +492,9 @@ function ScoringZoneView({ z }: { z: ScoringZone }): JSX.Element {
     return <SourceError reason={z.error ?? "UNKNOWN"} />;
   }
   const columns: Column<ScoringZoneRow>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
-    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ink-1">{r.position}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
     { key: "rzCarries", label: "RZ Car", align: "right", numeric: true, tooltip: "red-zone carries (inside the 20)", render: (r) => r.rzCarries },
     { key: "rzTargets", label: "RZ Tgt", align: "right", numeric: true, tooltip: "red-zone targets (inside the 20)", render: (r) => r.rzTargets },
     { key: "inside5", label: "In-5", align: "right", numeric: true, tooltip: "carries + targets inside the 5", render: (r) => r.inside5 },
@@ -543,7 +543,7 @@ function TeamEnvironmentView({ t }: { t: TeamEnvironment }): JSX.Element {
     return <SourceError reason={t.error ?? "UNKNOWN"} />;
   }
   const columns: Column<TeamEnvironmentRow>[] = [
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono font-semibold text-ink">{r.team}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono font-semibold text-ion-white">{r.team}</span> },
     { key: "offEpaPerPlay", label: "Off EPA", align: "right", numeric: true, tooltip: "offensive EPA per play (neutral script, early down)", sortValue: (r) => r.offEpaPerPlay, render: (r) => <DivergingBar value={r.offEpaPerPlay} domain={0.3} digits={3} /> },
     { key: "offEpaPct", label: "Off%ile", align: "right", numeric: true, tooltip: "within-league offensive EPA percentile", sortValue: (r) => r.offEpaPct, render: (r) => <PercentileBar pct={r.offEpaPct} /> },
     { key: "offSuccessRate", label: "Off SR", align: "right", numeric: true, tooltip: "offensive success rate", sortValue: (r) => r.offSuccessRate, render: (r) => <ShareBar value={r.offSuccessRate} /> },
@@ -604,12 +604,12 @@ function OpportunityTransferView({ transfer }: { transfer: OpportunityTransfer }
     return <SourceError reason={transfer.error ?? "UNKNOWN"} />;
   }
   const columns: Column<OpportunityTransferRow>[] = [
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
-    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ink-1">{r.position}</span> },
-    { key: "outPlayer", label: "Out (vacating)", render: (r) => <span className="font-semibold text-ink">{r.outPlayer}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
+    { key: "outPlayer", label: "Out (vacating)", render: (r) => <span className="font-semibold text-ion-white">{r.outPlayer}</span> },
     { key: "vacatedTargets", label: "Vac Tgt", align: "right", numeric: true, tooltip: "trailing per-game targets the role vacates", render: (r) => r.vacatedTargets.toFixed(1) },
     { key: "vacatedCarries", label: "Vac Car", align: "right", numeric: true, tooltip: "trailing per-game carries the role vacates", render: (r) => r.vacatedCarries.toFixed(1) },
-    { key: "beneficiary", label: "Beneficiary", render: (r) => <span className="text-ink">{r.beneficiary ?? "—"}</span> },
+    { key: "beneficiary", label: "Beneficiary", render: (r) => <span className="text-ion-white">{r.beneficiary ?? "—"}</span> },
     {
       key: "confidence",
       label: "Confidence",
@@ -662,20 +662,20 @@ function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
   if (c.status === "source-error") {
     return (
       <SourceError reason={c.note}>
-        <p className="font-mono text-xs leading-5 text-ink-2">{c.error ?? "UNKNOWN"}</p>
+        <p className="font-mono text-xs leading-5 text-ion-2">{c.error ?? "UNKNOWN"}</p>
       </SourceError>
     );
   }
   const columns: Column<ClvBacktestRow>[] = [
     { key: "season", label: "Season", align: "right", numeric: true, render: (r) => r.season },
     { key: "week", label: "Wk", align: "right", numeric: true, render: (r) => r.week },
-    { key: "game", label: "Game", render: (r) => <span className="font-semibold text-ink">{r.game}</span> },
-    { key: "market", label: "Market", render: (r) => <span className="font-mono text-ink-1">{r.market}</span> },
-    { key: "side", label: "Side", render: (r) => <span className="font-mono text-ink">{r.side}</span> },
+    { key: "game", label: "Game", render: (r) => <span className="font-semibold text-ion-white">{r.game}</span> },
+    { key: "market", label: "Market", render: (r) => <span className="font-mono text-ion-1">{r.market}</span> },
+    { key: "side", label: "Side", render: (r) => <span className="font-mono text-ion-white">{r.side}</span> },
     { key: "modelProb", label: "Model", align: "right", numeric: true, tooltip: "model implied probability for the side taken", sortValue: (r) => r.modelProb, render: (r) => prob(r.modelProb) },
     { key: "closingProb", label: "Close", align: "right", numeric: true, tooltip: "implied probability from the closing line", sortValue: (r) => r.closingProb, render: (r) => prob(r.closingProb) },
     { key: "clv", label: "CLV", align: "right", numeric: true, tooltip: "probability points beaten vs the close", sortValue: (r) => r.clv, render: (r) => <DivergingBar value={r.clv} domain={0.05} digits={4} tone={clvTone(r.clv)} /> },
-    { key: "covered", label: "Covered", align: "center", tooltip: "did the side actually cover/win?", sortValue: (r) => (r.covered ? 1 : 0), render: (r) => <span className="font-mono text-ink-1">{r.covered ? "Yes" : "—"}</span> },
+    { key: "covered", label: "Covered", align: "center", tooltip: "did the side actually cover/win?", sortValue: (r) => (r.covered ? 1 : 0), render: (r) => <span className="font-mono text-ion-1">{r.covered ? "Yes" : "—"}</span> },
     {
       key: "read",
       label: "The read",
@@ -713,16 +713,16 @@ function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
 function trendColumns(kind: "adds" | "drops"): Column<TrendingRow>[] {
   const isAdds = kind === "adds";
   return [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ink-1">{r.position}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     {
       key: "count",
       label: isAdds ? "Adds" : "Drops",
       align: "right",
       numeric: true,
       tooltip: isAdds ? "leagues adding over the window" : "leagues dropping over the window",
-      render: (r) => <span className={isAdds ? "text-emerald-700 font-semibold" : "text-rose-700 font-semibold"}>{r.count.toLocaleString()}</span>,
+      render: (r) => <span className={isAdds ? "text-emerald-400 font-semibold" : "text-rose-400 font-semibold"}>{r.count.toLocaleString()}</span>,
     },
   ];
 }
@@ -771,7 +771,7 @@ function WaiverTrendsView({ t }: { t: SleeperTrending }): JSX.Element {
 
 function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
   return [
-    { key: "label", label: "Group", render: (r) => <span className="font-semibold text-ink">{r.label}</span> },
+    { key: "label", label: "Group", render: (r) => <span className="font-semibold text-ion-white">{r.label}</span> },
     { key: "n", label: "N", align: "right", numeric: true, tooltip: "paired players", render: (r) => r.n },
     { key: "gradeCorr", label: "Grade ρ", align: "right", numeric: true, tooltip: "rank corr: grade → future production (signed, −1…1)", sortValue: (r) => r.gradeCorr, render: (r) => <DivergingBar value={r.gradeCorr} domain={1} digits={2} /> },
     { key: "baselineCorr", label: "Baseline ρ", align: "right", numeric: true, tooltip: "rank corr: past production → future production (signed, −1…1)", sortValue: (r) => r.baselineCorr, render: (r) => <DivergingBar value={r.baselineCorr} domain={1} digits={2} /> },
@@ -794,7 +794,7 @@ function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
       render: (r) => (
         <span className="inline-flex items-center gap-1">
           <ShareBar value={r.buyLowHitRate} tone={hitRateTone(r.buyLowHitRate)} />
-          <span className="text-xs text-ink-2">n={r.buyLowN}</span>
+          <span className="text-xs text-ion-2">n={r.buyLowN}</span>
         </span>
       ),
     },
@@ -808,7 +808,7 @@ function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
       render: (r) => (
         <span className="inline-flex items-center gap-1">
           <ShareBar value={r.sellHighHitRate} tone={hitRateTone(r.sellHighHitRate)} />
-          <span className="text-xs text-ink-2">n={r.sellHighN}</span>
+          <span className="text-xs text-ion-2">n={r.sellHighN}</span>
         </span>
       ),
     },

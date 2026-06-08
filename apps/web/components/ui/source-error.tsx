@@ -4,7 +4,12 @@ import type { ReactNode } from "react";
  * Honest empty / error state card. The product never fabricates data: when a
  * source is unavailable the board says so plainly ("this board is intentionally
  * empty") and shows the real reason. Every page hand-rolled this; here it is
- * once. Server-safe, paper-surface by default.
+ * once. Server-safe, unified-dark surface.
+ *
+ * Both variants render on the dark canvas: the `paper` variant is a legacy
+ * alias (callers on data boards pass it) and resolves to the same dark surface
+ * so nothing flips light. The kicker uses the dark-safe rose signal text
+ * (rose-300, AA on dark); body text is AA ion-white / ion-1.
  */
 
 export type SourceErrorVariant = "paper" | "dark";
@@ -21,22 +26,20 @@ export interface SourceErrorProps {
   className?: string;
 }
 
+const DARK_VARIANT = {
+  wrap: "border-surface-line bg-surface-raised",
+  kicker: "text-data-bad-text",
+  title: "text-ion-white",
+  reason: "text-ion-1",
+} as const;
+
 const VARIANTS: Record<
   SourceErrorVariant,
   { wrap: string; kicker: string; title: string; reason: string }
 > = {
-  paper: {
-    wrap: "border-paper-border bg-paper-raised",
-    kicker: "text-rose-700",
-    title: "text-ink",
-    reason: "text-ink-1",
-  },
-  dark: {
-    wrap: "border-mineral bg-eclipse",
-    kicker: "text-alert",
-    title: "text-ion-white",
-    reason: "text-ion-1",
-  },
+  // `paper` is a legacy alias → dark, so error cards stay on the unified canvas.
+  paper: DARK_VARIANT,
+  dark: DARK_VARIANT,
 };
 
 export function SourceError({

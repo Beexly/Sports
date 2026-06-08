@@ -4,8 +4,12 @@ import { toneClass, type SignalTone } from "@/lib/intelligence/colors";
 /**
  * A single stat card: label + big value + optional sublabel + optional accent.
  * Replaces the inline "Metric"/KPI tiles scattered across boards. Server-safe,
- * paper-surface by default. The big value renders in the numerals face with
+ * unified-dark surface. The big value renders in the numerals face with
  * tabular-nums so columns of KPIs line up.
+ *
+ * Both variants render on the dark canvas: the `paper` variant is a legacy
+ * alias (callers on data boards pass it) and resolves to the same dark surface
+ * so nothing flips light. Text is AA on dark (ion-white / ion-1 / ion-2).
  */
 
 export type KpiVariant = "paper" | "dark";
@@ -20,22 +24,20 @@ export interface KpiCardProps {
   className?: string;
 }
 
+const DARK_VARIANT = {
+  wrap: "border-surface-line bg-surface-raised",
+  label: "text-ion-2",
+  value: "text-ion-white",
+  sub: "text-ion-2",
+} as const;
+
 const VARIANTS: Record<
   KpiVariant,
   { wrap: string; label: string; value: string; sub: string }
 > = {
-  paper: {
-    wrap: "border-paper-border bg-paper-raised",
-    label: "text-ink-2",
-    value: "text-ink",
-    sub: "text-ink-2",
-  },
-  dark: {
-    wrap: "border-mineral bg-eclipse",
-    label: "text-ion-1",
-    value: "text-ion-white",
-    sub: "text-ion-1",
-  },
+  // `paper` is a legacy alias → dark, so KPI tiles stay on the unified canvas.
+  paper: DARK_VARIANT,
+  dark: DARK_VARIANT,
 };
 
 export function KpiCard({

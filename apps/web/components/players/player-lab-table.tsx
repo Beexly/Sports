@@ -46,7 +46,7 @@ import type { EnumOption, SectionData } from "@/lib/players/views";
  * faithfully from the original board pages — presentation only, no data change.
  */
 
-// ── Formatting helpers (paper-surface; AA ink only) ───────────────────────────
+// ── Formatting helpers (dark surface; AA ion only) ────────────────────────────
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 
@@ -65,23 +65,23 @@ function fmtPctRounded(value: number): string {
 
 /** A muted team chip used across player tables. */
 function teamCell(team: string): ReactNode {
-  return <span className="font-mono font-medium text-ink-1">{team}</span>;
+  return <span className="font-mono font-medium text-ion-1">{team}</span>;
 }
 /** Name + small position kicker (matches the old two-line player cell). */
 function playerCell(name: string, position?: string): ReactNode {
   return (
     <div>
-      <span className="font-medium text-ink">{name}</span>
+      <span className="font-medium text-ion-white">{name}</span>
       {position ? (
-        <span className="ml-2 font-mono text-xs uppercase tracking-wide text-ink-2">{position}</span>
+        <span className="ml-2 font-mono text-xs uppercase tracking-wide text-ion-2">{position}</span>
       ) : null}
     </div>
   );
 }
-/** Tone a signed numeric value (good/bad/neutral) on the paper surface. */
+/** Tone a signed numeric value (good/bad/neutral) on the dark surface. */
 function signedCell(value: number, digits = 1, invert = false): ReactNode {
   const tone = signedTone(value, invert);
-  const cls = tone === "good" ? "text-emerald-700" : tone === "bad" ? "text-rose-700" : "text-ink-1";
+  const cls = tone === "good" ? "text-emerald-400" : tone === "bad" ? "text-rose-400" : "text-ion-1";
   return <span className={`font-semibold ${cls}`}>{formatSigned(value, digits)}</span>;
 }
 
@@ -231,7 +231,7 @@ function qbPressureColumns(): ReadonlyArray<Column<QbPressureRow>> {
     { key: "name", label: "Player", render: (r) => playerCell(r.name) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "games", label: "G", align: "right", numeric: true },
-    { key: "pressurePct", label: "Pressure%", align: "right", numeric: true, render: (r) => <span className="font-semibold text-rose-700">{fmtPercent(r.pressurePct)}</span> },
+    { key: "pressurePct", label: "Pressure%", align: "right", numeric: true, render: (r) => <span className="font-semibold text-rose-400">{fmtPercent(r.pressurePct)}</span> },
     { key: "badThrowPct", label: "Bad throw%", align: "right", numeric: true, render: (r) => fmtPercent(r.badThrowPct) },
     { key: "sacks", label: "Sacks", align: "right", numeric: true },
     { key: "blitzesFaced", label: "Blitzes", align: "right", numeric: true },
@@ -244,7 +244,7 @@ function coverageColumns(): ReadonlyArray<Column<CoverageRow>> {
     { key: "targets", label: "Tgt", align: "right", numeric: true },
     { key: "completionPct", label: "Cmp%", align: "right", numeric: true, render: (r) => fmtPercent(r.completionPct) },
     { key: "yardsPerTarget", label: "Yd/Tgt", align: "right", numeric: true, render: (r) => r.yardsPerTarget.toFixed(1) },
-    { key: "passerRatingAllowed", label: "Rating allowed", align: "right", numeric: true, render: (r) => <span className="font-semibold text-emerald-700">{r.passerRatingAllowed.toFixed(1)}</span> },
+    { key: "passerRatingAllowed", label: "Rating allowed", align: "right", numeric: true, render: (r) => <span className="font-semibold text-emerald-400">{r.passerRatingAllowed.toFixed(1)}</span> },
     { key: "missedTacklePct", label: "Miss tkl%", align: "right", numeric: true, render: (r) => fmtPercent(r.missedTacklePct) },
   ];
 }
@@ -331,10 +331,10 @@ function edgeColumns(tone: "buy" | "sell"): ReadonlyArray<Column<EdgeSignalRow>>
 
 function injuryStatusBadge(r: InjuryRow): ReactNode {
   const cls: Record<ReportStatus, string> = {
-    Out: "border-rose-300 text-rose-700",
-    Doubtful: "border-amber-300 text-amber-700",
-    Questionable: "border-sky-300 text-sky-700",
-    Other: "border-paper-border text-ink-2",
+    Out: "border-rose-400/40 text-rose-400",
+    Doubtful: "border-amber-400/40 text-amber-400",
+    Questionable: "border-sky-400/40 text-sky-400",
+    Other: "border-surface-line text-ion-2",
   };
   return (
     <span className={`rounded-ds-sm border px-2 py-0.5 font-mono text-xs uppercase tracking-wide ${cls[r.reportStatus]}`}>
@@ -360,7 +360,7 @@ function marketColumns(): ReadonlyArray<Column<SleeperTrendingPlayer>> {
     { key: "name", label: "Player", render: (r) => playerCell(r.name) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "position", label: "Pos" },
-    { key: "injuryStatus", label: "Status", sortValue: (r) => r.injuryStatus, render: (r) => (r.injuryStatus ? <span className="text-amber-700">{r.injuryStatus}</span> : "—") },
+    { key: "injuryStatus", label: "Status", sortValue: (r) => r.injuryStatus, render: (r) => (r.injuryStatus ? <span className="text-amber-400">{r.injuryStatus}</span> : "—") },
     { key: "count", label: "Moves", align: "right", numeric: true, render: (r) => fmtNumber(r.count) },
   ];
 }
@@ -663,13 +663,13 @@ function SectionBlock({ section }: { section: SectionData }): JSX.Element {
       {section.eyebrow || section.title || section.blurb ? (
         <div>
           {section.eyebrow ? (
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan-on-light">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan">
               {section.eyebrow}
             </p>
           ) : null}
-          <h2 className="mt-1 text-2xl font-semibold text-ink">{section.title}</h2>
+          <h2 className="mt-1 text-2xl font-semibold text-ion-white">{section.title}</h2>
           {section.blurb ? (
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-ink-1">{section.blurb}</p>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">{section.blurb}</p>
           ) : null}
         </div>
       ) : null}
@@ -690,7 +690,7 @@ function SectionBlock({ section }: { section: SectionData }): JSX.Element {
       />
 
       {section.footnote ? (
-        <p className="text-xs leading-5 text-ink-2">{section.footnote}</p>
+        <p className="text-xs leading-5 text-ion-2">{section.footnote}</p>
       ) : null}
     </section>
   );

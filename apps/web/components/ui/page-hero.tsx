@@ -5,9 +5,11 @@ import type { ReactNode } from "react";
  * actions slot (JSON link, cross-links) and an optional right "how to read it"
  * slot (typically a <MetricExplainer />).
  *
- * Server-safe (no client hooks). Works on both the dark cosmic marketing
- * surfaces and the light paper data surfaces via the `variant` prop. The
- * paper variant is the default for data boards and uses only AA ink tokens.
+ * Server-safe (no client hooks). Renders on the unified dark canvas for both
+ * the cosmic marketing surfaces and the data boards. The `paper` variant is a
+ * legacy alias kept for API compatibility — it resolves to the dark styling so
+ * data heroes match the rest of the site and nothing flips light. All text is
+ * AA on dark (ion-white / ion-1) with the brand orbital cyan eyebrow.
  */
 
 export type HeroVariant = "paper" | "dark";
@@ -24,22 +26,20 @@ export interface PageHeroProps {
   className?: string;
 }
 
+const DARK_VARIANT = {
+  wrap: "border-surface-line",
+  eyebrow: "text-orbital-cyan",
+  title: "text-ion-white",
+  desc: "text-ion-1",
+} as const;
+
 const VARIANTS: Record<
   HeroVariant,
   { wrap: string; eyebrow: string; title: string; desc: string }
 > = {
-  paper: {
-    wrap: "border-paper-border",
-    eyebrow: "text-orbital-cyan-on-light",
-    title: "text-ink",
-    desc: "text-ink-1",
-  },
-  dark: {
-    wrap: "border-mineral",
-    eyebrow: "text-orbital-cyan",
-    title: "text-ion-white",
-    desc: "text-ion-1",
-  },
+  // `paper` is a legacy alias → dark so data heroes match the unified canvas.
+  paper: DARK_VARIANT,
+  dark: DARK_VARIANT,
 };
 
 export function PageHero({

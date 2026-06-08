@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 /**
- * Accessible tabbed nav + a filter-bar primitive for the LIGHT paper data
+ * Accessible tabbed nav + a filter-bar primitive for the UNIFIED DARK data
  * surfaces. URL-query aware so a server page can read the active view straight
  * from `searchParams` and fetch accordingly — the tabs are plain <Link>s that
  * set a query param (?view= / ?engine=), so they work without client data
@@ -81,7 +81,7 @@ export function Tabs({
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={`inline-flex flex-wrap items-center gap-1 rounded-ds-md border border-paper-border bg-paper p-1 ${className}`}
+      className={`inline-flex flex-wrap items-center gap-1 rounded-ds-md border border-surface-line bg-surface-sunken p-1 ${className}`}
     >
       {items.map((item) => {
         const isActive = item.value === active;
@@ -93,10 +93,10 @@ export function Tabs({
             aria-selected={isActive}
             title={item.tooltip}
             scroll={false}
-            className={`min-h-[36px] rounded-ds-sm px-3.5 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-1/30 ${
+            className={`min-h-[36px] rounded-ds-sm px-3.5 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ion-1/30 ${
               isActive
-                ? "bg-paper-raised text-ink shadow-sm"
-                : "text-ink-1 hover:bg-paper-sunken hover:text-ink"
+                ? "bg-surface-overlay text-ion-white shadow-sm"
+                : "text-ion-1 hover:bg-surface-raised hover:text-ion-white"
             }`}
           >
             {item.label}
@@ -119,16 +119,16 @@ export interface FilterBarProps {
 
 /**
  * A quiet bar that hosts tabs/filters on the left and meta/actions on the right.
- * Paper-surface; wraps gracefully on narrow viewports.
+ * Unified-dark surface; wraps gracefully on narrow viewports.
  */
 export function FilterBar({ children, trailing, className = "" }: FilterBarProps): JSX.Element {
   return (
     <div
-      className={`flex flex-col gap-3 rounded-ds-md border border-paper-border bg-paper-raised px-4 py-3 sm:flex-row sm:items-center sm:justify-between ${className}`}
+      className={`flex flex-col gap-3 rounded-ds-md border border-surface-line bg-surface-raised px-4 py-3 sm:flex-row sm:items-center sm:justify-between ${className}`}
     >
       <div className="flex flex-wrap items-center gap-2">{children}</div>
       {trailing ? (
-        <div className="flex flex-wrap items-center gap-2 text-xs text-ink-2">{trailing}</div>
+        <div className="flex flex-wrap items-center gap-2 text-xs text-ion-2">{trailing}</div>
       ) : null}
     </div>
   );

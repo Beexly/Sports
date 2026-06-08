@@ -2,9 +2,14 @@ import type { ReactNode } from "react";
 
 /**
  * The "how we read it" definition list — a term + definition card that every
- * board duplicated inline. Reusable, server-safe, paper-surface by default.
+ * board duplicated inline. Reusable, server-safe, unified-dark surface.
  *
  * Pair it with <PageHero aside={<MetricExplainer ... />} />.
+ *
+ * Both variants now render on the dark canvas: the `paper` variant is kept as a
+ * legacy alias (callers pass `variant="paper"` on data boards) and resolves to
+ * the same dark surface so nothing flips light. All text is AA on dark
+ * (ion-white / ion-1) and the title uses the brand orbital cyan.
  */
 
 export type ExplainerVariant = "paper" | "dark";
@@ -22,22 +27,20 @@ export interface MetricExplainerProps {
   className?: string;
 }
 
+const DARK_VARIANT = {
+  wrap: "border-surface-line bg-surface-raised",
+  title: "text-orbital-cyan",
+  term: "text-ion-white",
+  def: "text-ion-1",
+} as const;
+
 const VARIANTS: Record<
   ExplainerVariant,
   { wrap: string; title: string; term: string; def: string }
 > = {
-  paper: {
-    wrap: "border-paper-border bg-paper-raised",
-    title: "text-orbital-cyan-on-light",
-    term: "text-ink",
-    def: "text-ink-1",
-  },
-  dark: {
-    wrap: "border-mineral bg-eclipse",
-    title: "text-orbital-cyan",
-    term: "text-ion-white",
-    def: "text-ion-1",
-  },
+  // `paper` is a legacy alias → dark, so data boards stay on the unified canvas.
+  paper: DARK_VARIANT,
+  dark: DARK_VARIANT,
 };
 
 export function MetricExplainer({

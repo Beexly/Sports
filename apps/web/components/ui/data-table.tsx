@@ -5,15 +5,18 @@ import type { ReactNode } from "react";
 import { toneClass, toneRowClass, type SignalTone } from "@/lib/intelligence/colors";
 
 /**
- * Generic, typed, dependency-light data table for the LIGHT "paper" data
+ * Generic, typed, dependency-light data table for the UNIFIED DARK data
  * surfaces. Every board page hand-rolled its own table (sticky header, zebra
  * rows, right-aligned numerics, source-error empty state); this is the shared
  * one they should all use.
  *
- * Design intent (FantasyPros / PFF / Stathead): the data is the hero, chrome is
- * quiet, density is generous (py-3.5), numerics are tabular mono and
- * right-aligned, sort/filter are strong and obvious. All text is AA on paper
- * (text-ink / ink-1 / ink-2 only — never the dark failing ion-2/ion-3 grays).
+ * Design intent (FantasyPros / PFF / Stathead, on a dark canvas): the data is
+ * the hero, chrome is quiet, density is generous (py-3.5), numerics are tabular
+ * mono and right-aligned, sort/filter are strong and obvious. All text is AA on
+ * the dark surface — ion-white / ion-1 / ion-2 only (the re-valued AA grays),
+ * never the light-only text-ink / ink-1 / ink-2 scale. The header sits on the
+ * sunken surface, rows zebra between the base and raised dark surfaces, and the
+ * hover state lifts to the overlay surface.
  */
 
 export type ColumnAlign = "left" | "right" | "center";
@@ -183,8 +186,8 @@ function alignClass(align: ColumnAlign | undefined): string {
 }
 
 function SortGlyph({ active, dir }: { active: boolean; dir: SortDir }): JSX.Element {
-  if (!active) return <span className="ml-1 text-ink-2/50">↕</span>;
-  return <span className="ml-1 text-ink">{dir === "asc" ? "▲" : "▼"}</span>;
+  if (!active) return <span className="ml-1 text-ion-2/50">↕</span>;
+  return <span className="ml-1 text-ion-white">{dir === "asc" ? "▲" : "▼"}</span>;
 }
 
 export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
@@ -224,9 +227,9 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
   const tableStyle = minWidth ? { minWidth: `${minWidth}px` } : undefined;
 
   return (
-    <div className={`overflow-hidden rounded-ds-md border border-paper-border bg-paper-raised ${className}`}>
+    <div className={`overflow-hidden rounded-ds-md border border-surface-line bg-surface-raised ${className}`}>
       {hasFilters ? (
-        <div className="flex flex-col gap-3 border-b border-paper-border bg-paper px-4 py-3 sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-3 border-b border-surface-line bg-surface px-4 py-3 sm:flex-row sm:items-center">
           {searchable ? (
             <label className="flex flex-1 items-center gap-2">
               <span className="sr-only">Filter rows</span>
@@ -235,17 +238,17 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={searchPlaceholder}
-                className="min-h-[36px] w-full rounded-ds-sm border border-paper-border bg-paper-raised px-3 text-sm text-ink placeholder:text-ink-2 focus:border-ink-1 focus:outline-none focus:ring-2 focus:ring-ink-1/20"
+                className="min-h-[36px] w-full rounded-ds-sm border border-surface-line bg-surface-sunken px-3 text-sm text-ion-white placeholder:text-ion-2 focus:border-ion-1 focus:outline-none focus:ring-2 focus:ring-ion-1/30"
               />
             </label>
           ) : null}
           {enumFilter ? (
-            <label className="flex items-center gap-2 text-xs font-medium text-ink-1">
+            <label className="flex items-center gap-2 text-xs font-medium text-ion-1">
               <span>{enumFilter.label}</span>
               <select
                 value={enumValue}
                 onChange={(e) => setEnumValue(e.target.value)}
-                className="min-h-[36px] rounded-ds-sm border border-paper-border bg-paper-raised px-2 text-sm text-ink focus:border-ink-1 focus:outline-none focus:ring-2 focus:ring-ink-1/20"
+                className="min-h-[36px] rounded-ds-sm border border-surface-line bg-surface-sunken px-2 text-sm text-ion-white focus:border-ion-1 focus:outline-none focus:ring-2 focus:ring-ion-1/30"
               >
                 <option value="all">All</option>
                 {enumFilter.options.map((opt) => (
@@ -256,7 +259,7 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
               </select>
             </label>
           ) : null}
-          <span className="text-xs tabular-nums text-ink-2">
+          <span className="text-xs tabular-nums text-ion-2">
             {visibleRows.length} {visibleRows.length === 1 ? "row" : "rows"}
           </span>
         </div>
@@ -264,12 +267,12 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-sm" style={tableStyle}>
-          <thead className="sticky top-0 z-10 bg-paper-sunken">
-            <tr className="border-b border-paper-border">
+          <thead className="sticky top-0 z-10 bg-surface-sunken">
+            <tr className="border-b border-surface-line">
               {showRank ? (
                 <th
                   scope="col"
-                  className="px-4 py-3 text-right font-mono text-xs font-semibold uppercase tracking-wider text-ink-2"
+                  className="px-4 py-3 text-right font-mono text-xs font-semibold uppercase tracking-wider text-ion-2"
                 >
                   #
                 </th>
@@ -286,15 +289,15 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                     aria-sort={
                       active ? (sort?.dir === "asc" ? "ascending" : "descending") : undefined
                     }
-                    className={`px-4 py-3 font-mono text-xs font-semibold uppercase tracking-wider text-ink-1 ${align}`}
+                    className={`px-4 py-3 font-mono text-xs font-semibold uppercase tracking-wider text-ion-1 ${align}`}
                   >
                     {sortable ? (
                       <button
                         type="button"
                         onClick={() => setSort((cur) => nextSort(cur, col.key))}
-                        className={`inline-flex items-center gap-0.5 rounded-ds-xs hover:text-ink focus:outline-none focus:ring-2 focus:ring-ink-1/20 ${
+                        className={`inline-flex items-center gap-0.5 rounded-ds-xs hover:text-ion-white focus:outline-none focus:ring-2 focus:ring-ion-1/30 ${
                           align === "text-right" ? "flex-row-reverse" : ""
-                        } ${active ? "text-ink" : ""}`}
+                        } ${active ? "text-ion-white" : ""}`}
                       >
                         <span>{col.label}</span>
                         <SortGlyph active={active} dir={sort?.dir ?? "desc"} />
@@ -314,23 +317,23 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                   colSpan={columns.length + (showRank ? 1 : 0)}
                   className="px-4 py-10 text-center"
                 >
-                  <p className="text-sm font-medium text-ink">{emptyTitle}</p>
-                  {emptyHint ? <p className="mt-1 text-xs text-ink-2">{emptyHint}</p> : null}
+                  <p className="text-sm font-medium text-ion-white">{emptyTitle}</p>
+                  {emptyHint ? <p className="mt-1 text-xs text-ion-2">{emptyHint}</p> : null}
                 </td>
               </tr>
             ) : (
               visibleRows.map((row, i) => {
                 const tone = rowTone?.(row) ?? null;
                 const tint = tone ? toneRowClass(tone) : "";
-                const zebra = i % 2 === 1 ? "bg-paper-sunken/60" : "bg-paper-raised";
+                const zebra = i % 2 === 1 ? "bg-surface-raised" : "bg-surface";
                 return (
                   <tr
                     key={rowKey(row, i)}
                     title={rowTitle?.(row)}
-                    className={`border-b border-paper-border/70 last:border-0 ${tint || zebra} hover:bg-paper-sunken`}
+                    className={`border-b border-surface-line/70 last:border-0 ${tint || zebra} hover:bg-surface-overlay`}
                   >
                     {showRank ? (
-                      <td className="px-4 py-3.5 text-right font-mono text-xs tabular-nums text-ink-2">
+                      <td className="px-4 py-3.5 text-right font-mono text-xs tabular-nums text-ion-2">
                         {i + 1}
                       </td>
                     ) : null}
@@ -344,7 +347,7 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                       return (
                         <td
                           key={col.key}
-                          className={`px-4 py-3.5 text-sm text-ink ${align} ${numericClass}`}
+                          className={`px-4 py-3.5 text-sm text-ion-white ${align} ${numericClass}`}
                         >
                           {content}
                         </td>
@@ -362,7 +365,7 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
 }
 
 function defaultCell(value: unknown): ReactNode {
-  if (value == null) return <span className="text-ink-2">—</span>;
+  if (value == null) return <span className="text-ion-2">—</span>;
   return String(value);
 }
 

@@ -30,7 +30,10 @@ const config: Config = {
         // ── CANONICAL GALAXY SPORTS EDGE PALETTE ─────────
         "obsidian-black":    "#050608",
         "ion-white-2":       "#F6F7FA",   // distinct from the .ion-white alias
-        "orbital-cyan":      "#00E5FF",
+        // Softened working cyan (hsl 191,68%,52%); `orbital-cyan-pure` keeps
+        // full-saturation #00E5FF for the rare single-CTA accent per screen.
+        "orbital-cyan":      "#2BC4DD",
+        "orbital-cyan-pure": "#00E5FF",
         "ion-magenta":       "#FF2DD6",
         "soft-ultraviolet":  "#7A5CFF",
         "steel-gray":        "#1A1D23",
@@ -45,6 +48,41 @@ const config: Config = {
         slate:      "#20283A",
         mineral:    "#2E3849",
         "mineral-hi": "#3C4961",
+
+        // ── SURFACE — CANONICAL unified dark elevation scale ──
+        // ONE base black + a premium elevation ladder. Use these everywhere
+        // for data surfaces instead of the 3 competing blacks (obsidianBlack
+        // #050608 / carbon #0D1117 / gray-950 #030712). Mirrors the CSS vars
+        // in design-tokens.css. ion-white/ion/ion-1/ion-2 text are AA on all.
+        //   bg-surface          → page canvas (#0D1117, == bg-carbon)
+        //   bg-surface-raised   → cards / table rows / panels
+        //   bg-surface-sunken   → insets / wells / bar TRACKS
+        //   bg-surface-overlay  → popovers / floating layers
+        //   border-surface-line → hairline divider on dark
+        surface: {
+          DEFAULT: "#0D1117",  // base canvas → bg-surface
+          base:    "#0D1117",  // explicit base → bg-surface-base
+          raised:  "#161B22",  // cards/tables → bg-surface-raised
+          sunken:  "#0A0D12",  // tracks/wells → bg-surface-sunken
+          overlay: "#1C2128",  // overlays → bg-surface-overlay
+          line:    "#30363D",  // hairline → border-surface-line
+          "line-strong": "#3C4961", // stronger divider → border-surface-line-strong
+        },
+
+        // ── DATA PALETTE — "data is the color" on dark ────────
+        // Bar/dot FILLS (bg-data-good / bg-data-bad / bg-data-neutral) and AA
+        // signal TEXT (text-data-good / text-data-bad / text-data-neutral) for
+        // the viz kit after the light→dark re-theme. Brighter than the light
+        // emerald-700/rose-700 so they pop; text values pass AA on dark.
+        data: {
+          "good":         "#34D399",  // emerald-400 — positive FILL
+          "good-text":    "#6EE7B7",  // emerald-300 — AA signal TEXT on dark
+          "bad":          "#FB7185",  // rose-400 — negative FILL
+          "bad-text":     "#FDA4AF",  // rose-300 — AA signal TEXT on dark
+          "neutral":      "#5B6678",  // muted — "no signal" FILL
+          "neutral-text": "#9AA6B8",  // ion-2 — AA muted meta TEXT on dark
+          "track":        "#0A0D12",  // == surface-sunken — bar TRACK
+        },
 
         // ── ION — cool whites & mineral silvers (DARK SCALE) ──
         // Marketing / cinematic text on carbon #0D1117. ion-2 / ion-3 were
@@ -79,11 +117,21 @@ const config: Config = {
         },
 
         // ── SECONDARY — orbital cyan (live signal) ────────
+        // Softened from hsl(191,100%,52%) #00E5FF → hsl(191,68%,52%) #2BC4DD
+        // per audit Option B (long-session eye strain). `pure` keeps the full
+        // saturation for the ONE primary CTA per screen the doc allows.
         "ion-blue": {
-          DEFAULT: "#00E5FF",
-          glow: "#5BEEFF",
-          deep: "#00A8BF",
+          DEFAULT: "#2BC4DD",
+          glow: "#6FDDEE",
+          deep: "#1A93A8",
+          pure: "#00E5FF",
           ink: "#001226",
+        },
+        "accent-cyan": {
+          DEFAULT: "#2BC4DD",
+          glow: "#6FDDEE",
+          deep: "#1A93A8",
+          pure: "#00E5FF",
         },
 
         // ── DEPTH — soft ultraviolet (model layer) ────────
@@ -94,10 +142,12 @@ const config: Config = {
         },
 
         // ── ACCENT — orbital cyan (live telemetry pings) ──
+        // Softened to match the working accent; `pure` for rare full-sat CTA.
         "ds-cyan": {
-          DEFAULT: "#00E5FF",
-          glow: "#5BEEFF",
-          deep: "#00A8BF",
+          DEFAULT: "#2BC4DD",
+          glow: "#6FDDEE",
+          deep: "#1A93A8",
+          pure: "#00E5FF",
         },
         lime: {
           DEFAULT: "#D4FF3D",
@@ -132,9 +182,9 @@ const config: Config = {
           200: "#8AE3FF",
           300: "#5BD8FF",
           400: "#33CEFF",
-          500: "#00E5FF",
-          600: "#00B8CC",
-          700: "#008CA0",
+          500: "#2BC4DD",   // softened from #00E5FF (audit Option B)
+          600: "#1A93A8",
+          700: "#137585",
           800: "#005F73",
           900: "#003647",
           950: "#001226",
@@ -187,6 +237,10 @@ const config: Config = {
         "display-2xl": ["clamp(3rem, 8vw, 6rem)", { lineHeight: "0.95", letterSpacing: "-0.02em" }],
         "display-xl":  ["clamp(2.5rem, 6vw, 4rem)", { lineHeight: "1.0", letterSpacing: "-0.02em" }],
         "display-lg":  ["clamp(2rem, 5vw, 3rem)", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
+        // Mid/small display steps complete the editorial headline ramp so data
+        // pages have a confident section-title scale (mirrors --t-display-md/sm).
+        "display-md":  ["clamp(1.5rem, 3vw, 2rem)", { lineHeight: "1.1", letterSpacing: "-0.015em" }],
+        "display-sm":  ["clamp(1.25rem, 2vw, 1.5rem)", { lineHeight: "1.2", letterSpacing: "-0.01em" }],
         eyebrow:    ["12px", { lineHeight: "1.3", letterSpacing: "0.08em" }], // floor bumped 11→12px
         "eyebrow-lg": ["13px", { lineHeight: "1.3", letterSpacing: "0.08em" }],
       },
