@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { getUserEntitlements } from "@/lib/entitlements";
 
 describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
@@ -29,13 +29,12 @@ describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
   });
 
   it("production guard: bypass is dead when NODE_ENV=production even if DEV_FAKE_ADMIN=true", async () => {
-    const originalEnv = process.env["NODE_ENV"];
-    process.env["NODE_ENV"] = "production";
+    vi.stubEnv("NODE_ENV", "production");
     try {
       const ent = await getUserEntitlements("dev-admin");
       expect(ent.tier).toBe("FREE");
     } finally {
-      process.env["NODE_ENV"] = originalEnv;
+      vi.unstubAllEnvs();
     }
   });
 });
