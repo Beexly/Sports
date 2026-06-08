@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { EngineView } from "@/components/intelligence/engine-view";
 import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Attribution } from "@/components/ui/attribution";
@@ -27,6 +29,13 @@ interface EnginesBrowserProps {
 }
 
 export default async function EnginesBrowserPage({ searchParams }: EnginesBrowserProps): Promise<JSX.Element> {
+  // Founder gate — the full engine browser exposes competitor-sensitive keys.
+  // Only an ADMIN session sees it; everyone else is bounced to sign-in.
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") {
+    redirect("/auth/signin?callbackUrl=/intelligence/engines");
+  }
+
   const requested = searchParams?.engine;
   const active = getEngine(requested);
   const groups = groupedEngines();

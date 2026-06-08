@@ -39,8 +39,13 @@ import { loadDfsSalaries } from "@/lib/dfs/salaries";
 /**
  * Player Lab view registry (SERVER).
  *
- * Collapses the ~11 separate /players/* board pages into one tabbed lab. Each
- * view reuses its EXISTING loader (no loader rewrites) and declares, as DATA,
+ * Collapses the original /players/* board pages into one tabbed lab, then
+ * consolidates that down to six primary tabs (Production, Snaps, Next Gen,
+ * Trenches, Efficiency, Availability) — folding QBR into Next Gen, Combine into
+ * Trenches, Edge + backfield efficiency into Efficiency, and Injuries + Market
+ * into Availability — with DFS demoted to a secondary (deep-link-only) view.
+ * Every consolidation is presentation only: each view reuses the EXISTING
+ * loaders (no loader rewrites) and declares, as DATA,
  * exactly how to present it: the hero copy and one or more table SECTIONS (every
  * metric and column ported faithfully, no data
  * dropped). A view can render more than one table (e.g. Production has RB/WR/TE
@@ -368,8 +373,22 @@ async function loadSnapsView(): Promise<ViewResult> {
 
 // ── OPPORTUNITY ───────────────────────────────────────────────────────────────
 
-async function loadOpportunityView(): Promise<ViewResult> {
-  const [o, ru] = await Promise.all([loadReceivingOpportunity(), loadRushingEfficiency()]);
+// ── EFFICIENCY (opportunity + backfield efficiency + edge signals) ────────────
+//
+// Presentation merge of three former tabs into one "where the looks go vs what
+// they're worth" surface. Receiving opportunity is the spine; backfield
+// efficiency and the buy-low / sell-high edge signals stack beneath it. Each
+// uses its EXISTING loader and section kind — no data logic changes. The spine
+// (receiving opportunity) gates the view; the trailing sections are additive and
+// are quietly skipped if their feed is unavailable, so a partial source outage
+// still renders the rest.
+
+async function loadEfficiencyView(): Promise<ViewResult> {
+  const [o, ru, edge] = await Promise.all([
+    loadReceivingOpportunity(),
+    loadRushingEfficiency(),
+    loadNflverseEdgeSignals(),
+  ]);
   if (o.status === "source-error") {
     return { status: "source-error", error: o.error ?? o.note ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
   }
@@ -399,6 +418,34 @@ async function loadOpportunityView(): Promise<ViewResult> {
       showRank: true,
       minWidth: 820,
     });
+  }
+  if (edge.status !== "source-error") {
+    sections.push(
+      {
+        id: "buy-low",
+        kind: "edge",
+        variant: "buy",
+        eyebrow: "Buy-low · regression up",
+        title: "Doing the work, waiting on the payoff",
+        blurb: "Players whose underlying play is running ahead of their box score, ranked by the size of the gap.",
+        rows: edge.buyLow,
+        showRank: true,
+        minWidth: 940,
+        emptyTitle: "No players cleared the gap threshold in the source window.",
+      },
+      {
+        id: "sell-high",
+        kind: "edge",
+        variant: "sell",
+        eyebrow: "Sell-high · regression risk",
+        title: "Scoring more than the play backs up",
+        blurb: "Players whose box score is outrunning their underlying play, ranked by the widest gap.",
+        rows: edge.sellHigh,
+        showRank: true,
+        minWidth: 940,
+        emptyTitle: "No players cleared the gap threshold in the source window.",
+      },
+    );
   }
   return {
     status: "live",
@@ -492,8 +539,19 @@ async function scheduleContextSection(): Promise<{ section: SectionData; windowL
   };
 }
 
+// The Next Gen view also folds in the quarterback standings: ESPN's Total QBR
+// and the two-read accuracy consensus. They live here because QBR + CPOE are the
+// season-long companion to the play-by-play passing tracking above — one tab for
+// "what the box score leaves out about the quarterback." Both QBR sections are
+// additive and skipped if their feed is down, so the tracking spine still
+// renders.
 async function loadNextGenView(): Promise<ViewResult> {
-  const [ngs, schedule] = await Promise.all([loadNflverseNextGenStats(), scheduleContextSection()]);
+  const [ngs, schedule, q, consensus] = await Promise.all([
+    loadNflverseNextGenStats(),
+    scheduleContextSection(),
+    loadNflverseQbr(),
+    loadQbConsensus(),
+  ]);
   if (ngs.status === "source-error") {
     return { status: "source-error", error: ngs.error ?? ngs.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
   }
@@ -535,6 +593,32 @@ async function loadNextGenView(): Promise<ViewResult> {
       minWidth: 980,
     },
   );
+  if (q.status !== "source-error") {
+    sections.push({
+      id: "qbr",
+      kind: "qbr",
+      eyebrow: "QBR leaders",
+      title: `The ${q.season} quarterback standings`,
+      blurb: "ESPN's Total QBR across the season, on a 0-100 scale.",
+      footnote: "Weighted by how much each play mattered; minimum six games.",
+      rows: q.leaders,
+      showRank: true,
+      minWidth: 640,
+    });
+    if (consensus.status !== "source-error" && consensus.rows.length > 0) {
+      sections.push({
+        id: "consensus",
+        kind: "qbr-consensus",
+        eyebrow: "Consensus",
+        title: "Where two takes on the QB agree",
+        blurb: consensus.note,
+        footnote: `Two independent reads, shown side by side. We flag where they disagree rather than blending them.${!consensus.sources.ngs ? " One feed is unavailable right now, so some rows are single-source." : ""}`,
+        rows: consensus.rows,
+        showRank: true,
+        minWidth: 720,
+      });
+    }
+  }
   return {
     status: "live",
     windowLabel: `Season ${ngs.season}${schedule ? ` · context ${schedule.windowLabel}` : ""}`,
@@ -545,202 +629,110 @@ async function loadNextGenView(): Promise<ViewResult> {
 
 // ── TRENCHES (pressure & coverage) ────────────────────────────────────────────
 
+// Trenches now also carries the athletic measurables: the latest combine class
+// and the fastest forties on record fold in as two additive sections beneath
+// pressure & coverage — same loader, same kinds, just stacked here so "the line
+// of scrimmage and the traits behind it" live on one tab. Combine sections are
+// skipped if the feed is down so the pressure/coverage spine still renders.
 async function loadTrenchesView(): Promise<ViewResult> {
-  const pc = await loadNflversePressureCoverage();
+  const [pc, combine] = await Promise.all([loadNflversePressureCoverage(), loadNflverseCombine()]);
   if (pc.status === "source-error") {
     return { status: "source-error", error: pc.error ?? pc.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
   }
-  return {
-    status: "live",
-    windowLabel: `Season ${pc.season}`,
-    sourceIds: ["nflverse"],
-    sections: [
+  const sections: SectionData[] = [
+    {
+      id: "qb-pressure",
+      kind: "trenches-qb",
+      eyebrow: "QB pressure",
+      title: "Most pressured passers",
+      blurb: "Quarterbacks who take the most heat, and how it shows up in bad throws and sacks.",
+      rows: pc.qbPressure,
+      showRank: true,
+      minWidth: 640,
+      emptyTitle: "No qualifying quarterbacks in the source window.",
+    },
+    {
+      id: "coverage",
+      kind: "trenches-coverage",
+      eyebrow: "Coverage",
+      title: "Lockdown defenders",
+      blurb: "The defenders quarterbacks have the least success throwing at this season.",
+      rows: pc.coverage,
+      showRank: true,
+      minWidth: 720,
+      emptyTitle: "No qualifying defenders in the source window.",
+    },
+  ];
+  if (combine.status !== "source-error") {
+    sections.push(
       {
-        id: "qb-pressure",
-        kind: "trenches-qb",
-        eyebrow: "QB pressure",
-        title: "Most pressured passers",
-        blurb: "Quarterbacks who take the most heat, and how it shows up in bad throws and sacks.",
-        rows: pc.qbPressure,
-        showRank: true,
-        minWidth: 640,
-        emptyTitle: "No qualifying quarterbacks in the source window.",
-      },
-      {
-        id: "coverage",
-        kind: "trenches-coverage",
-        eyebrow: "Coverage",
-        title: "Lockdown defenders",
-        blurb: "The defenders quarterbacks have the least success throwing at this season.",
-        rows: pc.coverage,
-        showRank: true,
-        minWidth: 720,
-        emptyTitle: "No qualifying defenders in the source window.",
-      },
-    ],
-  };
-}
-
-// ── COMBINE ───────────────────────────────────────────────────────────────────
-
-async function loadCombineView(): Promise<ViewResult> {
-  const c = await loadNflverseCombine();
-  if (c.status === "source-error") {
-    return { status: "source-error", error: c.error ?? c.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
-  }
-  return {
-    status: "live",
-    windowLabel: `Latest class ${c.latestYear ?? "N/A"}`,
-    sourceIds: ["nflverse"],
-    sections: [
-      {
-        id: "latest",
+        id: "combine-latest",
         kind: "combine",
-        eyebrow: `Class of ${c.latestYear ?? ""}`,
+        eyebrow: `Athletic testing · class of ${combine.latestYear ?? ""}`,
         title: "Fastest 40 in the latest class",
-        blurb: "The latest draft class's combine testing — speed, jumps, and agility. Filter by position.",
-        rows: c.latestClass,
+        blurb: "The latest draft class's combine testing — speed, jumps, and agility. Traits to weigh against the tape, not proof on their own.",
+        rows: combine.latestClass,
         showRank: true,
         minWidth: 760,
         emptyTitle: "No measurements in the source window.",
       },
       {
-        id: "fastest",
+        id: "combine-fastest",
         kind: "combine",
         variant: "with-year",
-        eyebrow: "All-time",
+        eyebrow: "Athletic testing · all-time",
         title: "Fastest 40 on record",
         blurb: "The fastest forties on record, across every class.",
-        rows: c.fastestForty,
+        rows: combine.fastestForty,
         showRank: true,
         minWidth: 820,
         emptyTitle: "No measurements in the source window.",
       },
-    ],
-  };
-}
-
-// ── QBR ───────────────────────────────────────────────────────────────────────
-
-async function loadQbrView(): Promise<ViewResult> {
-  const [q, consensus] = await Promise.all([loadNflverseQbr(), loadQbConsensus()]);
-  if (q.status === "source-error") {
-    return { status: "source-error", error: q.error ?? q.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
-  }
-  const sections: SectionData[] = [
-    {
-      id: "qbr",
-      kind: "qbr",
-      eyebrow: "QBR leaders",
-      title: `The ${q.season} quarterback standings`,
-      blurb: "ESPN's Total QBR across the season, on a 0-100 scale.",
-      footnote: "Weighted by how much each play mattered; minimum six games.",
-      rows: q.leaders,
-      showRank: true,
-      minWidth: 640,
-    },
-  ];
-  if (consensus.status !== "source-error" && consensus.rows.length > 0) {
-    sections.push({
-      id: "consensus",
-      kind: "qbr-consensus",
-      eyebrow: "Consensus",
-      title: "Where two takes on the QB agree",
-      blurb: consensus.note,
-      footnote: `Two independent reads, shown side by side. We flag where they disagree rather than blending them.${!consensus.sources.ngs ? " One feed is unavailable right now, so some rows are single-source." : ""}`,
-      rows: consensus.rows,
-      showRank: true,
-      minWidth: 720,
-    });
-  }
-  return { status: "live", windowLabel: `Season ${q.season}`, sourceIds: ["nflverse"], sections };
-}
-
-// ── EDGE ──────────────────────────────────────────────────────────────────────
-
-async function loadEdgeView(): Promise<ViewResult> {
-  const edge = await loadNflverseEdgeSignals();
-  if (edge.status === "source-error") {
-    return { status: "source-error", error: edge.error ?? edge.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
+    );
   }
   return {
     status: "live",
-    windowLabel: `Season ${edge.season}`,
+    windowLabel: `Season ${pc.season}${combine.status !== "source-error" && combine.latestYear ? ` · combine ${combine.latestYear}` : ""}`,
     sourceIds: ["nflverse"],
-    sections: [
-      {
-        id: "buy-low",
-        kind: "edge",
-        variant: "buy",
-        eyebrow: "Buy-low · regression up",
-        title: "Doing the work, waiting on the payoff",
-        blurb: "Players whose underlying play is running ahead of their box score, ranked by the size of the gap.",
-        rows: edge.buyLow,
-        showRank: true,
-        minWidth: 940,
-        emptyTitle: "No players cleared the gap threshold in the source window.",
-      },
-      {
-        id: "sell-high",
-        kind: "edge",
-        variant: "sell",
-        eyebrow: "Sell-high · regression risk",
-        title: "Scoring more than the play backs up",
-        blurb: "Players whose box score is outrunning their underlying play, ranked by the widest gap.",
-        rows: edge.sellHigh,
-        showRank: true,
-        minWidth: 940,
-        emptyTitle: "No players cleared the gap threshold in the source window.",
-      },
-    ],
+    sections,
   };
 }
 
-// ── INJURIES ──────────────────────────────────────────────────────────────────
-
-async function loadInjuriesView(): Promise<ViewResult> {
-  const report = await loadNflverseInjuryReport();
+// ── AVAILABILITY (injuries + market) ──────────────────────────────────────────
+//
+// Presentation merge of the former Injuries and Market tabs into one "who's
+// actually going to play, and what the crowd already knows" surface. The
+// official injury report is the spine and gates the view; Sleeper's live add /
+// drop activity stacks beneath it as additive sections, skipped if Sleeper is
+// unavailable so the injury report still renders. Both feeds (nflverse +
+// sleeper) are attributed.
+async function loadAvailabilityView(): Promise<ViewResult> {
+  const [report, signal] = await Promise.all([loadNflverseInjuryReport(), loadSleeperMarketSignal()]);
   if (report.status === "source-error") {
     return { status: "source-error", error: report.error ?? report.note ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
   }
-  return {
-    status: "live",
-    windowLabel: `Season ${report.season}, week ${report.week ?? "N/A"}`,
-    sourceIds: ["nflverse"],
-    sections: [
-      {
-        id: "injuries",
-        kind: "injuries",
-        eyebrow: "Latest week",
-        title: "Designations & practice status",
-        blurb: `Out ${report.counts.out} · Doubtful ${report.counts.doubtful} · Questionable ${report.counts.questionable}. Straight from the official team reports. Filter by position.`,
-        footnote: report.note,
-        rows: report.rows,
-        enumOptions: distinctOptions(report.rows, (r) => r.position),
-        minWidth: 820,
-        emptyTitle: "No designations in the latest week of the source file.",
-      },
-    ],
-  };
-}
-
-// ── MARKET (Sleeper) ──────────────────────────────────────────────────────────
-
-async function loadMarketView(): Promise<ViewResult> {
-  const signal = await loadSleeperMarketSignal();
-  if (signal.status === "source-error") {
-    return { status: "source-error", error: signal.error ?? signal.note ?? "UNKNOWN", sourceIds: ["sleeper"], sections: [] };
-  }
-  return {
-    status: "live",
-    windowLabel: `Last ${signal.lookbackHours} hours`,
-    sourceIds: ["sleeper"],
-    sections: [
+  const marketLive = signal.status !== "source-error";
+  const sections: SectionData[] = [
+    {
+      id: "injuries",
+      kind: "injuries",
+      eyebrow: "Injury report · latest week",
+      title: "Designations & practice status",
+      blurb: `Out ${report.counts.out} · Doubtful ${report.counts.doubtful} · Questionable ${report.counts.questionable}. Straight from the official team reports. Filter by position.`,
+      footnote: report.note,
+      rows: report.rows,
+      enumOptions: distinctOptions(report.rows, (r) => r.position),
+      minWidth: 820,
+      emptyTitle: "No designations in the latest week of the source file.",
+    },
+  ];
+  if (marketLive) {
+    sections.push(
       {
         id: "adds",
         kind: "market",
         variant: "buy",
-        eyebrow: "Rising · most added",
+        eyebrow: "Market · rising, most added",
         title: "What the crowd is buying",
         blurb: `The players fantasy managers are adding most across Sleeper in the last ${signal.lookbackHours} hours.`,
         footnote: signal.note,
@@ -754,7 +746,7 @@ async function loadMarketView(): Promise<ViewResult> {
         id: "drops",
         kind: "market",
         variant: "sell",
-        eyebrow: "Falling · most dropped",
+        eyebrow: "Market · falling, most dropped",
         title: "What the crowd is selling",
         blurb: `The players fantasy managers are dropping most across Sleeper in the last ${signal.lookbackHours} hours.`,
         rows: signal.drops,
@@ -763,7 +755,13 @@ async function loadMarketView(): Promise<ViewResult> {
         minWidth: 520,
         emptyTitle: "No trending players in this window.",
       },
-    ],
+    );
+  }
+  return {
+    status: "live",
+    windowLabel: `Season ${report.season}, week ${report.week ?? "N/A"}${marketLive ? ` · market last ${signal.lookbackHours}h` : ""}`,
+    sourceIds: marketLive ? ["nflverse", "sleeper"] : ["nflverse"],
+    sections,
   };
 }
 
@@ -810,6 +808,16 @@ async function loadDfsView(): Promise<ViewResult> {
 }
 
 // ── Registry ──────────────────────────────────────────────────────────────────
+//
+// PLAYER_VIEWS is the PRIMARY tab row (the page maps it 1:1 into <Tabs/>). The
+// Player Lab was consolidated from ~11 board tabs down to six here:
+//   Production · Snaps · Next Gen · Trenches · Efficiency · Availability
+// Three former tabs were folded into these as additive sections (QBR → Next Gen,
+// Combine → Trenches, Edge + backfield efficiency → Efficiency), and two became
+// the merged Efficiency / Availability views. DFS is DEMOTED to SECONDARY_VIEWS:
+// it is intentionally absent from the tab row, but stays reachable at
+// /players?view=dfs so existing deep links keep working. Old, now-merged slugs
+// alias forward via VIEW_ALIASES so no /players?view= deep link 404s.
 
 export const PLAYER_VIEWS: readonly PlayerView[] = [
   {
@@ -835,93 +843,57 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     load: loadSnapsView,
   },
   {
-    slug: "opportunity",
-    label: "Opportunity",
-    tabTooltip: "WOPR / air yards (WR) & RYOE / volume (RB)",
-    eyebrow: "Receiving opportunity",
-    title: "Opportunity comes before production.",
-    description:
-      "Where the looks are going, and where that hasn't shown up in the box score yet. That gap is the edge.",
-    jsonHref: "/api/intelligence/receiving-opportunity",
-    load: loadOpportunityView,
-  },
-  {
     slug: "nextgen",
     label: "Next Gen",
-    tabTooltip: "Separation, CPOE, RYOE + last-4-week recent form",
+    tabTooltip: "Separation, CPOE, RYOE + recent form, plus QBR standings",
     eyebrow: "Next Gen Stats",
     title: "What the box score leaves out.",
     description:
-      "Player-tracking data: how open receivers get, how accurate quarterbacks throw, and how much backs add beyond their blocking — each with a four-week trend and this week's game conditions.",
+      "Player-tracking data: how open receivers get, how accurate quarterbacks throw, and how much backs add beyond their blocking — each with a four-week trend — plus the season's QBR standings and a second accuracy read on the quarterback.",
     jsonHref: "/api/nflverse/next-gen-stats",
     load: loadNextGenView,
   },
   {
     slug: "trenches",
     label: "Trenches",
-    tabTooltip: "Pressure & coverage (PFR advanced charting)",
-    eyebrow: "Pressure & Coverage",
+    tabTooltip: "Pressure & coverage (PFR charting) + combine measurables",
+    eyebrow: "Pressure, Coverage & Traits",
     title: "The trenches, charted.",
     description:
-      "Which quarterbacks take the most heat and how they hold up under it, and which coverage defenders quarterbacks can't beat.",
+      "Which quarterbacks take the most heat and how they hold up under it, which coverage defenders quarterbacks can't beat, and the athletic testing behind the prospects.",
     jsonHref: "/api/nflverse/pressure-coverage",
     load: loadTrenchesView,
   },
   {
-    slug: "combine",
-    label: "Combine",
-    tabTooltip: "Athletic testing measurements",
-    eyebrow: "Combine · athletic testing",
-    title: "The traits, before the tape.",
+    slug: "efficiency",
+    label: "Efficiency",
+    tabTooltip: "Opportunity, backfield efficiency & buy-low / sell-high edges",
+    eyebrow: "Opportunity & Edge",
+    title: "Where the looks go, and what they're worth.",
     description:
-      "NFL Combine measurements — speed, jumps, and agility. Athletic traits to weigh against production, not proof on their own.",
-    jsonHref: "/api/nflverse/combine",
-    load: loadCombineView,
+      "Where the targets and carries are going, how efficiently each player turns them into yards, and where underlying play and box score have drifted far enough apart to be a buy or a sell.",
+    jsonHref: "/api/intelligence/receiving-opportunity",
+    load: loadEfficiencyView,
   },
   {
-    slug: "qbr",
-    label: "QBR",
-    tabTooltip: "ESPN Total QBR + CPOE consensus",
-    eyebrow: "Total QBR",
-    title: "A second opinion on the quarterback.",
+    slug: "availability",
+    label: "Availability",
+    tabTooltip: "Official injury designations + live fantasy adds / drops",
+    eyebrow: "Injuries & Market",
+    title: "Who's actually available — and what the crowd already knows.",
     description:
-      "ESPN's Total QBR across the season, set next to an independent accuracy read. When both agree, the read holds up better.",
-    jsonHref: "/api/nflverse/qbr",
-    load: loadQbrView,
-  },
-  {
-    slug: "edge",
-    label: "Edge",
-    tabTooltip: "Buy-low / sell-high from tracking vs production",
-    eyebrow: "Edge Signals",
-    title: "Getting open, not yet getting paid.",
-    description:
-      "Where a receiver's underlying play and his box score have drifted apart. Play ahead of production is a buy; production ahead of play is a sell.",
-    jsonHref: "/api/nflverse/edge-signals",
-    load: loadEdgeView,
-  },
-  {
-    slug: "injuries",
-    label: "Injuries",
-    tabTooltip: "Official injury designations",
-    eyebrow: "Injury report",
-    title: "Who's actually available.",
-    description:
-      "The official team injury designations and practice status for the latest week. Availability swings outcomes as much as anything outside the market.",
+      "The official team injury designations and practice status for the latest week, set next to where fantasy managers are piling in and bailing out across Sleeper. Availability swings outcomes; the market is a fast tell on breaking news.",
     jsonHref: "/api/nflverse/injuries",
-    load: loadInjuriesView,
+    load: loadAvailabilityView,
   },
-  {
-    slug: "market",
-    label: "Market",
-    tabTooltip: "Live fantasy adds & drops (Sleeper)",
-    eyebrow: "Market signal",
-    title: "What the crowd is doing right now.",
-    description:
-      "Live add and drop activity across Sleeper fantasy leagues. A read on sentiment and a fast tell on breaking news, not our projection.",
-    jsonHref: "/api/sleeper/market-signal",
-    load: loadMarketView,
-  },
+];
+
+/**
+ * Secondary views — resolvable via /players?view=<slug> but deliberately kept
+ * OFF the primary tab row. DFS lives here: a niche, licensed-feed-gated surface
+ * that doesn't earn a permanent tab, but whose deep links must still resolve.
+ */
+export const SECONDARY_VIEWS: readonly PlayerView[] = [
   {
     slug: "dfs",
     label: "DFS",
@@ -935,13 +907,35 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
   },
 ];
 
+/**
+ * Forward-aliases for the former (pre-consolidation) slugs so existing
+ * /players?view=<old> deep links don't 404. Each maps to the merged view that
+ * now carries its sections.
+ */
+export const VIEW_ALIASES: Readonly<Record<string, string>> = {
+  opportunity: "efficiency", // receiving opportunity → Efficiency spine
+  edge: "efficiency", // buy-low / sell-high → Efficiency section
+  combine: "trenches", // athletic measurables → Trenches section
+  qbr: "nextgen", // QBR standings + consensus → Next Gen section
+  injuries: "availability", // injury report → Availability spine
+  market: "availability", // Sleeper adds / drops → Availability section
+};
+
 export const DEFAULT_VIEW_SLUG = "production";
 
-/** Resolve a slug (possibly from searchParams) to a registered view. */
+/** Every resolvable view (primary tab row + secondary). */
+const ALL_VIEWS: readonly PlayerView[] = [...PLAYER_VIEWS, ...SECONDARY_VIEWS];
+
+/**
+ * Resolve a slug (possibly from searchParams) to a registered view. Tries the
+ * primary + secondary registries directly, then forwards a former/merged slug
+ * through VIEW_ALIASES, and finally falls back to the default view.
+ */
 export function resolvePlayerView(slug: string | undefined): PlayerView {
+  const aliased = slug && VIEW_ALIASES[slug] ? VIEW_ALIASES[slug] : slug;
   const found =
-    PLAYER_VIEWS.find((v) => v.slug === slug) ??
-    PLAYER_VIEWS.find((v) => v.slug === DEFAULT_VIEW_SLUG) ??
+    ALL_VIEWS.find((v) => v.slug === aliased) ??
+    ALL_VIEWS.find((v) => v.slug === DEFAULT_VIEW_SLUG) ??
     PLAYER_VIEWS[0];
   if (!found) {
     throw new Error("PLAYER_VIEWS registry is empty");

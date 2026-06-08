@@ -33,19 +33,19 @@ const PLAYERS_MENU: readonly NavGroup[] = [
   },
 ];
 
-// Intelligence ▾ — hub-first: the one system, then at most 3 curated entries.
-// Trend Lab / Airwave / CLV Tracker / The Beat / Mission Control / metrics now
-// live inside the Intelligence hub + its sub-nav + the ⌘K palette.
+// Intelligence ▾ — flagship-first: the GSE Rating leads, then the hub and a few
+// public surfaces. The engine browser and methodology/metrics are founder-gated
+// and intentionally absent here. Trend Lab / Airwave / CLV Tracker / The Beat
+// all live inside the Intelligence hub + its sub-nav + the ⌘K palette.
 const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
-      { label: "Intelligence Hub", href: "/intelligence", desc: "The whole intelligence system, one place" },
+      { label: "GSE Rating", href: "/intelligence/rating", desc: "One honest number, with the reasoning shown" },
     ],
   },
   {
     items: [
-      { label: "Engines", href: "/intelligence/engines", desc: "Every advanced-data engine" },
-      { label: "Proof", href: "/intelligence/engines?engine=proof", desc: "Does the process predict?" },
+      { label: "Intelligence Hub", href: "/intelligence", desc: "The whole intelligence system, one place" },
       { label: "Edge Map", href: "/observatory", desc: "The slate as a galaxy" },
     ],
   },

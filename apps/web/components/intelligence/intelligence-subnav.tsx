@@ -15,7 +15,10 @@ import { usePathname } from "next/navigation";
  *
  * Pure, deterministic client component — no data fetching, no time/random
  * sources. Active state is derived solely from usePathname() (which returns the
- * path WITHOUT the query string, so Engines highlights for any ?engine=value).
+ * path WITHOUT the query string).
+ *
+ * Public surfaces only. The engine browser and methodology/metrics are
+ * founder-gated and intentionally absent here.
  *
  * Accessibility: every item is a real <Link> (keyboard reachable); the active
  * item is distinguishable by MORE than hue — it carries font-semibold weight, a
@@ -32,7 +35,7 @@ interface SubnavItem {
 
 const ITEMS: readonly SubnavItem[] = [
   { label: "Overview", href: "/intelligence", match: "exact" },
-  { label: "Engines", href: "/intelligence/engines", match: "startsWith" },
+  { label: "GSE Rating", href: "/intelligence/rating", match: "startsWith" },
   { label: "Trends", href: "/trends", match: "startsWith" },
   { label: "Edge Map", href: "/observatory", match: "startsWith" },
   { label: "Airwave", href: "/airwave", match: "startsWith" },

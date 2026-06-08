@@ -100,22 +100,16 @@ const SYSTEM_NODES: ReadonlyArray<{
   readonly accent: string;
 }> = [
   {
-    title: "Engines",
-    href: "/intelligence/engines",
-    desc: "Every advanced-data engine in one browsable surface.",
+    title: "GSE Rating",
+    href: "/intelligence/rating",
+    desc: "One honest number per player, with the read that comes with it.",
     accent: BRAND_COLORS.orbitalCyan,
-  },
-  {
-    title: "Proof & Calibration",
-    href: "/intelligence/engines?engine=proof",
-    desc: "Does the process actually predict? The honest answer.",
-    accent: BRAND_COLORS.softUltraviolet,
   },
   {
     title: "Trend Lab",
     href: "/trends",
     desc: "Significant trends, surfaced with their p-values.",
-    accent: BRAND_COLORS.orbitalCyan,
+    accent: BRAND_COLORS.softUltraviolet,
   },
   {
     title: "Edge Map",

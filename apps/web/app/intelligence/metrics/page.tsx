@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { Footer } from "@/components/ui/footer";
 import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Nav } from "@/components/ui/nav";
@@ -10,6 +12,8 @@ import {
   type Metric,
   type Stability,
 } from "@/lib/intelligence/metric-methodology";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "How We Read the Numbers — Metric Methodology",
@@ -68,7 +72,14 @@ function Row({ term, tone, children }: { term: string; tone: string; children: R
   );
 }
 
-export default function MetricsMethodologyPage(): JSX.Element {
+export default async function MetricsMethodologyPage(): Promise<JSX.Element> {
+  // Founder gate — the methodology page is the competitor-sensitive glass box.
+  // Only an ADMIN session sees it; everyone else is bounced to sign-in.
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") {
+    redirect("/auth/signin?callbackUrl=/intelligence/metrics");
+  }
+
   const groups = metricsByCategory();
   const s = methodologySummary();
 
