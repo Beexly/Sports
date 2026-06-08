@@ -119,6 +119,15 @@ export interface SectionData {
   readonly footnote?: string;
   /** The rows to render (plain, serializable objects from the loader). */
   readonly rows: ReadonlyArray<unknown>;
+  /**
+   * Density control (serializable): the column `key`s to show BY DEFAULT for a
+   * busy table — the player + the key read + a few numbers, leading. The client
+   * keeps the long tail one click away ("Show all columns"). Omit to show every
+   * column. The keys must match the bound columns for the section's `kind`; the
+   * client ignores any that don't resolve, so a stale key never drops a column
+   * silently into an error.
+   */
+  readonly primaryColumns?: readonly string[];
   /** Serializable enum-filter options; the accessor is bound on the client. */
   readonly enumOptions?: ReadonlyArray<EnumOption>;
   /** Show the rank "#" column. */
@@ -286,6 +295,9 @@ async function loadProductionView(): Promise<ViewResult> {
       blurb: `The season's top scorers${lab.throughWeek ? ` through ${lab.throughWeek} weeks` : ""}, with how each one is trending lately. Filter by position.`,
       footnote: "What already happened on the field, not a projection.",
       rows: allLeaders,
+      // Lead with the player, the scoring pace, the recent-form read, and the
+      // boom/bust shape; the full per-game splits stay one click away.
+      primaryColumns: ["playerName", "team", "pprPerGame", "last5PprPerGame", "last5PprDelta", "boomRate", "bustRate"],
       enumOptions: POS_OPTIONS,
       showRank: true,
       minWidth: 1180,
@@ -401,6 +413,9 @@ async function loadEfficiencyView(): Promise<ViewResult> {
       blurb: o.note,
       footnote: "Where the looks are going, and where that hasn't shown up in the box score yet.",
       rows: o.rows,
+      // Lead with who, the looks (targets + WOPR), the share, and the read; the
+      // depth-of-target detail (aDOT, RACR, air-yards share) tucks behind the toggle.
+      primaryColumns: ["name", "team", "position", "targets", "wopr", "targetShare", "signal"],
       enumOptions: distinctOptions(o.rows, (r) => r.position),
       showRank: true,
       minWidth: 920,
@@ -429,6 +444,9 @@ async function loadEfficiencyView(): Promise<ViewResult> {
         title: "Doing the work, waiting on the payoff",
         blurb: "Players whose underlying play is running ahead of their box score, ranked by the size of the gap.",
         rows: edge.buyLow,
+        // Lead with the player, the scoring, the usage, and the gap itself; the
+        // z-score breakdown behind the gap stays one click away.
+        primaryColumns: ["playerName", "team", "pprPerGame", "targetShare", "gap"],
         showRank: true,
         minWidth: 940,
         emptyTitle: "No players cleared the gap threshold in the source window.",
@@ -441,6 +459,7 @@ async function loadEfficiencyView(): Promise<ViewResult> {
         title: "Scoring more than the play backs up",
         blurb: "Players whose box score is outrunning their underlying play, ranked by the widest gap.",
         rows: edge.sellHigh,
+        primaryColumns: ["playerName", "team", "pprPerGame", "targetShare", "gap"],
         showRank: true,
         minWidth: 940,
         emptyTitle: "No players cleared the gap threshold in the source window.",
@@ -567,6 +586,9 @@ async function loadNextGenView(): Promise<ViewResult> {
       blurb: "How much space receivers create and what they do with it, plus how that's trended over the last four weeks.",
       footnote: formNote,
       rows: buildNgsReceivingForm(ngs),
+      // Lead with the player, the separation, the recent-form delta, and the
+      // weekly trend; cushion / catch% / air-share detail tucks behind the toggle.
+      primaryColumns: ["playerName", "team", "avgSeparation", "separationDelta", "separationSeries"],
       showRank: true,
       minWidth: 1100,
     },
@@ -578,6 +600,9 @@ async function loadNextGenView(): Promise<ViewResult> {
       blurb: "Quarterbacks ranked by accuracy beyond what the throw asked for, plus how that's trended over the last four weeks.",
       footnote: formNote,
       rows: buildNgsPassingForm(ngs),
+      // Lead with the quarterback, CPOE, the recent-form delta, and the trend;
+      // completion splits / time-to-throw / aggressiveness tuck behind the toggle.
+      primaryColumns: ["playerName", "team", "cpoe", "cpoeDelta", "cpoeSeries"],
       showRank: true,
       minWidth: 1120,
     },
@@ -589,6 +614,9 @@ async function loadNextGenView(): Promise<ViewResult> {
       blurb: "Backs ranked by the yards they add beyond what the blocking gave them, plus how that's trended over the last four weeks.",
       footnote: formNote,
       rows: buildNgsRushingForm(ngs),
+      // Lead with the back, RYOE/att, the recent-form delta, and the trend; the
+      // efficiency / stacked-box / time-to-LOS detail tucks behind the toggle.
+      primaryColumns: ["playerName", "team", "ryoePerAtt", "ryoeDelta", "ryoeSeries"],
       showRank: true,
       minWidth: 980,
     },

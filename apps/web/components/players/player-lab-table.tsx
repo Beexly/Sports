@@ -1,7 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { DataTable, type Column } from "@/components/ui/data-table";
+import { UpsellGate } from "@/components/ui/upsell-gate";
 import type { SignalTone } from "@/lib/intelligence/colors";
 import { formatSigned, signedTone, buySellTone } from "@/lib/intelligence/colors";
 import {
@@ -763,10 +764,46 @@ function resolveBinding(section: SectionData): SectionBinding {
   }
 }
 
+// ── Density: lead-with-the-read column reducer ────────────────────────────────
+
+/**
+ * Pick the default-visible columns for a section. When the server declares
+ * `primaryColumns` (the player + the key read + a few numbers), we show only
+ * those by default and keep the long tail behind a toggle — the page leads, it
+ * doesn't wall. A declared key that doesn't resolve to a real column is ignored
+ * (never an error), so a stale key degrades to "show that column from the tail"
+ * rather than dropping it. With no `primaryColumns`, every column shows.
+ */
+function pickColumns(
+  all: ReadonlyArray<Column<unknown>>,
+  primary: readonly string[] | undefined,
+  showAll: boolean,
+): { columns: ReadonlyArray<Column<unknown>>; hiddenCount: number } {
+  if (!primary || primary.length === 0) {
+    return { columns: all, hiddenCount: 0 };
+  }
+  const primarySet = new Set(primary);
+  const lead = all.filter((c) => primarySet.has(c.key));
+  // Guard against a section whose declared keys don't match any column: fall
+  // back to the full set so a stale config never blanks the table.
+  if (lead.length === 0) {
+    return { columns: all, hiddenCount: 0 };
+  }
+  const hiddenCount = all.length - lead.length;
+  return { columns: showAll ? all : lead, hiddenCount };
+}
+
 // ── Section + view rendering (CLIENT) ─────────────────────────────────────────
 
 function SectionBlock({ section }: { section: SectionData }): JSX.Element {
   const binding = resolveBinding(section);
+  const [showAll, setShowAll] = useState(false);
+
+  const { columns, hiddenCount } = useMemo(
+    () => pickColumns(binding.columns, section.primaryColumns, showAll),
+    [binding.columns, section.primaryColumns, showAll],
+  );
+
   const enumOptions: ReadonlyArray<EnumOption> | undefined = section.enumOptions;
   const enumFilter =
     enumOptions && binding.enumAccessor
@@ -777,24 +814,43 @@ function SectionBlock({ section }: { section: SectionData }): JSX.Element {
         }
       : undefined;
 
+  const hasHeader = Boolean(section.eyebrow || section.title || section.blurb);
+
   return (
     <section className="flex flex-col gap-3">
-      {section.eyebrow || section.title || section.blurb ? (
-        <div>
-          {section.eyebrow ? (
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan">
-              {section.eyebrow}
-            </p>
-          ) : null}
-          <h2 className="mt-1 text-2xl font-semibold text-ion-white">{section.title}</h2>
-          {section.blurb ? (
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">{section.blurb}</p>
-          ) : null}
+      {hasHeader ? (
+        // Card-style header (the MovesCard pattern): a quiet raised panel that
+        // frames the section read above the table, so the surface breathes.
+        <div className="rounded-ds-md border border-surface-line bg-surface-raised/60 px-5 py-4">
+          <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
+            <div className="min-w-0">
+              {section.eyebrow ? (
+                <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan">
+                  {section.eyebrow}
+                </p>
+              ) : null}
+              <h2 className="mt-1 text-2xl font-semibold text-ion-white">{section.title}</h2>
+              {section.blurb ? (
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">{section.blurb}</p>
+              ) : null}
+            </div>
+
+            {hiddenCount > 0 ? (
+              <button
+                type="button"
+                onClick={() => setShowAll((v) => !v)}
+                aria-expanded={showAll}
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-ds-sm border border-surface-line px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-wide text-ion-1 transition-colors hover:border-surface-line-strong hover:text-ion-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orbital-cyan/40"
+              >
+                {showAll ? "Fewer columns" : `All ${hiddenCount} more columns`}
+              </button>
+            ) : null}
+          </div>
         </div>
       ) : null}
 
       <DataTable<unknown>
-        columns={binding.columns}
+        columns={columns}
         rows={section.rows}
         rowKey={binding.rowKey}
         searchable={Boolean(binding.searchAccessor)}
@@ -803,7 +859,7 @@ function SectionBlock({ section }: { section: SectionData }): JSX.Element {
         rowTone={binding.rowTone}
         rowTitle={binding.rowTitle}
         showRank={section.showRank}
-        minWidth={section.minWidth}
+        minWidth={showAll ? section.minWidth : undefined}
         emptyTitle={section.emptyTitle}
         emptyHint={section.emptyHint}
       />
@@ -818,20 +874,44 @@ function SectionBlock({ section }: { section: SectionData }): JSX.Element {
 export interface PlayerLabTableProps {
   /** The serializable sections for the active view (in render order). */
   readonly sections: ReadonlyArray<SectionData>;
+  /**
+   * Whether this view's depth is gated for the current viewer. The server
+   * decides it (via lib/access.ts: ACCESS.freePlayerViews + canAccess) and
+   * passes a serializable boolean — true means FREE is looking at a paid view.
+   * Default false (open) so an un-gated caller renders everything.
+   */
+  readonly locked?: boolean;
+  /** Tier that unlocks a gated view — drives the CTA copy. Default "PRO". */
+  readonly unlockTier?: "PRO" | "ELITE";
 }
 
 /**
  * Renders all of the active view's DataTable sections from serializable data.
- * The server page owns the loaders + hero/tabs/attribution; this owns the
- * tables (and therefore the render/sort/accessor functions).
+ * The server page owns the loaders + hero/tabs/attribution and the gate
+ * DECISION; this owns the tables (and therefore the render/sort/accessor
+ * functions) and the gate PRESENTATION.
+ *
+ * When `locked`, the sections render as a blurred, inert teaser behind an
+ * "Unlock with {tier}" CTA — the shape of the depth is visible, the depth
+ * itself is sold. When open, they render in full.
  */
-export function PlayerLabTable({ sections }: PlayerLabTableProps): JSX.Element {
-  return (
-    <>
+export function PlayerLabTable({
+  sections,
+  locked = false,
+  unlockTier = "PRO",
+}: PlayerLabTableProps): JSX.Element {
+  const body = (
+    <div className="flex flex-col gap-12">
       {sections.map((s) => (
         <SectionBlock key={s.id} section={s} />
       ))}
-    </>
+    </div>
+  );
+
+  return (
+    <UpsellGate locked={locked} tier={unlockTier} label="the full Player Lab">
+      {body}
+    </UpsellGate>
   );
 }
 

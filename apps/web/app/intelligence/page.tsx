@@ -10,6 +10,7 @@ import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subna
 import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { Atmosphere } from "@/components/ui/atmosphere";
+import { AmbientGlow } from "@/components/motion/signature-grid";
 import { SignalCourtroom } from "@/components/courtroom/signal-courtroom";
 import { DecisionAutopsy } from "@/components/courtroom/decision-autopsy";
 import { AgentWarRoom } from "@/components/war-room/agent-war-room";
@@ -251,6 +252,8 @@ export default function IntelligencePage() {
           <div className="absolute inset-0 z-0">
             <ConsensusEngine3DLazy />
           </div>
+          {/* Drifting ambient glow — extra flash behind the engine, reduced-motion safe */}
+          <AmbientGlow className="z-[1]" />
           {/* Local bottom scrim — readable headline without hiding the upper labels */}
           <div
             aria-hidden="true"
@@ -458,10 +461,14 @@ export default function IntelligencePage() {
               <p className="mx-auto mt-4 max-w-xl text-sm text-ink-300">
                 Numbers about our track record stay hidden until there&apos;s enough
                 settled, calibrated history to publish them honestly. Until then,
-                this is the part we can show you in full: the method.
+                this is the part we can show you in full: the method. The rating is
+                free to read — Pro and Elite open the deeper views.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <Link href="/methodology" className="btn btn-primary">
+                <Link href="/pricing" className="btn btn-primary">
+                  See plans
+                </Link>
+                <Link href="/methodology" className="btn btn-ghost">
                   How it works
                 </Link>
                 <Link href="/responsible-play" className="btn btn-ghost">
