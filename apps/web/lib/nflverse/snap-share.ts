@@ -22,6 +22,10 @@ export type SkillPosition = "RB" | "WR" | "TE";
 /** Defensive snap-share buckets, mapped from the real PFR `position` codes. */
 export type DefensePositionGroup = "DL" | "LB" | "CB" | "S";
 
+/** Offensive-line snap-share buckets (Tackle / Guard / Center), mapped from the
+ *  real PFR `position` codes including the side variants (LT/RT, LG/RG). */
+export type OlPositionGroup = "T" | "G" | "C";
+
 /** The phase of play a snap-share row describes. */
 export type PositionGroup = "offense" | "defense" | "specialTeams";
 
@@ -66,6 +70,22 @@ export interface SpecialTeamsSnapShareRow {
   readonly totalStSnaps: number;
 }
 
+export interface OlSnapShareRow {
+  readonly playerId: string;
+  readonly playerName: string;
+  readonly team: string;
+  /** The raw PFR position code from the asset (e.g. LT, RT, LG, RG, C, T, G). */
+  readonly position: string;
+  /** Bucketed OL group for table grouping (T / G / C). */
+  readonly group: OlPositionGroup;
+  /** OL snaps are OFFENSIVE snaps — this row measures the offense phase. */
+  readonly positionGroup: "offense";
+  readonly games: number;
+  readonly snapSharePct: number; // 0..1 average offensive snap share
+  readonly snapsPerGame: number;
+  readonly totalOffenseSnaps: number;
+}
+
 export interface NflverseSnapShare {
   readonly generatedAt: string;
   readonly status: "live" | "source-error";
@@ -76,6 +96,8 @@ export interface NflverseSnapShare {
   readonly leaders: Readonly<Record<SkillPosition, readonly SnapShareRow[]>>;
   /** Defensive snap-share leaders, grouped DL / LB / CB / S. */
   readonly defense: Readonly<Record<DefensePositionGroup, readonly DefenseSnapShareRow[]>>;
+  /** Offensive-line snap-share leaders, grouped T / G / C (real OFFENSE snaps). */
+  readonly offensiveLine: Readonly<Record<OlPositionGroup, readonly OlSnapShareRow[]>>;
   /** Special-teams snap-share leaders (gunners, returners, core ST). */
   readonly specialTeams: readonly SpecialTeamsSnapShareRow[];
   readonly canPublishProjections: false;
@@ -89,6 +111,7 @@ type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
 const SKILL: readonly SkillPosition[] = ["RB", "WR", "TE"];
 const DEFENSE_GROUPS: readonly DefensePositionGroup[] = ["DL", "LB", "CB", "S"];
+const OL_GROUPS: readonly OlPositionGroup[] = ["T", "G", "C"];
 const MIN_GAMES = 4;
 const TOP_N = 40;
 
@@ -154,6 +177,34 @@ function defenseGroup(value: string | undefined): DefensePositionGroup | null {
     case "FS":
     case "SAF":
       return "S";
+    default:
+      return null;
+  }
+}
+
+/**
+ * Map a raw PFR `position` code to an offensive-line snap-share group, collapsing
+ * the side variants the asset uses (LT/RT → Tackle, LG/RG → Guard). Returns null
+ * for non-OL codes so they are excluded honestly rather than mis-bucketed. OL
+ * snaps are OFFENSE snaps in snap_counts, so these rows read the offense pair.
+ * Exported so offensive-line.ts can reuse the exact same bucketing.
+ */
+export function olGroup(value: string | undefined): OlPositionGroup | null {
+  const code = (value ?? "").toUpperCase();
+  if (!code) return null;
+  switch (code) {
+    case "T":
+    case "LT":
+    case "RT":
+    case "OT":
+      return "T";
+    case "G":
+    case "LG":
+    case "RG":
+    case "OG":
+      return "G";
+    case "C":
+      return "C";
     default:
       return null;
   }
@@ -327,6 +378,73 @@ function buildSpecialTeams(records: readonly CsvRecord[]): SpecialTeamsSnapShare
     .slice(0, TOP_N);
 }
 
+interface OlAgg {
+  name: string;
+  team: string;
+  position: string;
+  group: OlPositionGroup;
+  shares: number[];
+  snaps: number;
+}
+
+/**
+ * Offensive-line snap-share leaders, grouped T / G / C. OL workload is OFFENSE
+ * snaps in the snap_counts asset, so this reads the exact same `offense_snaps` /
+ * `offense_pct` pair the skill builder uses — only the position filter differs
+ * (OL codes via `olGroup` instead of skill codes). Real columns only; nothing is
+ * fabricated. A near-100% snap share is the honest, settled "iron-man" tell for a
+ * starting lineman.
+ */
+function buildOffensiveLine(records: readonly CsvRecord[]): Record<OlPositionGroup, OlSnapShareRow[]> {
+  const byPlayer = new Map<string, OlAgg>();
+  for (const row of records) {
+    if (row["game_type"] !== "REG") continue;
+    const group = olGroup(row["position"]);
+    if (!group) continue;
+    const snaps = toNumber(row["offense_snaps"]);
+    if (snaps <= 0) continue; // only games the lineman actually played offense
+    const id = row["pfr_player_id"] || row["player"] || "";
+    if (!id) continue;
+    const agg =
+      byPlayer.get(id) ??
+      { name: row["player"] ?? "UNKNOWN", team: row["team"] ?? "", position: row["position"] ?? "", group, shares: [], snaps: 0 };
+    agg.shares.push(toNumber(row["offense_pct"]));
+    agg.snaps += snaps;
+    agg.name = row["player"] || agg.name;
+    agg.team = row["team"] || agg.team;
+    agg.position = row["position"] || agg.position;
+    byPlayer.set(id, agg);
+  }
+
+  const rows: OlSnapShareRow[] = [];
+  for (const [id, agg] of byPlayer) {
+    const games = agg.shares.length;
+    if (games < MIN_GAMES) continue;
+    const avgShare = agg.shares.reduce((s, v) => s + v, 0) / games;
+    rows.push({
+      playerId: id,
+      playerName: agg.name,
+      team: agg.team,
+      position: agg.position,
+      group: agg.group,
+      positionGroup: "offense",
+      games,
+      snapSharePct: round(avgShare),
+      snapsPerGame: round(agg.snaps / games, 1),
+      totalOffenseSnaps: agg.snaps,
+    });
+  }
+
+  const result: Record<OlPositionGroup, OlSnapShareRow[]> = { T: [], G: [], C: [] };
+  for (const group of OL_GROUPS) {
+    result[group] = rows
+      .filter((r) => r.group === group)
+      .sort((a, b) => b.snapSharePct - a.snapSharePct || b.totalOffenseSnaps - a.totalOffenseSnaps)
+      .slice(0, TOP_N);
+  }
+  return result;
+}
+
 export function resetSnapShareCacheForTests(): void {
   snapCache = null;
 }
@@ -351,6 +469,7 @@ export async function loadNflverseSnapShare({
 
   const emptyLeaders = { RB: [], WR: [], TE: [] } as const;
   const emptyDefense = { DL: [], LB: [], CB: [], S: [] } as const;
+  const emptyOl = { T: [], G: [], C: [] } as const;
   const candidates = [season, season - 1];
   let lastError: unknown = null;
 
@@ -368,6 +487,7 @@ export async function loadNflverseSnapShare({
         sourceRows: records.length,
         leaders: buildLeaders(records),
         defense: buildDefense(records),
+        offensiveLine: buildOffensiveLine(records),
         specialTeams: buildSpecialTeams(records),
         canPublishProjections: false,
         blockReason:
@@ -390,6 +510,7 @@ export async function loadNflverseSnapShare({
     sourceRows: 0,
     leaders: emptyLeaders,
     defense: emptyDefense,
+    offensiveLine: emptyOl,
     specialTeams: [],
     canPublishProjections: false,
     blockReason:

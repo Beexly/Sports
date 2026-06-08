@@ -279,8 +279,22 @@
   20% { opacity: 1; }
   100% { stroke-dashoffset: 0; opacity: 1; }
 }
+/* Light-band wipe that sweeps across the forming→identity handoff, like a
+ * film frame catching light as the mark resolves. */
+@keyframes gse-lightband {
+  0%   { transform: translateX(-120%) skewX(-12deg); opacity: 0; }
+  20%  { opacity: 0.9; }
+  100% { transform: translateX(120%) skewX(-12deg); opacity: 0; }
+}
+/* Particle sweep — fine streaks rushing inward as identity locks. */
+@keyframes gse-particle-sweep {
+  0%   { transform: scale(1.6) rotate(0deg); opacity: 0; }
+  25%  { opacity: 0.8; }
+  100% { transform: scale(0.2) rotate(40deg); opacity: 0; }
+}
 @media (prefers-reduced-motion: reduce) {
   .gse-cine-anim { animation: none !important; }
+  .gse-grain { animation: none !important; }
 }
 @keyframes gse-fill {
   from { transform: scaleX(0); }
@@ -295,10 +309,33 @@
   inset: 0;
   pointer-events: none;
   z-index: 70;
-  opacity: 0.05;
+  opacity: 0.09;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 140px 140px;
+  animation: gse-grain-jitter 0.5s steps(3) infinite;
+}
+@keyframes gse-grain-jitter {
+  0%   { transform: translate3d(0, 0, 0); }
+  33%  { transform: translate3d(-3px, 2px, 0); }
+  66%  { transform: translate3d(2px, -3px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+/* Fine CRT scanlines layered over the whole frame for a broadcast-tube feel. */
+.gse-scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 69;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.5) 3px,
+    rgba(0, 0, 0, 0) 4px
+  );
 }
 .gse-vignette {
   position: fixed;
@@ -306,8 +343,9 @@
   pointer-events: none;
   z-index: 1;
   background:
-    radial-gradient(130% 100% at 50% 38%, transparent 52%, rgba(2, 3, 5, 0.5) 100%),
-    linear-gradient(180deg, rgba(2, 3, 5, 0.35) 0%, transparent 18%);
+    radial-gradient(120% 95% at 50% 40%, transparent 42%, rgba(2, 3, 5, 0.78) 100%),
+    linear-gradient(180deg, rgba(2, 3, 5, 0.5) 0%, transparent 16%),
+    linear-gradient(0deg, rgba(2, 3, 5, 0.5) 0%, transparent 16%);
 }
 
 /* Editorial serif accent — Instrument Serif italic against the geometric

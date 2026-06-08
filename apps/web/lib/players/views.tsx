@@ -28,6 +28,11 @@ import {
 } from "@/lib/nflverse/next-gen-stats";
 import { loadScheduleContext } from "@/lib/nflverse/schedule-context";
 import { loadNflversePressureCoverage } from "@/lib/nflverse/pressure-coverage";
+import {
+  loadNflverseOffensiveLine,
+  type OffensiveLinemanRow,
+  type OlTeamProtection,
+} from "@/lib/nflverse/offensive-line";
 import { loadNflverseCombine } from "@/lib/nflverse/combine";
 import { loadNflverseQbr } from "@/lib/nflverse/qbr";
 import { loadQbConsensus } from "@/lib/intelligence/qb-consensus";
@@ -89,6 +94,7 @@ export type SectionKind =
   | "nextgen-rushing"
   | "trenches-qb"
   | "trenches-coverage"
+  | "offensive-line"
   | "combine"
   | "qbr"
   | "qbr-consensus"
@@ -181,6 +187,26 @@ export interface NgsRushingFormRow extends NgsRushingLine {
   readonly trailingWeeks: number;
   /** Real per-week RYOE/att series (oldest→newest) for the spark line. */
   readonly ryoeSeries: readonly number[];
+}
+
+// ── OL / Trenches expansion row (fully serializable) ──────────────────────────
+//
+// The OL loader returns per-team views (each with a team protection PROXY) plus a
+// flat league-wide lineman list. For a single league-wide table we FLATTEN the
+// team protection proxy onto each lineman by team — every value stays a real
+// nflverse number or an honest null. The two metrics free data cannot give —
+// per-lineman pass-pro grade and scheme fit — arrive as `null` from the loader
+// and are surfaced as labeled gaps in the column + the section footnote, never
+// faked. No render fns cross the boundary here; only this plain row does.
+
+/** A league-wide OL row: the lineman joined to his team's protection proxy. */
+export interface OffensiveLineViewRow extends OffensiveLinemanRow {
+  /** Team pressure rate ALLOWED (0..1); null when no qualifying QB row. Proxy. */
+  readonly teamPressureRateAllowed: number | null;
+  /** Team mean pocket time (s); null when the column/QB row is absent. Proxy. */
+  readonly teamPocketTime: number | null;
+  /** Team sacks allowed (count); null when no QB row. Proxy context, not blame. */
+  readonly teamSacksAllowed: number | null;
 }
 
 /** What a view's load() resolves to (fully serializable). */
@@ -657,13 +683,41 @@ async function loadNextGenView(): Promise<ViewResult> {
 
 // ── TRENCHES (pressure & coverage) ────────────────────────────────────────────
 
-// Trenches now also carries the athletic measurables: the latest combine class
-// and the fastest forties on record fold in as two additive sections beneath
-// pressure & coverage — same loader, same kinds, just stacked here so "the line
-// of scrimmage and the traits behind it" live on one tab. Combine sections are
-// skipped if the feed is down so the pressure/coverage spine still renders.
+/**
+ * Flatten the OL loader's per-team protection PROXY onto each league-wide
+ * lineman by team, so a single sortable table can show, per starter, both his
+ * own settled workload/role and his unit's protection context. Each proxy value
+ * is the real team number or an honest null (no QB row / column) — never faked.
+ * Linemen arrive starters-first then by snap share; we keep that order.
+ */
+function buildOffensiveLineRows(
+  ol: Awaited<ReturnType<typeof loadNflverseOffensiveLine>>,
+): OffensiveLineViewRow[] {
+  const protectionByTeam = new Map<string, OlTeamProtection>();
+  for (const team of ol.teams) protectionByTeam.set(team.team, team.protection);
+  return ol.linemen.map((lineman): OffensiveLineViewRow => {
+    const p = protectionByTeam.get(lineman.team) ?? null;
+    return {
+      ...lineman,
+      teamPressureRateAllowed: p?.pressureRateAllowed ?? null,
+      teamPocketTime: p?.pocketTime ?? null,
+      teamSacksAllowed: p?.sacksAllowed ?? null,
+    };
+  });
+}
+
+// Trenches now also carries the offensive line and the athletic measurables: the
+// OL workload/role/protection picture and then the latest combine class + fastest
+// forties on record fold in as additive sections beneath pressure & coverage —
+// each its own loader/kind, stacked here so "the line of scrimmage and the traits
+// behind it" live on one tab. Both the OL and combine sections are skipped if
+// their feed is down so the pressure/coverage spine still renders.
 async function loadTrenchesView(): Promise<ViewResult> {
-  const [pc, combine] = await Promise.all([loadNflversePressureCoverage(), loadNflverseCombine()]);
+  const [pc, ol, combine] = await Promise.all([
+    loadNflversePressureCoverage(),
+    loadNflverseOffensiveLine(),
+    loadNflverseCombine(),
+  ]);
   if (pc.status === "source-error") {
     return { status: "source-error", error: pc.error ?? pc.blockReason ?? "UNKNOWN", sourceIds: ["nflverse"], sections: [] };
   }
@@ -691,6 +745,46 @@ async function loadTrenchesView(): Promise<ViewResult> {
       emptyTitle: "No qualifying defenders in the source window.",
     },
   ];
+  if (ol.status !== "source-error" && ol.linemen.length > 0) {
+    // The OL expansion: per starter, the settled workload + role + their unit's
+    // protection PROXY, with the college combine measurables shown as the
+    // pre-draft athletic PRIOR (labeled "college", not current form). The two
+    // metrics the free feed cannot give — per-lineman pass-pro grade and scheme
+    // fit — are carried as labeled gaps (the footnote spells them out), never
+    // invented. Filter by line spot (T / G / C); starters lead.
+    const degraded =
+      ol.sourceStatus.depth_charts === "source-error" ||
+      ol.sourceStatus.combine === "source-error" ||
+      ol.sourceStatus.pfr_advstats === "source-error";
+    sections.push({
+      id: "offensive-line",
+      kind: "offensive-line",
+      eyebrow: "Offensive line · trenches",
+      title: "The men up front, by the snaps they actually play",
+      blurb:
+        "Every tracked lineman's settled workload and role, his unit's protection proxy, and the pre-draft combine traits he tested at in college. Filter by line spot (T / G / C); starters lead.",
+      footnote: [
+        ol.perLinemanPassProGap,
+        ol.schemeFitGap,
+        degraded ? "One join leg (depth chart, combine, or protection) is degraded right now, so some columns show honest dashes." : "",
+      ]
+        .filter(Boolean)
+        .join(" "),
+      rows: buildOffensiveLineRows(ol),
+      // Lead with who, the line spot, the iron-man snap share, the starter/backup
+      // role, and the unit's protection proxy; the college combine prior + the
+      // grade/scheme gap columns tuck behind the toggle.
+      primaryColumns: ["playerName", "team", "position", "snapSharePct", "role", "teamPressureRateAllowed", "teamPocketTime"],
+      enumOptions: [
+        { value: "T", label: "T" },
+        { value: "G", label: "G" },
+        { value: "C", label: "C" },
+      ],
+      showRank: true,
+      minWidth: 1180,
+      emptyTitle: "No qualifying linemen in the source window.",
+    });
+  }
   if (combine.status !== "source-error") {
     sections.push(
       {
@@ -720,7 +814,7 @@ async function loadTrenchesView(): Promise<ViewResult> {
   }
   return {
     status: "live",
-    windowLabel: `Season ${pc.season}${combine.status !== "source-error" && combine.latestYear ? ` · combine ${combine.latestYear}` : ""}`,
+    windowLabel: `Season ${pc.season}${ol.status !== "source-error" && ol.linemen.length > 0 ? ` · OL ${ol.season}` : ""}${combine.status !== "source-error" && combine.latestYear ? ` · combine ${combine.latestYear}` : ""}`,
     sourceIds: ["nflverse"],
     sections,
   };
@@ -884,11 +978,11 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
   {
     slug: "trenches",
     label: "Trenches",
-    tabTooltip: "Pressure & coverage (PFR charting) + combine measurables",
-    eyebrow: "Pressure, Coverage & Traits",
+    tabTooltip: "Pressure & coverage (PFR charting), offensive line + combine measurables",
+    eyebrow: "Pressure, Coverage, Line & Traits",
     title: "The trenches, charted.",
     description:
-      "Which quarterbacks take the most heat and how they hold up under it, which coverage defenders quarterbacks can't beat, and the athletic testing behind the prospects.",
+      "Which quarterbacks take the most heat and how they hold up under it, which coverage defenders quarterbacks can't beat, the offensive line by the snaps it actually plays, and the athletic testing behind the prospects.",
     jsonHref: "/api/nflverse/pressure-coverage",
     load: loadTrenchesView,
   },

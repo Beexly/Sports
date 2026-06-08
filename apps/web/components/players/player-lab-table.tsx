@@ -34,6 +34,7 @@ import type {
   NgsReceivingFormRow,
   NgsPassingFormRow,
   NgsRushingFormRow,
+  OffensiveLineViewRow,
 } from "@/lib/players/views";
 
 /**
@@ -309,6 +310,72 @@ function combineColumns(showYear: boolean): ReadonlyArray<Column<CombineRow>> {
     { key: "shuttle", label: "Shuttle", align: "right", numeric: true, sortValue: (r) => r.shuttle, render: (r) => fmtDecimal(r.shuttle, 2) },
   );
   return cols;
+}
+
+// ── OFFENSIVE LINE (trenches) ─────────────────────────────────────────────────
+
+/** Line-spot chip from the bucketed group (T / G / C), with the raw PFR code
+ *  (LT/RT/LG/RG/C) as the hover title so the side detail isn't lost. */
+function olPositionCell(r: OffensiveLineViewRow): ReactNode {
+  return (
+    <span
+      title={`line spot ${r.group} · charted as ${r.position}`}
+      className="font-mono text-xs font-semibold uppercase tracking-wide text-ion-1"
+    >
+      {r.group}
+    </span>
+  );
+}
+
+/** Starter / backup role chip from the real depth-chart order; an honest dash
+ *  when the lineman isn't on the latest chart (depthOrder null). */
+function olRoleCell(r: OffensiveLineViewRow): ReactNode {
+  if (r.depthOrder == null) return <span className="font-mono tabular-nums text-ion-2">—</span>;
+  if (r.isStarter) return <SignalChip label="Starter" tone="good" title="depth-chart order 1" />;
+  return <SignalChip label={`Backup #${r.depthOrder}`} tone="neutral" title={`depth-chart order ${r.depthOrder}`} />;
+}
+
+/** A college combine measurable (the pre-draft athletic PRIOR). Renders the real
+ *  number or an honest dash; never a guess. Always labeled "college" upstream. */
+function olCombineCell(value: number | null, digits: number): ReactNode {
+  return value == null ? (
+    <span className="font-mono tabular-nums text-ion-2">—</span>
+  ) : (
+    <span className="font-mono tabular-nums text-ion-1">{value.toFixed(digits)}</span>
+  );
+}
+
+/** The two metrics the free feed cannot give honestly: a single neutral "not in
+ *  the free feed" chip, shared by the pass-pro grade and scheme-fit columns, so
+ *  the gap is visible in the table and never reads as a real grade. */
+function olGapCell(title: string): ReactNode {
+  return <SignalChip label="Not in free feed" tone="neutral" title={title} />;
+}
+
+const OL_PASS_PRO_GAP_TITLE =
+  "Per-lineman pass-protection grade is PFF-paywalled — GSE shows a dash and never fabricates an individual blocking grade. The closest free signal is the team protection proxy (pressure rate allowed / pocket time).";
+const OL_SCHEME_FIT_GAP_TITLE =
+  "Scheme fit (zone vs gap blocking) requires PFF/All-22 charting and is in no free source — GSE labels this a gap rather than guessing a scheme.";
+
+function offensiveLineColumns(): ReadonlyArray<Column<OffensiveLineViewRow>> {
+  return [
+    { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName) },
+    { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
+    { key: "position", label: "Spot", tooltip: "line spot (T / G / C); hover for the charted side", sortValue: (r) => r.group, render: (r) => olPositionCell(r) },
+    { key: "games", label: "G", align: "right", numeric: true },
+    { key: "snapSharePct", label: "Snap %", align: "right", numeric: true, tooltip: "share of team offensive snaps — the iron-man tell", sortValue: (r) => r.snapSharePct, render: (r) => <ShareBar value={r.snapSharePct} format={(v) => fmtPercent(v)} /> },
+    { key: "snapsPerGame", label: "Snaps/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.snapsPerGame) },
+    { key: "role", label: "Role", tooltip: "depth-chart role (starter / backup); dash if not charted", sortable: false, render: (r) => olRoleCell(r) },
+    { key: "teamPressureRateAllowed", label: "Unit press% allow", align: "right", numeric: true, tooltip: "TEAM protection proxy: pressure rate allowed (unit + QB + scheme), not a per-lineman grade", sortValue: (r) => r.teamPressureRateAllowed, render: (r) => <ShareBar value={r.teamPressureRateAllowed} tone="bad" format={(v) => fmtPercent(v)} /> },
+    { key: "teamPocketTime", label: "Unit pocket (s)", align: "right", numeric: true, tooltip: "TEAM protection proxy: mean pocket time (higher = more time)", sortValue: (r) => r.teamPocketTime, render: (r) => olCombineCell(r.teamPocketTime, 2) },
+    { key: "teamSacksAllowed", label: "Unit sacks", align: "right", numeric: true, tooltip: "TEAM protection proxy: sacks the unit's QBs took (context, not blame)", sortValue: (r) => r.teamSacksAllowed, render: (r) => (r.teamSacksAllowed == null ? <span className="font-mono tabular-nums text-ion-2">—</span> : String(r.teamSacksAllowed)) },
+    { key: "collegeForty", label: "40 (college)", align: "right", numeric: true, tooltip: "pre-draft combine 40-yard dash (s) — college prior, not current form", sortValue: (r) => r.collegePrior.forty, render: (r) => olCombineCell(r.collegePrior.forty, 2) },
+    { key: "collegeCone", label: "3-cone (college)", align: "right", numeric: true, tooltip: "pre-draft combine 3-cone (s) — college prior", sortValue: (r) => r.collegePrior.cone, render: (r) => olCombineCell(r.collegePrior.cone, 2) },
+    { key: "collegeBench", label: "Bench (college)", align: "right", numeric: true, tooltip: "pre-draft combine 225 bench reps — college prior", sortValue: (r) => r.collegePrior.bench, render: (r) => olCombineCell(r.collegePrior.bench, 0) },
+    { key: "collegeWeight", label: "Wt (college)", align: "right", numeric: true, tooltip: "pre-draft combine weight (lb) — college prior", sortValue: (r) => r.collegePrior.weight, render: (r) => olCombineCell(r.collegePrior.weight, 0) },
+    { key: "passProGrade", label: "Pass-pro grade", sortable: false, tooltip: OL_PASS_PRO_GAP_TITLE, render: () => olGapCell(OL_PASS_PRO_GAP_TITLE) },
+    { key: "schemeFit", label: "Scheme fit", sortable: false, tooltip: OL_SCHEME_FIT_GAP_TITLE, render: () => olGapCell(OL_SCHEME_FIT_GAP_TITLE) },
+  ];
 }
 
 // ── QBR ───────────────────────────────────────────────────────────────────────
@@ -639,6 +706,21 @@ function resolveBinding(section: SectionData): SectionBinding {
           const r = row as CoverageRow;
           return `${r.name} ${r.team}`;
         },
+      };
+    }
+    case "offensive-line": {
+      return {
+        columns: offensiveLineColumns() as ReadonlyArray<Column<unknown>>,
+        rowKey: (row) => {
+          const r = row as OffensiveLineViewRow;
+          return `${r.playerId}-${r.team}-${r.position}`;
+        },
+        searchAccessor: (row) => {
+          const r = row as OffensiveLineViewRow;
+          return `${r.playerName} ${r.team} ${r.position} ${r.group} ${r.collegePrior.school ?? ""}`;
+        },
+        enumAccessor: (row) => (row as OffensiveLineViewRow).group,
+        enumLabel: "Spot",
       };
     }
     case "combine": {
