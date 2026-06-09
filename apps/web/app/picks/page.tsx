@@ -4,6 +4,9 @@ import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { Reveal } from "@/components/motion/reveal";
+import { AmbientGlow, SignatureGrid } from "@/components/motion/signature-grid";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import type { PublicPick, DailySlate } from "@sports/types";
@@ -169,31 +172,39 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
   const demoActive = isStubMode() && isDemoPicksEnabled();
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-surface-base text-ion-white">
+      <Atmosphere />
       <Nav />
 
       <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
 
           {demoActive && (
-            <div data-testid="sample-data-banner-picks" role="status" aria-live="polite" className="mb-4 flex items-start gap-3 rounded-xl border border-yellow-900 bg-yellow-950/30 p-3 text-xs">
-              <span className="mt-0.5 rounded-md bg-yellow-900/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">Sample data</span>
-              <p className="flex-1 text-yellow-200/90 leading-relaxed">These picks are deterministic samples shown while live ingestion is being wired up. They never settle, they never count toward a verified record, and no win-rate claim is published from them.</p>
+            <div data-testid="sample-data-banner-picks" role="status" aria-live="polite" className="mb-4 flex items-start gap-3 rounded-ds-md border border-amber-500/30 bg-amber-500/10 p-3 text-xs">
+              <span className="mt-0.5 rounded-md bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-amber-300">Sample data</span>
+              <p className="flex-1 leading-relaxed text-ion-1">These picks are deterministic samples shown while live ingestion is being wired up. They never settle, they never count toward a verified record, and no win-rate claim is published from them.</p>
             </div>
           )}
-          {/* Header */}
-          <div className="mb-6">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
-              Today&apos;s Board
-            </p>
-            <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
-              Today&apos;s sports signals.
-            </h1>
-            <p className="mt-1.5 text-sm text-gray-400">
-              Every signal published today, with price, timing, risk, and the
-              reason it cleared the gate.
-            </p>
-          </div>
+
+          {/* Header — cinematic hero on the unified dark canvas. */}
+          <Reveal>
+            <div className="relative isolate mb-8 overflow-hidden rounded-ds-lg">
+              <AmbientGlow className="-z-10" />
+              <SignatureGrid className="-z-10" opacity={0.1} rotate />
+              <div className="relative z-10 px-1 py-2">
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">
+                  Today&apos;s Board
+                </p>
+                <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-ion-white">
+                  Today&apos;s sports signals.
+                </h1>
+                <p className="mt-1.5 max-w-2xl text-sm text-ion-2">
+                  Every signal published today, with price, timing, risk, and the
+                  reason it cleared the gate.
+                </p>
+              </div>
+            </div>
+          </Reveal>
 
           {/* Daily Slate Bar */}
           {slate && <SlateBar slate={slate} />}
@@ -218,10 +229,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     key={key}
                     href={`/picks${p.toString() ? `?${p}` : ""}`}
                     className={[
-                      "inline-flex min-h-11 items-center rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors",
+                      "inline-flex min-h-11 items-center rounded-ds-sm border px-3 py-1.5 text-sm font-semibold transition-colors",
                       isActive
-                        ? "border-cyan-300 bg-cyan-400 text-slate-950 shadow-[0_0_18px_rgba(34,211,238,0.35)]"
-                        : "border-gray-700 bg-gray-900 text-gray-200 hover:border-cyan-400 hover:text-white",
+                        ? "border-orbital-cyan bg-orbital-cyan/15 text-orbital-cyan"
+                        : "border-surface-line bg-surface-raised text-ion-1 hover:border-orbital-cyan/60 hover:text-ion-white",
                     ].join(" ")}
                   >
                     {label}
@@ -245,8 +256,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     className={[
                       "inline-flex min-h-11 items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                       isActive
-                        ? "border-fuchsia-300 bg-fuchsia-400 text-slate-950 shadow-[0_0_18px_rgba(217,70,239,0.35)]"
-                        : "border-gray-700 bg-gray-900 text-gray-200 hover:border-fuchsia-400 hover:text-white",
+                        ? "border-soft-ultraviolet bg-soft-ultraviolet/15 text-soft-ultraviolet"
+                        : "border-surface-line bg-surface-raised text-ion-1 hover:border-soft-ultraviolet/60 hover:text-ion-white",
                     ].join(" ")}
                   >
                     {label}
@@ -262,9 +273,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Error state */}
           {fetchError && (
-            <div className="rounded-xl border border-red-800/60 bg-red-950/40 p-6 text-center">
-              <p className="text-sm font-medium text-red-400">{fetchError}</p>
-              <p className="mt-1 text-xs text-red-500/70">
+            <div className="rounded-ds-md border border-rose-500/40 bg-rose-500/10 p-6 text-center">
+              <p className="text-sm font-medium text-rose-300">{fetchError}</p>
+              <p className="mt-1 text-xs text-rose-400/70">
                 Please refresh the page or try again shortly.
               </p>
             </div>
@@ -272,57 +283,59 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Empty state */}
           {!fetchError && bootstrapState && picks.length === 0 && (
-            <div className="rounded-xl border border-cyan-400/25 bg-cyan-950/10 p-8 text-center shadow-[0_0_28px_rgba(34,211,238,0.10)]">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-cyan-400/30 bg-cyan-400/10">
-                <svg
-                  className="h-7 w-7 text-cyan-200"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 13.5h4.5L10 6l4 12 2.5-4.5H21"
-                  />
-                </svg>
+            <Reveal>
+              <div className="rounded-ds-md border border-orbital-cyan/25 bg-surface-raised p-8 text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-orbital-cyan/30 bg-orbital-cyan/10">
+                  <svg
+                    className="h-7 w-7 text-orbital-cyan"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 13.5h4.5L10 6l4 12 2.5-4.5H21"
+                    />
+                  </svg>
+                </div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-orbital-cyan">
+                  Signal gate collecting
+                </p>
+                <h3 className="mt-3 text-lg font-semibold text-ion-white">
+                  The board is live. Public picks are still gated.
+                </h3>
+                <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
+                  Galaxy Sports Edge is ingesting odds and settlement history
+                  before publishing customer-facing picks. This keeps the record
+                  clean and keeps weak signals off the board.
+                </p>
+                <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <Link
+                    href="/methodology"
+                    className="rounded-ds-sm border border-orbital-cyan/40 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:bg-orbital-cyan/20"
+                  >
+                    Read methodology
+                  </Link>
+                  <Link
+                    href="/performance"
+                    className="rounded-ds-sm border border-surface-line bg-surface-sunken px-4 py-2 text-sm font-semibold text-ion-1 transition-colors hover:border-surface-line-strong hover:text-ion-white"
+                  >
+                    View the record
+                  </Link>
+                </div>
               </div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200">
-                Signal gate collecting
-              </p>
-              <h3 className="mt-3 text-lg font-semibold text-white">
-                The board is live. Public picks are still gated.
-              </h3>
-              <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-gray-400">
-                Galaxy Sports Edge is ingesting odds and settlement history
-                before publishing customer-facing picks. This keeps the record
-                clean and keeps weak signals off the board.
-              </p>
-              <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link
-                  href="/methodology"
-                  className="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
-                >
-                  Read methodology
-                </Link>
-                <Link
-                  href="/performance"
-                  className="rounded-lg border border-gray-700 bg-gray-900 px-4 py-2 text-sm font-semibold text-gray-200 transition-colors hover:border-fuchsia-300 hover:text-white"
-                >
-                  View the record
-                </Link>
-              </div>
-            </div>
+            </Reveal>
           )}
 
           {/* Empty state */}
           {!fetchError && !bootstrapState && picks.length === 0 && (
-            <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-12 text-center">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-800">
+            <div className="rounded-ds-md border border-surface-line bg-surface-raised p-12 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-surface-sunken">
                 <svg
-                  className="h-7 w-7 text-gray-400"
+                  className="h-7 w-7 text-ion-2"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
@@ -336,8 +349,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold text-white">No signals published for this date</h3>
-              <p className="mt-2 text-sm text-gray-500">
+              <h3 className="text-base font-semibold text-ion-white">No signals published for this date</h3>
+              <p className="mt-2 text-sm text-ion-2">
                 We only publish when the stack earns it. Some slates don&apos;t
                 clear the gates — that&apos;s the point.
               </p>
@@ -346,32 +359,34 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Picks grid */}
           {!fetchError && picks.length > 0 && (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {picks.map((pick) => (
-                <PickCard
-                  key={pick.id}
-                  pick={pick}
-                  canSeeConfidence={entitlements.canSeeConfidence}
-                  canSeeEdgeScore={entitlements.canSeeEdgeScore ?? false}
-                  canSeeFactorBreakdown={entitlements.canSeeFactorBreakdown ?? false}
-                />
-              ))}
-            </div>
+            <Reveal>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                {picks.map((pick) => (
+                  <PickCard
+                    key={pick.id}
+                    pick={pick}
+                    canSeeConfidence={entitlements.canSeeConfidence}
+                    canSeeEdgeScore={entitlements.canSeeEdgeScore ?? false}
+                    canSeeFactorBreakdown={entitlements.canSeeFactorBreakdown ?? false}
+                  />
+                ))}
+              </div>
+            </Reveal>
           )}
 
           {/* Bottom upgrade CTA for free users */}
           {isFreeTier && picks.length > 0 && (
-            <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
-              <p className="text-sm font-semibold text-blue-200">
+            <div className="mt-10 rounded-ds-md border border-orbital-cyan/25 bg-surface-raised p-6 text-center">
+              <p className="text-sm font-semibold text-ion-white">
                 You&apos;re seeing {entitlements.dailyPickLimit ?? 1} free pick per day.
               </p>
-              <p className="mt-1 text-xs text-blue-400/70">
+              <p className="mt-1 text-xs text-ion-2">
                 Pro unlocks every signal, the confidence rating, and factor
                 trail for each one. Edge Index is public.
               </p>
               <Link
                 href="/pricing"
-                className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+                className="mt-4 inline-flex rounded-ds-sm border border-orbital-cyan/50 bg-orbital-cyan/10 px-6 py-2.5 text-sm font-semibold text-orbital-cyan transition-colors hover:bg-orbital-cyan/20"
               >
                 Upgrade to Pro / $14.99/mo
               </Link>
@@ -380,10 +395,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* PRO conversion teaser for elite features */}
           {isPro && entitlements.tier === "PRO" && picks.length > 0 && (
-            <div className="mt-8 rounded-xl border border-purple-800/30 bg-purple-950/10 p-4 text-center">
-              <p className="text-xs text-purple-400">
+            <div className="mt-8 rounded-ds-md border border-soft-ultraviolet/30 bg-surface-raised p-4 text-center">
+              <p className="text-xs text-ion-2">
                 Want real-time email and push alerts on every signal?{" "}
-                <Link href="/pricing" className="font-semibold underline underline-offset-2">
+                <Link href="/pricing" className="font-semibold text-soft-ultraviolet underline underline-offset-2">
                   Upgrade to Elite / $24.99/mo
                 </Link>
               </p>
@@ -412,7 +427,7 @@ function SlateBar({ slate }: { slate: DailySlate }) {
     : null;
 
   return (
-    <div className="mb-6 rounded-xl border border-cyan-400/20 bg-slate-950/80 px-5 py-4 shadow-[0_0_28px_rgba(8,145,178,0.12)]">
+    <div className="mb-6 rounded-ds-md border border-orbital-cyan/20 bg-surface-raised px-5 py-4">
       <div className="flex flex-wrap items-center gap-3">
         {/* Games / picks */}
         <StatPill label="Games Today" value={String(slate.totalGames)} />
@@ -425,15 +440,15 @@ function SlateBar({ slate }: { slate: DailySlate }) {
 
         {/* Recent record */}
         {record && (
-          <div className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-2">
-            <span className="mr-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-400">{record.period}</span>
-            <span className="text-xs font-bold text-green-400">{record.wins}W</span>
-            <span className="mx-1 text-xs text-gray-500">/</span>
-            <span className="text-xs font-bold text-red-400">{record.losses}L</span>
+          <div className="rounded-ds-sm border border-surface-line bg-surface-sunken px-3 py-2">
+            <span className="mr-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-ion-2">{record.period}</span>
+            <span className="text-xs font-bold text-emerald-400">{record.wins}W</span>
+            <span className="mx-1 text-xs text-ion-2">/</span>
+            <span className="text-xs font-bold text-rose-400">{record.losses}L</span>
             {record.pushes > 0 && (
               <>
-                <span className="mx-1 text-xs text-gray-500">/</span>
-                <span className="text-xs font-semibold text-gray-400">{record.pushes}P</span>
+                <span className="mx-1 text-xs text-ion-2">/</span>
+                <span className="text-xs font-semibold text-ion-2">{record.pushes}P</span>
               </>
             )}
           </div>
@@ -442,20 +457,20 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {/* Last updated */}
         {lastUpdated && (
           <div className="ml-auto flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.9)]" aria-hidden="true" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-100">Updated {lastUpdated}</span>
+            <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(34,211,238,0.9)]" aria-hidden="true" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>
           </div>
         )}
       </div>
 
       {/* Sport breakdown */}
       {slate.sportBreakdown.length > 1 && (
-        <div className="mt-3 flex flex-wrap gap-2 border-t border-cyan-400/10 pt-3">
+        <div className="mt-3 flex flex-wrap gap-2 border-t border-orbital-cyan/10 pt-3">
           {slate.sportBreakdown.map(({ sport, pickCount }) => (
             <Link
               key={sport}
               href={`/picks?sport=${sport.toLowerCase()}`}
-              className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
+              className="rounded-full border border-orbital-cyan/25 bg-orbital-cyan/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-orbital-cyan transition-colors hover:bg-orbital-cyan/20 hover:text-ion-white"
             >
               {sport} {pickCount}
             </Link>
@@ -476,11 +491,11 @@ function StatPill({
   highlight?: boolean;
 }) {
   return (
-    <div className="min-w-[108px] rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-left">
-      <p className={`text-lg font-bold ${highlight ? "text-fuchsia-300" : "text-white"}`}>
+    <div className="min-w-[108px] rounded-ds-sm border border-surface-line bg-surface-sunken px-3 py-2 text-left">
+      <p className={`text-lg font-bold ${highlight ? "text-soft-ultraviolet" : "text-ion-white"}`}>
         {value}
       </p>
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">{label}</p>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ion-2">{label}</p>
     </div>
   );
 }
@@ -491,10 +506,10 @@ function StatPill({
 
 function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
   return (
-    <div className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/50 bg-yellow-950/30 p-5 sm:flex-row sm:items-center">
+    <div className="mb-6 flex flex-col items-start justify-between gap-4 rounded-ds-md border border-amber-500/40 bg-amber-500/10 p-5 sm:flex-row sm:items-center">
       <div>
-        <p className="text-sm font-semibold text-yellow-300">You&apos;re on Free — one signal a day</p>
-        <p className="mt-0.5 text-xs text-yellow-300/80">
+        <p className="text-sm font-semibold text-amber-300">You&apos;re on Free — one signal a day</p>
+        <p className="mt-0.5 text-xs text-amber-200/80">
           Pro and Elite unlock every signal, the confidence rating, and the
           factor trail behind each one.
         </p>
@@ -503,14 +518,14 @@ function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
         {!hasAccount && (
           <Link
             href="/auth/signin"
-            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:bg-gray-700"
+            className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-surface-line bg-surface-sunken px-4 py-2 text-xs font-medium text-ion-1 transition-colors hover:border-surface-line-strong hover:text-ion-white"
           >
             Sign in
           </Link>
         )}
         <Link
           href="/pricing"
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
+          className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-orbital-cyan/50 bg-orbital-cyan/10 px-4 py-2 text-xs font-semibold text-orbital-cyan transition-colors hover:bg-orbital-cyan/20"
         >
           See plans
         </Link>
@@ -528,7 +543,7 @@ function PicksTrustStrip() {
     <section
       data-testid="picks-trust-strip"
       aria-labelledby="picks-trust-heading"
-      className="mb-6 rounded-xl border border-gray-800 bg-gray-900/50 p-4"
+      className="mb-6 rounded-ds-md border border-surface-line bg-surface-raised p-4"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="max-w-2xl">
@@ -538,7 +553,7 @@ function PicksTrustStrip() {
           >
             Trust context
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-gray-300">
+          <p className="mt-2 text-sm leading-relaxed text-ion-1">
             Picks only appear after the gate clears. The methodology page
             explains what enters the score, what stays hidden, and why some
             slates publish no pick.
@@ -546,7 +561,7 @@ function PicksTrustStrip() {
         </div>
         <Link
           href="/methodology"
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-ds-sm border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:bg-orbital-cyan/20"
         >
           Read methodology
         </Link>
@@ -554,7 +569,7 @@ function PicksTrustStrip() {
       <RiskDisclosure
         variant="card"
         includePastPerformance
-        className="mt-4 border-gray-800 bg-gray-950/50"
+        className="mt-4 border-surface-line bg-surface-sunken"
       />
     </section>
   );
@@ -573,17 +588,17 @@ function DatePickerForm({
     <form method="get" action="/picks" className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
       {currentSport && <input type="hidden" name="sport" value={currentSport} />}
       {currentGrade && <input type="hidden" name="grade" value={currentGrade} />}
-      <label htmlFor="date" className="sr-only text-xs text-gray-500">Date</label>
+      <label htmlFor="date" className="sr-only text-xs text-ion-2">Date</label>
       <input
         id="date"
         type="date"
         name="date"
         defaultValue={currentDate}
-        className="min-h-11 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm text-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="min-h-11 rounded-ds-sm border border-surface-line bg-surface-sunken px-3 py-1.5 text-sm text-ion-1 focus:border-orbital-cyan focus:outline-none focus:ring-1 focus:ring-orbital-cyan"
       />
       <button
         type="submit"
-        className="min-h-11 rounded-lg bg-gray-800 px-3 py-1.5 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
+        className="min-h-11 rounded-ds-sm border border-surface-line bg-surface-sunken px-3 py-1.5 text-sm font-medium text-ion-1 transition-colors hover:border-surface-line-strong hover:text-ion-white"
       >
         Apply date
       </button>

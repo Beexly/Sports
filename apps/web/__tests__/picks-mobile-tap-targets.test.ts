@@ -29,10 +29,12 @@ describe("picks mobile ergonomics", () => {
   it("keeps visible picks-page controls mobile tappable", () => {
     const picksPageSrc = readComponent("app/picks/page.tsx");
 
-    expect(picksPageSrc).toContain("inline-flex min-h-11 items-center rounded-lg border");
+    // Tap-target invariant is min-h-11 (44px); the radius/bg tokens follow the
+    // unified dark theme (rounded-ds-sm / surface-*), not the legacy gray palette.
+    expect(picksPageSrc).toContain("inline-flex min-h-11 items-center rounded-ds-sm border");
     expect(picksPageSrc).toContain("inline-flex min-h-11 items-center rounded-full");
     expect(picksPageSrc).toContain("inline-flex min-h-11 shrink-0 items-center justify-center");
-    expect(picksPageSrc).toContain("className=\"min-h-11 rounded-lg border");
-    expect(picksPageSrc).toContain("className=\"min-h-11 rounded-lg bg-gray-800");
+    expect(picksPageSrc).toContain("min-h-11 rounded-ds-sm border border-surface-line bg-surface-sunken px-3 py-1.5 text-sm text-ion-1");
+    expect(picksPageSrc).toContain("min-h-11 rounded-ds-sm border border-surface-line bg-surface-sunken px-3 py-1.5 text-sm font-medium");
   });
 });
