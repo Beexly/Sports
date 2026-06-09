@@ -10,6 +10,7 @@ import {
 } from "@/lib/pricing/pricing-phases";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 import { Reveal } from "@/components/motion/reveal";
+import { Atmosphere } from "@/components/ui/atmosphere";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
@@ -133,7 +134,7 @@ const FAQ = [
   },
   {
     q: "How is this different from a tout service?",
-    a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail and holds back a public win-rate until enough canonical settled history exists to support one honestly.",
+    a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge grades every signal against where the market actually settled and holds back a public win-rate until enough canonical settled history exists to support one honestly.",
   },
   {
     q: "Why is the Performance page empty right now?",
@@ -164,6 +165,7 @@ export default function PricingPage() {
 
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <Atmosphere />
       <Nav />
 
       <script
@@ -208,11 +210,11 @@ export default function PricingPage() {
           {/* Feature comparison table */}
           <div className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Side by side</h2>
-            <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-800">
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-ink-800">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-800">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  <tr className="border-b border-ink-800">
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-400">
                       Feature
                     </th>
                     {PLANS.map((plan) => (
@@ -224,12 +226,12 @@ export default function PricingPage() {
                             ? "text-brand-400"
                             : plan.id === "ELITE"
                               ? "text-ultraviolet-glow"
-                              : "text-gray-300",
+                              : "text-ink-200",
                         ].join(" ")}
                       >
                         {plan.name}
                         {plan.monthly !== null && (
-                          <span className="ml-1 text-xs font-normal text-gray-400">
+                          <span className="ml-1 text-xs font-normal text-ink-400">
                             ${plan.monthly}/mo
                           </span>
                         )}
@@ -242,11 +244,11 @@ export default function PricingPage() {
                     <tr
                       key={feature}
                       className={[
-                        "border-b border-gray-800/60",
-                        i % 2 === 0 ? "bg-gray-900/20" : "",
+                        "border-b border-ink-800/60",
+                        i % 2 === 0 ? "bg-ink-950/20" : "",
                       ].join(" ")}
                     >
-                      <td className="px-4 py-3 text-gray-400">{feature}</td>
+                      <td className="px-4 py-3 text-ink-400">{feature}</td>
                       {(["FREE", "PRO", "ELITE"] as const).map((planId) => {
                         const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
                         return (
@@ -265,29 +267,29 @@ export default function PricingPage() {
           {/* FAQ */}
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Frequently asked</h2>
-            <div className="mx-auto mt-8 max-w-3xl divide-y divide-gray-800/60 rounded-2xl border border-gray-800 bg-gray-900/40">
+            <div className="mx-auto mt-8 max-w-3xl divide-y divide-ink-800/60 rounded-2xl border border-ink-800 bg-ink-950/40">
               {FAQ.map((item) => (
                 <details
                   key={item.q}
                   className="group px-5 py-4 [&_summary::-webkit-details-marker]:hidden"
                 >
-                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-gray-100">
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-ink-100">
                     <span>{item.q}</span>
                     <span
                       aria-hidden="true"
-                      className="text-gray-400 transition-transform group-open:rotate-45"
+                      className="text-ink-500 transition-transform group-open:rotate-45"
                     >
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-400">{item.a}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-ink-300">{item.a}</p>
                 </details>
               ))}
             </div>
           </section>
 
           {/* Refund note */}
-          <p className="mt-12 text-center text-xs text-gray-400">
+          <p className="mt-12 text-center text-xs text-ink-400">
             Every paid plan ships with a 7-day refund window. Cancel any time from your
             dashboard. Prices shown are founding-member rates.
           </p>
@@ -319,7 +321,7 @@ function ComparisonCell({ value }: { value: string | boolean }) {
       </svg>
     ) : (
       <svg
-        className="mx-auto h-5 w-5 text-gray-700"
+        className="mx-auto h-5 w-5 text-ink-700"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={2}
@@ -331,5 +333,5 @@ function ComparisonCell({ value }: { value: string | boolean }) {
       </svg>
     );
   }
-  return <span className="text-gray-300">{value}</span>;
+  return <span className="text-ink-200">{value}</span>;
 }

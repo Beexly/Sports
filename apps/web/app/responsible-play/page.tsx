@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { Reveal } from "@/components/motion/reveal";
 import { BiasMirror } from "@/components/bias-mirror/bias-mirror";
 import { BRAND_NAME, HELPLINE, BRAND_COLORS } from "@/lib/brand";
 
@@ -36,17 +38,22 @@ const RESOURCES = [
 
 export default function ResponsiblePlayPage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <Atmosphere />
       <Nav />
 
-      <main className="flex-1">
+      <main className="flex-1 text-ion-white">
         {/* Hero */}
         <section className="border-b border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <p className="eyebrow">Responsible play</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              Sports betting carries real risk.
-            </h1>
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>Responsible play</p>
+            </Reveal>
+            <Reveal delay={90}>
+              <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+                Sports betting carries real risk.
+              </h1>
+            </Reveal>
             <p className="mt-5 text-lg text-ink-300">
               {BRAND_NAME} is an informational service. Outcomes are never
               certain — no model eliminates variance. Wager only what you

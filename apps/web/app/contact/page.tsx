@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME, LEGAL_EMAIL, SUPPORT_EMAIL } from "@/lib/brand";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { Reveal } from "@/components/motion/reveal";
+import { BRAND_NAME, LEGAL_EMAIL, SUPPORT_EMAIL, BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -29,20 +31,27 @@ const INBOXES = [
 
 export default function ContactPage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <Atmosphere />
       <Nav />
 
-      <main className="flex-1">
+      <main className="flex-1 text-ion-white">
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <p className="eyebrow">Get in touch</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              I answer real people, not bots.
-            </h1>
-            <p className="mt-5 max-w-xl text-lg text-ink-300">
-              I aim to reply within one business day. Faster on weekday
-              afternoons, slower around major slates.
-            </p>
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>Get in touch</p>
+            </Reveal>
+            <Reveal delay={90}>
+              <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+                I answer real people, not bots.
+              </h1>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-5 max-w-xl text-lg text-ink-300">
+                I aim to reply within one business day. Faster on weekday
+                afternoons, slower around major slates.
+              </p>
+            </Reveal>
 
             <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {INBOXES.map((box) => (
