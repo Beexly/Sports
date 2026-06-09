@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { OptimizerWorkspace } from "@/components/fantasy/optimizer-workspace";
+import { canAccess, getViewerTier } from "@/lib/access";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 
 export const metadata: Metadata = {
@@ -20,7 +21,17 @@ export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs 
 export default async function OptimizerPage(): Promise<JSX.Element> {
   // Live graded pool for Start/Sit + Draft tabs when projections are on; DFS uses
   // its own slate seam regardless.
-  const pool = await resolveToolPoolAsync();
+  //
+  // FREE -> PRO -> ELITE gradient (tier resolved on the SERVER; only serializable
+  // booleans cross into the client workspace):
+  //  - FREE keeps the workspace shell + the "how the math works" teaser (ungated).
+  //  - PRO unlocks the season Start/Sit board and the Draft board.
+  //  - ELITE unlocks the DFS multi-lineup builder. (DFS output is additionally
+  //    founder-gated on a licensed salary feed elsewhere, so the gate label stays
+  //    neutral and never implies live salaries for ELITE.)
+  const [pool, tier] = await Promise.all([resolveToolPoolAsync(), getViewerTier()]);
+  const lockedPro = !canAccess(tier, "PRO");
+  const lockedElite = !canAccess(tier, "ELITE");
   return (
     <div className="min-h-screen bg-carbon text-ion">
       <Nav />
@@ -38,7 +49,7 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
           </p>
         </section>
 
-        <OptimizerWorkspace pool={pool} />
+        <OptimizerWorkspace pool={pool} lockedPro={lockedPro} lockedElite={lockedElite} />
       </main>
       <Footer />
     </div>

@@ -12,7 +12,7 @@ const SECTIONS: readonly Section[] = [
   {
     heading: "Start here",
     links: [
-      { label: "Board", href: "/board" },
+      { label: "Board", href: "/picks" },
       { label: "Today — Mission Control", href: "/today" },
       { label: "Pricing", href: "/pricing" },
     ],

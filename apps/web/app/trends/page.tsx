@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Footer } from "@/components/ui/footer";
+import { UpsellGate } from "@/components/ui/upsell-gate";
+import { canAccess, getViewerTier } from "@/lib/access";
 import {
   CONTEXT_INTELLIGENCE_SOURCES,
   PUBLIC_DATA_SOURCES,
@@ -49,13 +51,18 @@ function formatPValue(value: number): string {
 
 export default async function TrendsPage(): Promise<JSX.Element> {
   const workbench = loadTrendWorkbench();
-  const [nflverseReadiness, qbAgeTrend, birthdayTrend] = await Promise.all([
+  const [tier, nflverseReadiness, qbAgeTrend, birthdayTrend] = await Promise.all([
+    getViewerTier(),
     loadNflverseTrendReadiness(),
     loadQbAgeRbTrendReport(),
     loadBirthdayUsageTrendReport(),
   ]);
+  const lockedPro = !canAccess(tier, "PRO");
   const qbAge34Trend = qbAgeTrend.trends.find((trend) => trend.cohort === "QB age 34+");
   const birthdayResult = birthdayTrend.result;
+  // FREE teaser: the strongest cohort row stays visible; the rest of the board is gated.
+  const teaserTrends = qbAgeTrend.trends.slice(0, 1);
+  const gatedTrends = qbAgeTrend.trends.slice(1);
 
   return (
     <div className="min-h-screen bg-carbon text-ion">
@@ -201,37 +208,75 @@ export default async function TrendsPage(): Promise<JSX.Element> {
             </Link>
           </div>
 
-          <div className="overflow-x-auto border border-mineral">
-            <table className="w-full min-w-[760px] text-left text-sm">
-              <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-                <tr>
-                  <th className="px-4 py-3">Cohort</th>
-                  <th className="px-4 py-3">n</th>
-                  <th className="px-4 py-3">Mean</th>
-                  <th className="px-4 py-3">Field</th>
-                  <th className="px-4 py-3">Lift</th>
-                  <th className="px-4 py-3">p-value</th>
-                  <th className="px-4 py-3">Gate</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-mineral bg-carbon">
-                {qbAgeTrend.trends.map((trend) => (
-                  <tr key={trend.cohort}>
-                    <td className="px-4 py-3 font-semibold text-ion-white">{trend.cohort}</td>
-                    <td className="px-4 py-3 font-mono text-ion">{formatNumber(trend.n)}</td>
-                    <td className="px-4 py-3 font-mono text-ion">{formatPercent(trend.cohortMean)}</td>
-                    <td className="px-4 py-3 font-mono text-ion">{formatPercent(trend.baselineMean)}</td>
-                    <td className="px-4 py-3 font-mono text-orbital-cyan">
-                      {formatSignedPercent(trend.relativeDelta)}
-                    </td>
-                    <td className="px-4 py-3 font-mono text-ion">{formatPValue(trend.pValue)}</td>
-                    <td className="px-4 py-3 font-mono text-ion-2">
-                      {trend.significant ? "significant" : "watch"}
-                    </td>
+          <div className="flex flex-col gap-3">
+            <div className="overflow-x-auto border border-mineral">
+              <table className="w-full min-w-[760px] text-left text-sm">
+                <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                  <tr>
+                    <th className="px-4 py-3">Cohort</th>
+                    <th className="px-4 py-3">n</th>
+                    <th className="px-4 py-3">Mean</th>
+                    <th className="px-4 py-3">Field</th>
+                    <th className="px-4 py-3">Lift</th>
+                    <th className="px-4 py-3">p-value</th>
+                    <th className="px-4 py-3">Gate</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-mineral bg-carbon">
+                  {teaserTrends.map((trend) => (
+                    <tr key={trend.cohort}>
+                      <td className="px-4 py-3 font-semibold text-ion-white">{trend.cohort}</td>
+                      <td className="px-4 py-3 font-mono text-ion">{formatNumber(trend.n)}</td>
+                      <td className="px-4 py-3 font-mono text-ion">{formatPercent(trend.cohortMean)}</td>
+                      <td className="px-4 py-3 font-mono text-ion">{formatPercent(trend.baselineMean)}</td>
+                      <td className="px-4 py-3 font-mono text-orbital-cyan">
+                        {formatSignedPercent(trend.relativeDelta)}
+                      </td>
+                      <td className="px-4 py-3 font-mono text-ion">{formatPValue(trend.pValue)}</td>
+                      <td className="px-4 py-3 font-mono text-ion-2">
+                        {trend.significant ? "significant" : "watch"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {gatedTrends.length > 0 ? (
+              <UpsellGate locked={lockedPro} tier="PRO" label="The full trend board">
+                <div className="overflow-x-auto border border-mineral">
+                  <table className="w-full min-w-[760px] text-left text-sm">
+                    <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                      <tr>
+                        <th className="px-4 py-3">Cohort</th>
+                        <th className="px-4 py-3">n</th>
+                        <th className="px-4 py-3">Mean</th>
+                        <th className="px-4 py-3">Field</th>
+                        <th className="px-4 py-3">Lift</th>
+                        <th className="px-4 py-3">p-value</th>
+                        <th className="px-4 py-3">Gate</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-mineral bg-carbon">
+                      {gatedTrends.map((trend) => (
+                        <tr key={trend.cohort}>
+                          <td className="px-4 py-3 font-semibold text-ion-white">{trend.cohort}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{formatNumber(trend.n)}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{formatPercent(trend.cohortMean)}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{formatPercent(trend.baselineMean)}</td>
+                          <td className="px-4 py-3 font-mono text-orbital-cyan">
+                            {formatSignedPercent(trend.relativeDelta)}
+                          </td>
+                          <td className="px-4 py-3 font-mono text-ion">{formatPValue(trend.pValue)}</td>
+                          <td className="px-4 py-3 font-mono text-ion-2">
+                            {trend.significant ? "significant" : "watch"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </UpsellGate>
+            ) : null}
           </div>
         </section>
 

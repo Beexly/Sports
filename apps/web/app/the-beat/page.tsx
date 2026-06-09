@@ -7,6 +7,10 @@ import { Atmosphere } from "@/components/ui/atmosphere";
 import { TheBeat } from "@/components/news/the-beat";
 import { NATIONAL_INSIDERS, TEAM_BEATS, WIRE_DISCLAIMER } from "@/lib/news/wire";
 import { BRAND_COLORS } from "@/lib/brand";
+import { UpsellGate } from "@/components/ui/upsell-gate";
+import { getViewerTier, canAccess } from "@/lib/access";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "The Beat — Reliability-Tiered Sports Newsroom",
@@ -15,7 +19,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/the-beat" },
 };
 
-export default function TheBeatPage() {
+export default async function TheBeatPage() {
+  const tier = await getViewerTier();
+  const lockedPro = !canAccess(tier, "PRO");
+
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Atmosphere />
@@ -67,7 +74,9 @@ export default function TheBeatPage() {
 
         <section className="px-4 pb-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <TheBeat />
+            <UpsellGate locked={lockedPro} tier="PRO" label="The full newsroom">
+              <TheBeat />
+            </UpsellGate>
             <Reveal delay={120}>
               <p className="mt-6 text-xs leading-relaxed text-ink-500">{WIRE_DISCLAIMER}</p>
             </Reveal>

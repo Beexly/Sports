@@ -16,7 +16,7 @@ type Command = { label: string; href: string; group: string; keywords?: string }
 
 const COMMANDS: Command[] = [
   // Intelligence
-  { label: "Today's Board", href: "/board", group: "Intelligence", keywords: "picks games slate" },
+  { label: "Today's Board", href: "/picks", group: "Intelligence", keywords: "picks games slate" },
   { label: "Edge Map", href: "/observatory", group: "Intelligence", keywords: "observatory market" },
   { label: "Inside the Signal", href: "/intelligence", group: "Intelligence", keywords: "engine reasoning how it works" },
   { label: "The Beat", href: "/the-beat", group: "Intelligence", keywords: "news breaking injuries reporters" },

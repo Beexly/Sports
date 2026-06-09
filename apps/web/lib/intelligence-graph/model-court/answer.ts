@@ -300,14 +300,14 @@ function renderRefusal(kind: RefusalKind, input: ModelCourtAnswerInput): string 
   const replacements: Record<string, string> = {
     grade: node?.evidenceHealth.status ?? "thin",
     bootstrapSharePct: node ? String(bootstrapShare(node)) : "100",
-    premortemLink: node ? `/room/${node.id}#premortem` : "/board",
+    premortemLink: node ? `/room/${node.id}#premortem` : "/picks",
     ledgerLink: "/ledger",
     edgeIndex: node?.marketPulse.edgeIndex === null || typeof node?.marketPulse.edgeIndex === "undefined"
       ? "n/a"
       : String(node.marketPulse.edgeIndex),
     publishStatus: node?.marketPulse.publishedPickCount ? "cleared" : "not cleared",
     gateOrPickContext: node ? pickSummary(node) : "No game evidence is attached.",
-    premortemTextOrLink: node ? `/room/${node.id}#premortem` : "/board",
+    premortemTextOrLink: node ? `/room/${node.id}#premortem` : "/picks",
     gameId: node?.id ?? "unknown",
   };
 

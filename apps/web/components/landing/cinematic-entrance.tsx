@@ -355,7 +355,7 @@ export function CinematicEntrance() {
               </button>
 
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
-                <Link href="/board" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
+                <Link href="/picks" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
                   Open today&apos;s slate
                 </Link>
                 <span aria-hidden className="text-ink-500">·</span>

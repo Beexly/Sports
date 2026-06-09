@@ -102,7 +102,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                     See the GSE Rating
                   </Link>
                   <Link
-                    href="/board"
+                    href="/picks"
                     className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-surface-line px-5 py-3 text-sm font-semibold text-ion-1 transition-colors hover:border-orbital-cyan hover:text-ion-white"
                   >
                     Today&apos;s board
@@ -185,7 +185,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   title="Public picks"
                   value={state.publishedToday.length}
                   detail={state.publishedToday.length > 0 ? "Published rows available." : "No fabricated picks."}
-                  href="/board"
+                  href="/picks"
                 />
                 <StatusPanel
                   title="Trend observations"

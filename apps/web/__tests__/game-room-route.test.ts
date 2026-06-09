@@ -5,7 +5,6 @@ import { describe, expect, it } from "vitest";
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const page = fs.readFileSync(path.join(repoRoot, "apps/web/app/room/[gameId]/page.tsx"), "utf8");
 const loader = fs.readFileSync(path.join(repoRoot, "apps/web/lib/game-room/load.ts"), "utf8");
-const boardPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/board/page.tsx"), "utf8");
 const ledgerPage = fs.readFileSync(path.join(repoRoot, "apps/web/app/ledger/page.tsx"), "utf8");
 
 describe("Game Intelligence Room v0", () => {
@@ -33,8 +32,9 @@ describe("Game Intelligence Room v0", () => {
     expect(loader).toMatch(/isPublished:\s*true/);
   });
 
-  it("is discoverable from board and ledger surfaces", () => {
-    expect(boardPage).toContain("href={`/room/${row.gameId}`}");
+  it("is discoverable from the ledger surface", () => {
+    // The legacy /board page was consolidated into /picks (redirect stub), so the
+    // settled-results ledger is now the canonical surface that links into game rooms.
     expect(ledgerPage).toContain("href={`/room/${row.gameId}`}");
   });
 

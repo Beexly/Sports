@@ -3,10 +3,9 @@ import { BrandLockup } from "@/components/brand/brand-lockup";
 import { BRAND_NAME, BRAND_TAGLINE, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
-  { label: "Today's Board", href: "/board" },
+  { label: "Today's Board", href: "/picks" },
   { label: "Edge Map", href: "/observatory" },
   { label: "Public Ledger", href: "/ledger" },
-  { label: "The Vault", href: "/vault" },
   { label: "Methodology", href: "/methodology" },
 ] as const;
 

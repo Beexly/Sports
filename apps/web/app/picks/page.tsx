@@ -308,10 +308,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   Read methodology
                 </Link>
                 <Link
-                  href="/vault"
+                  href="/performance"
                   className="rounded-lg border border-gray-700 bg-gray-900 px-4 py-2 text-sm font-semibold text-gray-200 transition-colors hover:border-fuchsia-300 hover:text-white"
                 >
-                  View The Vault
+                  View the record
                 </Link>
               </div>
             </div>

@@ -61,8 +61,8 @@ describe("synthetic monitoring dashboard", () => {
           admin: false,
         },
         {
-          path: "/board",
-          label: "board",
+          path: "/picks",
+          label: "picks",
           ok: false,
           status: 500,
           ms: 330,
@@ -203,8 +203,8 @@ describe("synthetic monitoring dashboard", () => {
       failed: 0,
       probes: [
         {
-          path: "/board",
-          label: "board",
+          path: "/picks",
+          label: "picks",
           ok: true,
           status: 200,
           ms: 41,
@@ -219,8 +219,8 @@ describe("synthetic monitoring dashboard", () => {
       failed: 1,
       probes: [
         {
-          path: "/board",
-          label: "board",
+          path: "/picks",
+          label: "picks",
           ok: false,
           status: 500,
           ms: 300,

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
+import { UpsellGate } from "@/components/ui/upsell-gate";
+import { canAccess, getViewerTier } from "@/lib/access";
 import {
   loadBirthdayUsageTrendReport,
   type BirthdayUsageComparison,
@@ -62,13 +64,18 @@ function qbBucketLabel(row: NflverseQbAgeRow): string {
 }
 
 export default async function NflversePage(): Promise<JSX.Element> {
-  const [pulse, qbAgeTrend, birthdayTrend] = await Promise.all([
+  const [tier, pulse, qbAgeTrend, birthdayTrend] = await Promise.all([
+    getViewerTier(),
     loadNflverseUsagePulse(),
     loadQbAgeRbTrendReport(),
     loadBirthdayUsageTrendReport(),
   ]);
+  const lockedPro = !canAccess(tier, "PRO");
   const oldQbTrend = qbAgeTrend.trends.find((trend) => trend.cohort === "QB age 34+");
   const birthdayResult = birthdayTrend.result;
+  // FREE teaser: the top opportunity rows stay visible; the rest of the board is gated.
+  const teaserPlayerRows = pulse.playerRows.slice(0, 3);
+  const gatedPlayerRows = pulse.playerRows.slice(3);
 
   return (
     <div className="min-h-screen bg-carbon text-ion">
@@ -146,46 +153,93 @@ export default async function NflversePage(): Promise<JSX.Element> {
                   Sorted by carries plus targets for the latest regular-season week in the source file.
                 </p>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[1080px] text-left text-sm">
-                  <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-                    <tr>
-                      <th className="px-4 py-3">Player</th>
-                      <th className="px-4 py-3">Team</th>
-                      <th className="px-4 py-3">Opp</th>
-                      <th className="px-4 py-3">Oppty</th>
-                      <th className="px-4 py-3">Tgt</th>
-                      <th className="px-4 py-3">Car</th>
-                      <th className="px-4 py-3">Tgt share</th>
-                      <th className="px-4 py-3">Air share</th>
-                      <th className="px-4 py-3">WOPR</th>
-                      <th className="px-4 py-3">PPR</th>
-                      <th className="px-4 py-3">Age</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-mineral bg-carbon">
-                    {pulse.playerRows.map((row) => (
-                      <tr key={`${row.playerId}-${row.team}-${row.opponent}`}>
-                        <td className="px-4 py-3">
-                          <p className="font-semibold text-ion-white">{row.playerName}</p>
-                          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-                            {row.position}
-                          </p>
-                        </td>
-                        <td className="px-4 py-3 font-mono text-orbital-cyan">{row.team}</td>
-                        <td className="px-4 py-3 font-mono text-ion-2">{row.opponent}</td>
-                        <td className="px-4 py-3 font-mono text-ion-white">{row.opportunities}</td>
-                        <td className="px-4 py-3 font-mono text-ion">{row.targets}</td>
-                        <td className="px-4 py-3 font-mono text-ion">{row.carries}</td>
-                        <td className="px-4 py-3 font-mono text-ion">{fmtPercent(row.targetShare)}</td>
-                        <td className="px-4 py-3 font-mono text-ion">{fmtPercent(row.airYardsShare)}</td>
-                        <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.wopr)}</td>
-                        <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.fantasyPointsPpr, 1)}</td>
-                        <td className="px-4 py-3 font-mono text-ion">{row.age ?? "N/A"}</td>
+              <div className="flex flex-col gap-3 p-px">
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[1080px] text-left text-sm">
+                    <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                      <tr>
+                        <th className="px-4 py-3">Player</th>
+                        <th className="px-4 py-3">Team</th>
+                        <th className="px-4 py-3">Opp</th>
+                        <th className="px-4 py-3">Oppty</th>
+                        <th className="px-4 py-3">Tgt</th>
+                        <th className="px-4 py-3">Car</th>
+                        <th className="px-4 py-3">Tgt share</th>
+                        <th className="px-4 py-3">Air share</th>
+                        <th className="px-4 py-3">WOPR</th>
+                        <th className="px-4 py-3">PPR</th>
+                        <th className="px-4 py-3">Age</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-mineral bg-carbon">
+                      {teaserPlayerRows.map((row) => (
+                        <tr key={`${row.playerId}-${row.team}-${row.opponent}`}>
+                          <td className="px-4 py-3">
+                            <p className="font-semibold text-ion-white">{row.playerName}</p>
+                            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                              {row.position}
+                            </p>
+                          </td>
+                          <td className="px-4 py-3 font-mono text-orbital-cyan">{row.team}</td>
+                          <td className="px-4 py-3 font-mono text-ion-2">{row.opponent}</td>
+                          <td className="px-4 py-3 font-mono text-ion-white">{row.opportunities}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{row.targets}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{row.carries}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{fmtPercent(row.targetShare)}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{fmtPercent(row.airYardsShare)}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.wopr)}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.fantasyPointsPpr, 1)}</td>
+                          <td className="px-4 py-3 font-mono text-ion">{row.age ?? "N/A"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {gatedPlayerRows.length > 0 ? (
+                  <UpsellGate locked={lockedPro} tier="PRO" label="The full WOPR & target-share board">
+                    <div className="overflow-x-auto">
+                      <table className="w-full min-w-[1080px] text-left text-sm">
+                        <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                          <tr>
+                            <th className="px-4 py-3">Player</th>
+                            <th className="px-4 py-3">Team</th>
+                            <th className="px-4 py-3">Opp</th>
+                            <th className="px-4 py-3">Oppty</th>
+                            <th className="px-4 py-3">Tgt</th>
+                            <th className="px-4 py-3">Car</th>
+                            <th className="px-4 py-3">Tgt share</th>
+                            <th className="px-4 py-3">Air share</th>
+                            <th className="px-4 py-3">WOPR</th>
+                            <th className="px-4 py-3">PPR</th>
+                            <th className="px-4 py-3">Age</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-mineral bg-carbon">
+                          {gatedPlayerRows.map((row) => (
+                            <tr key={`${row.playerId}-${row.team}-${row.opponent}`}>
+                              <td className="px-4 py-3">
+                                <p className="font-semibold text-ion-white">{row.playerName}</p>
+                                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                                  {row.position}
+                                </p>
+                              </td>
+                              <td className="px-4 py-3 font-mono text-orbital-cyan">{row.team}</td>
+                              <td className="px-4 py-3 font-mono text-ion-2">{row.opponent}</td>
+                              <td className="px-4 py-3 font-mono text-ion-white">{row.opportunities}</td>
+                              <td className="px-4 py-3 font-mono text-ion">{row.targets}</td>
+                              <td className="px-4 py-3 font-mono text-ion">{row.carries}</td>
+                              <td className="px-4 py-3 font-mono text-ion">{fmtPercent(row.targetShare)}</td>
+                              <td className="px-4 py-3 font-mono text-ion">{fmtPercent(row.airYardsShare)}</td>
+                              <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.wopr)}</td>
+                              <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.fantasyPointsPpr, 1)}</td>
+                              <td className="px-4 py-3 font-mono text-ion">{row.age ?? "N/A"}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </UpsellGate>
+                ) : null}
               </div>
             </section>
 

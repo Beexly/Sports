@@ -80,7 +80,7 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
                   Open Trend Lab
                 </Link>
                 <Link
-                  href="/board"
+                  href="/picks"
                   className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
                 >
                   View public board

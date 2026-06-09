@@ -6,6 +6,8 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { PunditLedger } from "@/components/airwave/pundit-ledger";
+import { UpsellGate } from "@/components/ui/upsell-gate";
+import { getViewerTier, canAccess } from "@/lib/access";
 import {
   leaderboard,
   toPublicLedger,
@@ -38,6 +40,9 @@ export default async function AirwavePage() {
     Promise.resolve(readAirwaveControlPlane(process.env as Record<string, string | undefined>)),
     readAirwaveIntakeReadiness(process.env as Record<string, string | undefined>),
   ]);
+
+  const tier = await getViewerTier();
+  const lockedPro = !canAccess(tier, "PRO");
 
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
@@ -160,7 +165,9 @@ export default async function AirwavePage() {
         {/* The ledger */}
         <section className="px-4 pb-10 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
-            <PunditLedger scorecards={scorecards} claims={claims} />
+            <UpsellGate locked={lockedPro} tier="PRO" label="The full Airwave board">
+              <PunditLedger scorecards={scorecards} claims={claims} />
+            </UpsellGate>
           </div>
         </section>
 

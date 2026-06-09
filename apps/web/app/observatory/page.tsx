@@ -8,6 +8,8 @@ import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
 import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { GalaxySlateTwinLazy } from "@/components/slate-twin/galaxy-slate-twin-lazy";
+import { UpsellGate } from "@/components/ui/upsell-gate";
+import { canAccess, getViewerTier } from "@/lib/access";
 import { getSlateTwin } from "@/lib/slate-twin/get-slate-twin";
 import { BRAND_NAME, SURFACES } from "@/lib/brand";
 import { BRAND_COLORS } from "@/lib/brand";
@@ -50,7 +52,8 @@ const PREVIEW: ReadonlyArray<{ readonly title: string; readonly body: string; re
 ];
 
 export default async function ObservatoryPage() {
-  const slate = await getSlateTwin();
+  const [tier, slate] = await Promise.all([getViewerTier(), getSlateTwin()]);
+  const lockedPro = !canAccess(tier, "PRO");
   const live = slate.live;
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
@@ -131,7 +134,9 @@ export default async function ObservatoryPage() {
               </p>
             </Reveal>
             <Reveal delay={140} className="mt-8">
-              <GalaxySlateTwinLazy slate={slate} />
+              <UpsellGate locked={lockedPro} tier="PRO" label="The full Edge Map">
+                <GalaxySlateTwinLazy slate={slate} />
+              </UpsellGate>
             </Reveal>
           </div>
         </section>
