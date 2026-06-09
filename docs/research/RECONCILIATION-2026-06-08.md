@@ -88,6 +88,17 @@ This pass shipped actual **code**, not just docs. Reconciled both:
 - **Core principle now encoded:** Every signal can matter, but nothing gets to hallucinate. P0/P1 domains need primary source + fallback + no-data policy + output-withholding behavior + debug trace. Missing P0 coverage withholds dependent output rather than guessing.
 - **Next hard builds (AUTO-001–004, founder-gated):** control-plane fixture generator → source registry seed → domain coverage evaluator → extend `/api/health` (requires storage/schema approval). Cockpit Source Health and Domain Coverage views follow (AUTO-005). All domain-specific builds (officials, stadium/wind, reporters) approval-gated.
 
+## Aesthetic & IA R&D pass (code + docs; ported + reconciled)
+
+2026-06-09. Research checkout built the autonomous intelligence control-plane cockpit surface and delivered the full aesthetic R&D packet. Reconciled:
+
+- **CODE ported (net-new in canonical):** `apps/web/lib/cockpit/intelligence-control-plane.ts` — fixture-backed implementation covering AUTO-001 (fixture generator), AUTO-002 (source registry seed), and AUTO-003 (domain coverage evaluator) in one module. `apps/web/app/cockpit/sources/page.tsx` — replaced the DATA_SOURCE_STACK dashboard with the typed control-plane view (autonomous systems table, domain coverage cards, fallback chains). 2 new test files (`cockpit-control-plane.test.ts`, `cockpit-control-plane-render.test.tsx`); 4 tests pass; types 40/40 green. All founder-gated; fixture-backed until storage/schema approval for live source registry.
+- **Docs ported (8 files, all net-new):** `gse-aesthetic-rd-master-plan.md` (84-competitor aesthetic matrix rationale + GSE north-star), `gse-competitor-aesthetic-matrix.csv/.md` (84 rows), `gse-top-2025-2026-design-references.md` (40 references), `gse-design-motion-repo-watchlist.csv/.md` (20 OSS repos), `gse-aesthetic-claude-handoff.md` (ordered build plan), `gse-aesthetic-build-queue.jsonl` (8 cards GSE-AESTH-01–08).
+- **IA audit already in canonical:** `docs/aesthetic-ia-audit-2026-06-08.md` — covers theme, transparency, IA, and copy diagnoses with exact file targets and phase plan.
+- **Closeout written:** `gse-aesthetic-rd-closeout.md`.
+- **Key finding:** All-Dark Premium is the correct direction (23/25 routes already dark; two outliers are the exception). IA Phase 1 (theme unification, Size S) + Phase 2 (transparency trim, Size M) ship first. GSE-AESTH-01–03 + AESTH-08 are P0 in the aesthetic queue.
+- **AUTO-004** (`/api/health` extension) still requires storage/schema approval before building.
+
 ## Quality assets to mine into canonical (independent of the queue)
 - `gse-free-source-inventory.csv` — 42 risk-tiered sources; **superset** of `catalog.ts` (officials, draft picks, CFBD, Wikidata venue graph, GDELT, attention layers, cross-sport analog). Fold the net-new lanes into the catalog as `status: mapped, approval-gated`.
 - `gse-source-risk-register.md`, `nfl-world-state-machine.md`, `gse-nfl-signal-taxonomy.md`, `gse-video-game-analog-builds.jsonl` (78 analog signals) — design inputs for the net-new builds.

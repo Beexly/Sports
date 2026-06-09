@@ -1,0 +1,21 @@
+repo,url,stars_as_of_2026_06_09,forks_as_of_2026_06_09,last_pushed_utc,license,relevant_fit,current_gse_status,recommendation,priority
+shadcn-ui/ui,https://github.com/shadcn-ui/ui,115995,9007,2026-06-08,MIT,Component system/distribution,Not installed as a formal dependency; app uses Tailwind/lucide foundations.,Adopt selectively for accessible primitives and local ownership; avoid generic template sameness.,P0
+remotion-dev/remotion,https://github.com/remotion-dev/remotion,49450,3522,2026-06-08,NOASSERTION,Programmatic video,Not installed in web app.,"Use for automated weekly recap/social/video reports, not core cockpit UI.",P2
+xyflow/xyflow,https://github.com/xyflow/xyflow,36985,2433,2026-06-02,MIT,Node/graph interfaces,Not installed.,"Use for source fallback graphs, autonomous system topology, and workflow health maps.",P1
+motiondivision/motion,https://github.com/motiondivision/motion,32265,1193,2026-05-28,MIT,React/JS animation,Not installed.,"Use for measured layout transitions, cards, drawers, and reduced-motion aware UI.",P0
+airbnb/lottie-web,https://github.com/airbnb/lottie-web,31899,2927,2025-09-01,MIT,After Effects JSON animation,Not installed.,Use only for small status/empty-state animations; avoid heavy hero animation.,P3
+pmndrs/react-three-fiber,https://github.com/pmndrs/react-three-fiber,31042,1855,2026-05-07,MIT,React Three.js renderer,Base three is installed; R3F is not.,Use for controlled full-bleed 3D explainers and topology maps where Three.js is already a fit.,P2
+TanStack/table,https://github.com/TanStack/table,28069,3523,2026-06-08,MIT,Headless data grids,Not installed.,"Strong candidate for cockpit tables, optimizer grids, filters, grouping, and row selection.",P0
+recharts/recharts,https://github.com/recharts/recharts,27211,1931,2026-06-08,MIT,React charts,Not installed.,"Fast path for cockpit charts, trend cards, source health, and retention dashboards.",P1
+greensock/GSAP,https://github.com/greensock/GSAP,25701,2030,2026-04-13,Proprietary/mixed,Advanced motion,Not installed.,Use only after license review for marquee pages; Motion is safer for app UI.,P3
+magicuidesign/magicui,https://github.com/magicuidesign/magicui,21203,1029,2026-06-03,MIT,Animated component ideas,Not installed.,Reference for component ideas; do not paste wholesale into operator UI.,P2
+radix-ui/primitives,https://github.com/radix-ui/primitives,18955,1185,2026-06-08,MIT,Accessible primitives,Not installed directly.,"Use as base under shadcn or custom components for menus, dialogs, tabs, tooltips.",P0
+wagerfield/parallax,https://github.com/wagerfield/parallax,16586,2097,2024-04-06,NOASSERTION,Parallax,Not installed.,Generally avoid for core product; maybe archival inspiration only.,P4
+darkroomengineering/lenis,https://github.com/darkroomengineering/lenis,14060,558,2026-06-04,MIT,Smooth scroll,Not installed.,"Use only on editorial/story pages, never core cockpit tables unless accessibility proof passes.",P3
+plouc/nivo,https://github.com/plouc/nivo,14038,1075,2026-04-03,MIT,Rich data visualization,Not installed.,Consider for advanced dataviz once Recharts baseline is insufficient.,P2
+formkit/auto-animate,https://github.com/formkit/auto-animate,13836,252,2026-04-02,MIT,Drop-in animation,Not installed.,Useful for list/table state transitions if Motion is too heavy for a small surface.,P2
+pacocoursey/cmdk,https://github.com/pacocoursey/cmdk,12662,370,2025-10-29,MIT,Command palette,Not installed.,High-leverage operator command center for cockpit navigation and debug actions.,P1
+pmndrs/drei,https://github.com/pmndrs/drei,9679,812,2026-03-23,MIT,R3F helpers,Not installed.,"Use only with R3F for text, cameras, effects, and controls.",P2
+emilkowalski/vaul,https://github.com/emilkowalski/vaul,8407,353,2025-10-03,MIT,Drawer component,Not installed.,"Good for mobile operator drawers, evidence panels, and pick detail sheets.",P1
+TanStack/virtual,https://github.com/TanStack/virtual,6944,435,2026-06-02,MIT,Virtual lists,Not installed.,Use with large player/source/event tables to keep dense UIs fast.,P0
+ibelick/motion-primitives,https://github.com/ibelick/motion-primitives,5575,214,2026-03-19,MIT,Animated UI primitives,Not installed.,Reference/adopt sparingly for polished primitives after design-token alignment.,P2
