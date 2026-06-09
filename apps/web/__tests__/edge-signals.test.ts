@@ -53,6 +53,12 @@ function buildNgs(): string {
   return rows.join("\n");
 }
 
+// Future-schema variant: nflverse renamed player_stats `recent_team` -> `team`
+// (nflfastR::calculate_stats). The production aggregator must still read the team.
+function buildStatsTeamSchema(): string {
+  return buildStats().replace("position,recent_team,season", "position,team,season");
+}
+
 function gz(csv: string): Response {
   const body = gzipSync(Buffer.from(csv));
   return new Response(body, { status: 200, headers: { "content-length": String(body.length) } });
@@ -90,6 +96,25 @@ describe("nflverse edge signals (buy-low / sell-high fusion)", () => {
     expect(edge.sellHigh[0]?.playerName).toBe("Sell High Sam");
     expect(edge.sellHigh[0]?.label).toBe("sell-high");
     expect(edge.sellHigh[0]?.gap).toBeLessThan(-0.75);
+  });
+
+  it("reads the renamed player_stats `team` column when aggregating production", async () => {
+    const stats = buildStatsTeamSchema();
+    const ngs = buildNgs();
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("player_stats.csv.gz")) return gz(stats);
+      if (url.includes("ngs_receiving.csv.gz")) return gz(ngs);
+      return new Response("missing", { status: 404 });
+    });
+
+    const edge = await loadNflverseEdgeSignals({ season: 2024, fetcher, cacheTtlMs: 0 });
+
+    expect(edge.status).toBe("live");
+    expect(edge.qualifiedPlayers).toBe(4);
+    expect(edge.buyLow[0]?.playerName).toBe("Buy Low Larry");
+    // Team still resolves from the renamed column instead of falling back to "".
+    expect(edge.buyLow[0]?.team).toBe("PIT");
   });
 
   it("returns an empty boundary state when sources fail", async () => {

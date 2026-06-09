@@ -9,7 +9,7 @@ const HEADER =
 
 const INJURIES = [
   HEADER,
-  // Week 18 (latest)
+  // Week 18 (latest REGULAR-season week)
   "2024,REG,KC,18,00-1,WR,Patrick Player,Patrick,Player,Knee,,Out,Knee,,Did Not Participate,2024",
   "2024,REG,BUF,18,00-2,RB,Doubt Doug,Doubt,Doug,Ankle,,Doubtful,Ankle,,Limited,2024",
   "2024,REG,CIN,18,00-3,TE,Quest Quincy,Quest,Quincy,Hamstring,,Questionable,Hamstring,,Limited,2024",
@@ -19,6 +19,10 @@ const INJURIES = [
   "2024,REG,SEA,18,00-5,QB,Healthy Henry,Healthy,Henry,,,,,,,2024",
   // earlier week -> excluded by latest-week filter
   "2024,REG,KC,17,00-6,WR,Old Otto,Old,Otto,Knee,,Out,Knee,,Did Not Participate,2024",
+  // POST weeks (19-22). In the offseason these carry the file's max week, but
+  // they must NOT define "latest" — only the few playoff teams appear here.
+  "2024,POST,KC,22,00-7,QB,Playoff Pete,Playoff,Pete,Shoulder,,Out,Shoulder,,Did Not Participate,2024",
+  "2024,POST,PHI,19,00-8,WR,Wildcard Wally,Wildcard,Wally,Groin,,Questionable,Groin,,Limited,2024",
 ].join("\n");
 
 function csv(body: string): Response {
@@ -44,18 +48,57 @@ describe("nflverse injury report", () => {
 
     expect(report.status).toBe("live");
     expect(report.season).toBe(2024);
+    // Latest REGULAR-season week, not the POST max (22).
     expect(report.week).toBe(18);
-    expect(report.sourceRows).toBe(6);
+    expect(report.sourceRows).toBe(8);
 
-    // Healthy Henry (no designation, no practice) and the week-17 row are excluded.
+    // Healthy Henry (no designation, no practice), the week-17 row, and the
+    // POST-week playoff rows are all excluded.
     expect(report.rows.map((r) => r.playerName)).toEqual([
       "Patrick Player",
       "Doubt Doug",
       "Quest Quincy",
       "Practice Pat",
     ]);
+    expect(report.rows.some((r) => r.playerName === "Playoff Pete")).toBe(false);
     expect(report.rows[0]?.reportStatus).toBe("Out");
     expect(report.counts).toEqual({ out: 1, doubtful: 1, questionable: 1 });
+  });
+
+  it("ignores POST weeks: latest is the max REGULAR-season week, not the playoff max", async () => {
+    // Offseason shape: file's overall max week is a POST week (22). Without the
+    // REG filter, only the playoff teams would show and every other team would
+    // fall back to injuryStatus 'None' downstream.
+    const report = await loadNflverseInjuryReport({ season: 2024, fetcher: mockFetch(), cacheTtlMs: 0 });
+
+    expect(report.status).toBe("live");
+    expect(report.week).toBe(18);
+    // Playoff-only rows (POST 19 & 22) must not leak into the report.
+    expect(report.rows.map((r) => r.playerName)).not.toContain("Playoff Pete");
+    expect(report.rows.map((r) => r.playerName)).not.toContain("Wildcard Wally");
+    // The regular-season teams are present, so downstream availability resolves.
+    expect(report.rows.map((r) => r.team)).toEqual(expect.arrayContaining(["KC", "BUF", "CIN"]));
+  });
+
+  it("falls back to all rows when the file carries no season-type marker", async () => {
+    // Defensive: if the source ever drops the REG/POST column, we keep showing
+    // the latest-week report rather than blanking it (honest non-empty path).
+    const HEADER_NO_TYPE =
+      "season,team,week,gsis_id,position,full_name,first_name,last_name,report_primary_injury,report_secondary_injury,report_status,practice_primary_injury,practice_secondary_injury,practice_status,date_modified";
+    const body = [
+      HEADER_NO_TYPE,
+      "2024,KC,18,00-1,WR,Patrick Player,Patrick,Player,Knee,,Out,Knee,,Did Not Participate,2024",
+    ].join("\n");
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("injuries_2024.csv")) return csv(body);
+      return new Response("missing", { status: 404 });
+    });
+
+    const report = await loadNflverseInjuryReport({ season: 2024, fetcher, cacheTtlMs: 0 });
+    expect(report.status).toBe("live");
+    expect(report.week).toBe(18);
+    expect(report.rows.map((r) => r.playerName)).toEqual(["Patrick Player"]);
   });
 
   it("returns an empty boundary state when sources fail", async () => {

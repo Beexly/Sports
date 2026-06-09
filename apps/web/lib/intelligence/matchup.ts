@@ -176,17 +176,61 @@ function round(v: number, d = 1): number {
   const f = 10 ** d;
   return Math.round(v * f) / f;
 }
-/** nflverse team codes are clean abbreviations; normalize defensively for joins. */
+/**
+ * Relocation / spelling aliases that fold variant team codes onto ONE canonical
+ * key so a cross-source join never silently misses. The three sources we join —
+ * the schedule (games.csv home/away), team-environment (pbp posteam/defteam) and
+ * the PFR charting (advstats `team`) — can disagree on a handful of codes:
+ * Washington (WAS/WSH), the Raiders (LV/OAK), the Chargers (LAC/SD) and the Rams
+ * (LA/LAR/STL), plus a few PFR spelling variants. Without folding, e.g. a "WAS"
+ * schedule row never finds a "WSH" defense row and the matchup reads "no context".
+ *
+ * This MIRRORS the alias map in lib/integrations/graded-pool.ts (normTeam). It is
+ * intentionally kept identical so the two engines collapse codes to the SAME
+ * canonical form; it is duplicated here only because this slice may edit just the
+ * matchup files. Unknown codes pass through unchanged.
+ */
+const TEAM_ALIASES: Readonly<Record<string, string>> = {
+  OAK: "LV",
+  SD: "LAC",
+  STL: "LA",
+  LAR: "LA",
+  WAS: "WSH",
+  WSH: "WSH",
+  JAX: "JAX",
+  JAC: "JAX",
+  ARZ: "ARI",
+  BLT: "BAL",
+  CLV: "CLE",
+  HST: "HOU",
+};
+
+/**
+ * Normalize an nflverse team code for cross-source joins: upper-case, trim, then
+ * fold relocation/spelling variants onto one canonical key (see TEAM_ALIASES).
+ */
 function teamKey(team: string): string {
-  return team.trim().toUpperCase();
+  const t = team.trim().toUpperCase();
+  return TEAM_ALIASES[t] ?? t;
 }
 
 /**
- * Aggregate pressure-coverage's PER-PLAYER charting into PER-TEAM opponent reads.
- * The charting files carry individual defenders; a team's pass-rush is the sum of
- * its defenders' pressures/blitzes, and its coverage is the target-weighted mean
- * of its defenders' passer-rating-allowed. Pure — fed real rows by the loader,
- * a fixture by tests. Returns a map keyed by normalized team code.
+ * Aggregate pressure-coverage's charting into PER-TEAM opponent reads.
+ *
+ * Two DIFFERENT sources, deliberately:
+ *   • Pass-rush (pressures/blitzes) comes from pc.teamPassRush — the UNCAPPED
+ *     per-team rollup over EVERY charted defender. We must NOT sum pass-rush from
+ *     pc.coverage: that list is filtered to a coverage-target floor and sliced to
+ *     the 30 lowest-passer-rating-allowed defenders LEAGUE-WIDE, so a team with no
+ *     defender in that top-30 would contribute 0 pressures and falsely read as
+ *     "generates no rush" against the full-team PRESSURE_REF/BLITZ_REF bands.
+ *   • Coverage (target-weighted passer rating allowed) comes from pc.coverage,
+ *     which is the right source for the coverage read: it is the per-player
+ *     coverage leaderboard, and covTargets/covPrWeighted weight what's there.
+ *
+ * Pure — fed real rows by the loader, a fixture by tests. Keyed by normalized team
+ * code. `defenders` is the count of COVERAGE defenders backing the coverage read
+ * (what OpponentDefense.coverageDefenders documents), independent of the rush set.
  */
 export function buildTeamDefenseFromCoverage(
   pc: NflversePressureCoverage,
@@ -204,14 +248,19 @@ export function buildTeamDefenseFromCoverage(
     }
     return t;
   };
+  // Pass-rush from the uncapped team rollup (full team, not the capped leaderboard).
+  for (const r of pc.teamPassRush) {
+    if (!r.team) continue;
+    const t = get(r.team);
+    t.pressures += r.pressures;
+    t.blitzes += r.blitzes;
+  }
+  // Coverage from the per-player coverage leaderboard, target-weighted so a
+  // defender thrown at often counts more than one rarely targeted.
   for (const c of pc.coverage) {
     if (!c.team) continue;
     const t = get(c.team);
     t.defenders += 1;
-    t.pressures += c.pressures;
-    t.blitzes += c.blitzes;
-    // Target-weight the passer rating allowed so a defender targeted often counts
-    // more than one rarely thrown at — same weighting coverage uses internally.
     if (c.targets > 0) {
       t.covPrWeighted += c.passerRatingAllowed * c.targets;
       t.covTargets += c.targets;
@@ -547,6 +596,7 @@ export async function loadMatchupEngine({
           sourceRows: 0,
           qbPressure: [],
           coverage: [],
+          teamPassRush: [],
           receivingAdvanced: [],
           canPublishProjections: false,
           blockReason: "",

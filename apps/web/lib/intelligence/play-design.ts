@@ -22,6 +22,11 @@
  * is dropped rather than shown on a thin denominator, and a season with no FTN file
  * (pre-2022, or a not-yet-published off-season file) returns an honest empty state.
  *
+ * SCOPE — regular season only. FTN charting covers the postseason too, but the
+ * identity map (`buildPbpIdentity`) indexes only REG plays (`season_type === "REG"`),
+ * so a playoff charted play finds no identity and is dropped. Without this, a
+ * playoff team's rates would silently blend REG + POST snaps onto one denominator.
+ *
  * SERVER engine: builds entirely on the server (loadPbp + loadNflverseFtnCharting)
  * and returns a flat, serializable `PlayDesign` result (string / number rows, plus
  * a status / source-error path) — no functions cross the RSC boundary. The CLIENT
@@ -110,10 +115,12 @@ export interface PbpPlayIdentity {
 
 /**
  * The exact pbp columns the identity map reads, projected via `loadPbp` so the
- * ~372-column asset is reduced to ~5 keys per record (the OOM defense). Keep in
+ * ~372-column asset is reduced to ~6 keys per record (the OOM defense). Keep in
  * lockstep with `buildPbpIdentity`.
  *   join key:    game_id, play_id
  *   attribution: posteam, passer_player_id, passer_player_name
+ *   scope guard: season_type (REG/POST) — only REG identities are indexed so
+ *                playoff FTN rows fail the join and drop (see buildPbpIdentity).
  */
 export const PLAY_DESIGN_PBP_COLUMNS = [
   "game_id",
@@ -121,6 +128,7 @@ export const PLAY_DESIGN_PBP_COLUMNS = [
   "posteam",
   "passer_player_id",
   "passer_player_name",
+  "season_type",
 ] as const;
 
 /** Composite play key shared by pbp (game_id/play_id) and FTN (gameId/playId). */
@@ -132,10 +140,18 @@ function playKey(gameId: string, playId: string): string {
  * Fold pbp rows into a play-identity map in a single pass. Pure. Only rows with
  * both join components are indexed; the passer fields may be empty for non-pass
  * plays and are stored as-is (the FTN flags still attribute to the offense team).
+ *
+ * SCOPE — regular season only: FTN charting covers the postseason too, and a
+ * playoff team's per-QB / per-team rates would otherwise silently blend REG + POST
+ * plays. We index only REG identities here, so a POST charted play finds no
+ * identity in `buildPlayDesign` and is dropped (never attributed) rather than
+ * inflating a denominator with playoff snaps. `season_type` is the real pbp column
+ * ("REG" / "POST"); rows lacking it are treated as non-REG and skipped.
  */
 export function buildPbpIdentity(records: readonly CsvRecord[]): Map<string, PbpPlayIdentity> {
   const map = new Map<string, PbpPlayIdentity>();
   for (const r of records) {
+    if (r["season_type"] !== "REG") continue; // drop POST (and any non-REG) — scope is regular season
     const gameId = r["game_id"] ?? "";
     const playId = r["play_id"] ?? "";
     if (!gameId || !playId) continue;
@@ -344,7 +360,7 @@ export async function loadPlayDesign({
     qbs,
     teams,
     canPublishProjections: false,
-    note: "The play-call DNA behind every snap — how each QB and offense is actually designed to attack. Design context, not a projection or a pick.",
+    note: "The play-call DNA behind every snap — how each QB and offense is actually designed to attack, across the regular season. Design context, not a projection or a pick.",
     sourceUrl: ftn.sourceUrl,
     error: null,
   };

@@ -114,6 +114,24 @@ describe("nflverse pressure & coverage", () => {
     expect(pc.coverage[0]?.qbKnockdowns).toBe(4); // 1 * 4 weeks
     expect(pc.coverage[0]?.sacks).toBe(4); // 1 * 4 weeks
 
+    // Uncapped per-team pass-rush rollup (M6): sums EVERY charted defender on the
+    // team, INCLUDING the low-coverage-volume defender the coverage leaderboard
+    // drops. coverage carries only d1+d2 (Fred is below the 25-target floor), so a
+    // coverage-based sum would under-count; teamPassRush must include Fred.
+    const buf = pc.teamPassRush.find((r) => r.team === "BUF");
+    expect(buf).toBeDefined();
+    expect(buf?.defenders).toBe(9); // d1(4) + d2(4) + d3(1) weeks — Fred counted
+    expect(buf?.pressures).toBe(27); // 3 * (4 + 4 + 1) — INCLUDES the dropped defender
+    expect(buf?.blitzes).toBe(9); // 1 * 9 charted rows
+    expect(buf?.sacks).toBe(9); // 1 * 9
+    expect(buf?.qbKnockdowns).toBe(9); // 1 * 9
+    expect(buf?.hurries).toBe(18); // 2 * 9
+    // Sum from the capped coverage leaderboard would MISS Fred — proving the fix.
+    const coverageOnlyPressures = pc.coverage
+      .filter((c) => c.team === "BUF")
+      .reduce((s, c) => s + c.pressures, 0);
+    expect(coverageOnlyPressures).toBe(24); // d1 + d2 only — the bug this fix avoids
+
     // Receiver charting (rec variant): sorted deepest ADOT first, low-volume dropped.
     expect(pc.receivingAdvanced.map((r) => r.name)).toEqual(["Deep Dan", "Shallow Sam"]);
     expect(pc.receivingAdvanced[0]?.adot).toBe(14);

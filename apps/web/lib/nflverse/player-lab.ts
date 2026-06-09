@@ -187,7 +187,8 @@ function buildLeaders(
       playerId,
       playerName:
         latest["player_display_name"] || latest["player_name"] || "UNKNOWN",
-      team: latest["recent_team"] ?? "",
+      // nflverse renamed player_stats `recent_team` -> `team` (nflfastR::calculate_stats); tolerate both.
+      team: latest["recent_team"] || latest["team"] || "",
       position,
       games,
       pprPerGame: round(pprPerGame),

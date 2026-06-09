@@ -229,7 +229,9 @@ function buildUsageTimelines({
 
     const season = row["season"];
     const week = row["week"];
-    const team = row["recent_team"];
+    // nflverse renamed player_stats `recent_team` -> `team` (nflfastR::calculate_stats).
+    // Tolerate both so the season|week|team game-date join key never silently breaks.
+    const team = row["recent_team"] || row["team"] || "";
     const gameDate = gameDates.get(`${season}|${week}|${team}`);
     if (!gameDate) {
       skippedMissingGameDate += 1;

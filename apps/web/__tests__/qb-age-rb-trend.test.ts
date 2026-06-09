@@ -41,6 +41,13 @@ const SCHEDULES = [
   "2024_01_YNG3_X,2024,REG,1,2024-09-08,YNG3,X,young-qb-3,,Young QB 3,",
 ].join("\n");
 
+// Future-schema variant: nflverse renamed player_stats `recent_team` -> `team`
+// (nflfastR::calculate_stats). The loader must still join team-weeks.
+const PLAYER_STATS_TEAM_SCHEMA = PLAYER_STATS.replace(
+  "position,recent_team,season",
+  "position,team,season",
+);
+
 function csvResponse(csv: string): Response {
   return new Response(csv, {
     status: 200,
@@ -108,6 +115,30 @@ describe("QB-age RB target-share trend report", () => {
     expect(data["status"]).toBe("live");
     expect(data["canPowerScoring"]).toBe(false);
     expect(data["trends"]).toEqual(expect.any(Array));
+  });
+
+  it("tolerates the renamed player_stats `team` column without silently dropping rows", async () => {
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("player_stats.csv.gz")) return gzResponse(PLAYER_STATS_TEAM_SCHEMA);
+      if (url.includes("players.csv")) return csvResponse(PLAYERS);
+      if (url.includes("games.csv")) return csvResponse(SCHEDULES);
+      return new Response("missing", { status: 404 });
+    });
+
+    const report = await loadQbAgeRbTrendReport({
+      fetcher,
+      minSampleSize: 2,
+      alpha: 0.05,
+      cacheTtlMs: 0,
+    });
+
+    // Same result as the `recent_team` schema: the team-week join still resolves.
+    expect(report.status).toBe("live");
+    expect(report.quality.observationsUsed).toBe(6);
+    const oldQbTrend = report.trends.find((trend) => trend.cohort === "QB age 34+");
+    expect(oldQbTrend?.n).toBe(3);
+    expect(oldQbTrend?.cohortMean).toBeCloseTo(0.5, 2);
   });
 
   it("returns an empty report instead of fabricating rows when sources fail", async () => {

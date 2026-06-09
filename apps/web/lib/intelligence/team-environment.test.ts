@@ -61,6 +61,36 @@ describe("buildTeamEnvironment", () => {
     // Default minPlays (30) cannot be met by a six-play fixture.
     expect(buildTeamEnvironment(PLAYS)).toEqual([]);
   });
+
+  it("excludes postseason plays (season_type != REG) so the baseline stays regular-season-repeatable", () => {
+    // Real pbp mixes season_type REG and POST. Only the ~14 playoff teams play
+    // POST, so blending it in would skew their per-team EPA and the within-league
+    // percentiles. We add a wildly skewed POST play for TMA that, if counted,
+    // would blow up its offensive EPA and PROE.
+    const withPost: CsvRecord[] = [
+      { posteam: "TMA", defteam: "TMB", season_type: "REG", down: "1", wp: "0.50", qtr: "1", pass: "1", rush: "0", epa: "0.5", success: "1", pass_oe: "10", no_huddle: "0" },
+      { posteam: "TMA", defteam: "TMB", season_type: "REG", down: "2", wp: "0.40", qtr: "2", pass: "1", rush: "0", epa: "0.3", success: "1", pass_oe: "20", no_huddle: "1" },
+      { posteam: "TMA", defteam: "TMB", season_type: "REG", down: "1", wp: "0.60", qtr: "3", pass: "0", rush: "1", epa: "-0.1", success: "0", pass_oe: "30", no_huddle: "0" },
+      // EXCLUDED: postseason. Neutral/early-down/pre-Q4 so it would otherwise
+      // count, but season_type POST must drop it before anything is tallied.
+      { posteam: "TMA", defteam: "TMB", season_type: "POST", down: "1", wp: "0.50", qtr: "1", pass: "1", rush: "0", epa: "9", success: "1", pass_oe: "999", no_huddle: "1" },
+      { posteam: "TMB", defteam: "TMA", season_type: "REG", down: "1", wp: "0.50", qtr: "1", pass: "1", rush: "0", epa: "-0.2", success: "0", pass_oe: "5", no_huddle: "0" },
+      { posteam: "TMB", defteam: "TMA", season_type: "REG", down: "2", wp: "0.50", qtr: "2", pass: "0", rush: "1", epa: "0.1", success: "1", pass_oe: "15", no_huddle: "0" },
+    ];
+
+    const rows = buildTeamEnvironment(withPost, 2);
+    const tma = rows.find((r) => r.team === "TMA")!;
+    expect(tma).toBeDefined();
+
+    // Only the three REG plays count — the POST play drops out entirely.
+    expect(tma.offPlays).toBe(3);
+    expect(tma.offScrimmagePlays).toBe(3);
+    // PROE = mean(pass_oe) over the three REG plays = (10 + 20 + 30) / 3 = 20.
+    // The POST row's pass_oe 999 must not leak in.
+    expect(tma.proe).toBe(20);
+    // The POST row's epa of 9 must not contaminate offensive EPA/play.
+    expect(tma.offEpaPerPlay).toBe(0.233);
+  });
 });
 
 /**

@@ -93,7 +93,11 @@ interface Agg { name: string; team: string; position: string; games: number; xfp
 
 /** Build expected-points rows with within-position buy/sell signals. Pure. */
 export function buildExpectedPoints(records: readonly CsvRecord[], activeSeason: number): { rows: ExpectedPointsRow[]; throughWeek: number | null } {
-  const rows = records.filter((r) => num(r["season"]) === activeSeason && (r["season_type"] ? r["season_type"] === "REG" : true));
+  // ffverse's ep_weekly_{season}.csv asset has NO season_type column and ships
+  // weeks 1-22 (19-22 = postseason). Scope by WEEK — the modern REG cutoff is 18
+  // (2021+) — so the board, xfpTotal/xfpPerGame, and within-position percentiles
+  // are not biased toward playoff participants.
+  const rows = records.filter((r) => num(r["season"]) === activeSeason && num(r["week"]) <= 18);
   if (rows.length === 0) return { rows: [], throughWeek: null };
   const throughWeek = rows.reduce((m, r) => Math.max(m, num(r["week"])), 0) || null;
 

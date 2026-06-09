@@ -56,6 +56,15 @@ function classifyStatus(raw: string): ReportStatus {
   return "Other";
 }
 
+/**
+ * The regular/post-season marker. The nflreadr dictionary documents this as
+ * `season_type`, but the published release CSV ships the column as `game_type`
+ * (both carry REG / POST). We read either so the filter is robust to the name.
+ */
+function seasonType(row: CsvRecord): string {
+  return (row["season_type"] ?? row["game_type"] ?? "").trim().toUpperCase();
+}
+
 async function fetchCsv(url: string, fetcher: FetchLike, timeoutMs: number): Promise<readonly CsvRecord[]> {
   const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs });
   return parseCsv(await response.text()).records;
@@ -93,8 +102,16 @@ export async function loadNflverseInjuryReport({
       const records = await fetchCsv(url, fetcher, timeoutMs);
       if (records.length === 0) throw new Error("empty injuries file");
 
-      const week = records.reduce((max, row) => Math.max(max, toNumber(row["week"])), 0);
-      const latest = records.filter((row) => toNumber(row["week"]) === week);
+      // Restrict to REGULAR-season rows before picking the "latest week". In the
+      // offseason the source file's max week is a POST week (19-22, only the few
+      // playoff teams), which would silently blank availability for every other
+      // team downstream. If the file carries no season-type marker at all we fall
+      // back to every row rather than emptying the report.
+      const regular = records.filter((row) => seasonType(row) === "REG");
+      const scoped = regular.length > 0 ? regular : records;
+
+      const week = scoped.reduce((max, row) => Math.max(max, toNumber(row["week"])), 0);
+      const latest = scoped.filter((row) => toNumber(row["week"]) === week);
 
       const rows: InjuryRow[] = latest
         .map((row): InjuryRow => {
@@ -134,7 +151,7 @@ export async function loadNflverseInjuryReport({
         sourceRows: records.length,
         counts,
         rows,
-        note: "Official team-submitted injury designations as published, from the latest week in the source file. These are reported facts, not a prediction of availability.",
+        note: "Official team-submitted injury designations as published, from the latest regular-season week in the source file. These are reported facts, not a prediction of availability.",
         sourceUrl: url,
         error: null,
       };

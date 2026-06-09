@@ -148,7 +148,7 @@ function buildPlayerRows({
       return {
         playerId: row["player_id"] ?? "",
         playerName,
-        team: row["recent_team"] ?? "",
+        team: row["recent_team"] || row["team"] || "",
         opponent: row["opponent_team"] ?? "",
         position: row["position"] ?? "",
         targets,
@@ -182,11 +182,13 @@ function buildQbAgeRows({
   season: number;
   week: number;
 }): NflverseQbAgeRow[] {
-  const teams = new Set(latestRows.map((row) => row["recent_team"]).filter((team): team is string => Boolean(team)));
+  const teams = new Set(
+    latestRows.map((row) => row["recent_team"] || row["team"]).filter((team): team is string => Boolean(team)),
+  );
   const rows: NflverseQbAgeRow[] = [];
 
   for (const team of teams) {
-    const teamRows = latestRows.filter((row) => row["recent_team"] === team);
+    const teamRows = latestRows.filter((row) => (row["recent_team"] || row["team"]) === team);
     const qbRows = teamRows.filter((row) => row["position"] === "QB" && toNumber(row["attempts"]) > 0);
     if (qbRows.length === 0) continue;
     const startingQb = qbRows.sort((a, b) => toNumber(b["attempts"]) - toNumber(a["attempts"]))[0]!;
@@ -266,8 +268,8 @@ export async function loadNflverseUsagePulse({
       sourceRows: stats.records.length,
       seasonRows: seasonRows.length,
       latestWeekRows: latestRows.length,
-      playerRows: week > 0 ? buildPlayerRows({ latestRows, profiles, season, week }) : [],
-      qbAgeRows: week > 0 ? buildQbAgeRows({ latestRows, profiles, season, week }) : [],
+      playerRows: week > 0 ? buildPlayerRows({ latestRows, profiles, season: activeSeason, week }) : [],
+      qbAgeRows: week > 0 ? buildQbAgeRows({ latestRows, profiles, season: activeSeason, week }) : [],
       canPublishTrends: false,
       blockReason:
         "This pulse reads real nflverse rows directly. It is not a published betting pick or statistically significant trend until persisted joins and tests clear.",

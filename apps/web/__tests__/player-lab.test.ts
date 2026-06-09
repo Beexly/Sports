@@ -97,6 +97,12 @@ const ROSTERS_CSV = [
   "2025,PIT,TE,Pat Freiermuth,1998-09-02,00-te1,",
 ].join("\n");
 
+// Future-schema variant: nflverse renamed player_stats `recent_team` -> `team`
+// (nflfastR::calculate_stats). The leaders builder must still read the team.
+function buildStatsCsvTeamSchema(): string {
+  return buildStatsCsv().replace("position,headshot_url,recent_team,season", "position,headshot_url,team,season");
+}
+
 function gzResponse(csv: string): Response {
   const body = gzipSync(Buffer.from(csv));
   return new Response(body, { status: 200, headers: { "content-length": String(body.length) } });
@@ -161,6 +167,23 @@ describe("nflverse player lab", () => {
     expect(lab.defenseVsPosition.WR[0]!.pprAllowedPerGame).toBeGreaterThan(
       lab.defenseVsPosition.WR[1]!.pprAllowedPerGame,
     );
+  });
+
+  it("reads the renamed player_stats `team` column for season leaders", async () => {
+    const statsTeamSchema = buildStatsCsvTeamSchema();
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("player_stats.csv.gz")) return gzResponse(statsTeamSchema);
+      if (url.includes("roster_2025.csv")) return csvResponse(ROSTERS_CSV);
+      return new Response("missing", { status: 404 });
+    });
+
+    const lab = await loadNflversePlayerLab({ season: 2025, fetcher, cacheTtlMs: 0 });
+
+    expect(lab.status).toBe("live");
+    expect(lab.leaders.WR.map((r) => r.playerName)).toEqual(["George Pickens", "Calvin Austin"]);
+    // Team still resolves from the renamed column instead of falling back to "".
+    expect(lab.leaders.WR[0]?.team).toBe("PIT");
   });
 
   it("returns an explicit empty boundary state when sources fail", async () => {

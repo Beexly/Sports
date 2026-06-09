@@ -158,7 +158,8 @@ export async function loadNflverseEdgeSignals({
       if (!id) continue;
       const agg = production.get(id) ?? {
         playerName: row["player_display_name"] || row["player_name"] || "UNKNOWN",
-        team: row["recent_team"] ?? "",
+        // nflverse renamed player_stats `recent_team` -> `team` (nflfastR::calculate_stats); tolerate both.
+        team: row["recent_team"] || row["team"] || "",
         position,
         games: 0,
         ppr: 0,
@@ -169,7 +170,7 @@ export async function loadNflverseEdgeSignals({
       const ts = Number(row["target_share"]);
       if (Number.isFinite(ts)) agg.targetShares.push(ts);
       agg.playerName = row["player_display_name"] || agg.playerName;
-      agg.team = row["recent_team"] || agg.team;
+      agg.team = row["recent_team"] || row["team"] || agg.team;
       production.set(id, agg);
     }
 

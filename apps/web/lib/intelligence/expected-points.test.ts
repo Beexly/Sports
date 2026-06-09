@@ -2,9 +2,12 @@ import { describe, it, expect } from "vitest";
 import { buildExpectedPoints, loadExpectedPoints } from "./expected-points";
 
 type Row = Record<string, string>;
+// NB: ffverse's ep_weekly_{season}.csv has NO season_type column (it ships weeks
+// 1-22, 19-22 = postseason). Fixtures intentionally omit it to mirror the real
+// asset; regular-season scoping is by week (<= 18), not season_type.
 function wk(o: Partial<Row>): Row {
   return {
-    season: "2025", season_type: "REG", week: "1", position: "WR",
+    season: "2025", week: "1", position: "WR",
     player_id: "x", full_name: "X", posteam: "KC",
     total_fantasy_points_exp: "11", total_fantasy_points_diff: "0",
     ...o,
@@ -45,11 +48,30 @@ describe("buildExpectedPoints", () => {
     expect(by("In Line")!.signal).toBe("in-line");
   });
 
+  it("excludes postseason weeks (19-22) — REG cutoff is week 18", () => {
+    // ep_weekly has no season_type column, so week>18 is the only honest filter.
+    const { rows: r3, throughWeek: tw3 } = buildExpectedPoints(
+      [
+        wk({ player_id: "PLAYOFF", full_name: "Playoff Guy", week: "1", total_fantasy_points_exp: "12", total_fantasy_points_diff: "0" }),
+        wk({ player_id: "PLAYOFF", full_name: "Playoff Guy", week: "2", total_fantasy_points_exp: "12", total_fantasy_points_diff: "0" }),
+        wk({ player_id: "PLAYOFF", full_name: "Playoff Guy", week: "18", total_fantasy_points_exp: "12", total_fantasy_points_diff: "0" }),
+        // Postseason rows that MUST be dropped (wild card / divisional / conf / SB):
+        wk({ player_id: "PLAYOFF", full_name: "Playoff Guy", week: "19", total_fantasy_points_exp: "99", total_fantasy_points_diff: "0" }),
+        wk({ player_id: "PLAYOFF", full_name: "Playoff Guy", week: "22", total_fantasy_points_exp: "99", total_fantasy_points_diff: "0" }),
+      ],
+      2025,
+    );
+    const p = r3.find((r) => r.name === "Playoff Guy")!;
+    expect(tw3).toBe(18); // postseason week 19/22 not counted as the through-week
+    expect(p.games).toBe(3); // only REG weeks 1, 2, 18
+    expect(p.xfpTotal).toBe(36); // 3 * 12 — the two 99-pt postseason rows excluded
+  });
+
   it("falls back to rush+rec components when total_* columns are absent", () => {
     const { rows: r2 } = buildExpectedPoints(
       [
-        { season: "2025", season_type: "REG", week: "1", position: "RB", player_id: "R", full_name: "RB One", posteam: "ATL", rush_fantasy_points_exp: "10", rec_fantasy_points_exp: "6", rush_fantasy_points_diff: "1", rec_fantasy_points_diff: "0" },
-        { season: "2025", season_type: "REG", week: "2", position: "RB", player_id: "R", full_name: "RB One", posteam: "ATL", rush_fantasy_points_exp: "10", rec_fantasy_points_exp: "6", rush_fantasy_points_diff: "1", rec_fantasy_points_diff: "0" },
+        { season: "2025", week: "1", position: "RB", player_id: "R", full_name: "RB One", posteam: "ATL", rush_fantasy_points_exp: "10", rec_fantasy_points_exp: "6", rush_fantasy_points_diff: "1", rec_fantasy_points_diff: "0" },
+        { season: "2025", week: "2", position: "RB", player_id: "R", full_name: "RB One", posteam: "ATL", rush_fantasy_points_exp: "10", rec_fantasy_points_exp: "6", rush_fantasy_points_diff: "1", rec_fantasy_points_diff: "0" },
       ],
       2025,
     );

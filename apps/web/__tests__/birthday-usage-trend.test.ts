@@ -56,6 +56,13 @@ const SCHEDULES = [
   "2024_06_TMC,2024,REG,6,2024-10-20,TMC,OPP",
 ].join("\n");
 
+// Future-schema variant: nflverse renamed player_stats `recent_team` -> `team`
+// (nflfastR::calculate_stats). The loader must still join game dates by team-week.
+const PLAYER_STATS_TEAM_SCHEMA = PLAYER_STATS.replace(
+  "position,recent_team,season",
+  "position,team,season",
+);
+
 function csvResponse(csv: string): Response {
   return new Response(csv, {
     status: 200,
@@ -125,6 +132,31 @@ describe("birthday-window usage trend report", () => {
     expect(data["status"]).toBe("live");
     expect(data["canPowerScoring"]).toBe(false);
     expect(data["conclusion"]).toEqual(expect.stringMatching(/candidate|not-publishable/));
+  });
+
+  it("tolerates the renamed player_stats `team` column without dropping every timeline", async () => {
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("player_stats.csv.gz")) return gzResponse(PLAYER_STATS_TEAM_SCHEMA);
+      if (url.includes("players.csv")) return csvResponse(PLAYERS);
+      if (url.includes("games.csv")) return csvResponse(SCHEDULES);
+      return new Response("missing", { status: 404 });
+    });
+
+    const report = await loadBirthdayUsageTrendReport({
+      fetcher,
+      minSampleSize: 1,
+      minPriorAverage: 5,
+      cacheTtlMs: 0,
+    });
+
+    // Same result as the `recent_team` schema: game-date join still resolves,
+    // so timelines and observations survive instead of all skipping as missing-game-date.
+    expect(report.status).toBe("live");
+    expect(report.quality.observationsUsed).toBe(6);
+    expect(report.quality.skippedMissingGameDate).toBe(0);
+    expect(report.result?.n).toBe(2);
+    expect(report.result?.baselineN).toBe(4);
   });
 
   it("returns an empty report instead of fabricating a narrative when sources fail", async () => {

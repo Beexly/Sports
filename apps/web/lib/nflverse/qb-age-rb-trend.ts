@@ -111,7 +111,9 @@ function teamWeekUsageMap(playerStats: readonly CsvRecord[]): Map<string, TeamWe
     if (row["season_type"] !== "REG") continue;
     const season = row["season"];
     const week = row["week"];
-    const team = row["recent_team"];
+    // nflverse renamed player_stats `recent_team` -> `team` (nflfastR::calculate_stats).
+    // Tolerate both so the team-week join key never silently becomes undefined.
+    const team = row["recent_team"] || row["team"] || "";
     if (!season || !week || !team) continue;
     const key = `${season}|${week}|${team}`;
     const usage = map.get(key) ?? { attempts: 0, rbTargets: 0 };

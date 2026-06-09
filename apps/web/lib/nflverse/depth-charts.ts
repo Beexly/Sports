@@ -10,8 +10,20 @@ import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness"
  * nflverse changed this source after the 2024 season, so we parse BOTH schemas
  * defensively:
  *   • legacy (≤2024): full_name / season / week / club_code|team / position /
- *     depth_team (1 = starter) / game_type|season_type.
- *   • new (2025+): player_name / team / pos_abb|pos_name / pos_rank (1 = starter).
+ *     depth_team (1 = starter) / game_type|season_type. Weekly grain — we scope to
+ *     the latest REG week so the chart reflects current roles.
+ *   • new (2025+, ESPN schema): player_name / team / pos_abb|pos_name / pos_slot /
+ *     pos_rank. Per the nflverse `dictionary_depth_charts`, pos_slot is "a number
+ *     assigned to each position in a formation" and pos_rank is the player's rank
+ *     "grouped by pos_slot" — i.e. rank WITHIN a slot, not within a position. A
+ *     single position (e.g. guard) spans multiple slots (LG, RG), so several
+ *     players at one pos_name can each carry pos_rank===1. Treating any
+ *     pos_rank===1 as "the starter" is therefore wrong. Instead we re-rank each
+ *     team+position group by (pos_slot, pos_rank) into a dense 1-based depthOrder,
+ *     so the single most-prominent player becomes the starter (depthOrder 1). The
+ *     ESPN schema carries no season/week/game_type column, so this is a
+ *     point-in-time snapshot of the latest published chart — there is no week to
+ *     scope to and week-scoping is a no-op.
  * Any missing column simply drops the row — we never invent an order or a name.
  * These are reported roster facts, not our prediction of who will play.
  */
@@ -58,7 +70,27 @@ function pick(r: CsvRecord, keys: readonly string[]): string {
   return "";
 }
 
-/** Parse a depth-charts CSV (legacy or 2025+ schema) into normalized rows. Pure. */
+/** Shared, schema-agnostic identity/position fields for one depth-chart record. */
+function normalizeRecord(r: CsvRecord): { playerId: string; playerName: string; team: string; position: string } | null {
+  const playerName = pick(r, ["full_name", "player_name", "football_name", "player"]);
+  const position = pick(r, ["position", "depth_position", "pos_abb", "pos_name"]).toUpperCase();
+  const team = pick(r, ["club_code", "team", "recent_team"]).toUpperCase();
+  if (!playerName || !position || !team) return null; // never invent a role
+  return {
+    playerId: pick(r, ["gsis_id", "player_id", "elias_id", "espn_id"]),
+    playerName,
+    team,
+    position,
+  };
+}
+
+/**
+ * Parse a depth-charts CSV (legacy or 2025+ ESPN schema) into normalized rows.
+ * Pure. Legacy rows (with a `depth_team` order) keep their per-week scoping and
+ * their depth_team value as the starter order. 2025+ rows (no depth_team; instead
+ * pos_slot + pos_rank, where pos_rank is rank WITHIN a slot) are re-ranked per
+ * team+position by (pos_slot, pos_rank) so exactly one player becomes the starter.
+ */
 export function buildDepthCharts(records: readonly CsvRecord[]): { rows: DepthChartRow[]; week: number | null } {
   // Regular-season only where a season-type column exists; otherwise keep all.
   const seasonTyped = records.filter((r) => {
@@ -66,29 +98,55 @@ export function buildDepthCharts(records: readonly CsvRecord[]): { rows: DepthCh
     return st === "" || st === "REG";
   });
 
-  const weeks = seasonTyped.map((r) => finite(r["week"])).filter((w): w is number => w != null);
+  // Legacy carries an explicit depth_team order; the 2025+ ESPN schema does not.
+  const legacyRecords = seasonTyped.filter((r) => finite(r["depth_team"]) != null);
+  const espnRecords = seasonTyped.filter((r) => finite(r["depth_team"]) == null);
+
+  const weeks = legacyRecords.map((r) => finite(r["week"])).filter((w): w is number => w != null);
   const latestWeek = weeks.length ? weeks.reduce((m, w) => Math.max(m, w), 0) : null;
 
-  // When a week column is present, keep only the most recent week (current roles).
-  const scoped = latestWeek == null ? seasonTyped : seasonTyped.filter((r) => finite(r["week"]) === latestWeek);
-
   const rows: DepthChartRow[] = [];
-  for (const r of scoped) {
-    const playerName = pick(r, ["full_name", "player_name", "football_name", "player"]);
-    const position = pick(r, ["position", "depth_position", "pos_abb", "pos_name"]).toUpperCase();
-    const team = pick(r, ["club_code", "team", "recent_team"]).toUpperCase();
-    // depth_team (legacy) and pos_rank (2025+) both encode order, 1 = starter.
-    const depthOrder = finite(r["depth_team"]) ?? finite(r["pos_rank"]) ?? finite(r["pos_slot"]);
-    if (!playerName || !position || !team || depthOrder == null) continue; // never invent a role
-    rows.push({
-      playerId: pick(r, ["gsis_id", "player_id", "elias_id", "espn_id"]),
-      playerName,
-      team,
-      position,
-      depthOrder,
-      week: finite(r["week"]),
+
+  // ── Legacy (≤2024) ── depth_team is the order; scope to the latest REG week. ──
+  const legacyScoped =
+    latestWeek == null ? legacyRecords : legacyRecords.filter((r) => finite(r["week"]) === latestWeek);
+  for (const r of legacyScoped) {
+    const base = normalizeRecord(r);
+    const depthOrder = finite(r["depth_team"]);
+    if (!base || depthOrder == null) continue; // never invent a role
+    rows.push({ ...base, depthOrder, week: finite(r["week"]) });
+  }
+
+  // ── 2025+ (ESPN schema) ── pos_rank is rank WITHIN a pos_slot, so several
+  // players at one position can each be pos_rank===1. Re-rank each team+position
+  // group by (pos_slot, pos_rank) into a dense 1-based order; only the single
+  // most-prominent player gets depthOrder 1 (the starter). No week column exists
+  // in this schema, so it is a point-in-time snapshot — week stays null.
+  interface EspnEntry {
+    base: NonNullable<ReturnType<typeof normalizeRecord>>;
+    posSlot: number;
+    posRank: number;
+  }
+  const espnByKey = new Map<string, EspnEntry[]>();
+  for (const r of espnRecords) {
+    const base = normalizeRecord(r);
+    // pos_rank is required to order; fall back to pos_slot when pos_rank is absent.
+    const posRank = finite(r["pos_rank"]) ?? finite(r["pos_slot"]);
+    if (!base || posRank == null) continue; // never invent a role
+    const posSlot = finite(r["pos_slot"]) ?? posRank;
+    const key = `${base.team}|${base.position}`;
+    const list = espnByKey.get(key) ?? [];
+    list.push({ base, posSlot, posRank });
+    espnByKey.set(key, list);
+  }
+  for (const list of espnByKey.values()) {
+    // Sort by slot first (most-prominent slot wins the starter spot), then rank.
+    list.sort((a, b) => a.posSlot - b.posSlot || a.posRank - b.posRank);
+    list.forEach((entry, index) => {
+      rows.push({ ...entry.base, depthOrder: index + 1, week: null });
     });
   }
+
   return { rows, week: latestWeek };
 }
 
@@ -136,7 +194,10 @@ export async function loadNflverseDepthCharts({
         sourceRows: records.length,
         rows,
         canPublishProjections: false,
-        note: "Weekly depth-chart order per player (1 = starter) from the latest week in the source file. Reported roster facts, not a prediction of who will play.",
+        note:
+          week == null
+            ? "Depth-chart order per player (1 = starter) — a point-in-time snapshot of the latest published chart (the 2025+ ESPN source carries no week). Reported roster facts, not a prediction of who will play."
+            : "Weekly depth-chart order per player (1 = starter) from the latest week in the source file. Reported roster facts, not a prediction of who will play.",
         sourceUrl: url,
         error: null,
       };

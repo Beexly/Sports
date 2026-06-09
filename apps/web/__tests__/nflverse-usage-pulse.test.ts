@@ -75,6 +75,54 @@ describe("nflverse usage pulse", () => {
     });
   });
 
+  it("ages players against the active (fallback) season, not the requested future season", async () => {
+    // Request a season newer than any rows in the source. resolveActiveSeason
+    // falls back to 2025, and value.season reports 2025 — so the QB/player ages
+    // must be computed for 2025, not the requested 2027 (which would render two
+    // years too high and contradict the reported season).
+    const pulse = await loadNflverseUsagePulse({
+      season: 2027,
+      fetcher: mockNflverseFetch(),
+      cacheTtlMs: 0,
+    });
+
+    expect(pulse.status).toBe("live");
+    expect(pulse.season).toBe(2025);
+    expect(pulse.week).toBe(18);
+
+    const rodgers = pulse.qbAgeRows.find((row) => row.qbName === "Aaron Rodgers");
+    // Born 1983-12-02; at the 2025 week-18 game date (2026-01-05) he is 42.
+    // The bug computed against requested 2027 and produced 44.
+    expect(rodgers?.qbAge).toBe(42);
+
+    const warren = pulse.playerRows.find((row) => row.playerName === "Jaylen Warren");
+    // Born 1998-11-01; 27 at the 2025 week-18 game date, not 29.
+    expect(warren?.age).toBe(27);
+  });
+
+  it("falls back to the team column when recent_team is absent (M1)", async () => {
+    // Current nflverse player_stats releases use `team`; older vintages used
+    // `recent_team`. The pulse must read whichever is present.
+    const teamOnlyCsv = [
+      "player_id,player_name,player_display_name,position,headshot_url,team,season,week,season_type,opponent_team,attempts,carries,rushing_yards,receptions,targets,receiving_yards,receiving_air_yards,target_share,air_yards_share,wopr,fantasy_points_ppr",
+      "00-qb1,,Aaron Rodgers,QB,,PIT,2025,18,REG,CIN,32,2,8,0,0,0,0,,,0,1.1",
+      "00-rb1,,Jaylen Warren,RB,,PIT,2025,18,REG,CIN,0,18,88,6,8,42,15,0.25,0.04,0.21,18.0",
+      "00-wr1,,George Pickens,WR,,PIT,2025,18,REG,CIN,0,0,0,7,11,94,110,0.34,0.41,0.72,23.4",
+    ].join("\n");
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("player_stats.csv.gz")) return gzResponse(teamOnlyCsv);
+      if (url.includes("roster_2025.csv")) return csvResponse(ROSTERS_CSV);
+      return new Response("missing", { status: 404 });
+    });
+
+    const pulse = await loadNflverseUsagePulse({ season: 2025, fetcher, cacheTtlMs: 0 });
+
+    expect(pulse.status).toBe("live");
+    expect(pulse.playerRows[0]?.team).toBe("PIT");
+    expect(pulse.qbAgeRows[0]?.team).toBe("PIT");
+  });
+
   it("returns an empty boundary state when sources fail", async () => {
     const fetcher = vi.fn(async () => new Response("missing", { status: 404 }));
 

@@ -9,11 +9,18 @@
  *
  * IMPORTANT — what FTN does and does NOT carry: the asset has full PLAY identity
  * (`nflverse_game_id`, `nflverse_play_id`, `season`, `week`) but NO team or player
- * identity. There is no `posteam`, no `passer_player_id`. So this loader's job is
- * only to fetch + project + decode the real charting columns into compact,
- * serializable rows; attributing a play to a QB or a team requires a join to
- * play-by-play (which carries `game_id` / `play_id` / `posteam` / `passer_*`).
- * That join + aggregation lives in the SERVER engine `lib/intelligence/play-design.ts`.
+ * identity. There is no `posteam`, no `passer_player_id`, and no `season_type`. So
+ * this loader's job is only to fetch + project + decode the real charting columns
+ * into compact, serializable rows; attributing a play to a QB or a team requires a
+ * join to play-by-play (which carries `game_id` / `play_id` / `posteam` /
+ * `passer_*` / `season_type`). That join + aggregation lives in the SERVER engine
+ * `lib/intelligence/play-design.ts`.
+ *
+ * SCOPE — this loader returns every charted play, REG and POST (FTN covers the
+ * postseason). The regular-season-only scoping for play-design rates is enforced
+ * downstream in the engine's identity map (it indexes only REG pbp plays), so POST
+ * charted rows fail the join and drop. Keeping the loader scope-agnostic lets other
+ * consumers read postseason charting if they ever need it.
  *
  * RSC boundary: this is a server module. It returns only plain serializable rows
  * (string / number / boolean) — never functions — so a server engine or RSC can

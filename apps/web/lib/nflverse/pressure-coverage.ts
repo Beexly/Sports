@@ -82,6 +82,25 @@ export interface ReceivingAdvancedRow {
   readonly passerRatingWhenTargeted: number | null; // QB rating when targeted (rat)
 }
 
+/**
+ * Per-TEAM pass-rush rollup, summed over EVERY charted defender on a team — with
+ * NO coverage-target floor and NO TOP_N coverage cap. `coverage` above is sliced
+ * to the 30 lowest-passer-rating-allowed defenders league-wide (a per-player
+ * coverage leaderboard), so summing pass-rush from it under-counts or zeroes any
+ * team whose defenders didn't make that list. This rollup is the honest team
+ * pass-rush total: every defender's def_pressures / def_blitzes / def_sacks /
+ * def_qbkd / def_hurries, grouped by team. Real columns only; absent stays 0.
+ */
+export interface TeamPassRushRow {
+  readonly team: string;
+  readonly defenders: number; // charted defenders on the team backing the rollup
+  readonly pressures: number; // sum of def_pressures
+  readonly blitzes: number; // sum of def_blitzes
+  readonly sacks: number; // sum of def_sacks (individual)
+  readonly qbKnockdowns: number; // sum of def_qbkd
+  readonly hurries: number; // sum of def_hurries
+}
+
 export interface NflversePressureCoverage {
   readonly generatedAt: string;
   readonly status: "live" | "source-error";
@@ -91,6 +110,11 @@ export interface NflversePressureCoverage {
   readonly qbPressure: readonly QbPressureRow[];
   readonly coverage: readonly CoverageRow[];
   readonly receivingAdvanced: readonly ReceivingAdvancedRow[];
+  /**
+   * Uncapped per-team pass-rush totals (see TeamPassRushRow). Distinct from
+   * `coverage`: this is the FULL team rush, not the capped coverage leaderboard.
+   */
+  readonly teamPassRush: readonly TeamPassRushRow[];
   readonly canPublishProjections: false;
   readonly blockReason: string;
   readonly sourceUrls: Record<"pass" | "def" | "rec", string>;
@@ -328,6 +352,58 @@ function buildCoverage(records: readonly CsvRecord[]): CoverageRow[] {
   return rows.sort((x, y) => x.passerRatingAllowed - y.passerRatingAllowed).slice(0, TOP_N);
 }
 
+interface TeamRushAgg {
+  defenders: number;
+  pressures: number;
+  blitzes: number;
+  sacks: number;
+  qbkd: number;
+  hurries: number;
+}
+
+/**
+ * Aggregate the FULL def charting into per-team pass-rush totals — every charted
+ * defender on a team, with NO coverage-target floor and NO TOP_N cap. This is the
+ * honest team rush total that `coverage` (a capped per-player leaderboard) cannot
+ * provide. Real columns only (def_pressures / def_blitzes / def_sacks / def_qbkd /
+ * def_hurries); a defender missing a column simply contributes 0 to it. Keyed by
+ * the team code as it appears in the source (upper-cased); the consumer applies
+ * any relocation/spelling normalization on lookup.
+ */
+function buildTeamPassRush(records: readonly CsvRecord[]): TeamPassRushRow[] {
+  const byTeam = new Map<string, TeamRushAgg>();
+  for (const row of records) {
+    if (row["game_type"] !== "REG") continue;
+    const team = (row["team"] ?? "").trim().toUpperCase();
+    if (!team) continue;
+    let agg = byTeam.get(team);
+    if (!agg) {
+      agg = { defenders: 0, pressures: 0, blitzes: 0, sacks: 0, qbkd: 0, hurries: 0 };
+      byTeam.set(team, agg);
+    }
+    agg.defenders += 1;
+    agg.pressures += toNumber(row["def_pressures"]);
+    agg.blitzes += toNumber(row["def_blitzes"]);
+    agg.sacks += toNumber(row["def_sacks"]);
+    agg.qbkd += toNumber(row["def_qbkd"]);
+    agg.hurries += toNumber(row["def_hurries"]);
+  }
+  const rows: TeamPassRushRow[] = [];
+  for (const [team, a] of byTeam) {
+    rows.push({
+      team,
+      defenders: a.defenders,
+      pressures: a.pressures,
+      blitzes: a.blitzes,
+      sacks: a.sacks,
+      qbKnockdowns: a.qbkd,
+      hurries: a.hurries,
+    });
+  }
+  // Hardest rush first (most pressures); stable, full league — never sliced.
+  return rows.sort((x, y) => y.pressures - x.pressures);
+}
+
 interface RecAgg {
   name: string;
   team: string;
@@ -463,6 +539,7 @@ export async function loadNflversePressureCoverage({
         sourceRows: pass.records.length + def.records.length + rec.records.length,
         qbPressure: buildQbPressure(pass.records),
         coverage: buildCoverage(def.records),
+        teamPassRush: buildTeamPassRush(def.records),
         receivingAdvanced: buildReceivingAdvanced(rec.records),
         canPublishProjections: false,
         blockReason:
@@ -485,6 +562,7 @@ export async function loadNflversePressureCoverage({
     sourceRows: 0,
     qbPressure: [],
     coverage: [],
+    teamPassRush: [],
     receivingAdvanced: [],
     canPublishProjections: false,
     blockReason:

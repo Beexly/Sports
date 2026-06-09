@@ -9,6 +9,12 @@
  * situations leaves the closest thing to a team's repeatable baseline.
  *
  * Built straight from nflverse play-by-play (the first PBP consumer in the app).
+ * REGULAR SEASON ONLY: the pbp asset mixes season_type REG and POST, so every
+ * record outside season_type == "REG" is skipped. Blending the latest playoffs
+ * in (which only the ~14 postseason teams play) would skew their per-team
+ * baselines and every within-league percentile, contradicting the "repeatable
+ * baseline" framing. This matches the cluster's other REG-only pbp loaders
+ * (scoring-zone, snap-share, pressure-coverage).
  * Per team we compute, over the neutral-script filter:
  *   • offensive EPA/play (team as posteam) and success rate (success == 1)
  *   • defensive EPA/play (team as defteam) — lower is better defense
@@ -190,6 +196,7 @@ interface Agg {
  * compact per-record keyset (the OOM fix). Keep this in lockstep with the
  * reducer: every `r["..."]` access below must appear here, or that column reads
  * as missing and the data goes silently wrong.
+ *   season-type gate (REG only):         season_type
  *   neutral filter (isNeutralEarlyDown): down, wp, qtr
  *   neutral reducer:                     posteam, defteam, pass, rush, epa,
  *                                        success, pass_oe, no_huddle
@@ -203,6 +210,8 @@ interface Agg {
  *   play classification:      play_type
  */
 export const TEAM_ENVIRONMENT_PBP_COLUMNS = [
+  // regular-season gate (pbp mixes REG/POST; we keep REG only)
+  "season_type",
   // neutral-script early-down core (unchanged)
   "down",
   "wp",
@@ -308,6 +317,12 @@ export function buildTeamEnvironment(
   };
 
   for (const r of records) {
+    // Regular season only: the pbp asset mixes season_type REG/POST. Skipping
+    // POST keeps the per-team baseline repeatable (only ~14 teams play
+    // postseason, so blending it would skew their EPA/percentiles). The
+    // presence guard keeps tiny fixtures without the column working.
+    if (r["season_type"] && r["season_type"] !== "REG") continue;
+
     const posteam = r["posteam"] ?? "";
     const defteam = r["defteam"] ?? "";
     // Only count real scrimmage plays where the play is a pass or a rush.
