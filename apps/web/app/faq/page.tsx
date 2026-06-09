@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME } from "@/lib/brand";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { Reveal } from "@/components/motion/reveal";
+import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 
 /**
  * /faq — Standalone FAQ landing page with FAQPage JSON-LD.
@@ -34,11 +36,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. Galaxy Sports Edge ingests live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal with its full factor trail attached. Free plan gets one signal a day. Pro and Elite unlock every signal with the reasoning behind each one.",
+        a: "A sports intelligence platform built around one number: the GSE Rating. One score per matchup or player, with a plain-English read — buy low before the market catches up, or sell high into the value. Free gets the Rating and one signal a day. Pro and Elite unlock the full depth: every signal, every position, every day.",
       },
       {
         q: "How is this different from a tout service?",
-        a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail — consensus, line movement, market depth, freshness, intelligence layers — and holds back a public win-rate until enough canonical settled signals exist to support one honestly. The page reads \"Collecting\" until that's true. Patience over noise.",
+        a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge grades every signal against where the market actually settled and holds back a public win-rate until enough canonical settled history exists to make it statistically honest. The page reads \"Collecting\" until that's true. Patience over noise — that's the standard.",
       },
       {
         q: "Which sports are covered?",
@@ -46,7 +48,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What's the philosophy behind it?",
-        a: "One model, one standard. Galaxy Sports Edge was built because the sports picks industry runs on a quiet trick — services that publish their wins and scrub their losses. The opposite approach: show the work on every pick, gate the win-rate readout until it's statistically defensible, and let the data do the talking.",
+        a: "One model, one standard. Galaxy Sports Edge was built because the sports picks industry runs on a quiet trick — services that publish their wins and scrub their losses. The opposite: grade every signal against the closing line, gate the win-rate readout until it's statistically defensible, and let the record do the talking.",
       },
     ],
   },
@@ -66,8 +68,8 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
         a: "Verified conviction state: the rarest grade. Only signals where every gate cleared by a wide margin earn it. It's the model's strongest honest signal, not a promise about the outcome. It still loses sometimes.",
       },
       {
-        q: "Can I see the factor trail on every signal?",
-        a: "Yes — that's the whole product. Every published signal exposes its full factor breakdown: which books, what line movement, market depth, freshness, public lean, intelligence layers. You read what the model read.",
+        q: "Can I see the reasoning behind a signal?",
+        a: "Pro and Elite subscribers get the full confidence rating and the reasoning trail on every published signal. Free gets the signal's direction and grade. The depth is what we sell — the GSE Rating and the headline read are free for everyone.",
       },
       {
         q: "Does the model ever stay quiet?",
@@ -158,7 +160,8 @@ const faqJsonLd = {
 
 export default function FaqPage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <Atmosphere />
       <Nav />
 
       <script
@@ -166,13 +169,17 @@ export default function FaqPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      <main className="flex-1">
+      <main className="flex-1 text-ion-white">
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <p className="eyebrow">FAQ</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              The questions that come up most.
-            </h1>
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>FAQ</p>
+            </Reveal>
+            <Reveal delay={90}>
+              <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+                The questions that come up most.
+              </h1>
+            </Reveal>
             <p className="mt-5 max-w-2xl text-lg text-ink-300">
               Plain answers about how {BRAND_NAME} works, what&apos;s gated,
               what&apos;s open, and how this is different from the rest of the
