@@ -5,6 +5,9 @@ import { getReadinessGates } from "@sports/prediction-engine";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { Reveal } from "@/components/motion/reveal";
+import { AmbientGlow, SignatureGrid } from "@/components/motion/signature-grid";
 import { PerformanceBootstrapState } from "@/components/performance/bootstrap-state";
 import { CalibrationPanel } from "@/components/performance/calibration-panel";
 import type { PickType, PickTier } from "@sports/types";
@@ -59,11 +62,13 @@ function aggregateOverall(summaries: PerformanceSummary[]) {
   return { wins, losses, pushes, totalPicks, winRate };
 }
 
+// Win-rate tone on the unified dark palette: emerald (strong) → orbital-cyan
+// (solid) → amber (coin-flip) → rose (below water). Text stays AA on dark.
 function winRateColor(rate: number): string {
-  if (rate >= 60) return "text-green-400";
-  if (rate >= 55) return "text-brand-400";
-  if (rate >= 50) return "text-yellow-400";
-  return "text-red-400";
+  if (rate >= 60) return "text-emerald-400";
+  if (rate >= 55) return "text-orbital-cyan";
+  if (rate >= 50) return "text-amber-400";
+  return "text-rose-400";
 }
 
 function latestComputedAt(summaries: PerformanceSummary[]): Date | null {
@@ -87,7 +92,8 @@ function latestModelVersion(summaries: PerformanceSummary[]): string | null {
 // <PerformanceBootstrapState> with minimal JSX between it and the gate check.
 function BootstrapShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-surface-base text-ion-white">
+      <Atmosphere />
       <Nav />
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
@@ -117,13 +123,13 @@ export default async function PerformancePage() {
         {todayPickCount > 0 && (
           <div
             data-testid="performance-pick-count-banner"
-            className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-4 text-xs"
+            className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-ds-md border border-surface-line bg-surface-raised p-4 text-xs"
           >
-            <p className="text-gray-300">
+            <p className="text-ion-1">
               {todayPickCount} pick{todayPickCount === 1 ? "" : "s"} published
               today
               {demoActive && (
-                <span className="ml-2 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">
+                <span className="ml-2 rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-amber-300">
                   sample
                 </span>
               )}
@@ -131,7 +137,7 @@ export default async function PerformancePage() {
             </p>
             <Link
               href="/picks"
-              className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60"
+              className="rounded-ds-sm border border-surface-line px-3 py-1.5 text-ion-1 hover:bg-surface-sunken"
             >
               See today&apos;s picks
             </Link>
@@ -142,7 +148,7 @@ export default async function PerformancePage() {
           minSettledPicksForLearning={gates.minSettledPicksForLearning}
         />
         <div className="mt-12">
-          <h2 className="mb-4 text-center text-sm font-semibold uppercase tracking-widest text-gray-500">
+          <h2 className="mb-4 text-center text-sm font-semibold uppercase tracking-widest text-ion-2">
             How we&apos;ll prove it
           </h2>
           <CalibrationPanel />
@@ -182,23 +188,30 @@ export default async function PerformancePage() {
   const isEmpty = !fetchError && summaries.length === 0;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-surface-base text-ion-white">
+      <Atmosphere />
       <Nav />
       <main className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-10 text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              Calibration Report
-            </h1>
-            <p className="mx-auto mt-4 max-w-xl text-gray-400">
-              Every settled canonical pick is included. Bootstrap-era picks
-              are excluded by design — they don&apos;t get to inflate the
-              record.
-            </p>
-            <p className="mt-3 text-xs text-gray-600">
-              Past performance does not guarantee future results.
-            </p>
-          </div>
+          <Reveal>
+            <div className="relative isolate mb-10 overflow-hidden rounded-ds-lg text-center">
+              <AmbientGlow className="-z-10" />
+              <SignatureGrid className="-z-10" opacity={0.1} rotate />
+              <div className="relative z-10 px-1 py-4">
+                <h1 className="text-4xl font-extrabold tracking-tight text-ion-white sm:text-5xl">
+                  Calibration Report
+                </h1>
+                <p className="mx-auto mt-4 max-w-xl text-ion-2">
+                  Every settled canonical pick is included. Bootstrap-era picks
+                  are excluded by design — they don&apos;t get to inflate the
+                  record.
+                </p>
+                <p className="mt-3 text-xs text-ion-2">
+                  Past performance does not guarantee future results.
+                </p>
+              </div>
+            </div>
+          </Reveal>
 
           {/* Lead with the scoreboard: calibration + discrimination first. */}
           <CalibrationPanel />
@@ -207,9 +220,9 @@ export default async function PerformancePage() {
             <div
               data-testid="performance-error"
               role="alert"
-              className="rounded-xl border border-red-800/60 bg-red-950/40 p-6 text-center"
+              className="rounded-ds-md border border-rose-500/40 bg-rose-500/10 p-6 text-center"
             >
-              <p className="text-sm text-red-400">{fetchError}</p>
+              <p className="text-sm text-rose-300">{fetchError}</p>
             </div>
           )}
 
@@ -225,95 +238,97 @@ export default async function PerformancePage() {
               {/* Methodology summary card */}
               <section
                 data-testid="performance-methodology"
-                className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+                className="mb-8 rounded-ds-lg border border-surface-line bg-surface-raised p-5"
               >
-                <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
+                <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-2">
                   Methodology
                 </h2>
-                <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs text-gray-400 sm:grid-cols-4">
+                <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs text-ion-2 sm:grid-cols-4">
                   <div>
-                    <dt className="text-gray-600">Win rate definition</dt>
+                    <dt className="text-ion-2">Win rate definition</dt>
                     <dd>
-                      <code className="rounded bg-gray-800 px-1 py-0.5 font-mono text-[10px] text-gray-300">
+                      <code className="rounded bg-surface-sunken px-1 py-0.5 font-mono text-[10px] text-ion-1">
                         wins divided by decided outcomes
                       </code>
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-gray-600">Pushes</dt>
+                    <dt className="text-ion-2">Pushes</dt>
                     <dd>Reported separately, excluded from the denominator</dd>
                   </div>
                   <div>
-                    <dt className="text-gray-600">Sample size</dt>
+                    <dt className="text-ion-2">Sample size</dt>
                     <dd>{overall.totalPicks} canonical picks</dd>
                   </div>
                   <div>
-                    <dt className="text-gray-600">Model version</dt>
+                    <dt className="text-ion-2">Model version</dt>
                     <dd>
-                      <code className="rounded bg-gray-800 px-1 py-0.5 font-mono text-[10px] text-gray-300">
+                      <code className="rounded bg-surface-sunken px-1 py-0.5 font-mono text-[10px] text-ion-1">
                         {modelVersion ?? "-"}
                       </code>
                     </dd>
                   </div>
                   {computedAt && (
                     <div className="col-span-2 sm:col-span-4">
-                      <dt className="text-gray-600">Last computed</dt>
+                      <dt className="text-ion-2">Last computed</dt>
                       <dd>{computedAt.toUTCString()}</dd>
                     </div>
                   )}
                 </dl>
               </section>
 
-              <section className="mb-12">
-                <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900 to-gray-900/60">
-                  <div className="border-b border-gray-800 px-6 py-4">
-                    <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
-                      All-Time Overall
-                    </h2>
+              <Reveal>
+                <section className="mb-12">
+                  <div className="overflow-hidden rounded-ds-lg border border-surface-line bg-surface-raised">
+                    <div className="border-b border-surface-line px-6 py-4">
+                      <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
+                        All-Time Overall
+                      </h2>
+                    </div>
+                    <div className="grid grid-cols-2 divide-x divide-surface-line sm:grid-cols-4">
+                      <OverallStat
+                        label="Win Rate"
+                        value={
+                          overall.winRate !== null
+                            ? `${overall.winRate.toFixed(1)}%`
+                            : "-"
+                        }
+                        accent={
+                          overall.winRate !== null
+                            ? winRateColor(overall.winRate)
+                            : "text-ion-2"
+                        }
+                        large
+                      />
+                      <OverallStat
+                        label="Wins"
+                        value={overall.wins.toString()}
+                        accent="text-emerald-400"
+                      />
+                      <OverallStat
+                        label="Losses"
+                        value={overall.losses.toString()}
+                        accent="text-rose-400"
+                      />
+                      <OverallStat
+                        label="Pushes"
+                        value={overall.pushes.toString()}
+                        accent="text-ion-2"
+                      />
+                    </div>
+                    <div className="border-t border-surface-line px-6 py-3">
+                      <p className="text-xs text-ion-2">
+                        Based on {overall.totalPicks} canonical settled picks. Win
+                        rate excludes pushes.
+                      </p>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 divide-x divide-gray-800 sm:grid-cols-4">
-                    <OverallStat
-                      label="Win Rate"
-                      value={
-                        overall.winRate !== null
-                          ? `${overall.winRate.toFixed(1)}%`
-                          : "-"
-                      }
-                      accent={
-                        overall.winRate !== null
-                          ? winRateColor(overall.winRate)
-                          : "text-gray-400"
-                      }
-                      large
-                    />
-                    <OverallStat
-                      label="Wins"
-                      value={overall.wins.toString()}
-                      accent="text-green-400"
-                    />
-                    <OverallStat
-                      label="Losses"
-                      value={overall.losses.toString()}
-                      accent="text-red-400"
-                    />
-                    <OverallStat
-                      label="Pushes"
-                      value={overall.pushes.toString()}
-                      accent="text-gray-400"
-                    />
-                  </div>
-                  <div className="border-t border-gray-800 px-6 py-3">
-                    <p className="text-xs text-gray-600">
-                      Based on {overall.totalPicks} canonical settled picks. Win
-                      rate excludes pushes.
-                    </p>
-                  </div>
-                </div>
-              </section>
+                </section>
+              </Reveal>
 
               {bySport.size > 0 && (
                 <section className="mb-12">
-                  <h2 className="mb-5 text-xl font-bold text-white">
+                  <h2 className="mb-5 text-xl font-bold text-ion-white">
                     By sport (all-time)
                   </h2>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -346,32 +361,32 @@ export default async function PerformancePage() {
 
               {recentSummaries.length > 0 && (
                 <section className="mb-12">
-                  <h2 className="mb-5 text-xl font-bold text-white">
+                  <h2 className="mb-5 text-xl font-bold text-ion-white">
                     Recent periods
                   </h2>
-                  <div className="overflow-x-auto rounded-2xl border border-gray-800">
+                  <div className="overflow-x-auto rounded-ds-lg border border-surface-line">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b border-gray-800 text-left">
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                        <tr className="border-b border-surface-line text-left">
+                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Period
                           </th>
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Sport
                           </th>
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Type
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             W
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             L
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             P
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Win%
                           </th>
                         </tr>
@@ -385,27 +400,27 @@ export default async function PerformancePage() {
                             <tr
                               key={s.id}
                               className={[
-                                "border-b border-gray-800/60",
-                                i % 2 === 0 ? "bg-gray-900/20" : "",
+                                "border-b border-surface-line",
+                                i % 2 === 0 ? "bg-surface-raised/40" : "",
                               ].join(" ")}
                             >
-                              <td className="px-4 py-3 font-mono text-xs text-gray-400">
+                              <td className="px-4 py-3 font-mono text-xs text-ion-2">
                                 {s.period}
                               </td>
-                              <td className="px-4 py-3 text-gray-300">
+                              <td className="px-4 py-3 text-ion-1">
                                 {SPORT_DISPLAY_NAMES[s.sport.toLowerCase()] ??
                                   s.sport}
                               </td>
-                              <td className="px-4 py-3 text-gray-500">
+                              <td className="px-4 py-3 text-ion-2">
                                 {s.pickType ?? "All"}
                               </td>
-                              <td className="px-4 py-3 text-center text-green-400">
+                              <td className="px-4 py-3 text-center text-emerald-400">
                                 {s.wins}
                               </td>
-                              <td className="px-4 py-3 text-center text-red-400">
+                              <td className="px-4 py-3 text-center text-rose-400">
                                 {s.losses}
                               </td>
-                              <td className="px-4 py-3 text-center text-gray-500">
+                              <td className="px-4 py-3 text-center text-ion-2">
                                 {s.pushes}
                               </td>
                               <td className="px-4 py-3 text-center">
@@ -419,7 +434,7 @@ export default async function PerformancePage() {
                                     {wr.toFixed(1)}%
                                   </span>
                                 ) : (
-                                  <span className="text-gray-600">-</span>
+                                  <span className="text-ion-2">-</span>
                                 )}
                               </td>
                             </tr>
@@ -456,7 +471,7 @@ function OverallStat({
 }) {
   return (
     <div className="flex flex-col items-center gap-1 px-6 py-6 text-center">
-      <dt className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+      <dt className="text-xs font-semibold uppercase tracking-widest text-ion-2">
         {label}
       </dt>
       <dd
@@ -488,9 +503,9 @@ function SportCard({
   winRate: number | null;
 }) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-5">
+    <div className="rounded-ds-lg border border-surface-line bg-surface-raised p-5">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-lg font-bold text-white">{sport}</h3>
+        <h3 className="text-lg font-bold text-ion-white">{sport}</h3>
         {winRate !== null && (
           <span
             className={["text-2xl font-extrabold", winRateColor(winRate)].join(
@@ -503,37 +518,37 @@ function SportCard({
       </div>
 
       <div className="grid grid-cols-3 gap-2 text-center">
-        <div className="rounded-lg bg-green-900/20 py-2">
-          <p className="text-xs text-gray-500">W</p>
-          <p className="text-lg font-bold text-green-400">{wins}</p>
+        <div className="rounded-ds-sm bg-emerald-500/10 py-2">
+          <p className="text-xs text-ion-2">W</p>
+          <p className="text-lg font-bold text-emerald-400">{wins}</p>
         </div>
-        <div className="rounded-lg bg-red-900/20 py-2">
-          <p className="text-xs text-gray-500">L</p>
-          <p className="text-lg font-bold text-red-400">{losses}</p>
+        <div className="rounded-ds-sm bg-rose-500/10 py-2">
+          <p className="text-xs text-ion-2">L</p>
+          <p className="text-lg font-bold text-rose-400">{losses}</p>
         </div>
-        <div className="rounded-lg bg-gray-800/60 py-2">
-          <p className="text-xs text-gray-500">P</p>
-          <p className="text-lg font-bold text-gray-400">{pushes}</p>
+        <div className="rounded-ds-sm bg-surface-sunken py-2">
+          <p className="text-xs text-ion-2">P</p>
+          <p className="text-lg font-bold text-ion-2">{pushes}</p>
         </div>
       </div>
 
-      <p className="mt-3 text-center text-xs text-gray-600">
+      <p className="mt-3 text-center text-xs text-ion-2">
         {totalPicks} canonical picks
       </p>
 
       {winRate !== null && (
         <div className="mt-3">
-          <div className="h-1.5 overflow-hidden rounded-full bg-gray-800">
+          <div className="h-1.5 overflow-hidden rounded-full bg-surface-sunken">
             <div
               className={[
                 "h-full rounded-full transition-all",
                 winRate >= 60
-                  ? "bg-green-500"
+                  ? "bg-emerald-500"
                   : winRate >= 55
-                  ? "bg-brand-500"
+                  ? "bg-orbital-cyan"
                   : winRate >= 50
-                  ? "bg-yellow-500"
-                  : "bg-red-500",
+                  ? "bg-amber-500"
+                  : "bg-rose-500",
               ].join(" ")}
               style={{ width: `${Math.min(winRate, 100)}%` }}
             />
