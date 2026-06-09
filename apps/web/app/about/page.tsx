@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL } from "@/lib/brand";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { Reveal } from "@/components/motion/reveal";
+import { BRAND_NAME, BRAND_TAGLINE, BRAND_COLORS, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "About",
@@ -18,10 +20,10 @@ const PRINCIPLES = [
       "Live odds from dozens of sportsbooks, ingested on a 30-minute cadence. The model's view of a matchup is always reconcilable to the markets it was pulled from. No synthesized numbers. No back-tested narratives masquerading as live signal.",
   },
   {
-    eyebrow: "02 · Reasoning is published",
-    title: "If the work can't be shown, it doesn't ship.",
+    eyebrow: "02 · Outcomes are the proof",
+    title: "The record, not the recipe.",
     body:
-      "Each pick exposes its factor breakdown — consensus, market depth, line movement, intelligence layers, and the calibrated confidence the model assigned. You see the inputs. You decide what to do with them.",
+      "Every signal is graded against where the market actually settled — because beating the close is the claim worth making. The performance record is the evidence. We don't ask you to trust the method; we show you how it held up.",
   },
   {
     eyebrow: "03 · Outcomes are uncertain",
@@ -39,39 +41,50 @@ const PRINCIPLES = [
 
 export default function AboutPage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <Atmosphere />
       <Nav />
 
-      <main className="flex-1">
+      <main className="flex-1 text-ion-white">
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <p className="eyebrow">Why this exists</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              Built for people tired of paying for picks from services that
-              quietly delete the losses.
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg text-ink-300">
-              {BRAND_NAME} exists because the sports picks industry runs on a
-              quiet trick: tout services publish their wins, scrub their
-              losses, and price their access against a record you can&apos;t
-              verify. {BRAND_NAME} is the opposite — a system that shows its
-              work on every pick and refuses to publish a win-rate it
-              can&apos;t honestly back.
-            </p>
-            <p className="mt-5 max-w-2xl text-lg text-ink-300">
-              {BRAND_NAME} ingests live odds across dozens of sportsbooks,
-              scores every matchup for edge, and publishes a calibrated,
-              fully-reasoned signal alongside every factor that drove it. The
-              bar is simple: if it can&apos;t be explained, it doesn&apos;t
-              get published.
-            </p>
-            <p className="mt-5 max-w-2xl text-sm font-mono uppercase tracking-widest text-accent-300">
-              — The {BRAND_NAME} team
-            </p>
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>Why this exists</p>
+            </Reveal>
+            <Reveal delay={90}>
+              <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+                Built for people tired of paying for picks from services that
+                quietly delete the losses.
+              </h1>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-6 max-w-2xl text-lg text-ink-300">
+                {BRAND_NAME} exists because the sports picks industry runs on a
+                quiet trick: tout services publish their wins, scrub their
+                losses, and price their access against a record you can&apos;t
+                verify. {BRAND_NAME} is the opposite — every signal is graded
+                against where the market actually settled, and the record
+                is there whether the outcome was good or not.
+              </p>
+            </Reveal>
+            <Reveal delay={220}>
+              <p className="mt-5 max-w-2xl text-lg text-ink-300">
+                {BRAND_NAME} reads live odds across dozens of sportsbooks,
+                scores every matchup against its own models, and holds that
+                number up to the closing line. The bar is simple: if the read
+                isn&apos;t there, the board stays empty. We&apos;d rather
+                publish nothing than fill it with noise.
+              </p>
+            </Reveal>
+            <Reveal delay={270}>
+              <p className="mt-5 max-w-2xl text-sm font-mono uppercase tracking-widest" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                — The {BRAND_NAME} team
+              </p>
+            </Reveal>
           </div>
         </section>
 
-        <section className="border-t border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-t border-surface-line px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <p className="eyebrow">Operating principles</p>
             <h2 className="mt-3 font-display text-display-lg text-balance text-white">
