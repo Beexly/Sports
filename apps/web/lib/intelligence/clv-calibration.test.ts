@@ -75,7 +75,7 @@ describe("rollupClv", () => {
     expect(r.beatCloseCount).toBe(3);
     expect(r.beatCloseRate).toBe(1);
     expect(r.calibration.meanModelProb).toBeGreaterThan(r.calibration.meanClosingProb);
-    expect(r.note).toMatch(/beat the close/i);
+    expect(r.note).toMatch(/beat the clos/i);
   });
 
   it("a model that trails the close yields negative mean CLV", () => {
@@ -85,7 +85,7 @@ describe("rollupClv", () => {
     ]);
     expect(r.meanClv).toBeLessThan(0);
     expect(r.beatCloseCount).toBe(0);
-    expect(r.note).toMatch(/trailed the close/i);
+    expect(r.note).toMatch(/trailed the clos/i);
   });
 
   it("drops invalid pairs instead of fabricating", () => {

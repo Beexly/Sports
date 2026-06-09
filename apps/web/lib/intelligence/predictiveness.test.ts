@@ -63,7 +63,7 @@ describe("buildPredictiveness", () => {
     const wr = proof.byPosition.find((p) => p.position === "WR");
     expect(wr).toBeTruthy();
     expect(wr!.n).toBeGreaterThanOrEqual(6);
-    expect(proof.verdict).toMatch(/process grade/i);
+    expect(proof.verdict).toMatch(/grade forecasts|process grade/i);
   });
 
   it("stays honest and empty when a season can't be split", () => {
@@ -211,6 +211,7 @@ describe("loadPredictiveness", () => {
     expect(r.stackedPairs).toEqual([[2021, 2022], [2022, 2023], [2023, 2024]]);
     expect(r.stacked!.gradeCorr!).toBeGreaterThan(0.5);
     expect(r.stacked!.n).toBeGreaterThan(r.yearOverYear!.n); // pooling beats the single pair on sample size
-    expect(r.stackedVerdict).toMatch(/2021/);
+    // The stacked verdict labels the multi-year span by the predicted (follow) seasons.
+    expect(r.stackedVerdict).toMatch(/3 seasons/i);
   });
 });

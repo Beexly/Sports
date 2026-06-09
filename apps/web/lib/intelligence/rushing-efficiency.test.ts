@@ -2,15 +2,17 @@ import { describe, it, expect } from "vitest";
 import { buildRushingEfficiency, loadRushingEfficiency } from "./rushing-efficiency";
 import type { NgsRushingLine } from "@/lib/nflverse/next-gen-stats";
 
-function rb(name: string, ryoePerAtt: number, rushAttempts: number, pctStackedBox = 15): NgsRushingLine {
+// pctStackedBox is a 0..1 fraction (NGS percent_attempts_gte_eight_defenders / 100),
+// matching the real loader output — whole-number percents here would mask the threshold bug.
+function rb(name: string, ryoePerAtt: number, rushAttempts: number, pctStackedBox = 0.15): NgsRushingLine {
   return { playerId: name, playerName: name, team: "ATL", rushAttempts, ryoePerAtt, efficiency: 4.0, pctStackedBox, avgTimeToLos: 2.9, expectedRushYards: null, rushPctOverExpected: null };
 }
 
 const RBS: NgsRushingLine[] = [
-  rb("Bell Cow", 1.0, 250, 25),       // efficient + high volume + loaded boxes
-  rb("Efficient Backup", 1.2, 80, 10), // efficient + low volume + light boxes
-  rb("Workhorse", -0.5, 240, 22),      // high volume + low efficiency
-  rb("Limited Back", -0.8, 70, 12),    // low both
+  rb("Bell Cow", 1.0, 250, 0.25),       // efficient + high volume + loaded boxes (>= 0.20)
+  rb("Efficient Backup", 1.2, 80, 0.10), // efficient + low volume + light boxes (< 0.20)
+  rb("Workhorse", -0.5, 240, 0.22),      // high volume + low efficiency
+  rb("Limited Back", -0.8, 70, 0.12),    // low both
 ];
 
 describe("buildRushingEfficiency", () => {

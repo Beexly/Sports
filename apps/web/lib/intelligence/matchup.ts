@@ -507,9 +507,13 @@ export async function loadMatchupEngine({
   timeoutMs = 20000,
   fetcher = fetch,
 }: { season?: number; timeoutMs?: number; fetcher?: FetchLike } = {}): Promise<MatchupEngine> {
+  // Pin the schedule to the SAME season as every other source. Without this, the
+  // schedule defaults to the latest season in games.csv (which already ships the
+  // full upcoming season), pairing prior-season grades/defense against next-season
+  // opponents in the offseason — a cross-season corruption. One season everywhere.
   const [modelR, scheduleR, envR, pcR] = await Promise.allSettled([
     loadPlayerModel({ season, timeoutMs, fetcher }),
-    loadScheduleContext({ timeoutMs, fetcher }),
+    loadScheduleContext({ season, timeoutMs, fetcher }),
     loadTeamEnvironment({ season, timeoutMs, fetcher }),
     loadNflversePressureCoverage({ season, timeoutMs, fetcher }),
   ]);

@@ -210,7 +210,7 @@ export function buildRouteRate(
 }
 
 function signalFor(tprrPct: number, routePct: number): { signal: RouteRateSignal; note: string } {
-  const proxy = "Read as a usage tell, not a measured rate — it's an estimate.";
+  const proxy = "Read as a usage-tell proxy, not a measured rate — it's an estimate.";
   if (tprrPct >= HIGH_TPRR_PCT && routePct <= LOW_ROUTE_PCT) {
     return {
       signal: "breakout",

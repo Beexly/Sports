@@ -212,10 +212,12 @@ export async function loadScheduleContext({
   // Governance: a forbidden/paid source would throw here before any fetch.
   assertIngestible("nflverse");
 
-  const pinned = season != null && week != null;
+  // A call is "default" only when neither season nor week is bound; only that call
+  // reads/writes the shared cache. A season-bounded or fully-pinned call must bypass
+  // the cache so it can never serve a different season's result.
+  const isDefault = season == null && week == null;
   const now = Date.now();
-  // Only cache the default (unpinned, real-fetch) call; pinned/test calls bypass.
-  if (!pinned && cacheTtlMs > 0 && fetcher === fetch && cache && cache.expiresAt > now) {
+  if (isDefault && cacheTtlMs > 0 && fetcher === fetch && cache && cache.expiresAt > now) {
     return cache.value;
   }
 
@@ -225,7 +227,11 @@ export async function loadScheduleContext({
     const { records } = parseCsv(await response.text());
     if (records.length === 0) throw new Error("empty schedules");
 
-    const target = resolveTargetWeek(records, pinned ? { season, week } : undefined);
+    // Bound the resolution whenever a season is supplied (week optional → the
+    // latest scheduled week of that season), so a caller can pin the schedule to
+    // the data season without already knowing the target week. Fully unbounded
+    // only on the default call (latest scheduled week of the most recent season).
+    const target = resolveTargetWeek(records, season != null ? { season, week } : undefined);
     if (target === null) throw new Error("no scheduled games in schedule file");
 
     const rows = buildScheduleContext(records, target.season, target.week);
@@ -241,7 +247,7 @@ export async function loadScheduleContext({
       sourceUrl: url,
       error: null,
     };
-    if (!pinned && cacheTtlMs > 0 && fetcher === fetch) cache = { expiresAt: now + cacheTtlMs, value };
+    if (isDefault && cacheTtlMs > 0 && fetcher === fetch) cache = { expiresAt: now + cacheTtlMs, value };
     return value;
   } catch (error) {
     return {

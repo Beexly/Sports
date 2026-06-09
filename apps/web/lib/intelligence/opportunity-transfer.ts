@@ -34,7 +34,7 @@ import {
   type DepthChartRow,
   type NflverseDepthCharts,
 } from "@/lib/nflverse/depth-charts";
-import { assertIngestible, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { assertIngestible, decodeDatasetText, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 import { normName } from "./qb-consensus";
 
@@ -212,7 +212,10 @@ export async function loadOpportunityTransfer({
       loadNflverseDepthCharts({ season, timeoutMs, fetcher, cacheTtlMs: 0 }),
     ]);
     const { response } = await fetchWithFailover(withMirrors(statsUrl), fetcher, { timeoutMs });
-    const { records } = parseCsv(await response.text());
+    // player_stats ships gzipped (.csv.gz) with no Content-Encoding header, so
+    // fetch() does not auto-inflate; decodeDatasetText gunzips by magic byte
+    // (and falls back to plain text for the test mock). Matches every sibling loader.
+    const { records } = parseCsv(await decodeDatasetText(response));
     if (records.length === 0) throw new Error("empty player_stats_week");
     stats = { records };
   } catch (error) {

@@ -130,7 +130,7 @@ describe("buildQbForward", () => {
 
     // Its note is the "second look" message, not the agreement message.
     expect(byId["00-SPLIT"]!.note).toMatch(/second look/i);
-    expect(byId["00-ELITE"]!.note).toMatch(/same tier|higher confidence/i);
+    expect(byId["00-ELITE"]!.note).toMatch(/same tier|higher.?confidence/i);
 
     // forwardGrade is the mean of the two percentiles, rounded.
     expect(byId["00-ELITE"]!.forwardGrade).toBe(

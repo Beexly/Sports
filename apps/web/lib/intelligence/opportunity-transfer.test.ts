@@ -1,3 +1,4 @@
+import { gzipSync } from "node:zlib";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildOpportunityTransfer,
@@ -221,6 +222,37 @@ describe("opportunity-transfer loader (honest boundaries)", () => {
     expect(data.rows[0]!.outPlayer).toBe("Star Starter");
     expect(data.rows[0]!.beneficiary).toBe("Backup Bob");
     expect(data.rows[0]!.vacatedTargets).toBe(8);
+  });
+
+  // Regression for the gzip bug: player_stats ships as .csv.gz with no
+  // Content-Encoding header, so the loader must gunzip it. Before the fix the
+  // body was parsed as binary text and EVERY vacated-volume read was 0. The
+  // plain-text mock above could not catch this; this one feeds a real gzip body.
+  it("gunzips the gzipped player_stats body (no zeroed vacated volume)", async () => {
+    const injuriesCsv =
+      "season,game_type,team,week,gsis_id,position,full_name,first_name,last_name,report_primary_injury,report_secondary_injury,report_status,practice_primary_injury,practice_secondary_injury,practice_status,date_modified\n" +
+      "2024,REG,KC,10,00-1,WR,Star Starter,Star,Starter,Knee,,Out,Knee,,Did Not Participate,2024";
+    const depthCsv = [
+      "season,game_type,club_code,week,gsis_id,position,depth_team,full_name",
+      "2024,REG,KC,10,00-1,WR,1,Star Starter",
+      "2024,REG,KC,10,00-2,WR,2,Backup Bob",
+    ].join("\n");
+    const gzippedStats = gzipSync(Buffer.from(STATS_ROWS, "utf8"));
+
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("injuries_2024.csv")) return new Response(injuriesCsv, { status: 200 });
+      if (url.includes("depth_charts_2024.csv")) return new Response(depthCsv, { status: 200 });
+      // gzip bytes, exactly as the real nflverse asset is served (no Content-Encoding).
+      if (url.includes("player_stats")) return new Response(gzippedStats, { status: 200 });
+      return new Response("missing", { status: 404 });
+    });
+
+    const data = await loadOpportunityTransfer({ season: 2024, fetcher });
+    expect(data.status).toBe("live");
+    expect(data.rows).toHaveLength(1);
+    expect(data.rows[0]!.vacatedTargets).toBe(8); // would be 0 if the gzip body were not inflated
+    expect(data.rows[0]!.confidence).toBe("high");
   });
 });
 
