@@ -134,15 +134,15 @@ export function EnterGate() {
           className="font-display text-balance text-white"
           style={{ fontSize: "clamp(2.5rem, 8vw, 6.5rem)", lineHeight: 0.98, letterSpacing: "-0.03em" }}
         >
-          Open the{" "}
+          Every read,{" "}
           <span className="gse-editorial gse-sheen" style={{ fontSize: "1.12em" }}>
-            glass box.
+            on record.
           </span>
         </h1>
 
         <p className="mt-6 max-w-md text-base text-ink-300 sm:text-lg">
-          Most products hand you a pick and ask for trust. Step inside and watch the
-          machine reason — every read, graded and recorded.
+          Most products hand you a pick and call it intelligence. We publish the source,
+          the confidence, and the outcome — so the record speaks for itself.
         </p>
 
         <button

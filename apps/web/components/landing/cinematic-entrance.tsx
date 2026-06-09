@@ -40,7 +40,7 @@ const BOOT = [
   "CALIBRATION CHECKED",
   "RISK LAYER ACTIVE",
   "NO-BET ENGINE ARMED",
-  "GLASS BOX OPEN",
+  "SIGNAL ARCHITECTURE LOADED",
   "SIGNAL LINK ESTABLISHED",
 ] as const;
 
@@ -59,7 +59,7 @@ const FLASHES: readonly Flash[] = [
   { text: "NO EDGE · NO BET", tone: "anomaly" },
   { text: "SHOW YOUR WORK", tone: "white" },
   { text: "EDGE SURVIVED REVIEW", tone: "ion" },
-  { text: "THE GLASS BOX IS OPEN", tone: "white" },
+  { text: "TRACK RECORD OVER PROMISES", tone: "white" },
   { text: "SEE IT FIRST", tone: "deep" },
   { text: "SIGNAL ACQUIRED", tone: "ion" },
 ];
