@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { Reveal } from "@/components/motion/reveal";
+import { AmbientGlow, SignatureGrid } from "@/components/motion/signature-grid";
 import { BRAND_COLORS } from "@/lib/brand";
 import { loadSourceLiveEvidence } from "@/lib/data-sources/live-evidence";
 
@@ -63,32 +66,39 @@ export default async function FantasyHubPage(): Promise<JSX.Element> {
 
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <Atmosphere />
       <Nav />
       <main className="flex-1">
         <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
-            <div>
-              <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-white sm:text-6xl">
-                Real roster first. No fake projections.
-              </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-ink-300">
-                Galaxy Fantasy is being rebuilt around the same rule as the picks product:
-                if the data is not real, the advice stays locked. You can connect a real
-                Sleeper roster now; projection-driven recommendations open only after the
-                live data layer clears.
-              </p>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <Link href="/fantasy/connect" className="btn btn-primary">
-                  Connect Sleeper
-                </Link>
-                <Link href="/optimizer" className="btn btn-ghost">
-                  Open the Optimizer
-                </Link>
-                <Link href="/trends" className="btn btn-ghost">
-                  View Trend Lab
-                </Link>
+            <Reveal>
+              <div className="relative isolate overflow-hidden rounded-ds-lg">
+                <AmbientGlow className="-z-10" />
+                <SignatureGrid className="-z-10" opacity={0.08} />
+                <div className="relative z-10 py-2">
+                  <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-white sm:text-6xl">
+                    Real roster first. No fake projections.
+                  </h1>
+                  <p className="mt-5 max-w-2xl text-base leading-7 text-ink-300">
+                    Galaxy Fantasy is being rebuilt around the same rule as the picks product:
+                    if the data is not real, the advice stays locked. You can connect a real
+                    Sleeper roster now; projection-driven recommendations open only after the
+                    live data layer clears.
+                  </p>
+                  <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                    <Link href="/fantasy/connect" className="btn btn-primary">
+                      Connect Sleeper
+                    </Link>
+                    <Link href="/optimizer" className="btn btn-ghost">
+                      Open the Optimizer
+                    </Link>
+                    <Link href="/trends" className="btn btn-ghost">
+                      View Trend Lab
+                    </Link>
+                  </div>
+                </div>
               </div>
-            </div>
+            </Reveal>
             <div className="border border-mineral bg-eclipse p-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Fantasy readiness

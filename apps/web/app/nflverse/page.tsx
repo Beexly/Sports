@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { Reveal } from "@/components/motion/reveal";
+import { AmbientGlow, SignatureGrid } from "@/components/motion/signature-grid";
 import { UpsellGate } from "@/components/ui/upsell-gate";
 import { canAccess, getViewerTier } from "@/lib/access";
 import {
@@ -78,31 +81,38 @@ export default async function NflversePage(): Promise<JSX.Element> {
   const gatedPlayerRows = pulse.playerRows.slice(3);
 
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="flex min-h-screen flex-col bg-surface-base text-ion-white">
+      <Atmosphere />
       <Nav />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
-        <section className="grid gap-8 border-b border-mineral pb-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
-          <div>
-            <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
-              Real NFL rows before real claims.
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              This pulse reads nflverse player-week and roster releases directly. It shows
-              usage, target share, air-yard share, WOPR, and quarterback-age context from
-              real source rows. It does not publish picks, projections, or significant trends.
-            </p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Link href="/api/nflverse/usage-pulse" className="btn-primary min-h-11 px-5 py-3">
-                JSON pulse
-              </Link>
-              <Link
-                href="/trends"
-                className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
-              >
-                Trend Lab
-              </Link>
+      <main className="flex-1 mx-auto w-full max-w-7xl flex flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+        <section className="grid gap-8 border-b border-surface-line pb-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
+          <Reveal>
+            <div className="relative isolate overflow-hidden rounded-ds-lg">
+              <AmbientGlow className="-z-10" />
+              <SignatureGrid className="-z-10" opacity={0.08} />
+              <div className="relative z-10 py-2">
+                <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+                  Real NFL rows before real claims.
+                </h1>
+                <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
+                  This pulse reads nflverse player-week and roster releases directly. It shows
+                  usage, target share, air-yard share, WOPR, and quarterback-age context from
+                  real source rows. It does not publish picks, projections, or significant trends.
+                </p>
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                  <Link href="/api/nflverse/usage-pulse" className="btn-primary min-h-11 px-5 py-3">
+                    JSON pulse
+                  </Link>
+                  <Link
+                    href="/trends"
+                    className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
+                  >
+                    Trend Lab
+                  </Link>
+                </div>
+              </div>
             </div>
-          </div>
+          </Reveal>
 
           <div className="border border-mineral bg-eclipse p-5">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">

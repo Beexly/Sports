@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { Reveal } from "@/components/motion/reveal";
+import { AmbientGlow, SignatureGrid } from "@/components/motion/signature-grid";
 import { OptimizerWorkspace } from "@/components/fantasy/optimizer-workspace";
 import { canAccess, getViewerTier } from "@/lib/access";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
@@ -33,23 +36,32 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
   const lockedPro = !canAccess(tier, "PRO");
   const lockedElite = !canAccess(tier, "ELITE");
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="flex min-h-screen flex-col bg-surface-base text-ion-white">
+      <Atmosphere />
       <Nav />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
-        <section className="flex flex-col gap-2">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">The Optimizer</p>
-          <h1 className="font-display text-3xl font-semibold leading-tight text-ion-white sm:text-4xl">
-            One workspace. Every lineup.
-          </h1>
-          <p className="max-w-3xl text-sm leading-6 text-ion-1">
-            Pick a contest type and build — DFS, season start/sit, or the draft board, on the same real
-            data (snaps, usage, Next Gen, injuries, weather), with the math shown. Salaries are licensed
-            and gated; projections and ownership stay gated until a real feed is connected, never faked.{" "}
-            <Link href="/data" className="text-orbital-cyan hover:text-ion-white">How we source data</Link>.
-          </p>
-        </section>
+      <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
+          <Reveal>
+            <div className="relative isolate overflow-hidden rounded-ds-lg">
+              <AmbientGlow className="-z-10" />
+              <SignatureGrid className="-z-10" opacity={0.1} rotate />
+              <div className="relative z-10 px-1 py-2">
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">The Optimizer</p>
+                <h1 className="mt-1.5 font-display text-3xl font-semibold leading-tight text-ion-white sm:text-4xl">
+                  One workspace. Every lineup.
+                </h1>
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">
+                  Pick a contest type and build — DFS, season start/sit, or the draft board, on the same real
+                  data (snaps, usage, Next Gen, injuries, weather). Salaries are licensed and gated;
+                  projections and ownership stay gated until a real feed is connected, never faked.{" "}
+                  <Link href="/data" className="text-orbital-cyan hover:text-ion-white">How we source data</Link>.
+                </p>
+              </div>
+            </div>
+          </Reveal>
 
-        <OptimizerWorkspace pool={pool} lockedPro={lockedPro} lockedElite={lockedElite} />
+          <OptimizerWorkspace pool={pool} lockedPro={lockedPro} lockedElite={lockedElite} />
+        </div>
       </main>
       <Footer />
     </div>

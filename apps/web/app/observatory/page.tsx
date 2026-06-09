@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Footer } from "@/components/ui/footer";
+import { Atmosphere } from "@/components/ui/atmosphere";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
 import { CipherShard } from "@/components/cipher/cipher-shard";
@@ -57,6 +58,7 @@ export default async function ObservatoryPage() {
   const live = slate.live;
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <Atmosphere />
       <Nav />
       <IntelligenceSubnav />
 

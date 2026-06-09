@@ -3,6 +3,9 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { IntelligenceSubnav } from "@/components/intelligence/intelligence-subnav";
 import { Footer } from "@/components/ui/footer";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { Reveal } from "@/components/motion/reveal";
+import { AmbientGlow, SignatureGrid } from "@/components/motion/signature-grid";
 import { UpsellGate } from "@/components/ui/upsell-gate";
 import { canAccess, getViewerTier } from "@/lib/access";
 import {
@@ -65,22 +68,29 @@ export default async function TrendsPage(): Promise<JSX.Element> {
   const gatedTrends = qbAgeTrend.trends.slice(1);
 
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="flex min-h-screen flex-col bg-surface-base text-ion-white">
+      <Atmosphere />
       <Nav />
       <IntelligenceSubnav />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
-        <section className="grid gap-8 border-b border-mineral pb-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
-          <div>
-            <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
-              Find the edges before they become consensus.
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              Trend Lab runs cohort analysis over real observations only: player weeks,
-              team weeks, route participation, targets, injuries, age, rest, and market
-              context. The engine is ready. The public trend table stays empty until
-              the data is real enough to defend.
-            </p>
-          </div>
+      <main className="flex-1 mx-auto w-full max-w-7xl flex flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+        <section className="grid gap-8 border-b border-surface-line pb-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
+          <Reveal>
+            <div className="relative isolate overflow-hidden rounded-ds-lg">
+              <AmbientGlow className="-z-10" />
+              <SignatureGrid className="-z-10" opacity={0.08} />
+              <div className="relative z-10 py-2">
+                <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+                  Find the edges before they become consensus.
+                </h1>
+                <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
+                  Trend Lab runs cohort analysis over real observations only: player weeks,
+                  team weeks, route participation, targets, injuries, age, rest, and market
+                  context. The engine is ready. The public trend table stays empty until
+                  the data is real enough to defend.
+                </p>
+              </div>
+            </div>
+          </Reveal>
           <div className="border border-mineral bg-eclipse p-5">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
               Engine status
