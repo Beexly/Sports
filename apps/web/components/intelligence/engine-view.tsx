@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { SourceError } from "@/components/ui/source-error";
@@ -19,6 +20,7 @@ import {
   toneClass,
   type SignalTone,
 } from "@/lib/intelligence/colors";
+import { ratingWhy } from "@/lib/intelligence/rating-why";
 
 // Row / payload TYPES only (no loaders) — types are erased at runtime, so importing
 // them into a client component costs nothing and never drags a loader across the
@@ -118,24 +120,41 @@ function TierChip({ grade }: { grade: number }): JSX.Element {
   return <SignalChip label={label} tone={tone} />;
 }
 
+// A player's name links to their dossier when an id is in hand; otherwise it
+// renders as plain text (no dead link). The dossier route is /intelligence/player/{id}.
+function PlayerName({ id, name }: { id: string; name: string }): JSX.Element {
+  if (!id) return <span className="font-semibold text-ion-white">{name}</span>;
+  return (
+    <Link
+      href={`/intelligence/player/${encodeURIComponent(id)}`}
+      className="font-semibold text-ion-white underline-offset-4 transition-colors hover:text-orbital-cyan hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orbital-cyan/40"
+    >
+      {name}
+    </Link>
+  );
+}
+
 function MovesCard({ title, tone, rows }: { title: string; tone: SignalTone; rows: readonly PlayerProfile[] }): JSX.Element {
   return (
     <section className="rounded-ds-md border border-surface-line bg-surface-raised p-5">
       <p className={`font-mono text-xs font-semibold uppercase tracking-[0.16em] ${toneClass(tone)}`}>{title}</p>
-      <div className="mt-3 space-y-2.5">
+      <div className="mt-3 space-y-3">
         {rows.length === 0 ? (
           <p className="text-sm text-ion-2">None flagged this week.</p>
         ) : (
           rows.map((p) => (
-            <div key={p.playerId} className="flex items-center justify-between gap-3 border-l border-surface-line pl-3">
-              <span className="flex flex-col">
-                <span className="text-sm font-semibold text-ion-white">{p.name}</span>
-                <span className="font-mono text-xs text-ion-2">{p.position} · {p.team}</span>
-              </span>
-              <span className="flex items-center gap-2">
-                <RatingCell grade={p.processGrade} />
-                <TierChip grade={p.processGrade} />
-              </span>
+            <div key={p.playerId} className="flex flex-col gap-1 border-l border-surface-line pl-3">
+              <div className="flex items-start justify-between gap-3">
+                <span className="flex flex-col">
+                  <PlayerName id={p.playerId} name={p.name} />
+                  <span className="font-mono text-xs text-ion-2">{p.position} · {p.team}</span>
+                </span>
+                <span className="flex shrink-0 items-center gap-2">
+                  <RatingCell grade={p.processGrade} />
+                  <TierChip grade={p.processGrade} />
+                </span>
+              </div>
+              <p className="text-xs leading-5 text-ion-1">{ratingWhy(p)}</p>
             </div>
           ))
         )}
@@ -149,7 +168,7 @@ function MovesCard({ title, tone, rows }: { title: string; tone: SignalTone; row
 // gone — the rating already carries them.
 function playerColumns(): Column<PlayerProfile>[] {
   return [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "name", label: "Player", render: (r) => <PlayerName id={r.playerId} name={r.name} /> },
     { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     {
       key: "processGrade",
@@ -170,6 +189,12 @@ function playerColumns(): Column<PlayerProfile>[] {
       label: "The read",
       sortValue: (r) => r.signal,
       render: (r) => <SignalChip label={PROCESS_SIGNAL_LABEL[r.signal]} tone={processTone(r.signal)} />,
+    },
+    {
+      key: "why",
+      label: "Why",
+      sortable: false,
+      render: (r) => <span className="block max-w-[26rem] text-xs leading-5 text-ion-1">{ratingWhy(r)}</span>,
     },
   ];
 }
@@ -199,7 +224,7 @@ function PlayerModelView({ model }: { model: PlayerModel }): JSX.Element {
               searchAccessor={(r) => `${r.name} ${r.team}`}
               rowTone={(r) => processTone(r.signal)}
               initialSort={{ key: "processGrade", dir: "desc" }}
-              minWidth={560}
+              minWidth={880}
             />
           </div>
         );

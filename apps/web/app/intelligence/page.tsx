@@ -107,6 +107,18 @@ const SYSTEM_NODES: ReadonlyArray<{
     accent: BRAND_COLORS.orbitalCyan,
   },
   {
+    title: "Matchups",
+    href: "/intelligence/matchups",
+    desc: "Your number, adjusted for who they play this week.",
+    accent: BRAND_COLORS.softUltraviolet,
+  },
+  {
+    title: "Edges",
+    href: "/intelligence/edges",
+    desc: "Where the data and the box score disagree.",
+    accent: BRAND_COLORS.ionMagenta,
+  },
+  {
     title: "Trend Lab",
     href: "/trends",
     desc: "Significant trends, surfaced with their p-values.",

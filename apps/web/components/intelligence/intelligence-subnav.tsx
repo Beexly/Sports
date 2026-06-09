@@ -36,6 +36,8 @@ interface SubnavItem {
 const ITEMS: readonly SubnavItem[] = [
   { label: "Overview", href: "/intelligence", match: "exact" },
   { label: "GSE Rating", href: "/intelligence/rating", match: "startsWith" },
+  { label: "Matchups", href: "/intelligence/matchups", match: "startsWith" },
+  { label: "Edges", href: "/intelligence/edges", match: "startsWith" },
   { label: "Trends", href: "/trends", match: "startsWith" },
   { label: "Edge Map", href: "/observatory", match: "startsWith" },
   { label: "Airwave", href: "/airwave", match: "startsWith" },

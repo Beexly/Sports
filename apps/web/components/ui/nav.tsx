@@ -41,6 +41,8 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
       { label: "GSE Rating", href: "/intelligence/rating", desc: "One honest number, with the reasoning shown" },
+      { label: "Matchups", href: "/intelligence/matchups", desc: "Your number, adjusted for who they play this week" },
+      { label: "Edges", href: "/intelligence/edges", desc: "Where the data and the box score disagree" },
     ],
   },
   {
