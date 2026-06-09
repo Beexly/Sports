@@ -26,7 +26,7 @@ const LIVE_FIRST = [
   },
   {
     title: "Player projections provider",
-    href: "/integrations",
+    href: "/methodology",
     status: "Required",
     body: "Lineups, waivers, DFS, and trades stay gated until a real projections source is enabled.",
   },
@@ -204,8 +204,8 @@ export default async function FantasyHubPage(): Promise<JSX.Element> {
                 <Link href="/fantasy/baseline" className="text-orbital-cyan hover:text-white">
                   LineStar / Elite baseline
                 </Link>
-                <Link href="/integrations" className="text-orbital-cyan hover:text-white">
-                  Data requirements
+                <Link href="/methodology" className="text-orbital-cyan hover:text-white">
+                  How it works
                 </Link>
               </div>
             </div>

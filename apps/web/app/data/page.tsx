@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { clearedSources, forbiddenSources, type LegalSource, type LegalVerdict } from "@sports/data-ingestion";
@@ -20,7 +22,13 @@ const VERDICT_STYLE: Record<LegalVerdict, { label: string; className: string }> 
   forbidden: { label: "Refused", className: "border-alert/50 text-alert" },
 };
 
-export default function DataSourcingPage(): JSX.Element {
+export default async function DataSourcingPage(): Promise<JSX.Element> {
+  // Founder gate — the full legal/source registry is competitor-sensitive.
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") {
+    redirect("/auth/signin?callbackUrl=/data");
+  }
+
   const cleared = clearedSources();
   const blocked = forbiddenSources();
 
@@ -47,10 +55,10 @@ export default function DataSourcingPage(): JSX.Element {
               JSON registry
             </Link>
             <Link
-              href="/integrations"
+              href="/methodology"
               className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
             >
-              Live readiness
+              Methodology
             </Link>
           </div>
           <dl className="mt-7 grid grid-cols-2 gap-3 sm:max-w-md sm:grid-cols-2">

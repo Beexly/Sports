@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import {
@@ -47,6 +49,12 @@ const STATUS_ORDER: readonly SourceStatus[] = [
 const COST_ORDER: readonly DataSourceCard["cost"][] = ["free", "low-cost", "paid-optional", "owned", "licensed"];
 
 export default async function IntegrationsPage(): Promise<JSX.Element> {
+  // Founder gate — the source-control ledger is competitor-sensitive.
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") {
+    redirect("/auth/signin?callbackUrl=/integrations");
+  }
+
   const providers = providerStatuses();
   const providerSummary = readinessSummary();
   const liveEvidence = await loadSourceLiveEvidence({ timeoutMs: 12000 });

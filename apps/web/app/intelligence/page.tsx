@@ -305,9 +305,9 @@ export default function IntelligencePage() {
             </Reveal>
             <Reveal delay={180}>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-300">
-                Most sites give you a pick and say trust us. We show the work:
-                several models price each game independently, and every signal is
-                graded against the closing line so you can check it.
+                Most sites give you a pick and say trust us. We prove it:
+                every signal is graded against the closing line, every outcome
+                is logged, and the record is there whether the call was right or wrong.
               </p>
             </Reveal>
             <Reveal delay={260}>

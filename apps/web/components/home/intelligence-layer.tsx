@@ -13,7 +13,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const SURFACES: ReadonlyArray<{ title: string; href: string; desc: string; tag: string; accent: string }> = [
-  { title: "Inside the Signal", href: "/intelligence", desc: "See the reasoning, not just the number — the engine prosecutes every call.", tag: "Engine", accent: BRAND_COLORS.orbitalCyan },
+  { title: "Inside the Signal", href: "/intelligence", desc: "The GSE Rating on every game — the number, the read, and the record behind it.", tag: "Engine", accent: BRAND_COLORS.orbitalCyan },
   { title: "Edge Map", href: "/observatory", desc: "Enter the slate as a navigable universe — games as star systems, markets as orbits.", tag: "Slate Twin", accent: BRAND_COLORS.softUltraviolet },
   { title: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's hidden risk and correlation before you ever place it.", tag: "Surgeon", accent: BRAND_COLORS.ionMagenta },
   { title: "The Academy", href: "/academy", desc: "Train on process, not luck — earn rank by calibration and restraint.", tag: "Training", accent: BRAND_COLORS.orbitalCyan },

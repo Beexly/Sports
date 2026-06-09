@@ -418,10 +418,10 @@ export default async function TrendsPage(): Promise<JSX.Element> {
                     snap counts, and schedules, then let the engine compare age cohorts to the field.
                   </p>
                   <Link
-                    href="/integrations"
+                    href="/methodology"
                     className="mt-5 inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-4 py-2 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
                   >
-                    View data readiness
+                    How the model works
                   </Link>
                 </div>
               </div>
