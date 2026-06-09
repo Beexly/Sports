@@ -21,10 +21,7 @@ export function Attribution({
       data-testid="source-attribution"
       className={`font-mono text-[10px] leading-5 tracking-[0.04em] text-ion-2 ${className}`}
     >
-      {lines.join("  •  ")}{" "}
-      <a href="/data" className="text-orbital-cyan hover:text-ion-white">
-        How we source data
-      </a>
+      {lines.join("  •  ")}
     </p>
   );
 }

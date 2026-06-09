@@ -24,7 +24,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Trend Lab - Cohort Discovery Without Guessing",
   description:
-    "Galaxy Sports Edge Trend Lab shows which statistical questions are ready, which data sources feed them, and why no public trend is published without real observations.",
+    "Galaxy Sports Edge Trend Lab: statistical questions graded against real player data. No trend is published without enough real observations to support it — honest empty rather than thin-sample noise.",
   alternates: { canonical: "/intelligence/trends" },
 };
 
