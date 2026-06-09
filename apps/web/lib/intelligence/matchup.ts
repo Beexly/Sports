@@ -64,6 +64,7 @@ import {
   loadNflversePressureCoverage,
   type NflversePressureCoverage,
 } from "@/lib/nflverse/pressure-coverage";
+import { canonicalTeam } from "@/lib/nflverse/entities";
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
@@ -177,41 +178,15 @@ function round(v: number, d = 1): number {
   return Math.round(v * f) / f;
 }
 /**
- * Relocation / spelling aliases that fold variant team codes onto ONE canonical
- * key so a cross-source join never silently misses. The three sources we join —
- * the schedule (games.csv home/away), team-environment (pbp posteam/defteam) and
- * the PFR charting (advstats `team`) — can disagree on a handful of codes:
- * Washington (WAS/WSH), the Raiders (LV/OAK), the Chargers (LAC/SD) and the Rams
- * (LA/LAR/STL), plus a few PFR spelling variants. Without folding, e.g. a "WAS"
- * schedule row never finds a "WSH" defense row and the matchup reads "no context".
- *
- * This MIRRORS the alias map in lib/integrations/graded-pool.ts (normTeam). It is
- * intentionally kept identical so the two engines collapse codes to the SAME
- * canonical form; it is duplicated here only because this slice may edit just the
- * matchup files. Unknown codes pass through unchanged.
- */
-const TEAM_ALIASES: Readonly<Record<string, string>> = {
-  OAK: "LV",
-  SD: "LAC",
-  STL: "LA",
-  LAR: "LA",
-  WAS: "WSH",
-  WSH: "WSH",
-  JAX: "JAX",
-  JAC: "JAX",
-  ARZ: "ARI",
-  BLT: "BAL",
-  CLV: "CLE",
-  HST: "HOU",
-};
-
-/**
- * Normalize an nflverse team code for cross-source joins: upper-case, trim, then
- * fold relocation/spelling variants onto one canonical key (see TEAM_ALIASES).
+ * Normalize an nflverse team code for cross-source joins. Delegates to the
+ * canonical entity graph (lib/nflverse/entities) so the schedule (games.csv),
+ * team-environment (pbp posteam/defteam), and PFR charting (advstats `team`) all
+ * collapse relocation/spelling/PFR variants onto the SAME canonical code — a
+ * "WAS" schedule row and a "WSH" defense row resolve to one key. Formerly a local
+ * alias map duplicated from graded-pool.ts; now a single source of truth.
  */
 function teamKey(team: string): string {
-  const t = team.trim().toUpperCase();
-  return TEAM_ALIASES[t] ?? t;
+  return canonicalTeam(team);
 }
 
 /**

@@ -27,6 +27,7 @@ import { loadExpectedPoints, type ExpectedPointsRow } from "../intelligence/expe
 import { normName, percentileRanks } from "../intelligence/qb-consensus";
 import type { TeamEnvironmentRow } from "../intelligence/team-environment";
 import type { QbForwardRow } from "../intelligence/qb-forward";
+import { canonicalTeam } from "../nflverse/entities";
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
@@ -49,31 +50,11 @@ function clamp01(n: number): number {
 }
 
 /**
- * Normalize a team abbreviation for cross-source joins. The model, team
- * environment, and QB forward all read nflverse `recent_team` / `posteam`, so the
- * codes already align in the common case — this just upper-cases and folds the
- * handful of historical relocations / spelling variants so a join never silently
- * misses (e.g. a stale "OAK" row against a current "LV" player). Unknown codes
- * pass through unchanged.
+ * Normalize a team abbreviation for cross-source joins. Delegates to the canonical
+ * entity graph (lib/nflverse/entities) so relocations / spelling / PFR variants
+ * fold the same way everywhere — formerly a duplicated local alias map.
  */
-function normTeam(team: string | undefined | null): string {
-  const t = (team ?? "").trim().toUpperCase();
-  const aliases: Record<string, string> = {
-    OAK: "LV",
-    SD: "LAC",
-    STL: "LA",
-    LAR: "LA",
-    WAS: "WSH",
-    WSH: "WSH",
-    JAX: "JAX",
-    JAC: "JAX",
-    ARZ: "ARI",
-    BLT: "BAL",
-    CLV: "CLE",
-    HST: "HOU",
-  };
-  return aliases[t] ?? t;
-}
+const normTeam = canonicalTeam;
 
 /**
  * Build a team -> schemeFit (0..1) map from team-environment rows. schemeFit is

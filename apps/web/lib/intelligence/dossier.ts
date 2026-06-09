@@ -35,6 +35,7 @@
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 import { ratingTier, type RatingTierLabel, type SignalTone } from "./colors";
 import { ratingWhy } from "./rating-why";
+import { normalizePlayerName } from "@/lib/nflverse/entities";
 import {
   loadPlayerModel,
   type ModelPosition,
@@ -199,16 +200,8 @@ export interface PlayerDossier {
 
 /** Normalize a player name for the name-only joins (combine / Sleeper) and the
  *  PFR-id sources (pressure-coverage / snap-share), which live in a different id
- *  namespace than the gsis-keyed model. Mirrors offensive-line.ts: lowercased,
- *  accent- and suffix-stripped, letters only. */
-function nameKey(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "") // strip combining diacritics
-    .replace(/\b(jr|sr|ii|iii|iv|v)\b\.?/g, "") // drop generational suffixes
-    .replace(/[^a-z]/g, ""); // keep letters only
-}
+ *  namespace than the gsis-keyed model. Canonical impl in lib/nflverse/entities. */
+const nameKey = normalizePlayerName;
 
 /** Wrap a loader result as a section: a thrown/rejected load → source-error,
  *  a resolved-but-empty match → missing, a real row → ok. */

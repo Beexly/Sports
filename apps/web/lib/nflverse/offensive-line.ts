@@ -1,4 +1,5 @@
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
+import { normalizePlayerName } from "@/lib/nflverse/entities";
 import { loadNflverseCombine, type CombineRow, type NflverseCombine } from "@/lib/nflverse/combine";
 import { loadNflverseDepthCharts, type NflverseDepthCharts } from "@/lib/nflverse/depth-charts";
 import {
@@ -144,15 +145,9 @@ export interface NflverseOffensiveLine {
 }
 
 /** Normalize a player name for the combine name+position join (combine has no
- *  gsis/pfr id, so we match on a lowercased, punctuation/suffix-stripped name). */
-function nameKey(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "") // strip accents (combining diacritics)
-    .replace(/\b(jr|sr|ii|iii|iv|v)\b\.?/g, "") // drop generational suffixes
-    .replace(/[^a-z]/g, ""); // keep letters only
-}
+ *  gsis/pfr id, so we match on a lowercased, punctuation/suffix-stripped name).
+ *  Canonical impl in lib/nflverse/entities. */
+const nameKey = normalizePlayerName;
 
 /** Build a combine lookup keyed by name+OL-group, keeping the most recent draft
  *  class when a name repeats. Only OL combine rows are indexed. */

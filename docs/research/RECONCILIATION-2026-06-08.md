@@ -49,6 +49,18 @@ The packet's "current data state" (`gse-current-data-state.md`) describes a repo
 - Licensed providers (SportsDataIO/Sportradar/API-Sports paid tiers), public launch, migrations.
 - Most `nfl_core` model cards (016-030) **touch scoring/MODEL_VERSION → founder-gated** (the packet's own rule: "Do not bump MODEL_VERSION to consume unlicensed/shadow stats"). Build as **shadow/illustrative** only until founder sign-off.
 
+## Verification correction (checked against canonical code, not the packet's claims)
+
+The packet **systematically understates canonical** — verify every "net-new" against code before building:
+
+- **010 founder source-risk dashboard — ALREADY EXISTS.** The packet calls `/cockpit/sources` a stub; in canonical it is a built founder dashboard (`DATA_SOURCE_STACK` + live evidence + provider statuses + status/freshness/cost + R/A/G tones). Do **not** rebuild. Possible delta only: a legal-risk-tier / next-action overlay (the packet's BUILD-118 "source war room").
+- **002 entity graph — genuinely net-new** (only `operator-registry.ts`, unrelated).
+- **005 historical warehouse — genuinely net-new** (loaders fetch live; no persistence).
+- **006 feature store — genuinely net-new.**
+- **008 stadium registry — partial** (weather/environment exist; lat-long + altitude registry net-new).
+
+**Revised first build: BUILD-002 entity graph** — highest value because it also hardens the join fragility the NFL-accuracy audit patched ad-hoc (M1 team-column drift, M7 relocation aliases, GSIS↔PFR id namespaces). One canonical team/player/venue/season graph replaces the scattered `normTeam` maps in `graded-pool.ts` + `matchup.ts`.
+
 ## Quality assets to mine into canonical (independent of the queue)
 - `gse-free-source-inventory.csv` — 42 risk-tiered sources; **superset** of `catalog.ts` (officials, draft picks, CFBD, Wikidata venue graph, GDELT, attention layers, cross-sport analog). Fold the net-new lanes into the catalog as `status: mapped, approval-gated`.
 - `gse-source-risk-register.md`, `nfl-world-state-machine.md`, `gse-nfl-signal-taxonomy.md`, `gse-video-game-analog-builds.jsonl` (78 analog signals) — design inputs for the net-new builds.
