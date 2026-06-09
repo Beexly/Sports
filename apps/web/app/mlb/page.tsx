@@ -46,7 +46,7 @@ export default async function MlbPage(): Promise<JSX.Element> {
               failover so one outage never drops the feed. Real stats, not a pick.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/api/mlb/teams" className="btn-primary min-h-11 px-5 py-3">JSON</Link>
+              <Link href="/api/mlb/teams" className="inline-flex min-h-11 items-center gap-1.5 rounded-ds-sm border border-surface-line bg-surface-raised px-4 py-2 text-xs font-medium text-ion-1 transition-colors hover:border-surface-line-strong hover:text-ion-white">↓ Export</Link>
               <Link href="/data" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">How we source data</Link>
             </div>
           </div>

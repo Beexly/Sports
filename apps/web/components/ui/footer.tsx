@@ -4,13 +4,13 @@ import { BRAND_NAME, BRAND_TAGLINE, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
   { label: "Today's Board", href: "/board" },
-  { label: "Edge Map", href: "/observatory" },
-  { label: "Public Ledger", href: "/ledger" },
+  { label: "GSE Rating", href: "/intelligence/rating" },
+  { label: "Edge Map", href: "/intelligence/observatory" },
   { label: "Methodology", href: "/methodology" },
 ] as const;
 
 const COMPANY_LINKS = [
-  { label: "Calibration Report", href: "/performance" },
+  { label: "Track Record", href: "/performance" },
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "FAQ", href: "/faq" },

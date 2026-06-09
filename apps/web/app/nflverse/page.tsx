@@ -104,7 +104,7 @@ export default async function NflversePage(): Promise<JSX.Element> {
                     JSON pulse
                   </Link>
                   <Link
-                    href="/trends"
+                    href="/intelligence/trends"
                     className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
                   >
                     Trend Lab

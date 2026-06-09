@@ -73,7 +73,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           </div>
           <div className="flex flex-wrap gap-2 text-xs">
             <Link
-              href="/airwave"
+              href="/intelligence/airwave"
               className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60"
             >
               Public ledger

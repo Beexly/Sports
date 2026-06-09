@@ -92,7 +92,7 @@ export default async function FantasyHubPage(): Promise<JSX.Element> {
                     <Link href="/optimizer" className="btn btn-ghost">
                       Open the Optimizer
                     </Link>
-                    <Link href="/trends" className="btn btn-ghost">
+                    <Link href="/intelligence/trends" className="btn btn-ghost">
                       View Trend Lab
                     </Link>
                   </div>

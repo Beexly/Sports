@@ -40,7 +40,7 @@ const CARDS: readonly TrustCard[] = [
   },
   {
     title: "Dashes, never filler",
-    body: "If the inputs behind a game aren't real enough to defend, you get an honest blank instead of a made-up number. Nothing on the board is invented to look busy.",
+    body: "When the data behind a game isn't sufficient, you get a dash. Nothing on the board is invented to look busy.",
     claimId: "methodology.data-freshness",
     accent: "honest",
   },

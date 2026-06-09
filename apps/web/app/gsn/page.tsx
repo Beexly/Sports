@@ -84,7 +84,7 @@ export default function GSNPage() {
                 thing.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
-                <Link href="/observatory" className="btn btn-primary">
+                <Link href="/intelligence/observatory" className="btn btn-primary">
                   Enter the slate
                 </Link>
                 <Link href="/academy" className="btn btn-ghost">

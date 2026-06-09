@@ -92,8 +92,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               <Reveal delay={170}>
                 <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
                   One score per matchup, with a plain-English read and the receipts to
-                  back it. Nothing reaches the board unless the read behind it is real
-                  enough to defend.
+                  back it. The board only publishes when the data earns it.
                 </p>
               </Reveal>
               <Reveal delay={250}>
@@ -191,7 +190,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   title="Trend observations"
                   value={trendWorkbench.observationCount}
                   detail="Trend engine is ready; observations land as real game data settles."
-                  href="/trends"
+                  href="/intelligence/trends"
                 />
                 <StatusPanel
                   title="Calibration sample"
@@ -254,8 +253,8 @@ export default async function HomePage(): Promise<JSX.Element> {
             <div className="mx-auto max-w-5xl rounded-ds-md border border-surface-line bg-surface-raised/70 p-5 sm:p-7">
               <h2 className="text-2xl font-semibold text-ion-white">We do the analysis. You make the call.</h2>
               <p className="mt-3 text-sm leading-6 text-ion-1">
-                This is research, not certainty. Every read comes with a source, a confidence level, and a
-                clear statement of what we don&apos;t know — so you can see every step we took.
+                Every read comes with a source and a confidence level. Where the data isn&apos;t
+                sufficient, we publish a dash instead of a guess.
               </p>
               <RiskDisclosure variant="compact" includePastPerformance className="mt-5 text-ion-1" />
             </div>

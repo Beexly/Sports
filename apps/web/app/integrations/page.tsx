@@ -76,7 +76,7 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
                 until the legal boundary is explicit.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <Link href="/trends" className="btn-primary min-h-11 px-5 py-3">
+                <Link href="/intelligence/trends" className="btn-primary min-h-11 px-5 py-3">
                   Open Trend Lab
                 </Link>
                 <Link

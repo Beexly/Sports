@@ -17,14 +17,14 @@ type Command = { label: string; href: string; group: string; keywords?: string }
 const COMMANDS: Command[] = [
   // Intelligence
   { label: "Today's Board", href: "/board", group: "Intelligence", keywords: "board picks games slate" },
-  { label: "Edge Map", href: "/observatory", group: "Intelligence", keywords: "observatory market" },
+  { label: "Edge Map", href: "/intelligence/observatory", group: "Intelligence", keywords: "observatory market" },
   { label: "Inside the Signal", href: "/intelligence", group: "Intelligence", keywords: "engine reasoning how it works" },
-  { label: "The Beat", href: "/the-beat", group: "Intelligence", keywords: "news breaking injuries reporters" },
+  { label: "The Beat", href: "/intelligence/the-beat", group: "Intelligence", keywords: "news breaking injuries reporters" },
   { label: "GSN Transmission", href: "/gsn", group: "Intelligence", keywords: "daily news network" },
   { label: "Parlay MRI", href: "/parlay-mri", group: "Intelligence", keywords: "parlay risk genome" },
   { label: "The Academy", href: "/academy", group: "Intelligence", keywords: "train scenarios lessons" },
   { label: "Trust Ledger", href: "/ledger", group: "Intelligence", keywords: "merkle proof record" },
-  { label: "CLV Tracker", href: "/track", group: "Intelligence", keywords: "bets clv closing line value calibration roi" },
+  { label: "CLV Tracker", href: "/intelligence/track", group: "Intelligence", keywords: "bets clv closing line value calibration roi" },
   { label: "The Cipher", href: "/cipher", group: "Intelligence", keywords: "puzzle hunt easter egg" },
   { label: "Methodology", href: "/methodology", group: "Intelligence", keywords: "how method" },
   { label: "Pricing", href: "/pricing", group: "Intelligence", keywords: "plans subscribe cost" },
