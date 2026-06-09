@@ -18,12 +18,12 @@ import { ILLUSTRATIVE_BRIEF } from "@/lib/courtroom/courtroom";
 import { BRAND_COLORS, CLOSING_LINE } from "@/lib/brand";
 
 const TICKER_PHRASES = [
-  "Math you can read",
-  "See the reasoning — not just the number",
-  "Independent referees, judged on their own",
-  "Edge lives in the disagreement",
+  "Every signal graded against the close",
+  "When our models agree the market is off, that's the bet",
+  "Independent reads, each priced on their own",
+  "Agreement is confidence — disagreement is where edge lives",
   "Graded against the close",
-  "It audits its own calibration",
+  "The model watches its own accuracy and flags when it drifts",
   "A record that can't be rewritten",
   "Silence when there's nothing honest to say",
 ] as const;
@@ -31,12 +31,12 @@ const TICKER_PHRASES = [
 export const metadata: Metadata = {
   title: "Inside the Signal — How the Intelligence Works",
   description:
-    "A look inside the glass box: independent referees, consensus and divergence, calibrated edge, and a tamper-evident record. Methodology, not promises.",
+    "How independent models price each game, converge on a signal, and grade it against the closing line — so you can check every read we publish.",
   alternates: { canonical: "/intelligence" },
 };
 
 /**
- * /intelligence — the glass-box showpiece. Dark, cinematic, kinetic, accessible.
+ * /intelligence — the signal showpiece. Dark, cinematic, kinetic, accessible.
  *
  * DOCTRINE: explains METHODOLOGY only — never asserts a performance number (those
  * are gated behind the calibration readiness gate) and uses no banned-language.
@@ -139,7 +139,7 @@ const SYSTEM_NODES: ReadonlyArray<{
   {
     title: "CLV Tracker",
     href: "/track",
-    desc: "Your glass-box ledger, graded against the close.",
+    desc: "Log your bets, settle them with the closing line, and see if you actually have an edge.",
     accent: BRAND_COLORS.orbitalCyan,
   },
   {
@@ -282,7 +282,7 @@ export default function IntelligencePage() {
                   className="inline-block h-1.5 w-1.5 rounded-full"
                   style={{ backgroundColor: BRAND_COLORS.orbitalCyan, boxShadow: `0 0 12px ${BRAND_COLORS.orbitalCyan}` }}
                 />
-                Inside the glass box
+                How the signal works
               </p>
             </Reveal>
             <Reveal delay={90}>
@@ -290,7 +290,7 @@ export default function IntelligencePage() {
                 className="mt-5 max-w-4xl font-display text-balance text-white"
                 style={{ fontSize: "clamp(2.75rem, 7.2vw, 5.75rem)", lineHeight: 1.02, letterSpacing: "-0.02em" }}
               >
-                See the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>reasoning</span>,{" "}
+                See <span className="gse-editorial" style={{ fontSize: "1.08em" }}>why</span>{" "}
                 <span
                   style={{
                     backgroundImage: `linear-gradient(115deg, ${BRAND_COLORS.orbitalCyan}, ${BRAND_COLORS.softUltraviolet} 48%, ${BRAND_COLORS.ionMagenta})`,
@@ -299,15 +299,15 @@ export default function IntelligencePage() {
                     color: "transparent",
                   }}
                 >
-                  not just the number.
+                  — not just what.
                 </span>
               </h1>
             </Reveal>
             <Reveal delay={180}>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-300">
-                Most products hand you a pick and ask for trust. We show the
-                machinery: thousands of independent reads, converging on a signal —
-                and every one graded and recorded so it can be checked.
+                Most sites give you a pick and say trust us. We show the work:
+                several models price each game independently, and every signal is
+                graded against the closing line so you can check it.
               </p>
             </Reveal>
             <Reveal delay={260}>
@@ -315,7 +315,7 @@ export default function IntelligencePage() {
                 <Link href="/methodology" className="btn btn-primary">
                   The full methodology →
                 </Link>
-                <Link href="/picks" className="btn btn-ghost">
+                <Link href="/board" className="btn btn-ghost">
                   Today&apos;s board
                 </Link>
               </div>
@@ -419,7 +419,7 @@ export default function IntelligencePage() {
               <p className="mt-5 max-w-2xl text-ink-300">
                 Behind every read is a council of specialist agents — each with one job and an
                 escalation threshold. When the recommendation changes, you can trace exactly
-                which agent escalated and why. No opaque black box.
+                which agent moved it and why.
               </p>
             </Reveal>
             <Reveal delay={140} className="mt-10">
@@ -465,16 +465,15 @@ export default function IntelligencePage() {
               }}
             >
               <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
-                Transparency is the product
+                Your receipt
               </p>
               <p className="mx-auto mt-4 max-w-2xl font-display text-2xl text-white sm:text-3xl">
                 {CLOSING_LINE}
               </p>
               <p className="mx-auto mt-4 max-w-xl text-sm text-ink-300">
-                Numbers about our track record stay hidden until there&apos;s enough
-                settled, calibrated history to publish them honestly. Until then,
-                this is the part we can show you in full: the method. The rating is
-                free to read — Pro and Elite open the deeper views.
+                Our track record goes live after 200 settled signals — until then,
+                here&apos;s everything that goes into every read. The rating is
+                free; Pro and Elite open the deeper views.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <Link href="/pricing" className="btn btn-primary">

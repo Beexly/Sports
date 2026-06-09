@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "How We Read the Numbers — Metric Methodology",
   description:
-    "The glass box on every signal the engine uses: what each metric is, how we read it, how it's commonly misread, and how that makes us different. Stable, predictive inputs vs. noisy outputs that regress.",
+    "Every signal the engine uses, explained: what each metric is, how we read it, how it's commonly misread, and why stable inputs beat noisy outputs that regress to nothing.",
   alternates: { canonical: "/intelligence/metrics" },
 };
 

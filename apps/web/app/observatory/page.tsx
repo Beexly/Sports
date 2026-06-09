@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: "Edge Map — Live Market Intelligence by Sport, Slate, Matchup",
   description:
     "Real-time line movement, sharp/public splits, and market depth across every active matchup. The same view the model is reading from. Opens after the readiness gate clears.",
-  alternates: { canonical: "/observatory" },
+  alternates: { canonical: "/intelligence/observatory" },
 };
 
 /**
@@ -116,7 +116,7 @@ export default async function ObservatoryPage() {
             </Reveal>
             <Reveal delay={90}>
               <h2 id="twin-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
-                Don&apos;t take the pick. Enter the model.
+                See the whole slate the way our model does.
               </h2>
             </Reveal>
             <Reveal delay={160}>
@@ -171,16 +171,16 @@ export default async function ObservatoryPage() {
                 Status · Pre-launch
               </p>
               <p className="text-base leading-relaxed text-ink-300">
-                The Edge Map stays dark until {BRAND_NAME} has enough settled history
-                to publish a calibrated live read. We would rather show you nothing
-                than show you a number we can&apos;t yet stand behind. In the
-                meantime, the methodology page explains exactly what feeds into it.
+                The Edge Map goes live once we have enough settled results to read it
+                honestly — at that point it streams live line movement, sharp/public
+                splits, and market depth across the whole slate. Until then,
+                the methodology page explains exactly what feeds into it.
               </p>
               <div className="mt-2 flex flex-wrap gap-3">
                 <Link href="/methodology" className="btn btn-primary">
                   Read the methodology
                 </Link>
-                <Link href="/picks" className="btn btn-ghost">
+                <Link href="/board" className="btn btn-ghost">
                   Today&apos;s board
                 </Link>
               </div>

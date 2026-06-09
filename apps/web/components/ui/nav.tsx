@@ -6,7 +6,7 @@ import { BrandLockup } from "@/components/brand/brand-lockup";
 
 // Small, clear top bar. Six top-level doors; three carry ONE tight, grouped
 // dropdown each. Everything dropped from here still lives in its section/footer.
-const PRIMARY_LINKS = [{ label: "Board", href: "/picks" }] as const;
+const PRIMARY_LINKS = [{ label: "Board", href: "/board" }] as const;
 
 const TAIL_LINKS = [
   { label: "Today", href: "/today" },
@@ -48,7 +48,7 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
       { label: "Intelligence Hub", href: "/intelligence", desc: "The whole intelligence system, one place" },
-      { label: "Edge Map", href: "/observatory", desc: "The slate as a galaxy" },
+      { label: "Edge Map", href: "/intelligence/observatory", desc: "The slate as a galaxy" },
     ],
   },
 ];

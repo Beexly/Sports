@@ -102,7 +102,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                     See the GSE Rating
                   </Link>
                   <Link
-                    href="/picks"
+                    href="/board"
                     className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-surface-line px-5 py-3 text-sm font-semibold text-ion-1 transition-colors hover:border-orbital-cyan hover:text-ion-white"
                   >
                     Today&apos;s board
@@ -185,7 +185,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   title="Public picks"
                   value={state.publishedToday.length}
                   detail={state.publishedToday.length > 0 ? "Published rows available." : "No fabricated picks."}
-                  href="/picks"
+                  href="/board"
                 />
                 <StatusPanel
                   title="Trend observations"
@@ -252,10 +252,10 @@ export default async function HomePage(): Promise<JSX.Element> {
         <section data-testid="homepage-responsible-close" className="px-4 py-16 sm:px-6 lg:px-8">
           <Reveal>
             <div className="mx-auto max-w-5xl rounded-ds-md border border-surface-line bg-surface-raised/70 p-5 sm:p-7">
-              <h2 className="text-2xl font-semibold text-ion-white">The math can point. The decision stays yours.</h2>
+              <h2 className="text-2xl font-semibold text-ion-white">We do the analysis. You make the call.</h2>
               <p className="mt-3 text-sm leading-6 text-ion-1">
-                This product is research, not certainty. The upgrade path is more data, better receipts,
-                and clearer uncertainty, not louder claims.
+                This is research, not certainty. Every read comes with a source, a confidence level, and a
+                clear statement of what we don&apos;t know — so you can see every step we took.
               </p>
               <RiskDisclosure variant="compact" includePastPerformance className="mt-5 text-ion-1" />
             </div>

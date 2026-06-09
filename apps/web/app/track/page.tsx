@@ -9,10 +9,10 @@ import { StakingCalculator } from "@/components/tracker/staking-calculator";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "CLV Tracker — Your Glass-Box Bet Ledger",
+  title: "CLV Tracker — Track Your Closing Line Value",
   description:
-    "Log your bets, settle them with the closing line, and track the metric that actually predicts edge: Closing Line Value — plus ROI and calibration. Stored locally; nothing leaves your device.",
-  alternates: { canonical: "/track" },
+    "Closing Line Value is the strongest proof of a real edge. Log your bets, settle them against the closing price, and track the stat that actually matters. Stored locally; nothing leaves your device.",
+  alternates: { canonical: "/intelligence/track" },
 };
 
 export default function TrackPage() {
@@ -30,14 +30,14 @@ export default function TrackPage() {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-5 max-w-3xl font-display text-balance text-white" style={{ fontSize: "clamp(2.4rem, 7vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}>
-                Track the number, not the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>noise</span>.
+                Closing Line Value is the only stat that proves you have an <span className="gse-editorial" style={{ fontSize: "1.08em" }}>edge</span>.
               </h1>
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">
-                Your record is mostly variance over any human-sized sample. Closing Line Value isn't — beating the
-                close consistently is the strongest public proof you have an edge. Log your bets, settle them with the
-                closing price, and watch your real scoreboard. It lives in your browser; nothing leaves your device.
+                Wins and losses over a short sample are mostly variance. Beating the close consistently is different —
+                it is the strongest public signal that you are finding real edges. Log your bets, settle them with the
+                closing price, and watch the stat that actually matters. Stored in your browser; nothing leaves your device.
               </p>
             </Reveal>
           </div>

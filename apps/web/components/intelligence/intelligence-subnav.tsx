@@ -38,16 +38,30 @@ const ITEMS: readonly SubnavItem[] = [
   { label: "GSE Rating", href: "/intelligence/rating", match: "startsWith" },
   { label: "Matchups", href: "/intelligence/matchups", match: "startsWith" },
   { label: "Edges", href: "/intelligence/edges", match: "startsWith" },
-  { label: "Trends", href: "/trends", match: "startsWith" },
-  { label: "Edge Map", href: "/observatory", match: "startsWith" },
-  { label: "Airwave", href: "/airwave", match: "startsWith" },
-  { label: "CLV Tracker", href: "/track", match: "startsWith" },
-  { label: "The Beat", href: "/the-beat", match: "startsWith" },
+  { label: "Trends", href: "/intelligence/trends", match: "startsWith" },
+  { label: "Edge Map", href: "/intelligence/observatory", match: "startsWith" },
+  { label: "Airwave", href: "/intelligence/airwave", match: "startsWith" },
+  { label: "CLV Tracker", href: "/intelligence/track", match: "startsWith" },
+  { label: "The Beat", href: "/intelligence/the-beat", match: "startsWith" },
 ];
+
+/** Map new /intelligence/* hrefs to their legacy top-level counterparts. */
+const LEGACY_ALIASES: Partial<Record<string, string>> = {
+  "/intelligence/trends": "/trends",
+  "/intelligence/observatory": "/observatory",
+  "/intelligence/airwave": "/airwave",
+  "/intelligence/track": "/track",
+  "/intelligence/the-beat": "/the-beat",
+};
 
 function isActive(item: SubnavItem, pathname: string): boolean {
   if (item.match === "exact") return pathname === item.href;
-  return pathname === item.href || pathname.startsWith(`${item.href}/`);
+  const legacy = LEGACY_ALIASES[item.href];
+  return (
+    pathname === item.href ||
+    pathname.startsWith(`${item.href}/`) ||
+    (legacy !== undefined && (pathname === legacy || pathname.startsWith(`${legacy}/`)))
+  );
 }
 
 export function IntelligenceSubnav(): JSX.Element {

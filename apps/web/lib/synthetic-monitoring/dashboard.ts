@@ -132,7 +132,7 @@ const CHECK_DEFINITIONS: ReadonlyArray<
       },
       {
         id: "CHECK-A2",
-        label: "/picks returns 200",
+        label: "/board returns 200",
         status: "passing",
         severity: "P1",
         detail: "Covered by scripts/prod-probe.mjs.",
@@ -262,7 +262,7 @@ const CHECK_DEFINITIONS: ReadonlyArray<
 
 const ARTIFACT_TO_CHECK_ID: Readonly<Record<string, string>> = {
   "/": "CHECK-A1",
-  "/picks": "CHECK-A2",
+  "/board": "CHECK-A2",
   "/ledger": "CHECK-A3",
   "/api/health?check=ingestion-freshness": "CHECK-E1",
   "/api/board/state": "CHECK-A4",

@@ -3,8 +3,8 @@
  *
  *   Brand:    Galaxy Sports Edge
  *   Tagline:  Find the signal before the market moves.
- *   Voice:    Calibrated. Precise. Always acquiring.
- *             Intelligence isn't loud. It's on frequency.
+ *   Voice:    We show our work, grade ourselves against the close,
+ *             and go quiet when the read isn't there.
  *   Closer:   We detect. You decide.
  *
  * This file is the single source of truth for the customer-facing brand.
@@ -73,23 +73,23 @@ export const SOCIAL = {
 export const BRAND_PILLARS = [
   {
     title: "Intelligence",
-    body: "Data with purpose.",
+    body: "Real data behind every signal.",
   },
   {
     title: "Precision",
-    body: "Measured. Not guessed.",
+    body: "Numbers we can show, not hunches we're selling.",
   },
   {
     title: "Advantage",
-    body: "See it first. Use it better.",
+    body: "Catch the edge before the line moves.",
   },
   {
     title: "Discipline",
-    body: "Process over emotion.",
+    body: "A repeatable process, win or lose.",
   },
   {
     title: "Results",
-    body: "Consistent long-term edge.",
+    body: "A record you can check, not a pitch you have to believe.",
   },
 ] as const;
 
@@ -106,7 +106,7 @@ export const SURFACES = {
     tagline: "Published picks with reasoning attached.",
     blurb:
       "Published signals that cleared the board, price, timing, and discipline checks.",
-    route: "/picks",
+    route: "/board",
   },
   observatory: {
     label: "Edge Map",
@@ -119,7 +119,7 @@ export const SURFACES = {
     label: "The Airwave Ledger",
     tagline: "Pundits, on the record.",
     blurb:
-      "On-air sports takes turned into a paraphrased, timestamped, graded record — the same glass-box standard the engine holds itself to.",
+      "On-air sports takes turned into a paraphrased, timestamped, graded record — the same standard the model holds itself to.",
     route: "/airwave",
   },
   marketGravity: {

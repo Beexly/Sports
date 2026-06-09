@@ -148,7 +148,7 @@ export default async function DashboardPage() {
             {BRAND_NAME}
           </Link>
           <nav className="flex items-center gap-4 text-xs text-gray-400">
-            <Link href="/picks" className="hover:text-white">Picks</Link>
+            <Link href="/board" className="hover:text-white">Board</Link>
             <Link href="/performance" className="hover:text-white">Performance</Link>
             <Link href="/pricing" className="hover:text-white">Pricing</Link>
             <span className="text-gray-600">|</span>
@@ -215,7 +215,7 @@ export default async function DashboardPage() {
                 Today's picks
               </h2>
               <Link
-                href="/picks"
+                href="/board"
                 className="text-xs text-brand-400 hover:text-brand-300"
               >
                 View all →
@@ -242,7 +242,7 @@ export default async function DashboardPage() {
               </h2>
               <nav className="flex flex-col gap-1">
                 {[
-                  { href: "/picks", label: "Today's Picks" },
+                  { href: "/board", label: "Today's Board" },
                   { href: "/performance", label: "Performance" },
                   { href: "/pricing", label: "View Plans" },
                   { href: "/blog", label: "Analysis Blog" },

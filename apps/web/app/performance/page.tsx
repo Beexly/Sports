@@ -136,7 +136,7 @@ export default async function PerformancePage() {
               . Win-rate aggregation is gated until canonical history accumulates.
             </p>
             <Link
-              href="/picks"
+              href="/board"
               className="rounded-ds-sm border border-surface-line px-3 py-1.5 text-ion-1 hover:bg-surface-sunken"
             >
               See today&apos;s picks

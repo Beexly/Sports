@@ -7,7 +7,7 @@ import { BRAND_COLORS } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Draft Assistant — Galaxy Fantasy",
   description:
-    "A glass-box draft board: VOR, tiers, best-available, and live pick recommendations with the reasoning — need, tier cliffs, value, and bye stacking.",
+    "Draft board powered by VOR, tiers, and best-available logic — live pick recommendations with the reasoning: need, tier cliffs, value, and bye stacking.",
   alternates: { canonical: "/fantasy/draft" },
 };
 

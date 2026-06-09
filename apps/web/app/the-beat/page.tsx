@@ -13,10 +13,10 @@ import { getViewerTier, canAccess } from "@/lib/access";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "The Beat — Reliability-Tiered Sports Newsroom",
+  title: "The Beat — News Ranked by Who's Reporting It",
   description:
-    "Not a timeline. Every breaking report scored the instant it lands: how reliable the source is, which players and lines it moves, by how much, and the move to make — before the market prices it in.",
-  alternates: { canonical: "/the-beat" },
+    "The moment a report drops, we rate the source, flag the players and lines it moves, and tell you whether it's worth acting on — before the market catches up.",
+  alternates: { canonical: "/intelligence/the-beat" },
 };
 
 export default async function TheBeatPage() {
@@ -41,14 +41,13 @@ export default async function TheBeatPage() {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-5 max-w-3xl font-display text-balance text-white" style={{ fontSize: "clamp(2.4rem, 7vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}>
-                Breaking news, <span className="gse-editorial" style={{ fontSize: "1.08em" }}>scored</span>.
+                News ranked by who&apos;s <span className="gse-editorial" style={{ fontSize: "1.08em" }}>reporting it</span>.
               </h1>
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">
-                Everyone aggregates the beat writers. We do the part that matters: the instant a report
-                lands, we weigh the source by tier, map it to the players and lines it moves, decay it by
-                freshness, and tell you the move — before it's priced in.
+                The moment a report drops, we rate the source, flag the players and lines it moves, and tell
+                you whether it&apos;s worth acting on — before the market catches up.
               </p>
             </Reveal>
           </div>

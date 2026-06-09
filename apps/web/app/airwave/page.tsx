@@ -23,8 +23,8 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "The Airwave Ledger — Pundits, On the Record",
   description:
-    "Sports takes, held to an outcome. The Airwave Ledger turns what pundits say on air into a paraphrased, timestamped, graded record — the same glass-box standard the engine holds itself to. Illustrative personas until founded.",
-  alternates: { canonical: "/airwave" },
+    "Sports takes, held to an outcome. The Airwave Ledger turns what pundits say on air into a paraphrased, timestamped, graded record — the same standard the model holds itself to. Illustrative personas until founded.",
+  alternates: { canonical: "/intelligence/airwave" },
 };
 
 const STEPS = [

@@ -12,7 +12,7 @@ const SECTIONS: readonly Section[] = [
   {
     heading: "Start here",
     links: [
-      { label: "Board", href: "/picks" },
+      { label: "Board", href: "/board" },
       { label: "Today — Mission Control", href: "/today" },
       { label: "Pricing", href: "/pricing" },
     ],
@@ -33,7 +33,7 @@ const SECTIONS: readonly Section[] = [
     links: [
       { label: "GSE Rating", href: "/intelligence/rating" },
       { label: "Intelligence Hub", href: "/intelligence" },
-      { label: "Edge Map", href: "/observatory" },
+      { label: "Edge Map", href: "/intelligence/observatory" },
     ],
   },
   {

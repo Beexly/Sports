@@ -6,7 +6,7 @@ import { BRAND_COLORS } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "DFS Optimizer — Galaxy Fantasy",
   description:
-    "A glass-box DFS optimizer: cash, GPP, and leverage objectives, QB stacking, locks and fades, and N unique lineups with real exposure control — every lineup shipped with the why.",
+    "DFS optimizer with real exposure control: cash, GPP, and leverage objectives, QB stacking, locks and fades, and N unique lineups — every lineup shipped with the reasoning behind it.",
   alternates: { canonical: "/fantasy/dfs" },
 };
 

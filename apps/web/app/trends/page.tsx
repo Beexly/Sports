@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   title: "Trend Lab - Cohort Discovery Without Guessing",
   description:
     "Galaxy Sports Edge Trend Lab shows which statistical questions are ready, which data sources feed them, and why no public trend is published without real observations.",
-  alternates: { canonical: "/trends" },
+  alternates: { canonical: "/intelligence/trends" },
 };
 
 const numberFormatter = new Intl.NumberFormat("en-US");
@@ -80,13 +80,11 @@ export default async function TrendsPage(): Promise<JSX.Element> {
               <SignatureGrid className="-z-10" opacity={0.08} />
               <div className="relative z-10 py-2">
                 <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
-                  Find the edges before they become consensus.
+                  Spot the trend before everyone&apos;s betting it.
                 </h1>
                 <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-                  Trend Lab runs cohort analysis over real observations only: player weeks,
-                  team weeks, route participation, targets, injuries, age, rest, and market
-                  context. The engine is ready. The public trend table stays empty until
-                  the data is real enough to defend.
+                  We test cohorts against real play-by-play data — targets, injuries, age curves, rest, and
+                  market context. Nothing gets published until the sample is big enough to trust.
                 </p>
               </div>
             </div>

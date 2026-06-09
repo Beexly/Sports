@@ -171,7 +171,7 @@ export default function MethodologyPage(): JSX.Element {
                 Pro keeps the detailed factor breakdown.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Link href="/picks" className="btn btn-primary">
+                <Link href="/board" className="btn btn-primary">
                   Open today&apos;s board
                 </Link>
                 <Link href="/performance" className="btn btn-ghost">

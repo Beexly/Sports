@@ -6,7 +6,7 @@ import { BRAND_COLORS } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Contests — Galaxy Fantasy",
   description:
-    "Best ball, survivor, pick'em, DFS, and squares — skill-first formats with a glass-box edge. Real-money entries and payouts activate behind compliance review; nothing charges automatically.",
+    "Best ball, survivor, pick'em, DFS, and squares — skill-first formats with a real data edge. Real-money entries and payouts activate behind compliance review; nothing charges automatically.",
   alternates: { canonical: "/fantasy/contests" },
 };
 
@@ -29,7 +29,7 @@ const SKILL: Contest[] = [
 
 const EDGE: Contest[] = [
   { title: "Pick'em Edge", status: "Edge advisor", blurb: "We don't run the pick'em — we tell you where our number beats Underdog & DK Pick6 lines, and the best alt-line EV.", href: "/fantasy/props", cta: "Open advisor" },
-  { title: "DFS · GPP & Milly Maker", status: "Edge advisor", blurb: "Cash, GPP, and leverage lineups with stacking and exposure control — built to win tournaments, glass-box.", href: "/fantasy/dfs", cta: "Open optimizer" },
+  { title: "DFS · GPP & Milly Maker", status: "Edge advisor", blurb: "Cash, GPP, and leverage lineups with stacking and exposure control — built to win tournaments, every decision explained.", href: "/fantasy/dfs", cta: "Open optimizer" },
 ];
 
 const GATED: Contest[] = [
@@ -69,7 +69,7 @@ export default function ContestsPage() {
       eyebrow="Contests"
       accent={BRAND_COLORS.softUltraviolet}
       title={<>Play where the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>skill</span> is.</>}
-      intro="Every format, with the same glass-box edge — and an honest line about what's live. Skill contests are the core. Where we touch third-party pick'em and DFS, we advise rather than operate. And anything involving real money or chance is held behind compliance review and never charges on its own."
+      intro="Every format, with a real data edge — and an honest line about what's live. Skill contests are the core. Where we touch third-party pick'em and DFS, we advise rather than operate. And anything involving real money or chance is held behind compliance review and never charges on its own."
       note="Skill-first formats are the live core. Real-money entries/payouts and chance-based squares are founder-gated and activate only behind licensing and compliance review — there are no autonomous payments."
       wide
     >

@@ -33,6 +33,21 @@ const nextConfig = {
   images: {
     domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
   },
+  /**
+   * Rewrites: Intelligence orphans get canonical `/intelligence/*` paths.
+   * Internally served from old top-level routes so content stays DRY.
+   * Old top-level routes remain accessible (redirects added in a later pass).
+   */
+  async rewrites() {
+    return [
+      { source: "/intelligence/trends", destination: "/trends" },
+      { source: "/intelligence/observatory", destination: "/observatory" },
+      { source: "/intelligence/airwave", destination: "/airwave" },
+      { source: "/intelligence/track", destination: "/track" },
+      { source: "/intelligence/the-beat", destination: "/the-beat" },
+    ];
+  },
+
   async headers() {
     return [
       {

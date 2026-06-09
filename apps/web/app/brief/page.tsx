@@ -67,8 +67,8 @@ export default async function BriefStub() {
             </p>
             <p className="mt-1 text-[11px] text-gray-500">
               See the full slate at{" "}
-              <Link href="/picks" className="text-brand-400 hover:text-brand-300">
-                /picks
+              <Link href="/board" className="text-brand-400 hover:text-brand-300">
+                /board
               </Link>
               .
             </p>

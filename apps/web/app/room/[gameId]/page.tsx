@@ -26,7 +26,7 @@ export default async function GameRoomPage({
       <Nav />
       <main className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
         <header className="border-b border-gray-800 pb-8">
-          <Link href="/picks" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">
+          <Link href="/board" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">
             Today&apos;s Board
           </Link>
           <p className="mt-5 font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">

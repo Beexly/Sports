@@ -27,7 +27,7 @@ export default async function TradePage() {
       eyebrow="Trade Analyzer"
       accent={BRAND_COLORS.softUltraviolet}
       title={<>Know who <span className="gse-editorial" style={{ fontSize: "1.08em" }}>wins</span> the deal.</>}
-      intro="Build both sides and the analyzer prices each on value over replacement, projection, trend, and injury risk — then tells you the part that matters: is it fair, does it consolidate your roster into a starter, are you buying risk at a discount, and which side wins the headliner."
+      intro="Build both sides and the analyzer prices each on value over replacement, projection, trend, and injury risk — then answers the questions that decide: is it fair, does it consolidate your roster into a starter, are you buying risk at a discount, and which side wins the headliner."
       note={pool ? LIVE_NOTE : ILLUSTRATIVE_NOTE}
       wide
     >
