@@ -57,9 +57,14 @@ const FLASHES: readonly Flash[] = [
   { text: "COUNTEREVIDENCE WEIGHED", tone: "deep" },
   { text: "GOOD PROCESS · BAD OUTCOME", tone: "deep" },
   { text: "NO EDGE · NO BET", tone: "anomaly" },
-  { text: "SHOW YOUR WORK", tone: "white" },
+  { text: "SHARP MONEY DETECTED", tone: "ion" },
+  { text: "THE BOOKS DON'T KNOW", tone: "anomaly" },
+  { text: "CONVERGENCE EVENT", tone: "deep" },
+  { text: "HOLD THE LINE", tone: "white" },
+  { text: "CALIBRATION VERIFIED", tone: "ion" },
   { text: "EDGE SURVIVED REVIEW", tone: "ion" },
   { text: "TRACK RECORD OVER PROMISES", tone: "white" },
+  { text: "THE SIGNAL IS REAL", tone: "deep" },
   { text: "SEE IT FIRST", tone: "deep" },
   { text: "SIGNAL ACQUIRED", tone: "ion" },
 ];
@@ -71,7 +76,7 @@ const toneColor: Record<Flash["tone"], string> = {
   white: BRAND_COLORS.ionWhite,
 };
 
-const FRAG_COUNT = 9;
+const FRAG_COUNT = 11;
 
 export function CinematicEntrance() {
   const [phase, setPhase] = useState<Phase>("boot");
@@ -539,24 +544,71 @@ function Fragment({ kind }: { kind: number }) {
       </svg>
     );
   }
-  // kind === 8 — heatmap grid; one cell ignites as the located edge
-  return (
-    <div className="w-full max-w-lg px-8">
-      <div className="grid grid-cols-8 gap-1.5">
-        {Array.from({ length: 32 }).map((_, i) => {
-          const hot = i === 19;
-          const warm = i === 18 || i === 20 || i === 11 || i === 27;
-          const bg = hot ? `${cyan}cc` : warm ? `${uv}55` : `rgba(255,255,255,${0.04 + (i % 5) * 0.02})`;
-          return (
-            <span
-              key={i}
-              className="aspect-square rounded-sm"
-              style={{ background: bg, boxShadow: hot ? `0 0 12px ${cyan}aa` : undefined }}
-            />
-          );
-        })}
+  if (kind === 8) {
+    // heatmap grid; one cell ignites as the located edge
+    return (
+      <div className="w-full max-w-lg px-8">
+        <div className="grid grid-cols-8 gap-1.5">
+          {Array.from({ length: 32 }).map((_, i) => {
+            const hot = i === 19;
+            const warm = i === 18 || i === 20 || i === 11 || i === 27;
+            const bg = hot ? `${cyan}cc` : warm ? `${uv}55` : `rgba(255,255,255,${0.04 + (i % 5) * 0.02})`;
+            return (
+              <span
+                key={i}
+                className="aspect-square rounded-sm"
+                style={{ background: bg, boxShadow: hot ? `0 0 12px ${cyan}aa` : undefined }}
+              />
+            );
+          })}
+        </div>
+        <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-ink-500">edge surface · located</p>
       </div>
-      <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-ink-500">edge surface · located</p>
+    );
+  }
+  if (kind === 9) {
+    // GSE Rating display — abstract score readout with position tiers
+    const rows = [
+      { pos: "QB", score: 87, label: "ELITE" },
+      { pos: "WR", score: 74, label: "HIGH" },
+      { pos: "RB", score: 61, label: "SOLID" },
+      { pos: "TE", score: 43, label: "RISK" },
+    ];
+    return (
+      <div className="w-full max-w-sm px-8 font-mono">
+        <p className="mb-4 text-[10px] uppercase tracking-[0.3em]" style={{ color: cyan }}>GSE Rating · illustrative</p>
+        {rows.map((r) => (
+          <div key={r.pos} className="mb-2.5 flex items-center gap-3">
+            <span className="w-6 text-[10px] uppercase tracking-widest text-ink-400">{r.pos}</span>
+            <div className="relative flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
+              <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${r.score}%`, background: r.score >= 80 ? cyan : r.score >= 60 ? uv : r.score >= 40 ? `${uv}88` : mag }} />
+            </div>
+            <span className="w-6 text-right text-xs tabular-nums" style={{ color: r.score >= 80 ? cyan : r.score >= 60 ? uv : "rgba(255,255,255,0.4)" }}>{r.score}</span>
+            <span className="w-10 text-[9px] uppercase tracking-wider" style={{ color: r.score >= 80 ? cyan : r.score >= 60 ? uv : "rgba(255,255,255,0.3)" }}>{r.label}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  // kind === 10 — divergence matrix: two columns of model reads cross-checked
+  return (
+    <div className="w-full max-w-md px-8 font-mono text-xs">
+      <div className="grid grid-cols-2 gap-px border border-white/10">
+        {[
+          ["CONSENSUS", `${uv}`, "0.71"],
+          ["MARKET", `${cyan}`, "0.68"],
+          ["DEPTH", `${cyan}`, "OK"],
+          ["DIVERGENCE", `${mag}`, "▲ 0.11"],
+          ["VERDICT", `${cyan}`, "EDGE"],
+          ["GATE", `${cyan}`, "CLEAR"],
+        ].map(([label, color, val]) => (
+          <div key={label} className="flex items-center justify-between px-3 py-1.5 border-b border-white/5">
+            <span className="text-ink-500">{label}</span>
+            <span style={{ color }}>{val}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[9px] uppercase tracking-[0.3em] text-ink-600">illustrative system trace</p>
     </div>
   );
 }
