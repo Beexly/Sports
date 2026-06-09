@@ -663,3 +663,11 @@ export interface PublicBlogPost {
   publishedAt: string | null;
   isFeatured: boolean;
 }
+
+// ============================================================
+// World-model contracts — source-provenanced decision-OS shared types
+// (coach/scheme, provenance, coverage, fallback, control-plane). Storage-agnostic;
+// no scoring/MODEL_VERSION dependency. Ported from the scheme/GitHub R&D pass.
+// ============================================================
+
+export * from "./world-model";

@@ -70,6 +70,14 @@ The packet's competitive addendum (23 platforms, 46 optimizers, 15 media/betting
 - **COMP-009 (founder competitor war-room) — BUILT** this pass: `lib/cockpit/competitor-watchlist.ts` (curated, sourced registry: their-edge + GSE-counter + hard-line per rival) + founder-gated `/cockpit/competitors` page + nav. Leverages the watchlist directly; founder-only; no approval.
 - **Approval-gated (do NOT auto-build):** any DFS salary/projection or odds/prop ingestion (DK/FD/PrizePicks/Underdog/Action/OddsJam/Outlier/Dimers), private-league import (Draft Sharks), social-casino/sweepstakes (Rebet), and any profit/edge/medical/official-data claim.
 
+## Scheme / GitHub R&D pass (docs + CODE contracts; ported + reconciled)
+
+This pass shipped actual **code**, not just docs. Reconciled both:
+- **Docs ported:** `gse-coach-scheme-*` (addendum, current-state, data-model, metrics-catalog, build-queue, Claude handoff), `gse-github-trending-*` (addendum/watchlist/recommendations), `gse-scheme-github-rd-closeout.md`, plus the accumulated `top-20-rd/` deep-dives (126 files). All lossless.
+- **CODE ported — `packages/types/src/world-model.ts`** (source-provenanced decision-OS contracts: provenance, coverage, fallback chains, control-plane, AND the coach/scheme types — CoachStaffAssignment, PlayCallSplit, SchemeTendencyProfile + pure validators `classifyRunPassBias`/`validatePlayCallSplit`/`validateSchemeTendencyProfile`). Absent in canonical; **no name collisions**. Wired via `export * from "./world-model"` in `packages/types/src/index.ts`; test ported. **Verified:** types typecheck + 40 tests (12 world-model + 28 entitlements) + web typecheck all green. Storage-agnostic; **no scoring/MODEL_VERSION dependency**.
+- **Key finding confirmed against canonical:** canonical HAS scheme *tendency* data (`play-design.ts` — FTN play-action/RPO/screen/motion; `team-environment.ts` — PROE/pace) but **NO coach/coordinator/play-caller dataset or attribution**. So the coach-attribution layer is genuine net-new. First build (per the packet): curated **verified 2026 staff ledger** → nflverse run/pass aggregation (pbp already loaded) → **coach attribution with play-caller confidence**. The ported `world-model` types are its foundation.
+- **Gated:** coverage/front/motion/personnel/blitz concepts need approved charting/licensed sources; GitHub-trending recommendations are OSS reference (any dependency adoption is evaluation + approval).
+
 ## Quality assets to mine into canonical (independent of the queue)
 - `gse-free-source-inventory.csv` — 42 risk-tiered sources; **superset** of `catalog.ts` (officials, draft picks, CFBD, Wikidata venue graph, GDELT, attention layers, cross-sport analog). Fold the net-new lanes into the catalog as `status: mapped, approval-gated`.
 - `gse-source-risk-register.md`, `nfl-world-state-machine.md`, `gse-nfl-signal-taxonomy.md`, `gse-video-game-analog-builds.jsonl` (78 analog signals) — design inputs for the net-new builds.
