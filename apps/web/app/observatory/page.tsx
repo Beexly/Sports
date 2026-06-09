@@ -12,8 +12,7 @@ import { GalaxySlateTwinLazy } from "@/components/slate-twin/galaxy-slate-twin-l
 import { UpsellGate } from "@/components/ui/upsell-gate";
 import { canAccess, getViewerTier } from "@/lib/access";
 import { getSlateTwin } from "@/lib/slate-twin/get-slate-twin";
-import { BRAND_NAME, SURFACES } from "@/lib/brand";
-import { BRAND_COLORS } from "@/lib/brand";
+import { BRAND_COLORS, SURFACES } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
 
