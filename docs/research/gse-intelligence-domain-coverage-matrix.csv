@@ -1,0 +1,28 @@
+domain,criticality,primary_source,fallback_sources,minimum_fields,governance_note
+ODDS,P0,The Odds API / licensed odds provider,"TheRundown, SportsDataIO, manual book export","moneyline, spread, total, prop, book count, open/current, no-vig shape","public derived, raw provider terms gated"
+SCORES,P0,licensed scores feed,"SportsDataIO, nflverse schedules/PBP, official league site","status, score, clock, final, settlement confidence",withhold settlement on conflict
+SCHEDULE,P0,nflreadr schedules,"SportsDataIO, official NFL/team schedule","date, venue, week, rest, travel, timezone",required for every slate
+PLAYER_PROFILE,P1,nflreadr rosters,"SportsDataIO, team roster pages, GSIS IDs","height, weight, position, age, college, team, status",identity map required
+PLAYER_STATS,P0,nflfastR/nflreadr player stats,"SportsDataIO, official gamebooks","snap, rush, target, air yards, EPA, success, fantasy stats",public stats can power derived claims
+PLAYER_PARTICIPATION,P1,nflreadr participation,"snap counts, charting provider, manual review","players on field, snap participation, personnel inference",raw personnel may require charting license
+INJURY,P0,official injury report / licensed feed,"team report, SportsDataIO, trusted reporter confirmation","practice status, game status, body part, participation trend",public claims require official or T1/T2 support
+DEPTH_CHART,P1,team official depth chart / licensed feed,"SportsDataIO, FantasyLife, team beat confirmation","starter, backup, role change, handcuff, package note","beat notes are claim cards, not truth"
+ROSTER_TRANSACTION,P0,NFL transactions/team official,"SportsDataIO, trusted wires, team accounts","signed, waived, IR, active roster, practice squad",must be timestamped
+COACH_STAFF,P1,team announcements / ESPN guide,"NFL.com, CBS, FantasyLife, official team pages","HC, OC, DC, play caller, role confidence, start/end",titles do not equal play caller
+SCHEME_TENDENCY,P1,nflverse PBP aggregate,"FTN/PFF/SIS charting, manual analyst review","run/pass, neutral pass, third down, red zone, pace, play action",separate observed vs inferred
+OFFICIALS,P1,nflreadr load_officials,"SportsDataIO referee crew, Football Zebras, PFR officials","referee, crew, position, assignment history",trend claims observational only
+OFFICIATING_TENDENCY,P2,derived PBP + officials join,"RefMetrics, SportsDataIO, Football Zebras","penalty rate, home/away split, total penalties, pace impact",never imply bias or misconduct
+STADIUM,P1,nflreadr schedules/stadium metadata,"SportsDataIO stadium profiles, Tom Bliss coordinates","stadium, roof, surface, altitude, orientation, timezone",retractable roof needs game-day status
+WEATHER,P1,Weather API at stadium coordinates,"Meteostat archive, AccuWeather, Windy, Weatherbit","temp, humidity, precipitation, pressure, forecast confidence",indoors/retractable roof gates impact
+WIND,P1,Weather API + stadium orientation,"Windy, Meteostat, stadium-side manual report","speed, gust, direction, cross/head/tail wind",wind is a separate football-impact domain
+SURFACE_ROOF,P1,stadium metadata + team/game day source,"Tom Bliss archive, SportsDataIO, official team/stadium account","roof type, roof status, playing surface, field orientation",roof status must not be stale
+MARKET_PROPS,P1,licensed odds/player props,"TheRundown, SportsDataIO, manual user export","prop lines, alternates, line movement, limits proxy",provider terms govern display
+DFS_SALARIES,P2,authorized user export / licensed provider,"Run The Sims, SaberSim, FantasyLabs if licensed","salary, slate, position, site, lock time",no direct scraping DK/FD
+DFS_OWNERSHIP,P2,licensed projection provider,"user upload, public contest rewind when allowed","projected ownership, leverage, contest type",source terms are critical
+FANTASY_ADP,P2,platform ADP exports/licensed,"FantasyPros, Underdog ADP, FFPC/NFFC data if licensed","ADP, roster rate, draft room movement",do not ingest private leagues without user auth
+BEAT_REPORTER,P2,trusted reporter registry,"team beat lists, outlet pages, manual operator curation","reporter, outlet, beat, claim types, accuracy score",reporter claims require verification path
+ANALYST_RANKINGS,P3,licensed/ranked analysts,"FantasyPros ECR, FTN, Footballguys, free public articles","rank, tier, projection delta, rationale",never copy paid rankings verbatim
+NEWS_CLAIM,P1,claim card from trusted source,"official confirmation, multiple T3 corroboration, manual review","claim, entity, time, contradiction, expiry",AI output is never a source
+COMMUNITY_WEAK_SIGNAL,P3,watchlist-only community monitor,Reddit/X/YouTube comments only if policy-approved,"keyword, sentiment, emergence, source volume",cockpit only; never public evidence
+MODEL_OUTPUT,P2,internal model decision trace,"shadow models, backtests, calibration logs","prediction, confidence, features, calibration, drift",model output is not truth
+AUTONOMOUS_SYSTEM_HEALTH,P0,control-plane telemetry,"synthetic monitor, health route, worker logs, CI","status, heartbeat, failures, trace, runbook, owner",must remain visible in cockpit

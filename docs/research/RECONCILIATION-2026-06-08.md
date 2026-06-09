@@ -78,7 +78,19 @@ This pass shipped actual **code**, not just docs. Reconciled both:
 - **Key finding confirmed against canonical:** canonical HAS scheme *tendency* data (`play-design.ts` — FTN play-action/RPO/screen/motion; `team-environment.ts` — PROE/pace) but **NO coach/coordinator/play-caller dataset or attribution**. So the coach-attribution layer is genuine net-new. First build (per the packet): curated **verified 2026 staff ledger** → nflverse run/pass aggregation (pbp already loaded) → **coach attribution with play-caller confidence**. The ported `world-model` types are its foundation.
 - **Gated:** coverage/front/motion/personnel/blitz concepts need approved charting/licensed sources; GitHub-trending recommendations are OSS reference (any dependency adoption is evaluation + approval).
 
+## Autonomous Intelligence pass (docs + control-plane contracts; ported + reconciled)
+
+2026-06-08. Research checkout extended `world-model.ts` into a full autonomous intelligence/control-plane layer. Reconciled:
+
+- **CODE — already in canonical.** Both `packages/types/src/world-model.ts` (731 lines) and `packages/types/src/__tests__/world-model.test.ts` were byte-for-byte identical. The control-plane types (`SignalDomain` 27 domains, `SourceFallbackChain`, `AutonomousSystemRun`, `ControlPlaneSnapshot`, + 5 helpers) were already present from the scheme/GitHub pass. **No port needed for code.** Verify-before-building confirmed again.
+- **Docs ported (7 files, all net-new):** `gse-autonomous-intelligence-engine.md` (five-layer OS architecture + non-negotiables), `gse-autonomous-system-health-spec.md` (10 system register, 6 health states, debug contract), `gse-autonomous-intelligence-claude-handoff.md` (AUTO-001–012 build queue), `gse-autonomous-intelligence-build-queue.jsonl` (machine-readable), `gse-intelligence-domain-coverage-matrix.md` (27-domain coverage matrix), `gse-intelligence-domain-coverage-matrix.csv` (28-row CSV), `gse-source-fallback-map.jsonl` (27 fallback chains). All lossless.
+- **Closeout written:** `gse-autonomous-intelligence-rd-closeout.md` (this pass's reconciliation summary).
+- **Core principle now encoded:** Every signal can matter, but nothing gets to hallucinate. P0/P1 domains need primary source + fallback + no-data policy + output-withholding behavior + debug trace. Missing P0 coverage withholds dependent output rather than guessing.
+- **Next hard builds (AUTO-001–004, founder-gated):** control-plane fixture generator → source registry seed → domain coverage evaluator → extend `/api/health` (requires storage/schema approval). Cockpit Source Health and Domain Coverage views follow (AUTO-005). All domain-specific builds (officials, stadium/wind, reporters) approval-gated.
+
 ## Quality assets to mine into canonical (independent of the queue)
 - `gse-free-source-inventory.csv` — 42 risk-tiered sources; **superset** of `catalog.ts` (officials, draft picks, CFBD, Wikidata venue graph, GDELT, attention layers, cross-sport analog). Fold the net-new lanes into the catalog as `status: mapped, approval-gated`.
 - `gse-source-risk-register.md`, `nfl-world-state-machine.md`, `gse-nfl-signal-taxonomy.md`, `gse-video-game-analog-builds.jsonl` (78 analog signals) — design inputs for the net-new builds.
 - The **Do-Not-Touch Expansion Rules** (gse-current-data-state §19) match our integrity guardrails verbatim — adopt as canon.
+- `gse-intelligence-domain-coverage-matrix.csv` — 27-domain coverage map with primary/fallback/governance; seed for the domain coverage evaluator (AUTO-003).
+- `gse-source-fallback-map.jsonl` — 27 fallback chains with criticality/policy/minimum fields; seed for AUTO-002 source registry.
