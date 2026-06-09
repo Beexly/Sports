@@ -61,6 +61,15 @@ The packet **systematically understates canonical** — verify every "net-new" a
 
 **Revised first build: BUILD-002 entity graph** — highest value because it also hardens the join fragility the NFL-accuracy audit patched ad-hoc (M1 team-column drift, M7 relocation aliases, GSIS↔PFR id namespaces). One canonical team/player/venue/season graph replaces the scattered `normTeam` maps in `graded-pool.ts` + `matchup.ts`.
 
+## Competitive-expansion addendum (11 files; ported + reconciled)
+
+The packet's competitive addendum (23 platforms, 46 optimizers, 15 media/betting-intel rivals, retention/growth/finance research, 20 COMP-* follow-up actions) was ported. Substantive read:
+- **Thesis matches ours:** rivals converge on commodity primitives (projections/salaries/ownership/stacks/sims/locks/export/Discord/subs); GSE builds the source-provenanced world model and exposes products from it — do NOT chase feature-for-feature.
+- The 20 COMP-* actions are mostly **design/spec/memo** (brand voice, pricing, funding, affiliate, optimizer specs) — strategy, now preserved; not auto-build code.
+- **COMP-002 (DK/FanDuel CSV parser) ALREADY EXISTS** — `lib/fantasy/dk-import.ts`. Skip (verify-before-building again).
+- **COMP-009 (founder competitor war-room) — BUILT** this pass: `lib/cockpit/competitor-watchlist.ts` (curated, sourced registry: their-edge + GSE-counter + hard-line per rival) + founder-gated `/cockpit/competitors` page + nav. Leverages the watchlist directly; founder-only; no approval.
+- **Approval-gated (do NOT auto-build):** any DFS salary/projection or odds/prop ingestion (DK/FD/PrizePicks/Underdog/Action/OddsJam/Outlier/Dimers), private-league import (Draft Sharks), social-casino/sweepstakes (Rebet), and any profit/edge/medical/official-data claim.
+
 ## Quality assets to mine into canonical (independent of the queue)
 - `gse-free-source-inventory.csv` — 42 risk-tiered sources; **superset** of `catalog.ts` (officials, draft picks, CFBD, Wikidata venue graph, GDELT, attention layers, cross-sport analog). Fold the net-new lanes into the catalog as `status: mapped, approval-gated`.
 - `gse-source-risk-register.md`, `nfl-world-state-machine.md`, `gse-nfl-signal-taxonomy.md`, `gse-video-game-analog-builds.jsonl` (78 analog signals) — design inputs for the net-new builds.
