@@ -19,8 +19,7 @@ const config: NextAuthConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        token.role = ((user as any).role as UserRole) ?? "USER";
+        token.role = (user.role as UserRole) ?? "USER";
       }
 
       if (!token.role && token.email) {
@@ -76,10 +75,10 @@ export const auth: () => Promise<Session | null> = async () => {
         name: "Dev Admin",
         email: "dev-admin@local",
         image: null,
-        role: "ADMIN",
+        role: "ADMIN" as UserRole,
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any as Session;
+      expires: new Date(Date.now() + 86400000).toISOString(),
+    } as Session;
   }
   try {
     return await realAuth();
@@ -101,6 +100,10 @@ export const signIn = nextAuth.signIn as (...args: unknown[]) => Promise<void>;
 export const signOut = nextAuth.signOut as (...args: unknown[]) => Promise<void>;
 
 declare module "next-auth" {
+  interface User {
+    role?: UserRole;
+  }
+
   interface Session {
     user: {
       id: string;
@@ -109,6 +112,12 @@ declare module "next-auth" {
       image?: string | null;
       role: UserRole;
     };
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    role?: UserRole;
   }
 }
 

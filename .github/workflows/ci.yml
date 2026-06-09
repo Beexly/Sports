@@ -170,7 +170,27 @@ jobs:
         run: node scripts/guardrails/draft-only.mjs
 
   # --------------------------------------------------------------
-  # 6. Composite guardrails job — convenience target for local + branch
+  # 6. tsconfig-health — fast, no-install check that all tsconfigs
+  #    with deprecated options have ignoreDeprecations set. Prevents
+  #    TS5107/TS5101 from silently creeping back in.
+  # --------------------------------------------------------------
+  tsconfig-health:
+    name: tsconfig health (deprecation guard)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run tsconfig-health guardrail
+        run: node scripts/guardrails/tsconfig-health.mjs
+
+  # --------------------------------------------------------------
+  # 8. Composite guardrails job — convenience target for local + branch
   #    protection rules.
   # --------------------------------------------------------------
   guardrails:
@@ -193,7 +213,7 @@ jobs:
         run: npm run guardrails
 
   # --------------------------------------------------------------
-  # 7. Brand-safety — fast, focused job that fences the customer-
+  # 9. Brand-safety — fast, focused job that fences the customer-
   #    facing copy invariants. Runs the public-copy scanner plus the
   #    policy / dashboard / Jarvis tests that gate visible claims.
   #    Designed to fail in under a minute if a PR introduces a
