@@ -2,6 +2,23 @@
 
 ---
 
+## Digest #5 — 2026-06-10 (cycles 6–7)
+
+**Readiness:** 2,106 → **2,162 tests**, build green, tree about to be clean at 27 commits. Trend: ↑. **Note: cycle 7's workflow died on the monthly spend limit — the director now builds directly (no multi-agent spend); velocity holds, cost drops.**
+
+**Closed:**
+- **BV-02** — the JSON humanizer is in the launch product; the one raw-JSON surface (`/cockpit/brief`) now renders human tables, raw demoted (test-guarded against regression).
+- **R-13** — odds-quota burn-down persisted per run + cockpit tile with LOW QUOTA warning (the #1 silent ingestion killer now has a gauge).
+- **S-06** — OG card on the matured brand.
+- **POD-01** — the weekly podcast pipeline, built by hand and packet-compliant: real-data DRAFT scripts (banned-phrase-scanned, two-way parity with trust-claims), own-voice-only render behind a **consent record** + your sample (GA-11/GA-14), the **verbatim AI-voice disclosure** in every airable script + the feed, gated `/podcast` + RSS (404 default), 15 tests.
+- **Founder links reviewed** (Lovable-breach → SEC-01 BOLA checklist; fakedetail = avoid for anything public; blink/luma/abacus verdicts on file).
+
+**The GSN Deep R&D packet: reconciled in full** (`docs/research/inbox/gsn-deep-rd-packet/RECONCILIATION.md`). Verdict: it largely VALIDATES the built system (publish gate, freshness, no-bet, autopsy, podcast governance — all live). Net-new ideas ticketed + sequenced as the post-launch moat: **SRC-01** source/rumor quarantine → **FR-01** Flight Recorder → **DEC-01** decay clock → **MR-01** Market Radar → **POD-02** episode upgrades. None move the launch gate.
+
+**Unchanged critical path:** GA-01 (prod DB) + GA-02 (odds key) → shadow season → 150 graded picks → the verdict → your signature. Podcast adds GA-11 (voice sample, ~10 min) when you're ready for episode 1.
+
+---
+
 ## Digest #4 — 2026-06-10 (cycle 5)
 
 **Readiness:** test count 2,037 → **2,106**; commits 15 → **18**; tree clean. Trend: ↑.

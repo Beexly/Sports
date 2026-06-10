@@ -51,6 +51,16 @@ Priority: BLOCKER > SHOULD > POLISH. Owner: DIRECTOR (me) / CODEX (isolated lane
 | SEC-01 | Object-level-authorization audit of every parameterized route (the Lovable-breach lesson: BOLA); re-run whenever a user-OWNED resource ships (saved slates, billing objects) | Current `[id]` routes verified visibility-safe (explain ✓, losses ✓); the risk arrives with user-owned objects | S (recurring checklist) | SHOULD | DIRECTOR | OPEN (baseline done, recheck on new resources) |
 | POD-01 | Weekly podcast scaffold CODE (per docs/command-center/launch/weekly-podcast-design.md): script generator (DRAFT-only + banned-phrase scan), render runner (honest-exit), PODCAST_ENABLED-gated RSS + /podcast | Founder ask; design committed; build was lost to the spend-limit failure | M | SHOULD | DIRECTOR (direct, no workflow — budget) | QUEUED |
 
+## GSN Deep R&D packet tickets (2026-06-10 — full reconcile: docs/research/inbox/gsn-deep-rd-packet/RECONCILIATION.md)
+| ID | Ticket | Effort | Priority | Owner | Status |
+|---|---|---|---|---|---|
+| SRC-01 | Source Quality Ledger + Rumor Quarantine (Source/SourceClaim models, rumor states, publish locks; implements data-mesh 20-22) | L | SHOULD (post-launch moat) | DIRECTOR | QUEUED |
+| FR-01 | Market Integrity Flight Recorder (append-only unified event timeline + public drawer + admin diff) | L | SHOULD | DIRECTOR | QUEUED after SRC-01 |
+| DEC-01 | Confidence Decay Clock (TTL curve over the binary 60-min gate; shadow-first) | M | SHOULD | DIRECTOR | QUEUED |
+| NBR-01 | No-Bet taxonomy extension (richer NoBetReason enum + radar state on GateDecision) | S-M | SHOULD | CODEX-able | QUEUED |
+| MR-01 | Market Radar slate cards (freshness/volatility/disagreement/no-bet) | M | SHOULD | DIRECTOR | QUEUED |
+| POD-02 | Podcast upgrades: 8-segment structure, per-episode source packet, clip pack | M | POLISH | DIRECTOR | QUEUED (segments depend on SRC-01/FR-01) |
+
 ## Founder voice directive (2026-06-10) — BV tickets
 | ID | Ticket | Why | Effort | Priority | Owner | Status |
 |---|---|---|---|---|---|---|

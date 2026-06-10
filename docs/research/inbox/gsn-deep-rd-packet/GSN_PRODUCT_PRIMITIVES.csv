@@ -1,0 +1,11 @@
+Primitive,Purpose,Data required,UI expression,Priority
+Trust Receipt,Show proof behind every recommendation,"Source list, timestamps, odds snapshot, reviewer, freshness, uncertainty",Drawer/card on every game/pick/note,High
+Market Integrity Flight Recorder,Log every meaningful market/source/review change,"Event stream with actor, source, timestamp, before/after",Game timeline + admin audit,Critical
+No-Bet Intelligence,Make abstention a decision product,"Taxonomy, trigger reason, what would change",No-Bet card and radar state,Critical
+Confidence Decay Clock,Prevent stale confidence,"Freshness windows, source TTL, odds age",Countdown / decay badge,High
+Source Quality Ledger,Score source trust over time,"Source type, accuracy history, conflict rate, license status",Admin ledger + public compact grade,Critical
+Rumor Quarantine,Prevent unverified info from becoming picks,"Unconfirmed claims, conflicts, reviewer lock",Admin quarantine panel,Critical
+Sharp/Public Divergence Lens,Show market pressure without mythologizing it,"Bet/dollar splits, line movement, source caveats",Two-sided divergence bar,Medium
+Post-Game Autopsy,"Grade process, not just outcome","Pre-game receipt, final result, changed variables",Public autopsy page,High
+Analyst Note Grader,Raise content quality before publishing,"Claim specificity, uncertainty language, source strength",Admin scorecard,Medium
+Podcast Intelligence Loop,Turn approved intelligence into weekly audio,"Source packet, script, consent record, transcript",Podcast builder + public episode receipt,High

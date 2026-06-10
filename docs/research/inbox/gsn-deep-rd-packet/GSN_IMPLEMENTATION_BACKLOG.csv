@@ -1,0 +1,11 @@
+Priority,Ticket,Scope,Strategic value
+P0,Build Source Quality Ledger,"Create Source, SourceClaim, SourceScore models; admin source detail; public compact source grade",Data freshness and source trust
+P0,Build Trust Receipt schema and drawer,"Attach receipts to PickCandidate, NoBetDecision, IntelligenceNote, PodcastEpisode",Proof layer
+P0,Build Publish Gate,"Block stale data, unresolved rumors, unreviewed claims, unlicensed sources, risky language",Compliance/trust
+P0,Implement No-Bet taxonomy,"Add NoBetReason enum, UI card, admin explanation fields, radar state",Decision quality
+P1,Implement Confidence Decay Clock,Source TTL + odds age + injury uncertainty decay rules,Freshness
+P1,Build Flight Recorder MVP,Event log with before/after data and reviewer actions,IP spine
+P1,Build Rumor Quarantine,SourceClaim status workflow and publish lock,Rumor control
+P1,Build Market Radar prototype,"Slate-level cards showing freshness, volatility, disagreement, no-bet status",10-second comprehension
+P2,Build Podcast Packet Builder,Approved notes → script packet → checklist → voice consent → transcript,Sports-only weekly podcast
+P2,Build Post-Game Autopsy,Outcome and process review tied to original receipt,Accountability
