@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { createPortalSession } from "@/lib/stripe";
+import { StripeConfigurationError, createPortalSession } from "@/lib/stripe";
 import { db } from "@sports/db";
 
 export async function POST(_req: NextRequest): Promise<NextResponse> {
@@ -30,6 +30,9 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
     );
     return NextResponse.json({ url: portalSession.url });
   } catch (err) {
+    if (err instanceof StripeConfigurationError) {
+      return NextResponse.json({ error: err.message }, { status: 503 });
+    }
     const message = err instanceof Error ? err.message : "Portal error";
     console.error(`Portal session error: ${message}`);
     return NextResponse.json({ error: message }, { status: 500 });

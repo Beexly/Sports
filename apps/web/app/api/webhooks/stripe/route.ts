@@ -1,12 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
+import { getStripe, StripeConfigurationError } from "@/lib/stripe";
 import { db } from "@sports/db";
 
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
 // Next.js App Router does not parse the body automatically for route handlers.
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // Degrade clearly (503) when billing is not configured — never crash at import.
+  const webhookSecret = process.env["STRIPE_WEBHOOK_SECRET"];
+  if (!webhookSecret) {
+    return NextResponse.json(
+      { error: "Stripe webhook is not configured" },
+      { status: 503 }
+    );
+  }
+
+  let stripe: Stripe;
+  try {
+    stripe = getStripe();
+  } catch (err) {
+    if (err instanceof StripeConfigurationError) {
+      return NextResponse.json({ error: err.message }, { status: 503 });
+    }
+    throw err;
+  }
+
   const body = await req.text();
   const signature = req.headers.get("stripe-signature");
 
@@ -17,11 +36,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env["STRIPE_WEBHOOK_SECRET"]!
-    );
+    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`Stripe webhook signature verification failed: ${message}`);
@@ -63,7 +78,7 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       // have the subscriptionId yet — retrieve and sync it now.
       const session = event.data.object as Stripe.Checkout.Session;
       if (session.subscription) {
-        const subscription = await stripe.subscriptions.retrieve(
+        const subscription = await getStripe().subscriptions.retrieve(
           session.subscription as string
         );
         await syncSubscription(subscription);
@@ -94,7 +109,7 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
     case "invoice.payment_succeeded": {
       const invoice = event.data.object as Stripe.Invoice;
       if (invoice.subscription) {
-        const subscription = await stripe.subscriptions.retrieve(
+        const subscription = await getStripe().subscriptions.retrieve(
           invoice.subscription as string
         );
         await syncSubscription(subscription);

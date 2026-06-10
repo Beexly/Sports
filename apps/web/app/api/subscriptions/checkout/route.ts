@@ -3,8 +3,10 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import {
   STRIPE_PRICE_IDS,
+  StripeConfigurationError,
   getOrCreateStripeCustomer,
   createCheckoutSession,
+  isStripeConfigured,
 } from "@/lib/stripe";
 
 const CheckoutSchema = z.object({
@@ -26,6 +28,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const { tier } = parsed.data;
   const priceId = STRIPE_PRICE_IDS[tier];
 
+  if (!isStripeConfigured()) {
+    return NextResponse.json(
+      { error: "Billing is not configured" },
+      { status: 503 }
+    );
+  }
+
   try {
     const customerId = await getOrCreateStripeCustomer(
       session.user.id,
@@ -44,6 +53,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (err) {
+    if (err instanceof StripeConfigurationError) {
+      return NextResponse.json({ error: err.message }, { status: 503 });
+    }
     const message = err instanceof Error ? err.message : "Checkout failed";
     console.error(`Checkout error: ${message}`);
     return NextResponse.json({ error: message }, { status: 500 });
