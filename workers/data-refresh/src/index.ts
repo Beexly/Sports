@@ -24,6 +24,9 @@
  *             future calibration reads snapshots joined to settled outcomes.
  */
 
+import { execFile } from "node:child_process";
+import * as path from "node:path";
+import { promisify } from "node:util";
 import { db } from "@sports/db";
 import {
   SUPPORTED_SPORTS,
@@ -306,6 +309,39 @@ async function settleResults(): Promise<void> {
   }
 }
 
+const execFileAsync = promisify(execFile);
+
+// Resolved relative to this file so it works from both src (ts-node) and the
+// compiled dist output — both sit three levels below the repo root.
+const CALIBRATION_REPORT_SCRIPT = path.resolve(
+  __dirname,
+  "../../../scripts/generate-calibration-report.mjs"
+);
+
+/**
+ * Regenerate _launch/CALIBRATION_REPORT.md after settlement (B-04).
+ *
+ * Same guarded pattern as the CLV/gate-decision writes: strictly additive,
+ * fully non-fatal. The generator runs as an isolated child process so even a
+ * crash inside it cannot touch worker state or block settlement. The script
+ * itself is stub-safe (no DATABASE_URL → honest empty report) and read-only
+ * against the DB.
+ */
+async function regenerateCalibrationReport(): Promise<void> {
+  try {
+    await execFileAsync(process.execPath, [CALIBRATION_REPORT_SCRIPT], {
+      timeout: 120_000,
+      windowsHide: true,
+    });
+    console.log("[calibration-report] regenerated after settlement.");
+  } catch (err) {
+    console.warn(
+      "[calibration-report] regeneration failed (non-fatal): " +
+        `${err instanceof Error ? err.message : err}`
+    );
+  }
+}
+
 async function main(): Promise<void> {
   const gates = getReadinessGates();
   console.log("[data-refresh] Worker v5 starting...");
@@ -315,10 +351,12 @@ async function main(): Promise<void> {
 
   await runRefreshCycle();
   await settleResults();
+  await regenerateCalibrationReport();
   setInterval(async () => {
     try {
       await runRefreshCycle();
       await settleResults();
+      await regenerateCalibrationReport();
     } catch (err) {
       console.error("[data-refresh] Unhandled error:", err instanceof Error ? err.message : err);
     }

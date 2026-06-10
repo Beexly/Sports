@@ -31,6 +31,7 @@
     "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/brand-lint.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/eval-contracts.mjs",
     "evals:contracts": "node scripts/eval-contracts.mjs",
     "snapshots:regen": "node scripts/regenerate-launch-snapshots.mjs",
+    "calibration:report": "node scripts/generate-calibration-report.mjs",
     "deploy:ready": "node scripts/check-deploy-readiness.mjs",
     "stripe:seed": "node scripts/seed-stripe-prices.mjs",
     "test:brand-safety": "npm run test:brand-safety --workspace=apps/web",
