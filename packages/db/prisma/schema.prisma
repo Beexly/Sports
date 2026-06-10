@@ -362,6 +362,13 @@ model IngestionRun {
   startedAt     DateTime        @default(now())
   completedAt   DateTime?
 
+  // R-13 quota burn-down visibility — The Odds API request-quota headers
+  // (x-requests-remaining / x-requests-used) captured at run completion.
+  // Nullable + additive: rows created before the columns existed, stub-mode
+  // runs, and failures without a quota-bearing response simply stay NULL.
+  remainingRequests Int?
+  usedRequests      Int?
+
   odds            Odds[]
   sourceSnapshots SourceSnapshot[]
 

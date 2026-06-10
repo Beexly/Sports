@@ -3,10 +3,12 @@ import { render, screen } from "@testing-library/react";
 import CockpitSources from "@/app/cockpit/sources/page";
 
 describe("/cockpit/sources control-plane render", () => {
-  it("renders the source health, domain coverage, fallback chain, and debug trace views", () => {
-    render(<CockpitSources />);
+  it("renders the source health, domain coverage, fallback chain, and debug trace views", async () => {
+    // Async server component: resolve the element first, then render it.
+    render(await CockpitSources());
 
     expect(screen.getByRole("heading", { name: "Source Control Plane" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Odds API Quota" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Source Health" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Domain Coverage" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Fallback Chain" })).toBeInTheDocument();

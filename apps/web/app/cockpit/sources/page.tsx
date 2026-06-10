@@ -5,6 +5,7 @@ import {
   type ControlPlaneDebugTraceStatus,
   type ControlPlaneFreshnessState,
 } from "@/lib/cockpit/intelligence-control-plane";
+import { loadOddsQuotaView } from "@/lib/cockpit/odds-quota";
 import type { ReactNode } from "react";
 import type {
   AutonomousSystemStatus,
@@ -130,8 +131,9 @@ function Metric({
   );
 }
 
-export default function CockpitSources() {
+export default async function CockpitSources() {
   const view = loadIntelligenceControlPlaneView();
+  const quota = await loadOddsQuotaView();
   const generatedAt = new Date(view.snapshot.generatedAt).toLocaleString();
 
   return (
@@ -156,6 +158,58 @@ export default function CockpitSources() {
         <Metric label="Degraded systems" value={view.summary.degradedSystems} tone="text-yellow-300" />
         <Metric label="Blind spots" value={view.summary.blindSpots} tone="text-red-300" />
         <Metric label="Manual reviews" value={view.summary.manualReviewCount} tone="text-orange-300" />
+      </section>
+
+      <section id="odds-quota" className="rounded-lg border border-gray-800 bg-gray-900/40 p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold text-white">Odds API Quota</h2>
+            <p className="text-sm text-gray-500">
+              Request-quota burn-down from the latest ingestion run.
+            </p>
+          </div>
+          {quota.hasData && (
+            <Pill
+              className={
+                quota.isLow
+                  ? "border-red-900/60 bg-red-950/25 text-red-300"
+                  : "border-green-900/60 bg-green-950/20 text-green-300"
+              }
+            >
+              {quota.isLow ? "LOW QUOTA" : "QUOTA OK"}
+            </Pill>
+          )}
+        </div>
+        {quota.hasData ? (
+          <>
+            <div className="mt-4 grid gap-4 sm:grid-cols-3">
+              <Metric
+                label="Requests remaining"
+                value={quota.remainingRequests ?? "unknown"}
+                tone={quota.isLow ? "text-red-300" : "text-green-300"}
+              />
+              <Metric label="Requests used" value={quota.usedRequests ?? "unknown"} tone="text-gray-200" />
+              <Metric label="Warning threshold" value={quota.warnThreshold} tone="text-gray-400" />
+            </div>
+            {quota.isLow && (
+              <p className="mt-4 text-sm text-red-300">
+                Remaining requests are below the warning threshold ({quota.warnThreshold}).
+                Upcoming refresh and settlement cycles may exhaust the key — review refresh
+                cadence or the plan tier before the quota runs out.
+              </p>
+            )}
+            <p className="mt-3 text-xs text-gray-600">
+              Recorded {formatTimestamp(quota.recordedAt)}
+              {quota.sport ? ` — run sport ${quota.sport}` : ""}. Threshold is env-tunable via
+              ODDS_QUOTA_WARN_THRESHOLD.
+            </p>
+          </>
+        ) : (
+          <p className="mt-4 text-sm text-gray-500">
+            No quota data yet — quota headers are persisted per ingestion run, so this tile
+            populates after the next odds refresh completes.
+          </p>
+        )}
       </section>
 
       {view.summary.recommendedActions.length > 0 && (

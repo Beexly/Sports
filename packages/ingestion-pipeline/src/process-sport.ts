@@ -25,6 +25,7 @@
 import { db } from "@sports/db";
 import {
   OddsApiClient,
+  OddsApiError,
   DataNormalizer,
   MARKETS,
   enrichGameContext,
@@ -44,6 +45,7 @@ import {
 import type { ReadinessGates } from "@sports/prediction-engine";
 import { MODEL_VERSION } from "@sports/prediction-engine";
 import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from "@sports/types";
+import type { Prisma } from "@sports/db";
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import { recordGateDecisions } from "./gate-decisions.js";
 import type { EvaluatedGame } from "./gate-decisions.js";
@@ -98,6 +100,56 @@ function buildMissingContextEvidence(fetchedAt: Date): EvidenceRecord[] {
   }));
 }
 
+/** Quota burn-down values read from The Odds API response headers (R-13). */
+interface QuotaSnapshot {
+  remainingRequests: number | null;
+  usedRequests: number | null;
+}
+
+/** Coerce a parsed quota header onto the nullable column shape (NaN → null). */
+function quotaValue(value: number | undefined): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+/**
+ * R-13 — complete an IngestionRun, attaching The Odds API quota burn-down
+ * headers (x-requests-remaining / x-requests-used) when available.
+ *
+ * Fail-soft contract: quota persistence must NEVER block run completion. If
+ * the combined write fails (e.g. the additive remainingRequests/usedRequests
+ * columns are not migrated yet), the completion is retried WITHOUT the quota
+ * fields — the run outcome stays the record of truth and only the quota
+ * visibility degrades (columns stay NULL, the cockpit shows "no quota data").
+ */
+async function completeIngestionRun(
+  runId: string,
+  base: Prisma.IngestionRunUpdateInput,
+  quota: QuotaSnapshot,
+  logPrefix: string,
+): Promise<void> {
+  const hasQuota = quota.remainingRequests !== null || quota.usedRequests !== null;
+  if (!hasQuota) {
+    await db.ingestionRun.update({ where: { id: runId }, data: base });
+    return;
+  }
+  try {
+    await db.ingestionRun.update({
+      where: { id: runId },
+      data: {
+        ...base,
+        remainingRequests: quota.remainingRequests,
+        usedRequests: quota.usedRequests,
+      },
+    });
+  } catch (quotaErr) {
+    console.warn(
+      `${logPrefix} Quota persistence failed for run ${runId} — retrying completion ` +
+        `without quota fields: ${quotaErr instanceof Error ? quotaErr.message : quotaErr}`
+    );
+    await db.ingestionRun.update({ where: { id: runId }, data: base });
+  }
+}
+
 /**
  * Runs the full pick generation pipeline for one sport.
  *
@@ -120,11 +172,21 @@ export async function processSport(
     data: { sport: sport.key, status: "RUNNING" },
   });
 
+  // R-13 quota burn-down: last-seen Odds API quota headers for this run.
+  // Declared outside the try so the FAILED completion path can persist them
+  // too (a quota-exhausted failure is exactly when remaining=0 matters).
+  const quota: QuotaSnapshot = { remainingRequests: null, usedRequests: null };
+
   try {
     const client = new OddsApiClient(apiKey);
     const normalizer = new DataNormalizer();
 
-    const { data: events, remainingRequests } = await client.getOdds(sport.key, [...MARKETS]);
+    const { data: events, remainingRequests, usedRequests } = await client.getOdds(
+      sport.key,
+      [...MARKETS],
+    );
+    quota.remainingRequests = quotaValue(remainingRequests);
+    quota.usedRequests = quotaValue(usedRequests);
     const fetchedAt = new Date();
 
     try {
@@ -453,15 +515,19 @@ export async function processSport(
       );
     }
 
-    await db.ingestionRun.update({
-      where: { id: run.id },
-      data: {
+    // Run completion + R-13 quota persistence (fail-soft — a quota write
+    // failure degrades to a completion without quota fields, never a throw).
+    await completeIngestionRun(
+      run.id,
+      {
         status: "SUCCESS",
         gamesUpserted: Object.keys(gameRecords).length,
         oddsInserted,
         completedAt: new Date(),
       },
-    });
+      quota,
+      logPrefix,
+    );
 
     console.log(
       `${logPrefix} ${sport.key}: ${Object.keys(gameRecords).length} games, ` +
@@ -485,14 +551,24 @@ export async function processSport(
         ? message
         : `[${providerStatus}] ${message}`;
     console.error(`${logPrefix} ${sport.key} failed (${providerStatus}): ${message}`);
-    await db.ingestionRun.update({
-      where: { id: run.id },
-      data: {
+    // R-13: a failed pull can still carry the quota headers (OddsApiError
+    // captures x-requests-remaining) — persist them so quota exhaustion is
+    // visible on the exact run that hit it. usedRequests is not carried on
+    // the error, so only override what we actually know.
+    if (err instanceof OddsApiError) {
+      const errRemaining = quotaValue(err.remainingRequests);
+      if (errRemaining !== null) quota.remainingRequests = errRemaining;
+    }
+    await completeIngestionRun(
+      run.id,
+      {
         status: "FAILED",
         errorMessage: classifiedMessage,
         completedAt: new Date(),
       },
-    });
+      quota,
+      logPrefix,
+    );
     return {
       sport: sport.key,
       status: "failed",

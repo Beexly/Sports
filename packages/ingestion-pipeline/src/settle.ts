@@ -173,6 +173,12 @@ async function settleSport(args: SettleSportArgs): Promise<{
   let gamesSettled = 0;
   let picksSettled = 0;
 
+  // R-13 note: getScores returns the same quota headers (remainingRequests/
+  // usedRequests), but settlement deliberately does NOT persist them — the
+  // settlement pass never creates an IngestionRun row (only processSport
+  // does), so there is no run record to attach quota to here. The next odds
+  // refresh records the post-settlement quota anyway (headers are global to
+  // the API key, not per-endpoint).
   const { data: scores } = await client.getScores(sport.key, daysFrom);
   const normalized = normalizer.normalizeScores(scores);
 
