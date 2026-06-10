@@ -1,0 +1,24 @@
+stage,file,role,depends_on_odds,fail_closed_now,freshness_aware,public_facing,notes
+provider_client,packages/data-ingestion/src/odds-api-client.ts:41-107,The Odds API HTTP client (fetch/getSports/getOdds/getScores/getEvents),yes,partial,no,no,Throws on provider errors but callers swallow; env THE_ODDS_API_KEY
+ingest_per_sport,packages/ingestion-pipeline/src/process-sport.ts:107-426,Fetch+normalize+upsert games/odds/picks per sport; writes IngestionRun,yes,no,yes,no,"Catch-all at 418-426 returns {status:failed} instead of throwing — masking source; sets IngestionRun FAILED at 421-424 (honest DB write)"
+source_snapshot,packages/ingestion-pipeline/src/process-sport.ts:114-128,Records full Odds API payload + sha256 for audit/replay,yes,n/a,no,no,Non-fatal (123-128); SourceSnapshot model; best-effort by design
+freshness_guard,packages/ingestion-pipeline/src/process-sport.ts:134-136,Rejects stale fetch before normalize (validateFreshness),yes,yes,yes,no,Throws 'Freshness validation failed' — caught by 418-426 and turned into failed-return
+cron_job,apps/web/app/api/cron/refresh-odds/route.ts:74-100,Every-30-min loop over SUPPORTED_SPORTS calling processSport,yes,no,no,no,"MASKED SUCCESS: ignores return (76-77), final NextResponse.json (92) has no status code => HTTP 200 even when all sports fail"
+cron_trigger,.github/workflows/external-cron.yml:21,External pinger every 30 minutes; vercel.json:8-44 daily backups,yes,n/a,no,no,Bearer CRON_SECRET; judges health on HTTP status which is always 200
+worker_settle,workers/data-refresh/src/index.ts:76-81,Long-running worker settling results via getScores,yes,partial,no,no,Parallel path to cron; shares processSport logic
+admin_trigger,apps/web/app/api/admin/trigger-refresh/route.ts:28,Manual operator refresh calling processSport,yes,no,no,yes,Admin-gated; same masking inheritance as cron
+last_good_store,packages/db/prisma/schema.prisma:318-334,IngestionRun model (status/errorMessage/completedAt) = freshness source of truth,yes,n/a,yes,no,Readiness reads newest status=SUCCESS row; FAILED rows correctly never count as fresh
+health_checks,apps/web/lib/health/checks.ts:16-69,loadHealthChecks: DB SELECT 1 + ingestion age vs 2h threshold,yes,yes,yes,no,Threshold is ageHours>2 (120min) not 60min; 60min in dashboard.ts:170 is aspirational
+api_health,apps/web/app/api/health/route.ts:9-16,Liveness endpoint,yes,no,yes,yes,Always HTTP 200 by design; dependency summary in body only
+api_ready,apps/web/app/api/ready/route.ts:9-16,Readiness endpoint,yes,yes,yes,yes,Returns 503 when ingestion error OR DB down; correctly red during odds outage — the working backstop
+api_board_state,apps/web/app/api/board/state/route.ts:7-35,Live board lanes (scoringNow/publishedToday/gatedToday),yes,yes,yes,yes,Catch returns success:true dataStatus:degraded HTTP 200 — never 500
+api_picks,apps/web/app/api/picks/route.ts,Public PublicPick[] filtered isBootstrap=false,yes,yes,yes,yes,"Gates on readiness: 503 bootstrapGateResponse if canExposePublicPicks=false"
+api_daily_slate,apps/web/app/api/picks/daily-slate/route.ts,Daily slate counts + sport breakdown,yes,yes,yes,yes,Downstream of pick records from ingestion
+api_performance,apps/web/app/api/performance/route.ts,Win/loss/push aggregation for settled canonical picks,yes,yes,yes,yes,Depends on settlement via getScores
+api_pick_audit,apps/web/app/api/picks/[id]/audit/route.ts,Per-pick audit trail,yes,yes,yes,yes,Reads PickSignalSnapshot immutable capture
+cockpit_market_twin,apps/web/app/api/cockpit/market-twin/route.ts,Cockpit market analysis,yes,partial,no,no,Operator-facing; control plane (avoid-list)
+cockpit_history_export,apps/web/app/api/cockpit/history/export/route.ts,Export pick history,yes,partial,no,no,Operator-facing export
+page_home,apps/web/app/page.tsx,Homepage loads BoardState/BoardPasses/CalibrationReport,yes,yes,yes,yes,Promise.allSettled degrades not crashes; sample-data banner if isSampleData
+page_board,apps/web/app/board,Board page with live gateDecision lanes,yes,yes,yes,yes,Same three loaders as homepage; needs 30-min freshness
+page_picks,apps/web/app/picks,Picks page calling /api/picks,yes,yes,yes,yes,Inherits readiness gate from /api/picks
+admin_dashboard,apps/web/app/admin/dashboard/page.tsx,Admin dashboard rendering,yes,partial,yes,no,Operator view of ingestion+picks state

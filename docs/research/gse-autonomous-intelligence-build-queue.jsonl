@@ -1,0 +1,12 @@
+{"id":"AUTO-001","priority":"P0","title":"Add control-plane fixture generator","output":"Create JSON fixture from SourceFallbackChain, CoverageEvaluation, and AutonomousSystemRun types for cockpit development.","owner":"Claude"}
+{"id":"AUTO-002","priority":"P0","title":"Seed source registry docs/data","output":"Create canonical source records for Odds API, nflverse, SportsDataIO candidate, TheRundown candidate, weather, officials, and manual review paths.","owner":"Claude"}
+{"id":"AUTO-003","priority":"P0","title":"Build domain coverage evaluator","output":"Read coverage requirements and current source runs, then emit blind spot/degraded/covered states.","owner":"Claude"}
+{"id":"AUTO-004","priority":"P0","title":"Extend health route after storage approval","output":"Add autonomous system and domain coverage checks to /api/health without exposing private source details publicly.","owner":"Claude"}
+{"id":"AUTO-005","priority":"P1","title":"Add cockpit Source Health view","output":"Show source health, freshness, legal state, active fallback, and manual-review queue.","owner":"Claude"}
+{"id":"AUTO-006","priority":"P1","title":"Add debug trace IDs to workers","output":"Attach trace_id, source_run_id, and decision_id to ingestion, pick generation, settlement, and content drafting.","owner":"Claude"}
+{"id":"AUTO-007","priority":"P1","title":"Build source-failure simulator","output":"Inject provider timeout/stale/legal-block scenarios and assert withhold/fallback behavior.","owner":"Claude"}
+{"id":"AUTO-008","priority":"P1","title":"Build reporter/analyst registry","output":"Track beat writers, outlets, claim types, reliability, contradictions, and official confirmation latency.","owner":"Claude"}
+{"id":"AUTO-009","priority":"P1","title":"Build officials/referee profile pipeline","output":"Join nflreadr officials with PBP penalty/game totals and generate observational trend cards.","owner":"Claude"}
+{"id":"AUTO-010","priority":"P1","title":"Build stadium/wind model","output":"Join stadium coordinates/roof/azimuth to weather sources and produce football-impact wind features.","owner":"Claude"}
+{"id":"AUTO-011","priority":"P2","title":"Agent handoff compression gate","output":"Require source ledger, file list, validation status, and next task in every Claude/Codex handoff artifact.","owner":"Claude"}
+{"id":"AUTO-012","priority":"P2","title":"Cost and provider budget circuit breakers","output":"Pause non-critical API/model usage when budget thresholds or provider error budgets burn too fast.","owner":"Claude"}
