@@ -10,6 +10,14 @@ export const metadata: Metadata = {
 };
 
 /**
+ * Hardcoded revision date for these terms. Bump this string only when the
+ * policy copy actually changes — building it from the runtime clock would
+ * self-refresh on every request and misrepresent the policy revision
+ * history (GAP_REGISTER R-09). Guarded by legal-revision-dates.test.ts.
+ */
+const TERMS_LAST_UPDATED = "June 10, 2026";
+
+/**
  * Terms of Service — placeholder, written to be safe-by-default while the
  * operator runs the final legal review. The content is reasonable to ship as
  * v1 but must be reviewed by counsel before paid checkout is enabled.
@@ -27,7 +35,7 @@ export default function TermsPage() {
               Terms of Service
             </h1>
             <p className="mt-2 text-sm text-ink-500">
-              Last updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+              Last updated: {TERMS_LAST_UPDATED}
             </p>
 
             <Heading>1. Acceptance of these terms</Heading>

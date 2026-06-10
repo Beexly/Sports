@@ -9,6 +9,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "/privacy" },
 };
 
+/**
+ * Hardcoded revision date for this policy. Bump this string only when the
+ * policy copy actually changes — building it from the runtime clock would
+ * self-refresh on every request and misrepresent the policy revision
+ * history (GAP_REGISTER R-09). Guarded by legal-revision-dates.test.ts.
+ */
+const PRIVACY_LAST_UPDATED = "June 10, 2026";
+
 export default function PrivacyPage() {
   return (
     <div className="flex min-h-screen flex-col">
@@ -22,12 +30,7 @@ export default function PrivacyPage() {
               Privacy Policy
             </h1>
             <p className="mt-2 text-sm text-ink-500">
-              Last updated:{" "}
-              {new Date().toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+              Last updated: {PRIVACY_LAST_UPDATED}
             </p>
 
             <Heading>1. What we collect</Heading>
