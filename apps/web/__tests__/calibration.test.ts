@@ -23,6 +23,37 @@ describe("computeCalibration", () => {
     expect(bucket?.sampleSize).toBe(3);
     expect(bucket?.observedWinRate).toBe(0.5);
   });
+
+  it("excludes VOID picks from calibration tallies (R-05)", () => {
+    // VOID (postponed/cancelled games swept by the worker) must never count
+    // toward calibration: resultToOutcome maps it to null, same as PENDING.
+    const withVoids = computeCalibration([
+      { id: "a", confidence: 72, result: "WIN" },
+      { id: "b", confidence: 74, result: "LOSS" },
+      { id: "c", confidence: 76, result: "VOID" },
+      { id: "d", confidence: 78, result: "VOID" },
+    ]);
+
+    const bucket = withVoids.buckets.find((entry) => entry.label === "70-79");
+    expect(withVoids.sampleSize).toBe(2);
+    expect(bucket?.sampleSize).toBe(2);
+    expect(bucket?.observedWinRate).toBe(0.5);
+
+    // Brier and win rates are identical to the same slate without the voids.
+    const withoutVoids = computeCalibration([
+      { id: "a", confidence: 72, result: "WIN" },
+      { id: "b", confidence: 74, result: "LOSS" },
+    ]);
+    expect(withVoids.brierScore).toBe(withoutVoids.brierScore);
+
+    // An all-VOID slate is "no evidence", not a 0% or 100% win rate.
+    const allVoid = computeCalibration([
+      { id: "x", confidence: 72, result: "VOID" },
+      { id: "y", confidence: 88, result: "VOID" },
+    ]);
+    expect(allVoid.sampleSize).toBe(0);
+    expect(allVoid.brierScore).toBeNull();
+  });
 });
 
 describe("computeCalibrationProposals", () => {

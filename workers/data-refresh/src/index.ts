@@ -46,6 +46,9 @@ import {
   homePerspectiveLine,
   computeClv,
   clvBetSideFor,
+  isDecisiveSettlementResult,
+  VOID_SWEEP_HOURS,
+  picksToVoid,
 } from "@sports/prediction-engine";
 import { processSport } from "@sports/ingestion-pipeline";
 
@@ -160,7 +163,7 @@ async function settleResults(): Promise<void> {
             //   (1) canLearnFromOutcomes=true
             //   (2) pick was canonical (isBootstrap=false)
             //   (3) result is a decisive outcome (WIN/LOSS/PUSH — not VOID)
-            const isDecisiveResult = result === "WIN" || result === "LOSS" || result === "PUSH";
+            const isDecisiveResult = isDecisiveSettlementResult(result);
             const isEligibleForLearning =
               gates.canLearnFromOutcomes &&
               !pick.isBootstrap &&
@@ -305,6 +308,98 @@ async function settleResults(): Promise<void> {
       }
     } catch (err) {
       console.error(`[settlement] ${sport.key}: ${err instanceof Error ? err.message : err}`);
+    }
+  }
+
+  // R-05 VOID sweep (fail-closed, non-fatal): postponed/cancelled games never
+  // produce a completed score from the feed, so their picks would rot PENDING
+  // forever. Runs after score settlement each cycle so a game that settled
+  // normally this pass is already out of PENDING and untouched. A sweep
+  // failure must never block the settlement pass.
+  try {
+    await voidStalePendingPicks();
+  } catch (sweepErr) {
+    console.warn(
+      `[void-sweep] sweep failed (non-fatal): ` +
+      `${sweepErr instanceof Error ? sweepErr.message : sweepErr}`
+    );
+  }
+}
+
+/**
+ * R-05 — settle abandoned games' PENDING picks as VOID.
+ *
+ * A game is void-eligible when it has no recorded final score pair AND is
+ * either past commenceTime + VOID_SWEEP_HOURS (default 12h, env-overridable)
+ * or carries an explicit POSTPONED/CANCELED status. The Odds API scores
+ * payload has no cancelled/postponed flag (only `completed`), so the sweep is
+ * time-threshold based today; the status check is defensive for any future
+ * writer of those GameStatus values.
+ *
+ * VOID never counts toward W/L or learning: eligibleForLearning requires a
+ * decisive WIN/LOSS/PUSH (same rule as the score-settlement path above), and
+ * the calibration readers (apps/web/lib/calibration/report.ts:40,
+ * scripts/generate-calibration-report.mjs:630) filter result IN
+ * (WIN,LOSS,PUSH). Stub-safe: with no DATABASE_URL the stub client returns []
+ * from findMany and the sweep is a no-op.
+ */
+async function voidStalePendingPicks(): Promise<void> {
+  const now = new Date();
+  const cutoff = new Date(now.getTime() - VOID_SWEEP_HOURS * 60 * 60 * 1000);
+
+  // Narrow DB query; the pure predicate (picksToVoid → isVoidSweepEligible)
+  // re-checks everything — including recorded scores — so a gradable game can
+  // never be voided even if this query over-selects.
+  const staleGames = await db.game.findMany({
+    where: {
+      picks: { some: { result: "PENDING" } },
+      OR: [
+        { commenceTime: { lte: cutoff } },
+        { status: { in: ["POSTPONED", "CANCELED"] } },
+      ],
+    },
+    include: {
+      picks: {
+        where: { result: "PENDING" },
+        select: { id: true, result: true },
+      },
+    },
+  });
+
+  for (const game of staleGames) {
+    const voidIds = picksToVoid(game, game.picks, now);
+    if (voidIds.length === 0) continue;
+
+    const settledAt = new Date();
+    let voided = 0;
+    for (const pickId of voidIds) {
+      try {
+        await db.pick.update({
+          where: { id: pickId },
+          data: { result: "VOID", settledAt },
+        });
+        voided += 1;
+
+        // Mirror the score-settlement snapshot write: VOID is not a decisive
+        // outcome, so eligibleForLearning stays false.
+        await db.pickSignalSnapshot.updateMany({
+          where: { pickId, settlementResult: null },
+          data: { settlementResult: "VOID", settledAt, eligibleForLearning: false },
+        });
+      } catch (voidErr) {
+        // Non-fatal: one failed write must never abort the rest of the sweep
+        console.warn(
+          `[void-sweep] VOID write failed for pick ${pickId}: ` +
+          `${voidErr instanceof Error ? voidErr.message : voidErr}`
+        );
+      }
+    }
+
+    if (voided > 0) {
+      console.log(
+        `[void-sweep] Voided ${voided} pick(s) for game ${game.id} ` +
+        `(status=${game.status}, commenced ${game.commenceTime.toISOString()})`
+      );
     }
   }
 }

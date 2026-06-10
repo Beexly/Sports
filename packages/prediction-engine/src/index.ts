@@ -20,8 +20,23 @@ export {
   computeScheduleStressScore,
 } from "./game-context.js";
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
-export { calculatePickResult, homePerspectiveLine } from "./settlement.js";
+export {
+  calculatePickResult,
+  homePerspectiveLine,
+  isDecisiveSettlementResult,
+} from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// R-05 — VOID sweep: pure eligibility logic for settling abandoned games
+// (postponed/cancelled/never-scored) as VOID. VOID is excluded from
+// learning/calibration by the existing result IN (WIN,LOSS,PUSH) filters.
+export {
+  DEFAULT_VOID_SWEEP_HOURS,
+  VOID_SWEEP_HOURS,
+  parseVoidSweepHours,
+  isVoidSweepEligible,
+  picksToVoid,
+} from "./void-sweep.js";
+export type { VoidSweepGame, VoidSweepPick } from "./void-sweep.js";
 // v6 — Closing-Line Value (CLV): pure shadow proof, never feeds the published
 // confidence/tier/grade/result or MODEL_VERSION.
 export {

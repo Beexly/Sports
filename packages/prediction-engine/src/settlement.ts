@@ -32,6 +32,18 @@ import type { PickType } from "@sports/types";
 export type SettlementResult = "WIN" | "LOSS" | "PUSH";
 
 /**
+ * Whether a result is a decisive game outcome (WIN/LOSS/PUSH).
+ *
+ * This is the learning/calibration boundary (R-05): only decisive outcomes
+ * may ever set eligibleForLearning=true or count toward W/L. VOID (postponed/
+ * cancelled/never-scored games swept by the worker's VOID sweep) and PENDING
+ * are explicitly NOT decisive.
+ */
+export function isDecisiveSettlementResult(result: string): result is SettlementResult {
+  return result === "WIN" || result === "LOSS" || result === "PUSH";
+}
+
+/**
  * Calculate the settlement result for a single pick.
  *
  * @param pickType   - SPREAD, MONEYLINE, or TOTAL
