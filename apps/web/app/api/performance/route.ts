@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
+import { enforcePublicApiRateLimit } from "@/lib/rate-limit";
+import { parsePublicQuery, performanceQuerySchema } from "@/lib/public-query";
 import {
   getReadinessGates,
   bootstrapGateResponse,
@@ -9,14 +11,21 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  // Inbound throttle first — cheapest rejection, applies even when gated.
+  const limited = await enforcePublicApiRateLimit(req, "performance");
+  if (limited) return limited;
+
+  // Malformed input is the caller's fault: clean 400, never a 503.
+  const query = parsePublicQuery(req, performanceQuerySchema);
+  if (!query.ok) return query.response;
+
   const gates = getReadinessGates();
   if (!gates.canExposePerformanceStats) {
     return NextResponse.json(bootstrapGateResponse("Performance stats"), { status: 503 });
   }
 
-  const { searchParams } = new URL(req.url);
-  const period = searchParams.get("period") ?? "all-time";
-  const sport = searchParams.get("sport");
+  const period = query.data.period ?? "all-time";
+  const sport = query.data.sport ?? null;
 
   // Aggregate real win/loss/push data from settled canonical picks only.
   // Bootstrap-era picks are excluded — their win rates are uncalibrated and

@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { NextRequest } from "next/server";
 
 /**
  * /api/picks/daily-slate — behavioural tests.
@@ -19,7 +20,10 @@ async function callGet(): Promise<{
   (globalThis as unknown as { prisma?: unknown; prismaStubMode?: boolean }).prisma = undefined;
   (globalThis as unknown as { prisma?: unknown; prismaStubMode?: boolean }).prismaStubMode = undefined;
   const mod = await import("@/app/api/picks/daily-slate/route");
-  const res = (await mod.GET()) as unknown as Response;
+  // R-12 gave the route a NextRequest param (per-IP rate limiting).
+  const res = (await mod.GET(
+    new NextRequest("http://localhost/api/picks/daily-slate")
+  )) as unknown as Response;
   return {
     status: res.status,
     body: (await res.json()) as {

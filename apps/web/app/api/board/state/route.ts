@@ -1,9 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { loadBoardState } from "@/lib/board/state";
+import { enforcePublicApiRateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  // Inbound throttle — this route consumes no query params (nothing to
+  // validate). The helper tolerates an absent request (argless test calls).
+  const limited = await enforcePublicApiRateLimit(req, "board-state");
+  if (limited) return limited;
+
   try {
     const payload = await loadBoardState();
     return NextResponse.json({ success: true, ...payload });

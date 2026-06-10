@@ -4,7 +4,9 @@
  * Returns only promotions that pass every compliance gate. Honors an
  * optional ?state=XX query parameter for geo-aware filtering. The route
  * never invents a state — when `state` is omitted, promos without an
- * explicit eligible-states list are still filtered out.
+ * explicit eligible-states list are still filtered out. A malformed
+ * `state` is rejected with a clean 400 (shared public-query schema)
+ * rather than silently treated as "no state".
  *
  * No auth required. The route is read-only. Cache headers permit a brief
  * cache to keep the page snappy without serving expired promos.
@@ -12,6 +14,8 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 import { db } from "@sports/db";
+import { enforcePublicApiRateLimit } from "@/lib/rate-limit";
+import { parsePublicQuery, promotionsQuerySchema } from "@/lib/public-query";
 import {
   buildDegradedPublicPromotionsResponse,
   buildPublicPromotionsResponse,
@@ -20,15 +24,16 @@ import {
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-function parseStateParam(raw: string | null): string | null {
-  if (!raw) return null;
-  const upper = raw.toUpperCase();
-  return /^[A-Z]{2}$/.test(upper) ? upper : null;
-}
-
 export async function GET(req: NextRequest): Promise<NextResponse> {
-  const url = new URL(req.url);
-  const state = parseStateParam(url.searchParams.get("state"));
+  // Inbound throttle first — cheapest rejection.
+  const limited = await enforcePublicApiRateLimit(req, "promotions");
+  if (limited) return limited;
+
+  // Malformed input is the caller's fault: clean 400, never a 503.
+  const query = parsePublicQuery(req, promotionsQuerySchema);
+  if (!query.ok) return query.response;
+
+  const state = query.data.state ?? null;
 
   try {
     // Pre-filter at the DB layer for indexable fields. Compliance / disclosure

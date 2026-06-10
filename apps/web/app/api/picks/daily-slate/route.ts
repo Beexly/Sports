@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { getReadinessGates } from "@sports/prediction-engine";
+import { enforcePublicApiRateLimit } from "@/lib/rate-limit";
 import {
   db,
   isStubMode,
@@ -16,7 +17,12 @@ import {
  */
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  // Inbound throttle — this route consumes no query params (nothing to
+  // validate). The helper tolerates an absent request (argless test calls).
+  const limited = await enforcePublicApiRateLimit(req, "daily-slate");
+  if (limited) return limited;
+
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
 

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { enforcePublicApiRateLimit } from "@/lib/rate-limit";
+import { parsePublicQuery, picksQuerySchema } from "@/lib/public-query";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown } from "@sports/types";
@@ -9,6 +11,14 @@ import { startOfDay, endOfDay } from "date-fns";
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  // Inbound throttle first — cheapest rejection, applies even when gated.
+  const limited = await enforcePublicApiRateLimit(req, "picks");
+  if (limited) return limited;
+
+  // Malformed input is the caller's fault: clean 400, never a 503.
+  const query = parsePublicQuery(req, picksQuerySchema);
+  if (!query.ok) return query.response;
+
   const gates = getReadinessGates();
   if (!gates.canExposePublicPicks) {
     return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
@@ -29,11 +39,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         dailyPickLimit: 1,
       };
 
-  const { searchParams } = new URL(req.url);
-  const sportFilter = searchParams.get("sport");
-  const dateParam = searchParams.get("date");
-  const gradeFilter = searchParams.get("grade") as PickGrade | null;
-  const targetDate = dateParam ? new Date(dateParam) : new Date();
+  const sportFilter = query.data.sport ?? null;
+  const gradeFilter: PickGrade | null = query.data.grade ?? null;
+  const targetDate = query.data.date ? new Date(query.data.date) : new Date();
 
   // Fail closed: if the database is unavailable, return an honest degraded
   // 503 rather than a 500 stack or a silent empty 200 that reads as "no picks
