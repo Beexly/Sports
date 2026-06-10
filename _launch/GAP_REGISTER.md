@@ -32,6 +32,22 @@ Priority: BLOCKER > SHOULD > POLISH. Owner: DIRECTOR (me) / CODEX (isolated lane
 | P-02 | Homepage H1 positioning ("proven, not explained" candidate) | 3-headline brand split | DIRECTOR proposes copy, founder taste | QUEUED |
 | P-03 | Beat-the-Model flag-on decision + nav entry | Growth loop is built, gated OFF | GARRETT (1 env var) | PARKED |
 
+## CLOSED — cycle 2 (2026-06-10, evidence: certify gate brjtm972y + commits 4387321/d86af18)
+- **R-01 CLOSED** — settlement boundary conversion landed; live repro regression-guarded (away -3.5 losing by 1-2 → LOSS); engine 246/246. Convention: D-010.
+- **R-04 CLOSED** — computeClv AWAY sign fixed; bet-time line lock via PickSignalSnapshot (additive migration); CLV null without a locked line (never drifted-line math).
+- **BA-B01 + BA-B02 CLOSED** — homepage fabrications deleted; real ledger/calibration rendering + honest empty states; guard tests bite (homepage-content suite).
+- **BV-01 VERIFIED** — publish-gate evidence on the record: draft-only guardrail (engine never writes publishedAt/PUBLISHED) + content-engine compliance BLOCKER + brand-voice/trust-claims suites all green inside the 1989-test certify run. No AI-generated content path reaches public surfaces without an operator publish.
+- **BV-03 CLOSED** — hero now founder-voice ("Every stat. Known, reviewed, weighted, scored."), zero tooling foregrounded; compliance-rule message + sponsor template aligned.
+- **B-07 CLOSED** (cycle 1) — 7 scoped commits total; tree clean.
+
+## Founder voice directive (2026-06-10) — BV tickets
+| ID | Ticket | Why | Effort | Priority | Owner | Status |
+|---|---|---|---|---|---|---|
+| BV-01 | Humanizer verification end-to-end: prove (with tests run + evidence) that NO AI-generated content path reaches public surfaces unpublished-by-hand — content-engine draft-only contract + compliance BLOCKER + draft-only guardrail + AI-tic coverage on every publish path | Founder: "never disrespect real analysts by publishing AI stuff"; brand-fatal if violated | S (verify) | **BLOCKER** | DIRECTOR | VERIFY AFTER FIX-WAVE GATE |
+| BV-02 | Port the JSON humanizer (json-humanizer.tsx + json-raw-actions.tsx + test) from canonical → deploy so raw JSON never fronts a public surface | The humanizer founder asked about is canonical-only today | S | SHOULD | CODEX LANE 6 (self-contained component) | READY |
+| BV-03 | Rewrite homepage H1 + hero in the founder's voice: founder-led process, ZERO AI mention in either direction (kill "We're not AI"), data-driven discipline ("every stat — known, reviewed, weighted, scored") — banned-phrase-clean, no unverifiable superlatives; sweep ALL public copy for AI-foregrounding mentions | Founder: "people don't need to know all that" — the public story is the process + the record, byline Garrett Baxley | S | **BLOCKER** (brand-integrity) | DIRECTOR (founder voice supplied) | QUEUED behind fix-wave (page.tsx lock) |
+| BV-04 | FLAG for founder: X handle @GalaxySportsAI contains "AI" — contradicts the no-AI-foregrounding stance (wired in layout.tsx twitter.site/creator + JSON-LD sameAs) | Handle change is an account action only Garrett can take; copy references update in 5 min once decided | 2m human | SHOULD | GARRETT | FLAGGED |
+
 ## Tickets from runtime audit B-01 (2026-06-10)
 
 Evidence for every ticket lives in `_launch/LAUNCH_READINESS.md`. Deduped against B-02..B-09 / S-xx / P-xx: odds-key validity stays under **B-03**; calibration-report scope stays under **B-04** (audit made the missing-pieces list precise: per-sport, trend, closing-implied, CI, ≥150 gate, verdict, generator); CLV near-kickoff capture timing stays under **S-01**; shadow-season unblocking stays under **B-05** (+R-07 below). CODEX lanes continue numbering from S-03 (LANE 1) and S-06 (LANE 2).
