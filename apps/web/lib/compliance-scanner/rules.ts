@@ -40,7 +40,7 @@ export const LAYER_1_PLATFORM_BANS: ComplianceRule[] = [
     layer: 1,
     severity: "block",
     pattern: /\b(AI[\s-]powered|powered by AI|AI[\s-]driven|AI[\s-]enabled)\b/i,
-    message: "Banned: 'AI-powered' / 'AI-driven' framing. The platform's position is 'We're not AI. We're math you can read.' (DEC-001/002)",
+    message: "Banned: 'AI-powered' / 'AI-driven' framing. The platform never foregrounds tooling — the public story is the hand-built process: every stat known, reviewed, weighted, scored. (DEC-001/002)",
     suggestion: "Use 'deterministic scoring' or 'factor model' instead.",
   },
   {

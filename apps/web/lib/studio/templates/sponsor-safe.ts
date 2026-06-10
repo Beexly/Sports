@@ -62,7 +62,7 @@ WHAT THE BLURB DOES
 - Introduces the game / matchup briefly.
 - References the model's read in a factual, non-recommendatory way.
 - Drives to Galaxy's Game Room for the full breakdown.
-- Closes with a one-line description of what Galaxy is (math you can read).
+- Closes with a one-line description of what Galaxy is (a hand-built research process that grades itself in public).
 
 LENGTH
 100-200 words. Aim for 140.

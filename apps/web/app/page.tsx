@@ -6,7 +6,7 @@ import { MethodologySection } from "@/components/ui/methodology-section";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateData, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
-import { isDemoPicksEnabled, isStubMode } from "@sports/db";
+import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -30,15 +30,6 @@ export const metadata: Metadata = {
   },
 };
 
-const LEDGER = [
-  ["SEA -1.5", "WIN", "Line movement led the factor mix"],
-  ["ATL/NYM under", "LOSS", "Late lineup change broke the setup"],
-  ["LA moneyline", "PUSH", "Market depth was strong, price closed flat"],
-  ["CHI +4.5", "WIN", "Rest and travel both supported the side"],
-  ["TOR total", "LOSS", "Weather moved after scoring"],
-  ["PHI -2.5", "WIN", "Consensus held through close"],
-] as const;
-
 const STACK = [
   ["Read the board", "Odds, depth, line movement, freshness, and consensus are collected before a pick can be evaluated."],
   ["Score the math", "More than 10 deterministic factors score the market against schedule, venue, volatility, and data quality context."],
@@ -53,6 +44,46 @@ const QUESTIONS = [
 
 type CalibrationData = Awaited<ReturnType<typeof loadPublicCalibrationReport>>["data"];
 
+interface LedgerPreviewRow {
+  readonly id: string;
+  readonly matchup: string;
+  readonly selection: string;
+  readonly result: string;
+  readonly sport: string;
+  readonly settledOn: string;
+}
+
+/**
+ * Mirrors the canonical query on /ledger (app/ledger/page.tsx): published,
+ * non-bootstrap, settled picks only, with synthetic seed records excluded.
+ * Returns [] when nothing has settled — the preview then renders the same
+ * honest "Building ledger history" state as the full ledger page.
+ */
+async function loadLedgerPreviewRows(): Promise<LedgerPreviewRow[]> {
+  const picks = await db.pick
+    .findMany({
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        result: { in: ["WIN", "LOSS", "PUSH"] },
+        NOT: { modelVersion: "v5.0.0-seed" },
+      },
+      include: { game: { include: { sport: { select: { name: true } } } } },
+      orderBy: { settledAt: "desc" },
+      take: 6,
+    })
+    .catch(() => []);
+
+  return picks.map((pick) => ({
+    id: pick.id,
+    matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
+    selection: pick.selection,
+    result: pick.result,
+    sport: pick.game.sport.name,
+    settledOn: pick.settledAt ? pick.settledAt.toISOString().slice(0, 10) : "settled",
+  }));
+}
+
 function timeLabel(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Just now";
@@ -60,10 +91,11 @@ function timeLabel(value: string): string {
 }
 
 export default async function HomePage(): Promise<JSX.Element> {
-  const [stateResult, passesResult, calibrationResult] = await Promise.all([
+  const [stateResult, passesResult, calibrationResult, ledgerRows] = await Promise.all([
     loadBoardState(),
     loadBoardPasses(),
     loadPublicCalibrationReport(),
+    loadLedgerPreviewRows(),
   ]);
   const demoActive = isStubMode() && isDemoPicksEnabled();
   const surfaceSampleActive =
@@ -79,7 +111,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         <LiveStateStrip state={stateResult.data} />
         <Hero />
         <GateCam state={stateResult.data} isSampleData={stateResult.meta.isSampleData} />
-        <LedgerPreview />
+        <LedgerPreview rows={ledgerRows} />
         <CalibrationPreview calibration={calibrationResult.data} />
         <PassList passes={passesResult.data.passes} isSampleData={passesResult.meta.isSampleData} />
         <StackSection />
@@ -142,11 +174,12 @@ function Hero(): JSX.Element {
       <div className="mx-auto max-w-6xl">
         <p className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-200">Galaxy Sports Edge</p>
         <h1 className="mt-5 max-w-4xl break-words text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
-          We&apos;re not AI. We&apos;re math you can read.
+          Every stat. Known, reviewed, weighted, scored.
         </h1>
         <p className="mt-6 max-w-2xl break-words text-lg leading-8 text-gray-300">
-          Deterministic sports betting research with the factor breakdown attached.
-          We post when the model finds edge. Most days that is fewer than five picks.
+          A hand-built research process that grades itself in public. Every pick
+          ships with the factor breakdown attached, and we post only when the
+          process finds edge. Most days that is fewer than five picks.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link href="/board" className="inline-flex min-h-11 items-center justify-center rounded-lg bg-cyan-300 px-5 py-3 text-sm font-bold text-gray-950 hover:bg-cyan-200">
@@ -208,20 +241,43 @@ function GateLane({ lane, rows }: { lane: string; rows: BoardStateRow[] }): JSX.
   );
 }
 
-function LedgerPreview(): JSX.Element {
+function LedgerPreview({ rows }: { rows: LedgerPreviewRow[] }): JSX.Element {
   return (
     <section className="border-y border-gray-800 bg-gray-900/35 px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <SectionHeader eyebrow="PREVIEW MODE" title="Public Ledger preview" meta="Six recent settlements" />
-        <div className="mt-8 overflow-hidden border border-gray-800">
-          {LEDGER.map(([pick, result, note]) => (
-            <div key={pick} className="grid gap-3 border-b border-gray-800 px-4 py-3 last:border-b-0 sm:grid-cols-[1fr_auto_2fr]">
-              <span className="font-semibold text-white">{pick}</span>
-              <span className="font-mono text-xs text-cyan-200">{result}</span>
-              <span className="text-sm text-gray-400">{note}</span>
-            </div>
-          ))}
-        </div>
+        <SectionHeader
+          eyebrow={rows.length > 0 ? "PUBLIC LEDGER" : "COLLECTING"}
+          title="Public Ledger preview"
+          meta={
+            rows.length > 0
+              ? `${rows.length} most recent settled canonical picks`
+              : "No canonical settlements yet"
+          }
+        />
+        {rows.length > 0 ? (
+          <div className="mt-8 overflow-hidden border border-gray-800">
+            {rows.map((row) => (
+              <div key={row.id} className="grid gap-3 border-b border-gray-800 px-4 py-3 last:border-b-0 sm:grid-cols-[1fr_auto_2fr]">
+                <span className="font-semibold text-white">{row.selection}</span>
+                <span className="font-mono text-xs text-cyan-200">{row.result}</span>
+                <span className="text-sm text-gray-400">
+                  {row.matchup} — {row.sport} / {row.settledOn}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div
+            data-testid="ledger-preview-empty"
+            className="mt-8 border border-gray-800 bg-gray-950/60 p-6"
+          >
+            <h3 className="text-xl font-bold text-white">Building ledger history</h3>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-400">
+              No settled canonical picks are available yet. The ledger will populate after
+              real picks settle with their signal snapshots attached.
+            </p>
+          </div>
+        )}
         <Link href="/ledger" className="mt-5 inline-flex text-sm font-semibold text-cyan-200 hover:text-cyan-100">
           Open the full ledger
         </Link>
@@ -231,25 +287,30 @@ function LedgerPreview(): JSX.Element {
 }
 
 function CalibrationPreview({ calibration }: { calibration: CalibrationData }): JSX.Element {
-  const points = [
-    [20, 72],
-    [42, 55],
-    [64, 39],
-    [84, 23],
-  ] as const;
+  const plottedBuckets = calibration.buckets.filter((bucket) => bucket.sampleSize > 0);
+  const collecting = calibration.isCollecting || plottedBuckets.length === 0;
   return (
     <section className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeader
-          eyebrow="LIVE CALIBRATION"
+          eyebrow={collecting ? "COLLECTING" : "LIVE CALIBRATION"}
           title="Live Calibration"
           meta={`Updated: ${timeLabel(calibration.updatedAt)}. Sample: ${calibration.sampleSize} canonical settled picks.`}
         />
         <div className="mt-8 border border-gray-800 bg-gray-900/60 p-5">
-          <div className="relative h-72 border-l border-b border-gray-700">
+          <div data-testid="calibration-chart" className="relative h-72 border-l border-b border-gray-700">
             <div className="absolute inset-x-0 bottom-0 h-px -rotate-45 bg-cyan-300/50" aria-hidden="true" />
-            {points.map(([x, y]) => (
-              <span key={`${x}-${y}`} className="absolute h-3 w-3 rounded-full bg-pink-300" style={{ left: `${x}%`, top: `${y}%` }} />
+            {plottedBuckets.map((bucket) => (
+              <span
+                key={bucket.label}
+                data-testid="calibration-bucket-point"
+                title={`${bucket.label}: observed ${Math.round(bucket.observedWinRate * 100)}% vs expected ${Math.round(bucket.expectedWinRate * 100)}% across ${bucket.sampleSize} settled picks`}
+                className="absolute h-3 w-3 rounded-full bg-pink-300"
+                style={{
+                  left: `${Math.round(bucket.expectedWinRate * 100)}%`,
+                  top: `${Math.round((1 - bucket.observedWinRate) * 100)}%`,
+                }}
+              />
             ))}
             <p className="absolute left-4 top-4 max-w-sm text-sm text-gray-400">
               {calibration.publicMessage} The diagonal shows perfect calibration.
