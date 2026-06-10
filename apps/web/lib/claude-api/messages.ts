@@ -19,6 +19,13 @@ export interface ClaudeMessagesRequest {
   readonly model?: string;
   readonly temperature?: number;
   readonly fetchImpl?: typeof fetch;
+  /**
+   * Optional prompt-caching hint. Accepted for forward-compatibility with
+   * callers that opt into system-prompt caching; currently a no-op on the wire
+   * (caching is a cost optimization, never a correctness requirement). Wiring
+   * the actual `cache_control` blocks is a future, behavior-preserving change.
+   */
+  readonly cache?: { readonly system?: boolean };
 }
 
 export interface ClaudeMessagesResult {
