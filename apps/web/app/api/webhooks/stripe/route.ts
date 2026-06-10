@@ -176,7 +176,7 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
       data: updateData,
     });
     if (updated.count === 0) {
-      console.warn(`[stripe] syncSubscription: no subscription record for customer ${customerId} — subscription ${stripeSubscription.id} not synced`);
+      console.warn(`[stripe] syncSubscription: no subscription record for customer [REDACTED] — subscription ${stripeSubscription.id} not synced`);
     }
   }
 }
