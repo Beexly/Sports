@@ -20,18 +20,41 @@ describe("computeClv — line CLV sign convention", () => {
     expect(r.clvPositive).toBe(false);
   });
 
-  // AWAY spread: away line = -homeLine. Bet home -3 (away +3), closes home -5
-  // (away +5) → away pick gained a point → POSITIVE.
-  it("away spread that gained points is CLV-positive", () => {
-    const r = computeClv({ betSide: "AWAY", betLine: -3, closingLine: -5 });
+  // AWAY spread: away line = -homeLine, both inputs HOME-perspective (R-01
+  // boundary contract). Bet at home -3 (away +3), closes home -1 (away +1):
+  // the bettor locked 2 more points than the close offered → POSITIVE.
+  it("away spread that beat the close is CLV-positive", () => {
+    const r = computeClv({ betSide: "AWAY", betLine: -3, closingLine: -1 });
     expect(r.clvPoints).toBe(2);
     expect(r.clvPositive).toBe(true);
   });
 
-  it("away spread that lost points is CLV-negative", () => {
-    const r = computeClv({ betSide: "AWAY", betLine: -5, closingLine: -3 });
+  // Bet at home -3 (away +3), closes home -5 (away +5): the market offered
+  // away +5 at close, the locked +3 is the WORSE number → NEGATIVE. (The
+  // pre-R-04 suite asserted +2 here — the exact inverted-AWAY-sign bug.)
+  it("away spread that lost points to the close is CLV-negative", () => {
+    const r = computeClv({ betSide: "AWAY", betLine: -3, closingLine: -5 });
     expect(r.clvPoints).toBe(-2);
     expect(r.clvPositive).toBe(false);
+  });
+
+  // Away-favorite mirror (home line positive): bet home +3 (away -3), closes
+  // home +5 (away -5) → away closed laying 5, the bet laid only 3 → POSITIVE.
+  it("away favorite laying fewer points than the close is CLV-positive", () => {
+    const r = computeClv({ betSide: "AWAY", betLine: 3, closingLine: 5 });
+    expect(r.clvPoints).toBe(2);
+    expect(r.clvPositive).toBe(true);
+  });
+
+  // Home/away sign symmetry on the SAME move: the home line rising from -3 to
+  // -1 is +2 for the away side and exactly -2 for the home side.
+  it("home and away CLV are equal and opposite on the same line move", () => {
+    const away = computeClv({ betSide: "AWAY", betLine: -3, closingLine: -1 });
+    const home = computeClv({ betSide: "HOME", betLine: -3, closingLine: -1 });
+    expect(away.clvPoints).toBe(2);
+    expect(home.clvPoints).toBe(-2);
+    expect(away.clvPositive).toBe(true);
+    expect(home.clvPositive).toBe(false);
   });
 
   // OVER wants a LOWER total. Bet 48, closes 50 → cheaper number → POSITIVE.

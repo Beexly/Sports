@@ -31,9 +31,12 @@ export interface ComputeClvInput {
   /** The side the pick is on (drives the sign convention). */
   betSide: ClvBetSide;
   /**
-   * Bet-time line at publish (Pick.line). For SPREAD it is the home-perspective
-   * spread; for TOTAL it is the total points line. Pass null for moneyline-only
-   * comparisons (where price is the meaningful axis).
+   * Bet-time line at publish, locked at snapshot creation (NOT the drifted
+   * last-refresh Pick.line — R-04). For SPREAD it MUST be the HOME-perspective
+   * spread: Pick.line is persisted chosen-side, so callers convert via
+   * `homePerspectiveLine()` first (R-01 boundary contract). For TOTAL it is
+   * the total points line. Pass null for moneyline-only comparisons (where
+   * price is the meaningful axis).
    */
   betLine?: number | null;
   /** Closing line at the reference book, same convention as betLine. */
@@ -77,8 +80,13 @@ export interface ClvResult {
  *
  * Spread is stored from the HOME perspective:
  *   - HOME wants a more positive home line (more points) → favor = bet − close.
- *   - AWAY (away line = −homeLine) is best when the home line DROPS, so the
- *     away dog lays fewer / gets more points → favor = bet − close as well.
+ *   - AWAY (away line = −homeLine) holds a better number than the close when
+ *     the home line RISES after the bet → favor = close − bet.
+ *     (Worked example: bet at home −3 means the away side got +3; close at
+ *     home −1 means the market closed offering away only +1 — the bet beat
+ *     the close by +2: favor = (−1) − (−3) = +2. Conversely close at home −5
+ *     means away +5 was available at close, so the locked +3 is 2 points
+ *     WORSE: favor = (−5) − (−3) = −2.)
  *
  * Totals:
  *   - OVER wants a LOWER total   → favor = close − bet.
@@ -91,9 +99,9 @@ function signedLineFavor(
 ): number {
   switch (betSide) {
     case "HOME":
-    case "AWAY":
     case "UNDER":
       return betLine - closingLine;
+    case "AWAY":
     case "OVER":
       return closingLine - betLine;
   }

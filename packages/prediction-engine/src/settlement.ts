@@ -14,6 +14,14 @@
  *   If homeCoverMargin > 0  → home covered → home pick = WIN, away pick = LOSS
  *   If homeCoverMargin < 0  → away covered → home pick = LOSS, away pick = WIN
  *   If homeCoverMargin = 0  → PUSH for both
+ *
+ * BOUNDARY CONTRACT (R-01, decision D-010): `Pick.line` is persisted from the
+ * CHOSEN side's perspective (scoring.ts: `chosenSpread = homeIsChosen ?
+ * avgSpread : -avgSpread`) because display/publish depend on it. Settlement
+ * callers MUST convert chosen-side → home-perspective via
+ * `homePerspectiveLine()` before calling `calculatePickResult()` (and before
+ * feeding `computeClv()`). Feeding a chosen-side away line directly inverts
+ * every away SPREAD grade — the exact live-repro bug this contract fixes.
  */
 
 import type { PickType } from "@sports/types";
@@ -72,4 +80,35 @@ export function calculatePickResult(
   }
 
   return "PUSH";
+}
+
+/**
+ * Convert a pick's persisted chosen-side line to the HOME perspective that
+ * `calculatePickResult()` and `computeClv()` expect (R-01 boundary fix).
+ *
+ * `Pick.line` keeps chosen-side semantics everywhere (display depends on it);
+ * this helper is the single conversion point at the settlement/CLV boundary:
+ *   - SPREAD, home pick → unchanged (chosen side IS the home perspective)
+ *   - SPREAD, away pick → negated (away line = −homeLine)
+ *   - TOTAL             → unchanged (a total has no team perspective)
+ *   - MONEYLINE         → unchanged (`line` is the chosen side's American
+ *                         price; prices are side-specific, never negated)
+ *
+ * Home/away derivation mirrors `calculatePickResult` exactly: a home pick's
+ * selection contains the home team name (e.g. "Kansas City Chiefs -3.5").
+ *
+ * @param pickType       - SPREAD, MONEYLINE, or TOTAL
+ * @param selection      - The pick selection string (chosen team + line)
+ * @param chosenSideLine - Pick.line as persisted (chosen-side perspective)
+ * @param homeTeam       - The game's home team name
+ */
+export function homePerspectiveLine(
+  pickType: PickType,
+  selection: string,
+  chosenSideLine: number,
+  homeTeam: string
+): number {
+  if (pickType !== "SPREAD") return chosenSideLine;
+  const pickedHome = selection.includes(homeTeam);
+  return pickedHome ? chosenSideLine : -chosenSideLine;
 }

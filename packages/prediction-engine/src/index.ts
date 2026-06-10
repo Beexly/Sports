@@ -20,7 +20,7 @@ export {
   computeScheduleStressScore,
 } from "./game-context.js";
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
-export { calculatePickResult } from "./settlement.js";
+export { calculatePickResult, homePerspectiveLine } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
 // v6 — Closing-Line Value (CLV): pure shadow proof, never feeds the published
 // confidence/tier/grade/result or MODEL_VERSION.

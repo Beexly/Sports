@@ -40,6 +40,7 @@ import type { OddsApiEvent } from "@sports/types";
 import {
   getReadinessGates,
   calculatePickResult,
+  homePerspectiveLine,
   computeClv,
   clvBetSideFor,
 } from "@sports/prediction-engine";
@@ -109,7 +110,14 @@ async function settleResults(): Promise<void> {
         if (!score.completed) continue;
         const game = await db.game.findUnique({
           where: { externalId: score.externalId },
-          include: { picks: { where: { result: "PENDING" } } },
+          include: {
+            picks: {
+              where: { result: "PENDING" },
+              // signalSnapshot carries the immutable bet-time line lock
+              // (lineAtPrediction/selectionAtPrediction) used by CLV (R-04).
+              include: { signalSnapshot: true },
+            },
+          },
         });
         if (!game) continue;
 
@@ -123,10 +131,15 @@ async function settleResults(): Promise<void> {
           // Real game outcomes are source truth and must be recorded.
           const settledAt = new Date();
           for (const pick of game.picks) {
+            const pickType = pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL";
+            // R-01 boundary contract (D-010): Pick.line is persisted from the
+            // CHOSEN side's perspective; calculatePickResult expects the HOME
+            // perspective. Convert at this boundary — feeding a chosen-side
+            // away line directly inverts every away SPREAD grade.
             const result = calculatePickResult(
-              pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
+              pickType,
               pick.selection,
-              pick.line,
+              homePerspectiveLine(pickType, pick.selection, pick.line, game.homeTeamName),
               game.homeTeamName,
               score.homeScore,
               score.awayScore,
@@ -214,7 +227,17 @@ async function settleResults(): Promise<void> {
 
               for (const pick of game.picks) {
                 const pickType = pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL";
-                const side = clvBetSideFor(pickType, pick.selection, game.homeTeamName);
+
+                // R-04 bet-time line lock: CLV compares the close to the
+                // line/selection as PUBLISHED (immutable snapshot), never the
+                // drifted last-refresh pick.line. No locked line → no CLV
+                // (degrade-to-null, never a fabricated honesty metric).
+                const lockedLine = pick.signalSnapshot?.lineAtPrediction ?? null;
+                const lockedSelection =
+                  pick.signalSnapshot?.selectionAtPrediction ?? pick.selection;
+                if (lockedLine === null) continue;
+
+                const side = clvBetSideFor(pickType, lockedSelection, game.homeTeamName);
                 const market = marketForPickType(pickType);
 
                 const closingRow = await db.closingLine.findUnique({
@@ -233,14 +256,21 @@ async function settleResults(): Promise<void> {
                   side
                 );
 
-                // For SPREAD/TOTAL the pick line is pick.line; price is vig-
-                // assumed (not stored), so price CLV is left to moneyline.
-                // For MONEYLINE pick.line IS the American price.
+                // R-01 boundary contract (D-010): the locked line keeps
+                // chosen-side semantics; computeClv expects HOME perspective
+                // (the closing consensus spread is home-perspective). Convert
+                // here — the SAME convention as settlement above.
+                // For SPREAD/TOTAL the locked line is the bet line; price is
+                // vig-assumed (not stored), so price CLV is left to moneyline.
+                // For MONEYLINE the locked line IS the American price.
                 const clv = computeClv({
                   betSide: side,
-                  betLine: pickType === "MONEYLINE" ? null : pick.line,
+                  betLine:
+                    pickType === "MONEYLINE"
+                      ? null
+                      : homePerspectiveLine(pickType, lockedSelection, lockedLine, game.homeTeamName),
                   closingLine,
-                  betPrice: pickType === "MONEYLINE" ? pick.line : null,
+                  betPrice: pickType === "MONEYLINE" ? lockedLine : null,
                   closingPrice,
                   isStale,
                 });

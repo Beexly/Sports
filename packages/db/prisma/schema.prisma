@@ -621,6 +621,16 @@ model PickSignalSnapshot {
   usedScheduleSignal Boolean @default(false) // schedule density signal was active
   modelVersion       String  @default("") // prediction engine version at prediction time
 
+  // Bet-time line lock (R-04) — Pick.line/selection exactly as published at
+  // snapshot creation, immutable. Chosen-side semantics, same as Pick.line
+  // (decision D-010). CLV must compare the close to THIS locked line:
+  // Pick.line/selection are refreshed every ingestion cycle, so the
+  // last-refresh values would drift the honesty metric. NULL on snapshots
+  // created before this column existed → CLV degrades to null (never
+  // computed from a drifted line).
+  lineAtPrediction      Float? // Pick.line at publish (chosen-side / ML price)
+  selectionAtPrediction String? // Pick.selection at publish (side derivation)
+
   // Outcome — filled in when the underlying pick settles (never before)
   // settlementResult: "WIN" | "LOSS" | "PUSH" — mirrors pick.result
   settlementResult String?

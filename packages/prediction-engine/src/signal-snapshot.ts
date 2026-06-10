@@ -57,6 +57,13 @@ export interface PickSignalSnapshotData {
   usedDerivedHistory: boolean;
   usedScheduleSignal: boolean;
   modelVersion: string;
+
+  // Bet-time line lock (R-04) — Pick.line/selection exactly as published at
+  // snapshot creation (chosen-side semantics, same as Pick.line — D-010).
+  // Pick.line/selection are refreshed every cycle, so settlement-time CLV
+  // must read THESE immutable values, never the drifted last-refresh pick.
+  lineAtPrediction: number;
+  selectionAtPrediction: string;
 }
 
 /**
@@ -189,5 +196,10 @@ export function buildPickSignalSnapshot(
     usedDerivedHistory,
     usedScheduleSignal: hadScheduleSignal,
     modelVersion: pick.modelVersion,
+
+    // Bet-time line lock (R-04): freeze the published line/selection at
+    // creation so settlement-time CLV never compares against a drifted value.
+    lineAtPrediction: pick.line,
+    selectionAtPrediction: pick.selection,
   };
 }

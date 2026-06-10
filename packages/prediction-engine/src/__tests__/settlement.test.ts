@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculatePickResult } from "../settlement.js";
+import { calculatePickResult, homePerspectiveLine } from "../settlement.js";
 
 const NFL = "americanfootball_nfl";
 const MLS = "soccer_usa_mls";
@@ -162,4 +162,130 @@ describe("calculatePickResult — home/away symmetry", () => {
       }
     });
   }
+});
+
+// ============================================================
+// R-01 boundary contract: Pick.line is persisted from the CHOSEN side's
+// perspective. Settlement converts chosen-side → home-perspective via
+// homePerspectiveLine() before calculatePickResult()/computeClv().
+// ============================================================
+
+describe("homePerspectiveLine — chosen-side → home-perspective conversion", () => {
+  it("SPREAD home pick passes through unchanged (chosen IS home)", () => {
+    expect(homePerspectiveLine("SPREAD", "Kansas City Chiefs -3.5", -3.5, "Kansas City Chiefs")).toBe(-3.5);
+    expect(homePerspectiveLine("SPREAD", "Kansas City Chiefs +2.5", 2.5, "Kansas City Chiefs")).toBe(2.5);
+  });
+
+  it("SPREAD away pick is negated (away line = −homeLine)", () => {
+    // Away favorite laying 3.5 → home perspective is +3.5
+    expect(homePerspectiveLine("SPREAD", "Denver Broncos -3.5", -3.5, "Kansas City Chiefs")).toBe(3.5);
+    // Away dog getting 3.5 → home perspective is -3.5
+    expect(homePerspectiveLine("SPREAD", "Denver Broncos +3.5", 3.5, "Kansas City Chiefs")).toBe(-3.5);
+  });
+
+  it("TOTAL passes through (no team perspective)", () => {
+    expect(homePerspectiveLine("TOTAL", "OVER 48.5", 48.5, "Kansas City Chiefs")).toBe(48.5);
+    expect(homePerspectiveLine("TOTAL", "UNDER 48.5", 48.5, "Kansas City Chiefs")).toBe(48.5);
+  });
+
+  it("MONEYLINE passes through (line is the chosen side's American price)", () => {
+    expect(homePerspectiveLine("MONEYLINE", "Denver Broncos ML (-150)", -150, "Kansas City Chiefs")).toBe(-150);
+    expect(homePerspectiveLine("MONEYLINE", "Kansas City Chiefs ML (+130)", 130, "Kansas City Chiefs")).toBe(130);
+  });
+});
+
+describe("R-01 live-repro regression — settlement through the boundary conversion", () => {
+  // Settles a pick exactly the way the worker does post-fix: the persisted
+  // chosen-side Pick.line is converted with homePerspectiveLine() before
+  // calculatePickResult(). Mirrors workers/data-refresh settleResults().
+  function settleAsWorker(
+    pickType: "SPREAD" | "MONEYLINE" | "TOTAL",
+    selection: string,
+    persistedChosenSideLine: number,
+    homeTeam: string,
+    homeScore: number,
+    awayScore: number
+  ) {
+    return calculatePickResult(
+      pickType,
+      selection,
+      homePerspectiveLine(pickType, selection, persistedChosenSideLine, homeTeam),
+      homeTeam,
+      homeScore,
+      awayScore,
+      NFL
+    );
+  }
+
+  // THE live repro (LAUNCH_READINESS B-01): away-favored pick persisted
+  // line=-3.5 (chosen-perspective), away loses by 1-2 → must grade LOSS.
+  // Pre-fix, feeding the chosen-side -3.5 straight in graded this WIN.
+  it("away favorite -3.5 that loses by 1 grades LOSS (live repro)", () => {
+    expect(
+      settleAsWorker("SPREAD", "Denver Broncos -3.5", -3.5, "Kansas City Chiefs", 21, 20)
+    ).toBe("LOSS");
+  });
+
+  it("away favorite -3.5 that loses by 2 grades LOSS (live repro)", () => {
+    expect(
+      settleAsWorker("SPREAD", "Denver Broncos -3.5", -3.5, "Kansas City Chiefs", 22, 20)
+    ).toBe("LOSS");
+  });
+
+  it("away favorite -3.5 that wins by 4 grades WIN (covers)", () => {
+    expect(
+      settleAsWorker("SPREAD", "Denver Broncos -3.5", -3.5, "Kansas City Chiefs", 17, 21)
+    ).toBe("WIN");
+  });
+
+  it("away favorite -3.5 that wins by 3 grades LOSS (fails to cover)", () => {
+    expect(
+      settleAsWorker("SPREAD", "Denver Broncos -3.5", -3.5, "Kansas City Chiefs", 17, 20)
+    ).toBe("LOSS");
+  });
+
+  it("away favorite -3 that wins by exactly 3 grades PUSH", () => {
+    expect(
+      settleAsWorker("SPREAD", "Denver Broncos -3", -3, "Kansas City Chiefs", 17, 20)
+    ).toBe("PUSH");
+  });
+
+  it("home favorite -3.5 is unaffected by the conversion (wins by 7 → WIN)", () => {
+    expect(
+      settleAsWorker("SPREAD", "Kansas City Chiefs -3.5", -3.5, "Kansas City Chiefs", 21, 14)
+    ).toBe("WIN");
+  });
+
+  it("home favorite -3.5 that wins by 3 grades LOSS (fails to cover)", () => {
+    expect(
+      settleAsWorker("SPREAD", "Kansas City Chiefs -3.5", -3.5, "Kansas City Chiefs", 17, 14)
+    ).toBe("LOSS");
+  });
+
+  it("away dog +3.5 that loses by 3 grades WIN (covers)", () => {
+    expect(
+      settleAsWorker("SPREAD", "Denver Broncos +3.5", 3.5, "Kansas City Chiefs", 24, 21)
+    ).toBe("WIN");
+  });
+
+  it("away dog +3.5 that loses by 4 grades LOSS", () => {
+    expect(
+      settleAsWorker("SPREAD", "Denver Broncos +3.5", 3.5, "Kansas City Chiefs", 24, 20)
+    ).toBe("LOSS");
+  });
+
+  it("away dog +3 that loses by exactly 3 grades PUSH", () => {
+    expect(
+      settleAsWorker("SPREAD", "Denver Broncos +3", 3, "Kansas City Chiefs", 24, 21)
+    ).toBe("PUSH");
+  });
+
+  it("chosen-side away favorite WITHOUT the conversion reproduces the bug", () => {
+    // Documents the defect this contract fixes: feeding the persisted
+    // chosen-side line straight into calculatePickResult inverts the grade.
+    const wrong = calculatePickResult(
+      "SPREAD", "Denver Broncos -3.5", -3.5, "Kansas City Chiefs", 21, 20, NFL
+    );
+    expect(wrong).toBe("WIN"); // the corrupt grade the boundary fix prevents
+  });
 });
