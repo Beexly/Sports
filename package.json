@@ -32,6 +32,7 @@
     "evals:contracts": "node scripts/eval-contracts.mjs",
     "snapshots:regen": "node scripts/regenerate-launch-snapshots.mjs",
     "calibration:report": "node scripts/generate-calibration-report.mjs",
+    "podcast:script": "node scripts/podcast/generate-episode-script.mjs",
     "deploy:ready": "node scripts/check-deploy-readiness.mjs",
     "stripe:seed": "node scripts/seed-stripe-prices.mjs",
     "test:brand-safety": "npm run test:brand-safety --workspace=apps/web",
