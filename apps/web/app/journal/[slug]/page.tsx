@@ -5,8 +5,73 @@ import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { loadPublicJournalEntry, type PublicJournalEntry } from "@/lib/journal/load";
 import { formatDate } from "@/lib/utils";
+import { BRAND_NAME } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
+
+// Canonical apex (matches layout.tsx / robots.ts / sitemap.ts). Used to anchor
+// Article URLs and reference the shared Organization node from the root layout.
+const SITE_URL =
+  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
+const ORG_ID = `${SITE_URL}/#organization`;
+
+// ──────────────────────────────────────────────────────────────────────────
+// JSON-LD — BlogPosting + BreadcrumbList for a published Journal entry.
+//
+// Additive only: built entirely from the entry's real, already-public fields
+// (title, publishedAt, coldOpen, slug). Authorship is attributed to the
+// Organization to match the on-page byline ("The Galaxy Sports Edge team");
+// the internal author email is never exposed. No fabricated facts.
+// ──────────────────────────────────────────────────────────────────────────
+
+function buildArticleJsonLd(entry: PublicJournalEntry) {
+  const articleUrl = `${SITE_URL}/journal/${entry.slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${articleUrl}#article`,
+    headline: entry.title,
+    description: entry.coldOpen.slice(0, 155),
+    datePublished: entry.publishedAt,
+    url: articleUrl,
+    mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
+    articleSection: "Model Journal",
+    inLanguage: "en",
+    isAccessibleForFree: true,
+    author: { "@type": "Organization", name: BRAND_NAME, "@id": ORG_ID },
+    publisher: {
+      "@type": "Organization",
+      "@id": ORG_ID,
+      name: BRAND_NAME,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/logo-mark.svg`,
+      },
+    },
+  };
+}
+
+function buildEntryBreadcrumbJsonLd(entry: PublicJournalEntry) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Model Journal",
+        item: `${SITE_URL}/journal`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: entry.title,
+        item: `${SITE_URL}/journal/${entry.slug}`,
+      },
+    ],
+  };
+}
 
 export async function generateMetadata({
   params,
@@ -116,6 +181,18 @@ export default async function JournalEntryPage({
   return (
     <>
       <Nav />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildArticleJsonLd(entry)),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildEntryBreadcrumbJsonLd(entry)),
+        }}
+      />
       <main className="min-h-screen bg-gray-950">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
           <Link href="/journal" className="text-sm text-gray-500 transition-colors hover:text-gray-300">

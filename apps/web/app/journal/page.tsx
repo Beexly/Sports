@@ -14,6 +14,25 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
+// Canonical apex (matches layout.tsx / robots.ts / sitemap.ts). Additive
+// BreadcrumbList only — nothing rendered on the page changes.
+const SITE_URL =
+  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
+
+const journalBreadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Model Journal",
+      item: `${SITE_URL}/journal`,
+    },
+  ],
+};
+
 function JournalEntryCard({ entry }: { readonly entry: PublicJournalEntry }): JSX.Element {
   return (
     <article className="rounded-lg border border-gray-800 bg-gray-900/60 p-6 transition-colors hover:border-gray-700">
@@ -41,6 +60,12 @@ export default async function JournalPage(): Promise<JSX.Element> {
   return (
     <>
       <Nav />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(journalBreadcrumbJsonLd),
+        }}
+      />
       <main className="min-h-screen bg-gray-950">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
           <header className="mb-12">

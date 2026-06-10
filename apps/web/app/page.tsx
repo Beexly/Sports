@@ -7,8 +7,28 @@ import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateData, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { isDemoPicksEnabled, isStubMode } from "@sports/db";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  description:
+    "Deterministic sports research. Every pick ships with the factors that moved it, the games we passed on, and a record graded against the close.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Galaxy Sports Edge",
+    description:
+      "Every pick ships with its factor trail, the games we passed on, and a record graded against the close.",
+    type: "website",
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Galaxy Sports Edge",
+    description:
+      "Every pick ships with its factor trail and a record graded against the close.",
+  },
+};
 
 const LEDGER = [
   ["SEA -1.5", "WIN", "Line movement led the factor mix"],
@@ -107,7 +127,7 @@ function LiveStateStrip({ state }: { state: BoardStateData }): JSX.Element {
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 py-3 sm:grid-cols-3 lg:grid-cols-6">
         {stateRows.map(([label, value]) => (
           <div key={label} className="min-h-14 border border-gray-800 bg-gray-900/55 px-3 py-2">
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-400">{label}</p>
             <p className="mt-1 text-lg font-semibold text-white">{value}</p>
           </div>
         ))}
@@ -174,14 +194,14 @@ function GateLane({ lane, rows }: { lane: string; rows: BoardStateRow[] }): JSX.
         {rows.length > 0 ? rows.slice(0, 4).map((row) => (
           <div key={row.id} className="border border-gray-800 bg-gray-950/45 p-3">
             <h3 className="text-base font-bold text-white">{row.matchup}</h3>
-            <p className="mt-1 text-xs text-gray-500">{row.sport} / {row.market}</p>
+            <p className="mt-1 text-xs text-gray-400">{row.sport} / {row.market}</p>
             <p className="mt-3 text-sm text-gray-300">
               {row.edgeIndex === null ? "Edge Index pending" : `Edge Index ${row.edgeIndex}`}
             </p>
             {row.gateReason && <p className="mt-2 text-xs leading-5 text-gray-400">{row.gateReason}</p>}
           </div>
         )) : (
-          <p className="text-sm text-gray-500">No rows in this lane right now.</p>
+          <p className="text-sm text-gray-400">No rows in this lane right now.</p>
         )}
       </div>
     </article>
@@ -257,7 +277,7 @@ function PassList({ passes, isSampleData }: { passes: PassListRow[]; isSampleDat
               <span className="text-right text-sm text-gray-400">{row.reason}</span>
             </div>
           )) : (
-            <p className="border border-gray-800 bg-gray-950/60 px-4 py-5 text-sm text-gray-500 sm:col-span-2">
+            <p className="border border-gray-800 bg-gray-950/60 px-4 py-5 text-sm text-gray-400 sm:col-span-2">
               No passes recorded for this slate yet.
             </p>
           )}
@@ -333,7 +353,7 @@ function SectionHeader({
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">{eyebrow}</p>
         <h2 className="mt-2 max-w-3xl text-3xl font-black tracking-tight text-white sm:text-4xl">{title}</h2>
       </div>
-      <p className="max-w-xs text-sm text-gray-500 sm:text-right">{meta}</p>
+      <p className="max-w-xs text-sm text-gray-400 sm:text-right">{meta}</p>
     </div>
   );
 }

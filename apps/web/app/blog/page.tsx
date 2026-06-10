@@ -68,7 +68,7 @@ export default async function BlogPage() {
 
           {posts.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">
+              <p className="text-gray-400 text-lg">
                 Posts arrive once the board opens. The first reads will cover
                 methodology — how a signal gets scored, gated, and shipped.
               </p>
@@ -102,7 +102,7 @@ export default async function BlogPage() {
                       <p className="text-gray-400 text-sm line-clamp-2 mb-3">
                         {post.excerpt}
                       </p>
-                      <div className="flex items-center gap-3 text-xs text-gray-500">
+                      <div className="flex items-center gap-3 text-xs text-gray-400">
                         {post.publishedAt && (
                           <span>{formatDate(post.publishedAt)}</span>
                         )}

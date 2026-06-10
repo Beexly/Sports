@@ -199,7 +199,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
               )}
             </div>
 
-            <footer className="border-t border-gray-800 px-6 py-4 text-[11px] leading-relaxed text-gray-500">
+            <footer className="border-t border-gray-800 px-6 py-4 text-[11px] leading-relaxed text-gray-400">
               Snapshots are SHA-256 hashed at ingestion. Hash prefixes are
               shown for operator verification; raw payload bytes remain
               server-side.
@@ -289,7 +289,7 @@ function SummaryAudit({
           />
         </div>
         {audit.mostRecentSnapshotProvider && (
-          <p className="mt-3 text-[11px] uppercase tracking-wider text-gray-500">
+          <p className="mt-3 text-[11px] uppercase tracking-wider text-gray-400">
             Most recent provider:{" "}
             <span className="text-gray-300">
               {audit.mostRecentSnapshotProvider}
@@ -385,7 +385,7 @@ function DetailedAudit({
                 <p className="text-[13px] font-medium text-gray-100">
                   {row.category}
                 </p>
-                <p className="text-[11px] text-gray-500">{row.description}</p>
+                <p className="text-[11px] text-gray-400">{row.description}</p>
               </div>
               <SignalStatusBadge status={row.status} />
             </li>
@@ -396,7 +396,7 @@ function DetailedAudit({
       <section>
         <SectionHeader title="Source snapshots" />
         {audit.sourceSnapshots.length === 0 ? (
-          <p className="mt-3 text-xs text-gray-500">
+          <p className="mt-3 text-xs text-gray-400">
             No SourceSnapshot rows recorded for this pick's game window.
           </p>
         ) : (
@@ -428,7 +428,7 @@ function DetailedAudit({
                     {snap.payloadBytes.toLocaleString()} bytes
                   </span>
                 </div>
-                <div className="mt-1 font-mono text-[10px] text-gray-500">
+                <div className="mt-1 font-mono text-[10px] text-gray-400">
                   sha256:{snap.payloadHashPrefix}…
                 </div>
               </li>
@@ -507,7 +507,7 @@ function Stat({
 }) {
   return (
     <div className="rounded-md border border-gray-800 bg-gray-900/50 px-3 py-2">
-      <p className="text-[10px] uppercase tracking-wider text-gray-500">
+      <p className="text-[10px] uppercase tracking-wider text-gray-400">
         {label}
       </p>
       <p
@@ -524,7 +524,7 @@ function Stat({
 function Row({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
   return (
     <div className="flex items-baseline justify-between gap-3 border-b border-gray-900 pb-1.5 last:border-0">
-      <dt className="text-gray-500">{k}</dt>
+      <dt className="text-gray-400">{k}</dt>
       <dd
         className={`text-right text-gray-100 ${
           mono ? "font-mono text-[11px]" : ""
@@ -546,7 +546,7 @@ function SignalStatusBadge({
       ? "border-emerald-700/50 bg-emerald-500/10 text-emerald-200"
       : status === "SHADOW"
       ? "border-violet-700/50 bg-violet-500/10 text-violet-200"
-      : "border-gray-800 bg-gray-900 text-gray-500";
+      : "border-gray-800 bg-gray-900 text-gray-400";
 
   const label =
     status === "LIVE" ? "Live" : status === "SHADOW" ? "Shadow" : "Absent";

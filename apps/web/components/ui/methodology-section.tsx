@@ -96,7 +96,7 @@ export function MethodologySection() {
                 {claim?.copy ?? ""}
               </p>
               {item.hint && (
-                <p className="text-xs leading-relaxed text-gray-500">
+                <p className="text-xs leading-relaxed text-gray-400">
                   {item.hint}
                 </p>
               )}

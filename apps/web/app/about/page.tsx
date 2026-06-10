@@ -2,12 +2,69 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL } from "@/lib/brand";
+import {
+  BRAND_NAME,
+  BRAND_TAGLINE,
+  FOUNDER_NAME,
+  FOUNDER_ROLE,
+  SUPPORT_EMAIL,
+} from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "About",
   description: `${BRAND_NAME} — ${BRAND_TAGLINE}. The story, the model, the operating principles.`,
   alternates: { canonical: "/about" },
+};
+
+// Canonical apex (matches layout.tsx / robots.ts / sitemap.ts). Used only to
+// reference the shared Organization @id node defined in the root layout.
+const SITE_URL =
+  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
+const ORG_ID = `${SITE_URL}/#organization`;
+
+// ──────────────────────────────────────────────────────────────────────────
+// JSON-LD — ProfilePage + Person (founder) + BreadcrumbList
+//
+// Additive structured data only. The Person states only verifiable facts:
+// name + founder role + that they founded the GSE Organization (referenced by
+// its shared @id from the root layout). No credentials, awards, or claims are
+// asserted. Nothing rendered on the page changes.
+// ──────────────────────────────────────────────────────────────────────────
+
+const aboutProfileJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": `${SITE_URL}/about#profile`,
+  url: `${SITE_URL}/about`,
+  name: `About ${BRAND_NAME}`,
+  mainEntity: {
+    "@type": "Person",
+    "@id": `${SITE_URL}/#founder`,
+    name: FOUNDER_NAME,
+    jobTitle: FOUNDER_ROLE,
+    description: `${FOUNDER_ROLE} of ${BRAND_NAME}.`,
+    worksFor: { "@id": ORG_ID },
+    founderOf: { "@id": ORG_ID },
+  },
+};
+
+const aboutBreadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: SITE_URL,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "About",
+      item: `${SITE_URL}/about`,
+    },
+  ],
 };
 
 const PRINCIPLES = [
@@ -41,6 +98,17 @@ export default function AboutPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Nav />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutProfileJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(aboutBreadcrumbJsonLd),
+        }}
+      />
 
       <main className="flex-1">
         <section className="px-4 py-22 sm:px-6 lg:px-8">

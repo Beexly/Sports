@@ -67,13 +67,13 @@ export function PerformanceBootstrapState({
       >
         <h3
           id="ladder-heading"
-          className="text-sm font-semibold uppercase tracking-widest text-gray-500"
+          className="text-sm font-semibold uppercase tracking-widest text-gray-400"
         >
           What needs to be true before this page shows data
         </h3>
         <ol className="mt-4 space-y-3 text-sm text-gray-400">
           <li className="flex gap-3">
-            <span className="text-gray-600">1.</span>
+            <span className="text-gray-400">1.</span>
             <span>
               Canonical history is enabled and new picks are being written with{" "}
               <code className="rounded bg-gray-800 px-1 py-0.5 font-mono text-xs text-gray-300">
@@ -83,7 +83,7 @@ export function PerformanceBootstrapState({
             </span>
           </li>
           <li className="flex gap-3">
-            <span className="text-gray-600">2.</span>
+            <span className="text-gray-400">2.</span>
             <span>
               At least{" "}
               <strong className="text-gray-200">
@@ -93,7 +93,7 @@ export function PerformanceBootstrapState({
             </span>
           </li>
           <li className="flex gap-3">
-            <span className="text-gray-600">3.</span>
+            <span className="text-gray-400">3.</span>
             <span>
               The platform's <code className="rounded bg-gray-800 px-1 py-0.5 font-mono text-xs text-gray-300">PERFORMANCE_STATS_ENABLED</code> readiness gate is set to true.
             </span>
@@ -106,7 +106,7 @@ export function PerformanceBootstrapState({
         data-testid="bootstrap-what-we-show"
         className="mt-8 rounded-2xl border border-gray-800 bg-gray-900/30 p-6"
       >
-        <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+        <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400">
           What you'll see once data is published
         </h3>
         <ul className="mt-4 space-y-2 text-sm text-gray-400">

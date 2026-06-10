@@ -69,18 +69,18 @@ export default async function GameRoomPage({
         <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <Panel title="Evidence Timeline">
             {room.timeline.length === 0 ? (
-              <p className="text-sm text-gray-500">No source-aware signals have been attached to this game yet.</p>
+              <p className="text-sm text-gray-400">No source-aware signals have been attached to this game yet.</p>
             ) : (
               <ol className="divide-y divide-gray-800 border border-gray-800">
                 {room.timeline.map((item) => (
                   <li key={item.id} className="grid gap-2 px-4 py-3 text-sm sm:grid-cols-[1fr_auto]">
                     <div>
                       <p className="font-semibold text-white">{item.label}</p>
-                      <p className="mt-1 text-xs text-gray-500">{item.source}</p>
+                      <p className="mt-1 text-xs text-gray-400">{item.source}</p>
                     </div>
                     <div className="text-left sm:text-right">
                       <p className="font-mono text-xs text-cyan-200">{item.status}</p>
-                      <p className="mt-1 text-xs text-gray-500">{item.fetchedAt.slice(0, 16).replace("T", " ")}</p>
+                      <p className="mt-1 text-xs text-gray-400">{item.fetchedAt.slice(0, 16).replace("T", " ")}</p>
                     </div>
                   </li>
                 ))}
@@ -95,7 +95,7 @@ export default async function GameRoomPage({
                 <p className="mt-3">{room.premortem.summary}</p>
               </div>
             ) : (
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-400">
                 No published pick is attached yet, so the public pre-mortem will appear after a pick clears the gate.
               </p>
             )}
@@ -118,7 +118,7 @@ export default async function GameRoomPage({
             <div className="text-sm leading-6 text-gray-300">
               <p className="font-mono text-xs uppercase tracking-[0.18em] text-cyan-200">{room.memory.status.replace(/_/g, " ")}</p>
               <p className="mt-3">{room.memory.body}</p>
-              {room.memory.settledAt && <p className="mt-3 text-xs text-gray-500">Settled {room.memory.settledAt.slice(0, 10)}</p>}
+              {room.memory.settledAt && <p className="mt-3 text-xs text-gray-400">Settled {room.memory.settledAt.slice(0, 10)}</p>}
             </div>
           </Panel>
         </section>
@@ -142,7 +142,7 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
     <div className="min-h-20 border border-gray-800 bg-gray-900/60 p-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-400">{label}</p>
       <p className="mt-2 break-words text-xl font-bold text-white">{value}</p>
     </div>
   );
@@ -151,7 +151,7 @@ function Metric({ label, value }: { label: string; value: string }): JSX.Element
 function Fact({ label, value }: { label: string; value: string }): JSX.Element {
   return (
     <div className="border border-gray-800 bg-gray-950/55 p-3">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</dt>
+      <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-400">{label}</dt>
       <dd className="mt-1 text-gray-200">{value}</dd>
     </div>
   );

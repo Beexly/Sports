@@ -1,12 +1,62 @@
 import type { Metadata, Viewport } from "next";
+import {
+  Big_Shoulders_Display,
+  Instrument_Serif,
+  Inter,
+  JetBrains_Mono,
+  Syne,
+} from "next/font/google";
 import "./globals.css";
 import {
   BRAND_META,
   BRAND_NAME,
   BRAND_TAGLINE,
+  FOUNDER_NAME,
+  FOUNDER_ROLE,
   SOCIAL,
   SUPPORT_EMAIL,
 } from "@/lib/brand";
+
+const archFont = Big_Shoulders_Display({
+  subsets: ["latin"],
+  weight: ["800", "900"],
+  variable: "--f-arch",
+  display: "swap",
+});
+
+const displayFont = Syne({
+  subsets: ["latin"],
+  variable: "--f-display",
+  display: "swap",
+});
+
+// Next 14.2's Google font manifest does not expose Geist, so --f-body uses
+// the doctrine stack's first available Google fallback while preserving the var.
+const bodyFont = Inter({
+  subsets: ["latin"],
+  variable: "--f-body",
+  display: "swap",
+});
+
+const numeralsFont = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--f-numerals",
+  display: "swap",
+});
+
+const monoFont = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--f-mono",
+  display: "swap",
+});
+
+const editorialFont = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--f-editorial",
+  display: "swap",
+});
 
 export const viewport: Viewport = {
   themeColor: "#04060a",
@@ -17,11 +67,9 @@ export const viewport: Viewport = {
 /**
  * Root layout.
  *
- * Fonts (Syne, Big Shoulders Display, Geist, Geist Mono, Instrument Serif,
- * JetBrains Mono, Space Grotesk) are loaded via the @import at the top of
- * `styles/design-tokens.css` to keep one source of truth with the standalone
- * design-system CSS. If we ever swap to `next/font` for layout-shift wins,
- * remove the @import there and mirror the variables here.
+ * Fonts are loaded through next/font and bound directly to the design-system
+ * CSS variables consumed by `styles/design-tokens.css` and Tailwind:
+ *   --f-arch, --f-display, --f-body, --f-mono, --f-numerals, --f-editorial.
  *
  * SEO foundation:
  *  - Per-page <title>/<description> override the defaults below via each
@@ -31,8 +79,12 @@ export const viewport: Viewport = {
  *  - X handle wired in twitter.site/creator so attribution survives reshares.
  */
 
+// Canonical host = bare apex (matches robots.ts, sitemap.ts, and the live
+// domain). The www/non-www split previously here forked canonical/OG URLs from
+// the sitemap/robots host and split SEO link equity. In production
+// NEXT_PUBLIC_APP_URL is set, so this fallback should never fire.
 const SITE_URL =
-  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://www.galaxysportsedge.com";
+  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
 
 const ORG_HANDLE = "@GalaxySportsAI";
 
@@ -94,14 +146,27 @@ export const metadata: Metadata = {
 // JSON-LD — Organization + WebSite
 // ──────────────────────────────────────────────────────────────────────────
 
+// Canonical @id anchors so every other node on the site (Person on /about,
+// Article publisher, breadcrumbs) can reference one Organization/WebSite node
+// instead of forking duplicate entities. Google merges the graph on @id.
+const ORG_ID = `${SITE_URL}/#organization`;
+const WEBSITE_ID = `${SITE_URL}/#website`;
+
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": ORG_ID,
   name: BRAND_NAME,
   alternateName: "GSE",
   url: SITE_URL,
   logo: `${SITE_URL}/logo-mark.svg`,
   description: BRAND_META.description,
+  slogan: BRAND_TAGLINE,
+  founder: {
+    "@type": "Person",
+    name: FOUNDER_NAME,
+    jobTitle: FOUNDER_ROLE,
+  },
   sameAs: [
     SOCIAL.x,
     SOCIAL.instagram,
@@ -119,8 +184,10 @@ const organizationJsonLd = {
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": WEBSITE_ID,
   name: BRAND_NAME,
   url: SITE_URL,
+  publisher: { "@id": ORG_ID },
   potentialAction: {
     "@type": "SearchAction",
     target: `${SITE_URL}/picks?q={search_term_string}`,
@@ -133,9 +200,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const fontVariables = [
+    archFont.variable,
+    displayFont.variable,
+    bodyFont.variable,
+    numeralsFont.variable,
+    monoFont.variable,
+    editorialFont.variable,
+  ].join(" ");
+
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className={`scroll-smooth ${fontVariables}`}>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

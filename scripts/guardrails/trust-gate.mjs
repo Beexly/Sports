@@ -57,6 +57,9 @@ const WHITELIST_PATHS = new Set([
   "apps/web/lib/content/workflow.ts",
   "apps/web/lib/promotions/copy-rules.ts",
   "apps/web/lib/content-generator.ts",
+  // Enforcement-policy definition: contains the banned phrases as detection
+  // patterns (same rationale as trust-claims.ts above).
+  "apps/web/lib/pick-explainer/policy.ts",
   "packages/brand/src/voice.ts",
   "packages/db/prisma/seed.ts",
 ]);

@@ -40,7 +40,7 @@ export default async function BriefStub() {
             data-testid="brief-pick-count"
             className="mt-4 rounded-xl border border-gray-800 bg-gray-900/40 p-4"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">
               Today's slate
             </p>
             <p className="mt-1 text-sm text-gray-300">
@@ -55,7 +55,7 @@ export default async function BriefStub() {
                 </span>
               )}
             </p>
-            <p className="mt-1 text-[11px] text-gray-500">
+            <p className="mt-1 text-[11px] text-gray-400">
               See the full slate at{" "}
               <Link href="/picks" className="text-brand-400 hover:text-brand-300">
                 /picks
@@ -66,11 +66,11 @@ export default async function BriefStub() {
         )}
 
         {brief.readiness.performance ? (
-          <p data-testid="brief-performance-hidden" className="mt-3 text-xs text-gray-500">
+          <p data-testid="brief-performance-hidden" className="mt-3 text-xs text-gray-400">
             Performance summary will render here once the composer is restored.
           </p>
         ) : (
-          <p data-testid="brief-performance-hidden" className="mt-3 text-xs text-gray-500">
+          <p data-testid="brief-performance-hidden" className="mt-3 text-xs text-gray-400">
             Performance data is gated until canonical sample is sufficient.
           </p>
         )}

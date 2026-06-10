@@ -95,13 +95,13 @@ export default async function BoardPage(): Promise<JSX.Element> {
                 <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">Pass List</p>
                 <h2 className="mt-2 text-2xl font-bold text-white">Evaluated without publishing</h2>
               </div>
-              <span className="font-mono text-xs text-gray-500">{passesResult.data.date}</span>
+              <span className="font-mono text-xs text-gray-400">{passesResult.data.date}</span>
             </div>
             <div className="mt-5 divide-y divide-gray-800 border border-gray-800">
               {passes.length > 0 ? (
                 passes.map((row) => <PassListItem key={row.id} row={row} />)
               ) : (
-                <p className="px-4 py-5 text-sm text-gray-500">No passes recorded for this slate yet.</p>
+                <p className="px-4 py-5 text-sm text-gray-400">No passes recorded for this slate yet.</p>
               )}
             </div>
           </div>
@@ -116,7 +116,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
               <Metric label="Sample" value={String(calibration.sampleSize)} />
               <Metric label="Brier" value={calibration.brierScore === null ? "N/A" : String(calibration.brierScore)} />
             </dl>
-            <p className="mt-5 text-xs text-gray-500">Updated {timeLabel(calibration.updatedAt)}</p>
+            <p className="mt-5 text-xs text-gray-400">Updated {timeLabel(calibration.updatedAt)}</p>
           </div>
         </section>
 
@@ -130,7 +130,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
 function StateTile({ label, value }: { label: string; value: string }): JSX.Element {
   return (
     <div className="min-h-16 border border-gray-800 bg-gray-900/60 px-3 py-2">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-400">{label}</p>
       <p className="mt-1 break-words text-lg font-semibold text-white">{value}</p>
     </div>
   );
@@ -142,7 +142,7 @@ function BoardLane({ title, rows, empty }: { title: string; rows: BoardStateRow[
       <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">{title}</h2>
       <div className="mt-4 flex flex-col gap-3">
         {rows.length > 0 ? rows.map((row) => <BoardRowItem key={row.id} row={row} />) : (
-          <p className="text-sm text-gray-500">{empty}</p>
+          <p className="text-sm text-gray-400">{empty}</p>
         )}
       </div>
     </section>
@@ -155,7 +155,7 @@ function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="font-semibold text-white">{row.matchup}</h3>
-          <p className="mt-1 text-xs text-gray-500">{row.sport} / {row.market}</p>
+          <p className="mt-1 text-xs text-gray-400">{row.sport} / {row.market}</p>
         </div>
         <span className="font-mono text-xs text-cyan-200">
           {row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}
@@ -189,7 +189,7 @@ function PassListItem({ row }: { row: PassListRow }): JSX.Element {
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
     <div className="border border-gray-800 bg-gray-950/55 p-3">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</dt>
+      <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-400">{label}</dt>
       <dd className="mt-1 text-lg font-semibold text-white">{value}</dd>
     </div>
   );

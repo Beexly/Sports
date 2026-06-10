@@ -87,7 +87,7 @@ export default function MethodologyPage(): JSX.Element {
                 </p>
                 <h2 className="mt-2 text-3xl font-black text-white">What the model can read</h2>
               </div>
-              <p className="max-w-sm text-sm text-gray-500 sm:text-right">
+              <p className="max-w-sm text-sm text-gray-400 sm:text-right">
                 Factors are visible. Exact scoring weights are not published.
               </p>
             </div>

@@ -3,7 +3,8 @@
    Orbital cyan signal · ion magenta energy · ultraviolet depth
    ============================================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+/* Fonts are loaded via next/font in app/layout.tsx and bound to the --f-*
+   variables below; no @import needed here. */
 
 :root {
   /* ── ENVIRONMENT — cosmic dark scale ──────────────────── */
@@ -23,12 +24,58 @@
   --steel-1:     var(--titanium);
   --graphite:    var(--slate);
 
+  /* ── SURFACE — canonical UNIFIED dark elevation scale ─────
+     ONE black + a small premium elevation ladder (Sleeper/Underdog-grade).
+     This consolidates the three competing near-blacks (obsidianBlack #050608,
+     carbon #0D1117, gray-950 #030712) into a single base + raised/sunken steps.
+     ALL data surfaces (tables, cards, tracks) and re-themed pages use these.
+     Values verified visibly distinguishable; ion-white/ion/ion-1/ion-2 text
+     remain AA (>=4.5:1) on every step below.
+       base    — page background (also keeps `bg-carbon` pages identical)
+       raised  — cards / table rows / panels (one step up)
+       sunken  — insets, wells, bar TRACKS (one step down, sits under fills)
+       overlay — popovers / floating layers (highest)
+       line    — hairline borders / dividers on the dark canvas             */
+  --surface-base:    #0D1117;   /* the single canonical canvas (== carbon) */
+  --surface-raised:  #161B22;   /* cards / tables / panels */
+  --surface-sunken:  #0A0D12;   /* insets / wells / bar tracks (under base) */
+  --surface-overlay: #1C2128;   /* popovers / floating overlays */
+  --surface-line:    #30363D;   /* hairline border / divider on dark */
+  --surface-line-strong: #3C4961; /* stronger divider (== mineral-hi) */
+
+  /* ── PAPER — LIGHT data-surface scale (ADDITIVE) ──────── */
+  /* New light-surface token group ported from canonical for data surfaces
+     (tables, tools, boards). All TEXT tokens verified WCAG AA on --paper.
+     New names; nothing in deploy references them yet. */
+  --paper:         #F7F8FB;   /* near-white page bg */
+  --paper-raised:  #FFFFFF;   /* cards / raised rows */
+  --paper-sunken:  #F0F2F6;   /* zebra / sunken wells */
+  --paper-border:  #D9DEE7;   /* hairline divider on light (border, not text) */
+  --ink:           #0E1320;   /* body text — 17.46:1 on paper — PASS */
+  --ink-1:         #3A4356;   /* secondary text — 9.34:1 on paper — PASS */
+  --ink-2:         #5B6678;   /* muted meta — 5.47:1 on paper — PASS */
+  /* Accent-on-light variants — darkened so brand accents pass AA as TEXT on
+     paper. Accents = highlights/links only, never long prose. */
+  --plasma-on-light:      #B0118C;   /* 5.98:1 on paper — PASS */
+  --orbital-cyan-on-light:#06748A;   /* 5.11:1 on paper — PASS */
+  --ultraviolet-on-light: #5B43C9;   /* 6.40:1 on paper — PASS */
+
   /* ── ION — cool whites & mineral silvers ──────────────── */
-  --ion-white:   #F6F7FA;   /* ION WHITE — Brand Use Pack §4 */
-  --ion:         #D5DDE9;   /* primary text */
-  --ion-1:       #98A3B5;   /* secondary · mineral silver */
-  --ion-2:       #5E6878;   /* tertiary · meta */
-  --ion-3:       #3D4555;   /* muted */
+  /* DARK SCALE = marketing / cinematic surfaces (canvas is carbon #0D1117).
+     Every value below is verified WCAG AA (>=4.5:1) as TEXT on carbon/eclipse
+     so existing text-ion-* / var(--ion-*) usages are legible without renaming. */
+  --ion-white:   #F6F7FA;   /* ION WHITE — 17.67:1 on carbon — PASS */
+  --ion:         #D5DDE9;   /* primary text — 13.83:1 on carbon — PASS */
+  --ion-1:       #98A3B5;   /* secondary · mineral silver — 7.43:1 on carbon — PASS */
+  /* WCAG AA fix: --ion-2 re-valued from #5E6878 (3.36:1, FAIL) to #9AA6B8
+     (7.68:1 on carbon, 7.36:1 on eclipse — PASS). Used as text in tables/nav/meta. */
+  --ion-2:       #9AA6B8;   /* tertiary · meta — 7.68:1 on carbon — PASS */
+  /* WCAG AA fix: --ion-3 re-valued from #3D4555 (1.97:1, FAIL) to #8B97AB
+     (6.41:1 on carbon, 6.14:1 on eclipse — PASS). Kept a touch darker than
+     ion-2 to preserve the muted hierarchy. Used as text in nav sublabels.
+     Decorative non-text uses (giant step numbers, muted bullet dots) were
+     moved to --mineral so this lighter value never over-weights them. */
+  --ion-3:       #8B97AB;   /* muted — 6.41:1 on carbon — PASS */
 
   /* ── PRIMARY SIGNAL — ion magenta ─────────────────────── */
   /* ION MAGENTA from Brand Use Pack §4. */
@@ -42,14 +89,25 @@
      aliased a true blue (#3B82FF); the spec only names cyan, so we
      unify both names to #00E5FF and let legacy classes inherit the
      correct brand color automatically. */
-  --ion-blue:      #00E5FF;
-  --ion-blue-glow: #5BEEFF;
-  --ion-blue-deep: #00A8BF;
+  /* Softened per audit Option B: the harsh full-saturation cyan
+     (hsl(191,100%,52%) = #00E5FF) caused long-session eye strain. The
+     working accent is now hsl(191,68%,52%) ≈ #2BC4DD — same hue, calmer.
+     `--accent-cyan-pure` keeps the full-saturation value for the ONE primary
+     CTA per screen the doc allows. Legacy `--ion-blue`/`--orbital-cyan` names
+     now resolve to the softened value so every existing usage calms down. */
+  --accent-cyan:        #2BC4DD;   /* hsl(191,68%,52%) — softened working accent */
+  --accent-cyan-glow:   #6FDDEE;
+  --accent-cyan-deep:   #1A93A8;
+  --accent-cyan-pure:   #00E5FF;   /* full-saturation — reserve for 1 CTA / screen */
+
+  --ion-blue:      var(--accent-cyan);
+  --ion-blue-glow: var(--accent-cyan-glow);
+  --ion-blue-deep: var(--accent-cyan-deep);
   --ion-blue-ink:  #001226;
 
-  --orbital-cyan:      #00E5FF;
-  --orbital-cyan-glow: #5BEEFF;
-  --orbital-cyan-deep: #00A8BF;
+  --orbital-cyan:      var(--accent-cyan);
+  --orbital-cyan-glow: var(--accent-cyan-glow);
+  --orbital-cyan-deep: var(--accent-cyan-deep);
 
   /* ── NEBULA PURPLE — gradient anchor (rare, decorative) ─ */
   --nebula-purple:     #7A5CFF;
@@ -97,6 +155,20 @@
   --alert:         #FF6470;
   --alert-deep:    #B53C45;
 
+  /* ── DATA PALETTE — "data is the color" on the dark canvas (ADDITIVE) ─
+     New token group ported from canonical for the viz kit + signal helpers.
+     *-fill = NON-TEXT bar/dot/area fill; *-text = AA SIGNAL TEXT on dark.
+     New names; nothing in deploy references them yet. --data-neutral-text
+     uses canonical's AA ion-2 value (#9AA6B8) directly, and --data-track
+     resolves to the new --surface-sunken added above. */
+  --data-good-fill:   #34D399;   /* emerald-400 — positive bar/dot fill */
+  --data-good-text:   #6EE7B7;   /* emerald-300 — AA signal text on dark */
+  --data-bad-fill:    #FB7185;   /* rose-400 — negative bar/dot fill */
+  --data-bad-text:    #FDA4AF;   /* rose-300 — AA signal text on dark */
+  --data-neutral-fill:#5B6678;   /* muted slate — "no signal" fill */
+  --data-neutral-text:#9AA6B8;   /* AA muted meta on dark (canonical ion-2) */
+  --data-track:       var(--surface-sunken); /* bar TRACK under every fill */
+
   /* ── DEPRECATED ALIASES — keep older boards working ──── */
   --mint:          var(--verify);
   --vermilion:     var(--alert);
@@ -116,9 +188,13 @@
   --risk-high:     var(--alert);
 
   /* ── SEMANTIC ALIASES ────────────────────────────────── */
-  --bg:           var(--carbon);
-  --bg-raised:    var(--eclipse);
-  --bg-elevated:  var(--titanium);
+  /* Point the semantic surface roles at the canonical surface scale. base
+     stays #0D1117 so existing `--bg`/`bg-carbon` pages are byte-identical;
+     raised/elevated now resolve through the unified ladder. */
+  --bg:           var(--surface-base);
+  --bg-raised:    var(--surface-raised);
+  --bg-elevated:  var(--surface-overlay);
+  --bg-sunken:    var(--surface-sunken);
   --bg-hover:     var(--slate);
   --fg:           var(--ion-white);
   --fg-1:         var(--ion);
@@ -181,7 +257,7 @@
   --f-display: "Syne", "Neue Machina", "Space Grotesk", system-ui, sans-serif;
   --f-display-tech: "Space Grotesk", "Neue Montreal", system-ui, sans-serif;
   --f-body: "Geist", "Inter", system-ui, -apple-system, sans-serif;
-  --f-mono: "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
+  --f-mono: "JetBrains Mono", "Geist Mono", ui-monospace, monospace;
   --f-numerals: "JetBrains Mono", "Geist Mono", ui-monospace, monospace;
   --f-editorial: "Instrument Serif", "Iowan Old Style", Georgia, serif;
 
@@ -204,7 +280,8 @@
   --t-body-sm: 400 13px/1.5  var(--f-body);
   --t-body-xs: 400 12px/1.4  var(--f-body);
 
-  --t-eyebrow:    500 11px/1.3 var(--f-mono);
+  /* Eyebrow bumped from 11px to 12px floor (was often rendered ~10px). */
+  --t-eyebrow:    500 12px/1.3 var(--f-mono);
   --t-eyebrow-lg: 500 13px/1.3 var(--f-mono);
 
   --t-num-3xl: 700 96px/0.95 var(--f-numerals);

@@ -7,8 +7,23 @@ import {
   PUBLIC_PROMOTIONS_NOTICE,
   type PublicPromotion,
 } from "@/lib/promotions/public-payload";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Sportsbook offers",
+  description:
+    "A directory of sportsbook offers reviewed for transparency and basic eligibility before they appear. Listings are not an endorsement. 21+ where applicable.",
+  alternates: { canonical: "/promotions" },
+  openGraph: {
+    title: "Sportsbook offers — reviewed before they appear",
+    description:
+      "Sportsbook offers reviewed for transparency and eligibility. Not an endorsement of any operator. Terms apply at the operator. 21+ where applicable.",
+    type: "website",
+    url: "/promotions",
+  },
+};
 
 interface PromotionsPageProps {
   searchParams: { state?: string };
@@ -48,7 +63,7 @@ export default async function PromotionsPage({
               Sportsbook Promotions
             </p>
             <h1 className="text-3xl font-bold text-white sm:text-4xl">
-              Vetted sportsbook promotions.
+              Sportsbook offers, reviewed before they appear.
             </h1>
             <p className="mt-3 text-sm text-gray-400">
               A directory of sportsbook offers reviewed for transparency and
@@ -66,7 +81,7 @@ export default async function PromotionsPage({
           >
             <label
               htmlFor="state"
-              className="flex flex-col gap-1 text-xs uppercase tracking-widest text-gray-500"
+              className="flex flex-col gap-1 text-xs uppercase tracking-widest text-gray-400"
             >
               <span>Your state</span>
               <input
@@ -88,7 +103,7 @@ export default async function PromotionsPage({
             {state && (
               <a
                 href="/promotions"
-                className="text-xs text-gray-500 underline-offset-2 hover:text-gray-300 hover:underline"
+                className="text-xs text-gray-400 underline-offset-2 hover:text-gray-300 hover:underline"
               >
                 Clear state
               </a>
@@ -137,14 +152,14 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
         <span className="rounded bg-brand-900/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-brand-300">
           {promo.offerCategory.replaceAll("_", " ")}
         </span>
-        <span className="text-[10px] uppercase tracking-widest text-gray-600">
+        <span className="text-[10px] uppercase tracking-widest text-gray-400">
           {promo.sportsbookKey}
         </span>
       </header>
       <h2 className="text-base font-semibold text-white">{promo.headline}</h2>
       <p className="text-sm text-gray-400">{promo.offerSummary}</p>
 
-      <dl className="grid grid-cols-2 gap-2 text-[11px] text-gray-500">
+      <dl className="grid grid-cols-2 gap-2 text-[11px] text-gray-400">
         <div>
           <dt className="uppercase tracking-widest">Operator</dt>
           <dd className="text-gray-300">{promo.operatorName}</dd>
@@ -190,13 +205,13 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
         )}
         <p
           data-testid="promotion-disclosure"
-          className="text-[10px] leading-snug text-gray-500"
+          className="text-[10px] leading-snug text-gray-400"
         >
           {promo.disclosureText}
         </p>
         <p
           data-testid="promotion-rg"
-          className="text-[10px] leading-snug text-gray-500"
+          className="text-[10px] leading-snug text-gray-400"
         >
           {promo.responsibleGamingText}
         </p>
@@ -219,7 +234,7 @@ function PromotionsEmptyState({ state }: { state: string | null }) {
           ? `We do not have any reviewed promotions cleared for ${state} at the moment.`
           : "We do not have any reviewed promotions cleared for public display at the moment."}
       </p>
-      <p className="mt-3 text-xs text-gray-500">
+      <p className="mt-3 text-xs text-gray-400">
         Listings here only appear after a manual compliance review. We never
         surface promotions without operator terms, disclosure, or eligibility
         evidence.

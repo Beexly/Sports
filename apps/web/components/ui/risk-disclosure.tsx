@@ -41,7 +41,7 @@ export function RiskDisclosure({
           className ?? "",
         ].join(" ")}
       >
-        <p className="font-semibold uppercase tracking-widest text-gray-500">
+        <p className="font-semibold uppercase tracking-widest text-gray-400">
           Risk disclosure
         </p>
         <p className="mt-2 leading-relaxed">{text}</p>
@@ -54,7 +54,7 @@ export function RiskDisclosure({
       <p
         data-testid="risk-disclosure"
         className={[
-          "text-[10px] text-gray-600 leading-relaxed",
+          "text-[10px] text-gray-400 leading-relaxed",
           className ?? "",
         ].join(" ")}
       >
@@ -67,7 +67,7 @@ export function RiskDisclosure({
     <p
       data-testid="risk-disclosure"
       className={[
-        "text-[11px] text-gray-500 leading-relaxed",
+        "text-[11px] text-gray-400 leading-relaxed",
         className ?? "",
       ].join(" ")}
     >

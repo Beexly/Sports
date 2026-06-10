@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { captureError } from "@/lib/observability";
 
 /**
  * Global error boundary. Server-side errors arrive with a `digest`
@@ -20,6 +21,7 @@ export default function GlobalError({
   useEffect(() => {
     // eslint-disable-next-line no-console
     console.error("[app] error boundary caught:", error);
+    captureError(error, { surface: "app-root", digest: error.digest });
   }, [error]);
 
   const isProd = process.env.NODE_ENV === "production";

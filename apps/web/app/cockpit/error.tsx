@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { captureError } from "@/lib/observability";
 
 /**
  * Cockpit error boundary.
@@ -20,6 +21,7 @@ export default function CockpitError({
   useEffect(() => {
     // eslint-disable-next-line no-console
     console.error("[cockpit] error boundary caught:", error);
+    captureError(error, { surface: "cockpit", digest: error.digest });
   }, [error]);
 
   return (

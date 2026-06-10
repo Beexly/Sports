@@ -29,6 +29,20 @@ export const BRAND_POSITIONING =
 /** Two-letter monogram used in compact lockups when the icon SVG is overkill. */
 export const BRAND_MONOGRAM = "GSE";
 
+/**
+ * Founder identity — the single, factual person behind the brand.
+ *
+ * Source of truth: the already-shipped public `public/llms.txt`
+ * ("founded by Garrett Baxley", "Founder: Garrett Baxley"). Used only for
+ * additive structured data (schema.org Person / Organization.founder) so the
+ * founder is a first-class, verifiable entity. State only what is true here:
+ * name and the founder role. No titles, awards, or claims beyond that.
+ */
+export const FOUNDER_NAME = "Garrett Baxley";
+
+/** Founder role — the only claim made about the person. */
+export const FOUNDER_ROLE = "Founder";
+
 /** Public support / general inquiries inbox. Single front-door for the brand. */
 export const SUPPORT_EMAIL = "hq@galaxysportsedge.com";
 

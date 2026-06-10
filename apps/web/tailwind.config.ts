@@ -11,8 +11,8 @@ import type { Config } from "tailwindcss";
  *  - SOFT ULTRAVIOLET #7A5CFF  — depth, intelligence, secondary signal
  *  - STEEL GRAY      #1A1D23   — panels, dividers, UI depth
  *
- * Typography: Exo 2 (display) + Inter (text). Legacy display/sans tokens
- * point at these so existing components inherit the brand automatically.
+ * Typography is bound to the doctrine CSS variables loaded through
+ * next/font in `app/layout.tsx`.
  *
  * Legacy aliases (brand-*, accent-*, plasma-*, ion-blue-*) are kept and
  * REPOINTED to the new palette. No component refactor required.
@@ -30,7 +30,10 @@ const config: Config = {
         // ── CANONICAL GALAXY SPORTS EDGE PALETTE ─────────
         "obsidian-black":    "#050608",
         "ion-white-2":       "#F6F7FA",   // distinct from the .ion-white alias
-        "orbital-cyan":      "#00E5FF",
+        // Softened working cyan (hsl 191,68%,52%); `orbital-cyan-pure` keeps
+        // full-saturation #00E5FF for the rare single-CTA accent per screen.
+        "orbital-cyan":      "#2BC4DD",
+        "orbital-cyan-pure": "#00E5FF",
         "ion-magenta":       "#FF2DD6",
         "soft-ultraviolet":  "#7A5CFF",
         "steel-gray":        "#1A1D23",
@@ -46,14 +49,59 @@ const config: Config = {
         mineral:    "#2E3849",
         "mineral-hi": "#3C4961",
 
-        // ── ION — cool whites & mineral silvers ───────────
+        // ── SURFACE — CANONICAL unified dark elevation scale (ADDITIVE) ──
+        // New token group ported from canonical. ONE base black + a premium
+        // elevation ladder. Mirrors the --surface-* CSS vars in
+        // design-tokens.css. No existing deploy key references these names.
+        //   bg-surface / -base / -raised / -sunken / -overlay,
+        //   border-surface-line / -line-strong
+        surface: {
+          DEFAULT: "#0D1117",  // base canvas → bg-surface
+          base:    "#0D1117",  // explicit base → bg-surface-base
+          raised:  "#161B22",  // cards/tables → bg-surface-raised
+          sunken:  "#0A0D12",  // tracks/wells → bg-surface-sunken
+          overlay: "#1C2128",  // overlays → bg-surface-overlay
+          line:    "#30363D",  // hairline → border-surface-line
+          "line-strong": "#3C4961", // stronger divider → border-surface-line-strong
+        },
+
+        // ── DATA PALETTE — "data is the color" on dark (ADDITIVE) ────────
+        // Bar/dot FILLS and AA signal TEXT for the viz kit. New group; no
+        // existing deploy key references these names.
+        data: {
+          "good":         "#34D399",  // emerald-400 — positive FILL
+          "good-text":    "#6EE7B7",  // emerald-300 — AA signal TEXT on dark
+          "bad":          "#FB7185",  // rose-400 — negative FILL
+          "bad-text":     "#FDA4AF",  // rose-300 — AA signal TEXT on dark
+          "neutral":      "#5B6678",  // muted — "no signal" FILL
+          "neutral-text": "#9AA6B8",  // ion-2 — AA muted meta TEXT on dark
+          "track":        "#0A0D12",  // == surface-sunken — bar TRACK
+        },
+
+        // ── ION — cool whites & mineral silvers (DARK SCALE) ──
+        // Marketing / cinematic text on carbon #0D1117. ion-2 / ion-3 were
+        // re-valued to pass WCAG AA (>=4.5:1) as text; see design-tokens.css.
         "ion-white": "#F6F7FA",
         ion: {
-          DEFAULT: "#D5DDE9",
-          1: "#98A3B5",
-          2: "#5E6878",
-          3: "#3D4555",
+          DEFAULT: "#D5DDE9", // 13.83:1 on carbon
+          1: "#98A3B5",       // 7.43:1 on carbon
+          2: "#9AA6B8",       // was #5E6878 (3.36:1 FAIL) → 7.68:1 PASS
+          3: "#8B97AB",       // was #3D4555 (1.97:1 FAIL) → 6.41:1 PASS
         },
+
+        // ── PAPER — LIGHT data-surface scale (ADDITIVE) ───
+        // New light-surface token group ported from canonical for data
+        // surfaces (tables/tools/boards). No existing deploy key references
+        // these names. Accents-on-light are AA text accents on paper.
+        paper: {
+          DEFAULT: "#F7F8FB",  // page bg → bg-paper
+          raised:  "#FFFFFF",  // cards → bg-paper-raised
+          sunken:  "#F0F2F6",  // zebra → bg-paper-sunken
+          border:  "#D9DEE7",  // hairline → border-paper-border
+        },
+        "plasma-on-light":       "#B0118C", // 5.98:1 on paper — text accent
+        "orbital-cyan-on-light": "#06748A", // 5.11:1 on paper — text accent
+        "ultraviolet-on-light":  "#5B43C9", // 6.40:1 on paper — text accent
 
         // ── PRIMARY SIGNAL — ion magenta ──────────────────
         plasma: {
@@ -64,11 +112,21 @@ const config: Config = {
         },
 
         // ── SECONDARY — orbital cyan (live signal) ────────
+        // Softened from hsl(191,100%,52%) #00E5FF → hsl(191,68%,52%) #2BC4DD
+        // per audit Option B (long-session eye strain). `pure` keeps the full
+        // saturation for the ONE primary CTA per screen the doc allows.
         "ion-blue": {
-          DEFAULT: "#00E5FF",
-          glow: "#5BEEFF",
-          deep: "#00A8BF",
+          DEFAULT: "#2BC4DD",
+          glow: "#6FDDEE",
+          deep: "#1A93A8",
+          pure: "#00E5FF",
           ink: "#001226",
+        },
+        "accent-cyan": {
+          DEFAULT: "#2BC4DD",
+          glow: "#6FDDEE",
+          deep: "#1A93A8",
+          pure: "#00E5FF",
         },
 
         // ── DEPTH — soft ultraviolet (model layer) ────────
@@ -79,10 +137,12 @@ const config: Config = {
         },
 
         // ── ACCENT — orbital cyan (live telemetry pings) ──
+        // Softened to match the working accent; `pure` for rare full-sat CTA.
         "ds-cyan": {
-          DEFAULT: "#00E5FF",
-          glow: "#5BEEFF",
-          deep: "#00A8BF",
+          DEFAULT: "#2BC4DD",
+          glow: "#6FDDEE",
+          deep: "#1A93A8",
+          pure: "#00E5FF",
         },
         lime: {
           DEFAULT: "#D4FF3D",
@@ -117,14 +177,21 @@ const config: Config = {
           200: "#8AE3FF",
           300: "#5BD8FF",
           400: "#33CEFF",
-          500: "#00E5FF",
-          600: "#00B8CC",
-          700: "#008CA0",
+          500: "#2BC4DD",   // softened from #00E5FF (audit Option B)
+          600: "#1A93A8",
+          700: "#137585",
           800: "#005F73",
           900: "#003647",
           950: "#001226",
         },
         ink: {
+          // LIGHT body inks for the PAPER data-surface scale (ADDITIVE).
+          // text-ink / text-ink-1 / text-ink-2 — all WCAG AA on --paper.
+          // No prior usages of these names; numeric ramp below is untouched.
+          DEFAULT: "#0E1320",  // body — 17.46:1 on paper
+          1:    "#3A4356",     // secondary — 9.34:1 on paper
+          2:    "#5B6678",     // muted meta — 5.47:1 on paper
+          // ── legacy DARK ramp (unchanged) — ink-50..ink-1000 ──
           50:   "#F5F7FF",
           100:  "#D5DDE9",
           200:  "#98A3B5",
@@ -150,13 +217,12 @@ const config: Config = {
         },
       },
       fontFamily: {
-        // Galaxy Sports Edge typography — Exo 2 + Inter.
-        arch:      ['"Exo 2"', '"Big Shoulders Display"', "Impact", "sans-serif"],
-        display:   ['"Exo 2"', "Inter", "system-ui", "sans-serif"],
-        sans:      ["Inter", '"Exo 2"', "system-ui", "sans-serif"],
-        mono:      ['"JetBrains Mono"', '"Geist Mono"', "ui-monospace", "monospace"],
-        numerals:  ['"JetBrains Mono"', '"Exo 2"', "ui-monospace", "monospace"],
-        editorial: ['"Exo 2"', "Inter", "system-ui", "sans-serif"],
+        arch: ["var(--f-arch)"],
+        display: ["var(--f-display)"],
+        sans: ["var(--f-body)"],
+        mono: ["var(--f-mono)"],
+        numerals: ["var(--f-numerals)"],
+        editorial: ["var(--f-editorial)"],
       },
       fontSize: {
         "arch-3xl": ["220px", { lineHeight: "0.85" }],
@@ -166,7 +232,11 @@ const config: Config = {
         "display-2xl": ["clamp(3rem, 8vw, 6rem)", { lineHeight: "0.95", letterSpacing: "-0.02em" }],
         "display-xl":  ["clamp(2.5rem, 6vw, 4rem)", { lineHeight: "1.0", letterSpacing: "-0.02em" }],
         "display-lg":  ["clamp(2rem, 5vw, 3rem)", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
-        eyebrow:    ["11px", { lineHeight: "1.3", letterSpacing: "0.08em" }],
+        // Mid/small display steps complete the editorial headline ramp so data
+        // pages have a confident section-title scale (mirrors --t-display-md/sm).
+        "display-md":  ["clamp(1.5rem, 3vw, 2rem)", { lineHeight: "1.1", letterSpacing: "-0.015em" }],
+        "display-sm":  ["clamp(1.25rem, 2vw, 1.5rem)", { lineHeight: "1.2", letterSpacing: "-0.01em" }],
+        eyebrow:    ["12px", { lineHeight: "1.3", letterSpacing: "0.08em" }], // floor bumped 11→12px
         "eyebrow-lg": ["13px", { lineHeight: "1.3", letterSpacing: "0.08em" }],
       },
       letterSpacing: {
