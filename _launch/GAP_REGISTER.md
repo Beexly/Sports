@@ -32,6 +32,11 @@ Priority: BLOCKER > SHOULD > POLISH. Owner: DIRECTOR (me) / CODEX (isolated lane
 | P-02 | Homepage H1 positioning ("proven, not explained" candidate) | 3-headline brand split | DIRECTOR proposes copy, founder taste | QUEUED |
 | P-03 | Beat-the-Model flag-on decision + nav entry | Growth loop is built, gated OFF | GARRETT (1 env var) | PARKED |
 
+## CLOSED — cycle 3 (2026-06-10, evidence: certify bmeohm2p9 — 2014 tests; commits e5ccb74/a44d1cd)
+- **R-02 CLOSED** — pre-chain baseline migration; empty-DB bootstrap proven on a real throwaway PG18 cluster (11/11 migrations, zero drift, idempotent replay, control reproduces the 42P01). One-time `migrate resolve` step for existing DBs documented.
+- **B-04 CLOSED** — the calibration gate runs itself: `_launch/CALIBRATION_REPORT.md` auto-regenerates after every settlement; current honest verdict on record ("Not yet — 0 graded picks"); ≥150 gate + Wilson CI + Brier/buckets/CLV; 24 parity-pinned tests. The launch gate is now autonomous.
+- **R-07 PARTIALLY MITIGATED** — the throwaway-initdb pattern (documented in migration-baseline.md) works on this machine; docker-compose port fix still queued.
+
 ## CLOSED — cycle 2 (2026-06-10, evidence: certify gate brjtm972y + commits 4387321/d86af18)
 - **R-01 CLOSED** — settlement boundary conversion landed; live repro regression-guarded (away -3.5 losing by 1-2 → LOSS); engine 246/246. Convention: D-010.
 - **R-04 CLOSED** — computeClv AWAY sign fixed; bet-time line lock via PickSignalSnapshot (additive migration); CLV null without a locked line (never drifted-line math).

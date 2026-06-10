@@ -2,6 +2,25 @@
 
 ---
 
+## Digest #3 — 2026-06-10 (cycles 3–4)
+
+**Readiness:** ~32 🟢 / 9 🟡 / 0 🔴 — both audit REDs are dead. Trend: ↑↑. Test count 1,989 → **2,029**. Commits this run: 13 (all scoped, tree clean).
+
+**Closed (evidence: throwaway-PG proof run, certify gates, critic-run full gates):**
+- **R-02** — an empty database now bootstraps the full migration chain (proven empirically on a real scratch Postgres: 11/11 apply, zero drift, idempotent replay, control reproduces the old failure). Disaster-recovery/fresh-env risk eliminated.
+- **B-04** — **the launch gate now runs itself**: `_launch/CALIBRATION_REPORT.md` regenerates after every settlement with Brier/buckets/CI/CLV and an unsoftenable verdict. Today's truth on record: *"Not yet — 0 graded picks"* + the exact unblock path.
+- **R-05** — postponed/cancelled games can no longer rot PENDING: VOID sweep at +12h, excluded from the record and the calibration sample (test-pinned end-to-end).
+- **R-11** — security headers byte-identical across both sources, HSTS at the edge, CSP in Report-Only; a dropped header now fails CI.
+- **R-09** — legal pages no longer self-refresh their revision date; banned-pattern test prevents recurrence.
+
+**In flight:** D-011 Option A — real settlement inside the Vercel cron envelope (shared core for worker + route, job-truth contract, 30-min odds cadence + hourly settlement). After this lands, **prod settles picks the day GA-01/GA-02 clear** — no new infrastructure.
+
+**Decisions:** D-011 (settlement host = Vercel-only, your GA-09 plan-tier confirm can flip it). New asks added: GA-09 (5 min), GA-10 (2 min, @GalaxySportsAI handle).
+
+**The critical path is unchanged and entirely yours now:** GA-01 (prod DB) + GA-02 (odds key) → shadow season starts → ~3–6 weeks to 150 graded picks → the report prints the verdict → GA-08 signature.
+
+---
+
 ## Digest #2 — 2026-06-10 (cycle 2)
 
 **Readiness:** 3 🔴 → settlement-correctness 🔴 is now 🟢; homepage trust items closed. Net: ~29 🟢 / 12 🟡 / 1 🔴 (R-02 fresh-env). Trend: ↑.

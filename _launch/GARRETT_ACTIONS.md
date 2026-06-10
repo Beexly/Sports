@@ -12,6 +12,8 @@ Each ~15 minutes. Everything is built up to the human step.
 | GA-06 | **Domain/DNS confirmation** (galaxysportsedge.com already live/aliased on Vercel — confirm it points at THIS project when we deploy) | Prod is alias-based; a wrong alias ships the wrong tree. | ~10 min | Launch |
 | GA-07 | **Payment-processor policy review** (Stripe's prohibited/restricted list re: prediction/picks products — read once, confirm GSE's no-real-money-gambling posture fits) | De-risks a ban after revenue starts. | ~20 min | Revenue confidence |
 | GA-08 | **Launch go/no-go signature** | The only step after zero-BLOCKERs + calibration pass + Breathtaking Audit. | ~1 min | Launch |
+| GA-09 | **Confirm Vercel plan tier** (Pro = sub-daily crons OK → Option A stands; Hobby → say "B" and I wire the worker host instead) | Settlement + 30-min odds cadence need sub-daily crons; full proposal: `docs/command-center/launch/settlement-host-and-cadence-proposal.md` | ~5 min | Settlement in prod, readiness green, calibration sample |
+| GA-10 | **(2 min) X handle decision** — @GalaxySportsAI contains "AI"; contradicts the no-AI-foregrounding brand stance (BV-04) | Site metadata updates in 5 min once decided | ~2 min | Brand consistency (not launch) |
 
 **QUESTIONS (defaults already in effect — silence = consent)**
 - Q-01: "GSN (Galaxy Sports Network)" vs the repo's "Galaxy Sports Edge" — *proceeding with the existing GSE brand everywhere because all constants/domain/JSON-LD say GSE; override if GSN is a deliberate rebrand.*
