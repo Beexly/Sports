@@ -15,3 +15,5 @@
 **Decision rule (D-011, default in effect):** implement Option A's code next cycle — route-based settlement with the truth contract + `*/30` cadence in `vercel.json`. If GA-09 comes back "Hobby, won't upgrade," flip to Option B with zero code waste (the route reuses the worker's settle functions).
 
 **What does NOT change in either option:** the 60-minute freshness gate (never loosened to fake green), the draft-only publish gate, the calibration report regenerating after settlement.
+
+**Cadence + quota (implemented 2026-06-10, D-011 Option A):** `vercel.json` now runs ONE all-sports `/api/cron/refresh-odds` at `*/30 * * * *` (replacing the 7 daily per-sport crons) plus `/api/cron/settle-picks` hourly — 30-min all-sports polling is quota-sized by GA-02's The Odds API tier purchase, and if the tier is undersized the job-truth contract reports `PROVIDER_QUOTA_EXHAUSTED` honestly (non-2xx) rather than masking it. `jarvis-snapshot` is unchanged. (Note lives here because `vercel.json` forbids comments.)

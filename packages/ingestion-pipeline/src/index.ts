@@ -7,3 +7,9 @@ export type {
   EvaluatedGame,
   RecordGateDecisionsInput,
 } from "./gate-decisions.js";
+export { settleOnce } from "./settle.js";
+export type {
+  SettleOnceDeps,
+  SettleOnceResult,
+  SettleSportOutcome,
+} from "./settle.js";
