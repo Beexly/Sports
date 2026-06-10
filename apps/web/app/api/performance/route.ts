@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
-import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
+import {
+  getReadinessGates,
+  bootstrapGateResponse,
+  computeClvPositiveRate,
+} from "@sports/prediction-engine";
 
 export const dynamic = "force-dynamic";
 
@@ -83,11 +87,39 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       ? Math.round((overall.wins / (overall.wins + overall.losses)) * 100 * 10) / 10
       : null;
 
+  // Rolling CLV-positive rate (ADDITIVE — does not affect win-rate above).
+  // Honest proof the engine beats the close: share of settled canonical picks
+  // whose bet-time line/price beat the closing reference. Only picks with a
+  // computed CLV verdict count (clvComputedAt set); a missing/stale close is
+  // excluded, so the rate is never inflated by absent data. Null when sample
+  // is 0. This is shadow proof — it never feeds the published pick number.
+  const clvPicks = await db.pick.findMany({
+    where: {
+      result: { in: ["WIN", "LOSS", "PUSH"] },
+      isPublished: true,
+      isBootstrap: false,
+      NOT: { modelVersion: "v5.0.0-seed" },
+      clvComputedAt: { not: null },
+      ...(sport
+        ? { game: { sport: { name: { contains: sport, mode: "insensitive" as const } } } }
+        : {}),
+    },
+    select: { clvPositive: true, clvComputedAt: true },
+  });
+
+  const clv = computeClvPositiveRate(clvPicks);
+
   return NextResponse.json({
     success: true,
     data: {
       overall: { ...overall, winRate: overallWinRate },
       bySport: stats.sort((a, b) => b.total - a.total),
+      // Closing-Line Value scoreboard (additive; null until closes accrue).
+      clv: {
+        clvPositiveRate: clv.clvPositiveRate,
+        sampleSize: clv.sampleSize,
+        positiveCount: clv.positiveCount,
+      },
       period,
       disclaimer:
         "Past performance does not guarantee future results. For informational purposes only.",

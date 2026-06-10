@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  buildDegradedPublicPromotionsResponse,
   toPublicPromotion,
   buildPublicPromotionsResponse,
 } from "@/lib/promotions/public-payload";
@@ -85,5 +86,20 @@ describe("public payload builder", () => {
       { now: TS_NOW, state: "NJ" }
     );
     expect(resp.meta.state).toBe("NJ");
+  });
+
+  it("builds a degraded empty response without live links when promotions data is unavailable", () => {
+    const resp = buildDegradedPublicPromotionsResponse({ state: "NJ" });
+
+    expect(resp.success).toBe(true);
+    expect(resp.data).toEqual([]);
+    expect(resp.meta).toMatchObject({
+      total: 0,
+      filteredCount: 0,
+      state: "NJ",
+      dataStatus: "degraded",
+      degradedReason: "promotions_unavailable",
+    });
+    expect(resp.meta.notice).toMatch(/21\+/);
   });
 });

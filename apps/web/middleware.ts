@@ -24,6 +24,8 @@ const AUTH_COOKIE_NAMES = [
 
 export function middleware(req: NextRequest): NextResponse {
   const { pathname } = req.nextUrl;
+  const devFakeAdminEnabled =
+    process.env["DEV_FAKE_ADMIN"] === "true" && process.env["NODE_ENV"] !== "production";
 
   // Check if route requires auth
   const requiresAuth = PROTECTED_ROUTES.some(
@@ -35,7 +37,7 @@ export function middleware(req: NextRequest): NextResponse {
     // a synthetic admin session, so we must NOT redirect here. Without this
     // bypass, the middleware would 307 to /auth/signin before the page
     // even runs.
-    if (process.env["DEV_FAKE_ADMIN"] === "true") {
+    if (devFakeAdminEnabled) {
       return NextResponse.next();
     }
 

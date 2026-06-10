@@ -10,16 +10,50 @@ import {
   type Market,
   type SupportedSportKey,
 } from "./config.js";
+import {
+  classifyProviderError,
+  PROVIDER_JOB_STATUS,
+  type ProviderJobStatus,
+  type HeaderLike,
+} from "./provider-status.js";
 
 export class OddsApiError extends Error {
+  /**
+   * The classified job-truth status for this failure (PROVIDER_AUTH_FAILED,
+   * PROVIDER_QUOTA_EXHAUSTED, PROVIDER_RATE_LIMITED, PROVIDER_UNAVAILABLE, …).
+   * Always populated so callers can record it without re-deriving — this is
+   * the signal the cron job-truth contract keys off of.
+   */
+  public readonly providerStatus: ProviderJobStatus;
+
   constructor(
     message: string,
     public readonly status?: number,
-    public readonly remainingRequests?: number
+    public readonly remainingRequests?: number,
+    providerStatus?: ProviderJobStatus,
+    headers?: HeaderLike
   ) {
     super(message);
     this.name = "OddsApiError";
+    this.providerStatus =
+      providerStatus ??
+      classifyProviderError({ status: status ?? null, headers });
   }
+}
+
+/**
+ * Best-effort extraction of the classified provider status from any caught
+ * error. An `OddsApiError` carries it directly; a raw fetch/network failure is
+ * classified on the spot; anything else is UNKNOWN.
+ */
+export function providerStatusFromError(error: unknown): ProviderJobStatus {
+  if (error instanceof OddsApiError) return error.providerStatus;
+  // Network/timeout failures never reach OddsApiError (the throw is below the
+  // `response.ok` check), so classify them from the raw error here.
+  const classified = classifyProviderError({ status: null, error });
+  return classified === PROVIDER_JOB_STATUS.UNKNOWN
+    ? PROVIDER_JOB_STATUS.UNKNOWN
+    : classified;
 }
 
 export interface OddsApiFetchResult<T> {
@@ -64,7 +98,11 @@ export class OddsApiClient {
       throw new OddsApiError(
         `The Odds API error: ${response.status} — ${body}`,
         response.status,
-        remainingRequests
+        remainingRequests,
+        // Classify here so the headers (rate-limit vs quota) are available;
+        // the constructor would otherwise only see the status code.
+        classifyProviderError({ status: response.status, headers: response.headers }),
+        response.headers
       );
     }
 

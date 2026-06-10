@@ -107,9 +107,11 @@ export default async function PerformancePage() {
   // Gate closed: bootstrap state only. No DB query, no track-record claim.
   if (!gates.canExposePerformanceStats) {
     const demoActive = isStubMode() && isDemoPicksEnabled();
-    const todayPickCount = await db.pick
-      .count({ where: { isPublished: true, result: "PENDING" } })
-      .catch(() => 0);
+    const todayPickCount = demoActive
+      ? await db.pick
+          .count({ where: { isPublished: true, result: "PENDING" } })
+          .catch(() => 0)
+      : 0;
 
     return (
       <BootstrapShell>
@@ -188,7 +190,7 @@ export default async function PerformancePage() {
               are excluded by design — they don&apos;t get to inflate the
               record.
             </p>
-            <p className="mt-3 text-xs text-gray-600">
+            <p className="mt-3 text-xs text-gray-400">
               Past performance does not guarantee future results.
             </p>
           </div>
@@ -217,12 +219,12 @@ export default async function PerformancePage() {
                 data-testid="performance-methodology"
                 className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
               >
-                <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
+                <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-400">
                   Methodology
                 </h2>
                 <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs text-gray-400 sm:grid-cols-4">
                   <div>
-                    <dt className="text-gray-600">Win rate definition</dt>
+                    <dt className="text-gray-400">Win rate definition</dt>
                     <dd>
                       <code className="rounded bg-gray-800 px-1 py-0.5 font-mono text-[10px] text-gray-300">
                         wins divided by decided outcomes
@@ -230,15 +232,15 @@ export default async function PerformancePage() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-gray-600">Pushes</dt>
+                    <dt className="text-gray-400">Pushes</dt>
                     <dd>Reported separately, excluded from the denominator</dd>
                   </div>
                   <div>
-                    <dt className="text-gray-600">Sample size</dt>
+                    <dt className="text-gray-400">Sample size</dt>
                     <dd>{overall.totalPicks} canonical picks</dd>
                   </div>
                   <div>
-                    <dt className="text-gray-600">Model version</dt>
+                    <dt className="text-gray-400">Model version</dt>
                     <dd>
                       <code className="rounded bg-gray-800 px-1 py-0.5 font-mono text-[10px] text-gray-300">
                         {modelVersion ?? "-"}
@@ -247,7 +249,7 @@ export default async function PerformancePage() {
                   </div>
                   {computedAt && (
                     <div className="col-span-2 sm:col-span-4">
-                      <dt className="text-gray-600">Last computed</dt>
+                      <dt className="text-gray-400">Last computed</dt>
                       <dd>{computedAt.toUTCString()}</dd>
                     </div>
                   )}
@@ -257,7 +259,7 @@ export default async function PerformancePage() {
               <section className="mb-12">
                 <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900 to-gray-900/60">
                   <div className="border-b border-gray-800 px-6 py-4">
-                    <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+                    <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400">
                       All-Time Overall
                     </h2>
                   </div>
@@ -293,7 +295,7 @@ export default async function PerformancePage() {
                     />
                   </div>
                   <div className="border-t border-gray-800 px-6 py-3">
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-gray-400">
                       Based on {overall.totalPicks} canonical settled picks. Win
                       rate excludes pushes.
                     </p>
@@ -343,25 +345,25 @@ export default async function PerformancePage() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-gray-800 text-left">
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
                             Period
                           </th>
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
                             Sport
                           </th>
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
                             Type
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-400">
                             W
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-400">
                             L
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-400">
                             P
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-400">
                             Win%
                           </th>
                         </tr>
@@ -386,7 +388,7 @@ export default async function PerformancePage() {
                                 {SPORT_DISPLAY_NAMES[s.sport.toLowerCase()] ??
                                   s.sport}
                               </td>
-                              <td className="px-4 py-3 text-gray-500">
+                              <td className="px-4 py-3 text-gray-400">
                                 {s.pickType ?? "All"}
                               </td>
                               <td className="px-4 py-3 text-center text-green-400">
@@ -395,7 +397,7 @@ export default async function PerformancePage() {
                               <td className="px-4 py-3 text-center text-red-400">
                                 {s.losses}
                               </td>
-                              <td className="px-4 py-3 text-center text-gray-500">
+                              <td className="px-4 py-3 text-center text-gray-400">
                                 {s.pushes}
                               </td>
                               <td className="px-4 py-3 text-center">
@@ -409,7 +411,7 @@ export default async function PerformancePage() {
                                     {wr.toFixed(1)}%
                                   </span>
                                 ) : (
-                                  <span className="text-gray-600">-</span>
+                                  <span className="text-gray-400">-</span>
                                 )}
                               </td>
                             </tr>
@@ -446,7 +448,7 @@ function OverallStat({
 }) {
   return (
     <div className="flex flex-col items-center gap-1 px-6 py-6 text-center">
-      <dt className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+      <dt className="text-xs font-semibold uppercase tracking-widest text-gray-400">
         {label}
       </dt>
       <dd
@@ -494,20 +496,20 @@ function SportCard({
 
       <div className="grid grid-cols-3 gap-2 text-center">
         <div className="rounded-lg bg-green-900/20 py-2">
-          <p className="text-xs text-gray-500">W</p>
+          <p className="text-xs text-gray-400">W</p>
           <p className="text-lg font-bold text-green-400">{wins}</p>
         </div>
         <div className="rounded-lg bg-red-900/20 py-2">
-          <p className="text-xs text-gray-500">L</p>
+          <p className="text-xs text-gray-400">L</p>
           <p className="text-lg font-bold text-red-400">{losses}</p>
         </div>
         <div className="rounded-lg bg-gray-800/60 py-2">
-          <p className="text-xs text-gray-500">P</p>
+          <p className="text-xs text-gray-400">P</p>
           <p className="text-lg font-bold text-gray-400">{pushes}</p>
         </div>
       </div>
 
-      <p className="mt-3 text-center text-xs text-gray-600">
+      <p className="mt-3 text-center text-xs text-gray-400">
         {totalPicks} canonical picks
       </p>
 

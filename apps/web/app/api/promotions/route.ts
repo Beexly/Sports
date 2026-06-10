@@ -12,7 +12,10 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 import { db } from "@sports/db";
-import { buildPublicPromotionsResponse } from "@/lib/promotions/public-payload";
+import {
+  buildDegradedPublicPromotionsResponse,
+  buildPublicPromotionsResponse,
+} from "@/lib/promotions/public-payload";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -27,23 +30,36 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const url = new URL(req.url);
   const state = parseStateParam(url.searchParams.get("state"));
 
-  // Pre-filter at the DB layer for indexable fields. Compliance / disclosure
-  // gating happens in the response builder to keep the rule in one place.
-  const rows = await db.promotion.findMany({
-    where: {
-      status: "ACTIVE",
-      complianceStatus: "APPROVED",
-    },
-    orderBy: { updatedAt: "desc" },
-    take: 100,
-  });
+  try {
+    // Pre-filter at the DB layer for indexable fields. Compliance / disclosure
+    // gating happens in the response builder to keep the rule in one place.
+    const rows = await db.promotion.findMany({
+      where: {
+        status: "ACTIVE",
+        complianceStatus: "APPROVED",
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 100,
+    });
 
-  const payload = buildPublicPromotionsResponse(rows, { state });
+    const payload = buildPublicPromotionsResponse(rows, { state });
 
-  return NextResponse.json(payload, {
-    status: 200,
-    headers: {
-      "cache-control": "public, max-age=60, s-maxage=300",
-    },
-  });
+    return NextResponse.json(payload, {
+      status: 200,
+      headers: {
+        "cache-control": "public, max-age=60, s-maxage=300",
+      },
+    });
+  } catch (err) {
+    console.warn(
+      "[api/promotions] promotions unavailable; returning safe empty response.",
+      err instanceof Error ? err.message : "unknown error"
+    );
+    return NextResponse.json(buildDegradedPublicPromotionsResponse({ state }), {
+      status: 200,
+      headers: {
+        "cache-control": "no-store",
+      },
+    });
+  }
 }

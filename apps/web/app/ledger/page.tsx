@@ -37,7 +37,7 @@ function snapshotSummary(snapshot: {
   readonly hadAtsFormSignal: boolean;
   readonly hadH2HSignal: boolean;
 } | null): string {
-  if (!snapshot) return "Signal snapshot pending backfill.";
+  if (!snapshot) return "Signal snapshot not available for this entry.";
   const active = [
     snapshot.hadLineMovementSignal ? "line movement" : null,
     snapshot.hadRestSignal ? "rest" : null,
@@ -121,7 +121,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
           </section>
         ) : (
           <section className="overflow-hidden border border-gray-800">
-            <div className="grid grid-cols-[1fr_auto] gap-3 border-b border-gray-800 bg-gray-900/70 px-4 py-3 text-xs uppercase tracking-[0.16em] text-gray-500 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]">
+            <div className="grid grid-cols-[1fr_auto] gap-3 border-b border-gray-800 bg-gray-900/70 px-4 py-3 text-xs uppercase tracking-[0.16em] text-gray-400 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]">
               <span>Pick</span>
               <span className="hidden md:block">Market</span>
               <span>Result</span>
@@ -138,7 +138,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
                       {row.matchup}
                     </Link>
                   </h2>
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 text-xs text-gray-400">
                     {row.sport} / {row.settledAt ? row.settledAt.toISOString().slice(0, 10) : "settled"}
                   </p>
                 </div>

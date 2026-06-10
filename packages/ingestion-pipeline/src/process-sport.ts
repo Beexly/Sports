@@ -30,15 +30,23 @@ import {
   enrichGameContext,
   getAtsForm,
   getHeadToHeadForm,
+  providerStatusFromError,
+  PROVIDER_JOB_STATUS,
 } from "@sports/data-ingestion";
-import type { SupportedSportKey } from "@sports/data-ingestion";
+import type {
+  SupportedSportKey,
+  ProviderJobStatus,
+} from "@sports/data-ingestion";
 import {
   scoreGames,
   buildPickSignalSnapshot,
 } from "@sports/prediction-engine";
 import type { ReadinessGates } from "@sports/prediction-engine";
+import { MODEL_VERSION } from "@sports/prediction-engine";
 import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
+import { recordGateDecisions } from "./gate-decisions.js";
+import type { EvaluatedGame } from "./gate-decisions.js";
 
 export interface SportConfig {
   key: SupportedSportKey;
@@ -52,6 +60,14 @@ export interface ProcessSportResult {
   games: number;
   picks: number;
   error?: string;
+  /**
+   * Classified job-truth reason when status === "failed". Lets the caller
+   * (e.g. the cron route) report the precise provider failure cause to
+   * monitoring without re-deriving it. Absent on success.
+   *
+   * Internal/founder-only — never surfaced in public copy.
+   */
+  providerStatus?: ProviderJobStatus;
 }
 
 const SHADOW_CONTEXT_CATEGORIES: SignalCategory[] = [
@@ -193,6 +209,9 @@ export async function processSport(
 
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
+    // Parallel record of the publish-vs-gate inputs for every evaluated game.
+    // Captured here (no extra query) for the additive GateDecision writes.
+    const evaluatedGames: EvaluatedGame[] = [];
 
     for (const game of normalizedGames) {
       const gameRecord = gameRecords[game.externalId];
@@ -308,10 +327,22 @@ export async function processSport(
         })),
         context,
       });
+
+      // Capture the publish-vs-gate signal for this game. dataQualityScore is
+      // read from the enriched game record (defaults to 0 when enrichment was
+      // skipped or unavailable — matching the Game.dataQualityScore default).
+      evaluatedGames.push({
+        gameId: gameRecord.id,
+        bookmakerCoverageMax,
+        dataQualityScore: enrichedGame?.dataQualityScore ?? 0,
+      });
     }
 
     const scoredPicks = scoreGames(oddsInputs, fetchedAt);
     let picksGenerated = 0;
+    // Track the upserted pick id for the top published pick of each game so the
+    // additive GateDecision PUBLISHED rows can reference the real pick.
+    const pickIdByGameId = new Map<string, string>();
 
     for (const pick of scoredPicks) {
       // Fields refreshed on every cycle (confidence, odds, reasoning).
@@ -362,6 +393,13 @@ export async function processSport(
       });
       picksGenerated++;
 
+      // Record the top published pick id per game for the GateDecision rows.
+      // scoredPicks is sorted by confidence desc, so the first pick seen for a
+      // game is its highest-confidence pick — set-once preserves that.
+      if (!pickIdByGameId.has(pick.gameId)) {
+        pickIdByGameId.set(pick.gameId, upsertedPick.id);
+      }
+
       // Capture PickSignalSnapshot — immutable record of signal state at prediction time.
       // Created ONCE (update:{} ensures existing snapshots are never overwritten).
       // This is the foundation for future outcome-anchored calibration:
@@ -394,6 +432,27 @@ export async function processSport(
       }
     }
 
+    // Additive "dark trust" writes — populate the GateDecision rows and the
+    // public currentEdgeIndex that the board already READS. Fail-closed: the
+    // helper never throws (each DB call is guarded internally), and this extra
+    // try/catch mirrors the non-fatal snapshot pattern above. These writes never
+    // touch the published pick value/tier/grade, isFeatured, or MODEL_VERSION.
+    try {
+      await recordGateDecisions({
+        evaluatedGames,
+        scoredPicks,
+        pickIdByGameId,
+        isBootstrap,
+        modelVersion: MODEL_VERSION,
+        logPrefix,
+      });
+    } catch (gateErr) {
+      console.warn(
+        `${logPrefix} Gate decision recording failed for ${sport.key}: ` +
+        `${gateErr instanceof Error ? gateErr.message : gateErr}`
+      );
+    }
+
     await db.ingestionRun.update({
       where: { id: run.id },
       data: {
@@ -417,11 +476,30 @@ export async function processSport(
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error(`${logPrefix} ${sport.key} failed: ${message}`);
+    // Classify the failure onto the job-truth vocabulary so the IngestionRun
+    // record and the caller both carry the precise provider reason. This never
+    // records SUCCESS — a failed provider pull stays FAILED.
+    const providerStatus = providerStatusFromError(err);
+    const classifiedMessage =
+      providerStatus === PROVIDER_JOB_STATUS.UNKNOWN
+        ? message
+        : `[${providerStatus}] ${message}`;
+    console.error(`${logPrefix} ${sport.key} failed (${providerStatus}): ${message}`);
     await db.ingestionRun.update({
       where: { id: run.id },
-      data: { status: "FAILED", errorMessage: message, completedAt: new Date() },
+      data: {
+        status: "FAILED",
+        errorMessage: classifiedMessage,
+        completedAt: new Date(),
+      },
     });
-    return { sport: sport.key, status: "failed", games: 0, picks: 0, error: message };
+    return {
+      sport: sport.key,
+      status: "failed",
+      games: 0,
+      picks: 0,
+      error: classifiedMessage,
+      providerStatus,
+    };
   }
 }

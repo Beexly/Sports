@@ -38,7 +38,7 @@ function snapshotSummary(snapshot: {
   readonly hadRestSignal: boolean;
   readonly hadScheduleSignal: boolean;
 } | null): string {
-  if (!snapshot) return "Signal snapshot pending backfill.";
+  if (!snapshot) return "Signal snapshot not available for this entry.";
   const active = [
     snapshot.hadLineMovementSignal ? "line movement" : null,
     snapshot.hadRestSignal ? "rest" : null,
@@ -125,7 +125,7 @@ export default async function LossRoomPage(): Promise<JSX.Element> {
           <ul className="flex flex-col gap-3">
             {rows.map((row) => (
               <li key={row.id} className="border border-gray-800 bg-gray-900/40 p-4">
-                <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-gray-500">
+                <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-gray-400">
                   <span>{row.sport}</span>
                   <span>{row.rootCause.replace(/_/g, " ")}</span>
                   <span>{row.autopsyStatus.replace(/_/g, " ")}</span>
@@ -136,7 +136,7 @@ export default async function LossRoomPage(): Promise<JSX.Element> {
                     {row.headline}
                   </Link>
                 </h2>
-                <p className="mt-1 text-xs text-gray-500">{row.matchup}</p>
+                <p className="mt-1 text-xs text-gray-400">{row.matchup}</p>
                 <p className="mt-3 text-sm font-semibold text-gray-200">{row.selection}</p>
                 <p className="mt-3 text-sm text-gray-300">{row.whatWeLearned}</p>
                 <div className="mt-4 grid gap-3 text-xs text-gray-400 sm:grid-cols-3">
@@ -144,7 +144,7 @@ export default async function LossRoomPage(): Promise<JSX.Element> {
                   <span>Edge {row.edgeScore.toFixed(1)}</span>
                   <span>{row.modelVersion}</span>
                 </div>
-                <p className="mt-3 text-xs leading-5 text-gray-500">{row.snapshotSummary}</p>
+                <p className="mt-3 text-xs leading-5 text-gray-400">{row.snapshotSummary}</p>
               </li>
             ))}
           </ul>

@@ -2,7 +2,8 @@
 /**
  * prod-probe.mjs
  *
- * Light-weight production health probe. Hits /api/health, critical
+ * Light-weight production health probe. Hits /api/live, /api/health,
+ * /api/ready, critical
  * public routes, and (when an admin session cookie is provided)
  * /api/cockpit/jarvis, printing a one-line summary suitable for piping
  * into a deploy-verification step or scheduled synthetic monitor.
@@ -15,7 +16,8 @@
  *     ADMIN_COOKIE="next-auth.session-token=..." \
  *     node scripts/prod-probe.mjs
  *
- * Exits non-zero if /api/health is not 200, a critical public route is
+ * Exits non-zero if /api/live or /api/health is not 200, /api/ready is
+ * not 200, a critical public route is
  * unavailable, or a public route contains banned positioning language.
  */
 
@@ -109,7 +111,7 @@ const PUBLIC_ROUTE_PROBES = [
 
 const API_SHAPE_PROBES = [
   {
-    path: "/api/health?check=ingestion-freshness",
+    path: "/api/ready?check=ingestion-freshness",
     label: "ingestion freshness",
     validate: validateIngestionFreshness,
   },
@@ -184,7 +186,9 @@ function findBannedPublicPhrase(text) {
 
 const results = [];
 
+results.push({ path: "/api/live", ...(await probe("/api/live")) });
 results.push({ path: "/api/health", ...(await probe("/api/health")) });
+results.push({ path: "/api/ready", ...(await probe("/api/ready")) });
 for (const route of PUBLIC_ROUTE_PROBES) {
   const result = await probe(route.path);
   const bannedPattern = result.ok ? findBannedPublicPhrase(result.bodyText) : "";
@@ -213,7 +217,8 @@ if (ADMIN_COOKIE) {
   }
 }
 
-const failHealth = !results[0]?.ok;
+const failHealth = results.some((r) => (r.path === "/api/live" || r.path === "/api/health") && !r.ok);
+const failReady = results.some((r) => r.path === "/api/ready" && !r.ok);
 const failPublic = results.some((r) => PUBLIC_ROUTE_PROBES.some((route) => route.path === r.path) && !r.ok);
 const failApiShape = results.some((r) => API_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok);
 const failTextShape = results.some((r) => TEXT_SHAPE_PROBES.some((route) => route.path === r.path) && !r.ok);
@@ -224,7 +229,7 @@ const failAdminShape = results.some((r) =>
 const payload = {
   appUrl: APP_URL,
   generatedAtIso,
-  ok: !failHealth && !failPublic && !failApiShape && !failTextShape && !failGateShape && !failAdminShape,
+  ok: !failHealth && !failReady && !failPublic && !failApiShape && !failTextShape && !failGateShape && !failAdminShape,
   failed: results.filter((r) => !r.ok).length,
   probes: results.map((r) => ({
     path: r.path,
@@ -259,7 +264,13 @@ if (PROD_PROBE_JSON) {
 
 if (failHealth) {
   if (!PROD_PROBE_JSON) {
-    console.error("\n/api/health did not return 200. Deploy verification failed.");
+    console.error("\n/api/live or /api/health did not return 200. Deploy verification failed.");
+  }
+  process.exit(1);
+}
+if (failReady) {
+  if (!PROD_PROBE_JSON) {
+    console.error("\n/api/ready did not return 200. Deploy verification failed.");
   }
   process.exit(1);
 }
@@ -313,6 +324,7 @@ function validateBoardState(json) {
 function validateBoardEdgeIndex(json) {
   const baseError = validateBoardState(json);
   if (baseError) return baseError;
+  if (json.meta?.dataStatus === "degraded") return "";
   const rows = [
     ...json.data.scoringNow,
     ...json.data.publishedToday,
@@ -327,6 +339,7 @@ function validateBoardEdgeIndex(json) {
 function validateBookDepth(json) {
   const baseError = validateBoardState(json);
   if (baseError) return baseError;
+  if (json.meta?.dataStatus === "degraded") return "";
   if (json.data.booksPolled < 8) {
     return `Expected at least 8 books reporting, got ${json.data.booksPolled}.`;
   }

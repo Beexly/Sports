@@ -41,7 +41,7 @@ export function DashboardView() {
           ))}
         </div>
         <p className="mt-6 text-xs text-gray-500">
-          To exit dev-mode bypass, unset <code className="rounded bg-gray-800 px-1 py-0.5 text-gray-300">DEV_FAKE_ADMIN</code> and configure real Google OAuth.
+          Operator access is controlled by the configured production auth provider.
         </p>
       </div>
     </div>

@@ -14,8 +14,10 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/process\.exit\(2\)/);
   });
 
-  it("hits /api/health unconditionally", () => {
+  it("hits /api/live, /api/health, and /api/ready unconditionally", () => {
+    expect(src).toMatch(/\/api\/live/);
     expect(src).toMatch(/\/api\/health/);
+    expect(src).toMatch(/\/api\/ready/);
   });
 
   it("hits critical public routes for synthetic availability checks", () => {
@@ -29,7 +31,7 @@ describe("scripts/prod-probe.mjs", () => {
 
   it("validates board and calibration API response shapes", () => {
     expect(src).toMatch(/API_SHAPE_PROBES/);
-    expect(src).toMatch(/path:\s*"\/api\/health\?check=ingestion-freshness"/);
+    expect(src).toMatch(/path:\s*"\/api\/ready\?check=ingestion-freshness"/);
     expect(src).toMatch(/path:\s*"\/api\/board\/state"/);
     expect(src).toMatch(/path:\s*"\/api\/board\/state\?check=book-depth"/);
     expect(src).toMatch(/path:\s*"\/api\/board\/state\?check=edge-index"/);
@@ -84,7 +86,9 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/trust gate probes failed/);
   });
 
-  it("exits non-zero when /api/health is unhealthy", () => {
+  it("exits non-zero when health or readiness is unhealthy", () => {
+    expect(src).toMatch(/failReady/);
+    expect(src).toMatch(/\/api\/ready did not return 200/);
     expect(src).toMatch(/process\.exit\(1\)/);
   });
 

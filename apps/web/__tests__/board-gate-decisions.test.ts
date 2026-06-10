@@ -130,4 +130,32 @@ describe("board loaders with persisted gate decisions", () => {
     });
     expect(mocks.gameFindMany).not.toHaveBeenCalled();
   });
+
+  it("fails closed with degraded board state when the DB is unavailable", async () => {
+    mocks.gateDecisionFindMany.mockRejectedValue(new Error("database unavailable"));
+
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"));
+
+    expect(result.meta).toMatchObject({
+      isSampleData: false,
+      dataStatus: "degraded",
+      degradedReason: "board_data_unavailable",
+    });
+    expect(result.data.scoringNow).toEqual([]);
+    expect(result.data.publishedToday).toEqual([]);
+    expect(result.data.gatedTodayRows).toEqual([]);
+  });
+
+  it("fails closed with an empty pass list when the DB is unavailable", async () => {
+    mocks.gateDecisionFindMany.mockRejectedValue(new Error("database unavailable"));
+
+    const result = await loadBoardPasses(new Date("2026-05-22T16:00:00.000Z"));
+
+    expect(result.meta).toMatchObject({
+      isSampleData: false,
+      dataStatus: "degraded",
+      degradedReason: "pass_list_unavailable",
+    });
+    expect(result.data.passes).toEqual([]);
+  });
 });

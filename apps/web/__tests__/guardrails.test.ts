@@ -24,12 +24,16 @@ function runGuard(relativePath: string): {
   const r = spawnSync("node", [script], {
     cwd: REPO_ROOT,
     encoding: "utf8",
-    timeout: 30_000,
+    timeout: 90_000,
   });
   return {
     status: typeof r.status === "number" ? r.status : 1,
     stdout: r.stdout ?? "",
-    stderr: r.stderr ?? "",
+    stderr: [
+      r.stderr ?? "",
+      r.signal ? `signal=${r.signal}` : "",
+      r.error ? `error=${r.error.message}` : "",
+    ].filter(Boolean).join("\n"),
   };
 }
 

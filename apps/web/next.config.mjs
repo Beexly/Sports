@@ -41,6 +41,14 @@ const nextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
+          // HSTS — force HTTPS for two years incl. subdomains. Only takes
+          // effect over HTTPS (Vercel serves HTTPS), so it is inert in local
+          // http dev. `preload` is intentionally omitted (that is an
+          // irreversible registry commitment and a founder decision).
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains",
+          },
         ],
       },
     ];

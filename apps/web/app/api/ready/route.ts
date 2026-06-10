@@ -9,9 +9,9 @@ export async function GET(): Promise<NextResponse> {
   return NextResponse.json(
     {
       ...payload,
-      endpoint: "health",
-      semantics: "liveness_with_dependency_summary",
+      endpoint: "ready",
+      semantics: "dependency_readiness",
     },
-    { status: 200 }
+    { status: payload.ok ? 200 : 503 }
   );
 }

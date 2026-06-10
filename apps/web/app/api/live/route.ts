@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
-import { loadHealthChecks } from "@/lib/health/checks";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<NextResponse> {
-  const payload = await loadHealthChecks();
-
   return NextResponse.json(
     {
-      ...payload,
-      endpoint: "health",
-      semantics: "liveness_with_dependency_summary",
+      ok: true,
+      status: "alive",
+      endpoint: "live",
+      checkedAt: new Date().toISOString(),
     },
     { status: 200 }
   );

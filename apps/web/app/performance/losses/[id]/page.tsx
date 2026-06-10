@@ -37,7 +37,7 @@ function snapshotSummary(snapshot: {
   readonly hadRestSignal: boolean;
   readonly hadScheduleSignal: boolean;
 } | null): string {
-  if (!snapshot) return "Signal snapshot pending backfill.";
+  if (!snapshot) return "Signal snapshot not available for this entry.";
   const active = [
     snapshot.hadLineMovementSignal ? "line movement" : null,
     snapshot.hadRestSignal ? "rest" : null,
@@ -148,13 +148,13 @@ export default async function LossDetailPage({
           <Link href="/performance/losses" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">
             Loss Room
           </Link>
-          <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-gray-500">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-gray-400">
             <span>{loss.sport}</span>
             <span>{loss.rootCause.replace(/_/g, " ")}</span>
             <span>{loss.authoredAt.toISOString().slice(0, 10)}</span>
           </div>
           <h1 className="text-3xl font-bold text-white">{loss.headline}</h1>
-          <p className="text-sm text-gray-500">{loss.matchup}</p>
+          <p className="text-sm text-gray-400">{loss.matchup}</p>
         </header>
 
         <section className="grid gap-3 border border-gray-800 bg-gray-900/40 p-4 text-sm text-gray-300 sm:grid-cols-3">
@@ -178,7 +178,7 @@ export default async function LossDetailPage({
 function LossSection({ title, body }: { title: string; body: string }): JSX.Element {
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">{title}</h2>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-400">{title}</h2>
       <p className="text-base leading-7 text-gray-200">{body}</p>
     </section>
   );

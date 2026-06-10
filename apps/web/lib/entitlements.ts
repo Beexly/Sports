@@ -17,8 +17,12 @@ export type { Entitlements };
  */
 const DEV_FAKE_ADMIN_TIER: SubscriptionTier = "ELITE";
 
+function isDevFakeAdminEnabled(): boolean {
+  return process.env["DEV_FAKE_ADMIN"] === "true" && process.env["NODE_ENV"] !== "production";
+}
+
 export async function getUserEntitlements(userId: string): Promise<Entitlements> {
-  if (process.env["DEV_FAKE_ADMIN"] === "true" && userId === "dev-admin") {
+  if (isDevFakeAdminEnabled() && userId === "dev-admin") {
     return getEntitlements(DEV_FAKE_ADMIN_TIER);
   }
 

@@ -40,6 +40,8 @@ export interface PublicPromotionsResponse {
     readonly filteredCount: number;
     readonly state: string | null;
     readonly notice: string;
+    readonly dataStatus?: "live" | "degraded";
+    readonly degradedReason?: string;
   };
 }
 
@@ -96,6 +98,23 @@ export function buildPublicPromotionsResponse(
       filteredCount: filtered.length,
       state: options.state ?? null,
       notice: PUBLIC_NOTICE,
+    },
+  };
+}
+
+export function buildDegradedPublicPromotionsResponse(options: {
+  state?: string | null;
+} = {}): PublicPromotionsResponse {
+  return {
+    success: true,
+    data: Object.freeze([]),
+    meta: {
+      total: 0,
+      filteredCount: 0,
+      state: options.state ?? null,
+      notice: PUBLIC_NOTICE,
+      dataStatus: "degraded",
+      degradedReason: "promotions_unavailable",
     },
   };
 }

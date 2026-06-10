@@ -35,42 +35,69 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const gradeFilter = searchParams.get("grade") as PickGrade | null;
   const targetDate = dateParam ? new Date(dateParam) : new Date();
 
-  const picks = await db.pick.findMany({
-    where: {
-      isPublished: true,
-      isBootstrap: false, // never expose bootstrap-era picks publicly
-      generatedAt: {
-        gte: startOfDay(targetDate),
-        lte: endOfDay(targetDate),
-      },
-      // Server-side tier gate
-      ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
-      // Optional grade filter (only useful for PRO+ who can see premium)
-      ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
-      ...(sportFilter
-        ? {
-            game: {
-              sport: {
-                key: { contains: sportFilter, mode: "insensitive" as const },
+  // Fail closed: if the database is unavailable, return an honest degraded
+  // 503 rather than a 500 stack or a silent empty 200 that reads as "no picks
+  // today." Mirrors the board/promotions degraded-payload pattern.
+  const picks = await db.pick
+    .findMany({
+      where: {
+        isPublished: true,
+        isBootstrap: false, // never expose bootstrap-era picks publicly
+        generatedAt: {
+          gte: startOfDay(targetDate),
+          lte: endOfDay(targetDate),
+        },
+        // Server-side tier gate
+        ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
+        // Optional grade filter (only useful for PRO+ who can see premium)
+        ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
+        ...(sportFilter
+          ? {
+              game: {
+                sport: {
+                  key: { contains: sportFilter, mode: "insensitive" as const },
+                },
               },
-            },
-          }
-        : {}),
-    },
-    include: {
-      game: {
-        include: {
-          sport: { select: { name: true, key: true } },
+            }
+          : {}),
+      },
+      include: {
+        game: {
+          include: {
+            sport: { select: { name: true, key: true } },
+          },
         },
       },
-    },
-    orderBy: [
-      { isFeatured: "desc" },
-      { confidence: "desc" },
-      { generatedAt: "desc" },
-    ],
-    take: entitlements.dailyPickLimit ?? 200,
-  });
+      orderBy: [
+        { isFeatured: "desc" },
+        { confidence: "desc" },
+        { generatedAt: "desc" },
+      ],
+      take: entitlements.dailyPickLimit ?? 200,
+    })
+    .catch((err: unknown) => {
+      console.warn(
+        "[api/picks] live picks unavailable; returning degraded payload.",
+        err instanceof Error ? err.message : "unknown error"
+      );
+      return null;
+    });
+
+  if (picks === null) {
+    return NextResponse.json(
+      {
+        success: false,
+        degraded: true,
+        data: [],
+        meta: {
+          tier: entitlements.tier,
+          total: 0,
+          reason: "DATA_UNAVAILABLE",
+        },
+      },
+      { status: 503 }
+    );
+  }
 
   const publicPicks: PublicPick[] = picks.map((pick) => {
     // Parse factorBreakdown from JSON storage

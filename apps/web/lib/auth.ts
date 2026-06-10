@@ -60,6 +60,10 @@ export const handlers = nextAuth.handlers as {
 
 const realAuth = nextAuth.auth as () => Promise<Session | null>;
 
+function isDevFakeAdminEnabled(): boolean {
+  return process.env["DEV_FAKE_ADMIN"] === "true" && process.env["NODE_ENV"] !== "production";
+}
+
 /**
  * Dev-mode admin bypass.
  *
@@ -69,7 +73,7 @@ const realAuth = nextAuth.auth as () => Promise<Session | null>;
  * table. NEVER set this in production.
  */
 export const auth: () => Promise<Session | null> = async () => {
-  if (process.env["DEV_FAKE_ADMIN"] === "true") {
+  if (isDevFakeAdminEnabled()) {
     return {
       user: {
         id: "dev-admin",
@@ -112,4 +116,4 @@ declare module "next-auth" {
   }
 }
 
-export const DEV_FAKE_ADMIN = process.env["DEV_FAKE_ADMIN"] === "true";
+export const DEV_FAKE_ADMIN = isDevFakeAdminEnabled();
