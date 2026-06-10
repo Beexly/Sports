@@ -14,6 +14,10 @@ Each ~15 minutes. Everything is built up to the human step.
 | GA-08 | **Launch go/no-go signature** | The only step after zero-BLOCKERs + calibration pass + Breathtaking Audit. | ~1 min | Launch |
 | GA-09 | **Confirm Vercel plan tier** (Pro = sub-daily crons OK → Option A stands; Hobby → say "B" and I wire the worker host instead) | Settlement + 30-min odds cadence need sub-daily crons; full proposal: `docs/command-center/launch/settlement-host-and-cadence-proposal.md` | ~5 min | Settlement in prod, readiness green, calibration sample |
 | GA-10 | **(2 min) X handle decision** — @GalaxySportsAI contains "AI"; contradicts the no-AI-foregrounding brand stance (BV-04) | Site metadata updates in 5 min once decided | ~2 min | Brand consistency (not launch) |
+| GA-11 | **Record your podcast reference voice** — 3–15s clean mono WAV, natural continuous speech, + its exact transcript (save as e.g. `~/voice-ref.wav` + set `PODCAST_VOICE_REF`/`PODCAST_VOICE_REF_TEXT`) | The voice-clone key; the render pipeline physically cannot run without it | ~10 min | Weekly podcast |
+| GA-12 | **Name the show + pick the weekly day** | Feed + page copy fill in | ~5 min | Podcast publish |
+| GA-13 | **Platform policy pass** — Spotify/Apple synthetic-content metadata rules for own-voice clones (one-time read) | Clean distribution from episode 1 | ~20 min | Podcast distribution |
+| GA-14 | **Install NeuTTS Air locally** (`pip install neutts`; Apache-2.0, runs on CPU, voice never leaves your machine) | Doctrine: no autonomous installs on this box | ~15 min | Podcast render |
 
 **QUESTIONS (defaults already in effect — silence = consent)**
 - Q-01: "GSN (Galaxy Sports Network)" vs the repo's "Galaxy Sports Edge" — *proceeding with the existing GSE brand everywhere because all constants/domain/JSON-LD say GSE; override if GSN is a deliberate rebrand.*
