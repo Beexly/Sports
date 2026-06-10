@@ -22,6 +22,20 @@ export {
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export { calculatePickResult } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// v6 — Closing-Line Value (CLV): pure shadow proof, never feeds the published
+// confidence/tier/grade/result or MODEL_VERSION.
+export {
+  computeClv,
+  computeClvPositiveRate,
+  clvBetSideFor,
+} from "./clv.js";
+export type {
+  ClvBetSide,
+  ComputeClvInput,
+  ClvResult,
+  ClvRateInput,
+  ClvRate,
+} from "./clv.js";
 export * from "./constants.js";
 export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";

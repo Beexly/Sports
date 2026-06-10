@@ -27,13 +27,21 @@
 import { db } from "@sports/db";
 import {
   SUPPORTED_SPORTS,
+  MARKETS,
   OddsApiClient,
   DataNormalizer,
   settleGameLogs,
+  captureClosingLine,
+  pickClosingValues,
+  marketForPickType,
+  DEFAULT_CLOSING_REF,
 } from "@sports/data-ingestion";
+import type { OddsApiEvent } from "@sports/types";
 import {
   getReadinessGates,
   calculatePickResult,
+  computeClv,
+  clvBetSideFor,
 } from "@sports/prediction-engine";
 import { processSport } from "@sports/ingestion-pipeline";
 
@@ -80,6 +88,22 @@ async function settleResults(): Promise<void> {
     try {
       const { data: scores } = await client.getScores(sport.key, 2);
       const normalized = normalizer.normalizeScores(scores);
+
+      // CLV closing-line capture (additive, fail-closed): one odds pull per
+      // sport, used as the best-available near-kickoff "close" reference for
+      // the games settling this cycle. A failure here must NEVER block
+      // settlement, so it is fully isolated and degrades to an empty map
+      // (CLV simply not computed → pick clv* columns stay NULL).
+      const closingEventsByExternalId = new Map<string, OddsApiEvent>();
+      try {
+        const { data: closingEvents } = await client.getOdds(sport.key, [...MARKETS]);
+        for (const ev of closingEvents) closingEventsByExternalId.set(ev.id, ev);
+      } catch (oddsErr) {
+        console.warn(
+          `[clv] closing-odds pull skipped for ${sport.key}: ` +
+            `${oddsErr instanceof Error ? oddsErr.message : oddsErr}`
+        );
+      }
 
       for (const score of normalized) {
         if (!score.completed) continue;
@@ -170,6 +194,78 @@ async function settleResults(): Promise<void> {
             console.warn(
               `[settlement] GameLog failed for ${game.id}: ` +
               `${settleErr instanceof Error ? settleErr.message : settleErr}`
+            );
+          }
+
+          // CLV capture + per-pick compute (additive shadow, fail-closed).
+          // Snapshot the best-available pre-kickoff close for this game, then
+          // compute Closing-Line Value for each pick settled this cycle and
+          // write it to the NULLABLE pick.clv* columns. Nothing here changes
+          // the published confidence/tier/grade/result or MODEL_VERSION.
+          // The entire block is non-fatal: any failure leaves clv* NULL.
+          try {
+            const closingEvent = closingEventsByExternalId.get(score.externalId);
+            if (closingEvent) {
+              await captureClosingLine({
+                gameId: game.id,
+                event: closingEvent,
+                fetchedAt: settledAt,
+              });
+
+              for (const pick of game.picks) {
+                const pickType = pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL";
+                const side = clvBetSideFor(pickType, pick.selection, game.homeTeamName);
+                const market = marketForPickType(pickType);
+
+                const closingRow = await db.closingLine.findUnique({
+                  where: {
+                    gameId_market_closingRef: {
+                      gameId: game.id,
+                      market,
+                      closingRef: DEFAULT_CLOSING_REF,
+                    },
+                  },
+                });
+
+                const { closingLine, closingPrice, isStale } = pickClosingValues(
+                  closingRow,
+                  pickType,
+                  side
+                );
+
+                // For SPREAD/TOTAL the pick line is pick.line; price is vig-
+                // assumed (not stored), so price CLV is left to moneyline.
+                // For MONEYLINE pick.line IS the American price.
+                const clv = computeClv({
+                  betSide: side,
+                  betLine: pickType === "MONEYLINE" ? null : pick.line,
+                  closingLine,
+                  betPrice: pickType === "MONEYLINE" ? pick.line : null,
+                  closingPrice,
+                  isStale,
+                });
+
+                // Only write when at least one axis produced a value — a fully
+                // null result leaves the columns untouched (degrade-to-null).
+                if (clv.clvPoints !== null || clv.clvCents !== null) {
+                  await db.pick.update({
+                    where: { id: pick.id },
+                    data: {
+                      closingLine,
+                      closingPrice,
+                      clvPoints: clv.clvPoints,
+                      clvCents: clv.clvCents,
+                      clvPositive: clv.clvPositive,
+                      clvComputedAt: settledAt,
+                    },
+                  });
+                }
+              }
+            }
+          } catch (clvErr) {
+            console.warn(
+              `[clv] capture/compute failed for ${game.id}: ` +
+              `${clvErr instanceof Error ? clvErr.message : clvErr}`
             );
           }
         }

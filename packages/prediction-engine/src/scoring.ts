@@ -15,8 +15,10 @@ import {
   WEIGHTS,
   RISK_THRESHOLDS,
   MIN_BOOKMAKERS,
+  SHADOW_INDEPENDENT_ESTIMATOR_ENABLED,
 } from "./constants.js";
 import { computeGameContext } from "./game-context.js";
+import { estimateIndependentProbability } from "./independent-estimator.js";
 
 // ============================================================
 // Utility: convert American odds to implied probability
@@ -386,13 +388,26 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
     (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
 
+  // Shadow independent (non-market) estimate — populated only when enabled; it
+  // never feeds the published confidence/tier/grade. See independent-estimator.ts.
+  const independentEstimate = SHADOW_INDEPENDENT_ESTIMATOR_ENABLED
+    ? estimateIndependentProbability({
+        restAdvantageScore,
+        historicalFormScore,
+        headToHeadScore,
+        venueFormScore,
+        scheduleStressScore,
+        offeredAmericanPrice: avgPrice,
+      })
+    : null;
+
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
     marketDepthScore: depthScore,
     edgeScore: edgeComponentScore,
     marketPriceShapeScore: edgeComponentScore,
-    trueEvScore: null,
-    fairProbability: null,
+    trueEvScore: independentEstimate?.trueEvScore ?? null,
+    fairProbability: independentEstimate?.fairProbability ?? null,
     lineMovementScore,
     volatilityPenalty,
     headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,
@@ -549,13 +564,26 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const reasoningShort =
     `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${avgTotal.toFixed(1)}.`;
 
+  // Shadow independent estimate. Totals carry no fundamental (rest/form/H2H/venue/
+  // schedule) signal in this v1, so it anchors near 0.5; populated only when enabled.
+  const independentEstimate = SHADOW_INDEPENDENT_ESTIMATOR_ENABLED
+    ? estimateIndependentProbability({
+        restAdvantageScore: 0,
+        historicalFormScore: 0,
+        headToHeadScore: 0,
+        venueFormScore: 0,
+        scheduleStressScore: 0,
+        offeredAmericanPrice: avgPrice,
+      })
+    : null;
+
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
     marketDepthScore: depthScore,
     edgeScore: edgeComponentScore,
     marketPriceShapeScore: edgeComponentScore,
-    trueEvScore: null,
-    fairProbability: null,
+    trueEvScore: independentEstimate?.trueEvScore ?? null,
+    fairProbability: independentEstimate?.fairProbability ?? null,
     lineMovementScore,
     volatilityPenalty,
     dataQualityScore,
@@ -702,13 +730,26 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     `${chosenTeam} implied at ${Math.round(fairProb * 100)}% across ${h2hOdds.length} books.` +
     (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
 
+  // Shadow independent (non-market) estimate — populated only when enabled; it
+  // never feeds the published confidence/tier/grade. See independent-estimator.ts.
+  const independentEstimate = SHADOW_INDEPENDENT_ESTIMATOR_ENABLED
+    ? estimateIndependentProbability({
+        restAdvantageScore,
+        historicalFormScore,
+        headToHeadScore,
+        venueFormScore,
+        scheduleStressScore,
+        offeredAmericanPrice: avgPrice,
+      })
+    : null;
+
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
     marketDepthScore: depthScore,
     edgeScore: edgeComponentScore,
     marketPriceShapeScore: edgeComponentScore,
-    trueEvScore: null,
-    fairProbability: null,
+    trueEvScore: independentEstimate?.trueEvScore ?? null,
+    fairProbability: independentEstimate?.fairProbability ?? null,
     lineMovementScore,
     volatilityPenalty,
     headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,

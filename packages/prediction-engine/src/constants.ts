@@ -80,3 +80,15 @@ export const RISK_THRESHOLDS = {
 
 // Minimum bookmakers required to generate a pick
 export const MIN_BOOKMAKERS = 2;
+
+// ============================================================
+// Shadow: independent (non-market) estimator (WIN-03)
+// ============================================================
+// When enabled, the engine ALSO computes a fundamentals-only probability + EV
+// that is independent of the market price (see independent-estimator.ts) and
+// stores it in factorBreakdown (trueEvScore / fairProbability) for shadow
+// validation against closing-line value. DEFAULT OFF: the published confidence,
+// tier, pick grade, and MODEL_VERSION are never affected — this only populates
+// two otherwise-null diagnostic fields. Flipping it on is a founder decision.
+export const SHADOW_INDEPENDENT_ESTIMATOR_ENABLED =
+  process.env["SHADOW_INDEPENDENT_ESTIMATOR_ENABLED"] === "true";

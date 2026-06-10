@@ -2,6 +2,8 @@
 // Shared Platform Types
 // ============================================================
 
+export * from "./world-model.js";
+
 export type SubscriptionTier = "FREE" | "PRO" | "ELITE";
 
 export type PickType = "SPREAD" | "MONEYLINE" | "TOTAL";
