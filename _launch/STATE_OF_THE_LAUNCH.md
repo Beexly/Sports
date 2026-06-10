@@ -2,6 +2,22 @@
 
 ---
 
+## Digest #4 — 2026-06-10 (cycle 5)
+
+**Readiness:** test count 2,037 → **2,106**; commits 15 → **18**; tree clean. Trend: ↑.
+
+**Closed (evidence: director certify gate b2dsimby7 — 2,106 tests, build green; commits `6b08c8c`/`c71cb54`/`9f86fb4`):**
+- **R-08** — the entire Stripe revenue lifecycle is now PROVEN without live keys: real signature verification against synthetic signed events, tier flips (PRO/ELITE) asserted server-side, unknown-price → FREE (no silent grants), idempotent replay, retryable failures. Plus lazy-init: a missing key degrades cleanly instead of crashing the module graph.
+- **R-12** — public APIs are throttled (per-IP, 429 + Retry-After, fail-OPEN so a broken limiter can't take the site down) and validated (junk params → clean 400; no more fake "degraded" 503s from a malformed date). Upstash/KV activates on key presence — your env action, inert until then.
+- **R-10** — observability actually dispatches now: Sentry-compatible error envelopes + PostHog events the moment keys exist (zero egress without them, contract test-pinned), and synthetic uptime monitoring runs every 30 min via GitHub Actions.
+- **D-011 settlement route** (prior cycle, now logged): production settles picks inside Vercel the day GA-01/GA-02 clear.
+
+**Note:** cycle 5's workflow critic timed out mid-verdict; the director ran the full certify gate personally before committing (doctrine held — nothing lands unverified).
+
+**Next:** BV-02 humanizer port (your ask), R-13 odds-quota visibility, S-06 OG-image rebrand; then the Breathtaking SHOULD stack (17 tickets).
+
+---
+
 ## Digest #3 — 2026-06-10 (cycles 3–4)
 
 **Readiness:** ~32 🟢 / 9 🟡 / 0 🔴 — both audit REDs are dead. Trend: ↑↑. Test count 1,989 → **2,029**. Commits this run: 13 (all scoped, tree clean).
