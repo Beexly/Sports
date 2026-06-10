@@ -1,0 +1,71 @@
+name: Synthetic Monitoring
+
+# R-10: scheduled uptime checks. Runs scripts/synthetic-monitoring-runner.mjs
+# every 30 minutes against production. The runner spawns scripts/prod-probe.mjs
+# (health/ready endpoints, critical public routes, API shape checks, banned
+# positioning language) and writes a structured artifact to
+# .synthetic-monitoring/ which is uploaded for evidence.
+#
+# Configuration (no secrets are committed; both runner scripts use only Node
+# built-ins, so no npm install is needed):
+#   APP_URL — REPOSITORY VARIABLE (Settings → Secrets and variables →
+#             Actions → Variables), e.g. https://www.galaxysportsedge.com
+#             (no trailing slash). When unset, the run no-ops gracefully
+#             with a notice instead of failing.
+#
+# Intentionally NOT wired: ADMIN_COOKIE (authenticated cockpit probes) and
+# SYNTHETIC_MONITORING_FILE_ISSUES (issue-queue writes) — both stay
+# human-invoked per the founder-gated ops posture.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: synthetic-monitoring
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    name: Probe production
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check APP_URL configuration
+        id: config
+        env:
+          APP_URL: ${{ vars.APP_URL }}
+        run: |
+          if [ -z "${APP_URL}" ]; then
+            echo "::notice::APP_URL repository variable is not set — skipping synthetic monitoring run."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.config.outputs.configured == 'true'
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        if: steps.config.outputs.configured == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run synthetic monitoring
+        if: steps.config.outputs.configured == 'true'
+        env:
+          APP_URL: ${{ vars.APP_URL }}
+        run: node scripts/synthetic-monitoring-runner.mjs
+
+      - name: Upload monitoring artifact
+        # Upload evidence even when probes fail — that is when it matters most.
+        if: ${{ !cancelled() && steps.config.outputs.configured == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-monitoring-${{ github.run_id }}
+          path: .synthetic-monitoring/
+          retention-days: 14
+          if-no-files-found: ignore
