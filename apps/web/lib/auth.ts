@@ -69,7 +69,7 @@ const realAuth = nextAuth.auth as () => Promise<Session | null>;
  * table. NEVER set this in production.
  */
 export const auth: () => Promise<Session | null> = async () => {
-  if (process.env["DEV_FAKE_ADMIN"] === "true") {
+  if (process.env["DEV_FAKE_ADMIN"] === "true" && process.env["NODE_ENV"] !== "production") {
     return {
       user: {
         id: "dev-admin",

@@ -27,4 +27,16 @@ describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
     const ent = await getUserEntitlements("dev-admin");
     expect(ent.tier).toBe("FREE");
   });
+
+  it("disables the shortcut in production even when DEV_FAKE_ADMIN=true", async () => {
+    const env = process.env as Record<string, string | undefined>;
+    const original = env["NODE_ENV"];
+    env["NODE_ENV"] = "production";
+    try {
+      const ent = await getUserEntitlements("dev-admin");
+      expect(ent.tier).toBe("FREE");
+    } finally {
+      env["NODE_ENV"] = original;
+    }
+  });
 });
