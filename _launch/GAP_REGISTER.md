@@ -45,6 +45,12 @@ Priority: BLOCKER > SHOULD > POLISH. Owner: DIRECTOR (me) / CODEX (isolated lane
 - **BV-03 CLOSED** — hero now founder-voice ("Every stat. Known, reviewed, weighted, scored."), zero tooling foregrounded; compliance-rule message + sponsor template aligned.
 - **B-07 CLOSED** (cycle 1) — 7 scoped commits total; tree clean.
 
+## Security (from founder-links review, 2026-06-10)
+| ID | Ticket | Why | Effort | Priority | Owner | Status |
+|---|---|---|---|---|---|---|
+| SEC-01 | Object-level-authorization audit of every parameterized route (the Lovable-breach lesson: BOLA); re-run whenever a user-OWNED resource ships (saved slates, billing objects) | Current `[id]` routes verified visibility-safe (explain ✓, losses ✓); the risk arrives with user-owned objects | S (recurring checklist) | SHOULD | DIRECTOR | OPEN (baseline done, recheck on new resources) |
+| POD-01 | Weekly podcast scaffold CODE (per docs/command-center/launch/weekly-podcast-design.md): script generator (DRAFT-only + banned-phrase scan), render runner (honest-exit), PODCAST_ENABLED-gated RSS + /podcast | Founder ask; design committed; build was lost to the spend-limit failure | M | SHOULD | DIRECTOR (direct, no workflow — budget) | QUEUED |
+
 ## Founder voice directive (2026-06-10) — BV tickets
 | ID | Ticket | Why | Effort | Priority | Owner | Status |
 |---|---|---|---|---|---|---|
