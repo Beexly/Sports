@@ -5,6 +5,21 @@ import { db } from "@sports/db";
 
 export type UserRole = "USER" | "ADMIN";
 
+/**
+ * Owner/operator allow-list: comma-separated emails in ADMIN_EMAILS are
+ * elevated to ADMIN at session time. This is the production path for the
+ * founder to reach /cockpit without manual DB writes; the DB role still
+ * works and is never downgraded by this check.
+ */
+function isAdminEmail(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const list = (process.env["ADMIN_EMAILS"] ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  return list.includes(email.toLowerCase());
+}
+
 const config: NextAuthConfig = {
   adapter: PrismaAdapter(db),
   trustHost: true,
@@ -37,12 +52,18 @@ const config: NextAuthConfig = {
         }
       }
 
+      if (isAdminEmail(token.email)) {
+        token.role = "ADMIN";
+      }
+
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.sub ?? "";
-        session.user.role = ((token.role as UserRole | undefined) ?? "USER");
+        session.user.role = isAdminEmail(session.user.email)
+          ? "ADMIN"
+          : ((token.role as UserRole | undefined) ?? "USER");
       }
       return session;
     },

@@ -46,8 +46,29 @@ export default async function CockpitLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  if (!session?.user || session.user.role !== "ADMIN") {
+  if (!session?.user) {
     redirect("/auth/signin?callbackUrl=/cockpit");
+  }
+  // Signed in but not an operator: render a terminal screen. Redirecting
+  // back to signin here looped forever (signin bounces signed-in users to
+  // callbackUrl) — the exact ERR_TOO_MANY_REDIRECTS the owner hit.
+  if (session.user.role !== "ADMIN") {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-950 px-6 text-center">
+        <p className="rounded-md bg-yellow-900/40 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-yellow-300">
+          Cockpit · Operators only
+        </p>
+        <h1 className="text-2xl font-bold text-white">This flight deck needs an operator badge.</h1>
+        <p className="max-w-md text-sm text-gray-400">
+          You&apos;re signed in as {session.user.email ?? "a member"}, but this account doesn&apos;t
+          have operator access. If this is your platform, grant your email the operator role
+          (ADMIN_EMAILS) and reload.
+        </p>
+        <Link href="/" className="rounded-lg border border-gray-800 px-4 py-2 text-xs text-gray-300 hover:bg-gray-900/60">
+          ← Back to the Galaxy
+        </Link>
+      </div>
+    );
   }
 
   return (
