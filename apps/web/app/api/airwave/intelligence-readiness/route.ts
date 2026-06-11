@@ -20,10 +20,8 @@ export async function GET(): Promise<NextResponse> {
 
   // Return the full plane minus the channel87Contract.shows (sample fixture —
   // no need to serialize all placeholder blocks to the API surface).
-  const {
-    channel87Contract: _contract,
-    ...rest
-  } = plane;
+  const omitContract = ({ channel87Contract: _contract, ...kept }: typeof plane) => kept;
+  const rest = omitContract(plane);
 
   return NextResponse.json({
     success: true,

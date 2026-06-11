@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import {
   parseShowBlocksFromCsv,
   SHOW_BLOCK_CSV_CONTRACT,
-  type ShowBlockImportResult,
 } from "@/lib/airwave/show-block-import";
 
 // Minimal valid CSV with required columns only

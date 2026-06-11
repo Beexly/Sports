@@ -281,6 +281,39 @@
   20% { opacity: 1; }
   100% { stroke-dashoffset: 0; opacity: 1; }
 }
+
+/* ── Warp traversal (CinematicEntrance galaxy flyover) ──────────────────
+ * Radial star streaks pour past the camera; on arrival they brake back to
+ * points. Waypoints (--wx/--wy exit vectors) approach from deep space and
+ * sweep past the viewer. All geometry is deterministic; reduced motion is
+ * killed by the .gse-cine-anim override below. */
+@keyframes gse-warp-star {
+  0%   { transform: rotate(var(--ang)) translateX(2vmax) scaleX(0.08); opacity: 0; }
+  12%  { opacity: 0.9; }
+  100% { transform: rotate(var(--ang)) translateX(58vmax) scaleX(1.7); opacity: 0; }
+}
+@keyframes gse-warp-brake {
+  0%   { transform: rotate(var(--ang)) translateX(16vmax) scaleX(0.6); opacity: 0.7; }
+  100% { transform: rotate(var(--ang)) translateX(20vmax) scaleX(0.05); opacity: 0; }
+}
+@keyframes gse-wp-fly {
+  0%   { transform: translate(-50%, -50%) translate(calc(var(--wx) * 0.12), calc(var(--wy) * 0.12)) scale(0.3); opacity: 0; filter: blur(3px); }
+  22%  { opacity: 1; filter: blur(0); }
+  62%  { transform: translate(-50%, -50%) translate(calc(var(--wx) * 0.55), calc(var(--wy) * 0.55)) scale(1.05); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translate(calc(var(--wx) * 1.6), calc(var(--wy) * 1.6)) scale(2.1); opacity: 0; filter: blur(4px); }
+}
+@keyframes gse-nebula-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(4%, -3%, 0) scale(1.12); }
+}
+@keyframes gse-core-glow {
+  from { transform: scale(1); opacity: 0.5; }
+  to   { transform: scale(2.4); opacity: 1; }
+}
+@keyframes gse-star-breathe {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 0.8; }
+}
 @media (prefers-reduced-motion: reduce) {
   .gse-cine-anim { animation: none !important; }
 }

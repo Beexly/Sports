@@ -179,7 +179,7 @@ function parsePipeSeparated(value: string): readonly string[] {
 
 function parseRowToShowBlock(
   row: Record<string, string>,
-  rowIndex: number,
+  _rowIndex: number,
 ): { block: ShowBlock | null; errors: readonly string[] } {
   const errors: string[] = [];
 

@@ -81,11 +81,6 @@ export function isWithinChannel87Window(hourCt: number): boolean {
   return hourCt >= CH87_WINDOW.startHour && hourCt < CH87_WINDOW.endHour;
 }
 
-function parseHour(timeStr: string): number {
-  const parts = timeStr.split(":");
-  return parseInt(parts[0] ?? "0", 10);
-}
-
 /**
  * Validate a ShowBlock for required fields and time integrity.
  * Returns an array of validation errors (empty if valid).

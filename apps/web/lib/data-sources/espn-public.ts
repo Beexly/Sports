@@ -49,6 +49,7 @@ export type EspnGame = {
 };
 
 export type EspnScoreboardResult = {
+  readonly ok: true;
   readonly sport: EspnSport;
   readonly league: EspnLeague;
   readonly games: readonly EspnGame[];
@@ -69,6 +70,7 @@ export type EspnTeam = {
 };
 
 export type EspnTeamsResult = {
+  readonly ok: true;
   readonly sport: EspnSport;
   readonly league: EspnLeague;
   readonly teams: readonly EspnTeam[];
@@ -86,6 +88,7 @@ export type EspnRosterPlayer = {
 };
 
 export type EspnRosterResult = {
+  readonly ok: true;
   readonly sport: EspnSport;
   readonly league: EspnLeague;
   readonly teamId: string;
@@ -202,6 +205,7 @@ export async function fetchEspnScoreboard(
     .filter((g): g is EspnGame => g !== null);
 
   return {
+    ok: true,
     sport,
     league,
     games,
@@ -263,6 +267,7 @@ export async function fetchEspnTeams(
     .filter((t): t is EspnTeam => t !== null);
 
   return {
+    ok: true,
     sport,
     league,
     teams,
@@ -328,6 +333,7 @@ export async function fetchEspnRoster(
   }
 
   return {
+    ok: true,
     sport,
     league,
     teamId,

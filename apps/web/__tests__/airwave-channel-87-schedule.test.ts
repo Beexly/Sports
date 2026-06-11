@@ -5,7 +5,6 @@ import {
   validateShowBlock,
   sortShowBlocks,
   getCurrentShowBlock,
-  getNextShowBlock,
   summarizeChannel87Schedule,
   CH87_CHANNEL_NUMBER,
   CH87_WINDOW,

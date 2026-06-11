@@ -6,7 +6,6 @@ import type { PublicPerformancePolicy } from "@/lib/performance/public-performan
 import {
   buildOwnerSummary,
   type OwnerSummary,
-  type OwnerStatusColor,
   type DepartmentSummary,
   type OwnerDecision,
   type PerformanceSummary,

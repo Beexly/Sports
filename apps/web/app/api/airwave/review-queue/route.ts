@@ -44,7 +44,8 @@ export async function GET(): Promise<NextResponse> {
   // Strip row-level details (source_pointer_private is in the claim objects
   // but the summary type doesn't carry it — still, strip rows entirely
   // from the public API to prevent any accidental leakage).
-  const { rows: _rows, ...summary } = batchResult;
+  const omitRows = ({ rows: _rows, ...kept }: typeof batchResult) => kept;
+  const summary = omitRows(batchResult);
 
   return NextResponse.json({
     success: true,

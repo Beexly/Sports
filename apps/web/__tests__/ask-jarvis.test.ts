@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { askJarvis, JARVIS_QUESTIONS, JARVIS_INTENT_ORDER, type JarvisIntent } from "@/lib/cockpit/ask-jarvis";
+import { askJarvis, JARVIS_QUESTIONS, JARVIS_INTENT_ORDER } from "@/lib/cockpit/ask-jarvis";
 import { buildOwnerSummary, type BuildOwnerSummaryInput, type GatesForOwnerSummary } from "@/lib/cockpit/owner-summary";
 import { synthesizeJarvis, type JarvisInput } from "@/lib/cockpit/jarvis";
 import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-performance-policy";

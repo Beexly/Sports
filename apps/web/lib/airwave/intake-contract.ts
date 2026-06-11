@@ -219,7 +219,7 @@ function buildLaneState(args: {
 export function buildAirwaveIntakePlan(
   env: Record<string, string | undefined> = {},
   now: Date = new Date(),
-  scheduleBlocks: readonly ShowBlock[] = [],
+  _scheduleBlocks: readonly ShowBlock[] = [],
 ): AirwaveIntakePlan {
   const gates: SourcePolicyGates = {
     airwaveEnabled: env["AIRWAVE_ENABLED"] === "true",
