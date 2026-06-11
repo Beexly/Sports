@@ -24,8 +24,9 @@
  *
  * DOCTRINE: no fake odds/teams/wins presented as real. Waypoint copy is the
  * brand's honest philosophy ("Every edge earns a receipt.", "Sometimes the
- * sharpest pick is no pick."). All motion is CSS-only; star/nebula geometry is
- * deterministic (no render-time randomness → no hydration drift).
+ * sharpest pick is no pick."). The CSS warp is the instant base layer; the
+ * WebGL particle nebula (WarpNebulaLazy) fades in over it when its chunk
+ * lands. All geometry is deterministic (no render-time randomness).
  *
  * Accessibility: role="dialog", focus-managed Skip, Escape to skip, body scroll
  * locked while open, polite live-region announce. No audio.
@@ -34,6 +35,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import Link from "next/link";
 import { BRAND_COLORS, BRAND_NAME, BRAND_MONOGRAM } from "@/lib/brand";
+import { WarpNebulaLazy } from "@/components/landing/warp-nebula-lazy";
 
 const SEEN_KEY = "gse-entrance-seen-v1";
 
@@ -384,6 +386,10 @@ export function CinematicEntrance() {
       {/* ── WARP TRAVERSAL — flying through the galaxy, past the system ── */}
       {(showWarp || showArrival) && (
         <div className="absolute inset-0" style={{ perspective: "600px" }}>
+          {/* particle nebula — the BlueYard-class WebGL tier. Streams during
+              warp, decelerates to galactic idle on arrival. The CSS streaks
+              below are the instant base layer; this fades in over them. */}
+          <WarpNebulaLazy mode={showArrival ? "idle" : "warp"} />
           {/* star tunnel — radial streaks pouring past the camera */}
           <div aria-hidden className="absolute inset-0" style={par(26)}>
             {WARP_STARS.map((s, i) => (
