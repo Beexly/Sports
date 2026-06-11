@@ -8,6 +8,16 @@ import { CountUp } from "@/components/ui/count-up";
 import { BRAND_COLORS } from "@/lib/brand";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
+import { Reveal } from "@/components/motion/reveal";
+import { WorldSection } from "@/components/world/world-section";
+import { GalaxyTwinPreview } from "@/components/world/galaxy-twin-preview";
+import { SignalFragmentField } from "@/components/world/signal-fragment-field";
+import { MarketMirageChapter } from "@/components/world/market-mirage";
+import { NoBetGateChapter } from "@/components/world/no-bet-gate";
+import { DecisionAutopsyPreview } from "@/components/world/decision-autopsy-preview";
+import { ParlayMriPreview } from "@/components/world/parlay-mri-preview";
+import { AirwaveSignalLayer } from "@/components/world/airwave-signal-layer";
+import { CostOfNoiseCalculator } from "@/components/world/cost-of-noise-calculator";
 import { loadBoardPasses } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
@@ -25,9 +35,9 @@ import { loadTrendWorkbench } from "@/lib/trends/workbench";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Sports Intelligence With Receipts",
+  title: "A Sports Intelligence Operating System",
   description:
-    "Galaxy Sports Edge is a data-first sports intelligence platform: public board state, trend discovery, source readiness, and loss accountability without fake picks.",
+    "Galaxy Sports Edge + Galaxy Sports Network: the market's noise turned into structured signal — public board state, no-bet gating, decision autopsies, media intelligence, and receipts for all of it.",
   alternates: { canonical: "/" },
 };
 
@@ -63,14 +73,18 @@ export default async function HomePage(): Promise<JSX.Element> {
     <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
       {/* Site front door: the cinematic "SIGNAL ACQUIRED" cold open. Self-gating
           (localStorage) so it plays once on arrival, ~3s on return, skippable,
-          reduced-motion safe — it dissolves to reveal the home behind it. */}
+          reduced-motion safe — it dissolves to reveal the world behind it. */}
       <CinematicEntrance />
       <Nav />
       <main id="main-content">
-        <section className="relative isolate overflow-hidden border-b border-mineral">
+        {/* ── 00 · THE WORLD OPENS ─────────────────────────────────────
+            The entrance burst dissolves into this: aurora, starfield, the
+            thesis, and live board telemetry. Real data, honest empty states. */}
+        <section className="gw-nebula-deep relative isolate overflow-hidden border-b border-mineral">
           <div aria-hidden="true" className="absolute inset-0 -z-20">
             <ShaderAuroraLazy />
           </div>
+          <div aria-hidden="true" className="gw-starfield -z-10" />
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-10"
@@ -78,20 +92,30 @@ export default async function HomePage(): Promise<JSX.Element> {
               background: `linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}d9 0%, ${BRAND_COLORS.obsidianBlack}80 44%, ${BRAND_COLORS.obsidianBlack}b3 72%, ${BRAND_COLORS.obsidianBlack} 100%)`,
             }}
           />
-          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[1.04fr_0.96fr] lg:items-center lg:px-8">
             <div>
-              <h1 className="max-w-4xl font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
-                The board is only as smart as the data behind it.
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-2 rounded-full border border-orbital-cyan/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+                  GSE · the decision engine
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-plasma/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
+                  GSN · the signal studio
+                </span>
+              </div>
+              <h1 className="mt-6 max-w-4xl font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
+                The market is full of noise.
+                <br />
+                Galaxy turns it into <span className="gse-editorial text-orbital-cyan">signal</span>.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
-                Galaxy Sports Edge is being rebuilt as a sports intelligence engine:
-                odds, nflverse, roster context, trend discovery, and public accountability
-                in one readable system. No public pick or projection appears unless the
-                inputs are real enough to defend.
+                A sports intelligence operating system for markets, picks, media, and
+                decision quality. The board is only as smart as the data behind it.
+                No public pick or projection appears unless the
+                inputs are real enough to defend — and every edge earns a receipt.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Link href="/board" className="btn-primary min-h-11 px-5 py-3">
-                  Today&apos;s board
+                  Enter today&apos;s board
                 </Link>
                 <Link
                   href="/trends"
@@ -100,13 +124,16 @@ export default async function HomePage(): Promise<JSX.Element> {
                   Open Trend Lab
                 </Link>
               </div>
+              <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
+                We detect. You decide.
+              </p>
             </div>
 
-            <div className="border border-mineral bg-eclipse p-5">
+            <div className="gw-card-hover rounded-ds-lg border border-mineral bg-eclipse p-5">
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                    Board state
+                    Board state · live telemetry
                   </p>
                   <h2 className="mt-2 text-2xl font-semibold text-ion-white">
                     {totalRows > 0 ? "Live rows available" : "No public rows yet"}
@@ -123,7 +150,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 <Metric label="Gated" value={state.gatedToday} />
               </dl>
               {dbUnreachable ? (
-                <div className="mt-5 border border-mineral bg-carbon px-4 py-3">
+                <div className="mt-5 rounded-ds-sm border border-mineral bg-carbon px-4 py-3">
                   <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-alert">
                     Data store unreachable
                   </p>
@@ -133,7 +160,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   </p>
                 </div>
               ) : suppressedDemo ? (
-                <div className="mt-5 border border-mineral bg-carbon px-4 py-3">
+                <div className="mt-5 rounded-ds-sm border border-mineral bg-carbon px-4 py-3">
                   <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">
                     Demo data suppressed
                   </p>
@@ -143,25 +170,53 @@ export default async function HomePage(): Promise<JSX.Element> {
                   </p>
                 </div>
               ) : null}
+              <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.18em] text-ion-2">
+                An empty board is the gate doing its job — not a promise withheld.
+              </p>
             </div>
           </div>
         </section>
 
-        <section className="border-b border-mineral px-4 py-10 sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-            <div>
+        {/* ── 01 · GALAXY TWIN ──────────────────────────────────────── */}
+        <WorldSection
+          index="01"
+          eyebrow="Galaxy Twin · Market Observatory"
+          title={
+            <>
+              The slate, read as a <span className="gse-editorial text-orbital-cyan">living system</span>.
+            </>
+          }
+          lede="Every game is a node held by market gravity — bent by public pressure, flagged by context gaps, opened by edge windows, closed by the no-bet gate. Select a state to see how the engine reads it."
+          tone="deep"
+        >
+          <GalaxyTwinPreview />
+        </WorldSection>
+
+        {/* ── 02 · SIGNAL VS NOISE ──────────────────────────────────── */}
+        <WorldSection
+          index="02"
+          eyebrow="Signal vs noise"
+          title="Same market. Two completely different readings."
+          lede="The inputs that reach you arrive as argument — takes, steam, rumor, stale numbers. The engine takes the same inputs and structures them into something accountable."
+        >
+          <SignalFragmentField />
+
+          {/* Ten-second product test — the live telemetry behind the claim. */}
+          <div className="mt-14 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+            <Reveal>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Ten-second product test
               </p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
+              <h3 className="mt-3 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
                 See the current state, not a promise.
-              </h2>
+              </h3>
               <p className="mt-4 text-sm leading-6 text-ion-1">
-                Competitors win with dense data. GSE has to win with dense data plus receipts:
-                what cleared, what passed, what sources are live, and which trends are statistically defensible.
+                Anyone can claim signal. The honest version is checkable in ten seconds:
+                what cleared, what passed, which sources are live, and which trends are
+                statistically defensible — right now, on this page.
               </p>
-            </div>
-            <div className="grid gap-px overflow-hidden border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
+            </Reveal>
+            <div className="grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
               <StatusPanel
                 title="Public picks"
                 value={state.publishedToday.length}
@@ -193,124 +248,200 @@ export default async function HomePage(): Promise<JSX.Element> {
               />
             </div>
           </div>
-        </section>
+        </WorldSection>
 
-        <section className="border-b border-mineral px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        {/* ── 03 · MARKET MIRAGE ────────────────────────────────────── */}
+        <WorldSection
+          index="03"
+          eyebrow="Market Mirage"
+          title={
+            <>
+              The most dangerous pick is the <span className="gse-editorial text-plasma">obvious</span> one.
+            </>
+          }
+          lede="Public pressure, stale lines, decayed prices, and incomplete context can make distortion look like consensus. Peel the layers and watch the sure-looking thing dissolve."
+          tone="nebula"
+        >
+          <MarketMirageChapter />
+        </WorldSection>
+
+        {/* ── 04 · THE NO-BET GATE ──────────────────────────────────── */}
+        <WorldSection
+          index="04"
+          eyebrow="The No-Bet Gate"
+          title="No-Bet is not absence. It is intelligence."
+          lede="The edge is not the pick — the edge is knowing what not to trust. Restraint is a first-class output of this system, logged with reasons like any other decision."
+          tone="deep"
+        >
+          <NoBetGateChapter />
+
+          {/* The real lanes — what's scoring, published, and gated right now. */}
+          <div className="mt-14 rounded-ds-lg border border-mineral bg-eclipse p-5">
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                  Source health
+                  Today&apos;s lanes · live
                 </p>
-                <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
-                  Free-first ingestion stack
-                </h2>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
-                  {publicSourceCount} structured feeds and {contextSourceCount} context feeds are tracked
-                  separately so free APIs, owned media workflows, licensed reporting, and permission-required
-                  references do not blur together.
-                </p>
+                <h3 className="mt-2 text-2xl font-semibold text-ion-white">Scored, published, passed</h3>
               </div>
-              <Link href="/integrations" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-                All integrations
+              <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+                Full board
               </Link>
             </div>
-            <div className="mt-6 overflow-x-auto border border-mineral">
-              <table className="w-full min-w-[900px] text-left text-sm">
-                <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-                  <tr>
-                    <th className="px-4 py-3">Source</th>
-                    <th className="px-4 py-3">Cost</th>
-                    <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3">Grain</th>
-                    <th className="px-4 py-3">What it unlocks</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-mineral bg-carbon">
-                  {DATA_SOURCE_STACK.map((source) => (
-                    <tr key={source.key}>
-                      <td className="px-4 py-3 font-semibold text-ion-white">{source.name}</td>
-                      <td className="px-4 py-3 font-mono text-orbital-cyan">{sourceCostLabel(source.cost)}</td>
-                      <td className="px-4 py-3 font-mono text-ion">{sourceStatusLabel(source.status)}</td>
-                      <td className="px-4 py-3 text-ion-1">{source.grain}</td>
-                      <td className="px-4 py-3 text-ion-1">{source.unlocks}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="mt-5 grid gap-3 lg:grid-cols-3">
+              <Lane title="Scoring" rows={state.scoringNow} empty="No active scoring rows." />
+              <Lane title="Published" rows={state.publishedToday} empty="No public pick has cleared." />
+              <Lane title="Gated" rows={state.gatedTodayRows} empty="No pass rows logged." />
             </div>
-            <div className="mt-6 grid gap-px overflow-hidden border border-mineral bg-mineral lg:grid-cols-4">
-              {CONTEXT_INTELLIGENCE_SOURCES.map((source) => (
-                <article key={source.key} className="bg-eclipse p-4">
-                  <div className="flex min-h-24 flex-col justify-between gap-3">
-                    <div>
-                      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">
-                        {sourceStatusLabel(source.status)}
-                      </p>
-                      <h3 className="mt-2 text-lg font-semibold leading-tight text-ion-white">{source.name}</h3>
-                    </div>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-                      {source.grain}
+          </div>
+        </WorldSection>
+
+        {/* ── 05 · DECISION AUTOPSY ─────────────────────────────────── */}
+        <WorldSection
+          index="05"
+          eyebrow="Decision Autopsy"
+          title="Every decision leaves evidence."
+          lede="Published rows don't vanish when they settle. They get x-rayed in public: original signal, market movement, caveats, result, lesson."
+        >
+          <DecisionAutopsyPreview />
+        </WorldSection>
+
+        {/* ── 06 · PARLAY MRI ───────────────────────────────────────── */}
+        <WorldSection
+          index="06"
+          eyebrow="Parlay MRI"
+          title="See inside the slip before money does."
+          lede="Stacked legs hide correlation, dependency, and compounding fragility. The MRI is risk education — it shows the structure, you make the call."
+        >
+          <ParlayMriPreview />
+        </WorldSection>
+
+        {/* ── 07 · GSN / AIRWAVE ────────────────────────────────────── */}
+        <WorldSection
+          index="07"
+          eyebrow="Galaxy Sports Network · Airwave"
+          title={
+            <>
+              Sports media is a market too. <span className="gse-editorial text-plasma">Noisy</span> — and
+              now <span className="gse-editorial text-orbital-cyan">accountable</span>.
+            </>
+          }
+          lede="GSN runs the same discipline on the airwaves that GSE runs on the board: takes become paraphrased, tagged, human-reviewed claims — then graded records and studio briefs."
+          tone="nebula"
+        >
+          <AirwaveSignalLayer />
+        </WorldSection>
+
+        {/* ── 08 · COST OF NOISE ────────────────────────────────────── */}
+        <WorldSection
+          index="08"
+          eyebrow="Cost of Noise"
+          title="How much of your process is noise?"
+          lede="Describe a typical week and get a directional read on your decision quality — where avoidable noise leaks in, and which Galaxy modules tighten it. Education, not a profit promise."
+          tone="deep"
+        >
+          <CostOfNoiseCalculator />
+        </WorldSection>
+
+        {/* ── 09 · RECEIPTS ─────────────────────────────────────────── */}
+        <WorldSection
+          index="09"
+          eyebrow="Receipts"
+          title="Trust is an architecture, not a tagline."
+          lede="No fabricated picks, no invented stats, no silent edits. The source ledger below is the live state of the engine's inputs — cost, status, grain, and what each unlocks."
+        >
+          {/* Source health — the ingestion stack, in public. */}
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+                Source health
+              </p>
+              <h3 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+                Free-first ingestion stack
+              </h3>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
+                {publicSourceCount} structured feeds and {contextSourceCount} context feeds are tracked
+                separately so free APIs, owned media workflows, licensed reporting, and permission-required
+                references do not blur together.
+              </p>
+            </div>
+            <Link href="/integrations" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+              All integrations
+            </Link>
+          </div>
+          <div className="mt-6 overflow-x-auto rounded-ds-md border border-mineral">
+            <table className="w-full min-w-[900px] text-left text-sm">
+              <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                <tr>
+                  <th className="px-4 py-3">Source</th>
+                  <th className="px-4 py-3">Cost</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Grain</th>
+                  <th className="px-4 py-3">What it unlocks</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-mineral bg-carbon">
+                {DATA_SOURCE_STACK.map((source) => (
+                  <tr key={source.key}>
+                    <td className="px-4 py-3 font-semibold text-ion-white">{source.name}</td>
+                    <td className="px-4 py-3 font-mono text-orbital-cyan">{sourceCostLabel(source.cost)}</td>
+                    <td className="px-4 py-3 font-mono text-ion">{sourceStatusLabel(source.status)}</td>
+                    <td className="px-4 py-3 text-ion-1">{source.grain}</td>
+                    <td className="px-4 py-3 text-ion-1">{source.unlocks}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-6 grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral lg:grid-cols-4">
+            {CONTEXT_INTELLIGENCE_SOURCES.map((source) => (
+              <article key={source.key} className="bg-eclipse p-4">
+                <div className="flex min-h-24 flex-col justify-between gap-3">
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">
+                      {sourceStatusLabel(source.status)}
                     </p>
+                    <h4 className="mt-2 text-lg font-semibold leading-tight text-ion-white">{source.name}</h4>
                   </div>
-                  <p className="mt-4 text-sm leading-6 text-ion-1">{source.unlocks}</p>
-                  <p className="mt-4 text-xs leading-5 text-ion-2">{source.liveClaim}</p>
-                  {source.complianceNote ? (
-                    <p className="mt-3 border-t border-mineral pt-3 text-xs leading-5 text-ion-2">
-                      {source.complianceNote}
-                    </p>
-                  ) : null}
-                </article>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                    {source.grain}
+                  </p>
+                </div>
+                <p className="mt-4 text-sm leading-6 text-ion-1">{source.unlocks}</p>
+                <p className="mt-4 text-xs leading-5 text-ion-2">{source.liveClaim}</p>
+                {source.complianceNote ? (
+                  <p className="mt-3 border-t border-mineral pt-3 text-xs leading-5 text-ion-2">
+                    {source.complianceNote}
+                  </p>
+                ) : null}
+              </article>
+            ))}
+          </div>
+
+          {/* First trend targets — the questions the engine mines next. */}
+          <div className="mt-10 rounded-ds-lg border border-mineral bg-eclipse p-5">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+              First trend targets
+            </p>
+            <h3 className="mt-2 text-2xl font-semibold text-ion-white">The engine needs questions worth mining.</h3>
+            <div className="mt-5 grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral lg:grid-cols-4">
+              {TREND_BACKLOG.slice(0, 4).map((item) => (
+                <div key={item.key} className="bg-carbon p-4">
+                  <p className="font-semibold text-ion-white">{item.title}</p>
+                  <p className="mt-1 text-sm leading-6 text-ion-1">{item.question}</p>
+                  <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                    {item.requiredSources.join(" + ")}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
-        </section>
-
-        <section className="border-b border-mineral px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="border border-mineral bg-eclipse p-5">
-              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                    Today&apos;s lanes
-                  </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-ion-white">Scored, published, passed</h2>
-                </div>
-                <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-                  Full board
-                </Link>
-              </div>
-              <div className="mt-5 grid gap-3 lg:grid-cols-3">
-                <Lane title="Scoring" rows={state.scoringNow} empty="No active scoring rows." />
-                <Lane title="Published" rows={state.publishedToday} empty="No public pick has cleared." />
-                <Lane title="Gated" rows={state.gatedTodayRows} empty="No pass rows logged." />
-              </div>
-            </div>
-
-            <div className="border border-mineral bg-eclipse p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                First trend targets
-              </p>
-              <h2 className="mt-2 text-2xl font-semibold text-ion-white">The engine needs questions worth mining.</h2>
-              <div className="mt-5 flex flex-col divide-y divide-mineral border border-mineral">
-                {TREND_BACKLOG.slice(0, 4).map((item) => (
-                  <div key={item.key} className="p-4">
-                    <p className="font-semibold text-ion-white">{item.title}</p>
-                    <p className="mt-1 text-sm leading-6 text-ion-1">{item.question}</p>
-                    <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-                      {item.requiredSources.join(" + ")}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        </WorldSection>
 
         <MethodologySection />
 
-        <section data-testid="homepage-responsible-close" className="px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl border border-mineral bg-eclipse p-5 sm:p-7">
+        <section data-testid="homepage-responsible-close" className="gw-nebula px-4 py-14 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl rounded-ds-lg border border-mineral bg-eclipse p-5 sm:p-7">
             <h2 className="text-2xl font-semibold text-ion-white">The math can point. The decision stays yours.</h2>
             <p className="mt-3 text-sm leading-6 text-ion-1">
               This product is research, not certainty. The upgrade path is more data, better receipts,
@@ -327,7 +458,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
 function Metric({ label, value }: { label: string; value: number }): JSX.Element {
   return (
-    <div className="border border-mineral bg-carbon px-3 py-2">
+    <div className="rounded-ds-sm border border-mineral bg-carbon px-3 py-2">
       <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</dt>
       <dd className="mt-1 font-numerals text-2xl font-semibold tabular-nums text-ion-white">
         <CountUp value={value} />
@@ -370,7 +501,7 @@ function Lane({
   empty: string;
 }): JSX.Element {
   return (
-    <div className="border border-mineral bg-carbon p-4">
+    <div className="rounded-ds-sm border border-mineral bg-carbon p-4">
       <div className="flex items-center justify-between gap-3">
         <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">{title}</p>
         <span className="font-numerals text-sm text-ion-2">{rows.length}</span>
