@@ -73,6 +73,19 @@ Base tokens already exist (`apps/web/styles/design-tokens.css`, mirrored in
 
 Usage ratio: ~80% void/nebula dark, ~10% cyan, ~6% magenta, ~3% white, ~1% amber/red.
 
+**Energi pass (poster-grade pop, readability intact):**
+
+- Backgrounds are *purple-forward nebula*, never flat black — `gw-nebula` /
+  `gw-nebula-deep` carry visible ultraviolet/magenta atmosphere; text sits on
+  the darker wells so AA holds.
+- Identity chips and key callouts are **solid saturated fills with dark ink**
+  (`gw-chip-cyan`, `gw-chip-plasma`) — higher contrast than dim outline tints.
+- Headline *accent words* (never prose, never more than a few words) may use
+  chrome gradients (`gw-chrome-ice`, `gw-chrome-plasma`, `gw-chrome-violet`)
+  and text glow (`gw-text-glow-*`). One chrome treatment per headline max.
+- Magenta is a visual co-lead in atmosphere and accents, but its *meaning*
+  never changes: heat/distortion/volatility. Don't use it to mark good news.
+
 Hard rules:
 
 - Cyan never marks danger. Magenta never marks confirmation. Amber/red are rare.

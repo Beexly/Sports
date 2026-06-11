@@ -86,27 +86,26 @@ export default async function HomePage(): Promise<JSX.Element> {
             <ShaderAuroraLazy />
           </div>
           <div aria-hidden="true" className="gw-starfield -z-10" />
+          {/* Lighter damping than before — the aurora is the show; the copy
+              column gets its own local scrim for AA contrast. */}
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-10"
             style={{
-              background: `linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}d9 0%, ${BRAND_COLORS.obsidianBlack}80 44%, ${BRAND_COLORS.obsidianBlack}b3 72%, ${BRAND_COLORS.obsidianBlack} 100%)`,
+              background: `radial-gradient(ellipse 70% 60% at 78% 18%, ${"#FF2DD6"}21, transparent 60%), radial-gradient(ellipse 60% 55% at 12% 80%, ${"#7A5CFF"}2b, transparent 65%), linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}b3 0%, ${BRAND_COLORS.obsidianBlack}59 44%, ${BRAND_COLORS.obsidianBlack}99 72%, ${BRAND_COLORS.obsidianBlack} 100%)`,
             }}
           />
           <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[1.04fr_0.96fr] lg:items-center lg:px-8">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-2 rounded-full border border-orbital-cyan/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                  GSE · the decision engine
-                </span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-plasma/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
-                  GSN · the signal studio
-                </span>
+                <span className="gw-chip-cyan">GSE · the decision engine</span>
+                <span className="gw-chip-plasma">GSN · the signal studio</span>
               </div>
               <h1 className="mt-6 max-w-4xl font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
-                The market is full of noise.
+                The market is full of <span className="gw-chrome-plasma">noise</span>.
                 <br />
-                Galaxy turns it into <span className="gse-editorial text-orbital-cyan">signal</span>.
+                <span className="gw-chrome-ice">Galaxy turns it into</span>{" "}
+                <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">signal</span>.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
                 A sports intelligence operating system for markets, picks, media, and
@@ -120,7 +119,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 </Link>
                 <Link
                   href="/trends"
-                  className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-orbital-cyan/60 px-5 py-3 text-sm font-semibold text-orbital-cyan transition-shadow hover:border-orbital-cyan hover:text-ion-white hover:shadow-[0_0_28px_-6px_rgba(0,229,255,0.6)]"
                 >
                   Open Trend Lab
                 </Link>
@@ -187,7 +186,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           eyebrow="Galaxy Twin · Market Observatory"
           title={
             <>
-              The slate, read as a <span className="gse-editorial text-orbital-cyan">living system</span>.
+              The slate, read as a <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">living system</span>.
             </>
           }
           lede="Every game is a node held by market gravity — bent by public pressure, flagged by context gaps, opened by edge windows, closed by the no-bet gate. Select a state to see how the engine reads it."
@@ -262,7 +261,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           eyebrow="Market Mirage"
           title={
             <>
-              The most dangerous pick is the <span className="gse-editorial text-plasma">obvious</span> one.
+              The most dangerous pick is the <span className="gse-editorial gw-chrome-plasma">obvious</span> one.
             </>
           }
           lede="Public pressure, stale lines, decayed prices, and incomplete context can make distortion look like consensus. Peel the layers and watch the sure-looking thing dissolve."
@@ -276,7 +275,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           index="04"
           id="gate"
           eyebrow="The No-Bet Gate"
-          title="No-Bet is not absence. It is intelligence."
+          title={<>No-Bet is not absence. It is <span className="gw-chrome-ice">intelligence</span>.</>}
           lede="The edge is not the pick — the edge is knowing what not to trust. Restraint is a first-class output of this system, logged with reasons like any other decision."
           tone="deep"
         >
@@ -332,8 +331,8 @@ export default async function HomePage(): Promise<JSX.Element> {
           eyebrow="Galaxy Sports Network · Airwave"
           title={
             <>
-              Sports media is a market too. <span className="gse-editorial text-plasma">Noisy</span> — and
-              now <span className="gse-editorial text-orbital-cyan">accountable</span>.
+              Sports media is a market too. <span className="gse-editorial text-plasma gw-text-glow-plasma">Noisy</span> — and
+              now <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">accountable</span>.
             </>
           }
           lede="GSN runs the same discipline on the airwaves that GSE runs on the board: takes become paraphrased, tagged, human-reviewed claims — then graded records and studio briefs."
@@ -495,7 +494,7 @@ function StatusPanel({
   return (
     <Link href={href} className="block min-h-52 bg-eclipse p-5 transition-colors hover:bg-slate">
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{title}</p>
-      <p className="mt-4 font-numerals text-5xl font-semibold tabular-nums text-orbital-cyan">
+      <p className="gw-text-glow-cyan mt-4 font-numerals text-5xl font-semibold tabular-nums text-orbital-cyan">
         <CountUp value={value} group={group} />
       </p>
       <p className="mt-4 text-sm leading-6 text-ion-1">{detail}</p>

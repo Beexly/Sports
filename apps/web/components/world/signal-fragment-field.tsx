@@ -30,8 +30,8 @@ const STRUCTURED: readonly { label: string; value: string }[] = [
 ] as const;
 
 const NOISE_TONE: Record<"heat" | "caution" | "raw", string> = {
-  heat: "border-plasma/30 text-plasma/80",
-  caution: "border-caution/30 text-caution/90",
+  heat: "border-plasma/50 text-plasma gw-ring-heat",
+  caution: "border-caution/50 text-caution gw-ring-caution",
   raw: "border-mineral text-ion-1",
 };
 

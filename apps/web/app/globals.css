@@ -26,10 +26,12 @@
     background: var(--carbon);
     color: var(--ion);
     font-family: var(--f-body);
-    /* Subtle multi-layer atmospheric glow — never a flat black. */
+    /* Multi-layer atmospheric glow — never a flat black. ENERGI PASS:
+       purple/magenta atmosphere turned up so the canvas reads cosmic. */
     background-image:
-      radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255, 45, 138, 0.05), transparent 70%),
-      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(79, 168, 255, 0.04), transparent 60%);
+      radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255, 45, 214, 0.09), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(122, 92, 255, 0.10), transparent 60%),
+      radial-gradient(ellipse 90% 70% at 15% 100%, rgba(122, 92, 255, 0.07), transparent 65%);
     background-attachment: fixed;
     min-height: 100vh;
   }
@@ -332,20 +334,25 @@
    explain signal / risk / trust / gravity — never decorate.
    ════════════════════════════════════════════════════════════════════ */
 
-/* Void + nebula atmosphere — the section canvas. Never flat black. */
+/* Void + nebula atmosphere — the section canvas. Never flat black.
+   ENERGI PASS: purple is the atmosphere's co-lead — sections read as cosmic
+   nebula, not near-black. Text sits on the darker wells, so AA holds. */
 .gw-nebula {
   position: relative;
   background:
-    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(122, 92, 255, 0.10), transparent 62%),
-    radial-gradient(ellipse 70% 45% at 86% 18%, rgba(255, 45, 214, 0.05), transparent 60%),
-    radial-gradient(ellipse 60% 60% at 50% 110%, rgba(0, 229, 255, 0.05), transparent 65%),
-    linear-gradient(180deg, var(--void) 0%, #0A0D14 50%, var(--void) 100%);
+    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(122, 92, 255, 0.22), transparent 62%),
+    radial-gradient(ellipse 70% 45% at 86% 18%, rgba(255, 45, 214, 0.12), transparent 60%),
+    radial-gradient(ellipse 60% 60% at 50% 110%, rgba(0, 229, 255, 0.09), transparent 65%),
+    radial-gradient(ellipse 45% 35% at 70% 65%, rgba(90, 30, 90, 0.35), transparent 70%),
+    linear-gradient(180deg, var(--void) 0%, #0E0A1C 50%, var(--void) 100%);
 }
 .gw-nebula-deep {
   position: relative;
   background:
-    radial-gradient(ellipse 100% 65% at 50% -10%, rgba(122, 92, 255, 0.14), transparent 65%),
-    radial-gradient(ellipse 55% 40% at 8% 90%, rgba(0, 229, 255, 0.06), transparent 60%),
+    radial-gradient(ellipse 100% 65% at 50% -10%, rgba(122, 92, 255, 0.28), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 88% 30%, rgba(255, 45, 214, 0.14), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 8% 90%, rgba(0, 229, 255, 0.10), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 30% 55%, rgba(58, 22, 70, 0.45), transparent 75%),
     var(--void);
 }
 
@@ -415,6 +422,60 @@
   50%      { transform: rotate(8deg) scale(0.97); opacity: 1; }
 }
 
+/* ── ENERGI PASS — chrome text, glows, filled chips ──────────────────
+   Poster-grade treatments: gradient "chrome" headlines, saturated text
+   glow, and solid filled chips with dark ink (higher contrast than dim
+   outline tints). Semantics unchanged: cyan = signal, plasma = heat. */
+
+/* Chrome headline fills — vertical white→hue gradients, clipped to text. */
+.gw-chrome-ice {
+  background: linear-gradient(180deg, #FFFFFF 0%, #E8FBFF 38%, #8FECFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 24px rgba(0, 229, 255, 0.28));
+}
+.gw-chrome-plasma {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFB8EE 30%, #FF2DD6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 26px rgba(255, 45, 214, 0.38));
+}
+.gw-chrome-violet {
+  background: linear-gradient(180deg, #FFFFFF 0%, #D9CBFF 35%, #9F87FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 24px rgba(122, 92, 255, 0.35));
+}
+
+/* Saturated text glow — for short accent words only, never prose. */
+.gw-text-glow-cyan   { text-shadow: 0 0 18px rgba(0, 229, 255, 0.65), 0 0 44px rgba(0, 229, 255, 0.3); }
+.gw-text-glow-plasma { text-shadow: 0 0 18px rgba(255, 45, 214, 0.6), 0 0 44px rgba(255, 45, 214, 0.3); }
+.gw-text-glow-alert  { text-shadow: 0 0 18px rgba(255, 100, 112, 0.55), 0 0 40px rgba(255, 100, 112, 0.28); }
+.gw-text-glow-white  { text-shadow: 0 0 22px rgba(246, 247, 250, 0.45); }
+
+/* Filled identity chips — dark ink on full-saturation fill. */
+.gw-chip-cyan {
+  display: inline-flex; align-items: center; gap: 8px;
+  border-radius: 999px; padding: 5px 13px;
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  background: linear-gradient(110deg, #5BEEFF, #00E5FF);
+  color: var(--ion-blue-ink);
+  box-shadow: 0 0 26px -4px rgba(0, 229, 255, 0.55);
+}
+.gw-chip-plasma {
+  display: inline-flex; align-items: center; gap: 8px;
+  border-radius: 999px; padding: 5px 13px;
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  background: linear-gradient(110deg, #FF66E0, #FF2DD6);
+  color: var(--plasma-ink);
+  box-shadow: 0 0 26px -4px rgba(255, 45, 214, 0.55);
+}
+
 /* Glow rings — semantic halo states for nodes and readouts. */
 .gw-ring-signal   { box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.45), 0 0 24px -4px rgba(0, 229, 255, 0.5); }
 .gw-ring-heat     { box-shadow: 0 0 0 1px rgba(255, 45, 214, 0.4), 0 0 24px -4px rgba(255, 45, 214, 0.45); }
@@ -438,8 +499,9 @@
   color: var(--ion-2);
 }
 .gw-chapter-index::after {
-  content: ""; width: 48px; height: 1px;
-  background: linear-gradient(90deg, var(--orbital-cyan), transparent);
+  content: ""; width: 64px; height: 2px; border-radius: 999px;
+  background: linear-gradient(90deg, var(--orbital-cyan), var(--plasma) 70%, transparent);
+  box-shadow: 0 0 12px -2px rgba(0, 229, 255, 0.5);
 }
 
 /* Mirage degrade — truth layers revealing under a too-good surface. */

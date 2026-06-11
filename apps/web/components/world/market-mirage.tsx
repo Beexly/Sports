@@ -87,7 +87,7 @@ export function MarketMirageChapter(): JSX.Element {
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-plasma">
             Tonight&apos;s “obvious” play
           </p>
-          <p className="mt-3 font-display text-4xl font-semibold leading-none text-ion-white sm:text-5xl">
+          <p className="gw-chrome-ice mt-3 font-display text-4xl font-semibold leading-none sm:text-5xl">
             The favorite,
             <br />
             minus the points.
@@ -99,7 +99,7 @@ export function MarketMirageChapter(): JSX.Element {
         </div>
         {done ? (
           <div className="relative mt-8 border-t border-alert/40 pt-5">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-alert">Mirage collapsed</p>
+            <p className="gw-text-glow-alert font-mono text-xs uppercase tracking-[0.22em] text-alert">Mirage collapsed</p>
             <p className="mt-2 max-w-sm text-sm leading-6 text-ion">
               What looked like consensus was distortion. The edge was never the
               pick — it was knowing what not to trust.

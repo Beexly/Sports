@@ -41,8 +41,10 @@ export function NoBetGateChapter(): JSX.Element {
         <span aria-hidden className="absolute inset-6 rounded-full border border-mineral" />
         <span aria-hidden className="absolute inset-12 rounded-full border border-mineral/60" />
         <div className="relative text-center">
-          <p className="font-display text-5xl font-semibold tracking-tight text-ion-white">NO BET</p>
-          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-alert">
+          <p className="gw-text-glow-white font-display text-5xl font-semibold tracking-tight text-ion-white">
+            NO BET
+          </p>
+          <p className="gw-text-glow-alert mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-alert">
             gate closed · pass logged
           </p>
         </div>
