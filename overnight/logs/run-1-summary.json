@@ -1,0 +1,43 @@
+{
+  "run": 1,
+  "status": "completed",
+  "ts": "2026-06-11T07:10:00Z",
+  "branch": "claude/magical-volta-3wohz9",
+  "streams_completed": [
+    "security-sweep",
+    "paywall-audit",
+    "type-coverage",
+    "gate-invariants",
+    "test-coverage",
+    "synthesis"
+  ],
+  "streams_blocked": [],
+  "actions": {
+    "repair": [
+      "apps/web/lib/auth.ts — 3 any-cast eliminations (lines 23, 54, 82)",
+      "apps/web/lib/auth.ts — NextAuthInstance interface + User module augmentation"
+    ],
+    "improve": [
+      "apps/web/lib/auth.ts — DEV_FAKE_ADMIN NODE_ENV guard",
+      "apps/web/middleware.ts — DEV_FAKE_ADMIN NODE_ENV guard",
+      "apps/web/lib/entitlements.ts — DEV_FAKE_ADMIN NODE_ENV guard",
+      "apps/web/lib/auth.ts — exported DEV_FAKE_ADMIN constant NODE_ENV guard"
+    ],
+    "grow": [
+      "apps/web/lib/stripe/subscription-utils.ts (NEW) — extracted pure Stripe utilities",
+      "apps/web/__tests__/stripe-subscription-utils.test.ts (NEW) — 16 tests for revenue-critical mapping",
+      "apps/web/__tests__/db-stub-url-and-client.test.ts (NEW) — 18 tests for db stub behaviors"
+    ]
+  },
+  "findings_added": 7,
+  "leverage_total": 585,
+  "calibration_invariants_intact": true,
+  "top_priorities_next_run": [
+    "stripe-webhook-idempotency-integration-test (missing userId in metadata path)",
+    "auth-unit-tests-isolated (getUserEntitlements + auth() tested in isolation)",
+    "ingestion-pipeline-settle-sport-contract-tests (zero tests, HIGH blast)",
+    "CRON_SECRET timing-safe comparison via crypto.timingSafeEqual"
+  ],
+  "blocked_questions": [],
+  "next_action": "grow"
+}
