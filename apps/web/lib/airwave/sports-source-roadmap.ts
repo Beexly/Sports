@@ -16,8 +16,8 @@
  *   - Deryck97/nfl_nextgenstats_data (archived — value is as pointer only)
  *   - naivelogic/NFL-smarter-football (no license, nflscrapR-era dead data)
  *   - AGPL repos into closed product (statistics-for-strava, ZeroCat)
- *   - scores24.live / Kiito OÜ (ToS §4.2 explicitly forbids automated programs;
- *       commercial use requires written consent — 2026-06-11 review)
+ *   - scores24.live / Kiito OÜ (ToS §4.2 forbids automated programs; PERMISSION_REQUIRED —
+ *       manual UX research allowed; outreach via support@scores24.live for automation rights)
  */
 
 export type SourceDomain = "GSE" | "GSN" | "BOTH" | "DEV_TOOLING" | "EXCLUDED";
@@ -35,7 +35,8 @@ export type SourceCurrentStatus =
   | "READY_TO_EVALUATE"   // Architecture reviewed; evaluation sprint needed
   | "REFERENCE_FILED"     // Filed as reference; no code adoption
   | "INSTALLED_CLAUDE"    // Installed as Claude Code skill/plugin
-  | "EXCLUDED_PERMANENT"  // Permanently excluded
+  | "EXCLUDED_PERMANENT"  // Permanently excluded — no safe path
+  | "PERMISSION_REQUIRED" // Automation forbidden until written consent obtained
   | "FUTURE_CONSIDERATION"; // Not now; revisit at a later milestone
 
 export type SportsSourceEntry = {
@@ -346,29 +347,32 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
     id: "scores24-live",
     name: "scores24.live (Kiito OÜ)",
     repo: "https://scores24.live",
-    domain: "EXCLUDED",
-    licensePosture: "EXCLUDED",
-    licenseId: "All rights reserved — ToS prohibits automated access",
+    domain: "GSE",
+    licensePosture: "REFERENCE_ONLY",
+    licenseId: "All rights reserved — ToS §4.2 prohibits automated access without consent",
     useCaseSummary:
       "Consumer sports scores/odds aggregator. Estonian company (Kiito OÜ). " +
       "ToS §4.2 explicitly forbids 'automated programs to interact with the Site'. " +
       "Commercial use requires prior written consent. Data source unknown (may relay " +
       "Sportradar/Stats Perform feeds, which carry independent ToS restrictions). " +
-      "Reviewed 2026-06-11.",
-    currentStatus: "EXCLUDED_PERMANENT",
+      "Manual UX/taxonomy/feature research is allowed. Reviewed 2026-06-11.",
+    currentStatus: "PERMISSION_REQUIRED",
     nextAction:
-      "Do not build an adapter. Use ESPN public API (no ToS restriction on display data) " +
-      "or The Odds API (licensed) as alternatives.",
+      "Manual UX and taxonomy research permitted. For automation: contact Kiito OÜ via " +
+      "support@scores24.live or personal-data@scores24.live to obtain written permission, " +
+      "API agreement, or data license. Track in Source Rights Registry (source_id: scores24-live). " +
+      "Until then use ESPN public API or The Odds API as alternatives for data.",
     risk:
-      "HIGH. ToS explicitly prohibits automated programs. Commercial use requires written " +
-      "consent. Upstream data provider unknown — potential secondary liability if they relay " +
-      "Sportradar or Stats Perform data.",
-    fitsGse: false,
+      "MEDIUM. Automation without written consent violates ToS §4.2. Commercial use requires " +
+      "prior written permission. Upstream data provider unknown — potential secondary liability " +
+      "if they relay Sportradar or Stats Perform data. Manual research carries no legal risk.",
+    fitsGse: true,
     fitsGsn: false,
     maintained: true,
     notes:
-      "Permanently excluded per 2026-06-11 ToS review. ESPN public API and nflverse " +
-      "cover the same use cases without legal exposure.",
+      "Reclassified from EXCLUDED_PERMANENT to PERMISSION_REQUIRED per 2026-06-11 scraping " +
+      "rights framework review. Not excluded — has a viable unlock path via Kiito OÜ outreach. " +
+      "Manual UX/competitor analysis allowed. See source-rights-registry.ts (source_id: scores24-live).",
   },
 ];
 
