@@ -14,6 +14,11 @@
  *  - Reduced motion → static identity + entry choices, instant, no flashing.
  *  - #enter deep-link or prior-session flag → bypass entirely.
  *
+ * WORLD HANDSHAKE: the handoff is the front door of the Galaxy public world
+ * (docs/design/GALAXY_2026_PUBLIC_WORLD.md). The burst dissolves into the
+ * homepage's nebula/starfield hero, and the exit links open the world's
+ * primary modules (Board · Galaxy Twin · GSN) rather than generic pages.
+ *
  * DOCTRINE: no fake odds/teams/wins presented as real. The montage is abstract,
  * system-level, and its memorable lines are the brand's honest philosophy
  * ("CONFIDENCE IS NOT EVIDENCE", "GOOD PROCESS · BAD OUTCOME"). Any numerals are
@@ -289,6 +294,9 @@ export function CinematicEntrance() {
             <p className="eyebrow mt-3 justify-center" style={{ color: BRAND_COLORS.orbitalCyan }}>
               {BRAND_NAME}
             </p>
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-ink-400">
+              edge · the decision engine&ensp;|&ensp;network · the signal studio
+            </p>
           </div>
 
           <p
@@ -318,21 +326,21 @@ export function CinematicEntrance() {
                 }}
               >
                 <span aria-hidden className="gse-enter-ring absolute inset-0 rounded-full" style={{ border: `1.5px solid ${BRAND_COLORS.orbitalCyan}` }} />
-                Enter the engine
+                Enter the system
                 <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">▸</span>
               </button>
 
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
                 <Link href="/board" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
-                  Open today&apos;s slate
+                  Today&apos;s board
                 </Link>
                 <span aria-hidden className="text-ink-500">·</span>
-                <Link href="/cipher" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
-                  The Cipher
+                <Link href="/observatory" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
+                  Galaxy Twin
                 </Link>
                 <span aria-hidden className="text-ink-500">·</span>
-                <Link href="/methodology" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
-                  How it works
+                <Link href="/gsn" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
+                  GSN Studio
                 </Link>
               </div>
             </div>
