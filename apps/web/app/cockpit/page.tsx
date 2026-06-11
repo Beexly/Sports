@@ -31,10 +31,6 @@ export default async function CockpitOverview() {
     })
     .catch(() => 0);
 
-  const activeSubCount = await db.subscription
-    .count({ where: { status: "active" } })
-    .catch(() => 0);
-
   const todaysOperatorPicks = await db.pick
     .findMany({
       where: {
@@ -99,12 +95,6 @@ export default async function CockpitOverview() {
           >
             Today's picks: {todayPicksForOperator}
             {demoActive ? " (sample)" : ""}
-          </span>
-          <span
-            aria-label="Active paid subscribers"
-            className="rounded-md bg-gray-800/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-gray-200"
-          >
-            Active subs: {activeSubCount}
           </span>
         </div>
         <p className="text-sm text-gray-400">
