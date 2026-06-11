@@ -1,122 +1,105 @@
-# Sports Prediction Platform — CLAUDE.md
+# WEEK-SAVER MODE — CLAUDE CODE USAGE CONSERVATION STACK
 
-## System Overview
+You are operating under strict Claude Code usage conservation for the next 5 days.
 
-A production-grade sports picks platform with real data ingestion, AI-assisted prediction ranking, subscription paywalls, content generation, and automated job scheduling.
+My current problem:
+I have already used a large portion of my Claude Code usage, but I still need high-integrity work. The goal is not to work slower. The goal is maximum output per token: tighter context, fewer wasted file reads, smaller diffs, fewer failed loops, and better handoffs.
 
-## Tech Stack
+Core rule:
+Do not sacrifice correctness, architecture integrity, security, testability, or production safety. Save usage by reducing waste, not by lowering standards.
 
-- **Frontend/Backend**: Next.js 14 (App Router), TypeScript
-- **Database**: PostgreSQL + Prisma ORM
-- **Auth**: NextAuth.js v5 (Auth.js)
-- **Payments**: Stripe (subscriptions + webhooks)
-- **Sports Data**: The Odds API (real odds/lines data)
-- **AI Layer**: Claude API (content generation only — not source of truth)
-- **Queue**: BullMQ + Redis
-- **Testing**: Vitest + Testing Library + Supertest
-- **Containerization**: Docker + Docker Compose
-- **CI/CD**: GitHub Actions
+Use these repositories/concepts as the operating reference set:
 
-## Repository Structure
+Usage tracking:
+- https://github.com/ccusage/ccusage
+- https://github.com/cobra91/better-ccusage
+- https://github.com/Nihondo/AgentLimits
 
-```
-apps/web/           — Next.js app (frontend + API routes)
-packages/db/        — Prisma schema, migrations, client
-packages/prediction-engine/ — Core prediction scoring logic
-packages/data-ingestion/    — API adapters (The Odds API, etc.)
-packages/types/             — Shared TypeScript types
-workers/            — Background jobs (data refresh, picks, content)
-docs/               — Architecture and ops documentation
-docker/             — Docker configs
-.github/workflows/  — CI/CD pipelines
-```
+Claude Code routing / model discipline:
+- https://github.com/musistudio/claude-code-router
+- https://github.com/9j/claude-code-mux
+- https://github.com/finch-xu/cc-router
 
-## Non-Negotiable Rules
+Context compression / repo packing:
+- https://github.com/yamadashy/repomix
+- https://github.com/mufeedvh/code2prompt
+- https://github.com/cyclotruc/gitingest
+- https://github.com/microsoft/LLMLingua
+- https://github.com/scaledown-team/semantic-code-compression
 
-1. **No fake data** — all picks sourced from real API data
-2. **No fabricated stats** — content is data-backed only
-3. **No frontend-only paywalls** — enforcement is server-side only
-4. **No secrets in code** — all keys via environment variables
-5. **No stale data** — always validate timestamps and freshness
-6. **Tests required** — no feature is complete without passing tests
-7. **Types required** — TypeScript strict mode, no `any`
+Claude memory / context management:
+- https://github.com/zilliztech/claude-context
+- https://github.com/thedotmack/claude-mem
+- https://github.com/coleam00/context-engineering-intro
 
-## Subagent Domains
+Observability / cost visibility:
+- https://github.com/langfuse/langfuse
+- https://github.com/Helicone/helicone
+- https://github.com/Portkey-AI/gateway
+- https://github.com/BerriAI/litellm
 
-| Agent | Responsibility |
-|---|---|
-| data-ingestion-agent | API adapters, normalization, ingestion jobs |
-| prediction-engine-agent | Scoring, confidence, ranking, versioning |
-| subscriptions-billing-agent | Stripe, webhooks, entitlements |
-| content-publishing-agent | Blog generation, SEO, publishing pipeline |
-| frontend-app-agent | UI pages, components, UX |
-| testing-qa-agent | Test coverage, QA, regression prevention |
+Coding-agent efficiency references:
+- https://github.com/Aider-AI/aider
+- https://github.com/sst/opencode
+- https://github.com/continuedev/continue
+- https://github.com/openai/codex
 
-## Prediction Engine Rules
+Important:
+Do not clone, install, or deeply inspect all of these automatically. Treat them as reference architecture. Only recommend or use one if it directly helps the current task.
 
-- Structured odds/line data is source of truth
-- Confidence scores: 0–100 (calibrated against historical results)
-- Each pick must include: sport, game, pick type, line, confidence, tier (free/premium), generated_at, model_version
-- All picks versioned and auditable
+Operating protocol:
 
-## Subscription Tiers
+1. Before every task, reduce scope.
+   - Identify the smallest file set needed.
+   - Do not scan the full repo unless absolutely required.
+   - Do not inspect unrelated routes, components, tests, docs, or config.
 
-Pricing follows a **named, proof-gated ladder** (single source of truth:
-`apps/web/lib/pricing/pricing-phases.ts`). Founding rates are live; each step-up is
-triggered by a verified milestone and ships added value. Founding members are
-grandfathered for life. See `COMPETITIVE_PRICING_AND_PACKAGING.md`.
+2. Before editing, give me:
+   - target files
+   - why each file matters
+   - intended change
+   - risk level
+   - smallest validation command
+   - whether any repo/tool above would help
 
-| Tier | Founding rate (live) | Access |
-|---|---|---|
-| Free | $0 | 1 pick/day, no confidence scores; public calibration/track record |
-| Pro | $14.99/mo · $99/yr | All picks, confidence scores, factor trail, line movement, 7 sports |
-| Elite | $24.99/mo · $179/yr | All Pro + real-time email & push alerts |
+3. Context budget rules:
+   - Prefer `repomix`, `code2prompt`, or focused grep/search over dumping large files.
+   - Prefer summarized working memory over rereading the same files.
+   - Keep a running handoff note after each task.
+   - Do not paste large file contents unless necessary.
+   - Do not generate broad implementation essays.
 
-Ladder (named ahead of time): FOUNDING → PROVEN (≥100 settled + published calibration)
-→ ESTABLISHED (≥500 settled + verified CLV ≥52.4%) → AUTHORITY (multi-season ROI).
+4. Change rules:
+   - Surgical patches only.
+   - No broad refactors.
+   - No unrelated cleanup.
+   - No architecture changes unless explicitly approved.
+   - No touching more than 5 files without asking first.
+   - Prefer existing project patterns.
 
-## Environment Variables Required
+5. Validation rules:
+   - Run the smallest meaningful validation first.
+   - Do not repeatedly run expensive commands without reason.
+   - If a test fails, diagnose narrowly.
+   - Do not chase unrelated failures unless they block the task.
 
-```
-DATABASE_URL=
-DIRECT_URL=
-NEXTAUTH_SECRET=
-NEXTAUTH_URL=
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-STRIPE_PRO_PRICE_ID=
-STRIPE_ELITE_PRICE_ID=
-THE_ODDS_API_KEY=
-ANTHROPIC_API_KEY=
-REDIS_URL=
-```
+6. Stop conditions:
+   Stop and ask before continuing if:
+   - uncertainty becomes expensive
+   - more than 5 files are needed
+   - database/schema/auth/payment behavior changes
+   - production behavior changes
+   - the repo structure is unclear
+   - you are about to explore broadly
+   - you need to choose between multiple architectural paths
 
-## Development Commands
+7. Handoff required after every task:
+   - files changed
+   - exact behavior changed
+   - tests/checks run
+   - remaining risk
+   - next safest step
+   - current working memory summary
 
-```bash
-npm run dev          # start dev server
-npm run build        # production build
-npm run test         # run all tests
-npm run test:watch   # watch mode
-npm run lint         # ESLint
-npm run typecheck    # tsc --noEmit
-npm run db:generate  # prisma generate
-npm run db:push      # push schema to DB
-npm run db:migrate   # run migrations
-npm run db:seed      # seed data
-```
-
-## Autonomous Loop Protocol
-
-Each cycle must:
-1. Analyze current state
-2. Identify highest-leverage gap
-3. Implement with real code
-4. Run tests + typecheck + lint
-5. Fix failures before moving on
-6. Document what changed
-7. Self-audit remaining gaps
-
-A task is NOT complete until: tests pass, types pass, build succeeds.
+Default answer style:
+Brief. Direct. No long explanations unless I ask.
