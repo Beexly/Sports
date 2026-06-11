@@ -6,6 +6,8 @@ import { Atmosphere } from "@/components/ui/atmosphere";
 import { BetTracker } from "@/components/tracker/bet-tracker";
 import { StakingCalculator } from "@/components/tracker/staking-calculator";
 import { BRAND_COLORS } from "@/lib/brand";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
 
 export const metadata: Metadata = {
   title: "CLV Tracker — Your Glass-Box Bet Ledger",
@@ -14,7 +16,36 @@ export const metadata: Metadata = {
   alternates: { canonical: "/track" },
 };
 
-export default function TrackPage() {
+export default async function TrackPage() {
+  const viewer = await getViewerEntitlements();
+  if (!viewer.canUseClvLedger) {
+    return (
+      <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+        <Atmosphere />
+        <Nav />
+        <main className="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-28 sm:px-6">
+          <div className="text-center">
+            <p className="eyebrow justify-center" style={{ color: BRAND_COLORS.softUltraviolet }}>
+              CLV Tracker
+            </p>
+            <h1 className="mt-4 max-w-3xl font-display text-balance text-white" style={{ fontSize: "clamp(2.2rem, 6vw, 4rem)", lineHeight: 1 }}>
+              Track the number, not the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>noise</span>.
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl text-ink-300">
+              Closing Line Value is the strongest public proof of edge there is.
+            </p>
+          </div>
+          <TierGatePanel
+            need="ELITE"
+            surface="The CLV Ledger + Staking Toolkit"
+            blurb="The glass-box bet ledger, closing-line settlement, ROI and calibration readouts, and the Kelly-aware staking calculator — the professional toolkit, reserved for Elite members."
+          />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Atmosphere />

@@ -6,6 +6,8 @@ import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { ParlayGenome } from "@/components/parlay/parlay-genome";
 import { BRAND_COLORS } from "@/lib/brand";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
 
 export const metadata: Metadata = {
   title: "Parlay MRI — The Portfolio Surgeon",
@@ -14,7 +16,33 @@ export const metadata: Metadata = {
   alternates: { canonical: "/parlay-mri" },
 };
 
-export default function ParlayMriPage() {
+export default async function ParlayMriPage() {
+  const viewer = await getViewerEntitlements();
+  if (!viewer.canUseParlayMri) {
+    return (
+      <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+        <Atmosphere />
+        <Nav />
+        <main className="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-28 sm:px-6">
+          <div className="text-center">
+            <p className="eyebrow justify-center" style={{ color: BRAND_COLORS.ionMagenta }}>
+              Parlay MRI
+            </p>
+            <h1 className="mt-4 max-w-3xl font-display text-balance text-white" style={{ fontSize: "clamp(2.2rem, 6vw, 4rem)", lineHeight: 1 }}>
+              Stacked risk, made <span className="gse-editorial" style={{ fontSize: "1.08em" }}>visible</span>.
+            </h1>
+          </div>
+          <TierGatePanel
+            need="PRO"
+            surface="The Parlay MRI"
+            blurb="Per-leg survivability, compounded house edge, hidden same-game correlation — the full genome of any parlay, with legs you can toggle live. This is the portfolio surgeon, and it operates for Pro members."
+          />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Atmosphere />

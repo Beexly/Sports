@@ -194,8 +194,8 @@ export function WarpNebula({ mode }: { mode: "warp" | "idle" }) {
     const frame = () => {
       if (disposed) return;
       const t = (performance.now() - t0) / 1000;
-      const wantSpeed = modeRef.current === "warp" ? 14 : 2.0;
-      speed += (wantSpeed - speed) * 0.022; // eases like ignition / deceleration
+      const wantSpeed = modeRef.current === "warp" ? 9 : 1.6;
+      speed += (wantSpeed - speed) * 0.016; // eases like ignition / deceleration
       mat.uniforms.u_time!.value = t;
       mat.uniforms.u_speed!.value = speed;
       steerVec.lerp(steerTarget, 0.06);

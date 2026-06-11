@@ -118,6 +118,10 @@ export interface Entitlements {
   canSeeEdgeScore: boolean;         // public Edge Index
   canGetAlerts: boolean;
   dailyPickLimit: number | null;
+  // ── Surface gates (server-enforced at the page/API level) ──
+  canUseTrendLab: boolean;          // PRO+ — full cohort workbench
+  canUseParlayMri: boolean;         // PRO+ — full parlay genome
+  canUseClvLedger: boolean;         // ELITE — bet ledger + staking toolkit
 }
 
 export function getEntitlements(tier: SubscriptionTier): Entitlements {
@@ -131,6 +135,9 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
     canSeeEdgeScore: true,
     canGetAlerts: tier === "ELITE",
     dailyPickLimit: tier === "FREE" ? 1 : null,
+    canUseTrendLab: isPro,
+    canUseParlayMri: isPro,
+    canUseClvLedger: tier === "ELITE",
   };
 }
 

@@ -287,6 +287,10 @@
  * points. Waypoints (--wx/--wy exit vectors) approach from deep space and
  * sweep past the viewer. All geometry is deterministic; reduced motion is
  * killed by the .gse-cine-anim override below. */
+@keyframes gse-camera-roll {
+  from { transform: rotate(-2.2deg) scale(1.04); }
+  to   { transform: rotate(2.2deg) scale(1.04); }
+}
 @keyframes gse-warp-star {
   0%   { transform: rotate(var(--ang)) translateX(2vmax) scaleX(0.08); opacity: 0; }
   12%  { opacity: 0.9; }

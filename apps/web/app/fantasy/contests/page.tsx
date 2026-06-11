@@ -1,83 +1,147 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FantasyShell } from "@/components/fantasy/fantasy-shell";
+import { Nav } from "@/components/ui/nav";
+import { Footer } from "@/components/ui/footer";
 import { BRAND_COLORS } from "@/lib/brand";
 
+/**
+ * /fantasy/contests — THE CONTEST BAY, sealed.
+ *
+ * Cinematic under-construction door. The previous version enumerated the
+ * full contest roadmap (formats, operator names, gating posture) before
+ * launch — that brief is classified now. This page says exactly one thing,
+ * beautifully: something competitive is being built behind this door.
+ *
+ * No vendor names, no compliance posture, no internal status leaks.
+ * CSS-only motion (reuses the gse keyframes); reduced motion renders calm.
+ */
+
 export const metadata: Metadata = {
-  title: "Contests — Galaxy Fantasy",
-  description:
-    "Best ball, survivor, pick'em, DFS, and squares — skill-first formats with a glass-box edge. Real-money entries and payouts activate behind compliance review; nothing charges automatically.",
+  title: "Contests — Galaxy Sports Edge",
+  description: "The Contest Bay is under construction. Something competitive is coming.",
   alternates: { canonical: "/fantasy/contests" },
 };
 
-type Status = "Live · skill" | "Edge advisor" | "Founder-gated" | "Compliance review";
+const cyan = BRAND_COLORS.orbitalCyan;
+const uv = BRAND_COLORS.softUltraviolet;
+const white = BRAND_COLORS.ionWhite;
 
-const STATUS_HEX: Record<Status, string> = {
-  "Live · skill": BRAND_COLORS.orbitalCyan,
-  "Edge advisor": BRAND_COLORS.softUltraviolet,
-  "Founder-gated": "#E0A800",
-  "Compliance review": BRAND_COLORS.ionMagenta,
-};
+/** Deterministic sparks drifting around the bay door (golden-angle spray). */
+const SPARKS: readonly { left: number; top: number; size: number; delay: number; hue: string }[] =
+  Array.from({ length: 26 }, (_, i) => ({
+    left: ((i * 137.508) % 100 + 100) % 100,
+    top: ((i * 61.803) % 100 + 100) % 100,
+    size: i % 6 === 0 ? 2 : 1,
+    delay: -((i * 0.53) % 7),
+    hue: i % 7 === 0 ? cyan : i % 11 === 0 ? uv : white,
+  }));
 
-type Contest = { title: string; status: Status; blurb: string; href?: string; cta?: string };
-
-const SKILL: Contest[] = [
-  { title: "Beat the Model", status: "Live · skill", blurb: "Free weekly pick'em against our own projections — climb the leaderboard, no entry fee, pure skill. The flagship engagement game, in build.", },
-  { title: "Season-long Best Ball", status: "Live · skill", blurb: "Draft, no in-season management — your best lineup auto-starts each week. Skill-first; entry fees gated.", },
-  { title: "Survivor / Eliminator", status: "Live · skill", blurb: "One pick a week, can't reuse a team, last manager standing. Our edge engine flags the lowest-risk survivors and the save-it-for-later traps.", },
-];
-
-const EDGE: Contest[] = [
-  { title: "Pick'em Edge", status: "Edge advisor", blurb: "We don't run the pick'em — we tell you where our number beats Underdog & DK Pick6 lines, and the best alt-line EV.", href: "/fantasy/props", cta: "Open advisor" },
-  { title: "DFS · GPP & Milly Maker", status: "Edge advisor", blurb: "Cash, GPP, and leverage lineups with stacking and exposure control — built to win tournaments, glass-box.", href: "/fantasy/dfs", cta: "Open optimizer" },
-];
-
-const GATED: Contest[] = [
-  { title: "Real-money DFS entries", status: "Founder-gated", blurb: "Paid entries and payouts require licensing, geofencing, and KYC. The tools are live; the money rail activates behind compliance — and never charges automatically.", },
-  { title: "Squares (game / week / month)", status: "Compliance review", blurb: "Squares are chance-based. The board and settlement logic are designed, but real-money squares are held for legal/compliance review before any go-live. No autonomous payments.", },
-];
-
-function Card({ c }: { c: Contest }) {
-  const hex = STATUS_HEX[c.status];
-  const inner = (
-    <div className="surface-card group flex h-full flex-col p-5 transition-transform duration-300 hover:-translate-y-1">
-      <div className="flex items-center justify-between">
-        <span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: `${hex}1c`, color: hex }}>{c.status}</span>
-        {c.cta && <span className="text-xs font-medium transition-transform group-hover:translate-x-1" style={{ color: hex }}>{c.cta} →</span>}
-      </div>
-      <h3 className="mt-3 text-lg font-semibold text-white">{c.title}</h3>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-300">{c.blurb}</p>
-    </div>
-  );
-  return c.href ? <Link href={c.href} className="block h-full">{inner}</Link> : <div className="h-full">{inner}</div>;
-}
-
-function Section({ title, items }: { title: string; items: Contest[] }) {
+export default function ContestBaySealedPage() {
   return (
-    <div>
-      <h2 className="font-display text-xl text-white">{title}</h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((c) => <Card key={c.title} c={c} />)}
-      </div>
-    </div>
-  );
-}
+    <div className="flex min-h-screen flex-col" style={{ background: BRAND_COLORS.obsidianBlack }}>
+      <Nav />
 
-export default function ContestsPage() {
-  return (
-    <FantasyShell
-      eyebrow="Contests"
-      accent={BRAND_COLORS.softUltraviolet}
-      title={<>Play where the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>skill</span> is.</>}
-      intro="Every format, with the same glass-box edge — and an honest line about what's live. Skill contests are the core. Where we touch third-party pick'em and DFS, we advise rather than operate. And anything involving real money or chance is held behind compliance review and never charges on its own."
-      note="Skill-first formats are the live core. Real-money entries/payouts and chance-based squares are founder-gated and activate only behind licensing and compliance review — there are no autonomous payments."
-      wide
-    >
-      <div className="space-y-10">
-        <Section title="Skill contests — the core" items={SKILL} />
-        <Section title="Edge advisors — we read their lines" items={EDGE} />
-        <Section title="Real money — gated behind compliance" items={GATED} />
-      </div>
-    </FantasyShell>
+      <main className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-28 text-center">
+        {/* atmosphere */}
+        <div aria-hidden className="gse-vignette" />
+        <div aria-hidden className="gse-grain" />
+        <div
+          aria-hidden
+          className="gse-cine-anim pointer-events-none absolute -left-1/4 top-[-20%] h-[70vh] w-[70vw] rounded-full"
+          style={{
+            animation: "gse-nebula-drift 16s ease-in-out infinite alternate",
+            background: `radial-gradient(closest-side, ${uv}26, transparent 72%)`,
+          }}
+        />
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          {SPARKS.map((s, i) => (
+            <span
+              key={i}
+              className="gse-cine-anim absolute rounded-full"
+              style={{
+                left: `${s.left}%`,
+                top: `${s.top}%`,
+                width: s.size,
+                height: s.size,
+                background: s.hue,
+                opacity: 0.45,
+                animation: "gse-star-breathe 7s ease-in-out infinite",
+                animationDelay: `${s.delay}s`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* the sealed bay door */}
+        <div className="relative z-10 flex flex-col items-center">
+          <div
+            className="relative flex h-44 w-44 items-center justify-center rounded-full"
+            style={{ border: `1px solid ${uv}40`, boxShadow: `0 0 60px ${uv}22, inset 0 0 40px ${uv}14` }}
+          >
+            <div
+              aria-hidden
+              className="gse-cine-anim absolute inset-3 rounded-full"
+              style={{
+                border: `1px dashed ${cyan}45`,
+                animation: "gw-rotate 26s linear infinite",
+              }}
+            />
+            <div
+              aria-hidden
+              className="gse-cine-anim absolute inset-3 rounded-full"
+              style={{
+                background: `conic-gradient(from 0deg, transparent 0 70%, ${cyan}30 82%, transparent 94%)`,
+                animation: "gw-rotate 13s linear infinite reverse",
+              }}
+            />
+            <span className="font-arch text-5xl" style={{ color: white }}>
+              ⬡
+            </span>
+          </div>
+
+          <p className="eyebrow mt-10 justify-center" style={{ color: cyan }}>
+            contest bay · sector sealed
+          </p>
+          <h1
+            className="mt-4 max-w-2xl font-display text-balance text-white"
+            style={{ fontSize: "clamp(2rem, 5.5vw, 3.5rem)", lineHeight: 1.05 }}
+          >
+            Something competitive is being{" "}
+            <span className="gse-editorial" style={{ fontSize: "1.08em" }}>
+              built
+            </span>{" "}
+            behind this door.
+          </h1>
+          <p className="mt-5 max-w-xl text-balance text-ink-300">
+            The Contest Bay is under construction. The brief stays classified until launch —
+            when this door opens, it opens with receipts.
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm">
+            <Link href="/board" className="btn btn-primary">
+              Today&apos;s board
+            </Link>
+            <Link
+              href="/fantasy"
+              className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline"
+            >
+              Fantasy Galaxy
+            </Link>
+            <Link
+              href="/academy"
+              className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline"
+            >
+              Train in the Academy
+            </Link>
+          </div>
+
+          <p className="mt-12 font-mono text-[10px] uppercase tracking-[0.3em] text-ink-500">
+            {"// no countdown · no leaks · worth the wait"}
+          </p>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   );
 }

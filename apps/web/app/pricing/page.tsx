@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { PricingPlans, type PlanView } from "@/components/pricing/pricing-plans";
@@ -35,31 +36,38 @@ export const metadata: Metadata = {
 
 const FREE_FEATURES = [
   { label: "1 signal per day", included: true },
-  { label: "Game matchup info", included: true },
-  { label: "Pick type (spread / ML / total)", included: true },
-  { label: "Confidence rating on every signal", included: false },
-  { label: "Highest-Edge-Index signals", included: false },
-  { label: "Full factor trail & reasoning", included: false },
-  { label: "Line-movement alerts", included: false },
-  { label: "Email + push notifications", included: false },
-  { label: "All 7 sports", included: false },
+  { label: "Edge Index on every signal", included: true },
+  { label: "Game matchup info + pick type", included: true },
+  { label: "Public verified record & calibration", included: true },
+  { label: "The Academy — full training floor", included: true },
+  { label: "Confidence rating (Pro)", included: false },
+  { label: "Factor trail & evidence audit (Pro)", included: false },
+  { label: "Trend Lab + Parlay MRI (Pro)", included: false },
+  { label: "Real-time alerts (Elite)", included: false },
+  { label: "CLV Ledger + staking toolkit (Elite)", included: false },
 ] as const;
 
 const PRO_FEATURES = [
-  { label: "Every signal, every day", included: true },
-  { label: "Game matchup info", included: true },
-  { label: "Pick type (spread / ML / total)", included: true },
+  { label: "Everything in Free", included: true },
+  { label: "Every signal, every day — all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
-  { label: "Highest-Edge-Index signals", included: true },
   { label: "Full factor trail & reasoning", included: true },
-  { label: "Line-movement alerts", included: true },
-  { label: "Email + push notifications", included: false },
-  { label: "All 7 sports", included: true },
+  { label: "Evidence audit — full forensic detail", included: true },
+  { label: "Ask the model why, on any pick", included: true },
+  { label: "Line-movement intel", included: true },
+  { label: "Trend Lab — full cohort workbench", included: true },
+  { label: "Parlay MRI — the portfolio surgeon", included: true },
+  { label: "Real-time alerts (Elite)", included: false },
+  { label: "CLV Ledger + staking toolkit (Elite)", included: false },
 ] as const;
 
-const ELITE_FEATURES = PRO_FEATURES.map((f) =>
-  f.label === "Email + push notifications" ? { ...f, included: true } : f,
-);
+const ELITE_FEATURES = [
+  { label: "Everything in Pro", included: true },
+  { label: "Real-time email + push alerts on every signal", included: true },
+  { label: "CLV Ledger — your glass-box bet tracker", included: true },
+  { label: "Staking calculator — Kelly-aware sizing", included: true },
+  { label: "First access to new intelligence surfaces", included: true },
+] as const;
 
 const PLANS: PlanView[] = [
   {
@@ -69,7 +77,7 @@ const PLANS: PlanView[] = [
     annual: null,
     annualSavingsPct: null,
     annualMonthly: null,
-    description: "One signal a day — sample the discipline before committing.",
+    description: "The discipline, sampled: one signal a day, the public record, and the full Academy.",
     badge: null,
     cta: "Start free",
     features: [...FREE_FEATURES],
@@ -81,7 +89,7 @@ const PLANS: PlanView[] = [
     annual: phase.pro.annual,
     annualSavingsPct: annualSavingsPct(phase.pro),
     annualMonthly: annualMonthlyEquivalent(phase.pro),
-    description: "Every published signal, with the confidence rating and factor trail attached.",
+    description: "The full intelligence layer: every signal, the confidence rating, the factor trail, the Trend Lab, the Parlay MRI.",
     badge: "Where most start",
     cta: "Subscribe to Pro",
     features: [...PRO_FEATURES],
@@ -93,8 +101,8 @@ const PLANS: PlanView[] = [
     annual: phase.elite.annual,
     annualSavingsPct: annualSavingsPct(phase.elite),
     annualMonthly: annualMonthlyEquivalent(phase.elite),
-    description: "Pro plus real-time email & push alerts on every published signal — built for live slates.",
-    badge: "All signals, all alerts",
+    description: "The professional toolkit: everything in Pro, plus real-time alerts and the CLV ledger that proves your own edge.",
+    badge: "The professional toolkit",
     cta: "Subscribe to Elite",
     features: [...ELITE_FEATURES],
   },
@@ -102,20 +110,25 @@ const PLANS: PlanView[] = [
 
 const COMPARISON_FEATURES = [
   "Signals per day",
-  "Game matchup info",
-  "Pick type",
-  "Confidence rating",
-  "Highest-Edge-Index signals",
-  "Full factor trail",
-  "Line-movement alerts",
-  "Notifications",
   "Sports covered",
+  "Edge Index",
+  "Confidence rating",
+  "Factor trail & reasoning",
+  "Evidence audit detail",
+  "Ask the model why",
+  "Line-movement intel",
+  "Trend Lab",
+  "Parlay MRI",
+  "Real-time alerts",
+  "CLV Ledger + staking toolkit",
+  "The Academy",
+  "Public verified record",
 ] as const;
 
 const COMPARISON_CELLS: Record<"FREE" | "PRO" | "ELITE", (string | boolean)[]> = {
-  FREE: ["1", true, true, false, false, false, false, false, "Sampler"],
-  PRO: ["Unlimited", true, true, true, true, true, true, false, "All 7"],
-  ELITE: ["Unlimited", true, true, true, true, true, true, true, "All 7"],
+  FREE: ["1", "Sampler", true, false, false, "Counts only", false, false, false, false, false, false, true, true],
+  PRO: ["Unlimited", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true],
+  ELITE: ["Unlimited", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true],
 };
 
 // ─────────────────────────────────────────────
@@ -204,6 +217,44 @@ export default function PricingPage() {
           <div className="mt-14">
             <PricingPlans plans={PLANS} grandfatherNote={grandfatherNote} />
           </div>
+
+          {/* Where each tier takes you — real doors, real locks */}
+          <section className="mt-20">
+            <h2 className="text-center text-2xl font-bold text-white">Where each tier takes you</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
+              Every gate below is enforced on the server — walk up to any door and the seal tells
+              you exactly which tier opens it.
+            </p>
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              <TierDoorColumn
+                tier="Free"
+                hex={BRAND_COLORS.orbitalCyan}
+                doors={[
+                  { label: "Today's board", href: "/board" },
+                  { label: "The Academy", href: "/academy" },
+                  { label: "Verified record & calibration", href: "/performance" },
+                ]}
+              />
+              <TierDoorColumn
+                tier="Pro"
+                hex={BRAND_COLORS.ionMagenta}
+                doors={[
+                  { label: "Trend Lab — cohort workbench", href: "/trends" },
+                  { label: "Parlay MRI — portfolio surgeon", href: "/parlay-mri" },
+                  { label: "Factor trail on every pick", href: "/picks" },
+                ]}
+              />
+              <TierDoorColumn
+                tier="Elite"
+                hex={BRAND_COLORS.softUltraviolet}
+                doors={[
+                  { label: "CLV Ledger + staking toolkit", href: "/track" },
+                  { label: "Real-time alerts", href: "/dashboard" },
+                  { label: "New surfaces, first", href: "/changelog" },
+                ]}
+              />
+            </div>
+          </section>
 
           {/* Feature comparison table */}
           <div className="mt-20">
@@ -302,6 +353,40 @@ export default function PricingPage() {
 // ─────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────
+
+function TierDoorColumn({
+  tier,
+  hex,
+  doors,
+}: {
+  tier: string;
+  hex: string;
+  doors: { label: string; href: string }[];
+}) {
+  return (
+    <div
+      className="rounded-2xl border p-5"
+      style={{ borderColor: `${hex}33`, background: `radial-gradient(100% 80% at 50% 0%, ${hex}0c, transparent 70%)` }}
+    >
+      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em]" style={{ color: hex }}>
+        {tier} opens
+      </p>
+      <ul className="mt-4 space-y-2.5">
+        {doors.map((d) => (
+          <li key={d.href + d.label}>
+            <Link
+              href={d.href}
+              className="group flex items-center justify-between rounded-lg border border-transparent px-3 py-2 text-sm text-ink-200 transition-colors hover:border-gray-800 hover:bg-gray-900/50 hover:text-white"
+            >
+              {d.label}
+              <span aria-hidden className="text-ink-500 transition-transform group-hover:translate-x-0.5">→</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 function ComparisonCell({ value }: { value: string | boolean }) {
   if (typeof value === "boolean") {

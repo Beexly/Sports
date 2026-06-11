@@ -11,8 +11,8 @@
  * into the live nebula hero behind it (the cinematic object becomes the UI).
  *
  * Modes:
- *  - First visit  → full ~17s sequence (boot → warp traversal → arrival → identity → handoff).
- *  - Return visit → compressed ~4s jump (localStorage flag): short warp, no waypoint tour.
+ *  - First visit  → full ~25s cinematic (boot → warp traversal → arrival → identity → handoff).
+ *  - Return visit → compressed ~6s jump (localStorage flag): short warp, no waypoint tour.
  *  - Power user   → Skip (always available) jumps straight to the world.
  *  - Opted out    → "Don't show again" on the handoff sets gse-intro-disabled;
  *    the entrance bypasses itself entirely on later visits.
@@ -54,14 +54,15 @@ const DISABLED_KEY = "gse-intro-disabled";
 type Phase = "boot" | "warp" | "arrival" | "identity" | "handoff" | "done";
 
 /* ── Cinematic timeline (first visit, from warp engage) ──────────────────
- * Engage → 12.2s of traversal → 1.6s arrival brake → identity → handoff.
- * With the boot phase (auto-engage at 6.5s if the visitor never holds),
- * the full ride runs ~15–19s depending on when they engage. */
-const WARP_MS = 12200;
-const ARRIVAL_MS = WARP_MS + 1600; // 13800
-const HANDOFF_MS = ARRIVAL_MS + 2000; // 15800
-const BOOT_AUTO_ENGAGE_MS = 6500;
-const TRANSMISSION_TICK_MS = 2450;
+ * Engage → 20s of traversal → 2.6s arrival brake → 3s identity soak →
+ * handoff. With the boot phase (auto-engage at 9s if the visitor never
+ * holds), the full ride runs ~23–29s. This is a film, not a loading
+ * screen — Skip and "don't show again" are always one click away. */
+const WARP_MS = 20000;
+const ARRIVAL_MS = WARP_MS + 2600; // 22600
+const HANDOFF_MS = ARRIVAL_MS + 3000; // 25600
+const BOOT_AUTO_ENGAGE_MS = 9000;
+const TRANSMISSION_TICK_MS = 3800;
 
 const BOOT = [
   "SYSTEM BOOT",
@@ -110,11 +111,11 @@ const WAYPOINTS: readonly Waypoint[] = [
   { label: "THE ACADEMY", line: "Train the pass. Graded on process.", href: "/academy", tone: "uv", x: 30, y: -14 },
 ] as const;
 
-/* Each waypoint hangs in view much longer now — the visitor has time to
- * actually read the door before it sweeps past (and to grab it). The last
- * door exits right as the arrival brake fires. */
-const WAYPOINT_STEP_MS = 950;
-const WAYPOINT_FLY_MS = 3600;
+/* Each waypoint OWNS the screen — it approaches from deep space, hangs
+ * near full size long enough to actually read twice, then sweeps past.
+ * The last door exits right as the arrival brake fires. */
+const WAYPOINT_STEP_MS = 1550;
+const WAYPOINT_FLY_MS = 5400;
 
 /**
  * Deterministic warp starfield — golden-angle spray so the field reads as a
@@ -124,8 +125,8 @@ type WarpStar = { angle: number; duration: number; delay: number; hue: "white" |
 
 const WARP_STARS: readonly WarpStar[] = Array.from({ length: 72 }, (_, i) => ({
   angle: (i * 137.508) % 360,
-  duration: 1.8 + (i % 7) * 0.26, // slower streaks — gliding, not strobing
-  delay: -((i * 0.137) % 2.4),
+  duration: 2.6 + (i % 7) * 0.38, // near-weightless glide — stars, not strobes
+  delay: -((i * 0.137) % 3.4),
   hue: i % 9 === 0 ? "cyan" : i % 13 === 0 ? "uv" : "white",
   thickness: i % 5 === 0 ? 2 : 1,
 }));
@@ -184,6 +185,12 @@ const BootStars = memo(function BootStars() {
 const StarTunnel = memo(function StarTunnel({ arrival }: { arrival: boolean }) {
   return (
     <div aria-hidden className="absolute inset-0" style={par(26)}>
+      {/* slow camera roll — the whole tunnel banks a few degrees and back,
+          which sells "flying" more than any individual streak can */}
+      <div
+        className="gse-cine-anim absolute inset-0"
+        style={{ animation: "gse-camera-roll 24s ease-in-out infinite alternate", willChange: "transform" }}
+      >
       {WARP_STARS.map((s, i) => (
         <span
           key={i}
@@ -204,6 +211,7 @@ const StarTunnel = memo(function StarTunnel({ arrival }: { arrival: boolean }) {
           }}
         />
       ))}
+      </div>
     </div>
   );
 });
@@ -371,13 +379,13 @@ export function CinematicEntrance() {
     const push = (fn: () => void, at: number) => timers.current.push(window.setTimeout(fn, at));
 
     if (seen) {
-      push(() => setPhase("warp"), 500);
-      push(() => setPhase("arrival"), 3000);
-      push(() => setPhase("identity"), 3500);
-      push(() => setPhase("handoff"), 4300);
-      const iv = window.setInterval(() => setTick((t) => t + 1), 1300);
+      push(() => setPhase("warp"), 600);
+      push(() => setPhase("arrival"), 4600);
+      push(() => setPhase("identity"), 5400);
+      push(() => setPhase("handoff"), 6400);
+      const iv = window.setInterval(() => setTick((t) => t + 1), 1500);
       timers.current.push(iv);
-      push(() => window.clearInterval(iv), 3000);
+      push(() => window.clearInterval(iv), 4600);
       return;
     }
 
@@ -407,12 +415,17 @@ export function CinematicEntrance() {
   };
 
   // Click & hold — the charge ring fills for 800ms; releasing early aborts.
+  // Engage fires from the timer while held, AND from a duration check on
+  // release — so a busy main thread (chunk loads) can never eat a completed
+  // hold by running the release handler before the delayed timer.
   const [holding, setHolding] = useState(false);
   const holdTimer = useRef<number | null>(null);
+  const holdStart = useRef(0);
   const beginHold = (e: { target: EventTarget | null }) => {
     if (phase !== "boot") return;
     if ((e.target as Element | null)?.closest?.("button, a")) return;
     setHolding(true);
+    holdStart.current = performance.now();
     holdTimer.current = window.setTimeout(() => engageRef.current(), 800);
   };
   const endHold = () => {
@@ -420,6 +433,7 @@ export function CinematicEntrance() {
     if (holdTimer.current !== null) {
       window.clearTimeout(holdTimer.current);
       holdTimer.current = null;
+      if (performance.now() - holdStart.current >= 760) engageRef.current();
     }
   };
 
@@ -528,7 +542,7 @@ export function CinematicEntrance() {
                   <li
                     key={line}
                     className="gse-cine-anim flex items-center justify-between"
-                    style={{ animation: "gse-boot-line 420ms ease-out both", animationDelay: `${i * 320}ms` }}
+                    style={{ animation: "gse-boot-line 600ms ease-out both", animationDelay: `${i * 460}ms` }}
                   >
                     <span className="text-ink-300">{line}</span>
                     <span style={{ color: cyan }}>OK</span>
@@ -614,7 +628,7 @@ export function CinematicEntrance() {
             style={{ animation: "gse-form-burst 1100ms ease-out forwards", background: cyan }}
           />
 
-          <div className="gse-cine-anim" style={{ animation: "gse-in 700ms ease-out both" }}>
+          <div className="gse-cine-anim" style={{ animation: "gse-in 1100ms ease-out both" }}>
             <p
               className="font-arch tabular-nums"
               style={{ fontSize: "clamp(4rem, 14vw, 9rem)", lineHeight: 0.85, color: white, letterSpacing: "0.02em" }}
@@ -631,7 +645,7 @@ export function CinematicEntrance() {
 
           <p
             className="gse-cine-anim mt-7 max-w-xl font-display text-balance text-white"
-            style={{ animation: "gse-in 800ms ease-out both", animationDelay: "260ms", fontSize: "clamp(1.5rem, 4.5vw, 2.75rem)", lineHeight: 1.05 }}
+            style={{ animation: "gse-in 1200ms ease-out both", animationDelay: "500ms", fontSize: "clamp(1.5rem, 4.5vw, 2.75rem)", lineHeight: 1.05 }}
           >
             Find the signal{" "}
             <span className="gse-editorial" style={{ fontSize: "1.1em" }}>

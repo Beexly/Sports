@@ -1,11 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_COLORS } from "@/lib/brand";
 import { loadSourceLiveEvidence } from "@/lib/data-sources/live-evidence";
 
 export const dynamic = "force-dynamic";
+
+/** Legacy deep-links (`/fantasy?tool=trade`) predate the dedicated tool
+ * routes; honor them forever so no shared link ever strands on the hub. */
+const LEGACY_TOOL_ROUTES: Record<string, string> = {
+  draft: "/fantasy/draft",
+  lineup: "/fantasy/lineup",
+  waivers: "/fantasy/waivers",
+  trade: "/fantasy/trade",
+  dfs: "/fantasy/dfs",
+  props: "/fantasy/props",
+  connect: "/fantasy/connect",
+  academy: "/fantasy/academy",
+  contests: "/fantasy/contests",
+};
 
 export const metadata: Metadata = {
   title: "Galaxy Fantasy - Real Roster First",
@@ -52,7 +67,16 @@ const STATUS_TONE: Record<ToolStatus, string> = {
   gated: "text-ion-2",
 };
 
-export default async function FantasyHubPage(): Promise<JSX.Element> {
+export default async function FantasyHubPage({
+  searchParams,
+}: {
+  searchParams?: { tool?: string };
+}): Promise<JSX.Element> {
+  const requestedTool = searchParams?.tool?.toLowerCase();
+  if (requestedTool && LEGACY_TOOL_ROUTES[requestedTool]) {
+    redirect(LEGACY_TOOL_ROUTES[requestedTool]!);
+  }
+
   const evidence = await loadSourceLiveEvidence({ timeoutMs: 15000 });
   const qbAgeLift = evidence.summary.qbAge34Lift;
   const qbAgeLiftLabel = typeof qbAgeLift === "number" ? `${formatPercent(qbAgeLift)} lift` : "UNKNOWN";

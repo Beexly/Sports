@@ -40,6 +40,27 @@ describe("getEntitlements", () => {
     it("can get alerts", () => expect(ents.canGetAlerts).toBe(true));
     it("unlimited picks", () => expect(ents.dailyPickLimit).toBeNull());
   });
+
+  describe("surface gates", () => {
+    it("FREE: no Trend Lab, no Parlay MRI, no CLV ledger", () => {
+      const ents = getEntitlements("FREE");
+      expect(ents.canUseTrendLab).toBe(false);
+      expect(ents.canUseParlayMri).toBe(false);
+      expect(ents.canUseClvLedger).toBe(false);
+    });
+    it("PRO: Trend Lab + Parlay MRI, but no CLV ledger", () => {
+      const ents = getEntitlements("PRO");
+      expect(ents.canUseTrendLab).toBe(true);
+      expect(ents.canUseParlayMri).toBe(true);
+      expect(ents.canUseClvLedger).toBe(false);
+    });
+    it("ELITE: everything including the CLV ledger", () => {
+      const ents = getEntitlements("ELITE");
+      expect(ents.canUseTrendLab).toBe(true);
+      expect(ents.canUseParlayMri).toBe(true);
+      expect(ents.canUseClvLedger).toBe(true);
+    });
+  });
 });
 
 describe("computePickGrade", () => {

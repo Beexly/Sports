@@ -12,6 +12,8 @@ import { loadBirthdayUsageTrendReport } from "@/lib/nflverse/birthday-usage-tren
 import { loadQbAgeRbTrendReport } from "@/lib/nflverse/qb-age-rb-trend";
 import { loadNflverseTrendReadiness } from "@/lib/trends/nflverse-readiness";
 import { loadTrendWorkbench } from "@/lib/trends/workbench";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +49,35 @@ function formatPValue(value: number): string {
 }
 
 export default async function TrendsPage(): Promise<JSX.Element> {
+  // Server-side gate: the cohort workbench is a Pro surface. Under-tier
+  // viewers get the hero + seal — the gated data is never loaded for them.
+  const viewer = await getViewerEntitlements();
+  if (!viewer.canUseTrendLab) {
+    return (
+      <div className="min-h-screen bg-carbon text-ion">
+        <Nav />
+        <main className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
+          <section>
+            <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+              Find the edges before they become consensus.
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
+              Trend Lab runs cohort analysis over real observations only: player weeks,
+              team weeks, route participation, targets, injuries, age, rest, and market
+              context — and every published trend survives the math first.
+            </p>
+          </section>
+          <TierGatePanel
+            need="PRO"
+            surface="The Trend Lab"
+            blurb="The full cohort workbench — sample sizes, hit rates, p-values, and the trends that survive scrutiny — is a Pro surface. Free members keep the board, the Academy, and the public track record."
+          />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   const workbench = loadTrendWorkbench();
   const [nflverseReadiness, qbAgeTrend, birthdayTrend] = await Promise.all([
     loadNflverseTrendReadiness(),
