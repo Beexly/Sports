@@ -296,11 +296,15 @@
   0%   { transform: rotate(var(--ang)) translateX(16vmax) scaleX(0.6); opacity: 0.7; }
   100% { transform: rotate(var(--ang)) translateX(20vmax) scaleX(0.05); opacity: 0; }
 }
+/* Compositor-only (transform + opacity): the old version animated
+ * filter: blur(), which forced a repaint of every card every frame and
+ * was the main source of warp-phase lag. The long mid-flight plateau
+ * (18%→70% near full scale) is what makes the doors readable. */
 @keyframes gse-wp-fly {
-  0%   { transform: translate(-50%, -50%) translate(calc(var(--wx) * 0.12), calc(var(--wy) * 0.12)) scale(0.3); opacity: 0; filter: blur(3px); }
-  22%  { opacity: 1; filter: blur(0); }
-  62%  { transform: translate(-50%, -50%) translate(calc(var(--wx) * 0.55), calc(var(--wy) * 0.55)) scale(1.05); opacity: 1; }
-  100% { transform: translate(-50%, -50%) translate(calc(var(--wx) * 1.6), calc(var(--wy) * 1.6)) scale(2.1); opacity: 0; filter: blur(4px); }
+  0%   { transform: translate(-50%, -50%) translate(calc(var(--wx) * 0.12), calc(var(--wy) * 0.12)) scale(0.3); opacity: 0; }
+  18%  { opacity: 1; }
+  70%  { transform: translate(-50%, -50%) translate(calc(var(--wx) * 0.55), calc(var(--wy) * 0.55)) scale(1.05); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translate(calc(var(--wx) * 1.6), calc(var(--wy) * 1.6)) scale(2.1); opacity: 0; }
 }
 @keyframes gse-nebula-drift {
   from { transform: translate3d(0, 0, 0) scale(1); }

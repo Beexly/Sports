@@ -3,7 +3,7 @@
 /**
  * WarpNebula — the BlueYard-class particle tier for the cinematic entrance.
  *
- * A Three.js point cloud (~26,000 particles) forming a spiral nebula the
+ * A Three.js point cloud (~16,000 particles) forming a spiral nebula the
  * visitor flies through. Two modes:
  *  - "warp": particles stream past the camera (z-advance with wrap) — the
  *    tunnel flight. Speed eases in so engagement feels like ignition.
@@ -21,7 +21,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-const COUNT = 26000;
+const COUNT = 16000;
 const DEPTH = 90;
 
 function mulberry32(seed: number): () => number {
@@ -103,7 +103,7 @@ export function WarpNebula({ mode }: { mode: "warp" | "idle" }) {
       return; // no WebGL — CSS warp carries the scene
     }
     // Software rasterizers (SwiftShader/llvmpipe — VMs, blocklisted GPUs)
-    // cannot push 26k additive points per frame; the CSS warp carries those
+    // cannot push 16k additive points per frame; the CSS warp carries those
     // clients instead of a stalled intro.
     try {
       const gl = renderer.getContext();
@@ -116,7 +116,7 @@ export function WarpNebula({ mode }: { mode: "warp" | "idle" }) {
     } catch {
       /* renderer name unavailable — proceed */
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setClearColor(0x000000, 0);
     host.appendChild(renderer.domElement);
     renderer.domElement.style.cssText = "position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity 700ms ease";
@@ -194,8 +194,8 @@ export function WarpNebula({ mode }: { mode: "warp" | "idle" }) {
     const frame = () => {
       if (disposed) return;
       const t = (performance.now() - t0) / 1000;
-      const wantSpeed = modeRef.current === "warp" ? 26 : 2.2;
-      speed += (wantSpeed - speed) * 0.035; // eases like ignition / deceleration
+      const wantSpeed = modeRef.current === "warp" ? 14 : 2.0;
+      speed += (wantSpeed - speed) * 0.022; // eases like ignition / deceleration
       mat.uniforms.u_time!.value = t;
       mat.uniforms.u_speed!.value = speed;
       steerVec.lerp(steerTarget, 0.06);
