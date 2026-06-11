@@ -1,0 +1,413 @@
+/**
+ * Ask Jarvis — deterministic question answering from OwnerSummary state.
+ *
+ * Pure function. No model call. No fabrication. Every answer is derived
+ * entirely from the OwnerSummary produced by buildOwnerSummary().
+ *
+ * Rules:
+ *   - Never invent performance stats not present in the summary.
+ *   - Never claim 70% is achieved unless performance.displaySafe is true.
+ *   - Never describe agents as autonomous.
+ *   - When data is unavailable, the answer says so.
+ *   - confidence is LOW when key facts are UNKNOWN or missing.
+ */
+
+import type { OwnerSummary } from "./owner-summary";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export type JarvisIntent =
+  | "picks"
+  | "launch-ready"
+  | "performance"
+  | "blocked"
+  | "decisions"
+  | "today"
+  | "workers"
+  | "meeting"
+  | "ai-ops";
+
+export const JARVIS_QUESTIONS: Readonly<Record<JarvisIntent, string>> = {
+  "picks": "Where are our picks?",
+  "launch-ready": "Are we launch-ready?",
+  "performance": "Can we show performance?",
+  "blocked": "What is blocked?",
+  "decisions": "What needs my decision?",
+  "today": "What changed today?",
+  "workers": "What are workers doing?",
+  "meeting": "What should I know before a meeting?",
+  "ai-ops": "What is our AI Ops / Claude / Codex status?",
+};
+
+export const JARVIS_INTENT_ORDER: readonly JarvisIntent[] = [
+  "picks",
+  "launch-ready",
+  "performance",
+  "blocked",
+  "decisions",
+  "today",
+  "workers",
+  "meeting",
+  "ai-ops",
+];
+
+export interface JarvisAnswer {
+  readonly intent: JarvisIntent;
+  readonly question: string;
+  readonly answer: string;
+  readonly supportingState: readonly string[];
+  readonly confidence: "HIGH" | "MEDIUM" | "LOW";
+  readonly caveat: string | null;
+  readonly nextAction: string | null;
+}
+
+// ─── Intent handlers ──────────────────────────────────────────────────────────
+
+function answerPicks(summary: OwnerSummary): JarvisAnswer {
+  const { picks } = summary;
+
+  let answer: string;
+  if (picks.isPublicGateOpen && picks.today > 0) {
+    answer = `${picks.today} pick${picks.today === 1 ? "" : "s"} are published and public-facing today.`;
+  } else if (picks.isPublicGateOpen && picks.today === 0) {
+    answer = "The public picks gate is open but no picks have been published today.";
+  } else {
+    answer = `Picks are internal only. ${picks.today > 0 ? `${picks.today} pick${picks.today === 1 ? "" : "s"} published internally today. ` : "No picks published today. "}The PUBLIC_PICKS_ENABLED gate is closed.`;
+  }
+
+  const supporting = [
+    `Today: ${picks.today} pick${picks.today === 1 ? "" : "s"}`,
+    `Public gate: ${picks.isPublicGateOpen ? "OPEN" : "CLOSED"}`,
+    `Canonical settled: ${picks.canonicalSettled}`,
+    `Pending settlement: ${picks.canonicalPending}`,
+    `Bootstrap excluded: ${picks.bootstrapExcluded}`,
+  ];
+
+  if (picks.blockedReason) {
+    supporting.push(`Blocked reason: ${picks.blockedReason}`);
+  }
+
+  return {
+    intent: "picks",
+    question: JARVIS_QUESTIONS["picks"],
+    answer,
+    supportingState: supporting,
+    confidence: picks.isPublicGateOpen ? "HIGH" : "MEDIUM",
+    caveat: picks.blockedReason
+      ? `Gate is closed: ${picks.blockedReason}. This is intentional.`
+      : null,
+    nextAction: !picks.isPublicGateOpen
+      ? "Set PUBLIC_PICKS_ENABLED=true when data quality and trust gates are satisfied."
+      : picks.today === 0
+        ? "Run the ingestion and scoring workers to generate today's picks."
+        : "Monitor ingestion freshness and settlement health.",
+  };
+}
+
+function answerLaunchReady(summary: OwnerSummary): JarvisAnswer {
+  const color = summary.overallColor;
+  const criticals = summary.criticalWarnings.length;
+  const decisions = summary.decisions.filter((d) => d.urgency === "CRITICAL").length;
+
+  let answer: string;
+  let confidence: JarvisAnswer["confidence"];
+  if (color === "GREEN" && criticals === 0) {
+    answer = "Yes. Platform is launch-ready. All gates are aligned and no safety warnings are active.";
+    confidence = "HIGH";
+  } else if (color === "RED") {
+    answer = `No. Platform is NOT launch-ready. ${criticals > 0 ? `${criticals} critical warning(s) active.` : "RED-status systems detected."}`;
+    confidence = "HIGH";
+  } else {
+    answer = `Not fully ready. Code is aligned but ${decisions > 0 ? `${decisions} critical item(s) need attention` : "some systems are amber"}.`;
+    confidence = "MEDIUM";
+  }
+
+  const supporting = [
+    `Overall: ${color}`,
+    `Jarvis status: ${summary.oneLiner}`,
+    `Critical warnings: ${criticals}`,
+    `Open decisions: ${summary.decisions.length}`,
+  ];
+
+  return {
+    intent: "launch-ready",
+    question: JARVIS_QUESTIONS["launch-ready"],
+    answer,
+    supportingState: supporting,
+    confidence,
+    caveat:
+      color !== "GREEN"
+        ? "Launch-readiness is derived from readiness gates, ingestion health, settlement health, and safety warnings."
+        : null,
+    nextAction:
+      summary.decisions.length > 0
+        ? summary.decisions[0].description
+        : "Continue monitoring the daily operator checklist.",
+  };
+}
+
+function answerPerformance(summary: OwnerSummary): JarvisAnswer {
+  const { performance } = summary;
+
+  let answer: string;
+  let confidence: JarvisAnswer["confidence"];
+
+  if (performance.displaySafe && performance.actualWinRate !== null) {
+    answer = `Yes. Performance stats are public-ready. Current win rate: ${performance.actualWinRate}% vs target ${performance.targetPct}% (${performance.record}, ${performance.canonicalSampleSize} canonical picks).`;
+    confidence = "HIGH";
+  } else if (!performance.isGateOpen) {
+    answer = `No. The PERFORMANCE_STATS_ENABLED gate is closed. Target: ${performance.targetPct}%. Public display is off until the operator opens the gate.`;
+    confidence = "HIGH";
+  } else if (performance.remainingToThreshold > 0) {
+    answer = `Not yet. Target: ${performance.targetPct}%. Gate is open but the canonical sample is too small. ${performance.canonicalSampleSize} of ${performance.minimumRequired} required picks settled. Need ${performance.remainingToThreshold} more.`;
+    confidence = "HIGH";
+  } else {
+    answer = `No. Performance display is gated. Target: ${performance.targetPct}%. Blockers: ${performance.gateBlockers.join(", ")}.`;
+    confidence = "MEDIUM";
+  }
+
+  const supporting = [
+    `Target: ${performance.targetPct}% (internal goal — not a public claim)`,
+    `Gate open: ${performance.isGateOpen ? "YES" : "NO"}`,
+    `Display safe: ${performance.displaySafe ? "YES" : "NO"}`,
+    `Canonical settled: ${performance.canonicalSampleSize} / ${performance.minimumRequired} required`,
+    `Bootstrap excluded: always`,
+    `Pending excluded: always`,
+    ...(performance.actualWinRate !== null
+      ? [`Current win rate: ${performance.actualWinRate}%`, `Record: ${performance.record}`]
+      : []),
+  ];
+
+  return {
+    intent: "performance",
+    question: JARVIS_QUESTIONS["performance"],
+    answer,
+    supportingState: supporting,
+    confidence,
+    caveat:
+      "Win rates are never derived from pending or bootstrap picks. The 70% figure is a target, not a claim, unless canonical data and the gate both allow display.",
+    nextAction: !performance.isGateOpen
+      ? "Set PERFORMANCE_STATS_ENABLED=true after reviewing canonical pick history."
+      : performance.remainingToThreshold > 0
+        ? `Accumulate ${performance.remainingToThreshold} more canonical settled picks before display threshold.`
+        : "Performance is display-ready. Verify before opening gate.",
+  };
+}
+
+function answerBlocked(summary: OwnerSummary): JarvisAnswer {
+  const criticals = summary.decisions.filter((d) => d.urgency === "CRITICAL");
+  const highs = summary.decisions.filter((d) => d.urgency === "HIGH");
+  const blockedDepts = summary.departments.filter((d) => d.actionRequired);
+
+  let answer: string;
+  if (criticals.length === 0 && highs.length === 0 && blockedDepts.length === 0) {
+    answer = "Nothing is critically blocked right now. The platform is in a stable state.";
+  } else {
+    const parts: string[] = [];
+    if (criticals.length > 0) parts.push(`${criticals.length} critical safety warning(s)`);
+    if (highs.length > 0) parts.push(`${highs.length} missing environment variable(s)`);
+    if (blockedDepts.length > 0) parts.push(`${blockedDepts.length} department(s) require action`);
+    answer = `Blocked items: ${parts.join(", ")}.`;
+  }
+
+  const supporting = [
+    ...criticals.map((d) => `[CRITICAL] ${d.description}`),
+    ...highs.map((d) => `[HIGH] ${d.description}`),
+    ...blockedDepts.map((d) => `[DEPT:${d.name}] ${d.actionDescription ?? d.oneLiner}`),
+  ];
+
+  if (supporting.length === 0) supporting.push("No blockers detected.");
+
+  return {
+    intent: "blocked",
+    question: JARVIS_QUESTIONS["blocked"],
+    answer,
+    supportingState: supporting,
+    confidence: summary.overallColor === "GREEN" ? "HIGH" : "MEDIUM",
+    caveat: null,
+    nextAction:
+      criticals.length > 0
+        ? criticals[0].description
+        : highs.length > 0
+          ? highs[0].description
+          : null,
+  };
+}
+
+function answerDecisions(summary: OwnerSummary): JarvisAnswer {
+  const { decisions } = summary;
+
+  let answer: string;
+  if (decisions.length === 0) {
+    answer = "No owner decisions are queued right now.";
+  } else {
+    const critical = decisions.filter((d) => d.urgency === "CRITICAL").length;
+    const high = decisions.filter((d) => d.urgency === "HIGH").length;
+    const normal = decisions.filter((d) => d.urgency === "NORMAL").length;
+    const parts: string[] = [];
+    if (critical > 0) parts.push(`${critical} critical`);
+    if (high > 0) parts.push(`${high} high-priority`);
+    if (normal > 0) parts.push(`${normal} normal`);
+    answer = `${decisions.length} item${decisions.length === 1 ? "" : "s"} need your attention: ${parts.join(", ")}.`;
+  }
+
+  const supporting = decisions.map(
+    (d) => `[${d.urgency}] ${d.description}`
+  );
+  if (supporting.length === 0) supporting.push("Queue is empty.");
+
+  return {
+    intent: "decisions",
+    question: JARVIS_QUESTIONS["decisions"],
+    answer,
+    supportingState: supporting,
+    confidence: "HIGH",
+    caveat: null,
+    nextAction:
+      decisions.length > 0
+        ? `Start with: ${decisions[0].description}`
+        : "Monitor daily operator checklist.",
+  };
+}
+
+function answerToday(summary: OwnerSummary): JarvisAnswer {
+  const { picks } = summary;
+
+  const supporting = [
+    `Picks published today: ${picks.today}`,
+    `Canonical settled total: ${picks.canonicalSettled}`,
+    `Pending settlement: ${picks.canonicalPending}`,
+    `Bootstrap excluded: ${picks.bootstrapExcluded}`,
+    `Overall status: ${summary.overallColor}`,
+    `Critical warnings: ${summary.criticalWarnings.length}`,
+  ];
+
+  return {
+    intent: "today",
+    question: JARVIS_QUESTIONS["today"],
+    answer:
+      `Today: ${picks.today} pick${picks.today === 1 ? "" : "s"} published. ` +
+      `${picks.canonicalPending} pending settlement. ` +
+      `Overall status: ${summary.overallColor}. ` +
+      (summary.criticalWarnings.length > 0
+        ? `${summary.criticalWarnings.length} safety warning(s) active.`
+        : "No safety warnings."),
+    supportingState: supporting,
+    confidence: picks.today > 0 ? "HIGH" : "MEDIUM",
+    caveat:
+      "This reflects the last Jarvis sync. Refresh the cockpit to see current state.",
+    nextAction: "Verify ingestion freshness and settlement in /admin/dashboard.",
+  };
+}
+
+function answerWorkers(summary: OwnerSummary): JarvisAnswer {
+  const dataReliability = summary.departments.find((d) => d.id === "data-reliability");
+  const settlement = summary.departments.find((d) => d.id === "settlement-results");
+
+  const supporting = [
+    `Data ingestion: ${dataReliability?.status ?? "UNKNOWN"} — ${dataReliability?.oneLiner ?? "status unknown"}`,
+    `Settlement: ${settlement?.status ?? "UNKNOWN"} — ${settlement?.oneLiner ?? "status unknown"}`,
+    "All agents: DRAFT_ONLY — no external actions without human approval.",
+    "Workers: BullMQ + Redis queue. Check /admin/dashboard for last run timestamps.",
+  ];
+
+  const bothGreen =
+    dataReliability?.status === "GREEN" && settlement?.status === "GREEN";
+
+  return {
+    intent: "workers",
+    question: JARVIS_QUESTIONS["workers"],
+    answer: bothGreen
+      ? "Ingestion and settlement workers are running normally. No manual intervention needed."
+      : `Workers have issues. Ingestion: ${dataReliability?.status ?? "UNKNOWN"}, Settlement: ${settlement?.status ?? "UNKNOWN"}.`,
+    supportingState: supporting,
+    confidence: bothGreen ? "HIGH" : "MEDIUM",
+    caveat:
+      "Agents are internal operator roles. They produce DRAFTS only — no external actions happen without your approval.",
+    nextAction: !bothGreen
+      ? "Check /admin/dashboard for ingestion and settlement run logs."
+      : "Continue monitoring. Workers are healthy.",
+  };
+}
+
+function answerMeeting(summary: OwnerSummary): JarvisAnswer {
+  const { picks, performance, decisions, criticalWarnings, overallColor } = summary;
+
+  const bullets: string[] = [
+    `Status: ${overallColor} — ${summary.oneLiner}`,
+    `Picks: ${picks.today} published today (${picks.isPublicGateOpen ? "public" : "internal only"})`,
+    `Performance: Target ${performance.targetPct}% — ${performance.displaySafe ? `${performance.actualWinRate ?? "?"}% (${performance.record})` : "Gated"}`,
+    `Open decisions: ${decisions.length}`,
+    `Critical warnings: ${criticalWarnings.length}`,
+  ];
+
+  let answer: string;
+  if (overallColor === "GREEN" && criticalWarnings.length === 0) {
+    answer = `Platform is GREEN. No critical issues. ${picks.today} pick${picks.today === 1 ? "" : "s"} published today. Performance is ${performance.displaySafe ? "display-ready" : "gated — still accumulating data"}.`;
+  } else if (overallColor === "RED") {
+    answer = `Platform has issues before this meeting. ${criticalWarnings.length} critical warning(s) active. Do not make public claims until resolved.`;
+  } else {
+    answer = `Platform is AMBER. ${decisions.length} item${decisions.length === 1 ? "" : "s"} need attention. Safe to operate but not yet fully launch-ready.`;
+  }
+
+  return {
+    intent: "meeting",
+    question: JARVIS_QUESTIONS["meeting"],
+    answer,
+    supportingState: bullets,
+    confidence: "HIGH",
+    caveat:
+      "Performance stats are only shared publicly if displaySafe is true. Never share the 70% target as an achieved result.",
+    nextAction:
+      decisions.length > 0
+        ? `Review the ${decisions.length} open decision(s) before the meeting.`
+        : "No action needed. Platform state is stable.",
+  };
+}
+
+function answerAiOps(summary: OwnerSummary): JarvisAnswer {
+  const { aiOps } = summary;
+
+  const supporting = [
+    `Telemetry available: NO — ${aiOps.reason}`,
+    `ccusage: ${aiOps.ccusageNote}`,
+    "Model lane policy:",
+    ...aiOps.modelLanePolicy.map((p) => `  • ${p}`),
+    "To instrument next:",
+    ...aiOps.toInstrumentNext.map((t) => `  • ${t}`),
+  ];
+
+  return {
+    intent: "ai-ops",
+    question: JARVIS_QUESTIONS["ai-ops"],
+    answer:
+      "AI Ops telemetry is not yet instrumented. Usage data does not flow into Jarvis automatically. " +
+      "Run `npx ccusage@latest` in the terminal to see today's Claude spend. " +
+      "Model lane policy is defined and should be followed by all agents.",
+    supportingState: supporting,
+    confidence: "HIGH",
+    caveat:
+      "No token counts, model costs, or failed-run data are available in Jarvis until wired. " +
+      "This is the honest state — do not infer discipline from absence of data.",
+    nextAction: aiOps.toInstrumentNext[0] ?? "Wire ccusage to /cockpit/api-costs.",
+  };
+}
+
+// ─── Dispatcher ───────────────────────────────────────────────────────────────
+
+const HANDLERS: Readonly<Record<JarvisIntent, (s: OwnerSummary) => JarvisAnswer>> = {
+  "picks": answerPicks,
+  "launch-ready": answerLaunchReady,
+  "performance": answerPerformance,
+  "blocked": answerBlocked,
+  "decisions": answerDecisions,
+  "today": answerToday,
+  "workers": answerWorkers,
+  "meeting": answerMeeting,
+  "ai-ops": answerAiOps,
+};
+
+// Dispatches a deterministic owner question to the correct intent handler for the given OwnerSummary.
+export function askJarvis(intent: JarvisIntent, summary: OwnerSummary): JarvisAnswer {
+  return HANDLERS[intent](summary);
+}
