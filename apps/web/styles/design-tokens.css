@@ -123,6 +123,12 @@
   --alert:         #FF6470;
   --alert-deep:    #B53C45;
 
+  /* ── CAUTION — incomplete data / review needed ───────── */
+  /* Semantic amber for the world layer. NOT the deprecated --amber alias
+     (which auto-redirects to cyan); never use for anything but warnings. */
+  --caution:       #FFB454;
+  --caution-deep:  #B5781F;
+
   /* ── DEPRECATED ALIASES — keep older boards working ──── */
   --mint:          var(--verify);
   --vermilion:     var(--alert);

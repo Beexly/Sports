@@ -324,3 +324,137 @@
   .gse-sheen { animation: none !important; color: var(--ion-white); -webkit-text-fill-color: var(--ion-white); }
   .gse-enter-ring { animation: none !important; opacity: 0 !important; }
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   GALAXY WORLD LAYER (`gw-`) — public-experience world utilities.
+   Doctrine: docs/design/GALAXY_2026_PUBLIC_WORLD.md §2–4. Every visual
+   here maps to the metaphor grammar (fragments → signal). Motion must
+   explain signal / risk / trust / gravity — never decorate.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Void + nebula atmosphere — the section canvas. Never flat black. */
+.gw-nebula {
+  position: relative;
+  background:
+    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(122, 92, 255, 0.10), transparent 62%),
+    radial-gradient(ellipse 70% 45% at 86% 18%, rgba(255, 45, 214, 0.05), transparent 60%),
+    radial-gradient(ellipse 60% 60% at 50% 110%, rgba(0, 229, 255, 0.05), transparent 65%),
+    linear-gradient(180deg, var(--void) 0%, #0A0D14 50%, var(--void) 100%);
+}
+.gw-nebula-deep {
+  position: relative;
+  background:
+    radial-gradient(ellipse 100% 65% at 50% -10%, rgba(122, 92, 255, 0.14), transparent 65%),
+    radial-gradient(ellipse 55% 40% at 8% 90%, rgba(0, 229, 255, 0.06), transparent 60%),
+    var(--void);
+}
+
+/* Starfield — three drifting dot layers, masked to fade at edges. */
+.gw-starfield {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 12% 22%, rgba(246, 247, 250, 0.55), transparent 50%),
+    radial-gradient(1px 1px at 34% 68%, rgba(246, 247, 250, 0.35), transparent 50%),
+    radial-gradient(1.5px 1.5px at 56% 14%, rgba(0, 229, 255, 0.45), transparent 50%),
+    radial-gradient(1px 1px at 71% 47%, rgba(246, 247, 250, 0.4), transparent 50%),
+    radial-gradient(1px 1px at 87% 79%, rgba(122, 92, 255, 0.5), transparent 50%),
+    radial-gradient(1.5px 1.5px at 23% 88%, rgba(246, 247, 250, 0.3), transparent 50%),
+    radial-gradient(1px 1px at 64% 92%, rgba(255, 45, 214, 0.35), transparent 50%),
+    radial-gradient(1px 1px at 92% 8%, rgba(246, 247, 250, 0.45), transparent 50%);
+  background-size: 520px 520px;
+  mask-image: radial-gradient(ellipse at center, black 45%, transparent 95%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 45%, transparent 95%);
+  animation: gw-star-drift 90s linear infinite;
+}
+@keyframes gw-star-drift {
+  from { background-position: 0 0; }
+  to   { background-position: -520px 260px; }
+}
+
+/* Signal beam — fragments resolve INTO this. Vertical cyan column. */
+.gw-beam {
+  position: relative;
+  background: linear-gradient(180deg, transparent, rgba(0, 229, 255, 0.75) 18%, rgba(0, 229, 255, 0.95) 50%, rgba(0, 229, 255, 0.75) 82%, transparent);
+  box-shadow: 0 0 18px 2px rgba(0, 229, 255, 0.35);
+  animation: gw-beam-breathe 4.5s ease-in-out infinite;
+}
+@keyframes gw-beam-breathe {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; box-shadow: 0 0 26px 4px rgba(0, 229, 255, 0.5); }
+}
+
+/* Market-gravity stroke flow — apply to SVG paths (pair with stroke-dasharray). */
+.gw-dash-flow { animation: gw-dash 3.2s linear infinite; }
+@keyframes gw-dash { to { stroke-dashoffset: -28; } }
+
+/* Fragment drift — unresolved market inputs floating in the void. */
+.gw-drift   { animation: gw-float 9s ease-in-out infinite; }
+.gw-drift-2 { animation: gw-float 12s ease-in-out -3s infinite; }
+.gw-drift-3 { animation: gw-float 15s ease-in-out -7s infinite; }
+@keyframes gw-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33%      { transform: translate3d(5px, -9px, 0); }
+  66%      { transform: translate3d(-6px, 5px, 0); }
+}
+
+/* Orbit — slow rotation for orbiting signal labels (counter-rotate children). */
+.gw-orbit         { animation: gw-rotate 36s linear infinite; }
+.gw-orbit-counter { animation: gw-rotate 36s linear infinite reverse; }
+@keyframes gw-rotate { to { transform: rotate(360deg); } }
+
+/* Gate aperture — the No-Bet gate breathing shut. Conic ring with a gap. */
+.gw-gate-ring {
+  border-radius: 999px;
+  background: conic-gradient(from 210deg, var(--alert) 0deg 300deg, transparent 300deg 360deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 3px));
+  animation: gw-gate-breathe 5s ease-in-out infinite;
+}
+@keyframes gw-gate-breathe {
+  0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.9; }
+  50%      { transform: rotate(8deg) scale(0.97); opacity: 1; }
+}
+
+/* Glow rings — semantic halo states for nodes and readouts. */
+.gw-ring-signal   { box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.45), 0 0 24px -4px rgba(0, 229, 255, 0.5); }
+.gw-ring-heat     { box-shadow: 0 0 0 1px rgba(255, 45, 214, 0.4), 0 0 24px -4px rgba(255, 45, 214, 0.45); }
+.gw-ring-caution  { box-shadow: 0 0 0 1px rgba(255, 180, 84, 0.45), 0 0 20px -4px rgba(255, 180, 84, 0.4); }
+.gw-ring-gate     { box-shadow: 0 0 0 1px rgba(255, 100, 112, 0.45), 0 0 20px -4px rgba(255, 100, 112, 0.4); }
+
+/* Receipt row — canonical truth readout: white text, hairline, timestamp slot. */
+.gw-receipt {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  border-bottom: 1px solid rgba(46, 56, 73, 0.7);
+  padding: 10px 0;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+/* Scroll-linked chapter marker — mono index + hairline, used by WorldSection. */
+.gw-chapter-index {
+  display: inline-flex; align-items: center; gap: 10px;
+  font: var(--t-eyebrow); text-transform: uppercase; letter-spacing: 0.22em;
+  color: var(--ion-2);
+}
+.gw-chapter-index::after {
+  content: ""; width: 48px; height: 1px;
+  background: linear-gradient(90deg, var(--orbital-cyan), transparent);
+}
+
+/* Mirage degrade — truth layers revealing under a too-good surface. */
+.gw-mirage-layer { transition: opacity 480ms var(--ease-out), transform 480ms var(--ease-out); }
+
+/* Hover depth for world cards — restrained lift, no scale soup. */
+.gw-card-hover { transition: transform 200ms var(--ease-out), border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
+.gw-card-hover:hover { transform: translateY(-2px); border-color: var(--mineral-hi); box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.8), 0 0 24px -10px rgba(0, 229, 255, 0.25); }
+
+/* Reduced motion — every gw animation collapses to its readable end state. */
+@media (prefers-reduced-motion: reduce) {
+  .gw-starfield, .gw-beam, .gw-dash-flow,
+  .gw-drift, .gw-drift-2, .gw-drift-3,
+  .gw-orbit, .gw-orbit-counter, .gw-gate-ring {
+    animation: none !important;
+  }
+  .gw-mirage-layer, .gw-card-hover { transition: none !important; }
+}

@@ -108,6 +108,13 @@ const config: Config = {
         // ── INFORMATIONAL ─────────────────────────────────
         verify: "#5FD9A3",
         alert: "#FF6470",
+        // Semantic caution — incomplete data / review needed. Distinct from
+        // the deprecated warm `amber` alias (which now resolves to cyan);
+        // this is the only sanctioned warm warning hue in the world layer.
+        caution: {
+          DEFAULT: "#FFB454",
+          deep: "#B5781F",
+        },
 
         // ── LEGACY ALIASES — repointed to GSE palette ─────
         // Components written under prior brands use `brand-*` and `accent-*`.
