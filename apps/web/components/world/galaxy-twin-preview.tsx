@@ -169,8 +169,14 @@ export function GalaxyTwinPreview(): JSX.Element {
                   {node.state === "gated" ? (
                     <span aria-hidden className="gw-gate-ring absolute -inset-2.5" />
                   ) : null}
-                  {node.state === "signal" && selected ? (
-                    <span aria-hidden className="absolute -inset-2.5 rounded-full border border-orbital-cyan/60" />
+                  {node.state === "signal" ? (
+                    // The edge window: an orbiting dashed aperture — open, scanning.
+                    <span
+                      aria-hidden
+                      className={`gw-orbit absolute rounded-full border border-dashed border-orbital-cyan/70 ${
+                        selected ? "-inset-3" : "-inset-2 opacity-60"
+                      }`}
+                    />
                   ) : null}
                 </span>
                 <span
@@ -183,9 +189,18 @@ export function GalaxyTwinPreview(): JSX.Element {
           })}
         </div>
 
-        <p className="absolute bottom-3 left-4 font-mono text-[9px] uppercase tracking-[0.2em] text-ion-2">
-          Illustrative system schematic — not live market data
-        </p>
+        {/* semantic legend — the color system, taught in place */}
+        <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-mineral/60 bg-void/80 px-4 py-2.5 backdrop-blur-sm">
+          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ion-2">
+            Illustrative system schematic — not live market data
+          </p>
+          <ul aria-hidden className="hidden items-center gap-3 font-mono text-[9px] uppercase tracking-[0.14em] sm:flex">
+            <li className="flex items-center gap-1.5 text-orbital-cyan"><span className="h-1.5 w-1.5 rounded-full bg-orbital-cyan" />signal</li>
+            <li className="flex items-center gap-1.5 text-plasma"><span className="h-1.5 w-1.5 rounded-full bg-plasma" />distortion</li>
+            <li className="flex items-center gap-1.5 text-caution"><span className="h-1.5 w-1.5 rounded-full bg-caution" />review</li>
+            <li className="flex items-center gap-1.5 text-alert"><span className="h-1.5 w-1.5 rounded-full bg-alert" />gated</li>
+          </ul>
+        </div>
       </div>
 
       {/* ── The reading ───────────────────────────────────────── */}

@@ -35,7 +35,7 @@ export function WorldSection({
   return (
     <section
       id={id}
-      className={`relative isolate overflow-hidden border-b border-mineral px-4 py-16 sm:px-6 sm:py-20 lg:px-8 ${atmosphere} ${className}`}
+      className={`relative isolate scroll-mt-20 overflow-hidden border-b border-mineral px-4 py-16 sm:px-6 sm:py-20 lg:px-8 ${atmosphere} ${className}`}
     >
       <div className="mx-auto max-w-7xl">
         <Reveal>

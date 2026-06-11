@@ -126,7 +126,7 @@ export function CostOfNoiseCalculator(): JSX.Element {
                   {opt.labels.map((label, i) => (
                     <label
                       key={label}
-                      className={`flex-1 cursor-pointer rounded-ds-sm border px-2 py-2 text-center text-xs font-medium transition-colors ${
+                      className={`flex-1 cursor-pointer rounded-ds-sm border px-2 py-2 text-center text-xs font-medium transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-orbital-cyan/80 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-eclipse ${
                         value === i
                           ? "border-orbital-cyan/60 bg-carbon text-ion-white"
                           : "border-mineral bg-carbon text-ion-1 hover:border-mineral-hi"

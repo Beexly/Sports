@@ -10,6 +10,7 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { Reveal } from "@/components/motion/reveal";
 import { WorldSection } from "@/components/world/world-section";
+import { WorldWaypoints } from "@/components/world/world-waypoints";
 import { GalaxyTwinPreview } from "@/components/world/galaxy-twin-preview";
 import { SignalFragmentField } from "@/components/world/signal-fragment-field";
 import { MarketMirageChapter } from "@/components/world/market-mirage";
@@ -175,11 +176,14 @@ export default async function HomePage(): Promise<JSX.Element> {
               </p>
             </div>
           </div>
+          {/* The module index — the journey's map, at the hero's seam. */}
+          <WorldWaypoints />
         </section>
 
         {/* ── 01 · GALAXY TWIN ──────────────────────────────────────── */}
         <WorldSection
           index="01"
+          id="twin"
           eyebrow="Galaxy Twin · Market Observatory"
           title={
             <>
@@ -195,6 +199,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* ── 02 · SIGNAL VS NOISE ──────────────────────────────────── */}
         <WorldSection
           index="02"
+          id="signal"
           eyebrow="Signal vs noise"
           title="Same market. Two completely different readings."
           lede="The inputs that reach you arrive as argument — takes, steam, rumor, stale numbers. The engine takes the same inputs and structures them into something accountable."
@@ -253,6 +258,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* ── 03 · MARKET MIRAGE ────────────────────────────────────── */}
         <WorldSection
           index="03"
+          id="mirage"
           eyebrow="Market Mirage"
           title={
             <>
@@ -268,6 +274,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* ── 04 · THE NO-BET GATE ──────────────────────────────────── */}
         <WorldSection
           index="04"
+          id="gate"
           eyebrow="The No-Bet Gate"
           title="No-Bet is not absence. It is intelligence."
           lede="The edge is not the pick — the edge is knowing what not to trust. Restraint is a first-class output of this system, logged with reasons like any other decision."
@@ -299,6 +306,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* ── 05 · DECISION AUTOPSY ─────────────────────────────────── */}
         <WorldSection
           index="05"
+          id="autopsy"
           eyebrow="Decision Autopsy"
           title="Every decision leaves evidence."
           lede="Published rows don't vanish when they settle. They get x-rayed in public: original signal, market movement, caveats, result, lesson."
@@ -309,6 +317,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* ── 06 · PARLAY MRI ───────────────────────────────────────── */}
         <WorldSection
           index="06"
+          id="mri"
           eyebrow="Parlay MRI"
           title="See inside the slip before money does."
           lede="Stacked legs hide correlation, dependency, and compounding fragility. The MRI is risk education — it shows the structure, you make the call."
@@ -319,6 +328,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* ── 07 · GSN / AIRWAVE ────────────────────────────────────── */}
         <WorldSection
           index="07"
+          id="gsn"
           eyebrow="Galaxy Sports Network · Airwave"
           title={
             <>
@@ -335,6 +345,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* ── 08 · COST OF NOISE ────────────────────────────────────── */}
         <WorldSection
           index="08"
+          id="noise"
           eyebrow="Cost of Noise"
           title="How much of your process is noise?"
           lede="Describe a typical week and get a directional read on your decision quality — where avoidable noise leaks in, and which Galaxy modules tighten it. Education, not a profit promise."
@@ -346,6 +357,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* ── 09 · RECEIPTS ─────────────────────────────────────────── */}
         <WorldSection
           index="09"
+          id="receipts"
           eyebrow="Receipts"
           title="Trust is an architecture, not a tagline."
           lede="No fabricated picks, no invented stats, no silent edits. The source ledger below is the live state of the engine's inputs — cost, status, grain, and what each unlocks."
