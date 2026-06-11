@@ -45,6 +45,12 @@ export interface AgentCouncilMember {
   readonly escalatesTo: CouncilEscalation;
   /** Hard invariant: no council seat takes external actions on its own. */
   readonly externalActions: "NONE";
+  /**
+   * Org design (owner note 2026-06-11): department heads and subagents form a
+   * real reporting tree. A seat with no reportsTo is a department head
+   * reporting to the owner via Jarvis.
+   */
+  readonly reportsTo?: string;
 }
 
 // ─── Council roster ───────────────────────────────────────────────────────────
@@ -448,6 +454,196 @@ export const AGENT_COUNCIL: readonly AgentCouncilMember[] = [
     ],
     escalatesTo: "OWNER",
     externalActions: "NONE",
+  },
+
+  // ── Org-design expansion (owner notes 2026-06-11) — designed, NOT_WIRED ───
+  // "Quality, humanizer, marketing, employee engagement, customer sourcing &
+  //  analytics & data & forecasting & planning… department heads and
+  //  subagents… financials, advanced player stat development & research…
+  //  a subagent constantly looking to better our GSE score."
+
+  {
+    id: "quality-officer",
+    codename: "GAUGE",
+    displayName: "Quality Officer",
+    role: "Quality Assurance Department Head",
+    status: "NOT_WIRED",
+    isRegisteredCockpitAgent: false,
+    charter:
+      "Own output quality across every public surface: copy, numbers, layout, and claims. " +
+      "Run regression review on each release and grade departments on defect rate.",
+    currentTruth:
+      "Seat is designed only. Quality lives in the test suites and doctrine docs; no seat " +
+      "synthesizes a quality report yet.",
+    ownsCapabilities: [],
+    safeActions: ["Document quality bars per surface from existing doctrine and tests"],
+    forbiddenActions: [
+      "Approve its own department's output",
+      "Lower a quality bar without owner sign-off",
+    ],
+    escalatesTo: "JARVIS",
+    externalActions: "NONE",
+  },
+
+  {
+    id: "voice-humanizer",
+    codename: "QUILL",
+    displayName: "Voice Humanizer",
+    role: "Brand Voice & Humanizer Department Head",
+    status: "NOT_WIRED",
+    isRegisteredCockpitAgent: false,
+    charter:
+      "Make every public word sound like Beex / we-at-GSN wrote it: first-person plural, " +
+      "no tool language, no 'AI' on public surfaces. Owns the we-voice rewrite pass.",
+    currentTruth:
+      "Voice rules are codified (doctrine §10.5) and enforced mechanically in the Beex Weekly " +
+      "generator; no seat audits the rest of the site's voice yet.",
+    ownsCapabilities: [],
+    safeActions: ["Apply the codified we-voice rules to draft copy for owner review"],
+    forbiddenActions: [
+      "Remove a legally required disclosure while rewording",
+      "Fabricate first-person experiences that did not happen",
+    ],
+    escalatesTo: "OWNER",
+    externalActions: "NONE",
+  },
+
+  {
+    id: "growth-marketer",
+    codename: "FLARE",
+    displayName: "Growth Marketer",
+    role: "Marketing & Customer Sourcing Department Head",
+    status: "NOT_WIRED",
+    isRegisteredCockpitAgent: false,
+    charter:
+      "Own acquisition: channel strategy, social presence (X, IG, Threads, FB; Telegram, " +
+      "WhatsApp, Discord once structure exists), launch sequencing, and conversion copy.",
+    currentTruth:
+      "Seat is designed only. Social handles are reserved in lib/brand.ts; the marketing " +
+      "blueprint exists as a doc; no campaign engine is wired.",
+    ownsCapabilities: [],
+    safeActions: ["Draft channel plans and campaign briefs for owner review"],
+    forbiddenActions: [
+      "Post to any external channel",
+      "Make performance claims not backed by the graded record",
+    ],
+    escalatesTo: "OWNER",
+    externalActions: "NONE",
+  },
+
+  {
+    id: "engagement-officer",
+    codename: "PULSE",
+    displayName: "Engagement Officer",
+    role: "Community & Engagement Department Head",
+    status: "NOT_WIRED",
+    isRegisteredCockpitAgent: false,
+    charter:
+      "Own member engagement and the owner's direct-input loop: community structure " +
+      "(Discord-first, with the security and bot design done BEFORE launch), feedback " +
+      "intake, and retention signals.",
+    currentTruth:
+      "Seat is designed only. No community platform is stood up; structure-first per the " +
+      "owner's direction.",
+    ownsCapabilities: [],
+    safeActions: ["Design the Discord security/bot/moderation structure on paper"],
+    forbiddenActions: [
+      "Open a community channel before the security structure is approved",
+      "Speak as the brand in any external community",
+    ],
+    escalatesTo: "OWNER",
+    externalActions: "NONE",
+  },
+
+  {
+    id: "forecast-planner",
+    codename: "VECTOR",
+    displayName: "Forecast Planner",
+    role: "Analytics, Forecasting & Planning Department Head",
+    status: "NOT_WIRED",
+    isRegisteredCockpitAgent: false,
+    charter:
+      "Own the planning layer: traffic/member/revenue forecasting, capacity planning, and " +
+      "the data roadmap that decides which intake lanes get built next.",
+    currentTruth:
+      "Seat is designed only. Snapshots and metrics exist in the cockpit; no forecasting " +
+      "model is built.",
+    ownsCapabilities: [],
+    safeActions: ["Assemble planning baselines from existing cockpit snapshots"],
+    forbiddenActions: ["Present a forecast as a commitment or as public performance"],
+    escalatesTo: "JARVIS",
+    externalActions: "NONE",
+  },
+
+  {
+    id: "financial-controller",
+    codename: "MINT",
+    displayName: "Financial Controller",
+    role: "Financials Department Head",
+    status: "NOT_WIRED",
+    isRegisteredCockpitAgent: false,
+    charter:
+      "Own the money view: MRR, founding-tier mix, data-spend budget, token/API cost " +
+      "discipline roll-ups, and the pricing-ladder milestone tracker.",
+    currentTruth:
+      "Seat is designed only. Stripe billing and API budget monitors exist; no unified " +
+      "financial view is synthesized.",
+    ownsCapabilities: [],
+    safeActions: ["Aggregate existing billing and budget data into a draft owner report"],
+    forbiddenActions: [
+      "Move money or change prices",
+      "Trigger a pricing-ladder step without the verified milestone",
+    ],
+    escalatesTo: "OWNER",
+    externalActions: "NONE",
+  },
+
+  {
+    id: "stat-rd-lead",
+    codename: "PRISM",
+    displayName: "Stat R&D Lead",
+    role: "Advanced Player-Stat Research & Development Head",
+    status: "NOT_WIRED",
+    isRegisteredCockpitAgent: false,
+    charter:
+      "Own the research program behind our numbers: new metric design, the math, validation " +
+      "against out-of-sample results, and the roadmap for growing proprietary data.",
+    currentTruth:
+      "Seat is designed only. The predictiveness backtest and graded pool exist as engines; " +
+      "no seat runs a continuous research loop over them.",
+    ownsCapabilities: [],
+    safeActions: ["Propose new metrics with falsifiable validation plans"],
+    forbiddenActions: [
+      "Ship a metric that has not passed out-of-sample validation",
+      "Present research output as public performance",
+    ],
+    escalatesTo: "JARVIS",
+    externalActions: "NONE",
+  },
+
+  {
+    id: "gse-score-optimizer",
+    codename: "ASCEND",
+    displayName: "GSE Score Optimizer",
+    role: "GSE Rating Improvement Subagent",
+    status: "NOT_WIRED",
+    isRegisteredCockpitAgent: false,
+    charter:
+      "The standing subagent that is constantly looking to better the GSE score: monitor " +
+      "calibration drift, hunt feature gaps, and propose scored experiments to its " +
+      "department head.",
+    currentTruth:
+      "Seat is designed only. Calibration and backtest engines exist to measure against; " +
+      "no improvement loop runs.",
+    ownsCapabilities: [],
+    safeActions: ["Rank improvement hypotheses by expected calibration gain"],
+    forbiddenActions: [
+      "Change scoring weights without validation and owner sign-off",
+      "Optimize for win-rate optics over calibration honesty",
+    ],
+    escalatesTo: "JARVIS",
+    externalActions: "NONE",
+    reportsTo: "stat-rd-lead",
   },
 ];
 

@@ -36,6 +36,9 @@ const SOCIAL_LINKS = [
   { href: SOCIAL.instagram, label: "Instagram" },
   { href: SOCIAL.threads, label: "Threads" },
   { href: SOCIAL.facebook, label: "Facebook" },
+  { href: SOCIAL.telegram, label: "Telegram" },
+  { href: SOCIAL.whatsapp, label: "WhatsApp" },
+  { href: SOCIAL.discord, label: "Discord" },
 ].filter((link) => link.href);
 
 export function Footer() {

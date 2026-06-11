@@ -31,8 +31,8 @@ const VALID_STATUSES: ReadonlySet<CouncilSeatStatus> = new Set([
 ]);
 
 describe("council structure", () => {
-  it("seats exactly 15 members", () => {
-    expect(AGENT_COUNCIL.length).toBe(15);
+  it("seats exactly 23 members", () => {
+    expect(AGENT_COUNCIL.length).toBe(23);
   });
 
   it("has globally unique ids and codenames", () => {
@@ -140,7 +140,7 @@ describe("council accessors", () => {
 
   it("seat counts add up and report 6 registered cockpit agents", () => {
     const counts = getCouncilSeatCounts();
-    expect(counts.total).toBe(15);
+    expect(counts.total).toBe(23);
     expect(counts.draftOnly + counts.manual + counts.notWired).toBe(counts.total);
     expect(counts.registeredCockpitAgents).toBe(6);
   });

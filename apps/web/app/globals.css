@@ -314,6 +314,10 @@
   0%, 100% { opacity: 0.25; }
   50%      { opacity: 0.8; }
 }
+@keyframes gse-hold-charge {
+  from { transform: scale(0.7); opacity: 0.4; }
+  to   { transform: scale(1.18); opacity: 1; }
+}
 @media (prefers-reduced-motion: reduce) {
   .gse-cine-anim { animation: none !important; }
 }

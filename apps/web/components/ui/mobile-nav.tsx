@@ -28,7 +28,6 @@ const SECTIONS: readonly Section[] = [
       { label: "Snap Share", href: "/players?view=snaps" },
       { label: "Next Gen", href: "/players?view=nextgen" },
       { label: "Edge Signals", href: "/players?view=edge" },
-      { label: "DFS Salaries", href: "/players?view=dfs" },
     ],
   },
   {
@@ -51,6 +50,7 @@ const SECTIONS: readonly Section[] = [
       { label: "Waiver & FAAB", href: "/fantasy/waivers" },
       { label: "Trade Analyzer", href: "/fantasy/trade" },
       { label: "DFS Optimizer", href: "/fantasy/dfs" },
+      { label: "DFS Salary Board", href: "/players?view=dfs" },
       { label: "Pick'em Edge", href: "/fantasy/props" },
       { label: "Connect League", href: "/fantasy/connect" },
     ],

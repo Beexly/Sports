@@ -66,6 +66,7 @@ const TRANSMISSIONS = [
 type Waypoint = {
   label: string;
   line: string;
+  href: string;
   tone: "cyan" | "uv" | "plasma" | "white";
   /** lateral exit vector (vw/vh units) — which edge the waypoint sweeps past */
   x: number;
@@ -73,16 +74,16 @@ type Waypoint = {
 };
 
 const WAYPOINTS: readonly Waypoint[] = [
-  { label: "THE BOARD", line: "Every edge earns a receipt.", tone: "cyan", x: -34, y: -12 },
-  { label: "GALAXY TWIN", line: "The slate as a living market map.", tone: "uv", x: 36, y: -16 },
-  { label: "TREND LAB", line: "Trends that survive the math.", tone: "cyan", x: -38, y: 14 },
-  { label: "PARLAY MRI", line: "Stacked risk, made visible.", tone: "plasma", x: 34, y: 16 },
-  { label: "NO-BET GATE", line: "Sometimes the sharpest pick is no pick.", tone: "white", x: -30, y: -18 },
-  { label: "DECISION AUTOPSY", line: "Losses dissected in public.", tone: "plasma", x: 32, y: -10 },
-  { label: "THE BEAT", line: "Reporting, reliability-scored.", tone: "uv", x: -36, y: 12 },
-  { label: "FANTASY GALAXY", line: "Draft, lineups, waivers — your league, twinned.", tone: "cyan", x: 38, y: 12 },
-  { label: "THE OPTIMIZER", line: "Floor vs ceiling, glass-box.", tone: "white", x: -32, y: 16 },
-  { label: "THE ACADEMY", line: "Train the pass. Graded on process.", tone: "uv", x: 30, y: -14 },
+  { label: "THE BOARD", line: "Every edge earns a receipt.", href: "/board", tone: "cyan", x: -34, y: -12 },
+  { label: "GALAXY TWIN", line: "The slate as a living market map.", href: "/observatory", tone: "uv", x: 36, y: -16 },
+  { label: "TREND LAB", line: "Trends that survive the math.", href: "/trends", tone: "cyan", x: -38, y: 14 },
+  { label: "PARLAY MRI", line: "Stacked risk, made visible.", href: "/parlay-mri", tone: "plasma", x: 34, y: 16 },
+  { label: "NO-BET GATE", line: "Sometimes the sharpest pick is no pick.", href: "/board", tone: "white", x: -30, y: -18 },
+  { label: "DECISION AUTOPSY", line: "Losses dissected in public.", href: "/performance/losses", tone: "plasma", x: 32, y: -10 },
+  { label: "THE BEAT", line: "Reporting, reliability-scored.", href: "/the-beat", tone: "uv", x: -36, y: 12 },
+  { label: "FANTASY GALAXY", line: "Draft, lineups, waivers — your league, twinned.", href: "/fantasy", tone: "cyan", x: 38, y: 12 },
+  { label: "THE OPTIMIZER", line: "Floor vs ceiling, glass-box.", href: "/optimizer", tone: "white", x: -32, y: 16 },
+  { label: "THE ACADEMY", line: "Train the pass. Graded on process.", href: "/academy", tone: "uv", x: 30, y: -14 },
 ] as const;
 
 const WAYPOINT_STEP_MS = 560;
@@ -117,7 +118,7 @@ export function CinematicEntrance() {
   const [phase, setPhase] = useState<Phase>("boot");
   const [tick, setTick] = useState(0);
   const [tour, setTour] = useState(true);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const timers = useRef<number[]>([]);
   const skipRef = useRef<HTMLButtonElement | null>(null);
   const startedRef = useRef(false);
@@ -159,23 +160,62 @@ export function CinematicEntrance() {
       return;
     }
 
-    // Schedule (ms). Return visits get a short jump with no waypoint tour.
+    // Return visits get a short automatic jump with no waypoint tour.
     setTour(!seen);
-    const S = seen
-      ? { warp: 500, arrival: 1900, identity: 2300, handoff: 3100 }
-      : { warp: 1700, arrival: 8000, identity: 8800, handoff: 10200 };
-
     const push = (fn: () => void, at: number) => timers.current.push(window.setTimeout(fn, at));
-    push(() => setPhase("warp"), S.warp);
-    push(() => setPhase("arrival"), S.arrival);
-    push(() => setPhase("identity"), S.identity);
-    push(() => setPhase("handoff"), S.handoff);
 
-    // Transmission clock during warp.
+    if (seen) {
+      push(() => setPhase("warp"), 500);
+      push(() => setPhase("arrival"), 1900);
+      push(() => setPhase("identity"), 2300);
+      push(() => setPhase("handoff"), 3100);
+      const iv = window.setInterval(() => setTick((t) => t + 1), 1200);
+      timers.current.push(iv);
+      push(() => window.clearInterval(iv), 1900);
+      return;
+    }
+
+    // First visit — Unseen-style entry: the visitor CLICK & HOLDs to engage
+    // the warp (engageRef fires the chain); if they don't, the system
+    // auto-engages so the door never blocks anyone.
+    push(() => engageRef.current(), 5200);
+  }, []);
+
+  // Engage the warp (idempotent): clears boot timers and runs the traversal
+  // chain relative to NOW — fired by the hold interaction or the fallback.
+  const engagedRef = useRef(false);
+  const engageRef = useRef<() => void>(() => {});
+  engageRef.current = () => {
+    if (engagedRef.current) return;
+    engagedRef.current = true;
+    timers.current.forEach((t) => window.clearTimeout(t));
+    timers.current = [];
+    const push = (fn: () => void, at: number) => timers.current.push(window.setTimeout(fn, at));
+    setPhase("warp");
+    push(() => setPhase("arrival"), 6300);
+    push(() => setPhase("identity"), 7100);
+    push(() => setPhase("handoff"), 8500);
     const iv = window.setInterval(() => setTick((t) => t + 1), 1200);
     timers.current.push(iv);
-    push(() => window.clearInterval(iv), S.arrival);
-  }, []);
+    push(() => window.clearInterval(iv), 6300);
+  };
+
+  // Click & hold — the charge ring fills for 800ms; releasing early aborts.
+  const [holding, setHolding] = useState(false);
+  const holdTimer = useRef<number | null>(null);
+  const beginHold = (e: { target: EventTarget | null }) => {
+    if (phase !== "boot") return;
+    if ((e.target as Element | null)?.closest?.("button, a")) return;
+    setHolding(true);
+    holdTimer.current = window.setTimeout(() => engageRef.current(), 800);
+  };
+  const endHold = () => {
+    setHolding(false);
+    if (holdTimer.current !== null) {
+      window.clearTimeout(holdTimer.current);
+      holdTimer.current = null;
+    }
+  };
 
   // Focus skip; lock scroll; Escape to skip.
   useEffect(() => {
@@ -195,10 +235,14 @@ export function CinematicEntrance() {
 
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
 
+  // Steering: parallax is written straight to CSS variables — zero React
+  // re-renders per mousemove (the old state-based version re-rendered the
+  // whole star tunnel on every pixel of movement; that was the lag).
   const onMove = (e: ReactMouseEvent) => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 2;
-    const y = (e.clientY / window.innerHeight - 0.5) * 2;
-    setMouse({ x, y });
+    const el = rootRef.current;
+    if (!el) return;
+    el.style.setProperty("--par-x", String((e.clientX / window.innerWidth - 0.5) * 2));
+    el.style.setProperty("--par-y", String((e.clientY / window.innerHeight - 0.5) * 2));
   };
 
   const transmission = useMemo(
@@ -209,7 +253,8 @@ export function CinematicEntrance() {
   if (phase === "done") return null;
 
   const par = (depth: number) => ({
-    transform: `translate3d(${mouse.x * depth}px, ${mouse.y * depth}px, 0)`,
+    transform: `translate3d(calc(var(--par-x, 0) * ${depth}px), calc(var(--par-y, 0) * ${depth}px), 0)`,
+    willChange: "transform" as const,
   });
 
   const showBoot = phase === "boot";
@@ -226,10 +271,14 @@ export function CinematicEntrance() {
 
   return (
     <div
+      ref={rootRef}
       role="dialog"
       aria-modal="true"
       aria-label={`Entering ${BRAND_NAME}`}
       onMouseMove={onMove}
+      onPointerDown={beginHold}
+      onPointerUp={endHold}
+      onPointerLeave={endHold}
       className="fixed inset-0 z-[70] overflow-hidden"
       style={{ background: BRAND_COLORS.obsidianBlack }}
     >
@@ -247,8 +296,7 @@ export function CinematicEntrance() {
         className="gse-cine-anim pointer-events-none absolute -left-1/4 top-[-20%] h-[80vh] w-[80vw] rounded-full"
         style={{
           animation: "gse-nebula-drift 14s ease-in-out infinite alternate",
-          background: `radial-gradient(closest-side, ${uv}2e, transparent 70%)`,
-          filter: "blur(10px)",
+          background: `radial-gradient(closest-side, ${uv}2e, transparent 72%)`,
         }}
       />
       <div
@@ -256,8 +304,7 @@ export function CinematicEntrance() {
         className="gse-cine-anim pointer-events-none absolute bottom-[-25%] right-[-15%] h-[70vh] w-[70vw] rounded-full"
         style={{
           animation: "gse-nebula-drift 17s ease-in-out infinite alternate-reverse",
-          background: `radial-gradient(closest-side, ${mag}1f, transparent 70%)`,
-          filter: "blur(12px)",
+          background: `radial-gradient(closest-side, ${mag}1f, transparent 72%)`,
         }}
       />
 
@@ -301,6 +348,36 @@ export function CinematicEntrance() {
               </ul>
             </div>
           </div>
+
+          {/* Unseen-style entry: click & hold charges the warp drive. The
+              ring fills while held; auto-engage covers everyone else. */}
+          {tour && (
+            <div className="pointer-events-none absolute inset-x-0 bottom-14 flex flex-col items-center gap-3">
+              <span className="relative flex h-12 w-12 items-center justify-center">
+                <span
+                  aria-hidden
+                  className="absolute inset-0 rounded-full border"
+                  style={{ borderColor: `${cyan}40` }}
+                />
+                <span
+                  aria-hidden
+                  className="gse-cine-anim absolute inset-0 rounded-full"
+                  style={{
+                    border: `2px solid ${cyan}`,
+                    clipPath: "inset(0 0 0 0)",
+                    opacity: holding ? 1 : 0,
+                    transform: holding ? "scale(1)" : "scale(0.7)",
+                    animation: holding ? "gse-hold-charge 800ms linear forwards" : "none",
+                    boxShadow: `0 0 24px ${cyan}66`,
+                  }}
+                />
+                <span aria-hidden className="h-2 w-2 rounded-full" style={{ background: cyan, boxShadow: `0 0 12px ${cyan}` }} />
+              </span>
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-300">
+                {holding ? "charging…" : "click & hold to engage warp"}
+              </p>
+            </div>
+          )}
         </div>
       )}
 
@@ -308,7 +385,7 @@ export function CinematicEntrance() {
       {(showWarp || showArrival) && (
         <div className="absolute inset-0" style={{ perspective: "600px" }}>
           {/* star tunnel — radial streaks pouring past the camera */}
-          <div aria-hidden className="absolute inset-0" style={par(8)}>
+          <div aria-hidden className="absolute inset-0" style={par(26)}>
             {WARP_STARS.map((s, i) => (
               <span
                 key={i}
@@ -317,6 +394,7 @@ export function CinematicEntrance() {
                   width: 64,
                   height: s.thickness,
                   transformOrigin: "left center",
+                  willChange: "transform, opacity",
                   // arrival: streaks collapse back to points (deceleration)
                   animation: `${showArrival ? "gse-warp-brake" : "gse-warp-star"} ${s.duration}s linear infinite`,
                   animationDelay: `${s.delay}s`,
@@ -330,28 +408,62 @@ export function CinematicEntrance() {
             ))}
           </div>
 
-          {/* destination star — brightens as we close in */}
-          <div aria-hidden className="absolute inset-0 flex items-center justify-center">
-            <span
-              className="gse-cine-anim block h-2 w-2 rounded-full"
-              style={{
-                background: white,
-                animation: `gse-core-glow ${showArrival ? "0.8s" : "6.5s"} ease-in forwards`,
-                boxShadow: `0 0 24px 6px ${cyan}`,
-              }}
-            />
-            {showArrival && (
+          {/* destination — a luminous particle orb that blooms as we close in */}
+          <div aria-hidden className="absolute inset-0 flex items-center justify-center" style={par(10)}>
+            <div
+              className="gse-cine-anim relative h-40 w-40"
+              style={{ animation: `gse-core-glow ${showArrival ? "0.9s" : "6.5s"} ease-in forwards`, willChange: "transform, opacity" }}
+            >
+              {/* core bloom */}
               <span
-                aria-hidden
-                className="gse-cine-anim absolute h-24 w-24 rounded-full"
-                style={{ animation: "gse-signal-ping 1.2s ease-out infinite", border: `1.5px solid ${cyan}` }}
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: `radial-gradient(circle at 42% 38%, ${white}f2 0%, ${cyan}b8 22%, ${uv}55 48%, transparent 70%)`,
+                  filter: "saturate(1.2)",
+                }}
               />
-            )}
+              {/* flowing line streams — two counter-rotating conic veils */}
+              <span
+                className="gse-cine-anim absolute inset-[6%] rounded-full"
+                style={{
+                  background: `conic-gradient(from 0deg, transparent 0 12%, ${cyan}3d 16%, transparent 24%, ${white}30 38%, transparent 46%, ${uv}44 60%, transparent 70%, ${mag}26 84%, transparent 92%)`,
+                  animation: "gw-rotate 9s linear infinite",
+                  maskImage: "radial-gradient(circle, transparent 30%, black 46%, black 66%, transparent 72%)",
+                  WebkitMaskImage: "radial-gradient(circle, transparent 30%, black 46%, black 66%, transparent 72%)",
+                }}
+              />
+              <span
+                className="gse-cine-anim absolute inset-[14%] rounded-full"
+                style={{
+                  background: `conic-gradient(from 180deg, transparent 0 8%, ${white}3d 14%, transparent 26%, ${cyan}33 44%, transparent 56%, ${uv}3d 74%, transparent 86%)`,
+                  animation: "gw-rotate 13s linear infinite reverse",
+                  maskImage: "radial-gradient(circle, transparent 22%, black 38%, black 60%, transparent 68%)",
+                  WebkitMaskImage: "radial-gradient(circle, transparent 22%, black 38%, black 60%, transparent 68%)",
+                }}
+              />
+              {/* particle dust ring */}
+              <span
+                className="absolute -inset-[14%] rounded-full"
+                style={{
+                  background: `radial-gradient(circle, transparent 52%, ${cyan}14 60%, transparent 64%), radial-gradient(circle, transparent 60%, ${uv}11 70%, transparent 76%)`,
+                }}
+              />
+              {showArrival && (
+                <span
+                  className="gse-cine-anim absolute inset-0 rounded-full"
+                  style={{ animation: "gse-signal-ping 1.2s ease-out infinite", border: `1.5px solid ${cyan}` }}
+                />
+              )}
+            </div>
           </div>
 
-          {/* waypoint flybys — the unseen rooms of the system, swept past */}
+          {/* waypoint flybys — the unseen rooms of the system, swept past.
+              INTERACTIVE: each card is a live door; click one mid-flight to
+              skip the rest of the ride and land directly on that surface.
+              (tabIndex -1: transient, mouse-first — keyboard users get the
+              same destinations in the static handoff.) */}
           {showWarp && tour && (
-            <div aria-hidden className="absolute inset-0">
+            <div className="absolute inset-0" style={par(12)}>
               {WAYPOINTS.map((w, i) => (
                 <div
                   key={w.label}
@@ -362,13 +474,17 @@ export function CinematicEntrance() {
                     ["--wx" as string]: `${w.x}vw`,
                     ["--wy" as string]: `${w.y}vh`,
                     opacity: 0,
+                    willChange: "transform, opacity",
                   }}
                 >
-                  <div
-                    className="rounded-lg border px-4 py-2.5 text-left backdrop-blur-[2px]"
+                  <Link
+                    href={w.href}
+                    tabIndex={-1}
+                    onClick={finish}
+                    className="block rounded-lg border px-4 py-2.5 text-left transition-transform duration-150 hover:scale-105"
                     style={{
                       borderColor: `${toneColor[w.tone]}55`,
-                      background: "rgba(5, 6, 8, 0.55)",
+                      background: "rgba(5, 6, 8, 0.72)",
                       boxShadow: `0 0 28px ${toneColor[w.tone]}22`,
                     }}
                   >
@@ -378,8 +494,8 @@ export function CinematicEntrance() {
                     >
                       ◈ {w.label}
                     </p>
-                    <p className="mt-1 text-sm text-ink-300">{w.line}</p>
-                  </div>
+                    <p className="mt-1 text-sm text-ink-200">{w.line}</p>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -402,8 +518,8 @@ export function CinematicEntrance() {
             </p>
           )}
 
-          <p className="absolute bottom-5 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.3em] text-ink-500">
-            {"// traversal · illustrative system map"}
+          <p className="absolute bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.3em] text-ink-400">
+            {"steer with your cursor · grab a door as it passes // illustrative system map"}
           </p>
         </div>
       )}

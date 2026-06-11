@@ -173,6 +173,38 @@ export default async function HomePage(): Promise<JSX.Element> {
               </p>
             </div>
           </div>
+          {/* LIVE ribbon — BlueYard-style ticker, fed only by real state.
+              Honest empty states ride the same ribbon. */}
+          <div className="relative border-t border-mineral/60 bg-void/40">
+            <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-2.5 sm:px-6 lg:px-8">
+              <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-alert/90 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-ion-white">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-ion-white" style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }} />
+                Live
+              </span>
+              <div className="gse-marquee min-w-0 flex-1" style={{ ["--gse-marquee-dur" as string]: "44s" }}>
+                <div className="gse-marquee-track font-mono text-[11px] uppercase tracking-[0.16em] text-ion-1">
+                  {[0, 1].map((copy) => (
+                    <span key={copy} aria-hidden={copy === 1}>
+                      <span className="px-6">Board · {state.publishedToday.length} public {state.publishedToday.length === 1 ? "row" : "rows"} cleared today</span>
+                      <span className="px-6 text-orbital-cyan">◆</span>
+                      <span className="px-6">Gate · {state.gatedTodayRows.length} {state.gatedTodayRows.length === 1 ? "row" : "rows"} holding behind the no-bet gate</span>
+                      <span className="px-6 text-plasma">◆</span>
+                      <span className="px-6">Scoring · {state.scoringNow.length} live</span>
+                      <span className="px-6 text-orbital-cyan">◆</span>
+                      <span className="px-6">Calibration sample · {calibration.sampleSize}</span>
+                      <span className="px-6 text-plasma">◆</span>
+                      <span className="px-6">Trend observations · {trendWorkbench.observationCount}</span>
+                      <span className="px-6 text-orbital-cyan">◆</span>
+                      <span className="px-6">Last refresh · {timeLabel(state.lastRefresh)}</span>
+                      <span className="px-6 text-plasma">◆</span>
+                      <span className="px-6">We detect. You decide.</span>
+                      <span className="px-6 text-orbital-cyan">◆</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
           {/* The module index — the journey's map, at the hero's seam. */}
           <WorldWaypoints />
         </section>

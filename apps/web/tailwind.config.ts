@@ -52,9 +52,9 @@ const config: Config = {
         "ion-white": "#F6F7FA",
         ion: {
           DEFAULT: "#D5DDE9", // 13.83:1 on carbon
-          1: "#98A3B5",       // 7.43:1 on carbon
-          2: "#9AA6B8",       // was #5E6878 (3.36:1 FAIL) → 7.68:1 PASS
-          3: "#8B97AB",       // was #3D4555 (1.97:1 FAIL) → 6.41:1 PASS
+          1: "#AEB7D2",       // nebula silver — brighter + violet-tinted, AA+
+          2: "#B1BAD5",       // brighter + violet-tinted, AA+
+          3: "#9AA3C0",       // violet-tinted, AA
         },
 
         // ── PAPER — LIGHT data-surface scale (ADDITIVE) ───
@@ -156,8 +156,8 @@ const config: Config = {
           // ── legacy DARK ramp (unchanged) — ink-50..ink-1000 ──
           50:   "#F5F7FF",
           100:  "#D5DDE9",
-          200:  "#98A3B5",
-          300:  "#98A3B5",
+          200:  "#AEB7D2",
+          300:  "#AEB7D2",
           400:  "#5E6878",
           500:  "#3D4555",
           600:  "#2E3849",

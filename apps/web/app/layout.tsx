@@ -15,6 +15,7 @@ import {
   SUPPORT_EMAIL,
 } from "@/lib/brand";
 import { CommandPalette } from "@/components/ui/command-palette";
+import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 
 const archFont = Big_Shoulders_Display({
   subsets: ["latin"],
@@ -218,6 +219,7 @@ export default function RootLayout({
         </a>
         {children}
         <CommandPalette />
+        <GalaxyCursor />
       </body>
     </html>
   );

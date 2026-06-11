@@ -28,13 +28,16 @@ const PLAYERS_MENU: readonly NavGroup[] = [
     ],
   },
   {
-    heading: "Quick views",
+    heading: "Advanced stats",
     items: [
       { label: "Opportunity", href: "/players?view=opportunity", desc: "Air yards · WOPR — buy-low / sell-high" },
       { label: "Snap Share", href: "/players?view=snaps", desc: "Offensive workload leaders" },
       { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, CPOE, RYOE" },
-      { label: "Edge Signals", href: "/players?view=edge", desc: "Process grade vs output" },
-      { label: "DFS Salaries", href: "/players?view=dfs", desc: "Salary value, graded glass-box" },
+    ],
+  },
+  {
+    items: [
+      { label: "Edge Signals", href: "/players?view=edge", desc: "All the advanced stats, distilled into one tradeable read" },
     ],
   },
 ];
@@ -64,6 +67,7 @@ const FANTASY_MENU: readonly NavGroup[] = [
       { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Adds and bids, with the why" },
       { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Value, fairness, win-now" },
       { label: "DFS Optimizer", href: "/fantasy/dfs", desc: "Cash / GPP / leverage, glass-box" },
+      { label: "DFS Salary Board", href: "/players?view=dfs", desc: "Salary value inside the optimizer stack" },
       { label: "Pick'em Edge", href: "/fantasy/props", desc: "Pick'em line edges, graded" },
     ],
   },

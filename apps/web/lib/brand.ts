@@ -63,6 +63,13 @@ export const SOCIAL = {
   facebook: "https://facebook.com/galaxysportsedge",
   threads: "https://threads.net/@galaxysportsedge",
   youtube: "",
+  // Owner note 2026-06-11: Telegram + WhatsApp wanted; Discord too, but only
+  // after the security/bot/moderation structure is designed (structure first).
+  // Each slot stays empty — and therefore hidden on every surface — until the
+  // real channel exists. Paste the URL here and it appears everywhere.
+  telegram: "",
+  whatsapp: "",
+  discord: "",
 } as const;
 
 /**
