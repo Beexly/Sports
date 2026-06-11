@@ -7,40 +7,12 @@
   "regions": ["iad1"],
   "crons": [
     {
-      "path": "/api/cron/refresh-odds?sport=americanfootball_nfl",
-      "schedule": "0 5 * * *"
-    },
-    {
-      "path": "/api/cron/refresh-odds?sport=americanfootball_ncaaf",
-      "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/cron/refresh-odds?sport=basketball_nba",
-      "schedule": "0 7 * * *"
-    },
-    {
-      "path": "/api/cron/refresh-odds?sport=basketball_ncaab",
-      "schedule": "0 8 * * *"
-    },
-    {
-      "path": "/api/cron/refresh-odds?sport=baseball_mlb",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron/refresh-odds?sport=icehockey_nhl",
+      "path": "/api/cron/refresh-odds",
       "schedule": "0 10 * * *"
     },
     {
-      "path": "/api/cron/refresh-odds?sport=soccer_usa_mls",
-      "schedule": "0 11 * * *"
-    },
-    {
       "path": "/api/cron/settle-picks",
-      "schedule": "0 12 * * *"
-    },
-    {
-      "path": "/api/cron/jarvis-snapshot",
-      "schedule": "0 13 * * *"
+      "schedule": "0 7 * * *"
     }
   ],
   "headers": [
