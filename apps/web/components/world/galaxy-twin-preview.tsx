@@ -116,6 +116,19 @@ export function GalaxyTwinPreview(): JSX.Element {
   const active = NODES.find((n) => n.id === activeId) ?? NODES[0]!;
   const activeStyle = STATE_STYLE[active.state];
 
+  // Arrow keys traverse the constellation like a gamepad — the focused
+  // hotspot moves with the selection so screen readers stay in sync.
+  const onGroupKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(e.key)) return;
+    e.preventDefault();
+    const idx = NODES.findIndex((n) => n.id === activeId);
+    const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : -1;
+    const next = NODES[(idx + step + NODES.length) % NODES.length]!;
+    setActiveId(next.id);
+    const target = e.currentTarget.querySelector<HTMLButtonElement>(`[data-node="${next.id}"]`);
+    target?.focus();
+  };
+
   return (
     <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
       {/* ── The map ───────────────────────────────────────────── */}
@@ -152,7 +165,12 @@ export function GalaxyTwinPreview(): JSX.Element {
         ))}
 
         {/* node hotspots — real buttons, keyboard accessible */}
-        <div className="relative aspect-[10/7] w-full" role="group" aria-label="Galaxy Twin schematic — select a market state to read it">
+        <div
+          className="relative aspect-[10/7] w-full"
+          role="group"
+          aria-label="Galaxy Twin schematic — select a market state to read it. Arrow keys move between states."
+          onKeyDown={onGroupKeyDown}
+        >
           {NODES.map((node) => {
             const s = STATE_STYLE[node.state];
             const selected = node.id === activeId;
@@ -160,6 +178,7 @@ export function GalaxyTwinPreview(): JSX.Element {
               <button
                 key={node.id}
                 type="button"
+                data-node={node.id}
                 onClick={() => setActiveId(node.id)}
                 aria-pressed={selected}
                 className={`group absolute -translate-x-1/2 -translate-y-1/2 rounded-full p-3 transition-transform duration-200 hover:scale-110 focus-visible:scale-110 ${selected ? "" : "opacity-80"}`}
