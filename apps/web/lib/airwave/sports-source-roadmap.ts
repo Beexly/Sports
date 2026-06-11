@@ -16,6 +16,8 @@
  *   - Deryck97/nfl_nextgenstats_data (archived — value is as pointer only)
  *   - naivelogic/NFL-smarter-football (no license, nflscrapR-era dead data)
  *   - AGPL repos into closed product (statistics-for-strava, ZeroCat)
+ *   - scores24.live / Kiito OÜ (ToS §4.2 explicitly forbids automated programs;
+ *       commercial use requires written consent — 2026-06-11 review)
  */
 
 export type SourceDomain = "GSE" | "GSN" | "BOTH" | "DEV_TOOLING" | "EXCLUDED";
@@ -339,6 +341,34 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
     fitsGsn: false,
     maintained: false,
     notes: "Unmaintained. nflverse is the canonical replacement.",
+  },
+  {
+    id: "scores24-live",
+    name: "scores24.live (Kiito OÜ)",
+    repo: "https://scores24.live",
+    domain: "EXCLUDED",
+    licensePosture: "EXCLUDED",
+    licenseId: "All rights reserved — ToS prohibits automated access",
+    useCaseSummary:
+      "Consumer sports scores/odds aggregator. Estonian company (Kiito OÜ). " +
+      "ToS §4.2 explicitly forbids 'automated programs to interact with the Site'. " +
+      "Commercial use requires prior written consent. Data source unknown (may relay " +
+      "Sportradar/Stats Perform feeds, which carry independent ToS restrictions). " +
+      "Reviewed 2026-06-11.",
+    currentStatus: "EXCLUDED_PERMANENT",
+    nextAction:
+      "Do not build an adapter. Use ESPN public API (no ToS restriction on display data) " +
+      "or The Odds API (licensed) as alternatives.",
+    risk:
+      "HIGH. ToS explicitly prohibits automated programs. Commercial use requires written " +
+      "consent. Upstream data provider unknown — potential secondary liability if they relay " +
+      "Sportradar or Stats Perform data.",
+    fitsGse: false,
+    fitsGsn: false,
+    maintained: true,
+    notes:
+      "Permanently excluded per 2026-06-11 ToS review. ESPN public API and nflverse " +
+      "cover the same use cases without legal exposure.",
   },
 ];
 
