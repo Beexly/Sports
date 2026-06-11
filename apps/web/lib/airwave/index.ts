@@ -21,6 +21,7 @@ export * from "./claim-extraction-contract";
 export * from "./gse-gsn-output-map";
 export * from "./sports-source-roadmap";
 export * from "./intelligence-control-plane";
+export * from "./show-block-import";
 export {
   DEMO_PUNDITS,
   DEMO_CLAIMS,
