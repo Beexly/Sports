@@ -76,10 +76,10 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
                 onClick={() => handleSelect(intent)}
                 data-testid={`ask-jarvis-btn-${intent}`}
                 className={[
-                  "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all",
+                  "flex w-full items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-left transition-all",
                   active === intent
-                    ? "bg-plasma/10 ring-1 ring-plasma/30"
-                    : "hover:bg-titanium/40",
+                    ? "border-plasma bg-plasma/10"
+                    : "border-transparent hover:bg-titanium/40",
                 ].join(" ")}
               >
                 <span className="w-5 flex-shrink-0 font-mono text-[9px] tabular-nums text-ion-3">
@@ -108,7 +108,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
               data-testid="ask-jarvis-answer"
               className="animate-fade-up"
             >
-              <p className="mb-2 font-mono text-[9px] uppercase tracking-widest text-ion-3">
+              <p className="mb-2 font-mono text-[9px] uppercase tracking-widest text-accent-500">
                 {answer.question}
               </p>
 
@@ -121,7 +121,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
                   <ul className="space-y-0.5">
                     {answer.supportingState.map((s, idx) => (
                       <li key={idx} className="font-mono text-[9px] text-ion-2">
-                        <span className="text-ion-3 select-none">· </span>{s}
+                        <span className="select-none text-ion-3">· </span>{s}
                       </li>
                     ))}
                   </ul>
@@ -161,14 +161,34 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
               )}
             </div>
           ) : (
-            <div className="flex min-h-48 items-center justify-center">
-              <div className="text-center">
-                <p className="font-mono text-[10px] text-ion-3">
-                  Select a question to query Jarvis
-                </p>
-                <p className="mt-1 text-[9px] text-ion-3/40">
-                  All answers derived from live operator state
-                </p>
+            <div className="flex min-h-48 flex-col justify-between">
+              <div className="flex flex-1 items-center justify-center">
+                <div className="text-center">
+                  <p className="font-mono text-[10px] text-ion-3">
+                    <span className="text-accent-500">$</span>{" "}
+                    <span className="text-ion-white">jarvis ask</span>
+                    <span className="ml-0.5 inline-block h-3 w-0.5 animate-cursor-blink bg-accent-500 align-middle" />
+                  </p>
+                  <p className="mt-2 text-[9px] text-ion-3/50">
+                    Select a question to query Jarvis
+                  </p>
+                  <p className="mt-0.5 text-[9px] text-ion-3/30">
+                    All answers derived from live operator state
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick command chips */}
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {(["picks", "launch-ready", "blocked"] as const).map((intent) => (
+                  <button
+                    key={intent}
+                    onClick={() => handleSelect(intent)}
+                    className="rounded-full border border-titanium/50 bg-obsidian/60 px-3 py-1 font-mono text-[8px] text-ion-2 transition-all hover:border-plasma/40 hover:bg-plasma/10 hover:text-plasma"
+                  >
+                    {JARVIS_QUESTIONS[intent]}
+                  </button>
+                ))}
               </div>
             </div>
           )}

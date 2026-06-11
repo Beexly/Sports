@@ -88,8 +88,8 @@ export default async function CockpitOverview() {
       : null;
 
   return (
-    <div className="relative flex flex-col gap-6">
-      {/* Atmospheric backdrop — stadium-glow bleeds behind the header */}
+    <div className="relative flex flex-col gap-4 pb-8">
+      {/* Atmospheric backdrop */}
       <div
         className="pointer-events-none absolute inset-x-0 -top-8 -z-10 h-80 overflow-hidden"
         aria-hidden="true"
@@ -97,28 +97,39 @@ export default async function CockpitOverview() {
         <div className="absolute inset-0 bg-stadium-glow opacity-80" />
       </div>
 
-      {/* ── JARVIS COMMAND HEADER ─────────────────────────────────────── */}
-      <header className="relative overflow-hidden rounded-2xl border border-titanium/60 bg-carbon/90">
+      {/* ── MISSION CONTROL HEADER ─────────────────────────────────────── */}
+      <header
+        className={[
+          "relative overflow-hidden rounded-2xl border bg-carbon/90",
+          ownerSummary?.overallColor === "RED"
+            ? "border-red-900/60 shadow-glow-plasma"
+            : ownerSummary?.overallColor === "GREEN"
+              ? "border-accent-900/40"
+              : "border-titanium/60",
+        ].join(" ")}
+      >
         <div
           className="pointer-events-none absolute inset-0 bg-stadium-glow opacity-50"
           aria-hidden="true"
         />
+
         <div className="relative px-6 py-5">
-          {/* Top metadata strip */}
-          <div className="mb-4 flex flex-wrap items-center gap-3">
+          {/* Identity strip */}
+          <div className="mb-5 flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
               <div className="relative h-2 w-2 flex-shrink-0">
                 <div className="absolute inset-0 animate-live-pulse rounded-full bg-accent-500" />
                 <div className="absolute inset-0 rounded-full bg-accent-500" />
               </div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-2">
+              <h1 className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">
                 Galaxy Sports Edge · Jarvis Owner OS
-              </span>
+              </h1>
             </div>
+
             <div className="ml-auto flex flex-wrap items-center gap-2">
               {stubMode && (
                 <span className="rounded bg-yellow-900/40 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-yellow-300">
-                  Stub · No DB
+                  Stub Mode · No DB
                 </span>
               )}
               {assessment && <LaunchStatusBadge status={assessment.launchStatus} />}
@@ -135,19 +146,109 @@ export default async function CockpitOverview() {
               </span>
             </div>
           </div>
-          {/* Status + one-liner */}
-          <div className="flex flex-wrap items-start gap-4">
-            {ownerSummary ? (
-              <>
-                <StatusPill color={ownerSummary.overallColor} />
-                <p className="max-w-2xl flex-1 text-base font-medium leading-snug text-ion-white/90">
-                  {ownerSummary.oneLiner}
-                </p>
-              </>
-            ) : (
-              <p className="text-base text-ion-3">Jarvis synthesis pending…</p>
-            )}
-          </div>
+
+          {ownerSummary ? (
+            <>
+              {/* Posture + one-liner + gate bar */}
+              <div className="mb-5 flex flex-wrap items-start gap-6">
+                {/* Large status text */}
+                <div>
+                  <p className="mb-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-ion-3">
+                    Posture
+                  </p>
+                  <p
+                    data-testid="owner-status-pill"
+                    className={[
+                      "text-5xl font-black leading-none tracking-tighter",
+                      ownerSummary.overallColor === "GREEN"
+                        ? "text-accent-500"
+                        : ownerSummary.overallColor === "RED"
+                          ? "text-red-400"
+                          : "text-yellow-300",
+                    ].join(" ")}
+                  >
+                    {ownerSummary.overallColor}
+                  </p>
+                </div>
+
+                {/* One-liner + critical warning */}
+                <div className="min-w-0 flex-1">
+                  <p className="mb-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-ion-3">
+                    Current State
+                  </p>
+                  <p className="text-base font-medium leading-snug text-ion-white/90">
+                    {ownerSummary.oneLiner}
+                  </p>
+                  {ownerSummary.criticalWarnings.length > 0 && (
+                    <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-red-300">
+                      <span className="h-1.5 w-1.5 flex-shrink-0 animate-live-pulse rounded-full bg-red-400" />
+                      {ownerSummary.criticalWarnings[0]}
+                    </p>
+                  )}
+                </div>
+
+                {/* Gate progress */}
+                {assessment && (() => {
+                  const ratio = assessment.readinessGateSummary.openCount / Math.max(assessment.readinessGateSummary.totalCount, 1);
+                  const barColor = ratio === 1 ? "bg-accent-500" : ratio >= 0.5 ? "bg-yellow-300" : "bg-red-400";
+                  return (
+                    <div className="min-w-[140px]">
+                      <p className="mb-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-ion-3">
+                        Readiness Gates
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-titanium/50">
+                          <div
+                            className={["h-full rounded-full transition-all", barColor].join(" ")}
+                            style={{ width: `${ratio * 100}%` }}
+                          />
+                        </div>
+                        <span className="font-mono text-[9px] tabular-nums text-ion-2">
+                          {assessment.readinessGateSummary.openCount}/
+                          {assessment.readinessGateSummary.totalCount}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* QuickStat strip */}
+              <div
+                data-testid="owner-status-grid"
+                className="grid grid-cols-2 gap-x-4 gap-y-3 border-t border-titanium/30 pt-4 sm:grid-cols-4"
+              >
+                <QuickStat
+                  label="Picks Today"
+                  value={String(ownerSummary.picks.today)}
+                  sub={ownerSummary.picks.isPublicGateOpen ? "public" : "internal"}
+                />
+                <QuickStat
+                  label="Public Gate"
+                  value={ownerSummary.picks.isPublicGateOpen ? "OPEN" : "CLOSED"}
+                  sub="PUBLIC_PICKS_ENABLED"
+                  accent={ownerSummary.picks.isPublicGateOpen ? "cyan" : "amber"}
+                />
+                <QuickStat
+                  label="Readiness"
+                  value={
+                    assessment
+                      ? `${assessment.readinessGateSummary.openCount}/${assessment.readinessGateSummary.totalCount}`
+                      : "—/—"
+                  }
+                  sub="gates open"
+                />
+                <QuickStat
+                  label="Decisions"
+                  value={String(ownerSummary.decisions.length)}
+                  sub={ownerSummary.decisions.length > 0 ? "need attention" : "queue clear"}
+                  accent={ownerSummary.decisions.length > 0 ? "amber" : "cyan"}
+                />
+              </div>
+            </>
+          ) : (
+            <p className="text-base text-ion-3">Jarvis synthesis pending…</p>
+          )}
         </div>
       </header>
 
@@ -162,110 +263,36 @@ export default async function CockpitOverview() {
         </section>
       )}
 
-      {/* ── Zone 1: Central Intelligence Core ────────────────────────── */}
-      {ownerSummary && (
-        <section
-          data-testid="owner-status-grid"
-          className="grid gap-4 sm:grid-cols-3"
-        >
-          <CommandPillar
-            label="Picks Desk"
-            primaryValue={String(ownerSummary.picks.today)}
-            primarySub="published today"
-            badge={ownerSummary.picks.isPublicGateOpen ? "Gate Open" : "Gate Closed"}
-            badgeTone={ownerSummary.picks.isPublicGateOpen ? "cyan" : "amber"}
-            details={[
-              `Canonical settled: ${ownerSummary.picks.canonicalSettled}`,
-              `Pending settlement: ${ownerSummary.picks.canonicalPending}`,
-            ]}
-            href="/cockpit/history"
-          />
-          <CommandPillar
-            label="Performance"
-            primaryValue={
-              ownerSummary.performance.displaySafe &&
-              ownerSummary.performance.actualWinRate !== null
-                ? `${ownerSummary.performance.actualWinRate}%`
-                : `${ownerSummary.performance.targetPct}%`
-            }
-            primarySub={
-              ownerSummary.performance.displaySafe
-                ? `win rate · ${ownerSummary.performance.record}`
-                : "internal target (gated)"
-            }
-            badge={ownerSummary.performance.displaySafe ? "Display-Ready" : "Gated"}
-            badgeTone={ownerSummary.performance.displaySafe ? "cyan" : "amber"}
-            details={[
-              `Sample: ${ownerSummary.performance.canonicalSampleSize} / ${ownerSummary.performance.minimumRequired} required`,
-              ownerSummary.performance.remainingToThreshold > 0
-                ? `${ownerSummary.performance.remainingToThreshold} more picks to threshold`
-                : "Sample threshold met",
-            ]}
-            href="/cockpit/calibration"
-          />
-          <CommandPillar
-            label="Pipeline"
-            primaryValue={
-              assessment
-                ? `${assessment.readinessGateSummary.openCount}/${assessment.readinessGateSummary.totalCount}`
-                : "—/—"
-            }
-            primarySub="readiness gates"
-            badge={
-              assessment?.ingestionStatus === "GREEN"
-                ? "Healthy"
-                : assessment?.ingestionStatus === "RED"
-                  ? "Issues"
-                  : "Amber"
-            }
-            badgeTone={
-              assessment?.ingestionStatus === "GREEN"
-                ? "cyan"
-                : assessment?.ingestionStatus === "RED"
-                  ? "red"
-                  : "amber"
-            }
-            details={[
-              `Ingestion: ${assessment?.ingestionStatus ?? "UNKNOWN"}`,
-              `Settlement: ${assessment?.settlementStatus ?? "UNKNOWN"}`,
-            ]}
-            href="/admin/dashboard"
-          />
-        </section>
-      )}
-
-      {/* ── Zone 2: Decision Queue ────────────────────────────────────── */}
+      {/* ── Zone 1: Decision Queue (interrupt priority) ───────────────── */}
       {ownerSummary && ownerSummary.decisions.length > 0 && (
         <DecisionQueueZone decisions={ownerSummary.decisions} />
       )}
 
-      {/* ── Zone 3: Picks Command Module ─────────────────────────────── */}
+      {/* ── Zone 2: Tactical Row — Picks + Performance ───────────────── */}
       {ownerSummary && (
-        <PicksDeskZone
-          picks={ownerSummary.picks}
-          demoActive={demoActive}
-          slateBreakdown={slateBreakdown}
-          featuredCount={featuredOperatorPicks.length}
-        />
+        <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
+          <PicksDeskZone
+            picks={ownerSummary.picks}
+            demoActive={demoActive}
+            slateBreakdown={slateBreakdown}
+            featuredCount={featuredOperatorPicks.length}
+          />
+          <PerformanceTargetZone performance={ownerSummary.performance} />
+        </div>
       )}
 
-      {/* ── Zone 4: Performance Target ───────────────────────────────── */}
-      {ownerSummary && (
-        <PerformanceTargetZone performance={ownerSummary.performance} />
-      )}
-
-      {/* ── Zone 5: Department Command Map ───────────────────────────── */}
+      {/* ── Zone 3: Department Command Map ───────────────────────────── */}
       {ownerSummary && (
         <DepartmentsZone departments={ownerSummary.departments} />
       )}
 
-      {/* ── Zone 6: Ask Jarvis Console ───────────────────────────────── */}
+      {/* ── Zone 4: Ask Jarvis Console ───────────────────────────────── */}
       {ownerSummary && <AskJarvisPanel summary={ownerSummary} />}
 
-      {/* ── Zone 7: AI Ops / Build Control ───────────────────────────── */}
+      {/* ── Zone 5: AI Ops / Build Control ───────────────────────────── */}
       {ownerSummary && <AiOpsZone aiOps={ownerSummary.aiOps} />}
 
-      {/* ── Zone 8: Drilldowns (existing detail) ─────────────────────── */}
+      {/* ── Zone 6: Drilldowns ───────────────────────────────────────── */}
       <div className="mt-2 border-t border-titanium/30 pt-6">
         <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-ion-3/40">
           Detail / Drilldowns
@@ -422,7 +449,7 @@ export default async function CockpitOverview() {
           >
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-                Today's picks — operator surface
+                Today&apos;s picks — operator surface
                 {demoActive && (
                   <span className="ml-2 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-yellow-300">
                     sample
@@ -480,7 +507,7 @@ export default async function CockpitOverview() {
             className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-4"
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-              Today's slate by sport
+              Today&apos;s slate by sport
             </p>
             <p className="mt-1 text-sm text-gray-300">
               {slateBreakdown.map((b) => `${b.name} ${b.n}`).join("  ·  ")}
@@ -497,7 +524,7 @@ export default async function CockpitOverview() {
         )}
       </div>
 
-      {/* Jarvis confidence + gates open count */}
+      {/* Footer */}
       {assessment && (
         <p
           data-testid="cockpit-generated-at"
@@ -543,102 +570,39 @@ export default async function CockpitOverview() {
   );
 }
 
-// ─── Zone components ─────────────────────────────────────────────────────────
+// ─── Mission Control primitives ───────────────────────────────────────────────
 
-function StatusPill({ color }: { color: OwnerStatusColor }) {
-  const ringStyles: Record<OwnerStatusColor, string> = {
-    GREEN: "bg-accent-950/40 text-accent-400 ring-1 ring-accent-800/50",
-    AMBER: "bg-yellow-950/40 text-yellow-300 ring-1 ring-yellow-900/50",
-    RED: "bg-red-950/40 text-red-400 ring-1 ring-red-900/50",
-  };
-  const dotStyles: Record<OwnerStatusColor, string> = {
-    GREEN: "bg-accent-500 animate-live-pulse",
-    AMBER: "bg-yellow-300",
-    RED: "bg-red-400 animate-live-pulse",
-  };
-  return (
-    <span
-      data-testid="owner-status-pill"
-      className={[
-        "flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest",
-        ringStyles[color],
-      ].join(" ")}
-    >
-      <span className={["h-1.5 w-1.5 flex-shrink-0 rounded-full", dotStyles[color]].join(" ")} />
-      {color}
-    </span>
-  );
-}
-
-interface CommandPillarProps {
-  label: string;
-  primaryValue: string;
-  primarySub: string;
-  badge: string;
-  badgeTone: "cyan" | "amber" | "red" | "green" | "unknown";
-  details: string[];
-  href: string;
-}
-
-function CommandPillar({
+function QuickStat({
   label,
-  primaryValue,
-  primarySub,
-  badge,
-  badgeTone,
-  details,
-  href,
-}: CommandPillarProps) {
-  const badgeClasses: Record<string, string> = {
-    cyan: "border-accent-800/50 bg-accent-950/30 text-accent-400",
-    amber: "border-yellow-900/50 bg-yellow-950/20 text-yellow-300",
-    red: "border-red-900/50 bg-red-950/20 text-red-400",
-    green: "border-green-900/50 bg-green-950/20 text-green-400",
-    unknown: "border-titanium/40 bg-obsidian/60 text-ion-3",
-  };
-
+  value,
+  sub,
+  accent,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  accent?: "cyan" | "amber" | "red";
+}) {
+  const valueClass =
+    accent === "cyan"
+      ? "text-accent-500"
+      : accent === "amber"
+        ? "text-yellow-300"
+        : accent === "red"
+          ? "text-red-400"
+          : "text-ion-white";
   return (
-    <Link
-      href={href}
-      className="group relative overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80 p-5 transition-all hover:border-titanium/70 hover:bg-carbon"
-    >
-      {/* Eyebrow */}
-      <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.15em] text-ion-2">
-        {label}
+    <div className="flex flex-col gap-0.5">
+      <p className="font-mono text-[8px] uppercase tracking-widest text-ion-3">{label}</p>
+      <p className={["text-xl font-black tabular-nums leading-none", valueClass].join(" ")}>
+        {value}
       </p>
-
-      {/* Primary value */}
-      <p className="mb-0.5 text-4xl font-bold tabular-nums leading-none text-ion-white">
-        {primaryValue}
-      </p>
-      <p className="mb-4 text-[10px] text-ion-3">{primarySub}</p>
-
-      {/* Status badge */}
-      <span
-        className={[
-          "inline-flex rounded border px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest",
-          badgeClasses[badgeTone],
-        ].join(" ")}
-      >
-        {badge}
-      </span>
-
-      {/* Detail lines */}
-      <ul className="mt-3 space-y-1">
-        {details.map((d, i) => (
-          <li key={i} className="text-[10px] text-ion-3">
-            {d}
-          </li>
-        ))}
-      </ul>
-
-      {/* Nav arrow */}
-      <span className="absolute bottom-4 right-4 text-[10px] text-ion-3/30 transition-colors group-hover:text-ion-2">
-        →
-      </span>
-    </Link>
+      <p className="text-[8px] text-ion-3">{sub}</p>
+    </div>
   );
 }
+
+// ─── Zone components ─────────────────────────────────────────────────────────
 
 function DecisionQueueZone({ decisions }: { decisions: readonly OwnerDecision[] }) {
   const topUrgency = decisions[0]?.urgency ?? "NORMAL";
@@ -803,18 +767,18 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
       className="overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80 p-5"
       style={{ borderColor: "rgba(122,92,255,0.20)" }}
     >
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+      <div className="mb-4 flex items-start justify-between gap-3">
         <div>
           <h2 className="text-[10px] font-bold uppercase tracking-widest text-ultraviolet">
-            Performance Target
+            Performance Gate
           </h2>
           <p className="mt-0.5 text-[9px] text-ion-3">
-            Internal goal · Not a public claim · Bootstrap and pending excluded always
+            Internal goal · Bootstrap + pending excluded
           </p>
         </div>
         <span
           className={[
-            "rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest",
+            "flex-shrink-0 rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest",
             performance.displaySafe
               ? "border-accent-800/50 bg-accent-950/30 text-accent-400"
               : "border-yellow-900/40 bg-yellow-950/20 text-yellow-300",
@@ -824,19 +788,18 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
         </span>
       </div>
 
-      <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-3">
-          <p className="text-[9px] font-bold uppercase tracking-widest text-ion-3">Target</p>
-          <p className="mt-1 text-3xl font-bold tabular-nums leading-none text-ultraviolet">
+      <div className="mb-4 grid grid-cols-2 gap-2">
+        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
+          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Target</p>
+          <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ultraviolet">
             {performance.targetPct}%
           </p>
-          <p className="mt-1 text-[9px] text-ion-3">internal goal</p>
         </div>
-        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-3">
-          <p className="text-[9px] font-bold uppercase tracking-widest text-ion-3">Actual Win Rate</p>
+        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
+          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Win Rate</p>
           <p
             className={[
-              "mt-1 text-3xl font-bold tabular-nums leading-none",
+              "mt-1 text-2xl font-bold tabular-nums leading-none",
               performance.displaySafe ? "text-ion-white" : "text-ion-3",
             ].join(" ")}
           >
@@ -844,52 +807,51 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
               ? `${performance.actualWinRate}%`
               : "—"}
           </p>
-          <p className="mt-1 text-[9px] text-ion-3">
-            {performance.displaySafe ? performance.record : "not yet displayable"}
-          </p>
         </div>
-        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-3">
-          <p className="text-[9px] font-bold uppercase tracking-widest text-ion-3">Sample</p>
-          <p className="mt-1 text-3xl font-bold tabular-nums leading-none text-ion-white">
+        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
+          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Sample</p>
+          <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ion-white">
             {performance.canonicalSampleSize}
           </p>
-          <p className="mt-1 text-[9px] text-ion-3">of {performance.minimumRequired} required</p>
+          <p className="text-[8px] text-ion-3">of {performance.minimumRequired} req.</p>
         </div>
-        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-3">
-          <p className="text-[9px] font-bold uppercase tracking-widest text-ion-3">Gate</p>
+        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
+          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Gate</p>
           <p
             className={[
-              "mt-1 text-3xl font-bold leading-none",
+              "mt-1 text-2xl font-bold leading-none",
               performance.isGateOpen ? "text-accent-500" : "text-yellow-300",
             ].join(" ")}
           >
             {performance.isGateOpen ? "ON" : "OFF"}
           </p>
-          <p className="mt-1 text-[9px] text-ion-3">PERFORMANCE_STATS_ENABLED</p>
+          <p className="text-[8px] text-ion-3">PERF_STATS_EN</p>
         </div>
       </div>
 
       {!performance.displaySafe && (
-        <p className="text-sm text-ion-2">
-          Public performance remains gated.
+        <p className="text-xs text-ion-2">
+          Public performance gated.
           {performance.remainingToThreshold > 0 && (
             <span className="text-yellow-300">
               {" "}
-              {performance.remainingToThreshold} more canonical picks needed before display
-              threshold.
+              {performance.remainingToThreshold} more canonical picks needed.
             </span>
           )}
         </p>
       )}
 
-      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[9px] text-ion-3">
-        <span>Bootstrap excluded: always</span>
-        <span>Pending excluded: always</span>
+      {performance.displaySafe && (
+        <p className="text-xs text-ion-2">
+          {performance.record} · Display-safe.
+        </p>
+      )}
+
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-0.5 text-[8px] text-ion-3">
+        <span>Bootstrap: excluded</span>
+        <span>Pending: excluded</span>
         {performance.smallSampleWarning && (
-          <span className="text-yellow-400">Small-sample warning active</span>
-        )}
-        {performance.gateBlockers.length > 0 && (
-          <span>Blockers: {performance.gateBlockers.join(", ")}</span>
+          <span className="text-yellow-400">Small-sample warning</span>
         )}
       </div>
     </section>
@@ -900,81 +862,77 @@ function DepartmentsZone({ departments }: { departments: readonly DepartmentSumm
   return (
     <section
       data-testid="departments-zone"
-      className="rounded-2xl border border-titanium/40 bg-carbon/80 p-5"
+      className="overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80"
     >
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+      <div className="flex items-center justify-between border-b border-titanium/30 px-5 py-3">
         <div>
           <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
             Agent Command Map
           </h2>
           <p className="mt-0.5 text-[9px] text-ion-3">
             {departments.length} departments · All agents draft-only · No external actions without
-            human approval
+            approval
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="divide-y divide-titanium/20">
         {departments.map((dept) => (
-          <DepartmentCard key={dept.id} dept={dept} />
+          <DepartmentReportRow key={dept.id} dept={dept} />
         ))}
       </div>
     </section>
   );
 }
 
-function DepartmentCard({ dept }: { dept: DepartmentSummary }) {
-  const healthDot: Record<JarvisHealth, string> = {
-    GREEN: "bg-green-400",
+function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
+  const dotColor: Record<JarvisHealth, string> = {
+    GREEN: "bg-accent-500 animate-live-pulse",
     AMBER: "bg-yellow-300",
-    RED: "bg-red-400",
-    UNKNOWN: "bg-gray-600",
-  };
-  const borderTone: Record<JarvisHealth, string> = {
-    GREEN: "border-green-900/40",
-    AMBER: "border-yellow-900/30",
-    RED: "border-red-900/40",
-    UNKNOWN: "border-titanium/40",
+    RED: "bg-red-400 animate-live-pulse",
+    UNKNOWN: "bg-ion-3/30",
   };
 
-  return (
-    <div
-      className={[
-        "rounded-xl border bg-obsidian/60 p-3",
-        borderTone[dept.status],
-      ].join(" ")}
-    >
-      <div className="mb-2 flex items-start justify-between gap-1">
-        <div className="flex min-w-0 items-center gap-1.5">
-          <span
-            className={[
-              "h-1.5 w-1.5 flex-shrink-0 rounded-full",
-              dept.status === "GREEN" ? "animate-live-pulse" : "",
-              healthDot[dept.status],
-            ].join(" ")}
-            aria-label={dept.status}
-          />
-          <p className="truncate text-[10px] font-semibold leading-tight text-ion-white">
-            {dept.name}
-          </p>
-        </div>
-        {dept.actionRequired && (
-          <div className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-yellow-400" />
-        )}
-      </div>
-      <p className="mb-2 text-[9px] leading-relaxed text-ion-3">{dept.oneLiner}</p>
+  const row = (
+    <div className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-titanium/20">
+      <span
+        className={["h-2 w-2 flex-shrink-0 rounded-full", dotColor[dept.status]].join(" ")}
+        aria-label={dept.status}
+      />
+      <span className="w-36 flex-shrink-0 text-[10px] font-semibold leading-tight text-ion-white">
+        {dept.name}
+      </span>
       {dept.agentDisplayName && (
-        <p className="font-mono text-[8px] text-ion-3/60">{dept.agentDisplayName}</p>
+        <span className="hidden w-16 flex-shrink-0 font-mono text-[8px] text-ion-3/60 sm:block">
+          {dept.agentDisplayName}
+        </span>
       )}
-      <p className="font-mono text-[8px] uppercase tracking-widest text-ion-3/40">
-        {dept.agentMode.replace("_", " ").toLowerCase()}
-      </p>
+      <span className="hidden flex-1 text-[10px] leading-snug text-ion-2 sm:block">
+        {dept.oneLiner}
+      </span>
       {dept.actionRequired && (
-        <div className="mt-2 rounded bg-yellow-900/30 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest text-yellow-300">
-          Action needed
-        </div>
+        <span className="flex-shrink-0 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest text-yellow-300">
+          Action
+        </span>
+      )}
+      <span className="flex-shrink-0 font-mono text-[8px] uppercase tracking-widest text-ion-3/40">
+        {dept.agentMode.replace("_", " ").toLowerCase()}
+      </span>
+      {dept.drilldownHref && (
+        <span className="flex-shrink-0 text-[10px] text-ion-3/30 transition-colors group-hover:text-ion-2">
+          →
+        </span>
       )}
     </div>
   );
+
+  if (dept.drilldownHref) {
+    return (
+      <Link href={dept.drilldownHref} className="group block">
+        {row}
+      </Link>
+    );
+  }
+  return <div>{row}</div>;
 }
 
 function AiOpsZone({ aiOps }: { aiOps: AiOpsSummary }) {
