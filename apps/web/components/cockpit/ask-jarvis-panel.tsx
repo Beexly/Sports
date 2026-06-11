@@ -5,6 +5,9 @@ import {
   askJarvis,
   JARVIS_QUESTIONS,
   JARVIS_INTENT_ORDER,
+  JARVIS_INTENT_GROUPS,
+  JARVIS_GROUP_LABELS,
+  type JarvisIntentGroup,
   type JarvisIntent,
   type JarvisAnswer,
 } from "@/lib/cockpit/ask-jarvis";
@@ -69,34 +72,43 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
             )}
           </p>
 
-          <div className="space-y-0.5">
-            {JARVIS_INTENT_ORDER.map((intent, i) => (
-              <button
-                key={intent}
-                onClick={() => handleSelect(intent)}
-                data-testid={`ask-jarvis-btn-${intent}`}
-                className={[
-                  "flex w-full items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-left transition-all",
-                  active === intent
-                    ? "border-plasma bg-plasma/10"
-                    : "border-transparent hover:bg-titanium/40",
-                ].join(" ")}
-              >
-                <span className="w-5 flex-shrink-0 font-mono text-[9px] tabular-nums text-ion-3">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span
-                  className={[
-                    "flex-1 text-[11px] transition-colors",
-                    active === intent ? "text-ion-white" : "text-ion-2",
-                  ].join(" ")}
-                >
-                  {JARVIS_QUESTIONS[intent]}
-                </span>
-                {active === intent && (
-                  <span className="flex-shrink-0 text-[10px] text-plasma">▶</span>
-                )}
-              </button>
+          <div className="space-y-3">
+            {(Object.keys(JARVIS_INTENT_GROUPS) as JarvisIntentGroup[]).map((group) => (
+              <div key={group}>
+                <p className="mb-1 px-3 font-mono text-[8px] font-bold uppercase tracking-widest text-ion-3/60">
+                  {JARVIS_GROUP_LABELS[group]}
+                </p>
+                <div className="space-y-0.5">
+                  {JARVIS_INTENT_GROUPS[group].map((intent) => (
+                    <button
+                      key={intent}
+                      onClick={() => handleSelect(intent)}
+                      data-testid={`ask-jarvis-btn-${intent}`}
+                      className={[
+                        "flex w-full items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-left transition-all",
+                        active === intent
+                          ? "border-plasma bg-plasma/10"
+                          : "border-transparent hover:bg-titanium/40",
+                      ].join(" ")}
+                    >
+                      <span className="w-5 flex-shrink-0 font-mono text-[9px] tabular-nums text-ion-3">
+                        {String(JARVIS_INTENT_ORDER.indexOf(intent) + 1).padStart(2, "0")}
+                      </span>
+                      <span
+                        className={[
+                          "flex-1 text-[11px] transition-colors",
+                          active === intent ? "text-ion-white" : "text-ion-2",
+                        ].join(" ")}
+                      >
+                        {JARVIS_QUESTIONS[intent]}
+                      </span>
+                      {active === intent && (
+                        <span className="flex-shrink-0 text-[10px] text-plasma">▶</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -180,7 +192,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
 
               {/* Quick command chips */}
               <div className="mt-4 flex flex-wrap gap-1.5">
-                {(["picks", "launch-ready", "blocked"] as const).map((intent) => (
+                {(["picks", "launch-ready", "what-is-wired"] as const).map((intent) => (
                   <button
                     key={intent}
                     onClick={() => handleSelect(intent)}

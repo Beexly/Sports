@@ -14,6 +14,9 @@ import {
   type AiOpsSummary,
 } from "@/lib/cockpit/owner-summary";
 import { AskJarvisPanel } from "@/components/cockpit/ask-jarvis-panel";
+import { CapabilitySystemMap } from "@/components/cockpit/capability-system-map";
+import { AgentCouncilPanel } from "@/components/cockpit/agent-council-panel";
+import { buildMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intelligence-state";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { startOfDay, endOfDay } from "date-fns";
 
@@ -292,7 +295,14 @@ export default async function CockpitOverview() {
       {/* ── Zone 5: AI Ops / Build Control ───────────────────────────── */}
       {ownerSummary && <AiOpsZone aiOps={ownerSummary.aiOps} />}
 
-      {/* ── Zone 6: Drilldowns ───────────────────────────────────────── */}
+      {/* ── Zone 6–8: Intelligence OS — architecture truth ──────────────
+           Rendered unconditionally: the capability registry, agent council,
+           and memory protocol are static truth, independent of DB state. */}
+      <CapabilitySystemMap />
+      <AgentCouncilPanel />
+      <MemoryProtocolZone memory={buildMemoryStatus()} />
+
+      {/* ── Zone 9: Drilldowns ───────────────────────────────────────── */}
       <div className="mt-2 border-t border-titanium/30 pt-6">
         <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-ion-3/40">
           Detail / Drilldowns
@@ -996,6 +1006,52 @@ function AiOpsZone({ aiOps }: { aiOps: AiOpsSummary }) {
           API Costs →
         </Link>
       </p>
+    </section>
+  );
+}
+
+function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
+  return (
+    <section
+      data-testid="memory-protocol-zone"
+      className="overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80 p-5"
+    >
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
+            Jarvis Memory Protocol
+          </h2>
+          <p className="mt-0.5 text-[9px] text-ion-3">
+            Persistent memory · cross-session recall · episodic decisions
+          </p>
+        </div>
+        <span className="rounded border border-titanium/40 bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+          Memory: Not wired
+        </span>
+      </div>
+
+      <p className="mb-3 text-xs leading-relaxed text-ion-2">{memory.truth}</p>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 p-3">
+          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+            Protocol Docs (version-controlled)
+          </p>
+          <ul className="space-y-0.5">
+            {memory.protocolDocs.map((d) => (
+              <li key={d} className="font-mono text-[9px] text-ion-2">
+                · {d}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 p-3">
+          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+            Next Action
+          </p>
+          <p className="text-[10px] leading-relaxed text-ion-2">{memory.nextAction}</p>
+        </div>
+      </div>
     </section>
   );
 }

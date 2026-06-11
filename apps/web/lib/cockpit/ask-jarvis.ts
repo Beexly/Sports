@@ -13,6 +13,14 @@
  */
 
 import type { OwnerSummary } from "./owner-summary";
+import {
+  CAPABILITY_REGISTRY,
+  computeWiringScore,
+  getWiringLabel,
+  type JarvisCapability,
+} from "../jarvis/capability-registry";
+import { AGENT_COUNCIL, getCouncilSeatCounts } from "../jarvis/agent-council";
+import { buildMemoryStatus, getOperatingLoop } from "../jarvis/intelligence-state";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -25,7 +33,16 @@ export type JarvisIntent =
   | "today"
   | "workers"
   | "meeting"
-  | "ai-ops";
+  | "ai-ops"
+  | "what-is-jarvis"
+  | "what-is-wired"
+  | "what-is-not-wired"
+  | "what-can-run"
+  | "which-agent-owns-this"
+  | "what-needs-approval"
+  | "what-should-we-build-next"
+  | "what-is-ai-ops-status"
+  | "what-is-memory-status";
 
 export const JARVIS_QUESTIONS: Readonly<Record<JarvisIntent, string>> = {
   "picks": "Where are our picks?",
@@ -37,6 +54,15 @@ export const JARVIS_QUESTIONS: Readonly<Record<JarvisIntent, string>> = {
   "workers": "What are workers doing?",
   "meeting": "What should I know before a meeting?",
   "ai-ops": "What is our AI Ops / Claude / Codex status?",
+  "what-is-jarvis": "What is Jarvis?",
+  "what-is-wired": "What is actually wired?",
+  "what-is-not-wired": "What is not wired yet?",
+  "what-can-run": "What can run today?",
+  "which-agent-owns-this": "Which agent owns what?",
+  "what-needs-approval": "What needs my approval?",
+  "what-should-we-build-next": "What should we build next?",
+  "what-is-ai-ops-status": "What is the AI Ops posture?",
+  "what-is-memory-status": "What is Jarvis memory status?",
 };
 
 export const JARVIS_INTENT_ORDER: readonly JarvisIntent[] = [
@@ -49,7 +75,52 @@ export const JARVIS_INTENT_ORDER: readonly JarvisIntent[] = [
   "workers",
   "meeting",
   "ai-ops",
+  "what-is-jarvis",
+  "what-is-wired",
+  "what-is-not-wired",
+  "what-can-run",
+  "which-agent-owns-this",
+  "what-needs-approval",
+  "what-should-we-build-next",
+  "what-is-ai-ops-status",
+  "what-is-memory-status",
 ];
+
+/** OPERATIONS intents answer from the live OwnerSummary; ARCHITECTURE intents
+ *  answer from the capability registry, agent council, and memory protocol. */
+export type JarvisIntentGroup = "OPERATIONS" | "ARCHITECTURE";
+
+export const JARVIS_GROUP_LABELS: Readonly<Record<JarvisIntentGroup, string>> = {
+  OPERATIONS: "Operations",
+  ARCHITECTURE: "Architecture & System",
+};
+
+export const JARVIS_INTENT_GROUPS: Readonly<
+  Record<JarvisIntentGroup, readonly JarvisIntent[]>
+> = {
+  OPERATIONS: [
+    "picks",
+    "launch-ready",
+    "performance",
+    "blocked",
+    "decisions",
+    "today",
+    "workers",
+    "meeting",
+    "ai-ops",
+  ],
+  ARCHITECTURE: [
+    "what-is-jarvis",
+    "what-is-wired",
+    "what-is-not-wired",
+    "what-can-run",
+    "which-agent-owns-this",
+    "what-needs-approval",
+    "what-should-we-build-next",
+    "what-is-ai-ops-status",
+    "what-is-memory-status",
+  ],
+};
 
 export interface JarvisAnswer {
   readonly intent: JarvisIntent;
@@ -140,9 +211,8 @@ function answerLaunchReady(summary: OwnerSummary): JarvisAnswer {
         ? "Launch-readiness is derived from readiness gates, ingestion health, settlement health, and safety warnings."
         : null,
     nextAction:
-      summary.decisions.length > 0
-        ? summary.decisions[0].description
-        : "Continue monitoring the daily operator checklist.",
+      summary.decisions[0]?.description ??
+      "Continue monitoring the daily operator checklist.",
   };
 }
 
@@ -225,12 +295,7 @@ function answerBlocked(summary: OwnerSummary): JarvisAnswer {
     supportingState: supporting,
     confidence: summary.overallColor === "GREEN" ? "HIGH" : "MEDIUM",
     caveat: null,
-    nextAction:
-      criticals.length > 0
-        ? criticals[0].description
-        : highs.length > 0
-          ? highs[0].description
-          : null,
+    nextAction: criticals[0]?.description ?? highs[0]?.description ?? null,
   };
 }
 
@@ -263,10 +328,9 @@ function answerDecisions(summary: OwnerSummary): JarvisAnswer {
     supportingState: supporting,
     confidence: "HIGH",
     caveat: null,
-    nextAction:
-      decisions.length > 0
-        ? `Start with: ${decisions[0].description}`
-        : "Monitor daily operator checklist.",
+    nextAction: decisions[0]
+      ? `Start with: ${decisions[0].description}`
+      : "Monitor daily operator checklist.",
   };
 }
 
@@ -393,6 +457,249 @@ function answerAiOps(summary: OwnerSummary): JarvisAnswer {
   };
 }
 
+// ─── Architecture intent handlers ─────────────────────────────────────────────
+// These answer from the static capability registry, agent council, and memory
+// protocol — the architecture truth — combined with live summary state where
+// it sharpens the answer. Same purity rules: no model calls, no fabrication.
+
+function describeCapability(c: JarvisCapability): string {
+  return `[${c.status}] ${c.name} — ${c.nextAction}`;
+}
+
+function answerWhatIsJarvis(summary: OwnerSummary): JarvisAnswer {
+  const loop = getOperatingLoop();
+  const wired = loop.filter((p) => p.status === "WIRED").length;
+
+  return {
+    intent: "what-is-jarvis",
+    question: JARVIS_QUESTIONS["what-is-jarvis"],
+    answer:
+      "Jarvis is a governed intelligence system, not a chatbot or a dashboard theme. " +
+      "It senses platform state, interprets it deterministically, prioritizes decisions, " +
+      "explains itself, and recommends action — while every external action waits for " +
+      `human approval. ${wired} of ${loop.length} operating-loop phases run in code today.`,
+    supportingState: loop.map((p) => `[${p.status}] ${p.phase}: ${p.truth}`),
+    confidence: "HIGH",
+    caveat:
+      "Jarvis never executes autonomously. Memory and self-improvement phases are not " +
+      "wired yet — that is the honest state.",
+    nextAction: summary.decisions[0]
+      ? `Operationally, start with: ${summary.decisions[0].description}`
+      : "Review the capability map for the next architecture step.",
+  };
+}
+
+function answerWhatIsWired(_summary: OwnerSummary): JarvisAnswer {
+  const wired = CAPABILITY_REGISTRY.filter(
+    (c) => c.status === "ACTIVE" || c.status === "DRAFT_ONLY" || c.status === "MANUAL"
+  );
+  const score = computeWiringScore();
+
+  return {
+    intent: "what-is-wired",
+    question: JARVIS_QUESTIONS["what-is-wired"],
+    answer:
+      `${wired.length} of ${CAPABILITY_REGISTRY.length} capabilities exist in working form ` +
+      `today — all draft-only or human-operated, none autonomous. ` +
+      `Wiring score: ${score}/100 (${getWiringLabel(score)}).`,
+    supportingState: wired.map((c) => `[${c.status}] ${c.name} — ${c.currentTruth}`),
+    confidence: "HIGH",
+    caveat:
+      "Wired means the capability functions via drafts or a human-run process. " +
+      "Zero capabilities are ACTIVE (autonomous) — and that is intentional at this stage.",
+    nextAction: "Ask 'What should we build next?' for the prioritized gap list.",
+  };
+}
+
+function answerWhatIsNotWired(_summary: OwnerSummary): JarvisAnswer {
+  const missing = CAPABILITY_REGISTRY.filter(
+    (c) => c.status === "NOT_WIRED" || c.status === "DESIGNED"
+  );
+
+  return {
+    intent: "what-is-not-wired",
+    question: JARVIS_QUESTIONS["what-is-not-wired"],
+    answer:
+      `${missing.length} of ${CAPABILITY_REGISTRY.length} capabilities are designed but not ` +
+      "functional: memory, tool routing (MCP), agent orchestration runtime, market/CLV " +
+      "intelligence, subscription intelligence, browser control, voice, and workflow automation.",
+    supportingState: missing.map(describeCapability),
+    confidence: "HIGH",
+    caveat:
+      "DESIGNED means architecture is defined with partial infrastructure. NOT_WIRED means " +
+      "concept only — zero code. Neither will be claimed as live before it is.",
+    nextAction: missing[0]?.nextAction ?? null,
+  };
+}
+
+function answerWhatCanRun(summary: OwnerSummary): JarvisAnswer {
+  const canExecute = CAPABILITY_REGISTRY.filter((c) => c.canExecute);
+  const canAnswer = CAPABILITY_REGISTRY.filter((c) => c.canAnswer);
+  const manual = CAPABILITY_REGISTRY.filter((c) => c.status === "MANUAL");
+
+  return {
+    intent: "what-can-run",
+    question: JARVIS_QUESTIONS["what-can-run"],
+    answer:
+      canExecute.length === 0
+        ? `Nothing runs autonomously — by design. ${canAnswer.length} capabilities can answer ` +
+          `questions from live data, and ${manual.length} run when a human triggers them ` +
+          "(settlement, calibration review, AI Ops spot-checks)."
+        : `${canExecute.length} capabilities can execute autonomously; the rest answer or recommend only.`,
+    supportingState: [
+      `Autonomous execution: ${canExecute.length} capabilities`,
+      `Can answer from live data: ${canAnswer.length} capabilities`,
+      `Human-triggered (MANUAL): ${manual.map((c) => c.name).join(", ") || "none"}`,
+      `Live decision queue: ${summary.decisions.length} item(s) awaiting the owner`,
+    ],
+    confidence: "HIGH",
+    caveat:
+      "canExecute is false across the registry until an approved orchestration runtime " +
+      "with audit logging exists. Do not infer execution ability from a capability existing.",
+    nextAction:
+      "To expand what can run: wire the tool router / MCP layer first, then orchestration.",
+  };
+}
+
+function answerWhichAgentOwnsThis(_summary: OwnerSummary): JarvisAnswer {
+  const counts = getCouncilSeatCounts();
+
+  return {
+    intent: "which-agent-owns-this",
+    question: JARVIS_QUESTIONS["which-agent-owns-this"],
+    answer:
+      `Every capability has exactly one owning council seat. ${counts.total} seats total: ` +
+      `${counts.registeredCockpitAgents} registered cockpit agents (draft-only), ` +
+      `${counts.manual} human-run roles, ${counts.notWired} designed-but-unwired seats.`,
+    supportingState: AGENT_COUNCIL.map(
+      (m) =>
+        `[${m.status}] ${m.codename} (${m.role}) → ${m.ownsCapabilities.join(", ")}`
+    ),
+    confidence: "HIGH",
+    caveat:
+      "Council seats are governed roles with charters, not running processes. " +
+      "No seat takes external actions without human approval.",
+    nextAction: "Review the agent council panel in the cockpit for full charters.",
+  };
+}
+
+function answerWhatNeedsApproval(summary: OwnerSummary): JarvisAnswer {
+  const approvalGated = CAPABILITY_REGISTRY.filter((c) => c.requiresHumanApproval);
+  const liveDecisions = summary.decisions;
+
+  return {
+    intent: "what-needs-approval",
+    question: JARVIS_QUESTIONS["what-needs-approval"],
+    answer:
+      `${approvalGated.length} of ${CAPABILITY_REGISTRY.length} capabilities require human ` +
+      `approval before anything externally visible happens. Right now ${liveDecisions.length} ` +
+      `live decision${liveDecisions.length === 1 ? "" : "s"} await${liveDecisions.length === 1 ? "s" : ""} you in the queue.`,
+    supportingState: [
+      ...liveDecisions.map((d) => `[LIVE · ${d.urgency}] ${d.description}`),
+      ...approvalGated
+        .filter((c) => c.ownerMode === "OWNER_DECISION_REQUIRED")
+        .map((c) => `[GATE] ${c.name}: ${c.nextAction}`),
+    ],
+    confidence: "HIGH",
+    caveat:
+      "Approval gates are structural, not optional: publishing, settlement verification, " +
+      "performance display, and all content require a human decision.",
+    nextAction: liveDecisions[0]
+      ? `Start with: ${liveDecisions[0].description}`
+      : "Queue is clear. No approvals pending.",
+  };
+}
+
+function answerWhatToBuildNext(_summary: OwnerSummary): JarvisAnswer {
+  // Deterministic leverage ranking: MANUAL capabilities are closest to paying
+  // off (the process already works — automate it), then DESIGNED, then
+  // NOT_WIRED. Within a band, higher operational risk surfaces first.
+  const statusRank: Record<JarvisCapability["status"], number> = {
+    MANUAL: 0,
+    DESIGNED: 1,
+    NOT_WIRED: 2,
+    DRAFT_ONLY: 3,
+    ACTIVE: 4,
+  };
+  const riskRank: Record<JarvisCapability["riskLevel"], number> = {
+    CRITICAL: 0,
+    HIGH: 1,
+    MEDIUM: 2,
+    LOW: 3,
+  };
+  const ranked = CAPABILITY_REGISTRY.filter((c) => c.status !== "ACTIVE")
+    .slice()
+    .sort(
+      (a, b) =>
+        statusRank[a.status] - statusRank[b.status] ||
+        riskRank[a.riskLevel] - riskRank[b.riskLevel]
+    );
+  const top = ranked.slice(0, 3);
+
+  return {
+    intent: "what-should-we-build-next",
+    question: JARVIS_QUESTIONS["what-should-we-build-next"],
+    answer:
+      "Highest-leverage next builds, ranked deterministically (manual processes closest to " +
+      `automation first, then designed gaps): ${top.map((c) => c.name).join("; ")}.`,
+    supportingState: ranked.slice(0, 6).map(describeCapability),
+    confidence: "MEDIUM",
+    caveat:
+      "This ranking is a deterministic heuristic over the capability registry — status depth " +
+      "and risk level — not a market analysis. The owner sets the real roadmap.",
+    nextAction: top[0]?.nextAction ?? null,
+  };
+}
+
+function answerAiOpsArchitecture(summary: OwnerSummary): JarvisAnswer {
+  const cap = CAPABILITY_REGISTRY.find((c) => c.id === "ai-ops-token-discipline");
+  const { aiOps } = summary;
+
+  return {
+    intent: "what-is-ai-ops-status",
+    question: JARVIS_QUESTIONS["what-is-ai-ops-status"],
+    answer:
+      `AI Ops is ${cap?.status ?? "UNKNOWN"}: the model lane policy is defined and enforced ` +
+      "by convention, ccusage covers manual spend checks, and no live token telemetry is " +
+      "wired into the cockpit. Discipline today is policy plus spot-checks, not instrumentation.",
+    supportingState: [
+      `Capability status: ${cap?.status ?? "UNKNOWN"} (${cap?.ownerMode ?? "UNKNOWN"})`,
+      `Telemetry available: NO — ${aiOps.reason}`,
+      `ccusage: ${aiOps.ccusageNote}`,
+      ...(cap ? cap.forbiddenActions.map((f) => `Forbidden: ${f}`) : []),
+    ],
+    confidence: "HIGH",
+    caveat:
+      "No token counts or model costs are claimed without instrumentation. " +
+      "Absence of data is reported as absence, never as discipline.",
+    nextAction: cap?.nextAction ?? aiOps.toInstrumentNext[0] ?? null,
+  };
+}
+
+function answerMemoryStatus(_summary: OwnerSummary): JarvisAnswer {
+  const memory = buildMemoryStatus();
+
+  return {
+    intent: "what-is-memory-status",
+    question: JARVIS_QUESTIONS["what-is-memory-status"],
+    answer:
+      "Jarvis has no persistent memory yet. Operational truth is rebuilt from the database " +
+      "on every load; architectural truth lives in version-controlled markdown. The memory " +
+      "protocol is designed and documented, but no store is wired.",
+    supportingState: [
+      `Memory wired: ${memory.wired ? "YES" : "NO"}`,
+      `Truth: ${memory.truth}`,
+      "Protocol docs (designed, version-controlled):",
+      ...memory.protocolDocs.map((d) => `  • ${d}`),
+    ],
+    confidence: "HIGH",
+    caveat:
+      "Nothing is recalled across sessions. Any claim of remembered context before the " +
+      "store is wired would be fabrication.",
+    nextAction: memory.nextAction,
+  };
+}
+
 // ─── Dispatcher ───────────────────────────────────────────────────────────────
 
 const HANDLERS: Readonly<Record<JarvisIntent, (s: OwnerSummary) => JarvisAnswer>> = {
@@ -405,6 +712,15 @@ const HANDLERS: Readonly<Record<JarvisIntent, (s: OwnerSummary) => JarvisAnswer>
   "workers": answerWorkers,
   "meeting": answerMeeting,
   "ai-ops": answerAiOps,
+  "what-is-jarvis": answerWhatIsJarvis,
+  "what-is-wired": answerWhatIsWired,
+  "what-is-not-wired": answerWhatIsNotWired,
+  "what-can-run": answerWhatCanRun,
+  "which-agent-owns-this": answerWhichAgentOwnsThis,
+  "what-needs-approval": answerWhatNeedsApproval,
+  "what-should-we-build-next": answerWhatToBuildNext,
+  "what-is-ai-ops-status": answerAiOpsArchitecture,
+  "what-is-memory-status": answerMemoryStatus,
 };
 
 // Dispatches a deterministic owner question to the correct intent handler for the given OwnerSummary.
