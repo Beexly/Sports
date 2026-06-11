@@ -11,6 +11,7 @@ import {
 } from "@/lib/airwave";
 import { readIntelligenceControlPlane } from "@/lib/airwave/intelligence-control-plane";
 import type { IntakeLaneState } from "@/lib/airwave/intake-contract";
+import type { ClaimCandidateOperatorStatus } from "@/lib/airwave/claim-extraction-contract";
 
 export const dynamic = "force-dynamic";
 
@@ -334,6 +335,82 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
         </div>
       </section>
 
+      {/* ── Claim Review Queue ── */}
+      <section data-testid="claim-review-queue" className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+              Claim Review Queue
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-400">
+              Operator-gated staging area for extracted claim candidates. Claims must pass
+              rights check and operator review before reaching any public surface.
+              No claim auto-advances. No claim is published from here.
+            </p>
+          </div>
+          <Link
+            href="/api/airwave/review-queue"
+            className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
+          >
+            Queue JSON
+          </Link>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <Metric label="Total claims" value="0" detail="Claims in queue (live import not yet active)." />
+          <Metric label="DRAFT" value="0" detail="Awaiting operator first review." />
+          <Metric label="IN REVIEW" value="0" detail="Operator has started review." />
+          <Metric label="APPROVED" value="0" detail="Cleared for GSE/GSN output mapping." />
+          <Metric label="GSE ready" value="0" detail="Approved + GSE-relevant claim type." />
+        </div>
+        <div className="mt-4 overflow-hidden rounded-xl border border-gray-800">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-gray-950 text-[10px] uppercase tracking-widest text-gray-500">
+              <tr>
+                <th className="px-3 py-2">Status</th>
+                <th className="px-3 py-2">Claim (paraphrased)</th>
+                <th className="px-3 py-2">Sport / Entity</th>
+                <th className="px-3 py-2">Type</th>
+                <th className="px-3 py-2">GSE</th>
+                <th className="px-3 py-2">GSN</th>
+                <th className="px-3 py-2">Public safe</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-800">
+              <tr>
+                <td colSpan={7} className="px-3 py-6 text-center text-gray-600">
+                  No claims in queue. Import via{" "}
+                  <span className="font-mono text-cyan-700">AIRWAVE_CLAIM_BATCH_FILE</span>
+                  {" "}or the batch validator API once a source lane is active.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-4 rounded-xl border border-gray-800 bg-gray-950/70 p-4">
+          <h3 className="text-sm font-semibold text-white">Review Gate — Status Machine</h3>
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+            {(["DRAFT", "REVIEW", "APPROVED", "REJECTED", "SETTLED"] as ClaimCandidateOperatorStatus[]).map((s, i, arr) => (
+              <span key={s} className="flex items-center gap-2">
+                <span className={`rounded border px-2 py-1 font-mono ${REVIEW_STATUS_TONE[s]}`}>{s}</span>
+                {i < arr.length - 1 && i !== 2 && <span className="text-gray-700">→</span>}
+                {i === 2 && <span className="text-gray-700 mx-1">or</span>}
+              </span>
+            ))}
+          </div>
+          <p className="mt-3 text-xs leading-5 text-gray-500">
+            DRAFT → REVIEW requires operator opens the claim. REVIEW → APPROVED requires
+            rights confirmed + paraphrase verified. APPROVED claims can map to GSE/GSN outputs.
+            REJECTED claims are archived, never published. SETTLED = historically confirmed outcome.
+          </p>
+          <dl className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
+            <Fact label="Can write status" value="NO — no DB writer active" />
+            <Fact label="Can auto-approve" value="NO — operator gate required" />
+            <Fact label="Can publish directly" value="NO — GSE/GSN mapping step required" />
+            <Fact label="Batch validator env" value="AIRWAVE_CLAIM_BATCH_FILE" />
+          </dl>
+        </div>
+      </section>
+
       {/* ── Intelligence Intake Posture ── */}
       <section data-testid="intelligence-intake-posture" className="rounded-2xl border border-cyan-900/40 bg-cyan-950/10 p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -479,6 +556,14 @@ function Fact({ label, value }: { label: string; value: string }): JSX.Element {
     </div>
   );
 }
+
+const REVIEW_STATUS_TONE: Record<string, string> = {
+  DRAFT: "border-gray-700 bg-gray-900/70 text-gray-400",
+  REVIEW: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
+  APPROVED: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
+  REJECTED: "border-red-500/30 bg-red-950/30 text-red-200",
+  SETTLED: "border-cyan-500/30 bg-cyan-950/30 text-cyan-200",
+};
 
 const INTAKE_MODE_TONE: Record<string, string> = {
   OFF: "border-gray-700 bg-gray-900/70 text-gray-400",
