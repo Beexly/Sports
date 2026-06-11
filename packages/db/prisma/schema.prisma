@@ -93,6 +93,9 @@ model Subscription {
   currentPeriodEnd     DateTime?
   cancelAtPeriodEnd    Boolean            @default(false)
   canceledAt           DateTime?
+  // First failed-payment timestamp; anchors the PAST_DUE grace window.
+  // Stamped once on the first invoice.payment_failed, cleared on recovery.
+  pastDueSince         DateTime?
   trialStart           DateTime?
   trialEnd             DateTime?
   createdAt            DateTime           @default(now())

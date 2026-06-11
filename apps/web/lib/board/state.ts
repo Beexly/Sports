@@ -34,6 +34,27 @@ export interface BoardStatePayload {
   meta: { isSampleData: boolean; suppressedDemoData?: boolean; dataError?: "DB_UNREACHABLE" };
 }
 
+/**
+ * Strip per-row confidence values for viewers without the PRO+
+ * `canSeeConfidence` entitlement. Confidence is a paid metric — the
+ * public board may show that a confidence label exists, but never the
+ * number itself. Edge Index stays public by design (canSeeEdgeScore
+ * is true for every tier).
+ */
+export function redactBoardConfidence(payload: BoardStatePayload): BoardStatePayload {
+  const strip = (rows: BoardStateRow[]): BoardStateRow[] =>
+    rows.map((row) => (row.confidence === null ? row : { ...row, confidence: null }));
+  return {
+    ...payload,
+    data: {
+      ...payload.data,
+      scoringNow: strip(payload.data.scoringNow),
+      publishedToday: strip(payload.data.publishedToday),
+      gatedTodayRows: strip(payload.data.gatedTodayRows),
+    },
+  };
+}
+
 function todayBounds(): { start: Date; end: Date } {
   const start = new Date();
   start.setHours(0, 0, 0, 0);

@@ -17,6 +17,14 @@ export type { Entitlements };
  */
 const DEV_FAKE_ADMIN_TIER: SubscriptionTier = "ELITE";
 
+/**
+ * Days a PAST_DUE member keeps premium access while Stripe retries the
+ * charge. Anchored to pastDueSince (stamped once on the first failed
+ * payment) so retries can't slide the window. After the window, or if
+ * the anchor is missing, access fails closed to FREE.
+ */
+export const PAST_DUE_GRACE_DAYS = 7;
+
 function isDatabaseUnreachable(error: unknown): boolean {
   const code = typeof error === "object" && error !== null && "code" in error ? String(error.code) : "";
   const message = error instanceof Error ? error.message : String(error);
@@ -28,12 +36,18 @@ export async function getUserEntitlements(userId: string): Promise<Entitlements>
     return getEntitlements(DEV_FAKE_ADMIN_TIER);
   }
 
+  const graceCutoff = new Date(Date.now() - PAST_DUE_GRACE_DAYS * 24 * 60 * 60 * 1000);
+
   let subscription: { tier: string } | null;
   try {
     subscription = await db.subscription.findFirst({
       where: {
         userId,
-        status: { in: ["ACTIVE", "TRIALING"] },
+        OR: [
+          { status: { in: ["ACTIVE", "TRIALING"] } },
+          // Failed payment in dunning: keep access through the grace window.
+          { status: "PAST_DUE", pastDueSince: { gte: graceCutoff } },
+        ],
       },
       select: { tier: true },
     });
