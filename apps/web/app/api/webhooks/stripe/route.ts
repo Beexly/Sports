@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { db } from "@sports/db";
+import { getTierFromPriceId, mapStripeStatus } from "@/lib/stripe/subscription-utils";
 
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
 // Next.js App Router does not parse the body automatically for route handlers.
@@ -181,43 +182,3 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   }
 }
 
-function getTierFromPriceId(priceId: string | undefined): "FREE" | "PRO" | "ELITE" {
-  if (!priceId) return "FREE";
-  const eliteIds = [
-    process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"],
-    process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"],
-    process.env["STRIPE_ELITE_PRICE_ID"], // legacy single-interval
-  ];
-  const proIds = [
-    process.env["STRIPE_PRO_MONTHLY_PRICE_ID"],
-    process.env["STRIPE_PRO_ANNUAL_PRICE_ID"],
-    process.env["STRIPE_PRO_PRICE_ID"], // legacy single-interval
-  ];
-  if (eliteIds.includes(priceId)) return "ELITE";
-  if (proIds.includes(priceId)) return "PRO";
-  return "FREE";
-}
-
-function mapStripeStatus(
-  status: Stripe.Subscription.Status
-): "ACTIVE" | "TRIALING" | "PAST_DUE" | "CANCELED" | "INCOMPLETE" | "PAUSED" {
-  switch (status) {
-    case "active":
-      return "ACTIVE";
-    case "trialing":
-      return "TRIALING";
-    case "past_due":
-      return "PAST_DUE";
-    case "canceled":
-    case "incomplete_expired":
-      return "CANCELED";
-    case "incomplete":
-      return "INCOMPLETE";
-    case "paused":
-      return "PAUSED";
-    case "unpaid":
-      return "PAST_DUE";
-    default:
-      return "ACTIVE";
-  }
-}

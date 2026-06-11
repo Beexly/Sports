@@ -5,6 +5,17 @@ import { db } from "@sports/db";
 
 export type UserRole = "USER" | "ADMIN";
 
+/** Typed shape of what NextAuth() returns — avoids casting the whole instance to any. */
+interface NextAuthInstance {
+  handlers: {
+    GET: (req: Request) => Promise<Response>;
+    POST: (req: Request) => Promise<Response>;
+  };
+  auth: () => Promise<Session | null>;
+  signIn: (...args: unknown[]) => Promise<void>;
+  signOut: (...args: unknown[]) => Promise<void>;
+}
+
 const config: NextAuthConfig = {
   adapter: PrismaAdapter(db),
   trustHost: true,
@@ -19,8 +30,8 @@ const config: NextAuthConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        token.role = ((user as any).role as UserRole) ?? "USER";
+        // user.role is populated by Prisma adapter — see module augmentation below
+        token.role = (user as { role?: UserRole }).role ?? "USER";
       }
 
       if (!token.role && token.email) {
@@ -50,15 +61,11 @@ const config: NextAuthConfig = {
   pages: { signIn: "/auth/signin", error: "/auth/error" },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const nextAuth = NextAuth(config) as any;
+const nextAuth = NextAuth(config) as unknown as NextAuthInstance;
 
-export const handlers = nextAuth.handlers as {
-  GET: (req: Request) => Promise<Response>;
-  POST: (req: Request) => Promise<Response>;
-};
+export const handlers = nextAuth.handlers;
 
-const realAuth = nextAuth.auth as () => Promise<Session | null>;
+const realAuth = nextAuth.auth;
 
 /**
  * Dev-mode admin bypass.
@@ -69,17 +76,17 @@ const realAuth = nextAuth.auth as () => Promise<Session | null>;
  * table. NEVER set this in production.
  */
 export const auth: () => Promise<Session | null> = async () => {
-  if (process.env["DEV_FAKE_ADMIN"] === "true") {
+  if (process.env["DEV_FAKE_ADMIN"] === "true" && process.env["NODE_ENV"] !== "production") {
     return {
       user: {
         id: "dev-admin",
         name: "Dev Admin",
         email: "dev-admin@local",
         image: null,
-        role: "ADMIN",
+        role: "ADMIN" as UserRole,
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any as Session;
+      expires: new Date(Date.now() + 86_400_000).toISOString(),
+    } as unknown as Session;
   }
   try {
     return await realAuth();
@@ -97,10 +104,14 @@ export const auth: () => Promise<Session | null> = async () => {
   }
 };
 
-export const signIn = nextAuth.signIn as (...args: unknown[]) => Promise<void>;
-export const signOut = nextAuth.signOut as (...args: unknown[]) => Promise<void>;
+export const signIn = nextAuth.signIn;
+export const signOut = nextAuth.signOut;
 
 declare module "next-auth" {
+  /** Prisma adapter surfaces role on every sign-in; declare it here so jwt callback is typed. */
+  interface User {
+    role?: UserRole;
+  }
   interface Session {
     user: {
       id: string;
@@ -112,4 +123,5 @@ declare module "next-auth" {
   }
 }
 
-export const DEV_FAKE_ADMIN = process.env["DEV_FAKE_ADMIN"] === "true";
+/** True only in non-production environments when DEV_FAKE_ADMIN=true is explicitly set. */
+export const DEV_FAKE_ADMIN = process.env["DEV_FAKE_ADMIN"] === "true" && process.env["NODE_ENV"] !== "production";

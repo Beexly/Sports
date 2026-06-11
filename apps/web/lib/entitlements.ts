@@ -24,7 +24,7 @@ function isDatabaseUnreachable(error: unknown): boolean {
 }
 
 export async function getUserEntitlements(userId: string): Promise<Entitlements> {
-  if (process.env["DEV_FAKE_ADMIN"] === "true" && userId === "dev-admin") {
+  if (process.env["DEV_FAKE_ADMIN"] === "true" && process.env["NODE_ENV"] !== "production" && userId === "dev-admin") {
     return getEntitlements(DEV_FAKE_ADMIN_TIER);
   }
 
