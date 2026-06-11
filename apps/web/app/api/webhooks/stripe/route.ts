@@ -102,9 +102,33 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       break;
     }
 
+    case "invoice.payment_action_required": {
+      // Payment needs customer action (3D Secure / card challenge).
+      // Re-sync so the DB reflects Stripe's status (past_due/incomplete)
+      // — the grace window and the dashboard billing banner take over
+      // from there, pointing the member at the billing portal.
+      const invoice = event.data.object as Stripe.Invoice;
+      if (invoice.subscription) {
+        const subscription = await stripe.subscriptions.retrieve(
+          invoice.subscription as string
+        );
+        await syncSubscription(subscription);
+      }
+      break;
+    }
+
     case "invoice.payment_failed": {
       const invoice = event.data.object as Stripe.Invoice;
       if (invoice.subscription) {
+        // Stamp the first failure only — retries must not slide the
+        // grace window that entitlements compute from pastDueSince.
+        await db.subscription.updateMany({
+          where: {
+            stripeSubscriptionId: invoice.subscription as string,
+            pastDueSince: null,
+          },
+          data: { pastDueSince: new Date() },
+        });
         await db.subscription.updateMany({
           where: { stripeSubscriptionId: invoice.subscription as string },
           data: { status: "PAST_DUE" },
@@ -142,6 +166,8 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
     ? new Date(stripeSubscription.trial_end * 1000)
     : null;
 
+  const isPastDue = status === "PAST_DUE";
+
   const updateData = {
     stripeSubscriptionId: stripeSubscription.id,
     stripePriceId: priceId,
@@ -152,7 +178,18 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
     cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
     trialStart,
     trialEnd,
+    // Recovery clears the grace anchor. While PAST_DUE the existing
+    // first-failure stamp is preserved (and backfilled below if a sync
+    // arrives before any invoice.payment_failed event).
+    ...(isPastDue ? {} : { pastDueSince: null }),
   };
+
+  if (isPastDue) {
+    await db.subscription.updateMany({
+      where: { stripeCustomerId: customerId, pastDueSince: null },
+      data: { pastDueSince: new Date() },
+    });
+  }
 
   // userId is embedded in subscription metadata during checkout session creation
   const userId = stripeSubscription.metadata?.["userId"];
@@ -166,6 +203,7 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
         userId,
         stripeCustomerId: customerId,
         ...updateData,
+        ...(isPastDue ? { pastDueSince: new Date() } : {}),
       },
       update: updateData,
     });

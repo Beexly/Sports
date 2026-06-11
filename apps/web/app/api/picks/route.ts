@@ -141,12 +141,36 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // this string — synthetic seed picks are the only producer.
   const containsSeedData = picks.some((p) => p.modelVersion === "v5.0.0-seed");
 
+  // Daily-limit transparency for FREE viewers: count the full published
+  // slate (no tier filter, no take) so the UI can say "N picks published
+  // today — you're seeing 1" instead of silently truncating. The count is
+  // already public on the board (openPicks), so no premium data leaks.
+  let totalAvailableToday = publicPicks.length;
+  if (!entitlements.canSeePremiumPicks) {
+    totalAvailableToday = await db.pick
+      .count({
+        where: {
+          isPublished: true,
+          isBootstrap: false,
+          generatedAt: {
+            gte: startOfDay(targetDate),
+            lte: endOfDay(targetDate),
+          },
+          game: gameFilter,
+        },
+      })
+      .catch(() => publicPicks.length);
+  }
+  const hitDailyLimit = totalAvailableToday > publicPicks.length;
+
   return NextResponse.json({
     success: true,
     data: publicPicks,
     meta: {
       tier: entitlements.tier,
       total: publicPicks.length,
+      totalAvailableToday,
+      hitDailyLimit,
       date: targetDate.toISOString().split("T")[0],
       canSeeConfidence: entitlements.canSeeConfidence,
       canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,

@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+// The board/state route checks the session to gate confidence values.
+// These tests exercise the anonymous path, so auth resolves to null.
+vi.mock("@/lib/auth", () => ({ auth: async () => null }));
+
 async function callRoute(path: string): Promise<{ status: number; body: Record<string, unknown> }> {
   vi.resetModules();
   (globalThis as unknown as { prisma?: unknown; prismaStubMode?: boolean }).prisma = undefined;

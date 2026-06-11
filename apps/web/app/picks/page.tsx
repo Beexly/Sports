@@ -28,7 +28,13 @@ interface PicksPageProps {
 interface PicksResponse {
   success: boolean;
   data: PublicPick[];
-  meta: { tier: string; total: number; date: string };
+  meta: {
+    tier: string;
+    total: number;
+    date: string;
+    totalAvailableToday?: number;
+    hitDailyLimit?: boolean;
+  };
   bootstrap?: {
     message: string;
     hint?: string;
@@ -54,7 +60,8 @@ function getRequestOrigin(): string {
 async function fetchPicks(
   sport?: string,
   date?: string,
-  grade?: string
+  grade?: string,
+  authenticated = false
 ): Promise<PicksResponse> {
   const appUrl = getRequestOrigin();
   const params = new URLSearchParams();
@@ -62,7 +69,15 @@ async function fetchPicks(
   if (date) params.set("date", date);
   if (grade) params.set("grade", grade);
   const url = `${appUrl}/api/picks${params.toString() ? `?${params}` : ""}`;
-  const res = await fetch(url, { next: { revalidate: 1800 } });
+  // Members must reach /api/picks with their session so the server tier
+  // gate returns their entitled view — and that response must never land
+  // in the shared data cache. Anonymous traffic keeps the cached fetch.
+  const res = authenticated
+    ? await fetch(url, {
+        cache: "no-store",
+        headers: { cookie: headers().get("cookie") ?? "" },
+      })
+    : await fetch(url, { next: { revalidate: 1800 } });
   if (!res.ok) {
     const body = await res.json().catch(() => null) as {
       error?: string;
@@ -131,7 +146,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
   const [slateResult, picksResult] = await Promise.allSettled([
     fetchSlate(),
-    fetchPicks(sport, date, grade),
+    fetchPicks(sport, date, grade, Boolean(session?.user?.id)),
   ]);
 
   const slate = slateResult.status === "fulfilled" ? slateResult.value : null;
@@ -199,7 +214,21 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {slate && <SlateBar slate={slate} />}
 
           {/* Paywall Banner */}
-          {isFreeTier && <PaywallBanner hasAccount={!!session?.user} />}
+          {isFreeTier && (
+            <PaywallBanner
+              hasAccount={!!session?.user}
+              totalAvailableToday={
+                picksResult.status === "fulfilled"
+                  ? picksResult.value.meta.totalAvailableToday ?? null
+                  : null
+              }
+              hitDailyLimit={
+                picksResult.status === "fulfilled"
+                  ? picksResult.value.meta.hitDailyLimit ?? false
+                  : false
+              }
+            />
+          )}
 
           <PicksTrustStrip />
 
@@ -489,11 +518,26 @@ function StatPill({
 // Paywall Banner
 // ─────────────────────────────────────────────
 
-function PaywallBanner({ hasAccount }: { hasAccount: boolean }) {
+function PaywallBanner({
+  hasAccount,
+  totalAvailableToday,
+  hitDailyLimit,
+}: {
+  hasAccount: boolean;
+  totalAvailableToday: number | null;
+  hitDailyLimit: boolean;
+}) {
+  const headline =
+    hitDailyLimit && totalAvailableToday !== null && totalAvailableToday > 1
+      ? `${totalAvailableToday} signals published today — you're seeing 1`
+      : "You're on Free — one signal a day";
   return (
-    <div className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/50 bg-yellow-950/30 p-5 sm:flex-row sm:items-center">
+    <div
+      data-testid="paywall-banner"
+      className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/50 bg-yellow-950/30 p-5 sm:flex-row sm:items-center"
+    >
       <div>
-        <p className="text-sm font-semibold text-yellow-300">You&apos;re on Free — one signal a day</p>
+        <p className="text-sm font-semibold text-yellow-300">{headline}</p>
         <p className="mt-0.5 text-xs text-yellow-300/80">
           Pro and Elite unlock every signal, the confidence rating, and the
           factor trail behind each one.
