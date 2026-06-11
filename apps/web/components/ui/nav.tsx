@@ -55,15 +55,32 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
     items: [
       { label: "Mission Control", href: "/today", desc: "Today's command deck" },
       { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
-      { label: "Edge Map", href: "/observatory", desc: "The slate as a galaxy" },
-      { label: "Airwave", href: "/airwave", desc: "Pundits, graded on the record" },
+      { label: "Galaxy Twin", href: "/observatory", desc: "The slate as a living market map" },
+      { label: "Decision Autopsy", href: "/performance/losses", desc: "Losses dissected in public" },
+      { label: "Parlay MRI", href: "/parlay-mri", desc: "Stacked risk, made visible" },
+      { label: "The Academy", href: "/academy", desc: "Train the pass, graded on process" },
       { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
-      { label: "The Beat", href: "/the-beat", desc: "News, reliability-scored" },
     ],
   },
   {
     items: [
       { label: "How we read metrics", href: "/intelligence/metrics", desc: "Metric methodology, glass-box" },
+    ],
+  },
+];
+
+// Network ▾ — the GSN face: media intelligence, the graded record, the studio.
+const NETWORK_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "GSN Studio", href: "/gsn", desc: "The daily intelligence transmission" },
+    ],
+  },
+  {
+    heading: "Signal layer",
+    items: [
+      { label: "Airwave Ledger", href: "/airwave", desc: "Pundits, graded on the record" },
+      { label: "The Beat", href: "/the-beat", desc: "News, reliability-scored" },
     ],
   },
 ];
@@ -138,6 +155,7 @@ export async function Nav() {
 
             <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
+            <NavMenu label="Network" href="/gsn" groups={NETWORK_MENU} />
             <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
 
             {TAIL_LINKS.map(({ href, label }) => (

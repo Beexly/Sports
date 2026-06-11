@@ -4,19 +4,23 @@ import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
   { label: "Today's Board", href: "/board" },
-  { label: "Edge Map", href: "/observatory" },
-  { label: "Public Ledger", href: "/ledger" },
-  { label: "Methodology", href: "/methodology" },
-  { label: "The Vault", href: "/vault" },
+  { label: "Galaxy Twin", href: "/observatory" },
+  { label: "Trend Lab", href: "/trends" },
+  { label: "Decision Autopsy", href: "/performance/losses" },
+  { label: "Parlay MRI", href: "/parlay-mri" },
+  { label: "The Academy", href: "/academy" },
+  { label: "GSN Studio", href: "/gsn" },
+  { label: "Airwave Ledger", href: "/airwave" },
 ] as const;
 
 const COMPANY_LINKS = [
-  { label: "Calibration Report", href: "/performance" },
+  { label: "Receipts — Calibration", href: "/performance" },
+  { label: "Methodology", href: "/methodology" },
+  { label: "The Vault", href: "/vault" },
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Press", href: "/press" },
   { label: "FAQ", href: "/faq" },
-  { label: "Changelog", href: "/changelog" },
 ] as const;
 
 const RESPONSIBLE_LINKS = [
