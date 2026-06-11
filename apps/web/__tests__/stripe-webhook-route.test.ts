@@ -387,6 +387,20 @@ describe("POST /api/webhooks/stripe", () => {
       );
     });
 
+    it("payment_action_required re-syncs so the DB captures the pending status", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("invoice.payment_action_required", { subscription: "sub_123" })
+      );
+      mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription({ status: "past_due" }));
+
+      const res = await POST(webhookRequest());
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionsRetrieve).toHaveBeenCalledWith("sub_123");
+      expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({ update: expect.objectContaining({ status: "PAST_DUE" }) })
+      );
+    });
+
     it("ignores invoices without a subscription", async () => {
       mocks.constructEvent.mockReturnValue(
         stripeEvent("invoice.payment_failed", { subscription: null })

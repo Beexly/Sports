@@ -4,6 +4,9 @@ import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { BillingNoticeBanner } from "@/components/ui/billing-notice-banner";
+import { getBillingNotice } from "@/lib/billing/notice";
+import { getUserEntitlements } from "@/lib/entitlements";
 import { BRAND_NAME } from "@/lib/brand";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
 
@@ -58,6 +61,10 @@ export default async function DashboardPage() {
   const stubMode = isStubMode();
   const demoActive = isDemoPicksEnabled() && stubMode;
 
+  // Server-side tier gate (rule #3): FREE members see their 1 daily FREE
+  // pick without confidence; PRO+ sees the full slate with confidence.
+  const entitlements = await getUserEntitlements(user.id);
+
   const [
     todayPicks,
     todayPicksCount,
@@ -69,6 +76,7 @@ export default async function DashboardPage() {
     bootstrapSettledCount,
     recentTotalCount,
     recentBootstrapCount,
+    billingNotice,
   ] = await Promise.all([
     db.pick
       .findMany({
@@ -76,10 +84,11 @@ export default async function DashboardPage() {
           isPublished: true,
           isBootstrap: false,
           generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) },
+          ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
         orderBy: [{ isFeatured: "desc" }, { confidence: "desc" }],
-        take: 6,
+        take: entitlements.canSeePremiumPicks ? 6 : (entitlements.dailyPickLimit ?? 1),
       })
       .catch(() => [] as unknown[]) as Promise<TodayPick[]>,
     db.pick
@@ -114,6 +123,7 @@ export default async function DashboardPage() {
       .catch(() => 0),
     db.pick.count({ where: { generatedAt: { gte: recentSince } } }).catch(() => 0),
     db.pick.count({ where: { generatedAt: { gte: recentSince }, isBootstrap: true } }).catch(() => 0),
+    getBillingNotice(user.id),
   ]);
 
   const performancePolicy = evaluatePublicPerformancePolicy({
@@ -185,11 +195,20 @@ export default async function DashboardPage() {
 
           {demoActive && <SampleDataBanner />}
 
+          {billingNotice && <BillingNoticeBanner notice={billingNotice} />}
+
           <div className="mb-2 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <StatCard label="Today's Picks" value={todayPicksCount.toString()} />
             <StatCard label="Verified Record" value={recordDisplay} />
             <StatCard label="Win Rate" value={winRateDisplay} highlight={winRateHighlight} />
-            <StatCard label="Tier" value={user.role === "ADMIN" ? "Admin" : "Member"} />
+            <StatCard
+              label="Tier"
+              value={
+                user.role === "ADMIN"
+                  ? "Admin"
+                  : entitlements.tier.charAt(0) + entitlements.tier.slice(1).toLowerCase()
+              }
+            />
           </div>
 
           {!performanceVisible && (
@@ -229,7 +248,7 @@ export default async function DashboardPage() {
             ) : (
               <ul className="divide-y divide-gray-800">
                 {todayPicks.map((p) => (
-                  <PickRow key={p.id} pick={p} />
+                  <PickRow key={p.id} pick={p} showConfidence={entitlements.canSeeConfidence} />
                 ))}
               </ul>
             )}
@@ -308,7 +327,7 @@ function SampleDataBanner() {
   );
 }
 
-function PickRow({ pick }: { pick: TodayPick }) {
+function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: boolean }) {
   const homeAway = `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`;
   return (
     <li className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
@@ -333,23 +352,34 @@ function PickRow({ pick }: { pick: TodayPick }) {
         <p className="truncate text-[11px] text-gray-600">
           {pick.reasoningShort}
         </p>
-        <div
-          data-testid="confidence-bar"
-          aria-label={`Confidence ${pick.confidence}%`}
-          className="mt-1 h-1 w-full overflow-hidden rounded-full bg-gray-800"
-        >
+        {showConfidence && (
           <div
-            className="h-full bg-brand-500/60"
-            style={{ width: `${Math.max(0, Math.min(100, pick.confidence))}%` }}
-          />
-        </div>
+            data-testid="confidence-bar"
+            aria-label={`Confidence ${pick.confidence}%`}
+            className="mt-1 h-1 w-full overflow-hidden rounded-full bg-gray-800"
+          >
+            <div
+              className="h-full bg-brand-500/60"
+              style={{ width: `${Math.max(0, Math.min(100, pick.confidence))}%` }}
+            />
+          </div>
+        )}
       </div>
       <div className="flex shrink-0 flex-col items-end gap-1 text-right">
         <GradeBadge grade={pick.pickGrade} />
-        <span className="text-xs text-gray-400">
-          {pick.confidence}% conf
-        </span>
-        {pick.edgeScore > 0 && (
+        {showConfidence ? (
+          <span className="text-xs text-gray-400">
+            {pick.confidence}% conf
+          </span>
+        ) : (
+          <Link
+            href="/pricing"
+            className="text-[10px] font-semibold uppercase tracking-widest text-brand-400 hover:text-brand-300"
+          >
+            Conf · Pro
+          </Link>
+        )}
+        {showConfidence && pick.edgeScore > 0 && (
           <span
             data-testid="edge-score"
             aria-label={`Edge score ${pick.edgeScore.toFixed(1)}`}

@@ -102,6 +102,21 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       break;
     }
 
+    case "invoice.payment_action_required": {
+      // Payment needs customer action (3D Secure / card challenge).
+      // Re-sync so the DB reflects Stripe's status (past_due/incomplete)
+      // — the grace window and the dashboard billing banner take over
+      // from there, pointing the member at the billing portal.
+      const invoice = event.data.object as Stripe.Invoice;
+      if (invoice.subscription) {
+        const subscription = await stripe.subscriptions.retrieve(
+          invoice.subscription as string
+        );
+        await syncSubscription(subscription);
+      }
+      break;
+    }
+
     case "invoice.payment_failed": {
       const invoice = event.data.object as Stripe.Invoice;
       if (invoice.subscription) {
