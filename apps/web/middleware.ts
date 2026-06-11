@@ -14,22 +14,6 @@ import { NextRequest, NextResponse } from "next/server";
 // Routes that require authentication (redirect to signin if no cookie)
 const PROTECTED_ROUTES = ["/dashboard", "/admin"];
 
-const PUBLIC_FANTASY_GATED_ROUTES = [
-  "/fantasy/academy",
-  "/fantasy/autopilot",
-  "/fantasy/contests",
-  "/fantasy/dfs",
-  "/fantasy/draft",
-  "/fantasy/gm-ledger",
-  "/fantasy/league-twin",
-  "/fantasy/lineup",
-  "/fantasy/props",
-  "/fantasy/scheme",
-  "/fantasy/studio",
-  "/fantasy/trade",
-  "/fantasy/waivers",
-] as const;
-
 // Auth cookie name (NextAuth.js v5)
 const AUTH_COOKIE_NAMES = [
   "authjs.session-token",
@@ -41,14 +25,11 @@ const AUTH_COOKIE_NAMES = [
 export function middleware(req: NextRequest): NextResponse {
   const { pathname } = req.nextUrl;
 
-  if (
-    process.env["FANTASY_PUBLIC_TOOLS_ENABLED"] !== "true" &&
-    PUBLIC_FANTASY_GATED_ROUTES.some((route) => pathname === route || pathname.startsWith(`${route}/`))
-  ) {
-    const fantasyUrl = new URL("/fantasy", req.url);
-    fantasyUrl.searchParams.set("tool", pathname.replace("/fantasy/", ""));
-    return NextResponse.redirect(fantasyUrl);
-  }
+  // NOTE: the old FANTASY_PUBLIC_TOOLS_ENABLED middleware gate is gone.
+  // It bounced every /fantasy/* tool back to the hub ("tabs not connected"),
+  // and looped against the hub's legacy ?tool= redirect. Each tool page now
+  // carries its own honest live/illustrative status; tier gates protect the
+  // premium surfaces server-side.
 
   // Check if route requires auth
   const requiresAuth = PROTECTED_ROUTES.some(

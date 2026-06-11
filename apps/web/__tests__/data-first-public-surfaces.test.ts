@@ -85,13 +85,25 @@ describe("data-first public surfaces", () => {
     expect(page).not.toMatch(/Reveal/);
   });
 
-  it("public fantasy tools redirect unless the live-data flag is explicitly enabled", () => {
+  it("fantasy tool routes resolve directly — no middleware bounce — and stay honest at page level", () => {
+    // Owner doctrine update (2026-06): the old FANTASY_PUBLIC_TOOLS_ENABLED
+    // middleware redirect made every fantasy tab land on the generic hub
+    // (and looped against the hub's legacy ?tool= redirect). Data-first
+    // honesty now lives ON each tool page (illustrative/live status notes),
+    // not in a router-level wall.
     const middleware = read("apps/web/middleware.ts");
     const fantasy = read("apps/web/app/fantasy/page.tsx");
-    expect(middleware).toMatch(/FANTASY_PUBLIC_TOOLS_ENABLED/);
-    expect(middleware).toMatch(/PUBLIC_FANTASY_GATED_ROUTES/);
+    expect(middleware).not.toMatch(/PUBLIC_FANTASY_GATED_ROUTES/);
+    expect(middleware).not.toMatch(/searchParams\.set\("tool"/);
+    // hub still honors old deep-links and stays data-first in copy
+    expect(fantasy).toMatch(/LEGACY_TOOL_ROUTES/);
     expect(fantasy).toMatch(/Real roster first/);
     expect(fantasy).toMatch(/No fake projections/);
     expect(fantasy).toMatch(/Connect your league/);
+    // each public tool page carries its own honest status note
+    const dfs = read("apps/web/app/fantasy/dfs/page.tsx");
+    expect(dfs).toMatch(/Illustrative classic-format sample pool|feed not connected/);
+    const trade = read("apps/web/app/fantasy/trade/page.tsx");
+    expect(trade).toMatch(/ILLUSTRATIVE_NOTE|LIVE_NOTE/);
   });
 });
