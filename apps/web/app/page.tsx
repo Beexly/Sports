@@ -17,7 +17,6 @@ import { MarketMirageChapter } from "@/components/world/market-mirage";
 import { NoBetGateChapter } from "@/components/world/no-bet-gate";
 import { DecisionAutopsyPreview } from "@/components/world/decision-autopsy-preview";
 import { ParlayMriPreview } from "@/components/world/parlay-mri-preview";
-import { AirwaveSignalLayer } from "@/components/world/airwave-signal-layer";
 import { CostOfNoiseCalculator } from "@/components/world/cost-of-noise-calculator";
 import { loadBoardPasses } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
@@ -27,7 +26,6 @@ import {
   DATA_SOURCE_STACK,
   PUBLIC_DATA_SOURCES,
   TREND_BACKLOG,
-  sourceCostLabel,
   sourceStatusLabel,
 } from "@/lib/data-sources/catalog";
 import { loadNflverseUsagePulse } from "@/lib/nflverse/usage-pulse";
@@ -230,7 +228,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               <StatusPanel
                 title="Trend observations"
                 value={trendWorkbench.observationCount}
-                detail="Trend engine is ready; observations are waiting on real nflverse writes."
+                detail="Trend engine is ready; observations are waiting on live intake writes."
                 href="/trends"
               />
               <StatusPanel
@@ -245,8 +243,8 @@ export default async function HomePage(): Promise<JSX.Element> {
                 group
                 detail={
                   nflversePulse.status === "live"
-                    ? `nflverse usage pulse: ${nflversePulse.season} week ${nflversePulse.week ?? "N/A"}.`
-                    : "nflverse source pull unavailable."
+                    ? `Usage pulse: ${nflversePulse.season} week ${nflversePulse.week ?? "N/A"}.`
+                    : "Usage pulse warming up."
                 }
                 href="/nflverse"
               />
@@ -324,21 +322,48 @@ export default async function HomePage(): Promise<JSX.Element> {
           <ParlayMriPreview />
         </WorldSection>
 
-        {/* ── 07 · GSN / AIRWAVE ────────────────────────────────────── */}
+        {/* ── 07 · THE BEAT — the public face of media intelligence.
+            The pipeline behind it (claims, review gates, studio) is ours and
+            stays internal; the visitor sees the graded OUTPUT and how it
+            plays into the board. */}
         <WorldSection
           index="07"
           id="gsn"
-          eyebrow="Galaxy Sports Network · Airwave"
+          eyebrow="Galaxy Sports Network · The Beat"
           title={
             <>
               Sports media is a market too. <span className="gse-editorial text-plasma gw-text-glow-plasma">Noisy</span> — and
               now <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">accountable</span>.
             </>
           }
-          lede="GSN runs the same discipline on the airwaves that GSE runs on the board: takes become paraphrased, tagged, human-reviewed claims — then graded records and studio briefs."
+          lede="We grade the noise so you don't have to. Reporting is reliability-scored before it touches a number — and when a story moves our read on a game, you can see exactly where it landed."
           tone="nebula"
         >
-          <AirwaveSignalLayer />
+          <div className="grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral md:grid-cols-3">
+            <div className="bg-eclipse p-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">Scored at the source</p>
+              <p className="mt-2 text-sm leading-6 text-ion-1">
+                Every report carries a reliability grade earned on the record — not a follower count.
+              </p>
+            </div>
+            <div className="bg-eclipse p-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">Plays into the board</p>
+              <p className="mt-2 text-sm leading-6 text-ion-1">
+                A graded story becomes context on the game node it touches — injuries, roles, weather, scheme.
+              </p>
+            </div>
+            <div className="bg-eclipse p-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-plasma">Browse it like a feed</p>
+              <p className="mt-2 text-sm leading-6 text-ion-1">
+                The Beat reads casual; the grading underneath is anything but.
+              </p>
+            </div>
+          </div>
+          <div className="mt-6">
+            <Link href="/the-beat" className="btn btn-primary">
+              Open The Beat
+            </Link>
+          </div>
         </WorldSection>
 
         {/* ── 08 · COST OF NOISE ────────────────────────────────────── */}
@@ -359,43 +384,43 @@ export default async function HomePage(): Promise<JSX.Element> {
           id="receipts"
           eyebrow="Receipts"
           title="Trust is an architecture, not a tagline."
-          lede="No fabricated picks, no invented stats, no silent edits. The source ledger below is the live state of the engine's inputs — cost, status, grain, and what each unlocks."
+          lede="No fabricated picks, no invented stats, no silent edits. The ledger below is the live state of the engine's intake — status, grain, and what each lane unlocks."
         >
-          {/* Source health — the ingestion stack, in public. */}
+          {/* Source health — our intake lanes, in our language. Vendor names
+              and license attribution live on /integrations, by design. */}
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Source health
               </p>
               <h3 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-                Free-first ingestion stack
+                The engine&apos;s intake lanes
               </h3>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
-                {publicSourceCount} structured feeds and {contextSourceCount} context feeds are tracked
-                separately so free APIs, owned media workflows, licensed reporting, and permission-required
-                references do not blur together.
+                {publicSourceCount} structured intake lanes and {contextSourceCount} context feeds are tracked
+                separately so structured data, owned media workflows, licensed reporting, and
+                permission-gated references never blur together. Every lane is graded before it
+                touches a number you see.
               </p>
             </div>
             <Link href="/integrations" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-              All integrations
+              Rights &amp; attribution
             </Link>
           </div>
           <div className="mt-6 overflow-x-auto rounded-ds-md border border-mineral">
             <table className="w-full min-w-[900px] text-left text-sm">
               <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                 <tr>
-                  <th className="px-4 py-3">Source</th>
-                  <th className="px-4 py-3">Cost</th>
+                  <th className="px-4 py-3">Intake lane</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Grain</th>
                   <th className="px-4 py-3">What it unlocks</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-mineral bg-carbon">
-                {DATA_SOURCE_STACK.map((source) => (
+                {PUBLIC_DATA_SOURCES.map((source) => (
                   <tr key={source.key}>
-                    <td className="px-4 py-3 font-semibold text-ion-white">{source.name}</td>
-                    <td className="px-4 py-3 font-mono text-orbital-cyan">{sourceCostLabel(source.cost)}</td>
+                    <td className="px-4 py-3 font-semibold text-ion-white">{source.publicLabel}</td>
                     <td className="px-4 py-3 font-mono text-ion">{sourceStatusLabel(source.status)}</td>
                     <td className="px-4 py-3 text-ion-1">{source.grain}</td>
                     <td className="px-4 py-3 text-ion-1">{source.unlocks}</td>
@@ -404,30 +429,15 @@ export default async function HomePage(): Promise<JSX.Element> {
               </tbody>
             </table>
           </div>
-          <div className="mt-6 grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral lg:grid-cols-4">
-            {CONTEXT_INTELLIGENCE_SOURCES.map((source) => (
-              <article key={source.key} className="bg-eclipse p-4">
-                <div className="flex min-h-24 flex-col justify-between gap-3">
-                  <div>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">
-                      {sourceStatusLabel(source.status)}
-                    </p>
-                    <h4 className="mt-2 text-lg font-semibold leading-tight text-ion-white">{source.name}</h4>
-                  </div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-                    {source.grain}
-                  </p>
-                </div>
-                <p className="mt-4 text-sm leading-6 text-ion-1">{source.unlocks}</p>
-                <p className="mt-4 text-xs leading-5 text-ion-2">{source.liveClaim}</p>
-                {source.complianceNote ? (
-                  <p className="mt-3 border-t border-mineral pt-3 text-xs leading-5 text-ion-2">
-                    {source.complianceNote}
-                  </p>
-                ) : null}
-              </article>
-            ))}
-          </div>
+          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2">
+            + {CONTEXT_INTELLIGENCE_SOURCES.length} context feeds (broadcast claims, beat intelligence,
+            studio assets, international reference) graded behind the same gates — all{" "}
+            {DATA_SOURCE_STACK.length} lanes on the{" "}
+            <Link href="/integrations" className="text-orbital-cyan hover:text-ion-white">
+              rights ledger
+            </Link>
+            .
+          </p>
 
           {/* First trend targets — the questions the engine mines next. */}
           <div className="mt-10 rounded-ds-lg border border-mineral bg-eclipse p-5">

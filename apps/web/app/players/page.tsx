@@ -16,7 +16,7 @@ export const maxDuration = 60; // heavy nflverse loads need headroom
 export const metadata: Metadata = {
   title: "Player Lab — Production, Snaps, Next Gen, Edge & Market in One Surface",
   description:
-    "One tabbed Player Lab over real nflverse + Sleeper data: season production & last-5 form, snap share, receiving/rushing opportunity, Next Gen tracking, pressure & coverage, combine, QBR, edge signals, injuries, market moves, and licensed DFS salaries. Settled facts, honest empty states — never fabricated.",
+    "One tabbed Player Lab over the engine's live intake layer: season production & last-5 form, snap share, receiving/rushing opportunity, Next Gen tracking, pressure & coverage, combine, QBR, edge signals, injuries, market moves, and licensed DFS salaries. Settled facts, honest empty states — never fabricated.",
   alternates: { canonical: "/players" },
 };
 

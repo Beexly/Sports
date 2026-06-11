@@ -7,13 +7,15 @@ type NavLink = { label: string; href: string };
 // A section is either a flat list of links (no toggle) or a collapsible group.
 type Section = { heading: string; collapsible?: boolean; links: ReadonlyArray<NavLink> };
 
-// Mirrors the desktop top bar: six doors, three with a short grouped list.
+// Mirrors the desktop top bar: a few proprietary doors, Contests and The
+// Beat standalone. Internal surfaces (Studio, Airwave) are not linked.
 const SECTIONS: readonly Section[] = [
   {
     heading: "Start here",
     links: [
       { label: "Board", href: "/board" },
       { label: "Today — Mission Control", href: "/today" },
+      { label: "Contests", href: "/fantasy/contests" },
       { label: "Pricing", href: "/pricing" },
     ],
   },
@@ -34,26 +36,10 @@ const SECTIONS: readonly Section[] = [
     collapsible: true,
     links: [
       { label: "Intelligence Engines", href: "/intelligence/engines" },
-      { label: "Proof", href: "/intelligence/engines?engine=proof" },
-      { label: "Player Model", href: "/intelligence/engines?engine=player-model" },
-      { label: "Expected Points", href: "/intelligence/engines?engine=expected-points" },
-      { label: "Mission Control", href: "/today" },
-      { label: "Trend Lab", href: "/trends" },
       { label: "Galaxy Twin", href: "/observatory" },
-      { label: "Decision Autopsy", href: "/performance/losses" },
-      { label: "Parlay MRI", href: "/parlay-mri" },
-      { label: "The Academy", href: "/academy" },
+      { label: "Trend Lab", href: "/trends" },
       { label: "CLV Tracker", href: "/track" },
       { label: "How we read metrics", href: "/intelligence/metrics" },
-    ],
-  },
-  {
-    heading: "Network",
-    collapsible: true,
-    links: [
-      { label: "GSN Studio", href: "/gsn" },
-      { label: "Airwave Ledger", href: "/airwave" },
-      { label: "The Beat", href: "/the-beat" },
     ],
   },
   {
@@ -66,14 +52,14 @@ const SECTIONS: readonly Section[] = [
       { label: "Trade Analyzer", href: "/fantasy/trade" },
       { label: "DFS Optimizer", href: "/fantasy/dfs" },
       { label: "Pick'em Edge", href: "/fantasy/props" },
-      { label: "Contests", href: "/fantasy/contests" },
       { label: "Connect League", href: "/fantasy/connect" },
     ],
   },
   {
-    heading: "Account",
+    heading: "More",
     links: [
-      { label: "Pricing", href: "/pricing" },
+      { label: "The Beat", href: "/the-beat" },
+      { label: "The Academy", href: "/academy" },
       { label: "Dashboard", href: "/dashboard" },
     ],
   },

@@ -33,18 +33,18 @@ const config: Config = {
         "orbital-cyan":      "#00E5FF",
         "ion-magenta":       "#FF2DD6",
         "soft-ultraviolet":  "#7A5CFF",
-        "steel-gray":        "#1A1D23",
+        "steel-gray":        "#211A33",
 
         // ── ENVIRONMENT — cosmic dark scale ───────────────
         // Surfaces step from #050608 (deepest) up to #2E3849 (raised).
         void:       "#050608",
         obsidian:   "#080A0F",
-        carbon:     "#0D1117",
-        eclipse:    "#11161F",
-        titanium:   "#1A1D23",        // Steel Gray sits here
+        carbon:     "#100D1D",
+        eclipse:    "#171228",
+        titanium:   "#211A33",        // Steel Gray sits here
         slate:      "#20283A",
-        mineral:    "#2E3849",
-        "mineral-hi": "#3C4961",
+        mineral:    "#3B3158",
+        "mineral-hi": "#4D4175",
 
         // ── ION — cool whites & mineral silvers (DARK SCALE) ──
         // Marketing / cinematic text on carbon #0D1117. ion-2 / ion-3 were

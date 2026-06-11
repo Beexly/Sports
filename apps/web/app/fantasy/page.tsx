@@ -19,7 +19,7 @@ const LIVE_FIRST = [
     title: "Read-only roster sync",
     href: "/fantasy/connect",
     status: "Live path",
-    body: "Sleeper connect uses public read-only data. No league writes, no OAuth handoff, no autonomous moves.",
+    body: "League connect uses public read-only data. No league writes, no OAuth handoff, no autonomous moves.",
   },
   {
     title: "Player projections provider",
@@ -28,7 +28,7 @@ const LIVE_FIRST = [
     body: "Lineups, waivers, DFS, and trades stay gated until a real projections source is enabled.",
   },
   {
-    title: "nflverse usage layer",
+    title: "Live usage layer",
     href: "/trends",
     status: "Building",
     body: "Snap share, player weeks, injuries, depth charts, and rosters become the free-first base layer.",
@@ -73,13 +73,13 @@ export default async function FantasyHubPage(): Promise<JSX.Element> {
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-ink-300">
                 Galaxy Fantasy is being rebuilt around the same rule as the picks product:
-                if the data is not real, the advice stays locked. You can connect a real
-                Sleeper roster now; projection-driven recommendations open only after the
+                if the data is not real, the advice stays locked. You can connect your real
+                league roster now; projection-driven recommendations open only after the
                 live data layer clears.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Link href="/fantasy/connect" className="btn btn-primary">
-                  Connect Sleeper
+                  Connect your league
                 </Link>
                 <Link href="/optimizer" className="btn btn-ghost">
                   Open the Optimizer
@@ -116,7 +116,7 @@ export default async function FantasyHubPage(): Promise<JSX.Element> {
                 Fantasy starts with rows, then earns recommendations.
               </h2>
               <p className="mt-3 text-sm leading-6 text-ink-300">
-                The free-first layer is already reading nflverse player-week usage, roster, and
+                The free-first layer is already reading live player-week usage, roster, and
                 schedule files. It can prove usage context and reject weak narrative angles today;
                 it still cannot unlock projection-driven lineup, waiver, trade, DFS, or pick'em
                 advice until those provider feeds are live.
@@ -137,7 +137,7 @@ export default async function FantasyHubPage(): Promise<JSX.Element> {
               <EvidenceMetric
                 label="Player-stat rows"
                 value={formatCount(evidence.summary.usagePlayerStatsRows)}
-                detail="Read-only nflverse player_stats.csv.gz."
+                detail="Read-only weekly source release pulls."
               />
               <EvidenceMetric
                 label="Latest usage week"

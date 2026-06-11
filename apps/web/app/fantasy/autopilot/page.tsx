@@ -16,7 +16,7 @@ export default function AutopilotPage() {
       eyebrow="GM Autopilot · First of its kind"
       accent={BRAND_COLORS.orbitalCyan}
       title={<>Delegate as much as you <span className="gse-editorial" style={{ fontSize: "1.08em" }}>trust</span>.</>}
-      intro="Sync your leagues and choose your level — from pure advisor to a fully remote GM that runs the team to your strategy. The difference from every other tool and every concierge service: nothing happens in the dark. Every move is explained before it's made, committed to your tamper-evident GM Ledger and graded on process, fully reversible where it can be — and it teaches you, so your GM IQ climbs even when the AI is driving. Control and proof, not one or the other."
+      intro="Sync your leagues and choose your level — from pure advisor to a fully remote GM that runs the team to your strategy. The difference from every other tool and every concierge service: nothing happens in the dark. Every move is explained before it's made, committed to your tamper-evident GM Ledger and graded on process, fully reversible where it can be — and it teaches you, so your GM IQ climbs even when the engine is driving. Control and proof, not one or the other."
       note="Illustrative. The Autopilot proposes and records; executing on a real ESPN/Yahoo/Sleeper account is gated behind your explicit consent, OAuth, and compliance review — there are no autonomous account actions or payments."
       wide
     >

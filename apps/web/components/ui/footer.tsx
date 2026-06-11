@@ -8,9 +8,10 @@ const PRODUCT_LINKS = [
   { label: "Trend Lab", href: "/trends" },
   { label: "Decision Autopsy", href: "/performance/losses" },
   { label: "Parlay MRI", href: "/parlay-mri" },
+  { label: "Lineup Optimizer", href: "/fantasy/lineup" },
+  { label: "Contests", href: "/fantasy/contests" },
+  { label: "The Beat", href: "/the-beat" },
   { label: "The Academy", href: "/academy" },
-  { label: "GSN Studio", href: "/gsn" },
-  { label: "Airwave Ledger", href: "/airwave" },
 ] as const;
 
 const COMPANY_LINKS = [

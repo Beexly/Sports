@@ -92,6 +92,6 @@ describe("data-first public surfaces", () => {
     expect(middleware).toMatch(/PUBLIC_FANTASY_GATED_ROUTES/);
     expect(fantasy).toMatch(/Real roster first/);
     expect(fantasy).toMatch(/No fake projections/);
-    expect(fantasy).toMatch(/Connect Sleeper/);
+    expect(fantasy).toMatch(/Connect your league/);
   });
 });

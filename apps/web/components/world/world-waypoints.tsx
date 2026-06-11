@@ -15,7 +15,7 @@ const WAYPOINTS = [
   { n: "04", label: "No-Bet Gate", href: "#gate" },
   { n: "05", label: "Autopsy", href: "#autopsy" },
   { n: "06", label: "Parlay MRI", href: "#mri" },
-  { n: "07", label: "GSN · Airwave", href: "#gsn" },
+  { n: "07", label: "GSN · The Beat", href: "#gsn" },
   { n: "08", label: "Cost of Noise", href: "#noise" },
   { n: "09", label: "Receipts", href: "#receipts" },
 ] as const;

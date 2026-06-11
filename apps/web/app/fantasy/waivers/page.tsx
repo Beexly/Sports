@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs headroom beyond the default
 
 const LIVE_NOTE =
-  "Live graded pool — real nflverse players with model-derived projections. Targets, FAAB tiers, and drop candidates are computed from real grades.";
+  "Live graded pool — real players with model-derived projections. Targets, FAAB tiers, and drop candidates are computed from real grades.";
 
 export default async function WaiversPage() {
   const pool = await resolveToolPoolAsync();

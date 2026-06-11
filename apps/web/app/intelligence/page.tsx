@@ -286,7 +286,7 @@ export default function IntelligencePage() {
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
-                Not one AI — a council
+                Not one engine — a council
               </p>
             </Reveal>
             <Reveal delay={90}>

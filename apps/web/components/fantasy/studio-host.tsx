@@ -145,7 +145,7 @@ function ReadinessPanel({ broadcast }: { broadcast: Broadcast }) {
       </div>
       <p className="mt-3 text-[10px] leading-relaxed text-ink-600">
         Brand-safety scans every script for sexual, hateful, unsafe, PII, and overclaiming content before it can pass.
-        Consent and human sign-off are operator-set — the AI can never mark its own work publish-ready.
+        Consent and human sign-off are operator-set — a synthetic segment can never mark itself publish-ready.
       </p>
     </div>
   );

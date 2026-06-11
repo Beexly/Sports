@@ -6,7 +6,7 @@
  * Not a hero section: a mission-control boot that jumps to warp and FLIES the
  * visitor through the Galaxy itself — past the system's real destinations
  * (Board, Galaxy Twin, Trend Lab, Parlay MRI, No-Bet Gate, Decision Autopsy,
- * GSN Airwave, Fantasy Galaxy, the Optimizer, the Academy) — before the light
+ * The Beat, Fantasy Galaxy, the Optimizer, the Academy) — before the light
  * decelerates and converges into the GSE identity. The overlay then dissolves
  * into the live nebula hero behind it (the cinematic object becomes the UI).
  *
@@ -20,7 +20,7 @@
  * WORLD HANDSHAKE: every waypoint passed during warp is a real module of the
  * Galaxy public world (docs/design/GALAXY_2026_PUBLIC_WORLD.md) — the intro is
  * a flyover of the map the visitor is about to land on, and the exit links open
- * the world's primary doors (Board · Galaxy Twin · Fantasy · GSN).
+ * the world's primary doors (Board · Galaxy Twin · Fantasy · The Beat).
  *
  * DOCTRINE: no fake odds/teams/wins presented as real. Waypoint copy is the
  * brand's honest philosophy ("Every edge earns a receipt.", "Sometimes the
@@ -79,7 +79,7 @@ const WAYPOINTS: readonly Waypoint[] = [
   { label: "PARLAY MRI", line: "Stacked risk, made visible.", tone: "plasma", x: 34, y: 16 },
   { label: "NO-BET GATE", line: "Sometimes the sharpest pick is no pick.", tone: "white", x: -30, y: -18 },
   { label: "DECISION AUTOPSY", line: "Losses dissected in public.", tone: "plasma", x: 32, y: -10 },
-  { label: "GSN AIRWAVE", line: "Pundits, graded on the record.", tone: "uv", x: -36, y: 12 },
+  { label: "THE BEAT", line: "Reporting, reliability-scored.", tone: "uv", x: -36, y: 12 },
   { label: "FANTASY GALAXY", line: "Draft, lineups, waivers — your league, twinned.", tone: "cyan", x: 38, y: 12 },
   { label: "THE OPTIMIZER", line: "Floor vs ceiling, glass-box.", tone: "white", x: -32, y: 16 },
   { label: "THE ACADEMY", line: "Train the pass. Graded on process.", tone: "uv", x: 30, y: -14 },
@@ -477,8 +477,8 @@ export function CinematicEntrance() {
                   Fantasy Galaxy
                 </Link>
                 <span aria-hidden className="text-ink-500">·</span>
-                <Link href="/gsn" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
-                  GSN Studio
+                <Link href="/the-beat" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
+                  The Beat
                 </Link>
               </div>
             </div>

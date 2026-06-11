@@ -221,7 +221,7 @@ export const BRAND_COLORS = {
   orbitalCyan: "#00E5FF",     // signal, data, active states
   ionMagenta: "#FF2DD6",      // alert signal / emphasis
   softUltraviolet: "#7A5CFF", // depth, intelligence, secondary signal
-  steelGray: "#1A1D23",       // panels, dividers, UI depth
+  steelGray: "#211A33",       // panels, dividers, UI depth
 } as const;
 
 /**

@@ -50,7 +50,7 @@ describe("homepage engine centerpiece", () => {
     expect(page).toContain("No public rows yet");
     expect(page).toContain("Rows stay empty instead of blocking the experience or inventing data.");
     expect(page).toContain("No active scoring rows.");
-    expect(page).toContain("Trend engine is ready; observations are waiting on real nflverse writes.");
+    expect(page).toContain("Trend engine is ready; observations are waiting on live intake writes.");
   });
 
   it("draws calibration on scroll with a reduced-motion-safe fallback", () => {

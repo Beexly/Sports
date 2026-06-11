@@ -4,12 +4,16 @@ import { auth } from "@/lib/auth";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 
-// Small, clear top bar. Six top-level doors; three carry ONE tight, grouped
-// dropdown each. Everything dropped from here still lives in its section/footer.
+// Small, clear top bar. The funnel doctrine: a FEW proprietary doors — the
+// Board, the Lab, the Engines, the Fantasy tools — plus standalone Contests
+// and The Beat for casual browse. Internal surfaces (Studio, Airwave) are
+// deliberately unlinked here: they are ours, not the visitor's.
 const PRIMARY_LINKS = [{ label: "Board", href: "/board" }] as const;
 
 const TAIL_LINKS = [
-  { label: "Today", href: "/today" },
+  { label: "Contests", href: "/fantasy/contests" },
+  { label: "The Beat", href: "/the-beat" },
+  { label: "Academy", href: "/academy" },
   { label: "Pricing", href: "/pricing" },
 ] as const;
 
@@ -30,57 +34,22 @@ const PLAYERS_MENU: readonly NavGroup[] = [
       { label: "Snap Share", href: "/players?view=snaps", desc: "Offensive workload leaders" },
       { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, CPOE, RYOE" },
       { label: "Edge Signals", href: "/players?view=edge", desc: "Process grade vs output" },
-      { label: "DFS Salaries", href: "/players?view=dfs", desc: "Licensed DraftKings feeds" },
+      { label: "DFS Salaries", href: "/players?view=dfs", desc: "Salary value, graded glass-box" },
     ],
   },
 ];
 
-// Intelligence ▾ — the engine browser, a few marquee engines, the standalone reads.
+// Intelligence ▾ — one tight list. Everything funnels into the engines;
+// the engine browser is the single deep door.
 const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
-      { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every advanced-data engine, browsable" },
-    ],
-  },
-  {
-    heading: "Marquee engines",
-    items: [
-      { label: "Proof", href: "/intelligence/engines?engine=proof", desc: "Does the process actually predict?" },
-      { label: "Player Model", href: "/intelligence/engines?engine=player-model", desc: "Process grade vs production" },
-      { label: "Expected Points", href: "/intelligence/engines?engine=expected-points", desc: "xFP vs actual, by position" },
-    ],
-  },
-  {
-    heading: "Surfaces",
-    items: [
+      { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, browsable" },
       { label: "Mission Control", href: "/today", desc: "Today's command deck" },
-      { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
       { label: "Galaxy Twin", href: "/observatory", desc: "The slate as a living market map" },
-      { label: "Decision Autopsy", href: "/performance/losses", desc: "Losses dissected in public" },
-      { label: "Parlay MRI", href: "/parlay-mri", desc: "Stacked risk, made visible" },
-      { label: "The Academy", href: "/academy", desc: "Train the pass, graded on process" },
+      { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
       { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
-    ],
-  },
-  {
-    items: [
       { label: "How we read metrics", href: "/intelligence/metrics", desc: "Metric methodology, glass-box" },
-    ],
-  },
-];
-
-// Network ▾ — the GSN face: media intelligence, the graded record, the studio.
-const NETWORK_MENU: readonly NavGroup[] = [
-  {
-    items: [
-      { label: "GSN Studio", href: "/gsn", desc: "The daily intelligence transmission" },
-    ],
-  },
-  {
-    heading: "Signal layer",
-    items: [
-      { label: "Airwave Ledger", href: "/airwave", desc: "Pundits, graded on the record" },
-      { label: "The Beat", href: "/the-beat", desc: "News, reliability-scored" },
     ],
   },
 ];
@@ -95,13 +64,12 @@ const FANTASY_MENU: readonly NavGroup[] = [
       { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Adds and bids, with the why" },
       { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Value, fairness, win-now" },
       { label: "DFS Optimizer", href: "/fantasy/dfs", desc: "Cash / GPP / leverage, glass-box" },
-      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & Pick6 line edges" },
-      { label: "Contests", href: "/fantasy/contests", desc: "Best ball, survivor, squares" },
+      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Pick'em line edges, graded" },
     ],
   },
   {
     items: [
-      { label: "Connect League", href: "/fantasy/connect", desc: "Read-only Sleeper sync" },
+      { label: "Connect League", href: "/fantasy/connect", desc: "Link your league in one tap" },
     ],
   },
 ];
@@ -155,7 +123,6 @@ export async function Nav() {
 
             <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
-            <NavMenu label="Network" href="/gsn" groups={NETWORK_MENU} />
             <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
 
             {TAIL_LINKS.map(({ href, label }) => (

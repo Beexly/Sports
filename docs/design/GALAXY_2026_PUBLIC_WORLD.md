@@ -189,7 +189,7 @@ projection appears unless the", "Board state", "Ten-second product test",
 "First trend targets", "Trend Lab", "Open Trend Lab", "Real NFL rows",
 "No public rows yet", "No active scoring rows.", "No public pick has cleared.",
 "Rows stay empty instead of blocking the experience or inventing data.",
-"Trend engine is ready; observations are waiting on real nflverse writes.",
+"Trend engine is ready; observations are waiting on live intake writes.",
 "Demo data suppressed", "The math can point. The decision stays yours.",
 `data-testid="homepage-responsible-close"`.
 
@@ -206,6 +206,34 @@ Class requirements: `bg-carbon`, `bg-eclipse`, `border-mineral`, `text-orbital-c
 Forbidden: `FALLBACK_PICKS`, `TESTIMONIALS`, `AnnotatedSampleSignal`,
 `sample-data-banner-home`, `StackSection`, `ThreeQuestions`, `LiveStateStrip`,
 "Gate Cam", "Three questions", "SEA -1.5", real team names as fixtures.
+
+## 10.5 Owner doctrine — 2026-06-11 notes (overrides anything above that conflicts)
+
+Direct from the owner's review notes; these are LAW for public surfaces:
+
+- **Don't show our hand.** No vendor/connector/API names on the front of the
+  tool (homepage, nav, footer, hub/landing pages, page metadata). Public
+  surfaces render `publicLabel` capability codenames from
+  `lib/data-sources/catalog.ts` ("Play-by-play substrate", "Market pricing
+  mesh", "League sync bridge"). Real names + license attribution live ONLY on
+  the deeper `/integrations` and `/nflverse` pages — that is the strategic
+  compliance placement (nflverse CC BY-SA attribution stays there, always).
+- **The funnel.** A FEW proprietary doors: Board, Player Lab, Intelligence
+  Engines (one condensed menu), the Fantasy tools, the optimizers.
+  **Contests is standalone** (own top-level door — big market). **The Beat**
+  is the casual-browse surface and visibly feeds our scores. **The Academy**
+  is semi-standalone.
+- **Airwave and Studio are internal.** Never linked from public nav/footer.
+  They live in the cockpit lineage; routes stay reachable for the operator.
+- **Voice.** First person plural — "we", "we at GSN". The word "AI" does not
+  appear on public surfaces; we say "the engine", "our models", "the desk".
+  Required legal/responsible-play disclosures are never weakened.
+- **No grey.** Surface tokens are violet-shifted (carbon `#100D1D`, eclipse
+  `#171228`, titanium `#211A33`, mineral `#3B3158`, mineral-hi `#4D4175`) —
+  panels sit in the nebula, not in SaaS grey. Keep luminance when adjusting.
+- **Beex Weekly.** The weekly podcast is Beex's voice on the record:
+  `lib/gsn/beex-weekly.ts` drafts the script from real transmissions; owner
+  approval + voice consent are hard gates; there is no autonomous publish.
 
 ## 11. Forbidden patterns
 

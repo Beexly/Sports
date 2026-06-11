@@ -23,7 +23,7 @@ export default function StudioPage() {
       accent={BRAND_COLORS.softUltraviolet}
       title={<>The week, <span className="gse-editorial" style={{ fontSize: "1.08em" }}>on air</span>.</>}
       intro="Galaxy Studios fronts the week with Nova — our brand presenter — reporting the edge from the field, the clubhouse, and the desk, then hands you the written Galaxy Brief beneath the broadcast. Studios reads every surface of the OS and turns it into a production-ready show and script. You review and publish; it never ships on its own, and every broadcast carries a clear synthetic-presenter disclosure."
-      note={`${ILLUSTRATIVE_NOTE} Studios generates broadcast scripts and draft text only — no AI-likeness video, no autonomous posting, and it does not publish to any external channel.`}
+      note={`${ILLUSTRATIVE_NOTE} Studios generates broadcast scripts and draft text only — no synthetic-likeness video, no autonomous posting, and it does not publish to any external channel.`}
       wide
     >
       <div className="space-y-12">

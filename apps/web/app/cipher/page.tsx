@@ -25,7 +25,7 @@ const RULES = [
   {
     n: "02",
     title: "The shards",
-    body: "Every chapter scatters short tokens across different rooms of the site. They exist only on the live site this week — no AI can hand them to you. You have to look.",
+    body: "Every chapter scatters short tokens across different rooms of the site. They exist only on the live site this week — no bot can hand them to you. You have to look.",
   },
   {
     n: "03",

@@ -26,7 +26,7 @@ export default async function LineupPage() {
       title={<>Start the points. Skip the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>guessing</span>.</>}
       intro="The optimal lineup, solved — with the leverage of every call (how much you'd lose starting the next-best bench option) and a floor-to-ceiling band. Mark a player out and watch it re-solve."
       note={pool
-        ? "Live graded pool — real nflverse players with model-derived projections. The roster shown is a sample drawn from that pool (no league connection yet); optimization, leverage, and the floor/ceiling band are computed from real grades."
+        ? "Live graded pool — real players with model-derived projections. The roster shown is a sample drawn from that pool (no league connection yet); optimization, leverage, and the floor/ceiling band are computed from real grades."
         : "Illustrative roster and projections. Optimization, leverage, and the floor/ceiling band are computed live from the sample pool."}
       wide
     >

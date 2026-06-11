@@ -13,6 +13,14 @@ export type SourceStatus =
 export interface DataSourceCard {
   readonly key: string;
   readonly name: string;
+  /**
+   * Front-of-house label. Public surfaces render THIS, never `name`:
+   * the engine speaks in its own capability language and does not name
+   * vendors/connectors on the front of the tool. Real source names and
+   * license attribution live on the deeper /integrations and /nflverse
+   * pages, which is where compliance points.
+   */
+  readonly publicLabel: string;
   readonly cost: SourceCost;
   readonly status: SourceStatus;
   readonly grain: string;
@@ -44,12 +52,27 @@ const NFLVERSE_PRIORITY_KEYS = [
   "schedules",
 ] as const;
 
+/** Capability codenames for the intake lanes — our language, not the vendor's. */
+const LANE_LABELS: Record<(typeof NFLVERSE_PRIORITY_KEYS)[number], string> = {
+  players: "Player identity spine",
+  rosters: "Roster spine",
+  player_stats_week: "Weekly production lane",
+  snap_counts: "Snap workload lane",
+  pbp: "Play-by-play substrate",
+  pbp_participation: "Route participation lane",
+  ngs: "Tracking & separation lane",
+  pfr_advstats: "Advanced charting lane",
+  injuries: "Injury designation lane",
+  schedules: "Schedule & rest lane",
+};
+
 export const PUBLIC_DATA_SOURCES: readonly DataSourceCard[] = [
   ...NFLVERSE_PRIORITY_KEYS.map((key): DataSourceCard => {
     const dataset = NFLVERSE_CATALOG[key];
     return {
       key: dataset.key,
       name: `nflverse ${dataset.key}`,
+      publicLabel: LANE_LABELS[key],
       cost: "free",
       status: "adapter-ready",
       grain: dataset.grain,
@@ -60,6 +83,7 @@ export const PUBLIC_DATA_SOURCES: readonly DataSourceCard[] = [
   {
     key: "the-odds-api",
     name: "The Odds API",
+    publicLabel: "Market pricing mesh",
     cost: "low-cost",
     status: "scheduled-code",
     grain: "game-market",
@@ -69,6 +93,7 @@ export const PUBLIC_DATA_SOURCES: readonly DataSourceCard[] = [
   {
     key: "sleeper",
     name: "Sleeper public API",
+    publicLabel: "League sync bridge",
     cost: "free",
     status: "wired",
     grain: "fantasy-roster",
@@ -78,6 +103,7 @@ export const PUBLIC_DATA_SOURCES: readonly DataSourceCard[] = [
   {
     key: "premium-charting",
     name: "Premium charting overlays",
+    publicLabel: "Premium charting overlays",
     cost: "paid-optional",
     status: "planned",
     grain: "player-play",
@@ -90,6 +116,7 @@ export const CONTEXT_INTELLIGENCE_SOURCES: readonly DataSourceCard[] = [
   {
     key: "airwave-transcript-spreadsheet",
     name: "Airwave transcript spreadsheet",
+    publicLabel: "Broadcast claims engine",
     cost: "owned",
     status: "founder-gated",
     grain: "show-segment / claim",
@@ -103,6 +130,7 @@ export const CONTEXT_INTELLIGENCE_SOURCES: readonly DataSourceCard[] = [
   {
     key: "beat-reporter-source-mesh",
     name: "Beat reporter source mesh",
+    publicLabel: "Beat intelligence mesh",
     cost: "licensed",
     status: "founder-gated",
     grain: "report / player / team",
@@ -116,6 +144,7 @@ export const CONTEXT_INTELLIGENCE_SOURCES: readonly DataSourceCard[] = [
   {
     key: "galaxy-studio-asset-engine",
     name: "Galaxy Studio asset engine",
+    publicLabel: "Studio asset engine",
     cost: "owned",
     status: "wired",
     grain: "approved-game / creator asset",
@@ -127,6 +156,7 @@ export const CONTEXT_INTELLIGENCE_SOURCES: readonly DataSourceCard[] = [
   {
     key: "scores24-reference",
     name: "Scores24 reference feed",
+    publicLabel: "International reference lane",
     cost: "licensed",
     status: "permission-required",
     grain: "match / market / trend",
