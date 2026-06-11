@@ -9,6 +9,15 @@ import {
 } from "@/lib/data-sources/catalog";
 import { loadSourceLiveEvidence, type SourceLiveEvidence } from "@/lib/data-sources/live-evidence";
 import { providerStatuses, readinessSummary } from "@/lib/integrations/providers";
+import {
+  SOURCE_RIGHTS_REGISTRY,
+  getRegistrySummary,
+  getSourcesByStatus,
+  getVendorCandidates,
+  getApprovedSources,
+  type SourceRightsEntry,
+  type SourceRightsStatus,
+} from "@/lib/scraping/source-rights-registry";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +51,30 @@ const STATUS_TONE: Record<SourceStatus, string> = {
   planned: "border-gray-700 bg-gray-900/70 text-gray-300",
 };
 
+const RIGHTS_STATUS_TONE: Record<SourceRightsStatus, string> = {
+  approved_public_logged_off: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
+  approved_api: "border-cyan-500/30 bg-cyan-950/30 text-cyan-200",
+  approved_open_license: "border-teal-500/30 bg-teal-950/30 text-teal-200",
+  approved_written_permission: "border-blue-500/30 bg-blue-950/30 text-blue-200",
+  vendor_candidate: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
+  manual_research_only: "border-violet-500/30 bg-violet-950/30 text-violet-200",
+  permission_required: "border-orange-500/30 bg-orange-950/30 text-orange-200",
+  blocked_technical_controls: "border-red-600/40 bg-red-950/30 text-red-300",
+  excluded: "border-red-900/60 bg-red-950/40 text-red-400",
+};
+
+const RIGHTS_STATUS_LABEL: Record<SourceRightsStatus, string> = {
+  approved_public_logged_off: "Approved: public logged-off",
+  approved_api: "Approved: licensed API",
+  approved_open_license: "Approved: open license",
+  approved_written_permission: "Approved: written permission",
+  vendor_candidate: "Vendor candidate",
+  manual_research_only: "Manual research only",
+  permission_required: "Permission required",
+  blocked_technical_controls: "Blocked: technical controls",
+  excluded: "Excluded",
+};
+
 export default async function CockpitSourcesPage(): Promise<JSX.Element> {
   const providers = providerStatuses();
   const providerSummary = readinessSummary();
@@ -60,6 +93,16 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
       DATA_SOURCE_STACK.some((source) => source.key === key || source.key.endsWith(key))
     ),
   }));
+
+  const rightsRegistrySummary = getRegistrySummary();
+  const approvedSources = getApprovedSources();
+  const permissionRequiredSources = getSourcesByStatus("permission_required");
+  const vendorCandidates = getVendorCandidates();
+  const excludedSources = getSourcesByStatus("excluded");
+  const legalReviewQueue = [
+    ...permissionRequiredSources.map((s) => ({ source: s, action: "outreach" as const })),
+    ...vendorCandidates.map((s) => ({ source: s, action: "questionnaire" as const })),
+  ];
 
   return (
     <div className="flex flex-col gap-6">
@@ -212,6 +255,99 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
         </div>
       </section>
 
+      {/* ── Source Rights Clearance ── */}
+      <section data-testid="source-rights-clearance">
+        <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-orange-300">
+              Source Rights Clearance
+            </p>
+            <h2 className="mt-1 text-lg font-bold text-white">Scraping Rights Registry</h2>
+          </div>
+          <span className="rounded border border-gray-700 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-gray-400">
+            {rightsRegistrySummary.total} sources tracked
+          </span>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <RightsMetric
+            label="Approved"
+            value={String(approvedSources.length)}
+            tone="text-emerald-300"
+            detail="Facts may be extracted per source constraints."
+          />
+          <RightsMetric
+            label="Permission required"
+            value={String(permissionRequiredSources.length)}
+            tone="text-orange-300"
+            detail="Manual research allowed. No automation until consent obtained."
+          />
+          <RightsMetric
+            label="Vendor candidates"
+            value={String(vendorCandidates.length)}
+            tone="text-yellow-300"
+            detail="Questionnaire pending. No ingestion until contract signed."
+          />
+          <RightsMetric
+            label="Excluded"
+            value={String(excludedSources.length)}
+            tone="text-red-400"
+            detail="No safe path. Permanently blocked."
+          />
+        </div>
+      </section>
+
+      <section className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-950">
+        <div className="border-b border-gray-800 px-4 py-3">
+          <h2 className="text-sm font-semibold text-white">Rights registry</h2>
+          <p className="mt-1 text-xs text-gray-500">
+            Every extraction job must pass through the Clearance Engine before running.
+            A{" "}
+            <code className="font-mono text-[11px] text-gray-400">ClearanceResult.allowed=false</code>{" "}
+            stops the job. Every extracted record carries a{" "}
+            <code className="font-mono text-[11px] text-gray-400">RightsSnapshot</code>.
+          </p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-[860px] divide-y divide-gray-800 text-left text-sm">
+            <thead className="bg-gray-900/60 text-[11px] uppercase tracking-wider text-gray-500">
+              <tr>
+                <th className="px-4 py-3">Source</th>
+                <th className="px-4 py-3">Jurisdiction</th>
+                <th className="px-4 py-3">Rights status</th>
+                <th className="px-4 py-3">Auto</th>
+                <th className="px-4 py-3">Display</th>
+                <th className="px-4 py-3">Store</th>
+                <th className="px-4 py-3">Train</th>
+                <th className="px-4 py-3">Unlock / action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-900">
+              {SOURCE_RIGHTS_REGISTRY.map((entry) => (
+                <RightsRow key={entry.source_id} entry={entry} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {legalReviewQueue.length > 0 && (
+        <section className="rounded-2xl border border-orange-900/40 bg-orange-950/10 p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-orange-300">
+            Legal action queue
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-orange-100/70">
+            These sources require outreach or vendor evaluation before any automated use.
+            Manual research is permitted on permission_required sources.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {legalReviewQueue.map(({ source, action }) => (
+              <LegalActionCard key={source.source_id} source={source} action={action} />
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="grid gap-4 lg:grid-cols-[1fr_1fr]">
         <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
           <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Trend coverage gaps</h2>
@@ -301,6 +437,89 @@ function EvidenceLink({ href, label }: { href: string; label: string }): JSX.Ele
     >
       {label}
     </Link>
+  );
+}
+
+function RightsMetric({
+  label,
+  value,
+  tone,
+  detail,
+}: {
+  label: string;
+  value: string;
+  tone: string;
+  detail: string;
+}): JSX.Element {
+  return (
+    <div className="rounded-lg border border-gray-800 bg-gray-950 p-4">
+      <p className="text-[11px] uppercase tracking-wider text-gray-500">{label}</p>
+      <p className={`mt-2 font-numerals text-2xl font-semibold ${tone}`}>{value}</p>
+      <p className="mt-1 text-xs leading-5 text-gray-500">{detail}</p>
+    </div>
+  );
+}
+
+function RightsRow({ entry }: { entry: SourceRightsEntry }): JSX.Element {
+  const tone = RIGHTS_STATUS_TONE[entry.status];
+  const flag = (v: boolean) =>
+    v ? (
+      <span className="text-xs font-semibold text-emerald-400">yes</span>
+    ) : (
+      <span className="text-xs text-red-400/80">no</span>
+    );
+  return (
+    <tr className="align-top text-gray-300">
+      <td className="px-4 py-3">
+        <p className="font-medium text-white">{entry.source_name}</p>
+        <code className="font-mono text-[10px] text-gray-600">{entry.source_id}</code>
+      </td>
+      <td className="px-4 py-3 text-xs text-gray-500">{entry.jurisdiction}</td>
+      <td className="px-4 py-3">
+        <span className={`inline-flex rounded border px-2 py-1 text-[10px] ${tone}`}>
+          {RIGHTS_STATUS_LABEL[entry.status]}
+        </span>
+      </td>
+      <td className="px-4 py-3">{flag(entry.automation_allowed)}</td>
+      <td className="px-4 py-3">{flag(entry.commercial_display_allowed)}</td>
+      <td className="px-4 py-3">{flag(entry.storage_allowed)}</td>
+      <td className="px-4 py-3">{flag(entry.model_training_allowed)}</td>
+      <td className="px-4 py-3 text-xs leading-5 text-gray-400">
+        {entry.unlock_condition ?? entry.notes.slice(0, 80)}
+      </td>
+    </tr>
+  );
+}
+
+function LegalActionCard({
+  source,
+  action,
+}: {
+  source: SourceRightsEntry;
+  action: "outreach" | "questionnaire";
+}): JSX.Element {
+  return (
+    <div className="rounded-lg border border-orange-900/30 bg-gray-950/70 p-4">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <p className="text-sm font-semibold text-gray-100">{source.source_name}</p>
+        <span
+          className={`rounded border px-2 py-0.5 text-[10px] uppercase tracking-widest ${
+            action === "outreach"
+              ? "border-orange-500/30 text-orange-300"
+              : "border-yellow-500/30 text-yellow-300"
+          }`}
+        >
+          {action === "outreach" ? "Outreach needed" : "Questionnaire needed"}
+        </span>
+      </div>
+      <p className="mt-1 font-mono text-[10px] text-gray-500">{source.source_id}</p>
+      {source.unlock_condition && (
+        <p className="mt-2 text-xs leading-5 text-gray-400">{source.unlock_condition}</p>
+      )}
+      {source.vendor_contact && (
+        <p className="mt-2 font-mono text-[11px] text-cyan-400">{source.vendor_contact}</p>
+      )}
+    </div>
   );
 }
 
