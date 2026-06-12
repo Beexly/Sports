@@ -36,12 +36,16 @@ export type {
   StaleSettlementOptions,
   StaleSettlementReport,
 } from "./stale-settlement.js";
-// Closing-Line Value — sharp-grade credibility metric (pure; not yet surfaced publicly)
+// Closing-Line Value — sharp-grade credibility metric (pure). The aggregate
+// beat-the-close rate is surfaced on the public calibration panel once the
+// graded sample clears MIN_PUBLIC_CLV_SAMPLE; per-pick grades stay internal.
 export {
   computeSpreadClv,
   computeTotalClv,
   computeMoneylineClv,
   summarizeClv,
+  aggregatePublicClv,
+  MIN_PUBLIC_CLV_SAMPLE,
 } from "./clv.js";
 export type {
   ClvVerdict,
@@ -50,6 +54,8 @@ export type {
   PointsClvResult,
   MoneylineClvResult,
   ClvSummary,
+  PublicClvRow,
+  PublicClvAggregate,
 } from "./clv.js";
 // CLV capture — derive the closing line from the timestamped odds history and
 // grade a pick's lock-time line/price against it. Pure; the settlement pipeline

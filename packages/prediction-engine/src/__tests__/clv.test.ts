@@ -4,6 +4,9 @@ import {
   computeTotalClv,
   computeMoneylineClv,
   summarizeClv,
+  aggregatePublicClv,
+  MIN_PUBLIC_CLV_SAMPLE,
+  type PublicClvRow,
 } from "../clv.js";
 
 describe("computeSpreadClv (home-perspective line)", () => {
@@ -94,5 +97,81 @@ describe("summarizeClv", () => {
     expect(s.beatCloseRate).toBeCloseTo(0.6667, 3);
     expect(s.lostToCloseRate).toBeCloseTo(0.3333, 3);
     expect(s.averageClv).toBeCloseTo(0.1667, 3);
+  });
+});
+
+describe("aggregatePublicClv (public proof aggregate)", () => {
+  const row = (
+    clvVerdict: string | null,
+    clvValue: number | null = null,
+    clvKind: string | null = null
+  ): PublicClvRow => ({ clvVerdict, clvValue, clvKind });
+
+  it("returns an empty, floor-failing aggregate when nothing is graded", () => {
+    const a = aggregatePublicClv([]);
+    expect(a.gradedSampleSize).toBe(0);
+    expect(a.beatCloseRate).toBeNull();
+    expect(a.averageClvPoints).toBeNull();
+    expect(a.meetsPublicSampleFloor).toBe(false);
+  });
+
+  it("computes the beat-the-close rate from graded verdicts", () => {
+    // 30 graded picks: 18 beat, 8 lost, 4 matched → 60% beat rate.
+    const rows: PublicClvRow[] = [
+      ...Array.from({ length: 18 }, () => row("BEAT_CLOSE", 0.5, "POINTS")),
+      ...Array.from({ length: 8 }, () => row("LOST_TO_CLOSE", -1, "POINTS")),
+      ...Array.from({ length: 4 }, () => row("MATCHED_CLOSE", 0, "POINTS")),
+    ];
+    const a = aggregatePublicClv(rows);
+    expect(a.gradedSampleSize).toBe(30);
+    expect(a.beatCloseCount).toBe(18);
+    expect(a.lostToCloseCount).toBe(8);
+    expect(a.matchedCloseCount).toBe(4);
+    expect(a.beatCloseRate).toBeCloseTo(0.6, 5);
+    // (18·0.5 + 8·(−1) + 4·0) / 30 = 1/30 ≈ 0.03
+    expect(a.averageClvPoints).toBeCloseTo(0.03, 2);
+    expect(a.meetsPublicSampleFloor).toBe(true);
+  });
+
+  it("excludes ungraded and junk-verdict rows from the sample", () => {
+    const rows: PublicClvRow[] = [
+      row("BEAT_CLOSE", 1, "POINTS"),
+      row(null), // close never captured — never graded
+      row("SOMETHING_ELSE", 2, "POINTS"), // junk verdict — ignored
+      row("LOST_TO_CLOSE", -1, "POINTS"),
+    ];
+    const a = aggregatePublicClv(rows);
+    expect(a.gradedSampleSize).toBe(2);
+    expect(a.beatCloseRate).toBeCloseTo(0.5, 5);
+  });
+
+  it("fails the public sample floor below MIN_PUBLIC_CLV_SAMPLE", () => {
+    const rows = Array.from({ length: MIN_PUBLIC_CLV_SAMPLE - 1 }, () =>
+      row("BEAT_CLOSE", 1, "POINTS")
+    );
+    const a = aggregatePublicClv(rows);
+    // The rate is computed (real data) but the floor flag stays false, which
+    // is what keeps it off the public surface.
+    expect(a.beatCloseRate).toBe(1);
+    expect(a.meetsPublicSampleFloor).toBe(false);
+  });
+
+  it("averages points-kind CLV only — never mixes moneyline probability units", () => {
+    const rows: PublicClvRow[] = [
+      row("BEAT_CLOSE", 2, "POINTS"),
+      row("BEAT_CLOSE", 0.05, "PROBABILITY"), // ML prob must not pollute points avg
+      row("LOST_TO_CLOSE", -1, "POINTS"),
+    ];
+    const a = aggregatePublicClv(rows);
+    expect(a.averageClvPoints).toBeCloseTo(0.5, 5);
+  });
+
+  it("returns a null points average when only moneyline grades exist", () => {
+    const a = aggregatePublicClv([
+      row("BEAT_CLOSE", 0.04, "PROBABILITY"),
+      row("LOST_TO_CLOSE", -0.02, "PROBABILITY"),
+    ]);
+    expect(a.gradedSampleSize).toBe(2);
+    expect(a.averageClvPoints).toBeNull();
   });
 });

@@ -549,6 +549,10 @@ function SportCard({
 // itself guarded by the canExposePerformanceStats gate check.
 async function getPerformanceSummaries(): Promise<PerformanceSummary[]> {
   return db.performanceSummary.findMany({
+    // Public surface: only summaries explicitly marked canonical may render.
+    // PerformanceSummary.isBootstrap defaults to true, so any future write
+    // that forgets the flag stays invisible here by construction.
+    where: { isBootstrap: false },
     orderBy: [{ period: "desc" }, { totalPicks: "desc" }],
     take: 100,
   }) as Promise<PerformanceSummary[]>;

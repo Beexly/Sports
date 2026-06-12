@@ -1,5 +1,6 @@
+import { MIN_PUBLIC_CLV_SAMPLE, type PublicClvAggregate } from "@sports/prediction-engine";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
-import { dec, int, pct, TABULAR } from "@/lib/format/numbers";
+import { dec, int, pct, signed, TABULAR } from "@/lib/format/numbers";
 
 /**
  * Calibration & Discrimination panel — the public "proof, not promises" surface.
@@ -95,6 +96,75 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
   );
 }
 
+/**
+ * Closing-line value proof stat — aggregate only, public-safe.
+ *
+ * Renders the beat-the-close rate ONLY when the graded sample clears
+ * MIN_PUBLIC_CLV_SAMPLE (real settled picks graded against a captured closing
+ * line). Below the floor it shows the same "collecting" treatment as the rest
+ * of the panel — no number is ever fabricated or extrapolated. Per-pick CLV,
+ * confidence, and premium fields never appear here.
+ *
+ * Exported (not default-rendered standalone) so the gating behavior is
+ * directly unit-testable without standing up the async server component.
+ */
+export function ClvProofStat({ clv }: { clv: PublicClvAggregate }) {
+  if (!clv.meetsPublicSampleFloor || clv.beatCloseRate === null) {
+    return (
+      <div
+        data-testid="clv-proof-collecting"
+        className="border-t border-titanium px-6 py-4"
+      >
+        <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+          Closing-line value
+        </p>
+        <p className={`mt-2 flex items-center gap-2 text-sm text-ion-1 ${TABULAR}`}>
+          <span aria-hidden="true">◴</span>
+          Collecting — publishes once {int(MIN_PUBLIC_CLV_SAMPLE)} settled picks
+          have been graded against a captured closing line
+          {clv.gradedSampleSize > 0 ? ` (${int(clv.gradedSampleSize)} graded so far)` : ""}.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div data-testid="clv-proof" className="border-t border-titanium px-6 py-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+            Closing-line value
+          </p>
+          <p className="mt-2 text-sm text-ion-1">
+            <span
+              data-testid="clv-beat-close-rate"
+              className={`text-xl font-bold text-ion ${TABULAR}`}
+            >
+              {pct(clv.beatCloseRate * 100)}
+            </span>{" "}
+            beat the close
+          </p>
+        </div>
+        <div className="text-right">
+          <p className={`text-[11px] uppercase tracking-widest text-ion-2 ${TABULAR}`}>
+            {int(clv.gradedSampleSize)} graded picks
+          </p>
+          {clv.averageClvPoints !== null && (
+            <p className={`mt-1 font-mono text-xs text-ion-1 ${TABULAR}`}>
+              avg {signed(clv.averageClvPoints)} pts vs the close (spread/total)
+            </p>
+          )}
+        </div>
+      </div>
+      <p className="mt-2 text-[11px] leading-relaxed text-ion-2">
+        Share of settled picks whose published line or price beat where the
+        market closed — the leading indicator of real edge, graded
+        automatically at settlement.
+      </p>
+    </div>
+  );
+}
+
 export async function CalibrationPanel() {
   // Own error handling: a transient calibration read failure must not take down
   // the whole /performance page (this renders outside the page's fetch try/catch).
@@ -164,6 +234,9 @@ export async function CalibrationPanel() {
           ))}
         </div>
       </div>
+
+      {/* Closing-line value — beat-the-close proof, gated on a real graded sample. */}
+      <ClvProofStat clv={data.clv} />
 
       {/* Brier score footer. */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-titanium px-6 py-4">

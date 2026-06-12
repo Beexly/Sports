@@ -119,6 +119,89 @@ export function computeMoneylineClv(
   };
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Public CLV proof aggregate
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Minimum graded sample before the beat-the-close rate may render on a PUBLIC
+ * surface. Mirrors the discrimination floor philosophy in calibration: a
+ * directional credibility signal needs a real sample, not three lucky picks.
+ */
+export const MIN_PUBLIC_CLV_SAMPLE = 20;
+
+/**
+ * Structural shape of a settled pick's persisted CLV grade (matches the
+ * Pick.clv* columns). Verdict/kind arrive as nullable strings from the DB;
+ * the aggregator validates them rather than trusting the cast.
+ */
+export interface PublicClvRow {
+  readonly clvVerdict: string | null;
+  readonly clvValue: number | null;
+  readonly clvKind: string | null;
+}
+
+export interface PublicClvAggregate {
+  /** Settled picks with a graded closing-line comparison (valid verdict). */
+  readonly gradedSampleSize: number;
+  readonly beatCloseCount: number;
+  readonly matchedCloseCount: number;
+  readonly lostToCloseCount: number;
+  /** beatCloseCount / gradedSampleSize (0–1); null when nothing is graded. */
+  readonly beatCloseRate: number | null;
+  /** Mean CLV in points across POINTS-kind grades only (spread/total). Null
+   *  when no points-kind grades exist — never mixes units with moneyline. */
+  readonly averageClvPoints: number | null;
+  /** True once gradedSampleSize ≥ MIN_PUBLIC_CLV_SAMPLE. Public surfaces must
+   *  not render the rate while this is false. */
+  readonly meetsPublicSampleFloor: boolean;
+}
+
+const VALID_VERDICTS: ReadonlySet<string> = new Set([
+  "BEAT_CLOSE",
+  "MATCHED_CLOSE",
+  "LOST_TO_CLOSE",
+]);
+
+/**
+ * Aggregate persisted per-pick CLV grades into the public-safe proof stat:
+ * how many settled picks had a captured closing line, and what share beat it.
+ *
+ * Rows without a valid graded verdict (close never captured, or junk data) are
+ * excluded from the sample — we never invent a close. Pure; callers supply
+ * real settled-pick rows and own the bootstrap/published filtering.
+ */
+export function aggregatePublicClv(
+  rows: ReadonlyArray<PublicClvRow> = [],
+): PublicClvAggregate {
+  const graded = rows.filter(
+    (r) => r.clvVerdict !== null && VALID_VERDICTS.has(r.clvVerdict),
+  );
+
+  const beat = graded.filter((r) => r.clvVerdict === "BEAT_CLOSE").length;
+  const matched = graded.filter((r) => r.clvVerdict === "MATCHED_CLOSE").length;
+  const lost = graded.filter((r) => r.clvVerdict === "LOST_TO_CLOSE").length;
+
+  const pointsValues = graded
+    .filter((r) => r.clvKind === "POINTS")
+    .map((r) => r.clvValue)
+    .filter((v): v is number => typeof v === "number" && Number.isFinite(v));
+  const averageClvPoints =
+    pointsValues.length > 0
+      ? round(pointsValues.reduce((a, b) => a + b, 0) / pointsValues.length, 2)
+      : null;
+
+  return {
+    gradedSampleSize: graded.length,
+    beatCloseCount: beat,
+    matchedCloseCount: matched,
+    lostToCloseCount: lost,
+    beatCloseRate: graded.length > 0 ? round(beat / graded.length, 4) : null,
+    averageClvPoints,
+    meetsPublicSampleFloor: graded.length >= MIN_PUBLIC_CLV_SAMPLE,
+  };
+}
+
 export interface ClvSummary {
   readonly sampleSize: number;
   /** Share of picks that beat the close (0–1). The headline credibility number. */

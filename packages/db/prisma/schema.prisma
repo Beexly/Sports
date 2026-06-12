@@ -679,8 +679,15 @@ model PerformanceSummary {
   period       String   // e.g. "2026-04", "2026-Q1", "all-time"
   computedAt   DateTime @default(now())
 
+  // Bootstrap safety — mirrors Pick.isBootstrap. Defaults to true so a summary
+  // row is only treated as canonical when the writer explicitly marks it
+  // isBootstrap=false. Public surfaces filter to isBootstrap=false, so a future
+  // aggregation job can never leak bootstrap/synthetic stats by omission.
+  isBootstrap  Boolean  @default(true)
+
   @@unique([sport, pickType, tier, modelVersion, period])
   @@index([sport])
+  @@index([isBootstrap])
   @@map("performance_summaries")
 }
 
