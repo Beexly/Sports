@@ -361,6 +361,237 @@ export const LESSONS: readonly CourseLesson[] = [
       },
     ],
   },
+  // ── LINE LITERACY (advanced) ────────────────────────────────────────
+  {
+    id: "ll-parlays",
+    track: "Line Literacy",
+    level: "Advanced",
+    title: "Parlays: when they cost more than they pay",
+    minutes: 3,
+    body: [
+      "A parlay's payout is always less than the product of the true odds. The house extracts vig on every leg. A 2-leg −110/−110 parlay pays 2.6:1; fair value would be 3.3:1.",
+      "The only situation where a parlay is the right move: your two picks are positively correlated (same-game, same drive outcome) — that correlation is not priced in.",
+      "Otherwise, bet legs separately and keep your edge per bet. Parlays are a product designed to make you feel like you got a deal.",
+    ],
+    quiz: [
+      {
+        id: "ll4-q1",
+        prompt: "A 2-leg parlay at −110/−110 should pay 3.3:1 at fair odds. Books pay ~2.6:1. The difference is…",
+        options: [
+          { id: "a", label: "Compounded vig — the house extracts margin on each leg", correct: true, why: "Every leg is a −110 bet. Multiply the implied odds and you see the compounding." },
+          { id: "b", label: "A cap because winning parlays are taxed", correct: false, why: "No tax — it's pure margin, compounded per leg." },
+          { id: "c", label: "Variance — parlays are just riskier", correct: false, why: "Risk is separate from the EV gap. Parlays have negative EV built in." },
+        ],
+      },
+      {
+        id: "ll4-q2",
+        prompt: "When might a 2-leg same-game parlay have a legitimate edge?",
+        options: [
+          { id: "a", label: "When both legs are on favorites", correct: false, why: "Favorite/underdog status is unrelated to the correlation argument." },
+          { id: "b", label: "When the legs are positively correlated and books don't price it", correct: true, why: "A QB and his WR in the same game are correlated — a big game lifts both. That's not in the parlay price." },
+          { id: "c", label: "Never — parlays are always −EV", correct: false, why: "Correlation pricing gaps are real. Same-game parlays can have edges." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "ll-live-betting",
+    track: "Line Literacy",
+    level: "Advanced",
+    title: "Live betting: speed is the edge, not feel",
+    minutes: 3,
+    body: [
+      "In-game lines are priced slower than the game moves. A turnover, injury, or big score creates a 10-15 second window where the new price is still reflecting the old world.",
+      "The edge is mechanical: model the adjusted spread (based on score, time, down-and-distance) and bet when the live line lags your model. Gut feel lags even more than the line.",
+      "Live betting has one landmine: the sunk-cost pump. Never chase a first-half position with a second-half bet to 'get it back' — that's two independent decisions.",
+    ],
+    quiz: [
+      {
+        id: "ll5-q1",
+        prompt: "Live lines lag the true market after a big play. Your edge in live betting is…",
+        options: [
+          { id: "a", label: "Reacting faster than the line adjusts", correct: true, why: "Mechanical speed against a slow-updating price is the sustainable live edge." },
+          { id: "b", label: "Knowing which team will win better than the market", correct: false, why: "That's the pregame game. Live edges are about lag, not prediction." },
+          { id: "c", label: "Taking the underdog after they fall behind", correct: false, why: "A team falling behind re-prices instantly. The lag is gone by the time you think about it." },
+        ],
+      },
+    ],
+  },
+
+  // ── BANKROLL & RISK (advanced) ──────────────────────────────────────
+  {
+    id: "br-sample-size",
+    track: "Bankroll & Risk",
+    level: "Advanced",
+    title: "Sample size: how long until results mean something",
+    minutes: 3,
+    body: [
+      "At 52.4% win rate you need ~500 bets to confidently separate skill from luck at the 95% confidence level. At 200 bets, a 55% record might just be variance.",
+      "Track record in terms of closing-line value (CLV), not win-rate alone. CLV tells you whether your process is sound before results confirm it.",
+      "The practical rule: never change your model based on fewer than 200 settled bets. Good process loses stretches; bad process wins stretches. Time separates them.",
+    ],
+    quiz: [
+      {
+        id: "br4-q1",
+        prompt: "After 50 bets, you're 35-15 (70%). You should…",
+        options: [
+          { id: "a", label: "Double your unit size — you've found your edge", correct: false, why: "50 bets is deep in the noise. Variance does this often." },
+          { id: "b", label: "Continue at the same stakes and track CLV", correct: true, why: "Trust process over results at this sample size. CLV tells you more." },
+          { id: "c", label: "Walk away — you're on a heater and it will end", correct: false, why: "If you have a real edge, ride it. The answer is patience, not retreat." },
+        ],
+      },
+      {
+        id: "br4-q2",
+        prompt: "Two bettors: A is 56% after 100 bets; B is 53% after 1000 bets. Who has the stronger case for an edge?",
+        options: [
+          { id: "a", label: "Bettor A — higher win rate", correct: false, why: "A's result is within normal variance over 100 bets. B's is statistically meaningful." },
+          { id: "b", label: "Bettor B — larger sample makes the result significant", correct: true, why: "53% over 1000 bets is highly statistically significant. 56% over 100 is not." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "br-roi-tracking",
+    track: "Bankroll & Risk",
+    level: "Advanced",
+    title: "ROI and CLV: what you should actually measure",
+    minutes: 2,
+    body: [
+      "Win rate is misleading without knowing the average odds. A 48% win rate on heavy favorites can be profitable; 55% on big dogs might not be.",
+      "ROI = (net profit) / (total wagered). 3-5% ROI sustained over 500+ bets is elite. 10%+ is extraordinary and usually unsustainable.",
+      "CLV (closing-line value) is the better real-time signal: if you consistently beat the closing line, your process is sound even when results are rough.",
+    ],
+    quiz: [
+      {
+        id: "br5-q1",
+        prompt: "A bettor wins 48% but bets heavily on big favorites. Their ROI is 4%. This means…",
+        options: [
+          { id: "a", label: "They're a losing bettor — below 50%", correct: false, why: "Win rate doesn't determine profitability. Odds do. 4% ROI is a winning bettor." },
+          { id: "b", label: "They're profitable — 4% ROI is real edge", correct: true, why: "ROI accounts for the odds. This is a competent, profitable bettor." },
+          { id: "c", label: "The sample is too small to say", correct: false, why: "Correct in general, but the question asks what 4% ROI MEANS — it means profitable." },
+        ],
+      },
+    ],
+  },
+
+  // ── MARKET MECHANICS (advanced) ────────────────────────────────────
+  {
+    id: "mm-reverse-line",
+    track: "Market Mechanics",
+    level: "Advanced",
+    title: "Reverse line movement: reading the sharp money",
+    minutes: 3,
+    body: [
+      "Public money follows narrative. Sharp money follows EV. When 70% of tickets are on Team A but the line moves TO Team B, that's reverse line movement — the sharp money disagrees with the crowd.",
+      "Reverse movement is the clearest public signal that informed money is on the other side. It doesn't guarantee a win, but it tells you who's doing the work.",
+      "The read: compare ticket % to money %. If 60% of tickets are on A but 80% of money is on B, a big account backed B. That matters.",
+    ],
+    quiz: [
+      {
+        id: "mm4-q1",
+        prompt: "65% of tickets are on Team A. The spread moves FROM A −3 to A −2.5. The likely explanation:",
+        options: [
+          { id: "a", label: "The book is following public money", correct: false, why: "Following public money would move A to −3.5, not back. This moved the other way." },
+          { id: "b", label: "Sharp money came in on Team B, overriding the public", correct: true, why: "Reverse line movement: line moves against the ticket count. Sharp signal." },
+          { id: "c", label: "An injury to a Team A player", correct: false, why: "Possible, but absent injury news, reverse movement points to sharp action." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "mm-public-traps",
+    track: "Market Mechanics",
+    level: "Advanced",
+    title: "Public traps: when the narrative beats the price",
+    minutes: 3,
+    body: [
+      "Books move the line to attract action on the side they need — they don't need it to be correct. A nationally televised team that lost two straight generates public fade money, which is exactly where the book wants it.",
+      "Trap signs: a line that seems too good, a well-known team at a price that looks like value after a bad week. The book is selling you what you want to see.",
+      "Counter: look at the closing-line value on similar situations historically. The public loss-reaction bias is documented — late-week money on 'bouncebacks' is often a trap.",
+    ],
+    quiz: [
+      {
+        id: "mm5-q1",
+        prompt: "A prime-time favorite that lost two straight is now +3.5. The line looks like value. The sharp read is…",
+        options: [
+          { id: "a", label: "Take it — the market overreacted to the losses", correct: false, why: "Maybe. But the book knows the public loves this narrative. Check CLV first." },
+          { id: "b", label: "Examine if the line is moving further in your direction or back — watch for the trap", correct: true, why: "If sharp money agreed, the line would move further. If it's stable or moving back, it's a retail price." },
+          { id: "c", label: "Avoid all teams with two straight losses", correct: false, why: "That's the same narrative bias flipped. Process, not patterns." },
+        ],
+      },
+    ],
+  },
+
+  // ── FANTASY & DFS (advanced) ────────────────────────────────────────
+  {
+    id: "fd-start-sit",
+    track: "Fantasy & DFS",
+    level: "Core",
+    title: "Start-sit: the matchup multiplier",
+    minutes: 3,
+    body: [
+      "The error most managers make: benching a stud because of a bad matchup, starting a streamer because of a great one. Don't. A top-12 player beats a top-12 matchup almost every week.",
+      "Matchup matters most at the edges — flex decisions, waiver adds, streaming QB/DST. At the top of your lineup, start your best players.",
+      "The multiplier framework: (projection × matchup grade). Matchup grade is 0.8 (tough) to 1.2 (soft). A 15-point projection at grade 1.2 is better than an 18-point projection at grade 0.8.",
+    ],
+    quiz: [
+      {
+        id: "fd4-q1",
+        prompt: "Your WR1 (top-6 season average) faces the league's best CB. Your WR2 (top-20) has the easiest matchup on the slate. You start…",
+        options: [
+          { id: "a", label: "WR2 — the matchup is a major edge", correct: false, why: "Matchup matters at the margins. A top-6 WR beats a tough matchup most weeks." },
+          { id: "b", label: "WR1 — talent beats matchup at the top", correct: true, why: "Stud over matchup. Save matchup upgrades for borderline flex decisions." },
+          { id: "c", label: "Flip a coin — it's too close to call", correct: false, why: "It's not close. The talent gap almost always wins." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "fd-gpp-vs-cash",
+    track: "Fantasy & DFS",
+    level: "Advanced",
+    title: "GPP vs cash: two different games",
+    minutes: 3,
+    body: [
+      "Cash games (50/50s, H2H) pay the top ~50%. Maximize your median — take the floor, not the ceiling. Target high-usage, low-variance players. DSTs with strong implied point totals.",
+      "GPPs (tournaments) pay the top 15-20%, with top prizes requiring 1st-place scores. Maximize your ceiling — you need a great day, not a good one. Differentiation matters.",
+      "The mistake: playing a cash roster in a GPP (you won't win), or playing a GPP roster in a cash game (you'll variance yourself out of the money). Match the lineup to the format.",
+    ],
+    quiz: [
+      {
+        id: "fd5-q1",
+        prompt: "You're building a lineup for a 50/50. Which player type do you prioritize?",
+        options: [
+          { id: "a", label: "High-ceiling, low-floor boom/bust (ownership: 5%)", correct: false, why: "A boom/bust at 5% ownership is GPP DNA. Cash games punish the busts." },
+          { id: "b", label: "High-floor, consistent producer (ownership: 35%)", correct: true, why: "High floor wins cash. You don't need to win the slate, you need to beat half the field." },
+          { id: "c", label: "The player everyone will have, to avoid falling behind the field", correct: false, why: "Chalk in a 50/50 is fine but your edge is the floor, not the herd." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "fd-late-swap-strategy",
+    track: "Fantasy & DFS",
+    level: "Advanced",
+    title: "Late swap: protect the lineup when scratches drop",
+    minutes: 2,
+    body: [
+      "In DFS, late swap is the difference between a wasted entry and a competitive one. The moment a player is ruled out, your job is to find the optimal replacement — not just any eligible body.",
+      "The late swap hierarchy: (1) same team, same game script — keep the stack. (2) floor over ceiling in cash, ceiling over floor in GPPs. (3) don't panic-swap into the highest-salary replacement; stay under cap.",
+      "Use the optimizer's late swap mode: pin your healthy players, mark the scratch, and let the engine find the best legal lineup within your remaining cap.",
+    ],
+    quiz: [
+      {
+        id: "fd6-q1",
+        prompt: "Your WR2 is ruled out 30 minutes before lineup deadline. In a GPP, you prioritize his replacement by…",
+        options: [
+          { id: "a", label: "Highest projected replacement regardless of salary", correct: false, why: "Projected median matters less in GPP. You need ceiling." },
+          { id: "b", label: "Highest ceiling at a salary that keeps you under the cap", correct: true, why: "GPP: ceiling and salary fit. Overpaying for a mediocre replacement sinks you." },
+          { id: "c", label: "The cheapest eligible player (save cap for next contest)", correct: false, why: "Salary savings don't carry over. Use the cap; you need ceiling." },
+        ],
+      },
+    ],
+  },
 ];
 
 // ── Scoring ─────────────────────────────────────────────────────────

@@ -59,6 +59,11 @@ export const FANTASY_COACH: Record<CoachToolKey, ToolCoach> = {
         meaning: "How many of your lineups share one player.",
         move: "Cap exposure so one dud can't sink the whole portfolio.",
       },
+      {
+        term: "Late swap",
+        meaning: "Replacing a scratched player after the lineup deadline — use the tab after generating.",
+        move: "Pin everyone healthy, mark the OUT player, re-optimize under remaining cap.",
+      },
     ],
   },
   draft: {
@@ -118,7 +123,7 @@ export const FANTASY_COACH: Record<CoachToolKey, ToolCoach> = {
   lineup: {
     tool: "lineup",
     quickStart: "Set your roster; we flag every start/sit call with the reason.",
-    lessonId: "fd-leverage-ownership",
+    lessonId: "fd-start-sit",
     terms: [
       {
         term: "Floor vs ceiling start",

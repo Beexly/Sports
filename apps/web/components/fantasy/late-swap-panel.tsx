@@ -3,7 +3,7 @@
 /**
  * LateSwapPanel — find optimal player replacements after scratches are announced.
  *
- * Works on any imported lineup. Mark a player as scratched; the engine locks
+ * Works on any imported lineup. Mark a player as scratched; the engine pins
  * everyone else and finds the best legal replacement within the remaining cap.
  * Shows before/after side-by-side so the call is easy.
  */
@@ -53,7 +53,7 @@ export function LateSwapPanel({ lineup, slate }: Props) {
           Late Swap
         </span>
         <p className="text-xs text-ink-300">
-          Mark scratched players below — the engine locks everyone else and finds the best legal replacement.
+          Mark scratched players — the engine pins everyone else and finds the best legal replacement within your remaining cap.
         </p>
         {scratched.size > 0 && (
           <button type="button" onClick={() => setScratched(new Set())} className="ml-auto text-[11px] text-ink-500 hover:text-white">
@@ -133,7 +133,7 @@ export function LateSwapPanel({ lineup, slate }: Props) {
 
       {scratched.size > 0 && !result && (
         <p className="text-xs" style={{ color: BRAND_COLORS.ionMagenta }}>
-          No legal lineup found after these scratches — try a different scratch combination or adjust locks.
+          No legal lineup found after these scratches — try a different scratch combination or adjust your pinned players.
         </p>
       )}
     </div>

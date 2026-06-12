@@ -83,8 +83,8 @@ const DFS_MENU: readonly NavGroup[] = [
   {
     heading: "Daily",
     items: [
-      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Optimizer — cash / GPP / leverage, glass-box" },
-      { label: "Salary Board", href: "/fantasy/dfs#salary-board", desc: "Reconciled DK salaries (feed-gated)" },
+      { label: "DFS Suite + Late Swap", href: "/fantasy/dfs", desc: "Optimizer — cash / GPP / leverage, glass-box, with late swap" },
+      { label: "Contest Simulator", href: "/fantasy/contests", desc: "Monte Carlo: cash rate, ROI, finish distribution" },
       { label: "Pick'em Edge", href: "/fantasy/props", desc: "Pick'em line edges, graded" },
       { label: "DFS Player Board", href: "/players?view=dfs", desc: "Salary value vs role and usage" },
     ],

@@ -59,8 +59,8 @@ const SECTIONS: readonly Section[] = [
     heading: "DFS",
     collapsible: true,
     links: [
-      { label: "DFS Suite", href: "/fantasy/dfs" },
-      { label: "Salary Board", href: "/fantasy/dfs#salary-board" },
+      { label: "DFS Suite + Late Swap", href: "/fantasy/dfs" },
+      { label: "Contest Simulator", href: "/fantasy/contests" },
       { label: "Pick'em Edge", href: "/fantasy/props" },
       { label: "DFS Player Board", href: "/players?view=dfs" },
     ],
