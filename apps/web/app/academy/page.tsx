@@ -8,6 +8,9 @@ import { AcademySimulator } from "@/components/academy/academy-simulator";
 import { CoursePlayer } from "@/components/academy/course-player";
 import { BeatTheClose } from "@/components/academy/beat-the-close";
 import { FilmRoom } from "@/components/academy/film-room";
+import { HoloTilt } from "@/components/motion/holo-tilt";
+import { ShootingStars } from "@/components/motion/shooting-stars";
+import { SignalRule } from "@/components/motion/signal-rule";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -38,6 +41,7 @@ export default function AcademyPage() {
       <main className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+          <ShootingStars />
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
@@ -70,17 +74,18 @@ export default function AcademyPage() {
             <Reveal delay={240}>
               <div className="mt-8 grid gap-3 sm:grid-cols-4">
                 {WINGS.map((w) => (
-                  <a
-                    key={w.id}
-                    href={`#${w.id}`}
-                    className="group rounded-xl border p-4 transition-transform duration-200 hover:-translate-y-0.5"
-                    style={{ borderColor: `${w.hex}33`, background: `radial-gradient(100% 100% at 50% 0%, ${w.hex}0d, transparent 75%)` }}
-                  >
-                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em]" style={{ color: w.hex }}>
-                      {w.label}
-                    </p>
-                    <p className="mt-1.5 text-xs leading-relaxed text-ink-300">{w.desc}</p>
-                  </a>
+                  <HoloTilt key={w.id} className="h-full">
+                    <a
+                      href={`#${w.id}`}
+                      className="group block h-full rounded-xl border p-4"
+                      style={{ borderColor: `${w.hex}33`, background: `radial-gradient(100% 100% at 50% 0%, ${w.hex}0d, transparent 75%)` }}
+                    >
+                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em]" style={{ color: w.hex }}>
+                        {w.label}
+                      </p>
+                      <p className="mt-1.5 text-xs leading-relaxed text-ink-300">{w.desc}</p>
+                    </a>
+                  </HoloTilt>
                 ))}
               </div>
             </Reveal>
@@ -109,6 +114,8 @@ export default function AcademyPage() {
           </div>
         </section>
 
+        <SignalRule />
+
         {/* ── LIVE FIRE — the original simulator ───────────────────────── */}
         <section id="live-fire" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
@@ -131,6 +138,8 @@ export default function AcademyPage() {
             </Reveal>
           </div>
         </section>
+
+        <SignalRule />
 
         {/* ── BEAT THE CLOSE — the game ────────────────────────────────── */}
         <section id="beat-the-close" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">

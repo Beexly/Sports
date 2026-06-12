@@ -55,6 +55,17 @@ export function TierGatePanel({
         ))}
       </div>
 
+      {/* sealing ring — slow conic sweep behind the badge */}
+      <div
+        aria-hidden
+        className="gse-cine-anim pointer-events-none absolute left-1/2 top-10 h-40 w-40 -translate-x-1/2 rounded-full"
+        style={{
+          border: `1px dashed ${hex}30`,
+          background: `conic-gradient(from 0deg, transparent 0 78%, ${hex}22 88%, transparent 96%)`,
+          animation: "gw-rotate 22s linear infinite",
+        }}
+      />
+
       <div className="relative z-10 flex flex-col items-center text-center">
         <span
           className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.3em]"

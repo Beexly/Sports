@@ -1,5 +1,7 @@
 "use client";
 
+import { HoloTilt } from "@/components/motion/holo-tilt";
+
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { SubscribeButton } from "./subscribe-button";
@@ -65,10 +67,10 @@ export function PricingPlans({
           const isElite = plan.id === "ELITE";
           const isPaid = plan.id !== "FREE";
           return (
+            <HoloTilt key={plan.id} className="h-full">
             <div
-              key={plan.id}
               className={[
-                "relative flex flex-col rounded-2xl border p-6",
+                "relative flex h-full flex-col rounded-2xl border p-6",
                 isPro
                   ? "border-brand-600 bg-brand-950/30 shadow-xl shadow-brand-900/30"
                   : isElite
@@ -149,6 +151,7 @@ export function PricingPlans({
                 )}
               </div>
             </div>
+            </HoloTilt>
           );
         })}
       </div>

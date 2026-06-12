@@ -287,6 +287,19 @@
  * points. Waypoints (--wx/--wy exit vectors) approach from deep space and
  * sweep past the viewer. All geometry is deterministic; reduced motion is
  * killed by the .gse-cine-anim override below. */
+/* Meteor: streaks diagonally down-right then dies — long quiet gaps come
+ * from the animation-delay spread, so the sky reads as weather. */
+@keyframes gse-meteor {
+  0%   { transform: translate3d(0, 0, 0) rotate(18deg) scaleX(0.3); opacity: 0; }
+  6%   { opacity: 0.9; }
+  22%  { transform: translate3d(46vw, 14vw, 0) rotate(18deg) scaleX(1); opacity: 0; }
+  100% { transform: translate3d(46vw, 14vw, 0) rotate(18deg) scaleX(1); opacity: 0; }
+}
+/* Signal pulse traveling along a hairline rule. */
+@keyframes gse-signal-travel {
+  0%   { transform: translateX(-12rem); }
+  55%, 100% { transform: translateX(100vw); }
+}
 @keyframes gse-camera-roll {
   from { transform: rotate(-2.2deg) scale(1.04); }
   to   { transform: rotate(2.2deg) scale(1.04); }

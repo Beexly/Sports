@@ -11,6 +11,8 @@ import {
 } from "@/lib/pricing/pricing-phases";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 import { Reveal } from "@/components/motion/reveal";
+import { ShootingStars } from "@/components/motion/shooting-stars";
+import { SignalRule } from "@/components/motion/signal-rule";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
@@ -184,7 +186,8 @@ export default function PricingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      <main className="relative flex-1 px-4 py-20 sm:px-6 lg:px-8">
+      <main className="relative flex-1 overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
+        <ShootingStars />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
@@ -217,6 +220,8 @@ export default function PricingPage() {
           <div className="mt-14">
             <PricingPlans plans={PLANS} grandfatherNote={grandfatherNote} />
           </div>
+
+          <SignalRule className="mt-20" />
 
           {/* Where each tier takes you — real doors, real locks */}
           <section className="mt-20">
