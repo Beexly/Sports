@@ -8,7 +8,8 @@
  */
 
 import type { ConversationMessage } from "./conversation-engine";
-import { nextScribeId, type ScribeEntry } from "./scribe-types";
+import { createScribeEntry } from "./scribe";
+import type { ScribeEntry } from "./scribe-types";
 
 export type SessionFactType =
   | "PLATFORM_STATE"
@@ -144,13 +145,19 @@ export function extractOwnerPreferences(
 
 export function buildSessionHandoff(context: SessionContext): ScribeEntry {
   const nowIso = context.lastSyncedAt;
-  return {
-    id: nextScribeId("HANDOFF", nowIso),
+  return createScribeEntry({
+    createdAt: nowIso,
+    source: "jarvis",
+    actor: "jarvis",
+    project: "JARVIS",
     type: "HANDOFF",
     title: `Session ${context.sessionId} handoff`,
-    body: buildContextSummary(context),
-    vaultPath: `06-memory/${nowIso.slice(0, 10)}-${context.sessionId}-handoff.md`,
-    createdAt: nowIso,
+    summary: buildContextSummary(context),
     tags: ["handoff", context.sessionId],
-  };
+    relatedFiles: [],
+    relatedRoutes: [],
+    approvalStatus: "NOT_REQUIRED",
+    visibility: "INTERNAL",
+    riskLevel: "LOW",
+  });
 }

@@ -62,8 +62,8 @@ describe("session memory", () => {
     ctx = addFact(ctx, FACT);
     const entry = buildSessionHandoff(ctx);
     expect(entry.type).toBe("HANDOFF");
-    expect(entry.body).toContain("1 facts on hand");
-    expect(entry.vaultPath).toContain("s1");
+    expect(entry.summary).toContain("1 facts on hand");
+    expect(entry.tags).toContain("s1");
   });
 
   it("extractOwnerPreferences reads explicit signals only", () => {

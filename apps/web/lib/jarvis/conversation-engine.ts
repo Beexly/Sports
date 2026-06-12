@@ -14,8 +14,9 @@ import {
   type JarvisIntent,
 } from "@/lib/cockpit/ask-jarvis";
 import type { OwnerSummary } from "@/lib/cockpit/owner-summary";
-import { planDispatch, type DispatchPlan, type TaskCategory } from "./task-dispatch";
-import { nextScribeId, type ScribeEntry } from "./scribe-types";
+import { dispatchTask, type DispatchPlan, type TaskCategory } from "./task-dispatch";
+import { createScribeEntry } from "./scribe";
+import type { ScribeEntry } from "./scribe-types";
 
 export type ConversationRole = "OWNER" | "JARVIS";
 export type MessagePriority = "ROUTINE" | "ATTENTION_REQUIRED" | "URGENT" | "CRITICAL";
@@ -57,12 +58,13 @@ const TASK_PATTERNS: ReadonlyArray<readonly [RegExp, TaskCategory]> = [
   [/\b(run|start)\b.*\b(today|tonight|overnight|the day|daily loop)\b/i, "OVERNIGHT_LOOP"],
   [/\bovernight loop\b/i, "OVERNIGHT_LOOP"],
   [/\bfix\b/i, "FIX"],
+  [/\bcalibration\b/i, "CALIBRATION_REVIEW"],
   [/\b(build|create|add|ship)\b/i, "BUILD"],
-  [/\b(investigate|diagnose|dig into|look into|check why)\b/i, "INVESTIGATE"],
-  [/\b(draft|write).*(post|content|brief|article)\b/i, "CONTENT"],
-  [/\b(refresh|ingest|pull).*(data|odds|lines)\b/i, "DATA_REFRESH"],
-  [/\bsettle\b/i, "SETTLEMENT"],
-  [/\breview\b/i, "REVIEW"],
+  [/\b(investigate|diagnose|dig into|look into|check why)\b/i, "DATA_CHECK"],
+  [/\b(draft|write).*(post|content|brief|article)\b/i, "CONTENT_RUN"],
+  [/\b(refresh|ingest|pull).*(data|odds|lines)\b/i, "DATA_CHECK"],
+  [/\bsettle\b/i, "DATA_CHECK"],
+  [/\breview\b/i, "QA_PASS"],
 ];
 
 const INTENT_PATTERNS: ReadonlyArray<readonly [RegExp, JarvisIntent]> = [
@@ -138,17 +140,22 @@ export function buildJarvisResponse(
 
   // Task request → dispatch plan, never execution.
   if (detected.taskCategory) {
-    const plan = planDispatch(input, detected.taskCategory, nowIso);
-    const verb = plan.requiresApproval ? "Awaiting your approval" : "Proceeding read-only";
+    const plan = dispatchTask(input, detected.taskCategory, {}, nowIso);
+    const verb = plan.approvalRequired
+      ? "Plan prepared — awaiting your approval"
+      : "Read/check only — proceeding, findings will be reported";
     return {
       ...base,
       content:
-        `Routed to ${plan.assignedAgentName} (${plan.category}). ` +
-        `${plan.steps.length} steps prepared, risk ${plan.riskLevel}. ${verb}.`,
-      priority: plan.riskLevel === "HIGH" ? "ATTENTION_REQUIRED" : "ROUTINE",
-      actionItems: plan.requiresApproval ? [`Approve or decline: ${plan.id}`] : [],
+        `Routed to ${plan.owningAgent} (${plan.category}). ` +
+        `${plan.checkpoints.length} checkpoints, risk ${plan.riskLevel}, budget ${plan.estimatedTokenBudget}. ${verb}.`,
+      priority:
+        plan.riskLevel === "HIGH" || plan.riskLevel === "CRITICAL"
+          ? "ATTENTION_REQUIRED"
+          : "ROUTINE",
+      actionItems: plan.approvalRequired ? [`Approve or decline: ${plan.taskId}`] : [],
       dispatchPlan: plan,
-      requiresApproval: plan.requiresApproval,
+      requiresApproval: plan.approvalRequired,
       confidence: "HIGH",
     };
   }
@@ -215,13 +222,19 @@ export function buildSessionScribe(
   summary: OwnerSummary,
   nowIso: string
 ): ScribeEntry {
-  return {
-    id: nextScribeId("HANDOFF", nowIso),
+  return createScribeEntry({
+    createdAt: nowIso,
+    source: "jarvis",
+    actor: "jarvis",
+    project: "JARVIS",
     type: "HANDOFF",
     title: `Session handoff — ${nowIso.slice(0, 10)}`,
-    body: buildExecutiveBriefing(session, summary),
-    vaultPath: `06-memory/${nowIso.slice(0, 10)}-session-handoff.md`,
-    createdAt: nowIso,
+    summary: buildExecutiveBriefing(session, summary),
     tags: ["session", "handoff"],
-  };
+    relatedFiles: [],
+    relatedRoutes: ["/cockpit/jarvis/conversation"],
+    approvalStatus: "NOT_REQUIRED",
+    visibility: "INTERNAL",
+    riskLevel: "LOW",
+  });
 }

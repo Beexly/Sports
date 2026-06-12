@@ -18,7 +18,7 @@ import {
   type ConversationSession,
   type MessagePriority,
 } from "@/lib/jarvis/conversation-engine";
-import { renderScribeEntry } from "@/lib/jarvis/scribe-types";
+import { formatScribeEntryAsMarkdown } from "@/lib/jarvis/scribe";
 import type { OwnerSummary } from "@/lib/cockpit/owner-summary";
 
 const QUICK_ACTIONS: readonly string[] = [
@@ -83,7 +83,7 @@ export function JarvisConversation({ summary }: { summary: OwnerSummary }) {
 
   function exportScribe() {
     const entry = buildSessionScribe(session, summary, new Date().toISOString());
-    setScribeExport(renderScribeEntry(entry));
+    setScribeExport(formatScribeEntryAsMarkdown(entry));
   }
 
   const dispatched = session.messages.filter((m) => m.dispatchPlan).length;
@@ -131,15 +131,15 @@ export function JarvisConversation({ summary }: { summary: OwnerSummary }) {
               {m.dispatchPlan && (
                 <div className="mt-3 rounded border border-slate-600 bg-slate-900/60 p-3">
                   <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">
-                    Dispatch plan · {m.dispatchPlan.category} → {m.dispatchPlan.assignedAgentName} · risk{" "}
-                    {m.dispatchPlan.riskLevel}
+                    Dispatch plan · {m.dispatchPlan.category} → {m.dispatchPlan.owningAgent} · risk{" "}
+                    {m.dispatchPlan.riskLevel} · budget {m.dispatchPlan.estimatedTokenBudget}
                   </p>
                   <ol className="mt-2 list-decimal space-y-0.5 pl-5 text-xs text-slate-300">
-                    {m.dispatchPlan.steps.map((s) => (
+                    {m.dispatchPlan.checkpoints.map((s) => (
                       <li key={s}>{s}</li>
                     ))}
                   </ol>
-                  <p className="mt-2 text-xs text-slate-400">{m.dispatchPlan.approvalNote}</p>
+                  <p className="mt-2 text-xs text-slate-400">Rollback: {m.dispatchPlan.rollbackPlan}</p>
                   {m.requiresApproval && (
                     <p className="mt-2 inline-block rounded border border-yellow-600/50 px-2 py-1 text-xs text-yellow-300">
                       Awaiting your approval — Jarvis prepared this; he did not run it.

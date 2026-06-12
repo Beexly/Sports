@@ -1,50 +1,58 @@
 /**
- * Scribe types — the institutional-memory record format.
+ * Jarvis Scribe — types.
  *
- * A ScribeEntry is a vault-ready note: decisions, dispatches, risks,
- * patterns, corrections, and session handoffs. Entries are immutable
- * once written; corrections reference the entry they amend rather than
- * mutating it. File-backed (docs/ai/jarvis/vault) — no DB, no vectors.
- * That limitation is recorded honestly in the self-knowledge model.
+ * The Scribe is the shared note-taking protocol every agent and session
+ * writes through. Entries are structured, redacted, and rendered to the
+ * Obsidian-compatible vault under docs/ai/jarvis/.
+ *
+ * Pure type definitions only. No runtime code.
  */
 
+export type ScribeProject = "GSE" | "GSN" | "AIRWAVE" | "JARVIS" | "DESIGN" | "OPS";
+
 export type ScribeEntryType =
-  | "DECISION"      // owner decided something
-  | "DISPATCH"      // a task was routed to an agent
-  | "RISK"          // a risk was surfaced
-  | "PATTERN"       // a recurring pattern was observed
-  | "CORRECTION"    // Jarvis corrected an earlier statement
-  | "HANDOFF";      // end-of-session context for the next session
+  | "OBSERVATION"
+  | "DECISION"
+  | "PROMPT"
+  | "ACTION_PROPOSAL"
+  | "HANDOFF"
+  | "RESULT"
+  | "RISK"
+  | "MEMORY"
+  | "TODO";
+
+export type ScribeVisibility = "PRIVATE" | "INTERNAL" | "PUBLIC_SAFE";
+
+export type ScribeApprovalStatus = "PENDING" | "APPROVED" | "REJECTED" | "NOT_REQUIRED";
+
+export type ScribeRiskLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
 export interface ScribeEntry {
   readonly id: string;
+  readonly createdAt: string; // ISO string — always provided by the caller
+  readonly source: string; // agent id, "owner", "claude", "codex"
+  readonly actor: string;
+  readonly agent?: string;
+  readonly taskId?: string;
+  readonly project: ScribeProject;
   readonly type: ScribeEntryType;
   readonly title: string;
-  /** Markdown body. Concise — the vault is a ledger, not a journal. */
-  readonly body: string;
-  /** Where this lands in the vault, e.g. "06-memory/2026-06-12-handoff.md". */
-  readonly vaultPath: string;
-  readonly createdAt: string;
+  readonly summary: string;
+  readonly details?: string;
   readonly tags: readonly string[];
+  readonly relatedFiles: readonly string[];
+  readonly relatedRoutes: readonly string[];
+  readonly approvalStatus: ScribeApprovalStatus;
+  readonly visibility: ScribeVisibility;
+  readonly riskLevel: ScribeRiskLevel;
+  readonly nextAction?: string;
 }
 
-let scribeSeq = 0;
-
-/** Deterministic-enough id for in-session entries (no crypto needed). */
-export function nextScribeId(type: ScribeEntryType, nowIso: string): string {
-  scribeSeq += 1;
-  return `scribe-${type.toLowerCase()}-${nowIso.slice(0, 10)}-${scribeSeq}`;
-}
-
-/** Render an entry as vault-ready markdown. */
-export function renderScribeEntry(entry: ScribeEntry): string {
-  return [
-    `# ${entry.title}`,
-    "",
-    `- type: ${entry.type}`,
-    `- created: ${entry.createdAt}`,
-    `- tags: ${entry.tags.join(", ") || "—"}`,
-    "",
-    entry.body,
-  ].join("\n");
+export interface ScribeProtocol {
+  readonly agentId: string;
+  readonly defaultProject: ScribeProject;
+  readonly defaultVisibility: ScribeVisibility;
+  readonly requiredFields: readonly string[];
+  readonly forbiddenFields: readonly string[];
+  readonly outputPath: string; // e.g. "docs/ai/jarvis/scribe/"
 }

@@ -75,7 +75,7 @@ describe("pattern recognition", () => {
   it("summaries and vault memory are produced", () => {
     expect(summarizePatternsForOwner([])).toContain("No patterns");
     const entry = buildPatternMemory([], "2026-06-12T07:00:00.000Z");
-    expect(entry.type).toBe("PATTERN");
-    expect(entry.body).toContain("No patterns detected");
+    expect(entry.type).toBe("MEMORY");
+    expect(entry.summary).toContain("No patterns detected");
   });
 });

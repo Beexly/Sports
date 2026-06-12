@@ -9,7 +9,8 @@
  */
 
 import type { OwnerSummary } from "@/lib/cockpit/owner-summary";
-import { nextScribeId, type ScribeEntry } from "./scribe-types";
+import { createScribeEntry } from "./scribe";
+import type { ScribeEntry } from "./scribe-types";
 
 export type PatternType =
   | "RECURRING_BLOCKER"
@@ -199,11 +200,14 @@ export function buildPatternMemory(
   patterns: readonly ObservedPattern[],
   nowIso: string = new Date().toISOString()
 ): ScribeEntry {
-  return {
-    id: nextScribeId("PATTERN", nowIso),
-    type: "PATTERN",
+  return createScribeEntry({
+    createdAt: nowIso,
+    source: "jarvis",
+    actor: "jarvis",
+    project: "JARVIS",
+    type: "MEMORY",
     title: `Pattern observations — ${nowIso.slice(0, 10)}`,
-    body:
+    summary:
       patterns.length === 0
         ? "No patterns detected this cycle."
         : patterns
@@ -212,8 +216,11 @@ export function buildPatternMemory(
                 `- [${p.severity}] ${p.type}: ${p.description} (seen ${p.occurrenceCount}×, ${p.firstObservedAt.slice(0, 10)} → ${p.lastObservedAt.slice(0, 10)})`
             )
             .join("\n"),
-    vaultPath: `06-memory/${nowIso.slice(0, 10)}-patterns.md`,
-    createdAt: nowIso,
     tags: ["patterns", "institutional-memory"],
-  };
+    relatedFiles: [],
+    relatedRoutes: [],
+    approvalStatus: "NOT_REQUIRED",
+    visibility: "INTERNAL",
+    riskLevel: "LOW",
+  });
 }

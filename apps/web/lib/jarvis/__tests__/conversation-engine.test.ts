@@ -49,23 +49,26 @@ describe("detectIntent", () => {
 });
 
 describe("buildJarvisResponse", () => {
-  it("task request returns an embedded DispatchPlan, approval-gated", () => {
+  it("task request returns an embedded DispatchPlan with a ready prompt", () => {
     const msg = buildJarvisResponse("run today", emptySession(), makeSummary(), NOW);
     expect(msg.dispatchPlan).toBeDefined();
     expect(msg.dispatchPlan!.category).toBe("OVERNIGHT_LOOP");
-    expect(msg.dispatchPlan!.status).toBe("PROPOSED");
-    expect(msg.requiresApproval).toBe(true);
+    expect(msg.dispatchPlan!.fullPrompt.length).toBeGreaterThan(0);
+    expect(msg.requiresApproval).toBe(msg.dispatchPlan!.approvalRequired);
   });
 
-  it("read-only investigation does not require approval", () => {
-    const msg = buildJarvisResponse(
+  it("state-changing fix requires approval; read-only check does not", () => {
+    const fix = buildJarvisResponse("fix the settlement job", emptySession(), makeSummary(), NOW);
+    expect(fix.dispatchPlan).toBeDefined();
+    expect(fix.requiresApproval).toBe(true);
+    const check = buildJarvisResponse(
       "investigate the ingestion lag",
       emptySession(),
       makeSummary(),
       NOW
     );
-    expect(msg.dispatchPlan).toBeDefined();
-    expect(msg.requiresApproval).toBe(false);
+    expect(check.dispatchPlan).toBeDefined();
+    expect(check.requiresApproval).toBe(false);
   });
 
   it("never invents facts: unknown questions get the honest fallback", () => {
@@ -112,6 +115,7 @@ describe("session synthesis", () => {
   it("buildSessionScribe produces a HANDOFF vault entry", () => {
     const entry = buildSessionScribe(emptySession(), makeSummary(), NOW);
     expect(entry.type).toBe("HANDOFF");
-    expect(entry.vaultPath).toContain("06-memory/");
+    expect(entry.project).toBe("JARVIS");
+    expect(entry.approvalStatus).toBe("NOT_REQUIRED");
   });
 });
