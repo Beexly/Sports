@@ -93,7 +93,9 @@ export function buildRushingEfficiency(rushing: readonly NgsRushingLine[]): Rush
       attempts: r.rushAttempts,
       ryoePerAtt: round(r.ryoePerAtt),
       efficiency: round(r.efficiency),
-      pctStackedBox: round(r.pctStackedBox, 1),
+      // 0..1 share — keep 3 decimals to match the NGS loader; rounding to 1
+      // decimal collapsed every box rate to a multiple of 10% (0.22 → 0.2).
+      pctStackedBox: round(r.pctStackedBox, 3),
       ryoePct,
       volPct,
       read,

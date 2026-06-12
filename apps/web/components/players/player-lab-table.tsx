@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { DataTable, type Column } from "@/components/ui/data-table";
+import { RowsFreshnessStamp } from "@/components/players/rows-freshness-stamp";
 import type { SignalTone } from "@/lib/intelligence/colors";
 import { formatSigned, signedTone, buySellTone } from "@/lib/intelligence/colors";
 import type {
@@ -691,6 +692,8 @@ function SectionBlock({ section }: { section: SectionData }): JSX.Element {
         emptyTitle={section.emptyTitle}
         emptyHint={section.emptyHint}
       />
+
+      <RowsFreshnessStamp rows={section.rows.length} asOf={section.asOf} source={section.sourceLabel} />
 
       {section.footnote ? (
         <p className="text-xs leading-5 text-ink-2">{section.footnote}</p>
