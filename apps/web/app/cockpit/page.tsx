@@ -1024,12 +1024,41 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
             Persistent memory · cross-session recall · episodic decisions
           </p>
         </div>
-        <span className="rounded border border-titanium/40 bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
-          Memory: Not wired
-        </span>
+        <div className="flex flex-wrap gap-1.5">
+          <span className="rounded border border-titanium/40 bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+            Memory: Not wired
+          </span>
+          <span className="rounded border border-titanium/40 bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+            Store: {memory.store}
+          </span>
+        </div>
       </div>
 
       <p className="mb-3 text-xs leading-relaxed text-ion-2">{memory.truth}</p>
+
+      <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-7">
+        {[
+          ["Last written", memory.lastWritten],
+          ["Last recalled", memory.lastRecalled],
+          ["Candidates", memory.candidatesAwaitingApproval],
+          ["Conflicted", memory.conflicted],
+          ["Stale", memory.stale],
+          ["Expired", memory.expired],
+          ["Health", memory.healthScore],
+        ].map(([label, value]) => (
+          <div
+            key={String(label)}
+            className="rounded-lg border border-titanium/30 bg-obsidian/40 px-2 py-1.5 text-center"
+          >
+            <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">
+              {label}
+            </p>
+            <p className="font-mono text-[10px] text-ion-2">
+              {value ?? "—"}
+            </p>
+          </div>
+        ))}
+      </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 p-3">

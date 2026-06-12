@@ -66,9 +66,21 @@ export interface CapabilityStats {
 export interface MemoryStatus {
   /** Always false until a persistent memory store is wired. */
   readonly wired: false;
+  /** Per the 2026-06-12 build spec: Postgres is the only canonical store;
+   * mem0/vector is retrieval-only and can never be the authority. */
+  readonly store: "Not Connected";
   readonly truth: string;
   readonly protocolDocs: readonly string[];
   readonly nextAction: string;
+  /** Ledger slots the wired panel will fill — null is the honest empty,
+   * never a zero that cosplays as a measurement. */
+  readonly lastWritten: null;
+  readonly lastRecalled: null;
+  readonly candidatesAwaitingApproval: null;
+  readonly conflicted: null;
+  readonly stale: null;
+  readonly expired: null;
+  readonly healthScore: null;
 }
 
 export interface JarvisIntelligenceState {
@@ -175,14 +187,23 @@ export function buildCapabilityStats(): CapabilityStats {
 export function buildMemoryStatus(): MemoryStatus {
   return {
     wired: false,
+    store: "Not Connected",
     truth:
       "Jarvis has no persistent memory. Operational truth is rebuilt from the database " +
       "on every load; architectural truth lives in version-controlled markdown. " +
       "Nothing is recalled across sessions.",
     protocolDocs: MEMORY_PROTOCOL_DOCS,
     nextAction:
-      "Wire an episodic memory store (Postgres table or mem0) that captures owner " +
-      "decisions with timestamps, per JARVIS_MEMORY_PROTOCOL.md.",
+      "Wire an episodic memory store that captures owner decisions with timestamps, " +
+      "source references, review state, and recall metadata per JARVIS_MEMORY_PROTOCOL.md. " +
+      "Postgres first — vector/mem0 is retrieval-only, never the source of truth.",
+    lastWritten: null,
+    lastRecalled: null,
+    candidatesAwaitingApproval: null,
+    conflicted: null,
+    stale: null,
+    expired: null,
+    healthScore: null,
   };
 }
 

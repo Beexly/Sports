@@ -63,7 +63,7 @@ Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · 
 
 | Commitment | State |
 |---|---|
-| Jarvis Memory Protocol — Postgres episodic store, decision ledger, review queue, AI Ops panel, recall behavior | QUEUED (owner dump 2026-06-12, behind current queue per owner) — full spec at `docs/ai/jarvis/JARVIS_MEMORY_BUILD_SPEC_2026-06-12.md` |
+| Jarvis Memory Protocol — Postgres episodic store, decision ledger, review queue, recall behavior | QUEUED — full spec at `docs/ai/jarvis/JARVIS_MEMORY_BUILD_SPEC_2026-06-12.md`. Stage 0 DONE: cockpit panel aligned to spec (store: Not Connected, honest null ledger slots, Postgres-first next action, mem0 demoted to retrieval-only) |
 
 ## Owner polish backlog (standing)
 
