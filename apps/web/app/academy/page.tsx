@@ -7,6 +7,7 @@ import { Atmosphere } from "@/components/ui/atmosphere";
 import { AcademySimulator } from "@/components/academy/academy-simulator";
 import { CoursePlayer } from "@/components/academy/course-player";
 import { BeatTheClose } from "@/components/academy/beat-the-close";
+import { FilmRoom } from "@/components/academy/film-room";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -26,16 +27,6 @@ const WINGS = [
   { id: "live-fire", label: "Live Fire", desc: "Decide blind, graded on process", hex: mag },
   { id: "beat-the-close", label: "Beat the Close", desc: "The line-trading arcade", hex: uv },
   { id: "film-room", label: "Film Room", desc: "Filmed lessons — in production", hex: "#8b93a8" },
-] as const;
-
-/** Film Room slate — episodes in production. Honest: no fake video players. */
-const FILM_SLATE = [
-  { ep: "EP 01", title: "How to read a line like a price" },
-  { ep: "EP 02", title: "The vig, de-vigging, and 52.4%" },
-  { ep: "EP 03", title: "CLV — the only honest scoreboard" },
-  { ep: "EP 04", title: "Key numbers and the half-points that matter" },
-  { ep: "EP 05", title: "Bankroll: survival is the strategy" },
-  { ep: "EP 06", title: "Steam, openers, and reading limits" },
 ] as const;
 
 export default function AcademyPage() {
@@ -178,27 +169,8 @@ export default function AcademyPage() {
               </p>
             </Reveal>
             <Reveal delay={120}>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {FILM_SLATE.map((f) => (
-                  <div
-                    key={f.ep}
-                    className="surface-card relative overflow-hidden p-5"
-                    aria-label={`${f.ep} — in production`}
-                  >
-                    <div
-                      aria-hidden
-                      className="absolute inset-x-0 top-0 h-24 animate-pulse opacity-20"
-                      style={{ background: `linear-gradient(110deg, ${uv}30, ${cyan}18, transparent)` }}
-                    />
-                    <p className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: uv }}>
-                      {f.ep}
-                    </p>
-                    <p className="mt-2 text-sm font-semibold text-white">{f.title}</p>
-                    <p className="mt-3 inline-block rounded-full border border-mineral px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-400">
-                      in production
-                    </p>
-                  </div>
-                ))}
+              <div className="mt-8">
+                <FilmRoom />
               </div>
             </Reveal>
           </div>
