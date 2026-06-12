@@ -7,7 +7,7 @@
  * fabricated stats about real teams.
  */
 
-export type CourseTrack = "Line Literacy" | "Bankroll & Risk" | "Market Mechanics";
+export type CourseTrack = "Line Literacy" | "Bankroll & Risk" | "Market Mechanics" | "Fantasy & DFS";
 export type CourseLevel = "Core" | "Advanced";
 
 export interface QuizOption {
@@ -37,6 +37,7 @@ export const COURSE_TRACKS: readonly CourseTrack[] = [
   "Line Literacy",
   "Bankroll & Risk",
   "Market Mechanics",
+  "Fantasy & DFS",
 ];
 
 export const LESSONS: readonly CourseLesson[] = [
@@ -283,6 +284,79 @@ export const LESSONS: readonly CourseLesson[] = [
         options: [
           { id: "a", label: "A 2-point move at tiny opening limits", correct: false, why: "Small limits, small conviction." },
           { id: "b", label: "A half-point move at full limits near close", correct: true, why: "Moving a trusted, high-limit number takes serious money." },
+        ],
+      },
+    ],
+  },
+
+  // ── FANTASY & DFS ────────────────────────────────────────────────
+  {
+    id: "fd-vor",
+    track: "Fantasy & DFS",
+    level: "Core",
+    title: "VOR: draft the gap, not the name",
+    minutes: 2,
+    body: [
+      "Value over replacement asks one question: how many points does this player score above the best option you could grab at that position later? A QB who scores 22 when every waiver QB scores 18 is worth less than an RB who scores 15 when replacements score 7.",
+      "So rank by the gap, not the total. Tiers form where the gaps cluster; the last player before a cliff is the most valuable pick on the board.",
+    ],
+    quiz: [
+      {
+        id: "fd1-q1",
+        prompt: "RB scores 15 (replacement: 7). QB scores 22 (replacement: 18). Who's more valuable?",
+        options: [
+          { id: "a", label: "The QB — he scores more points", correct: false, why: "Raw points ignore what a replacement gives you for free." },
+          { id: "b", label: "The RB — +8 over replacement beats +4", correct: true, why: "The gap is the value. That's VOR in one trade." },
+        ],
+      },
+      {
+        id: "fd1-q2",
+        prompt: "A tier cliff means…",
+        options: [
+          { id: "a", label: "A sharp value drop to the next player at that position", correct: true, why: "Take the last player before the cliff — the drop is the cost of waiting." },
+          { id: "b", label: "The position is deep and you can wait", correct: false, why: "That's the opposite — a flat tier lets you wait; a cliff doesn't." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "fd-leverage-ownership",
+    track: "Fantasy & DFS",
+    level: "Core",
+    title: "Ownership and leverage: cash pays floors, GPPs pay ceilings",
+    minutes: 2,
+    body: [
+      "In cash games half the field gets paid, so you want the safest median score — floors, favorites, chalk is fine. In tournaments only the top sliver gets paid, so you need the ceiling the field doesn't have.",
+      "That's leverage: ceiling relative to ownership. The same ceiling at 8% ownership beats it at 30%, because when it hits, you pass everyone who skipped him. High ownership isn't wrong — it's just upside you have to share.",
+    ],
+    quiz: [
+      {
+        id: "fd2-q1",
+        prompt: "Two players project the same ceiling. One is 30% owned, one is 8%. For a GPP…",
+        options: [
+          { id: "a", label: "Take the 8% — same upside, fewer people to share it with", correct: true, why: "That's leverage. When he hits, you pass 92% of the field." },
+          { id: "b", label: "Take the 30% — the field is usually right", correct: false, why: "In cash, fine. In a GPP, chalk upside is shared upside." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "fd-trade-value",
+    track: "Fantasy & DFS",
+    level: "Core",
+    title: "Trade math: the best player usually wins the deal",
+    minutes: 2,
+    body: [
+      "Price players on points above replacement, not name recognition. Two solid starters for one elite is usually a win for the elite side — your bench replaces the depth for free; nothing replaces elite.",
+      "Buy injuries only at a discount that matches your calendar: a player back for your playoff weeks is worth more to you than his rest-of-season average says.",
+    ],
+    quiz: [
+      {
+        id: "fd3-q1",
+        prompt: "A 2-for-1 sends away your two WR3s for an elite WR1. Who usually wins?",
+        options: [
+          { id: "a", label: "The side getting two starters — quantity wins", correct: false, why: "Your bench and the wire replace WR3 production for free." },
+          { id: "b", label: "The side getting the elite player", correct: true, why: "Depth is replaceable; elite isn't. Consolidation wins." },
         ],
       },
     ],

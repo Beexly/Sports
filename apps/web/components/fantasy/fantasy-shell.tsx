@@ -9,10 +9,12 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { ProjectionsBadge } from "@/components/integrations/projections-badge";
+import { FantasyCoach } from "@/components/fantasy/fantasy-coach";
+import type { ToolCoach } from "@/lib/fantasy/coach";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export function FantasyShell({
-  eyebrow, title, intro, accent = BRAND_COLORS.softUltraviolet, children, note, wide, projectionsBadge = true,
+  eyebrow, title, intro, accent = BRAND_COLORS.softUltraviolet, children, note, wide, projectionsBadge = true, coach,
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -23,6 +25,8 @@ export function FantasyShell({
   wide?: boolean;
   /** Show the honest live/illustrative projections status in the hero (default on). */
   projectionsBadge?: boolean;
+  /** Inline teaching card (lib/fantasy/coach.ts) — collapsed one-liner until opened. */
+  coach?: ToolCoach;
 }) {
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
@@ -62,6 +66,7 @@ export function FantasyShell({
 
         <section className="px-4 pb-12 sm:px-6 lg:px-8">
           <div className={wide ? "mx-auto max-w-6xl" : "mx-auto max-w-5xl"}>
+            {coach && <FantasyCoach coach={coach} />}
             <Reveal>{children}</Reveal>
             {note && (
               <p className="mt-8 text-xs leading-relaxed text-ink-500">{note}</p>

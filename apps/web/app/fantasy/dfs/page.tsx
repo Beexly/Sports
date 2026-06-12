@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
+import { FANTASY_COACH } from "@/lib/fantasy/coach";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -32,7 +33,8 @@ export default async function DfsSuitePage() {
       eyebrow="DFS Suite · Salary Board + Optimizer"
       accent={BRAND_COLORS.orbitalCyan}
       title={<>Solve the slate. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
-      intro="Salaries and the optimizer live in one room because they're one decision. The board shows what the field costs; the optimizer turns it into cash, GPP, or leverage lineups — QB stacking, locks and fades, unique portfolios with real exposure control. Every lineup ships with its salary, stack, field-ownership, and a leverage score."
+      intro="The board shows what the field costs; the optimizer turns it into cash, GPP, or leverage lineups — stacking, locks, and exposure control built in."
+      coach={FANTASY_COACH.dfs}
       note="Illustrative classic-format sample pool drives the optimizer until a licensed salary feed is connected. Salary-cap optimization, stacking, exposure, and leverage are computed live in your browser."
       wide
     >

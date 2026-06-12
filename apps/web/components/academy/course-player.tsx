@@ -26,6 +26,7 @@ const TRACK_HEX: Record<CourseTrack, string> = {
   "Line Literacy": BRAND_COLORS.orbitalCyan,
   "Bankroll & Risk": BRAND_COLORS.ionMagenta,
   "Market Mechanics": BRAND_COLORS.softUltraviolet,
+  "Fantasy & DFS": "#FFB547",
 };
 
 /** answers[lessonId][questionId] = chosen option id */
