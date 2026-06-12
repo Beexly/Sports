@@ -92,6 +92,31 @@ describe("NFL source catalog", () => {
     }
   });
 
+  it("every entry has a non-empty path_to_yes, actionable when permission_required", () => {
+    const ACTIONABLE_MARKERS: readonly string[] = [
+      "MIRROR",
+      "DERIVE",
+      "PERMISSION",
+      "LICENSE",
+      "SIGN",
+      "R&D",
+      "DO NOT",
+      "WEATHER",
+    ];
+    for (const entry of NFL_SOURCE_CATALOG) {
+      expect(
+        entry.path_to_yes.trim().length,
+        `path_to_yes empty: ${entry.id}`,
+      ).toBeGreaterThan(0);
+      if (entry.status === "permission_required") {
+        expect(
+          ACTIONABLE_MARKERS.some((marker) => entry.path_to_yes.includes(marker)),
+          `path_to_yes not actionable for ${entry.id}: "${entry.path_to_yes}"`,
+        ).toBe(true);
+      }
+    }
+  });
+
   it("isAutomatable() is true iff status is in AUTOMATABLE_STATUSES", () => {
     for (const entry of NFL_SOURCE_CATALOG) {
       expect(isAutomatable(entry), `isAutomatable mismatch for ${entry.id}`).toBe(
