@@ -50,6 +50,30 @@ describe("buildH2hMarketRead", () => {
   });
 });
 
+describe("capture-window drift — the Line Death Clock heartbeat", () => {
+  it("computes fair-price drift from each book's earliest vs latest quote", () => {
+    const result = buildH2hMarketRead([
+      row("book-a", -110, -110, "2026-06-12T08:00:00Z"),
+      row("book-b", -110, -110, "2026-06-12T08:00:00Z"),
+      row("book-a", -130, +110, "2026-06-12T12:00:00Z"),
+      row("book-b", -135, +115, "2026-06-12T12:00:00Z"),
+    ]);
+    expect(result).not.toBeNull();
+    expect(result!.homeDriftPp).not.toBeNull();
+    // Market moved from a pick'em toward home — drift must be positive.
+    expect(result!.homeDriftPp!).toBeGreaterThan(0);
+  });
+
+  it("reports null drift when no earlier capture exists — no invented history", () => {
+    const result = buildH2hMarketRead([
+      row("book-a", -120, +100, "2026-06-12T12:00:00Z"),
+      row("book-b", -125, +105, "2026-06-12T12:00:00Z"),
+    ]);
+    expect(result).not.toBeNull();
+    expect(result!.homeDriftPp).toBeNull();
+  });
+});
+
 describe("the surface honors the gates", () => {
   const component = read("components/observatory/market-fair-board.tsx");
 

@@ -23,6 +23,14 @@ export interface GameMarketRead {
   readonly consensus: ConsensusMarketRead;
   /** ISO timestamp of the freshest odds row used. */
   readonly freshestFetchedAt: string;
+  /**
+   * Fair P(home) drift in percentage points since each book's EARLIEST
+   * captured quote (no-vig then vs no-vig now). Positive = the market has
+   * moved toward the home side. Null when no earlier capture exists.
+   * This is the Line Death Clock's heartbeat: which way the fair price is
+   * bleeding, from real captured history only.
+   */
+  readonly homeDriftPp: number | null;
 }
 
 /**
@@ -48,20 +56,44 @@ export function buildH2hMarketRead(
   const books = [...latestByBook.values()];
   if (books.length < minBooks) return null;
 
-  const consensus = consensusNoVig(
-    books.map((b) => ({
+  const toBookPrices = (rows: readonly OddsRowForRead[]) =>
+    rows.map((b) => ({
       home: b.homePrice as number,
       away: b.awayPrice as number,
       draw: isPrice(b.drawPrice) ? b.drawPrice : null,
-    })),
-  );
+    }));
+
+  const consensus = consensusNoVig(toBookPrices(books));
   if (!consensus || consensus.bookCount < minBooks) return null;
 
   const freshest = books.reduce((max, b) =>
     b.fetchedAt > max.fetchedAt ? b : max,
   );
 
-  return { consensus, freshestFetchedAt: freshest.fetchedAt.toISOString() };
+  // Drift: same de-vig over each book's EARLIEST quote. Only books with a
+  // genuinely earlier capture count — a single snapshot has no history.
+  const earliestByBook = new Map<string, OddsRowForRead>();
+  for (const row of rows) {
+    if (row.market !== "H2H") continue;
+    if (!isPrice(row.homePrice) || !isPrice(row.awayPrice)) continue;
+    const existing = earliestByBook.get(row.bookmaker);
+    if (!existing || row.fetchedAt < existing.fetchedAt) {
+      earliestByBook.set(row.bookmaker, row);
+    }
+  }
+  const earlier = [...earliestByBook.values()].filter((b) => {
+    const latest = latestByBook.get(b.bookmaker);
+    return latest !== undefined && b.fetchedAt < latest.fetchedAt;
+  });
+  let homeDriftPp: number | null = null;
+  if (earlier.length >= minBooks) {
+    const open = consensusNoVig(toBookPrices(earlier));
+    if (open && open.bookCount >= minBooks) {
+      homeDriftPp = Number(((consensus.fairHomeProb - open.fairHomeProb) * 100).toFixed(1));
+    }
+  }
+
+  return { consensus, freshestFetchedAt: freshest.fetchedAt.toISOString(), homeDriftPp };
 }
 
 function isPrice(value: number | null): value is number {

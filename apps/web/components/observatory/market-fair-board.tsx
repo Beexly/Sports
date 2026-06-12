@@ -73,6 +73,19 @@ export async function MarketFairBoard() {
                     {new Date(row.commenceTime).toISOString().slice(5, 16).replace("T", " ")}{" "}
                     UTC · {formatCount(c.bookCount)} books · hold{" "}
                     {formatPercent(c.medianHoldPct)}
+                    {row.read.homeDriftPp !== null && (
+                      <span
+                        className={
+                          Math.abs(row.read.homeDriftPp) >= 1.5
+                            ? " text-plasma"
+                            : " text-ion-2"
+                        }
+                      >
+                        {" "}· drift {row.read.homeDriftPp > 0 ? "+" : ""}
+                        {row.read.homeDriftPp}pp → {row.read.homeDriftPp >= 0 ? "home" : "away"}{" "}
+                        in window
+                      </span>
+                    )}
                   </p>
                 </div>
                 <div className={`flex items-center gap-3 text-sm ${NUMERIC_TEXT_CLASS}`}>
@@ -96,7 +109,7 @@ export async function MarketFairBoard() {
 
       <div className="border-t border-titanium px-6 py-3">
         <p className="text-[11px] leading-relaxed text-ion-2">
-          De-vigged prices describe the market, not the outcome. They are not
+          Drift = fair-price movement across the capture window (earliest vs latest quote per book, vig removed) — the direction an edge bleeds. De-vigged prices describe the market, not the outcome. They are not
           picks, projections, or advice — the engine&apos;s own reads live on
           the board and carry their full evidence trail.
         </p>
