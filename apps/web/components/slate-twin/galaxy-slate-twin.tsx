@@ -335,12 +335,14 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       // Drift ring — pulsing outline when driftState === "moving".
       const driftMat = new THREE.LineBasicMaterial({ color: new THREE.Color(DRIFT_HEX), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const driftRing = new THREE.LineLoop(ringGeo, driftMat);
+      driftRing.visible = false;
       group.add(driftRing);
       disposables.push(driftMat);
 
       // Argued halo — diffuse warm glow when disagreementState === "argued".
       const arguedMat = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(ARGUED_HEX), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
       const arguedHalo = new THREE.Sprite(arguedMat);
+      arguedHalo.visible = false;
       const ahs = (0.5 + game.signalDensity * 1.3) * 2.8;
       arguedHalo.scale.set(ahs, ahs, 1);
       group.add(arguedHalo);
@@ -635,21 +637,25 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
 
         // Drift ring — shown only when driftState === "moving", pulsing.
         if (g.driftState === "moving") {
+          s.driftRing.visible = true;
           const ph = reduced ? 0.6 : Math.sin(t * 2.2 + g.pos[0]) * 0.5 + 0.5;
           const driftScale = 1.1 + ph * 0.4;
           s.driftRing.scale.set(driftScale, driftScale, driftScale);
           (s.driftRing.material as InstanceType<typeof THREE.LineBasicMaterial>).opacity =
             (0.18 + ph * 0.28) * dim;
         } else {
+          s.driftRing.visible = false;
           (s.driftRing.material as InstanceType<typeof THREE.LineBasicMaterial>).opacity = 0;
         }
 
         // Argued halo — shown only when disagreementState === "argued".
         if (g.disagreementState === "argued") {
+          s.arguedHalo.visible = true;
           const ph = reduced ? 0.5 : Math.sin(t * 1.1 + g.pos[2]) * 0.5 + 0.5;
           (s.arguedHalo.material as InstanceType<typeof THREE.SpriteMaterial>).opacity =
             (0.08 + ph * 0.1) * dim;
         } else {
+          s.arguedHalo.visible = false;
           (s.arguedHalo.material as InstanceType<typeof THREE.SpriteMaterial>).opacity = 0;
         }
 

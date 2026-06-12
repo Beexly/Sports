@@ -23,6 +23,7 @@ import {
   allowsStraightToBan,
   appealable,
   assertActionLoggable,
+  assertSuspendTimeBoxed,
   canReview,
   computeAppealDeadline,
   computeExpiry,
@@ -252,6 +253,37 @@ describe("computeExpiry and requiresExpiry", () => {
     const notRequired: ModerationActionKind[] = ["NUDGE", "REMOVE", "SUSPEND", "BAN"];
     for (const a of notRequired) {
       expect(requiresExpiry(a)).toBe(false);
+    }
+  });
+});
+
+// ── assertSuspendTimeBoxed ────────────────────────────────────────────────────
+
+describe("assertSuspendTimeBoxed", () => {
+  it("does not throw for SUSPEND when expiresAt is provided", () => {
+    expect(() =>
+      assertSuspendTimeBoxed("SUSPEND", new Date(Date.now() + 86400_000))
+    ).not.toThrow();
+  });
+
+  it("throws ModerationValidationError for SUSPEND with null expiresAt", () => {
+    expect(() => assertSuspendTimeBoxed("SUSPEND", null)).toThrow(ModerationValidationError);
+    expect(() => assertSuspendTimeBoxed("SUSPEND", null)).toThrow(
+      /SUSPEND requires expiresAt/
+    );
+  });
+
+  it("throws ModerationValidationError for SUSPEND with undefined expiresAt", () => {
+    expect(() => assertSuspendTimeBoxed("SUSPEND", undefined)).toThrow(ModerationValidationError);
+  });
+
+  it("does not throw for BAN with no expiresAt (permanent — no time-box required)", () => {
+    expect(() => assertSuspendTimeBoxed("BAN", null)).not.toThrow();
+  });
+
+  it("does not throw for NUDGE/REMOVE/MUTE_24H/MUTE_7D with no expiresAt", () => {
+    for (const action of ["NUDGE", "REMOVE", "MUTE_24H", "MUTE_7D"] as const) {
+      expect(() => assertSuspendTimeBoxed(action, null)).not.toThrow();
     }
   });
 });

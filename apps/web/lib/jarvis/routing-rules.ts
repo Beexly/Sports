@@ -40,6 +40,11 @@ export interface RoutingRule {
   sequence: RouteStep[];
   /** The terminal authority — work ends here awaiting human decision. */
   endsAt: "JARVIS" | "Owner";
+  /**
+   * Present when the route can conditionally escalate to Owner after the
+   * unconditional terminal. The condition string describes when the gate fires.
+   */
+  escalatesTo?: { authority: "Owner"; condition: string };
 }
 
 // ─── Routing rules (spec §6) ──────────────────────────────────────────────────
@@ -57,7 +62,8 @@ export const ROUTING_RULES: readonly RoutingRule[] = [
       { seat: "JARVIS" },
       { seat: "Owner", gateCondition: "public-facing pick" },
     ],
-    endsAt: "Owner",
+    endsAt: "JARVIS",
+    escalatesTo: { authority: "Owner", condition: "public-facing pick" },
   },
 
   {
@@ -113,7 +119,8 @@ export const ROUTING_RULES: readonly RoutingRule[] = [
       { seat: "JARVIS" },
       { seat: "Owner", gateCondition: "production risk" },
     ],
-    endsAt: "Owner",
+    endsAt: "JARVIS",
+    escalatesTo: { authority: "Owner", condition: "production risk" },
   },
 
   {

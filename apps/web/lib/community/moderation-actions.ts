@@ -15,6 +15,7 @@
 "use server";
 
 import { db } from "@sports/db";
+import { Prisma } from "@sports/db";
 import type {
   ModerationActionKind,
   ModerationAppealStatus,
@@ -27,6 +28,7 @@ import type {
 
 import {
   assertActionLoggable,
+  assertSuspendTimeBoxed,
   appealable,
   canReview,
   computeExpiry,
@@ -132,6 +134,9 @@ export async function takeAction(input: TakeActionInput): Promise<ModerationActi
     expiresAt = computed;
   }
 
+  // SUSPEND must always be time-boxed; an open-ended suspend is a de-facto BAN
+  assertSuspendTimeBoxed(input.action, expiresAt);
+
   try {
     return await db.moderationAction.create({
       data: {
@@ -211,6 +216,9 @@ export async function appealAction(input: AppealActionInput): Promise<Moderation
     });
   } catch (err) {
     if (err instanceof ModerationValidationError) throw err;
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+      throw new ModerationValidationError("action already appealed");
+    }
     throw new ModerationStoreUnavailableError(err);
   }
 }

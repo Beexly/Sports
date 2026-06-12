@@ -174,13 +174,13 @@ export async function supersedeMemory(
   newMemoryInput: CreateMemoryCandidateInput & { owner_approval?: boolean }
 ) {
   try {
-    const old = await db.jarvisMemoryEvent.findUniqueOrThrow({ where: { id: supersededId } });
-
-    if (!canTransition(old.memory_state as Parameters<typeof canTransition>[0], "superseded")) {
-      throw new MemoryTransitionError(old.memory_state, "superseded");
-    }
-
     return await db.$transaction(async (tx) => {
+      const old = await tx.jarvisMemoryEvent.findUniqueOrThrow({ where: { id: supersededId } });
+
+      if (!canTransition(old.memory_state as Parameters<typeof canTransition>[0], "superseded")) {
+        throw new MemoryTransitionError(old.memory_state, "superseded");
+      }
+
       const newMemory = await tx.jarvisMemoryEvent.create({
         data: {
           memory_type: newMemoryInput.memory_type as Parameters<typeof db.jarvisMemoryEvent.create>[0]["data"]["memory_type"],
@@ -205,10 +205,14 @@ export async function supersedeMemory(
         },
       });
 
-      await tx.jarvisMemoryEvent.update({
-        where: { id: supersededId },
+      const updated = await tx.jarvisMemoryEvent.updateMany({
+        where: { id: supersededId, memory_state: old.memory_state },
         data: { memory_state: "superseded" },
       });
+
+      if (updated.count === 0) {
+        throw new MemoryTransitionError(old.memory_state, "superseded");
+      }
 
       return { newMemory, supersededId };
     });

@@ -87,8 +87,13 @@ only attached to real data, in the existing grammar.
 
 ## Verification state (this session)
 
-3,900+ web tests · 356 engine tests · tsc clean · lint clean ·
-`next build` exit 0. Branch: `claude/laughing-thompson-x9xr6f` (supersedes
-`claude/wonderful-ptolemy-qh7pnq` — fast-forwarded, all 13 commits carried).
+4,135+ web tests · 358 engine tests (4,650+ total across workspaces) ·
+tsc clean · lint clean · `next build` exit 0 (127 pages). Adversarial
+code-review pass run over all agent-built code (2026-06-12 night): 3
+CRITICAL + 3 MAJOR findings found and fixed (typed guard errors,
+transactional supersession with optimistic lock, P2002 appeal contract,
+SUSPEND time-box law, honest routing terminals, GL visibility culling).
+Branch: `claude/laughing-thompson-x9xr6f` · PR #17 open (launch PR —
+merge + env keys are the owner switch).
 **Go-live note:** production deploy happens from the owner's main-branch
 flow — merging this branch is the owner's call; nothing here auto-deploys.

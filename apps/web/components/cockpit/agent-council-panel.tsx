@@ -1,5 +1,4 @@
 import {
-  AGENT_COUNCIL,
   getCouncilSeatCounts,
   getCouncilByDepartment,
   type AgentSeat,

@@ -198,6 +198,25 @@ export const LADDER_REFERENCE: readonly LadderEntry[] = [
   },
 ] as const;
 
+// ── SUSPEND time-box guard ────────────────────────────────────────────────────
+
+/**
+ * Validates that a SUSPEND action carries an expiresAt timestamp.
+ * SUSPEND is always time-boxed — an open-ended suspension is a de-facto BAN.
+ *
+ * Throws ModerationValidationError if action is SUSPEND and expiresAt is absent.
+ */
+export function assertSuspendTimeBoxed(
+  action: ModerationActionKind,
+  expiresAt: Date | null | undefined
+): void {
+  if (action === "SUSPEND" && !expiresAt) {
+    throw new ModerationValidationError(
+      "SUSPEND requires expiresAt — suspensions are time-boxed"
+    );
+  }
+}
+
 // ── Errors ────────────────────────────────────────────────────────────────────
 
 export class ModerationValidationError extends Error {

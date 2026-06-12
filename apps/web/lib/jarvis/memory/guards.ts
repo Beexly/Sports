@@ -9,6 +9,7 @@
  */
 
 import type { MemoryState } from "./states";
+import { MemoryGuardError } from "./errors";
 
 /** Sensitivity levels that require owner approval before confirmation. */
 export const SENSITIVE_SENSITIVITY_LEVELS = new Set([
@@ -51,7 +52,7 @@ export function assertConfirmationAllowed(
   if (targetState !== "confirmed") return;
 
   if (requiresOwnerApproval(memory) && !memory.owner_approval) {
-    throw new Error(
+    throw new MemoryGuardError(
       `Sensitive memory (type=${memory.memory_type}, sensitivity=${memory.sensitivity}) ` +
         `cannot reach 'confirmed' without owner_approval=true. ` +
         `Set owner_approval before confirming.`
@@ -67,7 +68,7 @@ export function assertConfirmationAllowed(
  */
 export function assertCandidateOnly(targetState: MemoryState): void {
   if (targetState !== "candidate") {
-    throw new Error(
+    throw new MemoryGuardError(
       `AI actors may only create memory in 'candidate' state. ` +
         `Attempted state: '${targetState}'.`
     );
