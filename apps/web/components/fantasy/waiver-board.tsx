@@ -10,7 +10,8 @@
 
 import { useMemo, useState } from "react";
 import { waiverTargets, bidDollars, dropCandidates, type FaabTier } from "@/lib/fantasy/waivers";
-import { POS_HEX, type Player } from "@/lib/fantasy/players";
+import { POS_HEX, type Player, type Pos } from "@/lib/fantasy/players";
+import { softMatchups } from "@/lib/fantasy/matchup";
 import { BRAND_COLORS } from "@/lib/brand";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 
@@ -31,6 +32,15 @@ export function WaiverBoard({ pool }: { pool?: readonly Player[] } = {}) {
   const targets = useMemo(() => waiverTargets(pool), [pool]);
   const drops = useMemo(() => dropCandidates(pool), [pool]);
   const [budget, setBudget] = useState(100);
+
+  // Softest defenses per position — useful for streaming decisions
+  const softByPos = useMemo(() => {
+    const m: Partial<Record<Pos, string[]>> = {};
+    (["QB", "RB", "WR", "TE"] as Pos[]).forEach((pos) => {
+      m[pos] = softMatchups(pos).slice(0, 6);
+    });
+    return m;
+  }, []);
 
   // Live but the graded pool is empty/unavailable — honest empty state.
   if (pool != null && pool.length === 0) return <LivePoolEmpty />;
@@ -101,6 +111,29 @@ export function WaiverBoard({ pool }: { pool?: readonly Player[] } = {}) {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Matchup Intel — soft defenses by position */}
+      <div className="surface-card p-5">
+        <p className="mb-3 text-xs uppercase tracking-[0.18em] text-ink-500">Matchup Intel — softest defenses by position</p>
+        <p className="mb-4 text-[11px] text-ink-400">Teams with cream-puff or favorable ratings for fantasy scoring. Target players facing these defenses on the wire.</p>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {(["QB", "RB", "WR", "TE"] as Pos[]).map((pos) => {
+            const soft = softByPos[pos] ?? [];
+            const phex = POS_HEX[pos];
+            return (
+              <div key={pos}>
+                <p className="mb-1.5 font-mono text-[11px] font-bold" style={{ color: phex }}>{pos}</p>
+                <div className="flex flex-wrap gap-1">
+                  {soft.map((team) => (
+                    <span key={team} className="rounded px-1.5 py-0.5 font-mono text-[10px]" style={{ color: BRAND_COLORS.orbitalCyan, background: `${BRAND_COLORS.orbitalCyan}14`, border: `1px solid ${BRAND_COLORS.orbitalCyan}33` }}>{team}</span>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <p className="mt-4 text-[10px] text-ink-600">Defense tiers derived from our team-environment model (schema fit, EPA, usage patterns). Live schedule sync will auto-assign opponent grades — for now, use this to identify which teams to target your streaming picks against.</p>
       </div>
     </div>
   );

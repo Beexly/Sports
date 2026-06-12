@@ -6,14 +6,16 @@
  */
 
 import { useMemo, useState } from "react";
-import { POS_HEX, type Player } from "@/lib/fantasy/players";
+import { POS_HEX, type Player, type Pos } from "@/lib/fantasy/players";
 import { DEFAULT_ROSTER_IDS, rosterFromIds, sampleRoster, optimize, startReason } from "@/lib/fantasy/lineup";
 import { importRoster, type RosterImportResult } from "@/lib/fantasy/roster-import";
+import { matchupGrade } from "@/lib/fantasy/matchup";
 import { activePlayerPool } from "@/lib/integrations/projections";
 import { BRAND_COLORS } from "@/lib/brand";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 
 const VERDICT_HEX = { anchor: BRAND_COLORS.orbitalCyan, start: BRAND_COLORS.softUltraviolet, close: BRAND_COLORS.ionMagenta } as const;
+const MATCHUP_HEX = { "Cream puff": BRAND_COLORS.orbitalCyan, Favorable: BRAND_COLORS.orbitalCyan, Neutral: "#9fb3c8", Tough: "#E0A800", "Brick wall": BRAND_COLORS.ionMagenta } as const;
 
 /**
  * @param pool When provided, the LIVE graded pool resolved server-side — the
@@ -35,9 +37,12 @@ export function LineupOptimizer({ pool }: { pool?: readonly Player[] } = {}) {
     [imported, live, pool],
   );
   const [out, setOut] = useState<Set<string>>(new Set());
+  /** team → opponent team code (user-editable per-game). Empty = no matchup grade shown. */
+  const [opponents, setOpponents] = useState<Map<string, string>>(new Map());
   const roster = useMemo(() => fullRoster.filter((p) => !out.has(p.id)), [fullRoster, out]);
   const opt = useMemo(() => optimize(roster), [roster]);
   const toggleOut = (id: string) => setOut((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
+  const setOpponent = (team: string, opp: string) => setOpponents((m) => { const n = new Map(m); if (opp.trim()) n.set(team, opp.trim().toUpperCase()); else n.delete(team); return n; });
 
   // Live but the graded pool came back empty/unavailable — be honest, never
   // silently fall back to illustrative data presented as live.
@@ -99,16 +104,39 @@ export function LineupOptimizer({ pool }: { pool?: readonly Player[] } = {}) {
           {opt.starters.map((call) => {
             const c = POS_HEX[call.player.pos];
             const vc = VERDICT_HEX[call.verdict];
+            const opp = opponents.get(call.player.team);
+            const mg = opp ? matchupGrade(call.player.team, call.player.pos as Pos, opp) : null;
+            const mhex = mg ? MATCHUP_HEX[mg.label] : null;
             return (
-              <div key={call.slot + call.player.id} className="flex items-center gap-3 border-b px-5 py-3 last:border-b-0" style={{ borderColor: BRAND_COLORS.steelGray }}>
-                <span className="w-10 shrink-0 font-mono text-[11px] font-bold text-ink-400">{call.slot}</span>
-                <span className="rounded px-1.5 py-0.5 font-mono text-[9px] font-bold" style={{ color: c, background: `${c}18` }}>{call.player.pos}</span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-white">{call.player.name}</p>
-                  <p className="text-[11px] text-ink-500">{startReason(call)}</p>
+              <div key={call.slot + call.player.id} className="border-b last:border-b-0" style={{ borderColor: BRAND_COLORS.steelGray }}>
+                <div className="flex items-center gap-3 px-5 py-3">
+                  <span className="w-10 shrink-0 font-mono text-[11px] font-bold text-ink-400">{call.slot}</span>
+                  <span className="rounded px-1.5 py-0.5 font-mono text-[9px] font-bold" style={{ color: c, background: `${c}18` }}>{call.player.pos}</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-white">{call.player.name}
+                      <span className="ml-1.5 font-mono text-[10px] text-ink-600">{call.player.team}</span>
+                    </p>
+                    <p className="text-[11px] text-ink-500">{startReason(call)}</p>
+                    {mg && <p className="mt-0.5 text-[11px] font-semibold" style={{ color: mhex ?? undefined }}>vs {mg.opponent} — {mg.label} · {mg.ptaPerGame} pts/g allowed</p>}
+                  </div>
+                  <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase" style={{ color: vc, background: `${vc}14`, border: `1px solid ${vc}44` }}>{call.verdict}</span>
+                  <span className="w-10 shrink-0 text-right font-mono text-sm text-white">{call.player.proj}</span>
                 </div>
-                <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase" style={{ color: vc, background: `${vc}14`, border: `1px solid ${vc}44` }}>{call.verdict}</span>
-                <span className="w-10 shrink-0 text-right font-mono text-sm text-white">{call.player.proj}</span>
+                {/* Opponent input — one per team, shared across all players on that team */}
+                <div className="flex items-center gap-1.5 border-t px-5 py-1.5" style={{ borderColor: `${BRAND_COLORS.steelGray}44`, background: "rgba(255,255,255,0.02)" }}>
+                  <span className="text-[9px] uppercase tracking-wider text-ink-600">vs</span>
+                  <input
+                    type="text"
+                    maxLength={3}
+                    placeholder="OPP"
+                    value={opponents.get(call.player.team) ?? ""}
+                    onChange={(e) => setOpponent(call.player.team, e.target.value)}
+                    className="w-12 rounded border bg-transparent px-1.5 py-0.5 font-mono text-[10px] uppercase text-white placeholder:text-ink-700 focus:outline-none"
+                    style={{ borderColor: BRAND_COLORS.steelGray }}
+                    aria-label={`Opponent for ${call.player.team}`}
+                  />
+                  <span className="text-[9px] text-ink-700">Enter 3-letter opponent code</span>
+                </div>
               </div>
             );
           })}
