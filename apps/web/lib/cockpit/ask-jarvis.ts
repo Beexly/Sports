@@ -21,6 +21,31 @@ import {
 } from "../jarvis/capability-registry";
 import { AGENT_COUNCIL, getCouncilSeatCounts } from "../jarvis/agent-council";
 import { buildMemoryStatus, getOperatingLoop } from "../jarvis/intelligence-state";
+import { buildJarvisMemoryStatus } from "../jarvis/memory-protocol";
+import { buildScribeProtocolForAgent } from "../jarvis/scribe";
+import { buildToolRouterStatus, getWiredTools } from "../jarvis/tool-router";
+import { buildVoiceProtocolStatus } from "../jarvis/voice-protocol";
+import {
+  PROMPT_LIBRARY,
+  getPromptsByType,
+  suggestNextPrompt,
+} from "../jarvis/prompt-library";
+import { buildImprovementLoopStatus } from "../jarvis/improvement-loop";
+import { buildAuditLedgerStatus } from "../jarvis/audit-ledger";
+import { buildJarvisOSState } from "../jarvis/os-state";
+import {
+  BOT_REGISTRY,
+  buildBotRegistrySummary,
+  getBotsThatCanDispatch,
+} from "../jarvis/bot-registry";
+import {
+  getAllAvailableTaskCategories,
+  getAgentForCategory,
+  getPromptForCategory,
+  getToolsForCategory,
+  getRecommendedBotForCategory,
+  buildOvernightLoopPlan,
+} from "../jarvis/task-dispatch";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -42,7 +67,24 @@ export type JarvisIntent =
   | "what-needs-approval"
   | "what-should-we-build-next"
   | "what-is-ai-ops-status"
-  | "what-is-memory-status";
+  | "what-is-memory-status"
+  | "what-do-you-remember"
+  | "what-is-in-scribe"
+  | "what-are-agents-doing"
+  | "prepare-next-prompt"
+  | "what-tools-are-wired"
+  | "can-you-talk"
+  | "can-you-act"
+  | "what-did-we-decide"
+  | "what-should-run-overnight"
+  | "summarize-galaxy"
+  | "summarize-airwave"
+  | "what-is-blocked-os"
+  | "how-do-we-improve"
+  | "dispatch-task"
+  | "what-bots-are-wired"
+  | "run-overnight-loop"
+  | "what-can-jarvis-run";
 
 export const JARVIS_QUESTIONS: Readonly<Record<JarvisIntent, string>> = {
   "picks": "Where are our picks?",
@@ -63,6 +105,23 @@ export const JARVIS_QUESTIONS: Readonly<Record<JarvisIntent, string>> = {
   "what-should-we-build-next": "What should we build next?",
   "what-is-ai-ops-status": "What is the AI Ops posture?",
   "what-is-memory-status": "What is Jarvis memory status?",
+  "what-do-you-remember": "What do you remember?",
+  "what-is-in-scribe": "What is in the scribe?",
+  "what-are-agents-doing": "What are the agents doing?",
+  "prepare-next-prompt": "Prepare the next prompt.",
+  "what-tools-are-wired": "What tools are wired?",
+  "can-you-talk": "Can you talk?",
+  "can-you-act": "Can you act on your own?",
+  "what-did-we-decide": "What did we decide?",
+  "what-should-run-overnight": "What should run overnight?",
+  "summarize-galaxy": "Summarize the galaxy.",
+  "summarize-airwave": "Summarize Airwave.",
+  "what-is-blocked-os": "What is blocked across the OS?",
+  "how-do-we-improve": "How do we improve?",
+  "dispatch-task": "How do I dispatch a task through Jarvis?",
+  "what-bots-are-wired": "What bots are wired?",
+  "run-overnight-loop": "Run the overnight loop.",
+  "what-can-jarvis-run": "What can Jarvis run?",
 };
 
 export const JARVIS_INTENT_ORDER: readonly JarvisIntent[] = [
@@ -84,15 +143,35 @@ export const JARVIS_INTENT_ORDER: readonly JarvisIntent[] = [
   "what-should-we-build-next",
   "what-is-ai-ops-status",
   "what-is-memory-status",
+  "what-do-you-remember",
+  "what-is-in-scribe",
+  "what-are-agents-doing",
+  "prepare-next-prompt",
+  "what-tools-are-wired",
+  "can-you-talk",
+  "can-you-act",
+  "what-did-we-decide",
+  "what-should-run-overnight",
+  "summarize-galaxy",
+  "summarize-airwave",
+  "what-is-blocked-os",
+  "how-do-we-improve",
+  "dispatch-task",
+  "what-bots-are-wired",
+  "run-overnight-loop",
+  "what-can-jarvis-run",
 ];
 
 /** OPERATIONS intents answer from the live OwnerSummary; ARCHITECTURE intents
- *  answer from the capability registry, agent council, and memory protocol. */
-export type JarvisIntentGroup = "OPERATIONS" | "ARCHITECTURE";
+ *  answer from the capability registry, agent council, and memory protocol;
+ *  OS_LAYER intents answer from the Jarvis OS layers (scribe, memory, tools,
+ *  voice, prompts, actions, audit, improvement). */
+export type JarvisIntentGroup = "OPERATIONS" | "ARCHITECTURE" | "OS_LAYER";
 
 export const JARVIS_GROUP_LABELS: Readonly<Record<JarvisIntentGroup, string>> = {
   OPERATIONS: "Operations",
   ARCHITECTURE: "Architecture & System",
+  OS_LAYER: "Jarvis OS Layers",
 };
 
 export const JARVIS_INTENT_GROUPS: Readonly<
@@ -120,6 +199,25 @@ export const JARVIS_INTENT_GROUPS: Readonly<
     "what-is-ai-ops-status",
     "what-is-memory-status",
   ],
+  OS_LAYER: [
+    "what-do-you-remember",
+    "what-is-in-scribe",
+    "what-are-agents-doing",
+    "prepare-next-prompt",
+    "what-tools-are-wired",
+    "can-you-talk",
+    "can-you-act",
+    "what-did-we-decide",
+    "what-should-run-overnight",
+    "summarize-galaxy",
+    "summarize-airwave",
+    "what-is-blocked-os",
+    "how-do-we-improve",
+    "dispatch-task",
+    "what-bots-are-wired",
+    "run-overnight-loop",
+    "what-can-jarvis-run",
+  ],
 };
 
 export interface JarvisAnswer {
@@ -130,6 +228,12 @@ export interface JarvisAnswer {
   readonly confidence: "HIGH" | "MEDIUM" | "LOW";
   readonly caveat: string | null;
   readonly nextAction: string | null;
+  /** OS-layer extensions — optional, additive, backward compatible. */
+  readonly source?: string;
+  readonly phase?: string;
+  readonly scribeSuggestion?: string;
+  readonly promptSuggestion?: string;
+  readonly approvalRequired?: boolean;
 }
 
 // ─── Intent handlers ──────────────────────────────────────────────────────────
@@ -700,6 +804,526 @@ function answerMemoryStatus(_summary: OwnerSummary): JarvisAnswer {
   };
 }
 
+// ─── OS-layer intent handlers ─────────────────────────────────────────────────
+// These answer from the Jarvis OS layers: scribe, memory protocol, tool router,
+// voice protocol, prompt library, action queue, audit ledger, improvement loop.
+// Same purity rules: deterministic, no model calls, no fabrication.
+
+function answerWhatDoYouRemember(_summary: OwnerSummary): JarvisAnswer {
+  const memory = buildJarvisMemoryStatus();
+
+  return {
+    intent: "what-do-you-remember",
+    question: JARVIS_QUESTIONS["what-do-you-remember"],
+    answer:
+      "Honestly: nothing across sessions. The memory protocol is designed — " +
+      "classification and redaction run in code, and candidate memories live as " +
+      "version-controlled markdown in the vault — but no queryable store is wired.",
+    supportingState: [
+      `Wired: ${memory.isWired ? "YES" : "NO"}`,
+      `Backing: ${memory.backingStatus}`,
+      ...memory.capabilities.map((c) => `Can: ${c}`),
+      ...memory.limitations.map((l) => `Cannot: ${l}`),
+    ],
+    confidence: "HIGH",
+    caveat:
+      "Any claim of remembered context before the store is wired would be fabrication.",
+    nextAction: memory.nextWiringStep,
+    source: "memory-protocol",
+    phase: "MEMORY",
+  };
+}
+
+function answerWhatIsInScribe(_summary: OwnerSummary): JarvisAnswer {
+  const protocol = buildScribeProtocolForAgent("jarvis");
+
+  return {
+    intent: "what-is-in-scribe",
+    question: JARVIS_QUESTIONS["what-is-in-scribe"],
+    answer:
+      "The scribe is the shared note-taking protocol every agent writes through. " +
+      "It is FILE_BACKED: typed entries are validated, redacted for secrets, and " +
+      "rendered as markdown into the vault. No entries flow into this view " +
+      "automatically yet — files land by explicit human or approved-job action.",
+    supportingState: [
+      `Output path: ${protocol.outputPath}`,
+      `Required fields: ${protocol.requiredFields.join(", ")}`,
+      `Forbidden fields: ${protocol.forbiddenFields.join(", ")}`,
+      "Entry types: OBSERVATION, DECISION, PROMPT, ACTION_PROPOSAL, HANDOFF, RESULT, RISK, MEMORY, TODO",
+      "Redaction: key/secret/token/password/credential values become [REDACTED]",
+    ],
+    confidence: "HIGH",
+    caveat:
+      "The scribe library does no I/O. Reading entries back into the cockpit is a " +
+      "future wiring step.",
+    nextAction: "Add a reviewed write path that lands formatted entries in docs/ai/jarvis/scribe/.",
+    source: "scribe",
+    phase: "SCRIBE",
+    scribeSuggestion:
+      "Record today's working session as a RESULT entry (project JARVIS).",
+  };
+}
+
+function answerWhatAreAgentsDoing(summary: OwnerSummary): JarvisAnswer {
+  const counts = getCouncilSeatCounts();
+  const actionDepts = summary.departments.filter((d) => d.actionRequired);
+
+  return {
+    intent: "what-are-agents-doing",
+    question: JARVIS_QUESTIONS["what-are-agents-doing"],
+    answer:
+      `${counts.total} council seats: ${counts.draftOnly} draft-only registered agents ` +
+      `producing drafts for approval, ${counts.manual} human-run roles, and ` +
+      `${counts.notWired} designed seats that do not run yet. No agent acts ` +
+      "externally without your approval." +
+      (actionDepts.length > 0
+        ? ` ${actionDepts.length} department(s) currently require action.`
+        : ""),
+    supportingState: AGENT_COUNCIL.map(
+      (m) => `[${m.status}] ${m.codename} — ${m.role}: ${m.currentTruth}`
+    ),
+    confidence: "HIGH",
+    caveat:
+      "Council seats are governed roles with charters, not running processes. " +
+      "DRAFT_ONLY means outputs wait in the review queue.",
+    nextAction:
+      actionDepts[0]?.actionDescription ??
+      "Review the agent council panel for charters and handoffs.",
+    source: "agent-council",
+    phase: "ACT_SAFELY",
+  };
+}
+
+function answerPrepareNextPrompt(summary: OwnerSummary): JarvisAnswer {
+  const blockers = [
+    ...summary.criticalWarnings,
+    ...summary.decisions.map((d) => d.description),
+  ];
+  const suggested = suggestNextPrompt("operations", blockers);
+
+  return {
+    intent: "prepare-next-prompt",
+    question: JARVIS_QUESTIONS["prepare-next-prompt"],
+    answer: suggested
+      ? `Suggested template: ${suggested.id} (${suggested.type}). Purpose: ${suggested.purpose} ` +
+        `Model lane: ${suggested.modelRecommendation}, budget: ${suggested.tokenBudget}.`
+      : "No prompt template matched the current state.",
+    supportingState: suggested
+      ? [
+          `Approval boundary: ${suggested.approvalBoundary}`,
+          ...suggested.acceptanceCriteria.map((c) => `Accept: ${c}`),
+          ...suggested.validationCommands.map((v) => `Validate: ${v}`),
+        ]
+      : [`Library size: ${PROMPT_LIBRARY.length} templates`],
+    confidence: suggested ? "HIGH" : "LOW",
+    caveat:
+      "Suggestion is a deterministic keyword heuristic over the typed library — " +
+      "not a model call. The owner picks the actual next task.",
+    nextAction: suggested
+      ? `Fill the {{placeholders}} in ${suggested.id} and launch the session.`
+      : "Add templates to the prompt library.",
+    source: "prompt-library",
+    phase: "DECIDE",
+    promptSuggestion: suggested?.id,
+  };
+}
+
+function answerWhatToolsAreWired(_summary: OwnerSummary): JarvisAnswer {
+  const status = buildToolRouterStatus();
+  const wired = getWiredTools();
+
+  return {
+    intent: "what-tools-are-wired",
+    question: JARVIS_QUESTIONS["what-tools-are-wired"],
+    answer:
+      `${status.wiredCount} of ${status.totalTools} tools are wired ` +
+      `(${wired.map((t) => t.name).join(", ") || "none"}), ${status.partialCount} partial, ` +
+      `${status.notWiredCount} not wired or designed. Ready to use now, read-only: ` +
+      `${status.readyToUseNow.join(", ") || "none"}. Every write tool is parked behind approval.`,
+    supportingState: [
+      `Ready now: ${status.readyToUseNow.join(", ") || "none"}`,
+      `Requires approval: ${status.requiresApproval.join(", ") || "none"}`,
+      "Invariant: canRunNow=false for all write tools until the approval mechanism is wired",
+    ],
+    confidence: "HIGH",
+    caveat:
+      "Wired means the integration functions today (file system or DB reads). " +
+      "PARTIAL tools depend on the session (web/file search).",
+    nextAction:
+      "Wire the approval mechanism so GitHub writes can flow through the action queue.",
+    source: "tool-router",
+    phase: "TOOL_ROUTER",
+  };
+}
+
+function answerCanYouTalk(_summary: OwnerSummary): JarvisAnswer {
+  const voice = buildVoiceProtocolStatus();
+
+  return {
+    intent: "can-you-talk",
+    question: JARVIS_QUESTIONS["can-you-talk"],
+    answer:
+      `Not yet. Voice is not active: STT is ${voice.sttStatus}, TTS is ${voice.ttsStatus}, ` +
+      `wake mode is ${voice.wakeMode}. The command grammar (${voice.supportedCommands.length} ` +
+      "commands) and privacy rules are designed, and the console renders the honest status.",
+    supportingState: [
+      `isActive: ${voice.isActive ? "YES" : "NO"}`,
+      `Approval phrase for any write: "${voice.approvalPhrase}"`,
+      ...voice.privacyRules.map((r) => `Privacy: ${r}`),
+    ],
+    confidence: "HIGH",
+    caveat:
+      "Browser speech APIs may be feature-detected client-side, but nothing records " +
+      "or speaks until the protocol is wired.",
+    nextAction:
+      "Feature-detect browser SpeechRecognition in the voice console, then wire push-to-talk STT.",
+    source: "voice-protocol",
+    phase: "VOICE",
+  };
+}
+
+function answerCanYouAct(_summary: OwnerSummary): JarvisAnswer {
+  const improvement = buildImprovementLoopStatus();
+
+  return {
+    intent: "can-you-act",
+    question: JARVIS_QUESTIONS["can-you-act"],
+    answer:
+      "Only inside hard boundaries. Every action flows through the action queue, " +
+      "and only READ_ONLY_CHECK can execute without approval — every write-shaped " +
+      "action requires your sign-off, and no executor is wired yet. The prediction " +
+      "engine can never be adjusted automatically.",
+    supportingState: [
+      "Action lifecycle: PROPOSED → NEEDS_APPROVAL → APPROVED → RUNNING → COMPLETED/FAILED → SCRIBED",
+      "canExecuteWithoutApproval: true only for READ_ONLY_CHECK",
+      `Improvement loop active: ${improvement.isActive ? "YES" : "NO"}`,
+      `Can auto-adjust prediction engine: ${improvement.canAutomaticallyAdjustPredictionEngine ? "YES" : "NO"}`,
+    ],
+    confidence: "HIGH",
+    caveat:
+      "The queue is code-backed but no execution runtime exists — even approved " +
+      "actions are carried out by humans today.",
+    nextAction: "Keep the boundary: wire the audit store before any executor.",
+    source: "action-queue",
+    phase: "ACT_SAFELY",
+    approvalRequired: true,
+  };
+}
+
+function answerWhatDidWeDecide(summary: OwnerSummary): JarvisAnswer {
+  const { decisions } = summary;
+
+  return {
+    intent: "what-did-we-decide",
+    question: JARVIS_QUESTIONS["what-did-we-decide"],
+    answer:
+      decisions.length === 0
+        ? "The live decision queue is empty. Past decisions are not recalled — " +
+          "there is no cross-session memory yet; the decision log lives in the " +
+          "vault (02-decisions) as markdown."
+        : `${decisions.length} decision item${decisions.length === 1 ? "" : "s"} are ` +
+          "live in the queue right now. Historical decisions are not recalled — " +
+          "no cross-session memory is wired; check the vault decision log.",
+    supportingState: [
+      ...decisions.map((d) => `[${d.urgency}] ${d.description}`),
+      "Decision log: docs/ai/jarvis/vault/02-decisions/",
+      "Cross-session memory: NOT wired",
+    ],
+    confidence: decisions.length > 0 ? "HIGH" : "MEDIUM",
+    caveat:
+      "This shows the live queue only. Jarvis cannot recall prior sessions until " +
+      "the memory store is wired.",
+    nextAction:
+      "Record owner decisions as vault notes so they survive until memory is wired.",
+    source: "owner-summary",
+    phase: "REMEMBER",
+    scribeSuggestion: "Write a DECISION entry for any call made today.",
+  };
+}
+
+function answerWhatShouldRunOvernight(_summary: OwnerSummary): JarvisAnswer {
+  const overnight = getPromptsByType("OVERNIGHT_RUN");
+  const pick = overnight[0] ?? null;
+
+  return {
+    intent: "what-should-run-overnight",
+    question: JARVIS_QUESTIONS["what-should-run-overnight"],
+    answer: pick
+      ? `Run the ${pick.id} template overnight: ${pick.purpose} It is read-and-test ` +
+        "only — any code fix it drafts waits for your approval in the morning."
+      : "No OVERNIGHT_RUN template is registered in the prompt library.",
+    supportingState: pick
+      ? [
+          ...pick.validationCommands.map((v) => `Command: ${v}`),
+          ...pick.forbiddenActions.map((f) => `Forbidden: ${f}`),
+          `Approval boundary: ${pick.approvalBoundary}`,
+        ]
+      : [`Library size: ${PROMPT_LIBRARY.length}`],
+    confidence: pick ? "HIGH" : "LOW",
+    caveat:
+      "Nothing runs unattended yet — 'overnight' means you launch the session " +
+      "before stepping away. No scheduler is wired to do it for you.",
+    nextAction: pick
+      ? `Launch ${pick.id} with scope filled in before end of day.`
+      : "Add an OVERNIGHT_RUN template.",
+    source: "prompt-library",
+    phase: "ACT_SAFELY",
+    promptSuggestion: pick?.id,
+  };
+}
+
+function answerSummarizeGalaxy(summary: OwnerSummary): JarvisAnswer {
+  const os = buildJarvisOSState(summary);
+
+  return {
+    intent: "summarize-galaxy",
+    question: JARVIS_QUESTIONS["summarize-galaxy"],
+    answer:
+      `Platform: ${summary.overallColor} — ${summary.oneLiner} ` +
+      `Picks: ${summary.picks.today} today (gate ${summary.picks.isPublicGateOpen ? "open" : "closed"}). ` +
+      `Decisions waiting: ${summary.decisions.length}. ` +
+      `OS posture: ${os.wiredCount} layers wired, ${os.partialCount} partial, ` +
+      `${os.notWiredCount} not wired.`,
+    supportingState: [
+      `Agents: ${os.agentSummary}`,
+      `Tools: ${os.toolSummary}`,
+      `Memory: ${os.memorySummary}`,
+      `Voice: ${os.voiceSummary}`,
+      `Improvement: ${os.improvementSummary}`,
+    ],
+    confidence: "HIGH",
+    caveat:
+      "Operational facts come from the last Jarvis sync; OS layer statuses are " +
+      "static truth from the registries.",
+    nextAction: os.nextBestActions[0] ?? null,
+    source: "os-state",
+    phase: "INTERPRET",
+  };
+}
+
+function answerSummarizeAirwave(_summary: OwnerSummary): JarvisAnswer {
+  return {
+    intent: "summarize-airwave",
+    question: JARVIS_QUESTIONS["summarize-airwave"],
+    answer:
+      "Honest answer: Airwave state does not flow into the OwnerSummary yet. " +
+      "The Airwave engines (pundit scorecards, claim grading, capture gating) " +
+      "exist in code with a demo ledger, but no live Airwave telemetry is wired " +
+      "into Jarvis — so no operational summary can be given without fabricating.",
+    supportingState: [
+      "Airwave code: apps/web/lib/airwave/ (scorecards, ledger, adapters)",
+      "Data: demo ledger only — no live claim ingestion",
+      "OwnerSummary coverage: NONE",
+    ],
+    confidence: "HIGH",
+    caveat:
+      "Absence of data is reported as absence. Do not infer Airwave health from this answer.",
+    nextAction:
+      "Wire an Airwave section into buildOwnerSummary() so Jarvis can answer this from live state.",
+    source: "os-state",
+    phase: "SENSE",
+  };
+}
+
+function answerWhatIsBlockedOS(summary: OwnerSummary): JarvisAnswer {
+  const os = buildJarvisOSState(summary);
+  const notWired = os.operatingLoopPhases.filter((p) => p.status === "NOT_WIRED");
+
+  return {
+    intent: "what-is-blocked-os",
+    question: JARVIS_QUESTIONS["what-is-blocked-os"],
+    answer:
+      `Across the OS: ${os.topBlockers.length} blockers. ` +
+      `${notWired.length} of ${os.operatingLoopPhases.length} phases are NOT_WIRED ` +
+      `(${notWired.map((p) => p.phase).join(", ")}). ` +
+      (summary.criticalWarnings.length > 0
+        ? `${summary.criticalWarnings.length} live critical warning(s) on top.`
+        : "No live critical warnings."),
+    supportingState: [
+      ...os.topBlockers.map((b) => `Blocker: ${b}`),
+      ...os.ownerDecisionQueue,
+    ],
+    confidence: "HIGH",
+    caveat:
+      "OS-layer blockers are structural (wiring gaps), not incidents. Live " +
+      "operational blockers come from the last Jarvis sync.",
+    nextAction: os.nextBestActions[0] ?? null,
+    source: "os-state",
+    phase: "DECIDE",
+  };
+}
+
+function answerHowDoWeImprove(_summary: OwnerSummary): JarvisAnswer {
+  const loop = buildImprovementLoopStatus();
+  const audit = buildAuditLedgerStatus();
+
+  return {
+    intent: "how-do-we-improve",
+    question: JARVIS_QUESTIONS["how-do-we-improve"],
+    answer:
+      `Through proposals, never autonomy. The improvement loop is ${loop.isActive ? "active" : "not active"}: ` +
+      `${loop.proposals.length} standing proposal(s) on file, every one requiring owner ` +
+      "approval. The prediction engine can never be adjusted automatically — " +
+      "calibration and model changes need sign-off plus out-of-sample validation.",
+    supportingState: [
+      ...loop.proposals.map((p) => `[${p.status}] ${p.title}`),
+      `canAutomaticallyAdjustPredictionEngine: ${loop.canAutomaticallyAdjustPredictionEngine ? "YES" : "NO"}`,
+      `Audit ledger wired: ${audit.isWired ? "YES" : "NO"} — improvements need a trail`,
+    ],
+    confidence: "HIGH",
+    caveat: loop.truth,
+    nextAction:
+      "Run the standing calibration review manually and record the result as a scribe entry.",
+    source: "improvement-loop",
+    phase: "IMPROVE",
+    approvalRequired: true,
+  };
+}
+
+// ─── Dispatch / bot intent handlers ──────────────────────────────────────────
+// These answer from the task-dispatch system and bot registry.
+// Same purity rules: deterministic, no model calls, no fabrication.
+
+function answerDispatchTask(_summary: OwnerSummary): JarvisAnswer {
+  const categories = getAllAvailableTaskCategories();
+
+  const supporting = categories.map((c) => {
+    const agent = getAgentForCategory(c);
+    const promptId = getPromptForCategory(c);
+    const tools = getToolsForCategory(c);
+    const bot = getRecommendedBotForCategory(c);
+    return (
+      `[${c}] agent:${agent}, template:${promptId}, ` +
+      `tools:[${tools.slice(0, 3).join(",")}${tools.length > 3 ? "…" : ""}]` +
+      (bot ? `, bot:${bot}` : "")
+    );
+  });
+
+  return {
+    intent: "dispatch-task",
+    question: JARVIS_QUESTIONS["dispatch-task"],
+    answer:
+      `To dispatch a task through Jarvis: pick a TaskCategory, supply a title and context ` +
+      `map, and call dispatchTask(). Jarvis identifies the owning agent, selects the ` +
+      `prompt template and required tools, creates an ActionItem in the action queue, ` +
+      `and returns a DispatchPlan with the full ready-to-run prompt. ` +
+      `${categories.length} task categories are available: ` +
+      categories.join(", ") + ". " +
+      "Every plan includes: fullPrompt (copy into Claude Code or Fable), checkpoints, " +
+      "rollbackPlan, and scribeInstructions.",
+    supportingState: supporting,
+    confidence: "HIGH",
+    caveat:
+      "Dispatch prepares the plan; the owner launches the session and approves any changes. " +
+      "No code runs automatically from a DispatchPlan.",
+    nextAction:
+      "Open the Task Dispatch panel in the cockpit to see all categories and ready-to-run prompts.",
+    source: "task-dispatch",
+    phase: "DECIDE",
+  };
+}
+
+function answerWhatBotsAreWired(_summary: OwnerSummary): JarvisAnswer {
+  const bots = buildBotRegistrySummary();
+  const dispatchable = getBotsThatCanDispatch();
+
+  const supporting = BOT_REGISTRY.map(
+    (b) =>
+      `[${b.status}] ${b.name} (${b.type}) — owned by ${b.owningAgent}. ` +
+      `Dispatch:${b.canDispatchViaJarvis ? "YES" : "NO"} Approval:${b.requiresApproval ? "YES" : "NO"} ` +
+      `Scribe:${b.scribeOnRun ? "YES" : "NO"}`
+  );
+
+  return {
+    intent: "what-bots-are-wired",
+    question: JARVIS_QUESTIONS["what-bots-are-wired"],
+    answer:
+      `${bots.total} bots registered. ${bots.canDispatch} can be dispatched via Jarvis: ` +
+      dispatchable.map((b) => b.name).join(", ") +
+      `. ${bots.manual} are manual (human must trigger). ` +
+      `${bots.active} are currently active. ` +
+      "Every bot that modifies state requires owner approval before executing.",
+    supportingState: supporting,
+    confidence: "HIGH",
+    caveat:
+      "Bot status is static truth from the bot registry — MANUAL means a human runs it, " +
+      "ON_DEMAND means Jarvis can prepare a plan but the owner launches the session.",
+    nextAction:
+      "Review the Bot Registry panel or ask 'what-can-jarvis-run' for a comprehensive view.",
+    source: "bot-registry",
+    phase: "ACT_SAFELY",
+  };
+}
+
+function answerRunOvernightLoop(_summary: OwnerSummary): JarvisAnswer {
+  const plan = buildOvernightLoopPlan({}, "2026-01-01T00:00:00.000Z");
+
+  return {
+    intent: "run-overnight-loop",
+    question: JARVIS_QUESTIONS["run-overnight-loop"],
+    answer:
+      `Overnight loop dispatch plan is ready. Category: OVERNIGHT_LOOP. ` +
+      `Owning agent: ${plan.owningAgent} (${plan.promptTemplate}). ` +
+      `Risk: ${plan.riskLevel}. Approval required: ${plan.approvalRequired ? "YES" : "NO"}. ` +
+      "The plan runs: full test suite, typecheck, lint — then triages failures into a " +
+      "morning report. No code changes ship automatically — fixes are proposals awaiting " +
+      "your morning review.",
+    supportingState: [
+      `Task ID: ${plan.taskId}`,
+      `Template: ${plan.promptTemplate}`,
+      `Tools: ${plan.toolsRequired.join(", ")}`,
+      `Budget: ${plan.estimatedTokenBudget}`,
+      `Rollback: ${plan.rollbackPlan}`,
+      ...plan.checkpoints.map((c) => `Checkpoint: ${c}`),
+      "Full prompt available in: DispatchPlan.fullPrompt — copy into Claude Code or Fable.",
+    ],
+    confidence: "HIGH",
+    caveat:
+      "Nothing runs unattended — 'overnight' means you launch the Claude Code session " +
+      "before stepping away. No scheduler triggers this automatically.",
+    nextAction:
+      "Open the Task Dispatch panel, select OVERNIGHT_LOOP, and copy the fullPrompt into Claude Code.",
+    source: "task-dispatch",
+    phase: "ACT_SAFELY",
+    promptSuggestion: plan.promptTemplate,
+    approvalRequired: plan.approvalRequired,
+  };
+}
+
+function answerWhatCanJarvisRun(summary: OwnerSummary): JarvisAnswer {
+  const bots = buildBotRegistrySummary();
+  const dispatchable = getBotsThatCanDispatch();
+  const categories = getAllAvailableTaskCategories();
+  const os = buildJarvisOSState(summary);
+
+  return {
+    intent: "what-can-jarvis-run",
+    question: JARVIS_QUESTIONS["what-can-jarvis-run"],
+    answer:
+      `Jarvis is the operations director: ${categories.length} task categories, ` +
+      `${bots.total} bots, ${os.toolSummary.split(":")[0] ?? "tools registered"}. ` +
+      `Dispatchable bots (owner launches): ${dispatchable.map((b) => b.name).join(", ")}. ` +
+      "For every category, Jarvis prepares a complete DispatchPlan with the full prompt, " +
+      "owning agent, required tools, checkpoints, and rollback plan. The owner launches " +
+      "the session — no autonomous execution exists.",
+    supportingState: [
+      `Task categories: ${categories.join(", ")}`,
+      `Bots total: ${bots.total} | can dispatch: ${bots.canDispatch} | manual: ${bots.manual}`,
+      `Dispatchable bots: ${dispatchable.map((b) => `${b.name} (${b.status})`).join("; ")}`,
+      `Loops available: overnight-loop (tests+typecheck+lint), content-run, calibration-review`,
+      `Tools ready now: ${os.safeToRunNow.slice(0, 4).join("; ")}`,
+    ],
+    confidence: "HIGH",
+    caveat:
+      "Jarvis prepares plans; the owner executes. No code runs automatically. " +
+      "Every write-capable action requires approval.",
+    nextAction:
+      "Open the Task Dispatch panel to see all dispatch plans and copy the ready-to-run prompt.",
+    source: "task-dispatch",
+    phase: "DECIDE",
+  };
+}
+
 // ─── Dispatcher ───────────────────────────────────────────────────────────────
 
 const HANDLERS: Readonly<Record<JarvisIntent, (s: OwnerSummary) => JarvisAnswer>> = {
@@ -721,6 +1345,23 @@ const HANDLERS: Readonly<Record<JarvisIntent, (s: OwnerSummary) => JarvisAnswer>
   "what-should-we-build-next": answerWhatToBuildNext,
   "what-is-ai-ops-status": answerAiOpsArchitecture,
   "what-is-memory-status": answerMemoryStatus,
+  "what-do-you-remember": answerWhatDoYouRemember,
+  "what-is-in-scribe": answerWhatIsInScribe,
+  "what-are-agents-doing": answerWhatAreAgentsDoing,
+  "prepare-next-prompt": answerPrepareNextPrompt,
+  "what-tools-are-wired": answerWhatToolsAreWired,
+  "can-you-talk": answerCanYouTalk,
+  "can-you-act": answerCanYouAct,
+  "what-did-we-decide": answerWhatDidWeDecide,
+  "what-should-run-overnight": answerWhatShouldRunOvernight,
+  "summarize-galaxy": answerSummarizeGalaxy,
+  "summarize-airwave": answerSummarizeAirwave,
+  "what-is-blocked-os": answerWhatIsBlockedOS,
+  "how-do-we-improve": answerHowDoWeImprove,
+  "dispatch-task": answerDispatchTask,
+  "what-bots-are-wired": answerWhatBotsAreWired,
+  "run-overnight-loop": answerRunOvernightLoop,
+  "what-can-jarvis-run": answerWhatCanJarvisRun,
 };
 
 // Dispatches a deterministic owner question to the correct intent handler for the given OwnerSummary.
