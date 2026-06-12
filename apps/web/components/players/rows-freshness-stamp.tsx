@@ -57,7 +57,7 @@ export function RowsFreshnessStamp({ rows, asOf, source }: RowsFreshnessStampPro
   return (
     <p
       data-testid="rows-freshness-stamp"
-      className="font-mono text-xs tracking-wide text-ink-2"
+      className="font-mono text-xs tracking-wide text-ion-2"
       title={date ? date.toISOString() : undefined}
       suppressHydrationWarning
     >

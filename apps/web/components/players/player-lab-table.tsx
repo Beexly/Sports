@@ -41,7 +41,7 @@ import type { EnumOption, SectionData } from "@/lib/players/views";
  * faithfully from the original board pages — presentation only, no data change.
  */
 
-// ── Formatting helpers (paper-surface; AA ink only) ───────────────────────────
+// ── Formatting helpers (carbon dark surface; AA ion only) ─────────────────────
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 
@@ -60,23 +60,23 @@ function fmtPctRounded(value: number): string {
 
 /** A muted team chip used across player tables. */
 function teamCell(team: string): ReactNode {
-  return <span className="font-mono font-medium text-ink-1">{team}</span>;
+  return <span className="font-mono font-medium text-ion-1">{team}</span>;
 }
 /** Name + small position kicker (matches the old two-line player cell). */
 function playerCell(name: string, position?: string): ReactNode {
   return (
     <div>
-      <span className="font-medium text-ink">{name}</span>
+      <span className="font-medium text-ion">{name}</span>
       {position ? (
-        <span className="ml-2 font-mono text-xs uppercase tracking-wide text-ink-2">{position}</span>
+        <span className="ml-2 font-mono text-xs uppercase tracking-wide text-ion-2">{position}</span>
       ) : null}
     </div>
   );
 }
-/** Tone a signed numeric value (good/bad/neutral) on the paper surface. */
+/** Tone a signed numeric value (good/bad/neutral) on the dark carbon surface. */
 function signedCell(value: number, digits = 1, invert = false): ReactNode {
   const tone = signedTone(value, invert);
-  const cls = tone === "good" ? "text-emerald-700" : tone === "bad" ? "text-rose-700" : "text-ink-1";
+  const cls = tone === "good" ? "text-emerald-400" : tone === "bad" ? "text-rose-400" : "text-ion-1";
   return <span className={`font-semibold ${cls}`}>{formatSigned(value, digits)}</span>;
 }
 
@@ -97,7 +97,7 @@ function productionLeaderColumns(): ReadonlyArray<Column<PlayerSeasonLine>> {
     { key: "receptionsPerGame", label: "Rec/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.receptionsPerGame) },
     { key: "receivingYardsPerGame", label: "RecYd/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.receivingYardsPerGame) },
     { key: "rushingYardsPerGame", label: "RushYd/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.rushingYardsPerGame) },
-    { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
+    { key: "targetShare", label: "Tgt\u00A0sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
     { key: "wopr", label: "WOPR", align: "right", numeric: true, sortValue: (r) => r.wopr, render: (r) => fmtDecimal(r.wopr, 2) },
   ];
 }
@@ -153,7 +153,7 @@ function opportunityColumns(): ReadonlyArray<Column<ReceivingOpportunityRow>> {
       sortValue: (r) => OPP_SIGNAL_LABEL[r.signal],
       render: (r) => {
         const tone = oppTone(r.signal);
-        const cls = tone === "good" ? "text-emerald-700" : tone === "bad" ? "text-rose-700" : "text-ink-1";
+        const cls = tone === "good" ? "text-emerald-400" : tone === "bad" ? "text-rose-400" : "text-ion-1";
         return <span className={`font-semibold ${cls}`}>{OPP_SIGNAL_LABEL[r.signal]}</span>;
       },
     },
@@ -177,7 +177,7 @@ function rushingColumns(): ReadonlyArray<Column<RushingEfficiencyRow>> {
       key: "read",
       label: "The read",
       sortValue: (r) => READ_LABEL[r.read],
-      render: (r) => <span className="font-semibold text-ink-1">{READ_LABEL[r.read]}</span>,
+      render: (r) => <span className="font-semibold text-ion-1">{READ_LABEL[r.read]}</span>,
     },
   ];
 }
@@ -228,7 +228,7 @@ function qbPressureColumns(): ReadonlyArray<Column<QbPressureRow>> {
     { key: "name", label: "Player", render: (r) => playerCell(r.name) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "games", label: "G", align: "right", numeric: true },
-    { key: "pressurePct", label: "Pressure%", align: "right", numeric: true, render: (r) => <span className="font-semibold text-rose-700">{fmtPercent(r.pressurePct)}</span> },
+    { key: "pressurePct", label: "Pressure%", align: "right", numeric: true, render: (r) => <span className="font-semibold text-rose-400">{fmtPercent(r.pressurePct)}</span> },
     { key: "badThrowPct", label: "Bad throw%", align: "right", numeric: true, render: (r) => fmtPercent(r.badThrowPct) },
     { key: "sacks", label: "Sacks", align: "right", numeric: true },
     { key: "blitzesFaced", label: "Blitzes", align: "right", numeric: true },
@@ -241,7 +241,7 @@ function coverageColumns(): ReadonlyArray<Column<CoverageRow>> {
     { key: "targets", label: "Tgt", align: "right", numeric: true },
     { key: "completionPct", label: "Cmp%", align: "right", numeric: true, render: (r) => fmtPercent(r.completionPct) },
     { key: "yardsPerTarget", label: "Yd/Tgt", align: "right", numeric: true, render: (r) => r.yardsPerTarget.toFixed(1) },
-    { key: "passerRatingAllowed", label: "Rating allowed", align: "right", numeric: true, render: (r) => <span className="font-semibold text-emerald-700">{r.passerRatingAllowed.toFixed(1)}</span> },
+    { key: "passerRatingAllowed", label: "Rating allowed", align: "right", numeric: true, render: (r) => <span className="font-semibold text-emerald-400">{r.passerRatingAllowed.toFixed(1)}</span> },
     { key: "missedTacklePct", label: "Miss tkl%", align: "right", numeric: true, render: (r) => fmtPercent(r.missedTacklePct) },
   ];
 }
@@ -302,7 +302,7 @@ function consensusColumns(): ReadonlyArray<Column<QbConsensusRow>> {
       sortValue: (r) => DIVERGENCE_LABEL[r.divergence],
       render: (r) => {
         const tone = divergenceTone(r.divergence);
-        const cls = tone === "good" ? "text-emerald-700" : "text-ink-1";
+        const cls = tone === "good" ? "text-emerald-400" : "text-ion-1";
         return <span className={`font-semibold ${cls}`}>{DIVERGENCE_LABEL[r.divergence]}</span>;
       },
     },
@@ -312,13 +312,13 @@ function consensusColumns(): ReadonlyArray<Column<QbConsensusRow>> {
 // ── EDGE ──────────────────────────────────────────────────────────────────────
 
 function edgeColumns(tone: "buy" | "sell"): ReadonlyArray<Column<EdgeSignalRow>> {
-  const gapCls = tone === "buy" ? "text-emerald-700" : "text-rose-700";
+  const gapCls = tone === "buy" ? "text-emerald-400" : "text-rose-400";
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, r.position) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "games", label: "G", align: "right", numeric: true },
     { key: "pprPerGame", label: "PPR/G", align: "right", numeric: true, render: (r) => r.pprPerGame.toFixed(1) },
-    { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
+    { key: "targetShare", label: "Tgt\u00A0sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
     { key: "avgSeparation", label: "Sep", align: "right", numeric: true, render: (r) => r.avgSeparation.toFixed(2) },
     { key: "yacAboveExpectation", label: "YAC+/-", align: "right", numeric: true, render: (r) => formatSigned(r.yacAboveExpectation, 2) },
     { key: "shareIntendedAirYards", label: "Air sh", align: "right", numeric: true, render: (r) => fmtPercent(r.shareIntendedAirYards) },
@@ -332,10 +332,10 @@ function edgeColumns(tone: "buy" | "sell"): ReadonlyArray<Column<EdgeSignalRow>>
 
 function injuryStatusBadge(r: InjuryRow): ReactNode {
   const cls: Record<ReportStatus, string> = {
-    Out: "border-rose-300 text-rose-700",
-    Doubtful: "border-amber-300 text-amber-700",
-    Questionable: "border-sky-300 text-sky-700",
-    Other: "border-paper-border text-ink-2",
+    Out: "border-rose-400/40 text-rose-400",
+    Doubtful: "border-amber-400/40 text-amber-400",
+    Questionable: "border-sky-400/40 text-sky-400",
+    Other: "border-mineral text-ion-2",
   };
   return (
     <span className={`rounded-ds-sm border px-2 py-0.5 font-mono text-xs uppercase tracking-wide ${cls[r.reportStatus]}`}>
@@ -361,7 +361,7 @@ function marketColumns(): ReadonlyArray<Column<SleeperTrendingPlayer>> {
     { key: "name", label: "Player", render: (r) => playerCell(r.name) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "position", label: "Pos" },
-    { key: "injuryStatus", label: "Status", sortValue: (r) => r.injuryStatus, render: (r) => (r.injuryStatus ? <span className="text-amber-700">{r.injuryStatus}</span> : "—") },
+    { key: "injuryStatus", label: "Status", sortValue: (r) => r.injuryStatus, render: (r) => (r.injuryStatus ? <span className="text-amber-400">{r.injuryStatus}</span> : "—") },
     { key: "count", label: "Moves", align: "right", numeric: true, render: (r) => fmtNumber(r.count) },
   ];
 }
@@ -371,9 +371,9 @@ function marketColumns(): ReadonlyArray<Column<SleeperTrendingPlayer>> {
 function dfsColumns(): ReadonlyArray<Column<DfsSalaryRow>> {
   const agreementCell = (r: DfsSalaryRow): ReactNode => {
     const cls: Record<DfsSalaryRow["agreement"], string> = {
-      agree: "border-emerald-300 text-emerald-700",
-      single: "border-paper-border text-ink-2",
-      disagree: "border-rose-300 text-rose-700",
+      agree: "border-emerald-400/40 text-emerald-400",
+      single: "border-mineral text-ion-2",
+      disagree: "border-rose-400/40 text-rose-400",
     };
     const text = r.agreement === "disagree" ? `±$${fmtNumber(r.spread)}` : r.agreement;
     return <span className={`rounded-ds-sm border px-2 py-0.5 font-mono text-xs uppercase tracking-wide ${cls[r.agreement]}`}>{text}</span>;
@@ -648,6 +648,43 @@ function resolveBinding(section: SectionData): SectionBinding {
   }
 }
 
+// ── Dark-surface skin for the shared paper DataTable ──────────────────────────
+
+/**
+ * The shared <DataTable> is hard-bound to the LIGHT "paper" tokens (it also
+ * serves the intelligence boards, which stay paper). The Player Lab is a dark
+ * "carbon" surface like /trends and /performance, so we re-skin the table from
+ * the outside through its `className` prop: `!`-important utilities restyle the
+ * wrapper itself, and arbitrary descendant variants remap every internal
+ * paper/ink token to its carbon/ion equivalent without touching the shared
+ * component. If DataTable ever grows a `surface="dark"` variant, this constant
+ * collapses into that prop.
+ */
+const DARK_TABLE_CLASS = [
+  // Wrapper card: paper-raised -> eclipse, hairline -> mineral.
+  "!border-mineral !bg-eclipse",
+  // Surfaces: filter bar (bg-paper) + sticky thead (bg-paper-sunken) -> carbon;
+  // raised inputs/selects + even zebra rows (bg-paper-raised) -> eclipse.
+  "[&_.bg-paper]:!bg-carbon",
+  "[&_.bg-paper-sunken]:!bg-carbon",
+  "[&_.bg-paper-raised]:!bg-eclipse",
+  // Odd zebra rows carry bg-paper-sunken/60; tone-tinted rows replace zebra
+  // entirely, so exclude them and give them dark tints of their own.
+  "[&_tbody_tr:nth-child(even):not(.bg-emerald-50):not(.bg-rose-50)]:!bg-white/[0.03]",
+  "[&_.bg-emerald-50]:!bg-emerald-500/10",
+  "[&_.bg-rose-50]:!bg-rose-500/10",
+  "[&_tbody_tr:hover]:!bg-white/[0.06]",
+  // Hairlines: header/filter borders and per-row borders -> mineral.
+  "[&_.border-paper-border]:!border-mineral",
+  "[&_tr]:!border-mineral",
+  // Ink text scale -> ion text scale (cells, headers, counts, empty states).
+  "[&_.text-ink]:!text-ion",
+  "[&_.text-ink-1]:!text-ion-1",
+  "[&_.text-ink-2]:!text-ion-2",
+  "[&_th_button:hover]:!text-ion-white",
+  "[&_input]:placeholder:!text-ion-3",
+].join(" ");
+
 // ── Section + view rendering (CLIENT) ─────────────────────────────────────────
 
 function SectionBlock({ section }: { section: SectionData }): JSX.Element {
@@ -667,18 +704,19 @@ function SectionBlock({ section }: { section: SectionData }): JSX.Element {
       {section.eyebrow || section.title || section.blurb ? (
         <div>
           {section.eyebrow ? (
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan-on-light">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan">
               {section.eyebrow}
             </p>
           ) : null}
-          <h2 className="mt-1 text-2xl font-semibold text-ink">{section.title}</h2>
+          <h2 className="mt-1 text-2xl font-semibold text-ion-white">{section.title}</h2>
           {section.blurb ? (
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-ink-1">{section.blurb}</p>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">{section.blurb}</p>
           ) : null}
         </div>
       ) : null}
 
       <DataTable<unknown>
+        className={DARK_TABLE_CLASS}
         columns={binding.columns}
         rows={section.rows}
         rowKey={binding.rowKey}
@@ -696,7 +734,7 @@ function SectionBlock({ section }: { section: SectionData }): JSX.Element {
       <RowsFreshnessStamp rows={section.rows.length} asOf={section.asOf} source={section.sourceLabel} />
 
       {section.footnote ? (
-        <p className="text-xs leading-5 text-ink-2">{section.footnote}</p>
+        <p className="text-xs leading-5 text-ion-2">{section.footnote}</p>
       ) : null}
     </section>
   );

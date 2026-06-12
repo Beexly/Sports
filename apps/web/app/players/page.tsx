@@ -40,17 +40,18 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
   }
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen bg-carbon text-ion">
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <PageHero
+          variant="dark"
           eyebrow={view.eyebrow}
           title={view.title}
           description={view.description}
           actions={
             <Link
               href={view.jsonHref}
-              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-paper-border px-5 py-3 text-sm font-semibold text-ink hover:border-ink-1"
+              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
               title="The raw rows behind this table, as machine-readable JSON"
             >
               Raw data (JSON)
@@ -58,7 +59,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
           }
           aside={
             view.explainer && view.explainer.length > 0 ? (
-              <MetricExplainer terms={view.explainer} />
+              <MetricExplainer variant="dark" terms={view.explainer} />
             ) : undefined
           }
         />
@@ -67,6 +68,11 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
           param="view"
           active={view.slug}
           pathname={PATHNAME}
+          // The shared <Tabs> is paper-surface by default (and stays that way for
+          // the intelligence boards). The Player Lab is a dark "carbon" surface,
+          // so we re-skin it through the className escape hatch only — see the
+          // matching DataTable overrides in components/players/player-lab-table.tsx.
+          className="!border-mineral !bg-eclipse [&_.bg-paper-raised]:!bg-mineral [&_.text-ink]:!text-ion-white [&_.text-ink-1]:!text-ion-1 [&_a:hover]:!bg-white/5 [&_a:hover]:!text-ion-white"
           ariaLabel="Player Lab views"
           currentParams={searchParams}
           items={PLAYER_VIEWS.map((v) => ({
@@ -78,6 +84,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
 
         {loadError || !result || result.status === "source-error" ? (
           <SourceError
+            variant="dark"
             reason={
               loadError
                 ? `This view could not load. ${loadError}`
@@ -87,7 +94,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
         ) : (
           <>
             {result.windowLabel ? (
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ink-2">
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ion-2">
                 Source window · {result.windowLabel}
               </p>
             ) : null}
@@ -95,7 +102,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
             <PlayerLabTable sections={result.sections} />
 
             {result.sourceIds.length > 0 ? (
-              <Attribution sourceIds={result.sourceIds} className="!text-ink-2" />
+              <Attribution sourceIds={result.sourceIds} />
             ) : null}
           </>
         )}

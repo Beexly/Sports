@@ -44,8 +44,16 @@ const SOCIAL_LINKS = [
 export function Footer() {
   return (
     <footer className="footer">
-      {/* Ambient wordmark — closing brand statement under the link columns */}
-      <div className="footer-wordmark" aria-hidden="true">
+      {/* Ambient wordmark — closing brand statement under the link columns.
+          The kit sets a fixed 240px size which crops the nowrap line mid-letter
+          inside the footer's overflow-hidden at normal viewports; scale it to
+          the viewport instead (and keep the bottom bleed proportional) so the
+          full wordmark always fits horizontally. */}
+      <div
+        className="footer-wordmark whitespace-nowrap"
+        style={{ fontSize: "min(240px, 9vw)", bottom: "-0.18em" }}
+        aria-hidden="true"
+      >
         GALAXY SPORTS EDGE
       </div>
       <div className="container">
