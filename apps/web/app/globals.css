@@ -578,3 +578,10 @@
   }
   .gw-mirage-layer, .gw-card-hover { transition: none !important; }
 }
+
+/* Backlog #4 — one numeric standard. Every monospace numeral on every
+   surface gets tabular figures so columns of stats, odds, and prices
+   align vertically. (Polish backlog: "tabular-nums everywhere".) */
+.font-mono {
+  font-variant-numeric: tabular-nums;
+}
