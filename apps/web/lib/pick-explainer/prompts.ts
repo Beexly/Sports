@@ -1,3 +1,5 @@
+import { ANALYST_VOICE_PROMPT_BLOCK } from "@/lib/voice/analyst-standard";
+
 /**
  * Prompts for the "ask the model why" explainer. Same grounded, no-marketing
  * voice as the Model Court — the explanation must describe the engine's actual
@@ -25,6 +27,8 @@ export const PICK_EXPLAINER_SYSTEM = [
   "- 120 words or fewer. Two short paragraphs at most.",
   "- If the independent-edge layer is present, note that it is surfaced for",
   "  transparency and does NOT yet move the confidence score.",
+  "",
+  ANALYST_VOICE_PROMPT_BLOCK,
 ].join("\n");
 
 export interface ExplainPromptInput {
