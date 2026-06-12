@@ -2,12 +2,13 @@
  * Next.js instrumentation — runs once at server startup (before the app serves
  * requests).
  *
- * Founder-gated and INERT BY DEFAULT. It registers the real graded projections
- * provider ONLY when (a) we're in the Node.js runtime and (b) PROJECTIONS_PROVIDER
- * is set. When both hold, it loads the nflverse-graded pool and registers it
- * through the existing seam, so lineup / waivers / draft / trade go live on real
- * players via activePlayerPool() — with no per-request fetch. A load/source error
- * never crashes startup: it's logged and the tools stay on the illustrative pool.
+ * ON BY DEFAULT (opt-out). Registers the real graded projections provider when
+ * (a) we're in the Node.js runtime and (b) PROJECTIONS_PROVIDER is NOT "off",
+ * "false", or "disabled". When both conditions hold, it loads the nflverse-graded
+ * pool and registers it through the existing seam, so lineup / waivers / draft /
+ * trade go live on real players via activePlayerPool() — with no per-request fetch.
+ * A load/source error never crashes startup: it's logged and the tools stay on the
+ * illustrative pool. Set PROJECTIONS_PROVIDER=off to disable (e.g. in test envs).
  *
  * The graded-pool module pulls node-only deps (node:zlib via the nflverse
  * loaders), so it must NOT enter the Edge instrumentation bundle. We import it
@@ -25,7 +26,7 @@ import type { GradedPoolResult } from "@/lib/integrations/graded-pool";
 
 export type ProjectionsRegistrationOutcome =
   | "skipped-runtime"
-  | "skipped-unset"
+  | "skipped-disabled"
   | "registered"
   | "source-error"
   | "load-failed";
@@ -44,9 +45,9 @@ export async function registerProjectionsFromEnv(
   // can't run the nflverse loaders). Guard so this is a no-op everywhere else.
   if (env.NEXT_RUNTIME !== "nodejs") return "skipped-runtime";
 
-  // Founder gate: do nothing unless the projections feed is explicitly enabled.
-  const flag = env.PROJECTIONS_PROVIDER;
-  if (!flag || flag.trim().length === 0) return "skipped-unset";
+  // Opt-out gate: skip only when explicitly disabled via env.
+  const flag = (env.PROJECTIONS_PROVIDER ?? "").trim().toLowerCase();
+  if (flag === "off" || flag === "false" || flag === "disabled") return "skipped-disabled";
 
   try {
     const result = await loader();
