@@ -10,6 +10,13 @@ import { consensusNoVig, type ConsensusMarketRead } from "@sports/prediction-eng
  * Pure, no I/O.
  */
 
+/**
+ * Minimum |homeDriftPp| that indicates the market is actively moving within
+ * the capture window. Used by both market-fair-board.tsx (text-plasma styling)
+ * and the Galaxy Twin (node "moving" state). Single source of truth.
+ */
+export const DRIFT_MOVING_PP = 1.5;
+
 export interface OddsRowForRead {
   readonly bookmaker: string;
   readonly market: string;

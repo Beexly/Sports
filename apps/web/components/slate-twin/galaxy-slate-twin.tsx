@@ -85,6 +85,11 @@ type StarTier = {
   spin: number;
 };
 
+/** Hex for drift-moving state — matches text-plasma in market-fair-board. */
+const DRIFT_HEX = "#FF2DD6";
+/** Hex for book-disagreement (argued) state — amber, distinct from all existing signals. */
+const ARGUED_HEX = "#FFB627";
+
 type System = {
   game: TwinGame;
   group: InstanceType<typeof THREE.Group>;
@@ -101,6 +106,10 @@ type System = {
   sharpNode: InstanceType<typeof THREE.Sprite>;
   lensRing: InstanceType<typeof THREE.LineLoop>;
   impactRing: InstanceType<typeof THREE.LineLoop>;
+  /** Pulsing ring shown when driftState === "moving". */
+  driftRing: InstanceType<typeof THREE.LineLoop>;
+  /** Diffuse glow shown when disagreementState === "argued". */
+  arguedHalo: InstanceType<typeof THREE.Sprite>;
   publicMoney: number;
   sharp: number;
   impact: TwinImpact | null;
@@ -323,8 +332,22 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       group.add(impactRing);
       disposables.push(impMat);
 
+      // Drift ring — pulsing outline when driftState === "moving".
+      const driftMat = new THREE.LineBasicMaterial({ color: new THREE.Color(DRIFT_HEX), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const driftRing = new THREE.LineLoop(ringGeo, driftMat);
+      group.add(driftRing);
+      disposables.push(driftMat);
+
+      // Argued halo — diffuse warm glow when disagreementState === "argued".
+      const arguedMat = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(ARGUED_HEX), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+      const arguedHalo = new THREE.Sprite(arguedMat);
+      const ahs = (0.5 + game.signalDensity * 1.3) * 2.8;
+      arguedHalo.scale.set(ahs, ahs, 1);
+      group.add(arguedHalo);
+      disposables.push(arguedMat);
+
       scene.add(group);
-      systems.push({ game, group, core, halo, ring, sats, satHalos, focus: 0, trail, trailHead, trailPts, pressure, sharpNode, lensRing, impactRing, publicMoney: pm, sharp, impact, base, baseHex: VERDICT_HEX[game.verdict], screen: { x: 0, y: 0, vis: false } });
+      systems.push({ game, group, core, halo, ring, sats, satHalos, focus: 0, trail, trailHead, trailPts, pressure, sharpNode, lensRing, impactRing, driftRing, arguedHalo, publicMoney: pm, sharp, impact, base, baseHex: VERDICT_HEX[game.verdict], screen: { x: 0, y: 0, vis: false } });
     }
 
     const composer = new EffectComposer(renderer);
@@ -429,6 +452,12 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       hud.appendChild(r);
       hudValues.set(row.key, v);
     }
+    // Market signal row — hidden when neither state is set.
+    const hudMarketRow = document.createElement("div");
+    Object.assign(hudMarketRow.style, {
+      display: "none", gap: "5px", padding: "4px 0", flexWrap: "wrap",
+    } as Partial<CSSStyleDeclaration>);
+    hud.appendChild(hudMarketRow);
     overlay.appendChild(hud);
     let hudKey = "";
 
@@ -604,6 +633,26 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
           (s.impactRing.material as InstanceType<typeof THREE.LineBasicMaterial>).opacity = op;
         }
 
+        // Drift ring — shown only when driftState === "moving", pulsing.
+        if (g.driftState === "moving") {
+          const ph = reduced ? 0.6 : Math.sin(t * 2.2 + g.pos[0]) * 0.5 + 0.5;
+          const driftScale = 1.1 + ph * 0.4;
+          s.driftRing.scale.set(driftScale, driftScale, driftScale);
+          (s.driftRing.material as InstanceType<typeof THREE.LineBasicMaterial>).opacity =
+            (0.18 + ph * 0.28) * dim;
+        } else {
+          (s.driftRing.material as InstanceType<typeof THREE.LineBasicMaterial>).opacity = 0;
+        }
+
+        // Argued halo — shown only when disagreementState === "argued".
+        if (g.disagreementState === "argued") {
+          const ph = reduced ? 0.5 : Math.sin(t * 1.1 + g.pos[2]) * 0.5 + 0.5;
+          (s.arguedHalo.material as InstanceType<typeof THREE.SpriteMaterial>).opacity =
+            (0.08 + ph * 0.1) * dim;
+        } else {
+          (s.arguedHalo.material as InstanceType<typeof THREE.SpriteMaterial>).opacity = 0;
+        }
+
         (s.trail.geometry as InstanceType<typeof THREE.BufferGeometry>).setDrawRange(0, ti + 1);
         s.trailHead.position.set(s.trailPts[ti * 3] ?? 0, s.trailPts[ti * 3 + 1] ?? 0, s.trailPts[ti * 3 + 2] ?? 0);
         const trailBase = sel === g.id ? 0.9 : lg !== "ALL" && !offLeague ? 0.55 : 0.28;
@@ -707,6 +756,33 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
           hudValues.get("risk")!.textContent = d.risk;
           hudValues.get("breakRead")!.textContent = d.breakRead;
           hudValues.get("receipt")!.textContent = d.receipt;
+
+          // Market signal chips — update whenever the hud key changes.
+          const gm = hudSys.game;
+          hudMarketRow.innerHTML = "";
+          const chips: { label: string; color: string; tip: string }[] = [];
+          if (gm.driftState === "moving") {
+            chips.push({ label: "market moving", color: DRIFT_HEX, tip: "No-vig fair price shifted ≥1.5pp in window" });
+          }
+          if (gm.disagreementState === "argued") {
+            chips.push({ label: "books argued", color: ARGUED_HEX, tip: "Book spread of no-vig fair price ≥4pp" });
+          }
+          if (chips.length > 0) {
+            hudMarketRow.style.display = "flex";
+            for (const chip of chips) {
+              const c = document.createElement("span");
+              c.textContent = chip.label;
+              c.title = chip.tip;
+              Object.assign(c.style, {
+                font: "600 9px var(--f-mono, monospace)", textTransform: "uppercase",
+                letterSpacing: "0.1em", padding: "2px 7px", borderRadius: "999px",
+                color: chip.color, border: `1px solid ${chip.color}55`, background: `${chip.color}18`,
+              } as Partial<CSSStyleDeclaration>);
+              hudMarketRow.appendChild(c);
+            }
+          } else {
+            hudMarketRow.style.display = "none";
+          }
         }
         const hx = Math.max(120, Math.min(W - 130, hudSys.screen.x));
         const below = hudSys.screen.y + 18;
@@ -882,6 +958,8 @@ const LEGEND_ROWS: ReadonlyArray<{ enc: string; means: string; color: string }> 
   { enc: "Satellites", means: "Markets orbiting the game; size = market depth", color: BRAND_COLORS.ionWhite },
   { enc: "Magenta lobe vs cyan node", means: "Public-money pull vs sharp divergence (dark-matter)", color: BRAND_COLORS.ionMagenta },
   { enc: "Core colour", means: "Verdict - PLAY / WATCHLIST / NO-BET (grey = held)", color: BRAND_COLORS.orbitalCyan },
+  { enc: "Pulsing plasma ring", means: "Market moving - no-vig fair price shifted materially within the capture window (drift ≥ 1.5pp)", color: DRIFT_HEX },
+  { enc: "Amber diffuse glow", means: "Books argued - book spread of no-vig fair price is wide (≥ 4pp); no consensus on the number", color: ARGUED_HEX },
 ];
 
 function Legend() {
@@ -980,6 +1058,24 @@ function Inspector({ game, timeIndex, illustrative, marketIndex, onMarket }: { g
               title={game.gateReason ?? undefined}
             >
               {game.boardStatus === "PUBLISHED_TODAY" ? "on the board" : game.boardStatus === "GATED_TODAY" ? "gate held" : "scoring now"}
+            </span>
+          )}
+          {game.driftState === "moving" && (
+            <span
+              className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
+              style={{ color: DRIFT_HEX, border: `1px solid ${DRIFT_HEX}55`, background: `${DRIFT_HEX}12` }}
+              title="No-vig fair price shifted ≥ 1.5pp within the capture window — the market is moving"
+            >
+              market moving
+            </span>
+          )}
+          {game.disagreementState === "argued" && (
+            <span
+              className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
+              style={{ color: ARGUED_HEX, border: `1px solid ${ARGUED_HEX}55`, background: `${ARGUED_HEX}12` }}
+              title="Book spread of no-vig fair price ≥ 4pp — the books haven&apos;t agreed on a number"
+            >
+              books argued
             </span>
           )}
         </div>
@@ -1156,6 +1252,12 @@ function Manifest({ games: allGames, selectedId, onSelect, league }: { games: re
                 <span className="flex items-center gap-2">
                   {g.impact && (
                     <span aria-label="has impact event" title="Impact event" style={{ color: BRAND_COLORS.ionMagenta }}>!</span>
+                  )}
+                  {g.driftState === "moving" && (
+                    <span aria-label="market moving" title="Market moving — fair price shifted ≥ 1.5pp in window" style={{ color: DRIFT_HEX, fontSize: "10px" }}>↑</span>
+                  )}
+                  {g.disagreementState === "argued" && (
+                    <span aria-label="books argued" title="Books argued — no-vig spread ≥ 4pp" style={{ color: ARGUED_HEX, fontSize: "10px" }}>≠</span>
                   )}
                   <span className="font-mono text-[11px] uppercase tracking-wider" style={{ color }}>{g.verdict}</span>
                 </span>

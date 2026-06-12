@@ -70,7 +70,7 @@ Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · 
 
 1. Optimizer real-pool env keys — OWNER (Vercel env)
 2. Players Lab stat polish — DONE (stamps + math spot-check + stability)
-3. Galaxy Twin live-row deepening — partially shipped pre-session; further Crosswire pass QUEUED
+3. Galaxy Twin live-row deepening — DONE (Crosswire pass): twin nodes now carry "market moving" (drift ≥ shared DRIFT_MOVING_PP) and "books argued" (cloud spread ≥ WIDE_SPREAD_PP) states from real captured odds only; inspector chips + legend + HUD wired; absent data renders no signal
 4. Number formatting unification — DONE
 5. Film Room Higgsfield slate render — OWNER (credits spend)
 6. Jeff Mans weekly-show feed rights evaluation — DONE (`jeff-mans-one-mans-opinion` in rights registry, vendor_candidate, automation off; questionnaire at `docs/legal/VENDOR_QUESTIONNAIRE_JEFF_MANS.md`; outreach is OWNER)

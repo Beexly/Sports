@@ -1,4 +1,5 @@
 import { loadMarketFairBoard } from "@/lib/market/load-market-fair-board";
+import { DRIFT_MOVING_PP } from "@/lib/market/game-market-read";
 import { SimulationCloud } from "@/components/observatory/simulation-cloud";
 import {
   NUMERIC_TEXT_CLASS,
@@ -77,7 +78,7 @@ export async function MarketFairBoard() {
                     {row.read.homeDriftPp !== null && (
                       <span
                         className={
-                          Math.abs(row.read.homeDriftPp) >= 1.5
+                          Math.abs(row.read.homeDriftPp) >= DRIFT_MOVING_PP
                             ? " text-plasma"
                             : " text-ion-2"
                         }
