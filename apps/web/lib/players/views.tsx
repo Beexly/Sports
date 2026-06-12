@@ -625,6 +625,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     explainer: [
       { term: "PPR/G & 5g", definition: "Per-game PPR over the season, and over the last 5 games. Δ = recent form minus season pace." },
       { term: "Boom% / Bust%", definition: "Share of games at or above a startable ceiling (≥20) and at or below a floor (≤10) — the real distribution." },
+      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6. Sample-size only — it does not model variance, opponent quality, or role changes." },
       { term: "WOPR & target share", definition: "Season averages of the weekly weighted opportunity rating (1.5·target share + 0.7·air-yards share) and team target share — the role behind the points." },
     ],
     jsonHref: "/api/nflverse/player-lab",
@@ -641,6 +642,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     explainer: [
       { term: "Snap %", definition: "Average share of team offensive snaps the player is on the field for." },
       { term: "Why it leads", definition: "Snap share moves before targets and production do — opportunity precedes the box score." },
+      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6. Sample-size only." },
     ],
     jsonHref: "/api/nflverse/snap-share",
     load: loadSnapsView,
