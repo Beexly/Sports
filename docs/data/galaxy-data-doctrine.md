@@ -80,8 +80,10 @@ Calibration → whether we deserve trust. Every stat gets a job or gets cut.
 
 ## Build order (next, in order)
 
-1. No-vig implied probability engine (the missing market-comparison
-   primitive; everything in "model vs market" framing depends on it).
+1. ~~No-vig implied probability engine~~ SHIPPED 2026-06-12:
+   `market-read.ts` (Shin de-vig per book, median consensus across books,
+   book hold, marketDisagreementPct). Feed: slate-twin loader already
+   selects per-book odds rows.
 2. Market disagreement panel fed by it (model % vs no-vig % vs consensus).
 3. Stat Stability Grade: extend `assessUncertainty` to per-metric envelopes
    in Player Lab.

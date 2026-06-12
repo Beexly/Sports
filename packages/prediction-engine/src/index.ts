@@ -163,3 +163,17 @@ export {
   type ReliabilityTier,
   type LimitationFlag,
 } from "./model-limitations.js";
+
+export {
+  noVigFromAmericanPrices,
+  consensusNoVig,
+  marketDisagreementPct,
+  type MarketRead,
+  type ConsensusMarketRead,
+} from "./market-read.js";
+export {
+  shinDevig,
+  gotoConversion,
+  impliedFromDecimalOdds,
+  type ShinResult,
+} from "./shin-devig.js";
