@@ -144,10 +144,11 @@ describe("buildGradedProvider + the founder gate", () => {
     expect(provider.list()[0]!.source).toBe("live");
   });
 
-  it("only drives activePlayerPool when registered AND keyed", () => {
+  it("drives activePlayerPool when registered (projections on by default)", () => {
     registerProjectionsProvider(buildGradedProvider(pool));
-    expect(activePlayerPool({})).toBe(PLAYERS); // env not set -> gate holds, illustrative
-    expect(activePlayerPool({ PROJECTIONS_PROVIDER: "graded" })).toBe(pool); // keyed -> real graded pool
+    expect(activePlayerPool({})).toBe(pool); // projections configured by default -> live pool
+    expect(activePlayerPool({ PROJECTIONS_PROVIDER: "graded" })).toBe(pool); // explicit key also works
+    expect(activePlayerPool({ PROJECTIONS_PROVIDER: "off" })).toBe(PLAYERS); // opt-out -> illustrative
   });
 });
 

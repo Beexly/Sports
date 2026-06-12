@@ -230,3 +230,54 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
 
   return { lineups, exposure };
 }
+
+export type LateSwapResult = {
+  readonly original: Lineup;
+  readonly swapped: Lineup;
+  /** Slots that changed (0-indexed into DFS_SLOTS). */
+  readonly changedSlots: readonly number[];
+  readonly salaryDelta: number;
+  readonly projDelta: number;
+};
+
+/**
+ * Late swap: given an existing lineup and a set of scratched player IDs, find
+ * the optimal replacement for each scratched slot while locking everyone else.
+ * Returns null if no legal swap exists under the cap.
+ */
+export function lateSwap(
+  lineup: Lineup,
+  scratchedIds: ReadonlySet<string>,
+  mode: Mode,
+  slate: readonly DfsPlayer[],
+): LateSwapResult | null {
+  if (scratchedIds.size === 0) return null;
+  const locks = new Set(lineup.filter((p) => !scratchedIds.has(p.id)).map((p) => p.id));
+  const opts: OptOpts = { mode, stack: false, locks, excludes: scratchedIds };
+  const lockedSalary = lineup.reduce((s, p) => (!scratchedIds.has(p.id) ? s + p.salary : s), 0);
+  const capLeft = SALARY_CAP - lockedSalary;
+
+  // Restrict slate to players not already in the lineup (excluding scratched) AND
+  // respect the remaining cap headroom.
+  const inLineup = new Set(lineup.filter((p) => !scratchedIds.has(p.id)).map((p) => p.id));
+  const available = slate.filter((p) => !inLineup.has(p.id) && !scratchedIds.has(p.id) && p.salary <= capLeft);
+
+  // Rebuild a full slate that contains both the locked players and available candidates.
+  const fullSlate = [...lineup.filter((p) => !scratchedIds.has(p.id)), ...available];
+
+  const swappedArr = optimizeOne(opts, () => 0, 80, fullSlate);
+  if (!swappedArr) return null;
+
+  const changedSlots = lineup
+    .map((p, i) => ({ i, changed: swappedArr[i]?.id !== p.id }))
+    .filter((x) => x.changed)
+    .map((x) => x.i);
+
+  return {
+    original: lineup,
+    swapped: swappedArr,
+    changedSlots,
+    salaryDelta: salaryOf(swappedArr) - salaryOf(lineup),
+    projDelta: Math.round((swappedArr.reduce((s, p) => s + p.proj, 0) - lineup.reduce((s, p) => s + p.proj, 0)) * 10) / 10,
+  };
+}

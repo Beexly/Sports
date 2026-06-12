@@ -46,7 +46,7 @@ Action Network, Dimers, BetWise, BettingPros.
 | Lineup optimizer (multi-objective) | Both | `/fantasy/dfs` — cash/GPP/leverage, stacking, exposure | ✅ |
 | Salary data | Both | DK CSV import live today; auto-feed unlocks with SPORTSDATAIO/FANTASYDATA keys | ✅ CSV form live · feed = key upgrade |
 | Ownership projections | LineStar | Leverage uses field-ownership estimates; no per-slate projection model | 🟡 |
-| Late swap | LineStar | Not built | ❌ low priority until live slates |
+| Late swap | LineStar | **DFS Suite** — scratch players, engine locks rest + re-solves under remaining cap, before/after salary+proj delta | ✅ NEW 2026-06-12 |
 | Contest sims | FTN | `/fantasy/contests` (sample-slate banner until feed) | 🟡 |
 
 ## Stats & data (PFF · FTN)
@@ -64,11 +64,12 @@ Action Network, Dimers, BetWise, BettingPros.
 ## Honest gaps ranked (what to build next)
 
 1. ~~Strength of schedule~~ — **shipped 2026-06-12: Schedule Lab `/sos`** (FBG parity ✅)
-2. ~~Projections~~ — **no vendor needed**: `PROJECTIONS_PROVIDER=graded` activates our own model (corrected 2026-06-12).
-3. ESPN/Yahoo — **form closed 2026-06-12** via universal roster paste-import; native OAuth sync still the upgrade (requires registered apps).
-4. **Public betting %** — needs a paid consensus vendor; route through vendor questionnaire.
-5. **Ownership projection model** — per-slate model once live salary feed is connected.
-6. ~~Unified history explorer~~ — **shipped 2026-06-12: History Lab `/history`** (MLB spine live; NFL pbp next).
+2. ~~Projections~~ — **default-on 2026-06-12**: graded pool (nflverse, our own model) now loads without any env flag.
+3. ~~ESPN/Yahoo~~ — **form closed 2026-06-12** via universal roster paste-import; native OAuth sync still the upgrade (requires registered apps).
+4. ~~Late swap~~ — **shipped 2026-06-12**: DFS Suite late swap panel (LineStar parity ✅)
+5. **Public betting %** — needs a paid consensus vendor; route through vendor questionnaire.
+6. **Ownership projection model** — per-slate model once live salary feed is connected.
+7. ~~Unified history explorer~~ — **shipped 2026-06-12: History Lab `/history`** (MLB spine live; NFL pbp next).
 
 ## Verdict against the owner's test (2026-06-12)
 

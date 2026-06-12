@@ -1,12 +1,14 @@
 /**
  * External provider registry — the single source of truth for what's wired vs.
- * founder-gated.
+ * vendor-gated.
  *
- * Every live integration (projections, image moderation, league OAuth, the Nova
- * avatar/TTS vendor, odds data) is enabled ONLY by an environment variable a
- * human sets. This module reads that config and reports status; it never
- * activates anything. The product degrades gracefully to illustrative data until
- * a key is present. Pure (env-injectable), so it's fully testable.
+ * Projections (nflverse-graded) is ON by default — it's our own model over
+ * free open-licensed data, same footing as Player Lab / Schedule Lab / History
+ * Lab. Set PROJECTIONS_PROVIDER=off to disable it explicitly.
+ *
+ * Every vendor integration (image moderation, league OAuth, the Nova avatar/TTS
+ * vendor, odds API key) is still opt-in — those require paid contracts or OAuth
+ * registrations. Pure (env-injectable), fully testable.
  */
 
 export type ProviderCategory = "projections" | "image-safety" | "league-oauth" | "avatar-tts" | "odds" | "pickem" | "dfs";
@@ -26,7 +28,7 @@ type Env = Record<string, string | undefined>;
 type ProviderDef = Omit<ProviderStatus, "configured">;
 
 const PROVIDERS: readonly ProviderDef[] = [
-  { key: "projections", name: "Player projections", category: "projections", envVar: "PROJECTIONS_PROVIDER", unlocks: "Live lineup/waiver/trade/DFS recommendations on real players", note: "Set to \"graded\" to run OUR OWN nflverse-graded model (no purchase needed) — a deliberate go-live decision, not a vendor dependency. A licensed third-party feed can replace it later via the same seam." },
+  { key: "projections", name: "Player projections", category: "projections", envVar: "PROJECTIONS_PROVIDER", unlocks: "Live lineup/waiver/trade/DFS recommendations on real players", note: "ON by default (nflverse-graded, our own model, no purchase). Set PROJECTIONS_PROVIDER=off to fall back to the illustrative pool. A licensed third-party feed can replace it later via the same seam." },
   { key: "image-safety", name: "NSFW image classifier", category: "image-safety", envVar: "NSFW_CLASSIFIER_URL", unlocks: "Automated image/video moderation for any media surface", note: "An open_nsfw / nsfwjs-class model. Until set, media fails closed to human review." },
   { key: "league-espn", name: "ESPN league OAuth", category: "league-oauth", envVar: "ESPN_OAUTH_CLIENT_ID", unlocks: "Read-only ESPN roster sync", note: "ESPN requires OAuth. Sleeper (public) already works without this." },
   { key: "league-yahoo", name: "Yahoo league OAuth", category: "league-oauth", envVar: "YAHOO_OAUTH_CLIENT_ID", unlocks: "Read-only Yahoo roster sync", note: "Yahoo OAuth app credentials." },
@@ -38,7 +40,17 @@ const PROVIDERS: readonly ProviderDef[] = [
 
 /** Status of every external provider, given an environment. */
 export function providerStatuses(env: Env = process.env): ProviderStatus[] {
-  return PROVIDERS.map((p) => ({ ...p, configured: Boolean(env[p.envVar] && String(env[p.envVar]).trim().length > 0) }));
+  return PROVIDERS.map((p) => {
+    let configured: boolean;
+    if (p.key === "projections") {
+      // Opt-out: on by default; set PROJECTIONS_PROVIDER=off to disable.
+      const val = (env[p.envVar] ?? "").trim().toLowerCase();
+      configured = val !== "off" && val !== "false" && val !== "disabled";
+    } else {
+      configured = Boolean(env[p.envVar] && String(env[p.envVar]).trim().length > 0);
+    }
+    return { ...p, configured };
+  });
 }
 
 /** Is a single provider configured? */

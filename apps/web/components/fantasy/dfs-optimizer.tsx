@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, leverage, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
 import { generateLineups, type Mode, type GenResult } from "@/lib/fantasy/dfs-optimizer";
 import { DkImportPanel } from "@/components/fantasy/dk-import-panel";
+import { LateSwapPanel } from "@/components/fantasy/late-swap-panel";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const MODES: { key: Mode; label: string; blurb: string }[] = [
@@ -20,6 +21,8 @@ const MODES: { key: Mode; label: string; blurb: string }[] = [
   { key: "gpp", label: "GPP", blurb: "Maximise ceiling — win the tournament." },
   { key: "leverage", label: "Leverage", blurb: "Contrarian ceiling vs. ownership — the edge." },
 ];
+
+type Tab = "optimize" | "lateswap";
 
 export function DfsOptimizer() {
   const [mode, setMode] = useState<Mode>("gpp");
@@ -31,6 +34,7 @@ export function DfsOptimizer() {
   const [busy, setBusy] = useState(false);
   const [slate, setSlate] = useState<DfsPlayer[]>(() => [...DFS_SLATE]);
   const [imported, setImported] = useState(false);
+  const [tab, setTab] = useState<Tab>("optimize");
 
   const run = (s: DfsPlayer[] = slate) => {
     setBusy(true);
@@ -112,6 +116,29 @@ export function DfsOptimizer() {
 
       <DkImportPanel onImport={onImport} onReset={onReset} imported={imported} />
 
+      {/* tab switcher — Late Swap only shown after a lineup is generated */}
+      {result && result.lineups.length > 0 && (
+        <div className="flex gap-1 rounded-full p-0.5" style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${BRAND_COLORS.steelGray}`, width: "fit-content" }}>
+          {(["optimize", "lateswap"] as Tab[]).map((t) => {
+            const active = tab === t;
+            return (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setTab(t)}
+                className="rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors"
+                style={{ color: active ? BRAND_COLORS.obsidianBlack : "var(--ion-2,#c8d2dd)", background: active ? BRAND_COLORS.orbitalCyan : "transparent" }}
+              >
+                {t === "optimize" ? "Optimizer" : "Late Swap"}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {tab === "lateswap" && result && result.lineups[0] ? (
+        <LateSwapPanel lineup={result.lineups[0].players} slate={slate} />
+      ) : (
       <div className="grid gap-6 lg:grid-cols-[1.35fr_1.05fr]">
         {/* lineups */}
         <div className="space-y-4">
@@ -208,6 +235,7 @@ export function DfsOptimizer() {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }
