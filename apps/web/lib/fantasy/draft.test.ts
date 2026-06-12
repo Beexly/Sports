@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { PLAYERS, playerById, type Pos } from "./players";
-import { positionalScarcity, detectRuns, parseAdpCsv, valueVsAdp } from "./draft";
+import { positionalScarcity, detectRuns, parseAdpCsv, valueVsAdp, auctionValues, AUCTION_DEFAULTS } from "./draft";
 
 describe("positionalScarcity", () => {
   it("reports remaining + startersLeft per position on the full board", () => {
@@ -59,6 +59,32 @@ describe("parseAdpCsv", () => {
     expect(m.has("ghost player")).toBe(false);
     expect(m.has("bad row")).toBe(false);
     expect(m.get("real")).toBe(8);
+  });
+});
+
+describe("auctionValues", () => {
+  const vals = auctionValues(PLAYERS, AUCTION_DEFAULTS);
+
+  it("returns an entry for every draftable player", () => {
+    expect(vals.length).toBeGreaterThan(0);
+    expect(vals.length).toBeLessThanOrEqual(PLAYERS.length);
+  });
+
+  it("every player gets at least $1 (reserve price)", () => {
+    expect(vals.every((v) => v.dollars >= 1)).toBe(true);
+  });
+
+  it("elite players command multiples of the minimum", () => {
+    const topDollars = vals[0]?.dollars ?? 0;
+    expect(topDollars).toBeGreaterThan(10);
+  });
+
+  it("total spend is close to the league-wide budget", () => {
+    const total = vals.reduce((s, v) => s + v.dollars, 0);
+    const leagueBudget = AUCTION_DEFAULTS.teams * AUCTION_DEFAULTS.budget;
+    // Allow ±30% for rounding
+    expect(total).toBeGreaterThan(leagueBudget * 0.5);
+    expect(total).toBeLessThan(leagueBudget * 1.3);
   });
 });
 

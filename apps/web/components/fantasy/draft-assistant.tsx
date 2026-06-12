@@ -15,13 +15,14 @@ import { useMemo, useRef, useState } from "react";
 import { PLAYERS, POSITIONS, POS_HEX, vor, tier, playerById, type Pos, type Player } from "@/lib/fantasy/players";
 import {
   recommend, rosterNeeds, STARTERS,
-  positionalScarcity, detectRuns, parseAdpCsv, valueVsAdp,
+  positionalScarcity, detectRuns, parseAdpCsv, valueVsAdp, auctionValues,
   type AdpLabel, type ScarcityLevel,
 } from "@/lib/fantasy/draft";
 import { BRAND_COLORS } from "@/lib/brand";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 
 type Filter = Pos | "ALL";
+type DraftMode = "snake" | "auction";
 
 const LEVEL_HEX: Record<ScarcityLevel, string> = { critical: BRAND_COLORS.ionMagenta, tight: "#E0A800", ok: "#6b7785" };
 const ADP_HEX: Record<AdpLabel, string> = { steal: BRAND_COLORS.orbitalCyan, value: BRAND_COLORS.softUltraviolet, "on-time": "#9fb3c8", reach: BRAND_COLORS.ionMagenta, none: "#6b7785" };
@@ -39,7 +40,16 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
   const [filter, setFilter] = useState<Filter>("ALL");
   const [adp, setAdp] = useState<Map<string, number>>(new Map());
   const [adpName, setAdpName] = useState<string | null>(null);
+  const [draftMode, setDraftMode] = useState<DraftMode>("snake");
+  const [auctionTeams, setAuctionTeams] = useState(12);
+  const [auctionBudget, setAuctionBudget] = useState(200);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const auctionVals = useMemo(
+    () => auctionValues(universe, { teams: auctionTeams, budget: auctionBudget, rosterSpots: 15, reserveSlots: 3 }),
+    [universe, auctionTeams, auctionBudget],
+  );
+  const auctionMap = useMemo(() => new Map(auctionVals.map((v) => [v.player.id, v.dollars])), [auctionVals]);
 
   const myPlayers = useMemo(() => [...mine].map((id) => playerById(id, universe)!).filter(Boolean), [mine, universe]);
   const available = useMemo(() => universe.filter((p) => !mine.has(p.id) && !gone.has(p.id)), [mine, gone, universe]);
@@ -79,8 +89,75 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
 
   return (
     <div className="space-y-4">
+      {/* Draft mode toggle */}
+      <div className="flex flex-wrap items-center gap-3">
+        {(["snake", "auction"] as DraftMode[]).map((m) => {
+          const active = draftMode === m;
+          const c = BRAND_COLORS.softUltraviolet;
+          return (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setDraftMode(m)}
+              className="rounded-full px-3 py-1 text-xs font-semibold capitalize tracking-wider"
+              style={{ color: active ? BRAND_COLORS.obsidianBlack : "var(--ion-3,#8b9bb4)", background: active ? c : "rgba(255,255,255,0.05)", border: `1px solid ${active ? c : BRAND_COLORS.steelGray}` }}
+            >
+              {m === "snake" ? "Snake Draft" : "Auction Draft"}
+            </button>
+          );
+        })}
+        {draftMode === "auction" && (
+          <span className="ml-auto flex items-center gap-3 text-[11px] text-ink-400">
+            <label className="flex items-center gap-1.5">
+              <span>Teams</span>
+              <select value={auctionTeams} onChange={(e) => setAuctionTeams(Number(e.target.value))} className="rounded border bg-transparent px-1.5 py-0.5 text-white focus:outline-none" style={{ borderColor: BRAND_COLORS.steelGray }}>
+                {[8, 10, 12, 14].map((n) => <option key={n} value={n}>{n}</option>)}
+              </select>
+            </label>
+            <label className="flex items-center gap-1.5">
+              <span>Budget</span>
+              <input type="number" value={auctionBudget} min={100} max={500} step={50} onChange={(e) => setAuctionBudget(Number(e.target.value))} className="w-20 rounded border bg-transparent px-1.5 py-0.5 text-white focus:outline-none" style={{ borderColor: BRAND_COLORS.steelGray }} />
+            </label>
+          </span>
+        )}
+      </div>
+
+      {/* Auction board — full-width when in auction mode */}
+      {draftMode === "auction" && (
+        <div className="surface-card overflow-hidden p-0">
+          <div className="grid grid-cols-[auto_1fr_auto_auto_auto] gap-3 border-b px-4 py-2.5 text-[10px] uppercase tracking-[0.14em] text-ink-500" style={{ borderColor: BRAND_COLORS.steelGray }}>
+            <span>Pos</span><span>Player</span><span className="text-right">Value $</span><span className="text-right">VOR</span><span className="text-right">Tier</span>
+          </div>
+          <div className="max-h-[60vh] overflow-y-auto">
+            {auctionVals.filter((v) => !gone.has(v.player.id)).map((v) => {
+              const taken = mine.has(v.player.id);
+              const c = POS_HEX[v.player.pos];
+              return (
+                <div
+                  key={v.player.id}
+                  className="grid grid-cols-[auto_1fr_auto_auto_auto] items-center gap-3 border-b px-4 py-2.5 last:border-b-0"
+                  style={{ borderColor: `${BRAND_COLORS.steelGray}55`, opacity: taken || gone.has(v.player.id) ? 0.4 : 1 }}
+                >
+                  <span className="rounded px-1 py-0.5 font-mono text-[9px] font-bold" style={{ color: c, background: `${c}18` }}>{v.player.pos}</span>
+                  <div>
+                    <p className="text-sm text-white">{v.player.name} <span className="text-[10px] text-ink-600">{v.player.team}</span></p>
+                    <p className="text-[10px] text-ink-600">{v.player.role}</p>
+                  </div>
+                  <p className="font-mono text-sm font-bold" style={{ color: BRAND_COLORS.orbitalCyan }}>${v.dollars}</p>
+                  <p className="font-mono text-sm text-ink-400">{vor(v.player, universe) >= 0 ? "+" : ""}{vor(v.player, universe)}</p>
+                  <p className="font-mono text-[11px] text-ink-500">T{tier(v.player, universe)}</p>
+                </div>
+              );
+            })}
+          </div>
+          <p className="border-t px-4 py-2 text-[10px] text-ink-600" style={{ borderColor: BRAND_COLORS.steelGray }}>
+            Dollar values distribute the league&apos;s total spendable budget ({auctionTeams} × ${auctionBudget - 3} = ${auctionTeams * (auctionBudget - 3)}) proportionally across VOR. Adjust teams/budget above to match your league.
+          </p>
+        </div>
+      )}
+
       {/* run alerts */}
-      {runs.length > 0 && (
+      {draftMode === "snake" && runs.length > 0 && (
         <div className="rounded-lg border p-3" style={{ borderColor: `${BRAND_COLORS.ionMagenta}55`, background: `${BRAND_COLORS.ionMagenta}0c` }}>
           {runs.map((r) => (
             <p key={r.pos} className="flex items-center gap-2 text-xs" style={{ color: BRAND_COLORS.ionMagenta }}>
@@ -90,7 +167,7 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+      {draftMode === "snake" && <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         {/* ── Board ── */}
         <div>
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -257,7 +334,7 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
             })()}
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

@@ -184,6 +184,49 @@ export function parseAdpCsv(text: string): Map<string, number> {
   return out;
 }
 
+// ── Auction draft values ─────────────────────────────────────────────────────
+
+export type AuctionConfig = {
+  readonly teams: number;
+  readonly budget: number;
+  /** Roster spots per team (determines how many players have positive VOR). */
+  readonly rosterSpots: number;
+  /** Minimum bid per player (reserve price; subtracts from spendable pool). */
+  readonly reserveSlots: number;
+};
+
+export const AUCTION_DEFAULTS: AuctionConfig = { teams: 12, budget: 200, rosterSpots: 15, reserveSlots: 3 };
+
+export type AuctionValue = {
+  readonly player: Player;
+  readonly dollars: number;
+  readonly pos: Player["pos"];
+};
+
+/**
+ * Standard auction-value formula: distribute the league's total spendable
+ * budget across draftable players proportional to their positive VOR. Players
+ * with VOR ≤ 0 are assigned the reserve price ($1). Pure; pool-injectable.
+ */
+export function auctionValues(
+  pool: readonly Player[] = PLAYERS,
+  cfg: AuctionConfig = AUCTION_DEFAULTS,
+): AuctionValue[] {
+  const { teams, budget, rosterSpots, reserveSlots } = cfg;
+  const spendablePerTeam = budget - reserveSlots;
+  const totalSpendable = teams * spendablePerTeam;
+
+  const draftable = pool.slice(0, teams * rosterSpots);
+  const vors = draftable.map((p) => Math.max(0, vor(p, pool)));
+  const totalVor = vors.reduce((s, v) => s + v, 0);
+
+  return draftable.map((p, i) => {
+    const v = vors[i]!;
+    const raw = totalVor > 0 ? (v / totalVor) * totalSpendable : 0;
+    return { player: p, dollars: Math.max(1, Math.round(raw)), pos: p.pos };
+  });
+}
+
 export type AdpLabel = "steal" | "value" | "on-time" | "reach" | "none";
 export type AdpValue = { readonly adp: number | null; readonly delta: number | null; readonly label: AdpLabel };
 
