@@ -203,6 +203,44 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     notes: "Paid API. Subscription in place. Confirmed commercial display and storage rights.",
   },
 
+  // ── Approved: documented free public API ────────────────────────────────────
+  {
+    source_id: "sleeper-api",
+    source_name: "Sleeper API",
+    source_url: "https://docs.sleeper.com",
+    terms_url: "https://sleeper.com/terms",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "fantasy_platform",
+    status: "approved_api",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: true,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Data via Sleeper API (https://sleeper.com)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "none",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-12",
+    reviewed_by: "internal",
+    evidence_urls: ["https://docs.sleeper.com"],
+    unlock_condition: null,
+    vendor_contact: null,
+    notes:
+      "Documented free public read-only HTTP API (https://docs.sleeper.com). No auth required " +
+      "for reads; rate-limited (stay well under 1000 calls/min) and the players endpoint must be " +
+      "cached (call at most once per day per docs). Facts only: player metadata, NFL state, " +
+      "trending adds/drops. commercial_display_allowed=true on the basis that the API is openly " +
+      "published for third-party use, but Sleeper ToS should be re-confirmed for commercial " +
+      "display before any paid surface leans on it; downgrade if terms say otherwise. " +
+      "No model training on Sleeper data. Attribute Sleeper in derived outputs.",
+  },
+
   // ── Permission required ──────────────────────────────────────────────────────
   {
     source_id: "scores24-live",
