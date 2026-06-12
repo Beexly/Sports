@@ -129,6 +129,26 @@ export default async function LineRoomPage() {
             {data.games.length} games · {data.bookCount} books · facts from stored bookmaker data — never projections
           </p>
 
+          {data.arbs.length > 0 && (
+            <section className="mt-8 rounded-ds-md border border-emerald-500/40 bg-emerald-500/5 p-5">
+              <h2 className="font-display text-lg font-semibold text-white">Arbitrage detected</h2>
+              <ul className="mt-2 space-y-1.5 text-sm text-ink-200 [font-variant-numeric:tabular-nums]">
+                {data.arbs.map((a, i) => (
+                  <li key={i}>
+                    <span className="font-mono font-semibold text-emerald-300">
+                      +{(a.profitPct * 100).toFixed(2)}% locked
+                    </span>{" "}
+                    · {a.matchup} {MARKET_LABEL[a.market]} —{" "}
+                    <span className="capitalize">{a.homeBook.replace(/_/g, " ")}</span>{" "}
+                    {formatAmerican(a.homePrice)} /{" "}
+                    <span className="capitalize">{a.awayBook.replace(/_/g, " ")}</span>{" "}
+                    {formatAmerican(a.awayPrice)}. Books re-price fast — verify both legs before staking.
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
           {data.topEdges.length > 0 && (
             <section className="mt-8 rounded-ds-md border p-5" style={{ borderColor: `${BRAND_COLORS.orbitalCyan}44`, backgroundColor: `${BRAND_COLORS.orbitalCyan}0a` }}>
               <h2 className="font-display text-lg font-semibold text-white">Today&apos;s edges</h2>

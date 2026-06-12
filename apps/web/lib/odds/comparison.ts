@@ -144,6 +144,45 @@ function profitPerUnit(american: number): number {
   return american > 0 ? american / 100 : 100 / -american;
 }
 
+export interface ArbOpportunity {
+  readonly homeBook: string;
+  readonly homePrice: number;
+  readonly awayBook: string;
+  readonly awayPrice: number;
+  /** Guaranteed profit per 1 unit of total stake, both sides covered. */
+  readonly profitPct: number;
+}
+
+/**
+ * Two-way arbitrage: when the best home price and best away price (at
+ * DIFFERENT books) imply probabilities summing under 1, both sides can
+ * be covered for a guaranteed margin. Spread/total arbs are only real
+ * when both books post the SAME line, so non-H2H markets require the
+ * best lines to match exactly.
+ */
+export function findArbitrage(board: MarketBoard): ArbOpportunity | null {
+  const { bestHome, bestAway } = board;
+  if (!bestHome || !bestAway) return null;
+  if (bestHome.bookmaker === bestAway.bookmaker) return null;
+  if (board.market !== "H2H") {
+    // -3.5 vs +3.5 is the same line flipped; totals carry the same number.
+    const a = bestHome.line;
+    const b = bestAway.line;
+    if (a === null || b === null) return null;
+    const matched = board.market === "SPREADS" ? a === -b : a === b;
+    if (!matched) return null;
+  }
+  const sum = impliedProbability(bestHome.price) + impliedProbability(bestAway.price);
+  if (sum >= 1) return null;
+  return {
+    homeBook: bestHome.bookmaker,
+    homePrice: bestHome.price,
+    awayBook: bestAway.bookmaker,
+    awayPrice: bestAway.price,
+    profitPct: Math.round((1 / sum - 1) * 10000) / 10000,
+  };
+}
+
 /**
  * Flag positive-EV prices in a two-sided market: a book is an edge when
  * its price beats the no-vig consensus of ALL books by at least

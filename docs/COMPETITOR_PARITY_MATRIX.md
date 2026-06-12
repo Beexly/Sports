@@ -24,6 +24,7 @@ Action Network, Dimers, BetWise, BettingPros.
 | Expert consensus picks | BP | Single-model shop by design; Airwave pundit claims = our analog | ✅ different form |
 | Odds boost finder | AN | Promotions engine (compliance-gated) | 🟡 |
 | +EV bet finder | BetWise, OddsJam-class | **Line Room "Today's edges"** — price vs no-vig consensus, ≥3 books required | ✅ NEW 2026-06-12 |
+| Arbitrage detector | OddsJam-class | **Line Room** — cross-book locked-margin pairs, matched lines only | ✅ NEW 2026-06-12 |
 
 ## Fantasy season-long (Footballguys · FantasyGuru)
 

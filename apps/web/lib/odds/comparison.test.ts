@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildMarketBoard,
+  findArbitrage,
   findEdges,
   formatAmerican,
   impliedProbability,
@@ -95,6 +96,43 @@ describe("buildMarketBoard", () => {
     expect(board.bestHome).toBeNull();
     expect(board.noVigHomeProb).toBeNull();
     expect(board.bookCount).toBe(0);
+  });
+});
+
+describe("findArbitrage", () => {
+  it("detects a two-book H2H arb and prices the guaranteed margin", () => {
+    const board = buildMarketBoard("H2H", [
+      line({ bookmaker: "a", homePrice: +110, awayPrice: -130 }),
+      line({ bookmaker: "b", homePrice: -120, awayPrice: +105 }),
+    ]);
+    const arb = findArbitrage(board);
+    expect(arb).not.toBeNull();
+    expect(arb!.homeBook).toBe("a");
+    expect(arb!.awayBook).toBe("b");
+    // +110 / +105 → implied 0.4762 + 0.4878 = 0.964 → 3.73% locked.
+    expect(arb!.profitPct).toBeCloseTo(0.0373, 3);
+  });
+
+  it("returns null when the vig holds (implied probs sum over 1)", () => {
+    const board = buildMarketBoard("H2H", [
+      line({ bookmaker: "a", homePrice: -110, awayPrice: -110 }),
+      line({ bookmaker: "b", homePrice: -108, awayPrice: -112 }),
+    ]);
+    expect(findArbitrage(board)).toBeNull();
+  });
+
+  it("rejects same-book pairs and mismatched spread lines", () => {
+    const oneBook = buildMarketBoard("H2H", [
+      line({ bookmaker: "solo", homePrice: +120, awayPrice: +120 }),
+    ]);
+    expect(findArbitrage(oneBook)).toBeNull();
+
+    const mismatched = buildMarketBoard("SPREADS", [
+      line({ bookmaker: "a", market: "SPREADS", spread: -3.5, homeSpreadPrice: +100, awaySpreadPrice: -120 }),
+      line({ bookmaker: "b", market: "SPREADS", spread: -2.5, homeSpreadPrice: -120, awaySpreadPrice: +100 }),
+    ]);
+    // Best away (+100 at b) is line +2.5; best home (+100 at a) is -3.5 — not the same number.
+    expect(findArbitrage(mismatched)).toBeNull();
   });
 });
 
