@@ -26,7 +26,8 @@ credential, or purchase), **STAGED** (gated on a prerequisite), **PARKED**
 ## Product modules (10 from the analyst dump)
 
 Signal Card ✓ · Market Disagreement ✓ (fair board) · Driver Stack ✓ (factor
-trail) · Fragility Check ✓ (premortem; formal score QUEUED) · Parlay MRI ✓ ·
+trail) · Fragility Check ✓ (premortem + formal 0–100 score, published weights,
+all tiers in the audit drawer) · Parlay MRI ✓ ·
 Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · CLV Tracker ✓
 · Human Explainer (3 registers) ✓ · No-Bet Gate ✓.
 

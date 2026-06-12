@@ -30,6 +30,7 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { buildPickPremortemNote } from "@/lib/premortem/build";
+import { computeFragilityScore } from "@/lib/premortem/fragility";
 import { buildPickDeathClock } from "@/lib/market/pick-death-clock";
 import type {
   AuditPayload,
@@ -141,6 +142,29 @@ export async function GET(
   );
 
   const snapshot = pick.signalSnapshot;
+  const snapshotInput = snapshot
+    ? {
+        id: snapshot.id,
+        capturedAt: snapshot.capturedAt,
+        hadLineMovementSignal: snapshot.hadLineMovementSignal,
+        hadRestSignal: snapshot.hadRestSignal,
+        hadScheduleSignal: snapshot.hadScheduleSignal,
+        hadAtsFormSignal: snapshot.hadAtsFormSignal,
+        hadH2HSignal: snapshot.hadH2HSignal,
+        hadVenueSignal: snapshot.hadVenueSignal,
+        hadWeatherSignal: snapshot.hadWeatherSignal,
+        hadInjurySignal: snapshot.hadInjurySignal,
+        bookmakerCount: snapshot.bookmakerCount,
+        dataQualityScore: snapshot.dataQualityScore,
+        lineMovementDelta: snapshot.lineMovementDelta,
+        restAdvantageNet: snapshot.restAdvantageNet,
+        atsFormSampleSize: snapshot.atsFormSampleSize,
+        h2hSampleSize: snapshot.h2hSampleSize,
+        scheduleDensityHome: snapshot.scheduleDensityHome,
+        scheduleDensityAway: snapshot.scheduleDensityAway,
+        modelVersion: snapshot.modelVersion,
+      }
+    : null;
   const preMortem = buildPickPremortemNote(
     {
       id: pick.id,
@@ -153,30 +177,11 @@ export async function GET(
       riskLevel: pick.riskLevel,
       modelVersion: pick.modelVersion,
     },
-    snapshot
-      ? {
-          id: snapshot.id,
-          capturedAt: snapshot.capturedAt,
-          hadLineMovementSignal: snapshot.hadLineMovementSignal,
-          hadRestSignal: snapshot.hadRestSignal,
-          hadScheduleSignal: snapshot.hadScheduleSignal,
-          hadAtsFormSignal: snapshot.hadAtsFormSignal,
-          hadH2HSignal: snapshot.hadH2HSignal,
-          hadVenueSignal: snapshot.hadVenueSignal,
-          hadWeatherSignal: snapshot.hadWeatherSignal,
-          hadInjurySignal: snapshot.hadInjurySignal,
-          bookmakerCount: snapshot.bookmakerCount,
-          dataQualityScore: snapshot.dataQualityScore,
-          lineMovementDelta: snapshot.lineMovementDelta,
-          restAdvantageNet: snapshot.restAdvantageNet,
-          atsFormSampleSize: snapshot.atsFormSampleSize,
-          h2hSampleSize: snapshot.h2hSampleSize,
-          scheduleDensityHome: snapshot.scheduleDensityHome,
-          scheduleDensityAway: snapshot.scheduleDensityAway,
-          modelVersion: snapshot.modelVersion,
-        }
-      : null
+    snapshotInput
   );
+  // Fragility: the premortem's structural risk as a published-weights
+  // number. Same snapshot, no new claims, null without a snapshot.
+  const fragility = computeFragilityScore(snapshotInput);
 
   // Signal-category topology. Derived from the snapshot's hadXxx flags
   // when present; falls back to "ABSENT" otherwise so the audit always
@@ -262,7 +267,7 @@ export async function GET(
       upgradeRequiredForDetail: true,
     };
     const payload: AuditPayload = summary;
-    return NextResponse.json({ success: true, audit: payload, preMortem });
+    return NextResponse.json({ success: true, audit: payload, preMortem, fragility });
   }
 
   // ──────────────────────────────────────────────────────────────────
@@ -315,5 +320,5 @@ export async function GET(
     },
   };
   const payload: AuditPayload = detailed;
-  return NextResponse.json({ success: true, audit: payload, preMortem });
+  return NextResponse.json({ success: true, audit: payload, preMortem, fragility });
 }

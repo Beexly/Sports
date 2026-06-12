@@ -37,7 +37,12 @@ interface EvidenceAuditDrawerProps {
 type LoadState =
   | { status: "idle" }
   | { status: "loading" }
-  | { status: "loaded"; audit: AuditPayload; preMortem: PickPremortemNote | null }
+  | {
+      status: "loaded";
+      audit: AuditPayload;
+      preMortem: PickPremortemNote | null;
+      fragility: FragilityView | null;
+    }
   | { status: "error"; message: string };
 
 interface PickPremortemNote {
@@ -47,6 +52,18 @@ interface PickPremortemNote {
   readonly riskDrivers: readonly string[];
   readonly evidenceRefs: readonly string[];
   readonly modelVersion: string;
+}
+
+interface FragilityView {
+  readonly score: number;
+  readonly band: "low" | "moderate" | "high" | "severe";
+  readonly components: readonly {
+    readonly name: string;
+    readonly points: number;
+    readonly max: number;
+    readonly why: string;
+  }[];
+  readonly weakness: string;
 }
 
 export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps) {
@@ -75,6 +92,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
         success?: boolean;
         audit?: AuditPayload;
         preMortem?: PickPremortemNote;
+        fragility?: FragilityView | null;
       };
       if (!body.success || !body.audit) {
         setLoad({ status: "error", message: "Audit response malformed." });
@@ -84,6 +102,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
         status: "loaded",
         audit: body.audit,
         preMortem: body.preMortem ?? null,
+        fragility: body.fragility ?? null,
       });
     } catch (err) {
       setLoad({
@@ -189,12 +208,14 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
                 <SummaryAudit
                   audit={load.audit as AuditPayloadSummary}
                   preMortem={load.preMortem}
+                  fragility={load.fragility}
                 />
               )}
               {load.status === "loaded" && load.audit.tier !== "FREE" && (
                 <DetailedAudit
                   audit={load.audit as AuditPayloadDetailed}
                   preMortem={load.preMortem}
+                  fragility={load.fragility}
                 />
               )}
             </div>
@@ -250,13 +271,16 @@ function DrawerSkeleton() {
 function SummaryAudit({
   audit,
   preMortem,
+  fragility,
 }: {
   audit: AuditPayloadSummary;
   preMortem: PickPremortemNote | null;
+  fragility: FragilityView | null;
 }) {
   return (
     <div className="space-y-6">
       <PremortemPanel preMortem={preMortem} />
+      <FragilityPanel fragility={fragility} />
 
       <section>
         <SectionHeader title="Provenance topology" />
@@ -322,13 +346,16 @@ function SummaryAudit({
 function DetailedAudit({
   audit,
   preMortem,
+  fragility,
 }: {
   audit: AuditPayloadDetailed;
   preMortem: PickPremortemNote | null;
+  fragility: FragilityView | null;
 }) {
   return (
     <div className="space-y-6">
       <PremortemPanel preMortem={preMortem} />
+      <FragilityPanel fragility={fragility} />
 
       {audit.isBootstrap && (
         <div className="rounded-md border border-ultraviolet/40 bg-ultraviolet/5 px-3 py-2 text-[11px] text-ultraviolet-glow">
@@ -615,4 +642,45 @@ function formatClockNumber(
 ): string {
   if (metric === "total_points") return `${value}`;
   return value > 0 ? `+${value}` : `${value}`;
+}
+
+// ── Fragility panel — structural risk, published weights ──
+
+const FRAGILITY_BAND_STYLES: Record<FragilityView["band"], string> = {
+  low: "border-verify/50 bg-verify/10 text-verify",
+  moderate: "border-ion-blue/50 bg-ion-blue/10 text-ion-blue",
+  high: "border-ultraviolet/50 bg-ultraviolet/10 text-ultraviolet-glow",
+  severe: "border-plasma/50 bg-plasma/10 text-plasma",
+};
+
+function FragilityPanel({ fragility }: { fragility: FragilityView | null }) {
+  if (!fragility) return null;
+  return (
+    <section data-testid="fragility-score">
+      <SectionHeader title="Fragility score — structural" />
+      <div className="mt-3 flex items-baseline gap-3">
+        <span className="font-numerals text-2xl font-semibold tabular-nums text-white">
+          {fragility.score}
+          <span className="text-sm font-normal text-ion-1"> / 100</span>
+        </span>
+        <span
+          className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${FRAGILITY_BAND_STYLES[fragility.band]}`}
+        >
+          {fragility.band}
+        </span>
+      </div>
+      <dl className="mt-3 space-y-2 text-xs">
+        {fragility.components.map((c) => (
+          <Row
+            key={c.name}
+            k={`${c.name} (${c.points}/${c.max})`}
+            v={c.why}
+          />
+        ))}
+      </dl>
+      <p className="mt-2 text-[10px] leading-relaxed text-ink-400">
+        {fragility.weakness}
+      </p>
+    </section>
+  );
 }
