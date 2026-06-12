@@ -50,7 +50,7 @@ const FREE_FEATURES = [
 ] as const;
 
 const PRO_FEATURES = [
-  { label: "Everything in Free", included: true },
+  { label: "The Academy + public verified record", included: true },
   { label: "Every signal, every day — all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
   { label: "Full factor trail & reasoning", included: true },
@@ -64,11 +64,17 @@ const PRO_FEATURES = [
 ] as const;
 
 const ELITE_FEATURES = [
-  { label: "Everything in Pro", included: true },
   { label: "Real-time email + push alerts on every signal", included: true },
   { label: "CLV Ledger — your glass-box bet tracker", included: true },
   { label: "Staking calculator — Kelly-aware sizing", included: true },
   { label: "First access to new intelligence surfaces", included: true },
+  { label: "Every signal, every day — all 7 sports", included: true },
+  { label: "Confidence rating on every signal", included: true },
+  { label: "Full factor trail & evidence audit", included: true },
+  { label: "Ask the model why + line-movement intel", included: true },
+  { label: "Trend Lab — full cohort workbench", included: true },
+  { label: "Parlay MRI — the portfolio surgeon", included: true },
+  { label: "The Academy + public verified record", included: true },
 ] as const;
 
 const PLANS: PlanView[] = [
