@@ -124,3 +124,87 @@ export function buildMarketBoard(
 export function formatAmerican(price: number): string {
   return price > 0 ? `+${price}` : `${price}`;
 }
+
+// ─── +EV finder ───────────────────────────────────────────────────────────────
+
+export interface EdgeFlag {
+  /** "HOME" = home ML / home spread / OVER side; "AWAY" = the other side. */
+  readonly side: "HOME" | "AWAY";
+  readonly bookmaker: string;
+  readonly price: number;
+  readonly line: number | null;
+  /** Fair (no-vig consensus) probability of this side winning the bet. */
+  readonly fairProb: number;
+  /** Expected value per 1 unit staked at this price vs the fair probability. */
+  readonly evPerUnit: number;
+}
+
+/** Decimal payout multiplier (profit per unit) for an American price. */
+function profitPerUnit(american: number): number {
+  return american > 0 ? american / 100 : 100 / -american;
+}
+
+/**
+ * Flag positive-EV prices in a two-sided market: a book is an edge when
+ * its price beats the no-vig consensus of ALL books by at least
+ * `minEvPct` (default 1%). Requires ≥3 books — with fewer, "consensus"
+ * is too thin to call anything an edge, so nothing is flagged.
+ */
+export function findEdges(
+  board: MarketBoard,
+  minEvPct = 0.01,
+  minBooks = 3
+): readonly EdgeFlag[] {
+  if (board.bookCount < minBooks) return [];
+
+  const sides: ReadonlyArray<{
+    side: "HOME" | "AWAY";
+    price: (l: BookLine) => number | null;
+    other: (l: BookLine) => number | null;
+    line: (l: BookLine) => number | null;
+  }> =
+    board.market === "H2H"
+      ? [
+          { side: "HOME", price: (l) => l.homePrice, other: (l) => l.awayPrice, line: () => null },
+          { side: "AWAY", price: (l) => l.awayPrice, other: (l) => l.homePrice, line: () => null },
+        ]
+      : board.market === "SPREADS"
+        ? [
+            { side: "HOME", price: (l) => l.homeSpreadPrice, other: (l) => l.awaySpreadPrice, line: (l) => l.spread },
+            { side: "AWAY", price: (l) => l.awaySpreadPrice, other: (l) => l.homeSpreadPrice, line: (l) => (l.spread === null ? null : -l.spread) },
+          ]
+        : [
+            { side: "HOME", price: (l) => l.overPrice, other: (l) => l.underPrice, line: (l) => l.total },
+            { side: "AWAY", price: (l) => l.underPrice, other: (l) => l.overPrice, line: (l) => l.total },
+          ];
+
+  const edges: EdgeFlag[] = [];
+  for (const s of sides) {
+    // Fair prob for this side = median no-vig prob across two-sided books.
+    const fairProbs = board.lines
+      .filter((l) => s.price(l) !== null && s.other(l) !== null)
+      .map((l) => noVigProbability(s.price(l)!, s.other(l)!));
+    if (fairProbs.length < minBooks) continue;
+    const sorted = [...fairProbs].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    const fairProb =
+      sorted.length % 2 === 1 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
+
+    for (const l of board.lines) {
+      const p = s.price(l);
+      if (p === null) continue;
+      const ev = fairProb * profitPerUnit(p) - (1 - fairProb);
+      if (ev >= minEvPct) {
+        edges.push({
+          side: s.side,
+          bookmaker: l.bookmaker,
+          price: p,
+          line: s.line(l),
+          fairProb,
+          evPerUnit: Math.round(ev * 10000) / 10000,
+        });
+      }
+    }
+  }
+  return edges.sort((a, b) => b.evPerUnit - a.evPerUnit);
+}

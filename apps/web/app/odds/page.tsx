@@ -129,6 +129,29 @@ export default async function LineRoomPage() {
             {data.games.length} games · {data.bookCount} books · facts from stored bookmaker data — never projections
           </p>
 
+          {data.topEdges.length > 0 && (
+            <section className="mt-8 rounded-ds-md border p-5" style={{ borderColor: `${BRAND_COLORS.orbitalCyan}44`, backgroundColor: `${BRAND_COLORS.orbitalCyan}0a` }}>
+              <h2 className="font-display text-lg font-semibold text-white">Today&apos;s edges</h2>
+              <p className="mt-1 text-sm text-ink-300">
+                Prices beating the no-vig consensus of the full market by ≥1% expected value.
+                Math, not a model — and lines move, so confirm at the book.
+              </p>
+              <ul className="mt-3 space-y-1.5 text-sm text-ink-200 [font-variant-numeric:tabular-nums]">
+                {data.topEdges.map((e, i) => (
+                  <li key={i} className="flex flex-wrap items-baseline gap-x-3">
+                    <span className="font-mono font-semibold" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                      +{(e.evPerUnit * 100).toFixed(1)}% EV
+                    </span>
+                    <span className="text-white">{e.sideLabel}</span>
+                    <span className="font-mono">{formatAmerican(e.price)}</span>
+                    <span className="capitalize text-ink-300">at {e.bookmaker.replace(/_/g, " ")}</span>
+                    <span className="text-ink-400">· {e.matchup} · {MARKET_LABEL[e.market]}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
           {data.games.length === 0 ? (
             <div className="mt-10 rounded-ds-md border border-mineral/70 bg-eclipse/60 p-6">
               <p className="text-sm text-ink-300">

@@ -7,8 +7,10 @@
 import { db, isStubMode } from "@sports/db";
 import {
   buildMarketBoard,
+  findEdges,
   type BoardMarket,
   type BookLine,
+  type EdgeFlag,
   type MarketBoard,
 } from "./comparison";
 
@@ -22,8 +24,16 @@ export interface GameBoard {
   readonly lastFetchedAt: string | null;
 }
 
+export interface GameEdge extends EdgeFlag {
+  readonly matchup: string;
+  readonly market: BoardMarket;
+  readonly sideLabel: string;
+}
+
 export interface LineRoomData {
   readonly games: readonly GameBoard[];
+  /** Positive-EV prices vs the no-vig consensus, hardest edges first. */
+  readonly topEdges: readonly GameEdge[];
   readonly bookCount: number;
   readonly generatedAt: string;
 }
@@ -33,7 +43,7 @@ const LOOKAHEAD_H = 72;
 
 export async function loadLineRoom(): Promise<LineRoomData> {
   const generatedAt = new Date().toISOString();
-  if (isStubMode()) return { games: [], bookCount: 0, generatedAt };
+  if (isStubMode()) return { games: [], topEdges: [], bookCount: 0, generatedAt };
 
   const now = new Date();
   const games = await db.game
@@ -84,8 +94,32 @@ export async function loadLineRoom(): Promise<LineRoomData> {
     };
   });
 
+  const withMarkets = boards.filter((b) => b.markets.length > 0);
+
+  const topEdges: GameEdge[] = withMarkets
+    .flatMap((g) =>
+      g.markets.flatMap((m) =>
+        findEdges(m).map((e) => ({
+          ...e,
+          matchup: `${g.awayTeam} @ ${g.homeTeam}`,
+          market: m.market,
+          sideLabel:
+            m.market === "TOTALS"
+              ? e.side === "HOME"
+                ? `Over ${e.line ?? ""}`.trim()
+                : `Under ${e.line ?? ""}`.trim()
+              : e.side === "HOME"
+                ? g.homeTeam
+                : g.awayTeam,
+        }))
+      )
+    )
+    .sort((a, b) => b.evPerUnit - a.evPerUnit)
+    .slice(0, 10);
+
   return {
-    games: boards.filter((b) => b.markets.length > 0),
+    games: withMarkets,
+    topEdges,
     bookCount: allBooks.size,
     generatedAt,
   };

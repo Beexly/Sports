@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildMarketBoard,
+  findEdges,
   formatAmerican,
   impliedProbability,
   latestPerBook,
@@ -94,5 +95,38 @@ describe("buildMarketBoard", () => {
     expect(board.bestHome).toBeNull();
     expect(board.noVigHomeProb).toBeNull();
     expect(board.bookCount).toBe(0);
+  });
+});
+
+describe("findEdges (+EV finder)", () => {
+  it("flags a book whose price beats the no-vig consensus", () => {
+    // Consensus says ~50/50; one book hangs +120 on home → clear +EV.
+    const board = buildMarketBoard("H2H", [
+      line({ bookmaker: "a", homePrice: -110, awayPrice: -110 }),
+      line({ bookmaker: "b", homePrice: -108, awayPrice: -112 }),
+      line({ bookmaker: "c", homePrice: -112, awayPrice: -108 }),
+      line({ bookmaker: "soft", homePrice: +120, awayPrice: -150 }),
+    ]);
+    const edges = findEdges(board);
+    expect(edges.length).toBeGreaterThanOrEqual(1);
+    expect(edges[0]).toMatchObject({ side: "HOME", bookmaker: "soft", price: 120 });
+    expect(edges[0]!.evPerUnit).toBeGreaterThan(0.05);
+  });
+
+  it("flags nothing when every book prices at consensus (vig eats the EV)", () => {
+    const board = buildMarketBoard("H2H", [
+      line({ bookmaker: "a", homePrice: -110, awayPrice: -110 }),
+      line({ bookmaker: "b", homePrice: -110, awayPrice: -110 }),
+      line({ bookmaker: "c", homePrice: -110, awayPrice: -110 }),
+    ]);
+    expect(findEdges(board)).toHaveLength(0);
+  });
+
+  it("refuses to call edges on a thin market (under 3 books)", () => {
+    const board = buildMarketBoard("H2H", [
+      line({ bookmaker: "a", homePrice: -110, awayPrice: -110 }),
+      line({ bookmaker: "soft", homePrice: +140, awayPrice: -170 }),
+    ]);
+    expect(findEdges(board)).toHaveLength(0);
   });
 });
