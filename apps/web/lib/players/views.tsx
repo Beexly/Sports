@@ -736,6 +736,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "Underlying z", definition: "Standardized tracking signal — separation, YAC over expected, air-yards share — across the qualified pool." },
       { term: "Production z", definition: "Standardized actual PPR production across the same pool." },
       { term: "Gap", definition: "Underlying z minus production z. Positive = buy-low (regression up); negative = sell-high (regression risk)." },
+      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6. Sample-size only — thin samples are where edge signals mislead most." },
     ],
     jsonHref: "/api/nflverse/edge-signals",
     load: loadEdgeView,

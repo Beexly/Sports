@@ -40,15 +40,15 @@ describe("statStabilityGrade", () => {
 });
 
 describe("Player Lab wiring", () => {
-  it("production and snaps tables carry the Stab column with tooltip", () => {
+  it("production, snaps, and edge tables carry the Stab column with tooltip", () => {
     const table = read("components/players/player-lab-table.tsx");
-    expect(table.match(/label: "Stab"/g)?.length).toBe(2);
+    expect(table.match(/label: "Stab"/g)?.length).toBe(3);
     expect(table).toContain("STABILITY_TOOLTIP");
     expect(table).toContain("stabilityCell");
   });
 
   it("the view explainers define the grade for readers", () => {
     const views = read("lib/players/views.tsx");
-    expect(views.match(/Stat Stability Grade/g)?.length).toBe(2);
+    expect(views.match(/Stat Stability Grade/g)?.length).toBe(3);
   });
 });
