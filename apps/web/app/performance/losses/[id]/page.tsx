@@ -5,6 +5,7 @@ import { db } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { dec, int, TABULAR } from "@/lib/format/numbers";
 
 interface LossDetail {
   readonly id: string;
@@ -44,7 +45,7 @@ function snapshotSummary(snapshot: {
     snapshot.hadScheduleSignal ? "schedule" : null,
   ].filter((item): item is string => item !== null);
 
-  return `${snapshot.bookmakerCount} books, ${Math.round(snapshot.dataQualityScore)} data quality, active: ${
+  return `${int(snapshot.bookmakerCount)} books, ${int(snapshot.dataQualityScore)} data quality, active: ${
     active.length > 0 ? active.join(", ") : "odds"
   }.`;
 }
@@ -159,8 +160,8 @@ export default async function LossDetailPage({
 
         <section className="grid gap-3 border border-gray-800 bg-gray-900/40 p-4 text-sm text-gray-300 sm:grid-cols-3">
           <span>{loss.selection}</span>
-          <span>Confidence {loss.confidence}</span>
-          <span>Edge {loss.edgeScore.toFixed(1)}</span>
+          <span className={TABULAR}>Confidence {int(loss.confidence)}</span>
+          <span className={TABULAR}>Edge {dec(loss.edgeScore)}</span>
         </section>
 
         <LossSection title="What We Saw" body={loss.whatWeSaw} />

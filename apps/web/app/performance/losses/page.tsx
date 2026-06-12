@@ -4,6 +4,7 @@ import { db } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { dec, int, TABULAR } from "@/lib/format/numbers";
 
 interface LossRoomRow {
   readonly id: string;
@@ -45,7 +46,7 @@ function snapshotSummary(snapshot: {
     snapshot.hadScheduleSignal ? "schedule" : null,
   ].filter((item): item is string => item !== null);
 
-  return `${snapshot.bookmakerCount} books, ${Math.round(snapshot.dataQualityScore)} data quality, active: ${
+  return `${int(snapshot.bookmakerCount)} books, ${int(snapshot.dataQualityScore)} data quality, active: ${
     active.length > 0 ? active.join(", ") : "odds"
   }.`;
 }
@@ -140,11 +141,11 @@ export default async function LossRoomPage(): Promise<JSX.Element> {
                 <p className="mt-3 text-sm font-semibold text-gray-200">{row.selection}</p>
                 <p className="mt-3 text-sm text-gray-300">{row.whatWeLearned}</p>
                 <div className="mt-4 grid gap-3 text-xs text-gray-400 sm:grid-cols-3">
-                  <span>Confidence {row.confidence}</span>
-                  <span>Edge {row.edgeScore.toFixed(1)}</span>
+                  <span className={TABULAR}>Confidence {int(row.confidence)}</span>
+                  <span className={TABULAR}>Edge {dec(row.edgeScore)}</span>
                   <span>{row.modelVersion}</span>
                 </div>
-                <p className="mt-3 text-xs leading-5 text-gray-500">{row.snapshotSummary}</p>
+                <p className={`mt-3 text-xs leading-5 text-gray-500 ${TABULAR}`}>{row.snapshotSummary}</p>
               </li>
             ))}
           </ul>

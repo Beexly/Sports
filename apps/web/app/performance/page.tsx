@@ -7,6 +7,7 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { PerformanceBootstrapState } from "@/components/performance/bootstrap-state";
 import { CalibrationPanel } from "@/components/performance/calibration-panel";
+import { int, pct, TABULAR } from "@/lib/format/numbers";
 import type { PickType, PickTier } from "@sports/types";
 
 export const metadata: Metadata = {
@@ -119,9 +120,9 @@ export default async function PerformancePage() {
             data-testid="performance-pick-count-banner"
             className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-4 text-xs"
           >
-            <p className="text-gray-300">
-              {todayPickCount} pick{todayPickCount === 1 ? "" : "s"} published
-              today
+            <p className={`text-gray-300 ${TABULAR}`}>
+              {int(todayPickCount)} pick{todayPickCount === 1 ? "" : "s"}{" "}
+              published today
               {demoActive && (
                 <span className="ml-2 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">
                   sample
@@ -245,7 +246,7 @@ export default async function PerformancePage() {
                   </div>
                   <div>
                     <dt className="text-gray-600">Sample size</dt>
-                    <dd>{overall.totalPicks} canonical picks</dd>
+                    <dd className={TABULAR}>{int(overall.totalPicks)} canonical picks</dd>
                   </div>
                   <div>
                     <dt className="text-gray-600">Model version</dt>
@@ -274,11 +275,7 @@ export default async function PerformancePage() {
                   <div className="grid grid-cols-2 divide-x divide-gray-800 sm:grid-cols-4">
                     <OverallStat
                       label="Win Rate"
-                      value={
-                        overall.winRate !== null
-                          ? `${overall.winRate.toFixed(1)}%`
-                          : "-"
-                      }
+                      value={pct(overall.winRate)}
                       accent={
                         overall.winRate !== null
                           ? winRateColor(overall.winRate)
@@ -288,24 +285,24 @@ export default async function PerformancePage() {
                     />
                     <OverallStat
                       label="Wins"
-                      value={overall.wins.toString()}
+                      value={int(overall.wins)}
                       accent="text-green-400"
                     />
                     <OverallStat
                       label="Losses"
-                      value={overall.losses.toString()}
+                      value={int(overall.losses)}
                       accent="text-red-400"
                     />
                     <OverallStat
                       label="Pushes"
-                      value={overall.pushes.toString()}
+                      value={int(overall.pushes)}
                       accent="text-gray-400"
                     />
                   </div>
                   <div className="border-t border-gray-800 px-6 py-3">
-                    <p className="text-xs text-gray-600">
-                      Based on {overall.totalPicks} canonical settled picks. Win
-                      rate excludes pushes.
+                    <p className={`text-xs text-gray-600 ${TABULAR}`}>
+                      Based on {int(overall.totalPicks)} canonical settled
+                      picks. Win rate excludes pushes.
                     </p>
                   </div>
                 </div>
@@ -399,16 +396,16 @@ export default async function PerformancePage() {
                               <td className="px-4 py-3 text-gray-500">
                                 {s.pickType ?? "All"}
                               </td>
-                              <td className="px-4 py-3 text-center text-green-400">
-                                {s.wins}
+                              <td className={`px-4 py-3 text-center text-green-400 ${TABULAR}`}>
+                                {int(s.wins)}
                               </td>
-                              <td className="px-4 py-3 text-center text-red-400">
-                                {s.losses}
+                              <td className={`px-4 py-3 text-center text-red-400 ${TABULAR}`}>
+                                {int(s.losses)}
                               </td>
-                              <td className="px-4 py-3 text-center text-gray-500">
-                                {s.pushes}
+                              <td className={`px-4 py-3 text-center text-gray-500 ${TABULAR}`}>
+                                {int(s.pushes)}
                               </td>
-                              <td className="px-4 py-3 text-center">
+                              <td className={`px-4 py-3 text-center ${TABULAR}`}>
                                 {wr !== null ? (
                                   <span
                                     className={[
@@ -416,10 +413,10 @@ export default async function PerformancePage() {
                                       winRateColor(wr),
                                     ].join(" ")}
                                   >
-                                    {wr.toFixed(1)}%
+                                    {pct(wr)}
                                   </span>
                                 ) : (
-                                  <span className="text-gray-600">-</span>
+                                  <span className="text-gray-600">{pct(null)}</span>
                                 )}
                               </td>
                             </tr>
@@ -462,6 +459,7 @@ function OverallStat({
       <dd
         className={[
           "font-extrabold",
+          TABULAR,
           large ? "text-5xl" : "text-3xl",
           accent,
         ].join(" ")}
@@ -493,11 +491,13 @@ function SportCard({
         <h3 className="text-lg font-bold text-white">{sport}</h3>
         {winRate !== null && (
           <span
-            className={["text-2xl font-extrabold", winRateColor(winRate)].join(
-              " "
-            )}
+            className={[
+              "text-2xl font-extrabold",
+              TABULAR,
+              winRateColor(winRate),
+            ].join(" ")}
           >
-            {winRate.toFixed(1)}%
+            {pct(winRate)}
           </span>
         )}
       </div>
@@ -505,20 +505,20 @@ function SportCard({
       <div className="grid grid-cols-3 gap-2 text-center">
         <div className="rounded-lg bg-green-900/20 py-2">
           <p className="text-xs text-gray-500">W</p>
-          <p className="text-lg font-bold text-green-400">{wins}</p>
+          <p className={`text-lg font-bold text-green-400 ${TABULAR}`}>{int(wins)}</p>
         </div>
         <div className="rounded-lg bg-red-900/20 py-2">
           <p className="text-xs text-gray-500">L</p>
-          <p className="text-lg font-bold text-red-400">{losses}</p>
+          <p className={`text-lg font-bold text-red-400 ${TABULAR}`}>{int(losses)}</p>
         </div>
         <div className="rounded-lg bg-gray-800/60 py-2">
           <p className="text-xs text-gray-500">P</p>
-          <p className="text-lg font-bold text-gray-400">{pushes}</p>
+          <p className={`text-lg font-bold text-gray-400 ${TABULAR}`}>{int(pushes)}</p>
         </div>
       </div>
 
-      <p className="mt-3 text-center text-xs text-gray-600">
-        {totalPicks} canonical picks
+      <p className={`mt-3 text-center text-xs text-gray-600 ${TABULAR}`}>
+        {int(totalPicks)} canonical picks
       </p>
 
       {winRate !== null && (

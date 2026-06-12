@@ -1,4 +1,5 @@
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { dec, int, pct, TABULAR } from "@/lib/format/numbers";
 
 /**
  * Calibration & Discrimination panel — the public "proof, not promises" surface.
@@ -23,10 +24,6 @@ import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 type CalibrationData = Awaited<ReturnType<typeof loadPublicCalibrationReport>>["data"];
 type Bucket = CalibrationData["buckets"][number];
 type Discrimination = CalibrationData["discrimination"];
-
-function pct(value: number): string {
-  return `${Math.round(value * 100)}%`;
-}
 
 // Brier score reads better with a plain-English band. Lower is better; 0.25 is
 // the coin-flip baseline for a binary outcome, so under it is meaningfully sharp.
@@ -88,11 +85,11 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
           aria-hidden="true"
         />
       </div>
-      <span className="w-12 shrink-0 text-right text-xs font-semibold text-ion">
-        {empty ? "—" : pct(bucket.observedWinRate)}
+      <span className={`w-12 shrink-0 text-right text-xs font-semibold text-ion ${TABULAR}`}>
+        {empty ? "—" : pct(bucket.observedWinRate * 100)}
       </span>
-      <span className="w-16 shrink-0 text-right text-[11px] text-ion-2">
-        {empty ? "no data" : `n=${bucket.sampleSize}`}
+      <span className={`w-16 shrink-0 text-right text-[11px] text-ion-2 ${TABULAR}`}>
+        {empty ? "no data" : `n=${int(bucket.sampleSize)}`}
       </span>
     </div>
   );
@@ -121,8 +118,8 @@ export async function CalibrationPanel() {
         <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
           Calibration &amp; discrimination
         </h2>
-        <span className="text-[11px] uppercase tracking-widest text-ion-2">
-          {collecting ? "Collecting" : `${data.sampleSize} settled picks`}
+        <span className={`text-[11px] uppercase tracking-widest text-ion-2 ${TABULAR}`}>
+          {collecting ? "Collecting" : `${int(data.sampleSize)} settled picks`}
         </span>
       </div>
 
@@ -141,12 +138,12 @@ export async function CalibrationPanel() {
             d.lowestBucketWinRate !== null &&
             d.highestBucketWinRate !== null && (
               <div className="mt-4 flex items-center gap-3 text-xs text-ion-1">
-                <span className="font-mono">
-                  {d.lowestBucketLabel}: {pct(d.lowestBucketWinRate)}
+                <span className={`font-mono ${TABULAR}`}>
+                  {d.lowestBucketLabel}: {pct(d.lowestBucketWinRate * 100)}
                 </span>
                 <span className="flex-1 border-t border-dashed border-titanium" />
-                <span className="font-mono">
-                  {d.highestBucketLabel}: {pct(d.highestBucketWinRate)}
+                <span className={`font-mono ${TABULAR}`}>
+                  {d.highestBucketLabel}: {pct(d.highestBucketWinRate * 100)}
                 </span>
               </div>
             )}
@@ -172,8 +169,10 @@ export async function CalibrationPanel() {
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-titanium px-6 py-4">
         <div>
           <span className="text-xs uppercase tracking-widest text-ion-2">Brier score</span>{" "}
-          <span className="ml-1 font-mono text-sm font-semibold text-ion">
-            {data.brierScore !== null ? data.brierScore.toFixed(3) : "—"}
+          <span className={`ml-1 font-mono text-sm font-semibold text-ion ${TABULAR}`}>
+            {/* Brier is the one deliberate exception to the one-decimal standard:
+                three decimals, because 0.2 vs 0.25 is the whole story. */}
+            {dec(data.brierScore, 3)}
           </span>
         </div>
         <p className="text-xs text-ion-2">{brierRead(data.brierScore)}</p>

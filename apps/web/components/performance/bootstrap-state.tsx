@@ -1,4 +1,5 @@
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { int, TABULAR } from "@/lib/format/numbers";
 
 /**
  * Performance — Bootstrap State
@@ -86,8 +87,8 @@ export function PerformanceBootstrapState({
             <span className="text-gray-600">2.</span>
             <span>
               At least{" "}
-              <strong className="text-gray-200">
-                {minSettledPicksForLearning}
+              <strong className={`text-gray-200 ${TABULAR}`}>
+                {int(minSettledPicksForLearning)}
               </strong>{" "}
               canonical picks have settled with verified outcomes.
             </span>
