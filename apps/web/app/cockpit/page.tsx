@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getReadinessGates } from "@sports/prediction-engine";
+import { getReadinessGates, assessStaleSettlement } from "@sports/prediction-engine";
+import type { PendingPickGameInfo, SettlementGameStatus } from "@sports/prediction-engine";
 import { loadJarvisAssessment } from "@/lib/cockpit/jarvis-data";
 import type { JarvisAssessment, JarvisHealth, JarvisLaunchStatus } from "@/lib/cockpit/jarvis";
 import type { PublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
@@ -66,6 +67,24 @@ export default async function CockpitOverview() {
     .map(([name, n]) => ({ name, n }));
 
   const featuredOperatorPicks = todaysOperatorPicks.filter((p) => p.isFeatured);
+
+  // Settlement-liveness check: PENDING picks whose games ended long ago.
+  // count > 0 means the settle-picks cron has likely been silently down.
+  const pendingPickGames = await db.pick
+    .findMany({
+      where: { result: "PENDING" },
+      select: { game: { select: { commenceTime: true, status: true } } },
+    })
+    .catch(() => [] as Array<{ game: { commenceTime: Date; status: SettlementGameStatus } }>);
+  const staleSettlement = assessStaleSettlement(
+    pendingPickGames.map(
+      (p): PendingPickGameInfo => ({
+        commenceTime: p.game.commenceTime,
+        gameStatus: p.game.status as SettlementGameStatus,
+      }),
+    ),
+    now,
+  );
 
   let jarvis: { assessment: JarvisAssessment; performancePolicy: PublicPerformancePolicy } | null =
     null;
@@ -431,9 +450,22 @@ export default async function CockpitOverview() {
 
         {/* Readiness gates */}
         <section className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
-            Readiness gates
-          </h2>
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+              Readiness gates
+            </h2>
+            {staleSettlement.count > 0 && (
+              <span
+                data-testid="stale-settlement-badge"
+                title={`${staleSettlement.count} settle-eligible pick(s) still PENDING more than ${staleSettlement.graceHours}h after estimated game end — check the settle-picks cron.`}
+                className="rounded bg-red-900/50 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-red-300"
+              >
+                {staleSettlement.count} unsettled past grace
+                {staleSettlement.oldestAgeHours !== null &&
+                  ` · oldest ${staleSettlement.oldestAgeHours}h`}
+              </span>
+            )}
+          </div>
           <div className="grid grid-cols-2 gap-2 text-xs text-gray-300 sm:grid-cols-3">
             <GateRow label="canPersistCanonicalHistory" value={gates.canPersistCanonicalHistory} />
             <GateRow label="canUseDerivedHistory" value={gates.canUseDerivedHistory} />

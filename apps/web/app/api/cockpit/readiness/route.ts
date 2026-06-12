@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { auth } from "@/lib/auth";
-import { getReadinessGates } from "@sports/prediction-engine";
+import { getReadinessGates, assessStaleSettlement } from "@sports/prediction-engine";
+import type { SettlementGameStatus } from "@sports/prediction-engine";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,20 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
     by: ["status"],
     _count: { _all: true },
   });
+
+  // Settlement-liveness signal: PENDING picks whose games should long since
+  // have been graded. A silently failing settle-picks cron shows up here.
+  const pendingPicks = await db.pick.findMany({
+    where: { result: "PENDING" },
+    select: { game: { select: { commenceTime: true, status: true } } },
+  });
+  const staleSettlement = assessStaleSettlement(
+    pendingPicks.map((p) => ({
+      commenceTime: p.game.commenceTime,
+      gameStatus: p.game.status as SettlementGameStatus,
+    })),
+    new Date(),
+  );
 
   return NextResponse.json({
     success: true,
@@ -40,6 +55,18 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
         count: g._count._all,
       })),
       minSettledPicksForLearning: gates.minSettledPicksForLearning,
+      // Alert when count > 0: settle-eligible picks ungraded past the grace
+      // window — i.e. the settlement cron has likely been down for hours.
+      staleUnsettledPicks: {
+        count: staleSettlement.count,
+        oldestAgeHours: staleSettlement.oldestAgeHours,
+        eligibleWithinGrace: staleSettlement.eligibleWithinGrace,
+        threshold: {
+          estimatedGameDurationHours: staleSettlement.estimatedGameDurationHours,
+          graceHours: staleSettlement.graceHours,
+          staleAfterHoursFromCommence: staleSettlement.thresholdHours,
+        },
+      },
     },
   });
 }

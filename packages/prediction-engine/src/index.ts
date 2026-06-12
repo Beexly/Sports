@@ -23,6 +23,19 @@ export {
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export { calculatePickResult } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// Stale-settlement detection — readiness signal for a silently failing
+// settlement cron (settle-eligible picks left ungraded past a grace window).
+export {
+  assessStaleSettlement,
+  DEFAULT_ESTIMATED_GAME_DURATION_HOURS,
+  DEFAULT_SETTLEMENT_GRACE_HOURS,
+} from "./stale-settlement.js";
+export type {
+  SettlementGameStatus,
+  PendingPickGameInfo,
+  StaleSettlementOptions,
+  StaleSettlementReport,
+} from "./stale-settlement.js";
 // Closing-Line Value — sharp-grade credibility metric (pure; not yet surfaced publicly)
 export {
   computeSpreadClv,
