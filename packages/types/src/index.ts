@@ -580,6 +580,21 @@ export interface AuditPayloadSummary {
   upgradeRequiredForDetail: true;
 }
 
+// Pick Death Clock — market movement since publish, PRICE SPACE only
+// (points / American prices). Never fair-prob, never EV, never a
+// time-to-zero: those stay hard-gated on pick surfaces.
+export interface AuditDeathClock {
+  metric: "spread_points" | "total_points" | "moneyline_price";
+  atPublish: number;       // median across books at/just before publish
+  latest: number;          // median across the same books, latest capture
+  delta: number;           // latest − atPublish, signed, market units
+  direction: "toward_pick" | "away_from_pick" | "flat";
+  minutesSincePublish: number;
+  ratePerHour: number;     // |delta| per hour, market units
+  booksUsed: number;
+  latestCaptureAt: string; // ISO timestamp
+}
+
 export interface AuditPayloadDetailed {
   tier: "PRO" | "ELITE";
   pickId: string;
@@ -597,6 +612,8 @@ export interface AuditPayloadDetailed {
   scheduleDensityAway: number | null;
   signalCategories: AuditSignalCategoryRow[];
   sourceSnapshots: AuditSourceSnapshotInfo[];
+  /** Null when captured history can't honestly support a clock. */
+  deathClock: AuditDeathClock | null;
   gatesAtPrediction: {
     canonicalHistory: boolean;
     derivedModelHistory: boolean;

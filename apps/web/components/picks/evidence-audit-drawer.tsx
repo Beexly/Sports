@@ -373,6 +373,40 @@ function DetailedAudit({
         </dl>
       </section>
 
+      {audit.deathClock && (
+        <section data-testid="death-clock">
+          <SectionHeader title="Death clock — market since publish" />
+          <dl className="mt-3 space-y-2 text-xs">
+            <Row
+              k="Published"
+              v={formatClockAge(audit.deathClock.minutesSincePublish)}
+            />
+            <Row
+              k={clockMetricLabel(audit.deathClock.metric)}
+              v={`${formatClockNumber(audit.deathClock.atPublish, audit.deathClock.metric)} → ${formatClockNumber(audit.deathClock.latest, audit.deathClock.metric)}`}
+              mono
+            />
+            <Row
+              k="Movement"
+              v={
+                audit.deathClock.direction === "flat"
+                  ? "flat — the market hasn't moved"
+                  : `${audit.deathClock.delta > 0 ? "+" : ""}${audit.deathClock.delta} ${audit.deathClock.direction === "toward_pick" ? "toward this pick" : "against this pick"} · ${audit.deathClock.ratePerHour}/h`
+              }
+            />
+            <Row
+              k="Basis"
+              v={`${audit.deathClock.booksUsed} books quoted both sides of publish · latest capture ${new Date(audit.deathClock.latestCaptureAt).toLocaleTimeString()}`}
+            />
+          </dl>
+          <p className="mt-2 text-[10px] leading-relaxed text-ink-400">
+            Price movement only — what the books charge now vs when this pick
+            was published. Median across books; describes the market, not the
+            outcome.
+          </p>
+        </section>
+      )}
+
       <section>
         <SectionHeader title="Signal topology" />
         <ul className="mt-3 space-y-1.5">
@@ -558,4 +592,27 @@ function SignalStatusBadge({
       {label}
     </span>
   );
+}
+
+// ── Death clock formatting (price space only) ──
+
+function formatClockAge(minutes: number): string {
+  if (minutes < 60) return `${minutes}m ago`;
+  return `${Math.floor(minutes / 60)}h ${minutes % 60}m ago`;
+}
+
+function clockMetricLabel(
+  metric: "spread_points" | "total_points" | "moneyline_price"
+): string {
+  if (metric === "spread_points") return "Spread (home line)";
+  if (metric === "total_points") return "Total";
+  return "Side price (American)";
+}
+
+function formatClockNumber(
+  value: number,
+  metric: "spread_points" | "total_points" | "moneyline_price"
+): string {
+  if (metric === "total_points") return `${value}`;
+  return value > 0 ? `+${value}` : `${value}`;
 }

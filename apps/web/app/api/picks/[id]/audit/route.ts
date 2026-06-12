@@ -30,6 +30,7 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { buildPickPremortemNote } from "@/lib/premortem/build";
+import { buildPickDeathClock } from "@/lib/market/pick-death-clock";
 import type {
   AuditPayload,
   AuditPayloadDetailed,
@@ -77,9 +78,18 @@ export async function GET(
       game: {
         include: {
           odds: {
-            select: { ingestionRunId: true },
+            select: {
+              ingestionRunId: true,
+              bookmaker: true,
+              market: true,
+              fetchedAt: true,
+              spread: true,
+              total: true,
+              homePrice: true,
+              awayPrice: true,
+            },
             orderBy: { fetchedAt: "desc" },
-            take: 50, // bounded — last 50 odds rows for this game
+            take: 120, // bounded — enough captured rows to reach back past publish
           },
         },
       },
@@ -259,6 +269,27 @@ export async function GET(
   // PRO / ELITE tier: full forensic detail. Still NO raw payload data,
   // NO Kelly/stake math, NO true-EV — those remain hard-gated.
   // ──────────────────────────────────────────────────────────────────
+  // Death clock: price-space market movement since publish, from the
+  // same bounded odds rows. Null whenever history can't support it.
+  const deathClock = buildPickDeathClock(
+    {
+      pickType: String(pick.pickType),
+      selection: pick.selection,
+      generatedAt: pick.generatedAt,
+      homeTeamName: pick.game.homeTeamName,
+      awayTeamName: pick.game.awayTeamName,
+    },
+    (pick.game.odds ?? []).map((o) => ({
+      bookmaker: o.bookmaker,
+      market: String(o.market),
+      fetchedAt: o.fetchedAt,
+      spread: o.spread,
+      total: o.total,
+      homePrice: o.homePrice,
+      awayPrice: o.awayPrice,
+    })),
+  );
+
   const detailed: AuditPayloadDetailed = {
     tier: tier === "ELITE" ? "ELITE" : "PRO",
     pickId: pick.id,
@@ -276,6 +307,7 @@ export async function GET(
     scheduleDensityAway: snapshot?.scheduleDensityAway ?? null,
     signalCategories,
     sourceSnapshots,
+    deathClock,
     gatesAtPrediction: {
       canonicalHistory: gates.canPersistCanonicalHistory,
       derivedModelHistory: gates.canUseDerivedHistory,
