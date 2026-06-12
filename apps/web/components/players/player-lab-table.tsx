@@ -171,7 +171,7 @@ function rushingColumns(): ReadonlyArray<Column<RushingEfficiencyRow>> {
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "rush attempts (volume)" },
     { key: "ryoePerAtt", label: "RYOE/att", align: "right", numeric: true, tooltip: "rush yards over expected per attempt", render: (r) => signedCell(r.ryoePerAtt, 2) },
-    { key: "pctStackedBox", label: "Box%", align: "right", numeric: true, tooltip: "% of carries vs an 8+ man box", render: (r) => `${r.pctStackedBox.toFixed(0)}%` },
+    { key: "pctStackedBox", label: "Box%", align: "right", numeric: true, tooltip: "% of carries vs an 8+ man box", render: (r) => fmtPercent(r.pctStackedBox) },
     {
       key: "read",
       label: "The read",

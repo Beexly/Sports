@@ -49,9 +49,17 @@ const SECTIONS: readonly Section[] = [
       { label: "Lineup Optimizer", href: "/fantasy/lineup" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers" },
       { label: "Trade Analyzer", href: "/fantasy/trade" },
-      { label: "DFS Suite", href: "/fantasy/dfs" },
-      { label: "Pick'em Edge", href: "/fantasy/props" },
       { label: "Connect League", href: "/fantasy/connect" },
+    ],
+  },
+  {
+    heading: "DFS",
+    collapsible: true,
+    links: [
+      { label: "DFS Suite", href: "/fantasy/dfs" },
+      { label: "Salary Board", href: "/fantasy/dfs#salary-board" },
+      { label: "Pick'em Edge", href: "/fantasy/props" },
+      { label: "DFS Player Board", href: "/players?view=dfs" },
     ],
   },
   {

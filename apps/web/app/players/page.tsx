@@ -48,17 +48,13 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
           title={view.title}
           description={view.description}
           actions={
-            <>
-              <Link href={view.jsonHref} className="btn-primary min-h-11 px-5 py-3">
-                JSON
-              </Link>
-              <Link
-                href="/nflverse"
-                className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-paper-border px-5 py-3 text-sm font-semibold text-ink hover:border-ink-1"
-              >
-                Usage Pulse
-              </Link>
-            </>
+            <Link
+              href={view.jsonHref}
+              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-paper-border px-5 py-3 text-sm font-semibold text-ink hover:border-ink-1"
+              title="The raw rows behind this table, as machine-readable JSON"
+            >
+              Raw data (JSON)
+            </Link>
           }
           aside={
             view.explainer && view.explainer.length > 0 ? (

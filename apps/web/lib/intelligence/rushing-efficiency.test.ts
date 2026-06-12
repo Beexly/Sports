@@ -2,15 +2,15 @@ import { describe, it, expect } from "vitest";
 import { buildRushingEfficiency, loadRushingEfficiency } from "./rushing-efficiency";
 import type { NgsRushingLine } from "@/lib/nflverse/next-gen-stats";
 
-function rb(name: string, ryoePerAtt: number, rushAttempts: number, pctStackedBox = 15): NgsRushingLine {
+function rb(name: string, ryoePerAtt: number, rushAttempts: number, pctStackedBox = 0.15): NgsRushingLine {
   return { playerId: name, playerName: name, team: "ATL", rushAttempts, ryoePerAtt, efficiency: 4.0, pctStackedBox, avgTimeToLos: 2.9 };
 }
 
 const RBS: NgsRushingLine[] = [
-  rb("Bell Cow", 1.0, 250, 25),       // efficient + high volume + loaded boxes
-  rb("Efficient Backup", 1.2, 80, 10), // efficient + low volume + light boxes
-  rb("Workhorse", -0.5, 240, 22),      // high volume + low efficiency
-  rb("Limited Back", -0.8, 70, 12),    // low both
+  rb("Bell Cow", 1.0, 250, 0.25),       // efficient + high volume + loaded boxes
+  rb("Efficient Backup", 1.2, 80, 0.1), // efficient + low volume + light boxes
+  rb("Workhorse", -0.5, 240, 0.22),      // high volume + low efficiency
+  rb("Limited Back", -0.8, 70, 0.12),    // low both
 ];
 
 describe("buildRushingEfficiency", () => {

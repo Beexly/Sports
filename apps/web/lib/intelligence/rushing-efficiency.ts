@@ -50,7 +50,7 @@ export interface RushingEfficiency {
 
 const TOP_N = 40;
 const HIGH = 60; // percentile threshold
-const STACKED_BOX_HIGH = 20; // % carries vs a loaded front that counts as "earning it"
+const STACKED_BOX_HIGH = 0.2; // share (0-1) of carries vs a loaded front that counts as "earning it"
 
 function round(value: number, d = 2): number {
   const f = 10 ** d;

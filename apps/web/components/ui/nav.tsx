@@ -66,13 +66,24 @@ const FANTASY_MENU: readonly NavGroup[] = [
       { label: "Lineup Optimizer", href: "/fantasy/lineup", desc: "Start-sit, floor vs ceiling" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Adds and bids, with the why" },
       { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Value, fairness, win-now" },
-      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Salary board + optimizer — cash / GPP / leverage" },
-      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Pick'em line edges, graded" },
     ],
   },
   {
     items: [
       { label: "Connect League", href: "/fantasy/connect", desc: "Link your league in one tap" },
+    ],
+  },
+];
+
+// DFS ▾ — daily fantasy is its own lane, not a fantasy sub-item.
+const DFS_MENU: readonly NavGroup[] = [
+  {
+    heading: "Daily",
+    items: [
+      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Optimizer — cash / GPP / leverage, glass-box" },
+      { label: "Salary Board", href: "/fantasy/dfs#salary-board", desc: "Reconciled DK salaries (feed-gated)" },
+      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Pick'em line edges, graded" },
+      { label: "DFS Player Board", href: "/players?view=dfs", desc: "Salary value vs role and usage" },
     ],
   },
 ];
@@ -127,6 +138,7 @@ export async function Nav() {
             <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
             <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
+            <NavMenu label="DFS" href="/fantasy/dfs" groups={DFS_MENU} />
 
             {TAIL_LINKS.map(({ href, label }) => (
               <Link key={href} href={href}>
