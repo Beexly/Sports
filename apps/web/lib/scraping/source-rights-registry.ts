@@ -318,6 +318,49 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "attribution, no recordings, no transcripts, no automated capture.",
   },
 
+  // ── Manual research only ─────────────────────────────────────────────────────
+  {
+    source_id: "jeff-mans-weekly-show",
+    source_name: "Jeff Mans weekly show (public podcast/YouTube distribution)",
+    source_url: "https://www.youtube.com/results?search_query=jeff+mans",
+    terms_url: "https://www.youtube.com/static?template=terms",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "broadcast_media",
+    status: "manual_research_only",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Claim heard on Jeff Mans' show (manual listener log)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "high",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-12",
+    reviewed_by: "internal",
+    evidence_urls: [],
+    unlock_condition:
+      "Step 1: locate the show's OFFICIAL public distribution endpoints (podcast RSS, " +
+      "YouTube channel) and record them in evidence_urls. Step 2: counsel review of the " +
+      "host platform's terms (YouTube ToS restricts automated access; an official podcast " +
+      "RSS feed's episode METADATA may qualify for approved_public_logged_off — facts only). " +
+      "Step 3: best path is direct permission from Jeff Mans / the show's outlet, which " +
+      "unlocks deeper integration and is likely attainable for an independent show.",
+    vendor_contact: null,
+    notes:
+      "Owner-flagged candidate (POLISH_BACKLOG #6) as the licensable alternative to " +
+      "SiriusXM corporate (parked per owner). Episode CONTENT is copyrighted expression: " +
+      "the only lane today is the same manual listener log as SiriusXM — a human listens " +
+      "to the public show and manually logs short factual claims (pundit, claim, date) " +
+      "into Airwave intake. No recordings, no transcripts, no automated capture until " +
+      "the unlock condition is met.",
+  },
+
   // ── Excluded ─────────────────────────────────────────────────────────────────
   {
     source_id: "siriusxm-activator",
