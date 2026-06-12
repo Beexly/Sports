@@ -38,6 +38,12 @@ export interface JournalEntryDetail extends JournalEntryListItem {
   readonly isBodyEditable: boolean;
 }
 
+export interface RetractedJournalTombstone {
+  readonly slug: string;
+  readonly title: string;
+  readonly retractedAt: string | null;
+}
+
 export interface PublicJournalEntry {
   readonly id: string;
   readonly isoWeek: number;
@@ -197,4 +203,29 @@ export async function loadPublicJournalEntry(slug: string): Promise<PublicJourna
 
   if (!row) return null;
   return toPublicEntry(row);
+}
+
+/**
+ * Resolves a slug to its retraction tombstone, if (and only if) the entry
+ * was retracted. Used by the public 410 path so retracted slugs answer
+ * HTTP 410 Gone instead of a soft 404, without exposing the internal
+ * retraction reason.
+ */
+export async function loadRetractedJournalEntry(
+  slug: string
+): Promise<RetractedJournalTombstone | null> {
+  const row = await db.modelJournalEntry
+    .findFirst({
+      where: { slug, status: "RETRACTED" },
+      select: { slug: true, title: true, retractedAt: true },
+    })
+    .catch(() => null);
+
+  if (!row) return null;
+
+  return {
+    slug: row.slug,
+    title: row.title,
+    retractedAt: row.retractedAt?.toISOString() ?? null,
+  };
 }

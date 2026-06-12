@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
-import { loadPublicJournalEntry, type PublicJournalEntry } from "@/lib/journal/load";
+import {
+  loadPublicJournalEntry,
+  loadRetractedJournalEntry,
+  type PublicJournalEntry,
+} from "@/lib/journal/load";
 import { formatDate } from "@/lib/utils";
 
 export const revalidate = 300;
@@ -111,7 +115,14 @@ export default async function JournalEntryPage({
   readonly params: { readonly slug: string };
 }): Promise<JSX.Element> {
   const entry = await loadPublicJournalEntry(params.slug);
-  if (!entry) notFound();
+  if (!entry) {
+    // Retracted slugs must answer HTTP 410 Gone, not a soft 404. Pages
+    // cannot set a 410 status, so permanently redirect to the tombstone
+    // Route Handler, which returns a real 410 Response.
+    const retracted = await loadRetractedJournalEntry(params.slug);
+    if (retracted) permanentRedirect(`/journal/retracted/${params.slug}`);
+    notFound();
+  }
 
   return (
     <>

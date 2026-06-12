@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
 import { loadPublicJournalEntries } from "@/lib/journal/load";
 
+/**
+ * Feed freshness: the route is incrementally regenerated at most every
+ * 300s, and publish/retract transitions call
+ * `revalidateJournalDistribution()` (lib/journal/revalidate.ts) for
+ * prompt on-demand invalidation, so a newly published entry appears and
+ * a retracted one disappears without a redeploy. The loader is
+ * published-only, so drafts and retracted entries never enter the feed.
+ */
+export const revalidate = 300;
+
 const SITE_URL = process.env["NEXT_PUBLIC_APP_URL"] ?? "https://www.galaxysportsedge.com";
 
 function escapeXml(value: string): string {

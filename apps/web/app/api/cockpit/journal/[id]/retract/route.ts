@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
+import { revalidateJournalDistribution } from "@/lib/journal/revalidate";
 
 export const dynamic = "force-dynamic";
 
@@ -40,7 +41,7 @@ export async function POST(
   const entry = await db.modelJournalEntry
     .findUnique({
       where: { id: params.id },
-      select: { id: true, status: true },
+      select: { id: true, status: true, slug: true },
     })
     .catch(() => null);
 
@@ -78,6 +79,11 @@ export async function POST(
     },
   });
 
+  // Invalidate the public archive, RSS feed, sitemap, and entry page so
+  // the retracted entry disappears promptly (and its slug starts
+  // answering 410) without a redeploy.
+  const revalidatedPaths = revalidateJournalDistribution(entry.slug);
+
   return NextResponse.json({
     success: true,
     data: {
@@ -85,6 +91,7 @@ export async function POST(
       retractedAt: updated.retractedAt?.toISOString() ?? null,
       updatedAt: updated.updatedAt.toISOString(),
     },
+    distribution: { revalidatedPaths },
     policy: {
       externalDistribution: false,
       note: "Retraction removes the entry from public Journal loaders. It does not send outbound notices.",
