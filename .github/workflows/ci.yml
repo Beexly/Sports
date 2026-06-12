@@ -200,6 +200,30 @@ jobs:
   #    customer-copy regression — without waiting for the full test
   #    matrix.
   # --------------------------------------------------------------
+  # --------------------------------------------------------------
+  # 8. Dependency security audit — blocks on production criticals.
+  #    Exit 1 (dev-only highs/criticals) is non-blocking; exit 2
+  #    (production critical) fails the job.
+  # --------------------------------------------------------------
+  dep-audit:
+    name: Dependency security audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-fund
+
+      - name: Run dependency audit guardrail
+        run: node scripts/guardrails/dep-audit.mjs || ([ $? -eq 1 ] && echo "Dev-tool warnings only — build continues" || exit 2)
+
   brand-safety:
     name: Brand safety (customer copy invariants)
     runs-on: ubuntu-latest
