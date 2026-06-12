@@ -71,6 +71,35 @@ describe("consensusNoVig", () => {
     expect(consensus!.bookCount).toBe(1);
     expect(consensus!.fairDrawProb).not.toBeNull();
   });
+
+  it("exposes each pooled book's fair P(home) ascending — the Simulation Cloud's samples", () => {
+    const consensus = consensusNoVig([
+      { home: -120, away: +100 },
+      { home: -125, away: +105 },
+      { home: -300, away: +250 },
+    ]);
+    expect(consensus).not.toBeNull();
+    const cloud = consensus!.fairHomeProbsByBook;
+    expect(cloud).toHaveLength(3); // one real sample per book, never padded
+    expect([...cloud]).toEqual([...cloud].sort((a, b) => a - b));
+    for (const p of cloud) {
+      expect(p).toBeGreaterThan(0);
+      expect(p).toBeLessThan(1);
+    }
+    // The outlier book is visible in the cloud even though the median ignores it.
+    expect(cloud[cloud.length - 1]!).toBeGreaterThan(0.65);
+    // The consensus sits inside the cloud's range.
+    expect(consensus!.fairHomeProb).toBeGreaterThanOrEqual(cloud[0]!);
+    expect(consensus!.fairHomeProb).toBeLessThanOrEqual(cloud[cloud.length - 1]!);
+  });
+
+  it("cloud samples come only from the pooled (like-with-like) books", () => {
+    const consensus = consensusNoVig([
+      { home: -120, away: +100 },
+      { home: +150, away: +210, draw: +240 },
+    ]);
+    expect(consensus!.fairHomeProbsByBook).toHaveLength(1);
+  });
 });
 
 describe("marketDisagreementPct", () => {

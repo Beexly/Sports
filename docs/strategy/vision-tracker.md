@@ -19,7 +19,7 @@ credential, or purchase), **STAGED** (gated on a prerequisite), **PARKED**
 | Market disagreement surface | DONE (first mount) — Market Fair Board on /observatory |
 | Model% vs market% on pick surfaces | STAGED — audit-drawer contract bans fair-prob/EV terms until owner lifts it |
 | Uncertainty bands public ("when NOT to trust us") | DONE — Honest Band on /performance |
-| Simulation cloud (distribution, not fake certainty) | QUEUED (#5) |
+| Simulation cloud (distribution, not fake certainty) | DONE — per-book no-vig P(home) dots on every fair-board game (real samples, labeled zoom, never invented variance) |
 | Parlay correlation | DONE — Parlay MRI now shows the **Dependency Coefficient** (bound-leg share, labeled structural-not-statistical) |
 | Kelly/stake guidance | PARKED from public surfaces — Elite-gated educational only |
 
@@ -27,7 +27,7 @@ credential, or purchase), **STAGED** (gated on a prerequisite), **PARKED**
 
 Signal Card ✓ · Market Disagreement ✓ (fair board) · Driver Stack ✓ (factor
 trail) · Fragility Check ✓ (premortem; formal score QUEUED) · Parlay MRI ✓ ·
-Simulation Cloud QUEUED · Calibration Panel ✓ + Honest Band ✓ · CLV Tracker ✓
+Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · CLV Tracker ✓
 · Human Explainer (3 registers) ✓ · No-Bet Gate ✓.
 
 ## NFL House (community/belonging)

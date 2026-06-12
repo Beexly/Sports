@@ -1,4 +1,5 @@
 import { loadMarketFairBoard } from "@/lib/market/load-market-fair-board";
+import { SimulationCloud } from "@/components/observatory/simulation-cloud";
 import {
   NUMERIC_TEXT_CLASS,
   formatCount,
@@ -101,6 +102,12 @@ export async function MarketFairBoard() {
                     Away {formatRatioAsPercent(c.fairAwayProb)}
                   </span>
                 </div>
+                <div className="sm:col-span-2">
+                  <SimulationCloud
+                    probs={c.fairHomeProbsByBook}
+                    consensus={c.fairHomeProb}
+                  />
+                </div>
               </li>
             );
           })}
@@ -109,7 +116,7 @@ export async function MarketFairBoard() {
 
       <div className="border-t border-titanium px-6 py-3">
         <p className="text-[11px] leading-relaxed text-ion-2">
-          Drift = fair-price movement across the capture window (earliest vs latest quote per book, vig removed) — the direction an edge bleeds. De-vigged prices describe the market, not the outcome. They are not
+          Drift = fair-price movement across the capture window (earliest vs latest quote per book, vig removed) — the direction an edge bleeds. The cloud under each game is one dot per book — the market&apos;s real spread of belief, not a simulated variance. De-vigged prices describe the market, not the outcome. They are not
           picks, projections, or advice — the engine&apos;s own reads live on
           the board and carry their full evidence trail.
         </p>

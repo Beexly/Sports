@@ -52,6 +52,12 @@ export interface ConsensusMarketRead {
   readonly fairDrawProb: number | null;
   readonly bookCount: number;
   readonly medianHoldPct: number;
+  /**
+   * Each pooled book's own no-vig P(home), ascending. This is the Simulation
+   * Cloud's raw material: the market's spread of belief as REAL samples (one
+   * per book), never an invented variance parameter.
+   */
+  readonly fairHomeProbsByBook: readonly number[];
 }
 
 interface BookPrices {
@@ -87,12 +93,17 @@ export function consensusNoVig(perBook: readonly BookPrices[]): ConsensusMarketR
   const total = home + away + draw;
   if (total <= 0) return null;
 
+  const fairHomeProbsByBook = pool
+    .map((r) => round4(r.probs[0]!))
+    .sort((a, b) => a - b);
+
   return {
     fairHomeProb: round4(home / total),
     fairAwayProb: round4(away / total),
     fairDrawProb: hasDraw ? round4(draw / total) : null,
     bookCount: pool.length,
     medianHoldPct: round2(median(pool.map((r) => r.holdPct))),
+    fairHomeProbsByBook,
   };
 }
 
