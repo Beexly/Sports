@@ -64,6 +64,13 @@ export type ParlayVitals = {
   /** house edge compounded across the legs, as a fraction (0.08 = 8%). */
   readonly houseEdge: number;
   readonly correlated: readonly CorrelatedGroup[];
+  /**
+   * Dependency Coefficient (0..1): share of legs bound into shared-game
+   * groups. Structural dependency only — counts ties the slip can see, not a
+   * measured statistical correlation. 0 = every leg independent; 1 = every
+   * leg shares its fate with another.
+   */
+  readonly dependencyCoefficient: number;
   readonly verdict: ParlayVerdict;
   readonly suggestions: readonly string[];
 };
@@ -80,7 +87,7 @@ export function computeVitals(legs: readonly ParlayLeg[]): ParlayVitals {
   if (count === 0) {
     return {
       count: 0, survivability: 0, payoutDecimal: 0, fairPayoutDecimal: 0, ev: 0,
-      houseEdge: 0, correlated: [], verdict: "Empty",
+      houseEdge: 0, correlated: [], dependencyCoefficient: 0, verdict: "Empty",
       suggestions: ["Add legs to see the ticket's genome and vitals."],
     };
   }
@@ -105,6 +112,8 @@ export function computeVitals(legs: readonly ParlayLeg[]): ParlayVitals {
   for (const [group, gl] of byGroup) {
     if (gl.length >= 2) correlated.push({ group, label: GROUP_LABELS[group] ?? group, legs: gl });
   }
+  const boundLegCount = correlated.reduce((n, c) => n + c.legs.length, 0);
+  const dependencyCoefficient = boundLegCount / count;
 
   // verdict
   let verdict: ParlayVerdict;
@@ -137,7 +146,7 @@ export function computeVitals(legs: readonly ParlayLeg[]): ParlayVitals {
     suggestions.push("This ticket is structurally balanced — no hidden correlation, positive expected value, survivable leg count.");
   }
 
-  return { count, survivability, payoutDecimal, fairPayoutDecimal, ev, houseEdge, correlated, verdict, suggestions };
+  return { count, survivability, payoutDecimal, fairPayoutDecimal, ev, houseEdge, correlated, dependencyCoefficient, verdict, suggestions };
 }
 
 export const VERDICT_HEX: Record<ParlayVerdict, string> = {

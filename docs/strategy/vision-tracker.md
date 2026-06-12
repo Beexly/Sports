@@ -20,7 +20,7 @@ credential, or purchase), **STAGED** (gated on a prerequisite), **PARKED**
 | Model% vs market% on pick surfaces | STAGED — audit-drawer contract bans fair-prob/EV terms until owner lifts it |
 | Uncertainty bands public ("when NOT to trust us") | DONE — Honest Band on /performance |
 | Simulation cloud (distribution, not fake certainty) | QUEUED (#5) |
-| Parlay correlation | DONE — pre-existing Parlay MRI; "Dependency Coefficient" naming QUEUED |
+| Parlay correlation | DONE — Parlay MRI now shows the **Dependency Coefficient** (bound-leg share, labeled structural-not-statistical) |
 | Kelly/stake guidance | PARKED from public surfaces — Elite-gated educational only |
 
 ## Product modules (10 from the analyst dump)
@@ -39,7 +39,7 @@ Simulation Cloud QUEUED · Calibration Panel ✓ + Honest Band ✓ · CLV Tracke
 | Doorway selector wiring registers site-wide | DONE (localStorage) |
 | Fan-type field on user profile (register follows account) | QUEUED — needs schema migration + privacy review |
 | Primary-nav placement of /house | OWNER — funnel doctrine says few doors |
-| Live rooms (Sunday Couch / Brotherhood / No-Shame) | STAGED — moderation policy + privacy review first; policy doc not yet written (QUEUED) |
+| Live rooms (Sunday Couch / Brotherhood / No-Shame) | STAGED — written policy DONE (`docs/legal/COMMUNITY_MODERATION_POLICY.md`); remaining gates: moderation tooling, privacy review, responsible-play wiring |
 | Weekly NFL ritual (Mon→Mon) | DONE as doctrine + /house rail; content-automation alignment QUEUED |
 | Register on Academy content | QUEUED |
 | NFL-first focus | DONE — all new work NFL-first |
@@ -65,7 +65,7 @@ Simulation Cloud QUEUED · Calibration Panel ✓ + Honest Band ✓ · CLV Tracke
 3. Galaxy Twin live-row deepening — partially shipped pre-session; further Crosswire pass QUEUED
 4. Number formatting unification — DONE
 5. Film Room Higgsfield slate render — OWNER (credits spend)
-6. Jeff Mans weekly-show feed rights evaluation — QUEUED (registry questionnaire; SiriusXM corporate parked per owner)
+6. Jeff Mans weekly-show feed rights evaluation — DONE (`jeff-mans-one-mans-opinion` in rights registry, vendor_candidate, automation off; questionnaire at `docs/legal/VENDOR_QUESTIONNAIRE_JEFF_MANS.md`; outreach is OWNER)
 7. ADMIN_EMAILS in Vercel — OWNER
 
 ## Visual/immersive (first dump)
@@ -80,6 +80,7 @@ only attached to real data, in the existing grammar.
 ## Verification state (this session)
 
 3,900+ web tests · 356 engine tests · tsc clean · lint clean ·
-`next build` exit 0. Branch: `claude/wonderful-ptolemy-qh7pnq` (14 commits).
+`next build` exit 0. Branch: `claude/laughing-thompson-x9xr6f` (supersedes
+`claude/wonderful-ptolemy-qh7pnq` — fast-forwarded, all 13 commits carried).
 **Go-live note:** production deploy happens from the owner's main-branch
 flow — merging this branch is the owner's call; nothing here auto-deploys.

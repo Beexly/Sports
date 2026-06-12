@@ -279,6 +279,51 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "Pending vendor questionnaire and commercial terms review. " +
       "All flags remain false until contract signed.",
   },
+  {
+    source_id: "jeff-mans-one-mans-opinion",
+    source_name: "One MANS Opinion with Jeff Mans (public podcast feed)",
+    source_url: "https://manspod.podbean.com/",
+    terms_url: null,
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "broadcast_media",
+    status: "vendor_candidate",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Claim made by Jeff Mans on One MANS Opinion (manual listener log)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "high",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-12",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://manspod.podbean.com/",
+      "https://podcasts.apple.com/us/podcast/one-mans-opinion-with-jeff-mans/id1500323362",
+      "https://www.fantasyguru.com/elite-plus-podcasts/",
+    ],
+    unlock_condition:
+      "Complete vendor questionnaire (docs/legal/VENDOR_QUESTIONNAIRE_JEFF_MANS.md) and obtain " +
+      "written license/partnership terms from Fantasy Guru / Jeff Mans for automated ingestion " +
+      "or derived analytics.",
+    vendor_contact: null,
+    notes:
+      "Owner-directed evaluation of Jeff Mans' weekly show as its own source — SiriusXM corporate " +
+      "licensing is PARKED per owner and is NOT this entry; SiriusXM-distributed content stays under " +
+      "siriusxm-streaming. This entry covers ONLY the openly syndicated podcast feed (Podbean host; " +
+      "ELITE+ Podcast Network / FantasyGuru). The show's picks and analysis are proprietary " +
+      "predictions — data-rules forbid extracting them as inputs, so the value lane is pundit-claim " +
+      "ACCOUNTABILITY (paraphrased claim, pundit, date), which the Airwave source policy already " +
+      "allows manually at LOW risk for podcast_rss. Automated capture/transcription stays OFF until " +
+      "the questionnaire and license land. Episode metadata (titles, dates) are facts; audio is " +
+      "copyrighted expression — hence high expression risk. Contact via fantasyguru.com.",
+  },
 
   // ── Permission required ──────────────────────────────────────────────────────
   {
