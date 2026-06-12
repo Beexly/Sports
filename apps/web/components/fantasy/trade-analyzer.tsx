@@ -8,10 +8,12 @@
  */
 
 import { useMemo, useState } from "react";
-import { evaluateTrade, tradeValue, type Fairness } from "@/lib/fantasy/trade";
+import { evaluateTrade, tradeValue, dynastyValue, type Fairness } from "@/lib/fantasy/trade";
 import { PLAYERS, POS_HEX, type Player } from "@/lib/fantasy/players";
 import { BRAND_COLORS } from "@/lib/brand";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
+
+type TradeMode = "redraft" | "dynasty";
 
 const FAIR_HEX: Record<Fairness, string> = {
   "you win": BRAND_COLORS.orbitalCyan,
@@ -25,14 +27,16 @@ const FAIR_HEX: Record<Fairness, string> = {
  */
 export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
   const universe = useMemo(() => pool ?? PLAYERS, [pool]);
-  const sortedPool = useMemo(() => [...universe].sort((a, b) => tradeValue(b, universe) - tradeValue(a, universe)), [universe]);
+  const [mode, setMode] = useState<TradeMode>("redraft");
+  const valueFn = useMemo(() => mode === "dynasty" ? (p: Player) => dynastyValue(p, universe) : (p: Player) => tradeValue(p, universe), [mode, universe]);
+  const sortedPool = useMemo(() => [...universe].sort((a, b) => valueFn(b) - valueFn(a)), [universe, valueFn]);
   const [give, setGive] = useState<string[]>([]);
   const [get, setGet] = useState<string[]>([]);
 
   const byId = (id: string) => sortedPool.find((p) => p.id === id)!;
   const giveP = give.map(byId);
   const getP = get.map(byId);
-  const evalResult = evaluateTrade(giveP, getP, universe);
+  const evalResult = evaluateTrade(giveP, getP, universe, mode);
 
   const addTo = (side: "give" | "get", id: string) => {
     if (give.includes(id) || get.includes(id)) return;
@@ -47,10 +51,32 @@ export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
 
   return (
     <div className="space-y-6">
+      {/* Mode toggle */}
+      <div className="flex flex-wrap items-center gap-3">
+        {(["redraft", "dynasty"] as TradeMode[]).map((m) => {
+          const active = mode === m;
+          const c = BRAND_COLORS.softUltraviolet;
+          return (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              className="rounded-full px-4 py-1.5 text-xs font-semibold capitalize tracking-wider transition-colors"
+              style={{ color: active ? BRAND_COLORS.obsidianBlack : "var(--ion-3,#8b9bb4)", background: active ? c : "rgba(255,255,255,0.05)", border: `1px solid ${active ? c : BRAND_COLORS.steelGray}` }}
+            >
+              {m === "redraft" ? "Redraft" : "Dynasty"}
+            </button>
+          );
+        })}
+        {mode === "dynasty" && (
+          <p className="text-[11px] text-ink-400">Dynasty mode weights career trajectory — ascending roles, usage momentum, and scheme fit — over raw current output.</p>
+        )}
+      </div>
+
       {/* two sides */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <Side title="You give" hex={BRAND_COLORS.ionMagenta} players={giveP} onRemove={(id) => removeFrom("give", id)} value={evalResult?.giveValue ?? 0} pool={universe} />
-        <Side title="You get" hex={BRAND_COLORS.orbitalCyan} players={getP} onRemove={(id) => removeFrom("get", id)} value={evalResult?.getValue ?? 0} pool={universe} />
+        <Side title="You give" hex={BRAND_COLORS.ionMagenta} players={giveP} onRemove={(id) => removeFrom("give", id)} value={evalResult?.giveValue ?? 0} pool={universe} mode={mode} />
+        <Side title="You get" hex={BRAND_COLORS.orbitalCyan} players={getP} onRemove={(id) => removeFrom("get", id)} value={evalResult?.getValue ?? 0} pool={universe} mode={mode} />
       </div>
 
       {/* verdict */}
@@ -87,7 +113,7 @@ export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
               <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1" style={{ opacity: used ? 0.4 : 1 }}>
                 <span className="rounded px-1 py-0.5 text-[9px] font-bold" style={{ color: phex, background: `${phex}1c` }}>{p.pos}</span>
                 <span className="flex-1 truncate text-xs text-white">{p.name} <span className="text-ink-600">{p.team}</span></span>
-                <span className="w-8 text-right font-mono text-[10px] text-ink-500">{tradeValue(p, universe)}</span>
+                <span className="w-8 text-right font-mono text-[10px] text-ink-500">{valueFn(p)}</span>
                 <button type="button" disabled={used} onClick={() => addTo("give", p.id)} className="rounded px-1.5 py-0.5 text-[10px] font-semibold disabled:opacity-30" style={{ color: BRAND_COLORS.ionMagenta }}>Give</button>
                 <button type="button" disabled={used} onClick={() => addTo("get", p.id)} className="rounded px-1.5 py-0.5 text-[10px] font-semibold disabled:opacity-30" style={{ color: BRAND_COLORS.orbitalCyan }}>Get</button>
               </div>
@@ -99,7 +125,7 @@ export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
   );
 }
 
-function Side({ title, hex, players, onRemove, value, pool }: { title: string; hex: string; players: Player[]; onRemove: (id: string) => void; value: number; pool: readonly Player[] }) {
+function Side({ title, hex, players, onRemove, value, pool, mode }: { title: string; hex: string; players: Player[]; onRemove: (id: string) => void; value: number; pool: readonly Player[]; mode: TradeMode }) {
   return (
     <div className="surface-card p-4" style={{ boxShadow: `inset 0 0 0 1px ${hex}33` }}>
       <div className="flex items-center justify-between">
@@ -114,7 +140,7 @@ function Side({ title, hex, players, onRemove, value, pool }: { title: string; h
             <li key={p.id} className="flex items-center gap-2 text-sm">
               <span className="rounded px-1 py-0.5 text-[9px] font-bold" style={{ color: POS_HEX[p.pos], background: `${POS_HEX[p.pos]}1c` }}>{p.pos}</span>
               <span className="flex-1 truncate text-white">{p.name}</span>
-              <span className="font-mono text-[11px] text-ink-500">{tradeValue(p, pool)}</span>
+              <span className="font-mono text-[11px] text-ink-500">{mode === "dynasty" ? dynastyValue(p, pool) : tradeValue(p, pool)}</span>
               <button type="button" onClick={() => onRemove(p.id)} className="px-1 text-ink-600 hover:text-white" aria-label="remove">×</button>
             </li>
           ))}

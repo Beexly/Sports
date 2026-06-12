@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { tradeValue, evaluateTrade } from "./trade";
+import { tradeValue, evaluateTrade, dynastyValue } from "./trade";
 import { PLAYERS, playerById } from "./players";
 
 const get = (id: string) => playerById(id)!;
@@ -43,5 +43,28 @@ describe("trade analyzer", () => {
     const e = evaluateTrade([get("rb-cole-mathis")], [get("rb-marcus-vale")])!;
     expect(e.getValue).toBeGreaterThan(e.giveValue);
     expect(e.fairness).toBe("you win");
+  });
+
+  it("dynasty mode uses dynastyValue in calculations", () => {
+    const give = [get("rb-marcus-vale")];
+    const recv = [get("rb-malik-orr")]; // trending up, ascending
+    const redraft = evaluateTrade(give, recv, PLAYERS, "redraft")!;
+    const dynasty = evaluateTrade(give, recv, PLAYERS, "dynasty")!;
+    // Trending-up player (malik-orr) gains more in dynasty mode
+    expect(dynasty.getValue).toBeGreaterThanOrEqual(redraft.getValue);
+  });
+});
+
+describe("dynastyValue", () => {
+  it("rewards ascending trend vs declining trend", () => {
+    const rising = get("rb-malik-orr"); // trend: up
+    const falling = get("rb-cole-mathis"); // trend: down
+    expect(dynastyValue(rising, PLAYERS)).toBeGreaterThan(dynastyValue(falling, PLAYERS));
+  });
+
+  it("returns a positive number for any player", () => {
+    for (const p of PLAYERS) {
+      expect(dynastyValue(p, PLAYERS)).toBeGreaterThan(0);
+    }
   });
 });
