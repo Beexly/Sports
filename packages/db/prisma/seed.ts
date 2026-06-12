@@ -1102,7 +1102,7 @@ async function seedPicks(): Promise<SeedPickResult> {
     line: number;
     selection: string;
     grade: "ELITE_PLAY" | "STRONG_PLAY" | "SOLID_PLAY" | "LEAN";
-    risk: "LOW" | "MODERATE" | "HIGH";
+    risk: "LOW_RISK" | "MODERATE" | "HIGH_VARIANCE";
     bookmakers: number;
     edgeScore: number;
   };
@@ -1164,7 +1164,7 @@ async function seedPicks(): Promise<SeedPickResult> {
         "PENDING",
         62 + (i % 30),
         i % 4 === 0 ? "ELITE_PLAY" : i % 4 === 1 ? "STRONG_PLAY" : i % 4 === 2 ? "SOLID_PLAY" : "LEAN",
-        i % 3 === 0 ? "LOW" : i % 3 === 1 ? "MODERATE" : "HIGH"
+        i % 3 === 0 ? "LOW_RISK" : i % 3 === 1 ? "MODERATE" : "HIGH_VARIANCE"
       )
     );
   }
@@ -1185,7 +1185,7 @@ async function seedPicks(): Promise<SeedPickResult> {
         settledOutcomes[i]!,
         58 + (i % 35),
         i % 5 === 0 ? "ELITE_PLAY" : i % 5 < 3 ? "STRONG_PLAY" : i % 5 === 3 ? "SOLID_PLAY" : "LEAN",
-        i % 4 === 0 ? "LOW" : i % 4 < 3 ? "MODERATE" : "HIGH"
+        i % 4 === 0 ? "LOW_RISK" : i % 4 < 3 ? "MODERATE" : "HIGH_VARIANCE"
       )
     );
   }
