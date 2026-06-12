@@ -54,7 +54,7 @@ Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · 
 | Stat Stability Grade | DONE — production/snaps/edge views |
 | Line Death Clock | DONE (price space) — per-pick clock in the evidence audit drawer (PRO+): market movement since publish, toward/against, rate/h, book basis. Time-to-zero stays OWNER-gated — it needs an edge definition, banned on pick surfaces until the fair-prob gate lifts |
 | Market Gravity Index (quantified) | PROPOSAL WRITTEN — `docs/models/market-gravity-index-proposal.md` (convergence math on captured snapshots, null guards, weaknesses); OWNER approves math, then build |
-| QB Pressure Sensitivity / Protection Stress indices | QUEUED — data live, derivation next |
+| QB Pressure Sensitivity / Protection Stress indices | PROPOSAL WRITTEN — `docs/models/qb-pressure-indices-proposal.md` (EPA clean-vs-pressured split via FTN join; blitz-adjusted protection stress); OWNER approves math, then build |
 | Script Elasticity / False Favorite / Narrative Risk / Public Comfort | PARKED until defensible math exists |
 | DuckDB/Polars/Dagster/dbt/ClickHouse | OWNER — infra decision, current stack not the bottleneck |
 | New data sources (nflverse ecosystem already live; CFBD, nba_api, pybaseball, StatsBomb, MoneyPuck...) | OWNER+legal — every source through the Scraping Clearance Engine / rights registry first; NFL-first says not now |
