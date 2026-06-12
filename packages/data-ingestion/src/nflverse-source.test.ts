@@ -93,6 +93,14 @@ describe("nflverse url builder", () => {
   it("builds non-seasonal master urls", () => {
     expect(nflverseUrl("players", 0)).toBe(`${NFLVERSE_BASE}/players/players.csv`);
     expect(nflverseUrl("schedules", 0)).toBe(`${NFLVERSE_BASE}/schedules/games.csv`);
+    expect(nflverseUrl("officials", 0)).toBe(`${NFLVERSE_BASE}/officials/officials.csv`);
+    expect(nflverseUrl("contracts", 0)).toBe(`${NFLVERSE_BASE}/contracts/historical_contracts.csv.gz`);
+    expect(nflverseUrl("teams", 0)).toBe(`${NFLVERSE_BASE}/teams/teams.csv`);
+    expect(nflverseUrl("trades", 0)).toBe(`${NFLVERSE_BASE}/trades/trades.csv`);
+  });
+
+  it("builds seasonal urls for the team-week stats release", () => {
+    expect(nflverseUrl("stats_team", 2024)).toBe(`${NFLVERSE_BASE}/stats_team/stats_team_week_2024.csv`);
   });
 });
 
@@ -112,5 +120,17 @@ describe("nflverse catalog integrity", () => {
     for (const key of ["pbp", "ngs", "snap_counts", "injuries", "pfr_advstats", "ftn_charting"]) {
       expect(NFLVERSE_CATALOG).toHaveProperty(key);
     }
+  });
+
+  it("covers the open context/master datasets with a non-empty tag and asset filename", () => {
+    const newKeys = ["officials", "stats_team", "contracts", "teams", "trades"] as const;
+    for (const key of newKeys) {
+      expect(NFLVERSE_CATALOG).toHaveProperty(key);
+      const d = NFLVERSE_CATALOG[key];
+      expect(d.tag.length).toBeGreaterThan(0);
+      expect(d.file(2024).length).toBeGreaterThan(0);
+    }
+    // Seasonal entries must embed the season in the asset filename.
+    expect(NFLVERSE_CATALOG.stats_team.file(2024)).toContain("2024");
   });
 });

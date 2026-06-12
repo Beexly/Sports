@@ -147,6 +147,36 @@ export const NFLVERSE_CATALOG = {
     unlocks: "Athletic testing priors.",
     file: () => `combine.csv`,
   }),
+  officials: ds({
+    key: "officials", tag: "officials", grain: "game", since: 2015, seasonal: false,
+    description: "Game officials: referee crew assignments per game.",
+    unlocks: "Officials/penalty-tendency context (crew-level flag and pace tendencies).",
+    file: () => `officials.csv`,
+  }),
+  stats_team: ds({
+    key: "stats_team", tag: "stats_team", grain: "team-week", since: 2018, seasonal: true,
+    description: "Combined weekly team stats (newer stats_team release family).",
+    unlocks: "Team-week aggregates without rolling up play-by-play ourselves.",
+    file: (s) => `stats_team_week_${s}.csv`,
+  }),
+  contracts: ds({
+    key: "contracts", tag: "contracts", grain: "player", since: 0, seasonal: false,
+    description: "Player contracts mirrored from OverTheCap via the nflverse release.",
+    unlocks: "Salary/contract priors — paid-like-a-starter role and investment signals.",
+    file: () => `historical_contracts.csv.gz`,
+  }),
+  teams: ds({
+    key: "teams", tag: "teams", grain: "snapshot", since: 0, seasonal: false,
+    description: "Team metadata master table (abbreviations, names, identifiers).",
+    unlocks: "Canonical team join keys across seasons and rebrands/relocations.",
+    file: () => `teams.csv`,
+  }),
+  trades: ds({
+    key: "trades", tag: "trades", grain: "snapshot", since: 2002, seasonal: false,
+    description: "Trade history: picks and players exchanged per trade.",
+    unlocks: "Roster-churn context — acquisition cost and mid-season movement signals.",
+    file: () => `trades.csv`,
+  }),
 } satisfies Record<string, NflverseDataset>;
 
 export type NflverseDatasetKey = keyof typeof NFLVERSE_CATALOG;
