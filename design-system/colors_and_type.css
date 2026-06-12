@@ -27,7 +27,12 @@
   --ion-white:   #EDF2F7;   /* hero text — cool, never #FFF */
   --ion:         #D5DDE9;   /* primary text */
   --ion-1:       #98A3B5;   /* secondary · mineral silver */
-  --ion-2:       #5E6878;   /* tertiary · meta */
+  /* WCAG AA fix (risk register #12): --ion-2 bumped #5E6878 → #7E8B9F.
+     Old: ~3.4:1 on carbon #0B0F18 / ~3.2:1 on eclipse — FAIL for 11px text.
+     New: ~5.5:1 on carbon / ~5.3:1 on eclipse — PASS (>=4.5:1), still a
+     step darker than ion-1 (~7.5:1) so the muted hierarchy is preserved.
+     Matches the already-remediated app tokens (apps/web/styles/design-tokens.css). */
+  --ion-2:       #7E8B9F;   /* tertiary · meta */
   --ion-3:       #3D4555;   /* muted */
 
   /* ── PRIMARY SIGNAL — plasma magenta ──────────────────── */

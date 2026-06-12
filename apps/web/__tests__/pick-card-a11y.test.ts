@@ -27,4 +27,19 @@ describe("PickCard accessibility labels", () => {
   it("does not use low-contrast gray text for small pick-card copy", () => {
     expect(src).not.toMatch(/text-gray-(500|600)\b/);
   });
+
+  it("uses brand tokens for card chrome — no raw tailwind gray-* utilities", () => {
+    expect(src).not.toMatch(/(?:text|bg|border)-gray-\d+/);
+  });
+
+  it("gives win/loss/push/void results a non-color glyph cue (WCAG 1.4.1)", () => {
+    expect(src).toMatch(/WIN:\s*"✓"/);
+    expect(src).toMatch(/LOSS:\s*"✕"/);
+    expect(src).toMatch(/PUSH:\s*"–"/);
+    expect(src).toMatch(/VOID:\s*"∅"/);
+  });
+
+  it("marks factor impact direction with a +/−/· glyph, not color alone", () => {
+    expect(src).toMatch(/"positive" \? "\+" : factor\.impact === "negative" \? "−" : "·"/);
+  });
 });

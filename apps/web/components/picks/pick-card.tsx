@@ -26,7 +26,7 @@ const PICK_GRADE_STYLES: Record<PickGrade, string> = {
   ELITE_PLAY: "text-plasma bg-plasma/10",
   STRONG_PLAY: "text-verify bg-verify/10",
   SOLID_PLAY: "text-ion-blue bg-ion-blue/10",
-  LEAN: "text-gray-400 bg-gray-700/40",
+  LEAN: "text-ion-1 bg-mineral/40",
 };
 
 const RISK_LEVEL_STYLES: Record<RiskLevel, string> = {
@@ -65,8 +65,8 @@ export function PickCard({
       className={[
         "relative flex flex-col gap-4 rounded-2xl border p-5 transition-shadow hover:shadow-lg hover:shadow-black/40",
         isFeatured
-          ? "border-plasma/50 bg-gray-900 shadow-plasma/20"
-          : "border-gray-800 bg-gray-900",
+          ? "border-plasma/50 bg-eclipse shadow-plasma/20"
+          : "border-mineral bg-eclipse",
       ].join(" ")}
     >
       {/* Featured ribbon */}
@@ -80,7 +80,7 @@ export function PickCard({
 
       {/* Header: sport + badges */}
       <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-xs font-semibold text-gray-300">
+        <span className="rounded-full bg-titanium px-2.5 py-0.5 text-xs font-semibold text-ion">
           {pick.game.sport}
         </span>
         <div className="flex flex-wrap items-center gap-1.5">
@@ -104,7 +104,7 @@ export function PickCard({
       </div>
 
       {/* Selection box */}
-      <div className="rounded-lg bg-gray-800/60 px-4 py-3">
+      <div className="rounded-lg bg-titanium/60 px-4 py-3">
         <p className="text-xs font-medium text-ion-1">Pick</p>
         <p className="mt-0.5 text-lg font-bold text-white">{pick.selection}</p>
         {/* SPREAD's chosen-side number already lives in `selection` (e.g.
@@ -161,7 +161,7 @@ export function PickCard({
       {!canSeeFactorBreakdown && (
         <Link
           href="/pricing"
-          className="block rounded-lg border border-dashed border-gray-700/50 px-4 py-3 transition-colors hover:border-plasma/50"
+          className="block rounded-lg border border-dashed border-mineral/50 px-4 py-3 transition-colors hover:border-plasma/50"
         >
           <p className="text-xs text-ion-1">
             Factor breakdown unlocks on Pro &amp; Elite →
@@ -170,7 +170,7 @@ export function PickCard({
       )}
 
       {/* Data quality + freshness footer */}
-      <div className="flex flex-col gap-2 border-t border-gray-800/60 pt-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-2 border-t border-mineral/60 pt-2 sm:flex-row sm:items-center sm:justify-between">
         <DataQualityMeter score={pick.dataQualityScore} />
         {freshnessAge !== null && (
           <div className="flex items-center gap-1.5">
@@ -184,7 +184,7 @@ export function PickCard({
         {pick.isAuditAvailable ? (
           <EvidenceAuditDrawer pickId={pick.id} />
         ) : (
-          <span className="rounded-full border border-gray-800 bg-gray-900/50 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-1">
+          <span className="rounded-full border border-mineral bg-eclipse/50 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-1">
             Evidence opens on live picks
           </span>
         )}
@@ -207,7 +207,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
     (breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore !== 0);
 
   return (
-    <div className="rounded-lg border border-gray-800/60 bg-gray-950/40 p-3">
+    <div className="rounded-lg border border-mineral/60 bg-carbon/40 p-3">
       <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-ion-1">
         Factor Breakdown
       </p>
@@ -249,18 +249,21 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         <div className="flex flex-col gap-1">
           {breakdown.factors.map((factor, idx) => (
             <div key={idx} className="flex items-start gap-2">
+              {/* WCAG 1.4.1 non-color cue: +/−/· glyph carries the impact
+                  direction so the state survives without color perception. */}
               <span
                 className={[
-                  "mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full",
+                  "w-3 shrink-0 text-center font-mono text-[10px] font-bold leading-relaxed",
                   factor.impact === "positive"
-                    ? "bg-verify"
+                    ? "text-verify"
                     : factor.impact === "negative"
-                    ? "bg-alert"
-                    : "bg-gray-500",
+                    ? "text-alert"
+                    : "text-ion-3",
                 ].join(" ")}
-                aria-hidden="true"
-              />
-              <span className="text-[10px] leading-relaxed text-gray-400">
+              >
+                {factor.impact === "positive" ? "+" : factor.impact === "negative" ? "−" : "·"}
+              </span>
+              <span className="text-[10px] leading-relaxed text-ion-1">
                 {factor.description}
               </span>
             </div>
@@ -275,11 +278,11 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
             <span className="text-[10px] font-semibold uppercase tracking-wide text-ion-blue">
               Independent edge
             </span>
-            <span className="rounded-full bg-gray-800 px-1.5 py-0.5 text-[9px] text-gray-400">
+            <span className="rounded-full bg-titanium px-1.5 py-0.5 text-[9px] text-ion-1">
               {breakdown.independentEdge.sources.join(", ") || "—"} · not yet priced
             </span>
           </div>
-          <p className="text-[10px] leading-relaxed text-gray-400">
+          <p className="text-[10px] leading-relaxed text-ion-1">
             {breakdown.independentEdge.rationale}
           </p>
         </div>
@@ -339,9 +342,9 @@ function ScoreBar({
     <div>
       <div className="mb-0.5 flex justify-between text-[10px]">
         <span className="text-ion-1">{label}</span>
-        <span className="font-medium text-gray-400">{Math.round(value)}</span>
+        <span className="font-medium text-ion-1">{Math.round(value)}</span>
       </div>
-      <div className="h-1 w-full overflow-hidden rounded-full bg-gray-800">
+      <div className="h-1 w-full overflow-hidden rounded-full bg-titanium">
         <div
           className={`h-full rounded-full ${color}`}
           style={{ width: `${pct}%` }}
@@ -406,7 +409,7 @@ function PickTypeBadge({ type }: { type: PickType }) {
 }
 
 function ConfidenceBadge({ confidence }: { confidence: number }) {
-  let color = "text-gray-400 bg-gray-800";
+  let color = "text-ion-1 bg-titanium";
   if (confidence >= 80) color = "text-verify bg-verify/10";
   else if (confidence >= 70) color = "text-ion-blue bg-ion-blue/10";
   else if (confidence >= 60) color = "text-plasma bg-plasma/10";
@@ -422,7 +425,7 @@ function ConfidenceBadge({ confidence }: { confidence: number }) {
 }
 
 function EdgeScoreBadge({ edgeScore }: { edgeScore: number }) {
-  let color = "text-gray-400";
+  let color = "text-ion-1";
   if (edgeScore >= 70) color = "text-verify";
   else if (edgeScore >= 50) color = "text-ion-blue";
   else if (edgeScore >= 30) color = "text-plasma";
@@ -440,14 +443,24 @@ function EdgeScoreBadge({ edgeScore }: { edgeScore: number }) {
 
 function ResultBadge({ result }: { result: PickResult }) {
   if (result === "PENDING") return null;
+  const settled = result as Exclude<PickResult, "PENDING">;
   const styles: Record<Exclude<PickResult, "PENDING">, string> = {
     WIN: "bg-verify/10 text-verify",
     LOSS: "bg-alert/10 text-alert",
-    PUSH: "bg-gray-800 text-gray-400",
-    VOID: "bg-gray-800 text-ion-1",
+    PUSH: "bg-titanium text-ion-1",
+    VOID: "bg-titanium text-ion-1",
+  };
+  // WCAG 1.4.1 non-color cue: a glyph leads the label so settled state is
+  // distinguishable even when verify/alert hues are indistinguishable.
+  const glyphs: Record<Exclude<PickResult, "PENDING">, string> = {
+    WIN: "✓",
+    LOSS: "✕",
+    PUSH: "–",
+    VOID: "∅",
   };
   return (
-    <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${styles[result as Exclude<PickResult, "PENDING">]}`}>
+    <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${styles[settled]}`}>
+      <span aria-hidden="true">{glyphs[settled]}&nbsp;</span>
       {result}
     </span>
   );
@@ -495,7 +508,7 @@ function DataQualityMeter({ score }: { score: number }) {
       aria-label={`Data quality: ${label}, ${clamped} out of 100`}
     >
       <span className="text-[10px] text-ion-1">Data Quality</span>
-      <div className="h-1 w-16 overflow-hidden rounded-full bg-gray-800" aria-hidden="true">
+      <div className="h-1 w-16 overflow-hidden rounded-full bg-titanium" aria-hidden="true">
         <div
           className={`h-full rounded-full ${color}`}
           style={{ width: `${clamped}%` }}
@@ -516,7 +529,7 @@ function FreshnessIndicator({ ageMinutes }: { ageMinutes: number }) {
     color = "text-plasma";
     label = `${ageMinutes}m old`;
   } else if (ageMinutes >= 10) {
-    color = "text-gray-400";
+    color = "text-ion-1";
     label = `${ageMinutes}m ago`;
   }
 
@@ -524,7 +537,7 @@ function FreshnessIndicator({ ageMinutes }: { ageMinutes: number }) {
     <>
       <span
         className={`h-1.5 w-1.5 rounded-full ${
-          ageMinutes < 10 ? "bg-verify" : ageMinutes < 30 ? "bg-gray-400" : "bg-plasma"
+          ageMinutes < 10 ? "bg-verify" : ageMinutes < 30 ? "bg-ion-1" : "bg-plasma"
         }`}
         aria-hidden="true"
       />
