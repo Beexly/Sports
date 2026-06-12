@@ -5,18 +5,27 @@ import type { ReactNode } from "react";
 import { toneClass, toneRowClass, type SignalTone } from "@/lib/intelligence/colors";
 
 /**
- * Generic, typed, dependency-light data table for the LIGHT "paper" data
- * surfaces. Every board page hand-rolled its own table (sticky header, zebra
- * rows, right-aligned numerics, source-error empty state); this is the shared
- * one they should all use.
+ * Generic, typed, dependency-light data table for the shared data surfaces.
+ * Every board page hand-rolled its own table (sticky header, zebra rows,
+ * right-aligned numerics, source-error empty state); this is the shared one
+ * they should all use.
  *
  * Design intent (FantasyPros / PFF / Stathead): the data is the hero, chrome is
  * quiet, density is generous (py-3.5), numerics are tabular mono and
- * right-aligned, sort/filter are strong and obvious. All text is AA on paper
- * (text-ink / ink-1 / ink-2 only — never the dark failing ion-2/ion-3 grays).
+ * right-aligned, sort/filter are strong and obvious.
+ *
+ * Surfaces: `surface="light"` (default) is the "paper" skin — all text AA on
+ * paper (text-ink / ink-1 / ink-2 only). `surface="dark"` is the "carbon" skin
+ * used by the Player Lab (carbon/eclipse backgrounds, mineral hairlines, the
+ * ion text scale, and white/[0.03] zebra rows) — the same token set the Player
+ * Lab previously applied from the outside via `!`-important descendant
+ * overrides, now owned by the component.
  */
 
 export type ColumnAlign = "left" | "right" | "center";
+
+/** Surface the table renders on: light "paper" (default) or dark "carbon". */
+export type TableSurface = "light" | "dark";
 
 export interface Column<Row> {
   /** Stable key; also the default sort accessor when `sortValue` is omitted. */
@@ -84,7 +93,124 @@ export interface DataTableProps<Row> {
   className?: string;
   /** min-width for the scrollable table (keeps columns from crushing). */
   minWidth?: number;
+  /** Surface skin: light "paper" (default) or dark "carbon". */
+  surface?: TableSurface;
 }
+
+// ── Surface token sets ────────────────────────────────────────────────────────
+
+/**
+ * Every surface-dependent class the table emits, resolved once per render from
+ * the `surface` prop. The dark set mirrors exactly what the Player Lab used to
+ * force through `!`-important descendant overrides (see player-lab-table.tsx
+ * history): paper→carbon/eclipse backgrounds, paper-border→mineral hairlines,
+ * ink→ion text scale, white/[0.03] zebra, emerald/rose-500/10 tone tints.
+ */
+interface SurfaceTokens {
+  /** Wrapper card: border + background. */
+  container: string;
+  /** Filter bar (search/enum) strip. */
+  filterBar: string;
+  /** Search input. */
+  input: string;
+  /** Enum <select>. */
+  select: string;
+  /** Enum filter label text. */
+  enumLabel: string;
+  /** "N rows" count text. */
+  rowCount: string;
+  /** Sticky <thead> background. */
+  thead: string;
+  /** Header row bottom border. */
+  headerRowBorder: string;
+  /** Rank "#" header cell text. */
+  rankHeader: string;
+  /** Header cell text. */
+  th: string;
+  /** Active (sorted) header text. */
+  thActive: string;
+  /** Sort button hover/focus. */
+  sortButton: string;
+  /** Sort glyph when the column is inactive / active. */
+  glyphIdle: string;
+  glyphActive: string;
+  /** Empty-state title / hint text. */
+  emptyTitle: string;
+  emptyHint: string;
+  /** Body row border + hover. */
+  rowBorder: string;
+  rowHover: string;
+  /** Zebra striping: odd-index rows (visual even) / even-index rows. */
+  zebraOdd: string;
+  zebraEven: string;
+  /** Rank "#" body cell text. */
+  rankCell: string;
+  /** Data cell text. */
+  cellText: string;
+  /** Muted "—" for null default cells. */
+  nullCell: string;
+  /** Subtle row tint for an accented tone. */
+  toneRow: (tone: SignalTone) => string;
+}
+
+const SURFACE_TOKENS: Record<TableSurface, SurfaceTokens> = {
+  light: {
+    container: "border-paper-border bg-paper-raised",
+    filterBar: "border-paper-border bg-paper",
+    input:
+      "border-paper-border bg-paper-raised text-ink placeholder:text-ink-2 focus:border-ink-1 focus:ring-ink-1/20",
+    select:
+      "border-paper-border bg-paper-raised text-ink focus:border-ink-1 focus:ring-ink-1/20",
+    enumLabel: "text-ink-1",
+    rowCount: "text-ink-2",
+    thead: "bg-paper-sunken",
+    headerRowBorder: "border-paper-border",
+    rankHeader: "text-ink-2",
+    th: "text-ink-1",
+    thActive: "text-ink",
+    sortButton: "hover:text-ink focus:ring-ink-1/20",
+    glyphIdle: "text-ink-2/50",
+    glyphActive: "text-ink",
+    emptyTitle: "text-ink",
+    emptyHint: "text-ink-2",
+    rowBorder: "border-paper-border/70",
+    rowHover: "hover:bg-paper-sunken",
+    zebraOdd: "bg-paper-sunken/60",
+    zebraEven: "bg-paper-raised",
+    rankCell: "text-ink-2",
+    cellText: "text-ink",
+    nullCell: "text-ink-2",
+    toneRow: toneRowClass,
+  },
+  dark: {
+    container: "border-mineral bg-eclipse",
+    filterBar: "border-mineral bg-carbon",
+    input:
+      "border-mineral bg-eclipse text-ion placeholder:text-ion-3 focus:border-ion-1 focus:ring-ion-1/20",
+    select: "border-mineral bg-eclipse text-ion focus:border-ion-1 focus:ring-ion-1/20",
+    enumLabel: "text-ion-1",
+    rowCount: "text-ion-2",
+    thead: "bg-carbon",
+    headerRowBorder: "border-mineral",
+    rankHeader: "text-ion-2",
+    th: "text-ion-1",
+    thActive: "text-ion",
+    sortButton: "hover:text-ion-white focus:ring-ion-1/20",
+    glyphIdle: "text-ion-2/50",
+    glyphActive: "text-ion",
+    emptyTitle: "text-ion",
+    emptyHint: "text-ion-2",
+    rowBorder: "border-mineral",
+    rowHover: "hover:bg-white/[0.06]",
+    zebraOdd: "bg-white/[0.03]",
+    zebraEven: "bg-eclipse",
+    rankCell: "text-ion-2",
+    cellText: "text-ion",
+    nullCell: "text-ion-2",
+    toneRow: (tone) =>
+      tone === "good" ? "bg-emerald-500/10" : tone === "bad" ? "bg-rose-500/10" : "",
+  },
+};
 
 // ── Pure helpers (exported for unit testing) ─────────────────────────────────
 
@@ -182,9 +308,17 @@ function alignClass(align: ColumnAlign | undefined): string {
   return "text-left";
 }
 
-function SortGlyph({ active, dir }: { active: boolean; dir: SortDir }): JSX.Element {
-  if (!active) return <span className="ml-1 text-ink-2/50">↕</span>;
-  return <span className="ml-1 text-ink">{dir === "asc" ? "▲" : "▼"}</span>;
+function SortGlyph({
+  active,
+  dir,
+  tokens,
+}: {
+  active: boolean;
+  dir: SortDir;
+  tokens: SurfaceTokens;
+}): JSX.Element {
+  if (!active) return <span className={`ml-1 ${tokens.glyphIdle}`}>↕</span>;
+  return <span className={`ml-1 ${tokens.glyphActive}`}>{dir === "asc" ? "▲" : "▼"}</span>;
 }
 
 export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
@@ -204,7 +338,10 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
     showRank = false,
     className = "",
     minWidth,
+    surface = "light",
   } = props;
+
+  const t = SURFACE_TOKENS[surface];
 
   const [sort, setSort] = useState<SortState | null>(initialSort);
   const [query, setQuery] = useState("");
@@ -224,9 +361,11 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
   const tableStyle = minWidth ? { minWidth: `${minWidth}px` } : undefined;
 
   return (
-    <div className={`overflow-hidden rounded-ds-md border border-paper-border bg-paper-raised ${className}`}>
+    <div className={`overflow-hidden rounded-ds-md border ${t.container} ${className}`}>
       {hasFilters ? (
-        <div className="flex flex-col gap-3 border-b border-paper-border bg-paper px-4 py-3 sm:flex-row sm:items-center">
+        <div
+          className={`flex flex-col gap-3 border-b px-4 py-3 sm:flex-row sm:items-center ${t.filterBar}`}
+        >
           {searchable ? (
             <label className="flex flex-1 items-center gap-2">
               <span className="sr-only">Filter rows</span>
@@ -235,17 +374,17 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={searchPlaceholder}
-                className="min-h-[36px] w-full rounded-ds-sm border border-paper-border bg-paper-raised px-3 text-sm text-ink placeholder:text-ink-2 focus:border-ink-1 focus:outline-none focus:ring-2 focus:ring-ink-1/20"
+                className={`min-h-[36px] w-full rounded-ds-sm border px-3 text-sm focus:outline-none focus:ring-2 ${t.input}`}
               />
             </label>
           ) : null}
           {enumFilter ? (
-            <label className="flex items-center gap-2 text-xs font-medium text-ink-1">
+            <label className={`flex items-center gap-2 text-xs font-medium ${t.enumLabel}`}>
               <span>{enumFilter.label}</span>
               <select
                 value={enumValue}
                 onChange={(e) => setEnumValue(e.target.value)}
-                className="min-h-[36px] rounded-ds-sm border border-paper-border bg-paper-raised px-2 text-sm text-ink focus:border-ink-1 focus:outline-none focus:ring-2 focus:ring-ink-1/20"
+                className={`min-h-[36px] rounded-ds-sm border px-2 text-sm focus:outline-none focus:ring-2 ${t.select}`}
               >
                 <option value="all">All</option>
                 {enumFilter.options.map((opt) => (
@@ -256,7 +395,7 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
               </select>
             </label>
           ) : null}
-          <span className="text-xs tabular-nums text-ink-2">
+          <span className={`text-xs tabular-nums ${t.rowCount}`}>
             {visibleRows.length} {visibleRows.length === 1 ? "row" : "rows"}
           </span>
         </div>
@@ -264,12 +403,12 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-sm" style={tableStyle}>
-          <thead className="sticky top-0 z-10 bg-paper-sunken">
-            <tr className="border-b border-paper-border">
+          <thead className={`sticky top-0 z-10 ${t.thead}`}>
+            <tr className={`border-b ${t.headerRowBorder}`}>
               {showRank ? (
                 <th
                   scope="col"
-                  className="px-4 py-3 text-right font-mono text-xs font-semibold uppercase tracking-wider text-ink-2"
+                  className={`px-4 py-3 text-right font-mono text-xs font-semibold uppercase tracking-wider ${t.rankHeader}`}
                 >
                   #
                 </th>
@@ -286,18 +425,18 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                     aria-sort={
                       active ? (sort?.dir === "asc" ? "ascending" : "descending") : undefined
                     }
-                    className={`px-4 py-3 font-mono text-xs font-semibold uppercase tracking-wider text-ink-1 ${align}`}
+                    className={`px-4 py-3 font-mono text-xs font-semibold uppercase tracking-wider ${t.th} ${align}`}
                   >
                     {sortable ? (
                       <button
                         type="button"
                         onClick={() => setSort((cur) => nextSort(cur, col.key))}
-                        className={`inline-flex items-center gap-0.5 rounded-ds-xs hover:text-ink focus:outline-none focus:ring-2 focus:ring-ink-1/20 ${
+                        className={`inline-flex items-center gap-0.5 rounded-ds-xs focus:outline-none focus:ring-2 ${t.sortButton} ${
                           align === "text-right" ? "flex-row-reverse" : ""
-                        } ${active ? "text-ink" : ""}`}
+                        } ${active ? t.thActive : ""}`}
                       >
                         <span>{col.label}</span>
-                        <SortGlyph active={active} dir={sort?.dir ?? "desc"} />
+                        <SortGlyph active={active} dir={sort?.dir ?? "desc"} tokens={t} />
                       </button>
                     ) : (
                       <span>{col.label}</span>
@@ -314,23 +453,27 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                   colSpan={columns.length + (showRank ? 1 : 0)}
                   className="px-4 py-10 text-center"
                 >
-                  <p className="text-sm font-medium text-ink">{emptyTitle}</p>
-                  {emptyHint ? <p className="mt-1 text-xs text-ink-2">{emptyHint}</p> : null}
+                  <p className={`text-sm font-medium ${t.emptyTitle}`}>{emptyTitle}</p>
+                  {emptyHint ? (
+                    <p className={`mt-1 text-xs ${t.emptyHint}`}>{emptyHint}</p>
+                  ) : null}
                 </td>
               </tr>
             ) : (
               visibleRows.map((row, i) => {
                 const tone = rowTone?.(row) ?? null;
-                const tint = tone ? toneRowClass(tone) : "";
-                const zebra = i % 2 === 1 ? "bg-paper-sunken/60" : "bg-paper-raised";
+                const tint = tone ? t.toneRow(tone) : "";
+                const zebra = i % 2 === 1 ? t.zebraOdd : t.zebraEven;
                 return (
                   <tr
                     key={rowKey(row, i)}
                     title={rowTitle?.(row)}
-                    className={`border-b border-paper-border/70 last:border-0 ${tint || zebra} hover:bg-paper-sunken`}
+                    className={`border-b ${t.rowBorder} last:border-0 ${tint || zebra} ${t.rowHover}`}
                   >
                     {showRank ? (
-                      <td className="px-4 py-3.5 text-right font-mono text-xs tabular-nums text-ink-2">
+                      <td
+                        className={`px-4 py-3.5 text-right font-mono text-xs tabular-nums ${t.rankCell}`}
+                      >
                         {i + 1}
                       </td>
                     ) : null}
@@ -340,11 +483,11 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                       const numericClass = isNumeric ? "font-mono tabular-nums" : "";
                       const content = col.render
                         ? col.render(row, i)
-                        : defaultCell((row as Record<string, unknown>)[col.key]);
+                        : defaultCell((row as Record<string, unknown>)[col.key], t);
                       return (
                         <td
                           key={col.key}
-                          className={`px-4 py-3.5 text-sm text-ink ${align} ${numericClass}`}
+                          className={`px-4 py-3.5 text-sm ${t.cellText} ${align} ${numericClass}`}
                         >
                           {content}
                         </td>
@@ -361,8 +504,8 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
   );
 }
 
-function defaultCell(value: unknown): ReactNode {
-  if (value == null) return <span className="text-ink-2">—</span>;
+function defaultCell(value: unknown, tokens: SurfaceTokens): ReactNode {
+  if (value == null) return <span className={tokens.nullCell}>—</span>;
   return String(value);
 }
 

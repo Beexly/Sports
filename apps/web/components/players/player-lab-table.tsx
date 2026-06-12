@@ -648,43 +648,6 @@ function resolveBinding(section: SectionData): SectionBinding {
   }
 }
 
-// ── Dark-surface skin for the shared paper DataTable ──────────────────────────
-
-/**
- * The shared <DataTable> is hard-bound to the LIGHT "paper" tokens (it also
- * serves the intelligence boards, which stay paper). The Player Lab is a dark
- * "carbon" surface like /trends and /performance, so we re-skin the table from
- * the outside through its `className` prop: `!`-important utilities restyle the
- * wrapper itself, and arbitrary descendant variants remap every internal
- * paper/ink token to its carbon/ion equivalent without touching the shared
- * component. If DataTable ever grows a `surface="dark"` variant, this constant
- * collapses into that prop.
- */
-const DARK_TABLE_CLASS = [
-  // Wrapper card: paper-raised -> eclipse, hairline -> mineral.
-  "!border-mineral !bg-eclipse",
-  // Surfaces: filter bar (bg-paper) + sticky thead (bg-paper-sunken) -> carbon;
-  // raised inputs/selects + even zebra rows (bg-paper-raised) -> eclipse.
-  "[&_.bg-paper]:!bg-carbon",
-  "[&_.bg-paper-sunken]:!bg-carbon",
-  "[&_.bg-paper-raised]:!bg-eclipse",
-  // Odd zebra rows carry bg-paper-sunken/60; tone-tinted rows replace zebra
-  // entirely, so exclude them and give them dark tints of their own.
-  "[&_tbody_tr:nth-child(even):not(.bg-emerald-50):not(.bg-rose-50)]:!bg-white/[0.03]",
-  "[&_.bg-emerald-50]:!bg-emerald-500/10",
-  "[&_.bg-rose-50]:!bg-rose-500/10",
-  "[&_tbody_tr:hover]:!bg-white/[0.06]",
-  // Hairlines: header/filter borders and per-row borders -> mineral.
-  "[&_.border-paper-border]:!border-mineral",
-  "[&_tr]:!border-mineral",
-  // Ink text scale -> ion text scale (cells, headers, counts, empty states).
-  "[&_.text-ink]:!text-ion",
-  "[&_.text-ink-1]:!text-ion-1",
-  "[&_.text-ink-2]:!text-ion-2",
-  "[&_th_button:hover]:!text-ion-white",
-  "[&_input]:placeholder:!text-ion-3",
-].join(" ");
-
 // ── Section + view rendering (CLIENT) ─────────────────────────────────────────
 
 function SectionBlock({ section }: { section: SectionData }): JSX.Element {
@@ -716,7 +679,7 @@ function SectionBlock({ section }: { section: SectionData }): JSX.Element {
       ) : null}
 
       <DataTable<unknown>
-        className={DARK_TABLE_CLASS}
+        surface="dark"
         columns={binding.columns}
         rows={section.rows}
         rowKey={binding.rowKey}

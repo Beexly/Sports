@@ -4,11 +4,13 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 /**
- * Accessible tabbed nav + a filter-bar primitive for the LIGHT paper data
- * surfaces. URL-query aware so a server page can read the active view straight
- * from `searchParams` and fetch accordingly — the tabs are plain <Link>s that
- * set a query param (?view= / ?engine=), so they work without client data
- * fetching and keep the page shareable/bookmarkable.
+ * Accessible tabbed nav + a filter-bar primitive for the shared data surfaces.
+ * `<Tabs surface="light">` (default) is the paper skin; `surface="dark"` is the
+ * carbon skin used by the Player Lab (eclipse container, mineral hairlines and
+ * active pill, ion text scale). URL-query aware so a server page can read the
+ * active view straight from `searchParams` and fetch accordingly — the tabs are
+ * plain <Link>s that set a query param (?view= / ?engine=), so they work
+ * without client data fetching and keep the page shareable/bookmarkable.
  *
  * `<Tabs>` is a "use client" component only because it builds hrefs and renders
  * interactive controls; it does NOT own selection state — the URL does. The
@@ -45,6 +47,35 @@ export function buildTabHref(
 
 // ── Tabs ─────────────────────────────────────────────────────────────────────
 
+/** Surface the tabs render on: light "paper" (default) or dark "carbon". */
+export type TabsSurface = "light" | "dark";
+
+interface TabsSurfaceTokens {
+  /** Tablist container: border + background. */
+  container: string;
+  /** Active tab pill. */
+  active: string;
+  /** Inactive tab text + hover. */
+  inactive: string;
+  /** Focus-visible ring. */
+  focusRing: string;
+}
+
+const TABS_SURFACE_TOKENS: Record<TabsSurface, TabsSurfaceTokens> = {
+  light: {
+    container: "border-paper-border bg-paper",
+    active: "bg-paper-raised text-ink shadow-sm",
+    inactive: "text-ink-1 hover:bg-paper-sunken hover:text-ink",
+    focusRing: "focus-visible:ring-ink-1/30",
+  },
+  dark: {
+    container: "border-mineral bg-eclipse",
+    active: "bg-mineral text-ion-white shadow-sm",
+    inactive: "text-ion-1 hover:bg-white/5 hover:text-ion-white",
+    focusRing: "focus-visible:ring-ion-1/30",
+  },
+};
+
 export interface TabItem {
   /** Value written to the query param. */
   value: string;
@@ -66,6 +97,8 @@ export interface TabsProps {
   /** Accessible label for the tablist. */
   ariaLabel?: string;
   className?: string;
+  /** Surface skin: light "paper" (default) or dark "carbon". */
+  surface?: TabsSurface;
 }
 
 export function Tabs({
@@ -76,12 +109,14 @@ export function Tabs({
   currentParams = {},
   ariaLabel = "Views",
   className = "",
+  surface = "light",
 }: TabsProps): JSX.Element {
+  const t = TABS_SURFACE_TOKENS[surface];
   return (
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={`inline-flex flex-wrap items-center gap-1 rounded-ds-md border border-paper-border bg-paper p-1 ${className}`}
+      className={`inline-flex flex-wrap items-center gap-1 rounded-ds-md border p-1 ${t.container} ${className}`}
     >
       {items.map((item) => {
         const isActive = item.value === active;
@@ -93,10 +128,8 @@ export function Tabs({
             aria-selected={isActive}
             title={item.tooltip}
             scroll={false}
-            className={`min-h-[36px] rounded-ds-sm px-3.5 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-1/30 ${
-              isActive
-                ? "bg-paper-raised text-ink shadow-sm"
-                : "text-ink-1 hover:bg-paper-sunken hover:text-ink"
+            className={`min-h-[36px] rounded-ds-sm px-3.5 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 ${t.focusRing} ${
+              isActive ? t.active : t.inactive
             }`}
           >
             {item.label}
