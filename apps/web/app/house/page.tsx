@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { ReaderDoorway } from "@/components/house/reader-doorway";
+import { WEEKLY_RITUAL } from "@/lib/house/weekly-ritual";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -96,16 +97,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
   },
 ];
 
-const WEEK_RHYTHM: ReadonlyArray<{ day: string; beat: string }> = [
-  { day: "Mon", beat: "What we learned" },
-  { day: "Tue", beat: "Injury watch · the accountability pass" },
-  { day: "Wed", beat: "Opening market read" },
-  { day: "Thu", beat: "First edge board" },
-  { day: "Fri", beat: "The human read" },
-  { day: "Sat", beat: "Fantasy help · Parlay MRI" },
-  { day: "Sun", beat: "Game day" },
-  { day: "Mon", beat: "Final slate closeout" },
-];
+const WEEK_RHYTHM = WEEKLY_RITUAL;
 
 const HOUSE_RULES: readonly string[] = [
   "Protect beginners. The basic question is always welcome.",

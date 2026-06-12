@@ -41,7 +41,7 @@ Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · 
 | Fan-type field on user profile (register follows account) | PRIVACY DRAFT WRITTEN — `docs/legal/PRIVACY_REVIEW_PROFILES_PRESENCE.md` awaits OWNER sign-off; schema migration ships after |
 | Primary-nav placement of /house | OWNER — funnel doctrine says few doors |
 | Live rooms (Sunday Couch / Brotherhood / No-Shame) | STAGED — written policy DONE; privacy review DRAFTED (awaits OWNER sign-off); remaining gates: moderation tooling, responsible-play wiring |
-| Weekly NFL ritual (Mon→Mon) | DONE as doctrine + /house rail; content-automation alignment QUEUED |
+| Weekly NFL ritual (Mon→Mon) | DONE — canonical `lib/house/weekly-ritual.ts` (beatsForDay API); /house rail reads it, content jobs must too — one module, no drift |
 | Register on Academy content | DONE — all four Academy floors re-registered (teach/plain/math), shared `useReaderRegister` hook extracted, copy verified against real game mechanics, banned-phrase-tested |
 | NFL-first focus | DONE — all new work NFL-first |
 
