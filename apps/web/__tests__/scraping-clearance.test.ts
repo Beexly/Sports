@@ -87,6 +87,22 @@ describe("Source rights registry — registry shape", () => {
     expect(entry!.model_training_allowed).toBe(false);
   });
 
+  it("jeff-mans-public-feed is permission_required with no automation until written consent", () => {
+    const entry = getSourceRightsEntry("jeff-mans-public-feed");
+    expect(entry).toBeDefined();
+    expect(entry!.status).toBe("permission_required");
+    expect(entry!.automation_allowed).toBe(false);
+    expect(entry!.public_logged_off_allowed).toBe(false);
+    expect(entry!.commercial_display_allowed).toBe(false);
+    expect(entry!.storage_allowed).toBe(false);
+    expect(entry!.derived_analytics_allowed).toBe(false);
+    expect(entry!.model_training_allowed).toBe(false);
+    expect(entry!.attribution_required).toBe(true);
+    expect(entry!.unlock_condition).toContain("Written consent");
+    // Scope: only the independent public feed; SiriusXM licensing parked per owner.
+    expect(entry!.notes).toContain("SiriusXM corporate licensing is PARKED");
+  });
+
   it("siriusxm-activator is permanently excluded", () => {
     const entry = getSourceRightsEntry("siriusxm-activator");
     expect(entry).toBeDefined();
@@ -113,6 +129,7 @@ describe("Source rights registry — registry shape", () => {
     const permRequired = getSourcesByStatus("permission_required");
     const ids = permRequired.map((s) => s.source_id);
     expect(ids).toContain("scores24-live");
+    expect(ids).toContain("jeff-mans-public-feed");
   });
 });
 

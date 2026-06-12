@@ -318,6 +318,60 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "attribution, no recordings, no transcripts, no automated capture.",
   },
 
+  // ── Permission required ──────────────────────────────────────────────────────
+  {
+    source_id: "jeff-mans-public-feed",
+    source_name: "One MANS Opinion with Jeff Mans (public podcast feed)",
+    source_url: "https://manspod.podbean.com",
+    terms_url: null, // hosted on Podbean — confirm exact host-platform ToS URL during outreach
+    robots_url: "https://manspod.podbean.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "broadcast_media",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text:
+      "Claim heard on One MANS Opinion with Jeff Mans (manual listener log, episode link)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "high",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-12",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://manspod.podbean.com",
+      "https://podcasts.apple.com/us/podcast/one-mans-opinion-with-jeff-mans/id1500323362",
+      "https://www.fantasyguru.com/one-mans-opinion-with-jeff-mans",
+    ],
+    unlock_condition:
+      "Written consent from Jeff Mans / FantasyGuru.com (Elite Sports Network) covering automated " +
+      "feed polling, metadata storage, and commercial display of episode facts with attribution. " +
+      "Host-platform terms (Podbean/Apple) must also permit the access method used.",
+    vendor_contact: "https://www.fantasyguru.com/contact-us/",
+    notes:
+      "SCOPE: ONLY the independent public distribution channel (Podbean RSS / podcast directories) " +
+      "for Jeff Mans's weekly show. SiriusXM corporate licensing is PARKED per owner directive " +
+      "(POLISH_BACKLOG #6) — SiriusXM-gated content stays under the siriusxm-streaming entry and is " +
+      "NOT unlocked by this one. WHY permission_required and not approved_* or vendor_candidate: " +
+      "the RSS feed is publicly syndicated, but (1) episode audio and commentary are copyrighted " +
+      "expression, and his picks/analysis are likely proprietary predictions tied to the paid " +
+      "FantasyGuru product (never extractable under data-rules regardless of status); (2) the feed " +
+      "is hosted on Podbean, whose host-platform terms govern automated access and reuse — exact " +
+      "terms unverified, so assume restrictive; (3) no commercial licensing program or API is " +
+      "publicly offered, so " +
+      "vendor_candidate would overstate what exists — the realistic path is direct written consent. " +
+      "Conservative default: all permission flags false. ALLOWED today: manual research — a human " +
+      "listens to public episodes and manually logs short factual claims (pundit, claim, date, " +
+      "episode link) with attribution; no recordings, no transcripts, no automated capture, no " +
+      "republication of episode bodies or audio.",
+  },
+
   // ── Excluded ─────────────────────────────────────────────────────────────────
   {
     source_id: "siriusxm-activator",
