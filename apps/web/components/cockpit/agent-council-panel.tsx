@@ -69,6 +69,19 @@ export function AgentCouncilPanel() {
           <DepartmentCard key={dept} department={dept} seats={seats} />
         ))}
       </div>
+
+      {/* Ledger posture — honest: typed, no store yet */}
+      <div
+        data-testid="council-ledger-posture"
+        className="border-t border-titanium/30 px-5 py-3"
+      >
+        <p className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
+          Handoff ledger · Subagent run ledger:{" "}
+          <span className="text-yellow-300">Not connected</span> — entry types
+          are defined; the store lands with a later migration. Nothing is
+          logged yet and nothing pretends to be.
+        </p>
+      </div>
     </section>
   );
 }

@@ -85,6 +85,52 @@ Immersive systems from the dumps (odds movement trails, probability clouds,
 dependency webs, fragility meters) map onto QUEUED items above — each ships
 only attached to real data, in the existing grammar.
 
+## Reconciliation addendum (2026-06-12 night sweep)
+
+Full cross-reference of tracker vs specs, polish backlog, policy
+checklists, and all strategy docs. **Zero DONE-claims failed artifact
+verification.** Drift absorbed below.
+
+### Shipped but previously untracked (now DONE on the ledger)
+
+ELO independent estimator (`elo-estimator.ts`) · Monte Carlo
+edge-significance (`edge-significance.ts`) · Poisson soccer estimator
+(`poisson.ts`) · per-prediction provenance stamp (`provenance.ts`) ·
+calibration-drift monitor (`calibration-drift.ts`) · openfootball
+adapter (`openfootball-source.ts`) · ToS/disclaimer pages
+(`/terms`, `/privacy`).
+
+### Newly tracked QUEUED (committed in strategy docs, never built)
+
+| Item | Source | Size |
+|---|---|---|
+| ML independent estimator scaffold (XGBoost-style) | repo-firehose-review #4 | L |
+| Public consensus/proof-of-record surface (design pass) | repo-firehose-review #6 | M |
+| `/accountability` public page (loss autopsies + model changelog, public) | platform-gaps-triage 1+2 | M |
+| Sentry/OTel observability (HIGH in opportunity-ledger) | opportunity-ledger §I | M |
+
+### Remaining buildable queue (consolidated, post-sweep)
+
+1. Memory review-queue UI (`/cockpit/memory`) — M
+2. Recall-before-answer wiring in Ask Jarvis — S
+3. Owner Brief + Model Council memory integration — M
+4. Memory hygiene views — S
+5. `createJarvisDecision` action (schema exists, action missing) — S
+6. `linkMemoryToAgentRun` — needs an agent-run relation, i.e. a migration — S (gated with ledger store)
+7. Handoff + Subagent Run ledger stores + write paths (one migration) — M
+8. Responsible-play distress-signal wiring for rooms — M
+9. Moderator coverage plan (operational doc) — S
+10. The four newly tracked items above
+
+### OWNER-gated (consolidated, unchanged by sweep)
+
+Merge PR #17 + Vercel env keys (incl. ADMIN_EMAILS, optimizer keys) ·
+prod migrations (memory + moderation tables) · privacy review sign-off
+(unlocks fan-type schema + rooms) · fair-prob gate on pick surfaces ·
+Market Gravity + QB indices math approvals · /house primary-nav ·
+Film Room credits · Jeff Mans outreach · infra/data-source decisions ·
+B2B/affiliate/mobile motions · live in-game feed purchase.
+
 ## Verification state (this session)
 
 4,135+ web tests · 358 engine tests (4,650+ total across workspaces) ·
