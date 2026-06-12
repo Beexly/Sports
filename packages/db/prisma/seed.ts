@@ -1230,7 +1230,7 @@ async function seedPicks(): Promise<SeedPickResult> {
         homeTeamName: p.home,
         awayTeamName: p.away,
         commenceTime: new Date(generatedAt.getTime() + 6 * HOUR_MS),
-        status: p.result === "PENDING" ? "SCHEDULED" : "COMPLETED",
+        status: p.result === "PENDING" ? "SCHEDULED" : "FINAL",
         homeScore: p.result === "PENDING" ? null : 17 + (i % 24),
         awayScore: p.result === "PENDING" ? null : 14 + (i % 21),
         resultFetched: p.result !== "PENDING",
