@@ -64,9 +64,8 @@ export default function AcademyPage() {
             </Reveal>
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">
-                Four training floors: interactive courses with graded quizzes, a live-fire decision
-                simulator, a line-trading game scored on pure CLV, and a film room in production.
-                Restraint counts. Lucky wins don&apos;t. You earn rank by calibration — not hot streaks.
+                Four floors: quizzed courses, a live-fire simulator, a line-trading game scored on
+                pure CLV, and a film room in production. Restraint counts. Lucky wins don&apos;t.
               </p>
             </Reveal>
 
@@ -101,9 +100,8 @@ export default function AcademyPage() {
                 Lessons that quiz back.
               </h2>
               <p className="mt-3 max-w-2xl text-ink-300">
-                Three tracks — line literacy, bankroll &amp; risk, market mechanics. Read the lesson,
-                pass the quiz, build your transcript. Progress lives in your browser; answers are
-                final, exactly like a locked bet.
+                Three tracks: line literacy, bankroll &amp; risk, market mechanics. Read, get quizzed,
+                build your transcript. Answers are final — like a placed bet.
               </p>
             </Reveal>
             <Reveal delay={120}>
@@ -125,10 +123,8 @@ export default function AcademyPage() {
                 Decide blind. Get graded on the decision.
               </h2>
               <p className="mt-3 max-w-2xl text-ink-300">
-                Historical-style slates exactly as they looked at lock — the line, the injury
-                report, the public pressure, the counter-evidence. Play, Watchlist, or No-Bet
-                before the result can contaminate the read. A lucky win is flagged; a correct
-                read that lost is respected.
+                The slate exactly as it looked before the result. Play, Watchlist, or No-Bet —
+                then get graded on the read. Lucky wins get flagged; correct losses get respect.
               </p>
             </Reveal>
             <Reveal delay={120}>
@@ -150,9 +146,8 @@ export default function AcademyPage() {
                 Beat the Close.
               </h2>
               <p className="mt-3 max-w-2xl text-ink-300">
-                Synthetic markets, real skill: intel drips in, the live number moves, and you
-                choose your moment — take the number or pass entirely. No wins, no losses, no
-                luck. Your score is closing-line value, the metric professionals actually track.
+                Intel drips in, the number moves, you pick your moment — take it or pass.
+                No luck involved: your score is pure closing-line value.
               </p>
             </Reveal>
             <Reveal delay={120}>
@@ -172,9 +167,8 @@ export default function AcademyPage() {
                 The filmed curriculum — in production.
               </h2>
               <p className="mt-3 max-w-2xl text-ink-300">
-                Six episodes are being produced to pair with the course floor. No placeholder
-                videos, no fake players — the slate below is the real production order, and each
-                lesson is already trainable interactively above.
+                Six episodes pairing with the course floor — the real production order, no
+                placeholders. Every lesson is already trainable above.
               </p>
             </Reveal>
             <Reveal delay={120}>

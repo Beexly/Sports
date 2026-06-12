@@ -286,11 +286,9 @@ export function BeatTheClose() {
             Six markets. One skill: <span style={{ color: cyan }}>time the number</span>.
           </h3>
           <p className="max-w-2xl text-sm leading-relaxed text-ink-300">
-            An opening line posts. Market intel arrives piece by piece, and the live number moves
-            with it. <strong className="text-white">TAKE</strong> the current number whenever you
-            like — or <strong className="text-white">PASS</strong> and let it go. When the market
-            closes, you&apos;re graded the only honest way: did your number beat the close? Wins and
-            losses don&apos;t exist here. Only price.
+            A line opens. Intel lands, the number moves. <strong className="text-white">TAKE</strong>{" "}
+            it whenever you like — or <strong className="text-white">PASS</strong>. At the close,
+            one grade: did your number beat it? No wins, no losses. Only price.
           </p>
           <div className="flex items-center gap-5">
             <button type="button" onClick={startRound} className="btn btn-primary">

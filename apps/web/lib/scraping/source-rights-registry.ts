@@ -280,6 +280,44 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "All flags remain false until contract signed.",
   },
 
+  // ── Permission required ──────────────────────────────────────────────────────
+  {
+    source_id: "siriusxm-streaming",
+    source_name: "SiriusXM Streaming (incl. Fantasy Sports Radio)",
+    source_url: "https://www.siriusxm.com/player/home",
+    terms_url: "https://www.siriusxm.com/customer-agreement",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "broadcast_media",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Claim heard on SiriusXM (manual listener log)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "high",
+    database_right_risk: "high",
+    technical_controls_detected: true,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-12",
+    reviewed_by: "internal",
+    evidence_urls: ["https://www.siriusxm.com/customer-agreement"],
+    unlock_condition:
+      "Written license or partnership agreement with Sirius XM Radio LLC covering automated capture, transcription, or AI analysis.",
+    vendor_contact: null,
+    notes:
+      "Customer Agreement (2025-06-05) §9(d): personal, non-commercial use only; " +
+      "§9(l) AI Matters: no scraping/extraction, and Services data may not be used to " +
+      "create/train/improve ANY AI service — a paid subscription does NOT unlock automation. " +
+      "ONLY legal lane without a license: a human listens on their own subscription and manually " +
+      "logs short factual claims (pundit, claim, date) into Airwave intake — facts with " +
+      "attribution, no recordings, no transcripts, no automated capture.",
+  },
+
   // ── Excluded ─────────────────────────────────────────────────────────────────
   {
     source_id: "siriusxm-activator",
