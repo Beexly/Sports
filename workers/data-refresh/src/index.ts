@@ -73,14 +73,29 @@ async function settleResults(): Promise<void> {
 }
 
 async function main(): Promise<void> {
+  if (!process.env["THE_ODDS_API_KEY"]) {
+    console.error(
+      "[data-refresh] THE_ODDS_API_KEY is not set. " +
+      "Add it to your environment (.env) before starting this worker — " +
+      "get a key at https://the-odds-api.com. Exiting."
+    );
+    process.exit(1);
+  }
+
   const gates = getReadinessGates();
   console.log("[data-refresh] Worker v5 starting...");
   console.log(`[data-refresh] Bootstrap mode: ${gates.isBootstrapMode}`);
   console.log(`[data-refresh] Derived history enabled: ${gates.canUseDerivedHistory}`);
   console.log(`[data-refresh] Featured promotion enabled: ${gates.canPromoteFeaturedPicks}`);
 
-  await runRefreshCycle();
-  await settleResults();
+  try {
+    await runRefreshCycle();
+    await settleResults();
+  } catch (err) {
+    // First cycle failing (e.g. upstream outage) should not kill the worker —
+    // the interval below retries every 30 minutes.
+    console.error("[data-refresh] Initial cycle failed:", err instanceof Error ? err.message : err);
+  }
   setInterval(async () => {
     try {
       await runRefreshCycle();
