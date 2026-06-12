@@ -84,7 +84,11 @@ Calibration → whether we deserve trust. Every stat gets a job or gets cut.
    `market-read.ts` (Shin de-vig per book, median consensus across books,
    book hold, marketDisagreementPct). Feed: slate-twin loader already
    selects per-book odds rows.
-2. Market disagreement panel fed by it (model % vs no-vig % vs consensus).
+2. ~~Market disagreement panel~~ FIRST MOUNT SHIPPED 2026-06-12: the
+   Market Fair Board on /observatory (no-vig consensus per game, hold,
+   book count — market description only). Model-vs-market comparison
+   stays gated by the audit-drawer contract (no fair-prob/EV terms on
+   pick surfaces) until the owner lifts it.
 3. Stat Stability Grade: extend `assessUncertainty` to per-metric envelopes
    in Player Lab.
 4. Line Death Clock prototype on the board (edge decay vs line movement).
