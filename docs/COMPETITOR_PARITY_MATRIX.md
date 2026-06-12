@@ -31,7 +31,7 @@ Action Network, Dimers, BetWise, BettingPros.
 | Feature | Theirs | Ours | Status |
 |---|---|---|---|
 | Rankings / projections | Both | **Our own nflverse-graded model** — set `PROJECTIONS_PROVIDER=graded` (env flag, NO purchase) | ✅ go-live flag |
-| Draft tools (VOR, tiers) | FBG Draft Dominator | `/fantasy/draft` — VOR, tier cliffs, run alerts | ✅ |
+| Draft tools (VOR, tiers) | FBG Draft Dominator | `/fantasy/draft` — VOR, tier cliffs, run alerts + **Mock Draft Simulator** (AI opponents, snake order, draft grade) | ✅ NEW 2026-06-12 |
 | Start/sit + lineup | Both | `/fantasy/lineup` | ✅ |
 | Waiver/FAAB advisor | FBG | `/fantasy/waivers` | ✅ |
 | Trade analyzer | Both | `/fantasy/trade` — fairness, consolidation | ✅ |
@@ -67,9 +67,10 @@ Action Network, Dimers, BetWise, BettingPros.
 2. ~~Projections~~ — **default-on 2026-06-12**: graded pool (nflverse, our own model) now loads without any env flag.
 3. ~~ESPN/Yahoo~~ — **form closed 2026-06-12** via universal roster paste-import; native OAuth sync still the upgrade (requires registered apps).
 4. ~~Late swap~~ — **shipped 2026-06-12**: DFS Suite late swap panel (LineStar parity ✅)
-5. **Public betting %** — needs a paid consensus vendor; route through vendor questionnaire.
-6. **Ownership projection model** — per-slate model once live salary feed is connected.
-7. ~~Unified history explorer~~ — **shipped 2026-06-12: History Lab `/history`** (MLB spine live; NFL pbp next).
+5. ~~Mock draft simulator~~ — **shipped 2026-06-12**: AI opponents, snake order, draft grade (FBG Draft Dominator parity ✅)
+6. **Public betting %** — needs a paid consensus vendor; route through vendor questionnaire.
+7. **Ownership projection model** — per-slate model once live salary feed is connected.
+8. ~~Unified history explorer~~ — **shipped 2026-06-12: History Lab `/history`** (MLB spine live; NFL pbp next).
 
 ## Verdict against the owner's test (2026-06-12)
 
