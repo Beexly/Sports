@@ -22,6 +22,11 @@ import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import type { FactorBreakdown } from "@sports/types";
 import { explainPick, PickExplanationError } from "@/lib/pick-explainer/explain";
+import {
+  DEFAULT_EXPLAIN_REGISTER,
+  isExplainRegister,
+  type ExplainRegister,
+} from "@/lib/pick-explainer/prompts";
 import type { GroundingSnapshot } from "@/lib/pick-explainer/grounding";
 
 export const dynamic = "force-dynamic";
@@ -77,6 +82,16 @@ export async function POST(
   // Optional focused question (the grounded explanation is the default).
   let question: string | null = null;
   const body = await request.json().catch(() => ({}) as Record<string, unknown>);
+
+  // Optional reader register — invalid values are rejected, not coerced.
+  let register: ExplainRegister = DEFAULT_EXPLAIN_REGISTER;
+  if (body?.register !== undefined) {
+    if (!isExplainRegister(body.register)) {
+      return NextResponse.json({ error: "invalid register" }, { status: 400 });
+    }
+    register = body.register;
+  }
+
   if (typeof body?.question === "string") {
     const q = body.question.trim();
     if (q.length > 280) {
@@ -120,6 +135,7 @@ export async function POST(
     const explanation = await explainPick({
       apiKey,
       question,
+      register,
       gameId: pick.gameId,
       userId: session.user.id === "dev-admin" ? null : session.user.id,
       grounding: {
@@ -150,6 +166,7 @@ export async function POST(
       success: true,
       explanation: explanation.text,
       modelName: explanation.modelName,
+      register,
     });
   } catch (err) {
     if (err instanceof PickExplanationError) {
