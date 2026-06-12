@@ -280,6 +280,46 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "All flags remain false until contract signed.",
   },
 
+  {
+    source_id: "jeff-mans-public-feed",
+    source_name: "Jeff Mans weekly show — public podcast/YouTube feed",
+    source_url: "https://www.youtube.com/@FantasyGuru",
+    terms_url: "https://www.youtube.com/static?template=terms",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "broadcast_media",
+    status: "vendor_candidate",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Claim heard on Jeff Mans' public show (manual listener log)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "high",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-12",
+    reviewed_by: "internal",
+    evidence_urls: [],
+    unlock_condition:
+      "Identify the canonical public feed (podcast RSS vs YouTube), review the host platform's ToS " +
+      "for automated access, and complete the vendor questionnaire — or obtain direct permission " +
+      "from Jeff Mans / Fantasy Guru for claim extraction.",
+    vendor_contact: null,
+    notes:
+      "Owner-flagged lane (POLISH_BACKLOG #6): unlike SiriusXM-gated shows, Jeff Mans publishes a " +
+      "weekly show on public channels — a potentially licensable pundit lane. Until the questionnaire " +
+      "and platform-ToS review complete, treat exactly like SiriusXM: manual listener log only " +
+      "(human listens, logs short factual claims with attribution; no recordings, no transcripts, " +
+      "no automated capture). YouTube ToS prohibits automated access without permission; podcast RSS " +
+      "may be friendlier — verify per-platform before any automation. SiriusXM corporate licensing " +
+      "remains parked per owner.",
+  },
+
   // ── Permission required ──────────────────────────────────────────────────────
   {
     source_id: "siriusxm-streaming",
