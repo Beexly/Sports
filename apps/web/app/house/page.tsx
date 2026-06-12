@@ -4,6 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
+import { ReaderDoorway } from "@/components/house/reader-doorway";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -228,6 +229,36 @@ export default function NflHousePage() {
                 </Link>
               ))}
             </Stagger>
+          </div>
+        </section>
+
+        {/* How Galaxy speaks to you — the register doorway. */}
+        <section
+          aria-labelledby="house-voice-heading"
+          className="px-4 py-14 sm:px-6 lg:px-8"
+        >
+          <div className="mx-auto max-w-5xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                Same data, different doorway
+              </p>
+              <h2
+                id="house-voice-heading"
+                className="mt-3 font-display text-2xl text-white"
+              >
+                How should Galaxy speak to you?
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm text-ink-300">
+                The engine never changes. The explanation meets you where you
+                are — pick a register and every &ldquo;ask the model why&rdquo;
+                across the site honors it.
+              </p>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="mt-8">
+                <ReaderDoorway />
+              </div>
+            </Reveal>
           </div>
         </section>
 

@@ -1,4 +1,5 @@
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { HonestBand } from "@/components/performance/honest-band";
 import {
   NUMERIC_TEXT_CLASS,
   STAT_PLACEHOLDER,
@@ -121,6 +122,13 @@ export async function CalibrationPanel() {
   const meta = VERDICT_META[d.trend];
   const collecting = data.isCollecting || data.sampleSize === 0;
 
+  // Overall observed rate = bucket rates weighted by bucket sample size.
+  const decided = data.buckets.reduce((s, b) => s + b.sampleSize, 0);
+  const overallObserved =
+    decided > 0
+      ? data.buckets.reduce((s, b) => s + b.observedWinRate * b.sampleSize, 0) / decided
+      : 0;
+
   return (
     <section
       data-testid="calibration-panel"
@@ -179,6 +187,11 @@ export async function CalibrationPanel() {
             <ReliabilityRow key={b.label} bucket={b} />
           ))}
         </div>
+      </div>
+
+      {/* The honest band — Wilson interval + reliability + limitation flags. */}
+      <div className="px-6 pb-6">
+        <HonestBand observedRate={overallObserved} sampleSize={data.sampleSize} />
       </div>
 
       {/* Brier score footer. */}

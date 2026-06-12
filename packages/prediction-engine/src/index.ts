@@ -154,3 +154,12 @@ export type {
   IsotonicModel,
   BrierDecomposition,
 } from "./probability-calibration.js";
+
+export {
+  assessUncertainty,
+  wilsonInterval,
+  type UncertaintyInput,
+  type UncertaintyDisclosure,
+  type ReliabilityTier,
+  type LimitationFlag,
+} from "./model-limitations.js";
