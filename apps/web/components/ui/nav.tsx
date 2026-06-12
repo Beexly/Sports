@@ -52,6 +52,7 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
       { label: "Galaxy Twin", href: "/observatory", desc: "The slate as a living market map" },
       { label: "Line Room", href: "/odds", desc: "Odds comparison — best price per side" },
       { label: "Schedule Lab", href: "/sos", desc: "Strength of schedule, priced by EPA" },
+      { label: "History Lab", href: "/history", desc: "Every franchise, every season since 1871" },
       { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
       { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
       { label: "How we read metrics", href: "/intelligence/metrics", desc: "Metric methodology, glass-box" },

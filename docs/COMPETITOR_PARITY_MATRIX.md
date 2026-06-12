@@ -58,7 +58,7 @@ Action Network, Dimers, BetWise, BettingPros.
 | Advanced metrics (CPOE, RYOE, WOPR, aDOT) | FTN | Player Lab views + Edge Signals | ✅ |
 | Next Gen tracking stats | — | `/players?view=nextgen` | ✅ |
 | Injury reports | All | nflverse injury feed overlaid on rosters | ✅ |
-| Historical DB (decades) | PFF | Lahman (MLB) + nflverse pbp; no unified history explorer | 🟡 |
+| Historical DB (decades) | PFF | **History Lab `/history`** — MLB franchises 1871→now; NFL pbp joins next | ✅ NEW 2026-06-12 |
 | DVOA-style team efficiency | FTN | Team environment engine — `/intelligence/engines` + public API route | ✅ |
 
 ## Honest gaps ranked (what to build next)
@@ -67,7 +67,7 @@ Action Network, Dimers, BetWise, BettingPros.
 2. **ESPN/Yahoo league sync** — OAuth apps + ToS review required, not just code.
 3. **Public betting %** — needs a paid consensus vendor; route through vendor questionnaire.
 4. **Ownership projection model** — per-slate model once live salary feed is connected.
-5. **Unified history explorer** — Lahman + nflverse pbp behind one query surface.
+5. ~~Unified history explorer~~ — **shipped 2026-06-12: History Lab `/history`** (MLB spine live; NFL pbp next).
 
 ## What we have that they don't
 
