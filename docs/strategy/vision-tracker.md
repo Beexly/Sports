@@ -50,7 +50,7 @@ Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · 
 | Commitment | State |
 |---|---|
 | Five stat questions publish gate | DONE (doctrine) — enforcement grows with each envelope |
-| Stat commandment (source/timestamp/definition/n/weakness/decision-use) | PARTIAL — freshness stamps ✓, explainers ✓, stability ✓; full envelope per metric QUEUED |
+| Stat commandment (source/timestamp/definition/n/weakness/decision-use) | CONTRACT LIVE — MetricTerm carries weakness + decision-use, renderer shows both, Production view fully enveloped and test-pinned; remaining views envelope incrementally (add slug to FULLY_ENVELOPED_VIEWS as each completes) |
 | Stat Stability Grade | DONE — production/snaps/edge views |
 | Line Death Clock | DONE (price space) — per-pick clock in the evidence audit drawer (PRO+): market movement since publish, toward/against, rate/h, book basis. Time-to-zero stays OWNER-gated — it needs an edge definition, banned on pick surfaces until the fair-prob gate lifts |
 | Market Gravity Index (quantified) | PROPOSAL WRITTEN — `docs/models/market-gravity-index-proposal.md` (convergence math on captured snapshots, null guards, weaknesses); OWNER approves math, then build |

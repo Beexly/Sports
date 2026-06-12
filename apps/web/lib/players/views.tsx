@@ -623,10 +623,30 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     description:
       "Season leaders, last-5 recent form, and positional defense ranks — all computed from real nflverse player-week rows. Settled, historical facts, not forecasts.",
     explainer: [
-      { term: "PPR/G & 5g", definition: "Per-game PPR over the season, and over the last 5 games. Δ = recent form minus season pace." },
-      { term: "Boom% / Bust%", definition: "Share of games at or above a startable ceiling (≥20) and at or below a floor (≤10) — the real distribution." },
-      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6. Sample-size only — it does not model variance, opponent quality, or role changes." },
-      { term: "WOPR & target share", definition: "Season averages of the weekly weighted opportunity rating (1.5·target share + 0.7·air-yards share) and team target share — the role behind the points." },
+      {
+        term: "PPR/G & 5g",
+        definition: "Per-game PPR over the season, and over the last 5 games. Δ = recent form minus season pace.",
+        weakness: "Averages hide volatility — a 15 PPR/G can be 15-15-15 or 30-0-15. Read with Boom/Bust.",
+        decisionUse: "Roster and start/sit context. Not a projection of next week.",
+      },
+      {
+        term: "Boom% / Bust%",
+        definition: "Share of games at or above a startable ceiling (≥20) and at or below a floor (≤10) — the real distribution.",
+        weakness: "Thresholds are PPR-format choices, not laws; small samples make these rates jumpy.",
+        decisionUse: "Volatility read for lineup risk. Pair with the Stab grade before trusting it.",
+      },
+      {
+        term: "Stab",
+        definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6.",
+        weakness: "Sample-size only — it does not model variance, opponent quality, or role changes.",
+        decisionUse: "A gate on every other column: thin grade, thin trust.",
+      },
+      {
+        term: "WOPR & target share",
+        definition: "Season averages of the weekly weighted opportunity rating (1.5·target share + 0.7·air-yards share) and team target share — the role behind the points.",
+        weakness: "Season averages lag role changes — a trade or injury redraws the role faster than the average moves.",
+        decisionUse: "Opportunity context: whether production is backed by role, or running ahead of it.",
+      },
     ],
     jsonHref: "/api/nflverse/player-lab",
     load: loadProductionView,
