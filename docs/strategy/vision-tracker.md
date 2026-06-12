@@ -59,6 +59,12 @@ Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · 
 | DuckDB/Polars/Dagster/dbt/ClickHouse | OWNER — infra decision, current stack not the bottleneck |
 | New data sources (nflverse ecosystem already live; CFBD, nba_api, pybaseball, StatsBomb, MoneyPuck...) | OWNER+legal — every source through the Scraping Clearance Engine / rights registry first; NFL-first says not now |
 
+## Jarvis Intelligence Core
+
+| Commitment | State |
+|---|---|
+| Jarvis Memory Protocol — Postgres episodic store, decision ledger, review queue, AI Ops panel, recall behavior | QUEUED (owner dump 2026-06-12, behind current queue per owner) — full spec at `docs/ai/jarvis/JARVIS_MEMORY_BUILD_SPEC_2026-06-12.md` |
+
 ## Owner polish backlog (standing)
 
 1. Optimizer real-pool env keys — OWNER (Vercel env)
