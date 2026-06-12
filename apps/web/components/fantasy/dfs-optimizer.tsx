@@ -58,6 +58,26 @@ export function DfsOptimizer() {
 
   return (
     <div className="space-y-6">
+      {/* sample-mode banner — fictional names must never read as real players */}
+      {!imported && (
+        <div
+          className="flex flex-wrap items-center gap-3 rounded-xl border px-4 py-3"
+          style={{ borderColor: `${BRAND_COLORS.ionMagenta}55`, background: `${BRAND_COLORS.ionMagenta}0d` }}
+        >
+          <span
+            className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em]"
+            style={{ background: BRAND_COLORS.ionMagenta, color: BRAND_COLORS.obsidianBlack }}
+          >
+            sample slate
+          </span>
+          <p className="text-xs text-ink-200">
+            These are <strong className="text-white">fictional players</strong> with illustrative
+            numbers — by design, so no fake stats ever attach to a real athlete. To optimize the
+            real slate today: export the player CSV from DraftKings and import it below ⤵
+          </p>
+        </div>
+      )}
+
       {/* controls */}
       <div className="surface-card flex flex-wrap items-center gap-4 p-4">
         <div className="flex rounded-full p-0.5" style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${BRAND_COLORS.steelGray}` }}>
