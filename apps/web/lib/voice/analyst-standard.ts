@@ -52,7 +52,7 @@ export const ANALYST_VOICE_EXEMPLARS = [
   },
   {
     bot: "This pick is highly likely to succeed.",
-    desk: "This is not a lock. It is a priced disagreement: the read is that the market is underweighting injury-adjusted efficiency.",
+    desk: "Nothing here is certain. It is a priced disagreement: the read is that the market is underweighting injury-adjusted efficiency.",
   },
   {
     bot: "Parlay confidence is high.",

@@ -33,13 +33,11 @@ describe("analyst voice standard", () => {
 
   it("desk exemplars never claim certainty or use tout language", () => {
     for (const { desk } of ANALYST_VOICE_EXEMPLARS) {
+      // Bare "lock" included: the repo-wide trust-gate guardrail flags the
+      // token even when negated, so the exemplars avoid it entirely.
       expect(desk.toLowerCase()).not.toMatch(
-        /guaranteed|sure thing|risk-free|easy money|can't lose|free money/
+        /guaranteed|sure thing|risk-free|easy money|can't lose|free money|\block\b/
       );
-      // "lock" may only appear when explicitly negated ("not a lock").
-      if (/\block\b/i.test(desk)) {
-        expect(desk.toLowerCase()).toMatch(/not a lock/);
-      }
     }
   });
 
