@@ -1661,3 +1661,136 @@ model ContentReview {
   @@index([draftId, createdAt])
   @@map("content_reviews")
 }
+
+// ============================================================
+// COMMUNITY MODERATION (Stage-2 gate)
+//
+// Powers the graduated action ladder (NUDGE → REMOVE → MUTE →
+// SUSPEND → BAN) mandated by COMMUNITY_MODERATION_POLICY.md.
+// Every action is logged with actor + reason (platform law).
+// Appeals are allowed once per SUSPEND/BAN; a different reviewer
+// than the original actor must decide (policy law).
+//
+// snake_case @@map names per convention.
+// No FK to User on actor/reviewer: free-text, matches cockpit pattern.
+// ============================================================
+
+enum ModerationReasonCode {
+  HARASSMENT
+  HATE_SPEECH
+  THREATS
+  DOXXING
+  TOUT_BEHAVIOR
+  GUARANTEED_WINNER_LANGUAGE
+  PRESSURE_TO_BET
+  BEGINNER_MOCKING
+  LOSS_SHAMING
+  CHASING_LOSSES_ENCOURAGEMENT
+  SELF_EXCLUSION_CIRCUMVENTION
+  UNDERAGE_PARTICIPATION
+  PIRATED_CONTENT
+  PERSONAL_DATA_SHARING
+  SPAM_REFERRAL_FLOOD
+  OTHER
+}
+
+enum ModerationReportStatus {
+  OPEN
+  UNDER_REVIEW
+  ACTIONED
+  DISMISSED
+  ESCALATED
+}
+
+enum ModerationActionKind {
+  NUDGE
+  REMOVE
+  MUTE_24H
+  MUTE_7D
+  SUSPEND
+  BAN
+}
+
+enum ModerationAppealStatus {
+  PENDING
+  UNDER_REVIEW
+  UPHELD
+  OVERTURNED
+  EXPIRED
+}
+
+// A report filed by a user or automated system against content.
+model ModerationReport {
+  id           String                  @id @default(cuid())
+  reporterUserId String?               // null for automated/system reports
+  targetUserId  String
+  contentRef   String                  // opaque ref: "message:<id>", "parlay:<id>", etc.
+  surface      String                  // e.g. "sunday_couch", "brotherhood_table"
+  reason       ModerationReasonCode
+  notes        String?                 @db.Text
+  status       ModerationReportStatus  @default(OPEN)
+  resolvedBy   String?                 // free-text actor id
+  resolvedAt   DateTime?
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  actions ModerationAction[]
+
+  @@index([targetUserId])
+  @@index([status, createdAt])
+  @@index([surface])
+  @@index([reason])
+  @@map("moderation_reports")
+}
+
+// A moderation action taken against a user (logged, auditable).
+// Every action MUST have actor + reason — enforced in the service layer.
+model ModerationAction {
+  id           String               @id @default(cuid())
+  actor        String               // free-text operator/system id — NEVER empty
+  targetUserId String
+  contentRef   String?              // optional: the specific content actioned
+  surface      String?
+  action       ModerationActionKind
+  reason       ModerationReasonCode
+  notes        String?              @db.Text
+  reportId     String?              // which report triggered this (optional)
+  // Time-boxed actions: expiresAt required for MUTE_24H, MUTE_7D, SUSPEND.
+  // BAN has no expiry. NUDGE/REMOVE have no expiry.
+  expiresAt    DateTime?
+  createdAt    DateTime             @default(now())
+
+  report  ModerationReport?  @relation(fields: [reportId], references: [id], onDelete: SetNull)
+  appeal  ModerationAppeal?
+
+  @@index([targetUserId, createdAt])
+  @@index([action])
+  @@index([reportId])
+  @@index([expiresAt])
+  @@map("moderation_actions")
+}
+
+// One appeal per SUSPEND/BAN action; decided by a different reviewer.
+// 7-day SLA enforced in service logic.
+model ModerationAppeal {
+  id           String                @id @default(cuid())
+  actionId     String                @unique  // one appeal per action
+  appellantId  String                // the user who was suspended/banned
+  grounds      String                @db.Text
+  status       ModerationAppealStatus @default(PENDING)
+  // The reviewer must NOT be the same actor who took the original action.
+  // Enforced in the service layer (canReview check).
+  decidedBy    String?               // free-text reviewer id
+  decision     String?               @db.Text
+  decidedAt    DateTime?
+  // SLA: appeal must be decided within 7 days of filing.
+  slaDeadline  DateTime              // createdAt + 7 days; computed at creation
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  action ModerationAction @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  @@index([status, slaDeadline])
+  @@index([appellantId])
+  @@map("moderation_appeals")
+}

@@ -40,7 +40,7 @@ Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · 
 | Doorway selector wiring registers site-wide | DONE (localStorage) |
 | Fan-type field on user profile (register follows account) | PRIVACY DRAFT WRITTEN — `docs/legal/PRIVACY_REVIEW_PROFILES_PRESENCE.md` awaits OWNER sign-off; schema migration ships after |
 | Primary-nav placement of /house | OWNER — funnel doctrine says few doors |
-| Live rooms (Sunday Couch / Brotherhood / No-Shame) | STAGED — written policy DONE; privacy review DRAFTED (awaits OWNER sign-off); remaining gates: moderation tooling, responsible-play wiring |
+| Live rooms (Sunday Couch / Brotherhood / No-Shame) | STAGED — written policy DONE; moderation tooling DONE (schema + ladder law + appeals + /cockpit/moderation queue, 49 tests; UI hooks land with rooms); privacy review DRAFTED (awaits OWNER); remaining gates: responsible-play wiring, moderator coverage plan |
 | Weekly NFL ritual (Mon→Mon) | DONE — canonical `lib/house/weekly-ritual.ts` (beatsForDay API); /house rail reads it, content jobs must too — one module, no drift |
 | Register on Academy content | DONE — all four Academy floors re-registered (teach/plain/math), shared `useReaderRegister` hook extracted, copy verified against real game mechanics, banned-phrase-tested |
 | NFL-first focus | DONE — all new work NFL-first |

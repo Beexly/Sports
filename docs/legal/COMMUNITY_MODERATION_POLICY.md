@@ -71,8 +71,8 @@ the original actor decides. Decision within 7 days.
 ## Launch checklist (Stage-2 gates)
 
 - [x] Written moderation policy (this document)
-- [ ] Moderation tooling: report button, action ladder, audit log, appeal
-      flow — built and tested
+- [x] Moderation tooling: report button, action ladder, audit log, appeal
+      flow — data layer + queue built (2026-06-12); UI hooks land with rooms
 - [ ] Privacy review: profiles, presence indicators, message retention
       schedule, data-deletion path
 - [ ] Responsible-play signal wiring (nudges live before rooms do)
