@@ -826,6 +826,97 @@ enum AtsResult {
 }
 
 // ============================================================
+// JARVIS MEMORY PROTOCOL (Stage 1)
+// ============================================================
+
+enum MemoryType {
+  episodic
+  semantic
+  procedural
+  preference
+  decision
+  failure
+  source
+  agent_performance
+  escalation_rule
+  public_claim_rule
+}
+
+enum MemoryState {
+  candidate
+  confirmed
+  repeated_pattern
+  conflicted
+  stale
+  superseded
+  rejected
+  expired
+}
+
+model JarvisMemoryEvent {
+  id                  String      @id @default(cuid())
+  memory_type         MemoryType
+  memory_state        MemoryState @default(candidate)
+  scope               String
+  title               String
+  summary             String      @db.Text
+  full_text           String?     @db.Text
+  source_type         String
+  source_ref          String?
+  source_timestamp    DateTime?
+  actor               String
+  owner               String
+  confidence          Int         // 0–100
+  sensitivity         String      @default("normal") // normal | high | legal | hr | spend
+  tags                String[]
+  related_decision_id String?
+  related_agent_id    String?
+  supersedes_memory_id String?
+  expires_at          DateTime?
+  created_at          DateTime    @default(now())
+  updated_at          DateTime    @updatedAt
+  confirmed_at        DateTime?
+  rejected_at         DateTime?
+  embedding_ref       String?
+  metadata            Json?
+  owner_approval      Boolean     @default(false)
+
+  superseded_by JarvisMemoryEvent[]  @relation("MemorySupersession")
+  supersedes    JarvisMemoryEvent?   @relation("MemorySupersession", fields: [supersedes_memory_id], references: [id])
+  decisions     JarvisDecision[]     @relation("MemoryDecisionLink")
+
+  @@index([memory_state])
+  @@index([memory_type])
+  @@index([scope])
+  @@index([created_at])
+  @@map("jarvis_memory_events")
+}
+
+model JarvisDecision {
+  id                  String   @id @default(cuid())
+  decision_title      String
+  decision_summary    String   @db.Text
+  decision_type       String
+  rationale           String   @db.Text
+  evidence            Json?
+  alternatives_rejected Json?
+  owner               String
+  decision_date       DateTime
+  revisit_date        DateTime?
+  outcome             String?  @db.Text
+  status              String   @default("open") // open | resolved | superseded | archived
+  source_refs         Json?
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  memory_events JarvisMemoryEvent[] @relation("MemoryDecisionLink")
+
+  @@index([decision_date])
+  @@index([status])
+  @@map("jarvis_decisions")
+}
+
+// ============================================================
 // OPERATOR COCKPIT (Phase 2B)
 //
 // Internal-only models. Power the Jarvis-style operator surface

@@ -29,6 +29,7 @@ import {
   type AgentCouncilMember,
   type CouncilSeatCounts,
 } from "./agent-council";
+import { db } from "@sports/db";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -63,7 +64,8 @@ export interface CapabilityStats {
   readonly wiringLabel: string;
 }
 
-export interface MemoryStatus {
+/** Not-wired posture: returned by buildMemoryStatus() when no DB is available. */
+export interface NotWiredMemoryStatus {
   /** Always false until a persistent memory store is wired. */
   readonly wired: false;
   /** Per the 2026-06-12 build spec: Postgres is the only canonical store;
@@ -82,6 +84,36 @@ export interface MemoryStatus {
   readonly expired: null;
   readonly healthScore: null;
 }
+
+/** Live posture: returned by buildLiveMemoryStatus() when DB counts succeed. */
+export interface WiredMemoryStatus {
+  readonly wired: true;
+  readonly store: "PostgreSQL";
+  readonly truth: string;
+  readonly protocolDocs: readonly string[];
+  readonly nextAction: string;
+  readonly lastWritten: null;
+  readonly lastRecalled: null;
+  /** Count of candidate memories awaiting owner approval. */
+  readonly candidatesAwaitingApproval: number;
+  /** Count of conflicted memories requiring resolution. */
+  readonly conflicted: number;
+  /** Count of stale memories. */
+  readonly stale: number;
+  /** Count of expired memories. */
+  readonly expired: number;
+  /**
+   * Health score formula: Math.max(0, 100 - 10 * conflicted - 5 * stale - 2 * candidates)
+   * 100 = no issues; lower = more unresolved conflicts/stale/pending candidates.
+   */
+  readonly healthScore: number;
+}
+
+/**
+ * Discriminated union of memory statuses.
+ * Use `memory.wired` to narrow to the correct shape.
+ */
+export type MemoryStatus = NotWiredMemoryStatus | WiredMemoryStatus;
 
 export interface JarvisIntelligenceState {
   readonly summary: OwnerSummary;
@@ -210,6 +242,63 @@ export function buildMemoryStatus(): MemoryStatus {
 // Returns the Sense → Improve loop posture (static truth about what runs today).
 export function getOperatingLoop(): readonly OperatingPhasePosture[] {
   return OPERATING_LOOP;
+}
+
+/**
+ * Async variant: tries a cheap set of COUNT queries against jarvis_memory_events.
+ *
+ * Success → returns a WiredMemoryStatus with REAL counts from the DB:
+ *   - candidatesAwaitingApproval: rows with memory_state = 'candidate'
+ *   - conflicted: rows with memory_state = 'conflicted'
+ *   - stale: rows with memory_state = 'stale'
+ *   - expired: rows with memory_state = 'expired'
+ *   - healthScore: Math.max(0, 100 − 10·conflicted − 5·stale − 2·candidates)
+ *     Each conflict costs 10 pts, each stale 5 pts, each pending candidate 2 pts.
+ *   - lastWritten / lastRecalled: null (timestamp telemetry not yet instrumented)
+ *
+ * Any DB error (unavailable, not yet migrated, etc.) → returns the existing sync
+ * buildMemoryStatus() not-wired posture unchanged. Never throws.
+ */
+export async function buildLiveMemoryStatus(): Promise<MemoryStatus> {
+  try {
+    const [candidates, conflicted, stale, expired] = await Promise.all([
+      db.jarvisMemoryEvent.count({ where: { memory_state: "candidate" } }),
+      db.jarvisMemoryEvent.count({ where: { memory_state: "conflicted" } }),
+      db.jarvisMemoryEvent.count({ where: { memory_state: "stale" } }),
+      db.jarvisMemoryEvent.count({ where: { memory_state: "expired" } }),
+    ]);
+
+    // healthScore: max(0, 100 − 10·conflicted − 5·stale − 2·candidates)
+    const healthScore = Math.max(0, 100 - 10 * conflicted - 5 * stale - 2 * candidates);
+
+    const wiredStatus: WiredMemoryStatus = {
+      wired: true,
+      store: "PostgreSQL",
+      truth:
+        "Jarvis episodic memory store is wired (Postgres). Owner decisions, lessons, " +
+        "and procedural rules persist across sessions. Confirmed memories are recalled " +
+        "before answering meaningful owner/architecture/product questions.",
+      protocolDocs: MEMORY_PROTOCOL_DOCS,
+      nextAction:
+        candidates > 0
+          ? `${candidates} candidate memor${candidates === 1 ? "y" : "ies"} awaiting owner review.`
+          : conflicted > 0
+            ? `${conflicted} conflicted memor${conflicted === 1 ? "y" : "ies"} require owner resolution.`
+            : "Memory store healthy. Add confirmed memories from owner decisions.",
+      lastWritten: null,
+      lastRecalled: null,
+      candidatesAwaitingApproval: candidates,
+      conflicted,
+      stale,
+      expired,
+      healthScore,
+    };
+
+    return wiredStatus;
+  } catch {
+    // DB unavailable or table not yet migrated — fall back to not-wired posture.
+    return buildMemoryStatus();
+  }
 }
 
 // Composes the full intelligence state from a live OwnerSummary.

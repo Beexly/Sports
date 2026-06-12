@@ -15,7 +15,7 @@ import {
 import { AskJarvisPanel } from "@/components/cockpit/ask-jarvis-panel";
 import { CapabilitySystemMap } from "@/components/cockpit/capability-system-map";
 import { AgentCouncilPanel } from "@/components/cockpit/agent-council-panel";
-import { buildMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intelligence-state";
+import { buildLiveMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intelligence-state";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { startOfDay, endOfDay } from "date-fns";
 
@@ -299,7 +299,7 @@ export default async function CockpitOverview() {
            and memory protocol are static truth, independent of DB state. */}
       <CapabilitySystemMap />
       <AgentCouncilPanel />
-      <MemoryProtocolZone memory={buildMemoryStatus()} />
+      <MemoryProtocolZone memory={await buildLiveMemoryStatus()} />
 
       {/* ── Zone 9: Drilldowns ───────────────────────────────────────── */}
       <div className="mt-2 border-t border-titanium/30 pt-6">
@@ -1025,8 +1025,15 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
           </p>
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <span className="rounded border border-titanium/40 bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
-            Memory: Not wired
+          <span
+            className={[
+              "rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest",
+              memory.wired
+                ? "border-accent-800/50 bg-accent-950/30 text-accent-400"
+                : "border-titanium/40 bg-obsidian/60 text-ion-3",
+            ].join(" ")}
+          >
+            Memory: {memory.wired ? "Wired" : "Not wired"}
           </span>
           <span className="rounded border border-titanium/40 bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
             Store: {memory.store}

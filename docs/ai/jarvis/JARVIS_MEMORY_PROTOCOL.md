@@ -74,3 +74,30 @@ The capability moves beyond `NOT_WIRED` only when demonstrated in the repo (see 
 - **DRAFT_ONLY → ACTIVE**: writes happen autonomously within the defined record schema, with audit logging and owner-accepted boundaries. Not on the current roadmap until the tool router and audit log exist.
 
 Registry `nextAction` (authoritative): *"Wire mem0 or Postgres-based episodic memory to capture owner decisions."* When any promotion happens, update `capability-registry.ts`, the ARCHIVE seat's `currentTruth` in `agent-council.ts`, the REMEMBER phase in `intelligence-state.ts`, and this document — in the same change.
+
+## Implementation status (2026-06-12)
+
+### Wired in code now
+
+| Artifact | Path | What it does |
+|---|---|---|
+| Prisma schema | `packages/db/prisma/schema.prisma` | `JarvisMemoryEvent` + `JarvisDecision` models, `MemoryType` + `MemoryState` enums |
+| Migration SQL | `packages/db/prisma/migrations/20260612120000_jarvis_memory_protocol/migration.sql` | Creates `jarvis_memory_events` + `jarvis_decisions` tables |
+| State machine | `apps/web/lib/jarvis/memory/states.ts` | All 8 states, allowed transitions, terminal-state enforcement |
+| Conflict detector | `apps/web/lib/jarvis/memory/conflict.ts` | Conservative conflict detection (explicit supersedes/contradicts only) |
+| Sensitivity guards | `apps/web/lib/jarvis/memory/guards.ts` | Blocks `public_claim_rule`/high/legal/hr/spend from `confirmed` without owner approval |
+| Error types | `apps/web/lib/jarvis/memory/errors.ts` | `MemoryStoreUnavailableError`, `MemoryTransitionError`, `MemoryGuardError` |
+| Server actions | `apps/web/lib/jarvis/memory/actions.ts` | `createMemoryCandidate`, `confirmMemory`, `rejectMemory`, `expireMemory`, `supersedeMemory` (single transaction), `recallRelevantMemory`, `listMemoryByState`, `listMemoryConflicts`, `linkMemoryToDecision` |
+| Live status builder | `apps/web/lib/jarvis/intelligence-state.ts` — `buildLiveMemoryStatus()` | Async: runs cheap COUNT queries; returns `WiredMemoryStatus` with real counts + health score on success, falls back to not-wired posture on any DB error |
+| Cockpit panel | `apps/web/app/cockpit/page.tsx` — `MemoryProtocolZone` | Calls `await buildLiveMemoryStatus()`; renders wired/not-wired honestly from the returned posture |
+| Tests | `apps/web/__tests__/jarvis-memory.test.ts` | Pure-logic tests (no live DB): 8 states, transition law, terminal state enforcement, sensitive-category guard, supersession trail, conservative conflict detection, health formula, `buildLiveMemoryStatus` surface |
+
+### Pending (requires owner action)
+
+| Item | Blocker |
+|---|---|
+| Production migration | `DATABASE_URL` must point to a real Postgres and `npm run db:migrate` must be run by the owner |
+| `wired: true` in live cockpit | Depends on production migration above |
+| `lastWritten` / `lastRecalled` timestamps | Timestamp telemetry not yet instrumented; both fields return `null` in `WiredMemoryStatus` |
+| Capability registry promotion to `DESIGNED` | Update `capability-registry.ts` once the owner confirms the production migration is live |
+| `REMEMBER` phase → `PARTIAL` | Update `intelligence-state.ts` operating loop after first confirmed memory is written in production |

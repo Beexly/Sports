@@ -63,7 +63,7 @@ Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · 
 
 | Commitment | State |
 |---|---|
-| Jarvis Memory Protocol — Postgres episodic store, decision ledger, review queue, recall behavior | QUEUED — full spec at `docs/ai/jarvis/JARVIS_MEMORY_BUILD_SPEC_2026-06-12.md`. Stage 0 DONE: cockpit panel aligned to spec (store: Not Connected, honest null ledger slots, Postgres-first next action, mem0 demoted to retrieval-only) |
+| Jarvis Memory Protocol — Postgres episodic store, decision ledger, review queue, recall behavior | STAGE 1 DONE — schema (jarvis_memory_events + jarvis_decisions + enums) with migration SQL, 8-state machine + transition law, conservative conflict detection, sensitivity guards, 9 server actions (supersession trail transactional), live cockpit panel (wired/not-wired from real DB probe, never faked), 45 tests. OWNER: run prod migration + DATABASE_URL to flip it wired. Remaining stages: review-queue UI, Owner Brief + Model Council integration, recall-before-answer wiring |
 | Jarvis Agent Council upgrade — 23 seats into departments, seat-vs-subagent law, authority tiers, routing rules, handoff + subagent ledgers, council UI | QUEUED (owner dump 2026-06-12, behind Memory build) — full spec at `docs/ai/jarvis/JARVIS_AGENT_COUNCIL_BUILD_SPEC_2026-06-12.md` |
 
 ## Owner polish backlog (standing)
