@@ -1,147 +1,28 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Nav } from "@/components/ui/nav";
-import { Footer } from "@/components/ui/footer";
+import { FantasyShell } from "@/components/fantasy/fantasy-shell";
+import { ContestSimulator } from "@/components/fantasy/contest-simulator";
 import { BRAND_COLORS } from "@/lib/brand";
 
-/**
- * /fantasy/contests — THE CONTEST BAY, sealed.
- *
- * Cinematic under-construction door. The previous version enumerated the
- * full contest roadmap (formats, operator names, gating posture) before
- * launch — that brief is classified now. This page says exactly one thing,
- * beautifully: something competitive is being built behind this door.
- *
- * No vendor names, no compliance posture, no internal status leaks.
- * CSS-only motion (reuses the gse keyframes); reduced motion renders calm.
- */
-
 export const metadata: Metadata = {
-  title: "Contests — Galaxy Sports Edge",
-  description: "The Contest Bay is under construction. Something competitive is coming.",
+  title: "Contest Simulator — Galaxy Fantasy",
+  description:
+    "Monte Carlo GPP contest simulation: pick a lineup strategy, run 500+ simulations against a random field, and read your cash probability, win rate, finish distribution, and expected ROI — the analytics FTN charges for.",
   alternates: { canonical: "/fantasy/contests" },
 };
 
-const cyan = BRAND_COLORS.orbitalCyan;
-const uv = BRAND_COLORS.softUltraviolet;
-const white = BRAND_COLORS.ionWhite;
+export const dynamic = "force-dynamic";
 
-/** Deterministic sparks drifting around the bay door (golden-angle spray). */
-const SPARKS: readonly { left: number; top: number; size: number; delay: number; hue: string }[] =
-  Array.from({ length: 26 }, (_, i) => ({
-    left: ((i * 137.508) % 100 + 100) % 100,
-    top: ((i * 61.803) % 100 + 100) % 100,
-    size: i % 6 === 0 ? 2 : 1,
-    delay: -((i * 0.53) % 7),
-    hue: i % 7 === 0 ? cyan : i % 11 === 0 ? uv : white,
-  }));
-
-export default function ContestBaySealedPage() {
+export default function ContestSimPage() {
   return (
-    <div className="flex min-h-screen flex-col" style={{ background: BRAND_COLORS.obsidianBlack }}>
-      <Nav />
-
-      <main className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-28 text-center">
-        {/* atmosphere */}
-        <div aria-hidden className="gse-vignette" />
-        <div aria-hidden className="gse-grain" />
-        <div
-          aria-hidden
-          className="gse-cine-anim pointer-events-none absolute -left-1/4 top-[-20%] h-[70vh] w-[70vw] rounded-full"
-          style={{
-            animation: "gse-nebula-drift 16s ease-in-out infinite alternate",
-            background: `radial-gradient(closest-side, ${uv}26, transparent 72%)`,
-          }}
-        />
-        <div aria-hidden className="pointer-events-none absolute inset-0">
-          {SPARKS.map((s, i) => (
-            <span
-              key={i}
-              className="gse-cine-anim absolute rounded-full"
-              style={{
-                left: `${s.left}%`,
-                top: `${s.top}%`,
-                width: s.size,
-                height: s.size,
-                background: s.hue,
-                opacity: 0.45,
-                animation: "gse-star-breathe 7s ease-in-out infinite",
-                animationDelay: `${s.delay}s`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* the sealed bay door */}
-        <div className="relative z-10 flex flex-col items-center">
-          <div
-            className="relative flex h-44 w-44 items-center justify-center rounded-full"
-            style={{ border: `1px solid ${uv}40`, boxShadow: `0 0 60px ${uv}22, inset 0 0 40px ${uv}14` }}
-          >
-            <div
-              aria-hidden
-              className="gse-cine-anim absolute inset-3 rounded-full"
-              style={{
-                border: `1px dashed ${cyan}45`,
-                animation: "gw-rotate 26s linear infinite",
-              }}
-            />
-            <div
-              aria-hidden
-              className="gse-cine-anim absolute inset-3 rounded-full"
-              style={{
-                background: `conic-gradient(from 0deg, transparent 0 70%, ${cyan}30 82%, transparent 94%)`,
-                animation: "gw-rotate 13s linear infinite reverse",
-              }}
-            />
-            <span className="font-arch text-5xl" style={{ color: white }}>
-              ⬡
-            </span>
-          </div>
-
-          <p className="eyebrow mt-10 justify-center" style={{ color: cyan }}>
-            contest bay · sector sealed
-          </p>
-          <h1
-            className="mt-4 max-w-2xl font-display text-balance text-white"
-            style={{ fontSize: "clamp(2rem, 5.5vw, 3.5rem)", lineHeight: 1.05 }}
-          >
-            Something competitive is being{" "}
-            <span className="gse-editorial" style={{ fontSize: "1.08em" }}>
-              built
-            </span>{" "}
-            behind this door.
-          </h1>
-          <p className="mt-5 max-w-xl text-balance text-ink-300">
-            The Contest Bay is under construction. The brief stays classified until launch —
-            when this door opens, it opens with receipts.
-          </p>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm">
-            <Link href="/board" className="btn btn-primary">
-              Today&apos;s board
-            </Link>
-            <Link
-              href="/fantasy"
-              className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline"
-            >
-              Fantasy Galaxy
-            </Link>
-            <Link
-              href="/academy"
-              className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline"
-            >
-              Train in the Academy
-            </Link>
-          </div>
-
-          <p className="mt-12 font-mono text-[10px] uppercase tracking-[0.3em] text-ink-500">
-            {"// no countdown · no leaks · worth the wait"}
-          </p>
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+    <FantasyShell
+      eyebrow="Contest Simulator"
+      accent={BRAND_COLORS.softUltraviolet}
+      title={<>Know your <span className="gse-editorial" style={{ fontSize: "1.08em" }}>edge</span> before you enter.</>}
+      intro="Monte Carlo simulation against a random field: cash rate, win rate, finish distribution, and expected ROI — in your browser, no black box."
+      note="Runs on the sample slate until you import a real DraftKings CSV in the optimizer. Strategy, format, and simulation count are all yours to control."
+      wide
+    >
+      <ContestSimulator />
+    </FantasyShell>
   );
 }

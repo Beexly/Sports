@@ -47,7 +47,7 @@ Action Network, Dimers, BetWise, BettingPros.
 | Salary data | Both | DK CSV import live today; auto-feed unlocks with SPORTSDATAIO/FANTASYDATA keys | ✅ CSV form live · feed = key upgrade |
 | Ownership projections | LineStar | Leverage uses field-ownership estimates; no per-slate projection model | 🟡 |
 | Late swap | LineStar | **DFS Suite** — scratch players, engine locks rest + re-solves under remaining cap, before/after salary+proj delta | ✅ NEW 2026-06-12 |
-| Contest sims | FTN | `/fantasy/contests` (sample-slate banner until feed) | 🟡 |
+| Contest sims | FTN | **`/fantasy/contests`** — Monte Carlo simulation: cash rate, win rate, finish distribution, expected ROI; runs in-browser on sample slate | ✅ NEW 2026-06-12 |
 
 ## Stats & data (PFF · FTN)
 
