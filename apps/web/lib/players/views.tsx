@@ -114,6 +114,8 @@ export interface ViewResult {
   readonly error?: ReactNode;
   /** Short source-window summary for the hero (e.g. "Season 2024, week 12"). */
   readonly windowLabel?: string;
+  /** ISO timestamp of when the underlying source rows were loaded/computed. */
+  readonly generatedAt?: string;
   /** Source attribution ids. */
   readonly sourceIds: readonly string[];
   /** One DataTable per section. */
@@ -211,6 +213,7 @@ async function loadProductionView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${lab.season}${lab.throughWeek ? `, through week ${lab.throughWeek}` : ""}`,
+    generatedAt: lab.generatedAt,
     sourceIds: ["nflverse"],
     sections,
   };
@@ -227,6 +230,7 @@ async function loadSnapsView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${snap.season}`,
+    generatedAt: snap.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -282,6 +286,7 @@ async function loadOpportunityView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${o.season}${o.throughWeek ? ` through week ${o.throughWeek}` : ""}`,
+    generatedAt: o.generatedAt,
     sourceIds: ["nflverse"],
     sections,
   };
@@ -297,6 +302,7 @@ async function loadNextGenView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${ngs.season}`,
+    generatedAt: ngs.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -343,6 +349,7 @@ async function loadTrenchesView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${pc.season}`,
+    generatedAt: pc.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -381,6 +388,7 @@ async function loadCombineView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Latest class ${c.latestYear ?? "N/A"}`,
+    generatedAt: c.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -443,7 +451,7 @@ async function loadQbrView(): Promise<ViewResult> {
       minWidth: 720,
     });
   }
-  return { status: "live", windowLabel: `Season ${q.season}`, sourceIds: ["nflverse"], sections };
+  return { status: "live", windowLabel: `Season ${q.season}`, generatedAt: q.generatedAt, sourceIds: ["nflverse"], sections };
 }
 
 // ── EDGE ──────────────────────────────────────────────────────────────────────
@@ -456,6 +464,7 @@ async function loadEdgeView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${edge.season}`,
+    generatedAt: edge.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -496,6 +505,7 @@ async function loadInjuriesView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${report.season}, week ${report.week ?? "N/A"}`,
+    generatedAt: report.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -524,6 +534,7 @@ async function loadMarketView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Last ${signal.lookbackHours} hours`,
+    generatedAt: signal.generatedAt,
     sourceIds: ["sleeper"],
     sections: [
       {
@@ -581,6 +592,7 @@ async function loadDfsView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `DraftKings · ${dfs.date}`,
+    generatedAt: dfs.generatedAt,
     sourceIds: [],
     sections: [
       {
@@ -613,7 +625,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     explainer: [
       { term: "PPR/G & 5g", definition: "Per-game PPR over the season, and over the last 5 games. Δ = recent form minus season pace." },
       { term: "Boom% / Bust%", definition: "Share of games at or above a startable ceiling (≥20) and at or below a floor (≤10) — the real distribution." },
-      { term: "WOPR & target share", definition: "Weighted opportunity rating and share of team targets — the role behind the points." },
+      { term: "WOPR & target share", definition: "Season averages of the weekly weighted opportunity rating (1.5·target share + 0.7·air-yards share) and team target share — the role behind the points." },
     ],
     jsonHref: "/api/nflverse/player-lab",
     load: loadProductionView,

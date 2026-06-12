@@ -22,6 +22,33 @@ export const metadata: Metadata = {
 
 const PATHNAME = "/players";
 
+/**
+ * Per-view "rows + freshness" stamp (POLISH_BACKLOG #2). Every Player Lab view
+ * declares its source window, how many real rows sit behind the tables, and
+ * when those rows were loaded — so a reader can judge staleness at a glance
+ * instead of trusting an unlabeled table.
+ */
+function ViewFreshnessStamp({ result }: { result: ViewResult }) {
+  const rowCount = result.sections.reduce((sum, s) => sum + s.rows.length, 0);
+  const refreshed = result.generatedAt
+    ? new Date(result.generatedAt).toISOString().replace("T", " ").slice(0, 16) + " UTC"
+    : null;
+  const parts = [
+    result.windowLabel ? `Source window · ${result.windowLabel}` : null,
+    `${new Intl.NumberFormat("en-US").format(rowCount)} rows`,
+    refreshed ? `refreshed ${refreshed}` : null,
+  ].filter(Boolean);
+  if (parts.length === 0) return null;
+  return (
+    <p
+      data-testid="player-view-freshness"
+      className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ink-2 tabular-nums"
+    >
+      {parts.join(" · ")}
+    </p>
+  );
+}
+
 interface PlayersPageProps {
   searchParams?: { view?: string };
 }
@@ -86,11 +113,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
           />
         ) : (
           <>
-            {result.windowLabel ? (
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ink-2">
-                Source window · {result.windowLabel}
-              </p>
-            ) : null}
+            <ViewFreshnessStamp result={result} />
 
             <PlayerLabTable sections={result.sections} />
 
