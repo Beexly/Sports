@@ -7,13 +7,17 @@ import {
   getCapabilityOwner,
   getCouncilSeatCounts,
   getOwnedCapabilities,
+  GUARDRAILS,
   type CouncilSeatStatus,
+  type AgentSeat,
 } from "@/lib/jarvis/agent-council";
 import {
   CAPABILITY_REGISTRY,
   getCapability,
 } from "@/lib/jarvis/capability-registry";
 import { AGENTS } from "@/lib/cockpit/agents";
+import { ROUTING_RULES, routeForTaskType } from "@/lib/jarvis/routing-rules";
+import { buildLedgerStatus } from "@/lib/jarvis/ledger-types";
 
 /**
  * Agent council contract.
@@ -143,5 +147,85 @@ describe("council accessors", () => {
     expect(counts.total).toBe(23);
     expect(counts.draftOnly + counts.manual + counts.notWired).toBe(counts.total);
     expect(counts.registeredCockpitAgents).toBe(6);
+  });
+});
+
+// ─── Spec §12 acceptance criteria ────────────────────────────────────────────
+
+describe("spec §12 acceptance criteria", () => {
+  it("AC1: all 23 seats registered", () => {
+    expect(AGENT_COUNCIL.length).toBe(23);
+  });
+
+  it("AC2-3: exact status counts 6 draft_only / 3 manual / 14 not_wired", () => {
+    const counts = getCouncilSeatCounts();
+    expect(counts.draftOnly).toBe(6);
+    expect(counts.manual).toBe(3);
+    expect(counts.notWired).toBe(14);
+  });
+
+  it("AC5-9: every seat has department, reportsTo, escalatesTo, authorityTier, externalActionsAllowed=false", () => {
+    for (const seat of AGENT_COUNCIL as readonly AgentSeat[]) {
+      expect(seat.department, `${seat.id} department`).toBeTruthy();
+      expect(seat.reportsTo.length, `${seat.id} reportsTo`).toBeGreaterThan(0);
+      expect(seat.escalatesTo.length, `${seat.id} escalatesTo`).toBeGreaterThan(0);
+      expect(typeof seat.authorityTier, `${seat.id} tier`).toBe("number");
+      expect(seat.externalActionsAllowed, `${seat.id} externalActionsAllowed`).toBe(false);
+    }
+  });
+
+  it("AC10: ASCEND is standing subagent under PRISM with AUDIT review", () => {
+    const ascend = AGENT_COUNCIL.find((s) => s.codename === "ASCEND") as AgentSeat | undefined;
+    expect(ascend).toBeDefined();
+    expect(ascend!.standingSubagent).toBe(true);
+    expect(ascend!.reportsTo).toContain("PRISM");
+    expect(ascend!.reviewedBy).toContain("AUDIT");
+    const prism = AGENT_COUNCIL.find((s) => s.codename === "PRISM") as AgentSeat | undefined;
+    expect(prism!.subagentTemplates?.some((t) => t.parentSeatId === prism!.id)).toBe(true);
+  });
+
+  it("AC11: AUDIT independent — not reporting to or reviewed by SCOUT/DELTA/PRISM/ASCEND", () => {
+    const audit = AGENT_COUNCIL.find((s) => s.codename === "AUDIT") as AgentSeat | undefined;
+    const forbidden = ["SCOUT", "DELTA", "PRISM", "ASCEND"];
+    for (const f of forbidden) {
+      expect(audit!.reportsTo, `AUDIT reportsTo ${f}`).not.toContain(f);
+      expect(audit!.reviewedBy ?? [], `AUDIT reviewedBy ${f}`).not.toContain(f);
+    }
+  });
+
+  it("AC17: routing rules exist for all 13 spec routes and end at JARVIS or Owner", () => {
+    const TASK_TYPES = [
+      "pick-research",
+      "settlement",
+      "public-content",
+      "customer-dashboard",
+      "data-incident",
+      "memory-decision",
+      "tool-browser",
+      "workflow-automation",
+      "marketing",
+      "community-launch",
+      "revenue-pricing",
+      "forecasting",
+      "stat-rd",
+    ];
+    expect(ROUTING_RULES.length).toBe(13);
+    for (const type of TASK_TYPES) {
+      const rule = routeForTaskType(type as Parameters<typeof routeForTaskType>[0]);
+      expect(rule, `route for ${type}`).toBeDefined();
+      expect(["JARVIS", "Owner"]).toContain(rule!.endsAt);
+    }
+  });
+
+  it("AC20: ledger posture is not_connected, nothing simulated", () => {
+    const status = buildLedgerStatus();
+    expect(status.handoffLedger).toBe("not_connected");
+    expect(status.subagentRunLedger).toBe("not_connected");
+    expect(status.storeAvailable).toBe(false);
+  });
+
+  it("guardrails list present with at least 8 entries", () => {
+    expect(GUARDRAILS.length).toBeGreaterThanOrEqual(8);
+    expect(GUARDRAILS.every((g) => g.length > 0)).toBe(true);
   });
 });
