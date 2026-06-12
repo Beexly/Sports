@@ -35,7 +35,7 @@ Action Network, Dimers, BetWise, BettingPros.
 | Start/sit + lineup | Both | `/fantasy/lineup` | ✅ |
 | Waiver/FAAB advisor | FBG | `/fantasy/waivers` | ✅ |
 | Trade analyzer | Both | `/fantasy/trade` — fairness, consolidation | ✅ |
-| League sync | Both | Sleeper connect (read-only, live rosters) | ✅ Sleeper · ❌ ESPN/Yahoo |
+| League sync | Both | Sleeper API sync + **universal paste-import** (any platform → lineup tool) | ✅ all platforms in some form · OAuth upgrade pending |
 | Strength of schedule matrix | FBG | **Schedule Lab `/sos`** — season/early SoS, toughest stretch | ✅ NEW 2026-06-12 |
 | Expert content / coaching | FantasyGuru | Academy (4 tracks incl. Fantasy & DFS) + in-tool Coach cards | ✅ NEW 2026-06-12 |
 
@@ -65,7 +65,7 @@ Action Network, Dimers, BetWise, BettingPros.
 
 1. ~~Strength of schedule~~ — **shipped 2026-06-12: Schedule Lab `/sos`** (FBG parity ✅)
 2. ~~Projections~~ — **no vendor needed**: `PROJECTIONS_PROVIDER=graded` activates our own model (corrected 2026-06-12).
-3. **ESPN/Yahoo league sync** — OAuth apps + ToS review required, not just code.
+3. ESPN/Yahoo — **form closed 2026-06-12** via universal roster paste-import; native OAuth sync still the upgrade (requires registered apps).
 4. **Public betting %** — needs a paid consensus vendor; route through vendor questionnaire.
 5. **Ownership projection model** — per-slate model once live salary feed is connected.
 6. ~~Unified history explorer~~ — **shipped 2026-06-12: History Lab `/history`** (MLB spine live; NFL pbp next).

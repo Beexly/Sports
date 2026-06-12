@@ -8,6 +8,8 @@
 import { useMemo, useState } from "react";
 import { POS_HEX, type Player } from "@/lib/fantasy/players";
 import { DEFAULT_ROSTER_IDS, rosterFromIds, sampleRoster, optimize, startReason } from "@/lib/fantasy/lineup";
+import { importRoster, type RosterImportResult } from "@/lib/fantasy/roster-import";
+import { activePlayerPool } from "@/lib/integrations/projections";
 import { BRAND_COLORS } from "@/lib/brand";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 
@@ -20,9 +22,17 @@ const VERDICT_HEX = { anchor: BRAND_COLORS.orbitalCyan, start: BRAND_COLORS.soft
  */
 export function LineupOptimizer({ pool }: { pool?: readonly Player[] } = {}) {
   const live = pool != null;
+  const [imported, setImported] = useState<RosterImportResult | null>(null);
+  const [pasteText, setPasteText] = useState("");
+  const matchPool = useMemo(() => pool ?? activePlayerPool(), [pool]);
   const fullRoster = useMemo(
-    () => (live ? sampleRoster(pool!) : rosterFromIds(DEFAULT_ROSTER_IDS)),
-    [live, pool],
+    () =>
+      imported && imported.matched.length > 0
+        ? imported.matched
+        : live
+          ? sampleRoster(pool!)
+          : rosterFromIds(DEFAULT_ROSTER_IDS),
+    [imported, live, pool],
   );
   const [out, setOut] = useState<Set<string>>(new Set());
   const roster = useMemo(() => fullRoster.filter((p) => !out.has(p.id)), [fullRoster, out]);
@@ -34,7 +44,51 @@ export function LineupOptimizer({ pool }: { pool?: readonly Player[] } = {}) {
   if (live && fullRoster.length === 0) return <LivePoolEmpty />;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+    <div>
+      {/* Universal roster import — works for ESPN/Yahoo/anything via paste. */}
+      <details className="group mb-6 rounded-ds-md border border-mineral/70 bg-eclipse/60">
+        <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: BRAND_COLORS.orbitalCyan }}>
+            Import roster
+          </span>
+          <span className="text-sm text-ink-300">
+            {imported && imported.matched.length > 0
+              ? `${imported.matched.length} players imported${imported.unmatched.length > 0 ? ` · ${imported.unmatched.length} unmatched` : ""}`
+              : "Paste your roster from ESPN, Yahoo, Sleeper, or anywhere — one player per line."}
+          </span>
+          <span aria-hidden="true" className="ml-auto text-ink-500 transition-transform group-open:rotate-90">›</span>
+        </summary>
+        <div className="border-t border-mineral/60 px-4 py-4">
+          <textarea
+            value={pasteText}
+            onChange={(e) => setPasteText(e.target.value)}
+            rows={5}
+            placeholder={"Patrick Mahomes QB (KC)\n2. Bijan Robinson - RB\n..."}
+            className="w-full rounded-md border border-mineral bg-obsidian/60 p-3 font-mono text-xs text-ink-200 placeholder:text-ink-600 focus:border-ink-400 focus:outline-none"
+          />
+          <div className="mt-2 flex items-center gap-3">
+            <button
+              onClick={() => setImported(importRoster(pasteText, matchPool))}
+              className="rounded-md px-3 py-1.5 text-xs font-semibold text-obsidian"
+              style={{ backgroundColor: BRAND_COLORS.orbitalCyan }}
+            >
+              Match players
+            </button>
+            {imported && (
+              <button onClick={() => { setImported(null); setPasteText(""); }} className="text-xs text-ink-400 underline underline-offset-4">
+                Back to sample roster
+              </button>
+            )}
+          </div>
+          {imported && imported.unmatched.length > 0 && (
+            <p className="mt-2 text-xs text-ink-400">
+              Not in the current player pool (skipped, never guessed): {imported.unmatched.join(", ")}
+            </p>
+          )}
+        </div>
+      </details>
+
+      <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
       {/* optimal lineup */}
       <div className="surface-card overflow-hidden p-0">
         <div className="flex items-center justify-between border-b px-5 py-3" style={{ borderColor: BRAND_COLORS.steelGray }}>
@@ -94,6 +148,7 @@ export function LineupOptimizer({ pool }: { pool?: readonly Player[] } = {}) {
           <p className="mt-3 text-[10px] text-ink-600">Marking a player out re-solves the optimal lineup instantly.</p>
         </div>
       </div>
+    </div>
     </div>
   );
 }
