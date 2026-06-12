@@ -41,7 +41,7 @@ Simulation Cloud ✓ (fair board) · Calibration Panel ✓ + Honest Band ✓ · 
 | Primary-nav placement of /house | OWNER — funnel doctrine says few doors |
 | Live rooms (Sunday Couch / Brotherhood / No-Shame) | STAGED — written policy DONE (`docs/legal/COMMUNITY_MODERATION_POLICY.md`); remaining gates: moderation tooling, privacy review, responsible-play wiring |
 | Weekly NFL ritual (Mon→Mon) | DONE as doctrine + /house rail; content-automation alignment QUEUED |
-| Register on Academy content | QUEUED |
+| Register on Academy content | DONE — all four Academy floors re-registered (teach/plain/math), shared `useReaderRegister` hook extracted, copy verified against real game mechanics, banned-phrase-tested |
 | NFL-first focus | DONE — all new work NFL-first |
 
 ## Data doctrine & stat factory

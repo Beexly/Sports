@@ -76,6 +76,8 @@ describe("API wiring", () => {
 
 describe("client wiring", () => {
   const client = read("components/picks/ask-why.tsx");
+  // Storage logic lives in the shared hook; ask-why delegates to it.
+  const hook = read("lib/reader-register/use-reader-register.ts");
 
   it("renders all three doorway labels with pressed-state accessibility", () => {
     expect(client).toContain("EXPLAIN_REGISTER_LABELS");
@@ -83,9 +85,13 @@ describe("client wiring", () => {
     expect(client).toContain('aria-label="Explanation depth"');
   });
 
-  it("persists the reader's choice", () => {
-    expect(client).toContain("gse-reader-register");
-    expect(client).toContain("localStorage");
+  it("ask-why uses the shared reader-register hook", () => {
+    expect(client).toContain("useReaderRegister");
+  });
+
+  it("shared hook persists the reader's choice under the canonical key", () => {
+    expect(hook).toContain("gse-reader-register");
+    expect(hook).toContain("localStorage");
   });
 
   it("uses world tokens, not raw palette classes", () => {

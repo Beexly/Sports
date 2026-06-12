@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
-  DEFAULT_EXPLAIN_REGISTER,
   EXPLAIN_REGISTERS,
   EXPLAIN_REGISTER_LABELS,
-  isExplainRegister,
   type ExplainRegister,
 } from "@/lib/pick-explainer/prompts";
+import { useReaderRegister } from "@/lib/reader-register/use-reader-register";
 
 /**
  * "Ask the model why" — a PRO+ glass-box control. POSTs to
@@ -20,26 +19,10 @@ import {
  * the whole product meets the reader where they are.
  */
 
-const REGISTER_STORAGE_KEY = "gse-reader-register";
-
-function storedRegister(): ExplainRegister {
-  try {
-    const raw = window.localStorage.getItem(REGISTER_STORAGE_KEY);
-    return isExplainRegister(raw) ? raw : DEFAULT_EXPLAIN_REGISTER;
-  } catch {
-    return DEFAULT_EXPLAIN_REGISTER;
-  }
-}
-
 export function AskWhy({ pickId }: { pickId: string }) {
   const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [text, setText] = useState<string>("");
-  const [register, setRegister] = useState<ExplainRegister>(DEFAULT_EXPLAIN_REGISTER);
-
-  // localStorage is read post-mount so SSR and first client render agree.
-  useEffect(() => {
-    setRegister(storedRegister());
-  }, []);
+  const [register, setRegister] = useReaderRegister();
 
   async function ask(nextRegister: ExplainRegister) {
     setState("loading");
@@ -71,11 +54,6 @@ export function AskWhy({ pickId }: { pickId: string }) {
 
   function selectRegister(next: ExplainRegister) {
     setRegister(next);
-    try {
-      window.localStorage.setItem(REGISTER_STORAGE_KEY, next);
-    } catch {
-      // Private mode — the choice just won't persist.
-    }
     // Re-read in the new register if an answer is already on screen.
     if (state === "done") void ask(next);
   }
