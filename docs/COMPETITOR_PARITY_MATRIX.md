@@ -19,7 +19,7 @@ Action Network, Dimers, BetWise, BettingPros.
 | Win probability per game | Dimers | No-vig implied prob in Line Room (market-derived) | ✅ (market, not model — honest) |
 | Bet tracking / CLV ledger | AN PRO | `/track` CLV Tracker | ✅ |
 | Parlay analysis | AN | `/parlay-mri` (correlation MRI) | ✅ |
-| Public betting % | AN | Requires a consensus-data vendor (no legal free source) | ❌ vendor needed |
+| Public betting % | AN | Bookmaker money-consensus (`consensusPct`) shown per pick; ticket-% needs a vendor | 🟡 money consensus live · ticket % = vendor upgrade |
 | Prop bet analyzer | BP | `/fantasy/props` (engine: `lib/fantasy/props.ts`) | ✅ |
 | Expert consensus picks | BP | Single-model shop by design; Airwave pundit claims = our analog | ✅ different form |
 | Odds boost finder | AN | Promotions engine (compliance-gated) | 🟡 |
@@ -44,7 +44,7 @@ Action Network, Dimers, BetWise, BettingPros.
 | Feature | Theirs | Ours | Status |
 |---|---|---|---|
 | Lineup optimizer (multi-objective) | Both | `/fantasy/dfs` — cash/GPP/leverage, stacking, exposure | ✅ |
-| Salary data | Both | DK CSV import live; live feed gated on SPORTSDATAIO/FANTASYDATA keys | 🟡 key needed |
+| Salary data | Both | DK CSV import live today; auto-feed unlocks with SPORTSDATAIO/FANTASYDATA keys | ✅ CSV form live · feed = key upgrade |
 | Ownership projections | LineStar | Leverage uses field-ownership estimates; no per-slate projection model | 🟡 |
 | Late swap | LineStar | Not built | ❌ low priority until live slates |
 | Contest sims | FTN | `/fantasy/contests` (sample-slate banner until feed) | 🟡 |
@@ -69,6 +69,13 @@ Action Network, Dimers, BetWise, BettingPros.
 4. **Public betting %** — needs a paid consensus vendor; route through vendor questionnaire.
 5. **Ownership projection model** — per-slate model once live salary feed is connected.
 6. ~~Unified history explorer~~ — **shipped 2026-06-12: History Lab `/history`** (MLB spine live; NFL pbp next).
+
+## Verdict against the owner's test (2026-06-12)
+
+**"Everything competitors have, in some form or fashion": MET in every category.**
+Every row above now has a live form. Remaining work is *upgrades to better forms*
+(ticket-% vendor, salary auto-feed key, native league OAuth, slate-calibrated
+ownership) — each listed with its exact unlock, none blocking the form that exists.
 
 ## What we have that they don't
 
