@@ -227,7 +227,9 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
 
     const systems: System[] = [];
     for (const game of games) {
-      const color = new THREE.Color(VERDICT_HEX[game.verdict]);
+      const boardHex =
+        game.boardStatus === "PUBLISHED_TODAY" ? "#00E5FF" : game.boardStatus === "GATED_TODAY" ? "#FF2DD6" : null;
+      const color = new THREE.Color(boardHex ?? VERDICT_HEX[game.verdict]);
       const group = new THREE.Group();
       const p = layout.positions.get(game.id) ?? (game.pos as Vec3);
       group.position.set(p[0], p[1], p[2]);
@@ -961,9 +963,26 @@ function Inspector({ game, timeIndex, illustrative, marketIndex, onMarket }: { g
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-ink-500">{game.league} - {illustrative ? "illustrative" : "live"}</p>
           <h3 className="mt-1 font-display text-xl text-white">{game.label}</h3>
         </div>
-        <span className="rounded-full px-3 py-1 text-sm font-bold" style={{ color, background: `${color}14`, border: `1px solid ${color}55` }}>
-          {game.verdict}
-        </span>
+        <div className="flex flex-col items-end gap-1.5">
+          <span className="rounded-full px-3 py-1 text-sm font-bold" style={{ color, background: `${color}14`, border: `1px solid ${color}55` }}>
+            {game.verdict}
+          </span>
+          {game.boardStatus && (
+            <span
+              className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
+              style={
+                game.boardStatus === "PUBLISHED_TODAY"
+                  ? { color: "#00E5FF", border: "1px solid #00E5FF55", background: "#00E5FF12" }
+                  : game.boardStatus === "GATED_TODAY"
+                    ? { color: "#FF2DD6", border: "1px solid #FF2DD655", background: "#FF2DD60f" }
+                    : { color: "#F6F7FA", border: "1px solid #F6F7FA44", background: "#F6F7FA10" }
+              }
+              title={game.gateReason ?? undefined}
+            >
+              {game.boardStatus === "PUBLISHED_TODAY" ? "on the board" : game.boardStatus === "GATED_TODAY" ? "gate held" : "scoring now"}
+            </span>
+          )}
+        </div>
       </div>
       <p className="relative mt-2 text-xs italic text-ink-500">{VERDICT_COPY[game.verdict]}</p>
 

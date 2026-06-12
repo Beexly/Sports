@@ -55,6 +55,9 @@ export type TwinGame = {
   readonly publicMoney?: number; // 0..1 public pressure — undefined if not instrumented
   readonly sharp?: number; // 0..1 sharp-vs-public divergence — undefined if not instrumented
   readonly impact?: TwinImpact | null;
+  /** Live board posture — present only on live slates (board cross-ref). */
+  readonly boardStatus?: "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
+  readonly gateReason?: string | null;
 };
 
 export type TwinSlate = {

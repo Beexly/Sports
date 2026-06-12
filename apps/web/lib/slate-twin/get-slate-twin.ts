@@ -17,6 +17,7 @@
  */
 
 import { getReadinessGates } from "@sports/prediction-engine";
+import { loadBoardState } from "@/lib/board/state";
 import { db } from "@sports/db";
 import {
   DEMO_SLATE, TIMELINE, LEAGUE_CENTERS,
@@ -70,6 +71,15 @@ function spreadStats(odds: OddsRow[]): { vol: number | null; current: number | n
 
 async function buildLiveSlate(): Promise<TwinSlate | null> {
   const now = new Date();
+  // Cross-reference the live board so galaxy nodes carry real posture:
+  // published picks light cyan, gated rows dim magenta, live games pulse.
+  const board = await loadBoardState().catch(() => null);
+  const boardByGame = new Map<string, { status: "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY"; gateReason: string | null }>();
+  if (board) {
+    for (const r of [...board.data.scoringNow, ...board.data.publishedToday, ...board.data.gatedTodayRows]) {
+      if (!boardByGame.has(r.gameId)) boardByGame.set(r.gameId, { status: r.status, gateReason: r.gateReason });
+    }
+  }
   const horizon = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 4);
 
   const rows = await db.game.findMany({
@@ -133,6 +143,9 @@ async function buildLiveSlate(): Promise<TwinSlate | null> {
       confidence: Array.from({ length: TLEN }, () => conf01),
       note: (pick?.reasoning ?? "").trim().slice(0, 160) || "Tracked game — no qualifying signal yet.",
       ...(oddsPath ? { oddsPath } : {}),
+      ...(boardByGame.has(row.id)
+        ? { boardStatus: boardByGame.get(row.id)!.status, gateReason: boardByGame.get(row.id)!.gateReason }
+        : {}),
       // publicMoney / sharp / impact intentionally OMITTED — not instrumented.
     });
   }
