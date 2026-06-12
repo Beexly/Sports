@@ -37,12 +37,12 @@ export type ClaudeSurface =
  * captured in one place and can be enabled deliberately.
  */
 const SURFACE_TIER: Record<ClaudeSurface, ModelTier> = {
-  studio: "sonnet", // recommended: sonnet (brand-voice creative — quality-sensitive)
-  journal: "sonnet", // recommended: sonnet (public accountability writing)
-  "calibration-insight": "sonnet", // recommended: haiku (short, structured read of stats)
-  "model-court": "sonnet", // recommended: opus (adversarial deep reasoning)
-  content: "sonnet", // recommended: sonnet (editorial drafts)
-  brief: "sonnet", // recommended: haiku (templated daily summary)
+  studio: "sonnet",             // brand-voice creative — quality-sensitive
+  journal: "sonnet",            // public accountability writing
+  "calibration-insight": "haiku", // short structured stat read — validated safe for Haiku
+  "model-court": "sonnet",      // adversarial reasoning (opus when available)
+  content: "sonnet",            // editorial drafts
+  brief: "haiku",               // templated daily summary — validated safe for Haiku
 };
 
 /** Resolve the model id for a surface. Unknown surfaces fall back to Sonnet. */

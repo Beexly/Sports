@@ -22,10 +22,19 @@ describe("model router", () => {
     expect(MODELS.opus).toBe("claude-opus-4-8");
   });
 
-  it("routes every known surface to Sonnet today (zero behavior change)", () => {
+  it("routes surfaces to their validated tiers", () => {
     expect(ALL_SURFACES.length).toBeGreaterThan(0);
+    // Haiku surfaces — validated low-complexity structured outputs
+    expect(pickModelForSurface("brief")).toBe(MODELS.haiku);
+    expect(pickModelForSurface("calibration-insight")).toBe(MODELS.haiku);
+    // Sonnet surfaces — editorial + brand-voice quality required
+    expect(pickModelForSurface("studio")).toBe(MODELS.sonnet);
+    expect(pickModelForSurface("journal")).toBe(MODELS.sonnet);
+    expect(pickModelForSurface("model-court")).toBe(MODELS.sonnet);
+    expect(pickModelForSurface("content")).toBe(MODELS.sonnet);
+    // No surface falls back to an undefined tier
     for (const surface of ALL_SURFACES) {
-      expect(pickModelForSurface(surface)).toBe(MODELS.sonnet);
+      expect(pickModelForSurface(surface)).toBeTruthy();
     }
   });
 });
