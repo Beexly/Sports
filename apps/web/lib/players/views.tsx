@@ -19,6 +19,7 @@ import { loadNflverseEdgeSignals } from "@/lib/nflverse/edge-signals";
 import { loadNflverseInjuryReport } from "@/lib/nflverse/injury-report";
 import { loadSleeperMarketSignal } from "@/lib/sleeper/market-signal";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
+import { loadScoringZone } from "@/lib/intelligence/scoring-zone";
 
 /**
  * Player Lab view registry (SERVER).
@@ -72,7 +73,8 @@ export type SectionKind =
   | "edge"
   | "injuries"
   | "market"
-  | "dfs";
+  | "dfs"
+  | "scoring-zone";
 
 /**
  * One DataTable's worth of fully-serializable data + presentation meta. The
@@ -599,6 +601,39 @@ async function loadDfsView(): Promise<ViewResult> {
   };
 }
 
+async function loadScoringZoneView(): Promise<ViewResult> {
+  const sz = await loadScoringZone();
+  if (sz.status !== "live" || sz.rows.length === 0) {
+    return {
+      status: "source-error",
+      error: "Scoring-zone opportunity data unavailable. The nflverse play-by-play fetch failed or returned no red-zone rows.",
+      sourceIds: ["nflverse"],
+      sections: [],
+    };
+  }
+  const throughLabel = sz.throughWeek ? `through week ${sz.throughWeek}` : "";
+  return {
+    status: "live",
+    windowLabel: `Season ${sz.season}${throughLabel ? ` · ${throughLabel}` : ""}`,
+    sourceIds: ["nflverse"],
+    sections: [
+      {
+        id: "scoring-zone",
+        kind: "scoring-zone",
+        eyebrow: `Red zone · scoring zone opportunity`,
+        title: "Who owns the TD equity — and who's borrowed it.",
+        blurb:
+          "Red-zone opportunity share (sticky role) vs. TD conversion rate (luck-heavy). A high share with few TDs is a buy — the scores are due; a high TD rate with a thin share is a sell.",
+        footnote: sz.note,
+        rows: sz.rows,
+        enumOptions: distinctOptions(sz.rows, (r) => (r as { position: string }).position),
+        showRank: true,
+        minWidth: 700,
+      },
+    ],
+  };
+}
+
 // ── Registry ──────────────────────────────────────────────────────────────────
 
 export const PLAYER_VIEWS: readonly PlayerView[] = [
@@ -770,6 +805,23 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     ],
     jsonHref: "/api/dfs/salaries",
     load: loadDfsView,
+  },
+  {
+    slug: "scoring-zone",
+    label: "Scoring Zone",
+    tabTooltip: "Red-zone opportunity share + TD equity — buy/sell signal",
+    eyebrow: "Scoring Zone — Red Zone Intel",
+    title: "Who owns the TD equity. Who borrowed it.",
+    description:
+      "Red-zone and goal-line opportunity from real nflverse play-by-play. TD equity is in the ROLE — who gets the ball inside the 20, the 10, and the 5. Touchdowns are luck; opportunity share is sticky. High share, few TDs: buy. Low share, many TDs: sell.",
+    explainer: [
+      { term: "RZ Share", definition: "Player's share of his team's total scoring-zone carries + targets (inside the 20). Sticky week to week." },
+      { term: "Inside 5", definition: "Combined carries and targets inside the 5-yard line — the goal-line equity that converts at the highest TD rate." },
+      { term: "TD Rate", definition: "Raw TDs per scoring-zone opportunity, then regressed toward the positional mean — corrects for small samples." },
+      { term: "Buy / Sell", definition: "High share, low conversion = buy. Low share, high conversion = sell. Regression to the mean is the edge." },
+    ],
+    jsonHref: "/api/intelligence/scoring-zone",
+    load: loadScoringZoneView,
   },
 ];
 

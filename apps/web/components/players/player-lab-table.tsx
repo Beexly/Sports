@@ -24,6 +24,7 @@ import type { EdgeSignalRow } from "@/lib/nflverse/edge-signals";
 import type { InjuryRow, ReportStatus } from "@/lib/nflverse/injury-report";
 import type { SleeperTrendingPlayer } from "@/lib/sleeper/market-signal";
 import type { DfsSalaryRow } from "@/lib/dfs/salaries";
+import type { ScoringZoneRow } from "@/lib/intelligence/scoring-zone";
 import type { EnumOption, SectionData } from "@/lib/players/views";
 
 /**
@@ -387,6 +388,39 @@ function dfsColumns(): ReadonlyArray<Column<DfsSalaryRow>> {
   ];
 }
 
+// ── SCORING ZONE ──────────────────────────────────────────────────────────────
+
+function scoringZoneColumns(): ReadonlyArray<Column<ScoringZoneRow>> {
+  const SIGNAL_LABEL: Record<ScoringZoneRow["signal"], string> = {
+    buy: "Buy",
+    sell: "Sell",
+    "in-line": "In-line",
+  };
+  return [
+    { key: "name", label: "Player", render: (r) => playerCell(r.name) },
+    { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
+    { key: "position", label: "Pos" },
+    { key: "rzCarries", label: "RZ Car", align: "right", numeric: true, tooltip: "carries inside the 20-yard line" },
+    { key: "rzTargets", label: "RZ Tgt", align: "right", numeric: true, tooltip: "targets inside the 20-yard line" },
+    { key: "rzShare", label: "RZ Share", align: "right", numeric: true, tooltip: "player's share of team scoring-zone opportunities", render: (r) => fmtPctRounded(r.rzShare) },
+    { key: "sharePct", label: "Share %ile", align: "right", numeric: true, tooltip: "opportunity-share percentile within the qualified pool", render: (r) => String(r.sharePct) },
+    { key: "inside5", label: "Inside 5", align: "right", numeric: true, tooltip: "carries + targets inside the 5-yard line — highest TD equity" },
+    { key: "rzTds", label: "RZ TDs", align: "right", numeric: true },
+    { key: "tdRate", label: "TD Rate", align: "right", numeric: true, tooltip: "raw TDs per scoring-zone opportunity", render: (r) => fmtPercent(r.tdRate) },
+    { key: "expectedTdRate", label: "xTD Rate", align: "right", numeric: true, tooltip: "TD rate regressed toward the positional mean", render: (r) => fmtPercent(r.expectedTdRate) },
+    {
+      key: "signal",
+      label: "Signal",
+      tooltip: "buy = high share / low TDs so far; sell = low share / TDs outrunning role",
+      sortValue: (r) => r.signal,
+      render: (r) => {
+        const cls = r.signal === "buy" ? "text-emerald-700" : r.signal === "sell" ? "text-rose-700" : "text-ink-1";
+        return <span className={`font-semibold ${cls}`}>{SIGNAL_LABEL[r.signal]}</span>;
+      },
+    },
+  ];
+}
+
 // ── Per-kind presentation binding ─────────────────────────────────────────────
 
 /**
@@ -637,6 +671,23 @@ function resolveBinding(section: SectionData): SectionBinding {
         enumAccessor: (row) => (row as DfsSalaryRow).position,
         enumLabel: POS_ENUM_LABEL,
         rowTone: (row) => ((row as DfsSalaryRow).agreement === "disagree" ? "bad" : null),
+      };
+    }
+    case "scoring-zone": {
+      return {
+        columns: scoringZoneColumns() as ReadonlyArray<Column<unknown>>,
+        rowKey: (row) => (row as ScoringZoneRow).playerId,
+        searchAccessor: (row) => {
+          const r = row as ScoringZoneRow;
+          return `${r.name} ${r.team} ${r.position}`;
+        },
+        enumAccessor: (row) => (row as ScoringZoneRow).position,
+        enumLabel: POS_ENUM_LABEL,
+        rowTitle: (row) => (row as ScoringZoneRow).note,
+        rowTone: (row) => {
+          const r = row as ScoringZoneRow;
+          return r.signal === "buy" ? "good" : r.signal === "sell" ? "bad" : null;
+        },
       };
     }
     default: {
