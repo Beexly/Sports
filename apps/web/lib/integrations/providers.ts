@@ -26,7 +26,7 @@ type Env = Record<string, string | undefined>;
 type ProviderDef = Omit<ProviderStatus, "configured">;
 
 const PROVIDERS: readonly ProviderDef[] = [
-  { key: "projections", name: "Player projections", category: "projections", envVar: "PROJECTIONS_PROVIDER", unlocks: "Live lineup/waiver/trade/DFS recommendations on real players", note: "A licensed projections feed. Until set, all fantasy tools use the illustrative pool." },
+  { key: "projections", name: "Player projections", category: "projections", envVar: "PROJECTIONS_PROVIDER", unlocks: "Live lineup/waiver/trade/DFS recommendations on real players", note: "Set to \"graded\" to run OUR OWN nflverse-graded model (no purchase needed) — a deliberate go-live decision, not a vendor dependency. A licensed third-party feed can replace it later via the same seam." },
   { key: "image-safety", name: "NSFW image classifier", category: "image-safety", envVar: "NSFW_CLASSIFIER_URL", unlocks: "Automated image/video moderation for any media surface", note: "An open_nsfw / nsfwjs-class model. Until set, media fails closed to human review." },
   { key: "league-espn", name: "ESPN league OAuth", category: "league-oauth", envVar: "ESPN_OAUTH_CLIENT_ID", unlocks: "Read-only ESPN roster sync", note: "ESPN requires OAuth. Sleeper (public) already works without this." },
   { key: "league-yahoo", name: "Yahoo league OAuth", category: "league-oauth", envVar: "YAHOO_OAUTH_CLIENT_ID", unlocks: "Read-only Yahoo roster sync", note: "Yahoo OAuth app credentials." },

@@ -30,7 +30,7 @@ Action Network, Dimers, BetWise, BettingPros.
 
 | Feature | Theirs | Ours | Status |
 |---|---|---|---|
-| Rankings / projections | Both | Graded pool engine; flips live with `PROJECTIONS_PROVIDER=live` | 🟡 needs licensed feed |
+| Rankings / projections | Both | **Our own nflverse-graded model** — set `PROJECTIONS_PROVIDER=graded` (env flag, NO purchase) | ✅ go-live flag |
 | Draft tools (VOR, tiers) | FBG Draft Dominator | `/fantasy/draft` — VOR, tier cliffs, run alerts | ✅ |
 | Start/sit + lineup | Both | `/fantasy/lineup` | ✅ |
 | Waiver/FAAB advisor | FBG | `/fantasy/waivers` | ✅ |
@@ -64,10 +64,11 @@ Action Network, Dimers, BetWise, BettingPros.
 ## Honest gaps ranked (what to build next)
 
 1. ~~Strength of schedule~~ — **shipped 2026-06-12: Schedule Lab `/sos`** (FBG parity ✅)
-2. **ESPN/Yahoo league sync** — OAuth apps + ToS review required, not just code.
-3. **Public betting %** — needs a paid consensus vendor; route through vendor questionnaire.
-4. **Ownership projection model** — per-slate model once live salary feed is connected.
-5. ~~Unified history explorer~~ — **shipped 2026-06-12: History Lab `/history`** (MLB spine live; NFL pbp next).
+2. ~~Projections~~ — **no vendor needed**: `PROJECTIONS_PROVIDER=graded` activates our own model (corrected 2026-06-12).
+3. **ESPN/Yahoo league sync** — OAuth apps + ToS review required, not just code.
+4. **Public betting %** — needs a paid consensus vendor; route through vendor questionnaire.
+5. **Ownership projection model** — per-slate model once live salary feed is connected.
+6. ~~Unified history explorer~~ — **shipped 2026-06-12: History Lab `/history`** (MLB spine live; NFL pbp next).
 
 ## What we have that they don't
 
