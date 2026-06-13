@@ -31,8 +31,8 @@ export default function Page() {
             run_id: String(r.run_id ?? ""),
             type: String(r.type ?? ""),
             status: String(r.status ?? ""),
-            mae: Number(r.mae ?? 0),
-            calibration: Number(r.calibration ?? 0),
+            mae: typeof r.mae === "number" ? r.mae : "—",
+            calibration: String(r.calibration ?? "—"),
             proven: String(r.what_is_proven ?? "")
           }))}
           maxRows={50}
