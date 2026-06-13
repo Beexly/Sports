@@ -16,6 +16,7 @@ import { AskJarvisPanel } from "@/components/cockpit/ask-jarvis-panel";
 import { CapabilitySystemMap } from "@/components/cockpit/capability-system-map";
 import { AgentCouncilPanel } from "@/components/cockpit/agent-council-panel";
 import { buildLiveMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intelligence-state";
+import { buildLiveLedgerStatus, type LedgerStatus } from "@/lib/jarvis/ledger-types";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { startOfDay, endOfDay } from "date-fns";
 
@@ -298,7 +299,7 @@ export default async function CockpitOverview() {
            Rendered unconditionally: the capability registry, agent council,
            and memory protocol are static truth, independent of DB state. */}
       <CapabilitySystemMap />
-      <AgentCouncilPanel />
+      <AgentCouncilPanel ledger={await buildLiveLedgerStatus()} />
       <MemoryProtocolZone memory={await buildLiveMemoryStatus()} />
 
       {/* ── Zone 9: Drilldowns ───────────────────────────────────────── */}

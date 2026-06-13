@@ -2,12 +2,14 @@
  * Jarvis Ledger Types
  *
  * Types for the Agent Handoff Ledger (spec §8) and Subagent Run Ledger (spec §9).
- * These types exist as honest architecture design — no database store is wired yet.
- * No fake data is generated, no simulated ledger entries are created.
  *
- * buildLedgerStatus() returns the honest posture: both ledgers are not_connected.
- * A database migration is required before any entries can be persisted.
+ * buildLedgerStatus() — sync fallback, returns not_connected posture.
+ * buildLiveLedgerStatus() — async probe: COUNT queries on the new tables.
+ *   Success → connected posture with REAL counts.
+ *   Any failure → not_connected posture (never throws).
  */
+
+import { db } from "@sports/db";
 
 // ─── Shared types ─────────────────────────────────────────────────────────────
 
@@ -81,31 +83,86 @@ export interface SubagentRunEntry {
 
 // ─── Ledger connection posture ─────────────────────────────────────────────────
 
-/** The only valid connection state today — no store is wired. */
-export type LedgerConnectionState = "not_connected";
-
-export interface LedgerStatus {
-  handoffLedger: LedgerConnectionState;
-  subagentRunLedger: LedgerConnectionState;
+/** Posture when no store is reachable. */
+export interface NotConnectedLedgerStatus {
+  handoffLedger: "not_connected";
+  subagentRunLedger: "not_connected";
   reason: string;
   storeAvailable: false;
 }
 
-// ─── Builder ──────────────────────────────────────────────────────────────────
+/** Posture when the store is reachable and COUNT queries succeeded. */
+export interface ConnectedLedgerStatus {
+  handoffLedger: "connected";
+  subagentRunLedger: "connected";
+  reason: string;
+  storeAvailable: true;
+  /** Total handoff entries logged. */
+  handoffCount: number;
+  /** Subagent runs still awaiting parent review. */
+  pendingReviewCount: number;
+  /** Total subagent run entries logged. */
+  subagentRunCount: number;
+}
+
+export type LedgerStatus = NotConnectedLedgerStatus | ConnectedLedgerStatus;
+
+// Backward-compat: LedgerConnectionState used in the old narrow type.
+export type LedgerConnectionState = "not_connected";
+
+// ─── Sync fallback builder ────────────────────────────────────────────────────
 
 /**
- * Returns the honest ledger posture.
+ * Returns the not-connected posture synchronously.
  *
- * Both ledgers are not_connected. No entries are simulated or fabricated.
- * A database migration is required before handoff or subagent run entries
- * can be persisted.
+ * Use when you cannot await (e.g. static rendering, fallback path).
+ * Nothing is simulated or fabricated.
  */
-export function buildLedgerStatus(): LedgerStatus {
+export function buildLedgerStatus(): NotConnectedLedgerStatus {
   return {
     handoffLedger: "not_connected",
     subagentRunLedger: "not_connected",
     reason:
-      "No ledger store wired. A database migration is required before handoff or subagent run entries can be persisted. No entries are simulated.",
+      "No ledger store wired. A database migration is required before handoff or subagent run entries " +
+      "can be persisted. No entries are simulated.",
     storeAvailable: false,
   };
+}
+
+// ─── Async probe builder ──────────────────────────────────────────────────────
+
+/**
+ * Async variant: runs cheap COUNT queries against agent_handoffs and subagent_runs.
+ *
+ * Success → ConnectedLedgerStatus with REAL counts from the DB:
+ *   - handoffCount: total rows in agent_handoffs
+ *   - subagentRunCount: total rows in subagent_runs
+ *   - pendingReviewCount: rows with parent_review_status = 'pending_review'
+ *
+ * Any DB error (unavailable, table not yet migrated, etc.) → returns the sync
+ * buildLedgerStatus() not-connected posture. Never throws.
+ */
+export async function buildLiveLedgerStatus(): Promise<LedgerStatus> {
+  try {
+    const [handoffCount, subagentRunCount, pendingReviewCount] = await Promise.all([
+      db.agentHandoff.count(),
+      db.subagentRun.count(),
+      db.subagentRun.count({ where: { parent_review_status: "pending_review" } }),
+    ]);
+
+    const connected: ConnectedLedgerStatus = {
+      handoffLedger: "connected",
+      subagentRunLedger: "connected",
+      reason: "Ledger store connected (PostgreSQL). Handoff and subagent run entries are being persisted.",
+      storeAvailable: true,
+      handoffCount,
+      subagentRunCount,
+      pendingReviewCount,
+    };
+
+    return connected;
+  } catch {
+    // DB unavailable or table not yet migrated — fall back to not-connected posture.
+    return buildLedgerStatus();
+  }
 }

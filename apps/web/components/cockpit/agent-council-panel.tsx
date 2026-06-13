@@ -4,6 +4,7 @@ import {
   type AgentSeat,
   type CouncilSeatStatus,
 } from "@/lib/jarvis/agent-council";
+import type { LedgerStatus } from "@/lib/jarvis/ledger-types";
 
 /**
  * Agent Council Panel — department-oriented view of the governed council.
@@ -27,7 +28,7 @@ const SEAT_STATUS_LABEL: Readonly<Record<CouncilSeatStatus, string>> = {
 
 // ─── Panel ────────────────────────────────────────────────────────────────────
 
-export function AgentCouncilPanel() {
+export function AgentCouncilPanel({ ledger }: { ledger: LedgerStatus }) {
   const counts = getCouncilSeatCounts();
   const byDepartment = getCouncilByDepartment();
 
@@ -70,17 +71,29 @@ export function AgentCouncilPanel() {
         ))}
       </div>
 
-      {/* Ledger posture — honest: typed, no store yet */}
+      {/* Ledger posture — honest: shows real counts when connected */}
       <div
         data-testid="council-ledger-posture"
         className="border-t border-titanium/30 px-5 py-3"
       >
-        <p className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
-          Handoff ledger · Subagent run ledger:{" "}
-          <span className="text-yellow-300">Not connected</span> — entry types
-          are defined; the store lands with a later migration. Nothing is
-          logged yet and nothing pretends to be.
-        </p>
+        {ledger.storeAvailable ? (
+          <p className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
+            Handoff ledger:{" "}
+            <span className="text-plasma font-bold tabular-nums">{ledger.handoffCount}</span>{" "}
+            entries · Subagent run ledger:{" "}
+            <span className="text-plasma font-bold tabular-nums">{ledger.subagentRunCount}</span>{" "}
+            runs ·{" "}
+            <span className="text-yellow-300 font-bold tabular-nums">{ledger.pendingReviewCount}</span>{" "}
+            pending parent review
+          </p>
+        ) : (
+          <p className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
+            Handoff ledger · Subagent run ledger:{" "}
+            <span className="text-yellow-300">Not connected</span> — entry types
+            are defined; the store lands with a later migration. Nothing is
+            logged yet and nothing pretends to be.
+          </p>
+        )}
       </div>
     </section>
   );

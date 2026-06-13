@@ -306,3 +306,26 @@ export async function linkMemoryToDecision(memoryId: string, decisionId: string)
     wrapDbError(err);
   }
 }
+
+/**
+ * Link a memory event to the subagent run that produced it.
+ *
+ * Validates that the target run exists before connecting. Follows the
+ * same error-rethrow pattern as linkMemoryToDecision: typed errors
+ * propagate; DB errors are wrapped as MemoryStoreUnavailableError.
+ */
+export async function linkMemoryToAgentRun(memoryId: string, agentRunId: string) {
+  try {
+    // Validate the run exists before connecting — throws if not found.
+    await db.subagentRun.findUniqueOrThrow({ where: { id: agentRunId } });
+
+    return await db.jarvisMemoryEvent.update({
+      where: { id: memoryId },
+      data: {
+        related_agent_run_id: agentRunId,
+      },
+    });
+  } catch (err) {
+    wrapDbError(err);
+  }
+}
