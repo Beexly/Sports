@@ -1,0 +1,1 @@
+export default function Page(){return <main><h1>Scouting</h1><p>StatKing rights-gated intelligence foundation route.</p></main>}

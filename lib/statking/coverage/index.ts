@@ -1,0 +1,1 @@
+export function summarizeCoverage(report:any){return {active:Object.values(report.coverage_by_data_type||{}).filter((v)=>v==="active_proxy").length,missing:report.missing_high_impact||[],licenseRequired:Object.values(report.coverage_by_data_type||{}).filter((v)=>v==="license_required").length}}
