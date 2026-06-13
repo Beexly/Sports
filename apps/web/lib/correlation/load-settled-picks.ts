@@ -4,7 +4,7 @@ import type { CorrelationQuery } from "@/lib/correlation/query-schema";
 
 const CORRELATION_HISTORY_LIMIT = 5000;
 
-const settledPickSelect = Prisma.validator<Prisma.PickSelect>()({
+const settledPickSelect = {
   id: true,
   pickType: true,
   riskLevel: true,
@@ -25,7 +25,7 @@ const settledPickSelect = Prisma.validator<Prisma.PickSelect>()({
       },
     },
   },
-});
+} satisfies Prisma.PickSelect;
 
 export type CorrelationSettledPick = Prisma.PickGetPayload<{
   select: typeof settledPickSelect;
