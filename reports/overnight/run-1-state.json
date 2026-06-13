@@ -1,0 +1,28 @@
+{
+  "run": 1,
+  "status": "completed",
+  "mode": "WRITE",
+  "branch": "claude/magical-volta-fxd4qj",
+  "started_at": "2026-06-13T07:08:00Z",
+  "completed_at": "2026-06-13T07:22:00Z",
+  "streams_completed": ["repair/prisma-generate", "security-sweep/cron-timing-attack", "security-sweep/dev-fake-admin", "grow/postinstall-hook", "grow/auth-contract-tests"],
+  "streams_blocked": [],
+  "leverage_total": 162,
+  "findings_added": 6,
+  "tests_before": 4349,
+  "tests_after": 4362,
+  "tests_added": 13,
+  "ts_errors_before": 229,
+  "ts_errors_after": 0,
+  "commits_pushed": 2,
+  "prs_opened": 0,
+  "blocked_questions": [
+    "Next.js 14→16 major version bump: is this approved? (fixes 10 CVEs including HTTP smuggling + XSS)"
+  ],
+  "top_priorities_next_run": [
+    "upgrade-nextjs-14-to-16 (5 HIGH CVEs + 1 CRITICAL, requires owner approval first)",
+    "api-route-auth-audit (check all /api routes touching db without auth check)",
+    "clearance-engine-cron-wire (cron refresh-odds calls TheOddsAPI without clearance check)"
+  ],
+  "next_action": "improve"
+}
