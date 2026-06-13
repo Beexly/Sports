@@ -4,6 +4,8 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { getPlate } from "@/lib/visual-production/asset-manifest";
 import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { GalaxySlateTwinLazy } from "@/components/slate-twin/galaxy-slate-twin-lazy";
@@ -53,6 +55,7 @@ const PREVIEW: ReadonlyArray<{ readonly title: string; readonly body: string; re
 export default async function ObservatoryPage() {
   const slate = await getSlateTwin();
   const live = slate.live;
+  const plate = getPlate("observatory-market-field");
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
@@ -60,6 +63,14 @@ export default async function ObservatoryPage() {
       <main className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden">
+          {plate && (
+            <GeneratedPlate
+              className="-z-30 opacity-60"
+              gradient={plate.gradient}
+              still={plate.still}
+              motion={plate.motion}
+            />
+          )}
           <div aria-hidden="true" className="absolute inset-0 -z-20">
             <InteractiveGalaxy />
           </div>
