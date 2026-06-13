@@ -35,6 +35,34 @@ const ROUTES: ReadonlyArray<{
   { path: "/changelog", priority: 0.5, changeFrequency: "weekly" },
   { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
+  // Daily intelligence surfaces
+  { path: "/board", priority: 0.8, changeFrequency: "daily" },
+  { path: "/brief", priority: 0.8, changeFrequency: "daily" },
+  { path: "/today", priority: 0.7, changeFrequency: "daily" },
+  { path: "/track", priority: 0.6, changeFrequency: "daily" },
+  { path: "/trends", priority: 0.6, changeFrequency: "daily" },
+  // Tools & education
+  { path: "/parlay-mri", priority: 0.7, changeFrequency: "weekly" },
+  { path: "/academy", priority: 0.7, changeFrequency: "weekly" },
+  { path: "/intelligence", priority: 0.7, changeFrequency: "weekly" },
+  { path: "/intelligence/engines", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/intelligence/metrics", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/optimizer", priority: 0.5, changeFrequency: "weekly" },
+  // Player & sport hubs
+  { path: "/players", priority: 0.7, changeFrequency: "daily" },
+  { path: "/nflverse", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/mlb", priority: 0.5, changeFrequency: "weekly" },
+  { path: "/nhl", priority: 0.5, changeFrequency: "weekly" },
+  { path: "/weather", priority: 0.5, changeFrequency: "daily" },
+  { path: "/fantasy", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/the-beat", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/gsn", priority: 0.5, changeFrequency: "weekly" },
+  // StatKing public surfaces
+  { path: "/stats", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/stats/compare", priority: 0.5, changeFrequency: "weekly" },
+  { path: "/stats/ask", priority: 0.5, changeFrequency: "weekly" },
+  { path: "/stats/proof", priority: 0.5, changeFrequency: "weekly" },
+  { path: "/stats/expert-board", priority: 0.5, changeFrequency: "weekly" },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

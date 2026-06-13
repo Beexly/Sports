@@ -8,6 +8,12 @@ import {
   getCouncilSeatCounts,
   getOwnedCapabilities,
   GUARDRAILS,
+  DEPARTMENT_HEADS,
+  getDepartmentHeads,
+  getDepartmentHead,
+  isDepartmentHead,
+  getReportingChain,
+  getDirectReports,
   type CouncilSeatStatus,
   type AgentSeat,
 } from "@/lib/jarvis/agent-council";
@@ -227,5 +233,76 @@ describe("spec §12 acceptance criteria", () => {
   it("guardrails list present with at least 8 entries", () => {
     expect(GUARDRAILS.length).toBeGreaterThanOrEqual(8);
     expect(GUARDRAILS.every((g) => g.length > 0)).toBe(true);
+  });
+});
+
+// ─── Department-head reporting hierarchy ──────────────────────────────────────
+
+describe("department head reporting hierarchy", () => {
+  it("every department has exactly one head, resolving to a seat in that department", () => {
+    const departments = new Set(AGENT_COUNCIL.map((s) => s.department));
+    for (const dept of departments) {
+      expect(DEPARTMENT_HEADS[dept], `department '${dept}' has no head`).toBeTruthy();
+    }
+    for (const [dept, codename] of Object.entries(DEPARTMENT_HEADS)) {
+      const head = getDepartmentHead(dept);
+      expect(head, `head ${codename} missing`).toBeDefined();
+      expect(head!.codename).toBe(codename);
+      expect(head!.department, `${codename} not in ${dept}`).toBe(dept);
+    }
+    expect(getDepartmentHeads().length).toBe(departments.size);
+  });
+
+  it("every department head reports to JARVIS (JARVIS itself reports to the Owner)", () => {
+    for (const head of getDepartmentHeads()) {
+      if (head.codename === "JARVIS") {
+        expect(head.reportsTo).toContain("Owner");
+      } else {
+        expect(head.reportsTo, `${head.codename} must report to JARVIS`).toContain("JARVIS");
+      }
+    }
+  });
+
+  it("every non-head seat reports to a seat inside its own department", () => {
+    for (const seat of AGENT_COUNCIL) {
+      if (isDepartmentHead(seat)) continue;
+      const manager = AGENT_COUNCIL.find((s) => s.codename === seat.reportsTo[0]);
+      expect(manager, `${seat.codename} reports to unknown ${seat.reportsTo[0]}`).toBeDefined();
+      expect(manager!.department, `${seat.codename} reports outside its department`).toBe(
+        seat.department,
+      );
+    }
+  });
+
+  it("every seat's reporting chain terminates at the Owner", () => {
+    for (const seat of AGENT_COUNCIL) {
+      const chain = getReportingChain(seat.id);
+      expect(chain[chain.length - 1], `${seat.codename}: ${chain.join("→")}`).toBe("Owner");
+    }
+  });
+
+  it("every non-head chain passes through its department head before reaching the Owner", () => {
+    for (const seat of AGENT_COUNCIL) {
+      if (isDepartmentHead(seat)) continue;
+      const head = DEPARTMENT_HEADS[seat.department]!;
+      const chain = getReportingChain(seat.id);
+      expect(chain, `${seat.codename} chain ${chain.join("→")} skips head ${head}`).toContain(head);
+    }
+  });
+
+  it("JARVIS is the direct manager of every department head except itself", () => {
+    const reports = getDirectReports("JARVIS").map((s) => s.codename);
+    for (const head of getDepartmentHeads()) {
+      if (head.codename === "JARVIS") continue;
+      expect(reports, `${head.codename} not a direct report of JARVIS`).toContain(head.codename);
+    }
+  });
+
+  it("AUDIT independence is preserved under the hierarchy (AC11 still holds)", () => {
+    const audit = getDepartmentHead("Results & Calibration")!;
+    for (const f of ["SCOUT", "DELTA", "PRISM", "ASCEND"]) {
+      expect(audit.reportsTo).not.toContain(f);
+      expect(audit.reviewedBy ?? []).not.toContain(f);
+    }
   });
 });
