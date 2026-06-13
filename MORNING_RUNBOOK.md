@@ -1,124 +1,47 @@
-# Morning Runbook — Recover StatKing, then Launch
+# Morning Runbook — StatKing integrated & green; launch is owner-gated
 
-_Written overnight 2026-06-13 by a Claude Code cloud session on branch
-`claude/friendly-fermat-fy99m2`. Read this top-to-bottom; it is the single
-source of truth for where everything actually is._
+_Updated overnight 2026-06-13. Branch: `claude/friendly-fermat-fy99m2`._
 
 ---
 
-## 0. The one fact that matters most
+## What happened overnight (the short version)
 
-**The StatKing work is NOT on GitHub.** A cloud session can only see what is
-pushed to `Beexly/Sports`. I fetched **all 60 remote branches** and verified:
+1. Codex's StatKing work finally landed on GitHub as **PR #19**
+   (`codex/upgrade-galaxy-statking-to-nfl-intelligence-system`). Earlier in the
+   night it was stranded on your laptop and its "created the PR" claims weren't
+   real yet — now it's actually pushed.
+2. **PR #19 as-is does NOT build.** I found and fixed three real defects, then
+   integrated the whole thing onto this branch. Everything is now green.
+3. **The site still isn't auto-live** — going to production needs your Vercel
+   secrets + Postgres (Section 3). That part only you can do.
 
-- Codex commits `486e030` ("Add autonomous StatKing integrity systems") and
-  `8e30e6d` ("Package StatKing Claude handoff") — **do not exist** anywhere.
-- No branch mentions `statking`, `rights ledger`, `integrity systems`, etc.
-- No file path like `rights_ledger.json`, `integrity_status.json`,
-  `apps/web/app/stats`, or `handoff/claude/statking/` exists in any branch.
+## What I fixed (all verified)
 
-Codex's last run reported *"An error occurred"* and *"Apply changes and continue
-locally?"* — so that work is stranded in a **local Codex checkout on your
-machine** (e.g. `Sports-canonical-2026-06-03`) and may not have committed
-cleanly. **Recover it before doing anything else** (Step 1). Nothing about the
-launch matters if the work you care about is lost.
+| # | Defect | Fix |
+|---|---|---|
+| 1 | **Build crash.** `/admin/statking/crown` + `/backtests` crashed at prerender reading `coverage_report.json`, which an over-broad `coverage/` gitignore rule had excluded from the repo. | Anchored the ignore rule, committed the report, and hardened `readJson()` so a missing snapshot degrades to an honest empty state instead of crashing. |
+| 2 | **Security hole.** All **31 `/admin/statking/*` cockpit pages had no access control** — world-readable. | Added the standard `auth()` + `role !== "ADMIN"` + `redirect()` guard to every page (enforced by `admin-routes-gating.test.ts`). |
+| 3 | **SEO gap.** The **26 public `/stats/*` pages had no metadata.** | Added unique `title` / `description` / `canonical` to each. |
 
-### Why Codex keeps saying "created the PR" when no PR exists
+**Verified state of this branch:** `typecheck` 0 errors · `next build` exit 0 (288 routes) · **4,538 tests pass (316 files)**.
 
-Re-verified twice (fetched all 61 branches + listed every open PR): the only
-open PRs are #18 (NFL House / market intelligence), #14 (pricing), #2 (operator
-docs). **No StatKing PR or branch is on GitHub.** Codex reported a **308-file /
-+151,059-line** change and hit *"the generated diff exceeds our size limit and
-could not be extracted"* → *"an error occurred."* That is the tell: Codex's
-environment **failed to apply/commit and never pushed.** A 151k-line diff is far
-too large to be just source — it almost certainly swept in **generated or data
-artifacts** (node_modules, `.next/`, large JSON snapshots, the 546-record
-ledger). So: don't trust "created the PR" from that tool until you see the branch
-on GitHub yourself. The work is on your disk; it just never left it.
+## What is REAL vs. foundation (do not over-claim)
 
----
+StatKing is a **rights-gated foundation**, not a finished "King of Stats." Per
+codex's own handoff (`handoff/claude/statking/DO_NOT_BREAK.md`):
+- Data is **fixture/snapshot-backed**, not live feeds. Don't market it as live.
+- Many `/stats/*` and `/admin/statking/*` pages are still **placeholder stubs**
+  (a heading + one line). They build, are secure, and are indexed — but they are
+  **not yet world-class UX.** Real content/UX is the next body of work
+  (`handoff/claude/statking/TODO_FOR_CLAUDE.md` lists 25 prioritized tasks).
+- Rights gates, fixture labels, and source lineage must **not** be weakened.
 
-## 1. RECOVER StatKing (do this first, on your LOCAL machine)
+## 3. Go-live checklist (owner-gated — only you can do these)
 
-A cloud session cannot reach your laptop's filesystem. You have to push it.
-For **each** local checkout that has StatKing work (start with the canonical
-one Codex was using):
+The Vercel project `sports-web` serves `galaxysportsedge.com` but reports
+`live: false`; every deploy so far is a branch preview. Production needs:
 
-```bash
-cd /path/to/Sports-canonical-2026-06-03      # your local checkout
-
-git status                                    # see what's uncommitted/untracked
-git stash list                                # check nothing important is stashed
-
-# Put EVERYTHING on a rescue branch so it cannot be lost:
-git checkout -b rescue/statking-$(date +%Y%m%d)
-git add -A
-git commit -m "Rescue: StatKing integrity systems + handoff (was unpushed local work)"
-git push -u origin rescue/statking-$(date +%Y%m%d)
-```
-
-Notes:
-- The Codex change was reportedly **308 files / +151,059 lines** — that size is
-  the reason its push failed. **First make sure you're not committing junk:**
-  ```bash
-  git status --short | wc -l            # how many files are really changing
-  cat .gitignore | grep -E "node_modules|.next|dist"   # confirm these are ignored
-  git ls-files --others --exclude-standard | grep -E "node_modules|\.next/" # should be empty
-  ```
-  If `git add -A` would stage `node_modules/` or `.next/`, fix `.gitignore`
-  first — those must never be committed. If a single commit still errors or is
-  rejected for size, commit in groups (e.g. `git add apps/web && git commit -m
-  "...statking app"`, then `git add handoff && git commit -m "...handoff"`).
-- After push, open the branch on GitHub and confirm the StatKing files are
-  actually there (`apps/web/app/stats/`, `apps/web/app/admin/statking/`,
-  `rights_ledger.json`, `handoff/claude/statking/`, the new tests).
-- Do the same for any **other** local checkout with unpushed work (the message
-  you sent mentioned new `app/studios/`, `app/no-bet/`, `lib/observability/`,
-  `trigger/`, etc. in `Sports-canonical-2026-06-03`). Don't trust memory —
-  `git status` in each checkout is the truth.
-
-**Once it's on GitHub, tell the next Claude session the branch name.** Then it
-can fetch it, run build/typecheck/tests against it, and reconcile it with the
-deployable lineage. Until then, no cloud session can include StatKing.
-
----
-
-## 2. What IS on GitHub right now — verified state
-
-I installed deps, generated the Prisma client, and ran the full gates on the
-reachable code. Baseline is healthy:
-
-| Gate | Result |
-|---|---|
-| `npm run db:generate` | ✅ generates `@prisma/client` |
-| `npm run typecheck --workspace=apps/web` | ✅ **0 errors** (only after `db:generate`) |
-| `npm run build` | ✅ exit 0, ~130 routes |
-| `npm run test --workspace=apps/web` | ✅ **4,349 tests / 313 files pass** |
-
-> Correction to the Codex report: the "typecheck fails on Prisma/generated-type
-> drift" warning was **just a missing `npm run db:generate`** in a fresh clone —
-> not real type debt. Run codegen first and it's clean.
-
----
-
-## 3. Launch state — what "go live" actually needs
-
-Vercel project `sports-web` (team "PickPilot's projects") exists; the domain
-`galaxysportsedge.com` / `www.galaxysportsedge.com` is attached. **But:**
-
-- Project reports `live: false`; **all ~20 recent deployments are branch
-  previews** (`target: null`). There is **no promoted production deployment.**
-- A production deploy runs `prisma migrate deploy` at build
-  (`scripts/deploy/migrate-if-configured.mjs`), which **hard-requires
-  `DATABASE_URL` + `DIRECT_URL` in Vercel's Production env.** Previews skip
-  migration — which is why previews are green and tell you nothing about prod.
-
-### Go-live checklist (owner-gated — only you can do these)
-
-1. **Pick the canonical codebase** (see Step 4). For a real launch this must be
-   the branch that contains StatKing once it's pushed (Step 1).
-2. **Set Production env vars in Vercel** (Settings → Environment Variables →
-   Production):
+1. **Set Production env vars in Vercel** (Settings → Env Vars → Production):
    `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`,
    `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `THE_ODDS_API_KEY`,
    `ANTHROPIC_API_KEY`, `REDIS_URL`, `STRIPE_SECRET_KEY`,
@@ -126,49 +49,28 @@ Vercel project `sports-web` (team "PickPilot's projects") exists; the domain
    `STRIPE_PRO_MONTHLY_PRICE_ID`, `STRIPE_PRO_ANNUAL_PRICE_ID`,
    `STRIPE_ELITE_MONTHLY_PRICE_ID`, `STRIPE_ELITE_ANNUAL_PRICE_ID`,
    `NEXT_PUBLIC_APP_URL=https://galaxysportsedge.com`.
-3. **Provision Postgres** (with both pooled `DATABASE_URL` and direct
-   `DIRECT_URL`). The prod build migrates automatically.
-4. **Verify before promoting:** create `.env.production.local` locally with the
-   real values and run `node scripts/check-deploy-readiness.mjs` — it checks
-   Postgres, Stripe, Odds API, Anthropic, Redis, and crons. Green = safe.
-5. **Stripe:** use **live** keys, and register the webhook at
-   `/api/webhooks/stripe`. Run `node scripts/seed-stripe-prices.mjs` if the
-   price IDs aren't created yet.
-6. **Promote to production** in Vercel (set the production branch and push, or
-   promote a build). The domain then serves it.
+2. **Provision Postgres** (pooled `DATABASE_URL` + direct `DIRECT_URL`). The
+   production build runs `prisma migrate deploy` automatically.
+3. **Verify before promoting:** create `.env.production.local`, then
+   `node scripts/check-deploy-readiness.mjs` — expect all green.
+4. **Stripe:** live keys + webhook at `/api/webhooks/stripe`;
+   `node scripts/seed-stripe-prices.mjs` if price IDs aren't created.
+5. **Promote to production** in Vercel (set production branch / promote a build).
 
-> Why I did **not** auto-launch overnight: doing so would put a real-money site
-> live (a) on a codebase that is **missing StatKing** — the work you called
-> "huge" — and (b) on production secrets I can neither supply nor verify. A
-> wrong/unverified launch on a paid product is harder to undo than to delay.
-> This is also exactly what StatKing's own rights gates and CLAUDE.md rule #1
-> ("no implying unavailable data is live") are built to prevent.
+## Branch note
 
----
+- **This branch (`claude/friendly-fermat-fy99m2`) is the corrected, green
+  one** — it has StatKing + the three fixes + all tests passing.
+- **PR #19's own branch still has the build break** (my fixes aren't on it; I'm
+  scoped to develop on this branch). To ship StatKing, merge **this** branch, or
+  tell the next session to push the three fixes onto the PR #19 branch.
+- Repo hygiene: there are **60+ branches with no common history**. Converging on
+  one canonical line (this one) and retiring the rest is the real fix for work
+  getting stranded.
 
-## 4. The bigger structural issue: 60 branches, no convergence
+## TL;DR
 
-`origin/main` and the `claude/*` lines **share no merge base** — unrelated
-histories. There are **60 remote branches** (47 `claude/*`, including ~20
-`magical-volta-*` from a swarm). This fragmentation is why work keeps getting
-"lost" — each session forks a new branch and nothing converges.
-
-**Recommendation:** pick ONE canonical branch, merge StatKing into it, fast-
-forward `main` to it, and stop spawning parallel branches. Reachable launch
-candidates today (before StatKing): PR **#18** (`claude/wonderful-ptolemy-qh7pnq`,
-the most documented launch line) and `claude/adoring-knuth-mhg8m4` (last Vercel
-preview: 4,349 tests, typecheck clean, build clean). Neither has StatKing — so
-the real canonical branch is the StatKing rescue branch from Step 1, reconciled
-with one of these.
-
----
-
-## TL;DR for morning-you
-
-1. **Push your local StatKing work** (Step 1) — most urgent; it's not lost, but
-   it's only on your laptop.
-2. The code already on GitHub is **green and deployable**, but `galaxysportsedge.com`
-   is **not live yet** and going live needs your **Vercel Production secrets +
-   Postgres** (Step 3).
-3. Tell the next Claude session the rescue branch name and it can finish the
-   reconcile + launch with you.
+StatKing is **in, building, secure, and tested** on this branch. It is a solid
+foundation — not yet a finished product, and not yet live. To launch: set the
+Vercel Production secrets + Postgres (Section 3) and promote. To make it truly
+"world-class," work through `handoff/claude/statking/TODO_FOR_CLAUDE.md`.
