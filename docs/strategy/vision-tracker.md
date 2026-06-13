@@ -52,7 +52,7 @@ Simulation Cloud QUEUED · Calibration Panel ✓ + Honest Band ✓ · CLV Tracke
 | Stat commandment (source/timestamp/definition/n/weakness/decision-use) | PARTIAL — freshness stamps ✓, explainers ✓, stability ✓; full envelope per metric QUEUED |
 | Stat Stability Grade | DONE — production/snaps/edge views |
 | Line Death Clock | HEARTBEAT DONE — capture-window fair-price drift on the Market Fair Board; full decay clock (per-pick, time-to-zero) QUEUED |
-| Market Gravity Index (quantified) | QUEUED — math proposal first |
+| Market Gravity Index (quantified) | DONE — `marketGravityIndex` (conviction × agreement × liquidity), badge on Market Fair Board (2026-06-12) |
 | QB Pressure Sensitivity / Protection Stress indices | QUEUED — data live, derivation next |
 | Script Elasticity / False Favorite / Narrative Risk / Public Comfort | PARKED until defensible math exists |
 | DuckDB/Polars/Dagster/dbt/ClickHouse | OWNER — infra decision, current stack not the bottleneck |

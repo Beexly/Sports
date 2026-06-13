@@ -100,4 +100,22 @@ describe("the surface honors the gates", () => {
     const raw = component.match(/(?:text|bg|border)-(?:gray|green|red|yellow)-\d+/g);
     expect(raw ?? []).toEqual([]);
   });
+
+  it("renders the Market Gravity badge and frames it as conviction, not correctness", () => {
+    expect(component).toContain("GravityBadge");
+    expect(component).toContain('data-testid="gravity-badge"');
+    expect(component.toLowerCase()).toMatch(/not whether it'?s right/);
+  });
+});
+
+describe("gravity flows through the builder", () => {
+  it("attaches a Market Gravity Index to every built read", () => {
+    const result = buildH2hMarketRead([
+      row("book-a", -600, +450, "2026-06-12T12:00:00Z"),
+      row("book-b", -610, +460, "2026-06-12T12:00:00Z"),
+    ]);
+    expect(result).not.toBeNull();
+    expect(result!.gravity.side).toBe("home");
+    expect(result!.gravity.index).toBeGreaterThan(0);
+  });
 });

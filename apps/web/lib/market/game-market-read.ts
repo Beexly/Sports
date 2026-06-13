@@ -1,4 +1,9 @@
-import { consensusNoVig, type ConsensusMarketRead } from "@sports/prediction-engine";
+import {
+  consensusNoVig,
+  marketGravityIndex,
+  type ConsensusMarketRead,
+  type MarketGravity,
+} from "@sports/prediction-engine";
 
 /**
  * Game-level market read — turns captured per-book H2H odds rows into the
@@ -31,6 +36,8 @@ export interface GameMarketRead {
    * bleeding, from real captured history only.
    */
   readonly homeDriftPp: number | null;
+  /** Market Gravity Index — how strongly the market pulls toward one side. */
+  readonly gravity: MarketGravity;
 }
 
 /**
@@ -93,7 +100,12 @@ export function buildH2hMarketRead(
     }
   }
 
-  return { consensus, freshestFetchedAt: freshest.fetchedAt.toISOString(), homeDriftPp };
+  return {
+    consensus,
+    freshestFetchedAt: freshest.fetchedAt.toISOString(),
+    homeDriftPp,
+    gravity: marketGravityIndex(consensus),
+  };
 }
 
 function isPrice(value: number | null): value is number {

@@ -1,3 +1,4 @@
+import type { MarketGravity } from "@sports/prediction-engine";
 import { loadMarketFairBoard } from "@/lib/market/load-market-fair-board";
 import {
   NUMERIC_TEXT_CLASS,
@@ -5,6 +6,38 @@ import {
   formatPercent,
   formatRatioAsPercent,
 } from "@/lib/format/stat";
+
+const GRAVITY_LABEL: Record<MarketGravity["band"], string> = {
+  strong: "Strong pull",
+  moderate: "Moderate pull",
+  slight: "Slight lean",
+  balanced: "Balanced",
+};
+
+/**
+ * Market Gravity Index badge — how hard the market is pulling, and which way.
+ * Magenta (market heat) for a strong pull; cooler tones as it weakens. The
+ * index measures the market's CONVICTION, not whether it is right.
+ */
+function GravityBadge({ gravity }: { gravity: MarketGravity }) {
+  const tone =
+    gravity.band === "strong"
+      ? "border-plasma/40 text-plasma"
+      : gravity.band === "moderate"
+        ? "border-ultraviolet/40 text-ion-1"
+        : "border-titanium text-ion-2";
+  const dir = gravity.side === "none" ? "" : ` → ${gravity.side}`;
+  return (
+    <span
+      data-testid="gravity-badge"
+      title="Market Gravity Index (0–100): conviction × book agreement × coverage. Measures how hard the market pulls — not whether it's right."
+      className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${tone} ${NUMERIC_TEXT_CLASS}`}
+    >
+      Gravity {gravity.index}
+      {dir} · {GRAVITY_LABEL[gravity.band]}
+    </span>
+  );
+}
 
 /**
  * Market Fair Board — the market's own price with the margin removed.
@@ -88,18 +121,21 @@ export async function MarketFairBoard() {
                     )}
                   </p>
                 </div>
-                <div className={`flex items-center gap-3 text-sm ${NUMERIC_TEXT_CLASS}`}>
-                  <span className={homeLeads ? "font-semibold text-orbital-cyan" : "text-ion-1"}>
-                    Home {formatRatioAsPercent(c.fairHomeProb)}
-                  </span>
-                  {c.fairDrawProb !== null && (
-                    <span className="text-ion-2">
-                      Draw {formatRatioAsPercent(c.fairDrawProb)}
+                <div className="flex flex-col items-start gap-1 sm:items-end">
+                  <div className={`flex items-center gap-3 text-sm ${NUMERIC_TEXT_CLASS}`}>
+                    <span className={homeLeads ? "font-semibold text-orbital-cyan" : "text-ion-1"}>
+                      Home {formatRatioAsPercent(c.fairHomeProb)}
                     </span>
-                  )}
-                  <span className={!homeLeads ? "font-semibold text-orbital-cyan" : "text-ion-1"}>
-                    Away {formatRatioAsPercent(c.fairAwayProb)}
-                  </span>
+                    {c.fairDrawProb !== null && (
+                      <span className="text-ion-2">
+                        Draw {formatRatioAsPercent(c.fairDrawProb)}
+                      </span>
+                    )}
+                    <span className={!homeLeads ? "font-semibold text-orbital-cyan" : "text-ion-1"}>
+                      Away {formatRatioAsPercent(c.fairAwayProb)}
+                    </span>
+                  </div>
+                  <GravityBadge gravity={row.read.gravity} />
                 </div>
               </li>
             );

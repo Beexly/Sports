@@ -40,10 +40,10 @@ If a stat can't survive these, it gets no premium screen space.
 | Proposal | Status |
 |---|---|
 | Edge Fragility Score | exists in spirit: premortem layer + evidence health; formalize as a score later |
-| Market Gravity Index | observatory vocabulary exists; quantified index = build candidate |
-| Parlay Dependency Coefficient | Parlay MRI correlation math = this; name it in UI |
-| Line Death Clock | build candidate (edge decay vs market movement) |
-| Stat Stability Grade | partially: `assessUncertainty` flags; extend to per-metric grades |
+| Market Gravity Index | SHIPPED 2026-06-12 — `marketGravityIndex` (conviction × agreement × liquidity), badge on the Market Fair Board |
+| Parlay Dependency Coefficient | SHIPPED — named in Parlay MRI vitals |
+| Line Death Clock | HEARTBEAT shipped — capture-window drift on the fair board; full per-pick clock QUEUED |
+| Stat Stability Grade | SHIPPED — Player Lab production/snaps/edge |
 | QB Pressure Sensitivity / Protection Stress | pressure-coverage data live; derived indices = build candidates |
 | Script Elasticity / False Favorite / Narrative Risk / Public Comfort | research candidates; need defensible math before any UI |
 
