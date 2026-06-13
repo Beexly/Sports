@@ -42,9 +42,9 @@ If a stat can't survive these, it gets no premium screen space.
 | Edge Fragility Score | exists in spirit: premortem layer + evidence health; formalize as a score later |
 | Market Gravity Index | SHIPPED 2026-06-12 — `marketGravityIndex` (conviction × agreement × liquidity), badge on the Market Fair Board |
 | Parlay Dependency Coefficient | SHIPPED — named in Parlay MRI vitals |
-| Line Death Clock | HEARTBEAT shipped — capture-window drift on the fair board; full per-pick clock QUEUED |
+| Line Death Clock | SHIPPED — drift + pp/hr decay rate on the fair board |
 | Stat Stability Grade | SHIPPED — Player Lab production/snaps/edge |
-| QB Pressure Sensitivity / Protection Stress | pressure-coverage data live; derived indices = build candidates |
+| Protection Stress | SHIPPED — Player Lab trenches. QB Pressure *Sensitivity* PARKED: needs clean/pressure splits not in feed |
 | Script Elasticity / False Favorite / Narrative Risk / Public Comfort | research candidates; need defensible math before any UI |
 
 Rule: a new derived stat ships only with definition, formula, sample-size

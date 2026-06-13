@@ -51,9 +51,9 @@ Simulation Cloud QUEUED · Calibration Panel ✓ + Honest Band ✓ · CLV Tracke
 | Five stat questions publish gate | DONE (doctrine) — enforcement grows with each envelope |
 | Stat commandment (source/timestamp/definition/n/weakness/decision-use) | PARTIAL — freshness stamps ✓, explainers ✓, stability ✓; full envelope per metric QUEUED |
 | Stat Stability Grade | DONE — production/snaps/edge views |
-| Line Death Clock | HEARTBEAT DONE — capture-window fair-price drift on the Market Fair Board; full decay clock (per-pick, time-to-zero) QUEUED |
+| Line Death Clock | DONE — capture-window drift + pp/hr decay rate on the Market Fair Board |
 | Market Gravity Index (quantified) | DONE — `marketGravityIndex` (conviction × agreement × liquidity), badge on Market Fair Board (2026-06-12) |
-| QB Pressure Sensitivity / Protection Stress indices | QUEUED — data live, derivation next |
+| Protection Stress index | DONE — Player Lab trenches (0–100, pressure+sacks). QB Pressure *Sensitivity* PARKED — needs clean-vs-pressured efficiency splits not in this feed |
 | Script Elasticity / False Favorite / Narrative Risk / Public Comfort | PARKED until defensible math exists |
 | DuckDB/Polars/Dagster/dbt/ClickHouse | OWNER — infra decision, current stack not the bottleneck |
 | New data sources (nflverse ecosystem already live; CFBD, nba_api, pybaseball, StatsBomb, MoneyPuck...) | OWNER+legal — every source through the Scraping Clearance Engine / rights registry first; NFL-first says not now |

@@ -36,6 +36,12 @@ export interface GameMarketRead {
    * bleeding, from real captured history only.
    */
   readonly homeDriftPp: number | null;
+  /**
+   * Line Death Clock: the drift's RATE in fair-prob points per hour across the
+   * capture window. |rate| is how fast the price is moving — a fast-bleeding
+   * edge has little time left. Null when no earlier capture or no time span.
+   */
+  readonly homeDriftPerHourPp: number | null;
   /** Market Gravity Index — how strongly the market pulls toward one side. */
   readonly gravity: MarketGravity;
 }
@@ -93,10 +99,16 @@ export function buildH2hMarketRead(
     return latest !== undefined && b.fetchedAt < latest.fetchedAt;
   });
   let homeDriftPp: number | null = null;
+  let homeDriftPerHourPp: number | null = null;
   if (earlier.length >= minBooks) {
     const open = consensusNoVig(toBookPrices(earlier));
     if (open && open.bookCount >= minBooks) {
       homeDriftPp = Number(((consensus.fairHomeProb - open.fairHomeProb) * 100).toFixed(1));
+      const earliestAt = earlier.reduce((min, b) => (b.fetchedAt < min ? b.fetchedAt : min), earlier[0]!.fetchedAt);
+      const spanHours = (freshest.fetchedAt.getTime() - earliestAt.getTime()) / 3_600_000;
+      if (spanHours > 0) {
+        homeDriftPerHourPp = Number((homeDriftPp / spanHours).toFixed(2));
+      }
     }
   }
 
@@ -104,6 +116,7 @@ export function buildH2hMarketRead(
     consensus,
     freshestFetchedAt: freshest.fetchedAt.toISOString(),
     homeDriftPp,
+    homeDriftPerHourPp,
     gravity: marketGravityIndex(consensus),
   };
 }
