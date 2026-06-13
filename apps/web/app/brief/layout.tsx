@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
 /**
- * /brief layout — internal preview surface during launch. Not indexable.
+ * /brief layout — public daily summary surface. Now indexable.
  */
 export const metadata: Metadata = {
-  robots: { index: false, follow: false, nocache: true },
+  robots: { index: true, follow: true },
 };
 
 export default function BriefLayout({
