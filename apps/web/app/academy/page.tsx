@@ -8,6 +8,13 @@ import { AcademySimulator } from "@/components/academy/academy-simulator";
 import { CoursePlayer } from "@/components/academy/course-player";
 import { BeatTheClose } from "@/components/academy/beat-the-close";
 import { FilmRoom } from "@/components/academy/film-room";
+import {
+  AcademyRegisterToggle,
+  AcademyHeroBody,
+  AcademyCourseSectionBody,
+  AcademyLiveFireBody,
+  AcademyBeatTheCloseBody,
+} from "@/components/academy/academy-register-toggle";
 import { HoloTilt } from "@/components/motion/holo-tilt";
 import { ShootingStars } from "@/components/motion/shooting-stars";
 import { SignalRule } from "@/components/motion/signal-rule";
@@ -63,10 +70,13 @@ export default function AcademyPage() {
               </h1>
             </Reveal>
             <Reveal delay={170}>
-              <p className="mt-5 max-w-2xl text-lg text-ink-300">
-                Four floors: quizzed courses, a live-fire simulator, a line-trading game scored on
-                pure CLV, and a film room in production. Restraint counts. Lucky wins don&apos;t.
-              </p>
+              <AcademyHeroBody />
+            </Reveal>
+
+            <Reveal delay={210}>
+              <div className="mt-4">
+                <AcademyRegisterToggle />
+              </div>
             </Reveal>
 
             {/* wing map */}
@@ -99,10 +109,7 @@ export default function AcademyPage() {
               <h2 className="mt-3 font-display text-3xl font-semibold text-white">
                 Lessons that quiz back.
               </h2>
-              <p className="mt-3 max-w-2xl text-ink-300">
-                Three tracks: line literacy, bankroll &amp; risk, market mechanics. Read, get quizzed,
-                build your transcript. Answers are final — like a placed bet.
-              </p>
+              <AcademyCourseSectionBody />
             </Reveal>
             <Reveal delay={120}>
               <div className="mt-8">
@@ -122,10 +129,7 @@ export default function AcademyPage() {
               <h2 className="mt-3 font-display text-3xl font-semibold text-white">
                 Decide blind. Get graded on the decision.
               </h2>
-              <p className="mt-3 max-w-2xl text-ink-300">
-                The slate exactly as it looked before the result. Play, Watchlist, or No-Bet —
-                then get graded on the read. Lucky wins get flagged; correct losses get respect.
-              </p>
+              <AcademyLiveFireBody />
             </Reveal>
             <Reveal delay={120}>
               <div className="mt-8">
@@ -145,10 +149,7 @@ export default function AcademyPage() {
               <h2 className="mt-3 font-display text-3xl font-semibold text-white">
                 Beat the Close.
               </h2>
-              <p className="mt-3 max-w-2xl text-ink-300">
-                Intel drips in, the number moves, you pick your moment — take it or pass.
-                No luck involved: your score is pure closing-line value.
-              </p>
+              <AcademyBeatTheCloseBody />
             </Reveal>
             <Reveal delay={120}>
               <div className="mt-8">

@@ -1,10 +1,60 @@
+import { ANALYST_VOICE_PROMPT_BLOCK } from "@/lib/voice/analyst-standard";
+
 /**
  * Prompts for the "ask the model why" explainer. Same grounded, no-marketing
  * voice as the Model Court — the explanation must describe the engine's actual
  * factors and never drift into a betting recommendation.
+ *
+ * Reader registers (NFL House doctrine, "same data, different doorway"):
+ * the SAME grounded context renders for three audiences. The register changes
+ * vocabulary and depth only — grounding, safety, and citation rules are
+ * identical in all three. A register may never weaken a rule.
  */
 
-export const PICK_EXPLAINER_SYSTEM = [
+export type ExplainRegister = "teach" | "plain" | "math";
+
+export const EXPLAIN_REGISTERS: readonly ExplainRegister[] = ["teach", "plain", "math"];
+
+export const DEFAULT_EXPLAIN_REGISTER: ExplainRegister = "plain";
+
+export function isExplainRegister(value: unknown): value is ExplainRegister {
+  return value === "teach" || value === "plain" || value === "math";
+}
+
+/** Reader-facing labels — shared by every surface that offers the toggle. */
+export const EXPLAIN_REGISTER_LABELS: Record<ExplainRegister, string> = {
+  teach: "Teach me",
+  plain: "Plain read",
+  math: "Show me the math",
+};
+
+const REGISTER_DIRECTIVES: Record<ExplainRegister, string> = {
+  teach: [
+    "REGISTER — teach me (beginner):",
+    "- The reader is new to betting markets and football analytics. Warm and",
+    "  steady, never condescending — they are smart, just new.",
+    "- Define every market term in-line the first time it appears (spread,",
+    "  line, confidence, consensus, line movement) in a short parenthetical.",
+    "- No unexplained abbreviations. Prefer plain words over jargon.",
+    "- Up to 160 words so definitions have room. Still two paragraphs max.",
+  ].join("\n"),
+  plain: [
+    "REGISTER — plain read (default):",
+    "- A sharp reader who knows the basics. No definitions needed; no jargon",
+    "  for its own sake. 120 words or fewer.",
+  ].join("\n"),
+  math: [
+    "REGISTER — show me the math (analyst):",
+    "- The reader wants the quantitative skeleton. Lead with the numbers.",
+    "- Name every contributing factor with its signed weight, and read the",
+    "  snapshot fields that matter (data quality, bookmaker count, line",
+    "  movement delta) as numbers, not adjectives.",
+    "- Compact and technical; tables of words, not prose flourishes.",
+    "  140 words or fewer.",
+  ].join("\n"),
+};
+
+const SYSTEM_CORE = [
   "You explain WHY the Galaxy Sports Edge engine surfaced a specific pick, for a",
   "paying user reading the glass-box factor trail. You are a calibration product,",
   "not a tout.",
@@ -22,10 +72,24 @@ export const PICK_EXPLAINER_SYSTEM = [
   "  (source: signal_snapshot at <ISO8601>). Copy the timestamp from the context.",
   "- Plain, technical, specific. Reference factors by their real names and their",
   "  signed weights. Numbers are numbers. No marketing adjectives, no hype.",
-  "- 120 words or fewer. Two short paragraphs at most.",
   "- If the independent-edge layer is present, note that it is surfaced for",
   "  transparency and does NOT yet move the confidence score.",
+  "",
+  ANALYST_VOICE_PROMPT_BLOCK,
 ].join("\n");
+
+/** Register-aware system prompt. The register block NEVER overrides a rule. */
+export function buildExplainSystem(
+  register: ExplainRegister = DEFAULT_EXPLAIN_REGISTER,
+): string {
+  return [SYSTEM_CORE, "", REGISTER_DIRECTIVES[register]].join("\n");
+}
+
+/**
+ * Back-compat constant — the default (plain) register. Existing callers and
+ * tests reference this directly.
+ */
+export const PICK_EXPLAINER_SYSTEM = buildExplainSystem("plain");
 
 export interface ExplainPromptInput {
   /** The grounded context block from buildGroundedContext(). */

@@ -18,7 +18,12 @@ import {
 } from "@/lib/claude-api/usage-store";
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
 import { buildGroundedContext, type GroundingInput } from "./grounding";
-import { PICK_EXPLAINER_SYSTEM, buildExplainUser } from "./prompts";
+import {
+  DEFAULT_EXPLAIN_REGISTER,
+  buildExplainSystem,
+  buildExplainUser,
+  type ExplainRegister,
+} from "./prompts";
 import { evaluatePickExplanationPolicy } from "./policy";
 
 const SURFACE = "PICK_EXPLANATION" as const;
@@ -36,6 +41,8 @@ export interface ExplainPickOptions {
   readonly apiKey: string;
   readonly grounding: GroundingInput;
   readonly question?: string | null;
+  /** Reader register — same grounding and safety rules, different depth. */
+  readonly register?: ExplainRegister;
   readonly gameId?: string | null;
   readonly userId?: string | null;
   /** Default true; set false in tests to skip the cost ledger. */
@@ -117,7 +124,7 @@ export async function explainPick(options: ExplainPickOptions): Promise<PickExpl
       model: modelName,
       maxTokens: 450,
       temperature: 0.1,
-      system: PICK_EXPLAINER_SYSTEM,
+      system: buildExplainSystem(options.register ?? DEFAULT_EXPLAIN_REGISTER),
       user: buildExplainUser({ context: grounded.context, question: options.question }),
       cache: { system: true },
     });

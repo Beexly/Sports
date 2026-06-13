@@ -16,6 +16,7 @@ const ROUTES: ReadonlyArray<{
 }> = [
   { path: "/", priority: 1.0, changeFrequency: "daily" },
   { path: "/picks", priority: 0.9, changeFrequency: "hourly" },
+  { path: "/house", priority: 0.8, changeFrequency: "weekly" },
   { path: "/methodology", priority: 0.8, changeFrequency: "monthly" },
   { path: "/performance", priority: 0.7, changeFrequency: "daily" },
   { path: "/journal", priority: 0.7, changeFrequency: "weekly" },
@@ -29,6 +30,8 @@ const ROUTES: ReadonlyArray<{
   { path: "/faq", priority: 0.5, changeFrequency: "monthly" },
   { path: "/responsible-play", priority: 0.5, changeFrequency: "monthly" },
   { path: "/vs/tout-services", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/accountability", priority: 0.7, changeFrequency: "weekly" },
+  { path: "/proof", priority: 0.7, changeFrequency: "daily" },
   { path: "/changelog", priority: 0.5, changeFrequency: "weekly" },
   { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },

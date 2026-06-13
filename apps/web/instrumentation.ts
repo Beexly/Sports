@@ -22,6 +22,7 @@
  */
 
 import type { GradedPoolResult } from "@/lib/integrations/graded-pool";
+import { initObservability } from "@/lib/observability/sentry";
 
 export type ProjectionsRegistrationOutcome =
   | "skipped-runtime"
@@ -72,6 +73,9 @@ export async function registerProjectionsFromEnv(
 
 /** Next.js calls this once at server startup. */
 export async function register(): Promise<void> {
+  // Initialise observability (Sentry) at startup. No-op when SENTRY_DSN is absent.
+  initObservability();
+
   // Literal NEXT_RUNTIME check + dynamic import → graded-pool (and its node:zlib
   // dep) is excluded from the Edge instrumentation bundle by dead-code elimination.
   if (process.env.NEXT_RUNTIME === "nodejs") {

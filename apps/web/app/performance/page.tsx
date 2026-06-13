@@ -7,6 +7,14 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { PerformanceBootstrapState } from "@/components/performance/bootstrap-state";
 import { CalibrationPanel } from "@/components/performance/calibration-panel";
+import {
+  NUMERIC_TEXT_CLASS,
+  STAT_PLACEHOLDER,
+  formatCount,
+  formatPercent,
+  winRatePct,
+  winRateToneClass,
+} from "@/lib/format/stat";
 import type { PickType, PickTier } from "@sports/types";
 
 export const metadata: Metadata = {
@@ -54,16 +62,16 @@ function aggregateOverall(summaries: PerformanceSummary[]) {
   const losses = allTime.reduce((acc, s) => acc + s.losses, 0);
   const pushes = allTime.reduce((acc, s) => acc + s.pushes, 0);
   const totalPicks = allTime.reduce((acc, s) => acc + s.totalPicks, 0);
-  const decided = wins + losses;
-  const winRate = decided > 0 ? (wins / decided) * 100 : null;
-  return { wins, losses, pushes, totalPicks, winRate };
+  return { wins, losses, pushes, totalPicks, winRate: winRatePct(wins, losses) };
 }
 
-function winRateColor(rate: number): string {
-  if (rate >= 60) return "text-green-400";
-  if (rate >= 55) return "text-brand-400";
-  if (rate >= 50) return "text-yellow-400";
-  return "text-red-400";
+// Bar fill mirrors winRateToneClass thresholds (55 / breakeven 52.4 / 50) so
+// the bar and the number can never tell different stories.
+function winRateBarClass(rate: number): string {
+  if (rate >= 55) return "bg-orbital-cyan";
+  if (rate >= 52.4) return "bg-ion-white";
+  if (rate >= 50) return "bg-caution";
+  return "bg-alert";
 }
 
 function latestComputedAt(summaries: PerformanceSummary[]): Date | null {
@@ -87,7 +95,7 @@ function latestModelVersion(summaries: PerformanceSummary[]): string | null {
 // <PerformanceBootstrapState> with minimal JSX between it and the gate check.
 function BootstrapShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-carbon">
       <Nav />
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
@@ -117,13 +125,13 @@ export default async function PerformancePage() {
         {todayPickCount > 0 && (
           <div
             data-testid="performance-pick-count-banner"
-            className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-4 text-xs"
+            className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-mineral bg-eclipse/60 p-4 text-xs"
           >
-            <p className="text-gray-300">
+            <p className="text-ion-1">
               {todayPickCount} pick{todayPickCount === 1 ? "" : "s"} published
               today
               {demoActive && (
-                <span className="ml-2 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">
+                <span className="ml-2 rounded bg-caution/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">
                   sample
                 </span>
               )}
@@ -131,7 +139,7 @@ export default async function PerformancePage() {
             </p>
             <Link
               href="/picks"
-              className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60"
+              className="rounded-lg border border-mineral px-3 py-1.5 text-ion-1 hover:bg-eclipse/80"
             >
               See today&apos;s picks
             </Link>
@@ -142,7 +150,7 @@ export default async function PerformancePage() {
           minSettledPicksForLearning={gates.minSettledPicksForLearning}
         />
         <div className="mt-12">
-          <h2 className="mb-4 text-center text-sm font-semibold uppercase tracking-widest text-gray-500">
+          <h2 className="mb-4 text-center text-sm font-semibold uppercase tracking-widest text-ion-2">
             How we&apos;ll prove it
           </h2>
           <CalibrationPanel />
@@ -182,20 +190,20 @@ export default async function PerformancePage() {
   const isEmpty = !fetchError && summaries.length === 0;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-carbon">
       <Nav />
       <main className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <div className="mb-10 text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+            <h1 className="text-4xl font-extrabold tracking-tight text-ion-white sm:text-5xl">
               Calibration Report
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-gray-400">
+            <p className="mx-auto mt-4 max-w-xl text-ion-1">
               Every settled canonical pick is included. Bootstrap-era picks
               are excluded by design — they don&apos;t get to inflate the
               record.
             </p>
-            <p className="mt-3 text-xs text-gray-600">
+            <p className="mt-3 text-xs text-ion-3">
               Past performance does not guarantee future results.
             </p>
           </div>
@@ -207,9 +215,9 @@ export default async function PerformancePage() {
             <div
               data-testid="performance-error"
               role="alert"
-              className="rounded-xl border border-red-800/60 bg-red-950/40 p-6 text-center"
+              className="rounded-xl border border-alert/40 bg-alert/10 p-6 text-center"
             >
-              <p className="text-sm text-red-400">{fetchError}</p>
+              <p className="text-sm text-alert">{fetchError}</p>
             </div>
           )}
 
@@ -225,39 +233,44 @@ export default async function PerformancePage() {
               {/* Methodology summary card */}
               <section
                 data-testid="performance-methodology"
-                className="mb-8 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+                className="mb-8 rounded-2xl border border-mineral bg-eclipse/60 p-5"
               >
-                <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
+                <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-2">
                   Methodology
                 </h2>
-                <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs text-gray-400 sm:grid-cols-4">
+                <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs text-ion-1 sm:grid-cols-4">
                   <div>
-                    <dt className="text-gray-600">Win rate definition</dt>
+                    <dt className="text-ion-3">Win rate definition</dt>
                     <dd>
-                      <code className="rounded bg-gray-800 px-1 py-0.5 font-mono text-[10px] text-gray-300">
+                      <code className="rounded bg-titanium px-1 py-0.5 font-mono text-[10px] text-ion-1">
                         wins divided by decided outcomes
                       </code>
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-gray-600">Pushes</dt>
+                    <dt className="text-ion-3">Pushes</dt>
                     <dd>Reported separately, excluded from the denominator</dd>
                   </div>
                   <div>
-                    <dt className="text-gray-600">Sample size</dt>
-                    <dd>{overall.totalPicks} canonical picks</dd>
+                    <dt className="text-ion-3">Sample size</dt>
+                    <dd>
+                      <span className={NUMERIC_TEXT_CLASS}>
+                        {formatCount(overall.totalPicks)}
+                      </span>{" "}
+                      canonical picks
+                    </dd>
                   </div>
                   <div>
-                    <dt className="text-gray-600">Model version</dt>
+                    <dt className="text-ion-3">Model version</dt>
                     <dd>
-                      <code className="rounded bg-gray-800 px-1 py-0.5 font-mono text-[10px] text-gray-300">
-                        {modelVersion ?? "-"}
+                      <code className="rounded bg-titanium px-1 py-0.5 font-mono text-[10px] text-ion-1">
+                        {modelVersion ?? STAT_PLACEHOLDER}
                       </code>
                     </dd>
                   </div>
                   {computedAt && (
                     <div className="col-span-2 sm:col-span-4">
-                      <dt className="text-gray-600">Last computed</dt>
+                      <dt className="text-ion-3">Last computed</dt>
                       <dd>{computedAt.toUTCString()}</dd>
                     </div>
                   )}
@@ -265,47 +278,46 @@ export default async function PerformancePage() {
               </section>
 
               <section className="mb-12">
-                <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900 to-gray-900/60">
-                  <div className="border-b border-gray-800 px-6 py-4">
-                    <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+                <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
+                  <div className="border-b border-mineral px-6 py-4">
+                    <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
                       All-Time Overall
                     </h2>
                   </div>
-                  <div className="grid grid-cols-2 divide-x divide-gray-800 sm:grid-cols-4">
+                  <div className="grid grid-cols-2 divide-x divide-mineral/60 sm:grid-cols-4">
                     <OverallStat
                       label="Win Rate"
-                      value={
-                        overall.winRate !== null
-                          ? `${overall.winRate.toFixed(1)}%`
-                          : "-"
-                      }
+                      value={formatPercent(overall.winRate)}
                       accent={
                         overall.winRate !== null
-                          ? winRateColor(overall.winRate)
-                          : "text-gray-400"
+                          ? winRateToneClass(overall.winRate)
+                          : "text-ion-2"
                       }
                       large
                     />
                     <OverallStat
                       label="Wins"
-                      value={overall.wins.toString()}
-                      accent="text-green-400"
+                      value={formatCount(overall.wins)}
+                      accent="text-orbital-cyan"
                     />
                     <OverallStat
                       label="Losses"
-                      value={overall.losses.toString()}
-                      accent="text-red-400"
+                      value={formatCount(overall.losses)}
+                      accent="text-alert"
                     />
                     <OverallStat
                       label="Pushes"
-                      value={overall.pushes.toString()}
-                      accent="text-gray-400"
+                      value={formatCount(overall.pushes)}
+                      accent="text-ion-2"
                     />
                   </div>
-                  <div className="border-t border-gray-800 px-6 py-3">
-                    <p className="text-xs text-gray-600">
-                      Based on {overall.totalPicks} canonical settled picks. Win
-                      rate excludes pushes.
+                  <div className="border-t border-mineral px-6 py-3">
+                    <p className="text-xs text-ion-3">
+                      Based on{" "}
+                      <span className={NUMERIC_TEXT_CLASS}>
+                        {formatCount(overall.totalPicks)}
+                      </span>{" "}
+                      canonical settled picks. Win rate excludes pushes.
                     </p>
                   </div>
                 </div>
@@ -313,7 +325,7 @@ export default async function PerformancePage() {
 
               {bySport.size > 0 && (
                 <section className="mb-12">
-                  <h2 className="mb-5 text-xl font-bold text-white">
+                  <h2 className="mb-5 text-xl font-bold text-ion-white">
                     By sport (all-time)
                   </h2>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -322,8 +334,6 @@ export default async function PerformancePage() {
                       const l = items.reduce((a, s) => a + s.losses, 0);
                       const p = items.reduce((a, s) => a + s.pushes, 0);
                       const total = items.reduce((a, s) => a + s.totalPicks, 0);
-                      const decided = w + l;
-                      const wr = decided > 0 ? (w / decided) * 100 : null;
 
                       return (
                         <SportCard
@@ -336,7 +346,7 @@ export default async function PerformancePage() {
                           losses={l}
                           pushes={p}
                           totalPicks={total}
-                          winRate={wr}
+                          winRate={winRatePct(w, l)}
                         />
                       );
                     })}
@@ -346,80 +356,89 @@ export default async function PerformancePage() {
 
               {recentSummaries.length > 0 && (
                 <section className="mb-12">
-                  <h2 className="mb-5 text-xl font-bold text-white">
+                  <h2 className="mb-5 text-xl font-bold text-ion-white">
                     Recent periods
                   </h2>
-                  <div className="overflow-x-auto rounded-2xl border border-gray-800">
+                  <div className="overflow-x-auto rounded-2xl border border-mineral">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b border-gray-800 text-left">
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                        <tr className="border-b border-mineral text-left">
+                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Period
                           </th>
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Sport
                           </th>
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Type
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             W
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             L
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             P
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Win%
                           </th>
                         </tr>
                       </thead>
                       <tbody>
                         {recentSummaries.slice(0, 30).map((s, i) => {
-                          const decided = s.wins + s.losses;
-                          const wr =
-                            decided > 0 ? (s.wins / decided) * 100 : null;
+                          const wr = winRatePct(s.wins, s.losses);
                           return (
                             <tr
                               key={s.id}
                               className={[
-                                "border-b border-gray-800/60",
-                                i % 2 === 0 ? "bg-gray-900/20" : "",
+                                "border-b border-mineral/40",
+                                i % 2 === 0 ? "bg-eclipse/40" : "",
                               ].join(" ")}
                             >
-                              <td className="px-4 py-3 font-mono text-xs text-gray-400">
+                              <td
+                                className={`px-4 py-3 text-xs text-ion-1 ${NUMERIC_TEXT_CLASS}`}
+                              >
                                 {s.period}
                               </td>
-                              <td className="px-4 py-3 text-gray-300">
+                              <td className="px-4 py-3 text-ion-1">
                                 {SPORT_DISPLAY_NAMES[s.sport.toLowerCase()] ??
                                   s.sport}
                               </td>
-                              <td className="px-4 py-3 text-gray-500">
+                              <td className="px-4 py-3 text-ion-2">
                                 {s.pickType ?? "All"}
                               </td>
-                              <td className="px-4 py-3 text-center tabular-nums text-green-400">
+                              <td
+                                className={`px-4 py-3 text-center text-orbital-cyan ${NUMERIC_TEXT_CLASS}`}
+                              >
                                 {s.wins}
                               </td>
-                              <td className="px-4 py-3 text-center tabular-nums text-red-400">
+                              <td
+                                className={`px-4 py-3 text-center text-alert ${NUMERIC_TEXT_CLASS}`}
+                              >
                                 {s.losses}
                               </td>
-                              <td className="px-4 py-3 text-center tabular-nums text-gray-500">
+                              <td
+                                className={`px-4 py-3 text-center text-ion-2 ${NUMERIC_TEXT_CLASS}`}
+                              >
                                 {s.pushes}
                               </td>
                               <td className="px-4 py-3 text-center">
                                 {wr !== null ? (
                                   <span
                                     className={[
-                                      "font-semibold tabular-nums",
-                                      winRateColor(wr),
+                                      "font-semibold",
+                                      NUMERIC_TEXT_CLASS,
+                                      winRateToneClass(wr),
                                     ].join(" ")}
                                   >
-                                    {wr.toFixed(1)}%
+                                    {formatPercent(wr)}
                                   </span>
                                 ) : (
-                                  <span className="text-gray-600">-</span>
+                                  <span className="text-ion-3">
+                                    {STAT_PLACEHOLDER}
+                                  </span>
                                 )}
                               </td>
                             </tr>
@@ -456,12 +475,13 @@ function OverallStat({
 }) {
   return (
     <div className="flex flex-col items-center gap-1 px-6 py-6 text-center">
-      <dt className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+      <dt className="text-xs font-semibold uppercase tracking-widest text-ion-2">
         {label}
       </dt>
       <dd
         className={[
-          "font-extrabold tabular-nums",
+          "font-extrabold",
+          NUMERIC_TEXT_CLASS,
           large ? "text-5xl" : "text-3xl",
           accent,
         ].join(" ")}
@@ -488,53 +508,55 @@ function SportCard({
   winRate: number | null;
 }) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-5">
+    <div className="rounded-2xl border border-mineral bg-eclipse/60 p-5">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-lg font-bold text-white">{sport}</h3>
+        <h3 className="text-lg font-bold text-ion-white">{sport}</h3>
         {winRate !== null && (
           <span
             className={[
-              "text-2xl font-extrabold tabular-nums",
-              winRateColor(winRate),
+              "text-2xl font-extrabold",
+              NUMERIC_TEXT_CLASS,
+              winRateToneClass(winRate),
             ].join(" ")}
           >
-            {winRate.toFixed(1)}%
+            {formatPercent(winRate)}
           </span>
         )}
       </div>
 
       <div className="grid grid-cols-3 gap-2 text-center">
-        <div className="rounded-lg bg-green-900/20 py-2">
-          <p className="text-xs text-gray-500">W</p>
-          <p className="text-lg font-bold tabular-nums text-green-400">{wins}</p>
+        <div className="rounded-lg bg-orbital-cyan/10 py-2">
+          <p className="text-xs text-ion-2">W</p>
+          <p className={`text-lg font-bold text-orbital-cyan ${NUMERIC_TEXT_CLASS}`}>
+            {wins}
+          </p>
         </div>
-        <div className="rounded-lg bg-red-900/20 py-2">
-          <p className="text-xs text-gray-500">L</p>
-          <p className="text-lg font-bold tabular-nums text-red-400">{losses}</p>
+        <div className="rounded-lg bg-alert/10 py-2">
+          <p className="text-xs text-ion-2">L</p>
+          <p className={`text-lg font-bold text-alert ${NUMERIC_TEXT_CLASS}`}>
+            {losses}
+          </p>
         </div>
-        <div className="rounded-lg bg-gray-800/60 py-2">
-          <p className="text-xs text-gray-500">P</p>
-          <p className="text-lg font-bold tabular-nums text-gray-400">{pushes}</p>
+        <div className="rounded-lg bg-titanium/60 py-2">
+          <p className="text-xs text-ion-2">P</p>
+          <p className={`text-lg font-bold text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+            {pushes}
+          </p>
         </div>
       </div>
 
-      <p className="mt-3 text-center text-xs text-gray-600">
-        {totalPicks} canonical picks
+      <p className="mt-3 text-center text-xs text-ion-3">
+        <span className={NUMERIC_TEXT_CLASS}>{formatCount(totalPicks)}</span>{" "}
+        canonical picks
       </p>
 
       {winRate !== null && (
         <div className="mt-3">
-          <div className="h-1.5 overflow-hidden rounded-full bg-gray-800">
+          <div className="h-1.5 overflow-hidden rounded-full bg-titanium">
             <div
               className={[
                 "h-full rounded-full transition-all",
-                winRate >= 60
-                  ? "bg-green-500"
-                  : winRate >= 55
-                  ? "bg-brand-500"
-                  : winRate >= 50
-                  ? "bg-yellow-500"
-                  : "bg-red-500",
+                winRateBarClass(winRate),
               ].join(" ")}
               style={{ width: `${Math.min(winRate, 100)}%` }}
             />

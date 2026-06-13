@@ -114,8 +114,8 @@ export interface ViewResult {
   readonly error?: ReactNode;
   /** Short source-window summary for the hero (e.g. "Season 2024, week 12"). */
   readonly windowLabel?: string;
-  /** ISO timestamp of when the loader actually pulled from source (cache-aware). */
-  readonly fetchedAt?: string;
+  /** ISO timestamp of when the underlying source rows were loaded/computed. */
+  readonly generatedAt?: string;
   /** Source attribution ids. */
   readonly sourceIds: readonly string[];
   /** One DataTable per section. */
@@ -213,7 +213,7 @@ async function loadProductionView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${lab.season}${lab.throughWeek ? `, through week ${lab.throughWeek}` : ""}`,
-    fetchedAt: lab.generatedAt,
+    generatedAt: lab.generatedAt,
     sourceIds: ["nflverse"],
     sections,
   };
@@ -230,7 +230,7 @@ async function loadSnapsView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${snap.season}`,
-    fetchedAt: snap.generatedAt,
+    generatedAt: snap.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -286,7 +286,7 @@ async function loadOpportunityView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${o.season}${o.throughWeek ? ` through week ${o.throughWeek}` : ""}`,
-    fetchedAt: o.generatedAt,
+    generatedAt: o.generatedAt,
     sourceIds: ["nflverse"],
     sections,
   };
@@ -302,7 +302,7 @@ async function loadNextGenView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${ngs.season}`,
-    fetchedAt: ngs.generatedAt,
+    generatedAt: ngs.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -349,7 +349,7 @@ async function loadTrenchesView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${pc.season}`,
-    fetchedAt: pc.generatedAt,
+    generatedAt: pc.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -388,7 +388,7 @@ async function loadCombineView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Latest class ${c.latestYear ?? "N/A"}`,
-    fetchedAt: c.generatedAt,
+    generatedAt: c.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -451,7 +451,7 @@ async function loadQbrView(): Promise<ViewResult> {
       minWidth: 720,
     });
   }
-  return { status: "live", windowLabel: `Season ${q.season}`, fetchedAt: q.generatedAt, sourceIds: ["nflverse"], sections };
+  return { status: "live", windowLabel: `Season ${q.season}`, generatedAt: q.generatedAt, sourceIds: ["nflverse"], sections };
 }
 
 // ── EDGE ──────────────────────────────────────────────────────────────────────
@@ -464,7 +464,7 @@ async function loadEdgeView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${edge.season}`,
-    fetchedAt: edge.generatedAt,
+    generatedAt: edge.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -505,7 +505,7 @@ async function loadInjuriesView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${report.season}, week ${report.week ?? "N/A"}`,
-    fetchedAt: report.generatedAt,
+    generatedAt: report.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -534,7 +534,7 @@ async function loadMarketView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Last ${signal.lookbackHours} hours`,
-    fetchedAt: signal.generatedAt,
+    generatedAt: signal.generatedAt,
     sourceIds: ["sleeper"],
     sections: [
       {
@@ -592,7 +592,7 @@ async function loadDfsView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `DraftKings · ${dfs.date}`,
-    fetchedAt: dfs.generatedAt,
+    generatedAt: dfs.generatedAt,
     sourceIds: [],
     sections: [
       {
@@ -623,9 +623,30 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     description:
       "Season leaders, last-5 recent form, and positional defense ranks — all computed from real nflverse player-week rows. Settled, historical facts, not forecasts.",
     explainer: [
-      { term: "PPR/G & 5g", definition: "Per-game PPR over the season, and over the last 5 games. Δ = recent form minus season pace." },
-      { term: "Boom% / Bust%", definition: "Share of games at or above a startable ceiling (≥20) and at or below a floor (≤10) — the real distribution." },
-      { term: "WOPR & target share", definition: "Weighted opportunity rating and share of team targets — the role behind the points." },
+      {
+        term: "PPR/G & 5g",
+        definition: "Per-game PPR over the season, and over the last 5 games. Δ = recent form minus season pace.",
+        weakness: "Averages hide volatility — a 15 PPR/G can be 15-15-15 or 30-0-15. Read with Boom/Bust.",
+        decisionUse: "Roster and start/sit context. Not a projection of next week.",
+      },
+      {
+        term: "Boom% / Bust%",
+        definition: "Share of games at or above a startable ceiling (≥20) and at or below a floor (≤10) — the real distribution.",
+        weakness: "Thresholds are PPR-format choices, not laws; small samples make these rates jumpy.",
+        decisionUse: "Volatility read for lineup risk. Pair with the Stab grade before trusting it.",
+      },
+      {
+        term: "Stab",
+        definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6.",
+        weakness: "Sample-size only — it does not model variance, opponent quality, or role changes.",
+        decisionUse: "A gate on every other column: thin grade, thin trust.",
+      },
+      {
+        term: "WOPR & target share",
+        definition: "Season averages of the weekly weighted opportunity rating (1.5·target share + 0.7·air-yards share) and team target share — the role behind the points.",
+        weakness: "Season averages lag role changes — a trade or injury redraws the role faster than the average moves.",
+        decisionUse: "Opportunity context: whether production is backed by role, or running ahead of it.",
+      },
     ],
     jsonHref: "/api/nflverse/player-lab",
     load: loadProductionView,
@@ -641,6 +662,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     explainer: [
       { term: "Snap %", definition: "Average share of team offensive snaps the player is on the field for." },
       { term: "Why it leads", definition: "Snap share moves before targets and production do — opportunity precedes the box score." },
+      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6. Sample-size only." },
     ],
     jsonHref: "/api/nflverse/snap-share",
     load: loadSnapsView,
@@ -734,6 +756,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "Underlying z", definition: "Standardized tracking signal — separation, YAC over expected, air-yards share — across the qualified pool." },
       { term: "Production z", definition: "Standardized actual PPR production across the same pool." },
       { term: "Gap", definition: "Underlying z minus production z. Positive = buy-low (regression up); negative = sell-high (regression risk)." },
+      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6. Sample-size only — thin samples are where edge signals mislead most." },
     ],
     jsonHref: "/api/nflverse/edge-signals",
     load: loadEdgeView,

@@ -279,6 +279,51 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "Pending vendor questionnaire and commercial terms review. " +
       "All flags remain false until contract signed.",
   },
+  {
+    source_id: "jeff-mans-one-mans-opinion",
+    source_name: "One MANS Opinion with Jeff Mans (public podcast feed)",
+    source_url: "https://manspod.podbean.com/",
+    terms_url: "https://www.podbean.com/site/static/termsOfUse",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "broadcast_media",
+    status: "vendor_candidate",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Claim made by Jeff Mans on One MANS Opinion (manual listener log)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "high",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-12",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://manspod.podbean.com/",
+      "https://podcasts.apple.com/us/podcast/one-mans-opinion-with-jeff-mans/id1500323362",
+      "https://www.fantasyguru.com/elite-plus-podcasts/",
+    ],
+    unlock_condition:
+      "Complete vendor questionnaire (docs/legal/VENDOR_QUESTIONNAIRE_JEFF_MANS.md) and obtain " +
+      "written license/partnership terms from Fantasy Guru / Jeff Mans for automated ingestion " +
+      "or derived analytics.",
+    vendor_contact: "https://www.fantasyguru.com",
+    notes:
+      "Owner-directed evaluation of Jeff Mans' weekly show as its own source — SiriusXM corporate " +
+      "licensing is PARKED per owner and is NOT this entry; SiriusXM-distributed content stays under " +
+      "siriusxm-streaming. This entry covers ONLY the openly syndicated podcast feed (Podbean host; " +
+      "ELITE+ Podcast Network / FantasyGuru). The show's picks and analysis are proprietary " +
+      "predictions — data-rules forbid extracting them as inputs, so the value lane is pundit-claim " +
+      "ACCOUNTABILITY (paraphrased claim, pundit, date), which the Airwave source policy already " +
+      "allows manually at LOW risk for podcast_rss. Automated capture/transcription stays OFF until " +
+      "the questionnaire and license land. Episode metadata (titles, dates) are facts; audio is " +
+      "copyrighted expression — hence high expression risk. Contact via fantasyguru.com.",
+  },
 
   // ── Permission required ──────────────────────────────────────────────────────
   {
@@ -316,53 +361,6 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "ONLY legal lane without a license: a human listens on their own subscription and manually " +
       "logs short factual claims (pundit, claim, date) into Airwave intake — facts with " +
       "attribution, no recordings, no transcripts, no automated capture.",
-  },
-
-  // ── Manual research only ─────────────────────────────────────────────────────
-  {
-    source_id: "jeff-mans-one-mans-opinion",
-    source_name: "One MANS Opinion with Jeff Mans (public podcast feed)",
-    source_url: "https://manspod.podbean.com/",
-    terms_url: "https://www.podbean.com/site/static/termsOfUse",
-    robots_url: null,
-    jurisdiction: "US",
-    source_type: "broadcast_media",
-    status: "manual_research_only",
-    automation_allowed: false,
-    public_logged_off_allowed: true,
-    commercial_display_allowed: false,
-    storage_allowed: false,
-    derived_analytics_allowed: false,
-    model_training_allowed: false,
-    attribution_required: true,
-    attribution_text: "Claim from 'One MANS Opinion with Jeff Mans' (manual listener log)",
-    personal_data_risk: "low",
-    copyright_expression_risk: "high",
-    database_right_risk: "low",
-    technical_controls_detected: false,
-    cease_and_desist_received: false,
-    reviewed_at: "2026-06-13",
-    reviewed_by: "internal",
-    evidence_urls: [
-      "https://manspod.podbean.com/",
-      "https://podcasts.apple.com/us/podcast/one-mans-opinion-with-jeff-mans/id1500323362",
-      "https://www.fantasyguru.com/elite-plus-podcasts/",
-    ],
-    unlock_condition:
-      "Written permission from Jeff Mans / FantasyGuru.com covering automated capture, " +
-      "transcription, or AI analysis of episode audio. Owner relationship lane: he publishes " +
-      "openly and owns the network, so a direct partnership ask is realistic.",
-    vendor_contact: "https://www.fantasyguru.com",
-    notes:
-      "Jeff Mans's own weekly show, published as a free public podcast (Podbean/Apple) on his " +
-      "FantasyGuru Elite+ network — distinct from his SiriusXM hosting, which stays governed by " +
-      "the siriusxm-streaming entry. RSS episode METADATA (titles, dates, public URLs) is " +
-      "syndication-by-design and fine to read. The episode AUDIO is copyrighted expression: no " +
-      "automated capture, transcription, or AI claim-extraction without permission, and his picks " +
-      "are proprietary predictions our own data rules forbid republishing. Approved lane today is " +
-      "the same as SiriusXM: a human listens and manually logs short factual claims with " +
-      "attribution via the cockpit Listener Log. YouTube mirrors (if any) additionally sit behind " +
-      "YouTube ToS automation limits.",
   },
 
   // ── Excluded ─────────────────────────────────────────────────────────────────

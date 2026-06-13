@@ -58,6 +58,22 @@ export type TwinGame = {
   /** Live board posture — present only on live slates (board cross-ref). */
   readonly boardStatus?: "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
   readonly gateReason?: string | null;
+
+  // ── Market signal states — derived from real captured odds; absent when
+  // data is unavailable (demo slates omit these; live slates set them only
+  // when the threshold is actually met). ──
+  /**
+   * "moving": |homeDriftPp| >= DRIFT_MOVING_PP — the no-vig fair price is
+   * actively shifting within the capture window. Market-description language:
+   * the books' margin-stripped price is bleeding in a direction.
+   */
+  readonly driftState?: "moving";
+  /**
+   * "argued": cloud spread (max−min of per-book no-vig P(home)) >= WIDE_SPREAD_PP
+   * — the books disagree materially on the fair price. Market-description
+   * language: the crowd of books hasn't agreed on a number.
+   */
+  readonly disagreementState?: "argued";
 };
 
 export type TwinSlate = {

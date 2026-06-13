@@ -30,6 +30,8 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { buildPickPremortemNote } from "@/lib/premortem/build";
+import { computeFragilityScore } from "@/lib/premortem/fragility";
+import { buildPickDeathClock } from "@/lib/market/pick-death-clock";
 import type {
   AuditPayload,
   AuditPayloadDetailed,
@@ -77,9 +79,18 @@ export async function GET(
       game: {
         include: {
           odds: {
-            select: { ingestionRunId: true },
+            select: {
+              ingestionRunId: true,
+              bookmaker: true,
+              market: true,
+              fetchedAt: true,
+              spread: true,
+              total: true,
+              homePrice: true,
+              awayPrice: true,
+            },
             orderBy: { fetchedAt: "desc" },
-            take: 50, // bounded — last 50 odds rows for this game
+            take: 120, // bounded — enough captured rows to reach back past publish
           },
         },
       },
@@ -131,6 +142,29 @@ export async function GET(
   );
 
   const snapshot = pick.signalSnapshot;
+  const snapshotInput = snapshot
+    ? {
+        id: snapshot.id,
+        capturedAt: snapshot.capturedAt,
+        hadLineMovementSignal: snapshot.hadLineMovementSignal,
+        hadRestSignal: snapshot.hadRestSignal,
+        hadScheduleSignal: snapshot.hadScheduleSignal,
+        hadAtsFormSignal: snapshot.hadAtsFormSignal,
+        hadH2HSignal: snapshot.hadH2HSignal,
+        hadVenueSignal: snapshot.hadVenueSignal,
+        hadWeatherSignal: snapshot.hadWeatherSignal,
+        hadInjurySignal: snapshot.hadInjurySignal,
+        bookmakerCount: snapshot.bookmakerCount,
+        dataQualityScore: snapshot.dataQualityScore,
+        lineMovementDelta: snapshot.lineMovementDelta,
+        restAdvantageNet: snapshot.restAdvantageNet,
+        atsFormSampleSize: snapshot.atsFormSampleSize,
+        h2hSampleSize: snapshot.h2hSampleSize,
+        scheduleDensityHome: snapshot.scheduleDensityHome,
+        scheduleDensityAway: snapshot.scheduleDensityAway,
+        modelVersion: snapshot.modelVersion,
+      }
+    : null;
   const preMortem = buildPickPremortemNote(
     {
       id: pick.id,
@@ -143,30 +177,11 @@ export async function GET(
       riskLevel: pick.riskLevel,
       modelVersion: pick.modelVersion,
     },
-    snapshot
-      ? {
-          id: snapshot.id,
-          capturedAt: snapshot.capturedAt,
-          hadLineMovementSignal: snapshot.hadLineMovementSignal,
-          hadRestSignal: snapshot.hadRestSignal,
-          hadScheduleSignal: snapshot.hadScheduleSignal,
-          hadAtsFormSignal: snapshot.hadAtsFormSignal,
-          hadH2HSignal: snapshot.hadH2HSignal,
-          hadVenueSignal: snapshot.hadVenueSignal,
-          hadWeatherSignal: snapshot.hadWeatherSignal,
-          hadInjurySignal: snapshot.hadInjurySignal,
-          bookmakerCount: snapshot.bookmakerCount,
-          dataQualityScore: snapshot.dataQualityScore,
-          lineMovementDelta: snapshot.lineMovementDelta,
-          restAdvantageNet: snapshot.restAdvantageNet,
-          atsFormSampleSize: snapshot.atsFormSampleSize,
-          h2hSampleSize: snapshot.h2hSampleSize,
-          scheduleDensityHome: snapshot.scheduleDensityHome,
-          scheduleDensityAway: snapshot.scheduleDensityAway,
-          modelVersion: snapshot.modelVersion,
-        }
-      : null
+    snapshotInput
   );
+  // Fragility: the premortem's structural risk as a published-weights
+  // number. Same snapshot, no new claims, null without a snapshot.
+  const fragility = computeFragilityScore(snapshotInput);
 
   // Signal-category topology. Derived from the snapshot's hadXxx flags
   // when present; falls back to "ABSENT" otherwise so the audit always
@@ -252,13 +267,34 @@ export async function GET(
       upgradeRequiredForDetail: true,
     };
     const payload: AuditPayload = summary;
-    return NextResponse.json({ success: true, audit: payload, preMortem });
+    return NextResponse.json({ success: true, audit: payload, preMortem, fragility });
   }
 
   // ──────────────────────────────────────────────────────────────────
   // PRO / ELITE tier: full forensic detail. Still NO raw payload data,
   // NO Kelly/stake math, NO true-EV — those remain hard-gated.
   // ──────────────────────────────────────────────────────────────────
+  // Death clock: price-space market movement since publish, from the
+  // same bounded odds rows. Null whenever history can't support it.
+  const deathClock = buildPickDeathClock(
+    {
+      pickType: String(pick.pickType),
+      selection: pick.selection,
+      generatedAt: pick.generatedAt,
+      homeTeamName: pick.game.homeTeamName,
+      awayTeamName: pick.game.awayTeamName,
+    },
+    (pick.game.odds ?? []).map((o) => ({
+      bookmaker: o.bookmaker,
+      market: String(o.market),
+      fetchedAt: o.fetchedAt,
+      spread: o.spread,
+      total: o.total,
+      homePrice: o.homePrice,
+      awayPrice: o.awayPrice,
+    })),
+  );
+
   const detailed: AuditPayloadDetailed = {
     tier: tier === "ELITE" ? "ELITE" : "PRO",
     pickId: pick.id,
@@ -276,6 +312,7 @@ export async function GET(
     scheduleDensityAway: snapshot?.scheduleDensityAway ?? null,
     signalCategories,
     sourceSnapshots,
+    deathClock,
     gatesAtPrediction: {
       canonicalHistory: gates.canPersistCanonicalHistory,
       derivedModelHistory: gates.canUseDerivedHistory,
@@ -283,5 +320,5 @@ export async function GET(
     },
   };
   const payload: AuditPayload = detailed;
-  return NextResponse.json({ success: true, audit: payload, preMortem });
+  return NextResponse.json({ success: true, audit: payload, preMortem, fragility });
 }

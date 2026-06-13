@@ -10,6 +10,17 @@
  *   - Never describe agents as autonomous.
  *   - When data is unavailable, the answer says so.
  *   - confidence is LOW when key facts are UNKNOWN or missing.
+ *
+ * Memory recall (§Recall-before-answer):
+ *   - For owner/architecture/product/strategy intents, recallRelevantMemory
+ *     is called before composing the answer.
+ *   - Confirmed memories are prepended to supportingState with the phrasing
+ *     "Using confirmed memory from [date]: …"
+ *   - Candidate-only note: "I found a related memory candidate, but it has
+ *     not been confirmed."
+ *   - Conflicts: "There are conflicting memories. Owner review is required."
+ *   - On MemoryStoreUnavailableError: answer proceeds exactly as today —
+ *     no degradation, no fake memory. Memory context is ADDITIVE.
  */
 
 import type { OwnerSummary } from "./owner-summary";
@@ -21,6 +32,8 @@ import {
 } from "../jarvis/capability-registry";
 import { AGENT_COUNCIL, getCouncilSeatCounts } from "../jarvis/agent-council";
 import { buildMemoryStatus, getOperatingLoop } from "../jarvis/intelligence-state";
+import { recallRelevantMemory, type RecallFilter } from "../jarvis/memory/actions";
+import { MemoryStoreUnavailableError } from "../jarvis/memory/errors";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -726,4 +739,140 @@ const HANDLERS: Readonly<Record<JarvisIntent, (s: OwnerSummary) => JarvisAnswer>
 // Dispatches a deterministic owner question to the correct intent handler for the given OwnerSummary.
 export function askJarvis(intent: JarvisIntent, summary: OwnerSummary): JarvisAnswer {
   return HANDLERS[intent](summary);
+}
+
+// ─── Memory recall — intents that trigger recall-before-answer ────────────────
+
+/**
+ * Intents that represent owner/architecture/product/strategy questions.
+ * These are the intents where recallRelevantMemory is called before composing.
+ */
+const RECALL_INTENTS = new Set<JarvisIntent>([
+  "decisions",
+  "meeting",
+  "what-is-jarvis",
+  "what-is-wired",
+  "what-is-not-wired",
+  "what-can-run",
+  "which-agent-owns-this",
+  "what-needs-approval",
+  "what-should-we-build-next",
+  "what-is-ai-ops-status",
+  "what-is-memory-status",
+]);
+
+/** Derive a recall filter scope + tags from the intent. */
+function recallFilterForIntent(intent: JarvisIntent): RecallFilter {
+  const intentTagMap: Partial<Record<JarvisIntent, string[]>> = {
+    "decisions": ["decision", "owner"],
+    "meeting": ["decision", "owner", "product"],
+    "what-is-jarvis": ["architecture", "jarvis"],
+    "what-is-wired": ["architecture", "wiring"],
+    "what-is-not-wired": ["architecture", "wiring"],
+    "what-can-run": ["architecture", "execution"],
+    "which-agent-owns-this": ["architecture", "agent"],
+    "what-needs-approval": ["decision", "approval"],
+    "what-should-we-build-next": ["architecture", "product", "roadmap"],
+    "what-is-ai-ops-status": ["ai-ops", "architecture"],
+    "what-is-memory-status": ["memory", "architecture"],
+  };
+
+  const scopeMap: Partial<Record<JarvisIntent, string>> = {
+    "decisions": "owner.decision",
+    "meeting": "owner.decision",
+    "what-is-jarvis": "architecture",
+    "what-is-wired": "architecture",
+    "what-is-not-wired": "architecture",
+    "what-can-run": "architecture",
+    "which-agent-owns-this": "architecture",
+    "what-needs-approval": "owner.decision",
+    "what-should-we-build-next": "architecture",
+    "what-is-ai-ops-status": "architecture",
+    "what-is-memory-status": "architecture",
+  };
+
+  return {
+    scope: scopeMap[intent],
+    tags: intentTagMap[intent],
+  };
+}
+
+/**
+ * Format recalled memory context into supportingState entries, per spec:
+ *   - confirmed → "Using confirmed memory from [date]: …"
+ *   - conflicts → "There are conflicting memories. Owner review is required."
+ *   - candidate-only note → "I found a related memory candidate, but it has not been confirmed."
+ */
+function formatMemoryContext(
+  memories: Awaited<ReturnType<typeof recallRelevantMemory>>,
+): readonly string[] {
+  if (!memories) return [];
+
+  const lines: string[] = [];
+
+  const { memories: confirmed, unresolvedConflicts: conflicts, candidateMemories } = memories;
+
+  if (conflicts.length > 0) {
+    lines.push("There are conflicting memories. Owner review is required.");
+  }
+
+  for (const mem of confirmed) {
+    const date = (mem.confirmed_at ?? mem.created_at).toISOString().slice(0, 10);
+    lines.push(`Using confirmed memory from ${date}: ${mem.summary}`);
+  }
+
+  // Candidate-only transparency note: emit when no confirmed memories exist
+  // but candidates are present in scope.
+  if (confirmed.length === 0 && candidateMemories && candidateMemories.length > 0) {
+    lines.push("I found a related memory candidate, but it has not been confirmed.");
+  }
+
+  return lines;
+}
+
+/**
+ * Async variant of askJarvis that recalls relevant memory before composing
+ * the answer for owner/architecture/product/strategy intents.
+ *
+ * - Memory context is ADDITIVE: existing answer is the base.
+ * - On MemoryStoreUnavailableError: answers exactly as askJarvis() — no degradation.
+ * - Candidate-only note: "I found a related memory candidate, but it has not been confirmed."
+ *   (surfaced when there are candidates but no confirmed memories in scope)
+ */
+export async function askJarvisWithMemory(
+  intent: JarvisIntent,
+  summary: OwnerSummary,
+): Promise<JarvisAnswer> {
+  const base = askJarvis(intent, summary);
+
+  if (!RECALL_INTENTS.has(intent)) {
+    return base;
+  }
+
+  try {
+    const filter = recallFilterForIntent(intent);
+    const recalled = await recallRelevantMemory(filter);
+
+    if (!recalled) return base;
+
+    const { memories: confirmedMemories, unresolvedConflicts, candidateMemories } = recalled;
+
+    if (confirmedMemories.length === 0 && unresolvedConflicts.length === 0 && (!candidateMemories || candidateMemories.length === 0)) {
+      return base;
+    }
+
+    const memoryLines = formatMemoryContext(recalled);
+
+    return {
+      ...base,
+      supportingState: [...memoryLines, ...base.supportingState],
+    };
+  } catch (err) {
+    if (err instanceof MemoryStoreUnavailableError) {
+      // Memory store unavailable — answer exactly as today, no degradation
+      return base;
+    }
+    // Other errors: also fall back gracefully
+    return base;
+  }
 }

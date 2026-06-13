@@ -139,7 +139,7 @@ export function ParlayGenome() {
             <Vital label="Headline payout" value={`${vitals.payoutDecimal ? vitals.payoutDecimal.toFixed(2) : "0"}×`} sub={`${decimalToAmerican(vitals.payoutDecimal)} American`} color={BRAND_COLORS.ionWhite} />
             <Vital label="Fair payout" value={`${vitals.fairPayoutDecimal ? vitals.fairPayoutDecimal.toFixed(2) : "0"}×`} sub="zero-vig break-even" color={BRAND_COLORS.softUltraviolet} />
             <Vital label="House edge" value={pct(vitals.houseEdge)} sub="compounded across legs" color={BRAND_COLORS.ionMagenta} />
-            <Vital label="Correlation" value={vitals.correlated.length ? `${vitals.correlated.length} group${vitals.correlated.length > 1 ? "s" : ""}` : "None"} sub="hidden same-game ties" color={vitals.correlated.length ? BRAND_COLORS.ionMagenta : BRAND_COLORS.orbitalCyan} />
+            <Vital label="Dependency Coefficient" value={vitals.count ? vitals.dependencyCoefficient.toFixed(2) : "—"} sub={vitals.correlated.length ? `${vitals.correlated.length} same-game tie${vitals.correlated.length > 1 ? "s" : ""} — structural, not statistical` : "every leg independent"} color={vitals.correlated.length ? BRAND_COLORS.ionMagenta : BRAND_COLORS.orbitalCyan} />
           </div>
         </div>
 

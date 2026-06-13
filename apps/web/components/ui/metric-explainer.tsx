@@ -12,6 +12,14 @@ export type ExplainerVariant = "paper" | "dark";
 export interface MetricTerm {
   term: ReactNode;
   definition: ReactNode;
+  /**
+   * Stat-envelope fields (stat commandment): the metric's known weakness
+   * and what decisions it may honestly inform. Optional during rollout —
+   * tests pin which surfaces are fully enveloped; source + timestamp live
+   * at view level (sourceIds/generatedAt).
+   */
+  weakness?: ReactNode;
+  decisionUse?: ReactNode;
 }
 
 export interface MetricExplainerProps {
@@ -56,7 +64,21 @@ export function MetricExplainer({
         {terms.map((t, i) => (
           <div key={i}>
             <dt className={`font-semibold ${v.term}`}>{t.term}</dt>
-            <dd className={v.def}>{t.definition}</dd>
+            <dd className={v.def}>
+              {t.definition}
+              {t.weakness != null && (
+                <span className="mt-1 block text-xs opacity-80">
+                  <span className="font-semibold">Known weakness:</span>{" "}
+                  {t.weakness}
+                </span>
+              )}
+              {t.decisionUse != null && (
+                <span className="mt-1 block text-xs opacity-80">
+                  <span className="font-semibold">Decision use:</span>{" "}
+                  {t.decisionUse}
+                </span>
+              )}
+            </dd>
           </div>
         ))}
       </dl>

@@ -826,6 +826,201 @@ enum AtsResult {
 }
 
 // ============================================================
+// JARVIS MEMORY PROTOCOL (Stage 1)
+// ============================================================
+
+enum MemoryType {
+  episodic
+  semantic
+  procedural
+  preference
+  decision
+  failure
+  source
+  agent_performance
+  escalation_rule
+  public_claim_rule
+}
+
+enum MemoryState {
+  candidate
+  confirmed
+  repeated_pattern
+  conflicted
+  stale
+  superseded
+  rejected
+  expired
+}
+
+model JarvisMemoryEvent {
+  id                  String      @id @default(cuid())
+  memory_type         MemoryType
+  memory_state        MemoryState @default(candidate)
+  scope               String
+  title               String
+  summary             String      @db.Text
+  full_text           String?     @db.Text
+  source_type         String
+  source_ref          String?
+  source_timestamp    DateTime?
+  actor               String
+  owner               String
+  confidence          Int         // 0–100
+  sensitivity         String      @default("normal") // normal | high | legal | hr | spend
+  tags                String[]
+  related_decision_id String?
+  related_agent_id    String?
+  supersedes_memory_id String?
+  expires_at          DateTime?
+  created_at          DateTime    @default(now())
+  updated_at          DateTime    @updatedAt
+  confirmed_at        DateTime?
+  rejected_at         DateTime?
+  embedding_ref       String?
+  metadata            Json?
+  owner_approval      Boolean     @default(false)
+
+  /// Optional link to the SubagentRun that created this memory candidate.
+  related_agent_run_id String?
+
+  superseded_by JarvisMemoryEvent[]  @relation("MemorySupersession")
+  supersedes    JarvisMemoryEvent?   @relation("MemorySupersession", fields: [supersedes_memory_id], references: [id])
+  decisions     JarvisDecision[]     @relation("MemoryDecisionLink")
+  agent_run     SubagentRun?         @relation("MemoryAgentRunLink", fields: [related_agent_run_id], references: [id], onDelete: SetNull)
+
+  @@index([memory_state])
+  @@index([memory_type])
+  @@index([scope])
+  @@index([created_at])
+  @@map("jarvis_memory_events")
+}
+
+model JarvisDecision {
+  id                  String   @id @default(cuid())
+  decision_title      String
+  decision_summary    String   @db.Text
+  decision_type       String
+  rationale           String   @db.Text
+  evidence            Json?
+  alternatives_rejected Json?
+  owner               String
+  decision_date       DateTime
+  revisit_date        DateTime?
+  outcome             String?  @db.Text
+  status              String   @default("open") // open | resolved | superseded | archived
+  source_refs         Json?
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  memory_events JarvisMemoryEvent[] @relation("MemoryDecisionLink")
+
+  @@index([decision_date])
+  @@index([status])
+  @@map("jarvis_decisions")
+}
+
+// ============================================================
+// AGENT COUNCIL LEDGERS (spec §8–9)
+//
+// AgentHandoff — every seat-to-seat handoff is logged here.
+// SubagentRun  — every subagent run is logged as a draft until
+//                the parent seat reviews it (pending_review → accepted/rejected/edited).
+//
+// JarvisMemoryEvent gains an optional link to SubagentRun so
+// memory candidates created during a subagent run carry their
+// provenance.
+//
+// snake_case @@map names per convention.
+// ============================================================
+
+enum AgentHandoffStatus {
+  pending
+  accepted
+  rejected
+  escalated
+}
+
+enum AgentHandoffRiskLevel {
+  low
+  medium
+  high
+  critical
+}
+
+enum SubagentParentReviewStatus {
+  pending_review
+  accepted
+  rejected
+  edited
+}
+
+model AgentHandoff {
+  id                     String                @id @default(cuid())
+  /// Codename of the council seat initiating the handoff.
+  source_seat            String
+  /// Codename of the council seat receiving the handoff.
+  target_seat            String
+  /// Human-readable reason for the handoff.
+  reason                 String                @db.Text
+  /// Task type from the routing rules (e.g. "pick-research", "settlement").
+  task_type              String
+  /// Supporting evidence text (urls, data references, test ids).
+  evidence_text          String                @db.Text
+  risk_level             AgentHandoffRiskLevel @default(low)
+  /// Authority tier of the initiating seat (0–4).
+  authority_tier         Int
+  status                 AgentHandoffStatus    @default(pending)
+  /// Whether this handoff requires explicit owner approval before proceeding.
+  owner_approval_required Boolean             @default(false)
+  /// Outcome narrative once the handoff is resolved — null until then.
+  outcome                String?               @db.Text
+  created_at             DateTime              @default(now())
+  updated_at             DateTime              @updatedAt
+
+  @@index([source_seat, created_at])
+  @@index([target_seat, created_at])
+  @@index([status])
+  @@index([created_at])
+  @@map("agent_handoffs")
+}
+
+model SubagentRun {
+  id                       String                     @id @default(cuid())
+  /// Id of the subagent template that ran (matches SubagentTemplate.id).
+  subagent_id              String
+  /// Codename of the parent council seat that spawned this subagent.
+  parent_seat              String
+  /// Narrow task the subagent was given.
+  task                     String                     @db.Text
+  /// Context provided as input to the subagent.
+  input_context            String                     @db.Text
+  /// Reference to the draft artifact the subagent produced (path, id, or url).
+  output_artifact_ref      String                     @db.Text
+  /// Confidence score 0–100 in the output.
+  confidence               Int
+  /// Explicit uncertainty statement about the output.
+  uncertainty              String                     @db.Text
+  /// Supporting evidence for the output.
+  evidence                 String[]
+  /// True = prohibited-actions check passed; false = violation detected.
+  prohibited_actions_checked Boolean                  @default(false)
+  /// Parent seat's review status — pending until parent explicitly reviews.
+  parent_review_status     SubagentParentReviewStatus @default(pending_review)
+  created_at               DateTime                   @default(now())
+  updated_at               DateTime                   @updatedAt
+
+  /// Memory events linked to this run (optional, created by linkMemoryToAgentRun).
+  memory_events JarvisMemoryEvent[] @relation("MemoryAgentRunLink")
+
+  @@index([subagent_id, created_at])
+  @@index([parent_seat, created_at])
+  @@index([parent_review_status])
+  @@index([created_at])
+  @@map("subagent_runs")
+}
+
+// ============================================================
 // OPERATOR COCKPIT (Phase 2B)
 //
 // Internal-only models. Power the Jarvis-style operator surface
@@ -1569,4 +1764,137 @@ model ContentReview {
 
   @@index([draftId, createdAt])
   @@map("content_reviews")
+}
+
+// ============================================================
+// COMMUNITY MODERATION (Stage-2 gate)
+//
+// Powers the graduated action ladder (NUDGE → REMOVE → MUTE →
+// SUSPEND → BAN) mandated by COMMUNITY_MODERATION_POLICY.md.
+// Every action is logged with actor + reason (platform law).
+// Appeals are allowed once per SUSPEND/BAN; a different reviewer
+// than the original actor must decide (policy law).
+//
+// snake_case @@map names per convention.
+// No FK to User on actor/reviewer: free-text, matches cockpit pattern.
+// ============================================================
+
+enum ModerationReasonCode {
+  HARASSMENT
+  HATE_SPEECH
+  THREATS
+  DOXXING
+  TOUT_BEHAVIOR
+  GUARANTEED_WINNER_LANGUAGE
+  PRESSURE_TO_BET
+  BEGINNER_MOCKING
+  LOSS_SHAMING
+  CHASING_LOSSES_ENCOURAGEMENT
+  SELF_EXCLUSION_CIRCUMVENTION
+  UNDERAGE_PARTICIPATION
+  PIRATED_CONTENT
+  PERSONAL_DATA_SHARING
+  SPAM_REFERRAL_FLOOD
+  OTHER
+}
+
+enum ModerationReportStatus {
+  OPEN
+  UNDER_REVIEW
+  ACTIONED
+  DISMISSED
+  ESCALATED
+}
+
+enum ModerationActionKind {
+  NUDGE
+  REMOVE
+  MUTE_24H
+  MUTE_7D
+  SUSPEND
+  BAN
+}
+
+enum ModerationAppealStatus {
+  PENDING
+  UNDER_REVIEW
+  UPHELD
+  OVERTURNED
+  EXPIRED
+}
+
+// A report filed by a user or automated system against content.
+model ModerationReport {
+  id           String                  @id @default(cuid())
+  reporterUserId String?               // null for automated/system reports
+  targetUserId  String
+  contentRef   String                  // opaque ref: "message:<id>", "parlay:<id>", etc.
+  surface      String                  // e.g. "sunday_couch", "brotherhood_table"
+  reason       ModerationReasonCode
+  notes        String?                 @db.Text
+  status       ModerationReportStatus  @default(OPEN)
+  resolvedBy   String?                 // free-text actor id
+  resolvedAt   DateTime?
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  actions ModerationAction[]
+
+  @@index([targetUserId])
+  @@index([status, createdAt])
+  @@index([surface])
+  @@index([reason])
+  @@map("moderation_reports")
+}
+
+// A moderation action taken against a user (logged, auditable).
+// Every action MUST have actor + reason — enforced in the service layer.
+model ModerationAction {
+  id           String               @id @default(cuid())
+  actor        String               // free-text operator/system id — NEVER empty
+  targetUserId String
+  contentRef   String?              // optional: the specific content actioned
+  surface      String?
+  action       ModerationActionKind
+  reason       ModerationReasonCode
+  notes        String?              @db.Text
+  reportId     String?              // which report triggered this (optional)
+  // Time-boxed actions: expiresAt required for MUTE_24H, MUTE_7D, SUSPEND.
+  // BAN has no expiry. NUDGE/REMOVE have no expiry.
+  expiresAt    DateTime?
+  createdAt    DateTime             @default(now())
+
+  report  ModerationReport?  @relation(fields: [reportId], references: [id], onDelete: SetNull)
+  appeal  ModerationAppeal?
+
+  @@index([targetUserId, createdAt])
+  @@index([action])
+  @@index([reportId])
+  @@index([expiresAt])
+  @@map("moderation_actions")
+}
+
+// One appeal per SUSPEND/BAN action; decided by a different reviewer.
+// 7-day SLA enforced in service logic.
+model ModerationAppeal {
+  id           String                @id @default(cuid())
+  actionId     String                @unique  // one appeal per action
+  appellantId  String                // the user who was suspended/banned
+  grounds      String                @db.Text
+  status       ModerationAppealStatus @default(PENDING)
+  // The reviewer must NOT be the same actor who took the original action.
+  // Enforced in the service layer (canReview check).
+  decidedBy    String?               // free-text reviewer id
+  decision     String?               @db.Text
+  decidedAt    DateTime?
+  // SLA: appeal must be decided within 7 days of filing.
+  slaDeadline  DateTime              // createdAt + 7 days; computed at creation
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  action ModerationAction @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  @@index([status, slaDeadline])
+  @@index([appellantId])
+  @@map("moderation_appeals")
 }

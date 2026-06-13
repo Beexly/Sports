@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { captureError, initObservability } from "@/lib/observability/sentry";
 
 /**
  * Global error boundary. Server-side errors arrive with a `digest`
@@ -18,8 +19,13 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
+    // Defensive init: SentryClientInit in root layout normally handles this,
+    // but error boundaries can mount before the layout's useEffect fires.
+    // initObservability is idempotent (_initialized guard makes this safe).
+    initObservability();
     // eslint-disable-next-line no-console
     console.error("[app] error boundary caught:", error);
+    captureError(error, { digest: error.digest });
   }, [error]);
 
   const isProd = process.env.NODE_ENV === "production";

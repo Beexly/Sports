@@ -9,6 +9,11 @@ import type {
   PlayerSeasonLine,
 } from "@/lib/nflverse/player-lab";
 import type { SnapShareRow } from "@/lib/nflverse/snap-share";
+import {
+  STABILITY_META,
+  STABILITY_TOOLTIP,
+  statStabilityGrade,
+} from "@/lib/players/stat-stability";
 import type { ReceivingOpportunityRow } from "@/lib/intelligence/receiving-opportunity";
 import type { RushingEfficiencyRow } from "@/lib/intelligence/rushing-efficiency";
 import type {
@@ -62,6 +67,15 @@ function teamCell(team: string): ReactNode {
   return <span className="font-mono font-medium text-ink-1">{team}</span>;
 }
 /** Name + small position kicker (matches the old two-line player cell). */
+function stabilityCell(games: number): ReactNode {
+  const meta = STABILITY_META[statStabilityGrade(games)];
+  return (
+    <span title={meta.label} aria-label={meta.label}>
+      {meta.glyph}
+    </span>
+  );
+}
+
 function playerCell(name: string, position?: string): ReactNode {
   return (
     <div>
@@ -86,6 +100,7 @@ function productionLeaderColumns(): ReadonlyArray<Column<PlayerSeasonLine>> {
     { key: "playerName", label: "Player", sortable: true, render: (r) => playerCell(r.playerName, r.position) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "games", label: "G", align: "right", numeric: true },
+    { key: "stability", label: "Stab", align: "right", tooltip: STABILITY_TOOLTIP, sortValue: (r) => r.games, render: (r) => stabilityCell(r.games) },
     { key: "pprPerGame", label: "PPR/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.pprPerGame) },
     { key: "last5PprPerGame", label: "5g", align: "right", numeric: true, tooltip: "last-5-game PPR/G", render: (r) => fmtDecimal(r.last5PprPerGame) },
     { key: "last5PprDelta", label: "Δ", align: "right", numeric: true, tooltip: "recent form minus season pace", render: (r) => signedCell(r.last5PprDelta, 1) },
@@ -118,6 +133,7 @@ function snapColumns(): ReadonlyArray<Column<SnapShareRow>> {
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, r.position) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "games", label: "G", align: "right", numeric: true },
+    { key: "stability", label: "Stab", align: "right", tooltip: STABILITY_TOOLTIP, sortValue: (r) => r.games, render: (r) => stabilityCell(r.games) },
     { key: "snapSharePct", label: "Snap %", align: "right", numeric: true, render: (r) => fmtPercent(r.snapSharePct) },
     { key: "snapsPerGame", label: "Snaps/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.snapsPerGame) },
   ];
@@ -316,6 +332,7 @@ function edgeColumns(tone: "buy" | "sell"): ReadonlyArray<Column<EdgeSignalRow>>
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, r.position) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team) },
     { key: "games", label: "G", align: "right", numeric: true },
+    { key: "stability", label: "Stab", align: "right", tooltip: STABILITY_TOOLTIP, sortValue: (r) => r.games, render: (r) => stabilityCell(r.games) },
     { key: "pprPerGame", label: "PPR/G", align: "right", numeric: true, render: (r) => r.pprPerGame.toFixed(1) },
     { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
     { key: "avgSeparation", label: "Sep", align: "right", numeric: true, render: (r) => r.avgSeparation.toFixed(2) },

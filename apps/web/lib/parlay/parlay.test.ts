@@ -41,4 +41,17 @@ describe("computeVitals — the parlay genome math", () => {
     const v = computeVitals(SAMPLE_LEGS);
     expect(v.suggestions.some((s) => /Game 1/.test(s))).toBe(true);
   });
+
+  it("computes the Dependency Coefficient as the bound-leg share", () => {
+    // Full sample: 2 of 5 legs share Game 1 → 0.4
+    expect(computeVitals(SAMPLE_LEGS).dependencyCoefficient).toBeCloseTo(0.4);
+    // Lone leg: nothing to bind to → 0
+    const lone = SAMPLE_LEGS.find((l) => l.id === "l1")!;
+    expect(computeVitals([lone]).dependencyCoefficient).toBe(0);
+    // Both Game-1 legs only: every leg bound → 1
+    const g1 = SAMPLE_LEGS.filter((l) => l.group === "g1");
+    expect(computeVitals(g1).dependencyCoefficient).toBe(1);
+    // Empty ticket stays 0, not NaN
+    expect(computeVitals([]).dependencyCoefficient).toBe(0);
+  });
 });

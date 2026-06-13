@@ -19,6 +19,8 @@
 import { getReadinessGates } from "@sports/prediction-engine";
 import { loadBoardState } from "@/lib/board/state";
 import { db } from "@sports/db";
+import { buildH2hMarketRead, DRIFT_MOVING_PP } from "@/lib/market/game-market-read";
+import { WIDE_SPREAD_PP } from "@/lib/market/simulation-cloud-geometry";
 import {
   DEMO_SLATE, TIMELINE, LEAGUE_CENTERS,
   type TwinSlate, type TwinGame, type TwinLeague, type TwinVerdict, type TwinMarket, type TwinMarketKey,
@@ -59,6 +61,17 @@ const MARKET_ORDER: ReadonlyArray<readonly [string, TwinMarketKey]> = [
 ];
 
 type OddsRow = { market: string; spread: number | null };
+
+/** Full H2H-capable odds row, a superset of OddsRow for market-read use. */
+type FullOddsRow = {
+  market: string;
+  spread: number | null;
+  bookmaker: string;
+  homePrice: number | null;
+  awayPrice: number | null;
+  drawPrice: number | null;
+  fetchedAt: Date;
+};
 
 function spreadStats(odds: OddsRow[]): { vol: number | null; current: number | null } {
   const spreads = odds.filter((o) => o.market === "SPREADS" && o.spread != null).map((o) => o.spread as number);
@@ -102,8 +115,33 @@ async function buildLiveSlate(): Promise<TwinSlate | null> {
     if (!league) continue; // the Twin only models NFL/NBA/MLB/NHL
 
     const pick = row.picks?.[0] ?? null;
-    const odds: OddsRow[] = (row.odds ?? []).map((o) => ({ market: String(o.market), spread: o.spread ?? null }));
+    const fullOdds: FullOddsRow[] = (row.odds ?? []).map((o) => ({
+      market: String(o.market),
+      spread: o.spread ?? null,
+      bookmaker: o.bookmaker,
+      homePrice: o.homePrice ?? null,
+      awayPrice: o.awayPrice ?? null,
+      drawPrice: o.drawPrice ?? null,
+      fetchedAt: o.fetchedAt,
+    }));
+    const odds: OddsRow[] = fullOdds;
     const { vol: spreadVol, current: curSpread } = spreadStats(odds);
+
+    // Market signal states — derived only from real captured H2H data.
+    const marketRead = buildH2hMarketRead(fullOdds);
+    const driftState: "moving" | undefined =
+      marketRead !== null &&
+      marketRead.homeDriftPp !== null &&
+      Math.abs(marketRead.homeDriftPp) >= DRIFT_MOVING_PP
+        ? "moving"
+        : undefined;
+    const disagreementState: "argued" | undefined = (() => {
+      if (!marketRead) return undefined;
+      const probs = marketRead.consensus.fairHomeProbsByBook;
+      if (probs.length < 2) return undefined;
+      const spreadPp = (Math.max(...probs) - Math.min(...probs)) * 100;
+      return spreadPp >= WIDE_SPREAD_PP ? "argued" : undefined;
+    })();
 
     const conf01 = pick ? c01((pick.confidence ?? 0) / 100) : c01((row.dataQualityScore ?? 0) / 100);
     const signalDensity = conf01;
@@ -146,6 +184,10 @@ async function buildLiveSlate(): Promise<TwinSlate | null> {
       ...(boardByGame.has(row.id)
         ? { boardStatus: boardByGame.get(row.id)!.status, gateReason: boardByGame.get(row.id)!.gateReason }
         : {}),
+      // Market signal states — set only when thresholds are met from real data;
+      // absent (undefined) when data is unavailable. No defaults, no synthesis.
+      ...(driftState ? { driftState } : {}),
+      ...(disagreementState ? { disagreementState } : {}),
       // publicMoney / sharp / impact intentionally OMITTED — not instrumented.
     });
   }
