@@ -20,7 +20,7 @@
 import { getPricingPhase } from "./pricing-phases";
 
 export type ValueTierId = "FREE" | "PRO" | "ELITE" | "OPERATOR";
-export type ValueTierStatus = "live" | "waitlist";
+export type ValueTierStatus = "live" | "waitlist" | "hidden";
 
 export interface ValueTierPrice {
   /** Monthly USD, or null for free / waitlist-target display. */
@@ -79,7 +79,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
       "How Galaxy works — the methodology preview",
       "Glossary and education (how to read confidence, movement, and No-Bet)",
       "Responsible-gaming framing, up front",
-      "A limited sample signal so you can see the shape of a day",
+      "Two free picks a day — with confidence scores (our lowest-confidence promoted picks)",
       "A partial board view with paid rows clearly gated",
       "No-Bet examples — when passing is the smarter call",
       "Public proof snippets — the receipts behind the claims",
@@ -87,8 +87,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     ],
     gated: [
       "Today's full board",
-      "The full reasoning behind each signal",
-      "Confidence detail and the factor trail",
+      "The full reasoning and factor trail behind each signal",
       "Line-movement history and props depth",
       "Alerts",
     ],
@@ -148,8 +147,9 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     gated: [
       "Operator workflow tools — exports, scenario analysis, automation, exposure tracking",
     ],
-    whyNextTier:
-      "Operator adds workflow control — exports, scenario analysis, board history, and exposure tracking — for running a serious operation.",
+    // Operator is hidden from public surfaces (owner decision); Elite is the top
+    // public tier, so it does not tease a higher tier.
+    whyNextTier: null,
   },
   {
     id: "OPERATOR",
@@ -157,7 +157,9 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     order: 3,
     promise: "Run a serious workflow.",
     forWho: "Power users running a full sports-intelligence workflow.",
-    status: "waitlist",
+    // Hidden from public surfaces per owner decision — kept in config for
+    // internal planning; not shown on /pricing and not a billable tier.
+    status: "hidden",
     ctaLabel: "Join the waitlist",
     price: { monthly: 79, annual: 699, note: "target pricing — waitlist; launches when the workflow infrastructure is real" },
     unlocks: [

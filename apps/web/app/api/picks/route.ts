@@ -28,7 +28,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         canSeeFactorBreakdown: false,
         canSeeEdgeScore: true,
         canGetAlerts: false,
-        dailyPickLimit: 1,
+        dailyPickLimit: 2,
       };
 
   const { searchParams } = new URL(req.url);
@@ -112,8 +112,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
       selection: pick.selection,
       line: pick.line,
-      // Gated fields
-      confidence: entitlements.canSeeConfidence ? pick.confidence : null,
+      // Gated fields. FREE-tier picks are the public free sample — they carry
+      // their confidence score (the owner's "2 free picks with confidence"
+      // decision). Premium picks are never returned to FREE viewers (tier filter
+      // above), and the board redacts confidence independently, so this does not
+      // leak the paid product.
+      confidence:
+        entitlements.canSeeConfidence || pick.tier === "FREE" ? pick.confidence : null,
       edgeScore: entitlements.canSeeEdgeScore ? pick.edgeScore : null,
       factorBreakdown,
       // Always visible — trust transparency

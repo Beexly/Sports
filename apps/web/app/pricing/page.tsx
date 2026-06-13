@@ -29,12 +29,12 @@ const phase = getCurrentPricingPhase();
 export const metadata: Metadata = {
   title: "Pricing — Founding-Member Rates, Locked For Life",
   description:
-    "Free for one signal a day. Founding-member pricing on Pro and Elite — the lowest price we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
+    "Free for two picks a day, with confidence. Founding-member pricing on Pro and Elite — the lowest price we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: `Pricing — ${BRAND_NAME}`,
     description:
-      "Founding-member pricing, locked for life. Monthly or annual, with a 7-day refund window.",
+      "Founding-member pricing, locked for life. Monthly or annual, with a 3-day money-back window.",
   },
 };
 
@@ -43,12 +43,12 @@ export const metadata: Metadata = {
 // ─────────────────────────────────────────────
 
 const FREE_FEATURES = [
-  { label: "1 signal per day", included: true },
+  { label: "2 picks per day, with confidence scores", included: true },
   { label: "Edge Index on every signal", included: true },
   { label: "Game matchup info + pick type", included: true },
   { label: "Public verified record & calibration", included: true },
   { label: "The Academy — full training floor", included: true },
-  { label: "Confidence rating (Pro)", included: false },
+  { label: "Confidence on the full board (Pro)", included: false },
   { label: "Factor trail & evidence audit (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
   { label: "Real-time alerts (Elite)", included: false },
@@ -140,7 +140,7 @@ const COMPARISON_FEATURES = [
 ] as const;
 
 const COMPARISON_CELLS: Record<"FREE" | "PRO" | "ELITE", (string | boolean)[]> = {
-  FREE: ["1", "Sampler", true, false, false, "Counts only", false, false, false, false, false, false, true, true],
+  FREE: ["2", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true],
   PRO: ["Unlimited", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true],
   ELITE: ["Unlimited", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true],
 };
@@ -152,7 +152,7 @@ const COMPARISON_CELLS: Record<"FREE" | "PRO" | "ELITE", (string | boolean)[]> =
 const FAQ = [
   {
     q: "Is there a free trial on Pro or Elite?",
-    a: "Every paid plan ships with a 7-day refund window. Cancel any time from your dashboard.",
+    a: "No free trial — but every paid plan has a 3-day money-back window. Cancel any time from your dashboard.",
   },
   {
     q: "What is founding-member pricing?",
@@ -242,8 +242,8 @@ export default function PricingPage() {
             <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
               Each plan is a different job — and you can see exactly what the next tier adds before you pay for it.
             </p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {VALUE_TIERS.map((t) => (
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {VALUE_TIERS.filter((t) => t.status === "live").map((t) => (
                 <div
                   key={t.id}
                   className="flex h-full flex-col rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
@@ -422,8 +422,8 @@ export default function PricingPage() {
 
           {/* Refund note */}
           <p className="mt-12 text-center text-xs text-gray-400">
-            Every paid plan ships with a 7-day refund window. Cancel any time from your
-            dashboard. Prices shown are founding-member rates.
+            No free trial. Every paid plan has a 3-day money-back window. Cancel any time
+            from your dashboard. Prices shown are founding-member rates.
           </p>
         </div>
       </main>

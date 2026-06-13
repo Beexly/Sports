@@ -79,9 +79,9 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   },
   {
     key: "sample-signal",
-    displayName: "Sample signal",
-    customerExplanation: "A limited daily sample so you can judge the quality before subscribing.",
-    internalNote: "1/day or sample-only per owner decision; never the full inventory.",
+    displayName: "Two free picks, with confidence",
+    customerExplanation: "Two free picks a day — our lowest-confidence promoted picks — shown with their confidence score so you can judge the quality before subscribing.",
+    internalNote: "2/day (dailyPickLimit=2) of tier:FREE picks, confidence included; never the full inventory.",
     minTier: "FREE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
 
@@ -104,8 +104,8 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     key: "confidence",
     displayName: "Confidence",
     customerExplanation: "Galaxy's estimate of how strong, stable, and supported a signal is — an estimate, never a promise.",
-    internalNote: "Confidence score + reasoning.",
-    minTier: "PRO", status: "live", freePreview: false, lockBehaviorForFree: "blurred", upgradeCtaTier: "PRO",
+    internalNote: "Confidence score. Free gets it on its 2 free (tier:FREE) picks; Pro+ gets it on the full board.",
+    minTier: "PRO", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
   {
     key: "no-bet-reasoning",
@@ -148,8 +148,8 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     key: "galaxy-twin",
     displayName: "Galaxy Twin / Edge Map",
     customerExplanation: "A visual map of how the game, market, and signal environment are changing.",
-    internalNote: "Galaxy Twin layers. Demo until live data wired.",
-    minTier: "ELITE", status: "demo", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "ELITE",
+    internalNote: "Galaxy Twin layers. Owner set live; underlying data labeled demo/live per surface.",
+    minTier: "ELITE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "ELITE",
   },
   {
     key: "market-gravity",

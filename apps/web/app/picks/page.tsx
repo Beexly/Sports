@@ -138,7 +138,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
         canSeeFactorBreakdown: false,
         canSeeEdgeScore: true,
         canGetAlerts: false,
-        dailyPickLimit: 1 as number | null,
+        dailyPickLimit: 2 as number | null,
       };
 
   const isPro = entitlements.tier === "PRO" || entitlements.tier === "ELITE";
@@ -380,7 +380,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 <PickCard
                   key={pick.id}
                   pick={pick}
-                  canSeeConfidence={entitlements.canSeeConfidence}
+                  canSeeConfidence={entitlements.canSeeConfidence || pick.tier === "FREE"}
                   canSeeEdgeScore={entitlements.canSeeEdgeScore ?? false}
                   canSeeFactorBreakdown={entitlements.canSeeFactorBreakdown ?? false}
                 />
@@ -392,11 +392,11 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {isFreeTier && picks.length > 0 && (
             <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
               <p className="text-sm font-semibold text-blue-200">
-                You&apos;re seeing {entitlements.dailyPickLimit ?? 1} free pick per day.
+                You&apos;re seeing {entitlements.dailyPickLimit ?? 2} free picks per day, with confidence.
               </p>
               <p className="mt-1 text-xs text-blue-400/70">
-                Pro unlocks every signal, the confidence rating, and factor
-                trail for each one. Edge Index is public.
+                Pro unlocks every signal and the full factor trail behind each one.
+                Edge Index is public on every pick.
               </p>
               <Link
                 href="/pricing"
@@ -528,9 +528,9 @@ function PaywallBanner({
   hitDailyLimit: boolean;
 }) {
   const headline =
-    hitDailyLimit && totalAvailableToday !== null && totalAvailableToday > 1
-      ? `${totalAvailableToday} signals published today — you're seeing 1`
-      : "You're on Free — one signal a day";
+    hitDailyLimit && totalAvailableToday !== null && totalAvailableToday > 2
+      ? `${totalAvailableToday} signals published today — you're seeing 2`
+      : "You're on Free — two signals a day, with confidence";
   return (
     <div
       data-testid="paywall-banner"
@@ -539,8 +539,7 @@ function PaywallBanner({
       <div>
         <p className="text-sm font-semibold text-yellow-300">{headline}</p>
         <p className="mt-0.5 text-xs text-yellow-300/80">
-          Pro and Elite unlock every signal, the confidence rating, and the
-          factor trail behind each one.
+          Pro and Elite unlock every signal and the full factor trail behind each one.
         </p>
       </div>
       <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
