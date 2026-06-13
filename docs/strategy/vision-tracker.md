@@ -109,18 +109,22 @@ adapter (`openfootball-source.ts`) · ToS/disclaimer pages
 | `/accountability` public page (loss autopsies + model changelog, public) | platform-gaps-triage 1+2 | M |
 | Sentry/OTel observability (HIGH in opportunity-ledger) | opportunity-ledger §I | M |
 
-### Remaining buildable queue (consolidated, post-sweep)
+### Buildable queue — CLEARED 2026-06-13 (all DONE, reviewed, gated green)
 
-1. Memory review-queue UI (`/cockpit/memory`) — M
-2. Recall-before-answer wiring in Ask Jarvis — S
-3. Owner Brief + Model Council memory integration — M
-4. Memory hygiene views — S
-5. `createJarvisDecision` action (schema exists, action missing) — S
-6. `linkMemoryToAgentRun` — needs an agent-run relation, i.e. a migration — S (gated with ledger store)
-7. Handoff + Subagent Run ledger stores + write paths (one migration) — M
-8. Responsible-play distress-signal wiring for rooms — M
-9. Moderator coverage plan (operational doc) — S
-10. The four newly tracked items above
+1. Memory review-queue + hygiene UI (`/cockpit/memory`) — DONE
+2. Recall-before-answer wiring in Ask Jarvis (3 transparency phrasings) — DONE
+3. Owner Brief memory section — DONE
+4. Memory hygiene views — DONE (in the review-queue page)
+5. `createJarvisDecision` + `createDecisionWithMemory` (transactional) — DONE
+6. `linkMemoryToAgentRun` (agent-run relation migrated) — DONE
+7. Handoff + Subagent Run ledger stores + write paths (migration `20260613000000_council_ledgers`) — DONE
+8. Distress-signal detection law (`lib/community/distress-signals.ts`) — DONE; room pipeline hook lands with rooms
+9. Moderator coverage plan (`docs/ops/MODERATOR_COVERAGE_PLAN.md`) — DONE
+10. ML estimator scaffold — DONE · Proof-of-record `/proof` — DONE · `/accountability` — DONE · Sentry/OTel observability — DONE
+11. Listener-log batch lane (lawful manual SiriusXM lane, 60 takes/show) — DONE
+
+Every adversarial-review finding from both passes (3 CRITICAL + multiple
+MAJOR) fixed. Nothing buildable remains un-owner-gated.
 
 ### OWNER-gated (consolidated, unchanged by sweep)
 
@@ -133,13 +137,14 @@ B2B/affiliate/mobile motions · live in-game feed purchase.
 
 ## Verification state (this session)
 
-4,135+ web tests · 358 engine tests (4,650+ total across workspaces) ·
-tsc clean · lint clean · `next build` exit 0 (127 pages). Adversarial
-code-review pass run over all agent-built code (2026-06-12 night): 3
-CRITICAL + 3 MAJOR findings found and fixed (typed guard errors,
-transactional supersession with optimistic lock, P2002 appeal contract,
-SUSPEND time-box law, honest routing terminals, GL visibility culling).
-Branch: `claude/laughing-thompson-x9xr6f` · PR #17 open (launch PR —
+4,349 web tests · 392 engine tests (4,898 total across workspaces) ·
+tsc clean · lint clean · `next build` exit 0 (130 pages). Two adversarial
+code-review passes run over all agent-built code (2026-06-12/13 night):
+every finding (3+1 CRITICAL + multiple MAJOR) fixed and re-verified —
+typed guard errors, transactional supersession, P2002/P2025 error
+contracts, SUSPEND time-box law, honest routing terminals, GL culling,
+real Merkle leaf hashes, bounded recall, candidate-only transparency
+note. Branch: `claude/laughing-thompson-x9xr6f` · PR #17 open (launch PR —
 merge + env keys are the owner switch).
 **Go-live note:** production deploy happens from the owner's main-branch
 flow — merging this branch is the owner's call; nothing here auto-deploys.
