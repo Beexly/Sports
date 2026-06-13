@@ -14,6 +14,7 @@ import { loadNflverseTrendReadiness } from "@/lib/trends/nflverse-readiness";
 import { loadTrendWorkbench } from "@/lib/trends/workbench";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const dynamic = "force-dynamic";
 
@@ -54,7 +55,8 @@ export default async function TrendsPage(): Promise<JSX.Element> {
   const viewer = await getViewerEntitlements();
   if (!viewer.canUseTrendLab) {
     return (
-      <div className="min-h-screen bg-carbon text-ion">
+      <div className="relative isolate min-h-screen bg-carbon text-ion">
+        <GeneratedPlate assetId="trends-field" className="-z-10 opacity-20" />
         <Nav />
         <main className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
           <section>
@@ -88,7 +90,8 @@ export default async function TrendsPage(): Promise<JSX.Element> {
   const birthdayResult = birthdayTrend.result;
 
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="relative isolate min-h-screen bg-carbon text-ion">
+      <GeneratedPlate assetId="trends-field" className="-z-10 opacity-20" />
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <section className="grid gap-8 border-b border-mineral pb-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">

@@ -19,6 +19,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
   title: `Accountability — ${BRAND_NAME}`,
@@ -76,7 +77,8 @@ function AccountabilityCard({
 
 export default function AccountabilityPage() {
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="relative isolate min-h-screen bg-carbon text-ion">
+      <GeneratedPlate assetId="accountability-steady" className="-z-10 opacity-20" />
       <Nav />
 
       <main className="mx-auto flex max-w-5xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">

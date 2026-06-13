@@ -9,6 +9,7 @@ import { ReasoningShowcase } from "@/components/intelligence/reasoning-showcase"
 import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { Atmosphere } from "@/components/ui/atmosphere";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { SignalCourtroom } from "@/components/courtroom/signal-courtroom";
 import { DecisionAutopsy } from "@/components/courtroom/decision-autopsy";
 import { AgentWarRoom } from "@/components/war-room/agent-war-room";
@@ -145,6 +146,7 @@ export default function IntelligencePage() {
       <main className="flex-1">
         {/* Hero — the interactive engine itself, full-screen intro */}
         <section className="relative isolate min-h-screen overflow-hidden">
+          <GeneratedPlate assetId="intelligence-deepsignal" className="-z-20 opacity-60" />
           <div className="absolute inset-0 z-0">
             <ConsensusEngine3DLazy />
           </div>

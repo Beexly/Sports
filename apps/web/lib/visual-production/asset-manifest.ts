@@ -60,6 +60,30 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
     gradient: `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/brief-horizon.webp",
   },
+  "intelligence-deepsignal": {
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 22% 80%, rgba(255,45,214,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/intelligence-deepsignal.webp",
+  },
+  "trends-field": {
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.11), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/trends-field.webp",
+  },
+  "performance-grid": {
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 78% 20%, rgba(139,92,246,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/performance-grid.webp",
+  },
+  "proof-crystal": {
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.11), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/proof-crystal.webp",
+  },
+  "accountability-steady": {
+    gradient: `radial-gradient(55% 80% at 50% 0%, rgba(139,92,246,0.11), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/accountability-steady.webp",
+  },
+  "players-constellation": {
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 22% 78%, rgba(255,45,214,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/players-constellation.webp",
+  },
 };
 
 export function getPlate(id: string): PlateManifest | undefined {

@@ -16,6 +16,7 @@ import {
   winRateToneClass,
 } from "@/lib/format/stat";
 import type { PickType, PickTier } from "@sports/types";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
   title: "Calibration Report — Settled-Pick Audit Trail",
@@ -95,7 +96,8 @@ function latestModelVersion(summaries: PerformanceSummary[]): string | null {
 // <PerformanceBootstrapState> with minimal JSX between it and the gate check.
 function BootstrapShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-carbon">
+    <div className="relative isolate flex min-h-screen flex-col bg-carbon">
+      <GeneratedPlate assetId="performance-grid" className="-z-10 opacity-20" />
       <Nav />
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
@@ -190,7 +192,8 @@ export default async function PerformancePage() {
   const isEmpty = !fetchError && summaries.length === 0;
 
   return (
-    <div className="flex min-h-screen flex-col bg-carbon">
+    <div className="relative isolate flex min-h-screen flex-col bg-carbon">
+      <GeneratedPlate assetId="performance-grid" className="-z-10 opacity-20" />
       <Nav />
       <main className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
