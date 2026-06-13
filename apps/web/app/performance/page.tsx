@@ -129,12 +129,10 @@ export default async function PerformancePage() {
               )}
               . Win-rate aggregation is gated until canonical history accumulates.
             </p>
-            <Link
-              href="/picks"
-              className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60"
-            >
-              See today&apos;s picks
-            </Link>
+            <div className="flex gap-3">
+              <Link href="/brief" className="text-cyan-300 hover:underline">Daily Brief</Link>
+              <Link href="/picks" className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60">See today&apos;s picks</Link>
+            </div>
           </div>
         )}
         <PerformanceBootstrapState
