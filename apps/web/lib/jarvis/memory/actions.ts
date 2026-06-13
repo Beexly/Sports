@@ -18,7 +18,7 @@
 "use server";
 
 import { db } from "@sports/db";
-import type { Prisma } from "@sports/db";
+import { Prisma } from "@sports/db";
 import { canTransition } from "./states";
 import { assertConfirmationAllowed } from "./guards";
 import {
@@ -125,6 +125,10 @@ export async function confirmMemory(id: string, ownerApproval: boolean = false) 
     });
   } catch (err) {
     if (err instanceof MemoryTransitionError || err instanceof MemoryGuardError) throw err;
+    // P2025: record not found — surface clearly before wrapDbError masks it
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
+      throw new Error(`JarvisMemoryEvent "${id}" not found.`);
+    }
     wrapDbError(err);
   }
 }
@@ -143,6 +147,10 @@ export async function rejectMemory(id: string) {
     });
   } catch (err) {
     if (err instanceof MemoryTransitionError) throw err;
+    // P2025: record not found — surface clearly before wrapDbError masks it
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
+      throw new Error(`JarvisMemoryEvent "${id}" not found.`);
+    }
     wrapDbError(err);
   }
 }
@@ -161,6 +169,10 @@ export async function expireMemory(id: string) {
     });
   } catch (err) {
     if (err instanceof MemoryTransitionError) throw err;
+    // P2025: record not found — surface clearly before wrapDbError masks it
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
+      throw new Error(`JarvisMemoryEvent "${id}" not found.`);
+    }
     wrapDbError(err);
   }
 }
@@ -224,6 +236,12 @@ export async function supersedeMemory(
 
 // ── Recall ────────────────────────────────────────────────────────────────────
 
+/** Maximum rows returned by each query in recallRelevantMemory (prevents unbounded scans). */
+const MAX_RECALL_ROWS = 20;
+
+/** Maximum candidate-state rows returned for the candidate-only transparency note. */
+const MAX_RECALL_CANDIDATES = 5;
+
 export interface RecallFilter {
   scope?: string;
   tags?: string[];
@@ -232,6 +250,8 @@ export interface RecallFilter {
 /**
  * Recall relevant memory: confirmed + repeated_pattern only.
  * Also returns unresolved conflicts flagged separately.
+ * Also queries candidate-state memories (bounded take 5) for the
+ * candidate-only transparency note in ask-jarvis.ts.
  */
 export async function recallRelevantMemory(filter: RecallFilter) {
   try {
@@ -250,6 +270,7 @@ export async function recallRelevantMemory(filter: RecallFilter) {
     const memories = await db.jarvisMemoryEvent.findMany({
       where,
       orderBy: { confirmed_at: "desc" },
+      take: MAX_RECALL_ROWS,
     });
 
     const conflicts = await db.jarvisMemoryEvent.findMany({
@@ -258,9 +279,26 @@ export async function recallRelevantMemory(filter: RecallFilter) {
         ...(filter.scope ? { scope: filter.scope } : {}),
       },
       orderBy: { created_at: "desc" },
+      take: MAX_RECALL_ROWS,
     });
 
-    return { memories, unresolvedConflicts: conflicts };
+    const candidateWhere: Prisma.JarvisMemoryEventWhereInput = {
+      memory_state: "candidate",
+    };
+    if (filter.scope) {
+      candidateWhere.scope = filter.scope;
+    }
+    if (filter.tags && filter.tags.length > 0) {
+      candidateWhere.tags = { hasSome: filter.tags };
+    }
+
+    const candidateMemories = await db.jarvisMemoryEvent.findMany({
+      where: candidateWhere,
+      orderBy: { created_at: "desc" },
+      take: MAX_RECALL_CANDIDATES,
+    });
+
+    return { memories, unresolvedConflicts: conflicts, candidateMemories };
   } catch (err) {
     wrapDbError(err);
   }
@@ -326,6 +364,12 @@ export async function linkMemoryToAgentRun(memoryId: string, agentRunId: string)
       },
     });
   } catch (err) {
+    // P2025: record not found — surface clearly before wrapDbError masks it
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
+      throw new Error(
+        `Record not found: SubagentRun "${agentRunId}" or JarvisMemoryEvent "${memoryId}" does not exist.`
+      );
+    }
     wrapDbError(err);
   }
 }

@@ -12,6 +12,7 @@
  */
 
 import Link from "next/link";
+import { revalidatePath } from "next/cache";
 import {
   listMemoryByState,
   listMemoryConflicts,
@@ -48,9 +49,12 @@ async function handleConfirm(formData: FormData): Promise<void> {
   if (typeof id !== "string" || !id) return;
   try {
     await confirmMemory(id, true /* ownerApproval */);
-  } catch {
-    // Errors surface as a redirect/reload; owner sees nothing changed
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("[cockpit/memory] handleConfirm failed for id=%s:", id, err);
   }
+  // Revalidate on success or failure so the page reflects the latest DB state.
+  revalidatePath("/cockpit/memory");
 }
 
 async function handleReject(formData: FormData): Promise<void> {
@@ -59,9 +63,12 @@ async function handleReject(formData: FormData): Promise<void> {
   if (typeof id !== "string" || !id) return;
   try {
     await rejectMemory(id);
-  } catch {
-    // Same as above
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("[cockpit/memory] handleReject failed for id=%s:", id, err);
   }
+  // Revalidate on success or failure so the page reflects the latest DB state.
+  revalidatePath("/cockpit/memory");
 }
 
 // ── DB probes ─────────────────────────────────────────────────────────────────

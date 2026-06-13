@@ -9,6 +9,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 // ─── State machine ────────────────────────────────────────────────────────────
 
@@ -432,6 +434,36 @@ describe("cockpit page source pin", () => {
     expect(result).toBeInstanceOf(Promise);
     // Clean up the promise
     return result;
+  });
+});
+
+// ─── P2025 masking — linkMemoryToAgentRun ────────────────────────────────────
+
+describe("linkMemoryToAgentRun — P2025 not-found is not masked as connectivity failure", () => {
+  it("source pin: P2025 branch throws a plain Error before wrapDbError wraps it", () => {
+    // Source pin: verify the P2025 guard is in the file
+    const src = fs.readFileSync(
+      path.resolve(__dirname, "../lib/jarvis/memory/actions.ts"),
+      "utf-8"
+    );
+    expect(src).toMatch(/P2025/);
+    expect(src).toMatch(/Record not found|not found/i);
+    // The guard must appear before wrapDbError in linkMemoryToAgentRun
+    const linkFnIdx = src.indexOf("export async function linkMemoryToAgentRun");
+    const p2025Idx = src.indexOf("P2025", linkFnIdx);
+    const wrapIdx = src.indexOf("wrapDbError", linkFnIdx);
+    expect(p2025Idx).toBeGreaterThan(linkFnIdx);
+    expect(p2025Idx).toBeLessThan(wrapIdx);
+  });
+
+  it("source pin: P2025 guard also present in confirmMemory and rejectMemory", () => {
+    const src = fs.readFileSync(
+      path.resolve(__dirname, "../lib/jarvis/memory/actions.ts"),
+      "utf-8"
+    );
+    const p2025Count = (src.match(/P2025/g) ?? []).length;
+    // At minimum: confirmMemory, rejectMemory, expireMemory, linkMemoryToAgentRun
+    expect(p2025Count).toBeGreaterThanOrEqual(4);
   });
 });
 

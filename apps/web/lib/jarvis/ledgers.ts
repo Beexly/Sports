@@ -20,6 +20,7 @@
 "use server";
 
 import { db } from "@sports/db";
+import { Prisma } from "@sports/db";
 import { AGENT_COUNCIL } from "./agent-council";
 
 // ─── Typed error ──────────────────────────────────────────────────────────────
@@ -230,6 +231,10 @@ export async function reviewSubagentRun(
   } catch (err) {
     if (err instanceof Error && err.message.startsWith("Seat ")) throw err;
     if (err instanceof Error && err.message.startsWith("Run ")) throw err;
+    // P2025: record not found — surface clearly before wrapDbError masks it
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
+      throw new Error(`SubagentRun "${runId}" not found.`);
+    }
     wrapDbError(err);
   }
 }

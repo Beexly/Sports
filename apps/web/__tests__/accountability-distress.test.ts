@@ -78,6 +78,7 @@ describe("detectDistressSignals — false positives (must return empty)", () => 
 
     // Chasing false-positive guards
     { text: "make it back to back", label: "make it back-to-back (not chasing)" },
+    { text: "make it back-to-back", label: "make it back-to-back hyphenated (not chasing)" },
     { text: "win it back-to-back for the second year", label: "win back-to-back year" },
   ];
 

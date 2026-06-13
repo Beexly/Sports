@@ -115,9 +115,9 @@ const PATTERNS: readonly PatternEntry[] = [
     label: "double-up",
   },
   {
-    // "make it back" but NOT "make it back to back" (back-to-back idiom)
+    // "make it back" but NOT "make it back to back" or "make it back-to-back" (back-to-back idiom)
     kind: "CHASING",
-    pattern: /\bmake\s+it\s+back(?!\s+to\s+back)\b/i,
+    pattern: /\bmake\s+it\s+back(?![\s-]to[\s-]back)\b/i,
     label: "make-it-back",
   },
   {

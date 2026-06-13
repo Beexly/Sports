@@ -58,6 +58,49 @@ describe("loadProofOfRecord loader honesty", () => {
   });
 });
 
+// ── 1b. leafHash correctness ──────────────────────────────────────────────────
+
+describe("leafHash correctness", () => {
+  it("leafHash in the loader is the real SHA-256 of 'leaf:<id>:<payload>', not the raw payload", async () => {
+    // Test the engine primitive directly — verifies the fix that changed
+    // leafHash from record.payload to hashLeaf(sha256, record).
+    const { hashLeaf, canonicalPickPayload } = await import("@sports/prediction-engine");
+    const { createHash } = await import("node:crypto");
+    function sha256(s: string) {
+      return createHash("sha256").update(s, "utf8").digest("hex");
+    }
+    const id = "test-pick-001";
+    const payload = canonicalPickPayload({
+      confidence: 72,
+      generatedAt: "2026-01-01T00:00:00.000Z",
+      id,
+      line: -3.5,
+      modelVersion: "v5.1.0",
+      pickType: "spread",
+      selection: "home",
+      tier: "pro",
+    });
+    const leaf = hashLeaf(sha256, { id, payload });
+    // Must be 64-char hex
+    expect(leaf).toMatch(/^[0-9a-f]{64}$/);
+    // Must NOT equal the raw payload string
+    expect(leaf).not.toBe(payload);
+    // Must equal the expected value computed the same way
+    const expected = sha256(`leaf:${id}:${payload}`);
+    expect(leaf).toBe(expected);
+  });
+
+  it("loader source imports hashLeaf from prediction-engine", () => {
+    const loaderSource = fs.readFileSync(
+      path.resolve(__dirname, "../lib/proof/load-proof-of-record.ts"),
+      "utf8"
+    );
+    expect(loaderSource).toContain("hashLeaf");
+    expect(loaderSource).toContain("hashLeaf(sha256, record)");
+    expect(loaderSource).not.toContain("leafHash: record.payload");
+  });
+});
+
 // ── 2. Loader source pins ─────────────────────────────────────────────────────
 
 describe("loadProofOfRecord source pins", () => {

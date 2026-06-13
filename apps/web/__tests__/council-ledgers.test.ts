@@ -272,6 +272,36 @@ describe("review-states law", () => {
   });
 });
 
+// ─── 2b. P2025 masking — reviewSubagentRun ────────────────────────────────────
+
+describe("reviewSubagentRun — P2025 not-found is not masked as connectivity failure", () => {
+  it("source pin: P2025 guard is present in reviewSubagentRun, before wrapDbError", () => {
+    const src = readFileSync(
+      resolve(__dirname, "../lib/jarvis/ledgers.ts"),
+      "utf-8"
+    );
+    // P2025 check must exist in the file
+    expect(src).toMatch(/P2025/);
+    // The guard must throw a plain Error (not wrapped as LedgerStoreUnavailableError)
+    expect(src).toMatch(/throw new Error\([^)]*not found/i);
+    // The P2025 guard must appear before wrapDbError in reviewSubagentRun
+    const reviewFnIdx = src.indexOf("export async function reviewSubagentRun");
+    const p2025Idx = src.indexOf("P2025", reviewFnIdx);
+    const wrapIdx = src.indexOf("wrapDbError", reviewFnIdx);
+    expect(p2025Idx).toBeGreaterThan(reviewFnIdx);
+    expect(p2025Idx).toBeLessThan(wrapIdx);
+  });
+
+  it("source pin: P2025 guard checks PrismaClientKnownRequestError instanceof + code", () => {
+    const src = readFileSync(
+      resolve(__dirname, "../lib/jarvis/ledgers.ts"),
+      "utf-8"
+    );
+    expect(src).toContain("PrismaClientKnownRequestError");
+    expect(src).toContain('"P2025"');
+  });
+});
+
 // ─── 3. Typed error ───────────────────────────────────────────────────────────
 
 describe("LedgerStoreUnavailableError", () => {

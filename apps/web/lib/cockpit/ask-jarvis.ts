@@ -810,7 +810,7 @@ function formatMemoryContext(
 
   const lines: string[] = [];
 
-  const { memories: confirmed, unresolvedConflicts: conflicts } = memories;
+  const { memories: confirmed, unresolvedConflicts: conflicts, candidateMemories } = memories;
 
   if (conflicts.length > 0) {
     lines.push("There are conflicting memories. Owner review is required.");
@@ -819,6 +819,12 @@ function formatMemoryContext(
   for (const mem of confirmed) {
     const date = (mem.confirmed_at ?? mem.created_at).toISOString().slice(0, 10);
     lines.push(`Using confirmed memory from ${date}: ${mem.summary}`);
+  }
+
+  // Candidate-only transparency note: emit when no confirmed memories exist
+  // but candidates are present in scope.
+  if (confirmed.length === 0 && candidateMemories && candidateMemories.length > 0) {
+    lines.push("I found a related memory candidate, but it has not been confirmed.");
   }
 
   return lines;
@@ -849,9 +855,9 @@ export async function askJarvisWithMemory(
 
     if (!recalled) return base;
 
-    const { memories: confirmedMemories, unresolvedConflicts } = recalled;
+    const { memories: confirmedMemories, unresolvedConflicts, candidateMemories } = recalled;
 
-    if (confirmedMemories.length === 0 && unresolvedConflicts.length === 0) {
+    if (confirmedMemories.length === 0 && unresolvedConflicts.length === 0 && (!candidateMemories || candidateMemories.length === 0)) {
       return base;
     }
 

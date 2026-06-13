@@ -2,6 +2,7 @@ import { db } from "@sports/db";
 import { createHash } from "node:crypto";
 import {
   canonicalPickPayload,
+  hashLeaf,
   merkleRoot,
   inclusionProof,
   verifyInclusion,
@@ -214,7 +215,7 @@ export async function loadProofOfRecord(
       modelVersion: pick.modelVersion,
       clvVerdict: pick.clvVerdict ?? null,
       clvValue: pick.clvValue ?? null,
-      leafHash: record.payload,
+      leafHash: hashLeaf(sha256, record),
       leafIndex: i,
       inclusionProof: proof,
       consensusAtSettle: consensus,
