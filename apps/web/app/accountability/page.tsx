@@ -100,7 +100,7 @@ export default function AccountabilityPage() {
           </p>
         </header>
 
-        {/* Three sections */}
+        {/* Four sections — three original + Proof of Record */}
         <section className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
           <AccountabilityCard
             eyebrow="Loss autopsies"
@@ -124,6 +124,14 @@ export default function AccountabilityPage() {
             body="Every model version, gate flip, and calibration update is logged publicly with a date and a reason. The changelog is how the record stays readable over time — not just a snapshot of where things stand today."
             href="/changelog"
             linkLabel="Read the Changelog"
+          />
+
+          <AccountabilityCard
+            eyebrow="Tamper-evident record"
+            title="Proof of Record"
+            body="Every settled pick carries a Merkle leaf hash stamped at generation time. Change a pick after the fact and the hash breaks. The Merkle root over all settled picks is published publicly so anyone can re-derive it and verify the record."
+            href="/proof"
+            linkLabel="View Proof of Record"
           />
         </section>
 
