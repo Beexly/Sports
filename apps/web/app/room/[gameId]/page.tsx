@@ -5,13 +5,39 @@ import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadGameRoom } from "@/lib/game-room/load";
+import { db } from "@sports/db";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Game Intelligence Room - Galaxy Sports Edge",
-  description: "A read-only game room with market pulse, evidence timeline, lens projections, and memory.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  readonly params: { readonly gameId: string };
+}): Promise<Metadata> {
+  const game = await db.game
+    .findUnique({
+      where: { id: params.gameId },
+      select: {
+        homeTeamName: true,
+        awayTeamName: true,
+        sport: { select: { name: true } },
+      },
+    })
+    .catch(() => null);
+
+  if (!game) {
+    return {
+      title: "Game Intelligence Room — Galaxy Sports Edge",
+      description: "Game intelligence room with market pulse, evidence timeline, and lens projections.",
+    };
+  }
+
+  const matchup = `${game.awayTeamName} at ${game.homeTeamName}`;
+  return {
+    title: `${matchup} — Game Intelligence Room · Galaxy Sports Edge`,
+    description: `Live market pulse, evidence timeline, and lens projections for ${matchup} (${game.sport.name}). Factor trail sourced from live odds data.`,
+  };
+}
 
 export default async function GameRoomPage({
   params,

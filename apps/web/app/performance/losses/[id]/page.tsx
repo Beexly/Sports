@@ -25,10 +25,24 @@ interface LossDetail {
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Loss Room Detail - Galaxy Sports Edge",
-  description: "A canonical loss record with the original reasoning, signal receipt, and post-mortem status.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  readonly params: { readonly id: string };
+}): Promise<Metadata> {
+  const detail = await loadLoss(params.id);
+  if (!detail) {
+    return {
+      title: "Loss Room — Galaxy Sports Edge",
+      description: "Canonical loss record with original reasoning and signal snapshot.",
+    };
+  }
+  return {
+    title: `${detail.headline} — Loss Room · Galaxy Sports Edge`,
+    description: `${detail.matchup} · ${detail.sport}. ${detail.whatWeLearned.slice(0, 120)}`,
+    alternates: { canonical: `/performance/losses/${params.id}` },
+  };
+}
 
 function snapshotSummary(snapshot: {
   readonly bookmakerCount: number;
