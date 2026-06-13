@@ -3,10 +3,22 @@ import path from "node:path";
 
 const root = path.resolve(process.cwd(), "../..");
 const fallbackRoot = process.cwd();
-function readJson<T>(relativePath: string): T {
+function readJson<T>(relativePath: string, fallbackValue?: T): T {
   const primary = path.join(root, relativePath);
   const fallback = path.join(fallbackRoot, relativePath);
   const file = fs.existsSync(primary) ? primary : fallback;
+  if (!fs.existsSync(file)) {
+    // A single missing snapshot must never crash the build/prerender. Callers
+    // that pass a fallback get an honest empty state; the rest fail loudly with
+    // an actionable message instead of a cryptic ENOENT.
+    if (fallbackValue !== undefined) {
+      console.warn(`[statking] missing data file ${relativePath} — using empty fallback`);
+      return fallbackValue;
+    }
+    throw new Error(
+      `[statking] required data file not found: ${relativePath}. Regenerate with \`npm run statking:product\` / \`npm run statking:all\`.`,
+    );
+  }
   return JSON.parse(fs.readFileSync(file, "utf8")) as T;
 }
 
@@ -28,7 +40,7 @@ export function loadWeeklyStats(): WeeklyStat[] { return readJson<{rows: WeeklyS
 export function loadSources(): SourceRecord[] { return readJson<{sources: SourceRecord[]}>("data/source-atlas/source_registry.json").sources; }
 export function loadSummary() { return readJson<{source_count:number; candidate_capacity:number; candidate_count:number; discovery_query_count:number; metric_count:number; systems:string[]}>("data/statking/hardening_summary.json"); }
 export function loadAudit() { return readJson<{summary: Record<string, number>; items: Array<{system:string; status:string; priority:string; next_fix:string}>}>("data/statking/real_vs_stubbed_audit.json"); }
-export function loadCoverage() { return readJson<{players_sampled:number; teams:number; missing_high_impact:string[]; coverage_by_data_type: Record<string,string>}>("data/statking/coverage/coverage_report.json"); }
+export function loadCoverage() { return readJson<{players_sampled:number; teams:number; missing_high_impact:string[]; coverage_by_data_type: Record<string,string>}>("data/statking/coverage/coverage_report.json", {players_sampled:0, teams:0, missing_high_impact:[], coverage_by_data_type:{}}); }
 export function loadActiveMetricManifest() { return readJson<{active_calculated_count:number; total_manifest_count:number; metrics:Array<{metric_key:string; name:string; status:string; entity_type:string; visible_status:string}>}>("data/statking/active_metric_manifest.json"); }
 export function loadSourceTargets() { return readJson<{top_50_easiest_wins:any[]; top_50_highest_moat_sources:any[]; top_50_requires_license:any[]}>("data/statking/source_targets_top_50.json"); }
 export function loadMediaItems(): MediaItem[] { return readJson<{items: MediaItem[]}>("data/statking/snapshots/media_items.json").items; }

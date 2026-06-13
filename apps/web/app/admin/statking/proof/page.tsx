@@ -1,3 +1,8 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { Shell, Cards, SimpleTable } from "../../../stats/_components";
 import { loadProofReport, loadMetricReliability } from "@/lib/statking/product";
-export default function Page(){ const proof=loadProofReport() as {metric_reliability_count?:number; claims_to_mute?:string[]}; const rel=loadMetricReliability(); return <Shell title="Proof Admin"><Cards items={[{label:"Metric reliability",value:proof.metric_reliability_count ?? rel.metrics.length},{label:"Claims to mute",value:proof.claims_to_mute?.length ?? 0},{label:"Proof state",value:"partial"},{label:"Need",value:"prediction archive"}]}/><SimpleTable rows={rel.metrics.slice(0,50)}/></Shell> }
+export default async function Page(){
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") { redirect("/"); }
+ const proof=loadProofReport() as {metric_reliability_count?:number; claims_to_mute?:string[]}; const rel=loadMetricReliability(); return <Shell title="Proof Admin"><Cards items={[{label:"Metric reliability",value:proof.metric_reliability_count ?? rel.metrics.length},{label:"Claims to mute",value:proof.claims_to_mute?.length ?? 0},{label:"Proof state",value:"partial"},{label:"Need",value:"prediction archive"}]}/><SimpleTable rows={rel.metrics.slice(0,50)}/></Shell> }
