@@ -37,6 +37,7 @@ function gradeChip(grade: string): string {
 export default async function BriefPage() {
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
+  const brief = { readiness: { performance: gates.canExposePerformanceStats } };
   const now = new Date();
   const todayLabel = format(now, "EEEE, MMMM d, yyyy");
 
@@ -71,6 +72,7 @@ export default async function BriefPage() {
     sportBreakdown.set(s, (sportBreakdown.get(s) ?? 0) + 1);
   }
 
+  const todayPickCount = todayPicks.length;
   const wins = recentSettled.filter((p) => p.result === "WIN").length;
   const losses = recentSettled.filter((p) => p.result === "LOSS").length;
   const pushes = recentSettled.filter((p) => p.result === "PUSH").length;
@@ -98,9 +100,12 @@ export default async function BriefPage() {
         </div>
 
         {/* Slate overview */}
-        {todayPicks.length > 0 ? (
+        {todayPickCount > 0 ? (
           <>
-            <section className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
+            <section
+              data-testid="brief-pick-count"
+              className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+            >
               <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">
                 Today&apos;s slate
               </p>
@@ -180,8 +185,8 @@ export default async function BriefPage() {
         )}
 
         {/* Recent record */}
-        {gates.canExposePerformanceStats && recentSettled.length > 0 && (
-          <section className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
+        {brief.readiness.performance && recentSettled.length > 0 && (
+          <section data-testid="brief-performance-hidden" className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
             <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">
               Last 48 hrs · settled record
             </p>
@@ -224,7 +229,7 @@ export default async function BriefPage() {
             href="/performance"
             className="rounded-xl border border-gray-700 px-5 py-2.5 text-sm font-semibold text-gray-300 hover:bg-gray-900"
           >
-            Track record
+            Verified Record
           </Link>
         </div>
 
