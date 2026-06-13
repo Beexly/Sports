@@ -2,8 +2,8 @@
 
 Jarvis is the governed intelligence layer of Galaxy Sports Edge: a deterministic system that senses platform state, interprets it, prioritizes decisions, explains itself, routes work to governed roles, and recommends the owner's next action — while every externally visible action waits for human approval. This document is the canonical architectural truth for what Jarvis is, what it is not, what runs in code today, and where each piece lives in the repository.
 
-Last updated: 2026-06-11
-Status: DESIGNED — architecture is documented and partially wired; zero capabilities are autonomous.
+Last updated: 2026-06-13
+Status: WIRED — Layers A–H of Executive Intelligence v2 shipped on 2026-06-13.
 
 ## What Jarvis Is
 
@@ -94,9 +94,28 @@ Honest per-phase status from `intelligence-state.ts`. WIRED means the behavior r
 | `apps/web/app/cockpit/` | Command bridge UI: agents, calibration, history, content, api-costs. |
 | `docs/ai/jarvis/` | These five protocol docs — the only durable Jarvis memory today. |
 
+## Executive Intelligence v2 — Layers A–H
+
+Shipped 2026-06-13 on branch `jarvis/os-foundation-fable5-v1`. Full details in `JARVIS_EXECUTIVE_INTELLIGENCE.md`.
+
+| Layer | File | Role |
+|---|---|---|
+| A | `conversation-engine.ts` | Intent detection, response building, dispatch plans, session lifecycle |
+| B | `session-memory.ts` | Fact accumulation, supersession audit trail, handoff export |
+| C | `department-reports.ts` | 8-department health grid derived from OwnerSummary |
+| D | `pattern-recognition.ts` | Recurring pattern detection across historical snapshots |
+| E | `self-knowledge.ts` | Knowledge domains, NOT_WIRED declarations, self-correction log |
+| F | `components/jarvis/jarvis-conversation.tsx` | Executive Q&A UI (client component) |
+| G | `app/cockpit/jarvis/briefing/page.tsx` | Morning intelligence briefing (server component) |
+| H | `app/cockpit/jarvis/conversation/page.tsx` | Conversation page (server component) |
+
 ## Related Documents
 
+- `JARVIS_EXECUTIVE_INTELLIGENCE.md` — full v2 spec, layer descriptions, commit history.
+- `JARVIS_CONVERSATION_PROTOCOL.md` — conversation invariants, intent patterns, dispatch rules.
 - `JARVIS_CAPABILITY_REGISTRY.md` — the 16 capabilities and the wiring score.
 - `JARVIS_AGENT_COUNCIL.md` — the 15 governed seats and escalation model.
 - `JARVIS_MEMORY_PROTOCOL.md` — memory tiers and the (not wired) episodic store.
 - `JARVIS_OPERATOR_BRIEF.md` — one-page owner brief.
+- `vault/06-memory/MEMORY_INDEX.md` — session memory protocol and vault structure.
+- `vault/04-agents/AGENT_NOTES.md` — department report derivation rules.
