@@ -8,6 +8,7 @@ import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { GalaxySlateTwinLazy } from "@/components/slate-twin/galaxy-slate-twin-lazy";
 import { MarketFairBoard } from "@/components/observatory/market-fair-board";
+import { SimulationCloud } from "@/components/observatory/simulation-cloud";
 import { getSlateTwin } from "@/lib/slate-twin/get-slate-twin";
 import { BRAND_NAME, SURFACES } from "@/lib/brand";
 import { BRAND_COLORS } from "@/lib/brand";
@@ -139,6 +140,12 @@ export default async function ObservatoryPage() {
         <section className="px-4 py-10 sm:px-6 lg:px-8" aria-label="Market fair board">
           <div className="mx-auto max-w-5xl">
             <MarketFairBoard />
+          </div>
+        </section>
+
+        <section className="px-4 py-10 sm:px-6 lg:px-8" aria-label="Simulation cloud">
+          <div className="mx-auto max-w-5xl">
+            <SimulationCloud />
           </div>
         </section>
 

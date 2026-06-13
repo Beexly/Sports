@@ -92,4 +92,5 @@ Calibration → whether we deserve trust. Every stat gets a job or gets cut.
 3. Stat Stability Grade: extend `assessUncertainty` to per-metric envelopes
    in Player Lab.
 4. Line Death Clock prototype on the board (edge decay vs line movement).
-5. Simulation cloud (distribution visual) on game pages.
+5. ~~Simulation cloud~~ SHIPPED 2026-06-13 — illustrative Poisson margin
+   distribution on /observatory (scoring-event domain, transparent math).
