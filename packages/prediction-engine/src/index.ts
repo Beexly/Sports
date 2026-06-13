@@ -177,3 +177,23 @@ export {
   impliedFromDecimalOdds,
   type ShinResult,
 } from "./shin-devig.js";
+// Build-queue #4 — ML independent estimator scaffold (kyleskom concept).
+// Gradient-boosted stumps inference + honesty gate. Fed into independentFairValues
+// ONLY after calibration proves it (same law as Poisson / Elo estimators).
+// Reference: repo-firehose-review.md build-queue item #4; edge-engine.ts.
+export {
+  predictWinProb,
+  toMlFairValue,
+  fitReferenceModel,
+  computeFeatureSchemaHash,
+  FEATURE_SCHEMA_HASH,
+  MIN_SAMPLE_SIZE,
+  MODEL_MAX_AGE_DAYS,
+} from "./ml-estimator.js";
+export type {
+  MlFeatureVector,
+  MlModelObject,
+  MlModelProvenance,
+  DecisionStump,
+  TrainingSample,
+} from "./ml-estimator.js";
