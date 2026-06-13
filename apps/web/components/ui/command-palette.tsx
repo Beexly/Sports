@@ -23,6 +23,7 @@ const COMMANDS: Command[] = [
   { label: "Mission Control", href: "/today", group: "Intelligence", keywords: "today command deck dashboard overview" },
   { label: "Trend Lab", href: "/trends", group: "Intelligence", keywords: "trends cohort statistical p-value discovery" },
   { label: "Calibration", href: "/performance", group: "Intelligence", keywords: "performance settled picks record roi win rate" },
+  { label: "Player Lab", href: "/players", group: "Intelligence", keywords: "players stats snaps opportunity usage" },
   { label: "Inside the Signal", href: "/intelligence", group: "Intelligence", keywords: "engine reasoning how it works" },
   { label: "The Beat", href: "/the-beat", group: "Intelligence", keywords: "news breaking injuries reporters" },
   { label: "GSN Transmission", href: "/gsn", group: "Intelligence", keywords: "daily news network" },
