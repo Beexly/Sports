@@ -1,0 +1,300 @@
+{
+  "generated_at": "2026-06-13T00:00:00Z",
+  "summary": {
+    "real_working": 9,
+    "partially_working": 6,
+    "fixture_only": 0,
+    "stub_only": 11,
+    "docs_only": 0,
+    "broken": 0,
+    "missing": 0
+  },
+  "items": [
+    {
+      "system": "source registry",
+      "status": "real_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs real feed replacement for fixture fallback.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "source graph",
+      "status": "partially_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "candidate graph",
+      "status": "partially_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "discovery scripts",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "media engines",
+      "status": "partially_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "vendor adapters",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "expert signal system",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "metric ontology",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "metric calculations",
+      "status": "real_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs real feed replacement for fixture fallback.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "coverage map",
+      "status": "real_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs real feed replacement for fixture fallback.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "source trust",
+      "status": "real_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs real feed replacement for fixture fallback.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "conflict detection",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "freshness",
+      "status": "partially_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "backtesting",
+      "status": "partially_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "player comps",
+      "status": "real_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs real feed replacement for fixture fallback.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "archetypes",
+      "status": "real_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs real feed replacement for fixture fallback.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "injury/depth",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "trenches",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "scheme/scouting",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "user feedback",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "alerts",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "versioning",
+      "status": "stub_only",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Shape exists only.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "critical"
+    },
+    {
+      "system": "UI pages",
+      "status": "real_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs real feed replacement for fixture fallback.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "admin pages",
+      "status": "real_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs real feed replacement for fixture fallback.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "tests",
+      "status": "real_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs real feed replacement for fixture fallback.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    },
+    {
+      "system": "docs",
+      "status": "partially_working",
+      "file_path": "data/statking/real_vs_stubbed_audit.json",
+      "what_works": "Snapshot-backed loaders, visible status, and tests exist.",
+      "what_does_not_work": "Needs live authorized feeds and deeper production workflow.",
+      "proof": "npm run test:statking",
+      "test_coverage": "statking-hardening plus product-depth tests",
+      "next_fix": "Activate live feed or replace stub with working adapter",
+      "priority": "high"
+    }
+  ]
+}

@@ -35,8 +35,10 @@ yarn-error.log*
 *.swp
 *.swo
 
-# Type coverage
+# Type coverage (test/type-coverage output dirs only — not StatKing data)
 coverage/
+!data/statking/coverage/
+!data/statking/coverage/**
 
 # Vercel
 .vercel

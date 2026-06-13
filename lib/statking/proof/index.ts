@@ -1,0 +1,1 @@
+export function classifyMetricReliability(metric: { stability: string; noise_level: string }): 'strong' | 'usable' | 'noisy' { if (metric.stability === 'high' && metric.noise_level === 'low') return 'strong'; if (metric.stability === 'low' || metric.noise_level === 'high') return 'noisy'; return 'usable'; }
