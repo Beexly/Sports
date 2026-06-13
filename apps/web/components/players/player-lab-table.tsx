@@ -22,6 +22,10 @@ import type {
   NgsRushingLine,
 } from "@/lib/nflverse/next-gen-stats";
 import type { CoverageRow, QbPressureRow } from "@/lib/nflverse/pressure-coverage";
+import {
+  PROTECTION_STRESS_TOOLTIP,
+  protectionStress,
+} from "@/lib/nflverse/protection-stress";
 import type { CombineRow } from "@/lib/nflverse/combine";
 import type { QbrRow } from "@/lib/nflverse/qbr";
 import type { QbConsensusRow, Divergence } from "@/lib/intelligence/qb-consensus";
@@ -247,6 +251,23 @@ function qbPressureColumns(): ReadonlyArray<Column<QbPressureRow>> {
     { key: "badThrowPct", label: "Bad throw%", align: "right", numeric: true, render: (r) => fmtPercent(r.badThrowPct) },
     { key: "sacks", label: "Sacks", align: "right", numeric: true },
     { key: "blitzesFaced", label: "Blitzes", align: "right", numeric: true },
+    {
+      key: "protectionStress",
+      label: "Prot stress",
+      align: "right",
+      tooltip: PROTECTION_STRESS_TOOLTIP,
+      sortValue: (r) => protectionStress(r).index,
+      render: (r) => {
+        const s = protectionStress(r);
+        const cls =
+          s.band === "high"
+            ? "font-semibold text-rose-700"
+            : s.band === "moderate"
+              ? "text-amber-700"
+              : "text-ink-2";
+        return <span className={cls}>{s.index}</span>;
+      },
+    },
   ];
 }
 function coverageColumns(): ReadonlyArray<Column<CoverageRow>> {

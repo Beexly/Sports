@@ -58,6 +58,13 @@ export interface ConsensusMarketRead {
    * per book), never an invented variance parameter.
    */
   readonly fairHomeProbsByBook: readonly number[];
+  /**
+   * Book disagreement: mean absolute deviation of each book's fair P(home)
+   * from the consensus median, 0–1. 0 = the books agree exactly; higher =
+   * the market is split. Robust to a single outlier because it deviates from
+   * the median, not the mean.
+   */
+  readonly homeProbDispersion: number;
 }
 
 interface BookPrices {
@@ -93,9 +100,20 @@ export function consensusNoVig(perBook: readonly BookPrices[]): ConsensusMarketR
   const total = home + away + draw;
   if (total <= 0) return null;
 
+  // Simulation Cloud raw material: each pooled book's own no-vig P(home).
   const fairHomeProbsByBook = pool
     .map((r) => round4(r.probs[0]!))
     .sort((a, b) => a - b);
+
+  // Disagreement on the home side: each book's home prob is normalized within
+  // that book, then we take the mean absolute deviation from the pool median.
+  const homeProbs = pool.map((r) => {
+    const t = r.probs.reduce((s, p) => s + p, 0);
+    return t > 0 ? r.probs[0]! / t : 0;
+  });
+  const medHome = median(homeProbs);
+  const dispersion =
+    homeProbs.reduce((s, p) => s + Math.abs(p - medHome), 0) / homeProbs.length;
 
   return {
     fairHomeProb: round4(home / total),
@@ -104,6 +122,64 @@ export function consensusNoVig(perBook: readonly BookPrices[]): ConsensusMarketR
     bookCount: pool.length,
     medianHoldPct: round2(median(pool.map((r) => r.holdPct))),
     fairHomeProbsByBook,
+    homeProbDispersion: round4(dispersion),
+  };
+}
+
+export type GravityBand = "strong" | "moderate" | "slight" | "balanced";
+
+export interface MarketGravity {
+  /** 0–100 — how strongly the market pulls toward one side. */
+  readonly index: number;
+  /** Which side the pull favours. "none" only when the index is ~0. */
+  readonly side: "home" | "away" | "none";
+  readonly band: GravityBand;
+  /** Conviction: distance of consensus from a coin flip, 0–1. */
+  readonly conviction: number;
+  /** Agreement: 1 − (dispersion capped), 0–1. */
+  readonly agreement: number;
+  /** Liquidity: book coverage vs target, 0–1. */
+  readonly liquidity: number;
+}
+
+// Above this much book disagreement (MAD in prob points), agreement → 0.
+const DISPERSION_CAP = 0.1;
+// Book count at which liquidity confidence saturates.
+const LIQUIDITY_TARGET = 6;
+
+/**
+ * Market Gravity Index (Galaxy Data Doctrine stat factory) — how strongly the
+ * market is pulling toward one side, on a 0–100 scale.
+ *
+ * Conviction (distance of the consensus from a coin flip) is the anchor; book
+ * AGREEMENT and LIQUIDITY are confidence factors that discount a lopsided
+ * median when books disagree or coverage is thin. They modulate within
+ * [0.6, 1.0] so they sharpen the read without erasing a genuine lean.
+ *
+ * Known weakness (stat commandment): this measures the market's CONVICTION,
+ * never whether the market is RIGHT. Strong gravity against our read is a
+ * reason to look harder, not to fold.
+ */
+export function marketGravityIndex(consensus: ConsensusMarketRead): MarketGravity {
+  const conviction = Math.min(1, Math.abs(consensus.fairHomeProb - 0.5) * 2);
+  const agreement = 1 - Math.min(1, consensus.homeProbDispersion / DISPERSION_CAP);
+  const liquidity = Math.min(1, consensus.bookCount / LIQUIDITY_TARGET);
+
+  const quality = 0.6 + 0.25 * agreement + 0.15 * liquidity; // [0.6, 1.0]
+  const index = Math.round(conviction * quality * 100);
+
+  const band: GravityBand =
+    index >= 60 ? "strong" : index >= 30 ? "moderate" : index >= 10 ? "slight" : "balanced";
+  const side =
+    band === "balanced" ? "none" : consensus.fairHomeProb >= 0.5 ? "home" : "away";
+
+  return {
+    index,
+    side,
+    band,
+    conviction: round4(conviction),
+    agreement: round4(agreement),
+    liquidity: round4(liquidity),
   };
 }
 

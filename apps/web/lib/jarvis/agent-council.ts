@@ -466,7 +466,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "DRAFT_ONLY",
     wiringState: "wired",
     department: "Customer Surface & Quality",
-    reportsTo: ["JARVIS"],
+    reportsTo: ["SARAH"],
     escalatesTo: ["JARVIS"],
     authorityTier: 1,
     isRegisteredCockpitAgent: true,
@@ -611,7 +611,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "MANUAL",
     wiringState: "manual",
     department: "Results & Calibration",
-    reportsTo: ["JARVIS"],
+    reportsTo: ["AUDIT"],
     escalatesTo: ["JARVIS"],
     authorityTier: 2,
     isRegisteredCockpitAgent: false,
@@ -665,7 +665,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "MANUAL",
     wiringState: "manual",
     department: "Results & Calibration",
-    reportsTo: ["Owner", "JARVIS"],
+    reportsTo: ["JARVIS", "Owner"],
     escalatesTo: ["Owner"],
     authorityTier: 2,
     isRegisteredCockpitAgent: false,
@@ -719,7 +719,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "MANUAL",
     wiringState: "manual",
     department: "Command & Governance",
-    reportsTo: ["Owner", "JARVIS"],
+    reportsTo: ["JARVIS"],
     escalatesTo: ["Owner"],
     authorityTier: 2,
     isRegisteredCockpitAgent: false,
@@ -879,7 +879,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "NOT_WIRED",
     wiringState: "not_connected",
     department: "Data & Automation Platform",
-    reportsTo: ["JARVIS", "METER"],
+    reportsTo: ["TAL"],
     escalatesTo: ["Owner"],
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
@@ -983,7 +983,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "NOT_WIRED",
     wiringState: "not_connected",
     department: "Data & Automation Platform",
-    reportsTo: ["RELAY", "JARVIS"],
+    reportsTo: ["RELAY"],
     escalatesTo: ["JARVIS"],
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
@@ -1034,7 +1034,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "NOT_WIRED",
     wiringState: "not_connected",
     department: "Data & Automation Platform",
-    reportsTo: ["JARVIS", "METER"],
+    reportsTo: ["TAL"],
     escalatesTo: ["Owner"],
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
@@ -1088,7 +1088,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "NOT_WIRED",
     wiringState: "not_connected",
     department: "Customer Surface & Quality",
-    reportsTo: ["JARVIS"],
+    reportsTo: ["SARAH"],
     escalatesTo: ["JARVIS"],
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
@@ -1184,7 +1184,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "NOT_WIRED",
     wiringState: "not_connected",
     department: "Customer Surface & Quality",
-    reportsTo: ["JARVIS", "Owner"],
+    reportsTo: ["SARAH"],
     escalatesTo: ["Owner"],
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
@@ -1235,7 +1235,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "NOT_WIRED",
     wiringState: "not_connected",
     department: "Growth, Community & Finance",
-    reportsTo: ["JARVIS"],
+    reportsTo: ["BOBBY"],
     escalatesTo: ["Owner"],
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
@@ -1285,7 +1285,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "NOT_WIRED",
     wiringState: "not_connected",
     department: "Growth, Community & Finance",
-    reportsTo: ["JARVIS"],
+    reportsTo: ["BOBBY"],
     escalatesTo: ["Owner"],
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
@@ -1336,7 +1336,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "NOT_WIRED",
     wiringState: "not_connected",
     department: "Growth, Community & Finance",
-    reportsTo: ["JARVIS"],
+    reportsTo: ["BOBBY"],
     escalatesTo: ["JARVIS"],
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
@@ -1383,7 +1383,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "NOT_WIRED",
     wiringState: "not_connected",
     department: "Growth, Community & Finance",
-    reportsTo: ["Owner", "JARVIS"],
+    reportsTo: ["BOBBY"],
     escalatesTo: ["Owner"],
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
@@ -1433,7 +1433,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     status: "NOT_WIRED",
     wiringState: "not_connected",
     department: "Sports Intelligence",
-    reportsTo: ["JARVIS"],
+    reportsTo: ["SCOUT"],
     escalatesTo: ["JARVIS"],
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
@@ -1597,6 +1597,72 @@ export function getCouncilByDepartment(): ReadonlyMap<string, readonly AgentSeat
     map.get(dept)!.push(seat);
   }
   return map as ReadonlyMap<string, readonly AgentSeat[]>;
+}
+
+// ─── Department heads & reporting hierarchy ───────────────────────────────────
+
+/**
+ * Exactly one department head per department. The head is the senior WIRED /
+ * registered operational seat (honesty doctrine: the head is the one actually
+ * running the function), except Results & Calibration which has no registered
+ * agent and is headed by AUDIT, its senior oversight seat.
+ *
+ * The reporting law is: every seat → its department head → JARVIS → Owner.
+ * Heads report to JARVIS; JARVIS reports to the Owner. A few seats report to a
+ * sub-lead beneath the head (DELTA/PRISM→SCOUT, ASCEND→PRISM, PILOT/ECHO→RELAY)
+ * — the chain still resolves up through the head. AUDIT also escalates to the
+ * Owner directly to preserve audit independence.
+ */
+export const DEPARTMENT_HEADS: Readonly<Record<string, string>> = {
+  "Command & Governance": "JARVIS",
+  "Sports Intelligence": "SCOUT",
+  "Data & Automation Platform": "TAL",
+  "Customer Surface & Quality": "SARAH",
+  "Growth, Community & Finance": "BOBBY",
+  "Results & Calibration": "AUDIT",
+};
+
+/** The seat that heads a department, or undefined for an unknown department. */
+export function getDepartmentHead(department: string): AgentSeat | undefined {
+  const codename = DEPARTMENT_HEADS[department];
+  return codename ? AGENT_COUNCIL.find((m) => m.codename === codename) : undefined;
+}
+
+/** All department-head seats, in department order. */
+export function getDepartmentHeads(): readonly AgentSeat[] {
+  return Object.values(DEPARTMENT_HEADS)
+    .map((codename) => AGENT_COUNCIL.find((m) => m.codename === codename))
+    .filter((m): m is AgentSeat => m !== undefined);
+}
+
+/** True when this seat is the head of its department. */
+export function isDepartmentHead(seat: AgentSeat): boolean {
+  return DEPARTMENT_HEADS[seat.department] === seat.codename;
+}
+
+/** Direct reports of a seat (by codename): seats whose primary manager is it. */
+export function getDirectReports(codename: string): readonly AgentSeat[] {
+  return AGENT_COUNCIL.filter((m) => m.reportsTo[0] === codename);
+}
+
+/**
+ * The escalation chain from a seat up to the Owner, by codename. Follows the
+ * primary reportsTo link at each step, guards against cycles, and terminates at
+ * "Owner" for a well-formed roster.
+ */
+export function getReportingChain(seatId: string): readonly string[] {
+  const chain: string[] = [];
+  const seen = new Set<string>();
+  let current = AGENT_COUNCIL.find((m) => m.id === seatId);
+  while (current && !seen.has(current.codename)) {
+    seen.add(current.codename);
+    const next = current.reportsTo[0];
+    if (!next) break;
+    chain.push(next);
+    if (next === "Owner") break;
+    current = AGENT_COUNCIL.find((m) => m.codename === next);
+  }
+  return chain;
 }
 
 // ─── Council accessors ────────────────────────────────────────────────────────

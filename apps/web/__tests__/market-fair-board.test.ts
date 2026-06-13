@@ -71,6 +71,22 @@ describe("capture-window drift — the Line Death Clock heartbeat", () => {
     ]);
     expect(result).not.toBeNull();
     expect(result!.homeDriftPp).toBeNull();
+    expect(result!.homeDriftPerHourPp).toBeNull();
+  });
+
+  it("expresses the death-clock rate in pp/hr across the real time span", () => {
+    const result = buildH2hMarketRead([
+      row("book-a", -110, -110, "2026-06-12T08:00:00Z"),
+      row("book-b", -110, -110, "2026-06-12T08:00:00Z"),
+      row("book-a", -130, +110, "2026-06-12T12:00:00Z"),
+      row("book-b", -135, +115, "2026-06-12T12:00:00Z"),
+    ]);
+    expect(result!.homeDriftPerHourPp).not.toBeNull();
+    // 4-hour span → rate is a fraction of the total drift, same sign.
+    expect(Math.abs(result!.homeDriftPerHourPp!)).toBeLessThan(
+      Math.abs(result!.homeDriftPp!),
+    );
+    expect(result!.homeDriftPerHourPp!).toBeGreaterThan(0);
   });
 });
 
@@ -99,5 +115,23 @@ describe("the surface honors the gates", () => {
     expect(component).toContain("NUMERIC_TEXT_CLASS");
     const raw = component.match(/(?:text|bg|border)-(?:gray|green|red|yellow)-\d+/g);
     expect(raw ?? []).toEqual([]);
+  });
+
+  it("renders the Market Gravity badge and frames it as conviction, not correctness", () => {
+    expect(component).toContain("GravityBadge");
+    expect(component).toContain('data-testid="gravity-badge"');
+    expect(component.toLowerCase()).toMatch(/not whether it'?s right/);
+  });
+});
+
+describe("gravity flows through the builder", () => {
+  it("attaches a Market Gravity Index to every built read", () => {
+    const result = buildH2hMarketRead([
+      row("book-a", -600, +450, "2026-06-12T12:00:00Z"),
+      row("book-b", -610, +460, "2026-06-12T12:00:00Z"),
+    ]);
+    expect(result).not.toBeNull();
+    expect(result!.gravity.side).toBe("home");
+    expect(result!.gravity.index).toBeGreaterThan(0);
   });
 });
