@@ -7,10 +7,9 @@ import { SubscribeButton } from "./subscribe-button";
 /**
  * Pricing plan cards with a monthly/annual billing toggle.
  *
- * Client component (holds toggle state) but receives all price data as
- * serializable props from the server page — so lib/stripe.ts (and the Stripe
- * SDK / secret) never enters the client bundle. Prices originate from the
- * current pricing phase (pricing-phases.ts); this component only displays them.
+ * Energi pass: design-token classes throughout (no raw gray-* / brand-* palette
+ * classes), filled identity chips for Pro and Elite badges, billing toggle
+ * upgraded to use orbital-cyan active state.
  */
 
 type PlanId = "FREE" | "PRO" | "ELITE";
@@ -29,6 +28,12 @@ export interface PlanView {
   readonly features: ReadonlyArray<{ readonly label: string; readonly included: boolean }>;
 }
 
+const CARD_RING: Record<PlanId, string> = {
+  FREE:  "border-mineral bg-eclipse",
+  PRO:   "border-orbital-cyan/40 bg-void shadow-[0_0_48px_-16px_rgba(0,229,255,0.25)]",
+  ELITE: "border-ultraviolet/50 bg-void shadow-[0_0_48px_-16px_rgba(122,92,255,0.25)]",
+};
+
 export function PricingPlans({
   plans,
   grandfatherNote,
@@ -46,16 +51,16 @@ export function PricingPlans({
         <div
           role="group"
           aria-label="Billing interval"
-          className="inline-flex rounded-full border border-gray-800 bg-gray-900/60 p-1"
+          className="inline-flex rounded-full border border-mineral bg-eclipse p-1"
         >
-          <ToggleButton active={!annual} onClick={() => setInterval("month")}>
+          <ToggleButton active={!annual} variant="cyan" onClick={() => setInterval("month")}>
             Monthly
           </ToggleButton>
-          <ToggleButton active={annual} onClick={() => setInterval("year")}>
+          <ToggleButton active={annual} variant="cyan" onClick={() => setInterval("year")}>
             Annual
           </ToggleButton>
         </div>
-        <span className="text-xs font-medium text-brand-400">Save up to 45% annually</span>
+        <span className="text-xs font-medium text-orbital-cyan">Save up to 45% annually</span>
       </div>
 
       {/* Plan cards */}
@@ -67,22 +72,13 @@ export function PricingPlans({
           return (
             <div
               key={plan.id}
-              className={[
-                "relative flex flex-col rounded-2xl border p-6",
-                isPro
-                  ? "border-brand-600 bg-brand-950/30 shadow-xl shadow-brand-900/30"
-                  : isElite
-                    ? "border-ultraviolet/60 bg-ultraviolet/5 shadow-xl shadow-ultraviolet/10"
-                    : "border-gray-800 bg-gray-900/60",
-              ].join(" ")}
+              className={`relative flex flex-col rounded-2xl border p-6 ${CARD_RING[plan.id]}`}
             >
               {plan.badge && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
                   <span
-                    className={[
-                      "rounded-full px-3 py-0.5 text-xs font-semibold",
-                      isPro ? "bg-brand-600 text-white" : "bg-ultraviolet text-white",
-                    ].join(" ")}
+                    className={isPro ? "gw-chip-cyan" : "gw-chip-plasma"}
+                    style={{ fontSize: "9px", padding: "4px 12px" }}
                   >
                     {plan.badge}
                   </span>
@@ -90,43 +86,45 @@ export function PricingPlans({
               )}
 
               <div className="mb-4">
-                <h2 className="text-xl font-bold text-white">{plan.name}</h2>
+                <h2 className={`text-xl font-bold ${isPro ? "text-orbital-cyan" : isElite ? "text-ultraviolet" : "text-ion-white"}`}>
+                  {plan.name}
+                </h2>
 
                 <div className="mt-2 flex items-baseline gap-1">
                   {plan.id === "FREE" || plan.monthly === null ? (
-                    <span className="text-4xl font-extrabold text-white">$0</span>
+                    <span className="text-4xl font-extrabold text-ion-white">$0</span>
                   ) : annual ? (
                     <>
-                      <span className="text-4xl font-extrabold text-white">${plan.annual}</span>
-                      <span className="text-sm text-gray-400">/year</span>
+                      <span className="text-4xl font-extrabold text-ion-white">${plan.annual}</span>
+                      <span className="text-sm text-ion-2">/year</span>
                     </>
                   ) : (
                     <>
-                      <span className="text-4xl font-extrabold text-white">${plan.monthly}</span>
-                      <span className="text-sm text-gray-400">/month</span>
+                      <span className="text-4xl font-extrabold text-ion-white">${plan.monthly}</span>
+                      <span className="text-sm text-ion-2">/month</span>
                     </>
                   )}
                 </div>
 
                 {/* Annual context line */}
                 {isPaid && annual && plan.annualMonthly !== null && (
-                  <p className="mt-1 text-xs text-brand-400">
+                  <p className="mt-1 text-xs text-orbital-cyan">
                     ≈ ${plan.annualMonthly}/mo billed annually
                     {plan.annualSavingsPct ? ` · save ${plan.annualSavingsPct}%` : ""}
                   </p>
                 )}
                 {isPaid && !annual && plan.annual !== null && (
-                  <p className="mt-1 text-xs text-gray-500">or ${plan.annual}/year</p>
+                  <p className="mt-1 text-xs text-ion-2">or ${plan.annual}/year</p>
                 )}
 
-                <p className="mt-2 text-sm text-gray-400">{plan.description}</p>
+                <p className="mt-2 text-sm text-ion-1">{plan.description}</p>
               </div>
 
               <ul className="mb-6 flex flex-col gap-3">
                 {plan.features.map(({ label, included }) => (
                   <li key={label} className="flex items-center gap-2 text-sm">
                     {included ? <CheckIcon /> : <DashIcon />}
-                    <span className={included ? "text-gray-200" : "text-gray-500"}>{label}</span>
+                    <span className={included ? "text-ion" : "text-ion-2"}>{label}</span>
                   </li>
                 ))}
               </ul>
@@ -135,7 +133,7 @@ export function PricingPlans({
                 {plan.id === "FREE" ? (
                   <Link
                     href="/auth/signin"
-                    className="block w-full rounded-xl border border-gray-700 bg-gray-800 py-2.5 text-center text-sm font-semibold text-gray-200 transition-colors hover:bg-gray-700"
+                    className="block w-full rounded-xl border border-mineral bg-eclipse py-2.5 text-center text-sm font-semibold text-ion transition-colors hover:border-mineral-hi hover:bg-titanium"
                   >
                     {plan.cta}
                   </Link>
@@ -153,8 +151,8 @@ export function PricingPlans({
         })}
       </div>
 
-      {/* Founding-member grandfather guarantee — the loyalty + urgency hook */}
-      <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-brand-400">
+      {/* Founding-member grandfather guarantee */}
+      <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-orbital-cyan">
         {grandfatherNote}
       </p>
     </div>
@@ -163,10 +161,12 @@ export function PricingPlans({
 
 function ToggleButton({
   active,
+  variant,
   onClick,
   children,
 }: {
   active: boolean;
+  variant: "cyan";
   onClick: () => void;
   children: ReactNode;
 }) {
@@ -177,8 +177,14 @@ function ToggleButton({
       aria-pressed={active}
       className={[
         "rounded-full px-4 py-1.5 text-sm font-semibold transition-colors",
-        active ? "bg-brand-600 text-white" : "text-gray-400 hover:text-gray-200",
+        active
+          ? "text-void"
+          : "text-ion-2 hover:text-ion",
       ].join(" ")}
+      style={active ? {
+        background: "linear-gradient(110deg, #5BEEFF, #00E5FF)",
+        boxShadow: "0 0 16px -4px rgba(0,229,255,0.5)",
+      } : undefined}
     >
       {children}
     </button>
@@ -188,7 +194,7 @@ function ToggleButton({
 function CheckIcon() {
   return (
     <svg
-      className="h-4 w-4 shrink-0 text-brand-400"
+      className="h-4 w-4 shrink-0 text-orbital-cyan"
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={2.5}
@@ -203,7 +209,7 @@ function CheckIcon() {
 function DashIcon() {
   return (
     <svg
-      className="h-4 w-4 shrink-0 text-gray-700"
+      className="h-4 w-4 shrink-0 text-mineral-hi"
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={2}

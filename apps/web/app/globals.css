@@ -62,20 +62,21 @@
 }
 
 @layer components {
-  /* Buttons — primary uses plasma, secondary stays neutral. */
+  /* Buttons — primary: plasma→ultraviolet gradient (Energi pass). */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all duration-200;
-    background: var(--plasma);
+    background: linear-gradient(110deg, var(--plasma) 0%, var(--ultraviolet) 100%);
     color: var(--plasma-ink);
-    box-shadow: var(--glow-plasma);
+    box-shadow: 0 0 24px -6px rgba(255, 45, 214, 0.65), 0 0 48px -12px rgba(122, 92, 255, 0.4);
   }
   .btn-primary:hover {
-    background: var(--plasma-glow);
+    background: linear-gradient(110deg, var(--plasma-glow) 0%, var(--ultraviolet-glow) 100%);
     transform: translateY(-1px);
+    box-shadow: 0 0 32px -4px rgba(255, 45, 214, 0.75), 0 0 64px -12px rgba(122, 92, 255, 0.5);
   }
   .btn-primary:focus-visible {
     outline: none;
-    box-shadow: var(--glow-plasma), 0 0 0 2px var(--plasma-glow), 0 0 0 4px var(--carbon);
+    box-shadow: 0 0 24px -6px rgba(255, 45, 214, 0.65), 0 0 0 2px var(--plasma-glow), 0 0 0 4px var(--carbon);
   }
 
   .btn-secondary {
@@ -98,11 +99,12 @@
     color: var(--ion-white);
   }
 
-  /* Card surfaces */
+  /* Card surfaces — Energi pass: subtle cyan top-edge accent. */
   .surface-card {
     @apply rounded-2xl backdrop-blur-sm;
     border: 1px solid var(--mineral);
     background: color-mix(in srgb, var(--eclipse) 80%, transparent);
+    box-shadow: inset 0 1px 0 0 color-mix(in srgb, var(--orbital-cyan) 22%, transparent);
   }
   .surface-glass {
     @apply rounded-2xl backdrop-blur-md;

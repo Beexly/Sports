@@ -193,7 +193,7 @@ export default function PricingPage() {
               </h1>
             </Reveal>
             <Reveal delay={180}>
-              <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">
+              <p className="mx-auto mt-4 max-w-xl text-lg text-ion-1">
                 Start free. Back us before the record exists and your price never moves —
                 even as it rises for everyone who joins later.
               </p>
@@ -207,12 +207,12 @@ export default function PricingPage() {
 
           {/* Feature comparison table */}
           <div className="mt-20">
-            <h2 className="text-center text-2xl font-bold text-white">Side by side</h2>
-            <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-800">
+            <h2 className="text-center text-2xl font-bold text-ion-white">Side by side</h2>
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-mineral">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-800">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  <tr className="border-b border-mineral">
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ion-2">
                       Feature
                     </th>
                     {PLANS.map((plan) => (
@@ -221,15 +221,15 @@ export default function PricingPage() {
                         className={[
                           "px-4 py-3 text-center text-sm font-bold",
                           plan.id === "PRO"
-                            ? "text-brand-400"
+                            ? "text-orbital-cyan"
                             : plan.id === "ELITE"
-                              ? "text-ultraviolet-glow"
-                              : "text-gray-300",
+                              ? "text-ultraviolet"
+                              : "text-ion-1",
                         ].join(" ")}
                       >
                         {plan.name}
                         {plan.monthly !== null && (
-                          <span className="ml-1 text-xs font-normal text-gray-400">
+                          <span className="ml-1 text-xs font-normal text-ion-2">
                             ${plan.monthly}/mo
                           </span>
                         )}
@@ -242,11 +242,11 @@ export default function PricingPage() {
                     <tr
                       key={feature}
                       className={[
-                        "border-b border-gray-800/60",
-                        i % 2 === 0 ? "bg-gray-900/20" : "",
+                        "border-b border-mineral/60",
+                        i % 2 === 0 ? "bg-void/30" : "",
                       ].join(" ")}
                     >
-                      <td className="px-4 py-3 text-gray-400">{feature}</td>
+                      <td className="px-4 py-3 text-ion-2">{feature}</td>
                       {(["FREE", "PRO", "ELITE"] as const).map((planId) => {
                         const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
                         return (
@@ -264,30 +264,30 @@ export default function PricingPage() {
 
           {/* FAQ */}
           <section className="mt-20">
-            <h2 className="text-center text-2xl font-bold text-white">Frequently asked</h2>
-            <div className="mx-auto mt-8 max-w-3xl divide-y divide-gray-800/60 rounded-2xl border border-gray-800 bg-gray-900/40">
+            <h2 className="text-center text-2xl font-bold text-ion-white">Frequently asked</h2>
+            <div className="mx-auto mt-8 max-w-3xl divide-y divide-mineral/60 rounded-2xl border border-mineral bg-eclipse/40">
               {FAQ.map((item) => (
                 <details
                   key={item.q}
                   className="group px-5 py-4 [&_summary::-webkit-details-marker]:hidden"
                 >
-                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-gray-100">
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-ion-white">
                     <span>{item.q}</span>
                     <span
                       aria-hidden="true"
-                      className="text-gray-400 transition-transform group-open:rotate-45"
+                      className="text-ion-2 transition-transform group-open:rotate-45"
                     >
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-400">{item.a}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-ion-1">{item.a}</p>
                 </details>
               ))}
             </div>
           </section>
 
           {/* Refund note */}
-          <p className="mt-12 text-center text-xs text-gray-400">
+          <p className="mt-12 text-center text-xs text-ion-2">
             Every paid plan ships with a 7-day refund window. Cancel any time from your
             dashboard. Prices shown are founding-member rates.
           </p>
@@ -307,7 +307,7 @@ function ComparisonCell({ value }: { value: string | boolean }) {
   if (typeof value === "boolean") {
     return value ? (
       <svg
-        className="mx-auto h-5 w-5 text-brand-400"
+        className="mx-auto h-5 w-5 text-orbital-cyan"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={2.5}
@@ -319,7 +319,7 @@ function ComparisonCell({ value }: { value: string | boolean }) {
       </svg>
     ) : (
       <svg
-        className="mx-auto h-5 w-5 text-gray-700"
+        className="mx-auto h-5 w-5 text-mineral-hi"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={2}
@@ -331,5 +331,5 @@ function ComparisonCell({ value }: { value: string | boolean }) {
       </svg>
     );
   }
-  return <span className="text-gray-300">{value}</span>;
+  return <span className="text-ion">{value}</span>;
 }

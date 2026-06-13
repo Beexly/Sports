@@ -553,8 +553,8 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* Wordmark moment — giant ambient EDGE behind the footer columns.
-   Reference: linear.app, vercel.com — footers earn their pixels with
-   a closing brand statement, not just link columns. */
+   Energi pass: chrome gradient fill (white→cyan→violet) so the wordmark
+   reads as a lit closing statement, not a dim outline. */
 .footer-wordmark {
   position: absolute;
   bottom: -42px;
@@ -563,7 +563,17 @@ button { font-family: inherit; cursor: pointer; }
   font: 900 240px/0.85 "Exo 2", var(--f-arch);
   letter-spacing: -0.05em;
   color: transparent;
-  -webkit-text-stroke: 1px color-mix(in srgb, var(--ion-blue-glow) 18%, transparent);
+  background: linear-gradient(
+    180deg,
+    rgba(246, 247, 250, 0.22) 0%,
+    rgba(0, 229, 255, 0.16) 38%,
+    rgba(122, 92, 255, 0.12) 70%,
+    rgba(255, 45, 214, 0.07) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--orbital-cyan) 28%, transparent);
+  filter: drop-shadow(0 0 80px rgba(0, 229, 255, 0.10)) drop-shadow(0 0 140px rgba(122, 92, 255, 0.08));
   text-transform: uppercase;
   pointer-events: none;
   z-index: 0;
