@@ -69,6 +69,77 @@ const POSITIONS: readonly ModelPosition[] = ["QB", "RB", "WR", "TE"];
 const DIVERGENCE = 18;
 const TOP_PER_POS = 24;
 
+// Default decay weights for prior seasons blended into efficiency metrics.
+// Active season always has weight 1.0; priors augment but never dominate.
+const DEFAULT_PRIOR_WEIGHTS = [
+  { seasonOffset: -1, weight: 0.6 },
+  { seasonOffset: -2, weight: 0.35 },
+] as const;
+
+interface SeasonEff {
+  epaPerPlay: number | null;
+  wopr: number | null;
+  targetShare: number | null;
+  dakota: number | null;
+  pacr: number | null;
+}
+
+function buildSeasonEff(records: readonly CsvRecord[], season: number): Map<string, SeasonEff> {
+  const rows = records.filter((r) => r["season"] === String(season) && r["season_type"] === "REG");
+  const acc = new Map<string, { epaSum: number; epaN: number; woprSum: number; woprN: number; tsSum: number; tsN: number; dakotaSum: number; dakotaN: number; pacrSum: number; pacrN: number }>();
+  for (const r of rows) {
+    const id = r["player_id"] || r["player_display_name"] || "";
+    if (!id) continue;
+    const a = acc.get(id) ?? { epaSum: 0, epaN: 0, woprSum: 0, woprN: 0, tsSum: 0, tsN: 0, dakotaSum: 0, dakotaN: 0, pacrSum: 0, pacrN: 0 };
+    const plays = num(r["attempts"]) + num(r["carries"]) + num(r["targets"]);
+    const epa = num(r["passing_epa"]) + num(r["rushing_epa"]) + num(r["receiving_epa"]);
+    if (plays > 0) { a.epaSum += epa; a.epaN += plays; }
+    const wopr = finite(r["wopr"]); if (wopr != null) { a.woprSum += wopr; a.woprN += 1; }
+    const ts = finite(r["target_share"]); if (ts != null) { a.tsSum += ts; a.tsN += 1; }
+    const dak = finite(r["dakota"]); if (dak != null) { a.dakotaSum += dak; a.dakotaN += 1; }
+    const pacr = finite(r["pacr"]); if (pacr != null) { a.pacrSum += pacr; a.pacrN += 1; }
+    acc.set(id, a);
+  }
+  const out = new Map<string, SeasonEff>();
+  for (const [id, a] of acc.entries()) {
+    out.set(id, {
+      epaPerPlay: a.epaN ? a.epaSum / a.epaN : null,
+      wopr: a.woprN ? a.woprSum / a.woprN : null,
+      targetShare: a.tsN ? a.tsSum / a.tsN : null,
+      dakota: a.dakotaN ? a.dakotaSum / a.dakotaN : null,
+      pacr: a.pacrN ? a.pacrSum / a.pacrN : null,
+    });
+  }
+  return out;
+}
+
+// Blend active-season efficiency with decay-weighted prior seasons. A prior
+// season contributes only when it has data for that metric; missing prior data
+// never drags down a metric, it just doesn't widen the denominator.
+function blendEfficiency(
+  active: SeasonEff,
+  priors: ReadonlyArray<{ eff: SeasonEff; weight: number }>,
+): SeasonEff {
+  const blendKey = (key: keyof SeasonEff): number | null => {
+    const av = active[key] as number | null;
+    if (av == null) return null; // no active anchor → can't grade this metric
+    let num_ = av * 1.0;
+    let den = 1.0;
+    for (const { eff, weight } of priors) {
+      const pv = eff[key] as number | null;
+      if (pv != null) { num_ += pv * weight; den += weight; }
+    }
+    return num_ / den;
+  };
+  return {
+    epaPerPlay: blendKey("epaPerPlay"),
+    wopr: blendKey("wopr"),
+    targetShare: blendKey("targetShare"),
+    dakota: blendKey("dakota"),
+    pacr: blendKey("pacr"),
+  };
+}
+
 // Predictive anchors that feed the composite process grade, by position.
 const ANCHORS: Record<ModelPosition, readonly (keyof Pick<PlayerProfile, "epaPerPlay" | "touches" | "wopr" | "targetShare" | "dakota" | "pacr">)[]> = {
   QB: ["epaPerPlay", "dakota", "pacr"],
@@ -103,9 +174,27 @@ interface Agg {
  * `topPerPos` caps each position for a scannable display board (default 24); pass a
  * large value (e.g. Infinity) for statistical uses like the predictiveness backtest,
  * where capping to the leaders would bias the sample.
+ *
+ * `priorSeasonWeights` blends earlier seasons into efficiency metrics with exponential
+ * decay (default: prior-1 @ 0.6, prior-2 @ 0.35). Pass an empty array to disable.
+ * Since player_stats_week is non-seasonal (all years in one file), the same records
+ * feed the active season and both priors — no extra network fetch.
  */
-export function buildPlayerModel(records: readonly CsvRecord[], activeSeason: number, options: { topPerPos?: number } = {}): { profiles: PlayerProfile[]; throughWeek: number | null } {
+export function buildPlayerModel(
+  records: readonly CsvRecord[],
+  activeSeason: number,
+  options: {
+    topPerPos?: number;
+    priorSeasonWeights?: ReadonlyArray<{ season: number; weight: number }>;
+  } = {},
+): { profiles: PlayerProfile[]; throughWeek: number | null } {
   const topPerPos = options.topPerPos ?? TOP_PER_POS;
+  const priorSeasonWeights =
+    options.priorSeasonWeights ??
+    DEFAULT_PRIOR_WEIGHTS.map((p) => ({ season: activeSeason + p.seasonOffset, weight: p.weight })).filter(
+      (p) => p.season > 0,
+    );
+
   const rows = records.filter((r) => r["season"] === String(activeSeason) && r["season_type"] === "REG");
   if (rows.length === 0) return { profiles: [], throughWeek: null };
   const throughWeek = rows.reduce((m, r) => Math.max(m, num(r["week"])), 0) || null;
@@ -133,19 +222,44 @@ export function buildPlayerModel(records: readonly CsvRecord[], activeSeason: nu
     byPlayer.set(id, a);
   }
 
+  // Build prior-season efficiency maps once, then blend per player.
+  const priorEffMaps: ReadonlyArray<{ eff: Map<string, SeasonEff>; weight: number }> =
+    priorSeasonWeights.length > 0
+      ? priorSeasonWeights.map(({ season, weight }) => ({ eff: buildSeasonEff(records, season), weight }))
+      : [];
+
   // Minimum involvement so percentiles are meaningful (position-appropriate).
   const minPlays: Record<ModelPosition, number> = { QB: 80, RB: 40, WR: 25, TE: 20 };
   const base = [...byPlayer.entries()]
     .filter(([, a]) => a.plays >= minPlays[a.position])
-    .map(([id, a]) => ({
-      id,
-      a,
-      epaPerPlay: a.epaN ? a.epaSum / a.epaN : 0,
-      wopr: a.woprN ? a.woprSum / a.woprN : null,
-      targetShare: a.tsN ? a.tsSum / a.tsN : null,
-      dakota: a.dakotaN ? a.dakotaSum / a.dakotaN : null,
-      pacr: a.pacrN ? a.pacrSum / a.pacrN : null,
-    }));
+    .map(([id, a]) => {
+      const activeEff: SeasonEff = {
+        epaPerPlay: a.epaN ? a.epaSum / a.epaN : null,
+        wopr: a.woprN ? a.woprSum / a.woprN : null,
+        targetShare: a.tsN ? a.tsSum / a.tsN : null,
+        dakota: a.dakotaN ? a.dakotaSum / a.dakotaN : null,
+        pacr: a.pacrN ? a.pacrSum / a.pacrN : null,
+      };
+      const blended =
+        priorEffMaps.length > 0
+          ? blendEfficiency(
+              activeEff,
+              priorEffMaps.map(({ eff, weight }) => ({
+                eff: eff.get(id) ?? { epaPerPlay: null, wopr: null, targetShare: null, dakota: null, pacr: null },
+                weight,
+              })),
+            )
+          : activeEff;
+      return {
+        id,
+        a,
+        epaPerPlay: blended.epaPerPlay ?? 0,
+        wopr: blended.wopr,
+        targetShare: blended.targetShare,
+        dakota: blended.dakota,
+        pacr: blended.pacr,
+      };
+    });
 
   const profiles: PlayerProfile[] = [];
   for (const pos of POSITIONS) {

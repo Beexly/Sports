@@ -27,6 +27,7 @@ import { loadExpectedPoints, type ExpectedPointsRow } from "../intelligence/expe
 import { normName, percentileRanks } from "../intelligence/qb-consensus";
 import type { TeamEnvironmentRow } from "../intelligence/team-environment";
 import type { QbForwardRow } from "../intelligence/qb-forward";
+import type { SleeperPlayersMap } from "../sleeper/source";
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
@@ -73,6 +74,89 @@ function normTeam(team: string | undefined | null): string {
     HST: "HOU",
   };
   return aliases[t] ?? t;
+}
+
+// ---------------------------------------------------------------------------
+// Sleeper enrichment — consensus rank signal + age curve, applied post-build
+// ---------------------------------------------------------------------------
+
+// Up to +6% proj boost for the consensus #1 at their position; scales linearly
+// to 0% at 3× the tier cutoff (beyond that the market has low conviction).
+const SLEEPER_RANK_MAX_NUDGE = 0.06;
+
+const RANK_TIER_CUTOFF: Record<string, number> = { QB: 12, RB: 24, WR: 36, TE: 12 };
+
+function sleeperRankMult(
+  rankPpr: number | null | undefined,
+  searchRank: number | null | undefined,
+  pos: Player["pos"],
+): number {
+  const rank = rankPpr ?? searchRank;
+  if (!rank || rank <= 0) return 1;
+  const cutoff = RANK_TIER_CUTOFF[pos] ?? 24;
+  const maxRank = cutoff * 3;
+  if (rank > maxRank) return 1;
+  const pct = Math.max(0, 1 - (rank - 1) / Math.max(1, maxRank - 1));
+  return 1 + SLEEPER_RANK_MAX_NUDGE * pct;
+}
+
+// Age-based projection multiplier. QBs peak later; RBs fade earliest.
+function ageMultiplier(age: number | null | undefined, pos: Player["pos"]): number {
+  if (age == null) return 1;
+  if (pos === "QB") {
+    if (age < 24) return 1.03;
+    if (age <= 35) return 1;
+    return Math.max(0.85, 1 - (age - 35) * 0.05);
+  }
+  if (pos === "RB") {
+    if (age < 23) return 1.03;
+    if (age <= 26) return 1;
+    return Math.max(0.78, 1 - (age - 26) * 0.06);
+  }
+  // WR / TE
+  if (age < 24) return 1.02;
+  if (age <= 28) return 1;
+  return Math.max(0.80, 1 - (age - 28) * 0.04);
+}
+
+/**
+ * Enrich a graded pool using Sleeper's current player map:
+ *   1. Patch team assignments (Sleeper tracks trades within hours; nflverse lags days).
+ *   2. Apply a forward-looking consensus rank nudge (up to +6% proj for the #1 pick).
+ *   3. Apply a position-aware age curve (prime window = neutral; aging fade bounded).
+ *
+ * All three steps are team-patch-then-proj-scale: purely multiplicative, no
+ * fabrication. A player absent from Sleeper passes through unchanged. Exported for
+ * unit tests; used by loadAndRegisterGradedProvider on the live path.
+ */
+export function enrichFromSleeper(players: readonly Player[], sleeperMap: SleeperPlayersMap): readonly Player[] {
+  return players.map((p) => {
+    const raw = sleeperMap[p.id];
+    if (!raw) return p;
+
+    // --- Step 1: team patch ---
+    const team = raw.team && raw.team !== p.team ? raw.team : p.team;
+
+    // --- Step 2+3: proj multiplier (rank * age) ---
+    const rankMult = sleeperRankMult(raw.rank_ppr, raw.search_rank, p.pos);
+    const ageMult = ageMultiplier(raw.age, p.pos);
+    const totalMult = rankMult * ageMult;
+
+    if (team === p.team && Math.abs(totalMult - 1) <= 0.001) return p;
+
+    // Scale proj and floor/ceiling proportionally (preserves any existing ceiling nudge ratio).
+    const newProj = totalMult === 1 ? p.proj : round(p.proj * totalMult);
+    const scale = newProj / Math.max(1, p.proj);
+    const floor = round(p.floor * scale);
+    const ceiling = round(p.ceiling * scale);
+
+    // Annotate the role string so downstream UIs can surface the signal.
+    const rankBit = rankMult > 1.001 ? ` · rank #${raw.rank_ppr ?? raw.search_rank}` : "";
+    const ageBit = ageMult < 0.999 ? ` · age ${raw.age}↓` : ageMult > 1.001 ? ` · age ${raw.age}↑` : "";
+    const role = rankBit || ageBit ? `${p.role}${rankBit}${ageBit}` : p.role;
+
+    return { ...p, team, proj: newProj, floor, ceiling, role };
+  });
 }
 
 /**
@@ -265,31 +349,11 @@ export async function loadGradedPool({ fetcher = fetch }: { fetcher?: FetchLike 
 }
 
 /**
- * Attempt to cross-reference a graded pool's team assignments against the
- * Sleeper current-roster map. Sleeper reflects trades and free-agency signings
- * within hours; nflverse reflects them within days. Returns the patched pool
- * (only team field updated) or the original pool unchanged on any Sleeper error.
- * Uses Sleeper's GSIS player_id as the join key — same IDs nflverse uses.
- */
-async function patchTeamsFromSleeper(players: readonly Player[], fetcher: FetchLike): Promise<readonly Player[]> {
-  try {
-    const { fetchSleeperPlayers } = await import("../sleeper/source");
-    const sleeperMap = await fetchSleeperPlayers({ fetcher });
-    return players.map((p) => {
-      const raw = sleeperMap[p.id];
-      if (!raw?.team || raw.team === p.team) return p;
-      return { ...p, team: raw.team };
-    });
-  } catch {
-    return players; // Sleeper down → keep nflverse teams, no crash
-  }
-}
-
-/**
  * Load + register the nflverse graded provider. Always active — no env flag
  * required. A source-error model registers nothing (tools stay on the illustrative
- * pool). On success, patches team assignments from Sleeper so 2026 offseason
- * moves (free-agency, trades) are reflected without waiting for nflverse to update.
+ * pool). On success, enriches via Sleeper: patches teams for 2026 offseason moves,
+ * applies a forward-looking consensus rank nudge (up to +6% proj), and applies a
+ * position-aware age curve. All three degrade gracefully when Sleeper is unavailable.
  */
 export async function loadAndRegisterGradedProvider({ fetcher = fetch }: { fetcher?: FetchLike } = {}): Promise<GradedPoolResult> {
   const result = await loadGradedPool({ fetcher });
@@ -297,7 +361,16 @@ export async function loadAndRegisterGradedProvider({ fetcher = fetch }: { fetch
     registerProjectionsProvider(null);
     return result;
   }
-  const patched = await patchTeamsFromSleeper(result.players, fetcher);
-  registerProjectionsProvider(buildGradedProvider(patched));
-  return { ...result, players: patched };
+
+  let enriched = result.players;
+  try {
+    const { fetchSleeperPlayers } = await import("../sleeper/source");
+    const sleeperMap = await fetchSleeperPlayers({ fetcher });
+    enriched = enrichFromSleeper(result.players, sleeperMap);
+  } catch {
+    // Sleeper down → keep base nflverse pool unchanged
+  }
+
+  registerProjectionsProvider(buildGradedProvider(enriched));
+  return { ...result, players: enriched };
 }

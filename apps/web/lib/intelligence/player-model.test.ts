@@ -64,6 +64,46 @@ describe("buildPlayerModel", () => {
   });
 });
 
+describe("buildPlayerModel — multi-year blending", () => {
+  // Prior seasons for BUY with consistently elite efficiency and mid-tier for SELL.
+  const prior2024 = [
+    wr({ season: "2024", player_id: "BUY", player_display_name: "Buy Low", week: "1", targets: "14", receiving_epa: "9", wopr: "0.55", target_share: "0.27" }),
+    wr({ season: "2024", player_id: "BUY", player_display_name: "Buy Low", week: "2", targets: "14", receiving_epa: "9", wopr: "0.55", target_share: "0.27" }),
+    wr({ season: "2024", player_id: "SELL", player_display_name: "Sell High", week: "1", targets: "13", receiving_epa: "2", wopr: "0.22", target_share: "0.14" }),
+    wr({ season: "2024", player_id: "SELL", player_display_name: "Sell High", week: "2", targets: "13", receiving_epa: "2", wopr: "0.22", target_share: "0.14" }),
+  ];
+  const prior2023 = [
+    wr({ season: "2023", player_id: "BUY", player_display_name: "Buy Low", week: "1", targets: "14", receiving_epa: "8", wopr: "0.50", target_share: "0.25" }),
+    wr({ season: "2023", player_id: "BUY", player_display_name: "Buy Low", week: "2", targets: "14", receiving_epa: "8", wopr: "0.50", target_share: "0.25" }),
+  ];
+  const allRecords = [...prior2023, ...prior2024, ...RECORDS];
+
+  it("falls back gracefully (no prior data) → same profiles as single-season", () => {
+    // Only 2025 rows in RECORDS — 2024 and 2023 lookups return empty maps.
+    const single = buildPlayerModel(RECORDS, 2025, { priorSeasonWeights: [] });
+    const withDefaults = buildPlayerModel(RECORDS, 2025); // default priors present but no rows
+    expect(withDefaults.profiles.map((p) => p.name).sort()).toEqual(single.profiles.map((p) => p.name).sort());
+    expect(withDefaults.profiles.map((p) => p.signal)).toEqual(single.profiles.map((p) => p.signal));
+  });
+
+  it("blending with consistent prior-season data does not lower a top player's processGrade", () => {
+    const single = buildPlayerModel(RECORDS, 2025, { priorSeasonWeights: [] });
+    const blended = buildPlayerModel(allRecords, 2025, {
+      priorSeasonWeights: [{ season: 2024, weight: 0.6 }, { season: 2023, weight: 0.35 }],
+    });
+    const singleBuy = single.profiles.find((p) => p.name === "Buy Low")!;
+    const blendedBuy = blended.profiles.find((p) => p.name === "Buy Low")!;
+    expect(blendedBuy.processGrade).toBeGreaterThanOrEqual(singleBuy.processGrade);
+  });
+
+  it("default options use the two prior seasons automatically (no option needed)", () => {
+    const r = buildPlayerModel(allRecords, 2025);
+    expect(r.profiles.length).toBeGreaterThan(0);
+    expect(r.profiles.some((p) => p.name === "Buy Low")).toBe(true);
+    expect(r.throughWeek).toBe(2); // anchors to the active season's through-week
+  });
+});
+
 describe("loadPlayerModel", () => {
   it("degrades to source-error when nflverse is unreachable", async () => {
     const r = await loadPlayerModel({ fetcher: async () => { throw new Error("blocked"); } });

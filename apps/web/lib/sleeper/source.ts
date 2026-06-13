@@ -32,6 +32,16 @@ export interface SleeperPlayerRaw {
   readonly team?: string | null;
   readonly injury_status?: string | null;
   readonly years_exp?: number | null;
+  /** PPR consensus rank (lower = better). Present when Sleeper has ADP data. */
+  readonly rank_ppr?: number | null;
+  /** Standard (non-PPR) consensus rank. */
+  readonly rank_std?: number | null;
+  /** Half-PPR consensus rank. */
+  readonly rank_half_ppr?: number | null;
+  /** Overall search popularity rank — a useful forward-looking proxy when positional ranks are absent. */
+  readonly search_rank?: number | null;
+  /** Player age as of the upcoming season. */
+  readonly age?: number | null;
 }
 export type SleeperPlayersMap = Record<string, SleeperPlayerRaw>;
 

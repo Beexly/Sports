@@ -1,11 +1,12 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { buildGradedPool, buildGradedProvider, loadGradedPool } from "./graded-pool";
+import { buildGradedPool, buildGradedProvider, loadGradedPool, enrichFromSleeper } from "./graded-pool";
 import { registerProjectionsProvider, activePlayerPool } from "./projections";
 import { PLAYERS } from "../fantasy/players";
 import type { PlayerProfile, ProcessSignal } from "../intelligence/player-model";
 import type { ExpectedPointsRow } from "../intelligence/expected-points";
 import type { TeamEnvironmentRow } from "../intelligence/team-environment";
 import type { QbForwardRow } from "../intelligence/qb-forward";
+import type { SleeperPlayersMap } from "../sleeper/source";
 
 function prof(name: string, position: string, fppg: number, signal: ProcessSignal, touches = 80, games = 8, team = "KC"): PlayerProfile {
   return {
@@ -232,5 +233,74 @@ describe("loadGradedPool", () => {
     const wr = r.players.find((p) => p.id === "WR1")!;
     expect(wr.schemeFit).toBe(0.6); // neutral — team environment not loaded on the hot path
     expect(wr.role).not.toContain("off env");
+  });
+});
+
+// Helper: build a minimal Player for enrichment tests.
+function mkPlayer(id: string, pos: "QB" | "RB" | "WR" | "TE", proj = 200, team = "KC") {
+  return { id, name: id, pos, team, bye: 0, proj, floor: Math.round(proj * 0.75), ceiling: Math.round(proj * 1.4), usage: 0.5, schemeFit: 0.6, role: `${pos}`, trend: "flat" as const, injury: "healthy" as const, note: "" };
+}
+
+describe("enrichFromSleeper", () => {
+  it("patches team when Sleeper has a newer assignment", () => {
+    const player = mkPlayer("P1", "WR");
+    const sleeperMap: SleeperPlayersMap = { P1: { team: "SF", position: "WR", age: 26 } };
+    const [enriched] = enrichFromSleeper([player], sleeperMap);
+    expect(enriched!.team).toBe("SF");
+  });
+
+  it("leaves team unchanged when Sleeper matches nflverse", () => {
+    const player = mkPlayer("P1", "WR", 200, "KC");
+    const sleeperMap: SleeperPlayersMap = { P1: { team: "KC", position: "WR", age: 26 } };
+    const [enriched] = enrichFromSleeper([player], sleeperMap);
+    expect(enriched!.team).toBe("KC");
+    expect(enriched!.proj).toBe(200); // no change
+  });
+
+  it("boosts proj for a top-consensus rank (rank_ppr = 1)", () => {
+    const player = mkPlayer("P1", "WR", 300);
+    const sleeperMap: SleeperPlayersMap = { P1: { position: "WR", rank_ppr: 1, age: 26 } };
+    const [enriched] = enrichFromSleeper([player], sleeperMap);
+    expect(enriched!.proj).toBeGreaterThan(300); // rank nudge applied
+    expect(enriched!.role).toContain("rank #1");
+  });
+
+  it("applies no rank nudge when rank is beyond 3x the tier cutoff", () => {
+    const player = mkPlayer("P1", "WR", 100);
+    // WR tier cutoff = 36, maxRank = 108; rank 109 → no nudge
+    const sleeperMap: SleeperPlayersMap = { P1: { position: "WR", rank_ppr: 109, age: 26 } };
+    const [enriched] = enrichFromSleeper([player], sleeperMap);
+    expect(enriched!.proj).toBe(100);
+  });
+
+  it("fades proj for an aging RB (age 30)", () => {
+    const player = mkPlayer("P1", "RB", 200);
+    const sleeperMap: SleeperPlayersMap = { P1: { position: "RB", age: 30 } };
+    const [enriched] = enrichFromSleeper([player], sleeperMap);
+    expect(enriched!.proj).toBeLessThan(200); // age fade applied
+    expect(enriched!.role).toContain("↓");
+  });
+
+  it("rises proj for a young QB (age 23)", () => {
+    const player = mkPlayer("P1", "QB", 400);
+    const sleeperMap: SleeperPlayersMap = { P1: { position: "QB", age: 23 } };
+    const [enriched] = enrichFromSleeper([player], sleeperMap);
+    expect(enriched!.proj).toBeGreaterThan(400);
+    expect(enriched!.role).toContain("↑");
+  });
+
+  it("passes through unchanged for players absent from Sleeper", () => {
+    const player = mkPlayer("UNKNOWN", "WR", 200);
+    const [enriched] = enrichFromSleeper([player], {});
+    expect(enriched).toBe(player); // same reference
+  });
+
+  it("floor and ceiling scale proportionally with the proj nudge", () => {
+    const player = mkPlayer("P1", "WR", 200);
+    const sleeperMap: SleeperPlayersMap = { P1: { position: "WR", rank_ppr: 1, age: 26 } };
+    const [enriched] = enrichFromSleeper([player], sleeperMap);
+    const scale = enriched!.proj / 200;
+    expect(enriched!.floor).toBeCloseTo(Math.round(150 * scale), 0);
+    expect(enriched!.ceiling).toBeCloseTo(Math.round(280 * scale), 0);
   });
 });
