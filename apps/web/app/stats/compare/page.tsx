@@ -19,18 +19,23 @@ export default function Page({ searchParams }: { searchParams?: { a?: string; b?
       ]} />
       <div className="grid gap-4 md:grid-cols-2">
         {c.categories.map(x => {
-          const tone = x.winner === c.a.name ? "cyan" : x.winner === c.b.name ? "amber" : "neutral";
+          const aWins = x.winner === c.a.name;
+          const bWins = x.winner === c.b.name;
+          const aVal = Number(x.a ?? 0);
+          const bVal = Number(x.b ?? 0);
+          const max = Math.max(aVal, bVal, 1);
           return (
             <div key={x.key} className="border border-mineral bg-eclipse p-4">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-ion-white font-semibold">{x.key}</p>
-                <Badge tone={tone === "cyan" ? "good" : tone === "amber" ? "warn" : "neutral"}>
-                  {x.winner === c.a.name ? c.a.name : x.winner === c.b.name ? c.b.name : "Tied"}
+                <p className="text-ion-white font-semibold capitalize">{x.key.replace(/_/g, " ")}</p>
+                <Badge tone={aWins ? "good" : bWins ? "warn" : "neutral"}>
+                  {aWins ? c.a.name : bWins ? c.b.name : "Tied"}
                 </Badge>
               </div>
-              <p className="text-sm text-ion-1">
-                {c.a.name}: {x.a} · {c.b.name}: {x.b}
-              </p>
+              <BarChart items={[
+                { label: c.a.name, value: aVal, max, tone: aWins ? "cyan" : "amber" },
+                { label: c.b.name, value: bVal, max, tone: bWins ? "cyan" : "amber" },
+              ]} />
             </div>
           );
         })}

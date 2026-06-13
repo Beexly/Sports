@@ -32,7 +32,7 @@ export default function Page() {
           return (
             <HeroStat
               key={p.player_id}
-              label={`${p.team} · ${p.position}`}
+              label={`${p.team} · ${p.position}${a?.archetype ? ` · ${a.archetype}` : ""}`}
               value={p.name}
               sublabel={`Hidden Value: ${Number(p.hidden_value_score ?? 0)} · Trend: ${Number(p.trend_score ?? 0)}`}
               tone="cyan"

@@ -32,12 +32,12 @@ export default async function Page() {
       </div>
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Reality Check</h2>
-        <DataTable
-          rows={Object.entries(a.summary).map(([status, count]) => ({
-            status: String(status),
-            count: Number(count ?? 0)
+        <BarChart
+          items={Object.entries(a.summary).map(([status, count]) => ({
+            label: String(status),
+            value: Number(count ?? 0),
+            max: Math.max(...Object.values(a.summary).map((v) => Number(v ?? 0)), 1),
           }))}
-          maxRows={10}
         />
       </div>
       <div>

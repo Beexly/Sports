@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Shell, Cards, HeroStat, BarChart, ScoreRing, InsightCard, SectionHeader, StatusRibbon } from "./_components";
+import { Shell, HeroStat, BarChart, ScoreRing, InsightCard, SectionHeader, StatusRibbon } from "./_components";
 import { loadSummary, loadActiveMetricManifest, rankPlayers } from "@/lib/statking/product";
 
 export const metadata = {
