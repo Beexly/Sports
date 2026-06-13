@@ -197,17 +197,25 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             </div>
           )}
           {/* Header */}
-          <div className="mb-6">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
-              Today&apos;s Board
-            </p>
-            <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
-              Today&apos;s sports signals.
-            </h1>
-            <p className="mt-1.5 text-sm text-gray-400">
-              Every signal published today, with price, timing, risk, and the
-              reason it cleared the gate.
-            </p>
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
+                Today&apos;s Board
+              </p>
+              <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
+                Today&apos;s sports signals.
+              </h1>
+              <p className="mt-1.5 text-sm text-gray-400">
+                Every signal published today, with price, timing, risk, and the
+                reason it cleared the gate.
+              </p>
+            </div>
+            <Link
+              href="/brief"
+              className="inline-flex min-h-9 items-center justify-center rounded-lg border border-cyan-800 bg-cyan-950/30 px-4 py-2 text-sm font-semibold text-cyan-200 transition-colors hover:border-cyan-400"
+            >
+              Daily Brief
+            </Link>
           </div>
 
           {/* Daily Slate Bar */}

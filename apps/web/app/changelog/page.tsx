@@ -43,6 +43,34 @@ const TYPE_COLOR: Record<Entry["type"], string> = {
 
 const ENTRIES: ReadonlyArray<Entry> = [
   {
+    date: "2026-06-13",
+    type: "ship",
+    title: "Daily Brief rebuilt with live engine data",
+    body:
+      "The /brief page now queries today's published picks and the last 48-hour settled record from the live database. Pick list shows grade chips (S→D), confidence scores, and risk levels. Settled record section is gate-locked behind canExposePerformanceStats. Board and member dashboard both link directly to the Brief.",
+  },
+  {
+    date: "2026-06-13",
+    type: "ship",
+    title: "Academy expanded to 12 lessons across all three tracks",
+    body:
+      "Added three new Advanced-tier lessons: Totals Pricing (Line Literacy), Expected Value formula (Bankroll & Risk), and Line Shopping at key numbers (Market Mechanics). Each lesson includes a quiz with calibrated feedback.",
+  },
+  {
+    date: "2026-06-13",
+    type: "ship",
+    title: "Player Lab freshness stamps on every section",
+    body:
+      "Each data section in the Player Lab (production, snaps, opportunity, Next Gen, trenches, combine, QBR, edge, injuries, market, DFS) now shows a per-section data freshness stamp (e.g. 'Season 2025, Wk 18') alongside the record count. Freshness is computed server-side and serialized to the client.",
+  },
+  {
+    date: "2026-06-13",
+    type: "ship",
+    title: "Sitemap expanded to 33 routes including all major surfaces",
+    body:
+      "Added /board, /brief, /academy, /players, /trends, /today, /the-beat, /fantasy, and /fantasy/dfs to the canonical sitemap so crawlers index the full public surface.",
+  },
+  {
     date: "2026-05-21",
     type: "ship",
     title: "Anatomy of a Signal, vs. Tout Services, and brand voice refresh",
