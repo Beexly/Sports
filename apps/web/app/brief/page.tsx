@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { BRIEF_RESPONSIBLE_GAMING_NOTE } from "@/lib/brief/compose";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 // Composer is being rebuilt; keep the stub out of the index until it ships.
 export const metadata: Metadata = {
@@ -37,7 +38,8 @@ export default async function BriefStub() {
     .catch(() => 0);
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="relative isolate flex min-h-screen flex-col bg-gray-950">
+      <GeneratedPlate assetId="brief-horizon" className="-z-10 opacity-25" />
       <main className="mx-auto max-w-3xl px-4 py-12">
         <h1 className="text-2xl font-bold text-white">Daily brief</h1>
         <p className="mt-2 text-sm text-gray-400">

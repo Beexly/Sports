@@ -6,6 +6,7 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
   title: "Today's Board - Galaxy Sports Edge",
@@ -42,7 +43,8 @@ export default async function BoardPage(): Promise<JSX.Element> {
     passesResult.meta.dataError === "DB_UNREACHABLE";
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
+    <div className="relative isolate min-h-screen w-full overflow-x-hidden bg-gray-950 text-gray-100">
+      <GeneratedPlate assetId="board-command" className="-z-10 opacity-20" />
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         {dbUnreachable && (

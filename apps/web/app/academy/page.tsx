@@ -4,6 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { AcademySimulator } from "@/components/academy/academy-simulator";
 import { CoursePlayer } from "@/components/academy/course-player";
 import { ReaderDoorway } from "@/components/house/reader-doorway";
@@ -49,6 +50,7 @@ export default function AcademyPage() {
       <main className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+          <GeneratedPlate assetId="academy-path" className="-z-20 opacity-60" />
           <ShootingStars />
           <div
             aria-hidden="true"
