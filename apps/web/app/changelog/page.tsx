@@ -71,6 +71,27 @@ const ENTRIES: ReadonlyArray<Entry> = [
       "Added /board, /brief, /academy, /players, /trends, /today, /the-beat, /fantasy, and /fantasy/dfs to the canonical sitemap so crawlers index the full public surface.",
   },
   {
+    date: "2026-06-13",
+    type: "ship",
+    title: "Error boundaries added to all 7 major user-facing routes",
+    body:
+      "Each of /board, /picks, /brief, /players, /performance, /today, and /trends now has a segment-level error boundary. A runtime crash in any of these surfaces renders a route-specific recovery card (Retry + contextual fallback link) rather than the global error page.",
+  },
+  {
+    date: "2026-06-13",
+    type: "ship",
+    title: "Daily Brief and Picks Board added to desktop + mobile nav",
+    body:
+      "/picks added to PRIMARY_LINKS alongside Board. /brief added to TAIL_LINKS. Mobile nav 'Start here' section now includes both. Player Lab added to ⌘K command palette. Mission Control, Trend Lab, and Calibration also added to the palette.",
+  },
+  {
+    date: "2026-06-13",
+    type: "ship",
+    title: "not-found pages for 4 dynamic routes",
+    body:
+      "Added route-specific 404 pages for /blog/[slug], /room/[gameId], /journal/[slug], and /performance/losses/[id]. Each has context-relevant copy and a meaningful recovery link rather than falling through to the global 404.",
+  },
+  {
     date: "2026-05-21",
     type: "ship",
     title: "Anatomy of a Signal, vs. Tout Services, and brand voice refresh",
