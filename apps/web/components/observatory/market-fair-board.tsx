@@ -1,12 +1,45 @@
+import type { MarketGravity } from "@sports/prediction-engine";
 import { loadMarketFairBoard } from "@/lib/market/load-market-fair-board";
 import { DRIFT_MOVING_PP } from "@/lib/market/game-market-read";
-import { SimulationCloud } from "@/components/observatory/simulation-cloud";
+import { MarketCloud } from "@/components/observatory/market-cloud";
 import {
   NUMERIC_TEXT_CLASS,
   formatCount,
   formatPercent,
   formatRatioAsPercent,
 } from "@/lib/format/stat";
+
+const GRAVITY_LABEL: Record<MarketGravity["band"], string> = {
+  strong: "Strong pull",
+  moderate: "Moderate pull",
+  slight: "Slight lean",
+  balanced: "Balanced",
+};
+
+/**
+ * Market Gravity Index badge — how hard the market is pulling, and which way.
+ * Magenta (market heat) for a strong pull; cooler tones as it weakens. The
+ * index measures the market's CONVICTION, not whether it is right.
+ */
+function GravityBadge({ gravity }: { gravity: MarketGravity }) {
+  const tone =
+    gravity.band === "strong"
+      ? "border-plasma/40 text-plasma"
+      : gravity.band === "moderate"
+        ? "border-ultraviolet/40 text-ion-1"
+        : "border-titanium text-ion-2";
+  const dir = gravity.side === "none" ? "" : ` → ${gravity.side}`;
+  return (
+    <span
+      data-testid="gravity-badge"
+      title="Market Gravity Index (0–100): conviction × book agreement × coverage. Measures how hard the market pulls — not whether it's right."
+      className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${tone} ${NUMERIC_TEXT_CLASS}`}
+    >
+      Gravity {gravity.index}
+      {dir} · {GRAVITY_LABEL[gravity.band]}
+    </span>
+  );
+}
 
 /**
  * Market Fair Board — the market's own price with the margin removed.
@@ -84,27 +117,31 @@ export async function MarketFairBoard() {
                         }
                       >
                         {" "}· drift {row.read.homeDriftPp > 0 ? "+" : ""}
-                        {row.read.homeDriftPp}pp → {row.read.homeDriftPp >= 0 ? "home" : "away"}{" "}
-                        in window
+                        {row.read.homeDriftPp}pp → {row.read.homeDriftPp >= 0 ? "home" : "away"}
+                        {row.read.homeDriftPerHourPp !== null &&
+                          ` (${Math.abs(row.read.homeDriftPerHourPp)}pp/hr)`}
                       </span>
                     )}
                   </p>
                 </div>
-                <div className={`flex items-center gap-3 text-sm ${NUMERIC_TEXT_CLASS}`}>
-                  <span className={homeLeads ? "font-semibold text-orbital-cyan" : "text-ion-1"}>
-                    Home {formatRatioAsPercent(c.fairHomeProb)}
-                  </span>
-                  {c.fairDrawProb !== null && (
-                    <span className="text-ion-2">
-                      Draw {formatRatioAsPercent(c.fairDrawProb)}
+                <div className="flex flex-col items-start gap-1 sm:items-end">
+                  <div className={`flex items-center gap-3 text-sm ${NUMERIC_TEXT_CLASS}`}>
+                    <span className={homeLeads ? "font-semibold text-orbital-cyan" : "text-ion-1"}>
+                      Home {formatRatioAsPercent(c.fairHomeProb)}
                     </span>
-                  )}
-                  <span className={!homeLeads ? "font-semibold text-orbital-cyan" : "text-ion-1"}>
-                    Away {formatRatioAsPercent(c.fairAwayProb)}
-                  </span>
+                    {c.fairDrawProb !== null && (
+                      <span className="text-ion-2">
+                        Draw {formatRatioAsPercent(c.fairDrawProb)}
+                      </span>
+                    )}
+                    <span className={!homeLeads ? "font-semibold text-orbital-cyan" : "text-ion-1"}>
+                      Away {formatRatioAsPercent(c.fairAwayProb)}
+                    </span>
+                  </div>
+                  <GravityBadge gravity={row.read.gravity} />
                 </div>
                 <div className="sm:col-span-2">
-                  <SimulationCloud
+                  <MarketCloud
                     probs={c.fairHomeProbsByBook}
                     consensus={c.fairHomeProb}
                   />
@@ -117,7 +154,7 @@ export async function MarketFairBoard() {
 
       <div className="border-t border-titanium px-6 py-3">
         <p className="text-[11px] leading-relaxed text-ion-2">
-          Drift = fair-price movement across the capture window (earliest vs latest quote per book, vig removed) — the direction an edge bleeds. The cloud under each game is one dot per book — the market&apos;s real spread of belief, not a simulated variance. De-vigged prices describe the market, not the outcome. They are not
+          Drift = fair-price movement across the capture window (earliest vs latest quote per book, vig removed) — the direction an edge bleeds, and the pp/hr rate is how fast (the Line Death Clock). The cloud under each game is one dot per book — the market&apos;s real spread of belief, not a simulated variance. De-vigged prices describe the market, not the outcome. They are not
           picks, projections, or advice — the engine&apos;s own reads live on
           the board and carry their full evidence trail.
         </p>

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   consensusNoVig,
   marketDisagreementPct,
+  marketGravityIndex,
   noVigFromAmericanPrices,
 } from "../market-read.js";
 
@@ -106,5 +107,68 @@ describe("marketDisagreementPct", () => {
   it("is the honest edge sentence in percentage points", () => {
     expect(marketDisagreementPct(0.56, 0.528)).toBeCloseTo(3.2, 5);
     expect(marketDisagreementPct(0.5, 0.55)).toBeCloseTo(-5, 5);
+  });
+});
+
+describe("consensus dispersion", () => {
+  it("is ~0 when books agree, higher when they split", () => {
+    const tight = consensusNoVig([
+      { home: -120, away: +100 },
+      { home: -122, away: +102 },
+    ]);
+    const split = consensusNoVig([
+      { home: -500, away: +400 },
+      { home: +200, away: -240 },
+    ]);
+    expect(tight!.homeProbDispersion).toBeLessThan(0.02);
+    expect(split!.homeProbDispersion).toBeGreaterThan(0.2);
+  });
+});
+
+describe("marketGravityIndex", () => {
+  it("a pick'em with agreement is balanced — no pull", () => {
+    const consensus = consensusNoVig([
+      { home: -110, away: -110 },
+      { home: -110, away: -110 },
+    ])!;
+    const g = marketGravityIndex(consensus);
+    expect(g.index).toBeLessThan(10);
+    expect(g.band).toBe("balanced");
+    expect(g.side).toBe("none");
+  });
+
+  it("a lopsided, agreed, well-covered market pulls strongly toward the favourite", () => {
+    const consensus = consensusNoVig([
+      { home: -600, away: +450 },
+      { home: -610, away: +460 },
+      { home: -590, away: +440 },
+      { home: -605, away: +455 },
+      { home: -595, away: +445 },
+      { home: -600, away: +450 },
+    ])!;
+    const g = marketGravityIndex(consensus);
+    expect(g.side).toBe("home");
+    expect(g.band).toBe("strong");
+    expect(g.index).toBeGreaterThan(60);
+    expect(g.conviction).toBeGreaterThan(0.6);
+    expect(g.agreement).toBeGreaterThan(0.9);
+  });
+
+  it("book disagreement discounts the pull below the same lean with consensus", () => {
+    const agreed = marketGravityIndex(
+      consensusNoVig([
+        { home: -200, away: +170 },
+        { home: -205, away: +175 },
+        { home: -198, away: +168 },
+      ])!,
+    );
+    const split = marketGravityIndex(
+      consensusNoVig([
+        { home: -120, away: +100 },
+        { home: -400, away: +320 },
+        { home: -150, away: +130 },
+      ])!,
+    );
+    expect(split.agreement).toBeLessThan(agreed.agreement);
   });
 });

@@ -40,11 +40,11 @@ If a stat can't survive these, it gets no premium screen space.
 | Proposal | Status |
 |---|---|
 | Edge Fragility Score | exists in spirit: premortem layer + evidence health; formalize as a score later |
-| Market Gravity Index | observatory vocabulary exists; quantified index = build candidate |
-| Parlay Dependency Coefficient | Parlay MRI correlation math = this; name it in UI |
-| Line Death Clock | build candidate (edge decay vs market movement) |
-| Stat Stability Grade | partially: `assessUncertainty` flags; extend to per-metric grades |
-| QB Pressure Sensitivity / Protection Stress | pressure-coverage data live; derived indices = build candidates |
+| Market Gravity Index | SHIPPED 2026-06-12 — `marketGravityIndex` (conviction × agreement × liquidity), badge on the Market Fair Board |
+| Parlay Dependency Coefficient | SHIPPED — named in Parlay MRI vitals |
+| Line Death Clock | SHIPPED — drift + pp/hr decay rate on the fair board |
+| Stat Stability Grade | SHIPPED — Player Lab production/snaps/edge |
+| Protection Stress | SHIPPED — Player Lab trenches. QB Pressure *Sensitivity* PARKED: needs clean/pressure splits not in feed |
 | Script Elasticity / False Favorite / Narrative Risk / Public Comfort | research candidates; need defensible math before any UI |
 
 Rule: a new derived stat ships only with definition, formula, sample-size
@@ -92,4 +92,5 @@ Calibration → whether we deserve trust. Every stat gets a job or gets cut.
 3. Stat Stability Grade: extend `assessUncertainty` to per-metric envelopes
    in Player Lab.
 4. Line Death Clock prototype on the board (edge decay vs line movement).
-5. Simulation cloud (distribution visual) on game pages.
+5. ~~Simulation cloud~~ SHIPPED 2026-06-13 — illustrative Poisson margin
+   distribution on /observatory (scoring-event domain, transparent math).

@@ -709,6 +709,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       "PFR advanced charting from nflverse: how often each quarterback is pressured and how he throws under it, and which defenders in coverage are actually throwable. Context for a read, not a pick.",
     explainer: [
       { term: "Pressure%", definition: "Share of dropbacks a quarterback is pressured (season mean). Bad-throw% and sacks show how it cashes out." },
+      { term: "Prot stress", definition: "Protection Stress Index (0–100): 0.7×pressure share + 0.3×sacks/game. Pocket disruption — conflates O-line, scheme, and the QB’s own time-to-throw, so read it with the sack column." },
       { term: "Rating allowed", definition: "Passer rating allowed in coverage, target-weighted. Lower = a defender you can't throw at." },
     ],
     jsonHref: "/api/nflverse/pressure-coverage",

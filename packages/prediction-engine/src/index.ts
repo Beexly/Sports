@@ -168,8 +168,11 @@ export {
   noVigFromAmericanPrices,
   consensusNoVig,
   marketDisagreementPct,
+  marketGravityIndex,
   type MarketRead,
   type ConsensusMarketRead,
+  type MarketGravity,
+  type GravityBand,
 } from "./market-read.js";
 export {
   shinDevig,
