@@ -17,9 +17,14 @@ const FIELDS = [
 
 export function ListenerLogForm() {
   const [values, setValues] = useState<Record<string, string>>({});
-  const [paraphrase, setParaphrase] = useState("");
+  const [batch, setBatch] = useState("");
   const [state, setState] = useState<"idle" | "busy" | "ok" | "err">("idle");
   const [msg, setMsg] = useState("");
+
+  const lines = batch
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,16 +33,21 @@ export function ListenerLogForm() {
       const res = await fetch("/api/cockpit/listener-log", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, paraphrase }),
+        body: JSON.stringify({ ...values, claims: lines }),
       });
-      const json = (await res.json()) as { ok?: boolean; error?: string; taskId?: string };
+      const json = (await res.json()) as {
+        ok?: boolean;
+        error?: string;
+        detail?: string;
+        filed?: number;
+      };
       if (res.ok && json.ok) {
         setState("ok");
-        setMsg(`Filed for review (task ${json.taskId?.slice(0, 8)}…)`);
-        setParaphrase("");
+        setMsg(`Filed ${json.filed ?? lines.length} take${(json.filed ?? lines.length) === 1 ? "" : "s"} for review.`);
+        setBatch("");
       } else {
         setState("err");
-        setMsg(json.error ?? "failed");
+        setMsg(json.detail ?? json.error ?? "failed");
       }
     } catch {
       setState("err");
@@ -61,22 +71,36 @@ export function ListenerLogForm() {
         ))}
       </div>
       <label className="flex flex-col gap-1 text-xs text-gray-400">
-        Paraphrase * — your words, never a quote ({280 - paraphrase.length} left)
+        Your takes — one per line, your own words ({lines.length}/60 · never a quote, never a transcript)
         <textarea
-          value={paraphrase}
-          onChange={(e) => setParaphrase(e.target.value.slice(0, 280))}
-          rows={3}
-          placeholder="e.g. Backs the road underdog this week on a rest edge he thinks the number missed."
-          className="rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2 text-sm text-white placeholder:text-gray-600 focus:border-cyan-700 focus:outline-none"
+          value={batch}
+          onChange={(e) => setBatch(e.target.value)}
+          rows={14}
+          placeholder={
+            "One paraphrased take per line — a whole show's worth:\n" +
+            "Backs the road dog on a rest edge he thinks the number missed.\n" +
+            "Fades the primetime total — expects a slow, run-heavy script.\n" +
+            "Likes the rookie TE as a value pick at his current ADP.\n\n" +
+            "Paste a transcript and it'll be rejected — this lane is your words only."
+          }
+          className="rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2 text-sm leading-6 text-white placeholder:text-gray-600 focus:border-cyan-700 focus:outline-none"
         />
       </label>
+      <p className="text-[11px] leading-relaxed text-gray-500">
+        Legal lane only: you listened on your own subscription and write each take in your
+        own words. No recordings, no transcripts, no verbatim quotes — SiriusXM&apos;s terms
+        forbid using their content to train tools, so timestamped/transcript lines are
+        rejected automatically. Each line files as its own SCOUT review task.
+      </p>
       <div className="flex items-center gap-4">
         <button
           type="submit"
-          disabled={state === "busy" || !paraphrase.trim() || !(values["pundit"] ?? "").trim()}
+          disabled={state === "busy" || lines.length === 0 || !(values["pundit"] ?? "").trim()}
           className="w-fit rounded-lg bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500 disabled:opacity-50"
         >
-          {state === "busy" ? "Filing…" : "File claim for review"}
+          {state === "busy"
+            ? "Filing…"
+            : `File ${lines.length || ""} take${lines.length === 1 ? "" : "s"} for review`}
         </button>
         {msg && (
           <span className={`text-xs ${state === "ok" ? "text-cyan-300" : "text-red-400"}`}>{msg}</span>
