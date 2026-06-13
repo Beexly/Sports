@@ -22,7 +22,7 @@ export default async function Page() {
         { label: "Sources", value: s.source_count },
         { label: "Active metrics", value: m.active_calculated_count },
         { label: "Rights records", value: rights.rights_count },
-        { label: "Stub systems", value: (a.summary as any).stub_only ?? 0 },
+        { label: "Stub systems", value: a.summary.stub_only ?? 0 },
         { label: "Readiness avg", value: avg },
         { label: "ROI targets", value: (roi.top_25_activate_now ?? []).length },
         { label: "King gaps", value: gaps.gaps.length }
@@ -57,7 +57,7 @@ export default async function Page() {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Activation ROI: Next 25</h2>
         <DataTable
-          rows={(roi.top_25_activate_now ?? []).map((r: any) => ({
+          rows={(roi.top_25_activate_now ?? []).map((r: Record<string, unknown>) => ({
             source: String(r.source ?? ""),
             roi_score: Number(r.roi_score ?? 0),
             effort: String(r.effort ?? ""),
@@ -70,7 +70,7 @@ export default async function Page() {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">King Gap Map</h2>
         <DataTable
-          rows={gaps.gaps.map((g: any) => ({
+          rows={gaps.gaps.map((g: Record<string, unknown>) => ({
             gap: String(g.gap ?? ""),
             impact: Number(g.impact ?? 0),
             effort: String(g.effort ?? ""),
@@ -86,7 +86,7 @@ export default async function Page() {
           Merge as autonomous foundation; do not market as complete King of Stats until live feeds, licenses, and proof archive are active.
         </p>
         <DataTable
-          rows={readiness.pages.map((p: any) => ({
+          rows={readiness.pages.map((p: Record<string, unknown>) => ({
             page: String(p.page ?? ""),
             readiness_score: Number(p.readiness_score ?? 0),
             status: String(p.status ?? ""),

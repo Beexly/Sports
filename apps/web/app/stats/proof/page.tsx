@@ -27,7 +27,7 @@ export default function Page() {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Backtest Results</h2>
         <DataTable
-          rows={b.runs.map((r: any) => ({
+          rows={b.runs.map((r: Record<string, unknown>) => ({
             run_id: String(r.run_id ?? ""),
             metric: String(r.metric ?? ""),
             test_period: String(r.test_period ?? ""),

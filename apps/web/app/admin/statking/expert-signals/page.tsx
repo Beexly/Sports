@@ -43,7 +43,7 @@ export default async function Page() {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">All Experts</h2>
         <DataTable
-          rows={experts.map((e: any) => ({
+          rows={experts.map((e: Record<string, unknown>) => ({
             name: String(e.name ?? ""),
             org: String(e.organization ?? ""),
             specialty: String(e.specialty ?? ""),

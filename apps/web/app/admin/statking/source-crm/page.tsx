@@ -26,7 +26,7 @@ export default async function Page() {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Easiest Wins — Start Here</h2>
         <DataTable
-          rows={t.top_50_easiest_wins.slice(0, 25).map((s: any) => ({
+          rows={t.top_50_easiest_wins.slice(0, 25).map((s: Record<string, unknown>) => ({
             source: String(s.source ?? ""),
             category: String(s.category ?? ""),
             effort: String(s.effort ?? ""),

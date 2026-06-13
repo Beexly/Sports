@@ -58,7 +58,7 @@ export default function Page() {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Recent Suggestions</h2>
         <DataTable
-          rows={suggestions.slice(0, 40).map((s: any) => ({
+          rows={suggestions.slice(0, 40).map((s: Record<string, unknown>) => ({
             url: String(s.submitted_url ?? ""),
             type: String(s.source_type ?? ""),
             reason: String(s.reason ?? ""),

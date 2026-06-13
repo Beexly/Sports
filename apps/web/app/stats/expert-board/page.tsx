@@ -35,7 +35,7 @@ export default function Page() {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Expert Registry</h2>
         <DataTable
-          rows={experts.map((e: any) => ({
+          rows={experts.map((e: Record<string, unknown>) => ({
             expert_name: String(e.expert_name ?? ""),
             specialty: String(e.specialty ?? ""),
             platform: String(e.platform ?? ""),

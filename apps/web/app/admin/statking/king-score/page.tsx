@@ -47,7 +47,7 @@ export default async function Page() {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Page Readiness</h2>
         <DataTable
-          rows={readiness.pages.map((p: any) => ({
+          rows={readiness.pages.map((p: Record<string, unknown>) => ({
             page: String(p.page ?? ""),
             readiness_score: Number(p.readiness_score ?? 0),
             status: String(p.status ?? ""),

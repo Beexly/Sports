@@ -28,11 +28,13 @@ export interface StatKingPlayer {
   volatility_score: number; role_score: number; trend_score: number; data_confidence: number;
   hidden_value_score: number; mirage_risk: number; missing_data: string[]; source_lineage: string[];
   ppr_points_per_game: number; standard_points_per_game: number; half_ppr_points_per_game: number;
+  [key: string]: unknown;
 }
 export interface StatKingTeam { team_id: string; name: string; points_for: number; points_against: number; offensive_environment: number; defensive_environment: number; fantasy_environment: number; pace_proxy: number; data_confidence: number; }
 export interface WeeklyStat { player_id: string; week: number; fantasy_points_ppr: number; touches: number; targets: number; pass_attempts: number; receptions: number; yards: number; }
-export interface SourceRecord { source_id: string; canonical_name: string; source_family: string; source_category: string; source_mode: string; legal_gate_status: string; priority_score: number; next_action: string; }
-export interface MediaItem { item_id: string; platform: string; source_name: string; title: string; rights_mode: string; activation_status: string; source_trust: number; detected_players: string[]; detected_teams: string[]; topics: string[]; signal_candidate: string; next_action: string; }
+export interface SourceRecord { source_id: string; canonical_name: string; source_family: string; source_category: string; source_mode: string; legal_gate_status: string; priority_score: number; next_action: string; [key: string]: unknown; }
+export interface MediaItem { item_id: string; platform: string; source_name: string; title: string; rights_mode: string; activation_status: string; source_trust: number; detected_players: string[]; detected_teams: string[]; topics: string[]; signal_candidate: string; next_action: string; [key: string]: unknown; }
+export interface SourceTarget { source_id: string; name: string; category: string; value_score: number; moat_score: number; ease_score: number; cost_risk_score: number; rights_clarity_score: number; activation_priority: number; activation_path: string; recommended_next_action: string; [key: string]: unknown; }
 
 export function loadPlayers(): StatKingPlayer[] { return readJson<{players: StatKingPlayer[]}>("data/statking/snapshots/players.json").players; }
 export function loadTeams(): StatKingTeam[] { return readJson<{teams: StatKingTeam[]}>("data/statking/snapshots/teams.json").teams; }
@@ -42,7 +44,7 @@ export function loadSummary() { return readJson<{source_count:number; candidate_
 export function loadAudit() { return readJson<{summary: Record<string, number>; items: Array<{system:string; status:string; priority:string; next_fix:string}>}>("data/statking/real_vs_stubbed_audit.json"); }
 export function loadCoverage() { return readJson<{players_sampled:number; teams:number; missing_high_impact:string[]; coverage_by_data_type: Record<string,string>}>("data/statking/coverage/coverage_report.json", {players_sampled:0, teams:0, missing_high_impact:[], coverage_by_data_type:{}}); }
 export function loadActiveMetricManifest() { return readJson<{active_calculated_count:number; total_manifest_count:number; metrics:Array<{metric_key:string; name:string; status:string; entity_type:string; visible_status:string}>}>("data/statking/active_metric_manifest.json"); }
-export function loadSourceTargets() { return readJson<{top_50_easiest_wins:any[]; top_50_highest_moat_sources:any[]; top_50_requires_license:any[]}>("data/statking/source_targets_top_50.json"); }
+export function loadSourceTargets() { return readJson<{top_50_easiest_wins:SourceTarget[]; top_50_highest_moat_sources:SourceTarget[]; top_50_requires_license:SourceTarget[]}>("data/statking/source_targets_top_50.json"); }
 export function loadMediaItems(): MediaItem[] { return readJson<{items: MediaItem[]}>("data/statking/snapshots/media_items.json").items; }
 export function loadBacktests() { return readJson<{runs:Array<Record<string, unknown>>}>("data/statking/backtests/backtest_summary.json"); }
 export function loadComps() { return readJson<{rows:Array<{player_id:string; comparisons:Array<{player_id:string; name:string; similarity_score:number; shared_features:string[]}>}>}>("data/statking/snapshots/player_comps.json").rows; }

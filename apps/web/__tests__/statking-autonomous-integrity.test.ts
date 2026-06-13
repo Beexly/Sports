@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { scoreActivationRoi } from '../../../lib/statking/activation-roi';
-import { canFeedActiveMetric, rightsGateLabel } from '../../../lib/statking/rights';
+import { canFeedActiveMetric, rightsGateLabel, type RightsRecord } from '../../../lib/statking/rights';
 import { classifyMetricReliability } from '../../../lib/statking/proof';
 import { explainPlayerScore } from '../../../lib/statking/explanations';
 import { loadActivationRoi, loadIntegrityStatus, loadKingGapMap, loadMetricReliability, loadReadinessScores, loadRightsLedger, loadUiContracts } from '../lib/statking/product';
@@ -19,8 +19,8 @@ describe('Autonomous StatKing integrity and build sprint', () => {
 
   it('enforces rights gates for active metrics', () => {
     const ledger = loadRightsLedger();
-    const metadataOnly = ledger.rights.find((source) => source.source_mode === 'media_metadata' || source.source_mode === 'metadata_only') as any;
-    const licenseRequired = ledger.rights.find((source) => source.source_mode === 'activation_license') as any;
+    const metadataOnly = ledger.rights.find((source) => source.source_mode === 'media_metadata' || source.source_mode === 'metadata_only') as unknown as RightsRecord;
+    const licenseRequired = ledger.rights.find((source) => source.source_mode === 'activation_license') as unknown as RightsRecord;
     expect(canFeedActiveMetric(metadataOnly)).toBe(false);
     expect(canFeedActiveMetric(licenseRequired)).toBe(false);
     expect(metadataOnly).toBeTruthy();

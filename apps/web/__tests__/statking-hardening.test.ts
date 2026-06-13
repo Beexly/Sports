@@ -13,7 +13,7 @@ describe('StatKing hardening sprint', () => {
   it('seeds a large source universe with required source fields and no duplicate IDs', () => {
     const registry = readJson('data/source-atlas/source_registry.json');
     expect(registry.source_count).toBeGreaterThanOrEqual(500);
-    const ids = new Set(registry.sources.map((source: any) => source.source_id));
+    const ids = new Set(registry.sources.map((source: Record<string, unknown>) => source.source_id));
     expect(ids.size).toBe(registry.sources.length);
     for (const source of registry.sources) {
       expect(source.canonical_name).toBeTruthy();

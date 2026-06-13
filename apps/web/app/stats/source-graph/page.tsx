@@ -32,7 +32,7 @@ export default function Page() {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Top 25 Easiest Wins</h2>
         <DataTable
-          rows={t.top_50_easiest_wins.slice(0, 25).map((s: any) => ({
+          rows={t.top_50_easiest_wins.slice(0, 25).map((s: Record<string, unknown>) => ({
             source: String(s.source_name ?? ""),
             category: String(s.category ?? ""),
             effort: String(s.effort ?? ""),

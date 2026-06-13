@@ -68,7 +68,7 @@ export default function Page({ params }: { params: { id: string } }) {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Similar Players</h2>
         <DataTable
-          rows={comps.map((c: any) => ({
+          rows={comps.map((c: Record<string, unknown>) => ({
             player: String(c.player ?? ""),
             similarity: Number(c.similarity ?? 0),
             position: String(c.position ?? ""),
