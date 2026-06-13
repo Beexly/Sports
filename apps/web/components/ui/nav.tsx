@@ -149,10 +149,10 @@ export async function Nav() {
         </div>
 
         <div className="nav-right">
-          <span className="live-chip">
+          <Link href="/board" className="live-chip" aria-label="View live board">
             <span className="dot" />
             Live Board
-          </span>
+          </Link>
 
           <div className="desktop-auth">
             {user ? (
