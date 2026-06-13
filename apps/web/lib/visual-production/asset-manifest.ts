@@ -43,10 +43,12 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
   "today-mission": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/today-mission.webp",
+    motion: "/immersive/today-mission.mp4",
   },
   "house-belonging": {
     gradient: `radial-gradient(55% 75% at 50% 0%, rgba(255,45,214,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/house-belonging.webp",
+    motion: "/immersive/house-belonging.mp4",
   },
   "academy-path": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(139,92,246,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
