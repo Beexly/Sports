@@ -1,26 +1,30 @@
 /**
- * Pattern recognition — Layer D of Executive Intelligence v2.
+ * Pattern Recognition — Layer D
  *
- * Jarvis compares OwnerSummary snapshots over time and notices what is
- * different — recurring blockers, decision backlogs, calibration
- * trends. Patterns derive only from real snapshots; with fewer than two
- * snapshots, nothing is claimed. A surfaced pattern is never surfaced
- * twice in one session.
+ * Jarvis notices patterns across historical snapshots. He does not re-derive
+ * what he already knows. He notices when something is different from last time.
+ *
+ * Trust rules:
+ *   - detectPatterns requires at least 2 OwnerSummary snapshots to identify
+ *     a recurring pattern — a single snapshot cannot show a trend.
+ *   - shouldSurfacePattern prevents the same pattern from surfacing twice
+ *     in a session.
+ *   - buildPatternMemory produces a compact ScribeEntry — not a data dump.
+ *   - Severity is derived from actual state, never inflated for drama.
  */
 
-import type { OwnerSummary } from "@/lib/cockpit/owner-summary";
-import { createScribeEntry } from "./scribe";
+import type { OwnerSummary } from "../cockpit/owner-summary";
 import type { ScribeEntry } from "./scribe-types";
 
-export type PatternType =
-  | "RECURRING_BLOCKER"
-  | "DATA_DRIFT"
-  | "DECISION_BACKLOG"
-  | "CALIBRATION_TREND"
-  | "CONTENT_VELOCITY"
-  | "REVENUE_SIGNAL";
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-export type PatternSeverity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+export type PatternType =
+  | "RECURRING_BLOCKER"    // same blocker appears repeatedly
+  | "DATA_DRIFT"           // ingestion latency worsening over time
+  | "DECISION_BACKLOG"     // owner decisions piling up without resolution
+  | "CALIBRATION_TREND"    // pick accuracy trending up or down
+  | "CONTENT_VELOCITY"     // content production rate changing
+  | "REVENUE_SIGNAL";      // conversion or churn pattern
 
 export interface ObservedPattern {
   readonly id: string;
@@ -29,198 +33,235 @@ export interface ObservedPattern {
   readonly firstObservedAt: string;
   readonly lastObservedAt: string;
   readonly occurrenceCount: number;
-  readonly severity: PatternSeverity;
+  readonly severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   readonly recommendation: string;
   readonly autoProposedImprovement: boolean;
   readonly requiresOwnerAwareness: boolean;
 }
 
-let patternSeq = 0;
+// ─── Pattern detectors ────────────────────────────────────────────────────────
 
-function makePattern(
-  p: Omit<ObservedPattern, "id">
-): ObservedPattern {
-  patternSeq += 1;
-  return { ...p, id: `pattern-${patternSeq}` };
-}
-
-/**
- * Detect patterns across historical snapshots (oldest → newest).
- * Honest floor: under 2 snapshots there is no "pattern", only a state.
- */
-export function detectPatterns(
-  history: readonly OwnerSummary[]
+function detectRecurringBlockers(
+  history: readonly OwnerSummary[],
 ): readonly ObservedPattern[] {
   if (history.length < 2) return [];
+
   const patterns: ObservedPattern[] = [];
-  const first = history[0]!;
-  const last = history[history.length - 1]!;
 
-  // RECURRING_BLOCKER — same critical warning across ≥2 snapshots.
-  const warningCounts = new Map<string, { n: number; first: string; last: string }>();
-  for (const snap of history) {
-    for (const w of snap.criticalWarnings) {
-      const cur = warningCounts.get(w);
-      if (cur) {
-        cur.n += 1;
-        cur.last = snap.assessedAt;
-      } else {
-        warningCounts.set(w, { n: 1, first: snap.assessedAt, last: snap.assessedAt });
-      }
-    }
-  }
-  for (const [warning, stat] of warningCounts) {
-    if (stat.n >= 2) {
-      patterns.push(
-        makePattern({
-          type: "RECURRING_BLOCKER",
-          description: `Blocker recurred ${stat.n}× across snapshots: ${warning}`,
-          firstObservedAt: stat.first,
-          lastObservedAt: stat.last,
-          occurrenceCount: stat.n,
-          severity: stat.n >= 3 ? "CRITICAL" : "HIGH",
-          recommendation: "Stop re-triaging — assign a permanent fix and track it to closure.",
-          autoProposedImprovement: true,
-          requiresOwnerAwareness: true,
-        })
-      );
-    }
+  // Check if picks gate has been closed across multiple snapshots
+  const gateClosedSnapshots = history.filter((s) => !s.picks.isPublicGateOpen);
+  if (gateClosedSnapshots.length >= 2) {
+    patterns.push({
+      id: `blocker_picks_gate_${gateClosedSnapshots.length}`,
+      type: "RECURRING_BLOCKER",
+      description: `Public picks gate has been closed in ${gateClosedSnapshots.length} consecutive assessments.`,
+      firstObservedAt: gateClosedSnapshots[0]?.assessedAt ?? history[0]!.assessedAt,
+      lastObservedAt: gateClosedSnapshots[gateClosedSnapshots.length - 1]?.assessedAt ?? history[history.length - 1]!.assessedAt,
+      occurrenceCount: gateClosedSnapshots.length,
+      severity: gateClosedSnapshots.length >= 5 ? "HIGH" : "MEDIUM",
+      recommendation: "Review PUBLIC_PICKS_ENABLED gate — it has been closed across multiple sessions.",
+      autoProposedImprovement: false,
+      requiresOwnerAwareness: true,
+    });
   }
 
-  // DECISION_BACKLOG — pending decisions growing monotonically.
-  const counts = history.map((s) => s.decisions.length);
-  const growing = counts.every((c, i) => i === 0 || c >= counts[i - 1]!);
-  if (growing && (counts[counts.length - 1] ?? 0) > (counts[0] ?? 0)) {
-    patterns.push(
-      makePattern({
-        type: "DECISION_BACKLOG",
-        description: `Owner decision queue grew ${counts[0]} → ${counts[counts.length - 1]} without resolution.`,
-        firstObservedAt: first.assessedAt,
-        lastObservedAt: last.assessedAt,
-        occurrenceCount: history.length,
-        severity: (counts[counts.length - 1] ?? 0) >= 5 ? "HIGH" : "MEDIUM",
-        recommendation: "Batch the queue into one decision session — most items are one-word approvals.",
-        autoProposedImprovement: false,
-        requiresOwnerAwareness: true,
-      })
-    );
-  }
-
-  // CALIBRATION_TREND — displayed win rate trending across ≥3 snapshots.
-  const rates = history
-    .map((s) => s.performance.actualWinRate)
-    .filter((r): r is number => r !== null);
-  if (rates.length >= 3) {
-    const firstRate = rates[0]!;
-    const lastRate = rates[rates.length - 1]!;
-    const delta = lastRate - firstRate;
-    if (Math.abs(delta) >= 3) {
-      patterns.push(
-        makePattern({
-          type: "CALIBRATION_TREND",
-          description: `Win rate moved ${delta > 0 ? "+" : ""}${delta.toFixed(1)}pp across ${rates.length} snapshots (${firstRate.toFixed(1)}% → ${lastRate.toFixed(1)}%).`,
-          firstObservedAt: first.assessedAt,
-          lastObservedAt: last.assessedAt,
-          occurrenceCount: rates.length,
-          severity: delta < 0 ? "HIGH" : "LOW",
-          recommendation:
-            delta < 0
-              ? "Open a calibration proposal — review which factor drifted before adjusting anything."
-              : "Positive drift — keep the model frozen and let the sample grow.",
-          autoProposedImprovement: delta < 0,
-          requiresOwnerAwareness: delta < 0,
-        })
-      );
-    }
-  }
-
-  // DATA_DRIFT — picks flowing into the system slowing down.
-  const totals = history.map((s) => s.picks.totalInSystem);
-  if (totals.length >= 3) {
-    const recent = totals[totals.length - 1]! - totals[totals.length - 2]!;
-    const prior = totals[totals.length - 2]! - totals[totals.length - 3]!;
-    if (prior > 0 && recent < prior / 2) {
-      patterns.push(
-        makePattern({
-          type: "DATA_DRIFT",
-          description: `Pick inflow halved: +${prior} then +${recent} between snapshots.`,
-          firstObservedAt: history[history.length - 3]!.assessedAt,
-          lastObservedAt: last.assessedAt,
-          occurrenceCount: 2,
-          severity: recent === 0 ? "HIGH" : "MEDIUM",
-          recommendation: "Check ingestion freshness and The Odds API quota before it shows up on the board.",
-          autoProposedImprovement: true,
-          requiresOwnerAwareness: recent === 0,
-        })
-      );
-    }
+  // Check for persistent critical warnings
+  const criticalSnapshots = history.filter((s) => s.criticalWarnings.length > 0);
+  if (criticalSnapshots.length >= 2) {
+    patterns.push({
+      id: `blocker_critical_warnings_${criticalSnapshots.length}`,
+      type: "RECURRING_BLOCKER",
+      description: `Critical warnings have been active in ${criticalSnapshots.length} consecutive assessments.`,
+      firstObservedAt: criticalSnapshots[0]?.assessedAt ?? history[0]!.assessedAt,
+      lastObservedAt: criticalSnapshots[criticalSnapshots.length - 1]?.assessedAt ?? history[history.length - 1]!.assessedAt,
+      occurrenceCount: criticalSnapshots.length,
+      severity: criticalSnapshots.length >= 3 ? "CRITICAL" : "HIGH",
+      recommendation: "Critical warnings are persistent — owner review required to clear them.",
+      autoProposedImprovement: false,
+      requiresOwnerAwareness: true,
+    });
   }
 
   return patterns;
 }
 
-const SEVERITY_RANK: Readonly<Record<PatternSeverity, number>> = {
-  CRITICAL: 3,
-  HIGH: 2,
-  MEDIUM: 1,
-  LOW: 0,
-};
-
-export function rankPatternsByUrgency(
-  patterns: readonly ObservedPattern[]
+function detectDecisionBacklog(
+  history: readonly OwnerSummary[],
 ): readonly ObservedPattern[] {
-  return [...patterns].sort(
-    (a, b) =>
-      SEVERITY_RANK[b.severity] - SEVERITY_RANK[a.severity] ||
-      b.occurrenceCount - a.occurrenceCount
+  if (history.length < 2) return [];
+
+  const patterns: ObservedPattern[] = [];
+
+  // Count snapshots with growing decision queues
+  const decisionsOverTime = history.map((s) => s.decisions.length);
+  const isGrowing =
+    decisionsOverTime.length >= 2 &&
+    decisionsOverTime[decisionsOverTime.length - 1]! >
+      decisionsOverTime[0]!;
+
+  if (isGrowing) {
+    const current = decisionsOverTime[decisionsOverTime.length - 1] ?? 0;
+    patterns.push({
+      id: `decision_backlog_${current}`,
+      type: "DECISION_BACKLOG",
+      description: `Decision queue has grown from ${decisionsOverTime[0]} to ${current} items across ${history.length} snapshots.`,
+      firstObservedAt: history[0]!.assessedAt,
+      lastObservedAt: history[history.length - 1]!.assessedAt,
+      occurrenceCount: history.length,
+      severity: current >= 5 ? "HIGH" : current >= 3 ? "MEDIUM" : "LOW",
+      recommendation: `Clear the ${current}-item decision queue — backlog is growing.`,
+      autoProposedImprovement: false,
+      requiresOwnerAwareness: current >= 3,
+    });
+  }
+
+  return patterns;
+}
+
+function detectCalibrationTrend(
+  history: readonly OwnerSummary[],
+): readonly ObservedPattern[] {
+  if (history.length < 2) return [];
+
+  const patterns: ObservedPattern[] = [];
+
+  // Track performance.canonicalSampleSize growth
+  const sampleSizes = history.map((s) => s.performance.canonicalSampleSize);
+  const isStagnant =
+    sampleSizes.length >= 3 &&
+    sampleSizes[sampleSizes.length - 1] === sampleSizes[0];
+
+  if (isStagnant && (sampleSizes[0] ?? 0) === 0) {
+    patterns.push({
+      id: "calibration_no_settled_picks",
+      type: "CALIBRATION_TREND",
+      description: `No canonical picks have settled across ${history.length} snapshots.`,
+      firstObservedAt: history[0]!.assessedAt,
+      lastObservedAt: history[history.length - 1]!.assessedAt,
+      occurrenceCount: history.length,
+      severity: "MEDIUM",
+      recommendation: "Settlement worker has not run — no canonical picks are settling.",
+      autoProposedImprovement: false,
+      requiresOwnerAwareness: true,
+    });
+  }
+
+  // Check for gate remaining closed when approaching threshold
+  const approachingThreshold = history.filter(
+    (s) =>
+      s.performance.remainingToThreshold > 0 &&
+      s.performance.remainingToThreshold <= 10,
   );
+  if (approachingThreshold.length >= 2) {
+    patterns.push({
+      id: "calibration_near_threshold",
+      type: "CALIBRATION_TREND",
+      description: `Platform has been within 10 picks of display threshold for ${approachingThreshold.length} snapshots.`,
+      firstObservedAt: approachingThreshold[0]?.assessedAt ?? history[0]!.assessedAt,
+      lastObservedAt: approachingThreshold[approachingThreshold.length - 1]?.assessedAt ?? history[history.length - 1]!.assessedAt,
+      occurrenceCount: approachingThreshold.length,
+      severity: "LOW",
+      recommendation: "Near performance display threshold — prioritize settling pending picks.",
+      autoProposedImprovement: false,
+      requiresOwnerAwareness: false,
+    });
+  }
+
+  return patterns;
 }
 
+// ─── Main functions ───────────────────────────────────────────────────────────
+
+/**
+ * Detect patterns across a history of OwnerSummary snapshots.
+ *
+ * Requires at least 2 snapshots to identify any pattern (a single snapshot
+ * cannot show a trend). Returns empty array for single-snapshot history.
+ */
+export function detectPatterns(
+  history: readonly OwnerSummary[],
+): readonly ObservedPattern[] {
+  if (history.length < 2) return [];
+
+  const all = [
+    ...detectRecurringBlockers(history),
+    ...detectDecisionBacklog(history),
+    ...detectCalibrationTrend(history),
+  ];
+
+  return all;
+}
+
+/** Sort patterns by urgency: CRITICAL → HIGH → MEDIUM → LOW. */
+export function rankPatternsByUrgency(
+  patterns: readonly ObservedPattern[],
+): readonly ObservedPattern[] {
+  const rank = (s: ObservedPattern["severity"]): number =>
+    s === "CRITICAL" ? 0 : s === "HIGH" ? 1 : s === "MEDIUM" ? 2 : 3;
+  return [...patterns].sort((a, b) => rank(a.severity) - rank(b.severity));
+}
+
+/** Produce a concise owner-facing pattern summary. */
 export function summarizePatternsForOwner(
-  patterns: readonly ObservedPattern[]
+  patterns: readonly ObservedPattern[],
 ): string {
-  if (patterns.length === 0) return "No patterns worth your attention — nothing recurring, nothing drifting.";
+  if (patterns.length === 0) return "No recurring patterns detected across available history.";
+
   const ranked = rankPatternsByUrgency(patterns);
-  return ranked
-    .slice(0, 3)
-    .map((p, i) => `${i + 1}. [${p.severity}] ${p.description} → ${p.recommendation}`)
-    .join("\n");
+  const lines: string[] = [
+    `${patterns.length} pattern${patterns.length === 1 ? "" : "s"} detected:`,
+  ];
+
+  ranked.slice(0, 3).forEach((p, i) => {
+    lines.push(`  ${i + 1}. [${p.severity}] ${p.description} → ${p.recommendation}`);
+  });
+
+  return lines.join("\n");
 }
 
+/**
+ * Returns true if this pattern should be surfaced now.
+ *
+ * A pattern that has already been surfaced in this session is suppressed
+ * to avoid repeating the same observation.
+ */
 export function shouldSurfacePattern(
   pattern: ObservedPattern,
-  alreadySurfaced: readonly string[]
+  alreadySurfaced: readonly string[],
 ): boolean {
-  // Same type + description = same pattern; never surface twice a session.
-  const key = `${pattern.type}:${pattern.description}`;
-  return !alreadySurfaced.includes(key) && !alreadySurfaced.includes(pattern.id);
+  return !alreadySurfaced.includes(pattern.id);
 }
 
+/** Build a ScribeEntry for institutional memory from observed patterns. */
 export function buildPatternMemory(
   patterns: readonly ObservedPattern[],
-  nowIso: string = new Date().toISOString()
 ): ScribeEntry {
-  return createScribeEntry({
-    createdAt: nowIso,
-    source: "jarvis",
-    actor: "jarvis",
-    project: "JARVIS",
-    type: "MEMORY",
-    title: `Pattern observations — ${nowIso.slice(0, 10)}`,
-    summary:
-      patterns.length === 0
-        ? "No patterns detected this cycle."
-        : patterns
-            .map(
-              (p) =>
-                `- [${p.severity}] ${p.type}: ${p.description} (seen ${p.occurrenceCount}×, ${p.firstObservedAt.slice(0, 10)} → ${p.lastObservedAt.slice(0, 10)})`
-            )
-            .join("\n"),
-    tags: ["patterns", "institutional-memory"],
-    relatedFiles: [],
-    relatedRoutes: [],
-    approvalStatus: "NOT_REQUIRED",
-    visibility: "INTERNAL",
-    riskLevel: "LOW",
-  });
+  const ranked = rankPatternsByUrgency(patterns);
+  const today = new Date().toISOString().slice(0, 10);
+
+  const body =
+    patterns.length === 0
+      ? "No recurring patterns detected in this session."
+      : ranked
+          .map(
+            (p) =>
+              `[${p.severity}] ${p.type}: ${p.description}\n` +
+              `  Recommendation: ${p.recommendation}\n` +
+              `  Occurrences: ${p.occurrenceCount} · First: ${p.firstObservedAt.slice(0, 10)} · Last: ${p.lastObservedAt.slice(0, 10)}`,
+          )
+          .join("\n\n");
+
+  return {
+    id: `patterns_${Date.now()}`,
+    type: "PATTERN",
+    title: `Pattern observation — ${today} (${patterns.length} patterns)`,
+    body,
+    createdAt: new Date().toISOString(),
+    tags: [
+      "patterns",
+      today,
+      ...patterns.map((p) => p.type.toLowerCase().replace(/_/g, "-")),
+    ],
+    vaultPath: `06-memory/patterns-${today}.md`,
+  };
 }
