@@ -14,6 +14,8 @@ const SECTIONS: readonly Section[] = [
     heading: "Start here",
     links: [
       { label: "Board", href: "/board" },
+      { label: "Picks Board", href: "/picks" },
+      { label: "Daily Brief", href: "/brief" },
       { label: "Today — Mission Control", href: "/today" },
       { label: "Contests", href: "/fantasy/contests" },
       { label: "Pricing", href: "/pricing" },

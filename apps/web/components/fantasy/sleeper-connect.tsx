@@ -13,6 +13,7 @@
  */
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { SLEEPER_READONLY_NOTE, type League, type Team } from "@/lib/integrations/sleeper";
 import type { StandingRow } from "@/lib/integrations/sleeper-sync";
 import { connectorsByStatus, type ConnectorStatus } from "@/lib/integrations/connectors";
@@ -187,7 +188,7 @@ export function SleeperConnect() {
               projections source is wired behind the founder gate. The GM Autopilot then drives this roster —
               still proposal-only, with every move explained, ledgered, and human-approved.
             </p>
-            <a href="/fantasy/autopilot" className="mt-2 inline-block text-sm font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>See how the Autopilot would drive it →</a>
+            <Link href="/fantasy/autopilot" className="mt-2 inline-block text-sm font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>See how the Autopilot would drive it →</Link>
           </div>
         </div>
       )}

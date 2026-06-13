@@ -8,9 +8,13 @@ import { BrandLockup } from "@/components/brand/brand-lockup";
 // Board, the Lab, the Engines, the Fantasy tools — plus standalone Contests
 // and The Beat for casual browse. Internal surfaces (Studio, Airwave) are
 // deliberately unlinked here: they are ours, not the visitor's.
-const PRIMARY_LINKS = [{ label: "Board", href: "/board" }] as const;
+const PRIMARY_LINKS = [
+  { label: "Board", href: "/board" },
+  { label: "Picks", href: "/picks" },
+] as const;
 
 const TAIL_LINKS = [
+  { label: "Daily Brief", href: "/brief" },
   { label: "Contests", href: "/fantasy/contests" },
   { label: "The Beat", href: "/the-beat" },
   { label: "Academy", href: "/academy" },
