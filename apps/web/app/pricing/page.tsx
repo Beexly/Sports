@@ -13,6 +13,12 @@ import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 import { Reveal } from "@/components/motion/reveal";
 import { ShootingStars } from "@/components/motion/shooting-stars";
 import { SignalRule } from "@/components/motion/signal-rule";
+import {
+  VALUE_TIERS,
+  POSITIONING,
+  EMOTIONAL_VALUE,
+} from "@/lib/pricing/value-architecture";
+import { getFeature } from "@/lib/pricing/feature-gates";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
@@ -220,12 +226,58 @@ export default function PricingPage() {
                 even as it rises for everyone who joins later.
               </p>
             </Reveal>
+            <Reveal delay={260}>
+              <p className="mx-auto mt-5 max-w-2xl text-sm text-ink-400">{POSITIONING}</p>
+            </Reveal>
           </div>
 
           {/* Plans with billing toggle */}
           <div className="mt-14">
             <PricingPlans plans={PLANS} grandfatherNote={grandfatherNote} />
           </div>
+
+          {/* Why each step up — the value ladder (incl. the Operator waitlist) */}
+          <section className="mt-20">
+            <h2 className="text-center text-2xl font-bold text-white">Why each step up</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
+              Each plan is a different job — and you can see exactly what the next tier adds before you pay for it.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {VALUE_TIERS.map((t) => (
+                <div
+                  key={t.id}
+                  className="flex h-full flex-col rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-400">
+                      {t.name}
+                    </p>
+                    {t.status === "waitlist" && (
+                      <span className="rounded-full border border-gray-700 px-2 py-0.5 text-[10px] font-medium text-ink-300">
+                        Waitlist
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-2 text-base font-semibold text-white">{t.promise}</p>
+                  <p className="mt-1 text-xs text-ink-400">{t.forWho}</p>
+                  {t.whyNextTier && (
+                    <p className="mt-3 border-t border-gray-800 pt-3 text-xs leading-relaxed text-ink-300">
+                      <span className="text-ink-500">Next: </span>
+                      {t.whyNextTier}
+                    </p>
+                  )}
+                  {t.status === "waitlist" && (
+                    <Link
+                      href="/contact"
+                      className="mt-4 inline-block text-xs font-semibold text-brand-400 transition-colors hover:text-brand-300"
+                    >
+                      {t.ctaLabel} →
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
 
           <SignalRule className="mt-20" />
 
@@ -323,6 +375,26 @@ export default function PricingPage() {
               </table>
             </div>
           </div>
+
+          {/* Built to protect you from hype — what every tier is really for */}
+          <section className="mt-20">
+            <h2 className="text-center text-2xl font-bold text-white">Built to protect you from hype</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">{EMOTIONAL_VALUE}</p>
+            <div className="mx-auto mt-8 grid max-w-4xl gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
+                <h3 className="text-sm font-semibold text-white">How confidence works</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                  {getFeature("confidence")?.customerExplanation}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
+                <h3 className="text-sm font-semibold text-white">What No-Bet means</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                  {getFeature("no-bet-reasoning")?.customerExplanation}
+                </p>
+              </div>
+            </div>
+          </section>
 
           {/* FAQ */}
           <section className="mt-20">
