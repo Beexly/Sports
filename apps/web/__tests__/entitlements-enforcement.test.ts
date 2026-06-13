@@ -101,7 +101,7 @@ describe("getUserEntitlements — production DB path", () => {
     expect(ent.tier).toBe("FREE");
     expect(ent.canSeePremiumPicks).toBe(false);
     expect(ent.canSeeConfidence).toBe(false);
-    expect(ent.dailyPickLimit).toBe(1);
+    expect(ent.dailyPickLimit).toBe(2);
   });
 
   it("fails closed to FREE when the database is unreachable (P1001)", async () => {

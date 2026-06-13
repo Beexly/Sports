@@ -12,7 +12,7 @@ describe("getEntitlements", () => {
     it("cannot see factor breakdown", () => expect(ents.canSeeFactorBreakdown).toBe(false));
     it("can see edge score", () => expect(ents.canSeeEdgeScore).toBe(true));
     it("cannot get alerts", () => expect(ents.canGetAlerts).toBe(false));
-    it("daily limit is 1", () => expect(ents.dailyPickLimit).toBe(1));
+    it("daily limit is 2", () => expect(ents.dailyPickLimit).toBe(2));
   });
 
   describe("PRO tier", () => {

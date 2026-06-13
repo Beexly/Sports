@@ -134,7 +134,7 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
     canSeeFactorBreakdown: isPro,
     canSeeEdgeScore: true,
     canGetAlerts: tier === "ELITE",
-    dailyPickLimit: tier === "FREE" ? 1 : null,
+    dailyPickLimit: tier === "FREE" ? 2 : null,
     canUseTrendLab: isPro,
     canUseParlayMri: isPro,
     canUseClvLedger: tier === "ELITE",

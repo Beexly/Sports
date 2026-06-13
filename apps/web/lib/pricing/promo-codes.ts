@@ -42,6 +42,23 @@ const RG = "Informational only. Subscriptions are for sports intelligence and ed
 
 export const PROMO_CODES: readonly PromoCode[] = [
   {
+    code: "FOUNDING50",
+    audience: "Founding annual subscribers — first 90 days",
+    offer: "50% off the first year on annual Pro or Elite",
+    offerKind: "percent_off_annual",
+    eligiblePlans: ["PRO", "ELITE"],
+    window: "90 days from launch",
+    usageLimit: null,
+    stackable: false,
+    complianceCopy: RG,
+    // Owner-approved (Garrett's 90-day / 50%-off-annual decision). Stays inactive
+    // until live Stripe coupon infrastructure exists — flip `active` to true once
+    // the Stripe secrets are set and the coupon is created.
+    ownerApproved: true,
+    active: false,
+    killSwitchMetric: "90-day founding window elapsed OR annual margin floor breached",
+  },
+  {
     code: "GALAXYFOUNDING",
     audience: "Founding members during the launch window",
     offer: "Founding rate — Pro $99/yr, Elite $179/yr (owner-approved founding discount)",

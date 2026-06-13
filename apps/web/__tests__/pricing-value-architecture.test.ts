@@ -37,11 +37,14 @@ describe("value architecture — ladder shape", () => {
     }
   });
 
-  it("each non-top tier explains why the next tier exists; the top tier does not", () => {
+  it("Free and Pro explain why the next tier exists; Elite (top public) and Operator (hidden) need not", () => {
     for (const t of VALUE_TIERS) {
-      if (t.id === "OPERATOR") expect(t.whyNextTier).toBeNull();
-      else expect(t.whyNextTier && t.whyNextTier.length, `${t.id} whyNextTier`).toBeGreaterThan(0);
+      if (t.id === "FREE" || t.id === "PRO") {
+        expect(t.whyNextTier && t.whyNextTier.length, `${t.id} whyNextTier`).toBeGreaterThan(0);
+      }
     }
+    expect(getValueTier("ELITE").whyNextTier).toBeNull();
+    expect(getValueTier("OPERATOR").whyNextTier).toBeNull();
   });
 
   it("every tier has a promise, audience, and CTA", () => {
@@ -52,8 +55,8 @@ describe("value architecture — ladder shape", () => {
     }
   });
 
-  it("Operator is waitlist; Free/Pro/Elite are live", () => {
-    expect(getValueTier("OPERATOR").status).toBe("waitlist");
+  it("Operator is hidden; Free/Pro/Elite are the live, public tiers", () => {
+    expect(getValueTier("OPERATOR").status).toBe("hidden");
     expect(getLiveValueTiers().map((t) => t.id)).toEqual(["FREE", "PRO", "ELITE"]);
   });
 });
@@ -169,12 +172,13 @@ describe("feature gating", () => {
 });
 
 describe("promo codes — safe by default", () => {
-  it("every promo is inactive and unapproved until the owner flips it", () => {
+  it("no promo is active until live coupon infra exists — even owner-approved ones stay inactive", () => {
     for (const p of PROMO_CODES) {
       expect(p.active, `${p.code} active`).toBe(false);
-      expect(p.ownerApproved, `${p.code} ownerApproved`).toBe(false);
     }
+    // FOUNDING50 is owner-approved but still inactive (no Stripe coupon wired).
     expect(getActivePromoCodes()).toHaveLength(0);
+    expect(PROMO_CODES.some((p) => p.ownerApproved)).toBe(true);
   });
 
   it("no promo is stackable and each carries compliance + kill-switch copy", () => {

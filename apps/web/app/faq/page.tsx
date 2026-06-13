@@ -92,7 +92,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Is there a refund window?",
-        a: "Every paid plan ships with a 7-day refund window. Cancel any time from your dashboard — no questions.",
+        a: "No free trial — but every paid plan has a 3-day money-back window. Cancel any time from your dashboard — no questions.",
       },
       {
         q: "Will pricing change?",
