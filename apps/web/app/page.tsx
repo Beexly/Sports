@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { ShaderAuroraLazy } from "@/components/hero/shader-aurora-lazy";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { getPlate } from "@/lib/visual-production/asset-manifest";
 import { CinematicEntrance } from "@/components/landing/cinematic-entrance";
 import { CountUp } from "@/components/ui/count-up";
 import { BRAND_COLORS } from "@/lib/brand";
@@ -67,6 +69,7 @@ export default async function HomePage(): Promise<JSX.Element> {
     passesResult.meta.dataError === "DB_UNREACHABLE";
   const totalRows =
     state.scoringNow.length + state.publishedToday.length + state.gatedTodayRows.length + passes.length;
+  const heroPlate = getPlate("home-hero-cosmos");
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
@@ -80,6 +83,14 @@ export default async function HomePage(): Promise<JSX.Element> {
             The entrance burst dissolves into this: aurora, starfield, the
             thesis, and live board telemetry. Real data, honest empty states. */}
         <section className="gw-nebula-deep relative isolate overflow-hidden border-b border-mineral">
+          {heroPlate && (
+            <GeneratedPlate
+              className="-z-30 opacity-70"
+              gradient={heroPlate.gradient}
+              still={heroPlate.still}
+              motion={heroPlate.motion}
+            />
+          )}
           <div aria-hidden="true" className="absolute inset-0 -z-20">
             <ShaderAuroraLazy />
           </div>
