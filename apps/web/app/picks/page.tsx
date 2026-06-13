@@ -11,9 +11,9 @@ import Link from "next/link";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
-  title: "Today's Board - Sports Picks With Reasoning Attached",
+  title: "Picks Board — Today's Sports Signals With Reasoning Attached",
   description:
-    "Live sports signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater — just the reasoning.",
+    "Every published signal today, scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NBA, MLB, NHL, NCAAF, NCAAB, MLS. No certainty theater — just the reasoning.",
   alternates: { canonical: "/picks" },
 };
 
