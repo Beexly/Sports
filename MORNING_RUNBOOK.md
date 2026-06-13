@@ -23,6 +23,19 @@ machine** (e.g. `Sports-canonical-2026-06-03`) and may not have committed
 cleanly. **Recover it before doing anything else** (Step 1). Nothing about the
 launch matters if the work you care about is lost.
 
+### Why Codex keeps saying "created the PR" when no PR exists
+
+Re-verified twice (fetched all 61 branches + listed every open PR): the only
+open PRs are #18 (NFL House / market intelligence), #14 (pricing), #2 (operator
+docs). **No StatKing PR or branch is on GitHub.** Codex reported a **308-file /
++151,059-line** change and hit *"the generated diff exceeds our size limit and
+could not be extracted"* → *"an error occurred."* That is the tell: Codex's
+environment **failed to apply/commit and never pushed.** A 151k-line diff is far
+too large to be just source — it almost certainly swept in **generated or data
+artifacts** (node_modules, `.next/`, large JSON snapshots, the 546-record
+ledger). So: don't trust "created the PR" from that tool until you see the branch
+on GitHub yourself. The work is on your disk; it just never left it.
+
 ---
 
 ## 1. RECOVER StatKing (do this first, on your LOCAL machine)
@@ -45,10 +58,17 @@ git push -u origin rescue/statking-$(date +%Y%m%d)
 ```
 
 Notes:
-- The Codex change was reportedly **308 files / +151,059 lines**. If a single
-  `git add -A` / commit errors or is rejected for size, commit in groups
-  (e.g. `git add apps/web && git commit -m "...statking app"`, then
-  `git add handoff && git commit -m "...handoff"`, etc.).
+- The Codex change was reportedly **308 files / +151,059 lines** — that size is
+  the reason its push failed. **First make sure you're not committing junk:**
+  ```bash
+  git status --short | wc -l            # how many files are really changing
+  cat .gitignore | grep -E "node_modules|.next|dist"   # confirm these are ignored
+  git ls-files --others --exclude-standard | grep -E "node_modules|\.next/" # should be empty
+  ```
+  If `git add -A` would stage `node_modules/` or `.next/`, fix `.gitignore`
+  first — those must never be committed. If a single commit still errors or is
+  rejected for size, commit in groups (e.g. `git add apps/web && git commit -m
+  "...statking app"`, then `git add handoff && git commit -m "...handoff"`).
 - After push, open the branch on GitHub and confirm the StatKing files are
   actually there (`apps/web/app/stats/`, `apps/web/app/admin/statking/`,
   `rights_ledger.json`, `handoff/claude/statking/`, the new tests).
