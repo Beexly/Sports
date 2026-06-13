@@ -76,6 +76,8 @@ the original actor decides. Decision within 7 days.
 - [ ] Privacy review: profiles, presence indicators, message retention
       schedule, data-deletion path
 - [ ] Responsible-play signal wiring (nudges live before rooms do)
-- [ ] Moderator coverage plan for live windows (Sunday slate minimum)
+      *(detection law built 2026-06-13 — lib/community/distress-signals.ts; pipeline hook lands with rooms)*
+- [x] Moderator coverage plan for live windows (Sunday slate minimum)
+      — `docs/ops/MODERATOR_COVERAGE_PLAN.md` (adopted 2026-06-13)
 
 Rooms do not open until every box is checked. Owner sign-off required.

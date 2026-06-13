@@ -16,6 +16,7 @@ const PRODUCT_LINKS = [
 ] as const;
 
 const COMPANY_LINKS = [
+  { label: "Accountability", href: "/accountability" },
   { label: "Receipts — Calibration", href: "/performance" },
   { label: "Methodology", href: "/methodology" },
   { label: "The Vault", href: "/vault" },
