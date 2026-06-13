@@ -33,6 +33,12 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
       `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/observatory-market-field.webp",
   },
+  "no-bet-stillness": {
+    gradient:
+      `radial-gradient(70% 80% at 50% 0%, rgba(255,45,214,0.10), transparent 70%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/no-bet-stillness.webp",
+  },
 };
 
 export function getPlate(id: string): PlateManifest | undefined {
