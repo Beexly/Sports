@@ -1,4 +1,8 @@
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const here = path.dirname(fileURLToPath(import.meta.url)); // apps/web
+const repoRoot = path.resolve(here, "../..");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -14,6 +18,16 @@ const nextConfig = {
     // Next 14.x: instrumentation.ts (server-startup hook that founder-gates the
     // live graded projections provider) requires this flag. Stable in Next 15.
     instrumentationHook: true,
+    // The StatKing surfaces read JSON snapshots from the repo-root `data/` tree
+    // via fs at request time. On Vercel's serverless bundle those files are not
+    // included unless traced explicitly. Root is the monorepo root so the
+    // `../../data` globs resolve; includes cover every route whose server code
+    // calls the StatKing loaders (lib/statking/product.ts).
+    outputFileTracingRoot: repoRoot,
+    outputFileTracingIncludes: {
+      "/stats/**": ["../../data/statking/**/*", "../../data/source-atlas/**/*"],
+      "/admin/statking/**": ["../../data/statking/**/*", "../../data/source-atlas/**/*"],
+    },
   },
   webpack: (config) => {
     config.resolve.alias = {
