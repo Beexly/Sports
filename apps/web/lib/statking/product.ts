@@ -1,12 +1,34 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const root = path.resolve(process.cwd(), "../..");
-const fallbackRoot = process.cwd();
+/**
+ * Resolve the directory that contains the StatKing `data/` tree. Locally that is
+ * the repo root; on Vercel the serverless function's cwd is not the repo root,
+ * so we search candidate roots (cwd, cwd/../.., and each ancestor of cwd) for
+ * the data directory and cache the first hit. The files are bundled into the
+ * function at deploy time via `outputFileTracingIncludes` in next.config.mjs.
+ */
+function findDataRoot(): string {
+  const cwd = process.cwd();
+  const candidates = [cwd, path.resolve(cwd, "../..")];
+  let dir = cwd;
+  for (let i = 0; i < 8; i++) {
+    candidates.push(dir);
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  for (const c of candidates) {
+    if (fs.existsSync(path.join(c, "data/statking"))) return c;
+  }
+  return cwd;
+}
+let cachedDataRoot: string | null = null;
+function dataRoot(): string {
+  return (cachedDataRoot ??= findDataRoot());
+}
 function readJson<T>(relativePath: string, fallbackValue?: T): T {
-  const primary = path.join(root, relativePath);
-  const fallback = path.join(fallbackRoot, relativePath);
-  const file = fs.existsSync(primary) ? primary : fallback;
+  const file = path.join(dataRoot(), relativePath);
   if (!fs.existsSync(file)) {
     // A single missing snapshot must never crash the build/prerender. Callers
     // that pass a fallback get an honest empty state; the rest fail loudly with
