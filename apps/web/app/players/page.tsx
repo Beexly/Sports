@@ -9,6 +9,7 @@ import { PageHero } from "@/components/ui/page-hero";
 import { SourceError } from "@/components/ui/source-error";
 import { Tabs } from "@/components/ui/tabs";
 import { PLAYER_VIEWS, resolvePlayerView, type ViewResult } from "@/lib/players/views";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse loads need headroom
@@ -67,7 +68,8 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
   }
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="relative isolate min-h-screen bg-paper text-ink">
+      <GeneratedPlate assetId="players-constellation" className="-z-10 opacity-20" />
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <PageHero
