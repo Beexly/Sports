@@ -10,6 +10,11 @@
  *  - status is ALWAYS "DRAFT" — there is no publish transition in code.
  *  - responsibleGamingText rides every brief.
  *  - No fabricated stats: every number in the copy comes from the inputs.
+ *
+ * Memory section (§Owner Brief integration):
+ *  - Sourced from listMemoryByState results passed in via ComposeBriefInput.
+ *  - When memory store is unavailable, the section says so honestly.
+ *  - Follows the same section pattern as all other sections.
  */
 
 export const BRIEF_RESPONSIBLE_GAMING_NOTE =
@@ -56,6 +61,32 @@ export interface BriefTaskInput {
   readonly priority: number;
 }
 
+/**
+ * A single memory entry for the brief memory section.
+ * Passed in by the caller who has already loaded memory rows.
+ */
+export interface BriefMemoryInput {
+  readonly id: string;
+  readonly title: string;
+  readonly summary: string;
+  readonly memory_state: string;
+  readonly confirmed_at?: Date | null;
+  readonly created_at: Date;
+}
+
+/**
+ * Memory section for the brief.
+ *
+ * - storeConnected=false → honest not-connected message.
+ * - newConfirmed / pendingCandidates / conflicts are sourced from real DB rows.
+ */
+export interface BriefMemorySection {
+  readonly storeConnected: boolean;
+  readonly newConfirmed: readonly BriefMemoryInput[];
+  readonly pendingCandidates: readonly BriefMemoryInput[];
+  readonly conflicts: readonly BriefMemoryInput[];
+}
+
 export interface ComposedBrief {
   readonly date: string;
   readonly summary: string;
@@ -67,6 +98,8 @@ export interface ComposedBrief {
   readonly whatChanged: { readonly items: readonly BriefLineMoveInput[] };
   readonly contentIdeas: { readonly items: readonly string[] };
   readonly manualReview: { readonly items: readonly BriefTaskInput[] };
+  /** Memory section — present when memory input is provided; null otherwise. */
+  readonly memory: BriefMemorySection | null;
 }
 
 export interface ComposeBriefInput {
@@ -76,13 +109,22 @@ export interface ComposeBriefInput {
   readonly lineMoves?: readonly BriefLineMoveInput[];
   readonly promotions?: readonly BriefPromotionInput[];
   readonly reviewTasks?: readonly BriefTaskInput[];
+  /**
+   * Memory rows pre-fetched by the caller.
+   * When omitted: memory section body says "Memory section not loaded."
+   * When storeConnected=false: section body says store not connected.
+   */
+  readonly memory?: BriefMemorySection;
 }
 
 /** A line move only earns a mention when it's big enough to mean something. */
 const SIGNIFICANT_MOVE = 1.0;
 
-export function composeDailyBrief(input: { date: Date }): ComposedBrief {
-  return composeBrief({ date: input.date });
+export function composeDailyBrief(input: {
+  date: Date;
+  memory?: BriefMemorySection;
+}): ComposedBrief {
+  return composeBrief({ date: input.date, memory: input.memory });
 }
 
 export function composeBrief(input: ComposeBriefInput): ComposedBrief {
@@ -139,6 +181,36 @@ export function composeBrief(input: ComposeBriefInput): ComposedBrief {
     ideas.push("No-bet doctrine piece: why the gate held today and what would have changed its mind.");
   }
 
+  // ── Memory section ────────────────────────────────────────────────
+  let memorySectionBody: string;
+  if (!input.memory) {
+    memorySectionBody = "Memory section not loaded.";
+  } else if (!input.memory.storeConnected) {
+    memorySectionBody = "Memory store not connected — memory section unavailable.";
+  } else {
+    const parts: string[] = [];
+    if (input.memory.newConfirmed.length > 0) {
+      parts.push(
+        `${input.memory.newConfirmed.length} new confirmed memor${input.memory.newConfirmed.length === 1 ? "y" : "ies"}: ` +
+          input.memory.newConfirmed.map((m) => m.title).join(", ") +
+          ".",
+      );
+    } else {
+      parts.push("No new confirmed memories.");
+    }
+    if (input.memory.pendingCandidates.length > 0) {
+      parts.push(
+        `${input.memory.pendingCandidates.length} candidate${input.memory.pendingCandidates.length === 1 ? "" : "s"} awaiting approval.`,
+      );
+    }
+    if (input.memory.conflicts.length > 0) {
+      parts.push(
+        `${input.memory.conflicts.length} conflict${input.memory.conflicts.length === 1 ? "" : "s"} needing owner review.`,
+      );
+    }
+    memorySectionBody = parts.join(" ");
+  }
+
   const sections: BriefSection[] = [
     { title: "Slate overview", body: slateText, type: "slate" },
     { title: "Settlement", body: settledText, type: "settlement" },
@@ -169,6 +241,11 @@ export function composeBrief(input: ComposeBriefInput): ComposedBrief {
           : `${reviewTasks.length} item${reviewTasks.length === 1 ? "" : "s"} need${reviewTasks.length === 1 ? "s" : ""} an operator decision.`,
       type: "review",
     },
+    {
+      title: "Memory",
+      body: memorySectionBody,
+      type: "memory",
+    },
   ];
 
   return {
@@ -182,6 +259,7 @@ export function composeBrief(input: ComposeBriefInput): ComposedBrief {
     whatChanged: { items: lineMoves },
     contentIdeas: { items: ideas },
     manualReview: { items: reviewTasks },
+    memory: input.memory ?? null,
   };
 }
 
