@@ -38,15 +38,14 @@ describe("projections provider resolution (founder-gated)", () => {
     expect(resolveProjectionsProvider({}).list()[0]!.source).toBe("illustrative");
   });
 
-  it("requires BOTH a registered live provider AND the env flag to go live", () => {
+  it("goes live as soon as a live provider is registered (no env key required)", () => {
     registerProjectionsProvider(live);
-    // registered but env not set → still illustrative
-    expect(isLiveProjections({})).toBe(false);
-    expect(resolveProjectionsProvider({}).live).toBe(false);
-    // registered AND env set → live
-    const env = { PROJECTIONS_PROVIDER: "acme" };
-    expect(isLiveProjections(env)).toBe(true);
-    expect(resolveProjectionsProvider(env).name).toBe("Acme Live");
+    // nflverse graded pool: registered = live immediately, no env flag needed
+    expect(isLiveProjections({})).toBe(true);
+    expect(resolveProjectionsProvider({}).live).toBe(true);
+    expect(resolveProjectionsProvider({}).name).toBe("Acme Live");
+    // env key still works (backwards-compatible for future external feeds)
+    expect(isLiveProjections({ PROJECTIONS_PROVIDER: "acme" })).toBe(true);
     registerProjectionsProvider(null); // reset
   });
 

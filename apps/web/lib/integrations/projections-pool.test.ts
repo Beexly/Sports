@@ -16,19 +16,17 @@ describe("activePlayerPool — the plug-in swap point", () => {
     expect(activePlayerPool({})).toBe(PLAYERS);
   });
 
-  it("returns a live feed's players only when registered, live, AND keyed", () => {
+  it("returns a live feed's players as soon as it is registered (no env key required)", () => {
     const customPool = [rb("a", 300), rb("b", 100)];
     registerProjectionsProvider({ name: "Acme", live: true, list: () => [], players: () => customPool });
-
-    // registered but env not set -> still illustrative (the founder gate holds)
-    expect(activePlayerPool({})).toBe(PLAYERS);
-    // registered AND keyed -> the live pool flows through
+    // registered -> live pool flows through immediately (nflverse graded pool needs no env key)
+    expect(activePlayerPool({})).toBe(customPool);
     expect(activePlayerPool({ PROJECTIONS_PROVIDER: "acme" })).toBe(customPool);
   });
 
   it("falls back to illustrative when a live provider omits players()", () => {
     registerProjectionsProvider({ name: "thin", live: true, list: () => [] });
-    expect(activePlayerPool({ PROJECTIONS_PROVIDER: "acme" })).toBe(PLAYERS);
+    expect(activePlayerPool({})).toBe(PLAYERS);
   });
 
   it("the illustrative provider exposes the rich pool", () => {
@@ -37,16 +35,14 @@ describe("activePlayerPool — the plug-in swap point", () => {
 });
 
 describe("resolveToolPool — what a tool PAGE hands its client component", () => {
-  it("returns undefined when not live (client keeps its illustrative default → demo unchanged)", () => {
-    expect(resolveToolPool({})).toBeUndefined();
-    registerProjectionsProvider({ name: "Acme", live: true, list: () => [], players: () => [rb("a", 300)] });
-    // registered but env not set -> gate holds -> undefined
+  it("returns undefined when no live provider is registered", () => {
     expect(resolveToolPool({})).toBeUndefined();
   });
 
-  it("returns the live pool only when registered, live, AND keyed", () => {
+  it("returns the live pool as soon as a live provider is registered (no env key required)", () => {
     const customPool = [rb("a", 300), rb("b", 100)];
     registerProjectionsProvider({ name: "Acme", live: true, list: () => [], players: () => customPool });
+    expect(resolveToolPool({})).toBe(customPool);
     expect(resolveToolPool({ PROJECTIONS_PROVIDER: "acme" })).toBe(customPool);
   });
 });

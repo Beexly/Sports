@@ -68,15 +68,20 @@ export function registerProjectionsProvider(provider: ProjectionsProvider | null
   (globalThis as ProviderRegistry)[REGISTRY_KEY] = provider && provider.live ? provider : null;
 }
 
-/** The active provider — live only when registered AND enabled by env; else illustrative. */
-export function resolveProjectionsProvider(env: Record<string, string | undefined> = process.env): ProjectionsProvider {
+/**
+ * The active provider — live when registered (nflverse graded pool always
+ * registers automatically on tool-page load). PROJECTIONS_PROVIDER env var is
+ * kept for a future licensed external feed; the built-in nflverse graded pool
+ * requires no env flag.
+ */
+export function resolveProjectionsProvider(_env: Record<string, string | undefined> = process.env): ProjectionsProvider {
   const liveProvider = getLiveProvider();
-  if (liveProvider && isConfigured("projections", env)) return liveProvider;
+  if (liveProvider) return liveProvider;
   return ILLUSTRATIVE_PROJECTIONS;
 }
 
-export function isLiveProjections(env: Record<string, string | undefined> = process.env): boolean {
-  return Boolean(getLiveProvider()) && isConfigured("projections", env);
+export function isLiveProjections(_env: Record<string, string | undefined> = process.env): boolean {
+  return Boolean(getLiveProvider());
 }
 
 /**

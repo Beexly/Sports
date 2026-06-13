@@ -265,12 +265,39 @@ export async function loadGradedPool({ fetcher = fetch }: { fetcher?: FetchLike 
 }
 
 /**
- * Founder/server hook: load + register the graded provider so the tools go live
- * (only takes effect when PROJECTIONS_PROVIDER is also set — the env gate). A
- * source-error model registers nothing (the tools stay on the illustrative pool).
+ * Attempt to cross-reference a graded pool's team assignments against the
+ * Sleeper current-roster map. Sleeper reflects trades and free-agency signings
+ * within hours; nflverse reflects them within days. Returns the patched pool
+ * (only team field updated) or the original pool unchanged on any Sleeper error.
+ * Uses Sleeper's GSIS player_id as the join key — same IDs nflverse uses.
+ */
+async function patchTeamsFromSleeper(players: readonly Player[], fetcher: FetchLike): Promise<readonly Player[]> {
+  try {
+    const { fetchSleeperPlayers } = await import("../sleeper/source");
+    const sleeperMap = await fetchSleeperPlayers({ fetcher });
+    return players.map((p) => {
+      const raw = sleeperMap[p.id];
+      if (!raw?.team || raw.team === p.team) return p;
+      return { ...p, team: raw.team };
+    });
+  } catch {
+    return players; // Sleeper down → keep nflverse teams, no crash
+  }
+}
+
+/**
+ * Load + register the nflverse graded provider. Always active — no env flag
+ * required. A source-error model registers nothing (tools stay on the illustrative
+ * pool). On success, patches team assignments from Sleeper so 2026 offseason
+ * moves (free-agency, trades) are reflected without waiting for nflverse to update.
  */
 export async function loadAndRegisterGradedProvider({ fetcher = fetch }: { fetcher?: FetchLike } = {}): Promise<GradedPoolResult> {
   const result = await loadGradedPool({ fetcher });
-  registerProjectionsProvider(result.status === "live" && result.players.length > 0 ? buildGradedProvider(result.players) : null);
-  return result;
+  if (result.status !== "live" || result.players.length === 0) {
+    registerProjectionsProvider(null);
+    return result;
+  }
+  const patched = await patchTeamsFromSleeper(result.players, fetcher);
+  registerProjectionsProvider(buildGradedProvider(patched));
+  return { ...result, players: patched };
 }

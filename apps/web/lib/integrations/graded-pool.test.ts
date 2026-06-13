@@ -144,10 +144,11 @@ describe("buildGradedProvider + the founder gate", () => {
     expect(provider.list()[0]!.source).toBe("live");
   });
 
-  it("only drives activePlayerPool when registered AND keyed", () => {
+  it("drives activePlayerPool as soon as it is registered (no env key required)", () => {
     registerProjectionsProvider(buildGradedProvider(pool));
-    expect(activePlayerPool({})).toBe(PLAYERS); // env not set -> gate holds, illustrative
-    expect(activePlayerPool({ PROJECTIONS_PROVIDER: "graded" })).toBe(pool); // keyed -> real graded pool
+    // nflverse graded pool activates on registration — no PROJECTIONS_PROVIDER flag needed
+    expect(activePlayerPool({})).toBe(pool);
+    expect(activePlayerPool({ PROJECTIONS_PROVIDER: "graded" })).toBe(pool);
   });
 });
 

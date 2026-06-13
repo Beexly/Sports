@@ -4,12 +4,13 @@
  * SchemeIntel — pick a coaching/scheme change, watch the cascade.
  *
  * Each scenario re-prices a whole offense: the gainers, the faders, the delta,
- * the reason, and the confidence from the source tier. Illustrative.
+ * the reason, and the confidence from the source tier.
  */
 
 import { useState } from "react";
 import { SCHEME_SCENARIOS, applyScheme } from "@/lib/fantasy/scheme";
 import { POS_HEX } from "@/lib/fantasy/players";
+import { coachByTeam } from "@/lib/nfl/coaches";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export function SchemeIntel() {
@@ -17,6 +18,7 @@ export function SchemeIntel() {
   const scenario = SCHEME_SCENARIOS.find((s) => s.id === id)!;
   const cascade = applyScheme(scenario);
   const maxDelta = Math.max(...cascade.impacts.map((i) => Math.abs(i.deltaPct)), 1);
+  const coach = coachByTeam(scenario.team);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1.5fr]">
@@ -25,6 +27,7 @@ export function SchemeIntel() {
         <p className="text-xs uppercase tracking-[0.18em] text-ink-500">Coaching / scheme change</p>
         {SCHEME_SCENARIOS.map((s) => {
           const active = s.id === id;
+          const c = coachByTeam(s.team);
           return (
             <button
               key={s.id}
@@ -36,6 +39,7 @@ export function SchemeIntel() {
               <div className="flex items-center gap-2">
                 <span className="rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider" style={{ color: BRAND_COLORS.ionWhite, background: "rgba(255,255,255,0.06)" }}>{s.team}</span>
                 <span className="text-[10px] uppercase tracking-wider" style={{ color: s.tier === "Insider" ? BRAND_COLORS.orbitalCyan : s.tier === "Beat" ? BRAND_COLORS.ionMagenta : "#9fb3c8" }}>{s.tier}</span>
+                {c && <span className="ml-auto text-[10px] text-ink-500">{c.headCoach}</span>}
               </div>
               <p className="mt-1.5 text-sm font-semibold text-white">{s.headline}</p>
             </button>
@@ -46,6 +50,14 @@ export function SchemeIntel() {
       {/* cascade */}
       <div className="space-y-4">
         <div className="surface-card p-5">
+          {coach && (
+            <div className="mb-3 flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-ink-400">
+              <span>HC <strong className="text-white">{coach.headCoach}</strong></span>
+              {coach.offCoordinator && coach.offCoordinator !== coach.headCoach && <span>OC <strong className="text-white">{coach.offCoordinator}</strong></span>}
+              {coach.defCoordinator && coach.defCoordinator !== coach.headCoach && <span>DC <strong className="text-white">{coach.defCoordinator}</strong></span>}
+              <span className="ml-auto text-ink-600">since {coach.hiredYear}</span>
+            </div>
+          )}
           <p className="text-sm text-ink-300">{scenario.summary}</p>
           <div className="mt-3 flex flex-wrap items-center gap-4 text-xs">
             <span style={{ color: BRAND_COLORS.orbitalCyan }}>{cascade.gainers} gain</span>

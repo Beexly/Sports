@@ -1,5 +1,4 @@
 import "server-only";
-import { isConfigured } from "./providers";
 import { isLiveProjections, resolveToolPool } from "./projections";
 import type { Player } from "../fantasy/players";
 
@@ -9,21 +8,17 @@ import type { Player } from "../fantasy/players";
  * dynamic graded-pool import below pulls node:zlib — which must never enter a
  * client bundle. The `server-only` import makes a client import a hard build error.
  *
- * RELIABILITY: serverless instances freeze after a response, so a background
- * (fire-and-forget) registration in instrumentation may never finish on a
- * low-traffic instance. This lazily loads on first tool access instead,
- * guaranteeing the fantasy tools get the live pool — while the showcase pages
- * (which never call this) keep their fast cold starts.
+ * The nflverse graded pool always activates — no env flag required. PROJECTIONS_PROVIDER
+ * is reserved for a future licensed external feed. The lazy load + shared promise
+ * ensures the multi-MB nflverse files are fetched at most once per process.
  *
- * De-duplicated via a module-level cached promise so concurrent tool requests and
- * the instrumentation head-start share ONE multi-MB load; a failure clears the
- * cache to allow a later retry. No-op when the gate is off or already registered.
+ * De-duplicated via a module-level cached promise so concurrent tool requests
+ * share ONE multi-MB load; a failure clears the cache to allow a later retry.
  */
 let gradedLoadPromise: Promise<void> | null = null;
 
-export function ensureLiveProjections(env: Record<string, string | undefined> = process.env): Promise<void> {
-  if (!isConfigured("projections", env)) return Promise.resolve(); // founder gate off
-  if (isLiveProjections(env)) return Promise.resolve(); // already registered
+export function ensureLiveProjections(_env: Record<string, string | undefined> = process.env): Promise<void> {
+  if (isLiveProjections()) return Promise.resolve(); // already registered
   if (!gradedLoadPromise) {
     gradedLoadPromise = import("./graded-pool")
       .then((m) => m.loadAndRegisterGradedProvider())
@@ -47,5 +42,5 @@ export async function resolveToolPoolAsync(env: Record<string, string | undefine
   } catch {
     // honest fallback to illustrative on a source/load error
   }
-  return resolveToolPool(env);
+  return resolveToolPool();
 }
