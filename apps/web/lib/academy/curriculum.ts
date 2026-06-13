@@ -203,6 +203,70 @@ export const LESSONS: readonly CourseLesson[] = [
     ],
   },
 
+  {
+    id: "ll-totals",
+    track: "Line Literacy",
+    level: "Advanced",
+    title: "Totals: the other half of every slate",
+    minutes: 2,
+    body: [
+      "A total (over/under) is the same kind of price as a spread — the market, not a forecast. Public money runs systematically to overs; that creates chronic over-inflation on high-profile totals.",
+      "Weather reprices totals fast and is published late — wind and precipitation hit passing totals hardest. Track the line, not the narrative: a total that opens 48 and falls to 44 is telling you something sharp money saw.",
+    ],
+    quiz: [
+      {
+        id: "ll4-q1",
+        prompt: "The O/U opens 47.5 and moves to 44.5 before game time. The best read:",
+        options: [
+          { id: "a", label: "Public is loading the over, as usual", correct: false, why: "Public loading the over would push the number UP, not down." },
+          { id: "b", label: "Respected money or news moved the number down", correct: true, why: "A 3-point drop into the close reflects serious money or late news — weather, injury, pace." },
+          { id: "c", label: "The opener was a mistake and the market corrected", correct: false, why: "Openers expect adjustment, but a 3-point move is larger than a routine correction." },
+        ],
+      },
+      {
+        id: "ll4-q2",
+        prompt: "Why does systematic public bias toward overs matter?",
+        options: [
+          { id: "a", label: "It means overs are always bad bets", correct: false, why: "Systematic bias inflates prices — it's not a blanket fade, it's a pricing signal." },
+          { id: "b", label: "It inflates over prices, making unders relatively cheap on average", correct: true, why: "Chronic public lean → overs priced above fair value → unders offer systematic value." },
+          { id: "c", label: "Books cap total bets to protect against it", correct: false, why: "Books price through the bias, not around it." },
+        ],
+      },
+    ],
+  },
+
+  {
+    id: "br-ev",
+    track: "Bankroll & Risk",
+    level: "Advanced",
+    title: "Expected value: the math under the money",
+    minutes: 3,
+    body: [
+      "EV = (probability of win × amount won) − (probability of loss × amount lost). At −110, a bet paying 100 to win has EV of zero at 52.4%, positive above it, negative below it. One win says nothing; EV at 1,000 bets says everything.",
+      "The practical move: price your edge before the bet, not after. If you think 56% and the market implies 52.4%, your edge is ~3.6% of the stake per bet. Never bet without a number — 'feels like a good spot' has no EV.",
+    ],
+    quiz: [
+      {
+        id: "br4-q1",
+        prompt: "Your model says 55% on a −110 bet (break-even 52.4%). Is this a positive-EV bet?",
+        options: [
+          { id: "a", label: "Yes — your edge is ~2.6% over the breakeven", correct: true, why: "55% − 52.4% = 2.6% edge. Over a large sample, that compounds." },
+          { id: "b", label: "No — you need at least 60% for a bet to be worth making", correct: false, why: "Any edge above 52.4% at −110 is positive EV. 60% is strong; 55% still has value." },
+          { id: "c", label: "Depends on the sport", correct: false, why: "The sport doesn't change the math. The break-even is the same regardless." },
+        ],
+      },
+      {
+        id: "br4-q2",
+        prompt: "What does it mean to 'price your edge before the bet'?",
+        options: [
+          { id: "a", label: "Wait until just before tip-off to decide", correct: false, why: "Timing is about information, not about having a number." },
+          { id: "b", label: "Estimate your true-probability before looking at the line", correct: true, why: "Your number first, then the market's. Otherwise you're anchoring to their price." },
+          { id: "c", label: "Use a third-party pricing service", correct: false, why: "The discipline is forming your own number — tools can help, but the habit is yours." },
+        ],
+      },
+    ],
+  },
+
   // ── MARKET MECHANICS ────────────────────────────────────────────
   {
     id: "mm-clv",
@@ -283,6 +347,37 @@ export const LESSONS: readonly CourseLesson[] = [
         options: [
           { id: "a", label: "A 2-point move at tiny opening limits", correct: false, why: "Small limits, small conviction." },
           { id: "b", label: "A half-point move at full limits near close", correct: true, why: "Moving a trusted, high-limit number takes serious money." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "mm-line-shopping",
+    track: "Market Mechanics",
+    level: "Core",
+    title: "Line shopping: the free edge most bettors skip",
+    minutes: 2,
+    body: [
+      "Half a point is worth real money. Across NFL spreads, −3 vs −2.5 is worth ~2% of stake in win probability. Getting −3.5 instead of −4 on a key number is worth more than any picking service charges.",
+      "Line shopping requires accounts at multiple books. It takes 10 minutes to check four shops; that 10 minutes pays more than a full homework session on the wrong number. A bettor who shops lines is getting paid before the game starts.",
+    ],
+    quiz: [
+      {
+        id: "mm4-q1",
+        prompt: "What is the practical definition of 'line shopping'?",
+        options: [
+          { id: "a", label: "Waiting for lines to move in your direction", correct: false, why: "That's timing, not shopping. Shopping is checking multiple books for the best number right now." },
+          { id: "b", label: "Checking multiple sportsbooks to find the best available number", correct: true, why: "Books price slightly differently. Shopping captures the best number for free." },
+          { id: "c", label: "Betting on the side with the lowest juice", correct: false, why: "That's juice shopping — a related but narrower concept." },
+        ],
+      },
+      {
+        id: "mm4-q2",
+        prompt: "Why is a half-point at a key number worth more than normal?",
+        options: [
+          { id: "a", label: "Psychological comfort in seeing a better number", correct: false, why: "The value is statistical, not psychological." },
+          { id: "b", label: "More games land on key numbers, so crossing them changes outcomes more often", correct: true, why: "Margins cluster on 3 and 7. Crossing them changes the outcome on a meaningful % of games." },
+          { id: "c", label: "Books price them arbitrarily", correct: false, why: "Books price half-points around key numbers at a premium precisely because they're worth more." },
         ],
       },
     ],
