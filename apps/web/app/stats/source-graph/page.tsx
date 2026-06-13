@@ -33,11 +33,11 @@ export default function Page() {
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Top 25 Easiest Wins</h2>
         <DataTable
           rows={t.top_50_easiest_wins.slice(0, 25).map((s: Record<string, unknown>) => ({
-            source: String(s.source_name ?? ""),
+            source: String(s.name ?? ""),
             category: String(s.category ?? ""),
-            effort: String(s.effort ?? ""),
-            impact: Number(s.impact ?? 0),
-            priority: Number(s.priority ?? 0)
+            ease: Number(s.ease_score ?? 0),
+            value: Number(s.value_score ?? 0),
+            priority: Number(s.activation_priority ?? 0)
           }))}
           maxRows={25}
         />

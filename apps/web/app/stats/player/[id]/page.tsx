@@ -69,10 +69,9 @@ export default function Page({ params }: { params: { id: string } }) {
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Similar Players</h2>
         <DataTable
           rows={comps.map((c: Record<string, unknown>) => ({
-            player: String(c.player ?? ""),
-            similarity: Number(c.similarity ?? 0),
-            position: String(c.position ?? ""),
-            team: String(c.team ?? "")
+            player: String(c.name ?? ""),
+            similarity: Number(c.similarity_score ?? 0),
+            shared: Array.isArray(c.shared_features) ? (c.shared_features as unknown[]).join(", ") : ""
           }))}
           maxRows={10}
         />

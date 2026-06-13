@@ -40,8 +40,8 @@ export default async function Page() {
           rows={r.pages.map((p: Record<string, unknown>) => ({
             page: String(p.page ?? ""),
             readiness_score: Number(p.readiness_score ?? 0),
-            status: String(p.status ?? ""),
-            blockers: String(p.blockers ?? "")
+            weakest_part: String(p.weakest_part ?? ""),
+            next_improvement: String(p.next_improvement ?? "")
           }))}
           maxRows={50}
         />

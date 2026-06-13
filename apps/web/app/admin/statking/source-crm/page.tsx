@@ -27,12 +27,12 @@ export default async function Page() {
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Easiest Wins — Start Here</h2>
         <DataTable
           rows={t.top_50_easiest_wins.slice(0, 25).map((s: Record<string, unknown>) => ({
-            source: String(s.source ?? ""),
+            source: String(s.name ?? ""),
             category: String(s.category ?? ""),
-            effort: String(s.effort ?? ""),
-            impact: Number(s.impact ?? 0),
-            priority: Number(s.priority ?? 0),
-            next_action: String(s.next_action ?? "")
+            ease: Number(s.ease_score ?? 0),
+            value: Number(s.value_score ?? 0),
+            priority: Number(s.activation_priority ?? 0),
+            next_action: String(s.recommended_next_action ?? "")
           }))}
           maxRows={25}
         />

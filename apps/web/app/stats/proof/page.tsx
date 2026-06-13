@@ -29,11 +29,11 @@ export default function Page() {
         <DataTable
           rows={b.runs.map((r: Record<string, unknown>) => ({
             run_id: String(r.run_id ?? ""),
-            metric: String(r.metric ?? ""),
-            test_period: String(r.test_period ?? ""),
-            hit_rate: Number(r.hit_rate ?? 0),
+            type: String(r.type ?? ""),
+            status: String(r.status ?? ""),
+            mae: Number(r.mae ?? 0),
             calibration: Number(r.calibration ?? 0),
-            sample_size: Number(r.sample_size ?? 0)
+            proven: String(r.what_is_proven ?? "")
           }))}
           maxRows={50}
         />

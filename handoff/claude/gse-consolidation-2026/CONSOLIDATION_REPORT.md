@@ -73,8 +73,24 @@ autonomous-loop iterations already absorbed into the launch lineage via the
 prior reconciliation sweeps ("drift absorbed, nothing missing"). The open PRs
 were the explicit integration scope and are all accounted for above.
 
-## Known follow-up (pre-existing, low-visibility)
+## Runtime integrity pass (2026-06-13) — FIXED
 
-A few admin-only StatKing tables (`source-crm`, `source-graph`) read field names
-that don't match the snapshot shape and render blank/zero. Not introduced here;
-behavior was preserved. Tracked for a data-contract pass.
+A full HTTP sweep of the running production server (48 public routes) returned
+**200 on every route, zero runtime 500s**. The sweep also caught a real
+capability defect: **9 StatKing tables were mapping to field names that don't
+exist in the snapshot data**, rendering blank cells and zeros. Fixed all 9 to
+read the real fields, verified in live HTML:
+
+| Page | Was reading (blank) | Now reads (real) |
+|---|---|---|
+| `stats/source-graph`, `admin/source-crm` | `source`/`source_name`/`effort`/`impact` | `name`/`ease_score`/`value_score`/`activation_priority`/`recommended_next_action` |
+| `stats/expert-board` | `expert_name`/`platform`/`signal_status`/`rights_status` | `name`/`organization`/`signal_rights`/`display_rights` |
+| `stats/player/[id]` (comps) | `player`/`similarity`/`position`/`team` | `name`/`similarity_score`/`shared_features` |
+| `stats/proof` | `metric`/`test_period`/`hit_rate`/`sample_size` | `type`/`status`/`mae`/`what_is_proven` |
+| `admin/crown` (roi + gaps + readiness) | `source`/`roi_score`/`gap`/`status`/`blockers` | `source_name`/`activation_roi_score`/`moat`/`weakest_part`/`next_improvement` |
+| `admin/readiness`, `admin/king-score` | `status`/`blockers` | `weakest_part`/`next_improvement` |
+| `stats/ask` | `entity`/`metric`/`value`/`source` (none existed) | renders the real row fields directly |
+
+Verified live: `PFF` renders on source-graph, real expert names on expert-board,
+real backtest types on proof, real comp names on player pages. Already-correct
+pages (`source-suggest`, `expert-signals`) were left as-is.

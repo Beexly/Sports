@@ -27,12 +27,7 @@ export default function Page({ searchParams }: { searchParams?: { q?: string } }
         Supported templates: best QB by fantasy edge, best RB by usage, most volatile WR, hidden value players, mirage players, sources needing activation, top YouTube sources.
       </p>
       <DataTable
-        rows={answer.rows.map((r: Record<string, unknown>) => ({
-          entity: String(r.entity ?? ""),
-          metric: String(r.metric ?? ""),
-          value: Number(r.value ?? 0),
-          source: String(r.source ?? "")
-        }))}
+        rows={answer.rows as Array<Record<string, unknown>>}
         maxRows={50}
       />
     </Shell>

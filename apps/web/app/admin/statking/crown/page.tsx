@@ -58,11 +58,11 @@ export default async function Page() {
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Activation ROI: Next 25</h2>
         <DataTable
           rows={(roi.top_25_activate_now ?? []).map((r: Record<string, unknown>) => ({
-            source: String(r.source ?? ""),
-            roi_score: Number(r.roi_score ?? 0),
-            effort: String(r.effort ?? ""),
-            impact: Number(r.impact ?? 0),
-            priority: Number(r.priority ?? 0)
+            source: String(r.source_name ?? ""),
+            roi_score: Number(r.activation_roi_score ?? 0),
+            effort: String(r.effort_estimate ?? ""),
+            coverage_gain: Number(r.coverage_gain ?? 0),
+            action: String(r.recommended_action ?? "")
           }))}
           maxRows={25}
         />
@@ -71,11 +71,11 @@ export default async function Page() {
         <h2 className="text-2xl font-semibold text-ion-white mb-4">King Gap Map</h2>
         <DataTable
           rows={gaps.gaps.map((g: Record<string, unknown>) => ({
-            gap: String(g.gap ?? ""),
-            impact: Number(g.impact ?? 0),
-            effort: String(g.effort ?? ""),
-            owner: String(g.owner ?? ""),
-            status: String(g.status ?? "")
+            moat: String(g.moat ?? ""),
+            score: Number(g.current_score ?? 0),
+            effort: String(g.estimated_effort ?? ""),
+            fix: String(g.highest_leverage_autonomous_fix ?? ""),
+            next_action: String(g.next_action ?? "")
           }))}
           maxRows={50}
         />
@@ -89,8 +89,8 @@ export default async function Page() {
           rows={readiness.pages.map((p: Record<string, unknown>) => ({
             page: String(p.page ?? ""),
             readiness_score: Number(p.readiness_score ?? 0),
-            status: String(p.status ?? ""),
-            blockers: String(p.blockers ?? "")
+            weakest_part: String(p.weakest_part ?? ""),
+            next_improvement: String(p.next_improvement ?? "")
           }))}
           maxRows={50}
         />

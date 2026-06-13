@@ -36,11 +36,11 @@ export default function Page() {
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Expert Registry</h2>
         <DataTable
           rows={experts.map((e: Record<string, unknown>) => ({
-            expert_name: String(e.expert_name ?? ""),
+            expert_name: String(e.name ?? ""),
             specialty: String(e.specialty ?? ""),
-            platform: String(e.platform ?? ""),
-            signal_status: String(e.signal_status ?? ""),
-            rights_status: String(e.rights_status ?? "")
+            organization: String(e.organization ?? ""),
+            signal_rights: String(e.signal_rights ?? ""),
+            display_rights: String(e.display_rights ?? "")
           }))}
           maxRows={50}
         />
