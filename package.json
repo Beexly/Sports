@@ -32,6 +32,7 @@
     "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/eval-contracts.mjs",
     "evals:contracts": "node scripts/eval-contracts.mjs",
     "snapshots:regen": "node scripts/regenerate-launch-snapshots.mjs",
+    "ai:smoke": "tsx scripts/ai-gateway-smoke.ts",
     "deploy:ready": "node scripts/check-deploy-readiness.mjs",
     "stripe:seed": "node scripts/seed-stripe-prices.mjs",
     "lint:brand": "npm run test:brand-safety",
@@ -47,6 +48,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
+    "dotenv": "^17.4.2",
+    "tsx": "^4.22.4",
     "typescript": "^5.4.5"
   },
   "engines": {
