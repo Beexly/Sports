@@ -18,6 +18,7 @@
 
 import type { JarvisAssessment, JarvisHealth } from "./jarvis";
 import type { PublicPerformancePolicy } from "../performance/public-performance-policy";
+import { observabilityPosture } from "../observability/sentry";
 
 // ─── Input ────────────────────────────────────────────────────────────────────
 
@@ -97,6 +98,8 @@ export interface AiOpsSummary {
   readonly modelLanePolicy: readonly string[];
   readonly toInstrumentNext: readonly string[];
   readonly ccusageNote: string;
+  /** Honest error-tracking posture derived from env presence only. */
+  readonly errorTracking: string;
 }
 
 export interface OwnerSummary {
@@ -443,6 +446,7 @@ function buildAiOps(): AiOpsSummary {
       "ccusage is available in this environment. " +
       "Run `npx ccusage@latest` in the terminal to see daily Claude spend. " +
       "Wire the output to /cockpit/api-costs to make it persistent.",
+    errorTracking: observabilityPosture(),
   };
 }
 

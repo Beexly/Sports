@@ -16,7 +16,7 @@ import { AskJarvisPanel } from "@/components/cockpit/ask-jarvis-panel";
 import { CapabilitySystemMap } from "@/components/cockpit/capability-system-map";
 import { AgentCouncilPanel } from "@/components/cockpit/agent-council-panel";
 import { buildLiveMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intelligence-state";
-import { buildLiveLedgerStatus, type LedgerStatus } from "@/lib/jarvis/ledger-types";
+import { buildLiveLedgerStatus } from "@/lib/jarvis/ledger-types";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { startOfDay, endOfDay } from "date-fns";
 
