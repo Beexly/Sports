@@ -1,8 +1,47 @@
-import { Shell, Cards, SimpleTable } from "../_components";
+import { Shell, Cards, DataTable, BarChart, StatusRibbon } from "../_components";
 import { loadSources, loadSourceTargets } from "@/lib/statking/product";
 export const metadata = {
   title: "Source Graph — Where StatKing Data Comes From",
   description: "The candidate source graph and lineage behind StatKing intelligence.",
   alternates: { canonical: "/stats/source-graph" },
 };
-export default function Page(){ const sources=loadSources(); const t=loadSourceTargets(); return <Shell title="Source Graph"><Cards items={[{label:"Nodes",value:sources.length},{label:"Top targets",value:t.top_50_easiest_wins.length},{label:"Moat targets",value:t.top_50_highest_moat_sources.length},{label:"License targets",value:t.top_50_requires_license.length}]}/><SimpleTable rows={t.top_50_easiest_wins.slice(0,25)}/></Shell>}
+export default function Page() {
+  const sources = loadSources();
+  const t = loadSourceTargets();
+
+  return (
+    <Shell title="Source Graph">
+      <StatusRibbon status="fixture" label="Source graph updated regularly" />
+      <Cards items={[
+        { label: "Nodes", value: sources.length },
+        { label: "Top targets", value: t.top_50_easiest_wins.length },
+        { label: "Moat targets", value: t.top_50_highest_moat_sources.length },
+        { label: "License targets", value: t.top_50_requires_license.length }
+      ]} />
+      <p className="text-ion-1">
+        The candidate source graph and lineage behind StatKing intelligence. Prioritized by activation difficulty and impact.
+      </p>
+      <div className="border border-mineral bg-eclipse p-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Source Distribution by Category</p>
+        <BarChart items={[
+          { label: "Easiest wins", value: t.top_50_easiest_wins.length, max: 50, tone: "cyan" },
+          { label: "Highest moat", value: t.top_50_highest_moat_sources.length, max: 50, tone: "amber" },
+          { label: "License-gated", value: t.top_50_requires_license.length, max: 50, tone: "alert" }
+        ]} />
+      </div>
+      <div>
+        <h2 className="text-2xl font-semibold text-ion-white mb-4">Top 25 Easiest Wins</h2>
+        <DataTable
+          rows={t.top_50_easiest_wins.slice(0, 25).map((s: any) => ({
+            source: String(s.source_name ?? ""),
+            category: String(s.category ?? ""),
+            effort: String(s.effort ?? ""),
+            impact: Number(s.impact ?? 0),
+            priority: Number(s.priority ?? 0)
+          }))}
+          maxRows={25}
+        />
+      </div>
+    </Shell>
+  );
+}
