@@ -39,6 +39,11 @@ const NAV: ReadonlyArray<{ href: string; label: string; hint: string }> = [
   { href: "/cockpit/sources", label: "Sources", hint: "Source intelligence" },
   { href: "/cockpit/airwave", label: "Airwave", hint: "Pundit claim review" },
   { href: "/cockpit/listener-log", label: "Listener Log", hint: "Manual broadcast claim entry" },
+  { href: "/cockpit/moderation", label: "Moderation", hint: "Community room queue" },
+  { href: "/cockpit/memory", label: "Memory", hint: "Memory review queue" },
+  { href: "/cockpit/jarvis/briefing", label: "Morning Brief", hint: "Jarvis daily intelligence" },
+  { href: "/cockpit/jarvis/conversation", label: "Talk to Jarvis", hint: "Executive Q&A interface" },
+  { href: "/cockpit/jarvis/os", label: "Jarvis OS Map", hint: "Operating structure" },
 ];
 
 export default async function CockpitLayout({
