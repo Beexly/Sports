@@ -26,6 +26,13 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
     still: "/immersive/home-hero-cosmos.webp",
     motion: "/immersive/home-hero-cosmos.mp4",
   },
+  "observatory-market-field": {
+    gradient:
+      `radial-gradient(60% 55% at 70% 25%, rgba(34,211,238,0.10), transparent 60%), ` +
+      `radial-gradient(55% 50% at 20% 80%, rgba(255,45,214,0.10), transparent 65%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/observatory-market-field.webp",
+  },
 };
 
 export function getPlate(id: string): PlateManifest | undefined {
