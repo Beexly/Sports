@@ -40,6 +40,26 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
       `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/no-bet-stillness.webp",
   },
+  "today-mission": {
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/today-mission.webp",
+  },
+  "house-belonging": {
+    gradient: `radial-gradient(55% 75% at 50% 0%, rgba(255,45,214,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/house-belonging.webp",
+  },
+  "academy-path": {
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(139,92,246,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/academy-path.webp",
+  },
+  "board-command": {
+    gradient: `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/board-command.webp",
+  },
+  "brief-horizon": {
+    gradient: `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/brief-horizon.webp",
+  },
 };
 
 export function getPlate(id: string): PlateManifest | undefined {

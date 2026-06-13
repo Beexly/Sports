@@ -3,6 +3,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { PersonalizedBriefing } from "@/components/cockpit/personalized-briefing";
 import { buildBriefing } from "@/lib/cockpit/mission-control";
 import { BRAND_COLORS } from "@/lib/brand";
@@ -22,6 +23,7 @@ export default function TodayPage() {
       <Nav />
       <main id="main-content" className="flex-1">
         <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+          <GeneratedPlate assetId="today-mission" className="-z-20 opacity-60" />
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80" style={{ background: `radial-gradient(60% 80% at 50% 0%, ${BRAND_COLORS.orbitalCyan}18, transparent 70%), radial-gradient(40% 60% at 76% 6%, ${BRAND_COLORS.ionMagenta}10, transparent 70%)` }} />
           <div className="mx-auto max-w-6xl">
             <Reveal>

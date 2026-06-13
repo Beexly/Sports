@@ -1,59 +1,60 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getPlate } from "@/lib/visual-production/asset-manifest";
 
 /**
  * GeneratedPlate — the integration point for AI-generated atmosphere.
  *
- * Doctrine: generate atmosphere, render truth. This paints a generated still
- * and/or motion plate as a decorative background BEHIND app-rendered content.
- * It always paints a CSS gradient base first, so:
+ * Doctrine: generate atmosphere, render truth. Paints a generated still and/or
+ * motion plate as a decorative background BEHIND app-rendered content. It always
+ * paints a CSS gradient base first, so:
  *   - if no asset is committed yet, it's just the gradient (zero risk to wire early);
  *   - if the image/video fails to load, the gradient remains;
  *   - under prefers-reduced-motion, the video never mounts (still/gradient only);
  *   - it never blocks first paint (video is a client-only enhancement).
  *
- * It is purely decorative (aria-hidden). All truth — claims, stats, labels — is
- * rendered by the app on top of this, never inside the generated media.
+ * Pass `assetId` to resolve gradient/still/motion from the manifest, or pass them
+ * explicitly. Purely decorative (aria-hidden); all truth is rendered on top.
  */
 export interface GeneratedPlateProps {
-  /** CSS background value always painted as the base/fallback. Required. */
-  readonly gradient: string;
-  /** Optional generated still, committed under /public/immersive. */
+  /** Manifest id to resolve gradient/still/motion from. */
+  readonly assetId?: string;
+  /** Explicit CSS background (overrides the resolved gradient). */
+  readonly gradient?: string;
   readonly still?: string;
-  /** Optional generated motion (looping video). Autoplays only if motion is allowed. */
   readonly motion?: string;
-  /** Decorative alt — kept empty; the plate is aria-hidden. */
   readonly className?: string;
 }
 
-export function GeneratedPlate({ gradient, still, motion, className }: GeneratedPlateProps) {
-  const [motionOk, setMotionOk] = useState(false);
+export function GeneratedPlate({ assetId, gradient, still, motion, className }: GeneratedPlateProps) {
+  const resolved = assetId ? getPlate(assetId) : undefined;
+  const bg = gradient ?? resolved?.gradient ?? "transparent";
+  const stillSrc = still ?? resolved?.still;
+  const motionSrc = motion ?? resolved?.motion;
 
+  const [motionOk, setMotionOk] = useState(false);
   useEffect(() => {
-    if (!motion) return;
+    if (!motionSrc) return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setMotionOk(!mq.matches);
     update();
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
-  }, [motion]);
+  }, [motionSrc]);
 
   return (
     <div aria-hidden="true" className={`pointer-events-none absolute inset-0 overflow-hidden ${className ?? ""}`}>
-      {/* Base + fallback — always painted. */}
-      <div className="absolute inset-0" style={{ background: gradient }} />
-      {/* Generated still — progressive. */}
-      {still && (
+      <div className="absolute inset-0" style={{ background: bg }} />
+      {stillSrc && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={still} alt="" className="absolute inset-0 h-full w-full object-cover opacity-90" loading="lazy" decoding="async" />
+        <img src={stillSrc} alt="" className="absolute inset-0 h-full w-full object-cover opacity-90" loading="lazy" decoding="async" />
       )}
-      {/* Generated motion — client-only, reduced-motion-gated. */}
-      {motion && motionOk && (
+      {motionSrc && motionOk && (
         <video
           className="absolute inset-0 h-full w-full object-cover opacity-90"
-          src={motion}
-          poster={still}
+          src={motionSrc}
+          poster={stillSrc}
           autoPlay
           muted
           loop
