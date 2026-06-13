@@ -24,8 +24,9 @@ type CalibrationData = Awaited<ReturnType<typeof loadPublicCalibrationReport>>["
 type Bucket = CalibrationData["buckets"][number];
 type Discrimination = CalibrationData["discrimination"];
 
+// One-decimal percentage — the standard across /performance surfaces.
 function pct(value: number): string {
-  return `${Math.round(value * 100)}%`;
+  return `${(value * 100).toFixed(1)}%`;
 }
 
 // Brier score reads better with a plain-English band. Lower is better; 0.25 is
@@ -88,10 +89,10 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
           aria-hidden="true"
         />
       </div>
-      <span className="w-12 shrink-0 text-right text-xs font-semibold text-ion">
+      <span className="w-14 shrink-0 text-right text-xs font-semibold tabular-nums text-ion">
         {empty ? "—" : pct(bucket.observedWinRate)}
       </span>
-      <span className="w-16 shrink-0 text-right text-[11px] text-ion-2">
+      <span className="w-16 shrink-0 text-right text-[11px] tabular-nums text-ion-2">
         {empty ? "no data" : `n=${bucket.sampleSize}`}
       </span>
     </div>
@@ -121,7 +122,7 @@ export async function CalibrationPanel() {
         <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
           Calibration &amp; discrimination
         </h2>
-        <span className="text-[11px] uppercase tracking-widest text-ion-2">
+        <span className="text-[11px] uppercase tracking-widest tabular-nums text-ion-2">
           {collecting ? "Collecting" : `${data.sampleSize} settled picks`}
         </span>
       </div>

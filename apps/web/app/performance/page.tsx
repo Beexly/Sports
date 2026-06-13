@@ -399,20 +399,20 @@ export default async function PerformancePage() {
                               <td className="px-4 py-3 text-gray-500">
                                 {s.pickType ?? "All"}
                               </td>
-                              <td className="px-4 py-3 text-center text-green-400">
+                              <td className="px-4 py-3 text-center tabular-nums text-green-400">
                                 {s.wins}
                               </td>
-                              <td className="px-4 py-3 text-center text-red-400">
+                              <td className="px-4 py-3 text-center tabular-nums text-red-400">
                                 {s.losses}
                               </td>
-                              <td className="px-4 py-3 text-center text-gray-500">
+                              <td className="px-4 py-3 text-center tabular-nums text-gray-500">
                                 {s.pushes}
                               </td>
                               <td className="px-4 py-3 text-center">
                                 {wr !== null ? (
                                   <span
                                     className={[
-                                      "font-semibold",
+                                      "font-semibold tabular-nums",
                                       winRateColor(wr),
                                     ].join(" ")}
                                   >
@@ -461,7 +461,7 @@ function OverallStat({
       </dt>
       <dd
         className={[
-          "font-extrabold",
+          "font-extrabold tabular-nums",
           large ? "text-5xl" : "text-3xl",
           accent,
         ].join(" ")}
@@ -493,9 +493,10 @@ function SportCard({
         <h3 className="text-lg font-bold text-white">{sport}</h3>
         {winRate !== null && (
           <span
-            className={["text-2xl font-extrabold", winRateColor(winRate)].join(
-              " "
-            )}
+            className={[
+              "text-2xl font-extrabold tabular-nums",
+              winRateColor(winRate),
+            ].join(" ")}
           >
             {winRate.toFixed(1)}%
           </span>
@@ -505,15 +506,15 @@ function SportCard({
       <div className="grid grid-cols-3 gap-2 text-center">
         <div className="rounded-lg bg-green-900/20 py-2">
           <p className="text-xs text-gray-500">W</p>
-          <p className="text-lg font-bold text-green-400">{wins}</p>
+          <p className="text-lg font-bold tabular-nums text-green-400">{wins}</p>
         </div>
         <div className="rounded-lg bg-red-900/20 py-2">
           <p className="text-xs text-gray-500">L</p>
-          <p className="text-lg font-bold text-red-400">{losses}</p>
+          <p className="text-lg font-bold tabular-nums text-red-400">{losses}</p>
         </div>
         <div className="rounded-lg bg-gray-800/60 py-2">
           <p className="text-xs text-gray-500">P</p>
-          <p className="text-lg font-bold text-gray-400">{pushes}</p>
+          <p className="text-lg font-bold tabular-nums text-gray-400">{pushes}</p>
         </div>
       </div>
 

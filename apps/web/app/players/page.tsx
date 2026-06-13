@@ -89,6 +89,11 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
             {result.windowLabel ? (
               <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ink-2">
                 Source window · {result.windowLabel}
+                {" · "}
+                {result.sections.reduce((n, s) => n + s.rows.length, 0).toLocaleString("en-US")} rows
+                {result.fetchedAt
+                  ? ` · fetched ${result.fetchedAt.slice(0, 16).replace("T", " ")} UTC`
+                  : ""}
               </p>
             ) : null}
 

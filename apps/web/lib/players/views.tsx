@@ -114,6 +114,8 @@ export interface ViewResult {
   readonly error?: ReactNode;
   /** Short source-window summary for the hero (e.g. "Season 2024, week 12"). */
   readonly windowLabel?: string;
+  /** ISO timestamp of when the loader actually pulled from source (cache-aware). */
+  readonly fetchedAt?: string;
   /** Source attribution ids. */
   readonly sourceIds: readonly string[];
   /** One DataTable per section. */
@@ -211,6 +213,7 @@ async function loadProductionView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${lab.season}${lab.throughWeek ? `, through week ${lab.throughWeek}` : ""}`,
+    fetchedAt: lab.generatedAt,
     sourceIds: ["nflverse"],
     sections,
   };
@@ -227,6 +230,7 @@ async function loadSnapsView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${snap.season}`,
+    fetchedAt: snap.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -282,6 +286,7 @@ async function loadOpportunityView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${o.season}${o.throughWeek ? ` through week ${o.throughWeek}` : ""}`,
+    fetchedAt: o.generatedAt,
     sourceIds: ["nflverse"],
     sections,
   };
@@ -297,6 +302,7 @@ async function loadNextGenView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${ngs.season}`,
+    fetchedAt: ngs.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -343,6 +349,7 @@ async function loadTrenchesView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${pc.season}`,
+    fetchedAt: pc.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -381,6 +388,7 @@ async function loadCombineView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Latest class ${c.latestYear ?? "N/A"}`,
+    fetchedAt: c.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -443,7 +451,7 @@ async function loadQbrView(): Promise<ViewResult> {
       minWidth: 720,
     });
   }
-  return { status: "live", windowLabel: `Season ${q.season}`, sourceIds: ["nflverse"], sections };
+  return { status: "live", windowLabel: `Season ${q.season}`, fetchedAt: q.generatedAt, sourceIds: ["nflverse"], sections };
 }
 
 // ── EDGE ──────────────────────────────────────────────────────────────────────
@@ -456,6 +464,7 @@ async function loadEdgeView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${edge.season}`,
+    fetchedAt: edge.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -496,6 +505,7 @@ async function loadInjuriesView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Season ${report.season}, week ${report.week ?? "N/A"}`,
+    fetchedAt: report.generatedAt,
     sourceIds: ["nflverse"],
     sections: [
       {
@@ -524,6 +534,7 @@ async function loadMarketView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `Last ${signal.lookbackHours} hours`,
+    fetchedAt: signal.generatedAt,
     sourceIds: ["sleeper"],
     sections: [
       {
@@ -581,6 +592,7 @@ async function loadDfsView(): Promise<ViewResult> {
   return {
     status: "live",
     windowLabel: `DraftKings · ${dfs.date}`,
+    fetchedAt: dfs.generatedAt,
     sourceIds: [],
     sections: [
       {

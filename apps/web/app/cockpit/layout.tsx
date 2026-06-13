@@ -50,6 +50,10 @@ export default async function CockpitLayout({
   if (!session?.user) {
     redirect("/auth/signin?callbackUrl=/cockpit");
   }
+  // Surface the deployment's operator allow-list state. An empty ADMIN_EMAILS
+  // means owner access is riding on DB roles alone — flag it until the env
+  // var lands in Vercel.
+  const adminEmailsConfigured = (process.env["ADMIN_EMAILS"] ?? "").trim().length > 0;
   // Signed in but not an operator: render a terminal screen. Redirecting
   // back to signin here looped forever (signin bounces signed-in users to
   // callbackUrl) — the exact ERR_TOO_MANY_REDIRECTS the owner hit.
@@ -84,6 +88,14 @@ export default async function CockpitLayout({
               Cockpit · Internal
             </span>
             <span className="text-sm text-gray-500">Sports Intelligence OS</span>
+            {!adminEmailsConfigured && (
+              <span
+                className="rounded-md border border-amber-700/60 bg-amber-900/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-amber-300"
+                title="This deployment has no ADMIN_EMAILS env var — operator access relies on DB roles only. Set it in Vercel."
+              >
+                ADMIN_EMAILS unset
+              </span>
+            )}
           </div>
           <div className="text-xs text-gray-500">
             Signed in as <span className="text-gray-300">{session.user.email}</span>
