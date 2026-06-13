@@ -79,12 +79,20 @@ export default async function BoardPage(): Promise<JSX.Element> {
                 and what was evaluated without becoming a pick.
               </p>
             </div>
-            <Link
-              href="/methodology"
-              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-bold text-gray-100 hover:border-cyan-300"
-            >
-              Read methodology
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/brief"
+                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-cyan-800 bg-cyan-950/30 px-5 py-3 text-sm font-bold text-cyan-200 hover:border-cyan-400"
+              >
+                Daily Brief
+              </Link>
+              <Link
+                href="/methodology"
+                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-700 px-5 py-3 text-sm font-bold text-gray-100 hover:border-cyan-300"
+              >
+                Read methodology
+              </Link>
+            </div>
           </div>
         </section>
 

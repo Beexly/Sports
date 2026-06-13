@@ -159,6 +159,7 @@ export default async function DashboardPage() {
           </Link>
           <nav className="flex items-center gap-4 text-xs text-gray-400">
             <Link href="/picks" className="hover:text-white">Picks</Link>
+            <Link href="/brief" className="hover:text-white">Daily Brief</Link>
             <Link href="/performance" className="hover:text-white">Performance</Link>
             <Link href="/pricing" className="hover:text-white">Pricing</Link>
             <span className="text-gray-600">|</span>
