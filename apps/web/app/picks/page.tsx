@@ -10,6 +10,8 @@ import type { PublicPick, DailySlate } from "@sports/types";
 import Link from "next/link";
 import { headers } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Picks Board — Today's Sports Signals With Reasoning Attached",
   description:

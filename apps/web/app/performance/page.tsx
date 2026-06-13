@@ -9,6 +9,8 @@ import { PerformanceBootstrapState } from "@/components/performance/bootstrap-st
 import { CalibrationPanel } from "@/components/performance/calibration-panel";
 import type { PickType, PickTier } from "@sports/types";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Calibration Report — Settled-Pick Audit Trail",
   description:
