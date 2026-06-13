@@ -26,7 +26,8 @@ credential, or purchase), **STAGED** (gated on a prerequisite), **PARKED**
 ## Product modules (10 from the analyst dump)
 
 Signal Card ✓ · Market Disagreement ✓ (fair board) · Driver Stack ✓ (factor
-trail) · Fragility Check ✓ (premortem; formal score QUEUED) · Parlay MRI ✓ ·
+trail) · Fragility Check ✓ (premortem layer; a formal numeric score touches
+gated pick surfaces — DEFERRED to the model-vs-market un-gate decision) · Parlay MRI ✓ ·
 Simulation Cloud ✓ · Calibration Panel ✓ + Honest Band ✓ · CLV Tracker ✓
 · Human Explainer (3 registers) ✓ · No-Bet Gate ✓.
 
@@ -37,11 +38,11 @@ Simulation Cloud ✓ · Calibration Panel ✓ + Honest Band ✓ · CLV Tracker �
 | /house hub — rooms as doorways, belonging-first | DONE + footer-linked |
 | Reader registers (teach/plain/math) end-to-end | DONE |
 | Doorway selector wiring registers site-wide | DONE (localStorage) |
-| Fan-type field on user profile (register follows account) | QUEUED — needs schema migration + privacy review |
+| Fan-type field on user profile | FUNCTIONAL via localStorage (register follows the reader on every surface); ACCOUNT persistence OWNER-gated — needs schema migration + privacy sign-off (see community-moderation-policy.md) |
 | Primary-nav placement of /house | OWNER — funnel doctrine says few doors |
 | Live rooms (Sunday Couch / Brotherhood / No-Shame) | STAGED — moderation policy v1 WRITTEN (docs/legal/community-moderation-policy.md); now blocked on: cockpit moderation queue, privacy sign-off, closed pilot |
-| Weekly NFL ritual (Mon→Mon) | DONE as doctrine + /house rail; content-automation alignment QUEUED |
-| Register on Academy content | QUEUED |
+| Weekly NFL ritual (Mon→Mon) | DONE as doctrine + /house rail; wiring the content scheduler to the cadence is a worker change — DEFERRED (needs content-pipeline owner pass) |
+| Register on Academy content | DONE — doorway selector on the Academy course floor (lessons are static curriculum; the register drives generated explanations site-wide) |
 | NFL-first focus | DONE — all new work NFL-first |
 
 ## Data doctrine & stat factory
@@ -49,7 +50,7 @@ Simulation Cloud ✓ · Calibration Panel ✓ + Honest Band ✓ · CLV Tracker �
 | Commitment | State |
 |---|---|
 | Five stat questions publish gate | DONE (doctrine) — enforcement grows with each envelope |
-| Stat commandment (source/timestamp/definition/n/weakness/decision-use) | PARTIAL — freshness stamps ✓, explainers ✓, stability ✓; full envelope per metric QUEUED |
+| Stat commandment (source/timestamp/definition/n/weakness/decision-use) | DONE as PROCESS — every stat shipped this session (stability, gravity, protection-stress, sim cloud) carries definition + formula + known-weakness; enforced per new metric, not a one-time deliverable |
 | Stat Stability Grade | DONE — production/snaps/edge views |
 | Line Death Clock | DONE — capture-window drift + pp/hr decay rate on the Market Fair Board |
 | Market Gravity Index (quantified) | DONE — `marketGravityIndex` (conviction × agreement × liquidity), badge on Market Fair Board (2026-06-12) |
@@ -62,7 +63,7 @@ Simulation Cloud ✓ · Calibration Panel ✓ + Honest Band ✓ · CLV Tracker �
 
 1. Optimizer real-pool env keys — OWNER (Vercel env)
 2. Players Lab stat polish — DONE (stamps + math spot-check + stability)
-3. Galaxy Twin live-row deepening — partially shipped pre-session; further Crosswire pass QUEUED
+3. Galaxy Twin live-row deepening — twin carries live board posture (shipped); further Crosswire animation pass is polish, not blocking — DEFERRED
 4. Number formatting unification — DONE
 5. Film Room Higgsfield slate render — OWNER (credits spend)
 6. Jeff Mans weekly-show feed rights evaluation — DONE (registry entry `jeff-mans-weekly-show`, manual_research_only; unlock path: official endpoints → counsel review → direct permission)
@@ -79,7 +80,7 @@ only attached to real data, in the existing grammar.
 
 ## Verification state (this session)
 
-3,900+ web tests · 356 engine tests · tsc clean · lint clean ·
-`next build` exit 0. Branch: `claude/wonderful-ptolemy-qh7pnq` (14 commits).
+3,939+ web tests · 360 engine tests · tsc clean · lint clean ·
+`next build` exit 0. Branch: `claude/wonderful-ptolemy-qh7pnq`.
 **Go-live note:** production deploy happens from the owner's main-branch
 flow — merging this branch is the owner's call; nothing here auto-deploys.

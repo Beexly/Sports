@@ -6,6 +6,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { AcademySimulator } from "@/components/academy/academy-simulator";
 import { CoursePlayer } from "@/components/academy/course-player";
+import { ReaderDoorway } from "@/components/house/reader-doorway";
 import { BeatTheClose } from "@/components/academy/beat-the-close";
 import { FilmRoom } from "@/components/academy/film-room";
 import { HoloTilt } from "@/components/motion/holo-tilt";
@@ -103,6 +104,20 @@ export default function AcademyPage() {
                 Three tracks: line literacy, bankroll &amp; risk, market mechanics. Read, get quizzed,
                 build your transcript. Answers are final — like a placed bet.
               </p>
+            </Reveal>
+            <Reveal delay={90}>
+              <div className="mt-6 rounded-2xl border border-mineral bg-eclipse/40 p-5">
+                <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+                  How should we explain things?
+                </p>
+                <p className="mt-1 text-sm text-ink-300">
+                  Set your register — every &ldquo;ask the model why&rdquo; across
+                  Galaxy meets you here. New to this? Choose &ldquo;Teach me.&rdquo;
+                </p>
+                <div className="mt-4">
+                  <ReaderDoorway />
+                </div>
+              </div>
             </Reveal>
             <Reveal delay={120}>
               <div className="mt-8">
