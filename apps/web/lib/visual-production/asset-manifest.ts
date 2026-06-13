@@ -32,6 +32,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
       `radial-gradient(55% 50% at 20% 80%, rgba(255,45,214,0.10), transparent 65%), ` +
       `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/observatory-market-field.webp",
+    motion: "/immersive/observatory-market-field.mp4",
   },
   "no-bet-stillness": {
     gradient:
