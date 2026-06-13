@@ -4,6 +4,7 @@ import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
   { label: "Today's Board", href: "/board" },
+  { label: "Daily Brief", href: "/brief" },
   { label: "Galaxy Twin", href: "/observatory" },
   { label: "Trend Lab", href: "/trends" },
   { label: "Decision Autopsy", href: "/performance/losses" },
