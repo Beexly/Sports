@@ -52,6 +52,13 @@ const CRITICAL_API_ROUTES = [
 const ERROR_BOUNDARIES = [
   "app/error.tsx",
   "app/cockpit/error.tsx",
+  "app/board/error.tsx",
+  "app/picks/error.tsx",
+  "app/brief/error.tsx",
+  "app/players/error.tsx",
+  "app/performance/error.tsx",
+  "app/today/error.tsx",
+  "app/trends/error.tsx",
 ];
 
 describe("critical pages — exist and look complete", () => {
