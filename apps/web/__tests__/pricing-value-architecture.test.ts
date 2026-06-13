@@ -5,11 +5,9 @@ import {
   getLiveValueTiers,
   POSITIONING,
   EMOTIONAL_VALUE,
-  type ValueTier,
 } from "@/lib/pricing/value-architecture";
 import {
   FEATURE_GATES,
-  getFeature,
   isFeatureUnlocked,
   featuresForTier,
   freeVisibleFeatures,
