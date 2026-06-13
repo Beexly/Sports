@@ -41,6 +41,7 @@ const NAV: ReadonlyArray<{ href: string; label: string; hint: string }> = [
   { href: "/cockpit/listener-log", label: "Listener Log", hint: "Manual broadcast claim entry" },
   { href: "/cockpit/moderation", label: "Moderation", hint: "Community room queue" },
   { href: "/cockpit/memory", label: "Memory", hint: "Memory review queue" },
+  { href: "/cockpit/film-room", label: "Film Room", hint: "Visual production · spend-gated" },
 ];
 
 export default async function CockpitLayout({
