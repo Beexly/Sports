@@ -11,6 +11,7 @@
  */
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { LEVELS, levelSpec, proposeActions, executionNotice, type AutonomyLevel, type ActionType } from "@/lib/fantasy/autonomy";
 import { BRAND_COLORS } from "@/lib/brand";
 
@@ -35,10 +36,10 @@ export function GmAutopilot() {
       {/* league sync surface */}
       <div className="surface-card flex flex-wrap items-center gap-3 p-4">
         <span className="text-xs uppercase tracking-[0.16em] text-ink-500">League sync</span>
-        <a href="/fantasy/connect" className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs" style={{ borderColor: `${BRAND_COLORS.orbitalCyan}66`, color: BRAND_COLORS.orbitalCyan }}>
+        <Link href="/fantasy/connect" className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs" style={{ borderColor: `${BRAND_COLORS.orbitalCyan}66`, color: BRAND_COLORS.orbitalCyan }}>
           Sleeper
           <span className="text-[9px] uppercase tracking-wider" style={{ color: BRAND_COLORS.orbitalCyan }}>connect →</span>
-        </a>
+        </Link>
         {(["ESPN", "Yahoo"] as const).map((p) => (
           <span key={p} className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs" style={{ borderColor: BRAND_COLORS.steelGray, color: "#c8d2dd" }}>
             {p}

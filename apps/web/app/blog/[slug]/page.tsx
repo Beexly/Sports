@@ -27,6 +27,7 @@ export async function generateMetadata({
   return {
     title: post.seoTitle ?? post.title,
     description: post.seoDescription ?? post.excerpt.slice(0, 155),
+    alternates: { canonical: `/blog/${params.slug}` },
   };
 }
 

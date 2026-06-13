@@ -36,6 +36,7 @@ export async function generateMetadata({
   return {
     title: `${matchup} — Game Intelligence Room · Galaxy Sports Edge`,
     description: `Live market pulse, evidence timeline, and lens projections for ${matchup} (${game.sport.name}). Factor trail sourced from live odds data.`,
+    alternates: { canonical: `/room/${params.gameId}` },
   };
 }
 
