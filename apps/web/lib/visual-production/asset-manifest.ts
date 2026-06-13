@@ -24,6 +24,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
       `radial-gradient(60% 55% at 12% 80%, rgba(139,92,246,0.14), transparent 65%), ` +
       `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/home-hero-cosmos.webp",
+    motion: "/immersive/home-hero-cosmos.mp4",
   },
 };
 
