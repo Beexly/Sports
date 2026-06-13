@@ -64,8 +64,8 @@ export function createScribeEntry(
 ): ScribeEntry {
   return {
     ...fields,
-    id: generateScribeId(fields.source, fields.type, fields.createdAt),
-    summary: redactSecretsFromText(fields.summary),
+    id: generateScribeId(fields.source ?? "unknown", fields.type, fields.createdAt),
+    summary: fields.summary !== undefined ? redactSecretsFromText(fields.summary) : undefined,
     details: fields.details === undefined ? undefined : redactSecretsFromText(fields.details),
   };
 }
@@ -116,15 +116,15 @@ export function validateScribeEntry(entry: ScribeEntry): {
   if (!entry.title || entry.title.trim() === "") errors.push("title is required");
   if (!entry.summary || entry.summary.trim() === "") errors.push("summary is required");
   if (!VALID_TYPES.includes(entry.type)) errors.push(`unknown type: ${entry.type}`);
-  if (!VALID_PROJECTS.includes(entry.project)) {
+  if (entry.project !== undefined && !VALID_PROJECTS.includes(entry.project)) {
     errors.push(`unknown project: ${entry.project}`);
   }
-  if (!VALID_RISK_LEVELS.includes(entry.riskLevel)) {
+  if (entry.riskLevel !== undefined && !VALID_RISK_LEVELS.includes(entry.riskLevel)) {
     errors.push(`unknown riskLevel: ${entry.riskLevel}`);
   }
   if (!Array.isArray(entry.tags)) errors.push("tags must be an array");
-  if (!Array.isArray(entry.relatedFiles)) errors.push("relatedFiles must be an array");
-  if (!Array.isArray(entry.relatedRoutes)) errors.push("relatedRoutes must be an array");
+  if (entry.relatedFiles !== undefined && !Array.isArray(entry.relatedFiles)) errors.push("relatedFiles must be an array");
+  if (entry.relatedRoutes !== undefined && !Array.isArray(entry.relatedRoutes)) errors.push("relatedRoutes must be an array");
 
   return { valid: errors.length === 0, errors };
 }
@@ -136,7 +136,7 @@ export function redactScribeEntry(entry: ScribeEntry): ScribeEntry {
   return {
     ...entry,
     title: redactSecretsFromText(entry.title),
-    summary: redactSecretsFromText(entry.summary),
+    summary: entry.summary !== undefined ? redactSecretsFromText(entry.summary) : undefined,
     details: entry.details === undefined ? undefined : redactSecretsFromText(entry.details),
     nextAction:
       entry.nextAction === undefined
@@ -159,15 +159,15 @@ export function formatScribeEntryAsMarkdown(entry: ScribeEntry): string {
     "---",
     `id: ${safe.id}`,
     `created: ${safe.createdAt}`,
-    `source: ${safe.source}`,
-    `actor: ${safe.actor}`,
+    ...(safe.source ? [`source: ${safe.source}`] : []),
+    ...(safe.actor ? [`actor: ${safe.actor}`] : []),
     ...(safe.agent ? [`agent: ${safe.agent}`] : []),
     ...(safe.taskId ? [`taskId: ${safe.taskId}`] : []),
-    `project: ${safe.project}`,
+    ...(safe.project ? [`project: ${safe.project}`] : []),
     `type: ${safe.type}`,
-    `approval: ${safe.approvalStatus}`,
-    `visibility: ${safe.visibility}`,
-    `risk: ${safe.riskLevel}`,
+    ...(safe.approvalStatus ? [`approval: ${safe.approvalStatus}`] : []),
+    ...(safe.visibility ? [`visibility: ${safe.visibility}`] : []),
+    ...(safe.riskLevel ? [`risk: ${safe.riskLevel}`] : []),
     `tags: ${yamlList(safe.tags)}`,
     "---",
   ].join("\n");
@@ -177,17 +177,17 @@ export function formatScribeEntryAsMarkdown(entry: ScribeEntry): string {
     "",
     `# ${safe.title}`,
     "",
-    safe.summary,
+    safe.summary ?? "",
   ];
 
   if (safe.details) {
     sections.push("", "## Details", "", safe.details);
   }
-  if (safe.relatedFiles.length > 0) {
-    sections.push("", "## Related files", "", ...safe.relatedFiles.map((f) => `- \`${f}\``));
+  if (safe.relatedFiles && safe.relatedFiles.length > 0) {
+    sections.push("", "## Related files", "", ...safe.relatedFiles!.map((f) => `- \`${f}\``));
   }
-  if (safe.relatedRoutes.length > 0) {
-    sections.push("", "## Related routes", "", ...safe.relatedRoutes.map((r) => `- \`${r}\``));
+  if (safe.relatedRoutes && safe.relatedRoutes.length > 0) {
+    sections.push("", "## Related routes", "", ...safe.relatedRoutes!.map((r) => `- \`${r}\``));
   }
   if (safe.nextAction) {
     sections.push("", "## Next action", "", safe.nextAction);

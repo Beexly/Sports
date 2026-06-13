@@ -4,7 +4,7 @@ import { loadJarvisAssessment } from "@/lib/cockpit/jarvis-data";
 import { buildOwnerSummary } from "@/lib/cockpit/owner-summary";
 import {
   buildIntelligenceState,
-  buildLiveMemoryStatus,
+  buildMemoryStatus,
 } from "@/lib/jarvis/intelligence-state";
 import { buildSelfModel } from "@/lib/jarvis/self-knowledge";
 import { buildAllDepartmentReports } from "@/lib/jarvis/department-reports";
@@ -44,7 +44,7 @@ export default async function JarvisOSPage() {
       })
     : null;
 
-  const memory = await buildLiveMemoryStatus();
+  const memory = await buildMemoryStatus();
   const osState = summary
     ? { ...buildIntelligenceState(summary), memory }
     : null;

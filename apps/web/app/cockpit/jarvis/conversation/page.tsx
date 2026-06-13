@@ -3,7 +3,7 @@ import { loadJarvisAssessment } from "@/lib/cockpit/jarvis-data";
 import { buildOwnerSummary } from "@/lib/cockpit/owner-summary";
 import {
   buildIntelligenceState,
-  buildLiveMemoryStatus,
+  buildMemoryStatus,
 } from "@/lib/jarvis/intelligence-state";
 import { JarvisConversation } from "@/components/jarvis/jarvis-conversation";
 import Link from "next/link";
@@ -58,7 +58,7 @@ export default async function JarvisConversationPage() {
     todayPickCount,
   });
 
-  const memory = await buildLiveMemoryStatus();
+  const memory = await buildMemoryStatus();
   const osState = { ...buildIntelligenceState(summary), memory };
 
   const sessionId = `session_${Date.now()}`;

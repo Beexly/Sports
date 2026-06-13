@@ -4,7 +4,7 @@ import { loadJarvisAssessment } from "@/lib/cockpit/jarvis-data";
 import { buildOwnerSummary } from "@/lib/cockpit/owner-summary";
 import {
   buildIntelligenceState,
-  buildLiveMemoryStatus,
+  buildMemoryStatus,
 } from "@/lib/jarvis/intelligence-state";
 import {
   buildAllDepartmentReports,
@@ -126,7 +126,7 @@ export default async function JarvisBriefingPage() {
     todayPickCount,
   });
 
-  const memory = await buildLiveMemoryStatus();
+  const memory = await buildMemoryStatus();
   const osState = { ...buildIntelligenceState(summary), memory };
 
   const reports = buildAllDepartmentReports(summary);

@@ -339,7 +339,7 @@ const DEPT_CONFIGS: readonly DeptConfig[] = [
         department: "AI_OPS",
         agentId: "ai-ops-officer",
         healthLevel: "ATTENTION",
-        oneLiner: `AI Ops telemetry unavailable (source: aiOps.available=false). ${aiOps.errorTracking}. Model lane policy: active.`,
+        oneLiner: `AI Ops telemetry unavailable (source: aiOps.available=false). Model lane policy: active.`,
         openItems: aiOps.toInstrumentNext.length,
         topRisk:
           aiOps.toInstrumentNext.length > 0

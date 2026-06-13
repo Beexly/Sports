@@ -48,7 +48,6 @@ function makeSnapshot(overrides: Partial<OwnerSummary> = {}): OwnerSummary {
       modelLanePolicy: [],
       toInstrumentNext: [],
       ccusageNote: "",
-      errorTracking: "not wired",
     },
     assessedAt: new Date().toISOString(),
     jarvisVersion: "v2-test",
