@@ -105,6 +105,8 @@ export interface SectionData {
   /** Empty-state copy. */
   readonly emptyTitle?: string;
   readonly emptyHint?: string;
+  /** Data-freshness stamp rendered under the table (e.g. "Season 2024, Wk 12"). */
+  readonly freshThrough?: string;
 }
 
 /** What a view's load() resolves to (fully serializable). */
@@ -188,6 +190,7 @@ async function loadProductionView(): Promise<ViewResult> {
       title: "Who is producing, who is heating up",
       blurb: `Ranked by PPR per game${lab.throughWeek ? ` over the first ${lab.throughWeek} weeks` : ""}. 5g is last-5 form; Δ is recent form minus season pace. Filter by position.`,
       footnote: "Settled, historical PPR — not a projection. Boom ≥ 20 PPR, bust ≤ 10 PPR per game.",
+      freshThrough: `Season ${lab.season}${lab.throughWeek ? `, Wk ${lab.throughWeek}` : ""}`,
       rows: allLeaders,
       enumOptions: POS_OPTIONS,
       showRank: true,
@@ -195,6 +198,7 @@ async function loadProductionView(): Promise<ViewResult> {
     },
   ];
 
+  const prodFresh = `Season ${lab.season}${lab.throughWeek ? `, Wk ${lab.throughWeek}` : ""}`;
   for (const position of POSITIONS) {
     sections.push({
       id: `defense-${position}`,
@@ -202,6 +206,7 @@ async function loadProductionView(): Promise<ViewResult> {
       eyebrow: `Defense vs ${position}`,
       title: `Softest matchups for ${POSITION_LABEL[position].toLowerCase()}`,
       blurb: "PPR opportunity allowed per game, ranked across qualifying defenses. Rank 1 allows the most — what actually happened on the field.",
+      freshThrough: prodFresh,
       rows: lab.defenseVsPosition[position],
       minWidth: 360,
       emptyTitle: "Not enough games in the source window.",
@@ -236,6 +241,7 @@ async function loadSnapsView(): Promise<ViewResult> {
         title: "Workload before box score",
         blurb: "Share of team offensive snaps a player is on the field for, averaged across the season. Filter by position.",
         footnote: "Snap share is the cleanest leading indicator of opportunity — it moves before targets and production do.",
+        freshThrough: `Season ${snap.season}`,
         rows,
         enumOptions: POS_OPTIONS,
         showRank: true,
@@ -260,6 +266,7 @@ async function loadOpportunityView(): Promise<ViewResult> {
       title: "Who's earning the looks",
       blurb: o.note,
       footnote: "WOPR = 1.5·target share + 0.7·air-yards share (mean per game). The read compares opportunity vs production percentiles — weight this, not the box score.",
+      freshThrough: `Season ${o.season}${o.throughWeek ? `, Wk ${o.throughWeek}` : ""}`,
       rows: o.rows,
       enumOptions: distinctOptions(o.rows, (r) => r.position),
       showRank: true,
@@ -274,6 +281,7 @@ async function loadOpportunityView(): Promise<ViewResult> {
       title: "RB value is a different equation",
       blurb: ru.note,
       footnote: "Volume is the floor (sticky, coach-driven); RYOE is the regression-prone ceiling. Hover a row for the read.",
+      freshThrough: ru.season ? `Season ${ru.season}` : undefined,
       rows: ru.rows,
       showRank: true,
       minWidth: 820,
@@ -305,6 +313,7 @@ async function loadNextGenView(): Promise<ViewResult> {
         eyebrow: "Receiving · tracking",
         title: "Who gets open",
         blurb: "Separation (space at the catch point), cushion (pre-snap space), and YAC over expected.",
+        freshThrough: `Season ${ngs.season}`,
         rows: ngs.receiving,
         showRank: true,
         minWidth: 860,
@@ -315,6 +324,7 @@ async function loadNextGenView(): Promise<ViewResult> {
         eyebrow: "Passing · tracking",
         title: "Who is accurate beyond expectation",
         blurb: "CPOE (completion % over expected, given throw difficulty), time-to-throw, aggressiveness.",
+        freshThrough: `Season ${ngs.season}`,
         rows: ngs.passing,
         showRank: true,
         minWidth: 860,
@@ -325,6 +335,7 @@ async function loadNextGenView(): Promise<ViewResult> {
         eyebrow: "Rushing · tracking",
         title: "Who beats the blocking",
         blurb: "Rush yards over expected per attempt — production above what the blocking and box gave them.",
+        freshThrough: `Season ${ngs.season}`,
         rows: ngs.rushing,
         showRank: true,
         minWidth: 760,
@@ -351,6 +362,7 @@ async function loadTrenchesView(): Promise<ViewResult> {
         eyebrow: "QB pressure",
         title: "Most pressured passers",
         blurb: "Share of dropbacks pressured (season mean). Bad-throw% and sacks show how it cashes out.",
+        freshThrough: `Season ${pc.season}`,
         rows: pc.qbPressure,
         showRank: true,
         minWidth: 640,
@@ -362,6 +374,7 @@ async function loadTrenchesView(): Promise<ViewResult> {
         eyebrow: "Coverage",
         title: "Lockdown defenders",
         blurb: "Lowest passer rating allowed in coverage (target-weighted), min 25 targets. Who you can't throw at.",
+        freshThrough: `Season ${pc.season}`,
         rows: pc.coverage,
         showRank: true,
         minWidth: 720,
@@ -389,6 +402,7 @@ async function loadCombineView(): Promise<ViewResult> {
         eyebrow: `Class of ${c.latestYear ?? ""}`,
         title: "Fastest 40 in the latest class",
         blurb: "Athletic-trait scouting priors — forty, vertical, broad jump, three-cone, shuttle. Filter by position.",
+        freshThrough: c.latestYear ? `Class ${c.latestYear}` : undefined,
         rows: c.latestClass,
         showRank: true,
         minWidth: 760,
@@ -401,6 +415,7 @@ async function loadCombineView(): Promise<ViewResult> {
         eyebrow: "All-time",
         title: "Fastest 40 on record",
         blurb: "The fastest forties in the source file, all classes.",
+        freshThrough: c.latestYear ? `Through class ${c.latestYear}` : undefined,
         rows: c.fastestForty,
         showRank: true,
         minWidth: 820,
@@ -425,6 +440,7 @@ async function loadQbrView(): Promise<ViewResult> {
       title: `Play-weighted, ${q.season} regular season`,
       blurb: "ESPN Total QBR (0-100), play-weighted across the season. One independent QB-quality estimate.",
       footnote: "QBR is play-weighted across the season; min 6 games. EPA = total expected points added.",
+      freshThrough: `Season ${q.season}`,
       rows: q.leaders,
       showRank: true,
       minWidth: 640,
@@ -438,6 +454,7 @@ async function loadQbrView(): Promise<ViewResult> {
       title: "Where the estimators agree — and where they don't",
       blurb: consensus.note,
       footnote: `Two independent estimators, each as a within-pool percentile. We surface disagreement (results vs accuracy) instead of averaging it into false precision.${!consensus.sources.ngs ? " CPOE feed unavailable — single-source reads only." : ""}`,
+      freshThrough: `Season ${q.season}`,
       rows: consensus.rows,
       showRank: true,
       minWidth: 720,
@@ -465,6 +482,7 @@ async function loadEdgeView(): Promise<ViewResult> {
         eyebrow: "Buy-low · regression up",
         title: "Underlying ahead of the box score",
         blurb: "Tracking signal runs hotter than production. Ranked by the gap (underlying z minus production z).",
+        freshThrough: `Season ${edge.season}`,
         rows: edge.buyLow,
         showRank: true,
         minWidth: 940,
@@ -477,6 +495,7 @@ async function loadEdgeView(): Promise<ViewResult> {
         eyebrow: "Sell-high · regression risk",
         title: "Production ahead of the underlying",
         blurb: "Output is outrunning the tracking signal. Ranked by the most negative gap.",
+        freshThrough: `Season ${edge.season}`,
         rows: edge.sellHigh,
         showRank: true,
         minWidth: 940,
@@ -505,6 +524,7 @@ async function loadInjuriesView(): Promise<ViewResult> {
         title: "Designations & practice status",
         blurb: `Out ${report.counts.out} · Doubtful ${report.counts.doubtful} · Questionable ${report.counts.questionable}. Official team-submitted designations. Filter by position.`,
         footnote: report.note,
+        freshThrough: `Season ${report.season}${report.week != null ? `, Wk ${report.week}` : ""}`,
         rows: report.rows,
         enumOptions: distinctOptions(report.rows, (r) => r.position),
         minWidth: 820,
@@ -534,6 +554,7 @@ async function loadMarketView(): Promise<ViewResult> {
         title: "Buying",
         blurb: `Live add activity across Sleeper leagues over the last ${signal.lookbackHours} hours.`,
         footnote: signal.note,
+        freshThrough: `Last ${signal.lookbackHours} hrs`,
         rows: signal.adds,
         enumOptions: distinctOptions(signal.adds, (r) => r.position),
         showRank: true,
@@ -547,6 +568,7 @@ async function loadMarketView(): Promise<ViewResult> {
         eyebrow: "Falling · most dropped",
         title: "Selling",
         blurb: `Live drop activity across Sleeper leagues over the last ${signal.lookbackHours} hours.`,
+        freshThrough: `Last ${signal.lookbackHours} hrs`,
         rows: signal.drops,
         enumOptions: distinctOptions(signal.drops, (r) => r.position),
         showRank: true,
@@ -590,6 +612,7 @@ async function loadDfsView(): Promise<ViewResult> {
         title: `Reconciled across ${connectedLive} feed${connectedLive === 1 ? "" : "s"}`,
         blurb: "DK salaries via licensed DFS providers, reconciled across feeds. A salary is trusted when feeds agree; disagreement is flagged. Filter by position.",
         footnote: `${dfs.discrepancies} disagreement${dfs.discrepancies === 1 ? "" : "s"} flagged across ${dfs.rows.length} salaries.`,
+        freshThrough: dfs.date,
         rows: dfs.rows,
         enumOptions: distinctOptions(dfs.rows, (r) => r.position),
         showRank: true,

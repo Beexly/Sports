@@ -695,6 +695,11 @@ function SectionBlock({ section }: { section: SectionData }): JSX.Element {
       {section.footnote ? (
         <p className="text-xs leading-5 text-ink-2">{section.footnote}</p>
       ) : null}
+
+      <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ink-2/60">
+        {section.rows.length} {section.rows.length === 1 ? "record" : "records"}
+        {section.freshThrough ? ` · ${section.freshThrough}` : null}
+      </p>
     </section>
   );
 }
