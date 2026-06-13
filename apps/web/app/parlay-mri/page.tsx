@@ -4,6 +4,8 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { getPlate } from "@/lib/visual-production/asset-manifest";
 import { ParlayGenome } from "@/components/parlay/parlay-genome";
 import { BRAND_COLORS } from "@/lib/brand";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
@@ -18,6 +20,7 @@ export const metadata: Metadata = {
 
 export default async function ParlayMriPage() {
   const viewer = await getViewerEntitlements();
+  const plate = getPlate("no-bet-stillness");
   if (!viewer.canUseParlayMri) {
     return (
       <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
@@ -51,6 +54,9 @@ export default async function ParlayMriPage() {
       <main className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+          {plate && (
+            <GeneratedPlate className="-z-20 opacity-50" gradient={plate.gradient} still={plate.still} motion={plate.motion} />
+          )}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
