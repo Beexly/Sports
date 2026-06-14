@@ -27,3 +27,18 @@
   radial-gradient accent div + `<Reveal>` + `eyebrow` + `font-display` h1 (see `app/academy`).
 - **L6 · Agents run `npm run typecheck` only** (§9) — concurrent full builds collide on
   `.next`. Orchestrator runs the one consolidated gate after agents return.
+- **L7 · Anticipate brittle source-string tests on any page rebrand.** Several tests read a
+  page's `.tsx` as TEXT and assert exact substrings/char-distances (e.g.
+  `picks-mobile-tap-targets` pinned `min-h-11 rounded-lg bg-gray-800`;
+  `picks-page-policy-gate` matched `href="/methodology"{0,300}Read methodology`). A token
+  rebrand breaks these even though behavior is intact. Fix = update the assertion to track
+  the new (still-correct) string while preserving its guarantee — NOT revert the rebrand,
+  NOT loosen the guarantee. Adding `focus-visible:ring` classes lengthens className strings,
+  so distance-window regexes may need widening. After every rebrand, run the full gate and
+  expect 1-3 of these.
+- **L8 · The brief's punch-list was mostly ALREADY DONE on this newer branch.** Verified
+  non-issues here: a11y keyboard parity (all onClick on native buttons/links or custom
+  components that render buttons), `stats/source-suggest` `/promotions` action (already
+  clean), hero-video LCP (GeneratedPlate gates video on motion + preload="none"), missing
+  page backgrounds (global body carbon bg). Don't manufacture work where the tree is already
+  correct — verify, document, move on. A green tree beats churn.

@@ -187,7 +187,16 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
     <div className="flex min-h-screen flex-col bg-void">
       <Nav />
 
-      <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <main className="relative isolate flex-1 overflow-hidden px-4 py-10 sm:px-6 lg:px-8">
+        {/* Cosmic hero accent — decorative, static (reduced-motion-safe). */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64"
+          style={{
+            background:
+              "radial-gradient(60% 70% at 50% 0%, rgba(0,229,255,0.07), transparent 70%), radial-gradient(40% 60% at 82% 0%, rgba(122,92,255,0.06), transparent 70%)",
+          }}
+        />
         <div className="mx-auto max-w-5xl">
 
           {demoActive && (
