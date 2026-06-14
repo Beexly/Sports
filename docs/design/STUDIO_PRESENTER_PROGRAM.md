@@ -26,6 +26,17 @@ wardrobe themes change, the bar doesn't. No suggestive content; the
 content-safety scan (sexual/hateful/unsafe/PII/overclaiming) already in
 `studio-host.tsx` applies to every script.
 
+**Art direction (owner note 2026-06-14): "semi-professional, flirty, sexy
+reporter — SFW."** The presenter should read as a *charismatic, playful,
+approachable sideline reporter* — flirty warmth and confident energy, smart-
+casual sporty-chic styling (not stiff corporate). Attractive and alluring, but
+the bar is **strictly SFW and fully clothed**: fitted-but-tasteful wardrobe,
+natural glam hair and makeup, a captivating flirtatious smile. "Sexy" here
+means magnetic on-camera charisma and high production value — never revealing,
+suggestive, or objectifying. Render prompts carry a positive flirty-reporter
+direction *and* an explicit SFW/fully-clothed/no-nudity floor; the content-
+safety gate and owner sign-off below still apply to every frame.
+
 ## 2. Production pipeline (operator-gated, same spine as Beex Weekly)
 
 1. **Script** — drafted from real graded data only (board state, Beat rows,
