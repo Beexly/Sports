@@ -66,7 +66,28 @@ export interface TabsProps {
   /** Accessible label for the tablist. */
   ariaLabel?: string;
   className?: string;
+  /**
+   * Surface variant. "paper" (default) keeps the original light ink/paper
+   * classes so every existing caller is unaffected. "dark" swaps to the cosmic
+   * dark tokens used across the dark pages.
+   */
+  variant?: "paper" | "dark";
 }
+
+const TABS_VARIANTS = {
+  paper: {
+    wrap: "border-paper-border bg-paper",
+    active: "bg-paper-raised text-ink shadow-sm",
+    inactive: "text-ink-1 hover:bg-paper-sunken hover:text-ink",
+    ring: "focus-visible:ring-ink-1/30",
+  },
+  dark: {
+    wrap: "border-mineral bg-carbon",
+    active: "bg-eclipse text-ion-white shadow-sm",
+    inactive: "text-ion-1 hover:bg-eclipse hover:text-ion-white",
+    ring: "focus-visible:ring-orbital-cyan/30",
+  },
+} as const;
 
 export function Tabs({
   param,
@@ -76,12 +97,14 @@ export function Tabs({
   currentParams = {},
   ariaLabel = "Views",
   className = "",
+  variant = "paper",
 }: TabsProps): JSX.Element {
+  const tv = TABS_VARIANTS[variant];
   return (
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={`inline-flex flex-wrap items-center gap-1 rounded-ds-md border border-paper-border bg-paper p-1 ${className}`}
+      className={`inline-flex flex-wrap items-center gap-1 rounded-ds-md border p-1 ${tv.wrap} ${className}`}
     >
       {items.map((item) => {
         const isActive = item.value === active;
@@ -93,10 +116,8 @@ export function Tabs({
             aria-selected={isActive}
             title={item.tooltip}
             scroll={false}
-            className={`min-h-[36px] rounded-ds-sm px-3.5 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-1/30 ${
-              isActive
-                ? "bg-paper-raised text-ink shadow-sm"
-                : "text-ink-1 hover:bg-paper-sunken hover:text-ink"
+            className={`min-h-[36px] rounded-ds-sm px-3.5 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 ${tv.ring} ${
+              isActive ? tv.active : tv.inactive
             }`}
           >
             {item.label}
