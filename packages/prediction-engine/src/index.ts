@@ -178,6 +178,10 @@ export type { TeamGameEfficiency, TeamRating, OpponentAdjustOptions } from "./op
 export { compositeScore } from "./composite-score.js";
 export type { WeightedSignal, SignalContribution, CompositeScore, CompositeScoreOptions } from "./composite-score.js";
 
+// Player usage archetype (receiving lean / workload) from rushing/receiving usage.
+export { classifyUsageProfile } from "./player-archetype.js";
+export type { UsageProfileInput, UsageProfile, WorkloadTier } from "./player-archetype.js";
+
 export {
   assessUncertainty,
   wilsonInterval,
