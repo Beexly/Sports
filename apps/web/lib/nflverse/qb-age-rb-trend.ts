@@ -1,5 +1,5 @@
 import { gunzipSync } from "node:zlib";
-import { nflverseUrl, parseCsv } from "@sports/data-ingestion";
+import { fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { discoverCohortTrends, range, type Observation, type Trend } from "@sports/prediction-engine";
 
 type CsvRecord = Readonly<Record<string, string>>;
@@ -82,17 +82,16 @@ function ageOnDate(birthDate: string | undefined, gameDate: string | undefined):
 }
 
 async function fetchCsvRecords(url: string, fetcher: FetchLike, timeoutMs: number): Promise<readonly CsvRecord[]> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetcher(url, { signal: controller.signal });
-    if (!response.ok) throw new Error(`nflverse fetch failed (${response.status}) for ${url}`);
-    const buffer = Buffer.from(await response.arrayBuffer());
-    const text = url.endsWith(".gz") ? gunzipSync(buffer).toString("utf8") : buffer.toString("utf8");
-    return parseCsv(text).records;
-  } finally {
-    clearTimeout(timer);
-  }
+  // Route through mirror failover so a primary GitHub outage falls back to the
+  // community proxy instead of failing the whole report (matches the other loaders).
+  const { response } = await fetchWithFailover(withMirrors(url), fetcher, {
+    timeoutMs,
+    init: { cache: "no-store" },
+  });
+  if (!response.ok) throw new Error(`nflverse fetch failed (${response.status}) for ${url}`);
+  const buffer = Buffer.from(await response.arrayBuffer());
+  const text = url.endsWith(".gz") ? gunzipSync(buffer).toString("utf8") : buffer.toString("utf8");
+  return parseCsv(text).records;
 }
 
 function playerBirthDateMap(players: readonly CsvRecord[]): Map<string, string> {

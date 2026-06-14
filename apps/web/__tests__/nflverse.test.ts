@@ -37,13 +37,13 @@ const SAMPLE_ROSTER_CSV = `gsis_id,full_name,team,position,depth_chart_position,
 
 describe("nflverse Data Adapter", () => {
   describe("constants and attribution", () => {
-    it("NFLVERSE_ATTRIBUTION includes required CC BY-SA 4.0 text", () => {
+    it("NFLVERSE_ATTRIBUTION includes required CC-BY-4.0 text", () => {
       expect(NFLVERSE_ATTRIBUTION).toMatch(/nflverse/);
-      expect(NFLVERSE_ATTRIBUTION).toMatch(/CC BY-SA 4\.0/);
+      expect(NFLVERSE_ATTRIBUTION).toMatch(/CC-BY-4\.0/);
     });
 
-    it("NFLVERSE_LICENSE is CC BY-SA 4.0", () => {
-      expect(NFLVERSE_LICENSE).toBe("CC BY-SA 4.0");
+    it("NFLVERSE_LICENSE is CC-BY-4.0", () => {
+      expect(NFLVERSE_LICENSE).toBe("CC-BY-4.0");
     });
 
     it("nflverseUrls builds correct player stats URL for 2025", () => {
@@ -67,7 +67,7 @@ describe("nflverse Data Adapter", () => {
       if (result.ok) {
         expect(result.data).toHaveLength(2);
         expect(result.source).toBe("nflverse");
-        expect(result.license).toBe("CC BY-SA 4.0");
+        expect(result.license).toBe("CC-BY-4.0");
         expect(result.dataQuality).toBe("authoritative-free");
         expect(result.season).toBe(2025);
       }
@@ -108,7 +108,7 @@ describe("nflverse Data Adapter", () => {
     it("includes attribution on every result", async () => {
       const result = await fetchNflversePlayerStats(2025, mockTextFetcher(SAMPLE_PLAYER_STATS_CSV));
       if (result.ok) {
-        expect(result.attribution).toMatch(/CC BY-SA/);
+        expect(result.attribution).toMatch(/CC-BY-4\.0/);
       }
     });
 
@@ -153,7 +153,7 @@ describe("nflverse Data Adapter", () => {
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.data).toHaveLength(2);
-        expect(result.license).toBe("CC BY-SA 4.0");
+        expect(result.license).toBe("CC-BY-4.0");
       }
     });
 

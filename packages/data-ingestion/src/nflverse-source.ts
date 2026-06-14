@@ -1,13 +1,15 @@
 /**
  * nflverse ingestion — the free, comprehensive NFL data source.
  *
- * nflverse (github.com/nflverse, MIT) publishes the entire modern NFL analytics
+ * nflverse (github.com/nflverse) publishes the entire modern NFL analytics
  * stack as release assets on `nflverse-data`: play-by-play with EPA/WPA, Next
  * Gen Stats (separation, time-to-throw, air yards), snap counts, depth charts,
  * injuries, PFR advanced stats, FTN charting, rosters (with age), draft/combine/
  * contracts, and weekly player stats. It is the same source the R (nflreadr)
  * and Python (nflreadpy / nfl_data_py) packages read — we read it directly from
- * Node, no R, no licence, ~$0.
+ * Node, no R, ~$0. Licensing: the tooling is MIT; the DATA is CC-BY-4.0
+ * (attribution required, no share-alike) — except FTN charting/participation,
+ * which is CC-BY-SA-4.0 and is not ingested.
  *
  * This adapter is the typed access layer: a catalog of the high-value datasets
  * (each knowing its release tag, grain, season range, and the prediction value
