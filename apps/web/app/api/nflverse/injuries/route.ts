@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { loadNflverseInjuryReport } from "@/lib/nflverse/injury-report";
+import { requirePremiumApi } from "@/lib/api-entitlement";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<NextResponse> {
+  const denied = await requirePremiumApi();
+  if (denied) return denied;
   const data = await loadNflverseInjuryReport();
   return NextResponse.json({ success: true, data });
 }
