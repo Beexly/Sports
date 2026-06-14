@@ -91,6 +91,12 @@ const realAuth = nextAuth.auth as () => Promise<Session | null>;
  */
 export const auth: () => Promise<Session | null> = async () => {
   if (process.env["DEV_FAKE_ADMIN"] === "true") {
+    if (process.env["NODE_ENV"] === "production") {
+      throw new Error(
+        "DEV_FAKE_ADMIN must never be enabled in production. " +
+        "Remove it from your environment variables immediately."
+      );
+    }
     return {
       user: {
         id: "dev-admin",

@@ -12,7 +12,6 @@
  */
 
 const CONTENT_WORKER_ENABLED = process.env["CONTENT_WORKER_ENABLED"] === "true";
-const INTERNAL_CALIBRATION_ONLY = process.env["INTERNAL_CALIBRATION_ONLY"] !== "false";
 
 interface PublishRequest {
   readonly id: string;
@@ -29,7 +28,8 @@ interface PublishResult {
 export async function runContentPublisher(
   reqs: ReadonlyArray<PublishRequest>
 ): Promise<ReadonlyArray<PublishResult>> {
-  if (INTERNAL_CALIBRATION_ONLY) {
+  const internalCalibrationOnly = process.env["INTERNAL_CALIBRATION_ONLY"] !== "false";
+  if (internalCalibrationOnly) {
     return reqs.map((r) => ({
       id: r.id,
       status: "REFUSED",
@@ -55,9 +55,10 @@ async function main(): Promise<void> {
     );
     return;
   }
+  const internalCalibrationOnly = process.env["INTERNAL_CALIBRATION_ONLY"] !== "false";
   // eslint-disable-next-line no-console
   console.log(
-    INTERNAL_CALIBRATION_ONLY
+    internalCalibrationOnly
       ? "[content-publisher] CONTENT_WORKER_ENABLED=true but kill switch ON — refusing all publish requests."
       : "[content-publisher] CONTENT_WORKER_ENABLED=true and kill switch OFF — queueing only, never auto-publishing."
   );

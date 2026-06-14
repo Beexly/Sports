@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME } from "@/lib/brand";
+import { getCurrentPricingPhase, type PricingPhase } from "@/lib/pricing/pricing-phases";
 
 /**
  * /faq — Standalone FAQ landing page with FAQPage JSON-LD.
@@ -27,6 +28,34 @@ type FaqGroup = {
   heading: string;
   items: ReadonlyArray<{ q: string; a: string }>;
 };
+
+function buildPricingGroup(phase: PricingPhase): FaqGroup {
+  return {
+    heading: "Pricing & billing",
+    items: [
+      {
+        q: "What does Free get?",
+        a: "One signal per day — the highest-Edge-Index signal of the slate. The matchup and pick type are visible; the confidence rating and factor trail are gated to Pro and Elite.",
+      },
+      {
+        q: "What does Pro get?",
+        a: `$${phase.pro.monthly}/month, or $${phase.pro.annual}/year. Every signal, every day, with the calibrated confidence rating and full factor trail on each one. Plus line-movement alerts.`,
+      },
+      {
+        q: "What does Elite get?",
+        a: `$${phase.elite.monthly}/month, or $${phase.elite.annual}/year. Everything in Pro plus email and push notifications for high-Edge-Index signals as they ship.`,
+      },
+      {
+        q: "Is there a refund window?",
+        a: "No free trial — but every paid plan has a 3-day money-back window. Cancel any time from your dashboard — no questions.",
+      },
+      {
+        q: "Will pricing change?",
+        a: `Free stays free. Pro is $${phase.pro.monthly}/month, Elite is $${phase.elite.monthly}/month — founding-member rates locked for the life of your subscription. As the verified record grows and prices rise for new members, yours never does.`,
+      },
+    ],
+  };
+}
 
 const GROUPS: ReadonlyArray<FaqGroup> = [
   {
@@ -76,31 +105,6 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     ],
   },
   {
-    heading: "Pricing & billing",
-    items: [
-      {
-        q: "What does Free get?",
-        a: "One signal per day — the highest-Edge-Index signal of the slate. The matchup and pick type are visible; the confidence rating and factor trail are gated to Pro and Elite.",
-      },
-      {
-        q: "What does Pro get?",
-        a: "$14.99/month, or $99/year. Every signal, every day, with the calibrated confidence rating and full factor trail on each one. Plus line-movement alerts.",
-      },
-      {
-        q: "What does Elite get?",
-        a: "$24.99/month, or $179/year. Everything in Pro plus email and push notifications for high-Edge-Index signals as they ship.",
-      },
-      {
-        q: "Is there a refund window?",
-        a: "No free trial — but every paid plan has a 3-day money-back window. Cancel any time from your dashboard — no questions.",
-      },
-      {
-        q: "Will pricing change?",
-        a: "Free stays free. Pro is $14.99/month, Elite is $24.99/month — founding-member rates locked for the life of your subscription. As the verified record grows and prices rise for new members, yours never does.",
-      },
-    ],
-  },
-  {
     heading: "Account & data",
     items: [
       {
@@ -140,23 +144,25 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
   },
 ];
 
-// FAQPage JSON-LD — flat list of every Q/A, for rich-result eligibility.
-const FLATTENED_FAQ = GROUPS.flatMap((g) => g.items);
+export default async function FaqPage() {
+  const phase = getCurrentPricingPhase();
+  // Insert the dynamic pricing section at index 2 (between trust and account)
+  const allGroups: ReadonlyArray<FaqGroup> = [
+    ...GROUPS.slice(0, 2),
+    buildPricingGroup(phase),
+    ...GROUPS.slice(2),
+  ];
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FLATTENED_FAQ.map((item) => ({
-    "@type": "Question",
-    name: item.q,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: item.a,
-    },
-  })),
-};
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: allGroups.flatMap((g) => g.items).map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
 
-export default function FaqPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Nav />
@@ -188,7 +194,7 @@ export default function FaqPage() {
           </div>
         </section>
 
-        {GROUPS.map((group) => (
+        {allGroups.map((group) => (
           <section
             key={group.heading}
             className="border-t border-ink-800/60 px-4 py-16 sm:px-6 lg:px-8"
