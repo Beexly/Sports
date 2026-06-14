@@ -1898,3 +1898,147 @@ model ModerationAppeal {
   @@index([appellantId])
   @@map("moderation_appeals")
 }
+
+// ============================================================
+// PLAYER DATA (nflverse) — system-of-record for NFL player stats
+// ------------------------------------------------------------
+// Additive layer persisted from the free nflverse release assets
+// (CC-BY-4.0). Every row carries provenance (sourceId), a point-in-time
+// rights snapshot (captured at extraction), and fetchedAt for freshness —
+// per the CLAUDE.md no-stale-data / rights invariants. These tables do NOT
+// yet feed the prediction engine; wiring player signals into scoring is a
+// separate, gated MODEL_VERSION step.
+// ============================================================
+
+model Player {
+  id          String   @id @default(cuid())
+  gsisId      String   @unique  // nflverse player_id / gsis_id (canonical)
+  fullName    String
+  position    String?
+  recentTeam  String?  // denormalized most-recent team abbreviation
+  headshotUrl String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  gameStats    PlayerGameStat[]
+  snapCounts   SnapCount[]
+  injuries     Injury[]
+  depthEntries DepthChartEntry[]
+
+  @@index([position])
+  @@index([recentTeam])
+  @@map("players")
+}
+
+model PlayerGameStat {
+  id         String  @id @default(cuid())
+  playerId   String
+  season     Int
+  week       Int
+  seasonType String  @default("REG") // REG | POST
+  team       String?
+  opponent   String?
+
+  // Volume / usage (real player_stats_week columns)
+  attempts         Int? // pass attempts
+  carries          Int?
+  receptions       Int?
+  targets          Int?
+  targetShare      Float?
+  receivingYards   Float?
+  rushingYards     Float?
+  fantasyPointsPpr Float?
+
+  // Efficiency (nflverse EPA)
+  passingEpa   Float?
+  rushingEpa   Float?
+  receivingEpa Float?
+
+  // Provenance / rights / freshness
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, season, week, seasonType])
+  @@index([season, week])
+  @@index([playerId])
+  @@map("player_game_stats")
+}
+
+model SnapCount {
+  id           String  @id @default(cuid())
+  playerId     String? // resolved nflverse gsis link when available
+  pfrPlayerId  String? // natural id in the snap_counts asset
+  playerName   String
+  season       Int
+  week         Int
+  seasonType   String  @default("REG")
+  team         String?
+  opponent     String?
+  position     String?
+  offenseSnaps Int?
+  offensePct   Float?
+  defenseSnaps Int?
+  defensePct   Float?
+  stSnaps      Int?
+  stPct        Float?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  player Player? @relation(fields: [playerId], references: [id], onDelete: SetNull)
+
+  @@index([season, week])
+  @@index([playerId])
+  @@map("snap_counts")
+}
+
+model Injury {
+  id             String  @id @default(cuid())
+  playerId       String?
+  gsisId         String?
+  playerName     String
+  season         Int
+  week           Int
+  team           String?
+  position       String?
+  reportStatus   String? // Out | Doubtful | Questionable | ... (free text from source)
+  practiceStatus String?
+  primaryInjury  String? // body part / description
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  player Player? @relation(fields: [playerId], references: [id], onDelete: SetNull)
+
+  @@index([season, week])
+  @@index([playerId])
+  @@map("injuries")
+}
+
+model DepthChartEntry {
+  id         String  @id @default(cuid())
+  playerId   String?
+  gsisId     String?
+  playerName String
+  season     Int
+  week       Int
+  team       String?
+  position   String?
+  depthRank  Int?    // depth_team rank (1 = starter)
+  role       String?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  player Player? @relation(fields: [playerId], references: [id], onDelete: SetNull)
+
+  @@index([season, week, team])
+  @@index([playerId])
+  @@map("depth_chart_entries")
+}
