@@ -79,15 +79,15 @@ const MORE_ENGINES: readonly MoreEngine[] = [
 
 function MoreEnginesSection(): JSX.Element {
   return (
-    <section className="flex flex-col gap-5 border-t border-paper-border pt-8">
+    <section className="flex flex-col gap-5 border-t border-mineral pt-8">
       <div className="flex flex-col gap-1">
-        <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan-on-light">
+        <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan">
           More engines &amp; APIs
         </p>
-        <h2 className="text-xl font-semibold text-ink">Engines without a standalone board</h2>
-        <p className="mt-1 max-w-3xl text-sm leading-6 text-ink-1">
+        <h2 className="text-xl font-semibold text-ion-white">Engines without a standalone board</h2>
+        <p className="mt-1 max-w-3xl text-sm leading-6 text-ion-1">
           Some engines are POST-only or founder-gated, and three player engines render on the player boards under{" "}
-          <Link href="/players" className="font-semibold text-orbital-cyan-on-light hover:text-ink">
+          <Link href="/players" className="font-semibold text-orbital-cyan hover:text-ion-white">
             /players
           </Link>
           . They stay indexed and reachable here.
@@ -97,16 +97,16 @@ function MoreEnginesSection(): JSX.Element {
         {MORE_ENGINES.map((e) => (
           <article
             key={e.name}
-            className="flex flex-col rounded-ds-md border border-paper-border bg-paper-raised p-5"
+            className="flex flex-col rounded-ds-md border border-mineral bg-eclipse p-5"
           >
-            <h3 className="text-base font-semibold leading-tight text-ink">{e.name}</h3>
-            <p className="mt-2 flex-1 text-sm leading-6 text-ink-1">{e.summary}</p>
+            <h3 className="text-base font-semibold leading-tight text-ion-white">{e.name}</h3>
+            <p className="mt-2 flex-1 text-sm leading-6 text-ion-1">{e.summary}</p>
             <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
-              <Link href={e.api} className="text-orbital-cyan-on-light hover:text-ink">
+              <Link href={e.api} className="text-orbital-cyan hover:text-ion-white">
                 {e.apiLabel}
               </Link>
               {e.board ? (
-                <Link href={e.board} className="text-ultraviolet-on-light hover:text-ink">
+                <Link href={e.board} className="text-ultraviolet hover:text-ion-white">
                   Board →
                 </Link>
               ) : null}
@@ -141,13 +141,14 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
   }
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen bg-carbon text-ion-white">
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <PageHero
           eyebrow="Intelligence engines"
           title={active.title}
           description={active.description}
+          variant="dark"
           actions={
             <>
               <Link href={active.api} className="btn-primary min-h-11 px-5 py-3">
@@ -155,7 +156,7 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
               </Link>
               <Link
                 href="/intelligence/metrics"
-                className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-paper-border px-5 py-3 text-sm font-semibold text-ink hover:border-ink-1"
+                className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion-white hover:border-orbital-cyan"
               >
                 How we read each metric
               </Link>
@@ -173,12 +174,13 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
           <aside className="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start" aria-label="Engine directory">
             {groups.map((g) => (
               <nav key={g.group} className="flex flex-col gap-2">
-                <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ink-2">{g.group}</p>
+                <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ion-2">{g.group}</p>
                 <Tabs
                   param="engine"
                   active={active.slug}
                   pathname={PATHNAME}
                   ariaLabel={g.group}
+                  variant="dark"
                   className="!flex !flex-col !items-stretch"
                   items={g.engines.map((e) => ({
                     value: e.slug,
@@ -192,7 +194,7 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
           {/* Active engine */}
           <section className="flex min-w-0 flex-col gap-6">
             {body}
-            <Attribution sourceIds={active.sourceIds} className="!text-ink-2" />
+            <Attribution sourceIds={active.sourceIds} className="!text-ion-2" />
           </section>
         </div>
 
