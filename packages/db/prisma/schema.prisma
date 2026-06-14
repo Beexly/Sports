@@ -2076,3 +2076,37 @@ model HistoricalGame {
   @@index([season])
   @@map("historical_games")
 }
+
+// ============================================================
+// TEAM-GAME EFFICIENCY (nflverse play-by-play, aggregated)
+// ------------------------------------------------------------
+// The public foundation for opponent-adjusted ratings and scheme/archetype
+// signals. Raw ~50k plays/season are aggregated AT INGESTION to one compact row
+// per team-game: offense produced + defense allowed (EPA/play and success rate).
+// Additive; clearance-gated + rights/freshness stamped like the other sources.
+// ============================================================
+
+model TeamGameEfficiency {
+  id            String  @id @default(cuid())
+  gameKey       String  // nflverse game_id
+  season        Int
+  week          Int
+  seasonType    String  @default("REG")
+  team          String  // abbreviation
+  opponent      String
+  isHome        Boolean
+  plays         Int     // offensive plays counted (pass + run)
+  offEpaPerPlay Float
+  offSuccess    Float
+  defEpaPerPlay Float // allowed
+  defSuccess    Float // allowed
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([team, gameKey])
+  @@index([season, week])
+  @@index([team, season])
+  @@map("team_game_efficiency")
+}
