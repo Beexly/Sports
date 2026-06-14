@@ -8,10 +8,20 @@ import { loadGameRoom } from "@/lib/game-room/load";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Game Intelligence Room - Galaxy Sports Edge",
-  description: "A read-only game room with market pulse, evidence timeline, lens projections, and memory.",
-};
+export function generateMetadata({
+  params,
+}: {
+  params: { gameId: string };
+}): Metadata {
+  return {
+    title: "Game Intelligence Room - Galaxy Sports Edge",
+    description:
+      "A read-only game room with market pulse, evidence timeline, lens projections, and memory.",
+    // Dynamic route → self-canonical per game so each room indexes itself
+    // instead of collapsing to a single URL.
+    alternates: { canonical: `/room/${params.gameId}` },
+  };
+}
 
 export default async function GameRoomPage({
   params,
