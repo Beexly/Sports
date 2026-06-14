@@ -162,9 +162,13 @@ export function buildPickSignalSnapshot(
     hadAtsFormSignal,
     hadH2HSignal,
     hadVenueSignal,
-    hadWeatherSignal: false,            // not implemented yet
-    hadInjurySignal: false,             // not implemented yet
-    hadRatingsSignal: false,            // not implemented yet
+    // Data-driven from shadow evidence (same pattern as hadPlayerSignal). These
+    // fire when the pipeline surfaces the corresponding category as ACTIVE
+    // evidence; they remain false until that data is wired in. Recorded for the
+    // audit trail only — they do not move the confidence score.
+    hadWeatherSignal: activeShadowCategories.has("WEATHER"),
+    hadInjurySignal: activeShadowCategories.has("INJURIES"),
+    hadRatingsSignal: activeShadowCategories.has("RATINGS"),
     hadPlayerSignal: activeShadowCategories.has("PLAYER_AVAILABILITY"),
     hadOfficialsSignal: activeShadowCategories.has("OFFICIALS"),
     hadVenueEnvironmentSignal: activeShadowCategories.has("VENUE_ENVIRONMENT"),
