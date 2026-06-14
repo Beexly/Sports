@@ -44,6 +44,8 @@ export interface ModelCourtAnswerOptions {
   readonly recordUsage?: boolean;
   readonly usageClient?: ClaudeUsageStoreDb;
   readonly userId?: string | null;
+  /** Provenance chain for the game — enables CHAIN_BROKEN refusal and citation injection. */
+  readonly chain?: import("@/lib/provenance/trace-claim").ProvenanceChain | null;
 }
 
 export interface ModelCourtAnswer {
@@ -95,11 +97,25 @@ const COMPETITOR_PATTERNS = [
 
 const ANSWER_CITATION_PATTERN = /\(source:\s+[a-z0-9_-]+\s+at\s+\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z\)/i;
 
+// ─── Chain-broken detection ───────────────────────────────────────────────────
+
+/**
+ * Returns true when the provenance chain has broken broadcast rights:
+ *  - broadcastAllowed is false (commercial display denied or unresolved rights)
+ *  - any source is unresolved (cannot verify rights)
+ */
+function detectChainBroken(
+  chain: import("@/lib/provenance/trace-claim").ProvenanceChain | null | undefined
+): boolean {
+  if (!chain) return false;
+  return !chain.broadcastAllowed || chain.unresolved.length > 0;
+}
+
 export async function answerModelCourtQuestion(
   input: ModelCourtAnswerInput,
   options: ModelCourtAnswerOptions
 ): Promise<ModelCourtAnswer> {
-  const refusalKind = detectModelCourtRefusal(input);
+  const refusalKind = detectModelCourtRefusal(input, options);
   if (refusalKind) {
     return {
       bodyMarkdown: renderRefusal(refusalKind, input),
@@ -141,7 +157,7 @@ export async function answerModelCourtQuestion(
       maxTokens: 1200,
       temperature: 0.1,
       system: SYSTEM_PROMPT,
-      user: buildPromptUser(input),
+      user: buildPromptUser(input, options.chain),
     });
     const policyFailures = evaluateModelCourtAnswerPolicy(result.text);
     if (policyFailures.length > 0) {
@@ -192,7 +208,10 @@ export async function answerModelCourtQuestion(
   }
 }
 
-export function detectModelCourtRefusal(input: ModelCourtAnswerInput): RefusalKind | null {
+export function detectModelCourtRefusal(
+  input: ModelCourtAnswerInput,
+  options?: Pick<ModelCourtAnswerOptions, "chain">
+): RefusalKind | null {
   const question = input.question.trim();
 
   if ((input.mode === "ASK_THIS_GAME" || input.mode === "EXPLAIN_FOR_MY_LENS") && !input.node) {
@@ -200,6 +219,11 @@ export function detectModelCourtRefusal(input: ModelCourtAnswerInput): RefusalKi
   }
   if (input.mode === "EXPLAIN_FOR_MY_LENS" && !input.lens) {
     return "GAME_NOT_IN_CONTEXT";
+  }
+  // CHAIN_BROKEN check: evaluate before content-based checks so a broken chain
+  // always surfaces as a data-integrity refusal rather than an evidence-thin one.
+  if (detectChainBroken(options?.chain)) {
+    return "CHAIN_BROKEN";
   }
   if (matchesAny(question, PERSONAL_ADVICE_PATTERNS)) {
     return "PERSONAL_ADVICE";
@@ -252,20 +276,45 @@ export function evaluateModelCourtAnswerPolicy(bodyMarkdown: string): string[] {
   return failures;
 }
 
-function buildPromptUser(input: ModelCourtAnswerInput): string {
+function buildPromptUser(
+  input: ModelCourtAnswerInput,
+  chain?: import("@/lib/provenance/trace-claim").ProvenanceChain | null
+): string {
+  let base: string;
+
   if (input.mode === "ASK_THE_SLATE") {
-    return buildAskTheSlatePrelude(input.slate ?? {}, input.question);
-  }
-  if (input.mode === "EXPLAIN_FOR_MY_LENS") {
+    base = buildAskTheSlatePrelude(input.slate ?? {}, input.question);
+  } else if (input.mode === "EXPLAIN_FOR_MY_LENS") {
     if (!input.node || !input.lens) {
       throw new ModelCourtAnswerError("Model Court lens mode requires a game and lens context.");
     }
-    return buildExplainForMyLensPrelude(toCourtNodeContext(input.node), input.question, input.lens);
+    base = buildExplainForMyLensPrelude(toCourtNodeContext(input.node), input.question, input.lens);
+  } else {
+    if (!input.node) {
+      throw new ModelCourtAnswerError("Model Court game mode requires a game context.");
+    }
+    base = buildAskThisGamePrelude(toCourtNodeContext(input.node), input.question);
   }
-  if (!input.node) {
-    throw new ModelCourtAnswerError("Model Court game mode requires a game context.");
+
+  // When a provenance chain is present and valid, inject an evidence chain summary
+  // and citation instructions. These are appended to the user prelude only — we do
+  // NOT modify the locked SYSTEM_PROMPT constant (see file header comment).
+  if (chain) {
+    const claimCount = chain.links.filter((l) => l.kind === "CLAIM").length;
+    const contextCount = chain.links.filter((l) => l.kind === "CONTEXT").length;
+    const chainSummary = `
+Evidence chain summary:
+- Signals: ${chain.links.length} total (${claimCount} CLAIM, ${contextCount} CONTEXT)
+- Broadcast cleared: ${chain.broadcastAllowed ? "YES" : "NO"}
+- Attribution required: ${chain.attribution.join("; ") || "none"}
+- Unresolved sources: ${chain.unresolved.join(", ") || "none"}
+
+Citation instruction (for CLAIM signals): cite as (source: <sourceName>, knownAt: <ISO>, hash: <first 8 chars of payloadHash or "unavailable">).`;
+
+    return base + chainSummary;
   }
-  return buildAskThisGamePrelude(toCourtNodeContext(input.node), input.question);
+
+  return base;
 }
 
 function toCourtNodeContext(node: GameIntelligenceNode): Record<string, unknown> {
@@ -309,6 +358,8 @@ function renderRefusal(kind: RefusalKind, input: ModelCourtAnswerInput): string 
     gateOrPickContext: node ? pickSummary(node) : "No game evidence is attached.",
     premortemTextOrLink: node ? `/room/${node.id}#premortem` : "/board",
     gameId: node?.id ?? "unknown",
+    // CHAIN_BROKEN placeholder — uses the game matchup if available
+    gameName: node ? node.matchup : "this game",
   };
 
   return REFUSAL_TEMPLATES[kind].replace(/\{\{([a-zA-Z0-9]+)\}\}/g, (_match, key: string) => {

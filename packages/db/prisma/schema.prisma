@@ -624,6 +624,8 @@ model GameSignal {
   trustLevel     Float         @default(1.0)   // 0.0–1.0: source reliability weight
   isBootstrap    Boolean       @default(true)
   createdAt      DateTime      @default(now())
+  sourceRightsId     String?   // SourceRightsEntry.source_id — null for legacy rows
+  rightsSnapshotJson Json?     // snapshotRights() at signal-write time — IMMUTABLE
 
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
@@ -1454,6 +1456,31 @@ model Promotion {
   @@index([sportsbookKey])
   @@index([expiresAt])
   @@map("promotions")
+}
+
+// ============================================================
+// DECISION RECORDS — Provenance Fusion (V9)
+//
+// Immutable Merkle-committed record of every pick's provenance chain
+// at publish time. chainPayload and leafHash are written once at commit
+// time and never updated. dailyRoot is stamped by publishDailyDecisionRoot.
+// isQuarantined is set by quarantineSource when a C&D is received.
+// ============================================================
+
+model DecisionRecord {
+  id           String    @id @default(cuid())
+  pickId       String    @unique
+  committedAt  DateTime  @default(now())
+  knownAt      DateTime
+  modelVersion String
+  chainPayload String    @db.Text
+  leafHash     String
+  dailyRoot    String?
+  isQuarantined Boolean  @default(false)
+  @@index([committedAt])
+  @@index([dailyRoot])
+  @@index([isQuarantined])
+  @@map("decision_records")
 }
 
 // ============================================================

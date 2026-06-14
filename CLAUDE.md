@@ -156,6 +156,33 @@ Facts (scores, standings, fixtures), timestamps, URLs, metadata, derived signals
 - Rights snapshots are point-in-time captures; do not mutate them
 - Attribution text from the registry must propagate to all derived outputs
 
+## Provenance Fusion Invariant (v9)
+
+The platform maintains two provenance spines that MUST stay joined:
+
+- **Analytical spine** — `SourceSnapshot` (raw payload + `payloadHash`) → `GameSignal`
+  (`trustLevel`, `expiresAt`) → `PickSignalSnapshot` (inputs frozen at prediction) → `Pick`.
+- **Legal spine** — `checkClearance()` / `RightsSnapshot` / `SourceRightsEntry`
+  (`commercial_display_allowed`, `attribution_text`, `cease_and_desist_received`).
+
+Rules:
+
+- Every published pick MUST resolve a complete `traceClaim()` chain joining the
+  analytical spine to the legal spine. A CLAIM link with no `RightsSnapshot` is
+  treated as *unresolved* and blocks broadcast.
+- `assertBroadcastRights()` MUST pass before any claim reaches a customer surface
+  (pick publication, Model Court answer). It enforces `commercial_display_allowed`,
+  propagates copyleft (CC BY-SA derivatives stay share-alike), and carries attribution.
+- `DecisionRecord`s are immutable and committed at `knownAt` (max signal `fetchedAt`);
+  `chainPayload`/`leafHash` are written once and never updated. Tampering breaks
+  `replayDecision()`.
+- Sources under cease-and-desist are quarantined retroactively via `quarantineSource()`.
+- Feedback loops (signal reliability, source reliability, falsification verdicts)
+  RECOMMEND only. The founder promotes; gates never auto-flip.
+- `MODEL_VERSION` reflects scoring-engine behavior only. Do NOT bump it for
+  shadow-mode infrastructure that leaves scoring math unchanged — a truthful
+  version tag is itself part of the provenance guarantee.
+
 ## Autonomous Loop Protocol
 
 Each cycle must:

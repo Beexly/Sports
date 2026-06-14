@@ -184,15 +184,16 @@ export async function resolveTeamAsOf(name: string, asOf: Date): Promise<Team | 
   if (byCurrentName) return byCurrentName;
 
   // 2. Check formerNames on all teams. Prisma doesn't support JSON array
-  //    element filtering in a WHERE clause portably, so we fetch all teams
-  //    that have a non-null formerNames and filter in application code.
-  //    Teams are small (<1000 rows) so this is acceptable.
+  //    element filtering in a WHERE clause portably, so we fetch every team
+  //    and filter in application code. Teams are small (<1000 rows) so this
+  //    is acceptable. (Prisma's nullable-JSON `not` filter requires the
+  //    JsonNull sentinel rather than a literal null, and behaves
+  //    inconsistently across providers, so we skip the DB-level predicate.)
   const year = asOf.getFullYear();
-  const teamsWithHistory = await db.team.findMany({
-    where: { formerNames: { not: null } },
-  });
+  const allTeams = await db.team.findMany();
 
-  for (const team of teamsWithHistory) {
+  for (const team of allTeams) {
+    if (team.formerNames == null) continue;
     const entries = parseFormerNames(team.formerNames);
     const matched = entries.some(
       (e) => e.name === name && e.fromSeason <= year && year <= e.toSeason,

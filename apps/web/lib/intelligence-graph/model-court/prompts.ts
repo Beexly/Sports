@@ -21,7 +21,8 @@ export type RefusalKind =
   | "EV_KELLY_WINRATE"
   | "COMPETITOR_COMPARE"
   | "GAME_NOT_IN_CONTEXT"
-  | "PERSONAL_ADVICE";
+  | "PERSONAL_ADVICE"
+  | "CHAIN_BROKEN";
 
 /**
  * Canonical system prompt. Locked text — modify only via decision-log entry.
@@ -138,6 +139,13 @@ What we can show you for this game:
 
 The Edge Lab at /tools has a Kelly criterion sizer for your bankroll, and
 a CLV tracker for evaluating closing-line value over time.`,
+
+  // Added by Pillar G (V9 Provenance Fusion sprint) — do not modify without a
+  // decision-log entry per the file comment convention.
+  CHAIN_BROKEN: `I can't answer this question about {{gameName}} right now. The evidence chain ` +
+    `backing this game's analysis has one or more signals that are either stale, ` +
+    `unresolved, or not cleared for commercial display. I won't surface analysis ` +
+    `built on evidence I can't verify. Check back once the data pipeline refreshes.`,
 };
 
 /**
