@@ -15,7 +15,16 @@ instead of trusting it (see LESSONS L1).
 ---
 
 ## In progress
-- [ ] **W2-2b · pricing/dashboard subtle gray polish** — DEFERRED/low-value (see note below).
+- (none — cohesion mission complete; see "Cohesion: COMPLETE" below.)
+
+## Cohesion: COMPLETE across all non-reference / non-stub public surfaces
+Verified by `grep gray-[0-9]` over every public `page.tsx`: the ONLY remaining grays are
+(1) the white Google button on /auth/signin (`text-gray-900`/`bg-gray-100`, required by
+Google brand convention), (2) the semantic GradeBadge map on /dashboard (grade-tier
+colors), and (3) the intentionally-untouched reference-quality pages (/board, /journal)
+and noindex stub (/brief). Everything else rides void/carbon/eclipse/titanium/mineral/ink
++ orbital-cyan/ion-magenta/soft-ultraviolet, with the magenta brand-* CTAs intact.
+Locked by `public-cosmic-cohesion.test.ts` (119) against loud-token drift.
 
 ## GROUND-TRUTH RECALIBRATION (verified on this tree, supersedes brief assumptions)
 - Global `body` already sets `background: var(--carbon)` + fixed cosmic bg-image
@@ -46,14 +55,33 @@ instead of trusting it (see LESSONS L1).
 - [ ] **W3-1 · hero video perf** — confirm `GeneratedPlate` uses preload="none"+poster+
   motion-gated mount; flag oversized `public/immersive/**` clips.
 
-### DONE — WAVE 1 (cohesion) + auth honesty
-- [x] **W1-1 picks rebrand** — shipped b5bd7ce. Loud off-brand → cosmic; logic/gating intact.
-- [x] **W1-2 accent-300 sweep** (7 pages) — shipped b5bd7ce.
-- [x] **W1-3 room rebrand** — shipped b5bd7ce.
-- [x] **W2-2 auth/signin** — rebranded + removed "Email sign-in coming soon" half-feature
-  (Google OAuth is a complete auth experience). Gate pending.
-- [~] **W1-4 hero warmth** — DESCOPED: global cosmic bg already present; accent sweep
-  delivered cohesion; legal pages don't need added motion. Optional polish only.
+### DONE — shipped + pushed (gate green each)
+- [x] **W1-1 picks rebrand** (b5bd7ce) — loud off-brand → cosmic; logic/gating intact.
+- [x] **W1-2 accent-300 sweep** (b5bd7ce) — 7 pages.
+- [x] **W1-3 room rebrand** (b5bd7ce).
+- [x] **W2-2 auth/signin** (3799b09) — rebrand + removed "Email sign-in coming soon".
+- [x] **Cohesion guard + picks hero accent** (b3d0355) — 119-test palette lock + static
+  gradient hero.
+- [x] **room self-canonical + top-route SEO test** (7a4bdf5).
+- [x] **pricing + promotions + blog sweep** (aff4dd1).
+- [x] **auth/error + fantasy/baseline** (19e8d29).
+- [x] **dashboard chrome sweep** (gate pending) — member home; GradeBadge semantics kept.
+- [~] **W1-4 hero warmth** — DESCOPED: global cosmic bg already present; legal pages don't
+  need added motion. (Did add a tasteful static accent to /picks.)
+
+### VERIFIED ALREADY-SATISFIED on this branch (no action needed — see NIGHT_AUDIT)
+- [x] a11y keyboard parity (all onClick on native/wrapping-button elements).
+- [x] hero-video LCP (GeneratedPlate gates video on motion + preload="none").
+- [x] stats/source-suggest /promotions action (already clean).
+- [x] WAVE-2 honesty surfaces (fantasy/contests, brief, academy, trends) already honest.
+
+### PARKED — owner decision / blocked
+- Preview skeptic-verification (§8): no Vercel preview URL/auth in-session → visual changes
+  verified via gate + source review + the academy reference pattern, not a live preview.
+- source-suggest form persistence (no backend; needs API/DB + clearance) — owner/product.
+- flagship hero-video transcode to WebM/AV1 (owner-curated paid media).
+- Bold build-vision §6 (WebGL particle-nav, bespoke per-surface motifs): high-impact but
+  UNVERIFIABLE without a preview → deferred rather than ship-on-faith (violates §8).
 
 ### WAVE 3 — Performance / A11y / Tests
 - [ ] **W3-1 · hero video perf** — confirm `GeneratedPlate` uses `preload="none"` + poster

@@ -38,10 +38,10 @@ export default async function DashboardPage() {
 
   if (!session?.user?.id) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-950 text-gray-200">
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-8 text-center">
+      <div className="flex min-h-screen items-center justify-center bg-void text-ion-1">
+        <div className="rounded-2xl border border-mineral bg-eclipse/60 p-8 text-center">
           <h1 className="text-2xl font-bold text-white">Sign in required</h1>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-ink-300">
             The customer dashboard requires an authenticated session.
           </p>
           <Link
@@ -151,18 +151,18 @@ export default async function DashboardPage() {
     performancePolicy.publicWinRate >= 55;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
-      <header className="border-b border-gray-800 bg-gray-950/80 backdrop-blur-sm">
+    <div className="flex min-h-screen flex-col bg-void">
+      <header className="border-b border-mineral bg-void/80 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-sm font-semibold text-white">
             {BRAND_NAME}
           </Link>
-          <nav className="flex items-center gap-4 text-xs text-gray-400">
+          <nav className="flex items-center gap-4 text-xs text-ink-300">
             <Link href="/picks" className="hover:text-white">Picks</Link>
             <Link href="/performance" className="hover:text-white">Performance</Link>
             <Link href="/pricing" className="hover:text-white">Pricing</Link>
-            <span className="text-gray-600">|</span>
-            <span className="text-gray-500">{user.email}</span>
+            <span className="text-ink-500">|</span>
+            <span className="text-ink-400">{user.email}</span>
           </nav>
         </div>
       </header>
@@ -174,7 +174,7 @@ export default async function DashboardPage() {
               <h1 className="text-2xl font-bold text-white">
                 {user.name ? `Welcome back, ${user.name.split(" ")[0]}` : "Dashboard"}
               </h1>
-              <p className="text-sm text-gray-400">{user.email}</p>
+              <p className="text-sm text-ink-300">{user.email}</p>
             </div>
             <div className="flex items-center gap-2">
               {demoActive && (
@@ -187,7 +187,7 @@ export default async function DashboardPage() {
                   Sample mode
                 </span>
               )}
-              <span className="rounded-full bg-gray-700 px-3 py-1 text-sm font-semibold text-gray-300">
+              <span className="rounded-full bg-titanium px-3 py-1 text-sm font-semibold text-ink-200">
                 {user.role === "ADMIN" ? "Admin" : "Member"}
               </span>
             </div>
@@ -214,13 +214,13 @@ export default async function DashboardPage() {
           {!performanceVisible && (
             <p
               data-testid="dashboard-performance-collecting"
-              className="mb-6 rounded-lg border border-gray-800 bg-gray-900/40 px-4 py-3 text-xs text-gray-400"
+              className="mb-6 rounded-lg border border-mineral bg-eclipse/40 px-4 py-3 text-xs text-ink-300"
             >
               {performancePolicy.publicMessage}
             </p>
           )}
           {performanceVisible && (
-            <p className="mb-6 text-[11px] text-gray-600">
+            <p className="mb-6 text-[11px] text-ink-500">
               Only fully-settled verified picks are counted. Pushes are
               reported separately. Pending and early-period picks are
               excluded.
@@ -228,9 +228,9 @@ export default async function DashboardPage() {
           )}
 
           {/* Today's picks list */}
-          <section className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/60 p-6">
+          <section className="mb-6 rounded-2xl border border-mineral bg-eclipse/60 p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+              <h2 className="text-sm font-semibold uppercase tracking-widest text-ink-400">
                 Today's picks
               </h2>
               <Link
@@ -241,12 +241,12 @@ export default async function DashboardPage() {
               </Link>
             </div>
             {todayPicks.length === 0 ? (
-              <p className="py-6 text-center text-sm text-gray-500">
+              <p className="py-6 text-center text-sm text-ink-400">
                 No picks generated yet today. Check back after the ingestion
                 worker runs.
               </p>
             ) : (
-              <ul className="divide-y divide-gray-800">
+              <ul className="divide-y divide-mineral">
                 {todayPicks.map((p) => (
                   <PickRow key={p.id} pick={p} showConfidence={entitlements.canSeeConfidence} />
                 ))}
@@ -255,8 +255,8 @@ export default async function DashboardPage() {
           </section>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <section className="rounded-2xl border border-gray-800 bg-gray-900/60 p-6">
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-gray-500">
+            <section className="rounded-2xl border border-mineral bg-eclipse/60 p-6">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-ink-400">
                 Quick Links
               </h2>
               <nav className="flex flex-col gap-1">
@@ -269,21 +269,21 @@ export default async function DashboardPage() {
                   <Link
                     key={href}
                     href={href}
-                    className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-white"
+                    className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-ink-300 hover:bg-titanium hover:text-white"
                   >
                     {label}
-                    <span className="text-gray-700">{`→`}</span>
+                    <span className="text-ink-500">{`→`}</span>
                   </Link>
                 ))}
               </nav>
             </section>
 
-            <section className="rounded-2xl border border-gray-800 bg-gray-900/60 p-6">
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-gray-500">
+            <section className="rounded-2xl border border-mineral bg-eclipse/60 p-6">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-ink-400">
                 Where we are
               </h2>
-              <p className="text-sm text-gray-300">{performancePolicy.publicMessage}</p>
-              <p className="mt-3 text-[11px] text-gray-600">
+              <p className="text-sm text-ink-200">{performancePolicy.publicMessage}</p>
+              <p className="mt-3 text-[11px] text-ink-500">
                 Pick generation, ingestion, and settlement are running.
                 Your verified record will populate as canonical picks
                 settle. We do not publish a win rate until we have a
@@ -291,7 +291,7 @@ export default async function DashboardPage() {
               </p>
               <p
                 data-testid="dashboard-last-sync"
-                className="mt-3 text-[10px] uppercase tracking-widest text-gray-700"
+                className="mt-3 text-[10px] uppercase tracking-widest text-ink-500"
               >
                 As of {format(new Date(), "MMM d, yyyy · h:mm a")}
               </p>
@@ -335,7 +335,7 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
         <p className="truncate text-sm font-medium text-white">
           <span
             data-testid="dashboard-sport-pill"
-            className="mr-2 rounded bg-gray-800 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-gray-400"
+            className="mr-2 rounded bg-titanium px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-ink-300"
           >
             {pick.game.sport.name}
           </span>
@@ -346,17 +346,17 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
             </span>
           )}
         </p>
-        <p className="truncate text-xs text-gray-500">
+        <p className="truncate text-xs text-ink-400">
           {homeAway} · {pick.game.sport.name}
         </p>
-        <p className="truncate text-[11px] text-gray-600">
+        <p className="truncate text-[11px] text-ink-500">
           {pick.reasoningShort}
         </p>
         {showConfidence && (
           <div
             data-testid="confidence-bar"
             aria-label={`Confidence ${pick.confidence}%`}
-            className="mt-1 h-1 w-full overflow-hidden rounded-full bg-gray-800"
+            className="mt-1 h-1 w-full overflow-hidden rounded-full bg-titanium"
           >
             <div
               className="h-full bg-brand-500/60"
@@ -368,7 +368,7 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
       <div className="flex shrink-0 flex-col items-end gap-1 text-right">
         <GradeBadge grade={pick.pickGrade} />
         {showConfidence ? (
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-ink-300">
             {pick.confidence}% conf
           </span>
         ) : (
@@ -388,7 +388,7 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
             +{pick.edgeScore.toFixed(1)} edge
           </span>
         )}
-        <span className="text-[10px] uppercase tracking-widest text-gray-600">
+        <span className="text-[10px] uppercase tracking-widest text-ink-500">
           {pick.riskLevel}
         </span>
       </div>
@@ -424,8 +424,8 @@ function StatCard({
   highlight?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
-      <p className="text-xs text-gray-500">{label}</p>
+    <div className="rounded-xl border border-mineral bg-eclipse/60 p-4">
+      <p className="text-xs text-ink-400">{label}</p>
       <p className={`mt-1 text-2xl font-bold ${highlight ? "text-green-400" : "text-white"}`}>{value}</p>
     </div>
   );
