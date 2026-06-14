@@ -1,25 +1,32 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
- * Player composite (Galaxy Index) loader: production z-score vs position +
- * availability (injury/practice/concussion) blended via the real composite
- * matrix. Only the DB is mocked.
+ * Player composite (Galaxy Index): reads weekly PlayerGameStat and blends
+ * production (z vs position) + workload + momentum + availability via the real
+ * composite matrix. Only the DB is mocked.
  */
 
-const mocks = vi.hoisted(() => ({ groupBy: vi.fn(), playerFindMany: vi.fn(), injuryFindMany: vi.fn() }));
+const mocks = vi.hoisted(() => ({ findMany: vi.fn(), playerFindMany: vi.fn(), injuryFindMany: vi.fn() }));
 vi.mock("@sports/db", () => ({ db: {
-  playerGameStat: { groupBy: mocks.groupBy },
+  playerGameStat: { findMany: mocks.findMany },
   player: { findMany: mocks.playerFindMany },
   injury: { findMany: mocks.injuryFindMany },
 } }));
 
 import { loadPlayerCompositeScores, availabilitySignalValue } from "@/lib/scoring/player-composite";
 
+function weekRows(playerId: string, ppr: number[], carries: number, receptions: number) {
+  return ppr.map((v, i) => ({ playerId, week: i + 1, fantasyPointsPpr: v, carries, receptions }));
+}
+
 beforeEach(() => {
-  mocks.groupBy.mockReset();
-  mocks.playerFindMany.mockReset();
-  mocks.injuryFindMany.mockReset();
-  mocks.injuryFindMany.mockResolvedValue([]);
+  mocks.findMany.mockReset();
+  mocks.playerFindMany.mockReset().mockResolvedValue([
+    { id: "p1", fullName: "Alpha", position: "RB", recentTeam: "KC" },
+    { id: "p2", fullName: "Bravo", position: "RB", recentTeam: "SF" },
+    { id: "p3", fullName: "Charlie", position: "RB", recentTeam: "BUF" },
+  ]);
+  mocks.injuryFindMany.mockReset().mockResolvedValue([]);
 });
 
 describe("availabilitySignalValue", () => {
@@ -27,46 +34,45 @@ describe("availabilitySignalValue", () => {
     expect(availabilitySignalValue({ reportStatus: "Out", practiceStatus: null, primaryInjury: null })).toBe(-2);
     expect(availabilitySignalValue({ reportStatus: "Questionable", practiceStatus: null, primaryInjury: null })).toBe(-0.5);
     expect(availabilitySignalValue({ reportStatus: null, practiceStatus: "Limited", primaryInjury: "Concussion" })).toBe(-1);
-    expect(availabilitySignalValue({ reportStatus: "Out", practiceStatus: "Did Not Participate", primaryInjury: "Concussion" })).toBe(-2.5); // clamped
+    expect(availabilitySignalValue({ reportStatus: "Out", practiceStatus: "Did Not Participate", primaryInjury: "Concussion" })).toBe(-2.5);
     expect(availabilitySignalValue({ reportStatus: null, practiceStatus: null, primaryInjury: null })).toBe(0);
   });
 });
 
 describe("loadPlayerCompositeScores", () => {
-  it("ranks by blended score and an injured player is dragged below an equal producer", async () => {
-    mocks.groupBy.mockResolvedValue([
-      { playerId: "p1", _count: { _all: 16 }, _avg: { fantasyPointsPpr: 20 } },
-      { playerId: "p2", _count: { _all: 16 }, _avg: { fantasyPointsPpr: 10 } },
-      { playerId: "p3", _count: { _all: 16 }, _avg: { fantasyPointsPpr: 20 } }, // same production as p1, but injured
-    ]);
-    mocks.playerFindMany.mockResolvedValue([
-      { id: "p1", fullName: "Alpha", position: "RB", recentTeam: "KC" },
-      { id: "p2", fullName: "Bravo", position: "RB", recentTeam: "BUF" },
-      { id: "p3", fullName: "Charlie", position: "RB", recentTeam: "SF" },
+  it("blends production + workload + momentum + availability and attributes drivers", async () => {
+    mocks.findMany.mockResolvedValue([
+      ...weekRows("p1", [15, 15, 15, 22, 22, 22], 15, 3), // strong, rising, workhorse
+      ...weekRows("p2", [15, 15, 15, 22, 22, 22], 15, 3), // same production but injured below
+      ...weekRows("p3", [5, 5, 5, 5, 5, 5], 5, 0), // weak, flat, low usage
     ]);
     mocks.injuryFindMany.mockResolvedValue([
-      { playerId: "p3", week: 5, reportStatus: "Out", practiceStatus: "Did Not Participate", primaryInjury: "Concussion" },
+      { playerId: "p2", week: 5, reportStatus: "Out", practiceStatus: null, primaryInjury: null },
     ]);
 
     const r = await loadPlayerCompositeScores(2024);
     expect(r.status).toBe("ok");
     expect(r.playerCount).toBe(3);
-    expect(r.top[0]!.name).toBe("Alpha"); // top producer, no injury
+    expect(r.top[0]!.name).toBe("Alpha"); // healthy, rising, workhorse
 
     const p1 = r.top.find((x) => x.playerId === "p1")!;
-    const p3 = r.top.find((x) => x.playerId === "p3")!;
     const p2 = r.top.find((x) => x.playerId === "p2")!;
-    expect(p1.score).toBeGreaterThan(p3.score); // same production z, but p3 hurt by availability
-    expect(p3.score).toBeGreaterThan(p2.score);
-    // p3's drivers include the availability signal pulling it down
-    const avail = p3.drivers.find((d) => d.key === "availability")!;
-    expect(avail.contribution).toBeLessThan(0);
+    const p3 = r.top.find((x) => x.playerId === "p3")!;
+    expect(p1.score).toBeGreaterThan(p2.score); // identical production, p2 hurt by availability
+    expect(p2.score).toBeGreaterThan(p3.score);
+    expect(p1.touchesPerGame).toBeCloseTo(18, 1);
+    expect(p1.recentPpg).toBeGreaterThan(p1.seasonPpg); // rising → recent above season
+
+    // drivers reflect the multi-signal blend
+    expect(p1.drivers.some((d) => d.key === "momentum" && d.contribution > 0)).toBe(true);
+    expect(p1.drivers.some((d) => d.key === "workload" && d.contribution > 0)).toBe(true);
+    expect(p2.drivers.some((d) => d.key === "availability" && d.contribution < 0)).toBe(true);
   });
 
   it("returns no-data when empty, and is stub-safe on null", async () => {
-    mocks.groupBy.mockResolvedValue([]);
+    mocks.findMany.mockResolvedValue([]);
     expect((await loadPlayerCompositeScores(2024)).status).toBe("no-data");
-    mocks.groupBy.mockResolvedValue(null);
+    mocks.findMany.mockResolvedValue(null);
     expect((await loadPlayerCompositeScores(2024)).status).toBe("no-data");
   });
 });
