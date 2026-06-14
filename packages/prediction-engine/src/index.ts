@@ -148,11 +148,13 @@ export {
   isotonicCalibration,
   brierDecomposition,
   expectedCalibrationError,
+  reliabilityCurve,
 } from "./probability-calibration.js";
 export type {
   CalibrationSample,
   IsotonicModel,
   BrierDecomposition,
+  ReliabilityBin,
 } from "./probability-calibration.js";
 
 export {

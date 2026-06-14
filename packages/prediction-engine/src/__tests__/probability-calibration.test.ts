@@ -3,6 +3,7 @@ import {
   isotonicCalibration,
   brierDecomposition,
   expectedCalibrationError,
+  reliabilityCurve,
   type CalibrationSample,
 } from "../probability-calibration.js";
 
@@ -112,5 +113,32 @@ describe("isotonicCalibration (PAVA)", () => {
     ]);
     expect(m.points).toHaveLength(1);
     expect(m.predict(0.65)).toBe(0.5);
+  });
+});
+
+describe("reliabilityCurve", () => {
+  it("reports forecast vs observed per bin and zeroes empty bins", () => {
+    const samples: CalibrationSample[] = [
+      ...Array.from({ length: 7 }, (): CalibrationSample => ({ p: 0.85, y: 1 })),
+      ...Array.from({ length: 3 }, (): CalibrationSample => ({ p: 0.85, y: 0 })),
+    ];
+    const curve = reliabilityCurve(samples, 10);
+    expect(curve).toHaveLength(10);
+    const bin = curve[8]!; // [0.8, 0.9)
+    expect(bin.count).toBe(10);
+    expect(bin.meanForecast).toBeCloseTo(0.85, 4);
+    expect(bin.observedRate).toBeCloseTo(0.7, 4);
+    expect(curve[0]!.count).toBe(0);
+    expect(curve[0]!.observedRate).toBe(0);
+  });
+
+  it("sits on the diagonal for a well-calibrated forecaster", () => {
+    const samples: CalibrationSample[] = [
+      ...Array.from({ length: 30 }, (): CalibrationSample => ({ p: 0.3, y: 1 })),
+      ...Array.from({ length: 70 }, (): CalibrationSample => ({ p: 0.3, y: 0 })),
+    ];
+    const bin = reliabilityCurve(samples, 10)[3]!; // [0.3, 0.4)
+    expect(bin.meanForecast).toBeCloseTo(0.3, 4);
+    expect(bin.observedRate).toBeCloseTo(0.3, 4);
   });
 });
