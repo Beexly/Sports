@@ -157,6 +157,12 @@ export type {
   ReliabilityBin,
 } from "./probability-calibration.js";
 
+// Player season projection (recency+games-weighted, regressed) and its
+// honest backtest vs a carry-forward baseline. Forecasts; surfaced with their
+// measured error, not auto-published.
+export { projectPlayerSeason, backtestProjections } from "./player-projection.js";
+export type { PlayerSeasonLine, PlayerProjection, ProjectionBacktest } from "./player-projection.js";
+
 export {
   assessUncertainty,
   wilsonInterval,

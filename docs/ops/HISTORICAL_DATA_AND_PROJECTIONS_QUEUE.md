@@ -9,22 +9,26 @@ lines (`spread_line`, `total_line`, moneylines) AND final scores per game back t
 That is the real `(forecast, outcome)` archive — it passes the calibration data gate
 that the empty live `Pick` table could not.
 
-## Queue (intelligent dependency order)
+## Queue (intelligent dependency order) — ALL SHIPPED ✅
 
-1. **gsis→Player crosswalk** ✅ in progress — resolve `Injury.playerId` (clean gsisId
-   match) so injuries are queryable per player; order cron players-first.
-2. **Historical schedules/results ingestion** — new `HistoricalGame` model from nflverse
-   `schedules`: per-game closing line + total + moneylines + final score + result, ALL
-   seasons (1999+). This is the settled-outcome archive.
-3. **Backtest + calibration measurement report** — run the engine's de-vig/market logic
-   on historical closing lines → forecast probability; compare to real outcomes; compute
-   Brier / reliability / ECE with the already-built `probability-calibration.ts`. Read-only,
-   real numbers. This is the honest "how calibrated are we" surface.
-4. **Historical player-stats backfill** — extend player/snap/injury ingestion to ingest a
-   season RANGE (all seasons), not just current. Inputs for projections.
-5. **Depth charts** ingestion (deferred earlier for column variance — verify columns first).
-6. **2026 projections** — only after 1–4: per-player/team projections grounded in
-   historical rates, with the calibration from the backtest. A MODEL_VERSION step.
+1. **gsis→Player crosswalk** ✅ `4410e4e` — Injury.playerId resolved by gsis match.
+2. **Historical schedules/results ingestion** ✅ `47fb125` — `HistoricalGame` model +
+   all-seasons `games.csv` ingestion (closing lines + results, 1999+).
+3. **Backtest + calibration measurement report** ✅ `ee98361` — de-vig closing moneylines →
+   real Brier/ECE/reliability curve vs actual results at `/api/calibration/market-backtest`.
+4. **Historical player-stats backfill** ✅ `a2c7b54` — chunked multi-season backfill
+   (stats/snaps/injuries) across all seasons with a `nextFrom` cursor.
+5. **Depth charts** ✅ `4c2ff78` — ingestion across both column schemas; all 5 models live.
+6. **2026 projections** ✅ (this commit) — recency+games-weighted, regressed, BACKTESTED vs a
+   carry-forward baseline; Pro-gated `/api/projections`, shown with measured error.
+
+## What remains (owner-gated / needs the data flowing)
+- **Run it**: execute the backfills against the real DB (deploy) so the calibration +
+  projection surfaces fill in (they return honest empty states until then).
+- **Our model's own calibration**: run the platform scorer over historical games (adapt the
+  closing line into an OddsInput) → our Brier/ECE vs the market baseline. The framework exists.
+- **Price + publish**: wire projections/injury signals into confidence and publish projections
+  to users — now unblockable (real calibration exists), but a deliberate MODEL_VERSION step.
 
 ## Hard rules carried forward
 - No fake data; every extracted record clearance-gated + rights/freshness-stamped.
