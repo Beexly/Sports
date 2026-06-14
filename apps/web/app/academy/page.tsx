@@ -33,13 +33,61 @@ const cyan = BRAND_COLORS.orbitalCyan;
 const uv = BRAND_COLORS.softUltraviolet;
 const mag = BRAND_COLORS.ionMagenta;
 
-/** The wings of the Academy — every door on this floor is real. */
+/**
+ * The wings of the Academy — every door on this floor is real. Each carries a
+ * `mode` tag so the trainee knows what kind of activity waits behind it before
+ * they arrive: read+quiz, simulate, play, or watch.
+ */
 const WINGS = [
-  { id: "courses", label: "Course Floor", desc: "Interactive lessons + graded quizzes", hex: cyan },
-  { id: "live-fire", label: "Live Fire", desc: "Decide blind, graded on process", hex: mag },
-  { id: "beat-the-close", label: "Beat the Close", desc: "The line-trading arcade", hex: uv },
-  { id: "film-room", label: "Film Room", desc: "Filmed lessons — in production", hex: "#8b93a8" },
+  { id: "courses", label: "Course Floor", mode: "Read + Quiz", desc: "Interactive lessons, then graded quizzes", hex: cyan },
+  { id: "live-fire", label: "Live Fire", mode: "Simulate", desc: "Decide blind, graded on process", hex: mag },
+  { id: "beat-the-close", label: "Beat the Close", mode: "Arcade", desc: "The line-trading game", hex: uv },
+  { id: "film-room", label: "Film Room", mode: "Watch", desc: "Filmed lessons — in production", hex: "#8b93a8" },
 ] as const;
+
+/**
+ * WingHeader — one consistent chapter header for every wing, so the four
+ * sections read as distinct, evenly-spaced chapters. Wayfinding ("Wing N of
+ * 4"), the activity mode, the title, and an optional kicker line, in a fixed
+ * rhythm. Server-rendered; the register-aware body paragraph is slotted in by
+ * the caller as `children`.
+ */
+function WingHeader({
+  index,
+  hex,
+  mode,
+  eyebrow,
+  title,
+  children,
+}: {
+  index: number;
+  hex: string;
+  mode: string;
+  eyebrow: string;
+  title: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <header>
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: hex }}>
+          {eyebrow}
+        </span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-ink-500">
+          Wing {index} of 4
+        </span>
+        <span
+          className="rounded-full px-2.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.2em]"
+          style={{ color: hex, background: `${hex}14`, border: `1px solid ${hex}3a` }}
+        >
+          {mode}
+        </span>
+      </div>
+      <h2 className="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">{title}</h2>
+      {children}
+    </header>
+  );
+}
 
 export default function AcademyPage() {
   return (
@@ -82,17 +130,29 @@ export default function AcademyPage() {
               </div>
             </Reveal>
 
-            {/* wing map */}
+            {/* wing map — the four doors, each labeled by what you'll DO inside */}
             <Reveal delay={240}>
-              <div className="mt-8 grid gap-3 sm:grid-cols-4">
-                {WINGS.map((w) => (
+              <p className="mt-10 font-mono text-[10px] uppercase tracking-[0.28em] text-ink-500">
+                Four wings · pick where to start
+              </p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-4">
+                {WINGS.map((w, i) => (
                   <HoloTilt key={w.id} className="h-full">
                     <a
                       href={`#${w.id}`}
-                      className="group block h-full rounded-xl border p-4"
+                      className="group block h-full rounded-xl border p-4 transition-shadow hover:shadow-[0_0_0_1px_var(--tw-shadow-color)]"
                       style={{ borderColor: `${w.hex}33`, background: `radial-gradient(100% 100% at 50% 0%, ${w.hex}0d, transparent 75%)` }}
                     >
-                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em]" style={{ color: w.hex }}>
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="font-mono text-[10px] text-ink-500">0{i + 1}</span>
+                        <span
+                          className="rounded-full px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.18em]"
+                          style={{ color: w.hex, background: `${w.hex}14`, border: `1px solid ${w.hex}3a` }}
+                        >
+                          {w.mode}
+                        </span>
+                      </span>
+                      <p className="mt-2 font-mono text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: w.hex }}>
                         {w.label}
                       </p>
                       <p className="mt-1.5 text-xs leading-relaxed text-ink-300">{w.desc}</p>
@@ -104,20 +164,18 @@ export default function AcademyPage() {
           </div>
         </section>
 
-        {/* ── COURSE FLOOR — interactive lessons + quizzes ─────────────── */}
-        <section id="courses" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
+        {/* ── WING 01 · COURSE FLOOR — interactive lessons + quizzes ───── */}
+        <section id="courses" className="scroll-mt-28 px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: cyan }}>course floor</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-white">
-                Lessons that quiz back.
-              </h2>
-              <AcademyCourseSectionBody />
+              <WingHeader index={1} hex={cyan} mode="Read + Quiz" eyebrow="course floor" title="Lessons that quiz back.">
+                <AcademyCourseSectionBody />
+              </WingHeader>
             </Reveal>
             <Reveal delay={90}>
-              <div className="mt-6 rounded-2xl border border-mineral bg-eclipse/40 p-5">
+              <div className="mt-7 rounded-2xl border border-mineral bg-eclipse/40 p-5">
                 <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
-                  How should we explain things?
+                  Before you start — how should we explain things?
                 </p>
                 <p className="mt-1 text-sm text-ink-300">
                   Set your register — every &ldquo;ask the model why&rdquo; across
@@ -138,18 +196,16 @@ export default function AcademyPage() {
 
         <SignalRule />
 
-        {/* ── LIVE FIRE — the original simulator ───────────────────────── */}
-        <section id="live-fire" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl">
+        {/* ── WING 02 · LIVE FIRE — the decision simulator ─────────────── */}
+        <section id="live-fire" className="scroll-mt-28 px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: mag }}>live fire</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-white">
-                Decide blind. Get graded on the decision.
-              </h2>
-              <AcademyLiveFireBody />
+              <WingHeader index={2} hex={mag} mode="Simulate" eyebrow="live fire" title="Decide blind. Get graded on the decision.">
+                <AcademyLiveFireBody />
+              </WingHeader>
             </Reveal>
             <Reveal delay={120}>
-              <div className="mt-8">
+              <div className="mx-auto mt-8 max-w-3xl">
                 <AcademySimulator />
               </div>
             </Reveal>
@@ -158,15 +214,13 @@ export default function AcademyPage() {
 
         <SignalRule />
 
-        {/* ── BEAT THE CLOSE — the game ────────────────────────────────── */}
-        <section id="beat-the-close" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
+        {/* ── WING 03 · BEAT THE CLOSE — the arcade ────────────────────── */}
+        <section id="beat-the-close" className="scroll-mt-28 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: uv }}>the arcade</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-white">
-                Beat the Close.
-              </h2>
-              <AcademyBeatTheCloseBody />
+              <WingHeader index={3} hex={uv} mode="Arcade" eyebrow="the arcade" title="Beat the Close.">
+                <AcademyBeatTheCloseBody />
+              </WingHeader>
             </Reveal>
             <Reveal delay={120}>
               <div className="mt-8">
@@ -176,18 +230,18 @@ export default function AcademyPage() {
           </div>
         </section>
 
-        {/* ── FILM ROOM — in production, honestly ──────────────────────── */}
-        <section id="film-room" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
+        <SignalRule />
+
+        {/* ── WING 04 · FILM ROOM — in production, honestly ────────────── */}
+        <section id="film-room" className="scroll-mt-28 px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl">
             <Reveal>
-              <p className="eyebrow text-ink-400">film room</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-white">
-                The filmed curriculum — in production.
-              </h2>
-              <p className="mt-3 max-w-2xl text-ink-300">
-                Six episodes pairing with the course floor — the real production order, no
-                placeholders. Every lesson is already trainable above.
-              </p>
+              <WingHeader index={4} hex="#8b93a8" mode="Watch" eyebrow="film room" title="The filmed curriculum — in production.">
+                <p className="mt-3 max-w-2xl text-ink-300">
+                  Six episodes pairing with the course floor — the real production order, no
+                  placeholders. Every lesson is already trainable above.
+                </p>
+              </WingHeader>
             </Reveal>
             <Reveal delay={120}>
               <div className="mt-8">
@@ -197,8 +251,10 @@ export default function AcademyPage() {
           </div>
         </section>
 
+        <SignalRule />
+
         {/* GM Academy + closing note */}
-        <section className="px-4 pb-24 pt-4 sm:px-6 lg:px-8">
+        <section className="px-4 pb-24 pt-16 sm:px-6 lg:px-8">
           <Reveal>
             <div className="mx-auto max-w-3xl text-center">
               <p className="text-sm leading-relaxed text-ink-500">

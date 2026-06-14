@@ -269,16 +269,50 @@ export function BeatTheClose() {
 
   const last = results[results.length - 1];
 
+  // Phase → mode chip: the always-on "what's happening right now" signal.
+  const PHASE_CHIP: Record<Phase, { label: string; hex: string; icon: string }> = {
+    brief: { label: "How to play", hex: uv, icon: "▤" },
+    live: { label: "Live — your call", hex: cyan, icon: "●" },
+    report: { label: "Result", hex: uv, icon: "◆" },
+    final: { label: "Session report", hex: cyan, icon: "◆" },
+  };
+  const chip = PHASE_CHIP[phase];
+
   return (
     <div className="surface-card relative overflow-hidden p-6">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: cyan }}>
-          beat the close · training simulation
-        </p>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span
+          className="inline-flex items-center gap-2 rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.24em]"
+          style={{ color: chip.hex, background: `${chip.hex}14`, border: `1px solid ${chip.hex}55` }}
+        >
+          <span aria-hidden>{chip.icon}</span>
+          {chip.label}
+        </span>
         <p className="font-mono text-[10px] uppercase tracking-widest text-ink-400">
           synthetic markets · fictional teams · graded on CLV
         </p>
       </div>
+
+      {/* round progress — visible once play begins */}
+      {phase !== "brief" && (
+        <div className="mt-4 flex items-center gap-3">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-ink-500">
+            Market {Math.min(roundIdx + 1, ROUNDS.length)} / {ROUNDS.length}
+          </span>
+          <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/5">
+            <div
+              className="h-full rounded-full transition-[width] duration-500 ease-out"
+              style={{
+                width: `${((roundIdx + (phase === "report" || phase === "final" ? 1 : 0)) / ROUNDS.length) * 100}%`,
+                background: `linear-gradient(90deg, ${cyan}, ${uv})`,
+              }}
+            />
+          </div>
+          <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: cyan }}>
+            {total} pts
+          </span>
+        </div>
+      )}
 
       {phase === "brief" && (
         <div className="mt-6 flex flex-col items-start gap-5">
@@ -307,9 +341,7 @@ export function BeatTheClose() {
         <div className="mt-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-widest text-ink-400">
-                market {roundIdx + 1} / {ROUNDS.length}
-              </p>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-ink-400">the matchup</p>
               <p className="mt-1 font-display text-xl font-semibold text-white">{round.matchup}</p>
             </div>
             <div className="text-right">
@@ -402,7 +434,6 @@ export function BeatTheClose() {
 
       {phase === "final" && (
         <div className="mt-6">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-ink-400">session report</p>
           <p className="mt-2 font-display text-4xl font-bold text-white">
             {total} <span className="text-xl font-normal text-ink-300">/ 30 pts</span>
           </p>

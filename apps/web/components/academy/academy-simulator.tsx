@@ -85,19 +85,44 @@ export function AcademySimulator() {
 
   const s = SCENARIOS[index]!;
   const grade = picked ? gradeChoice(picked, s) : null;
+  const modeHex = picked ? GRADE_HEX[grade!.tone] : BRAND_COLORS.ionMagenta;
 
   return (
     <div className="surface-card relative overflow-hidden p-6 sm:p-8">
-      {/* header */}
+      {/* header — mode chip makes "deciding" vs "graded" unmistakable */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="font-mono text-xs uppercase tracking-[0.16em] text-ink-500">
-          Scenario {index + 1} / {SCENARIOS.length} · {s.label}
-        </p>
+        <span
+          className="inline-flex items-center gap-2 rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.24em]"
+          style={{ color: modeHex, background: `${modeHex}14`, border: `1px solid ${modeHex}55` }}
+        >
+          <span aria-hidden>{picked ? "◆" : "●"}</span>
+          {picked ? "Graded" : "Your call"}
+        </span>
         <span className="font-mono text-xs text-ink-400">process score · {score}</span>
+      </div>
+
+      {/* progress */}
+      <div className="mt-4 flex items-center gap-3">
+        <span className="font-mono text-[10px] uppercase tracking-widest text-ink-500">
+          Scenario {index + 1} / {SCENARIOS.length}
+        </span>
+        <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/5">
+          <div
+            className="h-full rounded-full transition-[width] duration-500 ease-out"
+            style={{
+              width: `${((index + (picked ? 1 : 0)) / SCENARIOS.length) * 100}%`,
+              background: `linear-gradient(90deg, ${BRAND_COLORS.ionMagenta}, ${BRAND_COLORS.softUltraviolet})`,
+            }}
+          />
+        </div>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-ink-500">{s.label}</span>
       </div>
 
       {/* market state */}
       <div className="mt-5">
+        <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.24em] text-ink-500">
+          Read the market state
+        </p>
         <StateRow label="Lines" value={s.market} />
         <StateRow label="Injury" value={s.injury} />
         <StateRow label="Public" value={s.publicPressure} />
@@ -108,7 +133,9 @@ export function AcademySimulator() {
       {/* choices */}
       {!picked && (
         <div className="mt-6">
-          <p className="mb-3 text-xs uppercase tracking-[0.16em] text-ink-500">Your call — decide before you see the result</p>
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.24em] text-ink-500">
+            Decide blind — pick one before the result reveals
+          </p>
           <div className="grid grid-cols-3 gap-3">
             {CHOICES.map((c) => (
               <button
