@@ -158,24 +158,37 @@ models + clearance-gated ingestion), the **HistoricalGame** settled archive, a
   efficiency (DVOA-like), per-player EPA allocation, CPOE, an xYAC model, a QBR-like
   QB composite, and an FPI-like power rating (extend Elo). Each calibrated with the
   backtest framework — every metric ships with its measured error.
-- **Phase C — Our composite glass-box ratings (the "Galaxy Index").** A transparent,
-  weighted blend of the Phase-B signals → 0–100, position-normalized, **validated
-  against real outcomes** (does the rating predict next-season production / wins?
-  — measurable with the projection + calibration backtests already built). The
-  existing `galaxy_player_index` concept becomes a real, calibrated number.
+- **Phase C — Our composite ratings (the "Galaxy Index").** A weighted blend of the
+  Phase-B signals → 0–100, position-normalized, **validated against real outcomes**
+  (does the rating predict next-season production / wins? — measurable with the
+  projection + calibration backtests already built). The existing
+  `galaxy_player_index` concept becomes a real, calibrated number we own and lead
+  our analysis/narrative with.
 - **Phase D — Tracking models (advanced).** Train separation/space/xYAC-from-geometry
   on Big Data Bowl samples; apply to full seasons via the outcome framework.
 - **Phase E — Surface it.** Gated/public routes like the calibration/projection ones
   already shipped, each returning its backtest error, plus a player "ratings" page.
 
-## Our actual edge — why ours can be *better*, not just cheaper
+## Our actual edge — we DOMINATE the data, then out-interpret and out-narrate it
 
-We are not selling a free knockoff. PFF is opaque human judgment; NGS is a
-black-box feed; DVOA is a secret recipe. Ours is **glass-box** (open methodology),
-**calibration-proven** (every metric ships with its backtest error, the way the
-projections and Elo backtest already do), and **unified** (one system of record →
-one rating). Transparent + provably-calibrated is the credible "best site of 2026"
-angle — and it's defensible because it's ours.
+The win is NOT transparency — nobody sees our recipe, and we don't sell "open
+methodology." The win is **owning the most complete picture and doing more with it
+than anyone else**:
+
+- **Breadth / domination:** every public pillar persisted and joined in one system
+  of record — more metrics, more coverage, more history than competitors bother to
+  assemble. We have it all in one place; they each own one slice.
+- **Better derived metrics:** our own opponent-adjusted efficiency, power ratings,
+  projections — calibrated against real outcomes so they are genuinely *right*.
+  (Validation is an internal quality bar, not a marketing claim.)
+- **Interpretation & leverage:** turn the metric soup into a sharp, ranked,
+  actionable read — who to trust, where the edge is, what the market missed. The
+  analysis is the value, not the raw number.
+- **Narration:** present it with authority and a voice. The metric is the
+  ingredient; the interpretation and the story are the product.
+
+PFF/NGS/DVOA each guard one proprietary slice. We assemble ALL the public signal,
+build superior derived metrics on top, and win on interpretation + narrative.
 
 ## Highest value-for-effort order (recommended)
 1. Persist PBP + the public stat pillars (Phase A) — unlocks everything.

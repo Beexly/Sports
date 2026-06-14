@@ -168,6 +168,10 @@ export type { PlayerSeasonLine, PlayerProjection, ProjectionBacktest } from "./p
 export { eloBacktest } from "./elo-backtest.js";
 export type { EloBacktestGame, EloBacktestReport, EloBacktestOptions } from "./elo-backtest.js";
 
+// Opponent-adjusted efficiency (DVOA/SRS-family) over public play-by-play.
+export { opponentAdjustedRatings } from "./opponent-adjusted.js";
+export type { TeamGameEfficiency, TeamRating, OpponentAdjustOptions } from "./opponent-adjusted.js";
+
 export {
   assessUncertainty,
   wilsonInterval,
