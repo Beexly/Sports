@@ -15,35 +15,45 @@ instead of trusting it (see LESSONS L1).
 ---
 
 ## In progress
-- [ ] Boot: gate baseline running (typecheck ✓ all 10 workspaces, lint→build→test in flight).
+- [ ] **W2-2b · pricing/dashboard subtle gray polish** — DEFERRED/low-value (see note below).
+
+## GROUND-TRUTH RECALIBRATION (verified on this tree, supersedes brief assumptions)
+- Global `body` already sets `background: var(--carbon)` + fixed cosmic bg-image
+  (globals.css:25-35) → "missing background" is NOT a defect here; pages inherit cosmic bg.
+- `bg-gray-900/950` are visually NEAR brand `carbon/void` (lack only the violet tint), so
+  pages using dark grays look near-cosmic. The high-value rebrands are surfaces with LOUD
+  off-brand accents (harsh cyan-400/fuchsia-400/blue-600/white cards): that was picks+room
+  (DONE) + auth/signin (DONE). Remaining gray-only pages (pricing 26, dashboard 49,
+  promotions 28, blog) are SUBTLE → low visible impact, low priority.
+- `board` + `journal` are brief-designated reference-quality; their gray usage is
+  acceptable in context → DO NOT rebrand (respect the brief).
+- `stats/source-suggest` is ALREADY on-brand on this tree and has NO broken `/promotions`
+  action (brief's W2-1 superseded). New minor finding: its form has no real submit handler
+  yet StatusRibbon says "accepted and reviewed" → honesty nuance, deferred (needs API/DB).
+- fantasy/contests, brief, academy film-room, trends all already carry HONEST in-progress
+  gating → no fabrication; leave as-is (polish only if time).
 
 ## Queue (scored, highest first)
+- [ ] **W3-3 · page-level smoke tests (HIGH durable value)** — score ~6 (Imp 5 × Conf 4 ÷
+  Eff 3). Brief: "112/113 public pages have no page-level test." Add happy-path/smoke tests
+  for top routes (home, pricing, board, picks, performance, room, intelligence, academy).
+  Would have caught tonight's brittle-test breakage class. Durable regression prevention.
+- [ ] **W3-2 · a11y keyboard parity** — score ~4 (Imp 3 × Conf 3 ÷ Eff 2). NOTE: brief's
+  "~90 onClick missing parity" is overstated here — 47 client comps use onClick, ~all on
+  native `<button>/<a>/<Link>` (already keyboard-safe). Real gap = onClick on
+  `<div>/<span>` w/o role/tabIndex/onKeyDown. Scope precisely in dfs-optimizer,
+  draft-assistant, galaxy-slate-twin, cinematic-entrance, observatory/simulation-cloud.
+- [ ] **W3-1 · hero video perf** — confirm `GeneratedPlate` uses preload="none"+poster+
+  motion-gated mount; flag oversized `public/immersive/**` clips.
 
-### WAVE 1 — Cohesion (off-brand gray/accent → cosmic system). Re-verified on this tree.
-- [ ] **W1-1 · `app/picks/page.tsx` rebrand** — score ~6.7 (Impact 5 × Conf 4 ÷ Eff 3).
-  Revenue surface. Confirmed off-brand: `bg-gray-950/900/800/700`, 13× `cyan-400`,
-  `text-accent-300`, many `text-gray-*`. → void/carbon/eclipse + `border-mineral` +
-  `#00E5FF` orbital-cyan + `text-ink-*`. Keep server-side paywall + all logic intact.
-- [ ] **W1-2 · accent-300 sweep (mechanical, Haiku)** — score ~7.5 (Imp 3 × Conf 5 ÷ Eff 2).
-  Swap off-palette `text-accent-300`/`text-accent-200` → `text-orbital-cyan` across
-  `app/about`, `app/contact`, `app/changelog`, `app/faq`, `app/terms`, `app/privacy`,
-  `app/responsible-play`. Pure token swap; no layout change.
-- [ ] **W1-3 · `app/room/[gameId]/page.tsx` rebrand** — score ~5.3 (Imp 4 × Conf 4 ÷ Eff 3).
-  Decision Room. `bg-gray-950/900`, `border-gray-800`, `text-gray-100..500` → carbon/
-  eclipse + ink tokens + subtle accent glow.
-- [ ] **W1-4 · hero warmth for flat public pages** — about/contact/changelog/faq/terms/
-  privacy/vault/integrations/responsible-play: ensure explicit cosmic bg + eyebrow/title
-  hero w/ radial-gradient accent (academy hero pattern). Decompose per page.
-
-### WAVE 2 — Honest, finished public surfaces (never fabricate)
-- [ ] **W2-1 · fix `app/stats/source-suggest` form action** — score HIGH (real bug, Conf 5).
-  Brief flags `action` → `/promotions` (broken). Verify + point at correct handler.
-- [ ] **W2-2 · `app/auth/signin` "email sign-in coming soon"** — finish or remove the
-  half-feature so auth feels complete. Decide per code reality.
-- [ ] **W2-3 · `app/fantasy/contests` "under construction"** — gate out of public nav or
-  convert to honest, polished in-progress state.
-- [ ] **W2-4 · `app/terms` "pending counsel"** — keep honest (no fabricated legal text),
-  make presentation production-grade.
+### DONE — WAVE 1 (cohesion) + auth honesty
+- [x] **W1-1 picks rebrand** — shipped b5bd7ce. Loud off-brand → cosmic; logic/gating intact.
+- [x] **W1-2 accent-300 sweep** (7 pages) — shipped b5bd7ce.
+- [x] **W1-3 room rebrand** — shipped b5bd7ce.
+- [x] **W2-2 auth/signin** — rebranded + removed "Email sign-in coming soon" half-feature
+  (Google OAuth is a complete auth experience). Gate pending.
+- [~] **W1-4 hero warmth** — DESCOPED: global cosmic bg already present; accent sweep
+  delivered cohesion; legal pages don't need added motion. Optional polish only.
 
 ### WAVE 3 — Performance / A11y / Tests
 - [ ] **W3-1 · hero video perf** — confirm `GeneratedPlate` uses `preload="none"` + poster

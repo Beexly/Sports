@@ -22,18 +22,18 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const errorMessage = getErrorMessage(searchParams.error);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-950 px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-void px-4">
       {/* Background glow */}
       <div
         className="pointer-events-none fixed inset-x-0 top-0 -z-10 overflow-hidden blur-3xl"
         aria-hidden="true"
       >
-        <div className="relative left-1/2 aspect-[1155/678] w-[36rem] -translate-x-1/2 bg-gradient-to-tr from-brand-700 to-blue-600 opacity-10" />
+        <div className="relative left-1/2 aspect-[1155/678] w-[36rem] -translate-x-1/2 bg-gradient-to-tr from-soft-ultraviolet to-orbital-cyan opacity-[0.08]" />
       </div>
 
       {/* Logo */}
       <Link href="/" className="group mb-10 flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 transition-colors group-hover:bg-brand-500">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-ion-magenta transition-colors group-hover:bg-plasma-glow">
           <svg
             className="h-5 w-5 text-white"
             fill="none"
@@ -55,10 +55,10 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       </Link>
 
       {/* Card */}
-      <div className="w-full max-w-sm rounded-2xl border border-gray-800 bg-gray-900 p-8 shadow-2xl shadow-black/60">
+      <div className="w-full max-w-sm rounded-2xl border border-mineral bg-eclipse p-8 shadow-2xl shadow-black/60">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-white">Sign in to Galaxy Sports Edge</h1>
-          <p className="mt-1.5 text-sm text-gray-400">
+          <p className="mt-1.5 text-sm text-ink-300">
             Pick up where you left the signal.
           </p>
         </div>
@@ -81,7 +81,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         >
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-700 bg-white px-4 py-3 text-sm font-semibold text-gray-900 shadow-sm transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="flex w-full items-center justify-center gap-3 rounded-xl border border-mineral bg-white px-4 py-3 text-sm font-semibold text-gray-900 shadow-sm transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orbital-cyan"
           >
             {/* Google logo SVG */}
             <svg
@@ -110,31 +110,19 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           </button>
         </form>
 
-        {/* Divider */}
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-800" />
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="bg-gray-900 px-3 text-gray-400">
-              Email sign-in coming soon
-            </span>
-          </div>
-        </div>
-
         {/* Legal */}
-        <p className="text-center text-xs leading-relaxed text-gray-400">
+        <p className="mt-6 text-center text-xs leading-relaxed text-ink-300">
           By signing in you agree to our{" "}
           <Link
             href="/terms"
-            className="text-gray-500 underline underline-offset-2 hover:text-gray-300"
+            className="text-ink-400 underline underline-offset-2 hover:text-orbital-cyan"
           >
             Terms of Service
           </Link>{" "}
           and{" "}
           <Link
             href="/privacy"
-            className="text-gray-500 underline underline-offset-2 hover:text-gray-300"
+            className="text-ink-400 underline underline-offset-2 hover:text-orbital-cyan"
           >
             Privacy Policy
           </Link>
@@ -145,7 +133,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       {/* Back to home */}
       <Link
         href="/"
-        className="mt-8 text-sm text-gray-400 transition-colors hover:text-gray-400"
+        className="mt-8 text-sm text-ink-300 transition-colors hover:text-orbital-cyan"
       >
         &larr; Back to {BRAND_NAME}
       </Link>
