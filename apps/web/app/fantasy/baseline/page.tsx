@@ -30,7 +30,7 @@ const STATUS_TONE: Record<FantasyBaselineStatus, string> = {
   "csv-import-ready": "border-cyan-500/30 bg-cyan-950/25 text-cyan-200",
   "gated-data": "border-yellow-500/30 bg-yellow-950/25 text-yellow-200",
   "content-ready": "border-violet-500/30 bg-violet-950/25 text-violet-200",
-  "manual-community": "border-gray-700 bg-gray-900/70 text-gray-300",
+  "manual-community": "border-mineral bg-eclipse/70 text-ink-200",
 };
 
 export default function FantasyBaselinePage(): JSX.Element {

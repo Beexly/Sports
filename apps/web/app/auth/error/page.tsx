@@ -18,9 +18,9 @@ export default function AuthErrorPage({
     errorMessages["Default"]!;
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-void flex items-center justify-center px-4">
       <div className="max-w-md w-full">
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center">
+        <div className="bg-eclipse border border-mineral rounded-2xl p-8 text-center">
           <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <svg
               className="w-8 h-8 text-red-400"
@@ -37,16 +37,16 @@ export default function AuthErrorPage({
             </svg>
           </div>
           <h1 className="text-2xl font-bold text-white mb-3">Sign-in didn&apos;t go through</h1>
-          <p className="text-gray-400 mb-6">{message}</p>
+          <p className="text-ink-300 mb-6">{message}</p>
           <Link
             href="/auth/signin"
-            className="inline-block w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl transition-colors"
+            className="inline-block w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orbital-cyan"
           >
             Try sign-in again
           </Link>
           <Link
             href="/"
-            className="inline-block mt-3 text-gray-500 hover:text-gray-300 text-sm transition-colors"
+            className="inline-block mt-3 text-ink-400 hover:text-orbital-cyan text-sm transition-colors"
           >
             Back to Home
           </Link>
