@@ -55,7 +55,7 @@ export default function ContactPage() {
                   <p className="text-sm leading-relaxed text-ink-300">
                     {box.description}
                   </p>
-                  <p className="mt-2 font-mono text-sm text-accent-300 group-hover:underline">
+                  <p className="mt-2 font-mono text-sm text-orbital-cyan group-hover:underline">
                     {box.email}
                   </p>
                 </a>

@@ -65,7 +65,7 @@ export default function AboutPage() {
               bar is simple: if it can&apos;t be explained, it doesn&apos;t
               get published.
             </p>
-            <p className="mt-5 max-w-2xl text-sm font-mono uppercase tracking-widest text-accent-300">
+            <p className="mt-5 max-w-2xl text-sm font-mono uppercase tracking-widest text-orbital-cyan">
               — The {BRAND_NAME} team
             </p>
           </div>
@@ -106,7 +106,7 @@ export default function AboutPage() {
               about a line — write to{" "}
               <a
                 href={`mailto:${SUPPORT_EMAIL}`}
-                className="font-mono text-accent-300 underline-offset-4 hover:underline"
+                className="font-mono text-orbital-cyan underline-offset-4 hover:underline"
               >
                 {SUPPORT_EMAIL}
               </a>

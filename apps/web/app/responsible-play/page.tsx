@@ -66,7 +66,7 @@ export default function ResponsiblePlayPage() {
               </p>
               <a
                 href={HELPLINE.href}
-                className="font-display text-3xl font-bold text-accent-300 underline-offset-4 hover:underline"
+                className="font-display text-3xl font-bold text-orbital-cyan underline-offset-4 hover:underline"
               >
                 {HELPLINE.number}
               </a>
@@ -146,7 +146,7 @@ export default function ResponsiblePlayPage() {
                   rel="noopener noreferrer"
                   className="surface-card group flex flex-col gap-2 p-5 transition-colors hover:border-accent-700"
                 >
-                  <p className="text-sm font-semibold text-white group-hover:text-accent-200">
+                  <p className="text-sm font-semibold text-white group-hover:text-orbital-cyan">
                     {res.name}
                     <span aria-hidden className="ml-1.5 text-ink-500">
                       ↗

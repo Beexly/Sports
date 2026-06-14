@@ -74,7 +74,7 @@ export default function PrivacyPage() {
               personal data we hold about you. Email {" "}
               <a
                 href={`mailto:${LEGAL_EMAIL}`}
-                className="text-accent-300 underline-offset-4 hover:underline"
+                className="text-orbital-cyan underline-offset-4 hover:underline"
               >
                 {LEGAL_EMAIL}
               </a>{" "}
@@ -107,7 +107,7 @@ export default function PrivacyPage() {
               Email{" "}
               <a
                 href={`mailto:${LEGAL_EMAIL}`}
-                className="text-accent-300 underline-offset-4 hover:underline"
+                className="text-orbital-cyan underline-offset-4 hover:underline"
               >
                 {LEGAL_EMAIL}
               </a>{" "}

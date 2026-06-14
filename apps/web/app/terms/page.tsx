@@ -116,7 +116,7 @@ export default function TermsPage() {
               Questions about these terms should be sent to{" "}
               <a
                 href={`mailto:${LEGAL_EMAIL}`}
-                className="text-accent-300 underline-offset-4 hover:underline"
+                className="text-orbital-cyan underline-offset-4 hover:underline"
               >
                 {LEGAL_EMAIL}
               </a>

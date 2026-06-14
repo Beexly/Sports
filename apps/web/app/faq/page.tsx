@@ -179,7 +179,7 @@ export default function FaqPage() {
               category. If your question isn&apos;t here, write to{" "}
               <a
                 href="mailto:hq@galaxysportsedge.com"
-                className="font-mono text-accent-300 underline-offset-4 hover:underline"
+                className="font-mono text-orbital-cyan underline-offset-4 hover:underline"
               >
                 hq@galaxysportsedge.com
               </a>{" "}
@@ -232,7 +232,7 @@ export default function FaqPage() {
               Reach out at{" "}
               <a
                 href="mailto:hq@galaxysportsedge.com"
-                className="font-mono text-accent-300 underline-offset-4 hover:underline"
+                className="font-mono text-orbital-cyan underline-offset-4 hover:underline"
               >
                 hq@galaxysportsedge.com
               </a>

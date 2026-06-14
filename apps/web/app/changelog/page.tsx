@@ -35,7 +35,7 @@ const TYPE_LABEL: Record<Entry["type"], string> = {
 
 const TYPE_COLOR: Record<Entry["type"], string> = {
   launch: "text-plasma-glow border-plasma-glow",
-  ship: "text-accent-300 border-accent-700",
+  ship: "text-orbital-cyan border-accent-700",
   gate: "text-ultraviolet border-ultraviolet/40",
   calibration: "text-ultraviolet border-ultraviolet/40",
   voice: "text-ink-200 border-ink-700",
@@ -152,7 +152,7 @@ export default function ChangelogPage() {
               Updates ship weekly.{" "}
               <Link
                 href="/auth/signin"
-                className="text-accent-300 underline-offset-4 hover:underline"
+                className="text-orbital-cyan underline-offset-4 hover:underline"
               >
                 Create a free account
               </Link>{" "}

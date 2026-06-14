@@ -78,7 +78,11 @@ describe("/picks policy-gate contract", () => {
     expect(src).toMatch(/data-testid="picks-trust-strip"/);
     expect(src).toMatch(/<RiskDisclosure[\s\S]{0,120}variant="card"/);
     expect(src).toMatch(/<RiskDisclosure[\s\S]{0,160}includePastPerformance/);
-    expect(src).toMatch(/href="\/methodology"[\s\S]{0,300}Read methodology/);
+    // Window widened from 300 → 420 after the cosmic rebrand added
+    // focus-visible a11y rings to the methodology links (longer className,
+    // same "Read methodology" label). The guarantee — an in-content
+    // methodology link labeled "Read methodology" — is unchanged.
+    expect(src).toMatch(/href="\/methodology"[\s\S]{0,420}Read methodology/);
   });
 
   it("renders no PickCard array literal that would imply fake fixtures", () => {
