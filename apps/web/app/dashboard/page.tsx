@@ -400,13 +400,13 @@ function GradeBadge({ grade }: { grade: string }) {
   const styles: Record<string, string> = {
     A: "bg-green-900/40 text-green-300",
     B: "bg-blue-900/40 text-blue-300",
-    C: "bg-gray-800 text-gray-400",
+    C: "bg-titanium text-ink-300",
   };
   return (
     <span
       className={[
         "rounded-full px-2 py-0.5 text-xs font-bold",
-        styles[grade] ?? "bg-gray-800 text-gray-400",
+        styles[grade] ?? "bg-titanium text-ink-300",
       ].join(" ")}
     >
       {grade}

@@ -89,12 +89,10 @@ const GRAY_CHROME: ReadonlyArray<RegExp> = [
 // Documented, intentional gray exceptions (by path suffix). Keep this list
 // SHORT — every entry is a conscious decision, not a loophole.
 //  - auth/signin: the "Continue with Google" button is white (bg-gray-100 /
-//    text-gray-900) per Google's brand guidelines for OAuth buttons.
-//  - dashboard: GradeBadge encodes grade tiers; the C/neutral tier is a
-//    semantic gray (bg-gray-800 / text-gray-400), not chrome.
+//    text-gray-900) per Google's brand guidelines for OAuth buttons. This is
+//    the ONLY unavoidable exception (a third-party brand requirement).
 const GRAY_ALLOWLIST: ReadonlyArray<string> = [
   "app/auth/signin/page.tsx",
-  "app/dashboard/page.tsx",
 ];
 
 describe("public surfaces stay on the cosmic palette", () => {
