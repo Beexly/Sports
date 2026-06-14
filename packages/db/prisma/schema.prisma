@@ -2110,3 +2110,36 @@ model TeamGameEfficiency {
   @@index([team, season])
   @@map("team_game_efficiency")
 }
+
+// ============================================================
+// PLAYER RUSH PROFILE (nflverse play-by-play run direction)
+// ------------------------------------------------------------
+// Per-rusher season distribution of runs by gap (guard=interior, tackle=
+// off-tackle, end=edge) and location (left/middle/right) + EPA/run. The basis
+// for a gap/zone/power scheme lean (a proxy from public PBP direction, not
+// charted blocking scheme). Additive; clearance-gated + rights/freshness.
+// ============================================================
+
+model PlayerRushProfile {
+  id         String  @id @default(cuid())
+  gsisId     String
+  playerName String
+  season     Int
+  team       String?
+  runs       Int
+  guardRuns  Int     @default(0) // interior gap (A/B)
+  tackleRuns Int     @default(0) // off-tackle (C gap)
+  endRuns    Int     @default(0) // outside / edge
+  leftRuns   Int     @default(0)
+  middleRuns Int     @default(0)
+  rightRuns  Int     @default(0)
+  epaPerRun  Float
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([gsisId, season])
+  @@index([season])
+  @@map("player_rush_profiles")
+}

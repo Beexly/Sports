@@ -182,6 +182,10 @@ export type { WeightedSignal, SignalContribution, CompositeScore, CompositeScore
 export { classifyUsageProfile } from "./player-archetype.js";
 export type { UsageProfileInput, UsageProfile, WorkloadTier } from "./player-archetype.js";
 
+// Run-scheme lean (gap/power vs outside/zone) from PBP run direction.
+export { classifyRushScheme } from "./player-rush-scheme.js";
+export type { RushDirectionCounts, RushSchemeProfile } from "./player-rush-scheme.js";
+
 export {
   assessUncertainty,
   wilsonInterval,
