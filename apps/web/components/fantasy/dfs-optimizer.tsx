@@ -93,12 +93,12 @@ export function DfsOptimizer() {
           })}
         </div>
         <label className="flex items-center gap-2 text-sm text-ink-300">
-          <input type="checkbox" checked={stack} onChange={(e) => setStack(e.target.checked)} className="accent-cyan-400" />
+          <input type="checkbox" checked={stack} onChange={(e) => setStack(e.target.checked)} className="accent-orbital-cyan" />
           QB stack
         </label>
         <label className="flex items-center gap-2 text-sm text-ink-300">
           Lineups
-          <input type="range" min={1} max={20} value={count} onChange={(e) => setCount(Number(e.target.value))} className="accent-cyan-400" />
+          <input type="range" min={1} max={20} value={count} onChange={(e) => setCount(Number(e.target.value))} className="accent-orbital-cyan" />
           <span className="w-6 font-mono text-sm text-white">{count}</span>
         </label>
         <button type="button" onClick={() => run()} disabled={busy} className="btn btn-primary ml-auto disabled:opacity-60">
@@ -123,7 +123,7 @@ export function DfsOptimizer() {
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-2.5" style={{ borderColor: BRAND_COLORS.steelGray }}>
                   <p className="text-xs uppercase tracking-[0.16em] text-ink-500">Lineup {idx + 1}{m.stacked > 0 && <span style={{ color: BRAND_COLORS.softUltraviolet }}> · {m.stackTeam} stack ×{m.stacked}</span>}</p>
                   <div className="flex items-center gap-4 font-mono text-[11px]">
-                    <span className="text-ink-400">${m.salary.toLocaleString()} <span className={left < 0 ? "text-fuchsia-400" : "text-ink-600"}>(${left.toLocaleString()} left)</span></span>
+                    <span className="text-ink-400">${m.salary.toLocaleString()} <span className={left < 0 ? "text-ion-magenta" : "text-ink-600"}>(${left.toLocaleString()} left)</span></span>
                     <span style={{ color: BRAND_COLORS.orbitalCyan }}>{m.proj} proj</span>
                     <span style={{ color: BRAND_COLORS.softUltraviolet }}>{m.ceiling} ceil</span>
                   </div>

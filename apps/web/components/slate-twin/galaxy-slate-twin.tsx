@@ -937,7 +937,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
           step={1}
           value={timeIndex}
           onChange={(e) => setTimeIndex(Number(e.target.value))}
-          className="mt-3 w-full accent-cyan-400"
+          className="mt-3 w-full accent-orbital-cyan"
           aria-valuetext={TIMELINE[timeIndex]}
         />
         <div className="mt-2 flex justify-between text-[10px] uppercase tracking-wider text-ink-500">

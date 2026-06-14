@@ -41,7 +41,7 @@ export function WaiverBoard({ pool }: { pool?: readonly Player[] } = {}) {
         <label className="flex items-center gap-3 text-sm text-ink-300">
           Remaining FAAB
           <span className="font-mono text-lg text-white">${budget}</span>
-          <input type="range" min={1} max={1000} value={budget} onChange={(e) => setBudget(Number(e.target.value))} className="accent-cyan-400" />
+          <input type="range" min={1} max={1000} value={budget} onChange={(e) => setBudget(Number(e.target.value))} className="accent-orbital-cyan" />
         </label>
         <p className="text-xs text-ink-500">Bids re-price to your budget. Tier sets the share; you set the pool.</p>
       </div>

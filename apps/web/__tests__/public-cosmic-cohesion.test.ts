@@ -11,8 +11,12 @@ import { resolve, join } from "node:path";
  * the WAVE-1 rebrand by forbidding the *loud* generic-Tailwind hues that clash
  * with that palette — the ones swept out of /picks, /room, and /auth/signin.
  *
- * Scope: every public `page.tsx` (operator/admin/cockpit/api routes are
- * exempt — they are internal tools, not brand surfaces). Source-level only.
+ * Scope: every public `page.tsx` AND every shared component that renders on a
+ * public surface (operator/admin/cockpit/api trees are exempt — internal tools,
+ * not brand surfaces). Components are in scope because a loud hue in a shared
+ * card/slider/terminal reaches every page that mounts it (e.g. the
+ * `accent-cyan-400` form-control sliders found on the fantasy/cipher tools).
+ * Source-level only.
  *
  * Note: `cyan-300` is deliberately NOT forbidden — it is used as a restrained
  * light accent on the reference-quality /board surface. Only the loud hues are
@@ -21,6 +25,7 @@ import { resolve, join } from "node:path";
 
 const webRoot = resolve(__dirname, "..");
 const appDir = resolve(webRoot, "app");
+const componentsDir = resolve(webRoot, "components");
 
 function read(path: string): string {
   return readFileSync(path, "utf8");
@@ -39,6 +44,19 @@ function collectPublicPages(dir: string, acc: string[] = []): string[] {
   return acc;
 }
 
+function collectPublicComponents(dir: string, acc: string[] = []): string[] {
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    const rel = full.slice(componentsDir.length + 1);
+    // Exempt operator/admin component trees.
+    if (/(^|\/)(admin|cockpit)(\/|$)/.test(rel)) continue;
+    const st = statSync(full);
+    if (st.isDirectory()) collectPublicComponents(full, acc);
+    else if (entry.endsWith(".tsx")) acc.push(full);
+  }
+  return acc;
+}
+
 // Loud, never-on-brand Tailwind hues. Generic cyan-400 / fuchsia / raw blue
 // CTAs read as "off-brand bootstrap" against the cosmic system.
 const LOUD_OFF_BRAND: ReadonlyArray<RegExp> = [
@@ -53,15 +71,17 @@ const LOUD_OFF_BRAND: ReadonlyArray<RegExp> = [
 
 describe("public surfaces stay on the cosmic palette", () => {
   const pages = collectPublicPages(appDir);
+  const components = collectPublicComponents(componentsDir);
 
-  it("discovers the full public page set", () => {
+  it("discovers the full public page + component set", () => {
     expect(pages.length).toBeGreaterThan(100);
+    expect(components.length).toBeGreaterThan(100);
   });
 
-  for (const page of pages) {
-    const rel = page.slice(webRoot.length + 1);
+  for (const file of [...pages, ...components]) {
+    const rel = file.slice(webRoot.length + 1);
     it(`${rel} carries no loud off-brand hue`, () => {
-      const src = read(page);
+      const src = read(file);
       for (const re of LOUD_OFF_BRAND) {
         expect(src, `${rel} must not use ${re.source}`).not.toMatch(re);
       }

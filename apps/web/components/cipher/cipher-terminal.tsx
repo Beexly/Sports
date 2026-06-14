@@ -145,7 +145,7 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
             autoComplete="off"
             spellCheck={false}
             placeholder={live ? "shard01shard02shard03…" : "sealed until Mon 11:59am ET"}
-            className="flex-1 rounded-xl border bg-black/30 px-4 py-3 font-mono text-sm text-white outline-none transition-colors placeholder:text-ink-500 focus:border-cyan-400/60 disabled:opacity-50"
+            className="flex-1 rounded-xl border bg-black/30 px-4 py-3 font-mono text-sm text-white outline-none transition-colors placeholder:text-ink-500 focus:border-orbital-cyan/60 disabled:opacity-50"
             style={{ borderColor: BRAND_COLORS.steelGray }}
           />
           <button
