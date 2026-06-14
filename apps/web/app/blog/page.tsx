@@ -53,14 +53,14 @@ export default async function BlogPage() {
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-gray-950">
+      <main className="min-h-screen bg-void">
         <div className="max-w-5xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300 mb-2">
               From the desk
             </p>
             <h1 className="text-4xl font-bold text-white mb-4">Market notes & methodology reads.</h1>
-            <p className="text-gray-400 text-lg">
+            <p className="text-ink-300 text-lg">
               Pre-game reads, line-movement breakdowns, and methodology notes
               — every post tied back to the live board.
             </p>
@@ -68,7 +68,7 @@ export default async function BlogPage() {
 
           {posts.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">
+              <p className="text-ink-400 text-lg">
                 Posts arrive once the board opens. The first reads will cover
                 methodology — how a signal gets scored, gated, and shipped.
               </p>
@@ -78,7 +78,7 @@ export default async function BlogPage() {
               {posts.map((post) => (
                 <article
                   key={post.id}
-                  className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-colors"
+                  className="bg-eclipse border border-mineral rounded-xl p-6 hover:border-mineral transition-colors"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -99,16 +99,16 @@ export default async function BlogPage() {
                           {post.title}
                         </h2>
                       </Link>
-                      <p className="text-gray-400 text-sm line-clamp-2 mb-3">
+                      <p className="text-ink-300 text-sm line-clamp-2 mb-3">
                         {post.excerpt}
                       </p>
-                      <div className="flex items-center gap-3 text-xs text-gray-500">
+                      <div className="flex items-center gap-3 text-xs text-ink-400">
                         {post.publishedAt && (
                           <span>{formatDate(post.publishedAt)}</span>
                         )}
                         <div className="flex gap-1 flex-wrap">
                           {post.tags.slice(0, 3).map((tag) => (
-                            <span key={tag} className="bg-gray-800 px-2 py-0.5 rounded text-gray-400">
+                            <span key={tag} className="bg-titanium px-2 py-0.5 rounded text-ink-300">
                               #{tag}
                             </span>
                           ))}
