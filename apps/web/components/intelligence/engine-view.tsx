@@ -56,11 +56,14 @@ function Note({ children }: { children: ReactNode }): JSX.Element {
 }
 
 function SubHead({ kicker, title, note }: { kicker: string; title: string; note?: ReactNode }): JSX.Element {
+  // Section header — renders directly on the dark page (not in a paper box), so
+  // it uses the dark-surface tokens. (Paper tokens here painted near-black text
+  // on carbon: title #0E1320 was 1.03:1, invisible.)
   return (
     <div className="flex flex-col gap-1">
-      <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan-on-light">{kicker}</p>
-      <h2 className="text-xl font-semibold text-ink">{title}</h2>
-      {note ? <p className="mt-1 max-w-3xl text-sm leading-6 text-ink-1">{note}</p> : null}
+      <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan">{kicker}</p>
+      <h2 className="text-xl font-semibold text-ion-white">{title}</h2>
+      {note ? <p className="mt-1 max-w-3xl text-sm leading-6 text-ink-200">{note}</p> : null}
     </div>
   );
 }
