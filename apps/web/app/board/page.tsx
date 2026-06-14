@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
+import { ConstellationField } from "@/components/motion/constellation-field";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
@@ -86,7 +87,8 @@ export default async function BoardPage(): Promise<JSX.Element> {
         )}
 
         {/* ── Header ─────────────────────────────────────────────── */}
-        <section className="relative">
+        <section className="relative isolate overflow-hidden rounded-3xl border border-mineral/60 bg-eclipse/20 px-6 py-10 sm:px-10 sm:py-12">
+          <ConstellationField className="-z-10 opacity-70" />
           <Reveal>
             <p className="eyebrow inline-flex items-center gap-2" style={{ color: cyan }}>
               <span className="live-dot" /> Command Board · Live
