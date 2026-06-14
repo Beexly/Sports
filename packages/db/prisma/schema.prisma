@@ -2042,3 +2042,37 @@ model DepthChartEntry {
   @@index([playerId])
   @@map("depth_chart_entries")
 }
+
+// ============================================================
+// HISTORICAL GAMES (nflverse `schedules` / games.csv) — settled outcomes
+// ------------------------------------------------------------
+// One row per game since 1999 with the CLOSING line + total + moneylines AND
+// the final score / result. This is the real settled (forecast, outcome)
+// archive used to backtest the market model and calibrate confidence against
+// actual results — distinct from the live, Odds-API-sourced `Game` table.
+// ============================================================
+
+model HistoricalGame {
+  id            String  @id @default(cuid())
+  gameKey       String  @unique // nflverse game_id (e.g. "2023_01_KC_DET")
+  season        Int
+  week          Int
+  gameType      String  @default("REG") // REG | POST
+  awayTeam      String // abbreviation
+  homeTeam      String
+  awayScore     Int?
+  homeScore     Int?
+  result        Float? // home margin (home_score - away_score)
+  spreadLine    Float? // closing spread, home perspective
+  totalLine     Float? // closing total
+  awayMoneyline Int?
+  homeMoneyline Int?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@index([season, week])
+  @@index([season])
+  @@map("historical_games")
+}
