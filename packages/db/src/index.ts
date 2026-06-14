@@ -157,14 +157,23 @@ function buildClient(): PrismaClient {
 
   if (!force && isStubDbUrl(url)) {
     if (!globalForPrisma.prismaStubMode) {
-      if (process.env["NODE_ENV"] !== "production") {
+      const detail = isDemoPicksEnabled()
+        ? "DEMO_PICKS_ENABLED=true — pick.findMany returns sample data."
+        : "All reads return empty results.";
+      if (process.env["NODE_ENV"] === "production") {
+        // Never silent in prod: a stub client here means DATABASE_URL is
+        // unset/sentinel and FORCE_REAL_PRISMA!=true, so every write is
+        // dropped and every read is empty while jobs still report success.
         // eslint-disable-next-line no-console
-        console.warn(
-          "[@sports/db] stub Prisma client active (DATABASE_URL not set). " +
-            (isDemoPicksEnabled()
-              ? "DEMO_PICKS_ENABLED=true — pick.findMany returns sample data."
-              : "All reads return empty results.")
+        console.error(
+          "[@sports/db] CRITICAL: stub Prisma client active in production. " +
+            "DATABASE_URL is unset/sentinel and FORCE_REAL_PRISMA!=true — " +
+            "writes are silently dropped. " +
+            detail
         );
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn("[@sports/db] stub Prisma client active (DATABASE_URL not set). " + detail);
       }
       globalForPrisma.prismaStubMode = true;
     }

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * Production-path tests for the server-side entitlement system —
@@ -142,5 +142,50 @@ describe("requireEntitlement", () => {
     await expect(requireEntitlement("free_user", (e) => e.canSeeConfidence)).rejects.toThrow(
       EntitlementError
     );
+  });
+});
+
+describe("getUserEntitlements — DEV_FAKE_ADMIN gating", () => {
+  beforeEach(() => {
+    mocks.subscriptionFindFirst.mockReset();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("grants ELITE to the dev-admin shortcut outside production (and skips the DB)", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("DEV_FAKE_ADMIN", "true");
+
+    const ent = await getUserEntitlements("dev-admin");
+
+    expect(ent.tier).toBe("ELITE");
+    // Must short-circuit before any DB lookup.
+    expect(mocks.subscriptionFindFirst).not.toHaveBeenCalled();
+  });
+
+  it("NEVER escalates dev-admin in production, even with DEV_FAKE_ADMIN=true", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("DEV_FAKE_ADMIN", "true");
+    mocks.subscriptionFindFirst.mockResolvedValue(null);
+
+    const ent = await getUserEntitlements("dev-admin");
+
+    // Falls through to the real DB path → fails closed to FREE.
+    expect(ent.tier).toBe("FREE");
+    expect(ent.canSeePremiumPicks).toBe(false);
+    expect(mocks.subscriptionFindFirst).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not escalate a non-dev-admin id even in dev with the flag on", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("DEV_FAKE_ADMIN", "true");
+    mocks.subscriptionFindFirst.mockResolvedValue(null);
+
+    const ent = await getUserEntitlements("attacker");
+
+    expect(ent.tier).toBe("FREE");
+    expect(mocks.subscriptionFindFirst).toHaveBeenCalledTimes(1);
   });
 });
