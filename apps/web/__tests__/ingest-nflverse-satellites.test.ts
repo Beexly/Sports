@@ -10,12 +10,14 @@ import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 const mocks = vi.hoisted(() => ({
   snapDelete: vi.fn(), snapCreate: vi.fn(),
   injDelete: vi.fn(), injCreate: vi.fn(),
+  playerFindMany: vi.fn(),
 }));
 
 vi.mock("@sports/db", () => ({
   db: {
     snapCount: { deleteMany: mocks.snapDelete, createMany: mocks.snapCreate },
     injury: { deleteMany: mocks.injDelete, createMany: mocks.injCreate },
+    player: { findMany: mocks.playerFindMany },
   },
 }));
 
@@ -36,6 +38,7 @@ beforeEach(() => {
   (nflverseIngestionGate as Mock).mockClear();
   mocks.snapCreate.mockImplementation(async (a: { data: unknown[] }) => ({ count: a.data.length }));
   mocks.injCreate.mockImplementation(async (a: { data: unknown[] }) => ({ count: a.data.length }));
+  mocks.playerFindMany.mockResolvedValue([{ id: "pid-00-1", gsisId: "00-1" }]);
 });
 
 describe("ingestSnapCounts", () => {
@@ -93,6 +96,7 @@ describe("ingestInjuries", () => {
     expect(data[0]!["reportStatus"]).toBe("Questionable");
     expect(data[0]!["primaryInjury"]).toBe("Ankle");
     expect(data[0]!["gsisId"]).toBe("00-1");
+    expect(data[0]!["playerId"]).toBe("pid-00-1"); // crosswalk resolved via gsisId
     expect(data[0]!["fetchedAt"]).toBe(NOW);
   });
 

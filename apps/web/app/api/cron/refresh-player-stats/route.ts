@@ -35,9 +35,10 @@ export async function GET(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "invalid season" }, { status: 400 });
   }
 
-  // All free nflverse player-data ingestions run together (independent tables).
-  const [stats, snaps, injuries] = await Promise.all([
-    ingestPlayerWeeklyStats(season),
+  // Players first (creates the Player rows), then the satellites concurrently —
+  // injuries resolve playerId against the players just upserted.
+  const stats = await ingestPlayerWeeklyStats(season);
+  const [snaps, injuries] = await Promise.all([
     ingestSnapCounts(season),
     ingestInjuries(season),
   ]);

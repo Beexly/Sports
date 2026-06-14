@@ -47,12 +47,19 @@ export async function ingestInjuries(
     return { status: "source-error", season, rowsWritten: 0, error: error instanceof Error ? error.message : "fetch failed" };
   }
 
+  // Resolve playerId from the gsis-keyed Player table (players are ingested
+  // first). Stub DB returns no players → playerId stays null.
+  const playerRows = await db.player.findMany({ select: { id: true, gsisId: true } });
+  const idByGsis = new Map((Array.isArray(playerRows) ? playerRows : []).map((p) => [p.gsisId, p.id]));
+
   const data = [];
   for (const r of rows) {
     const playerName = r["full_name"];
     if (!playerName) continue;
+    const gsisId = r["gsis_id"] ?? null;
     data.push({
-      gsisId: r["gsis_id"] ?? null,
+      playerId: gsisId ? idByGsis.get(gsisId) ?? null : null,
+      gsisId,
       playerName,
       season: int(r["season"]) ?? season,
       week: int(r["week"]) ?? 0,
