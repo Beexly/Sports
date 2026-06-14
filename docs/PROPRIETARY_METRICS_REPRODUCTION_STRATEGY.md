@@ -190,6 +190,102 @@ than anyone else**:
 PFF/NGS/DVOA each guard one proprietary slice. We assemble ALL the public signal,
 build superior derived metrics on top, and win on interpretation + narrative.
 
+## North Star: weight ABSOLUTELY EVERYTHING (the signal matrix)
+
+The deepest moat is not any single metric — it is **accumulating every signal that
+moves a player's or team's value and folding it into one weighted score**, including
+the soft signals nobody else bothers to quantify:
+
+- practice participation (DNP / Limited / Full — already in our `Injury` data)
+- injury designation + concussion protocol (report status / primary injury — ours)
+- # of off-days, rehab/treatment visits, snap-count trend, role change
+- beat-reporter rumors, holdout / contract noise, locker-room sentiment
+  (the news / Reddit narrative sources already in the repo)
+- the hard metrics: opponent-adjusted efficiency, EPA, projections, Elo
+
+The architecture this implies (and that we build toward):
+
+1. **Universal signal ledger** — every signal, hard or soft, normalized to one
+   record: `{ entity, key, value (directional), weight, confidence, capturedAt }`.
+   Confidence is the honesty valve: a settled stat ≈ 1.0, a rumor ≈ 0.2.
+2. **Weighted composite score** (`compositeScore` in the engine) — blends active
+   signals into one number with **attributed contributions** (which signals drove
+   it), applying confidence and freshness decay so stale/soft signals fade.
+3. **Interpretation & narration** — read the top contributions → the "why" and the
+   story. The score is the matrix; the narration is the product.
+
+Honesty caveat (the owner dislikes hand-waving): soft signals are LOW-confidence and
+must be weighted as such. The edge is breadth + interpretation, not pretending a
+rumor is a fact — confidence + freshness decay keep it honest.
+
+## The signal taxonomy — every input, hard and soft, is spoken for
+
+Everything that could move a player's or team's value is a signal with a weight, a
+confidence, and a freshness. The catalog (non-exhaustive — it only grows):
+
+**1. Production & efficiency (hard, high confidence).** EPA, success rate,
+opponent-adjusted efficiency (built), CPOE, YAC, air yards, pressure/coverage, snap
+share, target/route share, red-zone usage. Source: nflverse PBP + NGS aggregates +
+PFR advanced. Calibrate against outcomes.
+
+**2. Archetype & scheme fit (the part nobody else quantifies).**
+- RB run-scheme archetype: gap / power / inside-zone / outside-zone / receiving —
+  from PBP run concept + alignment, matched to the team's CURRENT run scheme. Fit =
+  archetype ↔ scheme alignment.
+- QB scheme transition: college offense → current offense (CFB data is public via
+  collegefootballdata.com / cfbfastR); add a learning-curve discount for big jumps.
+- TE role: in-line blocker vs flexed receiver (alignment/route rate); compare the
+  college role to the expected NFL role.
+- WR role: outside / slot, deep / possession.
+Medium confidence; calibrate fit → production lift.
+
+**3. Role, usage & depth (hard-ish).** Depth-chart slot (we ingest depth charts),
+snap-count trend, route-participation trend, target-share trend, role change after a
+coaching/personnel move.
+
+**4. Continuity & chemistry (derived/soft).** QB↔OC fit, scheme continuity
+year-over-year (new vs returning coordinator), O-line continuity, QB↔WR rapport
+(shared-snap history). Source: coaching/roster change data + derived history.
+
+**5. Health & availability (mixed confidence).** Injury designation, practice
+participation (DNP/Limited/Full — we have it), concussion protocol, rehab cadence,
+post-injury snap ramp. Source: nflverse injuries + beat news.
+
+**6. Situation & environment (hard).** Weather (NWS, ingested), dome/outdoor, rest,
+travel, primetime, division, implied game script (spread/total).
+
+**7. Narrative, sentiment & rumor (soft, LOW confidence — but still spoken for).**
+Beat-reporter rumors, holdout/contract noise, locker-room sentiment, media volume,
+and COACHSPEAK — mostly noise ("coaches say a lot"), calibrated toward ~zero unless
+it proves predictive. Source: the RSS/news/Reddit narrative engines in the repo.
+Low confidence + fast freshness decay.
+
+## Weighing & calibrating IS the craft (not an afterthought)
+- Every signal carries an explicit weight × confidence × freshness — soft signals
+  are present but discounted, **never ignored** (everything is "spoken for").
+- Weights are TUNED against outcomes with the backtest/calibration framework, not
+  guessed. Coachspeak in particular gets calibrated near zero until it earns weight.
+- Confidence is the honesty valve; freshness decay kills stale rumors.
+- `compositeScore` already implements the blend + the attribution (which signals
+  drove the number) so interpretation/narration can tell the story.
+
+## One score, every tool — no contradictions (single source of truth)
+
+Every tool and feature must derive from the SAME central score + signal matrix, so
+they can never contradict each other. The trade analyzer, buy-low/sell-high,
+start/sit, waiver, and lineup tools all read the player's `compositeScore` and its
+trend — they do NOT run independent, divergent logic. If the score says a player is
+rising, the buy-low tool and the trade analyzer say the same thing, because they
+read the same number.
+
+- The composite score (the matrix) is the single source of truth.
+- Tools are INTERPRETATIONS of it (different lenses on one value), never separate
+  models that can disagree.
+- Cross-tool consistency is guaranteed by construction, not by manual reconciliation
+  — and any future tool plugs into the same spine. (Enforce with a shared
+  score-access layer + a test asserting tools read the central score, not bespoke
+  logic.)
+
 ## Highest value-for-effort order (recommended)
 1. Persist PBP + the public stat pillars (Phase A) — unlocks everything.
 2. Opponent-adjusted efficiency (DVOA-like) — biggest signal, zero moat (Phase B).

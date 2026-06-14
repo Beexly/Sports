@@ -172,6 +172,12 @@ export type { EloBacktestGame, EloBacktestReport, EloBacktestOptions } from "./e
 export { opponentAdjustedRatings } from "./opponent-adjusted.js";
 export type { TeamGameEfficiency, TeamRating, OpponentAdjustOptions } from "./opponent-adjusted.js";
 
+// Weighted composite score — the "weight everything" matrix that blends hard
+// metrics + soft signals (with confidence + freshness valves) into one number
+// plus attributed contributions for interpretation/narration.
+export { compositeScore } from "./composite-score.js";
+export type { WeightedSignal, SignalContribution, CompositeScore, CompositeScoreOptions } from "./composite-score.js";
+
 export {
   assessUncertainty,
   wilsonInterval,
