@@ -64,5 +64,33 @@ not the method.
 - [ ] Cockpit review queue lane for presenter segments
 - [ ] First four-week rotation produced and owner-reviewed end to end
 
+## 5. Locked cast — owner-approved 2026-06-14
+
+The program now runs **two recurring synthetic hosts** (owner's call — evolves
+§1's single-identity plan into a duo for contrast). Both are **original
+fictional characters — not based on, and must not resemble, any real person or
+celebrity.** The faces below are the canonical identity anchors; every new look
+is generated as an edit off the anchor so identity stays consistent across the
+rotating wardrobe. Status: **design-approved, NOT wired** — the §2 pipeline,
+§3 "Synthetic presenter" disclosure chip, and §4 checklist still gate any
+publish. Approval here is of the *design*, not a go-live.
+
+### Host 1 — "The Fashion Queen" (name TBD)
+Blonde, bright blue eyes, signature pink hair streak; confident, playful,
+fashion-forward "sexy swag," strictly SFW. Rotating everyday/fashion wardrobe.
+- Identity anchor: `docs/design/presenter/blonde-sundress.webp` (Higgsfield job `226637e3-e79f-4148-8b43-70dd43b804be`)
+- Approved looks: `blonde-casual-chic`, `blonde-sundress`, `blonde-cheer`, `blonde-gameday` (all under `docs/design/presenter/`)
+
+### Host 2 — "The Alt Girl" (name TBD)
+Dark-haired edgy/gothic alt-glam; smoky makeup, forearm + shoulder tattoos,
+nose stud + ear piercings (no eyebrow piercing); sultry, magnetic, SFW.
+- Identity anchor: `docs/design/presenter/alt-girl.webp` (Higgsfield job `585e2f5e-37f3-4913-8148-89b669605520`)
+
+**Hard lines held during design (apply to every future render):** clearly
+adult; no real-celebrity likeness; SFW / fully clothed; no body-part or
+sexualized emphasis. These are brand-safety + payment-processor (Stripe) and
+app-store requirements, not just taste — crossing them risks the business, so
+they do not move.
+
 Owner of this program: STUDIO seat (cockpit) with the Voice Humanizer (QUILL)
 and Quality Officer (GAUGE) seats reviewing scripts once those are wired.
