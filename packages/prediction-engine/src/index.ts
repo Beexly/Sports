@@ -200,3 +200,10 @@ export type {
   DecisionStump,
   TrainingSample,
 } from "./ml-estimator.js";
+
+// v9-D — Per-Source Reliability (stub until feat/ledger merges)
+export { computeSourceReliability } from "./source-reliability.js";
+export type {
+  SourceReliabilityVerdict,
+  SourceReliabilityReport,
+} from "./source-reliability.js";

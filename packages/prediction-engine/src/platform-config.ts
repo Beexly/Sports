@@ -111,6 +111,16 @@ export interface PlatformConfig {
    * Default: 100
    */
   minSettledPicksForLearning: number;
+
+  /**
+   * ENTITY_GRAPH_AVAILABLE
+   * When true: the bitemporal player/team entity substrate (Pillar A, v9) is
+   * seeded and queryable. Gates any downstream code that reads from
+   * PlayerEntity / PlayerTenure / EntityAlias tables.
+   * Enable after running seed-from-nflverse for at least one full season.
+   * Default: false
+   */
+  entityGraphAvailable: boolean;
 }
 
 function parseBool(val: string | undefined, defaultVal: boolean): boolean {
@@ -141,5 +151,6 @@ export function getPlatformConfig(): PlatformConfig {
     minDataQualityForGameLog:     parseIntSafe(process.env["MIN_DATA_QUALITY_FOR_GAME_LOG"], 40),
     outcomeLearningEnabled:       parseBool(process.env["OUTCOME_LEARNING_ENABLED"],        false),
     minSettledPicksForLearning:   parseIntSafe(process.env["MIN_SETTLED_PICKS_FOR_LEARNING"], 100),
+    entityGraphAvailable:         parseBool(process.env["ENTITY_GRAPH_AVAILABLE"],           false),
   };
 }

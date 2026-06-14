@@ -161,21 +161,91 @@ model League {
 }
 
 model Team {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   leagueId     String?
   name         String
   abbreviation String?
   city         String?
   logoUrl      String?
-  createdAt    DateTime @default(now())
+  createdAt    DateTime  @default(now())
 
-  league     League? @relation(fields: [leagueId], references: [id])
-  homeGames  Game[]  @relation("HomeTeam")
-  awayGames  Game[]  @relation("AwayTeam")
+  // ── Entity Graph fields (Pillar A, v9) ──
+  nflId        String?   @unique
+  pfrId        String?   @unique
+  sportradarId String?   @unique
+  // JSON array of { name: string, fromSeason: number, toSeason: number }
+  formerNames  Json?
+  validFrom    DateTime?
+  validUntil   DateTime?
+
+  league        League?        @relation(fields: [leagueId], references: [id])
+  homeGames     Game[]         @relation("HomeTeam")
+  awayGames     Game[]         @relation("AwayTeam")
+  playerTenures PlayerTenure[]
 
   @@index([leagueId])
   @@index([name])
   @@map("teams")
+}
+
+// ============================================================
+// ENTITY GRAPH (Pillar A, v9 — Provenance Fusion)
+//
+// Bitemporal canonical player/team entity substrate.
+// PlayerEntity is the single canonical record for each real-world
+// player. PlayerTenure is a bitemporal membership record
+// (validAt/validUntil for "real world", knownAt for "when we knew").
+// EntityAlias maps external identifiers and display-name variants
+// back to the canonical entity.
+// ============================================================
+
+model PlayerEntity {
+  id             String   @id @default(cuid())
+  displayName    String
+  position       String?
+  nflId          String?  @unique
+  pfrId          String?  @unique
+  gsisId         String?  @unique
+  espnId         String?  @unique
+  birthYear      Int?
+  createdAt      DateTime @default(now())
+  lastVerifiedAt DateTime @default(now())
+
+  aliases EntityAlias[]
+  tenures PlayerTenure[]
+
+  @@index([displayName])
+  @@index([gsisId])
+  @@map("player_entities")
+}
+
+model PlayerTenure {
+  id         String       @id @default(cuid())
+  playerId   String
+  player     PlayerEntity @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  teamId     String
+  team       Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  validAt    DateTime
+  validUntil DateTime?
+  knownAt    DateTime
+  createdAt  DateTime     @default(now())
+
+  @@index([playerId, validAt])
+  @@index([teamId, validAt])
+  @@map("player_tenures")
+}
+
+model EntityAlias {
+  id        String       @id @default(cuid())
+  playerId  String
+  player    PlayerEntity @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  alias     String
+  source    String
+  createdAt DateTime     @default(now())
+
+  @@unique([playerId, alias, source])
+  @@index([alias])
+  @@map("entity_aliases")
 }
 
 // ============================================================
@@ -467,6 +537,23 @@ model LossAutopsy {
   @@index([status])
   @@index([rootCause])
   @@map("loss_autopsies")
+}
+
+// FalsificationCondition — machine-checkable pre-mortem conditions derived
+// at publish time. capturedAt is immutable (set on creation, never updated).
+// triggered and triggeredAt are written only at settlement by evaluateFalsification.
+model FalsificationCondition {
+  id          String    @id @default(cuid())
+  pickId      String
+  signalKey   String
+  operator    String
+  threshold   Float
+  rationale   String    @default("")
+  capturedAt  DateTime  @default(now())
+  triggered   Boolean?
+  triggeredAt DateTime?
+  @@index([pickId])
+  @@map("falsification_conditions")
 }
 
 enum LossAutopsyStatus {

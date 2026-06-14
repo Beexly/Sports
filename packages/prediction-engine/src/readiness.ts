@@ -102,6 +102,14 @@ export interface ReadinessGates {
   /** Minimum settled canonical picks needed for learning data to be meaningful. */
   readonly minSettledPicksForLearning: number;
 
+  /**
+   * When true: the bitemporal player/team entity substrate (Pillar A, v9) is
+   * available. Downstream code that reads PlayerEntity / PlayerTenure /
+   * EntityAlias may safely query those tables.
+   * Default: false — gates on ENTITY_GRAPH_AVAILABLE env var.
+   */
+  readonly canUseEntityGraph: boolean;
+
   /** The underlying config for callers that need specific values. */
   readonly config: PlatformConfig;
 }
@@ -123,6 +131,7 @@ export function getReadinessGates(): ReadinessGates {
     canLearnFromOutcomes:            config.outcomeLearningEnabled,
     canApplyCalibrationAdjustments:  false,
     minSettledPicksForLearning:      config.minSettledPicksForLearning,
+    canUseEntityGraph:               config.entityGraphAvailable,
     config,
   };
 }
