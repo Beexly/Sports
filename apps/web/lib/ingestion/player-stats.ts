@@ -14,8 +14,7 @@
  */
 import { fetchNflverse, type NflverseDatasetKey } from "@sports/data-ingestion";
 import { db } from "@sports/db";
-import type { Prisma } from "@sports/db";
-import { checkClearance } from "@/lib/scraping/clearance-engine";
+import { nflverseIngestionGate } from "@/lib/ingestion/nflverse-gate";
 
 type CsvRow = Readonly<Record<string, string>>;
 type TableFetcher = (key: NflverseDatasetKey, season: number, variant?: string) => Promise<{ records: readonly CsvRow[] }>;
@@ -62,25 +61,11 @@ export async function ingestPlayerWeeklyStats(
   const fetchTable: TableFetcher = options.fetcher ?? fetchNflverse;
 
   // 1. Clearance gate. A denied result MUST stop the job (CLAUDE.md invariant).
-  const clearance = checkClearance(
-    {
-      source_id: "nflverse",
-      mode: "open_dataset_ingest",
-      tool_id: "fetch-native",
-      intents: ["storage", "derived_analytics"],
-    },
-    now,
-  );
-  if (!clearance.allowed || !clearance.rightsSnapshot) {
-    return {
-      status: "clearance-denied",
-      season,
-      playersUpserted: 0,
-      statsUpserted: 0,
-      blocks: clearance.blocks.map((b) => b.code),
-    };
+  const gate = nflverseIngestionGate(now);
+  if (!gate.ok) {
+    return { status: "clearance-denied", season, playersUpserted: 0, statsUpserted: 0, blocks: gate.blocks };
   }
-  const rightsSnapshot = clearance.rightsSnapshot as unknown as Prisma.InputJsonValue;
+  const rightsSnapshot = gate.rightsSnapshot;
 
   // 2. Fetch the real nflverse weekly asset.
   let rows: readonly CsvRow[];

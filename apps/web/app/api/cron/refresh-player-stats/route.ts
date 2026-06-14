@@ -14,6 +14,8 @@
  */
 import { NextResponse } from "next/server";
 import { ingestPlayerWeeklyStats, currentNflSeason } from "@/lib/ingestion/player-stats";
+import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
+import { ingestInjuries } from "@/lib/ingestion/injuries";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // Vercel cron caps at 5 min
@@ -33,8 +35,12 @@ export async function GET(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "invalid season" }, { status: 400 });
   }
 
-  const result = await ingestPlayerWeeklyStats(season);
-  return NextResponse.json({ success: result.status === "ok", ...result }, {
-    status: result.status === "ok" ? 200 : 502,
-  });
+  // All free nflverse player-data ingestions run together (independent tables).
+  const [stats, snaps, injuries] = await Promise.all([
+    ingestPlayerWeeklyStats(season),
+    ingestSnapCounts(season),
+    ingestInjuries(season),
+  ]);
+  const success = [stats, snaps, injuries].every((r) => r.status === "ok");
+  return NextResponse.json({ success, season, stats, snaps, injuries }, { status: success ? 200 : 502 });
 }

@@ -1,18 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 
 /**
- * Cron route for player-stats ingestion: CRON_SECRET auth, season validation,
- * and the NFL-season helper. The ingestion itself is mocked (covered by
- * ingest-player-stats.test.ts) so this never touches the network or DB.
+ * Cron route for nflverse player-data ingestion: CRON_SECRET auth, season
+ * validation, the season helper, and aggregation across the three ingestions
+ * (weekly stats, snap counts, injuries). The ingestions are mocked (covered by
+ * their own tests) so this never touches the network or DB.
  */
 
 vi.mock("@/lib/ingestion/player-stats", async (importActual) => {
   const actual = await importActual<typeof import("@/lib/ingestion/player-stats")>();
   return { ...actual, ingestPlayerWeeklyStats: vi.fn() };
 });
+vi.mock("@/lib/ingestion/snap-counts", () => ({ ingestSnapCounts: vi.fn() }));
+vi.mock("@/lib/ingestion/injuries", () => ({ ingestInjuries: vi.fn() }));
 
 import { GET } from "@/app/api/cron/refresh-player-stats/route";
 import { ingestPlayerWeeklyStats, currentNflSeason } from "@/lib/ingestion/player-stats";
+import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
+import { ingestInjuries } from "@/lib/ingestion/injuries";
 
 function req(url: string, auth?: string): Request {
   return new Request(url, auth ? { headers: { authorization: auth } } : undefined);
@@ -32,6 +37,10 @@ describe("currentNflSeason", () => {
 describe("GET /api/cron/refresh-player-stats", () => {
   beforeEach(() => {
     (ingestPlayerWeeklyStats as Mock).mockReset();
+    (ingestSnapCounts as Mock).mockReset();
+    (ingestInjuries as Mock).mockReset();
+    (ingestSnapCounts as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 2 });
+    (ingestInjuries as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 1 });
     vi.stubEnv("CRON_SECRET", "secret");
   });
   afterEach(() => vi.unstubAllEnvs());
@@ -54,19 +63,28 @@ describe("GET /api/cron/refresh-player-stats", () => {
     expect(ingestPlayerWeeklyStats).not.toHaveBeenCalled();
   });
 
-  it("runs the ingestion and returns its summary when authorized", async () => {
+  it("runs all three player-data ingestions and aggregates the summary", async () => {
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
     });
     const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024", "Bearer secret"));
     expect(res.status).toBe(200);
-    const body = (await res.json()) as { success: boolean; statsUpserted: number };
+    const body = (await res.json()) as {
+      success: boolean;
+      stats: { statsUpserted: number };
+      snaps: { rowsWritten: number };
+      injuries: { rowsWritten: number };
+    };
     expect(body.success).toBe(true);
-    expect(body.statsUpserted).toBe(4);
+    expect(body.stats.statsUpserted).toBe(4);
+    expect(body.snaps.rowsWritten).toBe(2);
+    expect(body.injuries.rowsWritten).toBe(1);
     expect(ingestPlayerWeeklyStats).toHaveBeenCalledWith(2024);
+    expect(ingestSnapCounts).toHaveBeenCalledWith(2024);
+    expect(ingestInjuries).toHaveBeenCalledWith(2024);
   });
 
-  it("502s when the ingestion reports a non-ok status", async () => {
+  it("502s when any ingestion reports a non-ok status", async () => {
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "source-error", season: 2024, playersUpserted: 0, statsUpserted: 0, error: "down",
     });
