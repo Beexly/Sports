@@ -56,103 +56,135 @@ export function DfsOptimizer() {
 
   const pool = useMemo(() => [...slate].sort((a, b) => b.salary - a.salary), [slate]);
 
+  const activeBlurb = MODES.find((m) => m.key === mode)!.blurb;
+
   return (
     <div className="space-y-6">
       {/* sample-mode banner — fictional names must never read as real players */}
       {!imported && (
-        <div
-          className="flex flex-wrap items-center gap-3 rounded-xl border px-4 py-3"
-          style={{ borderColor: `${BRAND_COLORS.ionMagenta}55`, background: `${BRAND_COLORS.ionMagenta}0d` }}
-        >
+        <div className="flex flex-wrap items-start gap-3 rounded-xl border border-mineral bg-eclipse/50 px-4 py-3.5">
           <span
-            className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em]"
+            className="mt-0.5 shrink-0 rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em]"
             style={{ background: BRAND_COLORS.ionMagenta, color: BRAND_COLORS.obsidianBlack }}
           >
             sample slate
           </span>
-          <p className="text-xs text-ink-200">
-            These are <strong className="text-white">fictional players</strong> with illustrative
-            numbers — by design, so no fake stats ever attach to a real athlete. To optimize the
-            real slate today: export the player CSV from DraftKings and import it below ⤵
+          <p className="text-sm leading-relaxed text-ink-300">
+            These are <strong className="font-semibold text-ion-white">fictional players</strong> with
+            illustrative numbers — by design, so no fake stats ever attach to a real athlete. To
+            optimize the real slate today, export the player CSV from DraftKings and import it below.
           </p>
         </div>
       )}
 
-      {/* controls */}
-      <div className="surface-card flex flex-wrap items-center gap-4 p-4">
-        <div className="flex rounded-full p-0.5" style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${BRAND_COLORS.steelGray}` }}>
-          {MODES.map((m) => {
-            const active = mode === m.key;
-            return (
-              <button key={m.key} type="button" onClick={() => setMode(m.key)} title={m.blurb}
-                className="rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none"
-                style={{ color: active ? BRAND_COLORS.obsidianBlack : "var(--ion-2,#c8d2dd)", background: active ? BRAND_COLORS.orbitalCyan : "transparent" }}>
-                {m.label}
-              </button>
-            );
-          })}
+      {/* controls — one calm bar, labeled and breathable */}
+      <div className="surface-card p-5">
+        <div className="flex flex-col gap-5 lg:flex-row lg:flex-wrap lg:items-end">
+          {/* objective */}
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">Objective</p>
+            <div className="inline-flex rounded-full border border-mineral bg-void/40 p-1">
+              {MODES.map((m) => {
+                const active = mode === m.key;
+                return (
+                  <button key={m.key} type="button" onClick={() => setMode(m.key)} title={m.blurb}
+                    className="rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none"
+                    style={{ color: active ? BRAND_COLORS.obsidianBlack : "var(--ion-2,#c8d2dd)", background: active ? BRAND_COLORS.orbitalCyan : "transparent" }}>
+                    {m.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* stacking */}
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">Stacking</p>
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-mineral bg-void/40 px-4 py-1.5 text-sm text-ink-200">
+              <input type="checkbox" checked={stack} onChange={(e) => setStack(e.target.checked)} className="accent-[#00E5FF]" />
+              QB stack
+            </label>
+          </div>
+
+          {/* count */}
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">Lineups</p>
+            <div className="inline-flex items-center gap-3 rounded-full border border-mineral bg-void/40 px-4 py-1.5">
+              <input type="range" min={1} max={20} value={count} onChange={(e) => setCount(Number(e.target.value))} className="w-28 accent-[#00E5FF]" />
+              <span className="w-6 text-center font-mono text-sm text-ion-white">{count}</span>
+            </div>
+          </div>
+
+          <button type="button" onClick={() => run()} disabled={busy} className="btn btn-primary lg:ml-auto disabled:opacity-60">
+            {busy ? "Solving…" : "Generate lineups"}
+          </button>
         </div>
-        <label className="flex items-center gap-2 text-sm text-ink-300">
-          <input type="checkbox" checked={stack} onChange={(e) => setStack(e.target.checked)} className="accent-cyan-400" />
-          QB stack
-        </label>
-        <label className="flex items-center gap-2 text-sm text-ink-300">
-          Lineups
-          <input type="range" min={1} max={20} value={count} onChange={(e) => setCount(Number(e.target.value))} className="accent-cyan-400" />
-          <span className="w-6 font-mono text-sm text-white">{count}</span>
-        </label>
-        <button type="button" onClick={() => run()} disabled={busy} className="btn btn-primary ml-auto disabled:opacity-60">
-          {busy ? "Solving…" : "Generate lineups"}
-        </button>
+
+        <p className="mt-4 border-t border-mineral pt-3 text-xs text-ink-400">
+          {activeBlurb}
+          <span className="text-ink-500"> · Salary cap ${SALARY_CAP.toLocaleString()}</span>
+          {imported && <span className="text-orbital-cyan"> · imported DK slate ({slate.length} players)</span>}
+        </p>
       </div>
-      <p className="-mt-3 text-xs text-ink-500">
-        {MODES.find((m) => m.key === mode)!.blurb} · Cap ${SALARY_CAP.toLocaleString()}
-        {imported && <span style={{ color: BRAND_COLORS.orbitalCyan }}> · imported DK slate ({slate.length} players)</span>}
-      </p>
 
       <DkImportPanel onImport={onImport} onReset={onReset} imported={imported} />
 
       <div className="grid gap-6 lg:grid-cols-[1.35fr_1.05fr]">
         {/* lineups */}
         <div className="space-y-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
+            Lineups{result?.lineups.length ? ` · ${result.lineups.length}` : ""}
+          </p>
           {result?.lineups.map((lu, idx) => {
             const m = lu.metrics;
             const left = SALARY_CAP - m.salary;
+            const over = left < 0;
             return (
-              <div key={idx} className="surface-card overflow-hidden p-0">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-2.5" style={{ borderColor: BRAND_COLORS.steelGray }}>
-                  <p className="text-xs uppercase tracking-[0.16em] text-ink-500">Lineup {idx + 1}{m.stacked > 0 && <span style={{ color: BRAND_COLORS.softUltraviolet }}> · {m.stackTeam} stack ×{m.stacked}</span>}</p>
-                  <div className="flex items-center gap-4 font-mono text-[11px]">
-                    <span className="text-ink-400">${m.salary.toLocaleString()} <span className={left < 0 ? "text-fuchsia-400" : "text-ink-600"}>(${left.toLocaleString()} left)</span></span>
-                    <span style={{ color: BRAND_COLORS.orbitalCyan }}>{m.proj} proj</span>
-                    <span style={{ color: BRAND_COLORS.softUltraviolet }}>{m.ceiling} ceil</span>
+              <div key={idx} className="surface-card overflow-hidden">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-mineral px-4 py-3">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-400">
+                    Lineup {idx + 1}
+                    {m.stacked > 0 && (
+                      <span style={{ color: BRAND_COLORS.softUltraviolet }}> · {m.stackTeam} stack ×{m.stacked}</span>
+                    )}
+                  </p>
+                  <div className="flex items-center gap-4 font-mono text-[11px] text-ink-300">
+                    <span>
+                      ${m.salary.toLocaleString()}{" "}
+                      <span className={over ? "text-ion-magenta" : "text-ink-500"}>(${left.toLocaleString()} left)</span>
+                    </span>
+                    <span className="text-ion-white">{m.proj} <span className="text-ink-500">proj</span></span>
+                    <span style={{ color: BRAND_COLORS.softUltraviolet }}>{m.ceiling} <span className="text-ink-500">ceil</span></span>
                   </div>
                 </div>
                 {/* live salary-cap meter */}
-                <div className="px-4 pb-2 pt-2">
-                  <div className="h-1.5 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
-                    <div className="h-full rounded-full" style={{ width: `${Math.min(100, (m.salary / SALARY_CAP) * 100)}%`, background: left < 0 ? BRAND_COLORS.ionMagenta : BRAND_COLORS.orbitalCyan }} />
+                <div className="px-4 pt-3">
+                  <div className="h-1.5 overflow-hidden rounded-full bg-void">
+                    <div className="h-full rounded-full" style={{ width: `${Math.min(100, (m.salary / SALARY_CAP) * 100)}%`, background: over ? BRAND_COLORS.ionMagenta : BRAND_COLORS.orbitalCyan }} />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3">
+                <div className="grid grid-cols-1 p-2 sm:grid-cols-3">
                   {lu.players.map((p, j) => {
                     const c = DFS_POS_HEX[p.pos];
                     const inStack = m.stackTeam && p.team === m.stackTeam && p.pos !== "DST";
                     return (
-                      <div key={p.id + j} className="flex items-center gap-2 border-b border-r px-3 py-2" style={{ borderColor: `${BRAND_COLORS.steelGray}80` }}>
-                        <span className="w-8 shrink-0 font-mono text-[9px] font-bold" style={{ color: c }}>{DFS_SLOTS[j]}</span>
+                      <div key={p.id + j} className="flex items-center gap-2.5 rounded-lg px-2.5 py-2">
+                        <span className="w-9 shrink-0 font-mono text-[10px] font-bold" style={{ color: c }}>{DFS_SLOTS[j]}</span>
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-xs font-semibold text-white">{p.name}{inStack && <span title="stack" style={{ color: BRAND_COLORS.softUltraviolet }}> ◆</span>}</p>
-                          <p className="font-mono text-[9px] text-ink-500">${p.salary} · {Math.round(p.own * 100)}%own</p>
+                          <p className="truncate text-sm font-semibold text-ion-white">
+                            {p.name}
+                            {inStack && <span title="stack" style={{ color: BRAND_COLORS.softUltraviolet }}> ◆</span>}
+                          </p>
+                          <p className="font-mono text-[10px] text-ink-500">${p.salary} · {Math.round(p.own * 100)}% own</p>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-1 px-4 py-2.5 text-[11px] text-ink-400">
-                  <span>Total ownership <strong className="text-white">{m.totalOwn}%</strong></span>
-                  <span>Leverage <strong style={{ color: BRAND_COLORS.ionMagenta }}>{m.leverageScore}</strong></span>
-                  <span>Floor–ceiling <strong className="text-white">{m.floor}–{m.ceiling}</strong></span>
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-1 border-t border-mineral px-4 py-3 text-xs text-ink-400">
+                  <span>Total ownership <strong className="font-semibold text-ion-white">{m.totalOwn}%</strong></span>
+                  <span>Leverage <strong className="font-semibold" style={{ color: BRAND_COLORS.ionMagenta }}>{m.leverageScore}</strong></span>
+                  <span>Floor–ceiling <strong className="font-semibold text-ion-white">{m.floor}–{m.ceiling}</strong></span>
                 </div>
               </div>
             );
@@ -164,15 +196,17 @@ export function DfsOptimizer() {
         <div className="space-y-4">
           {result && result.exposure.length > 0 && (
             <div className="surface-card p-5">
-              <p className="mb-3 text-xs uppercase tracking-[0.16em] text-ink-500">Exposure across {result.lineups.length} lineups</p>
-              <div className="max-h-[40vh] space-y-1.5 overflow-y-auto">
+              <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
+                Exposure across {result.lineups.length} lineups
+              </p>
+              <div className="max-h-[40vh] space-y-2 overflow-y-auto pr-1">
                 {result.exposure.map((e) => (
-                  <div key={e.id} className="flex items-center gap-2">
+                  <div key={e.id} className="flex items-center gap-3">
                     <span className="w-28 shrink-0 truncate text-xs text-ink-300">{e.name}</span>
-                    <div className="h-1.5 flex-1 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-void">
                       <div className="h-full rounded-full" style={{ width: `${e.pct}%`, background: DFS_POS_HEX[e.pos] }} />
                     </div>
-                    <span className="w-9 text-right font-mono text-[10px] text-ink-500">{e.pct}%</span>
+                    <span className="w-9 text-right font-mono text-[11px] text-ink-400">{e.pct}%</span>
                   </div>
                 ))}
               </div>
@@ -180,31 +214,34 @@ export function DfsOptimizer() {
           )}
 
           <div className="surface-card p-5">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="text-xs uppercase tracking-[0.16em] text-ink-500">Slate ({pool.length})</p>
-              <p className="font-mono text-[10px] text-ink-500">
-                <span style={{ color: BRAND_COLORS.orbitalCyan }}>★ {locks.size} pinned</span>
-                {" · "}
-                <span style={{ color: BRAND_COLORS.ionMagenta }}>✕ {excludes.size} faded</span>
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">Player pool · {pool.length}</p>
+              <p className="font-mono text-[11px] text-ink-500">
+                <span className="text-orbital-cyan">★ {locks.size} pinned</span>
+                <span className="text-ink-600"> · </span>
+                <span className="text-ion-magenta">✕ {excludes.size} faded</span>
               </p>
             </div>
-            <div className="max-h-[60vh] space-y-0.5 overflow-y-auto">
+            <div className="max-h-[60vh] space-y-0.5 overflow-y-auto pr-1">
               {pool.map((p: DfsPlayer) => {
                 const c = DFS_POS_HEX[p.pos];
                 const locked = locks.has(p.id); const fade = excludes.has(p.id);
                 return (
-                  <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1.5" style={{ opacity: fade ? 0.4 : 1, background: locked ? `${BRAND_COLORS.orbitalCyan}12` : "transparent" }}>
-                    <span className="rounded px-1.5 py-0.5 font-mono text-[10px] font-bold" style={{ color: c, background: `${c}18` }}>{p.pos}</span>
-                    <span className="flex-1 truncate text-sm text-white">{p.name}</span>
-                    <span className="font-mono text-[11px] text-ink-500">${p.salary}</span>
-                    <span className="w-8 text-right font-mono text-[11px]" style={{ color: BRAND_COLORS.ionMagenta }}>{leverage(p).toFixed(1)}</span>
-                    <button type="button" onClick={() => toggle(locks, setLocks, p.id)} title="pin" className="px-1 text-sm" style={{ color: locked ? BRAND_COLORS.orbitalCyan : "var(--ion-4,#4b5563)" }}>★</button>
-                    <button type="button" onClick={() => toggle(excludes, setExcludes, p.id)} title="fade" className="px-1 text-sm" style={{ color: fade ? BRAND_COLORS.ionMagenta : "var(--ion-4,#4b5563)" }}>✕</button>
+                  <div key={p.id} className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/[0.03]" style={{ opacity: fade ? 0.45 : 1, background: locked ? `${BRAND_COLORS.orbitalCyan}12` : undefined }}>
+                    <span className="w-9 shrink-0 rounded px-1.5 py-0.5 text-center font-mono text-[10px] font-bold" style={{ color: c, background: `${c}18` }}>{p.pos}</span>
+                    <span className="min-w-0 flex-1 truncate text-sm text-ion-white">{p.name}</span>
+                    <span className="font-mono text-[11px] text-ink-400">${p.salary}</span>
+                    <span className="w-8 text-right font-mono text-[11px]" style={{ color: BRAND_COLORS.ionMagenta }} title="leverage">{leverage(p).toFixed(1)}</span>
+                    <button type="button" onClick={() => toggle(locks, setLocks, p.id)} title="pin" className="px-1 text-base leading-none transition-colors" style={{ color: locked ? BRAND_COLORS.orbitalCyan : "var(--ion-4,#4b5563)" }}>★</button>
+                    <button type="button" onClick={() => toggle(excludes, setExcludes, p.id)} title="fade" className="px-1 text-base leading-none transition-colors" style={{ color: fade ? BRAND_COLORS.ionMagenta : "var(--ion-4,#4b5563)" }}>✕</button>
                   </div>
                 );
               })}
             </div>
-            <p className="mt-2 text-[10px] text-ink-600">Rightmost number is leverage (ceiling vs. ownership). Pin/fade, then Generate.</p>
+            <p className="mt-3 border-t border-mineral pt-3 text-[11px] leading-relaxed text-ink-500">
+              The <span className="text-ion-magenta">magenta</span> number is leverage (ceiling vs. ownership).
+              Pin with ★, fade with ✕, then Generate.
+            </p>
           </div>
         </div>
       </div>

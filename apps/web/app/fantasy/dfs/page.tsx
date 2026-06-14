@@ -37,63 +37,97 @@ export default async function DfsSuitePage() {
       wide
     >
       {/* ── Salary Board — the optimizer's input layer ─────────────── */}
-      <section id="salary-board" className="surface-card mb-8 p-5">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="font-display text-xl font-semibold text-white">Salary board</h2>
+      <section id="salary-board" className="mb-12">
+        <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+          <div>
+            <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              Step 1 · the field
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white">
+              Salary board
+            </h2>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-300">
+              What the field costs — the optimizer&rsquo;s input layer. It prices the full board;
+              the slate below is the top of it.
+            </p>
+          </div>
           {live ? (
-            <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: BRAND_COLORS.orbitalCyan }}>
+            <span className="shrink-0 rounded-full border border-mineral bg-eclipse/60 px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-orbital-cyan">
               DraftKings · {dfs!.date} · {dfs!.rows.length} salaries
             </span>
           ) : (
-            <span className="font-mono text-[10px] uppercase tracking-widest text-ink-400">
+            <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-mineral bg-eclipse/60 px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-ink-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-ink-500" />
               feed not connected
             </span>
           )}
-        </div>
+        </header>
 
         {live ? (
-          <>
-            <p className="mt-1 text-sm text-ink-300">
+          <div className="surface-card mt-5 overflow-hidden">
+            <p className="border-b border-mineral px-5 py-3 text-sm text-ink-300">
               Reconciled across providers — a salary is trusted when feeds agree; disagreement is
-              flagged ({dfs!.discrepancies} flagged). Top of the slate below; the optimizer prices
-              the full board.
+              flagged{" "}
+              <strong className="font-medium text-ion-white">({dfs!.discrepancies} flagged)</strong>.
             </p>
-            <div className="mt-4 overflow-x-auto">
+            <div className="overflow-x-auto">
               <table className="w-full min-w-[560px] text-left text-sm">
                 <thead>
-                  <tr className="font-mono text-[10px] uppercase tracking-widest text-ink-400">
-                    <th className="py-1.5 pr-4 font-medium">Player</th>
-                    <th className="py-1.5 pr-4 font-medium">Team</th>
-                    <th className="py-1.5 pr-4 font-medium">Pos</th>
-                    <th className="py-1.5 font-medium">Salary</th>
+                  <tr className="border-b border-mineral font-mono text-[11px] uppercase tracking-widest text-ink-500">
+                    <th className="px-5 py-2.5 font-medium">Player</th>
+                    <th className="px-5 py-2.5 font-medium">Team</th>
+                    <th className="px-5 py-2.5 font-medium">Pos</th>
+                    <th className="px-5 py-2.5 text-right font-medium">Salary</th>
                   </tr>
                 </thead>
-                <tbody className="text-ink-200">
+                <tbody>
                   {topRows.map((r) => (
-                    <tr key={`${r.name}-${r.team}`} className="border-t border-mineral/60">
-                      <td className="py-1.5 pr-4 text-white">{r.name}</td>
-                      <td className="py-1.5 pr-4">{r.team}</td>
-                      <td className="py-1.5 pr-4 font-mono text-xs">{r.position}</td>
-                      <td className="py-1.5 font-mono">${r.salary.toLocaleString()}</td>
+                    <tr key={`${r.name}-${r.team}`} className="border-b border-mineral/50 last:border-b-0">
+                      <td className="px-5 py-2.5 font-medium text-ion-white">{r.name}</td>
+                      <td className="px-5 py-2.5 text-ink-300">{r.team}</td>
+                      <td className="px-5 py-2.5 font-mono text-xs text-ink-400">{r.position}</td>
+                      <td className="px-5 py-2.5 text-right font-mono text-ion-white">${r.salary.toLocaleString()}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </>
+          </div>
         ) : (
-          <p className="mt-2 text-sm text-ink-300">
-            No licensed salary feed is connected right now, so no real salaries are shown — the
-            board lights up the moment one is.{" "}
-            <Link href="/integrations" className="text-orbital-cyan underline-offset-4 hover:underline">
-              Data status →
-            </Link>{" "}
-            The optimizer below runs fully on the sample pool in the meantime.
-          </p>
+          <div className="surface-card mt-5 p-6">
+            <p className="text-sm leading-relaxed text-ink-300">
+              No licensed salary feed is connected right now, so no real salaries are shown — the
+              board lights up the moment one is. The optimizer below runs fully on the sample pool in
+              the meantime.
+            </p>
+            <Link
+              href="/integrations"
+              className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-orbital-cyan underline-offset-4 hover:underline"
+            >
+              Data status
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         )}
       </section>
 
-      <DfsOptimizer />
+      {/* ── Optimizer — turn the board into lineups ─────────────────── */}
+      <section id="optimizer">
+        <header className="mb-5">
+          <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+            Step 2 · the build
+          </p>
+          <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white">
+            The optimizer
+          </h2>
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-300">
+            Turn the board into cash, GPP, or leverage lineups — set the objective, pin or fade
+            players, then generate. Every lineup ships with its salary, stack, ownership, and a
+            leverage score.
+          </p>
+        </header>
+        <DfsOptimizer />
+      </section>
     </FantasyShell>
   );
 }
