@@ -730,7 +730,12 @@ function resolveBinding(section: SectionData, tok: Tok): SectionBinding {
 // ── Section + view rendering (CLIENT) ─────────────────────────────────────────
 
 function SectionBlock({ section, tok }: { section: SectionData; tok: Tok }): JSX.Element {
-  const binding = resolveBinding(section, tok);
+  // The DataTable is ALWAYS a light/paper surface (bg-paper-raised), so its cell
+  // content must use the paper ink tokens regardless of the page variant —
+  // otherwise the "dark" variant paints light ion-white text onto a white table
+  // and the rows become invisible. The section chrome (eyebrow/title/blurb) below
+  // still uses the page-variant `tok` because it sits on the page background.
+  const binding = resolveBinding(section, TABLE_TOKENS.paper);
   const enumOptions: ReadonlyArray<EnumOption> | undefined = section.enumOptions;
   const enumFilter =
     enumOptions && binding.enumAccessor

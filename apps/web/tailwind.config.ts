@@ -154,12 +154,14 @@ const config: Config = {
           1:    "#3A4356",     // secondary — 9.34:1 on paper
           2:    "#5B6678",     // muted meta — 5.47:1 on paper
           // ── legacy DARK ramp — ink-50..ink-1000 ──
-          // ink-400/500 are used ~390x as MUTED TEXT on dark cosmic surfaces
-          // (void/carbon/eclipse/titanium). Their old values (#5E6878/#3D4555)
-          // failed WCAG AA there (3.2:1 / ≤2.1:1). Re-valued to AA-passing cool
-          // greys that keep the ink-300 > 400 > 500 dimming hierarchy:
+          // ink-400/500/600 are used ~470x as MUTED TEXT on dark cosmic surfaces
+          // (void/carbon/eclipse/titanium). Their old values (#5E6878/#3D4555/
+          // #2E3849) failed WCAG AA there (3.2:1 / ≤2.1:1 / 1.72:1 — near-invisible).
+          // Re-valued to AA-passing cool greys that keep the 300 > 400 > 500 > 600
+          // dimming hierarchy:
           //   400 #9AA3C0 → 6.6–8.1:1 (AA on every dark surface incl. mineral)
           //   500 #8C95AE → 5.6–6.8:1 (AA on void/carbon/eclipse/titanium)
+          //   600 #828BA3 → 4.9–6.0:1 (AA on void/carbon/eclipse/titanium)
           // Verified by ux-contrast.test.ts. (Only used on dark surfaces — no
           // light/paper element uses these as text, so lightening is safe.)
           50:   "#F5F7FF",
@@ -168,7 +170,7 @@ const config: Config = {
           300:  "#AEB7D2",
           400:  "#9AA3C0",
           500:  "#8C95AE",
-          600:  "#2E3849",
+          600:  "#828BA3",
           700:  "#20283A",
           800:  "#181E28",
           900:  "#11161F",

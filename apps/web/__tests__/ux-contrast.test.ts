@@ -61,6 +61,7 @@ const TEXT_TOKENS = [
   "ink.300",
   "ink.400",
   "ink.500",
+  "ink.600",
   "orbital-cyan",
 ] as const;
 
