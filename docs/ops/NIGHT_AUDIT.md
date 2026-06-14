@@ -30,10 +30,17 @@ step.**
 7. **Cohesion — dashboard chrome** (`39bd87a`): member home swept; semantic GradeBadge tiers
    preserved.
 
-**Net: public + member cohesion is COMPLETE.** Only intentional grays remain — the white
-Google button (Google brand convention), the semantic GradeBadge tiers, and the
-deliberately-untouched reference-quality pages (/board, /journal) + noindex stub (/brief).
-Two durable guard tests now prevent regression.
+8. **Shared-tool loud-hue purge + guard extension** (`a166de5`): swept `accent-cyan-400`
+   slider/checkbox accents, `focus:border-cyan-400`, and a semantic `text-fuchsia-400`
+   off the public interactive tools (dfs-optimizer, waiver-board, slate-twin,
+   staking-calculator, cipher-terminal), and extended the cohesion guard to scan shared
+   components too (now 235 cases). Nav + Footer (every page) verified already clean.
+
+**Net: public + member cohesion is COMPLETE — pages AND shared components.** Only
+intentional grays remain — the white Google button (Google brand convention), the
+semantic GradeBadge tiers, and the deliberately-untouched reference-quality pages
+(/board, /journal) + noindex stub (/brief). Two durable guard tests (235 + 10) now
+prevent regression across the whole public surface.
 
 ### What the brief flagged but was ALREADY satisfied on this branch (verified, not assumed)
 - **a11y keyboard parity** ("~90 onClick missing"): NOT real here. 47 client components use
