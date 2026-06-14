@@ -42,3 +42,16 @@
   clean), hero-video LCP (GeneratedPlate gates video on motion + preload="none"), missing
   page backgrounds (global body carbon bg). Don't manufacture work where the tree is already
   correct — verify, document, move on. A green tree beats churn.
+- **L9 · The brief mislabeled several GRAY pages as "reference-quality."** `/board`,
+  `/journal/[slug]`, the pick-card + evidence-drawer components, and `error.tsx` were all
+  still generic gray on THIS branch (the brief described eloquent's rebuilt versions). The
+  loud-token guard (cyan-400/fuchsia/blue) did NOT catch subtle gray. Fix: a comprehensive
+  gray-chrome guard in `public-cosmic-cohesion.test.ts` (forbids `bg/text/border-gray-*` +
+  `slate-*` across all public pages + components, with a 2-file documented allowlist). When
+  auditing cohesion, scan for `gray-[0-9]` across BOTH app/ and components/, not just the
+  brief's named pages.
+- **L10 · Vercel preview IS reachable for §8 verification.** `mcp__Vercel__list_teams` →
+  `list_projects` (sports-web, team_VvPIx69THeXYfjeG71taqnPo) → `list_deployments`; the
+  branch auto-deploys to alias `sports-web-git-claude-nifty-hopper-au7wib-pick-pilot-s-projects.vercel.app`.
+  Fetch protected pages with `mcp__Vercel__web_fetch_vercel_url` (handles the 401). Large
+  HTML saves to a file — grep it for rendered classes/strings instead of reading inline.

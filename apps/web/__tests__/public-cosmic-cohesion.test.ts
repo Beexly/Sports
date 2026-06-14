@@ -69,6 +69,34 @@ const LOUD_OFF_BRAND: ReadonlyArray<RegExp> = [
   /\bfrom-brand-700\b/,
 ];
 
+// Generic Tailwind GRAY chrome. The cosmic system has no place for it on a
+// public surface — backgrounds are void/obsidian/carbon/eclipse/titanium,
+// borders are mineral, body text is ink/ion. Subtle gray reads as "near-cosmic
+// but off" and was the exact drift that left /board, /journal, the pick cards,
+// and the error page looking generic. Locked here so it can't come back.
+const GRAY_CHROME: ReadonlyArray<RegExp> = [
+  /\bbg-gray-\d/,
+  /\btext-gray-\d/,
+  /\bborder-gray-\d/,
+  /\bdivide-gray-\d/,
+  /\bring-gray-\d/,
+  /\b(?:from|to|via)-gray-\d/,
+  /\bbg-slate-\d/,
+  /\btext-slate-\d/,
+  /\bborder-slate-\d/,
+];
+
+// Documented, intentional gray exceptions (by path suffix). Keep this list
+// SHORT — every entry is a conscious decision, not a loophole.
+//  - auth/signin: the "Continue with Google" button is white (bg-gray-100 /
+//    text-gray-900) per Google's brand guidelines for OAuth buttons.
+//  - dashboard: GradeBadge encodes grade tiers; the C/neutral tier is a
+//    semantic gray (bg-gray-800 / text-gray-400), not chrome.
+const GRAY_ALLOWLIST: ReadonlyArray<string> = [
+  "app/auth/signin/page.tsx",
+  "app/dashboard/page.tsx",
+];
+
 describe("public surfaces stay on the cosmic palette", () => {
   const pages = collectPublicPages(appDir);
   const components = collectPublicComponents(componentsDir);
@@ -86,6 +114,18 @@ describe("public surfaces stay on the cosmic palette", () => {
         expect(src, `${rel} must not use ${re.source}`).not.toMatch(re);
       }
     });
+
+    if (!GRAY_ALLOWLIST.some((allowed) => rel.endsWith(allowed))) {
+      it(`${rel} carries no generic gray chrome`, () => {
+        const src = read(file);
+        for (const re of GRAY_CHROME) {
+          expect(
+            src,
+            `${rel} must use cosmic tokens (void/eclipse/mineral/ink), not ${re.source}`,
+          ).not.toMatch(re);
+        }
+      });
+    }
   }
 
   it("the WAVE-1 rebranded surfaces ride the cosmic base", () => {

@@ -10,7 +10,34 @@ shipped the genuinely-real fixes, locked them with a durable guard test, and doc
 what was already done so no one re-litigates it. **The tree is green and pushed at every
 step.**
 
-### What shipped tonight (every commit gated typecheck+lint+build+test green, then pushed)
+### PHASE 2 — preview unblocked, signature interaction, comprehensive cohesion lock
+After the owner asked for max autonomy, I found Vercel preview access via the Vercel MCP,
+which **unblocked §8 live verification**, and pushed considerably further:
+
+- **Signature build-vision SHIPPED + live-verified** (`52dcaab`): brought the
+  dependency-free, reduced-motion-safe, perf-budgeted `ConstellationField` (Canvas 2D
+  cursor-reactive particle mesh, capped at 90 pts, IntersectionObserver + visibility
+  paused) onto this branch and wired it behind the `/board` hero — the brief's "command
+  constellation." **Verified on the live preview:** the `<canvas>` mounts, palette is
+  cosmic, zero off-brand. Did NOT replicate it elsewhere — the brief forbids the same
+  effect on every surface; other per-surface motifs (performance "calibration ribbon,"
+  pricing "light beams") are bespoke and benefit from human taste review, so left for owner.
+- **The brief mislabeled MORE gray pages as "reference-quality."** Re-auditing the actual
+  tree exposed that `/board`, `/journal/[slug]`, the **pick cards + evidence drawer** (the
+  core content of the revenue surface), the billing button, the `/brief` stub, and the
+  global `error.tsx` were ALL still generic gray. Rebranded every one to cosmic
+  (`52dcaab`, `091d2dc`, `8b102be`, + error/guard commit).
+- **Comprehensive cohesion lock:** upgraded `public-cosmic-cohesion.test.ts` to a
+  **468-case** guard that forbids generic gray chrome (`bg/text/border-gray-*`, `slate-*`)
+  across EVERY public page + shared component, with a short documented allowlist (the white
+  Google OAuth button; the dashboard GradeBadge semantic tiers). This locks the exact drift
+  class I kept finding so it can never silently return.
+- **Live preview verification (§8):** `/board` (constellation + cosmic), `/auth/signin`
+  ("Email sign-in coming soon" confirmed REMOVED + cosmic), `/picks` (cosmic, off-brand
+  gone) all fetched from the deployed branch alias and verified against the rendered HTML —
+  not on faith.
+
+### PHASE 1 — what shipped (every commit gated typecheck+lint+build+test green, then pushed)
 1. **WAVE-1 cosmic cohesion** (`b5bd7ce`): rebranded the two loudest off-brand public
    surfaces — `/picks` (revenue board) and `/room/[gameId]` (decision room) — off generic
    gray/`cyan-400`/`fuchsia-400`/`blue-600` onto the cosmic tokens; added focus-visible a11y
