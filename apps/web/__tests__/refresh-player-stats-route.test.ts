@@ -13,11 +13,13 @@ vi.mock("@/lib/ingestion/player-stats", async (importActual) => {
 });
 vi.mock("@/lib/ingestion/snap-counts", () => ({ ingestSnapCounts: vi.fn() }));
 vi.mock("@/lib/ingestion/injuries", () => ({ ingestInjuries: vi.fn() }));
+vi.mock("@/lib/ingestion/depth-charts", () => ({ ingestDepthCharts: vi.fn() }));
 
 import { GET } from "@/app/api/cron/refresh-player-stats/route";
 import { ingestPlayerWeeklyStats, currentNflSeason } from "@/lib/ingestion/player-stats";
 import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
+import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 
 function req(url: string, auth?: string): Request {
   return new Request(url, auth ? { headers: { authorization: auth } } : undefined);
@@ -39,8 +41,10 @@ describe("GET /api/cron/refresh-player-stats", () => {
     (ingestPlayerWeeklyStats as Mock).mockReset();
     (ingestSnapCounts as Mock).mockReset();
     (ingestInjuries as Mock).mockReset();
+    (ingestDepthCharts as Mock).mockReset();
     (ingestSnapCounts as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 2 });
     (ingestInjuries as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 1 });
+    (ingestDepthCharts as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 3 });
     vi.stubEnv("CRON_SECRET", "secret");
   });
   afterEach(() => vi.unstubAllEnvs());
@@ -74,14 +78,17 @@ describe("GET /api/cron/refresh-player-stats", () => {
       stats: { statsUpserted: number };
       snaps: { rowsWritten: number };
       injuries: { rowsWritten: number };
+      depth: { rowsWritten: number };
     };
     expect(body.success).toBe(true);
     expect(body.stats.statsUpserted).toBe(4);
     expect(body.snaps.rowsWritten).toBe(2);
     expect(body.injuries.rowsWritten).toBe(1);
+    expect(body.depth.rowsWritten).toBe(3);
     expect(ingestPlayerWeeklyStats).toHaveBeenCalledWith(2024);
     expect(ingestSnapCounts).toHaveBeenCalledWith(2024);
     expect(ingestInjuries).toHaveBeenCalledWith(2024);
+    expect(ingestDepthCharts).toHaveBeenCalledWith(2024);
   });
 
   it("502s when any ingestion reports a non-ok status", async () => {

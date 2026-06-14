@@ -9,9 +9,10 @@
 import { ingestPlayerWeeklyStats } from "@/lib/ingestion/player-stats";
 import { ingestSnapCounts, type SnapCountIngestResult } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries, type InjuryIngestResult } from "@/lib/ingestion/injuries";
+import { ingestDepthCharts, type DepthChartIngestResult } from "@/lib/ingestion/depth-charts";
 
 /** Earliest season each nflverse dataset reliably covers. */
-export const DATASET_MIN_SEASON = { stats: 1999, snaps: 2012, injuries: 2009 } as const;
+export const DATASET_MIN_SEASON = { stats: 1999, snaps: 2012, injuries: 2009, depth: 2001 } as const;
 
 type PlayerStatsResult = Awaited<ReturnType<typeof ingestPlayerWeeklyStats>>;
 
@@ -20,6 +21,7 @@ export interface SeasonBackfillResult {
   readonly stats: PlayerStatsResult | "skipped";
   readonly snaps: SnapCountIngestResult | "skipped";
   readonly injuries: InjuryIngestResult | "skipped";
+  readonly depth: DepthChartIngestResult | "skipped";
 }
 
 export interface BackfillResult {
@@ -43,13 +45,14 @@ export async function backfillPlayerData(from: number, to: number): Promise<Back
     // Players first (creates Player rows) so injuries can resolve playerId.
     const stats: PlayerStatsResult | "skipped" =
       season >= DATASET_MIN_SEASON.stats ? await ingestPlayerWeeklyStats(season) : "skipped";
-    const [snaps, injuries] = await Promise.all([
+    const [snaps, injuries, depth] = await Promise.all([
       season >= DATASET_MIN_SEASON.snaps ? ingestSnapCounts(season) : Promise.resolve("skipped" as const),
       season >= DATASET_MIN_SEASON.injuries ? ingestInjuries(season) : Promise.resolve("skipped" as const),
+      season >= DATASET_MIN_SEASON.depth ? ingestDepthCharts(season) : Promise.resolve("skipped" as const),
     ]);
-    results.push({ season, stats, snaps, injuries });
+    results.push({ season, stats, snaps, injuries, depth });
   }
 
-  const allOk = results.every((r) => ok(r.stats) && ok(r.snaps) && ok(r.injuries));
+  const allOk = results.every((r) => ok(r.stats) && ok(r.snaps) && ok(r.injuries) && ok(r.depth));
   return { from: lo, to: hi, seasonsProcessed: results.length, allOk, results };
 }
