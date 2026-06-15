@@ -18,6 +18,7 @@ const PRODUCT_LINKS = [
 const COMPANY_LINKS = [
   { label: "Accountability", href: "/accountability" },
   { label: "Receipts — Calibration", href: "/performance" },
+  { label: "Closing Line Value", href: "/clv" },
   { label: "Methodology", href: "/methodology" },
   { label: "The Vault", href: "/vault" },
   { label: "Pricing", href: "/pricing" },
