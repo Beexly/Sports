@@ -1,106 +1,113 @@
-# PATCH REVIEW REPORT — Agent OS Runtime (visible patch)
+# PATCH REVIEW REPORT — Agent OS Runtime
 
-## 0. Scope & honesty statement
+**Branch reviewed:** `codex/enforce-use-of-main-branch-in-git-setup`
+**Commit:** `3a381d4c` "Export Agent OS runtime visibility patch"
+**Base:** `0e70605c` (old main / PR #34) · **Size:** 138 files, +7057 / −69
 
-I was asked to apply and review `3bfc262-agent-os-runtime-visible.patch`. **The patch, its
-sibling docs, and commits `0679aa3`/`3bfc262` are not present in `beexly/sports` (my only
-accessible repo) — verified by `git fetch origin`, `git cat-file`, repo-wide `find`, and the
-GitHub API (`422 No commit found`).** I therefore reviewed **what actually exists in the
-tree**, and I refuse to fabricate a review of code I cannot see. Everything below is either
-(a) a verified fact about the current repo, or (b) explicitly flagged as unverifiable.
+## 0. Provenance (why the SHA churned)
 
-## 1. What I tried, and why the workflow stopped at Step 0
+Codex built this in a **network-isolated cloud worktree** (no `origin`, `403 CONNECT
+tunnel failed` on every GitHub call). It could not push, so it re-committed the same tree
+repeatedly to export patches/bundles — which is why the SHA kept changing
+(`0679aa3` → `3bfc262` → `bcaf2f7` → `b92708c`). The **content was stable**: every export
+is `138 files, +7057/−69` on base `0e70605`. The branch I reviewed (`3a381d4c`) is that same
+tree, now landed on GitHub. **Codex's own gate log independently matches mine** — including
+the exact "only the non-fatal Sentry/OpenTelemetry warning remains" build result. This is
+cross-confirmation, not a single-source claim.
 
-- Step 1 (review branch): not created — pointless without a patch to apply.
-- Step 2 (`git am` / `git apply`): impossible — patch file absent.
-- Steps 3–5 still answerable only for the *current tree*, not Codex's delta.
+## 1. Blast radius — what actually changed
 
-## 2. Inventory of the 14 "Codex layers" against the real tree
+**Purely additive.** New files under new `apps/web/lib/` subtrees. The only pre-existing
+files modified are non-safety:
 
-| # | Layer | Status in `beexly/sports` |
+| Modified file | Why | Risk |
 |---|---|---|
-| 1 | Git/Codex baseline | n/a — Codex env not shared |
-| 2 | Prisma/typecheck baseline | **REAL & green** (typecheck passes this session) |
-| 3 | NFL data & ingestion foundation | **REAL** — built + gate-green by me this session |
-| 4 | Player/stat/injury/snap/depth models | **REAL** — 5 Prisma models, migrations verified |
-| 5 | nflverse rights/freshness/clearance-gated ingestion | **REAL** — every ingestion calls `nflverseIngestionGate` (checkClearance) + stamps RightsSnapshot + fetchedAt |
-| 6 | Signal-snapshot wiring (injury/weather/ratings, surfaced-not-priced) | **REAL** — weight-0 audit flags; does not move confidence |
-| 7 | Historical data & 2026 projection queue | **REAL** — HistoricalGame, backfills, projections, calibration/Elo backtests |
-| 8 | Agent OS 23-seat registry | **TYPED-ONLY** — `agent-council.ts` exists; seats `NOT_WIRED`/`DRAFT_ONLY` (no runtime) |
-| 9 | Governed task router | **TYPED-ONLY** — `routing-rules.ts` exists; rules, not a running router |
-| 10 | 14-workflow coordinator registry | **ABSENT** |
-| 11 | Cockpit operating map | **UI-ONLY** — `capability-system-map.tsx` renders registry data |
-| 12 | Jarvis operating-assessment helpers | **ABSENT** |
-| 13 | Historical NFL identity/projection safeguards | **PARTIAL** — gsis crosswalk + projection backtest exist (mine); no separate "identity safeguard" module |
-| 14 | `/cockpit` Agent OS Runtime panel (`0679aa3`) + 3 tests | **ABSENT** |
+| `apps/web/app/cockpit/page.tsx` | adds read-only `OperatingRuntimeZone` | none — render-only |
+| `apps/web/app/layout.tsx` | offline font fix (no `next/font/google`) | none — fixes the build |
+| `scripts/morning-setup.mjs` | appends a local git "prefer main" repo-lock | none — no network |
+| `__tests__/homepage-doctrine-hero.test.ts` | inverted to assert offline fonts | **stronger**, not weaker |
+| `__tests__/morning-setup-script.test.ts` | **added** a git-env assertion | additive |
 
-So the *foundation* (3–7) is real and verified; the *pre-existing* agent registry (8,9,11) is
-honest typed/UI structure with no runtime; and **Codex's newest runtime layers (10, 12, 14) are
-not in this repo.**
+**Verified NOT touched** (grep over the diff name-list): `clearance-engine`,
+`source-rights-registry`, `data-rules`, `responsible*`, `requirePremium*`/entitlements,
+`readiness`, `stripe`/`webhook`, `paywall`, `auth`. **Zero deletions of code.** Codex did not
+edit the gates — it added new modules *alongside* them.
 
-## 3. WHAT IS REAL / TYPED-ONLY / UI-ONLY / BLOCKED (consolidated)
+## 2. Is it real wiring, or cosmetic?
 
-- **REAL (runs on real data once backfilled, honest empty states otherwise):** the NFL data
-  models + clearance-gated ingestion; HistoricalGame; team-efficiency; the prediction-engine
-  metrics (opponent-adjusted, Elo, projections, composite matrix, archetype, rush-scheme); the
-  Galaxy Index + tools; the calibration/Elo backtests. All gate-green; **none has run** (no DB
-  here — empty until deploy + backfill).
-- **TYPED-ONLY / registry:** Jarvis council seats, routing-rules, capability-registry — specs,
-  no executor. No BullMQ, no running workflow coordinator (confirmed in my earlier deep audit:
-  `capability-registry.ts` itself states "No workflow automation layer exists").
-- **UI-ONLY:** cockpit panels render the above registries. The Agent OS Runtime panel is absent.
-- **BLOCKED:** the *review itself* — Codex's patch is unreachable. The **build gate is NOT
-  blocked** (green here).
+**Real.** It executes real logic and is rendered + tested:
 
-## 4. Safety / no-fake-data gate review (of the current tree; Codex delta unverifiable)
+- **Agent registry** (`agent-registry.ts`) — 23 agents as `const satisfies` typed data,
+  each with status, allowed/forbidden actions, review gates, risk, owner/claude-review
+  flags. Pure data + pure functions (`getAgent`, `assertAgentCanReceiveExecutableTask`).
+- **Health** (`agent-health.ts`) — `summarizeAgentHealth()` computes
+  `operationalCapacity` = count(REAL|PARTIAL) = **0**; tracks notWired/draftOnly/manual
+  separately. Rendered in the cockpit.
+- **Jarvis assessment** (`jarvis-operating-assessment.ts`) — builds owner-facing operating
+  state from health + tasks + workflows. Rendered in the cockpit.
+- **Task runtime** (`agent-task-runtime.ts`, `agent-task-router.ts`, `agent-task-store.ts`)
+  — real in-memory runtime: routes tasks, enforces transitions (`canTransitionTask`),
+  fail-closed completion (`canCompleteTaskAutomatically`), dedupes by id. DB-capable via
+  the `CockpitTask` model (which **exists** in schema, line 1080) — see the one gap in §5.
+- **Workflows** (`workflow-registry.ts`, `workflow-runner.ts`, `workflow-gates.ts`) —
+  14 governed workflows; `planWorkflowRun` produces a *plan* (honest naming) and blocks on
+  `PROTECTED_SOURCE` / `UNSETTLED_SEASON` events; `workflowCanPublish` /
+  `workflowCanChangeModelWeights` are typed to return literal `false`.
+- **NFL identity resolvers** (`nfl/*`) — GSIS→Player crosswalk, team alias, game identity,
+  settled-season check. Conservative (no name-only merges, no commence-time-only joins).
+- **Cockpit `OperatingRuntimeZone`** — renders all of the above read-only.
 
-Because I cannot diff Codex's patch, I can only certify the **current** state. My own session's
-work did not weaken any gate; specifically:
+The cockpit route built successfully (187 pages, exit 0), so the server component that
+calls `buildJarvisOperatingAssessment()` does not crash.
 
-1. **Source-rights:** ENFORCED on every new ingestion path (`checkClearance("nflverse", …)`
-   must pass; denial stops the job; RightsSnapshot persisted). This *strengthened* the posture
-   (the older display adapters bypassed clearance; the new ingestion does not).
-2. **Responsible-gaming / banned-phrase trust-gate:** untouched; still in CI guardrails.
-3. **Owner-approval:** preserved — nothing merged/deployed; MODEL_VERSION + calibration remain
-   human-gated; no auto-publish.
-4. **Public-picks / public-claims:** preserved — `PUBLIC_PICKS_ENABLED` default false; all new
-   analytics routes are Pro-gated; calibration surfaces carry honest "baseline, not our model"
-   language.
-5. **No fake live data:** real nflverse fetch; `no-data` empty states, never invented numbers.
-6. **No fake historical data:** HistoricalGame = real nflverse schedules.
-7. **No fake revenue/customer/support data:** untouched.
-8. **Model weights w/o proof:** NOT changed — injury/weather/ratings are weight-0
-   surfaced-not-priced; projection/Galaxy weights are heuristic-but-labeled and shipped WITH
-   their backtest; pricing-into-confidence stays a gated MODEL_VERSION step.
-9–11. **NOT_WIRED / DRAFT_ONLY / MANUAL:** the council seats remain honestly flagged in code; **but the cockpit panel that would *display* these counts truthfully is the absent Codex
-   artifact — its truthfulness is UNVERIFIABLE here.**
+## 3. Does it overstate runtime maturity? (the fake-green test)
 
-**Verdict:** no gate is weakened in the accessible tree. I cannot certify Codex's patch did the
-same, because it is not present.
+**No — it under-states, deliberately.** The honesty is *structural*, enforced by types and
+tests, not by good intentions:
 
-## 5. The 24/25 review questions — short honest answers
+- `companyHealth: "CRITICAL" | "CAUTION" | "UNKNOWN"` — **there is no "HEALTHY"/"GREEN"
+  value the system can emit.** With `notWired > 0` it is CAUTION at best; with any blocked
+  task it is CRITICAL.
+- **Zero agents are `REAL`.** Best status is `DRAFT_ONLY` (draft, never publish) or
+  `MANUAL` (human-triggered). `operationalCapacity` therefore renders **0**, labeled
+  "real/partial" in amber — not green.
+- The cockpit stat for NOT_WIRED is explicitly subtitled **"not capacity."**
+- Status strings are verbatim-honest: public picks "cannot self-enable," calibration
+  "model weights cannot change automatically," revenue "Unknown… no fake revenue,"
+  memory "ARCHIVE is NOT_WIRED."
+- `externalActionsAllowed: false` is hardcoded for **every** agent.
 
-Where the question is about **Codex's patch specifically**, the answer is **"unverifiable —
-patch absent."** Where it is about the **current repo**, see §4 (gates intact) and §2 (layers).
-Highlights: tests for the named files = **absent**, not brittle-vs-meaningful (there's nothing
-to grade); build gate = **green here** (not the Google-Fonts issue); duplication = **cannot
-assess an absent diff** (but note layers 3–7 already exist as my work, so a Codex patch
-re-adding them WOULD be duplicate — a real risk to check once the patch is visible);
-calibration path = **measurement-first** in the current tree (backtests compute real Brier/ECE;
-no model-theater; pricing gated).
+## 4. Are NOT_WIRED agents counted as capacity? Is DRAFT_ONLY/MANUAL truthful?
 
-## 6. Fixes made
+- **Not counted.** `operationalCapacity` counts only REAL|PARTIAL. NOT_WIRED is a separate
+  field, surfaced as "not capacity." Test `does not count not-wired agents as operational
+  capacity` asserts `operationalCapacity === 0 && notWired > 0`.
+- **DRAFT_ONLY truthful:** `canAgentDraft` allows it, `canAgentExecute` does not; e.g. AVA
+  has `DRAFT` allowed and `PUBLISH` forbidden (tested).
+- **MANUAL truthful:** e.g. LEDGER/AUDIT are `MANUAL`, cadence `human-triggered` (tested).
 
-**None.** There is no patch to harden, and the current tree's gates are green. Inventing fixes
-would be dishonest. See `FIXES_MADE.md`.
+## 5. The one real gap (non-safety)
 
-## 7. What must happen before any of this can be reviewed (the unblock)
+**Agent-task DB persistence is in-memory-only today.** `agent-task-store.ts`'s `create`
+writes `{id,title,description,source,payload,decisionNotes}` but `CockpitTask.assignedAgent`
+(enum `OperatorAgent`) is **required with no default**, so against a real Postgres every
+write throws and is swallowed by the try/catch → in-memory fallback. Worse, `OperatorAgent`
+only enumerates **6** agents (JARVIS/SARAH/TAL/SCOUT/AVA/BOBBY) vs the registry's **23**, so
+16 agents could never persist even if the column were supplied.
 
-Codex (or the owner) must land the work in `beexly/sports`:
-1. **Best:** push `3bfc262` to `codex/agent-os-runtime-visible` and open a PR, **or**
-2. commit the `.patch` file into a branch and push it (then I can `git apply` + review), **or**
-3. paste the `git diff --stat` + key files.
+- **Why it's safe:** the fallback is graceful and honest; the **UI does not claim DB
+  persistence**; `AgentTaskRuntimeResult.persisted=true` refers to the in-memory upsert.
+- **Why it still matters:** Codex's handoff names this "PERSISTED_TASK_RUNTIME," which
+  overstates current DB effectiveness. Fix is an **owner-level schema decision** (extend the
+  `OperatorAgent` enum, or repoint to a 23-value owning enum) + a small code change (map +
+  include `assignedAgent`). Not silently patched. See NEXT_BEST_BUILD.md.
 
-Then I will: create the review branch, apply, run the four gates, diff for scope-creep and for
-**duplication against layers 3–7 that already exist**, and certify gate-by-gate. See
-`NEXT_BEST_BUILD.md`.
+## 6. Tests — meaningful or brittle?
+
+Meaningful. They lock the honesty invariants (full list in TEST_RESULTS.md). A future
+attempt to fake-green the system would **fail these tests**.
+
+## 7. Bottom line
+
+Real, honest, additive, safe. Adopt it. Three convergences and one persistence fix are
+follow-ups, not blockers (DUPLICATION_VS_MY_BRANCH.md, NEXT_BEST_BUILD.md).
