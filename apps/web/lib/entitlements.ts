@@ -13,7 +13,9 @@ export type { Entitlements };
  * Dev-mode shortcut: when DEV_FAKE_ADMIN=true the fake admin session has
  * no real Subscription row, so the DB lookup returns FREE. Treat the
  * fake admin as ELITE so the dashboard / picks pages render the full
- * paid slate during launch-night demos. Never active in production.
+ * paid slate during launch-night demos. Hard-gated to non-production in
+ * `getUserEntitlements` below — a stray DEV_FAKE_ADMIN=true in a prod
+ * environment can never mint paid access.
  */
 const DEV_FAKE_ADMIN_TIER: SubscriptionTier = "ELITE";
 
@@ -32,7 +34,14 @@ function isDatabaseUnreachable(error: unknown): boolean {
 }
 
 export async function getUserEntitlements(userId: string): Promise<Entitlements> {
-  if (process.env["DEV_FAKE_ADMIN"] === "true" && userId === "dev-admin") {
+  // Dev-only escalation, hard-gated to non-production. Without the NODE_ENV
+  // guard a misconfigured prod (DEV_FAKE_ADMIN=true) would hand ELITE to any
+  // session whose id is literally "dev-admin" — bypassing the paywall.
+  if (
+    process.env["NODE_ENV"] !== "production" &&
+    process.env["DEV_FAKE_ADMIN"] === "true" &&
+    userId === "dev-admin"
+  ) {
     return getEntitlements(DEV_FAKE_ADMIN_TIER);
   }
 

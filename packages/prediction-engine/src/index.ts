@@ -148,12 +148,43 @@ export {
   isotonicCalibration,
   brierDecomposition,
   expectedCalibrationError,
+  reliabilityCurve,
 } from "./probability-calibration.js";
 export type {
   CalibrationSample,
   IsotonicModel,
   BrierDecomposition,
+  ReliabilityBin,
 } from "./probability-calibration.js";
+
+// Player season projection (recency+games-weighted, regressed) and its
+// honest backtest vs a carry-forward baseline. Forecasts; surfaced with their
+// measured error, not auto-published.
+export { projectPlayerSeason, backtestProjections } from "./player-projection.js";
+export type { PlayerSeasonLine, PlayerProjection, ProjectionBacktest } from "./player-projection.js";
+
+// Elo independent-model backtest: results-only win probabilities, calibrated and
+// comparable to the market baseline. Measurement only; not wired into scoring.
+export { eloBacktest } from "./elo-backtest.js";
+export type { EloBacktestGame, EloBacktestReport, EloBacktestOptions } from "./elo-backtest.js";
+
+// Opponent-adjusted efficiency (DVOA/SRS-family) over public play-by-play.
+export { opponentAdjustedRatings } from "./opponent-adjusted.js";
+export type { TeamGameEfficiency, TeamRating, OpponentAdjustOptions } from "./opponent-adjusted.js";
+
+// Weighted composite score — the "weight everything" matrix that blends hard
+// metrics + soft signals (with confidence + freshness valves) into one number
+// plus attributed contributions for interpretation/narration.
+export { compositeScore } from "./composite-score.js";
+export type { WeightedSignal, SignalContribution, CompositeScore, CompositeScoreOptions } from "./composite-score.js";
+
+// Player usage archetype (receiving lean / workload) from rushing/receiving usage.
+export { classifyUsageProfile } from "./player-archetype.js";
+export type { UsageProfileInput, UsageProfile, WorkloadTier } from "./player-archetype.js";
+
+// Run-scheme lean (gap/power vs outside/zone) from PBP run direction.
+export { classifyRushScheme } from "./player-rush-scheme.js";
+export type { RushDirectionCounts, RushSchemeProfile } from "./player-rush-scheme.js";
 
 export {
   assessUncertainty,

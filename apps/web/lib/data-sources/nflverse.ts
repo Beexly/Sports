@@ -4,9 +4,14 @@
  * nflverse (https://github.com/nflverse) publishes free NFL play-by-play,
  * player stats, injuries, and rosters as CSV/Parquet via GitHub releases.
  *
- * LICENSE: CC BY-SA 4.0 — requires attribution and share-alike.
- *   Credit: "Data from nflverse (https://github.com/nflverse), CC BY-SA 4.0"
- *   Any derived datasets must carry the same license.
+ * LICENSE: CC-BY-4.0 — attribution required, no share-alike. This covers
+ *   every dataset used here (player stats, snaps, injuries, depth charts,
+ *   rosters, pbp, NGS). Credit: "Data from nflverse
+ *   (https://github.com/nflverse), CC-BY-4.0".
+ *   NOTE: the one nflverse exception is FTN charting/participation data
+ *   (2023+), which is CC-BY-SA-4.0 with attribution to FTN Data. We do NOT
+ *   ingest FTN here; if that ever changes, it carries share-alike and needs
+ *   its own attribution.
  *
  * DATA QUALITY: "authoritative-free" — nflverse is the canonical free NFL
  * data source, built from official play-by-play data by nflreadr maintainers.
@@ -17,12 +22,12 @@
  */
 
 export type NflverseDataQuality = "authoritative-free";
-export type NflverseAttribution = "nflverse (https://github.com/nflverse), CC BY-SA 4.0";
+export type NflverseAttribution = "nflverse (https://github.com/nflverse), CC-BY-4.0";
 
 export const NFLVERSE_ATTRIBUTION: NflverseAttribution =
-  "nflverse (https://github.com/nflverse), CC BY-SA 4.0";
+  "nflverse (https://github.com/nflverse), CC-BY-4.0";
 
-export const NFLVERSE_LICENSE = "CC BY-SA 4.0" as const;
+export const NFLVERSE_LICENSE = "CC-BY-4.0" as const;
 export const NFLVERSE_BASE =
   "https://github.com/nflverse/nflverse-data/releases/download" as const;
 
@@ -148,7 +153,7 @@ function parsePlayerStatRow(row: Record<string, string>): NflversePlayerStatRow 
 
 /**
  * Fetch seasonal player stats from nflverse.
- * Requires attribution: "Data from nflverse (https://github.com/nflverse), CC BY-SA 4.0"
+ * Requires attribution: "Data from nflverse (https://github.com/nflverse), CC-BY-4.0"
  */
 export async function fetchNflversePlayerStats(
   season: number,
@@ -211,7 +216,7 @@ function parseInjuryRow(row: Record<string, string>): NflverseInjuryRow {
 
 /**
  * Fetch injury report data from nflverse for a given season.
- * Requires attribution: "Data from nflverse (https://github.com/nflverse), CC BY-SA 4.0"
+ * Requires attribution: "Data from nflverse (https://github.com/nflverse), CC-BY-4.0"
  */
 export async function fetchNflverseInjuries(
   season: number,
@@ -274,7 +279,7 @@ function parseRosterRow(row: Record<string, string>): NflverseRosterRow {
 
 /**
  * Fetch roster data from nflverse for a given season.
- * Requires attribution: "Data from nflverse (https://github.com/nflverse), CC BY-SA 4.0"
+ * Requires attribution: "Data from nflverse (https://github.com/nflverse), CC-BY-4.0"
  */
 export async function fetchNflverseRosters(
   season: number,

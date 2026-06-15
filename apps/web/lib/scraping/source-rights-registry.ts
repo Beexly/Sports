@@ -123,7 +123,7 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     derived_analytics_allowed: true,
     model_training_allowed: true,
     attribution_required: true,
-    attribution_text: "Data from nflverse (https://github.com/nflverse), CC BY-SA 4.0",
+    attribution_text: "Data from nflverse (https://github.com/nflverse), CC-BY-4.0",
     personal_data_risk: "low",
     copyright_expression_risk: "none",
     database_right_risk: "none",
@@ -134,7 +134,7 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     evidence_urls: ["https://github.com/nflverse/nflverse-data/blob/master/LICENSE"],
     unlock_condition: null,
     vendor_contact: null,
-    notes: "CC BY-SA 4.0. Share-alike applies to derived datasets. Attribution required in all outputs.",
+    notes: "CC-BY-4.0 — attribution required in all outputs, no share-alike. (The one exception, nflverse FTN charting/participation data, is CC-BY-SA-4.0 and is not ingested here.)",
   },
 
   // ── Approved: public logged-off API ─────────────────────────────────────────

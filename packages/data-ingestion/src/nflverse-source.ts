@@ -1,13 +1,15 @@
 /**
  * nflverse ingestion — the free, comprehensive NFL data source.
  *
- * nflverse (github.com/nflverse, MIT) publishes the entire modern NFL analytics
+ * nflverse (github.com/nflverse) publishes the entire modern NFL analytics
  * stack as release assets on `nflverse-data`: play-by-play with EPA/WPA, Next
  * Gen Stats (separation, time-to-throw, air yards), snap counts, depth charts,
  * injuries, PFR advanced stats, FTN charting, rosters (with age), draft/combine/
  * contracts, and weekly player stats. It is the same source the R (nflreadr)
  * and Python (nflreadpy / nfl_data_py) packages read — we read it directly from
- * Node, no R, no licence, ~$0.
+ * Node, no R, ~$0. Licensing: the tooling is MIT; the DATA is CC-BY-4.0
+ * (attribution required, no share-alike) — except FTN charting/participation,
+ * which is CC-BY-SA-4.0 and is not ingested.
  *
  * This adapter is the typed access layer: a catalog of the high-value datasets
  * (each knowing its release tag, grain, season range, and the prediction value
@@ -146,6 +148,39 @@ export const NFLVERSE_CATALOG = {
     description: "Combine results (40, vert, etc.).",
     unlocks: "Athletic testing priors.",
     file: () => `combine.csv`,
+  }),
+  // ── Coverage-completeness additions (verified live against nflverse-data,
+  //    all standard CC-BY-4.0 — NOT the FTN/participation CC-BY-SA exception).
+  //    Schemas confirmed from the live release headers on 2026-06-15.
+  officials: ds({
+    key: "officials", tag: "officials", grain: "game", since: 2015, seasonal: false,
+    description: "Officiating crew per game (referee/umpire/etc.) keyed by game_id.",
+    unlocks: "Referee-crew tendencies — penalty/total/pace lean the market rarely prices.",
+    file: () => `officials.csv`,
+  }),
+  trades: ds({
+    key: "trades", tag: "trades", grain: "snapshot", since: 2002, seasonal: false,
+    description: "Recorded trades: players/picks gave & received, with trade dates.",
+    unlocks: "Roster-movement events — mid-season role shifts and draft-capital flow.",
+    file: () => `trades.csv`,
+  }),
+  contracts: ds({
+    key: "contracts", tag: "contracts", grain: "player", since: 0, seasonal: false,
+    description: "OverTheCap historical player contracts: value, APY, guarantees, years.",
+    unlocks: "Contract-year / holdout / cap context — a soft motivation+availability signal.",
+    file: () => `historical_contracts.csv.gz`,
+  }),
+  weekly_rosters: ds({
+    key: "weekly_rosters", tag: "weekly_rosters", grain: "player-week", since: 2002, seasonal: true,
+    description: "Weekly roster status per player (active/inactive/IR) with gsis_id + bio.",
+    unlocks: "Weekly availability + in-season team/role changes — who actually dressed.",
+    file: (s) => `roster_weekly_${s}.csv`,
+  }),
+  stats_team_week: ds({
+    key: "stats_team_week", tag: "stats_team", grain: "team-week", since: 1999, seasonal: true,
+    description: "Team-week aggregated stats: pass/rush yards, EPA, CPOE, first downs, TDs.",
+    unlocks: "Team efficiency aggregates (EPA/CPOE) without re-deriving from play-by-play.",
+    file: (s) => `stats_team_week_${s}.csv`,
   }),
 } satisfies Record<string, NflverseDataset>;
 

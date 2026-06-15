@@ -1898,3 +1898,426 @@ model ModerationAppeal {
   @@index([appellantId])
   @@map("moderation_appeals")
 }
+
+// ============================================================
+// PLAYER DATA (nflverse) — system-of-record for NFL player stats
+// ------------------------------------------------------------
+// Additive layer persisted from the free nflverse release assets
+// (CC-BY-4.0). Every row carries provenance (sourceId), a point-in-time
+// rights snapshot (captured at extraction), and fetchedAt for freshness —
+// per the CLAUDE.md no-stale-data / rights invariants. These tables do NOT
+// yet feed the prediction engine; wiring player signals into scoring is a
+// separate, gated MODEL_VERSION step.
+// ============================================================
+
+model Player {
+  id          String   @id @default(cuid())
+  gsisId      String   @unique  // nflverse player_id / gsis_id (canonical)
+  fullName    String
+  position    String?
+  recentTeam  String?  // denormalized most-recent team abbreviation
+  headshotUrl String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  gameStats    PlayerGameStat[]
+  snapCounts   SnapCount[]
+  injuries     Injury[]
+  depthEntries DepthChartEntry[]
+
+  @@index([position])
+  @@index([recentTeam])
+  @@map("players")
+}
+
+model PlayerGameStat {
+  id         String  @id @default(cuid())
+  playerId   String
+  season     Int
+  week       Int
+  seasonType String  @default("REG") // REG | POST
+  team       String?
+  opponent   String?
+
+  // Volume / usage (real player_stats_week columns)
+  attempts         Int? // pass attempts
+  carries          Int?
+  receptions       Int?
+  targets          Int?
+  targetShare      Float?
+  receivingYards   Float?
+  rushingYards     Float?
+  fantasyPointsPpr Float?
+
+  // Efficiency (nflverse EPA)
+  passingEpa   Float?
+  rushingEpa   Float?
+  receivingEpa Float?
+
+  // Provenance / rights / freshness
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, season, week, seasonType])
+  @@index([season, week])
+  @@index([playerId])
+  @@map("player_game_stats")
+}
+
+model SnapCount {
+  id           String  @id @default(cuid())
+  playerId     String? // resolved nflverse gsis link when available
+  pfrPlayerId  String? // natural id in the snap_counts asset
+  playerName   String
+  season       Int
+  week         Int
+  seasonType   String  @default("REG")
+  team         String?
+  opponent     String?
+  position     String?
+  offenseSnaps Int?
+  offensePct   Float?
+  defenseSnaps Int?
+  defensePct   Float?
+  stSnaps      Int?
+  stPct        Float?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  player Player? @relation(fields: [playerId], references: [id], onDelete: SetNull)
+
+  @@index([season, week])
+  @@index([playerId])
+  @@map("snap_counts")
+}
+
+model Injury {
+  id             String  @id @default(cuid())
+  playerId       String?
+  gsisId         String?
+  playerName     String
+  season         Int
+  week           Int
+  team           String?
+  position       String?
+  reportStatus   String? // Out | Doubtful | Questionable | ... (free text from source)
+  practiceStatus String?
+  primaryInjury  String? // body part / description
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  player Player? @relation(fields: [playerId], references: [id], onDelete: SetNull)
+
+  @@index([season, week])
+  @@index([playerId])
+  @@map("injuries")
+}
+
+model DepthChartEntry {
+  id         String  @id @default(cuid())
+  playerId   String?
+  gsisId     String?
+  playerName String
+  season     Int
+  week       Int
+  team       String?
+  position   String?
+  depthRank  Int?    // depth_team rank (1 = starter)
+  role       String?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  player Player? @relation(fields: [playerId], references: [id], onDelete: SetNull)
+
+  @@index([season, week, team])
+  @@index([playerId])
+  @@map("depth_chart_entries")
+}
+
+// ============================================================
+// HISTORICAL GAMES (nflverse `schedules` / games.csv) — settled outcomes
+// ------------------------------------------------------------
+// One row per game since 1999 with the CLOSING line + total + moneylines AND
+// the final score / result. This is the real settled (forecast, outcome)
+// archive used to backtest the market model and calibrate confidence against
+// actual results — distinct from the live, Odds-API-sourced `Game` table.
+// ============================================================
+
+model HistoricalGame {
+  id            String  @id @default(cuid())
+  gameKey       String  @unique // nflverse game_id (e.g. "2023_01_KC_DET")
+  season        Int
+  week          Int
+  gameType      String  @default("REG") // REG | POST
+  awayTeam      String // abbreviation
+  homeTeam      String
+  awayScore     Int?
+  homeScore     Int?
+  result        Float? // home margin (home_score - away_score)
+  spreadLine    Float? // closing spread, home perspective
+  totalLine     Float? // closing total
+  awayMoneyline Int?
+  homeMoneyline Int?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@index([season, week])
+  @@index([season])
+  @@map("historical_games")
+}
+
+// ============================================================
+// TEAM-GAME EFFICIENCY (nflverse play-by-play, aggregated)
+// ------------------------------------------------------------
+// The public foundation for opponent-adjusted ratings and scheme/archetype
+// signals. Raw ~50k plays/season are aggregated AT INGESTION to one compact row
+// per team-game: offense produced + defense allowed (EPA/play and success rate).
+// Additive; clearance-gated + rights/freshness stamped like the other sources.
+// ============================================================
+
+model TeamGameEfficiency {
+  id            String  @id @default(cuid())
+  gameKey       String  // nflverse game_id
+  season        Int
+  week          Int
+  seasonType    String  @default("REG")
+  team          String  // abbreviation
+  opponent      String
+  isHome        Boolean
+  plays         Int     // offensive plays counted (pass + run)
+  offEpaPerPlay Float
+  offSuccess    Float
+  defEpaPerPlay Float // allowed
+  defSuccess    Float // allowed
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([team, gameKey])
+  @@index([season, week])
+  @@index([team, season])
+  @@map("team_game_efficiency")
+}
+
+// ============================================================
+// PLAYER RUSH PROFILE (nflverse play-by-play run direction)
+// ------------------------------------------------------------
+// Per-rusher season distribution of runs by gap (guard=interior, tackle=
+// off-tackle, end=edge) and location (left/middle/right) + EPA/run. The basis
+// for a gap/zone/power scheme lean (a proxy from public PBP direction, not
+// charted blocking scheme). Additive; clearance-gated + rights/freshness.
+// ============================================================
+
+model PlayerRushProfile {
+  id         String  @id @default(cuid())
+  gsisId     String
+  playerName String
+  season     Int
+  team       String?
+  runs       Int
+  guardRuns  Int     @default(0) // interior gap (A/B)
+  tackleRuns Int     @default(0) // off-tackle (C gap)
+  endRuns    Int     @default(0) // outside / edge
+  leftRuns   Int     @default(0)
+  middleRuns Int     @default(0)
+  rightRuns  Int     @default(0)
+  epaPerRun  Float
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([gsisId, season])
+  @@index([season])
+  @@map("player_rush_profiles")
+}
+
+// ============================================================
+// NEXT GEN STATS (nflverse `nextgen_stats` aggregates — CC-BY-4.0)
+// ------------------------------------------------------------
+// The published, free NGS weekly aggregates (NOT the proprietary raw tracking
+// feed): separation/cushion (receiving), time-to-throw + CPOE (passing), and
+// rush-yards-over-expected (rushing). One row per player-week-variant, keyed by
+// gsis id. This is Phase-A persistence — storage as a system of record, NOT a
+// scoring input (wiring into the score is a separate, calibration-gated step).
+// Real columns verified against the live release headers 2026-06-15.
+// ============================================================
+
+model NextGenStat {
+  id         String  @id @default(cuid())
+  gsisId     String
+  playerName String
+  position   String?
+  season     Int
+  week       Int
+  seasonType String  @default("REG")
+  team       String?
+  statType   String // "passing" | "receiving" | "rushing"
+
+  // Passing tracking signals
+  avgTimeToThrow        Float?
+  avgCompletedAirYards  Float?
+  avgIntendedAirYards   Float?
+  aggressiveness        Float?
+  avgAirYardsToSticks   Float?
+  completionPct         Float?
+  expectedCompletionPct Float?
+  cpoe                  Float? // completion_percentage_above_expectation
+  passerRating          Float?
+
+  // Receiving tracking signals
+  avgCushion               Float?
+  avgSeparation            Float?
+  pctShareIntendedAirYards Float?
+  catchPct                 Float?
+  avgYac                   Float?
+  avgExpectedYac           Float?
+  avgYacAboveExpectation   Float?
+
+  // Rushing tracking signals
+  rushEfficiency              Float?
+  pctAttemptsGte8Defenders    Float?
+  avgTimeToLos                Float?
+  expectedRushYards           Float?
+  rushYardsOverExpected       Float?
+  rushYardsOverExpectedPerAtt Float?
+  rushPctOverExpected         Float?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([gsisId, season, week, seasonType, statType])
+  @@index([season, week])
+  @@index([statType, season])
+  @@map("next_gen_stats")
+}
+
+// ============================================================
+// PFR ADVANCED STATS (nflverse `pfr_advstats` — CC-BY-4.0)
+// ------------------------------------------------------------
+// Pro-Football-Reference charting-grade weekly advanced stats, the closest
+// public "who-did-what": QB pressure (sacked/blitzed/hurried/hit/pressured,
+// bad-throw rate), receiving drops/broken tackles, rushing yards before/after
+// contact. Per player-game, keyed by the PFR player id (no gsis in the asset).
+// Phase-A persistence — storage as a system of record, NOT a scoring input.
+// Real columns verified against the live release headers 2026-06-15.
+// ============================================================
+
+model PfrAdvStat {
+  id          String  @id @default(cuid())
+  pfrPlayerId String
+  playerName  String
+  season      Int
+  week        Int
+  seasonType  String  @default("REG")
+  team        String?
+  opponent    String?
+  gameKey     String // nflverse/pfr game_id
+  statType    String // "pass" | "rec" | "rush"
+
+  // Passing / pressure
+  timesSacked        Int?
+  timesBlitzed       Int?
+  timesHurried       Int?
+  timesHit           Int?
+  timesPressured     Int?
+  timesPressuredPct  Float?
+  passingBadThrows   Int?
+  passingBadThrowPct Float?
+  passingDrops       Int?
+  passingDropPct     Float?
+
+  // Receiving
+  receivingBrokenTackles Int?
+  receivingDrop          Int?
+  receivingDropPct       Float?
+  receivingInt           Int?
+  receivingRat           Float?
+
+  // Rushing
+  carries                      Int?
+  rushingYardsBeforeContact    Float?
+  rushingYardsBeforeContactAvg Float?
+  rushingYardsAfterContact     Float?
+  rushingYardsAfterContactAvg  Float?
+  rushingBrokenTackles         Int?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([pfrPlayerId, gameKey, statType])
+  @@index([season, week])
+  @@index([statType, season])
+  @@map("pfr_adv_stats")
+}
+
+// ============================================================
+// TEAM WEEK STATS (nflverse `stats_team` aggregates — CC-BY-4.0)
+// ------------------------------------------------------------
+// Published team-week aggregates: offensive EPA/CPOE + air yards/first downs/
+// TDs and headline defensive box (sacks, INTs, QB hits, TFL, PDs). Complements
+// the PBP-DERIVED `TeamGameEfficiency` (per-play EPA/success) with the published
+// box+CPOE view. Phase-A persistence — storage only, not a scoring input.
+// Real columns verified against the live release headers 2026-06-15.
+// ============================================================
+
+model TeamWeekStat {
+  id         String  @id @default(cuid())
+  season     Int
+  week       Int
+  seasonType String  @default("REG")
+  team       String
+  opponent   String?
+
+  // Offense
+  completions    Int?
+  attempts       Int?
+  passYards      Float?
+  passTds        Int?
+  passInt        Int?
+  sacksSuffered  Int?
+  passAirYards   Float?
+  passYac        Float?
+  passFirstDowns Int?
+  passEpa        Float?
+  passCpoe       Float?
+  carries        Int?
+  rushYards      Float?
+  rushTds        Int?
+  rushFirstDowns Int?
+  rushEpa        Float?
+  receptions     Int?
+  targets        Int?
+  recYards       Float?
+  recEpa         Float?
+
+  // Defense (headline box)
+  defSacks          Float?
+  defInterceptions  Int?
+  defQbHits         Int?
+  defTacklesForLoss Int?
+  defPassDefended   Int?
+  defTds            Int?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([team, season, week, seasonType])
+  @@index([season, week])
+  @@map("team_week_stats")
+}

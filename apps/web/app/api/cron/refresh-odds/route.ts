@@ -1,5 +1,5 @@
 /**
- * Vercel cron — refresh odds every 30 minutes.
+ * Vercel cron — refresh odds on the schedule declared in `vercel.json`.
  *
  * Mirrors `workers/data-refresh/src/index.ts` but runs on Vercel's
  * scheduled-function infrastructure so the operator doesn't have to
@@ -8,7 +8,10 @@
  * paths can never drift.
  *
  * Schedule is declared in `vercel.json` at the repo root:
- *   "*\/30 * * * *"  → every 30 minutes
+ *   "0 10 * * *"  → once daily at 10:00 UTC
+ * NOTE: the long-running worker mirror still loops every 30 minutes
+ * (`REFRESH_INTERVAL_MS`); the deployed Vercel cadence is daily. Keep
+ * this comment in sync with `vercel.json` if the cadence changes.
  *
  * Authentication: Vercel invokes the route with
  *   Authorization: Bearer <CRON_SECRET>

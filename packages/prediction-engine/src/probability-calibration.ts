@@ -219,3 +219,50 @@ export function expectedCalibrationError(
   }
   return round(ece);
 }
+
+// ============================================================
+// Reliability curve (forecast vs observed per bin)
+// ============================================================
+
+export interface ReliabilityBin {
+  /** Bin lower edge in [0,1]. */
+  readonly binStart: number;
+  /** Bin upper edge in [0,1]. */
+  readonly binEnd: number;
+  readonly count: number;
+  /** Mean forecast probability of the samples in the bin. */
+  readonly meanForecast: number;
+  /** Observed outcome rate of the samples in the bin (the empirical truth). */
+  readonly observedRate: number;
+}
+
+/**
+ * The reliability diagram, as data: for each equal-width bin, the mean forecast
+ * vs the observed outcome rate. A perfectly calibrated forecaster sits on the
+ * diagonal (meanForecast === observedRate) in every populated bin.
+ */
+export function reliabilityCurve(samples: readonly CalibrationSample[], bins = 10): ReliabilityBin[] {
+  // Untyped arrays (any[]) to match the package's other bin aggregators under
+  // noUncheckedIndexedAccess.
+  const binCount = new Array(bins).fill(0);
+  const binForecastSum = new Array(bins).fill(0);
+  const binOutcomeSum = new Array(bins).fill(0);
+  for (const s of samples) {
+    const b = binIndex(s.p, bins);
+    binCount[b] += 1;
+    binForecastSum[b] += s.p;
+    binOutcomeSum[b] += s.y;
+  }
+  const out: ReliabilityBin[] = [];
+  for (let b = 0; b < bins; b++) {
+    const nk: number = binCount[b];
+    out.push({
+      binStart: round(b / bins),
+      binEnd: round((b + 1) / bins),
+      count: nk,
+      meanForecast: nk > 0 ? round(binForecastSum[b] / nk) : 0,
+      observedRate: nk > 0 ? round(binOutcomeSum[b] / nk) : 0,
+    });
+  }
+  return out;
+}

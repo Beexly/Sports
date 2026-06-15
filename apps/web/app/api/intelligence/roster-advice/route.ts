@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { loadPlayerModel } from "@/lib/intelligence/player-model";
 import { addTargets, dropCandidates, classifyRoster } from "@/lib/intelligence/roster-advice";
+import { requirePremiumApi } from "@/lib/api-entitlement";
 
 export const dynamic = "force-dynamic";
 
 const MAX_ROSTER = 60;
 
 export async function POST(request: Request): Promise<NextResponse> {
+  const denied = await requirePremiumApi();
+  if (denied) return denied;
   let body: unknown;
   try {
     body = await request.json();
