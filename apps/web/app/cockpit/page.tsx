@@ -99,12 +99,16 @@ export default async function CockpitOverview() {
 
   return (
     <div className="relative flex flex-col gap-4 pb-8">
-      {/* Atmospheric backdrop */}
+      {/* Atmospheric backdrop — a slow ambient breath so the whole deck feels alive */}
       <div
         className="pointer-events-none absolute inset-x-0 -top-8 -z-10 h-80 overflow-hidden"
         aria-hidden="true"
       >
         <div className="absolute inset-0 bg-stadium-glow opacity-80" />
+        <div
+          className="absolute -top-16 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-orbital-cyan/10 blur-3xl animate-pulse"
+          style={{ animationDuration: "7s" }}
+        />
       </div>
 
       {/* ── MISSION CONTROL HEADER ─────────────────────────────────────── */}
@@ -343,17 +347,17 @@ export default async function CockpitOverview() {
         {policy && (
           <section
             data-testid="cockpit-public-performance"
-            className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+            className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5"
           >
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
               Public performance policy
             </h2>
-            <p className="text-sm text-gray-300">{policy.publicMessage}</p>
-            <p className="mt-2 text-xs text-gray-500">
-              Operator: <span className="text-gray-300">{policy.operatorMessage}</span>
+            <p className="text-sm text-ion-1">{policy.publicMessage}</p>
+            <p className="mt-2 text-xs text-ion-3">
+              Operator: <span className="text-ion-1">{policy.operatorMessage}</span>
             </p>
             {policy.minimumRequirements.length > 0 && (
-              <ul className="mt-2 list-disc pl-5 text-xs text-gray-400">
+              <ul className="mt-2 list-disc pl-5 text-xs text-ion-2">
                 {policy.minimumRequirements.map((r: string, i: number) => (
                   <li key={i}>{r}</li>
                 ))}
@@ -364,11 +368,11 @@ export default async function CockpitOverview() {
 
         {/* Recommended actions */}
         {assessment && assessment.recommendedNextActions.length > 0 && (
-          <section className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+          <section className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
               Recommended next actions
             </h2>
-            <ol className="list-decimal space-y-1 pl-5 text-sm text-gray-200">
+            <ol className="list-decimal space-y-1 pl-5 text-sm text-ion-1">
               {assessment.recommendedNextActions.map((a: string, i: number) => (
                 <li key={i}>{a}</li>
               ))}
@@ -378,18 +382,18 @@ export default async function CockpitOverview() {
 
         {/* Phase matrix */}
         {assessment && (
-          <section className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+          <section className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
               Phase matrix
             </h2>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {assessment.phaseMatrix.map((p) => (
                 <div
                   key={p.key}
-                  className="rounded-lg border border-gray-800 bg-gray-950/60 px-3 py-2"
+                  className="rounded-lg border border-titanium/40 bg-obsidian/50 px-3 py-2"
                 >
-                  <p className="text-xs font-semibold text-gray-300">{p.label}</p>
-                  <p className="text-[10px] uppercase tracking-widest text-gray-600">
+                  <p className="text-xs font-semibold text-ion-1">{p.label}</p>
+                  <p className="text-[10px] uppercase tracking-widest text-ion-3">
                     {p.status}
                   </p>
                 </div>
@@ -399,11 +403,11 @@ export default async function CockpitOverview() {
         )}
 
         {/* Readiness gates */}
-        <section className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+        <section className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
             Readiness gates
           </h2>
-          <div className="grid grid-cols-2 gap-2 text-xs text-gray-300 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2 text-xs text-ion-1 sm:grid-cols-3">
             <GateRow label="canPersistCanonicalHistory" value={gates.canPersistCanonicalHistory} />
             <GateRow label="canUseDerivedHistory" value={gates.canUseDerivedHistory} />
             <GateRow label="canExposePublicPicks" value={gates.canExposePublicPicks} />
@@ -413,9 +417,9 @@ export default async function CockpitOverview() {
             <GateRow label="canLearnFromOutcomes" value={gates.canLearnFromOutcomes} />
             <GateRow label="isBootstrapMode" value={gates.isBootstrapMode} />
           </div>
-          <p className="mt-3 text-[11px] text-gray-600">
+          <p className="mt-3 text-[11px] text-ion-3">
             minSettledPicksForLearning ={" "}
-            <span className="text-gray-400">{gates.minSettledPicksForLearning}</span>
+            <span className="text-ion-2">{gates.minSettledPicksForLearning}</span>
           </p>
         </section>
 
@@ -423,10 +427,10 @@ export default async function CockpitOverview() {
         {todaysOperatorPicks.length > 0 && (
           <section
             data-testid="cockpit-today-picks-list"
-            className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+            className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5"
           >
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
                 Today&apos;s picks — operator surface
                 {demoActive && (
                   <span className="ml-2 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-yellow-300">
@@ -441,14 +445,14 @@ export default async function CockpitOverview() {
                 Full ledger →
               </Link>
             </div>
-            <ul className="divide-y divide-gray-800/60 text-sm">
+            <ul className="divide-y divide-titanium/30 text-sm">
               {todaysOperatorPicks.map((p) => (
                 <li
                   key={p.id}
                   className="flex flex-wrap items-center justify-between gap-3 py-2"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-gray-200">
+                    <p className="truncate font-medium text-ion-1">
                       {p.selection}
                       {p.isFeatured && (
                         <span className="ml-2 rounded bg-brand-900/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-brand-300">
@@ -456,19 +460,19 @@ export default async function CockpitOverview() {
                         </span>
                       )}
                     </p>
-                    <p className="truncate text-[11px] text-gray-500">
+                    <p className="truncate text-[11px] text-ion-3">
                       {p.game.awayTeamName} @ {p.game.homeTeamName} ·{" "}
                       {p.game.sport.name} ·{" "}
-                      <span className="text-gray-400">
+                      <span className="text-ion-2">
                         {p.pickGrade.replace("_", " ").toLowerCase()}
                       </span>{" "}
                       ·{" "}
-                      <span className="text-gray-400">
+                      <span className="text-ion-2">
                         {p.riskLevel.replace("_", " ").toLowerCase()}
                       </span>
                     </p>
                   </div>
-                  <span className="rounded bg-gray-800 px-2 py-0.5 font-mono text-xs text-gray-300">
+                  <span className="rounded bg-obsidian/70 px-2 py-0.5 font-mono text-xs text-ion-1">
                     {p.confidence}%
                   </span>
                 </li>
@@ -482,16 +486,16 @@ export default async function CockpitOverview() {
           <section
             data-testid="cockpit-slate-meta"
             aria-label="Today's slate breakdown by sport"
-            className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-4"
+            className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-4"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <p className="text-xs font-semibold uppercase tracking-widest text-ion-3">
               Today&apos;s slate by sport
             </p>
-            <p className="mt-1 text-sm text-gray-300">
+            <p className="mt-1 text-sm text-ion-1">
               {slateBreakdown.map((b) => `${b.name} ${b.n}`).join("  ·  ")}
             </p>
             {featuredOperatorPicks.length > 0 && (
-              <p data-testid="featured-count" className="mt-2 text-[11px] text-gray-500">
+              <p data-testid="featured-count" className="mt-2 text-[11px] text-ion-3">
                 Featured today: {featuredOperatorPicks.length} —{" "}
                 {featuredOperatorPicks
                   .map((p) => p.selection.replace(/\s+[-+]?\d.*$/, ""))
@@ -506,7 +510,7 @@ export default async function CockpitOverview() {
       {assessment && (
         <p
           data-testid="cockpit-generated-at"
-          className="text-[10px] uppercase tracking-widest text-gray-600"
+          className="text-[10px] uppercase tracking-widest text-ion-3"
         >
           Jarvis {assessment.version} · confidence {assessment.confidenceLevel} · gates open{" "}
           {assessment.readinessGateSummary.openCount}/{assessment.readinessGateSummary.totalCount} ·
@@ -1145,7 +1149,7 @@ function LaunchStatusBadge({ status }: { status: JarvisLaunchStatus }) {
     NOT_READY_DATA: "bg-orange-900/40 text-orange-300",
     NOT_READY_VALIDATION: "bg-red-900/40 text-red-300",
     NOT_READY_SAFETY: "bg-red-900/40 text-red-300",
-    UNKNOWN: "bg-gray-800 text-gray-400",
+    UNKNOWN: "bg-obsidian/70 text-ion-3",
   };
   return (
     <span
@@ -1164,7 +1168,7 @@ function HealthTile({ label, health }: { label: string; health: JarvisHealth }) 
     GREEN: "border-green-900 bg-green-950/30 text-green-300",
     AMBER: "border-yellow-900 bg-yellow-950/30 text-yellow-300",
     RED: "border-red-900 bg-red-950/30 text-red-300",
-    UNKNOWN: "border-gray-800 bg-gray-900/40 text-gray-400",
+    UNKNOWN: "border-titanium/40 bg-eclipse/40 text-ion-2",
   };
   return (
     <div
@@ -1180,10 +1184,10 @@ function HealthTile({ label, health }: { label: string; health: JarvisHealth }) 
 
 function GateRow({ label, value }: { label: string; value: boolean }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-950/60 px-3 py-1.5">
+    <div className="flex items-center justify-between rounded-lg border border-titanium/40 bg-obsidian/50 px-3 py-1.5">
       <span className="font-mono">{label}</span>
       <span
-        className={value ? "font-bold text-green-400" : "text-gray-500"}
+        className={value ? "font-bold text-accent-400" : "text-ion-3"}
         aria-label={value ? "enabled" : "disabled"}
       >
         {value ? "ON" : "off"}
