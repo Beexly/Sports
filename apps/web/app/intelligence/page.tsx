@@ -189,9 +189,10 @@ export default function IntelligencePage() {
             </Reveal>
             <Reveal delay={180}>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-300">
-                Most products hand you a pick and ask for trust. We show the
-                machinery: thousands of independent reads, converging on a signal —
-                and every one graded and recorded so it can be checked.
+                Most products hand you a pick and ask for trust. We show the work
+                behind every one: the confidence score, the factors that drove it,
+                and how the market has moved — each signal graded and recorded, so
+                you can check it instead of just taking it.
               </p>
             </Reveal>
             <Reveal delay={260}>
