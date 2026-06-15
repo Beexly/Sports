@@ -5,7 +5,8 @@
  *
  *   npx tsx scripts/free-ingest-smoke.mjs
  *
- * Hits ESPN public scoreboard (all 7 sports) + Open-Meteo. Read-only, facts only.
+ * Hits ESPN public scoreboard (all 7 sports) + Open-Meteo, then proves cross-source
+ * NCAA confirmation (ESPN + henrygd). Read-only, facts only.
  */
 
 import {
@@ -14,6 +15,13 @@ import {
 import { fetchWeatherFreeFirst } from "../apps/web/lib/data-sources/free-first-ingest.ts";
 import { fetchEspnRankings } from "../apps/web/lib/data-sources/free-adapters/espn-rankings.ts";
 import { fetchEspnStandings } from "../apps/web/lib/data-sources/free-adapters/espn-standings.ts";
+import { fetchEspnScoreboard } from "../apps/web/lib/data-sources/free-adapters/espn-scores.ts";
+import { fetchHenrygdScoreboard } from "../apps/web/lib/data-sources/free-adapters/henrygd-ncaa.ts";
+import {
+  crossCheckNcaaScores,
+  toComparableFromEspn,
+  toComparableFromHenrygd,
+} from "../apps/web/lib/data-sources/ncaa-consensus.ts";
 
 const SPORTS = ["nfl", "ncaaf", "nba", "ncaab", "mlb", "nhl", "mls"];
 
@@ -59,6 +67,38 @@ try {
   ok += 1;
 } catch (err) {
   console.error(`weather FAILED: ${err instanceof Error ? err.message : err}`);
+  fail += 1;
+}
+
+// Cross-source NCAA confirmation: two independent FREE sources agreeing on a final.
+// Slates are aligned dynamically — henrygd's latest completed slate drives the ESPN date —
+// so this proves real agreement in any season (no paid call).
+try {
+  const henry = (await fetchHenrygdScoreboard("football/fbs", { timeoutMs: 15000 })).map(toComparableFromHenrygd);
+  const completed = henry.filter((g) => g.completed && g.date);
+  if (completed.length === 0) {
+    console.log("consensus ncaaf → henrygd returned no completed games (offseason); skipped");
+  } else {
+    // Most common completed date in henrygd's slate.
+    const counts = {};
+    for (const g of completed) counts[g.date] = (counts[g.date] ?? 0) + 1;
+    const modalDate = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+    const espn = (await fetchEspnScoreboard("ncaaf", { dates: modalDate.replaceAll("-", ""), timeoutMs: 15000 }))
+      .map(toComparableFromEspn)
+      .filter(Boolean);
+    const report = crossCheckNcaaScores(espn, henry);
+    console.log(
+      `consensus ncaaf ${modalDate} → confirmed ${report.summary.confirmed}, ` +
+        `conflicts ${report.summary.conflicts}, pending ${report.summary.pending} ` +
+        `(ESPN ${espn.length} vs henrygd ${henry.length})`,
+    );
+    for (const a of report.agreements.slice(0, 2)) {
+      console.log(`  ✓ CONFIRMED ${a.matchup} ${a.a.away}-${a.a.home} (ESPN + henrygd agree)`);
+    }
+  }
+  ok += 1;
+} catch (err) {
+  console.error(`consensus FAILED: ${err instanceof Error ? err.message : err}`);
   fail += 1;
 }
 
