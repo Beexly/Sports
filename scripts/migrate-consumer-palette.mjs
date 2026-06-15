@@ -9,8 +9,9 @@
  *   near-black text then eclipse (dark text that rides on bright chips).
  *
  * Opacity suffixes (/40, /80, ...) and modifiers (hover:, sm:, group-hover:) are
- * preserved. All targets verified dark-themed (no paper/light surfaces). Cockpit,
- * admin, lib, and API are out of scope.
+ * preserved. All targets verified dark-themed (no paper/light surfaces). Also
+ * covers the internal admin operator pages (same dark theme). Cockpit (its own
+ * migration), lib, and API are out of scope.
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
@@ -21,7 +22,7 @@ const candidates = execSync(
 )
   .trim()
   .split("\n")
-  .filter((f) => f && !f.includes("/cockpit/") && !f.includes("/admin/"));
+  .filter((f) => f && !f.includes("/cockpit/"));
 
 // [regex, replacement] — $1 re-attaches a captured /opacity suffix.
 const op = "(\\/\\d+)?";
