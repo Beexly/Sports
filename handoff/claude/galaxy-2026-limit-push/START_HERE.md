@@ -68,9 +68,30 @@ The classifier is deliberately conservative: when section/list context is piracy
 (e.g. a tool listed under "Streaming Site APIs"), it quarantines even an otherwise-safe
 name. Over-blocking is the safe direction.
 
+## Free-first sourcing (added)
+
+Doctrine: use every FREE, cleared source before any paid API — without losing stats
+quality. See `docs/data/FREE_FIRST_SOURCING.md`.
+
+- Platform router: `apps/web/lib/data-sources/source-router.ts` (free-first, cleared-only,
+  quality-aware) + `cost-policy.ts` (CFB cost view).
+- Verified free adapters (live HTTP 200, schema-checked, fixture-tested):
+  `free-adapters/espn-scores.ts` (all 7 sports), `espn-rankings.ts` (AP/Coaches),
+  `open-meteo.ts` (weather). Entrypoints + spend guard: `free-first-ingest.ts`.
+- Open-Meteo added to the rights registry (approved_open_license).
+- In-season odds gating (`getInSeasonSports`) protects The Odds API 500/mo credits.
+- Cockpit: `/api/cockpit/free-coverage` + a free-vs-spend section on `/cockpit/sources`.
+- Live proof: `npx tsx scripts/free-ingest-smoke.mjs` (8/8 ok, no key/spend).
+
 ## Remaining continuation (not yet done)
 
-- Wire `getResourceCockpitFeed()` into an internal cockpit route/API (engine + JSON ready).
-- Extend StatKing source cards with confidence/freshness/license/rights fields.
-- Work the CFB/NFL data-source candidates through the source-provider gate — see
-  `apps/web/lib/scraping/sports-data-candidates.ts` and the generated review dossier.
+- Wire the free adapters into the actual ingestion pipeline writes (currently they
+  return normalized facts; the pipeline still needs to persist them via the DB schema).
+- Cross-source score verification → free settlement (save Odds API credits on scores).
+- Clear a free odds candidate (TheRundown / Big Balls / Sports Game Data) to remove the
+  last paid dependency.
+- Work the remaining CFB/NFL candidates through the source-provider gate — see
+  `apps/web/lib/scraping/sports-data-candidates.ts` and the dossier.
+
+Done since first handoff: resource-intelligence cockpit route/feed; StatKing source
+confidence fields; CFBD terms-gate checklist; broadened approvals (15→1,489).
