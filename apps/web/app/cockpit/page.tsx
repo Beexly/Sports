@@ -15,6 +15,7 @@ import {
 import { AskJarvisPanel } from "@/components/cockpit/ask-jarvis-panel";
 import { CapabilitySystemMap } from "@/components/cockpit/capability-system-map";
 import { AgentCouncilPanel } from "@/components/cockpit/agent-council-panel";
+import { CockpitPulse } from "@/components/cockpit/cockpit-pulse";
 import { buildLiveMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intelligence-state";
 import { buildLiveLedgerStatus } from "@/lib/jarvis/ledger-types";
 import { buildJarvisOperatingAssessment, type JarvisOperatingAssessment } from "@/lib/jarvis/jarvis-operating-assessment";
@@ -588,6 +589,9 @@ export default async function CockpitOverview() {
 
 // ─── Mission Control primitives ───────────────────────────────────────────────
 
+// Thin wrapper: the living "command deck" centerpiece now lives in CockpitPulse
+// (CSS-only motion, server-safe). Kept as a named seam so the call site and tests
+// (data-testid="jarvis-operating-runtime") stay stable.
 function OperatingRuntimeZone({
   assessment,
   agentReality,
@@ -595,95 +599,7 @@ function OperatingRuntimeZone({
   assessment: JarvisOperatingAssessment;
   agentReality: ReturnType<typeof summarizeAgentHealth>;
 }) {
-  return (
-    <section
-      data-testid="jarvis-operating-runtime"
-      className="rounded-2xl border border-titanium/50 bg-eclipse/70 p-5 shadow-inner shadow-black/20"
-    >
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">
-            Agent OS Runtime
-          </p>
-          <h2 className="mt-1 text-xl font-semibold text-ion-white">
-            {assessment.companyHealth === "CRITICAL"
-              ? "Critical blockers first"
-              : "Operating state"}
-          </h2>
-          <p className="mt-1 max-w-2xl text-sm text-ion-2">
-            Jarvis separates owner decisions, Claude review, safe internal work, and not-wired capacity.
-          </p>
-        </div>
-        <span className="rounded-full border border-red-500/30 bg-red-950/30 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-red-200">
-          {assessment.companyHealth}
-        </span>
-      </div>
-
-      <div className="grid gap-3 md:grid-cols-4">
-        <QuickStat label="Not Wired" value={String(agentReality.notWired)} sub="not capacity" accent="amber" />
-        <QuickStat label="Draft Only" value={String(agentReality.draftOnly)} sub="review-gated" />
-        <QuickStat label="Manual" value={String(agentReality.manual)} sub="human trigger" />
-        <QuickStat label="Operational" value={String(agentReality.operationalCapacity)} sub="real/partial" accent="amber" />
-      </div>
-
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
-        <RuntimeList title="Top risks" items={assessment.topRisks} empty="No critical runtime risks." tone="red" />
-        <RuntimeList title="Owner decisions" items={assessment.ownerDecisions} empty="No owner decisions queued." tone="amber" />
-        <RuntimeList title="Claude review" items={assessment.claudeReview} empty="No Claude review items queued." tone="cyan" />
-      </div>
-
-      <div className="mt-4 grid gap-3 text-xs text-ion-2 md:grid-cols-3">
-        <p>
-          <span className="font-semibold text-ion-white">Public gate:</span> {assessment.publicGateStatus}
-        </p>
-        <p>
-          <span className="font-semibold text-ion-white">Calibration:</span> {assessment.calibrationStatus}
-        </p>
-        <p>
-          <span className="font-semibold text-ion-white">Revenue:</span> {assessment.revenueStatus}
-        </p>
-        <p>
-          <span className="font-semibold text-ion-white">Memory:</span> {assessment.memoryStatus}
-        </p>
-        <p className="md:col-span-2">
-          <span className="font-semibold text-ion-white">Next:</span> {assessment.nextBestAction}
-        </p>
-      </div>
-    </section>
-  );
-}
-
-function RuntimeList({
-  title,
-  items,
-  empty,
-  tone,
-}: {
-  title: string;
-  items: readonly string[];
-  empty: string;
-  tone: "red" | "amber" | "cyan";
-}) {
-  const color =
-    tone === "red" ? "text-red-200" : tone === "amber" ? "text-yellow-200" : "text-accent-200";
-  return (
-    <div className="rounded-xl border border-titanium/40 bg-obsidian/50 p-4">
-      <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">
-        {title}
-      </p>
-      {items.length > 0 ? (
-        <ul className="space-y-1 text-xs">
-          {items.map((item) => (
-            <li key={item} className={color}>
-              {item}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-xs text-ion-3">{empty}</p>
-      )}
-    </div>
-  );
+  return <CockpitPulse assessment={assessment} agentReality={agentReality} />;
 }
 
 function QuickStat({
