@@ -26,8 +26,8 @@ export type NcaaGame = {
   readonly date: string; // YYYY-MM-DD (from MM/DD/YYYY)
   readonly state: NcaaGameState;
   readonly completed: boolean;
-  readonly home: { team: string; score: number | null };
-  readonly away: { team: string; score: number | null };
+  readonly home: { team: string; abbr: string; score: number | null };
+  readonly away: { team: string; abbr: string; score: number | null };
   readonly attribution: string;
 };
 
@@ -64,8 +64,8 @@ export function toIsoDate(mdy: string | undefined): string {
   return `${yyyy}-${mm!.padStart(2, "0")}-${dd!.padStart(2, "0")}`;
 }
 
-function team(t: HgTeam | undefined): { team: string; score: number | null } {
-  return { team: t?.names?.short ?? "", score: num(t?.score) };
+function team(t: HgTeam | undefined): { team: string; abbr: string; score: number | null } {
+  return { team: t?.names?.short ?? "", abbr: (t?.names?.char6 ?? "").toUpperCase(), score: num(t?.score) };
 }
 
 export function parseHenrygdScoreboard(json: HenrygdScoreboard): NcaaGame[] {
