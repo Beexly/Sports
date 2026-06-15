@@ -64,9 +64,9 @@ export default async function TrendsPage(): Promise<JSX.Element> {
               Find the edges before they become consensus.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              Trend Lab runs cohort analysis over real observations only: player weeks,
-              team weeks, route participation, targets, injuries, age, rest, and market
-              context — and every published trend survives the math first.
+              Trend Lab finds the patterns that actually hold up — which player and team
+              types beat expectations in specific spots (usage, targets, injuries, age,
+              rest, matchup) — and only publishes one once it survives the math, not the eye test.
             </p>
           </section>
           <TierGatePanel
@@ -100,10 +100,10 @@ export default async function TrendsPage(): Promise<JSX.Element> {
               Find the edges before they become consensus.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              Trend Lab runs cohort analysis over real observations only: player weeks,
-              team weeks, route participation, targets, injuries, age, rest, and market
-              context. The engine is ready. The public trend table stays empty until
-              the data is real enough to defend.
+              Trend Lab finds the patterns that actually hold up — which player and team
+              types beat expectations in specific spots (usage, targets, injuries, age,
+              rest, matchup). The engine is ready; the public trend table stays empty
+              until the data is real enough to defend.
             </p>
           </div>
           <div className="border border-mineral bg-eclipse p-5">
