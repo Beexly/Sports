@@ -6,7 +6,7 @@ const NAV = [
   { label: "Players",   href: "/stats/players" },
   { label: "Teams",     href: "/stats/teams" },
   { label: "Compare",   href: "/stats/compare" },
-  { label: "Alerts",    href: "/stats/alerts" },
+  { label: "Status & Movement", href: "/stats/injuries" },
   { label: "Media",     href: "/stats/media" },
   { label: "Sources",   href: "/stats/sources" },
   { label: "Proof",     href: "/stats/proof" },
