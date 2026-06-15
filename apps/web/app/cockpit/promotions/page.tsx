@@ -46,7 +46,7 @@ export default async function CockpitPromotionsPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-brand-400">
           Bobby · Promotions queue
         </p>
-        <h1 className="text-2xl font-bold text-white">Sportsbook promotions</h1>
+        <h1 className="text-2xl font-bold text-ion-white">Sportsbook promotions</h1>
         <p className="mt-1 text-sm text-ion-3">
           Every row is gated by compliance evidence. The publish gate refuses
           to surface a promotion missing disclosure, terms, eligibility, or
@@ -64,7 +64,7 @@ export default async function CockpitPromotionsPage() {
 
       {promos.length === 0 ? (
         <div className="rounded-xl border border-titanium/40 bg-eclipse/40 p-8 text-center">
-          <h2 className="text-base font-semibold text-white">
+          <h2 className="text-base font-semibold text-ion-white">
             No promotions yet
           </h2>
           <p className="mt-2 text-sm text-ion-3">
@@ -137,7 +137,7 @@ function CountCard({ label, value }: { label: string; value: number }) {
       <p className="text-[10px] uppercase tracking-widest text-ion-3">
         {label}
       </p>
-      <p className="text-xl font-bold text-white">{value}</p>
+      <p className="text-xl font-bold text-ion-white">{value}</p>
     </div>
   );
 }

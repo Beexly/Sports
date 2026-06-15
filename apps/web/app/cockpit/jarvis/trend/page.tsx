@@ -36,7 +36,7 @@ export default async function JarvisTrendPage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-white">Jarvis trend</h1>
+        <h1 className="text-2xl font-bold text-ion-white">Jarvis trend</h1>
         <p className="mt-1 text-sm text-ion-3">
           Last {snapshots.length} assessments held in the in-memory buffer
           (capacity 96). Newest on the right.
@@ -88,7 +88,7 @@ export default async function JarvisTrendPage() {
                   className="border-b border-titanium/40 hover:bg-carbon/50"
                 >
                   <td className="px-3 py-2 font-mono text-ion-2">{s.assessedAt}</td>
-                  <td className="px-3 py-2 text-white">{s.launchStatus}</td>
+                  <td className="px-3 py-2 text-ion-white">{s.launchStatus}</td>
                   <td className="px-3 py-2 text-ion-1">{s.publicSurfaceStatus}</td>
                   <td className="px-3 py-2 text-ion-1">{s.ingestionStatus}</td>
                   <td className="px-3 py-2 text-ion-1">{s.settlementStatus}</td>

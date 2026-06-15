@@ -80,7 +80,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-300">
               Media intelligence
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-white">Media Operating Room</h1>
+            <h1 className="mt-1 text-2xl font-bold text-ion-white">Media Operating Room</h1>
           </div>
           <div className="flex flex-wrap gap-2 text-xs">
             <Link href="/api/media/readiness" className="rounded-lg border border-titanium/40 px-3 py-1.5 text-ion-1 hover:bg-carbon/60">
@@ -211,7 +211,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
               <li key={item.id} className="rounded-2xl border border-titanium/40 bg-obsidian/60 p-4">
                 <header className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h3 className="text-sm font-semibold text-white">{item.briefTitle}</h3>
+                    <h3 className="text-sm font-semibold text-ion-white">{item.briefTitle}</h3>
                     <p className="mt-0.5 text-[11px] text-ion-3">
                       channel: <code className="rounded bg-obsidian/70 px-1 text-ion-1">{item.channel}</code>
                     </p>
@@ -245,7 +245,7 @@ function Metric({ label, value, detail }: { label: string; value: string; detail
   return (
     <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
       <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-2 font-numerals text-2xl font-semibold text-white">{value}</p>
+      <p className="mt-2 font-numerals text-2xl font-semibold text-ion-white">{value}</p>
       <p className="mt-1 text-xs leading-5 text-ion-3">{detail}</p>
     </div>
   );
@@ -265,7 +265,7 @@ function LaneCard({ lane }: { lane: MediaLane }): JSX.Element {
     <article className="rounded-xl border border-titanium/40 bg-obsidian/70 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 className="text-sm font-semibold text-white">{lane.name}</h3>
+          <h3 className="text-sm font-semibold text-ion-white">{lane.name}</h3>
           <p className="mt-1 text-xs text-ion-3">{lane.source}</p>
         </div>
         <span className={`rounded border px-2 py-1 text-[11px] ${STATUS_TONE[lane.status]}`}>

@@ -22,7 +22,7 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
               Bot Outbox
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-white">Draft Event Planner</h1>
+            <h1 className="mt-1 text-2xl font-bold text-ion-white">Draft Event Planner</h1>
           </div>
           <Link
             href="/cockpit"
@@ -46,7 +46,7 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
 
       <section className="overflow-hidden rounded-lg border border-titanium/40 bg-obsidian/60">
         <div className="border-b border-titanium/40 px-4 py-3">
-          <h2 className="text-sm font-semibold text-white">Draft Items</h2>
+          <h2 className="text-sm font-semibold text-ion-white">Draft Items</h2>
           <p className="mt-1 text-xs text-ion-3">
             Generated {new Date(drafts.generatedAt).toLocaleString("en-US")}
           </p>
@@ -83,7 +83,7 @@ function Metric({ label, value }: { readonly label: string; readonly value: stri
   return (
     <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
       <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-white">{value}</p>
+      <p className="mt-2 text-xl font-semibold text-ion-white">{value}</p>
     </div>
   );
 }
@@ -109,7 +109,7 @@ function OutboxRow({ item }: { readonly item: PlannedBotOutboxItem }): JSX.Eleme
           {item.channel}
         </span>
       </td>
-      <td className="whitespace-nowrap px-4 py-3 font-medium text-white">{item.eventKind}</td>
+      <td className="whitespace-nowrap px-4 py-3 font-medium text-ion-white">{item.eventKind}</td>
       <td className="whitespace-nowrap px-4 py-3">
         <Link href={`/room/${item.gameId}`} className="text-yellow-200 hover:text-yellow-100">
           {item.gameId}

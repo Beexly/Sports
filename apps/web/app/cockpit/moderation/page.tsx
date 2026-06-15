@@ -127,7 +127,7 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
       {/* Header */}
       <header className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-3">
-          <h1 className="text-2xl font-bold text-white">Moderation Queue</h1>
+          <h1 className="text-2xl font-bold text-ion-white">Moderation Queue</h1>
           <Link
             href="/cockpit"
             className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-1 hover:bg-carbon/60"

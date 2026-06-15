@@ -34,7 +34,7 @@ export default async function CockpitAgentDetail({
           <Link href="/cockpit/agents" className="text-xs text-ion-3 hover:text-ion-1">
             ← All agents
           </Link>
-          <h1 className="mt-1 text-2xl font-bold text-white">{agent.displayName}</h1>
+          <h1 className="mt-1 text-2xl font-bold text-ion-white">{agent.displayName}</h1>
           <p className="mt-1 max-w-2xl text-sm text-ion-3">{agent.responsibility}</p>
         </div>
         <span className="rounded-full bg-obsidian/70 px-3 py-1 text-xs font-semibold text-ion-1">
@@ -53,7 +53,7 @@ export default async function CockpitAgentDetail({
               <div className="min-w-0">
                 <Link
                   href={`/cockpit/tasks/${t.id}`}
-                  className="text-sm font-medium text-ion-1 hover:text-white"
+                  className="text-sm font-medium text-ion-1 hover:text-ion-white"
                 >
                   {t.title}
                 </Link>

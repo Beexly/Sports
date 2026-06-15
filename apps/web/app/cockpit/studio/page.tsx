@@ -18,7 +18,7 @@ export default async function CockpitStudioPage({
             <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
               Galaxy Studio
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-white">Creator Asset Workspace</h1>
+            <h1 className="mt-1 text-2xl font-bold text-ion-white">Creator Asset Workspace</h1>
           </div>
           <Link
             href="/cockpit"

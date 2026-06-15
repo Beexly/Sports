@@ -73,7 +73,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-cyan-300">
               Broadcast intelligence
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-white">Airwave Control Room</h1>
+            <h1 className="mt-1 text-2xl font-bold text-ion-white">Airwave Control Room</h1>
           </div>
           <div className="flex flex-wrap gap-2 text-xs">
             <Link
@@ -158,7 +158,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
         </div>
         <div className="mt-4 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-xl border border-titanium/40 bg-obsidian/70 p-4">
-            <h3 className="text-sm font-semibold text-white">Gate reason</h3>
+            <h3 className="text-sm font-semibold text-ion-white">Gate reason</h3>
             <p className="mt-2 text-sm leading-6 text-ion-2">{intake.source.reason}</p>
             <dl className="mt-4 grid gap-2 text-xs">
               <Fact label="Configured" value={String(intake.source.configured)} />
@@ -387,7 +387,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           </table>
         </div>
         <div className="mt-4 rounded-xl border border-titanium/40 bg-obsidian/70 p-4">
-          <h3 className="text-sm font-semibold text-white">Review Gate — Status Machine</h3>
+          <h3 className="text-sm font-semibold text-ion-white">Review Gate — Status Machine</h3>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
             {(["DRAFT", "REVIEW", "APPROVED", "REJECTED", "SETTLED"] as ClaimCandidateOperatorStatus[]).map((s, i, arr) => (
               <span key={s} className="flex items-center gap-2">
@@ -447,7 +447,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
         <div className="mt-4 grid gap-4 xl:grid-cols-2">
           {/* CH87 Status Card */}
           <div className="rounded-xl border border-titanium/40 bg-obsidian/70 p-4">
-            <h3 className="text-sm font-semibold text-white">Channel 87 — Status</h3>
+            <h3 className="text-sm font-semibold text-ion-white">Channel 87 — Status</h3>
             <dl className="mt-3 grid gap-2 text-xs">
               <Fact label="Lane status" value={intelligence.intakePlan.channel87.laneStatus} />
               <Fact label="Window (CT)" value={`${intelligence.intakePlan.channel87.windowStartHour}:00 – ${intelligence.intakePlan.channel87.windowEndHour}:00`} />
@@ -463,7 +463,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
 
           {/* GSE / GSN Output Readiness */}
           <div data-testid="gse-gsn-output-readiness" className="rounded-xl border border-titanium/40 bg-obsidian/70 p-4">
-            <h3 className="text-sm font-semibold text-white">GSE / GSN Output Readiness</h3>
+            <h3 className="text-sm font-semibold text-ion-white">GSE / GSN Output Readiness</h3>
             <div className="mt-3 grid gap-4 sm:grid-cols-2">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-3">GSE</p>
@@ -542,7 +542,7 @@ function Metric({ label, value, detail }: { label: string; value: string; detail
   return (
     <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
       <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-2 font-numerals text-2xl font-semibold text-white">{value}</p>
+      <p className="mt-2 font-numerals text-2xl font-semibold text-ion-white">{value}</p>
       <p className="mt-1 text-xs leading-5 text-ion-3">{detail}</p>
     </div>
   );
@@ -581,7 +581,7 @@ function IntakeLaneCard({ lane }: { lane: IntakeLaneState }): JSX.Element {
   return (
     <article className="rounded-xl border border-titanium/40 bg-obsidian/70 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <h3 className="text-sm font-semibold text-white">{lane.label}</h3>
+        <h3 className="text-sm font-semibold text-ion-white">{lane.label}</h3>
         <span className={`rounded border px-2 py-1 text-[11px] ${tone}`}>
           {lane.mode.toLowerCase().replace(/_/g, "-")}
         </span>
@@ -605,7 +605,7 @@ function LaneCard({ lane }: { lane: AirwaveInputLane }): JSX.Element {
     <article className="rounded-xl border border-titanium/40 bg-obsidian/70 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 className="text-sm font-semibold text-white">{lane.name}</h3>
+          <h3 className="text-sm font-semibold text-ion-white">{lane.name}</h3>
           <p className="mt-1 text-xs text-ion-3">{lane.source}</p>
         </div>
         <span className={`rounded border px-2 py-1 text-[11px] ${STATUS_TONE[lane.status]}`}>

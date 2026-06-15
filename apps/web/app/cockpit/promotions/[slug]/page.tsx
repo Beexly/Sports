@@ -31,7 +31,7 @@ export default async function CockpitPromotionDetail({
         <p className="text-xs font-semibold uppercase tracking-widest text-brand-400">
           {promo.operatorName} · {promo.sportsbookKey}
         </p>
-        <h1 className="text-2xl font-bold text-white">{promo.headline}</h1>
+        <h1 className="text-2xl font-bold text-ion-white">{promo.headline}</h1>
         <p className="mt-1 text-sm text-ion-2">{promo.offerSummary}</p>
       </header>
 
@@ -122,7 +122,7 @@ function Field({ label, value }: { label: string; value: string }) {
       <p className="text-[10px] uppercase tracking-widest text-ion-3">
         {label}
       </p>
-      <p className="text-sm text-white">{value}</p>
+      <p className="text-sm text-ion-white">{value}</p>
     </div>
   );
 }

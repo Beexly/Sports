@@ -31,7 +31,7 @@ function JournalEntryRow({ entry }: { readonly entry: JournalEntryListItem }): J
           <p className="text-[10px] font-semibold uppercase tracking-wide text-ion-3">
             Week {entry.isoWeek}, {entry.isoYear} - {entry.modelVersion}
           </p>
-          <h3 className="mt-1 text-sm font-semibold text-white">{entry.title}</h3>
+          <h3 className="mt-1 text-sm font-semibold text-ion-white">{entry.title}</h3>
         </div>
         <span className={`rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusClass(entry.status)}`}>
           {entry.status.replace(/_/g, " ")}
@@ -89,7 +89,7 @@ function JournalSection({
   return (
     <section className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-white">{title}</h2>
+        <h2 className="text-sm font-semibold text-ion-white">{title}</h2>
         <span className="text-[10px] uppercase tracking-wide text-ion-3">
           {entries.length} entries
         </span>
@@ -118,7 +118,7 @@ export default async function CockpitJournalPage(): Promise<JSX.Element> {
           <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
             Model Journal
           </p>
-          <h1 className="mt-1 text-2xl font-bold text-white">Operator Workspace</h1>
+          <h1 className="mt-1 text-2xl font-bold text-ion-white">Operator Workspace</h1>
           <p className="mt-2 max-w-3xl text-sm text-ion-2">
             Review weekly research drafts before they move to the public Journal.
             Published entries are preserved; retraction is the only removal path.

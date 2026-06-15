@@ -27,7 +27,7 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
               Claude API Costs
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-white">Generation Budget Monitor</h1>
+            <h1 className="mt-1 text-2xl font-bold text-ion-white">Generation Budget Monitor</h1>
           </div>
           <Link
             href="/cockpit"
@@ -50,7 +50,7 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
 
       <section className="overflow-hidden rounded-lg border border-titanium/40 bg-obsidian/60">
         <div className="border-b border-titanium/40 px-4 py-3">
-          <h2 className="text-sm font-semibold text-white">Surface Budgets</h2>
+          <h2 className="text-sm font-semibold text-ion-white">Surface Budgets</h2>
           <p className="mt-1 text-xs text-ion-3">
             Window: {new Date(dashboard.monthStartIso).toLocaleDateString("en-US")} to{" "}
             {new Date(dashboard.monthEndIso).toLocaleDateString("en-US")}
@@ -80,7 +80,7 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
       </section>
 
       <section className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-        <h2 className="text-sm font-semibold text-white">Recent Errors</h2>
+        <h2 className="text-sm font-semibold text-ion-white">Recent Errors</h2>
         {dashboard.recentErrors.length === 0 ? (
           <p className="mt-3 text-sm text-ion-3">No Claude API errors recorded.</p>
         ) : (
@@ -111,7 +111,7 @@ function Metric({ label, value }: { readonly label: string; readonly value: stri
   return (
     <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
       <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-white">{value}</p>
+      <p className="mt-2 text-xl font-semibold text-ion-white">{value}</p>
     </div>
   );
 }
@@ -120,7 +120,7 @@ function SurfaceRow({ surface }: { readonly surface: ClaudeApiCostSurfaceSummary
   const pct = Number.isFinite(surface.ratio) ? Math.round(surface.ratio * 100) : 100;
   return (
     <tr className="text-ion-1">
-      <td className="whitespace-nowrap px-4 py-3 font-medium text-white">{surface.surface}</td>
+      <td className="whitespace-nowrap px-4 py-3 font-medium text-ion-white">{surface.surface}</td>
       <td className="whitespace-nowrap px-4 py-3">{formatUsd(surface.spentUsd)}</td>
       <td className="whitespace-nowrap px-4 py-3">{formatUsd(surface.budgetUsd)}</td>
       <td className="whitespace-nowrap px-4 py-3">{pct}%</td>

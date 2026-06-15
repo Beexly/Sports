@@ -32,7 +32,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
             <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
               Synthetic Monitoring
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-white">Production Verification Runner</h1>
+            <h1 className="mt-1 text-2xl font-bold text-ion-white">Production Verification Runner</h1>
           </div>
           <Link
             href="/cockpit"
@@ -60,7 +60,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
           <div key={category.id} className="rounded-lg border border-titanium/40 bg-obsidian/60">
             <div className="border-b border-titanium/40 px-4 py-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-sm font-semibold text-white">{category.name}</h2>
+                <h2 className="text-sm font-semibold text-ion-white">{category.name}</h2>
                 <p className="text-[11px] uppercase tracking-wider text-ion-3">
                   {category.checks.length} checks
                 </p>
@@ -78,7 +78,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
 
       <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-          <h2 className="text-sm font-semibold text-white">Auto-Filed Issues</h2>
+          <h2 className="text-sm font-semibold text-ion-white">Auto-Filed Issues</h2>
           {dashboard.issues.length === 0 ? (
             <p className="mt-3 text-sm text-ion-3">No synthetic monitoring issues filed.</p>
           ) : (
@@ -100,7 +100,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
         </div>
 
         <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-          <h2 className="text-sm font-semibold text-white">Configuration</h2>
+          <h2 className="text-sm font-semibold text-ion-white">Configuration</h2>
           <dl className="mt-3 grid gap-2 text-sm">
             <ConfigRow label="Enabled" value={dashboard.config.enabled ? "true" : "false"} />
             <ConfigRow label="Cadence" value={`${dashboard.config.cadenceMinutes} minutes`} />
@@ -112,7 +112,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
       </section>
 
       <section className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-        <h2 className="text-sm font-semibold text-white">Manual Actions</h2>
+        <h2 className="text-sm font-semibold text-ion-white">Manual Actions</h2>
         <p className="mt-2 text-sm text-ion-3">
           The scheduled runner writes durable history. Manual controls stay disabled until a server
           action can append a decision-log entry and run checks with the production environment.
@@ -139,7 +139,7 @@ function Metric({ label, value }: { readonly label: string; readonly value: stri
   return (
     <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
       <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-2 truncate text-xl font-semibold text-white">{value}</p>
+      <p className="mt-2 truncate text-xl font-semibold text-ion-white">{value}</p>
     </div>
   );
 }
@@ -154,7 +154,7 @@ function CheckRow({ check }: { readonly check: SyntheticCheck }): JSX.Element {
         </p>
       </div>
       <div>
-        <p className="text-sm font-medium text-white">{check.label}</p>
+        <p className="text-sm font-medium text-ion-white">{check.label}</p>
         <p className="mt-1 text-xs text-ion-3">{check.detail}</p>
       </div>
       <div>

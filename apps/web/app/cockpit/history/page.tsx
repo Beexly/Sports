@@ -178,7 +178,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       )}
       <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Historical pick ledger</h1>
+          <h1 className="text-2xl font-bold text-ion-white">Historical pick ledger</h1>
           <p className="mt-1 text-sm text-ion-3">
             Last {TAKE} picks (descending by generatedAt). Filter to inspect
             eligibility, settlement, and snapshot coverage. Use the{" "}
@@ -334,8 +334,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active
-                    ? "bg-brand-800 text-white"
-                    : "bg-obsidian/70 text-ion-2 hover:text-white",
+                    ? "bg-brand-800 text-ion-white"
+                    : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
                 {r}
@@ -360,8 +360,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active
-                    ? "bg-brand-800 text-white"
-                    : "bg-obsidian/70 text-ion-2 hover:text-white",
+                    ? "bg-brand-800 text-ion-white"
+                    : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
                 {v}
@@ -386,8 +386,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active
-                    ? "bg-brand-800 text-white"
-                    : "bg-obsidian/70 text-ion-2 hover:text-white",
+                    ? "bg-brand-800 text-ion-white"
+                    : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
                 {v}
@@ -412,8 +412,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active
-                    ? "bg-brand-800 text-white"
-                    : "bg-obsidian/70 text-ion-2 hover:text-white",
+                    ? "bg-brand-800 text-ion-white"
+                    : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
                 {v}
@@ -449,8 +449,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active
-                    ? "bg-brand-800 text-white"
-                    : "bg-obsidian/70 text-ion-2 hover:text-white",
+                    ? "bg-brand-800 text-ion-white"
+                    : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
                 {entry.label}
@@ -512,7 +512,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                   </td>
                   <td className="px-3 py-2 text-ion-2">{p.game.sport.name}</td>
                   <td className="px-3 py-2 text-ion-1">{p.pickType}</td>
-                  <td className="px-3 py-2 text-white">{p.selection}</td>
+                  <td className="px-3 py-2 text-ion-white">{p.selection}</td>
                   <td className="px-3 py-2 font-mono text-ion-2">{p.line}</td>
                   <td className="px-3 py-2 font-mono text-ion-1">{p.confidence}</td>
                   <td className="px-3 py-2 text-ion-1">{p.pickGrade}</td>
@@ -575,7 +575,7 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
   return (
     <div>
       <p className="text-[10px] uppercase tracking-widest text-ion-3">{label}</p>
-      <p className={["mt-0.5 text-lg font-bold", accent ?? "text-white"].join(" ")}>{value}</p>
+      <p className={["mt-0.5 text-lg font-bold", accent ?? "text-ion-white"].join(" ")}>{value}</p>
     </div>
   );
 }

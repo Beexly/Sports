@@ -73,7 +73,7 @@ function Preview({ markdown }: { readonly markdown: string }): JSX.Element {
       {sections.map((section, index) => {
         if (section.startsWith("#")) {
           return (
-            <h3 key={`${section}-${index}`} className="text-sm font-semibold text-white">
+            <h3 key={`${section}-${index}`} className="text-sm font-semibold text-ion-white">
               {section.replace(/^#+\s*/, "")}
             </h3>
           );
@@ -224,7 +224,7 @@ export function JournalEntryEditor({
     <main className="space-y-4 rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-sm font-semibold text-white">Markdown editor</h2>
+          <h2 className="text-sm font-semibold text-ion-white">Markdown editor</h2>
           <p className="mt-1 text-xs text-ion-3">
             {isBodyEditable
               ? "Draft body can be edited before publication."
@@ -363,7 +363,7 @@ export function JournalEntryEditor({
 
       <section className="rounded-lg border border-titanium/40 bg-black/30 p-4">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <h2 className="text-sm font-semibold text-white">Preview</h2>
+          <h2 className="text-sm font-semibold text-ion-white">Preview</h2>
           <span className="text-[10px] uppercase tracking-wide text-ion-3">First sections</span>
         </div>
         <Preview markdown={bodyMarkdown} />

@@ -100,7 +100,7 @@ export default async function CockpitBriefPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-baseline justify-between">
-        <h1 className="text-2xl font-bold text-white">Daily brief</h1>
+        <h1 className="text-2xl font-bold text-ion-white">Daily brief</h1>
         <span className="rounded-full border border-yellow-900 bg-yellow-950/40 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-yellow-200">
           {brief.status} · internal only
         </span>

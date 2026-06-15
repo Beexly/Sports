@@ -137,7 +137,7 @@ export default async function CockpitContentPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-brand-400">
           Ava · Content workflow
         </p>
-        <h1 className="text-2xl font-bold text-white">Content drafts</h1>
+        <h1 className="text-2xl font-bold text-ion-white">Content drafts</h1>
         <p className="mt-1 text-sm text-ion-3">
           Drafts only. No part of this surface publishes externally, posts
           to social, or sends user communications.
@@ -183,7 +183,7 @@ export default async function CockpitContentPage() {
               <tbody>
                 {drafts.map((d) => (
                   <tr key={d.id} data-testid={`content-draft-row-${d.slug}`} className="border-b border-titanium/40 align-top text-ion-1">
-                    <td className="py-2 pr-3 font-semibold text-white">{d.title}</td>
+                    <td className="py-2 pr-3 font-semibold text-ion-white">{d.title}</td>
                     <td className="py-2 pr-3">{d.contentType}</td>
                     <td className="py-2 pr-3">{d.status}</td>
                     <td className="py-2 pr-3">{d.sourceCoverageStatus}</td>
@@ -235,7 +235,7 @@ export default async function CockpitContentPage() {
           <tbody>
             {templates.map((t) => (
               <tr key={t.key} className="border-b border-titanium/40 align-top text-ion-1">
-                <td className="py-2 pr-3 font-semibold text-white">{t.title}</td>
+                <td className="py-2 pr-3 font-semibold text-ion-white">{t.title}</td>
                 <td className="py-2 pr-3">{t.contentType}</td>
                 <td className="py-2 pr-3 text-ion-2">{t.requiredSources.join(", ")}</td>
                 <td className="py-2 pr-3">{t.requiresPerformanceGate ? "PERF" : "—"}</td>
@@ -300,7 +300,7 @@ export default async function CockpitContentPage() {
             <tbody>
               {legacy.map((d) => (
                 <tr key={d.id} className="border-b border-titanium/40 align-top text-ion-1">
-                  <td className="py-2 pr-3 font-semibold text-white">{d.briefTitle}</td>
+                  <td className="py-2 pr-3 font-semibold text-ion-white">{d.briefTitle}</td>
                   <td className="py-2 pr-3">{d.channel}</td>
                   <td className="py-2 pr-3">{d.qaStatus}</td>
                   <td className="py-2 pr-3">{d.complianceStatus}</td>

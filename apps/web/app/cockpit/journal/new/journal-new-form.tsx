@@ -126,7 +126,7 @@ export function JournalNewForm(): JSX.Element {
         <input
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
+          className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-ion-white outline-none focus:border-yellow-400"
         />
       </label>
 
@@ -137,7 +137,7 @@ export function JournalNewForm(): JSX.Element {
             value={isoWeek}
             inputMode="numeric"
             onChange={(event) => setIsoWeek(event.target.value)}
-            className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
+            className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-ion-white outline-none focus:border-yellow-400"
           />
         </label>
         <label className="grid gap-2 text-sm">
@@ -146,7 +146,7 @@ export function JournalNewForm(): JSX.Element {
             value={isoYear}
             inputMode="numeric"
             onChange={(event) => setIsoYear(event.target.value)}
-            className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
+            className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-ion-white outline-none focus:border-yellow-400"
           />
         </label>
       </div>

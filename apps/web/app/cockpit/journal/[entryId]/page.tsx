@@ -34,7 +34,7 @@ function MetaRail({ entry }: { readonly entry: JournalEntryDetail }): JSX.Elemen
     <aside className="space-y-4 rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
       <div>
         <p className="text-[10px] uppercase tracking-wide text-ion-3">Entry meta</p>
-        <h2 className="mt-1 text-sm font-semibold text-white">
+        <h2 className="mt-1 text-sm font-semibold text-ion-white">
           Week {entry.isoWeek}, {entry.isoYear}
         </h2>
       </div>
@@ -71,7 +71,7 @@ function WeekDataRail({ entry }: { readonly entry: JournalEntryDetail }): JSX.El
     <aside className="space-y-4 rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
       <div>
         <p className="text-[10px] uppercase tracking-wide text-ion-3">Week data</p>
-        <h2 className="mt-1 text-sm font-semibold text-white">Evidence attached</h2>
+        <h2 className="mt-1 text-sm font-semibold text-ion-white">Evidence attached</h2>
       </div>
       <dl className="grid grid-cols-2 gap-3 text-xs text-ion-2">
         <div>
@@ -149,7 +149,7 @@ export default async function CockpitJournalEntryPage({
           <p className="mt-3 text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
             Model Journal
           </p>
-          <h1 className="mt-1 text-2xl font-bold text-white">{entry.title}</h1>
+          <h1 className="mt-1 text-2xl font-bold text-ion-white">{entry.title}</h1>
           <p className="mt-2 max-w-3xl text-sm text-ion-2">
             Review the weekly essay draft, attached evidence, and distribution state before the public route goes live.
           </p>

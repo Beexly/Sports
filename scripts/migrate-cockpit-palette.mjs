@@ -65,6 +65,8 @@ const MAP = [
   ["text-gray-600", "text-ion-3"],
   ["text-gray-700", "text-ion-3"],
   ["text-slate-300", "text-ion-1"],
+  // pure white -> canonical soft ion-white (#F6F7FA) used by the redesign
+  ["text-white", "text-ion-white"],
 ];
 
 let totalFiles = 0;

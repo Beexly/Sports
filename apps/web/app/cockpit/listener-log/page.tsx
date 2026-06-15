@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export default function ListenerLogPage() {
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold text-white">Listener log</h1>
+      <h1 className="text-2xl font-bold text-ion-white">Listener log</h1>
       <p
         data-testid="internal-only-banner"
         className="rounded-lg border border-yellow-900 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-200"

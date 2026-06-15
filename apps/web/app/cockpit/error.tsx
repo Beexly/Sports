@@ -24,7 +24,7 @@ export default function CockpitError({
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-red-900 bg-red-950/30 p-6 text-red-200">
-      <h2 className="text-lg font-semibold text-white">Cockpit error</h2>
+      <h2 className="text-lg font-semibold text-ion-white">Cockpit error</h2>
       <p className="text-sm">
         Something inside the cockpit threw on render. Jarvis catches DB
         errors itself, so this is most likely a downstream type or model
@@ -41,7 +41,7 @@ export default function CockpitError({
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => reset()}
-          className="rounded-lg bg-red-900/60 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800"
+          className="rounded-lg bg-red-900/60 px-4 py-2 text-sm font-semibold text-ion-white hover:bg-red-800"
         >
           Try again
         </button>

@@ -66,7 +66,7 @@ export default async function CockpitLayout({
         <p className="rounded-md bg-yellow-900/40 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-yellow-300">
           Cockpit · Operators only
         </p>
-        <h1 className="text-2xl font-bold text-white">This flight deck needs an operator badge.</h1>
+        <h1 className="text-2xl font-bold text-ion-white">This flight deck needs an operator badge.</h1>
         <p className="max-w-md text-sm text-ion-2">
           You&apos;re signed in as {session.user.email ?? "a member"}, but this account doesn&apos;t
           have operator access. If this is your platform, grant your email the operator role
@@ -117,7 +117,7 @@ export default async function CockpitLayout({
               href={href}
               className="group rounded-lg border border-transparent px-3 py-2 transition-colors hover:border-titanium/70 hover:bg-carbon/60"
             >
-              <p className="text-sm font-medium text-ion-1 group-hover:text-white">
+              <p className="text-sm font-medium text-ion-1 group-hover:text-ion-white">
                 {label}
               </p>
               <p className="text-[11px] text-ion-3 group-hover:text-ion-3">

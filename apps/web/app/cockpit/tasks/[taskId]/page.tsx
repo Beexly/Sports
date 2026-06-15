@@ -26,7 +26,7 @@ export default async function CockpitTaskDetail({
         <Link href="/cockpit/tasks" className="text-xs text-ion-3 hover:text-ion-1">
           ← Tasks
         </Link>
-        <h1 className="mt-1 text-2xl font-bold text-white">{task.title}</h1>
+        <h1 className="mt-1 text-2xl font-bold text-ion-white">{task.title}</h1>
         <p className="mt-1 text-xs text-ion-3">
           Assigned to <strong className="text-ion-1">{agent.displayName}</strong> ·
           source <code className="rounded bg-obsidian/70 px-1 text-[10px] text-ion-1">{task.source}</code>
@@ -51,7 +51,7 @@ export default async function CockpitTaskDetail({
       </section>
 
       <section data-testid="allowed-transitions" className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
-        <h2 className="mb-2 text-sm font-semibold text-white">Allowed transitions</h2>
+        <h2 className="mb-2 text-sm font-semibold text-ion-white">Allowed transitions</h2>
         {allowed.length === 0 ? (
           <p className="text-xs text-ion-3">
             <strong className="text-ion-1">{task.status}</strong> is a terminal state.
@@ -76,7 +76,7 @@ export default async function CockpitTaskDetail({
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-semibold text-white">Decision history</h2>
+        <h2 className="mb-3 text-sm font-semibold text-ion-white">Decision history</h2>
         {task.decisions.length === 0 ? (
           <p className="rounded-lg border border-titanium/40 bg-eclipse/40 p-4 text-xs text-ion-3">
             No decisions yet.

@@ -112,7 +112,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
               Source Intelligence
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-white">Source Readiness Board</h1>
+            <h1 className="mt-1 text-2xl font-bold text-ion-white">Source Readiness Board</h1>
           </div>
           <div className="flex flex-wrap gap-2 text-xs">
             <Link
@@ -228,7 +228,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
 
       <section className="overflow-hidden rounded-2xl border border-titanium/40 bg-obsidian/60">
         <div className="border-b border-titanium/40 px-4 py-3">
-          <h2 className="text-sm font-semibold text-white">Source stack</h2>
+          <h2 className="text-sm font-semibold text-ion-white">Source stack</h2>
           <p className="mt-1 text-xs text-ion-3">
             The action column is the operator next move. It is deliberately separate from public marketing copy.
           </p>
@@ -262,7 +262,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-orange-300">
               Source Rights Clearance
             </p>
-            <h2 className="mt-1 text-lg font-bold text-white">Scraping Rights Registry</h2>
+            <h2 className="mt-1 text-lg font-bold text-ion-white">Scraping Rights Registry</h2>
           </div>
           <span className="rounded border border-titanium/40 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-ion-2">
             {rightsRegistrySummary.total} sources tracked
@@ -299,7 +299,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
 
       <section className="overflow-hidden rounded-2xl border border-titanium/40 bg-obsidian/60">
         <div className="border-b border-titanium/40 px-4 py-3">
-          <h2 className="text-sm font-semibold text-white">Rights registry</h2>
+          <h2 className="text-sm font-semibold text-ion-white">Rights registry</h2>
           <p className="mt-1 text-xs text-ion-3">
             Every extraction job must pass through the Clearance Engine before running.
             A{" "}
@@ -413,7 +413,7 @@ function Metric({ label, value, detail }: { label: string; value: string; detail
   return (
     <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
       <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-2 font-numerals text-2xl font-semibold text-white">{value}</p>
+      <p className="mt-2 font-numerals text-2xl font-semibold text-ion-white">{value}</p>
       <p className="mt-1 text-xs leading-5 text-ion-3">{detail}</p>
     </div>
   );
@@ -423,7 +423,7 @@ function ProofLine({ label, value, detail }: { label: string; value: string; det
   return (
     <div className="border-b border-titanium/40 pb-3 last:border-b-0 last:pb-0">
       <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-1 font-numerals text-2xl font-semibold text-white">{value}</p>
+      <p className="mt-1 font-numerals text-2xl font-semibold text-ion-white">{value}</p>
       <p className="mt-1 text-xs leading-5 text-ion-3">{detail}</p>
     </div>
   );
@@ -471,7 +471,7 @@ function RightsRow({ entry }: { entry: SourceRightsEntry }): JSX.Element {
   return (
     <tr className="align-top text-ion-1">
       <td className="px-4 py-3">
-        <p className="font-medium text-white">{entry.source_name}</p>
+        <p className="font-medium text-ion-white">{entry.source_name}</p>
         <code className="font-mono text-[10px] text-ion-3">{entry.source_id}</code>
       </td>
       <td className="px-4 py-3 text-xs text-ion-3">{entry.jurisdiction}</td>
@@ -532,7 +532,7 @@ function SourceRow({
 }): JSX.Element {
   return (
     <tr className="align-top text-ion-1">
-      <td className="px-4 py-3 font-medium text-white">{source.name}</td>
+      <td className="px-4 py-3 font-medium text-ion-white">{source.name}</td>
       <td className="px-4 py-3 font-mono text-xs text-cyan-300">{sourceCostLabel(source.cost)}</td>
       <td className="px-4 py-3">
         <span className={`inline-flex rounded border px-2 py-1 text-[11px] ${STATUS_TONE[source.status]}`}>

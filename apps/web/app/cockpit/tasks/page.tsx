@@ -25,7 +25,7 @@ export default async function CockpitTasksPage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-white">Task queue</h1>
+        <h1 className="text-2xl font-bold text-ion-white">Task queue</h1>
         <p className="mt-1 text-sm text-ion-3">
           Grouped by status. Click any row for the full decision history.
         </p>
@@ -58,7 +58,7 @@ export default async function CockpitTasksPage() {
                       <div className="flex items-start justify-between gap-3">
                         <Link
                           href={`/cockpit/tasks/${t.id}`}
-                          className="text-sm font-medium text-ion-white hover:text-white"
+                          className="text-sm font-medium text-ion-white hover:text-ion-white"
                         >
                           {t.title}
                         </Link>

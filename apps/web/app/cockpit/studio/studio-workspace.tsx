@@ -139,7 +139,7 @@ export function StudioWorkspace({
       <section className="grid gap-4 lg:grid-cols-[17rem_minmax(0,1fr)_18rem]">
         <aside className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold text-white">Games</h2>
+            <h2 className="text-sm font-semibold text-ion-white">Games</h2>
             <span className="text-[10px] uppercase tracking-wide text-ion-3">
               {games.length} loaded
             </span>
@@ -179,7 +179,7 @@ export function StudioWorkspace({
         <section className="min-w-0 rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-sm font-semibold text-white">Template Grid</h2>
+              <h2 className="text-sm font-semibold text-ion-white">Template Grid</h2>
               <p className="mt-1 text-xs text-ion-3">
                 Eight Claude-ready prompt packages with citations and scanner state.
               </p>
@@ -205,7 +205,7 @@ export function StudioWorkspace({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-sm font-semibold text-white">{draft.templateName}</h3>
+                      <h3 className="text-sm font-semibold text-ion-white">{draft.templateName}</h3>
                       <p className="mt-1 text-[11px] text-ion-3">
                         {draft.templateKind.replace(/_/g, " ")}
                       </p>
@@ -307,7 +307,7 @@ export function StudioWorkspace({
         </section>
 
         <aside className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
-          <h2 className="text-sm font-semibold text-white">Review Rail</h2>
+          <h2 className="text-sm font-semibold text-ion-white">Review Rail</h2>
 
           {selectedNode ? (
             <div className="mt-4 flex flex-col gap-3 text-sm">

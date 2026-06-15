@@ -16,7 +16,7 @@ export default async function CockpitReviewPage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-white">Review queue</h1>
+        <h1 className="text-2xl font-bold text-ion-white">Review queue</h1>
         <p className="mt-1 text-sm text-ion-3">
           Items awaiting a human decision. Each row links to the full audit trail.
         </p>
@@ -36,7 +36,7 @@ export default async function CockpitReviewPage() {
               <div className="min-w-0">
                 <Link
                   href={`/cockpit/tasks/${t.id}`}
-                  className="text-sm font-medium text-ion-white hover:text-white"
+                  className="text-sm font-medium text-ion-white hover:text-ion-white"
                 >
                   {t.title}
                 </Link>

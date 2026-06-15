@@ -30,7 +30,7 @@ export default function PromoDeskPage(): JSX.Element {
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-3">
-          <h1 className="text-2xl font-bold text-white">Promo Desk Operator Registry</h1>
+          <h1 className="text-2xl font-bold text-ion-white">Promo Desk Operator Registry</h1>
           <Link
             href="/cockpit"
             className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-1 hover:bg-carbon/60"
@@ -72,7 +72,7 @@ function SummaryCard({ label, value }: { label: string; value: number }): JSX.El
   return (
     <div className="flex flex-col gap-1 rounded-lg border border-titanium/40 bg-obsidian/50 p-3">
       <span className="text-[10px] uppercase tracking-wide text-ion-3">{label}</span>
-      <span className="text-xl font-bold text-white">{value}</span>
+      <span className="text-xl font-bold text-ion-white">{value}</span>
     </div>
   );
 }
@@ -82,7 +82,7 @@ function OperatorRow({ entry }: { entry: OperatorRegistryEntry }): JSX.Element {
     <li className="flex flex-col gap-2 rounded-lg border border-titanium/40 bg-obsidian/50 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-3">
-          <span className="text-sm font-semibold text-white">{entry.displayName}</span>
+          <span className="text-sm font-semibold text-ion-white">{entry.displayName}</span>
           <code className="rounded bg-eclipse/70 px-1.5 py-0.5 text-[10px] text-ion-2">
             {entry.key}
           </code>
