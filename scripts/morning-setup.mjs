@@ -42,7 +42,9 @@ function gitOutput(argv) {
 function appendGitEnvironmentLock() {
   const branch = gitOutput(["branch", "--show-current"]);
   const status = gitOutput(["status", "--short"]);
-  const remotes = gitOutput(["remote", "-v"]);
+  // Redact remote URLs (may embed credentials/internal hosts) before writing to
+  // the tracked lock file — keep only the remote name + (fetch)/(push) marker.
+  const remotes = gitOutput(["remote", "-v"]).replace(/^(\s*\S+)\s+\S+(\s+\([a-z]+\))/gm, "$1 <redacted-url>$2");
   const branches = gitOutput(["branch", "-a", "--no-color"]);
   const hasOriginMain = /(^|\n)\s*remotes\/origin\/main(\s|$)/.test(branches);
   const hasLocalMain = /(^|\n)\s*main(\s|$)/.test(branches);

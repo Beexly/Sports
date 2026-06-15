@@ -33,7 +33,16 @@ export const NFL_TEAM_ALIASES: Record<string, string> = {
   WAS: "WAS", WSH: "WAS", Washington: "WAS", Commanders: "WAS",
 };
 
+// Case-insensitive lookup keyed by alphanumeric-compacted, lowercased alias —
+// so "kansas city", "KANSAS CITY", "KansasCity", and "KC" all resolve to "KC".
+const COMPACT_ALIAS_LOOKUP: Record<string, string> = Object.fromEntries(
+  Object.entries(NFL_TEAM_ALIASES).map(([key, value]) => [
+    key.replace(/[^A-Za-z0-9]/g, "").toLowerCase(),
+    value,
+  ]),
+);
+
 export function normalizeTeamAlias(input: string): string | null {
-  const compact = input.replace(/[^A-Za-z0-9]/g, "");
-  return NFL_TEAM_ALIASES[input] ?? NFL_TEAM_ALIASES[compact] ?? NFL_TEAM_ALIASES[input.toUpperCase()] ?? null;
+  const compact = input.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
+  return COMPACT_ALIAS_LOOKUP[compact] ?? null;
 }

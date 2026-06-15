@@ -64,7 +64,8 @@ describe("workflow event runtime and queues", () => {
     expect(enqueueSafeAgentTask(draftTask, false).state).toBe("PAUSED_OWNER_APPROVAL");
     expect(enqueueSafeAgentTask(ownerTask, true).state).toBe("BLOCKED");
     expect(enqueueSafeAgentTask(notWiredTask, true).state).toBe("BLOCKED");
-    expect(enqueueSafeWorkflow("daily-intelligence-brief", false).owner).toBe("chain");
+    // Every workflow carries the owner-approval gate, so none may auto-enqueue past it.
+    expect(enqueueSafeWorkflow("daily-intelligence-brief", false).state).toBe("PAUSED_OWNER_APPROVAL");
   });
 });
 
@@ -78,6 +79,8 @@ describe("data reliability and memory runtime", () => {
     expect(freshnessStatusToTask(stale)?.risk).toBe("CRITICAL");
     expect(summarizeIngestionHealth([unknown])).toBe("UNKNOWN");
     expect(sourceRightsBlockTask("protected-feed").status).toBe("BLOCKED_BY_RIGHTS");
+    // An unparsable timestamp must never read as FRESH (fake-green guard).
+    expect(detectStaleSource({ sourceId: "odds", lastSuccessAt: "not-a-date", now: "2026-06-14T11:00:00.000Z" }).status).toBe("UNKNOWN");
   });
 
   it("keeps memory candidates review-gated and excludes rejected memory", () => {
@@ -98,6 +101,8 @@ describe("market/CLV and calibration runtime", () => {
     expect(computeClvCandidate(open, null, true).status).toBe("BLOCKED");
     expect(marketMovementToTask("g1", lineMovement(-3, -5))?.assignedAgent).toBe("delta");
     expect(blockPublicSharpLabel("sharp steam")).toBe(true);
+    // Open/close from different games must not produce a CLV candidate.
+    expect(computeClvCandidate(open, { ...open, gameId: "g2", kind: "CLOSE" as const }, true).status).toBe("BLOCKED");
   });
 
   it("calculates implied/no-vig probabilities and calibration metrics", () => {

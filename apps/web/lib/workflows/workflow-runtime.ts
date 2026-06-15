@@ -35,25 +35,33 @@ export async function runSafeWorkflowRuntime(input: { workflowId: string; events
   const seedEvents = input.events ?? [{ workflowId: workflow.id, kind: "NORMAL", message: `${workflow.name} observed`, createdAt: now } satisfies WorkflowEvent];
   const createdEvents: WorkflowEvent[] = [];
   const createdTasks: AgentTask[] = [];
+  const routingBlockers: string[] = [];
   for (const event of seedEvents) {
     createdEvents.push(await eventStore.append(event));
     for (const task of tasksForWorkflowEvent(workflow, event)) {
       const result = await persistRoutedTask(taskStore, task);
       createdTasks.push(result.task);
+      // A rejected route (NOT_WIRED / blocked agent) means the run cannot execute
+      // that work — surface it as a blocker, never let it pass silently.
+      if (!result.accepted) routingBlockers.push(`${task.id}: ${result.reason}`);
     }
   }
   const plan = planWorkflowRun(workflow.id, createdEvents, createdTasks);
-  const blockers = plan?.blockedReason ? [plan.blockedReason] : [];
+  const blockers = [...(plan?.blockedReason ? [plan.blockedReason] : []), ...routingBlockers];
   const ownerApprovalRequired = workflow.ownerApprovalRules.length > 0 || createdTasks.some((task) => task.ownerApprovalRequired);
   const claudeReviewRequired = workflow.claudeReviewRules.length > 0 || createdTasks.some((task) => task.claudeReviewRequired);
+  const status: WorkflowRuntimeStatus =
+    blockers.length > 0 ? "BLOCKED" : ownerApprovalRequired ? "NEEDS_OWNER_APPROVAL" : claudeReviewRequired ? "NEEDS_CLAUDE_REVIEW" : "COMPLETED";
   return {
     workflowRunId: `${workflow.id}:${now}`,
     workflowId: workflow.id,
     owningAgent: workflow.owningAgent,
     participatingAgents: workflow.participatingAgents,
     startedAt: now,
-    completedAt: blockers.length > 0 ? null : now,
-    status: blockers.length > 0 ? "BLOCKED" : ownerApprovalRequired ? "NEEDS_OWNER_APPROVAL" : claudeReviewRequired ? "NEEDS_CLAUDE_REVIEW" : "COMPLETED",
+    // Only a truly COMPLETED run gets a completion timestamp — pending approval/
+    // review and blocked runs stay open (completedAt null).
+    completedAt: status === "COMPLETED" ? now : null,
+    status,
     stagesRun: blockers.length > 0 ? workflow.stages.slice(0, 1) : workflow.stages,
     eventsCreated: createdEvents,
     tasksCreated: createdTasks,
