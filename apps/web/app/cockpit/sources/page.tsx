@@ -18,6 +18,16 @@ import {
   type SourceRightsEntry,
   type SourceRightsStatus,
 } from "@/lib/scraping/source-rights-registry";
+import { getResourceCockpitFeed } from "@/lib/resource-intelligence";
+import {
+  getCandidatesByPriority,
+  getCandidateSummary,
+  type CandidatePriority,
+} from "@/lib/scraping/sports-data-candidates";
+import {
+  deriveSourceConfidence,
+  type ConfidenceLevel,
+} from "@/lib/data-sources/source-confidence";
 
 export const dynamic = "force-dynamic";
 
@@ -103,6 +113,23 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
     ...permissionRequiredSources.map((s) => ({ source: s, action: "outreach" as const })),
     ...vendorCandidates.map((s) => ({ source: s, action: "questionnaire" as const })),
   ];
+
+  // Resource-intelligence ledger feed (safe opportunities + gated counts only).
+  const resourceFeed = getResourceCockpitFeed();
+
+  // CFB / NFL data-source candidates — all gated, grouped by priority.
+  const candidateSummary = getCandidateSummary();
+  const candidateGroups = (["high", "medium", "low", "evaluation"] as const)
+    .map((priority) => ({ priority, items: getCandidatesByPriority(priority) }))
+    .filter((g) => g.items.length > 0);
+
+  // StatKing source-confidence read — DERIVED from each card's wiring + cost.
+  const confidenceCards = DATA_SOURCE_STACK.map((card) => ({
+    card,
+    confidence:
+      card.confidence ??
+      deriveSourceConfidence({ cost: card.cost, status: card.status }),
+  }));
 
   return (
     <div className="flex flex-col gap-6">
@@ -390,7 +417,144 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           </div>
         </div>
       </section>
+
+      <section data-testid="resource-intelligence-ledger" className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-950">
+        <div className="border-b border-gray-800 px-5 py-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-cyan-300">
+            Resource Intelligence
+          </p>
+          <h2 className="mt-1 text-sm font-semibold text-white">Rights-gated resource ledger</h2>
+          <p className="mt-1 text-xs leading-5 text-gray-400">
+            {formatNumber(resourceFeed.totals.uniqueResources)} resources normalized from intake.
+            Only approved-direct + prototype are actionable; owner-review and quarantine are shown
+            as counts and never promoted into claims, StatKing evidence, Airwave, or automation.
+          </p>
+        </div>
+        <div className="grid gap-3 p-5 sm:grid-cols-3 lg:grid-cols-6">
+          <Metric label="Safe now" value={formatNumber(resourceFeed.safeOpportunities)} detail="approved-direct + prototype" />
+          <Metric label="Approved direct" value={formatNumber(resourceFeed.counts.approved_direct)} detail="vetted high-value" />
+          <Metric label="Reference" value={formatNumber(resourceFeed.counts.approved_internal_reference)} detail="safe, reference only" />
+          <Metric label="Owner review" value={formatNumber(resourceFeed.ownerReview)} detail="gated — needs decision" />
+          <Metric label="Quarantine" value={formatNumber(resourceFeed.quarantine)} detail="hard-blocked, terminal" />
+          <Metric label="Noise" value={formatNumber(resourceFeed.counts.rejected_noise)} detail="not real resources" />
+        </div>
+        {resourceFeed.topSafe.length > 0 && (
+          <div className="border-t border-gray-800 px-5 py-4">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Top safe opportunities</h3>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {resourceFeed.topSafe.slice(0, 15).map((item) => (
+                <span
+                  key={item.id}
+                  className="rounded-lg border border-emerald-500/30 bg-emerald-950/30 px-2.5 py-1 text-xs text-emerald-200"
+                  title={item.note}
+                >
+                  {item.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section data-testid="cfb-nfl-candidates" className="overflow-hidden rounded-2xl border border-yellow-900/40 bg-yellow-950/10">
+        <div className="border-b border-yellow-900/40 px-5 py-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+            Owner review
+          </p>
+          <h2 className="mt-1 text-sm font-semibold text-white">CFB / NFL data-source candidates</h2>
+          <p className="mt-1 text-xs leading-5 text-gray-400">
+            {candidateSummary.total} candidates ({candidateSummary.alreadyRegistered} already in the
+            rights registry). All gated — none approved for automation, claims, or production until
+            terms + endpoints are verified. API keys live in env vars only; rotate any key shared in
+            plaintext. See <code className="text-gray-300">docs/legal/CFB_NFL_DATA_SOURCE_CANDIDATES.md</code>.
+          </p>
+        </div>
+        <div className="space-y-4 p-5">
+          {candidateGroups.map((group) => (
+            <div key={group.priority}>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+                {priorityLabel(group.priority)}
+              </h3>
+              <div className="mt-2 grid gap-3 md:grid-cols-2">
+                {group.items.map((c) => (
+                  <div key={c.id} className="rounded-lg border border-gray-800 bg-gray-950/70 p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-semibold text-gray-100">{c.name}</p>
+                      <span className="rounded border border-yellow-500/30 bg-yellow-950/30 px-1.5 py-0.5 text-[10px] uppercase tracking-widest text-yellow-200">
+                        gated
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs leading-5 text-gray-400">{c.freeTier}</p>
+                    <p className="mt-2 text-[11px] text-gray-500">
+                      {c.oddsOnly ? "Odds-only" : "Stats + odds"} ·{" "}
+                      {c.keyRequired ? `key → ${c.apiKeyEnvVar}` : "no key"}
+                      {c.inMainRegistry ? " · in registry" : ""}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section data-testid="source-confidence" className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-950">
+        <div className="border-b border-gray-800 px-5 py-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-300">
+            StatKing read
+          </p>
+          <h2 className="mt-1 text-sm font-semibold text-white">Source confidence</h2>
+          <p className="mt-1 text-xs leading-5 text-gray-400">
+            Derived from each card&apos;s rights + wiring facts — never a hand-assigned number.
+            no-fake-live-data holds for every source: unproven sources lower confidence, they are
+            never dressed up as fresh.
+          </p>
+        </div>
+        <div className="divide-y divide-gray-900">
+          {confidenceCards.map(({ card, confidence }) => (
+            <div key={card.key} className="flex flex-wrap items-center gap-3 px-5 py-3">
+              <p className="min-w-[10rem] flex-1 text-sm text-gray-200">{card.publicLabel}</p>
+              <ConfidenceChip label="src" level={confidence.sourceConfidence} />
+              <ConfidenceChip label="fresh" level={confidence.freshnessConfidence} />
+              <ConfidenceChip label="license" level={confidence.licenseConfidence} />
+              <ConfidenceChip label="rights" level={confidence.rightsConfidence} />
+              <ConfidenceChip label="uncertainty" level={confidence.uncertainty} />
+              {confidence.ownerApprovalRequired && (
+                <span className="rounded border border-yellow-500/30 bg-yellow-950/30 px-1.5 py-0.5 text-[10px] uppercase tracking-widest text-yellow-200">
+                  owner approval
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
+  );
+}
+
+const PRIORITY_LABELS: Record<CandidatePriority, string> = {
+  high: "High priority",
+  medium: "Medium priority",
+  low: "Low priority",
+  evaluation: "Evaluation only",
+};
+
+function priorityLabel(priority: CandidatePriority): string {
+  return PRIORITY_LABELS[priority];
+}
+
+const CONFIDENCE_TONE: Record<ConfidenceLevel, string> = {
+  high: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
+  medium: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
+  low: "border-red-500/30 bg-red-950/30 text-red-200",
+  unknown: "border-gray-700 bg-gray-900/70 text-gray-400",
+};
+
+function ConfidenceChip({ label, level }: { label: string; level: ConfidenceLevel }): JSX.Element {
+  return (
+    <span className={`rounded border px-1.5 py-0.5 text-[10px] uppercase tracking-widest ${CONFIDENCE_TONE[level]}`}>
+      {label}: {level}
+    </span>
   );
 }
 

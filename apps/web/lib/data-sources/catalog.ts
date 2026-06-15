@@ -1,4 +1,5 @@
 import { NFLVERSE_CATALOG } from "@sports/data-ingestion";
+import type { SourceConfidence } from "./source-confidence";
 
 export type SourceCost = "free" | "low-cost" | "paid-optional" | "owned" | "licensed";
 export type SourceStatus =
@@ -27,6 +28,13 @@ export interface DataSourceCard {
   readonly unlocks: string;
   readonly liveClaim: string;
   readonly complianceNote?: string;
+  /**
+   * Optional StatKing confidence read. Usually DERIVED at render time via
+   * `deriveSourceConfidence` (from rights + wiring facts) rather than stored, so
+   * it can't drift into fabricated certainty. Present here for cards that pin an
+   * explicit, reviewed read.
+   */
+  readonly confidence?: SourceConfidence;
 }
 
 export interface TrendBacklogItem {
