@@ -324,6 +324,50 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "the questionnaire and license land. Episode metadata (titles, dates) are facts; audio is " +
       "copyrighted expression — hence high expression risk. Contact via fantasyguru.com.",
   },
+  {
+    source_id: "collegefootballdata",
+    source_name: "CollegeFootballData.com (CFBD)",
+    source_url: "https://collegefootballdata.com",
+    terms_url: "https://collegefootballdata.com/terms",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "sports_data_api",
+    status: "vendor_candidate",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "College data via CollegeFootballData.com",
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-15",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://collegefootballdata.com/key",
+      "https://collegefootballdata.com/api-tiers",
+      "https://collegefootballdata.com/terms",
+    ],
+    unlock_condition:
+      "Obtain a free CFBD API key (https://collegefootballdata.com/key) AND confirm the Terms & " +
+      "Conditions permit our commercial use — the terms page is JS-rendered and was NOT machine-" +
+      "verifiable, so it needs a human/legal read. Free tier = 1,000 calls/mo; paid tiers ($1–$30/mo) " +
+      "raise the limit. On confirmation: flip status → approved_api, enable automation/storage/derived " +
+      "flags, and verify each endpoint's real schema live before building the adapter (no guessed columns).",
+    vendor_contact: "https://collegefootballdata.com/key",
+    notes:
+      "Intended use: the QB college→NFL scheme-transition signal (college passing/scheme FACTS only), " +
+      "feeding projection/feature work — never any proprietary ratings or outputs. CFBD is a freemium " +
+      "API (free key required, Bearer token; cfbfastR is the MIT R wrapper). Its stated philosophy is " +
+      "'free and open data,' but commercial terms are not machine-verified, so ALL flags stay false and " +
+      "ingestion is BLOCKED until a key + terms-confirmation land. No schema is guessed: the adapter is " +
+      "deferred until a key lets us verify endpoints live (the no-fake-data rule).",
+  },
 
   // ── Permission required ──────────────────────────────────────────────────────
   {
