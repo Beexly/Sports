@@ -1,6 +1,7 @@
 import { Shell, Cards, DataTable, HeroStat, StatusRibbon } from "../_components";
 import { FilterBar } from "../_client";
 import { rankPlayers, loadPlayers } from "@/lib/statking/product";
+import { glossaryEntry } from "@/lib/glossary";
 export const metadata = {
   title: "Player Database — Every Tracked NFL Player",
   description: "Browse the full StatKing player universe with usage, efficiency, role, and fantasy edge.",
@@ -49,7 +50,17 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
           ))}
         </div>
       )}
-      <p className="text-ion-1">Browse all players sorted by Galaxy Player Index and confidence. Click any row to view the full profile.</p>
+      <p className="text-ion-1">Sorted by Galaxy Index. Click any row for the full profile.</p>
+      <dl className="grid gap-3 text-sm sm:grid-cols-2">
+        <div className="border border-mineral bg-eclipse p-3">
+          <dt className="font-semibold text-ion-white">Galaxy Index (GPI)</dt>
+          <dd className="mt-1 text-ion-2">{glossaryEntry("gpi")?.plain}</dd>
+        </div>
+        <div className="border border-mineral bg-eclipse p-3">
+          <dt className="font-semibold text-ion-white">Confidence</dt>
+          <dd className="mt-1 text-ion-2">{glossaryEntry("confidence")?.plain}</dd>
+        </div>
+      </dl>
       <DataTable
         rows={filtered.slice(0, 50).map(p => ({
           name: p.name,
