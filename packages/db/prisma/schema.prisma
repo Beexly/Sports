@@ -2143,3 +2143,64 @@ model PlayerRushProfile {
   @@index([season])
   @@map("player_rush_profiles")
 }
+
+// ============================================================
+// NEXT GEN STATS (nflverse `nextgen_stats` aggregates — CC-BY-4.0)
+// ------------------------------------------------------------
+// The published, free NGS weekly aggregates (NOT the proprietary raw tracking
+// feed): separation/cushion (receiving), time-to-throw + CPOE (passing), and
+// rush-yards-over-expected (rushing). One row per player-week-variant, keyed by
+// gsis id. This is Phase-A persistence — storage as a system of record, NOT a
+// scoring input (wiring into the score is a separate, calibration-gated step).
+// Real columns verified against the live release headers 2026-06-15.
+// ============================================================
+
+model NextGenStat {
+  id         String  @id @default(cuid())
+  gsisId     String
+  playerName String
+  position   String?
+  season     Int
+  week       Int
+  seasonType String  @default("REG")
+  team       String?
+  statType   String // "passing" | "receiving" | "rushing"
+
+  // Passing tracking signals
+  avgTimeToThrow        Float?
+  avgCompletedAirYards  Float?
+  avgIntendedAirYards   Float?
+  aggressiveness        Float?
+  avgAirYardsToSticks   Float?
+  completionPct         Float?
+  expectedCompletionPct Float?
+  cpoe                  Float? // completion_percentage_above_expectation
+  passerRating          Float?
+
+  // Receiving tracking signals
+  avgCushion               Float?
+  avgSeparation            Float?
+  pctShareIntendedAirYards Float?
+  catchPct                 Float?
+  avgYac                   Float?
+  avgExpectedYac           Float?
+  avgYacAboveExpectation   Float?
+
+  // Rushing tracking signals
+  rushEfficiency              Float?
+  pctAttemptsGte8Defenders    Float?
+  avgTimeToLos                Float?
+  expectedRushYards           Float?
+  rushYardsOverExpected       Float?
+  rushYardsOverExpectedPerAtt Float?
+  rushPctOverExpected         Float?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([gsisId, season, week, seasonType, statType])
+  @@index([season, week])
+  @@index([statType, season])
+  @@map("next_gen_stats")
+}
