@@ -38,11 +38,11 @@ export default async function BriefStub() {
     .catch(() => 0);
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col bg-gray-950">
+    <div className="relative isolate flex min-h-screen flex-col bg-obsidian">
       <GeneratedPlate assetId="brief-horizon" className="-z-10 opacity-25" />
       <main className="mx-auto max-w-3xl px-4 py-12">
         <h1 className="text-2xl font-bold text-white">Daily brief</h1>
-        <p className="mt-2 text-sm text-gray-400">
+        <p className="mt-2 text-sm text-ion-2">
           The daily brief composer is being rebuilt. Verified picks will
           appear here after launch-night verification is complete.
         </p>
@@ -50,12 +50,12 @@ export default async function BriefStub() {
         {todayPickCount > 0 && (
           <div
             data-testid="brief-pick-count"
-            className="mt-4 rounded-xl border border-gray-800 bg-gray-900/40 p-4"
+            className="mt-4 rounded-xl border border-titanium bg-carbon/40 p-4"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <p className="text-xs font-semibold uppercase tracking-widest text-ion-3">
               Today's slate
             </p>
-            <p className="mt-1 text-sm text-gray-300">
+            <p className="mt-1 text-sm text-ion-1">
               {todayPickCount} pick{todayPickCount === 1 ? "" : "s"}{" "}
               published today
               {demoActive && (
@@ -67,7 +67,7 @@ export default async function BriefStub() {
                 </span>
               )}
             </p>
-            <p className="mt-1 text-[11px] text-gray-500">
+            <p className="mt-1 text-[11px] text-ion-3">
               See the full slate at{" "}
               <Link href="/picks" className="text-brand-400 hover:text-brand-300">
                 /picks
@@ -78,15 +78,15 @@ export default async function BriefStub() {
         )}
 
         {brief.readiness.performance ? (
-          <p data-testid="brief-performance-hidden" className="mt-3 text-xs text-gray-500">
+          <p data-testid="brief-performance-hidden" className="mt-3 text-xs text-ion-3">
             Performance summary will render here once the composer is restored.
           </p>
         ) : (
-          <p data-testid="brief-performance-gated" className="mt-3 text-xs text-gray-500">
+          <p data-testid="brief-performance-gated" className="mt-3 text-xs text-ion-3">
             Performance data is gated until canonical sample is sufficient.
           </p>
         )}
-        <p className="mt-6 rounded-lg border border-gray-800 bg-gray-900/40 px-4 py-3 text-xs text-gray-400">
+        <p className="mt-6 rounded-lg border border-titanium bg-carbon/40 px-4 py-3 text-xs text-ion-2">
           {BRIEF_RESPONSIBLE_GAMING_NOTE} For problem-gambling help in the US,
           call <strong>1-800-GAMBLER</strong>.
         </p>

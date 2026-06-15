@@ -33,6 +33,6 @@ describe("picks mobile ergonomics", () => {
     expect(picksPageSrc).toContain("inline-flex min-h-11 items-center rounded-full");
     expect(picksPageSrc).toContain("inline-flex min-h-11 shrink-0 items-center justify-center");
     expect(picksPageSrc).toContain("className=\"min-h-11 rounded-lg border");
-    expect(picksPageSrc).toContain("className=\"min-h-11 rounded-lg bg-gray-800");
+    expect(picksPageSrc).toContain("className=\"min-h-11 rounded-lg bg-titanium");
   });
 });

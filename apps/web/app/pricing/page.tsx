@@ -246,14 +246,14 @@ export default function PricingPage() {
               {VALUE_TIERS.filter((t) => t.status === "live").map((t) => (
                 <div
                   key={t.id}
-                  className="flex h-full flex-col rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+                  className="flex h-full flex-col rounded-2xl border border-titanium bg-carbon/40 p-5"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-400">
                       {t.name}
                     </p>
                     {t.status === "waitlist" && (
-                      <span className="rounded-full border border-gray-700 px-2 py-0.5 text-[10px] font-medium text-ink-300">
+                      <span className="rounded-full border border-titanium px-2 py-0.5 text-[10px] font-medium text-ink-300">
                         Waitlist
                       </span>
                     )}
@@ -261,7 +261,7 @@ export default function PricingPage() {
                   <p className="mt-2 text-base font-semibold text-white">{t.promise}</p>
                   <p className="mt-1 text-xs text-ink-400">{t.forWho}</p>
                   {t.whyNextTier && (
-                    <p className="mt-3 border-t border-gray-800 pt-3 text-xs leading-relaxed text-ink-300">
+                    <p className="mt-3 border-t border-titanium pt-3 text-xs leading-relaxed text-ink-300">
                       <span className="text-ink-500">Next: </span>
                       {t.whyNextTier}
                     </p>
@@ -322,11 +322,11 @@ export default function PricingPage() {
           {/* Feature comparison table */}
           <div className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Side by side</h2>
-            <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-800">
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-titanium">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-800">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  <tr className="border-b border-titanium">
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ion-2">
                       Feature
                     </th>
                     {PLANS.map((plan) => (
@@ -338,12 +338,12 @@ export default function PricingPage() {
                             ? "text-brand-400"
                             : plan.id === "ELITE"
                               ? "text-ultraviolet-glow"
-                              : "text-gray-300",
+                              : "text-ion-1",
                         ].join(" ")}
                       >
                         {plan.name}
                         {plan.monthly !== null && (
-                          <span className="ml-1 text-xs font-normal text-gray-400">
+                          <span className="ml-1 text-xs font-normal text-ion-2">
                             ${plan.monthly}/mo
                           </span>
                         )}
@@ -356,11 +356,11 @@ export default function PricingPage() {
                     <tr
                       key={feature}
                       className={[
-                        "border-b border-gray-800/60",
-                        i % 2 === 0 ? "bg-gray-900/20" : "",
+                        "border-b border-titanium/60",
+                        i % 2 === 0 ? "bg-carbon/20" : "",
                       ].join(" ")}
                     >
-                      <td className="px-4 py-3 text-gray-400">{feature}</td>
+                      <td className="px-4 py-3 text-ion-2">{feature}</td>
                       {(["FREE", "PRO", "ELITE"] as const).map((planId) => {
                         const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
                         return (
@@ -381,13 +381,13 @@ export default function PricingPage() {
             <h2 className="text-center text-2xl font-bold text-white">Built to protect you from hype</h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">{EMOTIONAL_VALUE}</p>
             <div className="mx-auto mt-8 grid max-w-4xl gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
+              <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">
                 <h3 className="text-sm font-semibold text-white">How confidence works</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-300">
                   {getFeature("confidence")?.customerExplanation}
                 </p>
               </div>
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-6">
+              <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">
                 <h3 className="text-sm font-semibold text-white">What No-Bet means</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-300">
                   {getFeature("no-bet-reasoning")?.customerExplanation}
@@ -399,29 +399,29 @@ export default function PricingPage() {
           {/* FAQ */}
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Frequently asked</h2>
-            <div className="mx-auto mt-8 max-w-3xl divide-y divide-gray-800/60 rounded-2xl border border-gray-800 bg-gray-900/40">
+            <div className="mx-auto mt-8 max-w-3xl divide-y divide-titanium/60 rounded-2xl border border-titanium bg-carbon/40">
               {FAQ.map((item) => (
                 <details
                   key={item.q}
                   className="group px-5 py-4 [&_summary::-webkit-details-marker]:hidden"
                 >
-                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-gray-100">
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-ion-white">
                     <span>{item.q}</span>
                     <span
                       aria-hidden="true"
-                      className="text-gray-400 transition-transform group-open:rotate-45"
+                      className="text-ion-2 transition-transform group-open:rotate-45"
                     >
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-400">{item.a}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-ion-2">{item.a}</p>
                 </details>
               ))}
             </div>
           </section>
 
           {/* Refund note */}
-          <p className="mt-12 text-center text-xs text-gray-400">
+          <p className="mt-12 text-center text-xs text-ion-2">
             No free trial. Every paid plan has a 3-day money-back window. Cancel any time
             from your dashboard. Prices shown are founding-member rates.
           </p>
@@ -459,7 +459,7 @@ function TierDoorColumn({
           <li key={d.href + d.label}>
             <Link
               href={d.href}
-              className="group flex items-center justify-between rounded-lg border border-transparent px-3 py-2 text-sm text-ink-200 transition-colors hover:border-gray-800 hover:bg-gray-900/50 hover:text-white"
+              className="group flex items-center justify-between rounded-lg border border-transparent px-3 py-2 text-sm text-ink-200 transition-colors hover:border-titanium hover:bg-carbon/50 hover:text-white"
             >
               {d.label}
               <span aria-hidden className="text-ink-500 transition-transform group-hover:translate-x-0.5">→</span>
@@ -487,7 +487,7 @@ function ComparisonCell({ value }: { value: string | boolean }) {
       </svg>
     ) : (
       <svg
-        className="mx-auto h-5 w-5 text-gray-700"
+        className="mx-auto h-5 w-5 text-ion-3"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={2}
@@ -499,5 +499,5 @@ function ComparisonCell({ value }: { value: string | boolean }) {
       </svg>
     );
   }
-  return <span className="text-gray-300">{value}</span>;
+  return <span className="text-ion-1">{value}</span>;
 }
