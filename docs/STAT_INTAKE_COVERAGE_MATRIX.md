@@ -22,8 +22,8 @@ historical-game/team-efficiency are persisted.
 |---|---|---|---|
 | `pbp` | ✅ | CONSUMED | EPA/CPOE/WP/air-yards/success — the foundation |
 | `player_stats` | ✅ | PERSISTED | weekly player stats → `PlayerGameStat` |
-| `nextgen_stats` | ✅ | CONSUMED | separation/cushion/time-to-throw (pass/rush/rec variants) |
-| `pfr_advstats` | ✅ | CONSUMED | pressures/coverage/blocks (pass/rush/rec/def variants) |
+| `nextgen_stats` | ✅ | **PERSISTED** | → `NextGenStat` (separation/cushion/CPOE/rush-yds-over-expected) — **persisted 2026-06-15** |
+| `pfr_advstats` | ✅ | **PERSISTED** | → `PfrAdvStat` (QB pressure + yards before/after contact) — **persisted 2026-06-15** |
 | `snap_counts` | ✅ | PERSISTED | snap share → `SnapCount` |
 | `injuries` | ✅ | PERSISTED | report/practice status → `Injury` |
 | `depth_charts` | ✅ | PERSISTED | role/starter → `DepthChartEntry` |
@@ -75,5 +75,8 @@ each into CONSUMED/PERSISTED signal is the next (founder-gated) layer.
    *scheme/personnel* dataset; unlocks formation/box/coverage context.
 3. **Classify college football data** in the source-rights registry → QB college→NFL scheme.
 4. **Phase-A persistence** for the analytical pillars (the bigger structural unlock).
+   **In progress:** NGS (`NextGenStat`) + PFR advanced (`PfrAdvStat`) now persisted as
+   systems of record (storage only, not yet scoring inputs). Remaining pillars: `stats_team`
+   (team aggregates), per-player EPA allocation from PBP, then the universal signal ledger.
 5. Add an explicit `rights` field to the catalog type so CC-BY vs CC-BY-SA is enforced in code,
    not just comments.
