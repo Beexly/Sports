@@ -30,6 +30,20 @@ const BUCKETS = [
   { label: "90–100", min: 90, max: 100 },
 ] as const;
 
+// Market closing-line calibration — the bar our pick model must beat. A
+// point-in-time snapshot computed read-only via scripts/run-historical-
+// calibration.mjs (de-vig proportional) over completed NFL seasons; the season
+// window makes it stable (those games are settled). Re-run to refresh. This is
+// NOT our model's calibration — our model has no settled picks to score yet.
+const MARKET_BASELINE = {
+  brier: 0.2111,
+  ece: 0.018,
+  games: 5281,
+  homeWinRate: 55.8,
+  window: "NFL · 1999–2025 seasons",
+  computedOn: "2026-06-15",
+} as const;
+
 export default async function CockpitCalibrationPage() {
   const gates = getReadinessGates();
 
@@ -80,6 +94,28 @@ export default async function CockpitCalibrationPage() {
       >
         Internal calibration only. No auto-publish. No auto-send. No automated betting.
       </p>
+
+      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+          Market baseline — the bar to beat
+        </h2>
+        <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
+          The betting market&apos;s closing line, scored against real outcomes. It&apos;s
+          well-calibrated, so this is the bar our own model has to beat — it is{" "}
+          <strong className="text-ion-1">not</strong> our model&apos;s calibration (that needs
+          settled picks, which don&apos;t exist yet).
+        </p>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <BaselineStat label="Brier" value={MARKET_BASELINE.brier.toFixed(4)} sub="lower better · 0.25 = coin flip" />
+          <BaselineStat label="Calib. error" value={MARKET_BASELINE.ece.toFixed(4)} sub="0 = perfect" />
+          <BaselineStat label="Games scored" value={MARKET_BASELINE.games.toLocaleString()} sub="settled · both closes" />
+          <BaselineStat label="Home-win rate" value={`${MARKET_BASELINE.homeWinRate}%`} sub="base rate" />
+        </div>
+        <p className="mt-3 text-[10px] text-ion-3">
+          {MARKET_BASELINE.window} · de-vig proportional · computed {MARKET_BASELINE.computedOn} via{" "}
+          <span className="font-mono">scripts/run-historical-calibration.mjs</span> (read-only) — re-run to refresh.
+        </p>
+      </section>
 
       <section data-testid="calibration-history" className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
@@ -176,6 +212,16 @@ export default async function CockpitCalibrationPage() {
       <Link href="/cockpit" className="w-fit rounded-lg border border-titanium/40 px-3 py-2 text-xs text-ion-1 hover:bg-carbon/60">
         ← Back to Jarvis
       </Link>
+    </div>
+  );
+}
+
+function BaselineStat({ label, value, sub }: { label: string; value: string; sub: string }) {
+  return (
+    <div className="rounded-xl border border-titanium/40 bg-obsidian/40 p-3">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
+      <p className="mt-1 font-mono text-xl font-semibold tabular-nums text-ion-white">{value}</p>
+      <p className="mt-0.5 text-[10px] text-ion-3">{sub}</p>
     </div>
   );
 }
