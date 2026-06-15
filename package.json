@@ -17,6 +17,7 @@
     "db:disposable": "bash scripts/dev/disposable-postgres.sh",
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
+    "free:doctor": "npx tsx scripts/free-ingest-smoke.mjs",
     "db:generate": "npm run db:generate --workspace=packages/db",
     "db:push": "npm run db:push --workspace=packages/db",
     "db:migrate": "npm run db:migrate --workspace=packages/db",

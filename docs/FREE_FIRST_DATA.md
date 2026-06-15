@@ -52,11 +52,15 @@ without compromising the no-stale/no-unverified-data rules.
 ## Verify $0 operation
 
 ```bash
-npx tsx scripts/free-ingest-smoke.mjs
+npm run free:doctor        # or: npx tsx scripts/free-ingest-smoke.mjs
 ```
 
-Hits every free source live (no key, no spend) and proves cross-source NCAA confirmation —
-slates aligned dynamically so it works in any season. Exits non-zero on any failure.
+Hits every free source live (no key, no spend) and proves cross-source NCAA confirmation
+(football + basketball) — slates aligned dynamically so it works in any season. Exits
+non-zero on any failure.
+
+A resilient NCAA scores feed (ESPN primary → henrygd fallback, both free) is available via
+`fetchNcaaScoresResilient(sport)` in `ncaa-scores.ts`.
 
 ## Self-hosting henrygd (no rate cap)
 
