@@ -18,6 +18,11 @@ import {
   espnRankingsUrl,
   type EspnRankings,
 } from "@/lib/data-sources/free-adapters/espn-rankings";
+import {
+  parseEspnStandings,
+  espnStandingsUrl,
+  type EspnStandings,
+} from "@/lib/data-sources/free-adapters/espn-standings";
 
 const FIX = resolve(__dirname, "fixtures");
 const readFix = (f: string) => JSON.parse(readFileSync(resolve(FIX, f), "utf8"));
@@ -106,5 +111,28 @@ describe("ESPN rankings adapter (free, facts-only)", () => {
   it("skips empty polls defensively", () => {
     expect(parseEspnRankings({ rankings: [{ name: "x", ranks: [] }] }, "ncaaf")).toEqual([]);
     expect(parseEspnRankings({}, "ncaaf")).toEqual([]);
+  });
+});
+
+describe("ESPN standings adapter (free, facts-only)", () => {
+  const json = readFix("espn-nfl-standings.json") as EspnStandings;
+
+  it("parses team records, point diff, and streak with attribution", () => {
+    const standings = parseEspnStandings(json, "nfl");
+    expect(standings.teams.length).toBeGreaterThan(0);
+    const t = standings.teams[0]!;
+    expect(t.team).toBeTruthy();
+    expect(t.group).toBeTruthy();
+    expect(t.wins === null || typeof t.wins === "number").toBe(true);
+    expect(t.streak === null || typeof t.streak === "string").toBe(true);
+    expect(standings.attribution).toBe("Scores data via ESPN");
+  });
+
+  it("builds the verified standings URL (apis/v2)", () => {
+    expect(espnStandingsUrl("nfl")).toContain("/apis/v2/sports/football/nfl/standings");
+  });
+
+  it("is defensive against missing structure", () => {
+    expect(parseEspnStandings({}, "nfl").teams).toEqual([]);
   });
 });

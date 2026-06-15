@@ -12,6 +12,8 @@ import {
   fetchScoresFreeFirst,
 } from "../apps/web/lib/data-sources/free-first-ingest.ts";
 import { fetchWeatherFreeFirst } from "../apps/web/lib/data-sources/free-first-ingest.ts";
+import { fetchEspnRankings } from "../apps/web/lib/data-sources/free-adapters/espn-rankings.ts";
+import { fetchEspnStandings } from "../apps/web/lib/data-sources/free-adapters/espn-standings.ts";
 
 const SPORTS = ["nfl", "ncaaf", "nba", "ncaab", "mlb", "nhl", "mls"];
 
@@ -28,6 +30,25 @@ for (const sport of SPORTS) {
     console.error(`scores  ${sport.padEnd(6)} FAILED: ${err instanceof Error ? err.message : err}`);
     fail += 1;
   }
+}
+
+try {
+  const polls = await fetchEspnRankings("ncaaf", { timeoutMs: 15000 });
+  const ap = polls.find((p) => p.pollType === "ap") ?? polls[0];
+  console.log(`rankings ncaaf via espn-public-api → ${polls.length} polls (${ap?.pollName}: #1 ${ap?.teams[0]?.team ?? "?"})`);
+  ok += 1;
+} catch (err) {
+  console.error(`rankings FAILED: ${err instanceof Error ? err.message : err}`);
+  fail += 1;
+}
+
+try {
+  const s = await fetchEspnStandings("nfl", { timeoutMs: 15000 });
+  console.log(`standings nfl  via espn-public-api → ${s.teams.length} teams (top ${s.teams[0]?.team ?? "?"} ${s.teams[0]?.wins ?? "?"}-${s.teams[0]?.losses ?? "?"})`);
+  ok += 1;
+} catch (err) {
+  console.error(`standings FAILED: ${err instanceof Error ? err.message : err}`);
+  fail += 1;
 }
 
 try {
