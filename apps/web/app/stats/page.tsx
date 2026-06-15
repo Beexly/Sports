@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Shell, HeroStat, BarChart, ScoreRing, InsightCard, SectionHeader, StatusRibbon } from "./_components";
 import { loadSummary, loadActiveMetricManifest, rankPlayers } from "@/lib/statking/product";
+import { glossaryEntry } from "@/lib/glossary";
 
 export const metadata = {
   title: "Galaxy StatKing — NFL Player & Team Intelligence",
@@ -38,6 +39,7 @@ export default function Page() {
       />
 
       <SectionHeader eyebrow="Top players by" title="Galaxy Player Index" action={{ label: "Full rankings →", href: "/stats/players" }} />
+      <p className="-mt-3 mb-4 max-w-2xl text-sm text-ion-2">{glossaryEntry("gpi")?.plain}</p>
       <BarChart items={top5.map(p => ({ label: p.name, value: p.galaxy_player_index, max: maxGpi }))} />
 
       <SectionHeader title="Intelligence surfaces" />
