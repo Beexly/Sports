@@ -25,7 +25,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
+import { SUPPORTED_SPORTS, getInSeasonSports } from "@sports/data-ingestion";
 import { processSport } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
 
@@ -56,9 +56,12 @@ export async function GET(request: Request) {
   const startedAt = Date.now();
   const gates = getReadinessGates();
   const requestedSport = new URL(request.url).searchParams.get("sport");
+  // Default to in-season sports only — conserves The Odds API free-tier credits
+  // (500/mo across all sports). Override with ODDS_REFRESH_ALL_SPORTS=true, or
+  // request a specific sport explicitly.
   const sportsToProcess = requestedSport
     ? SUPPORTED_SPORTS.filter((sport) => sport.key === requestedSport)
-    : SUPPORTED_SPORTS;
+    : getInSeasonSports();
 
   if (requestedSport && sportsToProcess.length === 0) {
     return NextResponse.json(

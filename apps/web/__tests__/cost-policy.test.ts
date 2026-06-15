@@ -3,6 +3,7 @@ import {
   COST_TIER_RANK,
   selectSourcesForNeed,
   cheapestSourceForNeed,
+  cheapestClearedSourceForNeed,
   hasFreeCoverage,
   SOURCE_COST_PROFILES,
 } from "@/lib/data-sources/cost-policy";
@@ -25,8 +26,16 @@ describe("cost-policy: free-first ordering", () => {
   });
 
   it("cheapestSourceForNeed returns the lowest marginal-cost option", () => {
-    expect(cheapestSourceForNeed("cfb_scores")?.id).toBe("henrygd-ncaa");
-    expect(cheapestSourceForNeed("cfb_odds")?.id).toBe("the-odds-api-ncaaf"); // licensed_flat beats trial/paid
+    expect(cheapestSourceForNeed("cfb_scores")?.id).toBe("henrygd-ncaa"); // free_unlimited
+    // free odds sources (gated) outrank the licensed one on pure cost
+    expect(cheapestSourceForNeed("cfb_odds")?.tier).toBe("free_quota");
+  });
+
+  it("cheapestClearedSourceForNeed returns the cheapest source that is already usable", () => {
+    // ESPN public API is cleared (facts) and free → usable now for scores.
+    expect(cheapestClearedSourceForNeed("cfb_scores")?.id).toBe("espn-public-api");
+    // Free odds sources are gated; the licensed Odds API is the cheapest cleared one.
+    expect(cheapestClearedSourceForNeed("cfb_odds")?.id).toBe("the-odds-api-ncaaf");
   });
 
   it("free coverage exists for the core CFB facts needs", () => {

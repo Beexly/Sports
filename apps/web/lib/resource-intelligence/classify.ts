@@ -154,20 +154,26 @@ function categorize(haystack: string): ResourceCategory {
   return CATEGORY_RULES.find((c) => c.re.test(haystack))?.category ?? "uncategorized";
 }
 
-// High-value functional categories → worth a prototype trial.
-const PROTOTYPE_CATEGORIES: ReadonlySet<ResourceCategory> = new Set<ResourceCategory>([
+/**
+ * Safe-to-adopt operational categories. These are tools WE run in our own
+ * environment (test, security, analytics, infra, data-ops, API, design, content,
+ * AI-cost, dev) — they carry no third-party-data rights risk, so they are
+ * approved-direct. Specific security/license vetting still happens at adoption;
+ * "approved-direct" means cleared of the RIGHTS gate, not that every tool is
+ * individually audited. Data sources / scraping never reach here — they are
+ * routed to owner_review first.
+ */
+const SAFE_ADOPT_CATEGORIES: ReadonlySet<ResourceCategory> = new Set<ResourceCategory>([
   "testing_qa",
   "security",
   "analytics",
   "ai_ml_cost",
   "api_tooling",
   "data_ops",
-]);
-
-const ROADMAP_CATEGORIES: ReadonlySet<ResourceCategory> = new Set<ResourceCategory>([
   "infrastructure",
   "design_ux",
   "content_intel",
+  "dev_tool",
 ]);
 
 // ─── Noise detection at the resource level ───────────────────────────────────────
@@ -235,13 +241,18 @@ export function classifyEntry(entry: RawResourceEntry): Classification {
     };
   }
 
-  // 5. Positive buckets by functional category.
-  if (PROTOTYPE_CATEGORIES.has(category)) {
-    return { disposition: "prototype", riskTier: "low", category, gateRequired: false, reasons: [`high-value category (${category}) — prototype candidate`] };
+  // 5. Safe operational tooling (we run it; no third-party-data rights risk) → approved-direct.
+  if (SAFE_ADOPT_CATEGORIES.has(category)) {
+    return {
+      disposition: "approved_direct",
+      riskTier: "low",
+      category,
+      gateRequired: false,
+      reasons: [`safe operational category (${category}) — cleared of rights gate; vet specifics at adoption`],
+    };
   }
-  if (ROADMAP_CATEGORIES.has(category)) {
-    return { disposition: "roadmap", riskTier: "low", category, gateRequired: false, reasons: [`relevant category (${category}) — roadmapped`] };
-  }
+
+  // 6. Remaining safe but unrecognized / not-yet-relevant (system tweaks, uncategorized) → reference.
   return { disposition: "approved_internal_reference", riskTier: "none", category, gateRequired: false, reasons: ["safe — reference only"] };
 }
 

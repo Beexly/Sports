@@ -40,6 +40,54 @@ export const SUPPORTED_SPORTS = [
 export type SupportedSportKey =
   (typeof SUPPORTED_SPORTS)[number]["key"];
 
+// ── Season windows (cost control) ───────────────────────────────────────────────
+// The Odds API free tier is 500 credits/month across ALL sports. Refreshing
+// out-of-season sports burns credits for empty slates. Each window is an inclusive
+// [startMonth, endMonth] (1–12) that may wrap the year end (e.g. NFL Sep→Feb).
+// Approximate US-league calendars — intentionally generous at the edges so we never
+// miss a real game; tighten later with a schedule-driven check if needed.
+
+type SeasonWindow = { readonly startMonth: number; readonly endMonth: number };
+
+const SEASON_WINDOWS: Record<SupportedSportKey, SeasonWindow> = {
+  americanfootball_nfl: { startMonth: 9, endMonth: 2 },
+  americanfootball_ncaaf: { startMonth: 8, endMonth: 1 },
+  basketball_nba: { startMonth: 10, endMonth: 6 },
+  basketball_ncaab: { startMonth: 11, endMonth: 4 },
+  baseball_mlb: { startMonth: 3, endMonth: 10 },
+  icehockey_nhl: { startMonth: 10, endMonth: 6 },
+  soccer_usa_mls: { startMonth: 2, endMonth: 12 },
+};
+
+function monthInWindow(month: number, w: SeasonWindow): boolean {
+  return w.startMonth <= w.endMonth
+    ? month >= w.startMonth && month <= w.endMonth
+    : month >= w.startMonth || month <= w.endMonth; // wraps year-end
+}
+
+/** True if the sport is plausibly in season on `date` (UTC month). */
+export function isSportInSeason(
+  key: SupportedSportKey,
+  date: Date = new Date(),
+): boolean {
+  const w = SEASON_WINDOWS[key];
+  if (!w) return true;
+  return monthInWindow(date.getUTCMonth() + 1, w);
+}
+
+/**
+ * Sports to refresh right now. Defaults to in-season only (cost control).
+ * Set `ODDS_REFRESH_ALL_SPORTS=true` to force all sports (e.g. a backfill).
+ */
+export function getInSeasonSports(
+  date: Date = new Date(),
+): typeof SUPPORTED_SPORTS[number][] {
+  if (process.env["ODDS_REFRESH_ALL_SPORTS"] === "true") {
+    return [...SUPPORTED_SPORTS];
+  }
+  return SUPPORTED_SPORTS.filter((s) => isSportInSeason(s.key, date));
+}
+
 // Markets to fetch
 export const MARKETS = ["h2h", "spreads", "totals"] as const;
 export type Market = (typeof MARKETS)[number];

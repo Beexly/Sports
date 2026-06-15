@@ -24,7 +24,7 @@
  *             future calibration reads snapshots joined to settled outcomes.
  */
 
-import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
+import { SUPPORTED_SPORTS, getInSeasonSports } from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { processSport, settleSport } from "@sports/ingestion-pipeline";
 
@@ -48,7 +48,8 @@ async function runRefreshCycle(): Promise<void> {
     );
   }
 
-  for (const sport of SUPPORTED_SPORTS) {
+  // In-season sports only (cost control). Override: ODDS_REFRESH_ALL_SPORTS=true.
+  for (const sport of getInSeasonSports()) {
     await processSport(sport, apiKey, gates, "[data-refresh]");
     // Brief pause between sports to avoid saturating the API
     await new Promise((r) => setTimeout(r, 1000));

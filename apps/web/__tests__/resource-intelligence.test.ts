@@ -84,6 +84,14 @@ describe("resource-intelligence: classifier dispositions", () => {
     expect(classifyEntry(entry({ name: "Grafana" })).disposition).toBe("approved_direct");
   });
 
+  it("approves safe operational tooling by category (not just the allowlist)", () => {
+    // A generic tool we run ourselves, no rights risk → approved-direct.
+    expect(classifyEntry(entry({ name: "SomeRandoLinter", description: "code linting test tool" })).disposition).toBe("approved_direct");
+    expect(classifyEntry(entry({ name: "AcmeVulnScanner", description: "security vulnerability scanner" })).disposition).toBe("approved_direct");
+    // …but a data source in a safe-sounding sentence is still gated to owner_review first.
+    expect(classifyEntry(entry({ name: "AcmeScoresApi", description: "nfl scores api feed" })).disposition).toBe("owner_review");
+  });
+
   it("rejects noise", () => {
     expect(classifyEntry(entry({ name: "the" })).disposition).toBe("rejected_noise");
   });
@@ -106,6 +114,8 @@ describe("resource-intelligence: full-dump ledger (verified source)", () => {
     expect(ledger.uniqueResourceCount).toBeGreaterThan(1000);
     expect(ledger.counts.quarantine).toBeGreaterThan(0);
     expect(ledger.counts.owner_review).toBeGreaterThan(0);
+    // Broadened approvals: safe operational tooling is approved at scale, not 15.
+    expect(ledger.counts.approved_direct).toBeGreaterThan(500);
   });
 
   it("INVARIANT: no gated resource leaks into implement-now", () => {

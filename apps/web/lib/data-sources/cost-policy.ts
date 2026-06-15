@@ -71,6 +71,62 @@ export const SOURCE_COST_PROFILES: readonly SourceCostProfile[] = [
     note: "Free key (1,000/mo). Highest-value free CFB stats; spend the quota on stats the free fallback lacks.",
   },
   {
+    id: "espn-public-api",
+    name: "ESPN Public API (unofficial)",
+    tier: "free_quota", // no key, rate-limited; facts only
+    covers: ["cfb_scores", "cfb_standings", "cfb_rankings", "cfb_schedules"],
+    gated: false, // already approved_public_logged_off in the rights registry (facts only)
+    note: "Already cleared for facts (approved_public_logged_off). Free, no key. Strong free CFB scores/rankings fallback; no commercial display/storage without a license.",
+  },
+  {
+    id: "highlightly",
+    name: "Highlightly NFL/NCAA",
+    tier: "free_quota", // free key, 100/day
+    covers: ["cfb_scores", "cfb_standings"],
+    gated: true,
+    note: "Free key, 100/day. Broad live-score check source.",
+  },
+  {
+    id: "api-sports",
+    name: "API-SPORTS NFL & NCAA",
+    tier: "free_quota", // free key, 100/day
+    covers: ["cfb_scores", "cfb_stats", "cfb_standings"],
+    gated: true,
+    note: "Free key, 100/day. Validate CFB depth before relying.",
+  },
+  {
+    id: "bigballs",
+    name: "Big Balls Sports Data",
+    tier: "free_quota", // free 1,000–2,000/day
+    covers: ["cfb_scores", "cfb_stats", "cfb_standings", "cfb_schedules", "cfb_odds"],
+    gated: true,
+    note: "Free 1,000–2,000/day. Promising free breadth; verify before production.",
+  },
+  {
+    id: "sports-game-data",
+    name: "Sports Game Data",
+    tier: "free_quota", // free 2,500 objects/mo
+    covers: ["cfb_scores", "cfb_stats", "cfb_odds"],
+    gated: true,
+    note: "Free 2,500 objects/mo, 10-min updates. Validate freshness for live use.",
+  },
+  {
+    id: "balldontlie-ncaaf",
+    name: "BALLDONTLIE NCAAF",
+    tier: "free_quota", // free key, ~5/min, limited endpoints
+    covers: ["cfb_standings"],
+    gated: true,
+    note: "Free roster/identity + standings supplement (~5/min). Not a main engine.",
+  },
+  {
+    id: "therundown",
+    name: "TheRundown",
+    tier: "free_quota", // free 20,000 points/day
+    covers: ["cfb_odds"],
+    gated: true,
+    note: "Free 20,000 points/day, 5-min delay. Free odds baseline.",
+  },
+  {
     id: "the-odds-api-ncaaf",
     name: "The Odds API (NCAAF)",
     tier: "licensed_flat", // already licensed; free tier 500 credits/mo
@@ -107,6 +163,15 @@ export function selectSourcesForNeed(need: DataNeed): readonly SourceCostProfile
 /** The cheapest source that covers a need (still subject to the clearance gate). */
 export function cheapestSourceForNeed(need: DataNeed): SourceCostProfile | undefined {
   return selectSourcesForNeed(need)[0];
+}
+
+/**
+ * The cheapest source that is ALREADY cleared (gate passed) — what you can pull
+ * from right now without an owner/legal decision. Free-first still applies among
+ * cleared sources.
+ */
+export function cheapestClearedSourceForNeed(need: DataNeed): SourceCostProfile | undefined {
+  return selectSourcesForNeed(need).find((s) => !s.gated);
 }
 
 /** True if a free (zero marginal $) source already covers the need. */
