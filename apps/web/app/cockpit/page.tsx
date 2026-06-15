@@ -6,6 +6,7 @@ import type { PublicPerformancePolicy } from "@/lib/performance/public-performan
 import {
   buildOwnerSummary,
   type OwnerSummary,
+  type OwnerStatusColor,
   type DepartmentSummary,
   type OwnerDecision,
   type PerformanceSummary,
@@ -16,6 +17,7 @@ import { AskJarvisPanel } from "@/components/cockpit/ask-jarvis-panel";
 import { CapabilitySystemMap } from "@/components/cockpit/capability-system-map";
 import { AgentCouncilPanel } from "@/components/cockpit/agent-council-panel";
 import { CockpitPulse } from "@/components/cockpit/cockpit-pulse";
+import { CockpitGreeting } from "@/components/cockpit/cockpit-greeting";
 import { buildLiveMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intelligence-state";
 import { buildLiveLedgerStatus } from "@/lib/jarvis/ledger-types";
 import { buildJarvisOperatingAssessment, type JarvisOperatingAssessment } from "@/lib/jarvis/jarvis-operating-assessment";
@@ -108,9 +110,9 @@ export default async function CockpitOverview() {
       {/* ── MISSION CONTROL HEADER ─────────────────────────────────────── */}
       <header
         className={[
-          "relative overflow-hidden rounded-2xl border bg-carbon/90",
+          "relative overflow-hidden rounded-3xl border bg-carbon/90 shadow-2xl shadow-black/30",
           ownerSummary?.overallColor === "RED"
-            ? "border-red-900/60 shadow-glow-plasma"
+            ? "border-rose-900/60 shadow-glow-plasma"
             : ownerSummary?.overallColor === "GREEN"
               ? "border-accent-900/40"
               : "border-titanium/60",
@@ -157,74 +159,33 @@ export default async function CockpitOverview() {
 
           {ownerSummary ? (
             <>
-              {/* Posture + one-liner + gate bar */}
-              <div className="mb-5 flex flex-wrap items-start gap-6">
-                {/* Large status text */}
-                <div>
-                  <p className="mb-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-ion-3">
-                    Posture
-                  </p>
-                  <p
-                    data-testid="owner-status-pill"
-                    className={[
-                      "text-5xl font-black leading-none tracking-tighter",
-                      ownerSummary.overallColor === "GREEN"
-                        ? "text-accent-500"
-                        : ownerSummary.overallColor === "RED"
-                          ? "text-red-400"
-                          : "text-yellow-300",
-                    ].join(" ")}
-                  >
-                    {ownerSummary.overallColor}
-                  </p>
-                </div>
-
-                {/* One-liner + critical warning */}
+              {/* Greeting + posture medallion + current state */}
+              <div className="mb-6 flex flex-col gap-6 sm:flex-row sm:items-center">
+                <PostureMedallion
+                  color={ownerSummary.overallColor}
+                  open={assessment?.readinessGateSummary.openCount ?? 0}
+                  total={assessment?.readinessGateSummary.totalCount ?? 0}
+                />
                 <div className="min-w-0 flex-1">
-                  <p className="mb-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-ion-3">
-                    Current State
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ion-3">
+                    <CockpitGreeting /> · here&apos;s where things stand
                   </p>
-                  <p className="text-base font-medium leading-snug text-ion-white/90">
+                  <p className="mt-2 text-xl font-medium leading-snug text-ion-white/95 sm:text-2xl">
                     {ownerSummary.oneLiner}
                   </p>
                   {ownerSummary.criticalWarnings.length > 0 && (
-                    <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-red-300">
-                      <span className="h-1.5 w-1.5 flex-shrink-0 animate-live-pulse rounded-full bg-red-400" />
+                    <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-rose-300">
+                      <span className="h-1.5 w-1.5 flex-shrink-0 animate-live-pulse rounded-full bg-rose-400" />
                       {ownerSummary.criticalWarnings[0]}
                     </p>
                   )}
                 </div>
-
-                {/* Gate progress */}
-                {assessment && (() => {
-                  const ratio = assessment.readinessGateSummary.openCount / Math.max(assessment.readinessGateSummary.totalCount, 1);
-                  const barColor = ratio === 1 ? "bg-accent-500" : ratio >= 0.5 ? "bg-yellow-300" : "bg-red-400";
-                  return (
-                    <div className="min-w-[140px]">
-                      <p className="mb-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-ion-3">
-                        Readiness Gates
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-titanium/50">
-                          <div
-                            className={["h-full rounded-full transition-all", barColor].join(" ")}
-                            style={{ width: `${ratio * 100}%` }}
-                          />
-                        </div>
-                        <span className="font-mono text-[9px] tabular-nums text-ion-2">
-                          {assessment.readinessGateSummary.openCount}/
-                          {assessment.readinessGateSummary.totalCount}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })()}
               </div>
 
               {/* QuickStat strip */}
               <div
                 data-testid="owner-status-grid"
-                className="grid grid-cols-2 gap-x-4 gap-y-3 border-t border-titanium/30 pt-4 sm:grid-cols-4"
+                className="grid grid-cols-2 gap-3 border-t border-titanium/30 pt-5 sm:grid-cols-4"
               >
                 <QuickStat
                   label="Picks Today"
@@ -602,6 +563,69 @@ function OperatingRuntimeZone({
   return <CockpitPulse assessment={assessment} agentReality={agentReality} />;
 }
 
+// Posture medallion — the header's living centerpiece. A gate-fill ring (SVG,
+// server-safe, no JS) colored by the honest operating posture: RED only on real
+// safety/data blockers, GREEN only when genuinely LAUNCH_READY, AMBER otherwise.
+function PostureMedallion({
+  color,
+  open,
+  total,
+}: {
+  color: OwnerStatusColor;
+  open: number;
+  total: number;
+}) {
+  const meta: Record<OwnerStatusColor, { label: string; hex: string; glow: string }> = {
+    GREEN: { label: "Ready", hex: "#34d399", glow: "rgba(52,211,153,0.30)" },
+    AMBER: { label: "Holding", hex: "#fbbf24", glow: "rgba(251,191,36,0.26)" },
+    RED: { label: "Blocked", hex: "#fb7185", glow: "rgba(251,113,133,0.30)" },
+  };
+  const m = meta[color];
+  const ratio = total > 0 ? Math.min(Math.max(open / total, 0), 1) : 0;
+  const R = 34;
+  const C = 2 * Math.PI * R;
+
+  return (
+    <div className="relative flex h-28 w-28 shrink-0 items-center justify-center">
+      <div
+        aria-hidden
+        className="absolute h-24 w-24 rounded-full blur-2xl"
+        style={{ background: m.glow }}
+      />
+      <svg viewBox="0 0 80 80" className="h-28 w-28 -rotate-90" aria-hidden>
+        <circle cx="40" cy="40" r={R} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="5" />
+        <circle
+          cx="40"
+          cy="40"
+          r={R}
+          fill="none"
+          stroke={m.hex}
+          strokeWidth="5"
+          strokeLinecap="round"
+          strokeDasharray={C}
+          strokeDashoffset={C * (1 - ratio)}
+          style={{ transition: "stroke-dashoffset 600ms ease" }}
+        />
+      </svg>
+      <div className="absolute flex flex-col items-center">
+        <span
+          className="h-2 w-2 rounded-full animate-live-pulse"
+          style={{ background: m.hex, boxShadow: `0 0 12px ${m.hex}` }}
+        />
+        <span
+          data-testid="owner-status-pill"
+          className="mt-1.5 text-sm font-semibold text-ion-white"
+        >
+          {m.label}
+        </span>
+        <span className="font-mono text-[9px] tabular-nums text-ion-3">
+          {open}/{total} gates
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function QuickStat({
   label,
   value,
@@ -615,19 +639,19 @@ function QuickStat({
 }) {
   const valueClass =
     accent === "cyan"
-      ? "text-accent-500"
+      ? "text-accent-400"
       : accent === "amber"
-        ? "text-yellow-300"
+        ? "text-amber-300"
         : accent === "red"
-          ? "text-red-400"
+          ? "text-rose-300"
           : "text-ion-white";
   return (
-    <div className="flex flex-col gap-0.5">
-      <p className="font-mono text-[8px] uppercase tracking-widest text-ion-3">{label}</p>
-      <p className={["text-xl font-black tabular-nums leading-none", valueClass].join(" ")}>
+    <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4 transition-colors hover:border-titanium/70">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
+      <p className={["mt-1 font-mono text-2xl font-semibold tabular-nums", valueClass].join(" ")}>
         {value}
       </p>
-      <p className="text-[8px] text-ion-3">{sub}</p>
+      <p className="mt-0.5 text-[11px] text-ion-3">{sub}</p>
     </div>
   );
 }
