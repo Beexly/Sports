@@ -20,6 +20,7 @@ export default function Page() {
         { label: "Top fantasy env", value: topFantasy?.team_id ?? "—" },
         { label: "Avg confidence", value: avgConfidence + "%" }
       ]} />
+      <p className="text-ion-1">Team environment is the context every player number sits inside — offense, defense, and pace, ranked.</p>
       {topOffense && (
         <div className="grid gap-4 md:grid-cols-2">
           <HeroStat
