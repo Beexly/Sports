@@ -94,6 +94,22 @@ describe("nflverse url builder", () => {
     expect(nflverseUrl("players", 0)).toBe(`${NFLVERSE_BASE}/players/players.csv`);
     expect(nflverseUrl("schedules", 0)).toBe(`${NFLVERSE_BASE}/schedules/games.csv`);
   });
+
+  it("builds the coverage-completeness dataset urls (verified live)", () => {
+    // Single-file (all-seasons) assets.
+    expect(nflverseUrl("officials", 0)).toBe(`${NFLVERSE_BASE}/officials/officials.csv`);
+    expect(nflverseUrl("trades", 0)).toBe(`${NFLVERSE_BASE}/trades/trades.csv`);
+    expect(nflverseUrl("contracts", 0)).toBe(
+      `${NFLVERSE_BASE}/contracts/historical_contracts.csv.gz`,
+    );
+    // Per-season assets.
+    expect(nflverseUrl("weekly_rosters", 2024)).toBe(
+      `${NFLVERSE_BASE}/weekly_rosters/roster_weekly_2024.csv`,
+    );
+    expect(nflverseUrl("stats_team_week", 2023)).toBe(
+      `${NFLVERSE_BASE}/stats_team/stats_team_week_2023.csv`,
+    );
+  });
 });
 
 describe("nflverse catalog integrity", () => {
