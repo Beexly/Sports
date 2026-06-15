@@ -12,6 +12,23 @@ export const HENRYGD_ATTRIBUTION = "NCAA data via NCAA.com (henrygd/ncaa-api)";
 
 const PUBLIC_DEMO = "https://ncaa-api.henrygd.me";
 
+/** Verified henrygd sport paths (pass to the fetchers as `sportPath`). */
+export const HENRYGD_PATHS = {
+  cfb: "football/fbs",
+  mbb: "basketball-men/d1",
+  wbb: "basketball-women/d1",
+} as const;
+
+/**
+ * Date-pathed scoreboard for a specific day, e.g.
+ *   henrygdDatedPath("basketball-men/d1", "2025-03-20") → "basketball-men/d1/2025/03/20/all-conf"
+ * Verified for basketball; the base path alone returns the latest slate.
+ */
+export function henrygdDatedPath(base: string, date: string, group = "all-conf"): string {
+  const m = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${base}/${m[1]}/${m[2]}/${m[3]}/${group}` : base;
+}
+
 /** Base URL — self-hosted instance wins (no rate cap); falls back to the public demo. */
 export function henrygdBaseUrl(env: Record<string, string | undefined> = process.env): string {
   const base = env["HENRYGD_NCAA_BASE_URL"]?.trim();

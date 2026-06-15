@@ -8,7 +8,9 @@ import {
   splitSchoolVotes,
   toIsoDate,
   henrygdBaseUrl,
+  henrygdDatedPath,
   HENRYGD_ATTRIBUTION,
+  HENRYGD_PATHS,
 } from "@/lib/data-sources/free-adapters/henrygd-ncaa";
 
 const FIX = resolve(__dirname, "fixtures");
@@ -50,6 +52,13 @@ describe("henrygd NCAA adapter (free, no key)", () => {
     expect(toIsoDate("12/13/2025")).toBe("2025-12-13");
     expect(toIsoDate("1/2/2026")).toBe("2026-01-02");
     expect(toIsoDate("garbage")).toBe("");
+  });
+
+  it("exposes verified sport paths and builds dated scoreboard paths", () => {
+    expect(HENRYGD_PATHS.cfb).toBe("football/fbs");
+    expect(HENRYGD_PATHS.mbb).toBe("basketball-men/d1");
+    expect(henrygdDatedPath(HENRYGD_PATHS.mbb, "2025-03-20")).toBe("basketball-men/d1/2025/03/20/all-conf");
+    expect(henrygdDatedPath("football/fbs", "not-a-date")).toBe("football/fbs"); // defensive fallback
   });
 
   it("prefers a self-hosted base URL over the public demo", () => {

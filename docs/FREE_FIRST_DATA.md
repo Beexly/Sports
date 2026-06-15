@@ -16,7 +16,7 @@ per call; in-season gating keeps the Odds API's free credits for sports actually
 | Source | Covers | Key? | Clearance |
 |---|---|---|---|
 | ESPN public API | scores/schedule/status (7 sports), AP/Coaches rankings, standings | no | `approved_public_logged_off` |
-| henrygd NCAA API | NCAA scores/rankings/standings (self-hostable) | no | free; self-host via `docker/docker-compose.yml` |
+| henrygd NCAA API | NCAA football **and basketball** scores/rankings/standings (self-hostable) | no | free; self-host via `docker/docker-compose.yml` |
 | Open-Meteo | game-time weather | no | open license (CC-BY) |
 | nflverse | deep NFL stats | no | open data |
 
@@ -33,9 +33,11 @@ per call; in-season gating keeps the Odds API's free credits for sports actually
 - **free-first-ingest.ts** — `fetchScoresFreeFirst` / `fetchWeatherFreeFirst`: route → fetch → tag provenance.
 - **cfb-free.ts** — `getCfbSnapshot()`: one cached CFB facts snapshot (scores + rankings + standings).
 - **score-verification.ts** — index free finals; cross-check our recorded scores.
-- **ncaa-consensus.ts** — cross-source trust + failover. `crossCheckNcaaScores()` joins ESPN ↔
-  henrygd by stable team **abbreviation** + date proximity (±1 day), reporting
-  agreement / disagreement / coverage gaps. `resilientNcaaScores()` fails over free→free.
+- **ncaa-consensus.ts** — cross-source trust + failover, sport-agnostic. `crossCheckNcaaScores()`
+  joins ESPN ↔ henrygd by stable team **abbreviation** + date proximity (±1 day), reporting
+  agreement / disagreement / coverage gaps. Confirms **both NCAA football and basketball**
+  (March Madness). `resilientNcaaScores()` fails over free→free. henrygd sport paths are in
+  `HENRYGD_PATHS` (`cfb`, `mbb`, `wbb`).
 - **free-settlement.ts** — `buildTrustedFinals()` fuses ESPN + henrygd into trust-tiered finals
   (CONFIRMED / SINGLE_SOURCE / DISPUTED); `settlePendingPicks()` grades via the engine's
   `calculatePickResult` but only when trusted — DISPUTED finals HOLD, unmatched stay PENDING.

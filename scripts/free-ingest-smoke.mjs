@@ -72,34 +72,44 @@ try {
 
 // Cross-source NCAA confirmation: two independent FREE sources agreeing on a final.
 // Slates are aligned dynamically — henrygd's latest completed slate drives the ESPN date —
-// so this proves real agreement in any season (no paid call).
-try {
-  const henry = (await fetchHenrygdScoreboard("football/fbs", { timeoutMs: 15000 })).map(toComparableFromHenrygd);
-  const completed = henry.filter((g) => g.completed && g.date);
-  if (completed.length === 0) {
-    console.log("consensus ncaaf → henrygd returned no completed games (offseason); skipped");
-  } else {
-    // Most common completed date in henrygd's slate.
+// so this proves real agreement in any season (no paid call). Same generic consensus
+// confirms both football and basketball.
+async function checkConsensus(label, espnSport, henrygdPath) {
+  try {
+    const henry = (await fetchHenrygdScoreboard(henrygdPath, { timeoutMs: 15000 })).map(toComparableFromHenrygd);
+    const completed = henry.filter((g) => g.completed && g.date);
+    if (completed.length === 0) {
+      console.log(`consensus ${label} → henrygd returned no completed games (offseason); skipped`);
+      return true;
+    }
     const counts = {};
     for (const g of completed) counts[g.date] = (counts[g.date] ?? 0) + 1;
     const modalDate = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
-    const espn = (await fetchEspnScoreboard("ncaaf", { dates: modalDate.replaceAll("-", ""), timeoutMs: 15000 }))
+    const espn = (await fetchEspnScoreboard(espnSport, { dates: modalDate.replaceAll("-", ""), timeoutMs: 15000 }))
       .map(toComparableFromEspn)
       .filter(Boolean);
     const report = crossCheckNcaaScores(espn, henry);
     console.log(
-      `consensus ncaaf ${modalDate} → confirmed ${report.summary.confirmed}, ` +
+      `consensus ${label} ${modalDate} → confirmed ${report.summary.confirmed}, ` +
         `conflicts ${report.summary.conflicts}, pending ${report.summary.pending} ` +
         `(ESPN ${espn.length} vs henrygd ${henry.length})`,
     );
     for (const a of report.agreements.slice(0, 2)) {
       console.log(`  ✓ CONFIRMED ${a.matchup} ${a.a.away}-${a.a.home} (ESPN + henrygd agree)`);
     }
+    return true;
+  } catch (err) {
+    console.error(`consensus ${label} FAILED: ${err instanceof Error ? err.message : err}`);
+    return false;
   }
-  ok += 1;
-} catch (err) {
-  console.error(`consensus FAILED: ${err instanceof Error ? err.message : err}`);
-  fail += 1;
+}
+
+for (const [label, espnSport, path] of [
+  ["ncaaf", "ncaaf", "football/fbs"],
+  ["ncaab", "ncaab", "basketball-men/d1"],
+]) {
+  if (await checkConsensus(label, espnSport, path)) ok += 1;
+  else fail += 1;
 }
 
 console.log(`\nfree-ingest smoke: ${ok} ok, ${fail} failed`);
