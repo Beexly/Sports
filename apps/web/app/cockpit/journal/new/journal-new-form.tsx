@@ -122,64 +122,64 @@ export function JournalNewForm(): JSX.Element {
   return (
     <div className="grid gap-4">
       <label className="grid gap-2 text-sm">
-        <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">Title</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-ion-3">Title</span>
         <input
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          className="min-h-11 rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
+          className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
         />
       </label>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="grid gap-2 text-sm">
-          <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">ISO week</span>
+          <span className="text-xs font-semibold uppercase tracking-wide text-ion-3">ISO week</span>
           <input
             value={isoWeek}
             inputMode="numeric"
             onChange={(event) => setIsoWeek(event.target.value)}
-            className="min-h-11 rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
+            className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
           />
         </label>
         <label className="grid gap-2 text-sm">
-          <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">ISO year</span>
+          <span className="text-xs font-semibold uppercase tracking-wide text-ion-3">ISO year</span>
           <input
             value={isoYear}
             inputMode="numeric"
             onChange={(event) => setIsoYear(event.target.value)}
-            className="min-h-11 rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
+            className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-white outline-none focus:border-yellow-400"
           />
         </label>
       </div>
 
       <label className="grid gap-2 text-sm">
-        <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">Optional starter markdown</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-ion-3">Optional starter markdown</span>
         <textarea
           value={bodyMarkdown}
           onChange={(event) => setBodyMarkdown(event.target.value)}
           rows={12}
-          className="min-h-[260px] rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 font-mono text-sm text-gray-100 outline-none focus:border-yellow-400"
+          className="min-h-[260px] rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 font-mono text-sm text-ion-white outline-none focus:border-yellow-400"
           placeholder="Leave blank to create the standard weekly Journal draft outline."
         />
       </label>
 
-      <label className="flex min-h-11 items-center gap-3 rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 text-sm text-gray-300">
+      <label className="flex min-h-11 items-center gap-3 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-ion-1">
         <input
           type="checkbox"
           checked={draftWithClaude}
           onChange={(event) => setDraftWithClaude(event.target.checked)}
           disabled={bodyMarkdown.trim().length > 0}
-          className="h-4 w-4 rounded border-gray-700 bg-black"
+          className="h-4 w-4 rounded border-titanium/40 bg-black"
         />
         Generate the first draft from weekly evidence
       </label>
 
-      <section className="rounded-lg border border-gray-800 bg-black/30 p-3">
+      <section className="rounded-lg border border-titanium/40 bg-black/30 p-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+            <p className="text-xs font-semibold uppercase tracking-wide text-ion-3">
               Week evidence
             </p>
-            <p className="mt-1 text-xs text-gray-400">
+            <p className="mt-1 text-xs text-ion-2">
               Preview settled canonical picks and public loss autopsies before creating the draft.
             </p>
           </div>
@@ -187,53 +187,53 @@ export function JournalNewForm(): JSX.Element {
             type="button"
             onClick={loadEvidencePreview}
             disabled={isLoadingEvidence}
-            className="min-h-11 rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 hover:bg-gray-900 disabled:text-gray-500"
+            className="min-h-11 rounded-lg border border-titanium/40 px-3 py-2 text-xs font-semibold text-ion-1 hover:bg-carbon/60 disabled:text-ion-3"
           >
             {isLoadingEvidence ? "Loading evidence..." : "Load evidence"}
           </button>
         </div>
 
         {evidence ? (
-          <dl className="mt-3 grid grid-cols-2 gap-3 text-xs text-gray-400 sm:grid-cols-5">
+          <dl className="mt-3 grid grid-cols-2 gap-3 text-xs text-ion-2 sm:grid-cols-5">
             <div>
-              <dt className="text-[10px] uppercase tracking-wide text-gray-600">Settled</dt>
-              <dd className="mt-1 text-gray-100">{evidence.counts.settledPicks}</dd>
+              <dt className="text-[10px] uppercase tracking-wide text-ion-3">Settled</dt>
+              <dd className="mt-1 text-ion-white">{evidence.counts.settledPicks}</dd>
             </div>
             <div>
-              <dt className="text-[10px] uppercase tracking-wide text-gray-600">Wins</dt>
-              <dd className="mt-1 text-gray-100">{evidence.counts.wins}</dd>
+              <dt className="text-[10px] uppercase tracking-wide text-ion-3">Wins</dt>
+              <dd className="mt-1 text-ion-white">{evidence.counts.wins}</dd>
             </div>
             <div>
-              <dt className="text-[10px] uppercase tracking-wide text-gray-600">Losses</dt>
-              <dd className="mt-1 text-gray-100">{evidence.counts.losses}</dd>
+              <dt className="text-[10px] uppercase tracking-wide text-ion-3">Losses</dt>
+              <dd className="mt-1 text-ion-white">{evidence.counts.losses}</dd>
             </div>
             <div>
-              <dt className="text-[10px] uppercase tracking-wide text-gray-600">Pushes</dt>
-              <dd className="mt-1 text-gray-100">{evidence.counts.pushes}</dd>
+              <dt className="text-[10px] uppercase tracking-wide text-ion-3">Pushes</dt>
+              <dd className="mt-1 text-ion-white">{evidence.counts.pushes}</dd>
             </div>
             <div>
-              <dt className="text-[10px] uppercase tracking-wide text-gray-600">Autopsies</dt>
-              <dd className="mt-1 text-gray-100">{evidence.counts.publicLossAutopsies}</dd>
+              <dt className="text-[10px] uppercase tracking-wide text-ion-3">Autopsies</dt>
+              <dd className="mt-1 text-ion-white">{evidence.counts.publicLossAutopsies}</dd>
             </div>
           </dl>
         ) : null}
 
         {evidence && evidence.picks.length > 0 ? (
           <div className="mt-4">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-600">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-ion-3">
               Settled pick references
             </p>
             <ul className="mt-2 grid gap-2">
               {evidence.picks.slice(0, 6).map((pick) => (
-                <li key={pick.id} className="rounded-lg border border-gray-800 bg-gray-950/70 p-2 text-xs">
+                <li key={pick.id} className="rounded-lg border border-titanium/40 bg-obsidian/70 p-2 text-xs">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-semibold text-gray-200">{pick.matchup}</span>
-                    <span className="text-gray-500">{pick.result}</span>
+                    <span className="font-semibold text-ion-1">{pick.matchup}</span>
+                    <span className="text-ion-3">{pick.result}</span>
                   </div>
-                  <p className="mt-1 text-gray-400">
+                  <p className="mt-1 text-ion-2">
                     {pick.selection} - confidence {pick.confidence} - edge {pick.edgeScore.toFixed(1)}
                   </p>
-                  <p className="mt-1 font-mono text-[10px] text-gray-600">{pick.id}</p>
+                  <p className="mt-1 font-mono text-[10px] text-ion-3">{pick.id}</p>
                 </li>
               ))}
             </ul>
@@ -242,17 +242,17 @@ export function JournalNewForm(): JSX.Element {
 
         {evidence && evidence.lossAutopsies.length > 0 ? (
           <div className="mt-4">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-600">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-ion-3">
               Public loss autopsies
             </p>
             <ul className="mt-2 grid gap-2">
               {evidence.lossAutopsies.slice(0, 4).map((autopsy) => (
-                <li key={autopsy.id} className="rounded-lg border border-gray-800 bg-gray-950/70 p-2 text-xs">
+                <li key={autopsy.id} className="rounded-lg border border-titanium/40 bg-obsidian/70 p-2 text-xs">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-semibold text-gray-200">{autopsy.headline}</span>
-                    <span className="text-gray-500">{autopsy.rootCause}</span>
+                    <span className="font-semibold text-ion-1">{autopsy.headline}</span>
+                    <span className="text-ion-3">{autopsy.rootCause}</span>
                   </div>
-                  <p className="mt-1 font-mono text-[10px] text-gray-600">
+                  <p className="mt-1 font-mono text-[10px] text-ion-3">
                     {autopsy.id} - pick {autopsy.pickId}
                   </p>
                 </li>
@@ -278,7 +278,7 @@ export function JournalNewForm(): JSX.Element {
         type="button"
         onClick={createDraft}
         disabled={isSubmitting}
-        className="min-h-11 rounded-lg border border-yellow-400/60 bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-950 transition hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-60"
+        className="min-h-11 rounded-lg border border-yellow-400/60 bg-yellow-400 px-4 py-2 text-sm font-semibold text-eclipse transition hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? "Creating draft..." : "Create draft"}
       </button>

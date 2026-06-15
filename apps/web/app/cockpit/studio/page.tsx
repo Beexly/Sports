@@ -22,12 +22,12 @@ export default async function CockpitStudioPage({
           </div>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
+            className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-1 hover:bg-carbon/60"
           >
             Back to Jarvis
           </Link>
         </div>
-        <p className="max-w-3xl text-sm text-gray-400">
+        <p className="max-w-3xl text-sm text-ion-2">
           Build cited, scanner-checked creator drafts from one Game Intelligence Room.
           Exports stay manual by design; there is no external posting action in Studio.
         </p>

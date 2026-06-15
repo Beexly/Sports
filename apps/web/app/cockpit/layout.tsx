@@ -62,17 +62,17 @@ export default async function CockpitLayout({
   // callbackUrl) — the exact ERR_TOO_MANY_REDIRECTS the owner hit.
   if (session.user.role !== "ADMIN") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-950 px-6 text-center">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-obsidian/60 px-6 text-center">
         <p className="rounded-md bg-yellow-900/40 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-yellow-300">
           Cockpit · Operators only
         </p>
         <h1 className="text-2xl font-bold text-white">This flight deck needs an operator badge.</h1>
-        <p className="max-w-md text-sm text-gray-400">
+        <p className="max-w-md text-sm text-ion-2">
           You&apos;re signed in as {session.user.email ?? "a member"}, but this account doesn&apos;t
           have operator access. If this is your platform, grant your email the operator role
           (ADMIN_EMAILS) and reload.
         </p>
-        <Link href="/" className="rounded-lg border border-gray-800 px-4 py-2 text-xs text-gray-300 hover:bg-gray-900/60">
+        <Link href="/" className="rounded-lg border border-titanium/40 px-4 py-2 text-xs text-ion-1 hover:bg-carbon/60">
           ← Back to the Galaxy
         </Link>
       </div>
@@ -80,8 +80,8 @@ export default async function CockpitLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
-      <header className="border-b border-gray-800 bg-gray-950/95 backdrop-blur-sm">
+    <div className="flex min-h-screen flex-col bg-obsidian/60">
+      <header className="border-b border-titanium/40 bg-obsidian/90 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <span
@@ -90,7 +90,7 @@ export default async function CockpitLayout({
             >
               Cockpit · Internal
             </span>
-            <span className="text-sm text-gray-500">Sports Intelligence OS</span>
+            <span className="text-sm text-ion-3">Sports Intelligence OS</span>
             {!adminEmailsConfigured && (
               <span
                 className="rounded-md border border-amber-700/60 bg-amber-900/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-amber-300"
@@ -100,8 +100,8 @@ export default async function CockpitLayout({
               </span>
             )}
           </div>
-          <div className="text-xs text-gray-500">
-            Signed in as <span className="text-gray-300">{session.user.email}</span>
+          <div className="text-xs text-ion-3">
+            Signed in as <span className="text-ion-1">{session.user.email}</span>
           </div>
         </div>
       </header>
@@ -115,12 +115,12 @@ export default async function CockpitLayout({
             <Link
               key={href}
               href={href}
-              className="group rounded-lg border border-transparent px-3 py-2 transition-colors hover:border-gray-800 hover:bg-gray-900/60"
+              className="group rounded-lg border border-transparent px-3 py-2 transition-colors hover:border-titanium/70 hover:bg-carbon/60"
             >
-              <p className="text-sm font-medium text-gray-200 group-hover:text-white">
+              <p className="text-sm font-medium text-ion-1 group-hover:text-white">
                 {label}
               </p>
-              <p className="text-[11px] text-gray-600 group-hover:text-gray-500">
+              <p className="text-[11px] text-ion-3 group-hover:text-ion-3">
                 {hint}
               </p>
             </Link>

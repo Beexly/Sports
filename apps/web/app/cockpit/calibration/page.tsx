@@ -81,11 +81,11 @@ export default async function CockpitCalibrationPage() {
         Internal calibration only. No auto-publish. No auto-send. No automated betting.
       </p>
 
-      <section data-testid="calibration-history" className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+      <section data-testid="calibration-history" className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Game / prediction history
         </h2>
-        <ul className="grid grid-cols-2 gap-1 text-gray-300 sm:grid-cols-3">
+        <ul className="grid grid-cols-2 gap-1 text-ion-1 sm:grid-cols-3">
           <li>Games (total): {gamesTotal}</li>
           <li>Games (completed): {gamesCompleted}</li>
           <li>Predictions (total): {picksTotal}</li>
@@ -94,37 +94,37 @@ export default async function CockpitCalibrationPage() {
         </ul>
       </section>
 
-      <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Confidence vs realized win rate
-          <span className="ml-2 normal-case tracking-normal text-gray-600">
+          <span className="ml-2 normal-case tracking-normal text-ion-3">
             (settled · non-bootstrap · pushes excluded · last {eligibleSettled})
           </span>
         </h2>
         {eligibleSettled === 0 ? (
-          <p className="text-gray-500">
+          <p className="text-ion-3">
             No eligible settled picks yet — the table fills as non-bootstrap picks settle.
           </p>
         ) : (
           <table className="w-full text-left">
             <thead>
-              <tr className="text-[10px] uppercase tracking-widest text-gray-600">
+              <tr className="text-[10px] uppercase tracking-widest text-ion-3">
                 <th className="py-1 pr-4 font-medium">Confidence band</th>
                 <th className="py-1 pr-4 font-medium">Settled (n)</th>
                 <th className="py-1 pr-4 font-medium">Realized win rate</th>
                 <th className="py-1 font-medium">Read</th>
               </tr>
             </thead>
-            <tbody className="text-gray-300">
+            <tbody className="text-ion-1">
               {bucketStats.map((b) => {
                 const mid = (b.min + Math.min(b.max, 100)) / 2;
                 const drift = b.winRate === null ? null : b.winRate - mid;
                 return (
-                  <tr key={b.label} className="border-t border-gray-800/60">
+                  <tr key={b.label} className="border-t border-titanium/40">
                     <td className="py-1.5 pr-4 font-mono">{b.label}</td>
                     <td className="py-1.5 pr-4">{b.n}</td>
                     <td className="py-1.5 pr-4">{b.winRate === null ? "—" : `${b.winRate.toFixed(1)}%`}</td>
-                    <td className="py-1.5 text-gray-500">
+                    <td className="py-1.5 text-ion-3">
                       {drift === null
                         ? "insufficient sample"
                         : Math.abs(drift) <= 5
@@ -141,39 +141,39 @@ export default async function CockpitCalibrationPage() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Closing-line value
         </h2>
         {!clvAgg || !clvAgg._count.clvValue ? (
-          <p className="text-gray-500">No graded CLV yet — fills as locks are graded against closes.</p>
+          <p className="text-ion-3">No graded CLV yet — fills as locks are graded against closes.</p>
         ) : (
-          <p className="text-gray-300">
+          <p className="text-ion-1">
             {clvAgg._count.clvValue} graded picks · average CLV{" "}
             <span className="font-mono">{(clvAgg._avg.clvValue ?? 0).toFixed(2)}</span> (positive = beat the close)
           </p>
         )}
       </section>
 
-      <section data-testid="calibration-readiness" className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+      <section data-testid="calibration-readiness" className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Readiness
         </h2>
-        <ul className="space-y-1 text-gray-300">
+        <ul className="space-y-1 text-ion-1">
           <li>canExposePerformanceStats: {String(gates.canExposePerformanceStats)}</li>
           <li>canLearnFromOutcomes: {String(gates.canLearnFromOutcomes)}</li>
         </ul>
-        <h3 className="mt-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
+        <h3 className="mt-3 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Blocked reasons
         </h3>
-        <ul data-testid="calibration-blocked-reasons" className="space-y-1 text-gray-400">
+        <ul data-testid="calibration-blocked-reasons" className="space-y-1 text-ion-2">
           <li>autoPublish — ALWAYS BLOCKED (constant gate)</li>
           <li>autoSend — ALWAYS BLOCKED (constant gate)</li>
           <li>automatedBetting — ALWAYS BLOCKED (constant gate)</li>
         </ul>
       </section>
 
-      <Link href="/cockpit" className="w-fit rounded-lg border border-gray-800 px-3 py-2 text-xs text-gray-300 hover:bg-gray-900/60">
+      <Link href="/cockpit" className="w-fit rounded-lg border border-titanium/40 px-3 py-2 text-xs text-ion-1 hover:bg-carbon/60">
         ← Back to Jarvis
       </Link>
     </div>

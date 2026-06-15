@@ -21,7 +21,7 @@ export default function ListenerLogPage() {
         quote, never a recording, never automation. Claims file as SCOUT review tasks.
       </p>
       <ListenerLogForm />
-      <Link href="/cockpit" className="w-fit rounded-lg border border-gray-800 px-3 py-2 text-xs text-gray-300 hover:bg-gray-900/60">
+      <Link href="/cockpit" className="w-fit rounded-lg border border-titanium/40 px-3 py-2 text-xs text-ion-1 hover:bg-carbon/60">
         ← Back to Jarvis
       </Link>
     </div>

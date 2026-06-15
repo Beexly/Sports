@@ -54,7 +54,7 @@ function statusClass(status: string): string {
     case "red":
       return "border-rose-500/40 bg-rose-500/10 text-rose-300";
     default:
-      return "border-slate-500/40 bg-slate-500/10 text-slate-300";
+      return "border-titanium/50 bg-obsidian/40 text-ion-1";
   }
 }
 
@@ -137,16 +137,16 @@ export function StudioWorkspace({
 
   return (
       <section className="grid gap-4 lg:grid-cols-[17rem_minmax(0,1fr)_18rem]">
-        <aside className="rounded-lg border border-gray-800 bg-gray-950/40 p-4">
+        <aside className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-sm font-semibold text-white">Games</h2>
-            <span className="text-[10px] uppercase tracking-wide text-gray-600">
+            <span className="text-[10px] uppercase tracking-wide text-ion-3">
               {games.length} loaded
             </span>
           </div>
 
           {games.length === 0 ? (
-            <p className="mt-4 text-sm text-gray-500">
+            <p className="mt-4 text-sm text-ion-3">
               No canonical games are ready for Studio. The workspace will populate
               after ingestion attaches market evidence.
             </p>
@@ -161,11 +161,11 @@ export function StudioWorkspace({
                       className={`block rounded-lg border px-3 py-2 text-left transition-colors ${
                         selected
                           ? "border-yellow-500/50 bg-yellow-500/10"
-                          : "border-gray-800 bg-gray-950/30 hover:bg-gray-900/60"
+                          : "border-titanium/40 bg-obsidian/40 hover:bg-carbon/60"
                       }`}
                     >
-                      <p className="text-sm font-medium text-gray-100">{game.matchup}</p>
-                      <p className="mt-1 text-[11px] text-gray-500">
+                      <p className="text-sm font-medium text-ion-white">{game.matchup}</p>
+                      <p className="mt-1 text-[11px] text-ion-3">
                         {game.sport} - {formatTime(game.commenceTime)}
                       </p>
                     </Link>
@@ -176,16 +176,16 @@ export function StudioWorkspace({
           )}
         </aside>
 
-        <section className="min-w-0 rounded-lg border border-gray-800 bg-gray-950/40 p-4">
+        <section className="min-w-0 rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-sm font-semibold text-white">Template Grid</h2>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-ion-3">
                 Eight Claude-ready prompt packages with citations and scanner state.
               </p>
             </div>
             {selectedNode ? (
-              <span className="rounded-md border border-gray-800 px-2 py-1 text-[10px] uppercase tracking-wide text-gray-400">
+              <span className="rounded-md border border-titanium/40 px-2 py-1 text-[10px] uppercase tracking-wide text-ion-2">
                 {selectedNode.matchup}
               </span>
             ) : null}
@@ -201,12 +201,12 @@ export function StudioWorkspace({
               return (
                 <article
                   key={draft.templateKind}
-                  className="rounded-lg border border-gray-800 bg-gray-950/60 p-4"
+                  className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h3 className="text-sm font-semibold text-white">{draft.templateName}</h3>
-                      <p className="mt-1 text-[11px] text-gray-500">
+                      <p className="mt-1 text-[11px] text-ion-3">
                         {draft.templateKind.replace(/_/g, " ")}
                       </p>
                     </div>
@@ -222,17 +222,17 @@ export function StudioWorkspace({
                   ) : (
                     <div className="mt-4 flex flex-col gap-3">
                       <div className="flex items-center justify-between gap-3">
-                        <div className="rounded-md border border-gray-800 bg-gray-950 px-3 py-2">
-                          <p className="text-[10px] uppercase tracking-wide text-gray-600">
+                        <div className="rounded-md border border-titanium/40 bg-obsidian/60 px-3 py-2">
+                          <p className="text-[10px] uppercase tracking-wide text-ion-3">
                             Citations
                           </p>
-                          <p className="mt-1 text-xs text-gray-300">{activeDraft.citations.length}</p>
+                          <p className="mt-1 text-xs text-ion-1">{activeDraft.citations.length}</p>
                         </div>
                         <button
                           type="button"
                           onClick={() => void generateDraft(draft.templateKind)}
                           disabled={!canGenerate}
-                          className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-3 py-2 text-xs font-semibold text-yellow-100 transition-colors hover:bg-yellow-500/20 disabled:cursor-not-allowed disabled:border-gray-800 disabled:bg-gray-900/50 disabled:text-gray-600"
+                          className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-3 py-2 text-xs font-semibold text-yellow-100 transition-colors hover:bg-yellow-500/20 disabled:cursor-not-allowed disabled:border-titanium/40 disabled:bg-eclipse/40 disabled:text-ion-3"
                         >
                           {generation.status === "loading" ? (
                             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -250,9 +250,9 @@ export function StudioWorkspace({
                       ) : null}
 
                       {generatedDraft?.body ? (
-                        <div className="rounded-lg border border-gray-800 bg-gray-950 p-3">
+                        <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-3">
                           <div className="flex items-center justify-between gap-2">
-                            <p className="text-[10px] uppercase tracking-wide text-gray-600">
+                            <p className="text-[10px] uppercase tracking-wide text-ion-3">
                               Draft Preview
                             </p>
                             <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusClass(generatedDraft.compliance.status)}`}>
@@ -264,7 +264,7 @@ export function StudioWorkspace({
                               {generatedDraft.compliance.status}
                             </span>
                           </div>
-                          <p className="mt-3 max-h-36 overflow-auto whitespace-pre-wrap text-xs leading-5 text-gray-300">
+                          <p className="mt-3 max-h-36 overflow-auto whitespace-pre-wrap text-xs leading-5 text-ion-1">
                             {generatedDraft.body}
                           </p>
                           {generatedDraft.compliance.flags.length > 0 ? (
@@ -280,21 +280,21 @@ export function StudioWorkspace({
                             <button
                               type="button"
                               onClick={() => void copyDraft(generatedDraft)}
-                              className="min-h-11 rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 transition-colors hover:bg-gray-900"
+                              className="min-h-11 rounded-lg border border-titanium/40 px-3 py-2 text-xs font-semibold text-ion-1 transition-colors hover:bg-carbon/60"
                             >
                               {generation.status === "done" && generation.copied ? "Copied" : "Copy markdown"}
                             </button>
                             <button
                               type="button"
                               onClick={() => saveDraftMarkdown(generatedDraft)}
-                              className="min-h-11 rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 transition-colors hover:bg-gray-900"
+                              className="min-h-11 rounded-lg border border-titanium/40 px-3 py-2 text-xs font-semibold text-ion-1 transition-colors hover:bg-carbon/60"
                             >
                               Save markdown
                             </button>
                           </div>
                         </div>
                       ) : (
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-ion-2">
                           Prompt ready. Output must pass the compliance scanner before export.
                         </p>
                       )}
@@ -306,33 +306,33 @@ export function StudioWorkspace({
           </div>
         </section>
 
-        <aside className="rounded-lg border border-gray-800 bg-gray-950/40 p-4">
+        <aside className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
           <h2 className="text-sm font-semibold text-white">Review Rail</h2>
 
           {selectedNode ? (
             <div className="mt-4 flex flex-col gap-3 text-sm">
-              <div className="rounded-lg border border-gray-800 bg-gray-950/60 p-3">
-                <p className="text-[10px] uppercase tracking-wide text-gray-600">Evidence</p>
-                <p className="mt-1 text-gray-200">
+              <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-3">
+                <p className="text-[10px] uppercase tracking-wide text-ion-3">Evidence</p>
+                <p className="mt-1 text-ion-1">
                   {selectedNode.evidenceScore}/100 - {selectedNode.evidenceStatus}
                 </p>
               </div>
-              <div className="rounded-lg border border-gray-800 bg-gray-950/60 p-3">
-                <p className="text-[10px] uppercase tracking-wide text-gray-600">Market Pulse</p>
-                <p className="mt-1 text-gray-200">
+              <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-3">
+                <p className="text-[10px] uppercase tracking-wide text-ion-3">Market Pulse</p>
+                <p className="mt-1 text-ion-1">
                   Edge Index {selectedNode.edgeIndex ?? "N/A"}
                 </p>
               </div>
-              <div className="rounded-lg border border-gray-800 bg-gray-950/60 p-3">
-                <p className="text-[10px] uppercase tracking-wide text-gray-600">Export</p>
-                <p className="mt-1 text-xs text-gray-500">
+              <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-3">
+                <p className="text-[10px] uppercase tracking-wide text-ion-3">Export</p>
+                <p className="mt-1 text-xs text-ion-3">
                   Copy and markdown save controls unlock after generation and scanner review.
                   External publishing is intentionally absent.
                 </p>
               </div>
             </div>
           ) : (
-            <p className="mt-4 text-sm text-gray-500">
+            <p className="mt-4 text-sm text-ion-3">
               Select a game once canonical evidence exists.
             </p>
           )}
