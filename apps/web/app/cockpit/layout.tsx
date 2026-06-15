@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { Footer } from "@/components/ui/footer";
+import { CockpitNav, type CockpitNavGroup } from "@/components/cockpit/cockpit-nav";
 
 /**
  * Cockpit layout — admin-only, internal-only.
@@ -17,31 +18,64 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
-const NAV: ReadonlyArray<{ href: string; label: string; hint: string }> = [
-  { href: "/cockpit", label: "Overview", hint: "Jarvis launch assessment" },
-  { href: "/cockpit/history", label: "History", hint: "Pick forensic ledger" },
-  { href: "/cockpit/agents", label: "Agents", hint: "Six operator roles" },
-  { href: "/cockpit/tasks", label: "Tasks", hint: "Queue by status" },
-  { href: "/cockpit/review", label: "Review", hint: "Needs-review + blocked" },
-  { href: "/cockpit/media", label: "Media", hint: "Draft content workflow" },
-  { href: "/cockpit/promotions", label: "Promotions", hint: "Bobby · sportsbook offers" },
-  { href: "/cockpit/promo-desk", label: "Promo Desk", hint: "Operator registry" },
-  { href: "/cockpit/market-twin", label: "Market Twin", hint: "Upcoming board posture" },
-  { href: "/cockpit/losses", label: "Losses", hint: "Autopsy authoring queue" },
-  { href: "/cockpit/studio", label: "Studio", hint: "Creator asset workspace" },
-  { href: "/cockpit/journal", label: "Journal", hint: "Weekly model essay" },
-  { href: "/cockpit/api-costs", label: "API Costs", hint: "Claude budget monitor" },
-  { href: "/cockpit/synthetic-monitoring", label: "Synthetic Monitoring", hint: "Production probes" },
-  { href: "/cockpit/bot-outbox", label: "Bot Outbox", hint: "Draft event planner" },
-  { href: "/cockpit/brief", label: "Daily brief", hint: "Today's slate snapshot" },
-  { href: "/cockpit/calibration", label: "Calibration", hint: "Model accountability" },
-  { href: "/cockpit/content", label: "Content", hint: "Ava · draft-only engine" },
-  { href: "/cockpit/sources", label: "Sources", hint: "Source intelligence" },
-  { href: "/cockpit/airwave", label: "Airwave", hint: "Pundit claim review" },
-  { href: "/cockpit/listener-log", label: "Listener Log", hint: "Manual broadcast claim entry" },
-  { href: "/cockpit/moderation", label: "Moderation", hint: "Community room queue" },
-  { href: "/cockpit/memory", label: "Memory", hint: "Memory review queue" },
-  { href: "/cockpit/film-room", label: "Film Room", hint: "Visual production · spend-gated" },
+// Grouped into scannable buckets; the client <CockpitNav> renders these with a
+// live active-page indicator. Every href literal stays here so the nav-coverage
+// test can pin one entry per implemented cockpit page.
+const NAV: ReadonlyArray<CockpitNavGroup> = [
+  {
+    section: "Command",
+    items: [
+      { href: "/cockpit", label: "Overview", hint: "Jarvis launch assessment" },
+      { href: "/cockpit/brief", label: "Daily brief", hint: "Today's slate snapshot" },
+      { href: "/cockpit/tasks", label: "Tasks", hint: "Queue by status" },
+      { href: "/cockpit/review", label: "Review", hint: "Needs-review + blocked" },
+    ],
+  },
+  {
+    section: "Picks & proof",
+    items: [
+      { href: "/cockpit/history", label: "History", hint: "Pick forensic ledger" },
+      { href: "/cockpit/market-twin", label: "Market Twin", hint: "Upcoming board posture" },
+      { href: "/cockpit/losses", label: "Losses", hint: "Autopsy authoring queue" },
+      { href: "/cockpit/calibration", label: "Calibration", hint: "Model accountability" },
+    ],
+  },
+  {
+    section: "Agents & memory",
+    items: [
+      { href: "/cockpit/agents", label: "Agents", hint: "Six operator roles" },
+      { href: "/cockpit/memory", label: "Memory", hint: "Memory review queue" },
+    ],
+  },
+  {
+    section: "Content & promo",
+    items: [
+      { href: "/cockpit/media", label: "Media", hint: "Draft content workflow" },
+      { href: "/cockpit/content", label: "Content", hint: "Ava · draft-only engine" },
+      { href: "/cockpit/studio", label: "Studio", hint: "Creator asset workspace" },
+      { href: "/cockpit/journal", label: "Journal", hint: "Weekly model essay" },
+      { href: "/cockpit/film-room", label: "Film Room", hint: "Visual production · spend-gated" },
+      { href: "/cockpit/promotions", label: "Promotions", hint: "Bobby · sportsbook offers" },
+      { href: "/cockpit/promo-desk", label: "Promo Desk", hint: "Operator registry" },
+      { href: "/cockpit/bot-outbox", label: "Bot Outbox", hint: "Draft event planner" },
+    ],
+  },
+  {
+    section: "Signals & sources",
+    items: [
+      { href: "/cockpit/sources", label: "Sources", hint: "Source intelligence" },
+      { href: "/cockpit/airwave", label: "Airwave", hint: "Pundit claim review" },
+      { href: "/cockpit/listener-log", label: "Listener Log", hint: "Manual broadcast claim entry" },
+      { href: "/cockpit/moderation", label: "Moderation", hint: "Community room queue" },
+    ],
+  },
+  {
+    section: "Ops",
+    items: [
+      { href: "/cockpit/api-costs", label: "API Costs", hint: "Claude budget monitor" },
+      { href: "/cockpit/synthetic-monitoring", label: "Synthetic Monitoring", hint: "Production probes" },
+    ],
+  },
 ];
 
 export default async function CockpitLayout({
@@ -108,23 +142,10 @@ export default async function CockpitLayout({
 
       <div className="mx-auto flex w-full max-w-7xl flex-1 gap-6 px-4 py-6 sm:px-6 lg:px-8">
         <aside
-          className="hidden w-56 shrink-0 flex-col gap-1 md:flex"
+          className="hidden w-56 shrink-0 md:block"
           aria-label="Cockpit navigation"
         >
-          {NAV.map(({ href, label, hint }) => (
-            <Link
-              key={href}
-              href={href}
-              className="group rounded-lg border border-transparent px-3 py-2 transition-colors hover:border-titanium/70 hover:bg-carbon/60"
-            >
-              <p className="text-sm font-medium text-ion-1 group-hover:text-ion-white">
-                {label}
-              </p>
-              <p className="text-[11px] text-ion-3 group-hover:text-ion-3">
-                {hint}
-              </p>
-            </Link>
-          ))}
+          <CockpitNav nav={NAV} />
         </aside>
 
         <main className="min-w-0 flex-1">{children}</main>
