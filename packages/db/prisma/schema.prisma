@@ -2321,3 +2321,40 @@ model TeamWeekStat {
   @@index([season, week])
   @@map("team_week_stats")
 }
+
+// ============================================================
+// UNIVERSAL SIGNAL LEDGER ("weight absolutely everything")
+// ------------------------------------------------------------
+// One row per signal that moves an entity's value — hard metrics AND soft
+// signals (practice status, rumors, coachspeak). Each row carries its OWN
+// weight + confidence (the honesty valve) + a normalized directional `value`,
+// so the weighting POLICY lives in the data (set by calibration-gated
+// populators), never hardcoded. The prediction-engine `composeLedger` bridge
+// blends these via the existing composite-score engine with freshness decay.
+// Storage only — NOT wired into the published pick score.
+// ============================================================
+
+model Signal {
+  id         String   @id @default(cuid())
+  entityType String // "player" | "team"
+  entityId   String // gsis id or team abbreviation
+  key        String // e.g. "ngs.separation", "injury.practice_status", "rumor.holdout"
+  category   String // SignalCategory value (PRODUCTION / HEALTH / NARRATIVE / ...)
+  valueRaw   Float? // source reading, retained for audit
+  value      Float // normalized directional reading (+ good / − bad) for the composer
+  weight     Float    @default(1) // base importance (>= 0)
+  confidence Float    @default(1) // 0..1 honesty valve (settled stat ≈ 1, rumor ≈ 0.2)
+  capturedAt DateTime // drives freshness decay
+
+  season Int?
+  week   Int?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([entityType, entityId, key, season, week])
+  @@index([entityType, entityId])
+  @@index([category])
+  @@map("signals")
+}
