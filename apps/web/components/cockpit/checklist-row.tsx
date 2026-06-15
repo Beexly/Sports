@@ -23,15 +23,15 @@ export function ChecklistRow({
       <span
         className={[
           "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-          ok ? "bg-green-700 text-green-100" : "bg-gray-700 text-gray-300",
+          ok ? "bg-green-700 text-green-100" : "bg-titanium/40 text-ion-1",
         ].join(" ")}
         aria-hidden="true"
       >
         {ok ? "✓" : "·"}
       </span>
       <div className="min-w-0">
-        <p className={ok ? "text-gray-200" : "text-gray-400"}>{label}</p>
-        <p className="text-[10px] text-gray-500">{detail}</p>
+        <p className={ok ? "text-ion-1" : "text-ion-2"}>{label}</p>
+        <p className="text-[10px] text-ion-3">{detail}</p>
       </div>
     </div>
   );

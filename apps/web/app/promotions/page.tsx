@@ -84,7 +84,7 @@ export default async function PromotionsPage({
                 defaultValue={state ?? ""}
                 maxLength={2}
                 placeholder="e.g. NJ"
-                className="rounded-md border border-titanium bg-obsidian px-3 py-2 text-sm text-white placeholder-gray-600 focus:border-brand-500 focus:outline-none"
+                className="rounded-md border border-titanium bg-obsidian px-3 py-2 text-sm text-ion-white placeholder-ion-3 focus:border-brand-500 focus:outline-none"
               />
             </label>
             <button

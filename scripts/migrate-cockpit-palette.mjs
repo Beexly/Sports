@@ -10,7 +10,10 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 
-const files = execSync("find apps/web/app/cockpit -name '*.tsx'", { encoding: "utf8" })
+const files = execSync(
+  "find apps/web/app/cockpit apps/web/components/cockpit -name '*.tsx'",
+  { encoding: "utf8" }
+)
   .trim()
   .split("\n")
   .filter(Boolean);

@@ -101,7 +101,7 @@ export default async function BlogPostPage({
                   <div className="text-ion-2 leading-relaxed whitespace-pre-line blur-sm select-none pointer-events-none line-clamp-3">
                     {post.content.slice(0, 300)}...
                   </div>
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-gray-950/80 to-gray-950">
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-obsidian/80 to-obsidian">
                     <div className="text-center p-6 bg-carbon border border-titanium rounded-2xl max-w-sm">
                       <div className="w-10 h-10 bg-yellow-400/10 rounded-full flex items-center justify-center mx-auto mb-3">
                         <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
