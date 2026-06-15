@@ -1,0 +1,1 @@
+Claude, review Codex’s Prisma/typecheck baseline fix. Verify that missing Prisma exports were fixed correctly, no fake `any` types were introduced, generated client/package exports are consistent, schema changes are valid, and runtime behavior was not weakened. If typecheck still fails, identify the true root cause and fix the smallest safe path.

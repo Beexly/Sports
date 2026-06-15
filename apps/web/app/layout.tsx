@@ -1,11 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Big_Shoulders_Display,
-  Instrument_Serif,
-  Inter,
-  JetBrains_Mono,
-  Syne,
-} from "next/font/google";
 import "./globals.css";
 import {
   BRAND_META,
@@ -18,47 +11,6 @@ import { CommandPalette } from "@/components/ui/command-palette";
 import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
 
-const archFont = Big_Shoulders_Display({
-  subsets: ["latin"],
-  weight: ["800", "900"],
-  variable: "--f-arch",
-  display: "swap",
-});
-
-const displayFont = Syne({
-  subsets: ["latin"],
-  variable: "--f-display",
-  display: "swap",
-});
-
-// Next 14.2's Google font manifest does not expose Geist, so --f-body uses
-// the doctrine stack's first available Google fallback while preserving the var.
-const bodyFont = Inter({
-  subsets: ["latin"],
-  variable: "--f-body",
-  display: "swap",
-});
-
-const numeralsFont = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--f-numerals",
-  display: "swap",
-});
-
-const monoFont = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--f-mono",
-  display: "swap",
-});
-
-const editorialFont = Instrument_Serif({
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-  variable: "--f-editorial",
-  display: "swap",
-});
-
 export const viewport: Viewport = {
   themeColor: "#04060a",
   width: "device-width",
@@ -68,8 +20,8 @@ export const viewport: Viewport = {
 /**
  * Root layout.
  *
- * Fonts are loaded through next/font and bound directly to the design-system
- * CSS variables consumed by `styles/design-tokens.css` and Tailwind:
+ * Font-family stacks are self-contained in `styles/design-tokens.css` so
+ * offline/Codex builds never fetch Google Fonts at compile time:
  *   --f-arch, --f-display, --f-body, --f-mono, --f-numerals, --f-editorial.
  *
  * SEO foundation:
@@ -184,20 +136,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const fontVariables = [
-    archFont.variable,
-    displayFont.variable,
-    bodyFont.variable,
-    numeralsFont.variable,
-    monoFont.variable,
-    editorialFont.variable,
-  ].join(" ");
-
   return (
-    <html lang="en" className={`scroll-smooth ${fontVariables}`}>
+    <html lang="en" className="scroll-smooth">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

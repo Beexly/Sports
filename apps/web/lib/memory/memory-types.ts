@@ -1,0 +1,4 @@
+export const MEMORY_TYPES = ["OWNER_DECISION", "SPRINT_OUTCOME", "CLAUDE_REVIEW", "MODEL_LESSON", "CALIBRATION_LESSON", "DATA_RIGHTS_DECISION", "SOURCE_RELIABILITY_LESSON", "PUBLIC_GATE_DECISION", "BLOCKER", "SUPPORT_PATTERN", "AGENT_HANDOFF", "HISTORICAL_DATA_LESSON", "PROJECTION_FEATURE_DECISION"] as const;
+export type MemoryType = (typeof MEMORY_TYPES)[number];
+export type MemoryStatus = "CANDIDATE" | "NEEDS_OWNER_REVIEW" | "APPROVED" | "REJECTED" | "ARCHIVED";
+export interface MemoryCandidate { readonly id: string; readonly type: MemoryType; readonly title: string; readonly summary: string; readonly source: string; readonly createdByAgent: string; readonly sensitivity: "LOW" | "MEDIUM" | "HIGH"; readonly status: MemoryStatus; readonly ownerApprovalRequired: boolean; readonly relatedArtifact: string | null; readonly createdAt: string; readonly reviewedAt: string | null; readonly rejectedReason: string | null; }

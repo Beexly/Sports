@@ -22,8 +22,50 @@
  */
 
 import { spawnSync } from "node:child_process";
+import { appendFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
+const REPO_LOCK_PATH = resolve(process.cwd(), "CODEX_REPO_LOCK.md");
+
+function gitOutput(argv) {
+  const result = spawnSync("git", argv, {
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  if (result.status !== 0) {
+    return (result.stderr || result.stdout || `git ${argv.join(" ")} failed`).trim();
+  }
+  return result.stdout.trim() || "(none)";
+}
+
+function appendGitEnvironmentLock() {
+  const branch = gitOutput(["branch", "--show-current"]);
+  const status = gitOutput(["status", "--short"]);
+  const remotes = gitOutput(["remote", "-v"]);
+  const branches = gitOutput(["branch", "-a", "--no-color"]);
+  const hasOriginMain = /(^|\n)\s*remotes\/origin\/main(\s|$)/.test(branches);
+  const hasLocalMain = /(^|\n)\s*main(\s|$)/.test(branches);
+  const baseDecision = hasOriginMain
+    ? "origin/main is available as the base reference"
+    : hasLocalMain
+      ? "local main is available as the base reference"
+      : `continue on current branch ${branch || "(unknown)"} because no main remote/local base is configured`;
+
+  appendFileSync(
+    REPO_LOCK_PATH,
+    [
+      `\n## Morning setup git environment — ${new Date().toISOString()}\n`,
+      `- Current branch: ${branch}`,
+      `- Status: ${status === "(none)" ? "clean" : status.replaceAll("\n", "; ")}`,
+      `- Remotes: ${remotes.replaceAll("\n", "; ")}`,
+      `- Branches: ${branches.replaceAll("\n", "; ")}`,
+      `- Base decision: ${baseDecision}`,
+      "- Branch safety: never assume or use `master`; prefer `main` when available.",
+      "",
+    ].join("\n"),
+  );
+}
 
 const steps = [
   {
@@ -50,6 +92,8 @@ async function pingServer() {
     return false;
   }
 }
+
+appendGitEnvironmentLock();
 
 const serverUp = await pingServer();
 if (!serverUp) {

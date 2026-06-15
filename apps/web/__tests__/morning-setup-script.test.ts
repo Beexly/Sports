@@ -14,6 +14,15 @@ const repoRoot = resolve(__dirname, "..", "..", "..");
 const src = readFileSync(resolve(repoRoot, "scripts/morning-setup.mjs"), "utf8");
 
 describe("scripts/morning-setup.mjs", () => {
+  it("records the git environment in the repo lock file without assuming a remote", () => {
+    expect(src).toMatch(/CODEX_REPO_LOCK\.md/);
+    expect(src).toMatch(/appendGitEnvironmentLock/);
+    expect(src).toMatch(/branch", "--show-current/);
+    expect(src).toMatch(/remote", "-v/);
+    expect(src).toMatch(/origin\/main/);
+    expect(src).toMatch(/never assume or use `master`/);
+  });
+
   it("runs db:seed", () => {
     expect(src).toMatch(/"db:seed"/);
   });
