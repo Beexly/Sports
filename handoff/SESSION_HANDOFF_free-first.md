@@ -55,16 +55,40 @@ NCAA confirmation, $0 spend; exits non-zero on failure). Last run: 12/12 ok.
   matching + DISPUTED-holds against the mock, THEN validate against a real DB before enabling.
 
 ## Other open threads (lower priority, mostly safe)
-
-- **Owner-review batch:** `handoff/codex/galaxy-2026-limit-push/OWNER_REVIEW_BATCH_01.md` has
-  bulk decisions drafted for the 721 gated resource-dump items (adopt ~12 self-host RSS readers;
-  reject copyrighted replays + out-of-scope tools). Waiting on owner to accept buckets.
 - **CFBD** (College Football Data API) — free with registration, DEEP CFB stats; needs a terms
   read + owner clearance before wiring. The real "king of stats" CFB depth source.
 - **Self-host henrygd** to drop the public-demo 5 req/sec cap: `docker/docker-compose.yml`
   service `ncaa-api`, then set `HENRYGD_NCAA_BASE_URL`.
 - Women's basketball (`HENRYGD_PATHS.wbb`) would need a new `Sport` union member + ESPN path
   (`womens-college-basketball`) — touches core types, so scope it deliberately.
+
+## The owner's link dump — what it is, and what to expect
+
+Owner provided a large resource dump (`garrett-resource-dump-2026-06-15.md`, SHA-256
+`957f68dec0…`). It was normalized to **11,126 unique resources** in
+`handoff/codex/galaxy-2026-limit-push/` (ledger CSV + 6 generated docs). Dispositions:
+approved_internal_reference 8166 · approved_direct 1489 · owner_review 721 ·
+quarantine 632 (piracy/evasion, terminal) · rejected_noise 118.
+
+**Critical framing for the next session:** this dump is a **general-purpose FMHY-style
+mega-list** (movies/TV/games/hobby databases/dev+design+AI tools) — **NOT a sports-data
+collection.** A full keyword sweep found **zero odds/sportsbook/betting sources and no
+sports-stats APIs.** The only "sports" hits are copyrighted replays/highlights (quarantined
+or owner-review), a soccer browser game, an NBA guessing game, and an NFL schedule chart —
+none usable as data. **Do not go hunting the dump for stats sources; there are none.**
+
+The platform's free stats sources (ESPN, henrygd, Open-Meteo, nflverse) were sourced
+independently, not from the dump. The dump's real value is **operational tooling**:
+- Built: `apps/web/lib/data-sources/resource-intelligence.ts` (rights-gated ledger engine,
+  wired into the cockpit; leak-proof — quarantine terminal, owner-review can't reach public
+  claims/StatKing/Airwave/automation, enforced by `findGatedLeaks` + tests).
+- Owner-review batch with bulk decisions drafted:
+  `handoff/codex/galaxy-2026-limit-push/OWNER_REVIEW_BATCH_01.md` (recommend: adopt ~12
+  self-host RSS readers for content monitoring; reject copyrighted replays + out-of-scope
+  tools). **Waiting on owner to accept buckets.**
+- Real sports-stats source candidates live SEPARATELY in
+  `apps/web/lib/scraping/sports-data-candidates.ts` (CFBD, etc.) — that's where sports-data
+  work happens, not the dump.
 
 ## Working rules / gotchas
 
