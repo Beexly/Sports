@@ -1,0 +1,3 @@
+export interface LineSnapshot { readonly gameId: string; readonly market: "spread" | "total" | "moneyline"; readonly line: number; readonly price: number; readonly capturedAt: string; readonly kind: "OPEN" | "CURRENT" | "CLOSE"; }
+export function preserveOpeningLine(existing: readonly LineSnapshot[], incoming: LineSnapshot): readonly LineSnapshot[] { return incoming.kind === "OPEN" && existing.some((line) => line.kind === "OPEN" && line.gameId === incoming.gameId && line.market === incoming.market) ? existing : [...existing, incoming]; }
+export function canSetClosingLine(now: string, commenceTime: string): boolean { return Date.parse(now) >= Date.parse(commenceTime); }

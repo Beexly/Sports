@@ -1,0 +1,2 @@
+import type { LineSnapshot } from "./line-snapshot";
+export function computeClvCandidate(open: LineSnapshot | null, close: LineSnapshot | null, resultKnown: boolean) { if (!open || !close || !resultKnown) return { status: "BLOCKED" as const, clv: null, reason: "closing-line-and-result-required" }; if (open.gameId !== close.gameId || open.market !== close.market) return { status: "BLOCKED" as const, clv: null, reason: "open-close-game-or-market-mismatch" }; return { status: "READY" as const, clv: close.line - open.line, reason: "ready" }; }
