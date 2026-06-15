@@ -33,6 +33,23 @@ services:
       timeout: 5s
       retries: 5
 
+  # Self-hosted henrygd NCAA API — FREE NCAA facts (scores/standings/rankings),
+  # no key. Self-hosting drops the public demo's 5 req/sec/IP cap and improves
+  # reliability. Point the app at it with HENRYGD_NCAA_BASE_URL=http://localhost:3000
+  # (or http://ncaa-api:3000 from inside the compose network).
+  # Source: https://github.com/henrygd/ncaa-api  (verify the image tag before pinning).
+  ncaa-api:
+    image: ghcr.io/henrygd/ncaa-api:latest
+    container_name: sports_ncaa_api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
 volumes:
   postgres_data:
   redis_data:
