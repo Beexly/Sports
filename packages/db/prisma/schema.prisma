@@ -2264,3 +2264,60 @@ model PfrAdvStat {
   @@index([statType, season])
   @@map("pfr_adv_stats")
 }
+
+// ============================================================
+// TEAM WEEK STATS (nflverse `stats_team` aggregates — CC-BY-4.0)
+// ------------------------------------------------------------
+// Published team-week aggregates: offensive EPA/CPOE + air yards/first downs/
+// TDs and headline defensive box (sacks, INTs, QB hits, TFL, PDs). Complements
+// the PBP-DERIVED `TeamGameEfficiency` (per-play EPA/success) with the published
+// box+CPOE view. Phase-A persistence — storage only, not a scoring input.
+// Real columns verified against the live release headers 2026-06-15.
+// ============================================================
+
+model TeamWeekStat {
+  id         String  @id @default(cuid())
+  season     Int
+  week       Int
+  seasonType String  @default("REG")
+  team       String
+  opponent   String?
+
+  // Offense
+  completions    Int?
+  attempts       Int?
+  passYards      Float?
+  passTds        Int?
+  passInt        Int?
+  sacksSuffered  Int?
+  passAirYards   Float?
+  passYac        Float?
+  passFirstDowns Int?
+  passEpa        Float?
+  passCpoe       Float?
+  carries        Int?
+  rushYards      Float?
+  rushTds        Int?
+  rushFirstDowns Int?
+  rushEpa        Float?
+  receptions     Int?
+  targets        Int?
+  recYards       Float?
+  recEpa         Float?
+
+  // Defense (headline box)
+  defSacks          Float?
+  defInterceptions  Int?
+  defQbHits         Int?
+  defTacklesForLoss Int?
+  defPassDefended   Int?
+  defTds            Int?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([team, season, week, seasonType])
+  @@index([season, week])
+  @@map("team_week_stats")
+}
