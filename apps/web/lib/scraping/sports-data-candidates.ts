@@ -83,7 +83,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: true,
     registrySourceId: "collegefootballdata",
     verificationSteps: STANDARD_STEPS,
-    notes: "Highest-priority free CFB stats source. Already a vendor_candidate in the rights registry; terms page is JS-rendered and needs a human/legal read before flipping flags.",
+    notes: "Highest-priority free CFB stats source. Already a vendor_candidate in the rights registry; terms page is JS-rendered and needs a human/legal read before flipping flags. OWNER-APPROVED to start gated work: terms-read checklist (docs/legal/VENDOR_QUESTIONNAIRE_CFBD.md) + adapter scaffold against a verified schema — ingestion stays blocked until terms clear.",
   },
   {
     id: "henrygd-ncaa",
@@ -100,7 +100,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: false,
     registrySourceId: null,
     verificationSteps: STANDARD_STEPS,
-    notes: "Useful no-key fallback. Derived from NCAA.com — confirm the redistribution posture of NCAA.com-sourced facts and prefer self-hosting before any reliance.",
+    notes: "Useful no-key fallback. Derived from NCAA.com — confirm the redistribution posture of NCAA.com-sourced facts and prefer self-hosting before any reliance. OWNER-APPROVED as the FREE-FIRST primary for NCAA facts (cost-policy tier free_unlimited): exhaust this before spending on any paid source; self-host to drop the public-demo rate cap.",
   },
   {
     id: "balldontlie-ncaaf",
@@ -185,7 +185,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: true,
     registrySourceId: "the-odds-api",
     verificationSteps: STANDARD_STEPS,
-    notes: "Provider already approved_api in the rights registry and wired via THE_ODDS_API_KEY. This entry only records that the NCAAF sport key extends existing, licensed coverage — confirm the americanfootball_ncaaf key is included in the current plan.",
+    notes: "Provider already approved_api in the rights registry and wired via THE_ODDS_API_KEY. OWNER-APPROVED: americanfootball_ncaaf is ALREADY active in SUPPORTED_SPORTS (every refresh iterates it), so CFB odds ride the existing license at no new integration cost. Cost caveat: the free tier is 500 credits/mo across all sports — recommend gating refreshes to in-season sports to conserve credits.",
   },
   {
     id: "therundown",
