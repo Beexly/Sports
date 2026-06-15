@@ -177,6 +177,10 @@ export type { TeamGameEfficiency, TeamRating, OpponentAdjustOptions } from "./op
 // plus attributed contributions for interpretation/narration.
 export { compositeScore } from "./composite-score.js";
 export type { WeightedSignal, SignalContribution, CompositeScore, CompositeScoreOptions } from "./composite-score.js";
+// Universal signal ledger — the persistent "weight everything" accumulation layer
+// that bridges stored ledger rows to the composer (NOT wired into the live score).
+export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
+export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
 
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";

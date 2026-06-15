@@ -8,6 +8,7 @@ import { StakingCalculator } from "@/components/tracker/staking-calculator";
 import { BRAND_COLORS } from "@/lib/brand";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
+import { glossaryEntry } from "@/lib/glossary";
 
 export const metadata: Metadata = {
   title: "CLV Tracker — Your Glass-Box Bet Ledger",
@@ -67,6 +68,12 @@ export default async function TrackPage() {
                 Your record is mostly variance over any human-sized sample. Closing Line Value isn't — beating the
                 close consistently is the strongest public proof you have an edge. Log your bets, settle them with the
                 closing price, and watch your real scoreboard. It lives in your browser; nothing leaves your device.
+              </p>
+            </Reveal>
+            <Reveal delay={220}>
+              <p className="mt-5 max-w-2xl rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-ink-300">
+                <span className="font-semibold text-white">New to CLV?</span> {glossaryEntry("clv")?.plain}{" "}
+                {glossaryEntry("clv")?.more}
               </p>
             </Reveal>
           </div>

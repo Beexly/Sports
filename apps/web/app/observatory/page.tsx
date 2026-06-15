@@ -141,6 +141,21 @@ export default async function ObservatoryPage() {
                 )}
               </p>
             </Reveal>
+            <Reveal delay={200}>
+              <dl className="mt-6 grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+                {[
+                  { k: "Brightness", v: "how much signal a game has — brighter means more for the model to read." },
+                  { k: "Halo", v: "uncertainty — a wider halo means the read is shakier." },
+                  { k: "Wobble", v: "disagreement — the model's own signals pull against each other." },
+                  { k: "Ring", v: "our confidence in the read, firming up toward kickoff." },
+                ].map(({ k, v }) => (
+                  <div key={k} className="flex gap-2">
+                    <dt className="shrink-0 font-semibold text-ink-200">{k}:</dt>
+                    <dd className="text-ink-300">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </Reveal>
             <Reveal delay={140} className="mt-8">
               <GalaxySlateTwinLazy slate={slate} />
             </Reveal>

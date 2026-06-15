@@ -1,31 +1,32 @@
 import { Shell, Cards, Badge, DataTable, StatusRibbon, BarChart } from "../_components";
 import { loadPlayers } from "@/lib/statking/product";
 export const metadata = {
-  title: "Injury Report — Status & Fantasy Impact",
-  description: "Current injury status mapped to role and fantasy impact across the player universe.",
+  title: "Player Status & Movement — Injuries, Roles & Trends",
+  description: "Current injury/role status mapped to fantasy impact, plus the players whose usage, role, or trend is moving most — one place for what changed.",
   alternates: { canonical: "/stats/injuries" },
 };
 export default function Page() {
   const players = loadPlayers();
   const flagged = players.filter(p => p.status !== "Active");
   const active = players.filter(p => p.status === "Active");
-  const needsFeed = players.filter(p => p.missing_data && Array.isArray(p.missing_data) && p.missing_data.some(m => /injur/i.test(String(m))));
+  const risers = [...players].sort((a, b) => b.trend_score - a.trend_score).slice(0, 15);
 
   return (
-    <Shell title="Injury Report" eyebrow="Status & impact">
+    <Shell title="Player Status & Movement" eyebrow="What changed">
       <StatusRibbon status={flagged.length > 0 ? "blocked" : "active"} label={flagged.length > 0 ? `${flagged.length} players with status flags` : "No active injury flags"} />
       <Cards items={[
         { label: "Players tracked", value: players.length },
         { label: "Status flags", value: flagged.length },
         { label: "Active", value: active.length },
-        { label: "Need live feed", value: needsFeed.length }
+        { label: "High volatility", value: players.filter(p => p.volatility_score >= 60).length }
       ]} />
+
+      {/* ── Status (injury & role) ───────────────────────────── */}
+      <h2 className="text-2xl font-semibold text-ion-white">Injury &amp; role status</h2>
       <p className="text-ion-1">
         Current status mapped to role and fantasy impact, so a designation reads as a usage consequence, not just a label.
       </p>
-      <div className="space-y-3">
-        <Badge tone="warn">Official injury designations require a licensed feed; status shown is from public roster signal.</Badge>
-      </div>
+      <Badge tone="warn">Official injury designations require a licensed feed; status shown is from public roster signal.</Badge>
       {flagged.length > 0 && (
         <div className="grid gap-4 md:grid-cols-3">
           {flagged.slice(0, 3).map(p => (
@@ -41,21 +42,37 @@ export default function Page() {
           ))}
         </div>
       )}
-      <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">All Flagged Players</h2>
-        <DataTable
-          rows={flagged.map(p => ({
-            player: String(p.name ?? ""),
-            team: String(p.team ?? ""),
-            position: String(p.position ?? ""),
-            status: String(p.status ?? ""),
-            usage: Number(p.usage_score ?? 0),
-            fantasy_edge: Number(p.fantasy_edge ?? 0),
-            missing_data: Array.isArray(p.missing_data) ? p.missing_data.join("; ") : ""
-          }))}
-          maxRows={50}
-        />
-      </div>
+      <DataTable
+        rows={flagged.map(p => ({
+          player: String(p.name ?? ""),
+          team: String(p.team ?? ""),
+          position: String(p.position ?? ""),
+          status: String(p.status ?? ""),
+          usage: Number(p.usage_score ?? 0),
+          fantasy_edge: Number(p.fantasy_edge ?? 0),
+          missing_data: Array.isArray(p.missing_data) ? p.missing_data.join("; ") : ""
+        }))}
+        maxRows={50}
+      />
+
+      {/* ── Movement (usage/role/trend) ──────────────────────── */}
+      <h2 className="mt-2 text-2xl font-semibold text-ion-white">Movement watch</h2>
+      <p className="text-ion-1">
+        The players whose role, usage, or trend is moving most — the changes worth acting on before the market catches up.
+      </p>
+      <Badge tone="warn">Real-time email &amp; push delivery is an Elite feature and owner-gated; this is the underlying signal layer.</Badge>
+      <DataTable
+        rows={risers.map(p => ({
+          player: String(p.name ?? ""),
+          team: String(p.team ?? ""),
+          position: String(p.position ?? ""),
+          trend_score: Number(p.trend_score ?? 0),
+          usage_score: Number(p.usage_score ?? 0),
+          role_score: Number(p.role_score ?? 0),
+          status: String(p.status ?? "")
+        }))}
+        maxRows={15}
+      />
     </Shell>
   );
 }
