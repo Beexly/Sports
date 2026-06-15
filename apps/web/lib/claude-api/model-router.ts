@@ -45,10 +45,31 @@ const SURFACE_TIER: Record<ClaudeSurface, ModelTier> = {
   brief: "sonnet", // recommended: haiku (templated daily summary)
 };
 
+/**
+ * RECOMMENDED routing — the validated target tier per surface (the intent captured in
+ * the SURFACE_TIER comments, made machine-readable). ACTIVE routing stays all-Sonnet
+ * until each flip is validated; this map drives the cost-savings analysis in
+ * `model-economics.ts` so the deliberate flip is data-informed. Editing this map does
+ * NOT change runtime behavior — only `SURFACE_TIER` (ACTIVE) does.
+ */
+export const SURFACE_RECOMMENDED: Record<ClaudeSurface, ModelTier> = {
+  studio: "sonnet",
+  journal: "sonnet",
+  "calibration-insight": "haiku",
+  "model-court": "opus",
+  content: "sonnet",
+  brief: "haiku",
+};
+
 /** Resolve the model id for a surface. Unknown surfaces fall back to Sonnet. */
 export function pickModelForSurface(surface: ClaudeSurface): string {
   const tier = SURFACE_TIER[surface] ?? "sonnet";
   return MODELS[tier];
+}
+
+/** The currently-active tier for a surface (Sonnet today). */
+export function activeTierForSurface(surface: ClaudeSurface): ModelTier {
+  return SURFACE_TIER[surface] ?? "sonnet";
 }
 
 export const ALL_SURFACES = Object.keys(SURFACE_TIER) as ClaudeSurface[];

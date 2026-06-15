@@ -1,0 +1,43 @@
+# promptfoo eval gate — prove a cheaper model matches the active model BEFORE flipping a
+# surface in apps/web/lib/claude-api/model-router.ts (SURFACE_TIER). This is the guardrail
+# that makes the model-economics savings safe to capture.
+#
+# Run (needs ANTHROPIC_API_KEY; add GROQ_API_KEY to also test the internal tier):
+#   npm run eval:prompts
+#
+# Flow: pick a downgrade candidate from model-economics surfaceEconomics() (e.g.
+# calibration-insight: Sonnet -> Haiku saves ~67%), validate parity here, then flip that
+# one line in model-router. Keep Claude on any surface that fails the rubric.
+
+description: "Model-downgrade parity gate for Claude surfaces"
+
+prompts:
+  # Replace each with the real system+user prompt for the surface under test.
+  # Keep the {{input}} var so the same cases run across providers.
+  - "You are the calibration-insight surface. Given these settled-pick stats, write a 2-sentence, factual, no-hype read.\n\nStats:\n{{input}}"
+
+providers:
+  - id: anthropic:messages:claude-sonnet-4-6      # ACTIVE (baseline to match)
+    label: sonnet-active
+  - id: anthropic:messages:claude-haiku-4-5-20251001  # downgrade candidate
+    label: haiku-candidate
+  # Internal tier (uncomment once GROQ_API_KEY is set — see OWNER_ACTION_ITEMS.md):
+  # - id: groq:llama-3.3-70b-versatile
+  #   label: groq-internal
+
+defaultTest:
+  assert:
+    - type: cost            # fail if a "cheaper" model somehow costs more
+      threshold: 0.01
+    - type: latency
+      threshold: 8000
+    - type: llm-rubric      # the parity bar — judged against the active model's job
+      value: >
+        Factual and data-grounded (no fabricated numbers), on-brand (calm, no hype,
+        no guarantees), 2 sentences, and directly reflects the provided stats.
+
+tests:
+  - vars:
+      input: "Last 100 settled picks: 54-46 ATS, ROI +3.1%, Brier 0.232, best in NBA totals (28-18)."
+  - vars:
+      input: "Last 50 settled picks: 22-28 ATS, ROI -4.0%, Brier 0.261, weakest in NFL spreads (6-12)."
