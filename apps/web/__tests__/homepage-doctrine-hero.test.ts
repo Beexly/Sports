@@ -13,14 +13,13 @@ describe("homepage doctrine hero", () => {
   const tailwind = readRepoFile("apps/web/tailwind.config.ts");
   const galaxy = readRepoFile("apps/web/components/hero/interactive-galaxy.tsx");
 
-  it("keeps doctrine font families self-contained for offline builds", () => {
-    expect(layout).not.toMatch(/next\/font\/google/);
-    expect(layout).not.toMatch(/fonts\.googleapis\.com/);
-    expect(tokens).toMatch(/--f-arch: "Big Shoulders Display"/);
-    expect(tokens).toMatch(/--f-display: "Syne"/);
+  it("loads the doctrine font families through next/font and binds the CSS vars", () => {
+    expect(layout).toMatch(/Big_Shoulders_Display/);
+    expect(layout).toMatch(/Syne/);
+    expect(layout).toMatch(/Inter/);
     expect(tokens).toMatch(/--f-body: "Geist", "Inter"/);
-    expect(tokens).toMatch(/--f-mono: "JetBrains Mono"/);
-    expect(tokens).toMatch(/--f-editorial: "Instrument Serif"/);
+    expect(layout).toMatch(/JetBrains_Mono/);
+    expect(layout).toMatch(/Instrument_Serif/);
     for (const cssVar of [
       "--f-arch",
       "--f-display",
@@ -29,7 +28,7 @@ describe("homepage doctrine hero", () => {
       "--f-numerals",
       "--f-editorial",
     ]) {
-      expect(tokens).toContain(cssVar);
+      expect(layout).toContain(`variable: "${cssVar}"`);
       expect(tailwind).toContain(`var(${cssVar})`);
     }
     expect(tokens).not.toMatch(/fonts\.googleapis\.com/);
