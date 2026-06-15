@@ -698,7 +698,7 @@ function DecisionQueueZone({ decisions }: { decisions: readonly OwnerDecision[] 
           <li key={i} className="flex items-start gap-3">
             <span
               className={[
-                "mt-0.5 flex-shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest",
+                "mt-0.5 flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest",
                 d.urgency === "CRITICAL"
                   ? "bg-red-950/50 text-red-300"
                   : d.urgency === "HIGH"
@@ -734,10 +734,10 @@ function PicksDeskZone({
     >
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
             Where Are Our Picks?
           </h2>
-          <p className="mt-0.5 text-[9px] leading-relaxed text-ion-3">
+          <p className="mt-1 text-[11px] leading-relaxed text-ion-3">
             {picks.publicReadinessExplanation}
           </p>
         </div>
@@ -827,10 +827,10 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
     >
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ultraviolet">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ultraviolet">
             Performance Gate
           </h2>
-          <p className="mt-0.5 text-[9px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ion-3">
             Internal goal · Bootstrap + pending excluded
           </p>
         </div>
@@ -848,13 +848,13 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
 
       <div className="mb-4 grid grid-cols-2 gap-2">
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Target</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Target</p>
           <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ultraviolet">
             {performance.targetPct}%
           </p>
         </div>
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Win Rate</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Win Rate</p>
           <p
             className={[
               "mt-1 text-2xl font-bold tabular-nums leading-none",
@@ -867,14 +867,14 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
           </p>
         </div>
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Sample</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Sample</p>
           <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ion-white">
             {performance.canonicalSampleSize}
           </p>
-          <p className="text-[8px] text-ion-3">of {performance.minimumRequired} req.</p>
+          <p className="text-[10px] text-ion-3">of {performance.minimumRequired} req.</p>
         </div>
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Gate</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Gate</p>
           <p
             className={[
               "mt-1 text-2xl font-bold leading-none",
@@ -883,7 +883,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
           >
             {performance.isGateOpen ? "ON" : "OFF"}
           </p>
-          <p className="text-[8px] text-ion-3">PERF_STATS_EN</p>
+          <p className="text-[10px] text-ion-3">PERF_STATS_EN</p>
         </div>
       </div>
 
@@ -905,7 +905,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
         </p>
       )}
 
-      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-0.5 text-[8px] text-ion-3">
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-ion-3">
         <span>Bootstrap: excluded</span>
         <span>Pending: excluded</span>
         {performance.smallSampleWarning && (
@@ -924,10 +924,10 @@ function DepartmentsZone({ departments }: { departments: readonly DepartmentSumm
     >
       <div className="flex items-center justify-between border-b border-titanium/30 px-5 py-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
             Agent Command Map
           </h2>
-          <p className="mt-0.5 text-[9px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ion-3">
             {departments.length} departments · All agents draft-only · No external actions without
             approval
           </p>
@@ -960,7 +960,7 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
         {dept.name}
       </span>
       {dept.agentDisplayName && (
-        <span className="hidden w-16 flex-shrink-0 font-mono text-[8px] text-ion-3/60 sm:block">
+        <span className="hidden w-16 flex-shrink-0 font-mono text-[10px] text-ion-3/60 sm:block">
           {dept.agentDisplayName}
         </span>
       )}
@@ -968,11 +968,11 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
         {dept.oneLiner}
       </span>
       {dept.actionRequired && (
-        <span className="flex-shrink-0 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest text-yellow-300">
+        <span className="flex-shrink-0 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">
           Action
         </span>
       )}
-      <span className="flex-shrink-0 font-mono text-[8px] uppercase tracking-widest text-ion-3/40">
+      <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-widest text-ion-3/40">
         {dept.agentMode.replace("_", " ").toLowerCase()}
       </span>
       {dept.drilldownHref && (
@@ -1002,10 +1002,10 @@ function AiOpsZone({ aiOps }: { aiOps: AiOpsSummary }) {
     >
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ultraviolet">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ultraviolet">
             AI Ops / Build Control
           </h2>
-          <p className="mt-0.5 text-[9px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ion-3">
             Claude API · ccusage · Model lane policy
           </p>
         </div>
@@ -1066,10 +1066,10 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
     >
       <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
             Jarvis Memory Protocol
           </h2>
-          <p className="mt-0.5 text-[9px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ion-3">
             Persistent memory · cross-session recall · episodic decisions
           </p>
         </div>
@@ -1106,7 +1106,7 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
             key={String(label)}
             className="rounded-lg border border-titanium/30 bg-obsidian/40 px-2 py-1.5 text-center"
           >
-            <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">
               {label}
             </p>
             <p className="font-mono text-[10px] text-ion-2">
@@ -1154,7 +1154,7 @@ function LaunchStatusBadge({ status }: { status: JarvisLaunchStatus }) {
   return (
     <span
       className={[
-        "rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest",
+        "rounded-md px-2 py-0.5 text-xs font-bold uppercase tracking-widest",
         styles[status],
       ].join(" ")}
     >
