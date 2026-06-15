@@ -28,6 +28,12 @@ import {
   deriveSourceConfidence,
   type ConfidenceLevel,
 } from "@/lib/data-sources/source-confidence";
+import {
+  freeCoverageMatrix,
+  ALL_SPORTS,
+  planIngestion,
+  type StatNeed,
+} from "@/lib/data-sources/source-router";
 
 export const dynamic = "force-dynamic";
 
@@ -130,6 +136,23 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
       card.confidence ??
       deriveSourceConfidence({ cost: card.cost, status: card.status }),
   }));
+
+  // Free-first coverage: which needs are already covered free vs require spend.
+  const coverage = freeCoverageMatrix();
+  const coverageTotal = coverage.length;
+  const coverageFree = coverage.filter((r) => r.freeCovers).length;
+  const coverageSpend = coverage.filter((r) => r.mustSpend).length;
+  const spendNeeds = Array.from(
+    new Set(coverage.filter((r) => r.mustSpend).map((r) => r.need)),
+  ) as StatNeed[];
+  // For each spend need, the free candidates that — once cleared — remove the spend.
+  const spendUnlock = spendNeeds.map((need) => {
+    const ids = new Set<string>();
+    for (const sport of ALL_SPORTS) {
+      for (const s of planIngestion(need, sport).unlockToGoFree) ids.add(s.name);
+    }
+    return { need, sources: Array.from(ids) };
+  });
 
   return (
     <div className="flex flex-col gap-6">
@@ -450,6 +473,41 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
                 >
                   {item.name}
                 </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section data-testid="free-first-coverage" className="overflow-hidden rounded-2xl border border-emerald-900/40 bg-emerald-950/10">
+        <div className="border-b border-emerald-900/40 px-5 py-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-emerald-300">
+            Free-first
+          </p>
+          <h2 className="mt-1 text-sm font-semibold text-white">Free coverage vs paid spend</h2>
+          <p className="mt-1 text-xs leading-5 text-gray-400">
+            Use every free, cleared source before any paid API. Scores (ESPN, all sports)
+            and weather (Open-Meteo) are live and free; odds still require the licensed
+            Odds API until a free odds source clears.
+          </p>
+        </div>
+        <div className="grid gap-3 p-5 sm:grid-cols-3">
+          <Metric label="Need×sport covered" value={String(coverageTotal)} detail="across all sports" />
+          <Metric label="Free-covered" value={String(coverageFree)} detail="zero marginal cost" />
+          <Metric label="Require spend" value={String(coverageSpend)} detail="no free cleared source yet" />
+        </div>
+        {spendUnlock.length > 0 && (
+          <div className="border-t border-emerald-900/40 px-5 py-4">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+              Clear these free sources to stop paying
+            </h3>
+            <div className="mt-3 space-y-2">
+              {spendUnlock.map((row) => (
+                <div key={row.need} className="text-xs text-gray-300">
+                  <span className="font-semibold text-white">{row.need}</span>
+                  {": "}
+                  {row.sources.length > 0 ? row.sources.join(", ") : "no free candidate yet"}
+                </div>
               ))}
             </div>
           </div>
