@@ -32,6 +32,8 @@
     "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/eval-contracts.mjs",
     "evals:contracts": "node scripts/eval-contracts.mjs",
     "snapshots:regen": "node scripts/regenerate-launch-snapshots.mjs",
+    "resource-intel:generate": "npx tsx scripts/generate-resource-intelligence.mjs",
+    "test:resource-intel": "vitest run apps/web/__tests__/resource-intelligence.test.ts",
     "deploy:ready": "node scripts/check-deploy-readiness.mjs",
     "stripe:seed": "node scripts/seed-stripe-prices.mjs",
     "lint:brand": "npm run test:brand-safety",
