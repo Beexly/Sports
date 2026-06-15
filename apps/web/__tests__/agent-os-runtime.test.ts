@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createPrismaAgentTaskStore } from "@/lib/tasks/agent-task-store";
+import { createPrismaAgentTaskStore, toOperatorAgentBucket } from "@/lib/tasks/agent-task-store";
 import { persistRoutedTask, canTransitionTask } from "@/lib/tasks/agent-task-runtime";
 import { persistAgentOSTaskSeed } from "@/lib/tasks/agent-task-seed-runtime";
 import { listSeedAgentTasks } from "@/lib/tasks/agent-task-router";
@@ -40,6 +40,15 @@ describe("persisted task runtime", () => {
     expect(canTransitionTask(ownerTask, "COMPLETED")).toBe(false);
     expect(canTransitionTask(blockedTask, "COMPLETED")).toBe(false);
     expect(canTransitionTask(blockedTask, "NEEDS_OWNER_APPROVAL")).toBe(true);
+  });
+
+  it("maps every Agent OS agent into a valid 6-role OperatorAgent bucket for persistence", () => {
+    const valid = new Set(["JARVIS", "SARAH", "TAL", "SCOUT", "AVA", "BOBBY"]);
+    for (const task of listSeedAgentTasks()) {
+      expect(valid.has(toOperatorAgentBucket(task.assignedAgent))).toBe(true);
+    }
+    expect(toOperatorAgentBucket("prism")).toBe("SCOUT");
+    expect(toOperatorAgentBucket("unknown-agent")).toBe("JARVIS"); // safe default
   });
 });
 

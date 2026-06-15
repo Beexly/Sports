@@ -20,6 +20,22 @@ export interface AgentTaskStore {
 
 const SOURCE = "agent-os-runtime";
 
+// CockpitTask.assignedAgent is the OLD 6-role OperatorAgent enum (deliberately a
+// tight set — see lib/cockpit/agents.ts). The Agent OS has 23 agents, so we map
+// each to its nearest operator bucket for the DB column; the PRECISE agent id is
+// preserved in the task payload (which agent-task-store.list reads back from).
+const OPERATOR_AGENT_BUCKET: Readonly<Record<string, string>> = {
+  jarvis: "JARVIS", meter: "JARVIS", archive: "JARVIS", chain: "JARVIS", ledger: "JARVIS", audit: "JARVIS",
+  scout: "SCOUT", delta: "SCOUT", prism: "SCOUT", ascend: "SCOUT",
+  tal: "TAL", relay: "TAL", pilot: "TAL", echo: "TAL", vector: "TAL",
+  sarah: "SARAH", gauge: "SARAH", pulse: "SARAH",
+  ava: "AVA", quill: "AVA",
+  bobby: "BOBBY", flare: "BOBBY", mint: "BOBBY",
+};
+export function toOperatorAgentBucket(agentId: string): string {
+  return OPERATOR_AGENT_BUCKET[agentId.toLowerCase()] ?? "JARVIS";
+}
+
 function toDelegate(client: unknown): MinimalCockpitTaskDelegate | null {
   const maybe = client as { cockpitTask?: MinimalCockpitTaskDelegate };
   return maybe.cockpitTask ?? null;
@@ -59,6 +75,10 @@ export function createPrismaAgentTaskStore(client: unknown = db): AgentTaskStore
           id: task.id,
           title: task.title,
           description: task.description,
+          // Required OperatorAgent enum — map the 23-agent id to its 6-role bucket
+          // so the row persists (without it, every real-DB write threw and silently
+          // fell back to memory). The precise agent id stays in `payload`.
+          assignedAgent: toOperatorAgentBucket(task.assignedAgent),
           source: SOURCE,
           payload: taskToPayload(stored),
           decisionNotes: task.nextAction,
