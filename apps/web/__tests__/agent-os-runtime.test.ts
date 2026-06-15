@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createPrismaAgentTaskStore, toOperatorAgentBucket } from "@/lib/tasks/agent-task-store";
+import { createPrismaAgentTaskStore, toOperatorAgentBucket, toCockpitStatus, toCockpitRisk, toCockpitPriority } from "@/lib/tasks/agent-task-store";
 import { persistRoutedTask, canTransitionTask } from "@/lib/tasks/agent-task-runtime";
 import { persistAgentOSTaskSeed } from "@/lib/tasks/agent-task-seed-runtime";
 import { listSeedAgentTasks } from "@/lib/tasks/agent-task-router";
@@ -49,6 +49,11 @@ describe("persisted task runtime", () => {
     }
     expect(toOperatorAgentBucket("prism")).toBe("SCOUT");
     expect(toOperatorAgentBucket("unknown-agent")).toBe("JARVIS"); // safe default
+    // Status/risk/priority must persist truthfully, not as NEW · LOW · 50 defaults.
+    expect(toCockpitStatus("BLOCKED_BY_RIGHTS")).toBe("BLOCKED");
+    expect(toCockpitStatus("NEEDS_OWNER_APPROVAL")).toBe("NEEDS_REVIEW");
+    expect(toCockpitRisk("CRITICAL")).toBe("HIGH");
+    expect(toCockpitPriority("P0")).toBeGreaterThan(toCockpitPriority("P3"));
   });
 });
 

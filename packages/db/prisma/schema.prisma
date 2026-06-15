@@ -2346,8 +2346,11 @@ model Signal {
   confidence Float    @default(1) // 0..1 honesty valve (settled stat ≈ 1, rumor ≈ 0.2)
   capturedAt DateTime // drives freshness decay
 
-  season Int?
-  week   Int?
+  // Non-null with a 0 sentinel so the unique key actually enforces one row per
+  // signal — Postgres treats NULLs as distinct, which would let duplicates
+  // (and thus double-counted votes) through for non-seasonal signals.
+  season Int @default(0) // 0 = season-agnostic / non-seasonal signal
+  week   Int @default(0) // 0 = full-season / non-weekly signal
 
   sourceId       String   @default("nflverse")
   rightsSnapshot Json

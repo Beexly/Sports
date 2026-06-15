@@ -50,4 +50,14 @@ describe("composeLedger", () => {
     expect(r.contributions.find((c) => c.key === "bad-ts")!.effectiveWeight).toBe(0);
     expect(r.contributions.find((c) => c.key === "stale")!.effectiveWeight).toBeGreaterThan(0);
   });
+
+  it("drops bad-timestamp signals even when freshness decay is disabled (halfLifeDays 0)", () => {
+    const r = composeLedger(
+      [row({ key: "good", value: 1, capturedAt: NOW }), row({ key: "bad-ts", value: 9, weight: 5, capturedAt: "garbage" })],
+      { now: NOW, halfLifeDays: 0 },
+    );
+    expect(r.signalsUsed).toBe(1);
+    expect(r.contributions.find((c) => c.key === "bad-ts")!.effectiveWeight).toBe(0);
+    expect(r.score).toBe(1); // only the valid signal votes
+  });
 });

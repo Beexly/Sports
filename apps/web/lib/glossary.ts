@@ -24,7 +24,7 @@ const ENTRIES: readonly GlossaryEntry[] = [
   {
     id: "gpi",
     label: "Galaxy Index",
-    plain: "One 0–100 score blending how much a player is used, how efficient he is, and his role — higher means a stronger all-around bet.",
+    plain: "One 0–100 score blending how much a player is used, how efficient he is, and his role — higher means a stronger, more well-rounded player.",
     more: "It's a composite, not a single stat, so a player can rank high on volume, efficiency, or both.",
   },
   {
@@ -98,7 +98,7 @@ const ENTRIES: readonly GlossaryEntry[] = [
   {
     id: "kelly",
     label: "Kelly staking",
-    plain: "A bankroll formula that sizes each bet to the size of your edge — bigger edge, bigger bet — without risking going broke.",
+    plain: "A bankroll formula that sizes each bet to the size of your edge — bigger edge, bigger bet — to balance long-term growth against the risk of a downswing.",
   },
   {
     id: "noVig",

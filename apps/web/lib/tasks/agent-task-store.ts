@@ -36,6 +36,32 @@ export function toOperatorAgentBucket(agentId: string): string {
   return OPERATOR_AGENT_BUCKET[agentId.toLowerCase()] ?? "JARVIS";
 }
 
+// Map Agent OS task fields onto the CockpitTask columns the existing cockpit /
+// review-queue views read directly — otherwise a NEEDS_OWNER_APPROVAL / BLOCKED_*
+// / P0-CRITICAL task would persist as the column defaults (NEW · 50 · LOW) and
+// silently drop out of the blocked/review workflows.
+const COCKPIT_STATUS: Readonly<Record<string, string>> = {
+  NEW: "NEW", QUEUED: "ROUTED", IN_PROGRESS: "ROUTED",
+  NEEDS_OWNER_APPROVAL: "NEEDS_REVIEW", NEEDS_CLAUDE_REVIEW: "NEEDS_REVIEW", READY_FOR_REVIEW: "NEEDS_REVIEW",
+  BLOCKED_BY_DATA: "BLOCKED", BLOCKED_BY_RIGHTS: "BLOCKED", BLOCKED_BY_INFRA: "BLOCKED",
+  DRAFT_READY: "DRAFTED", COMPLETED: "APPROVED", REJECTED: "REJECTED", ARCHIVED: "ARCHIVED",
+};
+const COCKPIT_RISK: Readonly<Record<string, string>> = {
+  LOW: "LOW", MEDIUM: "MODERATE", HIGH: "HIGH", CRITICAL: "HIGH",
+};
+// CockpitTask.priority is a higher-is-more-important Int (cockpit sorts desc).
+const COCKPIT_PRIORITY: Readonly<Record<string, number>> = { P0: 90, P1: 70, P2: 50, P3: 30 };
+
+export function toCockpitStatus(status: string): string {
+  return COCKPIT_STATUS[status] ?? "NEW";
+}
+export function toCockpitRisk(risk: string): string {
+  return COCKPIT_RISK[risk] ?? "LOW";
+}
+export function toCockpitPriority(priority: string): number {
+  return COCKPIT_PRIORITY[priority] ?? 50;
+}
+
 function toDelegate(client: unknown): MinimalCockpitTaskDelegate | null {
   const maybe = client as { cockpitTask?: MinimalCockpitTaskDelegate };
   return maybe.cockpitTask ?? null;
@@ -79,6 +105,11 @@ export function createPrismaAgentTaskStore(client: unknown = db): AgentTaskStore
           // so the row persists (without it, every real-DB write threw and silently
           // fell back to memory). The precise agent id stays in `payload`.
           assignedAgent: toOperatorAgentBucket(task.assignedAgent),
+          // Normalize onto the CockpitTask columns so blocked/review/critical tasks
+          // are truthful in the cockpit views (not silent NEW · 50 · LOW defaults).
+          status: toCockpitStatus(task.status),
+          priority: toCockpitPriority(task.priority),
+          riskLevel: toCockpitRisk(task.risk),
           source: SOURCE,
           payload: taskToPayload(stored),
           decisionNotes: task.nextAction,

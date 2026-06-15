@@ -62,12 +62,19 @@ export function composeLedger(
   options: ComposeLedgerOptions = {},
 ): CompositeScore {
   const now = options.now ?? new Date().toISOString();
-  const signals = rows.map((r) => ({
-    key: r.key,
-    value: r.value,
-    weight: r.weight,
-    confidence: r.confidence,
-    ageDays: ledgerAgeDays(r.capturedAt, now),
-  }));
+  const signals = rows.map((r) => {
+    const ageDays = ledgerAgeDays(r.capturedAt, now);
+    // A malformed/absent timestamp must NEVER vote as fresh. Force zero weight at
+    // the source so the guarantee holds even when freshness decay is disabled
+    // (the composer treats halfLifeDays <= 0 as "no decay").
+    const usable = Number.isFinite(ageDays);
+    return {
+      key: r.key,
+      value: r.value,
+      weight: usable ? r.weight : 0,
+      confidence: r.confidence,
+      ageDays: usable ? ageDays : 0,
+    };
+  });
   return compositeScore(signals, options);
 }
