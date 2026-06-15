@@ -35,7 +35,7 @@ const PLAYERS_MENU: readonly NavGroup[] = [
     items: [
       { label: "Opportunity", href: "/players?view=opportunity", desc: "Air yards · WOPR — buy-low / sell-high" },
       { label: "Snap Share", href: "/players?view=snaps", desc: "Offensive workload leaders" },
-      { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, CPOE, RYOE" },
+      { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, accuracy, yards over expected" },
     ],
   },
   {
@@ -52,7 +52,7 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
     items: [
       { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, browsable" },
       { label: "Mission Control", href: "/today", desc: "Today's command deck" },
-      { label: "Galaxy Twin", href: "/observatory", desc: "The slate as a living market map" },
+      { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — where the line is moving across today's games" },
       { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
       { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
       { label: "How we read metrics", href: "/intelligence/metrics", desc: "Metric methodology, glass-box" },
