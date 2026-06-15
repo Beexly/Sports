@@ -137,6 +137,41 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     notes: "CC-BY-4.0 — attribution required in all outputs, no share-alike. (The one exception, nflverse FTN charting/participation data, is CC-BY-SA-4.0 and is not ingested here.)",
   },
 
+  {
+    source_id: "open-meteo",
+    source_name: "Open-Meteo",
+    source_url: "https://open-meteo.com",
+    terms_url: "https://open-meteo.com/en/terms",
+    robots_url: null,
+    jurisdiction: "DE",
+    source_type: "open_dataset",
+    status: "approved_open_license",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: true,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: true,
+    attribution_required: true,
+    attribution_text: "Weather data by Open-Meteo.com (CC-BY-4.0)",
+    personal_data_risk: "none",
+    copyright_expression_risk: "none",
+    database_right_risk: "none",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-15",
+    reviewed_by: "internal",
+    evidence_urls: ["https://open-meteo.com/en/terms", "https://open-meteo.com/en/license"],
+    unlock_condition:
+      "Free path for a commercial product: the underlying data is CC-BY-4.0 (commercial use OK with " +
+      "attribution). The HOSTED free API tier is non-commercial / fair-use only — for production either " +
+      "self-host the open data or take Open-Meteo's commercial tier. Verify endpoint schemas live before building the adapter.",
+    vendor_contact: "https://open-meteo.com",
+    notes:
+      "Free, no key, no sign-up. Game-time weather (wind/precip/temp) for outdoor venues — a free quality " +
+      "input for totals/passing models. Facts only (no copyrighted expression). Attribution required.",
+  },
+
   // ── Approved: public logged-off API ─────────────────────────────────────────
   {
     source_id: "espn-public-api",
