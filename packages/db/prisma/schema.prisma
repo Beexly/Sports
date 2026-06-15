@@ -2204,3 +2204,63 @@ model NextGenStat {
   @@index([statType, season])
   @@map("next_gen_stats")
 }
+
+// ============================================================
+// PFR ADVANCED STATS (nflverse `pfr_advstats` — CC-BY-4.0)
+// ------------------------------------------------------------
+// Pro-Football-Reference charting-grade weekly advanced stats, the closest
+// public "who-did-what": QB pressure (sacked/blitzed/hurried/hit/pressured,
+// bad-throw rate), receiving drops/broken tackles, rushing yards before/after
+// contact. Per player-game, keyed by the PFR player id (no gsis in the asset).
+// Phase-A persistence — storage as a system of record, NOT a scoring input.
+// Real columns verified against the live release headers 2026-06-15.
+// ============================================================
+
+model PfrAdvStat {
+  id          String  @id @default(cuid())
+  pfrPlayerId String
+  playerName  String
+  season      Int
+  week        Int
+  seasonType  String  @default("REG")
+  team        String?
+  opponent    String?
+  gameKey     String // nflverse/pfr game_id
+  statType    String // "pass" | "rec" | "rush"
+
+  // Passing / pressure
+  timesSacked        Int?
+  timesBlitzed       Int?
+  timesHurried       Int?
+  timesHit           Int?
+  timesPressured     Int?
+  timesPressuredPct  Float?
+  passingBadThrows   Int?
+  passingBadThrowPct Float?
+  passingDrops       Int?
+  passingDropPct     Float?
+
+  // Receiving
+  receivingBrokenTackles Int?
+  receivingDrop          Int?
+  receivingDropPct       Float?
+  receivingInt           Int?
+  receivingRat           Float?
+
+  // Rushing
+  carries                      Int?
+  rushingYardsBeforeContact    Float?
+  rushingYardsBeforeContactAvg Float?
+  rushingYardsAfterContact     Float?
+  rushingYardsAfterContactAvg  Float?
+  rushingBrokenTackles         Int?
+
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([pfrPlayerId, gameKey, statType])
+  @@index([season, week])
+  @@index([statType, season])
+  @@map("pfr_adv_stats")
+}
