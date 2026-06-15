@@ -13,6 +13,11 @@ import {
   openMeteoUrl,
   OPEN_METEO_ATTRIBUTION,
 } from "@/lib/data-sources/free-adapters/open-meteo";
+import {
+  parseEspnRankings,
+  espnRankingsUrl,
+  type EspnRankings,
+} from "@/lib/data-sources/free-adapters/espn-rankings";
 
 const FIX = resolve(__dirname, "fixtures");
 const readFix = (f: string) => JSON.parse(readFileSync(resolve(FIX, f), "utf8"));
@@ -74,5 +79,32 @@ describe("Open-Meteo weather adapter (free, open license)", () => {
     expect(url).toContain("temperature_2m");
     expect(url).toContain("wind_speed_10m");
     expect(url).toContain("precipitation");
+  });
+});
+
+describe("ESPN rankings adapter (free, facts-only)", () => {
+  const json = readFix("espn-cfb-rankings.json") as EspnRankings;
+
+  it("parses ranked polls with normalized teams + attribution", () => {
+    const polls = parseEspnRankings(json, "ncaaf");
+    expect(polls.length).toBeGreaterThan(0);
+    const ap = polls[0]!;
+    expect(ap.sport).toBe("ncaaf");
+    expect(ap.teams.length).toBeGreaterThan(0);
+    const top = ap.teams[0]!;
+    expect(top.rank).toBe(1);
+    expect(top.team).toBeTruthy();
+    expect(top.record === null || typeof top.record === "string").toBe(true);
+    expect(ap.attribution).toBe("Scores data via ESPN");
+  });
+
+  it("only supports sports with a known rankings path", () => {
+    expect(espnRankingsUrl("ncaaf")).toContain("college-football/rankings");
+    expect(espnRankingsUrl("mlb")).toBeNull(); // no AP-style poll
+  });
+
+  it("skips empty polls defensively", () => {
+    expect(parseEspnRankings({ rankings: [{ name: "x", ranks: [] }] }, "ncaaf")).toEqual([]);
+    expect(parseEspnRankings({}, "ncaaf")).toEqual([]);
   });
 });
