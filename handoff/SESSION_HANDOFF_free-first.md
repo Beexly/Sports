@@ -75,7 +75,9 @@ mega-list** (movies/TV/games/hobby databases/dev+design+AI tools) — **NOT a sp
 collection.** A full keyword sweep found **zero odds/sportsbook/betting sources and no
 sports-stats APIs.** The only "sports" hits are copyrighted replays/highlights (quarantined
 or owner-review), a soccer browser game, an NBA guessing game, and an NFL schedule chart —
-none usable as data. **Do not go hunting the dump for stats sources; there are none.**
+none usable as data. **The dump has no sports-DATA sources** — but it has heavy
+operational / cost-saving / dev-velocity leverage (see `docs/BOOTSTRAP_LEVERAGE.md` and the
+per-domain reports in `handoff/leverage/`). Mine it for tooling, not for stats feeds.
 
 The platform's free stats sources (ESPN, henrygd, Open-Meteo, nflverse) were sourced
 independently, not from the dump. The dump's real value is **operational tooling**:
