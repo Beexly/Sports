@@ -1,3 +1,13 @@
+/**
+ * Cockpit operating map — the single source of truth that binds every cockpit
+ * surface to its owning agent, supporting agents, primary workflow, task types,
+ * review gates, risk level, and current implementation status.
+ *
+ * It turns the cockpit from a menu of pages into an operating surface: each
+ * entry declares who owns the page, which governed workflow feeds it, what
+ * review gates apply, and the next executable build. Consumed by the Jarvis
+ * operating assessment and the Agent OS spine tests; contains no runtime logic.
+ */
 export interface CockpitOperatingSurface {
   readonly pageName: string;
   readonly route: string;
