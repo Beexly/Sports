@@ -120,15 +120,23 @@ export function parseEspnScoreboard(json: EspnScoreboard, sport: Sport): Normali
   return games;
 }
 
-export function espnScoreboardUrl(sport: Sport): string {
-  return `https://site.api.espn.com/apis/site/v2/sports/${ESPN_PATHS[sport]}/scoreboard`;
+/**
+ * Scoreboard URL. `dates` targets a specific slate — "YYYYMMDD" for one day or
+ * "YYYYMMDD-YYYYMMDD" for a range. Without it ESPN returns the *current* scoreboard,
+ * which in the offseason rolls to the next season — so date-targeting is required to
+ * verify finals for a past game.
+ */
+export function espnScoreboardUrl(sport: Sport, dates?: string): string {
+  const base = `https://site.api.espn.com/apis/site/v2/sports/${ESPN_PATHS[sport]}/scoreboard`;
+  return dates ? `${base}?dates=${encodeURIComponent(dates)}` : base;
 }
 
-export type FetchOptions = { readonly fetchImpl?: typeof fetch; readonly timeoutMs?: number };
+export type FetchOptions = { readonly fetchImpl?: typeof fetch; readonly timeoutMs?: number; readonly dates?: string };
 
 /**
- * Fetch + normalize the current scoreboard for a sport. Facts only; attribution
- * attached. Throws on non-200 so the pipeline can fall through to the next source.
+ * Fetch + normalize a scoreboard for a sport. Pass `opts.dates` to target a specific
+ * slate (required to settle/verify past finals). Facts only; attribution attached.
+ * Throws on non-200 so the pipeline can fall through to the next source.
  */
 export async function fetchEspnScoreboard(
   sport: Sport,
@@ -138,7 +146,7 @@ export async function fetchEspnScoreboard(
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), opts.timeoutMs ?? 12000);
   try {
-    const res = await doFetch(espnScoreboardUrl(sport), { signal: controller.signal });
+    const res = await doFetch(espnScoreboardUrl(sport, opts.dates), { signal: controller.signal });
     if (!res.ok) throw new Error(`ESPN scoreboard ${sport} HTTP ${res.status}`);
     const json = (await res.json()) as EspnScoreboard;
     return parseEspnScoreboard(json, sport);

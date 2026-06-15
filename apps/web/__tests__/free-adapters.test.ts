@@ -51,6 +51,12 @@ describe("ESPN scores adapter (free, facts-only)", () => {
     expect(espnScoreboardUrl("mls")).toContain("soccer/usa.1");
   });
 
+  it("targets a specific date slate when given dates (required to verify past finals)", () => {
+    expect(espnScoreboardUrl("ncaaf")).not.toContain("dates="); // current scoreboard by default
+    expect(espnScoreboardUrl("ncaaf", "20251213")).toContain("?dates=20251213");
+    expect(espnScoreboardUrl("nfl", "20251207-20251208")).toContain("dates=20251207-20251208");
+  });
+
   it("is defensive against missing fields", () => {
     expect(parseEspnScoreboard({}, "nfl")).toEqual([]);
     expect(parseEspnScoreboard({ events: [{}] }, "nba")).toEqual([]); // no competitions → skipped
