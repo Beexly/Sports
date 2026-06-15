@@ -76,8 +76,9 @@ collection.** A full keyword sweep found **zero odds/sportsbook/betting sources 
 sports-stats APIs.** The only "sports" hits are copyrighted replays/highlights (quarantined
 or owner-review), a soccer browser game, an NBA guessing game, and an NFL schedule chart —
 none usable as data. **The dump has no sports-DATA sources** — but it has heavy
-operational / cost-saving / dev-velocity leverage (see `docs/BOOTSTRAP_LEVERAGE.md` and the
-per-domain reports in `handoff/leverage/`). Mine it for tooling, not for stats feeds.
+operational / cost-saving / dev-velocity leverage. Mine it for tooling, not stats feeds.
+**Start at `handoff/leverage/00-LEVERAGE-INDEX.md`** — the synthesized, prioritized plan from
+a 5-subagent item-by-item sweep (reports `01`–`05`); `docs/BOOTSTRAP_LEVERAGE.md` is the first-pass.
 
 The platform's free stats sources (ESPN, henrygd, Open-Meteo, nflverse) were sourced
 independently, not from the dump. The dump's real value is **operational tooling**:
