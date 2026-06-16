@@ -26,11 +26,12 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
   const matrix = freeCoverageMatrix();
   const spendNeeds = Array.from(new Set(matrix.filter((r) => r.mustSpend).map((r) => r.need))) as StatNeed[];
   const unlock = spendNeeds.map((need) => {
-    const ids = new Set<string>();
+    // Collect by id (stable key) but include name for human readability
+    const byId = new Map<string, string>();
     for (const sport of ALL_SPORTS) {
-      for (const s of planIngestion(need, sport).unlockToGoFree) ids.add(s.id);
+      for (const s of planIngestion(need, sport).unlockToGoFree) byId.set(s.id, s.name);
     }
-    return { need, clearToGoFree: Array.from(ids) };
+    return { need, clearToGoFree: Array.from(byId, ([id, name]) => ({ id, name })) };
   });
 
   return NextResponse.json({

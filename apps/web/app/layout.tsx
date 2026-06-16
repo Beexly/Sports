@@ -46,11 +46,7 @@ const numeralsFont = JetBrains_Mono({
   display: "swap",
 });
 
-const monoFont = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--f-mono",
-  display: "swap",
-});
+// --f-mono aliased to var(--f-numerals) in design-tokens.css (same font, no duplicate request)
 
 const editorialFont = Instrument_Serif({
   subsets: ["latin"],
@@ -190,7 +186,6 @@ export default function RootLayout({
     displayFont.variable,
     bodyFont.variable,
     numeralsFont.variable,
-    monoFont.variable,
     editorialFont.variable,
   ].join(" ");
 

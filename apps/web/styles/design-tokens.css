@@ -213,8 +213,8 @@
   --f-display: "Syne", "Neue Machina", "Space Grotesk", system-ui, sans-serif;
   --f-display-tech: "Space Grotesk", "Neue Montreal", system-ui, sans-serif;
   --f-body: "Geist", "Inter", system-ui, -apple-system, sans-serif;
-  --f-mono: "JetBrains Mono", "Geist Mono", ui-monospace, monospace;
   --f-numerals: "JetBrains Mono", "Geist Mono", ui-monospace, monospace;
+  --f-mono: var(--f-numerals); /* alias — same font, avoids duplicate Google Fonts request */
   --f-editorial: "Instrument Serif", "Iowan Old Style", Georgia, serif;
 
   /* ── Type roles ──────────────────────────────────────── */
