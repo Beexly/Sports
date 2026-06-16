@@ -48,8 +48,14 @@ export default function Page() {
           { label: "Players",  href: "/stats/players",  note: "GPI rankings" },
           { label: "Teams",    href: "/stats/teams",    note: "Environment" },
           { label: "Compare",  href: "/stats/compare",  note: "Side-by-side" },
-          { label: "Sources",  href: "/stats/sources",  note: "Data origin" },
+          { label: "Comps",    href: "/stats/comps",    note: "Similar players" },
+          { label: "Depth",    href: "/stats/depth",    note: "Role & opportunity" },
+          { label: "Status & Movement", href: "/stats/injuries", note: "Injuries + risers" },
+          { label: "Trenches", href: "/stats/trenches", note: "Line play" },
+          { label: "Scouting", href: "/stats/scouting", note: "First-party notes" },
           { label: "Media",    href: "/stats/media",    note: "Signal intel" },
+          { label: "Sources",  href: "/stats/sources",  note: "Data origin" },
+          { label: "Proof",    href: "/stats/proof",    note: "Backtests" },
           { label: "Ask",      href: "/stats/ask",      note: "Grounded Q&A" },
         ].map(({ label, href, note }) => (
           <Link key={href} href={href} className="border border-mineral bg-eclipse p-4 hover:border-orbital-cyan transition-colors">

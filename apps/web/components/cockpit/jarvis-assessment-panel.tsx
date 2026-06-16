@@ -30,7 +30,7 @@ function launchStatusStyle(status: JarvisLaunchStatus): { label: string; tone: s
       return { label: "NOT READY · safety", tone: "bg-red-900/60 text-red-200 ring-red-700/40" };
     case "UNKNOWN":
     default:
-      return { label: "UNKNOWN", tone: "bg-gray-800 text-gray-300 ring-gray-700/40" };
+      return { label: "UNKNOWN", tone: "bg-obsidian/70 text-ion-1 ring-titanium/40" };
   }
 }
 
@@ -44,7 +44,7 @@ function healthTone(h: JarvisHealth): string {
       return "text-red-400";
     case "UNKNOWN":
     default:
-      return "text-gray-500";
+      return "text-ion-3";
   }
 }
 
@@ -78,19 +78,19 @@ export function JarvisAssessmentPanel({
     <section
       data-testid="jarvis-assessment-panel"
       className={[
-        "rounded-2xl border border-gray-800 bg-gray-900/50 p-5",
+        "rounded-2xl border border-titanium/40 bg-eclipse/40 p-5",
         className ?? "",
       ].join(" ")}
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
             Jarvis launch assessment
           </h2>
-          <p className="mt-1 text-sm text-gray-300">
+          <p className="mt-1 text-sm text-ion-1">
             {assessment.oneSentenceAssessment}
           </p>
-          <p className="mt-1 text-[10px] text-gray-600">
+          <p className="mt-1 text-[10px] text-ion-3">
             {assessment.version} · assessed {assessment.assessedAt} · confidence{" "}
             {assessment.confidenceLevel.toLowerCase()}
           </p>
@@ -107,20 +107,20 @@ export function JarvisAssessmentPanel({
         {sectional.map(([label, health]) => (
           <div
             key={label}
-            className="rounded-lg border border-gray-800 bg-gray-950/40 px-3 py-2"
+            className="rounded-lg border border-titanium/40 bg-obsidian/50 px-3 py-2"
           >
-            <p className="text-[10px] uppercase tracking-widest text-gray-500">{label}</p>
+            <p className="text-[10px] uppercase tracking-widest text-ion-3">{label}</p>
             <p className={["mt-1 font-bold", healthTone(health)].join(" ")}>{health}</p>
           </div>
         ))}
       </div>
 
       <div className="mt-5">
-        <h3 className="text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+        <h3 className="text-[10px] font-semibold uppercase tracking-widest text-ion-3">
           Public-performance policy
         </h3>
-        <p className="mt-1 text-[11px] text-gray-300">{policy.publicMessage}</p>
-        <p className="mt-1 text-[10px] text-gray-500">{policy.operatorMessage}</p>
+        <p className="mt-1 text-[11px] text-ion-1">{policy.publicMessage}</p>
+        <p className="mt-1 text-[10px] text-ion-3">{policy.operatorMessage}</p>
       </div>
 
       {assessment.safetyWarnings.length > 0 && (
@@ -136,10 +136,10 @@ export function JarvisAssessmentPanel({
 
       {assessment.recommendedNextActions.length > 0 && (
         <div className="mt-5">
-          <h3 className="text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+          <h3 className="text-[10px] font-semibold uppercase tracking-widest text-ion-3">
             Recommended next actions
           </h3>
-          <ol className="ml-5 mt-2 list-decimal space-y-1 text-[11px] text-gray-200">
+          <ol className="ml-5 mt-2 list-decimal space-y-1 text-[11px] text-ion-1">
             {assessment.recommendedNextActions.map((a) => (
               <li key={a}>{a}</li>
             ))}

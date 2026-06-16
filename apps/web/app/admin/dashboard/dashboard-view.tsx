@@ -19,11 +19,11 @@ const COCKPIT_LINKS: ReadonlyArray<{ href: string; label: string; hint: string }
 
 export function DashboardView() {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950 p-8 text-gray-200">
+    <div className="flex min-h-screen flex-col bg-obsidian p-8 text-ion-1">
       <div className="mx-auto w-full max-w-3xl">
         <header className="mb-6">
           <h1 className="text-2xl font-bold text-white">Admin dashboard</h1>
-          <p className="mt-1 text-sm text-gray-400">
+          <p className="mt-1 text-sm text-ion-2">
             The richer operational view is at <Link href="/cockpit" className="text-brand-400 hover:text-brand-300">/cockpit</Link>.
             This page is a quick landing into the operator surface.
           </p>
@@ -33,15 +33,15 @@ export function DashboardView() {
             <Link
               key={href}
               href={href}
-              className="rounded-2xl border border-gray-800 bg-gray-900/60 p-4 transition-colors hover:border-gray-700 hover:bg-gray-900"
+              className="rounded-2xl border border-titanium bg-carbon/60 p-4 transition-colors hover:border-titanium hover:bg-carbon"
             >
               <p className="font-semibold text-white">{label}</p>
-              <p className="mt-1 text-xs text-gray-500">{hint}</p>
+              <p className="mt-1 text-xs text-ion-3">{hint}</p>
             </Link>
           ))}
         </div>
-        <p className="mt-6 text-xs text-gray-500">
-          To exit dev-mode bypass, unset <code className="rounded bg-gray-800 px-1 py-0.5 text-gray-300">DEV_FAKE_ADMIN</code> and configure real Google OAuth.
+        <p className="mt-6 text-xs text-ion-3">
+          To exit dev-mode bypass, unset <code className="rounded bg-titanium px-1 py-0.5 text-ion-1">DEV_FAKE_ADMIN</code> and configure real Google OAuth.
         </p>
       </div>
     </div>

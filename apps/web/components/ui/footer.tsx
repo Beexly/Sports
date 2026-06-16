@@ -6,6 +6,7 @@ const PRODUCT_LINKS = [
   { label: "The NFL House", href: "/house" },
   { label: "Today's Board", href: "/board" },
   { label: "Galaxy Twin", href: "/observatory" },
+  { label: "CLV Tracker", href: "/track" },
   { label: "Trend Lab", href: "/trends" },
   { label: "Decision Autopsy", href: "/performance/losses" },
   { label: "Parlay MRI", href: "/parlay-mri" },
@@ -18,6 +19,7 @@ const PRODUCT_LINKS = [
 const COMPANY_LINKS = [
   { label: "Accountability", href: "/accountability" },
   { label: "Receipts — Calibration", href: "/performance" },
+  { label: "Closing Line Value", href: "/clv" },
   { label: "Methodology", href: "/methodology" },
   { label: "The Vault", href: "/vault" },
   { label: "Pricing", href: "/pricing" },

@@ -80,24 +80,24 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-300">
               Media intelligence
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-white">Media Operating Room</h1>
+            <h1 className="mt-1 text-2xl font-bold text-ion-white">Media Operating Room</h1>
           </div>
           <div className="flex flex-wrap gap-2 text-xs">
-            <Link href="/api/media/readiness" className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60">
+            <Link href="/api/media/readiness" className="rounded-lg border border-titanium/40 px-3 py-1.5 text-ion-1 hover:bg-carbon/60">
               JSON readiness
             </Link>
-            <Link href="/cockpit/airwave" className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60">
+            <Link href="/cockpit/airwave" className="rounded-lg border border-titanium/40 px-3 py-1.5 text-ion-1 hover:bg-carbon/60">
               Airwave
             </Link>
-            <Link href="/cockpit/studio" className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60">
+            <Link href="/cockpit/studio" className="rounded-lg border border-titanium/40 px-3 py-1.5 text-ion-1 hover:bg-carbon/60">
               Studio
             </Link>
-            <Link href="/cockpit/content" className="rounded-lg border border-gray-800 px-3 py-1.5 text-gray-300 hover:bg-gray-900/60">
+            <Link href="/cockpit/content" className="rounded-lg border border-titanium/40 px-3 py-1.5 text-ion-1 hover:bg-carbon/60">
               Content
             </Link>
           </div>
         </div>
-        <p className="max-w-4xl text-sm leading-6 text-gray-400">
+        <p className="max-w-4xl text-sm leading-6 text-ion-2">
           Read-only command view for the full media loop: Airwave context, The Beat source mesh,
           Ava drafts, Studio exports, public blog gating, and the legacy media item queue.
           This page does not publish, post, send, scrape, or generate external side effects.
@@ -125,8 +125,8 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Workflow lanes</h2>
+        <div className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">Workflow lanes</h2>
           <div className="mt-4 grid gap-3">
             {control.lanes.map((lane) => (
               <LaneCard key={lane.key} lane={lane} />
@@ -135,8 +135,8 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
         </div>
 
         <div className="flex flex-col gap-4">
-          <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Template coverage</h2>
+          <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">Template coverage</h2>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <Metric label="Templates" value={String(control.templateSummary.total)} detail="Approved emit shapes." />
               <Metric label="Public default" value={String(control.templateSummary.publicDefault)} detail="Still review-gated." />
@@ -147,8 +147,8 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Source mesh</h2>
+          <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">Source mesh</h2>
             <dl className="mt-4 grid gap-3 text-sm">
               <Fact label="National insiders seeded" value={String(control.sourceSummary.nationalInsidersSeeded)} />
               <Fact label="Team beat desks" value={String(control.sourceSummary.teamBeatDesks)} />
@@ -171,13 +171,13 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
+      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
               Legacy media queue
             </h2>
-            <p className="mt-2 text-sm leading-6 text-gray-400">
+            <p className="mt-2 text-sm leading-6 text-ion-2">
               The legacy queue is real only when the local database is reachable. If it is not,
               this surface reports UNKNOWN instead of inventing rows.
             </p>
@@ -193,7 +193,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
         {legacy.status === "unreachable" ? (
           <p
             data-testid="media-empty"
-            className="mt-4 rounded-xl border border-gray-800 bg-gray-950/70 p-4 text-sm leading-6 text-gray-500"
+            className="mt-4 rounded-xl border border-titanium/40 bg-obsidian/70 p-4 text-sm leading-6 text-ion-3"
           >
             Legacy media rows are unavailable because the local/dev database is not reachable.
             The workflow lanes above remain real configuration and code-state, not demo rows.
@@ -201,23 +201,23 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
         ) : legacy.items.length === 0 ? (
           <p
             data-testid="media-empty"
-            className="mt-4 rounded-xl border border-gray-800 bg-gray-950/70 p-4 text-sm leading-6 text-gray-500"
+            className="mt-4 rounded-xl border border-titanium/40 bg-obsidian/70 p-4 text-sm leading-6 text-ion-3"
           >
             No legacy media items exist in the local database. This is a real empty queue, not a prompt to seed demo content.
           </p>
         ) : (
           <ul data-testid="media-list" className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
             {legacy.items.map((item) => (
-              <li key={item.id} className="rounded-2xl border border-gray-800 bg-gray-950/60 p-4">
+              <li key={item.id} className="rounded-2xl border border-titanium/40 bg-obsidian/60 p-4">
                 <header className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h3 className="text-sm font-semibold text-white">{item.briefTitle}</h3>
-                    <p className="mt-0.5 text-[11px] text-gray-500">
-                      channel: <code className="rounded bg-gray-800 px-1 text-gray-300">{item.channel}</code>
+                    <h3 className="text-sm font-semibold text-ion-white">{item.briefTitle}</h3>
+                    <p className="mt-0.5 text-[11px] text-ion-3">
+                      channel: <code className="rounded bg-obsidian/70 px-1 text-ion-1">{item.channel}</code>
                     </p>
                   </div>
                   <div className="flex flex-col items-end gap-1">
-                    <span className="rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-semibold text-gray-200">
+                    <span className="rounded-full bg-obsidian/70 px-2 py-0.5 text-[10px] font-semibold text-ion-1">
                       QA: {item.qaStatus}
                     </span>
                     <span className={complianceClass(item.complianceStatus)}>
@@ -225,10 +225,10 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
                     </span>
                   </div>
                 </header>
-                <p className="mt-3 line-clamp-3 text-xs leading-relaxed text-gray-400">
+                <p className="mt-3 line-clamp-3 text-xs leading-relaxed text-ion-2">
                   {item.briefBody}
                 </p>
-                <footer className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-gray-600">
+                <footer className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-ion-3">
                   <span>{item.approved ? "Approved / ready for editor" : "Draft / unapproved"}</span>
                   {item.scheduledFor ? <span>scheduled metadata: {item.scheduledFor.toUTCString()}</span> : null}
                 </footer>
@@ -243,30 +243,30 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
 
 function Metric({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-950 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-gray-500">{label}</p>
-      <p className="mt-2 font-numerals text-2xl font-semibold text-white">{value}</p>
-      <p className="mt-1 text-xs leading-5 text-gray-500">{detail}</p>
+    <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
+      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
+      <p className="mt-2 font-numerals text-2xl font-semibold text-ion-white">{value}</p>
+      <p className="mt-1 text-xs leading-5 text-ion-3">{detail}</p>
     </div>
   );
 }
 
 function Fact({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border border-gray-800 bg-gray-950/70 px-3 py-2">
-      <dt className="text-gray-500">{label}</dt>
-      <dd className="font-mono text-xs text-gray-200">{value}</dd>
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-titanium/40 bg-obsidian/70 px-3 py-2">
+      <dt className="text-ion-3">{label}</dt>
+      <dd className="font-mono text-xs text-ion-1">{value}</dd>
     </div>
   );
 }
 
 function LaneCard({ lane }: { lane: MediaLane }): JSX.Element {
   return (
-    <article className="rounded-xl border border-gray-800 bg-gray-950/70 p-4">
+    <article className="rounded-xl border border-titanium/40 bg-obsidian/70 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 className="text-sm font-semibold text-white">{lane.name}</h3>
-          <p className="mt-1 text-xs text-gray-500">{lane.source}</p>
+          <h3 className="text-sm font-semibold text-ion-white">{lane.name}</h3>
+          <p className="mt-1 text-xs text-ion-3">{lane.source}</p>
         </div>
         <span className={`rounded border px-2 py-1 text-[11px] ${STATUS_TONE[lane.status]}`}>
           {statusLabel(lane.status)}
@@ -274,19 +274,19 @@ function LaneCard({ lane }: { lane: MediaLane }): JSX.Element {
       </div>
       <dl className="mt-3 grid gap-3 text-xs md:grid-cols-3">
         <div>
-          <dt className="text-gray-600">Output</dt>
-          <dd className="mt-1 text-gray-300">{lane.output}</dd>
+          <dt className="text-ion-3">Output</dt>
+          <dd className="mt-1 text-ion-1">{lane.output}</dd>
         </div>
         <div>
-          <dt className="text-gray-600">Gate</dt>
-          <dd className="mt-1 font-mono text-[11px] text-gray-400">{lane.gate}</dd>
+          <dt className="text-ion-3">Gate</dt>
+          <dd className="mt-1 font-mono text-[11px] text-ion-2">{lane.gate}</dd>
         </div>
         <div>
-          <dt className="text-gray-600">Operator action</dt>
-          <dd className="mt-1 text-gray-300">{lane.operatorAction}</dd>
+          <dt className="text-ion-3">Operator action</dt>
+          <dd className="mt-1 text-ion-1">{lane.operatorAction}</dd>
         </div>
       </dl>
-      <p className="mt-3 rounded-lg border border-gray-800 bg-black/20 px-3 py-2 text-xs leading-5 text-gray-500">
+      <p className="mt-3 rounded-lg border border-titanium/40 bg-black/20 px-3 py-2 text-xs leading-5 text-ion-3">
         {lane.riskBoundary}
       </p>
     </article>
@@ -303,5 +303,5 @@ function complianceClass(status: string): string {
   if (status === "HOLD") {
     return "rounded-full bg-red-900/40 px-2 py-0.5 text-[10px] font-semibold text-red-200";
   }
-  return "rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-semibold text-gray-300";
+  return "rounded-full bg-obsidian/70 px-2 py-0.5 text-[10px] font-semibold text-ion-1";
 }

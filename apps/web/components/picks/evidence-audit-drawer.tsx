@@ -161,9 +161,9 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
 
           {/* Drawer */}
           <aside
-            className="relative ml-auto flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-gray-800 bg-gray-950 text-gray-100 shadow-2xl motion-safe:animate-[slideInRight_180ms_ease-out]"
+            className="relative ml-auto flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-titanium bg-obsidian text-ion-white shadow-2xl motion-safe:animate-[slideInRight_180ms_ease-out]"
           >
-            <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-gray-800 bg-gray-950/95 px-6 py-5 backdrop-blur">
+            <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-titanium bg-obsidian/95 px-6 py-5 backdrop-blur">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.18em] text-ion-blue/80">
                   Galaxy Sports Edge
@@ -171,7 +171,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
                 <h2 className="mt-1 text-xl font-semibold tracking-tight text-white">
                   Evidence audit
                 </h2>
-                <p className="mt-1 text-xs text-gray-400">
+                <p className="mt-1 text-xs text-ion-2">
                   Every signal, every snapshot, every hash. No fabrications.
                 </p>
               </div>
@@ -179,7 +179,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
                 ref={closeBtnRef}
                 type="button"
                 onClick={handleClose}
-                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md p-2 text-ion-2 transition hover:bg-titanium hover:text-white"
                 aria-label="Close"
               >
                 <svg
@@ -220,7 +220,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
               )}
             </div>
 
-            <footer className="border-t border-gray-800 px-6 py-4 text-[11px] leading-relaxed text-ion-1">
+            <footer className="border-t border-titanium px-6 py-4 text-[11px] leading-relaxed text-ion-1">
               Snapshots are SHA-256 hashed at ingestion. Hash prefixes are
               shown for operator verification; raw payload bytes remain
               server-side.
@@ -260,10 +260,10 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
 function DrawerSkeleton() {
   return (
     <div className="space-y-4">
-      <div className="h-3 w-24 animate-pulse rounded bg-gray-800" />
-      <div className="h-20 animate-pulse rounded-lg bg-gray-800/60" />
-      <div className="h-3 w-32 animate-pulse rounded bg-gray-800" />
-      <div className="h-40 animate-pulse rounded-lg bg-gray-800/60" />
+      <div className="h-3 w-24 animate-pulse rounded bg-titanium" />
+      <div className="h-20 animate-pulse rounded-lg bg-titanium/60" />
+      <div className="h-3 w-32 animate-pulse rounded bg-titanium" />
+      <div className="h-40 animate-pulse rounded-lg bg-titanium/60" />
     </div>
   );
 }
@@ -315,7 +315,7 @@ function SummaryAudit({
         {audit.mostRecentSnapshotProvider && (
           <p className="mt-3 text-[11px] uppercase tracking-wider text-ion-1">
             Most recent provider:{" "}
-            <span className="text-gray-300">
+            <span className="text-ion-1">
               {audit.mostRecentSnapshotProvider}
             </span>
           </p>
@@ -440,10 +440,10 @@ function DetailedAudit({
           {audit.signalCategories.map((row) => (
             <li
               key={row.category}
-              className="flex items-start justify-between gap-3 rounded-md border border-gray-800 bg-gray-900/50 px-3 py-2"
+              className="flex items-start justify-between gap-3 rounded-md border border-titanium bg-carbon/50 px-3 py-2"
             >
               <div>
-                <p className="text-[13px] font-medium text-gray-100">
+                <p className="text-[13px] font-medium text-ion-white">
                   {row.category}
                 </p>
                 <p className="text-[11px] text-ion-1">{row.description}</p>
@@ -465,17 +465,17 @@ function DetailedAudit({
             {audit.sourceSnapshots.map((snap) => (
               <li
                 key={snap.id}
-                className="rounded-md border border-gray-800 bg-gray-900/50 px-3 py-2 text-[11px] leading-relaxed"
+                className="rounded-md border border-titanium bg-carbon/50 px-3 py-2 text-[11px] leading-relaxed"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-medium text-gray-200">
+                  <span className="font-medium text-ion-1">
                     {snap.provider}
                   </span>
                   <span className="text-[10px] uppercase tracking-wider text-ion-blue/70">
                     {snap.sourceKind}
                   </span>
                 </div>
-                <div className="mt-1 grid grid-cols-2 gap-x-3 text-gray-400">
+                <div className="mt-1 grid grid-cols-2 gap-x-3 text-ion-2">
                   <span>
                     {new Date(snap.fetchedAt).toLocaleString("en-US", {
                       month: "short",
@@ -534,7 +534,7 @@ function PremortemPanel({ preMortem }: { preMortem: PickPremortemNote | null }) 
       {preMortem.riskDrivers.length > 0 && (
         <ul className="mt-3 space-y-1.5">
           {preMortem.riskDrivers.map((driver) => (
-            <li key={driver} className="text-xs leading-5 text-gray-300">
+            <li key={driver} className="text-xs leading-5 text-ion-1">
               {driver}
             </li>
           ))}
@@ -567,7 +567,7 @@ function Stat({
   accent?: "cyan";
 }) {
   return (
-    <div className="rounded-md border border-gray-800 bg-gray-900/50 px-3 py-2">
+    <div className="rounded-md border border-titanium bg-carbon/50 px-3 py-2">
       <p className="text-[10px] uppercase tracking-wider text-ion-1">
         {label}
       </p>
@@ -584,10 +584,10 @@ function Stat({
 
 function Row({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
   return (
-    <div className="flex items-baseline justify-between gap-3 border-b border-gray-900 pb-1.5 last:border-0">
+    <div className="flex items-baseline justify-between gap-3 border-b border-titanium pb-1.5 last:border-0">
       <dt className="text-ion-1">{k}</dt>
       <dd
-        className={`text-right text-gray-100 ${
+        className={`text-right text-ion-white ${
           mono ? "font-mono text-[11px]" : ""
         }`}
       >
@@ -607,7 +607,7 @@ function SignalStatusBadge({
       ? "border-verify/50 bg-verify/10 text-verify"
       : status === "SHADOW"
       ? "border-ultraviolet/50 bg-ultraviolet/10 text-ultraviolet-glow"
-      : "border-gray-800 bg-gray-900 text-ion-1";
+      : "border-titanium bg-carbon text-ion-1";
 
   const label =
     status === "LIVE" ? "Live" : status === "SHADOW" ? "Shadow" : "Absent";

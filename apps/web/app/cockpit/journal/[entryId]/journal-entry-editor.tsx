@@ -65,7 +65,7 @@ function Preview({ markdown }: { readonly markdown: string }): JSX.Element {
   );
 
   if (sections.length === 0) {
-    return <p className="text-sm text-gray-500">No draft body yet.</p>;
+    return <p className="text-sm text-ion-3">No draft body yet.</p>;
   }
 
   return (
@@ -73,13 +73,13 @@ function Preview({ markdown }: { readonly markdown: string }): JSX.Element {
       {sections.map((section, index) => {
         if (section.startsWith("#")) {
           return (
-            <h3 key={`${section}-${index}`} className="text-sm font-semibold text-white">
+            <h3 key={`${section}-${index}`} className="text-sm font-semibold text-ion-white">
               {section.replace(/^#+\s*/, "")}
             </h3>
           );
         }
         return (
-          <p key={`${section}-${index}`} className="whitespace-pre-wrap text-sm leading-6 text-gray-300">
+          <p key={`${section}-${index}`} className="whitespace-pre-wrap text-sm leading-6 text-ion-1">
             {section}
           </p>
         );
@@ -221,11 +221,11 @@ export function JournalEntryEditor({
   }
 
   return (
-    <main className="space-y-4 rounded-lg border border-gray-800 bg-gray-950/40 p-4">
+    <main className="space-y-4 rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-sm font-semibold text-white">Markdown editor</h2>
-          <p className="mt-1 text-xs text-gray-500">
+          <h2 className="text-sm font-semibold text-ion-white">Markdown editor</h2>
+          <p className="mt-1 text-xs text-ion-3">
             {isBodyEditable
               ? "Draft body can be edited before publication."
               : "Published and retracted entries are preserved. Body edits are disabled."}
@@ -236,7 +236,7 @@ export function JournalEntryEditor({
             type="button"
             onClick={saveDraft}
             disabled={!isBodyEditable || isSaving}
-            className="rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 hover:bg-gray-900 disabled:text-gray-500"
+            className="rounded-lg border border-titanium/40 px-3 py-2 text-xs font-semibold text-ion-1 hover:bg-carbon/60 disabled:text-ion-3"
           >
             {isSaving ? "Saving..." : "Save draft"}
           </button>
@@ -244,7 +244,7 @@ export function JournalEntryEditor({
             type="button"
             onClick={runComplianceScan}
             disabled={isScanning}
-            className="rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 hover:bg-gray-900 disabled:text-gray-500"
+            className="rounded-lg border border-titanium/40 px-3 py-2 text-xs font-semibold text-ion-1 hover:bg-carbon/60 disabled:text-ion-3"
           >
             {isScanning ? "Scanning..." : "Run compliance scan"}
           </button>
@@ -252,7 +252,7 @@ export function JournalEntryEditor({
             type="button"
             onClick={submitForReview}
             disabled={!isBodyEditable || !scanResult?.publishAllowed || isSubmitting}
-            className="rounded-lg border border-gray-700 px-3 py-2 text-xs font-semibold text-gray-200 hover:bg-gray-900 disabled:text-gray-500"
+            className="rounded-lg border border-titanium/40 px-3 py-2 text-xs font-semibold text-ion-1 hover:bg-carbon/60 disabled:text-ion-3"
           >
             {isSubmitting ? "Submitting..." : "Submit for review"}
           </button>
@@ -261,7 +261,7 @@ export function JournalEntryEditor({
               type="button"
               onClick={retractEntry}
               disabled={isRetracting || retractionReason.trim().length < 12}
-              className="rounded-lg border border-rose-500/50 px-3 py-2 text-xs font-semibold text-rose-200 hover:bg-rose-950/30 disabled:text-gray-500"
+              className="rounded-lg border border-rose-500/50 px-3 py-2 text-xs font-semibold text-rose-200 hover:bg-rose-950/30 disabled:text-ion-3"
             >
               {isRetracting ? "Retracting..." : "Retract entry"}
             </button>
@@ -280,9 +280,9 @@ export function JournalEntryEditor({
         </p>
       ) : null}
       {scanResult ? (
-        <section className="rounded-lg border border-gray-800 bg-black/30 p-3 text-xs">
+        <section className="rounded-lg border border-titanium/40 bg-black/30 p-3 text-xs">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="font-semibold text-gray-200">
+            <p className="font-semibold text-ion-1">
               Compliance: {scanResult.status.toUpperCase()}
             </p>
             <p className={scanResult.publishAllowed ? "text-emerald-300" : "text-rose-300"}>
@@ -290,16 +290,16 @@ export function JournalEntryEditor({
             </p>
           </div>
           {scanResult.flags.length > 0 ? (
-            <ul className="mt-3 space-y-2 text-gray-400">
+            <ul className="mt-3 space-y-2 text-ion-2">
               {scanResult.flags.map((flag) => (
-                <li key={flag.id} className="rounded border border-gray-800 bg-gray-950/70 p-2">
-                  <span className="font-semibold text-gray-200">{flag.id}:</span> {flag.message}
-                  {flag.suggestion ? <span className="block text-gray-500">{flag.suggestion}</span> : null}
+                <li key={flag.id} className="rounded border border-titanium/40 bg-obsidian/70 p-2">
+                  <span className="font-semibold text-ion-1">{flag.id}:</span> {flag.message}
+                  {flag.suggestion ? <span className="block text-ion-3">{flag.suggestion}</span> : null}
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="mt-2 text-gray-500">No compliance flags found.</p>
+            <p className="mt-2 text-ion-3">No compliance flags found.</p>
           )}
         </section>
       ) : null}
@@ -326,7 +326,7 @@ export function JournalEntryEditor({
               value={retractionReason}
               onChange={(event) => setRetractionReason(event.target.value)}
               rows={3}
-              className="mt-2 w-full rounded-lg border border-rose-500/30 bg-black/40 p-3 text-xs leading-5 text-gray-100 outline-none focus:border-rose-400"
+              className="mt-2 w-full rounded-lg border border-rose-500/30 bg-black/40 p-3 text-xs leading-5 text-ion-white outline-none focus:border-rose-400"
               placeholder="Required before retracting a published Journal entry."
             />
           </label>
@@ -343,13 +343,13 @@ export function JournalEntryEditor({
         </section>
       ) : null}
 
-      <label className="block text-xs font-semibold text-gray-300">
+      <label className="block text-xs font-semibold text-ion-1">
         Title
         <input
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           readOnly={!isBodyEditable}
-          className="mt-2 w-full rounded-lg border border-gray-800 bg-black/40 p-3 text-sm text-gray-100 outline-none focus:border-yellow-500/60"
+          className="mt-2 w-full rounded-lg border border-titanium/40 bg-black/40 p-3 text-sm text-ion-white outline-none focus:border-yellow-500/60"
         />
       </label>
 
@@ -358,13 +358,13 @@ export function JournalEntryEditor({
         readOnly={!isBodyEditable}
         value={bodyMarkdown}
         onChange={(event) => setBodyMarkdown(event.target.value)}
-        className="min-h-[460px] w-full resize-y rounded-lg border border-gray-800 bg-black/40 p-3 font-mono text-xs leading-5 text-gray-200 outline-none focus:border-yellow-500/60"
+        className="min-h-[460px] w-full resize-y rounded-lg border border-titanium/40 bg-black/40 p-3 font-mono text-xs leading-5 text-ion-1 outline-none focus:border-yellow-500/60"
       />
 
-      <section className="rounded-lg border border-gray-800 bg-black/30 p-4">
+      <section className="rounded-lg border border-titanium/40 bg-black/30 p-4">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <h2 className="text-sm font-semibold text-white">Preview</h2>
-          <span className="text-[10px] uppercase tracking-wide text-gray-600">First sections</span>
+          <h2 className="text-sm font-semibold text-ion-white">Preview</h2>
+          <span className="text-[10px] uppercase tracking-wide text-ion-3">First sections</span>
         </div>
         <Preview markdown={bodyMarkdown} />
       </section>

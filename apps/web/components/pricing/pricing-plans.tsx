@@ -48,7 +48,7 @@ export function PricingPlans({
         <div
           role="group"
           aria-label="Billing interval"
-          className="inline-flex rounded-full border border-gray-800 bg-gray-900/60 p-1"
+          className="inline-flex rounded-full border border-titanium bg-carbon/60 p-1"
         >
           <ToggleButton active={!annual} onClick={() => setInterval("month")}>
             Monthly
@@ -75,7 +75,7 @@ export function PricingPlans({
                   ? "border-brand-600 bg-brand-950/30 shadow-xl shadow-brand-900/30"
                   : isElite
                     ? "border-ultraviolet/60 bg-ultraviolet/5 shadow-xl shadow-ultraviolet/10"
-                    : "border-gray-800 bg-gray-900/60",
+                    : "border-titanium bg-carbon/60",
               ].join(" ")}
             >
               {plan.badge && (
@@ -100,12 +100,12 @@ export function PricingPlans({
                   ) : annual ? (
                     <>
                       <span className="text-4xl font-extrabold text-white">${plan.annual}</span>
-                      <span className="text-sm text-gray-400">/year</span>
+                      <span className="text-sm text-ion-2">/year</span>
                     </>
                   ) : (
                     <>
                       <span className="text-4xl font-extrabold text-white">${plan.monthly}</span>
-                      <span className="text-sm text-gray-400">/month</span>
+                      <span className="text-sm text-ion-2">/month</span>
                     </>
                   )}
                 </div>
@@ -118,17 +118,17 @@ export function PricingPlans({
                   </p>
                 )}
                 {isPaid && !annual && plan.annual !== null && (
-                  <p className="mt-1 text-xs text-gray-500">or ${plan.annual}/year</p>
+                  <p className="mt-1 text-xs text-ion-3">or ${plan.annual}/year</p>
                 )}
 
-                <p className="mt-2 text-sm text-gray-400">{plan.description}</p>
+                <p className="mt-2 text-sm text-ion-2">{plan.description}</p>
               </div>
 
               <ul className="mb-6 flex flex-col gap-3">
                 {plan.features.map(({ label, included }) => (
                   <li key={label} className="flex items-center gap-2 text-sm">
                     {included ? <CheckIcon /> : <DashIcon />}
-                    <span className={included ? "text-gray-200" : "text-gray-500"}>{label}</span>
+                    <span className={included ? "text-ion-1" : "text-ion-3"}>{label}</span>
                   </li>
                 ))}
               </ul>
@@ -137,7 +137,7 @@ export function PricingPlans({
                 {plan.id === "FREE" ? (
                   <Link
                     href="/auth/signin"
-                    className="block w-full rounded-xl border border-gray-700 bg-gray-800 py-2.5 text-center text-sm font-semibold text-gray-200 transition-colors hover:bg-gray-700"
+                    className="block w-full rounded-xl border border-titanium bg-titanium py-2.5 text-center text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium"
                   >
                     {plan.cta}
                   </Link>
@@ -180,7 +180,7 @@ function ToggleButton({
       aria-pressed={active}
       className={[
         "rounded-full px-4 py-1.5 text-sm font-semibold transition-colors",
-        active ? "bg-brand-600 text-white" : "text-gray-400 hover:text-gray-200",
+        active ? "bg-brand-600 text-white" : "text-ion-2 hover:text-ion-1",
       ].join(" ")}
     >
       {children}
@@ -206,7 +206,7 @@ function CheckIcon() {
 function DashIcon() {
   return (
     <svg
-      className="h-4 w-4 shrink-0 text-gray-700"
+      className="h-4 w-4 shrink-0 text-ion-3"
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={2}

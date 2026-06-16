@@ -129,6 +129,30 @@ export default function VsToutServicesPage() {
           </div>
         </section>
 
+        {/* CLV — the number touts never show */}
+        <section className="border-t border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <p className="eyebrow">The benchmark they can&apos;t fake</p>
+            <h2 className="mt-3 font-display text-display-lg text-balance text-white">
+              Ask a tout for their closing line value. Watch the silence.
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-ink-300">
+              A win streak is a screenshot. Closing line value — whether the price
+              you locked beat where the market actually closed — is the one number
+              the sharps respect and the touts never publish, because it can&apos;t
+              be cherry-picked. It&apos;s the leading indicator that an edge is real
+              before a single game settles. We publish ours under the same gate as
+              everything else: nothing shown until it can be honestly backed.
+            </p>
+            <Link
+              href="/clv"
+              className="mt-6 inline-flex items-center gap-2 font-mono text-sm font-semibold text-accent-300 hover:text-accent-200"
+            >
+              See our Closing Line Value →
+            </Link>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="border-t border-ink-800/60 bg-ink-1000/80 px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">

@@ -22,16 +22,16 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
               Bot Outbox
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-white">Draft Event Planner</h1>
+            <h1 className="mt-1 text-2xl font-bold text-ion-white">Draft Event Planner</h1>
           </div>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
+            className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-1 hover:bg-carbon/60"
           >
             Back to Jarvis
           </Link>
         </div>
-        <p className="max-w-3xl text-sm text-gray-400">
+        <p className="max-w-3xl text-sm text-ion-2">
           Recent draft payloads for the Twitter/X and Discord bot surfaces. This page discovers
           eligible events, renders draft items, and does not deliver or persist channel work.
         </p>
@@ -44,19 +44,19 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
         <Metric label="Lookback" value={`${drafts.lookbackMinutes} min`} />
       </section>
 
-      <section className="overflow-hidden rounded-lg border border-gray-800 bg-gray-950">
-        <div className="border-b border-gray-800 px-4 py-3">
-          <h2 className="text-sm font-semibold text-white">Draft Items</h2>
-          <p className="mt-1 text-xs text-gray-500">
+      <section className="overflow-hidden rounded-lg border border-titanium/40 bg-obsidian/60">
+        <div className="border-b border-titanium/40 px-4 py-3">
+          <h2 className="text-sm font-semibold text-ion-white">Draft Items</h2>
+          <p className="mt-1 text-xs text-ion-3">
             Generated {new Date(drafts.generatedAt).toLocaleString("en-US")}
           </p>
         </div>
         {drafts.items.length === 0 ? (
-          <div className="p-6 text-sm text-gray-500">No draftable bot events in the current window.</div>
+          <div className="p-6 text-sm text-ion-3">No draftable bot events in the current window.</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-800 text-sm">
-              <thead className="bg-gray-900/60 text-left text-[11px] uppercase tracking-wider text-gray-500">
+            <table className="min-w-full divide-y divide-titanium/30 text-sm">
+              <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
                 <tr>
                   <th className="px-4 py-3">State</th>
                   <th className="px-4 py-3">Channel</th>
@@ -66,7 +66,7 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
                   <th className="px-4 py-3">Key</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-900">
+              <tbody className="divide-y divide-titanium/30">
                 {drafts.items.map((item) => (
                   <OutboxRow key={item.idempotencyKey} item={item} />
                 ))}
@@ -81,9 +81,9 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
 
 function Metric({ label, value }: { readonly label: string; readonly value: string }): JSX.Element {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-950 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-gray-500">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-white">{value}</p>
+    <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
+      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
+      <p className="mt-2 text-xl font-semibold text-ion-white">{value}</p>
     </div>
   );
 }
@@ -92,7 +92,7 @@ function OutboxRow({ item }: { readonly item: PlannedBotOutboxItem }): JSX.Eleme
   const preview = item.bodyText ?? item.threadText?.[0] ?? item.embed?.title ?? "Blocked before rendering.";
 
   return (
-    <tr className="align-top text-gray-300">
+    <tr className="align-top text-ion-1">
       <td className="whitespace-nowrap px-4 py-3">
         <span
           className={
@@ -109,16 +109,16 @@ function OutboxRow({ item }: { readonly item: PlannedBotOutboxItem }): JSX.Eleme
           {item.channel}
         </span>
       </td>
-      <td className="whitespace-nowrap px-4 py-3 font-medium text-white">{item.eventKind}</td>
+      <td className="whitespace-nowrap px-4 py-3 font-medium text-ion-white">{item.eventKind}</td>
       <td className="whitespace-nowrap px-4 py-3">
         <Link href={`/room/${item.gameId}`} className="text-yellow-200 hover:text-yellow-100">
           {item.gameId}
         </Link>
       </td>
-      <td className="max-w-xl px-4 py-3 text-xs leading-5 text-gray-400">
+      <td className="max-w-xl px-4 py-3 text-xs leading-5 text-ion-2">
         <span className="line-clamp-4 whitespace-pre-line">{preview}</span>
       </td>
-      <td className="max-w-xs break-all px-4 py-3 text-[11px] text-gray-500">
+      <td className="max-w-xs break-all px-4 py-3 text-[11px] text-ion-3">
         {item.idempotencyKey}
       </td>
     </tr>

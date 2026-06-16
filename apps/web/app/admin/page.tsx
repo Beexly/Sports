@@ -31,24 +31,24 @@ export default async function AdminPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 p-8">
+    <div className="min-h-screen bg-obsidian p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
-        <p className="text-gray-400 mb-8">Platform overview and controls</p>
+        <p className="text-ion-2 mb-8">Platform overview and controls</p>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {cards.map((card) => (
-            <div key={card.label} className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+            <div key={card.label} className="bg-carbon border border-titanium rounded-xl p-6">
               <div className={`w-10 h-10 ${card.color} rounded-lg mb-3 opacity-80`} />
               <p className="text-3xl font-bold text-white">{card.value.toLocaleString()}</p>
-              <p className="text-gray-400 text-sm mt-1">{card.label}</p>
+              <p className="text-ion-2 text-sm mt-1">{card.label}</p>
             </div>
           ))}
         </div>
 
         {/* System Status */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
+        <div className="bg-carbon border border-titanium rounded-xl p-6 mb-8">
           <h2 className="text-xl font-semibold text-white mb-4">System Status</h2>
           {lastIngestionRun ? (
             <div className="space-y-2">
@@ -57,10 +57,10 @@ export default async function AdminPage() {
                   lastIngestionRun.status === "SUCCESS" ? "bg-green-500" :
                   lastIngestionRun.status === "RUNNING" ? "bg-yellow-500" : "bg-red-500"
                 }`} />
-                <span className="text-gray-300">
+                <span className="text-ion-1">
                   Last ingestion: <strong className="text-white">{lastIngestionRun.status}</strong>
                 </span>
-                <span className="text-gray-500 text-sm">
+                <span className="text-ion-3 text-sm">
                   {lastIngestionRun.startedAt.toLocaleString()}
                 </span>
               </div>
@@ -69,12 +69,12 @@ export default async function AdminPage() {
               )}
             </div>
           ) : (
-            <p className="text-gray-400">No ingestion runs yet</p>
+            <p className="text-ion-2">No ingestion runs yet</p>
           )}
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-carbon border border-titanium rounded-xl p-6">
           <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
           <div className="flex flex-wrap gap-3">
             <a
@@ -86,19 +86,19 @@ export default async function AdminPage() {
             <TriggerRefreshButton />
             <a
               href="/admin/picks"
-              className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+              className="px-4 py-2 bg-titanium text-white rounded-lg hover:bg-titanium transition-colors text-sm"
             >
               Manage Picks
             </a>
             <a
               href="/admin/posts"
-              className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+              className="px-4 py-2 bg-titanium text-white rounded-lg hover:bg-titanium transition-colors text-sm"
             >
               Manage Posts
             </a>
             <a
               href="/admin/users"
-              className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+              className="px-4 py-2 bg-titanium text-white rounded-lg hover:bg-titanium transition-colors text-sm"
             >
               Manage Users
             </a>

@@ -100,35 +100,35 @@ export default async function CockpitBriefPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-baseline justify-between">
-        <h1 className="text-2xl font-bold text-white">Daily brief</h1>
+        <h1 className="text-2xl font-bold text-ion-white">Daily brief</h1>
         <span className="rounded-full border border-yellow-900 bg-yellow-950/40 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-yellow-200">
           {brief.status} · internal only
         </span>
       </div>
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-ion-3">
         {brief.date} · composed from live rows at render · no publish path exists on this surface
       </p>
 
-      <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4">
-        <p className="text-sm leading-relaxed text-gray-200">{brief.summary}</p>
+      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4">
+        <p className="text-sm leading-relaxed text-ion-1">{brief.summary}</p>
       </section>
 
       <div className="grid gap-4 lg:grid-cols-2">
         {brief.sections.map((s) => (
-          <section key={s.type} className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4">
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">{s.title}</h2>
-            <p className="text-sm leading-relaxed text-gray-300">{s.body}</p>
+          <section key={s.type} className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">{s.title}</h2>
+            <p className="text-sm leading-relaxed text-ion-1">{s.body}</p>
           </section>
         ))}
 
-        <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+        <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
             Content ideas (data-backed only)
           </h2>
           {brief.contentIdeas.items.length === 0 ? (
-            <p className="text-sm text-gray-500">No angles earned by today&apos;s data.</p>
+            <p className="text-sm text-ion-3">No angles earned by today&apos;s data.</p>
           ) : (
-            <ul className="space-y-1.5 text-sm text-gray-300">
+            <ul className="space-y-1.5 text-sm text-ion-1">
               {brief.contentIdeas.items.map((idea) => (
                 <li key={idea}>· {idea}</li>
               ))}
@@ -138,15 +138,15 @@ export default async function CockpitBriefPage() {
       </div>
 
       {brief.manualReview.items.length > 0 && (
-        <section className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+        <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
             Needs an operator decision
           </h2>
-          <ul className="divide-y divide-gray-800/60 text-sm">
+          <ul className="divide-y divide-titanium/30 text-sm">
             {brief.manualReview.items.map((t) => (
               <li key={t.title} className="flex items-center justify-between py-1.5">
-                <span className="text-gray-300">{t.title}</span>
-                <span className="font-mono text-[10px] uppercase text-gray-500">
+                <span className="text-ion-1">{t.title}</span>
+                <span className="font-mono text-[10px] uppercase text-ion-3">
                   {t.assignedAgent} · p{t.priority}
                 </span>
               </li>
@@ -158,11 +158,11 @@ export default async function CockpitBriefPage() {
         </section>
       )}
 
-      <p className="text-[11px] text-gray-600">{brief.responsibleGamingText}</p>
+      <p className="text-[11px] text-ion-3">{brief.responsibleGamingText}</p>
 
       <Link
         href="/cockpit"
-        className="w-fit rounded-lg border border-gray-800 px-3 py-2 text-xs text-gray-300 hover:bg-gray-900/60"
+        className="w-fit rounded-lg border border-titanium/40 px-3 py-2 text-xs text-ion-1 hover:bg-carbon/60"
       >
         ← Back to Jarvis
       </Link>

@@ -22,7 +22,7 @@ const STATUS_TONE: Record<string, string> = {
   NOT_READY_DATA: "bg-red-700 text-red-100",
   NOT_READY_VALIDATION: "bg-orange-700 text-orange-100",
   NOT_READY_SAFETY: "bg-red-800 text-red-100",
-  UNKNOWN: "bg-gray-700 text-gray-300",
+  UNKNOWN: "bg-titanium/40 text-ion-1",
 };
 
 const STATUS_SHORT: Record<string, string> = {
@@ -45,7 +45,7 @@ export function JarvisTrend({ snapshots, className }: JarvisTrendProps) {
     return (
       <div
         data-testid="jarvis-trend-empty"
-        className={["text-[10px] text-gray-600", className ?? ""].join(" ")}
+        className={["text-[10px] text-ion-3", className ?? ""].join(" ")}
       >
         No trend data yet
       </div>

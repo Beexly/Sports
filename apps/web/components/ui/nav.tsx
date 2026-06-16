@@ -52,10 +52,18 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
     items: [
       { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, browsable" },
       { label: "Mission Control", href: "/today", desc: "Today's command deck" },
-      { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — where the line is moving across today's games" },
+      { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line movement + best-price line shop" },
       { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
       { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
       { label: "How we read metrics", href: "/intelligence/metrics", desc: "Metric methodology, glass-box" },
+    ],
+  },
+  {
+    heading: "Receipts",
+    items: [
+      { label: "Closing Line Value", href: "/clv", desc: "Did we beat the close — the benchmark touts never show" },
+      { label: "Calibration Report", href: "/performance", desc: "Every settled pick; win rate gated until honest" },
+      { label: "Accountability", href: "/accountability", desc: "Loss autopsies, proof of record, the full ledger" },
     ],
   },
 ];

@@ -25,8 +25,8 @@ export default async function CockpitTasksPage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-white">Task queue</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-bold text-ion-white">Task queue</h1>
+        <p className="mt-1 text-sm text-ion-3">
           Grouped by status. Click any row for the full decision history.
         </p>
       </header>
@@ -38,35 +38,35 @@ export default async function CockpitTasksPage() {
             <section
               key={group.label}
               data-testid={`task-group-${group.label}`}
-              className="rounded-2xl border border-gray-800 bg-gray-900/40 p-4"
+              className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4"
             >
               <header className="mb-3 flex items-center justify-between">
-                <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400">
+                <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
                   {group.label}
                 </h2>
-                <span className="text-xs text-gray-500">{items.length}</span>
+                <span className="text-xs text-ion-3">{items.length}</span>
               </header>
               {items.length === 0 ? (
-                <p className="text-xs text-gray-600">No items.</p>
+                <p className="text-xs text-ion-3">No items.</p>
               ) : (
                 <ul className="space-y-2">
                   {items.map((t) => (
                     <li
                       key={t.id}
-                      className="rounded-lg border border-gray-800 bg-gray-950/40 p-3"
+                      className="rounded-lg border border-titanium/40 bg-obsidian/50 p-3"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <Link
                           href={`/cockpit/tasks/${t.id}`}
-                          className="text-sm font-medium text-gray-100 hover:text-white"
+                          className="text-sm font-medium text-ion-white hover:text-ion-white"
                         >
                           {t.title}
                         </Link>
-                        <span className="shrink-0 rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-semibold text-gray-200">
+                        <span className="shrink-0 rounded-full bg-obsidian/70 px-2 py-0.5 text-[10px] font-semibold text-ion-1">
                           {t.status}
                         </span>
                       </div>
-                      <p className="mt-1 text-[11px] text-gray-500">
+                      <p className="mt-1 text-[11px] text-ion-3">
                         {AGENTS[t.assignedAgent].displayName} · priority {t.priority} · {t.riskLevel}
                         {t.complianceStatus !== "NOT_APPLICABLE" && (
                           <span className="ml-2 rounded bg-yellow-900/30 px-1.5 py-0.5 text-[10px] font-semibold text-yellow-300">

@@ -44,10 +44,16 @@ export function americanToImpliedProb(odds: number): number | null {
 }
 
 /**
- * Single-pick closing-line value, in probability points.
- * Positive when our model's implied probability for the side we took exceeds the
- * probability implied by the CLOSING line — i.e. we got a better price than the
- * close. Both inputs are implied probabilities in 0..1; returns null on bad input.
+ * Single-pick MODEL EDGE vs the close, in probability points.
+ * Positive when our model's win probability for the side we took exceeds the
+ * probability implied by the CLOSING line — i.e. the model judged the side more
+ * likely than the market's final price did (a value/edge measure).
+ *
+ * NOTE: this is NOT the price-beat CLV of prediction-engine/clv.ts or
+ * tracker/clv.ts. A HIGHER implied probability is a SHORTER (worse) price, so do
+ * not read a positive result here as "we got a better price than the close."
+ * Pass a MODEL probability as the first argument, never a price-implied one.
+ * Both inputs are implied probabilities in 0..1; returns null on bad input.
  */
 export function clv(modelImpliedProb: number, closingImpliedProb: number): number | null {
   if (!Number.isFinite(modelImpliedProb) || !Number.isFinite(closingImpliedProb)) return null;
