@@ -28,14 +28,27 @@ import { resolve, join } from "node:path";
 
 const repoRoot = resolve(__dirname, "..");
 const APP_DIR = resolve(repoRoot, "app");
+const COMPONENTS_DIR = resolve(repoRoot, "components");
 
 const SKIP_SUBDIRS = new Set(["cockpit", "admin", "api", "auth"]);
 const SKIP_FILES = new Set<string>([
-  // Non-customer surfaces
+  // Non-customer / internal surfaces, or reviewed illustrative copy that names a
+  // percentage in an outcome context legitimately (each with a one-line reason).
 ]);
 
-function walkCustomerPages(dir: string, files: string[] = []): string[] {
-  const entries = readdirSync(dir);
+// Pages: page.tsx / layout.tsx. Components: every .tsx that a customer page can
+// render (the performance/CLV numbers actually live in components, not pages).
+function walkSurfaces(
+  dir: string,
+  accept: (entry: string) => boolean,
+  files: string[] = []
+): string[] {
+  let entries: string[];
+  try {
+    entries = readdirSync(dir);
+  } catch {
+    return files;
+  }
   for (const entry of entries) {
     const full = join(dir, entry);
     let stat;
@@ -46,8 +59,8 @@ function walkCustomerPages(dir: string, files: string[] = []): string[] {
     }
     if (stat.isDirectory()) {
       if (SKIP_SUBDIRS.has(entry)) continue;
-      walkCustomerPages(full, files);
-    } else if (entry === "page.tsx" || entry === "layout.tsx") {
+      walkSurfaces(full, accept, files);
+    } else if (accept(entry)) {
       if (SKIP_FILES.has(full)) continue;
       files.push(full);
     }
@@ -55,11 +68,19 @@ function walkCustomerPages(dir: string, files: string[] = []): string[] {
   return files;
 }
 
+function walkCustomerPages(dir: string): string[] {
+  return walkSurfaces(dir, (e) => e === "page.tsx" || e === "layout.tsx");
+}
+
+function walkComponents(dir: string): string[] {
+  return walkSurfaces(dir, (e) => e.endsWith(".tsx") && !e.endsWith(".test.tsx"));
+}
+
 // Tokens that turn a bare percentage into an outcome-claim red flag.
 // "win", "edge", "accurate", "accuracy", "hit rate", "roi", "profit",
 // "guaranteed". Plus "verified" because the dashboard uses "Verified
 // Record" — a static "verified record: 67%" would be the exact bug.
-const OUTCOME_CONTEXT = /(win[\s-]?rate|win\s+%|edge|accuracy|accurate|hit\s+rate|hit\s+%|roi|profit|guaranteed)/i;
+const OUTCOME_CONTEXT = /(win[\s-]?rate|win\s+%|edge|accuracy|accurate|hit\s+rate|hit\s+%|roi|profit|guaranteed|beat[\s-]the[\s-]close|beat[\s-]close|\bclv\b)/i;
 
 // A regex that matches a literal hardcoded percentage in a string,
 // JSX text node, or comment — but NOT inside `{}` (dynamic), `=`
@@ -67,12 +88,13 @@ const OUTCOME_CONTEXT = /(win[\s-]?rate|win\s+%|edge|accuracy|accurate|hit\s+rat
 const HARDCODED_PCT = /(\d{1,3}(?:\.\d+)?)\s*%/g;
 
 describe("no fake percentages on customer pages", () => {
-  const pages = walkCustomerPages(APP_DIR);
+  const pages = [...walkCustomerPages(APP_DIR), ...walkComponents(COMPONENTS_DIR)];
 
   it("finds at least the dashboard and homepage so the test isn't silently empty", () => {
     expect(pages.length).toBeGreaterThan(3);
     expect(pages.some((p) => p.includes("dashboard"))).toBe(true);
-    // The repo's customer routes should include at least one top-level page.
+    // The performance numbers render in components, so those must be scanned too.
+    expect(pages.some((p) => p.includes(`${"components"}/`))).toBe(true);
   });
 
   it.each(pages)("page has no hardcoded outcome-percentage: %s", (file) => {
@@ -80,6 +102,9 @@ describe("no fake percentages on customer pages", () => {
     // Strip dynamic JSX expressions ({...}) and common attribute strings
     // so we don't flag innocent style values or accessibility labels.
     const cleaned = src
+      // Block comments (incl. JSDoc) are never customer-visible — a "~50%" in a
+      // doc string explaining the math is not a rendered claim.
+      .replace(/\/\*[\s\S]*?\*\//g, "")
       .replace(/\{[^{}]*\}/g, "")
       .replace(/className\s*=\s*"[^"]*"/g, "")
       .replace(/data-testid\s*=\s*"[^"]*"/g, "")

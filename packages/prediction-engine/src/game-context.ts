@@ -254,7 +254,7 @@ export function computeHistoricalFormScore(
  *
  * Factors:
  *   - Bookmaker coverage: 0–40 pts
- *   - Data freshness: 0–30 pts (stale after 30 min, 0 at 120 min)
+ *   - Data freshness: 0–30 pts (full credit at 0 min, linear decay to 0 at 90 min)
  *   - Market coverage: 0–30 pts (having spread + total + h2h = full)
  */
 export function computeDataQuality(

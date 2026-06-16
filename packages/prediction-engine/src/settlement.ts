@@ -27,8 +27,13 @@ export type SettlementResult = "WIN" | "LOSS" | "PUSH";
  * Calculate the settlement result for a single pick.
  *
  * @param pickType   - SPREAD, MONEYLINE, or TOTAL
- * @param selection  - The pick selection string (must contain homeTeam name for home picks,
- *                     start with "OVER"/"UNDER" for totals)
+ * @param selection  - The pick selection string. Built by scoring as
+ *                     `${chosenTeam} …`, so a home pick STARTS WITH homeTeam
+ *                     (matches clv-capture's side derivation); TOTAL starts with
+ *                     "OVER"/"UNDER". `startsWith` (not `includes`) is required so
+ *                     an away team whose name contains the home name as a
+ *                     substring (e.g. "Winnipeg Jets" vs home "Jets") is not
+ *                     mis-settled as a home pick.
  * @param line       - The line (spread or total). For SPREAD, from home team's perspective.
  * @param homeTeam   - The home team name (used to determine home vs away pick)
  * @param homeScore  - Final home team score
@@ -46,7 +51,7 @@ export function calculatePickResult(
 ): SettlementResult {
   if (pickType === "MONEYLINE") {
     const homeWon = homeScore > awayScore;
-    const pickedHome = selection.includes(homeTeam);
+    const pickedHome = selection.startsWith(homeTeam);
     // Soccer 3-way ML: a draw (tie) is a LOSS for home or away ML picks
     if (homeScore === awayScore) {
       return sportKey.includes("soccer") ? "LOSS" : "PUSH";
@@ -55,7 +60,7 @@ export function calculatePickResult(
   }
 
   if (pickType === "SPREAD") {
-    const pickedHome = selection.includes(homeTeam);
+    const pickedHome = selection.startsWith(homeTeam);
     const homeMargin = homeScore - awayScore;
     // homeCoverMargin > 0 means home team covered
     const homeCoverMargin = homeMargin + line;
