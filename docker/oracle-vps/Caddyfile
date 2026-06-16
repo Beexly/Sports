@@ -1,0 +1,20 @@
+# Auto-TLS reverse proxy for the Oracle VPS stack.
+# Caddy fetches + renews Let's Encrypt certs automatically for each subdomain.
+# Point DNS A records for ncaa.<domain> (and optionally llm.<domain>) at the VPS IP.
+
+# Self-hosted henrygd NCAA API → set HENRYGD_NCAA_BASE_URL=https://ncaa.<domain> in the app.
+ncaa.{$DOMAIN} {
+	encode gzip
+	reverse_proxy ncaa-api:3000
+}
+
+# Internal-LLM endpoint (Ollama). Protected by HTTP basic auth so it isn't open to the world.
+# Generate LLM_BASICAUTH_HASH with: docker run --rm caddy:2-alpine caddy hash-password --plaintext 'yourpass'
+# Then in the app: INTERNAL_LLM_BASE_URL=https://llm.<domain>/v1  (Authorization handled by your INTERNAL_LLM_API_KEY if the model server needs it; basic auth is the network gate).
+llm.{$DOMAIN} {
+	encode gzip
+	basic_auth {
+		{$LLM_BASICAUTH_USER} {$LLM_BASICAUTH_HASH}
+	}
+	reverse_proxy ollama:11434
+}

@@ -46,4 +46,43 @@ tell me and I'll add a verified `source-rights-registry.ts` entry + wire ingesti
 
 ---
 
-## (appended as the remaining workstreams land: SEO flywheel, $0 infra, analytics)
+## C. SEO flywheel (#3 — engine shipped)
+
+⬜ **C1 — Nothing required from you to *build*; one decision to *ship*.**
+The engine is shipped + tested (`lib/seo/sports-jsonld.ts`). To go live I (or the next
+session) wire `apps/web/app/preview/[sport]/[slug]/page.tsx` to read scheduled games from
+the DB and spread `buildMatchupPreview()`, then extend `sitemap.ts`. That needs the DB
+running to verify rendering. Your only call: confirm the public URL shape `/preview/...`
+is fine (or name your preferred path).
+
+## D. $0 infra on Oracle Cloud (#4 — stack shipped, turnkey)
+
+⬜ **D1 — Create the Oracle Always-Free VPS + deploy the stack.**
+Full runbook: `docker/oracle-vps/README.md`. Summary:
+1. Sign up https://www.oracle.com/cloud/free/ (real CC + ID; not charged), create an
+   Always-Free Ampere ARM instance (Ubuntu), open ports 80/443/22.
+2. DNS A records `ncaa.<domain>` + `llm.<domain>` → instance IP.
+3. On the box: install Docker, `cp .env.example .env` (set DOMAIN/REDIS_PASSWORD/
+   LLM_BASICAUTH_HASH), `docker compose -f compose.yml up -d`, pull an Ollama model.
+4. Set app envs: `HENRYGD_NCAA_BASE_URL=https://ncaa.<domain>` (drops the rate cap) and,
+   for the internal-LLM tier, point `INTERNAL_LLM_BASE_URL` at this box's Ollama.
+Saves: managed Redis + paid VPS + henrygd rate cap + paid internal inference → all $0.
+
+## E. Free analytics (from the leverage plan — 10-minute win)
+
+⬜ **E1 — Add Cloudflare Web Analytics + Microsoft Clarity.**
+Both free, cookieless/consent-free. Create the properties, drop their JS snippets in
+`apps/web/app/layout.tsx` (gated behind an env flag so it only loads in prod). Tell me the
+two site tokens and I'll wire the snippet + env. Gives traffic + paywall-funnel heatmaps at $0.
+
+---
+
+### Quick status board
+| # | Item | Needs you | Code shipped |
+|---|------|-----------|--------------|
+| A1 | Internal-LLM tier (Groq/Ollama) | Groq key OR Oracle box | ✅ |
+| A2 | Run eval gate, flip cheap surfaces | run `npm run eval:prompts` | ✅ |
+| B1 | Clear FPL terms → wire EPL ingestion | read FPL/PL terms | ✅ (gated) |
+| C1 | Ship `/preview` pages | confirm URL shape + DB | ✅ (engine) |
+| D1 | Oracle VPS deploy | signup + `compose up` | ✅ (stack) |
+| E1 | Cloudflare + Clarity analytics | create properties, send tokens | scaffold pending tokens |
