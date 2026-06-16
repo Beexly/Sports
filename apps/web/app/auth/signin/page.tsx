@@ -14,9 +14,10 @@ interface SignInPageProps {
 export default async function SignInPage({ searchParams }: SignInPageProps) {
   const session = await auth();
 
-  // Already signed in — redirect to callbackUrl or dashboard
+  // Already signed in — redirect to callbackUrl or dashboard.
+  // safeCallbackUrl() strips any absolute/external URL to prevent open redirects.
   if (session?.user) {
-    redirect(searchParams.callbackUrl ?? "/dashboard");
+    redirect(safeCallbackUrl(searchParams.callbackUrl));
   }
 
   const errorMessage = getErrorMessage(searchParams.error);
@@ -75,7 +76,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           action={async () => {
             "use server";
             await signIn("google", {
-              redirectTo: searchParams.callbackUrl ?? "/dashboard",
+              redirectTo: safeCallbackUrl(searchParams.callbackUrl),
             });
           }}
         >
@@ -156,6 +157,18 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 // ─────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────
+
+/**
+ * Validates callbackUrl to only allow same-origin relative paths.
+ * Rejects absolute URLs (https://evil.com) and protocol-relative URLs
+ * (//evil.com) which browsers treat as absolute — preventing open redirects.
+ */
+function safeCallbackUrl(raw: string | undefined): string {
+  if (!raw) return "/dashboard";
+  // Must start with "/" but not "//" (protocol-relative)
+  if (raw.startsWith("/") && !raw.startsWith("//")) return raw;
+  return "/dashboard";
+}
 
 function getErrorMessage(error?: string): string | null {
   switch (error) {
