@@ -126,6 +126,38 @@ export const LESSONS: readonly CourseLesson[] = [
     ],
   },
 
+  {
+    id: "ll-line-shopping",
+    track: "Line Literacy",
+    level: "Core",
+    title: "Line shopping: never take the first price",
+    minutes: 2,
+    body: [
+      "The same game is priced differently at every book. Taking +3 at one shop when another has +3.5 throws away the most common margin in football — for free.",
+      "Half a point and a few cents of juice compound over a season into more than most bettors' entire edge. Check two or three books and take the best number. It is the lowest-effort edge there is.",
+    ],
+    quiz: [
+      {
+        id: "llshop-q1",
+        prompt: "Two books offer your side at +3 and +3.5. Taking +3 means…",
+        options: [
+          { id: "a", label: "Nothing — half a point rarely matters", correct: false, why: "It crosses 3, the most common NFL margin. It matters most exactly here." },
+          { id: "b", label: "Giving away free value on the key number", correct: true, why: "Same bet, worse price. The best number is the whole point of shopping." },
+          { id: "c", label: "A safer bet because the number is lower", correct: false, why: "Lower isn't safer — it's a worse price for the same side." },
+        ],
+      },
+      {
+        id: "llshop-q2",
+        prompt: "Why does taking the best price matter over a full season?",
+        options: [
+          { id: "a", label: "Small per-bet differences compound into real money", correct: true, why: "A few cents and half-points every bet add up past most bettors' edge." },
+          { id: "b", label: "Books reward loyal customers with better lines", correct: false, why: "The opposite — consistent best-price shoppers get limited, not rewarded." },
+          { id: "c", label: "It guarantees a winning season", correct: false, why: "It improves your price, not the outcome. Nothing guarantees a win." },
+        ],
+      },
+    ],
+  },
+
   // ── BANKROLL & RISK ─────────────────────────────────────────────
   {
     id: "br-units",
