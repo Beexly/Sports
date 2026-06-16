@@ -135,7 +135,9 @@ export function checkClearance(
 
   if (!compatibleStatuses.includes(source.status)) {
     if (constraint.allowedWhenManualOnly && request.mode === "manual_research_note") {
-      // manual_research_note allowed on more statuses — handled below
+      // manual_research_note is explicitly permitted for sources where other modes
+      // would be blocked. The broader compatibleStatuses for this mode (defined in
+      // extraction-modes.ts) already captures the allowed set; no additional block needed.
     } else {
       blocks.push(block(
         "INCOMPATIBLE_STATUS",
@@ -374,10 +376,4 @@ export type ClearanceSummary = {
 
 export function summarizeClearance(result: ClearanceResult): ClearanceSummary {
   return {
-    allowed: result.allowed,
-    blockCount: result.blocks.length,
-    warningCount: result.warnings.length,
-    primaryBlock: result.blocks[0]?.message ?? null,
-    requiresReview: result.requiresReview,
-  };
-}
+    allowed: result.allow

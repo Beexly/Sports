@@ -61,7 +61,7 @@ Until then, adapter stays gated — no ingestion, no public display.
 
 ## D. $0 infra on Oracle Cloud (#4 — fully turnkey now)
 
-⬜ **D1 — Create the Oracle Always-Free VPS + run deploy.sh.**
+🔧 **D1 — Create the Oracle Always-Free VPS + run deploy.sh.**
 
 Worker Dockerfiles + `deploy.sh` are now shipped. The stack is genuinely one-command-ready.
 
@@ -116,4 +116,4 @@ Saves: managed Redis + paid VPS + henrygd rate cap + paid internal inference →
 The snippet is already wired in `apps/web/app/layout.tsx` (gated behind
 `NEXT_PUBLIC_ANALYTICS_ENABLED`). Two signups + env vars:
 
-**Cloudflare Web Analytics** 
+**Cloudflare Web Analytics**
