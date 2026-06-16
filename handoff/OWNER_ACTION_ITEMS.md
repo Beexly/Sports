@@ -116,4 +116,33 @@ Saves: managed Redis + paid VPS + henrygd rate cap + paid internal inference →
 The snippet is already wired in `apps/web/app/layout.tsx` (gated behind
 `NEXT_PUBLIC_ANALYTICS_ENABLED`). Two signups + env vars:
 
-**Cloudflare Web Analytics**
+**Cloudflare Web Analytics** (cookieless, no consent banner needed):
+1. Go to https://dash.cloudflare.com → Web Analytics → Add a site
+2. Enter `galaxysportsedge.com` → copy the **beacon token** (32-char hex)
+3. `vercel env add NEXT_PUBLIC_CF_BEACON_TOKEN production` → paste token
+
+**Microsoft Clarity** (heatmaps + session recordings, free):
+1. Go to https://clarity.microsoft.com → New project → enter site URL
+2. Copy the **project ID** (e.g. `abc123xyz`)
+3. `vercel env add NEXT_PUBLIC_CLARITY_PROJECT_ID production` → paste ID
+
+**Then activate:**
+```bash
+vercel env add NEXT_PUBLIC_ANALYTICS_ENABLED production
+# paste: true
+```
+
+Redeploy. Both tools load only in production (env gate).
+
+---
+
+### Quick status board
+| # | Item | Code | Needs you |
+|---|------|------|-----------|
+| 0 | Push 2 unpushed commits (A1+A2, B1+C1) | ✅ committed | `git push origin claude/happy-euler-trkihe` |
+| A1 | Groq env vars in Vercel | ✅ internal-llm.ts wired | 3× `vercel env add` commands (see above) |
+| A2 | Model-router haiku flips | ✅ committed | nothing |
+| B1 | FPL terms → EPL adapter | ✅ gated (permission_required) | email PL or buy football-data.org plan |
+| C1 | `/preview` pages + sitemap | ✅ committed | push (item 0) |
+| D1 | Oracle VPS | ✅ Dockerfiles + deploy.sh | signup + DNS + `bash deploy.sh` |
+| E1 | Analytics snippet | ✅ layout.tsx wired | CF + Clarity signups → 3× `vercel env add` |

@@ -39,8 +39,9 @@ async function loadGameForSlug(sport: string, slug: string) {
   const homePart = slug.slice(vsIdx + 4); // "-vs-".length === 4
 
   // Pull recent + upcoming games for the sport (bounded query — no full scan)
+  let candidates: Awaited<ReturnType<typeof db.game.findMany>>;
   try {
-    const candidates = await db.game.findMany({
+    candidates = await db.game.findMany({
       where: {
         sportId: sport,
         status: { in: ["SCHEDULED", "LIVE", "FINAL"] },
@@ -55,16 +56,17 @@ async function loadGameForSlug(sport: string, slug: string) {
         },
       },
     });
-    return (
-      candidates.find(
-        (g) =>
-          slugify(g.awayTeamName) === awayPart &&
-          slugify(g.homeTeamName) === homePart,
-      ) ?? null
-    );
   } catch {
     return null; // DB unavailable — render 404 rather than 500
   }
+
+  return (
+    candidates.find(
+      (g) =>
+        slugify(g.awayTeamName) === awayPart &&
+        slugify(g.homeTeamName) === homePart,
+    ) ?? null
+  );
 }
 
 function toMatchupInput(

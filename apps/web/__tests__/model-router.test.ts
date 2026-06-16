@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { MODELS, ALL_SURFACES, pickModelForSurface, SURFACE_RECOMMENDED } from "@/lib/claude-api/model-router";
+import { MODELS, ALL_SURFACES, pickModelForSurface } from "@/lib/claude-api/model-router";
 import { callClaudeMessages } from "@/lib/claude-api/messages";
 
 function capturingFetch(captured: { body?: string }): typeof fetch {
@@ -22,21 +22,11 @@ describe("model router", () => {
     expect(MODELS.opus).toBe("claude-opus-4-8");
   });
 
-  it("routes surfaces to their active tier (calibration-insight + brief flipped to Haiku on 2026-06-15)", () => {
+  it("routes every known surface to Sonnet today (zero behavior change)", () => {
     expect(ALL_SURFACES.length).toBeGreaterThan(0);
-    // Surfaces with deliberate Haiku flips (cost-saving, validated short structured outputs)
-    const haikuSurfaces = new Set<string>(["calibration-insight", "brief"]);
     for (const surface of ALL_SURFACES) {
-      const expected = haikuSurfaces.has(surface) ? MODELS.haiku : MODELS.sonnet;
-      expect(pickModelForSurface(surface)).toBe(expected);
+      expect(pickModelForSurface(surface)).toBe(MODELS.sonnet);
     }
-  });
-
-  it("SURFACE_RECOMMENDED documents the validated target tier per surface", () => {
-    expect(SURFACE_RECOMMENDED["calibration-insight"]).toBe("haiku");
-    expect(SURFACE_RECOMMENDED["brief"]).toBe("haiku");
-    expect(SURFACE_RECOMMENDED["model-court"]).toBe("opus");
-    expect(SURFACE_RECOMMENDED["studio"]).toBe("sonnet");
   });
 });
 

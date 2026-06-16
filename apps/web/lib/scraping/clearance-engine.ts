@@ -376,4 +376,10 @@ export type ClearanceSummary = {
 
 export function summarizeClearance(result: ClearanceResult): ClearanceSummary {
   return {
-    allowed: result.allow
+    allowed: result.allowed,
+    blockCount: result.blocks.length,
+    warningCount: result.warnings.length,
+    primaryBlock: result.blocks[0]?.message ?? null,
+    requiresReview: result.requiresReview,
+  };
+}
