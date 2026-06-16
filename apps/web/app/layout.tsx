@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import {
   Big_Shoulders_Display,
   Instrument_Serif,
@@ -222,6 +223,28 @@ export default function RootLayout({
         <CommandPalette />
         <GalaxyCursor />
         <SentryClientInit />
+
+        {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}
+        {process.env["NEXT_PUBLIC_ANALYTICS_ENABLED"] === "true" && (
+          <>
+            {/* Cloudflare Web Analytics — beacon, no cookies */}
+            <Script
+              id="cf-beacon"
+              src="https://static.cloudflareinsights.com/beacon.min.js"
+              data-cf-beacon={`{"token":"${process.env["NEXT_PUBLIC_CF_BEACON_TOKEN"]}"}`}
+              strategy="afterInteractive"
+            />
+
+            {/* Microsoft Clarity — heatmaps + session recordings */}
+            <Script id="ms-clarity" strategy="afterInteractive">
+              {`(function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window,document,"clarity","script","${process.env["NEXT_PUBLIC_CLARITY_PROJECT_ID"]}");`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

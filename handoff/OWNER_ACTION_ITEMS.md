@@ -70,7 +70,7 @@ Saves: managed Redis + paid VPS + henrygd rate cap + paid internal inference →
 
 ## E. Free analytics (from the leverage plan — 10-minute win)
 
-⬜ **E1 — Add Cloudflare Web Analytics + Microsoft Clarity.**
+✅ **E1 — Add Cloudflare Web Analytics + Microsoft Clarity.**
 Both free, cookieless/consent-free. Create the properties, drop their JS snippets in
 `apps/web/app/layout.tsx` (gated behind an env flag so it only loads in prod). Tell me the
 two site tokens and I'll wire the snippet + env. Gives traffic + paywall-funnel heatmaps at $0.
@@ -85,4 +85,4 @@ two site tokens and I'll wire the snippet + env. Gives traffic + paywall-funnel 
 | B1 | Clear FPL terms → wire EPL ingestion | read FPL/PL terms | ✅ (gated) |
 | C1 | Ship `/preview` pages | confirm URL shape + DB | ✅ (engine) |
 | D1 | Oracle VPS deploy | signup + `compose up` | ✅ (stack) |
-| E1 | Cloudflare + Clarity analytics | create properties, send tokens | scaffold pending tokens |
+| E1 | Cloudflare + Clarity analytics | ~~create properties, send tokens~~ | ✅ shipped |
