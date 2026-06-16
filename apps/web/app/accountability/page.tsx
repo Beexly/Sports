@@ -121,6 +121,14 @@ export default function AccountabilityPage() {
           />
 
           <AccountabilityCard
+            eyebrow="Closing line value"
+            title="Beat the close"
+            body="The sharp-credible leading indicator of edge: whether the price we locked beat where the market closed — the one number tout services never show. Published under the same gate as the win rate, with no number shown before it can be honestly backed."
+            href="/clv"
+            linkLabel="See our CLV"
+          />
+
+          <AccountabilityCard
             eyebrow="Model changelog"
             title="Ship log"
             body="Every model version, gate flip, and calibration update is logged publicly with a date and a reason. The changelog is how the record stays readable over time — not just a snapshot of where things stand today."

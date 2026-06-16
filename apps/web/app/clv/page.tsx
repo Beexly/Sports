@@ -85,8 +85,26 @@ export default async function ClvPage() {
             />
           )}
 
+          {/* Track your own CLV — the funnel */}
+          <div className="mt-8 rounded-2xl border border-orbital-cyan/30 bg-orbital-cyan/[0.06] p-6">
+            <h2 className="text-sm font-semibold text-ion-white">
+              Now measure your own.
+            </h2>
+            <p className="mt-1.5 text-sm text-ion-1">
+              The CLV Tracker logs your bets, settles them against the closing line,
+              and shows whether <em>you</em> beat the close — your real scoreboard,
+              stored in your browser. The same metric we hold ourselves to.
+            </p>
+            <Link
+              href="/track"
+              className="mt-4 inline-flex items-center rounded-lg border border-orbital-cyan/50 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan hover:bg-orbital-cyan/20"
+            >
+              Open the CLV Tracker →
+            </Link>
+          </div>
+
           {/* Cross-links */}
-          <div className="mt-10 flex flex-wrap gap-3 text-sm">
+          <div className="mt-6 flex flex-wrap gap-3 text-sm">
             <Link
               href="/methodology"
               className="rounded-lg border border-mineral px-4 py-2 text-ion-1 hover:bg-eclipse/80"
@@ -98,6 +116,18 @@ export default async function ClvPage() {
               className="rounded-lg border border-mineral px-4 py-2 text-ion-1 hover:bg-eclipse/80"
             >
               The Calibration Report →
+            </Link>
+            <Link
+              href="/observatory"
+              className="rounded-lg border border-mineral px-4 py-2 text-ion-1 hover:bg-eclipse/80"
+            >
+              Live market &amp; line shop →
+            </Link>
+            <Link
+              href="/accountability"
+              className="rounded-lg border border-mineral px-4 py-2 text-ion-1 hover:bg-eclipse/80"
+            >
+              Full accountability →
             </Link>
           </div>
 

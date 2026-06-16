@@ -85,7 +85,9 @@ export default async function TrackPage() {
             <Reveal delay={120}>
               <p className="mt-8 text-xs leading-relaxed text-ink-500">
                 A personal record keeper — no books, no money, no advice. CLV is computed from the closing odds you
-                enter for each exact selection. Learn the why in the <a href="/fantasy/academy" style={{ color: BRAND_COLORS.softUltraviolet }}>Academy&apos;s Market track</a>.
+                enter for each exact selection. See how we hold ourselves to the same metric on our public{" "}
+                <a href="/clv" style={{ color: BRAND_COLORS.softUltraviolet }}>CLV report</a>, or learn the why in the{" "}
+                <a href="/fantasy/academy" style={{ color: BRAND_COLORS.softUltraviolet }}>Academy&apos;s Market track</a>.
               </p>
             </Reveal>
           </div>
