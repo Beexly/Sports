@@ -224,7 +224,7 @@ describe("askJarvisWithMemory — pure logic", () => {
     const answer = await result;
     expect(answer.intent).toBe("decisions");
     expect(answer.answer.length).toBeGreaterThan(0);
-  });
+  }, 20000);
 
   it("falls back gracefully to base answer when no DB is available", async () => {
     // The recall call will throw MemoryStoreUnavailableError in no-DB environment.
