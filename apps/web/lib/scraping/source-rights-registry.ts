@@ -279,6 +279,48 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "Outreach via support@scores24.live or personal-data@scores24.live required before any automation.",
   },
 
+  // ── Permission required ──────────────────────────────────────────────────────
+  {
+    source_id: "fpl-api",
+    source_name: "Fantasy Premier League API (Premier League / FAPL)",
+    source_url: "https://fantasy.premierleague.com/api/",
+    terms_url: "https://www.premierleague.com/en/terms-and-conditions",
+    robots_url: "https://fantasy.premierleague.com/robots.txt",
+    jurisdiction: "UK",
+    source_type: "fantasy_platform",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "low",
+    copyright_expression_risk: "medium",
+    database_right_risk: "high",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-15",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://www.premierleague.com/en/terms-and-conditions",
+    ],
+    unlock_condition:
+      "Prior written approval from the Football Association Premier League Limited. " +
+      "Contact: info@premierleague.com. Alternatively, use a licensed EPL data provider " +
+      "(e.g. football-data.org free tier allows non-commercial use; commercial requires their API plan).",
+    vendor_contact: "info@premierleague.com",
+    notes:
+      "PL Terms of Use (Intellectual Property Rights section) explicitly prohibit: (1) commercial use " +
+      "of Website/App data, (2) creating a database from downloaded material, (3) redistribution without " +
+      "prior written approval. UK database right (sui generis) applies even to factual compilations. " +
+      "Adapter built (lib/data-sources/free-adapters/fpl.ts) and gated — DO NOT ingest until written " +
+      "consent obtained or a licensed alternative source is used. EPL is not yet a core Sport type; " +
+      "adding it is gated on this clearance.",
+  },
+
   // ── Vendor candidate ─────────────────────────────────────────────────────────
   {
     source_id: "score24-com",

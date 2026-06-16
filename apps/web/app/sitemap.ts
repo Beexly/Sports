@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { loadPublicJournalEntries } from "@/lib/journal/load";
+import { db } from "@sports/db";
 
 /**
  * sitemap.xml
@@ -7,6 +8,9 @@ import { loadPublicJournalEntries } from "@/lib/journal/load";
  * Static list of public-facing URLs. Blog post URLs are intentionally
  * omitted while PUBLIC_BLOG_ENABLED is false; once the gate flips, swap
  * this for a dynamic generator that reads published ContentDraft slugs.
+ *
+ * Preview routes (/preview/[sport]/[slug]) are generated dynamically from the
+ * Game table — thousands of long-tail indexable matchup pages at no extra cost.
  */
 
 const ROUTES: ReadonlyArray<{
@@ -65,11 +69,55 @@ const ROUTES: ReadonlyArray<{
   { path: "/stats/expert-board", priority: 0.5, changeFrequency: "weekly" },
 ];
 
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+/** Load upcoming + recent games for preview page URLs (bounded, DB-safe). */
+async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
+  try {
+    const games = await db.game.findMany({
+      where: {
+        status: { in: ["SCHEDULED", "LIVE", "FINAL"] },
+      },
+      orderBy: { commenceTime: "desc" },
+      take: 2000, // well within sitemap's 50 k URL limit
+      select: {
+        sportId: true,
+        awayTeamName: true,
+        homeTeamName: true,
+        commenceTime: true,
+        updatedAt: true,
+      },
+    });
+
+    const baseUrl =
+      process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
+
+    return games.map((g) => ({
+      url: `${baseUrl}/preview/${slugify(g.sportId)}/${slugify(g.awayTeamName)}-vs-${slugify(g.homeTeamName)}`,
+      lastModified: g.updatedAt,
+      changeFrequency: "hourly" as const,
+      priority: 0.7,
+    }));
+  } catch {
+    // DB unavailable at build time — return empty rather than crashing the build
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
     process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
   const now = new Date();
-  const journalEntries = await loadPublicJournalEntries();
+  const [journalEntries, previewRoutes] = await Promise.all([
+    loadPublicJournalEntries(),
+    loadPreviewGames(),
+  ]);
 
   const staticRoutes = ROUTES.map(({ path, priority, changeFrequency }) => ({
     url: `${baseUrl}${path}`,
@@ -85,5 +133,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...journalRoutes];
+  return [...staticRoutes, ...journalRoutes, ...previewRoutes];
 }
