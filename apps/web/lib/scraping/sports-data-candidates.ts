@@ -69,6 +69,27 @@ const STANDARD_STEPS: readonly string[] = [
 
 export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
   {
+    id: "fpl",
+    name: "Fantasy Premier League API",
+    homepage: "https://fantasy.premierleague.com/api/bootstrap-static/",
+    coverage: "English Premier League FACTS: 20 teams (played/W/D/L/points/position), 380 fixtures (gameweek, scores, results, kickoff), 800+ players' factual season stats (minutes, goals, assists, clean sheets, cards, starts). Schema verified live 2026-06-15. We extract FACTS ONLY — never FPL's proprietary strength/ICT/form/expected-points metrics.",
+    accessModel: "free_no_key",
+    freeTier: "No key. Public JSON endpoints (bootstrap-static, fixtures). Be polite: cache + low request rate.",
+    keyRequired: false,
+    apiKeyEnvVar: null,
+    priority: "medium",
+    oddsOnly: false,
+    ...GATE,
+    inMainRegistry: false,
+    registrySourceId: null,
+    verificationSteps: [
+      "Read FPL/Premier League terms; confirm commercial display + storage of these facts is permitted (sport facts are generally not copyrightable, but the Terms must be checked).",
+      "Confirm we extract FACTS only and never republish FPL's proprietary derived metrics (strength, ICT, form, expected points).",
+      "Add a verified entry to source-rights-registry.ts on clearance and remove from this candidate list.",
+    ],
+    notes: "Free, no-key EPL depth (player-level facts + fixtures) ESPN covers thinly. Adapter built (lib/data-sources/free-adapters/fpl.ts, facts-only, fixture-tested) but GATED: no ingestion/public use until terms are read. EPL is not yet a core Sport type, so this is intentionally not in the free-first source-router.",
+  },
+  {
     id: "cfbd",
     name: "CollegeFootballData (CFBD)",
     homepage: "https://collegefootballdata.com",

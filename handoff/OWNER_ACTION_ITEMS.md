@@ -32,5 +32,18 @@ After a pass, flip that one line in `lib/claude-api/model-router.ts` (`SURFACE_T
 
 ---
 
-## (more items appended as the other three workstreams land: free-data adapter,
-## SEO flywheel, $0 infra, analytics)
+## B. Reduce Odds-API dependence — free EPL data (#2 — adapter shipped, GATED)
+
+⬜ **B1 — Read the FPL / Premier League terms, then clear the adapter.**
+A real, facts-only, fixture-tested Fantasy Premier League adapter is shipped
+(`lib/data-sources/free-adapters/fpl.ts`) — free, no key, EPL team/player/fixture FACTS
+(800+ players) that ESPN covers thinly. It is **gated** (candidate id `fpl` in
+`sports-data-candidates.ts`) — no ingestion/public use until you confirm terms.
+Steps: read FPL/PL terms for commercial display + storage of these facts; confirm we never
+republish FPL's proprietary metrics (we already exclude strength/ICT/form). On clearance,
+tell me and I'll add a verified `source-rights-registry.ts` entry + wire ingestion.
+(Note: EPL isn't a core `Sport` yet; clearing this is also the trigger to add it.)
+
+---
+
+## (appended as the remaining workstreams land: SEO flywheel, $0 infra, analytics)
