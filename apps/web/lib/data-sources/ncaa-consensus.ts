@@ -201,11 +201,13 @@ export async function resilientNcaaScores(primary: Thunk, secondary: Thunk): Pro
     const games = await primary();
     if (games.length > 0) return { games, servedBy: "primary", degraded: false };
   } catch (err) {
+    const primaryErrMsg = err instanceof Error ? err.message : String(err);
     try {
       const games = await secondary();
-      return { games, servedBy: "secondary", degraded: true, error: err instanceof Error ? err.message : String(err) };
-    } catch {
-      return { games: [], servedBy: "none", degraded: true, error: err instanceof Error ? err.message : String(err) };
+      return { games, servedBy: "secondary", degraded: true, error: primaryErrMsg };
+    } catch (secondaryErr) {
+      const secondaryErrMsg = secondaryErr instanceof Error ? secondaryErr.message : String(secondaryErr);
+      return { games: [], servedBy: "none", degraded: true, error: `primary: ${primaryErrMsg}; secondary: ${secondaryErrMsg}` };
     }
   }
   // primary returned empty — try secondary as a coverage fallback

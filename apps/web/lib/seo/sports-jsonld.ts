@@ -11,7 +11,7 @@
  * no hype/guarantees — CLAUDE.md). No DB here — pure + fully testable.
  */
 
-export const SITE_URL = process.env["NEXTAUTH_URL"]?.replace(/\/$/, "") || "https://example.com";
+export const SITE_URL = (process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com").replace(/\/$/, "");
 
 export type MatchupPick = {
   readonly type: "SPREAD" | "MONEYLINE" | "TOTAL";
