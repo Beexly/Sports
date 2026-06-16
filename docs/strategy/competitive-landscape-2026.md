@@ -19,6 +19,28 @@ exactly the lane our doctrine already points at.
 
 ---
 
+## Status — what shipped since this teardown (2026-06-16)
+
+The recommendations below were largely **latent capability**, not missing code.
+Surfaced this session:
+
+- ✅ **#1 Public CLV report** (`/clv`) — gated like the win rate, no number shown
+  until defensible; cross-linked from the anti-tout page, the methodology hub, the
+  accountability hub, and a homepage callout ("the one number touts never show").
+- ✅ **#2 Line shop** (`/observatory`) — best available price/line per side across
+  captured books; `buildBestLines`, unit-tested. Transparency, not arbitrage.
+- ✅ **#4 User CLV tracking** (`/track`) — already built (glass-box ledger: CLV,
+  ROI, your own Brier calibration); now woven into the proof suite + footer.
+- ◑ **#3 Education moat** — methodology now explains consensus → line shop → CLV;
+  glossary + /clv + /vs/tout carry the plain-language layer. Ongoing.
+
+The proof story now reads end to end: **consensus** (what the market thinks) →
+**line shop** (best of it) → **our CLV** (did we beat it) → **your CLV** (did you)
+→ **accountability** (the whole record). Remaining is depth (#3) and the bigger
+product bet of elevating CLV to a primary homepage/nav headline.
+
+---
+
 ## The four competitor segments
 
 ### 1. Pick / tout services (Action Network experts, WagerTalk, Docsports, Instagram cappers)

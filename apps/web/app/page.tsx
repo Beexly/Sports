@@ -500,6 +500,33 @@ export default async function HomePage(): Promise<JSX.Element> {
               ))}
             </div>
           </div>
+
+          {/* The benchmark we publish — CLV, the proof touts never show. */}
+          <div className="mt-10 rounded-ds-lg border border-orbital-cyan/30 bg-orbital-cyan/[0.05] p-5 sm:p-7">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+              The benchmark we publish
+            </p>
+            <h3 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+              Closing line value — the one number touts never show.
+            </h3>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
+              A win streak is a screenshot. Whether the price we locked beat where the
+              market closed is the sharp-credible leading indicator of a real edge —
+              counted over every settled pick, and gated until it can be honestly
+              backed. You can track your own bets against the same metric, too.
+            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <Link href="/clv" className="btn btn-primary">
+                See our CLV
+              </Link>
+              <Link href="/track" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+                Track your own →
+              </Link>
+              <Link href="/accountability" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+                Full accountability →
+              </Link>
+            </div>
+          </div>
         </WorldSection>
 
         <MethodologySection />
