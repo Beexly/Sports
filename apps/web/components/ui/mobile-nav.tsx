@@ -42,6 +42,15 @@ const SECTIONS: readonly Section[] = [
     ],
   },
   {
+    heading: "Receipts",
+    collapsible: true,
+    links: [
+      { label: "Closing Line Value", href: "/clv" },
+      { label: "Calibration Report", href: "/performance" },
+      { label: "Accountability", href: "/accountability" },
+    ],
+  },
+  {
     heading: "Fantasy",
     collapsible: true,
     links: [
