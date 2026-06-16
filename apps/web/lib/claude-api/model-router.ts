@@ -39,10 +39,10 @@ export type ClaudeSurface =
 const SURFACE_TIER: Record<ClaudeSurface, ModelTier> = {
   studio: "sonnet", // recommended: sonnet (brand-voice creative — quality-sensitive)
   journal: "sonnet", // recommended: sonnet (public accountability writing)
-  "calibration-insight": "sonnet", // recommended: haiku (short, structured read of stats)
+  "calibration-insight": "haiku", // flipped 2026-06-15: short structured stat read, 66.7% saving
   "model-court": "sonnet", // recommended: opus (adversarial deep reasoning)
   content: "sonnet", // recommended: sonnet (editorial drafts)
-  brief: "sonnet", // recommended: haiku (templated daily summary)
+  brief: "haiku", // flipped 2026-06-15: templated daily summary, 66.7% saving
 };
 
 /**
