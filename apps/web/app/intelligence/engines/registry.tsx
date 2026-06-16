@@ -458,11 +458,12 @@ const CLV_ENGINE = engine({
   slug: "clv",
   group: "Team & market",
   label: "CLV Calibration",
-  title: "CLV Calibration — the engine grades itself",
+  title: "CLV Calibration — proving the method",
   description: (
     <>
-      Closing-line-value backtest against nflverse schedules — does the model beat the closing line? Self-grading,
-      never a bet; forward odds stay gated.
+      An <strong>illustrative baseline model</strong> backtested against nflverse closing lines — a demonstration of how
+      closing-line value is computed and graded, not our pick engine&apos;s record (that stays gated until it can be
+      honestly published). Self-grading, never a bet; forward odds stay gated.
     </>
   ),
   api: "/api/intelligence/clv-calibration",
