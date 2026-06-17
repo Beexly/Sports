@@ -35,6 +35,14 @@ const RESPONSIBLE_LINKS = [
   { label: "Terms and Privacy", href: "/terms" },
 ] as const;
 
+// Beyond the NFL: the other sports data hubs plus the data-sourcing record.
+const DATA_LINKS = [
+  { label: "MLB stats", href: "/mlb" },
+  { label: "NHL stats", href: "/nhl" },
+  { label: "NFL weather", href: "/weather" },
+  { label: "How we source data", href: "/data" },
+] as const;
+
 const SOCIAL_LINKS = [
   { href: SOCIAL.x, label: "X" },
   { href: SOCIAL.instagram, label: "Instagram" },
@@ -70,6 +78,7 @@ export function Footer() {
 
           <FooterColumn title="Product" links={PRODUCT_LINKS} />
           <FooterColumn title="Company" links={COMPANY_LINKS} />
+          <FooterColumn title="Data" links={DATA_LINKS} />
           <FooterColumn title="Responsible" links={RESPONSIBLE_LINKS} />
         </div>
 
