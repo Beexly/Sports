@@ -7,6 +7,7 @@ import {
   getSamplePicks,
 } from "@sports/db";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
+import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 
 /**
  * Daily slate API — stub-safe and demo-aware.
@@ -20,6 +21,37 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
+
+  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). The /picks
+  // page reads this slate alongside /api/picks; without this guard the SlateBar
+  // would still count published rows and stamp a fresh "updated now" even when
+  // /api/picks has collapsed to its dark/collecting state. When the flag is ON
+  // and the latest successful ingestion is "stale" per the shared Refresh SLA,
+  // return the SAME zeroed/demo-suppressed slate shape — but with
+  // lastUpdatedAt: null so we never imply a fresh refresh (CLAUDE.md rule #5).
+  // Fail OPEN on a DB error — a transient blip must not black out a fresh
+  // surface; freshness is enforced separately by /api/health.
+  if (gates.forceNoBetIfStale) {
+    const stale = await isPublicPicksSurfaceStale().catch(() => false);
+    if (stale) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          date: new Date().toISOString().slice(0, 10),
+          totalGames: 0,
+          totalPicks: 0,
+          premiumPickCount: 0,
+          freePickCount: 0,
+          topEdgePick: null,
+          lastUpdatedAt: null,
+          sportBreakdown: [],
+          recentRecord: null,
+          isSampleData: demoActive,
+        },
+        meta: { isSampleData: demoActive },
+      });
+    }
+  }
 
   const totalPicks = await db.pick
     .count({

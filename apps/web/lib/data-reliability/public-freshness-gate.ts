@@ -33,6 +33,14 @@ import { classifyRefreshFreshness } from "./refresh-sla";
  * responsibility to decide fail-open vs fail-closed (consumers below fail OPEN
  * — i.e. do not suppress — so a transient DB blip can't black out a fresh
  * surface; freshness is also enforced separately by /api/health).
+ *
+ * KNOWN LIMITATION (tracked enhancement — per-sport freshness):
+ * This uses the GLOBAL latest successful IngestionRun, but ingestion runs are
+ * per-sport. If one in-season sport's ingestion fails past the SLA while
+ * another sport keeps succeeding, the global SUCCESS masks the stale sport —
+ * and that sport's picks could remain visible on the public surface. A
+ * per-sport freshness check (suppress only the stale sport's picks) is a
+ * planned follow-up; this global check is intentionally the coarse first cut.
  */
 export async function isPublicPicksSurfaceStale(now: Date = new Date()): Promise<boolean> {
   const lastSuccessRun = await db.ingestionRun.findFirst({

@@ -16,6 +16,7 @@ const cleanGates = {
   devFakeAdmin: false,
   demoPicksEnabled: false,
   derivedModelHistoryEnabled: true,
+  canonicalHistoryEnabled: true,
   publicPicksEnabled: true,
 };
 
@@ -105,6 +106,14 @@ describe("evaluatePublicPicksFlip", () => {
     const r = evaluatePublicPicksFlip(facts);
     expect(r.ok).toBe(false);
     expect(r.failures.some((m: string) => /DERIVED_MODEL_HISTORY_ENABLED/.test(m))).toBe(true);
+  });
+
+  it("blocks when CANONICAL_HISTORY_ENABLED is off (new picks would be bootstrap)", () => {
+    const facts = readyFacts();
+    facts.gates.canonicalHistoryEnabled = false;
+    const r = evaluatePublicPicksFlip(facts);
+    expect(r.ok).toBe(false);
+    expect(r.failures.some((m: string) => /CANONICAL_HISTORY_ENABLED/.test(m))).toBe(true);
   });
 });
 

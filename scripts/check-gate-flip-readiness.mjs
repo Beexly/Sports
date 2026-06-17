@@ -27,6 +27,8 @@
  *     (d) >= 1 published, non-bootstrap, FREE-tier pick passing the quality
  *         floor for today (so the public board isn't empty).
  *     (e) DERIVED_MODEL_HISTORY_ENABLED is on (sequencing).
+ *     (f) CANONICAL_HISTORY_ENABLED is on (else new picks are written as
+ *         bootstrap and /api/picks filters them out — empty board).
  *
  *   performance-stats:
  *     (a) >= 100 settled (WIN/LOSS/PUSH), non-bootstrap, non-seed picks.
@@ -124,6 +126,7 @@ const gates = {
   devFakeAdmin: getBool("DEV_FAKE_ADMIN"),
   demoPicksEnabled: getBool("DEMO_PICKS_ENABLED"),
   derivedModelHistoryEnabled: getBool("DERIVED_MODEL_HISTORY_ENABLED"),
+  canonicalHistoryEnabled: getBool("CANONICAL_HISTORY_ENABLED"),
   publicPicksEnabled: getBool("PUBLIC_PICKS_ENABLED"),
 };
 
@@ -134,10 +137,15 @@ const MIN_PUBLIC_PICK_DATA_QUALITY_SCORE = 70;
 // ── DB facts ────────────────────────────────────────────────────────────────
 
 function todayBoundsUtc() {
+  // Use UTC day bounds so this preflight counts the SAME day the deployed
+  // /api/picks route does: that route runs date-fns startOfDay/endOfDay on the
+  // server, which on Vercel runs in UTC. Machine-local setHours/setDate would
+  // count a different window on a non-UTC operator box, masking or inventing
+  // "FREE picks today".
   const start = new Date();
-  start.setHours(0, 0, 0, 0);
+  start.setUTCHours(0, 0, 0, 0);
   const end = new Date(start);
-  end.setDate(end.getDate() + 1);
+  end.setUTCHours(23, 59, 59, 999);
   return { start, end };
 }
 
@@ -168,11 +176,14 @@ async function gatherFacts() {
     );
     const seedCount = seedRes.rows[0]?.n ?? 0;
 
-    // settled, non-bootstrap, non-seed picks
+    // settled, non-bootstrap, non-seed picks.
+    // isPublished = true mirrors /api/performance (route.ts filters isPublished),
+    // so this pre-flight settled count matches what the public route reports.
     const settledRes = await client.query(
       `SELECT COUNT(*)::int AS n FROM picks
         WHERE "result" IN ('WIN','LOSS','PUSH')
           AND "isBootstrap" = false
+          AND "isPublished" = true
           AND "modelVersion" <> $1`,
       [SEED_MODEL_VERSION]
     );
@@ -239,6 +250,8 @@ function reportFacts(facts) {
     else bad("FREE picks today", "0 publishable — board would be empty");
     if (gates.derivedModelHistoryEnabled) ok("DERIVED_MODEL_HISTORY_ENABLED", "on");
     else bad("DERIVED_MODEL_HISTORY_ENABLED", "off (required before public picks)");
+    if (gates.canonicalHistoryEnabled) ok("CANONICAL_HISTORY_ENABLED", "on");
+    else bad("CANONICAL_HISTORY_ENABLED", "off (new picks would be bootstrap; required before public picks)");
     if (!gates.demoPicksEnabled) ok("DEMO_PICKS_ENABLED", "off");
     else bad("DEMO_PICKS_ENABLED", "must be off");
   }

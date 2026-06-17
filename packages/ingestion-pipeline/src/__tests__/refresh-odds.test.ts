@@ -140,6 +140,40 @@ describe("refreshOdds", () => {
     ]);
   });
 
+  it("honors a RESOLVED { status: 'failed' } result (processSport never throws on provider failure)", async () => {
+    // processSport catches provider/normalization failures internally and
+    // RESOLVES { status: "failed", error } — it does not throw. The loop must
+    // still mark that sport ok:false so the success ping cannot fire falsely.
+    mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1]]);
+    mocks.processSport
+      .mockResolvedValueOnce({ status: "success" }) // nfl ok
+      .mockResolvedValueOnce({ status: "failed", error: "odds provider 502" }); // nba failed (resolved, not thrown)
+
+    const result = await runWithTimers(refreshOdds());
+
+    expect(mocks.processSport).toHaveBeenCalledTimes(2);
+    expect(result.ok).toBe(false); // overall not ok
+    expect(result.okCount).toBe(1); // only nfl counted
+    expect(result.totalCount).toBe(2);
+    expect(result.results).toEqual([
+      { sport: "americanfootball_nfl", ok: true },
+      { sport: "basketball_nba", ok: false, error: "odds provider 502" },
+    ]);
+  });
+
+  it("falls back to a default error when a failed result carries no message", async () => {
+    mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+    mocks.processSport.mockResolvedValueOnce({ status: "failed" }); // no error field
+
+    const result = await runWithTimers(refreshOdds());
+
+    expect(result.ok).toBe(false);
+    expect(result.okCount).toBe(0);
+    expect(result.results).toEqual([
+      { sport: "americanfootball_nfl", ok: false, error: "ingestion failed" },
+    ]);
+  });
+
   it("returns an empty success envelope when no sports are in season", async () => {
     mocks.getInSeasonSports.mockReturnValue([]);
 

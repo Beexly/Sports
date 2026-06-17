@@ -105,8 +105,16 @@ export async function refreshOdds(
 
   for (const sport of sportsToProcess) {
     try {
-      await processSport(sport, apiKey, gates, "[cron:refresh-odds]");
-      results.push({ sport: sport.key, ok: true });
+      // processSport NEVER throws on a provider/normalization failure — it
+      // catches internally and RESOLVES { status: "failed", error }. Inspect
+      // the returned status so a failed sport is recorded as ok:false (and the
+      // Healthchecks success ping cannot fire falsely on a silent failure).
+      const res = await processSport(sport, apiKey, gates, "[cron:refresh-odds]");
+      results.push(
+        res.status === "success"
+          ? { sport: sport.key, ok: true }
+          : { sport: sport.key, ok: false, error: res.error ?? "ingestion failed" },
+      );
     } catch (err) {
       results.push({
         sport: sport.key,

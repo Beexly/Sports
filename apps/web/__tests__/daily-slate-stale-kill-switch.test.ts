@@ -1,0 +1,160 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+/**
+ * Stale-Data Kill Switch — executed behavior for /api/picks/daily-slate.
+ *
+ * Additive, env-gated, DEFAULT OFF. The /picks page fetches this slate
+ * alongside /api/picks, so it gets the SAME kill switch: with
+ * FORCE_NO_BET_IF_STALE off (forceNoBetIfStale = false) the route counts
+ * picks and stamps a fresh lastUpdatedAt exactly as before — the freshness
+ * query must never even run. With the gate ON, a "stale" latest successful
+ * ingestion (per the shared 240m Refresh SLA) must collapse the slate to
+ * zeroed counts with lastUpdatedAt: null (no fake "updated now"), while a
+ * fresh run serves normally. A DB blip on the freshness query fails OPEN.
+ *
+ * Mirrors picks-stale-kill-switch.test.ts and the daily-slate-route.test.ts
+ * vi.mock("@sports/db") + readiness-gates patterns.
+ */
+
+const mocks = vi.hoisted(() => ({
+  forceNoBetIfStale: false,
+  pickCount: vi.fn<(args?: unknown) => Promise<number>>(),
+  ingestionRunFindFirst:
+    vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
+  isStubMode: vi.fn<() => boolean>(),
+  isDemoPicksEnabled: vi.fn<() => boolean>(),
+  getSamplePicks: vi.fn<() => unknown[]>(),
+}));
+
+vi.mock("@sports/db", () => ({
+  db: {
+    pick: { count: mocks.pickCount },
+    ingestionRun: { findFirst: mocks.ingestionRunFindFirst },
+  },
+  isStubMode: mocks.isStubMode,
+  isDemoPicksEnabled: mocks.isDemoPicksEnabled,
+  getSamplePicks: mocks.getSamplePicks,
+}));
+
+// Keep readiness real except for the two gates this route reads, so the
+// canExposePerformanceStats path stays genuine and only staleness is steered.
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({
+      canExposePerformanceStats: false,
+      forceNoBetIfStale: mocks.forceNoBetIfStale,
+    }),
+  };
+});
+
+function minutesAgo(m: number): Date {
+  return new Date(Date.now() - m * 60 * 1000);
+}
+
+async function callSlate(): Promise<{ status: number; body: Record<string, unknown> }> {
+  vi.resetModules();
+  const mod = await import("@/app/api/picks/daily-slate/route");
+  const res = (await mod.GET()) as unknown as Response;
+  return { status: res.status, body: (await res.json()) as Record<string, unknown> };
+}
+
+describe("/api/picks/daily-slate — stale-data kill switch", () => {
+  beforeEach(() => {
+    mocks.forceNoBetIfStale = false;
+    // Non-demo, non-stub: the route's normal "real data" path. The count is the
+    // only DB read; give it a non-zero value so suppression is observable.
+    mocks.pickCount.mockReset().mockResolvedValue(3);
+    mocks.ingestionRunFindFirst.mockReset();
+    mocks.isStubMode.mockReset().mockReturnValue(false);
+    mocks.isDemoPicksEnabled.mockReset().mockReturnValue(false);
+    mocks.getSamplePicks.mockReset().mockReturnValue([]);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("flag OFF: serves the slate and never queries ingestion freshness", async () => {
+    mocks.forceNoBetIfStale = false;
+    // Even a wildly stale ingestion is irrelevant when the flag is off.
+    mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10_000) });
+
+    const { status, body } = await callSlate();
+    const data = body["data"] as Record<string, unknown>;
+
+    expect(status).toBe(200);
+    expect(body["success"]).toBe(true);
+    expect(data["totalPicks"]).toBe(3);
+    // A fresh timestamp is stamped on the normal path.
+    expect(data["lastUpdatedAt"]).not.toBeNull();
+    // The freshness query must not run when the kill switch is off — this is
+    // the byte-for-byte "no behavior change" guarantee.
+    expect(mocks.ingestionRunFindFirst).not.toHaveBeenCalled();
+    expect(mocks.pickCount).toHaveBeenCalled();
+  });
+
+  it("flag ON + stale: returns a zeroed slate with no fresh timestamp", async () => {
+    mocks.forceNoBetIfStale = true;
+    mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(241) });
+
+    const { status, body } = await callSlate();
+    const data = body["data"] as Record<string, unknown>;
+
+    expect(status).toBe(200);
+    expect(body["success"]).toBe(true);
+    expect(data["totalPicks"]).toBe(0);
+    expect(data["freePickCount"]).toBe(0);
+    expect(data["premiumPickCount"]).toBe(0);
+    expect(data["sportBreakdown"]).toEqual([]);
+    // No fake "updated now" while suppressed.
+    expect(data["lastUpdatedAt"]).toBeNull();
+    // Suppressed: the pick-count query never ran.
+    expect(mocks.pickCount).not.toHaveBeenCalled();
+  });
+
+  it("flag ON + never-succeeded ingestion is treated as stale (zeroed slate)", async () => {
+    mocks.forceNoBetIfStale = true;
+    mocks.ingestionRunFindFirst.mockResolvedValue(null);
+
+    const { status, body } = await callSlate();
+    const data = body["data"] as Record<string, unknown>;
+
+    expect(status).toBe(200);
+    expect(data["totalPicks"]).toBe(0);
+    expect(data["lastUpdatedAt"]).toBeNull();
+    expect(mocks.pickCount).not.toHaveBeenCalled();
+  });
+
+  it("flag ON + fresh: serves the slate normally", async () => {
+    mocks.forceNoBetIfStale = true;
+    mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+
+    const { status, body } = await callSlate();
+    const data = body["data"] as Record<string, unknown>;
+
+    expect(status).toBe(200);
+    expect(body["success"]).toBe(true);
+    expect(data["totalPicks"]).toBe(3);
+    expect(data["lastUpdatedAt"]).not.toBeNull();
+    expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
+    expect(mocks.pickCount).toHaveBeenCalled();
+  });
+
+  it("flag ON + DB error on freshness query: fails OPEN (serves the slate)", async () => {
+    mocks.forceNoBetIfStale = true;
+    mocks.ingestionRunFindFirst.mockRejectedValue(new Error("db down"));
+
+    const { status, body } = await callSlate();
+    const data = body["data"] as Record<string, unknown>;
+
+    // A transient freshness-query blip must not black out a surface — health
+    // enforces staleness separately.
+    expect(status).toBe(200);
+    expect(body["success"]).toBe(true);
+    expect(data["totalPicks"]).toBe(3);
+    expect(data["lastUpdatedAt"]).not.toBeNull();
+    expect(mocks.pickCount).toHaveBeenCalled();
+  });
+});

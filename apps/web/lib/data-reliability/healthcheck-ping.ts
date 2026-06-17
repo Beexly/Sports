@@ -18,6 +18,11 @@
  *     wiring it in ships zero behavior change.
  *   - It NEVER throws. All network/abort errors are swallowed. Telemetry must
  *     never be able to break the job it is observing.
+ *   - The fetch is ALWAYS bounded. If the caller does not supply its own
+ *     AbortSignal, an internal 5s timeout (`AbortSignal.timeout`) is used so a
+ *     stalled Healthchecks.io endpoint or DNS hang can never block the calling
+ *     cron up to its maxDuration. A resulting AbortError is swallowed like any
+ *     other network error.
  *
  * Kept generic (takes the URL directly, no env read) so it is trivially
  * unit-testable and reusable for other jobs (settlement, content, etc.).
@@ -35,9 +40,14 @@ export async function pingHealthcheck(
   const suffix = signal === "success" ? "" : `/${signal}`;
   const url = `${pingUrl}${suffix}`;
 
+  // Bound the request: use the caller's signal if provided, otherwise an
+  // internal 5s timeout so a stalled endpoint/DNS can never hang the caller.
+  const abortSignal = fetchSignal ?? AbortSignal.timeout(5000);
+
   try {
-    await fetch(url, { method: "GET", signal: fetchSignal });
+    await fetch(url, { method: "GET", signal: abortSignal });
   } catch {
-    // Swallow ALL errors — a monitoring ping must never break the job.
+    // Swallow ALL errors (including AbortError on timeout) — a monitoring ping
+    // must never break the job.
   }
 }

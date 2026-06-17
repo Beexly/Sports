@@ -67,6 +67,7 @@ export function evaluateAlwaysFailClosed(env) {
  *   gates: {
  *     demoPicksEnabled: boolean,
  *     derivedModelHistoryEnabled: boolean,
+ *     canonicalHistoryEnabled: boolean,
  *   },
  * }} facts
  * @returns {{ ok: boolean, failures: string[] }}
@@ -109,6 +110,15 @@ export function evaluatePublicPicksFlip(facts) {
   if (facts.gates.derivedModelHistoryEnabled !== true) {
     failures.push(
       "DERIVED_MODEL_HISTORY_ENABLED is off — public picks require derived model history first (sequencing)."
+    );
+  }
+
+  // (f) Canonical history must be on — otherwise NEW picks are written as
+  // bootstrap (isBootstrap = !canPersistCanonicalHistory), and /api/picks
+  // filters bootstrap rows out, so the board would silently stay empty.
+  if (facts.gates.canonicalHistoryEnabled !== true) {
+    failures.push(
+      "CANONICAL_HISTORY_ENABLED is off — new picks would be written as bootstrap; public picks require canonical history on."
     );
   }
 
@@ -169,6 +179,7 @@ export function evaluatePerformanceStatsFlip(facts) {
  *     devFakeAdmin: boolean,
  *     demoPicksEnabled: boolean,
  *     derivedModelHistoryEnabled: boolean,
+ *     canonicalHistoryEnabled: boolean,
  *     publicPicksEnabled: boolean,
  *   },
  * }} facts

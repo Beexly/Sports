@@ -59,4 +59,28 @@ describe("pingHealthcheck", () => {
     await expect(pingHealthcheck(PING, "success")).resolves.toBeUndefined();
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
+
+  it("never throws when fetch aborts/times out (AbortError swallowed)", async () => {
+    // Simulate a stalled endpoint aborting the request — the helper must still
+    // resolve, never bubble the AbortError up to the cron caller.
+    const abortErr = new DOMException("The operation was aborted.", "AbortError");
+    fetchMock.mockRejectedValue(abortErr);
+    await expect(pingHealthcheck(PING, "success")).resolves.toBeUndefined();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("bounds the fetch with an internal AbortSignal when none is supplied", async () => {
+    // No caller signal → the helper must still pass an AbortSignal so the
+    // request can never hang unbounded.
+    await pingHealthcheck(PING, "success");
+    const opts = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(opts.signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it("uses the caller-supplied AbortSignal verbatim when provided", async () => {
+    const controller = new AbortController();
+    await pingHealthcheck(PING, "success", controller.signal);
+    const opts = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(opts.signal).toBe(controller.signal);
+  });
 });
