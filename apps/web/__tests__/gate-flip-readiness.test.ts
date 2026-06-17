@@ -10,7 +10,6 @@ import {
   MIN_SETTLED_PICKS_FOR_PERFORMANCE,
   SEED_MODEL_VERSION,
   GATE_TARGETS,
-  // @ts-expect-error — plain .mjs lib, no type declarations
 } from "../../../scripts/lib/gate-flip-readiness.mjs";
 
 const cleanGates = {
@@ -171,6 +170,7 @@ describe("evaluateGateFlip (dispatcher)", () => {
   });
 
   it("rejects an unknown target", () => {
+    // @ts-expect-error — intentionally invalid target to exercise the runtime guard
     const r = evaluateGateFlip("not-a-gate", readyFacts());
     expect(r.ok).toBe(false);
     expect(r.failures.some((m: string) => /Unknown target/.test(m))).toBe(true);
