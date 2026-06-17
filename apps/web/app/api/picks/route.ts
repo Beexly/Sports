@@ -7,6 +7,7 @@ import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown } fr
 import { startOfDay, endOfDay } from "date-fns";
 import { parseDateParam } from "@/lib/parse-date-param";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
+import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,18 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
   if (!gates.canExposePublicPicks) {
     return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
+  }
+
+  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). When ON and
+  // the latest successful ingestion is "stale" per the shared Refresh SLA, fall
+  // back to the same dark/"collecting" 503 as the bootstrap gate so the public
+  // surface never serves a stale slate (CLAUDE.md rule #5). Fail OPEN on a DB
+  // error — a transient blip must not black out a fresh surface.
+  if (gates.forceNoBetIfStale) {
+    const stale = await isPublicPicksSurfaceStale().catch(() => false);
+    if (stale) {
+      return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
+    }
   }
 
   const session = await auth();

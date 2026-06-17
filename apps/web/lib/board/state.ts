@@ -1,5 +1,6 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, MODEL_VERSION, toEdgeIndex } from "@sports/prediction-engine";
+import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -67,7 +68,15 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
-  if (demoActive) {
+  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). When ON and
+  // the latest successful ingestion is "stale" per the shared Refresh SLA,
+  // suppress the board the same way the demo path does — empty lanes, zeroed
+  // counts — so the public board never surfaces a stale slate (CLAUDE.md #5).
+  // Fail OPEN on a DB error so a transient blip can't black out a fresh board.
+  const staleSuppressed =
+    gates.forceNoBetIfStale && (await isPublicPicksSurfaceStale(now).catch(() => false));
+
+  if (demoActive || staleSuppressed) {
     return {
       data: {
         sportsWatched: 0,

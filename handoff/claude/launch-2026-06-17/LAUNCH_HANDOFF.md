@@ -117,18 +117,18 @@ flip. Leave it `false`.
 
 ---
 
-## 6. Confirm the kill switch shipped
+## 6. Stale-Data Kill Switch — SHIPPED & VERIFIED ✓
 
-The Stale-Data Kill Switch (`FORCE_NO_BET_IF_STALE`) was building in parallel when
-this doc was written. Before relying on it in Step 2:
-- Confirm the branch contains the `FORCE_NO_BET_IF_STALE` gate in
-  `packages/prediction-engine/src/platform-config.ts` and a freshness guard in
-  `apps/web/app/api/picks/route.ts` (+ board loaders), with tests.
-- If it did **not** land, Step 2's readiness script still verifies freshness at
-  flip time (so you're not exposed), but you won't have the *continuous* runtime
-  guard — in that case keep a closer eye on `/api/health` after flipping, and
-  finish the kill switch as the first post-launch task (design is in the audit /
-  the readiness-script commit references it).
+The Stale-Data Kill Switch (`FORCE_NO_BET_IF_STALE`, **default OFF**) is in this branch and verified:
+- Gate in `packages/prediction-engine/src/platform-config.ts` + `readiness.ts` (parses `FORCE_NO_BET_IF_STALE`, default `false`).
+- Shared `apps/web/lib/data-reliability/public-freshness-gate.ts` — reuses the 240m SLA (`classifyRefreshFreshness`) and the same latest-successful-ingestion query `/api/health` uses.
+- Wired into `/api/picks` **and** both board loaders (`board/state.ts`, `board/passes.ts`), reusing the existing "collecting"/empty (503 / suppressed) state. **Fail-open** on DB error so a transient blip can't black out a fresh surface.
+- Tests: picks (5), board (7), platform-config default-off (5); monorepo typecheck **0 errors**.
+- **Flag-OFF guarantee:** with `FORCE_NO_BET_IF_STALE` unset/false, `gates.forceNoBetIfStale` short-circuits — the freshness query never runs and behavior is byte-for-byte identical to today.
+
+**Enable it in Step 2** (set `FORCE_NO_BET_IF_STALE=true` alongside `PUBLIC_PICKS_ENABLED=true`) so the public surface auto-suppresses to the dark/collecting state if odds ever go stale.
+
+Known follow-up (not blocking): both board loaders set `lastRefresh: now` rather than the real last-ingestion timestamp — a freshness-*reporting* inaccuracy worth fixing post-launch (it does not affect the kill switch, which reads the IngestionRun directly).
 
 ---
 

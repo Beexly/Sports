@@ -1,5 +1,6 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
-import { toEdgeIndex } from "@sports/prediction-engine";
+import { getReadinessGates, toEdgeIndex } from "@sports/prediction-engine";
+import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 
 export interface PassListRow {
   id: string;
@@ -33,7 +34,16 @@ function passReason(bookmakerCoverageMax: number, dataQualityScore: number): str
 export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayload> {
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
-  if (demoActive) {
+  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). When ON and
+  // the latest successful ingestion is "stale" per the shared Refresh SLA,
+  // suppress the Pass List the same way the demo path does — empty passes — so
+  // the public board never surfaces a stale slate (CLAUDE.md #5). Fail OPEN on a
+  // DB error so a transient blip can't black out a fresh board.
+  const staleSuppressed =
+    getReadinessGates().forceNoBetIfStale &&
+    (await isPublicPicksSurfaceStale(now).catch(() => false));
+
+  if (demoActive || staleSuppressed) {
     return {
       data: { date: now.toISOString().slice(0, 10), passes: [] },
       meta: { isSampleData: false, suppressedDemoData: true },

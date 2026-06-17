@@ -105,6 +105,21 @@ export interface ReadinessGates {
   /** Minimum settled canonical picks needed for learning data to be meaningful. */
   readonly minSettledPicksForLearning: number;
 
+  /**
+   * Stale-data kill switch for the public picks surface.
+   *
+   * When true: public read paths (/api/picks, board loaders) must suppress the
+   * picks surface — rendering the same "collecting"/empty state they already use
+   * — whenever the latest successful ingestion run is classified "stale" by the
+   * shared Refresh SLA. This is the read-boundary enforcement of CLAUDE.md rule #5
+   * ("no stale data"), letting canExposePublicPicks be lifted safely.
+   *
+   * Defaults to false via FORCE_NO_BET_IF_STALE — ships dark, no behavior change
+   * until explicitly enabled. The gate itself performs NO I/O; consumers own the
+   * freshness query + classifyRefreshFreshness call.
+   */
+  readonly forceNoBetIfStale: boolean;
+
   /** The underlying config for callers that need specific values. */
   readonly config: PlatformConfig;
 }
@@ -126,6 +141,7 @@ export function getReadinessGates(): ReadinessGates {
     canLearnFromOutcomes:            config.outcomeLearningEnabled,
     canApplyCalibrationAdjustments:  config.calibrationAdjustmentsEnabled,
     minSettledPicksForLearning:      config.minSettledPicksForLearning,
+    forceNoBetIfStale:               config.forceNoBetIfStale,
     config,
   };
 }
