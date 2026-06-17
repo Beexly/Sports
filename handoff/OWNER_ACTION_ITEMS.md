@@ -8,27 +8,19 @@ Status legend: ⬜ not started · 🔧 code done, env/deploy step remaining · �
 
 ---
 
-## A. Cut the Claude bill (#1 — code shipped, env pending)
+## A. Cut the Claude bill (#1 — fully done ✅)
 
 ✅ **A2 — Model-router haiku flips shipped** (`calibration-insight` + `brief` → Haiku, 66.7% saving).
 Already committed and pushed. No action needed.
 
-🔧 **A1 — Set Groq env vars in Vercel** (activates the internal-LLM tier).
-Code is live in `lib/claude-api/internal-llm.ts`. Flip it on:
+✅ **A1 — Groq env vars set in Vercel** (internal-LLM tier live).
+`INTERNAL_LLM_BASE_URL`, `INTERNAL_LLM_MODEL`, and `INTERNAL_LLM_API_KEY` are all live in
+Vercel (Production + Preview). Code in `lib/claude-api/internal-llm.ts` is active.
 
-```bash
-# From your machine (C:\dev\sports), run once:
-vercel env add INTERNAL_LLM_BASE_URL production
-# paste: https://api.groq.com/openai/v1
+> ⚠️ **F5 still applies**: if the Groq key was ever in public git history before the
+> force-push, rotate it at https://console.groq.com → API Keys and update
+> `INTERNAL_LLM_API_KEY` in Vercel.
 
-vercel env add INTERNAL_LLM_MODEL production
-# paste: llama-3.3-70b-versatile
-
-vercel env add INTERNAL_LLM_API_KEY production
-# paste: <your-groq-api-key>   # from console.groq.com → API Keys
-```
-
-Also add to local `.env` for dev. Redeploy Vercel after.
 Economics: Groq Llama-3.3-70B ≈ $0.59/$0.79 per Mtok vs Claude Sonnet $3/$15 → ~85% cheaper;
 Groq free tier makes internal classification/normalisation work $0.
 
@@ -55,7 +47,8 @@ Until then, adapter stays gated — no ingestion, no public display.
 - `apps/web/app/sitemap.ts` — extended to enumerate up to 2,000 game URLs at
   `changeFrequency: "hourly"`. DB-safe at build time.
 
-**One action needed:** push the 2 unpushed local commits (see step 0 below).
+All commits pushed to `claude/happy-euler-trkihe`. Preview build is READY. No local action needed.
+See **G below** to ship these changes to production.
 
 ---
 
@@ -138,28 +131,16 @@ Redeploy. Both tools load only in production (env gate).
 
 ---
 
-## F. Security env vars — must set in Vercel before launch
+## F. Security env vars — all set ✅
 
-🔧 **F1 — CRON_SECRET** (cron endpoints return 500 without this).
-All `/api/cron/*` routes validate `Authorization: Bearer <CRON_SECRET>`. Without it they
-return `{"error":"CRON_SECRET not configured"}` (500). Vercel invokes them with this secret
-automatically once it's set.
+✅ **F1 — CRON_SECRET confirmed live in Vercel** (Production + Preview, set 27+ days ago).
+All `/api/cron/*` routes validate `Authorization: Bearer <CRON_SECRET>`. Vercel injects this
+automatically on each cron invocation. No action needed.
 
-```bash
-vercel env add CRON_SECRET production
-# paste: <generate with: openssl rand -hex 32>
-```
-
-🔧 **F2 — ADMIN_EMAILS** (cockpit operator access).
-Comma-separated list of owner email addresses elevated to ADMIN at session time. Without it,
-cockpit access relies on DB role alone — a manual DB write is required for each admin user.
-With it, anyone on the list who signs in gets ADMIN automatically.
-
-```bash
-vercel env add ADMIN_EMAILS production
-# paste: baxley.garrett@gmail.com
-# (add more: baxley.garrett@gmail.com,other@example.com)
-```
+✅ **F2 — ADMIN_EMAILS set in Vercel** (Production, set 2026-06-16).
+Value: `baxley.garrett@gmail.com`. Anyone on this list who signs in via Google OAuth is
+automatically elevated to ADMIN at session time. No DB write required. No action needed.
+To add more admins: `vercel env add ADMIN_EMAILS production --force` → paste comma-separated list.
 
 ✅ **F3 — Open redirect in `/auth/signin` fixed** (shipped in commit `628ea04d`).
 `callbackUrl` is now sanitised via `safeCallbackUrl()` — rejects absolute URLs and
@@ -177,18 +158,55 @@ Then update `INTERNAL_LLM_API_KEY` in Vercel.
 
 ---
 
+## G. 🚀 Merge branch → main to deploy all code changes to production
+
+**This is the single remaining step to ship everything to `galaxysportsedge.com`.**
+
+All 19 tasks are complete on branch `claude/happy-euler-trkihe`. The preview deployment
+is READY (commit `32cfc35d`). The production site is still running the old `main` branch
+from ~27 days ago.
+
+**What's waiting to ship when you merge:**
+- Security fixes (open redirect sanitization, /cockpit middleware gate)
+- `/preview/[sport]/[slug]` SEO pages + sitemap extension
+- Groq internal-LLM tier (85% cost reduction on classifications)
+- Model-router Haiku flips (66.7% saving on light Claude tasks)
+- Analytics wiring (Cloudflare + Clarity — activate via env vars after merge)
+- Oracle VPS worker Dockerfiles + deploy.sh
+- Full TypeScript strict compliance (0 errors)
+- 60+ CI/security/quality improvements
+
+**To deploy:**
+```bash
+# Option 1 — GitHub UI
+# Open https://github.com/Beexly/Sports/compare/main...claude/happy-euler-trkihe
+# Click "Create pull request" → merge → Vercel auto-deploys to production
+
+# Option 2 — CLI
+git checkout main
+git merge claude/happy-euler-trkihe
+git push origin main
+# Vercel auto-deploys on push to main
+```
+
+After merging, set the analytics env vars (E1 above) and redeploy once more if you want
+Cloudflare + Clarity active immediately.
+
+---
+
 ### Quick status board
-| # | Item | Code | Needs you |
-|---|------|------|-----------|
-| 0 | Push 2 unpushed commits (A1+A2, B1+C1) | ✅ pushed | nothing |
-| A1 | Groq env vars in Vercel | ✅ internal-llm.ts wired | 3× `vercel env add` commands (see above) |
-| A2 | Model-router haiku flips | ✅ committed | nothing |
-| B1 | FPL terms → EPL adapter | ✅ gated (permission_required) | email PL or buy football-data.org plan |
-| C1 | `/preview` pages + sitemap | ✅ committed | nothing |
-| D1 | Oracle VPS | ✅ Dockerfiles + deploy.sh | signup + DNS + `bash deploy.sh` |
-| E1 | Analytics snippet | ✅ layout.tsx wired | CF + Clarity signups → 3× `vercel env add` |
-| F1 | CRON_SECRET in Vercel | ✅ all cron routes gate on it | `vercel env add CRON_SECRET production` |
-| F2 | ADMIN_EMAILS in Vercel | ✅ auth.ts elevates on it | `vercel env add ADMIN_EMAILS production` |
-| F3 | Open redirect fix | ✅ shipped `628ea04d` | nothing |
-| F4 | /cockpit middleware gate | ✅ shipped `628ea04d` | nothing |
-| F5 | Rotate Groq key | n/a | rotate at console.groq.com if key was ever public |
+| # | Item | Code | Env/Deploy | Status |
+|---|------|------|-----------|--------|
+| 0 | Push all commits to branch | ✅ pushed | ✅ | ✅ done |
+| A1 | Groq env vars in Vercel | ✅ wired | ✅ set (5h ago) | ✅ done |
+| A2 | Model-router haiku flips | ✅ committed | n/a | ✅ done |
+| B1 | FPL terms → EPL adapter | ✅ gated | n/a | ✅ done (gated) |
+| C1 | `/preview` pages + sitemap | ✅ committed | n/a | ✅ done |
+| D1 | Oracle VPS | ✅ deploy.sh ready | 🔧 needs VPS signup | Owner action |
+| E1 | Analytics snippet | ✅ layout.tsx wired | 🔧 needs CF+Clarity signup | Owner action |
+| F1 | CRON_SECRET | ✅ cron routes gate on it | ✅ set in Vercel (27d ago) | ✅ done |
+| F2 | ADMIN_EMAILS | ✅ auth.ts elevates on it | ✅ `baxley.garrett@gmail.com` | ✅ done |
+| F3 | Open redirect fix | ✅ `628ea04d` | n/a | ✅ done |
+| F4 | /cockpit middleware gate | ✅ `628ea04d` | n/a | ✅ done |
+| F5 | Rotate Groq key | n/a | 🔧 rotate if key was public | Owner action |
+| **G** | **Merge branch → main** | **✅ ready** | **🔧 merge `claude/happy-euler-trkihe` → `main`** | **Owner action** |
