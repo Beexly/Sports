@@ -19,6 +19,10 @@
  */
 
 import type { PublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
+import {
+  REFRESH_WARN_AFTER_MINUTES,
+  REFRESH_STALE_AFTER_MINUTES,
+} from "@/lib/data-reliability/refresh-sla";
 
 // ─── Status enums ────────────────────────────────────────────────────────
 
@@ -203,9 +207,11 @@ function classifyIngestion(
 ): JarvisHealth {
   const last = toDate(ingestion.lastSuccessAt);
   if (!last) return "UNKNOWN";
-  const ageHours = (now.getTime() - last.getTime()) / HOUR;
-  if (ageHours > 24) return "RED";
-  if (ageHours > 6) return "AMBER";
+  // Use the shared Refresh SLA so Jarvis, /api/health, and the stale-data
+  // detector all agree on what "stale ingestion" means (was 6h/24h here).
+  const ageMinutes = (now.getTime() - last.getTime()) / (60 * 1000);
+  if (ageMinutes > REFRESH_STALE_AFTER_MINUTES) return "RED";
+  if (ageMinutes > REFRESH_WARN_AFTER_MINUTES) return "AMBER";
   if (ingestion.recentFailureCount >= 3) return "AMBER";
   return "GREEN";
 }

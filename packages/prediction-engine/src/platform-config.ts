@@ -128,6 +128,19 @@ export interface PlatformConfig {
    * Default: false (safe — identity passthrough until explicitly activated)
    */
   calibrationAdjustmentsEnabled: boolean;
+
+  /**
+   * FORCE_NO_BET_IF_STALE
+   * Stale-data kill switch for the PUBLIC picks surface. When true: the public
+   * picks endpoints and board loaders auto-suppress (render the same "collecting"
+   * / empty state they already use) whenever the latest successful ingestion run
+   * is classified "stale" by the shared Refresh SLA (classifyRefreshFreshness,
+   * 240m). This enforces CLAUDE.md rule #5 ("no stale data") at the read boundary
+   * so PUBLIC_PICKS_ENABLED can be lifted safely.
+   * When false: NO freshness check is performed and behavior is identical to today.
+   * Default: false (ships dark — zero behavior change until explicitly enabled)
+   */
+  forceNoBetIfStale: boolean;
 }
 
 function parseBool(val: string | undefined, defaultVal: boolean): boolean {
@@ -159,5 +172,6 @@ export function getPlatformConfig(): PlatformConfig {
     outcomeLearningEnabled:           parseBool(process.env["OUTCOME_LEARNING_ENABLED"],           false),
     minSettledPicksForLearning:       parseIntSafe(process.env["MIN_SETTLED_PICKS_FOR_LEARNING"], 100),
     calibrationAdjustmentsEnabled:    parseBool(process.env["CALIBRATION_ADJUSTMENTS_ENABLED"],    false),
+    forceNoBetIfStale:                parseBool(process.env["FORCE_NO_BET_IF_STALE"],                false),
   };
 }

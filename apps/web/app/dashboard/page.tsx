@@ -61,6 +61,17 @@ export default async function DashboardPage() {
   const stubMode = isStubMode();
   const demoActive = isDemoPicksEnabled() && stubMode;
 
+  // Production seed-row exclusion (defense-in-depth), mirroring
+  // lib/dashboard/load-performance.ts. The dev seed tags rows with
+  // modelVersion="v5.0.0-seed"; in production there should be zero, but these
+  // inline counts feed the member-facing Today's Picks list and the canonical
+  // settled/win/loss/push totals, so a stray seed row must not leak into them.
+  // Empty spread in dev/test → behavior unchanged.
+  const excludeSeedInProd =
+    process.env.NODE_ENV === "production"
+      ? { NOT: { modelVersion: "v5.0.0-seed" } }
+      : {};
+
   // Server-side tier gate (rule #3): FREE members see their 1 daily FREE
   // pick without confidence; PRO+ sees the full slate with confidence.
   const entitlements = await getUserEntitlements(user.id);
@@ -83,6 +94,7 @@ export default async function DashboardPage() {
         where: {
           isPublished: true,
           isBootstrap: false,
+          ...excludeSeedInProd,
           generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) },
           ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
         },
@@ -95,6 +107,7 @@ export default async function DashboardPage() {
       .count({
         where: {
           isPublished: true,
+          ...excludeSeedInProd,
           generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) },
         },
       })
@@ -105,13 +118,14 @@ export default async function DashboardPage() {
           result: { in: ["WIN", "LOSS", "PUSH"] },
           isPublished: true,
           isBootstrap: false,
+          ...excludeSeedInProd,
         },
       })
       .catch(() => 0),
-    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false } }).catch(() => 0),
-    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false } }).catch(() => 0),
-    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false } }).catch(() => 0),
-    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false } }).catch(() => 0),
+    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
+    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
+    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
+    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
     db.pick
       .count({
         where: {

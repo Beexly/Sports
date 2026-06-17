@@ -1,5 +1,6 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, MODEL_VERSION, toEdgeIndex } from "@sports/prediction-engine";
+import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -67,7 +68,15 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
-  if (demoActive) {
+  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). When ON and
+  // the latest successful ingestion is "stale" per the shared Refresh SLA,
+  // suppress the board the same way the demo path does — empty lanes, zeroed
+  // counts — so the public board never surfaces a stale slate (CLAUDE.md #5).
+  // Fail OPEN on a DB error so a transient blip can't black out a fresh board.
+  const staleSuppressed =
+    gates.forceNoBetIfStale && (await isPublicPicksSurfaceStale(now).catch(() => false));
+
+  if (demoActive || staleSuppressed) {
     return {
       data: {
         sportsWatched: 0,
@@ -84,6 +93,24 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
       meta: { isSampleData: false, suppressedDemoData: true },
     };
   }
+
+  // Production seed-row exclusion (defense-in-depth). The dev seed tags rows
+  // with modelVersion="v5.0.0-seed". In production there should be zero, but
+  // the board is a public surface so we exclude them ONLY in production. In
+  // dev/test this spread is empty, so behavior is unchanged.
+  const excludeSeedInProd =
+    process.env.NODE_ENV === "production"
+      ? { NOT: { modelVersion: "v5.0.0-seed" } }
+      : {};
+  // For the game→pick relation filters: "has a published, non-bootstrap pick".
+  // In production, a seed pick must not count as a real published pick, so the
+  // relation predicate excludes it too (a game whose only pick is a seed row is
+  // then correctly treated as having no published pick).
+  const publishedPickRelation = {
+    isPublished: true,
+    isBootstrap: false,
+    ...excludeSeedInProd,
+  };
 
   const { start, end } = todayBounds();
   try {
@@ -144,6 +171,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         where: {
           isPublished: true,
           isBootstrap: false,
+          ...excludeSeedInProd,
           generatedAt: { gte: start, lt: end },
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
@@ -162,7 +190,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
       db.game.findMany({
         where: {
           commenceTime: { gte: start, lt: end },
-          picks: { none: { isPublished: true, isBootstrap: false } },
+          picks: { none: publishedPickRelation },
         },
         include: { sport: { select: { name: true } } },
         orderBy: { commenceTime: "asc" },

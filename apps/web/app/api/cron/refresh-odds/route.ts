@@ -4,8 +4,8 @@
  * Mirrors `workers/data-refresh/src/index.ts` but runs on Vercel's
  * scheduled-function infrastructure so the operator doesn't have to
  * deploy a long-running worker box. Shares the underlying logic via
- * `@sports/ingestion-pipeline`'s `processSport()` so the two execution
- * paths can never drift.
+ * `@sports/ingestion-pipeline`'s `refreshOdds()` (which itself calls
+ * `processSport()`) so the two execution paths can never drift.
  *
  * Schedule is declared in `vercel.json` at the repo root:
  *   "0 10 * * *"  → once daily at 10:00 UTC
@@ -22,12 +22,19 @@
  * long-running worker is. If `CANONICAL_HISTORY_ENABLED=false`, writes
  * are still marked `isBootstrap=true` — nothing here changes the gate
  * semantics; it only changes where the loop runs.
+ *
+ * The per-cycle loop itself lives in `refreshOdds()` so the cron route,
+ * the admin trigger, and the worker all run identical logic. This route
+ * owns ONLY the HTTP concerns: auth, the env/sport pre-checks (and their
+ * exact status codes), the equivalent JSON envelope, and an optional
+ * env-gated dead-man's-switch ping.
  */
 
 import { NextResponse } from "next/server";
-import { SUPPORTED_SPORTS, getInSeasonSports } from "@sports/data-ingestion";
-import { processSport } from "@sports/ingestion-pipeline";
+import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
+import { refreshOdds } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
+import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // Vercel hobby/pro cron caps at 5 min
@@ -53,17 +60,16 @@ export async function GET(request: Request) {
     );
   }
 
-  const startedAt = Date.now();
   const gates = getReadinessGates();
   const requestedSport = new URL(request.url).searchParams.get("sport");
-  // Default to in-season sports only — conserves The Odds API free-tier credits
-  // (500/mo across all sports). Override with ODDS_REFRESH_ALL_SPORTS=true, or
-  // request a specific sport explicitly.
-  const sportsToProcess = requestedSport
-    ? SUPPORTED_SPORTS.filter((sport) => sport.key === requestedSport)
-    : getInSeasonSports();
 
-  if (requestedSport && sportsToProcess.length === 0) {
+  // Pre-validate an explicitly requested sport here so the 400 body stays
+  // byte-for-byte what callers depend on (refreshOdds throws an equivalent
+  // UnsupportedSportError, but we never reach it for the validated case).
+  if (
+    requestedSport &&
+    !SUPPORTED_SPORTS.some((sport) => sport.key === requestedSport)
+  ) {
     return NextResponse.json(
       {
         error: "Unsupported sport",
@@ -74,34 +80,27 @@ export async function GET(request: Request) {
     );
   }
 
-  const sportResults: Array<{ sport: string; ok: boolean; error?: string }> =
-    [];
+  // Dead-man's-switch monitor (env-gated; complete no-op until HC_REFRESH_PING_URL
+  // is set, so wiring it in ships no behavior change). Never throws.
+  const pingUrl = process.env["HC_REFRESH_PING_URL"];
 
-  for (const sport of sportsToProcess) {
-    try {
-      await processSport(sport, apiKey, gates, "[cron:refresh-odds]");
-      sportResults.push({ sport: sport.key, ok: true });
-    } catch (err) {
-      sportResults.push({
-        sport: sport.key,
-        ok: false,
-        error: err instanceof Error ? err.message : String(err),
-      });
-    }
-    // Brief pause to avoid bursting the upstream API quota.
-    await new Promise((r) => setTimeout(r, 750));
+  const result = await refreshOdds(
+    requestedSport ? { sport: requestedSport } : {}
+  );
+
+  if (result.ok) {
+    await pingHealthcheck(pingUrl, "success");
+  } else {
+    await pingHealthcheck(pingUrl, "fail");
   }
 
-  const elapsedMs = Date.now() - startedAt;
-  const okCount = sportResults.filter((r) => r.ok).length;
-
   return NextResponse.json({
-    ok: okCount === sportResults.length,
-    elapsedMs,
-    okCount,
-    totalCount: sportResults.length,
+    ok: result.ok,
+    elapsedMs: result.elapsedMs,
+    okCount: result.okCount,
+    totalCount: result.totalCount,
     requestedSport: requestedSport ?? null,
     bootstrapMode: gates.isBootstrapMode,
-    results: sportResults,
+    results: result.results,
   });
 }

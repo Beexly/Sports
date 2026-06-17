@@ -12,3 +12,9 @@ export type {
 } from "./settlement-snapshots.js";
 export { recordSourceSnapshot } from "./source-snapshot.js";
 export type { SourceSnapshotInput } from "./source-snapshot.js";
+export { refreshOdds, UnsupportedSportError } from "./refresh-odds.js";
+export type {
+  RefreshOddsResult,
+  RefreshOddsSportResult,
+  RefreshOddsOptions,
+} from "./refresh-odds.js";
