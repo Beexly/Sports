@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@sports/db";
+import { REFRESH_STALE_AFTER_MINUTES } from "@/lib/data-reliability/refresh-sla";
 
 type HealthCheck = {
   status: "ok" | "error";
@@ -35,10 +36,12 @@ export async function GET(): Promise<NextResponse> {
       checks["ingestion"] = { status: "error", detail: "No successful runs recorded" };
     } else {
       const ageMs = Date.now() - lastSuccessRun.completedAt.getTime();
-      const ageHours = ageMs / (1000 * 60 * 60);
       const ageMinutes = Math.round(ageMs / (1000 * 60));
+      // Use the shared Refresh SLA instead of a hard-coded 2h. The old 2h
+      // magic number caused false 503s (the deployed fallback cron is daily,
+      // schedulers jitter) and disagreed with Jarvis. See refresh-sla.ts.
       checks["ingestion"] = {
-        status: ageHours > 2 ? "error" : "ok",
+        status: ageMinutes > REFRESH_STALE_AFTER_MINUTES ? "error" : "ok",
         detail: `Last success: ${lastSuccessRun.completedAt.toISOString()} (${ageMinutes}m ago)`,
         lastSuccessAt: lastSuccessRun.completedAt.toISOString(),
         ageMinutes,

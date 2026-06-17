@@ -196,7 +196,8 @@ describe("synthesizeJarvis", () => {
     expect(["NOT_READY_SAFETY", "LAUNCH_READY_PENDING_EXTERNAL_CONFIG", "NOT_READY_DATA"]).toContain(a.launchStatus);
   });
 
-  it("flags ingestion RED when last success is older than 24h", () => {
+  it("flags ingestion RED when last success is well past the stale threshold (>240m)", () => {
+    // 48h is far beyond the shared stale threshold (240m / 4h) → RED.
     const stale = new Date(NOW.getTime() - 48 * 60 * 60 * 1000);
     const a = synthesizeJarvis(
       baseInput({
@@ -340,8 +341,11 @@ describe("synthesizeJarvis", () => {
     expect(a.settlementStatus).toBe("UNKNOWN");
   });
 
-  it("classifies ingestion AMBER when last success is 6-24h old", () => {
-    const stale = new Date(NOW.getTime() - 10 * 60 * 60 * 1000);
+  it("classifies ingestion AMBER between the shared warn (120m) and stale (240m) thresholds", () => {
+    // Ingestion now uses the shared Refresh SLA (refresh-sla.ts): warn at
+    // 120m, stale at 240m — replacing the prior 6h/24h. 3h (180m) is in the
+    // warn band → AMBER (would have been GREEN under the old 6h warn).
+    const stale = new Date(NOW.getTime() - 3 * 60 * 60 * 1000);
     const a = synthesizeJarvis(
       baseInput({
         ingestion: {
