@@ -111,19 +111,25 @@ const REQUIRED = [
 
 header("Environment variables");
 
-// Public, client-exposed vars are NEVER marked "Sensitive" in Vercel, so a
-// missing one is always a real problem.
-const PUBLIC_REQUIRED = new Set([
-  "NEXTAUTH_URL",
-  "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
-  "NEXT_PUBLIC_APP_URL",
+// The SPECIFIC server-side secrets this deployment stores as Vercel "Sensitive"
+// (write-only → absent from `vercel env pull`). ONLY these may downgrade to a
+// warning when missing from a local file; every other required var — including
+// non-sensitive secrets like STRIPE_SECRET_KEY/NEXTAUTH_SECRET and the public
+// NEXT_PUBLIC_* vars — stays a hard failure, so a partial hand-written env can't
+// produce a false green. Keep this list tight and in sync with the Vercel UI.
+const KNOWN_SENSITIVE = new Set([
+  "DIRECT_URL",
+  "THE_ODDS_API_KEY",
+  "STRIPE_WEBHOOK_SECRET",
+  "STRIPE_PRO_MONTHLY_PRICE_ID",
+  "STRIPE_PRO_ANNUAL_PRICE_ID",
+  "STRIPE_ELITE_MONTHLY_PRICE_ID",
+  "STRIPE_ELITE_ANNUAL_PRICE_ID",
 ]);
 
 // True when we loaded a local env file (e.g. the output of `vercel env pull`).
-// Vercel "Sensitive" vars are write-only and are NOT returned by `vercel env
-// pull`, so in this context an absent secret means "unverifiable locally", not
-// "unset". In the deploy/CI context (no local file; env injected) a missing
-// secret is a genuine failure.
+// In the deploy/CI context (no local file; env injected) ALL vars — including
+// Sensitive ones — are present, so any miss there is a genuine hard failure.
 const localPullContext = loaded.length > 0;
 
 let sensitiveUnverifiable = 0;
@@ -134,11 +140,13 @@ for (const key of REQUIRED) {
     ok(key, redacted);
     continue;
   }
-  if (localPullContext && !PUBLIC_REQUIRED.has(key)) {
+  // Downgrade to a warning ONLY for a known-Sensitive var absent from a local
+  // pull (write-only, can't be read locally). Everything else is a hard failure.
+  if (localPullContext && KNOWN_SENSITIVE.has(key)) {
     sensitiveUnverifiable += 1;
     warn(
       key,
-      "not in local pull — if set 'Sensitive' in Vercel it is write-only and won't pull; verify in the deploy/CI context"
+      "not in local pull — set 'Sensitive' in Vercel (write-only); verify in the deploy/CI context"
     );
   } else {
     bad(key, "missing");
