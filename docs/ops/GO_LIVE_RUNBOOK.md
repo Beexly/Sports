@@ -71,6 +71,29 @@ CANONICAL_HISTORY_ENABLED          ← root; must be on before anything downstre
 engine deliberately excludes bootstrap/seed picks, so stats stay honest. Never skip the order.
 Keep `DEV_FAKE_ADMIN=false` and `DEMO_PICKS_ENABLED=false` in prod (the script blocks them).
 
+## Phase 4b — Calibration & the 70% tier (the intelligence go-live)
+Once `OUTCOME_LEARNING_ENABLED` is on and real picks are settling, the calibration program is the
+path to a *provable* 70% tier. It is instrumented and self-suppressing — watch and activate, don't
+force it. Full detail + the audited order live in `docs/path-to-70.md` (§7).
+
+1. **Watch the sample fill.** Cockpit → Calibration → the "Path to a proven 70% tier" panel shows
+   settled eligible picks vs the 100-pick activation floor, the calibrator's state, and ECE before
+   vs after the fitted map. Until the floor is cleared the calibrator stays inactive (an identity
+   passthrough, labeled uncalibrated) — confidence is never shown as a calibrated probability
+   without the data to back it.
+2. **Activate (deliberate, audited `MODEL_VERSION` step).** When the panel shows ≥100 eligible picks
+   AND the fit improves calibration out-of-sample: bump `MODEL_VERSION` with an audit-trail entry
+   (the `docs/calibration-proposals/FROZEN.md` rule), unpin `canApplyCalibrationAdjustments`, and
+   wire the calibrated probability through. This is the only honest way to make "70%" mean 70%.
+3. **Prove it.** Surface the reliability diagram (realized win rate per confidence bucket) + the CLV
+   beat-rate + edge-significance. The conviction ("70%") tier then publishes only picks with a
+   calibrated win probability ≥ 65%, an independent SPEAK edge, and a CLV beat-rate ≥ 50% over ≥ 20
+   graded picks. First-in-class is the *proof*, not the number.
+
+Engine status (shipped, gated off): `conviction-tier.ts`, `calibration-apply.ts` (`buildCalibrator`),
+and the cockpit readiness panel are built and tested. Nothing in live scoring consumes them yet —
+they engage only at the audited step above.
+
 ## Phase 5 — Turn on payments (first revenue)
 1. In Stripe: create **Pro ($19/mo)** and **Elite ($49/mo)** products → copy their price IDs into
    `STRIPE_PRO_PRICE_ID` / `STRIPE_ELITE_PRICE_ID`.
@@ -103,5 +126,7 @@ posture · payment activation · live-AI activation · public-picks activation �
 
 ## Honest gaps to close for "best-of-2026" polish (tracked in the audit)
 Visual: forbidden-color → token migration + mobile responsiveness (need a **preview URL** so
-changes can be visually verified). Intelligence: confidence calibration loop (governed by
-`model-freeze`). SEO: per-route OG/canonical. See `reports/claude/GALAXY_FULL_AUDIT_2026-05-29.md`.
+changes can be visually verified). Intelligence: confidence-calibration loop is now built and
+instrumented (`calibration-apply.ts` + cockpit readiness panel, governed by `model-freeze`) — see
+Phase 4b + `docs/path-to-70.md`; it activates on settled data. SEO: per-route OG/canonical. See
+`reports/claude/GALAXY_FULL_AUDIT_2026-05-29.md`.
