@@ -76,19 +76,25 @@ Once `OUTCOME_LEARNING_ENABLED` is on and real picks are settling, the calibrati
 path to a *provable* 70% tier. It is instrumented and self-suppressing — watch and activate, don't
 force it. Full detail + the audited order live in `docs/path-to-70.md` (§7).
 
-1. **Watch the sample fill.** Cockpit → Calibration → the "Path to a proven 70% tier" panel shows
-   settled eligible picks vs the 100-pick activation floor, the calibrator's state, and ECE before
-   vs after the fitted map. Until the floor is cleared the calibrator stays inactive (an identity
-   passthrough, labeled uncalibrated) — confidence is never shown as a calibrated probability
-   without the data to back it.
-2. **Activate (deliberate, audited `MODEL_VERSION` step).** When the panel shows ≥100 eligible picks
-   AND the fit improves calibration out-of-sample: bump `MODEL_VERSION` with an audit-trail entry
-   (the `docs/calibration-proposals/FROZEN.md` rule), unpin `canApplyCalibrationAdjustments`, and
-   wire the calibrated probability through. This is the only honest way to make "70%" mean 70%.
+1. **Watch the eligible sample fill.** Cockpit → Calibration → the "Path to a proven 70% tier" panel
+   shows **learning-eligible** settled picks (the `eligibleForLearning` gate, set only while
+   `OUTCOME_LEARNING_ENABLED` is on) vs the 100-pick activation floor. Picks that settled *before* you
+   turned that flag on stay ineligible and do **not** count — turn the flag on first, or backfill
+   eligibility, so the floor reflects admitted data. Until the floor is cleared the calibrator stays
+   inactive (an identity passthrough, labeled uncalibrated).
+2. **Validate out-of-sample, then activate (deliberate, audited `MODEL_VERSION` step).** The panel's
+   ECE numbers are **in-sample and indicative only** — isotonic fitting will almost always look
+   improved on the data it was fit on. Before the bump, run a held-out / offline calibration
+   validation (train/test split or k-fold) and confirm the map improves ECE *out-of-sample*. Only
+   then: bump `MODEL_VERSION` with an audit-trail entry (the `docs/calibration-proposals/FROZEN.md`
+   rule), unpin `canApplyCalibrationAdjustments`, and wire the calibrated probability through. This is
+   the only honest way to make "70%" mean 70%.
 3. **Prove it.** Surface the reliability diagram (realized win rate per confidence bucket) + the CLV
    beat-rate + edge-significance. The conviction ("70%") tier then publishes only picks with a
-   calibrated win probability ≥ 65%, an independent SPEAK edge, and a CLV beat-rate ≥ 50% over ≥ 20
-   graded picks. First-in-class is the *proof*, not the number.
+   calibrated win probability ≥ 65% **and at or above the pick's price-specific break-even** (a −200
+   favorite needs ~66.7%, so 65% is below break-even and must not qualify — `convictionTier()` already
+   enforces `max(0.65, price break-even)`), an independent SPEAK edge, and a CLV beat-rate ≥ 50% over
+   ≥ 20 graded picks. First-in-class is the *proof*, not the number.
 
 Engine status (shipped, gated off): `conviction-tier.ts`, `calibration-apply.ts` (`buildCalibrator`),
 and the cockpit readiness panel are built and tested. Nothing in live scoring consumes them yet —
