@@ -332,6 +332,7 @@ function checkGates() {
   const perf = get("PERFORMANCE_STATS_ENABLED");
   const learn = get("OUTCOME_LEARNING_ENABLED");
   const blog = get("PUBLIC_BLOG_ENABLED");
+  const calib = get("CALIBRATION_ADJUSTMENTS_ENABLED");
 
   if (!canon && (derived || pub || perf || learn)) {
     bad("Gate sequencing", "downstream gate is on while CANONICAL_HISTORY_ENABLED is off");
@@ -342,6 +343,14 @@ function checkGates() {
   if (perf && !pub) bad("PERFORMANCE_STATS_ENABLED", "requires PUBLIC_PICKS_ENABLED");
   if (blog && !pub) bad("PUBLIC_BLOG_ENABLED", "requires PUBLIC_PICKS_ENABLED");
   if (learn && !perf) bad("OUTCOME_LEARNING_ENABLED", "requires PERFORMANCE_STATS_ENABLED");
+  // Calibration sits ABOVE the learning gate: a calibrated win-probability can only
+  // be honestly applied once outcome learning has been admitting eligible picks.
+  // Requiring learn transitively enforces the whole upstream ladder (perf→pub→derived→canon).
+  // This is a sequencing guard only — actual activation also requires the audited
+  // MODEL_VERSION step in docs/path-to-70.md §7, which this script cannot verify.
+  if (calib && !learn) {
+    bad("CALIBRATION_ADJUSTMENTS_ENABLED", "requires OUTCOME_LEARNING_ENABLED + audited MODEL_VERSION activation (docs/path-to-70.md §7)");
+  }
 
   if (get("DEV_FAKE_ADMIN")) bad("DEV_FAKE_ADMIN", "must not be true in production");
   if (get("DEMO_PICKS_ENABLED")) bad("DEMO_PICKS_ENABLED", "must not be true in production");
