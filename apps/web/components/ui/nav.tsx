@@ -57,7 +57,7 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
       { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line moves & best available prices" },
       { label: "Trend Lab", href: "/trends", desc: "Trends that pass a real statistical test" },
       { label: "CLV Tracker", href: "/track", desc: "Track your own bets — did you beat the closing line?" },
-      { label: "GSN — Daily Briefing", href: "/gsn", desc: "Today's intelligence transmission" },
+      { label: "GSN — Daily Briefing", href: "/gsn", desc: "A sample of our daily briefing format — live feed coming soon" },
       { label: "How we read metrics", href: "/intelligence/metrics", desc: "What each stat means, in plain terms" },
     ],
   },

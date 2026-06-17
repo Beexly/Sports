@@ -38,7 +38,7 @@ const SECTIONS: readonly Section[] = [
       { label: "Galaxy Twin — Market map", href: "/observatory" },
       { label: "Trend Lab — Tested trends", href: "/trends" },
       { label: "CLV Tracker — Track your bets", href: "/track" },
-      { label: "GSN — Daily briefing", href: "/gsn" },
+      { label: "GSN — Briefing (sample)", href: "/gsn" },
       { label: "How we read metrics", href: "/intelligence/metrics" },
     ],
   },
