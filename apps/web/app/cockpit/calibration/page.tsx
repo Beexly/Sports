@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { db } from "@sports/db";
-import { getReadinessGates } from "@sports/prediction-engine";
+import { getReadinessGates, buildCalibrator, DEFAULT_MIN_CALIBRATION_SAMPLE } from "@sports/prediction-engine";
 
 /**
  * Cockpit calibration — live data binding, rebuilt. Preserves the
@@ -84,6 +84,19 @@ export default async function CockpitCalibrationPage() {
     };
   });
   const eligibleSettled = (settledRows as SettledRow[]).length;
+
+  // Path-to-70 activation readiness: drive the (self-suppressing) calibrator over
+  // the same settled rows. It only activates at the sample floor + an improving fit
+  // — so this panel shows exactly how close the model is to a calibrated tier.
+  const calibrationSamples = (settledRows as SettledRow[])
+    .filter((r) => r.result === "WIN" || r.result === "LOSS")
+    .map((r) => ({ p: r.confidence / 100, y: (r.result === "WIN" ? 1 : 0) as 0 | 1 }));
+  const calibrator = buildCalibrator(calibrationSamples);
+  const sampleFloor = DEFAULT_MIN_CALIBRATION_SAMPLE;
+  const sampleProgressPct = Math.min(
+    100,
+    Math.round((calibrator.sampleSize / sampleFloor) * 100),
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -175,6 +188,49 @@ export default async function CockpitCalibrationPage() {
             </tbody>
           </table>
         )}
+      </section>
+
+      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+          Path to a proven 70% tier — activation readiness
+        </h2>
+        <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
+          Calibration converts the confidence score into a win probability, but only once there is
+          enough settled data to fit on and the fit actually improves calibration. Until then,
+          confidence is shown uncalibrated. See <span className="font-mono">docs/path-to-70.md</span>.
+        </p>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <BaselineStat
+            label="Settled sample"
+            value={`${calibrator.sampleSize} / ${sampleFloor}`}
+            sub={`${sampleProgressPct}% to activation floor`}
+          />
+          <BaselineStat
+            label="Calibrator"
+            value={calibrator.isActive ? "active" : "inactive"}
+            sub={calibrator.isActive ? "fit improves calibration" : "awaiting sample"}
+          />
+          <BaselineStat
+            label="ECE (raw)"
+            value={calibrator.sampleSize > 0 ? calibrator.rawEce.toFixed(4) : "—"}
+            sub="before mapping"
+          />
+          <BaselineStat
+            label="ECE (calibrated)"
+            value={calibrator.isActive ? calibrator.calibratedEce.toFixed(4) : "—"}
+            sub="after mapping"
+          />
+        </div>
+        <p className="mt-3 text-[10px] text-ion-3">
+          {calibrator.isActive
+            ? "Calibration map is active — confidence is mapped to a calibrated win probability."
+            : `Inactive: ${calibrator.inactiveReason || "awaiting settled sample"}. Activation is a deliberate, audited MODEL_VERSION step — never an automatic env flip.`}
+        </p>
+        <p className="mt-3 text-[11px] leading-relaxed text-ion-2">
+          The conviction (&ldquo;70%&rdquo;) tier then requires a calibrated win probability of at least
+          65%, an independent SPEAK edge, and a closing-line-value beat-rate of at least 50% over a
+          minimum of 20 graded picks.
+        </p>
       </section>
 
       <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
