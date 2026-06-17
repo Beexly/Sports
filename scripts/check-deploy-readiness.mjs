@@ -110,14 +110,54 @@ const REQUIRED = [
 ];
 
 header("Environment variables");
+
+// The SPECIFIC server-side secrets this deployment stores as Vercel "Sensitive"
+// (write-only → absent from `vercel env pull`). ONLY these may downgrade to a
+// warning when missing from a local file; every other required var — including
+// non-sensitive secrets like STRIPE_SECRET_KEY/NEXTAUTH_SECRET and the public
+// NEXT_PUBLIC_* vars — stays a hard failure, so a partial hand-written env can't
+// produce a false green. Keep this list tight and in sync with the Vercel UI.
+const KNOWN_SENSITIVE = new Set([
+  "DIRECT_URL",
+  "THE_ODDS_API_KEY",
+  "STRIPE_WEBHOOK_SECRET",
+  "STRIPE_PRO_MONTHLY_PRICE_ID",
+  "STRIPE_PRO_ANNUAL_PRICE_ID",
+  "STRIPE_ELITE_MONTHLY_PRICE_ID",
+  "STRIPE_ELITE_ANNUAL_PRICE_ID",
+]);
+
+// True when we loaded a local env file (e.g. the output of `vercel env pull`).
+// In the deploy/CI context (no local file; env injected) ALL vars — including
+// Sensitive ones — are present, so any miss there is a genuine hard failure.
+const localPullContext = loaded.length > 0;
+
+let sensitiveUnverifiable = 0;
 for (const key of REQUIRED) {
   const v = process.env[key];
-  if (!v) {
-    bad(key, "missing");
-  } else {
+  if (v) {
     const redacted = v.length > 12 ? `${v.slice(0, 8)}…${v.slice(-4)}` : "(short)";
     ok(key, redacted);
+    continue;
   }
+  // Downgrade to a warning ONLY for a known-Sensitive var absent from a local
+  // pull (write-only, can't be read locally). Everything else is a hard failure.
+  if (localPullContext && KNOWN_SENSITIVE.has(key)) {
+    sensitiveUnverifiable += 1;
+    warn(
+      key,
+      "not in local pull — set 'Sensitive' in Vercel (write-only); verify in the deploy/CI context"
+    );
+  } else {
+    bad(key, "missing");
+  }
+}
+if (sensitiveUnverifiable > 0) {
+  lines.push(
+    `  ${COLOR.dim}↳ ${sensitiveUnverifiable} secret(s) absent from the local pull (likely Vercel "Sensitive" = write-only). ` +
+      `For an authoritative check run this in the Vercel build or a CI job with the env injected; ` +
+      `otherwise confirm via runtime side-effects (the cron hitting The Odds API, the Stripe TEST subscribe cycle).${COLOR.reset}`
+  );
 }
 
 // ── Postgres ─────────────────────────────────────────────────────────────
