@@ -430,9 +430,16 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
 
   const actions: string[] = [];
   if (!input.gates.canExposePerformanceStats) {
-    actions.push(
-      `Hold PERFORMANCE_STATS_ENABLED off until ${input.gates.minSettledPicksForLearning} canonical picks have settled (currently ${input.history.canonicalSettledCount}).`
-    );
+    if (input.history.canonicalSettledCount >= input.gates.minSettledPicksForLearning) {
+      // Floor already met: stop telling the owner to "hold" — the data is in.
+      actions.push(
+        `PERFORMANCE_STATS_ENABLED is data-ready: ${input.history.canonicalSettledCount} canonical picks have settled (floor ${input.gates.minSettledPicksForLearning}). Set PERFORMANCE_STATS_ENABLED=true and redeploy to publish the record and win rate.`
+      );
+    } else {
+      actions.push(
+        `Hold PERFORMANCE_STATS_ENABLED off until ${input.gates.minSettledPicksForLearning} canonical picks have settled (currently ${input.history.canonicalSettledCount}).`
+      );
+    }
   }
   if (input.ingestion.lastSuccessAt === null) {
     actions.push("Run /api/admin/trigger-refresh to seed the first ingestion cycle.");
