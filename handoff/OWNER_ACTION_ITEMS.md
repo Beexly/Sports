@@ -158,39 +158,23 @@ Then update `INTERNAL_LLM_API_KEY` in Vercel.
 
 ---
 
-## G. 🚀 Merge branch → main to deploy all code changes to production
+## G. 🚀 Merge branch → main — ✅ SHIPPED 2026-06-16
 
-**This is the single remaining step to ship everything to `galaxysportsedge.com`.**
+**Done.** Branch `claude/happy-euler-trkihe` was merged into `main` (commit `98509b84`)
+and the Vercel production deploy triggered automatically.
 
-All 19 tasks are complete on branch `claude/happy-euler-trkihe`. The preview deployment
-is READY (commit `32cfc35d`). The production site is still running the old `main` branch
-from ~27 days ago.
-
-**What's waiting to ship when you merge:**
+**What shipped:**
 - Security fixes (open redirect sanitization, /cockpit middleware gate)
 - `/preview/[sport]/[slug]` SEO pages + sitemap extension
 - Groq internal-LLM tier (85% cost reduction on classifications)
 - Model-router Haiku flips (66.7% saving on light Claude tasks)
-- Analytics wiring (Cloudflare + Clarity — activate via env vars after merge)
-- Oracle VPS worker Dockerfiles + deploy.sh
+- Analytics wiring (Cloudflare + Clarity — activate via env vars, see E1)
+- Oracle VPS worker Dockerfiles + deploy.sh (see D1)
 - Full TypeScript strict compliance (0 errors)
 - 60+ CI/security/quality improvements
 
-**To deploy:**
-```bash
-# Option 1 — GitHub UI
-# Open https://github.com/Beexly/Sports/compare/main...claude/happy-euler-trkihe
-# Click "Create pull request" → merge → Vercel auto-deploys to production
-
-# Option 2 — CLI
-git checkout main
-git merge claude/happy-euler-trkihe
-git push origin main
-# Vercel auto-deploys on push to main
-```
-
-After merging, set the analytics env vars (E1 above) and redeploy once more if you want
-Cloudflare + Clarity active immediately.
+**Deployment:** `dpl_4ViioS71A7FKTnMSn53y2cALe9U6` → https://galaxysportsedge.com
+**Vercel inspect:** https://vercel.com/pick-pilot-s-projects/sports-web/4ViioS71A7FKTnMSn53y2cALe9U6
 
 ---
 
@@ -209,4 +193,4 @@ Cloudflare + Clarity active immediately.
 | F3 | Open redirect fix | ✅ `628ea04d` | n/a | ✅ done |
 | F4 | /cockpit middleware gate | ✅ `628ea04d` | n/a | ✅ done |
 | F5 | Rotate Groq key | n/a | 🔧 rotate if key was public | Owner action |
-| **G** | **Merge branch → main** | **✅ ready** | **🔧 merge `claude/happy-euler-trkihe` → `main`** | **Owner action** |
+| **G** | **Merge branch → main** | **✅ shipped** | **✅ live `98509b84` (2026-06-16)** | **✅ done** |
