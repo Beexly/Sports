@@ -94,6 +94,24 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     };
   }
 
+  // Production seed-row exclusion (defense-in-depth). The dev seed tags rows
+  // with modelVersion="v5.0.0-seed". In production there should be zero, but
+  // the board is a public surface so we exclude them ONLY in production. In
+  // dev/test this spread is empty, so behavior is unchanged.
+  const excludeSeedInProd =
+    process.env.NODE_ENV === "production"
+      ? { NOT: { modelVersion: "v5.0.0-seed" } }
+      : {};
+  // For the game→pick relation filters: "has a published, non-bootstrap pick".
+  // In production, a seed pick must not count as a real published pick, so the
+  // relation predicate excludes it too (a game whose only pick is a seed row is
+  // then correctly treated as having no published pick).
+  const publishedPickRelation = {
+    isPublished: true,
+    isBootstrap: false,
+    ...excludeSeedInProd,
+  };
+
   const { start, end } = todayBounds();
   try {
     const decisions = await db.gateDecision.findMany({
@@ -153,6 +171,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         where: {
           isPublished: true,
           isBootstrap: false,
+          ...excludeSeedInProd,
           generatedAt: { gte: start, lt: end },
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
@@ -171,7 +190,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
       db.game.findMany({
         where: {
           commenceTime: { gte: start, lt: end },
-          picks: { none: { isPublished: true, isBootstrap: false } },
+          picks: { none: publishedPickRelation },
         },
         include: { sport: { select: { name: true } } },
         orderBy: { commenceTime: "asc" },

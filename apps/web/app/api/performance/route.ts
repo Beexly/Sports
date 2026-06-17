@@ -14,6 +14,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const period = searchParams.get("period") ?? "all-time";
   const sport = searchParams.get("sport");
 
+  // Minimum-sample floor (honesty guard). Publishing a raw win rate over a
+  // handful of settled picks (e.g. "66.7%" off 3 picks) is misleading. The
+  // honest floor is MIN_SETTLED_PICKS_FOR_LEARNING (default 100) from
+  // platform-config. Below it we WITHHOLD the rate — never fabricate one —
+  // returning the same null-winRate shape this route already emits for an
+  // empty sample, plus an explicit insufficientSample flag. Above it,
+  // behavior is unchanged.
+  const minSettledFloor = Math.max(1, gates.minSettledPicksForLearning);
+
   // Aggregate real win/loss/push data from settled canonical picks only.
   // Bootstrap-era picks are excluded — their win rates are uncalibrated and
   // would produce misleading public performance stats.
@@ -78,17 +87,30 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     { wins: 0, losses: 0, pushes: 0, total: 0 }
   );
 
+  // Settled denominator for the floor: all decided picks (wins + losses +
+  // pushes). Below the floor we withhold every published rate.
+  const settledCount = overall.wins + overall.losses + overall.pushes;
+  const insufficientSample = settledCount < minSettledFloor;
+
   const overallWinRate =
-    overall.wins + overall.losses > 0
+    !insufficientSample && overall.wins + overall.losses > 0
       ? Math.round((overall.wins / (overall.wins + overall.losses)) * 100 * 10) / 10
       : null;
+
+  // When below the floor, suppress per-sport rates too — the counts stay
+  // visible (they're factual), only the derived rate is withheld.
+  const publishedStats = (insufficientSample
+    ? stats.map((s) => ({ ...s, winRate: null }))
+    : stats
+  ).sort((a, b) => b.total - a.total);
 
   return NextResponse.json({
     success: true,
     data: {
       overall: { ...overall, winRate: overallWinRate },
-      bySport: stats.sort((a, b) => b.total - a.total),
+      bySport: publishedStats,
       period,
+      insufficientSample,
       disclaimer:
         "Past performance does not guarantee future results. For informational purposes only.",
     },

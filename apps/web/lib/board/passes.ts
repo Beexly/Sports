@@ -50,6 +50,18 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
     };
   }
 
+  // Production seed-row exclusion (defense-in-depth). In production a dev seed
+  // pick (modelVersion="v5.0.0-seed") must not count as a real published pick,
+  // so a game whose only pick is a seed row is correctly listed as a pass. The
+  // spread is empty in dev/test, so behavior is unchanged there.
+  const publishedPickRelation = {
+    isPublished: true,
+    isBootstrap: false,
+    ...(process.env.NODE_ENV === "production"
+      ? { NOT: { modelVersion: "v5.0.0-seed" } }
+      : {}),
+  };
+
   const { start, end } = todayBounds();
   try {
     const gateDecisions = await db.gateDecision.findMany({
@@ -84,7 +96,7 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
     const games = await db.game.findMany({
       where: {
         commenceTime: { gte: start, lt: end },
-        picks: { none: { isPublished: true, isBootstrap: false } },
+        picks: { none: publishedPickRelation },
       },
       include: { sport: { select: { name: true } } },
       orderBy: { commenceTime: "asc" },

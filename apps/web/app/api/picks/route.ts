@@ -50,6 +50,18 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const gradeFilter = searchParams.get("grade") as PickGrade | null;
   // Guard against malformed `?date=` values producing an Invalid Date query.
   const targetDate = parseDateParam(dateParam);
+
+  // Production seed-row exclusion (defense-in-depth). The dev seed writes
+  // synthetic rows tagged modelVersion="v5.0.0-seed"; in production there
+  // should be zero of them, but this is the last unguarded public path.
+  // Exclude them ONLY in production so a stray seed row can never surface on
+  // the live picks endpoint. In dev/test this spread is empty, so demo mode —
+  // which intentionally returns seed rows and flags meta.containsSeedData —
+  // is preserved byte-for-byte.
+  const excludeSeedInProd =
+    process.env.NODE_ENV === "production"
+      ? { NOT: { modelVersion: "v5.0.0-seed" } }
+      : {};
   const gameFilter = {
     dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE },
     ...(sportFilter
@@ -65,6 +77,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     where: {
       isPublished: true,
       isBootstrap: false, // never expose bootstrap-era picks publicly
+      ...excludeSeedInProd, // prod-only: drop dev seed rows (no-op in dev/test)
       generatedAt: {
         gte: startOfDay(targetDate),
         lte: endOfDay(targetDate),
@@ -170,6 +183,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         where: {
           isPublished: true,
           isBootstrap: false,
+          ...excludeSeedInProd, // prod-only: keep the count consistent with the slate
           generatedAt: {
             gte: startOfDay(targetDate),
             lte: endOfDay(targetDate),
