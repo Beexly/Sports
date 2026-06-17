@@ -24,11 +24,10 @@ export default async function Page() {
       <SectionHeader title="Tracked YouTube Sources" />
       <DataTable
         rows={items.map((i: Record<string, unknown>) => ({
-          source: String(i.source_name ?? ""),
-          title: String(i.title ?? ""),
+          name: String(i.name ?? ""),
           rights_mode: String(i.rights_mode ?? ""),
           activation: String(i.activation_status ?? ""),
-          trust: Number(i.source_trust ?? 0),
+          transcript: String(i.transcript_status ?? ""),
         }))}
         maxRows={50}
       />

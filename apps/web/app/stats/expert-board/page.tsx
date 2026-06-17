@@ -27,11 +27,11 @@ export default function Page() {
         {experts.slice(0, 6).map((e: Record<string, unknown>, idx) => (
           <div key={idx} className="border border-mineral bg-eclipse p-4">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-ion-white font-semibold">{String(e.expert_name ?? "")}</p>
+              <p className="text-ion-white font-semibold">{String(e.name ?? "")}</p>
               <Badge tone="warn">Pending</Badge>
             </div>
             <p className="text-sm text-ion-1 mb-2">Specialty: {String(e.specialty ?? "")}</p>
-            <p className="text-xs text-ion-2">Platform: {String(e.platform ?? "")}</p>
+            <p className="text-xs text-ion-2">Organization: {String(e.organization ?? "")}</p>
             {String(e.rights_mode ?? e.display_rights ?? "") !== "" && (
               <p className="text-xs text-ion-2">{String(e.rights_mode ?? e.display_rights ?? "")}</p>
             )}

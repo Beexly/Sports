@@ -16,8 +16,8 @@ export default async function Page(){
         rows={integ.commands.map((r: Record<string, unknown>) => ({
           command: String(r.command ?? ""),
           result: String(r.result ?? ""),
-          status: String(r.status ?? ""),
-          note: String(r.note ?? ""),
+          exact_failure: String(r.exact_failure ?? ""),
+          remaining_risk: String(r.remaining_risk ?? ""),
         }))}
         maxRows={50}
       />

@@ -441,13 +441,13 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
         </div>
       </section>
 
-      <section data-testid="resource-intelligence-ledger" className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-950">
-        <div className="border-b border-gray-800 px-5 py-4">
+      <section data-testid="resource-intelligence-ledger" className="overflow-hidden rounded-2xl border border-mineral bg-carbon">
+        <div className="border-b border-mineral px-5 py-4">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-cyan-300">
             Resource Intelligence
           </p>
-          <h2 className="mt-1 text-sm font-semibold text-white">Rights-gated resource ledger</h2>
-          <p className="mt-1 text-xs leading-5 text-gray-400">
+          <h2 className="mt-1 text-sm font-semibold text-ion-white">Rights-gated resource ledger</h2>
+          <p className="mt-1 text-xs leading-5 text-ion-2">
             {formatNumber(resourceFeed.totals.uniqueResources)} resources normalized from intake.
             Only approved-direct + prototype are actionable; owner-review and quarantine are shown
             as counts and never promoted into claims, StatKing evidence, Airwave, or automation.
@@ -462,8 +462,8 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           <Metric label="Noise" value={formatNumber(resourceFeed.counts.rejected_noise)} detail="not real resources" />
         </div>
         {resourceFeed.topSafe.length > 0 && (
-          <div className="border-t border-gray-800 px-5 py-4">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Top safe opportunities</h3>
+          <div className="border-t border-mineral px-5 py-4">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-3">Top safe opportunities</h3>
             <div className="mt-3 flex flex-wrap gap-2">
               {resourceFeed.topSafe.slice(0, 15).map((item) => (
                 <span
@@ -485,7 +485,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
             Free-first
           </p>
           <h2 className="mt-1 text-sm font-semibold text-white">Free coverage vs paid spend</h2>
-          <p className="mt-1 text-xs leading-5 text-gray-400">
+          <p className="mt-1 text-xs leading-5 text-ion-2">
             Use every free, cleared source before any paid API. Scores (ESPN, all sports)
             and weather (Open-Meteo) are live and free; odds still require the licensed
             Odds API until a free odds source clears.
@@ -498,13 +498,13 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
         </div>
         {spendUnlock.length > 0 && (
           <div className="border-t border-emerald-900/40 px-5 py-4">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
               Clear these free sources to stop paying
             </h3>
             <div className="mt-3 space-y-2">
               {spendUnlock.map((row) => (
-                <div key={row.need} className="text-xs text-gray-300">
-                  <span className="font-semibold text-white">{row.need}</span>
+                <div key={row.need} className="text-xs text-ion-1">
+                  <span className="font-semibold text-ion-white">{row.need}</span>
                   {": "}
                   {row.sources.length > 0 ? row.sources.join(", ") : "no free candidate yet"}
                 </div>
@@ -520,30 +520,30 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
             Owner review
           </p>
           <h2 className="mt-1 text-sm font-semibold text-white">CFB / NFL data-source candidates</h2>
-          <p className="mt-1 text-xs leading-5 text-gray-400">
+          <p className="mt-1 text-xs leading-5 text-ion-2">
             {candidateSummary.total} candidates ({candidateSummary.alreadyRegistered} already in the
             rights registry). All gated — none approved for automation, claims, or production until
             terms + endpoints are verified. API keys live in env vars only; rotate any key shared in
-            plaintext. See <code className="text-gray-300">docs/legal/CFB_NFL_DATA_SOURCE_CANDIDATES.md</code>.
+            plaintext. See <code className="text-ion-1">docs/legal/CFB_NFL_DATA_SOURCE_CANDIDATES.md</code>.
           </p>
         </div>
         <div className="space-y-4 p-5">
           {candidateGroups.map((group) => (
             <div key={group.priority}>
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
                 {priorityLabel(group.priority)}
               </h3>
               <div className="mt-2 grid gap-3 md:grid-cols-2">
                 {group.items.map((c) => (
-                  <div key={c.id} className="rounded-lg border border-gray-800 bg-gray-950/70 p-3">
+                  <div key={c.id} className="rounded-lg border border-mineral bg-carbon/70 p-3">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-sm font-semibold text-gray-100">{c.name}</p>
+                      <p className="text-sm font-semibold text-ion-white">{c.name}</p>
                       <span className="rounded border border-yellow-500/30 bg-yellow-950/30 px-1.5 py-0.5 text-[10px] uppercase tracking-widest text-yellow-200">
                         gated
                       </span>
                     </div>
-                    <p className="mt-1 text-xs leading-5 text-gray-400">{c.freeTier}</p>
-                    <p className="mt-2 text-[11px] text-gray-500">
+                    <p className="mt-1 text-xs leading-5 text-ion-2">{c.freeTier}</p>
+                    <p className="mt-2 text-[11px] text-ion-3">
                       {c.oddsOnly ? "Odds-only" : "Stats + odds"} ·{" "}
                       {c.keyRequired ? `key → ${c.apiKeyEnvVar}` : "no key"}
                       {c.inMainRegistry ? " · in registry" : ""}
@@ -556,22 +556,22 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
         </div>
       </section>
 
-      <section data-testid="source-confidence" className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-950">
-        <div className="border-b border-gray-800 px-5 py-4">
+      <section data-testid="source-confidence" className="overflow-hidden rounded-2xl border border-mineral bg-carbon">
+        <div className="border-b border-mineral px-5 py-4">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-300">
             StatKing read
           </p>
-          <h2 className="mt-1 text-sm font-semibold text-white">Source confidence</h2>
-          <p className="mt-1 text-xs leading-5 text-gray-400">
+          <h2 className="mt-1 text-sm font-semibold text-ion-white">Source confidence</h2>
+          <p className="mt-1 text-xs leading-5 text-ion-2">
             Derived from each card&apos;s rights + wiring facts — never a hand-assigned number.
             no-fake-live-data holds for every source: unproven sources lower confidence, they are
             never dressed up as fresh.
           </p>
         </div>
-        <div className="divide-y divide-gray-900">
+        <div className="divide-y divide-titanium/30">
           {confidenceCards.map(({ card, confidence }) => (
             <div key={card.key} className="flex flex-wrap items-center gap-3 px-5 py-3">
-              <p className="min-w-[10rem] flex-1 text-sm text-gray-200">{card.publicLabel}</p>
+              <p className="min-w-[10rem] flex-1 text-sm text-ion-1">{card.publicLabel}</p>
               <ConfidenceChip label="src" level={confidence.sourceConfidence} />
               <ConfidenceChip label="fresh" level={confidence.freshnessConfidence} />
               <ConfidenceChip label="license" level={confidence.licenseConfidence} />
@@ -605,7 +605,7 @@ const CONFIDENCE_TONE: Record<ConfidenceLevel, string> = {
   high: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
   medium: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
   low: "border-red-500/30 bg-red-950/30 text-red-200",
-  unknown: "border-gray-700 bg-gray-900/70 text-gray-400",
+  unknown: "border-titanium bg-eclipse/70 text-ion-2",
 };
 
 function ConfidenceChip({ label, level }: { label: string; level: ConfidenceLevel }): JSX.Element {

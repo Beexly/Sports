@@ -25,10 +25,10 @@ export default async function Page() {
       <SectionHeader title="Metric Reliability Records" eyebrow={rel.metrics.length + " metrics"} />
       <DataTable
         rows={rel.metrics.slice(0, 50).map((m: Record<string, unknown>) => ({
-          metric: String(m.metric_id ?? m.metric ?? ""),
-          reliability: String(m.reliability ?? ""),
-          source: String(m.source ?? ""),
-          note: String(m.note ?? ""),
+          metric_key: String(m.metric_key ?? ""),
+          metric_name: String(m.metric_name ?? ""),
+          stability: String(m.stability ?? ""),
+          noise_level: String(m.noise_level ?? ""),
         }))}
         maxRows={50}
       />
