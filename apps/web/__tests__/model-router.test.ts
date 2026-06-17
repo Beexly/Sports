@@ -22,10 +22,12 @@ describe("model router", () => {
     expect(MODELS.opus).toBe("claude-opus-4-8");
   });
 
-  it("routes every known surface to Sonnet today (zero behavior change)", () => {
+  it("routes surfaces to the validated tier (Haiku flips active for calibration-insight + brief)", () => {
     expect(ALL_SURFACES.length).toBeGreaterThan(0);
+    const HAIKU_SURFACES = new Set(["calibration-insight", "brief"]);
     for (const surface of ALL_SURFACES) {
-      expect(pickModelForSurface(surface)).toBe(MODELS.sonnet);
+      const expected = HAIKU_SURFACES.has(surface) ? MODELS.haiku : MODELS.sonnet;
+      expect(pickModelForSurface(surface)).toBe(expected);
     }
   });
 });

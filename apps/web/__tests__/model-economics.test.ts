@@ -26,10 +26,10 @@ describe("model economics (models.dev pricing)", () => {
   it("computes per-surface savings of the validated flips", () => {
     const econ = surfaceEconomics(snapshot);
     const calib = econ.find((e) => e.surface === "calibration-insight")!;
-    // active Sonnet → recommended Haiku: blended 0.75*3+0.25*15=6 → 0.75*1+0.25*5=2 ⇒ 66.7% saved
-    expect(calib.activeTier).toBe("sonnet");
+    // Haiku flip active since 2026-06-15: active=haiku=recommended, savings already captured (0)
+    expect(calib.activeTier).toBe("haiku");
     expect(calib.recommendedTier).toBe("haiku");
-    expect(calib.savingsFraction).toBeCloseTo((6 - 2) / 6, 5);
+    expect(calib.savingsFraction).toBeCloseTo(0, 5);
 
     const court = econ.find((e) => e.surface === "model-court")!;
     expect(court.recommendedTier).toBe("opus"); // an upgrade → negative savings
