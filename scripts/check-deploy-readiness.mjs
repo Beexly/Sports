@@ -110,14 +110,46 @@ const REQUIRED = [
 ];
 
 header("Environment variables");
+
+// Public, client-exposed vars are NEVER marked "Sensitive" in Vercel, so a
+// missing one is always a real problem.
+const PUBLIC_REQUIRED = new Set([
+  "NEXTAUTH_URL",
+  "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+  "NEXT_PUBLIC_APP_URL",
+]);
+
+// True when we loaded a local env file (e.g. the output of `vercel env pull`).
+// Vercel "Sensitive" vars are write-only and are NOT returned by `vercel env
+// pull`, so in this context an absent secret means "unverifiable locally", not
+// "unset". In the deploy/CI context (no local file; env injected) a missing
+// secret is a genuine failure.
+const localPullContext = loaded.length > 0;
+
+let sensitiveUnverifiable = 0;
 for (const key of REQUIRED) {
   const v = process.env[key];
-  if (!v) {
-    bad(key, "missing");
-  } else {
+  if (v) {
     const redacted = v.length > 12 ? `${v.slice(0, 8)}…${v.slice(-4)}` : "(short)";
     ok(key, redacted);
+    continue;
   }
+  if (localPullContext && !PUBLIC_REQUIRED.has(key)) {
+    sensitiveUnverifiable += 1;
+    warn(
+      key,
+      "not in local pull — if set 'Sensitive' in Vercel it is write-only and won't pull; verify in the deploy/CI context"
+    );
+  } else {
+    bad(key, "missing");
+  }
+}
+if (sensitiveUnverifiable > 0) {
+  lines.push(
+    `  ${COLOR.dim}↳ ${sensitiveUnverifiable} secret(s) absent from the local pull (likely Vercel "Sensitive" = write-only). ` +
+      `For an authoritative check run this in the Vercel build or a CI job with the env injected; ` +
+      `otherwise confirm via runtime side-effects (the cron hitting The Odds API, the Stripe TEST subscribe cycle).${COLOR.reset}`
+  );
 }
 
 // ── Postgres ─────────────────────────────────────────────────────────────
