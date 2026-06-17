@@ -129,10 +129,22 @@ export class DataNormalizer {
         (s) => s.name === score.away_team
       );
 
+      // A present-but-non-numeric score ("", "-", "PPD" for a postponed/
+      // abandoned game) must normalize to null, NOT NaN. parseInt("PPD") is
+      // NaN, and `NaN !== null` is true — so a NaN score slips the settlement
+      // null-guard and mis-grades a non-game as a real WIN/LOSS, corrupting the
+      // published record. Number.isFinite collapses any non-number to null,
+      // which correctly leaves the pick PENDING.
+      const parseScore = (entry: { score: string } | undefined): number | null => {
+        if (!entry) return null;
+        const n = Number.parseInt(entry.score, 10);
+        return Number.isFinite(n) ? n : null;
+      };
+
       return {
         externalId: score.id,
-        homeScore: homeScoreEntry ? parseInt(homeScoreEntry.score, 10) : null,
-        awayScore: awayScoreEntry ? parseInt(awayScoreEntry.score, 10) : null,
+        homeScore: parseScore(homeScoreEntry),
+        awayScore: parseScore(awayScoreEntry),
         completed: score.completed,
       };
     });
