@@ -158,55 +158,42 @@ Then update `INTERNAL_LLM_API_KEY` in Vercel.
 
 ---
 
-## G. 🚀 Merge branch → main to deploy all code changes to production
+## G. 🚀 Merge branch → main to deploy StatKing UX polish to production
 
-**This is the single remaining step to ship everything to `galaxysportsedge.com`.**
+✅ **Previous merge done** — `claude/happy-euler-trkihe` → `main` is live (merged 2026-06-16).
 
-All 19 tasks are complete on branch `claude/happy-euler-trkihe`. The preview deployment
-is READY (commit `32cfc35d`). The production site is still running the old `main` branch
-from ~27 days ago.
+🔧 **New UX polish on `claude/brave-hamilton-g7mlqd`** — 42 files, 894 insertions.
 
-**What's waiting to ship when you merge:**
-- Security fixes (open redirect sanitization, /cockpit middleware gate)
-- `/preview/[sport]/[slug]` SEO pages + sitemap extension
-- Groq internal-LLM tier (85% cost reduction on classifications)
-- Model-router Haiku flips (66.7% saving on light Claude tasks)
-- Analytics wiring (Cloudflare + Clarity — activate via env vars after merge)
-- Oracle VPS worker Dockerfiles + deploy.sh
-- Full TypeScript strict compliance (0 errors)
-- 60+ CI/security/quality improvements
+**What's waiting to ship when you merge this branch:**
+- StatKing `/stats/*` UX polish — hero, player cards, compare, injuries, watchlist, ask, sources, proof
+- Admin `/admin/statking/*` — all 20+ stub pages upgraded to DataTable + StatusRibbon + InsightCard
+- Active nav highlighting in stats layout
+- Empty states, back links, insight context on every page
+- No new dependencies, no schema changes — pure UI/UX
+
+**Verified green:** 0 typecheck errors · 443 tests pass · `next build` exit 0
 
 **To deploy:**
 ```bash
-# Option 1 — GitHub UI
-# Open https://github.com/Beexly/Sports/compare/main...claude/happy-euler-trkihe
+# GitHub UI
+# Open https://github.com/Beexly/Sports/compare/main...claude/brave-hamilton-g7mlqd
 # Click "Create pull request" → merge → Vercel auto-deploys to production
-
-# Option 2 — CLI
-git checkout main
-git merge claude/happy-euler-trkihe
-git push origin main
-# Vercel auto-deploys on push to main
 ```
-
-After merging, set the analytics env vars (E1 above) and redeploy once more if you want
-Cloudflare + Clarity active immediately.
 
 ---
 
 ### Quick status board
 | # | Item | Code | Env/Deploy | Status |
 |---|------|------|-----------|--------|
-| 0 | Push all commits to branch | ✅ pushed | ✅ | ✅ done |
-| A1 | Groq env vars in Vercel | ✅ wired | ✅ set (5h ago) | ✅ done |
+| A1 | Groq env vars in Vercel | ✅ wired | ✅ set | ✅ done |
 | A2 | Model-router haiku flips | ✅ committed | n/a | ✅ done |
 | B1 | FPL terms → EPL adapter | ✅ gated | n/a | ✅ done (gated) |
-| C1 | `/preview` pages + sitemap | ✅ committed | n/a | ✅ done |
+| C1 | `/preview` pages + sitemap | ✅ committed | ✅ live (merged) | ✅ done |
 | D1 | Oracle VPS | ✅ deploy.sh ready | 🔧 needs VPS signup | Owner action |
 | E1 | Analytics snippet | ✅ layout.tsx wired | 🔧 needs CF+Clarity signup | Owner action |
-| F1 | CRON_SECRET | ✅ cron routes gate on it | ✅ set in Vercel (27d ago) | ✅ done |
+| F1 | CRON_SECRET | ✅ cron routes gate on it | ✅ set in Vercel | ✅ done |
 | F2 | ADMIN_EMAILS | ✅ auth.ts elevates on it | ✅ `baxley.garrett@gmail.com` | ✅ done |
-| F3 | Open redirect fix | ✅ `628ea04d` | n/a | ✅ done |
-| F4 | /cockpit middleware gate | ✅ `628ea04d` | n/a | ✅ done |
+| F3 | Open redirect fix | ✅ committed | ✅ live (merged) | ✅ done |
+| F4 | /cockpit middleware gate | ✅ committed | ✅ live (merged) | ✅ done |
 | F5 | Rotate Groq key | n/a | 🔧 rotate if key was public | Owner action |
-| **G** | **Merge branch → main** | **✅ ready** | **🔧 merge `claude/happy-euler-trkihe` → `main`** | **Owner action** |
+| **G** | **Merge UX polish → main** | **✅ ready** | **🔧 merge `claude/brave-hamilton-g7mlqd` → `main`** | **Owner action** |

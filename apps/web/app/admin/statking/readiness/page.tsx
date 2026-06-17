@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { Shell, Cards, DataTable, ScoreRing, BarChart, Badge } from "../../../stats/_components";
+import { Shell, Cards, DataTable, ScoreRing, BarChart, InsightCard, SectionHeader, StatusRibbon } from "../../../stats/_components";
 import { loadReadinessScores } from "@/lib/statking/product";
+
 export default async function Page() {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") { redirect("/"); }
@@ -11,11 +12,12 @@ export default async function Page() {
 
   return (
     <Shell title="Product Readiness">
+      <StatusRibbon status="fixture" label="Readiness view — fixture-backed scores, not live" />
       <Cards items={[
         { label: "Pages scored", value: r.pages.length },
         { label: "Average readiness", value: avg },
-        { label: "Claude next", value: "UX polish" },
-        { label: "Codex next", value: "live ingestion" }
+        { label: "Highest priority", value: below50[0] ? String((below50[0] as Record<string, unknown>).page ?? "—") : "All ≥50", note: "lowest readiness page" },
+        { label: "Path to 90+", value: "Live feeds", note: "then proof archive" }
       ]} />
       <div className="flex justify-center mb-6">
         <ScoreRing score={avg} label="Average Readiness" size={140} />
@@ -30,22 +32,25 @@ export default async function Page() {
         }))} />
       </div>
       {below50.length > 0 && (
-        <div className="space-y-3 mb-6">
-          <Badge tone="warn">{below50.length} pages below 50% readiness — blockers flagged below</Badge>
+        <div className="mb-6">
+          <InsightCard
+            tone="warn"
+            eyebrow={below50.length + " pages need work"}
+            headline="Priority UX improvements"
+            body={"Lowest readiness: " + below50.slice(0, 3).map(p => String((p as Record<string, unknown>).page ?? "")).join(", ") + ". Focus UX polish on these first."}
+          />
         </div>
       )}
-      <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">All Pages</h2>
-        <DataTable
-          rows={r.pages.map((p: Record<string, unknown>) => ({
-            page: String(p.page ?? ""),
-            readiness_score: Number(p.readiness_score ?? 0),
-            weakest_part: String(p.weakest_part ?? ""),
-            next_improvement: String(p.next_improvement ?? "")
-          }))}
-          maxRows={50}
-        />
-      </div>
+      <SectionHeader eyebrow="Sorted by readiness" title="All Page Scores" />
+      <DataTable
+        rows={[...r.pages].sort((a, b) => Number(a.readiness_score ?? 0) - Number(b.readiness_score ?? 0)).map((p: Record<string, unknown>) => ({
+          page: String(p.page ?? ""),
+          readiness_score: Number(p.readiness_score ?? 0),
+          weakest_part: String(p.weakest_part ?? ""),
+          next_improvement: String(p.next_improvement ?? "")
+        }))}
+        maxRows={50}
+      />
     </Shell>
   );
 }

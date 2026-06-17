@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { Shell, Cards, DataTable, ScoreRing, InsightCard, BarChart } from "../../../stats/_components";
+import { Shell, Cards, DataTable, ScoreRing, InsightCard, BarChart, SectionHeader, StatusRibbon } from "../../../stats/_components";
 import { loadSummary, loadAudit, loadCoverage, loadActiveMetricManifest, loadActivationRoi, loadKingGapMap, loadRightsLedger, loadReadinessScores } from "@/lib/statking/product";
+
 export default async function Page() {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") { redirect("/"); }
@@ -17,6 +18,7 @@ export default async function Page() {
 
   return (
     <Shell title="King of Stats Crown">
+      <StatusRibbon status="fixture" label="Crown view — snapshot data, not live" />
       <Cards items={[
         { label: "King Standard", value: "61/100", note: "Autonomous foundation, not finished" },
         { label: "Sources", value: s.source_count },
@@ -32,6 +34,12 @@ export default async function Page() {
       </div>
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Reality Check</h2>
+        <InsightCard
+          eyebrow="Audit Status Legend"
+          headline="What these categories mean"
+          body="real = live licensed source active. stub = placeholder fixture only. partial = some real, some missing. blocked = rights clearance needed."
+          tone="neutral"
+        />
         <BarChart
           items={Object.entries(a.summary).map(([status, count]) => ({
             label: String(status),
@@ -55,7 +63,7 @@ export default async function Page() {
         </div>
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Activation ROI: Next 25</h2>
+        <SectionHeader eyebrow="ROI-ranked source pipeline" title="Activate These Next" />
         <DataTable
           rows={(roi.top_25_activate_now ?? []).map((r: Record<string, unknown>) => ({
             source: String(r.source_name ?? ""),
@@ -68,7 +76,7 @@ export default async function Page() {
         />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">King Gap Map</h2>
+        <SectionHeader eyebrow="What separates 61 from 90+" title="King Gap Map" />
         <DataTable
           rows={gaps.gaps.map((g: Record<string, unknown>) => ({
             moat: String(g.moat ?? ""),
@@ -82,9 +90,12 @@ export default async function Page() {
       </div>
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Merge Readiness</h2>
-        <p className="text-ion-1 mb-4">
-          Merge as autonomous foundation; do not market as complete King of Stats until live feeds, licenses, and proof archive are active.
-        </p>
+        <InsightCard
+          eyebrow="Merge Readiness"
+          headline="Ship as foundation — do not market as finished"
+          body="These readiness scores are honest self-assessments from the autonomous build. Scores below 50 need UX work or live data before they're user-ready. Scores 50–70 are usable foundation. 70+ are shippable."
+          tone="warn"
+        />
         <DataTable
           rows={readiness.pages.map((p: Record<string, unknown>) => ({
             page: String(p.page ?? ""),

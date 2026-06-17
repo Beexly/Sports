@@ -1,4 +1,4 @@
-import { Shell, Cards, DataTable, BarChart, StatusRibbon, HeroStat } from "../_components";
+import { Shell, Cards, DataTable, BarChart, StatusRibbon, HeroStat, InsightCard, SectionHeader } from "../_components";
 import { loadTeams } from "@/lib/statking/product";
 export const metadata = {
   title: "Team Environments — Pace, Offense & Defense",
@@ -16,11 +16,16 @@ export default function Page() {
       <StatusRibbon status="fixture" label="Team environments updated every sync cycle" />
       <Cards items={[
         { label: "Teams", value: teams.length },
-        { label: "Top offense", value: topOffense?.team_id ?? "—" },
-        { label: "Top fantasy env", value: topFantasy?.team_id ?? "—" },
+        { label: "Top offense", value: topOffense?.team_id ?? "—", note: "Offensive env: " + Number(topOffense?.offensive_environment ?? 0) },
+        { label: "Top fantasy env", value: topFantasy?.team_id ?? "—", note: "Fantasy env: " + Number(topFantasy?.fantasy_environment ?? 0) },
         { label: "Avg confidence", value: avgConfidence + "%" }
       ]} />
-      <p className="text-ion-1">Team environment is the context every player number sits inside — offense, defense, and pace, ranked.</p>
+      <InsightCard
+        eyebrow="Why Team Environment Matters"
+        headline="A player's ceiling is set by their team context — not just their talent"
+        body="High offensive environment = more play-calling volume and pass-friendly looks. High fantasy environment = historical correlation with skill-player targets and opportunity. Use these to separate players stuck in bad systems from those with a real path to production."
+        tone="neutral"
+      />
       {topOffense && (
         <div className="grid gap-4 md:grid-cols-2">
           <HeroStat
@@ -40,7 +45,7 @@ export default function Page() {
         </div>
       )}
       <div className="grid gap-6 md:grid-cols-2">
-        {teams.slice(0, 8).map(team => (
+        {teams.map(team => (
           <div key={team.team_id} className="border border-mineral bg-eclipse p-4">
             <p className="text-ion-white font-semibold mb-3">{team.team_id}</p>
             <BarChart items={[
@@ -52,8 +57,8 @@ export default function Page() {
           </div>
         ))}
       </div>
+      <SectionHeader title="All Team Environments" eyebrow={teams.length + " teams"} />
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">All Teams</h2>
         <DataTable
           rows={teams.map(t => ({
             team: String(t.team_id ?? ""),

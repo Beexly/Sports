@@ -1,4 +1,4 @@
-import { Shell, Cards, DataTable, Badge, StatusRibbon } from "../_components";
+import { Shell, Cards, DataTable, Badge, StatusRibbon, InsightCard, SectionHeader } from "../_components";
 import { loadExpertRegistry } from "@/lib/statking/product";
 export const metadata = {
   title: "Expert Board — Tracked Analyst Signals",
@@ -17,11 +17,14 @@ export default function Page() {
         { label: "Partner status", value: "queued" },
         { label: "Active signals", value: 0 }
       ]} />
-      <p className="text-ion-1">
-        A rights-respecting view of tracked expert and analyst signals across the league. Waiting for partnership approvals before activation.
-      </p>
+      <InsightCard
+        eyebrow="Why This Page Is Gated"
+        headline="Expert predictions are copyrighted — we need permission before automating"
+        body="Fantasy analysts like beat reporters own their predictions. Automated aggregation without a license or partnership agreement violates their rights. We're building outreach to analysts for data-sharing arrangements. Until then, signals are tracked in the registry but not displayed or processed."
+        tone="bad"
+      />
       <div className="grid gap-4 md:grid-cols-2">
-        {experts.slice(0, 6).map((e, idx) => (
+        {experts.slice(0, 6).map((e: Record<string, unknown>, idx) => (
           <div key={idx} className="border border-mineral bg-eclipse p-4">
             <div className="flex items-center justify-between mb-2">
               <p className="text-ion-white font-semibold">{String(e.expert_name ?? "")}</p>
@@ -29,11 +32,17 @@ export default function Page() {
             </div>
             <p className="text-sm text-ion-1 mb-2">Specialty: {String(e.specialty ?? "")}</p>
             <p className="text-xs text-ion-2">Platform: {String(e.platform ?? "")}</p>
+            {String(e.rights_mode ?? e.display_rights ?? "") !== "" && (
+              <p className="text-xs text-ion-2">{String(e.rights_mode ?? e.display_rights ?? "")}</p>
+            )}
           </div>
         ))}
       </div>
+      <SectionHeader
+        title="Expert Registry"
+        eyebrow={experts.length + " tracked"}
+      />
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Expert Registry</h2>
         <DataTable
           rows={experts.map((e: Record<string, unknown>) => ({
             expert_name: String(e.name ?? ""),

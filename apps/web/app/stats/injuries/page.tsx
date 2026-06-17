@@ -1,4 +1,5 @@
-import { Shell, Cards, Badge, DataTable, StatusRibbon, BarChart } from "../_components";
+import Link from "next/link";
+import { Shell, Cards, Badge, DataTable, StatusRibbon, BarChart, SectionHeader } from "../_components";
 import { loadPlayers } from "@/lib/statking/product";
 export const metadata = {
   title: "Player Status & Movement — Injuries, Roles & Trends",
@@ -21,13 +22,12 @@ export default function Page() {
         { label: "High volatility", value: players.filter(p => p.volatility_score >= 60).length }
       ]} />
 
-      {/* ── Status (injury & role) ───────────────────────────── */}
       <h2 className="text-2xl font-semibold text-ion-white">Injury &amp; role status</h2>
       <p className="text-ion-1">
         Current status mapped to role and fantasy impact, so a designation reads as a usage consequence, not just a label.
       </p>
       <Badge tone="warn">Official injury designations require a licensed feed; status shown is from public roster signal.</Badge>
-      {flagged.length > 0 && (
+      {flagged.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-3">
           {flagged.slice(0, 3).map(p => (
             <div key={p.player_id} className="border border-alert/30 bg-alert/5 p-4 rounded">
@@ -41,6 +41,8 @@ export default function Page() {
             </div>
           ))}
         </div>
+      ) : (
+        <p className="text-sm text-ion-1 py-4 px-4 border border-mineral bg-eclipse/40">No status flags in the current fixture snapshot.</p>
       )}
       <DataTable
         rows={flagged.map(p => ({
@@ -55,24 +57,26 @@ export default function Page() {
         maxRows={50}
       />
 
-      {/* ── Movement (usage/role/trend) ──────────────────────── */}
       <h2 className="mt-2 text-2xl font-semibold text-ion-white">Movement watch</h2>
       <p className="text-ion-1">
         The players whose role, usage, or trend is moving most — the changes worth acting on before the market catches up.
       </p>
       <Badge tone="warn">Real-time email &amp; push delivery is an Elite feature and owner-gated; this is the underlying signal layer.</Badge>
-      <DataTable
-        rows={risers.map(p => ({
-          player: String(p.name ?? ""),
-          team: String(p.team ?? ""),
-          position: String(p.position ?? ""),
-          trend_score: Number(p.trend_score ?? 0),
-          usage_score: Number(p.usage_score ?? 0),
-          role_score: Number(p.role_score ?? 0),
-          status: String(p.status ?? "")
-        }))}
-        maxRows={15}
-      />
+      <SectionHeader eyebrow="Top 15 by trend score" title="Usage & Trend Risers" />
+      <div className="space-y-2">
+        {risers.map(p => (
+          <Link key={p.player_id} href={"/stats/player/" + p.player_id} className="flex items-center justify-between border border-mineral bg-eclipse p-3 hover:border-orbital-cyan transition-colors">
+            <div>
+              <p className="text-ion-white font-medium">{p.name}</p>
+              <p className="text-xs text-ion-2">{p.team} · {p.position}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-orbital-cyan font-mono text-sm">{p.trend_score}</p>
+              <p className="text-xs text-ion-2">trend score</p>
+            </div>
+          </Link>
+        ))}
+      </div>
     </Shell>
   );
 }

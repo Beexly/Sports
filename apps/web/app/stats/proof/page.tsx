@@ -1,4 +1,4 @@
-import { Shell, Cards, DataTable, ScoreRing, StatusRibbon } from "../_components";
+import { Shell, Cards, DataTable, ScoreRing, InsightCard, SectionHeader, StatusRibbon } from "../_components";
 import { loadBacktests } from "@/lib/statking/product";
 export const metadata = {
   title: "Proof & Backtests — How StatKing Is Validated",
@@ -15,28 +15,35 @@ export default function Page() {
       <Cards items={[
         { label: "Runs", value: b.runs.length },
         { label: "Proof state", value: "fixture" },
-        { label: "Production archive", value: "missing" },
-        { label: "Next", value: "store predictions" }
+        { label: "Archive status", value: "missing", note: "Will auto-populate on live ingestion" },
+        { label: "Next milestone", value: "store predictions", note: "One prediction stored = proof starts" }
       ]} />
       <div className="flex justify-center">
         <ScoreRing score={proofScore} label="Proof Readiness" size={140} />
       </div>
-      <p className="text-ion-1">
-        Backtests, metric reliability, and the honest proof layer behind StatKing metrics. Every prediction is logged and backtested against real outcomes.
-      </p>
+      <InsightCard
+        eyebrow="How StatKing Validates Its Work"
+        headline="Predictions are logged, settled, and checked — once live data flows"
+        body="The proof archive is currently empty because no live predictions have been stored yet. This changes the moment real data ingestion goes active. Every pick will be archived with the model version, input data snapshot, and outcome — making the calibration score auditable."
+        tone="warn"
+      />
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Backtest Results</h2>
-        <DataTable
-          rows={b.runs.map((r: Record<string, unknown>) => ({
-            run_id: String(r.run_id ?? ""),
-            type: String(r.type ?? ""),
-            status: String(r.status ?? ""),
-            mae: typeof r.mae === "number" ? r.mae : "—",
-            calibration: String(r.calibration ?? "—"),
-            proven: String(r.what_is_proven ?? "")
-          }))}
-          maxRows={50}
-        />
+        <SectionHeader eyebrow={b.runs.length + " runs recorded"} title="Backtest Archive" />
+        {b.runs.length === 0 ? (
+          <p className="text-sm text-ion-1 py-6 px-4 border border-mineral bg-eclipse/40 text-center">No backtest runs in snapshot — will populate with live prediction data.</p>
+        ) : (
+          <DataTable
+            rows={b.runs.map((r: Record<string, unknown>) => ({
+              run_id: String(r.run_id ?? ""),
+              type: String(r.type ?? ""),
+              status: String(r.status ?? ""),
+              mae: typeof r.mae === "number" ? r.mae : "—",
+              calibration: String(r.calibration ?? "—"),
+              proven: String(r.what_is_proven ?? "")
+            }))}
+            maxRows={50}
+          />
+        )}
       </div>
     </Shell>
   );

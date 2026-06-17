@@ -1,4 +1,4 @@
-import { Shell, Cards, Badge, DataTable, StatusRibbon, HeroStat } from "../_components";
+import { Shell, Cards, StatusRibbon, HeroStat, InsightCard, SectionHeader } from "../_components";
 import { loadArchetypes, loadPlayers } from "@/lib/statking/product";
 export const metadata = {
   title: "Watchlist — Your Tracked Players",
@@ -20,12 +20,12 @@ export default function Page() {
         { label: "Personal lists", value: "owner-gated" },
         { label: "Sort", value: "hidden value" }
       ]} />
-      <p className="text-ion-1">
-        The system's highest-signal players right now — strong hidden value and trend before the market reprices them.
-      </p>
-      <div className="space-y-3">
-        <Badge tone="warn">Saving your own watchlist is an account feature and owner-gated.</Badge>
-      </div>
+      <InsightCard
+        eyebrow="What is the Watchlist?"
+        headline="Players the system flags as hidden opportunities right now"
+        body="Sorted by Hidden Value Score — players with strong underlying metrics (usage, efficiency, archetype fit) before the broader market reprices them. Saving a personal watchlist is an owner-gated account feature. This view always shows the system's top hidden-value picks."
+        tone="neutral"
+      />
       <div className="grid gap-4 md:grid-cols-2">
         {watch.slice(0, 2).map(p => {
           const a = archMap.get(p.player_id);
@@ -40,22 +40,30 @@ export default function Page() {
           );
         })}
       </div>
-      <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">All Watched Players</h2>
-        <DataTable
-          rows={watch.map(p => {
-            const a = archMap.get(p.player_id);
-            return {
-              player: String(p.name ?? ""),
-              team: String(p.team ?? ""),
-              position: String(p.position ?? ""),
-              hidden_value: Number(p.hidden_value_score ?? 0),
-              trend: Number(p.trend_score ?? 0),
-              archetype: String(a?.archetype ?? "—")
-            };
-          })}
-          maxRows={20}
-        />
+      <SectionHeader
+        title="Highest-Signal Players"
+        eyebrow={"Sorted by hidden value · " + watch.length + " tracked"}
+      />
+      <div className="space-y-2">
+        {watch.slice(0, 20).map(p => {
+          const a = archMap.get(p.player_id);
+          return (
+            <a
+              key={p.player_id}
+              href={"/stats/player/" + p.player_id}
+              className="flex items-center justify-between border border-mineral bg-eclipse p-3 hover:border-orbital-cyan transition-colors"
+            >
+              <div>
+                <p className="font-semibold text-ion-white">{String(p.name ?? "")}</p>
+                <p className="text-xs text-ion-2">{String(p.team ?? "")} · {String(p.position ?? "")}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-orbital-cyan font-mono text-sm">{Number(p.hidden_value_score ?? 0)}</p>
+                <p className="text-xs text-ion-2">{String(a?.archetype ?? "—")}</p>
+              </div>
+            </a>
+          );
+        })}
       </div>
     </Shell>
   );

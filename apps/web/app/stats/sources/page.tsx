@@ -1,4 +1,4 @@
-import { Shell, Cards, DataTable, Badge, StatusRibbon } from "../_components";
+import { Shell, Cards, DataTable, InsightCard, SectionHeader, StatusRibbon } from "../_components";
 import { FilterBar } from "../_client";
 import { loadSources } from "@/lib/statking/product";
 export const metadata = {
@@ -14,6 +14,12 @@ export default function Page({ searchParams }: { searchParams?: { status?: strin
   return (
     <Shell title="Source Universe">
       <StatusRibbon status="fixture" label="Source registry updated regularly" />
+      <InsightCard
+        eyebrow="Data Rights System"
+        headline="Every source is rights-classified before any ingestion"
+        body="approved_api = licensed commercial access. approved_public_logged_off = public facts, no login. permission_required = written consent needed before automation. blocked_technical_controls = anti-bot active. vendor_candidate = under evaluation."
+        tone="neutral"
+      />
       <Cards items={[
         { label: "Sources", value: sources.length },
         { label: "Active/open", value: sources.filter(s => String(s.source_mode ?? "").includes("active")).length },
@@ -35,23 +41,27 @@ export default function Page({ searchParams }: { searchParams?: { status?: strin
         />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">All Sources</h2>
-        <div className="mb-3 flex flex-wrap gap-2">
-          {filtered.slice(0, 50).map((s, i) => {
-            const gate = String(s.legal_gate_status ?? "");
-            const tone: "good" | "warn" | "bad" | "neutral" = gate.includes("blocked") ? "bad" : gate.includes("open") || gate.includes("active") ? "good" : gate.includes("license") || gate.includes("review") ? "warn" : "neutral";
-            return <Badge key={i} tone={tone}>{String(s.canonical_name ?? "source")} · {gate || "—"}</Badge>;
-          })}
-        </div>
+        <SectionHeader title="Source Registry" />
         <DataTable
-          rows={filtered.slice(0, 50).map(s => ({
-            source_name: String(s.canonical_name ?? ""),
-            source_mode: String(s.source_mode ?? ""),
-            legal_gate_status: String(s.legal_gate_status ?? ""),
-            next_action: String(s.next_action ?? ""),
-            priority_score: Number(s.priority_score ?? 0)
-          }))}
-          maxRows={50}
+          rows={filtered.slice(0, 100).map(s => {
+            const gate = String(s.legal_gate_status ?? "");
+            const rights_clarity = gate.includes("approved")
+              ? "✓ cleared"
+              : gate.includes("blocked")
+              ? "✗ blocked"
+              : gate.includes("permission")
+              ? "⚠ permission needed"
+              : "— review";
+            return {
+              source_name: String(s.canonical_name ?? ""),
+              source_mode: String(s.source_mode ?? ""),
+              legal_gate_status: gate,
+              rights_clarity,
+              next_action: String(s.next_action ?? ""),
+              priority_score: Number(s.priority_score ?? 0)
+            };
+          })}
+          maxRows={100}
         />
       </div>
     </Shell>
