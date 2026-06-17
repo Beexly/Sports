@@ -48,7 +48,7 @@ export default async function CockpitCalibrationPage() {
   const gates = getReadinessGates();
 
   // Defensive counts — page renders zeros in stub mode / DB outage.
-  const [gamesTotal, gamesCompleted, picksTotal, picksResolved, settledRows, clvAgg] =
+  const [gamesTotal, gamesCompleted, picksTotal, picksResolved, settledRows, eligibleRows, clvAgg] =
     await Promise.all([
       db.game.count().catch(() => 0),
       db.game.count({ where: { status: "FINAL" } }).catch(() => 0),
@@ -57,6 +57,21 @@ export default async function CockpitCalibrationPage() {
       db.pick
         .findMany({
           where: { result: { in: ["WIN", "LOSS", "PUSH"] }, isBootstrap: false },
+          select: { confidence: true, result: true },
+          orderBy: { settledAt: "desc" },
+          take: 2000,
+        })
+        .catch(() => [] as SettledRow[]),
+      // Activation readiness counts ONLY learning-eligible snapshots — the same gate
+      // the calibration report uses. Picks settled while OUTCOME_LEARNING_ENABLED was
+      // off stay eligibleForLearning=false and must NOT count toward the 100 floor.
+      db.pick
+        .findMany({
+          where: {
+            result: { in: ["WIN", "LOSS"] },
+            isBootstrap: false,
+            signalSnapshot: { is: { eligibleForLearning: true } },
+          },
           select: { confidence: true, result: true },
           orderBy: { settledAt: "desc" },
           take: 2000,
@@ -86,9 +101,10 @@ export default async function CockpitCalibrationPage() {
   const eligibleSettled = (settledRows as SettledRow[]).length;
 
   // Path-to-70 activation readiness: drive the (self-suppressing) calibrator over
-  // the same settled rows. It only activates at the sample floor + an improving fit
-  // — so this panel shows exactly how close the model is to a calibrated tier.
-  const calibrationSamples = (settledRows as SettledRow[])
+  // LEARNING-ELIGIBLE settled picks only — matching the gate that admits data into
+  // calibration. The ECE figures below are IN-SAMPLE/indicative; a held-out
+  // validation is required before the audited MODEL_VERSION activation (see runbook).
+  const calibrationSamples = (eligibleRows as SettledRow[])
     .filter((r) => r.result === "WIN" || r.result === "LOSS")
     .map((r) => ({ p: r.confidence / 100, y: (r.result === "WIN" ? 1 : 0) as 0 | 1 }));
   const calibrator = buildCalibrator(calibrationSamples);
@@ -195,40 +211,42 @@ export default async function CockpitCalibrationPage() {
           Path to a proven 70% tier — activation readiness
         </h2>
         <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
-          Calibration converts the confidence score into a win probability, but only once there is
-          enough settled data to fit on and the fit actually improves calibration. Until then,
-          confidence is shown uncalibrated. See <span className="font-mono">docs/path-to-70.md</span>.
+          Calibration converts the confidence score into a win probability, but only once there are
+          enough <strong className="text-ion-1">learning-eligible</strong> settled picks to fit on and
+          the fit actually improves calibration. Until then, confidence is shown uncalibrated. See{" "}
+          <span className="font-mono">docs/path-to-70.md</span>.
         </p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           <BaselineStat
-            label="Settled sample"
+            label="Eligible sample"
             value={`${calibrator.sampleSize} / ${sampleFloor}`}
-            sub={`${sampleProgressPct}% to activation floor`}
+            sub={`${sampleProgressPct}% to floor · learning-gate admitted`}
           />
           <BaselineStat
             label="Calibrator"
-            value={calibrator.isActive ? "active" : "inactive"}
-            sub={calibrator.isActive ? "fit improves calibration" : "awaiting sample"}
+            value={calibrator.isActive ? "fit ready" : "inactive"}
+            sub={calibrator.isActive ? "needs held-out check" : "awaiting sample"}
           />
           <BaselineStat
-            label="ECE (raw)"
+            label="ECE raw (in-sample)"
             value={calibrator.sampleSize > 0 ? calibrator.rawEce.toFixed(4) : "—"}
-            sub="before mapping"
+            sub="indicative only"
           />
           <BaselineStat
-            label="ECE (calibrated)"
-            value={calibrator.isActive ? calibrator.calibratedEce.toFixed(4) : "—"}
-            sub="after mapping"
+            label="ECE fit (in-sample)"
+            value={calibrator.sampleSize > 0 ? calibrator.calibratedEce.toFixed(4) : "—"}
+            sub="not a green light"
           />
         </div>
         <p className="mt-3 text-[10px] text-ion-3">
           {calibrator.isActive
-            ? "Calibration map is active — confidence is mapped to a calibrated win probability."
-            : `Inactive: ${calibrator.inactiveReason || "awaiting settled sample"}. Activation is a deliberate, audited MODEL_VERSION step — never an automatic env flip.`}
+            ? "Sample floor cleared and the in-sample fit improves — run a held-out/offline validation, then do the audited MODEL_VERSION activation. The ECE above is in-sample and is not, by itself, sufficient."
+            : `Inactive: ${calibrator.inactiveReason || "awaiting eligible sample"}. Activation is a deliberate, audited MODEL_VERSION step — never an automatic env flip.`}
         </p>
         <p className="mt-3 text-[11px] leading-relaxed text-ion-2">
           The conviction (&ldquo;70%&rdquo;) tier then requires a calibrated win probability of at least
-          65%, an independent SPEAK edge, and a closing-line-value beat-rate of at least 50% over a
+          65% <em>and</em> at or above the pick&apos;s price-specific break-even (a −200 favorite needs
+          ~66.7%), an independent SPEAK edge, and a closing-line-value beat-rate of at least 50% over a
           minimum of 20 graded picks.
         </p>
       </section>
