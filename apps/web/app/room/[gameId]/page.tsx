@@ -22,10 +22,10 @@ export default async function GameRoomPage({
   if (!room) notFound();
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-obsidian text-ion-white">
       <Nav />
       <main className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
-        <header className="border-b border-gray-800 pb-8">
+        <header className="border-b border-titanium pb-8">
           <Link href="/board" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">
             Today&apos;s Board
           </Link>
@@ -33,7 +33,7 @@ export default async function GameRoomPage({
             Game Intelligence Room
           </p>
           <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">{room.node.matchup}</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-gray-400">
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-2">
             A persistent read-only room for market state, evidence history, pre-mortem context,
             lens-safe summaries, and postgame memory.
           </p>
@@ -69,18 +69,18 @@ export default async function GameRoomPage({
         <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <Panel title="Evidence Timeline">
             {room.timeline.length === 0 ? (
-              <p className="text-sm text-gray-500">No source-aware signals have been attached to this game yet.</p>
+              <p className="text-sm text-ion-3">No source-aware signals have been attached to this game yet.</p>
             ) : (
-              <ol className="divide-y divide-gray-800 border border-gray-800">
+              <ol className="divide-y divide-titanium border border-titanium">
                 {room.timeline.map((item) => (
                   <li key={item.id} className="grid gap-2 px-4 py-3 text-sm sm:grid-cols-[1fr_auto]">
                     <div>
                       <p className="font-semibold text-white">{item.label}</p>
-                      <p className="mt-1 text-xs text-gray-500">{item.source}</p>
+                      <p className="mt-1 text-xs text-ion-3">{item.source}</p>
                     </div>
                     <div className="text-left sm:text-right">
                       <p className="font-mono text-xs text-cyan-200">{item.status}</p>
-                      <p className="mt-1 text-xs text-gray-500">{item.fetchedAt.slice(0, 16).replace("T", " ")}</p>
+                      <p className="mt-1 text-xs text-ion-3">{item.fetchedAt.slice(0, 16).replace("T", " ")}</p>
                     </div>
                   </li>
                 ))}
@@ -90,12 +90,12 @@ export default async function GameRoomPage({
 
           <Panel title="What Would Change Our Mind">
             {room.premortem ? (
-              <div className="text-sm leading-6 text-gray-300">
+              <div className="text-sm leading-6 text-ion-1">
                 <h2 className="font-semibold text-white">{room.premortem.headline}</h2>
                 <p className="mt-3">{room.premortem.summary}</p>
               </div>
             ) : (
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-ion-3">
                 No published pick is attached yet, so the public pre-mortem will appear after a pick clears the gate.
               </p>
             )}
@@ -106,25 +106,25 @@ export default async function GameRoomPage({
           <Panel title="Lens Switcher">
             <div className="grid gap-3 sm:grid-cols-2">
               {room.lenses.map((lens) => (
-                <article key={lens.lens} className="border border-gray-800 bg-gray-950/55 p-4">
+                <article key={lens.lens} className="border border-titanium bg-obsidian/55 p-4">
                   <h2 className="font-mono text-xs font-semibold text-cyan-200">{lens.lens}</h2>
-                  <p className="mt-3 text-sm leading-6 text-gray-400">{lens.visibleSummary}</p>
+                  <p className="mt-3 text-sm leading-6 text-ion-2">{lens.visibleSummary}</p>
                 </article>
               ))}
             </div>
           </Panel>
 
           <Panel title="Galaxy Memory">
-            <div className="text-sm leading-6 text-gray-300">
+            <div className="text-sm leading-6 text-ion-1">
               <p className="font-mono text-xs uppercase tracking-[0.18em] text-cyan-200">{room.memory.status.replace(/_/g, " ")}</p>
               <p className="mt-3">{room.memory.body}</p>
-              {room.memory.settledAt && <p className="mt-3 text-xs text-gray-500">Settled {room.memory.settledAt.slice(0, 10)}</p>}
+              {room.memory.settledAt && <p className="mt-3 text-xs text-ion-3">Settled {room.memory.settledAt.slice(0, 10)}</p>}
             </div>
           </Panel>
         </section>
 
         <Panel title="Where This Goes Next">
-          <p className="text-sm leading-6 text-gray-400">
+          <p className="text-sm leading-6 text-ion-2">
             Galaxy declines more games than it publishes. No edge, no pick &mdash; that is the
             process, not a gap. Treat this room as one input in a disciplined decision, never
             the decision itself.
@@ -146,7 +146,7 @@ export default async function GameRoomPage({
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }): JSX.Element {
   return (
-    <section className="border border-gray-800 bg-gray-900/45 p-5">
+    <section className="border border-titanium bg-carbon/45 p-5">
       <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">{title}</h2>
       <div className="mt-5">{children}</div>
     </section>
@@ -155,8 +155,8 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="min-h-20 border border-gray-800 bg-gray-900/60 p-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</p>
+    <div className="min-h-20 border border-titanium bg-carbon/60 p-4">
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</p>
       <p className="mt-2 break-words text-xl font-bold text-white">{value}</p>
     </div>
   );
@@ -164,9 +164,9 @@ function Metric({ label, value }: { label: string; value: string }): JSX.Element
 
 function Fact({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="border border-gray-800 bg-gray-950/55 p-3">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-gray-500">{label}</dt>
-      <dd className="mt-1 text-gray-200">{value}</dd>
+    <div className="border border-titanium bg-obsidian/55 p-3">
+      <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</dt>
+      <dd className="mt-1 text-ion-1">{value}</dd>
     </div>
   );
 }
@@ -175,10 +175,10 @@ function NextStep({ href, label, hint }: { href: string; label: string; hint: st
   return (
     <Link
       href={href}
-      className="group block border border-gray-800 bg-gray-950/55 p-4 transition-colors hover:border-cyan-500/40"
+      className="group block border border-titanium bg-obsidian/55 p-4 transition-colors hover:border-cyan-500/40"
     >
       <p className="font-mono text-xs font-semibold text-cyan-200 group-hover:text-cyan-100">{label}</p>
-      <p className="mt-2 text-sm leading-6 text-gray-400">{hint}</p>
+      <p className="mt-2 text-sm leading-6 text-ion-2">{hint}</p>
     </Link>
   );
 }

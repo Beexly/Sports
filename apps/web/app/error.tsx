@@ -39,7 +39,7 @@ export default function GlobalError({
     : error.message;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-950 p-6 text-gray-200">
+    <div className="flex min-h-screen items-center justify-center bg-obsidian p-6 text-ion-1">
       <div className="max-w-xl rounded-2xl border border-red-900 bg-red-950/30 p-6">
         <h1 className="text-xl font-bold text-white">
           Something broke on my side.

@@ -20,8 +20,8 @@ export default async function CockpitAgentsPage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-white">Operator agents</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-bold text-ion-white">Operator agents</h1>
+        <p className="mt-1 text-sm text-ion-3">
           Six internal roles. Each ships drafts only; no external action runs
           without explicit human approval.
         </p>
@@ -32,29 +32,29 @@ export default async function CockpitAgentsPage() {
           <article
             key={agent.key}
             data-testid={`agent-card-${agent.key}`}
-            className="flex flex-col gap-3 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+            className="flex flex-col gap-3 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5"
           >
             <header className="flex items-start justify-between gap-3">
               <div>
-                <h2 className="text-lg font-bold text-white">{agent.displayName}</h2>
-                <p className="text-[10px] uppercase tracking-widest text-gray-600">
+                <h2 className="text-lg font-bold text-ion-white">{agent.displayName}</h2>
+                <p className="text-[10px] uppercase tracking-widest text-ion-3">
                   {agent.key}
                 </p>
               </div>
               <Link
                 href={`/cockpit/agents/${agent.key}`}
-                className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1 text-xs text-gray-200 hover:bg-gray-700"
+                className="rounded-lg border border-titanium/40 bg-obsidian/70 px-3 py-1 text-xs text-ion-1 hover:bg-titanium/40"
               >
                 Open queue
               </Link>
             </header>
 
-            <p className="text-sm leading-relaxed text-gray-400">{agent.responsibility}</p>
+            <p className="text-sm leading-relaxed text-ion-2">{agent.responsibility}</p>
 
             <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="rounded-lg bg-gray-800/60 py-2">
-                <p className="text-[10px] uppercase text-gray-500">Open</p>
-                <p className="text-base font-bold text-white">{countFor(agent.key)}</p>
+              <div className="rounded-lg bg-obsidian/70 py-2">
+                <p className="text-[10px] uppercase text-ion-3">Open</p>
+                <p className="text-base font-bold text-ion-white">{countFor(agent.key)}</p>
               </div>
               <div className="rounded-lg bg-yellow-900/20 py-2">
                 <p className="text-[10px] uppercase text-yellow-400">Review</p>
@@ -70,8 +70,8 @@ export default async function CockpitAgentsPage() {
               </div>
             </div>
 
-            <details className="text-xs text-gray-500">
-              <summary className="cursor-pointer text-gray-400">Safe actions</summary>
+            <details className="text-xs text-ion-3">
+              <summary className="cursor-pointer text-ion-2">Safe actions</summary>
               <ul className="mt-2 ml-4 list-disc space-y-1">
                 {agent.safeActions.map((s) => (
                   <li key={s}>{s}</li>

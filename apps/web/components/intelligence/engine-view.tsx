@@ -677,8 +677,8 @@ function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
   return (
     <div className="flex flex-col gap-4">
       <SubHead
-        kicker={`CLV self-grade${c.seasonTo ? ` · ${c.seasonFrom}–${c.seasonTo}` : ""} · ${c.gamesGraded} games graded`}
-        title="Did the model beat the close?"
+        kicker={`Illustrative CLV self-grade${c.seasonTo ? ` · ${c.seasonFrom}–${c.seasonTo}` : ""} · ${c.gamesGraded} games graded`}
+        title="Did the illustrative model beat the close?"
         note={c.note}
       />
       <DataTable

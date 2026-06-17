@@ -31,12 +31,12 @@ export default async function CockpitPromotionDetail({
         <p className="text-xs font-semibold uppercase tracking-widest text-brand-400">
           {promo.operatorName} · {promo.sportsbookKey}
         </p>
-        <h1 className="text-2xl font-bold text-white">{promo.headline}</h1>
-        <p className="mt-1 text-sm text-gray-400">{promo.offerSummary}</p>
+        <h1 className="text-2xl font-bold text-ion-white">{promo.headline}</h1>
+        <p className="mt-1 text-sm text-ion-2">{promo.offerSummary}</p>
       </header>
 
-      <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
+      <section className="rounded-xl border border-titanium/40 bg-eclipse/40 p-5">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Publish verdict
         </h2>
         <p className="text-sm">
@@ -47,12 +47,12 @@ export default async function CockpitPromotionDetail({
           )}
         </p>
         {verdict.blockers.length > 0 && (
-          <ul className="mt-3 space-y-1 text-xs text-gray-400">
+          <ul className="mt-3 space-y-1 text-xs text-ion-2">
             {verdict.blockers.map((b) => (
               <li key={b.code}>
                 <span className="font-semibold text-yellow-400">{b.code}</span>{" "}
                 — {b.message}{" "}
-                <span className="text-gray-600">
+                <span className="text-ion-3">
                   ({b.reviewable ? "reviewable" : "hard block"})
                 </span>
               </li>
@@ -98,17 +98,17 @@ export default async function CockpitPromotionDetail({
         />
       </section>
 
-      <section className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+      <section className="rounded-xl border border-titanium/40 bg-eclipse/40 p-5">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Disclosure copy
         </h2>
-        <p className="text-sm text-gray-300">
+        <p className="text-sm text-ion-1">
           {promo.disclosureText ?? "(missing)"}
         </p>
-        <h2 className="mt-4 mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+        <h2 className="mt-4 mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Responsible gaming copy
         </h2>
-        <p className="text-sm text-gray-300">
+        <p className="text-sm text-ion-1">
           {promo.responsibleGamingText ?? "(missing)"}
         </p>
       </section>
@@ -118,11 +118,11 @@ export default async function CockpitPromotionDetail({
 
 function Field({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900/40 p-3">
-      <p className="text-[10px] uppercase tracking-widest text-gray-500">
+    <div className="rounded-lg border border-titanium/40 bg-eclipse/40 p-3">
+      <p className="text-[10px] uppercase tracking-widest text-ion-3">
         {label}
       </p>
-      <p className="text-sm text-white">{value}</p>
+      <p className="text-sm text-ion-white">{value}</p>
     </div>
   );
 }

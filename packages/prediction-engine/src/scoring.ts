@@ -182,7 +182,15 @@ function assessIndependentEdge(
 // Compute consensus component score (0 to WEIGHTS.CONSENSUS_COMPONENT_MAX)
 // ============================================================
 
-function computeConsensusScore(consensusPct: number): {
+function computeConsensusScore(
+  consensusPct: number,
+  // Spread/total pass the SHARE OF BOOKS agreeing on the side. Moneyline passes
+  // the de-vigged WIN PROBABILITY (for a 2-outcome market the fair prob is the
+  // consensus signal) — so its factor text must say "win probability", not
+  // "bookmakers align", which would misread the number to the customer. The
+  // score math is identical either way; only the human-readable label changes.
+  metric: "book-agreement" | "win-probability" = "book-agreement",
+): {
   score: number;
   factor: FactorDetail;
 } {
@@ -194,12 +202,17 @@ function computeConsensusScore(consensusPct: number): {
   const impact: FactorDetail["impact"] =
     consensusPct >= WEIGHTS.CONSENSUS_MIN_PCT ? "positive" : "negative";
 
+  const description =
+    metric === "win-probability"
+      ? `Market implies a ${pctDisplay}% win probability for this side`
+      : `${pctDisplay}% of bookmakers align on this side`;
+
   return {
     score,
     factor: {
       name: "Bookmaker Consensus",
       impact,
-      description: `${pctDisplay}% of bookmakers align on this side`,
+      description,
       weight: score,
     },
   };
@@ -726,7 +739,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     ? h2hOdds.reduce((acc, o) => acc + o.homePrice!, 0) / h2hOdds.length
     : h2hOdds.reduce((acc, o) => acc + o.awayPrice!, 0) / h2hOdds.length;
 
-  const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct);
+  const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct, "win-probability");
   const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(h2hOdds.length);
   // Overround for the inconsistent-market guard in computeEdgeScore.
   const twoSidedImpliedSum = avgHomeImplied + avgAwayImplied;

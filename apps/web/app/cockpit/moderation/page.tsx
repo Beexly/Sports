@@ -94,7 +94,7 @@ function reportStatusClass(status: ModerationReportStatus): string {
       return "border-amber-500/40 bg-amber-500/10 text-amber-300";
     case "OPEN":
     default:
-      return "border-slate-500/40 bg-slate-500/10 text-slate-300";
+      return "border-titanium/50 bg-obsidian/40 text-ion-1";
   }
 }
 
@@ -112,7 +112,7 @@ function slaClass(deadline: Date): string {
   const hoursLeft = (deadline.getTime() - Date.now()) / 3_600_000;
   if (hoursLeft < 24) return "text-rose-400";
   if (hoursLeft < 72) return "text-amber-400";
-  return "text-gray-400";
+  return "text-ion-2";
 }
 
 // ── Page ─────────────────────────────────────────────────────────────────────
@@ -127,15 +127,15 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
       {/* Header */}
       <header className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-3">
-          <h1 className="text-2xl font-bold text-white">Moderation Queue</h1>
+          <h1 className="text-2xl font-bold text-ion-white">Moderation Queue</h1>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
+            className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-1 hover:bg-carbon/60"
           >
             Back to Cockpit
           </Link>
         </div>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-ion-2">
           Stage-2 community room moderation. Rooms are not live yet — the machinery is armed and
           waiting.
         </p>
@@ -151,18 +151,18 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
 
       {/* Open reports */}
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold text-gray-100">Open Reports</h2>
+        <h2 className="text-base font-semibold text-ion-white">Open Reports</h2>
         {dbUnavailable || reports === null ? (
           <p
             data-testid="reports-db-unavailable"
-            className="rounded-lg border border-gray-800 bg-gray-950/40 p-5 text-sm text-gray-500"
+            className="rounded-lg border border-titanium/40 bg-obsidian/50 p-5 text-sm text-ion-3"
           >
             No database connection — reports will appear here when rooms are live.
           </p>
         ) : reports.length === 0 ? (
           <p
             data-testid="reports-empty"
-            className="rounded-lg border border-gray-800 bg-gray-950/40 p-5 text-sm text-gray-500"
+            className="rounded-lg border border-titanium/40 bg-obsidian/50 p-5 text-sm text-ion-3"
           >
             No rooms are live; the machinery is armed. Reports will appear here once UGC surfaces
             open.
@@ -175,18 +175,18 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
             {reports.map((r) => (
               <li
                 key={r.id}
-                className="rounded-lg border border-gray-800 bg-gray-950/40 p-4"
+                className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-gray-500">
+                    <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ion-3">
                       <span>{r.surface.replace(/_/g, " ")}</span>
                       <span>{r.createdAt.toISOString().slice(0, 10)}</span>
                     </div>
-                    <p className="mt-1 text-sm font-medium text-gray-200">
+                    <p className="mt-1 text-sm font-medium text-ion-1">
                       {r.reason.replace(/_/g, " ")}
                     </p>
-                    <p className="mt-0.5 text-[11px] text-gray-500">
+                    <p className="mt-0.5 text-[11px] text-ion-3">
                       target: {r.targetUserId} · report id: {r.id.slice(0, 8)}…
                     </p>
                   </div>
@@ -204,22 +204,22 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
 
       {/* Appeal queue */}
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold text-gray-100">Appeal Queue</h2>
-        <p className="text-xs text-gray-500">
+        <h2 className="text-base font-semibold text-ion-white">Appeal Queue</h2>
+        <p className="text-xs text-ion-3">
           Only SUSPEND and BAN may be appealed. Each action may be appealed once. A different
           reviewer than the original actor must decide. Decision within 7 days.
         </p>
         {dbUnavailable || appeals === null ? (
           <p
             data-testid="appeals-db-unavailable"
-            className="rounded-lg border border-gray-800 bg-gray-950/40 p-5 text-sm text-gray-500"
+            className="rounded-lg border border-titanium/40 bg-obsidian/50 p-5 text-sm text-ion-3"
           >
             No database connection.
           </p>
         ) : appeals.length === 0 ? (
           <p
             data-testid="appeals-empty"
-            className="rounded-lg border border-gray-800 bg-gray-950/40 p-5 text-sm text-gray-500"
+            className="rounded-lg border border-titanium/40 bg-obsidian/50 p-5 text-sm text-ion-3"
           >
             No pending appeals.
           </p>
@@ -231,15 +231,15 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
             {appeals.map((a) => (
               <li
                 key={a.id}
-                className="rounded-lg border border-gray-800 bg-gray-950/40 p-4"
+                className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-gray-500">
+                    <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ion-3">
                       <span>{a.actionKind}</span>
                       <span>filed {a.createdAt.toISOString().slice(0, 10)}</span>
                     </div>
-                    <p className="mt-1 text-sm font-medium text-gray-200">
+                    <p className="mt-1 text-sm font-medium text-ion-1">
                       Appellant: {a.appellantId}
                     </p>
                     <p className={`mt-0.5 text-[11px] ${slaClass(a.slaDeadline)}`}>
@@ -260,15 +260,15 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
 
       {/* Action ladder reference */}
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold text-gray-100">Action Ladder Reference</h2>
-        <p className="text-xs text-gray-500">
+        <h2 className="text-base font-semibold text-ion-white">Action Ladder Reference</h2>
+        <p className="text-xs text-ion-3">
           Graduated actions from policy. Hate speech, threats, doxxing, and self-exclusion
           circumvention may jump straight to BAN. Every action requires actor + reason — this is
           law.
         </p>
         <ul
           data-testid="ladder-reference"
-          className="flex flex-col divide-y divide-gray-800 rounded-xl border border-gray-800"
+          className="flex flex-col divide-y divide-titanium/30 rounded-xl border border-titanium/40"
         >
           {LADDER_REFERENCE.map((entry) => (
             <li
@@ -276,10 +276,10 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
               className="flex flex-wrap items-start justify-between gap-3 px-4 py-3"
             >
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-gray-100">{entry.action}</p>
-                <p className="mt-0.5 text-xs text-gray-500">{entry.description}</p>
+                <p className="text-sm font-semibold text-ion-white">{entry.action}</p>
+                <p className="mt-0.5 text-xs text-ion-3">{entry.description}</p>
                 {entry.expiryLabel && (
-                  <p className="mt-0.5 text-[11px] text-gray-600">
+                  <p className="mt-0.5 text-[11px] text-ion-3">
                     Expires: {entry.expiryLabel}
                   </p>
                 )}

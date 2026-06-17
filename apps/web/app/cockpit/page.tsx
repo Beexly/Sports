@@ -6,6 +6,7 @@ import type { PublicPerformancePolicy } from "@/lib/performance/public-performan
 import {
   buildOwnerSummary,
   type OwnerSummary,
+  type OwnerStatusColor,
   type DepartmentSummary,
   type OwnerDecision,
   type PerformanceSummary,
@@ -15,6 +16,8 @@ import {
 import { AskJarvisPanel } from "@/components/cockpit/ask-jarvis-panel";
 import { CapabilitySystemMap } from "@/components/cockpit/capability-system-map";
 import { AgentCouncilPanel } from "@/components/cockpit/agent-council-panel";
+import { CockpitPulse } from "@/components/cockpit/cockpit-pulse";
+import { CockpitGreeting } from "@/components/cockpit/cockpit-greeting";
 import { buildLiveMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intelligence-state";
 import { buildLiveLedgerStatus } from "@/lib/jarvis/ledger-types";
 import { buildJarvisOperatingAssessment, type JarvisOperatingAssessment } from "@/lib/jarvis/jarvis-operating-assessment";
@@ -96,20 +99,24 @@ export default async function CockpitOverview() {
 
   return (
     <div className="relative flex flex-col gap-4 pb-8">
-      {/* Atmospheric backdrop */}
+      {/* Atmospheric backdrop — a slow ambient breath so the whole deck feels alive */}
       <div
         className="pointer-events-none absolute inset-x-0 -top-8 -z-10 h-80 overflow-hidden"
         aria-hidden="true"
       >
         <div className="absolute inset-0 bg-stadium-glow opacity-80" />
+        <div
+          className="absolute -top-16 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-orbital-cyan/10 blur-3xl animate-pulse"
+          style={{ animationDuration: "7s" }}
+        />
       </div>
 
       {/* ── MISSION CONTROL HEADER ─────────────────────────────────────── */}
       <header
         className={[
-          "relative overflow-hidden rounded-2xl border bg-carbon/90",
+          "relative overflow-hidden rounded-3xl border bg-carbon/90 shadow-2xl shadow-black/30",
           ownerSummary?.overallColor === "RED"
-            ? "border-red-900/60 shadow-glow-plasma"
+            ? "border-rose-900/60 shadow-glow-plasma"
             : ownerSummary?.overallColor === "GREEN"
               ? "border-accent-900/40"
               : "border-titanium/60",
@@ -156,74 +163,33 @@ export default async function CockpitOverview() {
 
           {ownerSummary ? (
             <>
-              {/* Posture + one-liner + gate bar */}
-              <div className="mb-5 flex flex-wrap items-start gap-6">
-                {/* Large status text */}
-                <div>
-                  <p className="mb-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-ion-3">
-                    Posture
-                  </p>
-                  <p
-                    data-testid="owner-status-pill"
-                    className={[
-                      "text-5xl font-black leading-none tracking-tighter",
-                      ownerSummary.overallColor === "GREEN"
-                        ? "text-accent-500"
-                        : ownerSummary.overallColor === "RED"
-                          ? "text-red-400"
-                          : "text-yellow-300",
-                    ].join(" ")}
-                  >
-                    {ownerSummary.overallColor}
-                  </p>
-                </div>
-
-                {/* One-liner + critical warning */}
+              {/* Greeting + posture medallion + current state */}
+              <div className="mb-6 flex flex-col gap-6 sm:flex-row sm:items-center">
+                <PostureMedallion
+                  color={ownerSummary.overallColor}
+                  open={assessment?.readinessGateSummary.openCount ?? 0}
+                  total={assessment?.readinessGateSummary.totalCount ?? 0}
+                />
                 <div className="min-w-0 flex-1">
-                  <p className="mb-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-ion-3">
-                    Current State
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ion-3">
+                    <CockpitGreeting /> · here&apos;s where things stand
                   </p>
-                  <p className="text-base font-medium leading-snug text-ion-white/90">
+                  <p className="mt-2 text-xl font-medium leading-snug text-ion-white/95 sm:text-2xl">
                     {ownerSummary.oneLiner}
                   </p>
                   {ownerSummary.criticalWarnings.length > 0 && (
-                    <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-red-300">
-                      <span className="h-1.5 w-1.5 flex-shrink-0 animate-live-pulse rounded-full bg-red-400" />
+                    <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-rose-300">
+                      <span className="h-1.5 w-1.5 flex-shrink-0 animate-live-pulse rounded-full bg-rose-400" />
                       {ownerSummary.criticalWarnings[0]}
                     </p>
                   )}
                 </div>
-
-                {/* Gate progress */}
-                {assessment && (() => {
-                  const ratio = assessment.readinessGateSummary.openCount / Math.max(assessment.readinessGateSummary.totalCount, 1);
-                  const barColor = ratio === 1 ? "bg-accent-500" : ratio >= 0.5 ? "bg-yellow-300" : "bg-red-400";
-                  return (
-                    <div className="min-w-[140px]">
-                      <p className="mb-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-ion-3">
-                        Readiness Gates
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-titanium/50">
-                          <div
-                            className={["h-full rounded-full transition-all", barColor].join(" ")}
-                            style={{ width: `${ratio * 100}%` }}
-                          />
-                        </div>
-                        <span className="font-mono text-[9px] tabular-nums text-ion-2">
-                          {assessment.readinessGateSummary.openCount}/
-                          {assessment.readinessGateSummary.totalCount}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })()}
               </div>
 
               {/* QuickStat strip */}
               <div
                 data-testid="owner-status-grid"
-                className="grid grid-cols-2 gap-x-4 gap-y-3 border-t border-titanium/30 pt-4 sm:grid-cols-4"
+                className="grid grid-cols-2 gap-3 border-t border-titanium/30 pt-5 sm:grid-cols-4"
               >
                 <QuickStat
                   label="Picks Today"
@@ -381,17 +347,17 @@ export default async function CockpitOverview() {
         {policy && (
           <section
             data-testid="cockpit-public-performance"
-            className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+            className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5"
           >
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
               Public performance policy
             </h2>
-            <p className="text-sm text-gray-300">{policy.publicMessage}</p>
-            <p className="mt-2 text-xs text-gray-500">
-              Operator: <span className="text-gray-300">{policy.operatorMessage}</span>
+            <p className="text-sm text-ion-1">{policy.publicMessage}</p>
+            <p className="mt-2 text-xs text-ion-3">
+              Operator: <span className="text-ion-1">{policy.operatorMessage}</span>
             </p>
             {policy.minimumRequirements.length > 0 && (
-              <ul className="mt-2 list-disc pl-5 text-xs text-gray-400">
+              <ul className="mt-2 list-disc pl-5 text-xs text-ion-2">
                 {policy.minimumRequirements.map((r: string, i: number) => (
                   <li key={i}>{r}</li>
                 ))}
@@ -402,11 +368,11 @@ export default async function CockpitOverview() {
 
         {/* Recommended actions */}
         {assessment && assessment.recommendedNextActions.length > 0 && (
-          <section className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+          <section className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
               Recommended next actions
             </h2>
-            <ol className="list-decimal space-y-1 pl-5 text-sm text-gray-200">
+            <ol className="list-decimal space-y-1 pl-5 text-sm text-ion-1">
               {assessment.recommendedNextActions.map((a: string, i: number) => (
                 <li key={i}>{a}</li>
               ))}
@@ -416,18 +382,18 @@ export default async function CockpitOverview() {
 
         {/* Phase matrix */}
         {assessment && (
-          <section className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+          <section className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
               Phase matrix
             </h2>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {assessment.phaseMatrix.map((p) => (
                 <div
                   key={p.key}
-                  className="rounded-lg border border-gray-800 bg-gray-950/60 px-3 py-2"
+                  className="rounded-lg border border-titanium/40 bg-obsidian/50 px-3 py-2"
                 >
-                  <p className="text-xs font-semibold text-gray-300">{p.label}</p>
-                  <p className="text-[10px] uppercase tracking-widest text-gray-600">
+                  <p className="text-xs font-semibold text-ion-1">{p.label}</p>
+                  <p className="text-[10px] uppercase tracking-widest text-ion-3">
                     {p.status}
                   </p>
                 </div>
@@ -437,11 +403,11 @@ export default async function CockpitOverview() {
         )}
 
         {/* Readiness gates */}
-        <section className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+        <section className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
             Readiness gates
           </h2>
-          <div className="grid grid-cols-2 gap-2 text-xs text-gray-300 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2 text-xs text-ion-1 sm:grid-cols-3">
             <GateRow label="canPersistCanonicalHistory" value={gates.canPersistCanonicalHistory} />
             <GateRow label="canUseDerivedHistory" value={gates.canUseDerivedHistory} />
             <GateRow label="canExposePublicPicks" value={gates.canExposePublicPicks} />
@@ -451,9 +417,9 @@ export default async function CockpitOverview() {
             <GateRow label="canLearnFromOutcomes" value={gates.canLearnFromOutcomes} />
             <GateRow label="isBootstrapMode" value={gates.isBootstrapMode} />
           </div>
-          <p className="mt-3 text-[11px] text-gray-600">
+          <p className="mt-3 text-[11px] text-ion-3">
             minSettledPicksForLearning ={" "}
-            <span className="text-gray-400">{gates.minSettledPicksForLearning}</span>
+            <span className="text-ion-2">{gates.minSettledPicksForLearning}</span>
           </p>
         </section>
 
@@ -461,10 +427,10 @@ export default async function CockpitOverview() {
         {todaysOperatorPicks.length > 0 && (
           <section
             data-testid="cockpit-today-picks-list"
-            className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-5"
+            className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5"
           >
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
                 Today&apos;s picks — operator surface
                 {demoActive && (
                   <span className="ml-2 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-yellow-300">
@@ -479,14 +445,14 @@ export default async function CockpitOverview() {
                 Full ledger →
               </Link>
             </div>
-            <ul className="divide-y divide-gray-800/60 text-sm">
+            <ul className="divide-y divide-titanium/30 text-sm">
               {todaysOperatorPicks.map((p) => (
                 <li
                   key={p.id}
                   className="flex flex-wrap items-center justify-between gap-3 py-2"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-gray-200">
+                    <p className="truncate font-medium text-ion-1">
                       {p.selection}
                       {p.isFeatured && (
                         <span className="ml-2 rounded bg-brand-900/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-brand-300">
@@ -494,19 +460,19 @@ export default async function CockpitOverview() {
                         </span>
                       )}
                     </p>
-                    <p className="truncate text-[11px] text-gray-500">
+                    <p className="truncate text-[11px] text-ion-3">
                       {p.game.awayTeamName} @ {p.game.homeTeamName} ·{" "}
                       {p.game.sport.name} ·{" "}
-                      <span className="text-gray-400">
+                      <span className="text-ion-2">
                         {p.pickGrade.replace("_", " ").toLowerCase()}
                       </span>{" "}
                       ·{" "}
-                      <span className="text-gray-400">
+                      <span className="text-ion-2">
                         {p.riskLevel.replace("_", " ").toLowerCase()}
                       </span>
                     </p>
                   </div>
-                  <span className="rounded bg-gray-800 px-2 py-0.5 font-mono text-xs text-gray-300">
+                  <span className="rounded bg-obsidian/70 px-2 py-0.5 font-mono text-xs text-ion-1">
                     {p.confidence}%
                   </span>
                 </li>
@@ -520,16 +486,16 @@ export default async function CockpitOverview() {
           <section
             data-testid="cockpit-slate-meta"
             aria-label="Today's slate breakdown by sport"
-            className="mb-4 rounded-2xl border border-gray-800 bg-gray-900/40 p-4"
+            className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-4"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <p className="text-xs font-semibold uppercase tracking-widest text-ion-3">
               Today&apos;s slate by sport
             </p>
-            <p className="mt-1 text-sm text-gray-300">
+            <p className="mt-1 text-sm text-ion-1">
               {slateBreakdown.map((b) => `${b.name} ${b.n}`).join("  ·  ")}
             </p>
             {featuredOperatorPicks.length > 0 && (
-              <p data-testid="featured-count" className="mt-2 text-[11px] text-gray-500">
+              <p data-testid="featured-count" className="mt-2 text-[11px] text-ion-3">
                 Featured today: {featuredOperatorPicks.length} —{" "}
                 {featuredOperatorPicks
                   .map((p) => p.selection.replace(/\s+[-+]?\d.*$/, ""))
@@ -544,7 +510,7 @@ export default async function CockpitOverview() {
       {assessment && (
         <p
           data-testid="cockpit-generated-at"
-          className="text-[10px] uppercase tracking-widest text-gray-600"
+          className="text-[10px] uppercase tracking-widest text-ion-3"
         >
           Jarvis {assessment.version} · confidence {assessment.confidenceLevel} · gates open{" "}
           {assessment.readinessGateSummary.openCount}/{assessment.readinessGateSummary.totalCount} ·
@@ -588,6 +554,9 @@ export default async function CockpitOverview() {
 
 // ─── Mission Control primitives ───────────────────────────────────────────────
 
+// Thin wrapper: the living "command deck" centerpiece now lives in CockpitPulse
+// (CSS-only motion, server-safe). Kept as a named seam so the call site and tests
+// (data-testid="jarvis-operating-runtime") stay stable.
 function OperatingRuntimeZone({
   assessment,
   agentReality,
@@ -595,93 +564,68 @@ function OperatingRuntimeZone({
   assessment: JarvisOperatingAssessment;
   agentReality: ReturnType<typeof summarizeAgentHealth>;
 }) {
-  return (
-    <section
-      data-testid="jarvis-operating-runtime"
-      className="rounded-2xl border border-titanium/50 bg-eclipse/70 p-5 shadow-inner shadow-black/20"
-    >
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">
-            Agent OS Runtime
-          </p>
-          <h2 className="mt-1 text-xl font-semibold text-ion-white">
-            {assessment.companyHealth === "CRITICAL"
-              ? "Critical blockers first"
-              : "Operating state"}
-          </h2>
-          <p className="mt-1 max-w-2xl text-sm text-ion-2">
-            Jarvis separates owner decisions, Claude review, safe internal work, and not-wired capacity.
-          </p>
-        </div>
-        <span className="rounded-full border border-red-500/30 bg-red-950/30 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-red-200">
-          {assessment.companyHealth}
-        </span>
-      </div>
-
-      <div className="grid gap-3 md:grid-cols-4">
-        <QuickStat label="Not Wired" value={String(agentReality.notWired)} sub="not capacity" accent="amber" />
-        <QuickStat label="Draft Only" value={String(agentReality.draftOnly)} sub="review-gated" />
-        <QuickStat label="Manual" value={String(agentReality.manual)} sub="human trigger" />
-        <QuickStat label="Operational" value={String(agentReality.operationalCapacity)} sub="real/partial" accent="amber" />
-      </div>
-
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
-        <RuntimeList title="Top risks" items={assessment.topRisks} empty="No critical runtime risks." tone="red" />
-        <RuntimeList title="Owner decisions" items={assessment.ownerDecisions} empty="No owner decisions queued." tone="amber" />
-        <RuntimeList title="Claude review" items={assessment.claudeReview} empty="No Claude review items queued." tone="cyan" />
-      </div>
-
-      <div className="mt-4 grid gap-3 text-xs text-ion-2 md:grid-cols-3">
-        <p>
-          <span className="font-semibold text-ion-white">Public gate:</span> {assessment.publicGateStatus}
-        </p>
-        <p>
-          <span className="font-semibold text-ion-white">Calibration:</span> {assessment.calibrationStatus}
-        </p>
-        <p>
-          <span className="font-semibold text-ion-white">Revenue:</span> {assessment.revenueStatus}
-        </p>
-        <p>
-          <span className="font-semibold text-ion-white">Memory:</span> {assessment.memoryStatus}
-        </p>
-        <p className="md:col-span-2">
-          <span className="font-semibold text-ion-white">Next:</span> {assessment.nextBestAction}
-        </p>
-      </div>
-    </section>
-  );
+  return <CockpitPulse assessment={assessment} agentReality={agentReality} />;
 }
 
-function RuntimeList({
-  title,
-  items,
-  empty,
-  tone,
+// Posture medallion — the header's living centerpiece. A gate-fill ring (SVG,
+// server-safe, no JS) colored by the honest operating posture: RED only on real
+// safety/data blockers, GREEN only when genuinely LAUNCH_READY, AMBER otherwise.
+function PostureMedallion({
+  color,
+  open,
+  total,
 }: {
-  title: string;
-  items: readonly string[];
-  empty: string;
-  tone: "red" | "amber" | "cyan";
+  color: OwnerStatusColor;
+  open: number;
+  total: number;
 }) {
-  const color =
-    tone === "red" ? "text-red-200" : tone === "amber" ? "text-yellow-200" : "text-accent-200";
+  const meta: Record<OwnerStatusColor, { label: string; hex: string; glow: string }> = {
+    GREEN: { label: "Ready", hex: "#34d399", glow: "rgba(52,211,153,0.30)" },
+    AMBER: { label: "Holding", hex: "#fbbf24", glow: "rgba(251,191,36,0.26)" },
+    RED: { label: "Blocked", hex: "#fb7185", glow: "rgba(251,113,133,0.30)" },
+  };
+  const m = meta[color];
+  const ratio = total > 0 ? Math.min(Math.max(open / total, 0), 1) : 0;
+  const R = 34;
+  const C = 2 * Math.PI * R;
+
   return (
-    <div className="rounded-xl border border-titanium/40 bg-obsidian/50 p-4">
-      <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">
-        {title}
-      </p>
-      {items.length > 0 ? (
-        <ul className="space-y-1 text-xs">
-          {items.map((item) => (
-            <li key={item} className={color}>
-              {item}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-xs text-ion-3">{empty}</p>
-      )}
+    <div className="relative flex h-28 w-28 shrink-0 items-center justify-center">
+      <div
+        aria-hidden
+        className="absolute h-24 w-24 rounded-full blur-2xl"
+        style={{ background: m.glow }}
+      />
+      <svg viewBox="0 0 80 80" className="h-28 w-28 -rotate-90" aria-hidden>
+        <circle cx="40" cy="40" r={R} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="5" />
+        <circle
+          cx="40"
+          cy="40"
+          r={R}
+          fill="none"
+          stroke={m.hex}
+          strokeWidth="5"
+          strokeLinecap="round"
+          strokeDasharray={C}
+          strokeDashoffset={C * (1 - ratio)}
+          style={{ transition: "stroke-dashoffset 600ms ease" }}
+        />
+      </svg>
+      <div className="absolute flex flex-col items-center">
+        <span
+          className="h-2 w-2 rounded-full animate-live-pulse"
+          style={{ background: m.hex, boxShadow: `0 0 12px ${m.hex}` }}
+        />
+        <span
+          data-testid="owner-status-pill"
+          className="mt-1.5 text-sm font-semibold text-ion-white"
+        >
+          {m.label}
+        </span>
+        <span className="font-mono text-[9px] tabular-nums text-ion-3">
+          {open}/{total} gates
+        </span>
+      </div>
     </div>
   );
 }
@@ -699,19 +643,19 @@ function QuickStat({
 }) {
   const valueClass =
     accent === "cyan"
-      ? "text-accent-500"
+      ? "text-accent-400"
       : accent === "amber"
-        ? "text-yellow-300"
+        ? "text-amber-300"
         : accent === "red"
-          ? "text-red-400"
+          ? "text-rose-300"
           : "text-ion-white";
   return (
-    <div className="flex flex-col gap-0.5">
-      <p className="font-mono text-[8px] uppercase tracking-widest text-ion-3">{label}</p>
-      <p className={["text-xl font-black tabular-nums leading-none", valueClass].join(" ")}>
+    <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4 transition-colors hover:border-titanium/70">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
+      <p className={["mt-1 font-mono text-2xl font-semibold tabular-nums", valueClass].join(" ")}>
         {value}
       </p>
-      <p className="text-[8px] text-ion-3">{sub}</p>
+      <p className="mt-0.5 text-[11px] text-ion-3">{sub}</p>
     </div>
   );
 }
@@ -754,7 +698,7 @@ function DecisionQueueZone({ decisions }: { decisions: readonly OwnerDecision[] 
           <li key={i} className="flex items-start gap-3">
             <span
               className={[
-                "mt-0.5 flex-shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest",
+                "mt-0.5 flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest",
                 d.urgency === "CRITICAL"
                   ? "bg-red-950/50 text-red-300"
                   : d.urgency === "HIGH"
@@ -790,10 +734,10 @@ function PicksDeskZone({
     >
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
             Where Are Our Picks?
           </h2>
-          <p className="mt-0.5 text-[9px] leading-relaxed text-ion-3">
+          <p className="mt-1 text-[11px] leading-relaxed text-ion-3">
             {picks.publicReadinessExplanation}
           </p>
         </div>
@@ -883,10 +827,10 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
     >
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ultraviolet">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ultraviolet">
             Performance Gate
           </h2>
-          <p className="mt-0.5 text-[9px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ion-3">
             Internal goal · Bootstrap + pending excluded
           </p>
         </div>
@@ -904,13 +848,13 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
 
       <div className="mb-4 grid grid-cols-2 gap-2">
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Target</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Target</p>
           <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ultraviolet">
             {performance.targetPct}%
           </p>
         </div>
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Win Rate</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Win Rate</p>
           <p
             className={[
               "mt-1 text-2xl font-bold tabular-nums leading-none",
@@ -923,14 +867,14 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
           </p>
         </div>
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Sample</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Sample</p>
           <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ion-white">
             {performance.canonicalSampleSize}
           </p>
-          <p className="text-[8px] text-ion-3">of {performance.minimumRequired} req.</p>
+          <p className="text-[10px] text-ion-3">of {performance.minimumRequired} req.</p>
         </div>
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">Gate</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Gate</p>
           <p
             className={[
               "mt-1 text-2xl font-bold leading-none",
@@ -939,7 +883,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
           >
             {performance.isGateOpen ? "ON" : "OFF"}
           </p>
-          <p className="text-[8px] text-ion-3">PERF_STATS_EN</p>
+          <p className="text-[10px] text-ion-3">PERF_STATS_EN</p>
         </div>
       </div>
 
@@ -961,7 +905,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
         </p>
       )}
 
-      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-0.5 text-[8px] text-ion-3">
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-ion-3">
         <span>Bootstrap: excluded</span>
         <span>Pending: excluded</span>
         {performance.smallSampleWarning && (
@@ -980,10 +924,10 @@ function DepartmentsZone({ departments }: { departments: readonly DepartmentSumm
     >
       <div className="flex items-center justify-between border-b border-titanium/30 px-5 py-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
             Agent Command Map
           </h2>
-          <p className="mt-0.5 text-[9px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ion-3">
             {departments.length} departments · All agents draft-only · No external actions without
             approval
           </p>
@@ -1016,7 +960,7 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
         {dept.name}
       </span>
       {dept.agentDisplayName && (
-        <span className="hidden w-16 flex-shrink-0 font-mono text-[8px] text-ion-3/60 sm:block">
+        <span className="hidden w-16 flex-shrink-0 font-mono text-[10px] text-ion-3/60 sm:block">
           {dept.agentDisplayName}
         </span>
       )}
@@ -1024,11 +968,11 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
         {dept.oneLiner}
       </span>
       {dept.actionRequired && (
-        <span className="flex-shrink-0 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest text-yellow-300">
+        <span className="flex-shrink-0 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">
           Action
         </span>
       )}
-      <span className="flex-shrink-0 font-mono text-[8px] uppercase tracking-widest text-ion-3/40">
+      <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-widest text-ion-3/40">
         {dept.agentMode.replace("_", " ").toLowerCase()}
       </span>
       {dept.drilldownHref && (
@@ -1058,10 +1002,10 @@ function AiOpsZone({ aiOps }: { aiOps: AiOpsSummary }) {
     >
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ultraviolet">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ultraviolet">
             AI Ops / Build Control
           </h2>
-          <p className="mt-0.5 text-[9px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ion-3">
             Claude API · ccusage · Model lane policy
           </p>
         </div>
@@ -1122,10 +1066,10 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
     >
       <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
             Jarvis Memory Protocol
           </h2>
-          <p className="mt-0.5 text-[9px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ion-3">
             Persistent memory · cross-session recall · episodic decisions
           </p>
         </div>
@@ -1162,7 +1106,7 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
             key={String(label)}
             className="rounded-lg border border-titanium/30 bg-obsidian/40 px-2 py-1.5 text-center"
           >
-            <p className="text-[8px] font-bold uppercase tracking-widest text-ion-3">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">
               {label}
             </p>
             <p className="font-mono text-[10px] text-ion-2">
@@ -1205,12 +1149,12 @@ function LaunchStatusBadge({ status }: { status: JarvisLaunchStatus }) {
     NOT_READY_DATA: "bg-orange-900/40 text-orange-300",
     NOT_READY_VALIDATION: "bg-red-900/40 text-red-300",
     NOT_READY_SAFETY: "bg-red-900/40 text-red-300",
-    UNKNOWN: "bg-gray-800 text-gray-400",
+    UNKNOWN: "bg-obsidian/70 text-ion-3",
   };
   return (
     <span
       className={[
-        "rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest",
+        "rounded-md px-2 py-0.5 text-xs font-bold uppercase tracking-widest",
         styles[status],
       ].join(" ")}
     >
@@ -1224,7 +1168,7 @@ function HealthTile({ label, health }: { label: string; health: JarvisHealth }) 
     GREEN: "border-green-900 bg-green-950/30 text-green-300",
     AMBER: "border-yellow-900 bg-yellow-950/30 text-yellow-300",
     RED: "border-red-900 bg-red-950/30 text-red-300",
-    UNKNOWN: "border-gray-800 bg-gray-900/40 text-gray-400",
+    UNKNOWN: "border-titanium/40 bg-eclipse/40 text-ion-2",
   };
   return (
     <div
@@ -1240,10 +1184,10 @@ function HealthTile({ label, health }: { label: string; health: JarvisHealth }) 
 
 function GateRow({ label, value }: { label: string; value: boolean }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-950/60 px-3 py-1.5">
+    <div className="flex items-center justify-between rounded-lg border border-titanium/40 bg-obsidian/50 px-3 py-1.5">
       <span className="font-mono">{label}</span>
       <span
-        className={value ? "font-bold text-green-400" : "text-gray-500"}
+        className={value ? "font-bold text-accent-400" : "text-ion-3"}
         aria-label={value ? "enabled" : "disabled"}
       >
         {value ? "ON" : "off"}

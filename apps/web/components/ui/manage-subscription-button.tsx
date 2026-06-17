@@ -33,7 +33,7 @@ export function ManageSubscriptionButton() {
         type="button"
         disabled={loading}
         onClick={handleClick}
-        className="w-full rounded-xl border border-gray-700 bg-gray-800 py-2.5 text-sm font-semibold text-gray-200 transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-xl border border-titanium bg-titanium py-2.5 text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? (
           <span className="flex items-center justify-center gap-2">

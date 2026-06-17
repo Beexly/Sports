@@ -163,3 +163,37 @@ describe("calculatePickResult — home/away symmetry", () => {
     });
   }
 });
+
+// ============================================================
+// Substring-collision regression: an away team whose name CONTAINS the home
+// team name (e.g. home "Jets" / away "Winnipeg Jets") must not be mis-settled
+// as a home pick. Side is derived with startsWith(homeTeam) — matching how
+// scoring builds the selection (`${chosenTeam} …`) and how clv-capture grades —
+// so the two can never disagree. (Regression for the `.includes` bug.)
+// ============================================================
+
+describe("calculatePickResult — away name contains home name (no mis-settle)", () => {
+  const HOME = "Jets"; // NHL: home NY Jets-style short name, away "Winnipeg Jets"
+  const AWAY_SEL_ML = "Winnipeg Jets ML (-120)";
+  const AWAY_SEL_SPREAD = "Winnipeg Jets -1.5";
+  const HOME_SEL_ML = "Jets ML (+105)";
+
+  it("away ML pick wins when the away team (whose name contains 'Jets') wins", () => {
+    // away scored more → away won; away pick → WIN. With `.includes` this was a LOSS.
+    expect(calculatePickResult("MONEYLINE", AWAY_SEL_ML, 0, HOME, 2, 4, "icehockey_nhl")).toBe("WIN");
+  });
+
+  it("away ML pick loses when the away team loses", () => {
+    expect(calculatePickResult("MONEYLINE", AWAY_SEL_ML, 0, HOME, 4, 2, "icehockey_nhl")).toBe("LOSS");
+  });
+
+  it("home ML pick still settles correctly in the same matchup", () => {
+    expect(calculatePickResult("MONEYLINE", HOME_SEL_ML, 0, HOME, 4, 2, "icehockey_nhl")).toBe("WIN");
+  });
+
+  it("away SPREAD pick (away -1.5, home line +1.5) loses when away wins by only 1", () => {
+    // home line = +1.5; homeMargin = -1; homeCoverMargin = -1 + 1.5 = 0.5 > 0 → home covered
+    // away pick → !homeCovered → LOSS. With `.includes` this flipped to WIN.
+    expect(calculatePickResult("SPREAD", AWAY_SEL_SPREAD, 1.5, HOME, 2, 3, "icehockey_nhl")).toBe("LOSS");
+  });
+});

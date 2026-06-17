@@ -164,7 +164,7 @@ function sensitivityClass(s: string): string {
     case "spend":
       return "bg-rose-900/30 text-rose-300";
     default:
-      return "bg-gray-800 text-gray-400";
+      return "bg-obsidian/70 text-ion-2";
   }
 }
 
@@ -179,7 +179,7 @@ function stateClass(state: string): string {
     case "stale":
       return "border-amber-500/40 bg-amber-500/10 text-amber-300";
     default:
-      return "border-gray-500/40 bg-gray-500/10 text-gray-300";
+      return "border-titanium/50 bg-obsidian/40 text-ion-1";
   }
 }
 
@@ -193,11 +193,11 @@ function MemoryCard({
   showActions: boolean;
 }) {
   return (
-    <li className="rounded-lg border border-gray-800 bg-gray-950/40 p-4">
+    <li className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           {/* Meta line */}
-          <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-gray-500">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ion-3">
             <span>{row.memory_type.replace(/_/g, " ")}</span>
             <span>·</span>
             <span>{row.scope}</span>
@@ -206,13 +206,13 @@ function MemoryCard({
           </div>
 
           {/* Title */}
-          <p className="mt-1 text-sm font-semibold text-gray-100">{row.title}</p>
+          <p className="mt-1 text-sm font-semibold text-ion-white">{row.title}</p>
 
           {/* Summary */}
-          <p className="mt-0.5 text-xs text-gray-400">{row.summary}</p>
+          <p className="mt-0.5 text-xs text-ion-2">{row.summary}</p>
 
           {/* Source */}
-          <p className="mt-1 text-[11px] text-gray-500">
+          <p className="mt-1 text-[11px] text-ion-3">
             Source: {row.source_type}
             {row.source_ref ? ` — ${row.source_ref}` : " — no source ref"}
           </p>
@@ -230,7 +230,7 @@ function MemoryCard({
             {row.tags.slice(0, 4).map((t) => (
               <span
                 key={t}
-                className="rounded bg-gray-800 px-1.5 py-0.5 text-[10px] text-gray-400"
+                className="rounded bg-obsidian/70 px-1.5 py-0.5 text-[10px] text-ion-2"
               >
                 {t}
               </span>
@@ -290,15 +290,15 @@ export default async function CockpitMemoryPage(): Promise<JSX.Element> {
       {/* Header */}
       <header className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-3">
-          <h1 className="text-2xl font-bold text-white">Memory Review Queue</h1>
+          <h1 className="text-2xl font-bold text-ion-white">Memory Review Queue</h1>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-900/60"
+            className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-1 hover:bg-carbon/60"
           >
             Back to Cockpit
           </Link>
         </div>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-ion-2">
           Review candidate memories, resolve conflicts, and maintain memory hygiene. Only confirmed
           memories are recalled by Jarvis — candidates are never treated as facts.
         </p>
@@ -314,22 +314,22 @@ export default async function CockpitMemoryPage(): Promise<JSX.Element> {
 
       {/* Review queue — candidates */}
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold text-gray-100">Candidates Awaiting Approval</h2>
-        <p className="text-xs text-gray-500">
+        <h2 className="text-base font-semibold text-ion-white">Candidates Awaiting Approval</h2>
+        <p className="text-xs text-ion-3">
           Each candidate was proposed by Jarvis or an agent. Confirm to promote it to the memory
           store; reject to discard it. Sensitive types require owner approval before confirmation.
         </p>
         {dbUnavailable || candidates === null ? (
           <p
             data-testid="candidates-db-unavailable"
-            className="rounded-lg border border-gray-800 bg-gray-950/40 p-5 text-sm text-gray-500"
+            className="rounded-lg border border-titanium/40 bg-obsidian/50 p-5 text-sm text-ion-3"
           >
             No database connection — candidates will appear here when the memory store is wired.
           </p>
         ) : candidates.length === 0 ? (
           <p
             data-testid="candidates-empty"
-            className="rounded-lg border border-gray-800 bg-gray-950/40 p-5 text-sm text-gray-500"
+            className="rounded-lg border border-titanium/40 bg-obsidian/50 p-5 text-sm text-ion-3"
           >
             No candidates awaiting approval.
           </p>
@@ -351,22 +351,22 @@ export default async function CockpitMemoryPage(): Promise<JSX.Element> {
 
       {/* Conflicts section */}
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold text-gray-100">Conflicts</h2>
-        <p className="text-xs text-gray-500">
+        <h2 className="text-base font-semibold text-ion-white">Conflicts</h2>
+        <p className="text-xs text-ion-3">
           A conflicted memory contradicts a confirmed one. Both are shown. Owner resolution is
           required — conflicts are never silently overwritten.
         </p>
         {dbUnavailable || conflicts === null ? (
           <p
             data-testid="conflicts-db-unavailable"
-            className="rounded-lg border border-gray-800 bg-gray-950/40 p-5 text-sm text-gray-500"
+            className="rounded-lg border border-titanium/40 bg-obsidian/50 p-5 text-sm text-ion-3"
           >
             No database connection.
           </p>
         ) : conflicts.length === 0 ? (
           <p
             data-testid="conflicts-empty"
-            className="rounded-lg border border-gray-800 bg-gray-950/40 p-5 text-sm text-gray-500"
+            className="rounded-lg border border-titanium/40 bg-obsidian/50 p-5 text-sm text-ion-3"
           >
             No conflicted memories.
           </p>
@@ -388,26 +388,26 @@ export default async function CockpitMemoryPage(): Promise<JSX.Element> {
 
       {/* Hygiene section */}
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold text-gray-100">Memory Hygiene</h2>
-        <p className="text-xs text-gray-500">
+        <h2 className="text-base font-semibold text-ion-white">Memory Hygiene</h2>
+        <p className="text-xs text-ion-3">
           Memories that may need attention: stale (unused 90+ days), low confidence (&lt;50%),
           missing source references.
         </p>
 
         {/* Stale */}
         <div>
-          <h3 className="mb-2 text-sm font-medium text-gray-300">Stale (unused 90+ days)</h3>
+          <h3 className="mb-2 text-sm font-medium text-ion-1">Stale (unused 90+ days)</h3>
           {dbUnavailable || hygiene.stale === null ? (
             <p
               data-testid="stale-db-unavailable"
-              className="rounded-lg border border-gray-800 bg-gray-950/40 p-4 text-sm text-gray-500"
+              className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4 text-sm text-ion-3"
             >
               No database connection.
             </p>
           ) : hygiene.stale.length === 0 ? (
             <p
               data-testid="stale-empty"
-              className="rounded-lg border border-gray-800 bg-gray-950/40 p-4 text-sm text-gray-500"
+              className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4 text-sm text-ion-3"
             >
               No stale memories.
             </p>
@@ -426,18 +426,18 @@ export default async function CockpitMemoryPage(): Promise<JSX.Element> {
 
         {/* Low confidence */}
         <div>
-          <h3 className="mb-2 text-sm font-medium text-gray-300">Low Confidence (&lt;50%)</h3>
+          <h3 className="mb-2 text-sm font-medium text-ion-1">Low Confidence (&lt;50%)</h3>
           {dbUnavailable || hygiene.lowConfidence === null ? (
             <p
               data-testid="low-confidence-db-unavailable"
-              className="rounded-lg border border-gray-800 bg-gray-950/40 p-4 text-sm text-gray-500"
+              className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4 text-sm text-ion-3"
             >
               No database connection.
             </p>
           ) : hygiene.lowConfidence.length === 0 ? (
             <p
               data-testid="low-confidence-empty"
-              className="rounded-lg border border-gray-800 bg-gray-950/40 p-4 text-sm text-gray-500"
+              className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4 text-sm text-ion-3"
             >
               No low-confidence candidates.
             </p>
@@ -456,18 +456,18 @@ export default async function CockpitMemoryPage(): Promise<JSX.Element> {
 
         {/* Missing source refs */}
         <div>
-          <h3 className="mb-2 text-sm font-medium text-gray-300">Missing Source References</h3>
+          <h3 className="mb-2 text-sm font-medium text-ion-1">Missing Source References</h3>
           {dbUnavailable || hygiene.missingSource === null ? (
             <p
               data-testid="missing-source-db-unavailable"
-              className="rounded-lg border border-gray-800 bg-gray-950/40 p-4 text-sm text-gray-500"
+              className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4 text-sm text-ion-3"
             >
               No database connection.
             </p>
           ) : hygiene.missingSource.length === 0 ? (
             <p
               data-testid="missing-source-empty"
-              className="rounded-lg border border-gray-800 bg-gray-950/40 p-4 text-sm text-gray-500"
+              className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4 text-sm text-ion-3"
             >
               No candidates with missing source references.
             </p>

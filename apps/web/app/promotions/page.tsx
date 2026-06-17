@@ -46,7 +46,7 @@ export default async function PromotionsPage({
   const promotions = payload.data;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Nav />
 
       <main className="flex-1">
@@ -58,7 +58,7 @@ export default async function PromotionsPage({
             <h1 className="text-3xl font-bold text-white sm:text-4xl">
               Vetted sportsbook promotions.
             </h1>
-            <p className="mt-3 text-sm text-gray-400">
+            <p className="mt-3 text-sm text-ion-2">
               A directory of sportsbook offers reviewed for transparency and
               basic eligibility coverage. Listings here aren&apos;t an
               endorsement of any operator. Terms and conditions apply at the
@@ -70,11 +70,11 @@ export default async function PromotionsPage({
           <form
             action="/promotions"
             method="GET"
-            className="mb-8 flex flex-col gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-5 sm:flex-row sm:items-end"
+            className="mb-8 flex flex-col gap-3 rounded-xl border border-titanium bg-carbon/40 p-5 sm:flex-row sm:items-end"
           >
             <label
               htmlFor="state"
-              className="flex flex-col gap-1 text-xs uppercase tracking-widest text-gray-500"
+              className="flex flex-col gap-1 text-xs uppercase tracking-widest text-ion-3"
             >
               <span>Your state</span>
               <input
@@ -84,7 +84,7 @@ export default async function PromotionsPage({
                 defaultValue={state ?? ""}
                 maxLength={2}
                 placeholder="e.g. NJ"
-                className="rounded-md border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-white placeholder-gray-600 focus:border-brand-500 focus:outline-none"
+                className="rounded-md border border-titanium bg-obsidian px-3 py-2 text-sm text-ion-white placeholder-ion-3 focus:border-brand-500 focus:outline-none"
               />
             </label>
             <button
@@ -96,7 +96,7 @@ export default async function PromotionsPage({
             {state && (
               <a
                 href="/promotions"
-                className="text-xs text-gray-500 underline-offset-2 hover:text-gray-300 hover:underline"
+                className="text-xs text-ion-3 underline-offset-2 hover:text-ion-1 hover:underline"
               >
                 Clear state
               </a>
@@ -121,7 +121,7 @@ export default async function PromotionsPage({
           <div className="mt-10 space-y-4">
             <p
               data-testid="promotions-notice"
-              className="rounded-lg border border-gray-800 bg-gray-900/40 p-4 text-xs leading-relaxed text-gray-400"
+              className="rounded-lg border border-titanium bg-carbon/40 p-4 text-xs leading-relaxed text-ion-2"
             >
               {PUBLIC_PROMOTIONS_NOTICE}
             </p>
@@ -139,37 +139,37 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
   return (
     <article
       data-testid="promotion-card"
-      className="flex h-full flex-col gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-5"
+      className="flex h-full flex-col gap-3 rounded-xl border border-titanium bg-carbon/40 p-5"
     >
       <header className="flex items-center justify-between">
         <span className="rounded bg-brand-900/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-brand-300">
           {promo.offerCategory.replaceAll("_", " ")}
         </span>
-        <span className="text-[10px] uppercase tracking-widest text-gray-600">
+        <span className="text-[10px] uppercase tracking-widest text-ion-3">
           {promo.sportsbookKey}
         </span>
       </header>
       <h2 className="text-base font-semibold text-white">{promo.headline}</h2>
-      <p className="text-sm text-gray-400">{promo.offerSummary}</p>
+      <p className="text-sm text-ion-2">{promo.offerSummary}</p>
 
-      <dl className="grid grid-cols-2 gap-2 text-[11px] text-gray-500">
+      <dl className="grid grid-cols-2 gap-2 text-[11px] text-ion-3">
         <div>
           <dt className="uppercase tracking-widest">Operator</dt>
-          <dd className="text-gray-300">{promo.operatorName}</dd>
+          <dd className="text-ion-1">{promo.operatorName}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-widest">Min age</dt>
-          <dd className="text-gray-300">{promo.minimumAge}+</dd>
+          <dd className="text-ion-1">{promo.minimumAge}+</dd>
         </div>
         {promo.promoCode && (
           <div className="col-span-2">
             <dt className="uppercase tracking-widest">Promo code</dt>
-            <dd className="text-gray-300">{promo.promoCode}</dd>
+            <dd className="text-ion-1">{promo.promoCode}</dd>
           </div>
         )}
         <div className="col-span-2">
           <dt className="uppercase tracking-widest">Eligible states</dt>
-          <dd className="text-gray-300">
+          <dd className="text-ion-1">
             {promo.eligibleStates.length > 0
               ? promo.eligibleStates.join(", ")
               : "Not specified"}
@@ -177,7 +177,7 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
         </div>
       </dl>
 
-      <div className="mt-auto flex flex-col gap-2 border-t border-gray-800 pt-3">
+      <div className="mt-auto flex flex-col gap-2 border-t border-titanium pt-3">
         <a
           href={promo.termsUrl}
           target="_blank"
@@ -198,13 +198,13 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
         )}
         <p
           data-testid="promotion-disclosure"
-          className="text-[10px] leading-snug text-gray-500"
+          className="text-[10px] leading-snug text-ion-3"
         >
           {promo.disclosureText}
         </p>
         <p
           data-testid="promotion-rg"
-          className="text-[10px] leading-snug text-gray-500"
+          className="text-[10px] leading-snug text-ion-3"
         >
           {promo.responsibleGamingText}
         </p>
@@ -217,17 +217,17 @@ function PromotionsEmptyState({ state }: { state: string | null }) {
   return (
     <div
       data-testid="promotions-empty"
-      className="rounded-xl border border-gray-800 bg-gray-900/40 p-8 text-center"
+      className="rounded-xl border border-titanium bg-carbon/40 p-8 text-center"
     >
       <h2 className="text-base font-semibold text-white">
         No promotions available right now
       </h2>
-      <p className="mt-2 text-sm text-gray-400">
+      <p className="mt-2 text-sm text-ion-2">
         {state
           ? `We do not have any reviewed promotions cleared for ${state} at the moment.`
           : "We do not have any reviewed promotions cleared for public display at the moment."}
       </p>
-      <p className="mt-3 text-xs text-gray-500">
+      <p className="mt-3 text-xs text-ion-3">
         Listings here only appear after a manual compliance review. We never
         surface promotions without operator terms, disclosure, or eligibility
         evidence.
