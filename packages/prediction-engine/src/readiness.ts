@@ -93,11 +93,14 @@ export interface ReadinessGates {
   readonly canLearnFromOutcomes: boolean;
 
   /**
-   * Always false — confidence weight adjustments require explicit human review
-   * and a deliberate model version bump, not automatic activation.
-   * This constant gate makes the calibration boundary explicit and auditable.
+   * When true: the isotonic calibrator (calibration-apply.ts) is active and
+   * confidence scores are mapped to calibrated win probabilities.
+   *
+   * Defaults to false via CALIBRATION_ADJUSTMENTS_ENABLED env var.
+   * Activation requires completing the audited MODEL_VERSION sequence in
+   * docs/path-to-70.md §7 — never set this without that audit trail.
    */
-  readonly canApplyCalibrationAdjustments: false;
+  readonly canApplyCalibrationAdjustments: boolean;
 
   /** Minimum settled canonical picks needed for learning data to be meaningful. */
   readonly minSettledPicksForLearning: number;
@@ -121,7 +124,7 @@ export function getReadinessGates(): ReadinessGates {
     confidenceDisplayMode:           config.confidenceDisplayMode,
     minDataQualityForGameLog:        config.minDataQualityForGameLog,
     canLearnFromOutcomes:            config.outcomeLearningEnabled,
-    canApplyCalibrationAdjustments:  false,
+    canApplyCalibrationAdjustments:  config.calibrationAdjustmentsEnabled,
     minSettledPicksForLearning:      config.minSettledPicksForLearning,
     config,
   };

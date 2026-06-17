@@ -4,7 +4,7 @@
  * The platform's thesis is "calibrated, not just confident." Today `confidence`
  * is a 0–100 heuristic, not a win probability. Turning it into a calibrated
  * probability is a deliberate, human-gated MODEL_VERSION change (readiness.ts:
- * canApplyCalibrationAdjustments is a hardcoded false). This module provides the
+ * canApplyCalibrationAdjustments, default false via CALIBRATION_ADJUSTMENTS_ENABLED). This module provides the
  * standard, well-established math that work will need, built and unit-tested in
  * advance — exactly like kelly.ts / poisson.ts ("exported for future model work").
  *

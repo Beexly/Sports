@@ -164,7 +164,7 @@ export async function loadJarvisAssessment(): Promise<{
       canExposePerformanceStats: gates.canExposePerformanceStats,
       canPublishContent: gates.canPublishContent,
       canLearnFromOutcomes: gates.canLearnFromOutcomes,
-      canApplyCalibrationAdjustments: false,
+      canApplyCalibrationAdjustments: gates.canApplyCalibrationAdjustments,
       isBootstrapMode: gates.isBootstrapMode,
       minSettledPicksForLearning: gates.minSettledPicksForLearning,
     },

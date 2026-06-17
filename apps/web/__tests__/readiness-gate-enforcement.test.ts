@@ -61,12 +61,14 @@ describe("Readiness gate enforcement at the engine boundary", () => {
     expect(src).toMatch(/canExposePerformanceStats/);
   });
 
-  it("readiness module pins canApplyCalibrationAdjustments to literal false", () => {
-    const src = read("packages/prediction-engine/src/readiness.ts");
-    // Trust invariant: auto-calibration is never on by env flag — it
-    // requires a deliberate source change. The TypeScript type narrows
-    // this to `false`.
-    expect(src).toMatch(/canApplyCalibrationAdjustments\s*:\s*false/);
+  it("canApplyCalibrationAdjustments routes through CALIBRATION_ADJUSTMENTS_ENABLED env gate (default false)", () => {
+    const readinessSrc = read("packages/prediction-engine/src/readiness.ts");
+    const configSrc = read("packages/prediction-engine/src/platform-config.ts");
+    // Gate is env-configurable but defaults to false — activation still
+    // requires the audited MODEL_VERSION sequence in docs/path-to-70.md §7.
+    expect(readinessSrc).toMatch(/canApplyCalibrationAdjustments\s*:\s*config\.calibrationAdjustmentsEnabled/);
+    expect(configSrc).toMatch(/CALIBRATION_ADJUSTMENTS_ENABLED/);
+    expect(configSrc).toMatch(/calibrationAdjustmentsEnabled.*false/);
   });
 
   it("bootstrapGateResponse helper is exported with the right shape", () => {

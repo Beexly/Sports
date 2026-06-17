@@ -111,6 +111,23 @@ export interface PlatformConfig {
    * Default: 100
    */
   minSettledPicksForLearning: number;
+
+  /**
+   * CALIBRATION_ADJUSTMENTS_ENABLED
+   * When true: the isotonic/PAVA calibrator in calibration-apply.ts is wired
+   * into the conviction tier and the public reliability diagram. Confidence
+   * scores become calibrated win probabilities.
+   *
+   * This MUST NOT be set without first completing the audited MODEL_VERSION
+   * activation sequence in docs/path-to-70.md §7:
+   *   1. ≥100 learning-eligible settled picks
+   *   2. Held-out validation confirms calibratedEce ≤ rawEce out-of-sample
+   *   3. MODEL_VERSION bump + CalibrationProposal audit-trail entry
+   *   4. Then set this flag to true
+   *
+   * Default: false (safe — identity passthrough until explicitly activated)
+   */
+  calibrationAdjustmentsEnabled: boolean;
 }
 
 function parseBool(val: string | undefined, defaultVal: boolean): boolean {
@@ -139,7 +156,8 @@ export function getPlatformConfig(): PlatformConfig {
     confidenceDisplayMode:        parseConfidenceMode(process.env["CONFIDENCE_DISPLAY_MODE"]),
     featuredPickPromotionEnabled: parseBool(process.env["FEATURED_PICK_PROMOTION_ENABLED"], false),
     minDataQualityForGameLog:     parseIntSafe(process.env["MIN_DATA_QUALITY_FOR_GAME_LOG"], 40),
-    outcomeLearningEnabled:       parseBool(process.env["OUTCOME_LEARNING_ENABLED"],        false),
-    minSettledPicksForLearning:   parseIntSafe(process.env["MIN_SETTLED_PICKS_FOR_LEARNING"], 100),
+    outcomeLearningEnabled:           parseBool(process.env["OUTCOME_LEARNING_ENABLED"],           false),
+    minSettledPicksForLearning:       parseIntSafe(process.env["MIN_SETTLED_PICKS_FOR_LEARNING"], 100),
+    calibrationAdjustmentsEnabled:    parseBool(process.env["CALIBRATION_ADJUSTMENTS_ENABLED"],    false),
   };
 }

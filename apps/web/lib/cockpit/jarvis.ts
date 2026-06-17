@@ -49,7 +49,7 @@ export interface JarvisReadinessGates {
   readonly canExposePerformanceStats: boolean;
   readonly canPublishContent: boolean;
   readonly canLearnFromOutcomes: boolean;
-  readonly canApplyCalibrationAdjustments: false;
+  readonly canApplyCalibrationAdjustments: boolean;
   readonly isBootstrapMode: boolean;
   readonly minSettledPicksForLearning: number;
 }

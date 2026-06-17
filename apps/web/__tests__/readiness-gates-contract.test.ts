@@ -43,10 +43,11 @@ describe("ReadinessGates contract", () => {
     });
   }
 
-  it("canApplyCalibrationAdjustments is typed as the literal false", () => {
-    // The synthesizer + readiness module both pin this. The literal
-    // false type guarantees auto-calibration cannot turn on via env.
-    expect(src).toMatch(/canApplyCalibrationAdjustments\s*:\s*false/);
+  it("canApplyCalibrationAdjustments is declared and wired to the env-configurable gate", () => {
+    // Gate is now env-driven (CALIBRATION_ADJUSTMENTS_ENABLED, default false).
+    // Activation still requires the audited MODEL_VERSION sequence.
+    expect(src).toContain("canApplyCalibrationAdjustments");
+    expect(src).toMatch(/calibrationAdjustmentsEnabled/);
   });
 
   it("getReadinessGates() returns the canonical shape", () => {
