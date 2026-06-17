@@ -136,13 +136,59 @@ Redeploy. Both tools load only in production (env gate).
 
 ---
 
+---
+
+## F. Security env vars — must set in Vercel before launch
+
+🔧 **F1 — CRON_SECRET** (cron endpoints return 500 without this).
+All `/api/cron/*` routes validate `Authorization: Bearer <CRON_SECRET>`. Without it they
+return `{"error":"CRON_SECRET not configured"}` (500). Vercel invokes them with this secret
+automatically once it's set.
+
+```bash
+vercel env add CRON_SECRET production
+# paste: <generate with: openssl rand -hex 32>
+```
+
+🔧 **F2 — ADMIN_EMAILS** (cockpit operator access).
+Comma-separated list of owner email addresses elevated to ADMIN at session time. Without it,
+cockpit access relies on DB role alone — a manual DB write is required for each admin user.
+With it, anyone on the list who signs in gets ADMIN automatically.
+
+```bash
+vercel env add ADMIN_EMAILS production
+# paste: baxley.garrett@gmail.com
+# (add more: baxley.garrett@gmail.com,other@example.com)
+```
+
+✅ **F3 — Open redirect in `/auth/signin` fixed** (shipped in commit `628ea04d`).
+`callbackUrl` is now sanitised via `safeCallbackUrl()` — rejects absolute URLs and
+protocol-relative URLs (`//evil.com`), accepts only same-origin relative paths (`/dashboard`).
+No action needed.
+
+✅ **F4 — `/cockpit` added to middleware `PROTECTED_ROUTES`** (shipped in commit `628ea04d`).
+Unauthenticated visitors are now redirected to `/auth/signin?callbackUrl=/cockpit` at the
+middleware layer. No action needed.
+
+🔧 **F5 — Rotate the Groq API key**.
+A previous commit briefly contained the Groq API key before it was force-pushed out of history.
+If that key was ever in a public or shared remote, rotate it at https://console.groq.com → API Keys.
+Then update `INTERNAL_LLM_API_KEY` in Vercel.
+
+---
+
 ### Quick status board
 | # | Item | Code | Needs you |
 |---|------|------|-----------|
-| 0 | Push 2 unpushed commits (A1+A2, B1+C1) | ✅ committed | `git push origin claude/happy-euler-trkihe` |
+| 0 | Push 2 unpushed commits (A1+A2, B1+C1) | ✅ pushed | nothing |
 | A1 | Groq env vars in Vercel | ✅ internal-llm.ts wired | 3× `vercel env add` commands (see above) |
 | A2 | Model-router haiku flips | ✅ committed | nothing |
 | B1 | FPL terms → EPL adapter | ✅ gated (permission_required) | email PL or buy football-data.org plan |
-| C1 | `/preview` pages + sitemap | ✅ committed | push (item 0) |
+| C1 | `/preview` pages + sitemap | ✅ committed | nothing |
 | D1 | Oracle VPS | ✅ Dockerfiles + deploy.sh | signup + DNS + `bash deploy.sh` |
 | E1 | Analytics snippet | ✅ layout.tsx wired | CF + Clarity signups → 3× `vercel env add` |
+| F1 | CRON_SECRET in Vercel | ✅ all cron routes gate on it | `vercel env add CRON_SECRET production` |
+| F2 | ADMIN_EMAILS in Vercel | ✅ auth.ts elevates on it | `vercel env add ADMIN_EMAILS production` |
+| F3 | Open redirect fix | ✅ shipped `628ea04d` | nothing |
+| F4 | /cockpit middleware gate | ✅ shipped `628ea04d` | nothing |
+| F5 | Rotate Groq key | n/a | rotate at console.groq.com if key was ever public |
