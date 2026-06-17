@@ -68,6 +68,20 @@ export type {
   AnchorAgreement,
   EdgeAssessment,
 } from "./edge-engine.js";
+// Conviction tier — the honest "70% tier" selector (additive, gated off; see
+// docs/path-to-70.md). Classifies a pick on calibrated P + edge + CLV history.
+export {
+  convictionTier,
+  summarizeConviction,
+  BREAK_EVEN_PROBABILITY,
+  CONVICTION_MIN_PROBABILITY,
+  CONVICTION_MIN_CLV_BEAT_RATE,
+} from "./conviction-tier.js";
+export type {
+  ConvictionTier,
+  ConvictionInput,
+  ConvictionResult,
+} from "./conviction-tier.js";
 export * from "./constants.js";
 export * from "./trend-discovery.js";
 export { getPlatformConfig } from "./platform-config.js";
