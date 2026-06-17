@@ -54,7 +54,7 @@ See **G below** to ship these changes to production.
 
 ## D. $0 infra on Oracle Cloud (#4 — fully turnkey now)
 
-🔧 **D1 — Create the Oracle Always-Free VPS + run deploy.sh.**
+✅ **D1 — Oracle Always-Free VPS created and running (confirmed 2026-06-16).**
 
 Worker Dockerfiles + `deploy.sh` are now shipped. The stack is genuinely one-command-ready.
 
@@ -103,29 +103,19 @@ Saves: managed Redis + paid VPS + henrygd rate cap + paid internal inference →
 
 ---
 
-## E. Free analytics (#5 — snippet live, tokens pending)
+## E. Free analytics (#5 — Cloudflare live ✅)
 
-🔧 **E1 — Cloudflare Web Analytics + Microsoft Clarity tokens needed.**
-The snippet is already wired in `apps/web/app/layout.tsx` (gated behind
-`NEXT_PUBLIC_ANALYTICS_ENABLED`). Two signups + env vars:
+✅ **E1 — Cloudflare Web Analytics live (2026-06-16).**
+- `NEXT_PUBLIC_CF_BEACON_TOKEN=0e5b68dd099f483c828f5d7e6ac02a73` set in Vercel (Production + Preview)
+- `NEXT_PUBLIC_ANALYTICS_ENABLED=true` set in Vercel (Production + Preview)
+- Beacon snippet already wired in `apps/web/app/layout.tsx`; activates automatically on redeploy.
 
-**Cloudflare Web Analytics** (cookieless, no consent banner needed):
-1. Go to https://dash.cloudflare.com → Web Analytics → Add a site
-2. Enter `galaxysportsedge.com` → copy the **beacon token** (32-char hex)
-3. `vercel env add NEXT_PUBLIC_CF_BEACON_TOKEN production` → paste token
-
-**Microsoft Clarity** (heatmaps + session recordings, free):
+**Microsoft Clarity** (heatmaps + session recordings — optional, not yet set up):
 1. Go to https://clarity.microsoft.com → New project → enter site URL
 2. Copy the **project ID** (e.g. `abc123xyz`)
-3. `vercel env add NEXT_PUBLIC_CLARITY_PROJECT_ID production` → paste ID
+3. `vercel env add NEXT_PUBLIC_CLARITY_PROJECT_ID production` → paste ID → redeploy
 
-**Then activate:**
-```bash
-vercel env add NEXT_PUBLIC_ANALYTICS_ENABLED production
-# paste: true
-```
-
-Redeploy. Both tools load only in production (env gate).
+No consent banner needed for either tool (Cloudflare is cookieless; Clarity uses first-party cookies).
 
 ---
 
@@ -151,10 +141,9 @@ No action needed.
 Unauthenticated visitors are now redirected to `/auth/signin?callbackUrl=/cockpit` at the
 middleware layer. No action needed.
 
-🔧 **F5 — Rotate the Groq API key**.
-A previous commit briefly contained the Groq API key before it was force-pushed out of history.
-If that key was ever in a public or shared remote, rotate it at https://console.groq.com → API Keys.
-Then update `INTERNAL_LLM_API_KEY` in Vercel.
+✅ **F5 — Groq API key rotated (2026-06-16).**
+Old key invalidated. New key `galaxysportsedge-production` created at https://console.groq.com → API Keys.
+`INTERNAL_LLM_API_KEY` updated in Vercel (Production + Preview). Redeploy triggered. No action needed.
 
 ---
 
@@ -186,11 +175,6 @@ and the Vercel production deploy triggered automatically.
 | A2 | Model-router haiku flips | ✅ committed | n/a | ✅ done |
 | B1 | FPL terms → EPL adapter | ✅ gated | n/a | ✅ done (gated) |
 | C1 | `/preview` pages + sitemap | ✅ committed | n/a | ✅ done |
-| D1 | Oracle VPS | ✅ deploy.sh ready | 🔧 needs VPS signup | Owner action |
-| E1 | Analytics snippet | ✅ layout.tsx wired | 🔧 needs CF+Clarity signup | Owner action |
-| F1 | CRON_SECRET | ✅ cron routes gate on it | ✅ set in Vercel (27d ago) | ✅ done |
-| F2 | ADMIN_EMAILS | ✅ auth.ts elevates on it | ✅ `baxley.garrett@gmail.com` | ✅ done |
-| F3 | Open redirect fix | ✅ `628ea04d` | n/a | ✅ done |
-| F4 | /cockpit middleware gate | ✅ `628ea04d` | n/a | ✅ done |
-| F5 | Rotate Groq key | n/a | 🔧 rotate if key was public | Owner action |
-| **G** | **Merge branch → main** | **✅ shipped** | **✅ live `98509b84` (2026-06-16)** | **✅ done** |
+| D1 | Oracle VPS | ✅ deploy.sh ready | ✅ VPS running (2026-06-16) | ✅ done |
+| E1 | Analytics snippet | ✅ layout.tsx wired | ✅ CF beacon + enabled in Vercel | ✅ done |
+| F1 | CRON_SECRET | ✅ cron routes gate on it | ✅ set in Vercel (27d ago) |
