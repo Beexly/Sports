@@ -40,13 +40,17 @@ const bodyFont = Inter({
   display: "swap",
 });
 
+const monoFont = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--f-mono",
+  display: "swap",
+});
+
 const numeralsFont = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--f-numerals",
   display: "swap",
 });
-
-// --f-mono aliased to var(--f-numerals) in design-tokens.css (same font, no duplicate request)
 
 const editorialFont = Instrument_Serif({
   subsets: ["latin"],
@@ -185,6 +189,7 @@ export default function RootLayout({
     archFont.variable,
     displayFont.variable,
     bodyFont.variable,
+    monoFont.variable,
     numeralsFont.variable,
     editorialFont.variable,
   ].join(" ");

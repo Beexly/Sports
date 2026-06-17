@@ -24,11 +24,11 @@ export default async function Page() {
       <SectionHeader title="Tracked Podcast Sources" />
       <DataTable
         rows={items.map((i: Record<string, unknown>) => ({
-          source: String(i.source_name ?? ""),
-          title: String(i.title ?? ""),
+          name: String(i.name ?? ""),
+          rss_url: String(i.rss_url ?? ""),
           rights_mode: String(i.rights_mode ?? ""),
-          activation: String(i.activation_status ?? ""),
-          trust: Number(i.source_trust ?? 0),
+          activation: String(i.partner_activation_status ?? ""),
+          expert_mapping: String(i.expert_mapping_status ?? ""),
         }))}
         maxRows={50}
       />
