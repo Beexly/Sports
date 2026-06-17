@@ -264,5 +264,16 @@ export function collectAttentionSignals(
     });
   }
 
-  return signals;
+  // Safety net: collapse exact-duplicate signals (same normalized detail),
+  // keeping the first — i.e. highest-priority — occurrence. The feed sources
+  // each underlying signal once (it reads the assessment directly rather than
+  // also passing the Owner Summary's re-derived decisions/advisories), but this
+  // guards against any future re-introduction of double-feeding.
+  const seen = new Set<string>();
+  return signals.filter((s) => {
+    const key = s.detail.trim().toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }

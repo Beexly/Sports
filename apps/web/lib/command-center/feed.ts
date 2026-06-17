@@ -21,6 +21,7 @@ import { buildOperatingNarrative } from "./narrative";
 import type {
   CommandCenterFeed,
   CommandCenterLane,
+  DataMode,
   FeedDataMode,
   OwnerAttentionItem,
 } from "./types";
@@ -53,17 +54,29 @@ export async function loadCommandCenterFeed(): Promise<CommandCenterFeed> {
   const gates = getReadinessGates();
   const stub = isStubMode();
 
+  // This pick.count doubles as a DB-reachability probe. It uses the same client
+  // and DB as every query inside loadJarvisAssessment — which catches its own DB
+  // errors and degrades to empty/zero data rather than throwing. So if this probe
+  // fails (or we're in stub mode), the synthesis behind EVERY lane was built from
+  // empty fallbacks, and no lane may honestly claim "live".
+  //
+  // In stub mode we never call the stub's count: with DEMO_PICKS_ENABLED it would
+  // report sample picks as today's live count, contradicting the fallback label.
+  let dbReachable = false;
   let todayPickCount = 0;
-  let picksLive = !stub;
-  try {
-    todayPickCount = await db.pick.count({
-      where: {
-        isPublished: true,
-        generatedAt: { gte: startOfDay(now), lte: endOfDay(now) },
-      },
-    });
-  } catch {
-    picksLive = false;
+  if (!stub) {
+    try {
+      todayPickCount = await db.pick.count({
+        where: {
+          isPublished: true,
+          generatedAt: { gte: startOfDay(now), lte: endOfDay(now) },
+        },
+      });
+      dbReachable = true;
+    } catch {
+      dbReachable = false;
+      todayPickCount = 0;
+    }
   }
 
   let assessment;
@@ -117,8 +130,14 @@ export async function loadCommandCenterFeed(): Promise<CommandCenterFeed> {
     externalConfigWarnings: assessment.externalConfigWarnings,
     missingPhaseWarnings: assessment.missingPhaseWarnings,
     recommendedNextActions: assessment.recommendedNextActions,
-    advisoryWarnings: ownerSummary.advisoryWarnings,
-    decisions: ownerSummary.decisions,
+    // The Owner Summary's `decisions` and `advisoryWarnings` are re-derived views
+    // of the SAME assessment arrays above (decisions = safety ∪ config ∪ first-3
+    // recommended; advisories = missingPhase). Feeding both would double-count
+    // every issue and inflate the ranked queue, so the Command Center reads the
+    // assessment directly — the single source of truth — and takes only
+    // `departments`, the unique signal the Owner Summary adds.
+    advisoryWarnings: [],
+    decisions: [],
     departments: ownerSummary.departments.map((d) => ({
       id: d.id,
       name: d.name,
@@ -133,50 +152,54 @@ export async function loadCommandCenterFeed(): Promise<CommandCenterFeed> {
 
   const departmentsActioned = ownerSummary.departments.filter((d) => d.actionRequired).length;
 
+  // Every lane below is synthesized from DB-backed state. When the DB is
+  // unreachable (stub or outage), that synthesis ran on empty fallbacks, so the
+  // lanes are honestly labeled fallback — not just the picks lane.
+  const derivedMode: DataMode = dbReachable ? "live" : "labeled_fallback";
+  const derivedReason = dbReachable
+    ? null
+    : "Database unreachable (stub or outage) — synthesized from empty fallbacks, not live state.";
+
   const lanes: CommandCenterLane[] = [
     {
       key: "jarvis",
       label: "Jarvis launch assessment",
-      dataMode: "live",
-      fallbackReason: null,
-      itemCount: assessment.safetyWarnings.length + assessment.recommendedNextActions.length,
-    },
-    {
-      key: "decisions",
-      label: "Owner decision queue",
-      dataMode: "live",
-      fallbackReason: null,
-      itemCount: ownerSummary.decisions.length,
+      dataMode: derivedMode,
+      fallbackReason: derivedReason,
+      itemCount:
+        assessment.safetyWarnings.length +
+        assessment.missingPhaseWarnings.length +
+        assessment.recommendedNextActions.length,
     },
     {
       key: "departments",
       label: "Department command map",
-      dataMode: "live",
-      fallbackReason: null,
+      dataMode: derivedMode,
+      fallbackReason: derivedReason,
       itemCount: departmentsActioned,
     },
     {
       key: "performance",
       label: "Performance gate",
-      dataMode: "live",
-      fallbackReason: null,
+      dataMode: derivedMode,
+      fallbackReason: derivedReason,
       itemCount: ownerSummary.performance.displaySafe ? 1 : 0,
-    },
-    {
-      key: "picks",
-      label: "Today's picks",
-      dataMode: picksLive ? "live" : "labeled_fallback",
-      fallbackReason: picksLive
-        ? null
-        : "Database unreachable (stub mode) — pick count shown as zero, not fabricated.",
-      itemCount: todayPickCount,
     },
     {
       key: "config",
       label: "External configuration",
-      dataMode: "live",
-      fallbackReason: null,
+      dataMode: derivedMode,
+      fallbackReason: derivedReason,
       itemCount: assessment.externalConfigWarnings.length,
+    },
+    {
+      key: "picks",
+      label: "Today's picks",
+      dataMode: dbReachable ? "live" : "labeled_fallback",
+      fallbackReason: dbReachable
+        ? null
+        : "Database unreachable (stub or outage) — pick count shown as zero, not fabricated.",
+      itemCount: todayPickCount,
     },
   ];
 

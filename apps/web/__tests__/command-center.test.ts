@@ -170,6 +170,21 @@ describe("collectAttentionSignals", () => {
     const ids = signals.map((s) => s.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it("collapses exact-duplicate details (safety net against double-feeding)", () => {
+    // The same string arriving as both a safety warning and a recommended action
+    // must surface once — keeping the first (higher-priority) occurrence.
+    const signals = collectAttentionSignals({
+      ...base,
+      safetyWarnings: ["Resolve the trust gate."],
+      recommendedNextActions: ["Resolve the trust gate.", "Something else."],
+    });
+    const matching = signals.filter((s) => s.detail === "Resolve the trust gate.");
+    expect(matching).toHaveLength(1);
+    expect(matching[0]?.source).toBe("jarvis_safety");
+    // The distinct recommended action still survives.
+    expect(signals.some((s) => s.detail === "Something else.")).toBe(true);
+  });
 });
 
 describe("buildOperatingNarrative", () => {
