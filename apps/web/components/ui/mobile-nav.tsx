@@ -35,9 +35,10 @@ const SECTIONS: readonly Section[] = [
     collapsible: true,
     links: [
       { label: "Intelligence Engines", href: "/intelligence/engines" },
-      { label: "Galaxy Twin", href: "/observatory" },
-      { label: "Trend Lab", href: "/trends" },
-      { label: "CLV Tracker", href: "/track" },
+      { label: "Galaxy Twin — Market map", href: "/observatory" },
+      { label: "Trend Lab — Tested trends", href: "/trends" },
+      { label: "CLV Tracker — Track your bets", href: "/track" },
+      { label: "GSN — Briefing (sample)", href: "/gsn" },
       { label: "How we read metrics", href: "/intelligence/metrics" },
     ],
   },
@@ -47,6 +48,7 @@ const SECTIONS: readonly Section[] = [
     links: [
       { label: "Closing Line Value", href: "/clv" },
       { label: "Calibration Report", href: "/performance" },
+      { label: "Trust Ledger — Pick receipts", href: "/ledger" },
       { label: "Accountability", href: "/accountability" },
     ],
   },
@@ -58,6 +60,7 @@ const SECTIONS: readonly Section[] = [
       { label: "Lineup Optimizer", href: "/fantasy/lineup" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers" },
       { label: "Trade Analyzer", href: "/fantasy/trade" },
+      { label: "All-in-One Optimizer", href: "/optimizer" },
       { label: "Connect League", href: "/fantasy/connect" },
     ],
   },
@@ -74,7 +77,7 @@ const SECTIONS: readonly Section[] = [
   {
     heading: "More",
     links: [
-      { label: "The Beat", href: "/the-beat" },
+      { label: "The Beat — Media intelligence", href: "/the-beat" },
       { label: "The Academy", href: "/academy" },
       { label: "Dashboard", href: "/dashboard" },
     ],

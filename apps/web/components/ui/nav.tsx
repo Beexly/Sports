@@ -8,16 +8,18 @@ import { BrandLockup } from "@/components/brand/brand-lockup";
 // Board, the Lab, the Engines, the Fantasy tools — plus standalone Contests
 // and The Beat for casual browse. Internal surfaces (Studio, Airwave) are
 // deliberately unlinked here: they are ours, not the visitor's.
+// `title` gives the metaphor-named doors a plain-English hover hint, since a
+// horizontal bar has no room for an inline subtitle.
 const PRIMARY_LINKS = [
-  { label: "Board", href: "/board" },
-  { label: "The House", href: "/house" },
+  { label: "Board", href: "/board", title: "Today's picks board" },
+  { label: "The House", href: "/house", title: "NFL hub — odds, picks & matchups" },
 ] as const;
 
 const TAIL_LINKS = [
-  { label: "Contests", href: "/fantasy/contests" },
-  { label: "The Beat", href: "/the-beat" },
-  { label: "Academy", href: "/academy" },
-  { label: "Pricing", href: "/pricing" },
+  { label: "Contests", href: "/fantasy/contests", title: "Best ball, survivor & squares" },
+  { label: "The Beat", href: "/the-beat", title: "Sports-media intelligence — reporters, graded" },
+  { label: "Academy", href: "/academy", title: "Learn the system, step by step" },
+  { label: "Pricing", href: "/pricing", title: "Plans & what each unlocks" },
 ] as const;
 
 type NavItem = { label: string; href: string; desc: string };
@@ -33,9 +35,9 @@ const PLAYERS_MENU: readonly NavGroup[] = [
   {
     heading: "Advanced stats",
     items: [
-      { label: "Opportunity", href: "/players?view=opportunity", desc: "Air yards · WOPR — buy-low / sell-high" },
-      { label: "Snap Share", href: "/players?view=snaps", desc: "Offensive workload leaders" },
-      { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, accuracy, yards over expected" },
+      { label: "Opportunity", href: "/players?view=opportunity", desc: "Air yards & target share — find buy-low and sell-high players" },
+      { label: "Snap Share", href: "/players?view=snaps", desc: "Who's actually on the field — offensive workload leaders" },
+      { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, accuracy, and yards over expected" },
     ],
   },
   {
@@ -50,20 +52,22 @@ const PLAYERS_MENU: readonly NavGroup[] = [
 const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
-      { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, browsable" },
-      { label: "Mission Control", href: "/today", desc: "Today's command deck" },
-      { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line movement + best-price line shop" },
-      { label: "Trend Lab", href: "/trends", desc: "Significant trends, with p-values" },
-      { label: "CLV Tracker", href: "/track", desc: "Your glass-box bet ledger" },
-      { label: "How we read metrics", href: "/intelligence/metrics", desc: "Metric methodology, glass-box" },
+      { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, in one place" },
+      { label: "Mission Control", href: "/today", desc: "Everything happening today, in one view" },
+      { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line moves & best available prices" },
+      { label: "Trend Lab", href: "/trends", desc: "Trends that pass a real statistical test" },
+      { label: "CLV Tracker", href: "/track", desc: "Track your own bets — did you beat the closing line?" },
+      { label: "GSN — Daily Briefing", href: "/gsn", desc: "A sample of our daily briefing format — live feed coming soon" },
+      { label: "How we read metrics", href: "/intelligence/metrics", desc: "What each stat means, in plain terms" },
     ],
   },
   {
     heading: "Receipts",
     items: [
-      { label: "Closing Line Value", href: "/clv", desc: "Did we beat the close — the benchmark touts never show" },
-      { label: "Calibration Report", href: "/performance", desc: "Every settled pick; win rate gated until honest" },
-      { label: "Accountability", href: "/accountability", desc: "Loss autopsies, proof of record, the full ledger" },
+      { label: "Closing Line Value", href: "/clv", desc: "Did we beat the closing line — the benchmark most services hide" },
+      { label: "Calibration Report", href: "/performance", desc: "Every settled pick — win rate shown once the sample is honest" },
+      { label: "Trust Ledger", href: "/ledger", desc: "Every settled pick, with a tamper-proof receipt" },
+      { label: "Accountability", href: "/accountability", desc: "Loss autopsies and the full public record" },
     ],
   },
 ];
@@ -73,14 +77,15 @@ const FANTASY_MENU: readonly NavGroup[] = [
   {
     heading: "Core tools",
     items: [
-      { label: "Draft Assistant", href: "/fantasy/draft", desc: "Tiers, VOR, live guidance" },
-      { label: "Lineup Optimizer", href: "/fantasy/lineup", desc: "Start-sit, floor vs ceiling" },
-      { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Adds and bids, with the why" },
-      { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Value, fairness, win-now" },
+      { label: "Draft Assistant", href: "/fantasy/draft", desc: "Draft tiers, player values, and live pick guidance" },
+      { label: "Lineup Optimizer", href: "/fantasy/lineup", desc: "Start or sit — floor vs. ceiling, explained" },
+      { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Who to add and what to bid, with the why" },
+      { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Is the trade fair? Value and win-now read" },
     ],
   },
   {
     items: [
+      { label: "All-in-One Optimizer", href: "/optimizer", desc: "Draft, lineups & DFS in one workspace" },
       { label: "Connect League", href: "/fantasy/connect", desc: "Link your league in one tap" },
     ],
   },
@@ -91,10 +96,10 @@ const DFS_MENU: readonly NavGroup[] = [
   {
     heading: "Daily",
     items: [
-      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Optimizer — cash / GPP / leverage, glass-box" },
-      { label: "Salary Board", href: "/fantasy/dfs#salary-board", desc: "Reconciled DK salaries (feed-gated)" },
-      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Pick'em line edges, graded" },
-      { label: "DFS Player Board", href: "/players?view=dfs", desc: "Salary value vs role and usage" },
+      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Lineup builder for cash games & tournaments — fully transparent" },
+      { label: "Salary Board", href: "/fantasy/dfs#salary-board", desc: "DraftKings salaries, reconciled (when the feed is live)" },
+      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & PrizePicks line edges, graded" },
+      { label: "DFS Player Board", href: "/players?view=dfs", desc: "Salary value vs. role and usage" },
     ],
   },
 ];
@@ -140,8 +145,8 @@ export async function Nav() {
           <BrandLockup />
 
           <nav className="nav-links" aria-label="Primary">
-            {PRIMARY_LINKS.map(({ href, label }) => (
-              <Link key={href} href={href}>
+            {PRIMARY_LINKS.map(({ href, label, title }) => (
+              <Link key={href} href={href} title={title}>
                 {label}
               </Link>
             ))}
@@ -151,8 +156,8 @@ export async function Nav() {
             <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
             <NavMenu label="DFS" href="/fantasy/dfs" groups={DFS_MENU} />
 
-            {TAIL_LINKS.map(({ href, label }) => (
-              <Link key={href} href={href}>
+            {TAIL_LINKS.map(({ href, label, title }) => (
+              <Link key={href} href={href} title={title}>
                 {label}
               </Link>
             ))}
