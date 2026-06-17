@@ -117,10 +117,11 @@ export default async function HomePage(): Promise<JSX.Element> {
                 <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">signal</span>.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
-                A sports intelligence operating system for markets, picks, media, and
-                decision quality. The board is only as smart as the data behind it.
-                No public pick or projection appears unless the
-                inputs are real enough to defend — and every edge earns a receipt.
+                We turn real sportsbook data into picks you can actually check — and
+                the discipline to know when not to bet.{" "}
+                The board is only as smart as the data behind it.{" "}
+                No public pick or projection appears unless the inputs are real enough
+                to defend — and every edge earns a receipt.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Link href="/board" className="btn-primary min-h-11 px-5 py-3">
