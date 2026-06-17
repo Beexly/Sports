@@ -82,6 +82,14 @@ export type {
   ConvictionInput,
   ConvictionResult,
 } from "./conviction-tier.js";
+// Calibration application — confidence → calibrated win probability (self-suppressing
+// until a settled sample exists; activation is an audited MODEL_VERSION step). See
+// docs/path-to-70.md. Additive: does not touch the live scoring path or the freeze.
+export {
+  buildCalibrator,
+  DEFAULT_MIN_CALIBRATION_SAMPLE,
+} from "./calibration-apply.js";
+export type { Calibrator, CalibratedProbability } from "./calibration-apply.js";
 export * from "./constants.js";
 export * from "./trend-discovery.js";
 export { getPlatformConfig } from "./platform-config.js";

@@ -126,3 +126,29 @@ This maps directly onto the named ladder in `CLAUDE.md`:
 
 The number we chase is **calibration error → 0**. Win rate follows from honest selection; the 70% tier is
 the visible result, and the proof is the moat.
+
+---
+
+## 7. Activation checklist for Step 1 (calibration) — what "turn it on" actually requires
+
+The engine is built and tested (`calibration-apply.ts` → `buildCalibrator`). It is **self-suppressing**:
+with no settled sample it is a labeled-uncalibrated identity passthrough, so it is already safe to wire.
+Going live is deliberately gated — the model is FROZEN at `v5.0.0` by `scripts/guardrails/model-freeze.mjs`
++ `docs/calibration-proposals/FROZEN.md` to keep historical confidence numbers honest. When the data exists,
+activate in this order (each is one reviewable commit):
+
+1. **Have the sample.** ≥ `MIN_SETTLED_PICKS_FOR_LEARNING` (100) settled, canonical, learning-eligible picks.
+   Until then activation is inert by design — do not force it.
+2. **Fit & validate offline.** Run `buildCalibrator` over the settled (confidence/100, outcome) pairs;
+   confirm `isActive === true` and `calibratedEce <= rawEce` on a held-out split, not just in-sample.
+3. **Audit trail (required by FROZEN.md).** Bump `MODEL_VERSION` in `constants.ts` AND record the bump as a
+   `CalibrationProposal` (status `IMPLEMENTED`) or a `docs/calibration-proposals/<slug>.md` with the
+   observation + change that justified it. Update the `frozen:` line. Update the tests pinning `v5.0.0`.
+4. **Unpin the gate.** Change `canApplyCalibrationAdjustments` from the literal `false` to a config flag
+   (`CALIBRATION_ADJUSTMENTS_ENABLED`, default false) in `readiness.ts` + `platform-config.ts`, and update
+   `readiness-gate-enforcement.test.ts` (which intentionally pins it today).
+5. **Wire & display.** Feed the calibrated probability into the conviction tier and the public reliability
+   diagram. New picks carry the new `MODEL_VERSION`; prior picks keep theirs (no retroactive relabeling).
+
+Steps 3–4 are the founder's audited decision — they break the freeze pin on purpose and must not be done
+casually. Step 1 (the data) is the real gate; everything else is ready and waiting on it.
