@@ -1,4 +1,5 @@
-import { Shell, Cards, DataTable, BarChart, StatusRibbon } from "../_components";
+import Link from "next/link";
+import { Shell, Cards, DataTable, BarChart, StatusRibbon, SectionHeader } from "../_components";
 import { loadComps, playerNameMap } from "@/lib/statking/product";
 export const metadata = {
   title: "Player Comps — Statistical Similarity Scores",
@@ -23,17 +24,23 @@ export default function Page() {
       <p className="text-ion-1">
         Each player's closest statistical neighbor, scored on shared usage and production features — a fast way to frame an unknown by a known.
       </p>
+      <SectionHeader eyebrow="By statistical similarity" title="Top Player Comparisons" />
       <div className="grid gap-4 md:grid-cols-2">
         {withComp.slice(0, 6).map(c => {
           const comp = c.comparisons[0];
+          const sharedFeatures = Array.isArray(comp?.shared_features)
+            ? (comp.shared_features as unknown[]).map(String).join(" · ")
+            : String(comp?.shared_features ?? "");
           return (
             <div key={c.player_id} className="border border-mineral bg-eclipse p-4">
-              <p className="text-ion-white font-semibold mb-2">{names.get(c.player_id) ?? c.player_id}</p>
+              <Link href={"/stats/player/" + c.player_id}>
+                <p className="text-ion-white font-semibold mb-2">{names.get(c.player_id) ?? c.player_id}</p>
+              </Link>
               <p className="text-sm text-ion-1 mb-3">Closest comp: {comp?.name}</p>
               <BarChart items={[
                 { label: "Similarity", value: Number(comp?.similarity_score ?? 0), max: 100, tone: "cyan" }
               ]} />
-              <p className="mt-2 text-xs text-ion-2">Features: {comp?.shared_features}</p>
+              <p className="mt-2 text-xs text-ion-2">Features: {sharedFeatures}</p>
             </div>
           );
         })}

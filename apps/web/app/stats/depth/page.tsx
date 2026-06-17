@@ -1,4 +1,4 @@
-import { Shell, Cards, Badge, DataTable, StatusRibbon } from "../_components";
+import { Shell, Cards, DataTable, StatusRibbon, InsightCard, SectionHeader } from "../_components";
 import { loadDepthChart, playerNameMap } from "@/lib/statking/product";
 export const metadata = {
   title: "Depth Charts — Role & Opportunity by Team",
@@ -18,18 +18,18 @@ export default function Page() {
         { label: "Charted spots", value: depth.length },
         { label: "Status", value: "sample" }
       ]} />
-      <p className="text-ion-1">
-        Team depth mapped to StatKing role and opportunity, with source lineage on every row.
-      </p>
-      <div className="space-y-3">
-        <Badge tone="warn">Sample depth — full-league charting expands as roster sources activate.</Badge>
-      </div>
+      <InsightCard
+        eyebrow="How to Use Depth Charts"
+        headline="Role and opportunity before the stat line"
+        body="Depth position predicts target share and carry share before box scores confirm it. A WR2 in a pass-heavy offense may be worth more than a WR1 in a run-first scheme. Use depth + team environment together for the clearest opportunity read. Sample coverage expands as roster sources activate."
+        tone="neutral"
+      />
+      <SectionHeader title="Depth by Team" />
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Depth Chart</h2>
         <DataTable
           rows={[...depth]
             .sort((a, b) => a.team.localeCompare(b.team) || a.position.localeCompare(b.position))
-            .slice(0, 60)
+            .slice(0, 100)
             .map(d => ({
               team: String(d.team ?? ""),
               position: String(d.position ?? ""),
@@ -37,7 +37,7 @@ export default function Page() {
               role: String(d.role ?? ""),
               lineage: Array.isArray(d.source_lineage) ? d.source_lineage.join("; ") : String(d.source_lineage ?? "")
             }))}
-          maxRows={60}
+          maxRows={100}
         />
       </div>
     </Shell>
