@@ -97,6 +97,71 @@ describe("synthesizeJarvis", () => {
     expect(a.safetyWarnings).toHaveLength(0);
   });
 
+  it("flags a safety warning when calibration adjustments are ON but outcome learning is OFF", () => {
+    const a = synthesizeJarvis(baseInput({
+      gates: {
+        canPersistCanonicalHistory: true,
+        canUseDerivedHistory: true,
+        canExposePublicPicks: true,
+        canPromoteFeaturedPicks: true,
+        canExposePerformanceStats: true,
+        canPublishContent: true,
+        canLearnFromOutcomes: false,
+        canApplyCalibrationAdjustments: true,
+        isBootstrapMode: false,
+        minSettledPicksForLearning: 25,
+      },
+    }));
+    // The gate must NOT be invisible: flipping it changes the assessment.
+    expect(a.safetyWarnings.some((w) => /[Cc]alibration adjustments are ON/.test(w))).toBe(true);
+    expect(a.launchStatus).toBe("NOT_READY_SAFETY");
+  });
+
+  it("flags a safety warning when calibration is ON but the settled sample is below the floor", () => {
+    const a = synthesizeJarvis(baseInput({
+      gates: {
+        canPersistCanonicalHistory: true,
+        canUseDerivedHistory: true,
+        canExposePublicPicks: true,
+        canPromoteFeaturedPicks: true,
+        canExposePerformanceStats: true,
+        canPublishContent: true,
+        canLearnFromOutcomes: true,
+        canApplyCalibrationAdjustments: true,
+        isBootstrapMode: false,
+        minSettledPicksForLearning: 100,
+      },
+      history: { ...baseInput().history, canonicalSettledCount: 40 },
+    }));
+    // The warning is surfaced regardless of headline status — the gate is not invisible.
+    // (Below-floor settled also makes canonical history AMBER, so the headline reflects
+    // that blocker rather than promoting to NOT_READY_SAFETY; the safety string still shows.)
+    expect(a.safetyWarnings.some((w) => /below the calibration floor/.test(w))).toBe(true);
+    expect(a.launchStatus).not.toBe("LAUNCH_READY");
+  });
+
+  it("does NOT count calibration as a progression-ladder gate (stays 7/7, no false warning when audited)", () => {
+    const a = synthesizeJarvis(baseInput({
+      gates: {
+        canPersistCanonicalHistory: true,
+        canUseDerivedHistory: true,
+        canExposePublicPicks: true,
+        canPromoteFeaturedPicks: true,
+        canExposePerformanceStats: true,
+        canPublishContent: true,
+        canLearnFromOutcomes: true,
+        canApplyCalibrationAdjustments: true,
+        isBootstrapMode: false,
+        minSettledPicksForLearning: 25,
+      },
+    }));
+    // Calibration is a post-launch audited lever, not the 8th ladder gate.
+    expect(a.readinessGateSummary.totalCount).toBe(7);
+    expect(a.readinessGateSummary.openCount).toBe(7);
+    // Preconditions met (learning on, 100 ≥ 25) → no calibration safety warning.
+    expect(a.safetyWarnings.some((w) => /[Cc]alibration adjustments are ON/.test(w))).toBe(false);
+  });
+
   it("downgrades to NOT_READY_SAFETY when public picks are live but performance gate is closed", () => {
     const gates = {
       canPersistCanonicalHistory: true,

@@ -49,7 +49,7 @@ export interface JarvisReadinessGates {
   readonly canExposePerformanceStats: boolean;
   readonly canPublishContent: boolean;
   readonly canLearnFromOutcomes: boolean;
-  readonly canApplyCalibrationAdjustments: false;
+  readonly canApplyCalibrationAdjustments: boolean;
   readonly isBootstrapMode: boolean;
   readonly minSettledPicksForLearning: number;
 }
@@ -125,7 +125,7 @@ export interface JarvisInput {
  * Stamped onto every assessment so cockpit screenshots and saved reports
  * are auditable against the version that produced them.
  */
-export const JARVIS_VERSION = "v1.1";
+export const JARVIS_VERSION = "v1.2";
 
 export interface JarvisAssessment {
   /** ISO timestamp the assessment was synthesized. */
@@ -177,6 +177,14 @@ function toDate(value: Date | string | null): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+// The seven gates of the bootstrap PROGRESSION LADDER — the flags an operator
+// flips in order during a normal rollout. `canApplyCalibrationAdjustments` is
+// deliberately NOT one of them: it is a post-launch, audit-gated MODEL_VERSION
+// lever (docs/path-to-70.md §7), not a rollout step. Folding it into this count
+// would either make a fully-launched-but-pre-calibration platform read "7/8"
+// forever (misleadingly incomplete) or tempt an operator to flip it just to
+// reach "8/8" — the exact unaudited activation the freeze guards against.
+// Its state is surfaced separately as a safety signal (see calibration check below).
 function gateLabels(gates: JarvisReadinessGates): string[] {
   const closed: string[] = [];
   if (!gates.canPersistCanonicalHistory) closed.push("canPersistCanonicalHistory");
@@ -376,6 +384,22 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
     safety.push(
       `Ingestion has ${input.ingestion.recentFailureCount} recent failures — investigate the data adapter before public claims.`
     );
+  }
+  // Calibration activation is an audited MODEL_VERSION step, not a rollout flag.
+  // If it is ON while its preconditions are unmet, confidence is being presented
+  // as a calibrated win-probability without the evidence to back it — a trust risk
+  // exactly like exposing ungated stats. Surface it as a safety warning so flipping
+  // the gate is never invisible in the operator readiness signal.
+  if (input.gates.canApplyCalibrationAdjustments) {
+    if (!input.gates.canLearnFromOutcomes) {
+      safety.push(
+        "Calibration adjustments are ON but outcome learning is OFF — there is no eligible settled sample to justify a calibrated probability. Confirm the audited MODEL_VERSION activation (docs/path-to-70.md §7) or disable CALIBRATION_ADJUSTMENTS_ENABLED."
+      );
+    } else if (input.history.canonicalSettledCount < input.gates.minSettledPicksForLearning) {
+      safety.push(
+        `Calibration adjustments are ON but only ${input.history.canonicalSettledCount}/${input.gates.minSettledPicksForLearning} canonical picks have settled — below the calibration floor. Verify the held-out validation behind the MODEL_VERSION bump (docs/path-to-70.md §7).`
+      );
+    }
   }
 
   const missingPhase: string[] = [];
