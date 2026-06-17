@@ -112,6 +112,37 @@ describe("summarizeAffiliate", () => {
     expect(b.payableCents).toBe(0);
   });
 
+  it("is an as-of balance: postings dated after `now` are ignored", () => {
+    const a1 = accrual("a1", 1000); // T0, clears 2026-06-15
+    // A clawback dated AFTER the as-of date must not affect the earlier statement.
+    const futureClawback = clawbackCommission({ id: "c1", accrual: a1, occurredAt: "2026-06-25T00:00:00.000Z" });
+    const asOf = summarizeAffiliate([a1, futureClawback], "aff_1", AFTER_HOLD); // 2026-06-20
+    expect(asOf.clawedBackCents).toBe(0);
+    expect(asOf.payableCents).toBe(1000);
+    // …but by a later as-of date the clawback applies.
+    const later = summarizeAffiliate([a1, futureClawback], "aff_1", "2026-06-30T00:00:00.000Z");
+    expect(later.clawedBackCents).toBe(1000);
+    expect(later.payableCents).toBe(0);
+  });
+});
+
+describe("strict date validation", () => {
+  it("rejects calendar-invalid dates instead of normalizing (Feb 30)", () => {
+    expect(() =>
+      accrueCommission({ id: "a", affiliateId: "aff_1", referralId: "r", amountCents: 100, occurredAt: "2026-02-30T00:00:00.000Z", holdDays: 14 })
+    ).toThrow(/valid calendar date/);
+  });
+
+  it("rejects non-UTC / malformed ISO strings", () => {
+    expect(() => summarizeAffiliate([], "aff_1", "2026-06-01")).toThrow(/strict UTC ISO/);
+    expect(() => summarizeAffiliate([], "aff_1", "2026-06-01T00:00:00+02:00")).toThrow(/strict UTC ISO/);
+  });
+
+  it("accepts ISO with or without milliseconds", () => {
+    const a = accrueCommission({ id: "a", affiliateId: "aff_1", referralId: "r", amountCents: 100, occurredAt: "2026-06-01T00:00:00Z", holdDays: 0 });
+    expect(a.holdUntil).toBe("2026-06-01T00:00:00.000Z");
+  });
+
   it("isolates affiliates from each other", () => {
     const a = accrual("a1", 1000, { affiliateId: "aff_1" });
     const b = accrual("a2", 5000, { affiliateId: "aff_2" });
@@ -210,6 +241,48 @@ describe("auditLedger (double-entry invariant)", () => {
     expect(audit.balanced).toBe(false);
     expect(audit.problems.some((p) => /unknown accrual/.test(p))).toBe(true);
     expect(audit.problems.some((p) => /duplicate posting id/.test(p))).toBe(true);
+  });
+
+  it("flags a posting whose accounts don't match its type", () => {
+    // A PAYOUT shaped like an accrual: valid distinct accounts, but wrong for the type.
+    const corrupt: LedgerPosting = {
+      id: "x1",
+      affiliateId: "aff_1",
+      referralId: null,
+      type: "PAYOUT",
+      debit: "COMMISSION_EXPENSE",
+      credit: "AFFILIATE_PAYABLE",
+      amountCents: 100,
+      occurredAt: T0,
+      holdUntil: null,
+      reversesPostingId: null,
+      memo: "corrupt",
+    };
+    const audit = auditLedger([corrupt]);
+    expect(audit.balanced).toBe(false);
+    expect(audit.problems.some((p) => /PAYOUT must be dr AFFILIATE_PAYABLE\/cr CASH/.test(p))).toBe(true);
+  });
+
+  it("flags a clawback whose affiliate/amount doesn't match the referenced accrual", () => {
+    const a1 = accrual("a1", 1000, { affiliateId: "aff_1" });
+    // Right accrual id, wrong affiliate + amount.
+    const mismatched: LedgerPosting = {
+      id: "c1",
+      affiliateId: "aff_2",
+      referralId: a1.referralId,
+      type: "COMMISSION_CLAWBACK",
+      debit: "AFFILIATE_PAYABLE",
+      credit: "CLAWBACK_RECOVERY",
+      amountCents: 9999,
+      occurredAt: AFTER_HOLD,
+      holdUntil: null,
+      reversesPostingId: "a1",
+      memo: "mismatch",
+    };
+    const audit = auditLedger([a1, mismatched]);
+    expect(audit.balanced).toBe(false);
+    expect(audit.problems.some((p) => /affiliateId aff_2 != accrual aff_1/.test(p))).toBe(true);
+    expect(audit.problems.some((p) => /amount 9999¢ != accrual 1000¢/.test(p))).toBe(true);
   });
 
   it("flags a hand-crafted unbalanced/invalid posting", () => {

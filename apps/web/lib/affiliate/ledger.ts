@@ -80,6 +80,13 @@ const VALID_ACCOUNTS: ReadonlySet<LedgerAccount> = new Set<LedgerAccount>([
   "CASH",
 ]);
 
+/** The canonical debit/credit shape every posting of a given type must have. */
+const EXPECTED_SHAPE: Record<PostingType, { debit: LedgerAccount; credit: LedgerAccount }> = {
+  COMMISSION_ACCRUED: { debit: "COMMISSION_EXPENSE", credit: "AFFILIATE_PAYABLE" },
+  COMMISSION_CLAWBACK: { debit: "AFFILIATE_PAYABLE", credit: "CLAWBACK_RECOVERY" },
+  PAYOUT: { debit: "AFFILIATE_PAYABLE", credit: "CASH" },
+};
+
 function assertCents(amountCents: number): void {
   if (!Number.isInteger(amountCents) || amountCents <= 0) {
     throw new Error(
@@ -94,10 +101,47 @@ function assertNonEmpty(label: string, value: string): void {
   }
 }
 
-function assertIso(label: string, value: string): void {
-  if (Number.isNaN(Date.parse(value))) {
-    throw new Error(`affiliate ledger: ${label} must be an ISO-8601 date (got ${value})`);
+const ISO_RE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,3}))?Z$/;
+
+/**
+ * Strict UTC ISO-8601 parse returning epoch ms. Unlike Date.parse, it REJECTS
+ * calendar-invalid input (e.g. 2026-02-30, month 13) instead of silently
+ * normalizing it — a normalized timestamp would shift hold windows / clawback
+ * ordering and corrupt payout eligibility. Requires a trailing `Z` (all dates in
+ * this module are produced via toISOString, so they always qualify).
+ */
+function parseStrictIso(label: string, value: string): number {
+  const m = typeof value === "string" ? value.match(ISO_RE) : null;
+  if (!m) {
+    throw new Error(
+      `affiliate ledger: ${label} must be a strict UTC ISO-8601 date like 2026-06-01T00:00:00.000Z (got ${value})`
+    );
   }
+  const year = Number(m[1]);
+  const month = Number(m[2]);
+  const day = Number(m[3]);
+  const hour = Number(m[4]);
+  const minute = Number(m[5]);
+  const second = Number(m[6]);
+  const milli = m[7] ? Number(m[7].padEnd(3, "0")) : 0;
+  const epoch = Date.UTC(year, month - 1, day, hour, minute, second, milli);
+  const back = new Date(epoch);
+  // Component round-trip catches normalization (Feb 30 → Mar 2, etc.).
+  if (
+    back.getUTCFullYear() !== year ||
+    back.getUTCMonth() !== month - 1 ||
+    back.getUTCDate() !== day ||
+    back.getUTCHours() !== hour ||
+    back.getUTCMinutes() !== minute ||
+    back.getUTCSeconds() !== second
+  ) {
+    throw new Error(`affiliate ledger: ${label} is not a valid calendar date (got ${value})`);
+  }
+  return epoch;
+}
+
+function assertIso(label: string, value: string): void {
+  parseStrictIso(label, value);
 }
 
 /**
@@ -117,12 +161,12 @@ export function accrueCommission(input: {
   assertNonEmpty("affiliateId", input.affiliateId);
   assertNonEmpty("referralId", input.referralId);
   assertCents(input.amountCents);
-  assertIso("occurredAt", input.occurredAt);
+  const occurredMs = parseStrictIso("occurredAt", input.occurredAt);
   if (!Number.isInteger(input.holdDays) || input.holdDays < 0) {
     throw new Error(`affiliate ledger: holdDays must be a non-negative integer (got ${input.holdDays})`);
   }
   const holdUntil = new Date(
-    Date.parse(input.occurredAt) + input.holdDays * 24 * 60 * 60 * 1000
+    occurredMs + input.holdDays * 24 * 60 * 60 * 1000
   ).toISOString();
   return {
     id: input.id,
@@ -158,9 +202,9 @@ export function clawbackCommission(input: {
       `affiliate ledger: can only clawback a COMMISSION_ACCRUED posting (got ${input.accrual.type})`
     );
   }
-  assertIso("occurredAt", input.occurredAt);
+  const occurredMs = parseStrictIso("occurredAt", input.occurredAt);
   // A refund cannot precede the conversion it reverses.
-  if (Date.parse(input.occurredAt) < Date.parse(input.accrual.occurredAt)) {
+  if (occurredMs < Date.parse(input.accrual.occurredAt)) {
     throw new Error(
       `affiliate ledger: clawback occurredAt ${input.occurredAt} precedes accrual ${input.accrual.occurredAt}`
     );
@@ -234,9 +278,14 @@ export function summarizeAffiliate(
   affiliateId: string,
   now: string
 ): AffiliateBalance {
-  assertIso("now", now);
-  const nowMs = Date.parse(now);
-  const mine = postings.filter((p) => p.affiliateId === affiliateId);
+  const nowMs = parseStrictIso("now", now);
+  // As-of balance: ignore this affiliate's postings dated AFTER `now` so a later
+  // refund/payout never retroactively changes an earlier statement (and so
+  // recordPayout, which passes its own timestamp as `now`, can't be blocked by a
+  // future posting).
+  const mine = postings.filter(
+    (p) => p.affiliateId === affiliateId && Date.parse(p.occurredAt) <= nowMs
+  );
 
   // Index accruals so clawbacks can only count against a REAL accrual. This makes
   // the rollup robust to malformed input: a duplicate clawback collapses in the
@@ -315,19 +364,32 @@ export function auditLedger(postings: readonly LedgerPosting[]): {
   // credit total is always true; these checks are what actually catch corruption
   // like a double clawback over-debiting AFFILIATE_PAYABLE.)
   const seenIds = new Set<string>();
-  const accrualIds = new Set<string>();
+  const accrualById = new Map<string, LedgerPosting>();
   for (const p of postings) {
     if (seenIds.has(p.id)) problems.push(`${p.id}: duplicate posting id`);
     else seenIds.add(p.id);
-    if (p.type === "COMMISSION_ACCRUED") accrualIds.add(p.id);
+    if (p.type === "COMMISSION_ACCRUED") accrualById.set(p.id, p);
   }
   const clawbackCounts = new Map<string, number>();
   for (const p of postings) {
     if (p.type !== "COMMISSION_CLAWBACK") continue;
-    if (!p.reversesPostingId || !accrualIds.has(p.reversesPostingId)) {
+    const accrual = p.reversesPostingId ? accrualById.get(p.reversesPostingId) : undefined;
+    if (!accrual) {
       problems.push(`${p.id}: clawback references unknown accrual ${p.reversesPostingId ?? "(none)"}`);
-    } else {
-      clawbackCounts.set(p.reversesPostingId, (clawbackCounts.get(p.reversesPostingId) ?? 0) + 1);
+      continue;
+    }
+    clawbackCounts.set(p.reversesPostingId!, (clawbackCounts.get(p.reversesPostingId!) ?? 0) + 1);
+    // Ownership: a clawback must match the accrual it reverses. A mismatched
+    // affiliateId would otherwise be silently dropped by summarizeAffiliate,
+    // leaving the refunded commission payable to the wrong/real affiliate.
+    if (p.affiliateId !== accrual.affiliateId) {
+      problems.push(`${p.id}: clawback affiliateId ${p.affiliateId} != accrual ${accrual.affiliateId}`);
+    }
+    if (p.referralId !== accrual.referralId) {
+      problems.push(`${p.id}: clawback referralId ${p.referralId} != accrual ${accrual.referralId}`);
+    }
+    if (p.amountCents !== accrual.amountCents) {
+      problems.push(`${p.id}: clawback amount ${p.amountCents}¢ != accrual ${accrual.amountCents}¢`);
     }
   }
   for (const [accrualId, count] of clawbackCounts) {
@@ -338,6 +400,14 @@ export function auditLedger(postings: readonly LedgerPosting[]): {
     if (!VALID_ACCOUNTS.has(p.debit)) problems.push(`${p.id}: invalid debit account ${p.debit}`);
     if (!VALID_ACCOUNTS.has(p.credit)) problems.push(`${p.id}: invalid credit account ${p.credit}`);
     if (p.debit === p.credit) problems.push(`${p.id}: debit and credit are the same account (${p.debit})`);
+    // Per-type shape: the accounts must match the posting type, or a corrupted row
+    // (e.g. a PAYOUT shaped like an accrual) would balance yet mis-state the books.
+    const expected = EXPECTED_SHAPE[p.type];
+    if (expected && (p.debit !== expected.debit || p.credit !== expected.credit)) {
+      problems.push(
+        `${p.id}: ${p.type} must be dr ${expected.debit}/cr ${expected.credit} (got dr ${p.debit}/cr ${p.credit})`
+      );
+    }
     if (!Number.isInteger(p.amountCents) || p.amountCents <= 0) {
       problems.push(`${p.id}: amountCents must be a positive integer (got ${p.amountCents})`);
       continue;
