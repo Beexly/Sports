@@ -182,7 +182,7 @@ function AfterPanel(): JSX.Element {
         }}
       >
         <span className="font-mono text-[11px] font-semibold tracking-[0.04em] text-ultraviolet-glow">
-          +8.2% CLV projected
+          Projected to beat the close
         </span>
       </div>
 

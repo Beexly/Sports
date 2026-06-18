@@ -114,7 +114,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* ── 00 · THE WORLD OPENS ─────────────────────────────────────
             The entrance burst dissolves into this: aurora, starfield, the
             thesis, and live board telemetry. Real data, honest empty states. */}
-        <section className="gw-nebula-deep relative isolate overflow-hidden" style={{ borderBottom: "1px solid rgba(0,229,255,0.12)" }}>
+        <section className="gw-nebula-deep relative isolate overflow-hidden bg-carbon" style={{ borderBottom: "1px solid rgba(0,229,255,0.12)" }}>
           {heroPlate && (
             <GeneratedPlate
               className="-z-30 opacity-70"
@@ -173,11 +173,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             </div>
 
             <div
-              className="gw-card-hover overflow-hidden rounded-ds-lg p-5"
-              style={{
-                border: "1px solid rgba(0,229,255,0.18)",
-                background: "linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(8,6,20,0.88) 100%)",
-              }}
+              className="gw-card-hover overflow-hidden rounded-ds-lg bg-eclipse p-5 border border-mineral"
             >
               <div
                 className="mb-4 h-0.5 w-full rounded-full"
@@ -189,7 +185,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                     Board state · live telemetry
                   </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-white">
+                  <h2 className="mt-2 text-2xl font-semibold text-ion-white">
                     {totalRows > 0 ? "Live rows available" : "No public rows yet"}
                   </h2>
                 </div>

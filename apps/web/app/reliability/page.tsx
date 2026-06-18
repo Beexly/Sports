@@ -405,7 +405,7 @@ export default async function ReliabilityHubPage() {
                 index="01"
                 eyebrow="Calibration"
                 title="Does higher confidence win more?"
-                lede="The reliability diagram: observed vs expected win rate per confidence bucket, the Brier score, and the honest 95% band — not a point claim."
+                lede="The reliability diagram: observed vs expected win rate per confidence bucket, the Brier score, and the honest uncertainty band — not a point claim."
                 accent={BRAND_COLORS.orbitalCyan}
                 href="/performance"
                 hrefLabel="Full calibration report"

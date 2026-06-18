@@ -37,7 +37,7 @@ export function RiskDisclosure({
       <div
         data-testid="risk-disclosure"
         className={[
-          "surface-card p-4 text-xs text-ink-300",
+          "surface-card p-4 text-xs text-ink-300 text-ion-1",
           className ?? "",
         ].join(" ")}
       >

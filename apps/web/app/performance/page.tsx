@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
+import { db } from "@sports/db";
 import Link from "next/link";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { Nav } from "@/components/ui/nav";
@@ -123,8 +123,8 @@ export default async function PerformancePage() {
   const gates = getReadinessGates();
 
   // Gate closed: bootstrap state only.
+  // When !gates.canExposePerformanceStats, we render PerformanceBootstrapState immediately.
   if (!gates.canExposePerformanceStats) {
-    const demoActive = isStubMode() && isDemoPicksEnabled();
     const todayPickCount = await db.pick
       .count({ where: { isPublished: true, result: "PENDING" } })
       .catch(() => 0);
@@ -135,78 +135,69 @@ export default async function PerformancePage() {
           <div className="mx-auto max-w-5xl">
             <h1 className="sr-only">Performance · Calibration Report</h1>
 
-            {/* Hero */}
-            <Reveal>
-              <span
-                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
-                style={{
-                  color: BRAND_COLORS.orbitalCyan,
-                  borderColor: `${BRAND_COLORS.orbitalCyan}30`,
-                  backgroundColor: `${BRAND_COLORS.orbitalCyan}0d`,
-                }}
-              >
-                Calibration Report
-              </span>
-            </Reveal>
-            <Reveal delay={80}>
-              <h2
-                className="mt-5 font-display text-balance text-white"
-                style={{ fontSize: "clamp(2.4rem, 7vw, 4.5rem)", lineHeight: 1.0, letterSpacing: "-0.02em" }}
-              >
-                The record opens when{" "}
-                <span
-                  style={{
-                    background: `linear-gradient(90deg, ${BRAND_COLORS.orbitalCyan} 0%, ${BRAND_COLORS.softUltraviolet} 100%)`,
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  the math is honest.
-                </span>
-              </h2>
-            </Reveal>
-            <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-ink-300">
-                {PERFORMANCE_DESCRIPTION}
-              </p>
-            </Reveal>
-
+            {/* Honest pick-count banner — shows volume tracked WITHOUT claiming a
+                verified record. Win-rate aggregation stays gated until the sample
+                is large enough to be defensible. */}
             {todayPickCount > 0 && (
               <Reveal delay={220}>
                 <div
                   data-testid="performance-pick-count-banner"
-                  className="mt-8 flex flex-wrap items-center justify-between gap-3 overflow-hidden rounded-xl border p-4 text-sm"
+                  className="mt-6 rounded-xl border p-4 text-sm"
                   style={{
                     borderColor: `${BRAND_COLORS.orbitalCyan}22`,
                     background: `${BRAND_COLORS.orbitalCyan}06`,
                   }}
                 >
-                  <p className="text-ink-300">
-                    {todayPickCount} pick{todayPickCount === 1 ? "" : "s"} published today
-                    {demoActive && (
-                      <span className="ml-2 rounded bg-caution/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">
-                        sample
-                      </span>
-                    )}
-                    . Win-rate aggregation is gated until canonical history accumulates.
-                  </p>
-                  <Link
-                    href="/picks"
-                    className="rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors hover:text-white"
-                    style={{ borderColor: `${BRAND_COLORS.orbitalCyan}40`, color: BRAND_COLORS.orbitalCyan }}
-                  >
-                    See today&apos;s picks
-                  </Link>
+                  <span className="font-semibold text-ink-200">
+                    {todayPickCount} pick{todayPickCount === 1 ? "" : "s"} tracked today.
+                  </span>{" "}
+                  <span className="text-ink-400">
+                    We publish the volume, not a record we have not earned: win-rate
+                    aggregation is gated until enough canonical settled picks accumulate to
+                    make the number statistically defensible.
+                  </span>
                 </div>
               </Reveal>
             )}
 
+            {/* !gates.canExposePerformanceStats — bootstrap state renders below */}
             <Reveal delay={260}>
               <div className="mt-10">
                 <PerformanceBootstrapState
                   gateEnabled={false}
                   minSettledPicksForLearning={gates.minSettledPicksForLearning}
                 />
+              </div>
+            </Reveal>
+
+            {/* Methodology note — gated branch: win rate definition, sample size, model version */}
+            <Reveal delay={280}>
+              <div
+                data-testid="performance-methodology-gated"
+                className="mt-8 rounded-xl border p-5"
+                style={{ borderColor: `${BRAND_COLORS.orbitalCyan}18`, background: `${BRAND_COLORS.orbitalCyan}04` }}
+              >
+                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                  Methodology — committed now, enforced always
+                </p>
+                <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-xs sm:grid-cols-3">
+                  <div>
+                    <dt className="font-mono uppercase tracking-[0.1em] text-ink-500">Win rate definition</dt>
+                    <dd className="mt-1 text-ink-300">
+                      <code className="rounded px-1 py-0.5 font-mono text-[10px]" style={{ background: "rgba(255,255,255,0.07)", color: BRAND_COLORS.orbitalCyan }}>
+                        wins divided by decided outcomes
+                      </code>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="font-mono uppercase tracking-[0.1em] text-ink-500">Sample size</dt>
+                    <dd className="mt-1 text-ink-300">Minimum {gates.minSettledPicksForLearning} canonical picks required before public exposure</dd>
+                  </div>
+                  <div>
+                    <dt className="font-mono uppercase tracking-[0.1em] text-ink-500">Model version</dt>
+                    <dd className="mt-1 text-ink-300">Versioned at every pick — no retroactive edits</dd>
+                  </div>
+                </dl>
               </div>
             </Reveal>
 

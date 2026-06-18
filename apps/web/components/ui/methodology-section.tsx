@@ -87,7 +87,7 @@ export function MethodologySection() {
   return (
     <section
       data-testid="methodology-section"
-      className="relative isolate border-y border-white/[0.08] bg-white/[0.03] px-4 py-20 sm:px-6 lg:px-8"
+      className="relative isolate border-y border-white/[0.08] bg-carbon px-4 py-20 sm:px-6 lg:px-8"
       aria-labelledby="methodology-heading"
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule-fade" aria-hidden="true" />

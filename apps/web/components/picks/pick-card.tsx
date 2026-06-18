@@ -568,7 +568,7 @@ function TierBadge({ tier }: { tier: "FREE" | "PREMIUM" }) {
 
 function PickTypeBadge({ type }: { type: PickType }) {
   const colors: Record<PickType, string> = {
-    SPREAD:    "bg-orbital-cyan/10 text-orbital-cyan",
+    SPREAD:    "bg-ion-blue/10 text-ion-blue",
     MONEYLINE: "bg-ultraviolet/10 text-ultraviolet",
     TOTAL:     "bg-ultraviolet/10 text-ultraviolet",
   };

@@ -214,6 +214,7 @@ export default async function FantasyHubPage({
                 <p className="mt-4 text-sm leading-7 text-ink-300">
                   The free-first layer is already reading live player-week usage, roster, and
                   schedule files. It can prove usage context and reject weak narrative angles today;
+                  {/* Gating note: projection-driven lineup, waiver, trade, DFS, or pick'em advice stays locked until live feeds connect. No fake projections. */}
                   it still cannot unlock projection-driven lineup, waiver, trade, DFS, or pick&apos;em
                   advice until those provider feeds are live.
                 </p>

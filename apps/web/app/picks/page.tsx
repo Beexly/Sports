@@ -803,13 +803,11 @@ function DatePickerForm({
         type="date"
         name="date"
         defaultValue={currentDate}
-        className="min-h-11 rounded-lg px-3 py-1.5 text-sm text-ink-300 focus:outline-none focus:ring-1 focus:ring-orbital-cyan"
-        style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.06)" }}
+        className="min-h-11 rounded-lg border border-white/10 bg-white/[0.06] px-3 py-1.5 text-sm text-ink-300 focus:outline-none focus:ring-1 focus:ring-orbital-cyan"
       />
       <button
         type="submit"
-        className="min-h-11 rounded-lg px-3 py-1.5 text-sm font-medium text-ink-300 transition-colors hover:text-white"
-        style={{ background: "rgba(255,255,255,0.08)" }}
+        className="min-h-11 rounded-lg bg-titanium px-3 py-1.5 text-sm font-medium text-ink-300 transition-colors hover:text-white"
       >
         Apply date
       </button>
