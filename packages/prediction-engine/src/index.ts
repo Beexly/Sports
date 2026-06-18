@@ -275,3 +275,66 @@ export type {
   DecisionStump,
   TrainingSample,
 } from "./ml-estimator.js";
+
+// ── Workstream-K "K2" inert edge modules — pure, tested, NOT wired into live
+// scoring. Each is decision-support / a future labeler only; none is imported by
+// scoring.ts (the inert-edge-modules guard test proves it). See
+// reports/reality-engine/{edge-type-taxonomy-v1,pick-autopsy-taxonomy-v1,
+// workstream-k-activation-audit}.md.
+//
+// Edge-type taxonomy v1 — tags the KIND of edge a candidate acts on. Only the three
+// detectable-now types fire; data-blocked types are surfaced as candidates, never
+// false positives. A hypothesis tag, not proof.
+export {
+  EDGE_TYPES,
+  DETECTABLE_NOW_TYPES,
+  getEdgeTypeSpec,
+  tagEdgeType,
+  BOOK_DISAGREEMENT_DISPERSION,
+  MIN_BOOKS_FOR_DISAGREEMENT,
+  OVERCORRECTION_MIN_MOVE,
+  OVERCORRECTION_MIN_REVERSAL,
+} from "./edge-type.js";
+export type {
+  EdgeType,
+  EdgeDataStatus,
+  EdgeTypeSpec,
+  EdgeTypeSignals,
+  RequiresDataCandidate,
+  EdgeTypeTag,
+} from "./edge-type.js";
+// Pick-autopsy taxonomy v1 — classifies WHY a settled pick turned out as it did,
+// from result × CLV × line-movement × freshness. "Process not scoreboard": only the
+// computable-now classes are reachable; the rest collapse to insufficient-data.
+export {
+  AUTOPSY_CLASSES,
+  COMPUTABLE_NOW_CLASSES,
+  NEEDS_MORE_SIGNAL_CLASSES,
+  getAutopsyClassSpec,
+  classifyAutopsy,
+} from "./pick-autopsy.js";
+export type {
+  AutopsyClass,
+  AutopsyComputability,
+  AutopsyClassSpec,
+  PickResult,
+  AutopsyInput,
+  AutopsyLineMovement,
+  AutopsyFreshness,
+  AutopsyResult,
+} from "./pick-autopsy.js";
+// Sovereign Edge Index — the SHADOW decision-support index (weight 0). Composes
+// existing signals (assessEdge + calibration trust + CLV + price + uncertainty)
+// into a label. CRITICAL: uncalibrated → can NEVER return ATTACK (caps at WATCH/PASS).
+export {
+  sovereignEdgeIndex,
+  SOVEREIGN_MIN_CLV_SAMPLE,
+} from "./sovereign-edge-index.js";
+export type {
+  SovereignLabel,
+  CalibrationTrust,
+  SovereignEdgeFacts,
+  SovereignEdgeInput,
+  SovereignComponent,
+  SovereignEdgeResult,
+} from "./sovereign-edge-index.js";
