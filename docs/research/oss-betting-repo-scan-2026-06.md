@@ -510,3 +510,139 @@ predictor, upscale, outpaint, remove-bg). Net-new value from OSS is narrow:
 - **Defer:** **Superset** (internal BI) and **Pathway** (real-time line-movement, only on a push feed).
 - **Never:** the IPTV-piracy repo and the unlicensed/uncredited-scraping competitor layer — recorded here so
   they're explicitly out of scope under our clearance + no-piracy posture.
+
+---
+---
+
+# Part 3 — Accelerating the Proven-70% Path (code-grounded; every item mapped)
+
+> **Read `docs/path-to-70.md` first — it is the strategy of record and this Part plugs into it.**
+> The first two Parts of this doc were written *before* reading the engine and were generic. After reading
+> the real code, the picture inverts: GSN has **independently shipped most of the "discipline" the scan
+> recommends, often in more advanced form** (Shin **+** goto devig ensemble vs the proportional method;
+> `clv.ts`/`clv-capture.ts` + Prisma CLV columns; isotonic/PAVA + Brier-Murphy + ECE + reliability curves;
+> an *independent-estimator* `edge-engine.ts`; Merkle `proof-of-record.ts`; `marketGravityIndex`; a Kalshi
+> referee; `ml-estimator.ts`; `edge-significance.ts`). So this Part is not "what to build from scratch" —
+> it's **which research findings accelerate which step of the existing path to a truthful 70%.**
+
+## 16. The honest 70% (affirming `path-to-70.md`, not re-deriving it)
+
+A **blended / against-the-spread 70% win rate is not real and must never be claimed** (break-even at −110 is
+52.4%; the best sustained ATS in the world is ~55–57%; claiming 70% blended trips `scripts/guardrails/trust-gate.mjs`
+and burns credibility). "70%" is honest in exactly one framing GSN already chose: a **selective, calibrated,
+publicly-proven top tier** where a pick labeled ~70% *actually wins ~70%*, carries **positive CLV**, and is
+priced better than −233 (else 70% is −EV). **The only two honest levers on realized win rate are SELECTION
+(what you grade) and CALIBRATION (P means what it says)** — both already in the engine, both founder-gated.
+
+**What the research can and cannot do for 70%:**
+- It **cannot** shortcut the binding constraint: **Step 0 = ≥100 settled canonical picks** (`public-performance-policy.ts`).
+  No repo accelerates the clock; only real settled results prove calibration.
+- It **can** (a) **sharpen the probability estimate** so the engine correctly identifies *more* genuine
+  ≥70% situations (more tier volume *without lowering the bar*), and (b) **prove the 70% is real, not
+  variance** (CLV, significance, reliability curves). That's the whole game.
+
+## 17. Research → mapped onto the `path-to-70.md` staged plan
+
+| path-to-70 step | What it needs | Highest-leverage research accelerant (link → mechanism) | Maps to |
+|---|---|---|---|
+| **0. Honest sample** | ≥100 settled canonical picks; no leakage | **Offline backtest + calibrator-export lane** (georgedouzas/sports-betting, scikit-learn `TimeSeriesSplit`, statsmodels) → validate calibration on *historical* settled data and pre-prove the method before the live sample matures; **walk-forward only** fixes the in-sample self-validation in `calibration-apply.ts` | new `scripts/analytics/` notebook lane + a general `backtest-harness.ts` |
+| **1. Calibrate confidence→P** | small-n-safe, conservative, leak-free calibration | **Calibration-ladder upgrades** (Alex-2911 ladder + nadzhh shrinkage + scikit-learn): add **Platt/sigmoid for small-n** (you'll be small-n for a long time; isotonic-only is the wrong default), **binned-empirical + Wilson lower-bound** (publish the bucket's *lower* win-rate — a defensible 70%), **shrink-to-baseline**, **market-gap governor** | `calibration-apply.ts`, `probability-calibration.ts`, new `binned-empirical.ts` |
+| **2. Price the independent edge** | the sharpest possible P, to find true ≥70% spots | **★ Multi-market true-probability ensemble** (Kalshi **already wired** + Polymarket + Shin-consensus + Poisson/Elo/ML, **precision/inverse-variance weighted**) → lower-vig markets + model triangulation = the cleanest `p_fair`, surfacing more genuinely-mispriced ≥70% picks; **cross-market divergence/steam** as a leading edge-confirmation | `edge-engine.ts`, `market-read.ts`, new Polymarket referee |
+| **3. Define the conviction tier** | fill scarce ≥70% slots with the best qualifiers | **Learned no-bet abstention** (charlesmalafosse) + **contextual-bandit surfacing on CLV reward** (llSourcell RL *reframed*) to allocate attention to the highest-CLV ≥70% qualifiers; **Dixon-Coles τ** (✅ shipped this pass) sharpens soccer multi-market P | `conviction-tier.ts`, `poisson.ts` |
+| **4. Prove it in public** | the moat: a calibrated, auditable record | **Reliability diagram + Wilson-bounded per-bucket win-rate table via `react-vega`** (Vega-Lite, BSD-3); CLV beat-rate + edge-significance p-value + Merkle links on one page; **`exceljs`** track-record export; **Umami** to measure the FOUNDING→PROVEN conversion | `/methodology`, `/proof` routes; `react-vega`; `exceljs`; Umami |
+| **5. Keep improving** | tune without overfitting; find new spots | **Black-box threshold tuner** (Optuna over walk-forward CLV — **not betty**, the inner loop isn't differentiable); **statsforecast line-movement/steam** signal; drift monitor (`calibration-drift.ts`, exists); **war-room content** + **synthetic-fade** as labeled cockpit experiments | new `threshold-tuner`; statsforecast worker |
+
+## 18. The ranked accelerant builds (what to actually do, tagged by 70%-role)
+
+> Tags: **[FIND]** = surfaces more true ≥70% picks · **[PROVE]** = makes the 70% believable/auditable ·
+> **[DATA]** = matures the settled sample faster/cleaner. None flips a `MODEL_VERSION` gate — that stays the founder's audited call.
+
+1. **★ Multi-market true-prob ensemble + cross-market divergence** **[FIND]** — precision-weight Kalshi (wired) +
+   Polymarket (new, clearance-gated read-only) + Shin-consensus + Poisson/Elo/ML into one calibrated `p_fair`;
+   emit `crossMarketDivergence` + its time-derivative. *Socket already exists (`edge-engine.ts`); ~70% of the
+   plumbing is built; this is the flagship "find more honest 70% picks" lever and it directly serves the CLV milestone.*
+2. **Honest calibration ladder** **[PROVE]+[FIND]** — Platt/sigmoid small-n + binned-empirical/Wilson +
+   shrink-to-baseline + market-gap governor, composed after the existing isotonic calibrator; fixes the
+   in-sample-validation leak. *This is the literal switch behind `conviction-tier.ts` and the PROVEN milestone.*
+3. **Offline backtest + calibrator-export notebook lane** **[DATA]+[PROVE]** — sklearn `CalibratedClassifierCV(cv=TimeSeriesSplit)`
+   + statsmodels Poisson, over real `Odds` history + settled picks; exports the versioned calibrator for build #2.
+   *Converts the "fixture-scaffolded proof" admission into a real historical-proof artifact.*
+4. **Public calibration/proof surface** **[PROVE]** — reliability diagram + Wilson per-bucket table (`react-vega`),
+   CLV beat-rate, edge-significance, Merkle links, `exceljs` export, Umami conversion analytics.
+5. **Line-movement forecasting + steam/anomaly engine** **[FIND]** — statsforecast AutoETS/MFLES batch worker
+   building the doctrine-only `market-gravity.md`/`weak-signal-engine.md`; bounded `confidence_adjustment`; defer
+   pathway until a push feed (Elite real-time alerts) exists.
+6. **Canonical UOF-shaped odds schema + normalizer** **[FIND]+[DATA]** — `Event→Market{specifiers,status,lineId}→Outcome{odds,impliedProb,active}`,
+   nullable odds, per-source `lastProcessedAt`; promotes the shadow `lineMovement`/`closingLineValue` factors and
+   satisfies "no stale data" by heartbeat (minus5/go-uof-sdk).
+7. **Dixon-Coles τ for soccer** **[FIND]** — ✅ **shipped this pass** (`poisson.ts`: `dixonColesTau`,
+   `dixonColesJointMatrix`, `moneylineProbabilitiesDC`, `overUnderProbabilitiesDC`, tests) — closes the gap where
+   the header cited Dixon-Coles but shipped independent Maher. Remaining: fit ρ per-league + λ ingestion (gated).
+8. **Contextual-bandit surfacing/exploration** **[FIND]** — LinUCB/Thompson over pick features with **CLV as an
+   instant reward** for the scarce cockpit/free-pick slots and new-market exploration; *allocation layer only —
+   never resurrects a PASS into a SPEAK.*
+9. **War-room multi-agent content** **[PROVE-adjacent]** — Bull/Bear/Sharp/Skeptic debate over the factor trail
+   (reuses the `DRAFT_ONLY` agent-council pattern); forces the bear case into every pick — on-brand for a
+   "publish your losses" platform. (Synthetic-fade = labeled experiment, must earn CLV correlation first.)
+10. **Threshold tuner (Optuna, not betty)** **[FIND]** + **CLIP media brand-safety/dedup** **[product]** +
+    **news-velocity weak-signal worker** **[FIND, operational]** — second-order plays; all gated, all clearance-respecting.
+
+## 19. Net-new doctrine gaps the research names (not yet in GSN's docs)
+
+- **Time-ordered validation as an engine invariant** — add a doctrine line + a **CI test that fails any calibrator
+  validated in-sample/random-split** (`calibration-apply.ts` currently validates on the sample it fit — the exact
+  leakage Alex-2911's bugs illustrate). Cheap, high-trust.
+- **Learned "no-bet" abstention** (charlesmalafosse) — model PASS as a trained, EV-objective decision, not only a threshold.
+- **Prediction-market mid as a named vig-free calibration anchor** (polymarket_gambot) — articulate Kalshi/Polymarket
+  as a secondary CLV cross-check, not just one referee.
+- **Conversion analytics** — no doc owns funnel/conversion measurement for the pricing-ladder milestones; Umami (MIT, same stack) is the $0 fit.
+
+## 20. Full coverage ledger — ALL ~73 items (nothing skipped)
+
+**A. Already shipped in the engine (these links validate existing modules — no build):** WagerBrain & mberk/shin
+& goto_conversion → `shin-devig.ts`/`scoring.ts`/`kelly.ts` (+ELO estimator); EDGE_BOT/mlb-slate CLV → `clv.ts`/`clv-capture.ts`+DB;
+scikit-learn/Basketball_prediction/sports_analytics calibration *measurement* → `probability-calibration.ts` (isotonic/Brier-Murphy/ECE/reliability)
++ `model-limitations.wilsonInterval`; FIFA-WC/englianhu/statsmodels Poisson → `poisson.ts`/`team-rates.ts`; CardinHa/prediict
+Kelly/EV → `kelly.ts`/`bankroll.ts`; sportsAPBot/mlb-slate/betting_edge factor trail → `composite-score.ts`; arbitrage-repo
+consensus/steam → `market-read.ts` (`marketGravityIndex`); polymarket_gambot/Kalshi referee → `kalshi-client.ts`+`edge-engine.ts`;
+kyleskom ML → `ml-estimator.ts`; Merkle proof → `proof-of-record.ts`; mlb-slate/CardinHa grading → `settlement.ts`; J1BON Reddit →
+`reddit-narrative-source.ts`+`narrative-signal.ts`; paper-betting-tracker MC significance → `edge-significance.ts`; betting_edge RG gate → `responsible-gaming.ts`.
+
+**B. Finish-the-dormant (built but gated; research supplies activation mechanics) — top 70% leverage:** Alex-2911 +
+nadzhh + scikit-learn → calibration-ladder upgrades (Platt/Wilson/shrink/market-gap, walk-forward fit); georgedouzas/sports-betting +
+statsmodels + pandas + lazypredict + ProphitBet → offline backtest/notebook lane; minus5/go-uof-sdk → canonical odds schema;
+FIFA-WC/englianhu + openfootball → Dixon-Coles (✅ τ shipped) + λ ingestion.
+
+**C. Net-new signals/engines (additive; build toward more/better 70% spots):** ★ Kalshi+Polymarket+arbitrage repos →
+multi-market true-prob ensemble + divergence/steam; Nixtla statsforecast → line-movement/anomaly engine (pathway deferred);
+llSourcell RL *reframed* → contextual bandits (CLV reward); MiroFish *reframed* (build own minimal — AGPL) → war-room content +
+labeled synthetic-fade; CLIP → media brand-safety/logo/dedup + "setups-like-this" (own feature-embeddings); J1BON patterns →
+news-velocity weak-signal worker; betty → *concept only* (use Optuna, inner loop non-differentiable); devig-method-disagreement (Shin/goto/naive) → small signal.
+
+**D. Product / infra adopt:** **Umami** (MIT, same stack) ADOPT analytics · **exceljs** (MIT, not Go's excelize) ADOPT exports ·
+**Vega-Lite/`react-vega`** (BSD-3) ADOPT calibration charts · **Claude Design** + **awesome-claude-design** `DESIGN.md` (MIT) PILOT ·
+**higgsfield-js** (MIT) + connected MCP + seedance prompt-craft USE (provenance-stamped) · **Miller** (BSD) ADOPT ops/backfill ·
+**Superset** (Apache-2.0) EXPERIMENT internal BI · **Pathway** (BSL) DEFER to push-feed · **statsforecast/neuralforecast** (Apache-2.0)
+EXPERIMENT (= build #5) · **lazypredict** (MIT) R&D-only bake-off · **kserve** (Apache-2.0) DEFER (needs k8s) · **pandas/seaborn** (BSD) offline-only ·
+**scc** (MIT) optional CI metric · **AKCodez higgsfield-claude-skills** (no license) PARTIAL (prompt templates clean-room).
+
+**E. Decline (with reason):** smile (JVM + **GPL-3.0**), imbalanced-learn (**SMOTE degrades calibration** — a "don't"),
+plausible (**AGPL**+Elixir+ClickHouse → use Umami), VegaScroll (abandoned iOS), open-studio (no Claude tie), Edit-Banana
+(**AGPL**, diagram→DrawIO, off-domain), higgsfield-ai/higgsfield (dead GPU framework, name collision), higgsfield-client
+(skip unless Python worker), robonuggets/higgsfield-skill (thin MCP wrapper), MiroFish-as-picks (AGPL + violates calibration —
+*pattern reused in C*), le-wm (visual world model, true skip), llSourcell-as-MDP (skip — *bandit reframe in C*), companygondu
+MLB-montecarlo (no actual MC), Sports-Betting-Sportsbook/Active37/Swati7819/vegassportsbook/jhogarciacu/ursusandwolf/pybet/Fremont28/bet-coach/Neo4j-API
+(empty/thin/off-domain — concept-only at most), Bet-on-Sibyl/DKscraPy/sportsbookreview-scraper/JustBeYou (scrapers — technique refs only, clearance-gated; UOF is the legit target).
+
+**F. Compliance / off-domain decline:** ⚠ **stable-sports-iptv** (broadcast IPTV **piracy**) · ⚠ **aibet-meeting-room**
+(unlicensed competitor, **uncredited ESPN scraping**) · jamesbarnesmd-website (sports *medicine*) · innoweb (sports *collectibles*).
+
+## 21. Honest bottom line
+
+A **proven, calibrated ~70% high-conviction tier is achievable and genuinely first-of-kind** — not because the
+model is a crystal ball, but because the **selectivity + calibration + public proof** is something essentially no
+competitor does. The research **sharpens the probability** (the multi-market ensemble is the flagship "find more
+honest 70% picks" lever) and **strengthens the proof** (reliability curves, CLV, significance, Merkle). But the
+**binding constraint is settled data** (`path-to-70.md` Step 0) — the clock no repo can shortcut — and **blended/ATS
+70% remains impossible and must never be claimed** (it would violate the trust guardrails the platform is built on).
+Chase **calibration error → 0**; the 70% tier is the visible result, and the proof is the moat.
