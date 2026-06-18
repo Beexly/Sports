@@ -188,12 +188,45 @@ export default async function ProofOfRecordPage() {
                     {new Date(board.generatedAt).toUTCString()}
                   </p>
                 </div>
-                <code
-                  className={`break-all rounded bg-titanium px-3 py-2 font-mono text-[11px] text-ion-1 ${NUMERIC_TEXT_CLASS}`}
-                >
-                  {board.merkleRoot}
-                </code>
+                <div className="flex flex-col items-end gap-3">
+                  <code
+                    className={`break-all rounded bg-titanium px-3 py-2 font-mono text-[11px] text-ion-1 ${NUMERIC_TEXT_CLASS}`}
+                  >
+                    {board.merkleRoot}
+                  </code>
+                  <a
+                    href="/api/proof/export"
+                    download
+                    data-testid="proof-csv-download"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-orbital-cyan/50 px-4 py-2 text-[11px] font-semibold uppercase tracking-widest text-orbital-cyan transition hover:bg-orbital-cyan/10"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M6 1v7M3 5.5l3 3 3-3M1.5 10.5h9" />
+                    </svg>
+                    Download tamper-evident CSV
+                  </a>
+                </div>
               </div>
+              <p className="mt-3 text-[11px] text-ion-3">
+                The CSV includes every row&apos;s leaf hash. Re-derive each hash locally:{" "}
+                <code className="rounded bg-titanium/60 px-1 font-mono">
+                  SHA256(&quot;leaf:&quot; + id + &quot;:&quot; + payload)
+                </code>{" "}
+                then recompute the root and compare to the value above.
+                The{" "}
+                <code className="rounded bg-titanium/60 px-1 font-mono">X-Merkle-Root</code>{" "}
+                response header carries it too.
+              </p>
             </section>
           )}
 
@@ -251,12 +284,21 @@ export default async function ProofOfRecordPage() {
                       the hashed committed payload.
                     </p>
                   </div>
-                  <span
-                    className={`text-[11px] uppercase tracking-widest text-ion-2 ${NUMERIC_TEXT_CLASS}`}
-                  >
-                    {formatCount(board.picks.length)} of{" "}
-                    {formatCount(board.totalSettled)} shown
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`text-[11px] uppercase tracking-widest text-ion-2 ${NUMERIC_TEXT_CLASS}`}
+                    >
+                      {formatCount(board.picks.length)} of{" "}
+                      {formatCount(board.totalSettled)} shown
+                    </span>
+                    <a
+                      href="/api/proof/export"
+                      download
+                      className={`text-[11px] font-semibold text-orbital-cyan hover:underline ${NUMERIC_TEXT_CLASS}`}
+                    >
+                      Download CSV
+                    </a>
+                  </div>
                 </div>
 
                 <ul className="divide-y divide-titanium/60">
