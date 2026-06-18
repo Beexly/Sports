@@ -35,6 +35,9 @@ import type { SupportedSportKey } from "@sports/data-ingestion";
 import {
   scoreGames,
   buildPickSignalSnapshot,
+  getPlatformConfig,
+  computeEloRatings,
+  eloFairValuesForGame,
 } from "@sports/prediction-engine";
 import type { ReadinessGates } from "@sports/prediction-engine";
 import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from "@sports/types";
@@ -191,6 +194,41 @@ export async function processSport(
       oddsInserted++;
     }
 
+    // Independent edge (default OFF via INDEPENDENT_EDGE_ENABLED). Build a
+    // results-only team Elo from this sport's settled games so each fixture gets
+    // a real, market-INDEPENDENT fair probability. Surfaced in the glass box at
+    // weight 0 (scoring.ts) — it never moves confidence or pick selection;
+    // pricing it in requires a CLV backtest proving it beats the close. When off,
+    // eloRatings stays null and behavior is byte-for-byte identical to today.
+    let eloRatings: ReturnType<typeof computeEloRatings> | null = null;
+    if (getPlatformConfig().independentEdgeEnabled) {
+      try {
+        const settled = await db.game.findMany({
+          where: { sportId: sportRecord.id, homeScore: { not: null }, awayScore: { not: null } },
+          select: { homeTeamName: true, awayTeamName: true, homeScore: true, awayScore: true, commenceTime: true },
+        });
+        const ratedGames = settled
+          .filter((g) => g.homeScore !== null && g.awayScore !== null)
+          .map((g) => ({
+            homeTeam: g.homeTeamName,
+            awayTeam: g.awayTeamName,
+            homeScore: g.homeScore as number,
+            awayScore: g.awayScore as number,
+            season: g.commenceTime.getUTCFullYear(),
+            kickoff: g.commenceTime.getTime(),
+          }));
+        eloRatings = computeEloRatings(ratedGames);
+        console.log(
+          `${logPrefix} ${sport.key}: Elo from ${eloRatings.gamesRated} settled games, ${eloRatings.ratings.size} teams rated`
+        );
+      } catch (eloErr) {
+        // Non-fatal: a ratings failure must never block scoring.
+        console.warn(
+          `${logPrefix} Elo ratings failed for ${sport.key}: ${eloErr instanceof Error ? eloErr.message : eloErr}`
+        );
+      }
+    }
+
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
 
@@ -286,6 +324,11 @@ export async function processSport(
         hasTotalMarket: totalOdds.length > 0,
         hasH2HMarket,
         shadowEvidence: buildMissingContextEvidence(fetchedAt),
+        // Independent edge (default OFF): results-only Elo fair prob, surfaced at
+        // weight 0 — never moves a pick until a CLV backtest prices it in.
+        independentFairValues: eloRatings
+          ? eloFairValuesForGame(eloRatings, game.homeTeam, game.awayTeam)
+          : undefined,
       };
 
       oddsInputs.push({

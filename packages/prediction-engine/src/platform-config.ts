@@ -141,6 +141,20 @@ export interface PlatformConfig {
    * Default: false (ships dark — zero behavior change until explicitly enabled)
    */
   forceNoBetIfStale: boolean;
+
+  /**
+   * INDEPENDENT_EDGE_ENABLED
+   * Attaches the results-only Elo independent estimate (elo-ratings.ts) to each
+   * fixture's context.independentFairValues, so the edge engine finally produces
+   * a real independent read (Elo fair prob vs the de-vigged market). SURFACED
+   * ONLY: the edge appears in the glass-box factor trail at weight 0 — it does
+   * NOT move confidence or pick selection. Pricing it into the model (letting it
+   * change picks) requires a CLV backtest first proving the Elo edge beats the
+   * closing line. When false: no estimate is attached and behavior is
+   * byte-for-byte identical to today.
+   * Default: false (ships dark).
+   */
+  independentEdgeEnabled: boolean;
 }
 
 function parseBool(val: string | undefined, defaultVal: boolean): boolean {
@@ -173,5 +187,6 @@ export function getPlatformConfig(): PlatformConfig {
     minSettledPicksForLearning:       parseIntSafe(process.env["MIN_SETTLED_PICKS_FOR_LEARNING"], 100),
     calibrationAdjustmentsEnabled:    parseBool(process.env["CALIBRATION_ADJUSTMENTS_ENABLED"],    false),
     forceNoBetIfStale:                parseBool(process.env["FORCE_NO_BET_IF_STALE"],                false),
+    independentEdgeEnabled:           parseBool(process.env["INDEPENDENT_EDGE_ENABLED"],             false),
   };
 }

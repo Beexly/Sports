@@ -65,6 +65,12 @@ vi.mock("@sports/data-ingestion", () => ({
 vi.mock("@sports/prediction-engine", () => ({
   scoreGames: mocks.scoreGames,
   buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
+  // Independent-edge wiring is default OFF: getPlatformConfig reports the flag
+  // off, so the Elo block is skipped and pipeline behavior is unchanged. The
+  // elo helpers are stubbed only so the import resolves.
+  getPlatformConfig: () => ({ independentEdgeEnabled: false }),
+  computeEloRatings: () => ({ ratings: new Map(), gamesRated: 0, initialRating: 1500 }),
+  eloFairValuesForGame: () => [],
 }));
 
 vi.mock("../source-snapshot.js", () => ({

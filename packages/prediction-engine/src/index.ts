@@ -189,6 +189,10 @@ export type { PlayerSeasonLine, PlayerProjection, ProjectionBacktest } from "./p
 // comparable to the market baseline. Measurement only; not wired into scoring.
 export { eloBacktest } from "./elo-backtest.js";
 export type { EloBacktestGame, EloBacktestReport, EloBacktestOptions } from "./elo-backtest.js";
+// Live results-only Elo: current ratings + per-fixture independent fair values
+// that finally feed context.independentFairValues (pipeline wires it, flag-gated).
+export { computeEloRatings, eloFairValuesForGame } from "./elo-ratings.js";
+export type { RatedGame, EloRatings, EloRatingsOptions } from "./elo-ratings.js";
 
 // Opponent-adjusted efficiency (DVOA/SRS-family) over public play-by-play.
 export { opponentAdjustedRatings } from "./opponent-adjusted.js";
