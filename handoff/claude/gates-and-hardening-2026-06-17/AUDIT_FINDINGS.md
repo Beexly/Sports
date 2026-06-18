@@ -4,9 +4,29 @@ Run as **8 parallel read-only subagents** (ultracode) over the full repo, then
 consolidated here. Each finding is verified against real `file:line`. Disposition:
 **[FIX]** done in-session · **[HANDOFF]** for local Claude · **[ACCEPTED]** intentional/low.
 
-> Status: 6 of 8 audit domains consolidated below; **types/architecture** and
-> **accuracy-claims/calibration** were still finishing at write time and are
-> appended in a follow-up commit.
+> Status: all 8 audit domains consolidated below. See
+> **`✅ HARDENING APPLIED (2026-06-18)`** immediately below for exactly which
+> findings were fixed in-session (with commit hashes) versus deferred to handoff.
+
+---
+
+## ✅ HARDENING APPLIED (2026-06-18)
+
+Done in-session, each behind typecheck + lint + full test suite (5,900+) + build:
+
+| Finding | What shipped | Where |
+|---|---|---|
+| **G2** NaN scores | `Number.isFinite` collapses non-numeric scores to `null`; a postponed/abandoned game (`""`/`"-"`/`"PPD"`) now stays `PENDING` instead of mis-grading. Mitigates the common case of **G1** (VOID). | `data-ingestion/src/normalizer.ts` |
+| **G3** double-settle race | Settlement write is now `updateMany({where:{id, result:"PENDING"}})`; the race loser matches 0 rows and skips re-grading/re-stamping/CLV/snapshot. New idempotency test. | `ingestion-pipeline/src/settle-sport.ts` (+ test) |
+| **M4** Stripe fail-open | `mapStripeStatus` default flipped `ACTIVE → INCOMPLETE` (fail-closed billing gate for any future unknown Stripe status). | `app/api/webhooks/stripe/route.ts` |
+| **M2** seed in win-rate | `loadPublicPerformancePolicy` now excludes `modelVersion:"v5.0.0-seed"` from canonical counts, matching the three other win-rate readers. | `lib/performance/public-performance-policy.ts` |
+| **HIGH** server-action auth | `assertCockpitAdmin()` (`auth()` + ADMIN) added inside the memory Server Actions — the layout guard doesn't cover the POST endpoint. | `app/cockpit/memory/page.tsx` |
+| **CRITICAL** contrast | Faint `text-ion-3/40·/50·/60·/30` sub-labels (incl. the Drilldowns disclosure summary) bumped to `text-ion-2`/`text-ion-3` (AA-passing). | `app/cockpit/page.tsx` |
+| **HIGH** locked Win Rate | Gated win rate now renders a 🔒 **Locked** state with a title, not a bare `—` that read as broken. | `app/cockpit/page.tsx` |
+| UX (prior commits) | Calm still-backed intro (WebGL warp removed) + cockpit de-clutter (disclosures, softened red). | `components/landing/cinematic-entrance.tsx`, `app/cockpit/page.tsx` |
+
+**Still deferred to handoff (need prod/owner judgment or larger test work):**
+G1 full VOID-status path (needs an upstream `completed-but-cancelled` signal — G2 covers the non-numeric case), **G4** empty-run→non-SUCCESS, the DB **migration baseline + additive indexes**, `/api/performance` `groupBy`, `FORCE_NO_BET_IF_STALE` flip (in GATE_FLIP_HANDOFF), `npm audit fix`, failover wiring, and the color-role token sweep.
 
 ---
 
@@ -118,10 +138,14 @@ stats," so these come first.
 
 ## Disposition summary
 
-- **Fixing in-session (safe + test-covered):** G2 (NaN guard), G3 (double-settle
-  precondition), G4 (empty→non-success), the HIGH server-action auth gap, the cockpit
-  contrast/locked-state mechanical fixes, and the additive Pick/IngestionRun indexes.
-- **G1 (VOID path):** carries a status signal adapter→normalizer→settle; implemented
-  carefully with tests if it stays localized, else handed off — see HARDENING_APPLIED.md.
-- **Handoff (needs prod/owner judgment):** DB migration baseline, `/api/performance`
-  `groupBy`, `npm audit fix`, `next` CVE review, failover wiring, color-role token sweep.
+- **Fixed in-session (see `✅ HARDENING APPLIED` above):** G2 (NaN guard), G3
+  (double-settle precondition), M2 (seed-exclusion in the policy loader), M4 (Stripe
+  fail-closed), the HIGH server-action auth gap, and the cockpit contrast + locked-state
+  fixes — plus the prior calm-intro / cockpit-declutter UX commits.
+- **G1 (VOID path):** partially covered — G2 stops the non-numeric/abandoned case from
+  mis-grading; a full VOID-status path still needs an upstream "completed-but-cancelled"
+  signal (adapter→normalizer→settle) and is handed off.
+- **Handoff (needs prod/owner judgment or larger test work):** G4 (empty→non-SUCCESS),
+  DB migration baseline + additive Pick/IngestionRun indexes, `/api/performance` `groupBy`,
+  `FORCE_NO_BET_IF_STALE` flip, `npm audit fix`, `next` CVE review, failover wiring,
+  color-role token sweep.
