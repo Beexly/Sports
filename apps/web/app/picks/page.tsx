@@ -4,6 +4,7 @@ import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import type { PublicPick, DailySlate } from "@sports/types";
@@ -209,6 +210,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
         className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8"
         style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
       >
+        <GeneratedPlate assetId="today-mission" className="-z-20 opacity-50" />
         {/* Atmospheric glow layer */}
         <div
           aria-hidden="true"
