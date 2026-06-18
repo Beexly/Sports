@@ -128,7 +128,13 @@ export default function MethodologyPage(): JSX.Element {
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <Stagger className="mx-auto grid max-w-6xl gap-5 md:grid-cols-3" step={100}>
             {STACK.map((item, index) => (
-              <article key={item.title} className="surface-card p-6">
+              <article
+                key={item.title}
+                className="surface-card overflow-hidden p-6 transition-shadow hover:shadow-[0_0_28px_rgba(0,0,0,0.45)]"
+                style={{ borderColor: `${ACCENTS[index]}22` }}
+              >
+                {/* Accent top bar */}
+                <div className="mb-4 h-0.5 w-full rounded-full" style={{ background: `linear-gradient(90deg, ${ACCENTS[index]}, transparent 70%)` }} aria-hidden="true" />
                 <span aria-hidden="true" className="font-display text-2xl tabular-nums" style={{ color: ACCENTS[index] }}>
                   0{index + 1}
                 </span>
@@ -156,9 +162,10 @@ export default function MethodologyPage(): JSX.Element {
               </div>
             </Reveal>
             <Stagger className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" step={50}>
-              {FACTORS.map((factor) => (
-                <div key={factor} className="surface-card min-h-20 p-4">
-                  <p className="text-sm font-semibold text-white">{factor}</p>
+              {FACTORS.map((factor, i) => (
+                <div key={factor} className="surface-card group min-h-20 p-4 transition-shadow hover:border-orbital-cyan/30 hover:shadow-[0_0_16px_rgba(0,229,255,0.08)]">
+                  <span className="mb-2 block font-mono text-[10px] text-ion-3 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                  <p className="text-sm font-semibold text-white group-hover:text-orbital-cyan transition-colors">{factor}</p>
                 </div>
               ))}
             </Stagger>

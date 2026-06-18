@@ -273,33 +273,34 @@ export default function PricingPage() {
               Each plan is a different job — and you can see exactly what the next tier adds before you pay for it.
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {VALUE_TIERS.filter((t) => t.status === "live").map((t) => (
+              {VALUE_TIERS.filter((t) => t.status === "live").map((t, i) => (
                 <div
                   key={t.id}
-                  className="flex h-full flex-col rounded-2xl border border-titanium bg-carbon/40 p-5"
+                  className="flex h-full flex-col rounded-2xl border border-titanium bg-carbon/40 p-5 animate-fade-up transition-shadow hover:border-titanium hover:shadow-[0_0_24px_rgba(0,0,0,0.4)]"
+                  style={{ animationDelay: `${i * 80}ms` }}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-400">
+                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ion-blue">
                       {t.name}
                     </p>
                     {t.status === "waitlist" && (
-                      <span className="rounded-full border border-titanium px-2 py-0.5 text-[10px] font-medium text-ink-300">
+                      <span className="rounded-full border border-titanium px-2 py-0.5 text-[10px] font-medium text-ion-3">
                         Waitlist
                       </span>
                     )}
                   </div>
                   <p className="mt-2 text-base font-semibold text-white">{t.promise}</p>
-                  <p className="mt-1 text-xs text-ink-400">{t.forWho}</p>
+                  <p className="mt-1 text-xs text-ion-3">{t.forWho}</p>
                   {t.whyNextTier && (
-                    <p className="mt-3 border-t border-titanium pt-3 text-xs leading-relaxed text-ink-300">
-                      <span className="text-ink-500">Next: </span>
+                    <p className="mt-auto border-t border-titanium pt-3 text-xs leading-relaxed text-ion-2">
+                      <span className="text-ion-3">Next: </span>
                       {t.whyNextTier}
                     </p>
                   )}
                   {t.status === "waitlist" && (
                     <Link
                       href="/contact"
-                      className="mt-4 inline-block text-xs font-semibold text-brand-400 transition-colors hover:text-brand-300"
+                      className="mt-4 inline-block text-xs font-semibold text-ion-blue transition-colors hover:text-ion-blue-glow"
                     >
                       {t.ctaLabel} →
                     </Link>
@@ -355,25 +356,25 @@ export default function PricingPage() {
             <div className="mt-8 overflow-x-auto rounded-2xl border border-titanium">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-titanium">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ion-2">
+                  <tr className="border-b border-titanium bg-carbon/60">
+                    <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-ion-3">
                       Feature
                     </th>
                     {PLANS.map((plan) => (
                       <th
                         key={plan.id}
                         className={[
-                          "px-4 py-3 text-center text-sm font-bold",
+                          "px-4 py-4 text-center text-sm font-bold",
                           plan.id === "PRO"
-                            ? "text-brand-400"
+                            ? "text-plasma"
                             : plan.id === "ELITE"
-                              ? "text-ultraviolet-glow"
-                              : "text-ion-1",
+                              ? "text-ultraviolet"
+                              : "text-ion-blue",
                         ].join(" ")}
                       >
                         {plan.name}
                         {plan.monthly !== null && (
-                          <span className="ml-1 text-xs font-normal text-ion-2">
+                          <span className="ml-1 text-xs font-normal text-ion-3">
                             ${plan.monthly}/mo
                           </span>
                         )}
@@ -386,16 +387,16 @@ export default function PricingPage() {
                     <tr
                       key={feature}
                       className={[
-                        "border-b border-titanium/60",
-                        i % 2 === 0 ? "bg-carbon/20" : "",
+                        "border-b border-titanium/40 transition-colors hover:bg-carbon/30",
+                        i % 2 === 0 ? "bg-carbon/10" : "",
                       ].join(" ")}
                     >
-                      <td className="px-4 py-3 text-ion-2">{feature}</td>
+                      <td className="px-4 py-3 text-ion-1">{feature}</td>
                       {(["FREE", "PRO", "ELITE"] as const).map((planId) => {
                         const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
                         return (
                           <td key={planId} className="px-4 py-3 text-center">
-                            <ComparisonCell value={cell} />
+                            <ComparisonCell value={cell} tier={planId} />
                           </td>
                         );
                       })}
@@ -409,17 +410,19 @@ export default function PricingPage() {
           {/* Built to protect you from hype — what every tier is really for */}
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Built to protect you from hype</h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">{EMOTIONAL_VALUE}</p>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ion-2">{EMOTIONAL_VALUE}</p>
             <div className="mx-auto mt-8 grid max-w-4xl gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">
+              <div className="rounded-2xl border border-ion-blue/20 bg-ion-blue/5 p-6 transition-shadow hover:shadow-[0_0_24px_rgba(0,229,255,0.08)]">
+                <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-ion-blue">Signal quality</p>
                 <h3 className="text-sm font-semibold text-white">How confidence works</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                <p className="mt-2 text-sm leading-relaxed text-ion-2">
                   {getFeature("confidence")?.customerExplanation}
                 </p>
               </div>
-              <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">
+              <div className="rounded-2xl border border-verify/20 bg-verify/5 p-6 transition-shadow hover:shadow-[0_0_24px_rgba(95,217,163,0.08)]">
+                <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-verify">Discipline gate</p>
                 <h3 className="text-sm font-semibold text-white">What No-Bet means</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                <p className="mt-2 text-sm leading-relaxed text-ion-2">
                   {getFeature("no-bet-reasoning")?.customerExplanation}
                 </p>
               </div>
@@ -429,17 +432,17 @@ export default function PricingPage() {
           {/* FAQ */}
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Frequently asked</h2>
-            <div className="mx-auto mt-8 max-w-3xl divide-y divide-titanium/60 rounded-2xl border border-titanium bg-carbon/40">
+            <div className="mx-auto mt-8 max-w-3xl divide-y divide-titanium/40 overflow-hidden rounded-2xl border border-titanium bg-carbon/40">
               {FAQ.map((item) => (
                 <details
                   key={item.q}
-                  className="group px-5 py-4 [&_summary::-webkit-details-marker]:hidden"
+                  className="group px-5 py-4 transition-colors hover:bg-carbon/60 [&_summary::-webkit-details-marker]:hidden"
                 >
                   <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-ion-white">
                     <span>{item.q}</span>
                     <span
                       aria-hidden="true"
-                      className="text-ion-2 transition-transform group-open:rotate-45"
+                      className="shrink-0 rounded-full border border-titanium bg-carbon/60 px-1.5 py-0.5 text-xs text-plasma transition-transform group-open:rotate-45"
                     >
                       +
                     </span>
@@ -501,11 +504,12 @@ function TierDoorColumn({
   );
 }
 
-function ComparisonCell({ value }: { value: string | boolean }) {
+function ComparisonCell({ value, tier }: { value: string | boolean; tier?: "FREE" | "PRO" | "ELITE" }) {
   if (typeof value === "boolean") {
+    const checkColor = tier === "PRO" ? "text-plasma" : tier === "ELITE" ? "text-ultraviolet" : "text-ion-blue";
     return value ? (
       <svg
-        className="mx-auto h-5 w-5 text-brand-400"
+        className={`mx-auto h-5 w-5 ${checkColor}`}
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={2.5}
@@ -517,17 +521,17 @@ function ComparisonCell({ value }: { value: string | boolean }) {
       </svg>
     ) : (
       <svg
-        className="mx-auto h-5 w-5 text-ion-3"
+        className="mx-auto h-4 w-4 text-titanium"
         fill="none"
         viewBox="0 0 24 24"
-        strokeWidth={2}
+        strokeWidth={1.5}
         stroke="currentColor"
         role="img"
         aria-label="Not included"
       >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
       </svg>
     );
   }
-  return <span className="text-ion-1">{value}</span>;
+  return <span className="text-xs font-medium text-ion-2">{value}</span>;
 }
