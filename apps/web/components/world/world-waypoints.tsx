@@ -22,16 +22,16 @@ const WAYPOINTS = [
 
 export function WorldWaypoints(): JSX.Element {
   return (
-    <nav aria-label="World modules" className="relative border-t border-mineral/60">
+    <nav aria-label="World modules" className="relative" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
       <div className="mx-auto flex max-w-7xl items-center gap-1 overflow-x-auto px-4 py-3 sm:px-6 lg:px-8">
-        <span className="mr-2 shrink-0 font-mono text-[9px] uppercase tracking-[0.24em] text-ion-2">
+        <span className="mr-2 shrink-0 font-mono text-[9px] uppercase tracking-[0.24em] text-ink-400">
           The world ▸
         </span>
         {WAYPOINTS.map((wp) => (
           <Link
             key={wp.n}
             href={wp.href}
-            className="group flex shrink-0 items-baseline gap-1.5 rounded-ds-sm px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-1 transition-colors hover:bg-eclipse hover:text-ion-white"
+            className="group flex shrink-0 items-baseline gap-1.5 rounded-ds-sm px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-300 transition-colors hover:bg-white/[0.05] hover:text-white"
           >
             <span className="text-orbital-cyan/80 group-hover:text-orbital-cyan">{wp.n}</span>
             {wp.label}

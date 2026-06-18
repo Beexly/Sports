@@ -82,9 +82,9 @@ const TABS_VARIANTS = {
     ring: "focus-visible:ring-ink-1/30",
   },
   dark: {
-    wrap: "border-mineral bg-carbon",
-    active: "bg-eclipse text-ion-white shadow-sm",
-    inactive: "text-ion-1 hover:bg-eclipse hover:text-ion-white",
+    wrap: "border-white/10 bg-white/[0.03]",
+    active: "bg-white/[0.08] text-white shadow-sm",
+    inactive: "text-ink-300 hover:bg-white/[0.05] hover:text-white",
     ring: "focus-visible:ring-orbital-cyan/30",
   },
 } as const;

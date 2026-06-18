@@ -35,7 +35,8 @@ export function WorldSection({
   return (
     <section
       id={id}
-      className={`relative isolate scroll-mt-20 overflow-hidden border-b border-mineral px-4 py-16 sm:px-6 sm:py-20 lg:px-8 ${atmosphere} ${className}`}
+      className={`relative isolate scroll-mt-20 overflow-hidden px-4 py-16 sm:px-6 sm:py-20 lg:px-8 ${atmosphere} ${className}`}
+      style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
     >
       <div className="mx-auto max-w-7xl">
         <Reveal>
@@ -43,11 +44,11 @@ export function WorldSection({
             <span className="text-orbital-cyan">{index}</span>
             {eyebrow}
           </p>
-          <h2 className="mt-4 max-w-3xl font-display text-display-lg font-semibold text-balance text-ion-white">
+          <h2 className="mt-4 max-w-3xl font-display text-display-lg font-semibold text-balance text-white">
             {title}
           </h2>
           {lede ? (
-            <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">{lede}</p>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-ink-300">{lede}</p>
           ) : null}
         </Reveal>
         <div className="mt-10">{children}</div>

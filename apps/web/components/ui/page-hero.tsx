@@ -35,10 +35,10 @@ const VARIANTS: Record<
     desc: "text-ink-1",
   },
   dark: {
-    wrap: "border-mineral",
+    wrap: "border-white/10",
     eyebrow: "text-orbital-cyan",
-    title: "text-ion-white",
-    desc: "text-ion-1",
+    title: "text-white",
+    desc: "text-ink-300",
   },
 };
 

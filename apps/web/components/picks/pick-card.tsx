@@ -27,10 +27,10 @@ interface PickCardProps {
 // Grade → card border + ambient glow (base state).
 // hover adds a dark lift on top; both shadow values stack in CSS.
 const GRADE_CARD_STYLES: Record<PickGrade, { border: string; shadow: string }> = {
-  ELITE_PLAY: { border: "border-plasma/50",   shadow: "shadow-glow-plasma" },
-  STRONG_PLAY:{ border: "border-ion-blue/30", shadow: "shadow-glow-cyan" },
-  SOLID_PLAY: { border: "border-ion-blue/15", shadow: "" },
-  LEAN:       { border: "border-titanium",    shadow: "" },
+  ELITE_PLAY: { border: "border-plasma/50",         shadow: "shadow-glow-plasma" },
+  STRONG_PLAY:{ border: "border-orbital-cyan/30",   shadow: "shadow-glow-cyan" },
+  SOLID_PLAY: { border: "border-orbital-cyan/15",   shadow: "" },
+  LEAN:       { border: "border-white/10",          shadow: "" },
 };
 
 const RISK_LEVEL_STYLES: Record<RiskLevel, string> = {
@@ -70,13 +70,13 @@ export function PickCard({
     <article
       className={[
         "relative flex flex-col gap-4 rounded-2xl border p-5",
-        "bg-carbon transition-all duration-300",
+        "transition-all duration-300",
         "hover:shadow-[0_8px_32px_rgba(0,0,0,0.6)]",
         "animate-fade-up",
         gradeStyle.border,
         gradeStyle.shadow,
       ].join(" ")}
-      style={{ animationDelay: `${index * 70}ms` }}
+      style={{ animationDelay: `${index * 70}ms`, background: "rgba(8,6,20,0.75)" }}
     >
       {/* Featured ribbon */}
       {isFeatured && (
@@ -89,7 +89,7 @@ export function PickCard({
 
       {/* Header: sport + badges */}
       <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <span className="rounded-full bg-titanium px-2.5 py-0.5 text-xs font-semibold text-ion-1">
+        <span className="rounded-full bg-white/[0.08] px-2.5 py-0.5 text-xs font-semibold text-ink-300">
           {pick.game.sport}
         </span>
         <div className="flex flex-wrap items-center gap-1.5">
@@ -101,12 +101,12 @@ export function PickCard({
 
       {/* Matchup */}
       <div>
-        <p className="text-xs text-ion-1">{gameTime}</p>
+        <p className="text-xs text-ink-300">{gameTime}</p>
         <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-white">{pick.game.awayTeam}</p>
             <p className="mt-0.5 truncate text-sm font-semibold text-white">
-              <span className="font-normal text-ion-2">@ </span>
+              <span className="font-normal text-ink-400">@ </span>
               {pick.game.homeTeam}
             </p>
           </div>
@@ -115,11 +115,11 @@ export function PickCard({
       </div>
 
       {/* Selection box */}
-      <div className="rounded-lg bg-titanium/60 px-4 py-3">
-        <p className="text-xs font-medium text-ion-1">Pick</p>
+      <div className="rounded-lg px-4 py-3" style={{ background: "rgba(255,255,255,0.05)" }}>
+        <p className="text-xs font-medium text-ink-300">Pick</p>
         <p className="mt-0.5 text-lg font-bold text-white">{pick.selection}</p>
         {pick.line !== 0 && pick.pickType !== "SPREAD" && (
-          <p className="mt-0.5 text-xs text-ion-1">
+          <p className="mt-0.5 text-xs text-ink-300">
             Line: {pick.line > 0 ? "+" : ""}{pick.line}
           </p>
         )}
@@ -129,7 +129,7 @@ export function PickCard({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {/* Confidence */}
         <div className="min-w-0">
-          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ion-3">
+          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-500">
             Confidence
           </p>
           {canSeeConfidence && pick.confidence !== null ? (
@@ -141,7 +141,7 @@ export function PickCard({
 
         {/* Edge score */}
         <div className="min-w-0">
-          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ion-3">
+          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-500">
             Edge
           </p>
           {canSeeEdgeScore && pick.edgeScore !== null ? (
@@ -153,7 +153,7 @@ export function PickCard({
 
         {/* Risk */}
         <div className="min-w-0">
-          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ion-3">
+          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-500">
             Risk
           </p>
           <span className={`text-xs font-semibold ${RISK_LEVEL_STYLES[pick.riskLevel]}`}>
@@ -163,7 +163,7 @@ export function PickCard({
       </div>
 
       {/* Reasoning teaser / full */}
-      <p className="text-xs leading-relaxed text-ion-1">
+      <p className="text-xs leading-relaxed text-ink-300">
         {canSeeConfidence ? pick.reasoning : pick.reasoningShort}
       </p>
 
@@ -174,16 +174,16 @@ export function PickCard({
       {!canSeeFactorBreakdown && (
         <Link
           href="/pricing"
-          className="block rounded-lg border border-dashed border-titanium/50 px-4 py-3 transition-colors hover:border-plasma/50"
+          className="block rounded-lg border border-dashed px-4 py-3 transition-colors hover:border-plasma/50" style={{ borderColor: "rgba(255,255,255,0.12)" }}
         >
-          <p className="text-xs text-ion-1">
+          <p className="text-xs text-ink-300">
             Factor breakdown unlocks on Pro &amp; Elite →
           </p>
         </Link>
       )}
 
       {/* Data quality + freshness footer */}
-      <div className="flex flex-col gap-2 border-t border-titanium/60 pt-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:items-center sm:justify-between" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
         <DataQualityRing score={pick.dataQualityScore} />
         {freshnessAge !== null && (
           <div className="flex items-center gap-1.5">
@@ -197,7 +197,7 @@ export function PickCard({
         {pick.isAuditAvailable ? (
           <EvidenceAuditDrawer pickId={pick.id} />
         ) : (
-          <span className="rounded-full border border-titanium bg-carbon/50 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-1">
+          <span className="rounded-full px-3 py-1 text-[11px] font-medium tracking-wide text-ink-400" style={{ border: "1px solid rgba(255,255,255,0.10)", background: "rgba(255,255,255,0.04)" }}>
             Evidence opens on live picks
           </span>
         )}
@@ -219,9 +219,9 @@ function ConfidenceRing({ confidence }: { confidence: number }) {
   const filled = (confidence / 100) * circ;
 
   let stroke = "#9AA3C0"; // ion-3
-  let textCls = "text-ion-2";
+  let textCls = "text-ink-400";
   if (confidence >= 80) { stroke = "#5FD9A3"; textCls = "text-verify"; }
-  else if (confidence >= 70) { stroke = "#00E5FF"; textCls = "text-ion-blue"; }
+  else if (confidence >= 70) { stroke = "#00E5FF"; textCls = "text-orbital-cyan"; }
   else if (confidence >= 60) { stroke = "#FF2DD6"; textCls = "text-plasma"; }
 
   return (
@@ -268,9 +268,9 @@ function EdgeRing({ edgeScore }: { edgeScore: number }) {
   const filled = (edgeScore / 100) * circ;
 
   let stroke = "#9AA3C0";
-  let textCls = "text-ion-2";
+  let textCls = "text-ink-400";
   if (edgeScore >= 70) { stroke = "#5FD9A3"; textCls = "text-verify"; }
-  else if (edgeScore >= 50) { stroke = "#00E5FF"; textCls = "text-ion-blue"; }
+  else if (edgeScore >= 50) { stroke = "#00E5FF"; textCls = "text-orbital-cyan"; }
   else if (edgeScore >= 30) { stroke = "#FF2DD6"; textCls = "text-plasma"; }
 
   return (
@@ -342,7 +342,7 @@ function DataQualityRing({ score }: { score: number }) {
           strokeLinecap="round"
         />
       </svg>
-      <span className="text-[10px] text-ion-1">Data Quality</span>
+      <span className="text-[10px] text-ink-300">Data Quality</span>
       <span className={`text-[10px] font-semibold ${textCls}`}>{label}</span>
     </div>
   );
@@ -359,13 +359,13 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
     (breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore !== 0);
 
   return (
-    <div className="rounded-lg border border-titanium/60 bg-obsidian/40 p-3">
-      <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-ion-1">
+    <div className="rounded-lg p-3" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(8,6,20,0.5)" }}>
+      <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-ink-300">
         Factor Breakdown
       </p>
 
       <div className="mb-3 grid grid-cols-1 gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2">
-        <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-ion-blue" />
+        <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-orbital-cyan" />
         <ScoreBar label="Market Depth" value={breakdown.marketDepthScore} max={20} color="bg-ultraviolet" />
         <ScoreBar label="Pricing Edge" value={breakdown.edgeScore} max={25} color="bg-verify" />
         <ScoreBar label="Line Movement" value={Math.max(0, breakdown.lineMovementScore)} max={15} color="bg-plasma" />
@@ -405,11 +405,11 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
                     ? "bg-verify"
                     : factor.impact === "negative"
                     ? "bg-alert"
-                    : "bg-ion-3",
+                    : "bg-white/30",
                 ].join(" ")}
                 aria-hidden="true"
               />
-              <span className="text-[10px] leading-relaxed text-ion-2">
+              <span className="text-[10px] leading-relaxed text-ink-400">
                 {factor.description}
               </span>
             </div>
@@ -418,32 +418,32 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
       )}
 
       {breakdown.independentEdge && breakdown.independentEdge.decision !== "PASS" && (
-        <div className="mt-2 rounded-md border border-ion-blue/30 bg-ion-blue/5 p-2">
+        <div className="mt-2 rounded-md p-2" style={{ border: "1px solid rgba(0,229,255,0.25)", background: "rgba(0,229,255,0.05)" }}>
           <div className="mb-1 flex items-center gap-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wide text-ion-blue">
+            <span className="text-[10px] font-semibold uppercase tracking-wide text-orbital-cyan">
               Independent edge
             </span>
-            <span className="rounded-full bg-titanium px-1.5 py-0.5 text-[9px] text-ion-2">
+            <span className="rounded-full px-1.5 py-0.5 text-[9px] text-ink-400" style={{ background: "rgba(255,255,255,0.08)" }}>
               {breakdown.independentEdge.sources.join(", ") || "—"} · not yet priced
             </span>
           </div>
           {breakdown.independentEdge.trueProb !== null && (
             <div className="mb-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="text-[10px] text-ion-2">
+              <span className="text-[10px] text-ink-400">
                 Our read{" "}
-                <span className="font-semibold text-ion-blue">
+                <span className="font-semibold text-orbital-cyan">
                   {Math.round(breakdown.independentEdge.trueProb * 100)}%
                 </span>
               </span>
-              <span className="text-[9px] text-ion-3">vs</span>
-              <span className="text-[10px] text-ion-2">
+              <span className="text-[9px] text-ink-500">vs</span>
+              <span className="text-[10px] text-ink-400">
                 Market{" "}
-                <span className="font-semibold text-ion-1">
+                <span className="font-semibold text-ink-300">
                   {Math.round(breakdown.independentEdge.marketFairProb * 100)}%
                 </span>
               </span>
               {breakdown.independentEdge.expectedClv > 0 && (
-                <span className="text-[10px] text-ion-2">
+                <span className="text-[10px] text-ink-400">
                   Beat-the-close{" "}
                   <span className="font-semibold text-verify">
                     +{breakdown.independentEdge.expectedClv.toFixed(1)} pts
@@ -452,7 +452,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
               )}
             </div>
           )}
-          <p className="text-[10px] leading-relaxed text-ion-2">
+          <p className="text-[10px] leading-relaxed text-ink-400">
             {breakdown.independentEdge.rationale}
           </p>
         </div>
@@ -508,10 +508,10 @@ function ScoreBar({
   return (
     <div>
       <div className="mb-0.5 flex justify-between text-[10px]">
-        <span className="text-ion-1">{label}</span>
-        <span className="font-medium text-ion-2">{Math.round(value)}</span>
+        <span className="text-ink-300">{label}</span>
+        <span className="font-medium text-ink-400">{Math.round(value)}</span>
       </div>
-      <div className="h-1 w-full overflow-hidden rounded-full bg-titanium">
+      <div className="h-1 w-full overflow-hidden rounded-full bg-white/[0.08]">
         <div
           className={`h-full rounded-full ${color}`}
           style={{ width: `${pct}%` }}
@@ -532,7 +532,7 @@ function GradeBadge({ grade }: { grade: PickGrade }) {
   const baseStyles: Record<Exclude<PickGrade, "LEAN">, string> = {
     ELITE_PLAY:  "text-plasma bg-plasma/10 shadow-[0_0_12px_rgba(255,45,214,0.5)]",
     STRONG_PLAY: "text-verify bg-verify/10",
-    SOLID_PLAY:  "text-ion-blue bg-ion-blue/10",
+    SOLID_PLAY:  "text-orbital-cyan bg-orbital-cyan/10",
   };
 
   return (
@@ -568,7 +568,7 @@ function TierBadge({ tier }: { tier: "FREE" | "PREMIUM" }) {
 
 function PickTypeBadge({ type }: { type: PickType }) {
   const colors: Record<PickType, string> = {
-    SPREAD:    "bg-ion-blue/10 text-ion-blue",
+    SPREAD:    "bg-orbital-cyan/10 text-orbital-cyan",
     MONEYLINE: "bg-ultraviolet/10 text-ultraviolet",
     TOTAL:     "bg-ultraviolet/10 text-ultraviolet",
   };
@@ -589,8 +589,8 @@ function ResultBadge({ result }: { result: PickResult }) {
   const styles: Record<Exclude<PickResult, "PENDING">, string> = {
     WIN:  "bg-verify/10 text-verify",
     LOSS: "bg-alert/10 text-alert",
-    PUSH: "bg-titanium text-ion-2",
-    VOID: "bg-titanium text-ion-1",
+    PUSH: "bg-white/[0.08] text-ink-400",
+    VOID: "bg-white/[0.08] text-ink-300",
   };
   return (
     <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${styles[result as Exclude<PickResult, "PENDING">]}`}>
@@ -604,7 +604,7 @@ function LockedValue({ label }: { label: string }) {
     <Link
       href="/pricing"
       aria-label={`${label} unlocks on Pro — see pricing`}
-      className="flex items-center gap-1 text-xs text-ion-1 transition-colors hover:text-plasma"
+      className="flex items-center gap-1 text-xs text-ink-300 transition-colors hover:text-plasma"
     >
       <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
         <path
@@ -623,7 +623,7 @@ function FreshnessIndicator({ ageMinutes }: { ageMinutes: number }) {
   let dotCls = isLive
     ? "bg-verify animate-live-pulse"
     : ageMinutes < 30
-    ? "bg-ion-3"
+    ? "bg-white/40"
     : "bg-plasma";
 
   let textCls = "text-verify";
@@ -635,7 +635,7 @@ function FreshnessIndicator({ ageMinutes }: { ageMinutes: number }) {
     textCls = "text-plasma";
     label = `${ageMinutes}m old`;
   } else if (ageMinutes >= 10) {
-    textCls = "text-ion-2";
+    textCls = "text-ink-400";
     label = `${ageMinutes}m ago`;
   }
 
