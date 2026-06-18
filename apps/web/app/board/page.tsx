@@ -59,8 +59,8 @@ export default async function BoardPage(): Promise<JSX.Element> {
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         {dbUnreachable && (
-          <div className="flex flex-col gap-2 border border-red-900 bg-red-950/25 px-4 py-3 text-sm text-red-100 sm:flex-row sm:items-center">
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-red-300">
+          <div className="flex flex-col gap-2 border border-alert/40 bg-alert/10 px-4 py-3 text-sm text-ion-1 sm:flex-row sm:items-center">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-alert">
               Data store unreachable
             </span>
             <span className="break-words sm:ml-3">
@@ -70,8 +70,8 @@ export default async function BoardPage(): Promise<JSX.Element> {
         )}
 
         {isSampleData && (
-          <div className="flex flex-col gap-2 border border-cyan-900 bg-cyan-950/30 px-4 py-3 text-sm text-cyan-100 sm:flex-row sm:items-center">
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-300">
+          <div className="flex flex-col gap-2 border border-ion-blue/40 bg-ion-blue/10 px-4 py-3 text-sm text-ion-1 sm:flex-row sm:items-center">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-ion-blue">
               Preview mode
             </span>
             <span className="break-words sm:ml-3">
@@ -81,7 +81,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
         )}
 
         <section className="border-b border-titanium pb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.22em] text-cyan-300">Today&apos;s Board</p>
+          <p className="font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">Today&apos;s Board</p>
           <div className="mt-4 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div>
               <h1 className="max-w-4xl break-words text-3xl font-black tracking-tight text-white sm:text-5xl">
@@ -94,7 +94,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
             </div>
             <Link
               href="/methodology"
-              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-cyan-300"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-ion-blue"
             >
               Read methodology
             </Link>
@@ -120,7 +120,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
           <div className="border border-titanium bg-carbon/45 p-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">Pass List</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-blue">Pass List</p>
                 <h2 className="mt-2 text-2xl font-bold text-white">Evaluated without publishing</h2>
               </div>
               <span className="font-mono text-xs text-ion-3">{passesResult.data.date}</span>
@@ -135,7 +135,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
           </div>
 
           <div className="border border-titanium bg-carbon/45 p-5">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">Live Calibration</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-blue">Live Calibration</p>
             <h2 className="mt-2 text-2xl font-bold text-white">
               {calibration.isCollecting ? "Building history" : "Calibration sample"}
             </h2>
@@ -167,7 +167,7 @@ function StateTile({ label, value }: { label: string; value: string }): JSX.Elem
 function BoardLane({ title, rows, empty }: { title: string; rows: BoardStateRow[]; empty: string }): JSX.Element {
   return (
     <section className="border border-titanium bg-carbon/45 p-4">
-      <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300">{title}</h2>
+      <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-blue">{title}</h2>
       <div className="mt-4 flex flex-col gap-3">
         {rows.length > 0 ? rows.map((row) => <BoardRowItem key={row.id} row={row} />) : (
           <p className="text-sm text-ion-3">{empty}</p>
@@ -185,7 +185,7 @@ function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
           <h3 className="font-semibold text-white">{row.matchup}</h3>
           <p className="mt-1 text-xs text-ion-3">{row.sport} / {row.market}</p>
         </div>
-        <span className="font-mono text-xs text-cyan-200">
+        <span className="font-mono text-xs text-ion-blue">
           {row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}
         </span>
       </div>
@@ -193,7 +193,7 @@ function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
         <p className="mt-3 text-sm text-ion-1">Confidence label available on the pick view.</p>
       )}
       {row.gateReason && <p className="mt-3 text-sm text-ion-2">{row.gateReason}</p>}
-      <Link href={`/room/${row.gameId}`} className="mt-4 inline-flex text-sm font-semibold text-cyan-200 hover:text-cyan-100">
+      <Link href={`/room/${row.gameId}`} className="mt-4 inline-flex text-sm font-semibold text-ion-blue hover:text-ion-blue-glow">
         Open room
       </Link>
     </article>
@@ -204,11 +204,11 @@ function PassListItem({ row }: { row: PassListRow }): JSX.Element {
   return (
     <div className="grid gap-2 px-4 py-3 sm:grid-cols-[1fr_auto_1.4fr]">
       <span>
-        <Link href={`/room/${row.gameId}`} className="font-semibold text-white hover:text-cyan-100">
+        <Link href={`/room/${row.gameId}`} className="font-semibold text-white hover:text-ion-blue-glow">
           {row.matchup}
         </Link>
       </span>
-      <span className="font-mono text-xs text-cyan-200">{row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}</span>
+      <span className="font-mono text-xs text-ion-blue">{row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}</span>
       <span className="text-sm text-ion-2 sm:text-right">{row.reason}</span>
     </div>
   );

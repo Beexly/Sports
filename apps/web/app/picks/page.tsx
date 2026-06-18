@@ -202,9 +202,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
         <div className="mx-auto max-w-5xl">
 
           {demoActive && (
-            <div data-testid="sample-data-banner-picks" role="status" aria-live="polite" className="mb-4 flex items-start gap-3 rounded-xl border border-yellow-900 bg-yellow-950/30 p-3 text-xs">
-              <span className="mt-0.5 rounded-md bg-yellow-900/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">Sample data</span>
-              <p className="flex-1 text-yellow-200/90 leading-relaxed">These picks are deterministic samples shown while live ingestion is being wired up. They never settle, they never count toward a verified record, and no win-rate claim is published from them.</p>
+            <div data-testid="sample-data-banner-picks" role="status" aria-live="polite" className="mb-4 flex items-start gap-3 rounded-xl border border-caution/40 bg-caution/10 p-3 text-xs">
+              <span className="mt-0.5 rounded-md bg-caution/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">Sample data</span>
+              <p className="flex-1 leading-relaxed text-caution/90">These picks are deterministic samples shown while live ingestion is being wired up. They never settle, they never count toward a verified record, and no win-rate claim is published from them.</p>
             </div>
           )}
           {/* Header */}
@@ -260,8 +260,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     className={[
                       "inline-flex min-h-11 items-center rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors",
                       isActive
-                        ? "border-cyan-300 bg-cyan-400 text-eclipse shadow-[0_0_18px_rgba(34,211,238,0.35)]"
-                        : "border-titanium bg-carbon text-ion-1 hover:border-cyan-400 hover:text-white",
+                        ? "border-ion-blue bg-ion-blue text-eclipse shadow-[0_0_18px_rgba(0,229,255,0.35)]"
+                        : "border-titanium bg-carbon text-ion-1 hover:border-ion-blue hover:text-white",
                     ].join(" ")}
                   >
                     {label}
@@ -285,8 +285,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     className={[
                       "inline-flex min-h-11 items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                       isActive
-                        ? "border-fuchsia-300 bg-fuchsia-400 text-eclipse shadow-[0_0_18px_rgba(217,70,239,0.35)]"
-                        : "border-titanium bg-carbon text-ion-1 hover:border-fuchsia-400 hover:text-white",
+                        ? "border-plasma bg-plasma text-eclipse shadow-[0_0_18px_rgba(255,45,214,0.35)]"
+                        : "border-titanium bg-carbon text-ion-1 hover:border-plasma hover:text-white",
                     ].join(" ")}
                   >
                     {label}
@@ -302,9 +302,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Error state */}
           {fetchError && (
-            <div className="rounded-xl border border-red-800/60 bg-red-950/40 p-6 text-center">
-              <p className="text-sm font-medium text-red-400">{fetchError}</p>
-              <p className="mt-1 text-xs text-red-500/70">
+            <div className="rounded-xl border border-alert/60 bg-alert/10 p-6 text-center">
+              <p className="text-sm font-medium text-alert">{fetchError}</p>
+              <p className="mt-1 text-xs text-alert/70">
                 Please refresh the page or try again shortly.
               </p>
             </div>
@@ -312,10 +312,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Empty state */}
           {!fetchError && bootstrapState && picks.length === 0 && (
-            <div className="rounded-xl border border-cyan-400/25 bg-cyan-950/10 p-8 text-center shadow-[0_0_28px_rgba(34,211,238,0.10)]">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-cyan-400/30 bg-cyan-400/10">
+            <div className="rounded-xl border border-ion-blue/25 bg-ion-blue/5 p-8 text-center shadow-[0_0_28px_rgba(0,229,255,0.10)]">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-ion-blue/30 bg-ion-blue/10">
                 <svg
-                  className="h-7 w-7 text-cyan-200"
+                  className="h-7 w-7 text-ion-blue"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
@@ -329,7 +329,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   />
                 </svg>
               </div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200">
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-ion-blue">
                 Signal gate collecting
               </p>
               <h3 className="mt-3 text-lg font-semibold text-white">
@@ -343,13 +343,13 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
                   href="/methodology"
-                  className="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-eclipse"
+                  className="rounded-lg border border-ion-blue/30 bg-ion-blue/10 px-4 py-2 text-sm font-semibold text-ion-blue transition-colors hover:border-ion-blue hover:bg-ion-blue hover:text-eclipse"
                 >
                   Read methodology
                 </Link>
                 <Link
                   href="/vault"
-                  className="rounded-lg border border-titanium bg-carbon px-4 py-2 text-sm font-semibold text-ion-1 transition-colors hover:border-fuchsia-300 hover:text-white"
+                  className="rounded-lg border border-titanium bg-carbon px-4 py-2 text-sm font-semibold text-ion-1 transition-colors hover:border-plasma hover:text-white"
                 >
                   View The Vault
                 </Link>
@@ -401,17 +401,17 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Bottom upgrade CTA for free users */}
           {isFreeTier && picks.length > 0 && (
-            <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
-              <p className="text-sm font-semibold text-blue-200">
+            <div className="mt-10 rounded-xl border border-ion-blue/40 bg-ion-blue/5 p-6 text-center">
+              <p className="text-sm font-semibold text-ion-blue">
                 You&apos;re seeing {entitlements.dailyPickLimit ?? 2} free picks per day, with confidence.
               </p>
-              <p className="mt-1 text-xs text-blue-400/70">
+              <p className="mt-1 text-xs text-ion-2">
                 Pro unlocks every signal and the full factor trail behind each one.
                 Edge Index is public on every pick.
               </p>
               <Link
                 href="/pricing"
-                className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+                className="mt-4 inline-flex rounded-lg bg-ion-blue px-6 py-2.5 text-sm font-semibold text-ion-blue-ink transition-colors hover:bg-ion-blue-glow"
               >
                 Upgrade to Pro / $14.99/mo
               </Link>
@@ -420,8 +420,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* PRO conversion teaser for elite features */}
           {isPro && entitlements.tier === "PRO" && picks.length > 0 && (
-            <div className="mt-8 rounded-xl border border-purple-800/30 bg-purple-950/10 p-4 text-center">
-              <p className="text-xs text-purple-400">
+            <div className="mt-8 rounded-xl border border-ultraviolet/30 bg-ultraviolet/10 p-4 text-center">
+              <p className="text-xs text-ultraviolet">
                 Want real-time email and push alerts on every signal?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
                   Upgrade to Elite / $24.99/mo
@@ -452,7 +452,7 @@ function SlateBar({ slate }: { slate: DailySlate }) {
     : null;
 
   return (
-    <div className="mb-6 rounded-xl border border-cyan-400/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(8,145,178,0.12)]">
+    <div className="mb-6 rounded-xl border border-ion-blue/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(0,229,255,0.10)]">
       <div className="flex flex-wrap items-center gap-3">
         {/* Games / picks */}
         <StatPill label="Games Today" value={String(slate.totalGames)} />
@@ -467,9 +467,9 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {record && (
           <div className="rounded-lg border border-titanium bg-carbon px-3 py-2">
             <span className="mr-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-ion-2">{record.period}</span>
-            <span className="text-xs font-bold text-green-400">{record.wins}W</span>
+            <span className="text-xs font-bold text-verify">{record.wins}W</span>
             <span className="mx-1 text-xs text-ion-3">/</span>
-            <span className="text-xs font-bold text-red-400">{record.losses}L</span>
+            <span className="text-xs font-bold text-alert">{record.losses}L</span>
             {record.pushes > 0 && (
               <>
                 <span className="mx-1 text-xs text-ion-3">/</span>
@@ -482,20 +482,20 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {/* Last updated */}
         {lastUpdated && (
           <div className="ml-auto flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.9)]" aria-hidden="true" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-100">Updated {lastUpdated}</span>
+            <span className="h-2 w-2 rounded-full bg-ion-blue shadow-[0_0_10px_rgba(0,229,255,0.9)]" aria-hidden="true" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ion-blue">Updated {lastUpdated}</span>
           </div>
         )}
       </div>
 
       {/* Sport breakdown */}
       {slate.sportBreakdown.length > 1 && (
-        <div className="mt-3 flex flex-wrap gap-2 border-t border-cyan-400/10 pt-3">
+        <div className="mt-3 flex flex-wrap gap-2 border-t border-ion-blue/10 pt-3">
           {slate.sportBreakdown.map(({ sport, pickCount }) => (
             <Link
               key={sport}
               href={`/picks?sport=${sport.toLowerCase()}`}
-              className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-eclipse"
+              className="rounded-full border border-ion-blue/25 bg-ion-blue/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-ion-blue transition-colors hover:border-ion-blue hover:bg-ion-blue hover:text-eclipse"
             >
               {sport} {pickCount}
             </Link>
@@ -517,7 +517,7 @@ function StatPill({
 }) {
   return (
     <div className="min-w-[108px] rounded-lg border border-titanium bg-carbon px-3 py-2 text-left">
-      <p className={`text-lg font-bold ${highlight ? "text-fuchsia-300" : "text-white"}`}>
+      <p className={`text-lg font-bold ${highlight ? "text-plasma" : "text-white"}`}>
         {value}
       </p>
       <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ion-2">{label}</p>
@@ -545,11 +545,11 @@ function PaywallBanner({
   return (
     <div
       data-testid="paywall-banner"
-      className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/50 bg-yellow-950/30 p-5 sm:flex-row sm:items-center"
+      className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-caution/50 bg-caution/10 p-5 sm:flex-row sm:items-center"
     >
       <div>
-        <p className="text-sm font-semibold text-yellow-300">{headline}</p>
-        <p className="mt-0.5 text-xs text-yellow-300/80">
+        <p className="text-sm font-semibold text-caution">{headline}</p>
+        <p className="mt-0.5 text-xs text-caution/80">
           Pro and Elite unlock every signal and the full factor trail behind each one.
         </p>
       </div>
@@ -564,7 +564,7 @@ function PaywallBanner({
         )}
         <Link
           href="/pricing"
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-ion-blue px-4 py-2 text-xs font-semibold text-ion-blue-ink transition-colors hover:bg-ion-blue-glow"
         >
           See plans
         </Link>
@@ -600,7 +600,7 @@ function PicksTrustStrip() {
         </div>
         <Link
           href="/methodology"
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-eclipse"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-ion-blue/30 bg-ion-blue/10 px-4 py-2 text-sm font-semibold text-ion-blue transition-colors hover:border-ion-blue hover:bg-ion-blue hover:text-eclipse"
         >
           Read methodology
         </Link>
@@ -633,7 +633,7 @@ function DatePickerForm({
         type="date"
         name="date"
         defaultValue={currentDate}
-        className="min-h-11 rounded-lg border border-titanium bg-titanium px-3 py-1.5 text-sm text-ion-1 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="min-h-11 rounded-lg border border-titanium bg-titanium px-3 py-1.5 text-sm text-ion-1 focus:border-ion-blue focus:outline-none focus:ring-1 focus:ring-ion-blue"
       />
       <button
         type="submit"

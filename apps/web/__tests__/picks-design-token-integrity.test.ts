@@ -7,11 +7,16 @@ const repoRoot = resolve(__dirname, "..", "..", "..");
 const checkedFiles = [
   "apps/web/components/picks/pick-card.tsx",
   "apps/web/components/picks/evidence-audit-drawer.tsx",
+  // The pages that wrap the cards must share their color system — they had
+  // drifted to near-duplicate raw Tailwind hues (cyan-400 ≠ orbital-cyan).
+  // Lock them onto brand tokens too.
+  "apps/web/app/picks/page.tsx",
+  "apps/web/app/board/page.tsx",
   "packages/types/src/index.ts",
 ] as const;
 
 const rawColorClassPattern =
-  /\b(?:bg|text|border|shadow|hover:bg|hover:text|hover:border)-(?:green|yellow|emerald|orange|red|blue|purple|violet|cyan|amber|gold)-/;
+  /\b(?:bg|text|border|shadow|hover:bg|hover:text|hover:border|focus:border|focus:ring|ring)-(?:green|yellow|emerald|orange|red|blue|purple|violet|cyan|amber|gold|fuchsia)-/;
 
 function readRepoFile(path: string): string {
   return readFileSync(resolve(repoRoot, path), "utf8");
