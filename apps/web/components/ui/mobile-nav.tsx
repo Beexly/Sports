@@ -34,6 +34,7 @@ const SECTIONS: readonly Section[] = [
     heading: "Intelligence",
     collapsible: true,
     links: [
+      { label: "Intelligence Stack — Full engine map", href: "/stack" },
       { label: "Intelligence Engines", href: "/intelligence/engines" },
       { label: "Galaxy Twin — Market map", href: "/observatory" },
       { label: "Trend Lab — Tested trends", href: "/trends" },

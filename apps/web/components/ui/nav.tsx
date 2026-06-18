@@ -52,6 +52,7 @@ const PLAYERS_MENU: readonly NavGroup[] = [
 const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
+      { label: "Intelligence Stack", href: "/stack", desc: "The whole engine in one diagram — sources, layers, gates & receipts" },
       { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, in one place" },
       { label: "Mission Control", href: "/today", desc: "Everything happening today, in one view" },
       { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line moves & best available prices" },
