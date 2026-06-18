@@ -256,6 +256,10 @@ function mapStripeStatus(
     case "unpaid":
       return "PAST_DUE";
     default:
-      return "ACTIVE";
+      // Fail CLOSED. Stripe's status set is closed and fully handled above, so
+      // this only fires if Stripe introduces a new status — in which case the
+      // safe default for a billing gate is "no entitlement granted", never the
+      // access-granting ACTIVE.
+      return "INCOMPLETE";
   }
 }
