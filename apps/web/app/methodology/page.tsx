@@ -60,8 +60,8 @@ const STACK = [
 ] as const;
 
 const CHANGELOG = [
-  ["v5.1", "Elo independent estimator — results-only team ratings feed the glass-box factor trail. Surfaced at weight 0 until CLV validation gates pricing-in."],
-  ["v5.0", "Bootstrap-canonical gating and settled-only learning policy."],
+  ["v5.1 · staged", "Elo independent estimator — results-only team ratings feed the glass-box factor trail. Surfaced at weight 0 until CLV validation gates pricing-in; not yet the live model version."],
+  ["v5.0 · current", "Bootstrap-canonical gating and settled-only learning policy. The version every published pick is stamped with today."],
   ["v4.0", "Expanded factor snapshot storage for public audit trails."],
   ["v3.0", "Added schedule stress, rest, and cross-market checks."],
 ] as const;

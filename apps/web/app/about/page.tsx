@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { InteractiveGalaxyLazy } from "@/components/hero/interactive-galaxy-lazy";
 import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL, BRAND_COLORS } from "@/lib/brand";
+import { MODEL_VERSION } from "@sports/prediction-engine";
 
 export const metadata: Metadata = {
   title: "About",
@@ -46,7 +47,7 @@ const PRINCIPLES = [
 const STATS = [
   { value: "30min", label: "odds ingestion cadence" },
   { value: "11", label: "scoring factors per pick" },
-  { value: "v5.1", label: "current model version" },
+  { value: MODEL_VERSION, label: "current model version" },
 ] as const;
 
 export default function AboutPage() {
