@@ -260,10 +260,10 @@ function AttentionRow({ item }: { item: OwnerAttentionItem }) {
         <p className="mt-1 text-[11px] text-ion-3">
           <span className="text-ion-2">Do:</span> {item.recommendedAction}
         </p>
-        <p className="mt-0.5 text-[10px] text-ion-3/70">{item.scoreExplanation}</p>
+        <p className="mt-0.5 text-[10px] text-ion-3">{item.scoreExplanation}</p>
       </div>
       {item.link && (
-        <span className="mt-0.5 flex-shrink-0 self-center text-[11px] text-ion-3/40">→</span>
+        <span className="mt-0.5 flex-shrink-0 self-center text-[11px] text-ion-3">→</span>
       )}
     </div>
   );

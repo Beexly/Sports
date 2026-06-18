@@ -107,7 +107,7 @@ export function CapabilitySystemMap() {
                   ? "text-ion-white"
                   : p.status === "PARTIAL"
                     ? "text-ion-2"
-                    : "text-ion-3/50",
+                    : "text-ion-3",
               ].join(" ")}
             >
               {p.phase.replace("_", " ")}
@@ -130,7 +130,7 @@ export function CapabilitySystemMap() {
           <span key={status} className="font-mono text-[9px] text-ion-3">
             <span className="font-bold tabular-nums text-ion-2">{statusCount(status)}</span>{" "}
             {status.replace("_", " ").toLowerCase()}{" "}
-            <span className="text-ion-3/50">({desc})</span>
+            <span className="text-ion-3">({desc})</span>
           </span>
         ))}
       </div>
@@ -173,7 +173,7 @@ function CapabilityRow({ capability }: { capability: JarvisCapability }) {
       </div>
       <p className="mt-1 text-[9px] leading-snug text-ion-3">{capability.currentTruth}</p>
       <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5">
-        <span className="font-mono text-[8px] uppercase tracking-wider text-ion-3/60">
+        <span className="font-mono text-[8px] uppercase tracking-wider text-ion-3">
           risk: {capability.riskLevel.toLowerCase()}
         </span>
         {capability.requiresHumanApproval && (
@@ -182,13 +182,13 @@ function CapabilityRow({ capability }: { capability: JarvisCapability }) {
           </span>
         )}
         {capability.proofSource && (
-          <span className="font-mono text-[8px] text-ion-3/60">
+          <span className="font-mono text-[8px] text-ion-3">
             proof: {capability.proofSource}
           </span>
         )}
       </div>
       <p className="mt-1 text-[9px] text-ion-2">
-        <span className="font-mono text-[8px] uppercase tracking-wider text-ion-3/60">
+        <span className="font-mono text-[8px] uppercase tracking-wider text-ion-3">
           next →{" "}
         </span>
         {capability.nextAction}

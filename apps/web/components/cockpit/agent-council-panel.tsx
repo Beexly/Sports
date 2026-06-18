@@ -203,16 +203,16 @@ function CouncilSeatCard({ member }: { member: AgentSeat }) {
 
       {/* Governance metadata row */}
       <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5">
-        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3/50">
+        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3">
           tier {member.authorityTier}
         </p>
-        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3/50">
+        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3">
           reports to {member.reportsTo.join(", ")}
         </p>
-        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3/50">
+        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3">
           escalates to {member.escalatesTo.join(", ")}
         </p>
-        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3/50">
+        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3">
           external actions: never
         </p>
         {member.canSpawnSubagents && (
@@ -229,7 +229,7 @@ function CouncilSeatCard({ member }: { member: AgentSeat }) {
 
       {/* Review gates for not-wired seats */}
       {member.status === "NOT_WIRED" && member.reviewGates.length > 0 && (
-        <p className="mt-1 font-mono text-[8px] text-ion-3/40">
+        <p className="mt-1 font-mono text-[8px] text-ion-3">
           review gates: {member.reviewGates.join(", ")}
         </p>
       )}

@@ -47,7 +47,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <p className="hidden text-[9px] uppercase tracking-widest text-ion-3/50 sm:block">
+          <p className="hidden text-[9px] uppercase tracking-widest text-ion-3 sm:block">
             Deterministic · No model call · Grounded in live state
           </p>
           {active && (
@@ -75,7 +75,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
           <div className="space-y-3">
             {(Object.keys(JARVIS_INTENT_GROUPS) as JarvisIntentGroup[]).map((group) => (
               <div key={group}>
-                <p className="mb-1 px-3 font-mono text-[8px] font-bold uppercase tracking-widest text-ion-3/60">
+                <p className="mb-1 px-3 font-mono text-[8px] font-bold uppercase tracking-widest text-ion-3">
                   {JARVIS_GROUP_LABELS[group]}
                 </p>
                 <div className="space-y-0.5">
@@ -158,7 +158,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
               </div>
 
               {answer.caveat && (
-                <p className="mt-3 text-[9px] italic leading-relaxed text-ion-3/70">
+                <p className="mt-3 text-[9px] italic leading-relaxed text-ion-3">
                   {answer.caveat}
                 </p>
               )}
@@ -181,10 +181,10 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
                     <span className="text-ion-white">jarvis ask</span>
                     <span className="ml-0.5 inline-block h-3 w-0.5 animate-cursor-blink bg-accent-500 align-middle" />
                   </p>
-                  <p className="mt-2 text-[9px] text-ion-3/50">
+                  <p className="mt-2 text-[9px] text-ion-3">
                     Select a question to query Jarvis
                   </p>
-                  <p className="mt-0.5 text-[9px] text-ion-3/30">
+                  <p className="mt-0.5 text-[9px] text-ion-3">
                     All answers derived from live operator state
                   </p>
                 </div>
