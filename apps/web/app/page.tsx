@@ -83,7 +83,7 @@ export default async function HomePage(): Promise<JSX.Element> {
   const heroPlate = getPlate("home-hero-cosmos");
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
+    <div className="min-h-screen w-full overflow-x-hidden" style={{ backgroundColor: BRAND_COLORS.obsidianBlack, color: "white" }}>
       {/* Site front door: the cinematic "SIGNAL ACQUIRED" cold open. Self-gating
           (localStorage) so it plays once on arrival, ~3s on return, skippable,
           reduced-motion safe — it dissolves to reveal the world behind it. */}
@@ -93,7 +93,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* ── 00 · THE WORLD OPENS ─────────────────────────────────────
             The entrance burst dissolves into this: aurora, starfield, the
             thesis, and live board telemetry. Real data, honest empty states. */}
-        <section className="gw-nebula-deep relative isolate overflow-hidden border-b border-mineral">
+        <section className="gw-nebula-deep relative isolate overflow-hidden" style={{ borderBottom: "1px solid rgba(0,229,255,0.12)" }}>
           {heroPlate && (
             <GeneratedPlate
               className="-z-30 opacity-70"
@@ -122,13 +122,13 @@ export default async function HomePage(): Promise<JSX.Element> {
                 <span className="gw-chip-cyan">GSE · the decision engine</span>
                 <span className="gw-chip-plasma">GSN · the signal studio</span>
               </div>
-              <h1 className="mt-6 max-w-4xl font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
+              <h1 className="mt-6 max-w-4xl font-display text-display-xl font-semibold leading-[1.0] text-balance text-white">
                 The market is full of <span className="gw-chrome-plasma">noise</span>.
                 <br />
                 <span className="gw-chrome-ice">Galaxy turns it into</span>{" "}
                 <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">signal</span>.
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-ink-300">
                 We turn real sportsbook data into picks you can actually check — and
                 the discipline to know when not to bet.{" "}
                 The board is only as smart as the data behind it.{" "}
@@ -141,27 +141,38 @@ export default async function HomePage(): Promise<JSX.Element> {
                 </Link>
                 <Link
                   href="/trends"
-                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-orbital-cyan/60 px-5 py-3 text-sm font-semibold text-orbital-cyan transition-shadow hover:border-orbital-cyan hover:text-ion-white hover:shadow-[0_0_28px_-6px_rgba(0,229,255,0.6)]"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-orbital-cyan/60 px-5 py-3 text-sm font-semibold text-orbital-cyan transition-shadow hover:border-orbital-cyan hover:text-white hover:shadow-[0_0_28px_-6px_rgba(0,229,255,0.6)]"
                 >
                   Open Trend Lab
                 </Link>
               </div>
-              <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
+              <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-400">
                 We detect. You decide.
               </p>
             </div>
 
-            <div className="gw-card-hover rounded-ds-lg border border-mineral bg-eclipse p-5">
+            <div
+              className="gw-card-hover overflow-hidden rounded-ds-lg p-5"
+              style={{
+                border: "1px solid rgba(0,229,255,0.18)",
+                background: "linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(8,6,20,0.88) 100%)",
+              }}
+            >
+              <div
+                className="mb-4 h-0.5 w-full rounded-full"
+                style={{ background: "linear-gradient(90deg, rgba(0,229,255,0.8), transparent 70%)" }}
+                aria-hidden="true"
+              />
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                     Board state · live telemetry
                   </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-ion-white">
+                  <h2 className="mt-2 text-2xl font-semibold text-white">
                     {totalRows > 0 ? "Live rows available" : "No public rows yet"}
                   </h2>
                 </div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
                   updated {timeLabel(state.lastRefresh)}
                 </p>
               </div>
@@ -172,41 +183,47 @@ export default async function HomePage(): Promise<JSX.Element> {
                 <Metric label="Gated" value={state.gatedToday} />
               </dl>
               {dbUnreachable ? (
-                <div className="mt-5 rounded-ds-sm border border-mineral bg-carbon px-4 py-3">
+                <div
+                  className="mt-5 overflow-hidden rounded-ds-sm px-4 py-3"
+                  style={{ border: "1px solid rgba(255,100,112,0.25)", background: "rgba(255,100,112,0.06)" }}
+                >
                   <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-alert">
                     Data store unreachable
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-ion-1">
+                  <p className="mt-2 text-sm leading-6 text-ink-400">
                     The public page is online, but the local database is not reachable from this
                     checkout. Rows stay empty instead of blocking the experience or inventing data.
                   </p>
                 </div>
               ) : suppressedDemo ? (
-                <div className="mt-5 rounded-ds-sm border border-mineral bg-carbon px-4 py-3">
+                <div
+                  className="mt-5 overflow-hidden rounded-ds-sm px-4 py-3"
+                  style={{ border: "1px solid rgba(0,229,255,0.20)", background: "rgba(0,229,255,0.04)" }}
+                >
                   <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">
                     Demo data suppressed
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-ion-1">
+                  <p className="mt-2 text-sm leading-6 text-ink-400">
                     Deterministic sample picks exist for internal testing, but the public front door
                     is showing an empty readiness state instead of fake action.
                   </p>
                 </div>
               ) : null}
-              <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.18em] text-ion-2">
+              <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.18em] text-ink-500">
                 An empty board is the gate doing its job — not a promise withheld.
               </p>
             </div>
           </div>
           {/* LIVE ribbon — BlueYard-style ticker, fed only by real state.
               Honest empty states ride the same ribbon. */}
-          <div className="relative border-t border-mineral/60 bg-void/40">
+          <div className="relative" style={{ borderTop: "1px solid rgba(0,229,255,0.10)", background: "rgba(8,6,20,0.6)" }}>
             <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-2.5 sm:px-6 lg:px-8">
-              <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-alert/90 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-ion-white">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-ion-white" style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }} />
+              <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-alert/90 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-white" style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }} />
                 Live
               </span>
               <div className="gse-marquee min-w-0 flex-1" style={{ ["--gse-marquee-dur" as string]: "44s" }}>
-                <div className="gse-marquee-track font-mono text-[11px] uppercase tracking-[0.16em] text-ion-1">
+                <div className="gse-marquee-track font-mono text-[11px] uppercase tracking-[0.16em] text-ink-300">
                   {[0, 1].map((copy) => (
                     <span key={copy} aria-hidden={copy === 1}>
                       <span className="px-6">Board · {state.publishedToday.length} public {state.publishedToday.length === 1 ? "row" : "rows"} cleared today</span>
@@ -265,16 +282,16 @@ export default async function HomePage(): Promise<JSX.Element> {
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Ten-second product test
               </p>
-              <h3 className="mt-3 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
+              <h3 className="mt-3 font-display text-3xl font-semibold text-white sm:text-4xl">
                 See the current state, not a promise.
               </h3>
-              <p className="mt-4 text-sm leading-6 text-ion-1">
+              <p className="mt-4 text-sm leading-6 text-ink-300">
                 Anyone can claim signal. The honest version is checkable in ten seconds:
                 what cleared, what passed, which sources are live, and which trends are
                 statistically defensible — right now, on this page.
               </p>
             </Reveal>
-            <div className="grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-px overflow-hidden rounded-ds-md sm:grid-cols-2 lg:grid-cols-4" style={{ border: "1px solid rgba(0,229,255,0.14)", background: "rgba(0,229,255,0.08)" }}>
               <StatusPanel
                 title="Public picks"
                 value={state.publishedToday.length}
@@ -336,15 +353,21 @@ export default async function HomePage(): Promise<JSX.Element> {
           <NoBetGateChapter />
 
           {/* The real lanes — what's scoring, published, and gated right now. */}
-          <div className="mt-14 rounded-ds-lg border border-mineral bg-eclipse p-5">
+          <div
+            className="mt-14 overflow-hidden rounded-ds-lg p-5"
+            style={{
+              border: "1px solid rgba(0,229,255,0.18)",
+              background: "linear-gradient(135deg, rgba(0,229,255,0.05) 0%, rgba(8,6,20,0.88) 100%)",
+            }}
+          >
             <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                   Today&apos;s lanes · live
                 </p>
-                <h3 className="mt-2 text-2xl font-semibold text-ion-white">Scored, published, passed</h3>
+                <h3 className="mt-2 text-2xl font-semibold text-white">Scored, published, passed</h3>
               </div>
-              <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+              <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-white">
                 Full board
               </Link>
             </div>
@@ -395,22 +418,25 @@ export default async function HomePage(): Promise<JSX.Element> {
           lede="We grade the noise so you don't have to. Reporting is reliability-scored before it touches a number — and when a story moves our read on a game, you can see exactly where it landed."
           tone="nebula"
         >
-          <div className="grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral md:grid-cols-3">
-            <div className="bg-eclipse p-5">
+          <div
+            className="grid gap-px overflow-hidden rounded-ds-md md:grid-cols-3"
+            style={{ border: "1px solid rgba(0,229,255,0.14)", background: "rgba(0,229,255,0.08)" }}
+          >
+            <div className="p-5" style={{ background: BRAND_COLORS.obsidianBlack }}>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">Scored at the source</p>
-              <p className="mt-2 text-sm leading-6 text-ion-1">
+              <p className="mt-2 text-sm leading-6 text-ink-300">
                 Every report carries a reliability grade earned on the record — not a follower count.
               </p>
             </div>
-            <div className="bg-eclipse p-5">
+            <div className="p-5" style={{ background: BRAND_COLORS.obsidianBlack }}>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">Plays into the board</p>
-              <p className="mt-2 text-sm leading-6 text-ion-1">
+              <p className="mt-2 text-sm leading-6 text-ink-300">
                 A graded story becomes context on the game node it touches — injuries, roles, weather, scheme.
               </p>
             </div>
-            <div className="bg-eclipse p-5">
+            <div className="p-5" style={{ background: BRAND_COLORS.obsidianBlack }}>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-plasma">Browse it like a feed</p>
-              <p className="mt-2 text-sm leading-6 text-ion-1">
+              <p className="mt-2 text-sm leading-6 text-ink-300">
                 The Beat reads casual; the grading underneath is anything but.
               </p>
             </div>
@@ -449,23 +475,29 @@ export default async function HomePage(): Promise<JSX.Element> {
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Source health
               </p>
-              <h3 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+              <h3 className="mt-2 font-display text-2xl font-semibold text-white sm:text-3xl">
                 The engine&apos;s intake lanes
               </h3>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-ink-300">
                 {publicSourceCount} structured intake lanes and {contextSourceCount} context feeds are tracked
                 separately so structured data, owned media workflows, licensed reporting, and
                 permission-gated references never blur together. Every lane is graded before it
                 touches a number you see.
               </p>
             </div>
-            <Link href="/integrations" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+            <Link href="/integrations" className="text-sm font-semibold text-orbital-cyan hover:text-white">
               Rights &amp; attribution
             </Link>
           </div>
-          <div className="mt-6 overflow-x-auto rounded-ds-md border border-mineral">
+          <div
+            className="mt-6 overflow-x-auto overflow-hidden rounded-ds-md"
+            style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(8,6,20,0.5)" }}
+          >
             <table className="w-full min-w-[900px] text-left text-sm">
-              <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+              <thead
+                className="font-mono text-[10px] uppercase tracking-[0.14em]"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.40)", background: "rgba(0,229,255,0.04)" }}
+              >
                 <tr>
                   <th className="px-4 py-3">Intake lane</th>
                   <th className="px-4 py-3">Status</th>
@@ -473,40 +505,49 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <th className="px-4 py-3">What it unlocks</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-mineral bg-carbon">
-                {PUBLIC_DATA_SOURCES.map((source) => (
-                  <tr key={source.key}>
-                    <td className="px-4 py-3 font-semibold text-ion-white">{source.publicLabel}</td>
-                    <td className="px-4 py-3 font-mono text-ion">{sourceStatusLabel(source.status)}</td>
-                    <td className="px-4 py-3 text-ion-1">{source.grain}</td>
-                    <td className="px-4 py-3 text-ion-1">{source.unlocks}</td>
+              <tbody>
+                {PUBLIC_DATA_SOURCES.map((source, i) => (
+                  <tr key={source.key} style={{ borderBottom: i < PUBLIC_DATA_SOURCES.length - 1 ? "1px solid rgba(255,255,255,0.05)" : undefined }}>
+                    <td className="px-4 py-3 font-semibold text-white">{source.publicLabel}</td>
+                    <td className="px-4 py-3 font-mono text-orbital-cyan">{sourceStatusLabel(source.status)}</td>
+                    <td className="px-4 py-3 text-ink-400">{source.grain}</td>
+                    <td className="px-4 py-3 text-ink-400">{source.unlocks}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2">
+          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-400">
             + {CONTEXT_INTELLIGENCE_SOURCES.length} context feeds (broadcast claims, beat intelligence,
             studio assets, international reference) graded behind the same gates — all{" "}
             {DATA_SOURCE_STACK.length} lanes on the{" "}
-            <Link href="/integrations" className="text-orbital-cyan hover:text-ion-white">
+            <Link href="/integrations" className="text-orbital-cyan hover:text-white">
               rights ledger
             </Link>
             .
           </p>
 
-          {/* First trend targets — the questions the engine mines next. */}
-          <div className="mt-10 rounded-ds-lg border border-mineral bg-eclipse p-5">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+          {/* First trend targets */}
+          <div
+            className="mt-10 overflow-hidden rounded-ds-lg p-5"
+            style={{
+              border: `1px solid ${BRAND_COLORS.softUltraviolet}22`,
+              background: `linear-gradient(135deg, ${BRAND_COLORS.softUltraviolet}05 0%, rgba(8,6,20,0.88) 100%)`,
+            }}
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: BRAND_COLORS.softUltraviolet }}>
               First trend targets
             </p>
-            <h3 className="mt-2 text-2xl font-semibold text-ion-white">The engine needs questions worth mining.</h3>
-            <div className="mt-5 grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral lg:grid-cols-4">
+            <h3 className="mt-2 text-2xl font-semibold text-white">The engine needs questions worth mining.</h3>
+            <div
+              className="mt-5 grid gap-px overflow-hidden rounded-ds-md lg:grid-cols-4"
+              style={{ border: `1px solid ${BRAND_COLORS.softUltraviolet}14`, background: `${BRAND_COLORS.softUltraviolet}08` }}
+            >
               {TREND_BACKLOG.slice(0, 4).map((item) => (
-                <div key={item.key} className="bg-carbon p-4">
-                  <p className="font-semibold text-ion-white">{item.title}</p>
-                  <p className="mt-1 text-sm leading-6 text-ion-1">{item.question}</p>
-                  <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                <div key={item.key} className="p-4" style={{ background: BRAND_COLORS.obsidianBlack }}>
+                  <p className="font-semibold text-white">{item.title}</p>
+                  <p className="mt-1 text-sm leading-6 text-ink-400">{item.question}</p>
+                  <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-500">
                     {item.requiredSources.join(" + ")}
                   </p>
                 </div>
@@ -514,15 +555,21 @@ export default async function HomePage(): Promise<JSX.Element> {
             </div>
           </div>
 
-          {/* The benchmark we publish — CLV, the proof touts never show. */}
-          <div className="mt-10 rounded-ds-lg border border-orbital-cyan/30 bg-orbital-cyan/[0.05] p-5 sm:p-7">
+          {/* CLV — the benchmark we publish */}
+          <div
+            className="mt-10 overflow-hidden rounded-ds-lg p-5 sm:p-7"
+            style={{
+              border: `1px solid ${BRAND_COLORS.orbitalCyan}30`,
+              background: `${BRAND_COLORS.orbitalCyan}06`,
+            }}
+          >
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
               The benchmark we publish
             </p>
-            <h3 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+            <h3 className="mt-2 font-display text-2xl font-semibold text-white sm:text-3xl">
               Closing line value — the one number touts never show.
             </h3>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-ink-300">
               A win streak is a screenshot. Whether the price we locked beat where the
               market closed is the sharp-credible leading indicator of a real edge —
               counted over every settled pick, and gated until it can be honestly
@@ -532,10 +579,10 @@ export default async function HomePage(): Promise<JSX.Element> {
               <Link href="/clv" className="btn btn-primary">
                 See our CLV
               </Link>
-              <Link href="/track" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+              <Link href="/track" className="text-sm font-semibold text-orbital-cyan hover:text-white">
                 Track your own →
               </Link>
-              <Link href="/accountability" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+              <Link href="/accountability" className="text-sm font-semibold text-orbital-cyan hover:text-white">
                 Full accountability →
               </Link>
             </div>
@@ -545,13 +592,19 @@ export default async function HomePage(): Promise<JSX.Element> {
         <MethodologySection />
 
         <section data-testid="homepage-responsible-close" className="gw-nebula px-4 py-14 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl rounded-ds-lg border border-mineral bg-eclipse p-5 sm:p-7">
-            <h2 className="text-2xl font-semibold text-ion-white">The math can point. The decision stays yours.</h2>
-            <p className="mt-3 text-sm leading-6 text-ion-1">
+          <div
+            className="mx-auto max-w-5xl overflow-hidden rounded-ds-lg p-5 sm:p-7"
+            style={{
+              border: `1px solid ${BRAND_COLORS.orbitalCyan}18`,
+              background: `linear-gradient(135deg, ${BRAND_COLORS.orbitalCyan}05 0%, rgba(8,6,20,0.88) 100%)`,
+            }}
+          >
+            <h2 className="text-2xl font-semibold text-white">The math can point. The decision stays yours.</h2>
+            <p className="mt-3 text-sm leading-6 text-ink-300">
               This product is research, not certainty. The upgrade path is more data, better receipts,
               and clearer uncertainty, not louder claims.
             </p>
-            <RiskDisclosure variant="compact" includePastPerformance className="mt-5 text-ion-1" />
+            <RiskDisclosure variant="compact" includePastPerformance className="mt-5 text-ink-400" />
           </div>
         </section>
       </main>
@@ -562,9 +615,12 @@ export default async function HomePage(): Promise<JSX.Element> {
 
 function Metric({ label, value }: { label: string; value: number }): JSX.Element {
   return (
-    <div className="rounded-ds-sm border border-mineral bg-carbon px-3 py-2">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</dt>
-      <dd className="mt-1 font-numerals text-2xl font-semibold tabular-nums text-ion-white">
+    <div
+      className="overflow-hidden rounded-ds-sm px-3 py-2"
+      style={{ border: "1px solid rgba(0,229,255,0.18)", background: "rgba(0,229,255,0.05)" }}
+    >
+      <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-500">{label}</dt>
+      <dd className="mt-1 font-numerals text-2xl font-semibold tabular-nums text-orbital-cyan">
         <CountUp value={value} />
       </dd>
     </div>
@@ -585,12 +641,16 @@ function StatusPanel({
   group?: boolean;
 }): JSX.Element {
   return (
-    <Link href={href} className="block min-h-52 bg-eclipse p-5 transition-colors hover:bg-slate">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{title}</p>
+    <Link
+      href={href}
+      className="block min-h-52 p-5 transition-colors hover:bg-white/[0.025]"
+      style={{ background: BRAND_COLORS.obsidianBlack }}
+    >
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-500">{title}</p>
       <p className="gw-text-glow-cyan mt-4 font-numerals text-5xl font-semibold tabular-nums text-orbital-cyan">
         <CountUp value={value} group={group} />
       </p>
-      <p className="mt-4 text-sm leading-6 text-ion-1">{detail}</p>
+      <p className="mt-4 text-sm leading-6 text-ink-300">{detail}</p>
     </Link>
   );
 }
@@ -614,7 +674,7 @@ function Lane({
 }): JSX.Element {
   const a = LANE_ACCENT[accent];
   return (
-    <div className={`rounded-ds-sm border ${a.border} bg-carbon p-4`}>
+    <div className={`rounded-ds-sm border ${a.border} p-4`} style={{ background: "rgba(8,6,20,0.7)" }}>
       <div className="flex items-center gap-2">
         <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${a.dot}`} aria-hidden="true" />
         <p className={`font-mono text-[10px] uppercase tracking-[0.16em] ${a.label}`}>{title}</p>
@@ -624,14 +684,14 @@ function Lane({
         {rows.length > 0 ? (
           rows.slice(0, 3).map((row) => (
             <Link key={row.id} href={`/room/${row.gameId}`} className={`block border-l ${a.link} pl-3 transition-colors hover:border-l-2`}>
-              <p className="text-sm font-semibold text-ion-white">{row.matchup}</p>
-              <p className="mt-1 text-xs text-ion-2">
+              <p className="text-sm font-semibold text-white">{row.matchup}</p>
+              <p className="mt-1 text-xs text-ink-400">
                 {row.sport} / {row.edgeIndex === null ? "EI pending" : `EI ${row.edgeIndex}`}
               </p>
             </Link>
           ))
         ) : (
-          <p className="text-sm leading-6 text-ion-1">{empty}</p>
+          <p className="text-sm leading-6 text-ink-300">{empty}</p>
         )}
       </div>
     </div>

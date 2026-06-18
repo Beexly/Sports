@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { Reveal, Stagger } from "@/components/motion/reveal";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { PerformanceBootstrapState } from "@/components/performance/bootstrap-state";
 import { CalibrationPanel } from "@/components/performance/calibration-panel";
@@ -17,6 +18,7 @@ import {
 } from "@/lib/format/stat";
 import type { PickType, PickTier } from "@sports/types";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { BRAND_COLORS } from "@/lib/brand";
 
 const PERFORMANCE_TITLE = "Calibration Report — Settled-Pick Audit Trail";
 const PERFORMANCE_DESCRIPTION =
@@ -77,15 +79,6 @@ function aggregateOverall(summaries: PerformanceSummary[]) {
   return { wins, losses, pushes, totalPicks, winRate: winRatePct(wins, losses) };
 }
 
-// Bar fill mirrors winRateToneClass thresholds (55 / breakeven 52.4 / 50) so
-// the bar and the number can never tell different stories.
-function winRateBarClass(rate: number): string {
-  if (rate >= 55) return "bg-orbital-cyan";
-  if (rate >= 52.4) return "bg-ion-white";
-  if (rate >= 50) return "bg-caution";
-  return "bg-alert";
-}
-
 function latestComputedAt(summaries: PerformanceSummary[]): Date | null {
   if (summaries.length === 0) return null;
   return summaries.reduce<Date | null>((acc, s) => {
@@ -102,22 +95,23 @@ function latestModelVersion(summaries: PerformanceSummary[]): string | null {
   return sorted[0]?.modelVersion ?? null;
 }
 
-// BootstrapShell wraps the bootstrap state UI in the standard chrome.
-// Defined as a small inline component so the gate-closed branch can reference
-// <PerformanceBootstrapState> with minimal JSX between it and the gate check.
-function BootstrapShell({ children }: { children: React.ReactNode }) {
+// Chrome used for both the bootstrap (gate-closed) state and the full page
+function PageChrome({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative isolate flex min-h-screen flex-col bg-carbon">
-      <GeneratedPlate assetId="performance-grid" className="-z-10 opacity-20" />
+    <div
+      className="relative isolate flex min-h-screen flex-col"
+      style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[36rem]"
+        style={{
+          background: `radial-gradient(55% 70% at 50% 0%, ${BRAND_COLORS.orbitalCyan}12, transparent 60%), radial-gradient(35% 50% at 80% 20%, ${BRAND_COLORS.softUltraviolet}0d, transparent 65%)`,
+        }}
+      />
+      <GeneratedPlate assetId="performance-grid" className="absolute inset-0 -z-10 opacity-10" />
       <Nav />
-      <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl">
-          {/* The page's h1 — present in the gate-closed (bootstrap) state too, so
-              this high-value route is never h1-less in its default pre-launch view. */}
-          <h1 className="sr-only">Performance · Calibration Report</h1>
-          {children}
-        </div>
-      </main>
+      {children}
       <Footer />
     </div>
   );
@@ -128,7 +122,7 @@ function BootstrapShell({ children }: { children: React.ReactNode }) {
 export default async function PerformancePage() {
   const gates = getReadinessGates();
 
-  // Gate closed: bootstrap state only. No DB query, no track-record claim.
+  // Gate closed: bootstrap state only.
   if (!gates.canExposePerformanceStats) {
     const demoActive = isStubMode() && isDemoPicksEnabled();
     const todayPickCount = await db.pick
@@ -136,41 +130,100 @@ export default async function PerformancePage() {
       .catch(() => 0);
 
     return (
-      <BootstrapShell>
-        {todayPickCount > 0 && (
-          <div
-            data-testid="performance-pick-count-banner"
-            className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-mineral bg-eclipse/60 p-4 text-xs"
-          >
-            <p className="text-ion-1">
-              {todayPickCount} pick{todayPickCount === 1 ? "" : "s"} published
-              today
-              {demoActive && (
-                <span className="ml-2 rounded bg-caution/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">
-                  sample
+      <PageChrome>
+        <main className="flex-1 px-4 py-24 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <h1 className="sr-only">Performance · Calibration Report</h1>
+
+            {/* Hero */}
+            <Reveal>
+              <span
+                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
+                style={{
+                  color: BRAND_COLORS.orbitalCyan,
+                  borderColor: `${BRAND_COLORS.orbitalCyan}30`,
+                  backgroundColor: `${BRAND_COLORS.orbitalCyan}0d`,
+                }}
+              >
+                Calibration Report
+              </span>
+            </Reveal>
+            <Reveal delay={80}>
+              <h2
+                className="mt-5 font-display text-balance text-white"
+                style={{ fontSize: "clamp(2.4rem, 7vw, 4.5rem)", lineHeight: 1.0, letterSpacing: "-0.02em" }}
+              >
+                The record opens when{" "}
+                <span
+                  style={{
+                    background: `linear-gradient(90deg, ${BRAND_COLORS.orbitalCyan} 0%, ${BRAND_COLORS.softUltraviolet} 100%)`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  the math is honest.
                 </span>
-              )}
-              . Win-rate aggregation is gated until canonical history accumulates.
-            </p>
-            <Link
-              href="/picks"
-              className="rounded-lg border border-mineral px-3 py-1.5 text-ion-1 hover:bg-eclipse/80"
-            >
-              See today&apos;s picks
-            </Link>
+              </h2>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-ink-300">
+                {PERFORMANCE_DESCRIPTION}
+              </p>
+            </Reveal>
+
+            {todayPickCount > 0 && (
+              <Reveal delay={220}>
+                <div
+                  data-testid="performance-pick-count-banner"
+                  className="mt-8 flex flex-wrap items-center justify-between gap-3 overflow-hidden rounded-xl border p-4 text-sm"
+                  style={{
+                    borderColor: `${BRAND_COLORS.orbitalCyan}22`,
+                    background: `${BRAND_COLORS.orbitalCyan}06`,
+                  }}
+                >
+                  <p className="text-ink-300">
+                    {todayPickCount} pick{todayPickCount === 1 ? "" : "s"} published today
+                    {demoActive && (
+                      <span className="ml-2 rounded bg-caution/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">
+                        sample
+                      </span>
+                    )}
+                    . Win-rate aggregation is gated until canonical history accumulates.
+                  </p>
+                  <Link
+                    href="/picks"
+                    className="rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors hover:text-white"
+                    style={{ borderColor: `${BRAND_COLORS.orbitalCyan}40`, color: BRAND_COLORS.orbitalCyan }}
+                  >
+                    See today&apos;s picks
+                  </Link>
+                </div>
+              </Reveal>
+            )}
+
+            <Reveal delay={260}>
+              <div className="mt-10">
+                <PerformanceBootstrapState
+                  gateEnabled={false}
+                  minSettledPicksForLearning={gates.minSettledPicksForLearning}
+                />
+              </div>
+            </Reveal>
+
+            <Reveal delay={300}>
+              <div className="mt-12">
+                <p
+                  className="mb-5 text-center font-mono text-[10px] uppercase tracking-[0.2em]"
+                  style={{ color: BRAND_COLORS.orbitalCyan }}
+                >
+                  How we&apos;ll prove it
+                </p>
+                <CalibrationPanel />
+              </div>
+            </Reveal>
           </div>
-        )}
-        <PerformanceBootstrapState
-          gateEnabled={false}
-          minSettledPicksForLearning={gates.minSettledPicksForLearning}
-        />
-        <div className="mt-12">
-          <h2 className="mb-4 text-center text-sm font-semibold uppercase tracking-widest text-ion-2">
-            How we&apos;ll prove it
-          </h2>
-          <CalibrationPanel />
-        </div>
-      </BootstrapShell>
+        </main>
+      </PageChrome>
     );
   }
 
@@ -205,146 +258,216 @@ export default async function PerformancePage() {
   const isEmpty = !fetchError && summaries.length === 0;
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col bg-carbon">
-      <GeneratedPlate assetId="performance-grid" className="-z-10 opacity-20" />
-      <Nav />
+    <PageChrome>
       <main className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-10 text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight text-ion-white sm:text-5xl">
-              Calibration Report
-            </h1>
-            <p className="mx-auto mt-4 max-w-xl text-ion-1">
-              Every settled canonical pick is included. Bootstrap-era picks
-              are excluded by design — they don&apos;t get to inflate the
-              record.
-            </p>
-            <p className="mt-3 text-xs text-ion-3">
-              Past performance does not guarantee future results.
-            </p>
+
+          {/* Hero */}
+          <div className="mb-12 pt-12">
+            <Reveal>
+              <span
+                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
+                style={{
+                  color: BRAND_COLORS.orbitalCyan,
+                  borderColor: `${BRAND_COLORS.orbitalCyan}30`,
+                  backgroundColor: `${BRAND_COLORS.orbitalCyan}0d`,
+                }}
+              >
+                Calibration Report
+              </span>
+            </Reveal>
+            <Reveal delay={80}>
+              <h1
+                className="mt-5 font-display text-balance text-white"
+                style={{ fontSize: "clamp(2.4rem, 7vw, 4rem)", lineHeight: 1.0, letterSpacing: "-0.02em" }}
+              >
+                Every settled pick.{" "}
+                <span
+                  style={{
+                    background: `linear-gradient(90deg, ${BRAND_COLORS.orbitalCyan} 0%, ${BRAND_COLORS.softUltraviolet} 100%)`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  Every result.
+                </span>
+              </h1>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-ink-300">
+                Every settled canonical pick is included. Bootstrap-era picks
+                are excluded by design — they don&apos;t get to inflate the record.
+              </p>
+            </Reveal>
           </div>
 
-          {/* Lead with the scoreboard: calibration + discrimination first. */}
-          <CalibrationPanel />
+          {/* Calibration panel first */}
+          <Reveal>
+            <CalibrationPanel />
+          </Reveal>
 
           {fetchError && (
-            <div
-              data-testid="performance-error"
-              role="alert"
-              className="rounded-xl border border-alert/40 bg-alert/10 p-6 text-center"
-            >
-              <p className="text-sm text-alert">{fetchError}</p>
-            </div>
+            <Reveal>
+              <div
+                data-testid="performance-error"
+                role="alert"
+                className="mt-8 rounded-xl border p-6 text-center"
+                style={{ borderColor: "rgba(255,100,112,0.30)", background: "rgba(255,100,112,0.06)" }}
+              >
+                <p className="text-sm" style={{ color: "#FF6470" }}>{fetchError}</p>
+              </div>
+            </Reveal>
           )}
 
           {isEmpty && (
-            <PerformanceBootstrapState
-              gateEnabled
-              minSettledPicksForLearning={gates.minSettledPicksForLearning}
-            />
+            <Reveal>
+              <div className="mt-8">
+                <PerformanceBootstrapState
+                  gateEnabled
+                  minSettledPicksForLearning={gates.minSettledPicksForLearning}
+                />
+              </div>
+            </Reveal>
           )}
 
           {summaries.length > 0 && (
             <>
-              {/* Methodology summary card */}
-              <section
-                data-testid="performance-methodology"
-                className="mb-8 rounded-2xl border border-mineral bg-eclipse/60 p-5"
-              >
-                <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-2">
-                  Methodology
-                </h2>
-                <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs text-ion-1 sm:grid-cols-4">
-                  <div>
-                    <dt className="text-ion-3">Win rate definition</dt>
-                    <dd>
-                      <code className="rounded bg-titanium px-1 py-0.5 font-mono text-[10px] text-ion-1">
-                        wins divided by decided outcomes
-                      </code>
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-ion-3">Pushes</dt>
-                    <dd>Reported separately, excluded from the denominator</dd>
-                  </div>
-                  <div>
-                    <dt className="text-ion-3">Sample size</dt>
-                    <dd>
-                      <span className={NUMERIC_TEXT_CLASS}>
-                        {formatCount(overall.totalPicks)}
-                      </span>{" "}
-                      canonical picks
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-ion-3">Model version</dt>
-                    <dd>
-                      <code className="rounded bg-titanium px-1 py-0.5 font-mono text-[10px] text-ion-1">
-                        {modelVersion ?? STAT_PLACEHOLDER}
-                      </code>
-                    </dd>
-                  </div>
-                  {computedAt && (
-                    <div className="col-span-2 sm:col-span-4">
-                      <dt className="text-ion-3">Last computed</dt>
-                      <dd>{computedAt.toUTCString()}</dd>
+              {/* Methodology card */}
+              <Reveal delay={60}>
+                <section
+                  data-testid="performance-methodology"
+                  className="mt-8 overflow-hidden rounded-2xl border p-5"
+                  style={{
+                    borderColor: `${BRAND_COLORS.orbitalCyan}18`,
+                    background: `linear-gradient(135deg, ${BRAND_COLORS.orbitalCyan}04 0%, rgba(18,14,36,0.7) 100%)`,
+                  }}
+                >
+                  <div
+                    className="mb-4 h-0.5 w-full rounded-full"
+                    style={{ background: `linear-gradient(90deg, ${BRAND_COLORS.orbitalCyan}, transparent 70%)` }}
+                    aria-hidden="true"
+                  />
+                  <p
+                    className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em]"
+                    style={{ color: BRAND_COLORS.orbitalCyan }}
+                  >
+                    Methodology
+                  </p>
+                  <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-xs sm:grid-cols-4">
+                    <div>
+                      <dt className="font-mono uppercase tracking-[0.1em] text-ink-500">Win rate definition</dt>
+                      <dd className="mt-1 text-ink-300">
+                        <code
+                          className="rounded px-1 py-0.5 font-mono text-[10px]"
+                          style={{ background: "rgba(255,255,255,0.07)", color: BRAND_COLORS.orbitalCyan }}
+                        >
+                          wins divided by decided outcomes
+                        </code>
+                      </dd>
                     </div>
-                  )}
-                </dl>
-              </section>
+                    <div>
+                      <dt className="font-mono uppercase tracking-[0.1em] text-ink-500">Pushes</dt>
+                      <dd className="mt-1 text-ink-300">Reported separately, excluded from denominator</dd>
+                    </div>
+                    <div>
+                      <dt className="font-mono uppercase tracking-[0.1em] text-ink-500">Sample size</dt>
+                      <dd className="mt-1 text-ink-300">
+                        <span className={NUMERIC_TEXT_CLASS}>{formatCount(overall.totalPicks)}</span>{" "}
+                        canonical picks
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-mono uppercase tracking-[0.1em] text-ink-500">Model version</dt>
+                      <dd className="mt-1 text-ink-300">
+                        <code
+                          className="rounded px-1 py-0.5 font-mono text-[10px]"
+                          style={{ background: "rgba(255,255,255,0.07)", color: BRAND_COLORS.orbitalCyan }}
+                        >
+                          {modelVersion ?? STAT_PLACEHOLDER}
+                        </code>
+                      </dd>
+                    </div>
+                    {computedAt && (
+                      <div className="col-span-2 sm:col-span-4">
+                        <dt className="font-mono uppercase tracking-[0.1em] text-ink-500">Last computed</dt>
+                        <dd className="mt-1 text-ink-300">{computedAt.toUTCString()}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </section>
+              </Reveal>
 
-              <section className="mb-12">
-                <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
-                  <div className="border-b border-mineral px-6 py-4">
-                    <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
-                      All-Time Overall
-                    </h2>
+              {/* All-time overall */}
+              <Reveal delay={100}>
+                <section className="mt-8 mb-10">
+                  <div
+                    className="overflow-hidden rounded-2xl border"
+                    style={{
+                      borderColor: `${BRAND_COLORS.orbitalCyan}22`,
+                      background: `linear-gradient(140deg, ${BRAND_COLORS.orbitalCyan}06 0%, rgba(18,14,36,0.9) 60%)`,
+                    }}
+                  >
+                    <div
+                      className="px-6 py-4"
+                      style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+                    >
+                      <p
+                        className="font-mono text-[10px] uppercase tracking-[0.2em]"
+                        style={{ color: BRAND_COLORS.orbitalCyan }}
+                      >
+                        All-Time Overall
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+                      <OverallStat
+                        label="Win Rate"
+                        value={formatPercent(overall.winRate)}
+                        hexColor={
+                          overall.winRate !== null
+                            ? winRateHexColor(overall.winRate)
+                            : "rgba(255,255,255,0.30)"
+                        }
+                        large
+                      />
+                      <OverallStat
+                        label="Wins"
+                        value={formatCount(overall.wins)}
+                        hexColor={BRAND_COLORS.orbitalCyan}
+                      />
+                      <OverallStat
+                        label="Losses"
+                        value={formatCount(overall.losses)}
+                        hexColor="#FF6470"
+                      />
+                      <OverallStat
+                        label="Pushes"
+                        value={formatCount(overall.pushes)}
+                        hexColor="rgba(255,255,255,0.40)"
+                      />
+                    </div>
+                    <div className="px-6 py-3">
+                      <p className="text-xs text-ink-500">
+                        Based on{" "}
+                        <span className={NUMERIC_TEXT_CLASS}>{formatCount(overall.totalPicks)}</span>{" "}
+                        canonical settled picks. Win rate excludes pushes.
+                      </p>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 divide-x divide-mineral/60 sm:grid-cols-4">
-                    <OverallStat
-                      label="Win Rate"
-                      value={formatPercent(overall.winRate)}
-                      accent={
-                        overall.winRate !== null
-                          ? winRateToneClass(overall.winRate)
-                          : "text-ion-2"
-                      }
-                      large
-                    />
-                    <OverallStat
-                      label="Wins"
-                      value={formatCount(overall.wins)}
-                      accent="text-orbital-cyan"
-                    />
-                    <OverallStat
-                      label="Losses"
-                      value={formatCount(overall.losses)}
-                      accent="text-alert"
-                    />
-                    <OverallStat
-                      label="Pushes"
-                      value={formatCount(overall.pushes)}
-                      accent="text-ion-2"
-                    />
-                  </div>
-                  <div className="border-t border-mineral px-6 py-3">
-                    <p className="text-xs text-ion-3">
-                      Based on{" "}
-                      <span className={NUMERIC_TEXT_CLASS}>
-                        {formatCount(overall.totalPicks)}
-                      </span>{" "}
-                      canonical settled picks. Win rate excludes pushes.
-                    </p>
-                  </div>
-                </div>
-              </section>
+                </section>
+              </Reveal>
 
+              {/* By sport */}
               {bySport.size > 0 && (
-                <section className="mb-12">
-                  <h2 className="mb-5 text-xl font-bold text-ion-white">
-                    By sport (all-time)
-                  </h2>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <section className="mb-10">
+                  <Reveal>
+                    <h2
+                      className="mb-6 font-display text-white"
+                      style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", lineHeight: 1.1 }}
+                    >
+                      By sport (all-time)
+                    </h2>
+                  </Reveal>
+                  <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" step={60}>
                     {Array.from(bySport.entries()).map(([sport, items]) => {
                       const w = items.reduce((a, s) => a + s.wins, 0);
                       const l = items.reduce((a, s) => a + s.losses, 0);
@@ -354,10 +477,7 @@ export default async function PerformancePage() {
                       return (
                         <SportCard
                           key={sport}
-                          sport={
-                            SPORT_DISPLAY_NAMES[sport.toLowerCase()] ??
-                            sport.toUpperCase()
-                          }
+                          sport={SPORT_DISPLAY_NAMES[sport.toLowerCase()] ?? sport.toUpperCase()}
                           wins={w}
                           losses={l}
                           pushes={p}
@@ -366,143 +486,146 @@ export default async function PerformancePage() {
                         />
                       );
                     })}
-                  </div>
+                  </Stagger>
                 </section>
               )}
 
+              {/* Recent periods table */}
               {recentSummaries.length > 0 && (
-                <section className="mb-12">
-                  <h2 className="mb-5 text-xl font-bold text-ion-white">
-                    Recent periods
-                  </h2>
-                  <div className="overflow-x-auto rounded-2xl border border-mineral">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-mineral text-left">
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
-                            Period
-                          </th>
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
-                            Sport
-                          </th>
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
-                            Type
-                          </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
-                            W
-                          </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
-                            L
-                          </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
-                            P
-                          </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
-                            Win%
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {recentSummaries.slice(0, 30).map((s, i) => {
-                          const wr = winRatePct(s.wins, s.losses);
-                          return (
-                            <tr
-                              key={s.id}
-                              className={[
-                                "border-b border-mineral/40",
-                                i % 2 === 0 ? "bg-eclipse/40" : "",
-                              ].join(" ")}
-                            >
-                              <td
-                                className={`px-4 py-3 text-xs text-ion-1 ${NUMERIC_TEXT_CLASS}`}
+                <section className="mb-10">
+                  <Reveal>
+                    <h2
+                      className="mb-6 font-display text-white"
+                      style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", lineHeight: 1.1 }}
+                    >
+                      Recent periods
+                    </h2>
+                  </Reveal>
+                  <Reveal delay={60}>
+                    <div
+                      className="overflow-hidden overflow-x-auto rounded-2xl border"
+                      style={{
+                        borderColor: "rgba(255,255,255,0.08)",
+                        background: "rgba(8,6,20,0.5)",
+                      }}
+                    >
+                      <table className="w-full text-sm">
+                        <thead
+                          className="font-mono text-[10px] uppercase tracking-wider"
+                          style={{ borderBottom: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)", background: `${BRAND_COLORS.orbitalCyan}04` }}
+                        >
+                          <tr>
+                            <th className="px-4 py-3 text-left">Period</th>
+                            <th className="px-4 py-3 text-left">Sport</th>
+                            <th className="px-4 py-3 text-left">Type</th>
+                            <th className="px-4 py-3 text-center">W</th>
+                            <th className="px-4 py-3 text-center">L</th>
+                            <th className="px-4 py-3 text-center">P</th>
+                            <th className="px-4 py-3 text-center">Win%</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {recentSummaries.slice(0, 30).map((s, i) => {
+                            const wr = winRatePct(s.wins, s.losses);
+                            return (
+                              <tr
+                                key={s.id}
+                                style={{
+                                  borderBottom: i < Math.min(recentSummaries.length, 30) - 1 ? "1px solid rgba(255,255,255,0.05)" : undefined,
+                                  background: i % 2 === 0 ? "rgba(255,255,255,0.015)" : undefined,
+                                }}
                               >
-                                {s.period}
-                              </td>
-                              <td className="px-4 py-3 text-ion-1">
-                                {SPORT_DISPLAY_NAMES[s.sport.toLowerCase()] ??
-                                  s.sport}
-                              </td>
-                              <td className="px-4 py-3 text-ion-2">
-                                {s.pickType ?? "All"}
-                              </td>
-                              <td
-                                className={`px-4 py-3 text-center text-orbital-cyan ${NUMERIC_TEXT_CLASS}`}
-                              >
-                                {s.wins}
-                              </td>
-                              <td
-                                className={`px-4 py-3 text-center text-alert ${NUMERIC_TEXT_CLASS}`}
-                              >
-                                {s.losses}
-                              </td>
-                              <td
-                                className={`px-4 py-3 text-center text-ion-2 ${NUMERIC_TEXT_CLASS}`}
-                              >
-                                {s.pushes}
-                              </td>
-                              <td className="px-4 py-3 text-center">
-                                {wr !== null ? (
-                                  <span
-                                    className={[
-                                      "font-semibold",
-                                      NUMERIC_TEXT_CLASS,
-                                      winRateToneClass(wr),
-                                    ].join(" ")}
-                                  >
-                                    {formatPercent(wr)}
-                                  </span>
-                                ) : (
-                                  <span className="text-ion-3">
-                                    {STAT_PLACEHOLDER}
-                                  </span>
-                                )}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
+                                <td className={`px-4 py-3 text-xs text-ink-300 ${NUMERIC_TEXT_CLASS}`}>
+                                  {s.period}
+                                </td>
+                                <td className="px-4 py-3 text-ink-300">
+                                  {SPORT_DISPLAY_NAMES[s.sport.toLowerCase()] ?? s.sport}
+                                </td>
+                                <td className="px-4 py-3 text-ink-400">
+                                  {s.pickType ?? "All"}
+                                </td>
+                                <td className={`px-4 py-3 text-center ${NUMERIC_TEXT_CLASS}`} style={{ color: BRAND_COLORS.orbitalCyan }}>
+                                  {s.wins}
+                                </td>
+                                <td className={`px-4 py-3 text-center text-alert ${NUMERIC_TEXT_CLASS}`}>
+                                  {s.losses}
+                                </td>
+                                <td className={`px-4 py-3 text-center text-ink-400 ${NUMERIC_TEXT_CLASS}`}>
+                                  {s.pushes}
+                                </td>
+                                <td className="px-4 py-3 text-center">
+                                  {wr !== null ? (
+                                    <span
+                                      className={["font-semibold", NUMERIC_TEXT_CLASS].join(" ")}
+                                      style={{ color: winRateHexColor(wr) }}
+                                    >
+                                      {formatPercent(wr)}
+                                    </span>
+                                  ) : (
+                                    <span className="text-ink-500">{STAT_PLACEHOLDER}</span>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </Reveal>
                 </section>
               )}
 
-              <RiskDisclosure variant="card" includePastPerformance />
+              <Reveal delay={80}>
+                <RiskDisclosure variant="card" includePastPerformance />
+              </Reveal>
             </>
           )}
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageChrome>
   );
 }
 
 // Sub-components
 
+function winRateHexColor(rate: number): string {
+  if (rate >= 55) return BRAND_COLORS.orbitalCyan;
+  if (rate >= 52.4) return "#F6F7FA";
+  if (rate >= 50) return "#FFB454";
+  return "#FF6470";
+}
+
 function OverallStat({
   label,
   value,
-  accent,
+  hexColor,
   large,
 }: {
   label: string;
   value: string;
-  accent: string;
+  hexColor: string;
   large?: boolean;
 }) {
-  const isPositive = large && accent === winRateToneClass(55);
+  const glow = large && hexColor === BRAND_COLORS.orbitalCyan
+    ? `drop-shadow(0 0 16px rgba(0,229,255,0.5))`
+    : undefined;
+
   return (
-    <div className="flex flex-col items-center gap-1 px-6 py-6 text-center">
-      <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-ion-3">
+    <div
+      className="flex flex-col items-center gap-1 px-6 py-6 text-center"
+      style={{
+        borderRight: "1px solid rgba(255,255,255,0.07)",
+      }}
+    >
+      <dt
+        className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em]"
+        style={{ color: "rgba(255,255,255,0.40)" }}
+      >
         {label}
       </dt>
       <dd
-        className={[
-          "font-extrabold tabular-nums",
-          NUMERIC_TEXT_CLASS,
-          large ? "text-5xl" : "text-3xl",
-          accent,
-          isPositive ? "drop-shadow-[0_0_16px_rgba(0,229,255,0.5)]" : "",
-        ].join(" ")}
+        className={["font-extrabold tabular-nums", NUMERIC_TEXT_CLASS, large ? "text-5xl" : "text-3xl"].join(" ")}
+        style={{ color: hexColor, filter: glow }}
       >
         {value}
       </dd>
@@ -511,29 +634,16 @@ function OverallStat({
 }
 
 function WinRateArc({ winRate }: { winRate: number }) {
-  // Arc uses the breakeven threshold as the visual zero line; above it = positive,
-  // below it = caution. The ring itself still fills the full range.
   const r = 28;
-  const circ = 2 * Math.PI * r; // ≈ 175.9
+  const circ = 2 * Math.PI * r;
   const filled = (winRate / 100) * circ;
-
-  let stroke = "#9AA3C0"; // ion-3 — below breakeven
-  if (winRate >= 55) stroke = "#00E5FF";       // orbital-cyan
-  else if (winRate >= 52.4) stroke = "#F6F7FA"; // ion-white
-  else if (winRate >= 50) stroke = "#FFB454";   // caution
-  else stroke = "#FF6470";                       // alert
-
+  const stroke = winRateHexColor(winRate);
   const glow = winRate >= 55 ? `drop-shadow(0 0 6px ${stroke})` : undefined;
 
   return (
     <div className="relative flex items-center justify-center">
       <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true" className="-rotate-90">
-        <circle
-          cx="36" cy="36" r={r}
-          fill="none"
-          stroke="rgba(255,255,255,0.05)"
-          strokeWidth="4"
-        />
+        <circle cx="36" cy="36" r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="4" />
         <circle
           cx="36" cy="36" r={r}
           fill="none"
@@ -545,7 +655,7 @@ function WinRateArc({ winRate }: { winRate: number }) {
         />
       </svg>
       <span
-        className={`absolute text-sm font-bold tabular-nums ${winRateToneClass(winRate)} ${NUMERIC_TEXT_CLASS}`}
+        className={`absolute text-sm font-bold tabular-nums ${NUMERIC_TEXT_CLASS}`}
         style={{ color: stroke }}
       >
         {formatPercent(winRate)}
@@ -569,55 +679,52 @@ function SportCard({
   totalPicks: number;
   winRate: number | null;
 }) {
-  const borderColor = winRate !== null && winRate >= 55
-    ? "border-orbital-cyan/30"
+  const accent = winRate !== null && winRate >= 55
+    ? BRAND_COLORS.orbitalCyan
     : winRate !== null && winRate >= 52.4
-    ? "border-mineral"
-    : "border-mineral";
+    ? BRAND_COLORS.softUltraviolet
+    : "rgba(255,255,255,0.15)";
 
   return (
-    <div className={`rounded-2xl border ${borderColor} bg-eclipse/60 p-5 transition-shadow hover:shadow-float`}>
+    <div
+      className="overflow-hidden rounded-2xl border p-5 transition-shadow hover:shadow-float"
+      style={{
+        borderColor: `${accent}`,
+        background: `linear-gradient(135deg, ${accent === "rgba(255,255,255,0.15)" ? "rgba(255,255,255,0.02)" : `${accent}06`} 0%, rgba(18,14,36,0.8) 100%)`,
+      }}
+    >
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h3 className="text-lg font-bold text-ion-white">{sport}</h3>
+        <h3 className="text-lg font-bold text-white">{sport}</h3>
         {winRate !== null ? (
           <WinRateArc winRate={winRate} />
         ) : (
-          <span className="text-xs text-ion-3">Pending</span>
+          <span className="text-xs text-ink-500">Pending</span>
         )}
       </div>
 
       <div className="grid grid-cols-3 gap-2 text-center">
-        <div className="rounded-lg bg-orbital-cyan/10 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ion-3">W</p>
-          <p className={`text-xl font-bold text-orbital-cyan ${NUMERIC_TEXT_CLASS}`}>
-            {wins}
-          </p>
+        <div className="rounded-lg py-2" style={{ background: `${BRAND_COLORS.orbitalCyan}10` }}>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-500">W</p>
+          <p className={`text-xl font-bold ${NUMERIC_TEXT_CLASS}`} style={{ color: BRAND_COLORS.orbitalCyan }}>{wins}</p>
         </div>
-        <div className="rounded-lg bg-alert/10 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ion-3">L</p>
-          <p className={`text-xl font-bold text-alert ${NUMERIC_TEXT_CLASS}`}>
-            {losses}
-          </p>
+        <div className="rounded-lg py-2" style={{ background: "rgba(255,100,112,0.10)" }}>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-500">L</p>
+          <p className={`text-xl font-bold text-alert ${NUMERIC_TEXT_CLASS}`}>{losses}</p>
         </div>
-        <div className="rounded-lg bg-titanium/60 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ion-3">P</p>
-          <p className={`text-xl font-bold text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
-            {pushes}
-          </p>
+        <div className="rounded-lg py-2" style={{ background: "rgba(255,255,255,0.04)" }}>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-500">P</p>
+          <p className={`text-xl font-bold text-ink-400 ${NUMERIC_TEXT_CLASS}`}>{pushes}</p>
         </div>
       </div>
 
-      <p className="mt-3 text-center text-xs text-ion-3">
-        <span className={NUMERIC_TEXT_CLASS}>{formatCount(totalPicks)}</span>{" "}
-        canonical picks
+      <p className="mt-3 text-center text-xs text-ink-500">
+        <span className={NUMERIC_TEXT_CLASS}>{formatCount(totalPicks)}</span>{" "}canonical picks
       </p>
     </div>
   );
 }
 
-// Data fetching - declared at the bottom so the first textual occurrence of
-// "getPerformanceSummaries(" in this file is the call site above, which is
-// itself guarded by the canExposePerformanceStats gate check.
+// Data fetching
 async function getPerformanceSummaries(): Promise<PerformanceSummary[]> {
   return db.performanceSummary.findMany({
     orderBy: [{ period: "desc" }, { totalPicks: "desc" }],

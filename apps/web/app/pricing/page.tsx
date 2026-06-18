@@ -276,31 +276,45 @@ export default function PricingPage() {
               {VALUE_TIERS.filter((t) => t.status === "live").map((t, i) => (
                 <div
                   key={t.id}
-                  className="flex h-full flex-col rounded-2xl border border-titanium bg-carbon/40 p-5 animate-fade-up transition-shadow hover:border-titanium hover:shadow-[0_0_24px_rgba(0,0,0,0.4)]"
-                  style={{ animationDelay: `${i * 80}ms` }}
+                  className="flex h-full flex-col overflow-hidden rounded-2xl border p-5 animate-fade-up transition-all hover:-translate-y-0.5"
+                  style={{
+                    borderColor: `${BRAND_COLORS.orbitalCyan}20`,
+                    background: `linear-gradient(135deg, ${BRAND_COLORS.orbitalCyan}05 0%, rgba(18,14,36,0.7) 100%)`,
+                    animationDelay: `${i * 80}ms`,
+                  }}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ion-blue">
+                    <p
+                      className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em]"
+                      style={{ color: BRAND_COLORS.orbitalCyan }}
+                    >
                       {t.name}
                     </p>
                     {t.status === "waitlist" && (
-                      <span className="rounded-full border border-titanium px-2 py-0.5 text-[10px] font-medium text-ion-3">
+                      <span
+                        className="rounded-full border px-2 py-0.5 text-[10px] font-medium text-ink-400"
+                        style={{ borderColor: "rgba(255,255,255,0.12)" }}
+                      >
                         Waitlist
                       </span>
                     )}
                   </div>
                   <p className="mt-2 text-base font-semibold text-white">{t.promise}</p>
-                  <p className="mt-1 text-xs text-ion-3">{t.forWho}</p>
+                  <p className="mt-1 text-xs text-ink-500">{t.forWho}</p>
                   {t.whyNextTier && (
-                    <p className="mt-auto border-t border-titanium pt-3 text-xs leading-relaxed text-ion-2">
-                      <span className="text-ion-3">Next: </span>
+                    <p
+                      className="mt-auto pt-3 text-xs leading-relaxed text-ink-400"
+                      style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
+                    >
+                      <span className="text-ink-500">Next: </span>
                       {t.whyNextTier}
                     </p>
                   )}
                   {t.status === "waitlist" && (
                     <Link
                       href="/contact"
-                      className="mt-4 inline-block text-xs font-semibold text-ion-blue transition-colors hover:text-ion-blue-glow"
+                      className="mt-4 inline-block text-xs font-semibold transition-colors hover:text-white"
+                      style={{ color: BRAND_COLORS.orbitalCyan }}
                     >
                       {t.ctaLabel} →
                     </Link>
@@ -353,28 +367,31 @@ export default function PricingPage() {
           {/* Feature comparison table */}
           <div className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Side by side</h2>
-            <div className="mt-8 overflow-x-auto rounded-2xl border border-titanium">
+            <div
+              className="mt-8 overflow-x-auto overflow-hidden rounded-2xl border"
+              style={{ borderColor: "rgba(255,255,255,0.10)", background: "rgba(8,6,20,0.5)" }}
+            >
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-titanium bg-carbon/60">
-                    <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-ion-3">
+                  <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.08)", background: `${BRAND_COLORS.orbitalCyan}06` }}>
+                    <th className="px-4 py-4 text-left font-mono text-[10px] uppercase tracking-wider text-ink-500">
                       Feature
                     </th>
                     {PLANS.map((plan) => (
                       <th
                         key={plan.id}
-                        className={[
-                          "px-4 py-4 text-center text-sm font-bold",
-                          plan.id === "PRO"
-                            ? "text-plasma"
+                        className="px-4 py-4 text-center text-sm font-bold"
+                        style={{
+                          color: plan.id === "PRO"
+                            ? BRAND_COLORS.ionMagenta
                             : plan.id === "ELITE"
-                              ? "text-ultraviolet"
-                              : "text-ion-blue",
-                        ].join(" ")}
+                              ? BRAND_COLORS.softUltraviolet
+                              : BRAND_COLORS.orbitalCyan,
+                        }}
                       >
                         {plan.name}
                         {plan.monthly !== null && (
-                          <span className="ml-1 text-xs font-normal text-ion-3">
+                          <span className="ml-1 text-xs font-normal text-ink-500">
                             ${plan.monthly}/mo
                           </span>
                         )}
@@ -386,12 +403,13 @@ export default function PricingPage() {
                   {COMPARISON_FEATURES.map((feature, i) => (
                     <tr
                       key={feature}
-                      className={[
-                        "border-b border-titanium/40 transition-colors hover:bg-carbon/30",
-                        i % 2 === 0 ? "bg-carbon/10" : "",
-                      ].join(" ")}
+                      className="transition-colors hover:bg-white/[0.025]"
+                      style={{
+                        borderBottom: i < COMPARISON_FEATURES.length - 1 ? "1px solid rgba(255,255,255,0.05)" : undefined,
+                        background: i % 2 === 0 ? "rgba(255,255,255,0.015)" : undefined,
+                      }}
                     >
-                      <td className="px-4 py-3 text-ion-1">{feature}</td>
+                      <td className="px-4 py-3 text-ink-300">{feature}</td>
                       {(["FREE", "PRO", "ELITE"] as const).map((planId) => {
                         const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
                         return (
@@ -410,19 +428,41 @@ export default function PricingPage() {
           {/* Built to protect you from hype — what every tier is really for */}
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Built to protect you from hype</h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ion-2">{EMOTIONAL_VALUE}</p>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-400">{EMOTIONAL_VALUE}</p>
             <div className="mx-auto mt-8 grid max-w-4xl gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-ion-blue/20 bg-ion-blue/5 p-6 transition-shadow hover:shadow-[0_0_24px_rgba(0,229,255,0.08)]">
-                <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-ion-blue">Signal quality</p>
+              <div
+                className="overflow-hidden rounded-2xl border p-6 transition-all hover:-translate-y-0.5"
+                style={{
+                  borderColor: `${BRAND_COLORS.orbitalCyan}22`,
+                  background: `linear-gradient(135deg, ${BRAND_COLORS.orbitalCyan}06 0%, rgba(18,14,36,0.7) 100%)`,
+                }}
+              >
+                <p
+                  className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em]"
+                  style={{ color: BRAND_COLORS.orbitalCyan }}
+                >
+                  Signal quality
+                </p>
                 <h3 className="text-sm font-semibold text-white">How confidence works</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ion-2">
+                <p className="mt-2 text-sm leading-relaxed text-ink-400">
                   {getFeature("confidence")?.customerExplanation}
                 </p>
               </div>
-              <div className="rounded-2xl border border-verify/20 bg-verify/5 p-6 transition-shadow hover:shadow-[0_0_24px_rgba(95,217,163,0.08)]">
-                <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-verify">Discipline gate</p>
+              <div
+                className="overflow-hidden rounded-2xl border p-6 transition-all hover:-translate-y-0.5"
+                style={{
+                  borderColor: `${BRAND_COLORS.softUltraviolet}22`,
+                  background: `linear-gradient(135deg, ${BRAND_COLORS.softUltraviolet}06 0%, rgba(18,14,36,0.7) 100%)`,
+                }}
+              >
+                <p
+                  className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em]"
+                  style={{ color: BRAND_COLORS.softUltraviolet }}
+                >
+                  Discipline gate
+                </p>
                 <h3 className="text-sm font-semibold text-white">What No-Bet means</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ion-2">
+                <p className="mt-2 text-sm leading-relaxed text-ink-400">
                   {getFeature("no-bet-reasoning")?.customerExplanation}
                 </p>
               </div>
@@ -432,29 +472,34 @@ export default function PricingPage() {
           {/* FAQ */}
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Frequently asked</h2>
-            <div className="mx-auto mt-8 max-w-3xl divide-y divide-titanium/40 overflow-hidden rounded-2xl border border-titanium bg-carbon/40">
-              {FAQ.map((item) => (
+            <div
+              className="mx-auto mt-8 max-w-3xl overflow-hidden rounded-2xl border"
+              style={{ borderColor: "rgba(255,255,255,0.10)", background: "rgba(8,6,20,0.5)" }}
+            >
+              {FAQ.map((item, i) => (
                 <details
                   key={item.q}
-                  className="group px-5 py-4 transition-colors hover:bg-carbon/60 [&_summary::-webkit-details-marker]:hidden"
+                  className="group px-5 py-4 transition-colors hover:bg-white/[0.025] [&_summary::-webkit-details-marker]:hidden"
+                  style={{ borderBottom: i < FAQ.length - 1 ? "1px solid rgba(255,255,255,0.07)" : undefined }}
                 >
-                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-ion-white">
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-white">
                     <span>{item.q}</span>
                     <span
                       aria-hidden="true"
-                      className="shrink-0 rounded-full border border-titanium bg-carbon/60 px-1.5 py-0.5 text-xs text-plasma transition-transform group-open:rotate-45"
+                      className="shrink-0 rounded-full border px-1.5 py-0.5 text-xs transition-transform group-open:rotate-45"
+                      style={{ borderColor: `${BRAND_COLORS.ionMagenta}40`, color: BRAND_COLORS.ionMagenta }}
                     >
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-ion-2">{item.a}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-ink-400">{item.a}</p>
                 </details>
               ))}
             </div>
           </section>
 
           {/* Refund note */}
-          <p className="mt-12 text-center text-xs text-ion-2">
+          <p className="mt-12 text-center text-xs text-ink-500">
             No free trial. Every paid plan has a 3-day money-back window. Cancel any time
             from your dashboard. Prices shown are founding-member rates.
           </p>
@@ -492,7 +537,7 @@ function TierDoorColumn({
           <li key={d.href + d.label}>
             <Link
               href={d.href}
-              className="group flex items-center justify-between rounded-lg border border-transparent px-3 py-2 text-sm text-ink-200 transition-colors hover:border-titanium hover:bg-carbon/50 hover:text-white"
+              className="group flex items-center justify-between rounded-lg border border-transparent px-3 py-2 text-sm text-ink-300 transition-colors hover:border-white/10 hover:bg-white/[0.03] hover:text-white"
             >
               {d.label}
               <span aria-hidden className="text-ink-500 transition-transform group-hover:translate-x-0.5">→</span>
@@ -506,7 +551,7 @@ function TierDoorColumn({
 
 function ComparisonCell({ value, tier }: { value: string | boolean; tier?: "FREE" | "PRO" | "ELITE" }) {
   if (typeof value === "boolean") {
-    const checkColor = tier === "PRO" ? "text-plasma" : tier === "ELITE" ? "text-ultraviolet" : "text-ion-blue";
+    const checkColor = tier === "PRO" ? "text-plasma" : tier === "ELITE" ? "text-ultraviolet" : "text-orbital-cyan";
     return value ? (
       <svg
         className={`mx-auto h-5 w-5 ${checkColor}`}
@@ -533,5 +578,5 @@ function ComparisonCell({ value, tier }: { value: string | boolean; tier?: "FREE
       </svg>
     );
   }
-  return <span className="text-xs font-medium text-ion-2">{value}</span>;
+  return <span className="text-xs font-medium text-ink-400">{value}</span>;
 }
