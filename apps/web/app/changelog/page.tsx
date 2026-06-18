@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 
 /**
@@ -87,11 +89,13 @@ export default function ChangelogPage() {
 
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <Atmosphere />
       <Nav />
 
       <main className="flex-1">
         {/* Cinematic hero */}
         <section className="relative isolate overflow-hidden px-4 pb-14 pt-24 sm:px-6 lg:px-8">
+          <GeneratedPlate assetId="board-command" className="-z-20 opacity-35" />
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[24rem]"

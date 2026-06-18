@@ -6,6 +6,8 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { BRAND_COLORS } from "@/lib/brand";
 import {
   loadPublicClvPolicy,
@@ -39,11 +41,13 @@ export default async function ClvPage() {
       className="flex min-h-screen flex-col"
       style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}
     >
+      <Atmosphere />
       <Nav />
 
       <main className="flex-1">
         {/* Cinematic hero */}
         <section className="relative isolate overflow-hidden px-4 pb-12 pt-24 sm:px-6 lg:px-8">
+          <GeneratedPlate assetId="proof-crystal" className="-z-20 opacity-40" />
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[36rem]"
