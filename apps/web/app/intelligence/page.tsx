@@ -88,6 +88,37 @@ const CHAIN: ReadonlyArray<{
   },
 ];
 
+const ARCH_LAYERS = [
+  {
+    id: "layer-data",
+    name: "RAW DATA",
+    desc: "Rights-cleared intake",
+    color: BRAND_COLORS.orbitalCyan,
+    nodes: ["The Odds API", "nflverse", "Media Signal", "Market Movement"],
+  },
+  {
+    id: "layer-signal",
+    name: "SIGNAL EXTRACTION",
+    desc: "Factor scoring",
+    color: BRAND_COLORS.softUltraviolet,
+    nodes: ["Line Movement", "Factor Score", "Scheme Context", "Opportunity Index"],
+  },
+  {
+    id: "consensus",
+    name: "CONSENSUS",
+    desc: "Multi-agent agreement",
+    color: "#FFB454",
+    nodes: ["Agent 1", "Agent 2", "Agent 3", "Divergence Check"],
+  },
+  {
+    id: "layer-decision",
+    name: "DECISION",
+    desc: "Gate + receipt",
+    color: BRAND_COLORS.ionMagenta,
+    nodes: ["Confidence ≥55?", "No-Bet Gate", "Published Pick", "Tamper-Evident Receipt"],
+  },
+] as const;
+
 function ConsensusField() {
   // Decorative "referees converging on consensus" motif — the precise companion
   // to the ambient galaxy. Purely visual.
@@ -205,6 +236,79 @@ export default function IntelligencePage() {
                 </Link>
               </div>
             </Reveal>
+          </div>
+        </section>
+
+        {/* Engine Architecture — 4-layer horizontal stack diagram */}
+        <section className="px-4 py-16 sm:px-6 lg:px-8" aria-labelledby="arch-heading">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>Engine Architecture</p>
+            </Reveal>
+            <Reveal delay={80}>
+              <h2 id="arch-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
+                Four layers from raw data to auditable signal.
+              </h2>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-4 max-w-2xl text-ink-300">
+                Every pick traces a path through four distinct layers — each with its own
+                logic, failure mode, and tamper-evident log. Nothing skips a layer.
+              </p>
+            </Reveal>
+
+            <div className="mt-10 flex flex-col gap-2">
+              {ARCH_LAYERS.map((layer, i) => (
+                <Reveal key={layer.id} delay={120 + i * 80}>
+                  <div
+                    id={layer.id}
+                    className="group relative overflow-hidden rounded-xl border px-5 py-4 transition-all duration-300 hover:border-opacity-60"
+                    style={{ borderColor: `${layer.color}28`, background: `${layer.color}05` }}
+                  >
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                      {/* Layer label */}
+                      <div className="w-44 shrink-0">
+                        <p className="font-mono text-[9px] uppercase tracking-[0.2em]" style={{ color: layer.color }}>
+                          Layer {String(i + 1).padStart(2, "0")}
+                        </p>
+                        <p className="mt-0.5 font-mono text-sm font-bold text-white">{layer.name}</p>
+                        <p className="mt-1 text-[11px] leading-4 text-ink-500">{layer.desc}</p>
+                      </div>
+
+                      {/* Node row */}
+                      <div className="flex flex-1 flex-wrap items-center gap-2">
+                        {layer.nodes.map((node, ni) => (
+                          <div key={node} className="flex items-center gap-2">
+                            <span
+                              className="rounded-lg border px-3 py-1.5 font-mono text-[11px] leading-tight transition-all duration-200 group-hover:scale-[1.02]"
+                              style={{
+                                borderColor: `${layer.color}30`,
+                                background: `${layer.color}0d`,
+                                color: layer.color,
+                              }}
+                            >
+                              {node}
+                            </span>
+                            {ni < layer.nodes.length - 1 && (
+                              <span className="font-mono text-xs" style={{ color: `${layer.color}50` }}>→</span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Bottom-gradient connector to next layer */}
+                    {i < ARCH_LAYERS.length - 1 && (
+                      <div
+                        aria-hidden="true"
+                        className="absolute bottom-0 left-0 right-0 h-px"
+                        style={{ background: `linear-gradient(90deg, transparent, ${layer.color}20, ${ARCH_LAYERS[i + 1]!.color}20, transparent)` }}
+                      />
+                    )}
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </section>
 
