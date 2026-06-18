@@ -19,6 +19,7 @@ import {
   EMOTIONAL_VALUE,
 } from "@/lib/pricing/value-architecture";
 import { getFeature } from "@/lib/pricing/feature-gates";
+import { SITE_URL } from "@/lib/seo/sports-jsonld";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
@@ -182,6 +183,31 @@ const faqJsonLd = {
   })),
 };
 
+// Product/Offer markup — makes the paid tiers rich-result eligible. Prices come
+// straight from the live pricing phase (single source of truth), so they can
+// never drift from what Stripe charges.
+const offersJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: `${BRAND_NAME} subscription`,
+  description:
+    "Daily sports picks with confidence scores, factor trails, line movement, and published calibration receipts. Free tier included; Pro and Elite unlock the full board.",
+  brand: { "@type": "Brand", name: BRAND_NAME },
+  offers: [
+    { tier: "Pro", interval: "Monthly", price: phase.pro.monthly },
+    { tier: "Pro", interval: "Annual", price: phase.pro.annual },
+    { tier: "Elite", interval: "Monthly", price: phase.elite.monthly },
+    { tier: "Elite", interval: "Annual", price: phase.elite.annual },
+  ].map((o) => ({
+    "@type": "Offer",
+    name: `${o.tier} · ${o.interval}`,
+    price: o.price.toFixed(2),
+    priceCurrency: "USD",
+    availability: "https://schema.org/InStock",
+    url: `${SITE_URL}/pricing`,
+  })),
+};
+
 // ─────────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────────
@@ -196,6 +222,10 @@ export default function PricingPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(offersJsonLd) }}
       />
 
       <main className="relative flex-1 overflow-hidden px-4 py-20 sm:px-6 lg:px-8">

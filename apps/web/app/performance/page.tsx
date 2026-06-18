@@ -101,7 +101,9 @@ function BootstrapShell({ children }: { children: React.ReactNode }) {
       <Nav />
       <main className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <span className="sr-only">Performance</span>
+          {/* The page's h1 — present in the gate-closed (bootstrap) state too, so
+              this high-value route is never h1-less in its default pre-launch view. */}
+          <h1 className="sr-only">Performance · Calibration Report</h1>
           {children}
         </div>
       </main>
