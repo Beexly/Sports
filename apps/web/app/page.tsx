@@ -170,6 +170,22 @@ export default async function HomePage(): Promise<JSX.Element> {
               <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-400">
                 We detect. You decide.
               </p>
+              <div className="mt-5 flex flex-col gap-2 text-sm sm:flex-row sm:items-center sm:gap-5">
+                <Link
+                  href="/founding-desk"
+                  className="inline-flex items-center gap-1.5 font-semibold text-orbital-cyan transition-colors hover:text-white"
+                >
+                  Join the Founding Desk
+                  <span aria-hidden="true">→</span>
+                </Link>
+                <Link
+                  href="/ask-galaxy"
+                  className="inline-flex items-center gap-1.5 text-ink-300 transition-colors hover:text-white"
+                >
+                  Send Galaxy one game for a read
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
             </div>
 
             <div

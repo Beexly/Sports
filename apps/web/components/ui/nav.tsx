@@ -56,6 +56,7 @@ const COMPANY_MENU: readonly NavGroup[] = [
       { label: "About", href: "/about", desc: "The story, the model, the operating principles" },
       { label: "Partners", href: "/partners", desc: "Content partnerships, collaborations, and creator network" },
       { label: "Media Kit", href: "/media-kit", desc: "Sponsor information — niche trust, not fake reach" },
+      { label: "Affiliate Disclosure", href: "/affiliate-disclosure", desc: "How we disclose material connections — FTC-style, compliance-first" },
       { label: "Press", href: "/press", desc: "Press inquiries and brand assets" },
     ],
   },
