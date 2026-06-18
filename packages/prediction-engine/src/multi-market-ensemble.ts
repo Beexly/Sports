@@ -29,6 +29,7 @@
  */
 
 import type { IndependentEstimate } from "./edge-engine.js";
+import type { IndependentMarketFairValue } from "@sports/types";
 
 // ── σ-derivation constants (tunable; documented heuristics, not fitted) ──────────
 /** Baseline standard error (prob points) of an ideal, vig-free, deep, fresh quote. */
@@ -193,4 +194,73 @@ export function precisionWeightedEnsemble(estimates: readonly MarketEstimate[]):
     weights,
     independents,
   };
+}
+
+// ============================================================
+// Adapter — fuse the engine's real independent fair-value sources
+// ============================================================
+
+export interface SideEstimateOptions {
+  /** Injectable clock for staleness from each source's capturedAt. */
+  readonly now?: () => Date;
+  /** Per-source reliability overrides, merged over the source-family defaults. */
+  readonly reliabilityBySource?: Readonly<Record<string, EstimatorReliability>>;
+}
+
+/**
+ * Default reliability by source family. Exchanges (Kalshi/Polymarket) are
+ * vig-free and reasonably deep → low σ → more weight. Model estimators carry
+ * model variance via a reference sample size. Overridable per call.
+ */
+export const DEFAULT_SOURCE_RELIABILITY: Readonly<Record<string, EstimatorReliability>> = {
+  kalshi: { holdPct: 0, liquidity: 2 },
+  polymarket: { holdPct: 0, liquidity: 2 },
+  poisson: { sampleSize: 20 },
+  elo: { sampleSize: 20 },
+  ml: { sampleSize: 20 },
+};
+
+function ageSecondsFrom(capturedAt: string | undefined, now: Date): number | undefined {
+  if (!capturedAt) return undefined;
+  const t = Date.parse(capturedAt);
+  if (!Number.isFinite(t)) return undefined;
+  return Math.max(0, (now.getTime() - t) / 1000);
+}
+
+/**
+ * Build precision-weighting inputs for ONE side from the game's independent
+ * fair-value snapshots (Kalshi exchange, Poisson/Elo/ML models, …). Skips sources
+ * with no quote for the side. Reliability = source-family default, plus staleness
+ * derived from `capturedAt`, plus any per-source override (override wins).
+ */
+export function independentEstimatesForSide(
+  fairValues: readonly IndependentMarketFairValue[],
+  side: "home" | "away",
+  options: SideEstimateOptions = {},
+): MarketEstimate[] {
+  const now = (options.now ?? (() => new Date()))();
+  const out: MarketEstimate[] = [];
+  for (const fv of fairValues) {
+    const prob = side === "home" ? fv.homeFairProb : fv.awayFairProb;
+    if (typeof prob !== "number" || !Number.isFinite(prob) || prob < 0 || prob > 1) continue;
+    const base = DEFAULT_SOURCE_RELIABILITY[fv.source.toLowerCase()] ?? {};
+    const age = ageSecondsFrom(fv.capturedAt, now);
+    const override = options.reliabilityBySource?.[fv.source] ?? {};
+    const reliability: EstimatorReliability = {
+      ...base,
+      ...(age !== undefined ? { ageSeconds: age } : {}),
+      ...override,
+    };
+    out.push({ source: fv.source, prob, reliability });
+  }
+  return out;
+}
+
+/** Convenience: precision-weighted ensemble for one side, straight from fair values. */
+export function ensembleForSide(
+  fairValues: readonly IndependentMarketFairValue[],
+  side: "home" | "away",
+  options: SideEstimateOptions = {},
+): EnsembleResult {
+  return precisionWeightedEnsemble(independentEstimatesForSide(fairValues, side, options));
 }

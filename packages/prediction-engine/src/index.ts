@@ -274,12 +274,16 @@ export type {
 export {
   estimatorSigma,
   precisionWeightedEnsemble,
+  independentEstimatesForSide,
+  ensembleForSide,
+  DEFAULT_SOURCE_RELIABILITY,
   SIGMA_BASE,
 } from "./multi-market-ensemble.js";
 export type {
   EstimatorReliability,
   MarketEstimate,
   EnsembleResult,
+  SideEstimateOptions,
 } from "./multi-market-ensemble.js";
 
 // Synthetic public-lean / fade — the glass-box reframe of an agent-swarm crowd
