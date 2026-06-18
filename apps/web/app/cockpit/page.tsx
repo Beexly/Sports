@@ -293,7 +293,7 @@ export default async function CockpitOverview() {
            the default view stays calm. Critical safety items are already
            surfaced up top in the Decision Queue. */}
       <details className="group mt-2 border-t border-titanium/30 pt-4">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[10px] font-semibold uppercase tracking-widest text-ion-3/50 [&::-webkit-details-marker]:hidden">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[10px] font-semibold uppercase tracking-widest text-ion-2 [&::-webkit-details-marker]:hidden">
           <span>Detail / Drilldowns · warnings · health tiles · gates · phase matrix · picks</span>
           <span aria-hidden className="transition-transform group-open:rotate-180">▾</span>
         </summary>
@@ -875,16 +875,18 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
         </div>
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
           <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Win Rate</p>
-          <p
-            className={[
-              "mt-1 text-2xl font-bold tabular-nums leading-none",
-              performance.displaySafe ? "text-ion-white" : "text-ion-3",
-            ].join(" ")}
-          >
-            {performance.displaySafe && performance.actualWinRate !== null
-              ? `${performance.actualWinRate}%`
-              : "—"}
-          </p>
+          {performance.displaySafe && performance.actualWinRate !== null ? (
+            <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ion-white">
+              {performance.actualWinRate}%
+            </p>
+          ) : (
+            <p
+              className="mt-1 flex items-center gap-1.5 text-sm font-semibold leading-none text-ion-2"
+              title="Win rate is gated until the canonical settled-sample floor is met"
+            >
+              <span aria-hidden>🔒</span> Locked
+            </p>
+          )}
         </div>
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
           <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Sample</p>
@@ -980,7 +982,7 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
         {dept.name}
       </span>
       {dept.agentDisplayName && (
-        <span className="hidden w-16 flex-shrink-0 font-mono text-[10px] text-ion-3/60 sm:block">
+        <span className="hidden w-16 flex-shrink-0 font-mono text-[10px] text-ion-3 sm:block">
           {dept.agentDisplayName}
         </span>
       )}
@@ -992,11 +994,11 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
           Action
         </span>
       )}
-      <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-widest text-ion-3/40">
+      <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-widest text-ion-3">
         {dept.agentMode.replace("_", " ").toLowerCase()}
       </span>
       {dept.drilldownHref && (
-        <span className="flex-shrink-0 text-[10px] text-ion-3/30 transition-colors group-hover:text-ion-2">
+        <span className="flex-shrink-0 text-[10px] text-ion-3 transition-colors group-hover:text-ion-2">
           →
         </span>
       )}

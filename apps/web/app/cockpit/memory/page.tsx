@@ -13,12 +13,26 @@
 
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth";
 import {
   listMemoryByState,
   listMemoryConflicts,
   confirmMemory,
   rejectMemory,
 } from "@/lib/jarvis/memory/actions";
+
+/**
+ * In-action authorization. The cockpit layout guard only protects page RENDER;
+ * a Server Action is its own POST endpoint (callable by action id) and is NOT
+ * covered by that guard. Every mutating action must re-check the session+role
+ * itself. Throws on failure so the mutation never runs for a non-admin.
+ */
+async function assertCockpitAdmin(): Promise<void> {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") {
+    throw new Error("Unauthorized: cockpit memory mutations require an ADMIN session.");
+  }
+}
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +59,7 @@ interface MemoryRow {
 
 async function handleConfirm(formData: FormData): Promise<void> {
   "use server";
+  await assertCockpitAdmin();
   const id = formData.get("id");
   if (typeof id !== "string" || !id) return;
   try {
@@ -59,6 +74,7 @@ async function handleConfirm(formData: FormData): Promise<void> {
 
 async function handleReject(formData: FormData): Promise<void> {
   "use server";
+  await assertCockpitAdmin();
   const id = formData.get("id");
   if (typeof id !== "string" || !id) return;
   try {
