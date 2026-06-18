@@ -16,20 +16,29 @@ const KING_DIMENSIONS: Array<{ label: string; score: number; max: number; color:
   { label: "Metric Depth",    score: 65, max: 100, color: "#5FD9A3", glow: "rgba(95,217,163,0.5)" },
 ];
 
-const SURFACES: Array<{ label: string; href: string; note: string }> = [
-  { label: "Players",          href: "/stats/players",      note: "GPI rankings" },
-  { label: "Teams",            href: "/stats/teams",        note: "Environment" },
-  { label: "Compare",          href: "/stats/compare",      note: "Side-by-side" },
-  { label: "Comps",            href: "/stats/comps",        note: "Similar players" },
-  { label: "Depth",            href: "/stats/depth",        note: "Role & opportunity" },
-  { label: "Status & Movement", href: "/stats/injuries",   note: "Injuries + risers" },
-  { label: "Trenches",         href: "/stats/trenches",     note: "Line play" },
-  { label: "Scouting",         href: "/stats/scouting",     note: "First-party notes" },
-  { label: "Media",            href: "/stats/media",        note: "Signal intel" },
-  { label: "Sources",          href: "/stats/sources",      note: "Data origin" },
-  { label: "Proof",            href: "/stats/proof",        note: "Backtests" },
-  { label: "Ask",              href: "/stats/ask",          note: "Grounded Q&A" },
-  { label: "Expert Board",     href: "/stats/expert-board", note: "Analyst signals" },
+type SurfaceStatus = "LIVE" | "ACCRUING" | "GATED" | "SOON";
+
+const STATUS_STYLE: Record<SurfaceStatus, { color: string; bg: string; border: string }> = {
+  LIVE:     { color: "#00E5FF", bg: "rgba(0,229,255,0.08)",   border: "rgba(0,229,255,0.20)" },
+  ACCRUING: { color: "#FFB454", bg: "rgba(255,180,84,0.08)",  border: "rgba(255,180,84,0.20)" },
+  GATED:    { color: "#7A5CFF", bg: "rgba(122,92,255,0.08)",  border: "rgba(122,92,255,0.20)" },
+  SOON:     { color: "#9AA3B2", bg: "rgba(154,163,178,0.06)", border: "rgba(154,163,178,0.14)" },
+};
+
+const SURFACES: ReadonlyArray<{ label: string; href: string; note: string; status: SurfaceStatus }> = [
+  { label: "Players",           href: "/stats/players",      note: "GPI rankings",      status: "LIVE" },
+  { label: "Teams",             href: "/stats/teams",        note: "Environment",        status: "LIVE" },
+  { label: "Compare",           href: "/stats/compare",      note: "Side-by-side",       status: "LIVE" },
+  { label: "Comps",             href: "/stats/comps",        note: "Similar players",    status: "LIVE" },
+  { label: "Depth",             href: "/stats/depth",        note: "Role & opportunity", status: "LIVE" },
+  { label: "Status & Movement", href: "/stats/injuries",     note: "Injuries + risers",  status: "ACCRUING" },
+  { label: "Trenches",          href: "/stats/trenches",     note: "Line play",          status: "LIVE" },
+  { label: "Scouting",          href: "/stats/scouting",     note: "First-party notes",  status: "GATED" },
+  { label: "Media",             href: "/stats/media",        note: "Signal intel",       status: "LIVE" },
+  { label: "Sources",           href: "/stats/sources",      note: "Data origin",        status: "LIVE" },
+  { label: "Proof",             href: "/stats/proof",        note: "Backtests",          status: "ACCRUING" },
+  { label: "Ask",               href: "/stats/ask",          note: "Grounded Q&A",       status: "LIVE" },
+  { label: "Expert Board",      href: "/stats/expert-board", note: "Analyst signals",    status: "SOON" },
 ];
 
 export default function Page() {
@@ -110,19 +119,28 @@ export default function Page() {
 
       <SectionHeader title="All Intelligence Surfaces" />
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        {SURFACES.map(({ label, href, note }) => (
-          <Link
-            key={href}
-            href={href}
-            className="group rounded-lg border border-white/[0.08] bg-white/[0.04] p-4 transition-all duration-200 hover:border-orbital-cyan/60 hover:-translate-y-0.5 hover:shadow-[0_0_18px_rgba(0,229,255,0.10)]"
-          >
-            <p className="font-semibold text-white transition-colors group-hover:text-orbital-cyan">
-              {label}{" "}
-              <span className="text-ink-500 transition-colors group-hover:text-orbital-cyan">→</span>
-            </p>
-            <p className="mt-1 text-xs text-ink-400">{note}</p>
-          </Link>
-        ))}
+        {SURFACES.map(({ label, href, note, status }) => {
+          const st = STATUS_STYLE[status];
+          return (
+            <Link
+              key={href}
+              href={href}
+              className="group relative rounded-lg border border-white/[0.08] bg-white/[0.04] p-4 transition-all duration-200 hover:border-orbital-cyan/60 hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(0,229,255,0.12)]"
+            >
+              <span
+                className="absolute right-2.5 top-2.5 rounded-full px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em]"
+                style={{ color: st.color, background: st.bg, border: `1px solid ${st.border}` }}
+              >
+                {status}
+              </span>
+              <p className="mt-0.5 font-semibold text-white transition-colors group-hover:text-orbital-cyan">
+                {label}{" "}
+                <span className="text-ink-500 transition-colors group-hover:text-orbital-cyan">→</span>
+              </p>
+              <p className="mt-1 text-xs text-ink-400">{note}</p>
+            </Link>
+          );
+        })}
       </div>
     </Shell>
   );

@@ -3,7 +3,10 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { BiasMirror } from "@/components/bias-mirror/bias-mirror";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { BRAND_NAME, HELPLINE, BRAND_COLORS } from "@/lib/brand";
+import { QuoteCallout } from "@/components/ui/quote-callout";
 
 export const metadata: Metadata = {
   title: "Responsible play",
@@ -47,11 +50,13 @@ const WARNING_SIGNS = [
 export default function ResponsiblePlayPage() {
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <Atmosphere />
       <Nav />
 
       <main className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden px-4 pb-14 pt-24 sm:px-6 lg:px-8">
+          <GeneratedPlate assetId="no-bet-stillness" className="-z-20 opacity-35" />
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem]"
@@ -208,6 +213,12 @@ export default function ResponsiblePlayPage() {
             </Stagger>
           </div>
         </section>
+
+        {/* Quote break */}
+        <QuoteCallout cite="Galaxy Sports Edge, Responsible Play">
+          The model does not publish when it is not confident. The gate stays closed —
+          and honest silence is the most responsible pick of all.
+        </QuoteCallout>
 
         {/* Resources */}
         <section className="px-4 pb-24 pt-6 sm:px-6 lg:px-8">

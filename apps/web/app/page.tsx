@@ -32,6 +32,9 @@ import {
 } from "@/lib/data-sources/catalog";
 import { loadNflverseUsagePulse } from "@/lib/nflverse/usage-pulse";
 import { loadTrendWorkbench } from "@/lib/trends/workbench";
+import { loadSummary, loadActiveMetricManifest } from "@/lib/statking/product";
+import { SignalPipeline } from "@/components/world/signal-pipeline";
+import type { PipelineSummary } from "@/components/world/signal-pipeline";
 
 export const dynamic = "force-dynamic";
 
@@ -72,6 +75,22 @@ export default async function HomePage(): Promise<JSX.Element> {
   const trendWorkbench = loadTrendWorkbench();
   const publicSourceCount = PUBLIC_DATA_SOURCES.length;
   const contextSourceCount = CONTEXT_INTELLIGENCE_SOURCES.length;
+  let pipelineSummary: PipelineSummary = {
+    activeSources: publicSourceCount + contextSourceCount,
+    activeMetrics: 0,
+    candidateCount: 0,
+  };
+  try {
+    const sk = loadSummary();
+    const mm = loadActiveMetricManifest();
+    pipelineSummary = {
+      activeSources: sk.source_count,
+      activeMetrics: mm.active_calculated_count,
+      candidateCount: sk.candidate_count,
+    };
+  } catch {
+    // data files may not exist in all environments; fallback keeps the page renderable
+  }
   const suppressedDemo =
     stateResult.meta.suppressedDemoData === true ||
     passesResult.meta.suppressedDemoData === true;
@@ -587,6 +606,18 @@ export default async function HomePage(): Promise<JSX.Element> {
               </Link>
             </div>
           </div>
+        </WorldSection>
+
+        {/* ── 10 · SIGNAL PIPELINE ──────────────────────────────────── */}
+        <WorldSection
+          index="10"
+          id="pipeline"
+          eyebrow="How it works"
+          title="The signal pipeline."
+          lede="Five stages from raw data intake to receipted pick — every step logged, every gate honest."
+          tone="void"
+        >
+          <SignalPipeline summary={pipelineSummary} />
         </WorldSection>
 
         <MethodologySection />
