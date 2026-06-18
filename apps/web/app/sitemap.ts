@@ -34,6 +34,10 @@ const ROUTES: ReadonlyArray<{
   { path: "/airwave", priority: 0.6, changeFrequency: "weekly" },
   { path: "/vault", priority: 0.6, changeFrequency: "weekly" },
   { path: "/about", priority: 0.5, changeFrequency: "monthly" },
+  // Partner / sponsor / compliance public surfaces (M2)
+  { path: "/media-kit", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/partners", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/affiliate-disclosure", priority: 0.4, changeFrequency: "monthly" },
   { path: "/press", priority: 0.4, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.4, changeFrequency: "yearly" },
   { path: "/faq", priority: 0.5, changeFrequency: "monthly" },

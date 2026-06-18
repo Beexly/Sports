@@ -48,6 +48,18 @@ const PLAYERS_MENU: readonly NavGroup[] = [
   },
 ];
 
+// Company ▾ — about, partners, media kit.
+const COMPANY_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "About", href: "/about", desc: "The story, the model, the operating principles" },
+      { label: "Partners", href: "/partners", desc: "Content partnerships, collaborations, and creator network" },
+      { label: "Media Kit", href: "/media-kit", desc: "Sponsor information — niche trust, not fake reach" },
+      { label: "Press", href: "/press", desc: "Press inquiries and brand assets" },
+    ],
+  },
+];
+
 // Intelligence ▾ — one tight list. Everything funnels into the engines;
 // the engine browser is the single deep door.
 const INTELLIGENCE_MENU: readonly NavGroup[] = [
@@ -178,6 +190,7 @@ export async function Nav() {
 
             <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
+            <NavMenu label="Company" href="/about" groups={COMPANY_MENU} />
             <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
             <NavMenu label="DFS" href="/fantasy/dfs" groups={DFS_MENU} />
 

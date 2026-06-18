@@ -30,6 +30,8 @@ const COMPANY_LINKS = [
   { label: "About", href: "/about" },
   { label: "Press", href: "/press" },
   { label: "FAQ", href: "/faq" },
+  { label: "Partners", href: "/partners" },
+  { label: "Media Kit", href: "/media-kit" },
 ] as const;
 
 const RESPONSIBLE_LINKS = [
@@ -37,6 +39,7 @@ const RESPONSIBLE_LINKS = [
   { label: "Variance guide", href: "/responsible-play#variance" },
   { label: `Help: ${HELPLINE.shortLabel}`, href: HELPLINE.href },
   { label: "Terms and Privacy", href: "/terms" },
+  { label: "Affiliate Disclosure", href: "/affiliate-disclosure" },
 ] as const;
 
 // Beyond the NFL: the other sports data hubs plus the data-sourcing record.

@@ -74,6 +74,8 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
     section: "Monetization",
     items: [
       { href: "/cockpit/revenue", label: "Revenue", hint: "Lanes, MRR, activation" },
+      { href: "/cockpit/sponsors", label: "Sponsors", hint: "Outreach pipeline — lead to active" },
+      { href: "/cockpit/affiliate-registry", label: "Affiliate Registry", hint: "Compliance-first partner registry" },
     ],
   },
   {
