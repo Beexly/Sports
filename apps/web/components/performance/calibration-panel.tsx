@@ -1,5 +1,6 @@
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { HonestBand } from "@/components/performance/honest-band";
+import { ReliabilityDiagram } from "@/components/performance/reliability-diagram";
 import {
   NUMERIC_TEXT_CLASS,
   STAT_PLACEHOLDER,
@@ -75,12 +76,19 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
   const observedWidth = `${Math.round(bucket.observedWinRate * 100)}%`;
   const expectedLeft = `${Math.round(bucket.expectedWinRate * 100)}%`;
   const empty = bucket.sampleSize === 0;
+  const wilsonRange =
+    !empty && bucket.wilsonLow !== undefined && bucket.wilsonHigh !== undefined
+      ? `${formatRatioAsPercent(bucket.wilsonLow)}–${formatRatioAsPercent(bucket.wilsonHigh)}`
+      : null;
   return (
-    <div className="flex items-center gap-3 py-2" data-testid="reliability-row">
-      <span className={`w-14 shrink-0 text-xs text-ion-1 ${NUMERIC_TEXT_CLASS}`}>
-        {bucket.label}
-      </span>
-      <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-titanium">
+    <div className="flex items-start gap-3 py-2" data-testid="reliability-row">
+      <div className="w-14 shrink-0">
+        <span className={`text-xs text-ion-1 ${NUMERIC_TEXT_CLASS}`}>{bucket.label}</span>
+        {wilsonRange && (
+          <p className={`text-[10px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}>{wilsonRange}</p>
+        )}
+      </div>
+      <div className="relative mt-1 h-3 flex-1 overflow-hidden rounded-full bg-titanium">
         {!empty && (
           <div
             className="h-full rounded-full bg-gradient-to-r from-accent-500 to-accent-400 transition-all"
@@ -95,12 +103,12 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
         />
       </div>
       <span
-        className={`w-14 shrink-0 text-right text-xs font-semibold text-ion ${NUMERIC_TEXT_CLASS}`}
+        className={`mt-1 w-14 shrink-0 text-right text-xs font-semibold text-ion ${NUMERIC_TEXT_CLASS}`}
       >
         {empty ? STAT_PLACEHOLDER : formatRatioAsPercent(bucket.observedWinRate)}
       </span>
       <span
-        className={`w-16 shrink-0 text-right text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}
+        className={`mt-1 w-16 shrink-0 text-right text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}
       >
         {empty ? "no data" : `n=${formatCount(bucket.sampleSize)}`}
       </span>
@@ -174,13 +182,34 @@ export async function CalibrationPanel() {
         </div>
       </div>
 
-      {/* Reliability curve. */}
+      {/* Reliability diagram — scatter plot with Wilson CI bars. */}
+      <div className="border-b border-titanium px-6 py-6">
+        <div className="mb-3 flex items-center justify-between">
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+            Reliability diagram
+          </h3>
+          <span className="text-[11px] text-ion-2">expected vs observed · error bars = 95% CI</span>
+        </div>
+        <ReliabilityDiagram
+          points={data.buckets.map((b) => ({
+            label: b.label,
+            expectedWinRate: b.expectedWinRate,
+            observedWinRate: b.observedWinRate,
+            wilsonLow: b.wilsonLow,
+            wilsonHigh: b.wilsonHigh,
+            sampleSize: b.sampleSize,
+          }))}
+          sampleSize={data.sampleSize}
+        />
+      </div>
+
+      {/* Reliability table — numerical view. */}
       <div className="px-6 py-6">
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
-            Reliability by confidence bucket
+            By confidence bucket
           </h3>
-          <span className="text-[11px] text-ion-2">bar = observed · marker = expected</span>
+          <span className="text-[11px] text-ion-2">bar = observed · marker = expected · range = 95% CI</span>
         </div>
         <div className="divide-y divide-titanium/60">
           {data.buckets.map((b) => (

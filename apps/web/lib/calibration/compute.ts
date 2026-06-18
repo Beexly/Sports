@@ -6,6 +6,8 @@
  * human operator can review before any deliberate model-version bump.
  */
 
+import { wilsonInterval } from "@sports/prediction-engine";
+
 export type CalibrationProposalKind =
   | "CONFIDENCE_SHIFT"
   | "WEIGHT_ADJUSTMENT"
@@ -40,6 +42,10 @@ export interface CalibrationBucket {
   readonly expectedWinRate: number;
   readonly delta: number;
   readonly brierScore: number;
+  /** 95% Wilson lower bound on the observed win rate — the defensible floor. */
+  readonly wilsonLow: number;
+  /** 95% Wilson upper bound on the observed win rate. */
+  readonly wilsonHigh: number;
 }
 
 /**
@@ -139,6 +145,8 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
         expectedWinRate: round((bucket.min + bucket.max) / 200),
         delta: 0,
         brierScore: 0,
+        wilsonLow: 0,
+        wilsonHigh: 1,
       });
       continue;
     }
@@ -152,6 +160,8 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
         return sum + (expectedProb - row.outcome) ** 2;
       }, 0) / rows.length;
 
+    const { low: wilsonLow, high: wilsonHigh } = wilsonInterval(observed, rows.length);
+
     buckets.push({
       label: bucket.label,
       confidenceMin: bucket.min,
@@ -161,6 +171,8 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
       expectedWinRate: round(expected),
       delta: round(observed - expected),
       brierScore: round(brier),
+      wilsonLow: round(wilsonLow),
+      wilsonHigh: round(wilsonHigh),
     });
   }
 

@@ -228,6 +228,12 @@ export {
   type ReliabilityTier,
   type LimitationFlag,
 } from "./model-limitations.js";
+export {
+  edgeSignificance,
+  type SettledPick as SignificancePick,
+  type SignificanceOptions,
+  type SignificanceResult,
+} from "./edge-significance.js";
 
 export {
   noVigFromAmericanPrices,

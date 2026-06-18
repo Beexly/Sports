@@ -28,6 +28,20 @@ describe("computeCalibration", () => {
     expect(bucket?.observedWinRate).toBe(0.5);
   });
 
+  it("includes 95% Wilson bounds on every bucket", () => {
+    const report = computeCalibration([
+      { id: "a", confidence: 72, result: "WIN" },
+      { id: "b", confidence: 74, result: "LOSS" },
+      { id: "c", confidence: 76, result: "WIN" },
+      { id: "d", confidence: 77, result: "WIN" },
+    ]);
+    const bucket = report.buckets.find((e) => e.label === "70-79")!;
+    expect(bucket.wilsonLow).toBeGreaterThanOrEqual(0);
+    expect(bucket.wilsonHigh).toBeLessThanOrEqual(1);
+    expect(bucket.wilsonLow).toBeLessThanOrEqual(bucket.observedWinRate);
+    expect(bucket.wilsonHigh).toBeGreaterThanOrEqual(bucket.observedWinRate);
+  });
+
   it("surfaces an insufficient-data discrimination signal below the sample floor", () => {
     const report = computeCalibration([{ id: "a", confidence: 72, result: "WIN" }]);
     expect(report.discrimination.trend).toBe("insufficient-data");
@@ -50,6 +64,8 @@ describe("computeDiscrimination", () => {
     expectedWinRate: (confidenceMin + confidenceMax) / 200,
     delta: 0,
     brierScore: 0,
+    wilsonLow: 0,
+    wilsonHigh: 1,
   });
 
   it("reports insufficient-data with fewer than two populated buckets", () => {
@@ -121,6 +137,8 @@ describe("computeCalibrationProposals", () => {
           expectedWinRate: 0.75,
           delta: -0.35,
           brierScore: 0.28,
+          wilsonLow: 0,
+          wilsonHigh: 1,
         },
       ])
     ).toEqual([]);
@@ -137,6 +155,8 @@ describe("computeCalibrationProposals", () => {
         expectedWinRate: 0.74,
         delta: -0.22,
         brierScore: 0.24,
+        wilsonLow: 0,
+        wilsonHigh: 1,
       },
     ]);
 

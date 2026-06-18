@@ -7,6 +7,7 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { PerformanceBootstrapState } from "@/components/performance/bootstrap-state";
 import { CalibrationPanel } from "@/components/performance/calibration-panel";
+import { SignificancePanel } from "@/components/performance/significance-panel";
 import {
   NUMERIC_TEXT_CLASS,
   STAT_PLACEHOLDER,
@@ -213,6 +214,9 @@ export default async function PerformancePage() {
 
           {/* Lead with the scoreboard: calibration + discrimination first. */}
           <CalibrationPanel />
+
+          {/* Edge significance — is the win rate beyond luck? */}
+          <SignificancePanel />
 
           {fetchError && (
             <div
