@@ -43,7 +43,11 @@ type TodayPick = {
   };
 };
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: { upgraded?: string };
+}) {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -193,6 +197,25 @@ export default async function DashboardPage() {
 
       <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
+          {searchParams.upgraded === "true" && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="mb-6 flex items-start gap-3 rounded-xl border border-verify/40 bg-verify/10 px-4 py-3"
+            >
+              <svg className="mt-0.5 h-4 w-4 shrink-0 text-verify" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+              <div>
+                <p className="text-sm font-semibold text-verify">
+                  You&apos;re in — {entitlements.tier === "ELITE" ? "Elite" : "Pro"} is active.
+                </p>
+                <p className="mt-0.5 text-xs text-verify/80">
+                  Every signal, the full factor trail, and{entitlements.tier === "ELITE" ? " real-time alerts are now " : " confidence on all picks are now "}live for your account.
+                </p>
+              </div>
+            </div>
+          )}
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-white">
