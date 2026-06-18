@@ -9,11 +9,11 @@ export const metadata = {
   alternates: { canonical: "/stats" },
 };
 
-const KING_DIMENSIONS: Array<{ label: string; score: number; max: number }> = [
-  { label: "Source Coverage", score: 40, max: 100 },
-  { label: "Live Feeds",      score: 10, max: 100 },
-  { label: "Proof Archive",   score:  5, max: 100 },
-  { label: "Metric Depth",    score: 65, max: 100 },
+const KING_DIMENSIONS: Array<{ label: string; score: number; max: number; color: string; glow: string }> = [
+  { label: "Source Coverage", score: 40, max: 100, color: "#00E5FF", glow: "rgba(0,229,255,0.6)" },
+  { label: "Live Feeds",      score: 10, max: 100, color: "#FF2DD6", glow: "rgba(255,45,214,0.5)" },
+  { label: "Proof Archive",   score:  5, max: 100, color: "#FF6470", glow: "rgba(255,100,112,0.5)" },
+  { label: "Metric Depth",    score: 65, max: 100, color: "#5FD9A3", glow: "rgba(95,217,163,0.5)" },
 ];
 
 const SURFACES: Array<{ label: string; href: string; note: string }> = [
@@ -54,19 +54,19 @@ export default function Page() {
               Autonomous foundation — real sources, rights-gated, fixture-backed
             </p>
           </div>
-          <div className="space-y-2.5">
-            {KING_DIMENSIONS.map(({ label, score, max }) => {
+          <div className="space-y-3">
+            {KING_DIMENSIONS.map(({ label, score, max, color, glow }) => {
               const pct: number = max > 0 ? Math.min(100, Math.round((score / max) * 100)) : 0;
               return (
                 <div key={label} className="flex items-center gap-3">
                   <span className="w-36 shrink-0 text-xs text-ion-1">{label}</span>
-                  <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-carbon border border-mineral">
+                  <div className="relative flex-1 h-2 rounded-full overflow-hidden bg-carbon border border-mineral/60">
                     <div
-                      className="h-full rounded-full bg-orbital-cyan"
-                      style={{ width: `${pct}%` }}
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{ width: `${pct}%`, background: color, boxShadow: `0 0 6px ${glow}` }}
                     />
                   </div>
-                  <span className="w-8 text-right text-xs font-mono tabular-nums text-ion-white">{score}</span>
+                  <span className="w-8 text-right text-xs font-mono tabular-nums" style={{ color }}>{score}</span>
                 </div>
               );
             })}
@@ -114,10 +114,11 @@ export default function Page() {
           <Link
             key={href}
             href={href}
-            className="group border border-mineral bg-eclipse p-4 hover:border-orbital-cyan transition-all duration-150 hover:-translate-y-0.5"
+            className="group rounded-lg border border-mineral bg-eclipse p-4 transition-all duration-200 hover:border-orbital-cyan/60 hover:-translate-y-0.5 hover:shadow-[0_0_18px_rgba(0,229,255,0.10)]"
           >
-            <p className="font-semibold text-ion-white group-hover:text-orbital-cyan transition-colors">
-              {label} <span className="text-ion-2 group-hover:text-orbital-cyan">→</span>
+            <p className="font-semibold text-ion-white transition-colors group-hover:text-orbital-cyan">
+              {label}{" "}
+              <span className="text-ion-3 transition-colors group-hover:text-orbital-cyan">→</span>
             </p>
             <p className="mt-1 text-xs text-ion-2">{note}</p>
           </Link>

@@ -126,7 +126,7 @@ export function PickCard({
       </div>
 
       {/* Scores row: confidence + edge + risk */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {/* Confidence */}
         <div className="min-w-0">
           <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ion-3">

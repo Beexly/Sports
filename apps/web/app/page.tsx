@@ -349,9 +349,9 @@ export default async function HomePage(): Promise<JSX.Element> {
               </Link>
             </div>
             <div className="mt-5 grid gap-3 lg:grid-cols-3">
-              <Lane title="Scoring" rows={state.scoringNow} empty="No active scoring rows." />
-              <Lane title="Published" rows={state.publishedToday} empty="No public pick has cleared." />
-              <Lane title="Gated" rows={state.gatedTodayRows} empty="No pass rows logged." />
+              <Lane title="Scoring" rows={state.scoringNow} empty="No active scoring rows." accent="cyan" />
+              <Lane title="Published" rows={state.publishedToday} empty="No public pick has cleared." accent="verify" />
+              <Lane title="Gated" rows={state.gatedTodayRows} empty="No pass rows logged." accent="plasma" />
             </div>
           </div>
         </WorldSection>
@@ -595,25 +595,35 @@ function StatusPanel({
   );
 }
 
+const LANE_ACCENT = {
+  cyan:   { label: "text-orbital-cyan",  border: "border-orbital-cyan/30",  dot: "bg-orbital-cyan animate-live-pulse",  link: "border-orbital-cyan/20" },
+  verify: { label: "text-verify",        border: "border-verify/30",        dot: "bg-verify",                           link: "border-verify/20" },
+  plasma: { label: "text-plasma",        border: "border-plasma/30",        dot: "bg-plasma animate-live-pulse",        link: "border-plasma/20" },
+} as const;
+
 function Lane({
   title,
   rows,
   empty,
+  accent = "cyan",
 }: {
   title: string;
   rows: readonly BoardStateRow[];
   empty: string;
+  accent?: keyof typeof LANE_ACCENT;
 }): JSX.Element {
+  const a = LANE_ACCENT[accent];
   return (
-    <div className="rounded-ds-sm border border-mineral bg-carbon p-4">
-      <div className="flex items-center justify-between gap-3">
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">{title}</p>
-        <span className="font-numerals text-sm text-ion-2">{rows.length}</span>
+    <div className={`rounded-ds-sm border ${a.border} bg-carbon p-4`}>
+      <div className="flex items-center gap-2">
+        <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${a.dot}`} aria-hidden="true" />
+        <p className={`font-mono text-[10px] uppercase tracking-[0.16em] ${a.label}`}>{title}</p>
+        <span className={`ml-auto font-numerals text-sm tabular-nums ${a.label}`}>{rows.length}</span>
       </div>
       <div className="mt-4 space-y-3">
         {rows.length > 0 ? (
           rows.slice(0, 3).map((row) => (
-            <Link key={row.id} href={`/room/${row.gameId}`} className="block border-l border-mineral pl-3">
+            <Link key={row.id} href={`/room/${row.gameId}`} className={`block border-l ${a.link} pl-3 transition-colors hover:border-l-2`}>
               <p className="text-sm font-semibold text-ion-white">{row.matchup}</p>
               <p className="mt-1 text-xs text-ion-2">
                 {row.sport} / {row.edgeIndex === null ? "EI pending" : `EI ${row.edgeIndex}`}

@@ -204,28 +204,71 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
     <div className="flex min-h-screen flex-col bg-obsidian">
       <Nav />
 
-      <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      {/* ── Cinematic hero header ───────────────────────────── */}
+      <div className="relative isolate overflow-hidden border-b border-titanium/60 px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+        {/* Atmospheric glow layer */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(ellipse 70% 60% at 50% -10%, rgba(0,229,255,0.12), transparent 65%), radial-gradient(ellipse 50% 50% at 80% 30%, rgba(255,45,214,0.07), transparent 60%)",
+          }}
+        />
         <div className="mx-auto max-w-5xl">
-
           {demoActive && (
-            <div data-testid="sample-data-banner-picks" role="status" aria-live="polite" className="mb-4 flex items-start gap-3 rounded-xl border border-caution/40 bg-caution/10 p-3 text-xs">
+            <div data-testid="sample-data-banner-picks" role="status" aria-live="polite" className="mb-6 flex items-start gap-3 rounded-xl border border-caution/40 bg-caution/10 p-3 text-xs">
               <span className="mt-0.5 rounded-md bg-caution/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">Sample data</span>
               <p className="flex-1 leading-relaxed text-caution/90">These picks are deterministic samples shown while live ingestion is being wired up. They never settle, they never count toward a verified record, and no win-rate claim is published from them.</p>
             </div>
           )}
-          {/* Header */}
-          <div className="mb-6">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
-              Today&apos;s Board
-            </p>
-            <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
-              Today&apos;s sports signals.
-            </h1>
-            <p className="mt-1.5 text-sm text-ion-2">
-              Every signal published today, with price, timing, risk, and the
-              reason it cleared the gate.
-            </p>
+          {/* Eyebrow */}
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-ion-blue/30 bg-ion-blue/10 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-ion-blue">
+              <span className="h-1.5 w-1.5 rounded-full bg-ion-blue animate-live-pulse" aria-hidden="true" />
+              Live · Today&apos;s Board
+            </span>
+            <span className="hidden font-mono text-[10px] uppercase tracking-[0.14em] text-ion-3 sm:block">
+              {metaDate}
+            </span>
           </div>
+          {/* Headline */}
+          <h1 className="mt-5 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <span className="block">Scored. Gated.</span>
+            <span className="block" style={{ background: "linear-gradient(90deg, #00E5FF 0%, #7A5CFF 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Published with receipts.
+            </span>
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-2">
+            Every signal here cleared the gate: real odds data, model score,
+            and the reason it passed — not just a headline and a direction.
+          </p>
+          {/* Stats strip */}
+          <div className="mt-6 flex flex-wrap gap-3">
+            <div className="flex items-center gap-2 rounded-lg border border-titanium bg-carbon/60 px-3 py-2">
+              <span className="font-mono text-xs text-ion-3 uppercase tracking-[0.14em]">Published</span>
+              <span className="font-bold tabular-nums text-white">{picks.length}</span>
+            </div>
+            {isFreeTier && totalAvailableToday > picks.length && (
+              <div className="flex items-center gap-2 rounded-lg border border-plasma/30 bg-plasma/5 px-3 py-2">
+                <span className="font-mono text-xs text-plasma/80 uppercase tracking-[0.14em]">Hidden (Pro)</span>
+                <span className="font-bold tabular-nums text-plasma">{totalAvailableToday - picks.length}</span>
+              </div>
+            )}
+            {isPro && (
+              <div className="flex items-center gap-2 rounded-lg border border-verify/30 bg-verify/5 px-3 py-2">
+                <span className="font-mono text-xs text-verify/80 uppercase tracking-[0.14em]">Full access</span>
+                <svg className="h-3.5 w-3.5 text-verify" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl">
 
           {/* Daily Slate Bar */}
           {slate && <SlateBar slate={slate} />}

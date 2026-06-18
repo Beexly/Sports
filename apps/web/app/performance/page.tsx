@@ -511,8 +511,8 @@ function OverallStat({
 }
 
 function WinRateArc({ winRate }: { winRate: number }) {
-  // Arc shows breakeven (52.4%) as the "zero" baseline visually; fill above that
-  // tones to positive, below to negative. But the ring still fills from 0-100%.
+  // Arc uses the breakeven threshold as the visual zero line; above it = positive,
+  // below it = caution. The ring itself still fills the full range.
   const r = 28;
   const circ = 2 * Math.PI * r; // ≈ 175.9
   const filled = (winRate / 100) * circ;

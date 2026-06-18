@@ -406,7 +406,7 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
           <div className="mt-1.5 flex items-center gap-2">
             <div
               data-testid="confidence-bar"
-              aria-label={`Confidence ${conf}%`}
+              aria-label={`Confidence ${pick.confidence}%`}
               className="h-1 w-24 overflow-hidden rounded-full bg-titanium"
             >
               <div
@@ -493,11 +493,7 @@ function StatCard({
       ].join(" ")}
     >
       <p className="text-xs font-medium uppercase tracking-[0.12em] text-ion-3">{label}</p>
-      <p
-        className={`mt-1 text-2xl font-bold tabular-nums ${highlight ? "text-verify" : "text-white"}`}
-      >
-        {value}
-      </p>
+      <p className={`mt-1 text-2xl font-bold tabular-nums ${highlight ? "text-verify" : "text-white"}`}>{value}</p>
     </div>
   );
 }
