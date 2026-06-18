@@ -2361,3 +2361,58 @@ model Signal {
   @@index([category])
   @@map("signals")
 }
+
+// ============================================================
+// REVENUE CAPTURE — L2 (Workstream L2)
+//
+// NewsletterSubscriber — owned-audience capture.
+// AskGalaxySubmission — concierge intake wedge.
+//
+// Classification is MANUAL (SCOUT reviews). No auto-classification.
+// The API routes that write these rows never throw — on DB error
+// they return a 503 so the client shows an honest retry, never a
+// fake success state.
+// ============================================================
+
+enum AskGalaxyClassification {
+  PENDING
+  ACTION
+  CAUTION
+  NO_BET
+  INSUFFICIENT_DATA
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String?  // e.g. "newsletter-page" | "founding-desk"
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("newsletter_subscribers")
+}
+
+model AskGalaxySubmission {
+  id             String                   @id @default(cuid())
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  name           String?
+  email          String
+  sport          String?
+  league         String?
+  matchup        String
+  considering    String                   @db.Text  // what they're thinking of doing
+  reasoning      String?                  @db.Text  // why they're leaning that way
+  trustNeed      String?                  @db.Text  // what would make them trust the read
+  contactConsent Boolean                  @default(false)
+
+  // Classification is MANUAL — SCOUT reviews every submission.
+  // Never auto-classified; never produces automated betting advice.
+  classification AskGalaxyClassification  @default(PENDING)
+  reviewNote     String?                  @db.Text
+
+  @@index([classification])
+  @@map("ask_galaxy_submissions")
+}

@@ -20,6 +20,7 @@ const TAIL_LINKS = [
   { label: "The Beat", href: "/the-beat", title: "Sports-media intelligence — reporters, graded" },
   { label: "Academy", href: "/academy", title: "Learn the system, step by step" },
   { label: "Pricing", href: "/pricing", title: "Plans & what each unlocks" },
+  { label: "Ask Galaxy", href: "/ask-galaxy", title: "Submit one game — manual intelligence read" },
   { label: "Founding Desk", href: "/founding-desk", title: "Daily intelligence brief — Founding member access" },
 ] as const;
 
@@ -87,6 +88,8 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     heading: "The Desk",
     items: [
+      { label: "Ask Galaxy", href: "/ask-galaxy", desc: "Submit one game — manual classification: action / caution / no-bet / insufficient data" },
+      { label: "Galaxy Desk Note", href: "/newsletter", desc: "Free newsletter — market signals and No-Bet Watch" },
       { label: "Sample Desk Brief", href: "/sample-desk", desc: "See a representative brief before you join" },
       { label: "Trust Room", href: "/trust-room", desc: "How confidence works, what No-Bet means, our limitations" },
       { label: "No-Bet Philosophy", href: "/no-bet", desc: "Why declining action is a first-class position" },

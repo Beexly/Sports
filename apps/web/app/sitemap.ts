@@ -24,6 +24,9 @@ const ROUTES: ReadonlyArray<{
   { path: "/sample-desk", priority: 0.85, changeFrequency: "weekly" },
   { path: "/trust-room", priority: 0.8, changeFrequency: "monthly" },
   { path: "/no-bet", priority: 0.75, changeFrequency: "monthly" },
+  // Lead capture routes (L2)
+  { path: "/ask-galaxy", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/newsletter", priority: 0.85, changeFrequency: "weekly" },
   { path: "/picks", priority: 0.9, changeFrequency: "hourly" },
   { path: "/house", priority: 0.8, changeFrequency: "weekly" },
   { path: "/methodology", priority: 0.8, changeFrequency: "monthly" },

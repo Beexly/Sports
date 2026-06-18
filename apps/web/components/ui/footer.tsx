@@ -4,6 +4,8 @@ import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
   { label: "Founding Desk", href: "/founding-desk" },
+  { label: "Ask Galaxy", href: "/ask-galaxy" },
+  { label: "Galaxy Desk Note", href: "/newsletter" },
   { label: "Sample Desk Brief", href: "/sample-desk" },
   { label: "Trust Room", href: "/trust-room" },
   { label: "No-Bet Philosophy", href: "/no-bet" },
