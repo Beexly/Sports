@@ -43,7 +43,7 @@ function ViewFreshnessStamp({ result }: { result: ViewResult }) {
   return (
     <p
       data-testid="player-view-freshness"
-      className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ion-2 tabular-nums"
+      className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ink-400 tabular-nums"
     >
       {parts.join(" · ")}
     </p>
@@ -68,7 +68,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
   }
 
   return (
-    <div className="relative isolate min-h-screen bg-carbon text-ion-white">
+    <div className="relative isolate min-h-screen bg-white/[0.03] text-white">
       <GeneratedPlate assetId="players-constellation" className="-z-10 opacity-20" />
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
@@ -80,7 +80,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
           actions={
             <Link
               href={view.jsonHref}
-              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion-white hover:border-orbital-cyan"
+              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-white/[0.08] px-5 py-3 text-sm font-semibold text-white hover:border-orbital-cyan"
               title="The raw rows behind this table, as machine-readable JSON"
             >
               Raw data (JSON)
@@ -122,7 +122,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
             <PlayerLabTable sections={result.sections} variant="dark" />
 
             {result.sourceIds.length > 0 ? (
-              <Attribution sourceIds={result.sourceIds} className="!text-ion-2" />
+              <Attribution sourceIds={result.sourceIds} className="!text-ink-400" />
             ) : null}
           </>
         )}

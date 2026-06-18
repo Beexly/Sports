@@ -15,8 +15,8 @@ export default async function Page() {
         { label: "Partner path", value: "ready" },
         { label: "Next", value: "owner" }
       ]} />
-      <div className="border border-mineral bg-eclipse p-4 mb-6">
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Activation Effort vs. Impact</p>
+      <div className="border border-white/[0.08] bg-white/[0.04] p-4 mb-6">
+        <p className="text-xs uppercase tracking-[0.2em] text-ink-400 mb-3">Activation Effort vs. Impact</p>
         <BarChart items={[
           { label: "Easiest wins", value: t.top_50_easiest_wins.length, max: 50, tone: "cyan" },
           { label: "License targets", value: t.top_50_requires_license.length, max: 50, tone: "amber" },
@@ -24,7 +24,7 @@ export default async function Page() {
         ]} />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Easiest Wins — Start Here</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Easiest Wins — Start Here</h2>
         <DataTable
           rows={t.top_50_easiest_wins.slice(0, 25).map((s: Record<string, unknown>) => ({
             source: String(s.name ?? ""),

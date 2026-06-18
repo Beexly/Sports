@@ -93,7 +93,7 @@ export function AcademyRegisterToggle() {
       <div
         role="group"
         aria-label="Explanation depth"
-        className="flex w-fit overflow-hidden rounded-full border border-mineral bg-eclipse/60"
+        className="flex w-fit overflow-hidden rounded-full border border-white/[0.08] bg-white/[0.04]/60"
       >
         {EXPLAIN_REGISTERS.map((r) => (
           <button
@@ -105,7 +105,7 @@ export function AcademyRegisterToggle() {
               "px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide transition",
               register === r
                 ? "bg-orbital-cyan/15 text-orbital-cyan"
-                : "text-ion-2 hover:text-ion-1",
+                : "text-ink-400 hover:text-ink-300",
             ].join(" ")}
           >
             {EXPLAIN_REGISTER_LABELS[r]}

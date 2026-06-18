@@ -18,25 +18,25 @@ export default function Page() {
         { label: "Process", value: "rights-gated" },
         { label: "Who can submit", value: "anyone" }
       ]} />
-      <p className="text-ion-1">
+      <p className="text-ink-300">
         Suggest a data source and it enters lawful evaluation. Every source is rights-reviewed before any automation touches it.
       </p>
       <div className="space-y-3">
         <Badge tone="warn">Submissions are reviewed, never auto-ingested.</Badge>
       </div>
       <SectionHeader title="Submit a Source" />
-      <form className="mb-6 space-y-4 border border-mineral bg-eclipse p-4 rounded">
+      <form className="mb-6 space-y-4 border border-white/[0.08] bg-white/[0.04] p-4 rounded">
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-ion-2 mb-2">Source URL</label>
+          <label className="block text-xs uppercase tracking-[0.2em] text-ink-400 mb-2">Source URL</label>
           <input
             type="url"
             placeholder="https://..."
-            className="w-full border border-mineral bg-carbon p-3 text-ion-white placeholder-ion-2 rounded"
+            className="w-full border border-white/[0.08] bg-white/[0.03] p-3 text-white placeholder-ion-2 rounded"
           />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-ion-2 mb-2">Source Type</label>
-          <select className="w-full border border-mineral bg-carbon p-3 text-ion-white rounded">
+          <label className="block text-xs uppercase tracking-[0.2em] text-ink-400 mb-2">Source Type</label>
+          <select className="w-full border border-white/[0.08] bg-white/[0.03] p-3 text-white rounded">
             <option>API</option>
             <option>Web Scrape</option>
             <option>Feed</option>
@@ -44,10 +44,10 @@ export default function Page() {
           </select>
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-ion-2 mb-2">Why This Source?</label>
+          <label className="block text-xs uppercase tracking-[0.2em] text-ink-400 mb-2">Why This Source?</label>
           <textarea
             placeholder="Describe the data and why it matters..."
-            className="w-full border border-mineral bg-carbon p-3 text-ion-white placeholder-ion-2 rounded"
+            className="w-full border border-white/[0.08] bg-white/[0.03] p-3 text-white placeholder-ion-2 rounded"
             rows={4}
           />
         </div>
@@ -56,7 +56,7 @@ export default function Page() {
         </button>
       </form>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Recent Suggestions</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Recent Suggestions</h2>
         <DataTable
           rows={suggestions.slice(0, 40).map((s: Record<string, unknown>) => ({
             url: String(s.submitted_url ?? ""),

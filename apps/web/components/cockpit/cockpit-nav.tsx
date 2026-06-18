@@ -25,7 +25,7 @@ export function CockpitNav({ nav }: { nav: ReadonlyArray<CockpitNavGroup> }) {
     <nav className="flex flex-col gap-5">
       {nav.map((group) => (
         <div key={group.section} className="flex flex-col gap-0.5">
-          <p className="mb-1 px-3 font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">
+          <p className="mb-1 px-3 font-mono text-[9px] uppercase tracking-[0.18em] text-ink-500">
             {group.section}
           </p>
           {group.items.map(({ href, label, hint }) => {
@@ -39,7 +39,7 @@ export function CockpitNav({ nav }: { nav: ReadonlyArray<CockpitNavGroup> }) {
                   "group relative rounded-lg border px-3 py-2 transition-colors",
                   active
                     ? "border-orbital-cyan/40 bg-orbital-cyan/10"
-                    : "border-transparent hover:border-titanium/70 hover:bg-carbon/60",
+                    : "border-transparent hover:border-white/[0.10]/70 hover:bg-white/[0.03]",
                 ].join(" ")}
               >
                 {active && (
@@ -51,12 +51,12 @@ export function CockpitNav({ nav }: { nav: ReadonlyArray<CockpitNavGroup> }) {
                 <p
                   className={[
                     "text-sm font-medium",
-                    active ? "text-ion-white" : "text-ion-1 group-hover:text-ion-white",
+                    active ? "text-white" : "text-ink-300 group-hover:text-white",
                   ].join(" ")}
                 >
                   {label}
                 </p>
-                <p className="text-[11px] text-ion-3">{hint}</p>
+                <p className="text-[11px] text-ink-500">{hint}</p>
               </Link>
             );
           })}

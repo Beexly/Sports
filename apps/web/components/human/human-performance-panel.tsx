@@ -73,7 +73,7 @@ function EnvironmentCard() {
       <div className="flex items-center justify-between gap-3">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">Performance Environment Score</p>
         <select value={team} onChange={(e) => setTeam(e.target.value)} className="rounded-md border bg-transparent px-2 py-1 text-xs text-white" style={{ borderColor: BRAND_COLORS.steelGray }}>
-          {TEAMS.map((t) => <option key={t} value={t} className="bg-carbon">{t}</option>)}
+          {TEAMS.map((t) => <option key={t} value={t} className="bg-white/[0.03]">{t}</option>)}
         </select>
       </div>
 
@@ -152,8 +152,8 @@ function AvailabilityCard() {
         </label>
         <label className="text-[11px] text-ink-400">Team
           <select value={team} onChange={(e) => setTeam(e.target.value)} className="mt-1 block w-24 rounded-md border bg-transparent px-2 py-1.5 text-sm text-white" style={{ borderColor: BRAND_COLORS.steelGray }}>
-            <option value="" className="bg-carbon">any</option>
-            {TEAMS.map((t) => <option key={t} value={t} className="bg-carbon">{t}</option>)}
+            <option value="" className="bg-white/[0.03]">any</option>
+            {TEAMS.map((t) => <option key={t} value={t} className="bg-white/[0.03]">{t}</option>)}
           </select>
         </label>
         <label className="text-[11px] text-ink-400">Days rest

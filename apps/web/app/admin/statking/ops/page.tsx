@@ -10,7 +10,7 @@ export default async function Page(){
     <Shell title="Ops" eyebrow="Cockpit · ops">
       <StatusRibbon status="fixture" label="Admin view — fixture snapshot" />
       <Cards items={[{label:"Checks",value:integ.commands.length},{label:"Merge safety",value:String(integ.merge_safety)},{label:"Recommendation",value:String(integ.final_recommendation).slice(0,18)},{label:"Status",value:"audited"}]}/>
-      <p className="text-ion-1">The latest integrity pass — every gate command, its result, and the merge recommendation.</p>
+      <p className="text-ink-300">The latest integrity pass — every gate command, its result, and the merge recommendation.</p>
       <SectionHeader title="Integrity Gate Commands" />
       <DataTable
         rows={integ.commands.map((r: Record<string, unknown>) => ({

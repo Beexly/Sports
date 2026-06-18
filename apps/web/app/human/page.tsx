@@ -77,7 +77,7 @@ export default function HumanPage(): JSX.Element {
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">The non-negotiables</p>
               <ul className="mt-3 grid gap-2 sm:grid-cols-2">
                 {RULES.map((r) => (
-                  <li key={r} className="flex gap-2 text-sm leading-6 text-ion-1">
+                  <li key={r} className="flex gap-2 text-sm leading-6 text-ink-300">
                     <span className="text-orbital-cyan">▸</span>
                     <span>{r}</span>
                   </li>

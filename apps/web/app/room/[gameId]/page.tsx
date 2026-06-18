@@ -22,18 +22,18 @@ export default async function GameRoomPage({
   if (!room) notFound();
 
   return (
-    <div className="min-h-screen bg-obsidian text-ion-white">
+    <div className="min-h-screen bg-obsidian text-white">
       <Nav />
       <main className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
-        <header className="border-b border-titanium pb-8">
-          <Link href="/board" className="text-sm font-semibold text-ion-blue hover:text-ion-blue-glow">
+        <header className="border-b border-white/[0.10] pb-8">
+          <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-orbital-cyan-glow">
             Today&apos;s Board
           </Link>
-          <p className="mt-5 font-mono text-xs uppercase tracking-[0.22em] text-ion-blue">
+          <p className="mt-5 font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
             Game Intelligence Room
           </p>
           <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">{room.node.matchup}</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-2">
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-400">
             A persistent read-only room for market state, evidence history, pre-mortem context,
             lens-safe summaries, and postgame memory.
           </p>
@@ -69,18 +69,18 @@ export default async function GameRoomPage({
         <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <Panel title="Evidence Timeline">
             {room.timeline.length === 0 ? (
-              <p className="text-sm text-ion-3">No source-aware signals have been attached to this game yet.</p>
+              <p className="text-sm text-ink-500">No source-aware signals have been attached to this game yet.</p>
             ) : (
-              <ol className="divide-y divide-titanium border border-titanium">
+              <ol className="divide-y divide-titanium border border-white/[0.10]">
                 {room.timeline.map((item) => (
                   <li key={item.id} className="grid gap-2 px-4 py-3 text-sm sm:grid-cols-[1fr_auto]">
                     <div>
                       <p className="font-semibold text-white">{item.label}</p>
-                      <p className="mt-1 text-xs text-ion-3">{item.source}</p>
+                      <p className="mt-1 text-xs text-ink-500">{item.source}</p>
                     </div>
                     <div className="text-left sm:text-right">
-                      <p className="font-mono text-xs text-ion-blue">{item.status}</p>
-                      <p className="mt-1 text-xs text-ion-3">{item.fetchedAt.slice(0, 16).replace("T", " ")}</p>
+                      <p className="font-mono text-xs text-orbital-cyan">{item.status}</p>
+                      <p className="mt-1 text-xs text-ink-500">{item.fetchedAt.slice(0, 16).replace("T", " ")}</p>
                     </div>
                   </li>
                 ))}
@@ -90,12 +90,12 @@ export default async function GameRoomPage({
 
           <Panel title="What Would Change Our Mind">
             {room.premortem ? (
-              <div className="text-sm leading-6 text-ion-1">
+              <div className="text-sm leading-6 text-ink-300">
                 <h2 className="font-semibold text-white">{room.premortem.headline}</h2>
                 <p className="mt-3">{room.premortem.summary}</p>
               </div>
             ) : (
-              <p className="text-sm text-ion-3">
+              <p className="text-sm text-ink-500">
                 No published pick is attached yet, so the public pre-mortem will appear after a pick clears the gate.
               </p>
             )}
@@ -106,25 +106,25 @@ export default async function GameRoomPage({
           <Panel title="Lens Switcher">
             <div className="grid gap-3 sm:grid-cols-2">
               {room.lenses.map((lens) => (
-                <article key={lens.lens} className="border border-titanium bg-obsidian/55 p-4">
-                  <h2 className="font-mono text-xs font-semibold text-ion-blue">{lens.lens}</h2>
-                  <p className="mt-3 text-sm leading-6 text-ion-2">{lens.visibleSummary}</p>
+                <article key={lens.lens} className="border border-white/[0.10] bg-obsidian/55 p-4">
+                  <h2 className="font-mono text-xs font-semibold text-orbital-cyan">{lens.lens}</h2>
+                  <p className="mt-3 text-sm leading-6 text-ink-400">{lens.visibleSummary}</p>
                 </article>
               ))}
             </div>
           </Panel>
 
           <Panel title="Galaxy Memory">
-            <div className="text-sm leading-6 text-ion-1">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-ion-blue">{room.memory.status.replace(/_/g, " ")}</p>
+            <div className="text-sm leading-6 text-ink-300">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-orbital-cyan">{room.memory.status.replace(/_/g, " ")}</p>
               <p className="mt-3">{room.memory.body}</p>
-              {room.memory.settledAt && <p className="mt-3 text-xs text-ion-3">Settled {room.memory.settledAt.slice(0, 10)}</p>}
+              {room.memory.settledAt && <p className="mt-3 text-xs text-ink-500">Settled {room.memory.settledAt.slice(0, 10)}</p>}
             </div>
           </Panel>
         </section>
 
         <Panel title="Where This Goes Next">
-          <p className="text-sm leading-6 text-ion-2">
+          <p className="text-sm leading-6 text-ink-400">
             Galaxy declines more games than it publishes. No edge, no pick &mdash; that is the
             process, not a gap. Treat this room as one input in a disciplined decision, never
             the decision itself.
@@ -146,8 +146,8 @@ export default async function GameRoomPage({
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }): JSX.Element {
   return (
-    <section className="border border-titanium bg-carbon/45 p-5">
-      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-ion-blue">{title}</h2>
+    <section className="border border-white/[0.10] bg-white/[0.03]/45 p-5">
+      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-orbital-cyan">{title}</h2>
       <div className="mt-5">{children}</div>
     </section>
   );
@@ -155,8 +155,8 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="min-h-20 border border-titanium bg-carbon/60 p-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</p>
+    <div className="min-h-20 border border-white/[0.10] bg-white/[0.03] p-4">
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-500">{label}</p>
       <p className="mt-2 break-words text-xl font-bold text-white">{value}</p>
     </div>
   );
@@ -164,9 +164,9 @@ function Metric({ label, value }: { label: string; value: string }): JSX.Element
 
 function Fact({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="border border-titanium bg-obsidian/55 p-3">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</dt>
-      <dd className="mt-1 text-ion-1">{value}</dd>
+    <div className="border border-white/[0.10] bg-obsidian/55 p-3">
+      <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-500">{label}</dt>
+      <dd className="mt-1 text-ink-300">{value}</dd>
     </div>
   );
 }
@@ -175,10 +175,10 @@ function NextStep({ href, label, hint }: { href: string; label: string; hint: st
   return (
     <Link
       href={href}
-      className="group block border border-titanium bg-obsidian/55 p-4 transition-colors hover:border-ion-blue/40"
+      className="group block border border-white/[0.10] bg-obsidian/55 p-4 transition-colors hover:border-orbital-cyan/40"
     >
-      <p className="font-mono text-xs font-semibold text-ion-blue group-hover:text-ion-blue-glow">{label}</p>
-      <p className="mt-2 text-sm leading-6 text-ion-2">{hint}</p>
+      <p className="font-mono text-xs font-semibold text-orbital-cyan group-hover:text-orbital-cyan-glow">{label}</p>
+      <p className="mt-2 text-sm leading-6 text-ink-400">{hint}</p>
     </Link>
   );
 }

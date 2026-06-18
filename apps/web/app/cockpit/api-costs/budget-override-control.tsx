@@ -64,12 +64,12 @@ export function BudgetOverrideControl({
 
   return (
     <div className="flex min-w-[320px] flex-col gap-2">
-      <label className="text-[11px] font-semibold text-ion-2">
+      <label className="text-[11px] font-semibold text-ink-400">
         Reason
         <input
           value={reason}
           onChange={(event) => setReason(event.target.value)}
-          className="mt-1 h-11 w-full rounded-md border border-titanium/40 bg-black/40 px-3 text-xs text-ion-white outline-none focus:border-yellow-500/60"
+          className="mt-1 h-11 w-full rounded-md border border-white/[0.06] bg-black/40 px-3 text-xs text-white outline-none focus:border-yellow-500/60"
           placeholder="Decision-log reason"
         />
       </label>
@@ -78,7 +78,7 @@ export function BudgetOverrideControl({
           type="button"
           onClick={() => void submitOverride(true)}
           disabled={!canSubmit || overrideActive}
-          className="min-h-11 rounded-md border border-yellow-500/40 px-3 text-xs font-semibold text-yellow-100 hover:bg-yellow-950/30 disabled:border-titanium/40 disabled:text-ion-3"
+          className="min-h-11 rounded-md border border-yellow-500/40 px-3 text-xs font-semibold text-yellow-100 hover:bg-yellow-950/30 disabled:border-white/[0.06] disabled:text-ink-500"
         >
           Enable 24h
         </button>
@@ -86,7 +86,7 @@ export function BudgetOverrideControl({
           type="button"
           onClick={() => void submitOverride(false)}
           disabled={!canSubmit || !overrideActive}
-          className="min-h-11 rounded-md border border-titanium/40 px-3 text-xs font-semibold text-ion-1 hover:bg-carbon/60 disabled:text-ion-3"
+          className="min-h-11 rounded-md border border-white/[0.06] px-3 text-xs font-semibold text-ink-300 hover:bg-white/[0.03] disabled:text-ink-500"
         >
           Disable
         </button>

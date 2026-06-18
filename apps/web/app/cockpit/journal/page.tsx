@@ -12,7 +12,7 @@ function statusClass(status: string): string {
     case "REVIEW_PENDING":
       return "border-amber-500/40 bg-amber-500/10 text-amber-300";
     default:
-      return "border-titanium/50 bg-obsidian/40 text-ion-1";
+      return "border-white/[0.10]/50 bg-obsidian/40 text-ink-300";
   }
 }
 
@@ -25,34 +25,34 @@ function formatDate(value: string | null): string {
 
 function JournalEntryRow({ entry }: { readonly entry: JournalEntryListItem }): JSX.Element {
   return (
-    <article className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
+    <article className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-ion-3">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-500">
             Week {entry.isoWeek}, {entry.isoYear} - {entry.modelVersion}
           </p>
-          <h3 className="mt-1 text-sm font-semibold text-ion-white">{entry.title}</h3>
+          <h3 className="mt-1 text-sm font-semibold text-white">{entry.title}</h3>
         </div>
         <span className={`rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusClass(entry.status)}`}>
           {entry.status.replace(/_/g, " ")}
         </span>
       </div>
 
-      <dl className="mt-4 grid gap-3 text-xs text-ion-2 sm:grid-cols-4">
+      <dl className="mt-4 grid gap-3 text-xs text-ink-400 sm:grid-cols-4">
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Drafted</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Drafted</dt>
           <dd className="mt-1">{formatDate(entry.draftedAt)}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Words</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Words</dt>
           <dd className="mt-1">{entry.wordCount}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Picks</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Picks</dt>
           <dd className="mt-1">{entry.referencedPickCount}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Autopsies</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Autopsies</dt>
           <dd className="mt-1">{entry.referencedAutopsyCount}</dd>
         </div>
       </dl>
@@ -60,14 +60,14 @@ function JournalEntryRow({ entry }: { readonly entry: JournalEntryListItem }): J
       <div className="mt-4 flex flex-wrap gap-2">
         <Link
           href={`/cockpit/journal/${entry.id}`}
-          className="rounded-lg border border-titanium/40 px-3 py-2 text-xs font-semibold text-ion-1 hover:bg-carbon/60"
+          className="rounded-lg border border-white/[0.06] px-3 py-2 text-xs font-semibold text-ink-300 hover:bg-white/[0.03]"
         >
           Open editor
         </Link>
         {entry.status === "PUBLISHED" ? (
           <Link
             href={`/journal/${entry.slug}`}
-            className="rounded-lg border border-titanium/40 px-3 py-2 text-xs font-semibold text-ion-1 hover:bg-carbon/60"
+            className="rounded-lg border border-white/[0.06] px-3 py-2 text-xs font-semibold text-ink-300 hover:bg-white/[0.03]"
           >
             View public entry
           </Link>
@@ -87,16 +87,16 @@ function JournalSection({
   readonly empty: string;
 }): JSX.Element {
   return (
-    <section className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
+    <section className="rounded-lg border border-white/[0.06] bg-obsidian/50 p-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-ion-white">{title}</h2>
-        <span className="text-[10px] uppercase tracking-wide text-ion-3">
+        <h2 className="text-sm font-semibold text-white">{title}</h2>
+        <span className="text-[10px] uppercase tracking-wide text-ink-500">
           {entries.length} entries
         </span>
       </div>
 
       {entries.length === 0 ? (
-        <p className="mt-4 text-sm text-ion-3">{empty}</p>
+        <p className="mt-4 text-sm text-ink-500">{empty}</p>
       ) : (
         <div className="mt-4 grid gap-3">
           {entries.map((entry) => (
@@ -118,8 +118,8 @@ export default async function CockpitJournalPage(): Promise<JSX.Element> {
           <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
             Model Journal
           </p>
-          <h1 className="mt-1 text-2xl font-bold text-ion-white">Operator Workspace</h1>
-          <p className="mt-2 max-w-3xl text-sm text-ion-2">
+          <h1 className="mt-1 text-2xl font-bold text-white">Operator Workspace</h1>
+          <p className="mt-2 max-w-3xl text-sm text-ink-400">
             Review weekly research drafts before they move to the public Journal.
             Published entries are preserved; retraction is the only removal path.
           </p>
@@ -131,9 +131,9 @@ export default async function CockpitJournalPage(): Promise<JSX.Element> {
           >
             Create draft
           </Link>
-          <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-3 text-sm">
-            <p className="text-[10px] uppercase tracking-wide text-ion-3">Next publish</p>
-            <p className="mt-1 font-semibold text-ion-white">{data.nextPublishLabel}</p>
+          <div className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-3 text-sm">
+            <p className="text-[10px] uppercase tracking-wide text-ink-500">Next publish</p>
+            <p className="mt-1 font-semibold text-white">{data.nextPublishLabel}</p>
           </div>
         </div>
       </header>

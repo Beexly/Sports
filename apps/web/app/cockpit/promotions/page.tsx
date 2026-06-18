@@ -46,8 +46,8 @@ export default async function CockpitPromotionsPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-brand-400">
           Bobby · Promotions queue
         </p>
-        <h1 className="text-2xl font-bold text-ion-white">Sportsbook promotions</h1>
-        <p className="mt-1 text-sm text-ion-3">
+        <h1 className="text-2xl font-bold text-white">Sportsbook promotions</h1>
+        <p className="mt-1 text-sm text-ink-500">
           Every row is gated by compliance evidence. The publish gate refuses
           to surface a promotion missing disclosure, terms, eligibility, or
           compliance approval.
@@ -63,18 +63,18 @@ export default async function CockpitPromotionsPage() {
       </section>
 
       {promos.length === 0 ? (
-        <div className="rounded-xl border border-titanium/40 bg-eclipse/40 p-8 text-center">
-          <h2 className="text-base font-semibold text-ion-white">
+        <div className="rounded-xl border border-white/[0.06] bg-white/[0.04]/40 p-8 text-center">
+          <h2 className="text-base font-semibold text-white">
             No promotions yet
           </h2>
-          <p className="mt-2 text-sm text-ion-3">
+          <p className="mt-2 text-sm text-ink-500">
             Seed cockpit demo data or upsert promotions via the API to populate
             this queue.
           </p>
         </div>
       ) : (
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
+          <thead className="border-b border-white/[0.06] text-[10px] uppercase tracking-widest text-ink-500">
             <tr>
               <th className="py-2 pr-3">Operator</th>
               <th className="py-2 pr-3">Headline</th>
@@ -93,7 +93,7 @@ export default async function CockpitPromotionsPage() {
                 <tr
                   key={p.id}
                   data-testid="cockpit-promotion-row"
-                  className="border-b border-titanium/40 align-top text-ion-1"
+                  className="border-b border-white/[0.06] align-top text-ink-300"
                 >
                   <td className="py-2 pr-3">{p.operatorName}</td>
                   <td className="py-2 pr-3">
@@ -116,7 +116,7 @@ export default async function CockpitPromotionsPage() {
                       <span className="text-yellow-400">NO</span>
                     )}
                   </td>
-                  <td className="py-2 pr-3 text-ion-3">
+                  <td className="py-2 pr-3 text-ink-500">
                     {verdict.blockers.length === 0
                       ? "—"
                       : verdict.blockers.map((b) => b.code).join(", ")}
@@ -133,11 +133,11 @@ export default async function CockpitPromotionsPage() {
 
 function CountCard({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-lg border border-titanium/40 bg-eclipse/40 p-3">
-      <p className="text-[10px] uppercase tracking-widest text-ion-3">
+    <div className="rounded-lg border border-white/[0.06] bg-white/[0.04]/40 p-3">
+      <p className="text-[10px] uppercase tracking-widest text-ink-500">
         {label}
       </p>
-      <p className="text-xl font-bold text-ion-white">{value}</p>
+      <p className="text-xl font-bold text-white">{value}</p>
     </div>
   );
 }

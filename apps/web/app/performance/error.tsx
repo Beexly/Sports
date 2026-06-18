@@ -24,11 +24,11 @@ export default function PerformanceError({
           </svg>
         </div>
         <h2 className="text-lg font-semibold text-white">Calibration report unavailable</h2>
-        <p className="mt-2 text-sm text-ion-2">
+        <p className="mt-2 text-sm text-ink-400">
           The performance data couldn't be loaded. Your pick history is safe — this is a rendering issue, not a data loss.
         </p>
         {error.digest && (
-          <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-ion-3">
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-ink-500">
             ref: {error.digest}
           </p>
         )}
@@ -41,7 +41,7 @@ export default function PerformanceError({
           </button>
           <Link
             href="/dashboard"
-            className="rounded-xl border border-titanium px-5 py-2 text-sm text-ion-2 hover:bg-carbon hover:text-white transition-colors"
+            className="rounded-xl border border-white/[0.10] px-5 py-2 text-sm text-ink-400 hover:bg-white/[0.04] hover:text-white transition-colors"
           >
             Dashboard
           </Link>

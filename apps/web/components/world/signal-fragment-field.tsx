@@ -32,14 +32,14 @@ const STRUCTURED: readonly { label: string; value: string }[] = [
 const NOISE_TONE: Record<"heat" | "caution" | "raw", string> = {
   heat: "border-plasma/50 text-plasma gw-ring-heat",
   caution: "border-caution/50 text-caution gw-ring-caution",
-  raw: "border-mineral text-ion-1",
+  raw: "border-white/[0.08] text-ink-300",
 };
 
 export function SignalFragmentField(): JSX.Element {
   return (
     <div className="grid items-stretch gap-8 lg:grid-cols-[1fr_auto_1fr]">
       {/* fragments */}
-      <div className="relative min-h-64 overflow-hidden rounded-ds-lg border border-mineral bg-void p-5">
+      <div className="relative min-h-64 overflow-hidden rounded-ds-lg border border-white/[0.08] bg-void p-5">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
           The market, as you receive it
         </p>
@@ -53,7 +53,7 @@ export function SignalFragmentField(): JSX.Element {
             </span>
           ))}
         </div>
-        <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.2em] text-ion-2">
+        <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-400">
           noise · narrative · stale price · distortion
         </p>
       </div>
@@ -69,19 +69,19 @@ export function SignalFragmentField(): JSX.Element {
       </div>
 
       {/* structured intelligence */}
-      <div className="rounded-ds-lg border border-mineral bg-eclipse p-5">
+      <div className="rounded-ds-lg border border-white/[0.08] bg-white/[0.04] p-5">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">
           The market, as the engine reads it
         </p>
         <dl className="mt-4">
           {STRUCTURED.map((row) => (
             <div key={row.label} className="gw-receipt">
-              <dt className="text-ion-2">{row.label}</dt>
-              <dd className="text-right text-ion-white">{row.value}</dd>
+              <dt className="text-ink-400">{row.label}</dt>
+              <dd className="text-right text-white">{row.value}</dd>
             </div>
           ))}
         </dl>
-        <p className="mt-4 text-xs leading-5 text-ion-1">
+        <p className="mt-4 text-xs leading-5 text-ink-300">
           Same game, same day — one version argues, the other is structured,
           timestamped, and accountable.
         </p>

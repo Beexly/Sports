@@ -38,10 +38,10 @@ export function NoBetGateChapter(): JSX.Element {
       {/* the gate */}
       <div className="relative mx-auto flex aspect-square w-full max-w-sm items-center justify-center">
         <span aria-hidden className="gw-gate-ring absolute inset-0" />
-        <span aria-hidden className="absolute inset-6 rounded-full border border-mineral" />
-        <span aria-hidden className="absolute inset-12 rounded-full border border-mineral/60" />
+        <span aria-hidden className="absolute inset-6 rounded-full border border-white/[0.08]" />
+        <span aria-hidden className="absolute inset-12 rounded-full border border-white/[0.08]/60" />
         <div className="relative text-center">
-          <p className="gw-text-glow-white font-display text-5xl font-semibold tracking-tight text-ion-white">
+          <p className="gw-text-glow-white font-display text-5xl font-semibold tracking-tight text-white">
             NO BET
           </p>
           <p className="gw-text-glow-alert mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-alert">
@@ -52,10 +52,10 @@ export function NoBetGateChapter(): JSX.Element {
 
       {/* the doctrine */}
       <div>
-        <p className="font-display text-2xl font-semibold leading-snug text-ion-white sm:text-3xl">
+        <p className="font-display text-2xl font-semibold leading-snug text-white sm:text-3xl">
           Sometimes the sharpest pick is no pick.
         </p>
-        <p className="mt-4 max-w-xl text-sm leading-7 text-ion-1">
+        <p className="mt-4 max-w-xl text-sm leading-7 text-ink-300">
           Most products treat an empty board as a failure to hide. Galaxy treats
           it as the system working. Every held row is a decision with reasons
           attached — recorded, public, and accountable, exactly like a
@@ -63,7 +63,7 @@ export function NoBetGateChapter(): JSX.Element {
         </p>
         <dl className="mt-7 grid gap-4 sm:grid-cols-2">
           {GATE_REASONS.map((reason) => (
-            <div key={reason.title} className="rounded-ds-md border border-mineral bg-eclipse p-4">
+            <div key={reason.title} className="rounded-ds-md border border-white/[0.08] bg-white/[0.04] p-4">
               <dt className={`font-mono text-[10px] uppercase tracking-[0.18em] ${reason.tone}`}>
                 {reason.title}
               </dt>
@@ -72,10 +72,10 @@ export function NoBetGateChapter(): JSX.Element {
           ))}
         </dl>
         <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
-          <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+          <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-white">
             See today&apos;s gate decisions ▸
           </Link>
-          <Link href="/methodology" className="text-sm font-semibold text-ion-1 hover:text-ion-white">
+          <Link href="/methodology" className="text-sm font-semibold text-ink-300 hover:text-white">
             How the gates work
           </Link>
         </div>

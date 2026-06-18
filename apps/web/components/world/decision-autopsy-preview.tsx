@@ -46,26 +46,26 @@ export function DecisionAutopsyPreview(): JSX.Element {
   return (
     <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
       <div>
-        <p className="font-display text-2xl font-semibold leading-snug text-ion-white sm:text-3xl">
+        <p className="font-display text-2xl font-semibold leading-snug text-white sm:text-3xl">
           Losses don&apos;t get deleted.
           <br />
           They get dissected.
         </p>
-        <p className="mt-4 max-w-md text-sm leading-7 text-ion-1">
+        <p className="mt-4 max-w-md text-sm leading-7 text-ink-300">
           Every settled decision leaves a trail: what the system believed, what
           the market did, what changed, and what the engine learned. Good
           process with a bad outcome is respected; a lucky win is flagged.
         </p>
         <Link
           href="/performance/losses"
-          className="mt-6 inline-block text-sm font-semibold text-orbital-cyan hover:text-ion-white"
+          className="mt-6 inline-block text-sm font-semibold text-orbital-cyan hover:text-white"
         >
           Open the autopsy room ▸
         </Link>
       </div>
 
-      <ol className="relative space-y-0 border-l border-mineral pl-6">
-        <p className="mb-4 font-mono text-[9px] uppercase tracking-[0.2em] text-ion-2">
+      <ol className="relative space-y-0 border-l border-white/[0.08] pl-6">
+        <p className="mb-4 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-400">
           Anatomy of a settled decision — illustrative trail
         </p>
         {TRAIL.map((item) => (
@@ -74,9 +74,9 @@ export function DecisionAutopsyPreview(): JSX.Element {
               aria-hidden
               className={`absolute -left-[1.84rem] top-1.5 h-2.5 w-2.5 rounded-full ${item.marker}`}
             />
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{item.stamp}</p>
-            <p className="mt-1 text-sm font-semibold text-ion-white">{item.title}</p>
-            <p className="mt-1 text-sm leading-6 text-ion-1">{item.body}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">{item.stamp}</p>
+            <p className="mt-1 text-sm font-semibold text-white">{item.title}</p>
+            <p className="mt-1 text-sm leading-6 text-ink-300">{item.body}</p>
           </li>
         ))}
       </ol>

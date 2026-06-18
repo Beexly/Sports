@@ -64,7 +64,7 @@ const STATUS_TONE: Record<SourceStatus, string> = {
   "manual-ingest": "border-violet-500/30 bg-violet-950/30 text-violet-200",
   "founder-gated": "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
   "permission-required": "border-red-500/30 bg-red-950/30 text-red-200",
-  planned: "border-titanium/40 bg-eclipse/60 text-ion-1",
+  planned: "border-white/[0.06] bg-white/[0.04]/60 text-ink-300",
 };
 
 const RIGHTS_STATUS_TONE: Record<SourceRightsStatus, string> = {
@@ -162,24 +162,24 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
               Source Intelligence
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-ion-white">Source Readiness Board</h1>
+            <h1 className="mt-1 text-2xl font-bold text-white">Source Readiness Board</h1>
           </div>
           <div className="flex flex-wrap gap-2 text-xs">
             <Link
               href="/integrations"
-              className="rounded-lg border border-titanium/40 px-3 py-1.5 text-ion-1 hover:bg-carbon/60"
+              className="rounded-lg border border-white/[0.06] px-3 py-1.5 text-ink-300 hover:bg-white/[0.03]"
             >
               Public ledger
             </Link>
             <Link
               href="/api/sources/catalog"
-              className="rounded-lg border border-titanium/40 px-3 py-1.5 text-ion-1 hover:bg-carbon/60"
+              className="rounded-lg border border-white/[0.06] px-3 py-1.5 text-ink-300 hover:bg-white/[0.03]"
             >
               JSON catalog
             </Link>
           </div>
         </div>
-        <p className="max-w-3xl text-sm leading-6 text-ion-2">
+        <p className="max-w-3xl text-sm leading-6 text-ink-400">
           Read-only operator surface. This page does not touch the database or start ingestion.
           It shows what the code knows about sources, which provider slots are configured,
           and what must stay blocked until data rights are clear.
@@ -195,8 +195,8 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
-        <div className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">Live proof gates</h2>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-ink-500">Live proof gates</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
             <ProofLine
               label="Usage pulse"
@@ -217,11 +217,11 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">Evidence routes</h2>
-              <p className="mt-2 text-sm leading-6 text-ion-2">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-ink-500">Evidence routes</h2>
+              <p className="mt-2 text-sm leading-6 text-ink-400">
                 Use these machine-readable routes to inspect the row proof. None of them writes data.
               </p>
             </div>
@@ -239,8 +239,8 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">Status actions</h2>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-ink-500">Status actions</h2>
           <div className="mt-4 space-y-3">
             {statusGroups.map((group) => (
               <div key={group.status} className={`rounded-xl border p-3 ${STATUS_TONE[group.status]}`}>
@@ -254,38 +254,38 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">Provider gates</h2>
-          <p className="mt-2 text-sm text-ion-2">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-ink-500">Provider gates</h2>
+          <p className="mt-2 text-sm text-ink-400">
             Configured means the env slot is filled. It does not prove rows, schedules, or successful runs.
           </p>
           <div className="mt-4 grid gap-2">
             {providers.map((provider) => (
-              <div key={provider.key} className="rounded-lg border border-titanium/40 bg-obsidian/70 p-3">
+              <div key={provider.key} className="rounded-lg border border-white/[0.06] bg-obsidian/70 p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-sm font-semibold text-ion-white">{provider.name}</p>
+                  <p className="text-sm font-semibold text-white">{provider.name}</p>
                   <span className={provider.configured ? "text-xs font-semibold text-emerald-300" : "text-xs font-semibold text-yellow-300"}>
                     {provider.configured ? "configured" : "founder gated"}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-ion-3">{provider.unlocks}</p>
-                <code className="mt-2 block font-mono text-[11px] text-ion-3">{provider.envVar}</code>
+                <p className="mt-1 text-xs text-ink-500">{provider.unlocks}</p>
+                <code className="mt-2 block font-mono text-[11px] text-ink-500">{provider.envVar}</code>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-2xl border border-titanium/40 bg-obsidian/60">
-        <div className="border-b border-titanium/40 px-4 py-3">
-          <h2 className="text-sm font-semibold text-ion-white">Source stack</h2>
-          <p className="mt-1 text-xs text-ion-3">
+      <section className="overflow-hidden rounded-2xl border border-white/[0.06] bg-obsidian/60">
+        <div className="border-b border-white/[0.06] px-4 py-3">
+          <h2 className="text-sm font-semibold text-white">Source stack</h2>
+          <p className="mt-1 text-xs text-ink-500">
             The action column is the operator next move. It is deliberately separate from public marketing copy.
           </p>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[980px] divide-y divide-titanium/30 text-left text-sm">
-            <thead className="bg-eclipse/50 text-[11px] uppercase tracking-wider text-ion-3">
+            <thead className="bg-white/[0.04]/50 text-[11px] uppercase tracking-wider text-ink-500">
               <tr>
                 <th className="px-4 py-3">Source</th>
                 <th className="px-4 py-3">Cost</th>
@@ -312,9 +312,9 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-orange-300">
               Source Rights Clearance
             </p>
-            <h2 className="mt-1 text-lg font-bold text-ion-white">Scraping Rights Registry</h2>
+            <h2 className="mt-1 text-lg font-bold text-white">Scraping Rights Registry</h2>
           </div>
-          <span className="rounded border border-titanium/40 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-ion-2">
+          <span className="rounded border border-white/[0.06] px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-ink-400">
             {rightsRegistrySummary.total} sources tracked
           </span>
         </div>
@@ -347,20 +347,20 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-2xl border border-titanium/40 bg-obsidian/60">
-        <div className="border-b border-titanium/40 px-4 py-3">
-          <h2 className="text-sm font-semibold text-ion-white">Rights registry</h2>
-          <p className="mt-1 text-xs text-ion-3">
+      <section className="overflow-hidden rounded-2xl border border-white/[0.06] bg-obsidian/60">
+        <div className="border-b border-white/[0.06] px-4 py-3">
+          <h2 className="text-sm font-semibold text-white">Rights registry</h2>
+          <p className="mt-1 text-xs text-ink-500">
             Every extraction job must pass through the Clearance Engine before running.
             A{" "}
-            <code className="font-mono text-[11px] text-ion-2">ClearanceResult.allowed=false</code>{" "}
+            <code className="font-mono text-[11px] text-ink-400">ClearanceResult.allowed=false</code>{" "}
             stops the job. Every extracted record carries a{" "}
-            <code className="font-mono text-[11px] text-ion-2">RightsSnapshot</code>.
+            <code className="font-mono text-[11px] text-ink-400">RightsSnapshot</code>.
           </p>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[860px] divide-y divide-titanium/30 text-left text-sm">
-            <thead className="bg-eclipse/50 text-[11px] uppercase tracking-wider text-ion-3">
+            <thead className="bg-white/[0.04]/50 text-[11px] uppercase tracking-wider text-ink-500">
               <tr>
                 <th className="px-4 py-3">Source</th>
                 <th className="px-4 py-3">Jurisdiction</th>
@@ -399,19 +399,19 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
       )}
 
       <section className="grid gap-4 lg:grid-cols-[1fr_1fr]">
-        <div className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">Trend coverage gaps</h2>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-ink-500">Trend coverage gaps</h2>
           <div className="mt-4 space-y-3">
             {trendCoverage.map(({ trend, knownSources }) => (
-              <div key={trend.key} className="rounded-lg border border-titanium/40 bg-obsidian/70 p-3">
+              <div key={trend.key} className="rounded-lg border border-white/[0.06] bg-obsidian/70 p-3">
                 <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
-                  <p className="text-sm font-semibold text-ion-white">{trend.title}</p>
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-ion-3">
+                  <p className="text-sm font-semibold text-white">{trend.title}</p>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-ink-500">
                     {knownSources.length}/{trend.requiredSources.length} mapped
                   </p>
                 </div>
-                <p className="mt-2 text-xs leading-5 text-ion-3">{trend.question}</p>
-                <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-ion-3">
+                <p className="mt-2 text-xs leading-5 text-ink-500">{trend.question}</p>
+                <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-ink-500">
                   {trend.requiredSources.join(" + ")}
                 </p>
               </div>
@@ -428,11 +428,11 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           <div className="mt-4 space-y-3">
             {blockedSources.map((source) => (
               <div key={source.key} className="rounded-lg border border-red-900/40 bg-obsidian/70 p-3">
-                <p className="text-sm font-semibold text-ion-white">{source.name}</p>
+                <p className="text-sm font-semibold text-white">{source.name}</p>
                 <p className="mt-1 text-xs uppercase tracking-widest text-red-300">
                   {sourceStatusLabel(source.status)}
                 </p>
-                <p className="mt-2 text-xs leading-5 text-ion-2">
+                <p className="mt-2 text-xs leading-5 text-ink-400">
                   {source.complianceNote ?? STATUS_ACTION[source.status]}
                 </p>
               </div>
@@ -441,13 +441,13 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
         </div>
       </section>
 
-      <section data-testid="resource-intelligence-ledger" className="overflow-hidden rounded-2xl border border-mineral bg-carbon">
-        <div className="border-b border-mineral px-5 py-4">
+      <section data-testid="resource-intelligence-ledger" className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03]">
+        <div className="border-b border-white/[0.08] px-5 py-4">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-cyan-300">
             Resource Intelligence
           </p>
-          <h2 className="mt-1 text-sm font-semibold text-ion-white">Rights-gated resource ledger</h2>
-          <p className="mt-1 text-xs leading-5 text-ion-2">
+          <h2 className="mt-1 text-sm font-semibold text-white">Rights-gated resource ledger</h2>
+          <p className="mt-1 text-xs leading-5 text-ink-400">
             {formatNumber(resourceFeed.totals.uniqueResources)} resources normalized from intake.
             Only approved-direct + prototype are actionable; owner-review and quarantine are shown
             as counts and never promoted into claims, StatKing evidence, Airwave, or automation.
@@ -462,8 +462,8 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           <Metric label="Noise" value={formatNumber(resourceFeed.counts.rejected_noise)} detail="not real resources" />
         </div>
         {resourceFeed.topSafe.length > 0 && (
-          <div className="border-t border-mineral px-5 py-4">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-3">Top safe opportunities</h3>
+          <div className="border-t border-white/[0.08] px-5 py-4">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-ink-500">Top safe opportunities</h3>
             <div className="mt-3 flex flex-wrap gap-2">
               {resourceFeed.topSafe.slice(0, 15).map((item) => (
                 <span
@@ -485,7 +485,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
             Free-first
           </p>
           <h2 className="mt-1 text-sm font-semibold text-white">Free coverage vs paid spend</h2>
-          <p className="mt-1 text-xs leading-5 text-ion-2">
+          <p className="mt-1 text-xs leading-5 text-ink-400">
             Use every free, cleared source before any paid API. Scores (ESPN, all sports)
             and weather (Open-Meteo) are live and free; odds still require the licensed
             Odds API until a free odds source clears.
@@ -498,13 +498,13 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
         </div>
         {spendUnlock.length > 0 && (
           <div className="border-t border-emerald-900/40 px-5 py-4">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-ink-500">
               Clear these free sources to stop paying
             </h3>
             <div className="mt-3 space-y-2">
               {spendUnlock.map((row) => (
-                <div key={row.need} className="text-xs text-ion-1">
-                  <span className="font-semibold text-ion-white">{row.need}</span>
+                <div key={row.need} className="text-xs text-ink-300">
+                  <span className="font-semibold text-white">{row.need}</span>
                   {": "}
                   {row.sources.length > 0 ? row.sources.join(", ") : "no free candidate yet"}
                 </div>
@@ -520,30 +520,30 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
             Owner review
           </p>
           <h2 className="mt-1 text-sm font-semibold text-white">CFB / NFL data-source candidates</h2>
-          <p className="mt-1 text-xs leading-5 text-ion-2">
+          <p className="mt-1 text-xs leading-5 text-ink-400">
             {candidateSummary.total} candidates ({candidateSummary.alreadyRegistered} already in the
             rights registry). All gated — none approved for automation, claims, or production until
             terms + endpoints are verified. API keys live in env vars only; rotate any key shared in
-            plaintext. See <code className="text-ion-1">docs/legal/CFB_NFL_DATA_SOURCE_CANDIDATES.md</code>.
+            plaintext. See <code className="text-ink-300">docs/legal/CFB_NFL_DATA_SOURCE_CANDIDATES.md</code>.
           </p>
         </div>
         <div className="space-y-4 p-5">
           {candidateGroups.map((group) => (
             <div key={group.priority}>
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-ink-500">
                 {priorityLabel(group.priority)}
               </h3>
               <div className="mt-2 grid gap-3 md:grid-cols-2">
                 {group.items.map((c) => (
-                  <div key={c.id} className="rounded-lg border border-mineral bg-carbon/70 p-3">
+                  <div key={c.id} className="rounded-lg border border-white/[0.08] bg-white/[0.03]/70 p-3">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-sm font-semibold text-ion-white">{c.name}</p>
+                      <p className="text-sm font-semibold text-white">{c.name}</p>
                       <span className="rounded border border-yellow-500/30 bg-yellow-950/30 px-1.5 py-0.5 text-[10px] uppercase tracking-widest text-yellow-200">
                         gated
                       </span>
                     </div>
-                    <p className="mt-1 text-xs leading-5 text-ion-2">{c.freeTier}</p>
-                    <p className="mt-2 text-[11px] text-ion-3">
+                    <p className="mt-1 text-xs leading-5 text-ink-400">{c.freeTier}</p>
+                    <p className="mt-2 text-[11px] text-ink-500">
                       {c.oddsOnly ? "Odds-only" : "Stats + odds"} ·{" "}
                       {c.keyRequired ? `key → ${c.apiKeyEnvVar}` : "no key"}
                       {c.inMainRegistry ? " · in registry" : ""}
@@ -556,13 +556,13 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
         </div>
       </section>
 
-      <section data-testid="source-confidence" className="overflow-hidden rounded-2xl border border-mineral bg-carbon">
-        <div className="border-b border-mineral px-5 py-4">
+      <section data-testid="source-confidence" className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03]">
+        <div className="border-b border-white/[0.08] px-5 py-4">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-300">
             StatKing read
           </p>
-          <h2 className="mt-1 text-sm font-semibold text-ion-white">Source confidence</h2>
-          <p className="mt-1 text-xs leading-5 text-ion-2">
+          <h2 className="mt-1 text-sm font-semibold text-white">Source confidence</h2>
+          <p className="mt-1 text-xs leading-5 text-ink-400">
             Derived from each card&apos;s rights + wiring facts — never a hand-assigned number.
             no-fake-live-data holds for every source: unproven sources lower confidence, they are
             never dressed up as fresh.
@@ -571,7 +571,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
         <div className="divide-y divide-titanium/30">
           {confidenceCards.map(({ card, confidence }) => (
             <div key={card.key} className="flex flex-wrap items-center gap-3 px-5 py-3">
-              <p className="min-w-[10rem] flex-1 text-sm text-ion-1">{card.publicLabel}</p>
+              <p className="min-w-[10rem] flex-1 text-sm text-ink-300">{card.publicLabel}</p>
               <ConfidenceChip label="src" level={confidence.sourceConfidence} />
               <ConfidenceChip label="fresh" level={confidence.freshnessConfidence} />
               <ConfidenceChip label="license" level={confidence.licenseConfidence} />
@@ -605,7 +605,7 @@ const CONFIDENCE_TONE: Record<ConfidenceLevel, string> = {
   high: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
   medium: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
   low: "border-red-500/30 bg-red-950/30 text-red-200",
-  unknown: "border-titanium bg-eclipse/70 text-ion-2",
+  unknown: "border-white/[0.10] bg-white/[0.04]/70 text-ink-400",
 };
 
 function ConfidenceChip({ label, level }: { label: string; level: ConfidenceLevel }): JSX.Element {
@@ -633,20 +633,20 @@ function formatScientific(value: number | null): string {
 
 function Metric({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {
   return (
-    <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-2 font-numerals text-2xl font-semibold text-ion-white">{value}</p>
-      <p className="mt-1 text-xs leading-5 text-ion-3">{detail}</p>
+    <div className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-4">
+      <p className="text-[11px] uppercase tracking-wider text-ink-500">{label}</p>
+      <p className="mt-2 font-numerals text-2xl font-semibold text-white">{value}</p>
+      <p className="mt-1 text-xs leading-5 text-ink-500">{detail}</p>
     </div>
   );
 }
 
 function ProofLine({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {
   return (
-    <div className="border-b border-titanium/40 pb-3 last:border-b-0 last:pb-0">
-      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-1 font-numerals text-2xl font-semibold text-ion-white">{value}</p>
-      <p className="mt-1 text-xs leading-5 text-ion-3">{detail}</p>
+    <div className="border-b border-white/[0.06] pb-3 last:border-b-0 last:pb-0">
+      <p className="text-[11px] uppercase tracking-wider text-ink-500">{label}</p>
+      <p className="mt-1 font-numerals text-2xl font-semibold text-white">{value}</p>
+      <p className="mt-1 text-xs leading-5 text-ink-500">{detail}</p>
     </div>
   );
 }
@@ -655,7 +655,7 @@ function EvidenceLink({ href, label }: { href: string; label: string }): JSX.Ele
   return (
     <Link
       href={href}
-      className="rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-xs font-semibold text-ion-1 hover:border-cyan-500/50"
+      className="rounded-lg border border-white/[0.06] bg-obsidian/60 px-3 py-2 text-xs font-semibold text-ink-300 hover:border-cyan-500/50"
     >
       {label}
     </Link>
@@ -674,10 +674,10 @@ function RightsMetric({
   detail: string;
 }): JSX.Element {
   return (
-    <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
+    <div className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-4">
+      <p className="text-[11px] uppercase tracking-wider text-ink-500">{label}</p>
       <p className={`mt-2 font-numerals text-2xl font-semibold ${tone}`}>{value}</p>
-      <p className="mt-1 text-xs leading-5 text-ion-3">{detail}</p>
+      <p className="mt-1 text-xs leading-5 text-ink-500">{detail}</p>
     </div>
   );
 }
@@ -691,12 +691,12 @@ function RightsRow({ entry }: { entry: SourceRightsEntry }): JSX.Element {
       <span className="text-xs text-red-400/80">no</span>
     );
   return (
-    <tr className="align-top text-ion-1">
+    <tr className="align-top text-ink-300">
       <td className="px-4 py-3">
-        <p className="font-medium text-ion-white">{entry.source_name}</p>
-        <code className="font-mono text-[10px] text-ion-3">{entry.source_id}</code>
+        <p className="font-medium text-white">{entry.source_name}</p>
+        <code className="font-mono text-[10px] text-ink-500">{entry.source_id}</code>
       </td>
-      <td className="px-4 py-3 text-xs text-ion-3">{entry.jurisdiction}</td>
+      <td className="px-4 py-3 text-xs text-ink-500">{entry.jurisdiction}</td>
       <td className="px-4 py-3">
         <span className={`inline-flex rounded border px-2 py-1 text-[10px] ${tone}`}>
           {RIGHTS_STATUS_LABEL[entry.status]}
@@ -706,7 +706,7 @@ function RightsRow({ entry }: { entry: SourceRightsEntry }): JSX.Element {
       <td className="px-4 py-3">{flag(entry.commercial_display_allowed)}</td>
       <td className="px-4 py-3">{flag(entry.storage_allowed)}</td>
       <td className="px-4 py-3">{flag(entry.model_training_allowed)}</td>
-      <td className="px-4 py-3 text-xs leading-5 text-ion-2">
+      <td className="px-4 py-3 text-xs leading-5 text-ink-400">
         {entry.unlock_condition ?? entry.notes.slice(0, 80)}
       </td>
     </tr>
@@ -723,7 +723,7 @@ function LegalActionCard({
   return (
     <div className="rounded-lg border border-orange-900/30 bg-obsidian/70 p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <p className="text-sm font-semibold text-ion-white">{source.source_name}</p>
+        <p className="text-sm font-semibold text-white">{source.source_name}</p>
         <span
           className={`rounded border px-2 py-0.5 text-[10px] uppercase tracking-widest ${
             action === "outreach"
@@ -734,9 +734,9 @@ function LegalActionCard({
           {action === "outreach" ? "Outreach needed" : "Questionnaire needed"}
         </span>
       </div>
-      <p className="mt-1 font-mono text-[10px] text-ion-3">{source.source_id}</p>
+      <p className="mt-1 font-mono text-[10px] text-ink-500">{source.source_id}</p>
       {source.unlock_condition && (
-        <p className="mt-2 text-xs leading-5 text-ion-2">{source.unlock_condition}</p>
+        <p className="mt-2 text-xs leading-5 text-ink-400">{source.unlock_condition}</p>
       )}
       {source.vendor_contact && (
         <p className="mt-2 font-mono text-[11px] text-cyan-400">{source.vendor_contact}</p>
@@ -753,8 +753,8 @@ function SourceRow({
   evidence: SourceLiveEvidence["datasets"][number] | undefined;
 }): JSX.Element {
   return (
-    <tr className="align-top text-ion-1">
-      <td className="px-4 py-3 font-medium text-ion-white">{source.name}</td>
+    <tr className="align-top text-ink-300">
+      <td className="px-4 py-3 font-medium text-white">{source.name}</td>
       <td className="px-4 py-3 font-mono text-xs text-cyan-300">{sourceCostLabel(source.cost)}</td>
       <td className="px-4 py-3">
         <span className={`inline-flex rounded border px-2 py-1 text-[11px] ${STATUS_TONE[source.status]}`}>
@@ -767,12 +767,12 @@ function SourceRow({
             {evidence.status} / {formatNumber(evidence.rowCount)}
           </Link>
         ) : (
-          <span className="font-mono text-[11px] uppercase tracking-widest text-ion-3">UNKNOWN</span>
+          <span className="font-mono text-[11px] uppercase tracking-widest text-ink-500">UNKNOWN</span>
         )}
       </td>
-      <td className="px-4 py-3 text-xs text-ion-3">{source.grain}</td>
-      <td className="px-4 py-3 text-xs leading-5 text-ion-2">{source.unlocks}</td>
-      <td className="px-4 py-3 text-xs leading-5 text-ion-2">
+      <td className="px-4 py-3 text-xs text-ink-500">{source.grain}</td>
+      <td className="px-4 py-3 text-xs leading-5 text-ink-400">{source.unlocks}</td>
+      <td className="px-4 py-3 text-xs leading-5 text-ink-400">
         {source.complianceNote ?? STATUS_ACTION[source.status]}
       </td>
     </tr>

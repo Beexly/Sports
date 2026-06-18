@@ -32,10 +32,10 @@ const VARIANTS: Record<
     reason: "text-ink-1",
   },
   dark: {
-    wrap: "border-mineral bg-eclipse",
+    wrap: "border-white/[0.08] bg-white/[0.04]",
     kicker: "text-alert",
-    title: "text-ion-white",
-    reason: "text-ion-1",
+    title: "text-white",
+    reason: "text-ink-300",
   },
 };
 

@@ -34,7 +34,7 @@ export function PersonalizedBriefing({ cards }: { cards: BriefingCard[] }) {
       {prefs && !editing && (
         <div className="flex items-center gap-2 text-xs text-ink-500">
           <span>Personalized for <strong style={{ color: BRAND_COLORS.orbitalCyan }}>{FOCUS_LABEL[prefs.focus]}</strong> · {prefs.sports.join(", ") || "all sports"}</span>
-          <button type="button" onClick={() => setEditing(true)} className="underline hover:text-ion-white">edit</button>
+          <button type="button" onClick={() => setEditing(true)} className="underline hover:text-white">edit</button>
         </div>
       )}
 
@@ -53,7 +53,7 @@ function Intake({ initial, onSave, onCancel }: { initial: Preferences; onSave: (
   return (
     <div className="surface-card p-6">
       <p className="text-xs uppercase tracking-[0.18em]" style={{ color: BRAND_COLORS.orbitalCyan }}>Make it yours · 15 seconds</p>
-      <h3 className="mt-2 font-display text-xl text-ion-white">Tune Mission Control to you.</h3>
+      <h3 className="mt-2 font-display text-xl text-white">Tune Mission Control to you.</h3>
 
       <div className="mt-5 space-y-4">
         <Field label="What are you here for?">

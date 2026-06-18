@@ -65,10 +65,10 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       </Link>
 
       {/* Card */}
-      <div className="w-full max-w-sm rounded-2xl border border-titanium bg-carbon p-8 shadow-2xl shadow-black/60">
+      <div className="w-full max-w-sm rounded-2xl p-8 shadow-2xl shadow-black/60" style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(8,6,20,0.9)" }}>
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-white">Sign in to Galaxy Sports Edge</h1>
-          <p className="mt-1.5 text-sm text-ion-2">
+          <p className="mt-1.5 text-sm text-ink-400">
             Pick up where you left the signal.
           </p>
         </div>
@@ -91,7 +91,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         >
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-xl border border-titanium bg-white px-4 py-3 text-sm font-semibold text-eclipse shadow-sm transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/20 bg-white px-4 py-3 text-sm font-semibold text-[#05060A] shadow-sm transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             {/* Google logo SVG */}
             <svg
@@ -123,28 +123,28 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-titanium" />
+            <div className="w-full border-t border-white/10" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="bg-carbon px-3 text-ion-2">
+            <span className="px-3 text-ink-400" style={{ background: "rgba(8,6,20,0.9)" }}>
               Email sign-in coming soon
             </span>
           </div>
         </div>
 
         {/* Legal */}
-        <p className="text-center text-xs leading-relaxed text-ion-2">
+        <p className="text-center text-xs leading-relaxed text-ink-400">
           By signing in you agree to our{" "}
           <Link
             href="/terms"
-            className="text-ion-3 underline underline-offset-2 hover:text-ion-1"
+            className="text-ink-500 underline underline-offset-2 hover:text-ink-300"
           >
             Terms of Service
           </Link>{" "}
           and{" "}
           <Link
             href="/privacy"
-            className="text-ion-3 underline underline-offset-2 hover:text-ion-1"
+            className="text-ink-500 underline underline-offset-2 hover:text-ink-300"
           >
             Privacy Policy
           </Link>
@@ -155,7 +155,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       {/* Back to home */}
       <Link
         href="/"
-        className="mt-8 text-sm text-ion-2 transition-colors hover:text-ion-2"
+        className="mt-8 text-sm text-ink-400 transition-colors hover:text-white"
       >
         &larr; Back to {BRAND_NAME}
       </Link>

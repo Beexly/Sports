@@ -30,9 +30,9 @@ export function ParlayMriPreview(): JSX.Element {
   let running = 1;
   return (
     <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-      <div className="rounded-ds-lg border border-mineral bg-eclipse p-5 sm:p-6">
+      <div className="rounded-ds-lg border border-white/[0.08] bg-white/[0.04] p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
             Illustrative four-leg slip · stated probabilities, plain math
           </p>
           <button
@@ -53,11 +53,11 @@ export function ParlayMriPreview(): JSX.Element {
             return (
               <li
                 key={leg.id}
-                className={`rounded-ds-md border p-4 ${bound ? "border-plasma/50" : "border-mineral"} bg-carbon`}
+                className={`rounded-ds-md border p-4 ${bound ? "border-plasma/50" : "border-white/[0.08]"} bg-white/[0.03]`}
               >
                 <div className="flex items-baseline justify-between gap-3">
-                  <p className="text-sm font-semibold text-ion-white">{leg.label}</p>
-                  <p className="font-numerals text-sm tabular-nums text-ion-1">
+                  <p className="text-sm font-semibold text-white">{leg.label}</p>
+                  <p className="font-numerals text-sm tabular-nums text-ink-300">
                     ~{Math.round(leg.p * 100)}% alone
                   </p>
                 </div>
@@ -70,10 +70,10 @@ export function ParlayMriPreview(): JSX.Element {
                       />
                     </div>
                     <p className="mt-2 flex justify-between font-mono text-[10px] uppercase tracking-[0.14em]">
-                      <span className={bound ? "text-plasma" : "text-ion-2"}>
+                      <span className={bound ? "text-plasma" : "text-ink-400"}>
                         {bound ? "correlated — shares failure with its game" : "independent leg"}
                       </span>
-                      <span className="text-ion-1">slip survival ≈ {pct}%</span>
+                      <span className="text-ink-300">slip survival ≈ {pct}%</span>
                     </p>
                   </>
                 ) : null}
@@ -83,10 +83,10 @@ export function ParlayMriPreview(): JSX.Element {
         </ul>
 
         {scanned ? (
-          <div className="mt-5 border-t border-mineral pt-4">
+          <div className="mt-5 border-t border-white/[0.08] pt-4">
             <p className="text-sm leading-6 text-ion">
               Four legs that each feel safe compound to{" "}
-              <span className="font-numerals font-semibold text-ion-white">
+              <span className="font-numerals font-semibold text-white">
                 ≈{Math.round(SURVIVAL * 100)}%
               </span>{" "}
               survival — before correlation. Legs B and C live in the same game:
@@ -95,7 +95,7 @@ export function ParlayMriPreview(): JSX.Element {
             </p>
           </div>
         ) : (
-          <p className="mt-5 text-sm leading-6 text-ion-1">
+          <p className="mt-5 text-sm leading-6 text-ink-300">
             Each leg looks comfortable on its own. Run the scan to see what the
             slip looks like from the inside.
           </p>
@@ -103,10 +103,10 @@ export function ParlayMriPreview(): JSX.Element {
       </div>
 
       <div>
-        <p className="font-display text-2xl font-semibold leading-snug text-ion-white sm:text-3xl">
+        <p className="font-display text-2xl font-semibold leading-snug text-white sm:text-3xl">
           A parlay is one decision wearing four jerseys.
         </p>
-        <p className="mt-4 max-w-md text-sm leading-7 text-ion-1">
+        <p className="mt-4 max-w-md text-sm leading-7 text-ink-300">
           Correlation, leg dependency, and stacked volatility hide inside the
           slip where the payout number can&apos;t show them. The Parlay MRI
           makes the hidden structure visible before money does.
@@ -127,7 +127,7 @@ export function ParlayMriPreview(): JSX.Element {
         </ul>
         <Link
           href="/parlay-mri"
-          className="mt-6 inline-block text-sm font-semibold text-orbital-cyan hover:text-ion-white"
+          className="mt-6 inline-block text-sm font-semibold text-orbital-cyan hover:text-white"
         >
           Put a full slip through the MRI ▸
         </Link>

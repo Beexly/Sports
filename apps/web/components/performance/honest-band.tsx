@@ -37,7 +37,7 @@ const RELIABILITY_COPY: Record<ReliabilityTier, { label: string; read: string; t
   moderate: {
     label: "Moderate reliability",
     read: "The band is informative — mind its width before leaning on it.",
-    tone: "text-ion-white",
+    tone: "text-white",
   },
   low: {
     label: "Low reliability",
@@ -47,7 +47,7 @@ const RELIABILITY_COPY: Record<ReliabilityTier, { label: string; read: string; t
   insufficient: {
     label: "Insufficient history",
     read: "Not enough settled picks to publish a band we'd stand behind.",
-    tone: "text-ion-2",
+    tone: "text-ink-400",
   },
 };
 
@@ -70,10 +70,10 @@ export function HonestBand({ observedRate, sampleSize }: HonestBandProps) {
   return (
     <div
       data-testid="honest-band"
-      className="rounded-xl border border-titanium bg-eclipse/40 p-5"
+      className="rounded-xl border border-white/[0.10] bg-white/[0.04]/40 p-5"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-ink-400">
           The honest band — 95% interval, not a point claim
         </p>
         <span
@@ -84,16 +84,16 @@ export function HonestBand({ observedRate, sampleSize }: HonestBandProps) {
       </div>
 
       {d.reliability === "insufficient" ? (
-        <p className="mt-3 text-sm leading-relaxed text-ion-1">{meta.read}</p>
+        <p className="mt-3 text-sm leading-relaxed text-ink-300">{meta.read}</p>
       ) : (
         <>
           <p className={`mt-3 text-sm text-ion ${NUMERIC_TEXT_CLASS}`}>
             {formatRatioAsPercent(d.intervalLow)} —{" "}
-            <span className="font-semibold text-ion-white">
+            <span className="font-semibold text-white">
               {formatRatioAsPercent(d.probability)}
             </span>{" "}
             — {formatRatioAsPercent(d.intervalHigh)}
-            <span className="ml-2 text-xs text-ion-2">
+            <span className="ml-2 text-xs text-ink-400">
               over {formatCount(sampleSize)} settled picks
             </span>
           </p>
@@ -101,7 +101,7 @@ export function HonestBand({ observedRate, sampleSize }: HonestBandProps) {
           {/* Band visualization: track 0–100%, the interval as the lit region. */}
           <div
             aria-hidden="true"
-            className="relative mt-3 h-2 overflow-hidden rounded-full bg-titanium"
+            className="relative mt-3 h-2 overflow-hidden rounded-full bg-white/[0.08]"
           >
             <div
               className="absolute top-0 h-full rounded-full bg-orbital-cyan/30"
@@ -113,16 +113,16 @@ export function HonestBand({ observedRate, sampleSize }: HonestBandProps) {
             />
           </div>
 
-          <p className="mt-3 text-xs leading-relaxed text-ion-1">{meta.read}</p>
+          <p className="mt-3 text-xs leading-relaxed text-ink-300">{meta.read}</p>
         </>
       )}
 
       {d.flags.length > 0 && (
-        <ul className="mt-3 space-y-1.5 border-t border-titanium/60 pt-3">
+        <ul className="mt-3 space-y-1.5 border-t border-white/[0.06] pt-3">
           {d.flags.map((flag) => (
             <li
               key={flag}
-              className="flex gap-2 text-[11px] leading-relaxed text-ion-2"
+              className="flex gap-2 text-[11px] leading-relaxed text-ink-400"
             >
               <span aria-hidden="true" className="text-caution">
                 ⚠

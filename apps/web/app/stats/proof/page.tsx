@@ -30,7 +30,7 @@ export default function Page() {
       <div>
         <SectionHeader eyebrow={b.runs.length + " runs recorded"} title="Backtest Archive" />
         {b.runs.length === 0 ? (
-          <p className="text-sm text-ion-1 py-6 px-4 border border-mineral bg-eclipse/40 text-center">No backtest runs in snapshot — will populate with live prediction data.</p>
+          <p className="text-sm text-ink-300 py-6 px-4 border border-white/[0.08] bg-white/[0.04]/40 text-center">No backtest runs in snapshot — will populate with live prediction data.</p>
         ) : (
           <DataTable
             rows={b.runs.map((r: Record<string, unknown>) => ({

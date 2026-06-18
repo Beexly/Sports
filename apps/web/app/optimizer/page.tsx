@@ -22,19 +22,19 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
   // its own slate seam regardless.
   const pool = await resolveToolPoolAsync();
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="min-h-screen bg-white/[0.03] text-ion">
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
         <section className="flex flex-col gap-2">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">The Optimizer</p>
-          <h1 className="font-display text-3xl font-semibold leading-tight text-ion-white sm:text-4xl">
+          <h1 className="font-display text-3xl font-semibold leading-tight text-white sm:text-4xl">
             One workspace. Every lineup.
           </h1>
-          <p className="max-w-3xl text-sm leading-6 text-ion-1">
+          <p className="max-w-3xl text-sm leading-6 text-ink-300">
             Pick a contest type and build — DFS, season start/sit, or the draft board, on the same real
             data (snaps, usage, Next Gen, injuries, weather), with the math shown. Salaries are licensed
             and gated; projections and ownership stay gated until a real feed is connected, never faked.{" "}
-            <Link href="/data" className="text-orbital-cyan hover:text-ion-white">How we source data</Link>.
+            <Link href="/data" className="text-orbital-cyan hover:text-white">How we source data</Link>.
           </p>
         </section>
 

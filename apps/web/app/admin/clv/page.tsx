@@ -73,7 +73,7 @@ export default async function AdminClvPage() {
         <h1 className="text-2xl font-bold text-white">Closing-Line Value</h1>
         <Link
           href="/admin"
-          className="w-fit rounded-lg border border-titanium px-3 py-2 text-xs text-ion-1 hover:bg-carbon/60"
+          className="w-fit rounded-lg border border-white/[0.10] px-3 py-2 text-xs text-ink-300 hover:bg-white/[0.03]"
         >
           ← Back to Admin
         </Link>
@@ -93,33 +93,33 @@ export default async function AdminClvPage() {
         <ClvCard title="Spread & Total (points CLV)" summary={pointsSummary} unit="pts" />
       </div>
 
-      <section className="rounded-2xl border border-titanium bg-carbon/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section className="rounded-2xl border border-white/[0.10] bg-white/[0.02] p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Verdict distribution ({graded.length} graded picks)
         </h2>
-        <ul className="grid grid-cols-3 gap-2 text-ion-1">
+        <ul className="grid grid-cols-3 gap-2 text-ink-300">
           {verdictCounts.map(({ verdict, count }) => (
-            <li key={verdict} className="rounded-lg border border-titanium px-3 py-2">
+            <li key={verdict} className="rounded-lg border border-white/[0.10] px-3 py-2">
               <span className="block text-lg font-semibold text-white">{count}</span>
-              <span className="text-ion-3">{verdict.replace(/_/g, " ").toLowerCase()}</span>
+              <span className="text-ink-500">{verdict.replace(/_/g, " ").toLowerCase()}</span>
             </li>
           ))}
         </ul>
       </section>
 
-      <section className="rounded-2xl border border-titanium bg-carbon/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section className="rounded-2xl border border-white/[0.10] bg-white/[0.02] p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Recently graded
         </h2>
         {graded.length === 0 ? (
-          <p data-testid="clv-empty" className="text-ion-2">
+          <p data-testid="clv-empty" className="text-ink-400">
             No CLV-graded picks yet. CLV begins accruing once the lock→close→grade
             pipeline runs against settled games (requires the founder-gated
             deploy + migration).
           </p>
         ) : (
-          <table className="w-full text-left text-ion-1">
-            <thead className="text-ion-3">
+          <table className="w-full text-left text-ink-300">
+            <thead className="text-ink-500">
               <tr>
                 <th className="py-1 pr-2">Selection</th>
                 <th className="py-1 pr-2">Type</th>
@@ -133,12 +133,12 @@ export default async function AdminClvPage() {
                 const v = p.clvValue as number;
                 const display = p.clvKind === "PROBABILITY" ? `${v >= 0 ? "+" : ""}${(v * 100).toFixed(1)}%` : `${v >= 0 ? "+" : ""}${v.toFixed(1)} pts`;
                 return (
-                  <tr key={p.id} className="border-t border-titanium/60">
+                  <tr key={p.id} className="border-t border-white/[0.06]">
                     <td className="py-1 pr-2">{p.selection}</td>
-                    <td className="py-1 pr-2 text-ion-3">{p.pickType}</td>
-                    <td className={`py-1 pr-2 ${v > 0 ? "text-green-400" : v < 0 ? "text-red-400" : "text-ion-2"}`}>{display}</td>
-                    <td className="py-1 pr-2 text-ion-2">{p.clvVerdict?.replace(/_/g, " ").toLowerCase()}</td>
-                    <td className="py-1 pr-2 text-ion-3">{p.result}</td>
+                    <td className="py-1 pr-2 text-ink-500">{p.pickType}</td>
+                    <td className={`py-1 pr-2 ${v > 0 ? "text-green-400" : v < 0 ? "text-red-400" : "text-ink-400"}`}>{display}</td>
+                    <td className="py-1 pr-2 text-ink-400">{p.clvVerdict?.replace(/_/g, " ").toLowerCase()}</td>
+                    <td className="py-1 pr-2 text-ink-500">{p.result}</td>
                   </tr>
                 );
               })}
@@ -167,19 +167,19 @@ function ClvCard({
       : `${summary.averageClv >= 0 ? "+" : ""}${summary.averageClv.toFixed(2)} pts`;
   const beat = summary.beatCloseRate;
   return (
-    <section className="rounded-2xl border border-titanium bg-carbon/40 p-4">
-      <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">{title}</h2>
+    <section className="rounded-2xl border border-white/[0.10] bg-white/[0.02] p-4">
+      <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">{title}</h2>
       <div className="flex items-baseline gap-2">
-        <span className={`text-3xl font-bold ${beat >= 0.5 ? "text-green-400" : "text-ion-1"}`}>
+        <span className={`text-3xl font-bold ${beat >= 0.5 ? "text-green-400" : "text-ink-300"}`}>
           {summary.sampleSize === 0 ? "—" : pct(beat)}
         </span>
-        <span className="text-xs text-ion-3">beat the close</span>
+        <span className="text-xs text-ink-500">beat the close</span>
       </div>
-      <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-ion-2">
+      <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-ink-400">
         <span>Sample: {summary.sampleSize}</span>
         <span>Avg CLV: {avg}</span>
       </div>
-      <p className="mt-2 text-[11px] leading-snug text-ion-3">{summary.note}</p>
+      <p className="mt-2 text-[11px] leading-snug text-ink-500">{summary.note}</p>
     </section>
   );
 }

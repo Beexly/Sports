@@ -118,7 +118,7 @@ export default async function CockpitCalibrationPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold text-ion-white">Calibration</h1>
+      <h1 className="text-2xl font-bold text-white">Calibration</h1>
       <p
         data-testid="internal-only-banner"
         className="rounded-lg border border-yellow-900 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-200"
@@ -126,14 +126,14 @@ export default async function CockpitCalibrationPage() {
         Internal calibration only. No auto-publish. No auto-send. No automated betting.
       </p>
 
-      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Market baseline — the bar to beat
         </h2>
-        <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
+        <p className="mb-3 text-[11px] leading-relaxed text-ink-400">
           The betting market&apos;s closing line, scored against real outcomes. It&apos;s
           well-calibrated, so this is the bar our own model has to beat — it is{" "}
-          <strong className="text-ion-1">not</strong> our model&apos;s calibration (that needs
+          <strong className="text-ink-300">not</strong> our model&apos;s calibration (that needs
           settled picks, which don&apos;t exist yet).
         </p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -142,17 +142,17 @@ export default async function CockpitCalibrationPage() {
           <BaselineStat label="Games scored" value={MARKET_BASELINE.games.toLocaleString()} sub="settled · both closes" />
           <BaselineStat label="Home-win rate" value={`${MARKET_BASELINE.homeWinRate}%`} sub="base rate" />
         </div>
-        <p className="mt-3 text-[10px] text-ion-3">
+        <p className="mt-3 text-[10px] text-ink-500">
           {MARKET_BASELINE.window} · de-vig proportional · computed {MARKET_BASELINE.computedOn} via{" "}
           <span className="font-mono">scripts/run-historical-calibration.mjs</span> (read-only) — re-run to refresh.
         </p>
       </section>
 
-      <section data-testid="calibration-history" className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section data-testid="calibration-history" className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Game / prediction history
         </h2>
-        <ul className="grid grid-cols-2 gap-1 text-ion-1 sm:grid-cols-3">
+        <ul className="grid grid-cols-2 gap-1 text-ink-300 sm:grid-cols-3">
           <li>Games (total): {gamesTotal}</li>
           <li>Games (completed): {gamesCompleted}</li>
           <li>Predictions (total): {picksTotal}</li>
@@ -161,37 +161,37 @@ export default async function CockpitCalibrationPage() {
         </ul>
       </section>
 
-      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Confidence vs realized win rate
-          <span className="ml-2 normal-case tracking-normal text-ion-3">
+          <span className="ml-2 normal-case tracking-normal text-ink-500">
             (settled · non-bootstrap · pushes excluded · last {eligibleSettled})
           </span>
         </h2>
         {eligibleSettled === 0 ? (
-          <p className="text-ion-3">
+          <p className="text-ink-500">
             No eligible settled picks yet — the table fills as non-bootstrap picks settle.
           </p>
         ) : (
           <table className="w-full text-left">
             <thead>
-              <tr className="text-[10px] uppercase tracking-widest text-ion-3">
+              <tr className="text-[10px] uppercase tracking-widest text-ink-500">
                 <th className="py-1 pr-4 font-medium">Confidence band</th>
                 <th className="py-1 pr-4 font-medium">Settled (n)</th>
                 <th className="py-1 pr-4 font-medium">Realized win rate</th>
                 <th className="py-1 font-medium">Read</th>
               </tr>
             </thead>
-            <tbody className="text-ion-1">
+            <tbody className="text-ink-300">
               {bucketStats.map((b) => {
                 const mid = (b.min + Math.min(b.max, 100)) / 2;
                 const drift = b.winRate === null ? null : b.winRate - mid;
                 return (
-                  <tr key={b.label} className="border-t border-titanium/40">
+                  <tr key={b.label} className="border-t border-white/[0.06]">
                     <td className="py-1.5 pr-4 font-mono">{b.label}</td>
                     <td className="py-1.5 pr-4">{b.n}</td>
                     <td className="py-1.5 pr-4">{b.winRate === null ? "—" : `${b.winRate.toFixed(1)}%`}</td>
-                    <td className="py-1.5 text-ion-3">
+                    <td className="py-1.5 text-ink-500">
                       {drift === null
                         ? "insufficient sample"
                         : Math.abs(drift) <= 5
@@ -208,13 +208,13 @@ export default async function CockpitCalibrationPage() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Path to a proven 70% tier — activation readiness
         </h2>
-        <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
+        <p className="mb-3 text-[11px] leading-relaxed text-ink-400">
           Calibration converts the confidence score into a win probability, but only once there are
-          enough <strong className="text-ion-1">learning-eligible</strong> settled picks to fit on and
+          enough <strong className="text-ink-300">learning-eligible</strong> settled picks to fit on and
           the fit actually improves calibration. Until then, confidence is shown uncalibrated. See{" "}
           <span className="font-mono">docs/path-to-70.md</span>.
         </p>
@@ -240,12 +240,12 @@ export default async function CockpitCalibrationPage() {
             sub="not a green light"
           />
         </div>
-        <p className="mt-3 text-[10px] text-ion-3">
+        <p className="mt-3 text-[10px] text-ink-500">
           {calibrator.isActive
             ? "Sample floor cleared and the in-sample fit improves — run a held-out/offline validation, then do the audited MODEL_VERSION activation. The ECE above is in-sample and is not, by itself, sufficient."
             : `Inactive: ${calibrator.inactiveReason || "awaiting eligible sample"}. Activation is a deliberate, audited MODEL_VERSION step — never an automatic env flip.`}
         </p>
-        <p className="mt-3 text-[11px] leading-relaxed text-ion-2">
+        <p className="mt-3 text-[11px] leading-relaxed text-ink-400">
           The conviction (&ldquo;70%&rdquo;) tier then requires a calibrated win probability of at least
           65% <em>and</em> at or above the pick&apos;s price-specific break-even (a −200 favorite needs
           ~66.7%), an independent SPEAK edge, and a closing-line-value beat-rate of at least 50% over a
@@ -253,34 +253,34 @@ export default async function CockpitCalibrationPage() {
         </p>
       </section>
 
-      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Closing-line value
         </h2>
         {!clvAgg || !clvAgg._count.clvValue ? (
-          <p className="text-ion-3">No graded CLV yet — fills as locks are graded against closes.</p>
+          <p className="text-ink-500">No graded CLV yet — fills as locks are graded against closes.</p>
         ) : (
-          <p className="text-ion-1">
+          <p className="text-ink-300">
             {clvAgg._count.clvValue} graded picks · average CLV{" "}
             <span className="font-mono">{(clvAgg._avg.clvValue ?? 0).toFixed(2)}</span> (positive = beat the close)
           </p>
         )}
       </section>
 
-      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Elo independent signal — gate decision
         </h2>
-        <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
+        <p className="mb-3 text-[11px] leading-relaxed text-ink-400">
           Results-only Elo vs the de-vigged closing line on the same games. Flipping{" "}
           <span className="font-mono">INDEPENDENT_EDGE_ENABLED=true</span> surfaces the Elo fair
           probability in the glass-box factor trail at weight 0 (never moves confidence or picks).
           Pricing it in requires Elo Brier ≤ market Brier <em>and</em> a positive CLV beat-rate.
         </p>
         {!eloReport || eloReport.status === "no-data" ? (
-          <div className="rounded-xl border border-titanium/40 bg-obsidian/40 p-3">
+          <div className="rounded-xl border border-white/[0.06] bg-obsidian/40 p-3">
             <p className="font-mono text-xs text-amber-400">No data yet</p>
-            <p className="mt-1 text-[10px] text-ion-3">
+            <p className="mt-1 text-[10px] text-ink-500">
               Run <span className="font-mono">GET /api/cron/backfill-historical-games</span> (requires{" "}
               <span className="font-mono">CRON_SECRET</span>) to populate the{" "}
               <span className="font-mono">historicalGame</span> table. Re-visit this page after the
@@ -314,7 +314,7 @@ export default async function CockpitCalibrationPage() {
             <div className={`mt-3 rounded-lg border px-3 py-2 text-[11px] leading-relaxed ${
               eloReport.betterCalibrated === "elo"
                 ? "border-emerald-800 bg-emerald-950/30 text-emerald-200"
-                : "border-titanium/40 bg-obsidian/30 text-ion-2"
+                : "border-white/[0.06] bg-obsidian/30 text-ink-400"
             }`}>
               {eloReport.betterCalibrated === "elo" ? (
                 <>
@@ -333,7 +333,7 @@ export default async function CockpitCalibrationPage() {
                 </>
               )}
             </div>
-            <p className="mt-2 text-[10px] text-ion-3">
+            <p className="mt-2 text-[10px] text-ink-500">
               ECE Elo: {eloReport.elo.ece.toFixed(4)} · ECE market: {eloReport.market.ece.toFixed(4)} ·{" "}
               Teams rated: {eloReport.elo.teamsRated} · Generated: {eloReport.generatedAt.slice(0, 10)}
             </p>
@@ -341,25 +341,25 @@ export default async function CockpitCalibrationPage() {
         )}
       </section>
 
-      <section data-testid="calibration-readiness" className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
-        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section data-testid="calibration-readiness" className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Readiness
         </h2>
-        <ul className="space-y-1 text-ion-1">
+        <ul className="space-y-1 text-ink-300">
           <li>canExposePerformanceStats: {String(gates.canExposePerformanceStats)}</li>
           <li>canLearnFromOutcomes: {String(gates.canLearnFromOutcomes)}</li>
         </ul>
-        <h3 className="mt-3 text-xs font-semibold uppercase tracking-widest text-ion-3">
+        <h3 className="mt-3 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Blocked reasons
         </h3>
-        <ul data-testid="calibration-blocked-reasons" className="space-y-1 text-ion-2">
+        <ul data-testid="calibration-blocked-reasons" className="space-y-1 text-ink-400">
           <li>autoPublish — ALWAYS BLOCKED (constant gate)</li>
           <li>autoSend — ALWAYS BLOCKED (constant gate)</li>
           <li>automatedBetting — ALWAYS BLOCKED (constant gate)</li>
         </ul>
       </section>
 
-      <Link href="/cockpit" className="w-fit rounded-lg border border-titanium/40 px-3 py-2 text-xs text-ion-1 hover:bg-carbon/60">
+      <Link href="/cockpit" className="w-fit rounded-lg border border-white/[0.06] px-3 py-2 text-xs text-ink-300 hover:bg-white/[0.03]">
         ← Back to Jarvis
       </Link>
     </div>
@@ -368,10 +368,10 @@ export default async function CockpitCalibrationPage() {
 
 function BaselineStat({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
-    <div className="rounded-xl border border-titanium/40 bg-obsidian/40 p-3">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
-      <p className="mt-1 font-mono text-xl font-semibold tabular-nums text-ion-white">{value}</p>
-      <p className="mt-0.5 text-[10px] text-ion-3">{sub}</p>
+    <div className="rounded-xl border border-white/[0.06] bg-obsidian/40 p-3">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ink-500">{label}</p>
+      <p className="mt-1 font-mono text-xl font-semibold tabular-nums text-white">{value}</p>
+      <p className="mt-0.5 text-[10px] text-ink-500">{sub}</p>
     </div>
   );
 }

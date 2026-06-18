@@ -30,11 +30,11 @@ export function MarketCloud({
   const wide = geo.spreadPp >= WIDE_SPREAD_PP;
   return (
     <div data-testid="market-cloud" className="mt-2">
-      <div className={`flex items-center justify-between text-[10px] uppercase tracking-wider text-ion-3 ${NUMERIC_TEXT_CLASS}`}>
+      <div className={`flex items-center justify-between text-[10px] uppercase tracking-wider text-ink-500 ${NUMERIC_TEXT_CLASS}`}>
         <span>{formatRatioAsPercent(geo.loProb)}</span>
         <span>
           P(home) cloud · one dot per book ·{" "}
-          <span className={wide ? "text-plasma" : "text-ion-2"}>
+          <span className={wide ? "text-plasma" : "text-ink-400"}>
             spread {geo.spreadPp}pp
           </span>
         </span>

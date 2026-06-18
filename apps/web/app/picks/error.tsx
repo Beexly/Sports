@@ -24,11 +24,11 @@ export default function PicksError({
           </svg>
         </div>
         <h2 className="text-lg font-semibold text-white">Picks failed to load</h2>
-        <p className="mt-2 text-sm text-ion-2">
+        <p className="mt-2 text-sm text-ink-400">
           The picks board hit a server error. The data pipeline is intact — this is likely a transient rendering issue.
         </p>
         {error.digest && (
-          <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-ion-3">
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-ink-500">
             ref: {error.digest}
           </p>
         )}
@@ -41,7 +41,7 @@ export default function PicksError({
           </button>
           <Link
             href="/"
-            className="rounded-xl border border-titanium px-5 py-2 text-sm text-ion-2 hover:bg-carbon hover:text-white transition-colors"
+            className="rounded-xl border border-white/[0.10] px-5 py-2 text-sm text-ink-400 hover:bg-white/[0.04] hover:text-white transition-colors"
           >
             Home
           </Link>

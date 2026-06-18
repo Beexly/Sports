@@ -70,7 +70,7 @@ export default async function DfsSuitePage() {
                 </thead>
                 <tbody className="text-ink-200">
                   {topRows.map((r) => (
-                    <tr key={`${r.name}-${r.team}`} className="border-t border-mineral/60">
+                    <tr key={`${r.name}-${r.team}`} className="border-t border-white/[0.08]/60">
                       <td className="py-1.5 pr-4 text-white">{r.name}</td>
                       <td className="py-1.5 pr-4">{r.team}</td>
                       <td className="py-1.5 pr-4 font-mono text-xs">{r.position}</td>

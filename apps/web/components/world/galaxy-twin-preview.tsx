@@ -97,7 +97,7 @@ const STATE_STYLE: Record<
   heat: { dot: "bg-plasma", ring: "gw-ring-heat", text: "text-plasma", tag: "DISTORTION" },
   caution: { dot: "bg-caution", ring: "gw-ring-caution", text: "text-caution", tag: "REVIEW" },
   gated: { dot: "bg-alert", ring: "gw-ring-gate", text: "text-alert", tag: "GATED" },
-  quiet: { dot: "bg-ion-1", ring: "", text: "text-ion-1", tag: "EFFICIENT" },
+  quiet: { dot: "bg-ion-1", ring: "", text: "text-ink-300", tag: "EFFICIENT" },
 };
 
 /** Drifting noise fragments — the raw inputs the map resolves. */
@@ -132,7 +132,7 @@ export function GalaxyTwinPreview(): JSX.Element {
   return (
     <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
       {/* ── The map ───────────────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-ds-lg border border-mineral bg-void">
+      <div className="relative overflow-hidden rounded-ds-lg border border-white/[0.08] bg-void">
         <div aria-hidden className="gw-starfield" />
         {/* market-gravity field */}
         <svg
@@ -199,7 +199,7 @@ export function GalaxyTwinPreview(): JSX.Element {
                   ) : null}
                 </span>
                 <span
-                  className={`absolute left-1/2 top-full mt-1 -translate-x-1/2 whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.16em] ${selected ? s.text : "text-ion-2"}`}
+                  className={`absolute left-1/2 top-full mt-1 -translate-x-1/2 whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.16em] ${selected ? s.text : "text-ink-400"}`}
                 >
                   {node.label}
                 </span>
@@ -209,8 +209,8 @@ export function GalaxyTwinPreview(): JSX.Element {
         </div>
 
         {/* semantic legend — the color system, taught in place */}
-        <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-mineral/60 bg-void/80 px-4 py-2.5 backdrop-blur-sm">
-          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ion-2">
+        <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-white/[0.08]/60 bg-void/80 px-4 py-2.5 backdrop-blur-sm">
+          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ink-400">
             Illustrative system schematic — not live market data
           </p>
           <ul aria-hidden className="hidden items-center gap-3 font-mono text-[9px] uppercase tracking-[0.14em] sm:flex">
@@ -223,16 +223,16 @@ export function GalaxyTwinPreview(): JSX.Element {
       </div>
 
       {/* ── The reading ───────────────────────────────────────── */}
-      <div className="flex flex-col rounded-ds-lg border border-mineral bg-eclipse p-5 sm:p-6">
+      <div className="flex flex-col rounded-ds-lg border border-white/[0.08] bg-white/[0.04] p-5 sm:p-6">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className="text-xl font-semibold text-ion-white">{active.label}</h3>
+          <h3 className="text-xl font-semibold text-white">{active.label}</h3>
           <span className={`font-mono text-[10px] uppercase tracking-[0.18em] ${activeStyle.text}`}>
             {activeStyle.tag}
           </span>
         </div>
-        <p className="mt-3 text-sm leading-6 text-ion-1">{active.reading}</p>
+        <p className="mt-3 text-sm leading-6 text-ink-300">{active.reading}</p>
         <div className="mt-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">Inputs in play</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">Inputs in play</p>
           <ul className="mt-2 space-y-1.5">
             {active.inputs.map((input) => (
               <li key={input} className="flex items-center gap-2 text-sm text-ion">
@@ -242,12 +242,12 @@ export function GalaxyTwinPreview(): JSX.Element {
             ))}
           </ul>
         </div>
-        <div className="mt-5 border-t border-mineral pt-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">System verdict</p>
-          <p className="mt-2 text-sm font-semibold leading-6 text-ion-white">{active.verdict}</p>
+        <div className="mt-5 border-t border-white/[0.08] pt-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">System verdict</p>
+          <p className="mt-2 text-sm font-semibold leading-6 text-white">{active.verdict}</p>
         </div>
         <div className="mt-auto pt-6">
-          <Link href="/observatory" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+          <Link href="/observatory" className="text-sm font-semibold text-orbital-cyan hover:text-white">
             Open the full Edge Map ▸
           </Link>
         </div>

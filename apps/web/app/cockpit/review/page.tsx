@@ -16,8 +16,8 @@ export default async function CockpitReviewPage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-ion-white">Review queue</h1>
-        <p className="mt-1 text-sm text-ion-3">
+        <h1 className="text-2xl font-bold text-white">Review queue</h1>
+        <p className="mt-1 text-sm text-ink-500">
           Items awaiting a human decision. Each row links to the full audit trail.
         </p>
       </header>
@@ -25,22 +25,22 @@ export default async function CockpitReviewPage() {
       {items.length === 0 ? (
         <p
           data-testid="review-empty"
-          className="rounded-xl border border-titanium/40 bg-eclipse/40 p-6 text-sm text-ion-3"
+          className="rounded-xl border border-white/[0.06] bg-white/[0.04]/40 p-6 text-sm text-ink-500"
         >
           Nothing in review. Operator queue is clear.
         </p>
       ) : (
-        <ul data-testid="review-list" className="divide-y divide-titanium/30 rounded-2xl border border-titanium/40">
+        <ul data-testid="review-list" className="divide-y divide-titanium/30 rounded-2xl border border-white/[0.06]">
           {items.map((t) => (
             <li key={t.id} className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <Link
                   href={`/cockpit/tasks/${t.id}`}
-                  className="text-sm font-medium text-ion-white hover:text-ion-white"
+                  className="text-sm font-medium text-white hover:text-white"
                 >
                   {t.title}
                 </Link>
-                <p className="mt-0.5 text-[11px] text-ion-3">
+                <p className="mt-0.5 text-[11px] text-ink-500">
                   {AGENTS[t.assignedAgent].displayName} · priority {t.priority} · risk {t.riskLevel}
                   {t.complianceStatus !== "NOT_APPLICABLE" && (
                     <span className="ml-2 rounded bg-yellow-900/30 px-1.5 py-0.5 text-[10px] font-semibold text-yellow-300">

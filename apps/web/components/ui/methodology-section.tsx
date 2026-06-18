@@ -87,17 +87,17 @@ export function MethodologySection() {
   return (
     <section
       data-testid="methodology-section"
-      className="relative isolate border-y border-mineral bg-carbon px-4 py-20 sm:px-6 lg:px-8"
+      className="relative isolate border-y border-white/[0.08] bg-white/[0.03] px-4 py-20 sm:px-6 lg:px-8"
       aria-labelledby="methodology-heading"
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow text-ion-1">Methodology / Trust Surface</p>
+          <p className="eyebrow text-ink-300">Methodology / Trust Surface</p>
           <h2
             id="methodology-heading"
-            className="mt-4 font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl"
+            className="mt-4 font-display text-4xl font-semibold leading-[1.02] text-white sm:text-6xl"
           >
             The audit trail behind every signal
           </h2>
@@ -112,7 +112,7 @@ export function MethodologySection() {
             <article
               key={item.claimId}
               data-claim-id={item.claimId}
-              className="surface-card flex min-h-full flex-col gap-4 p-5 transition-colors hover:border-mineral-hi"
+              className="surface-card flex min-h-full flex-col gap-4 p-5 transition-colors hover:border-white/[0.08]-hi"
             >
               <div className="flex items-center justify-between gap-3">
                 <p className={`font-mono text-[10px] uppercase tracking-[0.16em] ${laneAccent(item.lane)}`}>
@@ -120,12 +120,12 @@ export function MethodologySection() {
                 </p>
                 <span className="h-px flex-1 bg-mineral" aria-hidden="true" />
               </div>
-              <h3 className="text-base font-semibold leading-snug text-ion-white">{item.title}</h3>
+              <h3 className="text-base font-semibold leading-snug text-white">{item.title}</h3>
               <p className="text-sm leading-6 text-ion">
                 {claim?.copy ?? ""}
               </p>
               {item.hint && (
-                <p className="mt-auto border-t border-mineral pt-4 text-xs leading-5 text-ion-1">
+                <p className="mt-auto border-t border-white/[0.08] pt-4 text-xs leading-5 text-ink-300">
                   {item.hint}
                 </p>
               )}

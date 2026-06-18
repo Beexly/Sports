@@ -42,15 +42,15 @@ export default function Page() {
     <Shell title="Galaxy StatKing" eyebrow="NFL intelligence">
       <StatusRibbon status="fixture" label="Snapshot data — fixture-backed, not a live feed" />
 
-      <div className="border border-mineral bg-eclipse p-6 flex flex-col sm:flex-row items-start gap-8">
+      <div className="border border-white/[0.08] bg-white/[0.04] p-6 flex flex-col sm:flex-row items-start gap-8">
         <div className="shrink-0">
           <ScoreRing score={61} label="King Standard" size={140} />
         </div>
         <div className="flex-1 min-w-0 space-y-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-ion-2">Overall rating</p>
-            <p className="mt-1 text-2xl font-bold text-ion-white">King Standard: 61 / 100</p>
-            <p className="mt-1 text-sm text-ion-1">
+            <p className="text-xs uppercase tracking-[0.2em] text-ink-400">Overall rating</p>
+            <p className="mt-1 text-2xl font-bold text-white">King Standard: 61 / 100</p>
+            <p className="mt-1 text-sm text-ink-300">
               Autonomous foundation — real sources, rights-gated, fixture-backed
             </p>
           </div>
@@ -59,8 +59,8 @@ export default function Page() {
               const pct: number = max > 0 ? Math.min(100, Math.round((score / max) * 100)) : 0;
               return (
                 <div key={label} className="flex items-center gap-3">
-                  <span className="w-36 shrink-0 text-xs text-ion-1">{label}</span>
-                  <div className="relative flex-1 h-2 rounded-full overflow-hidden bg-carbon border border-mineral/60">
+                  <span className="w-36 shrink-0 text-xs text-ink-300">{label}</span>
+                  <div className="relative flex-1 h-2 rounded-full overflow-hidden bg-white/[0.03] border border-white/[0.08]/60">
                     <div
                       className="h-full rounded-full transition-all duration-700"
                       style={{ width: `${pct}%`, background: color, boxShadow: `0 0 6px ${glow}` }}
@@ -105,7 +105,7 @@ export default function Page() {
       />
 
       <SectionHeader eyebrow="Top players by" title="Galaxy Player Index" action={{ label: "Full rankings →", href: "/stats/players" }} />
-      <p className="-mt-3 mb-4 max-w-2xl text-sm text-ion-2">{glossaryEntry("gpi")?.plain}</p>
+      <p className="-mt-3 mb-4 max-w-2xl text-sm text-ink-400">{glossaryEntry("gpi")?.plain}</p>
       <BarChart items={top5.map(p => ({ label: p.name, value: p.galaxy_player_index, max: maxGpi }))} />
 
       <SectionHeader title="All Intelligence Surfaces" />
@@ -114,13 +114,13 @@ export default function Page() {
           <Link
             key={href}
             href={href}
-            className="group rounded-lg border border-mineral bg-eclipse p-4 transition-all duration-200 hover:border-orbital-cyan/60 hover:-translate-y-0.5 hover:shadow-[0_0_18px_rgba(0,229,255,0.10)]"
+            className="group rounded-lg border border-white/[0.08] bg-white/[0.04] p-4 transition-all duration-200 hover:border-orbital-cyan/60 hover:-translate-y-0.5 hover:shadow-[0_0_18px_rgba(0,229,255,0.10)]"
           >
-            <p className="font-semibold text-ion-white transition-colors group-hover:text-orbital-cyan">
+            <p className="font-semibold text-white transition-colors group-hover:text-orbital-cyan">
               {label}{" "}
-              <span className="text-ion-3 transition-colors group-hover:text-orbital-cyan">→</span>
+              <span className="text-ink-500 transition-colors group-hover:text-orbital-cyan">→</span>
             </p>
-            <p className="mt-1 text-xs text-ion-2">{note}</p>
+            <p className="mt-1 text-xs text-ink-400">{note}</p>
           </Link>
         ))}
       </div>

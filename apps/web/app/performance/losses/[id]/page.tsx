@@ -141,24 +141,24 @@ export default async function LossDetailPage({
   if (!loss) notFound();
 
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="min-h-screen bg-white/[0.03] text-ion">
       <Nav />
       <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
       <article className="flex flex-col gap-8">
         <header className="flex flex-col gap-3">
-          <Link href="/performance/losses" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+          <Link href="/performance/losses" className="text-sm font-semibold text-orbital-cyan hover:text-white">
             Loss Room
           </Link>
-          <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ion-2">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ink-400">
             <span>{loss.sport}</span>
             <span>{loss.rootCause.replace(/_/g, " ")}</span>
             <span>{loss.authoredAt.toISOString().slice(0, 10)}</span>
           </div>
-          <h1 className="text-3xl font-bold text-ion-white">{loss.headline}</h1>
-          <p className="text-sm text-ion-2">{loss.matchup}</p>
+          <h1 className="text-3xl font-bold text-white">{loss.headline}</h1>
+          <p className="text-sm text-ink-400">{loss.matchup}</p>
         </header>
 
-        <section className="grid gap-3 border border-mineral bg-eclipse/50 p-4 text-sm text-ion-1 sm:grid-cols-3">
+        <section className="grid gap-3 border border-white/[0.08] bg-white/[0.04]/50 p-4 text-sm text-ink-300 sm:grid-cols-3">
           <span>{loss.selection}</span>
           <span>Confidence {loss.confidence}</span>
           <span>Edge {formatScalar(loss.edgeScore)}</span>
@@ -179,8 +179,8 @@ export default async function LossDetailPage({
 function LossSection({ title, body }: { title: string; body: string }): JSX.Element {
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-ion-2">{title}</h2>
-      <p className="text-base leading-7 text-ion-white">{body}</p>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-400">{title}</h2>
+      <p className="text-base leading-7 text-white">{body}</p>
     </section>
   );
 }

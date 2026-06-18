@@ -41,10 +41,10 @@ const VARIANTS: Record<
     def: "text-ink-1",
   },
   dark: {
-    wrap: "border-mineral bg-eclipse",
+    wrap: "border-white/[0.08] bg-white/[0.04]",
     title: "text-orbital-cyan",
-    term: "text-ion-white",
-    def: "text-ion-1",
+    term: "text-white",
+    def: "text-ink-300",
   },
 };
 

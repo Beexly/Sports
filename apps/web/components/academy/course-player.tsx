@@ -179,7 +179,7 @@ export function CoursePlayer() {
               </button>
 
               {open && (
-                <div className="border-t border-mineral/60 px-5 py-5">
+                <div className="border-t border-white/[0.08]/60 px-5 py-5">
                   <div className="max-w-3xl space-y-3">
                     {lesson.body.map((para) => (
                       <p key={para.slice(0, 32)} className="text-sm leading-relaxed text-ink-200">
@@ -232,7 +232,7 @@ function Question({
 }) {
   const answered = chosen !== undefined;
   return (
-    <div className="rounded-xl border border-mineral/60 bg-black/30 p-4">
+    <div className="rounded-xl border border-white/[0.08]/60 bg-black/30 p-4">
       <p className="text-sm font-semibold text-white">
         <span className="mr-2 font-mono text-[11px]" style={{ color: hex }}>
           Q{index + 1}

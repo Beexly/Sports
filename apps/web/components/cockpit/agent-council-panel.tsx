@@ -17,7 +17,7 @@ import type { LedgerStatus } from "@/lib/jarvis/ledger-types";
 const SEAT_STATUS_STYLES: Readonly<Record<CouncilSeatStatus, string>> = {
   DRAFT_ONLY: "border-plasma/40 bg-plasma/10 text-plasma",
   MANUAL: "border-yellow-900/40 bg-yellow-950/20 text-yellow-300",
-  NOT_WIRED: "border-titanium/40 bg-obsidian/60 text-ion-3",
+  NOT_WIRED: "border-white/[0.06] bg-obsidian/60 text-ink-500",
 };
 
 const SEAT_STATUS_LABEL: Readonly<Record<CouncilSeatStatus, string>> = {
@@ -35,20 +35,20 @@ export function AgentCouncilPanel({ ledger }: { ledger: LedgerStatus }) {
   return (
     <section
       data-testid="agent-council-zone"
-      className="overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80"
+      className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03]/80"
     >
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-titanium/30 px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.10]/30 px-5 py-3">
         <div>
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
+          <h2 className="text-[10px] font-bold uppercase tracking-widest text-ink-400">
             Agent Council
           </h2>
-          <p className="mt-0.5 text-[9px] text-ion-3">
+          <p className="mt-0.5 text-[9px] text-ink-500">
             {counts.total} seats across 6 departments · roles with charters, not running
             processes · no external actions without human approval
           </p>
         </div>
-        <div className="flex gap-4 font-mono text-[9px] text-ion-3">
+        <div className="flex gap-4 font-mono text-[9px] text-ink-500">
           <span>
             <span className="font-bold tabular-nums text-plasma">{counts.draftOnly}</span>{" "}
             draft-only
@@ -58,7 +58,7 @@ export function AgentCouncilPanel({ ledger }: { ledger: LedgerStatus }) {
             manual
           </span>
           <span>
-            <span className="font-bold tabular-nums text-ion-2">{counts.notWired}</span>{" "}
+            <span className="font-bold tabular-nums text-ink-400">{counts.notWired}</span>{" "}
             not wired
           </span>
         </div>
@@ -74,10 +74,10 @@ export function AgentCouncilPanel({ ledger }: { ledger: LedgerStatus }) {
       {/* Ledger posture — honest: shows real counts when connected */}
       <div
         data-testid="council-ledger-posture"
-        className="border-t border-titanium/30 px-5 py-3"
+        className="border-t border-white/[0.10]/30 px-5 py-3"
       >
         {ledger.storeAvailable ? (
-          <p className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
+          <p className="font-mono text-[9px] uppercase tracking-widest text-ink-500">
             Handoff ledger:{" "}
             <span className="text-plasma font-bold tabular-nums">{ledger.handoffCount}</span>{" "}
             entries · Subagent run ledger:{" "}
@@ -87,7 +87,7 @@ export function AgentCouncilPanel({ ledger }: { ledger: LedgerStatus }) {
             pending parent review
           </p>
         ) : (
-          <p className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
+          <p className="font-mono text-[9px] uppercase tracking-widest text-ink-500">
             Handoff ledger · Subagent run ledger:{" "}
             <span className="text-yellow-300">Not connected</span> — entry types
             are defined; the store lands with a later migration. Nothing is
@@ -115,22 +115,22 @@ function DepartmentCard({
   const hasOwnerApproval = seats.some((s) => s.ownerApprovalRequired);
 
   return (
-    <div className="rounded-xl border border-titanium/30 bg-obsidian/20 p-3">
+    <div className="rounded-xl border border-white/[0.10]/30 bg-obsidian/20 p-3">
       {/* Department header */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div>
-          <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-ion-2">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-ink-400">
             {department}
           </p>
-          <p className="mt-0.5 font-mono text-[9px] text-ion-3">
-            Lead: <span className="text-ion-white">{leadSeat?.codename ?? "—"}</span>
+          <p className="mt-0.5 font-mono text-[9px] text-ink-500">
+            Lead: <span className="text-white">{leadSeat?.codename ?? "—"}</span>
             {" · "}
             <span className="text-plasma">{draftSeats.length} draft-only</span>
             {manualSeats.length > 0 && (
               <>{" · "}<span className="text-yellow-300">{manualSeats.length} manual</span></>
             )}
             {notWiredSeats.length > 0 && (
-              <>{" · "}<span className="text-ion-3">{notWiredSeats.length} not wired</span></>
+              <>{" · "}<span className="text-ink-500">{notWiredSeats.length} not wired</span></>
             )}
           </p>
         </div>
@@ -157,12 +157,12 @@ function CouncilSeatCard({ member }: { member: AgentSeat }) {
   return (
     <div
       data-testid={`council-seat-${member.id}`}
-      className="rounded-lg border border-titanium/30 bg-obsidian/40 px-3 py-2.5"
+      className="rounded-lg border border-white/[0.10]/30 bg-obsidian/40 px-3 py-2.5"
     >
       {/* Top row: codename + status badge */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 min-w-0">
-          <p className="font-mono text-[10px] font-bold tracking-wider text-ion-white truncate">
+          <p className="font-mono text-[10px] font-bold tracking-wider text-white truncate">
             {member.codename}
           </p>
           {member.standingSubagent && (
@@ -182,10 +182,10 @@ function CouncilSeatCard({ member }: { member: AgentSeat }) {
       </div>
 
       {/* Role */}
-      <p className="mt-0.5 text-[9px] font-semibold text-ion-2">{member.role}</p>
+      <p className="mt-0.5 text-[9px] font-semibold text-ink-400">{member.role}</p>
 
       {/* Charter */}
-      <p className="mt-1 text-[9px] leading-snug text-ion-3">{member.charter}</p>
+      <p className="mt-1 text-[9px] leading-snug text-ink-500">{member.charter}</p>
 
       {/* Capability badges */}
       {member.ownsCapabilities.length > 0 && (
@@ -193,7 +193,7 @@ function CouncilSeatCard({ member }: { member: AgentSeat }) {
           {member.ownsCapabilities.map((id) => (
             <span
               key={id}
-              className="rounded bg-titanium/40 px-1.5 py-0.5 font-mono text-[8px] text-ion-3"
+              className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-[8px] text-ink-500"
             >
               {id}
             </span>
@@ -203,16 +203,16 @@ function CouncilSeatCard({ member }: { member: AgentSeat }) {
 
       {/* Governance metadata row */}
       <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5">
-        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3">
+        <p className="font-mono text-[8px] uppercase tracking-wider text-ink-500">
           tier {member.authorityTier}
         </p>
-        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3">
+        <p className="font-mono text-[8px] uppercase tracking-wider text-ink-500">
           reports to {member.reportsTo.join(", ")}
         </p>
-        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3">
+        <p className="font-mono text-[8px] uppercase tracking-wider text-ink-500">
           escalates to {member.escalatesTo.join(", ")}
         </p>
-        <p className="font-mono text-[8px] uppercase tracking-wider text-ion-3">
+        <p className="font-mono text-[8px] uppercase tracking-wider text-ink-500">
           external actions: never
         </p>
         {member.canSpawnSubagents && (
@@ -229,7 +229,7 @@ function CouncilSeatCard({ member }: { member: AgentSeat }) {
 
       {/* Review gates for not-wired seats */}
       {member.status === "NOT_WIRED" && member.reviewGates.length > 0 && (
-        <p className="mt-1 font-mono text-[8px] text-ion-3">
+        <p className="mt-1 font-mono text-[8px] text-ink-500">
           review gates: {member.reviewGates.join(", ")}
         </p>
       )}

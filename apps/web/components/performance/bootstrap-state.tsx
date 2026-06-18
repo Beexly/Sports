@@ -30,7 +30,7 @@ export function PerformanceBootstrapState({
   return (
     <div data-testid="performance-bootstrap-state" className="mx-auto max-w-3xl">
       {/* Honest empty header */}
-      <div className="rounded-2xl border border-mineral bg-eclipse/60 p-8">
+      <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04]/60 p-8">
         <p
           data-testid="bootstrap-status-label"
           className="text-xs font-semibold uppercase tracking-widest text-caution"
@@ -38,22 +38,22 @@ export function PerformanceBootstrapState({
           {gateEnabled ? "No canonical performance data yet" : "Public stats disabled"}
         </p>
 
-        <h2 className="mt-3 text-2xl font-bold text-ion-white">
+        <h2 className="mt-3 text-2xl font-bold text-white">
           {gateEnabled
             ? "We're still accumulating settled canonical picks."
             : "We don't show a track record we haven't earned."}
         </h2>
 
-        <p className="mt-4 text-sm leading-relaxed text-ion-1">
+        <p className="mt-4 text-sm leading-relaxed text-ink-300">
           {gateEnabled
             ? "The performance page is enabled, but there aren't yet enough settled canonical picks to publish meaningful win-rate numbers."
             : "Public performance statistics are disabled at the platform level because the system hasn't accumulated enough settled, canonical picks to publish them honestly."}
         </p>
 
-        <p className="mt-3 text-sm leading-relaxed text-ion-1">
+        <p className="mt-3 text-sm leading-relaxed text-ink-300">
           Bootstrap-era picks — those generated before canonical history was
           enabled — are stored for internal validation but are{" "}
-          <strong className="text-ion-white">never</strong> counted in public
+          <strong className="text-white">never</strong> counted in public
           performance numbers. We do this on purpose so the first numbers you
           see represent the live engine, not warm-up data.
         </p>
@@ -62,40 +62,40 @@ export function PerformanceBootstrapState({
       {/* Readiness ladder */}
       <section
         data-testid="readiness-ladder"
-        className="mt-8 rounded-2xl border border-mineral bg-eclipse/40 p-6"
+        className="mt-8 rounded-2xl border border-white/[0.08] bg-white/[0.04]/40 p-6"
         aria-labelledby="ladder-heading"
       >
         <h3
           id="ladder-heading"
-          className="text-sm font-semibold uppercase tracking-widest text-ion-2"
+          className="text-sm font-semibold uppercase tracking-widest text-ink-400"
         >
           What needs to be true before this page shows data
         </h3>
-        <ol className="mt-4 space-y-3 text-sm text-ion-1">
+        <ol className="mt-4 space-y-3 text-sm text-ink-300">
           <li className="flex gap-3">
-            <span className="text-ion-3">1.</span>
+            <span className="text-ink-500">1.</span>
             <span>
               Canonical history is enabled and new picks are being written with{" "}
-              <code className="rounded bg-titanium px-1 py-0.5 font-mono text-xs text-ion-1">
+              <code className="rounded bg-white/[0.08] px-1 py-0.5 font-mono text-xs text-ink-300">
                 isBootstrap=false
               </code>
               .
             </span>
           </li>
           <li className="flex gap-3">
-            <span className="text-ion-3">2.</span>
+            <span className="text-ink-500">2.</span>
             <span>
               At least{" "}
-              <strong className="font-numerals tabular-nums text-ion-white">
+              <strong className="font-numerals tabular-nums text-white">
                 {minSettledPicksForLearning}
               </strong>{" "}
               canonical picks have settled with verified outcomes.
             </span>
           </li>
           <li className="flex gap-3">
-            <span className="text-ion-3">3.</span>
+            <span className="text-ink-500">3.</span>
             <span>
-              The platform's <code className="rounded bg-titanium px-1 py-0.5 font-mono text-xs text-ion-1">PERFORMANCE_STATS_ENABLED</code> readiness gate is set to true.
+              The platform's <code className="rounded bg-white/[0.08] px-1 py-0.5 font-mono text-xs text-ink-300">PERFORMANCE_STATS_ENABLED</code> readiness gate is set to true.
             </span>
           </li>
         </ol>
@@ -104,18 +104,18 @@ export function PerformanceBootstrapState({
       {/* What we will show once unlocked */}
       <section
         data-testid="bootstrap-what-we-show"
-        className="mt-8 rounded-2xl border border-mineral bg-eclipse/40 p-6"
+        className="mt-8 rounded-2xl border border-white/[0.08] bg-white/[0.04]/40 p-6"
       >
-        <h3 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
+        <h3 className="text-sm font-semibold uppercase tracking-widest text-ink-400">
           What you'll see once data is published
         </h3>
-        <ul className="mt-4 space-y-2 text-sm text-ion-1">
+        <ul className="mt-4 space-y-2 text-sm text-ink-300">
           <li>• Sample size and period covered</li>
           <li>• Model version used during the period</li>
           <li>• Win / loss / push counts, computed only from canonical picks</li>
           <li>
             • Win rate computed as{" "}
-            <code className="rounded bg-titanium px-1 py-0.5 font-mono text-xs text-ion-1">
+            <code className="rounded bg-white/[0.08] px-1 py-0.5 font-mono text-xs text-ink-300">
               wins divided by decided outcomes
             </code>
             ; pushes are reported separately

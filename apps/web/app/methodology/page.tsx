@@ -164,7 +164,7 @@ export default function MethodologyPage(): JSX.Element {
             <Stagger className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" step={50}>
               {FACTORS.map((factor, i) => (
                 <div key={factor} className="surface-card group min-h-20 p-4 transition-shadow hover:border-orbital-cyan/30 hover:shadow-[0_0_16px_rgba(0,229,255,0.08)]">
-                  <span className="mb-2 block font-mono text-[10px] text-ion-3 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="mb-2 block font-mono text-[10px] text-ink-500 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
                   <p className="text-sm font-semibold text-white group-hover:text-orbital-cyan transition-colors">{factor}</p>
                 </div>
               ))}

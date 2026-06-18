@@ -25,17 +25,17 @@ export default function DataSourcingPage(): JSX.Element {
   const blocked = forbiddenSources();
 
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="min-h-screen bg-white/[0.03] text-ion">
       <Nav />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
-        <section className="border-b border-mineral pb-8">
+        <section className="border-b border-white/[0.08] pb-8">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">
             Data sourcing
           </p>
-          <h1 className="mt-2 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+          <h1 className="mt-2 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-white sm:text-6xl">
             We only show data we are legally allowed to show.
           </h1>
-          <p className="mt-5 max-w-3xl text-base leading-7 text-ion-1">
+          <p className="mt-5 max-w-3xl text-base leading-7 text-ink-300">
             Every external source we ingest is declared in a registry with its real license,
             terms, attribution, and a legal verdict. Ingestion code checks that registry before it
             fetches a single row, so a source whose terms forbid commercial or automated use cannot
@@ -48,26 +48,26 @@ export default function DataSourcingPage(): JSX.Element {
             </Link>
             <Link
               href="/integrations"
-              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
+              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-white/[0.08] px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-white"
             >
               Live readiness
             </Link>
           </div>
           <dl className="mt-7 grid grid-cols-2 gap-3 sm:max-w-md sm:grid-cols-2">
-            <div className="border border-mineral bg-carbon px-3 py-2">
-              <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">Cleared to ingest</dt>
+            <div className="border border-white/[0.08] bg-white/[0.03] px-3 py-2">
+              <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">Cleared to ingest</dt>
               <dd className="mt-1 font-numerals text-xl font-semibold tabular-nums text-orbital-cyan">{cleared.length}</dd>
             </div>
-            <div className="border border-mineral bg-carbon px-3 py-2">
-              <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">Refused / gated</dt>
+            <div className="border border-white/[0.08] bg-white/[0.03] px-3 py-2">
+              <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">Refused / gated</dt>
               <dd className="mt-1 font-numerals text-xl font-semibold tabular-nums text-alert">{blocked.length}</dd>
             </div>
           </dl>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-ion-white">Sources we ingest</h2>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">
+          <h2 className="text-2xl font-semibold text-white">Sources we ingest</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-ink-300">
             Open-licensed or licensed feeds, used within their terms. Attribution is rendered
             wherever the data appears.
           </p>
@@ -79,8 +79,8 @@ export default function DataSourcingPage(): JSX.Element {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-ion-white">Sources we refuse to touch</h2>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">
+          <h2 className="text-2xl font-semibold text-white">Sources we refuse to touch</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-ink-300">
             Technically reachable, legally off-limits for a commercial product — or requiring spend
             we have not committed. We name them so the boundary is auditable, not implied.
           </p>
@@ -91,9 +91,9 @@ export default function DataSourcingPage(): JSX.Element {
           </div>
         </section>
 
-        <section className="border border-mineral bg-eclipse p-5">
+        <section className="border border-white/[0.08] bg-white/[0.04] p-5">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">Sourcing doctrine</p>
-          <ul className="mt-4 grid gap-2 text-sm leading-6 text-ion-1 md:grid-cols-2">
+          <ul className="mt-4 grid gap-2 text-sm leading-6 text-ink-300 md:grid-cols-2">
             <li>Prefer open-licensed aggregators over scraping.</li>
             <li>Read the actual license/ToS, not the marketing page.</li>
             <li>Respect robots.txt and anti-automation clauses — accessible is not permitted.</li>
@@ -111,11 +111,11 @@ export default function DataSourcingPage(): JSX.Element {
 function SourceCard({ source }: { source: LegalSource }): JSX.Element {
   const verdict = VERDICT_STYLE[source.verdict];
   return (
-    <article className="flex flex-col border border-mineral bg-eclipse p-5">
+    <article className="flex flex-col border border-white/[0.08] bg-white/[0.04] p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="text-lg font-semibold text-ion-white">{source.provider}</h3>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{source.kind}</p>
+          <h3 className="text-lg font-semibold text-white">{source.provider}</h3>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">{source.kind}</p>
         </div>
         <span className={`shrink-0 rounded-ds-sm border px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] ${verdict.className}`}>
           {verdict.label}
@@ -124,7 +124,7 @@ function SourceCard({ source }: { source: LegalSource }): JSX.Element {
 
       <dl className="mt-4 grid grid-cols-2 gap-2 text-xs">
         <Field label="License">
-          <a href={source.license.url} target="_blank" rel="noopener noreferrer" className="text-orbital-cyan hover:text-ion-white">
+          <a href={source.license.url} target="_blank" rel="noopener noreferrer" className="text-orbital-cyan hover:text-white">
             {source.license.spdx ?? source.license.name}
           </a>
         </Field>
@@ -133,10 +133,10 @@ function SourceCard({ source }: { source: LegalSource }): JSX.Element {
         <Field label="Rate limit">{source.rateLimit}</Field>
       </dl>
 
-      <p className="mt-4 text-sm leading-6 text-ion-1">{source.reason}</p>
+      <p className="mt-4 text-sm leading-6 text-ink-300">{source.reason}</p>
 
       {source.attributionRequired && source.attributionText ? (
-        <p className="mt-3 border-l-2 border-orbital-cyan/40 pl-3 font-mono text-[10px] leading-5 text-ion-2">
+        <p className="mt-3 border-l-2 border-orbital-cyan/40 pl-3 font-mono text-[10px] leading-5 text-ink-400">
           {source.attributionText}
         </p>
       ) : null}
@@ -144,12 +144,12 @@ function SourceCard({ source }: { source: LegalSource }): JSX.Element {
       {source.datasets.length > 0 ? (
         <div className="mt-4 flex flex-wrap gap-1.5">
           {source.datasets.slice(0, 10).map((dataset) => (
-            <span key={dataset} className="rounded-ds-sm border border-mineral px-2 py-0.5 font-mono text-[10px] text-ion-2">
+            <span key={dataset} className="rounded-ds-sm border border-white/[0.08] px-2 py-0.5 font-mono text-[10px] text-ink-400">
               {dataset}
             </span>
           ))}
           {source.datasets.length > 10 ? (
-            <span className="px-1 font-mono text-[10px] text-ion-2">+{source.datasets.length - 10}</span>
+            <span className="px-1 font-mono text-[10px] text-ink-400">+{source.datasets.length - 10}</span>
           ) : null}
         </div>
       ) : null}
@@ -160,7 +160,7 @@ function SourceCard({ source }: { source: LegalSource }): JSX.Element {
 function Field({ label, children }: { label: string; children: React.ReactNode }): JSX.Element {
   return (
     <div>
-      <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</dt>
+      <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">{label}</dt>
       <dd className="mt-0.5 text-ion">{children}</dd>
     </div>
   );

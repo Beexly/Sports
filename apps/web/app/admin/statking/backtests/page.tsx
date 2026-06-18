@@ -12,7 +12,7 @@ export default async function Page(){
       <Cards items={[{label:"Runs",value:b.runs.length},{label:"State",value:"fixture"},{label:"Proof",value:"partial"},{label:"Need",value:"history"}]}/>
       <SectionHeader title="Backtest Runs" />
       {b.runs.length === 0 ? (
-        <p className="text-sm text-ion-1 py-4 border border-mineral bg-eclipse/40 px-4">No runs recorded yet.</p>
+        <p className="text-sm text-ink-300 py-4 border border-white/[0.08] bg-white/[0.04]/40 px-4">No runs recorded yet.</p>
       ) : (
         <DataTable
           rows={b.runs.map(r => ({

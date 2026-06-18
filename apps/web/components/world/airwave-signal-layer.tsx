@@ -24,8 +24,8 @@ const STAGES = [
   {
     n: "S2",
     title: "Paraphrased claim",
-    tone: "text-ion-white",
-    border: "border-mineral",
+    tone: "text-white",
+    border: "border-white/[0.08]",
     body: "Pundit asserts the home side is materially undervalued in this matchup.",
     meta: "neutral paraphrase · timestamped",
   },
@@ -56,8 +56,8 @@ const STAGES = [
   {
     n: "S6",
     title: "GSN studio brief",
-    tone: "text-ion-white",
-    border: "border-mineral",
+    tone: "text-white",
+    border: "border-white/[0.08]",
     body: "The claim, its grade history, and the market context land in a show-prep brief: story leads with receipts attached.",
     meta: "media made accountable",
   },
@@ -76,7 +76,7 @@ export function AirwaveSignalLayer(): JSX.Element {
           {STAGES.map((stage, i) => (
             <li
               key={stage.n}
-              className={`gw-card-hover relative rounded-ds-md border bg-eclipse p-4 ${stage.border} ${
+              className={`gw-card-hover relative rounded-ds-md border bg-white/[0.04] p-4 ${stage.border} ${
                 i % 2 === 1 ? "lg:translate-y-10" : ""
               }`}
             >
@@ -84,23 +84,23 @@ export function AirwaveSignalLayer(): JSX.Element {
                 {stage.n} · {stage.title}
               </p>
               <p className="mt-2 text-sm leading-6 text-ion">{stage.body}</p>
-              <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.16em] text-ion-2">{stage.meta}</p>
+              <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.16em] text-ink-400">{stage.meta}</p>
             </li>
           ))}
         </ol>
       </div>
 
-      <div className="mt-14 flex flex-col gap-4 rounded-ds-md border border-mineral bg-carbon p-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-2xl text-sm leading-6 text-ion-1">
+      <div className="mt-14 flex flex-col gap-4 rounded-ds-md border border-white/[0.08] bg-white/[0.03] p-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="max-w-2xl text-sm leading-6 text-ink-300">
           Workflow shown end-to-end; stage content is illustrative. No live
           broadcast capture is wired — transcripts enter the system only with
           permission, and a human review gate sits before anything public.
         </p>
         <div className="flex shrink-0 flex-wrap gap-x-6 gap-y-2">
-          <Link href="/gsn" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+          <Link href="/gsn" className="text-sm font-semibold text-orbital-cyan hover:text-white">
             GSN Studio ▸
           </Link>
-          <Link href="/airwave" className="text-sm font-semibold text-ion-1 hover:text-ion-white">
+          <Link href="/airwave" className="text-sm font-semibold text-ink-300 hover:text-white">
             The Airwave Ledger
           </Link>
         </div>

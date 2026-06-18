@@ -59,18 +59,18 @@ export function ListenerLogForm() {
     <form onSubmit={submit} className="flex max-w-2xl flex-col gap-3">
       <div className="grid gap-3 sm:grid-cols-2">
         {FIELDS.map(([key, label, ph]) => (
-          <label key={key} className="flex flex-col gap-1 text-xs text-ion-2">
+          <label key={key} className="flex flex-col gap-1 text-xs text-ink-400">
             {label}
             <input
               value={values[key] ?? ""}
               onChange={(e) => setValues((v) => ({ ...v, [key]: e.target.value }))}
               placeholder={ph}
-              className="rounded-lg border border-titanium/40 bg-eclipse/50 px-3 py-2 text-sm text-ion-white placeholder:text-ion-3 focus:border-cyan-700 focus:outline-none"
+              className="rounded-lg border border-white/[0.06] bg-white/[0.04]/50 px-3 py-2 text-sm text-white placeholder:text-ink-500 focus:border-cyan-700 focus:outline-none"
             />
           </label>
         ))}
       </div>
-      <label className="flex flex-col gap-1 text-xs text-ion-2">
+      <label className="flex flex-col gap-1 text-xs text-ink-400">
         Your takes — one per line, your own words ({lines.length}/60 · never a quote, never a transcript)
         <textarea
           value={batch}
@@ -83,10 +83,10 @@ export function ListenerLogForm() {
             "Likes the rookie TE as a value pick at his current ADP.\n\n" +
             "Paste a transcript and it'll be rejected — this lane is your words only."
           }
-          className="rounded-lg border border-titanium/40 bg-eclipse/50 px-3 py-2 text-sm leading-6 text-ion-white placeholder:text-ion-3 focus:border-cyan-700 focus:outline-none"
+          className="rounded-lg border border-white/[0.06] bg-white/[0.04]/50 px-3 py-2 text-sm leading-6 text-white placeholder:text-ink-500 focus:border-cyan-700 focus:outline-none"
         />
       </label>
-      <p className="text-[11px] leading-relaxed text-ion-3">
+      <p className="text-[11px] leading-relaxed text-ink-500">
         Legal lane only: you listened on your own subscription and write each take in your
         own words. No recordings, no transcripts, no verbatim quotes — SiriusXM&apos;s terms
         forbid using their content to train tools, so timestamped/transcript lines are
@@ -96,7 +96,7 @@ export function ListenerLogForm() {
         <button
           type="submit"
           disabled={state === "busy" || lines.length === 0 || !(values["pundit"] ?? "").trim()}
-          className="w-fit rounded-lg bg-cyan-600 px-4 py-2 text-sm font-semibold text-ion-white hover:bg-cyan-500 disabled:opacity-50"
+          className="w-fit rounded-lg bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500 disabled:opacity-50"
         >
           {state === "busy"
             ? "Filing…"

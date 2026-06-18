@@ -22,24 +22,24 @@ export default function RoomError({
           </svg>
         </div>
         <h2 className="text-lg font-bold text-white">Game room failed to load</h2>
-        <p className="mt-2 text-sm text-ion-2">
+        <p className="mt-2 text-sm text-ink-400">
           The evidence room for this game hit an error. The underlying pick data is safe.
         </p>
         {error.digest && (
-          <p className="mt-3 font-mono text-[10px] uppercase tracking-wide text-ion-3">
+          <p className="mt-3 font-mono text-[10px] uppercase tracking-wide text-ink-500">
             ref: {error.digest}
           </p>
         )}
         <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
           <button
             onClick={() => reset()}
-            className="rounded-lg bg-ion-blue/20 px-5 py-2 text-sm font-semibold text-ion-blue transition-colors hover:bg-ion-blue/30"
+            className="rounded-lg bg-orbital-cyan/20 px-5 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:bg-orbital-cyan/30"
           >
             Try again
           </button>
           <Link
             href="/"
-            className="rounded-lg border border-titanium px-5 py-2 text-sm font-semibold text-ion-1 transition-colors hover:border-ion-2 hover:text-white"
+            className="rounded-lg border border-white/[0.10] px-5 py-2 text-sm font-semibold text-ink-300 transition-colors hover:border-ion-2 hover:text-white"
           >
             Go home
           </Link>

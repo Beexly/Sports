@@ -27,10 +27,10 @@ const STATUS_LABEL: Record<FantasyBaselineStatus, string> = {
 
 const STATUS_TONE: Record<FantasyBaselineStatus, string> = {
   "live-proof": "border-verify/30 bg-verify/10 text-verify",
-  "csv-import-ready": "border-ion-blue/30 bg-ion-blue/10 text-ion-blue",
+  "csv-import-ready": "border-orbital-cyan/30 bg-orbital-cyan/10 text-orbital-cyan",
   "gated-data": "border-caution/30 bg-caution/10 text-caution",
   "content-ready": "border-ultraviolet/30 bg-ultraviolet/10 text-ultraviolet",
-  "manual-community": "border-titanium bg-carbon/70 text-ion-1",
+  "manual-community": "border-white/[0.10] bg-white/[0.03]/70 text-ink-300",
 };
 
 export default function FantasyBaselinePage(): JSX.Element {
@@ -40,7 +40,7 @@ export default function FantasyBaselinePage(): JSX.Element {
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
       <main className="flex-1">
-        <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-b border-white/[0.08] px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
               Competitive baseline
@@ -76,13 +76,13 @@ export default function FantasyBaselinePage(): JSX.Element {
           </div>
         </section>
 
-        <section className="border-b border-mineral px-4 py-8 sm:px-6 lg:px-8">
+        <section className="border-b border-white/[0.08] px-4 py-8 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-3 md:grid-cols-2">
             {FANTASY_BASELINE_SOURCES.map((source) => (
               <a
                 key={source.name}
                 href={source.url}
-                className="border border-mineral bg-eclipse p-4 transition-colors hover:border-orbital-cyan/60"
+                className="border border-white/[0.08] bg-white/[0.04] p-4 transition-colors hover:border-orbital-cyan/60"
               >
                 <p className="font-semibold text-white">{source.name}</p>
                 <p className="mt-2 text-sm leading-6 text-ink-300">{source.scope}</p>
@@ -93,11 +93,11 @@ export default function FantasyBaselinePage(): JSX.Element {
 
         <section className="px-4 py-10 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <div className="overflow-hidden border border-mineral">
+            <div className="overflow-hidden border border-white/[0.08]">
               {FANTASY_BASELINE_MODULES.map((module) => (
                 <article
                   key={module.key}
-                  className="grid gap-4 border-b border-mineral bg-eclipse px-4 py-4 last:border-b-0 lg:grid-cols-[0.28fr_0.2fr_0.24fr_1fr]"
+                  className="grid gap-4 border-b border-white/[0.08] bg-white/[0.04] px-4 py-4 last:border-b-0 lg:grid-cols-[0.28fr_0.2fr_0.24fr_1fr]"
                 >
                   <div>
                     <p className="font-semibold text-white">{module.module}</p>
@@ -139,8 +139,8 @@ export default function FantasyBaselinePage(): JSX.Element {
 
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="border border-mineral bg-eclipse p-3">
-      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</p>
+    <div className="border border-white/[0.08] bg-white/[0.04] p-3">
+      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">{label}</p>
       <p className="mt-1 font-numerals text-2xl font-semibold text-white">{value}</p>
     </div>
   );

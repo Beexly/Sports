@@ -78,11 +78,11 @@ export function CostOfNoiseCalculator(): JSX.Element {
   return (
     <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
       {/* ── inputs ────────────────────────────────────────────── */}
-      <form className="rounded-ds-lg border border-mineral bg-eclipse p-5 sm:p-6" onSubmit={(e) => e.preventDefault()}>
+      <form className="rounded-ds-lg border border-white/[0.08] bg-white/[0.04] p-5 sm:p-6" onSubmit={(e) => e.preventDefault()}>
         <div className="grid gap-6 sm:grid-cols-2">
           <label className="block">
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">Bets per week</span>
-            <span className="mt-1 block font-numerals text-2xl tabular-nums text-ion-white">{betsPerWeek}</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">Bets per week</span>
+            <span className="mt-1 block font-numerals text-2xl tabular-nums text-white">{betsPerWeek}</span>
             <input
               type="range"
               min={0}
@@ -94,8 +94,8 @@ export function CostOfNoiseCalculator(): JSX.Element {
             />
           </label>
           <label className="block">
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">Average unit size</span>
-            <span className="mt-1 block font-numerals text-2xl tabular-nums text-ion-white">${unitSize}</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">Average unit size</span>
+            <span className="mt-1 block font-numerals text-2xl tabular-nums text-white">${unitSize}</span>
             <input
               type="range"
               min={5}
@@ -128,8 +128,8 @@ export function CostOfNoiseCalculator(): JSX.Element {
                       key={label}
                       className={`flex-1 cursor-pointer rounded-ds-sm border px-2 py-2 text-center text-xs font-medium transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-orbital-cyan/80 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-eclipse ${
                         value === i
-                          ? "border-orbital-cyan/60 bg-carbon text-ion-white"
-                          : "border-mineral bg-carbon text-ion-1 hover:border-mineral-hi"
+                          ? "border-orbital-cyan/60 bg-white/[0.03] text-white"
+                          : "border-white/[0.08] bg-white/[0.03] text-ink-300 hover:border-white/[0.08]-hi"
                       }`}
                     >
                       <input
@@ -150,20 +150,20 @@ export function CostOfNoiseCalculator(): JSX.Element {
       </form>
 
       {/* ── readout ───────────────────────────────────────────── */}
-      <div className="flex flex-col rounded-ds-lg border border-mineral bg-void p-5 sm:p-6" aria-live="polite">
+      <div className="flex flex-col rounded-ds-lg border border-white/[0.08] bg-void p-5 sm:p-6" aria-live="polite">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2">Decision risk band</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">Decision risk band</p>
             <p className={`mt-1 font-display text-3xl font-semibold ${result.band.tone}`}>{result.band.label}</p>
           </div>
-          <span aria-hidden className={`mt-1 h-3.5 w-3.5 rounded-full bg-carbon ${result.band.ring}`} />
+          <span aria-hidden className={`mt-1 h-3.5 w-3.5 rounded-full bg-white/[0.03] ${result.band.ring}`} />
         </div>
 
         <dl className="mt-6 space-y-4">
           <div>
-            <dt className="flex justify-between text-sm text-ion-1">
+            <dt className="flex justify-between text-sm text-ink-300">
               <span>Decisions exposed to avoidable noise</span>
-              <span className="font-numerals tabular-nums text-ion-white">~{Math.round(result.leakage * 100)}%</span>
+              <span className="font-numerals tabular-nums text-white">~{Math.round(result.leakage * 100)}%</span>
             </dt>
             <dd className="mt-2 h-1.5 overflow-hidden rounded-full bg-mineral/50">
               <div
@@ -173,9 +173,9 @@ export function CostOfNoiseCalculator(): JSX.Element {
             </dd>
           </div>
           <div>
-            <dt className="flex justify-between text-sm text-ion-1">
+            <dt className="flex justify-between text-sm text-ink-300">
               <span>No-bet discipline score</span>
-              <span className="font-numerals tabular-nums text-ion-white">{result.discipline}/100</span>
+              <span className="font-numerals tabular-nums text-white">{result.discipline}/100</span>
             </dt>
             <dd className="mt-2 h-1.5 overflow-hidden rounded-full bg-mineral/50">
               <div
@@ -184,9 +184,9 @@ export function CostOfNoiseCalculator(): JSX.Element {
               />
             </dd>
           </div>
-          <div className="gw-receipt !border-mineral">
-            <dt className="text-ion-2">Stake riding on noisy decisions</dt>
-            <dd className="text-ion-white">≈ ${result.exposedStake}/week of ${result.weeklyTurnover}</dd>
+          <div className="gw-receipt !border-white/[0.08]">
+            <dt className="text-ink-400">Stake riding on noisy decisions</dt>
+            <dd className="text-white">≈ ${result.exposedStake}/week of ${result.weeklyTurnover}</dd>
           </div>
         </dl>
 
@@ -196,8 +196,8 @@ export function CostOfNoiseCalculator(): JSX.Element {
           </p>
           <ul className="mt-2 space-y-2">
             {result.workflow.slice(0, 4).map((step) => (
-              <li key={step.href} className="text-sm leading-6 text-ion-1">
-                <Link href={step.href} className="font-semibold text-ion-white underline-offset-4 hover:text-orbital-cyan hover:underline">
+              <li key={step.href} className="text-sm leading-6 text-ink-300">
+                <Link href={step.href} className="font-semibold text-white underline-offset-4 hover:text-orbital-cyan hover:underline">
                   {step.label}
                 </Link>{" "}
                 — {step.why}
@@ -206,7 +206,7 @@ export function CostOfNoiseCalculator(): JSX.Element {
           </ul>
         </div>
 
-        <p className="mt-auto pt-6 text-xs leading-5 text-ion-2">
+        <p className="mt-auto pt-6 text-xs leading-5 text-ink-400">
           Directional education from your stated habits — not a financial
           projection, not a profit estimate, and not advice to bet more. The
           cheapest improvement in any process is a better pass.

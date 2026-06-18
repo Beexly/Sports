@@ -46,14 +46,14 @@ export default function Page() {
       )}
       <div className="grid gap-6 md:grid-cols-2">
         {teams.map(team => (
-          <div key={team.team_id} className="border border-mineral bg-eclipse p-4">
-            <p className="text-ion-white font-semibold mb-3">{team.team_id}</p>
+          <div key={team.team_id} className="border border-white/[0.08] bg-white/[0.04] p-4">
+            <p className="text-white font-semibold mb-3">{team.team_id}</p>
             <BarChart items={[
               { label: "Offensive env", value: Number(team.offensive_environment ?? 0), max: 100, tone: "cyan" },
               { label: "Defensive env", value: Number(team.defensive_environment ?? 0), max: 100, tone: "amber" },
               { label: "Fantasy env", value: Number(team.fantasy_environment ?? 0), max: 100, tone: "cyan" }
             ]} />
-            <p className="mt-3 text-xs text-ion-2">Confidence: {String(team.data_confidence ?? 0)}%</p>
+            <p className="mt-3 text-xs text-ink-400">Confidence: {String(team.data_confidence ?? 0)}%</p>
           </div>
         ))}
       </div>

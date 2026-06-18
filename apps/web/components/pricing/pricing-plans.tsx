@@ -48,7 +48,7 @@ export function PricingPlans({
         <div
           role="group"
           aria-label="Billing interval"
-          className="inline-flex rounded-full border border-titanium bg-carbon/60 p-1"
+          className="inline-flex rounded-full border border-white/[0.10] bg-white/[0.03] p-1"
         >
           <ToggleButton active={!annual} onClick={() => setInterval("month")}>
             Monthly
@@ -84,10 +84,10 @@ export function PricingPlans({
               className={[
                 "relative flex h-full flex-col rounded-2xl border p-6 animate-fade-up",
                 isPro
-                  ? "border-plasma/50 bg-carbon/60 shadow-glow-plasma"
+                  ? "border-plasma/50 bg-white/[0.03] shadow-glow-plasma"
                   : isElite
                     ? "border-ultraviolet/50 bg-ultraviolet/5 shadow-glow-uv"
-                    : "border-titanium bg-carbon/60",
+                    : "border-white/[0.10] bg-white/[0.03]",
               ].join(" ")}
               style={{ animationDelay: `${i * 90}ms` }}
             >
@@ -122,12 +122,12 @@ export function PricingPlans({
                   ) : annual ? (
                     <>
                       <span className="text-4xl font-extrabold text-white">${plan.annual}</span>
-                      <span className="text-sm text-ion-2">/year</span>
+                      <span className="text-sm text-ink-400">/year</span>
                     </>
                   ) : (
                     <>
                       <span className="text-4xl font-extrabold text-white">${plan.monthly}</span>
-                      <span className="text-sm text-ion-2">/month</span>
+                      <span className="text-sm text-ink-400">/month</span>
                     </>
                   )}
                 </div>
@@ -140,17 +140,17 @@ export function PricingPlans({
                   </p>
                 )}
                 {isPaid && !annual && plan.annual !== null && (
-                  <p className="mt-1 text-xs text-ion-3">or ${plan.annual}/year</p>
+                  <p className="mt-1 text-xs text-ink-500">or ${plan.annual}/year</p>
                 )}
 
-                <p className="mt-2 text-sm text-ion-2">{plan.description}</p>
+                <p className="mt-2 text-sm text-ink-400">{plan.description}</p>
               </div>
 
               <ul className="mb-6 flex flex-col gap-3">
                 {plan.features.map(({ label, included }) => (
                   <li key={label} className="flex items-center gap-2 text-sm">
                     {included ? <CheckIcon isPro={isPro} /> : <DashIcon />}
-                    <span className={included ? "text-ion-1" : "text-ion-3"}>{label}</span>
+                    <span className={included ? "text-ink-300" : "text-ink-500"}>{label}</span>
                   </li>
                 ))}
               </ul>
@@ -159,7 +159,7 @@ export function PricingPlans({
                 {plan.id === "FREE" ? (
                   <Link
                     href="/auth/signin"
-                    className="block w-full rounded-xl border border-titanium bg-titanium py-2.5 text-center text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium"
+                    className="block w-full rounded-xl border border-white/[0.10] bg-white/[0.08] py-2.5 text-center text-sm font-semibold text-ink-300 transition-colors hover:bg-white/[0.08]"
                   >
                     {plan.cta}
                   </Link>
@@ -202,7 +202,7 @@ function ToggleButton({
       aria-pressed={active}
       className={[
         "rounded-full px-4 py-1.5 text-sm font-semibold transition-colors",
-        active ? "bg-brand-600 text-white" : "text-ion-2 hover:text-ion-1",
+        active ? "bg-brand-600 text-white" : "text-ink-400 hover:text-ink-300",
       ].join(" ")}
     >
       {children}
@@ -228,7 +228,7 @@ function CheckIcon({ isPro = false }: { isPro?: boolean }) {
 function DashIcon() {
   return (
     <svg
-      className="h-4 w-4 shrink-0 text-ion-3"
+      className="h-4 w-4 shrink-0 text-ink-500"
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={2}

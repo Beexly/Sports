@@ -18,7 +18,7 @@ export default function Page() {
         { label: "Platforms", value: new Set(items.map(i => i.platform)).size },
         { label: "Rights", value: "metadata-only" }
       ]} />
-      <p className="text-ion-1">
+      <p className="text-ink-300">
         Where the same player or topic is surfacing across platforms — the cross-source agreement that makes a media signal worth a look.
       </p>
       <div className="space-y-3">
@@ -36,7 +36,7 @@ export default function Page() {
         ))}
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">All Signal Candidates</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">All Signal Candidates</h2>
         <DataTable
           rows={signals.slice(0, 30).map(i => ({
             platform: String(i.platform ?? ""),

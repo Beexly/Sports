@@ -65,8 +65,8 @@ const VERDICT_META: Record<
   },
   "insufficient-data": {
     label: "Building discrimination history",
-    tone: "text-ion-1",
-    ring: "border-titanium bg-eclipse/40",
+    tone: "text-ink-300",
+    ring: "border-white/[0.10] bg-white/[0.04]/40",
     glyph: "◴",
   },
 };
@@ -77,10 +77,10 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
   const empty = bucket.sampleSize === 0;
   return (
     <div className="flex items-center gap-3 py-2" data-testid="reliability-row">
-      <span className={`w-14 shrink-0 text-xs text-ion-1 ${NUMERIC_TEXT_CLASS}`}>
+      <span className={`w-14 shrink-0 text-xs text-ink-300 ${NUMERIC_TEXT_CLASS}`}>
         {bucket.label}
       </span>
-      <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-titanium">
+      <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-white/[0.08]">
         {!empty && (
           <div
             className="h-full rounded-full bg-gradient-to-r from-accent-500 to-accent-400 transition-all"
@@ -100,7 +100,7 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
         {empty ? STAT_PLACEHOLDER : formatRatioAsPercent(bucket.observedWinRate)}
       </span>
       <span
-        className={`w-16 shrink-0 text-right text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}
+        className={`w-16 shrink-0 text-right text-[11px] text-ink-400 ${NUMERIC_TEXT_CLASS}`}
       >
         {empty ? "no data" : `n=${formatCount(bucket.sampleSize)}`}
       </span>
@@ -132,14 +132,14 @@ export async function CalibrationPanel() {
   return (
     <section
       data-testid="calibration-panel"
-      className="mb-12 overflow-hidden rounded-2xl border border-titanium bg-gradient-to-br from-eclipse to-carbon"
+      className="mb-12 overflow-hidden rounded-2xl border border-white/[0.10] bg-gradient-to-br from-eclipse to-carbon"
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-titanium px-6 py-4">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.10] px-6 py-4">
+        <h2 className="text-sm font-semibold uppercase tracking-widest text-ink-400">
           Calibration &amp; discrimination
         </h2>
         <span
-          className={`text-[11px] uppercase tracking-widest text-ion-2 ${NUMERIC_TEXT_CLASS}`}
+          className={`text-[11px] uppercase tracking-widest text-ink-400 ${NUMERIC_TEXT_CLASS}`}
         >
           {collecting
             ? "Collecting"
@@ -150,22 +150,22 @@ export async function CalibrationPanel() {
       {/* Discrimination verdict — the honest headline. */}
       <div className="px-6 pt-6">
         <div className={`rounded-xl border ${meta.ring} p-5`}>
-          <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-ink-400">
             Does higher confidence win more?
           </p>
           <p className={`mt-2 flex items-center gap-2 text-xl font-bold ${meta.tone}`}>
             <span aria-hidden="true">{meta.glyph}</span>
             {meta.label}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-ion-1">{d.note}</p>
+          <p className="mt-2 text-sm leading-relaxed text-ink-300">{d.note}</p>
           {d.spread !== null &&
             d.lowestBucketWinRate !== null &&
             d.highestBucketWinRate !== null && (
-              <div className="mt-4 flex items-center gap-3 text-xs text-ion-1">
+              <div className="mt-4 flex items-center gap-3 text-xs text-ink-300">
                 <span className={NUMERIC_TEXT_CLASS}>
                   {d.lowestBucketLabel}: {formatRatioAsPercent(d.lowestBucketWinRate)}
                 </span>
-                <span className="flex-1 border-t border-dashed border-titanium" />
+                <span className="flex-1 border-t border-dashed border-white/[0.10]" />
                 <span className={NUMERIC_TEXT_CLASS}>
                   {d.highestBucketLabel}: {formatRatioAsPercent(d.highestBucketWinRate)}
                 </span>
@@ -177,10 +177,10 @@ export async function CalibrationPanel() {
       {/* Reliability curve. */}
       <div className="px-6 py-6">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-ink-400">
             Reliability by confidence bucket
           </h3>
-          <span className="text-[11px] text-ion-2">bar = observed · marker = expected</span>
+          <span className="text-[11px] text-ink-400">bar = observed · marker = expected</span>
         </div>
         <div className="divide-y divide-titanium/60">
           {data.buckets.map((b) => (
@@ -195,18 +195,18 @@ export async function CalibrationPanel() {
       </div>
 
       {/* Brier score footer. */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-titanium px-6 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.10] px-6 py-4">
         <div>
-          <span className="text-xs uppercase tracking-widest text-ion-2">Brier score</span>{" "}
+          <span className="text-xs uppercase tracking-widest text-ink-400">Brier score</span>{" "}
           <span className={`ml-1 text-sm font-semibold text-ion ${NUMERIC_TEXT_CLASS}`}>
             {formatBrier(data.brierScore)}
           </span>
         </div>
-        <p className="text-xs text-ion-2">{brierRead(data.brierScore)}</p>
+        <p className="text-xs text-ink-400">{brierRead(data.brierScore)}</p>
       </div>
 
-      <div className="border-t border-titanium px-6 py-3">
-        <p className="text-[11px] leading-relaxed text-ion-2">
+      <div className="border-t border-white/[0.10] px-6 py-3">
+        <p className="text-[11px] leading-relaxed text-ink-400">
           {data.publicMessage} Calibration is evidence only — it never auto-adjusts
           the model. Past performance does not guarantee future results.
         </p>

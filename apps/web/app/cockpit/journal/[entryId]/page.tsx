@@ -18,7 +18,7 @@ function statusClass(status: string): string {
     case "REVIEW_PENDING":
       return "border-amber-500/40 bg-amber-500/10 text-amber-300";
     default:
-      return "border-titanium/50 bg-obsidian/40 text-ion-1";
+      return "border-white/[0.10]/50 bg-obsidian/40 text-ink-300";
   }
 }
 
@@ -31,34 +31,34 @@ function formatDate(value: string | null): string {
 
 function MetaRail({ entry }: { readonly entry: JournalEntryDetail }): JSX.Element {
   return (
-    <aside className="space-y-4 rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
+    <aside className="space-y-4 rounded-lg border border-white/[0.06] bg-obsidian/50 p-4">
       <div>
-        <p className="text-[10px] uppercase tracking-wide text-ion-3">Entry meta</p>
-        <h2 className="mt-1 text-sm font-semibold text-ion-white">
+        <p className="text-[10px] uppercase tracking-wide text-ink-500">Entry meta</p>
+        <h2 className="mt-1 text-sm font-semibold text-white">
           Week {entry.isoWeek}, {entry.isoYear}
         </h2>
       </div>
-      <dl className="space-y-3 text-xs text-ion-2">
+      <dl className="space-y-3 text-xs text-ink-400">
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Status</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Status</dt>
           <dd className={`mt-1 inline-flex rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusClass(entry.status)}`}>
             {entry.status.replace(/_/g, " ")}
           </dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Model version</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Model version</dt>
           <dd className="mt-1">{entry.modelVersion}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Author</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Author</dt>
           <dd className="mt-1 break-words">{entry.authorEmail}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Word count</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Word count</dt>
           <dd className="mt-1">{entry.wordCount}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Last saved</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Last saved</dt>
           <dd className="mt-1">{formatDate(entry.updatedAt)}</dd>
         </div>
       </dl>
@@ -68,26 +68,26 @@ function MetaRail({ entry }: { readonly entry: JournalEntryDetail }): JSX.Elemen
 
 function WeekDataRail({ entry }: { readonly entry: JournalEntryDetail }): JSX.Element {
   return (
-    <aside className="space-y-4 rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
+    <aside className="space-y-4 rounded-lg border border-white/[0.06] bg-obsidian/50 p-4">
       <div>
-        <p className="text-[10px] uppercase tracking-wide text-ion-3">Week data</p>
-        <h2 className="mt-1 text-sm font-semibold text-ion-white">Evidence attached</h2>
+        <p className="text-[10px] uppercase tracking-wide text-ink-500">Week data</p>
+        <h2 className="mt-1 text-sm font-semibold text-white">Evidence attached</h2>
       </div>
-      <dl className="grid grid-cols-2 gap-3 text-xs text-ion-2">
+      <dl className="grid grid-cols-2 gap-3 text-xs text-ink-400">
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Picks</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Picks</dt>
           <dd className="mt-1">{entry.referencedPickIds.length}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Autopsies</dt>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-500">Autopsies</dt>
           <dd className="mt-1">{entry.referencedAutopsyIds.length}</dd>
         </div>
       </dl>
       <ReferenceList title="Referenced Picks" values={entry.referencedPickIds} />
       <ReferenceList title="Cited Autopsies" values={entry.referencedAutopsyIds} />
-      <div className="rounded-lg border border-titanium/40 bg-obsidian/70 p-3">
-        <p className="text-[10px] uppercase tracking-wide text-ion-3">Distribution</p>
-        <dl className="mt-2 space-y-2 text-xs text-ion-2">
+      <div className="rounded-lg border border-white/[0.06] bg-obsidian/70 p-3">
+        <p className="text-[10px] uppercase tracking-wide text-ink-500">Distribution</p>
+        <dl className="mt-2 space-y-2 text-xs text-ink-400">
           <div className="flex justify-between gap-3">
             <dt>Published</dt>
             <dd>{formatDate(entry.publishedAt)}</dd>
@@ -115,13 +115,13 @@ function ReferenceList({
 }): JSX.Element {
   return (
     <div>
-      <p className="text-[10px] uppercase tracking-wide text-ion-3">{title}</p>
+      <p className="text-[10px] uppercase tracking-wide text-ink-500">{title}</p>
       {values.length === 0 ? (
-        <p className="mt-2 text-xs text-ion-3">None attached.</p>
+        <p className="mt-2 text-xs text-ink-500">None attached.</p>
       ) : (
-        <ul className="mt-2 space-y-1 text-xs text-ion-2">
+        <ul className="mt-2 space-y-1 text-xs text-ink-400">
           {values.slice(0, 8).map((value) => (
-            <li key={value} className="truncate rounded border border-titanium/40 bg-obsidian/70 px-2 py-1">
+            <li key={value} className="truncate rounded border border-white/[0.06] bg-obsidian/70 px-2 py-1">
               {value}
             </li>
           ))}
@@ -143,21 +143,21 @@ export default async function CockpitJournalEntryPage({
     <div className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <Link href="/cockpit/journal" className="text-xs text-ion-3 hover:text-ion-1">
+          <Link href="/cockpit/journal" className="text-xs text-ink-500 hover:text-ink-300">
             Back to Journal
           </Link>
           <p className="mt-3 text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
             Model Journal
           </p>
-          <h1 className="mt-1 text-2xl font-bold text-ion-white">{entry.title}</h1>
-          <p className="mt-2 max-w-3xl text-sm text-ion-2">
+          <h1 className="mt-1 text-2xl font-bold text-white">{entry.title}</h1>
+          <p className="mt-2 max-w-3xl text-sm text-ink-400">
             Review the weekly essay draft, attached evidence, and distribution state before the public route goes live.
           </p>
         </div>
         {entry.status === "PUBLISHED" ? (
           <Link
             href={`/journal/${entry.slug}`}
-            className="rounded-lg border border-titanium/40 px-3 py-2 text-xs font-semibold text-ion-1 hover:bg-carbon/60"
+            className="rounded-lg border border-white/[0.06] px-3 py-2 text-xs font-semibold text-ink-300 hover:bg-white/[0.03]"
           >
             View public entry
           </Link>

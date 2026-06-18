@@ -49,20 +49,20 @@ const HEALTH: Record<Health, { word: string; read: string; accent: string; glow:
 
 function PulseStat({ label, value, sub, hot }: { label: string; value: number; sub: string; hot?: boolean }) {
   return (
-    <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4 transition-colors hover:border-titanium/70">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
-      <p className={`mt-1 font-mono text-3xl font-semibold tabular-nums ${hot ? "text-amber-300" : "text-ion-white"}`}>{value}</p>
-      <p className="mt-0.5 text-[11px] text-ion-3">{sub}</p>
+    <div className="rounded-2xl border border-white/[0.06] bg-obsidian/40 p-4 transition-colors hover:border-white/[0.10]/70">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ink-500">{label}</p>
+      <p className={`mt-1 font-mono text-3xl font-semibold tabular-nums ${hot ? "text-amber-300" : "text-white"}`}>{value}</p>
+      <p className="mt-0.5 text-[11px] text-ink-500">{sub}</p>
     </div>
   );
 }
 
 function Lane({ title, items, empty, dot }: { title: string; items: readonly string[]; empty: string; dot: string }) {
   return (
-    <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4">
+    <div className="rounded-2xl border border-white/[0.06] bg-obsidian/40 p-4">
       <div className="mb-2 flex items-center justify-between">
-        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{title}</p>
-        <span className="flex items-center gap-1.5 font-mono text-[10px] text-ion-2">
+        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ink-500">{title}</p>
+        <span className="flex items-center gap-1.5 font-mono text-[10px] text-ink-400">
           <span className="h-1.5 w-1.5 rounded-full" style={{ background: dot }} />
           {items.length}
         </span>
@@ -70,14 +70,14 @@ function Lane({ title, items, empty, dot }: { title: string; items: readonly str
       {items.length > 0 ? (
         <ul className="space-y-1.5">
           {items.slice(0, 4).map((item) => (
-            <li key={item} className="flex gap-2 text-xs leading-snug text-ion-1">
+            <li key={item} className="flex gap-2 text-xs leading-snug text-ink-300">
               <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full" style={{ background: dot }} />
               <span>{item}</span>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="text-xs text-ion-3">{empty}</p>
+        <p className="text-xs text-ink-500">{empty}</p>
       )}
     </div>
   );
@@ -101,7 +101,7 @@ export function CockpitPulse({
   return (
     <section
       data-testid="jarvis-operating-runtime"
-      className="relative overflow-hidden rounded-3xl border border-titanium/50 bg-eclipse/70 p-6 shadow-2xl shadow-black/30"
+      className="relative overflow-hidden rounded-3xl border border-white/[0.10]/50 bg-white/[0.04]/70 p-6 shadow-2xl shadow-black/30"
     >
       {/* living ambient glow */}
       <div
@@ -127,12 +127,12 @@ export function CockpitPulse({
             <span className="relative h-4 w-4 rounded-full" style={{ background: h.accent, boxShadow: `0 0 18px ${h.accent}` }} />
           </div>
           <div>
-            <p className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.22em] text-ion-3">
+            <p className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.22em] text-ink-500">
               <span className="h-1.5 w-1.5 rounded-full bg-current animate-pulse" style={{ color: h.accent }} />
               Company pulse
             </p>
-            <h2 className="mt-1 text-2xl font-semibold text-ion-white">{h.word}</h2>
-            <p className="mt-1 max-w-xs text-sm text-ion-2">{h.read}</p>
+            <h2 className="mt-1 text-2xl font-semibold text-white">{h.word}</h2>
+            <p className="mt-1 max-w-xs text-sm text-ink-400">{h.read}</p>
             <span className={`mt-2 inline-block rounded-full border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest ${h.chip}`}>
               {assessment.companyHealth}
             </span>
@@ -156,15 +156,15 @@ export function CockpitPulse({
       </div>
 
       {/* ── Next + honest gate strip ─────────────────────────── */}
-      <div className="relative mt-5 rounded-2xl border border-titanium/30 bg-obsidian/30 p-4">
-        <p className="text-sm text-ion-1">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-ion-3">Next&nbsp;·&nbsp;</span>
+      <div className="relative mt-5 rounded-2xl border border-white/[0.10]/30 bg-obsidian/30 p-4">
+        <p className="text-sm text-ink-300">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-ink-500">Next&nbsp;·&nbsp;</span>
           {assessment.nextBestAction}
         </p>
-        <div className="mt-3 grid gap-x-6 gap-y-1.5 text-[11px] text-ion-2 sm:grid-cols-2">
+        <div className="mt-3 grid gap-x-6 gap-y-1.5 text-[11px] text-ink-400 sm:grid-cols-2">
           {gates.map((g) => (
             <p key={g.k}>
-              <span className="font-semibold text-ion-white">{g.k}:</span> {g.v}
+              <span className="font-semibold text-white">{g.k}:</span> {g.v}
             </p>
           ))}
         </div>

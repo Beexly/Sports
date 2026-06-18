@@ -26,8 +26,8 @@ function GravityBadge({ gravity }: { gravity: MarketGravity }) {
     gravity.band === "strong"
       ? "border-plasma/40 text-plasma"
       : gravity.band === "moderate"
-        ? "border-ultraviolet/40 text-ion-1"
-        : "border-titanium text-ion-2";
+        ? "border-ultraviolet/40 text-ink-300"
+        : "border-white/[0.10] text-ink-400";
   const dir = gravity.side === "none" ? "" : ` → ${gravity.side}`;
   return (
     <span
@@ -62,19 +62,19 @@ export async function MarketFairBoard() {
   return (
     <section
       data-testid="market-fair-board"
-      className="overflow-hidden rounded-2xl border border-titanium bg-gradient-to-br from-eclipse to-carbon"
+      className="overflow-hidden rounded-2xl border border-white/[0.10] bg-gradient-to-br from-eclipse to-carbon"
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-titanium px-6 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.10] px-6 py-4">
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-ink-400">
             Market fair board — vig removed
           </h2>
-          <p className="mt-1 text-[11px] text-ion-2">
+          <p className="mt-1 text-[11px] text-ink-400">
             What the books are charging, margin stripped (Shin de-vig, median
             across books). The market&apos;s opinion — not ours.
           </p>
         </div>
-        <span className={`text-[11px] uppercase tracking-widest text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+        <span className={`text-[11px] uppercase tracking-widest text-ink-400 ${NUMERIC_TEXT_CLASS}`}>
           {board.rows.length > 0
             ? `${formatCount(board.rows.length)} games quoted`
             : "Awaiting quotes"}
@@ -82,7 +82,7 @@ export async function MarketFairBoard() {
       </div>
 
       {board.rows.length === 0 ? (
-        <p className="px-6 py-8 text-sm text-ion-1">
+        <p className="px-6 py-8 text-sm text-ink-300">
           No upcoming game carries a two-sided quote from at least two books in
           the capture window. The board renders only from real captured odds —
           it stays empty rather than inventing a market.
@@ -99,11 +99,11 @@ export async function MarketFairBoard() {
                 className="grid gap-2 px-6 py-4 sm:grid-cols-[1fr_auto] sm:items-center"
               >
                 <div>
-                  <p className="text-sm font-semibold text-ion-white">
+                  <p className="text-sm font-semibold text-white">
                     {row.awayTeamName}{" "}
-                    <span className="text-ion-3">@</span> {row.homeTeamName}
+                    <span className="text-ink-500">@</span> {row.homeTeamName}
                   </p>
-                  <p className={`mt-1 text-[11px] uppercase tracking-wider text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+                  <p className={`mt-1 text-[11px] uppercase tracking-wider text-ink-400 ${NUMERIC_TEXT_CLASS}`}>
                     {row.sport} ·{" "}
                     {new Date(row.commenceTime).toISOString().slice(5, 16).replace("T", " ")}{" "}
                     UTC · {formatCount(c.bookCount)} books · hold{" "}
@@ -113,7 +113,7 @@ export async function MarketFairBoard() {
                         className={
                           Math.abs(row.read.homeDriftPp) >= DRIFT_MOVING_PP
                             ? " text-plasma"
-                            : " text-ion-2"
+                            : " text-ink-400"
                         }
                       >
                         {" "}· drift {row.read.homeDriftPp > 0 ? "+" : ""}
@@ -126,15 +126,15 @@ export async function MarketFairBoard() {
                 </div>
                 <div className="flex flex-col items-start gap-1 sm:items-end">
                   <div className={`flex items-center gap-3 text-sm ${NUMERIC_TEXT_CLASS}`}>
-                    <span className={homeLeads ? "font-semibold text-orbital-cyan" : "text-ion-1"}>
+                    <span className={homeLeads ? "font-semibold text-orbital-cyan" : "text-ink-300"}>
                       Home {formatRatioAsPercent(c.fairHomeProb)}
                     </span>
                     {c.fairDrawProb !== null && (
-                      <span className="text-ion-2">
+                      <span className="text-ink-400">
                         Draw {formatRatioAsPercent(c.fairDrawProb)}
                       </span>
                     )}
-                    <span className={!homeLeads ? "font-semibold text-orbital-cyan" : "text-ion-1"}>
+                    <span className={!homeLeads ? "font-semibold text-orbital-cyan" : "text-ink-300"}>
                       Away {formatRatioAsPercent(c.fairAwayProb)}
                     </span>
                   </div>
@@ -152,8 +152,8 @@ export async function MarketFairBoard() {
         </ul>
       )}
 
-      <div className="border-t border-titanium px-6 py-3">
-        <p className="text-[11px] leading-relaxed text-ion-2">
+      <div className="border-t border-white/[0.10] px-6 py-3">
+        <p className="text-[11px] leading-relaxed text-ink-400">
           Drift = fair-price movement across the capture window (earliest vs latest quote per book, vig removed) — the direction an edge bleeds, and the pp/hr rate is how fast (the Line Death Clock). The cloud under each game is one dot per book — the market&apos;s real spread of belief, not a simulated variance. De-vigged prices describe the market, not the outcome. They are not
           picks, projections, or advice — the engine&apos;s own reads live on
           the board and carry their full evidence trail.

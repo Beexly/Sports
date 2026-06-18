@@ -21,7 +21,7 @@ export default function Page() {
         { label: "Compared on", value: "usage · role · efficiency" },
         { label: "Method", value: "shared-feature score" }
       ]} />
-      <p className="text-ion-1">
+      <p className="text-ink-300">
         Each player's closest statistical neighbor, scored on shared usage and production features — a fast way to frame an unknown by a known.
       </p>
       <SectionHeader eyebrow="By statistical similarity" title="Top Player Comparisons" />
@@ -32,21 +32,21 @@ export default function Page() {
             ? (comp.shared_features as unknown[]).map(String).join(" · ")
             : String(comp?.shared_features ?? "");
           return (
-            <div key={c.player_id} className="border border-mineral bg-eclipse p-4">
+            <div key={c.player_id} className="border border-white/[0.08] bg-white/[0.04] p-4">
               <Link href={"/stats/player/" + c.player_id}>
-                <p className="text-ion-white font-semibold mb-2">{names.get(c.player_id) ?? c.player_id}</p>
+                <p className="text-white font-semibold mb-2">{names.get(c.player_id) ?? c.player_id}</p>
               </Link>
-              <p className="text-sm text-ion-1 mb-3">Closest comp: {comp?.name}</p>
+              <p className="text-sm text-ink-300 mb-3">Closest comp: {comp?.name}</p>
               <BarChart items={[
                 { label: "Similarity", value: Number(comp?.similarity_score ?? 0), max: 100, tone: "cyan" }
               ]} />
-              <p className="mt-2 text-xs text-ion-2">Features: {sharedFeatures}</p>
+              <p className="mt-2 text-xs text-ink-400">Features: {sharedFeatures}</p>
             </div>
           );
         })}
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">All Player Comps</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">All Player Comps</h2>
         <DataTable
           rows={withComp.slice(0, 40).map(c => {
             const t = c.comparisons[0];

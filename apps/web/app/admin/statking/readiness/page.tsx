@@ -22,8 +22,8 @@ export default async function Page() {
       <div className="flex justify-center mb-6">
         <ScoreRing score={avg} label="Average Readiness" size={140} />
       </div>
-      <div className="border border-mineral bg-eclipse p-4 mb-6">
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Readiness by Page</p>
+      <div className="border border-white/[0.08] bg-white/[0.04] p-4 mb-6">
+        <p className="text-xs uppercase tracking-[0.2em] text-ink-400 mb-3">Readiness by Page</p>
         <BarChart items={r.pages.slice(0, 8).map((p: Record<string, unknown>) => ({
           label: String(p.page ?? "").slice(0, 15),
           value: Number(p.readiness_score ?? 0),

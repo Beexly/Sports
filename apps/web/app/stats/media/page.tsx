@@ -17,7 +17,7 @@ const PLATFORMS = [
 function FilterTabs({ selected }: { selected?: string }) {
   const base = "border px-3 py-2 text-sm transition-colors whitespace-nowrap";
   const on = "border-orbital-cyan text-orbital-cyan";
-  const off = "border-mineral text-ion-1 hover:border-orbital-cyan hover:text-orbital-cyan";
+  const off = "border-white/[0.08] text-ink-300 hover:border-orbital-cyan hover:text-orbital-cyan";
   return (
     <div className="flex gap-3 flex-wrap mb-6">
       <Link href="/stats/media" className={`${base} ${!selected ? on : off}`}>All</Link>
@@ -52,9 +52,9 @@ export default function Page({ searchParams }: { searchParams?: { platform?: str
           { label: "Avg trust", value: avgTrust },
           { label: "Needs activation", value: needsActivation },
         ]} />
-        <p className="text-ion-1">{label} mentions — titles, sources, and detected players only (metadata-level, rights-aware).</p>
+        <p className="text-ink-300">{label} mentions — titles, sources, and detected players only (metadata-level, rights-aware).</p>
         <div>
-          <h2 className="text-2xl font-semibold text-ion-white mb-4">{label}</h2>
+          <h2 className="text-2xl font-semibold text-white mb-4">{label}</h2>
           <DataTable
             rows={f.map((i) => ({
               source: String(i.source_name ?? ""),
@@ -93,7 +93,7 @@ export default function Page({ searchParams }: { searchParams?: { platform?: str
         { label: "RSS", value: rss, max, tone: "amber" },
       ]} />
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Recent Media Items</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Recent Media Items</h2>
         <DataTable
           rows={items.slice(0, 25).map((i) => ({
             platform: String(i.platform ?? ""),

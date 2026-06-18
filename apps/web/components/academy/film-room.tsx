@@ -125,7 +125,7 @@ export function FilmRoom() {
                 {e.ep} · {e.minutes}
               </p>
               <p className="mt-2 text-sm font-semibold text-white">{e.title}</p>
-              <p className="mt-3 inline-block rounded-full border border-mineral px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-400">
+              <p className="mt-3 inline-block rounded-full border border-white/[0.08] px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-400">
                 in production
               </p>
             </div>

@@ -75,9 +75,9 @@ export function MarketMirageChapter(): JSX.Element {
   return (
     <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
       {/* the mirage */}
-      <div className="relative overflow-hidden rounded-ds-lg border border-mineral bg-void p-6 sm:p-8">
+      <div className="relative overflow-hidden rounded-ds-lg border border-white/[0.08] bg-void p-6 sm:p-8">
         <div aria-hidden className="gw-starfield" />
-        <p className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2">
+        <p className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
           Illustrative scenario — no real game, no real odds
         </p>
         <div
@@ -92,7 +92,7 @@ export function MarketMirageChapter(): JSX.Element {
             <br />
             minus the points.
           </p>
-          <p className="mt-4 max-w-sm text-sm leading-6 text-ion-1">
+          <p className="mt-4 max-w-sm text-sm leading-6 text-ink-300">
             Everyone agrees. The replies agree. The shows agree. Agreement feels
             like evidence.
           </p>
@@ -116,13 +116,13 @@ export function MarketMirageChapter(): JSX.Element {
             return (
               <li
                 key={layer.id}
-                className={`gw-mirage-layer rounded-ds-md border bg-eclipse p-4 ${
-                  shown ? TONE_BORDER[layer.tone] : "border-mineral opacity-50"
+                className={`gw-mirage-layer rounded-ds-md border bg-white/[0.04] p-4 ${
+                  shown ? TONE_BORDER[layer.tone] : "border-white/[0.08] opacity-50"
                 }`}
                 style={shown ? undefined : { transform: "translateY(2px)" }}
                 aria-hidden={!shown}
               >
-                <p className={`font-mono text-[10px] uppercase tracking-[0.18em] ${shown ? TONE_TEXT[layer.tone] : "text-ion-2"}`}>
+                <p className={`font-mono text-[10px] uppercase tracking-[0.18em] ${shown ? TONE_TEXT[layer.tone] : "text-ink-400"}`}>
                   {layer.step} · {layer.title}
                 </p>
                 {shown ? <p className="mt-2 text-sm leading-6 text-ion">{layer.body}</p> : null}
@@ -144,7 +144,7 @@ export function MarketMirageChapter(): JSX.Element {
               Reset the mirage
             </button>
           )}
-          <p className="text-xs text-ion-2" role="status">
+          <p className="text-xs text-ink-400" role="status">
             {done
               ? "Four layers deep, the obvious play was a pass."
               : "Step through what the surface hides."}

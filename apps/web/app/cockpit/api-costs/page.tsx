@@ -27,16 +27,16 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
               Claude API Costs
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-ion-white">Generation Budget Monitor</h1>
+            <h1 className="mt-1 text-2xl font-bold text-white">Generation Budget Monitor</h1>
           </div>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-1 hover:bg-carbon/60"
+            className="rounded-lg border border-white/[0.06] px-3 py-1.5 text-xs text-ink-300 hover:bg-white/[0.03]"
           >
             Back to Jarvis
           </Link>
         </div>
-        <p className="max-w-3xl text-sm text-ion-2">
+        <p className="max-w-3xl text-sm text-ink-400">
           Current-month spend by content surface. Red and hard-cap states stop new generation
           unless an operator override is active.
         </p>
@@ -48,17 +48,17 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
         <Metric label="Generated" value={new Date(dashboard.generatedAtIso).toLocaleString("en-US")} />
       </section>
 
-      <section className="overflow-hidden rounded-lg border border-titanium/40 bg-obsidian/60">
-        <div className="border-b border-titanium/40 px-4 py-3">
-          <h2 className="text-sm font-semibold text-ion-white">Surface Budgets</h2>
-          <p className="mt-1 text-xs text-ion-3">
+      <section className="overflow-hidden rounded-lg border border-white/[0.06] bg-obsidian/60">
+        <div className="border-b border-white/[0.06] px-4 py-3">
+          <h2 className="text-sm font-semibold text-white">Surface Budgets</h2>
+          <p className="mt-1 text-xs text-ink-500">
             Window: {new Date(dashboard.monthStartIso).toLocaleDateString("en-US")} to{" "}
             {new Date(dashboard.monthEndIso).toLocaleDateString("en-US")}
           </p>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-titanium/30 text-sm">
-            <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
+            <thead className="bg-white/[0.04]/50 text-left text-[11px] uppercase tracking-wider text-ink-500">
               <tr>
                 <th className="px-4 py-3">Surface</th>
                 <th className="px-4 py-3">Spend</th>
@@ -79,21 +79,21 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
         </div>
       </section>
 
-      <section className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-        <h2 className="text-sm font-semibold text-ion-white">Recent Errors</h2>
+      <section className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-4">
+        <h2 className="text-sm font-semibold text-white">Recent Errors</h2>
         {dashboard.recentErrors.length === 0 ? (
-          <p className="mt-3 text-sm text-ion-3">No Claude API errors recorded.</p>
+          <p className="mt-3 text-sm text-ink-500">No Claude API errors recorded.</p>
         ) : (
           <div className="mt-3 grid gap-2">
             {dashboard.recentErrors.map((error) => (
-              <div key={error.id} className="rounded-md border border-titanium/40 bg-eclipse/50 p-3">
+              <div key={error.id} className="rounded-md border border-white/[0.06] bg-white/[0.04]/50 p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-sm font-medium text-ion-1">{error.surface}</p>
-                  <p className="text-xs text-ion-3">
+                  <p className="text-sm font-medium text-ink-300">{error.surface}</p>
+                  <p className="text-xs text-ink-500">
                     {new Date(error.observedAtIso).toLocaleString("en-US")}
                   </p>
                 </div>
-                <p className="mt-1 text-xs text-ion-3">
+                <p className="mt-1 text-xs text-ink-500">
                   {error.errorKind ?? "unknown"} - {error.modelName}
                   {error.gameId ? ` - game ${error.gameId}` : ""}
                   {error.templateKind ? ` - ${error.templateKind}` : ""}
@@ -109,9 +109,9 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
 
 function Metric({ label, value }: { readonly label: string; readonly value: string }): JSX.Element {
   return (
-    <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-ion-white">{value}</p>
+    <div className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-4">
+      <p className="text-[11px] uppercase tracking-wider text-ink-500">{label}</p>
+      <p className="mt-2 text-xl font-semibold text-white">{value}</p>
     </div>
   );
 }
@@ -119,8 +119,8 @@ function Metric({ label, value }: { readonly label: string; readonly value: stri
 function SurfaceRow({ surface }: { readonly surface: ClaudeApiCostSurfaceSummary }): JSX.Element {
   const pct = Number.isFinite(surface.ratio) ? Math.round(surface.ratio * 100) : 100;
   return (
-    <tr className="text-ion-1">
-      <td className="whitespace-nowrap px-4 py-3 font-medium text-ion-white">{surface.surface}</td>
+    <tr className="text-ink-300">
+      <td className="whitespace-nowrap px-4 py-3 font-medium text-white">{surface.surface}</td>
       <td className="whitespace-nowrap px-4 py-3">{formatUsd(surface.spentUsd)}</td>
       <td className="whitespace-nowrap px-4 py-3">{formatUsd(surface.budgetUsd)}</td>
       <td className="whitespace-nowrap px-4 py-3">{pct}%</td>

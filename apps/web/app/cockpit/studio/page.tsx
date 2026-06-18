@@ -18,16 +18,16 @@ export default async function CockpitStudioPage({
             <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
               Galaxy Studio
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-ion-white">Creator Asset Workspace</h1>
+            <h1 className="mt-1 text-2xl font-bold text-white">Creator Asset Workspace</h1>
           </div>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-1 hover:bg-carbon/60"
+            className="rounded-lg border border-white/[0.06] px-3 py-1.5 text-xs text-ink-300 hover:bg-white/[0.03]"
           >
             Back to Jarvis
           </Link>
         </div>
-        <p className="max-w-3xl text-sm text-ion-2">
+        <p className="max-w-3xl text-sm text-ink-400">
           Build cited, scanner-checked creator drafts from one Game Intelligence Room.
           Exports stay manual by design; there is no external posting action in Studio.
         </p>

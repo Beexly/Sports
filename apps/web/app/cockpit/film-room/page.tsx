@@ -24,24 +24,24 @@ export default async function FilmRoomPage() {
   const masterReady = genEnabled && spendApproved;
 
   return (
-    <div className="min-h-screen bg-obsidian/60 px-4 py-10 sm:px-6 lg:px-8 text-ion-1">
+    <div className="min-h-screen bg-obsidian/60 px-4 py-10 sm:px-6 lg:px-8 text-ink-300">
       <div className="mx-auto max-w-5xl">
         <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Cockpit · Visual Production</p>
-        <h1 className="mt-1.5 text-3xl font-bold text-ion-white">Film Room</h1>
-        <p className="mt-2 max-w-2xl text-sm text-ion-2">
+        <h1 className="mt-1.5 text-3xl font-bold text-white">Film Room</h1>
+        <p className="mt-2 max-w-2xl text-sm text-ink-400">
           Generate atmosphere. Render truth. Paid generation is blocked by default — every claim, stat, label, and
           disclosure is app-rendered on top of any generated media. Nothing here spends until both master switches are on
           and an asset passes its checklist.
         </p>
 
         {/* Master spend gate */}
-        <div className={`mt-6 rounded-xl border p-4 text-sm ${masterReady ? "border-amber-700/50 bg-amber-950/20" : "border-titanium/40 bg-eclipse/40"}`}>
-          <p className="font-semibold text-ion-white">Master spend gate</p>
+        <div className={`mt-6 rounded-xl border p-4 text-sm ${masterReady ? "border-amber-700/50 bg-amber-950/20" : "border-white/[0.06] bg-white/[0.04]/40"}`}>
+          <p className="font-semibold text-white">Master spend gate</p>
           <ul className="mt-2 space-y-1 text-xs">
             <li>HIGGSFIELD_GENERATION_ENABLED: <span className={genEnabled ? "text-amber-300" : "text-verify"}>{genEnabled ? "ON" : "off (blocked)"}</span></li>
             <li>OWNER_VISUAL_SPEND_APPROVED: <span className={spendApproved ? "text-amber-300" : "text-verify"}>{spendApproved ? "ON" : "off (blocked)"}</span></li>
           </ul>
-          <p className="mt-2 text-xs text-ion-2">
+          <p className="mt-2 text-xs text-ink-400">
             {masterReady
               ? "Master gate OPEN — individual assets still need their own checklist + per-asset owner approval."
               : "Master gate CLOSED — no credit can be spent. Set both env flags to enable, then approve per asset."}
@@ -53,14 +53,14 @@ export default async function FilmRoomPage() {
           {WORLD_SLATE.map((a) => {
             const decision = evaluateGeneration(a);
             return (
-              <div key={a.id} className="rounded-xl border border-titanium/40 bg-eclipse/40 p-5">
+              <div key={a.id} className="rounded-xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
-                    <h2 className="text-base font-semibold text-ion-white">{a.title}</h2>
-                    <p className="text-xs text-ion-3">{a.surface} · {a.provider} · {a.mediaKind}</p>
+                    <h2 className="text-base font-semibold text-white">{a.title}</h2>
+                    <p className="text-xs text-ink-500">{a.surface} · {a.provider} · {a.mediaKind}</p>
                   </div>
                   <div className="text-right">
-                    <span className="rounded-full border border-titanium/40 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide text-ion-1">
+                    <span className="rounded-full border border-white/[0.06] px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide text-ink-300">
                       score {a.priorityScore} · {decision.band.replace(/_/g, " ")}
                     </span>
                     <p className={`mt-1 text-[11px] font-semibold ${decision.allowed ? "text-amber-300" : "text-verify"}`}>
@@ -68,15 +68,15 @@ export default async function FilmRoomPage() {
                     </p>
                   </div>
                 </div>
-                <p className="mt-3 text-sm text-ion-1"><span className="text-ion-3">Truth: </span>{a.productTruth}</p>
-                <p className="mt-1 text-sm text-ion-2"><span className="text-ion-3">Atmosphere: </span>{a.metaphor}</p>
-                <p className="mt-1 text-xs text-ion-3"><span className="text-ion-3">Overlay (app-rendered): </span>{a.overlayPlan}</p>
-                <p className="mt-1 text-xs text-ion-3"><span className="text-ion-3">Reduced-motion: </span>{a.reducedMotionFallback}</p>
-                <p className="mt-1 text-xs text-ion-3"><span className="text-ion-3">Reuse: </span>{a.plannedReuseCount}× — {a.reusePlan}</p>
+                <p className="mt-3 text-sm text-ink-300"><span className="text-ink-500">Truth: </span>{a.productTruth}</p>
+                <p className="mt-1 text-sm text-ink-400"><span className="text-ink-500">Atmosphere: </span>{a.metaphor}</p>
+                <p className="mt-1 text-xs text-ink-500"><span className="text-ink-500">Overlay (app-rendered): </span>{a.overlayPlan}</p>
+                <p className="mt-1 text-xs text-ink-500"><span className="text-ink-500">Reduced-motion: </span>{a.reducedMotionFallback}</p>
+                <p className="mt-1 text-xs text-ink-500"><span className="text-ink-500">Reuse: </span>{a.plannedReuseCount}× — {a.reusePlan}</p>
                 {decision.blockers.length > 0 && (
                   <details className="mt-3">
-                    <summary className="cursor-pointer text-xs font-semibold text-ion-1">Why it's blocked ({decision.blockers.length})</summary>
-                    <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-ion-2">
+                    <summary className="cursor-pointer text-xs font-semibold text-ink-300">Why it's blocked ({decision.blockers.length})</summary>
+                    <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-ink-400">
                       {decision.blockers.map((b) => <li key={b}>{b}</li>)}
                     </ul>
                   </details>

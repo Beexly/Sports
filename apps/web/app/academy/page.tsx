@@ -115,8 +115,8 @@ export default function AcademyPage() {
               <AcademyCourseSectionBody />
             </Reveal>
             <Reveal delay={90}>
-              <div className="mt-6 rounded-2xl border border-mineral bg-eclipse/40 p-5">
-                <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+              <div className="mt-6 rounded-2xl p-5" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(8,6,20,0.5)" }}>
+                <p className="text-xs font-semibold uppercase tracking-widest text-ink-400">
                   How should we explain things?
                 </p>
                 <p className="mt-1 text-sm text-ink-300">

@@ -200,7 +200,7 @@ export default function NflHousePage() {
                   key={door.href + door.name}
                   href={door.href}
                   data-testid="house-door"
-                  className="group flex flex-col rounded-2xl border border-mineral bg-eclipse/50 p-5 transition hover:border-mineral-hi hover:bg-eclipse/80"
+                  className="group flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.04]/50 p-5 transition hover:border-white/[0.08]-hi hover:bg-white/[0.04]/80"
                 >
                   <span
                     className="text-[10px] font-semibold uppercase tracking-[0.16em]"
@@ -208,14 +208,14 @@ export default function NflHousePage() {
                   >
                     {door.whose}
                   </span>
-                  <span className="mt-2 font-display text-xl text-ion-white">
+                  <span className="mt-2 font-display text-xl text-white">
                     {door.name}
                   </span>
-                  <span className="mt-3 flex-1 text-sm leading-relaxed text-ion-1">
+                  <span className="mt-3 flex-1 text-sm leading-relaxed text-ink-300">
                     {door.promise}
                   </span>
                   <span
-                    className="mt-4 text-xs font-semibold uppercase tracking-wider text-ion-2 transition group-hover:text-ion-white"
+                    className="mt-4 text-xs font-semibold uppercase tracking-wider text-ink-400 transition group-hover:text-white"
                     aria-hidden="true"
                   >
                     Enter →
@@ -281,7 +281,7 @@ export default function NflHousePage() {
               {WEEK_RHYTHM.map((slot, i) => (
                 <div
                   key={`${slot.day}-${i}`}
-                  className="rounded-xl border border-mineral/70 bg-carbon/60 p-4"
+                  className="rounded-xl border border-white/[0.08]/70 bg-white/[0.03] p-4"
                 >
                   <p
                     className="font-numerals text-xs font-semibold uppercase tracking-[0.18em]"
@@ -289,7 +289,7 @@ export default function NflHousePage() {
                   >
                     {slot.day}
                   </p>
-                  <p className="mt-2 text-sm leading-snug text-ion-1">{slot.beat}</p>
+                  <p className="mt-2 text-sm leading-snug text-ink-300">{slot.beat}</p>
                 </div>
               ))}
             </Stagger>
@@ -303,7 +303,7 @@ export default function NflHousePage() {
         >
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[3fr_2fr]">
             <Reveal>
-              <div className="h-full rounded-2xl border border-mineral bg-eclipse/50 p-7">
+              <div className="h-full rounded-2xl border border-white/[0.08] bg-white/[0.04]/50 p-7">
                 <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
                   House rules
                 </p>
@@ -311,7 +311,7 @@ export default function NflHousePage() {
                   {HOUSE_RULES.map((rule) => (
                     <li
                       key={rule}
-                      className="flex gap-3 text-sm leading-relaxed text-ion-1"
+                      className="flex gap-3 text-sm leading-relaxed text-ink-300"
                     >
                       <span
                         aria-hidden="true"
@@ -325,21 +325,21 @@ export default function NflHousePage() {
                 </ul>
                 <p
                   data-testid="house-culture-line"
-                  className="mt-7 border-t border-mineral/60 pt-5 text-base font-semibold text-ion-white"
+                  className="mt-7 border-t border-white/[0.08]/60 pt-5 text-base font-semibold text-white"
                 >
                   We do not force action. We protect decision quality.
                 </p>
               </div>
             </Reveal>
             <Reveal delay={120}>
-              <div className="flex h-full flex-col rounded-2xl border border-mineral bg-carbon/60 p-7">
+              <div className="flex h-full flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] p-7">
                 <p className="eyebrow" style={{ color: BRAND_COLORS.ionMagenta }}>
                   The Sunday Couch
                 </p>
-                <h3 className="mt-3 font-display text-xl text-ion-white">
+                <h3 className="mt-3 font-display text-xl text-white">
                   Live rooms open when we can protect them.
                 </h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-ion-1">
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-300">
                   A real game-day room — watching together, reacting together,
                   asking &ldquo;what just happened?&rdquo; together — is coming.
                   We open that door only after the safeguards are real: human

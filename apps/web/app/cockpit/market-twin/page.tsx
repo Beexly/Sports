@@ -41,7 +41,7 @@ const POSTURE_META: Readonly<
   },
   QUIET: {
     label: "Quiet",
-    chip: "border-titanium/50 bg-obsidian/40 text-ion-3",
+    chip: "border-white/[0.10]/50 bg-obsidian/40 text-ink-500",
     dot: "bg-ion-3/50",
     blurb: "No book coverage yet — nothing to read here.",
   },
@@ -126,15 +126,15 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-3">
         <div className="flex items-center justify-between gap-3">
-          <h1 className="text-2xl font-bold text-ion-white">Market Twin</h1>
+          <h1 className="text-2xl font-bold text-white">Market Twin</h1>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-2 hover:border-titanium/70 hover:bg-carbon/60"
+            className="rounded-lg border border-white/[0.06] px-3 py-1.5 text-xs text-ink-400 hover:border-white/[0.10]/70 hover:bg-white/[0.03]"
           >
             ← Back to Jarvis
           </Link>
         </div>
-        <p className="max-w-2xl text-sm leading-relaxed text-ion-2">
+        <p className="max-w-2xl text-sm leading-relaxed text-ink-400">
           A read-only mirror of where the betting market sits for each upcoming game — so you can
           see at a glance which boards are stable enough to score, which are still moving, and which
           we can&apos;t read yet. It&apos;s not a pick, and it&apos;s never published.
@@ -142,8 +142,8 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
       </header>
 
       {/* Legend = explanation + live counts in one bucket */}
-      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4">
-        <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">
+      <section className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4">
+        <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
           How to read this
         </p>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -151,11 +151,11 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
             <div key={p} className="flex items-start gap-2.5">
               <span className={`mt-1 h-2 w-2 flex-shrink-0 rounded-full ${POSTURE_META[p].dot}`} />
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-ion-white">
+                <p className="text-xs font-semibold text-white">
                   {POSTURE_META[p].label}
-                  <span className="ml-2 font-mono tabular-nums text-ion-3">{counts[p]}</span>
+                  <span className="ml-2 font-mono tabular-nums text-ink-500">{counts[p]}</span>
                 </p>
-                <p className="mt-0.5 text-[11px] leading-snug text-ion-2">{POSTURE_META[p].blurb}</p>
+                <p className="mt-0.5 text-[11px] leading-snug text-ink-400">{POSTURE_META[p].blurb}</p>
               </div>
             </div>
           ))}
@@ -163,7 +163,7 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
       </section>
 
       {rows.length === 0 ? (
-        <div className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-6 text-sm text-ion-3">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-6 text-sm text-ink-500">
           No upcoming games in the next 7 days.
         </div>
       ) : (
@@ -171,17 +171,17 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
           {rows.map((row) => (
             <li
               key={row.gameId}
-              className="flex flex-col gap-3 rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 transition-colors hover:border-titanium/70"
+              className="flex flex-col gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4 transition-colors hover:border-white/[0.10]/70"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] uppercase tracking-wide text-ion-3">
+                    <span className="font-mono text-[10px] uppercase tracking-wide text-ink-500">
                       {row.sport}
                     </span>
-                    <span className="text-[10px] text-ion-3">· starts {fromNow(row.commenceTime)}</span>
+                    <span className="text-[10px] text-ink-500">· starts {fromNow(row.commenceTime)}</span>
                   </div>
-                  <h2 className="text-base font-semibold text-ion-white">{row.matchup}</h2>
+                  <h2 className="text-base font-semibold text-white">{row.matchup}</h2>
                 </div>
                 <span
                   className={`rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${POSTURE_META[row.posture].chip}`}
@@ -189,7 +189,7 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
                   {POSTURE_META[row.posture].label}
                 </span>
               </div>
-              <dl className="grid grid-cols-2 gap-2 text-xs text-ion-2 md:grid-cols-3">
+              <dl className="grid grid-cols-2 gap-2 text-xs text-ink-400 md:grid-cols-3">
                 <Metric
                   label="Line move"
                   value={
@@ -215,8 +215,8 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="font-mono text-[10px] uppercase tracking-wide text-ion-3">{label}</span>
-      <span className="text-sm font-medium text-ion-1">{value}</span>
+      <span className="font-mono text-[10px] uppercase tracking-wide text-ink-500">{label}</span>
+      <span className="text-sm font-medium text-ink-300">{value}</span>
     </div>
   );
 }

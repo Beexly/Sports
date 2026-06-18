@@ -33,7 +33,7 @@ export default async function Page() {
         <ScoreRing score={61} label="King Standard Score" size={140} />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Reality Check</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Reality Check</h2>
         <InsightCard
           eyebrow="Audit Status Legend"
           headline="What these categories mean"
@@ -49,7 +49,7 @@ export default async function Page() {
         />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Highest-Impact Missing Data</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Highest-Impact Missing Data</h2>
         <div className="grid gap-4 md:grid-cols-3">
           {c.missing_high_impact.slice(0, 5).map((lane, idx) => (
             <InsightCard
@@ -89,7 +89,7 @@ export default async function Page() {
         />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Merge Readiness</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Merge Readiness</h2>
         <InsightCard
           eyebrow="Merge Readiness"
           headline="Ship as foundation — do not market as finished"

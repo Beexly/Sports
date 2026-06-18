@@ -137,18 +137,18 @@ export default async function CockpitContentPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-brand-400">
           Ava · Content workflow
         </p>
-        <h1 className="text-2xl font-bold text-ion-white">Content drafts</h1>
-        <p className="mt-1 text-sm text-ion-3">
+        <h1 className="text-2xl font-bold text-white">Content drafts</h1>
+        <p className="mt-1 text-sm text-ink-500">
           Drafts only. No part of this surface publishes externally, posts
           to social, or sends user communications.
         </p>
       </header>
 
-      <section data-testid="content-draft-queue" className="rounded-xl border border-titanium/40 bg-eclipse/40 p-5">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section data-testid="content-draft-queue" className="rounded-xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Draft queue · Phase 8 content engine
         </h2>
-        <p className="mb-3 text-[11px] text-ion-3">
+        <p className="mb-3 text-[11px] text-ink-500">
           Performance gate is currently{" "}
           {gates.canExposePerformanceStats ? (
             <span className="text-green-400">ON</span>
@@ -159,7 +159,7 @@ export default async function CockpitContentPage() {
           visibility while it is OFF.
         </p>
         {drafts.length === 0 ? (
-          <p className="text-xs text-ion-3">
+          <p className="text-xs text-ink-500">
             No drafts in the queue yet. Drafts are created by the content
             engine builders (<code>apps/web/lib/content-engine</code>) and
             seeded by <code>db:seed</code>. They never auto-publish.
@@ -167,7 +167,7 @@ export default async function CockpitContentPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px] text-left text-xs">
-              <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
+              <thead className="border-b border-white/[0.06] text-[10px] uppercase tracking-widest text-ink-500">
                 <tr>
                   <th className="py-2 pr-3">Title</th>
                   <th className="py-2 pr-3">Type</th>
@@ -182,8 +182,8 @@ export default async function CockpitContentPage() {
               </thead>
               <tbody>
                 {drafts.map((d) => (
-                  <tr key={d.id} data-testid={`content-draft-row-${d.slug}`} className="border-b border-titanium/40 align-top text-ion-1">
-                    <td className="py-2 pr-3 font-semibold text-ion-white">{d.title}</td>
+                  <tr key={d.id} data-testid={`content-draft-row-${d.slug}`} className="border-b border-white/[0.06] align-top text-ink-300">
+                    <td className="py-2 pr-3 font-semibold text-white">{d.title}</td>
                     <td className="py-2 pr-3">{d.contentType}</td>
                     <td className="py-2 pr-3">{d.status}</td>
                     <td className="py-2 pr-3">{d.sourceCoverageStatus}</td>
@@ -203,10 +203,10 @@ export default async function CockpitContentPage() {
           </div>
         )}
         {drafts.length > 0 && (
-          <ul data-testid="content-blockers-list" className="mt-4 space-y-2 text-[11px] text-ion-2">
+          <ul data-testid="content-blockers-list" className="mt-4 space-y-2 text-[11px] text-ink-400">
             {drafts.map((d) => (
               <li key={`blockers-${d.id}`}>
-                <span className="font-semibold text-ion-1">{d.title}</span>
+                <span className="font-semibold text-ink-300">{d.title}</span>
                 {" — "}
                 {d.verdict.blockers.length > 0 ? d.verdict.blockers.join(" · ") : `Next: ${d.verdict.nextRecommendedAction}`}
               </li>
@@ -215,12 +215,12 @@ export default async function CockpitContentPage() {
         )}
       </section>
 
-      <section className="rounded-xl border border-titanium/40 bg-eclipse/40 p-5">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section className="rounded-xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Templates the engine is allowed to emit
         </h2>
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
+          <thead className="border-b border-white/[0.06] text-[10px] uppercase tracking-widest text-ink-500">
             <tr>
               <th className="py-2 pr-3">Template</th>
               <th className="py-2 pr-3">Type</th>
@@ -234,10 +234,10 @@ export default async function CockpitContentPage() {
           </thead>
           <tbody>
             {templates.map((t) => (
-              <tr key={t.key} className="border-b border-titanium/40 align-top text-ion-1">
-                <td className="py-2 pr-3 font-semibold text-ion-white">{t.title}</td>
+              <tr key={t.key} className="border-b border-white/[0.06] align-top text-ink-300">
+                <td className="py-2 pr-3 font-semibold text-white">{t.title}</td>
                 <td className="py-2 pr-3">{t.contentType}</td>
-                <td className="py-2 pr-3 text-ion-2">{t.requiredSources.join(", ")}</td>
+                <td className="py-2 pr-3 text-ink-400">{t.requiredSources.join(", ")}</td>
                 <td className="py-2 pr-3">{t.requiresPerformanceGate ? "PERF" : "—"}</td>
                 <td className="py-2 pr-3">{t.requiresResponsibleGaming ? "yes" : "—"}</td>
                 <td className="py-2 pr-3">{t.requiresAffiliateDisclosure ? "yes" : "—"}</td>
@@ -249,12 +249,12 @@ export default async function CockpitContentPage() {
         </table>
       </section>
 
-      <section className="rounded-xl border border-titanium/40 bg-eclipse/40 p-5">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section className="rounded-xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Legacy content policy
         </h2>
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
+          <thead className="border-b border-white/[0.06] text-[10px] uppercase tracking-widest text-ink-500">
             <tr>
               <th className="py-2 pr-3">Kind</th>
               <th className="py-2 pr-3">Required sources</th>
@@ -267,9 +267,9 @@ export default async function CockpitContentPage() {
             {listContentKinds().map((kind) => {
               const p = CONTENT_POLICIES[kind];
               return (
-                <tr key={kind} className="border-b border-titanium/40 align-top text-ion-1">
+                <tr key={kind} className="border-b border-white/[0.06] align-top text-ink-300">
                   <td className="py-2 pr-3">{kind}</td>
-                  <td className="py-2 pr-3 text-ion-2">{p.requiredCategories.join(", ")}</td>
+                  <td className="py-2 pr-3 text-ink-400">{p.requiredCategories.join(", ")}</td>
                   <td className="py-2 pr-3">{p.requiresPerformanceGate ? "PERF" : "—"}</td>
                   <td className="py-2 pr-3">{p.requiresPromotionDisclosure ? "Disclosure" : "—"}</td>
                   <td className="py-2 pr-3">{p.requiresRgNote ? "Required" : "—"}</td>
@@ -280,15 +280,15 @@ export default async function CockpitContentPage() {
         </table>
       </section>
 
-      <section className="rounded-xl border border-titanium/40 bg-eclipse/40 p-5">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-3">
+      <section className="rounded-xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink-500">
           Legacy media queue (CockpitMediaItem)
         </h2>
         {legacy.length === 0 ? (
-          <p className="text-xs text-ion-3">No legacy media items.</p>
+          <p className="text-xs text-ink-500">No legacy media items.</p>
         ) : (
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
+            <thead className="border-b border-white/[0.06] text-[10px] uppercase tracking-widest text-ink-500">
               <tr>
                 <th className="py-2 pr-3">Title</th>
                 <th className="py-2 pr-3">Channel</th>
@@ -299,8 +299,8 @@ export default async function CockpitContentPage() {
             </thead>
             <tbody>
               {legacy.map((d) => (
-                <tr key={d.id} className="border-b border-titanium/40 align-top text-ion-1">
-                  <td className="py-2 pr-3 font-semibold text-ion-white">{d.briefTitle}</td>
+                <tr key={d.id} className="border-b border-white/[0.06] align-top text-ink-300">
+                  <td className="py-2 pr-3 font-semibold text-white">{d.briefTitle}</td>
                   <td className="py-2 pr-3">{d.channel}</td>
                   <td className="py-2 pr-3">{d.qaStatus}</td>
                   <td className="py-2 pr-3">{d.complianceStatus}</td>

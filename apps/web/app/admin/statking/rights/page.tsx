@@ -23,11 +23,11 @@ export default async function Page({ searchParams }: { searchParams?: { status?:
         { label: "Blocked", value: report.blocked_count ?? 0 },
         { label: "Policy", value: "gated" }
       ]} />
-      <p className="text-ion-1 mb-4">
+      <p className="text-ink-300 mb-4">
         Rights gates prevent metadata-only, license-required, partner-required, and blocked sources from feeding active metrics.
       </p>
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Filter by rights status</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-ink-400 mb-3">Filter by rights status</p>
         <FilterBar
           options={[
             { label: "All", value: "all" },
@@ -40,7 +40,7 @@ export default async function Page({ searchParams }: { searchParams?: { status?:
         />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">All Rights Records</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">All Rights Records</h2>
         <div className="mb-3 flex flex-wrap gap-2">
           {filtered.slice(0, 50).map((r, i) => {
             const rs = String(r.rights_status ?? "");

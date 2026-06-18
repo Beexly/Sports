@@ -34,7 +34,7 @@ function Card({ card, featured }: { card: BriefingCard; featured?: boolean }) {
           P{card.priority}
         </span>
       </div>
-      <h3 className={`mt-3 font-semibold text-ion-white ${featured ? "font-display text-2xl sm:text-3xl" : "text-base"}`}>{card.headline}</h3>
+      <h3 className={`mt-3 font-semibold text-white ${featured ? "font-display text-2xl sm:text-3xl" : "text-base"}`}>{card.headline}</h3>
       <p className={`mt-2 flex-1 leading-relaxed text-ink-300 ${featured ? "text-base" : "text-sm"}`}>{card.detail}</p>
       <span aria-hidden className="mt-4 inline-flex items-center gap-1 text-sm font-medium transition-transform duration-200 group-hover:translate-x-1" style={{ color: card.accent }}>
         {card.action} →

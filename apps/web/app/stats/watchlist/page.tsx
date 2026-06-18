@@ -51,15 +51,15 @@ export default function Page() {
             <a
               key={p.player_id}
               href={"/stats/player/" + p.player_id}
-              className="flex items-center justify-between border border-mineral bg-eclipse p-3 hover:border-orbital-cyan transition-colors"
+              className="flex items-center justify-between border border-white/[0.08] bg-white/[0.04] p-3 hover:border-orbital-cyan transition-colors"
             >
               <div>
-                <p className="font-semibold text-ion-white">{String(p.name ?? "")}</p>
-                <p className="text-xs text-ion-2">{String(p.team ?? "")} · {String(p.position ?? "")}</p>
+                <p className="font-semibold text-white">{String(p.name ?? "")}</p>
+                <p className="text-xs text-ink-400">{String(p.team ?? "")} · {String(p.position ?? "")}</p>
               </div>
               <div className="text-right">
                 <p className="text-orbital-cyan font-mono text-sm">{Number(p.hidden_value_score ?? 0)}</p>
-                <p className="text-xs text-ion-2">{String(a?.archetype ?? "—")}</p>
+                <p className="text-xs text-ink-400">{String(a?.archetype ?? "—")}</p>
               </div>
             </a>
           );

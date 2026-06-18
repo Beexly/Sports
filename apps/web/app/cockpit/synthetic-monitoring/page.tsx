@@ -12,7 +12,7 @@ const STATUS_STYLES: Readonly<Record<SyntheticCheckStatus, string>> = {
   passing: "border-emerald-500/30 bg-emerald-950/40 text-emerald-200",
   warn: "border-yellow-500/30 bg-yellow-950/40 text-yellow-200",
   failing: "border-red-500/30 bg-red-950/50 text-red-200",
-  pending: "border-titanium/40 bg-eclipse/70 text-ion-2",
+  pending: "border-white/[0.06] bg-white/[0.04]/70 text-ink-400",
 };
 
 const SEVERITY_STYLES: Readonly<Record<SyntheticSeverity, string>> = {
@@ -32,16 +32,16 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
             <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
               Synthetic Monitoring
             </p>
-            <h1 className="mt-1 text-2xl font-bold text-ion-white">Production Verification Runner</h1>
+            <h1 className="mt-1 text-2xl font-bold text-white">Production Verification Runner</h1>
           </div>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-1 hover:bg-carbon/60"
+            className="rounded-lg border border-white/[0.06] px-3 py-1.5 text-xs text-ink-300 hover:bg-white/[0.03]"
           >
             Back to Jarvis
           </Link>
         </div>
-        <p className="max-w-3xl text-sm text-ion-2">
+        <p className="max-w-3xl text-sm text-ink-400">
           Continuous checks for public routes, positioning language, data freshness, trust gates,
           draft-only content surfaces, and build integrity.
         </p>
@@ -57,15 +57,15 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
 
       <section className="grid gap-4">
         {dashboard.categories.map((category) => (
-          <div key={category.id} className="rounded-lg border border-titanium/40 bg-obsidian/60">
-            <div className="border-b border-titanium/40 px-4 py-3">
+          <div key={category.id} className="rounded-lg border border-white/[0.06] bg-obsidian/60">
+            <div className="border-b border-white/[0.06] px-4 py-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-sm font-semibold text-ion-white">{category.name}</h2>
-                <p className="text-[11px] uppercase tracking-wider text-ion-3">
+                <h2 className="text-sm font-semibold text-white">{category.name}</h2>
+                <p className="text-[11px] uppercase tracking-wider text-ink-500">
                   {category.checks.length} checks
                 </p>
               </div>
-              <p className="mt-1 text-xs text-ion-3">{category.description}</p>
+              <p className="mt-1 text-xs text-ink-500">{category.description}</p>
             </div>
             <div className="divide-y divide-titanium/30">
               {category.checks.map((check) => (
@@ -77,30 +77,30 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-          <h2 className="text-sm font-semibold text-ion-white">Auto-Filed Issues</h2>
+        <div className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-4">
+          <h2 className="text-sm font-semibold text-white">Auto-Filed Issues</h2>
           {dashboard.issues.length === 0 ? (
-            <p className="mt-3 text-sm text-ion-3">No synthetic monitoring issues filed.</p>
+            <p className="mt-3 text-sm text-ink-500">No synthetic monitoring issues filed.</p>
           ) : (
             <div className="mt-3 grid gap-2">
               {dashboard.issues.map((issue) => (
                 <Link
                   key={issue.id}
                   href={issue.sourcePath}
-                  className="rounded-md border border-titanium/40 bg-eclipse/50 p-3 hover:bg-carbon/60"
+                  className="rounded-md border border-white/[0.06] bg-white/[0.04]/50 p-3 hover:bg-white/[0.03]"
                 >
                   <p className={`text-xs font-semibold ${SEVERITY_STYLES[issue.severity]}`}>
                     {issue.severity}
                   </p>
-                  <p className="mt-1 text-sm text-ion-1">{issue.title}</p>
+                  <p className="mt-1 text-sm text-ink-300">{issue.title}</p>
                 </Link>
               ))}
             </div>
           )}
         </div>
 
-        <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-          <h2 className="text-sm font-semibold text-ion-white">Configuration</h2>
+        <div className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-4">
+          <h2 className="text-sm font-semibold text-white">Configuration</h2>
           <dl className="mt-3 grid gap-2 text-sm">
             <ConfigRow label="Enabled" value={dashboard.config.enabled ? "true" : "false"} />
             <ConfigRow label="Cadence" value={`${dashboard.config.cadenceMinutes} minutes`} />
@@ -111,9 +111,9 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
         </div>
       </section>
 
-      <section className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-        <h2 className="text-sm font-semibold text-ion-white">Manual Actions</h2>
-        <p className="mt-2 text-sm text-ion-3">
+      <section className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-4">
+        <h2 className="text-sm font-semibold text-white">Manual Actions</h2>
+        <p className="mt-2 text-sm text-ink-500">
           The scheduled runner writes durable history. Manual controls stay disabled until a server
           action can append a decision-log entry and run checks with the production environment.
           Pausing will require a decision-log entry before the control becomes active.
@@ -124,7 +124,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
               key={label}
               type="button"
               disabled
-              className="rounded-lg border border-titanium/40 px-3 py-2 text-xs text-ion-3"
+              className="rounded-lg border border-white/[0.06] px-3 py-2 text-xs text-ink-500"
             >
               {label}
             </button>
@@ -137,9 +137,9 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
 
 function Metric({ label, value }: { readonly label: string; readonly value: string }): JSX.Element {
   return (
-    <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-2 truncate text-xl font-semibold text-ion-white">{value}</p>
+    <div className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-4">
+      <p className="text-[11px] uppercase tracking-wider text-ink-500">{label}</p>
+      <p className="mt-2 truncate text-xl font-semibold text-white">{value}</p>
     </div>
   );
 }
@@ -148,14 +148,14 @@ function CheckRow({ check }: { readonly check: SyntheticCheck }): JSX.Element {
   return (
     <div className="grid gap-3 px-4 py-3 lg:grid-cols-[110px_1fr_128px_160px] lg:items-center">
       <div>
-        <p className="font-mono text-xs font-semibold text-ion-1">{check.id}</p>
+        <p className="font-mono text-xs font-semibold text-ink-300">{check.id}</p>
         <p className={`mt-1 text-[11px] font-semibold ${SEVERITY_STYLES[check.severity]}`}>
           {check.severity}
         </p>
       </div>
       <div>
-        <p className="text-sm font-medium text-ion-white">{check.label}</p>
-        <p className="mt-1 text-xs text-ion-3">{check.detail}</p>
+        <p className="text-sm font-medium text-white">{check.label}</p>
+        <p className="mt-1 text-xs text-ink-500">{check.detail}</p>
       </div>
       <div>
         <span className={`inline-flex rounded-full border px-2 py-1 text-[11px] ${STATUS_STYLES[check.status]}`}>
@@ -164,7 +164,7 @@ function CheckRow({ check }: { readonly check: SyntheticCheck }): JSX.Element {
       </div>
       <div>
         <Sparkline history={check.history} />
-        <p className="mt-1 text-[11px] text-ion-3">{formatDate(check.lastRunIso)}</p>
+        <p className="mt-1 text-[11px] text-ink-500">{formatDate(check.lastRunIso)}</p>
       </div>
     </div>
   );
@@ -186,9 +186,9 @@ function Sparkline({ history }: { readonly history: readonly SyntheticCheckStatu
 
 function ConfigRow({ label, value }: { readonly label: string; readonly value: string }): JSX.Element {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-md bg-eclipse/40 px-3 py-2">
-      <dt className="text-ion-3">{label}</dt>
-      <dd className="max-w-[16rem] truncate text-right text-ion-1">{value}</dd>
+    <div className="flex items-center justify-between gap-3 rounded-md bg-white/[0.04]/40 px-3 py-2">
+      <dt className="text-ink-500">{label}</dt>
+      <dd className="max-w-[16rem] truncate text-right text-ink-300">{value}</dd>
     </div>
   );
 }
@@ -197,7 +197,7 @@ function sparkColor(status: SyntheticCheckStatus): string {
   if (status === "passing") return "bg-emerald-500";
   if (status === "warn") return "bg-yellow-400";
   if (status === "failing") return "bg-red-500";
-  return "bg-titanium/40";
+  return "bg-white/[0.04]";
 }
 
 function formatDate(value: string | null): string {

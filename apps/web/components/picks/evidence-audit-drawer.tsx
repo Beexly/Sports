@@ -137,10 +137,10 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
       <button
         type="button"
         onClick={handleOpen}
-        className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full border border-ion-blue/30 bg-ion-blue/5 px-4 py-2 text-[11px] font-medium tracking-wide text-ion-blue/90 transition hover:border-ion-blue/50 hover:bg-ion-blue/10 hover:text-ion-blue-glow sm:w-auto"
+        className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full border border-orbital-cyan/30 bg-orbital-cyan/5 px-4 py-2 text-[11px] font-medium tracking-wide text-orbital-cyan/90 transition hover:border-orbital-cyan/50 hover:bg-orbital-cyan/10 hover:text-orbital-cyan-glow sm:w-auto"
         aria-label="Open evidence audit for this pick"
       >
-        <span aria-hidden="true" className="text-ion-blue/80">⌬</span>
+        <span aria-hidden="true" className="text-orbital-cyan/80">⌬</span>
         {label ?? "View evidence"}
       </button>
 
@@ -161,17 +161,17 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
 
           {/* Drawer */}
           <aside
-            className="relative ml-auto flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-titanium bg-obsidian text-ion-white shadow-2xl motion-safe:animate-[slideInRight_180ms_ease-out]"
+            className="relative ml-auto flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-white/[0.10] bg-obsidian text-white shadow-2xl motion-safe:animate-[slideInRight_180ms_ease-out]"
           >
-            <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-titanium bg-obsidian/95 px-6 py-5 backdrop-blur">
+            <header className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-white/[0.10] bg-obsidian/95 px-6 py-5 backdrop-blur">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-ion-blue/80">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-orbital-cyan/80">
                   Galaxy Sports Edge
                 </p>
                 <h2 className="mt-1 text-xl font-semibold tracking-tight text-white">
                   Evidence audit
                 </h2>
-                <p className="mt-1 text-xs text-ion-2">
+                <p className="mt-1 text-xs text-ink-400">
                   Every signal, every snapshot, every hash. No fabrications.
                 </p>
               </div>
@@ -179,7 +179,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
                 ref={closeBtnRef}
                 type="button"
                 onClick={handleClose}
-                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md p-2 text-ion-2 transition hover:bg-titanium hover:text-white"
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md p-2 text-ink-400 transition hover:bg-white/[0.08] hover:text-white"
                 aria-label="Close"
               >
                 <svg
@@ -220,7 +220,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
               )}
             </div>
 
-            <footer className="border-t border-titanium px-6 py-4 text-[11px] leading-relaxed text-ion-1">
+            <footer className="border-t border-white/[0.10] px-6 py-4 text-[11px] leading-relaxed text-ink-300">
               Snapshots are SHA-256 hashed at ingestion. Hash prefixes are
               shown for operator verification; raw payload bytes remain
               server-side.
@@ -260,10 +260,10 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
 function DrawerSkeleton() {
   return (
     <div className="space-y-4">
-      <div className="h-3 w-24 animate-pulse rounded bg-titanium" />
-      <div className="h-20 animate-pulse rounded-lg bg-titanium/60" />
-      <div className="h-3 w-32 animate-pulse rounded bg-titanium" />
-      <div className="h-40 animate-pulse rounded-lg bg-titanium/60" />
+      <div className="h-3 w-24 animate-pulse rounded bg-white/[0.08]" />
+      <div className="h-20 animate-pulse rounded-lg bg-white/[0.06]" />
+      <div className="h-3 w-32 animate-pulse rounded bg-white/[0.08]" />
+      <div className="h-40 animate-pulse rounded-lg bg-white/[0.06]" />
     </div>
   );
 }
@@ -313,9 +313,9 @@ function SummaryAudit({
           />
         </div>
         {audit.mostRecentSnapshotProvider && (
-          <p className="mt-3 text-[11px] uppercase tracking-wider text-ion-1">
+          <p className="mt-3 text-[11px] uppercase tracking-wider text-ink-300">
             Most recent provider:{" "}
-            <span className="text-ion-1">
+            <span className="text-ink-300">
               {audit.mostRecentSnapshotProvider}
             </span>
           </p>
@@ -440,13 +440,13 @@ function DetailedAudit({
           {audit.signalCategories.map((row) => (
             <li
               key={row.category}
-              className="flex items-start justify-between gap-3 rounded-md border border-titanium bg-carbon/50 px-3 py-2"
+              className="flex items-start justify-between gap-3 rounded-md border border-white/[0.10] bg-white/[0.03] px-3 py-2"
             >
               <div>
-                <p className="text-[13px] font-medium text-ion-white">
+                <p className="text-[13px] font-medium text-white">
                   {row.category}
                 </p>
-                <p className="text-[11px] text-ion-1">{row.description}</p>
+                <p className="text-[11px] text-ink-300">{row.description}</p>
               </div>
               <SignalStatusBadge status={row.status} />
             </li>
@@ -457,7 +457,7 @@ function DetailedAudit({
       <section>
         <SectionHeader title="Source snapshots" />
         {audit.sourceSnapshots.length === 0 ? (
-          <p className="mt-3 text-xs text-ion-1">
+          <p className="mt-3 text-xs text-ink-300">
             No SourceSnapshot rows recorded for this pick's game window.
           </p>
         ) : (
@@ -465,17 +465,17 @@ function DetailedAudit({
             {audit.sourceSnapshots.map((snap) => (
               <li
                 key={snap.id}
-                className="rounded-md border border-titanium bg-carbon/50 px-3 py-2 text-[11px] leading-relaxed"
+                className="rounded-md border border-white/[0.10] bg-white/[0.03] px-3 py-2 text-[11px] leading-relaxed"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-medium text-ion-1">
+                  <span className="font-medium text-ink-300">
                     {snap.provider}
                   </span>
-                  <span className="text-[10px] uppercase tracking-wider text-ion-blue/70">
+                  <span className="text-[10px] uppercase tracking-wider text-orbital-cyan/70">
                     {snap.sourceKind}
                   </span>
                 </div>
-                <div className="mt-1 grid grid-cols-2 gap-x-3 text-ion-2">
+                <div className="mt-1 grid grid-cols-2 gap-x-3 text-ink-400">
                   <span>
                     {new Date(snap.fetchedAt).toLocaleString("en-US", {
                       month: "short",
@@ -489,7 +489,7 @@ function DetailedAudit({
                     {snap.payloadBytes.toLocaleString()} bytes
                   </span>
                 </div>
-                <div className="mt-1 font-mono text-[10px] text-ion-1">
+                <div className="mt-1 font-mono text-[10px] text-ink-300">
                   sha256:{snap.payloadHashPrefix}…
                 </div>
               </li>
@@ -523,18 +523,18 @@ function PremortemPanel({ preMortem }: { preMortem: PickPremortemNote | null }) 
   if (!preMortem) return null;
 
   return (
-    <section className="rounded-lg border border-ion-blue/35 bg-ion-blue/5 p-4">
+    <section className="rounded-lg border border-orbital-cyan/35 bg-orbital-cyan/5 p-4">
       <SectionHeader title="What would change the read" />
       <h4 className="mt-3 text-sm font-semibold text-white">
         {preMortem.headline}
       </h4>
-      <p className="mt-2 text-xs leading-5 text-ion-blue/75">
+      <p className="mt-2 text-xs leading-5 text-orbital-cyan/75">
         {preMortem.summary}
       </p>
       {preMortem.riskDrivers.length > 0 && (
         <ul className="mt-3 space-y-1.5">
           {preMortem.riskDrivers.map((driver) => (
-            <li key={driver} className="text-xs leading-5 text-ion-1">
+            <li key={driver} className="text-xs leading-5 text-ink-300">
               {driver}
             </li>
           ))}
@@ -551,7 +551,7 @@ function PremortemPanel({ preMortem }: { preMortem: PickPremortemNote | null }) 
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ion-blue/80">
+    <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-orbital-cyan/80">
       {title}
     </h3>
   );
@@ -567,13 +567,13 @@ function Stat({
   accent?: "cyan";
 }) {
   return (
-    <div className="rounded-md border border-titanium bg-carbon/50 px-3 py-2">
-      <p className="text-[10px] uppercase tracking-wider text-ion-1">
+    <div className="rounded-md border border-white/[0.10] bg-white/[0.03] px-3 py-2">
+      <p className="text-[10px] uppercase tracking-wider text-ink-300">
         {label}
       </p>
       <p
         className={`mt-1 text-lg font-semibold tracking-tight ${
-          accent === "cyan" ? "text-ion-blue-glow" : "text-white"
+          accent === "cyan" ? "text-orbital-cyan-glow" : "text-white"
         }`}
       >
         {value}
@@ -584,10 +584,10 @@ function Stat({
 
 function Row({ k, v, mono }: { k: string; v: string; mono?: boolean }) {
   return (
-    <div className="flex items-baseline justify-between gap-3 border-b border-titanium pb-1.5 last:border-0">
-      <dt className="text-ion-1">{k}</dt>
+    <div className="flex items-baseline justify-between gap-3 border-b border-white/[0.10] pb-1.5 last:border-0">
+      <dt className="text-ink-300">{k}</dt>
       <dd
-        className={`text-right text-ion-white ${
+        className={`text-right text-white ${
           mono ? "font-mono text-[11px]" : ""
         }`}
       >
@@ -607,7 +607,7 @@ function SignalStatusBadge({
       ? "border-verify/50 bg-verify/10 text-verify"
       : status === "SHADOW"
       ? "border-ultraviolet/50 bg-ultraviolet/10 text-ultraviolet-glow"
-      : "border-titanium bg-carbon text-ion-1";
+      : "border-white/[0.10] bg-white/[0.03] text-ink-300";
 
   const label =
     status === "LIVE" ? "Live" : status === "SHADOW" ? "Shadow" : "Absent";
@@ -648,7 +648,7 @@ function formatClockNumber(
 
 const FRAGILITY_BAND_STYLES: Record<FragilityView["band"], string> = {
   low: "border-verify/50 bg-verify/10 text-verify",
-  moderate: "border-ion-blue/50 bg-ion-blue/10 text-ion-blue",
+  moderate: "border-orbital-cyan/50 bg-orbital-cyan/10 text-orbital-cyan",
   high: "border-ultraviolet/50 bg-ultraviolet/10 text-ultraviolet-glow",
   severe: "border-plasma/50 bg-plasma/10 text-plasma",
 };
@@ -661,7 +661,7 @@ function FragilityPanel({ fragility }: { fragility: FragilityView | null }) {
       <div className="mt-3 flex items-baseline gap-3">
         <span className="font-numerals text-2xl font-semibold tabular-nums text-white">
           {fragility.score}
-          <span className="text-sm font-normal text-ion-1"> / 100</span>
+          <span className="text-sm font-normal text-ink-300"> / 100</span>
         </span>
         <span
           className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${FRAGILITY_BAND_STYLES[fragility.band]}`}

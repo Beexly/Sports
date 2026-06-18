@@ -25,7 +25,7 @@ const SURFACES: ReadonlyArray<{ title: string; href: string; desc: string; tag: 
 
 export function IntelligenceLayer() {
   return (
-    <section className="border-b border-mineral px-4 py-20 sm:px-6 lg:px-8" aria-labelledby="layer-heading">
+    <section className="border-b border-white/[0.08] px-4 py-20 sm:px-6 lg:px-8" aria-labelledby="layer-heading">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>

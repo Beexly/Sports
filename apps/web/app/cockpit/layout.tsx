@@ -101,13 +101,13 @@ export default async function CockpitLayout({
         <p className="rounded-md bg-yellow-900/40 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-yellow-300">
           Cockpit · Operators only
         </p>
-        <h1 className="text-2xl font-bold text-ion-white">This flight deck needs an operator badge.</h1>
-        <p className="max-w-md text-sm text-ion-2">
+        <h1 className="text-2xl font-bold text-white">This flight deck needs an operator badge.</h1>
+        <p className="max-w-md text-sm text-ink-400">
           You&apos;re signed in as {session.user.email ?? "a member"}, but this account doesn&apos;t
           have operator access. If this is your platform, grant your email the operator role
           (ADMIN_EMAILS) and reload.
         </p>
-        <Link href="/" className="rounded-lg border border-titanium/40 px-4 py-2 text-xs text-ion-1 hover:bg-carbon/60">
+        <Link href="/" className="rounded-lg border border-white/[0.06] px-4 py-2 text-xs text-ink-300 hover:bg-white/[0.03]">
           ← Back to the Galaxy
         </Link>
       </div>
@@ -116,7 +116,7 @@ export default async function CockpitLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian/60">
-      <header className="border-b border-titanium/40 bg-obsidian/90 backdrop-blur-sm">
+      <header className="border-b border-white/[0.06] bg-obsidian/90 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <span
@@ -125,7 +125,7 @@ export default async function CockpitLayout({
             >
               Cockpit · Internal
             </span>
-            <span className="text-sm text-ion-3">Sports Intelligence OS</span>
+            <span className="text-sm text-ink-500">Sports Intelligence OS</span>
             {!adminEmailsConfigured && (
               <span
                 className="rounded-md border border-amber-700/60 bg-amber-900/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-amber-300"
@@ -135,8 +135,8 @@ export default async function CockpitLayout({
               </span>
             )}
           </div>
-          <div className="text-xs text-ion-3">
-            Signed in as <span className="text-ion-1">{session.user.email}</span>
+          <div className="text-xs text-ink-500">
+            Signed in as <span className="text-ink-300">{session.user.email}</span>
           </div>
         </div>
       </header>

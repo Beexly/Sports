@@ -61,16 +61,16 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
   })).filter((item) => item.count > 0);
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
+    <div className="min-h-screen w-full overflow-x-hidden bg-white/[0.03] text-ion">
       <Nav />
       <main id="main-content">
-        <section className="border-b border-mineral px-4 py-10 sm:px-6 lg:px-8">
+        <section className="border-b border-white/[0.08] px-4 py-10 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <div>
-              <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+              <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-white sm:text-6xl">
                 Source control for the engine.
               </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
+              <p className="mt-5 max-w-2xl text-base leading-7 text-ink-300">
                 Every useful sports product starts here: what feeds exist, what they cost,
                 what is actually wired, what still needs a key, and what cannot be touched
                 until the legal boundary is explicit.
@@ -81,14 +81,14 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
                 </Link>
                 <Link
                   href="/board"
-                  className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
+                  className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-white/[0.08] px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-white"
                 >
                   View public board
                 </Link>
               </div>
             </div>
 
-            <div className="grid gap-px overflow-hidden border border-mineral bg-mineral sm:grid-cols-2">
+            <div className="grid gap-px overflow-hidden border border-white/[0.08] bg-mineral sm:grid-cols-2">
               <SummaryTile label="Structured feeds" value={String(PUBLIC_DATA_SOURCES.length)} detail="API, file, or adapter-backed sources tracked for model inputs." />
               <SummaryTile label="Context feeds" value={String(CONTEXT_INTELLIGENCE_SOURCES.length)} detail="Owned, licensed, or permission-gated intelligence workflows." />
               <SummaryTile label="Env providers live" value={`${providerSummary.configured}/${providerSummary.total}`} detail="Configured means an env slot is filled. Values are never printed." />
@@ -97,32 +97,32 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        <section className="border-b border-mineral px-4 py-10 sm:px-6 lg:px-8">
+        <section className="border-b border-white/[0.08] px-4 py-10 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Readiness distribution
               </p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
+              <h2 className="mt-3 font-display text-3xl font-semibold text-white sm:text-4xl">
                 The ledger separates code, keys, consent, and rows.
               </h2>
-              <p className="mt-4 text-sm leading-6 text-ion-1">
+              <p className="mt-4 text-sm leading-6 text-ink-300">
                 A source being listed here does not mean it is populated. Adapter-ready means
                 code can fetch. Wired means the product can call it. Permission-required means
                 no automated ingestion should run.
               </p>
             </div>
-            <div className="grid gap-px overflow-hidden border border-mineral bg-mineral md:grid-cols-2">
-              <div className="bg-eclipse p-5">
-                <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-ion-white">By status</h3>
+            <div className="grid gap-px overflow-hidden border border-white/[0.08] bg-mineral md:grid-cols-2">
+              <div className="bg-white/[0.04] p-5">
+                <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-white">By status</h3>
                 <div className="mt-4 space-y-3">
                   {sourceStatusCounts.map((item) => (
                     <CountRow key={item.status} label={sourceStatusLabel(item.status)} value={item.count} />
                   ))}
                 </div>
               </div>
-              <div className="bg-eclipse p-5">
-                <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-ion-white">By cost</h3>
+              <div className="bg-white/[0.04] p-5">
+                <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-white">By cost</h3>
                 <div className="mt-4 space-y-3">
                   {sourceCostCounts.map((item) => (
                     <CountRow key={item.cost} label={sourceCostLabel(item.cost)} value={item.count} />
@@ -133,24 +133,24 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        <section className="border-b border-mineral px-4 py-10 sm:px-6 lg:px-8">
+        <section className="border-b border-white/[0.08] px-4 py-10 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                   Live source proof
                 </p>
-                <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
+                <h2 className="mt-2 font-display text-3xl font-semibold text-white sm:text-4xl">
                   Row counts are evidence, not permission to score.
                 </h2>
               </div>
-              <p className="max-w-xl text-sm leading-6 text-ion-1">
+              <p className="max-w-xl text-sm leading-6 text-ink-300">
                 These counts come from read-only nflverse release assets and public JSON evidence routes.
                 The gates below stay closed until persistence, backtests, and model review exist.
               </p>
             </div>
 
-            <div className="mt-6 grid gap-px overflow-hidden border border-mineral bg-mineral md:grid-cols-2 xl:grid-cols-5">
+            <div className="mt-6 grid gap-px overflow-hidden border border-white/[0.08] bg-mineral md:grid-cols-2 xl:grid-cols-5">
               <SummaryTile
                 label="nflverse rows"
                 value={formatNumber(liveEvidence.summary.usagePlayerStatsRows)}
@@ -187,26 +187,26 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        <section className="border-b border-mineral px-4 py-12 sm:px-6 lg:px-8">
+        <section className="border-b border-white/[0.08] px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                   Source stack
                 </p>
-                <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
+                <h2 className="mt-2 font-display text-3xl font-semibold text-white sm:text-4xl">
                   What the engine can eventually know
                 </h2>
               </div>
-              <p className="max-w-xl text-sm leading-6 text-ion-1">
+              <p className="max-w-xl text-sm leading-6 text-ink-300">
                 The table is intentionally explicit. It distinguishes free feeds from owned workflows,
                 paid overlays, licensed sources, and references that require consent before use.
               </p>
             </div>
 
-            <div className="mt-6 overflow-x-auto border border-mineral">
+            <div className="mt-6 overflow-x-auto border border-white/[0.08]">
               <table className="w-full min-w-[980px] text-left text-sm">
-                <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                <thead className="border-b border-white/[0.08] bg-white/[0.04] font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
                   <tr>
                     <th className="px-4 py-3">Source</th>
                     <th className="px-4 py-3">Cost</th>
@@ -217,7 +217,7 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
                     <th className="px-4 py-3">Boundary</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-mineral bg-carbon">
+                <tbody className="divide-y divide-mineral bg-white/[0.03]">
                   {DATA_SOURCE_STACK.map((source) => (
                     <SourceTableRow key={source.key} source={source} evidence={evidenceByKey.get(source.key)} />
                   ))}
@@ -227,24 +227,24 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        <section className="border-b border-mineral px-4 py-12 sm:px-6 lg:px-8">
+        <section className="border-b border-white/[0.08] px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1fr_1fr]">
-            <div className="border border-mineral bg-eclipse p-5">
+            <div className="border border-white/[0.08] bg-white/[0.04] p-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Trend dependencies
               </p>
-              <h2 className="mt-2 text-2xl font-semibold text-ion-white">Questions need source coverage.</h2>
-              <div className="mt-5 flex flex-col divide-y divide-mineral border border-mineral">
+              <h2 className="mt-2 text-2xl font-semibold text-white">Questions need source coverage.</h2>
+              <div className="mt-5 flex flex-col divide-y divide-mineral border border-white/[0.08]">
                 {TREND_BACKLOG.map((item) => (
                   <div key={item.key} className="p-4">
                     <div className="flex flex-col justify-between gap-2 sm:flex-row">
-                      <p className="font-semibold text-ion-white">{item.title}</p>
+                      <p className="font-semibold text-white">{item.title}</p>
                       <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-orbital-cyan">
                         {item.status.replaceAll("-", " ")}
                       </p>
                     </div>
-                    <p className="mt-2 text-sm leading-6 text-ion-1">{item.question}</p>
-                    <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                    <p className="mt-2 text-sm leading-6 text-ink-300">{item.question}</p>
+                    <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
                       {item.requiredSources.join(" + ")}
                     </p>
                   </div>
@@ -252,22 +252,22 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
               </div>
             </div>
 
-            <div className="border border-mineral bg-eclipse p-5">
+            <div className="border border-white/[0.08] bg-white/[0.04] p-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Env provider gates
               </p>
-              <h2 className="mt-2 text-2xl font-semibold text-ion-white">Keys enable capability, not claims.</h2>
-              <p className="mt-3 text-sm leading-6 text-ion-1">
+              <h2 className="mt-2 text-2xl font-semibold text-white">Keys enable capability, not claims.</h2>
+              <p className="mt-3 text-sm leading-6 text-ink-300">
                 This list reads whether env slots are filled. It never prints secret values and
                 does not imply the database has real rows.
               </p>
               <div className="mt-5 space-y-3">
                 {providers.map((provider) => (
-                  <div key={provider.key} className="border border-mineral bg-carbon p-4">
+                  <div key={provider.key} className="border border-white/[0.08] bg-white/[0.03] p-4">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div>
-                        <p className="font-semibold text-ion-white">{provider.name}</p>
-                        <p className="mt-1 text-xs uppercase tracking-[0.14em] text-ion-2">
+                        <p className="font-semibold text-white">{provider.name}</p>
+                        <p className="mt-1 text-xs uppercase tracking-[0.14em] text-ink-400">
                           {CATEGORY_LABEL[provider.category]}
                         </p>
                       </div>
@@ -275,10 +275,10 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
                         {provider.configured ? "configured" : "founder gated"}
                       </p>
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-ion-1">{provider.unlocks}</p>
-                    <div className="mt-3 flex flex-col gap-2 border-t border-mineral pt-3 sm:flex-row sm:items-center sm:justify-between">
-                      <code className="font-mono text-[11px] text-ion-2">{provider.envVar}</code>
-                      <p className="text-xs leading-5 text-ion-2">{provider.note}</p>
+                    <p className="mt-3 text-sm leading-6 text-ink-300">{provider.unlocks}</p>
+                    <div className="mt-3 flex flex-col gap-2 border-t border-white/[0.08] pt-3 sm:flex-row sm:items-center sm:justify-between">
+                      <code className="font-mono text-[11px] text-ink-400">{provider.envVar}</code>
+                      <p className="text-xs leading-5 text-ink-400">{provider.note}</p>
                     </div>
                   </div>
                 ))}
@@ -288,18 +288,18 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
         </section>
 
         <section className="px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl border border-mineral bg-eclipse p-5 sm:p-7">
-            <h2 className="text-2xl font-semibold text-ion-white">Permission is part of the architecture.</h2>
-            <p className="mt-3 text-sm leading-6 text-ion-1">
+          <div className="mx-auto max-w-5xl border border-white/[0.08] bg-white/[0.04] p-5 sm:p-7">
+            <h2 className="text-2xl font-semibold text-white">Permission is part of the architecture.</h2>
+            <p className="mt-3 text-sm leading-6 text-ink-300">
               Scores24, satellite-radio transcripts, paid charting, and reporter networks can be valuable
               only when they are licensed, consented, or reduced to lawful references. The engine should
               prefer free public datasets and owned workflows first, then pay only where a source compounds.
             </p>
             <div className="mt-5 grid gap-3 md:grid-cols-2">
               {DATA_SOURCE_STACK.filter((source) => source.complianceNote).map((source) => (
-                <div key={source.key} className="border border-mineral bg-carbon p-4">
-                  <p className="font-semibold text-ion-white">{source.name}</p>
-                  <p className="mt-2 text-sm leading-6 text-ion-1">{source.complianceNote}</p>
+                <div key={source.key} className="border border-white/[0.08] bg-white/[0.03] p-4">
+                  <p className="font-semibold text-white">{source.name}</p>
+                  <p className="mt-2 text-sm leading-6 text-ink-300">{source.complianceNote}</p>
                 </div>
               ))}
             </div>
@@ -328,10 +328,10 @@ function formatScientific(value: number | null): string {
 
 function SummaryTile({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {
   return (
-    <div className="bg-eclipse p-5">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{label}</p>
+    <div className="bg-white/[0.04] p-5">
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">{label}</p>
       <p className="mt-3 font-numerals text-4xl font-semibold tabular-nums text-orbital-cyan">{value}</p>
-      <p className="mt-3 text-sm leading-6 text-ion-1">{detail}</p>
+      <p className="mt-3 text-sm leading-6 text-ink-300">{detail}</p>
     </div>
   );
 }
@@ -340,7 +340,7 @@ function EvidenceLink({ href, label }: { href: string; label: string }): JSX.Ele
   return (
     <Link
       href={href}
-      className="border border-mineral bg-eclipse px-4 py-3 text-sm font-semibold text-ion-white hover:border-orbital-cyan"
+      className="border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm font-semibold text-white hover:border-orbital-cyan"
     >
       {label}
     </Link>
@@ -356,7 +356,7 @@ function SourceTableRow({
 }): JSX.Element {
   return (
     <tr>
-      <td className="px-4 py-3 font-semibold text-ion-white">{source.name}</td>
+      <td className="px-4 py-3 font-semibold text-white">{source.name}</td>
       <td className="px-4 py-3 font-mono text-orbital-cyan">{sourceCostLabel(source.cost)}</td>
       <td className="px-4 py-3 font-mono text-ion">{sourceStatusLabel(source.status)}</td>
       <td className="px-4 py-3">
@@ -365,21 +365,21 @@ function SourceTableRow({
             {evidence.status} / {formatNumber(evidence.rowCount)}
           </Link>
         ) : (
-          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-ion-2">UNKNOWN</span>
+          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-400">UNKNOWN</span>
         )}
       </td>
-      <td className="px-4 py-3 text-ion-1">{source.grain}</td>
-      <td className="px-4 py-3 text-ion-1">{source.unlocks}</td>
-      <td className="px-4 py-3 text-ion-2">{source.complianceNote ?? source.liveClaim}</td>
+      <td className="px-4 py-3 text-ink-300">{source.grain}</td>
+      <td className="px-4 py-3 text-ink-300">{source.unlocks}</td>
+      <td className="px-4 py-3 text-ink-400">{source.complianceNote ?? source.liveClaim}</td>
     </tr>
   );
 }
 
 function CountRow({ label, value }: { label: string; value: number }): JSX.Element {
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-mineral pb-2 last:border-b-0 last:pb-0">
-      <span className="text-sm text-ion-1">{label}</span>
-      <span className="font-numerals text-xl font-semibold text-ion-white">{value}</span>
+    <div className="flex items-center justify-between gap-4 border-b border-white/[0.08] pb-2 last:border-b-0 last:pb-0">
+      <span className="text-sm text-ink-300">{label}</span>
+      <span className="font-numerals text-xl font-semibold text-white">{value}</span>
     </div>
   );
 }

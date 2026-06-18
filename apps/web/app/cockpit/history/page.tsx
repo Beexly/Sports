@@ -178,11 +178,11 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       )}
       <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-ion-white">Historical pick ledger</h1>
-          <p className="mt-1 text-sm text-ion-3">
+          <h1 className="text-2xl font-bold text-white">Historical pick ledger</h1>
+          <p className="mt-1 text-sm text-ink-500">
             Last {TAKE} picks (descending by generatedAt). Filter to inspect
             eligibility, settlement, and snapshot coverage. Use the{" "}
-            <span className="text-ion-1">Source</span> filter to isolate
+            <span className="text-ink-300">Source</span> filter to isolate
             seed-data picks ({" "}
             <code className="rounded bg-obsidian/70 px-1 py-0.5 text-[10px]">
               modelVersion = v5.0.0-seed
@@ -201,13 +201,13 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
               const qs = new URLSearchParams(searchParams as Record<string, string>);
               return `/api/cockpit/history/export${qs.toString() ? `?${qs.toString()}` : ""}`;
             })()}
-            className="self-start rounded-lg border border-titanium/40 bg-eclipse/50 px-3 py-1.5 text-xs font-semibold text-ion-1 transition-colors hover:border-brand-700 hover:bg-brand-900/40 hover:text-brand-100 sm:self-end focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950"
+            className="self-start rounded-lg border border-white/[0.06] bg-white/[0.04]/50 px-3 py-1.5 text-xs font-semibold text-ink-300 transition-colors hover:border-brand-700 hover:bg-brand-900/40 hover:text-brand-100 sm:self-end focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950"
             download
             aria-label="Download the current ledger view as CSV (admin only)"
           >
             Export CSV (current filters)
           </a>
-          <span className="text-[10px] uppercase tracking-widest text-ion-3">
+          <span className="text-[10px] uppercase tracking-widest text-ink-500">
             Admin only — do not share the export URL
           </span>
         </div>
@@ -216,17 +216,17 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       {/* Roll-up bar */}
       <section
         data-testid="history-rollup"
-        className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4"
+        className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4"
       >
         <div className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-6">
           <Stat label="Showing" value={String(visibleCount)} />
           <Stat label="Public-eligible" value={String(eligibleCount)} accent="text-green-400" />
           <Stat label="Learning-eligible" value={String(learningCount)} accent="text-brand-400" />
-          <Stat label="With snapshot" value={String(snapshotCount)} accent="text-ion-1" />
+          <Stat label="With snapshot" value={String(snapshotCount)} accent="text-ink-300" />
           <Stat label="Wins / Losses" value={`${byResult.WIN} / ${byResult.LOSS}`} />
-          <Stat label="Push / Void / Pend" value={`${byResult.PUSH} / ${byResult.VOID} / ${byResult.PENDING}`} accent="text-ion-2" />
+          <Stat label="Push / Void / Pend" value={`${byResult.PUSH} / ${byResult.VOID} / ${byResult.PENDING}`} accent="text-ink-400" />
         </div>
-        <p className="mt-3 text-[11px] text-ion-3">
+        <p className="mt-3 text-[11px] text-ink-500">
           Performance gate is currently{" "}
           <span className={gates.canExposePerformanceStats ? "text-green-400" : "text-yellow-300"}>
             {gates.canExposePerformanceStats ? "OPEN" : "CLOSED"}
@@ -238,9 +238,9 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       {/* Publish-readiness checklist */}
       <section
         data-testid="history-publish-readiness"
-        className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4"
+        className="rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4"
       >
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-ink-500">
           Publish-readiness checklist
         </h2>
         {(() => {
@@ -252,7 +252,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
           const readyForGate =
             gates.canExposePerformanceStats === false && gap === 0 && settled > 0;
           return (
-            <div className="mt-3 space-y-3 text-[11px] text-ion-1">
+            <div className="mt-3 space-y-3 text-[11px] text-ink-300">
               <ChecklistRow
                 ok={gates.canPersistCanonicalHistory}
                 label="Canonical history enabled"
@@ -274,7 +274,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 detail={gates.isBootstrapMode ? "Still writing isBootstrap=true picks" : "All new picks canonical"}
               />
               <div className="rounded bg-obsidian/50 px-3 py-2">
-                <div className="flex items-center justify-between text-[10px] uppercase tracking-widest text-ion-3">
+                <div className="flex items-center justify-between text-[10px] uppercase tracking-widest text-ink-500">
                   <span>Progress to sample minimum</span>
                   <span>{pct}%</span>
                 </div>
@@ -288,13 +288,13 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
               {readyForGate && (
                 <p className="rounded border border-green-700/40 bg-green-900/20 px-3 py-2 text-green-300">
                   Ready: sample meets minimum and bootstrap is off. Operator
-                  may flip <code className="rounded bg-eclipse/70 px-1">PERFORMANCE_STATS_ENABLED=true</code>{" "}
+                  may flip <code className="rounded bg-white/[0.04]/70 px-1">PERFORMANCE_STATS_ENABLED=true</code>{" "}
                   when comfortable. The gate flip is the only operator
                   action that changes customer-visible behavior.
                 </p>
               )}
               {!readyForGate && !gates.canExposePerformanceStats && (
-                <p className="text-ion-3">
+                <p className="text-ink-500">
                   Continue accumulating canonical settled picks. The
                   performance gate stays closed until every checklist row
                   above is satisfied.
@@ -319,7 +319,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         className="flex flex-wrap items-center gap-2 text-[11px]"
       >
         <div role="group" aria-label="Filter by result" className="flex flex-wrap items-center gap-2">
-          <span className="text-ion-3">Result:</span>
+          <span className="text-ink-500">Result:</span>
           {RESULT_FILTERS.map((r) => {
             const params = new URLSearchParams(searchParams as Record<string, string>);
             if (r === "ALL") params.delete("result");
@@ -334,8 +334,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active
-                    ? "bg-brand-800 text-ion-white"
-                    : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
+                    ? "bg-brand-800 text-white"
+                    : "bg-obsidian/70 text-ink-400 hover:text-white",
                 ].join(" ")}
               >
                 {r}
@@ -345,7 +345,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         </div>
 
         <div role="group" aria-label="Filter by bootstrap flag" className="ml-3 flex flex-wrap items-center gap-2">
-          <span className="text-ion-3">Bootstrap:</span>
+          <span className="text-ink-500">Bootstrap:</span>
           {(["any", "true", "false"] as const).map((v) => {
             const params = new URLSearchParams(searchParams as Record<string, string>);
             if (v === "any") params.delete("bootstrap");
@@ -360,8 +360,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active
-                    ? "bg-brand-800 text-ion-white"
-                    : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
+                    ? "bg-brand-800 text-white"
+                    : "bg-obsidian/70 text-ink-400 hover:text-white",
                 ].join(" ")}
               >
                 {v}
@@ -371,7 +371,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         </div>
 
         <div role="group" aria-label="Filter by public-performance eligibility" className="ml-3 flex flex-wrap items-center gap-2">
-          <span className="text-ion-3">Eligible:</span>
+          <span className="text-ink-500">Eligible:</span>
           {(["any", "true", "false"] as const).map((v) => {
             const params = new URLSearchParams(searchParams as Record<string, string>);
             if (v === "any") params.delete("eligible");
@@ -386,8 +386,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active
-                    ? "bg-brand-800 text-ion-white"
-                    : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
+                    ? "bg-brand-800 text-white"
+                    : "bg-obsidian/70 text-ink-400 hover:text-white",
                 ].join(" ")}
               >
                 {v}
@@ -397,7 +397,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         </div>
 
         <div role="group" aria-label="Filter by learning eligibility" className="ml-3 flex flex-wrap items-center gap-2">
-          <span className="text-ion-3">Learning:</span>
+          <span className="text-ink-500">Learning:</span>
           {(["any", "true", "false"] as const).map((v) => {
             const params = new URLSearchParams(searchParams as Record<string, string>);
             if (v === "any") params.delete("learning");
@@ -412,8 +412,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active
-                    ? "bg-brand-800 text-ion-white"
-                    : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
+                    ? "bg-brand-800 text-white"
+                    : "bg-obsidian/70 text-ink-400 hover:text-white",
                 ].join(" ")}
               >
                 {v}
@@ -427,7 +427,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
           aria-label="Filter by source: live model vs seed picks"
           className="ml-3 flex flex-wrap items-center gap-2"
         >
-          <span className="text-ion-3">Source:</span>
+          <span className="text-ink-500">Source:</span>
           {(
             [
               { v: "any", label: "any", model: undefined },
@@ -449,8 +449,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
                   active
-                    ? "bg-brand-800 text-ion-white"
-                    : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
+                    ? "bg-brand-800 text-white"
+                    : "bg-obsidian/70 text-ink-400 hover:text-white",
                 ].join(" ")}
               >
                 {entry.label}
@@ -463,10 +463,10 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       {/* Ledger table */}
       <section
         data-testid="history-ledger"
-        className="overflow-x-auto rounded-2xl border border-titanium/40 bg-eclipse/40"
+        className="overflow-x-auto rounded-2xl border border-white/[0.06] bg-white/[0.04]/40"
       >
         <table className="w-full min-w-[1200px] text-[11px]">
-          <thead className="border-b border-titanium/40 bg-obsidian/50 text-left text-[10px] uppercase tracking-widest text-ion-3">
+          <thead className="border-b border-white/[0.06] bg-obsidian/50 text-left text-[10px] uppercase tracking-widest text-ink-500">
             <tr>
               <th className="px-3 py-2">Generated</th>
               <th className="px-3 py-2">Game</th>
@@ -493,7 +493,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
           <tbody>
             {filteredRows.length === 0 ? (
               <tr>
-                <td colSpan={20} className="px-3 py-8 text-center text-ion-3">
+                <td colSpan={20} className="px-3 py-8 text-center text-ink-500">
                   No picks match the current filters.
                 </td>
               </tr>
@@ -502,32 +502,32 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 <tr
                   key={p.id}
                   data-testid={`history-row-${p.id}`}
-                  className="border-b border-titanium/40 align-top hover:bg-carbon/50"
+                  className="border-b border-white/[0.06] align-top hover:bg-white/[0.03]"
                 >
-                  <td className="px-3 py-2 font-mono text-ion-2">
+                  <td className="px-3 py-2 font-mono text-ink-400">
                     {p.generatedAt.toISOString().replace("T", " ").slice(0, 16)}
                   </td>
-                  <td className="px-3 py-2 text-ion-1">
+                  <td className="px-3 py-2 text-ink-300">
                     {p.game.awayTeamName} @ {p.game.homeTeamName}
                   </td>
-                  <td className="px-3 py-2 text-ion-2">{p.game.sport.name}</td>
-                  <td className="px-3 py-2 text-ion-1">{p.pickType}</td>
-                  <td className="px-3 py-2 text-ion-white">{p.selection}</td>
-                  <td className="px-3 py-2 font-mono text-ion-2">{p.line}</td>
-                  <td className="px-3 py-2 font-mono text-ion-1">{p.confidence}</td>
-                  <td className="px-3 py-2 text-ion-1">{p.pickGrade}</td>
-                  <td className="px-3 py-2 text-ion-2">{p.riskLevel}</td>
-                  <td className="px-3 py-2 font-mono text-ion-3">{p.modelVersion}</td>
-                  <td className="px-3 py-2 font-mono text-ion-2">{p.bookmakerCount}</td>
-                  <td className="px-3 py-2 font-mono text-ion-2">{p.edgeScore.toFixed(2)}</td>
-                  <td className="px-3 py-2 font-mono text-ion-2">{(p.consensusPct * 100).toFixed(0)}%</td>
+                  <td className="px-3 py-2 text-ink-400">{p.game.sport.name}</td>
+                  <td className="px-3 py-2 text-ink-300">{p.pickType}</td>
+                  <td className="px-3 py-2 text-white">{p.selection}</td>
+                  <td className="px-3 py-2 font-mono text-ink-400">{p.line}</td>
+                  <td className="px-3 py-2 font-mono text-ink-300">{p.confidence}</td>
+                  <td className="px-3 py-2 text-ink-300">{p.pickGrade}</td>
+                  <td className="px-3 py-2 text-ink-400">{p.riskLevel}</td>
+                  <td className="px-3 py-2 font-mono text-ink-500">{p.modelVersion}</td>
+                  <td className="px-3 py-2 font-mono text-ink-400">{p.bookmakerCount}</td>
+                  <td className="px-3 py-2 font-mono text-ink-400">{p.edgeScore.toFixed(2)}</td>
+                  <td className="px-3 py-2 font-mono text-ink-400">{(p.consensusPct * 100).toFixed(0)}%</td>
                   <td className="px-3 py-2">
                     <ResultBadge result={p.result} />
                   </td>
-                  <td className="px-3 py-2 font-mono text-ion-3">
+                  <td className="px-3 py-2 font-mono text-ink-500">
                     {p.settledAt
                       ? p.settledAt.toISOString().replace("T", " ").slice(0, 16)
-                      : <span className="text-ion-3">—</span>}
+                      : <span className="text-ink-500">—</span>}
                   </td>
                   <td className="px-3 py-2 text-[10px]">
                     {p.isBootstrap && <Flag tone="yellow">bootstrap</Flag>}
@@ -545,12 +545,12 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                     {row.hasSnapshot ? (
                       <span className="text-green-400">yes</span>
                     ) : (
-                      <span className="text-ion-3">none</span>
+                      <span className="text-ink-500">none</span>
                     )}
                   </td>
-                  <td className="px-3 py-2 text-[10px] text-ion-2">
+                  <td className="px-3 py-2 text-[10px] text-ink-400">
                     {eligibility.exclusionReasons.length === 0
-                      ? <span className="text-ion-3">—</span>
+                      ? <span className="text-ink-500">—</span>
                       : eligibility.exclusionReasons.join("; ")}
                   </td>
                 </tr>
@@ -560,10 +560,10 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         </table>
       </section>
 
-      <p className="text-[10px] text-ion-3">
+      <p className="text-[10px] text-ink-500">
         Sourced live from <code className="rounded bg-obsidian/70 px-1">db.pick</code> and{" "}
         <code className="rounded bg-obsidian/70 px-1">db.pickSignalSnapshot</code>. No data is fabricated;
-        missing fields render as <span className="text-ion-3">—</span>.
+        missing fields render as <span className="text-ink-500">—</span>.
       </p>
     </div>
   );
@@ -574,8 +574,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
 function Stat({ label, value, accent }: { label: string; value: string; accent?: string }) {
   return (
     <div>
-      <p className="text-[10px] uppercase tracking-widest text-ion-3">{label}</p>
-      <p className={["mt-0.5 text-lg font-bold", accent ?? "text-ion-white"].join(" ")}>{value}</p>
+      <p className="text-[10px] uppercase tracking-widest text-ink-500">{label}</p>
+      <p className={["mt-0.5 text-lg font-bold", accent ?? "text-white"].join(" ")}>{value}</p>
     </div>
   );
 }
@@ -584,7 +584,7 @@ function ResultBadge({ result }: { result: string }) {
   const tone: Record<string, string> = {
     WIN: "bg-green-900/40 text-green-300",
     LOSS: "bg-red-900/40 text-red-300",
-    PUSH: "bg-obsidian/70 text-ion-1",
+    PUSH: "bg-obsidian/70 text-ink-300",
     VOID: "bg-orange-900/40 text-orange-300",
     PENDING: "bg-yellow-900/30 text-yellow-300",
   };
@@ -592,7 +592,7 @@ function ResultBadge({ result }: { result: string }) {
     <span
       className={[
         "rounded px-1.5 py-0.5 text-[10px] font-semibold",
-        tone[result] ?? "bg-obsidian/70 text-ion-2",
+        tone[result] ?? "bg-obsidian/70 text-ink-400",
       ].join(" ")}
     >
       {result}
@@ -603,7 +603,7 @@ function ResultBadge({ result }: { result: string }) {
 function Flag({ tone, children }: { tone: "yellow" | "gray" | "brand" | "green"; children: React.ReactNode }) {
   const cls: Record<typeof tone, string> = {
     yellow: "bg-yellow-900/40 text-yellow-300",
-    gray: "bg-obsidian/70 text-ion-2",
+    gray: "bg-obsidian/70 text-ink-400",
     brand: "bg-brand-900/40 text-brand-300",
     green: "bg-green-900/40 text-green-300",
   };
@@ -618,6 +618,6 @@ function Yes({ value }: { value: boolean }) {
   return value ? (
     <span className="rounded bg-green-900/40 px-1.5 py-0.5 text-[10px] font-semibold text-green-300">YES</span>
   ) : (
-    <span className="rounded bg-obsidian/70 px-1.5 py-0.5 text-[10px] font-semibold text-ion-2">NO</span>
+    <span className="rounded bg-obsidian/70 px-1.5 py-0.5 text-[10px] font-semibold text-ink-400">NO</span>
   );
 }

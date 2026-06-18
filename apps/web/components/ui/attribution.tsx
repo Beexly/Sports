@@ -19,10 +19,10 @@ export function Attribution({
   return (
     <p
       data-testid="source-attribution"
-      className={`font-mono text-[10px] leading-5 tracking-[0.04em] text-ion-2 ${className}`}
+      className={`font-mono text-[10px] leading-5 tracking-[0.04em] text-ink-400 ${className}`}
     >
       {lines.join("  •  ")}{" "}
-      <a href="/data" className="text-orbital-cyan hover:text-ion-white">
+      <a href="/data" className="text-orbital-cyan hover:text-white">
         How we source data
       </a>
     </p>

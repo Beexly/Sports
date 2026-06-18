@@ -195,7 +195,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
                     >
                       <div>
                         <h3 className="font-semibold text-white">
-                          <Link href={`/room/${row.gameId}`} className="hover:text-ion-blue">
+                          <Link href={`/room/${row.gameId}`} className="hover:text-orbital-cyan">
                             {row.matchup}
                           </Link>
                         </h3>

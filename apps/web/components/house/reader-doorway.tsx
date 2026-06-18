@@ -72,18 +72,18 @@ export function ReaderDoorway() {
                 "rounded-2xl border p-5 text-left transition",
                 active
                   ? "border-orbital-cyan/60 bg-orbital-cyan/10"
-                  : "border-mineral bg-eclipse/50 hover:border-mineral-hi hover:bg-eclipse/80",
+                  : "border-white/[0.08] bg-white/[0.04]/50 hover:border-white/[0.08]-hi hover:bg-white/[0.04]/80",
               ].join(" ")}
             >
               <span
                 className={[
                   "font-display text-lg",
-                  active ? "text-orbital-cyan" : "text-ion-white",
+                  active ? "text-orbital-cyan" : "text-white",
                 ].join(" ")}
               >
                 {EXPLAIN_REGISTER_LABELS[r]}
               </span>
-              <span className="mt-2 block text-sm leading-relaxed text-ion-1">
+              <span className="mt-2 block text-sm leading-relaxed text-ink-300">
                 {DOORWAY_DESCRIPTIONS[r]}
               </span>
             </button>
@@ -92,7 +92,7 @@ export function ReaderDoorway() {
       </div>
       <p
         aria-live="polite"
-        className="mt-3 min-h-5 text-xs uppercase tracking-wider text-ion-2"
+        className="mt-3 min-h-5 text-xs uppercase tracking-wider text-ink-400"
       >
         {saved
           ? "Saved on this device — explanations across Galaxy will meet you there."

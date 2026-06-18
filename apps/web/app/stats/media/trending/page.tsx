@@ -26,14 +26,14 @@ export default function Page() {
         { label: "Platforms", value: new Set(items.map(i => i.platform)).size },
         { label: "Rights", value: "metadata-only" }
       ]} />
-      <p className="text-ion-1">
+      <p className="text-ink-300">
         The players and teams gaining media attention right now, ranked by source trust.
       </p>
       <div className="space-y-3">
         <Badge tone="warn">Metadata only — headlines and mentions, not full content.</Badge>
       </div>
-      <div className="border border-mineral bg-eclipse p-4">
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Most Mentioned Players</p>
+      <div className="border border-white/[0.08] bg-white/[0.04] p-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-ink-400 mb-3">Most Mentioned Players</p>
         <BarChart items={
           [...mentions.entries()]
             .sort((a, b) => b[1] - a[1])
@@ -47,7 +47,7 @@ export default function Page() {
         } />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Top 20 Trending Items</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Top 20 Trending Items</h2>
         <DataTable
           rows={trending.map(i => ({
             platform: String(i.platform ?? ""),

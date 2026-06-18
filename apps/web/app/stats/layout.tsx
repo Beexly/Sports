@@ -29,7 +29,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
         "px-4 py-3 text-sm border-b-2 transition-colors whitespace-nowrap",
         isActive
           ? "border-orbital-cyan text-orbital-cyan"
-          : "border-transparent text-ion-1 hover:text-orbital-cyan hover:border-orbital-cyan",
+          : "border-transparent text-ink-300 hover:text-orbital-cyan hover:border-orbital-cyan",
       ].join(" ")}
     >
       {label}
@@ -40,7 +40,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 export default function StatsLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <nav className="border-b border-mineral bg-eclipse/60 sticky top-0 z-20 backdrop-blur-sm">
+      <nav className="border-b border-white/[0.08] bg-white/[0.04]/60 sticky top-0 z-20 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl overflow-x-auto">
           <div className="flex min-w-max px-4 sm:px-6 lg:px-8">
             {NAV.map(({ label, href }) => (

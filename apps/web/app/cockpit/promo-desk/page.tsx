@@ -30,15 +30,15 @@ export default function PromoDeskPage(): JSX.Element {
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-3">
-          <h1 className="text-2xl font-bold text-ion-white">Promo Desk Operator Registry</h1>
+          <h1 className="text-2xl font-bold text-white">Promo Desk Operator Registry</h1>
           <Link
             href="/cockpit"
-            className="rounded-lg border border-titanium/40 px-3 py-1.5 text-xs text-ion-1 hover:bg-carbon/60"
+            className="rounded-lg border border-white/[0.06] px-3 py-1.5 text-xs text-ink-300 hover:bg-white/[0.03]"
           >
             Back to Jarvis
           </Link>
         </div>
-        <p className="text-sm text-ion-2">
+        <p className="text-sm text-ink-400">
           Operators must be approved here before a promo can publish. New approved partner rows are code-review only.
         </p>
       </header>
@@ -57,7 +57,7 @@ export default function PromoDeskPage(): JSX.Element {
       )}
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-xs uppercase tracking-wide text-ion-3">Registered operators</h2>
+        <h2 className="text-xs uppercase tracking-wide text-ink-500">Registered operators</h2>
         <ul className="flex flex-col gap-2">
           {operators.map((operator) => (
             <OperatorRow key={operator.key} entry={operator} />
@@ -70,20 +70,20 @@ export default function PromoDeskPage(): JSX.Element {
 
 function SummaryCard({ label, value }: { label: string; value: number }): JSX.Element {
   return (
-    <div className="flex flex-col gap-1 rounded-lg border border-titanium/40 bg-obsidian/50 p-3">
-      <span className="text-[10px] uppercase tracking-wide text-ion-3">{label}</span>
-      <span className="text-xl font-bold text-ion-white">{value}</span>
+    <div className="flex flex-col gap-1 rounded-lg border border-white/[0.06] bg-obsidian/50 p-3">
+      <span className="text-[10px] uppercase tracking-wide text-ink-500">{label}</span>
+      <span className="text-xl font-bold text-white">{value}</span>
     </div>
   );
 }
 
 function OperatorRow({ entry }: { entry: OperatorRegistryEntry }): JSX.Element {
   return (
-    <li className="flex flex-col gap-2 rounded-lg border border-titanium/40 bg-obsidian/50 p-3">
+    <li className="flex flex-col gap-2 rounded-lg border border-white/[0.06] bg-obsidian/50 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-3">
-          <span className="text-sm font-semibold text-ion-white">{entry.displayName}</span>
-          <code className="rounded bg-eclipse/70 px-1.5 py-0.5 text-[10px] text-ion-2">
+          <span className="text-sm font-semibold text-white">{entry.displayName}</span>
+          <code className="rounded bg-white/[0.04]/70 px-1.5 py-0.5 text-[10px] text-ink-400">
             {entry.key}
           </code>
         </div>
@@ -91,11 +91,11 @@ function OperatorRow({ entry }: { entry: OperatorRegistryEntry }): JSX.Element {
           {entry.operatorClass.replace(/_/g, " ")}
         </span>
       </div>
-      <div className="flex flex-wrap gap-4 text-[11px] text-ion-2">
-        <span>jurisdiction: <strong className="text-ion-1">{entry.jurisdiction}</strong></span>
-        <span>states: <strong className="text-ion-1">{entry.licensedStates.length || "-"}</strong></span>
-        <span>real: <strong className="text-ion-1">{entry.isReal ? "yes" : "no"}</strong></span>
-        <span>reviewed: <strong className="text-ion-1">{entry.reviewedAt}</strong></span>
+      <div className="flex flex-wrap gap-4 text-[11px] text-ink-400">
+        <span>jurisdiction: <strong className="text-ink-300">{entry.jurisdiction}</strong></span>
+        <span>states: <strong className="text-ink-300">{entry.licensedStates.length || "-"}</strong></span>
+        <span>real: <strong className="text-ink-300">{entry.isReal ? "yes" : "no"}</strong></span>
+        <span>reviewed: <strong className="text-ink-300">{entry.reviewedAt}</strong></span>
       </div>
       {entry.blockedReason && (
         <p className="rounded border border-rose-500/30 bg-rose-500/5 p-2 text-[11px] text-rose-200">

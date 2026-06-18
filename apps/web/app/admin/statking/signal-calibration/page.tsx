@@ -10,7 +10,7 @@ export default async function Page(){
     <Shell title="Signal Calibration" eyebrow="Cockpit · proof">
       <StatusRibbon status="fixture" label="Admin view — fixture snapshot" />
       <Cards items={[{label:"Metrics scored",value:r.metrics.length},{label:"Method",value:"reliability tiers"},{label:"Basis",value:"backtest history"},{label:"Status",value:"honest"}]}/>
-      <p className="text-ion-1">Per-metric reliability — how much weight each signal has earned against history, so calibrated metrics outrank promising-but-unproven ones.</p>
+      <p className="text-ink-300">Per-metric reliability — how much weight each signal has earned against history, so calibrated metrics outrank promising-but-unproven ones.</p>
       <SectionHeader title="Signal Calibration" />
       <DataTable
         rows={r.metrics.map((m: Record<string, unknown>) => ({

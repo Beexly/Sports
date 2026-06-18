@@ -330,7 +330,7 @@ export function BeatTheClose() {
             {round.ticks.slice(0, ticksShown).map((t, i) => (
               <p
                 key={i}
-                className="gse-cine-anim rounded-lg border border-mineral/50 bg-black/30 px-3.5 py-2 font-mono text-xs text-ink-200"
+                className="gse-cine-anim rounded-lg border border-white/[0.08]/50 bg-black/30 px-3.5 py-2 font-mono text-xs text-ink-200"
                 style={{ animation: "gse-boot-line 400ms ease-out both" }}
               >
                 <span style={{ color: t.move < 0 ? mag : t.move > 0 ? cyan : "inherit" }}>
@@ -411,7 +411,7 @@ export function BeatTheClose() {
           </p>
           <ul className="mt-5 max-w-2xl space-y-1.5">
             {results.map((r, i) => (
-              <li key={i} className="flex items-baseline justify-between gap-4 border-b border-mineral/40 py-1.5 font-mono text-xs text-ink-300">
+              <li key={i} className="flex items-baseline justify-between gap-4 border-b border-white/[0.08]/40 py-1.5 font-mono text-xs text-ink-300">
                 <span>{r.matchup}</span>
                 <span>
                   {r.action === "TAKE" && r.locked !== null ? `take ${r.locked.toFixed(1)} → close ${r.close.toFixed(1)}` : `pass → close ${r.close.toFixed(1)}`}

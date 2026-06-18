@@ -40,9 +40,9 @@ export function Term({
       </span>
       <span
         role="tooltip"
-        className="pointer-events-none absolute left-0 top-full z-50 mt-1.5 hidden w-64 rounded-lg border border-titanium/50 bg-obsidian/95 p-3 text-left text-xs font-normal leading-relaxed text-ion-2 shadow-xl group-hover:block group-focus-within:block"
+        className="pointer-events-none absolute left-0 top-full z-50 mt-1.5 hidden w-64 rounded-lg border border-white/[0.10]/50 bg-obsidian/95 p-3 text-left text-xs font-normal leading-relaxed text-ink-400 shadow-xl group-hover:block group-focus-within:block"
       >
-        <span className="block font-semibold text-ion-white">{entry.label}</span>
+        <span className="block font-semibold text-white">{entry.label}</span>
         <span className="mt-1 block">{entry.plain}</span>
       </span>
     </span>

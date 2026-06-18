@@ -21,11 +21,11 @@ export default async function Page() {
       <div className="flex justify-center mb-6">
         <ScoreRing score={61} label="King Standard" size={140} />
       </div>
-      <p className="text-ion-1 mb-6">
+      <p className="text-ink-300 mb-6">
         The King Standard is the honest composite: source trust, coverage, freshness, conflicts, and proof. 61/100 reflects a real foundation with live feeds, licenses, and proof still ahead.
       </p>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">5 Pillars of the King Standard</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">5 Pillars of the King Standard</h2>
         <BarChart items={[
           { label: "Source trust", value: 75, max: 100, tone: "cyan" },
           { label: "Coverage", value: 68, max: 100, tone: "amber" },
@@ -35,7 +35,7 @@ export default async function Page() {
         ]} />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Reality Check</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Reality Check</h2>
         <DataTable
           rows={Object.entries(audit.summary).map(([status, count]) => ({
             status: String(status),
@@ -45,7 +45,7 @@ export default async function Page() {
         />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Page Readiness</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Page Readiness</h2>
         <DataTable
           rows={readiness.pages.map((p: Record<string, unknown>) => ({
             page: String(p.page ?? ""),

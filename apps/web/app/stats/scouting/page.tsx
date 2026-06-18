@@ -26,7 +26,7 @@ export default function Page() {
         tone="good"
       />
       {shown.length === 0 ? (
-        <p className="text-sm text-ion-1 py-6 px-4 border border-mineral bg-eclipse/40 text-center">
+        <p className="text-sm text-ink-300 py-6 px-4 border border-white/[0.08] bg-white/[0.04]/40 text-center">
           No public scouting notes yet — first-party notes will appear here when authored and approved for display.
         </p>
       ) : (
@@ -44,7 +44,7 @@ export default function Page() {
             ))}
           </div>
           <div>
-            <h2 className="text-2xl font-semibold text-ion-white mb-4">All Public Notes</h2>
+            <h2 className="text-2xl font-semibold text-white mb-4">All Public Notes</h2>
             <DataTable
               rows={shown.slice(0, 40).map(n => ({
                 type: String(n.note_type ?? ""),

@@ -53,7 +53,7 @@ export function JarvisDiffBadge({ recent, className }: JarvisDiffBadgeProps) {
       <span
         data-testid="jarvis-diff-badge"
         data-state="unchanged"
-        className={["text-[10px] text-ion-3", className ?? ""].join(" ")}
+        className={["text-[10px] text-ink-500", className ?? ""].join(" ")}
       >
         no change since last assessment
       </span>

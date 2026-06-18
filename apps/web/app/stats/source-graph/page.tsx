@@ -18,11 +18,11 @@ export default function Page() {
         { label: "Moat targets", value: t.top_50_highest_moat_sources.length },
         { label: "License targets", value: t.top_50_requires_license.length }
       ]} />
-      <p className="text-ion-1">
+      <p className="text-ink-300">
         The candidate source graph and lineage behind StatKing intelligence. Prioritized by activation difficulty and impact.
       </p>
-      <div className="border border-mineral bg-eclipse p-4">
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Source Distribution by Category</p>
+      <div className="border border-white/[0.08] bg-white/[0.04] p-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-ink-400 mb-3">Source Distribution by Category</p>
         <BarChart items={[
           { label: "Easiest wins", value: t.top_50_easiest_wins.length, max: 50, tone: "cyan" },
           { label: "Highest moat", value: t.top_50_highest_moat_sources.length, max: 50, tone: "amber" },
@@ -30,7 +30,7 @@ export default function Page() {
         ]} />
       </div>
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Top 25 Easiest Wins</h2>
+        <h2 className="text-2xl font-semibold text-white mb-4">Top 25 Easiest Wins</h2>
         <DataTable
           rows={t.top_50_easiest_wins.slice(0, 25).map((s: Record<string, unknown>) => ({
             source: String(s.name ?? ""),

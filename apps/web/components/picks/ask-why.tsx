@@ -64,7 +64,7 @@ export function AskWhy({ pickId }: { pickId: string }) {
         <div
           role="group"
           aria-label="Explanation depth"
-          className="flex w-fit overflow-hidden rounded-full border border-mineral bg-eclipse/60"
+          className="flex w-fit overflow-hidden rounded-full border border-white/[0.08] bg-white/[0.04]/60"
         >
           {EXPLAIN_REGISTERS.map((r) => (
             <button
@@ -77,7 +77,7 @@ export function AskWhy({ pickId }: { pickId: string }) {
                 "px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide transition disabled:opacity-60",
                 register === r
                   ? "bg-orbital-cyan/15 text-orbital-cyan"
-                  : "text-ion-2 hover:text-ion-1",
+                  : "text-ink-400 hover:text-ink-300",
               ].join(" ")}
             >
               {EXPLAIN_REGISTER_LABELS[r]}
@@ -90,7 +90,7 @@ export function AskWhy({ pickId }: { pickId: string }) {
             type="button"
             onClick={() => void ask(register)}
             disabled={state === "loading"}
-            className="w-fit rounded-full border border-ion-blue/40 bg-ion-blue/10 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-blue transition hover:bg-ion-blue/20 disabled:opacity-60"
+            className="w-fit rounded-full border border-orbital-cyan/40 bg-orbital-cyan/10 px-3 py-1 text-[11px] font-medium tracking-wide text-orbital-cyan transition hover:bg-orbital-cyan/20 disabled:opacity-60"
           >
             {state === "loading" ? "Reading the factors…" : "Ask the model why"}
           </button>
@@ -103,13 +103,13 @@ export function AskWhy({ pickId }: { pickId: string }) {
           className={[
             "rounded-lg border p-3 text-[11px] leading-relaxed",
             state === "done"
-              ? "border-mineral/60 bg-carbon/60 text-ion-1"
-              : "border-alert/30 bg-alert/5 text-ion-1",
+              ? "border-white/[0.08]/60 bg-white/[0.03] text-ink-300"
+              : "border-alert/30 bg-alert/5 text-ink-300",
           ].join(" ")}
         >
           <p className="whitespace-pre-wrap">{text}</p>
           {state === "done" && (
-            <p className="mt-2 text-[9px] uppercase tracking-wide text-ion-3">
+            <p className="mt-2 text-[9px] uppercase tracking-wide text-ink-500">
               Grounded only in this pick&apos;s stored factors &amp; signal snapshot.
             </p>
           )}

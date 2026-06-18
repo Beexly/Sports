@@ -40,13 +40,13 @@ export function SimulationCloud() {
   return (
     <section
       data-testid="simulation-cloud"
-      className="overflow-hidden rounded-2xl border border-titanium bg-gradient-to-br from-eclipse to-carbon"
+      className="overflow-hidden rounded-2xl border border-white/[0.10] bg-gradient-to-br from-eclipse to-carbon"
     >
-      <div className="border-b border-titanium px-6 py-4">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
+      <div className="border-b border-white/[0.10] px-6 py-4">
+        <h2 className="text-sm font-semibold uppercase tracking-widest text-ink-400">
           Simulation cloud — the shape of an outcome
         </h2>
-        <p className="mt-1 text-[11px] text-ion-2">
+        <p className="mt-1 text-[11px] text-ink-400">
           A win probability is one number. The real outcome is a cloud. Set two
           expected scoring-event rates (goals / scoring drives) and watch the distribution of final margins.
           Illustrative — transparent Poisson math, not a game projection.
@@ -77,19 +77,19 @@ export function SimulationCloud() {
               );
             })}
           </div>
-          <div className="mt-2 flex justify-between font-numerals text-[10px] tabular-nums text-ion-3">
+          <div className="mt-2 flex justify-between font-numerals text-[10px] tabular-nums text-ink-500">
             <span>away +10</span>
             <span>pick&apos;em</span>
             <span>home +10</span>
           </div>
-          <p className="mt-3 text-[11px] text-ion-2">
+          <p className="mt-3 text-[11px] text-ink-400">
             Lit bars = the narrowest band holding 80% of outcomes (margin{" "}
-            <span className="font-numerals tabular-nums text-ion-1">
+            <span className="font-numerals tabular-nums text-ink-300">
               {dist.p80Low > 0 ? "+" : ""}
               {dist.p80Low}
             </span>{" "}
             to{" "}
-            <span className="font-numerals tabular-nums text-ion-1">
+            <span className="font-numerals tabular-nums text-ink-300">
               {dist.p80High > 0 ? "+" : ""}
               {dist.p80High}
             </span>
@@ -111,23 +111,23 @@ export function SimulationCloud() {
                   setHome(p.home);
                   setAway(p.away);
                 }}
-                className="rounded-full border border-mineral px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-ion-2 transition hover:border-mineral-hi hover:text-ion-1"
+                className="rounded-full border border-white/[0.08] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-ink-400 transition hover:border-white/[0.08]-hi hover:text-ink-300"
               >
                 {p.label}
               </button>
             ))}
           </div>
 
-          <dl className="grid grid-cols-3 gap-2 border-t border-titanium pt-4 text-center font-numerals tabular-nums">
+          <dl className="grid grid-cols-3 gap-2 border-t border-white/[0.10] pt-4 text-center font-numerals tabular-nums">
             <Readout label="Home win" value={pct(dist.homeWinProb)} tone="text-orbital-cyan" />
-            <Readout label="Tie" value={pct(dist.tieProb)} tone="text-ion-2" />
+            <Readout label="Tie" value={pct(dist.tieProb)} tone="text-ink-400" />
             <Readout label="Away win" value={pct(dist.awayWinProb)} tone="text-plasma" />
           </dl>
         </div>
       </div>
 
-      <div className="border-t border-titanium px-6 py-3">
-        <p className="text-[11px] leading-relaxed text-ion-2">
+      <div className="border-t border-white/[0.10] px-6 py-3">
+        <p className="text-[11px] leading-relaxed text-ink-400">
           Illustrative model on transparent Poisson math. It teaches variance —
           it is not a pick, projection, or live game read.
         </p>
@@ -146,7 +146,7 @@ function RateInput({
   onChange: (v: number) => void;
 }) {
   return (
-    <label className="flex flex-col gap-1 text-[11px] uppercase tracking-wider text-ion-2">
+    <label className="flex flex-col gap-1 text-[11px] uppercase tracking-wider text-ink-400">
       {label}
       <input
         type="number"
@@ -155,7 +155,7 @@ function RateInput({
         step={0.1}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="rounded-lg border border-mineral bg-carbon px-3 py-2 font-numerals text-sm tabular-nums text-ion-white outline-none focus-visible:border-orbital-cyan"
+        className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2 font-numerals text-sm tabular-nums text-white outline-none focus-visible:border-orbital-cyan"
       />
     </label>
   );
@@ -164,7 +164,7 @@ function RateInput({
 function Readout({ label, value, tone }: { label: string; value: string; tone: string }) {
   return (
     <div>
-      <dt className="text-[10px] uppercase tracking-wider text-ion-3">{label}</dt>
+      <dt className="text-[10px] uppercase tracking-wider text-ink-500">{label}</dt>
       <dd className={`mt-0.5 text-sm font-semibold ${tone}`}>{value}</dd>
     </div>
   );

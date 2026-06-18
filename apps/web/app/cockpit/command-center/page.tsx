@@ -26,8 +26,8 @@ export const dynamic = "force-dynamic";
 const URGENCY_STYLES: Record<AttentionUrgency, string> = {
   CRITICAL: "bg-red-950/50 text-red-300 border-red-900/60",
   HIGH: "bg-yellow-950/50 text-yellow-300 border-yellow-900/50",
-  NORMAL: "bg-obsidian/70 text-ion-2 border-titanium/40",
-  LOW: "bg-obsidian/50 text-ion-3 border-titanium/30",
+  NORMAL: "bg-obsidian/70 text-ink-400 border-white/[0.06]",
+  LOW: "bg-obsidian/50 text-ink-500 border-white/[0.10]/30",
 };
 
 const DATA_MODE_STYLES: Record<DataMode, string> = {
@@ -44,19 +44,19 @@ export default async function CommandCenterPage() {
       ? "border-red-900/60 shadow-glow-plasma"
       : feed.overallColor === "GREEN"
         ? "border-accent-900/40"
-        : "border-titanium/60";
+        : "border-white/[0.06]";
 
   return (
     <div data-testid="command-center-page" className="flex flex-col gap-4 pb-8">
       {/* ── Header ─────────────────────────────────────────────────────── */}
-      <header className={["relative overflow-hidden rounded-3xl border bg-carbon/90 px-6 py-5 shadow-2xl shadow-black/30", shell].join(" ")}>
+      <header className={["relative overflow-hidden rounded-3xl border bg-white/[0.03]/90 px-6 py-5 shadow-2xl shadow-black/30", shell].join(" ")}>
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-2">
             <span className="relative h-2 w-2">
               <span className="absolute inset-0 animate-live-pulse rounded-full bg-accent-500" />
               <span className="absolute inset-0 rounded-full bg-accent-500" />
             </span>
-            <h1 className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">
+            <h1 className="font-mono text-[9px] uppercase tracking-[0.18em] text-ink-500">
               Command Center · ranked owner attention
             </h1>
           </div>
@@ -68,20 +68,20 @@ export default async function CommandCenterPage() {
             >
               noFakeLiveData
             </span>
-            <span className="rounded bg-obsidian/80 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-ion-2">
+            <span className="rounded bg-obsidian/80 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-ink-400">
               feed: {feed.dataMode.replace(/_/g, " ")}
             </span>
-            <span className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-ink-500">
               Jarvis {feed.jarvisVersion}
             </span>
           </div>
         </div>
 
-        <p className="text-xl font-medium leading-snug text-ion-white/95 sm:text-2xl">
+        <p className="text-xl font-medium leading-snug text-white/95 sm:text-2xl">
           {feed.headline}
         </p>
 
-        <div data-testid="attention-counts" className="mt-5 grid grid-cols-2 gap-3 border-t border-titanium/30 pt-5 sm:grid-cols-4">
+        <div data-testid="attention-counts" className="mt-5 grid grid-cols-2 gap-3 border-t border-white/[0.10]/30 pt-5 sm:grid-cols-4">
           <CountCell label="Critical" value={feed.counts.critical} accent="red" />
           <CountCell label="High" value={feed.counts.high} accent="amber" />
           <CountCell label="Normal" value={feed.counts.normal} />
@@ -100,11 +100,11 @@ export default async function CommandCenterPage() {
       )}
 
       {/* ── Operating narrative ───────────────────────────────────────── */}
-      <section data-testid="operating-narrative" className="rounded-2xl border border-titanium/40 bg-carbon/80 p-5">
-        <h2 className="mb-1 text-xs font-bold uppercase tracking-widest text-ion-2">
+      <section data-testid="operating-narrative" className="rounded-2xl border border-white/[0.06] bg-white/[0.04] p-5">
+        <h2 className="mb-1 text-xs font-bold uppercase tracking-widest text-ink-400">
           Operating narrative
         </h2>
-        <p className="mb-4 text-sm text-ion-white/90">{feed.narrative.headline}</p>
+        <p className="mb-4 text-sm text-white/90">{feed.narrative.headline}</p>
         <div className="grid gap-4 md:grid-cols-2">
           <NarrativeBlock title="What changed" items={feed.narrative.whatChanged} tone="neutral" />
           <NarrativeBlock title="What's blocked" items={feed.narrative.whatsBlocked} tone="red" />
@@ -117,17 +117,17 @@ export default async function CommandCenterPage() {
       </section>
 
       {/* ── Ranked attention queue ────────────────────────────────────── */}
-      <section data-testid="owner-attention-queue" className="rounded-2xl border border-titanium/40 bg-carbon/80">
-        <div className="flex items-center justify-between border-b border-titanium/30 px-5 py-3">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
+      <section data-testid="owner-attention-queue" className="rounded-2xl border border-white/[0.06] bg-white/[0.04]">
+        <div className="flex items-center justify-between border-b border-white/[0.10]/30 px-5 py-3">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ink-400">
             Owner attention — ranked
           </h2>
-          <span className="font-mono text-[10px] text-ion-3">
+          <span className="font-mono text-[10px] text-ink-500">
             {feed.counts.attentionTotal} item{feed.counts.attentionTotal === 1 ? "" : "s"}
           </span>
         </div>
         {feed.attention.length === 0 ? (
-          <p className="px-5 py-6 text-sm text-ion-3">
+          <p className="px-5 py-6 text-sm text-ink-500">
             Queue clear — no decisions are waiting. Hold the cadence.
           </p>
         ) : (
@@ -140,11 +140,11 @@ export default async function CommandCenterPage() {
       </section>
 
       {/* ── Source lanes (honesty contract) ───────────────────────────── */}
-      <section data-testid="command-center-lanes" className="rounded-2xl border border-titanium/40 bg-carbon/80 p-5">
-        <h2 className="mb-1 text-xs font-bold uppercase tracking-widest text-ion-2">
+      <section data-testid="command-center-lanes" className="rounded-2xl border border-white/[0.06] bg-white/[0.04] p-5">
+        <h2 className="mb-1 text-xs font-bold uppercase tracking-widest text-ink-400">
           Source lanes
         </h2>
-        <p className="mb-4 text-[11px] text-ion-3">
+        <p className="mb-4 text-[11px] text-ink-500">
           Every lane declares how its data was sourced. Fallbacks are labeled — never shown as live.
         </p>
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -154,7 +154,7 @@ export default async function CommandCenterPage() {
         </div>
       </section>
 
-      <p data-testid="command-center-generated-at" className="text-[10px] uppercase tracking-widest text-ion-3">
+      <p data-testid="command-center-generated-at" className="text-[10px] uppercase tracking-widest text-ink-500">
         Generated {new Date(feed.generatedAt).toLocaleString()} · Jarvis {feed.jarvisVersion} ·{" "}
         <Link href="/cockpit/command-center" prefetch={false} className="text-brand-400 hover:text-brand-300">
           refresh
@@ -162,13 +162,13 @@ export default async function CommandCenterPage() {
       </p>
 
       <nav className="flex flex-wrap gap-2 text-xs">
-        <Link href="/cockpit" className="rounded-lg border border-titanium/40 px-3 py-2 text-ion-2 hover:border-titanium/70 hover:bg-carbon/60">
+        <Link href="/cockpit" className="rounded-lg border border-white/[0.06] px-3 py-2 text-ink-400 hover:border-white/[0.10]/70 hover:bg-white/[0.03]">
           ← Cockpit overview
         </Link>
-        <Link href="/cockpit/tasks" className="rounded-lg border border-titanium/40 px-3 py-2 text-ion-2 hover:border-titanium/70 hover:bg-carbon/60">
+        <Link href="/cockpit/tasks" className="rounded-lg border border-white/[0.06] px-3 py-2 text-ink-400 hover:border-white/[0.10]/70 hover:bg-white/[0.03]">
           Tasks →
         </Link>
-        <Link href="/cockpit/calibration" className="rounded-lg border border-titanium/40 px-3 py-2 text-ion-2 hover:border-titanium/70 hover:bg-carbon/60">
+        <Link href="/cockpit/calibration" className="rounded-lg border border-white/[0.06] px-3 py-2 text-ink-400 hover:border-white/[0.10]/70 hover:bg-white/[0.03]">
           Calibration →
         </Link>
       </nav>
@@ -190,10 +190,10 @@ function CountCell({
       ? "text-rose-300"
       : accent === "amber" && value > 0
         ? "text-amber-300"
-        : "text-ion-white";
+        : "text-white";
   return (
-    <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
+    <div className="rounded-2xl border border-white/[0.06] bg-obsidian/40 p-4">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ink-500">{label}</p>
       <p className={["mt-1 font-mono text-2xl font-semibold tabular-nums", valueClass].join(" ")}>
         {value}
       </p>
@@ -216,14 +216,14 @@ function NarrativeBlock({
       : tone === "amber"
         ? "text-amber-300"
         : tone === "dim"
-          ? "text-ion-3"
-          : "text-ion-2";
+          ? "text-ink-500"
+          : "text-ink-400";
   return (
-    <div className="rounded-xl border border-titanium/40 bg-obsidian/40 p-3">
+    <div className="rounded-xl border border-white/[0.06] bg-obsidian/40 p-3">
       <p className={["mb-2 text-[10px] font-bold uppercase tracking-widest", titleClass].join(" ")}>
         {title}
       </p>
-      <ul className="space-y-1 text-[12px] leading-snug text-ion-1">
+      <ul className="space-y-1 text-[12px] leading-snug text-ink-300">
         {items.map((line, i) => (
           <li key={i} className="flex gap-2">
             <span className="mt-1 h-1 w-1 flex-shrink-0 rounded-full bg-ion-3/50" />
@@ -237,7 +237,7 @@ function NarrativeBlock({
 
 function AttentionRow({ item }: { item: OwnerAttentionItem }) {
   const body = (
-    <div className="flex items-start gap-3 px-5 py-3 transition-colors hover:bg-titanium/10">
+    <div className="flex items-start gap-3 px-5 py-3 transition-colors hover:bg-white/[0.01]">
       <span
         className={[
           "mt-0.5 flex-shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest",
@@ -246,24 +246,24 @@ function AttentionRow({ item }: { item: OwnerAttentionItem }) {
       >
         {item.urgency}
       </span>
-      <span className="mt-0.5 hidden w-14 flex-shrink-0 font-mono text-sm tabular-nums text-ion-white sm:block">
+      <span className="mt-0.5 hidden w-14 flex-shrink-0 font-mono text-sm tabular-nums text-white sm:block">
         {item.score}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-ion-white">
+        <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-white">
           {item.title}
-          <span className="rounded bg-obsidian/70 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-ion-3">
+          <span className="rounded bg-obsidian/70 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-ink-500">
             {item.decisionType.replace(/_/g, " ").toLowerCase()}
           </span>
         </p>
-        <p className="mt-0.5 text-[12px] leading-snug text-ion-2">{item.detail}</p>
-        <p className="mt-1 text-[11px] text-ion-3">
-          <span className="text-ion-2">Do:</span> {item.recommendedAction}
+        <p className="mt-0.5 text-[12px] leading-snug text-ink-400">{item.detail}</p>
+        <p className="mt-1 text-[11px] text-ink-500">
+          <span className="text-ink-400">Do:</span> {item.recommendedAction}
         </p>
-        <p className="mt-0.5 text-[10px] text-ion-3">{item.scoreExplanation}</p>
+        <p className="mt-0.5 text-[10px] text-ink-500">{item.scoreExplanation}</p>
       </div>
       {item.link && (
-        <span className="mt-0.5 flex-shrink-0 self-center text-[11px] text-ion-3">→</span>
+        <span className="mt-0.5 flex-shrink-0 self-center text-[11px] text-ink-500">→</span>
       )}
     </div>
   );
@@ -282,9 +282,9 @@ function AttentionRow({ item }: { item: OwnerAttentionItem }) {
 
 function LaneCard({ lane }: { lane: CommandCenterLane }) {
   return (
-    <div className="rounded-xl border border-titanium/40 bg-obsidian/50 p-3">
+    <div className="rounded-xl border border-white/[0.06] bg-obsidian/50 p-3">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-[11px] font-semibold text-ion-1">{lane.label}</p>
+        <p className="text-[11px] font-semibold text-ink-300">{lane.label}</p>
         <span
           className={[
             "rounded border px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest",
@@ -294,7 +294,7 @@ function LaneCard({ lane }: { lane: CommandCenterLane }) {
           {lane.dataMode.replace(/_/g, " ")}
         </span>
       </div>
-      <p className="mt-1 font-mono text-lg font-semibold tabular-nums text-ion-white">
+      <p className="mt-1 font-mono text-lg font-semibold tabular-nums text-white">
         {lane.itemCount}
       </p>
       {lane.fallbackReason && (

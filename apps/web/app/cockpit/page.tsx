@@ -113,12 +113,12 @@ export default async function CockpitOverview() {
       {/* ── MISSION CONTROL HEADER ─────────────────────────────────────── */}
       <header
         className={[
-          "relative overflow-hidden rounded-3xl border bg-carbon/90 shadow-2xl shadow-black/30",
+          "relative overflow-hidden rounded-3xl border bg-white/[0.03]/90 shadow-2xl shadow-black/30",
           ownerSummary?.overallColor === "RED"
             ? "border-rose-900/40"
             : ownerSummary?.overallColor === "GREEN"
               ? "border-accent-900/40"
-              : "border-titanium/60",
+              : "border-white/[0.06]",
         ].join(" ")}
       >
         <div
@@ -134,7 +134,7 @@ export default async function CockpitOverview() {
                 <div className="absolute inset-0 animate-live-pulse rounded-full bg-accent-500" />
                 <div className="absolute inset-0 rounded-full bg-accent-500" />
               </div>
-              <h1 className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">
+              <h1 className="font-mono text-[9px] uppercase tracking-[0.18em] text-ink-500">
                 Galaxy Sports Edge · Jarvis Owner OS
               </h1>
             </div>
@@ -149,12 +149,12 @@ export default async function CockpitOverview() {
               <span
                 data-testid="jarvis-today-picks"
                 aria-label="Picks generated today"
-                className="rounded bg-obsidian/80 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-ion-2"
+                className="rounded bg-obsidian/80 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-ink-400"
                 title="Picks generated today (sample data while stub mode is active)"
               >
                 picks: {todayPicksForOperator}{demoActive ? " (sample)" : ""}
               </span>
-              <span className="font-mono text-[9px] tabular-nums text-ion-3">
+              <span className="font-mono text-[9px] tabular-nums text-ink-500">
                 {now.toLocaleTimeString()}
               </span>
             </div>
@@ -170,10 +170,10 @@ export default async function CockpitOverview() {
                   total={assessment?.readinessGateSummary.totalCount ?? 0}
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ion-3">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ink-500">
                     <CockpitGreeting /> · here&apos;s where things stand
                   </p>
-                  <p className="mt-2 text-xl font-medium leading-snug text-ion-white/95 sm:text-2xl">
+                  <p className="mt-2 text-xl font-medium leading-snug text-white/95 sm:text-2xl">
                     {ownerSummary.oneLiner}
                   </p>
                   {ownerSummary.criticalWarnings.length > 0 && (
@@ -188,7 +188,7 @@ export default async function CockpitOverview() {
               {/* QuickStat strip */}
               <div
                 data-testid="owner-status-grid"
-                className="grid grid-cols-2 gap-3 border-t border-titanium/30 pt-5 sm:grid-cols-4"
+                className="grid grid-cols-2 gap-3 border-t border-white/[0.10]/30 pt-5 sm:grid-cols-4"
               >
                 <QuickStat
                   label="Picks Today"
@@ -219,7 +219,7 @@ export default async function CockpitOverview() {
               </div>
             </>
           ) : (
-            <p className="text-base text-ion-3">Jarvis synthesis pending…</p>
+            <p className="text-base text-ink-500">Jarvis synthesis pending…</p>
           )}
         </div>
       </header>
@@ -269,10 +269,10 @@ export default async function CockpitOverview() {
            (and their live ledger/memory still load) but sit behind a single
            disclosure so the cockpit opens to a scannable summary instead of a
            stack of dense panels. */}
-      <details className="group rounded-2xl border border-titanium/40 bg-carbon/40">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-xs font-semibold uppercase tracking-widest text-ion-2 [&::-webkit-details-marker]:hidden">
+      <details className="group rounded-2xl border border-white/[0.06] bg-white/[0.02]">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-xs font-semibold uppercase tracking-widest text-ink-400 [&::-webkit-details-marker]:hidden">
           <span>System internals · AI ops · capabilities · council · memory</span>
-          <span aria-hidden className="text-ion-3 transition-transform group-open:rotate-180">▾</span>
+          <span aria-hidden className="text-ink-500 transition-transform group-open:rotate-180">▾</span>
         </summary>
         <div className="flex flex-col gap-4 px-3 pb-4 sm:px-4">
           {/* ── Zone 5: AI Ops / Build Control ─────────────────────────── */}
@@ -292,8 +292,8 @@ export default async function CockpitOverview() {
            phase matrix, today's picks, slate — lives behind one disclosure so
            the default view stays calm. Critical safety items are already
            surfaced up top in the Decision Queue. */}
-      <details className="group mt-2 border-t border-titanium/30 pt-4">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[10px] font-semibold uppercase tracking-widest text-ion-2 [&::-webkit-details-marker]:hidden">
+      <details className="group mt-2 border-t border-white/[0.10]/30 pt-4">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[10px] font-semibold uppercase tracking-widest text-ink-400 [&::-webkit-details-marker]:hidden">
           <span>Detail / Drilldowns · warnings · health tiles · gates · phase matrix · picks</span>
           <span aria-hidden className="transition-transform group-open:rotate-180">▾</span>
         </summary>
@@ -366,17 +366,17 @@ export default async function CockpitOverview() {
         {policy && (
           <section
             data-testid="cockpit-public-performance"
-            className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5"
+            className="mb-4 rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-5"
           >
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
               Public performance policy
             </h2>
-            <p className="text-sm text-ion-1">{policy.publicMessage}</p>
-            <p className="mt-2 text-xs text-ion-3">
-              Operator: <span className="text-ion-1">{policy.operatorMessage}</span>
+            <p className="text-sm text-ink-300">{policy.publicMessage}</p>
+            <p className="mt-2 text-xs text-ink-500">
+              Operator: <span className="text-ink-300">{policy.operatorMessage}</span>
             </p>
             {policy.minimumRequirements.length > 0 && (
-              <ul className="mt-2 list-disc pl-5 text-xs text-ion-2">
+              <ul className="mt-2 list-disc pl-5 text-xs text-ink-400">
                 {policy.minimumRequirements.map((r: string, i: number) => (
                   <li key={i}>{r}</li>
                 ))}
@@ -387,11 +387,11 @@ export default async function CockpitOverview() {
 
         {/* Recommended actions */}
         {assessment && assessment.recommendedNextActions.length > 0 && (
-          <section className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+          <section className="mb-4 rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
               Recommended next actions
             </h2>
-            <ol className="list-decimal space-y-1 pl-5 text-sm text-ion-1">
+            <ol className="list-decimal space-y-1 pl-5 text-sm text-ink-300">
               {assessment.recommendedNextActions.map((a: string, i: number) => (
                 <li key={i}>{a}</li>
               ))}
@@ -401,18 +401,18 @@ export default async function CockpitOverview() {
 
         {/* Phase matrix */}
         {assessment && (
-          <section className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+          <section className="mb-4 rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
               Phase matrix
             </h2>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {assessment.phaseMatrix.map((p) => (
                 <div
                   key={p.key}
-                  className="rounded-lg border border-titanium/40 bg-obsidian/50 px-3 py-2"
+                  className="rounded-lg border border-white/[0.06] bg-obsidian/50 px-3 py-2"
                 >
-                  <p className="text-xs font-semibold text-ion-1">{p.label}</p>
-                  <p className="text-[10px] uppercase tracking-widest text-ion-3">
+                  <p className="text-xs font-semibold text-ink-300">{p.label}</p>
+                  <p className="text-[10px] uppercase tracking-widest text-ink-500">
                     {p.status}
                   </p>
                 </div>
@@ -422,11 +422,11 @@ export default async function CockpitOverview() {
         )}
 
         {/* Readiness gates */}
-        <section className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+        <section className="mb-4 rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-5">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink-500">
             Readiness gates
           </h2>
-          <div className="grid grid-cols-2 gap-2 text-xs text-ion-1 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2 text-xs text-ink-300 sm:grid-cols-3">
             <GateRow label="canPersistCanonicalHistory" value={gates.canPersistCanonicalHistory} />
             <GateRow label="canUseDerivedHistory" value={gates.canUseDerivedHistory} />
             <GateRow label="canExposePublicPicks" value={gates.canExposePublicPicks} />
@@ -436,9 +436,9 @@ export default async function CockpitOverview() {
             <GateRow label="canLearnFromOutcomes" value={gates.canLearnFromOutcomes} />
             <GateRow label="isBootstrapMode" value={gates.isBootstrapMode} />
           </div>
-          <p className="mt-3 text-[11px] text-ion-3">
+          <p className="mt-3 text-[11px] text-ink-500">
             minSettledPicksForLearning ={" "}
-            <span className="text-ion-2">{gates.minSettledPicksForLearning}</span>
+            <span className="text-ink-400">{gates.minSettledPicksForLearning}</span>
           </p>
         </section>
 
@@ -446,10 +446,10 @@ export default async function CockpitOverview() {
         {todaysOperatorPicks.length > 0 && (
           <section
             data-testid="cockpit-today-picks-list"
-            className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-5"
+            className="mb-4 rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-5"
           >
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-ink-500">
                 Today&apos;s picks — operator surface
                 {demoActive && (
                   <span className="ml-2 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-yellow-300">
@@ -471,7 +471,7 @@ export default async function CockpitOverview() {
                   className="flex flex-wrap items-center justify-between gap-3 py-2"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-ion-1">
+                    <p className="truncate font-medium text-ink-300">
                       {p.selection}
                       {p.isFeatured && (
                         <span className="ml-2 rounded bg-brand-900/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-brand-300">
@@ -479,19 +479,19 @@ export default async function CockpitOverview() {
                         </span>
                       )}
                     </p>
-                    <p className="truncate text-[11px] text-ion-3">
+                    <p className="truncate text-[11px] text-ink-500">
                       {p.game.awayTeamName} @ {p.game.homeTeamName} ·{" "}
                       {p.game.sport.name} ·{" "}
-                      <span className="text-ion-2">
+                      <span className="text-ink-400">
                         {p.pickGrade.replace("_", " ").toLowerCase()}
                       </span>{" "}
                       ·{" "}
-                      <span className="text-ion-2">
+                      <span className="text-ink-400">
                         {p.riskLevel.replace("_", " ").toLowerCase()}
                       </span>
                     </p>
                   </div>
-                  <span className="rounded bg-obsidian/70 px-2 py-0.5 font-mono text-xs text-ion-1">
+                  <span className="rounded bg-obsidian/70 px-2 py-0.5 font-mono text-xs text-ink-300">
                     {p.confidence}%
                   </span>
                 </li>
@@ -505,16 +505,16 @@ export default async function CockpitOverview() {
           <section
             data-testid="cockpit-slate-meta"
             aria-label="Today's slate breakdown by sport"
-            className="mb-4 rounded-2xl border border-titanium/40 bg-eclipse/40 p-4"
+            className="mb-4 rounded-2xl border border-white/[0.06] bg-white/[0.04]/40 p-4"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-ion-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-ink-500">
               Today&apos;s slate by sport
             </p>
-            <p className="mt-1 text-sm text-ion-1">
+            <p className="mt-1 text-sm text-ink-300">
               {slateBreakdown.map((b) => `${b.name} ${b.n}`).join("  ·  ")}
             </p>
             {featuredOperatorPicks.length > 0 && (
-              <p data-testid="featured-count" className="mt-2 text-[11px] text-ion-3">
+              <p data-testid="featured-count" className="mt-2 text-[11px] text-ink-500">
                 Featured today: {featuredOperatorPicks.length} —{" "}
                 {featuredOperatorPicks
                   .map((p) => p.selection.replace(/\s+[-+]?\d.*$/, ""))
@@ -530,7 +530,7 @@ export default async function CockpitOverview() {
       {assessment && (
         <p
           data-testid="cockpit-generated-at"
-          className="text-[10px] uppercase tracking-widest text-ion-3"
+          className="text-[10px] uppercase tracking-widest text-ink-500"
         >
           Jarvis {assessment.version} · confidence {assessment.confidenceLevel} · gates open{" "}
           {assessment.readinessGateSummary.openCount}/{assessment.readinessGateSummary.totalCount} ·
@@ -549,19 +549,19 @@ export default async function CockpitOverview() {
       <nav className="flex flex-wrap gap-2 text-xs">
         <Link
           href="/cockpit/history"
-          className="rounded-lg border border-titanium/40 px-3 py-2 text-ion-2 hover:border-titanium/70 hover:bg-carbon/60"
+          className="rounded-lg border border-white/[0.06] px-3 py-2 text-ink-400 hover:border-white/[0.10]/70 hover:bg-white/[0.03]"
         >
           Pick history →
         </Link>
         <Link
           href="/dashboard"
-          className="rounded-lg border border-titanium/40 px-3 py-2 text-ion-2 hover:border-titanium/70 hover:bg-carbon/60"
+          className="rounded-lg border border-white/[0.06] px-3 py-2 text-ink-400 hover:border-white/[0.10]/70 hover:bg-white/[0.03]"
         >
           Customer dashboard →
         </Link>
         <Link
           href="/performance"
-          className="rounded-lg border border-titanium/40 px-3 py-2 text-ion-2 hover:border-titanium/70 hover:bg-carbon/60"
+          className="rounded-lg border border-white/[0.06] px-3 py-2 text-ink-400 hover:border-white/[0.10]/70 hover:bg-white/[0.03]"
         >
           Performance →
         </Link>
@@ -638,11 +638,11 @@ function PostureMedallion({
         />
         <span
           data-testid="owner-status-pill"
-          className="mt-1.5 text-sm font-semibold text-ion-white"
+          className="mt-1.5 text-sm font-semibold text-white"
         >
           {m.label}
         </span>
-        <span className="font-mono text-[9px] tabular-nums text-ion-3">
+        <span className="font-mono text-[9px] tabular-nums text-ink-500">
           {open}/{total} gates
         </span>
       </div>
@@ -668,14 +668,14 @@ function QuickStat({
         ? "text-amber-300"
         : accent === "red"
           ? "text-rose-300"
-          : "text-ion-white";
+          : "text-white";
   return (
-    <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4 transition-colors hover:border-titanium/70">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
+    <div className="rounded-2xl border border-white/[0.06] bg-obsidian/40 p-4 transition-colors hover:border-white/[0.10]/70">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ink-500">{label}</p>
       <p className={["mt-1 font-mono text-2xl font-semibold tabular-nums", valueClass].join(" ")}>
         {value}
       </p>
-      <p className="mt-0.5 text-[11px] text-ion-3">{sub}</p>
+      <p className="mt-0.5 text-[11px] text-ink-500">{sub}</p>
     </div>
   );
 }
@@ -689,7 +689,7 @@ function DecisionQueueZone({ decisions }: { decisions: readonly OwnerDecision[] 
       ? "border-red-900/70 bg-red-950/20 shadow-glow-plasma"
       : topUrgency === "HIGH"
         ? "border-yellow-900/60 bg-yellow-950/10"
-        : "border-titanium/50 bg-carbon/80";
+        : "border-white/[0.10]/50 bg-white/[0.04]";
 
   return (
     <section
@@ -706,7 +706,7 @@ function DecisionQueueZone({ decisions }: { decisions: readonly OwnerDecision[] 
         <h2
           className={[
             "text-xs font-bold uppercase tracking-widest",
-            topUrgency === "CRITICAL" ? "text-red-300" : "text-ion-2",
+            topUrgency === "CRITICAL" ? "text-red-300" : "text-ink-400",
           ].join(" ")}
         >
           Decision Queue — {decisions.length} item{decisions.length === 1 ? "" : "s"} need your
@@ -723,12 +723,12 @@ function DecisionQueueZone({ decisions }: { decisions: readonly OwnerDecision[] 
                   ? "bg-red-950/50 text-red-300"
                   : d.urgency === "HIGH"
                     ? "bg-yellow-950/50 text-yellow-300"
-                    : "bg-titanium/60 text-ion-2",
+                    : "bg-white/[0.06] text-ink-400",
               ].join(" ")}
             >
               {d.urgency}
             </span>
-            <span className="text-sm text-ion-white">{d.description}</span>
+            <span className="text-sm text-white">{d.description}</span>
           </li>
         ))}
       </ol>
@@ -750,14 +750,14 @@ function PicksDeskZone({
   return (
     <section
       data-testid="picks-desk-zone"
-      className="rounded-2xl border border-accent-900/30 bg-carbon/80 p-5"
+      className="rounded-2xl border border-accent-900/30 bg-white/[0.04] p-5"
     >
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ink-400">
             Where Are Our Picks?
           </h2>
-          <p className="mt-1 text-[11px] leading-relaxed text-ion-3">
+          <p className="mt-1 text-[11px] leading-relaxed text-ink-500">
             {picks.publicReadinessExplanation}
           </p>
         </div>
@@ -800,7 +800,7 @@ function PicksDeskZone({
         <p className="mb-3 text-[11px] text-yellow-300">Blocked: {picks.blockedReason}</p>
       )}
 
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-[9px] text-ion-3">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-[9px] text-ink-500">
         <span>Bootstrap excluded: {picks.bootstrapExcluded}</span>
         <span>Total in system: {picks.totalInSystem}</span>
         {demoActive && <span className="text-yellow-400">DEMO_PICKS_ENABLED active</span>}
@@ -810,7 +810,7 @@ function PicksDeskZone({
         <p
           data-testid="cockpit-slate-meta"
           aria-label="Today's slate breakdown by sport"
-          className="mt-3 text-[11px] text-ion-3"
+          className="mt-3 text-[11px] text-ink-500"
         >
           Slate: {slateBreakdown.map((b) => `${b.name} ×${b.n}`).join(" · ")}
           {featuredCount > 0 && ` · ${featuredCount} featured`}
@@ -830,10 +830,10 @@ function PicksStatCell({
   sub: string;
 }) {
   return (
-    <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-3">
-      <p className="text-[9px] font-bold uppercase tracking-widest text-ion-3">{label}</p>
-      <p className="mt-1 text-3xl font-bold tabular-nums leading-none text-ion-white">{value}</p>
-      <p className="mt-1 text-[9px] text-ion-3">{sub}</p>
+    <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 px-3 py-3">
+      <p className="text-[9px] font-bold uppercase tracking-widest text-ink-500">{label}</p>
+      <p className="mt-1 text-3xl font-bold tabular-nums leading-none text-white">{value}</p>
+      <p className="mt-1 text-[9px] text-ink-500">{sub}</p>
     </div>
   );
 }
@@ -842,7 +842,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
   return (
     <section
       data-testid="performance-target-zone"
-      className="overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80 p-5"
+      className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.04] p-5"
       style={{ borderColor: "rgba(122,92,255,0.20)" }}
     >
       <div className="mb-4 flex items-start justify-between gap-3">
@@ -850,7 +850,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
           <h2 className="text-xs font-bold uppercase tracking-widest text-ultraviolet">
             Performance Gate
           </h2>
-          <p className="mt-0.5 text-[11px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ink-500">
             Internal goal · Bootstrap + pending excluded
           </p>
         </div>
@@ -867,36 +867,36 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
       </div>
 
       <div className="mb-4 grid grid-cols-2 gap-2">
-        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Target</p>
+        <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 px-3 py-2.5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-500">Target</p>
           <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ultraviolet">
             {performance.targetPct}%
           </p>
         </div>
-        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Win Rate</p>
+        <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 px-3 py-2.5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-500">Win Rate</p>
           {performance.displaySafe && performance.actualWinRate !== null ? (
-            <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ion-white">
+            <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-white">
               {performance.actualWinRate}%
             </p>
           ) : (
             <p
-              className="mt-1 flex items-center gap-1.5 text-sm font-semibold leading-none text-ion-2"
+              className="mt-1 flex items-center gap-1.5 text-sm font-semibold leading-none text-ink-400"
               title="Win rate is gated until the canonical settled-sample floor is met"
             >
               <span aria-hidden>🔒</span> Locked
             </p>
           )}
         </div>
-        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Sample</p>
-          <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ion-white">
+        <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 px-3 py-2.5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-500">Sample</p>
+          <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-white">
             {performance.canonicalSampleSize}
           </p>
-          <p className="text-[10px] text-ion-3">of {performance.minimumRequired} req.</p>
+          <p className="text-[10px] text-ink-500">of {performance.minimumRequired} req.</p>
         </div>
-        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Gate</p>
+        <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 px-3 py-2.5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-500">Gate</p>
           <p
             className={[
               "mt-1 text-2xl font-bold leading-none",
@@ -905,12 +905,12 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
           >
             {performance.isGateOpen ? "ON" : "OFF"}
           </p>
-          <p className="text-[10px] text-ion-3">PERF_STATS_EN</p>
+          <p className="text-[10px] text-ink-500">PERF_STATS_EN</p>
         </div>
       </div>
 
       {!performance.displaySafe && (
-        <p className="text-xs text-ion-2">
+        <p className="text-xs text-ink-400">
           Public performance gated.
           {performance.remainingToThreshold > 0 && (
             <span className="text-yellow-300">
@@ -922,12 +922,12 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
       )}
 
       {performance.displaySafe && (
-        <p className="text-xs text-ion-2">
+        <p className="text-xs text-ink-400">
           {performance.record} · Display-safe.
         </p>
       )}
 
-      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-ion-3">
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-ink-500">
         <span>Bootstrap: excluded</span>
         <span>Pending: excluded</span>
         {performance.smallSampleWarning && (
@@ -942,14 +942,14 @@ function DepartmentsZone({ departments }: { departments: readonly DepartmentSumm
   return (
     <section
       data-testid="departments-zone"
-      className="overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80"
+      className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.04]"
     >
-      <div className="flex items-center justify-between border-b border-titanium/30 px-5 py-3">
+      <div className="flex items-center justify-between border-b border-white/[0.10]/30 px-5 py-3">
         <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ink-400">
             Agent Command Map
           </h2>
-          <p className="mt-0.5 text-[11px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ink-500">
             {departments.length} departments · All agents draft-only · No external actions without
             approval
           </p>
@@ -973,20 +973,20 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
   };
 
   const row = (
-    <div className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-titanium/20">
+    <div className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-white/[0.02]">
       <span
         className={["h-2 w-2 flex-shrink-0 rounded-full", dotColor[dept.status]].join(" ")}
         aria-label={dept.status}
       />
-      <span className="w-36 flex-shrink-0 text-[10px] font-semibold leading-tight text-ion-white">
+      <span className="w-36 flex-shrink-0 text-[10px] font-semibold leading-tight text-white">
         {dept.name}
       </span>
       {dept.agentDisplayName && (
-        <span className="hidden w-16 flex-shrink-0 font-mono text-[10px] text-ion-3 sm:block">
+        <span className="hidden w-16 flex-shrink-0 font-mono text-[10px] text-ink-500 sm:block">
           {dept.agentDisplayName}
         </span>
       )}
-      <span className="hidden flex-1 text-[10px] leading-snug text-ion-2 sm:block">
+      <span className="hidden flex-1 text-[10px] leading-snug text-ink-400 sm:block">
         {dept.oneLiner}
       </span>
       {dept.actionRequired && (
@@ -994,11 +994,11 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
           Action
         </span>
       )}
-      <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-widest text-ion-3">
+      <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-widest text-ink-500">
         {dept.agentMode.replace("_", " ").toLowerCase()}
       </span>
       {dept.drilldownHref && (
-        <span className="flex-shrink-0 text-[10px] text-ion-3 transition-colors group-hover:text-ion-2">
+        <span className="flex-shrink-0 text-[10px] text-ink-500 transition-colors group-hover:text-ink-400">
           →
         </span>
       )}
@@ -1019,7 +1019,7 @@ function AiOpsZone({ aiOps }: { aiOps: AiOpsSummary }) {
   return (
     <section
       data-testid="ai-ops-zone"
-      className="overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80 p-5"
+      className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.04] p-5"
       style={{ borderColor: "rgba(122,92,255,0.18)" }}
     >
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
@@ -1027,42 +1027,42 @@ function AiOpsZone({ aiOps }: { aiOps: AiOpsSummary }) {
           <h2 className="text-xs font-bold uppercase tracking-widest text-ultraviolet">
             AI Ops / Build Control
           </h2>
-          <p className="mt-0.5 text-[11px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ink-500">
             Claude API · ccusage · Model lane policy
           </p>
         </div>
-        <span className="rounded border border-titanium/40 bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+        <span className="rounded border border-white/[0.06] bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ink-500">
           Telemetry: Not wired
         </span>
       </div>
 
-      <p className="mb-4 text-xs leading-relaxed text-ion-2">{aiOps.reason}</p>
+      <p className="mb-4 text-xs leading-relaxed text-ink-400">{aiOps.reason}</p>
 
-      <div className="mb-4 rounded-xl border border-titanium/40 bg-obsidian/60 p-3">
-        <p className="mb-1 text-[9px] font-bold uppercase tracking-widest text-ion-3">ccusage</p>
-        <p className="text-[10px] text-ion-2">{aiOps.ccusageNote}</p>
+      <div className="mb-4 rounded-xl border border-white/[0.06] bg-obsidian/60 p-3">
+        <p className="mb-1 text-[9px] font-bold uppercase tracking-widest text-ink-500">ccusage</p>
+        <p className="text-[10px] text-ink-400">{aiOps.ccusageNote}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <p className="mb-2 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+          <p className="mb-2 text-[9px] font-bold uppercase tracking-widest text-ink-500">
             Model Lane Policy
           </p>
           <ul className="space-y-1">
             {aiOps.modelLanePolicy.map((p, i) => (
-              <li key={i} className="text-[10px] text-ion-2">
+              <li key={i} className="text-[10px] text-ink-400">
                 · {p}
               </li>
             ))}
           </ul>
         </div>
         <div>
-          <p className="mb-2 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+          <p className="mb-2 text-[9px] font-bold uppercase tracking-widest text-ink-500">
             To Instrument Next
           </p>
           <ul className="space-y-1">
             {aiOps.toInstrumentNext.map((t, i) => (
-              <li key={i} className="text-[10px] text-ion-2">
+              <li key={i} className="text-[10px] text-ink-400">
                 · {t}
               </li>
             ))}
@@ -1070,7 +1070,7 @@ function AiOpsZone({ aiOps }: { aiOps: AiOpsSummary }) {
         </div>
       </div>
 
-      <p className="mt-4 text-[9px] text-ion-3">
+      <p className="mt-4 text-[9px] text-ink-500">
         See /cockpit/api-costs for manual cost tracking ·{" "}
         <Link href="/cockpit/api-costs" className="text-ultraviolet hover:text-ultraviolet-glow">
           API Costs →
@@ -1084,14 +1084,14 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
   return (
     <section
       data-testid="memory-protocol-zone"
-      className="overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80 p-5"
+      className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.04] p-5"
     >
       <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-ink-400">
             Jarvis Memory Protocol
           </h2>
-          <p className="mt-0.5 text-[11px] text-ion-3">
+          <p className="mt-0.5 text-[11px] text-ink-500">
             Persistent memory · cross-session recall · episodic decisions
           </p>
         </div>
@@ -1101,18 +1101,18 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
               "rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest",
               memory.wired
                 ? "border-accent-800/50 bg-accent-950/30 text-accent-400"
-                : "border-titanium/40 bg-obsidian/60 text-ion-3",
+                : "border-white/[0.06] bg-obsidian/60 text-ink-500",
             ].join(" ")}
           >
             Memory: {memory.wired ? "Wired" : "Not wired"}
           </span>
-          <span className="rounded border border-titanium/40 bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+          <span className="rounded border border-white/[0.06] bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ink-500">
             Store: {memory.store}
           </span>
         </div>
       </div>
 
-      <p className="mb-3 text-xs leading-relaxed text-ion-2">{memory.truth}</p>
+      <p className="mb-3 text-xs leading-relaxed text-ink-400">{memory.truth}</p>
 
       <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-7">
         {[
@@ -1126,12 +1126,12 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
         ].map(([label, value]) => (
           <div
             key={String(label)}
-            className="rounded-lg border border-titanium/30 bg-obsidian/40 px-2 py-1.5 text-center"
+            className="rounded-lg border border-white/[0.10]/30 bg-obsidian/40 px-2 py-1.5 text-center"
           >
-            <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ink-500">
               {label}
             </p>
-            <p className="font-mono text-[10px] text-ion-2">
+            <p className="font-mono text-[10px] text-ink-400">
               {value ?? "—"}
             </p>
           </div>
@@ -1139,23 +1139,23 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 p-3">
-          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+        <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 p-3">
+          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-ink-500">
             Protocol Docs (version-controlled)
           </p>
           <ul className="space-y-0.5">
             {memory.protocolDocs.map((d) => (
-              <li key={d} className="font-mono text-[9px] text-ion-2">
+              <li key={d} className="font-mono text-[9px] text-ink-400">
                 · {d}
               </li>
             ))}
           </ul>
         </div>
-        <div className="rounded-xl border border-titanium/40 bg-obsidian/60 p-3">
-          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
+        <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 p-3">
+          <p className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-ink-500">
             Next Action
           </p>
-          <p className="text-[10px] leading-relaxed text-ion-2">{memory.nextAction}</p>
+          <p className="text-[10px] leading-relaxed text-ink-400">{memory.nextAction}</p>
         </div>
       </div>
     </section>
@@ -1171,7 +1171,7 @@ function LaunchStatusBadge({ status }: { status: JarvisLaunchStatus }) {
     NOT_READY_DATA: "bg-orange-900/40 text-orange-300",
     NOT_READY_VALIDATION: "bg-red-900/40 text-red-300",
     NOT_READY_SAFETY: "bg-red-900/40 text-red-300",
-    UNKNOWN: "bg-obsidian/70 text-ion-3",
+    UNKNOWN: "bg-obsidian/70 text-ink-500",
   };
   return (
     <span
@@ -1190,7 +1190,7 @@ function HealthTile({ label, health }: { label: string; health: JarvisHealth }) 
     GREEN: "border-green-900 bg-green-950/30 text-green-300",
     AMBER: "border-yellow-900 bg-yellow-950/30 text-yellow-300",
     RED: "border-red-900 bg-red-950/30 text-red-300",
-    UNKNOWN: "border-titanium/40 bg-eclipse/40 text-ion-2",
+    UNKNOWN: "border-white/[0.06] bg-white/[0.04]/40 text-ink-400",
   };
   return (
     <div
@@ -1206,10 +1206,10 @@ function HealthTile({ label, health }: { label: string; health: JarvisHealth }) 
 
 function GateRow({ label, value }: { label: string; value: boolean }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-titanium/40 bg-obsidian/50 px-3 py-1.5">
+    <div className="flex items-center justify-between rounded-lg border border-white/[0.06] bg-obsidian/50 px-3 py-1.5">
       <span className="font-mono">{label}</span>
       <span
-        className={value ? "font-bold text-accent-400" : "text-ion-3"}
+        className={value ? "font-bold text-accent-400" : "text-ink-500"}
         aria-label={value ? "enabled" : "disabled"}
       >
         {value ? "ON" : "off"}

@@ -27,7 +27,7 @@ export default function Page({ searchParams }: { searchParams?: { status?: strin
         { label: "Next actions", value: sources.filter(s => s.next_action).length }
       ]} />
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Filter by legal gate status</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-ink-400 mb-3">Filter by legal gate status</p>
         <FilterBar
           options={[
             { label: "All", value: "all" },

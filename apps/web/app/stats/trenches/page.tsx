@@ -24,7 +24,7 @@ export default function Page() {
         tone="warn"
       />
       <SectionHeader title="Teams by Protection Score" eyebrow="Proxy ranking" />
-      <div className="border border-mineral bg-eclipse p-4">
+      <div className="border border-white/[0.08] bg-white/[0.04] p-4">
         <BarChart items={teams.map(t => ({
           label: String(t.team_id ?? ""),
           value: Number(t.offensive_environment ?? 0),

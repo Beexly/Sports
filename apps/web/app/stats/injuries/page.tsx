@@ -22,8 +22,8 @@ export default function Page() {
         { label: "High volatility", value: players.filter(p => p.volatility_score >= 60).length }
       ]} />
 
-      <h2 className="text-2xl font-semibold text-ion-white">Injury &amp; role status</h2>
-      <p className="text-ion-1">
+      <h2 className="text-2xl font-semibold text-white">Injury &amp; role status</h2>
+      <p className="text-ink-300">
         Current status mapped to role and fantasy impact, so a designation reads as a usage consequence, not just a label.
       </p>
       <Badge tone="warn">Official injury designations require a licensed feed; status shown is from public roster signal.</Badge>
@@ -32,8 +32,8 @@ export default function Page() {
           {flagged.slice(0, 3).map(p => (
             <div key={p.player_id} className="border border-alert/30 bg-alert/5 p-4 rounded">
               <p className="text-alert font-semibold text-sm mb-1">{String(p.status ?? "")}</p>
-              <p className="text-ion-white font-semibold">{p.name}</p>
-              <p className="text-xs text-ion-2 mb-2">{p.team} · {p.position}</p>
+              <p className="text-white font-semibold">{p.name}</p>
+              <p className="text-xs text-ink-400 mb-2">{p.team} · {p.position}</p>
               <BarChart items={[
                 { label: "Usage impact", value: Number(p.usage_score ?? 0), max: 100, tone: "alert" },
                 { label: "Fantasy impact", value: Number(p.fantasy_edge ?? 0), max: 100, tone: "alert" }
@@ -42,7 +42,7 @@ export default function Page() {
           ))}
         </div>
       ) : (
-        <p className="text-sm text-ion-1 py-4 px-4 border border-mineral bg-eclipse/40">No status flags in the current fixture snapshot.</p>
+        <p className="text-sm text-ink-300 py-4 px-4 border border-white/[0.08] bg-white/[0.04]/40">No status flags in the current fixture snapshot.</p>
       )}
       <DataTable
         rows={flagged.map(p => ({
@@ -57,22 +57,22 @@ export default function Page() {
         maxRows={50}
       />
 
-      <h2 className="mt-2 text-2xl font-semibold text-ion-white">Movement watch</h2>
-      <p className="text-ion-1">
+      <h2 className="mt-2 text-2xl font-semibold text-white">Movement watch</h2>
+      <p className="text-ink-300">
         The players whose role, usage, or trend is moving most — the changes worth acting on before the market catches up.
       </p>
       <Badge tone="warn">Real-time email &amp; push delivery is an Elite feature and owner-gated; this is the underlying signal layer.</Badge>
       <SectionHeader eyebrow="Top 15 by trend score" title="Usage & Trend Risers" />
       <div className="space-y-2">
         {risers.map(p => (
-          <Link key={p.player_id} href={"/stats/player/" + p.player_id} className="flex items-center justify-between border border-mineral bg-eclipse p-3 hover:border-orbital-cyan transition-colors">
+          <Link key={p.player_id} href={"/stats/player/" + p.player_id} className="flex items-center justify-between border border-white/[0.08] bg-white/[0.04] p-3 hover:border-orbital-cyan transition-colors">
             <div>
-              <p className="text-ion-white font-medium">{p.name}</p>
-              <p className="text-xs text-ion-2">{p.team} · {p.position}</p>
+              <p className="text-white font-medium">{p.name}</p>
+              <p className="text-xs text-ink-400">{p.team} · {p.position}</p>
             </div>
             <div className="text-right">
               <p className="text-orbital-cyan font-mono text-sm">{p.trend_score}</p>
-              <p className="text-xs text-ion-2">trend score</p>
+              <p className="text-xs text-ink-400">trend score</p>
             </div>
           </Link>
         ))}

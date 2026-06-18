@@ -25,7 +25,7 @@ export default function Page({ searchParams }: { searchParams?: { q?: string } }
           <a
             key={t}
             href={"?q=" + encodeURIComponent(t)}
-            className="inline-block border border-mineral bg-eclipse px-3 py-1.5 text-xs text-ion-1 hover:border-orbital-cyan hover:text-orbital-cyan transition-colors rounded-full"
+            className="inline-block border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-xs text-ink-300 hover:border-orbital-cyan hover:text-orbital-cyan transition-colors rounded-full"
           >
             {t}
           </a>
@@ -36,7 +36,7 @@ export default function Page({ searchParams }: { searchParams?: { q?: string } }
           name="q"
           defaultValue={q}
           placeholder="best QB by fantasy edge, most volatile WR, hidden value RB..."
-          className="w-full border border-mineral bg-eclipse p-3 text-ion-white placeholder-ion-2 rounded focus:border-orbital-cyan focus:outline-none"
+          className="w-full border border-white/[0.08] bg-white/[0.04] p-3 text-white placeholder-ion-2 rounded focus:border-orbital-cyan focus:outline-none"
         />
         <button className="mt-3 border border-orbital-cyan px-4 py-2 text-orbital-cyan hover:bg-orbital-cyan hover:text-carbon transition-colors rounded">
           Ask
@@ -44,7 +44,7 @@ export default function Page({ searchParams }: { searchParams?: { q?: string } }
       </form>
       <SectionHeader eyebrow="Ask StatKing results" title={answer.title} />
       {answer.rows.length === 0 ? (
-        <p className="text-sm text-ion-1 py-4">No results matched for this query in the current snapshot.</p>
+        <p className="text-sm text-ink-300 py-4">No results matched for this query in the current snapshot.</p>
       ) : (
         <DataTable
           rows={answer.rows as Array<Record<string, unknown>>}

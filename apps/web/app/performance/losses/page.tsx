@@ -101,51 +101,51 @@ export default async function LossRoomPage(): Promise<JSX.Element> {
   const rows = await loadLossRows();
 
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="min-h-screen bg-white/[0.03] text-ion">
       <Nav />
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
-        <header className="border-b border-mineral pb-8">
-          <Link href="/ledger" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+        <header className="border-b border-white/[0.08] pb-8">
+          <Link href="/ledger" className="text-sm font-semibold text-orbital-cyan hover:text-white">
             Public Ledger
           </Link>
-          <h1 className="mt-4 text-3xl font-black tracking-tight text-ion-white sm:text-5xl">Loss Room</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-1">
+          <h1 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-5xl">Loss Room</h1>
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
             A filtered public ledger for canonical losses. Published post-mortems attach when review is complete;
             pending entries keep the original reasoning and signal snapshot visible.
           </p>
         </header>
 
         {rows.length === 0 ? (
-          <section className="border border-mineral bg-eclipse/60 p-6">
-            <h2 className="text-xl font-bold text-ion-white">No canonical losses yet</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
+          <section className="border border-white/[0.08] bg-white/[0.04]/60 p-6">
+            <h2 className="text-xl font-bold text-white">No canonical losses yet</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-ink-300">
               The Loss Room opens once a published, non-bootstrap pick settles as a loss.
             </p>
           </section>
         ) : (
           <ul className="flex flex-col gap-3">
             {rows.map((row) => (
-              <li key={row.id} className="border border-mineral bg-eclipse/50 p-4">
-                <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ion-2">
+              <li key={row.id} className="border border-white/[0.08] bg-white/[0.04]/50 p-4">
+                <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ink-400">
                   <span>{row.sport}</span>
                   <span>{row.rootCause.replace(/_/g, " ")}</span>
                   <span>{row.autopsyStatus.replace(/_/g, " ")}</span>
                   <span>{row.authoredAt.toISOString().slice(0, 10)}</span>
                 </div>
-                <h2 className="mt-2 text-lg font-semibold text-ion-white">
+                <h2 className="mt-2 text-lg font-semibold text-white">
                   <Link href={`/performance/losses/${row.pickId}`} className="hover:underline">
                     {row.headline}
                   </Link>
                 </h2>
-                <p className="mt-1 text-xs text-ion-2">{row.matchup}</p>
-                <p className="mt-3 text-sm font-semibold text-ion-white">{row.selection}</p>
-                <p className="mt-3 text-sm text-ion-1">{row.whatWeLearned}</p>
-                <div className="mt-4 grid gap-3 text-xs text-ion-1 sm:grid-cols-3">
+                <p className="mt-1 text-xs text-ink-400">{row.matchup}</p>
+                <p className="mt-3 text-sm font-semibold text-white">{row.selection}</p>
+                <p className="mt-3 text-sm text-ink-300">{row.whatWeLearned}</p>
+                <div className="mt-4 grid gap-3 text-xs text-ink-300 sm:grid-cols-3">
                   <span>Confidence {row.confidence}</span>
                   <span>Edge {formatScalar(row.edgeScore)}</span>
                   <span>{row.modelVersion}</span>
                 </div>
-                <p className="mt-3 text-xs leading-5 text-ion-2">{row.snapshotSummary}</p>
+                <p className="mt-3 text-xs leading-5 text-ink-400">{row.snapshotSummary}</p>
               </li>
             ))}
           </ul>

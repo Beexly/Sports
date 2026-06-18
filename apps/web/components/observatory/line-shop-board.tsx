@@ -23,17 +23,17 @@ function PriceCell({
 }) {
   return (
     <div className="flex min-w-0 flex-col gap-0.5">
-      <span className="text-[10px] uppercase tracking-wider text-ion-3">{label}</span>
+      <span className="text-[10px] uppercase tracking-wider text-ink-500">{label}</span>
       {best ? (
-        <span className={`text-sm text-ion-white ${NUMERIC_TEXT_CLASS}`}>
+        <span className={`text-sm text-white ${NUMERIC_TEXT_CLASS}`}>
           {best.line !== undefined && kind !== "moneyline" && (
-            <span className="text-ion-1">{formatLine(best.line, kind === "spread" ? "spread" : "total")} </span>
+            <span className="text-ink-300">{formatLine(best.line, kind === "spread" ? "spread" : "total")} </span>
           )}
           <span className="font-semibold text-orbital-cyan">{formatAmerican(best.price)}</span>
-          <span className="ml-1 text-[11px] text-ion-3">{best.bookmaker}</span>
+          <span className="ml-1 text-[11px] text-ink-500">{best.bookmaker}</span>
         </span>
       ) : (
-        <span className="text-sm text-ion-3">—</span>
+        <span className="text-sm text-ink-500">—</span>
       )}
     </div>
   );
@@ -50,19 +50,19 @@ export async function LineShopBoard() {
   return (
     <section
       data-testid="line-shop-board"
-      className="overflow-hidden rounded-2xl border border-titanium bg-gradient-to-br from-eclipse to-carbon"
+      className="overflow-hidden rounded-2xl border border-white/[0.10] bg-gradient-to-br from-eclipse to-carbon"
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-titanium px-6 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.10] px-6 py-4">
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-ink-400">
             Line shop — best available price
           </h2>
-          <p className="mt-1 text-[11px] text-ion-2">
+          <p className="mt-1 text-[11px] text-ink-400">
             Where the price is best right now, per side, across the books we
             capture. Shop the number — it&apos;s your money.
           </p>
         </div>
-        <span className={`text-[11px] uppercase tracking-widest text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+        <span className={`text-[11px] uppercase tracking-widest text-ink-400 ${NUMERIC_TEXT_CLASS}`}>
           {board.rows.length > 0
             ? `${formatCount(board.rows.length)} games quoted`
             : "Awaiting quotes"}
@@ -70,7 +70,7 @@ export async function LineShopBoard() {
       </div>
 
       {board.rows.length === 0 ? (
-        <p className="px-6 py-8 text-sm text-ion-1">
+        <p className="px-6 py-8 text-sm text-ink-300">
           No upcoming game carries a real quote from at least two books in the
           capture window. The shop renders only from captured odds — it stays
           empty rather than inventing a price.
@@ -83,10 +83,10 @@ export async function LineShopBoard() {
               data-testid="line-shop-row"
               className="px-6 py-4"
             >
-              <p className="text-sm font-semibold text-ion-white">
-                {row.awayTeamName} <span className="text-ion-3">@</span> {row.homeTeamName}
+              <p className="text-sm font-semibold text-white">
+                {row.awayTeamName} <span className="text-ink-500">@</span> {row.homeTeamName}
               </p>
-              <p className={`mt-0.5 text-[11px] uppercase tracking-wider text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+              <p className={`mt-0.5 text-[11px] uppercase tracking-wider text-ink-400 ${NUMERIC_TEXT_CLASS}`}>
                 {row.sport} ·{" "}
                 {new Date(row.commenceTime).toISOString().slice(5, 16).replace("T", " ")} UTC ·{" "}
                 {formatCount(row.best.bookCount)} books
@@ -106,8 +106,8 @@ export async function LineShopBoard() {
         </ul>
       )}
 
-      <div className="border-t border-titanium px-6 py-3">
-        <p className="text-[11px] leading-relaxed text-ion-2">
+      <div className="border-t border-white/[0.10] px-6 py-3">
+        <p className="text-[11px] leading-relaxed text-ink-400">
           The best price shown is each book&apos;s latest captured quote for that
           side — a transparency read, not a pick and not a prompt to bet both
           sides. Prices move; confirm at the book before you act.
