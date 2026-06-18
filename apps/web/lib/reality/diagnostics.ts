@@ -39,7 +39,6 @@ import {
   tagEdgeType,
   classifyAutopsy,
   confidenceBand,
-  CONFIDENCE_BANDS,
   DEFAULT_MIN_CALIBRATION_SAMPLE,
   type ClvVerdict,
   type ClvSummary,
