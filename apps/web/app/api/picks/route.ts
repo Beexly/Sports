@@ -43,6 +43,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         canSeeEdgeScore: true,
         canGetAlerts: false,
         dailyPickLimit: 2,
+        maxConfidence: 57,
+        hasApexAccess: false,
       };
 
   const { searchParams } = new URL(req.url);
@@ -85,6 +87,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       },
       // Server-side tier gate
       ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
+      // Confidence-band ceiling (Workstream G1). A PRO/ELITE DEFENSE: hide bands
+      // above the viewer's tier (PRO can't see SHARP/APEX; ELITE can't see APEX)
+      // unless they hold the Apex add-on (fail-closed → 101 = no ceiling).
+      // SCOPED to premium viewers only. FREE picks are tier:"FREE" = confidence
+      // < PREMIUM_CONFIDENCE_THRESHOLD (70), so some FREE picks sit in [57,70);
+      // a 57 ceiling would zero out that slate. FREE stays selected purely by the
+      // tier:"FREE" gate + take:dailyPickLimit(2), so it can never be hidden here.
+      ...(entitlements.canSeePremiumPicks
+        ? { confidence: { lt: entitlements.hasApexAccess ? 101 : entitlements.maxConfidence } }
+        : {}),
       // Optional grade filter (only useful for PRO+ who can see premium)
       ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
       game: gameFilter,

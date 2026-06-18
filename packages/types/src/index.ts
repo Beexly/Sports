@@ -118,6 +118,20 @@ export interface Entitlements {
   canSeeEdgeScore: boolean;         // public Edge Index
   canGetAlerts: boolean;
   dailyPickLimit: number | null;
+  // ── Confidence-band ceiling (Workstream G1 — server-enforced pick access) ──
+  // maxConfidence is the EXCLUSIVE upper bound on the confidence band a tier may
+  // see. The query filter is `confidence < maxConfidence` (strict less-than), so:
+  //   FREE  57 → can see SIGNAL [50,57)
+  //   PRO   70 → can see SIGNAL+EDGE [50,70)
+  //   ELITE 92 → can see SIGNAL+EDGE+SHARP [50,92)
+  // The APEX band [92,100] is reachable only with hasApexAccess (then the ceiling
+  // opens to 101, i.e. everything). These bands are INFRA-ONLY / UNCALIBRATED —
+  // no win-rate claim is implied (see conviction-tier.ts CONFIDENCE_BANDS).
+  maxConfidence: number;
+  // FAIL-CLOSED: hardcoded false for every tier. No Apex purchase model exists
+  // yet — unlocking APEX needs a future one-time Apex add-on product + a Stripe
+  // one-time-payment webhook to set this true. Until then nobody sees APEX picks.
+  hasApexAccess: boolean;
   // ── Surface gates (server-enforced at the page/API level) ──
   canUseTrendLab: boolean;          // PRO+ — full cohort workbench
   canUseParlayMri: boolean;         // PRO+ — full parlay genome
@@ -135,6 +149,12 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
     canSeeEdgeScore: true,
     canGetAlerts: tier === "ELITE",
     dailyPickLimit: tier === "FREE" ? 2 : null,
+    // Exclusive confidence ceilings (see Entitlements.maxConfidence above):
+    // FREE→57 (SIGNAL only), PRO→70 (+EDGE), ELITE→92 (+SHARP). APEX is gated
+    // separately by hasApexAccess, which is fail-closed below.
+    maxConfidence: tier === "FREE" ? 57 : tier === "PRO" ? 70 : 92,
+    // Fail-closed for every tier until an Apex purchase model ships.
+    hasApexAccess: false,
     canUseTrendLab: isPro,
     canUseParlayMri: isPro,
     canUseClvLedger: tier === "ELITE",

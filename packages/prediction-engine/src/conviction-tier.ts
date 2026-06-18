@@ -155,6 +155,63 @@ export function convictionTier(input: ConvictionInput): ConvictionResult {
   return { tier, expectedWinRate: p, breakEven, meetsConvictionBar, reasons };
 }
 
+// ============================================================
+// Confidence bands — subscription-access architecture (Workstream G1)
+// ============================================================
+//
+// A PARALLEL, additive classifier that maps a pick's 0–100 confidence score to
+// a named band, which the entitlement layer maps to a subscription tier. This is
+// SEPARATE from convictionTier() above (that classifier judges calibrated
+// probability + edge + CLV; this one is a pure access-control partition of the
+// raw confidence range).
+//
+// HONESTY: these bands are INFRASTRUCTURE ONLY and UNCALIBRATED. The confidence
+// score is NOT yet a calibrated win probability (e.g. the 70–79% bucket
+// currently wins 0% on a 16-pick sample). No band carries a win-rate claim; the
+// bands exist solely so the server can gate which picks each tier may see, ready
+// for the day calibration makes the numbers real.
+//
+// Bands (lower-inclusive boundaries; nothing below 50 is bandable):
+//   SIGNAL [50, 57)  → Free
+//   EDGE   [57, 70)  → Pro
+//   SHARP  [70, 92)  → Elite
+//   APEX   [92, 100] → Apex add-on (inclusive at 100)
+
+export type ConfidenceBand = "SIGNAL" | "EDGE" | "SHARP" | "APEX";
+
+export interface ConfidenceBandRange {
+  band: ConfidenceBand;
+  minConfidence: number;
+  maxConfidence: number;
+}
+
+/**
+ * The four confidence bands, in ascending order. Boundaries are lower-inclusive
+ * (a pick AT a boundary lands in the higher band: 57→EDGE, 70→SHARP, 92→APEX);
+ * APEX is inclusive at its upper bound (100). Infra-only / uncalibrated — see the
+ * honesty note above; no band asserts a win rate.
+ */
+export const CONFIDENCE_BANDS: readonly ConfidenceBandRange[] = [
+  { band: "SIGNAL", minConfidence: 50, maxConfidence: 57 },
+  { band: "EDGE", minConfidence: 57, maxConfidence: 70 },
+  { band: "SHARP", minConfidence: 70, maxConfidence: 92 },
+  { band: "APEX", minConfidence: 92, maxConfidence: 100 },
+];
+
+/**
+ * Classify a 0–100 confidence score into its access band, or null when the score
+ * is below the lowest band's floor (< 50 → not bandable). Boundaries are
+ * lower-inclusive; APEX is inclusive at 100.
+ */
+export function confidenceBand(confidence: number): ConfidenceBand | null {
+  if (!Number.isFinite(confidence) || confidence < 50) return null;
+  if (confidence < 57) return "SIGNAL";
+  if (confidence < 70) return "EDGE";
+  if (confidence < 92) return "SHARP";
+  if (confidence <= 100) return "APEX";
+  return null;
+}
+
 /** Count how a slate of picks distributes across tiers — useful for board telemetry. */
 export function summarizeConviction(
   results: readonly ConvictionResult[],

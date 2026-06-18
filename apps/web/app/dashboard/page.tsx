@@ -111,6 +111,14 @@ export default async function DashboardPage({
           ...excludeSeedInProd,
           generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) },
           ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
+          // Confidence-band ceiling (Workstream G1) — PRO/ELITE defense, scoped to
+          // premium viewers. FREE picks are tier:"FREE" (confidence < 70) and some
+          // sit in [57,70), so a 57 ceiling must never apply to them; FREE stays
+          // selected by tier:"FREE" + take:dailyPickLimit. hasApexAccess is
+          // fail-closed (false) → APEX [92,100] stays hidden until an Apex model ships.
+          ...(entitlements.canSeePremiumPicks
+            ? { confidence: { lt: entitlements.hasApexAccess ? 101 : entitlements.maxConfidence } }
+            : {}),
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
         orderBy: [{ isFeatured: "desc" }, { confidence: "desc" }],

@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   convictionTier,
   summarizeConviction,
+  confidenceBand,
+  CONFIDENCE_BANDS,
   BREAK_EVEN_PROBABILITY,
   CONVICTION_MIN_PROBABILITY,
   CONVICTION_MIN_CLV_BEAT_RATE,
@@ -114,5 +116,52 @@ describe("convictionTier", () => {
       convictionTier({ ...QUALIFYING, calibratedProbability: 0.5, edgeDecision: "PASS" }), // PASS
     ];
     expect(summarizeConviction(results)).toEqual({ conviction: 1, lean: 1, pass: 1 });
+  });
+});
+
+describe("confidenceBand (subscription-access partition, infra-only)", () => {
+  it("returns null below the SIGNAL floor", () => {
+    expect(confidenceBand(0)).toBeNull();
+    expect(confidenceBand(49)).toBeNull();
+    expect(confidenceBand(49.999)).toBeNull();
+  });
+
+  it("SIGNAL covers [50, 57) — lower-inclusive", () => {
+    expect(confidenceBand(50)).toBe("SIGNAL"); // boundary in
+    expect(confidenceBand(53)).toBe("SIGNAL");
+    expect(confidenceBand(56.999)).toBe("SIGNAL");
+  });
+
+  it("EDGE covers [57, 70) — boundary 57 lands in EDGE, not SIGNAL", () => {
+    expect(confidenceBand(57)).toBe("EDGE");
+    expect(confidenceBand(65)).toBe("EDGE");
+    expect(confidenceBand(69.999)).toBe("EDGE");
+  });
+
+  it("SHARP covers [70, 92) — boundary 70 lands in SHARP, not EDGE", () => {
+    expect(confidenceBand(70)).toBe("SHARP");
+    expect(confidenceBand(85)).toBe("SHARP");
+    expect(confidenceBand(91.999)).toBe("SHARP");
+  });
+
+  it("APEX covers [92, 100] — boundary 92 lands in APEX, inclusive at 100", () => {
+    expect(confidenceBand(92)).toBe("APEX");
+    expect(confidenceBand(96)).toBe("APEX");
+    expect(confidenceBand(100)).toBe("APEX");
+  });
+
+  it("returns null above 100 and for non-finite input", () => {
+    expect(confidenceBand(100.001)).toBeNull();
+    expect(confidenceBand(Number.NaN)).toBeNull();
+    expect(confidenceBand(Number.POSITIVE_INFINITY)).toBeNull();
+  });
+
+  it("CONFIDENCE_BANDS ranges align with the classifier boundaries", () => {
+    expect(CONFIDENCE_BANDS.map((b) => b.band)).toEqual(["SIGNAL", "EDGE", "SHARP", "APEX"]);
+    // Each band's exclusive upper bound is the next band's inclusive lower bound.
+    for (let i = 0; i < CONFIDENCE_BANDS.length - 1; i++) {
+      expect(CONFIDENCE_BANDS[i]!.maxConfidence).toBe(CONFIDENCE_BANDS[i + 1]!.minConfidence);
+    }
+    expect(CONFIDENCE_BANDS[CONFIDENCE_BANDS.length - 1]!.maxConfidence).toBe(100);
   });
 });

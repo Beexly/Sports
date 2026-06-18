@@ -76,11 +76,16 @@ export {
   BREAK_EVEN_PROBABILITY,
   CONVICTION_MIN_PROBABILITY,
   CONVICTION_MIN_CLV_BEAT_RATE,
+  // Confidence bands — subscription-access partition (Workstream G1; infra-only).
+  confidenceBand,
+  CONFIDENCE_BANDS,
 } from "./conviction-tier.js";
 export type {
   ConvictionTier,
   ConvictionInput,
   ConvictionResult,
+  ConfidenceBand,
+  ConfidenceBandRange,
 } from "./conviction-tier.js";
 // Calibration application — confidence → calibrated win probability (self-suppressing
 // until a settled sample exists; activation is an audited MODEL_VERSION step). See

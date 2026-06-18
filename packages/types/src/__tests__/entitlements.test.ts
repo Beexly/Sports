@@ -13,6 +13,8 @@ describe("getEntitlements", () => {
     it("can see edge score", () => expect(ents.canSeeEdgeScore).toBe(true));
     it("cannot get alerts", () => expect(ents.canGetAlerts).toBe(false));
     it("daily limit is 2", () => expect(ents.dailyPickLimit).toBe(2));
+    it("confidence ceiling is 57 (SIGNAL band only)", () => expect(ents.maxConfidence).toBe(57));
+    it("has no Apex access (fail-closed)", () => expect(ents.hasApexAccess).toBe(false));
   });
 
   describe("PRO tier", () => {
@@ -26,6 +28,8 @@ describe("getEntitlements", () => {
     it("can see edge score", () => expect(ents.canSeeEdgeScore).toBe(true));
     it("cannot get alerts", () => expect(ents.canGetAlerts).toBe(false));
     it("unlimited picks", () => expect(ents.dailyPickLimit).toBeNull());
+    it("confidence ceiling is 70 (SIGNAL+EDGE)", () => expect(ents.maxConfidence).toBe(70));
+    it("has no Apex access (fail-closed)", () => expect(ents.hasApexAccess).toBe(false));
   });
 
   describe("ELITE tier", () => {
@@ -39,6 +43,9 @@ describe("getEntitlements", () => {
     });
     it("can get alerts", () => expect(ents.canGetAlerts).toBe(true));
     it("unlimited picks", () => expect(ents.dailyPickLimit).toBeNull());
+    it("confidence ceiling is 92 (SIGNAL+EDGE+SHARP)", () => expect(ents.maxConfidence).toBe(92));
+    it("has no Apex access (fail-closed — no Apex purchase model yet)", () =>
+      expect(ents.hasApexAccess).toBe(false));
   });
 
   describe("surface gates", () => {
