@@ -68,6 +68,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
   "board-command": {
     gradient: `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/board-command.webp",
+    motion: "/immersive/board-command.mp4",
   },
   "brief-horizon": {
     gradient: `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
@@ -80,6 +81,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
   "trends-field": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.11), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/trends-field.webp",
+    motion: "/immersive/trends-field.mp4",
   },
   "performance-grid": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 78% 20%, rgba(139,92,246,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
@@ -88,6 +90,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
   "proof-crystal": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(122,92,255,0.14), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/proof-crystal.webp",
+    motion: "/immersive/proof-crystal.mp4",
   },
   "home-observatory": {
     gradient: `radial-gradient(70% 60% at 50% -10%, rgba(0,229,255,0.15), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
@@ -101,6 +104,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
   "players-constellation": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 22% 78%, rgba(255,45,214,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/players-constellation.webp",
+    motion: "/immersive/players-constellation.mp4",
   },
 };
 
