@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { db } from "@sports/db";
 import { getReadinessGates, buildCalibrator, DEFAULT_MIN_CALIBRATION_SAMPLE } from "@sports/prediction-engine";
+import { loadEloVsMarketBacktest } from "@/lib/calibration/elo-backtest";
 
 /**
  * Cockpit calibration — live data binding, rebuilt. Preserves the
@@ -48,7 +49,7 @@ export default async function CockpitCalibrationPage() {
   const gates = getReadinessGates();
 
   // Defensive counts — page renders zeros in stub mode / DB outage.
-  const [gamesTotal, gamesCompleted, picksTotal, picksResolved, settledRows, eligibleRows, clvAgg] =
+  const [gamesTotal, gamesCompleted, picksTotal, picksResolved, settledRows, eligibleRows, clvAgg, eloReport] =
     await Promise.all([
       db.game.count().catch(() => 0),
       db.game.count({ where: { status: "FINAL" } }).catch(() => 0),
@@ -84,6 +85,7 @@ export default async function CockpitCalibrationPage() {
           _count: { clvValue: true },
         })
         .catch(() => null),
+      loadEloVsMarketBacktest().catch(() => null),
     ]);
   const picksPending = picksTotal - picksResolved;
 
@@ -262,6 +264,80 @@ export default async function CockpitCalibrationPage() {
             {clvAgg._count.clvValue} graded picks · average CLV{" "}
             <span className="font-mono">{(clvAgg._avg.clvValue ?? 0).toFixed(2)}</span> (positive = beat the close)
           </p>
+        )}
+      </section>
+
+      <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs">
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+          Elo independent signal — gate decision
+        </h2>
+        <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
+          Results-only Elo vs the de-vigged closing line on the same games. Flipping{" "}
+          <span className="font-mono">INDEPENDENT_EDGE_ENABLED=true</span> surfaces the Elo fair
+          probability in the glass-box factor trail at weight 0 (never moves confidence or picks).
+          Pricing it in requires Elo Brier ≤ market Brier <em>and</em> a positive CLV beat-rate.
+        </p>
+        {!eloReport || eloReport.status === "no-data" ? (
+          <div className="rounded-xl border border-titanium/40 bg-obsidian/40 p-3">
+            <p className="font-mono text-xs text-amber-400">No data yet</p>
+            <p className="mt-1 text-[10px] text-ion-3">
+              Run <span className="font-mono">GET /api/cron/backfill-historical-games</span> (requires{" "}
+              <span className="font-mono">CRON_SECRET</span>) to populate the{" "}
+              <span className="font-mono">historicalGame</span> table. Re-visit this page after the
+              backfill to see whether Elo matches the market.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <BaselineStat
+                label="Elo Brier"
+                value={eloReport.elo.brier.toFixed(4)}
+                sub="lower better · 0.25 = coin flip"
+              />
+              <BaselineStat
+                label="Market Brier"
+                value={eloReport.market.brier.toFixed(4)}
+                sub="efficient baseline"
+              />
+              <BaselineStat
+                label="Better calibrated"
+                value={eloReport.betterCalibrated.toUpperCase()}
+                sub={eloReport.betterCalibrated === "elo" ? "Elo beats the close" : eloReport.betterCalibrated === "market" ? "market leads" : "tied"}
+              />
+              <BaselineStat
+                label="Comparison sample"
+                value={eloReport.comparisonSampleSize.toLocaleString()}
+                sub={eloReport.seasonRange ? `seasons ${eloReport.seasonRange.from}–${eloReport.seasonRange.to}` : ""}
+              />
+            </div>
+            <div className={`mt-3 rounded-lg border px-3 py-2 text-[11px] leading-relaxed ${
+              eloReport.betterCalibrated === "elo"
+                ? "border-emerald-800 bg-emerald-950/30 text-emerald-200"
+                : "border-titanium/40 bg-obsidian/30 text-ion-2"
+            }`}>
+              {eloReport.betterCalibrated === "elo" ? (
+                <>
+                  <strong className="text-emerald-300">Elo beats the de-vigged close on this sample.</strong>{" "}
+                  Safe to flip <span className="font-mono">INDEPENDENT_EDGE_ENABLED=true</span> —
+                  the estimate will appear in the glass-box factor trail. To price it into confidence
+                  (Phase 3), also verify a positive CLV beat-rate on the graded picks above and do
+                  the audited MODEL_VERSION bump.
+                </>
+              ) : (
+                <>
+                  Market leads on this sample. Safe to flip{" "}
+                  <span className="font-mono">INDEPENDENT_EDGE_ENABLED=true</span> for surface-only
+                  display (weight 0, picks unaffected). Hold off pricing it in until Elo Brier ≤
+                  market Brier across a larger or more recent sample.
+                </>
+              )}
+            </div>
+            <p className="mt-2 text-[10px] text-ion-3">
+              ECE Elo: {eloReport.elo.ece.toFixed(4)} · ECE market: {eloReport.market.ece.toFixed(4)} ·{" "}
+              Teams rated: {eloReport.elo.teamsRated} · Generated: {eloReport.generatedAt.slice(0, 10)}
+            </p>
+          </>
         )}
       </section>
 

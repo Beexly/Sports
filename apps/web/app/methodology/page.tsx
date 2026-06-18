@@ -39,6 +39,7 @@ const FACTORS = [
   "Rest differential",
   "Cross-market agreement",
   "Data quality",
+  "Elo independent estimate",
 ] as const;
 
 const STACK = [
@@ -57,6 +58,7 @@ const STACK = [
 ] as const;
 
 const CHANGELOG = [
+  ["v5.1", "Elo independent estimator — results-only team ratings feed the glass-box factor trail. Surfaced at weight 0 until CLV validation gates pricing-in."],
   ["v5.0", "Bootstrap-canonical gating and settled-only learning policy."],
   ["v4.0", "Expanded factor snapshot storage for public audit trails."],
   ["v3.0", "Added schedule stress, rest, and cross-market checks."],
@@ -153,7 +155,7 @@ export default function MethodologyPage(): JSX.Element {
                 </p>
               </div>
             </Reveal>
-            <Stagger className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5" step={50}>
+            <Stagger className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" step={50}>
               {FACTORS.map((factor) => (
                 <div key={factor} className="surface-card min-h-20 p-4">
                   <p className="text-sm font-semibold text-white">{factor}</p>
