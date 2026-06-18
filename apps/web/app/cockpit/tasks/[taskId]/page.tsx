@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { db } from "@sports/db";
 import { AGENTS } from "@/lib/cockpit/agents";
 import { allowedTransitionsFrom } from "@/lib/cockpit/transitions";
+import { buildDecisionActions } from "@/lib/cockpit/daily-command/decision-mapping";
+import { DecisionActions } from "@/components/cockpit/daily-command/decision-actions";
 
 export default async function CockpitTaskDetail({
   params,
@@ -19,6 +21,7 @@ export default async function CockpitTaskDetail({
 
   const agent = AGENTS[task.assignedAgent];
   const allowed = allowedTransitionsFrom(task.status);
+  const decisionActions = buildDecisionActions(task.status);
 
   return (
     <div className="flex flex-col gap-6">
@@ -73,6 +76,19 @@ export default async function CockpitTaskDetail({
           Transitions are applied via the API at <code className="rounded bg-obsidian/70 px-1">PATCH /api/cockpit/tasks/{task.id}</code>. The
           service refuses any move outside this allow-list and writes a CockpitDecision row on success.
         </p>
+
+        {allowed.length > 0 && (
+          <div className="mt-4 border-t border-white/[0.06] pt-4">
+            <h3 className="mb-1 text-xs font-semibold uppercase tracking-widest text-ink-400">
+              Decide
+            </h3>
+            <p className="text-[11px] text-ink-500">
+              Approve, Edit, Reject, or Escalate. Reject and Escalate require a note. Each writes a
+              CockpitDecision via <code className="rounded bg-obsidian/70 px-1">POST /api/cockpit/tasks/{task.id}/decide</code>.
+            </p>
+            <DecisionActions taskId={task.id} actions={decisionActions} />
+          </div>
+        )}
       </section>
 
       <section>
