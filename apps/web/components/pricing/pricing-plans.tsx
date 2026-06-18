@@ -44,6 +44,15 @@ export function PricingPlans({
   const [interval, setInterval] = useState<Interval>("year");
   const annual = interval === "year";
 
+  // Honest savings headline: derive the real "up to" figure from the plans we
+  // were handed, never a hardcoded number. The annual savings differ by pricing
+  // mode (founding vs standard), so a fixed percentage would overstate the
+  // founding-rate savings. Computed from each plan's own annualSavingsPct.
+  const maxAnnualSavings = plans.reduce(
+    (max, p) => (p.annualSavingsPct != null && p.annualSavingsPct > max ? p.annualSavingsPct : max),
+    0,
+  );
+
   return (
     <div>
       {/* Billing toggle */}
@@ -71,7 +80,7 @@ export function PricingPlans({
           {annual && (
             <span className="h-1.5 w-1.5 rounded-full bg-verify animate-live-pulse" aria-hidden="true" />
           )}
-          Save up to 59% annually
+          Save up to {maxAnnualSavings}% annually
         </span>
       </div>
 
