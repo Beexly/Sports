@@ -281,3 +281,20 @@ export type {
   MarketEstimate,
   EnsembleResult,
 } from "./multi-market-ensemble.js";
+
+// Synthetic public-lean / fade — the glass-box reframe of an agent-swarm crowd
+// simulation. Transparent weighted proxy over public-attractor facts → a capped,
+// labelled contrarian nudge. EXPERIMENTAL + gated OFF (must earn CLV correlation
+// before any MODEL_VERSION step lets it touch a published number); never
+// originates a pick; same hard-capped Tier-B posture as narrative-signal.
+export {
+  syntheticPublicLean,
+  MAX_FADE_NUDGE,
+  MAX_CONFIDENCE,
+  SYNTHETIC_FADE_LABEL,
+} from "./synthetic-fade.js";
+export type {
+  PublicLeanInput,
+  SyntheticPublicLean,
+  FadeContribution,
+} from "./synthetic-fade.js";
