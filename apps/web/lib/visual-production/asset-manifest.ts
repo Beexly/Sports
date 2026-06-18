@@ -64,6 +64,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
   "academy-path": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(139,92,246,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/academy-path.webp",
+    motion: "/immersive/academy-path.mp4",
   },
   "board-command": {
     gradient: `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
@@ -73,10 +74,12 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
   "brief-horizon": {
     gradient: `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/brief-horizon.webp",
+    motion: "/immersive/brief-horizon.mp4",
   },
   "intelligence-deepsignal": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 22% 80%, rgba(255,45,214,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/intelligence-deepsignal.webp",
+    motion: "/immersive/intelligence-deepsignal.mp4",
   },
   "trends-field": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.11), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
