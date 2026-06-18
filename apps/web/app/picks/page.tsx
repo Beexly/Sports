@@ -176,6 +176,12 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
       ? picksResult.value.meta.date
       : (date ?? new Date().toISOString().split("T")[0]!);
 
+  const totalAvailableToday =
+    picksResult.status === "fulfilled"
+      ? (picksResult.value.meta.totalAvailableToday ?? picks.length)
+      : picks.length;
+  const hiddenCount = isFreeTier ? Math.max(0, totalAvailableToday - picks.length) : 0;
+
   const SPORTS = [
     { key: "", label: "All" },
     { key: "nfl", label: "NFL" },
@@ -399,6 +405,11 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             </div>
           )}
 
+          {/* Locked pick teasers for free users: show what's hidden */}
+          {isFreeTier && hiddenCount > 0 && !fetchError && (
+            <LockedPickGrid hiddenCount={hiddenCount} />
+          )}
+
           {/* Bottom upgrade CTA for free users */}
           {isFreeTier && picks.length > 0 && (
             <div className="mt-10 rounded-xl border border-ion-blue/40 bg-ion-blue/5 p-6 text-center">
@@ -521,6 +532,76 @@ function StatPill({
         {value}
       </p>
       <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ion-2">{label}</p>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Locked pick teasers — shows free users what's hidden
+// ─────────────────────────────────────────────
+
+function LockedPickCard() {
+  return (
+    <Link
+      href="/pricing"
+      aria-label="Unlock this signal — upgrade to Pro"
+      className="group relative overflow-hidden rounded-2xl border border-ion-blue/20 bg-carbon/40 p-5 transition-colors hover:border-ion-blue/50 hover:bg-carbon/60"
+    >
+      {/* Blur overlay */}
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 rounded-2xl bg-obsidian/70 backdrop-blur-[3px]">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full border border-ion-blue/40 bg-ion-blue/10 group-hover:border-ion-blue/80 group-hover:bg-ion-blue/20 transition-colors">
+          <svg className="h-4 w-4 text-ion-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+        </div>
+        <span className="text-xs font-semibold text-ion-blue group-hover:text-ion-blue-glow transition-colors">Pro signal</span>
+      </div>
+      {/* Blurred pick shape behind */}
+      <div className="space-y-3" aria-hidden="true">
+        <div className="flex items-start justify-between gap-2">
+          <div className="space-y-1.5">
+            <div className="flex gap-1.5">
+              <div className="h-4 w-10 rounded bg-titanium/60" />
+              <div className="h-4 w-20 rounded bg-titanium/40" />
+            </div>
+            <div className="h-5 w-40 rounded bg-titanium/50" />
+            <div className="h-3.5 w-28 rounded bg-titanium/30" />
+          </div>
+          <div className="space-y-1.5 text-right">
+            <div className="h-5 w-16 rounded-full bg-titanium/50" />
+            <div className="h-3.5 w-12 rounded bg-titanium/30" />
+          </div>
+        </div>
+        <div className="h-1.5 w-full rounded-full bg-titanium/30" />
+        <div className="space-y-1">
+          <div className="h-3 w-full rounded bg-titanium/20" />
+          <div className="h-3 w-4/5 rounded bg-titanium/20" />
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function LockedPickGrid({ hiddenCount }: { hiddenCount: number }) {
+  const showCount = Math.min(hiddenCount, 4);
+  return (
+    <div className="mt-5" data-testid="locked-pick-grid">
+      <div className="mb-3 flex items-center justify-between">
+        <p className="text-xs font-semibold uppercase tracking-widest text-ion-3">
+          {hiddenCount} more signal{hiddenCount === 1 ? "" : "s"} today · Pro required
+        </p>
+        <Link
+          href="/pricing"
+          className="text-xs font-semibold text-ion-blue hover:text-ion-blue-glow transition-colors"
+        >
+          Unlock all →
+        </Link>
+      </div>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        {Array.from({ length: showCount }).map((_, i) => (
+          <LockedPickCard key={i} />
+        ))}
+      </div>
     </div>
   );
 }

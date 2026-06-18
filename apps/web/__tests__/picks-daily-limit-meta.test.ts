@@ -89,4 +89,21 @@ describe("/picks page — member data flow", () => {
     expect(picksPageSrc).toMatch(/hitDailyLimit/);
     expect(picksPageSrc).toMatch(/signals published today/);
   });
+
+  it("computes hiddenCount from totalAvailableToday minus visible picks", () => {
+    expect(picksPageSrc).toMatch(/hiddenCount.*totalAvailableToday.*picks\.length/);
+  });
+
+  it("renders LockedPickGrid only for free-tier users with hidden picks", () => {
+    expect(picksPageSrc).toMatch(/isFreeTier.*hiddenCount.*>\s*0/);
+    expect(picksPageSrc).toMatch(/LockedPickGrid.*hiddenCount/);
+  });
+
+  it("caps the locked-card display at four cards", () => {
+    expect(picksPageSrc).toMatch(/Math\.min\(hiddenCount,\s*4\)/);
+  });
+
+  it("links locked cards to the pricing page", () => {
+    expect(picksPageSrc).toMatch(/LockedPickCard[\s\S]{0,500}href="\/pricing"/);
+  });
 });
