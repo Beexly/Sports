@@ -71,6 +71,12 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
     ],
   },
   {
+    section: "Monetization",
+    items: [
+      { href: "/cockpit/revenue", label: "Revenue", hint: "Lanes, MRR, activation" },
+    ],
+  },
+  {
     section: "Ops",
     items: [
       { href: "/cockpit/api-costs", label: "API Costs", hint: "Claude budget monitor" },
