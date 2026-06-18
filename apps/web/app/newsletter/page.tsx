@@ -10,14 +10,15 @@ import { NewsletterForm } from "@/components/founding-desk/newsletter-form";
 import { TrackView } from "@/components/founding-desk/track-view";
 
 export const metadata: Metadata = {
-  title: `Galaxy Desk Note — Free Newsletter | ${BRAND_NAME}`,
+  title: `Galaxy Desk Note — Free Sports Intelligence Newsletter`,
   description:
-    "The Galaxy Desk Note: market signals, No-Bet Watch, and the reasoning behind the reads. Free. Sent when the brief is worth sending — not on a mechanical schedule.",
+    "The Galaxy Desk Note delivers market signals, No-Bet Watch, and the reasoning behind every read — free, in your inbox. Sent when the brief earns it, not on a mechanical schedule.",
   alternates: { canonical: "/newsletter" },
   openGraph: {
     title: `Galaxy Desk Note — ${BRAND_NAME}`,
     description:
       "Join the free newsletter. Market signals, No-Bet Watch, and the reasoning — no spam, sent when the brief earns it.",
+    type: "website",
   },
 };
 
@@ -212,7 +213,7 @@ export default function NewsletterPage() {
                   className="font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
                   style={{ color: BRAND_COLORS.orbitalCyan }}
                 >
-                  Want more?
+                  Step up to the full brief
                 </p>
                 <h2
                   className="mt-3 font-display text-white"
@@ -221,12 +222,13 @@ export default function NewsletterPage() {
                     lineHeight: 1.15,
                   }}
                 >
-                  The full Desk, before the record exists.
+                  Galaxy Founding Desk — the complete intelligence ritual.
                 </h2>
                 <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-ink-300">
-                  Founding Desk members get the full daily brief, No-Bet Watch,
-                  Market Mirage, Signal vs Noise, and the ability to submit one
-                  game per cycle. Founding pricing is held for life.
+                  Founding Desk members receive the full daily brief — Market
+                  Mirage, No-Bet Watch, Signal vs Noise, and the ability to
+                  submit one game per cycle. Founding pricing is held for the
+                  life of your membership.
                 </p>
                 <div className="mt-7 flex flex-wrap justify-center gap-4">
                   <Link href="/founding-desk" className="btn btn-primary">

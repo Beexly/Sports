@@ -10,12 +10,13 @@ import { TrackView } from "@/components/founding-desk/track-view";
 export const metadata: Metadata = {
   title: "Trust Room — How Confidence Works & What No-Bet Means",
   description:
-    "How Galaxy Sports Edge builds confidence, what No-Bet means, our limitations, and why we are a sports intelligence company — not a sportsbook. We track the process before we claim the outcome.",
+    "How Galaxy builds confidence scores, what No-Bet means, our honest limitations, and why restraint is the trust pitch — not a weakness. We track the process before we claim the outcome.",
   alternates: { canonical: "/trust-room" },
   openGraph: {
     title: `Trust Room — ${BRAND_NAME}`,
     description:
       "Confidence is not certainty. No-Bet is a position. We track the process before we claim the outcome.",
+    type: "website",
   },
 };
 

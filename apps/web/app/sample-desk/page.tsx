@@ -10,12 +10,13 @@ import { TrackView } from "@/components/founding-desk/track-view";
 export const metadata: Metadata = {
   title: "Sample Desk Brief — See What Founding Members Receive",
   description:
-    "A representative Galaxy Desk brief so you understand exactly what Founding members read before every slate. Illustrative format — real product, sample content.",
+    "A representative Galaxy Desk brief so you understand exactly what Founding members read before every slate. Real format, illustrative content — not a live signal.",
   alternates: { canonical: "/sample-desk" },
   openGraph: {
     title: `Sample Desk Brief — ${BRAND_NAME}`,
     description:
       "Market Mirage · No-Bet Watch · Signal vs Noise · Public Narrative vs Market Pressure. Illustrative format showing the Founding Desk structure.",
+    type: "website",
   },
 };
 
@@ -205,12 +206,12 @@ export default function SampleDeskPage() {
                   </p>
                   <ul className="space-y-2 text-sm leading-relaxed text-ink-300">
                     <li className="flex items-start gap-2">
-                      <span style={{ color: BRAND_COLORS.orbitalCyan, marginTop: 2 }}>→</span>
+                      <span style={{ color: BRAND_COLORS.orbitalCyan, marginTop: 2 }} aria-hidden="true">→</span>
                       Consistent line movement toward the road side over the past
                       36 hours — market structure shift, not noise.
                     </li>
                     <li className="flex items-start gap-2">
-                      <span style={{ color: BRAND_COLORS.orbitalCyan, marginTop: 2 }}>→</span>
+                      <span style={{ color: BRAND_COLORS.orbitalCyan, marginTop: 2 }} aria-hidden="true">→</span>
                       The totals market has opened soft and drawn heavy early
                       action — suggesting the opening number may have been set
                       conservatively.
@@ -226,14 +227,14 @@ export default function SampleDeskPage() {
                   </p>
                   <ul className="space-y-2 text-sm leading-relaxed text-ink-300">
                     <li className="flex items-start gap-2">
-                      <span style={{ color: BRAND_COLORS.ionMagenta, marginTop: 2 }}>—</span>
+                      <span style={{ color: BRAND_COLORS.ionMagenta, marginTop: 2 }} aria-hidden="true">—</span>
                       The &quot;hot streak&quot; narrative circulating in the sports
                       media for the home side is based on a five-game window during
                       a stretch where they faced four bottom-third defenses. The
                       streak does not generalize.
                     </li>
                     <li className="flex items-start gap-2">
-                      <span style={{ color: BRAND_COLORS.ionMagenta, marginTop: 2 }}>—</span>
+                      <span style={{ color: BRAND_COLORS.ionMagenta, marginTop: 2 }} aria-hidden="true">—</span>
                       The starting time-of-possession stat being cited in preview
                       coverage reflects a sample that includes garbage-time
                       possessions. Strip those and the number halves.

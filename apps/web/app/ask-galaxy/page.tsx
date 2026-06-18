@@ -10,14 +10,15 @@ import { AskGalaxyForm } from "@/components/founding-desk/ask-galaxy-form";
 import { TrackView } from "@/components/founding-desk/track-view";
 
 export const metadata: Metadata = {
-  title: `Ask Galaxy — Submit a Game for Manual Review | ${BRAND_NAME}`,
+  title: `Ask Galaxy — Submit a Game for Manual Intelligence Review`,
   description:
-    "Send Galaxy one game. We classify it honestly — action signal, caution signal, no-bet signal, or insufficient data. Manual review, never automated betting advice.",
+    "Send us one game. A human analyst reads every submission and classifies it honestly: action signal, caution signal, no-bet signal, or insufficient data. Never automated betting advice.",
   alternates: { canonical: "/ask-galaxy" },
   openGraph: {
-    title: `Ask Galaxy — ${BRAND_NAME}`,
+    title: `Ask Galaxy — Submit a Game | ${BRAND_NAME}`,
     description:
       "Submit one game for a manual intelligence read. We classify it: action signal, caution signal, no-bet signal, or insufficient data — honestly, never as betting advice.",
+    type: "website",
   },
 };
 

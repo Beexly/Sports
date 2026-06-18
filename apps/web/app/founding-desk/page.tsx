@@ -13,12 +13,13 @@ import { TrackView } from "@/components/founding-desk/track-view";
 export const metadata: Metadata = {
   title: "Galaxy Founding Desk — The Intelligence Ritual",
   description:
-    "Before you bet, follow a pick, or make a sports decision — read the Desk. Daily calibrated signals, No-Bet Watch, Market Mirage, and Signal vs Noise. Founding pricing, locked for the life of your membership.",
+    "Before you bet, follow a pick, or make a sports decision — read the Desk. Daily calibrated signals, No-Bet Watch, Market Mirage, and Signal vs Noise. Founding pricing held for life.",
   alternates: { canonical: "/founding-desk" },
   openGraph: {
     title: `Galaxy Founding Desk — ${BRAND_NAME}`,
     description:
       "The intelligence ritual for people who are done being sold certainty. Daily Desk brief · No-Bet Watch · Market Mirage · Signal vs Noise.",
+    type: "website",
   },
 };
 
@@ -309,7 +310,7 @@ export default function FoundingDeskPage() {
                   className="font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
                   style={{ color: BRAND_COLORS.orbitalCyan }}
                 >
-                  Ready to join
+                  Join the Founding Desk
                 </p>
                 <h2
                   className="mt-3 font-display text-white"
@@ -318,12 +319,13 @@ export default function FoundingDeskPage() {
                     lineHeight: 1.15,
                   }}
                 >
-                  Back the Desk before the record exists.
+                  The lowest price the Desk will ever carry.
                 </h2>
                 <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-ink-300">
-                  Founding pricing is held for the life of your membership — the
-                  lowest price the Desk will ever carry. When the verified record
-                  grows and prices rise for new members, yours stays put.
+                  Founding pricing is held for the life of your membership. When
+                  the record grows and prices rise for new members, yours never
+                  does. The intelligence ritual, before the full record exists —
+                  honest about that from the start.
                 </p>
                 <div className="mt-7 flex flex-wrap justify-center gap-4">
                   <FoundingDeskCta

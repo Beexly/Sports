@@ -9,12 +9,13 @@ import { BRAND_NAME, BRAND_COLORS, SUPPORT_EMAIL } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Creator Network — Contribute to Galaxy Sports Edge",
   description:
-    "Become a Galaxy Sports Edge contributor. We partner with micro-creators and independent analysts across NFL, NBA, MLB, college football, fantasy, DFS, sports-betting education, and Houston-local sports. Honest revenue share, compliance guardrails, and real editorial support.",
+    "Contribute to Galaxy Sports Edge as an independent analyst or creator. Eight open lanes — NFL, NBA, MLB, college football, fantasy, DFS, sports-betting education, and Houston local. Honest revenue share, compliance guardrails, real editorial support.",
   alternates: { canonical: "/creator-network" },
   openGraph: {
     title: `Creator Network — ${BRAND_NAME}`,
     description:
       "Partner with Galaxy Sports Edge as a creator contributor. Content templates, brand guide, referral codes, revenue share, and compliance-first editorial standards.",
+    type: "website",
   },
 };
 

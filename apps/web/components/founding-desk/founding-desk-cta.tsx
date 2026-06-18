@@ -109,7 +109,7 @@ export function FoundingDeskCta({ displayPrice, offerLabel }: FoundingDeskCtaPro
       <button
         onClick={handleClick}
         disabled={isLoading}
-        className="btn btn-primary"
+        className="btn btn-primary min-h-11"
         style={{ minWidth: 220, opacity: isLoading ? 0.7 : 1 }}
         aria-label={`Join the Founding Desk — $${displayPrice} for ${offerLabel}`}
       >

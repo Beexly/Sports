@@ -328,7 +328,7 @@ export function AskGalaxyForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="btn btn-primary"
+          className="btn btn-primary min-h-11"
           style={{ opacity: isLoading ? 0.7 : 1 }}
         >
           {isLoading ? "Submitting…" : "Send this game to Galaxy"}

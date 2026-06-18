@@ -9,12 +9,13 @@ import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Shop — Galaxy Sports Edge Merch (Opening Soon)",
   description:
-    "Galaxy Sports Edge print-on-demand merch. Validating which phrases resonate before opening the store. Help us choose — tell us which phrase you would wear.",
+    "Galaxy Sports Edge print-on-demand merch is in phrase validation. No live products yet. Help shape the first drop — tell us which phrase you would wear.",
   alternates: { canonical: "/shop" },
   openGraph: {
     title: `Shop — ${BRAND_NAME} (Opening Soon)`,
     description:
       "Galaxy Sports Edge merch is in validation. No live products yet. Tell us which phrase you would wear and help shape the first drop.",
+    type: "website",
   },
 };
 

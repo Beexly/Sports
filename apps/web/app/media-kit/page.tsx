@@ -9,8 +9,14 @@ import { SPONSOR_PRICING_TIERS } from "@/lib/revenue/sponsors";
 export const metadata: Metadata = {
   title: "Media Kit — Sponsor Galaxy Sports Edge",
   description:
-    "Sponsor information for Galaxy Sports Edge — sports intelligence media for people done being sold certainty. Early-stage, founding-sponsor pricing. We sell niche trust, not fake reach.",
+    "Sponsor information for Galaxy Sports Edge — sports intelligence media built on trust, not hype. Early-stage founding-sponsor pricing. Niche audience. No fabricated reach numbers.",
   alternates: { canonical: "/media-kit" },
+  openGraph: {
+    title: `Media Kit — Sponsor ${BRAND_NAME}`,
+    description:
+      "Sports intelligence media for people done being sold certainty. Founding-sponsor pricing, honest reach numbers, brand-fit review on every inquiry.",
+    type: "website",
+  },
 };
 
 const CONTENT_FORMATS = [
@@ -205,19 +211,19 @@ export default function MediaKitPage() {
                 </p>
                 <ul className="mt-5 flex flex-col gap-2 text-sm text-ink-300">
                   <li className="flex items-start gap-2">
-                    <span style={{ color: BRAND_COLORS.orbitalCyan }}>—</span>
+                    <span style={{ color: BRAND_COLORS.orbitalCyan }} aria-hidden="true">—</span>
                     <span>Sports intelligence / media / analytics. Not a sportsbook. Not a tout.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span style={{ color: BRAND_COLORS.orbitalCyan }}>—</span>
+                    <span style={{ color: BRAND_COLORS.orbitalCyan }} aria-hidden="true">—</span>
                     <span>No fabricated audience numbers. We are early-stage; we say so.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span style={{ color: BRAND_COLORS.orbitalCyan }}>—</span>
+                    <span style={{ color: BRAND_COLORS.orbitalCyan }} aria-hidden="true">—</span>
                     <span>No win-rate claims before the internal evidence supports them.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span style={{ color: BRAND_COLORS.orbitalCyan }}>—</span>
+                    <span style={{ color: BRAND_COLORS.orbitalCyan }} aria-hidden="true">—</span>
                     <span>No-Bet is a first-class product value, not a fallback.</span>
                   </li>
                 </ul>
@@ -416,6 +422,7 @@ export default function MediaKitPage() {
                     <span
                       className="shrink-0 font-mono text-xs"
                       style={{ color: BRAND_COLORS.orbitalCyan }}
+                      aria-hidden="true"
                     >
                       ✓
                     </span>

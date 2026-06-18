@@ -115,7 +115,7 @@ export function NewsletterForm({ source = "newsletter-page" }: NewsletterFormPro
         <button
           type="submit"
           disabled={state === "loading" || email.length === 0}
-          className="btn btn-primary shrink-0"
+          className="btn btn-primary min-h-11 shrink-0"
           style={{ opacity: state === "loading" ? 0.7 : 1 }}
         >
           {state === "loading" ? "Saving…" : "Join the Desk Note"}

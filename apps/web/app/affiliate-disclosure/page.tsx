@@ -8,8 +8,14 @@ import { BRAND_NAME, BRAND_COLORS, LEGAL_EMAIL } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Affiliate & Sponsorship Disclosure — Galaxy Sports Edge",
   description:
-    "Galaxy Sports Edge affiliate and sponsorship disclosure. We disclose material connections clearly. There are currently no active affiliate relationships.",
+    "Galaxy Sports Edge affiliate and sponsorship disclosure. No active affiliate relationships as of June 2026. We disclose every material connection clearly, in plain language, at the point of placement.",
   alternates: { canonical: "/affiliate-disclosure" },
+  openGraph: {
+    title: `Affiliate & Sponsorship Disclosure — ${BRAND_NAME}`,
+    description:
+      "No active affiliate relationships. Full disclosure policy, FTC compliance posture, and sportsbook-affiliate status — plain language, updated whenever arrangements change.",
+    type: "website",
+  },
 };
 
 export default function AffiliateDisclosurePage() {

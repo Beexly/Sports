@@ -9,12 +9,13 @@ import { BRAND_NAME, BRAND_COLORS, SUPPORT_EMAIL } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Galaxy Desk Podcast — Sports Intelligence Audio",
   description:
-    "The Galaxy Desk Podcast: 12–18 minutes of calibrated sports intelligence. Market Mirage, No-Bet Watch, one matchup signal, one public-narrative correction. Building now — notify me when the first episodes drop.",
+    "The Galaxy Desk Podcast: 12–18 minutes per episode, five structured segments. Market Mirage, No-Bet Watch, one matchup signal, one public-narrative correction, and what we are not claiming yet. Building now.",
   alternates: { canonical: "/podcast" },
   openGraph: {
     title: `Galaxy Desk Podcast — ${BRAND_NAME}`,
     description:
       "The audio version of the Galaxy Desk brief. Market Mirage, No-Bet Watch, matchup signals, and public-narrative corrections. Episodes coming soon.",
+    type: "website",
   },
 };
 
@@ -301,12 +302,12 @@ export default function PodcastPage() {
                 >
                   Be first
                 </p>
-                <h2
+                <h3
                   className="mt-3 font-display text-2xl text-white"
                   style={{ lineHeight: 1.15 }}
                 >
                   Notify me when episodes drop.
-                </h2>
+                </h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-300">
                   Sign up for the Galaxy Desk Note. Subscribers hear about new
                   episodes before they post anywhere else — plus the weekly
@@ -335,12 +336,12 @@ export default function PodcastPage() {
                 >
                   Sponsors
                 </p>
-                <h2
+                <h3
                   className="mt-3 font-display text-2xl text-white"
                   style={{ lineHeight: 1.15 }}
                 >
                   Interested in sponsoring?
-                </h2>
+                </h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-300">
                   We sell niche trust — not fake reach. Podcast sponsor slots
                   go to businesses whose audience overlaps with disciplined

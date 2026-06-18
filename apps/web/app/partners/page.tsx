@@ -6,10 +6,16 @@ import { Reveal, Stagger } from "@/components/motion/reveal";
 import { BRAND_NAME, BRAND_COLORS, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Partners — Galaxy Sports Edge",
+  title: "Partners — Work With Galaxy Sports Edge",
   description:
-    "Partner with Galaxy Sports Edge — sports intelligence media. Content partnerships, newsletter swaps, local business collaborations, and more. We are not a sportsbook.",
+    "Partner with Galaxy Sports Edge — sponsor placements, newsletter swaps, local business collaborations, and creator partnerships. Sports intelligence media built on trust. Brand-fit review on every inquiry.",
   alternates: { canonical: "/partners" },
+  openGraph: {
+    title: `Partners — ${BRAND_NAME}`,
+    description:
+      "Sponsor placements, newsletter swaps, local collaborations, and creator partnerships with a trust-first sports intelligence brand. No sportsbook affiliates at this stage.",
+    type: "website",
+  },
 };
 
 const PARTNER_CATEGORIES = [
@@ -298,9 +304,9 @@ export default function PartnersPage() {
                 >
                   Not accepted
                 </p>
-                <h3 className="mt-2 font-display text-lg text-white">
+                <h2 className="mt-2 font-display text-lg text-white">
                   Categories we do not currently partner with.
-                </h3>
+                </h2>
                 <ul className="mt-4 flex flex-col gap-2">
                   {NOT_ACCEPTED.map((item) => (
                     <li
@@ -310,6 +316,7 @@ export default function PartnersPage() {
                       <span
                         className="mt-0.5 shrink-0 font-mono text-xs"
                         style={{ color: BRAND_COLORS.ionMagenta }}
+                        aria-hidden="true"
                       >
                         ✗
                       </span>

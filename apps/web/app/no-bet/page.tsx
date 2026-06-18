@@ -8,14 +8,15 @@ import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 import { TrackView } from "@/components/founding-desk/track-view";
 
 export const metadata: Metadata = {
-  title: "No-Bet — The Smartest Decision Is Often No Decision",
+  title: "No-Bet — Declining Action Is a Position, Not a Failure",
   description:
-    "No-Bet is not a missed pick. It is a deliberate position. When the data does not support action, the discipline is to say so. Galaxy Sports Edge explains the philosophy behind No-Bet as a product value.",
+    "No-Bet is not a missed pick — it is a deliberate conclusion. When the data does not justify action, the discipline is to say so clearly. Six reasons No-Bet is a first-class product value at Galaxy.",
   alternates: { canonical: "/no-bet" },
   openGraph: {
-    title: `No-Bet — ${BRAND_NAME}`,
+    title: `No-Bet Philosophy — ${BRAND_NAME}`,
     description:
       "No-Bet is a position, not a void. Uncertainty has a price. The smartest decision is often refusing action.",
+    type: "website",
   },
 };
 
