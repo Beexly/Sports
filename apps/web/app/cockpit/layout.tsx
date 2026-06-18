@@ -25,6 +25,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
   {
     section: "Command",
     items: [
+      { href: "/cockpit/go-live", label: "Go-Live", hint: "Finish-line readiness checklist" },
       { href: "/cockpit", label: "Overview", hint: "Daily Command" },
       { href: "/cockpit/command-center", label: "Command Center", hint: "Ranked owner attention" },
       { href: "/cockpit/brief", label: "Daily brief", hint: "Today's slate snapshot" },

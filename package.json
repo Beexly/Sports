@@ -70,7 +70,8 @@
     "statking:proof": "python3 scripts/statking_build_proof_report.py",
     "reality:export": "npx tsx scripts/reality/export-picks.mjs",
     "reality:diagnostics": "npx tsx scripts/reality/diagnostics.mjs",
-    "backtest:replay": "npx tsx scripts/backtest/replay.mjs"
+    "backtest:replay": "npx tsx scripts/backtest/replay.mjs",
+    "customer-proof:report": "npx tsx scripts/customer-proof/generate-report.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
