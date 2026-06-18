@@ -69,7 +69,8 @@
     "statking:activation-roi": "python3 scripts/statking_activation_roi.py",
     "statking:proof": "python3 scripts/statking_build_proof_report.py",
     "reality:export": "npx tsx scripts/reality/export-picks.mjs",
-    "reality:diagnostics": "npx tsx scripts/reality/diagnostics.mjs"
+    "reality:diagnostics": "npx tsx scripts/reality/diagnostics.mjs",
+    "backtest:replay": "npx tsx scripts/backtest/replay.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
