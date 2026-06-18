@@ -236,7 +236,7 @@ export default function FaqPage() {
         </section>
 
         {/* FAQ groups */}
-        {GROUPS.map((group, gi) => (
+        {GROUPS.map((group) => (
           <section
             key={group.heading}
             className="px-4 py-10 sm:px-6 lg:px-8"
@@ -261,7 +261,7 @@ export default function FaqPage() {
                   className="overflow-hidden rounded-2xl border"
                   style={{ borderColor: `${group.accent}18`, background: `${group.accent}04` }}
                 >
-                  {group.items.map((item, i) => (
+                  {group.items.map((item) => (
                     <details
                       key={item.q}
                       className="group border-b px-5 py-4 last:border-b-0 [&_summary::-webkit-details-marker]:hidden"

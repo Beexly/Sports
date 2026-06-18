@@ -14,7 +14,6 @@ import {
   formatCount,
   formatPercent,
   winRatePct,
-  winRateToneClass,
 } from "@/lib/format/stat";
 import type { PickType, PickTier } from "@sports/types";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";

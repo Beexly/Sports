@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { Reveal, Stagger } from "@/components/motion/reveal";
+import { Reveal } from "@/components/motion/reveal";
 import {
   CONTEXT_INTELLIGENCE_SOURCES,
   PUBLIC_DATA_SOURCES,

@@ -138,7 +138,7 @@ export default function PressPage() {
               </p>
             </Reveal>
             <Stagger className="flex flex-col gap-3" step={80}>
-              {SOUNDBITES.map((q, i) => (
+              {SOUNDBITES.map((q) => (
                 <blockquote
                   key={q}
                   className="relative overflow-hidden rounded-xl border p-5"

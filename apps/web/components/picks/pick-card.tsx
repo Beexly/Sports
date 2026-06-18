@@ -620,7 +620,7 @@ function LockedValue({ label }: { label: string }) {
 
 function FreshnessIndicator({ ageMinutes }: { ageMinutes: number }) {
   const isLive = ageMinutes < 10;
-  let dotCls = isLive
+  const dotCls = isLive
     ? "bg-verify animate-live-pulse"
     : ageMinutes < 30
     ? "bg-white/40"
