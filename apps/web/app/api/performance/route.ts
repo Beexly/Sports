@@ -39,10 +39,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       NOT: { modelVersion: "v5.0.0-seed" },
       ...(sport ? { game: { sport: { name: { contains: sport, mode: "insensitive" as const } } } } : {}),
     },
-    include: {
-      game: {
-        include: { sport: { select: { name: true } } },
-      },
+    // Aggregate-only read: select EXACTLY the two fields the per-sport tally
+    // needs (result + sport name) rather than include-ing every Pick column and
+    // full Game rows for hundreds/thousands of settled picks. Prisma groupBy
+    // can't group by a relation field (game.sport.name is a join, not a Pick
+    // scalar), so this narrowed select is the correct minimal-transfer shape —
+    // identical output, far less data over the wire.
+    select: {
+      result: true,
+      game: { select: { sport: { select: { name: true } } } },
     },
   });
 

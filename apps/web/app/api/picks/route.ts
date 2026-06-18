@@ -8,6 +8,7 @@ import { startOfDay, endOfDay } from "date-fns";
 import { parseDateParam } from "@/lib/parse-date-param";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 
 export const dynamic = "force-dynamic";
 
@@ -104,14 +105,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   });
 
   const publicPicks: PublicPick[] = picks.map((pick) => {
-    // Parse factorBreakdown from JSON storage
+    // Parse + validate factorBreakdown from JSON storage. The Prisma column is
+    // typed JsonValue; parseFactorBreakdown checks the shape and returns null
+    // for a malformed/legacy blob (a handled "no factor trail" state) so a
+    // consumer iterating `.factors` can never crash on bad data.
     let factorBreakdown: FactorBreakdown | null = null;
     if (entitlements.canSeeFactorBreakdown && pick.factorBreakdown) {
-      try {
-        factorBreakdown = pick.factorBreakdown as unknown as FactorBreakdown;
-      } catch {
-        factorBreakdown = null;
-      }
+      factorBreakdown = parseFactorBreakdown(pick.factorBreakdown);
     }
 
     // Extract dataQualityScore — always public trust signal

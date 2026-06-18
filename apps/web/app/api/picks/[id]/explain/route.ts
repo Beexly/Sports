@@ -20,7 +20,7 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
-import type { FactorBreakdown } from "@sports/types";
+import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { explainPick, PickExplanationError } from "@/lib/pick-explainer/explain";
 import {
   DEFAULT_EXPLAIN_REGISTER,
@@ -154,7 +154,7 @@ export async function POST(
           modelVersion: pick.modelVersion,
           generatedAt: pick.generatedAt,
           result: pick.result,
-          factorBreakdown: (pick.factorBreakdown as unknown as FactorBreakdown | null) ?? null,
+          factorBreakdown: parseFactorBreakdown(pick.factorBreakdown),
           clvKind: pick.clvKind,
           clvValue: pick.clvValue,
           clvVerdict: pick.clvVerdict,
