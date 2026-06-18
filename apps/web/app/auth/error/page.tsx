@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+// Real title for the tab/bookmark; kept out of search — an error page should
+// never be a landing result.
+export const metadata: Metadata = {
+  title: "Sign-in problem",
+  description: "Something went wrong signing in.",
+  robots: { index: false, follow: false },
+};
 
 export default function AuthErrorPage({
   searchParams,

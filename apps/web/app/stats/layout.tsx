@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { Footer } from "@/components/ui/footer";
 
 const NAV = [
   { label: "Overview",          href: "/stats" },
@@ -49,6 +50,9 @@ export default function StatsLayout({ children }: { children: React.ReactNode })
         </div>
       </nav>
       {children}
+      {/* Site footer — keep the StatKing subsection consistent with the rest of
+          the public site (every other public route renders it). */}
+      <Footer />
     </>
   );
 }

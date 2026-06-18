@@ -9,6 +9,15 @@ import { getBillingNotice } from "@/lib/billing/notice";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { BRAND_NAME } from "@/lib/brand";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
+import type { Metadata } from "next";
+
+// Authenticated surface — a real title for the tab/bookmark, kept out of search
+// since the dashboard is per-user and gated.
+export const metadata: Metadata = {
+  title: "Your dashboard",
+  description: `Your ${BRAND_NAME} board — today's slate, your tier, and your tracked picks.`,
+  robots: { index: false, follow: false },
+};
 
 export const dynamic = "force-dynamic";
 

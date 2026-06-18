@@ -179,6 +179,82 @@ function assessIndependentEdge(
 }
 
 // ============================================================
+// Pick narrative composer — turns already-scored signals into analyst-grade
+// prose. PURE NARRATION: every clause maps to a value the engine computed; no
+// claim appears that isn't backed by a real number. It shapes only the display
+// string — never confidence, selection, tier, or any scored field — so it is
+// NOT a model-version change and does not touch the scoring freeze.
+// ============================================================
+
+function pctText(p: number): string {
+  return `${Math.round(p * 100)}%`;
+}
+
+function signedPct(fraction: number): string {
+  const v = Math.round(fraction * 1000) / 10;
+  return `${v > 0 ? "+" : ""}${v}%`;
+}
+
+function consensusQualifier(pct: number): string {
+  if (pct >= 0.66) return "a firm consensus, not a coin-flip split";
+  if (pct >= 0.58) return "a clear lean";
+  return "a narrow lean";
+}
+
+function edgeSentence(rawEdge: number): string {
+  if (rawEdge >= 0.03) return `Our fair value runs meaningfully richer than the offered price — about ${signedPct(rawEdge)} of edge to capture.`;
+  if (rawEdge > 0.005) return `Our number sits a step above the price (${signedPct(rawEdge)} edge).`;
+  if (rawEdge >= -0.005) return `The price already reflects most of the value; this one rides on the strength of the read, not the number.`;
+  return `The market price is full here — we grade it on signal strength, not raw edge (${signedPct(rawEdge)}).`;
+}
+
+interface PickNarrativeArgs {
+  /** What we're backing, in display form: "Chiefs -3.5", "OVER 47.5", "Chiefs to win outright". */
+  readonly subject: string;
+  readonly bookmakerCount: number;
+  /** 0–1: share of books on the side (spread/total) or de-vigged win prob (moneyline). */
+  readonly consensusPct: number;
+  /** True for moneyline, where the consensus signal IS the fair win probability. */
+  readonly consensusIsProbability: boolean;
+  readonly rawEdge: number;
+  readonly contextClauses: readonly string[];
+  readonly independentEdge: IndependentEdgeSummary | null;
+  readonly confidence: number;
+  readonly pickGrade: PickGrade;
+}
+
+function composePickReasoning(args: PickNarrativeArgs): { reasoning: string; reasoningShort: string } {
+  const { subject, bookmakerCount, consensusPct, consensusIsProbability, rawEdge, contextClauses, independentEdge, confidence, pickGrade } = args;
+  const gradePhrase = pickGrade.replace(/_/g, " ").toLowerCase();
+
+  const opening = consensusIsProbability
+    ? `${subject}: ${bookmakerCount} books, fair-valued near ${pctText(consensusPct)} once the vig is stripped out — ${consensusQualifier(consensusPct)}.`
+    : `${bookmakerCount} books price ${subject}; ${pctText(consensusPct)} land on that side — ${consensusQualifier(consensusPct)}.`;
+
+  const edge = edgeSentence(rawEdge);
+
+  // The intelligent differentiator: a market-INDEPENDENT model weighing in.
+  // Only mentioned when it actually has an opinion (decision != PASS).
+  const independent =
+    independentEdge && independentEdge.decision !== "PASS" && independentEdge.trueProb != null
+      ? ` An independent model (${independentEdge.sources.join(", ")}) reads the true price near ${pctText(independentEdge.trueProb)} — ${independentEdge.shrunkEdge > 0 ? "it agrees there's value here" : "it sees less than the market does"}.`
+      : "";
+
+  const support =
+    contextClauses.length > 0
+      ? ` Supporting signals: ${contextClauses.slice(0, 3).join(", ")}.`
+      : "";
+
+  const reasoning = `${opening} ${edge}${independent}${support} Net read: ${gradePhrase} at ${confidence}/100.`;
+
+  const edgeTag = rawEdge >= 0.03 ? `, ${signedPct(rawEdge)} edge` : "";
+  const consensusWord = consensusIsProbability ? "fair-value" : "book";
+  const reasoningShort = `${pctText(consensusPct)} ${consensusWord} consensus on ${subject}${edgeTag}.`;
+
+  return { reasoning, reasoningShort };
+}
+
+// ============================================================
 // Compute consensus component score (0 to WEIGHTS.CONSENSUS_COMPONENT_MAX)
 // ============================================================
 
@@ -487,20 +563,17 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   else if (lineMovementScore < -5) contextClauses.push("fading line movement");
   if (uncertaintyPenalty < -3) contextClauses.push("conflicting signals noted");
 
-  const contextNote = contextClauses.length > 0
-    ? ` Context: ${contextClauses.join(", ")}.`
-    : "";
-
-  const reasoning =
-    `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${spreadOdds.length} ` +
-    `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
-    `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
-    contextNote +
-    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
-
-  const reasoningShort =
-    `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
-    (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
+  const { reasoning, reasoningShort } = composePickReasoning({
+    subject: `${chosenTeam} ${spreadDisplay}`,
+    bookmakerCount: spreadOdds.length,
+    consensusPct,
+    consensusIsProbability: false,
+    rawEdge,
+    contextClauses,
+    independentEdge: null,
+    confidence,
+    pickGrade,
+  });
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -660,18 +733,21 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const direction = overIsChosen ? "OVER" : "UNDER";
   const selection = `${direction} ${avgTotal.toFixed(1)}`;
 
-  const movementNote = lineMovementScore > 5 ? " Total line moving in pick direction." :
-    lineMovementScore < -5 ? " Total line moving against pick direction." : "";
+  const contextClauses: string[] = [];
+  if (lineMovementScore > 5) contextClauses.push("total moving toward the pick");
+  else if (lineMovementScore < -5) contextClauses.push("total moving against the pick");
 
-  const reasoning =
-    `${direction} ${avgTotal.toFixed(1)} backed by ${Math.round(consensusPct * 100)}% of ${totalOdds.length} ` +
-    `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
-    `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
-    movementNote +
-    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
-
-  const reasoningShort =
-    `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${avgTotal.toFixed(1)}.`;
+  const { reasoning, reasoningShort } = composePickReasoning({
+    subject: `${direction} ${avgTotal.toFixed(1)}`,
+    bookmakerCount: totalOdds.length,
+    consensusPct,
+    consensusIsProbability: false,
+    rawEdge,
+    contextClauses,
+    independentEdge: null,
+    confidence,
+    pickGrade,
+  });
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -840,20 +916,17 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   else if (headToHeadScore < 0) contextClauses.push("poor H2H history");
   if (venueFormScore > 0) contextClauses.push("strong venue form");
   if (uncertaintyPenalty < -3) contextClauses.push("conflicting signals");
-  const contextNote = contextClauses.length > 0
-    ? ` Context: ${contextClauses.join(", ")}.`
-    : "";
-
-  const reasoning =
-    `${chosenTeam} ML (${priceDisplay}): fair value ${Math.round(fairProb * 100)}% ` +
-    `across ${h2hOdds.length} bookmakers. ` +
-    `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
-    contextNote +
-    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
-
-  const reasoningShort =
-    `${chosenTeam} implied at ${Math.round(fairProb * 100)}% across ${h2hOdds.length} books.` +
-    (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
+  const { reasoning, reasoningShort } = composePickReasoning({
+    subject: `${chosenTeam} to win outright`,
+    bookmakerCount: h2hOdds.length,
+    consensusPct,
+    consensusIsProbability: true,
+    rawEdge,
+    contextClauses,
+    independentEdge,
+    confidence,
+    pickGrade,
+  });
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,

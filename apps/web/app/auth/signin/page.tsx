@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth, signIn } from "@/lib/auth";
 import Link from "next/link";
 import { BRAND_NAME } from "@/lib/brand";
+
+// Auth pages carry a real title for tabs/bookmarks but stay out of search —
+// a sign-in form has no business in the index.
+export const metadata: Metadata = {
+  title: "Sign in",
+  description: `Sign in to ${BRAND_NAME}.`,
+  robots: { index: false, follow: false },
+};
 
 // ─────────────────────────────────────────────
 // Page
