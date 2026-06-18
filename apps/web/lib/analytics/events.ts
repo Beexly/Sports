@@ -30,7 +30,23 @@ export type AnalyticsEvent =
   | "elite_feature_view"
   | "operator_waitlist_join"
   | "cancellation_start"
-  | "cancellation_reason_submit";
+  | "cancellation_reason_submit"
+  // Founding Desk / Revenue L1 events
+  | "founding_desk_view"
+  | "sample_desk_view"
+  | "trust_room_view"
+  | "no_bet_page_view"
+  | "ask_galaxy_started"
+  | "ask_galaxy_submitted"
+  | "email_signup_started"
+  | "email_signup_completed"
+  | "checkout_started"
+  | "checkout_completed"
+  | "feedback_submitted"
+  | "objection_logged"
+  | "testimonial_added"
+  | "referral_shared"
+  | "pricing_interest_clicked";
 
 /** What each event means and why it matters — the documented contract. */
 export const ANALYTICS_EVENTS: Readonly<Record<AnalyticsEvent, string>> = {
@@ -54,6 +70,22 @@ export const ANALYTICS_EVENTS: Readonly<Record<AnalyticsEvent, string>> = {
   operator_waitlist_join: "Visitor joined the Operator waitlist — demand signal for the top tier.",
   cancellation_start: "Member began cancellation — churn early-warning.",
   cancellation_reason_submit: "Member submitted a cancellation reason — churn-cause data.",
+  // Founding Desk / Revenue L1 events
+  founding_desk_view: "Visitor landed on /founding-desk — the Founding Desk offer page.",
+  sample_desk_view: "Visitor landed on /sample-desk — the representative Desk brief sample.",
+  trust_room_view: "Visitor landed on /trust-room — trust + limitations + responsible posture.",
+  no_bet_page_view: "Visitor landed on /no-bet — the No-Bet product philosophy page.",
+  ask_galaxy_started: "Visitor began the Ask Galaxy intake form — concierge lead wedge.",
+  ask_galaxy_submitted: "Visitor submitted the Ask Galaxy game request — lead captured.",
+  email_signup_started: "Visitor started the newsletter / email signup form.",
+  email_signup_completed: "Visitor completed and confirmed email signup.",
+  checkout_started: "Visitor initiated a Founding Desk or plan checkout — intent to pay.",
+  checkout_completed: "Founding Desk or plan checkout succeeded — the conversion.",
+  feedback_submitted: "Visitor submitted product feedback — qualitative insight.",
+  objection_logged: "Visitor's objection or question recorded in the objection ledger.",
+  testimonial_added: "A testimonial or social proof item was added to the proof record.",
+  referral_shared: "Member initiated a referral share — growth loop signal.",
+  pricing_interest_clicked: "Visitor clicked a pricing / plan CTA — top-of-funnel intent.",
 };
 
 export interface AnalyticsContext {

@@ -20,6 +20,7 @@ const TAIL_LINKS = [
   { label: "The Beat", href: "/the-beat", title: "Sports-media intelligence — reporters, graded" },
   { label: "Academy", href: "/academy", title: "Learn the system, step by step" },
   { label: "Pricing", href: "/pricing", title: "Plans & what each unlocks" },
+  { label: "Founding Desk", href: "/founding-desk", title: "Daily intelligence brief — Founding member access" },
 ] as const;
 
 type NavItem = { label: string; href: string; desc: string };
@@ -69,6 +70,14 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
       { label: "Calibration Report", href: "/performance", desc: "Every settled pick — win rate shown once the sample is honest" },
       { label: "Trust Ledger", href: "/ledger", desc: "Every settled pick, with a tamper-proof receipt" },
       { label: "Accountability", href: "/accountability", desc: "Loss autopsies and the full public record" },
+    ],
+  },
+  {
+    heading: "The Desk",
+    items: [
+      { label: "Sample Desk Brief", href: "/sample-desk", desc: "See a representative brief before you join" },
+      { label: "Trust Room", href: "/trust-room", desc: "How confidence works, what No-Bet means, our limitations" },
+      { label: "No-Bet Philosophy", href: "/no-bet", desc: "Why declining action is a first-class position" },
     ],
   },
 ];

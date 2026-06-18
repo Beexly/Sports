@@ -8,7 +8,7 @@ import {
 } from "@/lib/stripe";
 
 const CheckoutSchema = z.object({
-  tier: z.enum(["PRO", "ELITE"]),
+  tier: z.enum(["PRO", "ELITE", "FOUNDING_DESK"]),
   interval: z.enum(["month", "year"]).default("month"),
 });
 

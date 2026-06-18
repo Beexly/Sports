@@ -30,6 +30,13 @@ export const STRIPE_PRICE_IDS = {
     month: process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"] ?? "",
     year: process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"] ?? "",
   },
+  // Founding Desk beta — a separate introductory product; env var must be set
+  // by the operator in Stripe before the CTA activates. Absent env → "" →
+  // checkout route returns a clean 503, never a fake session.
+  FOUNDING_DESK: {
+    month: process.env["STRIPE_FOUNDING_DESK_MONTHLY_PRICE_ID"] ?? "",
+    year: process.env["STRIPE_FOUNDING_DESK_ANNUAL_PRICE_ID"] ?? "",
+  },
 } as const;
 
 // Apex add-on price IDs — the per-pick and 5-pack one-time purchases that sit
@@ -41,7 +48,10 @@ export const STRIPE_APEX_PRICE_IDS = {
 } as const;
 
 /** Resolve the Stripe price ID for a tier + billing interval. */
-export function getStripePriceId(tier: "PRO" | "ELITE", interval: BillingInterval): string {
+export function getStripePriceId(
+  tier: "PRO" | "ELITE" | "FOUNDING_DESK",
+  interval: BillingInterval,
+): string {
   return STRIPE_PRICE_IDS[tier][interval];
 }
 

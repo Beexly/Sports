@@ -222,3 +222,32 @@ export function annualMonthlyEquivalent(price: TierPrice): number {
 
 export const GRANDFATHER_GUARANTEE =
   "Your price is locked for the life of your subscription. When prices rise for new members, yours never does.";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Founding Desk beta offer — the first paid product.
+//
+// A separate, time-limited introductory offer distinct from the Pro/Elite
+// recurring ladder. $19 for a 14-day beta access period, or $19/month
+// thereafter. This is the introductory price for Founding Desk members;
+// it is not derived from the proof-gated phase ladder above. Display price
+// comes from here; the Stripe price ID lives in the env var
+// STRIPE_FOUNDING_DESK_MONTHLY_PRICE_ID.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface FoundingDeskOffer {
+  /** Display price for the 14-day beta entry, in USD. */
+  readonly beta14day: number;
+  /** Recurring monthly price after beta, in USD. */
+  readonly monthly: number;
+  /** Human-readable label for the offer. */
+  readonly label: string;
+  /** Short description shown near the price. */
+  readonly tagline: string;
+}
+
+export const FOUNDING_DESK_OFFER: FoundingDeskOffer = {
+  beta14day: 19,
+  monthly: 19,
+  label: "Founding Desk",
+  tagline: "14-day Founding Desk beta",
+} as const;

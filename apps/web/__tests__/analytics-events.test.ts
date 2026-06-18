@@ -23,6 +23,27 @@ describe("analytics event plan", () => {
     for (const e of required) expect(ANALYTICS_EVENTS[e], `missing ${e}`).toBeDefined();
   });
 
+  it("covers the Founding Desk / Revenue L1 events", () => {
+    const required: AnalyticsEvent[] = [
+      "founding_desk_view",
+      "sample_desk_view",
+      "trust_room_view",
+      "no_bet_page_view",
+      "ask_galaxy_started",
+      "ask_galaxy_submitted",
+      "email_signup_started",
+      "email_signup_completed",
+      "checkout_started",
+      "checkout_completed",
+      "feedback_submitted",
+      "objection_logged",
+      "testimonial_added",
+      "referral_shared",
+      "pricing_interest_clicked",
+    ];
+    for (const e of required) expect(ANALYTICS_EVENTS[e], `missing ${e}`).toBeDefined();
+  });
+
   it("isAnalyticsEvent guards against typos", () => {
     expect(isAnalyticsEvent("checkout_complete")).toBe(true);
     expect(isAnalyticsEvent("nope_event")).toBe(false);

@@ -3,6 +3,10 @@ import { BrandLockup } from "@/components/brand/brand-lockup";
 import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
+  { label: "Founding Desk", href: "/founding-desk" },
+  { label: "Sample Desk Brief", href: "/sample-desk" },
+  { label: "Trust Room", href: "/trust-room" },
+  { label: "No-Bet Philosophy", href: "/no-bet" },
   { label: "The NFL House", href: "/house" },
   { label: "Today's Board", href: "/board" },
   { label: "Galaxy Twin", href: "/observatory" },

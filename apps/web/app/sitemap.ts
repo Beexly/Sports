@@ -19,6 +19,11 @@ const ROUTES: ReadonlyArray<{
   changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
 }> = [
   { path: "/", priority: 1.0, changeFrequency: "daily" },
+  // Founding Desk conversion routes (L1)
+  { path: "/founding-desk", priority: 0.95, changeFrequency: "weekly" },
+  { path: "/sample-desk", priority: 0.85, changeFrequency: "weekly" },
+  { path: "/trust-room", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/no-bet", priority: 0.75, changeFrequency: "monthly" },
   { path: "/picks", priority: 0.9, changeFrequency: "hourly" },
   { path: "/house", priority: 0.8, changeFrequency: "weekly" },
   { path: "/methodology", priority: 0.8, changeFrequency: "monthly" },
