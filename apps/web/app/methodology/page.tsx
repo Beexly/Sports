@@ -9,6 +9,8 @@ import { InteractiveGalaxyLazy } from "@/components/hero/interactive-galaxy-lazy
 import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { BRAND_COLORS } from "@/lib/brand";
+import { PickEnhancement } from "@/components/world/pick-enhancement";
+import { QuoteCallout } from "@/components/ui/quote-callout";
 
 const METHODOLOGY_TITLE = "Methodology - Deterministic Scoring, Open Framework";
 const METHODOLOGY_DESCRIPTION =
@@ -173,6 +175,34 @@ export default function MethodologyPage(): JSX.Element {
         </section>
 
         <MethodologySection />
+
+        {/* Before/After pick comparison — the value-add made concrete */}
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                The value-add, made concrete
+              </p>
+              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
+                What a pick actually looks like.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
+                Not just a name and a line. Every published pick ships with a full
+                factor trail, market movement context, and a tamper-evident receipt.
+              </p>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="mt-10">
+                <PickEnhancement />
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <QuoteCallout cite="Galaxy Sports Edge, Methodology">
+          The framework is public. The weights stay proprietary.
+          The record is tamper-evident. That combination is the product.
+        </QuoteCallout>
 
         {/* Reading the market — and grading ourselves */}
         <section className="px-4 py-16 sm:px-6 lg:px-8">

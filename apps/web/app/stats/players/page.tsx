@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Shell, Cards, HeroStat, StatusRibbon } from "../_components";
+import { Shell, Cards, HeroStat, SectionHeader, StatusRibbon } from "../_components";
 import { FilterBar } from "../_client";
 import { rankPlayers, loadPlayers } from "@/lib/statking/product";
 import { glossaryEntry } from "@/lib/glossary";
+import { PlayerKnowledgeGraph } from "@/components/statking/player-knowledge-graph";
 export const metadata = {
   title: "Player Database — Every Tracked NFL Player",
   description: "Browse the full StatKing player universe with usage, efficiency, role, and fantasy edge.",
@@ -18,6 +19,18 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
   return (
     <Shell title="Player Database">
       <StatusRibbon status="fixture" label="Player snapshot updated every sync cycle" />
+
+      {/* Player Knowledge Graph — radial node-link visualization */}
+      <div
+        className="overflow-hidden rounded-xl border p-5"
+        style={{ borderColor: "rgba(255,180,84,0.18)", background: "rgba(255,180,84,0.03)" }}
+      >
+        <SectionHeader title="Intelligence Graph" eyebrow="Top 8 by GPI" />
+        <div className="mt-4">
+          <PlayerKnowledgeGraph />
+        </div>
+      </div>
+
       <Cards items={[
         { label: "Players", value: all.length },
         { label: "Teams", value: new Set(all.map(p => p.team)).size },
