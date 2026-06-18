@@ -143,6 +143,14 @@ export {
   overUnderProbabilities,
   poissonConsistencyScore,
   assertTeamRatesAvailable,
+  // Dixon–Coles (1997) low-score dependence correction — the τ adjustment the
+  // module header cites but previously omitted (was pure independent Maher 1982).
+  // Pure + tested; ρ must be fit from real scorelines before wiring (gated like λ).
+  dixonColesTau,
+  dixonColesJointMatrix,
+  moneylineProbabilitiesDC,
+  overUnderProbabilitiesDC,
+  DIXON_COLES_REFERENCE_RHO,
 } from "./poisson.js";
 // #11 — team scoring rates computed from REAL stored final scores (no new
 // provider, no fabricated λ) → an INDEPENDENT Poisson fair value that slots into

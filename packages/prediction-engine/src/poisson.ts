@@ -191,6 +191,136 @@ export function overUnderProbabilities(
 }
 
 // ============================================================
+// Dixon–Coles low-score dependence correction (1997).
+//
+// Independent Poisson (jointScoreMatrix / *Probabilities above, Maher 1982)
+// is known to UNDER-predict the four low-score lines — 0-0, 1-0, 0-1, 1-1 —
+// because real team scoring is weakly dependent at low totals (the same bias
+// that makes draws more likely than the independent model says). Dixon & Coles
+// multiply ONLY those four cells by a τ factor parameterised by a single
+// correlation ρ, then the grid is renormalised:
+//
+//   τ(0,0) = 1 − λh·λa·ρ      τ(0,1) = 1 + λh·ρ
+//   τ(1,0) = 1 + λa·ρ         τ(1,1) = 1 − ρ
+//   τ(x,y) = 1                otherwise
+//
+// ρ is a MODEL PARAMETER, not a fabricated stat — it must be fit from real
+// stored scorelines per league (TODO: fitDixonColesRho, mirroring how
+// team-rates.ts derives λ from real final scores) before this feeds any pick.
+// In the soccer literature ρ ≈ −0.03…−0.13 (negative ρ lifts 0-0 and 1-1, the
+// observed bias). DIXON_COLES_REFERENCE_RHO is for tests/illustration only and
+// must NOT be used as a silent production default — the scoring-facing
+// functions below require ρ explicitly.
+//
+// Validity (keeps every cell ≥ 0): max(−1/λh, −1/λa) ≤ ρ ≤ min(1/(λh·λa), 1).
+// τ is clamped at 0 so an out-of-range ρ can never produce a negative cell.
+// ============================================================
+
+/**
+ * Literature reference value for soccer ρ. NOT a production default — fit ρ
+ * from real scorelines per league (see TODO above) before wiring to picks.
+ */
+export const DIXON_COLES_REFERENCE_RHO = -0.05;
+
+/**
+ * Dixon–Coles τ multiplier for cell (x,y). Returns 1 for every cell except the
+ * four low-score lines. Clamped at 0 for safety against an out-of-range ρ.
+ */
+export function dixonColesTau(
+  x: number,
+  y: number,
+  lambdaHome: number,
+  lambdaAway: number,
+  rho: number
+): number {
+  let tau = 1;
+  if (x === 0 && y === 0) tau = 1 - lambdaHome * lambdaAway * rho;
+  else if (x === 0 && y === 1) tau = 1 + lambdaHome * rho;
+  else if (x === 1 && y === 0) tau = 1 + lambdaAway * rho;
+  else if (x === 1 && y === 1) tau = 1 - rho;
+  return Math.max(0, tau);
+}
+
+/**
+ * Joint score matrix with the Dixon–Coles low-score correction applied and the
+ * grid renormalised to sum to 1. ρ = 0 reproduces independent Poisson, then
+ * renormalised over the truncated grid. matrix[x][y] = P(home=x, away=y).
+ */
+export function dixonColesJointMatrix(
+  lambdaHome: number,
+  lambdaAway: number,
+  rho: number,
+  maxGoals: number = 12
+): number[][] {
+  const base = jointScoreMatrix(lambdaHome, lambdaAway, maxGoals);
+  let sum = 0;
+  const adjusted = base.map((row, x) =>
+    row.map((p, y) => {
+      const v = p * dixonColesTau(x, y, lambdaHome, lambdaAway, rho);
+      sum += v;
+      return v;
+    })
+  );
+  if (sum <= 0) return adjusted;
+  return adjusted.map((row) => row.map((v) => v / sum));
+}
+
+/**
+ * Moneyline (1X2) probabilities under the Dixon–Coles correction — the τ-adjusted,
+ * renormalised analogue of moneylineProbabilities. Because the grid is
+ * renormalised, coverage ≈ 1 (the truncated tail is absorbed by renormalisation).
+ */
+export function moneylineProbabilitiesDC(
+  lambdaHome: number,
+  lambdaAway: number,
+  rho: number,
+  maxGoals: number = 12
+): { home: number; draw: number; away: number; coverage: number } {
+  assertTeamRatesAvailable();
+  const m = dixonColesJointMatrix(lambdaHome, lambdaAway, rho, maxGoals);
+  let home = 0;
+  let draw = 0;
+  let away = 0;
+  for (let x = 0; x <= maxGoals; x++) {
+    for (let y = 0; y <= maxGoals; y++) {
+      const p = m[x]?.[y] ?? 0;
+      if (x > y) home += p;
+      else if (x === y) draw += p;
+      else away += p;
+    }
+  }
+  return { home, draw, away, coverage: home + draw + away };
+}
+
+/**
+ * Over/under probabilities under the Dixon–Coles correction — the τ-adjusted,
+ * renormalised analogue of overUnderProbabilities.
+ */
+export function overUnderProbabilitiesDC(
+  lambdaHome: number,
+  lambdaAway: number,
+  rho: number,
+  totalLine: number,
+  maxGoals: number = 12
+): { over: number; under: number; push: number; coverage: number } {
+  assertTeamRatesAvailable();
+  const m = dixonColesJointMatrix(lambdaHome, lambdaAway, rho, maxGoals);
+  let over = 0;
+  let under = 0;
+  let push = 0;
+  for (let x = 0; x <= maxGoals; x++) {
+    for (let y = 0; y <= maxGoals; y++) {
+      const p = m[x]?.[y] ?? 0;
+      const total = x + y;
+      if (total > totalLine) over += p;
+      else if (total < totalLine) under += p;
+      else push += p;
+    }
+  }
+  return { over, under, push, coverage: over + under + push };
+}
+
+// ============================================================
 // Sanity check function: are two Poisson rates internally
 // consistent with a bookmaker's total line?
 //
