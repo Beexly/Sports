@@ -265,3 +265,19 @@ export type {
   DecisionStump,
   TrainingSample,
 } from "./ml-estimator.js";
+
+// Multi-market true-probability ensemble — precision-weighted (inverse-variance)
+// fusion of independent estimators (book consensus, Kalshi/Polymarket exchanges,
+// Poisson/Elo/ML) into a sharper fair probability + a cross-market divergence
+// signal. Drop-in `independents` for edge-engine.assessEdge. The path-to-70 Step 2
+// "find more honest ≥70% picks" lever. Pure + tested; founder-gated like every estimator.
+export {
+  estimatorSigma,
+  precisionWeightedEnsemble,
+  SIGMA_BASE,
+} from "./multi-market-ensemble.js";
+export type {
+  EstimatorReliability,
+  MarketEstimate,
+  EnsembleResult,
+} from "./multi-market-ensemble.js";
