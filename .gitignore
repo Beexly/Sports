@@ -74,7 +74,9 @@ screenshots/
 /test-results/
 /playwright-report/
 
-.claude/
+# Ignore local .claude config, but DO track shared project commands.
+.claude/*
+!.claude/commands/
 
 # Local session helper scripts — never commit
 *.bat

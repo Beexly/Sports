@@ -106,8 +106,7 @@ export default async function CockpitOverview() {
       >
         <div className="absolute inset-0 bg-stadium-glow opacity-80" />
         <div
-          className="absolute -top-16 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-orbital-cyan/10 blur-3xl animate-pulse"
-          style={{ animationDuration: "7s" }}
+          className="absolute -top-16 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-orbital-cyan/[0.07] blur-3xl"
         />
       </div>
 
@@ -116,7 +115,7 @@ export default async function CockpitOverview() {
         className={[
           "relative overflow-hidden rounded-3xl border bg-carbon/90 shadow-2xl shadow-black/30",
           ownerSummary?.overallColor === "RED"
-            ? "border-rose-900/60 shadow-glow-plasma"
+            ? "border-rose-900/40"
             : ownerSummary?.overallColor === "GREEN"
               ? "border-accent-900/40"
               : "border-titanium/60",
@@ -264,21 +263,41 @@ export default async function CockpitOverview() {
       {/* ── Zone 4: Ask Jarvis Console ───────────────────────────────── */}
       {ownerSummary && <AskJarvisPanel summary={ownerSummary} />}
 
-      {/* ── Zone 5: AI Ops / Build Control ───────────────────────────── */}
-      {ownerSummary && <AiOpsZone aiOps={ownerSummary.aiOps} />}
+      {/* ── Reference layer (collapsed by default to keep the deck calm) ──
+           AI Ops, the capability registry, the agent council, and the memory
+           protocol are reference truth, not daily-glance. They stay rendered
+           (and their live ledger/memory still load) but sit behind a single
+           disclosure so the cockpit opens to a scannable summary instead of a
+           stack of dense panels. */}
+      <details className="group rounded-2xl border border-titanium/40 bg-carbon/40">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-xs font-semibold uppercase tracking-widest text-ion-2 [&::-webkit-details-marker]:hidden">
+          <span>System internals · AI ops · capabilities · council · memory</span>
+          <span aria-hidden className="text-ion-3 transition-transform group-open:rotate-180">▾</span>
+        </summary>
+        <div className="flex flex-col gap-4 px-3 pb-4 sm:px-4">
+          {/* ── Zone 5: AI Ops / Build Control ─────────────────────────── */}
+          {ownerSummary && <AiOpsZone aiOps={ownerSummary.aiOps} />}
 
-      {/* ── Zone 6–8: Intelligence OS — architecture truth ──────────────
-           Rendered unconditionally: the capability registry, agent council,
-           and memory protocol are static truth, independent of DB state. */}
-      <CapabilitySystemMap />
-      <AgentCouncilPanel ledger={await buildLiveLedgerStatus()} />
-      <MemoryProtocolZone memory={await buildLiveMemoryStatus()} />
+          {/* ── Zone 6–8: Intelligence OS — architecture truth ───────────
+               The capability registry, agent council, and memory protocol are
+               static truth, independent of DB state. */}
+          <CapabilitySystemMap />
+          <AgentCouncilPanel ledger={await buildLiveLedgerStatus()} />
+          <MemoryProtocolZone memory={await buildLiveMemoryStatus()} />
+        </div>
+      </details>
 
-      {/* ── Zone 9: Drilldowns ───────────────────────────────────────── */}
-      <div className="mt-2 border-t border-titanium/30 pt-6">
-        <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-ion-3/40">
-          Detail / Drilldowns
-        </p>
+      {/* ── Zone 9: Drilldowns (collapsed by default) ────────────────────
+           The full forensic detail — warnings, health tiles, readiness gates,
+           phase matrix, today's picks, slate — lives behind one disclosure so
+           the default view stays calm. Critical safety items are already
+           surfaced up top in the Decision Queue. */}
+      <details className="group mt-2 border-t border-titanium/30 pt-4">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[10px] font-semibold uppercase tracking-widest text-ion-2 [&::-webkit-details-marker]:hidden">
+          <span>Detail / Drilldowns · warnings · health tiles · gates · phase matrix · picks</span>
+          <span aria-hidden className="transition-transform group-open:rotate-180">▾</span>
+        </summary>
+        <div className="mt-5">
 
         {/* Safety + config warnings */}
         {assessment && assessment.safetyWarnings.length > 0 && (
@@ -504,7 +523,8 @@ export default async function CockpitOverview() {
             )}
           </section>
         )}
-      </div>
+        </div>
+      </details>
 
       {/* Footer */}
       {assessment && (
@@ -855,16 +875,18 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
         </div>
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
           <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Win Rate</p>
-          <p
-            className={[
-              "mt-1 text-2xl font-bold tabular-nums leading-none",
-              performance.displaySafe ? "text-ion-white" : "text-ion-3",
-            ].join(" ")}
-          >
-            {performance.displaySafe && performance.actualWinRate !== null
-              ? `${performance.actualWinRate}%`
-              : "—"}
-          </p>
+          {performance.displaySafe && performance.actualWinRate !== null ? (
+            <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ion-white">
+              {performance.actualWinRate}%
+            </p>
+          ) : (
+            <p
+              className="mt-1 flex items-center gap-1.5 text-sm font-semibold leading-none text-ion-2"
+              title="Win rate is gated until the canonical settled-sample floor is met"
+            >
+              <span aria-hidden>🔒</span> Locked
+            </p>
+          )}
         </div>
         <div className="rounded-xl border border-titanium/40 bg-obsidian/60 px-3 py-2.5">
           <p className="text-[10px] font-bold uppercase tracking-widest text-ion-3">Sample</p>
@@ -944,9 +966,9 @@ function DepartmentsZone({ departments }: { departments: readonly DepartmentSumm
 
 function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
   const dotColor: Record<JarvisHealth, string> = {
-    GREEN: "bg-accent-500 animate-live-pulse",
+    GREEN: "bg-accent-500",
     AMBER: "bg-yellow-300",
-    RED: "bg-red-400 animate-live-pulse",
+    RED: "bg-rose-400",
     UNKNOWN: "bg-ion-3/30",
   };
 
@@ -960,7 +982,7 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
         {dept.name}
       </span>
       {dept.agentDisplayName && (
-        <span className="hidden w-16 flex-shrink-0 font-mono text-[10px] text-ion-3/60 sm:block">
+        <span className="hidden w-16 flex-shrink-0 font-mono text-[10px] text-ion-3 sm:block">
           {dept.agentDisplayName}
         </span>
       )}
@@ -972,11 +994,11 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
           Action
         </span>
       )}
-      <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-widest text-ion-3/40">
+      <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-widest text-ion-3">
         {dept.agentMode.replace("_", " ").toLowerCase()}
       </span>
       {dept.drilldownHref && (
-        <span className="flex-shrink-0 text-[10px] text-ion-3/30 transition-colors group-hover:text-ion-2">
+        <span className="flex-shrink-0 text-[10px] text-ion-3 transition-colors group-hover:text-ion-2">
           →
         </span>
       )}

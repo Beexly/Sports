@@ -282,6 +282,28 @@
   100% { stroke-dashoffset: 0; opacity: 1; }
 }
 
+/* ── Calm entrance (CinematicEntrance, 2026 calm rebuild) ────────────────
+ * The galaxy intro was rebuilt around a still Higgsfield backdrop + paced
+ * copy. These are all compositor-only (transform/opacity) so the intro never
+ * repaints per frame — the fix for the old warp-tunnel lag. Reduced motion is
+ * killed by the .gse-cine-anim override below. */
+@keyframes gse-backdrop-drift {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to   { transform: scale(1.08) translate3d(-1.5%, -1%, 0); }
+}
+@keyframes gse-soft-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Doctrine line: gently appears, HOLDS long enough to read, then recedes —
+ * within its own time slot (duration set inline to the step length). */
+@keyframes gse-line-cycle {
+  0%   { opacity: 0; transform: translateY(8px); }
+  14%  { opacity: 1; transform: translateY(0); }
+  78%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+
 /* ── Warp traversal (CinematicEntrance galaxy flyover) ──────────────────
  * Radial star streaks pour past the camera; on arrival they brake back to
  * points. Waypoints (--wx/--wy exit vectors) approach from deep space and

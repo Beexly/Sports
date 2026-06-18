@@ -179,6 +179,13 @@ export async function loadPublicPerformancePolicy(
     isPublished: true,
   };
 
+  // Seed/demo picks (modelVersion "v5.0.0-seed") must NEVER count toward a
+  // public win rate. The three other win-rate readers (load-performance,
+  // /api/performance, calibration/report) already exclude them; mirror that
+  // here so this loader is safe-by-construction if it is ever wired to a
+  // public surface.
+  const notSeed = { NOT: { modelVersion: "v5.0.0-seed" } };
+
   const [
     canonicalSettledCount,
     canonicalWins,
@@ -189,11 +196,11 @@ export async function loadPublicPerformancePolicy(
     recentTotalCount,
     recentBootstrapCount,
   ] = await Promise.all([
-    db.pick.count({ where: { ...settledFilter, isBootstrap: false } }),
-    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false } }),
-    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false } }),
-    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false } }),
-    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false } }),
+    db.pick.count({ where: { ...settledFilter, isBootstrap: false, ...notSeed } }),
+    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...notSeed } }),
+    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...notSeed } }),
+    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...notSeed } }),
+    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...notSeed } }),
     db.pick.count({ where: { isBootstrap: true, ...settledFilter } }),
     db.pick.count({ where: { generatedAt: { gte: recentSince } } }),
     db.pick.count({ where: { generatedAt: { gte: recentSince }, isBootstrap: true } }),

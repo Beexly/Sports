@@ -18,6 +18,17 @@ export interface PlateManifest {
 const OBSIDIAN = "#05060A";
 
 export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
+  // Cinematic-entrance backdrop. Calm, restrained deep-space still (Higgsfield):
+  // a distant galaxy top-left, a soft violet wash along the bottom, and a large
+  // dark center reserved for the entrance copy. Replaces the old real-time WebGL
+  // warp tunnel (16k particles) — a static plate is near-zero GPU cost.
+  "intro-galaxy": {
+    gradient:
+      `radial-gradient(48% 42% at 18% 16%, rgba(34,211,238,0.10), transparent 62%), ` +
+      `radial-gradient(70% 45% at 50% 116%, rgba(122,92,255,0.12), transparent 70%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN} 0%, #070810 60%, ${OBSIDIAN} 100%)`,
+    still: "/immersive/intro-galaxy.webp",
+  },
   "home-hero-cosmos": {
     gradient:
       `radial-gradient(70% 60% at 78% 18%, rgba(34,211,238,0.10), transparent 60%), ` +

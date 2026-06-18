@@ -10,9 +10,12 @@
  * Single source of truth for "is the public picks surface stale right now?":
  *   - Freshness threshold is `classifyRefreshFreshness` (the shared 240m SLA) —
  *     this module adds NO new threshold and duplicates none of it.
- *   - "Latest successful ingestion" is the SAME query `/api/health` uses:
- *     db.ingestionRun.findFirst({ where: { status: "SUCCESS" },
- *                                 orderBy: { completedAt: "desc" } }).
+ *   - "Latest successful ingestion" requires a run that actually inserted odds
+ *     (status:"SUCCESS" AND oddsInserted > 0), ordered by completedAt desc.
+ *     This is intentionally STRICTER than /api/health: an empty-but-200 Odds API
+ *     response records a SUCCESS run with oddsInserted=0, which would otherwise
+ *     reset the freshness clock and let the picks surface read "fresh" while no
+ *     real odds flowed (G4). Only a run that brought in real odds counts.
  *
  * Default-off contract: callers MUST gate the call to
  * `isPublicPicksSurfaceStale` behind `getReadinessGates().forceNoBetIfStale`.
@@ -44,7 +47,12 @@ import { classifyRefreshFreshness } from "./refresh-sla";
  */
 export async function isPublicPicksSurfaceStale(now: Date = new Date()): Promise<boolean> {
   const lastSuccessRun = await db.ingestionRun.findFirst({
-    where: { status: "SUCCESS" },
+    // Requires a run that actually INSERTED ODDS. An empty-but-200 Odds API
+    // response is recorded as SUCCESS with oddsInserted=0; without this filter
+    // that empty run resets the freshness clock and the public picks surface
+    // reads "fresh" while no real odds flowed (G4). oddsInserted > 0 means only
+    // a run that brought in real odds counts as fresh.
+    where: { status: "SUCCESS", oddsInserted: { gt: 0 } },
     orderBy: { completedAt: "desc" },
     select: { completedAt: true },
   });

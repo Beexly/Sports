@@ -26,6 +26,7 @@ const mocks = vi.hoisted(() => ({
   gameUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
   oddsFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   pickUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  pickUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   openingLineFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   snapshotUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   snapshotFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -36,7 +37,7 @@ vi.mock("@sports/db", () => ({
   db: {
     game: { findUnique: mocks.gameFindUnique, update: mocks.gameUpdate },
     odds: { findMany: mocks.oddsFindMany },
-    pick: { update: mocks.pickUpdate },
+    pick: { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany },
     openingLine: { findUnique: mocks.openingLineFindUnique },
     pickSignalSnapshot: {
       updateMany: mocks.snapshotUpdateMany,
@@ -127,6 +128,7 @@ describe("settleSport", () => {
     mocks.deriveClosingSnapshotFromOdds.mockReturnValue(null);
     mocks.calculatePickResult.mockReturnValue("WIN");
     mocks.pickUpdate.mockResolvedValue({});
+    mocks.pickUpdateMany.mockResolvedValue({ count: 1 });
     mocks.openingLineFindUnique.mockResolvedValue({ spread: -3.5 });
     mocks.settleGameLogs.mockResolvedValue(undefined);
     mocks.snapshotUpdateMany.mockResolvedValue({ count: 1 });
@@ -151,12 +153,26 @@ describe("settleSport", () => {
         data: { homeScore: 27, awayScore: 20, status: "FINAL" },
       })
     );
-    expect(mocks.pickUpdate).toHaveBeenCalledWith(
+    expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { id: "pick-1" },
+        where: { id: "pick-1", result: "PENDING" },
         data: expect.objectContaining({ result: "WIN", settledAt: expect.any(Date) }),
       })
     );
+  });
+
+  it("is idempotent: a pick already settled by a concurrent run is skipped", async () => {
+    // The race loser's updateMany matches 0 rows (no longer PENDING).
+    mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
+    mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt: new Date() });
+
+    const result = await settleSport(SPORT, "key", gates());
+
+    // Settle write was attempted, but nothing downstream ran for that pick:
+    // no CLV grade, no snapshot, and it is not counted as newly settled.
+    expect(result.picksSettled).toBe(0);
+    expect(mocks.gradePickClv).not.toHaveBeenCalled();
+    expect(mocks.snapshotUpdateMany).not.toHaveBeenCalled();
   });
 
   it("skips scores that are not completed", async () => {
@@ -297,8 +313,10 @@ describe("settleSport", () => {
       await settleSport(SPORT, "key", gates());
 
       expect(mocks.gradePickClv).not.toHaveBeenCalled();
-      // Only the settlement update — no CLV update.
-      expect(mocks.pickUpdate).toHaveBeenCalledTimes(1);
+      // Settlement goes through updateMany; pick.update is CLV-only, so with no
+      // close it is never called.
+      expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
+      expect(mocks.pickUpdate).not.toHaveBeenCalled();
     });
   });
 });

@@ -33,10 +33,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
+  // Session.user.email is string | null. Guard explicitly (mirroring the priceId
+  // check) instead of a non-null assertion, so we never hand Stripe a null email
+  // when creating the customer — a missing email is a 400, not a runtime throw.
+  if (!session.user.email) {
+    return NextResponse.json(
+      { error: "An email address is required to start checkout." },
+      { status: 400 }
+    );
+  }
+
   try {
     const customerId = await getOrCreateStripeCustomer(
       session.user.id,
-      session.user.email!,
+      session.user.email,
       session.user.name
     );
 

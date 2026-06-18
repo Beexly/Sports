@@ -134,10 +134,17 @@ export async function settleSport(
             score.awayScore,
             sport.key,
           );
-          await db.pick.update({
-            where: { id: pick.id },
+          // Idempotent settle. game.picks was read with result:"PENDING", but
+          // the worker and the Vercel settle-picks cron can both reach this game
+          // between that read and this write. updateMany scoped to
+          // result:"PENDING" makes the write a no-op for the loser of the race
+          // (count===0) — so the first settlement and its settledAt stay
+          // immutable and CLV is never re-graded against a second close.
+          const settled = await db.pick.updateMany({
+            where: { id: pick.id, result: "PENDING" },
             data: { result, settledAt },
           });
+          if (settled.count === 0) continue;
 
           // Grade Closing-Line Value against the immutable lock snapshot
           // (clvLockLine/clvLockPrice, captured at publish). Additive and

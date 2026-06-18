@@ -120,6 +120,13 @@ describe("/api/picks — stale-data kill switch", () => {
     expect(status).toBe(200);
     expect(body["success"]).toBe(true);
     expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
+    // G4: freshness only counts a run that actually inserted odds, so an
+    // empty-but-200 SUCCESS run (oddsInserted=0) can never mask staleness.
+    expect(mocks.ingestionRunFindFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ status: "SUCCESS", oddsInserted: { gt: 0 } }),
+      }),
+    );
     expect(mocks.pickFindMany).toHaveBeenCalled();
   });
 
