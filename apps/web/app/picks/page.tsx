@@ -144,7 +144,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
     : {
         tier: "FREE" as const,
         canSeePremiumPicks: false,
-        canSeeConfidence: false,
+        canSeeConfidence: true,
         canSeeLineMovement: false,
         canSeeFactorBreakdown: false,
         canSeeEdgeScore: true,

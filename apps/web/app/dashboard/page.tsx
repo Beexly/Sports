@@ -31,6 +31,7 @@ type TodayPick = {
   pickGrade: string;
   riskLevel: string;
   reasoningShort: string;
+  tier: "FREE" | "PREMIUM";
   isFeatured: boolean;
   result: string;
   generatedAt: Date;
@@ -271,7 +272,7 @@ export default async function DashboardPage() {
             ) : (
               <ul className="divide-y divide-titanium">
                 {todayPicks.map((p) => (
-                  <PickRow key={p.id} pick={p} showConfidence={entitlements.canSeeConfidence} />
+                  <PickRow key={p.id} pick={p} showConfidence={entitlements.canSeeConfidence || p.tier === "FREE"} />
                 ))}
               </ul>
             )}

@@ -7,7 +7,7 @@ describe("getEntitlements", () => {
 
     it("tier is FREE", () => expect(ents.tier).toBe("FREE"));
     it("cannot see premium picks", () => expect(ents.canSeePremiumPicks).toBe(false));
-    it("cannot see confidence", () => expect(ents.canSeeConfidence).toBe(false));
+    it("cannot see confidence (the PRO gate covers the full board; FREE picks use pick.tier escape in the UI)", () => expect(ents.canSeeConfidence).toBe(false));
     it("cannot see line movement", () => expect(ents.canSeeLineMovement).toBe(false));
     it("cannot see factor breakdown", () => expect(ents.canSeeFactorBreakdown).toBe(false));
     it("can see edge score", () => expect(ents.canSeeEdgeScore).toBe(true));

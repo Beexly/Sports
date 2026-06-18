@@ -58,8 +58,10 @@ describe("/dashboard — tier-gated picks", () => {
     );
   });
 
-  it("gates confidence rendering on the canSeeConfidence entitlement", () => {
-    expect(dashboardSrc).toMatch(/showConfidence=\{entitlements\.canSeeConfidence\}/);
+  it("gates confidence rendering on the canSeeConfidence entitlement or FREE pick tier", () => {
+    // FREE picks carry confidence scores (product promise); PRO+ see confidence
+    // on all picks. The dashboard combines both conditions so neither path drops it.
+    expect(dashboardSrc).toMatch(/showConfidence=\{entitlements\.canSeeConfidence \|\| p\.tier === "FREE"\}/);
     // The raw "% conf" readout must be inside the showConfidence branch.
     expect(dashboardSrc).toMatch(/showConfidence\s*\?\s*\([\s\S]{0,200}% conf/);
   });

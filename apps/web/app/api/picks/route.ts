@@ -37,7 +37,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     : {
         tier: "FREE" as const,
         canSeePremiumPicks: false,
-        canSeeConfidence: false,
+        canSeeConfidence: true,
         canSeeLineMovement: false,
         canSeeFactorBreakdown: false,
         canSeeEdgeScore: true,

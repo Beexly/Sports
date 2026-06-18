@@ -27,7 +27,12 @@ export const metadata: Metadata = {
 };
 
 export default function TodayPage() {
-  const cards = buildBriefing();
+  let cards: ReturnType<typeof buildBriefing> = [];
+  try {
+    cards = buildBriefing();
+  } catch {
+    // briefing engine failure is non-fatal — render an empty state
+  }
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Atmosphere />
