@@ -17,8 +17,12 @@
  *   - Signals         REAL. Claude API spend (budget rings) + ingestion/
  *                     settlement health from the operating assessment. CLV/line
  *                     intelligence is labeled DESIGNED, not wired.
- *   - Lessons         MOCK/empty-honest. No lessons store; memory NOT_WIRED.
- *                     Links to /cockpit/losses + /cockpit/calibration.
+ *   - Lessons         REAL when confirmed memory exists. Renders CONFIRMED /
+ *                     repeated-pattern lessons from recall (dataMode "live");
+ *                     degrades to the honest "no lessons store wired" empty
+ *                     state (dataMode "unavailable") when recall is empty or
+ *                     the store is unreachable. Always links to /cockpit/losses
+ *                     + /cockpit/calibration.
  */
 
 import { db, isStubMode } from "@sports/db";
@@ -29,6 +33,10 @@ import type { ScoringInput } from "@/lib/cockpit/scoring";
 import type { CardScore } from "./types";
 import { summarizeAgentHealth } from "@/lib/agents/agent-health";
 import { buildJarvisOperatingAssessment } from "@/lib/jarvis/jarvis-operating-assessment";
+import {
+  recallConfirmedLessons,
+  type RecalledLesson,
+} from "@/lib/jarvis/memory/recall";
 import {
   getJarvisClaudeReviewItems,
   getJarvisOwnerDecisions,
@@ -387,14 +395,61 @@ export function buildSignals(
   return { lane, gauges };
 }
 
-// ── Lane: Lessons (MOCK / empty-honest) ────────────────────────────────────
+// ── Lane: Lessons (REAL from recall / empty-honest fallback) ────────────────
 
-export function buildLessons(memoryStatus: string): CommandLane {
+/** Map one recalled, CONFIRMED lesson to a read-only Lessons card. */
+function lessonToCard(lesson: RecalledLesson): CommandCard {
+  const evidence = [
+    { label: "Scope", value: lesson.scope },
+    {
+      label: "Learned",
+      value: `${lesson.memoryState} · ${lesson.learnedAt.toISOString().slice(0, 10)}`,
+    },
+    { label: "Loss autopsies", value: "/cockpit/losses" },
+    { label: "Calibration", value: "/cockpit/calibration" },
+  ];
+  return {
+    id: `lesson-${lesson.id}`,
+    title: lesson.title,
+    whyItMatters: lesson.summary.slice(0, 200),
+    agentOwner: agentDisplayName("archive"),
+    // Memory confidence is 0..100; the card contract carries it as-is.
+    confidence: lesson.confidence,
+    risk: "NONE",
+    expectedImpact: null,
+    evidence,
+    actionButtons: [],
+    taskId: null,
+  };
+}
+
+/**
+ * Build the Lessons lane. When recall returns CONFIRMED / repeated-pattern
+ * lessons, the lane is "live" and renders real cards. When recall is empty
+ * (store unwired/unreachable, or nothing confirmed yet) the lane degrades to
+ * the honest "no lessons store wired" empty state ("unavailable"). Either way
+ * it links to /cockpit/losses + /cockpit/calibration and never throws.
+ */
+export function buildLessons(
+  memoryStatus: string,
+  lessons: readonly RecalledLesson[]
+): CommandLane {
+  if (lessons.length > 0) {
+    return {
+      key: "lessons",
+      title: "Lessons",
+      subtitle: "What we learned and changed",
+      dataMode: "live",
+      fallbackReason: null,
+      cards: lessons.map(lessonToCard),
+    };
+  }
+
   const card: CommandCard = {
     id: "lessons-store",
     title: "No lessons store wired",
     whyItMatters:
-      "There is no persistent lessons/memory store yet, so no automated lesson can be surfaced.",
+      "There is no confirmed lesson to surface yet — recall returned nothing (store unwired/unreachable or no memory confirmed).",
     agentOwner: agentDisplayName("archive"),
     confidence: null,
     risk: "NONE",
@@ -497,6 +552,14 @@ export async function loadDailyCommand(): Promise<DailyCommand> {
   ingestionStatus = costsReachable ? "see /cockpit launch assessment" : "UNKNOWN (telemetry probe failed)";
   settlementStatus = costsReachable ? "see /cockpit launch assessment" : "UNKNOWN (telemetry probe failed)";
 
+  // Lessons reads CONFIRMED / repeated-pattern memory via recall (read-only).
+  // In stub mode we skip the probe; recall is itself never-throw so any failure
+  // degrades to [] and the lane falls back to its honest empty state.
+  let recalledLessons: readonly RecalledLesson[] = [];
+  if (!isStubMode()) {
+    recalledLessons = await recallConfirmedLessons({ limit: 8 });
+  }
+
   const moneyNext = buildMoneyNext(revenueStatus, bobbyNextAction);
   const approvalQueue = buildApprovalQueue(realTasks, dbReachable);
   const agentActivity = buildAgentActivity();
@@ -506,7 +569,7 @@ export async function loadDailyCommand(): Promise<DailyCommand> {
     settlementStatus,
     costsReachable
   );
-  const lessons = buildLessons(memoryStatus);
+  const lessons = buildLessons(memoryStatus, recalledLessons);
 
   const lanes: readonly CommandLane[] = [
     moneyNext,
