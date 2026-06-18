@@ -75,6 +75,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
     items: [
       { href: "/cockpit/api-costs", label: "API Costs", hint: "Claude budget monitor" },
       { href: "/cockpit/synthetic-monitoring", label: "Synthetic Monitoring", hint: "Production probes" },
+      { href: "/cockpit/gates", label: "Gate Audit", hint: "Readiness gates · read-only" },
     ],
   },
 ];
