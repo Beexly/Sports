@@ -1,8 +1,10 @@
 # OSS Betting & Prediction Repo Scan — June 2026
 
-**Scope:** Methodology/technique recon of 39 public GitHub repositories (sports-betting models, odds
-ingestion, betting math, ML infra) for applicability to GSN. Researched via README + raw source + web
-search; no repo cloned or executed.
+**Scope:** Methodology/technique recon of **73 public GitHub repositories + 1 article**, in two batches.
+**Part 1** (39 repos) = sports-betting models, odds ingestion, betting math, ML infra. **Part 2** (34 repos
++ the Anthropic "Claude Design" article) = core data/ML libraries, data infra/CLI, web analytics & BI,
+charting, AI-media (Higgsfield), and Claude/Anthropic design resources, plus six more sports repos.
+Researched via README + raw source + web search; no repo cloned or executed.
 
 **Read this as:** a methodology and schema reference, **not** a code-import list. Nearly everything here
 is Python/Go/R; GSN is TypeScript. The value is in *patterns and math we re-implement cleanly*, gated by
@@ -275,3 +277,236 @@ legitimate shape every ingestion path should resemble.
 **Honest caveat repeated:** none of these repos proves a durable edge. They give us **discipline** (vig
 removal, CLV, time-ordered validation, calibration, auditable factor trails) — which is exactly what a
 trustworthy, proof-gated platform needs. The alpha, if any, we have to earn ourselves.
+
+---
+---
+
+# Part 2 — Infrastructure, Data, Analytics, Media & Design (second batch)
+
+34 repos + 1 article, broader than betting: core data/ML libraries, data infra/CLI, web analytics & BI,
+charting, AI-media (Higgsfield), Claude/Anthropic design resources, and six more sports/prediction repos.
+Verdicts weigh **stack fit** (GSN is TS/Node) and **license** heavily — a great tool in the wrong language
+or under copyleft is a liability, not a win.
+
+## 7. Executive verdict (batch 2)
+
+**Adopt / use now (license-clean, in-stack or clearly worth it):**
+
+| Repo | License | Use |
+|---|---|---|
+| **umami-software/umami** | MIT | Self-hosted privacy analytics — *same Next.js+TS+Postgres stack* |
+| **exceljs** *(the Node answer to qax-os/excelize)* | MIT | Operator + track-record/calibration Excel exports |
+| **vega/vega-lite** (via `react-vega`) | BSD-3 | Calibration/reliability + line-movement charts (Recharts for the rest) |
+| **scikit-learn** | BSD-3 | *Offline* calibration toolchain → export fitted map to TS (§9) |
+| **statsmodels** | BSD-3 | *Offline* Poisson/Dixon-Coles GLM → port closed-form math to TS |
+| **Claude Design (Anthropic Labs)** | hosted | Pilot for cockpit views; one-instruction handoff to Claude Code |
+| **VoltAgent/awesome-claude-design** | MIT | Adopt the **`DESIGN.md` convention** (author a GSN-specific one) |
+| **higgsfield-ai/higgsfield-js** | MIT | Headless media-worker generation w/ provenance stamping (beyond the MCP) |
+
+**Experiment / defer:** apache/superset (internal-only BI over Postgres), pathwaycom/pathway (real-time
+line-movement — *only* if GSN moves to a push/websocket odds feed; BSL license does **not** block us),
+johnkerl/miller (BSD ops CLI for backfills), seedance2-jineng prompt-craft (ideas only for the media-brief
+generator), AKCodez/higgsfield-claude-skills (reuse prompt-style templates clean-room).
+
+**Skip:** haifengl/smile (JVM **+ GPL-3.0** copyleft blocker), boyter/scc (low-leverage), imbalanced-learn
+(SMOTE *degrades* calibration — a "don't"), ApplikeySolutions/VegaScroll (abandoned iOS), clawnify/open-studio
+(no Claude tie), BIT-DataLab/Edit-Banana (AGPL, diagram→DrawIO tool, off-domain), **higgsfield-ai/higgsfield**
+(dead legacy GPU-training framework — name collision, not the video product), pandas/seaborn (offline
+enabling deps only — adopt in notebooks, nothing to port), nwlynam62-ai/bet-coach (static UI shell).
+
+**⚠ Compliance flags (record + avoid):** **stablesports711-hue/stable-sports-iptv** is sports-broadcast
+**IPTV piracy** (expiring `.m3u` restream playlists) — off-limits under our no-piracy posture.
+**davidtheaibet/aibet-meeting-room** is a private, **unlicensed competitor** data layer that relies on
+**uncredited ESPN scraping** — don't borrow its rights-ungated ingestion approach (one-line competitive
+intel only). `jamesbarnesmd-website` (sports *medicine*) and `harrischs185/innoweb` (sports *collectibles*)
+are off-domain keyword matches — skip.
+
+## 8. More sports/prediction repos (6) — two carry real gold
+
+> All six are 0–3★ single-author projects; the huge commit counts (2,500–8,300) are **automated daily
+> bot/CI commits writing generated picks back to the repo**, not engineering signal. Judge on methodology.
+> Most have **no license** → reimplement ideas, don't copy code. All scrape sources our clearance posture
+> would block → take the math, keep The Odds API as source of truth.
+
+- **Alex-2911/Basketball_prediction** (MIT — the most production-grade) — NBA home-win LightGBM pipeline whose
+  *value is the post-processing, not the model*: a **calibration ladder** (raw → in-sample isotonic →
+  time-aware **walk-forward OOS isotonic** → **binned empirical win-rate** with **Wilson lower-bound** +
+  **readiness gating** that degrades to global base-rate when data is thin → market-safe clip), a full
+  **calibration eval suite** (Brier, LogLoss, **ECE**, reliability slope, subset accuracy), a **model-vs-market
+  gap governor** (devig → `gap` → blend `w=exp(-|gap|/0.08)` → shrink-to-0.5 `0.5+α(p−0.5)` → hard-block on
+  extreme disagreement), and **grid-searched EV thresholds**. Bugs to *avoid*: rolling means without
+  `.shift(1)` (leakage) and **random** train/test split on time-series (use walk-forward). → `prediction-engine`.
+- **nadzhh/sports-picks** (no license) — fully-specified NBA-prop + soccer engine. **Shrinkage-to-baseline
+  confidence** `final = 0.6·model + 0.4·55`, capped `[40,95]`; **bounded contextual multipliers** (pace
+  `[0.90,1.10]`, team-total `[0.88,1.12]`, defense `[0.92,1.08]`, B2B `0.96×`, blowout `0.94×`) over a
+  L5/L10/season-weighted projection with σ floored at 15% of mean; P(X>line) via **normal CDF**; **composite
+  quality-score** ranking + **diversification caps** (max 2/player, mix high+mid conf); soccer = independent
+  **Poisson** scoreline grid + xG-vs-actual "efficient finisher" flag + FIFA-ranking→goal-strength mapping.
+  → `prediction-engine` (high, methodology).
+- **05aptrading-jpg/sportsAPBot** (no license) — MLB/LMB sabermetric bot. **Transparent weighted factor
+  blocks → single auditable score** (Starter 30% / Offense 35% / Bullpen 25% / Efficiency 10%, each with
+  named sub-factors) = a textbook **factor trail**; **multi-condition value gate** ("Tríada del Valor":
+  publish only if prob >~57% AND BaseRuns-unlucky AND edge ≥3.5%) = a clean hard-stop pattern; context-aware
+  weight overrides + **graceful data fallbacks** (FanGraphs→MLB API→market). → `prediction-engine` (factor-trail
+  architecture is directly portable).
+- **SaRangWOO/sports_analytics** (no license) — KBO portfolio. Worth one idea each: **calibration tables as a
+  published accuracy artifact** (Brier+LogLoss), **explainable derived-index features** (team-style/situational
+  indices rather than raw stats — fits our "derived signals" rights rule + factor trail), and a **JSON model
+  artifact** (versionable/auditable). → `prediction-engine` (low-med).
+- **SEBASBELMOS/Sports_Data_API_with_Neo4j** (no license, thin academic) — Node REST API over a Neo4j graph.
+  Schema: `Athlete`/`Team`/`Sport` nodes; `PLAYS_FOR`, `PRACTICES`, and `CONTRACTED_BY {value,startDate,endDate}`
+  edges. **One takeaway: time-bounded relationships with properties on the edge.** GSN is Postgres/Prisma, so
+  borrow only the *modeling idea* (extend our entity graph with attributed, temporal edges to Game/Market/Line/
+  Season/Venue). → modeling concept (low).
+- **nwlynam62-ai/bet-coach** (no license) — static HTML "coach" board, **not** an LLM agent; no engine, even the
+  render JS is missing. Salvage only the **pick-card JSON shape** (`matchup, odds, line_movement_history[],
+  take, rank, grade, status, line_sources[], updated_at`) as a UI/content contract. → **skip**.
+
+## 9. Core Python ML libraries (5) — the calibration cookbook
+
+All BSD/MIT, all **Python** → used as **offline R&D** or **methodology to port to TS**, never in the runtime engine.
+
+- **scikit-learn** (66k★, BSD-3) — the keystone for our calibration + backtest roadmap. The concrete recipe:
+  measure honesty with **`brier_score_loss` + `calibration_curve`**, fit **`CalibratedClassifierCV(method=
+  'isotonic'|'sigmoid')`** using **`cv=TimeSeriesSplit`** (avoid temporal leakage), then **export the fitted
+  mapping** (two Platt scalars, or isotonic breakpoints) and **apply it in the TS engine at runtime**. Use
+  sigmoid/Platt until ~1000 settled picks per segment, then isotonic.
+- **statsmodels** (11.5k★, BSD-3) — `sm.GLM(y, X, family=Poisson()).fit()` is the canonical **soccer goal
+  model**; add the **Dixon-Coles** low-score correction + time-decay weighting, fit/validate offline, then
+  re-implement the (closed-form) Poisson scoring math in TS. Also Logit (win prob), ARIMA (team-form trend).
+- **imbalanced-learn** (MIT) — **mostly a warning, not an adopt:** SMOTE/resampling **destroys probability
+  calibration** by shifting base rates. For a calibration-first platform that's an anti-pattern — prefer
+  `class_weight`/threshold tuning, and if you ever resample, *always* recalibrate after and re-check Brier.
+- **pandas** (BSD-3) / **seaborn** (BSD-3) — offline **enabling tooling** only: build the labeled
+  backtest dataset (join Odds-API snapshots to settled results), draw reliability diagrams / Brier-by-bucket.
+  No runtime role, nothing to port (TS uses Prisma aggregations + React charts).
+
+**Synthesis — GSN calibration cookbook (pulls Part 1 + Part 2 together):**
+1. **Offline (Python notebook):** fit isotonic/Platt with `TimeSeriesSplit`; report **Brier + LogLoss + ECE +
+   reliability slope + calibration tables** (Basketball_prediction / sports_analytics standard). Export the map.
+2. **Runtime (TS engine):** apply the exported calibrator → then a **binned empirical win-rate table with
+   Wilson lower-bound + readiness gating** (degrade to base-rate when thin) → optional **shrink-to-baseline**
+   (`0.6·model + 0.4·base`) and **market-gap governor** (devig → blend/shrink → hard-block) before publishing.
+3. The per-bin observed-win-rate table *is* an auditable artifact → powers the public calibration page and the
+   PROVEN-tier "published calibration" milestone.
+
+## 10. Data infra / CLI (5)
+
+- **qax-os/excelize** (Go, BSD-3, 20.7k★) — great library, **wrong stack.** Do the capability (operator +
+  track-record/calibration **Excel exports**) **in-stack with `exceljs`** (MIT, ~1.9M wk npm, streaming, ~6×
+  less memory than SheetJS under serverless). Keep SheetJS in reserve only for reading legacy/odd formats.
+- **pathwaycom/pathway** (62.9k★, **BSL-1.1** → Apache after 4y) — strongest *future* fit for **real-time
+  line-movement / steam detection** (incremental, stateful, out-of-order-tolerant). License does **not** block
+  GSN (we're an end-user, not a stream-processing reseller). But it's **premature**: our upstream (The Odds API)
+  is a polled REST source and BullMQ snapshot-diff covers line-movement today; and it's a separate **Python
+  service**. Revisit only with a push/websocket feed.
+- **johnkerl/miller** (Go, BSD-2, 9.9k★) — handy **single-binary CLI** for ad-hoc CSV/JSON transforms in
+  backfill/migration/debug scripts. Adopt as an ops convenience; keep off the runtime ingestion path.
+- **boyter/scc** (Go, MIT) — fast LOC/complexity counter. Harmless but **low-leverage**; optional CI metric.
+- **haifengl/smile** (JVM, **GPL-3.0**, 6.4k★) — **skip:** doubly wrong-stack (JVM) and GPL copyleft is a real
+  blocker for a proprietary SaaS. If GSN ever needs real ML, use the Python ecosystem (XGBoost/LightGBM/sklearn).
+
+## 11. Analytics, BI & viz (5)
+
+- **umami-software/umami** (MIT, 37k★) — **adopt** for privacy-first web/product analytics: *same Next.js+TS+
+  Postgres stack*, single datastore, trivial self-host, richer free funnels/retention. Beats **plausible/analytics**
+  (27k★, excellent but **AGPL** + Elixir + ClickHouse → heavier + copyleft friction; prefer only as hosted SaaS).
+- **vega/vega-lite** (BSD-3) via the maintained **`react-vega`** — **selective adopt** for *statistical* charts
+  (calibration/reliability, binned confidence-vs-accuracy, layered line-movement with bands/annotations). Default
+  the bulk of GSN's React charts to **Recharts** (visx for bespoke) for stack ergonomics.
+- **apache/superset** (Apache-2.0, 73k★) — **experiment, internal-only.** Point it at Postgres for ad-hoc
+  operator BI (pick volume, confidence-bucket calibration, CLV trends) at near-zero frontend cost. Heavy
+  standalone Python service; never customer-facing; skip if a few fixed cockpit panels suffice.
+- **ApplikeySolutions/VegaScroll** (Swift, MIT) — **skip:** abandoned iOS animation lib, name-collision only.
+
+## 12. Higgsfield AI-media ecosystem (6) — mostly covered by the connected MCP
+
+GSN already has the **Higgsfield Video MCP** (`generate_image/_video/_audio`, marketing studio, virality
+predictor, upscale, outpaint, remove-bg). Net-new value from OSS is narrow:
+
+- **higgsfield-ai/higgsfield-js** (official, MIT, TS) — **use for headless, non-agent worker jobs**: typed
+  endpoints + polling/webhooks; control the call site to stamp the "AI-generated" label + brief ID at gen time.
+- **higgsfield-ai/higgsfield-client** (official, Apache-2.0, Python) — skip unless a Python media worker exists;
+  mirror its `NSFW`/`Failed` result classes in our media-acceptance gate.
+- **beshuaxian/higgsfield-seedance2-jineng** (3rd-party, **no license**, 608★) — best **prompt-craft** reference
+  (hook frameworks, shot lists, camera language, platform specs) for the **media-brief generator** — *ideas only*,
+  and **never fabricate footage of real games/players/events**; safest borrows are generic promo/explainer hooks.
+- **robonuggets/higgsfield-skill** (3rd-party, CC-BY-4.0) — thin MCP wrapper; **skip** (write a GSN-owned skill).
+  The *official* `higgsfield-ai/skills` (MIT, 427★) is the better skill reference if needed.
+- **higgsfield-ai/higgsfield** (Apache-2.0, 3.8k★) — **skip:** dead legacy **GPU-training framework** (name
+  collision), last release 03/2024, nothing to do with media.
+- **BIT-DataLab/Edit-Banana** (**AGPL-3.0**, 5.3k★) — **skip:** it's a **diagram→DrawIO XML** vectorizer (SAM 3 +
+  MLLM + OCR), *not* an image editor; off-domain + copyleft.
+
+> Throughout: our media rules hold — **label all generated media, keep it data-backed, never fabricate imagery
+> of real events.** The MCP executes generation; OSS adds only headless SDK control + prompt-craft inspiration.
+
+## 13. Claude / Anthropic design resources (3 repos + 1 article)
+
+- **Claude Design (Anthropic Labs)** *(article)* — first-party, hosted, **Opus-4.7** design surface whose
+  onboarding **ingests your codebase + design files into a persistent design system**, then offers
+  **one-instruction handoff to Claude Code** (exports to Vercel/Miro/Figma/etc.). **Pilot it (highest design
+  value)** for cockpit-view exploration and PM→Claude-Code sketches; subscription-gated (Pro/Max/Team/Enterprise);
+  treat output as scaffolding to reconcile against GSN's WCAG-contrast + color-role rules, not a token source.
+- **VoltAgent/awesome-claude-design** (MIT, 2.7k★) — **adopt the pattern, not the files**: the **`DESIGN.md`
+  convention** (tokens + rules + rationale in one agent-readable file). Author a GSN-specific `DESIGN.md`; mine
+  the dark-UI exemplars (Vercel/Sentry/Stripe-style) for structure. Don't import brand files wholesale.
+- **AKCodez/higgsfield-claude-skills** (**no license**, 194★) — **partial, clean-room**: reuse the **15
+  prompt-style templates** (motion ads, social hooks, e-commerce, brand stories) as inspiration for GSN-owned
+  Claude Code skills; **skip the Playwright browser-automation skills** (fragile, redundant with our MCP).
+- **clawnify/open-studio** (MIT, 16★) — **skip:** OpenRouter/Gemini image studio, **zero Claude tie**, tiny.
+
+## 14. Batch-2 full index
+
+| Repo | License | Verdict |
+|---|---|---|
+| 05aptrading-jpg/sportsAPBot | none | **Mine** — weighted factor-blocks → auditable score; multi-condition value gate |
+| SEBASBELMOS/Sports_Data_API_with_Neo4j | none | Concept — attributed/temporal graph edges (thin) |
+| nwlynam62-ai/bet-coach | none | Skip — static UI shell; salvage pick-card JSON only |
+| Alex-2911/Basketball_prediction | **MIT** | **Mine** — calibration ladder + ECE/Brier eval + market-gap governor |
+| SaRangWOO/sports_analytics | none | Low — calibration tables + derived-index features |
+| nadzhh/sports-picks | none | **Mine** — shrinkage calibration + quality-score ranking + Poisson |
+| johnkerl/miller | BSD-2 | Experiment — ops/backfill CLI |
+| statsmodels/statsmodels | BSD-3 | **Port-methodology** — Poisson/Dixon-Coles GLM (offline) |
+| boyter/scc | MIT | Skip — low-leverage CI metric |
+| plausible/analytics | **AGPL-3.0** | Skip self-host (Elixir+ClickHouse+copyleft); SaaS only |
+| qax-os/excelize | BSD-3 | Skip (wrong stack) → use **exceljs** (MIT) instead |
+| umami-software/umami | **MIT** | **Adopt** — self-hosted analytics, same stack |
+| scikit-learn/scikit-learn | BSD-3 | **Adopt offline** — calibration toolchain, export map to TS |
+| pathwaycom/pathway | **BSL-1.1** | Experiment/defer — real-time odds (future push feed) |
+| apache/superset | Apache-2.0 | Experiment — internal-only BI over Postgres |
+| ApplikeySolutions/VegaScroll | MIT | Skip — abandoned iOS lib |
+| vega/vega-lite | BSD-3 | **Adopt (selective)** — calibration/line-movement charts via react-vega |
+| beshuaxian/higgsfield-seedance2-jineng | none | Experiment — prompt-craft ideas for brief generator |
+| higgsfield-ai/higgsfield | Apache-2.0 | Skip — dead legacy GPU-training framework |
+| AKCodez/higgsfield-claude-skills | none | Partial — reuse prompt-style templates clean-room |
+| BIT-DataLab/Edit-Banana | **AGPL-3.0** | Skip — diagram→DrawIO tool, off-domain + copyleft |
+| haifengl/smile | **GPL-3.0** | Skip — JVM + copyleft blocker |
+| mwaskom/seaborn | BSD-3 | Adopt offline (light) — analysis plots only |
+| pandas-dev/pandas | BSD-3 | Adopt offline — enabling dep for notebooks |
+| scikit-learn-contrib/imbalanced-learn | MIT | Mostly skip — SMOTE *degrades* calibration (a "don't") |
+| clawnify/open-studio | MIT | Skip — no Claude tie |
+| VoltAgent/awesome-claude-design | MIT | **Adopt the `DESIGN.md` pattern** |
+| higgsfield-ai/higgsfield-js | **MIT** | **Use** — headless media-worker SDK w/ provenance |
+| robonuggets/higgsfield-skill | CC-BY-4.0 | Skip — thin MCP wrapper |
+| higgsfield-ai/higgsfield-client | Apache-2.0 | Skip unless Python media worker |
+| Claude Design (Anthropic Labs) *(article)* | hosted | **Pilot** — design-system-from-codebase + Claude Code handoff |
+| goldenhousemedia/jamesbarnesmd-website | — | Skip — off-domain (sports *medicine*) |
+| stablesports711-hue/stable-sports-iptv | — | **Skip + compliance flag** — IPTV broadcast piracy |
+| davidtheaibet/aibet-meeting-room | none (private) | Skip — unlicensed competitor; uncredited ESPN scraping |
+| harrischs185/innoweb | — | Skip — off-domain (sports collectibles), thin |
+
+## 15. Batch-2 added backlog (merge into §6)
+
+- **Adopt now:** self-host **Umami** for funnel/conversion analytics; build operator/track-record **Excel
+  exports** with **exceljs**; render calibration/line-movement charts with **Vega-Lite (`react-vega`)** + Recharts.
+- **Calibration cookbook (§9):** stand up the offline sklearn notebook (isotonic/Platt + `TimeSeriesSplit` +
+  ECE/Brier/LogLoss/reliability), export the fitted map, and apply **calibrator → binned-empirical+Wilson →
+  shrink-to-baseline → market-gap governor** in the TS engine. Add `statsmodels` Poisson/Dixon-Coles offline for
+  a real soccer goal model.
+- **Design/media:** pilot **Claude Design** for cockpit views; author a GSN **`DESIGN.md`**; add a headless
+  **higgsfield-js** media-worker path with provenance stamping (label + brief ID), mining seedance2 prompt-craft
+  for briefs (never fabricating real-event footage).
+- **Defer:** **Superset** (internal BI) and **Pathway** (real-time line-movement, only on a push feed).
+- **Never:** the IPTV-piracy repo and the unlicensed/uncredited-scraping competitor layer — recorded here so
+  they're explicitly out of scope under our clearance + no-piracy posture.
