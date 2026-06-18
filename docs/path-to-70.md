@@ -123,6 +123,13 @@ This maps directly onto the named ladder in `CLAUDE.md`:
    next `MODEL_VERSION` bump. *(This doc's companion PR.)*
 2. **Reliability-diagram surface** — a public proof page driven by `calibrationCurve()` showing realized
    win rate per confidence bucket, with the honest empty state until the sample clears the gate.
+3. **Calibration ladder** (`calibration-ladder.ts`, built — pure, tested, gated OFF) — extends Step 1
+   beyond isotonic-only: adds **Platt/sigmoid** (small-n-safe) and a **Wilson-bounded binned-empirical**
+   map, and `buildCalibrationLadder()` selects among them by **held-out, time-ordered ECE** (fixing the
+   in-sample-validation leak in `calibration-apply.ts`), refitting the winner on all data. It also exposes a
+   **Wilson lower-bound floor** per bucket — the defensible number behind a public "this tier wins ~70%"
+   claim. Wiring it in front of the conviction tier is the same founder-gated `MODEL_VERSION` step as
+   `buildCalibrator`; until then it is inert R&D.
 
 The number we chase is **calibration error → 0**. Win rate follows from honest selection; the 70% tier is
 the visible result, and the proof is the moat.

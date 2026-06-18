@@ -298,3 +298,24 @@ export type {
   SyntheticPublicLean,
   FadeContribution,
 } from "./synthetic-fade.js";
+
+// Calibration ladder (path-to-70 Step 1) — Platt (small-n) + Wilson-bounded
+// binned-empirical alongside the existing isotonic, selected by HELD-OUT,
+// time-ordered ECE (fixes the in-sample-validation leak), refit on full data,
+// with a conservative Wilson floor for the public 70%-tier claim. Pure + tested;
+// activation is a founder-gated MODEL_VERSION step (the model is frozen).
+export {
+  plattScaling,
+  binnedEmpiricalCalibration,
+  buildCalibrationLadder,
+  DEFAULT_LADDER_MIN_SAMPLE,
+} from "./calibration-ladder.js";
+export type {
+  PlattModel,
+  EmpiricalBin,
+  BinnedEmpiricalModel,
+  BinnedEmpiricalOptions,
+  CalibrationMethod,
+  CalibratedLadderProbability,
+  CalibrationLadder,
+} from "./calibration-ladder.js";
