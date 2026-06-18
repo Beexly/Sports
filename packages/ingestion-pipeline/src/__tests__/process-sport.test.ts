@@ -27,12 +27,16 @@ const mocks = vi.hoisted(() => ({
   // prediction-engine
   scoreGames: vi.fn<(inputs: unknown[], at: Date) => unknown[]>(),
   buildPickSignalSnapshot: vi.fn<(...args: unknown[]) => Record<string, unknown>>(),
+  getPlatformConfig: vi.fn<() => { independentEdgeEnabled: boolean }>(),
+  computeEloRatings: vi.fn<(...args: unknown[]) => unknown>(),
+  eloFairValuesForGame: vi.fn<(...args: unknown[]) => unknown[]>(),
   // db
   ingestionRunCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   ingestionRunUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
   sportUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   gameUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   oddsCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
   pickUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -42,7 +46,7 @@ vi.mock("@sports/db", () => ({
   db: {
     ingestionRun: { create: mocks.ingestionRunCreate, update: mocks.ingestionRunUpdate },
     sport: { upsert: mocks.sportUpsert },
-    game: { upsert: mocks.gameUpsert, findUnique: mocks.gameFindUnique },
+    game: { upsert: mocks.gameUpsert, findUnique: mocks.gameFindUnique, findMany: mocks.gameFindMany },
     odds: { create: mocks.oddsCreate },
     pick: { upsert: mocks.pickUpsert },
     pickSignalSnapshot: { upsert: mocks.snapshotUpsert },
@@ -65,12 +69,12 @@ vi.mock("@sports/data-ingestion", () => ({
 vi.mock("@sports/prediction-engine", () => ({
   scoreGames: mocks.scoreGames,
   buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
-  // Independent-edge wiring is default OFF: getPlatformConfig reports the flag
-  // off, so the Elo block is skipped and pipeline behavior is unchanged. The
-  // elo helpers are stubbed only so the import resolves.
-  getPlatformConfig: () => ({ independentEdgeEnabled: false }),
-  computeEloRatings: () => ({ ratings: new Map(), gamesRated: 0, initialRating: 1500 }),
-  eloFairValuesForGame: () => [],
+  // Independent-edge wiring. Defaults to the flag OFF (set in beforeEach) so the
+  // Elo block is skipped and pipeline behavior is unchanged; the dedicated tests
+  // flip getPlatformConfig on to exercise the gated path.
+  getPlatformConfig: mocks.getPlatformConfig,
+  computeEloRatings: mocks.computeEloRatings,
+  eloFairValuesForGame: mocks.eloFairValuesForGame,
 }));
 
 vi.mock("../source-snapshot.js", () => ({
@@ -145,6 +149,11 @@ describe("processSport", () => {
     mocks.pickUpsert.mockResolvedValue({ id: "pick-1" });
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
+    // Independent-edge wiring defaults OFF; the Elo helpers resolve harmlessly.
+    mocks.getPlatformConfig.mockReturnValue({ independentEdgeEnabled: false });
+    mocks.gameFindMany.mockResolvedValue([]);
+    mocks.computeEloRatings.mockReturnValue({ ratings: new Map(), gamesRated: 0, initialRating: 1500 });
+    mocks.eloFairValuesForGame.mockReturnValue([]);
   });
 
   it("runs the happy path and marks the IngestionRun SUCCESS with counts", async () => {
@@ -268,5 +277,51 @@ describe("processSport", () => {
 
     expect(result.status).toBe("success");
     expect(result.picks).toBe(1);
+  });
+
+  // ── Independent-edge wiring (INDEPENDENT_EDGE_ENABLED) ──────────────────────
+
+  it("does NOT query settled games or attach fair values when the edge flag is off", async () => {
+    // beforeEach default is flag-off.
+    await processSport(SPORT, "key", gates());
+
+    expect(mocks.gameFindMany).not.toHaveBeenCalled();
+    expect(mocks.eloFairValuesForGame).not.toHaveBeenCalled();
+    const scoreInput = mocks.scoreGames.mock.calls[0]![0] as Array<{ context?: { independentFairValues?: unknown } }>;
+    expect(scoreInput[0]!.context!.independentFairValues).toBeUndefined();
+  });
+
+  it("attaches the Elo independent fair values to scoring input when the flag is on", async () => {
+    mocks.getPlatformConfig.mockReturnValue({ independentEdgeEnabled: true });
+    mocks.gameFindMany.mockResolvedValue([
+      { homeTeamName: "Chiefs", awayTeamName: "Bills", homeScore: 27, awayScore: 24, commenceTime: new Date("2026-01-01T00:00:00Z") },
+    ]);
+    const fairValue = { source: "elo", homeFairProb: 0.6, awayFairProb: 0.4, capturedAt: new Date() };
+    mocks.eloFairValuesForGame.mockReturnValue([fairValue]);
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(result.status).toBe("success");
+    expect(mocks.gameFindMany).toHaveBeenCalled();
+    expect(mocks.computeEloRatings).toHaveBeenCalled();
+    expect(mocks.eloFairValuesForGame).toHaveBeenCalledWith(
+      expect.anything(),
+      "Chiefs",
+      "Bills",
+    );
+    const scoreInput = mocks.scoreGames.mock.calls[0]![0] as Array<{ context?: { independentFairValues?: unknown } }>;
+    expect(scoreInput[0]!.context!.independentFairValues).toEqual([fairValue]);
+  });
+
+  it("a failure building Elo ratings never blocks pick generation (non-fatal)", async () => {
+    mocks.getPlatformConfig.mockReturnValue({ independentEdgeEnabled: true });
+    mocks.gameFindMany.mockRejectedValue(new Error("settled-games query failed"));
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(result.status).toBe("success");
+    expect(result.picks).toBe(1);
+    const scoreInput = mocks.scoreGames.mock.calls[0]![0] as Array<{ context?: { independentFairValues?: unknown } }>;
+    expect(scoreInput[0]!.context!.independentFairValues).toBeUndefined();
   });
 });
