@@ -15,6 +15,7 @@ import { DecisionAutopsy } from "@/components/courtroom/decision-autopsy";
 import { AgentWarRoom } from "@/components/war-room/agent-war-room";
 import { ILLUSTRATIVE_BRIEF } from "@/lib/courtroom/courtroom";
 import { BRAND_COLORS, CLOSING_LINE } from "@/lib/brand";
+import { CapabilityMatrix } from "@/components/intelligence/capability-matrix";
 
 const TICKER_PHRASES = [
   "Math you can read",
@@ -357,6 +358,34 @@ export default function IntelligencePage() {
             <Reveal delay={120}>
               <div className="mt-10">
                 <ReasoningShowcase steps={CHAIN} />
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Capability Matrix — full stack in one view */}
+        <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="matrix-heading">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                Full capability map
+              </p>
+            </Reveal>
+            <Reveal delay={80}>
+              <h2 id="matrix-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
+                Every layer, every component.
+              </h2>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-4 max-w-2xl text-ink-300">
+                Data in, intelligence applied, gates enforced, output issued and receipted.
+                Status is live — ACCRUING means real history is building, GATED means the
+                gate is working, SOON means it&apos;s on the roadmap.
+              </p>
+            </Reveal>
+            <Reveal delay={200}>
+              <div className="mt-8">
+                <CapabilityMatrix />
               </div>
             </Reveal>
           </div>
