@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
-import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
+import { InteractiveGalaxyLazy } from "@/components/hero/interactive-galaxy-lazy";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { getPlate } from "@/lib/visual-production/asset-manifest";
 import { CipherShard } from "@/components/cipher/cipher-shard";
@@ -73,7 +73,7 @@ export default async function ObservatoryPage() {
             />
           )}
           <div aria-hidden="true" className="absolute inset-0 -z-20">
-            <InteractiveGalaxy />
+            <InteractiveGalaxyLazy />
           </div>
           <div
             aria-hidden="true"
