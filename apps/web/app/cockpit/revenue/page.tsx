@@ -22,6 +22,7 @@ import {
   type LaneStatus,
   type ActivationItem,
 } from "@/lib/revenue/revenue-loader";
+import { KpiCard } from "@/components/cockpit/kpi-card";
 
 export default async function CockpitRevenuePage(): Promise<JSX.Element> {
   const state = await loadRevenueState();
@@ -62,7 +63,7 @@ export default async function CockpitRevenuePage(): Promise<JSX.Element> {
         </p>
       </header>
 
-      {/* ── Headline MRR/ARR/Subs ──────────────────────────────────────────── */}
+      {/* ── Headline KPI grid ──────────────────────────────────────────────── */}
       <HeadlineMetrics state={state} />
 
       {/* ── Stripe note / data-mode explanation ────────────────────────────── */}
@@ -90,76 +91,77 @@ export default async function CockpitRevenuePage(): Promise<JSX.Element> {
 function HeadlineMetrics({ state }: { readonly state: RevenueState }): JSX.Element {
   const { subscriptions } = state;
 
-  const subsDisplay =
+  const subsUnknownNote =
     subscriptions.paidSubscribers === null
-      ? "—"
-      : subscriptions.paidSubscribers.toLocaleString("en-US");
+      ? "Connect Stripe to measure"
+      : undefined;
 
-  const mrrDisplay =
+  const mrrUnknownNote =
     subscriptions.mrr === null
-      ? "—"
-      : formatUsd(subscriptions.mrr);
+      ? "Connect Stripe to measure"
+      : undefined;
 
-  const arrDisplay =
-    subscriptions.arr === null
-      ? "—"
-      : formatUsd(subscriptions.arr);
-
-  const subsNote =
+  // Accent: if confirmed zero, treat as warning (no revenue yet); if positive, positive; if unknown, unknown
+  const subsAccent =
     subscriptions.paidSubscribers === null
-      ? "Stripe not configured"
+      ? "unknown"
       : subscriptions.paidSubscribers === 0
-      ? "confirmed zero"
-      : "active subscriptions";
+      ? "warning"
+      : "positive";
 
-  const mrrNote =
+  const mrrAccent =
     subscriptions.mrr === null
-      ? "attach STRIPE_SECRET_KEY to measure"
-      : "from real Stripe plan amounts";
+      ? "unknown"
+      : subscriptions.mrr === 0
+      ? "warning"
+      : "positive";
+
+  const arrAccent =
+    subscriptions.arr === null
+      ? "unknown"
+      : subscriptions.arr === 0
+      ? "warning"
+      : "positive";
 
   return (
-    <section className="grid gap-3 sm:grid-cols-3">
-      <RevenueMetric
+    <section className="grid gap-4 sm:grid-cols-3">
+      <KpiCard
+        value={subscriptions.paidSubscribers}
         label="Paid subscribers"
-        value={subsDisplay}
-        sub={subsNote}
-        unknown={subscriptions.paidSubscribers === null}
+        format="integer"
+        accent={subsAccent}
+        delta={
+          subscriptions.paidSubscribers === 0
+            ? "confirmed zero — no active subscriptions yet"
+            : subscriptions.paidSubscribers !== null
+            ? "active Stripe subscriptions"
+            : undefined
+        }
+        unknownNote={subsUnknownNote}
       />
-      <RevenueMetric
+      <KpiCard
+        value={subscriptions.mrr}
         label="MRR"
-        value={mrrDisplay}
-        sub={mrrNote}
-        unknown={subscriptions.mrr === null}
+        format="currency"
+        accent={mrrAccent}
+        delta={
+          subscriptions.mrr !== null
+            ? "from real Stripe plan amounts"
+            : undefined
+        }
+        unknownNote={mrrUnknownNote}
       />
-      <RevenueMetric
+      <KpiCard
+        value={subscriptions.arr}
         label="ARR run-rate"
-        value={arrDisplay}
-        sub="MRR × 12 — not a forecast"
-        unknown={subscriptions.arr === null}
+        format="currency"
+        accent={arrAccent}
+        delta="MRR × 12 — not a forecast"
+        unknownNote={
+          subscriptions.arr === null ? "Connect Stripe to measure" : undefined
+        }
       />
     </section>
-  );
-}
-
-function RevenueMetric({
-  label,
-  value,
-  sub,
-  unknown,
-}: {
-  readonly label: string;
-  readonly value: string;
-  readonly sub: string;
-  readonly unknown: boolean;
-}): JSX.Element {
-  return (
-    <div className="rounded-lg border border-white/[0.06] bg-obsidian/60 px-4 py-3">
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-ink-500">{label}</p>
-      <p className={`mt-1 text-lg font-bold ${unknown ? "text-ink-400" : "text-white"}`}>
-        {value}
-      </p>
-      <p className="mt-0.5 text-[11px] text-ink-600">{sub}</p>
-    </div>
   );
 }
 
@@ -196,16 +198,47 @@ function NotePanel({
 
 // ── Revenue lanes ─────────────────────────────────────────────────────────────
 
+const LANE_STATUS_LABELS: Record<LaneStatus, string> = {
+  not_started: "Not started",
+  scaffolding: "Scaffolding",
+  in_progress: "In progress",
+  active: "Active",
+  paused: "Paused",
+};
+
 function LanesSection({ lanes }: { readonly lanes: readonly RevenueLane[] }): JSX.Element {
+  const activeCount = lanes.filter((l) => l.status === "active").length;
+  const inProgressCount = lanes.filter(
+    (l) => l.status === "in_progress" || l.status === "scaffolding"
+  ).length;
+
   return (
     <section className="overflow-hidden rounded-lg border border-white/[0.06] bg-obsidian/60">
       <div className="border-b border-white/[0.06] px-4 py-3">
-        <h2 className="text-sm font-semibold text-white">Revenue lanes</h2>
-        <p className="mt-1 text-xs text-ink-500">
-          13 lanes from the doctrine. Status is honest today: nearly all are not_started or
-          scaffolding. This is decision-support, not a scoreboard — the &ldquo;blocked on&rdquo;
-          column names exactly what the owner must flip to go live.
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-sm font-semibold text-white">Revenue lanes</h2>
+            <p className="mt-1 text-xs text-ink-500">
+              {lanes.length} lanes from the doctrine.{" "}
+              {activeCount > 0 ? (
+                <span className="text-emerald-300">{activeCount} active</span>
+              ) : (
+                <span>None active yet</span>
+              )}
+              {inProgressCount > 0 && (
+                <span className="text-amber-300"> · {inProgressCount} in progress</span>
+              )}
+              {". "}
+              The &ldquo;blocked on&rdquo; column names exactly what the owner must flip to go live.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <LegendDot className="bg-emerald-400" label="Active" />
+            <LegendDot className="bg-sky-400" label="In progress" />
+            <LegendDot className="bg-amber-400" label="Scaffolding" />
+            <LegendDot className="bg-white/[0.15]" label="Not started" />
+          </div>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-white/[0.04] text-sm">
@@ -227,6 +260,21 @@ function LanesSection({ lanes }: { readonly lanes: readonly RevenueLane[] }): JS
         </table>
       </div>
     </section>
+  );
+}
+
+function LegendDot({
+  className,
+  label,
+}: {
+  readonly className: string;
+  readonly label: string;
+}): JSX.Element {
+  return (
+    <span className="flex items-center gap-1 text-[10px] text-ink-500">
+      <span className={`h-1.5 w-1.5 rounded-full ${className}`} aria-hidden="true" />
+      {label}
+    </span>
   );
 }
 
@@ -267,19 +315,11 @@ function LaneStatusBadge({ status }: { readonly status: LaneStatus }): JSX.Eleme
       "border-violet-500/30 bg-violet-950/30 text-violet-300",
   };
 
-  const labels: Record<LaneStatus, string> = {
-    not_started: "not started",
-    scaffolding: "scaffolding",
-    in_progress: "in progress",
-    active: "active",
-    paused: "paused",
-  };
-
   return (
     <span
       className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-semibold ${styles[status]}`}
     >
-      {labels[status]}
+      {LANE_STATUS_LABELS[status]}
     </span>
   );
 }
@@ -293,6 +333,15 @@ function ActivationSection({
 }): JSX.Element {
   const allPresent = activation.every((a) => a.present);
   const presentCount = activation.filter((a) => a.present).length;
+  const pct = activation.length > 0
+    ? Math.round((presentCount / activation.length) * 100)
+    : 0;
+
+  const barColor = allPresent
+    ? "bg-emerald-500"
+    : pct >= 60
+    ? "bg-sky-500"
+    : "bg-amber-500";
 
   return (
     <section className="overflow-hidden rounded-lg border border-white/[0.06] bg-obsidian/60">
@@ -307,13 +356,28 @@ function ActivationSection({
             </p>
           </div>
           <div className="text-right">
-            <p className="font-mono text-lg font-bold text-white">
-              {presentCount} / {activation.length}
+            <p className="font-mono text-2xl font-bold text-white">
+              {presentCount}{" "}
+              <span className="text-base font-normal text-ink-400">
+                / {activation.length}
+              </span>
             </p>
             <p className="text-[11px] text-ink-600">
               {allPresent ? "fully configured" : "credentials configured"}
             </p>
           </div>
+        </div>
+
+        {/* Progress bar */}
+        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
+          <div
+            className={`h-full rounded-full transition-all ${barColor}`}
+            style={{ width: `${pct}%` }}
+            role="progressbar"
+            aria-valuenow={pct}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          />
         </div>
       </div>
 
@@ -377,13 +441,4 @@ function DataModeBadge({ live }: { readonly live: boolean }): JSX.Element {
       unavailable
     </span>
   );
-}
-
-function formatUsd(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
 }
