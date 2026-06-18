@@ -202,11 +202,11 @@ export async function CalibrationPanel() {
             {formatBrier(data.brierScore)}
           </span>
         </div>
-        <p className="text-xs text-ink-400">{brierRead(data.brierScore)}</p>
+        <p className="text-xs text-ink-300">{brierRead(data.brierScore)}</p>
       </div>
 
       <div className="border-t border-white/[0.10] px-6 py-3">
-        <p className="text-[11px] leading-relaxed text-ink-400">
+        <p className="text-[11px] leading-relaxed text-ink-300">
           {data.publicMessage} Calibration is evidence only — it never auto-adjusts
           the model. Past performance does not guarantee future results.
         </p>

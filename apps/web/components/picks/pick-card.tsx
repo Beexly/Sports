@@ -36,9 +36,9 @@ const GRADE_CARD_STYLES: Record<PickGrade, { border: string; shadow: string }> =
 const RISK_LEVEL_STYLES: Record<RiskLevel, string> = {
   LOW_RISK:     "text-verify",
   MODERATE:     "text-plasma",
-  HIGH_VARIANCE:"text-ultraviolet",
+  HIGH_VARIANCE:"text-ultraviolet-glow",
   INJURY_RISK:  "text-alert",
-  LINE_STEAM:   "text-ultraviolet",
+  LINE_STEAM:   "text-ultraviolet-glow",
 };
 
 export function PickCard({
@@ -469,7 +469,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
           )}
           {breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0 && (
             <div className="flex items-center gap-1 rounded bg-ultraviolet/10 px-2 py-0.5">
-              <span className="text-[10px] text-ultraviolet">
+              <span className="text-[10px] text-ultraviolet-glow">
                 Signal conflict: {breakdown.uncertaintyPenalty} pts
               </span>
             </div>

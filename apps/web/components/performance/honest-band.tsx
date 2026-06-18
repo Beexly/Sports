@@ -122,7 +122,7 @@ export function HonestBand({ observedRate, sampleSize }: HonestBandProps) {
           {d.flags.map((flag) => (
             <li
               key={flag}
-              className="flex gap-2 text-[11px] leading-relaxed text-ink-400"
+              className="flex gap-2 text-[11px] leading-relaxed text-ink-300"
             >
               <span aria-hidden="true" className="text-caution">
                 ⚠

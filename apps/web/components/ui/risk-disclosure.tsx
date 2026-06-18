@@ -37,7 +37,7 @@ export function RiskDisclosure({
       <div
         data-testid="risk-disclosure"
         className={[
-          "surface-card p-4 text-xs text-ink-400",
+          "surface-card p-4 text-xs text-ink-300",
           className ?? "",
         ].join(" ")}
       >
@@ -54,7 +54,7 @@ export function RiskDisclosure({
       <p
         data-testid="risk-disclosure"
         className={[
-          "text-[10px] leading-relaxed text-ink-400",
+          "text-[10px] leading-relaxed text-ink-300",
           className ?? "",
         ].join(" ")}
       >
@@ -67,7 +67,7 @@ export function RiskDisclosure({
     <p
       data-testid="risk-disclosure"
       className={[
-        "text-[11px] leading-relaxed text-ink-400",
+        "text-[11px] leading-relaxed text-ink-300",
         className ?? "",
       ].join(" ")}
     >
