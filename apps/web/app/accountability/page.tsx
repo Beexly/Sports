@@ -19,6 +19,8 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -98,11 +100,13 @@ export default function AccountabilityPage() {
       className="flex min-h-screen flex-col"
       style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}
     >
+      <Atmosphere />
       <Nav />
 
       <main className="flex-1">
         {/* Cinematic hero */}
         <section className="relative isolate overflow-hidden px-4 pb-14 pt-24 sm:px-6 lg:px-8">
+          <GeneratedPlate assetId="accountability-steady" className="-z-20 opacity-55" />
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem]"
