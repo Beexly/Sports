@@ -62,6 +62,9 @@ const WHITELIST_PATHS = new Set([
   "apps/web/lib/pick-explainer/policy.ts",
   // Content-safety lexicon: contains the banned phrases as detection terms.
   "apps/web/lib/safety/content-safety.ts",
+  // Compliance risk scorer: declares the supplemental banned phrases as
+  // detection patterns (same rationale as trust-claims.ts / content-safety.ts).
+  "apps/web/lib/compliance/risk-scorer.ts",
   "packages/db/prisma/seed.ts",
 ]);
 
