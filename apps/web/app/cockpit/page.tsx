@@ -7,21 +7,21 @@ import {
   buildOwnerSummary,
   type OwnerSummary,
   type OwnerStatusColor,
-  type DepartmentSummary,
-  type OwnerDecision,
-  type PerformanceSummary,
-  type PicksSummary,
   type AiOpsSummary,
 } from "@/lib/cockpit/owner-summary";
-import { AskJarvisPanel } from "@/components/cockpit/ask-jarvis-panel";
 import { CapabilitySystemMap } from "@/components/cockpit/capability-system-map";
 import { AgentCouncilPanel } from "@/components/cockpit/agent-council-panel";
 import { CockpitPulse } from "@/components/cockpit/cockpit-pulse";
 import { CockpitGreeting } from "@/components/cockpit/cockpit-greeting";
-import { buildLiveMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intelligence-state";
-import { buildLiveLedgerStatus } from "@/lib/jarvis/ledger-types";
 import { buildJarvisOperatingAssessment, type JarvisOperatingAssessment } from "@/lib/jarvis/jarvis-operating-assessment";
 import { summarizeAgentHealth } from "@/lib/agents/agent-health";
+import { buildLiveMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intelligence-state";
+import { buildLiveLedgerStatus } from "@/lib/jarvis/ledger-types";
+import { Atmosphere } from "@/components/ui/atmosphere";
+import { loadDailyCommand } from "@/lib/cockpit/daily-command/loader";
+import { buildAuthorityMatrix } from "@/lib/cockpit/daily-command/authority-matrix";
+import { CommandDeck } from "@/components/cockpit/daily-command/command-deck";
+import { AuthorityMatrixView } from "@/components/cockpit/daily-command/authority-matrix";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { startOfDay, endOfDay } from "date-fns";
 
@@ -97,8 +97,14 @@ export default async function CockpitOverview() {
         })
       : null;
 
+  // Daily Command — the five-lane owner console + the L0–L5 authority matrix.
+  // loadDailyCommand never throws; the matrix is a pure projection.
+  const command = await loadDailyCommand();
+  const authorityMatrix = buildAuthorityMatrix();
+
   return (
     <div className="relative flex flex-col gap-4 pb-8">
+      <Atmosphere />
       {/* Atmospheric backdrop — a slow ambient breath so the whole deck feels alive */}
       <div
         className="pointer-events-none absolute inset-x-0 -top-8 -z-10 h-80 overflow-hidden"
@@ -235,33 +241,19 @@ export default async function CockpitOverview() {
         </section>
       )}
 
-      {/* ── Zone 1: Decision Queue (interrupt priority) ───────────────── */}
-      {ownerSummary && ownerSummary.decisions.length > 0 && (
-        <DecisionQueueZone decisions={ownerSummary.decisions} />
-      )}
+      {/* ── Daily Command — five-lane, exception-based owner console ───── */}
+      <section data-testid="daily-command" aria-label="Daily Command">
+        <p
+          data-testid="daily-command-headline"
+          className="mb-3 text-sm font-medium text-white/90"
+        >
+          {command.headline}
+        </p>
+        <CommandDeck command={command} />
+      </section>
 
-      <OperatingRuntimeZone assessment={operatingAssessment} agentReality={agentReality} />
-
-      {/* ── Zone 2: Tactical Row — Picks + Performance ───────────────── */}
-      {ownerSummary && (
-        <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-          <PicksDeskZone
-            picks={ownerSummary.picks}
-            demoActive={demoActive}
-            slateBreakdown={slateBreakdown}
-            featuredCount={featuredOperatorPicks.length}
-          />
-          <PerformanceTargetZone performance={ownerSummary.performance} />
-        </div>
-      )}
-
-      {/* ── Zone 3: Department Command Map ───────────────────────────── */}
-      {ownerSummary && (
-        <DepartmentsZone departments={ownerSummary.departments} />
-      )}
-
-      {/* ── Zone 4: Ask Jarvis Console ───────────────────────────────── */}
-      {ownerSummary && <AskJarvisPanel summary={ownerSummary} />}
+      {/* ── L0–L5 Authority Matrix ───────────────────────────────────── */}
+      <AuthorityMatrixView matrix={authorityMatrix} />
 
       {/* ── Reference layer (collapsed by default to keep the deck calm) ──
            AI Ops, the capability registry, the agent council, and the memory
@@ -271,10 +263,13 @@ export default async function CockpitOverview() {
            stack of dense panels. */}
       <details className="group rounded-2xl border border-white/[0.06] bg-white/[0.02]">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-xs font-semibold uppercase tracking-widest text-ink-400 [&::-webkit-details-marker]:hidden">
-          <span>System internals · AI ops · capabilities · council · memory</span>
+          <span>References · System internals · AI ops · capabilities · council · memory</span>
           <span aria-hidden className="text-ink-500 transition-transform group-open:rotate-180">▾</span>
         </summary>
         <div className="flex flex-col gap-4 px-3 pb-4 sm:px-4">
+          {/* Operating runtime — the living CockpitPulse centerpiece (reference view) */}
+          <OperatingRuntimeZone assessment={operatingAssessment} agentReality={agentReality} />
+
           {/* ── Zone 5: AI Ops / Build Control ─────────────────────────── */}
           {ownerSummary && <AiOpsZone aiOps={ownerSummary.aiOps} />}
 
@@ -680,340 +675,6 @@ function QuickStat({
   );
 }
 
-// ─── Zone components ─────────────────────────────────────────────────────────
-
-function DecisionQueueZone({ decisions }: { decisions: readonly OwnerDecision[] }) {
-  const topUrgency = decisions[0]?.urgency ?? "NORMAL";
-  const shellClass =
-    topUrgency === "CRITICAL"
-      ? "border-red-900/70 bg-red-950/20 shadow-glow-plasma"
-      : topUrgency === "HIGH"
-        ? "border-yellow-900/60 bg-yellow-950/10"
-        : "border-white/[0.10]/50 bg-white/[0.04]";
-
-  return (
-    <section
-      data-testid="decision-queue"
-      className={["rounded-2xl border p-5", shellClass].join(" ")}
-    >
-      <div className="mb-4 flex items-center gap-3">
-        {topUrgency === "CRITICAL" && (
-          <div className="relative h-2 w-2 flex-shrink-0">
-            <div className="absolute inset-0 animate-live-pulse rounded-full bg-red-400" />
-            <div className="absolute inset-0 rounded-full bg-red-400" />
-          </div>
-        )}
-        <h2
-          className={[
-            "text-xs font-bold uppercase tracking-widest",
-            topUrgency === "CRITICAL" ? "text-red-300" : "text-ink-400",
-          ].join(" ")}
-        >
-          Decision Queue — {decisions.length} item{decisions.length === 1 ? "" : "s"} need your
-          attention
-        </h2>
-      </div>
-      <ol className="space-y-3">
-        {decisions.map((d, i) => (
-          <li key={i} className="flex items-start gap-3">
-            <span
-              className={[
-                "mt-0.5 flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest",
-                d.urgency === "CRITICAL"
-                  ? "bg-red-950/50 text-red-300"
-                  : d.urgency === "HIGH"
-                    ? "bg-yellow-950/50 text-yellow-300"
-                    : "bg-white/[0.06] text-ink-400",
-              ].join(" ")}
-            >
-              {d.urgency}
-            </span>
-            <span className="text-sm text-white">{d.description}</span>
-          </li>
-        ))}
-      </ol>
-    </section>
-  );
-}
-
-function PicksDeskZone({
-  picks,
-  demoActive,
-  slateBreakdown,
-  featuredCount,
-}: {
-  picks: PicksSummary;
-  demoActive: boolean;
-  slateBreakdown: { name: string; n: number }[];
-  featuredCount: number;
-}) {
-  return (
-    <section
-      data-testid="picks-desk-zone"
-      className="rounded-2xl border border-accent-900/30 bg-white/[0.04] p-5"
-    >
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-ink-400">
-            Where Are Our Picks?
-          </h2>
-          <p className="mt-1 text-[11px] leading-relaxed text-ink-500">
-            {picks.publicReadinessExplanation}
-          </p>
-        </div>
-        <span
-          className={[
-            "rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest",
-            picks.isPublicGateOpen
-              ? "border-accent-800/50 bg-accent-950/30 text-accent-400"
-              : "border-yellow-900/40 bg-yellow-950/20 text-yellow-300",
-          ].join(" ")}
-        >
-          {picks.isPublicGateOpen ? "Gate Open" : "Gate Closed"}
-        </span>
-      </div>
-
-      <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <PicksStatCell
-          label="Today"
-          value={String(picks.today)}
-          sub={picks.isPublicGateOpen ? "public" : "internal"}
-        />
-        <PicksStatCell
-          label="Public-Ready"
-          value={String(picks.publicReadyCount)}
-          sub={picks.isPublicGateOpen ? "gate open" : "gate closed"}
-        />
-        <PicksStatCell
-          label="Canonical Settled"
-          value={String(picks.canonicalSettled)}
-          sub="excl. bootstrap"
-        />
-        <PicksStatCell
-          label="Pending Settlement"
-          value={String(picks.canonicalPending)}
-          sub="canonical only"
-        />
-      </div>
-
-      {picks.blockedReason && (
-        <p className="mb-3 text-[11px] text-yellow-300">Blocked: {picks.blockedReason}</p>
-      )}
-
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-[9px] text-ink-500">
-        <span>Bootstrap excluded: {picks.bootstrapExcluded}</span>
-        <span>Total in system: {picks.totalInSystem}</span>
-        {demoActive && <span className="text-yellow-400">DEMO_PICKS_ENABLED active</span>}
-      </div>
-
-      {slateBreakdown.length > 0 && (
-        <p
-          data-testid="cockpit-slate-meta"
-          aria-label="Today's slate breakdown by sport"
-          className="mt-3 text-[11px] text-ink-500"
-        >
-          Slate: {slateBreakdown.map((b) => `${b.name} ×${b.n}`).join(" · ")}
-          {featuredCount > 0 && ` · ${featuredCount} featured`}
-        </p>
-      )}
-    </section>
-  );
-}
-
-function PicksStatCell({
-  label,
-  value,
-  sub,
-}: {
-  label: string;
-  value: string;
-  sub: string;
-}) {
-  return (
-    <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 px-3 py-3">
-      <p className="text-[9px] font-bold uppercase tracking-widest text-ink-500">{label}</p>
-      <p className="mt-1 text-3xl font-bold tabular-nums leading-none text-white">{value}</p>
-      <p className="mt-1 text-[9px] text-ink-500">{sub}</p>
-    </div>
-  );
-}
-
-function PerformanceTargetZone({ performance }: { performance: PerformanceSummary }) {
-  return (
-    <section
-      data-testid="performance-target-zone"
-      className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.04] p-5"
-      style={{ borderColor: "rgba(122,92,255,0.20)" }}
-    >
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-ultraviolet">
-            Performance Gate
-          </h2>
-          <p className="mt-0.5 text-[11px] text-ink-500">
-            Internal goal · Bootstrap + pending excluded
-          </p>
-        </div>
-        <span
-          className={[
-            "flex-shrink-0 rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest",
-            performance.displaySafe
-              ? "border-accent-800/50 bg-accent-950/30 text-accent-400"
-              : "border-yellow-900/40 bg-yellow-950/20 text-yellow-300",
-          ].join(" ")}
-        >
-          {performance.displaySafe ? "Display-Ready" : "Gated"}
-        </span>
-      </div>
-
-      <div className="mb-4 grid grid-cols-2 gap-2">
-        <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-500">Target</p>
-          <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-ultraviolet">
-            {performance.targetPct}%
-          </p>
-        </div>
-        <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-500">Win Rate</p>
-          {performance.displaySafe && performance.actualWinRate !== null ? (
-            <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-white">
-              {performance.actualWinRate}%
-            </p>
-          ) : (
-            <p
-              className="mt-1 flex items-center gap-1.5 text-sm font-semibold leading-none text-ink-400"
-              title="Win rate is gated until the canonical settled-sample floor is met"
-            >
-              <span aria-hidden>🔒</span> Locked
-            </p>
-          )}
-        </div>
-        <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-500">Sample</p>
-          <p className="mt-1 text-2xl font-bold tabular-nums leading-none text-white">
-            {performance.canonicalSampleSize}
-          </p>
-          <p className="text-[10px] text-ink-500">of {performance.minimumRequired} req.</p>
-        </div>
-        <div className="rounded-xl border border-white/[0.06] bg-obsidian/60 px-3 py-2.5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-500">Gate</p>
-          <p
-            className={[
-              "mt-1 text-2xl font-bold leading-none",
-              performance.isGateOpen ? "text-accent-500" : "text-yellow-300",
-            ].join(" ")}
-          >
-            {performance.isGateOpen ? "ON" : "OFF"}
-          </p>
-          <p className="text-[10px] text-ink-500">PERF_STATS_EN</p>
-        </div>
-      </div>
-
-      {!performance.displaySafe && (
-        <p className="text-xs text-ink-400">
-          Public performance gated.
-          {performance.remainingToThreshold > 0 && (
-            <span className="text-yellow-300">
-              {" "}
-              {performance.remainingToThreshold} more canonical picks needed.
-            </span>
-          )}
-        </p>
-      )}
-
-      {performance.displaySafe && (
-        <p className="text-xs text-ink-400">
-          {performance.record} · Display-safe.
-        </p>
-      )}
-
-      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-ink-500">
-        <span>Bootstrap: excluded</span>
-        <span>Pending: excluded</span>
-        {performance.smallSampleWarning && (
-          <span className="text-yellow-400">Small-sample warning</span>
-        )}
-      </div>
-    </section>
-  );
-}
-
-function DepartmentsZone({ departments }: { departments: readonly DepartmentSummary[] }) {
-  return (
-    <section
-      data-testid="departments-zone"
-      className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.04]"
-    >
-      <div className="flex items-center justify-between border-b border-white/[0.10]/30 px-5 py-3">
-        <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-ink-400">
-            Agent Command Map
-          </h2>
-          <p className="mt-0.5 text-[11px] text-ink-500">
-            {departments.length} departments · All agents draft-only · No external actions without
-            approval
-          </p>
-        </div>
-      </div>
-      <div className="divide-y divide-titanium/20">
-        {departments.map((dept) => (
-          <DepartmentReportRow key={dept.id} dept={dept} />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
-  const dotColor: Record<JarvisHealth, string> = {
-    GREEN: "bg-accent-500",
-    AMBER: "bg-yellow-300",
-    RED: "bg-rose-400",
-    UNKNOWN: "bg-ion-3/30",
-  };
-
-  const row = (
-    <div className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-white/[0.02]">
-      <span
-        className={["h-2 w-2 flex-shrink-0 rounded-full", dotColor[dept.status]].join(" ")}
-        aria-label={dept.status}
-      />
-      <span className="w-36 flex-shrink-0 text-[10px] font-semibold leading-tight text-white">
-        {dept.name}
-      </span>
-      {dept.agentDisplayName && (
-        <span className="hidden w-16 flex-shrink-0 font-mono text-[10px] text-ink-500 sm:block">
-          {dept.agentDisplayName}
-        </span>
-      )}
-      <span className="hidden flex-1 text-[10px] leading-snug text-ink-400 sm:block">
-        {dept.oneLiner}
-      </span>
-      {dept.actionRequired && (
-        <span className="flex-shrink-0 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">
-          Action
-        </span>
-      )}
-      <span className="flex-shrink-0 font-mono text-[10px] uppercase tracking-widest text-ink-500">
-        {dept.agentMode.replace("_", " ").toLowerCase()}
-      </span>
-      {dept.drilldownHref && (
-        <span className="flex-shrink-0 text-[10px] text-ink-500 transition-colors group-hover:text-ink-400">
-          →
-        </span>
-      )}
-    </div>
-  );
-
-  if (dept.drilldownHref) {
-    return (
-      <Link href={dept.drilldownHref} className="group block">
-        {row}
-      </Link>
-    );
-  }
-  return <div>{row}</div>;
-}
 
 function AiOpsZone({ aiOps }: { aiOps: AiOpsSummary }) {
   return (
