@@ -646,3 +646,96 @@ honest 70% picks" lever) and **strengthens the proof** (reliability curves, CLV,
 **binding constraint is settled data** (`path-to-70.md` Step 0) — the clock no repo can shortcut — and **blended/ATS
 70% remains impossible and must never be claimed** (it would violate the trust guardrails the platform is built on).
 Chase **calibration error → 0**; the 70% tier is the visible result, and the proof is the moat.
+
+---
+---
+
+# Part 4 — Exhaustive per-repo leverage extraction (ALL 73, nothing declined)
+
+> Rule for this pass: **every repo yields a nugget.** No "skip." Even off-domain, dead, junk, or
+> compliance-blocked repos give *something* — an anti-pattern lesson, a UX/motion idea, a schema
+> reference, competitive intel, or a brand/SEO pattern. Format: **repo** — *leverage* → `GSN target`.
+> Items already shipped/deep-covered above are stated as the crisp nugget, not re-explained.
+
+## Set 1 (1–39)
+
+1. **kochlisGit/ProphitBet** — walk-forward (sliding) CV as default eval; **Boruta + impurity + coefficient triangulation** to prune which factors feed confidence; Optuna tuning; odds-range × probability-percentile selectivity filter → `prediction-engine` (factor selection, `tune-thresholds`).
+2. **leopard-ai/betty** — the *coupling insight*: calibration and threshold-tuning must be **co-optimized** (never tune thresholds on a miscalibrated model). Use Optuna, keep the bilevel framing → `tune-thresholds`.
+3. **jrbadiabo/Bet-on-Sibyl** — **relative feature normalization**: encode every stat as a home/away **ratio or difference** so the *matchup* is the signal, not raw strength → `prediction-engine` feature prep.
+4. **NBA-Betting/NBA_Betting** — **point-in-time feature store** (as-of-game, anti-leakage) + **league-relative ranking transforms** + benchmark model error **against the Vegas line** → `prediction-engine` (already partly via `clv.ts`).
+5. **llSourcell/sports_betting_with_RL** — reframe to **contextual bandits / Thompson sampling** with **CLV as instant reward** for (a) which pick to feature, (b) explore new markets, (c) stake fraction per tier → new `bandit` allocation layer.
+6. **day-mon/sports-betting-ai** — **compute-offline / cache-in-Redis / serve-thin** + strict train/serve separation (never inference on a request) → `workers/` serving discipline.
+7. **charlesmalafosse/sports-betting-customloss** — **profit/EV objective for model *selection*** + a **learned "no-bet" action** (payoff-0 abstention) distinct from a threshold → `edge-engine`/`conviction-tier`.
+8. **BettingApp-hcai/betting_edge** — **"LLM narrates, a separate classifier gates"** + a **responsible-gambling final gate**; *anti-pattern*: it forgets to remove vig (your `shin-devig` is the edge) → `content` + `responsible-gaming.ts`.
+9. **mykiie85/EDGE_BOT_SOCCER** — **calibrator bake-off** (isotonic/Platt/beta/temperature auto-select) + **per-league/market fusion** + **CLV vs Pinnacle close** + portfolio/quarter-Kelly → `calibration-apply` upgrade.
+10. **companygondu/MLB-montecarlo** — **Elo as a calibration *overlay*** on an ML ensemble + a **lineup-confirmation gate before pick generation** → `prediction-engine` (freshness/no-stale gate).
+11. **Active37/Betting-Analysis-** — near-zero (empty Angular). Transferable: an **API-key-presence readiness check** before a surface renders → trivial ops note.
+12. **CardinHa/sports-betting-engine** — **Kelly-capped 0.5u–3.0u unit ladder** as a user-facing conviction expression + **automated grade→learn loop** + **offline mock-data mode** for deterministic tests → `kelly.ts` display + `testing-qa`.
+13. **Swati7819/One-Percent-Better** — not a betting repo, but the **"1% better every week"** narrative is a *track-record framing*: show an improving calibration/CLV curve as "we compound" → public-trust surface.
+14. **ChasingCars2002/mlb-betting-model** — clean **module decomposition** (`data/features/model/calibration/odds/score/evaluate`), esp. a **discrete `calibration` stage** + vig-removal `odds` module decoupled from scoring → architecture sanity-check.
+15. **paul-pinto/FIFA-WC-2026** — **λ → Poisson/Dixon-Coles exact-score matrix**, **Elo with goal-diff + competition weighting**, 200k Monte-Carlo, **Brier** metric → `poisson.ts` (DC τ ✅) + `team-rates` λ.
+16. **thedatadoktor/prediict** — the **edge-gate → Kelly → backtest loop** + **GitHub-Actions daily cron** prediction-job pattern → `workers/` cadence.
+17. **J1BON/Reddit-opportunity-intel** — **canonical-ID dedup**, **subreddit sharding + adaptive backoff + dual auth/no-auth client**, and **news-velocity** (rate-of-change of chatter) as a verification trigger → `reddit-narrative-source` + a `weak-signal` worker.
+18. **vegassportsbook/Vegas-Pro-Engine** — near-zero stub; its `odds_provider/engine/storage` skeleton just re-confirms your `data-ingestion → prediction-engine → db` boundary.
+19. **Fremont28/vegas_point_spreads** — **"line delta vs consensus baseline"** as a derived feature + **store spreads/totals as decimals** (half-point normalization) → `prediction-engine` + `data-ingestion` hygiene.
+20. **zhoudaqing/pybet** — the **"trusted external model as the true-prob anchor"** pattern (538 vs implied) — same role Kalshi plays in `edge-engine` → anchor catalog.
+21. **lucas-maes/le-wm** — JEPA's one transferable idea: **prediction-error-in-latent-space = regime/momentum-change signal**, parked for a *future live in-game* product → roadmap note.
+22. **shankarpandala/lazypredict** — **offline model bake-off** ("is there signal, which family?") before investing in ML for a new sport → `scripts/analytics`.
+23. **Nixtla/statsforecast** — **line-movement forecasting** (AutoETS/MFLES) + **anomaly/steam detection** via prediction-interval breaches → `market-gravity` worker.
+24. **kserve/kserve** — **InferenceGraph = your multi-referee ensemble served as a graph** + drift detection feeding calibration + scale-to-zero/canary → infra graduation target.
+25. **openai/CLIP** — **brand-safety image filter**, **logo/protected-mark match**, **visual dedup**, **"setups like this" embedding retrieval** → media worker (Python sidecar, off request path).
+26. **666ghj/MiroFish** — **persona War-Room debate** (Bull/Bear/Sharp/Skeptic over the factor trail) + **synthetic public-lean/fade** (✅ shipped glass-box) → `agent-council` + `synthetic-fade.ts`.
+27. **jhogarciacu/Predictive-Betting-Agent** — near-zero (README stub); its framing ("**odds evaluation**, not score prediction") is the honest product-messaging reminder → messaging note.
+28. **Sports-Betting-Sportsbook/sports-betting** — the **Socket.IO real-time odds-push** pattern for a **live-updating odds/consensus UI** → `apps/web` live cockpit surface.
+29. **zhouyan8603/Betting-Arbitrage** — the **no-arb identity** `Σ(1/oᵢ) < 1` as a **cross-book mispricing / line-sanity detector** + "best line across books" → `market-read` sanity check.
+30. **agad495/DKscraPy** — the **DK JSON map** `eventGroup→…→outcomes{label,line,oddsDecimal}` + away/home `location` flag as a **canonical priced-outcome shape** (schema ref; clearance-gated) → `packages/types`.
+31. **flancast90/sportsbookreview-scraper** — **hit the JSON data layer, not HTML** (facts-only) + a **`(sport,start,end,format)` backfill CLI** contract → `data-ingestion` (clearance-gated).
+32. **englianhu/data-analysis** — **Poisson/bivariate-Poisson** soccer, **GARCH/ARIMA** form, **Kelly**, calibration/backtest framing (re-implement; GPL) → `prediction-engine` methodology.
+33. **sedemmler/WagerBrain** — conversions, **no-vig fair prob**, EV, **fractional Kelly**, parlay, **538-style Elo→win-prob** → `scoring`/`kelly`/`shin-devig` (Elo estimator ported).
+34. **Wysdomos/mlb-slate** — **transparent weighted-factor confidence + tiered gates**, **closed-loop grading → season/last-7/14-day rolling accuracy**, **sportsbook fallback chain + name normalization** → `composite-score` + public track record + ingestion hardening.
+35. **ursusandwolf/sportsbook** — Java auth scaffold; its **anti-fraud agent** = a real **subscription/promo-abuse + multi-account fraud layer** for Stripe → `subscriptions-billing`.
+36. **stevenleon30/mockbook-qa-sandbox** — **seed→exercise→assert-in-DB→reset** fixture harness, **SQL-integrity-as-tests**, `@smoke/@regression/@critical` tagging → `testing-qa`.
+37. **minus5/go-uof-sdk** — the **UOF canonical odds graph** (nullable odds, per-outcome status, `lineId`, stable identity, **per-source last-processed timestamp** for dedup/freshness/recovery) → `packages/types` + `data-ingestion`.
+38. **chrisgillam/polymarket_gambot** — **prediction-market mid = near-vig-free probability**; **cross-source divergence** as edge confirmation; fractional-Kelly → `multi-market-ensemble` (✅) + a Polymarket referee.
+39. **JustBeYou/betting** — same **arb-math line-sanity** nugget (cross-book `Σ1/o<1`); the auto-betting part is the anti-pattern we never build → `market-read` flag.
+
+## Set 2 (40–73) + the Claude Design article
+
+40. **05aptrading-jpg/sportsAPBot** — **weighted factor-blocks → one auditable score** + **"Tríada del Valor" multi-condition value gate** (prob ∧ fundamentals ∧ edge) + **graceful data fallbacks** → `composite-score` + `edge-engine` hard-stop + ingestion resilience.
+41. **SEBASBELMOS/Sports_Data_API_with_Neo4j** — **attributed, time-bounded relationship edges** (`{value,start,end}`) — extend the entity graph to `Game/Market/Line/Season/Venue` nodes → `docs/brain/entity-graph`.
+42. **nwlynam62-ai/bet-coach** — the **pick-card content contract**: `{matchup, odds, line_movement_history[], take, rank, grade, status, line_sources[], updated_at}` → `apps/web` pick card.
+43. **Alex-2911/Basketball_prediction** — the **calibration ladder** (isotonic → binned-empirical + **Wilson lower-bound** + readiness gating → market-gap governor), **ECE/Brier/LogLoss/reliability-slope** suite, and **two anti-patterns** (rolling mean without `.shift(1)`; random split on time series) → calibration upgrade + a CI leakage test.
+44. **goldenhousemedia/jamesbarnesmd-website** — off-domain, but a clean **per-topic static landing-page structure** = a **programmatic-SEO template** (one fast page per team/matchup/market) → `content`/pSEO.
+45. **stablesports711-hue/stable-sports-iptv** — compliance DECLINE (piracy); inverse leverage = a **brand-protection monitor** for our own content being restreamed, and a catalog of evasion patterns we must **never** build → `audit` note.
+46. **davidtheaibet/aibet-meeting-room** — **competitive intel** (a rival AI-bet data layer exists) + its **per-sport normalized schema** validates yours; its uncredited ESPN scraping is the clearance anti-pattern → competitive-landscape doc.
+47. **harrischs185/innoweb** — off-domain (collectibles) on **Astro**; transferable = **Astro/static-first for content & pSEO speed** (Core Web Vitals → GEO) → content delivery option.
+48. **SaRangWOO/sports_analytics** — **calibration tables as a published artifact** + **explainable derived-index features** + a **versioned JSON model artifact** → public proof + `composite-score`.
+49. **nadzhh/sports-picks** — **shrinkage-to-baseline** (`0.6·model + 0.4·base`) + **bounded contextual multipliers** + **composite quality-score ranking with diversification caps** + **Poisson grid** + **edge gate (3% / 10% high-variance)** → `conviction-tier` + ranking + free-tier slotting.
+50. **johnkerl/miller** — single-binary **CLI for ad-hoc CSV/JSON transforms** in backfill/debug scripts → `scripts/` ops.
+51. **statsmodels/statsmodels** — **Poisson GLM** for soccer λ + **Dixon-Coles τ** + **Logit** win-prob + **ARIMA** form — fit offline, port the math → `prediction-engine` offline lane.
+52. **boyter/scc** — fast **LOC/complexity CI metric** for hotspot tracking (optional) → `ops`.
+53. **plausible/analytics** — AGPL+heavy, but the **MIT tracker snippet** is usable standalone and its **funnel/goal model** is a clean metric reference → analytics (prefer Umami).
+54. **qax-os/excelize** — the capability (**Excel exports** of track-record/operator reports) → implement in-stack with **`exceljs`** → `apps/web`.
+55. **umami-software/umami** — **self-hosted, MIT, same stack** privacy analytics to measure the FOUNDING→PROVEN funnel → adopt.
+56. **scikit-learn/scikit-learn** — offline **calibration toolchain** (`CalibratedClassifierCV(isotonic|sigmoid, cv=TimeSeriesSplit)` + `calibration_curve` + `brier_score_loss`) → `scripts/analytics` + calibration.
+57. **pathwaycom/pathway** — incremental/streaming **real-time line-movement engine** for **when** you move to a push feed (Elite alerts) → deferred infra.
+58. **apache/superset** — **internal-only BI** over Postgres (volume, bucket calibration, CLV trends) → operator cockpit.
+59. **ApplikeySolutions/VegaScroll** — iOS/off-stack, but **physics-based scroll/reveal MOTION** is reference craft for tasteful cockpit reveal/celebration animations → `apps/web` motion.
+60. **vega/vega-lite** — declarative **reliability/calibration + line-movement charts** via `react-vega` → public proof surface.
+61. **beshuaxian/higgsfield-seedance2-jineng** — **prompt-craft scaffolds** (hooks, shot lists, camera language, platform specs) for the **media-brief generator** (clean-room; never fabricate real-event footage) → `content`.
+62. **higgsfield-ai/higgsfield** — dead GPU-training framework; near-zero. Only note: ZeRO/FSDP sharding is the reference *if* you ever train large models → footnote.
+63. **AKCodez/higgsfield-claude-skills** — **15 reusable prompt-style templates** + **show-cost-before-run** UX → GSN-owned `content` skills.
+64. **BIT-DataLab/Edit-Banana** — AGPL/off-domain, but **image→editable-vector** (turn a static stat-infographic into an editable chart) + **SAM-3 segmentation** → niche content-ops nugget (far future).
+65. **haifengl/smile** — JVM/GPL skip, but its **algorithm + conformal-prediction/calibration menu** is a useful *reference list* of methods (implement via sklearn) → methodology reference.
+66. **mwaskom/seaborn** — **reliability diagrams / Brier-by-bucket / EDA plots** for the offline calibration notebooks → `scripts/analytics`.
+67. **pandas-dev/pandas** — the **offline analysis substrate** (join Odds-API snapshots to settled results → labeled backtest dataset) → `scripts/analytics`.
+68. **scikit-learn-contrib/imbalanced-learn** — leverage = **the "don't"**: SMOTE/resampling **destroys calibration** → encode as a calibration-doctrine guardrail → `calibration`.
+69. **clawnify/open-studio** — no Claude tie, but its **React-Flow node-workflow editor** is reference UX for a future **visual media-pipeline builder** → media studio (far future).
+70. **VoltAgent/awesome-claude-design** — adopt the **`DESIGN.md` convention** (tokens + rules + rationale in one agent-readable file); mine dark-UI exemplars for cockpit structure → author a GSN `DESIGN.md`.
+71. **higgsfield-ai/higgsfield-js** — **official MIT TS SDK** for headless, provenance-stamped media generation in a worker → `workers/` media path.
+72. **robonuggets/higgsfield-skill** — the **"front the MCP, show per-call cost before running"** UX pattern (write your own) → media-studio UX.
+73. **higgsfield-ai/higgsfield-client** — Python SDK; transferable = its **`NSFW`/`Failed` result classes** → mirror in your **media-acceptance gate** → `content` brand-safety.
+74. **Claude Design (Anthropic Labs, article)** — pilot the surface that **ingests your codebase + design files into a persistent design system** with **one-instruction handoff to Claude Code** → cockpit/design workflow.
+
+### Rollup — the previously-dismissed repos that DO carry leverage
+Storefront → **live odds-push UX** (#28); Java scaffold → **anti-fraud/promo-abuse layer** (#35); learning journal → **"1% better" track-record narrative** (#13); the scrapers → **JSON-layer + backfill CLI + canonical-outcome shape** refs (#30/#31); the arb repos → **line-sanity mispricing flag** (#29/#39); imbalanced-learn → **the SMOTE-breaks-calibration guardrail** (#68); VegaScroll → **reveal-motion craft** (#59); IPTV → **brand-protection monitoring** (#45); the competitor → **schema validation + competitive intel** (#46); off-domain sites → **programmatic-SEO + Astro static-speed** (#44/#47); le-wm → **regime-change signal for a future live product** (#21); betty → **calibration↔threshold coupling** (#2).
