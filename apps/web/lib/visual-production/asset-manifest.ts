@@ -92,6 +92,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
   "home-observatory": {
     gradient: `radial-gradient(70% 60% at 50% -10%, rgba(0,229,255,0.15), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/home-observatory.webp",
+    motion: "/immersive/home-observatory.mp4",
   },
   "accountability-steady": {
     gradient: `radial-gradient(55% 80% at 50% 0%, rgba(139,92,246,0.11), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
