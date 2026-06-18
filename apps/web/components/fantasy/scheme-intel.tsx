@@ -30,6 +30,7 @@ export function SchemeIntel() {
               key={s.id}
               type="button"
               onClick={() => setId(s.id)}
+              aria-pressed={active}
               className="surface-card block w-full p-4 text-left transition-transform hover:-translate-y-0.5"
               style={{ boxShadow: active ? `inset 0 0 0 1px ${BRAND_COLORS.orbitalCyan}` : undefined }}
             >

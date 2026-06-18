@@ -59,6 +59,7 @@ export function GmAutopilot() {
                 key={l.level}
                 type="button"
                 onClick={() => setLevel(l.level)}
+                aria-pressed={active}
                 className="rounded-lg border p-2.5 text-left transition-colors"
                 style={{ borderColor: active ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.steelGray, background: active ? `${BRAND_COLORS.orbitalCyan}12` : "transparent" }}
               >

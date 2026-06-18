@@ -43,7 +43,7 @@ export function DkImportPanel({ onImport, onReset, imported }: { onImport: (play
   return (
     <div className="surface-card p-4">
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" onClick={() => setOpen((o) => !o)} className="text-sm font-semibold" style={{ color: BRAND_COLORS.orbitalCyan }}>
+        <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls="dk-import-panel-body" className="text-sm font-semibold" style={{ color: BRAND_COLORS.orbitalCyan }}>
           {open ? "▾" : "▸"} Import a DraftKings slate (CSV)
         </button>
         {imported && (
@@ -55,7 +55,7 @@ export function DkImportPanel({ onImport, onReset, imported }: { onImport: (play
       </div>
 
       {open && (
-        <div className="mt-4 space-y-3">
+        <div id="dk-import-panel-body" className="mt-4 space-y-3">
           <div className="flex flex-wrap items-center gap-3">
             <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onFile} className="text-xs text-ink-300 file:mr-3 file:rounded file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-xs file:text-white" />
             <span className="text-[11px] text-ink-600">or paste below</span>

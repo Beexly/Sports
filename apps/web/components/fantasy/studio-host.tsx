@@ -87,7 +87,7 @@ export function StudioHost({ broadcast }: { broadcast: Broadcast }) {
         {/* rundown */}
         <div className="flex flex-wrap gap-1.5 border-t p-3" style={{ borderColor: BRAND_COLORS.steelGray }}>
           {segs.map((s, idx) => (
-            <button key={s.id} type="button" onClick={() => setI(idx)} className="rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors"
+            <button key={s.id} type="button" onClick={() => setI(idx)} aria-pressed={idx === i} className="rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors"
               style={{ background: idx === i ? `${SCENES[s.scene].accent}22` : "rgba(255,255,255,0.04)", color: idx === i ? SCENES[s.scene].accent : "#9fb3c8" }}>
               {s.kicker}
             </button>

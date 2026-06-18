@@ -304,6 +304,7 @@ export function LeagueTwinGalaxy() {
                   key={n.player.id}
                   type="button"
                   onClick={() => setFocusRef.current(n.player.id)}
+                  aria-pressed={active}
                   className="flex w-full items-center gap-2 rounded px-2 py-1 text-left text-xs transition-colors"
                   style={{ background: active ? "rgba(255,255,255,0.08)" : "transparent" }}
                 >

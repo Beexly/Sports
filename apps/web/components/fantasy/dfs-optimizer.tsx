@@ -84,7 +84,7 @@ export function DfsOptimizer() {
           {MODES.map((m) => {
             const active = mode === m.key;
             return (
-              <button key={m.key} type="button" onClick={() => setMode(m.key)} title={m.blurb}
+              <button key={m.key} type="button" onClick={() => setMode(m.key)} title={m.blurb} aria-pressed={active}
                 className="rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none"
                 style={{ color: active ? BRAND_COLORS.obsidianBlack : "var(--ion-2,#c8d2dd)", background: active ? BRAND_COLORS.orbitalCyan : "transparent" }}>
                 {m.label}

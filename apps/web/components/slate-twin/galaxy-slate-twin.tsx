@@ -412,7 +412,14 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
         opacity: "0", transition: reduced ? "none" : "opacity 220ms",
       } as Partial<CSSStyleDeclaration>);
       const lgCaptured = lg;
-      el.addEventListener("pointerdown", (e) => { e.stopPropagation(); setSelectedId(null); setLeague(lgCaptured); });
+      el.setAttribute("role", "button");
+      el.tabIndex = 0;
+      el.setAttribute("aria-label", `Filter to ${lg} league`);
+      const selectLeague = () => { setSelectedId(null); setLeague(lgCaptured); };
+      el.addEventListener("pointerdown", (e) => { e.stopPropagation(); selectLeague(); });
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); selectLeague(); }
+      });
       overlay.appendChild(el);
       constLabels.push({ league: lg, el });
     }

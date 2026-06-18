@@ -103,6 +103,7 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
                     key={f}
                     type="button"
                     onClick={() => setFilter(f)}
+                    aria-pressed={active}
                     className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none"
                     style={{ color: active ? BRAND_COLORS.obsidianBlack : "var(--ion-2,#c8d2dd)", background: active ? c : "rgba(255,255,255,0.05)", border: `1px solid ${active ? c : BRAND_COLORS.steelGray}` }}
                   >

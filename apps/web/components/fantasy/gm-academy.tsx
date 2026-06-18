@@ -40,7 +40,7 @@ export function GmAcademy() {
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex rounded-full p-0.5" style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${BRAND_COLORS.steelGray}` }}>
           {(["drills", "reference"] as View[]).map((v) => (
-            <button key={v} type="button" onClick={() => setView(v)} className="rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider"
+            <button key={v} type="button" onClick={() => setView(v)} aria-pressed={view === v} className="rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider"
               style={{ color: view === v ? BRAND_COLORS.obsidianBlack : "#c8d2dd", background: view === v ? BRAND_COLORS.orbitalCyan : "transparent" }}>
               {v === "drills" ? "Drills" : "Reference"}
             </button>
@@ -51,7 +51,7 @@ export function GmAcademy() {
             const active = track === t;
             const hex = t === "All" ? "#fff" : TRACK_HEX[t];
             return (
-              <button key={t} type="button" onClick={() => switchTrack(t)} className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider"
+              <button key={t} type="button" onClick={() => switchTrack(t)} aria-pressed={active} className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider"
                 style={{ background: active ? `${hex}22` : "transparent", color: hex, boxShadow: active ? `inset 0 0 0 1px ${hex}` : "none" }}>
                 {t}
               </button>

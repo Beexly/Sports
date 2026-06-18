@@ -40,13 +40,13 @@ export function TheBeat() {
       {/* tier legend / filter */}
       <div className="surface-card flex flex-wrap items-center gap-3 p-4">
         <span className="text-[10px] uppercase tracking-[0.18em] text-ink-600">Source tier</span>
-        <button type="button" onClick={() => setTierFilter("All")}
+        <button type="button" onClick={() => setTierFilter("All")} aria-pressed={tierFilter === "All"}
           className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider"
           style={{ background: tierFilter === "All" ? "rgba(255,255,255,0.12)" : "transparent", color: "#fff" }}>All</button>
         {TIERS.map((t) => {
           const active = tierFilter === t;
           return (
-            <button key={t} type="button" onClick={() => setTierFilter(t)}
+            <button key={t} type="button" onClick={() => setTierFilter(t)} aria-pressed={active}
               className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-colors"
               style={{ background: active ? `${TIER_HEX[t]}22` : "transparent", color: TIER_HEX[t], boxShadow: active ? `inset 0 0 0 1px ${TIER_HEX[t]}` : "none" }}
               title={`reliability ${Math.round(TIER_WEIGHT[t] * 100)}%`}>

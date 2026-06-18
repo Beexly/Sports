@@ -107,6 +107,7 @@ export function SimulationCloud() {
               <button
                 key={p.label}
                 type="button"
+                aria-pressed={home === p.home && away === p.away}
                 onClick={() => {
                   setHome(p.home);
                   setAway(p.away);
