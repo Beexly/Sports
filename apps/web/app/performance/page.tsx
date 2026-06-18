@@ -17,6 +17,7 @@ import {
 } from "@/lib/format/stat";
 import type { PickType, PickTier } from "@sports/types";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { RingGauge } from "@/components/ui/ring-gauge";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const PERFORMANCE_TITLE = "Calibration Report — Settled-Pick Audit Trail";
@@ -417,6 +418,32 @@ export default async function PerformancePage() {
                         All-Time Overall
                       </p>
                     </div>
+                    {/* Executive gauge — real win rate only; rendered when the
+                        sample has at least one decided outcome. */}
+                    {overall.winRate !== null && (
+                      <div
+                        className="flex items-center gap-5 px-6 py-5"
+                        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+                      >
+                        <RingGauge
+                          value={overall.winRate}
+                          display={formatPercent(overall.winRate)}
+                          caption="Win rate"
+                          color={winRateHexColor(overall.winRate)}
+                        />
+                        <div className="min-w-0">
+                          <p className="text-sm leading-6 text-ink-300">
+                            <span className={NUMERIC_TEXT_CLASS}>{formatCount(overall.wins)}</span> wins ·{" "}
+                            <span className={NUMERIC_TEXT_CLASS}>{formatCount(overall.losses)}</span> losses across{" "}
+                            <span className={NUMERIC_TEXT_CLASS}>{formatCount(overall.totalPicks)}</span> settled picks.
+                          </p>
+                          <p className="mt-2 text-xs leading-5 text-ink-500">
+                            Win rate is wins over decided outcomes — pushes excluded. The arc is the
+                            real settled record, not a projection.
+                          </p>
+                        </div>
+                      </div>
+                    )}
                     <div className="grid grid-cols-2 sm:grid-cols-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
                       <OverallStat
                         label="Win Rate"
