@@ -8,10 +8,18 @@ import { loadGameRoom } from "@/lib/game-room/load";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Game Intelligence Room - Galaxy Sports Edge",
-  description: "A read-only game room with market pulse, evidence timeline, lens projections, and memory.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: { gameId: string };
+}): Promise<Metadata> {
+  return {
+    title: "Game Intelligence Room — Market Pulse & Evidence",
+    description:
+      "A read-only game room: live market pulse, the evidence timeline, lens projections, and how the line moved.",
+    alternates: { canonical: `/room/${params.gameId}` },
+  };
+}
 
 export default async function GameRoomPage({
   params,
@@ -24,7 +32,7 @@ export default async function GameRoomPage({
   return (
     <div className="min-h-screen bg-obsidian text-white">
       <Nav />
-      <main className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
         <header className="border-b border-white/[0.10] pb-8">
           <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-orbital-cyan-glow">
             Today&apos;s Board

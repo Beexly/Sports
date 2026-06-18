@@ -1,11 +1,18 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Shell, Cards, DataTable, Badge, ScoreRing, BarChart, StatusRibbon, InsightCard } from "../../_components";
 import { getPlayer, loadWeeklyStats, loadComps, loadArchetypes } from "@/lib/statking/product";
-export const metadata = {
-  title: "Player Profile — StatKing Metrics & Lineage",
-  description: "A full StatKing metric profile with source lineage and data-confidence for an NFL player.",
-  alternates: { canonical: "/stats/players" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  return {
+    title: "Player Profile — StatKing Metrics & Lineage",
+    description: "A full StatKing metric profile with source lineage and data-confidence for this NFL player.",
+    alternates: { canonical: `/stats/player/${params.id}` },
+  };
+}
 export default function Page({ params }: { params: { id: string } }) {
   const p = getPlayer(params.id);
   if (!p) return <Shell title="Player not found"><p>No player snapshot exists.</p></Shell>;
