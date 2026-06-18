@@ -68,7 +68,7 @@ grandfathered for life. See `COMPETITIVE_PRICING_AND_PACKAGING.md`.
 
 | Tier | Founding rate (live) | Access |
 |---|---|---|
-| Free | $0 | 1 pick/day, no confidence scores; public calibration/track record |
+| Free | $0 | 2 picks/day (the lowest-confidence promoted picks, `tier:FREE`) WITH their confidence score; public calibration/track record. Source of truth: `getEntitlements` (`dailyPickLimit:2`) + `feature-gates.ts`. |
 | Pro | $14.99/mo · $99/yr | All picks, confidence scores, factor trail, line movement, 7 sports |
 | Elite | $24.99/mo · $179/yr | All Pro + real-time email & push alerts |
 
