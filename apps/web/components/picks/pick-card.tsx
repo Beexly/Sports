@@ -90,14 +90,19 @@ export function PickCard({
         </div>
       </div>
 
-      {/* Matchup */}
+      {/* Matchup — away over home, with "@" as an inline prefix so the pairing
+          reads naturally ("Bills" / "@ Chiefs") instead of stranding a lone @.
+          Outer wrapper keeps the mobile-first stacking (team names get full
+          width before the type badge on phones). */}
       <div>
         <p className="text-xs text-ion-1">{gameTime}</p>
         <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-white">{pick.game.awayTeam}</p>
-            <p className="text-[10px] text-ion-1">@</p>
-            <p className="text-sm font-semibold text-white">{pick.game.homeTeam}</p>
+            <p className="truncate text-sm font-semibold text-white">{pick.game.awayTeam}</p>
+            <p className="mt-0.5 truncate text-sm font-semibold text-white">
+              <span className="font-normal text-ion-2">@ </span>
+              {pick.game.homeTeam}
+            </p>
           </div>
           <PickTypeBadge type={pick.pickType} />
         </div>
@@ -268,10 +273,12 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         </div>
       )}
 
-      {/* Independent-edge layer (#10) — surfaced, not yet priced into confidence. */}
+      {/* Independent-edge layer (#10) — a market-INDEPENDENT model's read,
+          surfaced (not yet priced into confidence). Showing our number against
+          the market's makes the disagreement concrete: this is the differentiator. */}
       {breakdown.independentEdge && breakdown.independentEdge.decision !== "PASS" && (
         <div className="mt-2 rounded-md border border-ion-blue/30 bg-ion-blue/5 p-2">
-          <div className="mb-0.5 flex items-center gap-1.5">
+          <div className="mb-1 flex items-center gap-1.5">
             <span className="text-[10px] font-semibold uppercase tracking-wide text-ion-blue">
               Independent edge
             </span>
@@ -279,6 +286,31 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
               {breakdown.independentEdge.sources.join(", ") || "—"} · not yet priced
             </span>
           </div>
+          {breakdown.independentEdge.trueProb !== null && (
+            <div className="mb-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span className="text-[10px] text-ion-2">
+                Our read{" "}
+                <span className="font-semibold text-ion-blue">
+                  {Math.round(breakdown.independentEdge.trueProb * 100)}%
+                </span>
+              </span>
+              <span className="text-[9px] text-ion-3">vs</span>
+              <span className="text-[10px] text-ion-2">
+                Market{" "}
+                <span className="font-semibold text-ion-1">
+                  {Math.round(breakdown.independentEdge.marketFairProb * 100)}%
+                </span>
+              </span>
+              {breakdown.independentEdge.expectedClv > 0 && (
+                <span className="text-[10px] text-ion-2">
+                  Beat-the-close{" "}
+                  <span className="font-semibold text-verify">
+                    +{breakdown.independentEdge.expectedClv.toFixed(1)} pts
+                  </span>
+                </span>
+              )}
+            </div>
+          )}
           <p className="text-[10px] leading-relaxed text-ion-2">
             {breakdown.independentEdge.rationale}
           </p>
