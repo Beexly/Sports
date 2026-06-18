@@ -73,7 +73,7 @@ export function NewsletterForm({ source = "newsletter-page" }: NewsletterFormPro
   if (state === "success") {
     return (
       <div
-        className="rounded-2xl border px-6 py-5 text-center"
+        className="rounded-2xl border px-6 py-8 text-center"
         style={{
           borderColor: `${BRAND_COLORS.orbitalCyan}30`,
           background: `${BRAND_COLORS.orbitalCyan}0d`,
@@ -81,10 +81,18 @@ export function NewsletterForm({ source = "newsletter-page" }: NewsletterFormPro
         role="status"
         aria-live="polite"
       >
-        <p className="font-display text-lg text-white">You are on the list.</p>
+        <p
+          className="font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
+          style={{ color: BRAND_COLORS.orbitalCyan }}
+        >
+          You are on the list
+        </p>
+        <p className="mt-3 font-display text-xl text-white">
+          The Desk Note is on its way.
+        </p>
         <p className="mt-2 text-sm leading-relaxed text-ink-300">
-          The Galaxy Desk Note arrives when the brief is worth sending — not on
-          a mechanical schedule. We will not spam you.
+          The Galaxy Desk Note arrives when the brief is worth sending — not on a
+          mechanical schedule. We will not spam you.
         </p>
       </div>
     );
@@ -92,34 +100,39 @@ export function NewsletterForm({ source = "newsletter-page" }: NewsletterFormPro
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <label htmlFor="newsletter-email" className="sr-only">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="newsletter-email" className="text-sm font-medium text-ink-200">
           Email address
+          <span
+            className="ml-1"
+            style={{ color: BRAND_COLORS.orbitalCyan }}
+            aria-hidden="true"
+          >
+            *
+          </span>
         </label>
-        <input
-          id="newsletter-email"
-          type="email"
-          required
-          autoComplete="email"
-          placeholder="your@email.com"
-          value={email}
-          onChange={handleEmailChange}
-          disabled={state === "loading"}
-          className="min-w-0 flex-1 rounded-xl border bg-transparent px-4 py-3 text-sm text-white placeholder:text-ink-500 focus:outline-none focus:ring-2"
-          style={{
-            borderColor: `${BRAND_COLORS.orbitalCyan}30`,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ["--tw-ring-color" as any]: BRAND_COLORS.orbitalCyan,
-          }}
-        />
-        <button
-          type="submit"
-          disabled={state === "loading" || email.length === 0}
-          className="btn btn-primary min-h-11 shrink-0"
-          style={{ opacity: state === "loading" ? 0.7 : 1 }}
-        >
-          {state === "loading" ? "Saving…" : "Join the Desk Note"}
-        </button>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <input
+            id="newsletter-email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="your@email.com"
+            value={email}
+            onChange={handleEmailChange}
+            disabled={state === "loading"}
+            className="min-h-11 min-w-0 flex-1 rounded-xl border bg-black/30 px-4 py-3 text-sm text-white placeholder:text-ink-500 outline-none transition-colors hover:border-white/20 focus:border-cyan-400/60 disabled:opacity-50"
+            style={{ borderColor: `${BRAND_COLORS.orbitalCyan}30` }}
+          />
+          <button
+            type="submit"
+            disabled={state === "loading" || email.length === 0}
+            className="btn btn-primary min-h-11 shrink-0"
+            style={{ opacity: state === "loading" ? 0.7 : 1 }}
+          >
+            {state === "loading" ? "Saving…" : "Join the Desk Note"}
+          </button>
+        </div>
       </div>
 
       {state === "error" && errorMsg && (

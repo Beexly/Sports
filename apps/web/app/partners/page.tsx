@@ -3,6 +3,10 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
+import { ShootingStars } from "@/components/motion/shooting-stars";
+import { SignalRule } from "@/components/motion/signal-rule";
+import { WorldSection } from "@/components/world/world-section";
+import { RevenueHero } from "@/components/revenue/revenue-hero";
 import { BRAND_NAME, BRAND_COLORS, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -22,56 +26,65 @@ const PARTNER_CATEGORIES = [
   {
     title: "Fantasy Tools & Platforms",
     description:
-      "Fantasy sports tools, roster platforms, and DFS analytics services whose audience overlaps with people who make data-informed lineup decisions.",
-    fit: "High — shared audience of analytically minded sports fans",
+      "Data-informed tools for roster decisions, lineup building, and DFS analysis. Our audience already thinks in terms of signal and process — your tool extends that naturally.",
+    fit: "High fit",
+    accent: BRAND_COLORS.orbitalCyan,
   },
   {
     title: "Sports Bars & Game Venues",
     description:
-      "Local and regional sports bars, viewing party venues, and game-watching experiences, especially in the Houston area. Game Night Packs available.",
-    fit: "High — local trust engine and community activation",
+      "Local and regional venues that turn a game into an experience — watching parties, viewing rooms, and community events. Especially relevant for Houston-area activations and Game Night Packs.",
+    fit: "High fit",
+    accent: BRAND_COLORS.softUltraviolet,
   },
   {
     title: "Sports Apparel & Merchandise",
     description:
-      "Apparel brands that speak to the sports identity layer — performance wear, fan gear, or brands with a niche intelligence / data culture angle.",
-    fit: "Medium to high — audience identity alignment",
+      "Fan gear and performance wear that speaks to the sports identity layer. Intelligence-culture brands and data-adjacent labels fit better than broad lifestyle play.",
+    fit: "Medium–high fit",
+    accent: BRAND_COLORS.ionMagenta,
   },
   {
     title: "Training Facilities & Equipment",
     description:
-      "Performance training facilities, sports conditioning equipment, and recovery brands that serve athletes and serious sports fans.",
-    fit: "Medium — shared values around preparation and process",
+      "Performance training, conditioning tools, and recovery brands that serve athletes and serious fans. Shared value: preparation over guesswork.",
+    fit: "Medium fit",
+    accent: BRAND_COLORS.orbitalCyan,
   },
   {
     title: "Ticketing Platforms",
     description:
-      "Primary and resale ticket platforms that offer value to sports fans making game attendance decisions.",
-    fit: "Medium — functional value for the same audience",
+      "Primary and resale platforms with real utility for sports fans making attendance decisions. Functional value for the same people reading the Desk.",
+    fit: "Medium fit",
+    accent: BRAND_COLORS.softUltraviolet,
   },
   {
     title: "Sports Podcasts & Newsletters",
     description:
-      "Newsletter and podcast swaps with sports-adjacent creators who share our anti-hype, intelligence-first values. Not tout services.",
-    fit: "High — audience overlap + co-credentialing",
+      "Audience-swap partners who share our anti-hype, intelligence-first values. Not tout services. The co-credentialing value goes both directions — your audience trusts you; our audience trusts us.",
+    fit: "High fit",
+    accent: BRAND_COLORS.ionMagenta,
   },
   {
     title: "Creator Tools",
     description:
-      "Video, audio, and content creation tools used by sports content creators. Relevant to our own production stack and creator network.",
-    fit: "Medium — overlap with creator-facing audience",
+      "Video, audio, and content production software used by sports creators. Directly relevant to our own production stack and the creators in our contributor network.",
+    fit: "Medium fit",
+    accent: BRAND_COLORS.orbitalCyan,
   },
   {
     title: "Local Houston Sports Businesses",
     description:
-      "Houston-area sports businesses of all kinds — including youth leagues, training academies, sports media outlets, and community organizations.",
-    fit: "High — local roots, community trust",
+      "Youth leagues, training academies, sports media, and community organizations rooted in Houston. We are Houston-based; local trust is not a slogan here.",
+    fit: "High fit",
+    accent: BRAND_COLORS.softUltraviolet,
   },
   {
     title: "Sports Analytics & Data Software",
     description:
-      "Analytics platforms and data tools built for serious sports fans, bettors, or fantasy players who want to understand numbers, not just consume picks.",
-    fit: "High — audience values match exactly",
+      "Platforms and tools for fans, bettors, and fantasy players who want to understand the numbers behind a game — not just consume picks from someone who claims to know.",
+    fit: "High fit",
+    accent: BRAND_COLORS.ionMagenta,
   },
 ] as const;
 
@@ -84,32 +97,40 @@ const NOT_ACCEPTED = [
 
 const PARTNERSHIP_TYPES = [
   {
+    eyebrow: "01",
     name: "Sponsor Placement",
     description:
-      "Paid placement in our newsletter, Desk briefs, YouTube content, or podcast. Brand is disclosed, not embedded as editorial. See the media kit for rate ranges.",
+      "Paid placement in our newsletter, Desk briefs, YouTube content, or podcast. Brand is disclosed, not embedded as editorial. Rate ranges in the media kit.",
     href: "/media-kit",
     cta: "See media kit",
+    accent: BRAND_COLORS.orbitalCyan,
   },
   {
+    eyebrow: "02",
     name: "Content / Newsletter Swap",
     description:
-      "We mention your publication to our list; you mention ours. No money changes hands. Both audiences are relevant and comparable in values.",
+      "We mention your publication to our list; you mention ours. No money changes hands. Both audiences are relevant and comparable in values — that is the entire logic.",
     href: null,
     cta: null,
+    accent: BRAND_COLORS.softUltraviolet,
   },
   {
+    eyebrow: "03",
     name: "Local Business Collaboration",
     description:
-      "Game Night Packs, co-branded content, and event tie-ins for Houston-area sports businesses. Practical, community-first activations.",
+      "Game Night Packs, co-branded content, and event tie-ins for Houston-area sports businesses. Practical, community-first activations — not reach theater.",
     href: null,
     cta: null,
+    accent: BRAND_COLORS.ionMagenta,
   },
   {
+    eyebrow: "04",
     name: "Creator Network",
     description:
-      "Sports content creators who want access to our intelligence stack, data tools, and affiliate/referral infrastructure. Requires a values alignment review.",
-    href: null,
-    cta: null,
+      "Sports content creators who want access to our intelligence stack, data tools, and affiliate infrastructure. Requires a values-alignment review — we are selective on purpose.",
+    href: "/creator-network",
+    cta: "See creator network",
+    accent: BRAND_COLORS.orbitalCyan,
   },
 ] as const;
 
@@ -121,263 +142,220 @@ export default function PartnersPage() {
     >
       <Nav />
 
-      <main id="main-content" className="flex-1">
-        {/* Hero */}
-        <section className="mx-auto max-w-5xl px-4 py-24 sm:px-6 lg:px-8">
-          <Reveal>
-            <span
-              className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
-              style={{
-                color: BRAND_COLORS.orbitalCyan,
-                borderColor: `${BRAND_COLORS.orbitalCyan}30`,
-                backgroundColor: `${BRAND_COLORS.orbitalCyan}0d`,
-              }}
-            >
-              Partnerships
-            </span>
-          </Reveal>
-          <Reveal delay={90}>
-            <h1
-              className="mt-5 max-w-4xl font-display text-balance text-white"
-              style={{
-                fontSize: "clamp(2.2rem, 5.5vw, 4rem)",
-                lineHeight: 1.05,
-                letterSpacing: "-0.02em",
-              }}
-            >
-              Work with a brand that builds on{" "}
-              <span
-                style={{
-                  background: `linear-gradient(90deg, ${BRAND_COLORS.softUltraviolet} 0%, ${BRAND_COLORS.orbitalCyan} 100%)`,
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                trust, not hype.
+      <main id="main-content" className="relative flex-1 overflow-hidden">
+        <ShootingStars />
+
+        {/* ── Hero — chrome + editorial-serif, violet chrome tone */}
+        <RevenueHero
+          chip="Partnerships"
+          chipTone="cyan"
+          headline={
+            <>
+              <span className="gw-chrome-violet">Work with</span> a brand that
+              builds on{" "}
+              <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
+                trust
               </span>
-            </h1>
-          </Reveal>
-          <Reveal delay={160}>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-ink-300">
-              {BRAND_NAME} is a sports intelligence media company. We are
-              building audience the hard way — by being honest about what we
-              know, what we do not know, and when the right call is to not act
-              at all. We partner with brands and creators that share those values.
-            </p>
-          </Reveal>
-          <Reveal delay={220}>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={`mailto:${SUPPORT_EMAIL}?subject=Partnership Inquiry`}
-                className="btn btn-primary"
-              >
-                Start a conversation →
-              </a>
-              <Link href="/media-kit" className="btn btn-ghost">
-                View media kit
-              </Link>
-            </div>
-          </Reveal>
-        </section>
-
-        {/* What a partnership looks like */}
-        <section className="px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <p
-                className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                style={{ color: BRAND_COLORS.orbitalCyan }}
-              >
-                Partnership types
-              </p>
-              <h2
-                className="mt-3 font-display text-white"
-                style={{
-                  fontSize: "clamp(1.5rem, 3vw, 2.2rem)",
-                  lineHeight: 1.15,
-                }}
-              >
-                What working together looks like.
-              </h2>
-            </Reveal>
-            <Stagger className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2" step={70}>
-              {PARTNERSHIP_TYPES.map((pt) => (
-                <div
-                  key={pt.name}
-                  className="rounded-xl border p-6"
-                  style={{
-                    borderColor: `${BRAND_COLORS.orbitalCyan}18`,
-                    backgroundColor: `${BRAND_COLORS.steelGray}40`,
-                  }}
-                >
-                  <p className="font-semibold text-white">{pt.name}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-300">
-                    {pt.description}
-                  </p>
-                  {pt.href && pt.cta && (
-                    <Link
-                      href={pt.href}
-                      className="mt-3 inline-block text-xs font-semibold underline underline-offset-4"
-                      style={{ color: BRAND_COLORS.orbitalCyan }}
-                    >
-                      {pt.cta} →
-                    </Link>
-                  )}
-                </div>
-              ))}
-            </Stagger>
+              .
+            </>
+          }
+          lede={
+            <>
+              <span className="font-display text-xl text-white">
+                Not hype. Not fake reach. Not a sportsbook.
+              </span>
+              <span className="mt-3 block">
+                {BRAND_NAME} is a sports intelligence media company. We are
+                building audience the hard way — by being honest about what we
+                know, what we do not know, and when the right call is to not act
+                at all. We partner with brands and creators that share those
+                values.
+              </span>
+            </>
+          }
+        >
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              href={`mailto:${SUPPORT_EMAIL}?subject=Partnership Inquiry`}
+              className="btn btn-primary"
+            >
+              Start a conversation →
+            </a>
+            <Link href="/media-kit" className="btn btn-ghost">
+              View media kit
+            </Link>
           </div>
-        </section>
+        </RevenueHero>
 
-        {/* Partner categories */}
-        <section className="px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <p
-                className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                style={{ color: BRAND_COLORS.softUltraviolet }}
+        {/* ── Partnership types */}
+        <WorldSection
+          index="01"
+          eyebrow="What working together looks like"
+          title={
+            <>
+              Four ways to{" "}
+              <span className="gse-editorial gw-chrome-ice">partner</span>.
+            </>
+          }
+          lede="Paid placements, audience swaps, local activations, and creator partnerships — each with different terms and different fit criteria. All go through a values-alignment review."
+          tone="void"
+        >
+          <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2" step={70}>
+            {PARTNERSHIP_TYPES.map((pt) => (
+              <article
+                key={pt.name}
+                className="surface-card gw-card-hover flex flex-col gap-2.5 p-6"
               >
-                Partner fit
-              </p>
-              <h2
-                className="mt-3 font-display text-white"
-                style={{
-                  fontSize: "clamp(1.5rem, 3vw, 2.2rem)",
-                  lineHeight: 1.15,
-                }}
-              >
-                Categories we work with.
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm text-ink-400">
-                All partnerships go through a brand-fit review. We are selective
-                — not to be difficult, but because the audience we are building
-                trusts us to be. Categories listed here are broadly approved;
-                individual brands are still reviewed.
-              </p>
-            </Reveal>
-            <Stagger className="mt-8 flex flex-col gap-4" step={50}>
-              {PARTNER_CATEGORIES.map((cat) => (
-                <div
-                  key={cat.title}
-                  className="rounded-xl border p-5"
-                  style={{
-                    borderColor: `${BRAND_COLORS.softUltraviolet}18`,
-                    backgroundColor: `${BRAND_COLORS.steelGray}40`,
-                  }}
+                <span
+                  className="font-display text-2xl tabular-nums"
+                  style={{ color: pt.accent }}
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <p className="font-semibold text-white">{cat.title}</p>
-                    <span
-                      className="shrink-0 rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider"
-                      style={{
-                        color: BRAND_COLORS.orbitalCyan,
-                        borderColor: `${BRAND_COLORS.orbitalCyan}30`,
-                        backgroundColor: `${BRAND_COLORS.orbitalCyan}0d`,
-                      }}
-                    >
-                      {cat.fit}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-300">
-                    {cat.description}
-                  </p>
-                </div>
-              ))}
-            </Stagger>
-          </div>
-        </section>
-
-        {/* Not accepted */}
-        <section className="px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <div
-                className="rounded-2xl border p-6"
-                style={{
-                  borderColor: `${BRAND_COLORS.ionMagenta}22`,
-                  background: `radial-gradient(ellipse 60% 80% at 50% 0%, ${BRAND_COLORS.ionMagenta}06, transparent 70%)`,
-                }}
-              >
-                <p
-                  className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                  style={{ color: BRAND_COLORS.ionMagenta }}
-                >
-                  Not accepted
+                  {pt.eyebrow}
+                </span>
+                <h3 className="font-display text-lg font-semibold text-white">
+                  {pt.name}
+                </h3>
+                <p className="text-sm leading-relaxed text-ink-300">
+                  {pt.description}
                 </p>
-                <h2 className="mt-2 font-display text-lg text-white">
-                  Categories we do not currently partner with.
-                </h2>
-                <ul className="mt-4 flex flex-col gap-2">
-                  {NOT_ACCEPTED.map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-start gap-3 text-sm text-ink-300"
-                    >
-                      <span
-                        className="mt-0.5 shrink-0 font-mono text-xs"
-                        style={{ color: BRAND_COLORS.ionMagenta }}
-                        aria-hidden="true"
-                      >
-                        ✗
-                      </span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-4 text-xs text-ink-500">
-                  Sportsbook and casino affiliates may be considered in the future
-                  only after a full compliance review, geo-restriction mapping,
-                  and owner approval — with explicit FTC-compliant disclosure on
-                  every placement. They are not part of the current partnership
-                  program.
+                {pt.href && pt.cta && (
+                  <Link
+                    href={pt.href}
+                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold transition-colors hover:text-white"
+                    style={{ color: pt.accent }}
+                  >
+                    {pt.cta}
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                )}
+              </article>
+            ))}
+          </Stagger>
+        </WorldSection>
+
+        <SignalRule className="mx-auto max-w-5xl px-4" />
+
+        {/* ── Partner fit categories */}
+        <WorldSection
+          index="02"
+          eyebrow="Partner fit"
+          title={
+            <>
+              Categories we{" "}
+              <span className="gse-editorial gw-chrome-plasma">work with</span>.
+            </>
+          }
+          lede="All partnerships go through a brand-fit review. We are selective — not to be difficult, but because the audience we are building trusts us to be. Categories listed here are broadly approved; individual brands are still reviewed."
+          tone="nebula"
+        >
+          <Stagger className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" step={50}>
+            {PARTNER_CATEGORIES.map((cat) => (
+              <div
+                key={cat.title}
+                className="surface-card gw-card-hover flex flex-col gap-2 p-5"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <h3 className="font-display text-base font-semibold text-white">
+                    {cat.title}
+                  </h3>
+                  <span
+                    className="shrink-0 rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider"
+                    style={{
+                      color: cat.accent,
+                      borderColor: `${cat.accent}30`,
+                      backgroundColor: `${cat.accent}0d`,
+                    }}
+                  >
+                    {cat.fit}
+                  </span>
+                </div>
+                <p className="text-sm leading-relaxed text-ink-300">
+                  {cat.description}
                 </p>
               </div>
+            ))}
+          </Stagger>
+        </WorldSection>
+
+        <SignalRule className="mx-auto max-w-5xl px-4" />
+
+        {/* ── Not accepted — compliance block */}
+        <section className="px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <Reveal>
+              <p className="gw-chapter-index">
+                <span className="text-orbital-cyan">03</span>
+                Non-negotiable exclusions
+              </p>
+              <h2 className="mt-4 max-w-3xl font-display text-display-lg font-semibold text-balance text-white">
+                What we{" "}
+                <span className="gse-editorial gw-chrome-plasma">do not</span>{" "}
+                currently partner with.
+              </h2>
+            </Reveal>
+            <Stagger className="mt-8 flex flex-col gap-3" step={60}>
+              {NOT_ACCEPTED.map((item) => (
+                <div
+                  key={item}
+                  className="surface-card gw-card-hover flex items-start gap-4 p-5"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="mt-0.5 shrink-0 font-mono text-sm font-bold"
+                    style={{ color: BRAND_COLORS.ionMagenta }}
+                  >
+                    ✗
+                  </span>
+                  <p className="text-sm leading-relaxed text-ink-300">{item}</p>
+                </div>
+              ))}
+            </Stagger>
+            <Reveal delay={200}>
+              <p className="mt-6 text-xs text-ink-500">
+                Sportsbook and casino affiliates may be considered in the future
+                only after a full compliance review, geo-restriction mapping, and
+                owner approval — with explicit FTC-compliant disclosure on every
+                placement. They are not part of the current partnership program.
+              </p>
             </Reveal>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="px-4 pb-24 pt-8 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
+        {/* ── CTA — nebula-deep */}
+        <section className="gw-nebula-deep relative isolate overflow-hidden px-4 py-24 sm:px-6 lg:px-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[60vh]"
+            style={{
+              background: `radial-gradient(ellipse 60% 80% at 50% 100%, ${BRAND_COLORS.softUltraviolet}14, transparent 70%)`,
+            }}
+          />
+          <div className="mx-auto max-w-3xl text-center">
             <Reveal>
-              <div
-                className="rounded-2xl border p-8"
-                style={{
-                  borderColor: `${BRAND_COLORS.orbitalCyan}22`,
-                  background: `radial-gradient(ellipse 60% 80% at 50% 100%, ${BRAND_COLORS.orbitalCyan}08, transparent 70%)`,
-                }}
-              >
-                <p
-                  className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                  style={{ color: BRAND_COLORS.orbitalCyan }}
+              <span className="gw-chip-cyan">Partnership inquiry</span>
+              <h2 className="mt-6 font-display text-display-lg font-semibold leading-[1.05] text-balance text-white">
+                Tell us about your brand.{" "}
+                <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
+                  We will respond.
+                </span>
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-ink-300">
+                Tell us about your brand and what kind of collaboration makes
+                sense. Every inquiry is reviewed personally. If there is a fit,
+                we will respond within a few business days.
+              </p>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="mt-9 flex flex-wrap justify-center gap-3">
+                <a
+                  href={`mailto:${SUPPORT_EMAIL}?subject=Partnership Inquiry`}
+                  className="btn btn-primary"
                 >
-                  Partnership inquiry
-                </p>
-                <h2
-                  className="mt-3 font-display text-white"
-                  style={{
-                    fontSize: "clamp(1.5rem, 3vw, 2.2rem)",
-                    lineHeight: 1.15,
-                  }}
-                >
-                  Let&rsquo;s talk.
-                </h2>
-                <p className="mt-4 max-w-xl text-base leading-7 text-ink-300">
-                  Tell us about your brand and what kind of collaboration makes
-                  sense. Every inquiry is reviewed personally. If there is a fit,
-                  we will respond within a few business days.
-                </p>
-                <div className="mt-7 flex flex-wrap gap-3">
-                  <a
-                    href={`mailto:${SUPPORT_EMAIL}?subject=Partnership Inquiry`}
-                    className="btn btn-primary"
-                  >
-                    Send an inquiry →
-                  </a>
-                  <Link href="/affiliate-disclosure" className="btn btn-ghost">
-                    Disclosure policy
-                  </Link>
-                </div>
+                  Send an inquiry →
+                </a>
+                <Link href="/affiliate-disclosure" className="btn btn-ghost">
+                  Disclosure policy
+                </Link>
               </div>
             </Reveal>
           </div>

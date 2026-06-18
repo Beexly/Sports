@@ -3,7 +3,10 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
+import { ShootingStars } from "@/components/motion/shooting-stars";
 import { SignalRule } from "@/components/motion/signal-rule";
+import { WorldSection } from "@/components/world/world-section";
+import { RevenueHero } from "@/components/revenue/revenue-hero";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 import { TrackView } from "@/components/founding-desk/track-view";
 
@@ -24,7 +27,7 @@ const CONFIDENCE_PRINCIPLES = [
   {
     eyebrow: "01",
     title: "Confidence is not certainty.",
-    body: "Every signal carries a calibrated confidence score between 0 and 100. A score of 67 means the model has estimated a 67% probability — it also means a 33% probability of being wrong. We do not hide that math. Every public surface is designed around it.",
+    body: "Every signal carries a calibrated confidence score between 0 and 100. A score of 67 means the model has estimated a 67% probability — it also means a 33% probability of being wrong. We do not hide that math. Every public surface is built around it.",
     accent: BRAND_COLORS.orbitalCyan,
   },
   {
@@ -53,7 +56,7 @@ const WHAT_NO_BET_MEANS = [
     body: "When the Desk issues a No-Bet on a game, it is not an absence of analysis. It is a conclusion: the available signal does not meet the threshold required to justify action. Saying no requires the same rigor as saying yes.",
   },
   {
-    heading: "Uncertainty has a cost.",
+    heading: "Uncertainty carries a price the public ignores.",
     body: "The market prices uncertainty differently than the public does. When the data is genuinely split, when injury information is unresolved, when the edge is too thin — the disciplined move is to preserve capital, not manufacture confidence.",
   },
   {
@@ -80,252 +83,220 @@ export default function TrustRoomPage() {
       <Nav />
       <TrackView event="trust_room_view" />
 
-      <main id="main-content" className="flex-1 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl">
+      <main id="main-content" className="relative flex-1 overflow-hidden">
+        <ShootingStars />
 
-          {/* Header */}
-          <Reveal>
-            <div className="mb-14">
-              <span
-                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
-                style={{
-                  color: BRAND_COLORS.orbitalCyan,
-                  borderColor: `${BRAND_COLORS.orbitalCyan}30`,
-                  backgroundColor: `${BRAND_COLORS.orbitalCyan}0d`,
-                }}
-              >
-                Trust Room
+        {/* ── Hero — violet chrome tone, authority positioning. */}
+        <RevenueHero
+          chip="Trust Room"
+          chipTone="cyan"
+          headline={
+            <>
+              <span className="gw-chrome-violet">We track the process</span>{" "}
+              <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
+                before
+              </span>{" "}
+              <span className="gw-chrome-ice">we claim the outcome.</span>
+            </>
+          }
+          lede={
+            <>
+              <span className="font-display text-xl text-white">
+                Restraint is the trust pitch — not a weakness.
               </span>
-              <h1
-                className="mt-5 font-display text-balance text-white"
-                style={{
-                  fontSize: "clamp(2.2rem, 5.5vw, 4.4rem)",
-                  lineHeight: 1.0,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                We track the process before{" "}
-                <span
-                  style={{
-                    background: `linear-gradient(90deg, ${BRAND_COLORS.orbitalCyan} 0%, ${BRAND_COLORS.softUltraviolet} 100%)`,
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  we claim the outcome.
-                </span>
-              </h1>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-ink-300">
+              <span className="mt-3 block">
                 {BRAND_NAME} is a sports intelligence, analytics, and
                 decision-support company. Not a sportsbook. Not a tout. Not a
                 gambling product dressed as analytics. This page explains how we
-                build confidence, what No-Bet means, and why the restraint is the
-                trust pitch — not a weakness.
-              </p>
-            </div>
-          </Reveal>
+                build confidence, what No-Bet means, and why the operating
+                honesty here is the whole point.
+              </span>
+            </>
+          }
+        >
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+            <Link
+              href="/sample-desk"
+              className="inline-flex items-center gap-1.5 font-semibold text-orbital-cyan transition-colors hover:text-white"
+            >
+              See a sample brief
+              <span aria-hidden="true">→</span>
+            </Link>
+            <Link
+              href="/no-bet"
+              className="inline-flex items-center gap-1.5 text-ink-300 transition-colors hover:text-white"
+            >
+              No-Bet as a product philosophy
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </RevenueHero>
 
-          {/* How confidence works */}
-          <section aria-labelledby="confidence-heading">
-            <Reveal>
-              <p
-                className="eyebrow"
+        {/* ── How confidence works — four principles, premium card grid. */}
+        <WorldSection
+          index="01"
+          eyebrow="How confidence works"
+          title={
+            <>
+              Four principles we{" "}
+              <span className="gse-editorial gw-chrome-plasma">never</span>{" "}
+              compromise.
+            </>
+          }
+          lede="Confidence scores are the engine of the Desk — and the operating rules around them are what make the engine trustworthy. Here is how we build the number and what it actually means."
+          tone="deep"
+        >
+          <Stagger
+            className="grid grid-cols-1 gap-5 md:grid-cols-2"
+            step={70}
+          >
+            {CONFIDENCE_PRINCIPLES.map((p) => (
+              <article
+                key={p.eyebrow}
+                className="surface-card gw-card-hover flex flex-col gap-3 overflow-hidden p-6"
+                style={{ borderColor: `${p.accent}1f` }}
+              >
+                <div
+                  className="mb-1 h-0.5 w-full rounded-full"
+                  style={{
+                    background: `linear-gradient(90deg, ${p.accent}, transparent 70%)`,
+                  }}
+                  aria-hidden="true"
+                />
+                <span
+                  className="font-display text-3xl tabular-nums"
+                  style={{ color: p.accent }}
+                >
+                  {p.eyebrow}
+                </span>
+                <h3 className="font-display text-xl text-white">{p.title}</h3>
+                <p className="text-sm leading-relaxed text-ink-300">{p.body}</p>
+              </article>
+            ))}
+          </Stagger>
+
+          <Reveal delay={100}>
+            <p className="mt-6 text-sm leading-relaxed text-ink-400">
+              Want to see calibration in detail?{" "}
+              <Link
+                href="/performance"
+                className="font-medium underline underline-offset-4"
                 style={{ color: BRAND_COLORS.orbitalCyan }}
               >
-                How confidence works
-              </p>
-              <h2
-                id="confidence-heading"
-                className="mt-3 font-display text-white"
-                style={{
-                  fontSize: "clamp(1.8rem, 4vw, 3rem)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.01em",
-                }}
+                Calibration Report →
+              </Link>
+            </p>
+          </Reveal>
+        </WorldSection>
+
+        <SignalRule className="mx-auto max-w-5xl px-4" />
+
+        {/* ── What No-Bet means — ion-magenta atmosphere. */}
+        <WorldSection
+          index="02"
+          eyebrow="What No-Bet means"
+          title={
+            <>
+              No-Bet is a{" "}
+              <span className="gse-editorial gw-chrome-plasma">position</span>
+              , not a void.
+            </>
+          }
+          lede="The smartest decision is often refusing action. We built No-Bet as a first-class product output — not a fallback when we do not have a pick. The Desk issues No-Bet when the data says the edge is insufficient. That discipline is the product."
+          tone="nebula"
+        >
+          <Stagger className="flex flex-col gap-5" step={90}>
+            {WHAT_NO_BET_MEANS.map((item) => (
+              <div
+                key={item.heading}
+                className="surface-card gw-card-hover p-6"
+                style={{ borderColor: `${BRAND_COLORS.ionMagenta}20` }}
               >
-                Four principles we never compromise.
-              </h2>
-            </Reveal>
+                <div
+                  className="mb-4 h-0.5 w-full rounded-full"
+                  style={{
+                    background: `linear-gradient(90deg, ${BRAND_COLORS.ionMagenta}99, transparent 70%)`,
+                  }}
+                  aria-hidden="true"
+                />
+                <h3 className="font-display text-lg text-white">
+                  {item.heading}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </Stagger>
 
-            <Stagger className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2" step={70}>
-              {CONFIDENCE_PRINCIPLES.map((p) => (
-                <article
-                  key={p.eyebrow}
-                  className="surface-card flex flex-col gap-3 overflow-hidden p-6"
-                  style={{ borderColor: `${p.accent}1f` }}
-                >
-                  <div
-                    className="mb-1 h-0.5 w-full rounded-full"
-                    style={{
-                      background: `linear-gradient(90deg, ${p.accent}, transparent 70%)`,
-                    }}
-                    aria-hidden="true"
-                  />
-                  <span
-                    className="font-display text-3xl tabular-nums"
-                    style={{ color: p.accent }}
-                  >
-                    {p.eyebrow}
-                  </span>
-                  <h3 className="font-display text-xl text-white">{p.title}</h3>
-                  <p className="text-sm leading-relaxed text-ink-300">{p.body}</p>
-                </article>
-              ))}
-            </Stagger>
-
-            <Reveal delay={100}>
-              <p className="mt-6 text-sm leading-relaxed text-ink-400">
-                Want to see calibration in detail?{" "}
-                <Link
-                  href="/performance"
-                  className="font-medium underline underline-offset-4"
-                  style={{ color: BRAND_COLORS.orbitalCyan }}
-                >
-                  Calibration Report →
-                </Link>
-              </p>
-            </Reveal>
-          </section>
-
-          <SignalRule className="my-16" />
-
-          {/* What No-Bet means */}
-          <section aria-labelledby="no-bet-heading">
-            <Reveal>
-              <p
-                className="eyebrow"
+          <Reveal delay={100}>
+            <p className="mt-6 text-sm leading-relaxed text-ink-400">
+              Deep read:{" "}
+              <Link
+                href="/no-bet"
+                className="font-medium underline underline-offset-4"
                 style={{ color: BRAND_COLORS.ionMagenta }}
               >
-                What No-Bet means
-              </p>
-              <h2
-                id="no-bet-heading"
-                className="mt-3 font-display text-white"
-                style={{
-                  fontSize: "clamp(1.8rem, 4vw, 3rem)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.01em",
-                }}
+                No-Bet as a product philosophy →
+              </Link>
+            </p>
+          </Reveal>
+        </WorldSection>
+
+        <SignalRule className="mx-auto max-w-5xl px-4" />
+
+        {/* ── Our limitations — violet. */}
+        <WorldSection
+          index="03"
+          eyebrow="Our limitations"
+          title={
+            <>
+              What {BRAND_NAME}{" "}
+              <span className="gw-chrome-ice">is not</span>.
+            </>
+          }
+          lede="Naming our limitations clearly is not a legal formality. It is how a trustworthy intelligence product operates. Every item below is a structural commitment to the people who read the Desk."
+          tone="void"
+        >
+          <Stagger className="flex flex-col gap-4" step={70}>
+            {OUR_LIMITATIONS.map((item, i) => (
+              <div
+                key={i}
+                className="surface-card gw-card-hover flex items-start gap-4 p-5"
+                style={{ borderColor: `${BRAND_COLORS.softUltraviolet}18` }}
               >
-                No-Bet is a position, not a void.
-              </h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-ink-300">
-                The smartest decision is often refusing action. We built No-Bet
-                as a first-class product output — not a fallback when we do not
-                have a pick. The Desk issues No-Bet when the data says the edge
-                is insufficient. That discipline is the product.
-              </p>
-            </Reveal>
-
-            <Stagger className="mt-8 flex flex-col gap-5" step={90}>
-              {WHAT_NO_BET_MEANS.map((item) => (
-                <div
-                  key={item.heading}
-                  className="rounded-2xl border p-6"
-                  style={{
-                    borderColor: `${BRAND_COLORS.ionMagenta}20`,
-                    background: `linear-gradient(135deg, ${BRAND_COLORS.ionMagenta}06 0%, rgba(8,6,20,0.5) 100%)`,
-                  }}
+                <span
+                  aria-hidden="true"
+                  className="mt-0.5 shrink-0 font-mono text-sm font-bold"
+                  style={{ color: BRAND_COLORS.softUltraviolet }}
                 >
-                  <h3
-                    className="font-display text-lg text-white"
-                    style={{ marginBottom: 8 }}
-                  >
-                    {item.heading}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-ink-300">{item.body}</p>
-                </div>
-              ))}
-            </Stagger>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="text-sm leading-relaxed text-ink-300">{item}</p>
+              </div>
+            ))}
+          </Stagger>
+        </WorldSection>
 
-            <Reveal delay={100}>
-              <p className="mt-6 text-sm leading-relaxed text-ink-400">
-                Deep read:{" "}
-                <Link
-                  href="/no-bet"
-                  className="font-medium underline underline-offset-4"
-                  style={{ color: BRAND_COLORS.ionMagenta }}
-                >
-                  No-Bet as a product philosophy →
-                </Link>
-              </p>
-            </Reveal>
-          </section>
+        <SignalRule className="mx-auto max-w-5xl px-4" />
 
-          <SignalRule className="my-16" />
-
-          {/* Our limitations */}
-          <section aria-labelledby="limitations-heading">
+        {/* ── Responsible gaming posture — plain section. */}
+        <section
+          aria-labelledby="responsible-heading"
+          className="px-4 py-20 sm:px-6 lg:px-8"
+        >
+          <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p
-                className="eyebrow"
-                style={{ color: BRAND_COLORS.softUltraviolet }}
-              >
-                Our limitations
-              </p>
-              <h2
-                id="limitations-heading"
-                className="mt-3 font-display text-white"
-                style={{
-                  fontSize: "clamp(1.8rem, 4vw, 3rem)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                What {BRAND_NAME} is not.
-              </h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-ink-300">
-                Naming our limitations clearly is not a legal formality. It is
-                how a trustworthy intelligence product operates. We are a sports
-                intelligence and media company. Here is what that means in
-                practice:
-              </p>
-            </Reveal>
-
-            <Stagger className="mt-8 flex flex-col gap-4" step={70}>
-              {OUR_LIMITATIONS.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-4 rounded-xl border p-5"
-                  style={{
-                    borderColor: `${BRAND_COLORS.softUltraviolet}18`,
-                    background: `${BRAND_COLORS.softUltraviolet}06`,
-                  }}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="mt-0.5 shrink-0 font-mono text-sm font-bold"
-                    style={{ color: BRAND_COLORS.softUltraviolet }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <p className="text-sm leading-relaxed text-ink-300">{item}</p>
-                </div>
-              ))}
-            </Stagger>
-          </section>
-
-          <SignalRule className="my-16" />
-
-          {/* Responsible gaming */}
-          <section aria-labelledby="responsible-heading">
-            <Reveal>
-              <p
-                className="eyebrow"
-                style={{ color: BRAND_COLORS.orbitalCyan }}
-              >
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
                 Responsible-gaming posture
               </p>
               <h2
                 id="responsible-heading"
-                className="mt-3 font-display text-white"
-                style={{
-                  fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.01em",
-                }}
+                className="mt-3 font-display text-display-lg font-semibold text-balance text-white"
               >
-                Set limits before emotion enters.
+                Set limits{" "}
+                <span className="gse-editorial gw-chrome-ice">before</span>{" "}
+                emotion enters.
               </h2>
               <div className="mt-5 max-w-2xl space-y-4 text-base leading-7 text-ink-300">
                 <p>
@@ -357,33 +328,36 @@ export default function TrustRoomPage() {
                 </Link>
               </div>
             </Reveal>
-          </section>
+          </div>
+        </section>
 
-          <SignalRule className="my-16" />
-
-          {/* CTA */}
-          <Reveal>
-            <div
-              className="rounded-2xl border p-8 text-center"
-              style={{
-                borderColor: `${BRAND_COLORS.orbitalCyan}22`,
-                background: `radial-gradient(ellipse 60% 80% at 50% 100%, ${BRAND_COLORS.orbitalCyan}08, transparent 70%)`,
-              }}
-            >
-              <h2
-                className="font-display text-white"
-                style={{
-                  fontSize: "clamp(1.6rem, 3.5vw, 2.5rem)",
-                  lineHeight: 1.15,
-                }}
-              >
-                Built for people who are done being sold certainty.
+        {/* ── Final CTA. */}
+        <section className="gw-nebula-deep relative isolate overflow-hidden px-4 py-24 sm:px-6 lg:px-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[60vh]"
+            style={{
+              background: `radial-gradient(ellipse 60% 80% at 50% 100%, ${BRAND_COLORS.orbitalCyan}14, transparent 70%)`,
+            }}
+          />
+          <div className="mx-auto max-w-3xl text-center">
+            <Reveal>
+              <span className="gw-chip-cyan">Built for the disciplined</span>
+              <h2 className="mt-6 font-display text-display-lg font-semibold leading-[1.05] text-balance text-white">
+                Done being sold{" "}
+                <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
+                  certainty
+                </span>
+                .
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-ink-300">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-ink-300">
                 Confidence is not certainty. No-Bet is a position. The record is
-                public. That is the operating standard.
+                public. That is the operating standard — and it is the reason
+                this product exists.
               </p>
-              <div className="mt-7 flex flex-wrap justify-center gap-4">
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="mt-9 flex flex-wrap justify-center gap-4">
                 <Link href="/founding-desk" className="btn btn-primary">
                   Join the Founding Desk →
                 </Link>
@@ -391,10 +365,9 @@ export default function TrustRoomPage() {
                   See a sample brief
                 </Link>
               </div>
-            </div>
-          </Reveal>
-
-        </div>
+            </Reveal>
+          </div>
+        </section>
       </main>
 
       <Footer />

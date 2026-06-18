@@ -3,7 +3,11 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
+import { ShootingStars } from "@/components/motion/shooting-stars";
 import { SignalRule } from "@/components/motion/signal-rule";
+import { WorldSection } from "@/components/world/world-section";
+import { RevenueHero } from "@/components/revenue/revenue-hero";
+import { CountUp } from "@/components/ui/count-up";
 import { BRAND_NAME, BRAND_COLORS, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -110,6 +114,28 @@ const COMPLIANCE_STANDARDS = [
   "Editorial review before publish — no contributor content goes live without review.",
 ] as const;
 
+/** Honest structural anchors — real numbers, no fabricated audience. */
+const NETWORK_ANCHORS = [
+  {
+    value: 8,
+    label: "Open lanes",
+    body: "NFL, college football, NBA, MLB, fantasy, DFS, sports-betting education, and Houston local.",
+    accent: BRAND_COLORS.orbitalCyan,
+  },
+  {
+    value: 6,
+    label: "Things you receive",
+    body: "Templates, style guide, referral code, revenue share, submission workflow, and compliance guardrails.",
+    accent: BRAND_COLORS.softUltraviolet,
+  },
+  {
+    value: 6,
+    label: "Compliance standards",
+    body: "Non-negotiable. Every contributor content submission is reviewed against all six before it publishes.",
+    accent: BRAND_COLORS.ionMagenta,
+  },
+] as const;
+
 export default function CreatorNetworkPage() {
   return (
     <div
@@ -119,149 +145,95 @@ export default function CreatorNetworkPage() {
       <Nav />
 
       <main id="main-content" className="relative flex-1 overflow-hidden">
+        <ShootingStars />
 
-        {/* Hero */}
-        <section className="relative px-4 pb-20 pt-28 sm:px-6 lg:px-8">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[65vh]"
-            style={{
-              background: `radial-gradient(55% 60% at 50% 0%, ${BRAND_COLORS.softUltraviolet}1a, transparent 70%), radial-gradient(40% 50% at 80% 0%, ${BRAND_COLORS.orbitalCyan}10, transparent 70%)`,
-            }}
-          />
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <span
-                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
-                style={{
-                  color: BRAND_COLORS.softUltraviolet,
-                  borderColor: `${BRAND_COLORS.softUltraviolet}30`,
-                  backgroundColor: `${BRAND_COLORS.softUltraviolet}0d`,
-                }}
-              >
-                Creator Network — Contributor Partners
+        {/* ── Hero — chrome + editorial-serif, violet chrome tone */}
+        <RevenueHero
+          chip="Creator Network · Contributor Partners"
+          chipTone="plasma"
+          headline={
+            <>
+              <span className="gw-chrome-violet">Contribute</span> to{" "}
+              <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
+                Galaxy
               </span>
-            </Reveal>
-
-            <Reveal delay={90}>
-              <h1
-                className="mt-5 font-display text-balance text-white"
-                style={{
-                  fontSize: "clamp(2.4rem, 6vw, 4.8rem)",
-                  lineHeight: 1.0,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Contribute to{" "}
-                <span
-                  style={{
-                    background: `linear-gradient(90deg, ${BRAND_COLORS.softUltraviolet} 0%, ${BRAND_COLORS.orbitalCyan} 100%)`,
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  Galaxy.
-                </span>
-              </h1>
-            </Reveal>
-
-            <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-ink-300">
+              .
+            </>
+          }
+          lede={
+            <>
+              <span className="font-display text-xl text-white">
+                Specialists preferred. Generalists need not apply.
+              </span>
+              <span className="mt-3 block">
                 {BRAND_NAME} is building a creator network of independent
                 analysts and contributors — one lane at a time. If you write,
                 record, or analyze sports with discipline and without hype, we
-                want to talk.
-              </p>
-            </Reveal>
-
-            <Reveal delay={240}>
-              <p className="mt-4 max-w-xl text-base leading-7 text-ink-300">
-                Contributors are not employees. They are independent partners
-                who agree to Galaxy's editorial standards, compliance
-                guardrails, and responsible-play posture — and in return
-                receive templates, a referral code, and revenue share.
-              </p>
-            </Reveal>
-
-            <Reveal delay={320}>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <a
-                  href={`mailto:${SUPPORT_EMAIL}?subject=Creator%20Network%20Application`}
-                  className="btn btn-primary"
-                >
-                  Apply as a contributor →
-                </a>
-                <Link
-                  href="/contact"
-                  className="btn btn-ghost"
-                  style={{ color: BRAND_COLORS.orbitalCyan }}
-                >
-                  Other questions →
-                </Link>
-              </div>
-            </Reveal>
-
-            <Reveal delay={400}>
-              <p className="mt-4 text-xs text-ink-500">
-                All contributor applications are reviewed manually. We will
-                respond within 5–7 business days.
-              </p>
-            </Reveal>
+                want to talk. Contributors are independent partners who agree to
+                Galaxy&apos;s editorial standards, compliance guardrails, and
+                responsible-play posture — and in return receive templates, a
+                referral code, and revenue share.
+              </span>
+            </>
+          }
+        >
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <a
+              href={`mailto:${SUPPORT_EMAIL}?subject=Creator%20Network%20Application`}
+              className="btn btn-primary"
+            >
+              Apply as a contributor →
+            </a>
+            <Link href="/contact" className="btn btn-ghost">
+              Other questions →
+            </Link>
           </div>
-        </section>
+          <p className="mt-4 text-xs text-ink-500">
+            All contributor applications are reviewed manually. We will respond
+            within 5–7 business days.
+          </p>
+        </RevenueHero>
 
-        <SignalRule className="mx-auto max-w-5xl px-4" />
-
-        {/* Open lanes */}
+        {/* ── Network anchors — real structural counts, no fake audience */}
         <section className="px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p
-                className="eyebrow"
-                style={{ color: BRAND_COLORS.softUltraviolet }}
-              >
-                Open contributor lanes
+              <p className="gw-chapter-index">
+                <span className="text-orbital-cyan">01</span>
+                The network at a glance
               </p>
-              <h2
-                className="mt-3 font-display text-white"
-                style={{
-                  fontSize: "clamp(1.8rem, 4vw, 3rem)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                Eight lanes looking for contributors.
+              <h2 className="mt-4 max-w-3xl font-display text-display-lg font-semibold text-balance text-white">
+                Built on{" "}
+                <span className="gse-editorial gw-chrome-ice">discipline</span>,
+                not volume.
               </h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-ink-300">
-                Each lane has its own submission cadence and content format.
-                Specialists preferred — we are not looking for generalists who
-                cover everything.
+                We are early-stage and selective by design. We do not publish
+                fabricated contributor counts or audience numbers — what we offer
+                is a structured, compliance-first network with real editorial
+                support and a genuine revenue share.
               </p>
             </Reveal>
-
-            <Stagger className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" step={60}>
-              {LANES.map((lane) => (
+            <Stagger className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-3" step={80}>
+              {NETWORK_ANCHORS.map((anchor) => (
                 <div
-                  key={lane.label}
-                  className="rounded-xl border p-5"
-                  style={{
-                    borderColor: `${lane.accent}22`,
-                    background: `${lane.accent}07`,
-                  }}
+                  key={anchor.label}
+                  className="surface-card gw-card-hover flex flex-col gap-3 p-6"
                 >
-                  <div
-                    className="mb-3 h-0.5 w-10 rounded-full"
-                    style={{ background: lane.accent }}
-                    aria-hidden="true"
-                  />
-                  <h3
-                    className="font-display text-base font-semibold"
-                    style={{ color: lane.accent }}
+                  <p
+                    className="font-display text-5xl font-bold tabular-nums"
+                    style={{ color: anchor.accent }}
                   >
-                    {lane.label}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-300">
-                    {lane.desc}
+                    <CountUp value={anchor.value} />
+                  </p>
+                  <p
+                    className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]"
+                    style={{ color: anchor.accent }}
+                  >
+                    {anchor.label}
+                  </p>
+                  <p className="text-sm leading-relaxed text-ink-300">
+                    {anchor.body}
                   </p>
                 </div>
               ))}
@@ -271,170 +243,182 @@ export default function CreatorNetworkPage() {
 
         <SignalRule className="mx-auto max-w-5xl px-4" />
 
-        {/* What you get */}
-        <section className="px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <p
-                className="eyebrow"
-                style={{ color: BRAND_COLORS.orbitalCyan }}
-              >
-                What contributor partners receive
-              </p>
-              <h2
-                className="mt-3 font-display text-white"
-                style={{
-                  fontSize: "clamp(1.8rem, 4vw, 3rem)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                Six things the partnership provides.
-              </h2>
-            </Reveal>
-
-            <Stagger className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2" step={70}>
-              {WHAT_YOU_GET.map((item) => (
-                <article
-                  key={item.eyebrow}
-                  className="surface-card group relative flex flex-col gap-3 overflow-hidden p-6"
-                  style={{ borderColor: `${item.accent}1f` }}
-                >
-                  <div
-                    className="mb-1 h-0.5 w-full rounded-full"
-                    style={{
-                      background: `linear-gradient(90deg, ${item.accent}, transparent 70%)`,
-                    }}
-                    aria-hidden="true"
-                  />
-                  <span
-                    className="font-display text-3xl tabular-nums"
-                    style={{ color: item.accent }}
-                  >
-                    {item.eyebrow}
-                  </span>
-                  <h3 className="font-display text-xl text-white">{item.title}</h3>
-                  <p className="text-sm leading-relaxed text-ink-300">{item.body}</p>
-                </article>
-              ))}
-            </Stagger>
-          </div>
-        </section>
-
-        <SignalRule className="mx-auto max-w-5xl px-4" />
-
-        {/* Compliance standards */}
-        <section className="px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
-              <p
-                className="eyebrow"
-                style={{ color: BRAND_COLORS.ionMagenta }}
-              >
-                Non-negotiable standards
-              </p>
-              <h2
-                className="mt-3 font-display text-white"
-                style={{
-                  fontSize: "clamp(1.8rem, 4vw, 3rem)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                Compliance guardrails for every contributor.
-              </h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-ink-300">
-                These are not suggestions. All contributor content must meet
-                these standards before it publishes. The editorial team checks
-                every submission. Anti-hype and responsible-play posture are
-                non-negotiable features of the Galaxy brand — not constraints
-                we work around.
-              </p>
-            </Reveal>
-
-            <Stagger className="mt-8 flex flex-col gap-4" step={70}>
-              {COMPLIANCE_STANDARDS.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-4 rounded-xl border p-5"
-                  style={{
-                    borderColor: `${BRAND_COLORS.ionMagenta}20`,
-                    background: `${BRAND_COLORS.ionMagenta}08`,
-                  }}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="mt-0.5 shrink-0 font-mono text-sm font-bold tabular-nums"
-                    style={{ color: BRAND_COLORS.ionMagenta }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <p className="text-sm leading-relaxed text-ink-300">{item}</p>
-                </div>
-              ))}
-            </Stagger>
-          </div>
-        </section>
-
-        <SignalRule className="mx-auto max-w-5xl px-4" />
-
-        {/* CTA */}
-        <section className="px-4 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
-            <Reveal>
+        {/* ── Open lanes */}
+        <WorldSection
+          index="02"
+          eyebrow="Open contributor lanes"
+          title={
+            <>
+              Eight lanes{" "}
+              <span className="gse-editorial gw-chrome-plasma">
+                looking for contributors
+              </span>
+              .
+            </>
+          }
+          lede="Each lane has its own submission cadence and content format. Specialists preferred — we are not looking for generalists who cover everything."
+          tone="nebula"
+        >
+          <Stagger
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+            step={60}
+          >
+            {LANES.map((lane) => (
               <div
-                className="rounded-2xl border p-8 text-center"
-                style={{
-                  borderColor: `${BRAND_COLORS.softUltraviolet}22`,
-                  background: `radial-gradient(ellipse 60% 80% at 50% 100%, ${BRAND_COLORS.softUltraviolet}08, transparent 70%)`,
-                }}
+                key={lane.label}
+                className="surface-card gw-card-hover flex flex-col gap-2.5 p-5"
               >
-                <p
-                  className="font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
-                  style={{ color: BRAND_COLORS.softUltraviolet }}
+                <div
+                  className="mb-1 h-0.5 w-10 rounded-full"
+                  style={{ background: lane.accent }}
+                  aria-hidden="true"
+                />
+                <h3
+                  className="font-display text-base font-semibold"
+                  style={{ color: lane.accent }}
                 >
-                  Apply now
-                </p>
-                <h2
-                  className="mt-3 font-display text-white"
-                  style={{
-                    fontSize: "clamp(1.6rem, 3.5vw, 2.5rem)",
-                    lineHeight: 1.15,
-                  }}
-                >
-                  Disciplined voice, open lane?
-                </h2>
-                <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-ink-300">
-                  If you analyze sports without hype, frame confidence without
-                  certainty, and want to reach an audience that has moved past
-                  the tout model — send us a note. Include the lane you cover,
-                  a sample of your work, and what you want to build.
-                </p>
-                <div className="mt-7 flex flex-wrap justify-center gap-4">
-                  <a
-                    href={`mailto:${SUPPORT_EMAIL}?subject=Creator%20Network%20Application`}
-                    className="btn btn-primary"
-                  >
-                    Apply via email →
-                  </a>
-                  <Link href="/contact" className="btn btn-ghost">
-                    Contact the team →
-                  </Link>
-                </div>
-                <p className="mt-6 text-xs text-ink-500">
-                  Contributors are independent partners, not employees.
-                  Revenue share and referral terms are disclosed in the
-                  partner agreement.{" "}
-                  <Link
-                    href="/affiliate-disclosure"
-                    className="underline underline-offset-4"
-                    style={{ color: BRAND_COLORS.softUltraviolet }}
-                  >
-                    Affiliate disclosure
-                  </Link>
-                  .
+                  {lane.label}
+                </h3>
+                <p className="text-sm leading-relaxed text-ink-300">
+                  {lane.desc}
                 </p>
               </div>
+            ))}
+          </Stagger>
+        </WorldSection>
+
+        <SignalRule className="mx-auto max-w-5xl px-4" />
+
+        {/* ── What contributors receive */}
+        <WorldSection
+          index="03"
+          eyebrow="What contributor partners receive"
+          title={
+            <>
+              Six things the{" "}
+              <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
+                partnership
+              </span>{" "}
+              provides.
+            </>
+          }
+          tone="void"
+        >
+          <Stagger className="grid grid-cols-1 gap-5 md:grid-cols-2" step={70}>
+            {WHAT_YOU_GET.map((item) => (
+              <article
+                key={item.eyebrow}
+                className="surface-card gw-card-hover relative flex flex-col gap-3 overflow-hidden p-6"
+                style={{ borderColor: `${item.accent}1f` }}
+              >
+                <div
+                  className="mb-1 h-0.5 w-full rounded-full"
+                  style={{
+                    background: `linear-gradient(90deg, ${item.accent}, transparent 70%)`,
+                  }}
+                  aria-hidden="true"
+                />
+                <span
+                  className="font-display text-3xl tabular-nums"
+                  style={{ color: item.accent }}
+                >
+                  {item.eyebrow}
+                </span>
+                <h3 className="font-display text-xl text-white">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-ink-300">{item.body}</p>
+              </article>
+            ))}
+          </Stagger>
+        </WorldSection>
+
+        <SignalRule className="mx-auto max-w-5xl px-4" />
+
+        {/* ── Compliance standards */}
+        <WorldSection
+          index="04"
+          eyebrow="Non-negotiable standards"
+          title={
+            <>
+              Compliance guardrails for{" "}
+              <span className="gse-editorial gw-chrome-violet">
+                every contributor
+              </span>
+              .
+            </>
+          }
+          lede="These are not suggestions. All contributor content must meet these standards before it publishes. The editorial team checks every submission. Anti-hype and responsible-play posture are non-negotiable features of the Galaxy brand — not constraints we work around."
+          tone="deep"
+        >
+          <Stagger className="flex flex-col gap-4" step={70}>
+            {COMPLIANCE_STANDARDS.map((item, i) => (
+              <div
+                key={i}
+                className="surface-card gw-card-hover flex items-start gap-4 p-5"
+                style={{ borderColor: `${BRAND_COLORS.ionMagenta}20` }}
+              >
+                <span
+                  aria-hidden="true"
+                  className="mt-0.5 shrink-0 font-mono text-sm font-bold tabular-nums"
+                  style={{ color: BRAND_COLORS.ionMagenta }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="text-sm leading-relaxed text-ink-300">{item}</p>
+              </div>
+            ))}
+          </Stagger>
+        </WorldSection>
+
+        {/* ── CTA — nebula-deep */}
+        <section className="gw-nebula-deep relative isolate overflow-hidden px-4 py-24 sm:px-6 lg:px-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[60vh]"
+            style={{
+              background: `radial-gradient(ellipse 60% 80% at 50% 100%, ${BRAND_COLORS.softUltraviolet}14, transparent 70%)`,
+            }}
+          />
+          <div className="mx-auto max-w-3xl text-center">
+            <Reveal>
+              <span className="gw-chip-plasma">Apply now</span>
+              <h2 className="mt-6 font-display text-display-lg font-semibold leading-[1.05] text-balance text-white">
+                Disciplined voice,{" "}
+                <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
+                  open lane?
+                </span>
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-ink-300">
+                If you analyze sports without hype, frame confidence without
+                certainty, and want to reach an audience that has moved past
+                the tout model — send us a note. Include the lane you cover,
+                a sample of your work, and what you want to build.
+              </p>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="mt-9 flex flex-wrap justify-center gap-4">
+                <a
+                  href={`mailto:${SUPPORT_EMAIL}?subject=Creator%20Network%20Application`}
+                  className="btn btn-primary"
+                >
+                  Apply via email →
+                </a>
+                <Link href="/contact" className="btn btn-ghost">
+                  Contact the team →
+                </Link>
+              </div>
+              <p className="mt-6 text-xs text-ink-500">
+                Contributors are independent partners, not employees. Revenue
+                share and referral terms are disclosed in the partner
+                agreement.{" "}
+                <Link
+                  href="/affiliate-disclosure"
+                  className="underline underline-offset-4 transition-colors hover:text-ink-300"
+                  style={{ color: BRAND_COLORS.softUltraviolet }}
+                >
+                  Affiliate disclosure
+                </Link>
+                .
+              </p>
             </Reveal>
           </div>
         </section>

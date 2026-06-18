@@ -47,6 +47,12 @@ const EMPTY: FormData = {
   contactConsent: false,
 };
 
+/** Shared input class — 44px min-height, consistent hover/focus ring */
+const INPUT_CLS =
+  "w-full min-h-11 rounded-xl border bg-black/30 px-4 py-3 text-sm text-white placeholder:text-ink-500 outline-none transition-colors hover:border-white/20 focus:border-cyan-400/60 disabled:opacity-50";
+
+const INPUT_STYLE = { borderColor: "rgba(100,116,139,0.35)" };
+
 export function AskGalaxyForm() {
   const [state, setState] = useState<FormState>("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -116,7 +122,7 @@ export function AskGalaxyForm() {
   if (state === "success") {
     return (
       <div
-        className="rounded-2xl border px-6 py-8 text-center"
+        className="rounded-2xl border px-6 py-10 text-center"
         style={{
           borderColor: `${BRAND_COLORS.orbitalCyan}30`,
           background: `${BRAND_COLORS.orbitalCyan}0d`,
@@ -134,10 +140,10 @@ export function AskGalaxyForm() {
           Got it — we review every submission.
         </p>
         <p className="mt-3 text-sm leading-relaxed text-ink-300">
-          Classification is manual. A human (SCOUT) reads every game submitted
-          and classifies it honestly: action signal, caution signal, no-bet
-          signal, or insufficient data. This is never automated betting advice.
-          We will be in touch if you opted in for contact.
+          Classification is manual. A human (SCOUT) reads every game submitted and
+          classifies it honestly: action signal, caution signal, no-bet signal, or
+          insufficient data. This is never automated betting advice. We will be in
+          touch if you opted in for contact.
         </p>
       </div>
     );
@@ -159,8 +165,8 @@ export function AskGalaxyForm() {
             value={form.name}
             onChange={handleChange}
             disabled={isLoading}
-            className="w-full rounded-xl border bg-black/30 px-4 py-3 text-sm text-white placeholder:text-ink-500 outline-none transition-colors focus:border-cyan-400/60 disabled:opacity-50"
-            style={{ borderColor: "rgba(100,116,139,0.5)" }}
+            className={INPUT_CLS}
+            style={INPUT_STYLE}
           />
         </Field>
 
@@ -175,8 +181,8 @@ export function AskGalaxyForm() {
             value={form.email}
             onChange={handleChange}
             disabled={isLoading}
-            className="w-full rounded-xl border bg-black/30 px-4 py-3 text-sm text-white placeholder:text-ink-500 outline-none transition-colors focus:border-cyan-400/60 disabled:opacity-50"
-            style={{ borderColor: "rgba(100,116,139,0.5)" }}
+            className={INPUT_CLS}
+            style={INPUT_STYLE}
           />
         </Field>
       </div>
@@ -192,8 +198,8 @@ export function AskGalaxyForm() {
             value={form.sport}
             onChange={handleChange}
             disabled={isLoading}
-            className="w-full rounded-xl border bg-black/30 px-4 py-3 text-sm text-white placeholder:text-ink-500 outline-none transition-colors focus:border-cyan-400/60 disabled:opacity-50"
-            style={{ borderColor: "rgba(100,116,139,0.5)" }}
+            className={INPUT_CLS}
+            style={INPUT_STYLE}
           />
         </Field>
 
@@ -206,8 +212,8 @@ export function AskGalaxyForm() {
             value={form.league}
             onChange={handleChange}
             disabled={isLoading}
-            className="w-full rounded-xl border bg-black/30 px-4 py-3 text-sm text-white placeholder:text-ink-500 outline-none transition-colors focus:border-cyan-400/60 disabled:opacity-50"
-            style={{ borderColor: "rgba(100,116,139,0.5)" }}
+            className={INPUT_CLS}
+            style={INPUT_STYLE}
           />
         </Field>
       </div>
@@ -228,8 +234,8 @@ export function AskGalaxyForm() {
           value={form.matchup}
           onChange={handleChange}
           disabled={isLoading}
-          className="w-full rounded-xl border bg-black/30 px-4 py-3 text-sm text-white placeholder:text-ink-500 outline-none transition-colors focus:border-cyan-400/60 disabled:opacity-50"
-          style={{ borderColor: "rgba(100,116,139,0.5)" }}
+          className={INPUT_CLS}
+          style={INPUT_STYLE}
         />
       </Field>
 
@@ -249,8 +255,8 @@ export function AskGalaxyForm() {
           value={form.considering}
           onChange={handleChange}
           disabled={isLoading}
-          className="w-full rounded-xl border bg-black/30 px-4 py-3 text-sm text-white placeholder:text-ink-500 outline-none transition-colors focus:border-cyan-400/60 disabled:opacity-50 resize-none"
-          style={{ borderColor: "rgba(100,116,139,0.5)" }}
+          className={`${INPUT_CLS} resize-none`}
+          style={INPUT_STYLE}
         />
       </Field>
 
@@ -268,8 +274,8 @@ export function AskGalaxyForm() {
           value={form.reasoning}
           onChange={handleChange}
           disabled={isLoading}
-          className="w-full rounded-xl border bg-black/30 px-4 py-3 text-sm text-white placeholder:text-ink-500 outline-none transition-colors focus:border-cyan-400/60 disabled:opacity-50 resize-none"
-          style={{ borderColor: "rgba(100,116,139,0.5)" }}
+          className={`${INPUT_CLS} resize-none`}
+          style={INPUT_STYLE}
         />
       </Field>
 
@@ -287,8 +293,8 @@ export function AskGalaxyForm() {
           value={form.trustNeed}
           onChange={handleChange}
           disabled={isLoading}
-          className="w-full rounded-xl border bg-black/30 px-4 py-3 text-sm text-white placeholder:text-ink-500 outline-none transition-colors focus:border-cyan-400/60 disabled:opacity-50 resize-none"
-          style={{ borderColor: "rgba(100,116,139,0.5)" }}
+          className={`${INPUT_CLS} resize-none`}
+          style={INPUT_STYLE}
         />
       </Field>
 
@@ -303,8 +309,8 @@ export function AskGalaxyForm() {
           className="mt-0.5 h-4 w-4 cursor-pointer rounded accent-cyan-400"
         />
         <span>
-          You may follow up with me at the email above if you need more context
-          to classify this game.
+          You may follow up with me at the email above if you need more context to
+          classify this game.
         </span>
       </label>
 
@@ -335,8 +341,8 @@ export function AskGalaxyForm() {
         </button>
 
         <p className="text-xs text-ink-500">
-          Classification is manual — a human reads every submission. This is
-          never automated betting advice.{" "}
+          Classification is manual — a human reads every submission. This is never
+          automated betting advice.{" "}
           <span style={{ color: BRAND_COLORS.orbitalCyan }}>
             Galaxy Sports Network
           </span>{" "}
@@ -369,7 +375,11 @@ function Field({
       <label htmlFor={htmlFor} className="text-sm font-medium text-ink-200">
         {label}
         {required && (
-          <span className="ml-1" style={{ color: BRAND_COLORS.orbitalCyan }} aria-hidden="true">
+          <span
+            className="ml-1"
+            style={{ color: BRAND_COLORS.orbitalCyan }}
+            aria-hidden="true"
+          >
             *
           </span>
         )}

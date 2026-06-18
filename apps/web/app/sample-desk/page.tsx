@@ -3,7 +3,10 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
+import { ShootingStars } from "@/components/motion/shooting-stars";
 import { SignalRule } from "@/components/motion/signal-rule";
+import { WorldSection } from "@/components/world/world-section";
+import { RevenueHero } from "@/components/revenue/revenue-hero";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 import { TrackView } from "@/components/founding-desk/track-view";
 
@@ -29,68 +32,84 @@ export default function SampleDeskPage() {
       <Nav />
       <TrackView event="sample_desk_view" />
 
-      <main id="main-content" className="flex-1 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl">
+      <main id="main-content" className="relative flex-1 overflow-hidden">
+        <ShootingStars />
 
-          {/* Header */}
-          <Reveal>
-            <div className="mb-10 text-center">
-              <span
-                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
-                style={{
-                  color: BRAND_COLORS.orbitalCyan,
-                  borderColor: `${BRAND_COLORS.orbitalCyan}30`,
-                  backgroundColor: `${BRAND_COLORS.orbitalCyan}0d`,
-                }}
-              >
-                Sample — illustrative format
+        {/* ── Hero — chrome + serif, plasma tone, format-first positioning. */}
+        <RevenueHero
+          chip="Sample — illustrative format"
+          chipTone="cyan"
+          headline={
+            <>
+              <span className="gw-chrome-plasma">The Galaxy</span>{" "}
+              <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
+                Desk Brief
               </span>
-              <h1
-                className="mt-5 font-display text-balance text-white"
-                style={{
-                  fontSize: "clamp(2rem, 5vw, 3.8rem)",
-                  lineHeight: 1.05,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                The Galaxy Desk Brief.
-              </h1>
-              <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-ink-300">
-                This is a representative example of the daily intelligence brief
-                Founding members receive. The format and recurring sections are
-                real. The specific game details, figures, and lines shown below
-                are illustrative — they are here to show you the structure, not
-                to be traded on.
-              </p>
-              <p
-                className="mt-3 inline-block rounded-lg border px-4 py-2 font-mono text-xs"
-                style={{
-                  borderColor: `${BRAND_COLORS.ionMagenta}30`,
-                  color: BRAND_COLORS.ionMagenta,
-                  background: `${BRAND_COLORS.ionMagenta}08`,
-                }}
-              >
-                Sample content — not a live signal · For illustrative purposes only
-              </p>
-            </div>
-          </Reveal>
-
-          {/* Brief shell */}
-          <Stagger className="flex flex-col gap-8" step={120}>
-
-            {/* Section: Market Mirage */}
-            <article
-              className="rounded-2xl border p-7"
+              .
+            </>
+          }
+          lede={
+            <>
+              <span className="font-display text-xl text-white">
+                The format Founding members read before every slate opens.
+              </span>
+              <span className="mt-3 block">
+                The structure and recurring sections below are real. The specific
+                game details, figures, and lines are illustrative — here to show
+                you the shape of the thing, not to be traded on.{" "}
+                {BRAND_NAME} is an intelligence and media company. Not a
+                sportsbook. Not a tout.
+              </span>
+            </>
+          }
+        >
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+            <Link
+              href="/founding-desk"
+              className="inline-flex items-center gap-1.5 font-semibold text-orbital-cyan transition-colors hover:text-white"
+            >
+              Join the Founding Desk
+              <span aria-hidden="true">→</span>
+            </Link>
+            <span
+              className="inline-block rounded-lg border px-4 py-1.5 font-mono text-xs"
               style={{
-                borderColor: `${BRAND_COLORS.orbitalCyan}22`,
-                background: `linear-gradient(135deg, ${BRAND_COLORS.orbitalCyan}06 0%, rgba(8,6,20,0.5) 100%)`,
+                borderColor: `${BRAND_COLORS.ionMagenta}30`,
+                color: BRAND_COLORS.ionMagenta,
+                background: `${BRAND_COLORS.ionMagenta}08`,
               }}
             >
+              Sample content · not a live signal
+            </span>
+          </div>
+        </RevenueHero>
+
+        {/* ── Brief artifact — four premium surface-card sections. */}
+        <WorldSection
+          index="01"
+          eyebrow="Daily intelligence brief"
+          title={
+            <>
+              Four sections.{" "}
+              <span className="gw-chrome-ice">One read</span> before the slate.
+            </>
+          }
+          lede="Every brief runs the same recurring structure so the read becomes a ritual rather than a scramble. Here is the full format, in the real layout — so you know exactly what you would receive."
+          tone="deep"
+        >
+          <Stagger className="flex flex-col gap-6" step={120}>
+
+            {/* ── 01: Market Mirage */}
+            <article className="surface-card gw-card-hover overflow-hidden p-7">
+              <div
+                aria-hidden="true"
+                className="mb-5 h-0.5 w-full rounded-full"
+                style={{
+                  background: `linear-gradient(90deg, ${BRAND_COLORS.orbitalCyan}cc, transparent 70%)`,
+                }}
+              />
               <header className="mb-5">
-                <p
-                  className="font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
-                  style={{ color: BRAND_COLORS.orbitalCyan }}
-                >
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-orbital-cyan">
                   Market Mirage
                 </p>
                 <h2 className="mt-1 font-display text-xl text-white">
@@ -106,13 +125,13 @@ export default function SampleDeskPage() {
                 means they see something different in the structure of this game.
               </p>
               <p className="text-sm leading-relaxed text-ink-300">
-                The Mirage here is that public enthusiasm reads like edge. It is
-                not. Public enthusiasm is the price of admission — it is already
-                priced in. The question the Desk asks is whether the remaining
-                signal after you strip out the narrative justifies action. In this
-                case: the data suggests the public is reacting to a home record
-                that carries significant sample-size caveats. The market has
-                corrected for that. The public has not.
+                The Mirage here is that public enthusiasm reads like edge. It
+                does not. Public enthusiasm is the price of admission — already
+                baked into the number. The question the Desk asks is whether the
+                remaining signal, once you strip out the narrative, justifies
+                action. In this case: the data suggests the public is reacting
+                to a home record that carries significant sample-size caveats.
+                The market has corrected for that. The public has not.
               </p>
               <p
                 className="mt-4 border-t pt-4 text-xs text-ink-500"
@@ -122,14 +141,15 @@ export default function SampleDeskPage() {
               </p>
             </article>
 
-            {/* Section: No-Bet Watch */}
-            <article
-              className="rounded-2xl border p-7"
-              style={{
-                borderColor: `${BRAND_COLORS.ionMagenta}22`,
-                background: `linear-gradient(135deg, ${BRAND_COLORS.ionMagenta}06 0%, rgba(8,6,20,0.5) 100%)`,
-              }}
-            >
+            {/* ── 02: No-Bet Watch */}
+            <article className="surface-card gw-card-hover overflow-hidden p-7">
+              <div
+                aria-hidden="true"
+                className="mb-5 h-0.5 w-full rounded-full"
+                style={{
+                  background: `linear-gradient(90deg, ${BRAND_COLORS.ionMagenta}cc, transparent 70%)`,
+                }}
+              />
               <header className="mb-5">
                 <p
                   className="font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
@@ -147,20 +167,18 @@ export default function SampleDeskPage() {
                 currently classifying it as a No-Bet.
               </p>
               <p className="mb-4 text-sm leading-relaxed text-ink-300">
-                Why: the injury situation in this game has three unresolved
-                variables that the market has already priced into a range rather
-                than a fixed number. The line spread across books spans 2.5
-                points — which signals that sharp money is genuinely split, not
-                that one side has edge over the other. Disagreement in the
-                sharp-money layer is itself a signal. It tells the Desk that the
+                Why: the injury situation has three unresolved variables that the
+                market has already priced into a range rather than a fixed
+                number. The line spread across books spans 2.5 points — signaling
+                that sharp money is genuinely split, not that one side has edge.
+                Disagreement in the sharp-money layer is itself a signal: the
                 information advantage is insufficient.
               </p>
               <p className="text-sm leading-relaxed text-ink-300">
-                The No-Bet is not a failure. It is the discipline: we do not
-                manufacture confidence where the data does not support it. The
-                most expensive action is the one taken to feel like you are doing
-                something. Sometimes the Desk&apos;s job is to tell you that
-                tonight, the edge is in watching.
+                The No-Bet is not a failure. It is the discipline. The most
+                expensive action is the one taken to feel like you are doing
+                something. Sometimes the Desk&apos;s job is to tell you the edge
+                is in watching.
               </p>
               <p
                 className="mt-4 border-t pt-4 text-xs"
@@ -177,14 +195,15 @@ export default function SampleDeskPage() {
               </p>
             </article>
 
-            {/* Section: Signal vs Noise */}
-            <article
-              className="rounded-2xl border p-7"
-              style={{
-                borderColor: `${BRAND_COLORS.softUltraviolet}22`,
-                background: `linear-gradient(135deg, ${BRAND_COLORS.softUltraviolet}06 0%, rgba(8,6,20,0.5) 100%)`,
-              }}
-            >
+            {/* ── 03: Signal vs Noise */}
+            <article className="surface-card gw-card-hover overflow-hidden p-7">
+              <div
+                aria-hidden="true"
+                className="mb-5 h-0.5 w-full rounded-full"
+                style={{
+                  background: `linear-gradient(90deg, ${BRAND_COLORS.softUltraviolet}cc, transparent 70%)`,
+                }}
+              />
               <header className="mb-5">
                 <p
                   className="font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
@@ -193,28 +212,34 @@ export default function SampleDeskPage() {
                   Signal vs Noise
                 </p>
                 <h2 className="mt-1 font-display text-xl text-white">
-                  What is real. What is media.
+                  What is real. What is coverage.
                 </h2>
               </header>
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
-                  <p
-                    className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-widest"
-                    style={{ color: BRAND_COLORS.orbitalCyan }}
-                  >
+                  <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-widest text-orbital-cyan">
                     Signal
                   </p>
                   <ul className="space-y-2 text-sm leading-relaxed text-ink-300">
                     <li className="flex items-start gap-2">
-                      <span style={{ color: BRAND_COLORS.orbitalCyan, marginTop: 2 }} aria-hidden="true">→</span>
-                      Consistent line movement toward the road side over the past
-                      36 hours — market structure shift, not noise.
+                      <span
+                        className="mt-0.5 shrink-0 text-orbital-cyan"
+                        aria-hidden="true"
+                      >
+                        →
+                      </span>
+                      Consistent line movement toward the road side over the
+                      past 36 hours — market structure shift, not momentum.
                     </li>
                     <li className="flex items-start gap-2">
-                      <span style={{ color: BRAND_COLORS.orbitalCyan, marginTop: 2 }} aria-hidden="true">→</span>
-                      The totals market has opened soft and drawn heavy early
-                      action — suggesting the opening number may have been set
-                      conservatively.
+                      <span
+                        className="mt-0.5 shrink-0 text-orbital-cyan"
+                        aria-hidden="true"
+                      >
+                        →
+                      </span>
+                      The totals market opened soft and drew heavy early action
+                      — suggesting the opening number was set conservatively.
                     </li>
                   </ul>
                 </div>
@@ -227,17 +252,28 @@ export default function SampleDeskPage() {
                   </p>
                   <ul className="space-y-2 text-sm leading-relaxed text-ink-300">
                     <li className="flex items-start gap-2">
-                      <span style={{ color: BRAND_COLORS.ionMagenta, marginTop: 2 }} aria-hidden="true">—</span>
-                      The &quot;hot streak&quot; narrative circulating in the sports
-                      media for the home side is based on a five-game window during
-                      a stretch where they faced four bottom-third defenses. The
-                      streak does not generalize.
+                      <span
+                        className="mt-0.5 shrink-0"
+                        style={{ color: BRAND_COLORS.ionMagenta }}
+                        aria-hidden="true"
+                      >
+                        —
+                      </span>
+                      The &quot;hot streak&quot; narrative for the home side is
+                      based on a five-game window against four bottom-third
+                      defenses. The streak does not generalize.
                     </li>
                     <li className="flex items-start gap-2">
-                      <span style={{ color: BRAND_COLORS.ionMagenta, marginTop: 2 }} aria-hidden="true">—</span>
-                      The starting time-of-possession stat being cited in preview
-                      coverage reflects a sample that includes garbage-time
-                      possessions. Strip those and the number halves.
+                      <span
+                        className="mt-0.5 shrink-0"
+                        style={{ color: BRAND_COLORS.ionMagenta }}
+                        aria-hidden="true"
+                      >
+                        —
+                      </span>
+                      The starting time-of-possession stat in preview coverage
+                      includes garbage-time possessions. Strip those and the
+                      number halves.
                     </li>
                   </ul>
                 </div>
@@ -250,19 +286,17 @@ export default function SampleDeskPage() {
               </p>
             </article>
 
-            {/* Section: Public Narrative vs Market Pressure */}
-            <article
-              className="rounded-2xl border p-7"
-              style={{
-                borderColor: `${BRAND_COLORS.orbitalCyan}1a`,
-                background: "rgba(8,6,20,0.5)",
-              }}
-            >
+            {/* ── 04: Public Narrative vs Market Pressure */}
+            <article className="surface-card gw-card-hover overflow-hidden p-7">
+              <div
+                aria-hidden="true"
+                className="mb-5 h-0.5 w-full rounded-full"
+                style={{
+                  background: `linear-gradient(90deg, ${BRAND_COLORS.orbitalCyan}55, transparent 70%)`,
+                }}
+              />
               <header className="mb-5">
-                <p
-                  className="font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
-                  style={{ color: BRAND_COLORS.orbitalCyan }}
-                >
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-orbital-cyan">
                   Public Narrative vs Market Pressure
                 </p>
                 <h2 className="mt-1 font-display text-xl text-white">
@@ -270,20 +304,20 @@ export default function SampleDeskPage() {
                 </h2>
               </header>
               <p className="mb-4 text-sm leading-relaxed text-ink-300">
-                The dominant media narrative entering tonight is about momentum:
-                a team that has won four of five and &quot;looks unstoppable.&quot; This
+                The dominant narrative entering tonight is momentum: a team that
+                has won four of five and &quot;looks unstoppable.&quot; This
                 framing is emotionally compelling and statistically thin. Markets
                 do not price momentum; they price current expected-value
-                probabilities anchored to the available information. A four-of-five
+                probabilities anchored to available information. A four-of-five
                 record does not move a closing line unless the underlying
                 performance metrics support it.
               </p>
               <p className="text-sm leading-relaxed text-ink-300">
                 What the market is actually doing: the spread on this game opened
                 at 4 and has settled at 3.5 toward the team everyone expects to
-                win. That half-point move against the grain of the public narrative
-                is the market communicating something. The Desk&apos;s read is that
-                the pressure is structural — not emotional — which is exactly the
+                win. That half-point move against the grain of public narrative
+                is the market communicating something. The Desk&apos;s read: the
+                pressure is structural — not emotional — which is exactly the
                 kind of gap between story and number worth paying attention to.
               </p>
               <p
@@ -295,39 +329,37 @@ export default function SampleDeskPage() {
             </article>
 
           </Stagger>
+        </WorldSection>
 
-          <SignalRule className="my-16" />
+        <SignalRule className="mx-auto max-w-5xl px-4" />
 
-          {/* CTA */}
-          <Reveal>
-            <div
-              className="rounded-2xl border p-8 text-center"
-              style={{
-                borderColor: `${BRAND_COLORS.orbitalCyan}22`,
-                background: `radial-gradient(ellipse 60% 80% at 50% 100%, ${BRAND_COLORS.orbitalCyan}08, transparent 70%)`,
-              }}
-            >
-              <p
-                className="font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
-                style={{ color: BRAND_COLORS.orbitalCyan }}
-              >
-                This is what Founding members receive
-              </p>
-              <h2
-                className="mt-3 font-display text-white"
-                style={{
-                  fontSize: "clamp(1.6rem, 3.5vw, 2.5rem)",
-                  lineHeight: 1.15,
-                }}
-              >
-                Read the Desk before the slate opens.
+        {/* ── CTA — nebula-deep section. */}
+        <section className="gw-nebula-deep relative isolate overflow-hidden px-4 py-24 sm:px-6 lg:px-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[60vh]"
+            style={{
+              background: `radial-gradient(ellipse 60% 80% at 50% 100%, ${BRAND_COLORS.orbitalCyan}14, transparent 70%)`,
+            }}
+          />
+          <div className="mx-auto max-w-3xl text-center">
+            <Reveal>
+              <span className="gw-chip-cyan">This is what Founding members receive</span>
+              <h2 className="mt-6 font-display text-display-lg font-semibold leading-[1.05] text-balance text-white">
+                Read the Desk before{" "}
+                <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
+                  the slate opens
+                </span>
+                .
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-ink-300">
-                Founding membership includes daily or near-daily Desk briefs in
-                this format, No-Bet Watch, Signal vs Noise, Market Mirage, and the
-                ability to submit one game per cycle. Founding price held for life.
+              <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-ink-300">
+                Founding membership includes daily Desk briefs in this format,
+                No-Bet Watch, Signal vs Noise, Market Mirage, and the ability to
+                submit one game per cycle. Founding price held for life.
               </p>
-              <div className="mt-7 flex flex-wrap justify-center gap-4">
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="mt-9 flex flex-wrap justify-center gap-4">
                 <Link href="/founding-desk" className="btn btn-primary">
                   Join the Founding Desk →
                 </Link>
@@ -346,10 +378,9 @@ export default function SampleDeskPage() {
                 </Link>
                 .
               </p>
-            </div>
-          </Reveal>
-
-        </div>
+            </Reveal>
+          </div>
+        </section>
       </main>
 
       <Footer />

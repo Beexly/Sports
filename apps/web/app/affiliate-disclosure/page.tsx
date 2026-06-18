@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
+import { RevenueHero } from "@/components/revenue/revenue-hero";
 import { BRAND_NAME, BRAND_COLORS, LEGAL_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -26,40 +27,39 @@ export default function AffiliateDisclosurePage() {
     >
       <Nav />
 
-      <main id="main-content" className="flex-1">
-        <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-          <Reveal>
-            <span
-              className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
-              style={{
-                color: BRAND_COLORS.orbitalCyan,
-                borderColor: `${BRAND_COLORS.orbitalCyan}30`,
-                backgroundColor: `${BRAND_COLORS.orbitalCyan}0d`,
-              }}
-            >
-              Legal · Compliance
-            </span>
-          </Reveal>
-          <Reveal delay={90}>
-            <h1
-              className="mt-5 font-display text-white"
-              style={{
-                fontSize: "clamp(1.8rem, 4vw, 3rem)",
-                lineHeight: 1.1,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              Affiliate &amp; Sponsorship Disclosure
-            </h1>
-          </Reveal>
-          <Reveal delay={140}>
-            <p className="mt-4 text-sm text-ink-500">
-              Last updated: June 2026. This page is updated whenever our
-              affiliate or sponsorship arrangements change.
-            </p>
-          </Reveal>
+      <main id="main-content" className="flex-1 overflow-hidden">
 
-          <div className="mt-12 flex flex-col gap-10">
+        {/* ── Hero — ice chrome tone. Legal page: understated but branded.
+            The headline is the document title; the chip signals compliance. */}
+        <RevenueHero
+          chip="Legal · Compliance"
+          chipTone="cyan"
+          headline={
+            <>
+              <span className="gw-chrome-ice">Affiliate &amp; Sponsorship</span>{" "}
+              <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
+                Disclosure.
+              </span>
+            </>
+          }
+          lede={
+            <>
+              No active affiliate relationships as of June 2026. Every material
+              connection is disclosed clearly, in plain language, at the point of
+              placement — not buried in fine print. This page is updated whenever
+              our arrangements change.
+            </>
+          }
+        >
+          <p className="mt-4 text-sm text-ink-500">
+            Last updated: June 2026.
+          </p>
+        </RevenueHero>
+
+        {/* ── Legal body — utilitarian prose; not over-decorated. */}
+        <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-10">
+
             {/* Section 1 — Who we are */}
             <Reveal>
               <section>
@@ -86,11 +86,7 @@ export default function AffiliateDisclosurePage() {
             {/* Section 2 — Current status */}
             <Reveal>
               <section
-                className="rounded-xl border p-6"
-                style={{
-                  borderColor: `${BRAND_COLORS.orbitalCyan}22`,
-                  backgroundColor: `${BRAND_COLORS.steelGray}40`,
-                }}
+                className="surface-card p-6"
               >
                 <h2 className="font-display text-lg font-semibold text-white">
                   2. Current affiliate and sponsorship status
@@ -173,11 +169,8 @@ export default function AffiliateDisclosurePage() {
             {/* Section 4 — Sportsbook / casino policy */}
             <Reveal>
               <section
-                className="rounded-xl border p-6"
-                style={{
-                  borderColor: `${BRAND_COLORS.ionMagenta}22`,
-                  backgroundColor: `${BRAND_COLORS.steelGray}40`,
-                }}
+                className="surface-card p-6"
+                style={{ borderColor: `${BRAND_COLORS.ionMagenta}22` }}
               >
                 <h2 className="font-display text-lg font-semibold text-white">
                   4. Sportsbook and casino affiliate policy
@@ -287,8 +280,7 @@ export default function AffiliateDisclosurePage() {
                     material connection correctly, contact us at{" "}
                     <a
                       href={`mailto:${LEGAL_EMAIL}`}
-                      className="font-mono underline underline-offset-4"
-                      style={{ color: BRAND_COLORS.orbitalCyan }}
+                      className="font-mono underline underline-offset-4 text-orbital-cyan transition-colors hover:text-white"
                     >
                       {LEGAL_EMAIL}
                     </a>
