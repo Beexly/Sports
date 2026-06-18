@@ -46,6 +46,9 @@ const nextConfig = {
   },
   images: {
     domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
+    // Serve modern formats (AVIF first, then WebP) for next/image — smaller
+    // hero/plate payloads now that the immersive stills render through it.
+    formats: ["image/avif", "image/webp"],
   },
   async headers() {
     return [

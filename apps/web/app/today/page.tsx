@@ -8,11 +8,22 @@ import { PersonalizedBriefing } from "@/components/cockpit/personalized-briefing
 import { buildBriefing } from "@/lib/cockpit/mission-control";
 import { BRAND_COLORS } from "@/lib/brand";
 
+const TODAY_TITLE = "Mission Control — What Matters Now";
+const TODAY_DESCRIPTION =
+  "One glance across the whole platform: breaking news, the scheme move re-pricing an offense, your roster's risk, the sharpest DFS and pick'em edges, and your CLV discipline — prioritized and actionable.";
+
 export const metadata: Metadata = {
-  title: "Mission Control — What Matters Now",
-  description:
-    "One glance across the whole platform: breaking news, the scheme move re-pricing an offense, your roster's risk, the sharpest DFS and pick'em edges, and your CLV discipline — prioritized and actionable.",
+  title: TODAY_TITLE,
+  description: TODAY_DESCRIPTION,
   alternates: { canonical: "/today" },
+  openGraph: {
+    title: TODAY_TITLE,
+    description: TODAY_DESCRIPTION,
+    url: "/today",
+    type: "website",
+    siteName: "Galaxy Sports Edge",
+  },
+  twitter: { card: "summary_large_image", title: TODAY_TITLE, description: TODAY_DESCRIPTION },
 };
 
 export default function TodayPage() {

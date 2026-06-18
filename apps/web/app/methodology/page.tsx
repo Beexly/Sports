@@ -10,11 +10,22 @@ import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { BRAND_COLORS } from "@/lib/brand";
 
+const METHODOLOGY_TITLE = "Methodology - Deterministic Scoring, Open Framework";
+const METHODOLOGY_DESCRIPTION =
+  "How Galaxy Sports Edge reads the board, scores the math, and gates the slate without publishing proprietary weights or constants.";
+
 export const metadata: Metadata = {
-  title: "Methodology - Deterministic Scoring, Open Framework",
-  description:
-    "How Galaxy Sports Edge reads the board, scores the math, and gates the slate without publishing proprietary weights or constants.",
+  title: METHODOLOGY_TITLE,
+  description: METHODOLOGY_DESCRIPTION,
   alternates: { canonical: "/methodology" },
+  openGraph: {
+    title: METHODOLOGY_TITLE,
+    description: METHODOLOGY_DESCRIPTION,
+    url: "/methodology",
+    type: "website",
+    siteName: "Galaxy Sports Edge",
+  },
+  twitter: { card: "summary_large_image", title: METHODOLOGY_TITLE, description: METHODOLOGY_DESCRIPTION },
 };
 
 const FACTORS = [

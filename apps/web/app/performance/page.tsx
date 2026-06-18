@@ -18,11 +18,22 @@ import {
 import type { PickType, PickTier } from "@sports/types";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
+const PERFORMANCE_TITLE = "Calibration Report — Settled-Pick Audit Trail";
+const PERFORMANCE_DESCRIPTION =
+  "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.";
+
 export const metadata: Metadata = {
-  title: "Calibration Report — Settled-Pick Audit Trail",
-  description:
-    "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
+  title: PERFORMANCE_TITLE,
+  description: PERFORMANCE_DESCRIPTION,
   alternates: { canonical: "/performance" },
+  openGraph: {
+    title: PERFORMANCE_TITLE,
+    description: PERFORMANCE_DESCRIPTION,
+    url: "/performance",
+    type: "website",
+    siteName: "Galaxy Sports Edge",
+  },
+  twitter: { card: "summary_large_image", title: PERFORMANCE_TITLE, description: PERFORMANCE_DESCRIPTION },
 };
 
 // Types
