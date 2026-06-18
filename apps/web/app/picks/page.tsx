@@ -10,11 +10,22 @@ import type { PublicPick, DailySlate } from "@sports/types";
 import Link from "next/link";
 import { headers } from "next/headers";
 
+const PICKS_TITLE = "Today's Board - Sports Picks With Reasoning Attached";
+const PICKS_DESCRIPTION =
+  "Live sports signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater — just the reasoning.";
+
 export const metadata: Metadata = {
-  title: "Today's Board - Sports Picks With Reasoning Attached",
-  description:
-    "Live sports signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater — just the reasoning.",
+  title: PICKS_TITLE,
+  description: PICKS_DESCRIPTION,
   alternates: { canonical: "/picks" },
+  openGraph: {
+    title: PICKS_TITLE,
+    description: PICKS_DESCRIPTION,
+    url: "/picks",
+    type: "website",
+    siteName: "Galaxy Sports Edge",
+  },
+  twitter: { card: "summary_large_image", title: PICKS_TITLE, description: PICKS_DESCRIPTION },
 };
 
 // ─────────────────────────────────────────────

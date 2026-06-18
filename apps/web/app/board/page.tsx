@@ -8,11 +8,22 @@ import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
+const BOARD_TITLE = "Today's Board - Galaxy Sports Edge";
+const BOARD_DESCRIPTION =
+  "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.";
+
 export const metadata: Metadata = {
-  title: "Today's Board - Galaxy Sports Edge",
-  description:
-    "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.",
+  title: BOARD_TITLE,
+  description: BOARD_DESCRIPTION,
   alternates: { canonical: "/board" },
+  openGraph: {
+    title: BOARD_TITLE,
+    description: BOARD_DESCRIPTION,
+    url: "/board",
+    type: "website",
+    siteName: "Galaxy Sports Edge",
+  },
+  twitter: { card: "summary_large_image", title: BOARD_TITLE, description: BOARD_DESCRIPTION },
 };
 
 // Reads live board state per request; never statically prerendered.

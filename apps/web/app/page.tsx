@@ -35,11 +35,22 @@ import { loadTrendWorkbench } from "@/lib/trends/workbench";
 
 export const dynamic = "force-dynamic";
 
+const HOME_TITLE = "A Sports Intelligence Operating System";
+const HOME_DESCRIPTION =
+  "Galaxy Sports Edge + Galaxy Sports Network: the market's noise turned into structured signal — public board state, no-bet gating, decision autopsies, media intelligence, and receipts for all of it.";
+
 export const metadata: Metadata = {
-  title: "A Sports Intelligence Operating System",
-  description:
-    "Galaxy Sports Edge + Galaxy Sports Network: the market's noise turned into structured signal — public board state, no-bet gating, decision autopsies, media intelligence, and receipts for all of it.",
+  title: HOME_TITLE,
+  description: HOME_DESCRIPTION,
   alternates: { canonical: "/" },
+  openGraph: {
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    url: "/",
+    type: "website",
+    siteName: "Galaxy Sports Edge",
+  },
+  twitter: { card: "summary_large_image", title: HOME_TITLE, description: HOME_DESCRIPTION },
 };
 
 function timeLabel(value: string): string {
