@@ -24,6 +24,7 @@
     "db:migrate": "npm run db:migrate --workspace=packages/db",
     "db:seed": "npm run db:seed --workspace=packages/db",
     "db:studio": "npm run db:studio --workspace=packages/db",
+    "diagnose:edge": "node scripts/diagnose-edge.mjs",
     "workers:refresh": "node workers/data-refresh/dist/index.js",
     "workers:picks": "node workers/pick-generation/dist/index.js",
     "workers:content": "node workers/content-publishing/dist/index.js",
