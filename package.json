@@ -67,7 +67,9 @@
     "statking:product": "python3 scripts/statking_generate_product_depth.py",
     "statking:autonomous": "python3 scripts/statking_autonomous_build.py",
     "statking:activation-roi": "python3 scripts/statking_activation_roi.py",
-    "statking:proof": "python3 scripts/statking_build_proof_report.py"
+    "statking:proof": "python3 scripts/statking_build_proof_report.py",
+    "reality:export": "npx tsx scripts/reality/export-picks.mjs",
+    "reality:diagnostics": "npx tsx scripts/reality/diagnostics.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
