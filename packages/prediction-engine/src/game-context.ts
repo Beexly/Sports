@@ -10,13 +10,14 @@
 //   - Cross-market consistency (spread vs ML agreement)
 //   - Uncertainty penalty (conflicting signal detection)
 //   - Data quality score with confidence penalty
+//   - Media context (Airwave APPROVED claims, weight 0 / inert — J9)
 //
 // All signals are normalized to the same units as other
 // scoring components so they can be added/subtracted cleanly.
 // ============================================================
 
 // Import shared types from @sports/types — single source of truth
-import type { FactorDetail, GameContextInput, AtsFormBucket } from "@sports/types";
+import type { FactorDetail, GameContextInput, AtsFormBucket, ApprovedMediaClaimInput } from "@sports/types";
 import { WEIGHTS } from "./constants.js";
 import { clamp } from "./scoring.js";
 
@@ -40,8 +41,38 @@ export interface GameContextScores {
   crossMarketScore: number;         // –3 to +4 (spread/ML agreement)
   // v5 additions
   scheduleStressScore: number;      // –5 to +5 (schedule density fatigue)
+  // J9 — Airwave media context (inert: weight 0, never priced into confidence)
+  mediaContextScore: number;        // directional signal for glass box only; always 0 in confidence sum
   factors: FactorDetail[];
 }
+
+// ============================================================
+// Airwave media context input (J9)
+//
+// An ApprovedMediaClaimInput is a ClaimCandidate with operator_status === "APPROVED"
+// that has been linked to the game being scored. The prediction engine consumes
+// a pre-filtered slice — only APPROVED claims, never PENDING/DRAFT/REJECTED.
+//
+// LINKAGE REALITY (2026-06-18): ClaimCandidate carries no game-id FK. Claims
+// reference games only via the free-text `entity` + `entity_type` fields.
+// Until a structured game-id link is built in the ingestion layer and persisted
+// (e.g. a `gameId: string` FK added to the claim DB model and populated by a
+// matching step), this field will always be an empty array and the factor will
+// always be NEUTRAL / score 0. The factor is still surfaced in the glass box so
+// the shape is ready when the data arrives.
+//
+// TO ACTIVATE (non-zero weight, non-neutral signal):
+//   1. Add `gameId: string` FK to the claim persistence model (Prisma).
+//   2. Wire a matching step in the ingestion layer that resolves claim.entity
+//      (entity_type === "game") → Game.id and writes the FK.
+//   3. Pass the linked claims into GameContextInput.approvedMediaClaims.
+//   4. Bump MODEL_VERSION and add a docs/calibration-proposals entry before
+//      changing `weight` from 0 to any non-zero value — NEVER an automatic flip.
+// ============================================================
+
+// ApprovedMediaClaimInput is defined in @sports/types (single source of truth).
+// Re-export it from this module so consumers can import from the engine package.
+export type { ApprovedMediaClaimInput };
 
 // ============================================================
 // Line movement signal
@@ -589,6 +620,120 @@ export function computeUncertaintyPenalty(
 }
 
 // ============================================================
+// Media context signal — Airwave APPROVED claims (J9)
+// INERT: weight 0, priced: false. Never contributes to confidence sum.
+//
+// Activating this factor (giving it a non-zero weight) requires:
+//   a) Approved-claim → game-id linkage data to exist (see ApprovedMediaClaimInput
+//      JSDoc for the exact fields + migration steps needed).
+//   b) A MODEL_VERSION bump.
+//   c) A docs/calibration-proposals entry proving directional accuracy vs outcomes.
+// These are hard gates, not soft preferences. Do NOT flip weight to non-zero
+// without completing all three steps.
+// ============================================================
+
+/**
+ * Computes a directional media-context signal from APPROVED Airwave claims.
+ *
+ * The returned score is a raw directional number (–5 to +5) for glass-box
+ * display. The returned FactorDetail carries **weight: 0** unconditionally —
+ * the signal is surfaced but NEVER added to the confidence sum.
+ *
+ * When no approved claims are linked to this game (the current reality as of
+ * 2026-06-18), returns score 0 / factor with impact "neutral". This is the
+ * honest default: we do not fabricate a signal from absent data.
+ *
+ * @param claims    Pre-filtered APPROVED claims linked to this game.
+ *                  Pass [] when no approved-claim → game linkage exists yet.
+ * @param pickedSide  The side being scored (HOME/AWAY/OVER/UNDER).
+ */
+export function computeMediaContextScore(
+  claims: ApprovedMediaClaimInput[],
+  pickedSide: "HOME" | "AWAY" | "OVER" | "UNDER"
+): { score: number; factor: FactorDetail } {
+  // NEUTRAL always — totals picks have no home/away direction to align claims to.
+  // Totals claims could be future work; scope here is directional side picks only.
+  if (pickedSide === "OVER" || pickedSide === "UNDER" || claims.length === 0) {
+    return {
+      score: 0,
+      factor: {
+        name: "Media Context",
+        impact: "neutral",
+        description:
+          claims.length === 0
+            ? "No approved media claims linked to this game — awaiting game-id linkage (see ApprovedMediaClaimInput JSDoc)"
+            : "Media context not directional for totals picks",
+        weight: 0, // INERT — never changes without MODEL_VERSION bump
+      },
+    };
+  }
+
+  // Each claim contributes a directional vote weighted by accountabilityIndex
+  // and confidence language. The sum is then mapped to a –5 to +5 range.
+  // Because weight is always 0, this arithmetic only affects the glass-box
+  // description — it NEVER enters the confidence integer.
+  const confidenceMultiplier = (lang: ApprovedMediaClaimInput["confidenceLanguage"]): number => {
+    switch (lang) {
+      case "EMPHATIC": return 1.0;
+      case "LEAN":     return 0.6;
+      case "HEDGED":   return 0.3;
+      default:         return 0.4; // UNKNOWN — conservative default
+    }
+  };
+
+  let weightedSum = 0;
+  let totalWeight = 0;
+
+  for (const claim of claims) {
+    if (claim.direction === "NEUTRAL") continue;
+
+    const accountability = clamp(claim.accountabilityIndex, 0, 100) / 100; // 0–1
+    const langMult = confidenceMultiplier(claim.confidenceLanguage);
+    const claimWeight = accountability * langMult;
+
+    // BACKS = aligns with HOME pick; FADES = fades home (aligns with AWAY pick)
+    const vote = pickedSide === "HOME"
+      ? (claim.direction === "BACKS" ? 1 : -1)
+      : (claim.direction === "FADES" ? 1 : -1); // FADES home = backs away
+
+    weightedSum += vote * claimWeight;
+    totalWeight += claimWeight;
+  }
+
+  if (totalWeight === 0) {
+    return {
+      score: 0,
+      factor: {
+        name: "Media Context",
+        impact: "neutral",
+        description: `${claims.length} approved claim(s) — all directionally neutral`,
+        weight: 0,
+      },
+    };
+  }
+
+  // Normalize to –5…+5 (saturates when all top-accountability emphatic claims agree)
+  const normalizedSignal = weightedSum / totalWeight; // –1 to +1
+  const rawScore = clamp(Math.round(normalizedSignal * 5), -5, 5);
+
+  const direction = rawScore > 0 ? "supporting" : rawScore < 0 ? "opposing" : "neutral";
+  const countDirectional = claims.filter((c) => c.direction !== "NEUTRAL").length;
+  const description =
+    `${countDirectional} approved media claim(s) ${direction} picked side ` +
+    `(accountability-weighted; inert — weight 0 until activation gates met)`;
+
+  return {
+    score: rawScore,
+    factor: {
+      name: "Media Context",
+      impact: rawScore > 0 ? "positive" : rawScore < 0 ? "negative" : "neutral",
+      description,
+      weight: 0, // INERT — activating requires MODEL_VERSION bump + calibration-proposals entry
+    },
+  };
+}
+
+// ============================================================
 // Compute all game context scores at once
 // ============================================================
 
@@ -707,6 +852,17 @@ export function computeGameContext(
   const dataQualityPenalty = dq.penalty;
   if (dq.factor) factors.push(dq.factor);
 
+  // 10. Media context — J9 (INERT: weight 0, never added to confidence sum).
+  // The factor is always surfaced in the glass box (even when neutral / no claims).
+  // Do NOT add mediaContextScore to any confidence arithmetic — it is display-only.
+  // Activating it (non-zero weight) requires MODEL_VERSION bump + calibration-proposals entry.
+  const mc = computeMediaContextScore(
+    context.approvedMediaClaims ?? [],
+    pickedSide
+  );
+  const mediaContextScore = mc.score;
+  factors.push(mc.factor); // always push — weight is 0, impact may be neutral
+
   return {
     lineMovementScore,
     restAdvantageScore,
@@ -720,6 +876,8 @@ export function computeGameContext(
     crossMarketScore,
     // v5
     scheduleStressScore,
+    // J9 — inert, display-only
+    mediaContextScore,
     factors,
   };
 }

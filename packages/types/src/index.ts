@@ -324,6 +324,41 @@ export interface GameContextInput {
   // are async I/O) so the PURE, synchronous scorer can run the edge engine
   // against them. Home/away perspective. Absent → scorer is unchanged.
   independentFairValues?: IndependentMarketFairValue[];
+  // J9 — Airwave APPROVED media claims linked to this game (inert, weight 0).
+  // Pre-filtered to operator_status === "APPROVED" only; PENDING/DRAFT/REJECTED
+  // claims must never appear here. Pass [] or omit when no game-id linkage exists.
+  // See ApprovedMediaClaimInput for the exact data needed to activate the signal.
+  approvedMediaClaims?: ApprovedMediaClaimInput[];
+}
+
+/**
+ * A single APPROVED Airwave media claim linked to a game being scored (J9).
+ *
+ * Only `operator_status === "APPROVED"` claims may appear here.
+ * The prediction engine factor is weight 0 / inert until activation gates are met:
+ *   1. game-id FK added to claim persistence (Prisma) and populated by ingestion.
+ *   2. MODEL_VERSION bump.
+ *   3. docs/calibration-proposals entry proving directional accuracy vs outcomes.
+ */
+export interface ApprovedMediaClaimInput {
+  /** Stable claim id (ClaimCandidate.id). */
+  id: string;
+  /**
+   * Direction relative to the game's home/away framing.
+   * BACKS = pundit backs the home side; FADES = pundit backs the away side;
+   * NEUTRAL = no directional lean.
+   */
+  direction: "BACKS" | "FADES" | "NEUTRAL";
+  /**
+   * Pundit's historical accountability score (0–100).
+   * From PunditScorecard.accountabilityIndex. Pass 50 when no scorecard exists.
+   */
+  accountabilityIndex: number;
+  /**
+   * Confidence language from the original claim broadcast.
+   * EMPHATIC claims carry more signal weight than LEAN or HEDGED.
+   */
+  confidenceLanguage: "EMPHATIC" | "LEAN" | "HEDGED" | "UNKNOWN";
 }
 
 /**

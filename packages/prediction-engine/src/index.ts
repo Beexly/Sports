@@ -19,8 +19,16 @@ export {
   computeUncertaintyPenalty,
   // v5
   computeScheduleStressScore,
+  // J9 — Airwave media context (inert, weight 0, display-only)
+  computeMediaContextScore,
 } from "./game-context.js";
-export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
+export type {
+  GameContextInput,
+  GameContextScores,
+  AtsFormBucket,
+  // J9
+  ApprovedMediaClaimInput,
+} from "./game-context.js";
 export { calculatePickResult } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
 // Closing-Line Value — sharp-grade credibility metric (pure; not yet surfaced publicly)
