@@ -8,6 +8,7 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { BRAND_COLORS } from "@/lib/brand";
 import { loadSummary, loadKingScorecard } from "@/lib/statking/product";
 import { STATUS_STYLE, CAPABILITY_COLUMNS, type StatusKey } from "@/lib/intelligence/capabilities";
+import { ConsensusConstellationLazy } from "@/components/hero/consensus-constellation-lazy";
 
 export const metadata: Metadata = {
   title: "Intelligence Stack — How Galaxy Sports Edge Works",
@@ -230,10 +231,15 @@ export default function StackPage() {
       <Atmosphere />
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* ── Hero ── */}
         <section className="relative isolate overflow-hidden px-4 pb-16 pt-24 sm:px-6 lg:px-8">
           <GeneratedPlate assetId="engine-core" className="-z-20 opacity-40" />
+          {/* Living galaxy backdrop — between the plate (-z-20) and the radial
+              scrim/content. Decorative, aria-hidden, lazy + reduced-motion safe. */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-[15] opacity-50">
+            <ConsensusConstellationLazy />
+          </div>
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem]"

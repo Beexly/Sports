@@ -35,6 +35,8 @@ import { loadTrendWorkbench } from "@/lib/trends/workbench";
 import { loadSummary, loadActiveMetricManifest } from "@/lib/statking/product";
 import { SignalPipeline } from "@/components/world/signal-pipeline";
 import type { PipelineSummary } from "@/components/world/signal-pipeline";
+import { IntelligenceLayer } from "@/components/home/intelligence-layer";
+import { SignatureGrid, AmbientGlow } from "@/components/motion/signature-grid";
 
 export const dynamic = "force-dynamic";
 
@@ -619,6 +621,16 @@ export default async function HomePage(): Promise<JSX.Element> {
         >
           <SignalPipeline summary={pipelineSummary} />
         </WorldSection>
+
+        {/* ── 11 · THE INTELLIGENCE LAYER ───────────────────────────────
+            The front door to every surface of the decision-OS. A subtle
+            radar grid + drifting ambient glow sit behind the cards as an
+            atmosphere (aria-hidden, reduced-motion safe via globals). */}
+        <div className="relative isolate overflow-hidden">
+          <SignatureGrid className="-z-10" opacity={0.1} rotate />
+          <AmbientGlow className="-z-10" />
+          <IntelligenceLayer />
+        </div>
 
         <MethodologySection />
 

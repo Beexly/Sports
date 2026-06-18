@@ -16,6 +16,7 @@ import { AgentWarRoom } from "@/components/war-room/agent-war-room";
 import { ILLUSTRATIVE_BRIEF } from "@/lib/courtroom/courtroom";
 import { BRAND_COLORS, CLOSING_LINE } from "@/lib/brand";
 import { CapabilityMatrix } from "@/components/intelligence/capability-matrix";
+import { AirwaveSignalLayer } from "@/components/world/airwave-signal-layer";
 
 const TICKER_PHRASES = [
   "Math you can read",
@@ -175,7 +176,7 @@ export default function IntelligencePage() {
       <Atmosphere />
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero — the interactive engine itself, full-screen intro */}
         <section className="relative isolate min-h-screen overflow-hidden">
           <GeneratedPlate assetId="intelligence-deepsignal" className="-z-20 opacity-60" />
@@ -465,6 +466,33 @@ export default function IntelligencePage() {
             </Reveal>
             <Reveal delay={140} className="mt-10">
               <DecisionAutopsy />
+            </Reveal>
+          </div>
+        </section>
+
+        {/* The Airwave Signal Layer — media noise audited into evidence */}
+        <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="airwave-heading">
+          <div className="mx-auto max-w-5xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.softUltraviolet }}>
+                Media made accountable
+              </p>
+            </Reveal>
+            <Reveal delay={90}>
+              <h2 id="airwave-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
+                From on-air noise to a checkable claim.
+              </h2>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-5 max-w-2xl text-ink-300">
+                The same engine that prosecutes a market signal can prosecute a take. A
+                permissioned transcript becomes a neutral paraphrase, gets tagged, passes a
+                human review gate, and only then enters the engine as a checkable hypothesis —
+                never auto-published.
+              </p>
+            </Reveal>
+            <Reveal delay={140} className="mt-10">
+              <AirwaveSignalLayer />
             </Reveal>
           </div>
         </section>

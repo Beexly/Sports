@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { toneClass, toneRowClass, type SignalTone } from "@/lib/intelligence/colors";
+import { toneRowClass, type SignalTone } from "@/lib/intelligence/colors";
 
 /**
  * Generic, typed, dependency-light data table for the LIGHT "paper" data
@@ -364,20 +364,4 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
 function defaultCell(value: unknown): ReactNode {
   if (value == null) return <span className="text-ink-2">—</span>;
   return String(value);
-}
-
-/**
- * Convenience: a span that colors a cell value by signal tone. Lets callers
- * keep tone logic in `lib/intelligence/colors` instead of inlining classes.
- */
-export function ToneCell({
-  tone,
-  children,
-  bold = true,
-}: {
-  tone: SignalTone;
-  children: ReactNode;
-  bold?: boolean;
-}): JSX.Element {
-  return <span className={`${toneClass(tone)} ${bold ? "font-semibold" : ""}`}>{children}</span>;
 }
