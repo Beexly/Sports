@@ -31,6 +31,7 @@
  */
 
 import { NextResponse } from "next/server";
+import { cronAuthError } from "@/lib/cron/authorize";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
 import { refreshOdds } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -40,17 +41,8 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 300; // Vercel hobby/pro cron caps at 5 min
 
 export async function GET(request: Request) {
-  const authHeader = request.headers.get("authorization") ?? "";
-  const expected = process.env["CRON_SECRET"];
-  if (!expected) {
-    return NextResponse.json(
-      { error: "CRON_SECRET not configured" },
-      { status: 500 }
-    );
-  }
-  if (authHeader !== `Bearer ${expected}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = cronAuthError(request);
+  if (denied) return denied;
 
   const apiKey = process.env["THE_ODDS_API_KEY"];
   if (!apiKey) {

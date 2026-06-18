@@ -13,6 +13,7 @@
  * Auth: Bearer <CRON_SECRET>, same as the other cron routes.
  */
 import { NextResponse } from "next/server";
+import { cronAuthError } from "@/lib/cron/authorize";
 import { ingestPlayerWeeklyStats, currentNflSeason } from "@/lib/ingestion/player-stats";
 import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
@@ -22,13 +23,8 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 300; // Vercel cron caps at 5 min
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const expected = process.env["CRON_SECRET"];
-  if (!expected) {
-    return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 500 });
-  }
-  if ((request.headers.get("authorization") ?? "") !== `Bearer ${expected}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = cronAuthError(request);
+  if (denied) return denied;
 
   const seasonParam = new URL(request.url).searchParams.get("season");
   const season = seasonParam ? Number(seasonParam) : currentNflSeason();

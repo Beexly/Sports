@@ -8,6 +8,7 @@
  *   GET /api/cron/backfill-player-data?from=1999&to=2025
  */
 import { NextResponse } from "next/server";
+import { cronAuthError } from "@/lib/cron/authorize";
 import { backfillPlayerData, DATASET_MIN_SEASON } from "@/lib/ingestion/backfill-player-data";
 import { currentNflSeason } from "@/lib/ingestion/player-stats";
 
@@ -17,13 +18,8 @@ export const maxDuration = 300; // Vercel cron caps at 5 min
 const MAX_SEASONS_PER_CALL = 4; // bound wall-time under the cron cap
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const expected = process.env["CRON_SECRET"];
-  if (!expected) {
-    return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 500 });
-  }
-  if ((request.headers.get("authorization") ?? "") !== `Bearer ${expected}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = cronAuthError(request);
+  if (denied) return denied;
 
   const url = new URL(request.url);
   const maxSeason = currentNflSeason() + 1;
