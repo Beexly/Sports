@@ -20,9 +20,11 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
     <Shell title="Player Database">
       <StatusRibbon status="fixture" label="Player snapshot updated every sync cycle" />
 
-      {/* Player Knowledge Graph — radial node-link visualization */}
+      {/* Player Knowledge Graph — radial node-link visualization.
+          Desktop-only: the in-SVG labels are too small to read on phones, and
+          the full ranked list below is the mobile-friendly equivalent. */}
       <div
-        className="overflow-hidden rounded-xl border p-5"
+        className="hidden overflow-hidden rounded-xl border p-5 sm:block"
         style={{ borderColor: "rgba(255,180,84,0.18)", background: "rgba(255,180,84,0.03)" }}
       >
         <SectionHeader title="Intelligence Graph" eyebrow="Top 8 by GPI" />
