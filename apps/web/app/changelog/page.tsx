@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME } from "@/lib/brand";
+import { Reveal } from "@/components/motion/reveal";
+import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 
 /**
  * /changelog - public transparency feed.
@@ -25,20 +26,12 @@ type Entry = {
   body: string;
 };
 
-const TYPE_LABEL: Record<Entry["type"], string> = {
-  launch: "Launch",
-  ship: "Ship",
-  gate: "Gate flip",
-  calibration: "Calibration",
-  voice: "Voice / copy",
-};
-
-const TYPE_COLOR: Record<Entry["type"], string> = {
-  launch: "text-plasma-glow border-plasma-glow",
-  ship: "text-accent-300 border-accent-700",
-  gate: "text-ultraviolet border-ultraviolet/40",
-  calibration: "text-ultraviolet border-ultraviolet/40",
-  voice: "text-ink-200 border-ink-700",
+const TYPE_META: Record<Entry["type"], { label: string; color: string; bg: string }> = {
+  launch:      { label: "Launch",      color: BRAND_COLORS.ionMagenta,    bg: `${BRAND_COLORS.ionMagenta}14` },
+  ship:        { label: "Ship",        color: BRAND_COLORS.orbitalCyan,   bg: `${BRAND_COLORS.orbitalCyan}14` },
+  gate:        { label: "Gate flip",   color: BRAND_COLORS.softUltraviolet, bg: `${BRAND_COLORS.softUltraviolet}14` },
+  calibration: { label: "Calibration", color: BRAND_COLORS.softUltraviolet, bg: `${BRAND_COLORS.softUltraviolet}14` },
+  voice:       { label: "Voice",       color: "#9AA3B2",                  bg: "rgba(154,163,178,0.10)" },
 };
 
 const ENTRIES: ReadonlyArray<Entry> = [
@@ -93,71 +86,138 @@ export default function ChangelogPage() {
   const grouped = groupByDate(ENTRIES);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
 
       <main className="flex-1">
-        <section className="px-4 py-22 sm:px-6 lg:px-8">
+        {/* Cinematic hero */}
+        <section className="relative isolate overflow-hidden px-4 pb-14 pt-24 sm:px-6 lg:px-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[24rem]"
+            style={{
+              background: `radial-gradient(50% 70% at 50% 0%, ${BRAND_COLORS.softUltraviolet}12, transparent 65%)`,
+            }}
+          />
           <div className="mx-auto max-w-3xl">
-            <p className="eyebrow">Changelog</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              What changed, when, and why.
-            </h1>
-            <p className="mt-5 max-w-2xl text-lg text-ink-300">
-              Every model version, every gate flip, every calibration update
-              logged publicly. {BRAND_NAME} runs on transparency, which means
-              the velocity of the product has to be transparent too.
-            </p>
+            <Reveal>
+              <span
+                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
+                style={{
+                  color: BRAND_COLORS.softUltraviolet,
+                  borderColor: `${BRAND_COLORS.softUltraviolet}30`,
+                  backgroundColor: `${BRAND_COLORS.softUltraviolet}0d`,
+                }}
+              >
+                Changelog
+              </span>
+            </Reveal>
+            <Reveal delay={90}>
+              <h1
+                className="mt-5 font-display text-balance text-white"
+                style={{
+                  fontSize: "clamp(2.2rem, 6vw, 4rem)",
+                  lineHeight: 1.0,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                What changed,{" "}
+                <span
+                  style={{
+                    background: `linear-gradient(90deg, ${BRAND_COLORS.softUltraviolet} 0%, ${BRAND_COLORS.orbitalCyan} 100%)`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  when, and why.
+                </span>
+              </h1>
+            </Reveal>
+            <Reveal delay={170}>
+              <p className="mt-5 text-lg leading-8 text-ink-300">
+                Every model version, every gate flip, every calibration update
+                logged publicly. {BRAND_NAME} runs on transparency, which means
+                the velocity of the product has to be transparent too.
+              </p>
+            </Reveal>
           </div>
         </section>
 
-        <section className="border-t border-ink-800/60 px-4 py-16 sm:px-6 lg:px-8">
+        {/* Timeline */}
+        <section className="px-4 pb-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <ol className="flex flex-col gap-12">
-              {grouped.map(([date, entries]) => (
-                <li key={date} className="grid gap-6 md:grid-cols-[140px_1fr]">
-                  <div className="md:sticky md:top-24 md:self-start">
-                    <p className="font-mono text-xs uppercase tracking-widest text-ink-500">
-                      {formatDate(date)}
-                    </p>
-                  </div>
+            {/* Timeline vertical line */}
+            <div className="relative">
+              <div
+                className="absolute left-0 top-0 hidden h-full w-px md:block"
+                style={{ background: `linear-gradient(180deg, ${BRAND_COLORS.softUltraviolet}30, transparent 90%)`, marginLeft: "138px" }}
+                aria-hidden="true"
+              />
 
-                  <div className="flex flex-col gap-6">
-                    {entries.map((entry) => (
-                      <article
-                        key={entry.title}
-                        className="surface-card flex flex-col gap-3 p-6"
+              <ol className="flex flex-col gap-12">
+                {grouped.map(([date, entries]) => (
+                  <li key={date} className="grid gap-6 md:grid-cols-[140px_1fr]">
+                    <div className="md:sticky md:top-24 md:self-start">
+                      <p
+                        className="font-mono text-xs uppercase tracking-widest"
+                        style={{ color: BRAND_COLORS.orbitalCyan }}
                       >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`rounded-full border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest ${TYPE_COLOR[entry.type]}`}
-                          >
-                            {TYPE_LABEL[entry.type]}
-                          </span>
-                        </div>
-                        <h2 className="font-display text-xl font-semibold text-white">
-                          {entry.title}
-                        </h2>
-                        <p className="text-sm leading-relaxed text-ink-300">
-                          {entry.body}
-                        </p>
-                      </article>
-                    ))}
-                  </div>
-                </li>
-              ))}
-            </ol>
+                        {formatDate(date)}
+                      </p>
+                    </div>
 
-            <p className="mt-12 border-t border-ink-800/60 pt-6 text-center text-xs text-ink-500">
-              Updates ship weekly.{" "}
-              <Link
-                href="/auth/signin"
-                className="text-accent-300 underline-offset-4 hover:underline"
+                    <div className="flex flex-col gap-4">
+                      {entries.map((entry) => {
+                        const meta = TYPE_META[entry.type];
+                        return (
+                          <article
+                            key={entry.title}
+                            className="surface-card flex flex-col gap-3 overflow-hidden p-6"
+                          >
+                            {/* Type chip */}
+                            <div>
+                              <span
+                                className="rounded-full border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em]"
+                                style={{
+                                  color: meta.color,
+                                  background: meta.bg,
+                                  borderColor: `${meta.color}30`,
+                                }}
+                              >
+                                {meta.label}
+                              </span>
+                            </div>
+                            <h2 className="font-display text-xl font-semibold text-white">
+                              {entry.title}
+                            </h2>
+                            <p className="text-sm leading-7 text-ink-300">
+                              {entry.body}
+                            </p>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <Reveal delay={120}>
+              <p
+                className="mt-12 border-t pt-6 text-center text-xs text-ink-500"
+                style={{ borderColor: "rgba(255,255,255,0.07)" }}
               >
-                Create a free account
-              </Link>{" "}
-              and you&apos;ll get the next one in your inbox.
-            </p>
+                Updates ship weekly.{" "}
+                <Link
+                  href="/auth/signin"
+                  className="underline-offset-4 hover:underline"
+                  style={{ color: BRAND_COLORS.orbitalCyan }}
+                >
+                  Create a free account
+                </Link>{" "}
+                and you&apos;ll get the next one in your inbox.
+              </p>
+            </Reveal>
           </div>
         </section>
       </main>

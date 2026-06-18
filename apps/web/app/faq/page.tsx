@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME } from "@/lib/brand";
+import { Reveal } from "@/components/motion/reveal";
+import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 
 /**
  * /faq — Standalone FAQ landing page with FAQPage JSON-LD.
@@ -25,12 +26,14 @@ export const metadata: Metadata = {
 
 type FaqGroup = {
   heading: string;
+  accent: string;
   items: ReadonlyArray<{ q: string; a: string }>;
 };
 
 const GROUPS: ReadonlyArray<FaqGroup> = [
   {
     heading: "The product",
+    accent: BRAND_COLORS.orbitalCyan,
     items: [
       {
         q: "What is Galaxy Sports Edge?",
@@ -38,7 +41,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "How is this different from a tout service?",
-        a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail — consensus, line movement, market depth, freshness, intelligence layers — and holds back a public win-rate until enough canonical settled signals exist to support one honestly. The page reads \"Collecting\" until that's true. Patience over noise.",
+        a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail — consensus, line movement, market depth, freshness, public lean, intelligence layers — and holds back a public win-rate until enough canonical settled signals exist to support one honestly. The page reads \"Collecting\" until that's true. Patience over noise.",
       },
       {
         q: "Which sports are covered?",
@@ -52,6 +55,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
   },
   {
     heading: "Trust & transparency",
+    accent: BRAND_COLORS.softUltraviolet,
     items: [
       {
         q: "Why is the Performance page empty?",
@@ -77,6 +81,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
   },
   {
     heading: "Pricing & billing",
+    accent: BRAND_COLORS.ionMagenta,
     items: [
       {
         q: "What does Free get?",
@@ -102,6 +107,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
   },
   {
     heading: "Account & data",
+    accent: BRAND_COLORS.orbitalCyan,
     items: [
       {
         q: "How do I sign up?",
@@ -123,6 +129,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
   },
   {
     heading: "Responsibility",
+    accent: "#FFB454",
     items: [
       {
         q: "Is sports betting risky?",
@@ -158,7 +165,7 @@ const faqJsonLd = {
 
 export default function FaqPage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
 
       <script
@@ -167,91 +174,158 @@ export default function FaqPage() {
       />
 
       <main className="flex-1">
-        <section className="px-4 py-22 sm:px-6 lg:px-8">
+        {/* Cinematic hero */}
+        <section className="relative isolate overflow-hidden px-4 pb-14 pt-24 sm:px-6 lg:px-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem]"
+            style={{
+              background: `radial-gradient(50% 70% at 50% 0%, ${BRAND_COLORS.softUltraviolet}12, transparent 65%), radial-gradient(30% 40% at 80% 10%, ${BRAND_COLORS.orbitalCyan}0c, transparent 60%)`,
+            }}
+          />
           <div className="mx-auto max-w-3xl">
-            <p className="eyebrow">FAQ</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-              The questions that come up most.
-            </h1>
-            <p className="mt-5 max-w-2xl text-lg text-ink-300">
-              Plain answers about how {BRAND_NAME} works, what&apos;s gated,
-              what&apos;s open, and how this is different from the rest of the
-              category. If your question isn&apos;t here, write to{" "}
-              <a
-                href="mailto:hq@galaxysportsedge.com"
-                className="font-mono text-accent-300 underline-offset-4 hover:underline"
+            <Reveal>
+              <span
+                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
+                style={{
+                  color: BRAND_COLORS.orbitalCyan,
+                  borderColor: `${BRAND_COLORS.orbitalCyan}30`,
+                  backgroundColor: `${BRAND_COLORS.orbitalCyan}0d`,
+                }}
               >
-                hq@galaxysportsedge.com
-              </a>{" "}
-              — it&apos;ll get added.
-            </p>
+                FAQ
+              </span>
+            </Reveal>
+            <Reveal delay={90}>
+              <h1
+                className="mt-5 font-display text-balance text-white"
+                style={{
+                  fontSize: "clamp(2.2rem, 6vw, 4rem)",
+                  lineHeight: 1.0,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                The questions that{" "}
+                <span
+                  style={{
+                    background: `linear-gradient(90deg, ${BRAND_COLORS.orbitalCyan} 0%, ${BRAND_COLORS.softUltraviolet} 100%)`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  come up most.
+                </span>
+              </h1>
+            </Reveal>
+            <Reveal delay={170}>
+              <p className="mt-5 text-lg leading-8 text-ink-300">
+                Plain answers about how {BRAND_NAME} works, what&apos;s gated,
+                what&apos;s open, and how this is different from the rest of the
+                category. If your question isn&apos;t here, write to{" "}
+                <a
+                  href="mailto:hq@galaxysportsedge.com"
+                  className="font-mono underline-offset-4 hover:underline"
+                  style={{ color: BRAND_COLORS.orbitalCyan }}
+                >
+                  hq@galaxysportsedge.com
+                </a>{" "}
+                — it&apos;ll get added.
+              </p>
+            </Reveal>
           </div>
         </section>
 
-        {GROUPS.map((group) => (
+        {/* FAQ groups */}
+        {GROUPS.map((group, gi) => (
           <section
             key={group.heading}
-            className="border-t border-ink-800/60 px-4 py-16 sm:px-6 lg:px-8"
+            className="px-4 py-10 sm:px-6 lg:px-8"
           >
             <div className="mx-auto max-w-3xl">
-              <h2 className="font-display text-display-lg text-balance text-white">
-                {group.heading}
-              </h2>
-              <div className="mt-8 divide-y divide-ink-800/60 rounded-2xl border border-ink-800 bg-ink-950/40">
-                {group.items.map((item) => (
-                  <details
-                    key={item.q}
-                    className="group px-5 py-4 [&_summary::-webkit-details-marker]:hidden"
+              <Reveal>
+                <div className="mb-5 flex items-center gap-3">
+                  <div
+                    className="h-0.5 w-8 rounded-full"
+                    style={{ backgroundColor: group.accent }}
+                    aria-hidden="true"
+                  />
+                  <h2
+                    className="font-display text-2xl font-semibold text-white"
                   >
-                    <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-ink-100">
-                      <span>{item.q}</span>
-                      <span
-                        aria-hidden="true"
-                        className="text-ink-500 transition-transform group-open:rotate-45"
-                      >
-                        +
-                      </span>
-                    </summary>
-                    <p className="mt-3 text-sm leading-relaxed text-ink-300">
-                      {item.a}
-                    </p>
-                  </details>
-                ))}
-              </div>
+                    {group.heading}
+                  </h2>
+                </div>
+              </Reveal>
+              <Reveal delay={60}>
+                <div
+                  className="overflow-hidden rounded-2xl border"
+                  style={{ borderColor: `${group.accent}18`, background: `${group.accent}04` }}
+                >
+                  {group.items.map((item, i) => (
+                    <details
+                      key={item.q}
+                      className="group border-b px-5 py-4 last:border-b-0 [&_summary::-webkit-details-marker]:hidden"
+                      style={{ borderColor: `${group.accent}12` }}
+                    >
+                      <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-white">
+                        <span className="leading-6">{item.q}</span>
+                        <span
+                          aria-hidden="true"
+                          className="shrink-0 text-lg font-light transition-transform duration-200 group-open:rotate-45"
+                          style={{ color: group.accent }}
+                        >
+                          +
+                        </span>
+                      </summary>
+                      <p className="mt-3 pb-2 text-sm leading-7 text-ink-300">
+                        {item.a}
+                      </p>
+                    </details>
+                  ))}
+                </div>
+              </Reveal>
             </div>
           </section>
         ))}
 
         {/* CTA */}
-        <section className="border-t border-ink-800/60 bg-ink-1000/80 px-4 py-22 sm:px-6 lg:px-8">
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-            <h2 className="font-display text-display-lg text-white">
-              Still have a question?
-            </h2>
-            <p className="text-ink-300">
-              Reach out at{" "}
-              <a
-                href="mailto:hq@galaxysportsedge.com"
-                className="font-mono text-accent-300 underline-offset-4 hover:underline"
+        <section className="px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <Reveal>
+              <div
+                className="flex flex-col items-center gap-5 rounded-2xl border p-10 text-center"
+                style={{
+                  borderColor: `${BRAND_COLORS.orbitalCyan}20`,
+                  background: `radial-gradient(ellipse 80% 60% at 50% 100%, ${BRAND_COLORS.orbitalCyan}08, transparent 70%)`,
+                }}
               >
-                hq@galaxysportsedge.com
-              </a>
-              . Every reply is direct from the team.
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/methodology"
-                className="btn-primary px-7 py-3.5 text-base"
-              >
-                Read the methodology →
-              </Link>
-              <Link
-                href="/pricing"
-                className="btn-secondary px-7 py-3.5 text-base"
-              >
-                See pricing
-              </Link>
-            </div>
+                <h2
+                  className="font-display text-white"
+                  style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", lineHeight: 1.1, letterSpacing: "-0.01em" }}
+                >
+                  Still have a question?
+                </h2>
+                <p className="text-ink-300">
+                  Reach out at{" "}
+                  <a
+                    href="mailto:hq@galaxysportsedge.com"
+                    className="font-mono underline-offset-4 hover:underline"
+                    style={{ color: BRAND_COLORS.orbitalCyan }}
+                  >
+                    hq@galaxysportsedge.com
+                  </a>
+                  . Every reply is direct from the team.
+                </p>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Link href="/methodology" className="btn btn-primary">
+                    Read the methodology →
+                  </Link>
+                  <Link href="/pricing" className="btn btn-ghost">
+                    See pricing
+                  </Link>
+                </div>
+              </div>
+            </Reveal>
           </div>
         </section>
       </main>

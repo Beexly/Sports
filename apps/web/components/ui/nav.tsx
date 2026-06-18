@@ -111,19 +111,34 @@ function NavMenu({ label, href, groups }: { label: string; href: string; groups:
         {label}
         <span aria-hidden className="text-[9px] opacity-70 transition-transform duration-150 group-hover:rotate-180">▼</span>
       </Link>
-      <div className="invisible absolute left-0 top-full z-50 pt-2 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-        <div className="surface-card flex w-[20rem] max-w-[90vw] flex-col gap-2 p-2">
+      <div className="invisible absolute left-0 top-full z-50 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+        <div
+          className="flex w-[20rem] max-w-[90vw] flex-col gap-1.5 overflow-hidden rounded-2xl p-2"
+          style={{
+            background: "rgba(8,6,20,0.88)",
+            backdropFilter: "blur(20px) saturate(160%)",
+            border: "1px solid rgba(0,229,255,0.12)",
+            boxShadow: "0 0 0 1px rgba(255,255,255,0.04), 0 16px 40px -8px rgba(0,0,0,0.7), 0 0 24px -4px rgba(0,229,255,0.06)",
+          }}
+        >
           {groups.map((group, gi) => (
             <div key={group.heading ?? `g${gi}`} className="flex flex-col gap-0.5">
               {group.heading ? (
-                <p className="px-2 pb-0.5 pt-1 text-[10px] font-semibold uppercase tracking-wider text-ink-200">
+                <p
+                  className="px-2 pb-0.5 pt-1.5 font-mono text-[9px] uppercase tracking-[0.2em]"
+                  style={{ color: "rgba(0,229,255,0.6)" }}
+                >
                   {group.heading}
                 </p>
               ) : null}
               {group.items.map((item) => (
-                <Link key={item.href} href={item.href} className="block rounded-md px-2 py-1.5 hover:bg-white/5">
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="group/item block rounded-xl px-2.5 py-2 transition-colors hover:bg-white/5"
+                >
                   <span className="block text-sm font-medium text-white">{item.label}</span>
-                  <span className="block text-xs text-ink-200">{item.desc}</span>
+                  <span className="block text-xs leading-4 text-ink-400 group-hover/item:text-ink-300">{item.desc}</span>
                 </Link>
               ))}
             </div>
