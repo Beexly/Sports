@@ -45,25 +45,24 @@ describe("blog content generator", () => {
     expect(fetchImpl).not.toHaveBeenCalled();
   });
 
-  it("records successful blog generation calls", async () => {
+  it("records successful blog generation calls with the REAL provider/model used", async () => {
     process.env["ANTHROPIC_API_KEY"] = "test-key";
+    // Drafting now routes through the multi-provider free pool — the keyless
+    // provider answers first, in OpenAI-compatible format. The ledger must record
+    // the real provider's model id ("openai"), not a hardcoded Claude id.
+    const blogJson = JSON.stringify({
+      title: "NBA Picks for May 22",
+      excerpt: "A measured preview.",
+      content: "Full analysis. Please gamble responsibly and only bet what you can afford to lose.",
+      seoTitle: "NBA Picks May 22",
+      seoDescription: "Measured NBA pick analysis.",
+      tags: ["NBA", "picks", "analysis"],
+    });
     const fetchImpl = vi.fn(async () =>
       new Response(
         JSON.stringify({
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                title: "NBA Picks for May 22",
-                excerpt: "A measured preview.",
-                content: "Full analysis. Please gamble responsibly and only bet what you can afford to lose.",
-                seoTitle: "NBA Picks May 22",
-                seoDescription: "Measured NBA pick analysis.",
-                tags: ["NBA", "picks", "analysis"],
-              }),
-            },
-          ],
-          usage: { input_tokens: 1000, output_tokens: 500 },
+          choices: [{ message: { content: blogJson } }],
+          usage: { prompt_tokens: 1000, completion_tokens: 500 },
         }),
         { status: 200 }
       )
@@ -71,7 +70,7 @@ describe("blog content generator", () => {
     const create = vi.fn().mockResolvedValue({ id: "record-1" });
 
     const post = await generateBlogPost(input, {
-      fetchImpl,
+      fetchImpl: fetchImpl as unknown as typeof fetch,
       monthlySpendUsd: 0,
       budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.BLOG_GENERATION,
       recordUsage: true,
@@ -88,7 +87,9 @@ describe("blog content generator", () => {
     expect(create).toHaveBeenCalledOnce();
     expect(create.mock.calls[0]?.[0].data).toMatchObject({
       surface: "BLOG_GENERATION",
-      modelName: "claude-sonnet-4-6",
+      // The keyless pool provider's model id — proves the ledger records what
+      // actually answered (no fabricated/hardcoded model).
+      modelName: "openai",
       inputTokens: 1000,
       outputTokens: 500,
       estimatedCostUsd: 0.0105,
@@ -102,23 +103,19 @@ describe("blog content generator", () => {
 
   it("records policy failures after Claude returns unsafe blog JSON", async () => {
     process.env["ANTHROPIC_API_KEY"] = "test-key";
+    const unsafeJson = JSON.stringify({
+      title: "NBA Picks for May 22",
+      excerpt: "A measured preview.",
+      content: "Full analysis without the required footer.",
+      seoTitle: "NBA Picks May 22",
+      seoDescription: "Measured NBA pick analysis.",
+      tags: ["NBA", "picks", "analysis"],
+    });
     const fetchImpl = vi.fn(async () =>
       new Response(
         JSON.stringify({
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify({
-                title: "NBA Picks for May 22",
-                excerpt: "A measured preview.",
-                content: "Full analysis without the required footer.",
-                seoTitle: "NBA Picks May 22",
-                seoDescription: "Measured NBA pick analysis.",
-                tags: ["NBA", "picks", "analysis"],
-              }),
-            },
-          ],
-          usage: { input_tokens: 1000, output_tokens: 250 },
+          choices: [{ message: { content: unsafeJson } }],
+          usage: { prompt_tokens: 1000, completion_tokens: 250 },
         }),
         { status: 200 }
       )
@@ -127,7 +124,7 @@ describe("blog content generator", () => {
 
     await expect(
       generateBlogPost(input, {
-        fetchImpl,
+        fetchImpl: fetchImpl as unknown as typeof fetch,
         monthlySpendUsd: 0,
         budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.BLOG_GENERATION,
         recordUsage: true,

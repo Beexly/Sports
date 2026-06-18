@@ -14,7 +14,10 @@ import {
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
-import { callClaudeMessages, ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { generateContentMessages, isFreePoolAvailable } from "@/lib/claude-api/free-lane";
+import { OpenAICompatibleError } from "@/lib/claude-api/providers/openai-compatible";
+import { PoolExhaustedError } from "@/lib/claude-api/provider-pool";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -60,9 +63,12 @@ export async function generateBlogPost(
   input: ContentGenerationInput,
   options: BlogGenerationOptions = {}
 ): Promise<GeneratedContent> {
-  const apiKey = process.env["ANTHROPIC_API_KEY"];
-  if (!apiKey) {
-    throw new Error("ANTHROPIC_API_KEY is not configured");
+  // The multi-provider free pool (keyless Pollinations + any configured
+  // keyed-free providers) means drafting works with ZERO paid key. We only need
+  // SOME provider: the free pool OR an Anthropic fallback key.
+  const apiKey = process.env["ANTHROPIC_API_KEY"] ?? "";
+  if (!isFreePoolAvailable() && !apiKey) {
+    throw new Error("No LLM provider configured (free pool empty and no ANTHROPIC_API_KEY)");
   }
 
   const dateDisplay = format(new Date(input.date), "MMMM d, yyyy");
@@ -126,10 +132,11 @@ Respond ONLY with valid JSON in this exact format:
 
   let parsed: ParsedBlogGeneration;
   try {
-    const result = await callClaudeMessages({
+    const result = await generateContentMessages({
       apiKey,
       fetchImpl: options.fetchImpl,
       model: modelName,
+      surface: "content",
       maxTokens: 2000,
       system: systemPrompt,
       user: userPrompt,
@@ -173,9 +180,10 @@ Respond ONLY with valid JSON in this exact format:
       errorKind: null,
     });
   } catch (error) {
-    if (error instanceof ClaudeMessagesError) {
+    if (error instanceof ClaudeMessagesError || error instanceof OpenAICompatibleError) {
       await maybeRecordBlogUsage({
         options,
+        // Real provider/model that failed — honest ledger, never a placeholder.
         modelName: error.modelName,
         inputTokens: 0,
         outputTokens: 0,
@@ -183,7 +191,18 @@ Respond ONLY with valid JSON in this exact format:
         success: false,
         errorKind: `HTTP_${error.status}`,
       });
+    } else if (error instanceof PoolExhaustedError) {
+      await maybeRecordBlogUsage({
+        options,
+        modelName,
+        inputTokens: 0,
+        outputTokens: 0,
+        durationMs: 0,
+        success: false,
+        errorKind: "POOL_EXHAUSTED",
+      });
     }
+    // Honest failure — never fabricate a draft. The caller surfaces the error.
     throw error;
   }
 

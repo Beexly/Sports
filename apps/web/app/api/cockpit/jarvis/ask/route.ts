@@ -19,8 +19,9 @@ import { auth } from "@/lib/auth";
 import { buildJarvisOperatingAssessment } from "@/lib/jarvis/jarvis-operating-assessment";
 import { loadJarvisAssessment } from "@/lib/cockpit/jarvis-data";
 import { loadDailyCommand } from "@/lib/cockpit/daily-command/loader";
-import { callClaudeMessages, ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { pickModelForSurface } from "@/lib/claude-api/model-router";
+import { generateContentMessages, isFreePoolAvailable } from "@/lib/claude-api/free-lane";
+import { PoolExhaustedError } from "@/lib/claude-api/provider-pool";
 import {
   estimateClaudeCostUsd,
   evaluateClaudeBudgetUsage,
@@ -209,12 +210,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const question = body.question.trim().slice(0, MAX_QUESTION_CHARS);
   const history = sanitizeHistory(body.history);
 
-  const apiKey = process.env["ANTHROPIC_API_KEY"];
-  if (!apiKey || apiKey.trim() === "") {
-    // Honest degrade — not a hard error. Chat just can't reach the model.
+  // Provider availability: the keyless free pool means we can answer with ZERO
+  // paid key. Only degrade if NO provider at all is reachable (free pool empty
+  // AND no Anthropic key) — which the keyless default makes practically never.
+  const hasAnthropic = Boolean(process.env["ANTHROPIC_API_KEY"]?.trim());
+  if (!isFreePoolAvailable() && !hasAnthropic) {
+    // Honest degrade — not a hard error. Chat just can't reach any model.
     return NextResponse.json({
       answer:
-        "I can't reach the model right now — ANTHROPIC_API_KEY is not configured, so live chat is paused. The cockpit panels still show the real operating state.",
+        "I can't reach any model right now — no LLM provider is configured, so live chat is paused. The cockpit panels still show the real operating state.",
       modelName: pickModelForSurface(MODEL_SURFACE),
       groundedOn: [],
     });
@@ -244,9 +248,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const { context, groundedOn } = await buildGrounding();
-  const modelName = pickModelForSurface(MODEL_SURFACE);
+  // Fallback label only — the ledger records the REAL provider/model that
+  // answered (see `result.modelName` below), never this placeholder.
+  const fallbackModelName = pickModelForSurface(MODEL_SURFACE);
 
   const ledger = async (args: {
+    modelName: string;
     inputTokens: number;
     outputTokens: number;
     durationMs: number;
@@ -256,7 +263,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     try {
       await recordClaudeApiCall({
         surface: COST_SURFACE,
-        modelName,
+        modelName: args.modelName,
         inputTokens: args.inputTokens,
         outputTokens: args.outputTokens,
         estimatedCostUsd: estimateClaudeCostUsd(args.inputTokens, args.outputTokens),
@@ -273,8 +280,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   };
 
   try {
-    const result = await callClaudeMessages({
-      apiKey,
+    const result = await generateContentMessages({
+      // apiKey is the Anthropic fallback key (pool falls back to it last); the
+      // keyless free pool answers first and needs no key.
+      apiKey: process.env["ANTHROPIC_API_KEY"] ?? "",
       surface: MODEL_SURFACE,
       maxTokens: 600,
       temperature: 0.2,
@@ -283,6 +292,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     });
 
     await ledger({
+      // Record what ACTUALLY answered (real provider/model), not a placeholder.
+      modelName: result.modelName,
       inputTokens: result.inputTokens,
       outputTokens: result.outputTokens,
       durationMs: result.durationMs,
@@ -296,20 +307,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       groundedOn,
     });
   } catch (error) {
-    if (error instanceof ClaudeMessagesError) {
+    if (error instanceof PoolExhaustedError) {
       await ledger({
+        modelName: fallbackModelName,
         inputTokens: 0,
         outputTokens: 0,
-        durationMs: error.durationMs,
+        durationMs: 0,
         success: false,
-        errorKind: `HTTP_${error.status}`,
+        errorKind: "POOL_EXHAUSTED",
       });
     }
     // Honest degrade rather than a raw 500 — chat is advisory and non-critical.
     return NextResponse.json({
       answer:
         "I hit an error reaching the model and couldn't answer that. Nothing was changed. Try again in a moment — the cockpit panels still show the real operating state.",
-      modelName,
+      modelName: fallbackModelName,
       groundedOn,
       errored: true,
     });
