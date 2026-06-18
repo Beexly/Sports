@@ -115,7 +115,44 @@ export default function Page() {
 
       <SectionHeader eyebrow="Top players by" title="Galaxy Player Index" action={{ label: "Full rankings →", href: "/stats/players" }} />
       <p className="-mt-3 mb-4 max-w-2xl text-sm text-ink-400">{glossaryEntry("gpi")?.plain}</p>
-      <BarChart items={top5.map(p => ({ label: p.name, value: p.galaxy_player_index, max: maxGpi }))} />
+      <div className="space-y-2">
+        {top5.map((p, i) => {
+          const pct = maxGpi > 0 ? Math.min(100, Math.max(0, (p.galaxy_player_index / maxGpi) * 100)) : 0;
+          const rankColor = i === 0 ? "#00E5FF" : i === 1 ? "#FFB454" : "#7A5CFF";
+          return (
+            <Link
+              key={p.player_id}
+              href={`/stats/player/${p.player_id}`}
+              className="flex items-center gap-4 rounded-lg border border-white/[0.06] bg-white/[0.03] px-4 py-3 transition-all duration-200 hover:border-orbital-cyan/40 hover:-translate-y-px hover:shadow-[0_0_20px_rgba(0,229,255,0.08)]"
+            >
+              <span
+                className="w-8 shrink-0 font-display text-3xl font-bold tabular-nums"
+                style={{ color: rankColor }}
+              >
+                {i + 1}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-white">{p.name}</p>
+                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-500">
+                  {p.team} · {p.position}
+                </p>
+                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/[0.04]">
+                  <div
+                    className="h-full rounded-full transition-all duration-700"
+                    style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${rankColor}, ${rankColor}88)`, boxShadow: `0 0 8px ${rankColor}44` }}
+                  />
+                </div>
+              </div>
+              <span
+                className="shrink-0 font-mono text-xl font-bold tabular-nums"
+                style={{ color: rankColor }}
+              >
+                {p.galaxy_player_index}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
 
       <SectionHeader title="All Intelligence Surfaces" />
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
