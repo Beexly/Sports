@@ -50,6 +50,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
       `radial-gradient(70% 80% at 50% 0%, rgba(255,45,214,0.10), transparent 70%), ` +
       `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/no-bet-stillness.webp",
+    motion: "/immersive/no-bet-stillness.mp4",
   },
   "today-mission": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
@@ -89,6 +90,7 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
   "performance-grid": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 78% 20%, rgba(139,92,246,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/performance-grid.webp",
+    motion: "/immersive/performance-grid.mp4",
   },
   "proof-crystal": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(122,92,255,0.14), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
@@ -103,6 +105,12 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
   "accountability-steady": {
     gradient: `radial-gradient(55% 80% at 50% 0%, rgba(139,92,246,0.11), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/accountability-steady.webp",
+    motion: "/immersive/accountability-steady.mp4",
+  },
+  "engine-core": {
+    gradient: `radial-gradient(55% 75% at 50% 0%, rgba(0,229,255,0.12), transparent 65%), radial-gradient(40% 55% at 80% 25%, rgba(122,92,255,0.10), transparent 60%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    still: "/immersive/engine-core.webp",
+    motion: "/immersive/engine-core.mp4",
   },
   "players-constellation": {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 22% 78%, rgba(255,45,214,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
