@@ -117,6 +117,27 @@ export default async function CockpitOverview() {
         />
       </div>
 
+      {/* ── Watch-live banner — the flagship motion surface ─────────────── */}
+      <Link
+        href="/cockpit/live"
+        prefetch={false}
+        className="group flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-accent-500/30 bg-accent-950/20 px-5 py-3 transition-colors hover:border-accent-400/50 hover:bg-accent-950/30"
+      >
+        <span className="flex items-center gap-3">
+          <span className="relative flex h-2.5 w-2.5" aria-hidden>
+            <span className="absolute inline-flex h-full w-full animate-live-pulse rounded-full bg-accent-400/70" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-400" />
+          </span>
+          <span className="text-sm font-semibold text-white">▶ Watch the operation live</span>
+          <span className="hidden text-[11px] text-ink-400 sm:inline">
+            Jarvis, gauges, agents — moving, not a wall of text
+          </span>
+        </span>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-accent-300 group-hover:text-accent-200">
+          Open Live Command Center →
+        </span>
+      </Link>
+
       {/* ── MISSION CONTROL HEADER ─────────────────────────────────────── */}
       <header
         className={[
