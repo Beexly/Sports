@@ -61,7 +61,7 @@ export default async function ObservatoryPage() {
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden">
           {plate && (

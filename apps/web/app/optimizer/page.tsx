@@ -24,7 +24,7 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
   return (
     <div className="min-h-screen bg-white/[0.03] text-ion">
       <Nav />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
         <section className="flex flex-col gap-2">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">The Optimizer</p>
           <h1 className="font-display text-3xl font-semibold leading-tight text-white sm:text-4xl">

@@ -159,7 +159,7 @@ export default async function ProofOfRecordPage() {
         </div>
       </section>
 
-      <main className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
 
           {/* ── How it works ── */}

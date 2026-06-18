@@ -37,7 +37,7 @@ export function StakingCalculator() {
           <span>Kelly fraction</span>
           <span className="font-mono text-white">{Math.round(frac * 100)}% {frac === 1 ? "(full — high variance)" : frac <= 0.25 ? "(conservative)" : ""}</span>
         </div>
-        <input type="range" min={0.1} max={1} step={0.05} value={frac} onChange={(e) => setFrac(Number(e.target.value))} className="mt-1 w-full accent-cyan-400" />
+        <input aria-label="Kelly fraction" type="range" min={0.1} max={1} step={0.05} value={frac} onChange={(e) => setFrac(Number(e.target.value))} className="mt-1 w-full accent-cyan-400" />
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">

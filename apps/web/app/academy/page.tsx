@@ -47,7 +47,7 @@ export default function AcademyPage() {
       <Atmosphere />
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
           <GeneratedPlate assetId="academy-path" className="-z-20 opacity-60" />
@@ -84,22 +84,24 @@ export default function AcademyPage() {
 
             {/* wing map */}
             <Reveal delay={240}>
-              <div className="mt-8 grid gap-3 sm:grid-cols-4">
+              <ul className="mt-8 grid gap-3 sm:grid-cols-4">
                 {WINGS.map((w) => (
-                  <HoloTilt key={w.id} className="h-full">
-                    <a
-                      href={`#${w.id}`}
-                      className="group block h-full rounded-xl border p-4"
-                      style={{ borderColor: `${w.hex}33`, background: `radial-gradient(100% 100% at 50% 0%, ${w.hex}0d, transparent 75%)` }}
-                    >
-                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em]" style={{ color: w.hex }}>
-                        {w.label}
-                      </p>
-                      <p className="mt-1.5 text-xs leading-relaxed text-ink-300">{w.desc}</p>
-                    </a>
-                  </HoloTilt>
+                  <li key={w.id}>
+                    <HoloTilt className="h-full">
+                      <a
+                        href={`#${w.id}`}
+                        className="group block h-full rounded-xl border p-4"
+                        style={{ borderColor: `${w.hex}33`, background: `radial-gradient(100% 100% at 50% 0%, ${w.hex}0d, transparent 75%)` }}
+                      >
+                        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em]" style={{ color: w.hex }}>
+                          {w.label}
+                        </p>
+                        <p className="mt-1.5 text-xs leading-relaxed text-ink-300">{w.desc}</p>
+                      </a>
+                    </HoloTilt>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </Reveal>
           </div>
         </section>

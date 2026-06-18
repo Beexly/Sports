@@ -19,12 +19,12 @@ export default function PerformanceError({
     <div className="flex min-h-screen flex-col items-center justify-center bg-obsidian px-6 py-16">
       <div className="w-full max-w-md rounded-2xl border border-alert/40 bg-alert/5 p-8 text-center">
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-alert/30 bg-alert/10">
-          <svg className="h-5 w-5 text-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <svg aria-hidden="true" className="h-5 w-5 text-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.5h4.5L10 6l4 12 2.5-4.5H21" />
           </svg>
         </div>
         <h2 className="text-lg font-semibold text-white">Calibration report unavailable</h2>
-        <p className="mt-2 text-sm text-ink-400">
+        <p className="mt-2 text-sm text-ink-300">
           The performance data couldn't be loaded. Your pick history is safe — this is a rendering issue, not a data loss.
         </p>
         {error.digest && (

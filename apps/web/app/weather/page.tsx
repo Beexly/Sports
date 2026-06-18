@@ -26,7 +26,7 @@ export default async function WeatherPage(): Promise<JSX.Element> {
   return (
     <div className="min-h-screen bg-white/[0.03] text-ion">
       <Nav />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <section className="grid gap-8 border-b border-white/[0.08] pb-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">Game weather</p>

@@ -92,7 +92,7 @@ export default function ChangelogPage() {
       <Atmosphere />
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Cinematic hero */}
         <section className="relative isolate overflow-hidden px-4 pb-14 pt-24 sm:px-6 lg:px-8">
           <GeneratedPlate assetId="board-command" className="-z-20 opacity-35" />

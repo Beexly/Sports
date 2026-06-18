@@ -108,7 +108,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
         </div>
       </section>
 
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         {dbUnreachable && (
           <div
             className="flex flex-col gap-2 px-4 py-3 text-sm text-ink-300 sm:flex-row sm:items-center"

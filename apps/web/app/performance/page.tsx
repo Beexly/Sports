@@ -131,7 +131,7 @@ export default async function PerformancePage() {
 
     return (
       <PageChrome>
-        <main className="flex-1 px-4 py-24 sm:px-6 lg:px-8">
+        <main id="main-content" className="flex-1 px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <h1 className="sr-only">Performance · Calibration Report</h1>
 
@@ -259,7 +259,7 @@ export default async function PerformancePage() {
 
   return (
     <PageChrome>
-      <main className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
 
           {/* Hero */}

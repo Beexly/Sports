@@ -116,7 +116,7 @@ export default async function JournalEntryPage({
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-obsidian">
+      <main id="main-content" className="min-h-screen bg-obsidian">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
           <Link href="/journal" className="text-sm text-ink-500 transition-colors hover:text-ink-300">
             Back to Model Journal

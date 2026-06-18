@@ -72,7 +72,7 @@ function EnvironmentCard() {
     <div className="surface-card p-5">
       <div className="flex items-center justify-between gap-3">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">Performance Environment Score</p>
-        <select value={team} onChange={(e) => setTeam(e.target.value)} className="rounded-md border bg-transparent px-2 py-1 text-xs text-white" style={{ borderColor: BRAND_COLORS.steelGray }}>
+        <select aria-label="Team" value={team} onChange={(e) => setTeam(e.target.value)} className="rounded-md border bg-transparent px-2 py-1 text-xs text-white" style={{ borderColor: BRAND_COLORS.steelGray }}>
           {TEAMS.map((t) => <option key={t} value={t} className="bg-white/[0.03]">{t}</option>)}
         </select>
       </div>

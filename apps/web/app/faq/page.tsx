@@ -173,7 +173,7 @@ export default function FaqPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Cinematic hero */}
         <section className="relative isolate overflow-hidden px-4 pb-14 pt-24 sm:px-6 lg:px-8">
           <div

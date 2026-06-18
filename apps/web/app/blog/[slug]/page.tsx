@@ -95,7 +95,7 @@ export default async function BlogPostPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
       />
       <Nav />
-      <main className="min-h-screen bg-obsidian">
+      <main id="main-content" className="min-h-screen bg-obsidian">
         <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6">
           {/* Back link */}
           <Link href="/blog" className="text-ink-500 hover:text-ink-300 text-sm transition-colors mb-8 inline-flex items-center gap-1">

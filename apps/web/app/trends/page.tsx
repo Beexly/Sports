@@ -68,7 +68,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
         />
         <GeneratedPlate assetId="trends-field" className="absolute inset-0 -z-10 opacity-10" />
         <Nav />
-        <main className="flex-1 mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-24 sm:px-6 lg:px-8">
+        <main id="main-content" className="flex-1 mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-24 sm:px-6 lg:px-8">
           <Reveal>
             <span
               className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]"
@@ -142,7 +142,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
       <GeneratedPlate assetId="trends-field" className="absolute inset-0 -z-10 opacity-10" />
       <Nav />
 
-      <main className="flex-1 mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-8 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1 mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-8 sm:px-6 lg:px-8">
 
         {/* Hero */}
         <section className="grid gap-8 pb-10 pt-16 lg:grid-cols-[1fr_0.72fr] lg:items-end"

@@ -228,7 +228,7 @@ export default function PricingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(offersJsonLd) }}
       />
 
-      <main className="relative flex-1 overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
+      <main id="main-content" className="relative flex-1 overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
         <ShootingStars />
         <div
           aria-hidden="true"

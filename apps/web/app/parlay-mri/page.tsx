@@ -26,7 +26,7 @@ export default async function ParlayMriPage() {
       <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
         <Atmosphere />
         <Nav />
-        <main className="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-28 sm:px-6">
+        <main id="main-content" className="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-28 sm:px-6">
           <div className="text-center">
             <p className="eyebrow justify-center" style={{ color: BRAND_COLORS.ionMagenta }}>
               Parlay MRI
@@ -51,7 +51,7 @@ export default async function ParlayMriPage() {
       <Atmosphere />
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
           {plate && (
