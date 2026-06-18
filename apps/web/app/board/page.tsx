@@ -111,9 +111,9 @@ export default async function BoardPage(): Promise<JSX.Element> {
         </section>
 
         <section className="grid gap-4 lg:grid-cols-3">
-          <BoardLane title="Scoring Now" rows={state.scoringNow} empty="No games are currently scoring." />
-          <BoardLane title="Published Today" rows={state.publishedToday} empty="No picks have cleared today." />
-          <BoardLane title="Gated Today" rows={state.gatedTodayRows} empty="No passed games logged yet." />
+          <BoardLane title="Scoring Now" rows={state.scoringNow} empty="No games are currently scoring." variant="scoring" />
+          <BoardLane title="Published Today" rows={state.publishedToday} empty="No picks have cleared today." variant="published" />
+          <BoardLane title="Gated Today" rows={state.gatedTodayRows} empty="No passed games logged yet." variant="gated" />
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
@@ -155,46 +155,74 @@ export default async function BoardPage(): Promise<JSX.Element> {
   );
 }
 
+type LaneVariant = "scoring" | "published" | "gated";
+
+const LANE_STYLES: Record<LaneVariant, { accent: string; border: string; dot: string; label: string }> = {
+  scoring:   { accent: "text-ion-blue",  border: "border-ion-blue/20",  dot: "bg-ion-blue animate-live-pulse", label: "text-ion-blue" },
+  published: { accent: "text-verify",    border: "border-verify/20",    dot: "bg-verify",                      label: "text-verify" },
+  gated:     { accent: "text-plasma",    border: "border-plasma/20",    dot: "bg-plasma",                      label: "text-plasma" },
+};
+
 function StateTile({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="min-h-16 border border-titanium bg-carbon/60 px-3 py-2">
+    <div className="min-h-16 rounded-lg border border-titanium bg-carbon/60 px-3 py-2.5 transition-colors hover:border-ion-blue/30">
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</p>
-      <p className="mt-1 break-words text-lg font-semibold text-white">{value}</p>
+      <p className="mt-1 break-words text-lg font-bold tabular-nums text-white">{value}</p>
     </div>
   );
 }
 
-function BoardLane({ title, rows, empty }: { title: string; rows: BoardStateRow[]; empty: string }): JSX.Element {
+function BoardLane({
+  title,
+  rows,
+  empty,
+  variant,
+}: {
+  title: string;
+  rows: BoardStateRow[];
+  empty: string;
+  variant: LaneVariant;
+}): JSX.Element {
+  const s = LANE_STYLES[variant];
   return (
-    <section className="border border-titanium bg-carbon/45 p-4">
-      <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-blue">{title}</h2>
-      <div className="mt-4 flex flex-col gap-3">
-        {rows.length > 0 ? rows.map((row) => <BoardRowItem key={row.id} row={row} />) : (
-          <p className="text-sm text-ion-3">{empty}</p>
+    <section className={`rounded-xl border ${s.border} bg-carbon/45 p-4 transition-shadow hover:shadow-[0_0_20px_rgba(0,0,0,0.4)]`}>
+      <div className="mb-4 flex items-center gap-2">
+        <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} aria-hidden="true" />
+        <h2 className={`font-mono text-[10px] uppercase tracking-[0.2em] ${s.label}`}>
+          {title}
+        </h2>
+        <span className={`ml-auto font-mono text-xs tabular-nums ${s.accent}`}>{rows.length}</span>
+      </div>
+      <div className="flex flex-col gap-2.5">
+        {rows.length > 0 ? rows.map((row) => <BoardRowItem key={row.id} row={row} variant={variant} />) : (
+          <p className="py-4 text-center text-xs text-ion-3">{empty}</p>
         )}
       </div>
     </section>
   );
 }
 
-function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
+function BoardRowItem({ row, variant }: { row: BoardStateRow; variant: LaneVariant }): JSX.Element {
+  const s = LANE_STYLES[variant];
   return (
-    <article className="border border-titanium bg-obsidian/55 p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="font-semibold text-white">{row.matchup}</h3>
-          <p className="mt-1 text-xs text-ion-3">{row.sport} / {row.market}</p>
+    <article className={`rounded-lg border border-titanium/60 bg-obsidian/55 p-3 transition-colors hover:border-${variant === "scoring" ? "ion-blue" : variant === "published" ? "verify" : "plasma"}/30`}>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <h3 className="truncate text-sm font-semibold text-white">{row.matchup}</h3>
+          <p className="mt-0.5 truncate text-xs text-ion-3">{row.sport} · {row.market}</p>
         </div>
-        <span className="font-mono text-xs text-ion-blue">
-          {row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}
+        <span className={`shrink-0 font-mono text-xs font-semibold tabular-nums ${s.accent}`}>
+          {row.edgeIndex === null ? "EI —" : `EI ${row.edgeIndex}`}
         </span>
       </div>
-      {row.confidence !== null && (
-        <p className="mt-3 text-sm text-ion-1">Confidence label available on the pick view.</p>
+      {row.gateReason && (
+        <p className="mt-2 text-xs leading-relaxed text-ion-2">{row.gateReason}</p>
       )}
-      {row.gateReason && <p className="mt-3 text-sm text-ion-2">{row.gateReason}</p>}
-      <Link href={`/room/${row.gameId}`} className="mt-4 inline-flex text-sm font-semibold text-ion-blue hover:text-ion-blue-glow">
-        Open room
+      <Link
+        href={`/room/${row.gameId}`}
+        className={`mt-2.5 inline-flex text-xs font-semibold ${s.accent} transition-opacity hover:opacity-80`}
+      >
+        Open room →
       </Link>
     </article>
   );
@@ -202,13 +230,15 @@ function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
 
 function PassListItem({ row }: { row: PassListRow }): JSX.Element {
   return (
-    <div className="grid gap-2 px-4 py-3 sm:grid-cols-[1fr_auto_1.4fr]">
+    <div className="grid gap-2 px-4 py-3 transition-colors hover:bg-titanium/10 sm:grid-cols-[1fr_auto_1.4fr]">
       <span>
-        <Link href={`/room/${row.gameId}`} className="font-semibold text-white hover:text-ion-blue-glow">
+        <Link href={`/room/${row.gameId}`} className="font-semibold text-white transition-colors hover:text-ion-blue">
           {row.matchup}
         </Link>
       </span>
-      <span className="font-mono text-xs text-ion-blue">{row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}</span>
+      <span className="font-mono text-xs tabular-nums text-ion-blue">
+        {row.edgeIndex === null ? "EI —" : `EI ${row.edgeIndex}`}
+      </span>
       <span className="text-sm text-ion-2 sm:text-right">{row.reason}</span>
     </div>
   );
@@ -216,9 +246,9 @@ function PassListItem({ row }: { row: PassListRow }): JSX.Element {
 
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="border border-titanium bg-obsidian/55 p-3">
+    <div className="rounded-lg border border-titanium bg-obsidian/55 p-3">
       <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</dt>
-      <dd className="mt-1 text-lg font-semibold text-white">{value}</dd>
+      <dd className="mt-1 text-lg font-bold tabular-nums text-white">{value}</dd>
     </div>
   );
 }
