@@ -57,12 +57,24 @@ export function PricingPlans({
             Annual
           </ToggleButton>
         </div>
-        <span className="text-xs font-medium text-brand-400">Save up to 45% annually</span>
+        <span
+          className={[
+            "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all duration-300",
+            annual
+              ? "border border-verify/40 bg-verify/10 text-verify"
+              : "text-brand-400",
+          ].join(" ")}
+        >
+          {annual && (
+            <span className="h-1.5 w-1.5 rounded-full bg-verify animate-live-pulse" aria-hidden="true" />
+          )}
+          Save up to 45% annually
+        </span>
       </div>
 
       {/* Plan cards */}
       <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
-        {plans.map((plan) => {
+        {plans.map((plan, i) => {
           const isPro = plan.id === "PRO";
           const isElite = plan.id === "ELITE";
           const isPaid = plan.id !== "FREE";
@@ -70,20 +82,23 @@ export function PricingPlans({
             <HoloTilt key={plan.id} className="h-full">
             <div
               className={[
-                "relative flex h-full flex-col rounded-2xl border p-6",
+                "relative flex h-full flex-col rounded-2xl border p-6 animate-fade-up",
                 isPro
-                  ? "border-brand-600 bg-brand-950/30 shadow-xl shadow-brand-900/30"
+                  ? "border-plasma/50 bg-carbon/60 shadow-glow-plasma"
                   : isElite
-                    ? "border-ultraviolet/60 bg-ultraviolet/5 shadow-xl shadow-ultraviolet/10"
+                    ? "border-ultraviolet/50 bg-ultraviolet/5 shadow-glow-uv"
                     : "border-titanium bg-carbon/60",
               ].join(" ")}
+              style={{ animationDelay: `${i * 90}ms` }}
             >
               {plan.badge && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
                   <span
                     className={[
-                      "rounded-full px-3 py-0.5 text-xs font-semibold",
-                      isPro ? "bg-brand-600 text-white" : "bg-ultraviolet text-white",
+                      "rounded-full px-3 py-1 text-xs font-bold",
+                      isPro
+                        ? "bg-plasma text-plasma-ink shadow-[0_0_14px_rgba(255,45,214,0.6)]"
+                        : "bg-ultraviolet text-white shadow-[0_0_14px_rgba(122,92,255,0.5)]",
                     ].join(" ")}
                   >
                     {plan.badge}
@@ -92,7 +107,14 @@ export function PricingPlans({
               )}
 
               <div className="mb-4">
-                <h2 className="text-xl font-bold text-white">{plan.name}</h2>
+                <h2
+                  className={[
+                    "text-xl font-bold",
+                    isPro ? "text-plasma" : isElite ? "text-ultraviolet-glow" : "text-white",
+                  ].join(" ")}
+                >
+                  {plan.name}
+                </h2>
 
                 <div className="mt-2 flex items-baseline gap-1">
                   {plan.id === "FREE" || plan.monthly === null ? (
@@ -112,7 +134,7 @@ export function PricingPlans({
 
                 {/* Annual context line */}
                 {isPaid && annual && plan.annualMonthly !== null && (
-                  <p className="mt-1 text-xs text-brand-400">
+                  <p className="mt-1 text-xs text-verify">
                     ≈ ${plan.annualMonthly}/mo billed annually
                     {plan.annualSavingsPct ? ` · save ${plan.annualSavingsPct}%` : ""}
                   </p>
@@ -127,7 +149,7 @@ export function PricingPlans({
               <ul className="mb-6 flex flex-col gap-3">
                 {plan.features.map(({ label, included }) => (
                   <li key={label} className="flex items-center gap-2 text-sm">
-                    {included ? <CheckIcon /> : <DashIcon />}
+                    {included ? <CheckIcon isPro={isPro} /> : <DashIcon />}
                     <span className={included ? "text-ion-1" : "text-ion-3"}>{label}</span>
                   </li>
                 ))}
@@ -188,10 +210,10 @@ function ToggleButton({
   );
 }
 
-function CheckIcon() {
+function CheckIcon({ isPro = false }: { isPro?: boolean }) {
   return (
     <svg
-      className="h-4 w-4 shrink-0 text-brand-400"
+      className={`h-4 w-4 shrink-0 ${isPro ? "text-plasma" : "text-verify"}`}
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={2.5}

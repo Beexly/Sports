@@ -393,10 +393,11 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* Picks grid */}
           {!fetchError && picks.length > 0 && (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {picks.map((pick) => (
+              {picks.map((pick, i) => (
                 <PickCard
                   key={pick.id}
                   pick={pick}
+                  index={i}
                   canSeeConfidence={entitlements.canSeeConfidence || pick.tier === "FREE"}
                   canSeeEdgeScore={entitlements.canSeeEdgeScore ?? false}
                   canSeeFactorBreakdown={entitlements.canSeeFactorBreakdown ?? false}

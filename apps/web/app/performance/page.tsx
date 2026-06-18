@@ -489,21 +489,67 @@ function OverallStat({
   accent: string;
   large?: boolean;
 }) {
+  const isPositive = large && accent === winRateToneClass(55);
   return (
     <div className="flex flex-col items-center gap-1 px-6 py-6 text-center">
-      <dt className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+      <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-ion-3">
         {label}
       </dt>
       <dd
         className={[
-          "font-extrabold",
+          "font-extrabold tabular-nums",
           NUMERIC_TEXT_CLASS,
           large ? "text-5xl" : "text-3xl",
           accent,
+          isPositive ? "drop-shadow-[0_0_16px_rgba(0,229,255,0.5)]" : "",
         ].join(" ")}
       >
         {value}
       </dd>
+    </div>
+  );
+}
+
+function WinRateArc({ winRate }: { winRate: number }) {
+  // Arc shows breakeven (52.4%) as the "zero" baseline visually; fill above that
+  // tones to positive, below to negative. But the ring still fills from 0-100%.
+  const r = 28;
+  const circ = 2 * Math.PI * r; // ≈ 175.9
+  const filled = (winRate / 100) * circ;
+
+  let stroke = "#9AA3C0"; // ion-3 — below breakeven
+  if (winRate >= 55) stroke = "#00E5FF";       // orbital-cyan
+  else if (winRate >= 52.4) stroke = "#F6F7FA"; // ion-white
+  else if (winRate >= 50) stroke = "#FFB454";   // caution
+  else stroke = "#FF6470";                       // alert
+
+  const glow = winRate >= 55 ? `drop-shadow(0 0 6px ${stroke})` : undefined;
+
+  return (
+    <div className="relative flex items-center justify-center">
+      <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true" className="-rotate-90">
+        <circle
+          cx="36" cy="36" r={r}
+          fill="none"
+          stroke="rgba(255,255,255,0.05)"
+          strokeWidth="4"
+        />
+        <circle
+          cx="36" cy="36" r={r}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="4"
+          strokeDasharray={`${filled} ${circ - filled}`}
+          strokeLinecap="round"
+          style={glow ? { filter: glow } : undefined}
+        />
+      </svg>
+      <span
+        className={`absolute text-sm font-bold tabular-nums ${winRateToneClass(winRate)} ${NUMERIC_TEXT_CLASS}`}
+        style={{ color: stroke }}
+      >
+        {formatPercent(winRate)}
+      </span>
     </div>
   );
 }
@@ -523,39 +569,39 @@ function SportCard({
   totalPicks: number;
   winRate: number | null;
 }) {
+  const borderColor = winRate !== null && winRate >= 55
+    ? "border-orbital-cyan/30"
+    : winRate !== null && winRate >= 52.4
+    ? "border-mineral"
+    : "border-mineral";
+
   return (
-    <div className="rounded-2xl border border-mineral bg-eclipse/60 p-5">
-      <div className="mb-3 flex items-center justify-between">
+    <div className={`rounded-2xl border ${borderColor} bg-eclipse/60 p-5 transition-shadow hover:shadow-float`}>
+      <div className="mb-4 flex items-center justify-between gap-3">
         <h3 className="text-lg font-bold text-ion-white">{sport}</h3>
-        {winRate !== null && (
-          <span
-            className={[
-              "text-2xl font-extrabold",
-              NUMERIC_TEXT_CLASS,
-              winRateToneClass(winRate),
-            ].join(" ")}
-          >
-            {formatPercent(winRate)}
-          </span>
+        {winRate !== null ? (
+          <WinRateArc winRate={winRate} />
+        ) : (
+          <span className="text-xs text-ion-3">Pending</span>
         )}
       </div>
 
       <div className="grid grid-cols-3 gap-2 text-center">
         <div className="rounded-lg bg-orbital-cyan/10 py-2">
-          <p className="text-xs text-ion-2">W</p>
-          <p className={`text-lg font-bold text-orbital-cyan ${NUMERIC_TEXT_CLASS}`}>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ion-3">W</p>
+          <p className={`text-xl font-bold text-orbital-cyan ${NUMERIC_TEXT_CLASS}`}>
             {wins}
           </p>
         </div>
         <div className="rounded-lg bg-alert/10 py-2">
-          <p className="text-xs text-ion-2">L</p>
-          <p className={`text-lg font-bold text-alert ${NUMERIC_TEXT_CLASS}`}>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ion-3">L</p>
+          <p className={`text-xl font-bold text-alert ${NUMERIC_TEXT_CLASS}`}>
             {losses}
           </p>
         </div>
         <div className="rounded-lg bg-titanium/60 py-2">
-          <p className="text-xs text-ion-2">P</p>
-          <p className={`text-lg font-bold text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ion-3">P</p>
+          <p className={`text-xl font-bold text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
             {pushes}
           </p>
         </div>
@@ -565,20 +611,6 @@ function SportCard({
         <span className={NUMERIC_TEXT_CLASS}>{formatCount(totalPicks)}</span>{" "}
         canonical picks
       </p>
-
-      {winRate !== null && (
-        <div className="mt-3">
-          <div className="h-1.5 overflow-hidden rounded-full bg-titanium">
-            <div
-              className={[
-                "h-full rounded-full transition-all",
-                winRateBarClass(winRate),
-              ].join(" ")}
-              style={{ width: `${Math.min(winRate, 100)}%` }}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

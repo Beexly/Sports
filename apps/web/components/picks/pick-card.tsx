@@ -20,21 +20,25 @@ interface PickCardProps {
   canSeeConfidence: boolean;
   canSeeEdgeScore: boolean;
   canSeeFactorBreakdown: boolean;
+  /** Stagger index for entrance animation delay (optional). */
+  index?: number;
 }
 
-const PICK_GRADE_STYLES: Record<PickGrade, string> = {
-  ELITE_PLAY: "text-plasma bg-plasma/10",
-  STRONG_PLAY: "text-verify bg-verify/10",
-  SOLID_PLAY: "text-ion-blue bg-ion-blue/10",
-  LEAN: "text-ion-2 bg-titanium/40",
+// Grade → card border + ambient glow (base state).
+// hover adds a dark lift on top; both shadow values stack in CSS.
+const GRADE_CARD_STYLES: Record<PickGrade, { border: string; shadow: string }> = {
+  ELITE_PLAY: { border: "border-plasma/50",   shadow: "shadow-glow-plasma" },
+  STRONG_PLAY:{ border: "border-ion-blue/30", shadow: "shadow-glow-cyan" },
+  SOLID_PLAY: { border: "border-ion-blue/15", shadow: "" },
+  LEAN:       { border: "border-titanium",    shadow: "" },
 };
 
 const RISK_LEVEL_STYLES: Record<RiskLevel, string> = {
-  LOW_RISK: "text-verify",
-  MODERATE: "text-plasma",
-  HIGH_VARIANCE: "text-ultraviolet",
-  INJURY_RISK: "text-alert",
-  LINE_STEAM: "text-ultraviolet",
+  LOW_RISK:     "text-verify",
+  MODERATE:     "text-plasma",
+  HIGH_VARIANCE:"text-ultraviolet",
+  INJURY_RISK:  "text-alert",
+  LINE_STEAM:   "text-ultraviolet",
 };
 
 export function PickCard({
@@ -42,6 +46,7 @@ export function PickCard({
   canSeeConfidence,
   canSeeEdgeScore,
   canSeeFactorBreakdown,
+  index = 0,
 }: PickCardProps) {
   const gameTime = new Date(pick.game.commenceTime).toLocaleString("en-US", {
     weekday: "short",
@@ -59,20 +64,24 @@ export function PickCard({
     : null;
 
   const isFeatured = pick.isFeatured;
+  const gradeStyle = GRADE_CARD_STYLES[pick.pickGrade];
 
   return (
     <article
       className={[
-        "relative flex flex-col gap-4 rounded-2xl border p-5 transition-shadow hover:shadow-lg hover:shadow-black/40",
-        isFeatured
-          ? "border-plasma/50 bg-carbon shadow-plasma/20"
-          : "border-titanium bg-carbon",
+        "relative flex flex-col gap-4 rounded-2xl border p-5",
+        "bg-carbon transition-all duration-300",
+        "hover:shadow-[0_8px_32px_rgba(0,0,0,0.6)]",
+        "animate-fade-up",
+        gradeStyle.border,
+        gradeStyle.shadow,
       ].join(" ")}
+      style={{ animationDelay: `${index * 70}ms` }}
     >
       {/* Featured ribbon */}
       {isFeatured && (
         <div className="absolute right-4 top-0 -translate-y-1/2">
-          <span className="rounded-full bg-plasma px-2.5 py-0.5 text-xs font-bold text-plasma-ink">
+          <span className="rounded-full bg-plasma px-2.5 py-0.5 text-xs font-bold text-plasma-ink shadow-[0_0_12px_rgba(255,45,214,0.6)]">
             Top Pick
           </span>
         </div>
@@ -90,10 +99,7 @@ export function PickCard({
         </div>
       </div>
 
-      {/* Matchup — away over home, with "@" as an inline prefix so the pairing
-          reads naturally ("Bills" / "@ Chiefs") instead of stranding a lone @.
-          Outer wrapper keeps the mobile-first stacking (team names get full
-          width before the type badge on phones). */}
+      {/* Matchup */}
       <div>
         <p className="text-xs text-ion-1">{gameTime}</p>
         <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -112,10 +118,6 @@ export function PickCard({
       <div className="rounded-lg bg-titanium/60 px-4 py-3">
         <p className="text-xs font-medium text-ion-1">Pick</p>
         <p className="mt-0.5 text-lg font-bold text-white">{pick.selection}</p>
-        {/* SPREAD's chosen-side number already lives in `selection` (e.g.
-            "Away Favs -6.0"). `line` is stored in HOME-team perspective for
-            settlement, so rendering it raw here would contradict the selection
-            for away-favored picks. Show the explicit line for TOTAL/MONEYLINE only. */}
         {pick.line !== 0 && pick.pickType !== "SPREAD" && (
           <p className="mt-0.5 text-xs text-ion-1">
             Line: {pick.line > 0 ? "+" : ""}{pick.line}
@@ -124,12 +126,14 @@ export function PickCard({
       </div>
 
       {/* Scores row: confidence + edge + risk */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-3 gap-3">
         {/* Confidence */}
         <div className="min-w-0">
-          <p className="mb-1 text-[10px] font-medium text-ion-1">Confidence</p>
+          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ion-3">
+            Confidence
+          </p>
           {canSeeConfidence && pick.confidence !== null ? (
-            <ConfidenceBadge confidence={pick.confidence} />
+            <ConfidenceRing confidence={pick.confidence} />
           ) : (
             <LockedValue label="Conf." />
           )}
@@ -137,9 +141,11 @@ export function PickCard({
 
         {/* Edge score */}
         <div className="min-w-0">
-          <p className="mb-1 text-[10px] font-medium text-ion-1">Edge Score</p>
+          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ion-3">
+            Edge
+          </p>
           {canSeeEdgeScore && pick.edgeScore !== null ? (
-            <EdgeScoreBadge edgeScore={pick.edgeScore} />
+            <EdgeRing edgeScore={pick.edgeScore} />
           ) : (
             <LockedValue label="Edge" />
           )}
@@ -147,7 +153,9 @@ export function PickCard({
 
         {/* Risk */}
         <div className="min-w-0">
-          <p className="mb-1 text-[10px] font-medium text-ion-1">Risk</p>
+          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ion-3">
+            Risk
+          </p>
           <span className={`text-xs font-semibold ${RISK_LEVEL_STYLES[pick.riskLevel]}`}>
             {riskInfo.label}
           </span>
@@ -176,7 +184,7 @@ export function PickCard({
 
       {/* Data quality + freshness footer */}
       <div className="flex flex-col gap-2 border-t border-titanium/60 pt-2 sm:flex-row sm:items-center sm:justify-between">
-        <DataQualityMeter score={pick.dataQualityScore} />
+        <DataQualityRing score={pick.dataQualityScore} />
         {freshnessAge !== null && (
           <div className="flex items-center gap-1.5">
             <FreshnessIndicator ageMinutes={freshnessAge} />
@@ -184,7 +192,7 @@ export function PickCard({
         )}
       </div>
 
-      {/* Evidence audit trigger — visible to ALL tiers for real picks (drives upgrade for FREE). */}
+      {/* Evidence audit trigger */}
       <div className="flex items-center justify-stretch sm:justify-end">
         {pick.isAuditAvailable ? (
           <EvidenceAuditDrawer pickId={pick.id} />
@@ -195,9 +203,148 @@ export function PickCard({
         )}
       </div>
 
-      {/* Glass-box explainer — PRO+ only, on real picks (server enforces the gate too). */}
+      {/* Glass-box explainer — PRO+ only */}
       {canSeeFactorBreakdown && pick.isAuditAvailable && <AskWhy pickId={pick.id} />}
     </article>
+  );
+}
+
+// ─────────────────────────────────────────────
+// SVG Radial Ring Gauges
+// ─────────────────────────────────────────────
+
+function ConfidenceRing({ confidence }: { confidence: number }) {
+  const r = 16;
+  const circ = 2 * Math.PI * r; // ≈ 100.5
+  const filled = (confidence / 100) * circ;
+
+  let stroke = "#9AA3C0"; // ion-3
+  let textCls = "text-ion-2";
+  if (confidence >= 80) { stroke = "#5FD9A3"; textCls = "text-verify"; }
+  else if (confidence >= 70) { stroke = "#00E5FF"; textCls = "text-ion-blue"; }
+  else if (confidence >= 60) { stroke = "#FF2DD6"; textCls = "text-plasma"; }
+
+  return (
+    <div
+      className="flex items-center gap-2"
+      aria-label={`Model confidence: ${confidence}%`}
+    >
+      <svg
+        width="40" height="40" viewBox="0 0 40 40"
+        aria-hidden="true"
+        className="shrink-0 -rotate-90"
+      >
+        {/* Track */}
+        <circle
+          cx="20" cy="20" r={r}
+          fill="none"
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth="3"
+        />
+        {/* Arc */}
+        <circle
+          cx="20" cy="20" r={r}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="3"
+          strokeDasharray={`${filled} ${circ - filled}`}
+          strokeLinecap="round"
+          style={confidence >= 75
+            ? { filter: `drop-shadow(0 0 4px ${stroke})` }
+            : undefined
+          }
+        />
+      </svg>
+      <span className={`text-xs font-bold tabular-nums ${textCls}`}>
+        {confidence}%
+      </span>
+    </div>
+  );
+}
+
+function EdgeRing({ edgeScore }: { edgeScore: number }) {
+  const r = 12;
+  const circ = 2 * Math.PI * r; // ≈ 75.4
+  const filled = (edgeScore / 100) * circ;
+
+  let stroke = "#9AA3C0";
+  let textCls = "text-ion-2";
+  if (edgeScore >= 70) { stroke = "#5FD9A3"; textCls = "text-verify"; }
+  else if (edgeScore >= 50) { stroke = "#00E5FF"; textCls = "text-ion-blue"; }
+  else if (edgeScore >= 30) { stroke = "#FF2DD6"; textCls = "text-plasma"; }
+
+  return (
+    <div
+      className="flex items-center gap-2"
+      aria-label={`Edge score: ${edgeScore}`}
+    >
+      <svg
+        width="30" height="30" viewBox="0 0 30 30"
+        aria-hidden="true"
+        className="shrink-0 -rotate-90"
+      >
+        <circle
+          cx="15" cy="15" r={r}
+          fill="none"
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth="2.5"
+        />
+        <circle
+          cx="15" cy="15" r={r}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="2.5"
+          strokeDasharray={`${filled} ${circ - filled}`}
+          strokeLinecap="round"
+        />
+      </svg>
+      <span className={`text-xs font-bold tabular-nums ${textCls}`}>
+        {edgeScore}
+      </span>
+    </div>
+  );
+}
+
+function DataQualityRing({ score }: { score: number }) {
+  const clamped = Math.max(0, Math.min(100, Math.round(score)));
+  const r = 8;
+  const circ = 2 * Math.PI * r; // ≈ 50.3
+  const filled = (clamped / 100) * circ;
+
+  let stroke = "#5FD9A3"; // verify
+  let label = "High";
+  let textCls = "text-verify";
+  if (clamped < 40) { stroke = "#FF6470"; label = "Low"; textCls = "text-alert"; }
+  else if (clamped < 70) { stroke = "#FF2DD6"; label = "Med"; textCls = "text-plasma"; }
+
+  return (
+    <div
+      className="flex items-center gap-2"
+      aria-label={`Data quality: ${label}, ${clamped} out of 100`}
+    >
+      <svg
+        width="20" height="20" viewBox="0 0 20 20"
+        aria-hidden="true"
+        className="shrink-0 -rotate-90"
+      >
+        <circle
+          cx="10" cy="10" r={r}
+          fill="none"
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth="2"
+        />
+        <circle
+          cx="10" cy="10" r={r}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="2"
+          strokeDasharray={`${filled} ${circ - filled}`}
+          strokeLinecap="round"
+        />
+      </svg>
+      <span className="text-[10px] text-ion-1">Data Quality</span>
+      <span className={`text-[10px] font-semibold ${textCls}`}>{label}</span>
+    </div>
   );
 }
 
@@ -217,7 +364,6 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         Factor Breakdown
       </p>
 
-      {/* Core market score bars */}
       <div className="mb-3 grid grid-cols-1 gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2">
         <ScoreBar label="Consensus" value={breakdown.consensusScore} max={30} color="bg-ion-blue" />
         <ScoreBar label="Market Depth" value={breakdown.marketDepthScore} max={20} color="bg-ultraviolet" />
@@ -225,7 +371,6 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         <ScoreBar label="Line Movement" value={Math.max(0, breakdown.lineMovementScore)} max={15} color="bg-plasma" />
       </div>
 
-      {/* Intelligence layer signal chips (v4) */}
       {hasIntelligenceLayer && (
         <div className="mb-2 flex flex-wrap gap-1.5">
           {breakdown.headToHeadScore !== undefined && breakdown.headToHeadScore > 0 && (
@@ -249,7 +394,6 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         </div>
       )}
 
-      {/* Individual factors */}
       {breakdown.factors.length > 0 && (
         <div className="flex flex-col gap-1">
           {breakdown.factors.map((factor, idx) => (
@@ -273,9 +417,6 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         </div>
       )}
 
-      {/* Independent-edge layer (#10) — a market-INDEPENDENT model's read,
-          surfaced (not yet priced into confidence). Showing our number against
-          the market's makes the disagreement concrete: this is the differentiator. */}
       {breakdown.independentEdge && breakdown.independentEdge.decision !== "PASS" && (
         <div className="mt-2 rounded-md border border-ion-blue/30 bg-ion-blue/5 p-2">
           <div className="mb-1 flex items-center gap-1.5">
@@ -317,7 +458,6 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         </div>
       )}
 
-      {/* Penalty summary row */}
       {(breakdown.volatilityPenalty < 0 || (breakdown.uncertaintyPenalty !== undefined && breakdown.uncertaintyPenalty < 0)) && (
         <div className="mt-1.5 flex flex-wrap gap-1.5">
           {breakdown.volatilityPenalty < 0 && (
@@ -345,9 +485,7 @@ function IntelChip({ label, positive }: { label: string; positive: boolean }) {
     <span
       className={[
         "rounded-full px-2 py-0.5 text-[9px] font-semibold",
-        positive
-          ? "bg-verify/10 text-verify"
-          : "bg-alert/10 text-alert",
+        positive ? "bg-verify/10 text-verify" : "bg-alert/10 text-alert",
       ].join(" ")}
     >
       {label}
@@ -389,9 +527,18 @@ function ScoreBar({
 
 function GradeBadge({ grade }: { grade: PickGrade }) {
   const info = PICK_GRADE_LABELS[grade];
-  if (grade === "LEAN") return null; // don't show lean badge — it's the default
+  if (grade === "LEAN") return null;
+
+  const baseStyles: Record<Exclude<PickGrade, "LEAN">, string> = {
+    ELITE_PLAY:  "text-plasma bg-plasma/10 shadow-[0_0_12px_rgba(255,45,214,0.5)]",
+    STRONG_PLAY: "text-verify bg-verify/10",
+    SOLID_PLAY:  "text-ion-blue bg-ion-blue/10",
+  };
+
   return (
-    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${PICK_GRADE_STYLES[grade]}`}>
+    <span
+      className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${baseStyles[grade as Exclude<PickGrade, "LEAN">]}`}
+    >
       {info.label}
     </span>
   );
@@ -421,14 +568,14 @@ function TierBadge({ tier }: { tier: "FREE" | "PREMIUM" }) {
 
 function PickTypeBadge({ type }: { type: PickType }) {
   const colors: Record<PickType, string> = {
-    SPREAD: "bg-ion-blue/10 text-ion-blue",
+    SPREAD:    "bg-ion-blue/10 text-ion-blue",
     MONEYLINE: "bg-ultraviolet/10 text-ultraviolet",
-    TOTAL: "bg-ultraviolet/10 text-ultraviolet",
+    TOTAL:     "bg-ultraviolet/10 text-ultraviolet",
   };
   const labels: Record<PickType, string> = {
-    SPREAD: "Spread",
+    SPREAD:    "Spread",
     MONEYLINE: "ML",
-    TOTAL: "Total",
+    TOTAL:     "Total",
   };
   return (
     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${colors[type]}`}>
@@ -437,43 +584,10 @@ function PickTypeBadge({ type }: { type: PickType }) {
   );
 }
 
-function ConfidenceBadge({ confidence }: { confidence: number }) {
-  let color = "text-ion-2 bg-titanium";
-  if (confidence >= 80) color = "text-verify bg-verify/10";
-  else if (confidence >= 70) color = "text-ion-blue bg-ion-blue/10";
-  else if (confidence >= 60) color = "text-plasma bg-plasma/10";
-
-  return (
-    <span
-      className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${color}`}
-      aria-label={`Model confidence: ${confidence} out of 100`}
-    >
-      {confidence}%
-    </span>
-  );
-}
-
-function EdgeScoreBadge({ edgeScore }: { edgeScore: number }) {
-  let color = "text-ion-2";
-  if (edgeScore >= 70) color = "text-verify";
-  else if (edgeScore >= 50) color = "text-ion-blue";
-  else if (edgeScore >= 30) color = "text-plasma";
-  else color = "text-ion-1";
-
-  return (
-    <span
-      className={`text-xs font-bold ${color}`}
-      aria-label={`Edge score: ${edgeScore} out of 100`}
-    >
-      {edgeScore}
-    </span>
-  );
-}
-
 function ResultBadge({ result }: { result: PickResult }) {
   if (result === "PENDING") return null;
   const styles: Record<Exclude<PickResult, "PENDING">, string> = {
-    WIN: "bg-verify/10 text-verify",
+    WIN:  "bg-verify/10 text-verify",
     LOSS: "bg-alert/10 text-alert",
     PUSH: "bg-titanium text-ion-2",
     VOID: "bg-titanium text-ion-1",
@@ -485,9 +599,6 @@ function ResultBadge({ result }: { result: PickResult }) {
   );
 }
 
-// Locked confidence/edge is the highest-intent, most-rendered conversion atom for
-// FREE users — so it links to /pricing instead of dead-ending. Purely navigational
-// (no entitlement logic; the server gate in /api/picks stays authoritative).
 function LockedValue({ label }: { label: string }) {
   return (
     <Link
@@ -507,62 +618,34 @@ function LockedValue({ label }: { label: string }) {
   );
 }
 
-function DataQualityMeter({ score }: { score: number }) {
-  const clamped = Math.max(0, Math.min(100, Math.round(score)));
-  let color = "bg-verify";
-  let textColor = "text-verify";
-  let label = "High";
-  if (clamped < 40) {
-    color = "bg-alert";
-    textColor = "text-alert";
-    label = "Low";
-  } else if (clamped < 70) {
-    color = "bg-plasma";
-    textColor = "text-plasma";
-    label = "Med";
-  }
-  return (
-    <div
-      className="flex items-center gap-2"
-      aria-label={`Data quality: ${label}, ${clamped} out of 100`}
-    >
-      <span className="text-[10px] text-ion-1">Data Quality</span>
-      <div className="h-1 w-16 overflow-hidden rounded-full bg-titanium" aria-hidden="true">
-        <div
-          className={`h-full rounded-full ${color}`}
-          style={{ width: `${clamped}%` }}
-        />
-      </div>
-      <span className={`text-[10px] font-semibold ${textColor}`}>{label}</span>
-    </div>
-  );
-}
-
 function FreshnessIndicator({ ageMinutes }: { ageMinutes: number }) {
-  let color = "text-verify";
+  const isLive = ageMinutes < 10;
+  let dotCls = isLive
+    ? "bg-verify animate-live-pulse"
+    : ageMinutes < 30
+    ? "bg-ion-3"
+    : "bg-plasma";
+
+  let textCls = "text-verify";
   let label = "Live";
   if (ageMinutes >= 60) {
-    color = "text-alert";
+    textCls = "text-alert";
     label = `${Math.round(ageMinutes / 60)}h old`;
   } else if (ageMinutes >= 30) {
-    color = "text-plasma";
+    textCls = "text-plasma";
     label = `${ageMinutes}m old`;
   } else if (ageMinutes >= 10) {
-    color = "text-ion-2";
+    textCls = "text-ion-2";
     label = `${ageMinutes}m ago`;
   }
 
   return (
     <>
       <span
-        className={`h-1.5 w-1.5 rounded-full ${
-          ageMinutes < 10 ? "bg-verify" : ageMinutes < 30 ? "bg-ion-3" : "bg-plasma"
-        }`}
+        className={`h-1.5 w-1.5 rounded-full ${dotCls}`}
         aria-hidden="true"
       />
-      <span className={`text-[10px] ${color}`}>
-        Data: {label}
-      </span>
+      <span className={`text-[10px] ${textCls}`}>Data: {label}</span>
     </>
   );
 }

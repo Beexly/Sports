@@ -376,8 +376,13 @@ function SampleDataBanner() {
 
 function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: boolean }) {
   const homeAway = `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`;
+  const conf = Math.max(0, Math.min(100, pick.confidence));
+  // Color for confidence bar
+  const confBarColor =
+    conf >= 80 ? "bg-verify" : conf >= 70 ? "bg-ion-blue" : conf >= 60 ? "bg-plasma" : "bg-titanium";
+
   return (
-    <li className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
+    <li className="group flex items-start justify-between gap-3 py-3 transition-colors first:pt-0 last:pb-0 hover:bg-titanium/20 -mx-2 px-2 rounded-lg">
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium text-white">
           <span
@@ -388,40 +393,37 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
           </span>
           {pick.selection}
           {pick.isFeatured && (
-            <span className="ml-2 rounded bg-brand-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-brand-300">
+            <span className="ml-2 rounded bg-plasma/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-plasma">
               Featured
             </span>
           )}
         </p>
-        <p className="truncate text-xs text-ion-3">
-          {homeAway} · {pick.game.sport.name}
-        </p>
-        <p className="truncate text-[11px] text-ion-3">
+        <p className="mt-0.5 truncate text-xs text-ion-3">{homeAway}</p>
+        <p className="mt-0.5 truncate text-[11px] text-ion-3 italic">
           {pick.reasoningShort}
         </p>
         {showConfidence && (
-          <div
-            data-testid="confidence-bar"
-            aria-label={`Confidence ${pick.confidence}%`}
-            className="mt-1 h-1 w-full overflow-hidden rounded-full bg-titanium"
-          >
+          <div className="mt-1.5 flex items-center gap-2">
             <div
-              className="h-full bg-brand-500/60"
-              style={{ width: `${Math.max(0, Math.min(100, pick.confidence))}%` }}
-            />
+              data-testid="confidence-bar"
+              aria-label={`Confidence ${conf}%`}
+              className="h-1 w-24 overflow-hidden rounded-full bg-titanium"
+            >
+              <div
+                className={`h-full rounded-full ${confBarColor} transition-all duration-500`}
+                style={{ width: `${conf}%` }}
+              />
+            </div>
+            <span className="text-[10px] font-semibold text-ion-2 tabular-nums">{conf}%</span>
           </div>
         )}
       </div>
-      <div className="flex shrink-0 flex-col items-end gap-1 text-right">
+      <div className="flex shrink-0 flex-col items-end gap-1.5 text-right">
         <GradeBadge grade={pick.pickGrade} />
-        {showConfidence ? (
-          <span className="text-xs text-ion-2">
-            {pick.confidence}% conf
-          </span>
-        ) : (
+        {!showConfidence && (
           <Link
             href="/pricing"
-            className="text-[10px] font-semibold uppercase tracking-widest text-brand-400 hover:text-brand-300"
+            className="text-[10px] font-semibold uppercase tracking-widest text-brand-400 transition-colors hover:text-plasma"
           >
             Conf · Pro
           </Link>
@@ -430,13 +432,13 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
           <span
             data-testid="edge-score"
             aria-label={`Edge score ${pick.edgeScore.toFixed(1)}`}
-            className="rounded bg-verify/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-verify"
+            className="rounded-full bg-verify/10 px-2 py-0.5 text-[10px] font-bold text-verify"
           >
             +{pick.edgeScore.toFixed(1)} edge
           </span>
         )}
         <span className="text-[10px] uppercase tracking-widest text-ion-3">
-          {pick.riskLevel}
+          {pick.riskLevel.replace(/_/g, " ")}
         </span>
       </div>
     </li>
@@ -445,18 +447,29 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
 
 function GradeBadge({ grade }: { grade: string }) {
   const styles: Record<string, string> = {
+    ELITE_PLAY:  "bg-plasma/10 text-plasma shadow-[0_0_8px_rgba(255,45,214,0.4)]",
+    STRONG_PLAY: "bg-verify/10 text-verify",
+    SOLID_PLAY:  "bg-ion-blue/10 text-ion-blue",
+    LEAN:        "bg-titanium text-ion-2",
+    // Legacy letter grades (backwards-compatible)
     A: "bg-verify/15 text-verify",
     B: "bg-ion-blue/15 text-ion-blue",
     C: "bg-titanium text-ion-2",
   };
+  const label: Record<string, string> = {
+    ELITE_PLAY:  "Elite",
+    STRONG_PLAY: "Strong",
+    SOLID_PLAY:  "Solid",
+    LEAN:        "Lean",
+  };
   return (
     <span
       className={[
-        "rounded-full px-2 py-0.5 text-xs font-bold",
+        "rounded-full px-2 py-0.5 text-[10px] font-bold",
         styles[grade] ?? "bg-titanium text-ion-2",
       ].join(" ")}
     >
-      {grade}
+      {label[grade] ?? grade}
     </span>
   );
 }
@@ -471,9 +484,20 @@ function StatCard({
   highlight?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-titanium bg-carbon/60 p-4">
-      <p className="text-xs text-ion-3">{label}</p>
-      <p className={`mt-1 text-2xl font-bold ${highlight ? "text-verify" : "text-white"}`}>{value}</p>
+    <div
+      className={[
+        "rounded-xl border p-4 transition-shadow",
+        highlight
+          ? "border-verify/30 bg-verify/5 shadow-[0_0_20px_rgba(95,217,163,0.12)]"
+          : "border-titanium bg-carbon/60",
+      ].join(" ")}
+    >
+      <p className="text-xs font-medium uppercase tracking-[0.12em] text-ion-3">{label}</p>
+      <p
+        className={`mt-1 text-2xl font-bold tabular-nums ${highlight ? "text-verify" : "text-white"}`}
+      >
+        {value}
+      </p>
     </div>
   );
 }
