@@ -74,17 +74,20 @@ export function SignalPipeline({ summary }: { summary: PipelineSummary }): JSX.E
 
   return (
     <div>
-      {/* Steps grid */}
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-4">
-        {steps.map((step, i) => (
-          <Reveal key={step.num} delay={i * 90}>
+      {/* Steps grid — an ordered sequence, so it's a real <ol> for SR users */}
+      <ol className="grid list-none grid-cols-1 gap-8 p-0 lg:grid-cols-5 lg:gap-4">
+        {steps.map((step, i) => {
+          const next = steps[i + 1];
+          return (
+          <li key={step.num}>
+          <Reveal delay={i * 90}>
             <div className="relative flex flex-col">
               {/* Connector line (desktop only) — right edge of each step except last */}
-              {i < steps.length - 1 && (
+              {next && (
                 <div
                   aria-hidden="true"
                   className="absolute -right-2 top-7 hidden h-px w-4 lg:block"
-                  style={{ background: `linear-gradient(90deg, ${step.color}40, ${steps[i + 1]!.color}40)` }}
+                  style={{ background: `linear-gradient(90deg, ${step.color}40, ${next.color}40)` }}
                 />
               )}
 
@@ -127,8 +130,10 @@ export function SignalPipeline({ summary }: { summary: PipelineSummary }): JSX.E
               )}
             </div>
           </Reveal>
-        ))}
-      </div>
+          </li>
+          );
+        })}
+      </ol>
 
       {/* Pro Tip callout (YouTube / Microservices pattern) */}
       <Reveal delay={520}>

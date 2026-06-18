@@ -2,11 +2,13 @@ import { BRAND_COLORS } from "@/lib/brand";
 
 type StatusKey = "LIVE" | "ACCRUING" | "GATED" | "SOON";
 
+// GATED text color is a lighter ultraviolet (#9D86FF) so the label clears WCAG
+// AA on its own tint; the border/bg keep the base ultraviolet identity.
 const STATUS_STYLE: Record<StatusKey, { color: string; bg: string; border: string }> = {
   LIVE:     { color: BRAND_COLORS.orbitalCyan, bg: "rgba(0,229,255,0.08)",   border: "rgba(0,229,255,0.22)"  },
   ACCRUING: { color: "#FFB454",                bg: "rgba(255,180,84,0.08)",  border: "rgba(255,180,84,0.22)" },
-  GATED:    { color: BRAND_COLORS.softUltraviolet, bg: "rgba(122,92,255,0.08)", border: "rgba(122,92,255,0.22)" },
-  SOON:     { color: "#9AA3B2",                bg: "rgba(154,163,178,0.06)", border: "rgba(154,163,178,0.14)" },
+  GATED:    { color: "#9D86FF",                bg: "rgba(122,92,255,0.10)",  border: "rgba(122,92,255,0.28)" },
+  SOON:     { color: "#AEB6C2",                bg: "rgba(154,163,178,0.08)", border: "rgba(154,163,178,0.18)" },
 };
 
 const COLUMNS = [
@@ -54,7 +56,12 @@ const COLUMNS = [
 
 export function CapabilityMatrix() {
   return (
-    <div className="overflow-x-auto">
+    <div>
+      {/* Horizontal-scroll affordance — only shown on narrow screens */}
+      <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-ink-500 md:hidden">
+        Scroll horizontally to see all four layers →
+      </p>
+      <div className="overflow-x-auto" tabIndex={0} aria-label="Capability matrix — scrolls horizontally on small screens">
       <div className="grid min-w-[640px] grid-cols-4 gap-3">
         {COLUMNS.map((col) => (
           <div key={col.label} className="flex flex-col gap-2">
@@ -72,24 +79,25 @@ export function CapabilityMatrix() {
               return (
                 <div
                   key={item.name}
-                  className="flex flex-col gap-1.5 rounded-lg border p-3 transition-all duration-200 hover:border-opacity-50"
+                  className="flex flex-col gap-1.5 rounded-lg border p-3 transition-all duration-200"
                   style={{ borderColor: `${col.color}18`, background: `${col.color}05` }}
                 >
                   <div className="flex items-start justify-between gap-1">
                     <p className="text-xs font-semibold leading-tight text-white">{item.name}</p>
                     <span
-                      className="shrink-0 rounded-full border px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.1em]"
+                      className="shrink-0 rounded-full border px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em]"
                       style={{ color: st.color, background: st.bg, borderColor: st.border }}
                     >
                       {item.status}
                     </span>
                   </div>
-                  <p className="text-[11px] leading-tight text-ink-500">{item.note}</p>
+                  <p className="text-[11px] leading-tight text-ink-400">{item.note}</p>
                 </div>
               );
             })}
           </div>
         ))}
+      </div>
       </div>
     </div>
   );

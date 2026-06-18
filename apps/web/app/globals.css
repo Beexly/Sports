@@ -194,6 +194,13 @@
   50% { opacity: 0.4; transform: scale(1.6); }
 }
 
+/* Core-node breathing ring (Intelligence Stack node-graph). Reduced-motion
+ * is handled by the global animation catch-all rule. */
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(1); transform-origin: center; }
+  50% { opacity: 0.55; transform: scale(1.08); transform-origin: center; }
+}
+
 /* ── Kinetic marquee / ticker ──────────────────────────────────────────
  * A seamless horizontal scroll. The track holds the content TWICE; moving
  * it -50% loops invisibly. Hovering the .gse-marquee pauses it. */

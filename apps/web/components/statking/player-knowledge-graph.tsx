@@ -16,17 +16,16 @@ export function PlayerKnowledgeGraph() {
   const maxGpi = players[0]?.galaxy_player_index ?? 1;
 
   const edges: Array<[number, number, string]> = [];
-  for (let i = 0; i < players.length; i++) {
-    for (let j = i + 1; j < players.length; j++) {
-      const pi = players[i]!;
-      const pj = players[j]!;
+  players.forEach((pi, i) => {
+    players.forEach((pj, j) => {
+      if (j <= i) return;
       if (pi.team === pj.team) {
         edges.push([i, j, "team"]);
       } else if (pi.position === pj.position) {
         edges.push([i, j, "position"]);
       }
-    }
-  }
+    });
+  });
 
   return (
     <div>
@@ -36,8 +35,15 @@ export function PlayerKnowledgeGraph() {
       <svg
         viewBox="0 0 600 600"
         className="mx-auto w-full max-w-[480px]"
-        aria-label="NFL Player Intelligence Graph — top players by Galaxy Player Index"
+        role="img"
+        aria-labelledby="pkg-title pkg-desc"
       >
+        <title id="pkg-title">NFL Player Intelligence Graph</title>
+        <desc id="pkg-desc">
+          {`Radial graph of the top ${players.length} NFL players by Galaxy Player Index: ` +
+            players.map((p, i) => `#${i + 1} ${p.name} (${p.team} ${p.position}), GPI ${p.galaxy_player_index}`).join("; ") +
+            ". Lines connect players who share a team or position. The full ranked list appears below."}
+        </desc>
         <defs>
           <radialGradient id="pkg-center" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#FFB454" stopOpacity="0.25" />

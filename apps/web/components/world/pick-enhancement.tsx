@@ -35,6 +35,39 @@ const FEATURES = [
 export function PickEnhancement() {
   return (
     <div>
+      {/* ── Illustrative-example disclaimer ──
+          Non-negotiable rule #2 (no fabricated stats): this is a marketing
+          mockup, not a real published pick. Mirrors the SignalCourtroom
+          `illustrative` badge so nothing is ever read as a live signal. */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          marginBottom: "1.25rem",
+          padding: "6px 12px",
+          borderRadius: 8,
+          alignSelf: "flex-start",
+          width: "fit-content",
+          border: "1px solid rgba(255,180,84,0.35)",
+          background: "rgba(255,180,84,0.08)",
+        }}
+      >
+        <span aria-hidden="true" style={{ fontSize: 12 }}>⚠️</span>
+        <span
+          style={{
+            fontFamily: "var(--f-mono, ui-monospace, monospace)",
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "#FFB454",
+          }}
+        >
+          Illustrative example — not a real pick
+        </span>
+      </div>
+
       {/* ── Before / After split ── */}
       <div
         className="pick-enhancement-grid"
@@ -117,15 +150,15 @@ function BeforePanel() {
         Before
       </span>
 
-      {/* Pick text */}
+      {/* Pick text — muted but still legible (≥3:1) */}
       <p
         style={{
           margin: 0,
           font: "600 15px/1.4 var(--f-body, system-ui, sans-serif)",
-          color: "rgba(255,255,255,0.35)",
+          color: "rgba(255,255,255,0.55)",
         }}
       >
-        Patrick Mahomes — Over 285.5 Yards
+        Generic Player — Over 285.5 Yards
       </p>
 
       {/* Faded confidence placeholder */}
@@ -142,17 +175,18 @@ function BeforePanel() {
             fontSize: 10,
             textTransform: "uppercase",
             letterSpacing: "0.14em",
-            color: "rgba(255,255,255,0.22)",
+            color: "rgba(255,255,255,0.50)",
           }}
         >
           Confidence
         </span>
         <span
+          aria-hidden="true"
           style={{
             fontFamily: "var(--f-numerals, var(--f-mono, ui-monospace, monospace))",
             fontSize: 22,
             fontWeight: 700,
-            color: "rgba(255,255,255,0.12)",
+            color: "rgba(255,255,255,0.30)",
             letterSpacing: "-0.02em",
           }}
         >
@@ -166,7 +200,7 @@ function BeforePanel() {
           margin: 0,
           fontFamily: "var(--f-mono, ui-monospace, monospace)",
           fontSize: 11,
-          color: "rgba(255,255,255,0.15)",
+          color: "rgba(255,255,255,0.55)",
           fontStyle: "italic",
         }}
       >
@@ -251,7 +285,7 @@ function AfterPanel() {
           color: "#F6F7FA",
         }}
       >
-        Patrick Mahomes — Over 285.5 Passing Yards
+        Generic Player — Over 285.5 Passing Yards
       </p>
 
       {/* Confidence chip */}
@@ -342,7 +376,7 @@ function AfterPanel() {
             fontFamily: "var(--f-mono, ui-monospace, monospace)",
             fontSize: 11,
             fontWeight: 600,
-            color: "#7A5CFF",
+            color: "#9D86FF",
             letterSpacing: "0.04em",
           }}
         >
@@ -366,7 +400,7 @@ function AfterPanel() {
             fontSize: 9,
             textTransform: "uppercase",
             letterSpacing: "0.18em",
-            color: "rgba(122,92,255,0.55)",
+            color: "#9D86FF",
           }}
         >
           Market line
@@ -381,11 +415,11 @@ function AfterPanel() {
           }}
         >
           Opened +110 &rarr; Current -105{" "}
-          <span style={{ color: "#7A5CFF" }}>(market moved toward us)</span>
+          <span style={{ color: "#9D86FF" }}>(market moved toward us)</span>
         </p>
       </div>
 
-      {/* Receipt footer */}
+      {/* Receipt footer — sample format, not a real settled receipt */}
       <p
         style={{
           margin: 0,
@@ -393,12 +427,12 @@ function AfterPanel() {
           fontSize: 9,
           textTransform: "uppercase",
           letterSpacing: "0.14em",
-          color: "rgba(246,247,250,0.28)",
+          color: "rgba(246,247,250,0.50)",
           borderTop: "1px solid rgba(255,255,255,0.06)",
           paddingTop: 10,
         }}
       >
-        Model v2.4.1 &middot; Issued 2026-05-21T14:32Z
+        Sample receipt &middot; model version + issue time stamped at publish
       </p>
     </div>
   );
@@ -438,7 +472,7 @@ function FeatureCell({ title, body }: { title: string; body: string }) {
         style={{
           margin: 0,
           font: "400 13px/1.55 var(--f-body, system-ui, sans-serif)",
-          color: "rgba(246,247,250,0.55)",
+          color: "rgba(246,247,250,0.66)",
         }}
       >
         {body}

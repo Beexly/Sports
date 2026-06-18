@@ -6,7 +6,7 @@ import { Reveal, Stagger } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { BRAND_COLORS } from "@/lib/brand";
-import { loadSummary, loadReadinessScores } from "@/lib/statking/product";
+import { loadSummary, loadKingScorecard } from "@/lib/statking/product";
 
 export const metadata: Metadata = {
   title: "Intelligence Stack — How Galaxy Sports Edge Works",
@@ -17,11 +17,14 @@ export const metadata: Metadata = {
 
 // ─── Data layer ───────────────────────────────────────────────────────────────
 
-const KING_DIMS = [
-  { label: "Source Coverage", score: 40, color: BRAND_COLORS.orbitalCyan },
-  { label: "Live Feeds",      score: 10, color: BRAND_COLORS.ionMagenta },
-  { label: "Proof Archive",   score:  5, color: "#FF6470" },
-  { label: "Metric Depth",    score: 65, color: "#5FD9A3" },
+// Real moats surfaced from the King Standard scorecard (rule #2: no fabricated
+// breakdown). Decorative bars use brand accents only — never the magenta/alert
+// semantic roles. Scores are read at render from the scorecard file.
+const KING_DIM_MOATS = [
+  { label: "Source Trust",        moat: "source trust moat",      color: BRAND_COLORS.orbitalCyan },
+  { label: "Explanation / UX",    moat: "explanation/UX moat",    color: BRAND_COLORS.softUltraviolet },
+  { label: "Proof & Backtesting", moat: "proof/backtesting moat", color: BRAND_COLORS.orbitalCyan },
+  { label: "Model & Prediction",  moat: "model/prediction moat",  color: BRAND_COLORS.softUltraviolet },
 ] as const;
 
 const STACK_COLS = [
@@ -90,8 +93,8 @@ type StatusKey = "LIVE" | "ACCRUING" | "GATED" | "SOON";
 const STATUS_STYLE: Record<StatusKey, { color: string; bg: string; border: string }> = {
   LIVE:     { color: BRAND_COLORS.orbitalCyan, bg: "rgba(0,229,255,0.10)",   border: "rgba(0,229,255,0.25)"  },
   ACCRUING: { color: "#FFB454",                bg: "rgba(255,180,84,0.10)",  border: "rgba(255,180,84,0.25)" },
-  GATED:    { color: BRAND_COLORS.softUltraviolet, bg: "rgba(122,92,255,0.10)", border: "rgba(122,92,255,0.25)" },
-  SOON:     { color: "#9AA3B2",                bg: "rgba(154,163,178,0.08)", border: "rgba(154,163,178,0.15)" },
+  GATED:    { color: "#9D86FF",                bg: "rgba(122,92,255,0.10)",  border: "rgba(122,92,255,0.28)" },
+  SOON:     { color: "#AEB6C2",                bg: "rgba(154,163,178,0.08)", border: "rgba(154,163,178,0.18)" },
 };
 
 // ─── Node-graph data ───────────────────────────────────────────────────────────
@@ -126,7 +129,7 @@ function StatusBadge({ status }: { status: StatusKey }) {
   const s = STATUS_STYLE[status];
   return (
     <span
-      className="rounded-full border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em]"
+      className="rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em]"
       style={{ color: s.color, background: s.bg, borderColor: s.border }}
     >
       {status}
@@ -268,6 +271,9 @@ function NodeGraph() {
 
 export default function StackPage() {
   const summary = loadSummary();
+  const scorecard = loadKingScorecard();
+  const kingScore: number = scorecard.overall_score || 0;
+  const kingDims = KING_DIM_MOATS.map((d) => ({ ...d, score: scorecard.dimensions[d.moat] ?? 0 }));
 
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
@@ -424,7 +430,7 @@ export default function StackPage() {
                       King Standard
                     </p>
                     <p className="mt-1 font-display text-4xl font-extrabold tabular-nums text-white">
-                      61 <span className="text-xl text-ink-500">/ 100</span>
+                      {kingScore} <span className="text-xl text-ink-500">/ 100</span>
                     </p>
                     <p className="mt-2 text-sm text-ink-300">
                       Autonomous foundation — real sources, rights-gated, fixture-backed.
@@ -436,13 +442,13 @@ export default function StackPage() {
                     <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-500">
                       Breakdown
                     </p>
-                    {KING_DIMS.map(({ label, score, color }) => (
+                    {kingDims.map(({ label, score, color }) => (
                       <div key={label} className="mb-2 flex items-center gap-3">
                         <span className="w-28 text-xs text-ink-400 truncate">{label}</span>
                         <div className="relative h-1.5 w-24 overflow-hidden rounded-full bg-white/[0.06]">
                           <div
                             className="h-full rounded-full"
-                            style={{ width: `${score}%`, background: color, boxShadow: `0 0 6px ${color}80` }}
+                            style={{ width: `${Math.min(100, Math.max(0, score))}%`, background: color, boxShadow: `0 0 6px ${color}80` }}
                           />
                         </div>
                         <span className="w-6 text-right font-mono text-xs tabular-nums" style={{ color }}>
