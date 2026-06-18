@@ -7,6 +7,7 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { formatDate } from "@/lib/utils";
+import { SITE_URL } from "@/lib/seo/sports-jsonld";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -19,14 +20,28 @@ export async function generateMetadata({
 
   const post = await db.blogPost.findUnique({
     where: { slug: params.slug, status: "PUBLISHED" },
-    select: { title: true, seoTitle: true, seoDescription: true, excerpt: true },
+    select: { title: true, seoTitle: true, seoDescription: true, excerpt: true, publishedAt: true },
   });
 
   if (!post) return { title: "Not Found" };
 
+  const url = `${SITE_URL}/blog/${params.slug}`;
+  const title = post.seoTitle ?? post.title;
+  const description = post.seoDescription ?? post.excerpt.slice(0, 155);
+
   return {
-    title: post.seoTitle ?? post.title,
-    description: post.seoDescription ?? post.excerpt.slice(0, 155),
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      url,
+      title,
+      description,
+      siteName: "Galaxy Sports Edge",
+      ...(post.publishedAt ? { publishedTime: post.publishedAt.toISOString() } : {}),
+    },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -51,8 +66,34 @@ export default async function BlogPostPage({
 
   const showFullContent = entitlements.canSeePremiumPicks;
 
+  const canonicalUrl = `${SITE_URL}/blog/${params.slug}`;
+  // BlogPosting rich-result markup — makes published analysis eligible for
+  // Article rich results. Author/publisher = Organization (Galaxy Sports Edge).
+  const blogJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.seoDescription ?? post.excerpt.slice(0, 200),
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+    ...(post.publishedAt
+      ? { datePublished: post.publishedAt.toISOString(), dateModified: post.publishedAt.toISOString() }
+      : {}),
+    author: { "@type": "Organization", name: "Galaxy Sports Edge", url: SITE_URL },
+    publisher: {
+      "@type": "Organization",
+      name: "Galaxy Sports Edge",
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo-mark.svg` },
+    },
+    ...(post.sport ? { about: post.sport } : {}),
+    ...(post.tags.length > 0 ? { keywords: post.tags.join(", ") } : {}),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+      />
       <Nav />
       <main className="min-h-screen bg-obsidian">
         <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6">
