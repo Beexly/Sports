@@ -1,58 +1,4 @@
-import { BRAND_COLORS } from "@/lib/brand";
-
-type StatusKey = "LIVE" | "ACCRUING" | "GATED" | "SOON";
-
-// GATED text color is a lighter ultraviolet (#9D86FF) so the label clears WCAG
-// AA on its own tint; the border/bg keep the base ultraviolet identity.
-const STATUS_STYLE: Record<StatusKey, { color: string; bg: string; border: string }> = {
-  LIVE:     { color: BRAND_COLORS.orbitalCyan, bg: "rgba(0,229,255,0.08)",   border: "rgba(0,229,255,0.22)"  },
-  ACCRUING: { color: "#FFB454",                bg: "rgba(255,180,84,0.08)",  border: "rgba(255,180,84,0.22)" },
-  GATED:    { color: "#9D86FF",                bg: "rgba(122,92,255,0.10)",  border: "rgba(122,92,255,0.28)" },
-  SOON:     { color: "#AEB6C2",                bg: "rgba(154,163,178,0.08)", border: "rgba(154,163,178,0.18)" },
-};
-
-const COLUMNS = [
-  {
-    label: "Data Layer",
-    color: BRAND_COLORS.orbitalCyan,
-    items: [
-      { name: "The Odds API",    note: "Live pricing",           status: "LIVE"     as StatusKey },
-      { name: "nflverse",        note: "Player & team data",     status: "LIVE"     as StatusKey },
-      { name: "Media Signal",    note: "Context intelligence",   status: "LIVE"     as StatusKey },
-      { name: "Market Movement", note: "Steam & sharp action",   status: "LIVE"     as StatusKey },
-    ],
-  },
-  {
-    label: "Intelligence Engine",
-    color: BRAND_COLORS.softUltraviolet,
-    items: [
-      { name: "Confidence Scoring", note: "0–100 calibrated",       status: "LIVE"     as StatusKey },
-      { name: "Factor Model",       note: "4-factor signal score",   status: "LIVE"     as StatusKey },
-      { name: "CLV Calibration",    note: "Closing-line alignment",  status: "ACCRUING" as StatusKey },
-      { name: "Consensus Engine",   note: "Independent referees",    status: "LIVE"     as StatusKey },
-    ],
-  },
-  {
-    label: "Decision Gates",
-    color: "#FFB454",
-    items: [
-      { name: "Min Confidence ≥55", note: "Hard floor threshold",   status: "LIVE"     as StatusKey },
-      { name: "No-Bet Discipline",  note: "Silence is the default", status: "LIVE"     as StatusKey },
-      { name: "King Standard",      note: "61/100 readiness",       status: "LIVE"     as StatusKey },
-      { name: "History Grading",    note: "Settled-pick scoring",   status: "ACCRUING" as StatusKey },
-    ],
-  },
-  {
-    label: "Output Layer",
-    color: BRAND_COLORS.ionMagenta,
-    items: [
-      { name: "Published Picks",  note: "Tiered with factor trail",  status: "LIVE" as StatusKey },
-      { name: "Receipts Archive", note: "Tamper-evident ledger",      status: "LIVE" as StatusKey },
-      { name: "Observatory",      note: "Live market monitoring",     status: "LIVE" as StatusKey },
-      { name: "Accountability",   note: "Public settled record",      status: "LIVE" as StatusKey },
-    ],
-  },
-] as const;
+import { STATUS_STYLE, CAPABILITY_COLUMNS } from "@/lib/intelligence/capabilities";
 
 export function CapabilityMatrix() {
   return (
@@ -63,7 +9,7 @@ export function CapabilityMatrix() {
       </p>
       <div className="overflow-x-auto" tabIndex={0} aria-label="Capability matrix — scrolls horizontally on small screens">
       <div className="grid min-w-[640px] grid-cols-4 gap-3">
-        {COLUMNS.map((col) => (
+        {CAPABILITY_COLUMNS.map((col) => (
           <div key={col.label} className="flex flex-col gap-2">
             {/* Column header pill */}
             <span

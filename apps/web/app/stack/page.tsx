@@ -7,6 +7,7 @@ import { Atmosphere } from "@/components/ui/atmosphere";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { BRAND_COLORS } from "@/lib/brand";
 import { loadSummary, loadKingScorecard } from "@/lib/statking/product";
+import { STATUS_STYLE, CAPABILITY_COLUMNS, type StatusKey } from "@/lib/intelligence/capabilities";
 
 export const metadata: Metadata = {
   title: "Intelligence Stack — How Galaxy Sports Edge Works",
@@ -27,48 +28,6 @@ const KING_DIM_MOATS = [
   { label: "Model & Prediction",  moat: "model/prediction moat",  color: BRAND_COLORS.softUltraviolet },
 ] as const;
 
-const STACK_COLS = [
-  {
-    label: "Data Layer",
-    color: BRAND_COLORS.orbitalCyan,
-    items: [
-      { name: "The Odds API",   note: "Live pricing",           status: "LIVE"     },
-      { name: "nflverse",       note: "Player & team data",     status: "LIVE"     },
-      { name: "Media Signal",   note: "Context intelligence",   status: "LIVE"     },
-      { name: "Market Movement",note: "Steam & sharp action",   status: "LIVE"     },
-    ],
-  },
-  {
-    label: "Intelligence Engine",
-    color: BRAND_COLORS.softUltraviolet,
-    items: [
-      { name: "Confidence Scoring",  note: "0–100 calibrated",       status: "LIVE"     },
-      { name: "Factor Model",        note: "4-factor signal score",   status: "LIVE"     },
-      { name: "CLV Calibration",     note: "Closing-line alignment",  status: "ACCRUING" },
-      { name: "Consensus Engine",    note: "Independent referees",    status: "LIVE"     },
-    ],
-  },
-  {
-    label: "Decision Gates",
-    color: "#FFB454",
-    items: [
-      { name: "Min Confidence ≥55",  note: "Hard floor threshold",    status: "LIVE"     },
-      { name: "No-Bet Discipline",   note: "Silence is the default",  status: "LIVE"     },
-      { name: "King Standard",       note: "61/100 readiness",        status: "LIVE"     },
-      { name: "History Grading",     note: "Settled-pick scoring",    status: "ACCRUING" },
-    ],
-  },
-  {
-    label: "Output Layer",
-    color: BRAND_COLORS.ionMagenta,
-    items: [
-      { name: "Published Picks",  note: "Tiered with factor trail",   status: "LIVE"     },
-      { name: "Receipts Archive", note: "Tamper-evident ledger",      status: "LIVE"     },
-      { name: "Observatory",      note: "Live market monitoring",     status: "LIVE"     },
-      { name: "Accountability",   note: "Public settled record",      status: "LIVE"     },
-    ],
-  },
-] as const;
 
 const BOTTOM_FEATURES = [
   {
@@ -87,15 +46,6 @@ const BOTTOM_FEATURES = [
     body: "Every published pick is cryptographically committed before the event. The history cannot be quietly edited — not even by us.",
   },
 ] as const;
-
-type StatusKey = "LIVE" | "ACCRUING" | "GATED" | "SOON";
-
-const STATUS_STYLE: Record<StatusKey, { color: string; bg: string; border: string }> = {
-  LIVE:     { color: BRAND_COLORS.orbitalCyan, bg: "rgba(0,229,255,0.10)",   border: "rgba(0,229,255,0.25)"  },
-  ACCRUING: { color: "#FFB454",                bg: "rgba(255,180,84,0.10)",  border: "rgba(255,180,84,0.25)" },
-  GATED:    { color: "#9D86FF",                bg: "rgba(122,92,255,0.10)",  border: "rgba(122,92,255,0.28)" },
-  SOON:     { color: "#AEB6C2",                bg: "rgba(154,163,178,0.08)", border: "rgba(154,163,178,0.18)" },
-};
 
 // ─── Node-graph data ───────────────────────────────────────────────────────────
 
@@ -373,7 +323,7 @@ export default function StackPage() {
               </p>
             </Reveal>
             <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-              {STACK_COLS.map((col) => (
+              {CAPABILITY_COLUMNS.map((col) => (
                 <Reveal key={col.label}>
                   <div
                     className="flex flex-col overflow-hidden rounded-2xl border"
@@ -400,9 +350,9 @@ export default function StackPage() {
                         <div key={item.name} className="flex items-center justify-between gap-3 px-4 py-3">
                           <div className="min-w-0">
                             <p className="text-sm font-semibold text-white truncate">{item.name}</p>
-                            <p className="text-xs text-ink-500 truncate">{item.note}</p>
+                            <p className="text-xs text-ink-400 truncate">{item.note}</p>
                           </div>
-                          <StatusBadge status={item.status as StatusKey} />
+                          <StatusBadge status={item.status} />
                         </div>
                       ))}
                     </div>

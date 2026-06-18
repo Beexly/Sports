@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Shell, HeroStat, ScoreRing, InsightCard, SectionHeader, StatusRibbon } from "./_components";
 import { loadSummary, loadActiveMetricManifest, loadKingScorecard, rankPlayers } from "@/lib/statking/product";
 import { glossaryEntry } from "@/lib/glossary";
+import { STATUS_STYLE, type StatusKey } from "@/lib/intelligence/capabilities";
 
 export const metadata = {
   title: "Galaxy StatKing — NFL Player & Team Intelligence",
@@ -23,16 +24,7 @@ const KING_DIMENSION_MOATS: Array<{ label: string; moat: string; color: string; 
   { label: "Model & Prediction", moat: "model/prediction moat",  color: "#7A5CFF", glow: "rgba(122,92,255,0.5)" },
 ];
 
-type SurfaceStatus = "LIVE" | "ACCRUING" | "GATED" | "SOON";
-
-const STATUS_STYLE: Record<SurfaceStatus, { color: string; bg: string; border: string }> = {
-  LIVE:     { color: "#00E5FF", bg: "rgba(0,229,255,0.08)",   border: "rgba(0,229,255,0.20)" },
-  ACCRUING: { color: "#FFB454", bg: "rgba(255,180,84,0.08)",  border: "rgba(255,180,84,0.20)" },
-  GATED:    { color: "#9D86FF", bg: "rgba(122,92,255,0.10)",  border: "rgba(122,92,255,0.26)" },
-  SOON:     { color: "#AEB6C2", bg: "rgba(154,163,178,0.08)", border: "rgba(154,163,178,0.18)" },
-};
-
-const SURFACES: ReadonlyArray<{ label: string; href: string; note: string; status: SurfaceStatus }> = [
+const SURFACES: ReadonlyArray<{ label: string; href: string; note: string; status: StatusKey }> = [
   { label: "Players",           href: "/stats/players",      note: "GPI rankings",      status: "LIVE" },
   { label: "Teams",             href: "/stats/teams",        note: "Environment",        status: "LIVE" },
   { label: "Compare",           href: "/stats/compare",      note: "Side-by-side",       status: "LIVE" },
