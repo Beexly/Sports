@@ -346,3 +346,68 @@ export type {
   SovereignComponent,
   SovereignEdgeResult,
 } from "./sovereign-edge-index.js";
+// Market Gravity Temporal — temporal read of market gravity over a chronological
+// series of snapshots (weight 0). Complements the point-in-time marketGravityIndex
+// with path length, efficiency, reversals, velocity, and a trajectory label. All
+// hypothesis / decision-support only; measuring movement ≠ the market being right.
+export {
+  marketGravityTrajectory,
+  STEAM_MIN_NET_MOVE,
+  STEAM_MIN_EFFICIENCY,
+  CHOP_MIN_PATH_LENGTH,
+  CHOP_MIN_REVERSALS,
+  DRIFT_NET_MOVE_MIN,
+  DRIFT_NET_MOVE_MAX,
+  STABLE_MAX_PATH_LENGTH,
+  DISPERSION_TREND_DEADBAND,
+  NET_MOVE_SIDE_DEADBAND,
+} from "./market-gravity-temporal.js";
+export type {
+  GravitySnapshot,
+  DispersionTrend,
+  MarketTrajectoryLabel,
+  MarketSide,
+  MarketGravityTrajectory,
+} from "./market-gravity-temporal.js";
+// Market-Lie Detector — pure adversarial pair (weight 0):
+//   classifyLineMove: labels the likely cause of a line move (hypothesis, never
+//     confirmed without news ingestion — the K3 gate).
+//   antiModel: the adversary pass that argues AGAINST our own shadow pick; surviving
+//     it is necessary but not sufficient for a real edge.
+export {
+  classifyLineMove,
+  antiModel,
+  LM_MIN_MEANINGFUL_NET_MOVE,
+  LM_STEAM_MIN_NET_MOVE,
+  LM_NEWS_DISPERSION_SPIKE,
+  LM_VIG_MAX_NET_MOVE,
+  LM_VIG_MAX_DISPERSION_DELTA,
+  LM_CHOP_MIN_REVERSALS,
+  ANTI_STRONG_GRAVITY_THRESHOLD,
+  ANTI_WEAK_CLV_BEAT_RATE,
+  ANTI_MIN_CLV_SAMPLE,
+  ANTI_HIGH_DISPERSION_THRESHOLD,
+} from "./market-lie-detector.js";
+export type {
+  LineMoveCauseLabel,
+  LineMoveFacts,
+  LineMoveCause,
+  AntiModelInput,
+  AntiModelVerdict,
+  AntiModelResult,
+} from "./market-lie-detector.js";
+// No-Bet Observability Analyzer — READ-ONLY surface of pick-publication decisions
+// (weight 0). Classifies candidates into published / no-bet and counts gate
+// firings (confidence floor, edge-pass, edge-contradicts). CRITICAL HONESTY:
+// measures that a no-bet HAPPENED and WHY — cannot say if it saved or cost us;
+// that requires the K3 No-Bet Ledger (settlement tracking, not yet built).
+export {
+  analyzeNoBetDecisions,
+  MIN_PUBLISH_CONFIDENCE as NO_BET_MIN_PUBLISH_CONFIDENCE,
+} from "./no-bet-ledger.js";
+export type {
+  NoBetReason,
+  NoBetCandidate,
+  NoBetReasonCount,
+  NoBetAnalysis,
+} from "./no-bet-ledger.js";

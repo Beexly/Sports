@@ -28,6 +28,9 @@ const FORBIDDEN_MODULES = [
   "sovereign-edge-index",
   "edge-type",
   "pick-autopsy",
+  "market-gravity-temporal",
+  "market-lie-detector",
+  "no-bet-ledger",
 ] as const;
 
 describe("(a) scoring.ts does not import the inert K2 edge modules", () => {
