@@ -97,8 +97,8 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     key: "signal-reasoning",
     displayName: "Signal reasoning",
     customerExplanation: "The factor trail behind each signal — what's driving it and how stable it is.",
-    internalNote: "Full factor breakdown.",
-    minTier: "PRO", status: "live", freePreview: false, lockBehaviorForFree: "blurred", upgradeCtaTier: "PRO",
+    internalNote: "Full factor breakdown. Elite-first restructure: moved PRO→ELITE.",
+    minTier: "ELITE", status: "live", freePreview: false, lockBehaviorForFree: "blurred", upgradeCtaTier: "ELITE",
   },
   {
     key: "confidence",
@@ -125,8 +125,8 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     key: "parlay-mri",
     displayName: "Parlay MRI",
     customerExplanation: "Shows where a parlay is fragile instead of pretending every leg is equal.",
-    internalNote: "Parlay genome / dependency analysis.",
-    minTier: "PRO", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
+    internalNote: "Parlay genome / dependency analysis. Elite-first restructure: moved PRO→ELITE.",
+    minTier: "ELITE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "ELITE",
   },
   {
     key: "board-filters",
@@ -206,6 +206,27 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     customerExplanation: "More of the alerts that matter, tuned to what you follow.",
     internalNote: "Richer alerts; planned.",
     minTier: "ELITE", status: "planned", freePreview: false, lockBehaviorForFree: "hidden", upgradeCtaTier: "ELITE",
+  },
+  {
+    key: "trend-lab",
+    displayName: "Trend Lab",
+    customerExplanation: "The cohort workbench — slice the board by situation and study how signals behave over time.",
+    internalNote: "Trend Lab cohort workbench. Elite-first restructure: Elite-gated money-feature.",
+    minTier: "ELITE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "ELITE",
+  },
+  {
+    key: "ask-the-model",
+    displayName: "Ask the model why",
+    customerExplanation: "Ask why a signal exists and get an evidence-grounded answer drawn from its factor trail.",
+    internalNote: "Evidence-grounded ask-the-model chat. Elite-first restructure: Elite-gated money-feature.",
+    minTier: "ELITE", status: "live", freePreview: false, lockBehaviorForFree: "blurred", upgradeCtaTier: "ELITE",
+  },
+  {
+    key: "line-movement",
+    displayName: "Line-movement intel",
+    customerExplanation: "How the market's price has moved across the window, and how fast — context the board alone can't give.",
+    internalNote: "Line-movement history/intel. Elite-first restructure: Elite-gated money-feature.",
+    minTier: "ELITE", status: "live", freePreview: false, lockBehaviorForFree: "blurred", upgradeCtaTier: "ELITE",
   },
 
   // ── Operator — workflow (waitlist) ───────────────────────────────────────

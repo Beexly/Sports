@@ -120,10 +120,30 @@ describe("feature gating", () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 
-  it("the full daily board and signal reasoning are Pro+ (not Free)", () => {
+  it("the full daily board is Pro+ (not Free)", () => {
     expect(isFeatureUnlocked("FREE", "daily-board-full")).toBe(false);
     expect(isFeatureUnlocked("PRO", "daily-board-full")).toBe(true);
     expect(isFeatureUnlocked("FREE", "signal-reasoning")).toBe(false);
+  });
+
+  it("Elite-first restructure: signal-reasoning and parlay-mri are Elite-only (not Pro)", () => {
+    for (const key of ["signal-reasoning", "parlay-mri"]) {
+      expect(isFeatureUnlocked("PRO", key), `${key} should be Elite-only now`).toBe(false);
+      expect(isFeatureUnlocked("ELITE", key), `${key} at Elite`).toBe(true);
+    }
+  });
+
+  it("confidence stays a Pro feature (the entry-tier value anchor)", () => {
+    expect(isFeatureUnlocked("FREE", "confidence")).toBe(false);
+    expect(isFeatureUnlocked("PRO", "confidence")).toBe(true);
+    expect(isFeatureUnlocked("ELITE", "confidence")).toBe(true);
+  });
+
+  it("the new Elite money-features (Trend Lab, ask-the-model, line-movement) are Elite-only", () => {
+    for (const key of ["trend-lab", "ask-the-model", "line-movement"]) {
+      expect(isFeatureUnlocked("PRO", key), `${key} should be Elite-only`).toBe(false);
+      expect(isFeatureUnlocked("ELITE", key), `${key} at Elite`).toBe(true);
+    }
   });
 
   it("Galaxy Twin, CLV, and deeper market movement are Elite+ (not Pro)", () => {

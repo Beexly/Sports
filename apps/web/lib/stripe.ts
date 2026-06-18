@@ -1,7 +1,16 @@
 import Stripe from "stripe";
-import { getCurrentPricingPhase, type BillingInterval } from "@/lib/pricing/pricing-phases";
+import {
+  getCurrentPricingPhase,
+  getNewSubscriberRates,
+  type BillingInterval,
+} from "@/lib/pricing/pricing-phases";
 
 export type { BillingInterval };
+
+// Reference getCurrentPricingPhase so the phase ladder stays wired here even
+// though display now derives from getNewSubscriberRates (which itself reads the
+// FOUNDING phase by default). Keeps the proof-gated phase as the founding floor.
+void getCurrentPricingPhase;
 
 export const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]!, {
   apiVersion: "2024-06-20",
@@ -23,17 +32,32 @@ export const STRIPE_PRICE_IDS = {
   },
 } as const;
 
+// Apex add-on price IDs — the per-pick and 5-pack one-time purchases that sit
+// ABOVE Elite (not a recurring tier). Operator creates these prices in Stripe and
+// wires the env vars; empty string until then.
+export const STRIPE_APEX_PRICE_IDS = {
+  perPick: process.env["STRIPE_APEX_PERPICK_PRICE_ID"] ?? "",
+  fivePack: process.env["STRIPE_APEX_5PACK_PRICE_ID"] ?? "",
+} as const;
+
 /** Resolve the Stripe price ID for a tier + billing interval. */
 export function getStripePriceId(tier: "PRO" | "ELITE", interval: BillingInterval): string {
   return STRIPE_PRICE_IDS[tier][interval];
 }
 
-// Display prices derive from the current pricing phase (Founding by default).
-// Advancing PRICING_PHASE re-prices every public surface at once.
-const currentPhase = getCurrentPricingPhase();
+/** Resolve the Stripe price ID for an Apex add-on purchase. */
+export function getApexPriceId(kind: "perPick" | "fivePack"): string {
+  return STRIPE_APEX_PRICE_IDS[kind];
+}
+
+// Display prices derive from the rates a NEW subscriber is quoted — the live
+// FOUNDING phase by default, or STANDARD_RATES once the owner flips PRICING_MODE.
+// One flip re-prices every public surface at once; grandfathered subscribers keep
+// their Stripe price regardless.
+const newSubscriberRates = getNewSubscriberRates();
 export const PRICE_DISPLAY = {
-  PRO: { monthly: currentPhase.pro.monthly, annual: currentPhase.pro.annual, label: "Pro" },
-  ELITE: { monthly: currentPhase.elite.monthly, annual: currentPhase.elite.annual, label: "Elite" },
+  PRO: { monthly: newSubscriberRates.pro.monthly, annual: newSubscriberRates.pro.annual, label: "Pro" },
+  ELITE: { monthly: newSubscriberRates.elite.monthly, annual: newSubscriberRates.elite.annual, label: "Elite" },
 } as const;
 
 /**

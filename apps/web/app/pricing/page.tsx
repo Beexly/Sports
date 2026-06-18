@@ -5,8 +5,11 @@ import { Footer } from "@/components/ui/footer";
 import { PricingPlans, type PlanView } from "@/components/pricing/pricing-plans";
 import {
   getCurrentPricingPhase,
+  getCurrentPricingMode,
+  getNewSubscriberRates,
   annualSavingsPct,
   annualMonthlyEquivalent,
+  APEX_ADDON,
   GRANDFATHER_GUARANTEE,
 } from "@/lib/pricing/pricing-phases";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
@@ -26,16 +29,25 @@ import { SITE_URL } from "@/lib/seo/sports-jsonld";
 // ─────────────────────────────────────────────
 
 const phase = getCurrentPricingPhase();
+// Rates a NEW subscriber is quoted — FOUNDING by default, STANDARD_RATES once the
+// owner flips PRICING_MODE. Founding-only copy ("lowest price we'll ever offer")
+// is gated on this so it never becomes untrue under standard mode.
+const rates = getNewSubscriberRates();
+const isFounding = getCurrentPricingMode() === "founding";
 
 export const metadata: Metadata = {
-  title: "Pricing — Founding-Member Rates, Locked For Life",
-  description:
-    "Free for two picks a day, with confidence. Founding-member pricing on Pro and Elite — the lowest price we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
+  title: isFounding
+    ? "Pricing — Founding-Member Rates, Locked For Life"
+    : "Pricing — Pro & Elite Plans",
+  description: isFounding
+    ? "Free for two picks a day, with confidence. Founding-member pricing on Pro and Elite — the lowest price we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time."
+    : "Free for two picks a day, with confidence. Pro and Elite unlock the full board — Elite is the best-value tier. Monthly or annual. Cancel any time.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: `Pricing — ${BRAND_NAME}`,
-    description:
-      "Founding-member pricing, locked for life. Monthly or annual, with a 3-day money-back window.",
+    description: isFounding
+      ? "Founding-member pricing, locked for life. Monthly or annual, with a 3-day money-back window."
+      : "Pro and Elite plans — Elite is the best value. Monthly or annual, with a 3-day money-back window.",
   },
 };
 
@@ -50,8 +62,9 @@ const FREE_FEATURES = [
   { label: "Public verified record & calibration", included: true },
   { label: "The Academy — full training floor", included: true },
   { label: "Confidence on the full board (Pro)", included: false },
-  { label: "Factor trail & evidence audit (Pro)", included: false },
-  { label: "Trend Lab + Parlay MRI (Pro)", included: false },
+  { label: "Factor trail & evidence audit (Elite)", included: false },
+  { label: "Trend Lab + Parlay MRI (Elite)", included: false },
+  { label: "Ask the model + line-movement intel (Elite)", included: false },
   { label: "Real-time alerts (Elite)", included: false },
   { label: "CLV Ledger + staking toolkit (Elite)", included: false },
 ] as const;
@@ -60,28 +73,28 @@ const PRO_FEATURES = [
   { label: "The Academy + public verified record", included: true },
   { label: "Every signal, every day — all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
+  { label: "Full No-Bet reasoning + board filters", included: true },
+  { label: "Edge history + proof ledger access", included: true },
+  { label: "Full factor trail & reasoning (Elite)", included: false },
+  { label: "Evidence audit — full forensic detail (Elite)", included: false },
+  { label: "Ask the model why + line-movement intel (Elite)", included: false },
+  { label: "Trend Lab + Parlay MRI (Elite)", included: false },
+  { label: "Real-time alerts (Elite)", included: false },
+  { label: "CLV Ledger + staking toolkit (Elite)", included: false },
+] as const;
+
+const ELITE_FEATURES = [
+  { label: "Everything in Pro — all 7 sports, confidence on every signal", included: true },
   { label: "Full factor trail & reasoning", included: true },
   { label: "Evidence audit — full forensic detail", included: true },
   { label: "Ask the model why, on any pick", included: true },
   { label: "Line-movement intel", included: true },
   { label: "Trend Lab — full cohort workbench", included: true },
   { label: "Parlay MRI — the portfolio surgeon", included: true },
-  { label: "Real-time alerts (Elite)", included: false },
-  { label: "CLV Ledger + staking toolkit (Elite)", included: false },
-] as const;
-
-const ELITE_FEATURES = [
   { label: "Real-time email + push alerts on every signal", included: true },
-  { label: "CLV Ledger — your glass-box bet tracker", included: true },
-  { label: "Staking calculator — Kelly-aware sizing", included: true },
+  { label: "CLV Ledger + Kelly-aware staking toolkit", included: true },
   { label: "First access to new intelligence surfaces", included: true },
-  { label: "Every signal, every day — all 7 sports", included: true },
-  { label: "Confidence rating on every signal", included: true },
-  { label: "Full factor trail & evidence audit", included: true },
-  { label: "Ask the model why + line-movement intel", included: true },
-  { label: "Trend Lab — full cohort workbench", included: true },
-  { label: "Parlay MRI — the portfolio surgeon", included: true },
-  { label: "The Academy + public verified record", included: true },
+  { label: "SHARP-tier signals (70–92% band) — building the record", included: true },
 ] as const;
 
 const PLANS: PlanView[] = [
@@ -100,24 +113,25 @@ const PLANS: PlanView[] = [
   {
     id: "PRO",
     name: "Pro",
-    monthly: phase.pro.monthly,
-    annual: phase.pro.annual,
-    annualSavingsPct: annualSavingsPct(phase.pro),
-    annualMonthly: annualMonthlyEquivalent(phase.pro),
-    description: "The full intelligence layer: every signal, the confidence rating, the factor trail, the Trend Lab, the Parlay MRI.",
-    badge: "Where most start",
+    monthly: rates.pro.monthly,
+    annual: rates.pro.annual,
+    annualSavingsPct: annualSavingsPct(rates.pro),
+    annualMonthly: annualMonthlyEquivalent(rates.pro),
+    description: "The daily board with confidence: every signal across all 7 sports, the confidence rating, full No-Bet reasoning, and filters.",
+    badge: "Most Popular",
     cta: "Subscribe to Pro",
     features: [...PRO_FEATURES],
   },
   {
     id: "ELITE",
     name: "Elite",
-    monthly: phase.elite.monthly,
-    annual: phase.elite.annual,
-    annualSavingsPct: annualSavingsPct(phase.elite),
-    annualMonthly: annualMonthlyEquivalent(phase.elite),
-    description: "The professional toolkit: everything in Pro, plus real-time alerts and the CLV ledger that proves your own edge.",
-    badge: "The professional toolkit",
+    monthly: rates.elite.monthly,
+    annual: rates.elite.annual,
+    annualSavingsPct: annualSavingsPct(rates.elite),
+    annualMonthly: annualMonthlyEquivalent(rates.elite),
+    description: "The complete intelligence layer: everything in Pro, plus the full factor trail, ask-the-model, line movement, Trend Lab, Parlay MRI, real-time alerts, and the CLV ledger.",
+    badge: "Best Value",
+    hero: true,
     cta: "Subscribe to Elite",
     features: [...ELITE_FEATURES],
   },
@@ -142,7 +156,7 @@ const COMPARISON_FEATURES = [
 
 const COMPARISON_CELLS: Record<"FREE" | "PRO" | "ELITE", (string | boolean)[]> = {
   FREE: ["2", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true],
-  PRO: ["Unlimited", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true],
+  PRO: ["Unlimited", "All 7", true, true, false, false, false, false, false, false, false, false, true, true],
   ELITE: ["Unlimited", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true],
 };
 
@@ -155,10 +169,18 @@ const FAQ = [
     q: "Is there a free trial on Pro or Elite?",
     a: "No free trial — but every paid plan has a 3-day money-back window. Cancel any time from your dashboard.",
   },
-  {
-    q: "What is founding-member pricing?",
-    a: "We are pre-track-record, so the launch cohort gets the lowest price we will ever offer — and it is locked for the life of your subscription. When prices rise for new members as the verified record grows, yours never does.",
-  },
+  // Founding-only: the "lowest price we'll ever offer" claim is true only while
+  // PRICING_MODE is founding. Under standard mode it is replaced with a neutral
+  // grandfather note so nothing on the page becomes untrue.
+  isFounding
+    ? {
+        q: "What is founding-member pricing?",
+        a: "We are pre-track-record, so the launch cohort gets the lowest price we will ever offer — and it is locked for the life of your subscription. When prices rise for new members as the verified record grows, yours never does.",
+      }
+    : {
+        q: "Are early subscribers grandfathered?",
+        a: "Yes. Founding members keep their founding rate for the life of their subscription — no forced migration, ever. Your price is locked when you join and never rises for you.",
+      },
   {
     q: "How is this different from a tout service?",
     a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail and holds back a public win-rate until enough canonical settled history exists to support one honestly.",
@@ -194,10 +216,10 @@ const offersJsonLd = {
     "Daily sports picks with confidence scores, factor trails, line movement, and published calibration receipts. Free tier included; Pro and Elite unlock the full board.",
   brand: { "@type": "Brand", name: BRAND_NAME },
   offers: [
-    { tier: "Pro", interval: "Monthly", price: phase.pro.monthly },
-    { tier: "Pro", interval: "Annual", price: phase.pro.annual },
-    { tier: "Elite", interval: "Monthly", price: phase.elite.monthly },
-    { tier: "Elite", interval: "Annual", price: phase.elite.annual },
+    { tier: "Pro", interval: "Monthly", price: rates.pro.monthly },
+    { tier: "Pro", interval: "Annual", price: rates.pro.annual },
+    { tier: "Elite", interval: "Monthly", price: rates.elite.monthly },
+    { tier: "Elite", interval: "Annual", price: rates.elite.annual },
   ].map((o) => ({
     "@type": "Offer",
     name: `${o.tier} · ${o.interval}`,
@@ -247,13 +269,14 @@ export default function PricingPage() {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-                Claim the founding rate.
+                {isFounding ? "Claim the founding rate." : "Elite is where the depth lives."}
               </h1>
             </Reveal>
             <Reveal delay={180}>
               <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">
-                Start free. Back us before the record exists and your price never moves —
-                even as it rises for everyone who joins later.
+                {isFounding
+                  ? "Start free. Back us before the record exists and your price never moves — even as it rises for everyone who joins later."
+                  : "Start free. Pro reads today's board with confidence; Elite is the best-value tier — the complete intelligence layer behind every signal."}
               </p>
             </Reveal>
             <Reveal delay={260}>
@@ -265,6 +288,31 @@ export default function PricingPage() {
           <div className="mt-14">
             <PricingPlans plans={PLANS} grandfatherNote={grandfatherNote} />
           </div>
+
+          {/* Apex add-on — a separate purchase ABOVE Elite, not a tier */}
+          <section className="mt-12">
+            <div
+              className="mx-auto max-w-3xl overflow-hidden rounded-2xl border p-6 text-center"
+              style={{
+                borderColor: `${BRAND_COLORS.softUltraviolet}44`,
+                background: `radial-gradient(120% 100% at 50% 0%, ${BRAND_COLORS.softUltraviolet}10, rgba(8,6,20,0.6) 70%)`,
+              }}
+            >
+              <p
+                className="font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
+                style={{ color: BRAND_COLORS.softUltraviolet }}
+              >
+                Apex add-on
+              </p>
+              <h3 className="mt-2 text-lg font-bold text-white">
+                Apex picks (92–100% band)
+              </h3>
+              <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-ink-300">
+                ${APEX_ADDON.perPick}/pick or ${APEX_ADDON.fivePack}/5-pack — a separate purchase
+                above Elite. Building the record; no win-rate claim published.
+              </p>
+            </div>
+          </section>
 
           {/* Why each step up — the value ladder (incl. the Operator waitlist) */}
           <section className="mt-20">
@@ -347,15 +395,18 @@ export default function PricingPage() {
                 tier="Pro"
                 hex={BRAND_COLORS.ionMagenta}
                 doors={[
-                  { label: "Trend Lab — cohort workbench", href: "/trends" },
-                  { label: "Parlay MRI — portfolio surgeon", href: "/parlay-mri" },
-                  { label: "Factor trail on every pick", href: "/picks" },
+                  { label: "Today's full board — all 7 sports", href: "/board" },
+                  { label: "Confidence on every signal", href: "/picks" },
+                  { label: "Board filters + No-Bet reasoning", href: "/board" },
                 ]}
               />
               <TierDoorColumn
                 tier="Elite"
                 hex={BRAND_COLORS.softUltraviolet}
                 doors={[
+                  { label: "Factor trail + ask the model", href: "/picks" },
+                  { label: "Trend Lab — cohort workbench", href: "/trends" },
+                  { label: "Parlay MRI — portfolio surgeon", href: "/parlay-mri" },
                   { label: "CLV Ledger + staking toolkit", href: "/track" },
                   { label: "Real-time alerts", href: "/dashboard" },
                   { label: "New surfaces, first", href: "/changelog" },
@@ -501,7 +552,7 @@ export default function PricingPage() {
           {/* Refund note */}
           <p className="mt-12 text-center text-xs text-ink-500">
             No free trial. Every paid plan has a 3-day money-back window. Cancel any time
-            from your dashboard. Prices shown are founding-member rates.
+            from your dashboard.{isFounding ? " Prices shown are founding-member rates." : " Founding members keep their founding rate for life."}
           </p>
         </div>
       </main>

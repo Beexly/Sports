@@ -132,6 +132,61 @@ const PHASE_BY_ID: Record<PricingPhaseId, PricingPhase> = Object.fromEntries(
   PRICING_PHASES.map((p) => [p.id, p]),
 ) as Record<PricingPhaseId, PricingPhase>;
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Orthogonal STANDARD-rate layer (Elite-first restructure)
+//
+// This sits ALONGSIDE the proof-gated FOUNDING ladder above — it does not mutate
+// it. FOUNDING stays the live default and existing founding subscribers are
+// grandfathered for life (their Stripe price persists; this module never migrates
+// them). The standard layer only changes what NEW subscribers are quoted, and only
+// once the owner flips PRICING_MODE to "standard" (default is "founding", so
+// nothing changes for live users until that deliberate human action).
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Which rate card NEW subscribers are quoted. Owner-gated via PRICING_MODE. */
+export type PricingMode = "founding" | "standard";
+
+/**
+ * Standard (non-founding) rate card. Pro rises and Elite becomes the flagship,
+ * best-value tier under the Elite-first restructure. Pinned here as the single
+ * source of truth for standard-mode quotes; only live once PRICING_MODE="standard".
+ */
+export const STANDARD_RATES: { readonly pro: TierPrice; readonly elite: TierPrice } = {
+  pro: { monthly: 24.99, annual: 149 },
+  elite: { monthly: 39.99, annual: 199 },
+} as const;
+
+/** Apex add-on — a separate, one-time purchase that sits ABOVE Elite (not a tier). */
+export interface ApexAddOnPricing {
+  /** Price for a single Apex pick, in USD. */
+  readonly perPick: number;
+  /** Price for a 5-pack of Apex picks, in USD. */
+  readonly fivePack: number;
+}
+
+export const APEX_ADDON: ApexAddOnPricing = { perPick: 9.99, fivePack: 49.99 };
+
+/**
+ * Current rate mode — operator-advanced via PRICING_MODE, defaulting to the safest
+ * (FOUNDING). An unrecognized value falls back to "founding" rather than guessing up.
+ */
+export function getCurrentPricingMode(): PricingMode {
+  return process.env["PRICING_MODE"] === "standard" ? "standard" : "founding";
+}
+
+/**
+ * The Pro/Elite rates a NEW subscriber is quoted right now. STANDARD_RATES under
+ * standard mode; the live FOUNDING phase's pro/elite otherwise. Grandfathered
+ * subscribers are unaffected — enforcement is at the Stripe subscription.
+ */
+export function getNewSubscriberRates(): { readonly pro: TierPrice; readonly elite: TierPrice } {
+  if (getCurrentPricingMode() === "standard") {
+    return STANDARD_RATES;
+  }
+  const founding = PHASE_BY_ID.FOUNDING;
+  return { pro: founding.pro, elite: founding.elite };
+}
+
 function isPhaseId(value: string | undefined): value is PricingPhaseId {
   return value === "FOUNDING" || value === "PROVEN" || value === "ESTABLISHED" || value === "AUTHORITY";
 }

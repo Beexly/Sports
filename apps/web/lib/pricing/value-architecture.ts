@@ -105,16 +105,19 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     price: { monthly: founding.pro.monthly, annual: founding.pro.annual, note: "founding rate, locked for life" },
     unlocks: [
       "Today's full daily board — every signal, risk, and No-Bet call",
-      "Core signal detail and the factor trail behind it",
       "Confidence reasoning — how strong, stable, and supported a signal is",
       "Board filters",
       "Recent edge history",
       "Full No-Bet reasoning (volatility, staleness, overpricing)",
       "Proof ledger access",
-      "Parlay MRI — where a parlay is fragile, not just its payout",
       "Basic alerts where available",
     ],
     gated: [
+      "The full factor trail and reasoning behind each signal",
+      "Ask the model why — evidence-grounded, on any pick",
+      "Line-movement intel",
+      "Trend Lab — the cohort workbench",
+      "Parlay MRI — where a parlay is fragile, not just its payout",
       "Galaxy Twin / Edge Map market layers",
       "Deeper market-movement context",
       "Saved watchlists and advanced filters",
@@ -122,7 +125,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
       "Premium Academy and briefings",
     ],
     whyNextTier:
-      "Elite adds the market BEHIND the board — Galaxy Twin, deeper movement, calibration, and CLV — so you read the market, not just the slate.",
+      "Elite is the best-value tier — and where the depth lives: the full factor trail, ask-the-model, line-movement intel, Trend Lab, Parlay MRI, plus Galaxy Twin, calibration, and CLV. It is the complete intelligence layer, and the place most members settle.",
   },
   {
     id: "ELITE",
@@ -135,6 +138,11 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     price: { monthly: founding.elite.monthly, annual: founding.elite.annual, note: "founding rate, locked for life" },
     unlocks: [
       "Everything in Pro",
+      "The full factor trail and reasoning behind each signal",
+      "Ask the model why — evidence-grounded, on any pick",
+      "Line-movement intel — how the price moved across the window",
+      "Trend Lab — the full cohort workbench",
+      "Parlay MRI — where a parlay is fragile, not just its payout",
       "Galaxy Twin / Edge Map — the live market and signal environment, visualized",
       "Deeper market-movement context and Market Gravity",
       "Sharper props intelligence where the data supports it",

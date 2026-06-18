@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { PRICING_PHASES, getPricingPhase } from "@/lib/pricing/pricing-phases";
+import {
+  PRICING_PHASES,
+  getPricingPhase,
+  STANDARD_RATES,
+  APEX_ADDON,
+  getCurrentPricingMode,
+} from "@/lib/pricing/pricing-phases";
 
 /**
  * Pricing honesty + consistency guard.
@@ -81,5 +87,39 @@ describe("public pricing honesty", () => {
       expect(p.pro.annual).toBeLessThan(p.pro.monthly * 12);
       expect(p.elite.annual).toBeLessThan(p.elite.monthly * 12);
     }
+  });
+});
+
+describe("orthogonal standard-rate layer stays founding-default", () => {
+  it("defaults to founding mode (owner-gated flip; live users unaffected)", () => {
+    expect(getCurrentPricingMode()).toBe("founding");
+  });
+
+  it("pins the STANDARD_RATES card without touching the FOUNDING floor", () => {
+    expect(STANDARD_RATES.pro.monthly).toBe(24.99);
+    expect(STANDARD_RATES.pro.annual).toBe(149);
+    expect(STANDARD_RATES.elite.monthly).toBe(39.99);
+    expect(STANDARD_RATES.elite.annual).toBe(199);
+    // FOUNDING is untouched.
+    expect(FOUNDING.pro.monthly).toBe(14.99);
+    expect(FOUNDING.elite.monthly).toBe(24.99);
+  });
+
+  it("pins the Apex add-on prices", () => {
+    expect(APEX_ADDON.perPick).toBe(9.99);
+    expect(APEX_ADDON.fivePack).toBe(49.99);
+  });
+
+  it("the pricing page Apex callout is honest — band stated, no win-rate claim", () => {
+    const pricing = readRepoFile("apps/web/app/pricing/page.tsx");
+    expect(pricing).toContain("Apex");
+    expect(pricing).toMatch(/no win-rate claim published/i);
+    expect(pricing).toMatch(/building the record/i);
+  });
+
+  it("stripe.ts derives display from the new-subscriber rates (founding-default)", () => {
+    const src = readRepoFile("apps/web/lib/stripe.ts");
+    expect(src).toContain("getNewSubscriberRates");
+    expect(src).toContain("getApexPriceId");
   });
 });

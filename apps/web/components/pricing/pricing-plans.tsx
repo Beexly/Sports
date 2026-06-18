@@ -28,6 +28,8 @@ export interface PlanView {
   readonly description: string;
   readonly badge: string | null;
   readonly cta: string;
+  /** The flagship, best-value plan — gets the prominent border/scale/glow + primary CTA. */
+  readonly hero?: boolean;
   readonly features: ReadonlyArray<{ readonly label: string; readonly included: boolean }>;
 }
 
@@ -38,7 +40,8 @@ export function PricingPlans({
   readonly plans: ReadonlyArray<PlanView>;
   readonly grandfatherNote: string;
 }) {
-  const [interval, setInterval] = useState<Interval>("month");
+  // Annual-first: the year plan is the better-value default we lead with.
+  const [interval, setInterval] = useState<Interval>("year");
   const annual = interval === "year";
 
   return (
@@ -50,11 +53,11 @@ export function PricingPlans({
           aria-label="Billing interval"
           className="inline-flex rounded-full border border-white/[0.10] bg-white/[0.03] p-1"
         >
-          <ToggleButton active={!annual} onClick={() => setInterval("month")}>
-            Monthly
-          </ToggleButton>
           <ToggleButton active={annual} onClick={() => setInterval("year")}>
             Annual
+          </ToggleButton>
+          <ToggleButton active={!annual} onClick={() => setInterval("month")}>
+            Monthly
           </ToggleButton>
         </div>
         <span
@@ -68,7 +71,7 @@ export function PricingPlans({
           {annual && (
             <span className="h-1.5 w-1.5 rounded-full bg-verify animate-live-pulse" aria-hidden="true" />
           )}
-          Save up to 45% annually
+          Save up to 59% annually
         </span>
       </div>
 
@@ -78,15 +81,18 @@ export function PricingPlans({
           const isPro = plan.id === "PRO";
           const isElite = plan.id === "ELITE";
           const isPaid = plan.id !== "FREE";
+          // Hero = the flagship best-value plan (Elite). It earns the prominent
+          // border/scale/glow + the primary CTA; everything else is secondary.
+          const isHero = plan.hero === true;
           return (
             <HoloTilt key={plan.id} className="h-full">
             <div
               className={[
                 "relative flex h-full flex-col rounded-2xl border p-6 animate-fade-up",
-                isPro
-                  ? "border-plasma/50 bg-white/[0.03] shadow-glow-plasma"
-                  : isElite
-                    ? "border-ultraviolet/50 bg-ultraviolet/5 shadow-glow-uv"
+                isHero
+                  ? "border-ultraviolet/60 bg-ultraviolet/10 shadow-glow-uv md:scale-[1.04]"
+                  : isPro
+                    ? "border-plasma/40 bg-white/[0.03]"
                     : "border-white/[0.10] bg-white/[0.03]",
               ].join(" ")}
               style={{ animationDelay: `${i * 90}ms` }}
@@ -96,9 +102,9 @@ export function PricingPlans({
                   <span
                     className={[
                       "rounded-full px-3 py-1 text-xs font-bold",
-                      isPro
-                        ? "bg-plasma text-plasma-ink shadow-[0_0_14px_rgba(255,45,214,0.6)]"
-                        : "bg-ultraviolet text-white shadow-[0_0_14px_rgba(122,92,255,0.5)]",
+                      isHero
+                        ? "bg-ultraviolet text-white shadow-[0_0_14px_rgba(122,92,255,0.5)]"
+                        : "bg-plasma text-plasma-ink shadow-[0_0_14px_rgba(255,45,214,0.6)]",
                     ].join(" ")}
                   >
                     {plan.badge}
@@ -110,7 +116,7 @@ export function PricingPlans({
                 <h2
                   className={[
                     "text-xl font-bold",
-                    isPro ? "text-plasma" : isElite ? "text-ultraviolet-glow" : "text-white",
+                    isElite ? "text-ultraviolet-glow" : isPro ? "text-plasma" : "text-white",
                   ].join(" ")}
                 >
                   {plan.name}
@@ -167,7 +173,7 @@ export function PricingPlans({
                   <SubscribeButton
                     tier={plan.id}
                     label={plan.cta}
-                    variant={isPro ? "primary" : "ghost"}
+                    variant={isHero ? "primary" : "ghost"}
                     interval={interval}
                   />
                 )}
