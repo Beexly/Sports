@@ -223,7 +223,7 @@ interface PickNarrativeArgs {
   readonly pickGrade: PickGrade;
 }
 
-function composePickReasoning(args: PickNarrativeArgs): { reasoning: string; reasoningShort: string } {
+export function composePickReasoning(args: PickNarrativeArgs): { reasoning: string; reasoningShort: string } {
   const { subject, bookmakerCount, consensusPct, consensusIsProbability, rawEdge, contextClauses, independentEdge, confidence, pickGrade } = args;
   const gradePhrase = pickGrade.replace(/_/g, " ").toLowerCase();
 
