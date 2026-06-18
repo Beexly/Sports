@@ -22,6 +22,7 @@ import { loadDailyCommand } from "@/lib/cockpit/daily-command/loader";
 import { buildAuthorityMatrix } from "@/lib/cockpit/daily-command/authority-matrix";
 import { CommandDeck } from "@/components/cockpit/daily-command/command-deck";
 import { AuthorityMatrixView } from "@/components/cockpit/daily-command/authority-matrix";
+import { JarvisChat } from "@/components/cockpit/jarvis-chat";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { startOfDay, endOfDay } from "date-fns";
 
@@ -250,6 +251,15 @@ export default async function CockpitOverview() {
           {command.headline}
         </p>
         <CommandDeck command={command} />
+      </section>
+
+      {/* ── Ask Jarvis — real Claude-powered, voice-capable, advisory-only ──
+           Grounded in the live operating assessment via the server endpoint.
+           Read-only: it never transitions tasks, publishes, or spends beyond
+           the metered model call. Voice degrades to text-only when the Web
+           Speech APIs are absent. */}
+      <section aria-label="Ask Jarvis">
+        <JarvisChat />
       </section>
 
       {/* ── L0–L5 Authority Matrix ───────────────────────────────────── */}
