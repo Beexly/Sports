@@ -144,8 +144,8 @@ export default async function BlogPostPage({
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-obsidian/80 to-obsidian">
                     <div className="text-center p-6 bg-carbon border border-titanium rounded-2xl max-w-sm">
-                      <div className="w-10 h-10 bg-yellow-400/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="w-10 h-10 bg-caution/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg className="w-5 h-5 text-caution" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
                       </div>

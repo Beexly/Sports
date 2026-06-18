@@ -23,7 +23,7 @@ function JournalEntryCard({ entry }: { readonly entry: PublicJournalEntry }): JS
         Week {entry.isoWeek}, {entry.isoYear} · {entry.modelVersion}
       </p>
       <Link href={`/journal/${entry.slug}`}>
-        <h2 className="mt-3 font-display text-xl text-white transition-colors group-hover:text-cyan-200">
+        <h2 className="mt-3 font-display text-xl text-white transition-colors group-hover:text-ion-blue">
           {entry.title}
         </h2>
       </Link>

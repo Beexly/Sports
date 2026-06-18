@@ -75,8 +75,8 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 
         {/* Error banner */}
         {errorMessage && (
-          <div className="mb-5 rounded-lg border border-red-800/60 bg-red-950/40 px-4 py-3">
-            <p className="text-center text-sm text-red-400">{errorMessage}</p>
+          <div className="mb-5 rounded-lg border border-alert/60 bg-alert/10 px-4 py-3">
+            <p className="text-center text-sm text-alert">{errorMessage}</p>
           </div>
         )}
 

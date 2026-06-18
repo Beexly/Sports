@@ -60,7 +60,7 @@ export default async function BriefStub() {
               published today
               {demoActive && (
                 <span
-                  className="ml-2 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300"
+                  className="ml-2 rounded bg-caution/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution"
                   title="Sample data"
                 >
                   sample
