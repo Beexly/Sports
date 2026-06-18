@@ -45,6 +45,15 @@ export {
   deriveClosingSnapshotFromOdds,
   gradePickClv,
 } from "./clv-capture.js";
+// Edge-significance self-grader — Monte-Carlo permutation test asking whether
+// the model's observed wins beat a no-edge (market-implied) null. Pure; surfaced
+// publicly only behind the performance gate + a minimum settled sample.
+export { edgeSignificance } from "./edge-significance.js";
+export type {
+  SettledPick as EdgeSettledPick,
+  SignificanceOptions,
+  SignificanceResult,
+} from "./edge-significance.js";
 export type {
   PickKind,
   ClosingOddsRow,

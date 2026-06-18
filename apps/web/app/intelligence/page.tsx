@@ -522,6 +522,9 @@ export default function IntelligencePage() {
                 <Link href="/methodology" className="btn btn-primary">
                   How it works
                 </Link>
+                <Link href="/reliability" className="btn btn-ghost">
+                  See the receipts
+                </Link>
                 <Link href="/responsible-play" className="btn btn-ghost">
                   Play responsibly
                 </Link>

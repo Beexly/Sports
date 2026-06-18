@@ -458,6 +458,7 @@ export default function StackPage() {
               <Stagger className="mt-10 flex flex-wrap gap-3 text-sm" step={50}>
                 {[
                   { href: "/intelligence", label: "Inside the signal →" },
+                  { href: "/reliability", label: "The receipts — every proof in one place →" },
                   { href: "/methodology", label: "How a pick is scored →" },
                   { href: "/clv", label: "Closing line value →" },
                   { href: "/accountability", label: "Full accountability →" },

@@ -184,6 +184,7 @@ export default async function ClvPage() {
           <Reveal delay={160}>
             <Stagger className="flex flex-wrap gap-3 text-sm" step={50}>
               {[
+                { href: "/reliability", label: "The receipts — every proof in one place →" },
                 { href: "/methodology", label: "How a signal is scored & graded →" },
                 { href: "/performance", label: "The Calibration Report →" },
                 { href: "/observatory", label: "Live market & line shop →" },

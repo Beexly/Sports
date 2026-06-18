@@ -219,6 +219,15 @@ export default async function PerformancePage() {
                   How we&apos;ll prove it
                 </p>
                 <CalibrationPanel />
+                <p className="mt-6 text-center text-sm">
+                  <Link
+                    href="/reliability"
+                    className="font-semibold transition-colors hover:text-white"
+                    style={{ color: BRAND_COLORS.orbitalCyan }}
+                  >
+                    See every proof in one place — the receipts →
+                  </Link>
+                </p>
               </div>
             </Reveal>
           </div>
@@ -304,6 +313,19 @@ export default async function PerformancePage() {
           {/* Calibration panel first */}
           <Reveal>
             <CalibrationPanel />
+          </Reveal>
+
+          {/* Crosslink to the unified proof hub */}
+          <Reveal>
+            <p className="-mt-6 mb-2 text-center text-sm">
+              <Link
+                href="/reliability"
+                className="font-semibold transition-colors hover:text-white"
+                style={{ color: BRAND_COLORS.orbitalCyan }}
+              >
+                See every proof in one place — the receipts →
+              </Link>
+            </p>
           </Reveal>
 
           {fetchError && (
