@@ -22,8 +22,11 @@
  */
 
 import { db, isStubMode } from "@sports/db";
-import type { CockpitTaskStatus } from "@prisma/client";
-import { AGENT_OS_REGISTRY } from "@/lib/agents/agent-registry";
+import type { CockpitRiskLevel, CockpitTaskStatus } from "@prisma/client";
+import { AGENT_OS_REGISTRY, getAgent } from "@/lib/agents/agent-registry";
+import { scoreCandidate } from "@/lib/cockpit/scoring";
+import type { ScoringInput } from "@/lib/cockpit/scoring";
+import type { CardScore } from "./types";
 import { summarizeAgentHealth } from "@/lib/agents/agent-health";
 import { buildJarvisOperatingAssessment } from "@/lib/jarvis/jarvis-operating-assessment";
 import {
@@ -130,6 +133,48 @@ interface QueueTaskRow {
   }>;
 }
 
+/**
+ * Compute a cockpit score for an Approval Queue task. Pure + defensive: any
+ * unexpected shape degrades to no score rather than throwing, preserving the
+ * loader's never-throw discipline. The scoring engine itself does no I/O.
+ *
+ * Inputs are derived from real task + agent-registry fields:
+ *   - riskLevel       — the CockpitTask risk classification.
+ *   - sensitiveDomains— inferred from the owning agent (model/calibration-
+ *                       sensitive agents map to MODEL_WEIGHTS) and the task's
+ *                       compliance status (a HOLD signals a rights/compliance
+ *                       concern).
+ *   - ownerApprovalRequired — the agent's own approval gate.
+ */
+function scoreQueueTask(task: QueueTaskRow): CardScore | null {
+  try {
+    const agent = getAgent(task.assignedAgent.toLowerCase());
+    const sensitiveDomains: NonNullable<ScoringInput["sensitiveDomains"]>[number][] = [];
+    // Scoring-sensitive agents (PRISM/ASCEND/AUDIT) touch model weights/calibration.
+    if (agent && (agent.riskLevel === "HIGH" || agent.claudeReviewRequired)) {
+      sensitiveDomains.push("MODEL_WEIGHTS");
+    }
+    // A compliance hold/review flags a rights/scraping or claims concern.
+    if (task.complianceStatus === "HOLD" || task.complianceStatus === "REVIEW_REQUIRED") {
+      sensitiveDomains.push("RIGHTS_SCRAPING");
+    }
+    const result = scoreCandidate({
+      assignedAgent: task.assignedAgent,
+      riskLevel: task.riskLevel as CockpitRiskLevel,
+      sensitiveDomains,
+      ownerApprovalRequired: agent?.ownerApprovalRequired ?? true,
+      authorityLevel: agent?.authorityLevel,
+    });
+    return {
+      routing: result.routing,
+      complianceRisk: result.complianceRisk,
+      confidence: result.confidence,
+    };
+  } catch {
+    return null; // never throw — a missing score is acceptable, a crash is not
+  }
+}
+
 function realTaskToCard(task: QueueTaskRow): CommandCard {
   const lastDecision = task.decisions[0];
   const evidence = [
@@ -156,6 +201,7 @@ function realTaskToCard(task: QueueTaskRow): CommandCard {
     evidence,
     actionButtons: buildDecisionActions(task.status),
     taskId: task.id,
+    score: scoreQueueTask(task),
   };
 }
 

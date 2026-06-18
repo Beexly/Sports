@@ -16,6 +16,7 @@
  */
 
 import type { CockpitTaskStatus } from "@prisma/client";
+import type { RoutingDecision } from "@/lib/cockpit/scoring";
 
 /** How a lane's data was sourced. */
 export type DataMode = "live" | "labeled_fallback" | "unavailable";
@@ -75,6 +76,26 @@ export interface CommandCard {
    * advisory/seed/projection cards (which carry no action buttons).
    */
   readonly taskId: string | null;
+  /**
+   * Cockpit scoring engine output (Workstream J5), attached to Approval Queue
+   * cards so a lane can render a risk/quality badge and the routing decision.
+   * Optional/null for cards that are not scored (advisory/projection lanes).
+   */
+  readonly score?: CardScore | null;
+}
+
+/**
+ * The compact, display-ready slice of a `ScoringResult` carried on a card.
+ * The full engine result lives in `@/lib/cockpit/scoring`; the card only needs
+ * the routing decision plus the two axes a badge surfaces.
+ */
+export interface CardScore {
+  /** The routing decision the scoring engine reached. */
+  readonly routing: RoutingDecision;
+  /** Likelihood of a trust-guardrail breach, 0..1. */
+  readonly complianceRisk: number;
+  /** Confidence in the proposal, 0..1. */
+  readonly confidence: number;
 }
 
 /** One composed lane, with its honesty label. */
