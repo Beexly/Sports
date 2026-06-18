@@ -23,10 +23,12 @@ Done in-session, each behind typecheck + lint + full test suite (5,900+) + build
 | **HIGH** server-action auth | `assertCockpitAdmin()` (`auth()` + ADMIN) added inside the memory Server Actions — the layout guard doesn't cover the POST endpoint. | `app/cockpit/memory/page.tsx` |
 | **CRITICAL** contrast | Faint `text-ion-3/40·/50·/60·/30` sub-labels (incl. the Drilldowns disclosure summary) bumped to `text-ion-2`/`text-ion-3` (AA-passing). | `app/cockpit/page.tsx` |
 | **HIGH** locked Win Rate | Gated win rate now renders a 🔒 **Locked** state with a title, not a bare `—` that read as broken. | `app/cockpit/page.tsx` |
+| **G4** (picks gate) freshness mask | The public picks freshness gate now requires `oddsInserted > 0`, not just `status:"SUCCESS"` — an empty-but-200 odds run can no longer reset the freshness clock and mask staleness. Locked with a test. (/api/health left as run-level, deferred.) | `lib/data-reliability/public-freshness-gate.ts` (+ test) |
+| **L3** checkout email | `session.user.email!` non-null assertion replaced with an explicit 400 guard on the payment path. | `app/api/subscriptions/checkout/route.ts` |
 | UX (prior commits) | Calm still-backed intro (WebGL warp removed) + cockpit de-clutter (disclosures, softened red). | `components/landing/cinematic-entrance.tsx`, `app/cockpit/page.tsx` |
 
 **Still deferred to handoff (need prod/owner judgment or larger test work):**
-G1 full VOID-status path (needs an upstream `completed-but-cancelled` signal — G2 covers the non-numeric case), **G4** empty-run→non-SUCCESS, the DB **migration baseline + additive indexes**, `/api/performance` `groupBy`, `FORCE_NO_BET_IF_STALE` flip (in GATE_FLIP_HANDOFF), `npm audit fix`, failover wiring, and the color-role token sweep.
+G1 full VOID-status path (needs an upstream `completed-but-cancelled` signal — G2 covers the non-numeric case), **G4 /api/health** portion (run-level vs real-odds needs the off-season-vs-outage call; ideally per-sport freshness), the DB **migration baseline + additive indexes**, `/api/performance` `groupBy`, `FORCE_NO_BET_IF_STALE` flip (in GATE_FLIP_HANDOFF), `npm audit fix`, failover wiring, cron timing-safe compare, and the color-role token sweep.
 
 ---
 
