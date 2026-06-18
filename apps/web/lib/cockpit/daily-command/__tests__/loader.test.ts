@@ -1,3 +1,8 @@
+/**
+ * Tests for loadDailyCommand() and the five lane builders: verifies the loader
+ * never throws, labels each lane's dataMode honestly (live/labeled_fallback/
+ * unavailable), and degrades cleanly when the DB is unreachable.
+ */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock the DB so we can drive the Approval-Queue and Signals lanes through both

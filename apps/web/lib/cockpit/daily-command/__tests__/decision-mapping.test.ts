@@ -1,3 +1,8 @@
+/**
+ * Tests for the owner-decision → CockpitTask transition mapping: verifies each
+ * verb (APPROVE/EDIT/REJECT/ESCALATE) resolves to the correct target status,
+ * note requirements, and allow-list-gated button enablement.
+ */
 import { describe, it, expect } from "vitest";
 import {
   DECISION_ACTIONS,

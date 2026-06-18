@@ -232,6 +232,10 @@ function seedAdvisoryCards(): readonly CommandCard[] {
   return cards;
 }
 
+/**
+ * Build the Approval Queue lane: real transitionable CockpitTask cards (with
+ * scored, allow-list-gated action buttons) first, seed/advisory items after.
+ */
 export function buildApprovalQueue(
   realTasks: readonly QueueTaskRow[],
   dbReachable: boolean

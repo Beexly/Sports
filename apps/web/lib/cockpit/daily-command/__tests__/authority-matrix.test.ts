@@ -1,3 +1,8 @@
+/**
+ * Tests for the Daily Command L0–L5 authority matrix: the ladder maps agent
+ * authority levels correctly and the declared-empty L5 (autonomous) rung holds
+ * zero agents — the on-screen face of the no-external-action invariant.
+ */
 import { describe, it, expect } from "vitest";
 import { AUTHORITY_LADDER, buildAuthorityMatrix } from "../authority-matrix";
 import { AGENT_OS_REGISTRY } from "@/lib/agents/agent-registry";

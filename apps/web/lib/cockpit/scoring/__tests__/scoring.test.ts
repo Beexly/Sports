@@ -1,3 +1,8 @@
+/**
+ * Tests for the cockpit scoring engine: verifies the routing decisions and the
+ * trust-guardrail-aligned escalation — anything touching public picks, model
+ * weights, revenue claims, or rights/scraping can never AUTO_SAVE_INTERNAL.
+ */
 import { describe, it, expect } from "vitest";
 import { scoreCandidate } from "../index";
 import type { ScoringInput } from "../types";

@@ -42,6 +42,7 @@ export const DECISION_ACTION_SPECS: Readonly<Record<DecisionAction, DecisionActi
   ESCALATE: { action: "ESCALATE", label: "Escalate", targetStatus: "BLOCKED", requiresNote: true },
 };
 
+/** Type guard: is `value` one of the four owner decision verbs? */
 export function isDecisionAction(value: unknown): value is DecisionAction {
   return typeof value === "string" && (DECISION_ACTIONS as readonly string[]).includes(value);
 }
