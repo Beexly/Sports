@@ -34,6 +34,9 @@ const COMPANY_LINKS = [
   { label: "FAQ", href: "/faq" },
   { label: "Partners", href: "/partners" },
   { label: "Media Kit", href: "/media-kit" },
+  { label: "Creator Network", href: "/creator-network" },
+  { label: "Galaxy Desk Podcast", href: "/podcast" },
+  { label: "Shop", href: "/shop" },
 ] as const;
 
 const RESPONSIBLE_LINKS = [

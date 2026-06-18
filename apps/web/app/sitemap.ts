@@ -41,6 +41,10 @@ const ROUTES: ReadonlyArray<{
   { path: "/media-kit", priority: 0.5, changeFrequency: "monthly" },
   { path: "/partners", priority: 0.5, changeFrequency: "monthly" },
   { path: "/affiliate-disclosure", priority: 0.4, changeFrequency: "monthly" },
+  // Media & community surfaces (M4)
+  { path: "/creator-network", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/podcast", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/shop", priority: 0.4, changeFrequency: "monthly" },
   { path: "/press", priority: 0.4, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.4, changeFrequency: "yearly" },
   { path: "/faq", priority: 0.5, changeFrequency: "monthly" },

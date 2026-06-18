@@ -49,7 +49,7 @@ const PLAYERS_MENU: readonly NavGroup[] = [
   },
 ];
 
-// Company ▾ — about, partners, media kit.
+// Company ▾ — about, partners, media kit, creator network, podcast, shop.
 const COMPANY_MENU: readonly NavGroup[] = [
   {
     items: [
@@ -57,6 +57,14 @@ const COMPANY_MENU: readonly NavGroup[] = [
       { label: "Partners", href: "/partners", desc: "Content partnerships, collaborations, and creator network" },
       { label: "Media Kit", href: "/media-kit", desc: "Sponsor information — niche trust, not fake reach" },
       { label: "Press", href: "/press", desc: "Press inquiries and brand assets" },
+    ],
+  },
+  {
+    heading: "Media & Community",
+    items: [
+      { label: "Galaxy Desk Podcast", href: "/podcast", desc: "12–18 min audio brief — Market Mirage, No-Bet Watch, matchup signal" },
+      { label: "Creator Network", href: "/creator-network", desc: "Contribute by lane — NFL, NBA, MLB, fantasy, DFS, Houston local" },
+      { label: "Shop", href: "/shop", desc: "Merch built around the Galaxy phrase library — opening soon" },
     ],
   },
 ];
