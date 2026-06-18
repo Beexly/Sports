@@ -1,5 +1,26 @@
+/**
+ * Agent OS Registry — the 23-seat fleet with formal, L0–L5-bound charters.
+ *
+ * Workstream J-fleet hardened every seat with an explicit `charter` block
+ * (see lib/agents/agent-charter.ts) so the dispatch loop, scoring, and
+ * observability reason about all agents uniformly. The charter is ADDITIVE:
+ * it is derived from each seat's existing authority/status/action fields and
+ * never contradicts them. No existing field changed; every seat keeps
+ * externalActionsAllowed=false, and no charter lists any evasion/external tool.
+ *
+ * The registry charter aligns with the richer per-seat governance in
+ * lib/jarvis/agent-council.ts (escalation chains, memory posture, review gates)
+ * rather than duplicating it contradictorily.
+ */
+
 import { FORBIDDEN_EXTERNAL_ACTIONS, type AgentAction } from "./agent-capabilities";
 import type { AgentOSDefinition } from "./agent-os";
+import {
+  authorityLevelToRung,
+  rungPermissionFloor,
+  type AgentCharter,
+  type CharterAuthorityRung,
+} from "./agent-charter";
 
 const draftActions = ["OBSERVE", "ANALYZE", "DRAFT", "ROUTE", "ESCALATE", "SUMMARIZE", "QUEUE", "REPORT"] as const satisfies readonly AgentAction[];
 const manualActions = ["OBSERVE", "ANALYZE", "VALIDATE", "REVIEW", "MEASURE", "REPORT"] as const satisfies readonly AgentAction[];
@@ -31,6 +52,96 @@ export const AGENT_OS_REGISTRY = [
   agent("audit", "Audit", "Results & Calibration", "Performance & Calibration Auditor", "MANUAL", "SPECIALIST", "MANUAL_EXECUTION", manualActions, ["Calibration", "Journal", "Losses"], ["calibration-report", "display-safety"], "Audit calibration and block unsafe performance claims."),
 ] as const satisfies readonly AgentOSDefinition[];
 
+/**
+ * Builds the formal charter for a seat, bound to its L0–L5 rung and derived
+ * from the same authority/status/action data the rest of the definition uses.
+ * Additive only — the result never contradicts an existing field, and the
+ * `forbiddenActions` charter field references the same FORBIDDEN_EXTERNAL_ACTIONS
+ * the definition forbids. `toolsAllowed` defaults to [] (no agent is wired to a
+ * tool bus yet); evasion/external tools are NEVER listed for any seat.
+ */
+function buildCharter(args: {
+  id: AgentOSDefinition["id"];
+  mission: string;
+  authorityLevel: AgentOSDefinition["authorityLevel"];
+  allowedActions: readonly AgentAction[];
+  taskTypesOwned: readonly string[];
+  cockpitSurfacesOwned: readonly string[];
+  escalatesTo: readonly string[];
+  scoringSensitive: boolean;
+  blockedTooling: boolean;
+  status: AgentOSDefinition["status"];
+}): AgentCharter {
+  const rung: CharterAuthorityRung = authorityLevelToRung(args.authorityLevel);
+
+  // Memory posture mirrors the memory-candidate protocol and agent-council:
+  // ARCHIVE is the only candidate-writer; all writes are review-gated, and
+  // sensitive writes require owner sign-off.
+  const memoryWriteRules: readonly string[] =
+    args.id === "archive"
+      ? [
+          "May prepare memory candidates only — never confirms or writes canonical memory.",
+          "Sensitive (HIGH) candidates require owner sign-off before confirmation.",
+          "All candidates pass the memory review queue; rejected candidates are excluded.",
+        ]
+      : [
+          "No direct memory writes — surfaces candidate-worthy facts to ARCHIVE/JARVIS only.",
+          "Sensitive memory requires owner sign-off; never confirms memory autonomously.",
+        ];
+
+  const escalationRules: readonly string[] = [
+    `Escalates to: ${args.escalatesTo.join(", ")}.`,
+    "Escalate any action requiring external effect, publish, or model-weight change to the owner.",
+    ...(args.scoringSensitive
+      ? ["Scoring/calibration changes route through AUDIT review and owner approval before any effect."]
+      : []),
+    ...(args.blockedTooling
+      ? ["Tool/browser/voice capability stays blocked until owner-approved controls and the tool bus exist."]
+      : []),
+  ];
+
+  const evidenceRequirements: readonly string[] = [
+    "Every output cites the source evidence and a fresh timestamp it was derived from.",
+    "No claim ships without a real, verifiable data reference — no fabricated stats.",
+    ...(args.scoringSensitive
+      ? ["Model/metric proposals attach out-of-sample validation and uncertainty estimates."]
+      : []),
+  ];
+
+  const qualityRubric: readonly string[] = [
+    "Truthful status — never claims wiring, telemetry, or capability that does not exist.",
+    "Stays within its authority rung; preserves every approval gate.",
+    "Grounded in real, fresh source data; no stale inputs presented as current.",
+    "Output is a draft/review/report only — never an externally visible action.",
+  ];
+
+  const evaluationMetrics: readonly string[] = [
+    "Zero external actions taken (externalActionsAllowed=false invariant holds).",
+    "Zero overstated-capability or fake-green incidents.",
+    "Approval gates preserved on every routed output.",
+    args.status === "MANUAL"
+      ? "Human-triggered runs complete with verified evidence within SLA."
+      : args.status === "NOT_WIRED"
+        ? "Stays honestly NOT_WIRED until its capability is built and verified."
+        : "Drafts accepted into the review queue with complete evidence.",
+  ];
+
+  return {
+    charter: args.mission,
+    authorityRung: rung,
+    permissions: [rungPermissionFloor(rung), ...args.allowedActions.map((action) => `May ${action}`), ...args.taskTypesOwned.map((task) => `Owns task type: ${task}`)],
+    toolsAllowed: [],
+    forbiddenActions: FORBIDDEN_EXTERNAL_ACTIONS,
+    inputTypes: ["cockpit-state", "task-queue", "source-evidence", ...args.cockpitSurfacesOwned.map((surface) => `cockpit-surface:${surface}`)],
+    outputTypes: ["review-task", "handoff-note", "owner-summary-item"],
+    qualityRubric,
+    escalationRules,
+    evidenceRequirements,
+    memoryWriteRules,
+    evaluationMetrics,
+  };
+}
+
 function agent(
   id: AgentOSDefinition["id"],
   displayName: AgentOSDefinition["displayName"],
@@ -46,12 +157,13 @@ function agent(
 ): AgentOSDefinition {
   const scoringSensitive = id === "prism" || id === "ascend" || id === "audit";
   const blockedTooling = id === "pilot" || id === "echo" || id === "relay";
+  const escalatesTo = ["jarvis", "owner"] as const;
   return {
     id, displayName, department, role, status, tier, mission, authorityLevel, allowedActions,
     forbiddenActions: FORBIDDEN_EXTERNAL_ACTIONS,
     canSpawnSubagents: id === "jarvis" || id === "prism",
     reportsTo: id === "jarvis" ? ["owner"] : ["jarvis"],
-    escalatesTo: ["jarvis", "owner"],
+    escalatesTo,
     ownerApprovalRequired: status !== "REAL" || scoringSensitive || blockedTooling,
     claudeReviewRequired: scoringSensitive || status === "NOT_WIRED",
     externalActionsAllowed: false,
@@ -67,6 +179,10 @@ function agent(
     failureModes: ["stale-inputs", "overstated-capability", "missing-review-gate"],
     implementationStatus: status,
     nextExecutableAction: mission,
+    charter: buildCharter({
+      id, mission, authorityLevel, allowedActions, taskTypesOwned, cockpitSurfacesOwned,
+      escalatesTo, scoringSensitive, blockedTooling, status,
+    }),
   };
 }
 

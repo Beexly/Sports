@@ -1,5 +1,6 @@
 import type { AgentAction } from "./agent-capabilities";
 import type { AgentAuthorityLevel } from "./agent-authority";
+import type { AgentCharter } from "./agent-charter";
 import type { AgentDepartment } from "./agent-departments";
 import type { AgentStatus } from "./agent-status";
 
@@ -35,4 +36,11 @@ export interface AgentOSDefinition {
   readonly failureModes: readonly string[];
   readonly implementationStatus: string;
   readonly nextExecutableAction: string;
+  /**
+   * Formal L0–L5-bound charter (Workstream J-fleet). OPTIONAL so legacy
+   * definitions still compile; the registry fills it in for every agent. The
+   * charter aligns with — and never contradicts — the fields above, and never
+   * grants an external action (externalActionsAllowed stays false).
+   */
+  readonly charter?: AgentCharter;
 }
