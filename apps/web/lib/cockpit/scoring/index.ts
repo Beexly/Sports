@@ -18,6 +18,13 @@
  *      claims, or rights / scraping carries HIGH compliance risk. It must reach
  *      a human: SEND_TO_APPROVAL, or ESCALATE when stakes are higher.
  *
+ *      The heuristic compliance risk derived here is MERGED with the optional
+ *      external J12 Compliance/Risk signal (`input.complianceSignal`): the axis
+ *      becomes `max(heuristic, signal.complianceRisk)` and a `signal.forceBlock`
+ *      (the scorer's own BLOCK verdict) hard-stops routing to BLOCK. This is
+ *      purely additive — it can only make compliance risk RICHER and routing
+ *      STRICTER, never less strict.
+ *
  *   3. OWNER APPROVAL REQUIRED → SEND_TO_APPROVAL or ESCALATE, never auto.
  *      `ownerApprovalRequired` or an OWNER_ONLY authority rung means a human
  *      must decide. The engine routes to the owner, never internal-only.
@@ -42,6 +49,7 @@ import type {
 } from "./types";
 
 export type {
+  CockpitComplianceInput,
   ExpectedImpactHint,
   RoutingDecision,
   ScoringInput,
@@ -170,6 +178,27 @@ export function scoreCandidate(input: ScoringInput): ScoringResult {
       `Touches sensitive domain(s): ${input.sensitiveDomains!.join(", ")} — HIGH compliance risk; never auto-saved.`
     );
   }
+
+  // J12 → J5 wiring: MERGE the external Compliance/Risk signal (strictest-wins).
+  // complianceRisk becomes the max of the heuristic and the scorer's signal, so
+  // the axis only ever gets RICHER, never less strict. A forced BLOCK is
+  // captured here and routed below with the same precedence as a forbidden
+  // action (Rule 1). This is additive and pure — no I/O, no new precedence.
+  const signal = input.complianceSignal;
+  const complianceForceBlock =
+    signal !== undefined && (signal.forceBlock === true || signal.verdict === "BLOCK");
+  if (signal !== undefined) {
+    complianceRisk = Math.max(complianceRisk, unit(signal.complianceRisk));
+    if (signal.reasons && signal.reasons.length > 0) {
+      reasons.push(
+        `Compliance scorer (J12) [${signal.verdict ?? "?"}]: ${signal.reasons.join(" ")}`
+      );
+    } else {
+      reasons.push(
+        `Compliance scorer (J12) signal merged: complianceRisk=${unit(signal.complianceRisk).toFixed(2)}, verdict=${signal.verdict ?? "?"}.`
+      );
+    }
+  }
   complianceRisk = unit(complianceRisk);
 
   const confidence = confidenceScore(input, evidenceStrength, complianceRisk);
@@ -180,6 +209,23 @@ export function scoreCandidate(input: ScoringInput): ScoringResult {
   if (isForbidden(input)) {
     reasons.unshift(
       `Action "${input.action}" is a forbidden external action (L5) — hard-stopped, never routed to the owner.`
+    );
+    return result("BLOCK", {
+      confidence,
+      complianceRisk: 1,
+      reversibility,
+      blastRadius,
+      evidenceStrength,
+      expectedImpact,
+      reasons,
+    });
+  }
+
+  // Rule 1b: an external Compliance/Risk BLOCK is non-negotiable — hard-stop to
+  // BLOCK regardless of every other axis (same precedence as a forbidden action).
+  if (complianceForceBlock) {
+    reasons.unshift(
+      "Compliance/Risk scorer (J12) returned BLOCK — hard-stopped, never routed to the owner as approvable."
     );
     return result("BLOCK", {
       confidence,

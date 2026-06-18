@@ -37,6 +37,28 @@ export type SensitiveDomain =
 export type ExpectedImpactHint = "NONE" | "LOW" | "MEDIUM" | "HIGH";
 
 /**
+ * An externally-computed compliance/risk signal the engine MERGES into its own
+ * heuristic `complianceRisk` axis (Workstream J12 → J5 wiring). It is purely
+ * additive: it can only make compliance risk RICHER (via `Math.max`) and the
+ * routing STRICTER (a `forceBlock` routes to BLOCK), never the reverse.
+ *
+ * This is structurally compatible with `CockpitComplianceSignal` from
+ * `@/lib/compliance/risk-scorer` (the J12 adapter that produces it), but is
+ * declared locally so the scoring engine stays pure and dependency-free — the
+ * caller wires the two together by passing the adapter's output in here.
+ */
+export interface CockpitComplianceInput {
+  /** 0..1 compliance risk to merge into `complianceRisk` via `Math.max`. */
+  readonly complianceRisk: number;
+  /** When true, the scorer reached a hard BLOCK — routing is forced to BLOCK. */
+  readonly forceBlock: boolean;
+  /** The raw compliance verdict, forwarded for the audit trail. */
+  readonly verdict?: "ALLOW" | "REVIEW" | "BLOCK";
+  /** Compliance-scorer reasons, forwarded into the result's audit trail. */
+  readonly reasons?: readonly string[];
+}
+
+/**
  * The routing decision the engine emits. This is the single thing the cockpit
  * reads to decide what to do with a candidate before it reaches the owner.
  */
@@ -79,6 +101,12 @@ export interface ScoringInput {
    * conservative confidence from risk + evidence so the score is never null.
    */
   readonly confidenceHint?: number;
+  /**
+   * Optional external compliance signal from the J12 Compliance/Risk scorer
+   * (`scoreComplianceRiskForCockpit`). When present it is merged into the
+   * heuristic `complianceRisk` axis (strictest-wins) — see {@link CockpitComplianceInput}.
+   */
+  readonly complianceSignal?: CockpitComplianceInput;
 }
 
 /** The structured score the engine returns. All axes 0..1 unless noted. */

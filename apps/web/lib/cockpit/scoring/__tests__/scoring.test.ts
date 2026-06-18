@@ -131,6 +131,101 @@ describe("scoreCandidate — guardrail-aligned escalation (never auto for picks/
   });
 });
 
+describe("scoreCandidate — J12 compliance signal merge (J5 wiring)", () => {
+  it("routes to BLOCK when the compliance scorer forces a block, regardless of other axes", () => {
+    // The SAFEST possible internal candidate — but the compliance scorer BLOCKs.
+    const r = scoreCandidate(
+      safeInternal({
+        complianceSignal: {
+          complianceRisk: 1,
+          forceBlock: true,
+          verdict: "BLOCK",
+          reasons: ["banned over-claiming language"],
+        },
+      })
+    );
+    expect(r.routing).toBe("BLOCK");
+    expect(r.complianceRisk).toBe(1);
+  });
+
+  it("routes to BLOCK on a BLOCK verdict even when forceBlock is not set explicitly", () => {
+    const r = scoreCandidate(
+      safeInternal({ complianceSignal: { complianceRisk: 1, forceBlock: false, verdict: "BLOCK" } })
+    );
+    expect(r.routing).toBe("BLOCK");
+  });
+
+  it("a compliance BLOCK beats every other axis (exhaustive over risk levels)", () => {
+    for (const riskLevel of ["LOW", "MODERATE", "HIGH"] as const) {
+      const r = scoreCandidate(
+        safeInternal({
+          riskLevel,
+          complianceSignal: { complianceRisk: 0.9, forceBlock: true, verdict: "BLOCK" },
+        })
+      );
+      expect(r.routing).toBe("BLOCK");
+    }
+  });
+
+  it("merges complianceRisk as the MAX of heuristic and scorer signal", () => {
+    // Heuristic floor for LOW risk is 0.1; the scorer signal (0.6) must win.
+    const higherSignal = scoreCandidate(
+      safeInternal({ complianceSignal: { complianceRisk: 0.6, forceBlock: false, verdict: "REVIEW" } })
+    );
+    expect(higherSignal.complianceRisk).toBeCloseTo(0.6, 5);
+
+    // A sensitive domain forces heuristic >= 0.85; a lower signal must NOT lower it.
+    const lowerSignal = scoreCandidate(
+      safeInternal({
+        sensitiveDomains: ["PUBLIC_PICKS"],
+        complianceSignal: { complianceRisk: 0.2, forceBlock: false, verdict: "ALLOW" },
+      })
+    );
+    expect(lowerSignal.complianceRisk).toBeGreaterThanOrEqual(0.85);
+  });
+
+  it("clamps a signal complianceRisk outside [0,1] before merging", () => {
+    const r = scoreCandidate(
+      safeInternal({ complianceSignal: { complianceRisk: 5, forceBlock: false } })
+    );
+    expect(r.complianceRisk).toBeLessThanOrEqual(1);
+    expect(r.complianceRisk).toBeGreaterThanOrEqual(0);
+  });
+
+  it("is purely additive: a non-blocking, low signal does not weaken safe auto-save routing", () => {
+    const baseline = scoreCandidate(safeInternal());
+    const withSignal = scoreCandidate(
+      safeInternal({ complianceSignal: { complianceRisk: 0.1, forceBlock: false, verdict: "ALLOW" } })
+    );
+    // The signal is low enough that auto-save eligibility is preserved.
+    expect(baseline.routing).toBe("AUTO_SAVE_INTERNAL");
+    expect(withSignal.routing).toBe("AUTO_SAVE_INTERNAL");
+  });
+
+  it("a moderate non-blocking signal removes auto-save (never weakens the gate)", () => {
+    // complianceRisk pushed above the 0.2 auto-save ceiling → no longer auto-save.
+    const r = scoreCandidate(
+      safeInternal({ complianceSignal: { complianceRisk: 0.5, forceBlock: false, verdict: "REVIEW" } })
+    );
+    expect(r.routing).not.toBe("AUTO_SAVE_INTERNAL");
+    expect(r.complianceRisk).toBeGreaterThanOrEqual(0.5);
+  });
+
+  it("forwards the compliance scorer reasons into the audit trail", () => {
+    const r = scoreCandidate(
+      safeInternal({
+        complianceSignal: {
+          complianceRisk: 1,
+          forceBlock: true,
+          verdict: "BLOCK",
+          reasons: ["source not approved_*"],
+        },
+      })
+    );
+    expect(r.reasons.some((x) => x.includes("source not approved_*"))).toBe(true);
+  });
+});
+
 describe("scoreCandidate — reversibility / blast-radius edges", () => {
   it("scores explicitly irreversible work at reversibility 0 and never auto-saves", () => {
     const r = scoreCandidate(safeInternal({ reversible: false }));

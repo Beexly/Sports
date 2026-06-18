@@ -517,11 +517,12 @@ export interface CockpitComplianceSignal {
 /**
  * Adapter: map a `ComplianceRiskResult` into the J5 compliance axis.
  *
- * TODO(J5-wiring): when J5 (`apps/web/lib/cockpit/scoring/index.ts`) is ready to
- * consume an external compliance signal, merge `complianceRisk` via
- * `Math.max(existing, signal.complianceRisk)` and route to BLOCK when
- * `forceBlock` is true. This is left as a thin, additive export so J5's own
- * logic is not rewritten here.
+ * J5-wiring DONE: `apps/web/lib/cockpit/scoring/index.ts` now consumes this
+ * signal via `ScoringInput.complianceSignal`. The cockpit scorer merges
+ * `complianceRisk` with `Math.max(heuristic, signal.complianceRisk)` and routes
+ * to BLOCK when `forceBlock` (verdict === "BLOCK") is true — strictest-wins, so
+ * this can only make compliance risk RICHER and routing STRICTER, never less so.
+ * This stays a thin, additive export; J5's own routing rules are unchanged.
  */
 export function toCockpitComplianceSignal(
   result: ComplianceRiskResult,
