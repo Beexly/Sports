@@ -1,38 +1,50 @@
 "use client";
 
 /**
- * Clipboard copy hook — pure navigator.clipboard, zero dependencies.
- * Re-implemented TS-native (pattern common to dozens of MIT hook libraries).
+ * Clipboard write hook with optional reset-after timeout.
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
-interface UseClipboardOptions {
-  /** How long to show "copied" state (ms). Default 2000. */
-  timeout?: number;
+export interface UseClipboardResult {
+  readonly copied: boolean;
+  readonly copy: (text: string) => Promise<void>;
+  readonly error: string | null;
 }
 
-interface UseClipboardResult {
-  copied: boolean;
-  copy: (text: string) => Promise<void>;
-}
-
-export function useClipboard({ timeout = 2000 }: UseClipboardOptions = {}): UseClipboardResult {
+export function useClipboard(resetMs = 2000): UseClipboardResult {
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const copy = useCallback(
     async (text: string) => {
-      if (!navigator?.clipboard) return;
+      if (typeof navigator === "undefined" || !navigator.clipboard) {
+        setError("Clipboard API not available");
+        return;
+      }
+
       try {
         await navigator.clipboard.writeText(text);
+        setError(null);
         setCopied(true);
-        setTimeout(() => setCopied(false), timeout);
-      } catch {
-        // Silently fail — clipboard access may be denied
+
+        // Clear any pending reset timer
+        if (timerRef.current !== null) {
+          clearTimeout(timerRef.current);
+        }
+
+        timerRef.current = setTimeout(() => {
+          setCopied(false);
+          timerRef.current = null;
+        }, resetMs);
+      } catch (err) {
+        setCopied(false);
+        setError(err instanceof Error ? err.message : "Failed to copy to clipboard");
       }
     },
-    [timeout]
+    [resetMs]
   );
 
-  return { copied, copy };
+  return { copied, copy, error };
 }
