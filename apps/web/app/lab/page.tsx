@@ -9,6 +9,7 @@ import { GameSimulatorTool } from "@/components/lab/game-simulator-tool";
 import { ParlayAnalyzerTool } from "@/components/lab/parlay-analyzer-tool";
 import { BankrollOptimizerTool } from "@/components/lab/bankroll-optimizer-tool";
 import { PaceScheduleTool } from "@/components/lab/pace-schedule-tool";
+import { MatchupCompareTool } from "@/components/lab/matchup-compare-tool";
 import { GlassBoxExplainer } from "@/components/lab/glass-box-explainer";
 import { CalibrationExplorer } from "@/components/lab/calibration-explorer";
 import { loadGlassBoxPicks } from "@/lib/lab/glass-box";
@@ -44,6 +45,11 @@ const TOOLS = [
     name: "Pace & schedule optimizer",
     status: "live",
     desc: "Turn a matchup's rest situation and tempo into an expected margin shift with a confidence interval — built on the dormant schedule + pace analytics libraries.",
+  },
+  {
+    name: "Multi-sport matchup compare",
+    status: "live",
+    desc: "Pick a league, enter two teams' season stats, and get league-normalized power ratings, an expected-margin frame, and a plain-language read — built on the dormant power-ranking + ELO libraries.",
   },
   {
     name: "Glass-box pick explainer",
@@ -150,6 +156,24 @@ export default async function GalaxyLabPage(): Promise<JSX.Element> {
               on your inputs and excludes injury and availability data.
             </p>
             <PaceScheduleTool />
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section className="mt-10">
+            <h2 className="mb-1 font-display text-lg font-semibold text-white">
+              Multi-sport matchup compare
+            </h2>
+            <p className="mb-4 max-w-2xl text-sm text-ink-300">
+              Pick a league and enter two teams&apos; season stats — win pct,
+              points for and against per game, schedule strength, recent form.
+              The tool returns league-normalized power ratings, an
+              expected-margin frame with an honest interval, and a
+              plain-language read. The per-league coefficients are transparent
+              model parameters, not measured outcomes; it runs on your inputs and
+              excludes injury and availability data.
+            </p>
+            <MatchupCompareTool />
           </section>
         </Reveal>
 
