@@ -8,6 +8,7 @@ import { db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { formatDate } from "@/lib/utils";
 import { SITE_URL } from "@/lib/seo/sports-jsonld";
+import { PooledImage } from "@/components/media/pooled-image";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -123,6 +124,17 @@ export default async function BlogPostPage({
                   </span>
                 ))}
               </div>
+            </div>
+
+            {/* Generative brand illustration — abstract art only, not a real photo */}
+            <div className="mb-8 overflow-hidden rounded-xl aspect-[1200/420]" aria-label="Brand illustration">
+              <PooledImage
+                prompt={`abstract cosmic sports signal data visualization ${post.sport ?? "sports"} galaxy ultraviolet cyan`}
+                width={1200}
+                height={420}
+                alt={`Brand illustration for: ${post.title}`}
+                className="w-full h-full object-cover"
+              />
             </div>
 
             {/* Content */}
