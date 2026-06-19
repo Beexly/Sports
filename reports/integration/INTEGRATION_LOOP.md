@@ -41,17 +41,31 @@ At most ONE in-flight slice editing `app/cockpit/layout.tsx` (cockpit nav) and O
 | 5 | Multi-Sport Matchup Compare Lab tool (`/lab`, `/api/lab/compare-matchup`) | B (customer) | `1d3246b1` | tsc+22 vitest+trust+build |
 | 6 | Sports Diagnostics workbench (`/cockpit/sports-diagnostics`, DB-read only) | A (internal) | `3d2662e1` | tsc+9 vitest+nav 43+trust+freeze+build |
 | 7 | No-Vig Fair Odds & Hold calculator Lab tool (`/lab`, `/api/lab/no-vig`) | B (customer) | `272212ee` | tsc+22 vitest+trust+build |
+| 8 | Calibration Learning workbench (`/cockpit/calibration-learning`, exploratory) | A (internal) | `e61df54b` | tsc+8 vitest+nav 44+trust+freeze+build |
+| 9 | Lab discoverability + SEO (8-tool metadata, sitemap) | polish | `294a51f3` | tsc+guard suites+trust+build |
 
 ## Queue (priority order; honest value × low effort × low risk first)
 - [x] Line-Movement / Market Intelligence workbench → shipped (slice 4).
 - [x] Multi-Sport Matchup Compare Lab tool → shipped (slice 5).
 - [x] Sports Diagnostics workbench → shipped (slice 6).
 - [x] No-Vig Fair-Odds & Hold calculator → shipped (slice 7).
-- [ ] Calibration Learning workbench (extend `/cockpit/calibration`) — `forecasting-analytics`,
-      `clustering`, `regression`, `statistics` on pick signal snapshots → signal-outcome correlation
-      (honest "correlation not causation" + small-sample caveats). Internal.
-- [ ] Discoverability + polish pass: surface the Lab tools on relevant public pages; ensure honest
-      gated/empty states; SEO metadata on new public routes.
+- [x] Calibration Learning workbench → shipped (slice 8). New page `/cockpit/calibration-learning`;
+      used a labeled correlation only (clustering/forecasting/regression deliberately NOT fit on ~16 picks).
+- [x] Discoverability + SEO pass → shipped (slice 9). `/lab` metadata + overview + sitemap.
+
+## Loop status: core extraction COMPLETE
+9 slices shipped. Dormant sports/math/analytics libs are now consumed across 8 Lab tools + 4 cockpit
+workbenches + the settlement pool. Lesson logged: never run two `next build` agents concurrently — they
+race on `.next/server/*-manifest.json`; the orchestrator runs the authoritative build serially (rm -rf
+.next) before every commit. Remaining dormant libs are honestly deferred (niche sports = no published
+picks; weather/injury = no ingested data; content/email/social-analytics = no real traffic/email data yet).
+
+## Opportunity backlog (researched; pick up as leverage allows)
+- Marketing/growth cockpit view for content/email/social-analytics — BLOCKED on real traffic/email data
+  (would be honest-empty today); revisit once analytics events persist.
+- Customer "Bet-Slip correlation + RLM" tool (analytics/parlay + line-movement) — partial overlap with the
+  existing parlay analyzer; build only if it adds distinct value.
+- Wire the free-data settlement fallback in settle-sport.ts once a game-id key-map (team-name+date) exists.
 
 ## Realized-value scorecard (running)
 8 Lab tools live (game-sim, parlay, bankroll, pace-schedule, matchup-compare, no-vig, glass-box,
