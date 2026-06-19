@@ -65,5 +65,17 @@ Model/calibration flips are **founder-gated** (MODEL_VERSION + audit), never aut
 
 ---
 
+## Never set in production (🟥 security)
+
+| Variable | Why |
+|---|---|
+| `DEV_FAKE_ADMIN` | Dev-only auth bypass. **Hard-ignored in production** by the middleware (NODE_ENV guard) AND the entitlements layer — but never set it in prod regardless. |
+| `DEV_FAKE_*` / `DEMO_PICKS_ENABLED` / `FANTASY_PUBLIC_TOOLS_ENABLED` | Dev/demo escape hatches. Demo data is gated to non-production; keep these unset/`false` in prod. |
+
+These exist for local development only. The codebase defends in depth (production
+guards on each), but the clean posture is to leave them unset in your prod environment.
+
+---
+
 *The minimal launch set is the 🟥 rows + the ✅ rows (already done). Everything else is
 upside you add when you want it.*

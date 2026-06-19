@@ -97,16 +97,42 @@ export interface AnalyticsContext {
 }
 
 /**
- * Record an event. NO-OP until a provider is wired (owner decision). Never
- * collects PII; callers pass only non-identifying funnel context. Returns the
- * normalized payload so callers/tests can assert what would be sent.
+ * Self-activating dispatch to whichever FREE analytics provider the owner has
+ * wired (presence of its global). Runs ONLY in the browser, only when a provider
+ * global exists, and only with non-identifying funnel context. No PII, no network
+ * of our own, no-op when nothing is configured. This is the autonomy contract: the
+ * funnel instruments itself the moment a free key is added — no further code needed.
+ */
+function dispatchToProviders(event: AnalyticsEvent, context: AnalyticsContext): void {
+  if (typeof window === "undefined") return; // server: never dispatch
+  try {
+    const w = window as unknown as {
+      gtag?: (...args: unknown[]) => void;
+      posthog?: { capture?: (name: string, props?: Record<string, unknown>) => void };
+      plausible?: (name: string, opts?: { props?: Record<string, unknown> }) => void;
+    };
+    // Google Analytics 4 (free)
+    w.gtag?.("event", event, context as Record<string, unknown>);
+    // PostHog (free tier)
+    w.posthog?.capture?.(event, context as Record<string, unknown>);
+    // Plausible (cookieless)
+    w.plausible?.(event, { props: context as Record<string, unknown> });
+  } catch {
+    // Analytics must never break the page — swallow any provider error.
+  }
+}
+
+/**
+ * Record a funnel event. Dispatches to any configured FREE provider (GA4 /
+ * PostHog / Plausible) when present in the browser; otherwise a clean no-op.
+ * Never collects PII; callers pass only non-identifying funnel context. Returns
+ * the normalized payload so callers/tests can assert what would be sent.
  */
 export function track(
   event: AnalyticsEvent,
   context: AnalyticsContext = {},
 ): { event: AnalyticsEvent; context: AnalyticsContext } {
-  // When a provider is wired, dispatch here (e.g. window.analytics?.track(...)).
-  // Intentionally inert for now — no network, no identity.
+  dispatchToProviders(event, context);
   return { event, context };
 }
 

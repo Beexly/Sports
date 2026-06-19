@@ -58,4 +58,31 @@ describe("analytics event plan", () => {
   it("track defaults context to an empty object", () => {
     expect(track("pricing_page_view").context).toEqual({});
   });
+
+  it("track dispatches to a configured provider global when present (no PII)", () => {
+    const calls: Array<{ name: string; props?: Record<string, unknown> }> = [];
+    // jsdom provides window; attach a fake free provider global.
+    (window as unknown as { posthog?: unknown }).posthog = {
+      capture: (name: string, props?: Record<string, unknown>) => calls.push({ name, props }),
+    };
+    try {
+      track("checkout_started", { tier: "PRO" });
+      expect(calls).toHaveLength(1);
+      expect(calls[0]?.name).toBe("checkout_started");
+      expect(calls[0]?.props?.tier).toBe("PRO");
+    } finally {
+      delete (window as unknown as { posthog?: unknown }).posthog;
+    }
+  });
+
+  it("track never throws even if a provider global misbehaves", () => {
+    (window as unknown as { gtag?: unknown }).gtag = () => {
+      throw new Error("provider exploded");
+    };
+    try {
+      expect(() => track("pricing_page_view")).not.toThrow();
+    } finally {
+      delete (window as unknown as { gtag?: unknown }).gtag;
+    }
+  });
 });
