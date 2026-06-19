@@ -27,7 +27,7 @@ function assertSameLength(a: Vec, b: Vec, fn: string): void {
 
 function assertSquare(A: Mat, fn: string): void {
   const rows = A.length;
-  const cols = A.length > 0 ? A[0].length : 0;
+  const cols = A.length > 0 ? (A[0]?.length ?? 0) : 0;
   if (rows !== cols)
     throw new Error(`${fn}: requires square matrix, got [${rows},${cols}]`);
 }
@@ -38,7 +38,7 @@ function zeros2d(r: number, c: number): Mat {
 
 function identity(n: number): Mat {
   const I = zeros2d(n, n);
-  for (let i = 0; i < n; i++) I[i][i] = 1;
+  for (let i = 0; i < n; i++) I[i]![i] = 1;
   return I;
 }
 
@@ -53,13 +53,13 @@ function cloneMat(A: Mat): Mat {
 /** Element-wise addition of two vectors of equal length. */
 export function vecAdd(a: Vec, b: Vec): Vec {
   assertSameLength(a, b, 'vecAdd');
-  return a.map((v, i) => v + b[i]);
+  return a.map((v, i) => v + (b[i] ?? 0));
 }
 
 /** Element-wise subtraction of two vectors of equal length. */
 export function vecSub(a: Vec, b: Vec): Vec {
   assertSameLength(a, b, 'vecSub');
-  return a.map((v, i) => v - b[i]);
+  return a.map((v, i) => v - (b[i] ?? 0));
 }
 
 /** Multiply every element of v by scalar. */
@@ -71,7 +71,7 @@ export function vecScale(v: Vec, scalar: number): Vec {
 export function vecDot(a: Vec, b: Vec): number {
   assertSameLength(a, b, 'vecDot');
   let s = 0;
-  for (let i = 0; i < a.length; i++) s += a[i] * b[i];
+  for (let i = 0; i < a.length; i++) s += (a[i] ?? 0) * (b[i] ?? 0);
   return s;
 }
 
@@ -80,9 +80,9 @@ export function vecCross(a: Vec, b: Vec): Vec {
   if (a.length !== 3 || b.length !== 3)
     throw new Error(`vecCross: requires 3-D vectors, got ${a.length} and ${b.length}`);
   return [
-    a[1] * b[2] - a[2] * b[1],
-    a[2] * b[0] - a[0] * b[2],
-    a[0] * b[1] - a[1] * b[0],
+    (a[1] ?? 0) * (b[2] ?? 0) - (a[2] ?? 0) * (b[1] ?? 0),
+    (a[2] ?? 0) * (b[0] ?? 0) - (a[0] ?? 0) * (b[2] ?? 0),
+    (a[0] ?? 0) * (b[1] ?? 0) - (a[1] ?? 0) * (b[0] ?? 0),
   ];
 }
 
@@ -138,9 +138,9 @@ export function vecOuter(a: Vec, b: Vec): Mat {
 /** Component-wise mean of a list of equal-length vectors. */
 export function vecMean(vectors: Vec[]): Vec {
   if (vectors.length === 0) return [];
-  const n = vectors[0].length;
+  const n = vectors[0]!.length;
   const sum = new Array<number>(n).fill(0);
-  for (const v of vectors) for (let i = 0; i < n; i++) sum[i] += v[i];
+  for (const v of vectors) for (let i = 0; i < n; i++) sum[i] = (sum[i] ?? 0) + (v[i] ?? 0);
   return sum.map(s => s / vectors.length);
 }
 
@@ -150,7 +150,7 @@ export function vecVariance(vectors: Vec[]): Vec {
   const mu = vecMean(vectors);
   const n = mu.length;
   const v = new Array<number>(n).fill(0);
-  for (const vec of vectors) for (let i = 0; i < n; i++) v[i] += (vec[i] - mu[i]) ** 2;
+  for (const vec of vectors) for (let i = 0; i < n; i++) v[i] = (v[i] ?? 0) + ((vec[i] ?? 0) - (mu[i] ?? 0)) ** 2;
   return v.map(s => s / vectors.length);
 }
 
@@ -192,7 +192,7 @@ export function minkowskiDistance(a: Vec, b: Vec, p: number): number {
 // ---------------------------------------------------------------------------
 
 function matShape(A: Mat): [number, number] {
-  return [A.length, A.length > 0 ? A[0].length : 0];
+  return [A.length, A.length > 0 ? (A[0]?.length ?? 0) : 0];
 }
 
 function assertSameShape(A: Mat, B: Mat, fn: string): void {
@@ -205,13 +205,13 @@ function assertSameShape(A: Mat, B: Mat, fn: string): void {
 /** Element-wise matrix addition. */
 export function matAdd(A: Mat, B: Mat): Mat {
   assertSameShape(A, B, 'matAdd');
-  return A.map((row, i) => row.map((v, j) => v + B[i][j]));
+  return A.map((row, i) => row.map((v, j) => v + (B[i]?.[j] ?? 0)));
 }
 
 /** Element-wise matrix subtraction. */
 export function matSub(A: Mat, B: Mat): Mat {
   assertSameShape(A, B, 'matSub');
-  return A.map((row, i) => row.map((v, j) => v - B[i][j]));
+  return A.map((row, i) => row.map((v, j) => v - (B[i]?.[j] ?? 0)));
 }
 
 /** Multiply every element of A by scalar. */
@@ -229,7 +229,7 @@ export function matMul(A: Mat, B: Mat): Mat {
   for (let i = 0; i < ra; i++)
     for (let k = 0; k < ca; k++)
       for (let j = 0; j < cb; j++)
-        C[i][j] += A[i][k] * B[k][j];
+        C[i]![j] = (C[i]![j] ?? 0) + (A[i]?.[k] ?? 0) * (B[k]?.[j] ?? 0);
   return C;
 }
 
@@ -238,7 +238,7 @@ export function matVecMul(A: Mat, v: Vec): Vec {
   const [, ca] = matShape(A);
   if (ca !== v.length)
     throw new Error(`matVecMul: A has ${ca} cols but v has length ${v.length}`);
-  return A.map(row => row.reduce((s, aij, j) => s + aij * v[j], 0));
+  return A.map(row => row.reduce((s, aij, j) => s + aij * (v[j] ?? 0), 0));
 }
 
 /** Transpose of A. */
@@ -247,14 +247,14 @@ export function matTranspose(A: Mat): Mat {
   const T = zeros2d(c, r);
   for (let i = 0; i < r; i++)
     for (let j = 0; j < c; j++)
-      T[j][i] = A[i][j];
+      T[j]![i] = A[i]?.[j] ?? 0;
   return T;
 }
 
 /** Trace: sum of diagonal elements of a square matrix. */
 export function matTrace(A: Mat): number {
   assertSquare(A, 'matTrace');
-  return A.reduce((s, row, i) => s + row[i], 0);
+  return A.reduce((s, row, i) => s + (row[i] ?? 0), 0);
 }
 
 /** Determinant via Gaussian elimination with partial pivoting. */
@@ -267,23 +267,23 @@ export function matDeterminant(A: Mat): number {
   for (let col = 0; col < n; col++) {
     let pivotRow = col;
     for (let row = col + 1; row < n; row++)
-      if (Math.abs(U[row][col]) > Math.abs(U[pivotRow][col])) pivotRow = row;
+      if (Math.abs(U[row]?.[col] ?? 0) > Math.abs(U[pivotRow]?.[col] ?? 0)) pivotRow = row;
 
-    if (Math.abs(U[pivotRow][col]) < 1e-12) return 0;
+    if (Math.abs(U[pivotRow]?.[col] ?? 0) < 1e-12) return 0;
 
     if (pivotRow !== col) {
-      [U[pivotRow], U[col]] = [U[col], U[pivotRow]];
+      [U[pivotRow], U[col]] = [U[col]!, U[pivotRow]!];
       sign *= -1;
     }
 
     for (let row = col + 1; row < n; row++) {
-      const f = U[row][col] / U[col][col];
-      for (let k = col; k < n; k++) U[row][k] -= f * U[col][k];
+      const f = (U[row]?.[col] ?? 0) / (U[col]?.[col] ?? 0);
+      for (let k = col; k < n; k++) U[row]![k] = (U[row]![k] ?? 0) - f * (U[col]?.[k] ?? 0);
     }
   }
 
   let det = sign;
-  for (let i = 0; i < n; i++) det *= U[i][i];
+  for (let i = 0; i < n; i++) det *= U[i]?.[i] ?? 0;
   return det;
 }
 
@@ -305,19 +305,19 @@ export function matInverse(A: Mat): Mat | null {
     // Partial pivot
     let pivotRow = col;
     for (let row = col + 1; row < n; row++)
-      if (Math.abs(aug[row][col]) > Math.abs(aug[pivotRow][col])) pivotRow = row;
+      if (Math.abs(aug[row]?.[col] ?? 0) > Math.abs(aug[pivotRow]?.[col] ?? 0)) pivotRow = row;
 
-    if (Math.abs(aug[pivotRow][col]) < 1e-12) return null;
+    if (Math.abs(aug[pivotRow]?.[col] ?? 0) < 1e-12) return null;
 
-    if (pivotRow !== col) [aug[pivotRow], aug[col]] = [aug[col], aug[pivotRow]];
+    if (pivotRow !== col) [aug[pivotRow], aug[col]] = [aug[col]!, aug[pivotRow]!];
 
-    const pivot = aug[col][col];
-    for (let k = 0; k < 2 * n; k++) aug[col][k] /= pivot;
+    const pivot = aug[col]![col]!;
+    for (let k = 0; k < 2 * n; k++) aug[col]![k] = (aug[col]![k] ?? 0) / pivot;
 
     for (let row = 0; row < n; row++) {
       if (row === col) continue;
-      const f = aug[row][col];
-      for (let k = 0; k < 2 * n; k++) aug[row][k] -= f * aug[col][k];
+      const f = aug[row]![col]!;
+      for (let k = 0; k < 2 * n; k++) aug[row]![k] = (aug[row]![k] ?? 0) - f * (aug[col]?.[k] ?? 0);
     }
   }
 
@@ -337,22 +337,22 @@ export function matRank(A: Mat, tol = 1e-10): number {
     // Find pivot in this column at or below `rank`
     let pivotRow = -1;
     for (let row = rank; row < r; row++) {
-      if (Math.abs(U[row][col]) > tol) {
+      if (Math.abs(U[row]?.[col] ?? 0) > tol) {
         pivotRow = row;
         break;
       }
     }
     if (pivotRow === -1) continue;
 
-    [U[rank], U[pivotRow]] = [U[pivotRow], U[rank]];
+    [U[rank], U[pivotRow]] = [U[pivotRow]!, U[rank]!];
 
-    const pivot = U[rank][col];
-    for (let k = col; k < c; k++) U[rank][k] /= pivot;
+    const pivot = U[rank]![col]!;
+    for (let k = col; k < c; k++) U[rank]![k] = (U[rank]![k] ?? 0) / pivot;
 
     for (let row = 0; row < r; row++) {
       if (row === rank) continue;
-      const f = U[row][col];
-      for (let k = col; k < c; k++) U[row][k] -= f * U[rank][k];
+      const f = U[row]![col]!;
+      for (let k = col; k < c; k++) U[row]![k] = (U[row]![k] ?? 0) - f * (U[rank]?.[k] ?? 0);
     }
     rank++;
   }
@@ -393,24 +393,24 @@ export function luDecompose(A: Mat): { L: Mat; U: Mat; P: Mat } {
     // Partial pivot
     let pivotRow = col;
     for (let row = col + 1; row < n; row++)
-      if (Math.abs(U[row][col]) > Math.abs(U[pivotRow][col])) pivotRow = row;
+      if (Math.abs(U[row]?.[col] ?? 0) > Math.abs(U[pivotRow]?.[col] ?? 0)) pivotRow = row;
 
     if (pivotRow !== col) {
-      [U[pivotRow], U[col]] = [U[col], U[pivotRow]];
-      [P[pivotRow], P[col]] = [P[col], P[pivotRow]];
+      [U[pivotRow], U[col]] = [U[col]!, U[pivotRow]!];
+      [P[pivotRow], P[col]] = [P[col]!, P[pivotRow]!];
       for (let k = 0; k < col; k++)
-        [L[pivotRow][k], L[col][k]] = [L[col][k], L[pivotRow][k]];
+        [L[pivotRow]![k], L[col]![k]] = [L[col]![k]!, L[pivotRow]![k]!];
     }
 
-    L[col][col] = 1;
+    L[col]![col] = 1;
     for (let row = col + 1; row < n; row++) {
-      if (Math.abs(U[col][col]) < 1e-14) { L[row][col] = 0; continue; }
-      const f = U[row][col] / U[col][col];
-      L[row][col] = f;
-      for (let k = col; k < n; k++) U[row][k] -= f * U[col][k];
+      if (Math.abs(U[col]?.[col] ?? 0) < 1e-14) { L[row]![col] = 0; continue; }
+      const f = (U[row]?.[col] ?? 0) / (U[col]?.[col] ?? 0);
+      L[row]![col] = f;
+      for (let k = col; k < n; k++) U[row]![k] = (U[row]![k] ?? 0) - f * (U[col]?.[k] ?? 0);
     }
   }
-  L[n - 1][n - 1] = 1;
+  L[n - 1]![n - 1] = 1;
   return { L, U, P };
 }
 
@@ -426,14 +426,14 @@ export function choleskyDecompose(A: Mat): Mat | null {
 
   for (let i = 0; i < n; i++) {
     for (let j = 0; j <= i; j++) {
-      let sum = A[i][j];
-      for (let k = 0; k < j; k++) sum -= L[i][k] * L[j][k];
+      let sum = A[i]?.[j] ?? 0;
+      for (let k = 0; k < j; k++) sum -= (L[i]?.[k] ?? 0) * (L[j]?.[k] ?? 0);
       if (i === j) {
         if (sum <= 0) return null; // not positive-definite
-        L[i][j] = Math.sqrt(sum);
+        L[i]![j] = Math.sqrt(sum);
       } else {
-        if (Math.abs(L[j][j]) < 1e-14) return null;
-        L[i][j] = sum / L[j][j];
+        if (Math.abs(L[j]?.[j] ?? 0) < 1e-14) return null;
+        L[i]![j] = sum / (L[j]?.[j] ?? 0);
       }
     }
   }
@@ -451,21 +451,21 @@ export function qrDecompose(A: Mat): { Q: Mat; R: Mat } {
   const R = zeros2d(n, n);
 
   // Copy columns of A into working array
-  const V: Vec[] = Array.from({ length: n }, (_, j) => A.map(row => row[j]));
+  const V: Vec[] = Array.from({ length: n }, (_, j) => A.map(row => row[j] ?? 0));
 
   for (let j = 0; j < n; j++) {
     // Modified Gram-Schmidt: subtract projections onto already-computed Q cols
-    let v = [...V[j]];
+    let v = [...V[j]!];
     for (let i = 0; i < j; i++) {
-      const qi = Array.from({ length: m }, (_, r) => Q[r][i]);
+      const qi = Array.from({ length: m }, (_, r) => Q[r]?.[i] ?? 0);
       const rij = vecDot(qi, v);
-      R[i][j] = rij;
+      R[i]![j] = rij;
       v = vecSub(v, vecScale(qi, rij));
     }
     const norm = vecNorm(v);
-    R[j][j] = norm;
+    R[j]![j] = norm;
     const qj = norm < 1e-14 ? new Array<number>(m).fill(0) : v.map(x => x / norm);
-    for (let r = 0; r < m; r++) Q[r][j] = qj[r];
+    for (let r = 0; r < m; r++) Q[r]![j] = qj[r] ?? 0;
   }
 
   return { Q, R };
@@ -534,20 +534,20 @@ export function svdLite(
     const vv = vecOuter(v, v);
     for (let i = 0; i < n; i++)
       for (let j = 0; j < n; j++)
-        deflated[i][j] -= sigma2 * vv[i][j];
+        deflated[i]![j] = (deflated[i]![j] ?? 0) - sigma2 * (vv[i]?.[j] ?? 0);
   }
 
   // Build U (m × k): each column is a left singular vector
   const U = zeros2d(m, k);
   for (let col = 0; col < k; col++)
     for (let row = 0; row < m; row++)
-      U[row][col] = Ucols[col][row];
+      U[row]![col] = Ucols[col]?.[row] ?? 0;
 
   // Build Vt (k × n): each row is a right singular vector
   const Vt = zeros2d(k, n);
   for (let row = 0; row < k; row++)
     for (let col = 0; col < n; col++)
-      Vt[row][col] = Vrows[row][col];
+      Vt[row]![col] = Vrows[row]?.[col] ?? 0;
 
   return { U, S: singularValues, Vt };
 }
@@ -566,30 +566,30 @@ export function solveLinear(A: Mat, b: Vec): Vec | null {
   if (b.length !== n)
     throw new Error(`solveLinear: b has length ${b.length}, expected ${n}`);
 
-  const aug: Mat = A.map((row, i) => [...row, b[i]]);
+  const aug: Mat = A.map((row, i) => [...row, b[i] ?? 0]);
 
   for (let col = 0; col < n; col++) {
     let pivotRow = col;
     for (let row = col + 1; row < n; row++)
-      if (Math.abs(aug[row][col]) > Math.abs(aug[pivotRow][col])) pivotRow = row;
+      if (Math.abs(aug[row]?.[col] ?? 0) > Math.abs(aug[pivotRow]?.[col] ?? 0)) pivotRow = row;
 
-    if (Math.abs(aug[pivotRow][col]) < 1e-12) return null;
+    if (Math.abs(aug[pivotRow]?.[col] ?? 0) < 1e-12) return null;
 
-    if (pivotRow !== col) [aug[pivotRow], aug[col]] = [aug[col], aug[pivotRow]];
+    if (pivotRow !== col) [aug[pivotRow], aug[col]] = [aug[col]!, aug[pivotRow]!];
 
-    const pivot = aug[col][col];
+    const pivot = aug[col]![col]!;
     for (let row = col + 1; row < n; row++) {
-      const f = aug[row][col] / pivot;
-      for (let k = col; k <= n; k++) aug[row][k] -= f * aug[col][k];
+      const f = (aug[row]?.[col] ?? 0) / pivot;
+      for (let k = col; k <= n; k++) aug[row]![k] = (aug[row]![k] ?? 0) - f * (aug[col]?.[k] ?? 0);
     }
   }
 
   const x = new Array<number>(n).fill(0);
   for (let i = n - 1; i >= 0; i--) {
-    if (Math.abs(aug[i][i]) < 1e-12) return null;
-    let s = aug[i][n];
-    for (let j = i + 1; j < n; j++) s -= aug[i][j] * x[j];
-    x[i] = s / aug[i][i];
+    if (Math.abs(aug[i]?.[i] ?? 0) < 1e-12) return null;
+    let s = aug[i]![n]!;
+    for (let j = i + 1; j < n; j++) s -= (aug[i]?.[j] ?? 0) * (x[j] ?? 0);
+    x[i] = s / (aug[i]?.[i] ?? 0);
   }
   return x;
 }
@@ -669,7 +669,7 @@ export function gramSchmidt(vectors: Vec[]): Vec[] {
 export function isOrthogonal(vectors: Vec[], tol = 1e-9): boolean {
   for (let i = 0; i < vectors.length; i++)
     for (let j = i + 1; j < vectors.length; j++)
-      if (Math.abs(vecDot(vectors[i], vectors[j])) > tol) return false;
+      if (Math.abs(vecDot(vectors[i]!, vectors[j]!)) > tol) return false;
   return true;
 }
 
@@ -714,7 +714,7 @@ export function householderReflection(v: Vec): Mat {
   if (norm2 === 0) return identity(n);
   const outer = vecOuter(v, v);
   const I = identity(n);
-  return I.map((row, i) => row.map((val, j) => val - (2 / norm2) * outer[i][j]));
+  return I.map((row, i) => row.map((val, j) => val - (2 / norm2) * (outer[i]?.[j] ?? 0)));
 }
 
 // ---------------------------------------------------------------------------
@@ -727,14 +727,14 @@ export function householderReflection(v: Vec): Mat {
  */
 export function covarianceMatrix(data: Vec[]): Mat {
   if (data.length === 0) return [];
-  const d = data[0].length;
+  const d = data[0]!.length;
   const mu = vecMean(data);
   const C = zeros2d(d, d);
   for (const obs of data) {
     const diff = vecSub(obs, mu);
     for (let i = 0; i < d; i++)
       for (let j = 0; j < d; j++)
-        C[i][j] += diff[i] * diff[j];
+        C[i]![j] = (C[i]![j] ?? 0) + (diff[i] ?? 0) * (diff[j] ?? 0);
   }
   return C.map(row => row.map(v => v / data.length));
 }
@@ -745,10 +745,10 @@ export function covarianceMatrix(data: Vec[]): Mat {
  */
 export function correlationMatrix(data: Vec[]): Mat {
   const C = covarianceMatrix(data);
-  const stdDevs = C.map((row, i) => Math.sqrt(row[i]));
+  const stdDevs = C.map((row, i) => Math.sqrt(row[i] ?? 0));
   return C.map((row, i) =>
     row.map((v, j) => {
-      const denom = stdDevs[i] * stdDevs[j];
+      const denom = (stdDevs[i] ?? 0) * (stdDevs[j] ?? 0);
       return denom < 1e-14 ? (i === j ? 1 : 0) : v / denom;
     }),
   );
@@ -768,7 +768,7 @@ export function pca(
   nComponents: number,
 ): { components: Vec[]; explainedVariance: number[] } {
   if (data.length === 0) return { components: [], explainedVariance: [] };
-  const d = data[0].length;
+  const d = data[0]!.length;
   const mu = vecMean(data);
   const centered = data.map(obs => vecSub(obs, mu));
   const C = covarianceMatrix(centered);
@@ -800,7 +800,7 @@ export function pca(
     const outer = vecOuter(v, v);
     for (let i = 0; i < d; i++)
       for (let j = 0; j < d; j++)
-        deflated[i][j] -= eigenvalue * outer[i][j];
+        deflated[i]![j] = (deflated[i]![j] ?? 0) - eigenvalue * (outer[i]?.[j] ?? 0);
   }
 
   return { components, explainedVariance };
@@ -819,11 +819,11 @@ export function playerSimilarityMatrix(players: Vec[]): Mat {
   const n = players.length;
   const M = zeros2d(n, n);
   for (let i = 0; i < n; i++) {
-    M[i][i] = 1;
+    M[i]![i] = 1;
     for (let j = i + 1; j < n; j++) {
-      const s = cosineSimilarity(players[i], players[j]);
-      M[i][j] = s;
-      M[j][i] = s;
+      const s = cosineSimilarity(players[i]!, players[j]!);
+      M[i]![j] = s;
+      M[j]![i] = s;
     }
   }
   return M;
@@ -836,7 +836,7 @@ export function playerSimilarityMatrix(players: Vec[]): Mat {
  */
 export function featureWeighting(features: Vec, weights: Vec): Vec {
   assertSameLength(features, weights, 'featureWeighting');
-  const weighted = features.map((f, i) => Math.max(0, f * weights[i]));
+  const weighted = features.map((f, i) => Math.max(0, f * (weights[i] ?? 0)));
   return vecNormalize(weighted);
 }
 

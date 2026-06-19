@@ -57,13 +57,13 @@ import {
 const NEAR = (a: number, b: number, eps = 1e-9) => Math.abs(a - b) < eps;
 
 function approxEqVec(a: number[], b: number[], eps = 1e-7): boolean {
-  return a.length === b.length && a.every((v, i) => Math.abs(v - b[i]) <= eps);
+  return a.length === b.length && a.every((v, i) => Math.abs(v - b[i]!) <= eps);
 }
 
 function approxEqMat(A: number[][], B: number[][], eps = 1e-7): boolean {
   return (
     A.length === B.length &&
-    A.every((row, i) => row.every((v, j) => Math.abs(v - B[i][j]) <= eps))
+    A.every((row, i) => row.every((v, j) => Math.abs(v - B[i]![j]!) <= eps))
   );
 }
 
@@ -74,10 +74,10 @@ function identityMat(n: number): number[][] {
 }
 
 function matMulHelper(A: number[][], B: number[][]): number[][] {
-  const m = A.length, n = B[0].length, p = B.length;
+  const m = A.length, n = B[0]!.length, p = B.length;
   return Array.from({ length: m }, (_, i) =>
     Array.from({ length: n }, (__, j) =>
-      Array.from({ length: p }, (___, k) => A[i][k] * B[k][j]).reduce((s, v) => s + v, 0),
+      Array.from({ length: p }, (___, k) => A[i]![k]! * B[k]![j]!).reduce((s, v) => s + v, 0),
     ),
   );
 }
@@ -269,7 +269,7 @@ describe('vecReject', () => {
     const a = [1, 2, 3], b = [4, 5, 6];
     const proj = vecProject(a, b);
     const rej = vecReject(a, b);
-    expect(approxEqVec(proj.map((v, i) => v + rej[i]), a)).toBe(true);
+    expect(approxEqVec(proj.map((v, i) => v + rej[i]!), a)).toBe(true);
   });
   it('rejection is perpendicular to b', () => {
     const a = [1, 2], b = [1, 0];
@@ -294,9 +294,9 @@ describe('vecOuter', () => {
   it('outer of unit vectors gives projection matrix', () => {
     const e = [1, 0, 0];
     const O = vecOuter(e, e);
-    expect(O[0][0]).toBe(1);
-    expect(O[0][1]).toBe(0);
-    expect(O[1][1]).toBe(0);
+    expect(O[0]![0]).toBe(1);
+    expect(O[0]![1]).toBe(0);
+    expect(O[1]![1]).toBe(0);
   });
 });
 
@@ -324,7 +324,7 @@ describe('vecVariance', () => {
   });
   it('[0] and [2] → variance 1', () => {
     const vs = [[0], [2]];
-    expect(NEAR(vecVariance(vs)[0], 1)).toBe(true);
+    expect(NEAR(vecVariance(vs)[0]!, 1)).toBe(true);
   });
   it('empty → empty', () => {
     expect(vecVariance([])).toEqual([]);
@@ -427,10 +427,10 @@ describe('matMul', () => {
     const A = [[1, 2], [3, 4]];
     const B = [[5, 6], [7, 8]];
     const C = matMul(A, B);
-    expect(C[0][0]).toBe(19); // 1*5+2*7
-    expect(C[0][1]).toBe(22); // 1*6+2*8
-    expect(C[1][0]).toBe(43); // 3*5+4*7
-    expect(C[1][1]).toBe(50); // 3*6+4*8
+    expect(C[0]![0]).toBe(19); // 1*5+2*7
+    expect(C[0]![1]).toBe(22); // 1*6+2*8
+    expect(C[1]![0]).toBe(43); // 3*5+4*7
+    expect(C[1]![1]).toBe(50); // 3*6+4*8
   });
   it('A × I = A', () => {
     const A = [[1, 2, 3], [4, 5, 6]];
@@ -599,16 +599,16 @@ describe('luDecompose', () => {
   });
   it('L has unit diagonal', () => {
     const { L } = luDecompose([[1, 2], [3, 4]]);
-    expect(NEAR(L[0][0], 1)).toBe(true);
-    expect(NEAR(L[1][1], 1)).toBe(true);
+    expect(NEAR(L[0]![0]!, 1)).toBe(true);
+    expect(NEAR(L[1]![1]!, 1)).toBe(true);
   });
   it('L is lower triangular', () => {
     const { L } = luDecompose([[1, 2], [3, 4]]);
-    expect(NEAR(L[0][1], 0)).toBe(true);
+    expect(NEAR(L[0]![1]!, 0)).toBe(true);
   });
   it('U is upper triangular', () => {
     const { U } = luDecompose([[1, 2], [3, 4]]);
-    expect(NEAR(U[1][0], 0)).toBe(true);
+    expect(NEAR(U[1]![0]!, 0)).toBe(true);
   });
   it('3×3 reconstruction', () => {
     const A = [[2, 0, 2], [6, 1, 8], [4, 0, 6]];
@@ -645,7 +645,7 @@ describe('choleskyDecompose', () => {
   });
   it('L is lower triangular', () => {
     const L = choleskyDecompose([[4, 2], [2, 3]])!;
-    expect(NEAR(L[0][1], 0)).toBe(true);
+    expect(NEAR(L[0]![1]!, 0)).toBe(true);
   });
 });
 
@@ -669,7 +669,7 @@ describe('qrDecompose', () => {
   });
   it('R is upper triangular', () => {
     const { R } = qrDecompose([[1, 2], [3, 4]]);
-    expect(NEAR(R[1][0], 0, 1e-10)).toBe(true);
+    expect(NEAR(R[1]![0]!, 0, 1e-10)).toBe(true);
   });
   it('square 2×2 QR', () => {
     const A = [[1, 2], [3, 4]];
@@ -692,7 +692,7 @@ describe('svdLite', () => {
   it('singular values are descending', () => {
     const A = [[1, 2], [3, 4], [5, 6]];
     const { S } = svdLite(A);
-    for (let i = 0; i < S.length - 1; i++) expect(S[i]).toBeGreaterThanOrEqual(S[i + 1]);
+    for (let i = 0; i < S.length - 1; i++) expect(S[i]).toBeGreaterThanOrEqual(S[i + 1]!);
   });
   it('A ≈ U * diag(S) * Vt reconstruction', () => {
     const A = [[3, 2, 2], [2, 3, -2]];
@@ -700,7 +700,7 @@ describe('svdLite', () => {
     const k = S.length;
     // Build diag(S) as k×k
     const diagS = Array.from({ length: k }, (_, i) =>
-      Array.from({ length: k }, (__, j) => (i === j ? S[i] : 0)),
+      Array.from({ length: k }, (__, j) => (i === j ? S[i]! : 0)),
     );
     const USigma = matMulHelper(U, diagS);
     const approx = matMulHelper(USigma, Vt);
@@ -709,9 +709,9 @@ describe('svdLite', () => {
   it('U has unit-norm columns', () => {
     const A = [[1, 2], [3, 4], [5, 6]];
     const { U } = svdLite(A);
-    const [m, k] = [U.length, U[0].length];
+    const [m, k] = [U.length, U[0]!.length];
     for (let j = 0; j < k; j++) {
-      const col = Array.from({ length: m }, (_, i) => U[i][j]);
+      const col = Array.from({ length: m }, (_, i) => U[i]![j]!);
       expect(NEAR(col.reduce((s, x) => s + x * x, 0), 1, 1e-6)).toBe(true);
     }
   });
@@ -733,9 +733,9 @@ describe('solveLinear', () => {
     const x = solveLinear(A, b)!;
     expect(x).not.toBeNull();
     // Check A*x ≈ b
-    const Ax = [A[0][0] * x[0] + A[0][1] * x[1], A[1][0] * x[0] + A[1][1] * x[1]];
-    expect(NEAR(Ax[0], b[0])).toBe(true);
-    expect(NEAR(Ax[1], b[1])).toBe(true);
+    const Ax = [A[0]![0]! * x[0]! + A[0]![1]! * x[1]!, A[1]![0]! * x[0]! + A[1]![1]! * x[1]!];
+    expect(NEAR(Ax[0]!, b[0]!)).toBe(true);
+    expect(NEAR(Ax[1]!, b[1]!)).toBe(true);
   });
   it('3×3 system Ax ≈ b', () => {
     const A = [[1, 2, 3], [0, 1, 4], [5, 6, 0]];
@@ -743,8 +743,8 @@ describe('solveLinear', () => {
     const x = solveLinear(A, b)!;
     expect(x).not.toBeNull();
     for (let i = 0; i < 3; i++) {
-      const s = A[i].reduce((acc, v, j) => acc + v * x[j], 0);
-      expect(NEAR(s, b[i], 1e-7)).toBe(true);
+      const s = A[i]!.reduce((acc, v, j) => acc + v * x[j]!, 0);
+      expect(NEAR(s, b[i]!, 1e-7)).toBe(true);
     }
   });
   it('singular system → null', () => {
@@ -752,8 +752,8 @@ describe('solveLinear', () => {
   });
   it('identity system → b itself', () => {
     const x = solveLinear([[1, 0], [0, 1]], [3, 7])!;
-    expect(NEAR(x[0], 3)).toBe(true);
-    expect(NEAR(x[1], 7)).toBe(true);
+    expect(NEAR(x[0]!, 3)).toBe(true);
+    expect(NEAR(x[1]!, 7)).toBe(true);
   });
 });
 
@@ -777,7 +777,7 @@ describe('leastSquares', () => {
     // Should return valid coefficient vector
     expect(x).toHaveLength(2);
     // Residual check: ||Ax - b||^2 should be small for a linear fit
-    const res = A.map((row, i) => row[0] * x[0] + row[1] * x[1] - b[i]);
+    const res = A.map((row, i) => row[0]! * x[0]! + row[1]! * x[1]! - b[i]!);
     const resNorm2 = res.reduce((s, r) => s + r * r, 0);
     expect(resNorm2).toBeLessThan(1); // rough sanity
   });
@@ -800,7 +800,7 @@ describe('gramSchmidt', () => {
   it('single vector: normalised', () => {
     const basis = gramSchmidt([[3, 4]]);
     expect(basis).toHaveLength(1);
-    expect(NEAR(vecNorm(basis[0]), 1)).toBe(true);
+    expect(NEAR(vecNorm(basis[0]!), 1)).toBe(true);
   });
 });
 
@@ -864,10 +864,10 @@ describe('powerIteration', () => {
 describe('hilbertMatrix', () => {
   it('H[i][j] = 1/(i+j+1)', () => {
     const H = hilbertMatrix(3);
-    expect(NEAR(H[0][0], 1)).toBe(true);
-    expect(NEAR(H[0][1], 1 / 2)).toBe(true);
-    expect(NEAR(H[1][0], 1 / 2)).toBe(true);
-    expect(NEAR(H[2][2], 1 / 5)).toBe(true);
+    expect(NEAR(H[0]![0]!, 1)).toBe(true);
+    expect(NEAR(H[0]![1]!, 1 / 2)).toBe(true);
+    expect(NEAR(H[1]![0]!, 1 / 2)).toBe(true);
+    expect(NEAR(H[2]![2]!, 1 / 5)).toBe(true);
   });
   it('symmetric', () => {
     const H = hilbertMatrix(4);
@@ -885,7 +885,7 @@ describe('vandermonde', () => {
   it('custom n cols', () => {
     const V = vandermonde([2, 3], 4);
     expect(V[0]).toHaveLength(4);
-    expect(NEAR(V[1][3], 27)).toBe(true); // 3^3
+    expect(NEAR(V[1]![3]!, 27)).toBe(true); // 3^3
   });
 });
 
@@ -919,8 +919,8 @@ describe('covarianceMatrix', () => {
     // Feature 0: mean=3, vals=[1,3,5], pop var = (4+0+4)/3 = 8/3
     // Feature 1: mean=4, vals=[2,4,6], pop var = (4+0+4)/3 = 8/3
     const C = covarianceMatrix(data);
-    expect(NEAR(C[0][0], 8 / 3, 1e-9)).toBe(true);
-    expect(NEAR(C[1][1], 8 / 3, 1e-9)).toBe(true);
+    expect(NEAR(C[0]![0]!, 8 / 3, 1e-9)).toBe(true);
+    expect(NEAR(C[1]![1]!, 8 / 3, 1e-9)).toBe(true);
   });
   it('symmetric', () => {
     const data = [[1, 2, 3], [4, 5, 6], [7, 8, 0]];
@@ -929,7 +929,7 @@ describe('covarianceMatrix', () => {
   });
   it('single observation → zero variance', () => {
     const C = covarianceMatrix([[1, 2, 3]]);
-    expect(C[0][0]).toBe(0);
+    expect(C[0]![0]).toBe(0);
   });
 });
 
@@ -937,19 +937,19 @@ describe('correlationMatrix', () => {
   it('diagonal entries = 1', () => {
     const data = [[1, 2], [3, 4], [5, 6]];
     const R = correlationMatrix(data);
-    expect(NEAR(R[0][0], 1)).toBe(true);
-    expect(NEAR(R[1][1], 1)).toBe(true);
+    expect(NEAR(R[0]![0]!, 1)).toBe(true);
+    expect(NEAR(R[1]![1]!, 1)).toBe(true);
   });
   it('off-diagonal bounded by [-1,1]', () => {
     const data = [[1, 3], [2, 2], [3, 1]];
     const R = correlationMatrix(data);
-    expect(R[0][1]).toBeGreaterThanOrEqual(-1 - 1e-9);
-    expect(R[0][1]).toBeLessThanOrEqual(1 + 1e-9);
+    expect(R[0]![1]).toBeGreaterThanOrEqual(-1 - 1e-9);
+    expect(R[0]![1]).toBeLessThanOrEqual(1 + 1e-9);
   });
   it('perfectly anti-correlated features → -1', () => {
     const data = [[1, 3], [2, 2], [3, 1]];
     const R = correlationMatrix(data);
-    expect(NEAR(R[0][1], -1, 1e-9)).toBe(true);
+    expect(NEAR(R[0]![1]!, -1, 1e-9)).toBe(true);
   });
 });
 
@@ -971,7 +971,7 @@ describe('pca', () => {
   it('first component has highest explained variance', () => {
     const data = [[10, 1], [20, 2], [30, 3], [40, 0], [50, 1]];
     const { explainedVariance } = pca(data, 2);
-    expect(explainedVariance[0]).toBeGreaterThan(explainedVariance[1]);
+    expect(explainedVariance[0]).toBeGreaterThan(explainedVariance[1]!);
   });
   it('empty data → empty result', () => {
     const { components, explainedVariance } = pca([], 2);
@@ -988,24 +988,24 @@ describe('playerSimilarityMatrix', () => {
   it('diagonal entries = 1', () => {
     const players = [[1, 0, 0], [0, 1, 0], [1, 1, 0]];
     const M = playerSimilarityMatrix(players);
-    expect(NEAR(M[0][0], 1)).toBe(true);
-    expect(NEAR(M[1][1], 1)).toBe(true);
+    expect(NEAR(M[0]![0]!, 1)).toBe(true);
+    expect(NEAR(M[1]![1]!, 1)).toBe(true);
   });
   it('symmetric: M[i][j] = M[j][i]', () => {
     const players = [[1, 2], [3, 4], [5, 0]];
     const M = playerSimilarityMatrix(players);
-    expect(NEAR(M[0][1], M[1][0])).toBe(true);
-    expect(NEAR(M[0][2], M[2][0])).toBe(true);
+    expect(NEAR(M[0]![1]!, M[1]![0]!)).toBe(true);
+    expect(NEAR(M[0]![2]!, M[2]![0]!)).toBe(true);
   });
   it('orthogonal players have similarity 0', () => {
     const players = [[1, 0], [0, 1]];
     const M = playerSimilarityMatrix(players);
-    expect(NEAR(M[0][1], 0)).toBe(true);
+    expect(NEAR(M[0]![1]!, 0)).toBe(true);
   });
   it('identical players have similarity 1', () => {
     const players = [[1, 2, 3], [1, 2, 3]];
     const M = playerSimilarityMatrix(players);
-    expect(NEAR(M[0][1], 1)).toBe(true);
+    expect(NEAR(M[0]![1]!, 1)).toBe(true);
   });
 });
 
