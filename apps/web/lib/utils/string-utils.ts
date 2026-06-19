@@ -642,3 +642,663 @@ export function formatBytes(bytes: number, decimals = 1): string {
   const value = bytes / Math.pow(k, i);
   return `${value.toFixed(decimals).replace(/\.0$/, '')} ${sizes[i] ?? 'B'}`;
 }
+
+// ---------------------------------------------------------------------------
+// Edit distance and fuzzy matching (new additions)
+// ---------------------------------------------------------------------------
+
+/** 1 - dist/max(len); 1.0 if both empty */
+export function levenshteinSimilarity(a: string, b: string): number {
+  const maxLen = Math.max(a.length, b.length);
+  if (maxLen === 0) return 1;
+  return 1 - levenshteinDistance(a, b) / maxLen;
+}
+
+/** Damerau-Levenshtein distance — includes transpositions */
+export function damerauLevenshteinDistance(a: string, b: string): number {
+  const m = a.length;
+  const n = b.length;
+  // Use flat array indexed as [i*(n+2)+j] to avoid noUncheckedIndexedAccess issues
+  const size = (m + 2) * (n + 2);
+  const dp = new Int32Array(size);
+  const idx = (i: number, j: number) => i * (n + 2) + j;
+  for (let i = 0; i <= m; i++) dp[idx(i, 0)] = i;
+  for (let j = 0; j <= n; j++) dp[idx(0, j)] = j;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[idx(i, j)] = Math.min(
+        dp[idx(i - 1, j)] + 1,
+        dp[idx(i, j - 1)] + 1,
+        dp[idx(i - 1, j - 1)] + cost,
+      );
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+        dp[idx(i, j)] = Math.min(dp[idx(i, j)], dp[idx(i - 2, j - 2)] + cost);
+      }
+    }
+  }
+  return dp[idx(m, n)];
+}
+
+/** Jaro similarity (0–1) */
+export function jaroSimilarity(a: string, b: string): number {
+  if (a === b) return 1;
+  if (a.length === 0 || b.length === 0) return 0;
+
+  const matchWindow = Math.max(Math.floor(Math.max(a.length, b.length) / 2) - 1, 0);
+  const aMatched = new Uint8Array(a.length);
+  const bMatched = new Uint8Array(b.length);
+
+  let matches = 0;
+  let transpositions = 0;
+
+  for (let i = 0; i < a.length; i++) {
+    const start = Math.max(0, i - matchWindow);
+    const end = Math.min(i + matchWindow + 1, b.length);
+    for (let j = start; j < end; j++) {
+      if (bMatched[j] || a[i] !== b[j]) continue;
+      aMatched[i] = 1;
+      bMatched[j] = 1;
+      matches++;
+      break;
+    }
+  }
+
+  if (matches === 0) return 0;
+
+  let k = 0;
+  for (let i = 0; i < a.length; i++) {
+    if (!aMatched[i]) continue;
+    while (!bMatched[k]) k++;
+    if (a[i] !== b[k]) transpositions++;
+    k++;
+  }
+
+  return (matches / a.length + matches / b.length + (matches - transpositions / 2) / matches) / 3;
+}
+
+/** Jaro-Winkler similarity with prefix scaling; p default 0.1 */
+export function jaroWinklerSimilarity(a: string, b: string, p = 0.1): number {
+  const jaro = jaroSimilarity(a, b);
+  let prefixLen = 0;
+  const maxPrefix = Math.min(4, Math.min(a.length, b.length));
+  for (let i = 0; i < maxPrefix; i++) {
+    if (a[i] === b[i]) prefixLen++;
+    else break;
+  }
+  return jaro + prefixLen * p * (1 - jaro);
+}
+
+/**
+ * Returns candidates with jaroWinkler ≥ threshold sorted descending.
+ * Default threshold=0.7
+ */
+export function fuzzyMatch(
+  query: string,
+  candidates: string[],
+  threshold = 0.7,
+): Array<{ candidate: string; score: number }> {
+  return candidates
+    .map((candidate) => ({ candidate, score: jaroWinklerSimilarity(query, candidate) }))
+    .filter(({ score }) => score >= threshold)
+    .sort((a, b) => b.score - a.score);
+}
+
+// ---------------------------------------------------------------------------
+// Soundex / phonetic
+// ---------------------------------------------------------------------------
+
+const SOUNDEX_MAP: Record<string, string> = {
+  B: '1', F: '1', P: '1', V: '1',
+  C: '2', G: '2', J: '2', K: '2', Q: '2', S: '2', X: '2', Z: '2',
+  D: '3', T: '3',
+  L: '4',
+  M: '5', N: '5',
+  R: '6',
+};
+
+/** Standard American Soundex (letter + 3 digits); empty → '' */
+export function soundex(s: string): string {
+  if (!s) return '';
+  const upper = s.toUpperCase().replace(/[^A-Z]/g, '');
+  if (!upper) return '';
+
+  const first = upper[0];
+  let code = first;
+  // In standard Soundex, H and W are ignored (do NOT reset prev digit)
+  // Vowels (AEIOUY) separate consonant groups — they reset prev
+  let prev = SOUNDEX_MAP[first] ?? '0';
+
+  for (let i = 1; i < upper.length && code.length < 4; i++) {
+    const ch = upper[i];
+    // H and W are ignored entirely — don't update prev
+    if (ch === 'H' || ch === 'W') continue;
+    // Vowels separate consonant groups — reset prev so next consonant is counted
+    if ('AEIOUY'.includes(ch)) {
+      prev = '0';
+      continue;
+    }
+    const digit = SOUNDEX_MAP[ch] ?? '0';
+    if (digit !== prev) {
+      code += digit;
+      prev = digit;
+    }
+  }
+
+  return code.padEnd(4, '0');
+}
+
+/** Simplified Metaphone (~15 rules) */
+export function metaphone(s: string): string {
+  if (!s) return '';
+  let str = s.toUpperCase().replace(/[^A-Z]/g, '');
+  if (!str) return '';
+
+  // Drop trailing S if it creates double: "SS" -> "S"
+  str = str.replace(/([AEIOU])/g, (v) => v); // keep vowels for now
+
+  let result = '';
+  const len = str.length;
+
+  for (let i = 0; i < len; i++) {
+    const ch = str[i] as string;
+    const prev = i > 0 ? str[i - 1] : '';
+    const next = i < len - 1 ? str[i + 1] : '';
+    const next2 = i < len - 2 ? str[i + 2] : '';
+
+    // Drop duplicate adjacent letters (except C)
+    if (ch !== 'C' && ch === prev) continue;
+
+    // Silent initial letters
+    if (i === 0) {
+      if ((ch === 'A' && next === 'E') ||
+          (ch === 'G' && next === 'N') ||
+          (ch === 'K' && next === 'N') ||
+          (ch === 'W' && next === 'R') ||
+          (ch === 'P' && next === 'N')) {
+        continue;
+      }
+    }
+
+    switch (ch) {
+      case 'A': case 'E': case 'I': case 'O': case 'U':
+        if (i === 0) result += ch;
+        break;
+      case 'B':
+        if (!(prev === 'M' && i === len - 1)) result += 'B';
+        break;
+      case 'C':
+        if (next === 'I' || next === 'E' || next === 'Y') {
+          result += 'S';
+        } else if (next === 'H') {
+          result += 'X';
+          i++;
+        } else if (next === 'K') {
+          result += 'K';
+          i++;
+        } else {
+          result += 'K';
+        }
+        break;
+      case 'D':
+        if (next === 'G' && (next2 === 'I' || next2 === 'E' || next2 === 'Y')) {
+          result += 'J';
+          i++;
+        } else {
+          result += 'T';
+        }
+        break;
+      case 'F':
+        result += 'F';
+        break;
+      case 'G':
+        if (next === 'H') {
+          if (i === 0 || !'AEIOU'.includes(prev)) {
+            result += 'K';
+          }
+          i++;
+        } else if (next === 'N') {
+          if (i === 0 || (i === 1 && !'AEIOU'.includes(str[0] ?? ''))) {
+            // silent
+          } else {
+            result += 'K';
+          }
+        } else if (next === 'I' || next === 'E' || next === 'Y') {
+          result += 'J';
+        } else {
+          result += 'K';
+        }
+        break;
+      case 'H':
+        if ('AEIOU'.includes(next) && !'AEIOU'.includes(prev)) {
+          result += 'H';
+        }
+        break;
+      case 'J':
+        result += 'J';
+        break;
+      case 'K':
+        if (prev !== 'C') result += 'K';
+        break;
+      case 'L':
+        result += 'L';
+        break;
+      case 'M':
+        result += 'M';
+        break;
+      case 'N':
+        result += 'N';
+        break;
+      case 'P':
+        if (next === 'H') {
+          result += 'F';
+          i++;
+        } else {
+          result += 'P';
+        }
+        break;
+      case 'Q':
+        result += 'K';
+        break;
+      case 'R':
+        result += 'R';
+        break;
+      case 'S':
+        if (next === 'H' || (next === 'I' && (next2 === 'O' || next2 === 'A'))) {
+          result += 'X';
+          i++;
+        } else if (next === 'C' && next2 === 'H') {
+          result += 'SK';
+          i += 2;
+        } else {
+          result += 'S';
+        }
+        break;
+      case 'T':
+        if (next === 'H') {
+          result += '0';
+          i++;
+        } else if (next === 'I' && (next2 === 'A' || next2 === 'O')) {
+          result += 'X';
+        } else {
+          result += 'T';
+        }
+        break;
+      case 'V':
+        result += 'F';
+        break;
+      case 'W':
+        if (next === 'H') {
+          result += 'W';
+          i++;
+        } else if ('AEIOU'.includes(next)) {
+          result += 'W';
+        }
+        break;
+      case 'X':
+        result += 'KS';
+        break;
+      case 'Y':
+        if ('AEIOU'.includes(next)) result += 'Y';
+        break;
+      case 'Z':
+        result += 'S';
+        break;
+    }
+  }
+
+  return result;
+}
+
+/** true if soundex(a) === soundex(b) */
+export function phoneticMatch(a: string, b: string): boolean {
+  return soundex(a) === soundex(b);
+}
+
+// ---------------------------------------------------------------------------
+// Text tokenization and normalization
+// ---------------------------------------------------------------------------
+
+/** Split on whitespace and punctuation; filter empty; lowercase */
+export function tokenize(text: string): string[] {
+  return text
+    .toLowerCase()
+    .split(/[\s\p{P}]+/u)
+    .filter((t) => t.length > 0);
+}
+
+const DEFAULT_STOP_WORDS = new Set([
+  'a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+  'of', 'with', 'by', 'is', 'was', 'are', 'were', 'be', 'been', 'have',
+  'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should',
+  'may', 'might',
+]);
+
+/** Remove stop words from tokens; defaults to English stop word list */
+export function removeStopWords(tokens: string[], stopWords?: string[]): string[] {
+  const set = stopWords ? new Set(stopWords) : DEFAULT_STOP_WORDS;
+  return tokens.filter((t) => !set.has(t));
+}
+
+/** Porter stemmer — simplified rules */
+export function stemWord(word: string): string {
+  let w = word.toLowerCase();
+  const MIN_STEM = 3;
+
+  // Helper: remove doubled consonant after suffix removal (e.g. "running"→"runn"→"run")
+  function dedouble(s: string): string {
+    if (s.length >= 2) {
+      const last = s[s.length - 1];
+      const prev = s[s.length - 2];
+      if (last === prev && !'aeiou'.includes(last ?? '')) {
+        return s.slice(0, -1);
+      }
+    }
+    return s;
+  }
+
+  // Suffixes (ordered longest-first); strip and dedouble
+  const suffixes: Array<[string, string]> = [
+    ['ation', ''],
+    ['ment', ''],
+    ['ness', ''],
+    ['tion', ''],
+    ['ing', ''],
+    ['ed', ''],
+    ['er', ''],
+    ['ly', ''],
+  ];
+
+  for (const [suffix, replacement] of suffixes) {
+    if (w.length > MIN_STEM + suffix.length && w.endsWith(suffix)) {
+      const stem = w.slice(0, -suffix.length) + replacement;
+      if (stem.length >= MIN_STEM) {
+        w = dedouble(stem);
+        break;
+      }
+    }
+  }
+
+  // Plurals (after other suffixes since -ies may already be handled above)
+  if (w.length > MIN_STEM + 2 && w.endsWith('ies')) {
+    w = w.slice(0, -3) + 'y';
+  } else if (w.length > MIN_STEM + 1 && w.endsWith('es') && !w.endsWith('aes') && !w.endsWith('oes')) {
+    w = w.slice(0, -1);
+  } else if (w.length > MIN_STEM && w.endsWith('s') && !w.endsWith('ss') && !w.endsWith('us')) {
+    w = w.slice(0, -1);
+  }
+
+  return w;
+}
+
+/** Map stemWord over an array of tokens */
+export function stemTokens(tokens: string[]): string[] {
+  return tokens.map(stemWord);
+}
+
+/** Produce n-grams from an array of tokens */
+export function nGrams(tokens: string[], n: number): string[][] {
+  if (n <= 0 || tokens.length < n) return [];
+  const result: string[][] = [];
+  for (let i = 0; i <= tokens.length - n; i++) {
+    result.push(tokens.slice(i, i + n));
+  }
+  return result;
+}
+
+/** Character n-grams (sliding window) */
+export function characterNGrams(s: string, n: number): string[] {
+  if (n <= 0 || s.length < n) return [];
+  const result: string[] = [];
+  for (let i = 0; i <= s.length - n; i++) {
+    result.push(s.slice(i, i + n));
+  }
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// String comparison and diff (new additions)
+// ---------------------------------------------------------------------------
+
+/**
+ * Line-level diff using LCS on lines.
+ * Returns array of {type, text} objects.
+ */
+export function textDiff(
+  original: string,
+  modified: string,
+): Array<{ type: 'equal' | 'insert' | 'delete'; text: string }> {
+  const aLines = original.split('\n');
+  const bLines = modified.split('\n');
+  const m = aLines.length;
+  const n = bLines.length;
+
+  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = aLines[i - 1] === bLines[j - 1]
+        ? dp[i - 1][j - 1] + 1
+        : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+
+  const result: Array<{ type: 'equal' | 'insert' | 'delete'; text: string }> = [];
+  let i = m;
+  let j = n;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && aLines[i - 1] === bLines[j - 1]) {
+      result.unshift({ type: 'equal', text: aLines[i - 1] as string });
+      i--;
+      j--;
+    } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+      result.unshift({ type: 'insert', text: bLines[j - 1] as string });
+      j--;
+    } else {
+      result.unshift({ type: 'delete', text: aLines[i - 1] as string });
+      i--;
+    }
+  }
+  return result;
+}
+
+/** 2*LCS_length / (|a|+|b|); 1.0 if both empty */
+export function diffRatio(a: string, b: string): number {
+  if (a.length === 0 && b.length === 0) return 1;
+  const lcs = longestCommonSubsequence(a, b);
+  return (2 * lcs.length) / (a.length + b.length);
+}
+
+// ---------------------------------------------------------------------------
+// Formatting and transformation (new additions)
+// ---------------------------------------------------------------------------
+
+/** Capitalize first letter of each word; lower rest */
+export function toTitleCase(s: string): string {
+  return s.replace(/\S+/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+}
+
+/** from snake_case or kebab-case or space-separated → camelCase */
+export function toCamelCase(s: string): string {
+  return s
+    .replace(/([A-Z])/g, ' $1')
+    .toLowerCase()
+    .replace(/[-_\s]+(.)/g, (_m, c: string) => c.toUpperCase())
+    .replace(/^(.)/, (m) => m.toLowerCase());
+}
+
+/** from camelCase or PascalCase or space-separated → snake_case */
+export function toSnakeCase(s: string): string {
+  return s
+    .replace(/([A-Z])/g, '_$1')
+    .replace(/[-\s]+/g, '_')
+    .toLowerCase()
+    .replace(/^_/, '');
+}
+
+/** from camelCase or PascalCase or space-separated → kebab-case */
+export function toKebabCase(s: string): string {
+  return toSnakeCase(s).replace(/_/g, '-');
+}
+
+/** from snake_case or kebab-case or space-separated → PascalCase */
+export function toPascalCase(s: string): string {
+  const c = toCamelCase(s);
+  return c.charAt(0).toUpperCase() + c.slice(1);
+}
+
+/** Word-wrap returning array of lines; respects word boundaries */
+export function wrap(s: string, width: number): string[] {
+  if (width <= 0) return [s];
+  const words = s.split(/\s+/).filter((w) => w.length > 0);
+  const lines: string[] = [];
+  let current = '';
+
+  for (const word of words) {
+    if (current.length === 0) {
+      current = word;
+    } else if (current.length + 1 + word.length <= width) {
+      current += ' ' + word;
+    } else {
+      lines.push(current);
+      current = word;
+    }
+  }
+
+  if (current.length > 0) lines.push(current);
+  return lines;
+}
+
+// ---------------------------------------------------------------------------
+// Pattern matching and extraction (new additions)
+// ---------------------------------------------------------------------------
+
+/** All numeric sequences including decimals */
+export function extractNumbers(s: string): number[] {
+  const matches = s.match(/-?\d+(\.\d+)?/g);
+  return matches ? matches.map(Number) : [];
+}
+
+/** Valid email patterns */
+export function extractEmails(s: string): string[] {
+  const re = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g;
+  return s.match(re) ?? [];
+}
+
+/** http/https URLs */
+export function extractUrls(s: string): string[] {
+  const re = /https?:\/\/[^\s<>"{}|\\^`[\]]+/g;
+  return s.match(re) ?? [];
+}
+
+/**
+ * * matches any sequence, ? matches one char
+ */
+export function wildcardMatch(pattern: string, text: string): boolean {
+  const m = pattern.length;
+  const n = text.length;
+  const dp: boolean[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(false));
+  dp[0][0] = true;
+
+  for (let i = 1; i <= m; i++) {
+    if (pattern[i - 1] === '*') dp[i][0] = dp[i - 1][0];
+  }
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (pattern[i - 1] === '*') {
+        dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
+      } else if (pattern[i - 1] === '?' || pattern[i - 1] === text[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      }
+    }
+  }
+
+  return dp[m][n];
+}
+
+// ---------------------------------------------------------------------------
+// Sports-specific string helpers (new additions)
+// ---------------------------------------------------------------------------
+
+/** Lowercase, remove punctuation, collapse whitespace, trim */
+export function normalizeTeamName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Uppercase first letter of each word, up to maxLen chars.
+ * Default maxLen=3. e.g. "New England Patriots" → "NEP"
+ */
+export function teamAbbreviation(teamName: string, maxLen = 3): string {
+  return teamName
+    .split(/\s+/)
+    .filter((w) => w.length > 0)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .slice(0, maxLen)
+    .join('');
+}
+
+/** Parse "+150", "-110" etc.; throw if invalid */
+export function parseAmericanOddsString(odds: string): number {
+  const trimmed = odds.trim();
+  if (!/^[+-]?\d+$/.test(trimmed)) {
+    throw new Error(`Invalid American odds string: "${odds}"`);
+  }
+  const n = Number(trimmed);
+  if (Number.isNaN(n)) {
+    throw new Error(`Invalid American odds string: "${odds}"`);
+  }
+  return n;
+}
+
+/** e.g. "NFL: Chiefs vs Eagles — Spread" */
+export function formatPickLabel(
+  sport: string,
+  homeTeam: string,
+  awayTeam: string,
+  betType: string,
+): string {
+  return `${sport}: ${homeTeam} vs ${awayTeam} — ${betType}`;
+}
+
+/** URL-safe slug; e.g. "Green Bay Packers" → "green-bay-packers" */
+export function slugifyTeam(teamName: string): string {
+  return teamName
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+/**
+ * 1000→"1K", 1500000→"1.5M", 1000000000→"1B"
+ * Default decimals=1
+ */
+export function abbreviateNumber(n: number, decimals = 1): string {
+  const abs = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  if (abs >= 1_000_000_000) {
+    const val = abs / 1_000_000_000;
+    const str = val.toFixed(decimals).replace(/\.0+$/, '');
+    return `${sign}${str}B`;
+  }
+  if (abs >= 1_000_000) {
+    const val = abs / 1_000_000;
+    const str = val.toFixed(decimals).replace(/\.0+$/, '');
+    return `${sign}${str}M`;
+  }
+  if (abs >= 1_000) {
+    const val = abs / 1_000;
+    const str = val.toFixed(decimals).replace(/\.0+$/, '');
+    return `${sign}${str}K`;
+  }
+  return `${sign}${abs}`;
+}
