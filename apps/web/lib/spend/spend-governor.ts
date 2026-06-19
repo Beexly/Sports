@@ -214,7 +214,7 @@ export const GOVERNED_SERVICES: readonly GovernedService[] = [
     name: "First-party analytics (DB/file-backed) + optional free GA4/PostHog",
     category: "analytics",
     costClass: "free_quota",
-    enableEnv: ["NEXT_PUBLIC_ANALYTICS_ENABLED", "NEXT_PUBLIC_GA4_ID", "NEXT_PUBLIC_POSTHOG_KEY"],
+    enableEnv: ["NEXT_PUBLIC_ANALYTICS_ENABLED", "NEXT_PUBLIC_GA_MEASUREMENT_ID", "NEXT_PUBLIC_POSTHOG_KEY"],
     defaultMode: "FREE_ONLY",
     unlocks:
       "Optional free-tier GA4/PostHog/Cloudflare beacon alongside the always-on first-party event store.",
