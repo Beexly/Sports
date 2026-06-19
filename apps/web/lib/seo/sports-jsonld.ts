@@ -138,3 +138,117 @@ export function buildMatchupPreview(input: MatchupPreviewInput): {
     jsonLd: [buildSportsEventJsonLd(input), buildBreadcrumbJsonLd(input), ...(faqLd ? [faqLd] : [])],
   };
 }
+
+/** Article JSON-LD schema for blog posts and intelligence articles */
+export function buildArticleSchema({
+  headline,
+  description,
+  url,
+  datePublished,
+  dateModified,
+  authorName = "Galaxy Sports Edge",
+  imageUrl,
+}: {
+  headline: string;
+  description: string;
+  url: string;
+  datePublished: string; // ISO date string
+  dateModified?: string;
+  authorName?: string;
+  imageUrl?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline,
+    description,
+    url,
+    datePublished,
+    ...(dateModified ? { dateModified } : {}),
+    author: {
+      "@type": "Organization",
+      name: authorName,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Galaxy Sports Edge",
+      url: "https://galaxysportsedge.com",
+    },
+    ...(imageUrl
+      ? {
+          image: {
+            "@type": "ImageObject",
+            url: imageUrl,
+          },
+        }
+      : {}),
+  };
+}
+
+/** ItemList JSON-LD schema for pick board / list pages */
+export function buildItemListSchema({
+  name,
+  description,
+  url,
+  items,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  items: Array<{ name: string; url: string; position: number }>;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    description,
+    url,
+    numberOfItems: items.length,
+    itemListElement: items.map((item) => ({
+      "@type": "ListItem",
+      position: item.position,
+      name: item.name,
+      url: item.url,
+    })),
+  };
+}
+
+/** ClaimReview JSON-LD schema for settled picks with verified outcomes.
+ *  Only use this on genuinely settled picks — never for pending picks. */
+export function buildClaimReviewSchema({
+  claimText,
+  reviewUrl,
+  datePublished,
+  ratingValue,
+  bestRating = 5,
+  worstRating = 1,
+  ratingExplanation,
+}: {
+  claimText: string;
+  reviewUrl: string;
+  datePublished: string;
+  ratingValue: number; // 1 = loss, 3 = push, 5 = win
+  bestRating?: number;
+  worstRating?: number;
+  ratingExplanation?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ClaimReview",
+    claimReviewed: claimText,
+    url: reviewUrl,
+    datePublished,
+    author: {
+      "@type": "Organization",
+      name: "Galaxy Sports Edge",
+      url: "https://galaxysportsedge.com",
+    },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue,
+      bestRating,
+      worstRating,
+      ...(ratingExplanation ? { alternateName: ratingExplanation } : {}),
+    },
+  };
+}
