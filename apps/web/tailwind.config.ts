@@ -153,13 +153,17 @@ const config: Config = {
           DEFAULT: "#0E1320",  // body — 17.46:1 on paper
           1:    "#3A4356",     // secondary — 9.34:1 on paper
           2:    "#5B6678",     // muted meta — 5.47:1 on paper
-          // ── legacy DARK ramp (unchanged) — ink-50..ink-1000 ──
+          // ── DARK ramp — ink-50..ink-1000 ──
           50:   "#F5F7FF",
           100:  "#D5DDE9",
           200:  "#AEB7D2",
           300:  "#AEB7D2",
-          400:  "#5E6878",
-          500:  "#3D4555",
+          // WCAG AA fix: 400/500 re-valued to match the corrected ramp in
+          // styles/design-tokens.css (--ion-2/--ion-3). Old #5E6878 (3.36:1) and
+          // #3D4555 (1.97:1) FAILED AA as body/meta text on the dark canvas; these
+          // pass while keeping the 300 > 400 > 500 muted hierarchy intact.
+          400:  "#9AA6B8",
+          500:  "#8B97AB",
           600:  "#2E3849",
           700:  "#20283A",
           800:  "#181E28",

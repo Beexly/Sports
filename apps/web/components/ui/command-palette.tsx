@@ -20,7 +20,6 @@ const COMMANDS: Command[] = [
   { label: "Edge Map", href: "/observatory", group: "Intelligence", keywords: "observatory market" },
   { label: "Inside the Signal", href: "/intelligence", group: "Intelligence", keywords: "engine reasoning how it works" },
   { label: "The Beat", href: "/the-beat", group: "Intelligence", keywords: "news breaking injuries reporters" },
-  { label: "GSN Transmission", href: "/gsn", group: "Intelligence", keywords: "daily news network" },
   { label: "Parlay MRI", href: "/parlay-mri", group: "Intelligence", keywords: "parlay risk genome" },
   { label: "The Academy", href: "/academy", group: "Intelligence", keywords: "train scenarios lessons" },
   { label: "Trust Ledger", href: "/ledger", group: "Intelligence", keywords: "merkle proof record" },

@@ -52,6 +52,29 @@ test.describe("front door — locked 10-second test", () => {
     await expect(page.getByRole("link", { name: /Join the Founding Desk/i })).toHaveAttribute("href", "/founding-desk");
   });
 
+  test("PASSIVE first visit reaches the three intents within 10s (cold-open does not hide the front door)", async ({ page }) => {
+    // A genuine first-time visitor: no skip param, fresh storage. The cinematic
+    // cold-open plays, but it must hand off to a clear front door (identity + the
+    // three intent CTAs) inside the locked 10-second window — without any click.
+    await page.addInitScript(() => {
+      try {
+        window.localStorage.removeItem("gse-entrance-seen-v1");
+        window.localStorage.removeItem("gse-intro-disabled");
+      } catch {
+        /* ignore */
+      }
+    });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    // "Within 10 seconds ON /" — measure from arrival, not network time.
+    const start = Date.now();
+    // Do NOT click Skip. Wait for the three locked intents to be visible.
+    await expect(page.getByRole("link", { name: /Enter today.?s board/i }).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("link", { name: /See a sample read/i }).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("link", { name: /Join the Founding Desk/i }).first()).toBeVisible({ timeout: 10_000 });
+    const elapsed = Date.now() - start;
+    expect(elapsed, `three intents visible in ${elapsed}ms (must be < 10s)`).toBeLessThan(10_000);
+  });
+
   test("capture first-screen evidence", async ({ page }, testInfo) => {
     await gotoHome(page);
     await page.locator("h1").first().waitFor({ state: "visible" });

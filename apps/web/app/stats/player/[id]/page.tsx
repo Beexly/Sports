@@ -24,7 +24,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Shell title={p.name} eyebrow={`${p.team} · ${p.position} · ${p.status}`}>
-      <Link href="/stats/players" className="text-sm text-orbital-cyan hover:text-white transition-colors">← Players</Link>
+      <Link href="/players" className="text-sm text-orbital-cyan hover:text-white transition-colors">← Players</Link>
       <StatusRibbon status="fixture" label="Player metrics updated every sync cycle" />
       <Cards items={[
         { label: "Galaxy Player Index", value: p.galaxy_player_index },

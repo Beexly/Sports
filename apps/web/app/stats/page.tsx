@@ -25,7 +25,7 @@ const KING_DIMENSION_MOATS: Array<{ label: string; moat: string; color: string; 
 ];
 
 const SURFACES: ReadonlyArray<{ label: string; href: string; note: string; status: StatusKey }> = [
-  { label: "Players",           href: "/stats/players",      note: "GPI rankings",      status: "LIVE" },
+  { label: "Players",           href: "/players",      note: "GPI rankings",      status: "LIVE" },
   { label: "Teams",             href: "/stats/teams",        note: "Environment",        status: "LIVE" },
   { label: "Compare",           href: "/stats/compare",      note: "Side-by-side",       status: "LIVE" },
   { label: "Comps",             href: "/stats/comps",        note: "Similar players",    status: "LIVE" },
@@ -121,7 +121,7 @@ export default function Page() {
         tone="warn"
       />
 
-      <SectionHeader eyebrow="Top players by" title="Galaxy Player Index" action={{ label: "Full rankings →", href: "/stats/players" }} />
+      <SectionHeader eyebrow="Top players by" title="Galaxy Player Index" action={{ label: "Full rankings →", href: "/players" }} />
       <p className="-mt-3 mb-4 max-w-2xl text-sm text-ink-400">{glossaryEntry("gpi")?.plain}</p>
       <div className="space-y-2">
         {top5.map((p, i) => {

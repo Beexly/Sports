@@ -7,7 +7,7 @@ import { Footer } from "@/components/ui/footer";
 
 const NAV = [
   { label: "Overview",          href: "/stats" },
-  { label: "Players",           href: "/stats/players" },
+  { label: "Players",           href: "/players" },
   { label: "Teams",             href: "/stats/teams" },
   { label: "Compare",           href: "/stats/compare" },
   { label: "Status & Movement", href: "/stats/injuries" },

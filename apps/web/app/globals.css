@@ -386,6 +386,17 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .gse-cine-anim { animation: none !important; }
+  /* Universal reduced-motion reset: animations/transitions resolve to their
+     END state instantly (keyframes use fill-mode `both`, so fade/slide-ins land
+     at their final, fully-opaque position rather than animating). This both
+     honors the user's motion preference site-wide and removes the transient
+     mid-fade low-contrast state that fails axe on animated cards. */
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 @keyframes gse-fill {
   from { transform: scaleX(0); }

@@ -21,7 +21,10 @@
  *    no stacked neon glows, no flashing.
  *
  * Modes:
- *  - First visit  → calm ~15s sequence (arrival → 3 doctrine beats → identity → handoff).
+ *  - First visit  → calm ~7.5s sequence (arrival → 3 doctrine beats → identity → handoff).
+ *    The handoff (identity + the three intent CTAs) is on screen well inside the
+ *    locked 10-second test window, so a passive first-timer never has to click
+ *    Skip to reach a clear front door. Skip is still always one action away.
  *  - Return visit → compressed ~3s (localStorage flag): arrival → identity → handoff.
  *  - Opted out    → "Don't show again" sets gse-intro-disabled; bypassed after.
  *  - Reduced motion → static identity + entry choices, instant, no motion.
@@ -53,10 +56,12 @@ type Phase = "intro" | "identity" | "handoff" | "done";
 /* ── Calm, readable cadence ───────────────────────────────────────────────
  * Each doctrine line OWNS the screen for LINE_MS so it can be read without
  * rushing; lines run back-to-back with no gaps, then the identity holds before
- * the handoff. First-visit total ≈ 15.6s, with Skip always one click away. */
+ * the handoff. The cadence is tuned so the handoff (identity + the three intent
+ * CTAs) appears at ≈ 7.6s — inside the locked 10-second test window — so the
+ * cold-open never hides the front door past the bar. Skip is always one click away. */
 const BACKDROP_FADE_MS = 1200;
-const LINE_MS = 3800;
-const IDENTITY_HOLD_MS = 3000;
+const LINE_MS = 1700;
+const IDENTITY_HOLD_MS = 1300;
 
 /** Doctrine beats — the brand's honest thesis, paced one line at a time. */
 const DOCTRINE = [
@@ -356,21 +361,20 @@ export function CinematicEntrance() {
                 </span>
               </button>
 
+              {/* The locked three intents (SURFACE_CONSOLIDATION_MAP §1), mirrored
+                  from the hero so the cold-open hands off to the same front door:
+                  action · proof · convert. */}
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
                 <Link href="/board" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
-                  Today&apos;s board
+                  Enter today&apos;s board
                 </Link>
                 <span aria-hidden className="text-ink-500">·</span>
-                <Link href="/observatory" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
-                  Galaxy Twin
+                <Link href="/sample-desk" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
+                  See a sample read
                 </Link>
                 <span aria-hidden className="text-ink-500">·</span>
-                <Link href="/fantasy" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
-                  Fantasy Galaxy
-                </Link>
-                <span aria-hidden className="text-ink-500">·</span>
-                <Link href="/the-beat" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
-                  The Beat
+                <Link href="/founding-desk" onClick={finish} className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline">
+                  Join the Founding Desk
                 </Link>
               </div>
 

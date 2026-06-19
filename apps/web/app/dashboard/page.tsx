@@ -316,7 +316,7 @@ export default async function DashboardPage({
               </h2>
               <nav className="flex flex-col gap-1">
                 {[
-                  { href: "/picks", label: "Today's Picks" },
+                  { href: "/board", label: "Today's Picks" },
                   { href: "/performance", label: "Performance" },
                   { href: "/pricing", label: "View Plans" },
                   { href: "/blog", label: "Analysis Blog" },

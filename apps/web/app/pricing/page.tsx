@@ -396,7 +396,7 @@ export default function PricingPage() {
                 hex={BRAND_COLORS.ionMagenta}
                 doors={[
                   { label: "Today's full board — all 7 sports", href: "/board" },
-                  { label: "Confidence on every signal", href: "/picks" },
+                  { label: "Confidence on every signal", href: "/board" },
                   { label: "Board filters + No-Bet reasoning", href: "/board" },
                 ]}
               />
@@ -404,7 +404,7 @@ export default function PricingPage() {
                 tier="Elite"
                 hex={BRAND_COLORS.softUltraviolet}
                 doors={[
-                  { label: "Factor trail + ask the model", href: "/picks" },
+                  { label: "Factor trail + ask the model", href: "/board" },
                   { label: "Trend Lab — cohort workbench", href: "/trends" },
                   { label: "Parlay MRI — portfolio surgeon", href: "/parlay-mri" },
                   { label: "CLV Ledger + staking toolkit", href: "/track" },
