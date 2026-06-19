@@ -7,6 +7,8 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { PersonalizedBriefing } from "@/components/cockpit/personalized-briefing";
 import { buildBriefing } from "@/lib/cockpit/mission-control";
 import { BRAND_COLORS } from "@/lib/brand";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
 const TODAY_TITLE = "Mission Control — What Matters Now";
 const TODAY_DESCRIPTION =
@@ -26,7 +28,18 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: TODAY_TITLE, description: TODAY_DESCRIPTION },
 };
 
-export default function TodayPage() {
+export const dynamic = "force-dynamic";
+
+export default async function TodayPage() {
+  // Defense-in-depth auth gate. /today (Mission Control) is a personalized surface;
+  // the middleware gates it on session-cookie presence, and this page-level auth()
+  // ensures a forged or stale cookie can never render Mission Control to an
+  // unauthenticated user (mirrors the /dashboard pattern). Returns to /today after sign-in.
+  const session = await auth();
+  if (!session?.user?.id) {
+    redirect("/auth/signin?callbackUrl=/today");
+  }
+
   let cards: ReturnType<typeof buildBriefing> = [];
   try {
     cards = buildBriefing();
