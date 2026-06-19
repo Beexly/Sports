@@ -30,6 +30,7 @@ import { AgentTheater } from "@/components/cockpit/live/agent-theater";
 import { SignalsTicker } from "@/components/cockpit/live/signals-ticker";
 import { AgentFleet } from "@/components/cockpit/live/agent-fleet";
 import { ModelPool } from "@/components/cockpit/live/model-pool";
+import { JarvisStatusVoice } from "@/components/cockpit/live/jarvis-status-voice";
 
 export const dynamic = "force-dynamic";
 
@@ -77,6 +78,14 @@ export default async function CockpitLivePage(): Promise<JSX.Element> {
         </p>
         <LivePulse generatedAtIso={command.generatedAt} />
       </header>
+
+      {/* ── 0. Hear it — one tap and Jarvis reads the live status aloud ──── */}
+      <JarvisStatusVoice
+        health={assessment.companyHealth}
+        ownerDecisionCount={assessment.ownerDecisions.length}
+        staleWarningCount={assessment.staleDataWarnings.length}
+        nextBestAction={assessment.nextBestAction}
+      />
 
       {/* ── 1. Hero — company-health posture + counts + next action ──────── */}
       <Reveal direction="up">
