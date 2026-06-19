@@ -487,28 +487,28 @@ describe('buildBreadcrumbSchema', () => {
   it('positions start at 1', () => {
     const schema = buildBreadcrumbSchema(data) as Record<string, unknown>
     const items = schema['itemListElement'] as Array<Record<string, unknown>>
-    expect(items[0]['position']).toBe(1)
+    expect(items[0]!['position']).toBe(1)
   })
 
   it('includes all items with correct positions', () => {
     const schema = buildBreadcrumbSchema(data) as Record<string, unknown>
     const items = schema['itemListElement'] as Array<Record<string, unknown>>
     expect(items).toHaveLength(3)
-    expect(items[1]['position']).toBe(2)
-    expect(items[2]['position']).toBe(3)
+    expect(items[1]!['position']).toBe(2)
+    expect(items[2]!['position']).toBe(3)
   })
 
   it('includes name and item url', () => {
     const schema = buildBreadcrumbSchema(data) as Record<string, unknown>
     const items = schema['itemListElement'] as Array<Record<string, unknown>>
-    expect(items[0]['name']).toBe('Home')
-    expect(items[0]['item']).toBe('https://example.com')
+    expect(items[0]!['name']).toBe('Home')
+    expect(items[0]!['item']).toBe('https://example.com')
   })
 
   it('ListItem @type is set', () => {
     const schema = buildBreadcrumbSchema(data) as Record<string, unknown>
     const items = schema['itemListElement'] as Array<Record<string, unknown>>
-    expect(items[0]['@type']).toBe('ListItem')
+    expect(items[0]!['@type']).toBe('ListItem')
   })
 })
 
@@ -547,9 +547,9 @@ describe('buildFaqSchema', () => {
   it('each item has Question type and acceptedAnswer', () => {
     const schema = buildFaqSchema(data) as Record<string, unknown>
     const items = schema['mainEntity'] as Array<Record<string, unknown>>
-    expect(items[0]['@type']).toBe('Question')
-    expect(items[0]['name']).toBe('What is GSE?')
-    const answer = items[0]['acceptedAnswer'] as Record<string, unknown>
+    expect(items[0]!['@type']).toBe('Question')
+    expect(items[0]!['name']).toBe('What is GSE?')
+    const answer = items[0]!['acceptedAnswer'] as Record<string, unknown>
     expect(answer['@type']).toBe('Answer')
     expect(answer['text']).toBe('Galaxy Sports Edge is a sports analytics platform.')
   })
@@ -766,8 +766,8 @@ describe('prioritizeSitemapEntries', () => {
     const result = prioritizeSitemapEntries(entries, [
       { pattern: '^https://example\\.com/$', priority: 1.0, changefreq: 'daily' },
     ])
-    expect(result[0].priority).toBe(1.0)
-    expect(result[0].changefreq).toBe('daily')
+    expect(result[0]!.priority).toBe(1.0)
+    expect(result[0]!.changefreq).toBe('daily')
   })
 
   it('first matching rule wins', () => {
@@ -776,15 +776,15 @@ describe('prioritizeSitemapEntries', () => {
       { pattern: '/nfl/week', priority: 0.1 },
     ])
     // /nfl/ matches first
-    expect(result[1].priority).toBe(0.9)
+    expect(result[1]!.priority).toBe(0.9)
   })
 
   it('non-matching entries are unchanged', () => {
     const result = prioritizeSitemapEntries(entries, [
       { pattern: '/nfl/', priority: 0.9 },
     ])
-    expect(result[0].priority).toBe(0.5)
-    expect(result[2].priority).toBe(0.5)
+    expect(result[0]!.priority).toBe(0.5)
+    expect(result[2]!.priority).toBe(0.5)
   })
 
   it('returns empty array for empty entries', () => {
@@ -872,9 +872,9 @@ describe('extractHeadings', () => {
     const html = '<h1>Title</h1><h2>Section</h2><h3>Subsection</h3>'
     const headings = extractHeadings(html)
     expect(headings).toHaveLength(3)
-    expect(headings[0].level).toBe(1)
-    expect(headings[1].level).toBe(2)
-    expect(headings[2].level).toBe(3)
+    expect(headings[0]!.level).toBe(1)
+    expect(headings[1]!.level).toBe(2)
+    expect(headings[2]!.level).toBe(3)
   })
 
   it('ignores h7 (not valid)', () => {
@@ -886,13 +886,13 @@ describe('extractHeadings', () => {
   it('strips inner HTML tags', () => {
     const html = '<h2><a href="/test">Link Text</a></h2>'
     const headings = extractHeadings(html)
-    expect(headings[0].text).toBe('Link Text')
+    expect(headings[0]!.text).toBe('Link Text')
   })
 
   it('handles headings with attributes', () => {
     const html = '<h1 class="main" id="top">Title Here</h1>'
     const headings = extractHeadings(html)
-    expect(headings[0].text).toBe('Title Here')
+    expect(headings[0]!.text).toBe('Title Here')
   })
 
   it('returns empty array for no headings', () => {
@@ -903,9 +903,9 @@ describe('extractHeadings', () => {
     const html = '<h4>Four</h4><h5>Five</h5><h6>Six</h6>'
     const headings = extractHeadings(html)
     expect(headings).toHaveLength(3)
-    expect(headings[0].level).toBe(4)
-    expect(headings[1].level).toBe(5)
-    expect(headings[2].level).toBe(6)
+    expect(headings[0]!.level).toBe(4)
+    expect(headings[1]!.level).toBe(5)
+    expect(headings[2]!.level).toBe(6)
   })
 })
 

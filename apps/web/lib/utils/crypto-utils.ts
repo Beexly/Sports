@@ -136,8 +136,8 @@ export function uuidV4(): string {
   }
   // Fallback using randomBytes
   const bytes = nodeRandomBytes(16);
-  bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
-  bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant RFC 4122
+  bytes[6] = (bytes[6]! & 0x0f) | 0x40; // version 4
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80; // variant RFC 4122
   const hex = bytes.toString("hex");
   return (
     hex.slice(0, 8) +
@@ -181,8 +181,8 @@ export function parseUuid(
   if (!isUuid(uuid)) return null;
   const hex = uuid.replace(/-/g, "");
   const bytes = Buffer.from(hex, "hex");
-  const version = (bytes[6] >> 4) & 0x0f;
-  const variantByte = bytes[8] >> 6;
+  const version = (bytes[6]! >> 4) & 0x0f;
+  const variantByte = bytes[8]! >> 6;
   let variant: string;
   if (variantByte === 0b10) {
     variant = "RFC 4122";
@@ -277,7 +277,7 @@ export function randomInt(min: number, max: number): number {
     const buf = nodeRandomBytes(bytesNeeded);
     value = 0;
     for (let i = 0; i < bytesNeeded; i++) {
-      value = value * 256 + buf[i];
+      value = value * 256 + buf[i]!;
     }
     value = value & mask;
   } while (value >= range);
@@ -294,8 +294,8 @@ export function randomFloat(): number {
   let hi = 0;
   let lo = 0;
   // Read 3 bytes into hi (24 bits) and 4 bytes into lo (32 bits) — total 56 bits
-  for (let i = 0; i < 3; i++) hi = hi * 256 + buf[i];
-  for (let i = 3; i < 7; i++) lo = lo * 256 + buf[i];
+  for (let i = 0; i < 3; i++) hi = hi * 256 + buf[i]!;
+  for (let i = 3; i < 7; i++) lo = lo * 256 + buf[i]!;
   // Keep only 53 bits: shift hi left by 29 bits (53-24) and combine with top 29 bits of lo
   const value = (hi * Math.pow(2, 29) + Math.floor(lo / 8)) / Math.pow(2, 53);
   return value;
@@ -307,7 +307,7 @@ export function randomFloat(): number {
  */
 export function randomChoice<T>(arr: T[]): T {
   if (arr.length === 0) throw new RangeError("Cannot choose from an empty array");
-  return arr[randomInt(0, arr.length)];
+  return arr[randomInt(0, arr.length)]!;
 }
 
 /**
@@ -318,8 +318,8 @@ export function randomShuffle<T>(arr: T[]): T[] {
   const result = arr.slice();
   for (let i = result.length - 1; i > 0; i--) {
     const j = randomInt(0, i + 1);
-    const temp = result[i];
-    result[i] = result[j];
+    const temp = result[i]!;
+    result[i] = result[j]!;
     result[j] = temp;
   }
   return result;
@@ -492,13 +492,13 @@ export function merkleRoot(items: string[]): string {
   while (layer.length > 1) {
     const next: string[] = [];
     for (let i = 0; i < layer.length; i += 2) {
-      const left = layer[i];
-      const right = i + 1 < layer.length ? layer[i + 1] : layer[i];
+      const left = layer[i]!;
+      const right = i + 1 < layer.length ? layer[i + 1]! : layer[i]!;
       next.push(sha256(left + right));
     }
     layer = next;
   }
-  return layer[0];
+  return layer[0]!;
 }
 
 /**

@@ -124,7 +124,7 @@ export function buildCanonicalUrl(
 
   const sorted = Object.keys(params)
     .sort()
-    .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+    .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k] ?? '')}`)
     .join('&')
 
   return combined + '?' + sorted
@@ -510,9 +510,9 @@ export function extractHeadings(html: string): Array<{ level: number; text: stri
   const regex = /<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi
   let match: RegExpExecArray | null
   while ((match = regex.exec(html)) !== null) {
-    const level = parseInt(match[1], 10)
+    const level = parseInt(match[1] ?? '', 10)
     // Strip inner HTML tags
-    const text = match[2].replace(/<[^>]+>/g, '').trim()
+    const text = (match[2] ?? '').replace(/<[^>]+>/g, '').trim()
     results.push({ level, text })
   }
   return results
@@ -526,7 +526,7 @@ export function countInternalLinks(html: string, baseDomain: string): number {
   let count = 0
   let match: RegExpExecArray | null
   while ((match = regex.exec(html)) !== null) {
-    const href = match[1]
+    const href = match[1] ?? ''
     if (href.startsWith('/') || href.includes(baseDomain)) {
       count++
     }
@@ -542,7 +542,7 @@ export function countExternalLinks(html: string, baseDomain: string): number {
   let count = 0
   let match: RegExpExecArray | null
   while ((match = regex.exec(html)) !== null) {
-    const href = match[1]
+    const href = match[1] ?? ''
     if ((href.startsWith('http://') || href.startsWith('https://')) && !href.includes(baseDomain)) {
       count++
     }

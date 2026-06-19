@@ -207,10 +207,10 @@ describe("kMeans — basic", () => {
     function majorityLabel(indices: number[]): number {
       const counts: Record<number, number> = {};
       for (const i of indices) {
-        const l = result.labels[i];
+        const l = result.labels[i]!;
         counts[l] = (counts[l] ?? 0) + 1;
       }
-      return Number(Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0]);
+      return Number(Object.entries(counts).sort((a, b) => b[1] - a[1])[0]![0]);
     }
     const b1Label = majorityLabel([...Array(30).keys()]);
     const b2Label = majorityLabel([...Array(30).keys()].map((i) => i + 30));
@@ -330,7 +330,7 @@ describe("elbowMethod", () => {
   it("inertias are non-increasing", () => {
     const { inertias } = elbowMethod(threeBlobs, 5, 42);
     for (let i = 1; i < inertias.length; i++) {
-      expect(inertias[i]).toBeLessThanOrEqual(inertias[i - 1] + 1e-6);
+      expect(inertias[i]).toBeLessThanOrEqual(inertias[i - 1]! + 1e-6);
     }
   });
 
@@ -398,7 +398,7 @@ describe("dbscan", () => {
     const result = dbscan(testPoints, 0.3, 2);
     for (const cp of result.corePoints) {
       const neighbors = testPoints.filter(
-        (p, i) => i !== cp && euclidean(testPoints[cp], p) <= 0.3
+        (p, i) => i !== cp && euclidean(testPoints[cp]!, p) <= 0.3
       ).length + 1; // include self
       expect(neighbors).toBeGreaterThanOrEqual(2);
     }
@@ -682,14 +682,14 @@ describe("standardize", () => {
   it("normalized output has mean ~0 per feature", () => {
     const pts = [[1, 10], [2, 20], [3, 30]];
     const { normalized } = standardize(pts);
-    const col0mean = normalized.reduce((a, p) => a + p[0], 0) / normalized.length;
+    const col0mean = normalized.reduce((a, p) => a + p[0]!, 0) / normalized.length;
     expect(col0mean).toBeCloseTo(0, 10);
   });
 
   it("normalized output has std ~1 per feature", () => {
     const pts = [[1, 10], [2, 20], [3, 30]];
     const { normalized } = standardize(pts);
-    const col0 = normalized.map((p) => p[0]);
+    const col0 = normalized.map((p) => p[0]!);
     const variance = col0.reduce((a, v) => a + v * v, 0) / col0.length;
     expect(Math.sqrt(variance)).toBeCloseTo(1, 5);
   });
@@ -711,8 +711,8 @@ describe("standardize", () => {
 
   it("single point produces 0 normalized value (std=0)", () => {
     const { normalized } = standardize([[3, 7]]);
-    expect(normalized[0][0]).toBe(0);
-    expect(normalized[0][1]).toBe(0);
+    expect(normalized[0]![0]).toBe(0);
+    expect(normalized[0]![1]).toBe(0);
   });
 });
 
@@ -731,7 +731,7 @@ describe("minMaxScale", () => {
   it("min value maps to 0, max value maps to 1", () => {
     const pts = [[1, 2], [3, 8], [5, 5]];
     const { normalized } = minMaxScale(pts);
-    const col0 = normalized.map((p) => p[0]);
+    const col0 = normalized.map((p) => p[0]!);
     expect(Math.min(...col0)).toBeCloseTo(0);
     expect(Math.max(...col0)).toBeCloseTo(1);
   });
@@ -805,7 +805,7 @@ describe("pca2D", () => {
   it("projected data spans a range (not all zeros)", () => {
     const pts = [[1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 1, 1]];
     const proj = pca2D(pts);
-    const x = proj.map((p) => p[0]);
+    const x = proj.map((p) => p[0]!);
     expect(Math.max(...x) - Math.min(...x)).toBeGreaterThan(0);
   });
 
@@ -819,8 +819,8 @@ describe("pca2D", () => {
     const proj = pca2D(pts);
     expect(proj).toHaveLength(4);
     // First component should have more variance than the second
-    const col1 = proj.map((p) => p[0]);
-    const col2 = proj.map((p) => p[1]);
+    const col1 = proj.map((p) => p[0]!);
+    const col2 = proj.map((p) => p[1]!);
     const range1 = Math.max(...col1) - Math.min(...col1);
     const range2 = Math.max(...col2) - Math.min(...col2);
     expect(range1).toBeGreaterThan(range2);

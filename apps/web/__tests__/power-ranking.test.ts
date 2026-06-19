@@ -106,8 +106,8 @@ describe("normalizeToRange", () => {
   it("preserves order of values", () => {
     const input = [30, 10, 20];
     const result = normalizeToRange(input);
-    expect(result[0]).toBeGreaterThan(result[1]);
-    expect(result[0]).toBeGreaterThan(result[2]);
+    expect(result[0]).toBeGreaterThan(result[1]!);
+    expect(result[0]).toBeGreaterThan(result[2]!);
   });
 
   it("negative input values handled correctly", () => {

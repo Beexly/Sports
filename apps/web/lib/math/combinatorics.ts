@@ -131,14 +131,14 @@ export function permutationList<T>(arr: T[]): T[][] {
   result.push([...a]);
   let i = 0;
   while (i < n) {
-    if (c[i] < i) {
+    if (c[i]! < i) {
       if (i % 2 === 0) {
-        [a[0], a[i]] = [a[i], a[0]];
+        [a[0], a[i]] = [a[i]!, a[0]!];
       } else {
-        [a[c[i]], a[i]] = [a[i], a[c[i]]];
+        [a[c[i]!], a[i]] = [a[i]!, a[c[i]!]!];
       }
       result.push([...a]);
-      c[i]++;
+      c[i]!++;
       i = 0;
     } else {
       c[i] = 0;

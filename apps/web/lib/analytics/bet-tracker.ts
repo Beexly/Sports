@@ -140,6 +140,7 @@ export function buildPnlSeries(bets: readonly Bet[]): PnlPoint[] {
 
   for (let i = 0; i < sorted.length; i++) {
     const bet = sorted[i];
+    if (bet === undefined) continue;
     cumulativeUnits += profitFromBet(bet);
     if (bet.result === "win" || bet.result === "loss") {
       totalStakedSoFar += bet.stake;
@@ -381,22 +382,24 @@ export function currentStreak(
   // Find the last bet that's a win or loss to anchor the streak type
   let streakType: BetResult | null = null;
   for (let i = sorted.length - 1; i >= 0; i--) {
-    if (sorted[i].result === "win" || sorted[i].result === "loss") {
-      streakType = sorted[i].result;
+    const b = sorted[i];
+    if (b === undefined) continue;
+    if (b.result === "win" || b.result === "loss") {
+      streakType = b.result;
       break;
     }
   }
 
   if (streakType === null) {
     // All bets are push/no-action — return the last bet's type with count
-    const last = sorted[sorted.length - 1];
+    const last = sorted[sorted.length - 1]!;
     return { type: last.result, count: 1 };
   }
 
   // Count consecutive streak from the end, push/no-action don't break it
   let count = 0;
   for (let i = sorted.length - 1; i >= 0; i--) {
-    const r = sorted[i].result;
+    const r = sorted[i]!.result;
     if (r === streakType) {
       count++;
     } else if (r === "push" || r === "no-action") {

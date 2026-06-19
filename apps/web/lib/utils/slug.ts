@@ -265,7 +265,7 @@ export function slugToTitle(slug: string): string {
  */
 export function extractDateFromSlug(slug: string): string | null {
   const match = slug.match(/(\d{4}-\d{2}-\d{2})/);
-  return match ? match[1] : null;
+  return match ? (match[1] ?? null) : null;
 }
 
 /**

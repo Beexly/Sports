@@ -572,7 +572,7 @@ describe("atRiskSubscriptions", () => {
     const subs = [makeSub({ userId: "u1", status: "past_due" })];
     const result = atRiskSubscriptions(subs, [], NOW);
     expect(result).toHaveLength(1);
-    expect(result[0].userId).toBe("u1");
+    expect(result[0]!.userId).toBe("u1");
   });
 
   it("includes trial ending within 7 days", () => {
@@ -723,8 +723,8 @@ describe("recentEvents", () => {
     ];
     const result = recentEvents(events, "u1", 2);
     expect(result).toHaveLength(2);
-    expect(result[0].event).toBe("payment_failed");
-    expect(result[1].event).toBe("upgraded");
+    expect(result[0]!.event).toBe("payment_failed");
+    expect(result[1]!.event).toBe("upgraded");
   });
 
   it("returns empty array for unknown user", () => {
@@ -753,9 +753,9 @@ describe("recentEvents", () => {
       makeEvent({ userId: "u1", event: "canceled", timestamp: 200 }),
     ];
     const result = recentEvents(events, "u1", 3);
-    expect(result[0].timestamp).toBe(300);
-    expect(result[1].timestamp).toBe(200);
-    expect(result[2].timestamp).toBe(100);
+    expect(result[0]!.timestamp).toBe(300);
+    expect(result[1]!.timestamp).toBe(200);
+    expect(result[2]!.timestamp).toBe(100);
   });
 });
 

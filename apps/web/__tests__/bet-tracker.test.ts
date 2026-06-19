@@ -207,9 +207,9 @@ describe("buildPnlSeries", () => {
     ];
     const series = buildPnlSeries(bets);
     // First point should be the win (earlier timestamp)
-    expect(series[0].cumulativeUnits).toBeCloseTo(1.0);
+    expect(series[0]!.cumulativeUnits).toBeCloseTo(1.0);
     // Second point: win + loss = 1 - 1 = 0
-    expect(series[1].cumulativeUnits).toBeCloseTo(0);
+    expect(series[1]!.cumulativeUnits).toBeCloseTo(0);
   });
 
   it("cumulativeUnits accumulates correctly", () => {
@@ -218,8 +218,8 @@ describe("buildPnlSeries", () => {
       makeBet({ result: "win", settledAt: BASE_TS + DAY, stake: 1, decimalOdds: 2.0 }),
     ];
     const series = buildPnlSeries(bets);
-    expect(series[0].cumulativeUnits).toBeCloseTo(1.0);
-    expect(series[1].cumulativeUnits).toBeCloseTo(2.0);
+    expect(series[0]!.cumulativeUnits).toBeCloseTo(1.0);
+    expect(series[1]!.cumulativeUnits).toBeCloseTo(2.0);
   });
 
   it("runningRoi is NaN for push-only bets", () => {
@@ -227,7 +227,7 @@ describe("buildPnlSeries", () => {
       makeBet({ result: "push", settledAt: BASE_TS }),
     ];
     const series = buildPnlSeries(bets);
-    expect(Number.isNaN(series[0].runningRoi)).toBe(true);
+    expect(Number.isNaN(series[0]!.runningRoi)).toBe(true);
   });
 
   it("runningRoi is computed correctly", () => {
@@ -236,7 +236,7 @@ describe("buildPnlSeries", () => {
     ];
     const series = buildPnlSeries(bets);
     // netUnits=1, totalStaked=1 → roi=1
-    expect(series[0].runningRoi).toBeCloseTo(1.0);
+    expect(series[0]!.runningRoi).toBeCloseTo(1.0);
   });
 
   it("betIndex matches position in sorted order", () => {
@@ -246,9 +246,9 @@ describe("buildPnlSeries", () => {
       makeBet({ result: "push", settledAt: BASE_TS + 2 * DAY }),
     ];
     const series = buildPnlSeries(bets);
-    expect(series[0].betIndex).toBe(0);
-    expect(series[1].betIndex).toBe(1);
-    expect(series[2].betIndex).toBe(2);
+    expect(series[0]!.betIndex).toBe(0);
+    expect(series[1]!.betIndex).toBe(1);
+    expect(series[2]!.betIndex).toBe(2);
   });
 });
 
@@ -711,19 +711,19 @@ describe("profitBySport", () => {
       { ...makeBet({ result: "loss" }), id: "nba-2" },
       { ...makeBet({ result: "win" }), id: "nfl-1" },
     ];
-    const getSport = (b: Bet) => b.id.split("-")[0];
+    const getSport = (b: Bet) => b.id.split("-")[0]!;
     const bysSport = profitBySport(bets, getSport);
-    expect(bysSport["nba"].totalBets).toBe(2);
-    expect(bysSport["nfl"].totalBets).toBe(1);
+    expect(bysSport["nba"]!.totalBets).toBe(2);
+    expect(bysSport["nfl"]!.totalBets).toBe(1);
   });
 
   it("returns BetStats for each sport", () => {
     const bets: Bet[] = [
       { ...makeBet({ result: "win", stake: 1, decimalOdds: 2.0 }), id: "nba-1" },
     ];
-    const bysSport = profitBySport(bets, (b) => b.id.split("-")[0]);
-    expect(bysSport["nba"].wins).toBe(1);
-    expect(bysSport["nba"].netUnits).toBeCloseTo(1);
+    const bysSport = profitBySport(bets, (b) => b.id.split("-")[0]!);
+    expect(bysSport["nba"]!.wins).toBe(1);
+    expect(bysSport["nba"]!.netUnits).toBeCloseTo(1);
   });
 });
 
@@ -747,7 +747,7 @@ describe("clvCapture", () => {
     ];
     const clvMap: number[] = [0.1, 0.3];
     let i = 0;
-    const avg = clvCapture(bets, () => clvMap[i++]);
+    const avg = clvCapture(bets, () => clvMap[i++]!);
     expect(avg).toBeCloseTo(0.2);
   });
 
@@ -759,7 +759,7 @@ describe("clvCapture", () => {
     ];
     const clvData: (number | null)[] = [0.1, null, 0.3];
     let i = 0;
-    const avg = clvCapture(bets, () => clvData[i++]);
+    const avg = clvCapture(bets, () => clvData[i++]!);
     expect(avg).toBeCloseTo(0.2);
   });
 

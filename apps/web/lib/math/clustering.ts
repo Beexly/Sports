@@ -66,7 +66,7 @@ export interface DBSCANResult {
 export function euclidean(a: Point, b: Point): number {
   let sum = 0;
   for (let i = 0; i < a.length; i++) {
-    const d = a[i] - b[i];
+    const d = a[i]! - b[i]!;
     sum += d * d;
   }
   return Math.sqrt(sum);
@@ -78,7 +78,7 @@ export function euclidean(a: Point, b: Point): number {
 export function manhattan(a: Point, b: Point): number {
   let sum = 0;
   for (let i = 0; i < a.length; i++) {
-    sum += Math.abs(a[i] - b[i]);
+    sum += Math.abs(a[i]! - b[i]!);
   }
   return sum;
 }
@@ -92,9 +92,9 @@ export function cosine(a: Point, b: Point): number {
   let normA = 0;
   let normB = 0;
   for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
-    normA += a[i] * a[i];
-    normB += b[i] * b[i];
+    dot += a[i]! * b[i]!;
+    normA += a[i]! * a[i]!;
+    normB += b[i]! * b[i]!;
   }
   if (normA === 0 || normB === 0) return 1;
   return 1 - dot / (Math.sqrt(normA) * Math.sqrt(normB));
@@ -106,7 +106,7 @@ export function cosine(a: Point, b: Point): number {
 export function chebyshev(a: Point, b: Point): number {
   let max = 0;
   for (let i = 0; i < a.length; i++) {
-    const d = Math.abs(a[i] - b[i]);
+    const d = Math.abs(a[i]! - b[i]!);
     if (d > max) max = d;
   }
   return max;
@@ -119,7 +119,7 @@ export function chebyshev(a: Point, b: Point): number {
 export function minkowski(a: Point, b: Point, p: number): number {
   let sum = 0;
   for (let i = 0; i < a.length; i++) {
-    sum += Math.pow(Math.abs(a[i] - b[i]), p);
+    sum += Math.pow(Math.abs(a[i]! - b[i]!), p);
   }
   return Math.pow(sum, 1 / p);
 }
@@ -168,12 +168,12 @@ function lcgInt(state: LCGState, n: number): number {
 /** Compute the centroid of a list of points. */
 function computeCentroid(pts: Point[]): Point {
   if (pts.length === 0) return [];
-  const dim = pts[0].length;
+  const dim = pts[0]!.length;
   const c: number[] = new Array(dim).fill(0);
   for (const p of pts) {
-    for (let d = 0; d < dim; d++) c[d] += p[d];
+    for (let d = 0; d < dim; d++) c[d]! += p[d]!;
   }
-  for (let d = 0; d < dim; d++) c[d] /= pts.length;
+  for (let d = 0; d < dim; d++) c[d]! /= pts.length;
   return c;
 }
 
@@ -183,7 +183,7 @@ function assignLabels(points: Point[], centroids: Point[]): number[] {
     let best = 0;
     let bestDist = Infinity;
     for (let k = 0; k < centroids.length; k++) {
-      const d = euclidean(p, centroids[k]);
+      const d = euclidean(p, centroids[k]!);
       if (d < bestDist) {
         bestDist = d;
         best = k;
@@ -197,7 +197,7 @@ function assignLabels(points: Point[], centroids: Point[]): number[] {
 function maxCentroidMovement(prev: Point[], next: Point[]): number {
   let max = 0;
   for (let k = 0; k < prev.length; k++) {
-    const d = euclidean(prev[k], next[k]);
+    const d = euclidean(prev[k]!, next[k]!);
     if (d > max) max = d;
   }
   return max;
@@ -207,7 +207,7 @@ function maxCentroidMovement(prev: Point[], next: Point[]): number {
 function computeInertia(points: Point[], labels: number[], centroids: Point[]): number {
   let inertia = 0;
   for (let i = 0; i < points.length; i++) {
-    const d = euclidean(points[i], centroids[labels[i]]);
+    const d = euclidean(points[i]!, centroids[labels[i]!]!);
     inertia += d * d;
   }
   return inertia;
@@ -224,7 +224,7 @@ export function kMeansPlusPlus(points: Point[], k: number, seed = 42): Point[] {
   const centroids: Point[] = [];
 
   // First centroid: random
-  centroids.push(points[lcgInt(rng, points.length)].slice());
+  centroids.push(points[lcgInt(rng, points.length)]!.slice());
 
   for (let c = 1; c < k; c++) {
     // Compute D² distances
@@ -242,13 +242,13 @@ export function kMeansPlusPlus(points: Point[], k: number, seed = 42): Point[] {
     let cumSum = 0;
     let chosen = points.length - 1;
     for (let i = 0; i < points.length; i++) {
-      cumSum += dSquared[i];
+      cumSum += dSquared[i]!;
       if (cumSum >= threshold) {
         chosen = i;
         break;
       }
     }
-    centroids.push(points[chosen].slice());
+    centroids.push(points[chosen]!.slice());
   }
 
   return centroids;
@@ -336,7 +336,7 @@ export function elbowMethod(
   let elbowK = 1;
   let maxCurvature = -Infinity;
   for (let i = 1; i < inertias.length - 1; i++) {
-    const curvature = inertias[i - 1] - 2 * inertias[i] + inertias[i + 1];
+    const curvature = inertias[i - 1]! - 2 * inertias[i]! + inertias[i + 1]!;
     if (curvature > maxCurvature) {
       maxCurvature = curvature;
       elbowK = i + 1; // 1-based k
@@ -368,7 +368,7 @@ export function dbscan(
   function regionQuery(idx: number): number[] {
     const neighbors: number[] = [];
     for (let i = 0; i < n; i++) {
-      if (distance(points[idx], points[i]) <= epsilon) {
+      if (distance(points[idx]!, points[i]!) <= epsilon) {
         neighbors.push(i);
       }
     }
@@ -397,16 +397,16 @@ export function dbscan(
 
     // Start a new cluster
     labels[i] = clusterId;
-    const queue: number[] = [...neighborCache[i]];
+    const queue: number[] = [...neighborCache[i]!];
 
     let qi = 0;
     while (qi < queue.length) {
-      const q = queue[qi++];
+      const q = queue[qi++]!;
       if (!visited[q]) {
         visited[q] = true;
         if (isCorePoint[q]) {
           // Add its neighbors to the queue
-          for (const nb of neighborCache[q]) {
+          for (const nb of neighborCache[q]!) {
             if (!queue.includes(nb)) queue.push(nb);
           }
         }
@@ -460,19 +460,19 @@ export function hierarchical(
 
   /** Compute centroid for a set of point indices. */
   function centroidOf(indices: number[]): Point {
-    return computeCentroid(indices.map((i) => points[i]));
+    return computeCentroid(indices.map((i) => points[i]!));
   }
 
   /** Linkage distance between two clusters. */
   function linkageDist(aIdx: number, bIdx: number): number {
-    const aMembers = members[aIdx];
-    const bMembers = members[bIdx];
+    const aMembers = members[aIdx]!;
+    const bMembers = members[bIdx]!;
 
     if (linkage === "single") {
       let min = Infinity;
       for (const ai of aMembers) {
         for (const bi of bMembers) {
-          const d = euclidean(points[ai], points[bi]);
+          const d = euclidean(points[ai]!, points[bi]!);
           if (d < min) min = d;
         }
       }
@@ -483,7 +483,7 @@ export function hierarchical(
       let max = -Infinity;
       for (const ai of aMembers) {
         for (const bi of bMembers) {
-          const d = euclidean(points[ai], points[bi]);
+          const d = euclidean(points[ai]!, points[bi]!);
           if (d > max) max = d;
         }
       }
@@ -495,7 +495,7 @@ export function hierarchical(
       let count = 0;
       for (const ai of aMembers) {
         for (const bi of bMembers) {
-          sum += euclidean(points[ai], points[bi]);
+          sum += euclidean(points[ai]!, points[bi]!);
           count++;
         }
       }
@@ -509,20 +509,20 @@ export function hierarchical(
 
     let ward = 0;
     for (const ai of aMembers) {
-      const d = euclidean(points[ai], cM);
+      const d = euclidean(points[ai]!, cM);
       ward += d * d;
     }
     for (const bi of bMembers) {
-      const d = euclidean(points[bi], cM);
+      const d = euclidean(points[bi]!, cM);
       ward += d * d;
     }
     let prevWard = 0;
     for (const ai of aMembers) {
-      const d = euclidean(points[ai], cA);
+      const d = euclidean(points[ai]!, cA);
       prevWard += d * d;
     }
     for (const bi of bMembers) {
-      const d = euclidean(points[bi], cB);
+      const d = euclidean(points[bi]!, cB);
       prevWard += d * d;
     }
     return ward - prevWard;
@@ -547,13 +547,13 @@ export function hierarchical(
     }
 
     // Merge bestI and bestJ
-    const mergedMembers = [...members[bestI], ...members[bestJ]];
+    const mergedMembers = [...members[bestI]!, ...members[bestJ]!];
     const mergedNode: HierarchicalNode = {
       id: nextId++,
       left: clusters[bestI],
       right: clusters[bestJ],
       distance: bestDist,
-      size: clusters[bestI].size + clusters[bestJ].size,
+      size: clusters[bestI]!.size + clusters[bestJ]!.size,
     };
 
     // Remove bestJ first (higher index), then bestI
@@ -561,8 +561,8 @@ export function hierarchical(
     const newMembers: number[][] = [];
     for (let i = 0; i < clusters.length; i++) {
       if (i !== bestI && i !== bestJ) {
-        newClusters.push(clusters[i]);
-        newMembers.push(members[i]);
+        newClusters.push(clusters[i]!);
+        newMembers.push(members[i]!);
       }
     }
     newClusters.push(mergedNode);
@@ -572,7 +572,7 @@ export function hierarchical(
     members = newMembers;
   }
 
-  return clusters[0];
+  return clusters[0]!;
 }
 
 /**
@@ -589,13 +589,14 @@ export function cutTree(root: HierarchicalNode, k: number): number[] {
     let maxDist = -Infinity;
     let maxIdx = 0;
     for (let i = 0; i < frontier.length; i++) {
-      if (frontier[i].distance > maxDist && (frontier[i].left || frontier[i].right)) {
-        maxDist = frontier[i].distance;
+      const fi = frontier[i]!;
+      if (fi.distance > maxDist && (fi.left || fi.right)) {
+        maxDist = fi.distance;
         maxIdx = i;
       }
     }
 
-    const node = frontier[maxIdx];
+    const node = frontier[maxIdx]!;
     if (!node.left && !node.right) break; // leaf, cannot split further
 
     // Replace node with its children
@@ -605,7 +606,7 @@ export function cutTree(root: HierarchicalNode, k: number): number[] {
         if (node.left) next.push(node.left);
         if (node.right) next.push(node.right);
       } else {
-        next.push(frontier[i]);
+        next.push(frontier[i]!);
       }
     }
     frontier = next;
@@ -623,7 +624,7 @@ export function cutTree(root: HierarchicalNode, k: number): number[] {
 
   const labels: number[] = new Array(maxLeafId + 1).fill(0);
   for (let clusterIdx = 0; clusterIdx < frontier.length; clusterIdx++) {
-    const leaves = collectLeaves(frontier[clusterIdx]);
+    const leaves = collectLeaves(frontier[clusterIdx]!);
     for (const leafId of leaves) {
       labels[leafId] = clusterIdx;
     }
@@ -664,7 +665,7 @@ export function cutTreeByDistance(root: HierarchicalNode, threshold: number): nu
 
   const labels: number[] = new Array(maxLeafId + 1).fill(0);
   for (let clusterIdx = 0; clusterIdx < frontier.length; clusterIdx++) {
-    const leaves = collectLeaves(frontier[clusterIdx]);
+    const leaves = collectLeaves(frontier[clusterIdx]!);
     for (const leafId of leaves) {
       labels[leafId] = clusterIdx;
     }
@@ -697,15 +698,16 @@ export function silhouette(
     clusterMembers.set(cid, []);
   }
   for (let i = 0; i < n; i++) {
-    if (labels[i] >= 0) {
-      clusterMembers.get(labels[i])!.push(i);
+    const li = labels[i]!;
+    if (li >= 0) {
+      clusterMembers.get(li)!.push(i);
     }
   }
 
   const perPoint: number[] = new Array(n).fill(0);
 
   for (let i = 0; i < n; i++) {
-    const ci = labels[i];
+    const ci = labels[i]!;
     if (ci < 0) {
       perPoint[i] = 0;
       continue;
@@ -721,7 +723,7 @@ export function silhouette(
     // a = mean distance to other points in same cluster
     let sumA = 0;
     for (const j of sameCluster) {
-      if (j !== i) sumA += distance(points[i], points[j]);
+      if (j !== i) sumA += distance(points[i]!, points[j]!);
     }
     const a = sumA / (sameCluster.length - 1);
 
@@ -733,7 +735,7 @@ export function silhouette(
       if (otherMembers.length === 0) continue;
       let sumB = 0;
       for (const j of otherMembers) {
-        sumB += distance(points[i], points[j]);
+        sumB += distance(points[i]!, points[j]!);
       }
       const meanB = sumB / otherMembers.length;
       if (meanB < minB) minB = meanB;
@@ -755,7 +757,7 @@ export function silhouette(
     if (!members || members.length === 0) {
       perCluster.push(0);
     } else {
-      const s = members.reduce((acc, i) => acc + perPoint[i], 0) / members.length;
+      const s = members.reduce((acc, i) => acc + perPoint[i]!, 0) / members.length;
       perCluster.push(s);
     }
   }
@@ -764,7 +766,7 @@ export function silhouette(
   const score =
     validPoints === 0
       ? 0
-      : labels.reduce((acc, l, i) => (l >= 0 ? acc + perPoint[i] : acc), 0) / validPoints;
+      : labels.reduce((acc, l, i) => (l >= 0 ? acc + perPoint[i]! : acc), 0) / validPoints;
 
   return { score, perPoint, perCluster };
 }
@@ -781,28 +783,28 @@ export function standardize(
   points: Point[]
 ): { normalized: Point[]; means: number[]; stds: number[] } {
   if (points.length === 0) return { normalized: [], means: [], stds: [] };
-  const dim = points[0].length;
+  const dim = points[0]!.length;
   const means: number[] = new Array(dim).fill(0);
   const stds: number[] = new Array(dim).fill(0);
 
   // Compute means
   for (const p of points) {
-    for (let d = 0; d < dim; d++) means[d] += p[d];
+    for (let d = 0; d < dim; d++) means[d]! += p[d]!;
   }
-  for (let d = 0; d < dim; d++) means[d] /= points.length;
+  for (let d = 0; d < dim; d++) means[d]! /= points.length;
 
   // Compute stds
   for (const p of points) {
     for (let d = 0; d < dim; d++) {
-      stds[d] += (p[d] - means[d]) ** 2;
+      stds[d]! += (p[d]! - means[d]!) ** 2;
     }
   }
   for (let d = 0; d < dim; d++) {
-    stds[d] = Math.sqrt(stds[d] / points.length);
+    stds[d] = Math.sqrt(stds[d]! / points.length);
   }
 
   const normalized = points.map((p) =>
-    p.map((v, d) => (stds[d] === 0 ? 0 : (v - means[d]) / stds[d]))
+    p.map((v, d) => (stds[d] === 0 ? 0 : (v - means[d]!) / stds[d]!))
   );
 
   return { normalized, means, stds };
@@ -816,21 +818,21 @@ export function minMaxScale(
   points: Point[]
 ): { normalized: Point[]; mins: number[]; maxes: number[] } {
   if (points.length === 0) return { normalized: [], mins: [], maxes: [] };
-  const dim = points[0].length;
+  const dim = points[0]!.length;
   const mins: number[] = new Array(dim).fill(Infinity);
   const maxes: number[] = new Array(dim).fill(-Infinity);
 
   for (const p of points) {
     for (let d = 0; d < dim; d++) {
-      if (p[d] < mins[d]) mins[d] = p[d];
-      if (p[d] > maxes[d]) maxes[d] = p[d];
+      if (p[d]! < mins[d]!) mins[d] = p[d]!;
+      if (p[d]! > maxes[d]!) maxes[d] = p[d]!;
     }
   }
 
   const normalized = points.map((p) =>
     p.map((v, d) => {
-      const range = maxes[d] - mins[d];
-      return range === 0 ? 0 : (v - mins[d]) / range;
+      const range = maxes[d]! - mins[d]!;
+      return range === 0 ? 0 : (v - mins[d]!) / range;
     })
   );
 
@@ -863,7 +865,7 @@ export function dimensionalityReduce(
   // Center the data
   const { normalized: centered } = standardize(points);
   const n = centered.length;
-  const d = centered[0].length;
+  const d = centered[0]!.length;
   const actualDims = Math.min(dims, d);
 
   // Build covariance matrix (d × d)
@@ -871,13 +873,13 @@ export function dimensionalityReduce(
   for (const p of centered) {
     for (let i = 0; i < d; i++) {
       for (let j = 0; j < d; j++) {
-        cov[i][j] += p[i] * p[j];
+        cov[i]![j]! += p[i]! * p[j]!;
       }
     }
   }
   for (let i = 0; i < d; i++) {
     for (let j = 0; j < d; j++) {
-      cov[i][j] /= n;
+      cov[i]![j]! /= n;
     }
   }
 
@@ -896,7 +898,7 @@ export function dimensionalityReduce(
       const Av: number[] = new Array(d).fill(0);
       for (let i = 0; i < d; i++) {
         for (let j = 0; j < d; j++) {
-          Av[i] += deflated[i][j] * v[j];
+          Av[i]! += deflated[i]![j]! * v[j]!;
         }
       }
 
@@ -915,22 +917,22 @@ export function dimensionalityReduce(
     const Av2: number[] = new Array(d).fill(0);
     for (let i = 0; i < d; i++) {
       for (let j = 0; j < d; j++) {
-        Av2[i] += deflated[i][j] * v[j];
+        Av2[i]! += deflated[i]![j]! * v[j]!;
       }
     }
     let eigenvalue = 0;
-    for (let i = 0; i < d; i++) eigenvalue += v[i] * Av2[i];
+    for (let i = 0; i < d; i++) eigenvalue += v[i]! * Av2[i]!;
 
     for (let i = 0; i < d; i++) {
       for (let j = 0; j < d; j++) {
-        deflated[i][j] -= eigenvalue * v[i] * v[j];
+        deflated[i]![j]! -= eigenvalue * v[i]! * v[j]!;
       }
     }
   }
 
   // Project centered data onto eigenvectors
   return centered.map((p) =>
-    eigenvectors.map((ev) => ev.reduce((acc, val, i) => acc + val * p[i], 0))
+    eigenvectors.map((ev) => ev.reduce((acc, val, i) => acc + val * p[i]!, 0))
   );
 }
 
@@ -949,7 +951,7 @@ export function clusterPlayersByStats(
   if (stats.length === 0) return [];
   const points = stats.map((s) => s.features);
   const result = kMeans(points, k);
-  return stats.map((s, i) => ({ id: s.id, cluster: result.labels[i] }));
+  return stats.map((s, i) => ({ id: s.id, cluster: result.labels[i] ?? 0 }));
 }
 
 /**

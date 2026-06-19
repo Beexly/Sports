@@ -508,8 +508,8 @@ describe('shotQualityBreakdown', () => {
     const shots = [{ location: 'free-throw' as const, made: true }]
     const result = shotQualityBreakdown(shots)
     expect(result).toHaveLength(1)
-    expect(result[0].frequency).toBe(1)
-    expect(result[0].fgm).toBe(1)
+    expect(result[0]!.frequency).toBe(1)
+    expect(result[0]!.fgm).toBe(1)
   })
 })
 

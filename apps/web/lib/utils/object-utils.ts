@@ -101,7 +101,7 @@ export function deepEqual<T>(a: T, b: T): boolean {
  * Arrays are replaced (not merged). Returns new object, does not mutate.
  */
 export function deepMerge<T extends object, U extends object>(target: T, source: U): T & U {
-  const result: Record<string, unknown> = { ...target };
+  const result: Record<string, unknown> = { ...(target as Record<string, unknown>) };
 
   for (const key of Object.keys(source)) {
     const sourceVal = (source as Record<string, unknown>)[key];
@@ -191,7 +191,8 @@ export function set<T extends object>(obj: T, path: string, value: unknown): T {
   if (parts.length === 0) return obj;
 
   function setIn(current: unknown, keys: string[]): unknown {
-    const [head, ...rest] = keys;
+    const head = keys[0] as string;
+    const rest = keys.slice(1);
 
     let base: Record<string, unknown>;
     if (Array.isArray(current)) {
@@ -288,14 +289,14 @@ export function unflatten(
     let current: Record<string, unknown> = result;
 
     for (let i = 0; i < parts.length - 1; i++) {
-      const part = parts[i];
+      const part = parts[i]!;
       if (!Object.prototype.hasOwnProperty.call(current, part) || !isPlainObject(current[part])) {
         current[part] = {};
       }
       current = current[part] as Record<string, unknown>;
     }
 
-    current[parts[parts.length - 1]] = value;
+    current[parts[parts.length - 1]!] = value;
   }
 
   return result;
@@ -375,7 +376,7 @@ export function mapValues<T extends object, R>(
 ): Record<string, R> {
   const result: Record<string, R> = {};
   for (const key of Object.keys(obj)) {
-    result[key] = fn((obj as Record<string, T[keyof T]>)[key], key);
+    result[key] = fn((obj as Record<string, T[keyof T]>)[key]!, key);
   }
   return result;
 }
@@ -406,7 +407,7 @@ export function mapKeys<T extends object>(
 ): Record<string, T[keyof T]> {
   const result: Record<string, T[keyof T]> = {};
   for (const key of Object.keys(obj)) {
-    const val = (obj as Record<string, T[keyof T]>)[key];
+    const val = (obj as Record<string, T[keyof T]>)[key]!;
     result[fn(key, val)] = val;
   }
   return result;
@@ -435,10 +436,8 @@ export function groupBy<T>(arr: T[], key: (item: T) => string): Record<string, T
   const result: Record<string, T[]> = {};
   for (const item of arr) {
     const k = key(item);
-    if (!Object.prototype.hasOwnProperty.call(result, k)) {
-      result[k] = [];
-    }
-    result[k].push(item);
+    const bucket = result[k] ?? (result[k] = []);
+    bucket.push(item);
   }
   return result;
 }
@@ -476,7 +475,7 @@ export function keyBy<T>(arr: T[], key: (item: T) => string): Record<string, T> 
 export function zipObject<K extends string, V>(keys: K[], values: V[]): Record<K, V> {
   const result = {} as Record<K, V>;
   for (let i = 0; i < keys.length; i++) {
-    result[keys[i]] = values[i];
+    result[keys[i]!] = values[i] as V;
   }
   return result;
 }
@@ -534,10 +533,10 @@ export function chunk<T>(arr: T[], size: number): T[][] {
  */
 export function sortedUniq<T>(arr: T[]): T[] {
   if (arr.length === 0) return [];
-  const result: T[] = [arr[0]];
+  const result: T[] = [arr[0]!];
   for (let i = 1; i < arr.length; i++) {
     if (arr[i] !== arr[i - 1]) {
-      result.push(arr[i]);
+      result.push(arr[i]!);
     }
   }
   return result;
