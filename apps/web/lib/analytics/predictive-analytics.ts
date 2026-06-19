@@ -446,7 +446,7 @@ export function lassoRegression(
   const yMean = y.reduce((s, v) => s + v, 0) / n;
 
   // Initialize coefficients
-  let beta: Vector = new Array<number>(numFeatures).fill(0);
+  const beta: Vector = new Array<number>(numFeatures).fill(0);
   const yCenter = y.map((v) => v - yMean);
 
   // Precompute column dot products (X_j^T X_j)
@@ -521,7 +521,7 @@ export function elasticNet(
   const yMean = y.reduce((s, v) => s + v, 0) / n;
   const yCenter = y.map((v) => v - yMean);
 
-  let beta: Vector = new Array<number>(numFeatures).fill(0);
+  const beta: Vector = new Array<number>(numFeatures).fill(0);
 
   const colNorms: Vector = Xs[0].map((_, j) =>
     Xs.reduce((s, row) => s + row[j] ** 2, 0)

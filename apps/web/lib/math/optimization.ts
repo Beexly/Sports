@@ -743,7 +743,6 @@ export function geneticAlgorithm(
   const trackHistory = opts?.trackHistory ?? false;
 
   const rng = makeLCG(opts?.seed ?? 42);
-  const dim = bounds.length;
   const history: number[] = [];
 
   // Initialize population within bounds
@@ -753,7 +752,7 @@ export function geneticAlgorithm(
 
   let fitnesses = population.map((ind) => fn(ind));
 
-  let bestIdx = fitnesses.indexOf(Math.min(...fitnesses));
+  const bestIdx = fitnesses.indexOf(Math.min(...fitnesses));
   let bestX = vecCopy(population[bestIdx]);
   let bestFx = fitnesses[bestIdx];
 

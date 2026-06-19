@@ -92,10 +92,6 @@ function zeroRecord(): TeamRecord {
   return { wins: 0, losses: 0, ties: 0, winRate: 0, pct: '0-0' }
 }
 
-function zeroAtsRecord(): AtsRecord {
-  return { covers: 0, pushes: 0, noCovers: 0, coverRate: 0, total: 0 }
-}
-
 function formatPct(wins: number, losses: number, ties: number): string {
   if (ties > 0) return `${wins}-${losses}-${ties}`
   return `${wins}-${losses}`

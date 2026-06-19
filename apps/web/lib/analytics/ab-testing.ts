@@ -1138,7 +1138,7 @@ function betaCF(x: number, a: number, b: number): number {
   const MAXIT = 200;
   const EPS = 3e-10;
   const FPMIN = 1e-30;
-  let qab = a + b, qap = a + 1, qam = a - 1;
+  const qab = a + b, qap = a + 1, qam = a - 1;
   let c = 1, d = 1 - qab * x / qap;
   if (Math.abs(d) < FPMIN) d = FPMIN;
   d = 1 / d;

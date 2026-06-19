@@ -64,22 +64,6 @@ function _std(arr: number[]): number {
   return Math.sqrt(_variance(arr));
 }
 
-/**
- * Simple moving average (trailing).
- * Result[i] is the average of values[i-window+1..i] for i >= window-1, else NaN.
- */
-function sma(values: number[], window: number): number[] {
-  const n = values.length;
-  const result: number[] = new Array(n).fill(NaN);
-  if (window <= 0 || window > n) return result;
-  for (let i = window - 1; i < n; i++) {
-    let s = 0;
-    for (let j = i - window + 1; j <= i; j++) s += values[j]!;
-    result[i] = s / window;
-  }
-  return result;
-}
-
 // ─── Trend ────────────────────────────────────────────────────────────────────
 
 /**
@@ -277,7 +261,7 @@ export function holtWinters(
 
   // Initialize level = mean of first period, trend = mean difference
   const firstPeriod = values.slice(0, Math.min(period, n));
-  let level = _mean(firstPeriod);
+  const level = _mean(firstPeriod);
 
   let trend = 0;
   if (n >= 2 * period) {
@@ -585,7 +569,6 @@ export function arimaLite(
 
   const n = series.length;
   const mu = _mean(series);
-  const centered = series.map((v) => v - mu);
 
   // Step 2: AR coefficients via Yule-Walker
   const phi = p > 0 ? yuleWalker(series, Math.min(p, 2)) : [];

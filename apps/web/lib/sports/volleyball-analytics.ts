@@ -185,7 +185,6 @@ export function serveEfficiencyRating(serve: ServeStats): number {
  * Clamped to [0, 1]
  */
 export function passQualityIndex(pass: PassStats): number {
-  const raw = (pass.perfect * 3 + pass.good * 2 - pass.error * 1) / (pass.attempts * 3);
   return clamp(safeDiv(pass.perfect * 3 + pass.good * 2 - pass.error * 1, pass.attempts * 3), 0, 1);
 }
 

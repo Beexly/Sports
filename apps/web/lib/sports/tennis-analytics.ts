@@ -417,18 +417,6 @@ export function gameWinProb(p: number): number {
 export function tiebreakWinProb(p: number, q: number): number {
   const memo = new Map<string, number>()
 
-  // Determine who serves point number `total` (0-indexed) in a standard tiebreak.
-  // Returns 0 if p0 serves, 1 if p1 serves.
-  function serverAtPoint(total: number): 0 | 1 {
-    if (total === 0) return 0
-    // Points 1+: p1 starts, then alternate every 2
-    // offset by 1: point index among "post-first-serve" points
-    const idx = total - 1
-    const block = Math.floor(idx / 2) // which 2-point block
-    // block 0: p1, block 1: p0, block 2: p1, ... alternating
-    return block % 2 === 0 ? 1 : 0
-  }
-
   function solve(i: number, j: number, server: 0 | 1): number {
     // Terminal conditions
     if (i >= 7 && i - j >= 2) return 1
@@ -659,7 +647,6 @@ export function simulateMatch(
     // Returns true if p0 wins tiebreak
     let p0Pts = 0
     let p1Pts = 0
-    let pointNum = 0
 
     while (true) {
       // Determine server
@@ -680,7 +667,6 @@ export function simulateMatch(
 
       if (simulatePoint(p0Serving)) p0Pts++
       else p1Pts++
-      pointNum++
 
       if (p0Pts >= 7 && p0Pts - p1Pts >= 2) return true
       if (p1Pts >= 7 && p1Pts - p0Pts >= 2) return false

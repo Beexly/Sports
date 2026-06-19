@@ -301,8 +301,6 @@ export function analyzeSeo(
   );
 
   // Link detection
-  const hrefPattern = /href="([^"]+)"/gi;
-  const mdLinkPattern = /\[([^\]]*)\]\(([^)]+)\)/g;
   const internalMarkers = ["/picks/", "/board/", "/today/", "/track/"];
 
   let internalLinkCount = 0;

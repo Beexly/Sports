@@ -653,7 +653,7 @@ export function dftPhase(re: number[], im: number[]): number[] {
 export function laplacianSmoother(signal: number[], lambda = 0.1): number[] {
   const N = signal.length;
   if (N === 0) return [];
-  let x = signal.slice();
+  const x = signal.slice();
   const maxIter = 100;
   for (let iter = 0; iter < maxIter; iter++) {
     const prev = x.slice();

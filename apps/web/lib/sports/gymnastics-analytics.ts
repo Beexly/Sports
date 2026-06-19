@@ -81,7 +81,7 @@ export function connectionBonus(
  */
 export function judgePanel(scores: number[], dropHighLow = true): number {
   if (scores.length < 3) return 0
-  let working = [...scores]
+  const working = [...scores]
   if (dropHighLow) {
     const min = Math.min(...working)
     const max = Math.max(...working)

@@ -398,7 +398,6 @@ export function offensiveWinShares(
   if (p.minutes === 0) return 0
 
   // Points produced estimate
-  const totalReb = p.offensiveRebounds + p.defensiveRebounds
   const teamPoss = estimatedPossessions(
     teamStats.fieldGoalsAttempted,
     teamStats.offensiveRebounds,
@@ -439,8 +438,6 @@ export function defensiveWinShares(
   lgAvg: LeagueAverages,
 ): number {
   if (p.minutes === 0) return 0
-
-  const minutesFraction = p.minutes / 240
 
   const stlContrib = p.steals * 1.5
   const blkContrib = p.blocks * 1.1

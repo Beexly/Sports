@@ -18,17 +18,6 @@ function clamp01(x: number): number {
   return Math.max(0, Math.min(1, x));
 }
 
-/** Quantile of a sorted array at level q in [0,1]. */
-function quantileSorted(sorted: number[], q: number): number {
-  if (sorted.length === 0) return 0;
-  const idx = q * (sorted.length - 1);
-  const lo = Math.floor(idx);
-  const hi = Math.ceil(idx);
-  if (lo === hi) return sorted[lo]!;
-  const frac = idx - lo;
-  return sorted[lo]! * (1 - frac) + sorted[hi]! * frac;
-}
-
 // ---------------------------------------------------------------------------
 // Core types
 // ---------------------------------------------------------------------------

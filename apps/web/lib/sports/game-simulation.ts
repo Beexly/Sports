@@ -296,7 +296,6 @@ export function simulateSeason(
   config?: SimulationConfig
 ): SeasonSimResult {
   const cfg = defaultConfig(config);
-  const totalGames = schedule.length;
   const winDistribution: Record<number, number> = {};
   const winTotals: number[] = [];
 

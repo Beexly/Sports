@@ -44,12 +44,6 @@ function _mean(data: readonly number[]): number {
   return s / data.length;
 }
 
-function _sum(data: readonly number[]): number {
-  let s = 0;
-  for (const v of data) s += v;
-  return s;
-}
-
 // ---------------------------------------------------------------------------
 // Linear regression (OLS)
 // ---------------------------------------------------------------------------

@@ -235,7 +235,7 @@ export function matMul(A: Mat, B: Mat): Mat {
 
 /** Matrix-vector multiply: A (m×n) × v (n) → (m). */
 export function matVecMul(A: Mat, v: Vec): Vec {
-  const [ra, ca] = matShape(A);
+  const [, ca] = matShape(A);
   if (ca !== v.length)
     throw new Error(`matVecMul: A has ${ca} cols but v has length ${v.length}`);
   return A.map(row => row.reduce((s, aij, j) => s + aij * v[j], 0));
@@ -745,7 +745,6 @@ export function covarianceMatrix(data: Vec[]): Mat {
  */
 export function correlationMatrix(data: Vec[]): Mat {
   const C = covarianceMatrix(data);
-  const d = C.length;
   const stdDevs = C.map((row, i) => Math.sqrt(row[i]));
   return C.map((row, i) =>
     row.map((v, j) => {

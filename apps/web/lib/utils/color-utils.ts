@@ -18,10 +18,10 @@ export type Lab = { l: number; a: number; b: number };
 export type XYZ = { x: number; y: number; z: number };
 
 // Legacy interface aliases (backward compat)
-export interface Rgb extends RGB {}
-export interface Rgba extends RGBA {}
-export interface Hsl extends HSL {}
-export interface Hsv extends HSV {}
+export type Rgb = RGB;
+export type Rgba = RGBA;
+export type Hsl = HSL;
+export type Hsv = HSV;
 
 // ---------------------------------------------------------------------------
 // Internal helpers

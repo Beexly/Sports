@@ -31,19 +31,19 @@ export function debounce<T extends AnyFn>(
 
   let timer: ReturnType<typeof setTimeout> | null = null;
   let lastArgs: Parameters<T> | null = null;
-  let lastThis: unknown = undefined;
+  let pendingCall: (() => ReturnType<T>) | null = null;
   let leadingFired = false;
 
   function invoke(): ReturnType<T> {
-    const result = fn.apply(lastThis, lastArgs as Parameters<T>) as ReturnType<T>;
+    const result = (pendingCall as () => ReturnType<T>)();
     lastArgs = null;
-    lastThis = undefined;
+    pendingCall = null;
     return result;
   }
 
   function debounced(this: unknown, ...args: Parameters<T>): ReturnType<T> | undefined {
     lastArgs = args;
-    lastThis = this;
+    pendingCall = () => fn.apply(this, args as Parameters<T>) as ReturnType<T>;
 
     const isFirstCall = timer === null && !leadingFired;
 
@@ -75,7 +75,7 @@ export function debounce<T extends AnyFn>(
       timer = null;
     }
     lastArgs = null;
-    lastThis = undefined;
+    pendingCall = null;
     leadingFired = false;
   };
 
@@ -108,19 +108,17 @@ export function throttle<T extends AnyFn>(
 
   let lastCall = -Infinity; // not 0 so leading=false doesn't fire on first call
   let timer: ReturnType<typeof setTimeout> | null = null;
-  let lastArgs: Parameters<T> | null = null;
-  let lastThis: unknown = undefined;
+  let pendingCall: (() => ReturnType<T>) | null = null;
   let cancelled = false;
 
   function invoke(): ReturnType<T> {
     lastCall = Date.now();
-    return fn.apply(lastThis, lastArgs as Parameters<T>) as ReturnType<T>;
+    return (pendingCall as () => ReturnType<T>)();
   }
 
   function throttled(this: unknown, ...args: Parameters<T>): ReturnType<T> | undefined {
     if (cancelled) return undefined;
-    lastArgs = args;
-    lastThis = this;
+    pendingCall = () => fn.apply(this, args as Parameters<T>) as ReturnType<T>;
 
     const now = Date.now();
     const elapsed = now - lastCall;
@@ -164,8 +162,7 @@ export function throttle<T extends AnyFn>(
       clearTimeout(timer);
       timer = null;
     }
-    lastArgs = null;
-    lastThis = undefined;
+    pendingCall = null;
     lastCall = 0;
   };
 

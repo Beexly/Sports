@@ -384,7 +384,7 @@ export function fiveHundredMEquivalent(distanceM: number, timeSec: number): numb
  * Default lap length = 400 m.
  * Returns 0 when laps is 0.
  */
-export function skatingPacePerLap(timeSec: number, laps: number, lapLengthM: number = 400): number {
+export function skatingPacePerLap(timeSec: number, laps: number, _lapLengthM: number = 400): number {
   if (laps === 0) return 0
   return timeSec / laps
 }

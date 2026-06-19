@@ -861,7 +861,7 @@ export function dimensionalityReduce(
   }
 
   // Center the data
-  const { normalized: centered, means } = standardize(points);
+  const { normalized: centered } = standardize(points);
   const n = centered.length;
   const d = centered[0].length;
   const actualDims = Math.min(dims, d);

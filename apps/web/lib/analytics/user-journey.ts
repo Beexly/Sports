@@ -183,7 +183,7 @@ export function buildFunnel(
       // (first event that caused inclusion in i-1 set)
       // We need to track when each user completed each step
       // Walk the events in order looking for step[i] after step[i-1]
-      let prevStepTime = getPrevStepCompletionTime(userEvents, steps, i - 1, firstStepTimeForUser[userId], windowMs)
+      const prevStepTime = getPrevStepCompletionTime(userEvents, steps, i - 1, firstStepTimeForUser[userId], windowMs)
       if (prevStepTime === null) continue
 
       const nextEvent = userEvents.find(e => {

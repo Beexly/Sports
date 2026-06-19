@@ -206,7 +206,7 @@ export async function retrySimple<T>(
 // ---------------------------------------------------------------------------
 
 export class TimeoutError extends Error {
-  readonly isTimeout: true = true;
+  readonly isTimeout = true as const;
 
   constructor(message = "Operation timed out") {
     super(message);
@@ -702,7 +702,7 @@ export async function hedgedRequest<T>(
   return new Promise<T>((resolve, reject) => {
     let settled = false;
     let launched = 0;
-    let errors: unknown[] = [];
+    const errors: unknown[] = [];
     let timer: ReturnType<typeof setTimeout> | null = null;
 
     const done = (value: T): void => {

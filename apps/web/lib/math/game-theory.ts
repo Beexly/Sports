@@ -95,18 +95,6 @@ function transpose(matrix: PayoffMatrix): PayoffMatrix {
   return result;
 }
 
-/** All subsets of size k from indices 0..n-1 */
-function subsets(n: number): number[][] {
-  const result: number[][] = [[]];
-  for (let i = 0; i < n; i++) {
-    const len = result.length;
-    for (let j = 0; j < len; j++) {
-      result.push([...result[j], i]);
-    }
-  }
-  return result;
-}
-
 /** Factorial */
 function factorial(n: number): number {
   if (n <= 1) return 1;

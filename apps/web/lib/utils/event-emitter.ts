@@ -194,7 +194,7 @@ export class PriorityQueue<T> {
 // Subject
 // ---------------------------------------------------------------------------
 
-export interface Subscription<T> {
+export interface Subscription {
   unsubscribe(): void
 }
 
@@ -207,7 +207,7 @@ export class Subject<T> {
     this._completed = false
   }
 
-  subscribe(handler: EventHandler<T>): Subscription<T> {
+  subscribe(handler: EventHandler<T>): Subscription {
     if (this._completed) {
       return { unsubscribe: () => undefined }
     }
@@ -263,7 +263,7 @@ export class BehaviorSubject<T> extends Subject<T> {
     super.next(value)
   }
 
-  override subscribe(handler: EventHandler<T>): Subscription<T> {
+  override subscribe(handler: EventHandler<T>): Subscription {
     const sub = super.subscribe(handler)
     if (!this._completed) {
       handler(this._value)

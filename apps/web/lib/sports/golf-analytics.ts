@@ -256,22 +256,10 @@ function interpolateLookup(
 }
 
 // Tee shot baseline: [holeDistance, expectedStrokes] by par
-const PAR3_TEE_TABLE = [
-  [150, 2.8],
-  [200, 3.0],
-  [250, 3.2],
-] as const
-
 const PAR4_TEE_TABLE = [
   [300, 3.8],
   [400, 4.0],
   [450, 4.1],
-] as const
-
-const PAR5_TEE_TABLE = [
-  [500, 4.5],
-  [550, 4.7],
-  [600, 5.0],
 ] as const
 
 // Approach: [distance yards, expectedStrokes]
@@ -327,20 +315,6 @@ export function expectedStrokes(type: ShotType, distance: number): number {
     }
     default:
       return 0
-  }
-}
-
-/** Internal: expected strokes from tee given par and hole distance. */
-function expectedStrokesFromTee(par: number, distance: number): number {
-  switch (par) {
-    case 3:
-      return interpolateLookup(PAR3_TEE_TABLE, distance)
-    case 4:
-      return interpolateLookup(PAR4_TEE_TABLE, distance)
-    case 5:
-      return interpolateLookup(PAR5_TEE_TABLE, distance)
-    default:
-      return interpolateLookup(PAR4_TEE_TABLE, distance)
   }
 }
 

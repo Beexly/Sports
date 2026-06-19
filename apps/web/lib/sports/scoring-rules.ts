@@ -735,7 +735,7 @@ export function optimalLineup(
   }
 
   // Check all requirements were filled
-  for (const [pos, count] of Object.entries(remaining)) {
+  for (const count of Object.values(remaining)) {
     if (count > 0) return null
   }
 

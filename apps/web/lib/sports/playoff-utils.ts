@@ -135,7 +135,7 @@ export function generateSeeds(
   const divisionWinnersFirst = format?.divisionWinnersFirst !== false
 
   const seeds: PlayoffSeed[] = []
-  let usedTeamIds = new Set<string>()
+  const usedTeamIds = new Set<string>()
 
   if (divisionWinnersFirst) {
     // Collect division winners (divisionRank === 1)
@@ -466,8 +466,6 @@ export function eliminationScenarios(
     const gamesRemaining = totalGames - (team.wins + team.losses + team.ties)
     const maxPossibleWins = team.wins + gamesRemaining
 
-    // The bubble team: the team in the last playoff spot
-    const bubbleTeam = sorted[playoffSpots - 1]
     // First team outside playoff
     const firstOut = sorted[playoffSpots]
 
@@ -486,9 +484,6 @@ export function eliminationScenarios(
     }
 
     // Eliminated: even winning out, can't reach playoff spot
-    const bubbleMaxWins = bubbleTeam
-      ? bubbleTeam.wins + (totalGames - (bubbleTeam.wins + bubbleTeam.losses + bubbleTeam.ties))
-      : 0
     const rankOfTeam = sorted.findIndex((t) => t.teamId === team.teamId)
     const eliminated = rankOfTeam >= playoffSpots && maxPossibleWins < (sorted[playoffSpots - 1]?.wins ?? 0)
 
@@ -531,7 +526,7 @@ export function eliminationScenarios(
 export function wildcardCompetitors(
   team: TeamStanding,
   allTeams: TeamStanding[],
-  playoffSpots: number
+  _playoffSpots: number
 ): TeamStanding[] {
   // Teams within 2 wins of the target that are competing for wildcard spots
   return allTeams.filter((t) => {
@@ -588,7 +583,7 @@ export function strengthOfRecord(
 export function divisionRace(
   teams: TeamStanding[],
   divisionId: string,
-  totalGames: number
+  _totalGames: number
 ): { leader: TeamStanding; gamesBack: Array<TeamStanding & { gamesBack: number }> } {
   const divTeams = sortStandings(
     teams.filter((t) => t.divisionId === divisionId),

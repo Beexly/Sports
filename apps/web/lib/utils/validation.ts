@@ -159,8 +159,6 @@ const VALID_SPORT_SLUGS = [
   "basketball_ncaab",
 ] as const;
 
-type ValidSportSlug = (typeof VALID_SPORT_SLUGS)[number];
-
 /** Must be one of the known sport slugs */
 export function validateSportSlug(slug: unknown): ValidationResult {
   if (typeof slug !== "string") {

@@ -135,7 +135,6 @@ export function lightweightCheck(
   if (!isLightweight) return false
   if (crewWeights.length === 0) return false
 
-  const allWeights = coxWeight !== undefined ? [...crewWeights, coxWeight] : crewWeights
   const rowerWeights = crewWeights
 
   const avg = rowerWeights.reduce((s, w) => s + w, 0) / rowerWeights.length

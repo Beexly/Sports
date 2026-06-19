@@ -159,7 +159,7 @@ export function falsePosition(
   tol = 1e-10,
   maxIter = 100
 ): number {
-  let fa = f(a);
+  const fa = f(a);
   const fb0 = f(b);
   if (fa * fb0 > 0) {
     throw new Error(
@@ -362,7 +362,6 @@ export function adaptiveSimpsons(
     if (depth >= 50 || Math.abs(delta) <= 15 * tol * ((hi - lo) / (b - a))) {
       return left + right + delta / 15;
     }
-    const halfTol = tol / 2;
     return (
       recurse(lo, mid, flо, flm, fmidNew, left, depth + 1) +
       recurse(mid, hi, fmidNew, frm, fhi, right, depth + 1)
@@ -426,7 +425,6 @@ export function rk4System(
   h: number,
   steps: number
 ): Array<{ t: number; ys: number[] }> {
-  const n = fs.length;
   const result: Array<{ t: number; ys: number[] }> = [
     { t: t0, ys: [...y0s] },
   ];
