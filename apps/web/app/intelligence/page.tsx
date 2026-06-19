@@ -233,7 +233,7 @@ export default function IntelligencePage() {
                 <Link href="/methodology" className="btn btn-primary">
                   The full methodology →
                 </Link>
-                <Link href="/picks" className="btn btn-ghost">
+                <Link href="/board" className="btn btn-ghost">
                   Today&apos;s board
                 </Link>
               </div>

@@ -84,6 +84,14 @@ const CARDS = [
     linkLabel: "View Proof of Record",
     accent: BRAND_COLORS.softUltraviolet,
   },
+  {
+    eyebrow: "Reliability & proof, in one place",
+    title: "The Receipts",
+    body: "One page that pulls every honesty pillar together: confidence calibration, closing-line value, an edge-significance test against a no-edge null, and the tamper-evident Merkle record. Every number is loader-backed and gated — nothing shows until the settled sample can honestly support it.",
+    href: "/reliability",
+    linkLabel: "Open The Receipts",
+    accent: BRAND_COLORS.orbitalCyan,
+  },
 ] as const;
 
 const COMMITMENTS = [
@@ -297,6 +305,9 @@ export default function AccountabilityPage() {
               </Link>
               <Link href="/proof" className="rounded-lg border px-4 py-2 text-ink-300 transition-colors hover:border-orbital-cyan/30 hover:text-white" style={{ borderColor: "rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.025)" }}>
                 Proof of Record →
+              </Link>
+              <Link href="/reliability" className="rounded-lg border px-4 py-2 text-ink-300 transition-colors hover:border-orbital-cyan/30 hover:text-white" style={{ borderColor: "rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.025)" }}>
+                The Receipts →
               </Link>
               <Link href="/clv" className="rounded-lg border px-4 py-2 text-ink-300 transition-colors hover:border-orbital-cyan/30 hover:text-white" style={{ borderColor: "rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.025)" }}>
                 CLV →

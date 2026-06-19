@@ -27,7 +27,8 @@ const ROUTES: ReadonlyArray<{
   // Lead capture routes (L2)
   { path: "/ask-galaxy", priority: 0.9, changeFrequency: "weekly" },
   { path: "/newsletter", priority: 0.85, changeFrequency: "weekly" },
-  { path: "/picks", priority: 0.9, changeFrequency: "hourly" },
+  // NOTE: /picks is merged into /board (next.config redirect) — omitted so we
+  // never submit a redirecting URL to Search Console. /board is canonical below.
   { path: "/house", priority: 0.8, changeFrequency: "weekly" },
   { path: "/methodology", priority: 0.8, changeFrequency: "monthly" },
   { path: "/performance", priority: 0.7, changeFrequency: "daily" },
@@ -59,9 +60,9 @@ const ROUTES: ReadonlyArray<{
   // Daily intelligence surfaces
   { path: "/board", priority: 0.8, changeFrequency: "daily" },
   // NOTE: /brief is intentionally NOT listed — it is noindex (brief/page.tsx)
-  // and Disallow-ed (robots.ts) until the composer ships. Listing it here would
-  // submit a noindex+blocked URL to Search Console. Re-add when it goes public.
-  { path: "/today", priority: 0.7, changeFrequency: "daily" },
+  // and Disallow-ed (robots.ts); it now redirects to /founding-desk (composer
+  // rebuild). NOTE: /today is no longer listed — it moved behind auth (Mission
+  // Control is a personalized dashboard, not a public discovery surface).
   { path: "/track", priority: 0.6, changeFrequency: "daily" },
   { path: "/trends", priority: 0.6, changeFrequency: "daily" },
   // Tools & education
@@ -79,7 +80,8 @@ const ROUTES: ReadonlyArray<{
   { path: "/weather", priority: 0.5, changeFrequency: "daily" },
   { path: "/fantasy", priority: 0.6, changeFrequency: "weekly" },
   { path: "/the-beat", priority: 0.6, changeFrequency: "weekly" },
-  { path: "/gsn", priority: 0.5, changeFrequency: "weekly" },
+  // NOTE: /gsn is merged into /the-beat (next.config redirect) — omitted so we
+  // never submit a redirecting URL to Search Console.
   // StatKing public surfaces
   { path: "/stats", priority: 0.6, changeFrequency: "weekly" },
   { path: "/stats/compare", priority: 0.5, changeFrequency: "weekly" },

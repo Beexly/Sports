@@ -28,10 +28,11 @@ const argUrl = process.argv.find((a) => a.startsWith("--url="));
 const BASE = (argUrl ? argUrl.split("=")[1] : "https://galaxysportsedge.com").replace(/\/$/, "");
 
 const PUBLIC_PAGES = [
-  // Homepage hero splits the tagline with <em>, so we check for the surrounding
-  // fragments rather than the full continuous string.
-  { path: "/", mustContain: ["Galaxy Sports Edge", "Find the", "before the market moves"] },
-  { path: "/picks", mustContain: ["Galaxy Sports Edge"] },
+  // Homepage hero splits the headline across spans, so we check for the
+  // individual text fragments rather than one continuous string.
+  { path: "/", mustContain: ["Galaxy Sports Edge", "The market is full of", "Galaxy turns it into"] },
+  // /picks is merged into /board (next.config redirect); probe the canonical surface.
+  { path: "/board", mustContain: ["Galaxy Sports Edge"] },
   { path: "/methodology", mustContain: ["Methodology"] },
   { path: "/performance", mustContain: ["Performance"] },
   { path: "/pricing", mustContain: ["Free", "Pro", "Elite"] },

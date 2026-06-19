@@ -218,7 +218,7 @@ export default async function ObservatoryPage() {
                 <Link href="/methodology" className="btn btn-primary">
                   Read the methodology
                 </Link>
-                <Link href="/picks" className="btn btn-ghost">
+                <Link href="/board" className="btn btn-ghost">
                   Today&apos;s board
                 </Link>
               </div>

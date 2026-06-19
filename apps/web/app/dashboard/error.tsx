@@ -40,7 +40,7 @@ export default function DashboardError({
             Try again
           </button>
           <Link
-            href="/picks"
+            href="/board"
             className="rounded-xl border border-white/[0.10] px-5 py-2 text-sm text-ink-400 hover:bg-white/[0.04] hover:text-white transition-colors"
           >
             View picks

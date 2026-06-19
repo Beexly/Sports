@@ -97,7 +97,7 @@ export function AirwaveSignalLayer(): JSX.Element {
           permission, and a human review gate sits before anything public.
         </p>
         <div className="flex shrink-0 flex-wrap gap-x-6 gap-y-2">
-          <Link href="/gsn" className="text-sm font-semibold text-orbital-cyan hover:text-white">
+          <Link href="/the-beat" className="text-sm font-semibold text-orbital-cyan hover:text-white">
             GSN Studio ▸
           </Link>
           <Link href="/airwave" className="text-sm font-semibold text-ink-300 hover:text-white">

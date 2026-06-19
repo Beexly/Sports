@@ -2,6 +2,10 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
 
+// Admin surfaces are auth-gated and read live data — never statically
+// prerendered (stale data + couples the build to DB connectivity).
+export const dynamic = "force-dynamic";
+
 export default async function AdminUsersPage() {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {

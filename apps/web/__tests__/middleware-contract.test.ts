@@ -20,6 +20,13 @@ describe("middleware route protection", () => {
     expect(src).toMatch(/"\/admin"/);
   });
 
+  it("protects /today (Mission Control — middleware is its only gate)", () => {
+    // /today (the personalized Mission Control dashboard) was moved behind
+    // auth in the Phase-0 consolidation. It has no page-level auth() check,
+    // so the middleware cookie gate is its sole protection — pin it here.
+    expect(src).toMatch(/"\/today"/);
+  });
+
   it("recognises the NextAuth.js v5 session cookies", () => {
     expect(src).toMatch(/authjs\.session-token/);
     expect(src).toMatch(/next-auth\.session-token/);

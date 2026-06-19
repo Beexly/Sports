@@ -50,6 +50,20 @@ const nextConfig = {
     // hero/plate payloads now that the immersive stills render through it.
     formats: ["image/avif", "image/webp"],
   },
+  // Phase-0 surface consolidation (reports/consolidation/SURFACE_CONSOLIDATION_MAP.md).
+  // Merge duplicate front doors into their canonical surface. Kept as 307
+  // (temporary) so the consolidation stays trivially reversible during the
+  // launch-hardening loop; promote to permanent 308 at launch (Founder Action).
+  async redirects() {
+    return [
+      { source: "/picks", destination: "/board", permanent: false },
+      { source: "/stats/players", destination: "/players", permanent: false },
+      { source: "/gsn", destination: "/the-beat", permanent: false },
+      // /brief is a noindex stub (composer rebuild); the live "daily brief"
+      // surface is the Founding Desk.
+      { source: "/brief", destination: "/founding-desk", permanent: false },
+    ];
+  },
   async headers() {
     return [
       {

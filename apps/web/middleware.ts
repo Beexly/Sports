@@ -11,8 +11,10 @@ import { NextRequest, NextResponse } from "next/server";
  * (full auth + role check).
  */
 
-// Routes that require authentication (redirect to signin if no cookie)
-const PROTECTED_ROUTES = ["/dashboard", "/admin", "/cockpit"];
+// Routes that require authentication (redirect to signin if no cookie).
+// /today is Mission Control — a personalized dashboard, not a discovery
+// surface — so it lives behind auth (Phase-0 consolidation).
+const PROTECTED_ROUTES = ["/dashboard", "/admin", "/cockpit", "/today"];
 
 // Auth cookie name (NextAuth.js v5)
 const AUTH_COOKIE_NAMES = [
