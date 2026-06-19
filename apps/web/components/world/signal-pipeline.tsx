@@ -43,7 +43,9 @@ function buildSteps(summary: PipelineSummary): Step[] {
       description:
         "Four-factor model evaluates each game: market opportunity, pricing efficiency, line movement direction, and scheme context.",
       stat: `${summary.activeMetrics} active metrics`,
-      color: BRAND_COLORS.softUltraviolet,
+      // AA-safe ultraviolet: the small-text label + stat chip must clear WCAG AA
+      // on the dark surface. Solid #7A5CFF is only 4.2:1; the glow variant clears.
+      color: BRAND_COLORS.softUltravioletText,
     },
     {
       num: "03",

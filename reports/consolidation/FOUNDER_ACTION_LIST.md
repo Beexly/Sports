@@ -19,6 +19,17 @@ here is a trap. Status of the autonomous work is in
 | A2 | **Publish the welcome video** | Generating the branded welcome clip is sanctioned; **publishing the final cut is a Founder Action** (live customer-facing content). | Review the generated cut (see grade report for the Higgsfield job/asset), then place it on `/` / onboarding and commit. | Remove the embed; the file stays unreferenced. |
 | A3 | **Decide the parked WIP** | A prior session's `/cockpit/command-center` + `/resource-intelligence` WIP was parked before this push (Phase-4 bans new cockpit dashboards as a product substitute). | It is safe in `git stash@{0}` on branch `claude/review-pending-requests-k46ywu` ("PARK 2026-06-18 pre-compassionate-ramanujan…"). Resume or drop at your discretion. | `git stash drop` to discard, or `git stash apply` on that branch to resume. |
 
+## A′. Phase 3 — accuracy-proof centerpiece (no new lever)
+
+Phase 3 wired the honest reliability-diagram engine (`buildReliabilityPresentation`)
+into the **existing** `/performance` and `/reliability` surfaces via `CalibrationPanel`
+— **no new pages, no new gated lever**. The diagram renders only above 100 settled
+picks (`displayReady:true`); below the floor it shows the honest "building the record"
+gated state and **never a fabricated curve**. The existing gate (item B6 "calibrated
+conviction tier after ≥100 settled") already governs when the full curve appears — Phase 3
+adds nothing a founder must approve. It self-activates from real settled data once the
+record clears the floor.
+
 ## B. From the launch-lock report (still open — unchanged)
 
 These predate this push; see `reports/master-system/LAUNCH_LOCK_FINAL_REPORT.md` §7.

@@ -1,4 +1,6 @@
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { loadReliabilityPresentation } from "@/lib/calibration/reliability-samples";
+import { ReliabilityDiagram } from "@/components/performance/reliability-diagram";
 import { HonestBand } from "@/components/performance/honest-band";
 import {
   NUMERIC_TEXT_CLASS,
@@ -117,6 +119,10 @@ export async function CalibrationPanel() {
   } catch {
     return null;
   }
+  // The honest reliability-diagram presentation (per-bin consistency bands,
+  // Brier-skill vs the 0.25 baseline, hit-rate CI, sample-size gate). Fails
+  // closed to the gated state — never throws a fabricated number.
+  const presentation = await loadReliabilityPresentation();
   const data = report.data;
   const d = data.discrimination;
   const meta = VERDICT_META[d.trend];
@@ -130,6 +136,12 @@ export async function CalibrationPanel() {
       : 0;
 
   return (
+    <>
+    {/* The honest reliability diagram leads — it is the accuracy-proof centerpiece. */}
+    <div className="mb-8">
+      <ReliabilityDiagram presentation={presentation} />
+    </div>
+
     <section
       data-testid="calibration-panel"
       className="mb-12 overflow-hidden rounded-2xl border border-white/[0.10] bg-gradient-to-br from-eclipse to-carbon"
@@ -212,5 +224,6 @@ export async function CalibrationPanel() {
         </p>
       </div>
     </section>
+    </>
   );
 }

@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 // Audit the accessible baseline: prefers-reduced-motion users see no mid-fade
 // transient states (the universal reduced-motion reset lands animations on
 // their final, fully-opaque frame), so contrast is measured on the settled DOM.
-test.use({ reducedMotion: "reduce" });
+test.use({ contextOptions: { reducedMotion: "reduce" } });
 
 /**
  * AA+ accessibility gate (Phase 2): zero serious/critical axe violations on the
