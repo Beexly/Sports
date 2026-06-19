@@ -41,7 +41,7 @@ import {
   // 6. Risk and exposure
   bookExposure,
   hedgeAmount,
-  guaranteedProfit,
+  hedgedProfit,
   arbOpportunity,
   // 7. Calibration
   brierScore,
@@ -760,7 +760,7 @@ describe("hedgeAmount", () => {
   });
 });
 
-describe("guaranteedProfit", () => {
+describe("hedgedProfit", () => {
   it("locks in positive profit when hedging a winning bet", () => {
     // $100 at +200 (decimal 3), payout = $300
     // hedge $150 at -150 (decimal 1.667), payout = $150 * (2/3 + 1) = 250?
@@ -769,7 +769,7 @@ describe("guaranteedProfit", () => {
     const origOdds = 200;
     const hedgeOdds = -150;
     const hedge = hedgeAmount(origBet, origOdds, hedgeOdds);
-    const profit = guaranteedProfit(origBet, origOdds, hedge, hedgeOdds);
+    const profit = hedgedProfit(origBet, origOdds, hedge, hedgeOdds);
     expect(profit).toBeGreaterThan(0);
   });
 
@@ -778,7 +778,7 @@ describe("guaranteedProfit", () => {
     const origOdds = 200;
     const hedgeOdds = -150;
     const hedge = hedgeAmount(origBet, origOdds, hedgeOdds);
-    const profit = guaranteedProfit(origBet, origOdds, hedge, hedgeOdds);
+    const profit = hedgedProfit(origBet, origOdds, hedge, hedgeOdds);
 
     // Manual check: if original wins: (100 * 2) - hedge; if hedge wins: (hedge * 0.667) - 100
     const origDecimal = 3; // +200

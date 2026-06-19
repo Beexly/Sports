@@ -541,13 +541,13 @@ export function hedgeAmount(
 }
 
 /**
- * Guaranteed profit after hedging, regardless of outcome.
+ * Locked-in profit after hedging, regardless of outcome.
  *
  * If original wins:  profit = originalBet * (origDecimal - 1) - hedgeAmount
  * If hedge wins:     profit = hedge * (hedgeDecimal - 1) - originalBet
- * Guaranteed profit = minimum of the two.
+ * Locked-in profit = minimum of the two.
  */
-export function guaranteedProfit(
+export function hedgedProfit(
   originalBet: number,
   originalOdds: number,
   hedge: number,
