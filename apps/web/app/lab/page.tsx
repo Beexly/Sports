@@ -9,7 +9,9 @@ import { GameSimulatorTool } from "@/components/lab/game-simulator-tool";
 import { ParlayAnalyzerTool } from "@/components/lab/parlay-analyzer-tool";
 import { BankrollOptimizerTool } from "@/components/lab/bankroll-optimizer-tool";
 import { GlassBoxExplainer } from "@/components/lab/glass-box-explainer";
+import { CalibrationExplorer } from "@/components/lab/calibration-explorer";
 import { loadGlassBoxPicks } from "@/lib/lab/glass-box";
+import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 
 export const dynamic = "force-dynamic";
@@ -44,7 +46,7 @@ const TOOLS = [
   },
   {
     name: "Calibration explorer",
-    status: "gated",
+    status: "live",
     desc: "The live reliability curve — honest 'building the record' until the settled-pick sample clears the gate.",
   },
 ] as const;
@@ -72,9 +74,10 @@ function StatusChip({ status }: { status: string }): JSX.Element {
 }
 
 export default async function GalaxyLabPage(): Promise<JSX.Element> {
-  const [entitlements, glassBox] = await Promise.all([
+  const [entitlements, glassBox, calibration] = await Promise.all([
     getViewerEntitlements(),
     loadGlassBoxPicks(),
+    loadPublicCalibrationReport(),
   ]);
   return (
     <div style={{ backgroundColor: BRAND_COLORS.obsidianBlack }} className="min-h-screen">
@@ -140,6 +143,22 @@ export default async function GalaxyLabPage(): Promise<JSX.Element> {
               point contributions unlock with Pro.
             </p>
             <GlassBoxExplainer picks={glassBox} entitlements={entitlements} />
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section className="mt-12">
+            <h2 className="mb-1 font-display text-lg font-semibold text-white">
+              Calibration explorer
+            </h2>
+            <p className="mb-4 max-w-2xl text-sm text-ink-300">
+              The reliability picture from real settled picks: predicted
+              confidence versus observed win rate per bucket, the Brier score,
+              and whether higher confidence actually ranks into higher win
+              rates. Honest &ldquo;building the record&rdquo; until the
+              settled-pick sample clears the gate.
+            </p>
+            <CalibrationExplorer report={calibration} />
           </section>
         </Reveal>
 
