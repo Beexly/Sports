@@ -42,6 +42,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
       { href: "/cockpit/market-twin", label: "Market Twin", hint: "Upcoming board posture" },
       { href: "/cockpit/losses", label: "Losses", hint: "Autopsy authoring queue" },
       { href: "/cockpit/calibration", label: "Calibration", hint: "Model accountability" },
+      { href: "/cockpit/calibration-learning", label: "Calibration Learning", hint: "Exploratory signal-vs-outcome correlation · read-only" },
       { href: "/cockpit/pick-analytics", label: "Pick Analytics", hint: "Win-rate grading workbench · read-only" },
       { href: "/cockpit/market-analysis", label: "Market Analysis", hint: "Line-movement intelligence · read-only" },
       { href: "/cockpit/sports-diagnostics", label: "Sports Diagnostics", hint: "Rest, home-field, power/Elo context · read-only" },
