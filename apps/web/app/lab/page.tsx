@@ -6,6 +6,8 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { BRAND_COLORS } from "@/lib/brand";
 import { GameSimulatorTool } from "@/components/lab/game-simulator-tool";
+import { ParlayAnalyzerTool } from "@/components/lab/parlay-analyzer-tool";
+import { BankrollOptimizerTool } from "@/components/lab/bankroll-optimizer-tool";
 
 export const metadata: Metadata = {
   title: "Galaxy Lab — Run the Model Yourself",
@@ -22,13 +24,13 @@ const TOOLS = [
   },
   {
     name: "Parlay stress-tester",
-    status: "soon",
-    desc: "Real correlation and risk-of-ruin on your slip — built on the parlay + risk-analytics libraries.",
+    status: "live",
+    desc: "Real correlation and risk-of-ruin on your slip — built on the parlay + combinatorics + risk-analytics libraries.",
   },
   {
     name: "Bankroll & Kelly optimizer",
-    status: "soon",
-    desc: "Size stakes to your edge and variance tolerance, with drawdown simulation.",
+    status: "live",
+    desc: "Size stakes to your edge and variance tolerance, with a Monte Carlo drawdown + risk-of-ruin simulation.",
   },
   {
     name: "Glass-box pick explainer",
@@ -93,7 +95,28 @@ export default function GalaxyLabPage(): JSX.Element {
 
         <Reveal>
           <section className="mt-10">
+            <h2 className="mb-4 font-display text-lg font-semibold text-white">
+              Monte Carlo game simulator
+            </h2>
             <GameSimulatorTool />
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section className="mt-10">
+            <h2 className="mb-4 font-display text-lg font-semibold text-white">
+              Parlay stress-tester
+            </h2>
+            <ParlayAnalyzerTool />
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section className="mt-10">
+            <h2 className="mb-4 font-display text-lg font-semibold text-white">
+              Bankroll &amp; Kelly optimizer
+            </h2>
+            <BankrollOptimizerTool />
           </section>
         </Reveal>
 
