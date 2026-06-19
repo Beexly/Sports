@@ -307,15 +307,33 @@ async function buildDataGroup(): Promise<ReadinessGroup> {
 }
 
 function buildAIGroup(): ReadinessGroup {
-  const check = envCheck(
-    "ai_anthropic_key",
-    "ANTHROPIC_API_KEY present",
+  // The LLM layer runs on a FREE, keyless multi-provider pool (Pollinations is
+  // always available with no key). Jarvis chat + AI content work out of the box —
+  // this is NOT an owner blocker. Any provider key (free Cerebras/Groq/DeepSeek/
+  // OpenRouter/Together/Gemini, or paid Anthropic) is OPTIONAL: it adds capacity +
+  // perspective and improves failover, but is never required.
+  const optionalPoolKeys = [
     "ANTHROPIC_API_KEY",
-    "ANTHROPIC_API_KEY is set — AI content generation (AVA) is available.",
-    "ANTHROPIC_API_KEY is not set — AI content generation is disabled. The product ships without it; content authoring is manual until wired.",
-    "Get an API key from console.anthropic.com and set ANTHROPIC_API_KEY. This enables AI-assisted content drafting only — it does not change scoring or publish anything automatically.",
-  );
-  return { name: "AI Content", checks: [check] };
+    "CEREBRAS_API_KEY",
+    "GROQ_API_KEY",
+    "DEEPSEEK_API_KEY",
+    "OPENROUTER_API_KEY",
+    "TOGETHER_API_KEY",
+    "GEMINI_API_KEY",
+  ];
+  const extraConfigured = optionalPoolKeys.filter((k) => envPresent(k)).length;
+
+  const check: ReadinessCheck = {
+    id: "ai_llm_pool",
+    label: "AI / LLM (free multi-provider pool)",
+    status: "ready",
+    detail:
+      extraConfigured > 0
+        ? `Ready. Jarvis + AI content run on the free keyless pool (Pollinations), with ${extraConfigured} optional provider key(s) wired for extra capacity + failover.`
+        : "Ready. Jarvis + AI content run on the free, keyless multi-provider pool (Pollinations) — no key required. Optional provider keys (Cerebras, Groq, DeepSeek, OpenRouter, Together, Gemini, Anthropic) add capacity + perspective.",
+    ownerAction: null,
+  };
+  return { name: "AI / LLM (free pool)", checks: [check] };
 }
 
 function buildAnalyticsGroup(): ReadinessGroup {
