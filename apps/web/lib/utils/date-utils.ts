@@ -247,10 +247,10 @@ export function isLeapYear(year: number): boolean {
 // Formatting
 // ---------------------------------------------------------------------------
 
-const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const LONG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const LONG_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const SHORT_MONTHS: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const LONG_MONTHS: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const SHORT_DAYS: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const LONG_DAYS: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 /**
  * Format a Date using simple tokens.
@@ -287,12 +287,12 @@ export function formatDate(date: Date, format: string): string {
   return format
     .replace(/YYYY/g, String(year))
     .replace(/YY/g, String(year).slice(-2))
-    .replace(/MMMM/g, LONG_MONTHS[month])
-    .replace(/MMM/g, SHORT_MONTHS[month])
+    .replace(/MMMM/g, LONG_MONTHS[month] ?? '')
+    .replace(/MMM/g, SHORT_MONTHS[month] ?? '')
     .replace(/MM/g, String(month + 1).padStart(2, '0'))
     .replace(/M/g, String(month + 1))
-    .replace(/dddd/g, LONG_DAYS[weekday])
-    .replace(/ddd/g, SHORT_DAYS[weekday])
+    .replace(/dddd/g, LONG_DAYS[weekday] ?? '')
+    .replace(/ddd/g, SHORT_DAYS[weekday] ?? '')
     .replace(/DD/g, String(day).padStart(2, '0'))
     .replace(/D/g, String(day))
     .replace(/HH/g, String(hours).padStart(2, '0'))
@@ -345,8 +345,8 @@ export function formatRelative(date: Date, reference: Date = new Date()): string
  * Uses UTC-based formatting.
  */
 export function formatGameTime(date: Date): string {
-  const weekday = SHORT_DAYS[date.getUTCDay()];
-  const month = SHORT_MONTHS[date.getUTCMonth()];
+  const weekday = SHORT_DAYS[date.getUTCDay()] ?? '';
+  const month = SHORT_MONTHS[date.getUTCMonth()] ?? '';
   const day = date.getUTCDate();
   const hours = date.getUTCHours();
   const minutes = date.getUTCMinutes();
@@ -534,12 +534,12 @@ export function formatCountdown(target: Date, reference: Date = new Date()): str
 
 /** Day of week name. */
 export function dayOfWeekName(date: Date, format: 'short' | 'long' = 'short'): string {
-  return format === 'long' ? LONG_DAYS[date.getUTCDay()] : SHORT_DAYS[date.getUTCDay()];
+  return format === 'long' ? (LONG_DAYS[date.getUTCDay()] ?? '') : (SHORT_DAYS[date.getUTCDay()] ?? '');
 }
 
 /** Month name. */
 export function monthName(date: Date, format: 'short' | 'long' = 'short'): string {
-  return format === 'long' ? LONG_MONTHS[date.getUTCMonth()] : SHORT_MONTHS[date.getUTCMonth()];
+  return format === 'long' ? (LONG_MONTHS[date.getUTCMonth()] ?? '') : (SHORT_MONTHS[date.getUTCMonth()] ?? '');
 }
 
 /**
@@ -655,10 +655,10 @@ export function parseFlexibleDate(input: string): Date | null {
   const slashPattern = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/;
   const slashMatch = slashPattern.exec(input);
   if (slashMatch) {
-    let year = parseInt(slashMatch[3], 10);
+    let year = parseInt(slashMatch[3] ?? '0', 10);
     if (year < 100) year = year < 50 ? 2000 + year : 1900 + year;
-    const month = parseInt(slashMatch[1], 10);
-    const day = parseInt(slashMatch[2], 10);
+    const month = parseInt(slashMatch[1] ?? '0', 10);
+    const day = parseInt(slashMatch[2] ?? '0', 10);
     if (month < 1 || month > 12 || day < 1 || day > 31) return null;
     return new Date(Date.UTC(year, month - 1, day));
   }
@@ -673,10 +673,10 @@ export function parseFlexibleDate(input: string): Date | null {
   const longPattern = /^([a-zA-Z]+)\s+(\d{1,2}),?\s+(\d{4})$/;
   const longMatch = longPattern.exec(input.trim());
   if (longMatch) {
-    const monthIdx = longMonthMap[longMatch[1].toLowerCase()];
+    const monthIdx = longMonthMap[longMatch[1]?.toLowerCase() ?? ''];
     if (monthIdx === undefined) return null;
-    const day = parseInt(longMatch[2], 10);
-    const year = parseInt(longMatch[3], 10);
+    const day = parseInt(longMatch[2] ?? '0', 10);
+    const year = parseInt(longMatch[3] ?? '0', 10);
     if (day < 1 || day > 31) return null;
     return new Date(Date.UTC(year, monthIdx, day));
   }
@@ -716,7 +716,7 @@ export function ordinalSuffix(n: number): string {
 
 /** Format day as 'January 15th, 2024'. */
 export function dayOrdinal(date: Date): string {
-  const month = LONG_MONTHS[date.getUTCMonth()];
+  const month = LONG_MONTHS[date.getUTCMonth()] ?? '';
   const day = ordinalSuffix(date.getUTCDate());
   const year = date.getUTCFullYear();
   return `${month} ${day}, ${year}`;
@@ -730,6 +730,552 @@ export function dayOrdinal(date: Date): string {
 export function quarterOfYear(date: Date): 1 | 2 | 3 | 4 {
   const month = date.getUTCMonth(); // 0-indexed
   return (Math.floor(month / 3) + 1) as 1 | 2 | 3 | 4;
+}
+
+// ---------------------------------------------------------------------------
+// Extended API — added to satisfy full spec (L117)
+// ---------------------------------------------------------------------------
+
+// --- Basic arithmetic additions ---
+
+/** Add N weeks to a date. */
+export function addWeeks(date: Date, weeks: number): Date {
+  return addDays(date, weeks * 7);
+}
+
+/** Add N seconds to a date. */
+export function addSeconds(date: Date, seconds: number): Date {
+  return new Date(date.getTime() + seconds * MS_PER_SECOND);
+}
+
+/** Subtract N days from a date (alias for addDays with negative). */
+export function subtractDays(date: Date, days: number): Date {
+  return addDays(date, -days);
+}
+
+// --- Diff functions (abs-floor semantics per spec) ---
+
+/** floor(|a-b| / ms_per_day) — always non-negative. */
+export function diffDays(a: Date, b: Date): number {
+  return Math.floor(Math.abs(a.getTime() - b.getTime()) / MS_PER_DAY);
+}
+
+/** floor(|a-b| / ms_per_hour) — always non-negative. */
+export function diffHours(a: Date, b: Date): number {
+  return Math.floor(Math.abs(a.getTime() - b.getTime()) / MS_PER_HOUR);
+}
+
+/** floor(|a-b| / ms_per_minute) — always non-negative. */
+export function diffMinutes(a: Date, b: Date): number {
+  return Math.floor(Math.abs(a.getTime() - b.getTime()) / MS_PER_MINUTE);
+}
+
+/** year diff * 12 + month diff (signed, a minus b). */
+export function diffMonths(a: Date, b: Date): number {
+  return (a.getFullYear() - b.getFullYear()) * 12 + (a.getMonth() - b.getMonth());
+}
+
+/** floor(diffDays(a,b) / 365) — always non-negative. */
+export function diffYears(a: Date, b: Date): number {
+  return Math.floor(Math.abs(a.getTime() - b.getTime()) / (365.25 * MS_PER_DAY));
+}
+
+// --- Start/end of period additions ---
+
+/** First day of quarter at 00:00:00.000 local (Q1=Jan, Q2=Apr, Q3=Jul, Q4=Oct). */
+export function startOfQuarter(date: Date): Date {
+  const d = new Date(date);
+  const month = d.getMonth();
+  const quarterStartMonth = Math.floor(month / 3) * 3;
+  d.setMonth(quarterStartMonth, 1);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+/** Last day of quarter at 23:59:59.999 local. */
+export function endOfQuarter(date: Date): Date {
+  const d = new Date(date);
+  const month = d.getMonth();
+  const quarterEndMonth = Math.floor(month / 3) * 3 + 2;
+  // Last day of quarterEndMonth
+  d.setMonth(quarterEndMonth + 1, 0);
+  d.setHours(23, 59, 59, 999);
+  return d;
+}
+
+/** Set minutes/seconds/ms to 0, preserving hours (local). */
+export function startOfHour(date: Date): Date {
+  const d = new Date(date);
+  d.setMinutes(0, 0, 0);
+  return d;
+}
+
+/** Set to xx:59:59.999 local. */
+export function endOfHour(date: Date): Date {
+  const d = new Date(date);
+  d.setMinutes(59, 59, 999);
+  return d;
+}
+
+// --- Comparison additions ---
+
+/** True if a < b. */
+export function isBefore(a: Date, b: Date): boolean {
+  return a.getTime() < b.getTime();
+}
+
+/** True if a > b. */
+export function isAfter(a: Date, b: Date): boolean {
+  return a.getTime() > b.getTime();
+}
+
+/** True if date falls on a weekday (Mon–Fri). */
+export function isWeekday(date: Date): boolean {
+  return !isWeekend(date);
+}
+
+/** True if date is a valid Date object. */
+export function isValid(date: Date): boolean {
+  return !isNaN(date.getTime());
+}
+
+// --- Getters ---
+
+/** Day of year: 1–366. Uses local calendar. */
+export function getDayOfYear(date: Date): number {
+  const start = new Date(date.getFullYear(), 0, 0);
+  const diff = date.getTime() - start.getTime();
+  const oneDay = MS_PER_DAY;
+  return Math.floor(diff / oneDay);
+}
+
+/** ISO week number: 1–53. */
+export function getWeekOfYear(date: Date): number {
+  return isoWeek(date);
+}
+
+/** Days in a month. month is 1-12. */
+export function getDaysInMonth(year: number, month: number): number {
+  return new Date(year, month, 0).getDate();
+}
+
+/** Days in a year: 365 or 366. */
+export function getDaysInYear(year: number): number {
+  return isLeapYear(year) ? 366 : 365;
+}
+
+/** Quarter of year: 1–4. */
+export function getQuarter(date: Date): 1 | 2 | 3 | 4 {
+  return quarterOfYear(date);
+}
+
+/** Timezone offset in minutes (date.getTimezoneOffset()). */
+export function getTimezoneOffset(date: Date): number {
+  return date.getTimezoneOffset();
+}
+
+/** Returns new Date with time set; original not mutated. */
+export function setTime(date: Date, hours: number, minutes: number, seconds: number = 0, ms: number = 0): Date {
+  const d = new Date(date);
+  d.setHours(hours, minutes, seconds, ms);
+  return d;
+}
+
+// --- Formatting additions ---
+
+
+function ordinalDay(n: number): string {
+  const mod100 = n % 100;
+  const mod10 = n % 10;
+  if (mod100 >= 11 && mod100 <= 13) return `${n}th`;
+  if (mod10 === 1) return `${n}st`;
+  if (mod10 === 2) return `${n}nd`;
+  if (mod10 === 3) return `${n}rd`;
+  return `${n}th`;
+}
+
+/**
+ * Format a Date with token support including Do (ordinal day).
+ * Tokens: YYYY, YY, MM, DD, HH, mm, ss, dddd, ddd, MMMM, MMM, Do
+ */
+export function formatDateEx(date: Date, format: string): string {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const weekday = date.getDay();
+
+  const SHORT_MONTHS_LOCAL: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const LONG_MONTHS_LOCAL: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const SHORT_DAYS_LOCAL: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const LONG_DAYS_LOCAL: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  return format
+    .replace(/YYYY/g, String(year))
+    .replace(/YY/g, String(year).slice(-2))
+    .replace(/MMMM/g, LONG_MONTHS_LOCAL[month] ?? '')
+    .replace(/MMM/g, SHORT_MONTHS_LOCAL[month] ?? '')
+    .replace(/MM/g, String(month + 1).padStart(2, '0'))
+    .replace(/dddd/g, LONG_DAYS_LOCAL[weekday] ?? '')
+    .replace(/ddd/g, SHORT_DAYS_LOCAL[weekday] ?? '')
+    .replace(/Do/g, ordinalDay(day))
+    .replace(/DD/g, String(day).padStart(2, '0'))
+    .replace(/HH/g, String(hours).padStart(2, '0'))
+    .replace(/mm/g, String(minutes).padStart(2, '0'))
+    .replace(/ss/g, String(seconds).padStart(2, '0'));
+}
+
+/**
+ * Format date range: "Jan 5–7, 2025" same month, "Jan 5 – Feb 3, 2025" diff month,
+ * "Dec 30, 2024 – Jan 2, 2025" diff year.
+ */
+export function formatDateRange(start: Date, end: Date): string {
+  const SHORT_MONTHS_LOCAL = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const sy = start.getFullYear();
+  const ey = end.getFullYear();
+  const sm = start.getMonth();
+  const em = end.getMonth();
+  const sd = start.getDate();
+  const ed = end.getDate();
+
+  if (sy === ey && sm === em) {
+    return `${SHORT_MONTHS_LOCAL[sm]} ${sd}–${ed}, ${sy}`;
+  } else if (sy === ey) {
+    return `${SHORT_MONTHS_LOCAL[sm]} ${sd} – ${SHORT_MONTHS_LOCAL[em]} ${ed}, ${sy}`;
+  } else {
+    return `${SHORT_MONTHS_LOCAL[sm]} ${sd}, ${sy} – ${SHORT_MONTHS_LOCAL[em]} ${ed}, ${ey}`;
+  }
+}
+
+/** ISO 8601 string. */
+export function toISO(date: Date): string {
+  return date.toISOString();
+}
+
+/** HTTP date format. */
+export function toUTCString(date: Date): string {
+  return date.toUTCString();
+}
+
+// --- Parsing additions ---
+
+/**
+ * Parse a date string. Accepts: YYYY-MM-DD, YYYY/MM/DD, MM/DD/YYYY, MM-DD-YYYY,
+ * "Jan 6, 2025", ISO 8601. Throws if unrecognized.
+ */
+export function parseDateStrict(str: string): Date {
+  const s = str.trim();
+
+  // ISO 8601 with time
+  if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
+    const ts = Date.parse(s);
+    if (!isNaN(ts)) return new Date(ts);
+  }
+
+  // YYYY-MM-DD
+  const yyyymmddDash = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (yyyymmddDash) {
+    const y = yyyymmddDash[1] ?? '0';
+    const m = yyyymmddDash[2] ?? '0';
+    const d = yyyymmddDash[3] ?? '0';
+    return new Date(Date.UTC(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10)));
+  }
+
+  // YYYY/MM/DD
+  const yyyymmddSlash = /^(\d{4})\/(\d{2})\/(\d{2})$/.exec(s);
+  if (yyyymmddSlash) {
+    const y = yyyymmddSlash[1] ?? '0';
+    const m = yyyymmddSlash[2] ?? '0';
+    const d = yyyymmddSlash[3] ?? '0';
+    return new Date(Date.UTC(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10)));
+  }
+
+  // MM/DD/YYYY
+  const mmddyyyy = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s);
+  if (mmddyyyy) {
+    const m = mmddyyyy[1] ?? '0';
+    const d = mmddyyyy[2] ?? '0';
+    const y = mmddyyyy[3] ?? '0';
+    return new Date(Date.UTC(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10)));
+  }
+
+  // MM-DD-YYYY
+  const mmddyyyyDash = /^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(s);
+  if (mmddyyyyDash) {
+    const m = mmddyyyyDash[1] ?? '0';
+    const d = mmddyyyyDash[2] ?? '0';
+    const y = mmddyyyyDash[3] ?? '0';
+    return new Date(Date.UTC(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10)));
+  }
+
+  // "Jan 6, 2025" or "January 6, 2025"
+  const MONTH_MAP: Record<string, number> = {
+    jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+    jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11,
+    january: 0, february: 1, march: 2, april: 3, june: 5,
+    july: 6, august: 7, september: 8, october: 9, november: 10, december: 11,
+  };
+  const namedMonth = /^([a-zA-Z]+)\s+(\d{1,2}),?\s+(\d{4})$/.exec(s);
+  if (namedMonth) {
+    const mon = namedMonth[1] ?? '';
+    const day = namedMonth[2] ?? '0';
+    const year = namedMonth[3] ?? '0';
+    const mIdx = MONTH_MAP[mon.toLowerCase()];
+    if (mIdx !== undefined) {
+      return new Date(Date.UTC(parseInt(year, 10), mIdx, parseInt(day, 10)));
+    }
+  }
+
+  throw new Error(`parseDateStrict: unrecognized date format: "${str}"`);
+}
+
+/**
+ * Parse a time string. Accepts: "HH:MM", "HH:MM:SS", "H:MM AM/PM".
+ */
+export function parseTime(str: string): { hours: number; minutes: number; seconds: number } {
+  const s = str.trim();
+
+  // H:MM AM/PM or HH:MM AM/PM
+  const ampm = /^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM|am|pm)$/i.exec(s);
+  if (ampm) {
+    let hours = parseInt(ampm[1] ?? '0', 10);
+    const minutes = parseInt(ampm[2] ?? '0', 10);
+    const seconds = ampm[3] ? parseInt(ampm[3], 10) : 0;
+    const period = (ampm[4] ?? '').toUpperCase();
+    if (period === 'AM') {
+      if (hours === 12) hours = 0;
+    } else {
+      if (hours !== 12) hours += 12;
+    }
+    return { hours, minutes, seconds };
+  }
+
+  // HH:MM or HH:MM:SS
+  const twentyFour = /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/.exec(s);
+  if (twentyFour) {
+    const hours = parseInt(twentyFour[1] ?? '0', 10);
+    const minutes = parseInt(twentyFour[2] ?? '0', 10);
+    const seconds = twentyFour[3] ? parseInt(twentyFour[3], 10) : 0;
+    return { hours, minutes, seconds };
+  }
+
+  throw new Error(`parseTime: unrecognized time format: "${str}"`);
+}
+
+/**
+ * Parse a duration string to milliseconds.
+ * Accepts: "2h", "30m", "1h30m", "90s", "1h30m45s".
+ */
+export function parseDuration(str: string): number {
+  const s = str.trim();
+  if (!s) throw new Error('parseDuration: empty string');
+
+  // Match combinations like 1h30m45s
+  const pattern = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/;
+  const match = pattern.exec(s);
+  if (!match || (!match[1] && !match[2] && !match[3])) {
+    throw new Error(`parseDuration: invalid format: "${str}"`);
+  }
+
+  const hours = match[1] ? parseInt(match[1], 10) : 0;
+  const minutes = match[2] ? parseInt(match[2], 10) : 0;
+  const seconds = match[3] ? parseInt(match[3], 10) : 0;
+
+  return hours * MS_PER_HOUR + minutes * MS_PER_MINUTE + seconds * MS_PER_SECOND;
+}
+
+// --- Sports schedule helpers ---
+
+/**
+ * NFL week dates: week 1 starts on first Thursday of September.
+ * Week spans Thu–Wed.
+ */
+export function nflWeekDates(year: number, week: number): { start: Date; end: Date } {
+  // First Thursday of September
+  const sep1 = new Date(Date.UTC(year, 8, 1));
+  const dayOfWeek = sep1.getUTCDay(); // 0=Sun, 4=Thu
+  const daysToThursday = (4 - dayOfWeek + 7) % 7;
+  const week1Start = new Date(Date.UTC(year, 8, 1 + daysToThursday));
+  const start = new Date(week1Start.getTime() + (week - 1) * MS_PER_WEEK);
+  const end = new Date(start.getTime() + 6 * MS_PER_DAY);
+  return { start, end };
+}
+
+/** NBA season: Oct 1 (year) to Jun 30 (year+1). */
+export function nbaSeasonDates(year: number): { start: Date; end: Date } {
+  return {
+    start: new Date(Date.UTC(year, 9, 1)),      // Oct 1
+    end: new Date(Date.UTC(year + 1, 5, 30)),   // Jun 30 year+1
+  };
+}
+
+/** MLB season: April 1 to Oct 31. */
+export function mlbSeasonDates(year: number): { start: Date; end: Date } {
+  return {
+    start: new Date(Date.UTC(year, 3, 1)),   // Apr 1
+    end: new Date(Date.UTC(year, 9, 31)),    // Oct 31
+  };
+}
+
+/** NHL season: Oct 1 to Jun 30 (year+1). */
+export function nhlSeasonDates(year: number): { start: Date; end: Date } {
+  return {
+    start: new Date(Date.UTC(year, 9, 1)),      // Oct 1
+    end: new Date(Date.UTC(year + 1, 5, 30)),   // Jun 30 year+1
+  };
+}
+
+/**
+ * Is date within the sport's season?
+ * sport: 'nfl' | 'nba' | 'mlb' | 'nhl' (lowercase)
+ */
+export function isInSeasonEx(date: Date, sport: 'nfl' | 'nba' | 'mlb' | 'nhl'): boolean {
+  const t = date.getTime();
+  const year = date.getUTCFullYear();
+
+  if (sport === 'nfl') {
+    // Check current year's season and prior year's season (spans Sep–Jan)
+    for (const y of [year, year - 1]) {
+      const { start } = nflWeekDates(y, 1);
+      // NFL ends around Feb: roughly 18 weeks = 126 days
+      const end = new Date(start.getTime() + 126 * MS_PER_DAY);
+      if (t >= start.getTime() && t <= end.getTime()) return true;
+    }
+    return false;
+  }
+
+  if (sport === 'nba') {
+    for (const y of [year, year - 1]) {
+      const { start, end } = nbaSeasonDates(y);
+      if (t >= start.getTime() && t <= end.getTime()) return true;
+    }
+    return false;
+  }
+
+  if (sport === 'mlb') {
+    const { start, end } = mlbSeasonDates(year);
+    return t >= start.getTime() && t <= end.getTime();
+  }
+
+  if (sport === 'nhl') {
+    for (const y of [year, year - 1]) {
+      const { start, end } = nhlSeasonDates(y);
+      if (t >= start.getTime() && t <= end.getTime()) return true;
+    }
+    return false;
+  }
+
+  return false;
+}
+
+/** Day of week name for a game date. */
+export function gameDay(date: Date): 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' {
+  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as const;
+  return days[date.getDay() as 0 | 1 | 2 | 3 | 4 | 5 | 6];
+}
+
+/**
+ * Next typical game day for sport.
+ * NFL: next Sunday. NBA/NHL: tomorrow. MLB: tomorrow.
+ */
+export function nextGameDay(date: Date, sport: 'nfl' | 'nba' | 'mlb' | 'nhl'): Date {
+  if (sport === 'nfl') {
+    // Next Sunday
+    const d = new Date(date);
+    const day = d.getDay();
+    const daysUntilSunday = (7 - day) % 7 || 7;
+    return addDays(d, daysUntilSunday);
+  }
+  // NBA/NHL/MLB: tomorrow
+  return addDays(date, 1);
+}
+
+/** Hours from baseDate to gameDate. Negative if past. */
+export function hoursUntilGame(gameDate: Date, baseDate: Date = new Date()): number {
+  return (gameDate.getTime() - baseDate.getTime()) / MS_PER_HOUR;
+}
+
+/**
+ * MLB doubleheader risk: weekends (Sat or Sun) in August or September.
+ */
+export function isDoubleheaderRisk(date: Date, sport: 'mlb'): boolean {
+  if (sport !== 'mlb') return false;
+  const month = date.getMonth(); // 0-indexed; 7=Aug, 8=Sep
+  const day = date.getDay();    // 0=Sun, 6=Sat
+  return (month === 7 || month === 8) && (day === 0 || day === 6);
+}
+
+/**
+ * Timezone label by offset (minutes).
+ * -300=ET, -360=CT, -420=MT, -480=PT, 0=UTC, else 'UTC'.
+ */
+export function timezoneLabel(date: Date): string {
+  const offset = date.getTimezoneOffset();
+  if (offset === 300) return 'ET';
+  if (offset === 360) return 'CT';
+  if (offset === 420) return 'MT';
+  if (offset === 480) return 'PT';
+  if (offset === 0) return 'UTC';
+  return 'UTC';
+}
+
+// --- Batch utilities additions ---
+
+/**
+ * Group dates by YYYY-MM-DD key.
+ */
+export function groupByDayRecord(dates: Date[]): Record<string, Date[]> {
+  const result: Record<string, Date[]> = {};
+  for (const d of dates) {
+    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+    if (!result[key]) result[key] = [];
+    result[key].push(d);
+  }
+  return result;
+}
+
+/**
+ * Group dates by YYYY-MM key.
+ */
+export function groupByMonth(dates: Date[]): Record<string, Date[]> {
+  const result: Record<string, Date[]> = {};
+  for (const d of dates) {
+    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+    if (!result[key]) result[key] = [];
+    result[key].push(d);
+  }
+  return result;
+}
+
+/** Sort dates ascending or descending. */
+export function sortDates(dates: Date[], direction: 'asc' | 'desc' = 'asc'): Date[] {
+  return [...dates].sort((a, b) => direction === 'asc' ? a.getTime() - b.getTime() : b.getTime() - a.getTime());
+}
+
+/** Deduplicate dates by calendar day (UTC). Returns one date per unique day. */
+export function uniqueDays(dates: Date[]): Date[] {
+  const seen = new Set<string>();
+  const result: Date[] = [];
+  for (const d of dates) {
+    const key = `${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      result.push(d);
+    }
+  }
+  return result;
+}
+
+/** Count dates by day of week. Key: 0=Sun..6=Sat. */
+export function countByDayOfWeek(dates: Date[]): Record<number, number> {
+  const result: Record<number, number> = {};
+  for (const d of dates) {
+    const dow = d.getDay();
+    result[dow] = (result[dow] ?? 0) + 1;
+  }
+  return result;
 }
 
 // ---------------------------------------------------------------------------
@@ -759,21 +1305,6 @@ export function endOfWeekUtc(date: Date | number): Date {
 /** @deprecated Use isSameDay */
 export function isSameDayUtc(a: Date | number, b: Date | number): boolean {
   return isSameDay(new Date(a), new Date(b));
-}
-
-/** @deprecated Use diffInDays */
-export function diffDays(a: Date | number, b: Date | number): number {
-  return diffInDays(new Date(a), new Date(b));
-}
-
-/** @deprecated Use diffInHours */
-export function diffHours(a: Date | number, b: Date | number): number {
-  return diffInHours(new Date(a), new Date(b));
-}
-
-/** @deprecated Use diffInMinutes */
-export function diffMinutes(a: Date | number, b: Date | number): number {
-  return diffInMinutes(new Date(a), new Date(b));
 }
 
 /** @deprecated Use isoWeek */
