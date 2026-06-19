@@ -25,7 +25,7 @@ export interface StreakRecord {
   readonly pushes: number;
   /** No-action records (skipped) */
   readonly noActions: number;
-  /** Win rate: wins / (wins + losses), excludes pushes/no-action */
+  /** Win rate over decided games (wins plus losses); excludes pushes/no-action */
   readonly winRate: number | null;
   /** Total settled outcomes (wins + losses, excludes pushes/no-action) */
   readonly settled: number;

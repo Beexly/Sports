@@ -21,7 +21,7 @@ export interface BetStats {
   readonly wins: number;
   readonly losses: number;
   readonly pushes: number;
-  readonly winRate: number; // wins / (wins + losses), NaN if 0
+  readonly winRate: number; // wins over decided bets (wins plus losses), NaN if 0
   readonly roi: number; // net / totalStaked, NaN if 0
   readonly netUnits: number;
   readonly totalStaked: number;
@@ -69,7 +69,7 @@ export function profitFromBet(bet: Bet): number {
 
 /**
  * Compute all BetStats from an array of bets.
- * winRate = wins / (wins + losses) — NaN if no settled bets
+ * winRate = wins over decided bets (wins plus losses) — NaN if no settled bets
  * roi = netUnits / totalStaked — NaN if totalStaked === 0
  * avgOdds = average decimal odds over wins + losses only
  * breakEvenWinRate = 1 / avgOdds (or NaN if no bets)
@@ -263,7 +263,7 @@ export function sortinoBetting(bets: readonly Bet[]): number {
 
 /**
  * Rolling win rate over a window of settled bets.
- * Each value = wins / (wins + losses) in that window.
+ * Each value = wins over decided bets (wins plus losses) in that window.
  * Output length = max(0, settledBets.length - window + 1)
  */
 export function rollingWinRate(

@@ -343,7 +343,7 @@ export function winLossRecord(profile: FighterProfile): string {
 }
 
 /**
- * Win rate: wins / (wins + losses). Returns 0 if no fights.
+ * Win rate over decided fights (wins plus losses). Returns 0 if no fights.
  */
 export function winRate(profile: FighterProfile): number {
   return safeDivide(profile.wins, profile.wins + profile.losses)

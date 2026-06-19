@@ -182,7 +182,7 @@ export function gradePickByClv(pick: PickRecord): PickGrade {
 
 /**
  * Calculate performance stats for all picks belonging to a specific tier.
- * winRate = wins / (wins + losses), null if no settled picks
+ * winRate = wins over decided picks (wins plus losses), null if none settled
  * roi = sum(profit) / sum(stake for settled picks), null if no staked picks
  * avgEv = mean ev across all picks in the tier
  * avgConfidence = mean confidence across all picks in the tier
@@ -242,7 +242,7 @@ const ALL_TIERS: PickTier[] = ["signal", "edge", "sharp", "apex"];
 /**
  * Full performance summary across all picks.
  * settledPicks: win + loss + push count
- * overallWinRate: total wins / (wins + losses)
+ * overallWinRate: total wins over decided picks (wins plus losses)
  * overallRoi: sum(profit) / sum(stake for settled picks)
  * byTier: TierPerformance for each tier that has any picks
  * avgEv: mean ev across all picks
@@ -289,8 +289,8 @@ export function performanceSummary(
   }
 
   const settled = wins + losses + pushes;
-  const overallWinRate =
-    wins + losses > 0 ? wins / (wins + losses) : null;
+  const decided = wins + losses;
+  const overallWinRate = decided > 0 ? wins / decided : null;
   const overallRoi = totalStaked > 0 ? totalProfit / totalStaked : null;
   const avgEv = picks.length > 0 ? evSum / picks.length : 0;
   const clvBeatRate =
