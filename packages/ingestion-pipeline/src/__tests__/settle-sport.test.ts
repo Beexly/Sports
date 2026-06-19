@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /**
@@ -17,12 +17,15 @@ const mocks = vi.hoisted(() => ({
   getScores: vi.fn<(sport: string, daysFrom: number) => Promise<{ data: unknown[] }>>(),
   normalizeScores: vi.fn<(scores: unknown[]) => unknown[]>(),
   settleGameLogs: vi.fn<(args: unknown) => Promise<void>>(),
+  fetchScoresWithPool: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
+  resolveFreeSettlementScores: vi.fn<(...args: unknown[]) => unknown[]>(),
   // prediction-engine
   calculatePickResult: vi.fn<(...args: unknown[]) => string>(),
   deriveClosingSnapshotFromOdds: vi.fn<(...args: unknown[]) => unknown>(),
   gradePickClv: vi.fn<(args: unknown) => unknown>(),
   // db
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   gameUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
   oddsFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   pickUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -35,7 +38,11 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@sports/db", () => ({
   db: {
-    game: { findUnique: mocks.gameFindUnique, update: mocks.gameUpdate },
+    game: {
+      findUnique: mocks.gameFindUnique,
+      findMany: mocks.gameFindMany,
+      update: mocks.gameUpdate,
+    },
     odds: { findMany: mocks.oddsFindMany },
     pick: { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany },
     openingLine: { findUnique: mocks.openingLineFindUnique },
@@ -51,6 +58,8 @@ vi.mock("@sports/data-ingestion", () => ({
   OddsApiClient: vi.fn().mockImplementation(() => ({ getScores: mocks.getScores })),
   DataNormalizer: vi.fn().mockImplementation(() => ({ normalizeScores: mocks.normalizeScores })),
   settleGameLogs: mocks.settleGameLogs,
+  fetchScoresWithPool: mocks.fetchScoresWithPool,
+  resolveFreeSettlementScores: mocks.resolveFreeSettlementScores,
 }));
 
 vi.mock("@sports/prediction-engine", () => ({
@@ -132,6 +141,19 @@ describe("settleSport", () => {
     mocks.openingLineFindUnique.mockResolvedValue({ spread: -3.5 });
     mocks.settleGameLogs.mockResolvedValue(undefined);
     mocks.snapshotUpdateMany.mockResolvedValue({ count: 1 });
+    mocks.gameFindMany.mockResolvedValue([]);
+    mocks.fetchScoresWithPool.mockResolvedValue({
+      healthy: false,
+      result: { provider: "score-pool", scores: [], healthy: false, error: "x" },
+      servedBy: null,
+      attempts: [],
+    });
+    mocks.resolveFreeSettlementScores.mockReturnValue([]);
+    delete process.env["FREE_DATA_PROVIDER_ENABLED"];
+  });
+
+  afterEach(() => {
+    delete process.env["FREE_DATA_PROVIDER_ENABLED"];
   });
 
   it("settles pending picks on completed games and reports counts", async () => {
@@ -317,6 +339,136 @@ describe("settleSport", () => {
       // close it is never called.
       expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
       expect(mocks.pickUpdate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("free keyless settlement fallback", () => {
+    const freeDeps = { fetchFn: (() => {}) as unknown as typeof fetch, checkClearance: () => ({ allowed: true as const, rightsSnapshot: null }) };
+
+    it("is INERT when the flag is off: never queries pending games or the free pool, even with deps injected", async () => {
+      // Paid path produces a completed score; flag unset.
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", freeDeps);
+
+      expect(result.status).toBe("success");
+      expect(mocks.gameFindMany).not.toHaveBeenCalled();
+      expect(mocks.fetchScoresWithPool).not.toHaveBeenCalled();
+      expect(mocks.resolveFreeSettlementScores).not.toHaveBeenCalled();
+    });
+
+    it("is INERT when the flag is on but deps are absent (fail-closed no-op)", async () => {
+      process.env["FREE_DATA_PROVIDER_ENABLED"] = "true";
+      // No freeDeps argument → free path is a no-op.
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(mocks.fetchScoresWithPool).not.toHaveBeenCalled();
+    });
+
+    it("is INERT when the flag is on and deps present but checkClearance is missing", async () => {
+      process.env["FREE_DATA_PROVIDER_ENABLED"] = "true";
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", {
+        fetchFn: (() => {}) as unknown as typeof fetch,
+      });
+
+      expect(result.status).toBe("success");
+      expect(mocks.fetchScoresWithPool).not.toHaveBeenCalled();
+    });
+
+    it("preserves status:failed (rethrows) when the paid scores API errors AND the free path is inert", async () => {
+      mocks.getScores.mockRejectedValue(new Error("rate limited"));
+      // flag off → inert → original behavior preserved
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", freeDeps);
+
+      expect(result.status).toBe("failed");
+      expect(result.error).toBe("rate limited");
+      expect(mocks.fetchScoresWithPool).not.toHaveBeenCalled();
+    });
+
+    it("does NOT run the free pool when the paid path already covered every pending game", async () => {
+      process.env["FREE_DATA_PROVIDER_ENABLED"] = "true";
+      // Paid completed score covers ext-1; the only pending game is ext-1.
+      mocks.gameFindMany.mockResolvedValue([
+        { externalId: "ext-1", homeTeamName: "Chiefs", awayTeamName: "Bills", commenceTime: new Date() },
+      ]);
+
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", freeDeps);
+
+      expect(result.status).toBe("success");
+      expect(mocks.gameFindMany).toHaveBeenCalledTimes(1);
+      // Every pending game already covered → no pool fetch.
+      expect(mocks.fetchScoresWithPool).not.toHaveBeenCalled();
+    });
+
+    it("fires the free fallback when a pending game is NOT covered by the paid path, and settles the resolved score", async () => {
+      process.env["FREE_DATA_PROVIDER_ENABLED"] = "true";
+      // Paid path returns NO completed scores.
+      mocks.normalizeScores.mockReturnValue([]);
+      // A pending game the paid path did not cover.
+      mocks.gameFindMany.mockResolvedValue([
+        { externalId: "ext-free", homeTeamName: "Chiefs", awayTeamName: "Bills", commenceTime: new Date() },
+      ]);
+      // Pool returns a (mock) score; the resolver re-keys it onto the real externalId.
+      mocks.fetchScoresWithPool.mockResolvedValue({
+        healthy: true,
+        result: { provider: "espn-public-api", scores: [{ x: 1 }], healthy: true },
+        servedBy: "espn-public-api",
+        attempts: [],
+      });
+      mocks.resolveFreeSettlementScores.mockReturnValue([
+        { externalId: "ext-free", homeScore: 27, awayScore: 20, completed: true },
+      ]);
+      // The settle loop then looks up the game by the resolved externalId.
+      mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()], { externalId: "ext-free" }));
+
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", freeDeps);
+
+      expect(mocks.fetchScoresWithPool).toHaveBeenCalledTimes(1);
+      expect(mocks.resolveFreeSettlementScores).toHaveBeenCalledTimes(1);
+      // The resolved free score drove the existing per-game settle loop.
+      expect(mocks.gameFindUnique).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { externalId: "ext-free" } }),
+      );
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+    });
+
+    it("runs the free fallback after a paid getScores error (paid threw) instead of failing", async () => {
+      process.env["FREE_DATA_PROVIDER_ENABLED"] = "true";
+      mocks.getScores.mockRejectedValue(new Error("rate limited"));
+      mocks.gameFindMany.mockResolvedValue([
+        { externalId: "ext-free", homeTeamName: "Chiefs", awayTeamName: "Bills", commenceTime: new Date() },
+      ]);
+      mocks.fetchScoresWithPool.mockResolvedValue({
+        healthy: true,
+        result: { provider: "nflverse", scores: [{ x: 1 }], healthy: true },
+        servedBy: "nflverse",
+        attempts: [],
+      });
+      mocks.resolveFreeSettlementScores.mockReturnValue([
+        { externalId: "ext-free", homeScore: 27, awayScore: 20, completed: true },
+      ]);
+      mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()], { externalId: "ext-free" }));
+
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", freeDeps);
+
+      // Paid error did NOT abort — the free path settled the game.
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(mocks.fetchScoresWithPool).toHaveBeenCalledTimes(1);
+    });
+
+    it("a free-fallback failure never throws — settlement still succeeds", async () => {
+      process.env["FREE_DATA_PROVIDER_ENABLED"] = "true";
+      mocks.gameFindMany.mockResolvedValue([
+        { externalId: "ext-x", homeTeamName: "A", awayTeamName: "B", commenceTime: new Date() },
+      ]);
+      mocks.fetchScoresWithPool.mockRejectedValue(new Error("pool exploded"));
+
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", freeDeps);
+
+      // Paid path still settled its game; the free failure was swallowed.
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
     });
   });
 });

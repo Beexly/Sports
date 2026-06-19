@@ -24,9 +24,30 @@
 
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
-import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
-import { settleSport } from "@sports/ingestion-pipeline";
+import {
+  SUPPORTED_SPORTS,
+  type CheckClearanceFn,
+  type ScoreClearanceRequest,
+  type ScoreClearanceResult,
+} from "@sports/data-ingestion";
+import { settleSport, type SettleSportFreeDeps } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
+import { checkClearance, type ClearanceRequest } from "@/lib/scraping/clearance-engine";
+
+/**
+ * Adapt the real Scraping Clearance Engine to the free score pool's structural
+ * `CheckClearanceFn`. The pool's request type widens mode/tool/intents to `string`
+ * (it does not depend on apps/web); the providers only ever emit registry-valid
+ * literals, so we narrow back to the real `ClearanceRequest` here. The engine
+ * remains the single source of truth — this only bridges the package boundary,
+ * never weakens any check (an unknown source/mode/tool still fails closed).
+ */
+const clearanceAdapter: CheckClearanceFn = (
+  request: ScoreClearanceRequest,
+): ScoreClearanceResult => {
+  const result = checkClearance(request as unknown as ClearanceRequest);
+  return { allowed: result.allowed, rightsSnapshot: result.rightsSnapshot };
+};
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // settling 7 sports with upstream calls + writes
@@ -45,6 +66,16 @@ export async function GET(request: Request) {
 
   const startedAt = Date.now();
   const gates = getReadinessGates();
+
+  // Free keyless settlement fallback — INERT unless FREE_DATA_PROVIDER_ENABLED==="true".
+  // When enabled we inject global fetch + the real Scraping Clearance Engine so the
+  // free score providers stay clearance-gated and fail-closed. When the flag is off,
+  // `freeDeps` is undefined and settleSport is byte-identical to the paid-only path.
+  const freeDeps: SettleSportFreeDeps | undefined =
+    process.env["FREE_DATA_PROVIDER_ENABLED"] === "true"
+      ? { fetchFn: fetch, checkClearance: clearanceAdapter }
+      : undefined;
+
   const requestedSport = new URL(request.url).searchParams.get("sport");
   const sportsToProcess = requestedSport
     ? SUPPORTED_SPORTS.filter((sport) => sport.key === requestedSport)
@@ -70,7 +101,7 @@ export async function GET(request: Request) {
   }> = [];
 
   for (const sport of sportsToProcess) {
-    const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks]");
+    const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks]", freeDeps);
     results.push({
       sport: result.sport,
       ok: result.status === "success",

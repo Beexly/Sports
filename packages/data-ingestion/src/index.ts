@@ -77,4 +77,30 @@ export {
   type SourceLicense,
   type LegalSource,
 } from "./source-registry.js";
+export {
+  fetchScoresWithPool,
+  DEFAULT_SCORE_PROVIDERS,
+  SCORE_POOL_COOLDOWN_MS,
+  __resetScorePoolStateForTests,
+  type ScorePoolResult,
+  type ScorePoolOptions,
+  type ScorePoolAttempt,
+} from "./score-provider-pool.js";
+export {
+  type ScoreProvider,
+  type ScoreProviderOptions,
+  type NormalizedScore,
+  type NormalizedScoreResult,
+  type CheckClearanceFn,
+  type ScoreClearanceRequest,
+  type ScoreClearanceResult,
+  type ScoreRightsSnapshot,
+} from "./score-provider.js";
+export {
+  resolveFreeSettlementScores,
+  normalizeTeamForMatch,
+  COMMENCE_TOLERANCE_MS,
+  type PendingGameForMatch,
+  type ResolvedSettlementScore,
+} from "./settlement-score-resolver.js";
 export * from "./config.js";

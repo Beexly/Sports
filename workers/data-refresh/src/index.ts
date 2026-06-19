@@ -65,6 +65,18 @@ async function settleResults(): Promise<void> {
   // Settlement is delegated to settleSport() from @sports/ingestion-pipeline —
   // the single source of truth shared with the Vercel settle-picks cron, so the
   // two settlement paths can never drift.
+  //
+  // NOTE (free keyless fallback): settleSport accepts an OPTIONAL `freeDeps`
+  // ({ fetchFn, checkClearance }) that enables a FREE_DATA_PROVIDER_ENABLED-gated
+  // fallback to settle PENDING picks from free score sources (ESPN/nflverse) when
+  // the paid path can't. It is intentionally NOT wired here: the fallback needs the
+  // real Scraping Clearance Engine, which lives in apps/web/lib/scraping and is not
+  // re-exported from any @sports/* package. Importing it from this standalone worker
+  // would be a forbidden cross-package dependency (worker → apps/web). The fallback
+  // is therefore wired ONLY in the apps/web settle-picks cron, which can import the
+  // engine cleanly. Without freeDeps the free path is a no-op, so this call is
+  // byte-identical to before. To enable it here too, first re-export checkClearance
+  // (with no Next.js deps) from a shared package, then pass freeDeps below.
   const gates = getReadinessGates();
   for (const sport of SUPPORTED_SPORTS) {
     await settleSport(sport, apiKey, gates, "[settlement]");
