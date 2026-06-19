@@ -141,36 +141,39 @@ export function subtract3D(a: Point3D, b: Point3D): Point3D {
  * Shoelace formula for polygon area.
  * Returns positive area regardless of winding order.
  */
-export function polygonArea(vertices: Point2D[]): number {
+export function polygonArea(vertices: readonly Point2D[]): number {
   const n = vertices.length;
   if (n < 3) return 0;
   let area = 0;
   for (let i = 0; i < n; i++) {
     const j = (i + 1) % n;
-    area += vertices[i].x * vertices[j].y;
-    area -= vertices[j].x * vertices[i].y;
+    const vi: Point2D = vertices[i] as Point2D;
+    const vj: Point2D = vertices[j] as Point2D;
+    area += vi.x * vj.y;
+    area -= vj.x * vi.y;
   }
   return Math.abs(area) / 2;
 }
 
 /** Sum of edge lengths for a closed polygon. */
-export function polygonPerimeter(vertices: Point2D[]): number {
+export function polygonPerimeter(vertices: readonly Point2D[]): number {
   const n = vertices.length;
   if (n < 2) return 0;
   let perimeter = 0;
   for (let i = 0; i < n; i++) {
     const j = (i + 1) % n;
-    perimeter += distance2D(vertices[i], vertices[j]);
+    perimeter += distance2D(vertices[i] as Point2D, vertices[j] as Point2D);
   }
   return perimeter;
 }
 
 /** Geometric centroid of a polygon. Throws if vertices array is empty. */
-export function centroid(vertices: Point2D[]): Point2D {
+export function centroid(vertices: readonly Point2D[]): Point2D {
   if (vertices.length === 0) throw new Error("centroid: vertices array must not be empty");
-  if (vertices.length === 1) return { x: vertices[0].x, y: vertices[0].y };
+  const v0 = vertices[0] as Point2D;
+  if (vertices.length === 1) return { x: v0.x, y: v0.y };
   if (vertices.length === 2) {
-    return midpoint2D(vertices[0], vertices[1]);
+    return midpoint2D(v0, vertices[1] as Point2D);
   }
   const area = polygonArea(vertices);
   if (area === 0) {
@@ -184,15 +187,19 @@ export function centroid(vertices: Point2D[]): Point2D {
   const n = vertices.length;
   for (let i = 0; i < n; i++) {
     const j = (i + 1) % n;
-    const factor = vertices[i].x * vertices[j].y - vertices[j].x * vertices[i].y;
-    cx += (vertices[i].x + vertices[j].x) * factor;
-    cy += (vertices[i].y + vertices[j].y) * factor;
+    const vi: Point2D = vertices[i] as Point2D;
+    const vj: Point2D = vertices[j] as Point2D;
+    const factor = vi.x * vj.y - vj.x * vi.y;
+    cx += (vi.x + vj.x) * factor;
+    cy += (vi.y + vj.y) * factor;
   }
   // Compute signed area to get correct sign for cx/cy
   let signedArea = 0;
   for (let i = 0; i < n; i++) {
     const j = (i + 1) % n;
-    signedArea += vertices[i].x * vertices[j].y - vertices[j].x * vertices[i].y;
+    const vi: Point2D = vertices[i] as Point2D;
+    const vj: Point2D = vertices[j] as Point2D;
+    signedArea += vi.x * vj.y - vj.x * vi.y;
   }
   signedArea /= 2;
   const coeff = 1 / (6 * signedArea);
@@ -203,14 +210,14 @@ export function centroid(vertices: Point2D[]): Point2D {
  * Returns true if all cross products of consecutive edges have the same sign.
  * Requires at least 3 vertices.
  */
-export function isConvex(vertices: Point2D[]): boolean {
+export function isConvex(vertices: readonly Point2D[]): boolean {
   const n = vertices.length;
   if (n < 3) return false;
   let sign = 0;
   for (let i = 0; i < n; i++) {
-    const a = vertices[i];
-    const b = vertices[(i + 1) % n];
-    const c = vertices[(i + 2) % n];
+    const a: Point2D = vertices[i] as Point2D;
+    const b: Point2D = vertices[(i + 1) % n] as Point2D;
+    const c: Point2D = vertices[(i + 2) % n] as Point2D;
     const cross = crossProduct2D(subtract2D(b, a), subtract2D(c, b));
     if (cross !== 0) {
       const s = cross > 0 ? 1 : -1;
@@ -228,17 +235,16 @@ export function isConvex(vertices: Point2D[]): boolean {
  * Ray casting algorithm to test if point p is inside polygon.
  * Points on edges are considered inside.
  */
-export function pointInPolygon(p: Point2D, polygon: Point2D[]): boolean {
+export function pointInPolygon(p: Point2D, polygon: readonly Point2D[]): boolean {
   const n = polygon.length;
   if (n < 3) return false;
   let inside = false;
   for (let i = 0, j = n - 1; i < n; j = i++) {
-    const xi = polygon[i].x;
-    const yi = polygon[i].y;
-    const xj = polygon[j].x;
-    const yj = polygon[j].y;
+    const pi: Point2D = polygon[i] as Point2D;
+    const pj: Point2D = polygon[j] as Point2D;
     const intersect =
-      yi > p.y !== yj > p.y && p.x < ((xj - xi) * (p.y - yi)) / (yj - yi) + xi;
+      pi.y > p.y !== pj.y > p.y &&
+      p.x < ((pj.x - pi.x) * (p.y - pi.y)) / (pj.y - pi.y) + pi.x;
     if (intersect) inside = !inside;
   }
   return inside;
@@ -246,69 +252,67 @@ export function pointInPolygon(p: Point2D, polygon: Point2D[]): boolean {
 
 /**
  * Graham scan convex hull.
- * Returns vertices in CCW order. Handles collinear points by excluding them
- * from hull edges (strict hull).
+ * Returns vertices in CCW order.
  */
-export function convexHull(points: Point2D[]): Point2D[] {
+export function convexHull(points: readonly Point2D[]): Point2D[] {
   const n = points.length;
   if (n <= 1) return points.slice();
   if (n === 2) return points.slice();
 
   // Find pivot: lowest y, then leftmost x
-  let pivot = 0;
+  let pivotIdx = 0;
   for (let i = 1; i < n; i++) {
-    if (
-      points[i].y < points[pivot].y ||
-      (points[i].y === points[pivot].y && points[i].x < points[pivot].x)
-    ) {
-      pivot = i;
+    const pi: Point2D = points[i] as Point2D;
+    const pp: Point2D = points[pivotIdx] as Point2D;
+    if (pi.y < pp.y || (pi.y === pp.y && pi.x < pp.x)) {
+      pivotIdx = i;
     }
   }
 
-  const sorted = points
-    .slice()
-    .filter((_, i) => i !== pivot);
+  const base: Point2D = points[pivotIdx] as Point2D;
+  const rest: Point2D[] = [];
+  for (let i = 0; i < n; i++) {
+    if (i !== pivotIdx) rest.push(points[i] as Point2D);
+  }
 
-  const base = points[pivot];
-
-  sorted.sort((a, b) => {
+  rest.sort((a, b) => {
     const cross = crossProduct2D(subtract2D(a, base), subtract2D(b, base));
     if (cross !== 0) return -cross; // CCW order
-    // Same angle: sort by distance ascending (we'll keep only farthest)
     return distance2D(base, a) - distance2D(base, b);
   });
 
   // Remove collinear duplicates — keep farthest for same angle
   const filtered: Point2D[] = [];
   let i = 0;
-  while (i < sorted.length) {
+  while (i < rest.length) {
+    const ri: Point2D = rest[i] as Point2D;
     let j = i + 1;
     while (
-      j < sorted.length &&
-      crossProduct2D(subtract2D(sorted[j], base), subtract2D(sorted[i], base)) === 0
+      j < rest.length &&
+      crossProduct2D(subtract2D(rest[j] as Point2D, base), subtract2D(ri, base)) === 0
     ) {
       j++;
     }
-    // Keep only the farthest among [i, j)
-    filtered.push(sorted[j - 1]);
+    filtered.push(rest[j - 1] as Point2D);
     i = j;
   }
 
   if (filtered.length === 0) return [base];
-  if (filtered.length === 1) return [base, filtered[0]];
+  if (filtered.length === 1) return [base, filtered[0] as Point2D];
 
-  const hull: Point2D[] = [base, filtered[0], filtered[1]];
+  const hull: Point2D[] = [base, filtered[0] as Point2D, filtered[1] as Point2D];
   for (let k = 2; k < filtered.length; k++) {
+    const fk: Point2D = filtered[k] as Point2D;
     while (
       hull.length >= 2 &&
       crossProduct2D(
-        subtract2D(hull[hull.length - 1], hull[hull.length - 2]),
-        subtract2D(filtered[k], hull[hull.length - 2])
+        subtract2D(hull[hull.length - 1] as Point2D, hull[hull.length - 2] as Point2D),
+        subtract2D(fk, hull[hull.length - 2] as Point2D)
       ) <= 0
     ) {
       hull.pop();
     }
-    hull.push(filtered[k]);
+    hull.push(fk);
   }
   return hull;
 }
@@ -358,8 +362,9 @@ export function segmentIntersects(
     // Collinear — check 1D overlap
     const len1Sq = dotProduct2D(d1, d1);
     if (len1Sq === 0) {
-      // p1=p2, check if on p3-p4
-      return closestPointOnSegmentParam(p1, p3, p4) >= 0;
+      // p1=p2 degenerate
+      const t = closestPointOnSegmentParam(p1, p3, p4);
+      return t >= 0 && t <= 1;
     }
     const t3 = dotProduct2D(subtract2D(p3, p1), d1) / len1Sq;
     const t4 = dotProduct2D(subtract2D(p4, p1), d1) / len1Sq;
@@ -373,7 +378,7 @@ export function segmentIntersects(
   return t >= 0 && t <= 1 && u >= 0 && u <= 1;
 }
 
-/** Helper: parameter t of closest point on segment from p. Not exported. */
+/** Helper: parameter t of closest point on segment from p. */
 function closestPointOnSegmentParam(p: Point2D, segStart: Point2D, segEnd: Point2D): number {
   const seg = subtract2D(segEnd, segStart);
   const lenSq = dotProduct2D(seg, seg);
@@ -431,7 +436,7 @@ export function circleCircumference(radius: number): number {
 
 /**
  * Relationship between two circles:
- * - 'none': do not intersect and one is not inside the other
+ * - 'none': do not intersect and neither is inside the other
  * - 'tangent': internally or externally tangent
  * - 'intersecting': two intersection points
  * - 'contained': one circle is entirely inside the other
@@ -583,13 +588,14 @@ export function destinationPoint(
  * Throws if points array is empty.
  */
 export function boundingBox(
-  points: Array<{ lat: number; lon: number }>
+  points: ReadonlyArray<{ lat: number; lon: number }>
 ): { minLat: number; maxLat: number; minLon: number; maxLon: number } {
   if (points.length === 0) throw new Error("boundingBox: points array must not be empty");
-  let minLat = points[0].lat;
-  let maxLat = points[0].lat;
-  let minLon = points[0].lon;
-  let maxLon = points[0].lon;
+  const first = points[0] as { lat: number; lon: number };
+  let minLat = first.lat;
+  let maxLat = first.lat;
+  let minLon = first.lon;
+  let maxLon = first.lon;
   for (const pt of points) {
     if (pt.lat < minLat) minLat = pt.lat;
     if (pt.lat > maxLat) maxLat = pt.lat;
@@ -688,24 +694,27 @@ export function basketballZone(
   const CORNER_THREE_Y_HIGH = 47;
   const CORNER_DIST = 14;
 
-  // Paint: within 8 ft of y=25 (lane width 16ft / 2 = 8), within 19 ft of basket
+  // Paint: within 8 ft of y=25 (lane width 16ft / 2 = 8), within 19 ft deep of basket
   const paintWidth = 8; // half lane width
   const paintDepth = 19;
   const inLane = Math.abs(y - 25) <= paintWidth;
   const inDepth =
-    side === 'left' ? x >= basket.x && x <= basket.x + paintDepth
+    side === 'left'
+      ? x >= basket.x && x <= basket.x + paintDepth
       : x <= basket.x && x >= basket.x - paintDepth;
 
   if (inLane && inDepth) return 'paint';
 
-  // Three-point corner
+  // Three-point corner: sideline area within 14ft of basket
   const isCorner = (y < CORNER_THREE_Y_LOW || y > CORNER_THREE_Y_HIGH) && dist <= CORNER_DIST;
   if (isCorner) return 'three-point-corner';
 
   // Three-point arc (outside the arc)
   if (dist > THREE_POINT_RADIUS) {
-    // Distinguish wing vs top
-    const angleFromBasket = Math.abs(Math.atan2(y - 25, side === 'left' ? x - basket.x : basket.x - x));
+    // Distinguish wing vs top based on angle from baseline
+    const angleFromBasket = Math.abs(
+      Math.atan2(y - 25, side === 'left' ? x - basket.x : basket.x - x)
+    );
     if (angleFromBasket > Math.PI / 3) {
       return 'three-point-wing';
     }
@@ -717,34 +726,22 @@ export function basketballZone(
 }
 
 /**
- * Hockey rink zone (200 ft rink).
- * faceoffSideLeft: if true, defensive zone is at x=0, offensive at x=200.
- * Zones: 0-25 defensive, 25-75 neutral, 75-100... wait.
- * Spec: defensive zone 0-25, neutral 25-75, offensive 75-100 (flip if right side).
- * Note: The spec says 75-100 for offensive, so rink seems 0-100 normalized. But
- * the parameter is xFeet and says "rink 200ft". We interpret the spec as:
- * 0-50 ft defensive, 50-150 ft neutral, 150-200 ft offensive for left side.
- * BUT the spec literally says "0-25, 25-75, 75-100" which maps to half-rink (0-100).
- * We'll use the numeric boundaries from the spec literally.
+ * Hockey rink zone.
+ * faceoffSideLeft: if true, defensive zone is at x=0-25, offensive 75-100.
+ * Zones: 0-25 defensive, 25-75 neutral, 75-100 offensive.
+ * If faceoffSideLeft is false, zones are flipped (x=0-25 is offensive).
  */
 export function hockeyZone(
   xFeet: number,
   faceoffSideLeft: boolean
 ): 'defensive' | 'neutral' | 'offensive' {
-  // Map to 0-100 scale if input is in 0-200 range
-  // Spec says "rink 200ft" but zones listed as "0-25, 25-75, 75-100"
-  // This implies they normalize to 0-100 (i.e., the boundaries are percentages of half-rink)
-  // We treat xFeet as already in 0-100 range per the spec's boundary values.
-  let x = xFeet;
-
   if (faceoffSideLeft) {
-    if (x <= 25) return 'defensive';
-    if (x <= 75) return 'neutral';
+    if (xFeet <= 25) return 'defensive';
+    if (xFeet <= 75) return 'neutral';
     return 'offensive';
   } else {
-    // flip
-    if (x >= 75) return 'defensive';
-    if (x >= 25) return 'neutral';
+    if (xFeet >= 75) return 'defensive';
+    if (xFeet >= 25) return 'neutral';
     return 'offensive';
   }
 }
@@ -758,7 +755,7 @@ export function hockeyZone(
 export function cricketFieldRegion(angleDeg: number): string {
   // Normalize to [0, 360)
   const a = ((angleDeg % 360) + 360) % 360;
-  const regions = [
+  const regions: readonly string[] = [
     'fine-leg',
     'square-leg',
     'mid-wicket',
@@ -768,8 +765,8 @@ export function cricketFieldRegion(angleDeg: number): string {
     'point',
     'third-man',
   ];
-  const idx = Math.floor(a / 45);
-  return regions[Math.min(idx, 7)];
+  const idx = Math.min(Math.floor(a / 45), 7);
+  return regions[idx] as string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -792,13 +789,10 @@ export function projectileRange(
   const v0y = velocityMps * Math.sin(theta);
 
   if (heightDiff === 0) {
-    // Standard formula: R = v² sin(2θ) / g
     return (velocityMps * velocityMps * Math.sin(2 * theta)) / G;
   }
 
-  // Solve for time: 0 = v0y*t - 0.5*g*t² + heightDiff => landing at y=heightDiff below
-  // y(t) = v0y*t - 0.5*G*t² = -heightDiff (if landing is lower, heightDiff < 0)
-  // 0.5*G*t² - v0y*t - heightDiff = 0
+  // Solve quadratic: 0.5*G*t² - v0y*t - heightDiff = 0
   const a = 0.5 * G;
   const b = -v0y;
   const c = -heightDiff;
@@ -819,7 +813,7 @@ export function projectileMaxHeight(velocityMps: number, angleDeg: number): numb
 
 /**
  * Angle (degrees) that maximizes range for given velocity and height differential.
- * For flat terrain: 45°. For height advantage (positive heightDiff), angle < 45°.
+ * For flat terrain: 45°.
  */
 export function optimalAngle(velocityMps: number, heightDiff = 0): number {
   if (heightDiff === 0) return 45;
@@ -839,7 +833,7 @@ export function optimalAngle(velocityMps: number, heightDiff = 0): number {
 
 /**
  * Exponential decay of football spin rate.
- * footballSpinDecay(initialSpin, time, decayRate=0.1) = initialSpin * e^(-decayRate * time)
+ * result = initialSpin * e^(-decayRate * time), decayRate default 0.1 per second
  */
 export function footballSpinDecay(
   initialSpin: number,
@@ -852,6 +846,7 @@ export function footballSpinDecay(
 /**
  * Discrete trajectory points of a projectile.
  * Returns steps+1 points from launch (t=0) to landing.
+ * Default steps = 20.
  */
 export function shotArc(
   velocityMps: number,
@@ -904,7 +899,7 @@ export function basketballMakesProbability(
   const angleDev = Math.abs(angleDeg - optAngle);
   prob -= 0.01 * angleDev;
 
-  // Velocity has minor influence (unused in simplified model but parameter kept)
+  // velocityFtPerSec is unused in this simplified model (parameter kept for API)
   void velocityFtPerSec;
 
   return Math.max(0, Math.min(1, prob));

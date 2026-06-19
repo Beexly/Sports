@@ -49,6 +49,13 @@ import {
 
 const approx = (a: number, b: number, tol = 1e-6) => Math.abs(a - b) < tol;
 
+/** Safe index — asserts element exists */
+function idx<T>(arr: T[], i: number): T {
+  const v = arr[i];
+  if (v === undefined) throw new Error(`No element at index ${i}`);
+  return v;
+}
+
 /** Build small ratings map for testing */
 function makeRatings(
   data: Record<string, Record<string, number>>
@@ -346,10 +353,9 @@ describe("userSimilarityMatrix", () => {
     }
   });
 
-  it("pairs with < 2 shared items are excluded", () => {
-    // dave only shares i2,i3 with others — still 2 items so should be included with carol
+  it("pairs with shared items are included in result", () => {
+    // dave shares i2,i3 with carol — 2 items → should be included
     const daveSims = sims.get("dave");
-    // dave and carol share i2 and i3 — should have 2 shared → included
     expect(daveSims).not.toBeUndefined();
   });
 
@@ -436,7 +442,7 @@ describe("topNRecommendations", () => {
   it("recommendations are sorted by predictedRating desc", () => {
     const recs = topNRecommendations("alice", ratings, sims);
     for (let i = 1; i < recs.length; i++) {
-      expect(recs[i - 1].predictedRating).toBeGreaterThanOrEqual(recs[i].predictedRating);
+      expect(idx(recs, i - 1).predictedRating).toBeGreaterThanOrEqual(idx(recs, i).predictedRating);
     }
   });
 
@@ -545,7 +551,7 @@ describe("computeTFIDF", () => {
     // When every doc contains the term, IDF = log(n/n) = 0
     const result = computeTFIDF([["cat"]]);
     // IDF for 'cat' appearing in 1/1 docs = log(1) = 0 → TF-IDF = 0
-    expect(result[0][0]).toBe(0);
+    expect(idx(idx(result, 0), 0)).toBe(0);
   });
 
   it("two docs, unique term has higher score in its doc", () => {
@@ -562,17 +568,17 @@ describe("computeTFIDF", () => {
     // doc1: cat TF=0, dog TF=1
     // cat IDF = log(2/1) = 0.693..
     // dog IDF = log(2/2) = 0
-    expect(matrix[0][0]).toBeGreaterThan(0); // cat in doc0 has positive TF-IDF
-    expect(matrix[0][1]).toBe(0); // dog in doc0: IDF=0 → TF-IDF=0
-    expect(matrix[1][0]).toBe(0); // cat not in doc1 → TF=0 → TF-IDF=0
-    expect(matrix[1][1]).toBe(0); // dog in doc1: IDF=0 → TF-IDF=0
+    expect(idx(idx(matrix, 0), 0)).toBeGreaterThan(0); // cat in doc0 has positive TF-IDF
+    expect(idx(idx(matrix, 0), 1)).toBe(0);            // dog in doc0: IDF=0 → TF-IDF=0
+    expect(idx(idx(matrix, 1), 0)).toBe(0);            // cat not in doc1 → TF=0
+    expect(idx(idx(matrix, 1), 1)).toBe(0);            // dog in doc1: IDF=0 → TF-IDF=0
   });
 
   it("matrix dimensions: m docs × n unique terms", () => {
     const docs = [["a", "b"], ["b", "c"], ["a", "c", "d"]];
     const matrix = computeTFIDF(docs);
     expect(matrix.length).toBe(3);
-    expect(matrix[0].length).toBe(4); // a,b,c,d
+    expect(idx(matrix, 0).length).toBe(4); // a,b,c,d
   });
 
   it("returns number[][] (no undefined/NaN)", () => {
@@ -589,7 +595,7 @@ describe("computeTFIDF", () => {
   it("single-doc, two distinct terms both have IDF=0", () => {
     // Only one doc → each term in IDF: log(1/1)=0
     const matrix = computeTFIDF([["foo", "bar"]]);
-    expect(matrix[0].every((v) => v === 0)).toBe(true);
+    expect(idx(matrix, 0).every((v) => v === 0)).toBe(true);
   });
 });
 
@@ -623,9 +629,9 @@ describe("buildUserProfile", () => {
   it("single item → features scaled by rating / rating = features", () => {
     const profile = buildUserProfile([{ itemFeatures: [1, 2, 3], rating: 5 }]);
     // weighted avg with only one item: features * 5 / 5 = features
-    expect(approx(profile[0], 1)).toBe(true);
-    expect(approx(profile[1], 2)).toBe(true);
-    expect(approx(profile[2], 3)).toBe(true);
+    expect(approx(idx(profile, 0), 1)).toBe(true);
+    expect(approx(idx(profile, 1), 2)).toBe(true);
+    expect(approx(idx(profile, 2), 3)).toBe(true);
   });
 
   it("two equal-rated items → average", () => {
@@ -633,8 +639,8 @@ describe("buildUserProfile", () => {
       { itemFeatures: [1, 0], rating: 1 },
       { itemFeatures: [0, 1], rating: 1 },
     ]);
-    expect(approx(profile[0], 0.5)).toBe(true);
-    expect(approx(profile[1], 0.5)).toBe(true);
+    expect(approx(idx(profile, 0), 0.5)).toBe(true);
+    expect(approx(idx(profile, 1), 0.5)).toBe(true);
   });
 
   it("higher-rated item has more influence", () => {
@@ -644,14 +650,14 @@ describe("buildUserProfile", () => {
     ]);
     // dim0: (4*1 + 1*0) / 5 = 0.8
     // dim1: (4*0 + 1*1) / 5 = 0.2
-    expect(approx(profile[0], 0.8)).toBe(true);
-    expect(approx(profile[1], 0.2)).toBe(true);
+    expect(approx(idx(profile, 0), 0.8)).toBe(true);
+    expect(approx(idx(profile, 1), 0.2)).toBe(true);
   });
 
   it("zero rating sum → returns zero vector", () => {
     const profile = buildUserProfile([{ itemFeatures: [1, 2], rating: 0 }]);
-    expect(profile[0]).toBe(0);
-    expect(profile[1]).toBe(0);
+    expect(idx(profile, 0)).toBe(0);
+    expect(idx(profile, 1)).toBe(0);
   });
 });
 
@@ -676,13 +682,13 @@ describe("contentBasedRecommendations", () => {
   it("sorts by score descending", () => {
     const recs = contentBasedRecommendations(userProfile, items, new Set());
     for (let i = 1; i < recs.length; i++) {
-      expect(recs[i - 1].score).toBeGreaterThanOrEqual(recs[i].score);
+      expect(idx(recs, i - 1).score).toBeGreaterThanOrEqual(idx(recs, i).score);
     }
   });
 
   it("best match is item a (parallel to profile)", () => {
     const recs = contentBasedRecommendations(userProfile, items, new Set());
-    expect(recs[0].id).toBe("a");
+    expect(idx(recs, 0).id).toBe("a");
   });
 
   it("respects n limit", () => {
@@ -734,7 +740,7 @@ describe("initializeMatrix", () => {
     const m2 = initializeMatrix(4, 4);
     for (let r = 0; r < 4; r++) {
       for (let c = 0; c < 4; c++) {
-        expect(m1[r][c]).toBe(m2[r][c]);
+        expect(idx(idx(m1, r), c)).toBe(idx(idx(m2, r), c));
       }
     }
   });
@@ -768,13 +774,16 @@ describe("matrixFactorizationSGD", () => {
   });
 
   it("predicted ratings converge toward actual after training", () => {
-    // Compare initial vs trained predictions
     const { P: Ptrained, Q: Qtrained } = matrixFactorizationSGD(ratings, 3, 3, 5, 100, 0.01, 0.01);
 
     let errorSum = 0;
     for (const { user, item, rating } of ratings) {
-      const pred = predictMFRating(Ptrained[user], Qtrained[item]);
-      errorSum += Math.abs(pred - rating);
+      const pu = Ptrained[user];
+      const qi = Qtrained[item];
+      if (pu && qi) {
+        const pred = predictMFRating(pu, qi);
+        errorSum += Math.abs(pred - rating);
+      }
     }
     // After 100 epochs, total absolute error should be reasonable
     expect(errorSum).toBeLessThan(ratings.length * 4); // generous bound
@@ -824,7 +833,7 @@ describe("reconstructMatrix", () => {
     const P = [[3]];
     const Q = [[4]];
     const R = reconstructMatrix(P, Q);
-    expect(R[0][0]).toBe(12);
+    expect(idx(idx(R, 0), 0)).toBe(12);
   });
 
   it("2×2 reconstruction", () => {
@@ -832,10 +841,10 @@ describe("reconstructMatrix", () => {
     const Q = [[1, 0], [0, 1]];
     const R = reconstructMatrix(P, Q);
     // R = I * I^T = I
-    expect(R[0][0]).toBe(1);
-    expect(R[0][1]).toBe(0);
-    expect(R[1][0]).toBe(0);
-    expect(R[1][1]).toBe(1);
+    expect(idx(idx(R, 0), 0)).toBe(1);
+    expect(idx(idx(R, 0), 1)).toBe(0);
+    expect(idx(idx(R, 1), 0)).toBe(0);
+    expect(idx(idx(R, 1), 1)).toBe(1);
   });
 
   it("dimensions: numUsers × numItems", () => {
@@ -945,7 +954,7 @@ describe("diversifiedTopN", () => {
 
   it("first pick is the highest-scoring item", () => {
     const recs = diversifiedTopN(candidates, 5);
-    expect(recs[0].id).toBe("a");
+    expect(idx(recs, 0).id).toBe("a");
   });
 
   it("diverse items preferred over similar high-scored items", () => {
@@ -975,9 +984,8 @@ describe("diversifiedTopN", () => {
 
   it("diversityWeight=0 → pure score ordering", () => {
     const recs = diversifiedTopN(candidates, 5, 0);
-    const scores = recs.map((r) => r.score);
-    for (let i = 1; i < scores.length; i++) {
-      expect(scores[i - 1]).toBeGreaterThanOrEqual(scores[i]);
+    for (let i = 1; i < recs.length; i++) {
+      expect(idx(recs, i - 1).score).toBeGreaterThanOrEqual(idx(recs, i).score);
     }
   });
 });
@@ -1039,9 +1047,9 @@ describe("sportPreferenceVector", () => {
 
   it("single sport → unit vector with 1 at that index", () => {
     const vec = sportPreferenceVector([{ sport: "NBA", engagementScore: 5 }], sports);
-    expect(approx(vec[0], 1)).toBe(true);
-    expect(vec[1]).toBe(0);
-    expect(vec[2]).toBe(0);
+    expect(approx(idx(vec, 0), 1)).toBe(true);
+    expect(idx(vec, 1)).toBe(0);
+    expect(idx(vec, 2)).toBe(0);
   });
 
   it("unit vector (magnitude = 1) when non-zero", () => {
@@ -1067,7 +1075,7 @@ describe("sportPreferenceVector", () => {
     ];
     const vec = sportPreferenceVector(history, sports);
     // total NBA=5, others=0 → normalized: [1, 0, 0]
-    expect(approx(vec[0], 1)).toBe(true);
+    expect(approx(idx(vec, 0), 1)).toBe(true);
   });
 
   it("returns vector of length = sports.length", () => {
@@ -1138,15 +1146,13 @@ describe("bettorProfile", () => {
     expect(p.sharpness).toBeLessThanOrEqual(1 + 1e-9);
   });
 
-  it("perfect sharpness: confidence always predicts wins", () => {
-    // higher confidence → always win
+  it("constant outcomes → pearson=0 (std of outcome is 0)", () => {
+    // Both won → constant outcome → pearson=0
     const history = [
       { confidence: 0.6, won: true, stake: 100 },
       { confidence: 0.8, won: true, stake: 100 },
     ];
-    // Both won → constant outcome → pearson=0 (std of outcome=0)
     const p = bettorProfile(history);
-    // All won means outcome vector is constant → pearson=0
     expect(p.sharpness).toBe(0);
   });
 });
@@ -1181,13 +1187,14 @@ describe("similarBettors", () => {
   });
 
   it("profile identical to a pool member → that member is first", () => {
-    const target = { ...pool[0] };
+    const target = pool[0];
+    if (!target) throw new Error("pool is empty");
     const result = similarBettors(
       { avgConfidence: target.avgConfidence, winRate: target.winRate, avgStake: target.avgStake, sharpness: target.sharpness },
       pool,
       1
     );
-    expect(result[0]).toBe("u1");
+    expect(idx(result, 0)).toBe("u1");
   });
 
   it("k larger than pool returns all pool members", () => {
@@ -1218,7 +1225,7 @@ describe("trendingPicks", () => {
     const views = new Map([["recent", 100], ["old", 100]]);
     const recency = new Map([["recent", nowSeconds], ["old", tenHoursAgo]]);
     const result = trendingPicks(views, recency);
-    expect(result[0].pickId).toBe("recent");
+    expect(idx(result, 0).pickId).toBe("recent");
   });
 
   it("sorted descending by score", () => {
@@ -1230,7 +1237,7 @@ describe("trendingPicks", () => {
     ]);
     const result = trendingPicks(views, recency);
     for (let i = 1; i < result.length; i++) {
-      expect(result[i - 1].score).toBeGreaterThanOrEqual(result[i].score);
+      expect(idx(result, i - 1).score).toBeGreaterThanOrEqual(idx(result, i).score);
     }
   });
 
@@ -1244,8 +1251,8 @@ describe("trendingPicks", () => {
   it("higher lambda → stronger time decay", () => {
     const views = new Map([["p1", 1000]]);
     const recency = new Map([["p1", oneHourAgo]]);
-    const score_low = trendingPicks(views, recency, 0.01)[0].score;
-    const score_high = trendingPicks(views, recency, 1.0)[0].score;
+    const score_low = idx(trendingPicks(views, recency, 0.01), 0).score;
+    const score_high = idx(trendingPicks(views, recency, 1.0), 0).score;
     expect(score_low).toBeGreaterThan(score_high);
   });
 
@@ -1253,7 +1260,7 @@ describe("trendingPicks", () => {
     const views = new Map([["p1", 0]]);
     const recency = new Map([["p1", nowSeconds]]);
     const result = trendingPicks(views, recency);
-    expect(result[0].score).toBe(0);
+    expect(idx(result, 0).score).toBe(0);
   });
 
   it("scores are non-negative", () => {
@@ -1285,8 +1292,12 @@ describe("matrixFactorizationSGD convergence", () => {
     const rmse = (P: number[][], Q: number[][]) => {
       let sum = 0;
       for (const { user, item, rating } of observations) {
-        const pred = predictMFRating(P[user], Q[item]);
-        sum += (pred - rating) ** 2;
+        const pu = P[user];
+        const qi = Q[item];
+        if (pu && qi) {
+          const pred = predictMFRating(pu, qi);
+          sum += (pred - rating) ** 2;
+        }
       }
       return Math.sqrt(sum / observations.length);
     };
@@ -1373,20 +1384,22 @@ describe("Integration: content-based pipeline", () => {
   it("TF-IDF produces a valid matrix", () => {
     const matrix = computeTFIDF(docs);
     expect(matrix.length).toBe(4);
-    expect(matrix[0].length).toBeGreaterThan(0);
+    expect(idx(matrix, 0).length).toBeGreaterThan(0);
   });
 
   it("content-based pipeline returns sorted results", () => {
     const matrix = computeTFIDF(docs);
+    const row0 = idx(matrix, 0);
+    const row2 = idx(matrix, 2);
     const userProfile = buildUserProfile([
-      { itemFeatures: matrix[0], rating: 5 },
-      { itemFeatures: matrix[2], rating: 4 },
+      { itemFeatures: row0, rating: 5 },
+      { itemFeatures: row2, rating: 4 },
     ]);
     const items = matrix.map((f, i) => ({ id: `doc${i}`, features: f }));
     const rated = new Set(["doc0", "doc2"]);
     const recs = contentBasedRecommendations(userProfile, items, rated);
     for (let i = 1; i < recs.length; i++) {
-      expect(recs[i - 1].score).toBeGreaterThanOrEqual(recs[i].score);
+      expect(idx(recs, i - 1).score).toBeGreaterThanOrEqual(idx(recs, i).score);
     }
   });
 });
@@ -1429,7 +1442,7 @@ describe("Integration: sports helpers pipeline", () => {
     const prefVec = sportPreferenceVector(engagementHistory, sports);
 
     expect(approx(affinity, 1)).toBe(true); // 2/2 wins
-    expect(prefVec[0]).toBeGreaterThan(prefVec[1]); // NBA > NFL
-    expect(prefVec[2]).toBe(0); // No MLB history
+    expect(idx(prefVec, 0)).toBeGreaterThan(idx(prefVec, 1)); // NBA > NFL
+    expect(idx(prefVec, 2)).toBe(0); // No MLB history
   });
 });

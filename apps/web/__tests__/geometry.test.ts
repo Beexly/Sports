@@ -1191,21 +1191,23 @@ describe("shotArc", () => {
 
   it("first point is at origin (0,0)", () => {
     const arc = shotArc(20, 45);
-    expect(arc[0].x).toBeCloseTo(0, 5);
-    expect(arc[0].y).toBeCloseTo(0, 5);
+    const first = arc[0]!;
+    expect(first.x).toBeCloseTo(0, 5);
+    expect(first.y).toBeCloseTo(0, 5);
   });
 
   it("last point has y ≈ 0 (lands at launch height)", () => {
     const arc = shotArc(20, 45);
-    const last = arc[arc.length - 1];
+    const last = arc[arc.length - 1]!;
     expect(last.y).toBeCloseTo(0, 3);
   });
 
   it("peak is somewhere in the middle", () => {
     const arc = shotArc(30, 60, 100);
     const midIdx = Math.floor(arc.length / 2);
-    const peak = arc[midIdx];
-    expect(peak.y).toBeGreaterThan(arc[0].y);
+    const peak = arc[midIdx]!;
+    const first = arc[0]!;
+    expect(peak.y).toBeGreaterThan(first.y);
   });
 
   it("custom step count", () => {
