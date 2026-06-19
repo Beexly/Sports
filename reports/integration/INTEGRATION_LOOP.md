@@ -39,19 +39,28 @@ At most ONE in-flight slice editing `app/cockpit/layout.tsx` (cockpit nav) and O
 | 3 | Pace & Schedule Optimizer Lab tool (`/lab`, `/api/lab/optimize-pace-schedule`) | B (customer) | `ab1bbf7e` | tsc+22 vitest+trust+build |
 | 4 | Market & Line Intelligence workbench (`/cockpit/market-analysis`, DB-read only) | A (internal) | `882be401` | tsc+10 vitest+nav 42+trust+freeze+build |
 | 5 | Multi-Sport Matchup Compare Lab tool (`/lab`, `/api/lab/compare-matchup`) | B (customer) | `1d3246b1` | tsc+22 vitest+trust+build |
+| 6 | Sports Diagnostics workbench (`/cockpit/sports-diagnostics`, DB-read only) | A (internal) | `3d2662e1` | tsc+9 vitest+nav 43+trust+freeze+build |
+| 7 | No-Vig Fair Odds & Hold calculator Lab tool (`/lab`, `/api/lab/no-vig`) | B (customer) | `272212ee` | tsc+22 vitest+trust+build |
 
 ## Queue (priority order; honest value × low effort × low risk first)
 - [x] Line-Movement / Market Intelligence workbench → shipped (slice 4).
 - [x] Multi-Sport Matchup Compare Lab tool → shipped (slice 5).
-- [ ] Sports Diagnostics workbench (`/cockpit/sports-diagnostics`) — `sports/nba|nfl-analytics`,
-      `power-ranking`, `elo-utils`, `schedule-utils`, `team-normalize` on team game logs. Internal.
-- [ ] No-Vig Fair-Odds & Hold calculator Lab tool — `sports/spread-math` devig + `math` on
-      user-supplied book prices (teaches no-vig fair probability + hold). Customer, pure compute.
+- [x] Sports Diagnostics workbench → shipped (slice 6).
+- [x] No-Vig Fair-Odds & Hold calculator → shipped (slice 7).
 - [ ] Calibration Learning workbench (extend `/cockpit/calibration`) — `forecasting-analytics`,
       `clustering`, `regression`, `statistics` on pick signal snapshots → signal-outcome correlation
       (honest "correlation not causation" + small-sample caveats). Internal.
 - [ ] Discoverability + polish pass: surface the Lab tools on relevant public pages; ensure honest
       gated/empty states; SEO metadata on new public routes.
+
+## Realized-value scorecard (running)
+8 Lab tools live (game-sim, parlay, bankroll, pace-schedule, matchup-compare, no-vig, glass-box,
+calibration-explorer) + 3 internal cockpit workbenches (pick-analytics, market-analysis,
+sports-diagnostics) + the free-data settlement pool. The dormant 50 sports / 36 math / 30 analytics
+libs are now consumed across these surfaces (sports: power-ranking/elo/schedule/pace/spread-math/
+team-normalize live; math: probability/probability-distributions/statistics/bankroll/
+line-movement-classify live; analytics: line-movement/market-analytics/streak live). Remaining
+dormant = the per-league niche libs (no published picks) + weather/injury (no data) — honestly deferred.
 
 ## Deferred (honest)
 - Niche-sport libs (~20: archery/badminton/curling/…) and weather/injury libs: framework-ready, **no data
