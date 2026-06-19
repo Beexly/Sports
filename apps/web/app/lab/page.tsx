@@ -8,6 +8,11 @@ import { BRAND_COLORS } from "@/lib/brand";
 import { GameSimulatorTool } from "@/components/lab/game-simulator-tool";
 import { ParlayAnalyzerTool } from "@/components/lab/parlay-analyzer-tool";
 import { BankrollOptimizerTool } from "@/components/lab/bankroll-optimizer-tool";
+import { GlassBoxExplainer } from "@/components/lab/glass-box-explainer";
+import { loadGlassBoxPicks } from "@/lib/lab/glass-box";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Galaxy Lab — Run the Model Yourself",
@@ -34,7 +39,7 @@ const TOOLS = [
   },
   {
     name: "Glass-box pick explainer",
-    status: "pro",
+    status: "live",
     desc: "The full devig → edge → distribution trail behind a real published pick. Unlocks with Pro.",
   },
   {
@@ -66,7 +71,11 @@ function StatusChip({ status }: { status: string }): JSX.Element {
   );
 }
 
-export default function GalaxyLabPage(): JSX.Element {
+export default async function GalaxyLabPage(): Promise<JSX.Element> {
+  const [entitlements, glassBox] = await Promise.all([
+    getViewerEntitlements(),
+    loadGlassBoxPicks(),
+  ]);
   return (
     <div style={{ backgroundColor: BRAND_COLORS.obsidianBlack }} className="min-h-screen">
       <Nav />
@@ -117,6 +126,20 @@ export default function GalaxyLabPage(): JSX.Element {
               Bankroll &amp; Kelly optimizer
             </h2>
             <BankrollOptimizerTool />
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section className="mt-12">
+            <h2 className="mb-1 font-display text-lg font-semibold text-white">
+              Glass-box pick explainer
+            </h2>
+            <p className="mb-4 max-w-2xl text-sm text-ink-300">
+              The full scoring trail behind real published picks. The header —
+              grade, Edge Index, result — is public on every tier; the per-factor
+              point contributions unlock with Pro.
+            </p>
+            <GlassBoxExplainer picks={glassBox} entitlements={entitlements} />
           </section>
         </Reveal>
 
