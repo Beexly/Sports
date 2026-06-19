@@ -114,3 +114,25 @@ Judgment / Tetlock, and FiveThirtyEight's "Checking Our Work."**
 *Bottom line: GSE doesn't need more features to be the best of 2026. It needs to make the one
 thing nobody else will do — prove itself, honestly and publicly — the unmistakable center of
 the product.*
+
+---
+
+## 4. The honest engine is built — wire it into the EXISTING surface (no new page)
+
+The research's accuracy-presentation spec is now a **pure, tested module**, not just a doc:
+`apps/web/lib/calibration/reliability-presentation.ts` → `buildReliabilityPresentation(samples)`.
+It composes on the existing calibration math and adds exactly what the research says makes a
+record trustworthy:
+- per-bin **consistency bands** (Metaculus/538) + **over/under-confidence** verdicts,
+- the plain-language **"We rated N picks ~70%; they won 71%"** readout (538),
+- **Brier** + **Brier-skill vs the 0.25 always-50% baseline** (Good Judgment),
+- the overall **hit-rate with a Wilson 95% CI** (never a bare stat),
+- the research **sample-size gate** (`building`/`early`/`developing`/`credible`) — below 100
+  settled it returns `displayReady:false` + a "building the record" verdict (no fabrication).
+
+**Wire it into the EXISTING `/reliability` ("The Receipts") and/or `/performance` page — do
+NOT add a new surface.** Feed it the settled `{probability, outcome}` samples those pages
+already load; render the bins as the reliability diagram (predicted x, observed y, the 45°
+diagonal, the band, the tooltip = `bin.readout`), show `brierSkillVsBaseline` + `verdictLine`,
+and render the honest gated state when `displayReady` is false. Words: `ACCURACY_PROOF_COPY.md`.
+14 unit tests prove the math + the honesty floor.
