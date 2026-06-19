@@ -73,6 +73,9 @@ VERCEL_ENV.txt
 screenshots/
 /test-results/
 /playwright-report/
+# Playwright e2e run artifacts (traces/error-contexts); committed evidence is the
+# settled screenshots beside this dir, not the per-run failure dumps.
+docs/visual-qa/*/_artifacts/
 
 # Ignore local .claude config, but DO track shared project commands.
 .claude/*

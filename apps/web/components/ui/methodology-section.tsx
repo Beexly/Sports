@@ -65,7 +65,8 @@ const ITEMS: readonly MethodologyItem[] = [
 function laneAccent(lane: MethodologyItem["lane"]): string {
   switch (lane) {
     case "model":
-      return "text-ultraviolet";
+      // glow (#9F87FF) clears AA as small label text; base #7A5CFF is 4.2:1.
+      return "text-ultraviolet-glow";
     case "gate":
       return "text-plasma";
     case "data":

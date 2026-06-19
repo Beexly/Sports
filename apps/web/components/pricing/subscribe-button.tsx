@@ -25,7 +25,7 @@ type Props = {
 };
 
 const PRIMARY_CLASSES =
-  "w-full rounded-xl bg-brand-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:cursor-not-allowed disabled:opacity-60";
+  "w-full rounded-xl bg-brand-700 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60";
 const GHOST_CLASSES =
   "w-full rounded-xl border border-ultraviolet/60 bg-ultraviolet/10 py-2.5 text-sm font-semibold text-ultraviolet-glow transition-colors hover:bg-ultraviolet/25 disabled:cursor-not-allowed disabled:opacity-60";
 

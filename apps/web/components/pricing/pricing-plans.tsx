@@ -112,7 +112,7 @@ export function PricingPlans({
                     className={[
                       "rounded-full px-3 py-1 text-xs font-bold",
                       isHero
-                        ? "bg-ultraviolet text-white shadow-[0_0_14px_rgba(122,92,255,0.5)]"
+                        ? "bg-ultraviolet-deep text-white shadow-[0_0_14px_rgba(122,92,255,0.5)]"
                         : "bg-plasma text-plasma-ink shadow-[0_0_14px_rgba(255,45,214,0.6)]",
                     ].join(" ")}
                   >

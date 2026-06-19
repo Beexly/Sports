@@ -421,6 +421,9 @@ export default function PricingPage() {
             <div
               className="mt-8 overflow-x-auto overflow-hidden rounded-2xl border"
               style={{ borderColor: "rgba(255,255,255,0.10)", background: "rgba(8,6,20,0.5)" }}
+              tabIndex={0}
+              role="region"
+              aria-label="Plan comparison — scroll horizontally to see all columns"
             >
               <table className="w-full text-sm">
                 <thead>

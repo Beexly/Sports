@@ -393,8 +393,15 @@
      mid-fade low-contrast state that fails axe on animated cards. */
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
+    /* A negative delay starts every animation already past its (instant)
+       duration, so delayed entrance animations (e.g. cards with inline
+       animation-delay) land on their final, fully-opaque frame immediately
+       instead of sitting in the backwards-filled `from` state during the
+       delay — which is what left axe catching a transient low-contrast frame. */
+    animation-delay: -1ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 }

@@ -64,10 +64,10 @@ export function DecisionAutopsyPreview(): JSX.Element {
         </Link>
       </div>
 
+      <p className="mb-4 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-400">
+        Anatomy of a settled decision — illustrative trail
+      </p>
       <ol className="relative space-y-0 border-l border-white/[0.08] pl-6">
-        <p className="mb-4 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-400">
-          Anatomy of a settled decision — illustrative trail
-        </p>
         {TRAIL.map((item) => (
           <li key={item.title} className="relative pb-6 last:pb-0">
             <span

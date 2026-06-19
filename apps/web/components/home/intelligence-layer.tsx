@@ -45,21 +45,28 @@ export function IntelligenceLayer() {
         </Reveal>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {SURFACES.map((s) => (
+          {SURFACES.map((s) => {
+            // The decorative top-bar keeps the true accent; small label text must
+            // clear AA on the card surface (#131022). Soft ultraviolet (#7A5CFF)
+            // lands at 4.26:1 as text, so the violet entries use its lighter
+            // `glow` shade (#9F87FF, ~6:1) for the tag + "Open →" only.
+            const textAccent = s.accent === BRAND_COLORS.softUltraviolet ? "#9F87FF" : s.accent;
+            return (
             <Link
               key={s.href}
               href={s.href}
               className="surface-card group relative flex flex-col overflow-hidden p-5 transition-transform duration-300 ease-out hover:-translate-y-1"
             >
               <span aria-hidden className="absolute inset-x-0 top-0 h-px opacity-70" style={{ background: `linear-gradient(90deg, transparent, ${s.accent}, transparent)` }} />
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: s.accent }}>{s.tag}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: textAccent }}>{s.tag}</span>
               <h3 className="mt-2 text-lg font-semibold text-white">{s.title}</h3>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-300">{s.desc}</p>
-              <span aria-hidden className="mt-4 inline-flex items-center gap-1 text-sm font-medium transition-transform duration-200 group-hover:translate-x-1" style={{ color: s.accent }}>
+              <span aria-hidden className="mt-4 inline-flex items-center gap-1 text-sm font-medium transition-transform duration-200 group-hover:translate-x-1" style={{ color: textAccent }}>
                 Open →
               </span>
             </Link>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

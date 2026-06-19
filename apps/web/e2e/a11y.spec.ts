@@ -22,6 +22,13 @@ for (const { path, label } of SURFACES) {
   test(`a11y: ${label} has no serious/critical axe violations`, async ({ page }) => {
     await page.goto(path, { waitUntil: "domcontentloaded" });
     await page.locator("main, body").first().waitFor({ state: "visible" });
+    // Measure the SETTLED DOM. Entrance animations (e.g. `animate-fade-up`
+    // cards, 0.5s + up to 180ms stagger) animate opacity 0→1; scanning before
+    // they land catches a transient low-contrast frame. reduced-motion lands
+    // them instantly, but we also wait past the longest entrance so the audit
+    // is deterministic regardless of how the runner emulates motion.
+    await page.waitForLoadState("networkidle").catch(() => {});
+    await page.waitForTimeout(800);
     const results = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
       .analyze();

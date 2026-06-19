@@ -562,11 +562,14 @@ export default async function HomePage(): Promise<JSX.Element> {
           <div
             className="mt-6 overflow-x-auto overflow-hidden rounded-ds-md"
             style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(8,6,20,0.5)" }}
+            tabIndex={0}
+            role="region"
+            aria-label="Public data sources — scroll horizontally to see all columns"
           >
             <table className="w-full min-w-[900px] text-left text-sm">
               <thead
                 className="font-mono text-[10px] uppercase tracking-[0.14em]"
-                style={{ borderBottom: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.40)", background: "rgba(0,229,255,0.04)" }}
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.66)", background: "rgba(0,229,255,0.04)" }}
               >
                 <tr>
                   <th className="px-4 py-3">Intake lane</th>
@@ -591,7 +594,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             + {CONTEXT_INTELLIGENCE_SOURCES.length} context feeds (broadcast claims, beat intelligence,
             studio assets, international reference) graded behind the same gates — all{" "}
             {DATA_SOURCE_STACK.length} lanes on the{" "}
-            <Link href="/integrations" className="text-orbital-cyan hover:text-white">
+            <Link href="/integrations" className="text-orbital-cyan underline underline-offset-2 hover:text-white">
               rights ledger
             </Link>
             .

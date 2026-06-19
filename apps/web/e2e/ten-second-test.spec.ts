@@ -39,10 +39,13 @@ test.describe("front door — locked 10-second test", () => {
     await expect(page.getByRole("link", { name: /See a sample read/i })).toBeVisible();
     await expect(page.getByRole("link", { name: /Join the Founding Desk/i })).toBeVisible();
 
-    // WHY TRUST IT: the three-reason trust strip.
-    await expect(page.getByText(/Closing-line value/i)).toBeVisible();
-    await expect(page.getByText(/Calibrated confidence/i)).toBeVisible();
-    await expect(page.getByText(/No-Bet gate/i)).toBeVisible();
+    // WHY TRUST IT: the three-reason trust strip. These phrases legitimately
+    // recur deeper in the page (methodology, feature cards), so we assert the
+    // hero's copy — the first occurrence in DOM order — which is exactly what
+    // the first-screen 10-second test is about.
+    await expect(page.getByText(/Closing-line value/i).first()).toBeVisible();
+    await expect(page.getByText(/Calibrated confidence/i).first()).toBeVisible();
+    await expect(page.getByText(/No-Bet gate/i).first()).toBeVisible();
   });
 
   test("primary CTAs point at the canonical destinations", async ({ page }) => {
