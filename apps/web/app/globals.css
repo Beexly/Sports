@@ -410,6 +410,12 @@
   to   { transform: scaleX(1); }
 }
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 /* ── Cinematic atmosphere — film grain + vignette ──────────────────────
  * Lifts the dark scenes out of "flat black" into something photographed.
  * Both layers are fixed, pointer-events-none, aria-hidden via the component. */
