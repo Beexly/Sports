@@ -760,8 +760,10 @@ describe("generateApiKey", () => {
 
   it("returns just the token when no prefix provided", () => {
     const key = generateApiKey();
-    expect(key).not.toContain("_");
+    // No prefix => no "<prefix>_" segment prepended. The base64url token itself
+    // may legitimately contain "_", so validate the bare-token format instead.
     expect(key).toMatch(/^[A-Za-z0-9\-_]+$/);
+    expect(generateApiKey("k").startsWith("k_")).toBe(true);
   });
 
   it("generates unique keys", () => {
