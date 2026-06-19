@@ -1,0 +1,75 @@
+name: Green Gate
+
+# Single source of truth for "is the tree green?".
+#
+# This is the comprehensive gate that runs the FULL-REPO checks on every
+# push and pull request. It was added to close a real CI gap: the
+# full-repo typecheck (apps/web tsconfig) and the guardrail scripts were
+# NOT blocking in CI, so debt accumulated silently (2,087 tsc errors plus
+# banned-phrase + guardrail regressions). Every step below is named and
+# any failure fails the job.
+#
+# It intentionally overlaps with ci.yml — ci.yml stays as-is; this is the
+# one job a branch-protection rule can point at to know the tree is green.
+
+on:
+  push:
+    branches: [main, "claude/*", "sports-intelligence-os-*"]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: green-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  green-gate:
+    name: Green gate (typecheck + lint + guardrails + tests + build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      # Placeholder values so the gate never fails for environmental
+      # reasons. These mirror ci.yml's build job — NEVER real secrets.
+      DATABASE_URL: "postgresql://placeholder:placeholder@localhost:5432/placeholder"
+      DIRECT_URL: "postgresql://placeholder:placeholder@localhost:5432/placeholder"
+      NEXTAUTH_SECRET: "build-placeholder"
+      NEXTAUTH_URL: "http://localhost:3000"
+      SKIP_ENV_VALIDATION: "true"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # model-freeze guardrail diffs against git history.
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+
+      - name: Typecheck (apps/web full repo)
+        run: npx tsc --noEmit -p apps/web/tsconfig.json
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Trust gate
+        run: node scripts/guardrails/trust-gate.mjs
+
+      - name: Model freeze
+        run: node scripts/guardrails/model-freeze.mjs
+
+      - name: Unit tests
+        working-directory: apps/web
+        run: npx vitest run
+
+      - name: Build
+        run: npm run build
