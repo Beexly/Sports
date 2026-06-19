@@ -4,6 +4,7 @@ import {
   validateParlayInput,
   runParlayAnalysis,
 } from "@/lib/lab/parlay-analyzer";
+import { checkLabRateLimit } from "@/lib/lab/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,14 @@ export const dynamic = "force-dynamic";
  * Pure compute over the request body: no DB, no secrets, no side effects.
  */
 export async function POST(request: Request): Promise<NextResponse> {
+  const rate = checkLabRateLimit(request);
+  if (!rate.allowed) {
+    return NextResponse.json(
+      { success: false, error: "Rate limit exceeded — please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(rate.retryAfterSec) } },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
