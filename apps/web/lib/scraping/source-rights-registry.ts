@@ -527,6 +527,264 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "the unlock condition is met.",
   },
 
+  // ── Permission required — new candidates ────────────────────────────────────
+  {
+    source_id: "the-athletic",
+    source_name: "The Athletic (NYT Sports)",
+    source_url: "https://theathletic.com",
+    terms_url: "https://theathletic.com/pages/terms-of-service/",
+    robots_url: "https://theathletic.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "news_aggregator",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "low",
+    copyright_expression_risk: "high",
+    database_right_risk: "medium",
+    technical_controls_detected: true,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://theathletic.com/pages/terms-of-service/",
+    ],
+    unlock_condition:
+      "Written licensing agreement with The Athletic Media Company (now a NYT subsidiary). " +
+      "Contact: partnerships@theathletic.com. Note: content is paywalled; only publicly " +
+      "accessible article titles and metadata (publication date, headline, author) may be " +
+      "reviewed manually as facts. Any automated extraction or paywall bypass is prohibited.",
+    vendor_contact: "partnerships@theathletic.com",
+    notes:
+      "Subscription-only sports journalism. ToS prohibit scraping, crawling, or automated " +
+      "access. Article bodies are copyrighted expression — data-rules forbid extraction. " +
+      "The only permitted lane today is a human reading publicly accessible headlines/bylines " +
+      "as factual references (author, date, topic — not article body). " +
+      "Potential value: injury context, coaching signals, lineup news — facts only, " +
+      "sourced via manual research note. No automation until a licensing agreement is in place.",
+  },
+
+  {
+    source_id: "tapology",
+    source_name: "Tapology (MMA/combat sports event database)",
+    source_url: "https://www.tapology.com",
+    terms_url: "https://www.tapology.com/terms",
+    robots_url: "https://www.tapology.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "sports_scores_aggregator",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "low",
+    copyright_expression_risk: "medium",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://www.tapology.com/terms",
+    ],
+    unlock_condition:
+      "Written permission or API/data licensing agreement from Tapology. " +
+      "Contact via tapology.com contact form. Confirm commercial use rights, " +
+      "storage rights, and derived-analytics rights before any automation.",
+    vendor_contact: "https://www.tapology.com/contact",
+    notes:
+      "Community-driven MMA/combat sports event and fighter database. ToS prohibit " +
+      "automated scraping and commercial use without consent. The database of fight " +
+      "records, event schedules, and fighter records is a factual compilation, but " +
+      "Tapology's curation effort may carry database-right risk in the EU. " +
+      "Value: UFC/MMA fight cards, fighter records, odds history — inputs for the " +
+      "combat-sports prediction track. All extraction stays blocked behind the Clearance " +
+      "Engine until written permission is obtained. Manual research note (human review " +
+      "of public pages) is the only permitted lane today.",
+  },
+
+  {
+    source_id: "nfl-schedule-api",
+    source_name: "NFL.com Schedule (public JSON endpoint)",
+    source_url: "https://www.nfl.com/schedules/",
+    terms_url: "https://www.nfl.com/legal/terms-and-conditions/",
+    robots_url: "https://www.nfl.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "official_league_site",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "none",
+    copyright_expression_risk: "medium",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://www.nfl.com/legal/terms-and-conditions/",
+    ],
+    unlock_condition:
+      "Written license or data partnership with the NFL. The Odds API (already approved_api) " +
+      "and nflverse (approved_open_license) are the preferred substitutes for schedule facts — " +
+      "evaluate those first. If direct NFL data is needed, contact NFL Data Solutions " +
+      "(nfldata@nfl.com) for licensing terms.",
+    vendor_contact: "nfldata@nfl.com",
+    notes:
+      "NFL.com ToS prohibit scraping or automated access to site content for commercial use. " +
+      "Schedule facts (teams, dates, times, venues) are not copyrightable, but the NFL's " +
+      "structured database compilation may carry additional rights. " +
+      "Preferred paths: The Odds API for game lines/schedules (already approved), nflverse " +
+      "for historical play-by-play. This entry documents the official site as a candidate " +
+      "only; no automation is enabled. Manual research note (human reads the schedule page) " +
+      "is permitted for one-off fact checks.",
+  },
+
+  {
+    source_id: "pro-football-reference",
+    source_name: "Pro Football Reference (Sports Reference LLC)",
+    source_url: "https://www.pro-football-reference.com",
+    terms_url: "https://www.sports-reference.com/data_use.html",
+    robots_url: "https://www.pro-football-reference.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "sports_data_api",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "medium",
+    technical_controls_detected: true,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://www.sports-reference.com/data_use.html",
+      "https://www.sports-reference.com/sharing.html",
+    ],
+    unlock_condition:
+      "Obtain a Sports Reference commercial data license (sports-reference.com/data_use.html). " +
+      "The data_use page explicitly states automated scraping is not permitted; contact " +
+      "sr-data@sports-reference.com for commercial licensing terms. Preferred substitute: " +
+      "nflverse (CC-BY-4.0, approved_open_license) covers most of the same historical stats.",
+    vendor_contact: "sr-data@sports-reference.com",
+    notes:
+      "Sports Reference explicitly prohibits automated scraping in its data_use policy and " +
+      "rate-limits heavily. Their robots.txt disallows most automated paths. The underlying " +
+      "statistics are facts, but the compiled database carries database-right risk. " +
+      "Value: historical career stats, advanced splits, game logs — but nflverse is the " +
+      "preferred free path for NFL historical data. No automation until licensed.",
+  },
+
+  {
+    source_id: "jersey-number-db",
+    source_name: "Jersey Number Database (candidate — source TBD)",
+    source_url: "https://www.prosportstransactions.com",
+    terms_url: null,
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "other",
+    status: "manual_research_only",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: [],
+    unlock_condition:
+      "Step 1: Identify the most appropriate free/open-licensed jersey-number source " +
+      "(prosportstransactions.com for transaction facts; nflverse roster data includes " +
+      "jersey numbers under CC-BY-4.0 and is the preferred path). " +
+      "Step 2: Human legal/terms review of whichever source is selected. " +
+      "Step 3: If nflverse covers the need, no new source entry is required — use the " +
+      "existing approved_open_license entry instead. Update this entry's source_url and " +
+      "terms_url once the authoritative source is identified.",
+    vendor_contact: null,
+    notes:
+      "Jersey number facts (player, team, number, season) are not copyrightable. " +
+      "Preferred path: nflverse roster data (CC-BY-4.0, approved_open_license) already " +
+      "includes player numbers. This entry exists to document the category for tracking. " +
+      "If nflverse does not cover a sport, evaluate the specific source before automation. " +
+      "No source URL or terms confirmed — manual human research only until resolved.",
+  },
+
+  // ── Approved: public government API ─────────────────────────────────────────
+  {
+    source_id: "nws-weather-api",
+    source_name: "National Weather Service API (weather.gov)",
+    source_url: "https://api.weather.gov",
+    terms_url: "https://www.weather.gov/disclaimer",
+    robots_url: "https://api.weather.gov/robots.txt",
+    jurisdiction: "US",
+    source_type: "open_dataset",
+    status: "approved_api",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: true,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: true,
+    attribution_required: true,
+    attribution_text: "Weather data from the U.S. National Weather Service (weather.gov) — public domain",
+    personal_data_risk: "none",
+    copyright_expression_risk: "none",
+    database_right_risk: "none",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://www.weather.gov/disclaimer",
+      "https://www.weather.gov/documentation/services-web-api",
+      "https://api.weather.gov/openapi.json",
+    ],
+    unlock_condition: null,
+    vendor_contact: "https://www.weather.gov/contact",
+    notes:
+      "U.S. federal government API. All NWS data is U.S. Government Work (17 U.S.C. §105) " +
+      "— in the public domain; no copyright restrictions on facts. No API key required; " +
+      "free for any use including commercial. The API follows the OpenAPI spec and provides " +
+      "hourly/7-day forecasts by lat/lon point and grid cell. " +
+      "Use case: game-time weather (temperature, wind speed/direction, precipitation " +
+      "probability) for outdoor NFL/MLB/CFB venues — a free, reliable input for the " +
+      "already-built weather factor in the prediction engine. Rate limits are generous " +
+      "for reasonable automated use; set a User-Agent header per NWS API guidelines. " +
+      "Covers US venues only; use Open-Meteo (approved_open_license) for non-US venues. " +
+      "Attribution strongly encouraged (government source attribution is standard practice).",
+  },
+
   // ── Excluded ─────────────────────────────────────────────────────────────────
   {
     source_id: "siriusxm-activator",
