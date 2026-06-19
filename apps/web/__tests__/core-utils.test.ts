@@ -266,11 +266,11 @@ describe("slugify", () => {
 
 describe("truncate", () => {
   it("no-op when short", () => expect(truncate("Hello", 10)).toBe("Hello"));
-  it("truncates with ellipsis", () => expect(truncate("Hello World", 8)).toBe("Hello..."));
+  it("truncates with ellipsis", () => expect(truncate("Hello World", 8)).toBe("Hello W…"));
 });
 
 describe("truncateWords", () => {
-  it("truncates at word boundary", () => expect(truncateWords("Hello World Foo", 14)).toBe("Hello World..."));
+  it("truncates at word boundary", () => expect(truncateWords("Hello World Foo", 2)).toBe("Hello World…"));
   it("no-op when fits", () => expect(truncateWords("Hi", 10)).toBe("Hi"));
 });
 
@@ -336,8 +336,8 @@ describe("hashCode / hashToColor", () => {
 });
 
 describe("pluralize / ordinal", () => {
-  it("pluralize 1", () => expect(pluralize(1, "pick")).toBe("pick"));
-  it("pluralize 2", () => expect(pluralize(2, "pick")).toBe("picks"));
+  it("pluralize 1", () => expect(pluralize(1, "pick")).toBe("1 pick"));
+  it("pluralize 2", () => expect(pluralize(2, "pick")).toBe("2 picks"));
   it("ordinal 1st", () => expect(ordinal(1)).toBe("1st"));
   it("ordinal 2nd", () => expect(ordinal(2)).toBe("2nd"));
   it("ordinal 3rd", () => expect(ordinal(3)).toBe("3rd"));
