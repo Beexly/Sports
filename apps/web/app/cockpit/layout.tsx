@@ -87,6 +87,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
   {
     section: "Ops",
     items: [
+      { href: "/cockpit/spend", label: "Spend Governor", hint: "Zero-spend posture · proof-gated upgrades" },
       { href: "/cockpit/api-costs", label: "API Costs", hint: "Claude budget monitor" },
       { href: "/cockpit/synthetic-monitoring", label: "Synthetic Monitoring", hint: "Production probes" },
       { href: "/cockpit/gates", label: "Gate Audit", hint: "Readiness gates · read-only" },
