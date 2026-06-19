@@ -19,11 +19,22 @@ import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 
 export const dynamic = "force-dynamic";
 
+const LAB_TITLE = "Galaxy Lab — Run the Model Yourself";
+const LAB_DESCRIPTION =
+  "A free interactive workbench of eight decision tools: matchup simulation, no-vig odds, parlay risk, bankroll sizing, calibration. Exploration, not picks.";
+
 export const metadata: Metadata = {
-  title: "Galaxy Lab — Run the Model Yourself",
-  description:
-    "An interactive sports-intelligence workbench. Simulate any matchup thousands of times, see the outcome distribution, and compare the model to the market line. A tool, not a tip sheet.",
+  title: LAB_TITLE,
+  description: LAB_DESCRIPTION,
   alternates: { canonical: "/lab" },
+  openGraph: {
+    title: LAB_TITLE,
+    description: LAB_DESCRIPTION,
+    url: "/lab",
+    type: "website",
+    siteName: "Galaxy Sports Edge",
+  },
+  twitter: { card: "summary_large_image", title: LAB_TITLE, description: LAB_DESCRIPTION },
 };
 
 const TOOLS = [
@@ -119,6 +130,13 @@ export default async function GalaxyLabPage(): Promise<JSX.Element> {
               disagrees with the market price. These are tools that run on{" "}
               <span className="text-white">your</span> inputs — model
               exploration, not published picks.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-ink-400">
+              Eight tools live here: the Monte Carlo game simulator, parlay
+              stress-tester, bankroll &amp; Kelly optimizer, pace &amp; schedule
+              optimizer, multi-sport matchup compare, no-vig fair-odds
+              calculator, glass-box pick explainer, and calibration explorer.
+              All free, all educational — exploration tools, not picks.
             </p>
           </header>
         </Reveal>

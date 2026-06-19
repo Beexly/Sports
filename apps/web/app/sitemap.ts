@@ -66,6 +66,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/track", priority: 0.6, changeFrequency: "daily" },
   { path: "/trends", priority: 0.6, changeFrequency: "daily" },
   // Tools & education
+  { path: "/lab", priority: 0.7, changeFrequency: "weekly" },
   { path: "/parlay-mri", priority: 0.7, changeFrequency: "weekly" },
   { path: "/academy", priority: 0.7, changeFrequency: "weekly" },
   { path: "/intelligence", priority: 0.7, changeFrequency: "weekly" },
