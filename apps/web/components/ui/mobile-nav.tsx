@@ -7,15 +7,17 @@ type NavLink = { label: string; href: string };
 // A section is either a flat list of links (no toggle) or a collapsible group.
 type Section = { heading: string; collapsible?: boolean; links: ReadonlyArray<NavLink> };
 
-// Mirrors the desktop top bar: a few proprietary doors, Contests and The
-// Beat standalone. Internal surfaces (Studio, Airwave) are not linked.
+// Mirrors the tightened desktop top bar: Board + The House are the primary
+// doors; Players / Intelligence / Fantasy / Company are the grouped menus;
+// DFS folds into Fantasy; no item appears twice. Internal surfaces (Studio,
+// Airwave) are not linked.
 const SECTIONS: readonly Section[] = [
   {
     heading: "Start here",
     links: [
       { label: "Board", href: "/board" },
-      { label: "Today — Mission Control", href: "/today" },
-      { label: "Contests", href: "/fantasy/contests" },
+      { label: "The House — NFL hub", href: "/house" },
+      { label: "Founding Desk", href: "/founding-desk" },
       { label: "Pricing", href: "/pricing" },
     ],
   },
@@ -39,7 +41,6 @@ const SECTIONS: readonly Section[] = [
       { label: "Galaxy Twin — Market map", href: "/observatory" },
       { label: "Trend Lab — Tested trends", href: "/trends" },
       { label: "CLV Tracker — Track your bets", href: "/track" },
-      { label: "GSN — Briefing (sample)", href: "/gsn" },
       { label: "How we read metrics", href: "/intelligence/metrics" },
     ],
   },
@@ -61,18 +62,11 @@ const SECTIONS: readonly Section[] = [
       { label: "Lineup Optimizer", href: "/fantasy/lineup" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers" },
       { label: "Trade Analyzer", href: "/fantasy/trade" },
+      { label: "DFS Suite", href: "/fantasy/dfs" },
+      { label: "Pick'em Edge", href: "/fantasy/props" },
+      { label: "Contests", href: "/fantasy/contests" },
       { label: "All-in-One Optimizer", href: "/optimizer" },
       { label: "Connect League", href: "/fantasy/connect" },
-    ],
-  },
-  {
-    heading: "DFS",
-    collapsible: true,
-    links: [
-      { label: "DFS Suite", href: "/fantasy/dfs" },
-      { label: "Salary Board", href: "/fantasy/dfs#salary-board" },
-      { label: "Pick'em Edge", href: "/fantasy/props" },
-      { label: "DFS Player Board", href: "/players?view=dfs" },
     ],
   },
   {
@@ -80,6 +74,7 @@ const SECTIONS: readonly Section[] = [
     links: [
       { label: "The Beat — Media intelligence", href: "/the-beat" },
       { label: "The Academy", href: "/academy" },
+      { label: "Ask Galaxy — Read one game", href: "/ask-galaxy" },
       { label: "Dashboard", href: "/dashboard" },
     ],
   },

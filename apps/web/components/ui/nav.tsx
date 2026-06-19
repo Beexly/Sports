@@ -15,12 +15,13 @@ const PRIMARY_LINKS = [
   { label: "The House", href: "/house", title: "NFL hub — odds, picks & matchups" },
 ] as const;
 
+// Tightened tail: The Beat (media), Academy (learn), Pricing, Founding Desk
+// (convert). Contests now lives in the Fantasy menu and Ask Galaxy in the
+// Intelligence → The Desk group — no item appears twice in the top bar.
 const TAIL_LINKS = [
-  { label: "Contests", href: "/fantasy/contests", title: "Best ball, survivor & squares" },
   { label: "The Beat", href: "/the-beat", title: "Sports-media intelligence — reporters, graded" },
   { label: "Academy", href: "/academy", title: "Learn the system, step by step" },
   { label: "Pricing", href: "/pricing", title: "Plans & what each unlocks" },
-  { label: "Ask Galaxy", href: "/ask-galaxy", title: "Submit one game — manual intelligence read" },
   { label: "Founding Desk", href: "/founding-desk", title: "Daily intelligence brief — Founding member access" },
 ] as const;
 
@@ -81,7 +82,6 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
       { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line moves & best available prices" },
       { label: "Trend Lab", href: "/trends", desc: "Trends that pass a real statistical test" },
       { label: "CLV Tracker", href: "/track", desc: "Track your own bets — did you beat the closing line?" },
-      { label: "GSN — Daily Briefing", href: "/gsn", desc: "A sample of our daily briefing format — live feed coming soon" },
       { label: "How we read metrics", href: "/intelligence/metrics", desc: "What each stat means, in plain terms" },
     ],
   },
@@ -118,22 +118,17 @@ const FANTASY_MENU: readonly NavGroup[] = [
     ],
   },
   {
+    heading: "Daily (DFS)",
+    items: [
+      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Lineup builder for cash games & tournaments — fully transparent" },
+      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & PrizePicks line edges, graded" },
+      { label: "Contests", href: "/fantasy/contests", desc: "Best ball, survivor & squares" },
+    ],
+  },
+  {
     items: [
       { label: "All-in-One Optimizer", href: "/optimizer", desc: "Draft, lineups & DFS in one workspace" },
       { label: "Connect League", href: "/fantasy/connect", desc: "Link your league in one tap" },
-    ],
-  },
-];
-
-// DFS ▾ — daily fantasy is its own lane, not a fantasy sub-item.
-const DFS_MENU: readonly NavGroup[] = [
-  {
-    heading: "Daily",
-    items: [
-      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Lineup builder for cash games & tournaments — fully transparent" },
-      { label: "Salary Board", href: "/fantasy/dfs#salary-board", desc: "DraftKings salaries, reconciled (when the feed is live)" },
-      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & PrizePicks line edges, graded" },
-      { label: "DFS Player Board", href: "/players?view=dfs", desc: "Salary value vs. role and usage" },
     ],
   },
 ];
@@ -202,9 +197,8 @@ export async function Nav() {
 
             <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
-            <NavMenu label="Company" href="/about" groups={COMPANY_MENU} />
             <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
-            <NavMenu label="DFS" href="/fantasy/dfs" groups={DFS_MENU} />
+            <NavMenu label="Company" href="/about" groups={COMPANY_MENU} />
 
             {TAIL_LINKS.map(({ href, label, title }) => (
               <Link key={href} href={href} title={title}>

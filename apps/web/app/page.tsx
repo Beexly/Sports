@@ -140,8 +140,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[1.04fr_0.96fr] lg:items-center lg:px-8">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="gw-chip-cyan">GSE · the decision engine</span>
-                <span className="gw-chip-plasma">GSN · the signal studio</span>
+                <span className="gw-chip-cyan">Sports intelligence — not a sportsbook</span>
               </div>
               <h1 className="mt-6 max-w-4xl font-display text-display-xl font-semibold leading-[1.0] text-balance text-white">
                 The market is full of <span className="gw-chrome-plasma">noise</span>.
@@ -161,16 +160,47 @@ export default async function HomePage(): Promise<JSX.Element> {
                   Enter today&apos;s board
                 </Link>
                 <Link
-                  href="/trends"
+                  href="/sample-desk"
                   className="inline-flex min-h-11 items-center justify-center rounded-xl border border-orbital-cyan/60 px-5 py-3 text-sm font-semibold text-orbital-cyan transition-shadow hover:border-orbital-cyan hover:text-white hover:shadow-[0_0_28px_-6px_rgba(0,229,255,0.6)]"
                 >
-                  Open Trend Lab
+                  See a sample read
                 </Link>
               </div>
+
+              {/* Three reasons the read is worth trusting — proof, calibration,
+                  discipline. Concepts, not numbers: no record is claimed before
+                  it's earned. This is what answers "why you" in the first screen. */}
+              <ul className="mt-7 grid gap-2.5 sm:max-w-xl">
+                <li className="flex items-start gap-2.5 text-sm leading-6 text-ink-300">
+                  <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orbital-cyan" />
+                  <span>
+                    <span className="font-semibold text-white">Closing-line value.</span> Every
+                    pick is graded against the number the market closes at — the benchmark most
+                    services hide.
+                  </span>
+                </li>
+                <li className="flex items-start gap-2.5 text-sm leading-6 text-ink-300">
+                  <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orbital-cyan" />
+                  <span>
+                    <span className="font-semibold text-white">Calibrated confidence.</span> A
+                    confidence score is only worth showing if it means what it says — measured in
+                    public, never asserted.
+                  </span>
+                </li>
+                <li className="flex items-start gap-2.5 text-sm leading-6 text-ink-300">
+                  <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orbital-cyan" />
+                  <span>
+                    <span className="font-semibold text-white">The No-Bet gate.</span> When the
+                    math doesn&apos;t support action, &ldquo;no bet&rdquo; is the call — and we log
+                    it like any other.
+                  </span>
+                </li>
+              </ul>
+
               <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-400">
                 We detect. You decide.
               </p>
-              <div className="mt-5 flex flex-col gap-2 text-sm sm:flex-row sm:items-center sm:gap-5">
+              <div className="mt-5 flex flex-col gap-2 text-sm sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
                 <Link
                   href="/founding-desk"
                   className="inline-flex items-center gap-1.5 font-semibold text-orbital-cyan transition-colors hover:text-white"
@@ -183,6 +213,13 @@ export default async function HomePage(): Promise<JSX.Element> {
                   className="inline-flex items-center gap-1.5 text-ink-300 transition-colors hover:text-white"
                 >
                   Send Galaxy one game for a read
+                  <span aria-hidden="true">→</span>
+                </Link>
+                <Link
+                  href="/trends"
+                  className="inline-flex items-center gap-1.5 text-ink-300 transition-colors hover:text-white"
+                >
+                  Open Trend Lab
                   <span aria-hidden="true">→</span>
                 </Link>
               </div>
