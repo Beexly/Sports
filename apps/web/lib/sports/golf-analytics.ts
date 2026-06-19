@@ -242,17 +242,22 @@ function interpolateLookup(
   distance: number,
 ): number {
   if (table.length === 0) return 0
-  if (distance <= table[0][0]) return table[0][1]
-  if (distance >= table[table.length - 1][0]) return table[table.length - 1][1]
+  const first = table[0]!
+  const last = table[table.length - 1]!
+  if (distance <= first[0]) return first[1]
+  if (distance >= last[0]) return last[1]
 
   for (let i = 0; i < table.length - 1; i++) {
-    const [x0, y0] = table[i]
-    const [x1, y1] = table[i + 1]
+    const lo = table[i]
+    const hi = table[i + 1]
+    if (lo === undefined || hi === undefined) continue
+    const [x0, y0] = lo
+    const [x1, y1] = hi
     if (distance >= x0 && distance <= x1) {
       return lerp(x0, y0, x1, y1, distance)
     }
   }
-  return table[table.length - 1][1]
+  return last[1]
 }
 
 // Tee shot baseline: [holeDistance, expectedStrokes] by par
@@ -578,13 +583,14 @@ export function leaderboard(entries: TournamentEntry[]): TournamentEntry[] {
   // Assign positions with tied positions
   return sorted.map((entry, idx, arr) => {
     let pos: number
-    if (idx === 0) {
+    const prev = arr[idx - 1]
+    if (idx === 0 || prev === undefined) {
       pos = 1
     } else if (
-      arr[idx - 1].score === entry.score &&
-      arr[idx - 1].holesCompleted === entry.holesCompleted
+      prev.score === entry.score &&
+      prev.holesCompleted === entry.holesCompleted
     ) {
-      pos = arr[idx - 1].position ?? idx
+      pos = prev.position ?? idx
     } else {
       pos = idx + 1
     }

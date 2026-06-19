@@ -40,7 +40,7 @@ import {
   padLeft,
   padRight,
   repeat,
-  highlight,
+  highlightSegments,
   countOccurrences,
   stripHtml,
   escapeHtml,
@@ -298,12 +298,12 @@ describe("padLeft / padRight / repeat", () => {
 
 describe("highlight", () => {
   it("returns unsplit text when no query", () => {
-    const segments = highlight("Hello", "");
+    const segments = highlightSegments("Hello", "");
     expect(segments[0]!.text).toBe("Hello");
     expect(segments[0]!.highlight).toBeUndefined();
   });
   it("marks matching segment", () => {
-    const segments = highlight("Hello World", "world");
+    const segments = highlightSegments("Hello World", "world");
     const matched = segments.find((s) => s.highlight);
     expect(matched?.text.toLowerCase()).toBe("world");
   });
@@ -595,23 +595,23 @@ describe("startOfWeekUtc", () => {
 describe("isSameDayUtc / isToday / isTomorrow", () => {
   it("same day", () => expect(isSameDayUtc(REF, REF + 3600 * 1000)).toBe(true));
   it("different day", () => expect(isSameDayUtc(REF, REF + 24 * 3600 * 1000)).toBe(false));
-  it("isToday with same ref", () => expect(isToday(REF, REF)).toBe(true));
-  it("isTomorrow", () => expect(isTomorrow(REF + 24 * 3600 * 1000, REF)).toBe(true));
+  it("isToday with same ref", () => expect(isToday(new Date(REF), new Date(REF))).toBe(true));
+  it("isTomorrow", () => expect(isTomorrow(new Date(REF + 24 * 3600 * 1000), new Date(REF))).toBe(true));
 });
 
 describe("isPast / isFuture", () => {
-  it("past date", () => expect(isPast(REF - 1000, REF)).toBe(true));
-  it("future date", () => expect(isFuture(REF + 1000, REF)).toBe(true));
-  it("same time is not future", () => expect(isFuture(REF, REF)).toBe(false));
+  it("past date", () => expect(isPast(new Date(REF - 1000), new Date(REF))).toBe(true));
+  it("future date", () => expect(isFuture(new Date(REF + 1000), new Date(REF))).toBe(true));
+  it("same time is not future", () => expect(isFuture(new Date(REF), new Date(REF))).toBe(false));
 });
 
 describe("addDays / addHours / diffDays / diffHours", () => {
   it("addDays", () => {
-    const tomorrow = addDays(REF, 1);
+    const tomorrow = addDays(new Date(REF), 1);
     expect(diffDays(tomorrow, new Date(REF))).toBe(1);
   });
   it("addHours", () => {
-    const later = addHours(REF, 2);
+    const later = addHours(new Date(REF), 2);
     expect(diffHours(later, new Date(REF))).toBe(2);
   });
 });

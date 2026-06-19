@@ -159,7 +159,7 @@ describe("propStdDev", () => {
 
   it("computes population std dev for known values", () => {
     // Values: 2, 4, 4, 4, 5, 5, 7, 9 → mean=5, variance=4, stddev=2
-    const results = [2, 4, 4, 4, 5, 5, 7, 9].map(makeResult);
+    const results = [2, 4, 4, 4, 5, 5, 7, 9].map((v) => makeResult(v));
     expect(propStdDev(results)).toBeCloseTo(2, 5);
   });
 
@@ -371,7 +371,7 @@ describe("analyzeProp", () => {
   });
 
   it("includes stdDev in analysis", () => {
-    const results = [2, 4, 4, 4, 5, 5, 7, 9].map(makeResult);
+    const results = [2, 4, 4, 4, 5, 5, 7, 9].map((v) => makeResult(v));
     const prop = makeProp({ line: 5 });
     const analysis = analyzeProp(prop, results);
     expect(analysis.stdDev).toBeCloseTo(2, 5);
@@ -479,23 +479,23 @@ describe("altLineAnalysis", () => {
     // The hitRate function should naturally return higher for lower lines
     const hitRateFn = (line: number) => Math.max(0, 1 - line / 500);
     const result = altLineAnalysis(250, [200, 250, 300], hitRateFn);
-    expect(result[0].hitRate).toBeGreaterThan(result[1].hitRate);
-    expect(result[1].hitRate).toBeGreaterThan(result[2].hitRate);
+    expect(result[0]!.hitRate).toBeGreaterThan(result[1]!.hitRate);
+    expect(result[1]!.hitRate).toBeGreaterThan(result[2]!.hitRate);
   });
 
   it("recommendedSide is 'over' when hitRate > 0.574", () => {
     const result = altLineAnalysis(250, [200], () => 0.6);
-    expect(result[0].recommendedSide).toBe("over");
+    expect(result[0]!.recommendedSide).toBe("over");
   });
 
   it("recommendedSide is 'under' when hitRate < 0.426", () => {
     const result = altLineAnalysis(250, [300], () => 0.3);
-    expect(result[0].recommendedSide).toBe("under");
+    expect(result[0]!.recommendedSide).toBe("under");
   });
 
   it("recommendedSide is 'skip' for hitRate near 50%", () => {
     const result = altLineAnalysis(250, [250], () => 0.5);
-    expect(result[0].recommendedSide).toBe("skip");
+    expect(result[0]!.recommendedSide).toBe("skip");
   });
 
   it("impliedProb is 110/210 for all lines", () => {
@@ -510,10 +510,10 @@ describe("altLineAnalysis", () => {
     const hitRateFn = (line: number) => (line < 250 ? 0.65 : 0.35);
     const result = altLineAnalysis(250, altLines, hitRateFn);
     expect(result).toHaveLength(4);
-    expect(result[0].recommendedSide).toBe("over");
-    expect(result[1].recommendedSide).toBe("over");
-    expect(result[2].recommendedSide).toBe("under");
-    expect(result[3].recommendedSide).toBe("under");
+    expect(result[0]!.recommendedSide).toBe("over");
+    expect(result[1]!.recommendedSide).toBe("over");
+    expect(result[2]!.recommendedSide).toBe("under");
+    expect(result[3]!.recommendedSide).toBe("under");
   });
 
   it("returns the correct line value in each entry", () => {

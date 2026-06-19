@@ -276,9 +276,11 @@ export function statVectorSimilarity(
   let magB = 0
 
   for (let i = 0; i < vecA.length; i++) {
-    dot += vecA[i] * vecB[i]
-    magA += vecA[i] ** 2
-    magB += vecB[i] ** 2
+    const a = vecA[i] ?? 0
+    const b = vecB[i] ?? 0
+    dot += a * b
+    magA += a ** 2
+    magB += b ** 2
   }
 
   const denom = Math.sqrt(magA) * Math.sqrt(magB)
@@ -731,6 +733,7 @@ export function buildOptimalLineup(
 
     for (let i = 0; i < count && i < eligible.length; i++) {
       const player = eligible[i]
+      if (player === undefined) continue
       lineup.push(player)
       selected.add(player.playerId)
     }
@@ -761,10 +764,11 @@ export function vorp(
   const sorted = [...rankings].sort((a, b) => a.compositeScore - b.compositeScore)
   const idx = Math.round(((replacementPercentile / 100) * (sorted.length - 1)))
   const safeIdx = Math.min(Math.max(idx, 0), sorted.length - 1)
-  const replacementScore = sorted[safeIdx].compositeScore
+  const replacementEntry = sorted[safeIdx]
+  const replacementScore = replacementEntry?.compositeScore ?? 0
 
   // Re-normalize the replacement score into allPlayers context
-  const replacementPlayer = allPlayers.find((p) => p.playerId === sorted[safeIdx].playerId)
+  const replacementPlayer = allPlayers.find((p) => p.playerId === replacementEntry?.playerId)
   const replacementScoreInContext = replacementPlayer
     ? compositeScore(replacementPlayer, allPlayers)
     : replacementScore

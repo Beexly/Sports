@@ -44,7 +44,7 @@ export interface TreeNode {
 /** Validate that all rows have the same length */
 function validateMatrix(matrix: PayoffMatrix): void {
   if (matrix.length === 0) throw new Error("Matrix must have at least 1 row");
-  const cols = matrix[0].length;
+  const cols = matrix[0]?.length ?? 0;
   if (cols === 0) throw new Error("Matrix must have at least 1 column");
   for (const row of matrix) {
     if (row.length !== cols) throw new Error("Matrix rows must all have the same length");
@@ -56,7 +56,7 @@ function numRows(matrix: PayoffMatrix): number {
 }
 
 function numCols(matrix: PayoffMatrix): number {
-  return matrix[0].length;
+  return matrix[0]?.length ?? 0;
 }
 
 /** Sum an array */
@@ -68,7 +68,7 @@ function sum(arr: number[]): number {
 function argmax(arr: number[]): number {
   let best = 0;
   for (let i = 1; i < arr.length; i++) {
-    if (arr[i] > arr[best]) best = i;
+    if ((arr[i] ?? 0) > (arr[best] ?? 0)) best = i;
   }
   return best;
 }
@@ -77,7 +77,7 @@ function argmax(arr: number[]): number {
 function argmin(arr: number[]): number {
   let best = 0;
   for (let i = 1; i < arr.length; i++) {
-    if (arr[i] < arr[best]) best = i;
+    if ((arr[i] ?? 0) < (arr[best] ?? 0)) best = i;
   }
   return best;
 }
@@ -89,7 +89,9 @@ function transpose(matrix: PayoffMatrix): PayoffMatrix {
   const result: PayoffMatrix = Array.from({ length: cols }, () => new Array(rows).fill(0));
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      result[c][r] = matrix[r][c];
+      const resultRow = result[c];
+      if (resultRow === undefined) continue;
+      resultRow[r] = matrix[r]?.[c] ?? 0;
     }
   }
   return result;
@@ -144,7 +146,7 @@ export function dominatedStrategies(matrix: PayoffMatrix, player: 0 | 1): number
       // Check if j strictly dominates i
       let dominates = true;
       for (let k = 0; k < nOpp; k++) {
-        if (m[j][k] <= m[i][k]) {
+        if ((m[j]?.[k] ?? 0) <= (m[i]?.[k] ?? 0)) {
           dominates = false;
           break;
         }
@@ -183,8 +185,10 @@ export function eliminateDominated(
       const keep = Array.from({ length: numRows(current) }, (_, i) => i).filter(
         (i) => !domRows.includes(i)
       );
-      current = keep.map((i) => current[i]);
-      p1Kept = keep.map((i) => p1Kept[i]);
+      const prevCurrent = current;
+      const prevP1Kept = p1Kept;
+      current = keep.map((i) => prevCurrent[i] ?? []);
+      p1Kept = keep.map((i) => prevP1Kept[i] ?? 0);
     }
 
     // Eliminate dominated columns (player 2)
@@ -194,8 +198,9 @@ export function eliminateDominated(
       const keepCols = Array.from({ length: numCols(current) }, (_, i) => i).filter(
         (i) => !domCols.includes(i)
       );
-      current = current.map((row) => keepCols.map((c) => row[c]));
-      p2Kept = keepCols.map((i) => p2Kept[i]);
+      const prevP2Kept = p2Kept;
+      current = current.map((row) => keepCols.map((c) => row[c] ?? 0));
+      p2Kept = keepCols.map((i) => prevP2Kept[i] ?? 0);
     }
   }
 
@@ -215,11 +220,11 @@ export function saddlePoint(
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      const val = matrix[r][c];
+      const val = matrix[r]?.[c] ?? 0;
       // Check row minimum
       let isRowMin = true;
       for (let cc = 0; cc < cols; cc++) {
-        if (matrix[r][cc] < val) {
+        if ((matrix[r]?.[cc] ?? 0) < val) {
           isRowMin = false;
           break;
         }
@@ -228,7 +233,7 @@ export function saddlePoint(
       // Check column maximum
       let isColMax = true;
       for (let rr = 0; rr < rows; rr++) {
-        if (matrix[rr][c] > val) {
+        if ((matrix[rr]?.[c] ?? 0) > val) {
           isColMax = false;
           break;
         }
@@ -246,7 +251,7 @@ export function maximin(matrix: PayoffMatrix): { strategy: number; value: number
   validateMatrix(matrix);
   const rowMins = matrix.map((row) => Math.min(...row));
   const strategy = argmax(rowMins);
-  return { strategy, value: rowMins[strategy] };
+  return { strategy, value: rowMins[strategy] ?? 0 };
 }
 
 /**
@@ -255,9 +260,9 @@ export function maximin(matrix: PayoffMatrix): { strategy: number; value: number
 export function minimax(matrix: PayoffMatrix): { strategy: number; value: number } {
   validateMatrix(matrix);
   const cols = numCols(matrix);
-  const colMaxes = Array.from({ length: cols }, (_, c) => Math.max(...matrix.map((row) => row[c])));
+  const colMaxes = Array.from({ length: cols }, (_, c) => Math.max(...matrix.map((row) => row[c] ?? 0)));
   const strategy = argmin(colMaxes);
-  return { strategy, value: colMaxes[strategy] };
+  return { strategy, value: colMaxes[strategy] ?? 0 };
 }
 
 /**
@@ -275,7 +280,7 @@ export function expectedPayoff(
   let total = 0;
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      total += p1Mix[r] * matrix[r][c] * p2Mix[c];
+      total += (p1Mix[r] ?? 0) * (matrix[r]?.[c] ?? 0) * (p2Mix[c] ?? 0);
     }
   }
   return total;
@@ -305,14 +310,14 @@ export function pureNashEquilibria(
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       // Is row r a best response for p1 given col c?
-      const p1ColPayoffs = matrix.map((row) => row[c]);
+      const p1ColPayoffs = matrix.map((row) => row[c] ?? 0);
       const maxP1 = Math.max(...p1ColPayoffs);
-      if (matrix[r][c] < maxP1) continue;
+      if ((matrix[r]?.[c] ?? 0) < maxP1) continue;
 
       // Is col c a best response for p2 given row r?
-      const p2RowPayoffs = p2m[r];
+      const p2RowPayoffs = p2m[r] ?? [];
       const maxP2 = Math.max(...p2RowPayoffs);
-      if (p2m[r][c] < maxP2) continue;
+      if ((p2m[r]?.[c] ?? 0) < maxP2) continue;
 
       equilibria.push({ row: r, col: c });
     }
@@ -421,9 +426,9 @@ function trySupport(
   // Verify best response condition: no strategy outside support should be preferred
   // P1: check all rows not in support yield <= value
   const p1Full: MixedStrategy = new Array(rows).fill(0);
-  for (let i = 0; i < rowSupport.length; i++) p1Full[rowSupport[i]] = p1[i];
+  for (let i = 0; i < rowSupport.length; i++) p1Full[rowSupport[i] ?? 0] = p1[i] ?? 0;
   const p2Full: MixedStrategy = new Array(cols).fill(0);
-  for (let i = 0; i < colSupport.length; i++) p2Full[colSupport[i]] = p2[i];
+  for (let i = 0; i < colSupport.length; i++) p2Full[colSupport[i] ?? 0] = p2[i] ?? 0;
 
   const val = expectedPayoff(matrix, p1Full, p2Full);
 
@@ -431,13 +436,13 @@ function trySupport(
   const EPS = 1e-7;
   for (let r = 0; r < rows; r++) {
     if (!rowSupport.includes(r)) {
-      const dev = colSupport.reduce((acc, c, ci) => acc + matrix[r][c] * p2[ci], 0);
+      const dev = colSupport.reduce((acc, c, ci) => acc + (matrix[r]?.[c] ?? 0) * (p2[ci] ?? 0), 0);
       if (dev > val + EPS) return null;
     }
   }
   for (let c = 0; c < cols; c++) {
     if (!colSupport.includes(c)) {
-      const dev = rowSupport.reduce((acc, r, ri) => acc + (-matrix[r][c]) * p1[ri], 0);
+      const dev = rowSupport.reduce((acc, r, ri) => acc + (-(matrix[r]?.[c] ?? 0)) * (p1[ri] ?? 0), 0);
       if (dev > -val + EPS) return null;
     }
   }
@@ -476,8 +481,9 @@ function solveForMix(
 
   // Indifference: M[ri][c] - M[ref][c] for c in colSupport = 0, for i = 1..n-1
   for (let i = 1; i < rowSupport.length && A.length < n - 1; i++) {
-    const ri = rowSupport[i];
-    const row = colSupport.map((c) => matrix[ri][c] - matrix[refRow][c]);
+    const ri = rowSupport[i] ?? 0;
+    const ref = refRow ?? 0;
+    const row = colSupport.map((c) => (matrix[ri]?.[c] ?? 0) - (matrix[ref]?.[c] ?? 0));
     A.push(row);
     b.push(0);
   }
@@ -510,32 +516,40 @@ function solveForMix(
 function gaussianElimination(A: number[][], b: number[]): number[] | null {
   const n = A.length;
   // Augmented matrix
-  const M = A.map((row, i) => [...row, b[i]]);
+  const M = A.map((row, i) => [...row, b[i] ?? 0]);
   const EPS = 1e-12;
 
   for (let col = 0; col < n; col++) {
     // Partial pivot
     let maxRow = col;
     for (let row = col + 1; row < n; row++) {
-      if (Math.abs(M[row][col]) > Math.abs(M[maxRow][col])) maxRow = row;
+      if (Math.abs(M[row]?.[col] ?? 0) > Math.abs(M[maxRow]?.[col] ?? 0)) maxRow = row;
     }
-    [M[col], M[maxRow]] = [M[maxRow], M[col]];
+    const tmpCol = M[col];
+    const tmpMax = M[maxRow];
+    if (tmpCol !== undefined && tmpMax !== undefined) {
+      [M[col], M[maxRow]] = [tmpMax, tmpCol];
+    }
 
-    if (Math.abs(M[col][col]) < EPS) return null; // singular
+    const mCol = M[col];
+    if (mCol === undefined) return null;
+    if (Math.abs(mCol[col] ?? 0) < EPS) return null; // singular
 
-    const pivot = M[col][col];
-    for (let j = col; j <= n; j++) M[col][j] /= pivot;
+    const pivot = mCol[col] ?? 0;
+    for (let j = col; j <= n; j++) mCol[j] = (mCol[j] ?? 0) / pivot;
 
     for (let row = 0; row < n; row++) {
       if (row === col) continue;
-      const factor = M[row][col];
+      const mRow = M[row];
+      if (mRow === undefined) continue;
+      const factor = mRow[col] ?? 0;
       for (let j = col; j <= n; j++) {
-        M[row][j] -= factor * M[col][j];
+        mRow[j] = (mRow[j] ?? 0) - factor * (mCol[j] ?? 0);
       }
     }
   }
 
-  return M.map((row) => row[n]);
+  return M.map((row) => row[n] ?? 0);
 }
 
 /**
@@ -557,13 +571,13 @@ export function bestResponse(
   validateMatrix(matrix);
   if (player === 0) {
     // p1 chooses row to max sum_c matrix[r][c] * opponentMix[c]
-    const payoffs = matrix.map((row) => sum(row.map((v, c) => v * opponentMix[c])));
+    const payoffs = matrix.map((row) => sum(row.map((v, c) => v * (opponentMix[c] ?? 0))));
     return argmax(payoffs);
   } else {
     // p2 chooses col to min sum_r matrix[r][c] * opponentMix[r]
     const cols = numCols(matrix);
     const payoffs = Array.from({ length: cols }, (_, c) =>
-      sum(matrix.map((row, r) => row[c] * opponentMix[r]))
+      sum(matrix.map((row, r) => (row[c] ?? 0) * (opponentMix[r] ?? 0)))
     );
     return argmin(payoffs);
   }
@@ -682,7 +696,7 @@ export function shapleyValue(game: CoalitionGame): number[] {
       const marginal = vS - vSWithout;
       const sSize = coalition.length;
       const weight = (factorial(sSize - 1) * factorial(n - sSize)) / nFact;
-      phi[i] += weight * marginal;
+      phi[i] = (phi[i] ?? 0) + weight * marginal;
     }
   }
   return phi;
@@ -701,7 +715,7 @@ export function coreCheck(game: CoalitionGame, allocation: number[]): boolean {
     for (let i = 0; i < n; i++) {
       if (mask & (1 << i)) coalition.push(i);
     }
-    const coalitionSum = sum(coalition.map((i) => allocation[i]));
+    const coalitionSum = sum(coalition.map((i) => allocation[i] ?? 0));
     if (coalitionSum < v(coalition) - EPS) return false;
   }
   return true;
@@ -731,7 +745,7 @@ export function nucleolus1D(game: CoalitionGame): number[] {
 
   // excess of coalition S under allocation x: v(S) - sum_S x_i
   function excesses(x: number[]): number[] {
-    return coalitions.map((S) => v(S) - sum(S.map((i) => x[i])));
+    return coalitions.map((S) => v(S) - sum(S.map((i) => x[i] ?? 0)));
   }
 
   function lexSort(e: number[]): number[] {
@@ -740,8 +754,10 @@ export function nucleolus1D(game: CoalitionGame): number[] {
 
   function lexLess(a: number[], b: number[]): boolean {
     for (let i = 0; i < Math.min(a.length, b.length); i++) {
-      if (a[i] < b[i] - 1e-9) return true;
-      if (a[i] > b[i] + 1e-9) return false;
+      const ai = a[i] ?? 0;
+      const bi = b[i] ?? 0;
+      if (ai < bi - 1e-9) return true;
+      if (ai > bi + 1e-9) return false;
     }
     return false;
   }
@@ -756,9 +772,9 @@ export function nucleolus1D(game: CoalitionGame): number[] {
       if (x2 < -1e-9) continue;
       const alloc = [x0, x1, Math.max(0, x2)];
       // Check individual rationality
-      if (alloc[0] < v([0]) - 1e-9) continue;
-      if (alloc[1] < v([1]) - 1e-9) continue;
-      if (alloc[2] < v([2]) - 1e-9) continue;
+      if ((alloc[0] ?? 0) < v([0]) - 1e-9) continue;
+      if ((alloc[1] ?? 0) < v([1]) - 1e-9) continue;
+      if ((alloc[2] ?? 0) < v([2]) - 1e-9) continue;
       const exc = lexSort(excesses(alloc));
       if (lexLess(exc, bestExcesses)) {
         bestExcesses = exc;
@@ -795,7 +811,7 @@ export function banzhafValue(game: CoalitionGame): number[] {
       const vSWithI = v(SWithI);
       // Pivotal: adding i moves coalition from below threshold to >= threshold
       if (vS < threshold && vSWithI >= threshold) {
-        pivotal[i]++;
+        pivotal[i] = (pivotal[i] ?? 0) + 1;
       }
     }
   }
@@ -820,7 +836,7 @@ export function vickreyAuction(bids: number[]): { winner: number; price: number 
     .map((b, i) => ({ bid: b, idx: i }))
     .sort((a, b) => b.bid - a.bid);
 
-  return { winner: sorted[0].idx, price: sorted[1].bid };
+  return { winner: sorted[0]?.idx ?? 0, price: sorted[1]?.bid ?? 0 };
 }
 
 /**
@@ -829,7 +845,7 @@ export function vickreyAuction(bids: number[]): { winner: number; price: number 
 export function firstPriceAuction(bids: number[]): { winner: number; price: number } {
   if (bids.length === 0) throw new Error("Need at least 1 bid");
   const winner = argmax(bids);
-  return { winner, price: bids[winner] };
+  return { winner, price: bids[winner] ?? 0 };
 }
 
 /**
@@ -874,7 +890,7 @@ export function coachingDecisionMatrix(
   const nash = mixedNashZeroSum(payoffs);
   const optimalIdx = argmax(nash.p1Strategy);
   return {
-    optimalStrategy: strategies[optimalIdx],
+    optimalStrategy: strategies[optimalIdx] ?? "",
     mixedOptimal: nash.p1Strategy,
     gameValue: nash.p1Value,
   };

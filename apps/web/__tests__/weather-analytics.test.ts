@@ -251,7 +251,7 @@ describe('beaufortScale', () => {
     const speeds = [0, 2, 5, 10, 15, 25, 35, 45, 55, 65, 75];
     const forces = speeds.map((s) => beaufortScale(s).force);
     for (let i = 1; i < forces.length; i++) {
-      expect(forces[i]).toBeGreaterThanOrEqual(forces[i - 1]);
+      expect(forces[i]).toBeGreaterThanOrEqual(forces[i - 1]!);
     }
   });
 });

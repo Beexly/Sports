@@ -48,10 +48,10 @@ describe("zeroSumComplement", () => {
     const m = [[0, 0], [0, 0]];
     const result = zeroSumComplement(m);
     // -0 === 0 in JS, check via closeTo
-    expect(result[0][0]).toBeCloseTo(0, 9);
-    expect(result[0][1]).toBeCloseTo(0, 9);
-    expect(result[1][0]).toBeCloseTo(0, 9);
-    expect(result[1][1]).toBeCloseTo(0, 9);
+    expect(result[0]![0]).toBeCloseTo(0, 9);
+    expect(result[0]![1]).toBeCloseTo(0, 9);
+    expect(result[1]![0]).toBeCloseTo(0, 9);
+    expect(result[1]![1]).toBeCloseTo(0, 9);
   });
 
   it("handles negative values", () => {
@@ -187,7 +187,7 @@ describe("saddlePoint", () => {
     // value = matrix[?][1]; need row min of that col = 1 at row 1
     const sp = saddlePoint(m);
     if (sp !== null) {
-      expect(sp.value).toBe(m[sp.row][sp.col]);
+      expect(sp.value).toBe(m[sp.row]![sp.col]);
     }
   });
 
@@ -628,8 +628,8 @@ describe("shapleyValue", () => {
       v: (S) => S.length,
     };
     const phi = shapleyValue(game);
-    expect(phi[0]).toBeCloseTo(phi[1], 8);
-    expect(phi[1]).toBeCloseTo(phi[2], 8);
+    expect(phi[0]).toBeCloseTo(phi[1]!, 8);
+    expect(phi[1]).toBeCloseTo(phi[2]!, 8);
   });
 
   it("Shapley values sum to v(grand coalition)", () => {
@@ -692,8 +692,8 @@ describe("shapleyValue", () => {
       v: (S) => (S.includes(0) ? S.length : 0),
     };
     const phi = shapleyValue(game);
-    expect(phi[0]).toBeGreaterThan(phi[1]);
-    expect(phi[0]).toBeGreaterThan(phi[2]);
+    expect(phi[0]).toBeGreaterThan(phi[1]!);
+    expect(phi[0]).toBeGreaterThan(phi[2]!);
   });
 });
 
@@ -772,7 +772,7 @@ describe("nucleolus1D", () => {
       v: (S) => (S.length === 3 ? 6 : S.length === 2 ? 3 : 1),
     };
     const nuc = nucleolus1D(game);
-    const total = nuc[0] + nuc[1] + nuc[2];
+    const total = nuc[0]! + nuc[1]! + nuc[2]!;
     expect(total).toBeCloseTo(6, 1);
   });
 
@@ -816,8 +816,8 @@ describe("banzhafValue", () => {
       v: (S) => (S.length >= 2 ? 1 : 0),
     };
     const bz = banzhafValue(game);
-    expect(bz[0]).toBeCloseTo(bz[1], 6);
-    expect(bz[1]).toBeCloseTo(bz[2], 6);
+    expect(bz[0]).toBeCloseTo(bz[1]!, 6);
+    expect(bz[1]).toBeCloseTo(bz[2]!, 6);
   });
 
   it("veto player has highest Banzhaf value", () => {
@@ -826,8 +826,8 @@ describe("banzhafValue", () => {
       v: (S) => (S.includes(0) && S.length >= 2 ? 1 : 0),
     };
     const bz = banzhafValue(game);
-    expect(bz[0]).toBeGreaterThan(bz[1]);
-    expect(bz[0]).toBeGreaterThan(bz[2]);
+    expect(bz[0]).toBeGreaterThan(bz[1]!);
+    expect(bz[0]).toBeGreaterThan(bz[2]!);
   });
 
   it("returns uniform for game with no pivotal players", () => {
@@ -1030,14 +1030,14 @@ describe("lineupOptimizationGame", () => {
   });
 
   it("handles empty opponent lineups", () => {
-    const score = (a: number[], _b: number[]) => a[0];
+    const score = (a: number[], _b: number[]) => a[0]!;
     const result = lineupOptimizationGame([5, 6, 7], [], score);
     expect(typeof result.expectedScore).toBe("number");
   });
 
   it("expected score is average over opponent lineups", () => {
     // If score is just a[0] regardless of b, expectedScore = a[0]
-    const score = (a: number[], _b: number[]) => a[0];
+    const score = (a: number[], _b: number[]) => a[0]!;
     const result = lineupOptimizationGame([10, 20], [[1], [2], [3]], score);
     expect(result.expectedScore).toBeCloseTo(10, 9);
   });

@@ -724,7 +724,9 @@ export async function hedgedRequest<T>(
 
     const launch = (i: number): void => {
       launched++;
-      fns[i]().then(done, fail);
+      const fn = fns[i];
+      if (fn === undefined) return;
+      fn().then(done, fail);
     };
 
     if (timeoutMs !== undefined) {

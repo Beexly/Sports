@@ -35,7 +35,6 @@ function makeGame(
     opponent: 'TeamA',
     homeAway: 'home',
     minutesPlayed: 30,
-    stats: { points: 20, rebounds: 5, assists: 4, possessions: 80 },
     result: 'W',
     pointsFor: 110,
     pointsAgainst: 100,
@@ -198,8 +197,8 @@ describe('rollingStats', () => {
       makeGame({ date: '2024-01-02', stats: { points: 20, rebounds: 10 } }),
     ]
     const result = rollingStats(games, ['points', 'rebounds'], 2)
-    expect(result[1]['points']).toBeCloseTo(15)
-    expect(result[1]['rebounds']).toBeCloseTo(7.5)
+    expect(result[1]!['points']).toBeCloseTo(15)
+    expect(result[1]!['rebounds']).toBeCloseTo(7.5)
   })
 
   it('returns records with all requested keys', () => {
@@ -395,10 +394,10 @@ describe('opponentSplit', () => {
       makeGame({ opponent: 'Lakers', stats: { points: 22 } }),
     ]
     const splits = opponentSplit(games, 'points')
-    expect(splits[0].label).toBe('Lakers')
-    expect(splits[0].games).toBe(3)
-    expect(splits[1].label).toBe('Celtics')
-    expect(splits[1].games).toBe(1)
+    expect(splits[0]!.label).toBe('Lakers')
+    expect(splits[0]!.games).toBe(3)
+    expect(splits[1]!.label).toBe('Celtics')
+    expect(splits[1]!.games).toBe(1)
   })
 
   it('returns empty array for no games', () => {
@@ -428,10 +427,10 @@ describe('monthSplit', () => {
     ]
     const splits = monthSplit(games, 'points')
     expect(splits).toHaveLength(2)
-    expect(splits[0].label).toBe('2024-01')
-    expect(splits[0].games).toBe(2)
-    expect(splits[1].label).toBe('2024-02')
-    expect(splits[1].games).toBe(1)
+    expect(splits[0]!.label).toBe('2024-01')
+    expect(splits[0]!.games).toBe(2)
+    expect(splits[1]!.label).toBe('2024-02')
+    expect(splits[1]!.games).toBe(1)
   })
 
   it('returns sorted by month ascending', () => {
@@ -464,8 +463,8 @@ describe('lastNGames', () => {
     ]
     const last3 = lastNGames(games, 3)
     expect(last3).toHaveLength(3)
-    expect(last3[0].stats['points']).toBe(30) // chronologically earliest of last 3
-    expect(last3[2].stats['points']).toBe(50) // most recent
+    expect(last3[0]!.stats['points']).toBe(30) // chronologically earliest of last 3
+    expect(last3[2]!.stats['points']).toBe(50) // most recent
   })
 
   it('returns all games when n >= length', () => {
@@ -483,7 +482,7 @@ describe('lastNGames', () => {
     expect(result).toHaveLength(1)
     // Should be the most recent one
     const sorted = [...games].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    expect(result[0].date).toBe(sorted[sorted.length - 1].date)
+    expect(result[0]!.date).toBe(sorted[sorted.length - 1]!.date)
   })
 })
 
@@ -930,7 +929,7 @@ describe('buildPlayerProfile', () => {
   })
 
   it('handles single game', () => {
-    const profile = buildPlayerProfile([games[0]], ['points'])
+    const profile = buildPlayerProfile([games[0]!], ['points'])
     expect(profile.gamesPlayed).toBe(1)
     expect(profile.seasonAverages['points']).toBe(20)
   })

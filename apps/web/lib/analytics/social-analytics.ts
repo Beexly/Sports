@@ -187,8 +187,8 @@ export function medianEngagementRate(posts: SocialPost[]): number {
   if (posts.length === 0) return 0
   const rates = posts.map(engagementRate).sort((a, b) => a - b)
   const mid = Math.floor(rates.length / 2)
-  if (rates.length % 2 === 1) return rates[mid]
-  return (rates[mid - 1] + rates[mid]) / 2
+  if (rates.length % 2 === 1) return rates[mid] ?? 0
+  return ((rates[mid - 1] ?? 0) + (rates[mid] ?? 0)) / 2
 }
 
 // ---------------------------------------------------------------------------

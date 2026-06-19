@@ -361,8 +361,8 @@ describe('rankPosts', () => {
     const high = makePost({ metrics: { impressions: 100, reach: 80, likes: 50, comments: 20, shares: 80 } })
     const mid = makePost({ metrics: { impressions: 500, reach: 400, likes: 20, comments: 10, shares: 5 } })
     const ranked = rankPosts([low, high, mid])
-    expect(ranked[0].post).toBe(high)
-    expect(ranked[ranked.length - 1].post).toBe(low)
+    expect(ranked[0]!.post).toBe(high)
+    expect(ranked[ranked.length - 1]!.post).toBe(low)
   })
 
   it('returns empty array for empty input', () => {
@@ -383,7 +383,7 @@ describe('topNPosts', () => {
     ]
     const top2 = topNPosts(posts, 2)
     expect(top2).toHaveLength(2)
-    expect(top2[0].viralityScore).toBeGreaterThanOrEqual(top2[1].viralityScore)
+    expect(top2[0]!.viralityScore).toBeGreaterThanOrEqual(top2[1]!.viralityScore)
   })
 
   it('returns all posts when N > posts.length', () => {
@@ -504,7 +504,7 @@ describe('engagementByDayOfWeek', () => {
       metrics: { impressions: 100, reach: 80, likes: 5, comments: 1, shares: 0 },
     })
     const result = engagementByDayOfWeek([sun, mon])
-    expect(result[0]).toBeGreaterThan(result[1]) // Sunday had higher engagement
+    expect(result[0]).toBeGreaterThan(result[1]!) // Sunday had higher engagement
   })
 })
 
@@ -906,7 +906,7 @@ describe('edge cases', () => {
     const post = makePost()
     const ranked = rankPosts([post])
     expect(ranked).toHaveLength(1)
-    expect(ranked[0].post).toBe(post)
+    expect(ranked[0]!.post).toBe(post)
   })
 
   it('topNPosts with N=0 returns empty', () => {

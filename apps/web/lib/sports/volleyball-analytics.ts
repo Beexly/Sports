@@ -451,10 +451,11 @@ export function rotationEfficiency(rotationScores: number[]): number {
 export function weakestRotation(rotationScores: number[]): number {
   if (rotationScores.length === 0) return 0;
   let minIdx = 0;
-  let minVal = rotationScores[0];
+  let minVal = rotationScores[0] ?? 0;
   for (let i = 1; i < rotationScores.length; i++) {
-    if (rotationScores[i] < minVal) {
-      minVal = rotationScores[i];
+    const v = rotationScores[i] ?? 0;
+    if (v < minVal) {
+      minVal = v;
       minIdx = i;
     }
   }
@@ -489,13 +490,13 @@ export function servingRotationOrder(players: string[], startingServer: number):
 export function runLengths(pointSequence: (0 | 1)[]): ScoringRun[] {
   if (pointSequence.length === 0) return [];
   const runs: ScoringRun[] = [];
-  let current: ScoringRun = { team: pointSequence[0], length: 1 };
+  let current: ScoringRun = { team: pointSequence[0]!, length: 1 };
   for (let i = 1; i < pointSequence.length; i++) {
     if (pointSequence[i] === current.team) {
       current.length++;
     } else {
       runs.push({ ...current });
-      current = { team: pointSequence[i], length: 1 };
+      current = { team: pointSequence[i]!, length: 1 };
     }
   }
   runs.push({ ...current });
@@ -508,7 +509,7 @@ export function runLengths(pointSequence: (0 | 1)[]): ScoringRun[] {
 export function longestRun(pointSequence: (0 | 1)[]): ScoringRun {
   const runs = runLengths(pointSequence);
   if (runs.length === 0) return { team: 0, length: 0 };
-  return runs.reduce((best, r) => (r.length > best.length ? r : best), runs[0]);
+  return runs.reduce((best, r) => (r.length > best.length ? r : best), runs[0]!);
 }
 
 /**
@@ -521,6 +522,7 @@ export function momentumShifts(pointSequence: (0 | 1)[], minRun = 3): number[] {
   let idx = 0;
   for (let i = 0; i < runs.length - 1; i++) {
     const run = runs[i];
+    if (run === undefined) continue;
     idx += run.length;
     // A shift happens at the boundary after a qualifying run
     if (run.length >= minRun) {

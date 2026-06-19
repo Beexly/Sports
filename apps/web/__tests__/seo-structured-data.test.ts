@@ -194,29 +194,29 @@ describe("buildBreadcrumb", () => {
       { name: "Picks", url: "/picks" },
       { name: "NFL", url: "/picks/nfl" },
     ]);
-    expect(result.itemListElement[0].position).toBe(1);
-    expect(result.itemListElement[1].position).toBe(2);
-    expect(result.itemListElement[2].position).toBe(3);
+    expect(result.itemListElement[0]!.position).toBe(1);
+    expect(result.itemListElement[1]!.position).toBe(2);
+    expect(result.itemListElement[2]!.position).toBe(3);
   });
 
   it("sets @type ListItem on each element", () => {
     const result = buildBreadcrumb([{ name: "Home", url: "/" }]);
-    expect(result.itemListElement[0]["@type"]).toBe("ListItem");
+    expect(result.itemListElement[0]!["@type"]).toBe("ListItem");
   });
 
   it("sets name on each element", () => {
     const result = buildBreadcrumb([{ name: "Picks", url: "/picks" }]);
-    expect(result.itemListElement[0].name).toBe("Picks");
+    expect(result.itemListElement[0]!.name).toBe("Picks");
   });
 
   it("sets item (url) when url is provided", () => {
     const result = buildBreadcrumb([{ name: "Home", url: "https://example.com/" }]);
-    expect(result.itemListElement[0].item).toBe("https://example.com/");
+    expect(result.itemListElement[0]!.item).toBe("https://example.com/");
   });
 
   it("does NOT set item key when url is not provided", () => {
     const result = buildBreadcrumb([{ name: "Current Page" }]);
-    expect("item" in result.itemListElement[0]).toBe(false);
+    expect("item" in result.itemListElement[0]!).toBe(false);
   });
 
   it("handles mixed items with and without urls", () => {
@@ -225,9 +225,9 @@ describe("buildBreadcrumb", () => {
       { name: "Picks", url: "https://example.com/picks" },
       { name: "Current Game" },
     ]);
-    expect(result.itemListElement[0].item).toBe("https://example.com/");
-    expect(result.itemListElement[1].item).toBe("https://example.com/picks");
-    expect("item" in result.itemListElement[2]).toBe(false);
+    expect(result.itemListElement[0]!.item).toBe("https://example.com/");
+    expect(result.itemListElement[1]!.item).toBe("https://example.com/picks");
+    expect("item" in result.itemListElement[2]!).toBe(false);
   });
 
   it("handles empty array", () => {
@@ -252,10 +252,10 @@ describe("buildFAQ", () => {
       { question: "When is the game?", answer: "Saturday." },
     ]);
     expect(result.mainEntity).toHaveLength(2);
-    expect(result.mainEntity[0]["@type"]).toBe("Question");
-    expect(result.mainEntity[0].name).toBe("Who wins?");
-    expect(result.mainEntity[0].acceptedAnswer["@type"]).toBe("Answer");
-    expect(result.mainEntity[0].acceptedAnswer.text).toBe("Uncertain.");
+    expect(result.mainEntity[0]!["@type"]).toBe("Question");
+    expect(result.mainEntity[0]!.name).toBe("Who wins?");
+    expect(result.mainEntity[0]!.acceptedAnswer["@type"]).toBe("Answer");
+    expect(result.mainEntity[0]!.acceptedAnswer.text).toBe("Uncertain.");
   });
 
   it("handles empty FAQ list", () => {
@@ -364,8 +364,8 @@ describe("combinedSchema", () => {
       site as unknown as Record<string, unknown>,
     ]);
     const parsed = JSON.parse(output) as Array<Record<string, unknown>>;
-    expect(parsed[0]["@type"]).toBe("SportsEvent");
-    expect(parsed[1]["@type"]).toBe("WebSite");
+    expect(parsed[0]!["@type"]).toBe("SportsEvent");
+    expect(parsed[1]!["@type"]).toBe("WebSite");
   });
 });
 
@@ -381,12 +381,12 @@ describe("buildPageMeta", () => {
 
   it("sets openGraph type to website by default", () => {
     const meta = buildPageMeta({ title: "Test", description: "Desc" });
-    expect(meta.openGraph?.type).toBe("website");
+    expect((meta.openGraph as { type?: string } | undefined)?.type).toBe("website");
   });
 
   it("sets openGraph type to article when specified", () => {
     const meta = buildPageMeta({ title: "Test", description: "Desc", type: "article" });
-    expect(meta.openGraph?.type).toBe("article");
+    expect((meta.openGraph as { type?: string } | undefined)?.type).toBe("article");
   });
 
   it("sets openGraph title and description", () => {
@@ -397,12 +397,12 @@ describe("buildPageMeta", () => {
 
   it("sets twitter card to summary_large_image by default", () => {
     const meta = buildPageMeta({ title: "Test", description: "Desc" });
-    expect(meta.twitter?.card).toBe("summary_large_image");
+    expect((meta.twitter as { card?: string } | undefined)?.card).toBe("summary_large_image");
   });
 
   it("sets twitter card to summary when specified", () => {
     const meta = buildPageMeta({ title: "Test", description: "Desc", twitterCard: "summary" });
-    expect(meta.twitter?.card).toBe("summary");
+    expect((meta.twitter as { card?: string } | undefined)?.card).toBe("summary");
   });
 
   it("sets alternates.canonical when url provided", () => {
@@ -502,12 +502,12 @@ describe("buildPickMeta", () => {
 
   it("sets openGraph type", () => {
     const meta = buildPickMeta(baseParams);
-    expect(meta.openGraph?.type).toBe("website");
+    expect((meta.openGraph as { type?: string } | undefined)?.type).toBe("website");
   });
 
   it("sets twitter card", () => {
     const meta = buildPickMeta(baseParams);
-    expect(meta.twitter?.card).toBe("summary_large_image");
+    expect((meta.twitter as { card?: string } | undefined)?.card).toBe("summary_large_image");
   });
 
   it("sets alternates.canonical when baseUrl provided", () => {
@@ -536,7 +536,7 @@ describe("buildBlogMeta", () => {
       description: "Desc",
       publishedAt: "2026-06-19T00:00:00Z",
     });
-    expect(meta.openGraph?.type).toBe("article");
+    expect((meta.openGraph as { type?: string } | undefined)?.type).toBe("article");
   });
 
   it("sets publishedTime from ISO string", () => {
@@ -545,7 +545,7 @@ describe("buildBlogMeta", () => {
       description: "Desc",
       publishedAt: "2026-06-19T12:00:00Z",
     });
-    expect(meta.openGraph?.publishedTime).toBe("2026-06-19T12:00:00Z");
+    expect((meta.openGraph as { publishedTime?: string } | undefined)?.publishedTime).toBe("2026-06-19T12:00:00Z");
   });
 
   it("sets publishedTime from Date object", () => {
@@ -555,7 +555,7 @@ describe("buildBlogMeta", () => {
       description: "Desc",
       publishedAt: date,
     });
-    expect(meta.openGraph?.publishedTime).toBe(date.toISOString());
+    expect((meta.openGraph as { publishedTime?: string } | undefined)?.publishedTime).toBe(date.toISOString());
   });
 
   it("includes authors when authorName provided", () => {
@@ -565,7 +565,7 @@ describe("buildBlogMeta", () => {
       publishedAt: "2026-06-19T00:00:00Z",
       authorName: "Jane Smith",
     });
-    expect(meta.openGraph?.authors).toContain("Jane Smith");
+    expect((meta.openGraph as { authors?: string[] } | undefined)?.authors).toContain("Jane Smith");
   });
 
   it("includes image in openGraph and twitter when provided", () => {
@@ -595,6 +595,6 @@ describe("buildBlogMeta", () => {
       description: "Desc",
       publishedAt: "2026-06-19T00:00:00Z",
     });
-    expect(meta.twitter?.card).toBe("summary_large_image");
+    expect((meta.twitter as { card?: string } | undefined)?.card).toBe("summary_large_image");
   });
 });

@@ -20,6 +20,7 @@ import {
   isConverged,
   decaySchedule,
 } from '@/lib/math/optimization';
+import type { ObjectiveFn, GradientFn } from '@/lib/math/optimization';
 
 // ---------------------------------------------------------------------------
 // Helper functions
@@ -32,8 +33,8 @@ const sqShifted = (x: number): number => (x - 3) ** 2;
 /** f(x) = (x - 2)^2 */
 const sqShifted2 = (x: number): number => (x - 2) ** 2;
 /** f(x, y) = x^2 + y^2 */
-const sphere: (x: number[]) => number = ([x, y]) => x * x + y * y;
-const sphereGrad: (x: number[]) => number[] = ([x, y]) => [2 * x, 2 * y];
+const sphere: (x: number[]) => number = ([x, y]) => x! * x! + y! * y!;
+const sphereGrad: (x: number[]) => number[] = ([x, y]) => [2 * x!, 2 * y!];
 
 // ---------------------------------------------------------------------------
 // goldenSectionSearch
@@ -246,17 +247,17 @@ describe('numericalGradient', () => {
   });
 
   it('matches gradient of x^3 at [2]', () => {
-    const grad = numericalGradient(([x]) => x ** 3, [2]);
+    const grad = numericalGradient(([x]) => x! ** 3, [2]);
     expect(grad[0]).toBeCloseTo(12, 4); // 3x^2 at x=2 = 12
   });
 
   it('returns array of same length as x', () => {
-    const grad = numericalGradient(([x, y, z]) => x + y + z, [1, 2, 3]);
+    const grad = numericalGradient(([x, y, z]) => x! + y! + z!, [1, 2, 3]);
     expect(grad).toHaveLength(3);
   });
 
   it('custom h produces good accuracy', () => {
-    const grad = numericalGradient(([x]) => Math.sin(x), [0], 1e-6);
+    const grad = numericalGradient(([x]) => Math.sin(x!), [0], 1e-6);
     expect(grad[0]).toBeCloseTo(1, 5); // cos(0) = 1
   });
 });
@@ -289,8 +290,8 @@ describe('armijoLineSearch', () => {
     const c = 1e-4;
     const alpha = armijoLineSearch(sphere, x, dir, g, { c });
     const f0 = sphere(x);
-    const slope = g.reduce((s, gi, i) => s + gi * dir[i], 0);
-    const fNew = sphere(x.map((xi, i) => xi + alpha * dir[i]));
+    const slope = g.reduce((s, gi, i) => s + gi * dir[i]!, 0);
+    const fNew = sphere(x.map((xi, i) => xi + alpha * dir[i]!));
     expect(fNew).toBeLessThanOrEqual(f0 + c * alpha * slope + 1e-12);
   });
 
@@ -342,7 +343,7 @@ describe('gradientDescent', () => {
     });
     const h = result.history!;
     for (let i = 1; i < h.length; i++) {
-      expect(h[i]).toBeLessThanOrEqual(h[i - 1] + 1e-10);
+      expect(h[i]).toBeLessThanOrEqual(h[i - 1]! + 1e-10);
     }
   });
 
@@ -461,8 +462,8 @@ describe('lbfgs', () => {
 
   it('converges on simple quadratic with known minimum', () => {
     // f(x) = (x-2)^2 + (y+1)^2, minimum at (2, -1)
-    const fn: ObjectiveFn = ([x, y]) => (x - 2) ** 2 + (y + 1) ** 2;
-    const grad: GradientFn = ([x, y]) => [2 * (x - 2), 2 * (y + 1)];
+    const fn: ObjectiveFn = ([x, y]) => (x! - 2) ** 2 + (y! + 1) ** 2;
+    const grad: GradientFn = ([x, y]) => [2 * (x! - 2), 2 * (y! + 1)];
     const result = lbfgs(fn, grad, [0, 0]);
     expect(result.x[0]).toBeCloseTo(2, 4);
     expect(result.x[1]).toBeCloseTo(-1, 4);
@@ -541,7 +542,7 @@ describe('simulatedAnnealing', () => {
     });
     const h = result.history!;
     for (let i = 1; i < h.length; i++) {
-      expect(h[i]).toBeLessThanOrEqual(h[i - 1] + 1e-12);
+      expect(h[i]).toBeLessThanOrEqual(h[i - 1]! + 1e-12);
     }
   });
 
@@ -576,7 +577,7 @@ describe('geneticAlgorithm', () => {
   it('solution stays within bounds', () => {
     const result = geneticAlgorithm(sphere, bounds2d, { seed: 42 });
     result.x.forEach((xi, i) => {
-      const [lo, hi] = bounds2d[i];
+      const [lo, hi] = bounds2d[i]!;
       expect(xi).toBeGreaterThanOrEqual(lo - 1e-10);
       expect(xi).toBeLessThanOrEqual(hi + 1e-10);
     });
@@ -607,12 +608,12 @@ describe('geneticAlgorithm', () => {
     });
     const h = result.history!;
     for (let i = 1; i < h.length; i++) {
-      expect(h[i]).toBeLessThanOrEqual(h[i - 1] + 1e-12);
+      expect(h[i]).toBeLessThanOrEqual(h[i - 1]! + 1e-12);
     }
   });
 
   it('works with 1D bounds', () => {
-    const result = geneticAlgorithm(([x]) => (x - 3) ** 2, [[-5, 5]], {
+    const result = geneticAlgorithm(([x]) => (x! - 3) ** 2, [[-5, 5]], {
       seed: 42,
       generations: 200,
     });
@@ -628,10 +629,10 @@ describe('penaltyMethod', () => {
   it('minimizes x^2+y^2 with equality constraint x+y=1', () => {
     // Analytical solution: x=y=0.5
     // Use a moderate penalty to avoid divergence with numerical gradient
-    const fn: ObjectiveFn = ([x, y]) => x * x + y * y;
-    const grad: GradientFn = ([x, y]) => [2 * x, 2 * y];
+    const fn: ObjectiveFn = ([x, y]) => x! * x! + y! * y!;
+    const grad: GradientFn = ([x, y]) => [2 * x!, 2 * y!];
     const constraints = [
-      { fn: ([x, y]: number[]) => x + y - 1, type: 'equality' as const },
+      { fn: ([x, y]: number[]) => x! + y! - 1, type: 'equality' as const },
     ];
     const result = penaltyMethod(fn, grad, [0.5, 0.5], constraints, {
       penaltyFactor: 10,
@@ -639,19 +640,19 @@ describe('penaltyMethod', () => {
       tol: 1e-5,
     });
     // With penalty method, we get an approximate solution; constraint roughly satisfied
-    const constraintViol = Math.abs(result.x[0] + result.x[1] - 1);
+    const constraintViol = Math.abs(result.x[0]! + result.x[1]! - 1);
     expect(constraintViol).toBeLessThan(0.5);
     // x and y should be roughly equal (symmetry of the problem)
-    expect(Math.abs(result.x[0] - result.x[1])).toBeLessThan(0.5);
+    expect(Math.abs(result.x[0]! - result.x[1]!)).toBeLessThan(0.5);
   });
 
   it('minimizes subject to inequality constraint x >= 1 (as x-1 <= 0 rewritten)', () => {
     // min x^2, s.t. x >= 1  ⟹  x=1
     // inequality g(x) = 1 - x <= 0
-    const fn: ObjectiveFn = ([x]) => x * x;
-    const grad: GradientFn = ([x]) => [2 * x];
+    const fn: ObjectiveFn = ([x]) => x! * x!;
+    const grad: GradientFn = ([x]) => [2 * x!];
     const constraints = [
-      { fn: ([x]: number[]) => 1 - x, type: 'inequality' as const },
+      { fn: ([x]: number[]) => 1 - x!, type: 'inequality' as const },
     ];
     const result = penaltyMethod(fn, grad, [0], constraints, {
       penaltyFactor: 500,
@@ -662,8 +663,8 @@ describe('penaltyMethod', () => {
   });
 
   it('returns an OptimizeResult shape', () => {
-    const fn: ObjectiveFn = ([x]) => x * x;
-    const grad: GradientFn = ([x]) => [2 * x];
+    const fn: ObjectiveFn = ([x]) => x! * x!;
+    const grad: GradientFn = ([x]) => [2 * x!];
     const result = penaltyMethod(fn, grad, [2], [], {});
     expect(result).toHaveProperty('x');
     expect(result).toHaveProperty('value');
@@ -672,8 +673,8 @@ describe('penaltyMethod', () => {
   });
 
   it('converges to unconstrained minimum when no constraints given', () => {
-    const fn: ObjectiveFn = ([x, y]) => x * x + y * y;
-    const grad: GradientFn = ([x, y]) => [2 * x, 2 * y];
+    const fn: ObjectiveFn = ([x, y]) => x! * x! + y! * y!;
+    const grad: GradientFn = ([x, y]) => [2 * x!, 2 * y!];
     const result = penaltyMethod(fn, grad, [3, 3], [], {
       penaltyFactor: 1,
       maxIter: 2000,
@@ -695,7 +696,7 @@ describe('meanVarianceOptimize', () => {
     const cov = [[0.01, 0], [0, 0.0025]];
     const result = meanVarianceOptimize(mu, cov, 0.18);
     // To achieve ~0.18 return, most weight should be on A
-    expect(result.weights[0]).toBeGreaterThan(result.weights[1]);
+    expect(result.weights[0]).toBeGreaterThan(result.weights[1]!);
     expect(result.expectedReturn).toBeGreaterThan(0.1);
   });
 
@@ -740,7 +741,7 @@ describe('meanVarianceOptimize', () => {
     const cov = [[0.09, 0], [0, 0.0025]]; // sig_A=0.3, sig_B=0.05
     const result = meanVarianceOptimize(mu, cov, 0.06);
     // Low target return — mostly B (low risk)
-    expect(result.weights[1]).toBeGreaterThan(result.weights[0]);
+    expect(result.weights[1]).toBeGreaterThan(result.weights[0]!);
   });
 });
 
@@ -798,7 +799,7 @@ describe('randomSearch', () => {
   it('returns a point within bounds', () => {
     const result = randomSearch(sphere, bounds, { seed: 42, iterations: 100 });
     result.x.forEach((xi, i) => {
-      const [lo, hi] = bounds[i];
+      const [lo, hi] = bounds[i]!;
       expect(xi).toBeGreaterThanOrEqual(lo - 1e-10);
       expect(xi).toBeLessThanOrEqual(hi + 1e-10);
     });
@@ -812,7 +813,7 @@ describe('randomSearch', () => {
   });
 
   it('maximizes when requested', () => {
-    const fn: ObjectiveFn = ([x, y]) => -(x * x + y * y); // negative sphere
+    const fn: ObjectiveFn = ([x, y]) => -(x! * x! + y! * y!); // negative sphere
     const r = randomSearch(fn, bounds, { maximize: true, seed: 42, iterations: 200 });
     // Maximum is at boundary; value should be negative (large |x|)
     expect(r.value).toBeGreaterThan(-50); // within bounds
@@ -882,7 +883,7 @@ describe('decaySchedule', () => {
       decaySchedule(1.0, s, 'exponential', { decayFactor: 0.9 }),
     );
     for (let i = 1; i < vals.length; i++) {
-      expect(vals[i]).toBeLessThan(vals[i - 1]);
+      expect(vals[i]).toBeLessThan(vals[i - 1]!);
     }
   });
 

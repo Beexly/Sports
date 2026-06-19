@@ -135,8 +135,12 @@ export function adjacencyMatrix(graph: Graph): number[][] {
     const r = idx.get(e.from)
     const c = idx.get(e.to)
     if (r !== undefined && c !== undefined) {
-      mat[r][c] = e.weight ?? 1
-      if (!graph.directed) mat[c][r] = e.weight ?? 1
+      const rowR = mat[r]
+      if (rowR !== undefined) rowR[c] = e.weight ?? 1
+      if (!graph.directed) {
+        const rowC = mat[c]
+        if (rowC !== undefined) rowC[r] = e.weight ?? 1
+      }
     }
   }
   return mat
@@ -242,7 +246,7 @@ class MinHeap<T> {
 
   pop(): T | undefined {
     if (this.heap.length === 0) return undefined
-    const top = this.heap[0]
+    const top = this.heap[0]!
     const last = this.heap.pop()!
     if (this.heap.length > 0) {
       this.heap[0] = last
@@ -258,8 +262,11 @@ class MinHeap<T> {
   private _bubbleUp(i: number): void {
     while (i > 0) {
       const parent = (i - 1) >> 1
-      if (this.heap[parent].priority <= this.heap[i].priority) break
-      ;[this.heap[parent], this.heap[i]] = [this.heap[i], this.heap[parent]]
+      const hp = this.heap[parent]
+      const hi = this.heap[i]
+      if (hp === undefined || hi === undefined) break
+      if (hp.priority <= hi.priority) break
+      ;[this.heap[parent], this.heap[i]] = [hi, hp]
       i = parent
     }
   }
@@ -270,12 +277,14 @@ class MinHeap<T> {
       let smallest = i
       const l = 2 * i + 1
       const r = 2 * i + 2
-      if (l < n && this.heap[l].priority < this.heap[smallest].priority)
+      if (l < n && this.heap[l]!.priority < this.heap[smallest]!.priority)
         smallest = l
-      if (r < n && this.heap[r].priority < this.heap[smallest].priority)
+      if (r < n && this.heap[r]!.priority < this.heap[smallest]!.priority)
         smallest = r
       if (smallest === i) break
-      ;[this.heap[smallest], this.heap[i]] = [this.heap[i], this.heap[smallest]]
+      const hs = this.heap[smallest]!
+      const hi = this.heap[i]!
+      ;[this.heap[smallest], this.heap[i]] = [hi, hs]
       i = smallest
     }
   }
@@ -383,21 +392,27 @@ export function floydWarshall(
     const c = idx.get(e.to)
     if (r !== undefined && c !== undefined) {
       const w = e.weight ?? 1
-      if (w < dist[r][c]) {
-        dist[r][c] = w
-        next[r][c] = c
+      const distR = dist[r]
+      const nextR = next[r]
+      if (distR !== undefined && nextR !== undefined && w < distR[c]!) {
+        distR[c] = w
+        nextR[c] = c
       }
     }
   }
 
   for (let k = 0; k < n; k++) {
     for (let i = 0; i < n; i++) {
+      const distI = dist[i]!
+      const nextI = next[i]!
+      const distK = dist[k]!
+      const nextI_k = nextI[k]!
       for (let j = 0; j < n; j++) {
-        if (dist[i][k] !== INF && dist[k][j] !== INF) {
-          const through = dist[i][k] + dist[k][j]
-          if (through < dist[i][j]) {
-            dist[i][j] = through
-            next[i][j] = next[i][k]
+        if (distI[k] !== INF && distK[j] !== INF) {
+          const through = distI[k]! + distK[j]!
+          if (through < distI[j]!) {
+            distI[j] = through
+            nextI[j] = nextI_k
           }
         }
       }
@@ -543,7 +558,7 @@ export function stronglyConnectedComponents(graph: Graph): NodeId[][] {
 
   for (let i = finishOrder.length - 1; i >= 0; i--) {
     const n = finishOrder[i]
-    if (!assigned.has(n)) {
+    if (n !== undefined && !assigned.has(n)) {
       const component: NodeId[] = []
       dfs2(n, component)
       sccs.push(component)
@@ -555,7 +570,7 @@ export function stronglyConnectedComponents(graph: Graph): NodeId[][] {
 
 export function isConnected(graph: Graph): boolean {
   if (graph.nodes.size === 0) return true
-  const start = [...graph.nodes][0]
+  const start = [...graph.nodes][0]!
   const visited = bfs(graph, start)
   return visited.length === graph.nodes.size
 }

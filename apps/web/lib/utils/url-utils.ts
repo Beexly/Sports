@@ -118,6 +118,7 @@ export function parsePathParams(
   for (let i = 0; i < templateSegments.length; i++) {
     const tSeg = templateSegments[i];
     const pSeg = pathSegments[i];
+    if (tSeg === undefined || pSeg === undefined) continue;
 
     if (tSeg.startsWith(":")) {
       result[tSeg.slice(1)] = pSeg;
@@ -166,7 +167,7 @@ export function getPathSegments(path: string): string[] {
 export function joinPaths(...parts: string[]): string {
   if (parts.length === 0) return "";
 
-  const leadingSlash = parts[0].startsWith("/");
+  const leadingSlash = parts[0]!.startsWith("/");
 
   const segments: string[] = [];
   for (const part of parts) {
@@ -303,7 +304,7 @@ export function getQueryParam(url: string, key: string): string | null {
 
   const value = params[key];
   if (value === undefined) return null;
-  if (Array.isArray(value)) return value[0];
+  if (Array.isArray(value)) return value[0] ?? null;
   return value;
 }
 

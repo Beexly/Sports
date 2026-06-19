@@ -299,7 +299,7 @@ export function splitByOpponent(
   for (const result of results) {
     if (result.opponent === undefined) continue;
     if (!grouped[result.opponent]) grouped[result.opponent] = [];
-    grouped[result.opponent].push(result);
+    (grouped[result.opponent] as PropHistoricalResult[]).push(result);
   }
 
   const output: Record<string, number> = {};

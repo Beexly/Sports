@@ -361,9 +361,9 @@ describe("retry — onRetry callback", () => {
     await vi.runAllTimersAsync();
     await p;
     expect(calls).toHaveLength(2);
-    expect(calls[0].attempt).toBe(1);
-    expect(calls[1].attempt).toBe(2);
-    expect(calls[0].error).toBeInstanceOf(Error);
+    expect(calls[0]!.attempt).toBe(1);
+    expect(calls[1]!.attempt).toBe(2);
+    expect(calls[0]!.error).toBeInstanceOf(Error);
     vi.useRealTimers();
   });
 
@@ -661,7 +661,7 @@ describe("retryWithFallback", () => {
   it("respects maxAttempts before falling back", async () => {
     vi.useFakeTimers();
     let calls = 0;
-    const fn = async (): Promise<void> => {
+    const fn = async (): Promise<string> => {
       calls++;
       throw new Error("fail");
     };

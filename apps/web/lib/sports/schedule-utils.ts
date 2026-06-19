@@ -62,9 +62,10 @@ export function restDays(
     .filter((g) => g.date < beforeDate)
     .sort((a, b) => b.date - a.date);
 
-  if (prior.length === 0) return null;
+  const mostRecent = prior[0];
+  if (mostRecent === undefined) return null;
 
-  return daysBetween(prior[0].date, beforeDate);
+  return daysBetween(mostRecent.date, beforeDate);
 }
 
 /**
@@ -258,7 +259,7 @@ export function currentHomeStreak(games: readonly ScheduledGame[]): number {
   if (games.length === 0) return 0;
   let streak = 0;
   for (let i = games.length - 1; i >= 0; i--) {
-    if (games[i].isHome) {
+    if (games[i]?.isHome) {
       streak++;
     } else {
       break;
@@ -274,7 +275,7 @@ export function currentAwayStreak(games: readonly ScheduledGame[]): number {
   if (games.length === 0) return 0;
   let streak = 0;
   for (let i = games.length - 1; i >= 0; i--) {
-    if (!games[i].isHome) {
+    if (!games[i]?.isHome) {
       streak++;
     } else {
       break;

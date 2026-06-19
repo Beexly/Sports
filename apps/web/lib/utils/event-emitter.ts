@@ -156,7 +156,7 @@ export class PriorityQueue<T> {
     let hi = this._items.length
     while (lo < hi) {
       const mid = (lo + hi) >>> 1
-      if (this._items[mid].priority >= item.priority) {
+      if (this._items[mid]!.priority >= item.priority) {
         lo = mid + 1
       } else {
         hi = mid

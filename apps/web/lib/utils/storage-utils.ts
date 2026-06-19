@@ -66,7 +66,7 @@ export function getSafeStorage(type: 'local' | 'session' = 'local'): StorageBack
     const probe = '__storage_probe__'
     storage.setItem(probe, '1')
     storage.removeItem(probe)
-    return storage as StorageBackend
+    return storage as unknown as StorageBackend
   } catch {
     return new MemoryStorage()
   }

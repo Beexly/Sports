@@ -87,7 +87,7 @@ export function formatWithCommas(n: number, decimals?: number): string {
   const fixed =
     decimals !== undefined ? Math.abs(n).toFixed(decimals) : String(Math.abs(n));
   const [intPart, decPart] = fixed.split(".");
-  const withCommas = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const withCommas = (intPart ?? "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   const result = decPart !== undefined ? `${withCommas}.${decPart}` : withCommas;
   return n < 0 ? `-${result}` : result;
 }

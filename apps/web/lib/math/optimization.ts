@@ -36,11 +36,11 @@ export interface OptimizeResult {
 // ---------------------------------------------------------------------------
 
 function vecAdd(a: number[], b: number[]): number[] {
-  return a.map((v, i) => v + b[i]);
+  return a.map((v, i) => v + (b[i] ?? 0));
 }
 
 function vecSub(a: number[], b: number[]): number[] {
-  return a.map((v, i) => v - b[i]);
+  return a.map((v, i) => v - (b[i] ?? 0));
 }
 
 function vecScale(a: number[], s: number): number[] {
@@ -48,7 +48,7 @@ function vecScale(a: number[], s: number): number[] {
 }
 
 function vecDot(a: number[], b: number[]): number {
-  return a.reduce((sum, v, i) => sum + v * b[i], 0);
+  return a.reduce((sum, v, i) => sum + v * (b[i] ?? 0), 0);
 }
 
 function vecNorm(a: number[]): number {
@@ -325,8 +325,8 @@ export function numericalGradient(fn: ObjectiveFn, x: number[], h = 1e-5): numbe
   return x.map((_, i) => {
     const xp = vecCopy(x);
     const xm = vecCopy(x);
-    xp[i] += h;
-    xm[i] -= h;
+    xp[i] = (xp[i] ?? 0) + h;
+    xm[i] = (xm[i] ?? 0) - h;
     return (fn(xp) - fn(xm)) / (2 * h);
   });
 }
@@ -521,7 +521,7 @@ export function adam(
     const mHat = vecScale(m, 1 / (1 - Math.pow(beta1, iter)));
     const vHat = v.map((vi) => vi / (1 - Math.pow(beta2, iter)));
 
-    const update = mHat.map((mi, i) => (lr * mi) / (Math.sqrt(vHat[i]) + epsilon));
+    const update = mHat.map((mi, i) => (lr * mi) / (Math.sqrt(vHat[i] ?? 0) + epsilon));
     const xNext = vecSub(x, update);
 
     if (trackHistory) history.push(fn(x));
@@ -586,15 +586,17 @@ export function lbfgs(
     const alpha: number[] = new Array(k).fill(0);
 
     for (let i = k - 1; i >= 0; i--) {
-      alpha[i] = rhoHistory[i] * vecDot(sHistory[i], q);
-      q = vecSub(q, vecScale(yHistory[i], alpha[i]));
+      const si = sHistory[i] ?? [];
+      const yi = yHistory[i] ?? [];
+      alpha[i] = (rhoHistory[i] ?? 0) * vecDot(si, q);
+      q = vecSub(q, vecScale(yi, alpha[i] ?? 0));
     }
 
     // Initial Hessian approximation (scaled identity)
     let r: number[];
     if (k > 0) {
-      const ys = vecDot(yHistory[k - 1], sHistory[k - 1]);
-      const yy = vecDot(yHistory[k - 1], yHistory[k - 1]);
+      const ys = vecDot(yHistory[k - 1] ?? [], sHistory[k - 1] ?? []);
+      const yy = vecDot(yHistory[k - 1] ?? [], yHistory[k - 1] ?? []);
       const gamma = yy > 0 ? ys / yy : 1;
       r = vecScale(q, gamma);
     } else {
@@ -602,8 +604,10 @@ export function lbfgs(
     }
 
     for (let i = 0; i < k; i++) {
-      const beta = rhoHistory[i] * vecDot(yHistory[i], r);
-      r = vecAdd(r, vecScale(sHistory[i], alpha[i] - beta));
+      const si = sHistory[i] ?? [];
+      const yi = yHistory[i] ?? [];
+      const beta = (rhoHistory[i] ?? 0) * vecDot(yi, r);
+      r = vecAdd(r, vecScale(si, (alpha[i] ?? 0) - beta));
     }
 
     // Search direction is -r
@@ -753,15 +757,15 @@ export function geneticAlgorithm(
   let fitnesses = population.map((ind) => fn(ind));
 
   const bestIdx = fitnesses.indexOf(Math.min(...fitnesses));
-  let bestX = vecCopy(population[bestIdx]);
-  let bestFx = fitnesses[bestIdx];
+  let bestX = vecCopy(population[bestIdx] ?? []);
+  let bestFx = fitnesses[bestIdx] ?? Infinity;
 
   for (let gen = 0; gen < generations; gen++) {
     // Tournament selection (size 2)
     function select(): number[] {
       const i = Math.floor(rng() * popSize);
       const j = Math.floor(rng() * popSize);
-      return vecCopy(fitnesses[i] <= fitnesses[j] ? population[i] : population[j]);
+      return vecCopy((fitnesses[i] ?? Infinity) <= (fitnesses[j] ?? Infinity) ? (population[i] ?? []) : (population[j] ?? []));
     }
 
     const newPop: number[][] = [];
@@ -773,7 +777,7 @@ export function geneticAlgorithm(
       // Uniform crossover
       let child: number[];
       if (rng() < crossoverRate) {
-        child = parent1.map((v, d) => (rng() < 0.5 ? v : parent2[d]));
+        child = parent1.map((v, d) => (rng() < 0.5 ? v : (parent2[d] ?? v)));
       } else {
         child = vecCopy(parent1);
       }
@@ -781,7 +785,9 @@ export function geneticAlgorithm(
       // Gaussian mutation
       child = child.map((v, d) => {
         if (rng() < mutationRate) {
-          const [lo, hi] = bounds[d];
+          const bound = bounds[d];
+          if (bound === undefined) return v;
+          const [lo, hi] = bound;
           const scale = (hi - lo) * 0.1;
           const u1 = rng();
           const u2 = rng();
@@ -801,9 +807,9 @@ export function geneticAlgorithm(
     fitnesses = population.map((ind) => fn(ind));
 
     const idx = fitnesses.indexOf(Math.min(...fitnesses));
-    if (fitnesses[idx] < bestFx) {
-      bestX = vecCopy(population[idx]);
-      bestFx = fitnesses[idx];
+    if ((fitnesses[idx] ?? Infinity) < bestFx) {
+      bestX = vecCopy(population[idx] ?? []);
+      bestFx = fitnesses[idx] ?? bestFx;
     }
 
     if (trackHistory) history.push(bestFx);
@@ -880,8 +886,9 @@ export function meanVarianceOptimize(
   function portfolioVariance(w: number[]): number {
     let v = 0;
     for (let i = 0; i < n; i++) {
+      const row = covMatrix[i] ?? [];
       for (let j = 0; j < n; j++) {
-        v += w[i] * covMatrix[i][j] * w[j];
+        v += (w[i] ?? 0) * (row[j] ?? 0) * (w[j] ?? 0);
       }
     }
     return v;
@@ -889,9 +896,10 @@ export function meanVarianceOptimize(
 
   /** Gradient of variance: 2 Sigma w */
   function varGrad(w: number[]): number[] {
-    return w.map((_, i) =>
-      2 * w.reduce((s, wj, j) => s + covMatrix[i][j] * wj, 0),
-    );
+    return w.map((_, i) => {
+      const row = covMatrix[i] ?? [];
+      return 2 * w.reduce((s, wj, j) => s + (row[j] ?? 0) * wj, 0);
+    });
   }
 
   /** Project onto simplex (sum=1, w>=0) via Duchi et al. O(n log n) algorithm. */
@@ -900,11 +908,11 @@ export function meanVarianceOptimize(
     let rho = 0;
     let cumSum = 0;
     for (let i = 0; i < n; i++) {
-      cumSum += sorted[i];
-      if (sorted[i] - (cumSum - 1) / (i + 1) > 0) rho = i;
+      cumSum += sorted[i] ?? 0;
+      if ((sorted[i] ?? 0) - (cumSum - 1) / (i + 1) > 0) rho = i;
     }
     let cumSumRho = 0;
-    for (let i = 0; i <= rho; i++) cumSumRho += sorted[i];
+    for (let i = 0; i <= rho; i++) cumSumRho += sorted[i] ?? 0;
     const theta = (cumSumRho - 1) / (rho + 1);
     return v.map((vi) => Math.max(0, vi - theta));
   }
@@ -920,15 +928,15 @@ export function meanVarianceOptimize(
 
       if (returnTarget !== undefined) {
         // Augmented objective: var + penalty*(w·mu - target)^2
-        const retErr = w.reduce((s, wi, i) => s + wi * expectedReturns[i], 0) - returnTarget;
+        const retErr = w.reduce((s, wi, i) => s + wi * (expectedReturns[i] ?? 0), 0) - returnTarget;
         const penalty = 200;
-        g = g.map((gi, i) => gi + 2 * penalty * retErr * expectedReturns[i]);
+        g = g.map((gi, i) => gi + 2 * penalty * retErr * (expectedReturns[i] ?? 0));
       }
 
-      const wNext = projectSimplex(w.map((wi, i) => wi - lr * g[i]));
+      const wNext = projectSimplex(w.map((wi, i) => wi - lr * (g[i] ?? 0)));
 
       let maxDiff = 0;
-      for (let i = 0; i < n; i++) maxDiff = Math.max(maxDiff, Math.abs(wNext[i] - w[i]));
+      for (let i = 0; i < n; i++) maxDiff = Math.max(maxDiff, Math.abs((wNext[i] ?? 0) - (w[i] ?? 0)));
       w = wNext;
       if (maxDiff < 1e-8) break;
     }
@@ -951,7 +959,7 @@ export function meanVarianceOptimize(
     for (let k = 0; k <= steps; k++) {
       const target = muMin + (k / steps) * (muMax - muMin);
       const w = solveMinVar(target);
-      const ret = w.reduce((s, wi, i) => s + wi * expectedReturns[i], 0);
+      const ret = w.reduce((s, wi, i) => s + wi * (expectedReturns[i] ?? 0), 0);
       const varP = portfolioVariance(w);
       const sharpe = varP > 1e-12 ? (ret - riskFreeRate) / Math.sqrt(varP) : 0;
       if (sharpe > bestSharpe) {
@@ -962,7 +970,7 @@ export function meanVarianceOptimize(
     weights = bestW;
   }
 
-  const expectedReturn = weights.reduce((s, wi, i) => s + wi * expectedReturns[i], 0);
+  const expectedReturn = weights.reduce((s, wi, i) => s + wi * (expectedReturns[i] ?? 0), 0);
   const variance = portfolioVariance(weights);
   const sharpeRatio = variance > 1e-12 ? (expectedReturn - riskFreeRate) / Math.sqrt(variance) : 0;
 
@@ -996,7 +1004,7 @@ export function gridSearch(
       }
       return;
     }
-    for (const v of paramGrids[depth]) {
+    for (const v of paramGrids[depth] ?? []) {
       recurse(depth + 1, [...current, v]);
     }
   }
@@ -1050,7 +1058,7 @@ export function randomSearch(
  */
 export function isConverged(current: number[], previous: number[], tol: number): boolean {
   for (let i = 0; i < current.length; i++) {
-    if (Math.abs(current[i] - previous[i]) >= tol) return false;
+    if (Math.abs((current[i] ?? 0) - (previous[i] ?? 0)) >= tol) return false;
   }
   return true;
 }

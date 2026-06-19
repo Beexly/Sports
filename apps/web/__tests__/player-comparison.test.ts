@@ -158,8 +158,8 @@ describe('compositeScore', () => {
 
   it('higher stat values produce higher scores', () => {
     const players = [makePlayer('a', 'QB', { yards: 100 }), makePlayer('b', 'QB', { yards: 300 })]
-    const scoreA = compositeScore(players[0], players)
-    const scoreB = compositeScore(players[1], players)
+    const scoreA = compositeScore(players[0]!, players)
+    const scoreB = compositeScore(players[1]!, players)
     expect(scoreB).toBeGreaterThan(scoreA)
   })
 
@@ -182,8 +182,8 @@ describe('compositeScore', () => {
     ]
     // Player B wins yards, Player A wins tds
     // Weight tds heavily → A should score higher
-    const scoreA = compositeScore(players[0], players, { tds: 10, yards: 1 })
-    const scoreB = compositeScore(players[1], players, { tds: 10, yards: 1 })
+    const scoreA = compositeScore(players[0]!, players, { tds: 10, yards: 1 })
+    const scoreB = compositeScore(players[1]!, players, { tds: 10, yards: 1 })
     expect(scoreA).toBeGreaterThan(scoreB)
   })
 
@@ -209,13 +209,13 @@ describe('compositeScore', () => {
 
   it('returns 100 for the sole dominant player in a 2-player pool', () => {
     const players = [makePlayer('a', 'QB', { yards: 100 }), makePlayer('b', 'QB', { yards: 0 })]
-    expect(compositeScore(players[0], players)).toBe(100)
+    expect(compositeScore(players[0]!, players)).toBe(100)
   })
 
   it('returns 50 for all players when all stat values are equal', () => {
     const players = [makePlayer('a', 'QB', { yards: 50 }), makePlayer('b', 'QB', { yards: 50 })]
-    expect(compositeScore(players[0], players)).toBe(50)
-    expect(compositeScore(players[1], players)).toBe(50)
+    expect(compositeScore(players[0]!, players)).toBe(50)
+    expect(compositeScore(players[1]!, players)).toBe(50)
   })
 })
 
@@ -229,8 +229,8 @@ describe('rankPlayers', () => {
       makePlayer('c', 'QB', { yards: 300 }),
     ]
     const rankings = rankPlayers(players)
-    expect(rankings[0].rank).toBe(1)
-    expect(rankings[0].playerId).toBe('b')
+    expect(rankings[0]!.rank).toBe(1)
+    expect(rankings[0]!.playerId).toBe('b')
   })
 
   it('assigns consecutive ranks', () => {
@@ -270,17 +270,17 @@ describe('rankPlayers', () => {
   it('single player gets rank 1 and percentile 100', () => {
     const players = [makePlayer('a', 'QB', { yards: 100 })]
     const rankings = rankPlayers(players)
-    expect(rankings[0].rank).toBe(1)
-    expect(rankings[0].percentileOverall).toBe(100)
+    expect(rankings[0]!.rank).toBe(1)
+    expect(rankings[0]!.percentileOverall).toBe(100)
   })
 
   it('results include playerId, name, position, compositeScore', () => {
     const players = [makePlayer('a', 'QB', { yards: 100 })]
     const rankings = rankPlayers(players)
-    expect(rankings[0].playerId).toBe('a')
-    expect(rankings[0].name).toBe('Player a')
-    expect(rankings[0].position).toBe('QB')
-    expect(rankings[0].compositeScore).toBeGreaterThanOrEqual(0)
+    expect(rankings[0]!.playerId).toBe('a')
+    expect(rankings[0]!.name).toBe('Player a')
+    expect(rankings[0]!.position).toBe('QB')
+    expect(rankings[0]!.compositeScore).toBeGreaterThanOrEqual(0)
   })
 
   it('weight overrides affect ranking order', () => {
@@ -293,9 +293,9 @@ describe('rankPlayers', () => {
     const b = makePlayer('b', 'QB', { yards: 0, tds: 100 })
     const pool = [a, b]
     const weightedTds = rankPlayers(pool, { tds: 10, yards: 1 })
-    expect(weightedTds[0].playerId).toBe('b')
+    expect(weightedTds[0]!.playerId).toBe('b')
     const weightedYards = rankPlayers(pool, { yards: 10, tds: 1 })
-    expect(weightedYards[0].playerId).toBe('a')
+    expect(weightedYards[0]!.playerId).toBe('a')
   })
 })
 
@@ -334,14 +334,14 @@ describe('comparePlayers', () => {
     const a = makePlayer('a', 'QB', { s1: 100, s2: 10 })
     const b = makePlayer('b', 'QB', { s1: 0, s2: 0 })
     const result = comparePlayers(a, b)
-    expect(result.advantages[0].diff).toBeGreaterThanOrEqual(result.advantages[1]?.diff ?? 0)
+    expect(result.advantages[0]!.diff).toBeGreaterThanOrEqual(result.advantages[1]?.diff ?? 0)
   })
 
   it('advantage playerId is correct', () => {
     const a = makePlayer('a', 'QB', { yards: 500 })
     const b = makePlayer('b', 'QB', { yards: 100 })
     const result = comparePlayers(a, b)
-    expect(result.advantages[0].playerId).toBe('a')
+    expect(result.advantages[0]!.playerId).toBe('a')
   })
 
   it('returns playerAId and playerBId correctly', () => {
@@ -524,7 +524,7 @@ describe('findSimilarPlayers', () => {
       makePlayer('b', 'QB', { yards: 100 }),
       makePlayer('c', 'QB', { yards: 100 }),
     ]
-    const results = findSimilarPlayers(players[0], players)
+    const results = findSimilarPlayers(players[0]!, players)
     expect(results.find((r) => r.playerId === 'a')).toBeUndefined()
   })
 
@@ -532,7 +532,7 @@ describe('findSimilarPlayers', () => {
     const players = Array.from({ length: 10 }, (_, i) =>
       makePlayer(`p${i}`, 'QB', { yards: i * 10 })
     )
-    const results = findSimilarPlayers(players[0], players, { topN: 3 })
+    const results = findSimilarPlayers(players[0]!, players, { topN: 3 })
     expect(results.length).toBeLessThanOrEqual(3)
   })
 
@@ -541,7 +541,7 @@ describe('findSimilarPlayers', () => {
     const identical = makePlayer('id', 'QB', { yards: 100, tds: 20 })
     const different = makePlayer('df', 'QB', { yards: 1, tds: 1 })
     const results = findSimilarPlayers(target, [target, identical, different])
-    expect(results[0].playerId).toBe('id')
+    expect(results[0]!.playerId).toBe('id')
   })
 
   it('samePosition filter excludes different positions', () => {
@@ -572,14 +572,14 @@ describe('findSimilarPlayers', () => {
     const target = makePlayer('t', 'QB', { yards: 100 })
     const same = makePlayer('a', 'QB', { yards: 100 })
     const results = findSimilarPlayers(target, [target, same])
-    expect(results[0].positionMatch).toBe(true)
+    expect(results[0]!.positionMatch).toBe(true)
   })
 
   it('positionMatch is false when positions differ', () => {
     const target = makePlayer('t', 'QB', { yards: 100 })
     const other = makePlayer('a', 'RB', { yards: 100 })
     const results = findSimilarPlayers(target, [target, other])
-    expect(results[0].positionMatch).toBe(false)
+    expect(results[0]!.positionMatch).toBe(false)
   })
 
   it('keySharedStrengths contains stats where both are above pool average', () => {
@@ -589,7 +589,7 @@ describe('findSimilarPlayers', () => {
       makePlayer('low1', 'QB', { yards: 10, tds: 2 }),
       makePlayer('low2', 'QB', { yards: 10, tds: 2 }),
     ]
-    const results = findSimilarPlayers(pool[0], pool)
+    const results = findSimilarPlayers(pool[0]!, pool)
     // a and b both have above-avg yards and tds
     const topResult = results.find((r) => r.playerId === 'b')
     expect(topResult?.keySharedStrengths).toContain('yards')
@@ -688,7 +688,7 @@ describe('h2hComparison', () => {
     const result = h2hComparison(a, b)
     const diffs = result.map((r) => Math.abs(r.pctDiff))
     for (let i = 1; i < diffs.length; i++) {
-      expect(diffs[i - 1]).toBeGreaterThanOrEqual(diffs[i])
+      expect(diffs[i - 1]).toBeGreaterThanOrEqual(diffs[i]!)
     }
   })
 
@@ -734,7 +734,7 @@ describe('positionRanking', () => {
       makePlayer('c', 'RB', { yards: 999 }),
     ]
     const rankings = positionRanking(players, 'QB')
-    expect(rankings[0].playerId).toBe('b')
+    expect(rankings[0]!.playerId).toBe('b')
   })
 })
 
@@ -746,21 +746,21 @@ describe('playerTier', () => {
       makePlayer(`p${i}`, 'QB', { yards: i * 100 })
     )
     // p19 is the top player (percentile 100)
-    expect(playerTier(players[19], players)).toBe('franchise')
+    expect(playerTier(players[19]!, players)).toBe('franchise')
   })
 
   it('bottom player is practice-squad', () => {
     const players = Array.from({ length: 10 }, (_, i) =>
       makePlayer(`p${i}`, 'QB', { yards: i * 100 })
     )
-    expect(playerTier(players[0], players)).toBe('practice-squad')
+    expect(playerTier(players[0]!, players)).toBe('practice-squad')
   })
 
   it('middle player is starter or depth', () => {
     const players = Array.from({ length: 10 }, (_, i) =>
       makePlayer(`p${i}`, 'QB', { yards: i * 100 })
     )
-    const tier = playerTier(players[5], players)
+    const tier = playerTier(players[5]!, players)
     expect(['starter', 'depth'].includes(tier)).toBe(true)
   })
 
@@ -869,7 +869,7 @@ describe('vorp', () => {
     const players = Array.from({ length: 10 }, (_, i) =>
       makePlayer(`p${i}`, 'QB', { yards: i * 100 })
     )
-    const topPlayer = players[9]
+    const topPlayer = players[9]!
     const result = vorp(topPlayer, players)
     expect(result).toBeGreaterThan(0)
   })
@@ -878,7 +878,7 @@ describe('vorp', () => {
     const players = Array.from({ length: 10 }, (_, i) =>
       makePlayer(`p${i}`, 'QB', { yards: i * 100 })
     )
-    const medianPlayer = players[4]
+    const medianPlayer = players[4]!
     const result = vorp(medianPlayer, players)
     // Replacement at 50th percentile, this player IS at ~50th, so VORP ≈ 0
     expect(Math.abs(result)).toBeLessThan(20) // within reasonable range
@@ -893,7 +893,7 @@ describe('vorp', () => {
     )
     const allPlayers = [...qbs, ...rbs]
     // Top QB's VORP should be based on QB position
-    const result = vorp(qbs[4], allPlayers)
+    const result = vorp(qbs[4]!, allPlayers)
     expect(result).toBeGreaterThan(0)
   })
 
@@ -914,8 +914,8 @@ describe('draftValue', () => {
       makePlayer('a', 'QB', { yards: 300 }, { age: 27 }),
       makePlayer('b', 'RB', { yards: 300 }, { age: 25 }),
     ]
-    const lowScarcity = draftValue(players[0], players, { QB: 1.0, RB: 1.0 })
-    const highScarcity = draftValue(players[0], players, { QB: 2.0, RB: 1.0 })
+    const lowScarcity = draftValue(players[0]!, players, { QB: 1.0, RB: 1.0 })
+    const highScarcity = draftValue(players[0]!, players, { QB: 2.0, RB: 1.0 })
     expect(highScarcity).toBeGreaterThan(lowScarcity)
   })
 
@@ -940,7 +940,7 @@ describe('draftValue', () => {
 
   it('returns non-negative value', () => {
     const players = [makePlayer('a', 'QB', { yards: 100 }, { age: 25 })]
-    const val = draftValue(players[0], players, { QB: 1.2 })
+    const val = draftValue(players[0]!, players, { QB: 1.2 })
     expect(val).toBeGreaterThanOrEqual(0)
   })
 })
@@ -968,7 +968,7 @@ describe('buildOptimalLineup', () => {
       makePlayer('qb2', 'QB', { yards: 100 }),
     ]
     const lineup = buildOptimalLineup(players, { QB: 1 })
-    expect(lineup[0].playerId).toBe('qb1')
+    expect(lineup[0]!.playerId).toBe('qb1')
   })
 
   it('does not select the same player twice', () => {

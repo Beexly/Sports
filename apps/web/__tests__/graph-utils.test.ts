@@ -93,7 +93,7 @@ describe('addEdge', () => {
     const g = buildGraph([1, 2], [])
     const g2 = addEdge(g, { from: 1, to: 2, weight: 5 })
     expect(g2.edges).toHaveLength(1)
-    expect(g2.edges[0].weight).toBe(5)
+    expect(g2.edges[0]!.weight).toBe(5)
   })
 
   it('allows duplicate edges', () => {
@@ -127,7 +127,7 @@ describe('removeEdge', () => {
     ])
     const g2 = removeEdge(g, 1, 2)
     expect(g2.edges).toHaveLength(1)
-    expect(g2.edges[0].from).toBe(2)
+    expect(g2.edges[0]!.from).toBe(2)
   })
 
   it('removing non-existent edge leaves edges unchanged', () => {
@@ -168,22 +168,22 @@ describe('adjacencyMatrix', () => {
     const g = buildGraph([1, 2, 3], [{ from: 1, to: 2, weight: 4 }])
     const mat = adjacencyMatrix(g)
     // nodes sorted: '1', '2', '3' → indices 0,1,2
-    expect(mat[0][1]).toBe(4)
-    expect(mat[1][0]).toBe(4)
-    expect(mat[0][2]).toBe(0)
+    expect(mat[0]![1]).toBe(4)
+    expect(mat[1]![0]).toBe(4)
+    expect(mat[0]![2]).toBe(0)
   })
 
   it('asymmetric for directed graphs', () => {
     const g = buildGraph([1, 2], [{ from: 1, to: 2, weight: 7 }], true)
     const mat = adjacencyMatrix(g)
-    expect(mat[0][1]).toBe(7)
-    expect(mat[1][0]).toBe(0)
+    expect(mat[0]![1]).toBe(7)
+    expect(mat[1]![0]).toBe(0)
   })
 
   it('default weight is 1 when not provided', () => {
     const g = buildGraph([1, 2], [{ from: 1, to: 2 }])
     const mat = adjacencyMatrix(g)
-    expect(mat[0][1]).toBe(1)
+    expect(mat[0]![1]).toBe(1)
   })
 
   it('returns 0-by-0 matrix for empty graph', () => {
@@ -273,7 +273,7 @@ describe('bfsLevels', () => {
     ])
     const levels = bfsLevels(g, 1)
     expect(levels[0]).toEqual([1])
-    expect(sortedIds(levels[1])).toEqual(['2', '3'])
+    expect(sortedIds(levels[1]!)).toEqual(['2', '3'])
     expect(levels[2]).toEqual([4])
   })
 
@@ -400,15 +400,15 @@ describe('floydWarshall', () => {
     ]
     const { dist } = floydWarshall(nodes, edges)
     // sorted order: '1'=0, '2'=1, '3'=2
-    expect(dist[0][2]).toBe(7) // 1->2->3 = 7, cheaper than direct 10
+    expect(dist[0]![2]).toBe(7) // 1->2->3 = 7, cheaper than direct 10
   })
 
   it('diagonal is zero', () => {
     const nodes: NodeId[] = [1, 2]
     const edges: Edge[] = [{ from: 1, to: 2, weight: 5 }]
     const { dist } = floydWarshall(nodes, edges)
-    expect(dist[0][0]).toBe(0)
-    expect(dist[1][1]).toBe(0)
+    expect(dist[0]![0]).toBe(0)
+    expect(dist[1]![1]).toBe(0)
   })
 
   it('returns empty matrices for no nodes', () => {
@@ -918,7 +918,7 @@ describe('edge cases', () => {
 
   it('floydWarshall single node', () => {
     const { dist } = floydWarshall([1], [])
-    expect(dist[0][0]).toBe(0)
+    expect(dist[0]![0]).toBe(0)
   })
 
   it('scheduleStrength with no matching edges returns 0', () => {

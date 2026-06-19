@@ -15,7 +15,7 @@ export function groupBy<T>(arr: T[], key: (item: T) => string): Record<string, T
     if (!Object.prototype.hasOwnProperty.call(result, k)) {
       result[k] = [];
     }
-    result[k].push(item);
+    (result[k] as T[]).push(item);
   }
   return result;
 }
@@ -30,7 +30,7 @@ export function groupByMultiple<T>(
     if (!Object.prototype.hasOwnProperty.call(result, k)) {
       result[k] = [];
     }
-    result[k].push(item);
+    (result[k] as T[]).push(item);
   }
   return result;
 }
@@ -57,14 +57,15 @@ export function partitionN<T>(arr: T[], predicates: Array<(item: T) => boolean>)
   for (const item of arr) {
     let matched = false;
     for (let i = 0; i < predicates.length; i++) {
-      if (predicates[i](item)) {
-        buckets[i].push(item);
+      const predicate = predicates[i];
+      if (predicate !== undefined && predicate(item)) {
+        (buckets[i] as T[]).push(item);
         matched = true;
         break;
       }
     }
     if (!matched) {
-      buckets[predicates.length].push(item);
+      (buckets[predicates.length] as T[]).push(item);
     }
   }
   return buckets;
@@ -87,7 +88,7 @@ export function zip<T, U>(a: T[], b: U[]): Array<[T, U]> {
   const len = Math.min(a.length, b.length);
   const result: Array<[T, U]> = [];
   for (let i = 0; i < len; i++) {
-    result.push([a[i], b[i]]);
+    result.push([a[i]!, b[i]!]);
   }
   return result;
 }
@@ -96,7 +97,7 @@ export function zipWith<T, U, R>(a: T[], b: U[], fn: (x: T, y: U) => R): R[] {
   const len = Math.min(a.length, b.length);
   const result: R[] = [];
   for (let i = 0; i < len; i++) {
-    result.push(fn(a[i], b[i]));
+    result.push(fn(a[i]!, b[i]!));
   }
   return result;
 }
@@ -121,7 +122,7 @@ export function flatten<T>(arr: T[][], depth?: number): T[] {
 export function flatMap<T, U>(arr: T[], fn: (item: T, index: number) => U[]): U[] {
   const result: U[] = [];
   for (let i = 0; i < arr.length; i++) {
-    for (const x of fn(arr[i], i)) {
+    for (const x of fn(arr[i]!, i)) {
       result.push(x);
     }
   }
@@ -163,7 +164,7 @@ export function interleave<T>(...arrays: T[][]): T[] {
   for (let i = 0; i < maxLen; i++) {
     for (const arr of arrays) {
       if (i < arr.length) {
-        result.push(arr[i]);
+        result.push(arr[i]!);
       }
     }
   }
@@ -231,11 +232,13 @@ export function rankItems<T>(
   const result: Array<{ item: T; rank: number; score: number }> = [];
   let currentRank = 1;
   for (let i = 0; i < scored.length; i++) {
-    if (i > 0 && scored[i].score < scored[i - 1].score) {
+    const cur = scored[i]!;
+    const prev = scored[i - 1];
+    if (i > 0 && prev !== undefined && cur.score < prev.score) {
       // Dense ranking: increment rank by 1 regardless of how many tied
       currentRank++;
     }
-    result.push({ item: scored[i].item, rank: currentRank, score: scored[i].score });
+    result.push({ item: cur.item, rank: currentRank, score: cur.score });
   }
   return result;
 }
@@ -361,13 +364,13 @@ export function unflattenObject(
     const parts = key.split(separator);
     let current: Record<string, unknown> = result;
     for (let i = 0; i < parts.length - 1; i++) {
-      const part = parts[i];
+      const part = parts[i] ?? '';
       if (!isPlainObject(current[part])) {
         current[part] = {};
       }
       current = current[part] as Record<string, unknown>;
     }
-    current[parts[parts.length - 1]] = value;
+    current[parts[parts.length - 1] ?? ''] = value;
   }
   return result;
 }

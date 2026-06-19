@@ -209,6 +209,7 @@ export function rallyWinRate(
   for (let i = 0; i < len; i++) {
     const shots = rallies[i]
     const won = wins[i]
+    if (shots === undefined) continue
     if (shots <= 4) {
       shortTotal++
       if (won) shortWins++
@@ -791,8 +792,8 @@ export function gameScore(
   for (const set of sets) {
     const match = /^(\d+)-(\d+)$/.exec(set)
     if (!match) return null
-    p0 += parseInt(match[1], 10)
-    p1 += parseInt(match[2], 10)
+    p0 += parseInt(match[1]!, 10)
+    p1 += parseInt(match[2]!, 10)
   }
   return { player0: p0, player1: p1 }
 }

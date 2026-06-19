@@ -116,8 +116,8 @@ function percentile(sorted: number[], p: number): number {
   const idx = p * (sorted.length - 1)
   const lower = Math.floor(idx)
   const upper = Math.ceil(idx)
-  if (lower === upper) return sorted[lower]
-  return sorted[lower] + (sorted[upper] - sorted[lower]) * (idx - lower)
+  if (lower === upper) return sorted[lower] ?? 0
+  return (sorted[lower] ?? 0) + ((sorted[upper] ?? 0) - (sorted[lower] ?? 0)) * (idx - lower)
 }
 
 // ---------------------------------------------------------------------------
@@ -216,9 +216,11 @@ export function weightedRecentForm(
   let weightedSum = 0
   let totalWeight = 0
   for (let i = 0; i < sorted.length; i++) {
+    const game = sorted[i]
+    if (game === undefined) continue
     const distanceFromRecent = sorted.length - 1 - i
     const weight = Math.pow(decayFactor, distanceFromRecent)
-    weightedSum += (sorted[i].stats[statKey] ?? 0) * weight
+    weightedSum += (game.stats[statKey] ?? 0) * weight
     totalWeight += weight
   }
   return safeDivide(weightedSum, totalWeight)
@@ -298,8 +300,8 @@ export function winLossSplit(
 export function opponentSplit(games: GameLog[], statKey: string): StatSplit[] {
   const grouped: Record<string, GameLog[]> = {}
   for (const game of games) {
-    if (!grouped[game.opponent]) grouped[game.opponent] = []
-    grouped[game.opponent].push(game)
+    const bucket = grouped[game.opponent] ?? (grouped[game.opponent] = [])
+    bucket.push(game)
   }
   return Object.entries(grouped)
     .map(([opponent, g]) => buildStatSplit(opponent, g, statKey))
@@ -416,9 +418,9 @@ export function resultStreak(games: GameLog[]): StreakResult {
 
   // current streak: count from most recent backwards
   let currentStreak = 0
-  const lastResult = sorted[sorted.length - 1].result
+  const lastResult = sorted[sorted.length - 1]!.result
   for (let i = sorted.length - 1; i >= 0; i--) {
-    if (sorted[i].result === lastResult) {
+    if (sorted[i]!.result === lastResult) {
       currentStreak += lastResult === 'W' ? 1 : -1
     } else {
       break
@@ -457,7 +459,7 @@ export function statStreak(
   // current streak from most recent
   let currentAbove = 0
   for (let i = sorted.length - 1; i >= 0; i--) {
-    if ((sorted[i].stats[statKey] ?? 0) >= threshold) {
+    if ((sorted[i]!.stats[statKey] ?? 0) >= threshold) {
       currentAbove++
     } else {
       break

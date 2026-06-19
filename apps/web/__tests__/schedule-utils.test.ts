@@ -678,8 +678,8 @@ describe("upcomingHomeGames", () => {
     ];
     const result = upcomingHomeGames(games, EPOCH + 2 * DAY, 2);
     expect(result).toHaveLength(2);
-    expect(result[0].gameId).toBe("h2");
-    expect(result[1].gameId).toBe("h3");
+    expect(result[0]!.gameId).toBe("h2");
+    expect(result[1]!.gameId).toBe("h3");
   });
 
   it("returns sorted by date ascending", () => {
@@ -689,8 +689,8 @@ describe("upcomingHomeGames", () => {
       makeGame({ gameId: "h2", isHome: true, date: EPOCH + 3 * DAY }),
     ];
     const result = upcomingHomeGames(games, EPOCH, 3);
-    expect(result[0].date).toBeLessThan(result[1].date);
-    expect(result[1].date).toBeLessThan(result[2].date);
+    expect(result[0]!.date).toBeLessThan(result[1]!.date);
+    expect(result[1]!.date).toBeLessThan(result[2]!.date);
   });
 
   it("includes games exactly at from timestamp", () => {
@@ -732,8 +732,8 @@ describe("upcomingAwayGames", () => {
     ];
     const result = upcomingAwayGames(games, EPOCH, 2);
     expect(result).toHaveLength(2);
-    expect(result[0].gameId).toBe("a1");
-    expect(result[1].gameId).toBe("a2");
+    expect(result[0]!.gameId).toBe("a1");
+    expect(result[1]!.gameId).toBe("a2");
   });
 
   it("returns empty when no away games match", () => {
@@ -760,6 +760,6 @@ describe("upcomingAwayGames", () => {
       makeGame({ gameId: "a1", isHome: false, date: EPOCH + 1 * DAY }),
     ];
     const result = upcomingAwayGames(games, EPOCH, 2);
-    expect(result[0].date).toBeLessThan(result[1].date);
+    expect(result[0]!.date).toBeLessThan(result[1]!.date);
   });
 });

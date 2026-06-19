@@ -26,7 +26,7 @@ import {
 // TypedEventEmitter
 // ---------------------------------------------------------------------------
 
-interface TestEvents {
+type TestEvents = {
   greet: string
   count: number
   data: { value: number; label: string }
@@ -279,9 +279,9 @@ describe('TypedEventEmitter', () => {
       emitter.once('count', vi.fn())
       const info = emitter.listeners()
       expect(info).toHaveLength(1)
-      expect(info[0].event).toBe('count')
-      expect(info[0].count).toBe(2)
-      expect(info[0].once).toEqual([false, true])
+      expect(info[0]!.event).toBe('count')
+      expect(info[0]!.count).toBe(2)
+      expect(info[0]!.once).toEqual([false, true])
     })
   })
 

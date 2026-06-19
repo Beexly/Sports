@@ -414,7 +414,7 @@ describe('analyzeLineup', () => {
     const p = makePlayer({ playerId: 'qb1', position: 'QB', status: 'out' })
     const result = analyzeLineup([p])
     expect(result.keyInjuries).toHaveLength(1)
-    expect(result.keyInjuries[0].playerId).toBe('qb1')
+    expect(result.keyInjuries[0]!.playerId).toBe('qb1')
     expect(result.totalImpactScore).toBe(100)
   })
 
@@ -624,7 +624,7 @@ describe('filterSignificantInjuries', () => {
     ]
     const result = filterSignificantInjuries(players, 'out')
     expect(result).toHaveLength(1)
-    expect(result[0].playerId).toBe('b')
+    expect(result[0]!.playerId).toBe('b')
   })
 
   it('minStatus=probable includes probable, doubtful, out', () => {
@@ -647,7 +647,7 @@ describe('filterSignificantInjuries', () => {
     ]
     const result = filterSignificantInjuries(players)
     // QB impact > WR impact
-    expect(result[0].position).toBe('QB')
+    expect(result[0]!.position).toBe('QB')
   })
 
   it('empty list returns empty', () => {

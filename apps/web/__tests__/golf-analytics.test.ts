@@ -825,13 +825,13 @@ describe('leaderboard', () => {
 
   it('sorts by score ascending (lowest wins)', () => {
     const lb = leaderboard(entries)
-    expect(lb[0].score).toBe(-12)
-    expect(lb[3].score).toBe(-8)
+    expect(lb[0]!.score).toBe(-12)
+    expect(lb[3]!.score).toBe(-8)
   })
 
   it('assigns position 1 to leader', () => {
     const lb = leaderboard(entries)
-    expect(lb[0].position).toBe(1)
+    expect(lb[0]!.position).toBe(1)
   })
 
   it('assigns same position to tied players', () => {
@@ -843,12 +843,12 @@ describe('leaderboard', () => {
   it('does not modify original array', () => {
     const orig = [...entries]
     leaderboard(entries)
-    expect(entries[0].playerId).toBe(orig[0].playerId)
+    expect(entries[0]!.playerId).toBe(orig[0]!.playerId)
   })
 
   it('handles single entry', () => {
     const lb = leaderboard([{ playerId: 'X', score: -5, holesCompleted: 72 }])
-    expect(lb[0].position).toBe(1)
+    expect(lb[0]!.position).toBe(1)
   })
 
   it('breaks ties by holesCompleted descending', () => {
@@ -857,7 +857,7 @@ describe('leaderboard', () => {
       { playerId: 'B', score: -5, holesCompleted: 72 },
     ]
     const lb = leaderboard(tied)
-    expect(lb[0].playerId).toBe('B')
+    expect(lb[0]!.playerId).toBe('B')
   })
 })
 

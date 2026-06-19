@@ -309,7 +309,7 @@ describe('uniqueBy', () => {
 
   it('returns first occurrence on duplicates', () => {
     const arr = [{ k: 'x', n: 1 }, { k: 'x', n: 2 }];
-    expect(uniqueBy(arr, (x) => x.k)[0].n).toBe(1);
+    expect(uniqueBy(arr, (x) => x.k)[0]!.n).toBe(1);
   });
 
   it('handles empty input', () => {
@@ -377,7 +377,7 @@ describe('interleave', () => {
   });
 
   it('handles unequal lengths', () => {
-    expect(interleave([1, 2, 3], ['a'])).toEqual([1, 'a', 2, 3]);
+    expect(interleave<number | string>([1, 2, 3], ['a'])).toEqual([1, 'a', 2, 3]);
   });
 
   it('returns empty for no arguments', () => {
@@ -529,10 +529,10 @@ describe('rankItems', () => {
 
   it('gives ties the same rank (dense ranking)', () => {
     const result = rankItems([{ n: 10 }, { n: 20 }, { n: 20 }, { n: 30 }], (x) => x.n);
-    expect(result[0].rank).toBe(1); // 30
-    expect(result[1].rank).toBe(2); // 20
-    expect(result[2].rank).toBe(2); // 20 (tie)
-    expect(result[3].rank).toBe(3); // 10 — dense: next rank after 2
+    expect(result[0]!.rank).toBe(1); // 30
+    expect(result[1]!.rank).toBe(2); // 20
+    expect(result[2]!.rank).toBe(2); // 20 (tie)
+    expect(result[3]!.rank).toBe(3); // 10 — dense: next rank after 2
   });
 
   it('handles single item', () => {
@@ -588,11 +588,11 @@ describe('omit', () => {
 // ---------------------------------------------------------------------------
 describe('deepMerge', () => {
   it('merges flat objects', () => {
-    expect(deepMerge({ a: 1, b: 2 }, { b: 3, c: 4 })).toEqual({ a: 1, b: 3, c: 4 });
+    expect(deepMerge<Record<string, number>>({ a: 1, b: 2 }, { b: 3, c: 4 })).toEqual({ a: 1, b: 3, c: 4 });
   });
 
   it('deep merges nested objects', () => {
-    const result = deepMerge({ a: { x: 1, y: 2 } }, { a: { y: 99, z: 3 } });
+    const result = deepMerge<{ a: Record<string, number> }>({ a: { x: 1, y: 2 } }, { a: { y: 99, z: 3 } });
     expect(result).toEqual({ a: { x: 1, y: 99, z: 3 } });
   });
 
@@ -1029,7 +1029,7 @@ describe('indexBy', () => {
 
   it('last item wins on duplicate key', () => {
     const arr = [{ id: 'a', v: 1 }, { id: 'a', v: 2 }];
-    expect(indexBy(arr, (x) => x.id)['a'].v).toBe(2);
+    expect(indexBy(arr, (x) => x.id)['a']!.v).toBe(2);
   });
 
   it('returns empty object for empty input', () => {
