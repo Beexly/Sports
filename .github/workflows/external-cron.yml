@@ -21,6 +21,10 @@ on:
     - cron: "*/30 * * * *"
     # Hourly on the :15 — settle picks whose games have completed.
     - cron: "15 * * * *"
+    # Every 15 minutes — advance the operator cockpit task queue one safe step
+    # (NEW→ROUTED→DRAFTED→NEEDS_REVIEW). Parks at the human approval gate; never
+    # crosses it. Internal decision records only — no external action.
+    - cron: "*/15 * * * *"
   workflow_dispatch:
     inputs:
       target:
@@ -32,6 +36,7 @@ on:
           - refresh-odds
           - settle-picks
           - jarvis-snapshot
+          - cockpit-dispatch
 
 concurrency:
   group: external-cron-${{ github.event.schedule || github.event.inputs.target }}
@@ -89,6 +94,35 @@ jobs:
             --location \
             --max-time 300 \
             "${CRON_TARGET_URL}/api/cron/settle-picks")
+          echo "HTTP ${response}"
+          if command -v jq >/dev/null 2>&1; then
+            jq . /tmp/body.json || cat /tmp/body.json
+          else
+            cat /tmp/body.json
+          fi
+          test "${response}" = "200"
+
+  cockpit-dispatch:
+    name: Advance cockpit task queue
+    if: ${{ github.event.schedule == '*/15 * * * *' || github.event.inputs.target == 'cockpit-dispatch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Hit /api/cron/cockpit-dispatch
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
+            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
+            exit 1
+          fi
+          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            --location \
+            --max-time 120 \
+            "${CRON_TARGET_URL}/api/cron/cockpit-dispatch")
           echo "HTTP ${response}"
           if command -v jq >/dev/null 2>&1; then
             jq . /tmp/body.json || cat /tmp/body.json
