@@ -11,6 +11,7 @@ import { BankrollOptimizerTool } from "@/components/lab/bankroll-optimizer-tool"
 import { PaceScheduleTool } from "@/components/lab/pace-schedule-tool";
 import { MatchupCompareTool } from "@/components/lab/matchup-compare-tool";
 import { NoVigTool } from "@/components/lab/no-vig-tool";
+import { WeatherImpactTool } from "@/components/lab/weather-impact-tool";
 import { GlassBoxExplainer } from "@/components/lab/glass-box-explainer";
 import { CalibrationExplorer } from "@/components/lab/calibration-explorer";
 import { loadGlassBoxPicks } from "@/lib/lab/glass-box";
@@ -21,7 +22,7 @@ export const dynamic = "force-dynamic";
 
 const LAB_TITLE = "Galaxy Lab — Run the Model Yourself";
 const LAB_DESCRIPTION =
-  "A free interactive workbench of eight decision tools: matchup simulation, no-vig odds, parlay risk, bankroll sizing, calibration. Exploration, not picks.";
+  "A free interactive workbench of nine decision tools: matchup simulation, no-vig odds, weather impact, parlay risk, bankroll sizing, calibration. Exploration, not picks.";
 
 export const metadata: Metadata = {
   title: LAB_TITLE,
@@ -67,6 +68,11 @@ const TOOLS = [
     name: "No-vig fair odds & hold calculator",
     status: "live",
     desc: "Enter a market's prices across one or more books and see each side's vig-free fair probability, the book's hold, the fair odds, and a consensus fair line — the price you see has the book's margin baked in.",
+  },
+  {
+    name: "Weather impact explorer",
+    status: "live",
+    desc: "Enter game-day conditions — temp, wind speed + direction, precip, humidity, stadium — and see the modeled effect on scoring and totals: NFL wind-and-cold passing impact, MLB ballpark wind in/out, and a total adjustment — built on the dormant weather-modeling libraries.",
   },
   {
     name: "Glass-box pick explainer",
@@ -132,11 +138,12 @@ export default async function GalaxyLabPage(): Promise<JSX.Element> {
               exploration, not published picks.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-ink-400">
-              Eight tools live here: the Monte Carlo game simulator, parlay
+              Nine tools live here: the Monte Carlo game simulator, parlay
               stress-tester, bankroll &amp; Kelly optimizer, pace &amp; schedule
               optimizer, multi-sport matchup compare, no-vig fair-odds
-              calculator, glass-box pick explainer, and calibration explorer.
-              All free, all educational — exploration tools, not picks.
+              calculator, weather impact explorer, glass-box pick explainer, and
+              calibration explorer. All free, all educational — exploration
+              tools, not picks.
             </p>
           </header>
         </Reveal>
@@ -216,6 +223,24 @@ export default async function GalaxyLabPage(): Promise<JSX.Element> {
               enter.
             </p>
             <NoVigTool />
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section className="mt-10">
+            <h2 className="mb-1 font-display text-lg font-semibold text-white">
+              Weather impact explorer
+            </h2>
+            <p className="mb-4 max-w-2xl text-sm text-ink-300">
+              Enter a game&apos;s conditions — sport, temperature, wind speed and
+              direction, precipitation, humidity, and stadium type — and the tool
+              models the effect on scoring and totals: the NFL/NCAAF wind-and-cold
+              passing impact, the MLB ballpark wind blowing in or out, a total
+              adjustment on a neutral reference total, and a plain-language
+              summary. It models weather only — it runs on your inputs and
+              excludes injury, availability, and roster data.
+            </p>
+            <WeatherImpactTool />
           </section>
         </Reveal>
 
