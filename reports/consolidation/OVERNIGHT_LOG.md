@@ -54,3 +54,16 @@ Three Sonnet research workers produced license-vetted, velocity-biased catalogs 
 - Re-implement small permissive utilities TS-native (reliability-diagram helper, sparkline) with attribution,
   where build-verifiable.
 - Park (owner approval): npm-dep adoptions, forks, new accounts/keys, anything needing data clearance.
+
+### [S4] 8 new data sources registered + HARVEST_DATA_DEEP synthesis — this commit
+- 8 new source-rights-registry entries: NHL API (approved_public_logged_off, keyless), BALLDONTLIE 
+  (approved_api, free tier), TheSportsDB (approved_api, community open), ClearSports (approved_api,
+  1000 calls/mo free), OddsPapi (vendor_candidate, free historical Pinnacle CLV data), 
+  transfermarkt-datasets (approved_open_license, CC0 - 79K games/37K players), 
+  OpenLigaDB (approved_open_license, keyless Bundesliga), nflverse / nfl_data_py (approved_open_license, 
+  MIT+CC-BY-SA, has venue surface/roof/temp + import_officials() for referee history).
+- HARVEST_DATA_DEEP.md: 40-source synthesis across sports APIs, historical odds, venue/referee data,
+  soccer xG, niche sports, GitHub/Kaggle. Top WIRE-NOW finds: NHL API, nfl-data-py, OpenLigaDB,
+  transfermarkt CC0, OddsPapi free tier for Pinnacle closing lines.
+- Clearance entries only — NO live extraction. Readies the data moat without any spend risk.
+- Gate: tsc 0 · scraping-clearance · trust-gate ✓ · build exit 0.

@@ -915,6 +915,305 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "Attribution strongly encouraged (government source attribution is standard practice).",
   },
 
+  // ── Approved: new open-license and API sources (S4) ─────────────────────────
+  {
+    source_id: "nhl-api",
+    source_name: "NHL Official API (api-web.nhle.com)",
+    source_url: "https://api-web.nhle.com/v1",
+    terms_url: null,
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "sports_data_api",
+    status: "approved_public_logged_off",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: false,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "NHL data via api-web.nhle.com (unofficial, community-documented endpoint)",
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: ["https://github.com/Zmalski/NHL-API-Reference"],
+    unlock_condition:
+      "Upgrade commercial_display_allowed requires an official NHL data license. " +
+      "Preferred path for display: derive facts from The Odds API (approved_api) which already " +
+      "carries commercial display rights.",
+    vendor_contact: null,
+    notes:
+      "Keyless REST API; no official ToS published but community-maintained documentation widely " +
+      "used for research. Provides full play-by-play, shot coordinates, live feeds, rosters, " +
+      "schedules, standings. No login required. commercial_display_allowed=false until licensed — " +
+      "use for derived analytics only (facts are not copyrightable; structured compilation may " +
+      "carry database rights). Wire via clearance engine only.",
+  },
+
+  {
+    source_id: "balldontlie",
+    source_name: "BALLDONTLIE API (balldontlie.io)",
+    source_url: "https://api.balldontlie.io",
+    terms_url: "https://www.balldontlie.io/home.html#terms",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "sports_data_api",
+    status: "approved_api",
+    automation_allowed: true,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: true,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Data provided by BALLDONTLIE (balldontlie.io)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "none",
+    database_right_risk: "none",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: ["https://www.balldontlie.io/home.html#terms"],
+    unlock_condition: null,
+    vendor_contact: "https://www.balldontlie.io",
+    notes:
+      "Free tier: 5 req/min, 100 req/day, API key required (free signup, no CC). Multi-sport: " +
+      "NBA, NFL, MLB, NHL, WNBA, NCAAF, NCAAB, soccer, MMA, tennis, golf, F1. " +
+      "Play-by-play only on paid GOAT tier. API key env: BALLDONTLIE_API_KEY. " +
+      "Adapter INERT until key provided — zero risk.",
+  },
+
+  {
+    source_id: "thesportsdb",
+    source_name: "TheSportsDB (thesportsdb.com)",
+    source_url: "https://www.thesportsdb.com/api/v1/json",
+    terms_url: "https://www.thesportsdb.com/api.php",
+    robots_url: null,
+    jurisdiction: "UK",
+    source_type: "sports_data_api",
+    status: "approved_api",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: false,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text:
+      "Data courtesy of TheSportsDB (thesportsdb.com) — community crowd-sourced sports database",
+    personal_data_risk: "low",
+    copyright_expression_risk: "low",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: ["https://www.thesportsdb.com/api.php"],
+    unlock_condition:
+      "Upgrade commercial_display_allowed requires Patreon tier ($9/mo) per TheSportsDB API terms. " +
+      "Free tier (test key '1' or free signup) restricts commercial display.",
+    vendor_contact: "https://www.thesportsdb.com/api.php",
+    notes:
+      "Free tier uses test key '1'. Full access via free signup. 30 req/min free tier. " +
+      "Multi-sport including NFL, NBA, NHL, MLB, soccer. V2 livescores require paid Patreon ($9/mo). " +
+      "Community crowd-sourced — verify data quality against primary sources before prediction use. " +
+      "API key env: THESPORTSDB_API_KEY.",
+  },
+
+  {
+    source_id: "clearsports",
+    source_name: "ClearSports API (clearsportsapi.com)",
+    source_url: "https://api.clearsportsapi.com",
+    terms_url: "https://clearsportsapi.com/terms",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "sports_data_api",
+    status: "approved_api",
+    automation_allowed: true,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: true,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Sports data provided by ClearSports API (clearsportsapi.com)",
+    personal_data_risk: "none",
+    copyright_expression_risk: "none",
+    database_right_risk: "none",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: ["https://clearsportsapi.com/terms"],
+    unlock_condition: null,
+    vendor_contact: "https://clearsportsapi.com",
+    notes:
+      "Free 1,000 API calls/month, no credit card required. NFL, NBA, NHL, MLB, soccer. " +
+      "Bearer token auth. Clean REST schema. Covers odds, stats, injuries, news, schedules. " +
+      "API key env: CLEARSPORTS_API_KEY. Adapter INERT until key provided — zero risk.",
+  },
+
+  {
+    source_id: "oddspapi",
+    source_name: "OddsPapi (oddspapi.io)",
+    source_url: "https://api.oddspapi.io",
+    terms_url: "https://oddspapi.io/terms",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "odds_provider",
+    status: "vendor_candidate",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Historical odds data via OddsPapi (oddspapi.io)",
+    personal_data_risk: "none",
+    copyright_expression_risk: "none",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: ["https://oddspapi.io/terms"],
+    unlock_condition:
+      "Complete vendor questionnaire (docs/legal/VENDOR_QUESTIONNAIRE_ODDSPAPI.md). " +
+      "Confirm commercial use, storage, and derived-analytics rights. " +
+      "On approval: flip to approved_api and enable relevant flags.",
+    vendor_contact: "https://oddspapi.io",
+    notes:
+      "Free tier: 250 req/month, no CC required. Includes Pinnacle historical closing lines — " +
+      "the primary free path to CLV backtesting. 350+ bookmakers. Historical data included on all " +
+      "tiers including free. Primary use case: closing-line value (CLV) calibration audit. " +
+      "API key env: ODDSPAPI_API_KEY. All flags remain false until vendor questionnaire complete.",
+  },
+
+  {
+    source_id: "transfermarkt-datasets",
+    source_name: "Transfermarkt Datasets (github.com/dcaribou/transfermarkt-datasets)",
+    source_url: "https://raw.githubusercontent.com/dcaribou/transfermarkt-datasets/main",
+    terms_url: "https://github.com/dcaribou/transfermarkt-datasets/blob/main/LICENSE",
+    robots_url: null,
+    jurisdiction: "INT",
+    source_type: "open_dataset",
+    status: "approved_open_license",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: true,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: true,
+    attribution_required: true,
+    attribution_text:
+      "Football data from Transfermarkt Datasets by David Caribou " +
+      "(github.com/dcaribou/transfermarkt-datasets) — CC0-1.0 (Public Domain)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "none",
+    database_right_risk: "none",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://github.com/dcaribou/transfermarkt-datasets/blob/main/LICENSE",
+    ],
+    unlock_condition: null,
+    vendor_contact: null,
+    notes:
+      "CC0-1.0 public domain dedication. 79,000+ games, 37,000+ players, 1.8M+ appearances, " +
+      "valuations, transfers. 12 relational tables (players, clubs, games, appearances, " +
+      "player_valuations, transfers, game_events, club_games, game_lineups). " +
+      "Updated weekly. GitHub direct download, no key required. " +
+      "Best soccer player/match/valuation dataset in the free tier.",
+  },
+
+  {
+    source_id: "openligadb",
+    source_name: "OpenLigaDB (api.openligadb.de)",
+    source_url: "https://api.openligadb.de",
+    terms_url: null,
+    robots_url: null,
+    jurisdiction: "DE",
+    source_type: "sports_data_api",
+    status: "approved_open_license",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: true,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: true,
+    attribution_required: true,
+    attribution_text:
+      "Football data from OpenLigaDB (api.openligadb.de) — community open sports database",
+    personal_data_risk: "none",
+    copyright_expression_risk: "none",
+    database_right_risk: "none",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: ["https://github.com/OpenLigaDB/OpenLigaDB-Samples"],
+    unlock_condition: null,
+    vendor_contact: null,
+    notes:
+      "Keyless REST API. Community open sports database; no restrictions documented. " +
+      "Coverage: Bundesliga, 2. Bundesliga, DFB Pokal, Champions League results. " +
+      "Returns JSON: match results, standings, schedules, goal scorers. " +
+      "Coverage strongest for German football. Suitable for soccer feature enrichment.",
+  },
+
+  {
+    source_id: "nfl-data-py",
+    source_name: "nflverse / nfl_data_py (nflverse.nflverse.com)",
+    source_url: "https://github.com/nflverse/nfl_data_py",
+    terms_url: "https://github.com/nflverse/nfl_data_py/blob/main/LICENSE",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "open_dataset",
+    status: "approved_open_license",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: true,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text:
+      "NFL data from nflverse (nflverse.nflverse.com). Code: MIT License. " +
+      "Data: CC-BY-SA 4.0. Attribution required; share-alike applies to data outputs.",
+    personal_data_risk: "low",
+    copyright_expression_risk: "none",
+    database_right_risk: "none",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-19",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://github.com/nflverse/nfl_data_py/blob/main/LICENSE",
+      "https://github.com/nflverse/nflverse-data/blob/master/LICENSE",
+    ],
+    unlock_condition:
+      "model_training_allowed=false because some nflverse data tables are CC-BY-SA 4.0 (share-alike). " +
+      "Upgrade to model_training requires confirming outputs comply with CC-BY-SA share-alike " +
+      "or obtaining explicit permission from nflverse maintainers.",
+    vendor_contact: null,
+    notes:
+      "NFL play-by-play back to 1999 with EPA, WPA. Schedule data includes surface (turf type), " +
+      "roof, stadium, temp, wind per game — best free source for venue surface/conditions. " +
+      "import_officials() provides historical referee assignments by game — direct input for referee signal. " +
+      "Python package: nfl-data-py. No API key required — pulls from GitHub-hosted datasets. " +
+      "IMPORTANT: Data is CC-BY-SA 4.0 (share-alike) — derived data outputs must carry the same license " +
+      "or be presented as analytics/transformations with attribution. Distinct from nflverse-data " +
+      "(nflverse CC-BY-4.0 entry) which is a separate package. Both are registered.",
+  },
+
   // ── Excluded ─────────────────────────────────────────────────────────────────
   {
     source_id: "siriusxm-activator",
