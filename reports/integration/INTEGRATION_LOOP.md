@@ -37,15 +37,16 @@ At most ONE in-flight slice editing `app/cockpit/layout.tsx` (cockpit nav) and O
 | 1 | Free-data keyless score/schedule provider pool (Odds-key phase-out, settlement) | backend | `8b8637eb`+`c5a49243` | tsc+39 vitest+trust+freeze |
 | 2 | Pick Analytics & Grading workbench (`/cockpit/pick-analytics`) | A (internal) | `b8d52fac` | tsc+10 vitest+trust+freeze+build |
 | 3 | Pace & Schedule Optimizer Lab tool (`/lab`, `/api/lab/optimize-pace-schedule`) | B (customer) | `ab1bbf7e` | tsc+22 vitest+trust+build |
+| 4 | Market & Line Intelligence workbench (`/cockpit/market-analysis`, DB-read only) | A (internal) | `882be401` | tsc+10 vitest+nav 42+trust+freeze+build |
+| 5 | Multi-Sport Matchup Compare Lab tool (`/lab`, `/api/lab/compare-matchup`) | B (customer) | `1d3246b1` | tsc+22 vitest+trust+build |
 
 ## Queue (priority order; honest value × low effort × low risk first)
-- [ ] Line-Movement / Market Intelligence workbench (`/cockpit/market-analysis`) — wires
-      `analytics/line-movement`, `analytics/market-analytics`, `math/line-movement-classify`,
-      `math/clustering`, `math/probability` on real Odds history. Internal, read-only.
-- [ ] Multi-Sport Matchup Compare Lab tool — surfaces the per-league `sports/*` libs as a user-driven
-      explorer (the biggest dormant chunk). Customer, pure compute, rate-limited, disclaimer.
+- [x] Line-Movement / Market Intelligence workbench → shipped (slice 4).
+- [x] Multi-Sport Matchup Compare Lab tool → shipped (slice 5).
 - [ ] Sports Diagnostics workbench (`/cockpit/sports-diagnostics`) — `sports/nba|nfl-analytics`,
       `power-ranking`, `elo-utils`, `schedule-utils`, `team-normalize` on team game logs. Internal.
+- [ ] No-Vig Fair-Odds & Hold calculator Lab tool — `sports/spread-math` devig + `math` on
+      user-supplied book prices (teaches no-vig fair probability + hold). Customer, pure compute.
 - [ ] Calibration Learning workbench (extend `/cockpit/calibration`) — `forecasting-analytics`,
       `clustering`, `regression`, `statistics` on pick signal snapshots → signal-outcome correlation
       (honest "correlation not causation" + small-sample caveats). Internal.
