@@ -10,6 +10,7 @@ import { ParlayAnalyzerTool } from "@/components/lab/parlay-analyzer-tool";
 import { BankrollOptimizerTool } from "@/components/lab/bankroll-optimizer-tool";
 import { PaceScheduleTool } from "@/components/lab/pace-schedule-tool";
 import { MatchupCompareTool } from "@/components/lab/matchup-compare-tool";
+import { NoVigTool } from "@/components/lab/no-vig-tool";
 import { GlassBoxExplainer } from "@/components/lab/glass-box-explainer";
 import { CalibrationExplorer } from "@/components/lab/calibration-explorer";
 import { loadGlassBoxPicks } from "@/lib/lab/glass-box";
@@ -50,6 +51,11 @@ const TOOLS = [
     name: "Multi-sport matchup compare",
     status: "live",
     desc: "Pick a league, enter two teams' season stats, and get league-normalized power ratings, an expected-margin frame, and a plain-language read — built on the dormant power-ranking + ELO libraries.",
+  },
+  {
+    name: "No-vig fair odds & hold calculator",
+    status: "live",
+    desc: "Enter a market's prices across one or more books and see each side's vig-free fair probability, the book's hold, the fair odds, and a consensus fair line — the price you see has the book's margin baked in.",
   },
   {
     name: "Glass-box pick explainer",
@@ -174,6 +180,24 @@ export default async function GalaxyLabPage(): Promise<JSX.Element> {
               excludes injury and availability data.
             </p>
             <MatchupCompareTool />
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section className="mt-10">
+            <h2 className="mb-1 font-display text-lg font-semibold text-white">
+              No-vig fair odds &amp; hold calculator
+            </h2>
+            <p className="mb-4 max-w-2xl text-sm text-ink-300">
+              Enter a market&apos;s American prices for each side — across as
+              many books as you like — and the tool strips out the book&apos;s
+              margin: each side&apos;s vig-free fair probability, the hold/vig %,
+              the fair (no-vig) odds, and a consensus fair line across the books.
+              It teaches a core idea — the price you see already includes the
+              book&apos;s cut. Every figure is computed only from the prices you
+              enter.
+            </p>
+            <NoVigTool />
           </section>
         </Reveal>
 
