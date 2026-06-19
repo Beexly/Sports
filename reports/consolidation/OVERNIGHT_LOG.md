@@ -34,8 +34,21 @@ Three Sonnet research workers produced license-vetted, velocity-biased catalogs 
 - Documented the 4 optional keys in `.env.example`.
 - Gate: tsc 0 · provider-pool 8/8 · model-router 5/5 · free-lane 6/6 · env-coverage ✓ · trust-gate ✓ · build exit 0.
 
+### [S3] Open-license datasets registered in the rights registry — this commit
+- Added Wikidata (CC0), openfootball (public-domain, incl. World Cup 2026), HIFLD venue geodata (US federal
+  public-domain → feeds weather lat/lon), Retrosheet (permissive, mandatory attribution notice) as
+  `approved_open_license` sources in `source-rights-registry.ts`. Classification entries only — NO live
+  extraction; readies the moat + honors the clearance posture.
+- HONESTY NOTE for the morning: the catalog agents recommended several sources ALREADY in the registry
+  (nflverse, Open-Meteo, ESPN, NWS) and SEO/JSON-LD that's ALREADY implemented (root layout Org+WebSite
+  JSON-LD + lib/seo/sports-jsonld.ts). The codebase is more mature than the catalog assumed — genuine
+  new-integration headroom is smaller than the catalog implies. The catalog remains a strong reference for
+  the parked dep/fork items.
+- Gate: tsc 0 · scraping-clearance 65/65 · trust-gate ✓ · build exit 0.
+
 ## Integration queue (safe, build-verifiable, derived from the catalog)
 - [done S2] Extend the free-LLM provider registry with additional free-tier OpenAI-compatible providers.
+- [done S3] Register genuinely-missing open-license datasets in the rights registry.
 - Register the new keyless/free data + API sources in `source-rights-registry.ts` + `cost-policy.ts`
   (catalog + clearance entries only — no live extraction).
 - Re-implement small permissive utilities TS-native (reliability-diagram helper, sparkline) with attribution,
