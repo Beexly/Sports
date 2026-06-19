@@ -219,39 +219,39 @@ describe("detectSteamMoves", () => {
     const snapshots = [snap(0, -3), snap(15 * MIN, -3.5)];
     const events = detectSteamMoves(snapshots);
     expect(events).toHaveLength(1);
-    expect(events[0].label).toBe("steam");
+    expect(events[0]!.label).toBe("steam");
   });
 
   it("steam event has correct timestamp (to.timestamp)", () => {
     const snapshots = [snap(0, -3), snap(15 * MIN, -3.5)];
     const events = detectSteamMoves(snapshots);
-    expect(events[0].timestamp).toBe(BASE_TS + 15 * MIN);
+    expect(events[0]!.timestamp).toBe(BASE_TS + 15 * MIN);
   });
 
   it("steam confidence = min(1, absMove / 1.0) for 0.5pt move → 0.5", () => {
     const snapshots = [snap(0, -3), snap(15 * MIN, -3.5)];
     const events = detectSteamMoves(snapshots);
-    expect(events[0].confidence).toBeCloseTo(0.5);
+    expect(events[0]!.confidence).toBeCloseTo(0.5);
   });
 
   it("steam confidence capped at 1.0 for >= 1pt move", () => {
     const snapshots = [snap(0, -3), snap(15 * MIN, -4)];
     const events = detectSteamMoves(snapshots);
-    expect(events[0].confidence).toBe(1);
+    expect(events[0]!.confidence).toBe(1);
   });
 
   it("sharp event has confidence 0.7", () => {
     const snapshots = [snap(0, -3), snap(2 * HOUR, -4)];
     const events = detectSteamMoves(snapshots);
-    expect(events[0].label).toBe("sharp");
-    expect(events[0].confidence).toBe(0.7);
+    expect(events[0]!.label).toBe("sharp");
+    expect(events[0]!.confidence).toBe(0.7);
   });
 
   it("public event has confidence 0.4", () => {
     const snapshots = [snap(0, -3), snap(5 * HOUR, -3.5)];
     const events = detectSteamMoves(snapshots);
-    expect(events[0].label).toBe("public");
-    expect(events[0].confidence).toBe(0.4);
+    expect(events[0]!.label).toBe("public");
+    expect(events[0]!.confidence).toBe(0.4);
   });
 
   it("excludes neutral events", () => {
@@ -263,13 +263,13 @@ describe("detectSteamMoves", () => {
   it("steam event description contains 'Steam:'", () => {
     const snapshots = [snap(0, -3), snap(15 * MIN, -3.5)];
     const events = detectSteamMoves(snapshots);
-    expect(events[0].description).toMatch(/Steam:/);
+    expect(events[0]!.description).toMatch(/Steam:/);
   });
 
   it("sharp event description contains 'Sharp:'", () => {
     const snapshots = [snap(0, -3), snap(2 * HOUR, -4)];
     const events = detectSteamMoves(snapshots);
-    expect(events[0].description).toMatch(/Sharp:/);
+    expect(events[0]!.description).toMatch(/Sharp:/);
   });
 
   it("detects multiple events across a sequence", () => {
@@ -286,7 +286,7 @@ describe("detectSteamMoves", () => {
   it("spreadMove in event matches computed move", () => {
     const snapshots = [snap(0, -3), snap(15 * MIN, -3.5)];
     const events = detectSteamMoves(snapshots);
-    expect(events[0].spreadMove).toBeCloseTo(-0.5);
+    expect(events[0]!.spreadMove).toBeCloseTo(-0.5);
   });
 
   it("returns [] when all snapshots have no spread", () => {

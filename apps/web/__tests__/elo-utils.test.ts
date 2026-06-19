@@ -468,15 +468,15 @@ describe("buildLeaderboard", () => {
 
   it("sorts teams by rating descending", () => {
     const sorted = buildLeaderboard(teams);
-    expect(sorted[0].teamId).toBe("B");
-    expect(sorted[1].teamId).toBe("C");
-    expect(sorted[2].teamId).toBe("A");
+    expect(sorted[0]!.teamId).toBe("B");
+    expect(sorted[1]!.teamId).toBe("C");
+    expect(sorted[2]!.teamId).toBe("A");
   });
 
   it("does not mutate the original array", () => {
     const original = [...teams];
     buildLeaderboard(teams);
-    expect(teams[0].teamId).toBe(original[0].teamId);
+    expect(teams[0]!.teamId).toBe(original[0]!.teamId);
   });
 
   it("returns a new array", () => {
@@ -489,9 +489,9 @@ describe("buildLeaderboard", () => {
   });
 
   it("handles single team", () => {
-    const single = buildLeaderboard([teams[0]]);
+    const single = buildLeaderboard([teams[0]!]);
     expect(single).toHaveLength(1);
-    expect(single[0].teamId).toBe("A");
+    expect(single[0]!.teamId).toBe("A");
   });
 });
 

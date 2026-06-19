@@ -73,7 +73,7 @@ const MS_PER_MONTH = 30.44 * MS_PER_DAY; // average month in ms
 /** Parse a "YYYY-MM" string into the Date at the start of that month (UTC). */
 function parseYearMonth(ym: string): Date {
   const [year, month] = ym.split("-").map(Number);
-  return new Date(Date.UTC(year, month - 1, 1));
+  return new Date(Date.UTC(year ?? 0, (month ?? 0) - 1, 1));
 }
 
 /** Return the "YYYY-MM" string for a given Date (UTC). */
@@ -520,8 +520,8 @@ export function expansionMrr(
     const sorted = [...records].sort(
       (a, b) => a.startDate.getTime() - b.startDate.getTime()
     );
-    const first = sorted[0];
-    const last = sorted[sorted.length - 1];
+    const first = sorted[0]!;
+    const last = sorted[sorted.length - 1]!;
     if (last.mrr > first.mrr) {
       upgrades++;
       expansionRevenue += last.mrr - first.mrr;

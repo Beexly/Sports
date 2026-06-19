@@ -966,7 +966,7 @@ describe('buildPassMatrix', () => {
     const matrix = buildPassMatrix([], ['p1', 'p2'])
     expect(matrix).toHaveLength(2)
     expect(matrix[0]).toHaveLength(2)
-    expect(matrix[0][1]).toBe(0)
+    expect(matrix[0]![1]).toBe(0)
   })
 
   it('increments matrix when two players coexist during a pass', () => {
@@ -976,7 +976,7 @@ describe('buildPassMatrix', () => {
     ]
     const matrix = buildPassMatrix(events, ['p1', 'p2'])
     // p1 passes to nearest player at same minute (p2)
-    expect(matrix[0][1]).toBeGreaterThanOrEqual(0) // at least 0
+    expect(matrix[0]![1]).toBeGreaterThanOrEqual(0) // at least 0
     expect(matrix).toHaveLength(2)
   })
 })

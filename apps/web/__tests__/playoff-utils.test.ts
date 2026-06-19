@@ -65,9 +65,9 @@ describe('sortStandings', () => {
       makeTeam('C', 3, 7),
     ]
     const sorted = sortStandings(teams)
-    expect(sorted[0].teamId).toBe('B')
-    expect(sorted[1].teamId).toBe('A')
-    expect(sorted[2].teamId).toBe('C')
+    expect(sorted[0]!.teamId).toBe('B')
+    expect(sorted[1]!.teamId).toBe('A')
+    expect(sorted[2]!.teamId).toBe('C')
   })
 
   it('uses pointsFor as tiebreaker when winPct equal', () => {
@@ -76,7 +76,7 @@ describe('sortStandings', () => {
       makeTeam('B', 5, 5, 0, { pointsFor: 200 }),
     ]
     const sorted = sortStandings(teams)
-    expect(sorted[0].teamId).toBe('B')
+    expect(sorted[0]!.teamId).toBe('B')
   })
 
   it('uses wins as tiebreaker when winPct equal and wins differ via ties', () => {
@@ -107,7 +107,7 @@ describe('sortStandings', () => {
     const teams = [makeTeam('A', 5, 5), makeTeam('B', 8, 2)]
     const original = [...teams]
     sortStandings(teams)
-    expect(teams[0].teamId).toBe(original[0].teamId)
+    expect(teams[0]!.teamId).toBe(original[0]!.teamId)
   })
 
   it('respects custom tiebreaker order: pointDiff', () => {
@@ -116,7 +116,7 @@ describe('sortStandings', () => {
       makeTeam('B', 5, 5, 0, { pointsFor: 100, pointsAgainst: 50 }), // diff +50
     ]
     const sorted = sortStandings(teams, ['winPct', 'pointDiff'])
-    expect(sorted[0].teamId).toBe('B')
+    expect(sorted[0]!.teamId).toBe('B')
   })
 
   it('handles single team', () => {
@@ -162,7 +162,7 @@ describe('generateSeeds', () => {
       makeTeam('C', 6, 4),
     ]
     const seeds = generateSeeds(teams, 3, { divisionWinnersFirst: false })
-    expect(seeds[0].teamId).toBe('A')
+    expect(seeds[0]!.teamId).toBe('A')
   })
 
   it('assigns sequential seed numbers', () => {
@@ -184,8 +184,8 @@ describe('generateSeeds', () => {
       makeTeam('C', 8, 2, 0, { divisionId: 'West', divisionRank: 2 }),
     ]
     const seeds = generateSeeds(teams, 3, { divisionWinnersFirst: true })
-    expect(seeds[0].teamId).toBe('B')
-    expect(seeds[0].clinchScenario).toBe('Clinched Division')
+    expect(seeds[0]!.teamId).toBe('B')
+    expect(seeds[0]!.clinchScenario).toBe('Clinched Division')
   })
 
   it('non-division-winners fill remaining spots', () => {
@@ -195,21 +195,21 @@ describe('generateSeeds', () => {
       makeTeam('C', 6, 4),
     ]
     const seeds = generateSeeds(teams, 3, { divisionWinnersFirst: true })
-    expect(seeds[0].teamId).toBe('A')
-    expect(seeds[1].teamId).toBe('B')
-    expect(seeds[2].teamId).toBe('C')
+    expect(seeds[0]!.teamId).toBe('A')
+    expect(seeds[1]!.teamId).toBe('B')
+    expect(seeds[2]!.teamId).toBe('C')
   })
 
   it('record format is correct W-L', () => {
     const teams = [makeTeam('A', 8, 2)]
     const seeds = generateSeeds(teams, 1, { divisionWinnersFirst: false })
-    expect(seeds[0].record).toBe('8-2')
+    expect(seeds[0]!.record).toBe('8-2')
   })
 
   it('record includes ties when present', () => {
     const teams = [makeTeam('A', 7, 2, 1)]
     const seeds = generateSeeds(teams, 1, { divisionWinnersFirst: false })
-    expect(seeds[0].record).toBe('7-2-1')
+    expect(seeds[0]!.record).toBe('7-2-1')
   })
 })
 
@@ -229,10 +229,10 @@ describe('singleEliminationBracket', () => {
     const seeds = makeSeeds(['T1', 'T2', 'T3', 'T4'])
     const bracket = singleEliminationBracket(seeds)
     const r1 = bracket.matchups.filter((m) => m.round === 1)
-    expect(r1[0].homeSeed).toBe(1)
-    expect(r1[0].awaySeed).toBe(4)
-    expect(r1[1].homeSeed).toBe(2)
-    expect(r1[1].awaySeed).toBe(3)
+    expect(r1[0]!.homeSeed).toBe(1)
+    expect(r1[0]!.awaySeed).toBe(4)
+    expect(r1[1]!.homeSeed).toBe(2)
+    expect(r1[1]!.awaySeed).toBe(3)
   })
 
   it('8 seeds → 4 round-1 matchups', () => {
@@ -486,9 +486,9 @@ describe('accumulateRoundRobin', () => {
       { homeTeamId: 'B', awayTeamId: 'C', homeScore: 1, awayScore: 0 },
     ]
     const standings = accumulateRoundRobin(results)
-    expect(standings[0].rank).toBe(1)
+    expect(standings[0]!.rank).toBe(1)
     const maxPoints = Math.max(...standings.map((s) => s.points))
-    expect(standings[0].points).toBe(maxPoints)
+    expect(standings[0]!.points).toBe(maxPoints)
   })
 
   it('accumulates pointsFor correctly', () => {
@@ -512,7 +512,7 @@ describe('accumulateRoundRobin', () => {
       { homeTeamId: 'B', awayTeamId: 'D', homeScore: 1, awayScore: 0 },
     ]
     const standings = accumulateRoundRobin(results)
-    expect(standings[0].teamId).toBe('A')
+    expect(standings[0]!.teamId).toBe('A')
   })
 })
 
@@ -524,13 +524,13 @@ describe('eliminationScenarios', () => {
   it('computes maxPossibleWins correctly', () => {
     const teams = [makeTeam('A', 8, 2)]
     const scenarios = eliminationScenarios(teams, 17, 1)
-    expect(scenarios[0].maxPossibleWins).toBe(15) // 8 + (17-10)
+    expect(scenarios[0]!.maxPossibleWins).toBe(15) // 8 + (17-10)
   })
 
   it('computes gamesRemaining correctly', () => {
     const teams = [makeTeam('A', 8, 2)]
     const scenarios = eliminationScenarios(teams, 17, 1)
-    expect(scenarios[0].gamesRemaining).toBe(7)
+    expect(scenarios[0]!.gamesRemaining).toBe(7)
   })
 
   it('team with maxPossibleWins below leader is eliminated', () => {
@@ -699,7 +699,7 @@ describe('divisionRace', () => {
     ]
     const { gamesBack } = divisionRace(teams, 'D1', 17)
     // GB = (10-8 + 2-0) / 2 = 4/2 = 2
-    expect(gamesBack[0].gamesBack).toBe(2)
+    expect(gamesBack[0]!.gamesBack).toBe(2)
   })
 
   it('includes all non-leaders in gamesBack', () => {
@@ -925,6 +925,6 @@ describe('nbaPlayoffSeeds', () => {
       makeTeam('C', 45, 37, 0, { conferenceId: 'West' }),
     ]
     const seeds = nbaPlayoffSeeds(teams)
-    expect(seeds[0].teamId).toBe('A')
+    expect(seeds[0]!.teamId).toBe('A')
   })
 })

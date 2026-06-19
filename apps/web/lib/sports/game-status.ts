@@ -202,8 +202,8 @@ export function formatClock(minutes: number, seconds: number): string {
 export function parseClock(clockStr: string): GameClock | null {
   const match = /^(\d+):(\d{2})$/.exec(clockStr.trim());
   if (!match) return null;
-  const minutes = parseInt(match[1], 10);
-  const seconds = parseInt(match[2], 10);
+  const minutes = parseInt(match[1]!, 10);
+  const seconds = parseInt(match[2]!, 10);
   if (seconds >= 60) return null;
   return { minutes, seconds };
 }

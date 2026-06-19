@@ -124,7 +124,7 @@ export function logLoss(actual: 0 | 1, predicted: number): number {
 /**
  * Mean log loss over an array of (actual, predicted) pairs.
  */
-export function meanLogLoss(outcomes: readonly Array<{ actual: 0 | 1; predicted: number }>): number | null {
+export function meanLogLoss(outcomes: ReadonlyArray<{ actual: 0 | 1; predicted: number }>): number | null {
   if (outcomes.length === 0) return null;
   const total = outcomes.reduce((acc, { actual, predicted }) => acc + logLoss(actual, predicted), 0);
   return total / outcomes.length;
@@ -135,7 +135,7 @@ export function meanLogLoss(outcomes: readonly Array<{ actual: 0 | 1; predicted:
  * brierScore = (1/n) * sum((p_i - o_i)^2)
  * Range [0, 1]; 0 = perfect, 0.25 = random, 1 = perfectly wrong.
  */
-export function brierScore(outcomes: readonly Array<{ actual: 0 | 1; predicted: number }>): number | null {
+export function brierScore(outcomes: ReadonlyArray<{ actual: 0 | 1; predicted: number }>): number | null {
   if (outcomes.length === 0) return null;
   const sse = outcomes.reduce((acc, { actual, predicted }) => {
     const diff = predicted - actual;
@@ -168,7 +168,7 @@ export interface BrierDecomposition {
 }
 
 export function brierDecompose(
-  outcomes: readonly Array<{ actual: 0 | 1; predicted: number }>,
+  outcomes: ReadonlyArray<{ actual: 0 | 1; predicted: number }>,
   nBins = 10,
 ): BrierDecomposition | null {
   if (outcomes.length === 0) return null;

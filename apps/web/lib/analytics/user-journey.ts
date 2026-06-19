@@ -135,8 +135,8 @@ function percentile(sorted: number[], p: number): number {
   const idx = (p / 100) * (sorted.length - 1)
   const lower = Math.floor(idx)
   const upper = Math.ceil(idx)
-  if (lower === upper) return sorted[lower]
-  return sorted[lower] + (idx - lower) * (sorted[upper] - sorted[lower])
+  if (lower === upper) return sorted[lower] ?? 0
+  return (sorted[lower] ?? 0) + (idx - lower) * ((sorted[upper] ?? 0) - (sorted[lower] ?? 0))
 }
 
 // ---------------------------------------------------------------------------
@@ -158,6 +158,7 @@ export function buildFunnel(
     return { steps: [], totalUsers: 0, overallConversionRate: 0 }
   }
 
+  const firstStep = steps[0]!
   const allUsers = distinctUsers(events)
 
   // Two-pass approach: first collect step-0 users, then validate downstream steps in order
@@ -167,9 +168,9 @@ export function buildFunnel(
   // First pass: collect all users who reached step 0
   for (const userId of allUsers) {
     const userEvents = userEventsFor(events, userId)
-    const firstMatch = userEvents.find(e => e.eventType === steps[0].eventType)
+    const firstMatch = userEvents.find(e => e.eventType === firstStep.eventType)
     if (firstMatch) {
-      stepUserSetsClean[0].add(userId)
+      stepUserSetsClean[0]!.add(userId)
       firstStepTimeForUser[userId] = firstMatch.timestamp.getTime()
     }
   }
@@ -177,34 +178,35 @@ export function buildFunnel(
   // Subsequent passes: each step requires the user completed the previous step
   for (let i = 1; i < steps.length; i++) {
     const step = steps[i]
-    for (const userId of stepUserSetsClean[i - 1]) {
+    if (step === undefined) continue
+    for (const userId of stepUserSetsClean[i - 1]!) {
       const userEvents = userEventsFor(events, userId)
       // Find the timestamp of the previous step completion for this user
       // (first event that caused inclusion in i-1 set)
       // We need to track when each user completed each step
       // Walk the events in order looking for step[i] after step[i-1]
-      const prevStepTime = getPrevStepCompletionTime(userEvents, steps, i - 1, firstStepTimeForUser[userId], windowMs)
+      const prevStepTime = getPrevStepCompletionTime(userEvents, steps, i - 1, firstStepTimeForUser[userId] ?? 0, windowMs)
       if (prevStepTime === null) continue
 
       const nextEvent = userEvents.find(e => {
         if (e.eventType !== step.eventType) return false
         if (e.timestamp.getTime() <= prevStepTime!) return false
-        if (e.timestamp.getTime() - firstStepTimeForUser[userId] > windowMs) return false
+        if (e.timestamp.getTime() - (firstStepTimeForUser[userId] ?? 0) > windowMs) return false
         return true
       })
       if (nextEvent) {
-        stepUserSetsClean[i].add(userId)
+        stepUserSetsClean[i]!.add(userId)
       }
     }
   }
 
-  const totalUsers = stepUserSetsClean[0].size
+  const totalUsers = stepUserSetsClean[0]!.size
   const resultSteps = steps.map((step, i) => {
-    const users = stepUserSetsClean[i].size
-    const prevUsers = i > 0 ? stepUserSetsClean[i - 1].size : users
+    const users = stepUserSetsClean[i]!.size
+    const prevUsers = i > 0 ? stepUserSetsClean[i - 1]!.size : users
     const conversionFromPrev = i === 0 ? 0 : (prevUsers === 0 ? 0 : users / prevUsers)
     const conversionFromStart = totalUsers === 0 ? 0 : users / totalUsers
-    const nextUsers = i < steps.length - 1 ? stepUserSetsClean[i + 1].size : 0
+    const nextUsers = i < steps.length - 1 ? stepUserSetsClean[i + 1]!.size : 0
     const dropOff = users - nextUsers
     return {
       name: step.name,
@@ -230,13 +232,15 @@ function getPrevStepCompletionTime(
   windowMs: number
 ): number | null {
   if (targetStep === 0) {
-    const match = userEvents.find(e => e.eventType === steps[0].eventType)
+    const match = userEvents.find(e => e.eventType === steps[0]!.eventType)
     return match ? match.timestamp.getTime() : null
   }
   let prevTime = firstStepTime
   for (let i = 1; i <= targetStep; i++) {
+    const stepI = steps[i]
+    if (stepI === undefined) return null
     const match = userEvents.find(e => {
-      if (e.eventType !== steps[i].eventType) return false
+      if (e.eventType !== stepI.eventType) return false
       if (e.timestamp.getTime() <= prevTime) return false
       if (e.timestamp.getTime() - firstStepTime > windowMs) return false
       return true
@@ -315,8 +319,8 @@ export function timeToConvert(
   const mean = durations.reduce((s, v) => s + v, 0) / durations.length
 
   return {
-    min: sorted[0],
-    max: sorted[sorted.length - 1],
+    min: sorted[0] ?? 0,
+    max: sorted[sorted.length - 1] ?? 0,
     median: percentile(sorted, 50),
     p75: percentile(sorted, 75),
     p90: percentile(sorted, 90),
@@ -368,8 +372,8 @@ export function buildSessionMetrics(events: JourneyEvent[], userId: string): Ses
 
   for (const [sid, sevents] of sessionMap) {
     const sorted = [...sevents].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())
-    const startTime = sorted[0].timestamp
-    const endTime = sorted.length > 1 ? sorted[sorted.length - 1].timestamp : null
+    const startTime = sorted[0]!.timestamp
+    const endTime = sorted.length > 1 ? sorted[sorted.length - 1]!.timestamp : null
     const durationMs = endTime ? endTime.getTime() - startTime.getTime() : null
 
     const pagesViewed = sorted.filter(e => e.eventType === 'page_view').length
@@ -473,8 +477,8 @@ export function buildRetentionCohort(
 ): RetentionCohort {
   // Find all users who did cohortEvent in the given month
   const [yearStr, monthStr] = cohortMonth.split('-')
-  const year = parseInt(yearStr, 10)
-  const month = parseInt(monthStr, 10) - 1 // 0-indexed
+  const year = parseInt(yearStr ?? '', 10)
+  const month = parseInt(monthStr ?? '', 10) - 1 // 0-indexed
   const cohortStart = new Date(year, month, 1)
   const cohortEnd = new Date(year, month + 1, 1)
 
@@ -564,7 +568,7 @@ export function churnRiskProfile(
 
   let daysSinceLastActivity = Infinity
   if (userEvents.length > 0) {
-    const lastEvent = userEvents[userEvents.length - 1]
+    const lastEvent = userEvents[userEvents.length - 1]!
     daysSinceLastActivity = (ref.getTime() - lastEvent.timestamp.getTime()) / MS_PER_DAY
   }
 
@@ -670,7 +674,7 @@ export function dropOffAnalysis(
         return true
       })
       if (match) {
-        reachedSets[i].add(userId)
+        reachedSets[i]!.add(userId)
         lastTime = match.timestamp.getTime()
       } else {
         break
@@ -679,8 +683,8 @@ export function dropOffAnalysis(
   }
 
   return orderedSteps.map((step, i) => {
-    const reached = reachedSets[i].size
-    const nextReached = i < orderedSteps.length - 1 ? reachedSets[i + 1].size : 0
+    const reached = reachedSets[i]!.size
+    const nextReached = i < orderedSteps.length - 1 ? reachedSets[i + 1]!.size : 0
     const droppedHere = reached - nextReached
     const dropRate = reached === 0 ? 0 : droppedHere / reached
     return { step, reached, droppedHere, dropRate }
@@ -850,7 +854,7 @@ export function userLifecycleStage(
   const subscriptionStartEvent = userEvents.find(e => e.eventType === 'subscription_start')
   const subscriptionCancelEvent = userEvents.find(e => e.eventType === 'subscription_cancel')
 
-  const lastEvent = userEvents[userEvents.length - 1]
+  const lastEvent = userEvents[userEvents.length - 1]!
   const daysSinceLastActivity = (now.getTime() - lastEvent.timestamp.getTime()) / MS_PER_DAY
 
   // churned: subscription_cancel OR no activity in 30+ days

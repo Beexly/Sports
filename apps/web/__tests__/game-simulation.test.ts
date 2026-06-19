@@ -476,13 +476,13 @@ describe("scoreDistribution", () => {
 
   it("final cumulative probability ≈ 1", () => {
     const dist = scoreDistribution(evenTeamA, evenTeamB, true, FAST);
-    expect(dist[dist.length - 1].cumulativeProbability).toBeCloseTo(1.0, 5);
+    expect(dist[dist.length - 1]!.cumulativeProbability).toBeCloseTo(1.0, 5);
   });
 
   it("sorted ascending by score", () => {
     const dist = scoreDistribution(evenTeamA, evenTeamB, true, FAST);
     for (let i = 1; i < dist.length; i++) {
-      expect(dist[i].score).toBeGreaterThanOrEqual(dist[i - 1].score);
+      expect(dist[i]!.score).toBeGreaterThanOrEqual(dist[i - 1]!.score);
     }
   });
 
@@ -497,8 +497,8 @@ describe("scoreDistribution", () => {
   it("cumulative probability is non-decreasing", () => {
     const dist = scoreDistribution(evenTeamA, evenTeamB, true, FAST);
     for (let i = 1; i < dist.length; i++) {
-      expect(dist[i].cumulativeProbability).toBeGreaterThanOrEqual(
-        dist[i - 1].cumulativeProbability
+      expect(dist[i]!.cumulativeProbability).toBeGreaterThanOrEqual(
+        dist[i - 1]!.cumulativeProbability
       );
     }
   });
@@ -521,7 +521,7 @@ describe("marginDistribution", () => {
   it("sorted ascending by margin", () => {
     const dist = marginDistribution(evenTeamA, evenTeamB, FAST);
     for (let i = 1; i < dist.length; i++) {
-      expect(dist[i].margin).toBeGreaterThan(dist[i - 1].margin);
+      expect(dist[i]!.margin).toBeGreaterThan(dist[i - 1]!.margin);
     }
   });
 
@@ -664,7 +664,7 @@ describe("simulateTournament", () => {
   it("stronger team (1-seed) wins championship more often", () => {
     const result = simulateTournament(teams4, { iterations: 2000, seed: 42 });
     expect(result.championProbabilities["T1"]).toBeGreaterThan(
-      result.championProbabilities["T4"]
+      result.championProbabilities["T4"]!
     );
   });
 

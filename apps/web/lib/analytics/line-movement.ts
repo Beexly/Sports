@@ -132,6 +132,7 @@ export function detectSteamMoves(snapshots: readonly OddsSnapshot[]): MovementEv
   for (let i = 1; i < snapshots.length; i++) {
     const from = snapshots[i - 1];
     const to = snapshots[i];
+    if (from === undefined || to === undefined) continue;
     const move = computeLineMove(from, to);
     const label = labelMovement(move);
 
@@ -328,8 +329,8 @@ export function lineMoveTrend(
   const spreads = snapshots.filter((s) => s.spread !== undefined);
   if (spreads.length < 2) return "stable";
 
-  const first = spreads[0];
-  const last = spreads[spreads.length - 1];
+  const first = spreads[0]!;
+  const last = spreads[spreads.length - 1]!;
 
   // Total move from first to last
   const totalMove = (last.spread as number) - (first.spread as number);
@@ -338,7 +339,7 @@ export function lineMoveTrend(
   // Max single move between adjacent snapshots
   let maxSingleMove = 0;
   for (let i = 1; i < spreads.length; i++) {
-    const move = Math.abs((spreads[i].spread as number) - (spreads[i - 1].spread as number));
+    const move = Math.abs((spreads[i]!.spread as number) - (spreads[i - 1]!.spread as number));
     if (move > maxSingleMove) maxSingleMove = move;
   }
 
@@ -370,9 +371,9 @@ function median(values: number[]): number | null {
   const sorted = [...values].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
   if (sorted.length % 2 === 0) {
-    return (sorted[mid - 1] + sorted[mid]) / 2;
+    return ((sorted[mid - 1] ?? 0) + (sorted[mid] ?? 0)) / 2;
   }
-  return sorted[mid];
+  return sorted[mid] ?? null;
 }
 
 /**

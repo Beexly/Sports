@@ -194,7 +194,7 @@ describe("ema", () => {
 
   it("converges upward for increasing data", () => {
     const result = ema([10, 12, 11, 13, 14], 0.5);
-    expect(result[result.length - 1]).toBeGreaterThan(result[0]);
+    expect(result[result.length - 1]!).toBeGreaterThan(result[0]!);
   });
 
   it("same length as input", () => {
@@ -271,9 +271,9 @@ describe("dema", () => {
     const e = ema(data, 0.5);
     const d = dema(data, 0.5);
     // DEMA should be closer to actual data (less lag) than EMA
-    const lastReal = data[data.length - 1];
-    expect(Math.abs(d[d.length - 1] - lastReal)).toBeLessThan(
-      Math.abs(e[e.length - 1] - lastReal)
+    const lastReal = data[data.length - 1]!;
+    expect(Math.abs(d[d.length - 1]! - lastReal)).toBeLessThan(
+      Math.abs(e[e.length - 1]! - lastReal)
     );
   });
 });
@@ -585,7 +585,7 @@ describe("bollingerBands", () => {
     const data = [2, 4, 6, 8, 10];
     const middles = sma(data, 3);
     const bands = bollingerBands(data, 3);
-    bands.forEach((b, i) => expect(b.middle).toBeCloseTo(middles[i], 10));
+    bands.forEach((b, i) => expect(b.middle).toBeCloseTo(middles[i]!, 10));
   });
 
   it("upper > middle and middle > lower for non-constant data", () => {
@@ -611,7 +611,7 @@ describe("bollingerBands", () => {
     const bands2 = bollingerBands(data, 3, 2);
     const bands4 = bollingerBands(data, 3, 4);
     bands2.forEach((b2, i) => {
-      const b4 = bands4[i];
+      const b4 = bands4[i]!;
       expect(b4.upper).toBeGreaterThanOrEqual(b2.upper - 1e-9);
       expect(b4.lower).toBeLessThanOrEqual(b2.lower + 1e-9);
     });

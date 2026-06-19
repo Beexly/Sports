@@ -337,7 +337,7 @@ describe("simulateSpring", () => {
 
   it("last frame has done=true when settled", () => {
     const frames = simulateSpring(0, 100);
-    expect(frames[frames.length - 1].done).toBe(true);
+    expect(frames[frames.length - 1]!.done).toBe(true);
   });
 
   it("does not exceed maxFrames", () => {
@@ -347,15 +347,15 @@ describe("simulateSpring", () => {
 
   it("first frame position is between from and to (moving right direction)", () => {
     const frames = simulateSpring(0, 100);
-    expect(frames[0].position).toBeGreaterThan(0);
-    expect(frames[0].position).toBeLessThan(100);
+    expect(frames[0]!.position).toBeGreaterThan(0);
+    expect(frames[0]!.position).toBeLessThan(100);
   });
 
   it("respects initial velocity from config", () => {
     const framesNormal = simulateSpring(0, 100, { velocity: 0 });
     const framesKicked = simulateSpring(0, 100, { velocity: 500 });
     // With positive initial velocity toward target, first frame should be further
-    expect(framesKicked[0].position).toBeGreaterThan(framesNormal[0].position);
+    expect(framesKicked[0]!.position).toBeGreaterThan(framesNormal[0]!.position);
   });
 });
 

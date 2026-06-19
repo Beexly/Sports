@@ -148,7 +148,7 @@ function median(sorted: number[]): number {
   const n = sorted.length;
   if (n === 0) return 0;
   const mid = Math.floor(n / 2);
-  return n % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+  return n % 2 === 0 ? ((sorted[mid - 1] ?? 0) + (sorted[mid] ?? 0)) / 2 : (sorted[mid] ?? 0);
 }
 
 function stdDev(values: number[], mean: number): number {
@@ -199,8 +199,8 @@ function buildResultFromRaw(
   let overCount = 0;
 
   for (let i = 0; i < n; i++) {
-    const hs = homeScores[i];
-    const as = awayScores[i];
+    const hs = homeScores[i] ?? 0;
+    const as = awayScores[i] ?? 0;
     const margin = hs - as;
 
     if (margin > 0) homeWins++;
@@ -460,7 +460,7 @@ export function marginDistribution(
 
   const buckets: Map<number, number> = new Map();
   for (let i = 0; i < n; i++) {
-    const margin = Math.round(homeScores[i] - awayScores[i]);
+    const margin = Math.round((homeScores[i] ?? 0) - (awayScores[i] ?? 0));
     buckets.set(margin, (buckets.get(margin) ?? 0) + 1);
   }
 
@@ -537,6 +537,7 @@ export function simulateTournament(
       for (let i = 0; i < bracket.length; i += 2) {
         const teamA = bracket[i];
         const teamB = bracket[i + 1];
+        if (teamA === undefined || teamB === undefined) continue;
         const gameSeed = (roundSeed + round * 100003 + i * 7919) >>> 0;
         const rng = new Lcg(gameSeed);
 
@@ -557,8 +558,8 @@ export function simulateTournament(
         nextRound.push(winner);
 
         if (isFinalFourRound) {
-          finalFourCounts[teamA.teamId]++;
-          finalFourCounts[teamB.teamId]++;
+          finalFourCounts[teamA.teamId] = (finalFourCounts[teamA.teamId] ?? 0) + 1;
+          finalFourCounts[teamB.teamId] = (finalFourCounts[teamB.teamId] ?? 0) + 1;
         }
       }
 
@@ -567,16 +568,18 @@ export function simulateTournament(
     }
 
     const champion = bracket[0];
-    championCounts[champion.teamId]++;
+    if (champion !== undefined) {
+      championCounts[champion.teamId] = (championCounts[champion.teamId] ?? 0) + 1;
+    }
   }
 
   const championProbabilities: Record<string, number> = {};
   for (const teamId of Object.keys(championCounts)) {
-    championProbabilities[teamId] = championCounts[teamId] / cfg.iterations;
+    championProbabilities[teamId] = (championCounts[teamId] ?? 0) / cfg.iterations;
   }
 
   // Find most likely champion
-  let bestChampion = teams[0].teamId;
+  let bestChampion = teams[0]!.teamId;
   let bestCount = 0;
   for (const [teamId, count] of Object.entries(championCounts)) {
     if (count > bestCount) {

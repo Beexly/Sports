@@ -286,7 +286,10 @@ export function buildPassMatrix(events: PlayerTrackingEvent[], players: string[]
       }
 
       if (receiverIdx >= 0 && receiverIdx !== senderIdx) {
-        matrix[senderIdx][receiverIdx]++
+        const senderRow = matrix[senderIdx]
+        if (senderRow !== undefined && senderRow[receiverIdx] !== undefined) {
+          senderRow[receiverIdx] = (senderRow[receiverIdx] ?? 0) + 1
+        }
       }
     }
   }
@@ -335,9 +338,12 @@ export function compactness(playerPositions: Array<{ x: number; y: number }>): n
   let count = 0
 
   for (let i = 0; i < n; i++) {
+    const pi = playerPositions[i]
     for (let j = i + 1; j < n; j++) {
-      const dx = playerPositions[j].x - playerPositions[i].x
-      const dy = playerPositions[j].y - playerPositions[i].y
+      const pj = playerPositions[j]
+      if (pi === undefined || pj === undefined) continue
+      const dx = pj.x - pi.x
+      const dy = pj.y - pi.y
       totalDist += Math.sqrt(dx * dx + dy * dy)
       count++
     }
@@ -478,7 +484,7 @@ export function expectedPoints(xg: number, xgAgainst: number): number {
 
   for (let h = 0; h <= maxGoals; h++) {
     for (let a = 0; a <= maxGoals; a++) {
-      const prob = homeProbs[h] * awayProbs[a]
+      const prob = (homeProbs[h] ?? 0) * (awayProbs[a] ?? 0)
       if (h > a) winProb += prob
       else if (h === a) drawProb += prob
     }

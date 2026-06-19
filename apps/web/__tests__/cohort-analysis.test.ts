@@ -209,7 +209,7 @@ describe("buildCohortMetrics", () => {
     const metrics = buildCohortMetrics(subs, cohort, 3);
     // Each month the user is active adds mrr to cumulative revenue
     expect(metrics.cumulativeRevenue[2]).toBeGreaterThanOrEqual(
-      metrics.cumulativeRevenue[1]
+      metrics.cumulativeRevenue[1]!
     );
   });
 
@@ -251,8 +251,8 @@ describe("compareCohorts", () => {
     ];
     const result = compareCohorts(subs, ["2025-01", "2025-02"]);
     expect(result).toHaveLength(2);
-    expect(result[0].cohortMonth).toBe("2025-01");
-    expect(result[1].cohortMonth).toBe("2025-02");
+    expect(result[0]!.cohortMonth).toBe("2025-01");
+    expect(result[1]!.cohortMonth).toBe("2025-02");
   });
 
   it("returns empty array for no cohort months", () => {
@@ -267,7 +267,7 @@ describe("compareCohorts", () => {
       makeSubWithCohort("u1", "pro", "2025-01", utcDate(2025, 1, 1)),
     ];
     const result = compareCohorts(subs, ["2025-01"], 3);
-    expect(result[0].monthlyRetention).toHaveLength(4);
+    expect(result[0]!.monthlyRetention).toHaveLength(4);
   });
 });
 
@@ -545,7 +545,7 @@ describe("cohortRevenueHeatmap", () => {
       makeSubWithCohort("u1", "pro", "2025-01", utcDate(2025, 1, 1)),
     ];
     const result = cohortRevenueHeatmap(subs, ["2025-01"], 4);
-    expect(result[0].revenueByMonth).toHaveLength(5);
+    expect(result[0]!.revenueByMonth).toHaveLength(5);
   });
 
   it("retentionByMonth array has length maxMonths + 1", () => {
@@ -553,7 +553,7 @@ describe("cohortRevenueHeatmap", () => {
       makeSubWithCohort("u1", "pro", "2025-01", utcDate(2025, 1, 1)),
     ];
     const result = cohortRevenueHeatmap(subs, ["2025-01"], 4);
-    expect(result[0].retentionByMonth).toHaveLength(5);
+    expect(result[0]!.retentionByMonth).toHaveLength(5);
   });
 
   it("retentionByMonth[0] is 100 when cohort has users", () => {
@@ -561,7 +561,7 @@ describe("cohortRevenueHeatmap", () => {
       makeSubWithCohort("u1", "pro", "2025-01", utcDate(2025, 1, 1)),
     ];
     const result = cohortRevenueHeatmap(subs, ["2025-01"], 2);
-    expect(result[0].retentionByMonth[0]).toBe(100);
+    expect(result[0]!.retentionByMonth[0]).toBe(100);
   });
 
   it("revenueByMonth[0] > 0 when users have non-zero mrr", () => {
@@ -569,7 +569,7 @@ describe("cohortRevenueHeatmap", () => {
       makeSubWithCohort("u1", "pro", "2025-01", utcDate(2025, 1, 1), undefined, 1499),
     ];
     const result = cohortRevenueHeatmap(subs, ["2025-01"], 2);
-    expect(result[0].revenueByMonth[0]).toBeGreaterThan(0);
+    expect(result[0]!.revenueByMonth[0]).toBeGreaterThan(0);
   });
 
   it("returns zeros for unknown cohort", () => {
@@ -577,8 +577,8 @@ describe("cohortRevenueHeatmap", () => {
       makeSubWithCohort("u1", "pro", "2025-01", utcDate(2025, 1, 1)),
     ];
     const result = cohortRevenueHeatmap(subs, ["1999-01"], 2);
-    expect(result[0].revenueByMonth[0]).toBe(0);
-    expect(result[0].retentionByMonth[0]).toBe(0);
+    expect(result[0]!.revenueByMonth[0]).toBe(0);
+    expect(result[0]!.retentionByMonth[0]).toBe(0);
   });
 
   it("uses default maxMonths of 6 producing 7 elements", () => {
@@ -586,7 +586,7 @@ describe("cohortRevenueHeatmap", () => {
       makeSubWithCohort("u1", "pro", "2025-01", utcDate(2025, 1, 1)),
     ];
     const result = cohortRevenueHeatmap(subs, ["2025-01"]);
-    expect(result[0].revenueByMonth).toHaveLength(7);
+    expect(result[0]!.revenueByMonth).toHaveLength(7);
   });
 });
 
@@ -682,7 +682,7 @@ describe("peakChurnMonths", () => {
       makeSubWithCohort("u3", "pro", "2025-01", utcDate(2025, 1, 1), utcDate(2025, 4, 10)),
     ];
     const result = peakChurnMonths(subs, 3);
-    expect(result[0].churnedUsers).toBeGreaterThanOrEqual(result[1]?.churnedUsers ?? 0);
+    expect(result[0]!.churnedUsers).toBeGreaterThanOrEqual(result[1]?.churnedUsers ?? 0);
   });
 
   it("churnRate is between 0 and 1 (or 0 when no prior active)", () => {
@@ -691,8 +691,8 @@ describe("peakChurnMonths", () => {
     ];
     const result = peakChurnMonths(subs, 1);
     if (result.length > 0) {
-      expect(result[0].churnRate).toBeGreaterThanOrEqual(0);
-      expect(result[0].churnRate).toBeLessThanOrEqual(1);
+      expect(result[0]!.churnRate).toBeGreaterThanOrEqual(0);
+      expect(result[0]!.churnRate).toBeLessThanOrEqual(1);
     }
   });
 

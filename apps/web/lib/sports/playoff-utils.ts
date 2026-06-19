@@ -196,6 +196,7 @@ export function singleEliminationBracket(seeds: PlayoffSeed[]): Bracket {
   for (let i = 0; i < firstRoundMatchups; i++) {
     const highSeed = seeds[i]
     const lowSeed = seeds[n - 1 - i]
+    if (highSeed === undefined || lowSeed === undefined) continue
     matchups.push({
       matchupId: `r1-m${i + 1}`,
       round: 1,
@@ -268,10 +269,12 @@ export function simulateBracket(
         const nextMatchupPos = Math.floor(posInRound / 2)
         if (nextMatchupPos < nextRoundMatchups.length) {
           const nextMatchup = nextRoundMatchups[nextMatchupPos]
-          if (posInRound % 2 === 0) {
-            nextMatchup.homeTeamId = winner
-          } else {
-            nextMatchup.awayTeamId = winner
+          if (nextMatchup !== undefined) {
+            if (posInRound % 2 === 0) {
+              nextMatchup.homeTeamId = winner
+            } else {
+              nextMatchup.awayTeamId = winner
+            }
           }
         }
       }
@@ -322,10 +325,12 @@ export function resolveBracketDeterministic(
         const nextMatchupPos = Math.floor(posInRound / 2)
         if (nextMatchupPos < nextRoundMatchups.length) {
           const nextMatchup = nextRoundMatchups[nextMatchupPos]
-          if (posInRound % 2 === 0) {
-            nextMatchup.homeTeamId = winner
-          } else {
-            nextMatchup.awayTeamId = winner
+          if (nextMatchup !== undefined) {
+            if (posInRound % 2 === 0) {
+              nextMatchup.homeTeamId = winner
+            } else {
+              nextMatchup.awayTeamId = winner
+            }
           }
         }
       }
@@ -368,7 +373,7 @@ export function roundRobinSchedule(
       const home = roundTeams[i]
       const away = roundTeams[m - 1 - i]
       // Skip bye matchups
-      if (home !== '__BYE__' && away !== '__BYE__') {
+      if (home !== undefined && away !== undefined && home !== '__BYE__' && away !== '__BYE__') {
         schedule.push({ homeTeamId: home, awayTeamId: away, round: round + 1 })
       }
     }
@@ -592,7 +597,7 @@ export function divisionRace(
 
   if (divTeams.length === 0) throw new Error(`No teams found in division ${divisionId}`)
 
-  const leader = divTeams[0]
+  const leader = divTeams[0]!
   const gamesBack = divTeams.slice(1).map((team) => {
     const gb = (leader.wins - team.wins + team.losses - leader.losses) / 2
     return { ...team, gamesBack: gb }

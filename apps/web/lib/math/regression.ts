@@ -72,8 +72,8 @@ export function linearRegression(
   let ssXX = 0;
   let ssXY = 0;
   for (let i = 0; i < n; i++) {
-    ssXX += (xs[i] - xMean) ** 2;
-    ssXY += (xs[i] - xMean) * (ys[i] - yMean);
+    ssXX += ((xs[i] ?? 0) - xMean) ** 2;
+    ssXY += ((xs[i] ?? 0) - xMean) * ((ys[i] ?? 0) - yMean);
   }
 
   const slope = ssXX === 0 ? 0 : ssXY / ssXX;
@@ -105,7 +105,7 @@ export function predict(model: LinearModel, x: number): number {
 export function predictPoly(model: PolynomialModel, x: number): number {
   let result = 0;
   for (let i = 0; i < model.coefficients.length; i++) {
-    result += model.coefficients[i] * x ** i;
+    result += (model.coefficients[i] ?? 0) * x ** i;
   }
   return result;
 }
@@ -127,12 +127,12 @@ export function sma(data: readonly number[], window: number): number[] {
   let windowSum = 0;
 
   for (let i = 0; i < window; i++) {
-    windowSum += data[i];
+    windowSum += data[i] ?? 0;
   }
   result.push(windowSum / window);
 
   for (let i = window; i < data.length; i++) {
-    windowSum += data[i] - data[i - window];
+    windowSum += (data[i] ?? 0) - (data[i - window] ?? 0);
     result.push(windowSum / window);
   }
   return result;
@@ -148,9 +148,9 @@ export function ema(data: readonly number[], alpha: number): number[] {
   if (alpha < 0 || alpha > 1) {
     throw new Error("ema: alpha must be in [0, 1]");
   }
-  const result: number[] = [data[0]];
+  const result: number[] = [data[0] ?? 0];
   for (let i = 1; i < data.length; i++) {
-    result.push(alpha * data[i] + (1 - alpha) * result[i - 1]);
+    result.push(alpha * (data[i] ?? 0) + (1 - alpha) * (result[i - 1] ?? 0));
   }
   return result;
 }
@@ -170,7 +170,7 @@ export function wma(data: readonly number[], window: number): number[] {
   for (let i = window - 1; i < data.length; i++) {
     let weightedSum = 0;
     for (let j = 0; j < window; j++) {
-      weightedSum += (j + 1) * data[i - window + 1 + j];
+      weightedSum += (j + 1) * (data[i - window + 1 + j] ?? 0);
     }
     result.push(weightedSum / denom);
   }
@@ -185,7 +185,7 @@ export function dema(data: readonly number[], alpha: number): number[] {
   if (data.length === 0) return [];
   const e1 = ema(data, alpha);
   const e2 = ema(e1, alpha);
-  return e1.map((v, i) => 2 * v - e2[i]);
+  return e1.map((v, i) => 2 * v - (e2[i] ?? 0));
 }
 
 // ---------------------------------------------------------------------------
@@ -202,9 +202,10 @@ export function rollingMin(data: readonly number[], window: number): number[] {
 
   const result: number[] = [];
   for (let i = window - 1; i < data.length; i++) {
-    let min = data[i - window + 1];
+    let min = data[i - window + 1] ?? 0;
     for (let j = i - window + 2; j <= i; j++) {
-      if (data[j] < min) min = data[j];
+      const dj = data[j] ?? 0;
+      if (dj < min) min = dj;
     }
     result.push(min);
   }
@@ -221,9 +222,10 @@ export function rollingMax(data: readonly number[], window: number): number[] {
 
   const result: number[] = [];
   for (let i = window - 1; i < data.length; i++) {
-    let max = data[i - window + 1];
+    let max = data[i - window + 1] ?? 0;
     for (let j = i - window + 2; j <= i; j++) {
-      if (data[j] > max) max = data[j];
+      const dj = data[j] ?? 0;
+      if (dj > max) max = dj;
     }
     result.push(max);
   }
@@ -303,8 +305,8 @@ export function rSquared(
   let ssTot = 0;
   let ssRes = 0;
   for (let i = 0; i < ys.length; i++) {
-    ssTot += (ys[i] - yMean) ** 2;
-    ssRes += (ys[i] - predictions[i]) ** 2;
+    ssTot += ((ys[i] ?? 0) - yMean) ** 2;
+    ssRes += ((ys[i] ?? 0) - (predictions[i] ?? 0)) ** 2;
   }
   if (ssTot === 0) return 1; // all y values identical — perfect fit (trivially)
   return 1 - ssRes / ssTot;
@@ -320,7 +322,7 @@ export function rmse(
   if (ys.length !== predictions.length) {
     throw new Error("rmse: ys and predictions must have the same length");
   }
-  const ssRes = ys.reduce((acc, y, i) => acc + (y - predictions[i]) ** 2, 0);
+  const ssRes = ys.reduce((acc, y, i) => acc + (y - (predictions[i] ?? 0)) ** 2, 0);
   return Math.sqrt(ssRes / ys.length);
 }
 
@@ -334,7 +336,7 @@ export function mae(
   if (ys.length !== predictions.length) {
     throw new Error("mae: ys and predictions must have the same length");
   }
-  return ys.reduce((acc, y, i) => acc + Math.abs(y - predictions[i]), 0) / ys.length;
+  return ys.reduce((acc, y, i) => acc + Math.abs(y - (predictions[i] ?? 0)), 0) / ys.length;
 }
 
 // ---------------------------------------------------------------------------
@@ -364,8 +366,8 @@ export function pearsonCorrelation(
   let xSS = 0;
   let ySS = 0;
   for (let i = 0; i < n; i++) {
-    const dx = xs[i] - xMean;
-    const dy = ys[i] - yMean;
+    const dx = (xs[i] ?? 0) - xMean;
+    const dy = (ys[i] ?? 0) - yMean;
     num += dx * dy;
     xSS += dx ** 2;
     ySS += dy ** 2;
@@ -429,9 +431,9 @@ export function bollingerBands(
   const stdDevs = rollingStdDev(data, window);
 
   return middles.map((middle, i) => ({
-    upper: middle + multiplier * stdDevs[i],
+    upper: middle + multiplier * (stdDevs[i] ?? 0),
     middle,
-    lower: middle - multiplier * stdDevs[i],
+    lower: middle - multiplier * (stdDevs[i] ?? 0),
   }));
 }
 
@@ -465,15 +467,16 @@ export function rsi(data: readonly number[], period = 14): number[] {
   // Compute price differences
   const changes: number[] = [];
   for (let i = 1; i < data.length; i++) {
-    changes.push(data[i] - data[i - 1]);
+    changes.push((data[i] ?? 0) - (data[i - 1] ?? 0));
   }
 
   // Initial average gain/loss over first `period` changes
   let avgGain = 0;
   let avgLoss = 0;
   for (let i = 0; i < period; i++) {
-    if (changes[i] > 0) avgGain += changes[i];
-    else avgLoss += Math.abs(changes[i]);
+    const ci = changes[i] ?? 0;
+    if (ci > 0) avgGain += ci;
+    else avgLoss += Math.abs(ci);
   }
   avgGain /= period;
   avgLoss /= period;
@@ -486,8 +489,9 @@ export function rsi(data: readonly number[], period = 14): number[] {
 
   // Subsequent values use Wilder's smoothing
   for (let i = period; i < changes.length; i++) {
-    const gain = changes[i] > 0 ? changes[i] : 0;
-    const loss = changes[i] < 0 ? Math.abs(changes[i]) : 0;
+    const ci = changes[i] ?? 0;
+    const gain = ci > 0 ? ci : 0;
+    const loss = ci < 0 ? Math.abs(ci) : 0;
     avgGain = (avgGain * (period - 1) + gain) / period;
     avgLoss = (avgLoss * (period - 1) + loss) / period;
     const rs = avgLoss === 0 ? Infinity : avgGain / avgLoss;
@@ -523,7 +527,7 @@ export function diff(data: readonly number[], lag = 1): number[] {
   if (data.length <= lag) return [];
   const result: number[] = [];
   for (let i = lag; i < data.length; i++) {
-    result.push(data[i] - data[i - lag]);
+    result.push((data[i] ?? 0) - (data[i - lag] ?? 0));
   }
   return result;
 }

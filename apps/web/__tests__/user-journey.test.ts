@@ -72,9 +72,9 @@ describe('buildFunnel', () => {
     ]
     const result = buildFunnel(events, steps)
     expect(result.totalUsers).toBe(3)
-    expect(result.steps[0].users).toBe(3)
-    expect(result.steps[1].users).toBe(2)
-    expect(result.steps[2].users).toBe(1)
+    expect(result.steps[0]!.users).toBe(3)
+    expect(result.steps[1]!.users).toBe(2)
+    expect(result.steps[2]!.users).toBe(1)
   })
 
   it('reports overall conversion rate as last/first', () => {
@@ -102,8 +102,8 @@ describe('buildFunnel', () => {
     ]
     const result = buildFunnel(events, steps)
     // u1 never did email_verify so should not be at step 2
-    expect(result.steps[1].users).toBe(1) // only u2
-    expect(result.steps[2].users).toBe(1) // only u2
+    expect(result.steps[1]!.users).toBe(1) // only u2
+    expect(result.steps[2]!.users).toBe(1) // only u2
   })
 
   it('users must complete steps in chronological order', () => {
@@ -115,9 +115,9 @@ describe('buildFunnel', () => {
     ]
     const result = buildFunnel(events, steps)
     // sign_up at step 0 — user qualifies for step 0
-    expect(result.steps[0].users).toBe(1)
+    expect(result.steps[0]!.users).toBe(1)
     // email_verify before sign_up doesn't count as completing step 1 after step 0
-    expect(result.steps[1].users).toBe(0)
+    expect(result.steps[1]!.users).toBe(0)
   })
 
   it('returns 0 conversion rates when no users completed first step', () => {
@@ -130,7 +130,7 @@ describe('buildFunnel', () => {
   it('conversionFromPrev is 0 for the first step', () => {
     const events: JourneyEvent[] = [makeEvent('u1', 'sign_up', 5)]
     const result = buildFunnel(events, steps)
-    expect(result.steps[0].conversionFromPrev).toBe(0)
+    expect(result.steps[0]!.conversionFromPrev).toBe(0)
   })
 
   it('conversionFromPrev is correct for subsequent steps', () => {
@@ -140,13 +140,13 @@ describe('buildFunnel', () => {
       makeEvent('u2', 'sign_up', 10),
     ]
     const result = buildFunnel(events, steps)
-    expect(result.steps[1].conversionFromPrev).toBeCloseTo(0.5, 5)
+    expect(result.steps[1]!.conversionFromPrev).toBeCloseTo(0.5, 5)
   })
 
   it('conversionFromStart is 1.0 for the first step', () => {
     const events: JourneyEvent[] = [makeEvent('u1', 'sign_up', 5)]
     const result = buildFunnel(events, steps)
-    expect(result.steps[0].conversionFromStart).toBeCloseTo(1, 5)
+    expect(result.steps[0]!.conversionFromStart).toBeCloseTo(1, 5)
   })
 
   it('handles empty events array', () => {
@@ -170,7 +170,7 @@ describe('buildFunnel', () => {
       makeEvent('u2', 'email_verify', 3),
     ]
     const result = buildFunnel(events, steps, { windowDays: 30 })
-    expect(result.steps[1].users).toBe(1) // only u2
+    expect(result.steps[1]!.users).toBe(1) // only u2
   })
 
   it('dropOff counts users who did not proceed to next step', () => {
@@ -183,8 +183,8 @@ describe('buildFunnel', () => {
       makeEvent('u3', 'sign_up', 10),
     ]
     const result = buildFunnel(events, steps)
-    expect(result.steps[0].dropOff).toBe(1) // u3 dropped at step 0
-    expect(result.steps[1].dropOff).toBe(1) // u2 dropped at step 1
+    expect(result.steps[0]!.dropOff).toBe(1) // u3 dropped at step 0
+    expect(result.steps[1]!.dropOff).toBe(1) // u2 dropped at step 1
   })
 })
 
@@ -325,7 +325,7 @@ describe('buildSessionMetrics', () => {
     const e2: JourneyEvent = { userId: 'u1', eventType: 'pick_view', timestamp: new Date(base.getTime() + 20 * 60 * 1000) }
     const sessions = buildSessionMetrics([e1, e2], 'u1')
     expect(sessions.length).toBe(1)
-    expect(sessions[0].eventCount).toBe(2)
+    expect(sessions[0]!.eventCount).toBe(2)
   })
 
   it('counts pagesViewed correctly', () => {
@@ -335,7 +335,7 @@ describe('buildSessionMetrics', () => {
       makeEvent('u1', 'pick_view', 1, { sessionId: 's1' }),
     ]
     const sessions = buildSessionMetrics(events, 'u1')
-    expect(sessions[0].pagesViewed).toBe(2)
+    expect(sessions[0]!.pagesViewed).toBe(2)
   })
 
   it('extracts featuresUsed from feature_used events', () => {
@@ -345,9 +345,9 @@ describe('buildSessionMetrics', () => {
       makeEvent('u1', 'feature_used', 1, { sessionId: 's1', properties: { featureName: 'pick-tracker' } }),
     ]
     const sessions = buildSessionMetrics(events, 'u1')
-    expect(sessions[0].featuresUsed).toContain('line-movement')
-    expect(sessions[0].featuresUsed).toContain('pick-tracker')
-    expect(sessions[0].featuresUsed).toHaveLength(2) // deduped
+    expect(sessions[0]!.featuresUsed).toContain('line-movement')
+    expect(sessions[0]!.featuresUsed).toContain('pick-tracker')
+    expect(sessions[0]!.featuresUsed).toHaveLength(2) // deduped
   })
 
   it('returns empty array for unknown userId', () => {
@@ -358,7 +358,7 @@ describe('buildSessionMetrics', () => {
   it('durationMs is null for single-event sessions', () => {
     const events: JourneyEvent[] = [makeEvent('u1', 'page_view', 1, { sessionId: 's1' })]
     const sessions = buildSessionMetrics(events, 'u1')
-    expect(sessions[0].durationMs).toBeNull()
+    expect(sessions[0]!.durationMs).toBeNull()
   })
 
   it('durationMs reflects time span within session', () => {
@@ -368,7 +368,7 @@ describe('buildSessionMetrics', () => {
       { userId: 'u1', eventType: 'pick_view', timestamp: new Date(base.getTime() + 5000), sessionId: 's1' },
     ]
     const sessions = buildSessionMetrics(events, 'u1')
-    expect(sessions[0].durationMs).toBe(5000)
+    expect(sessions[0]!.durationMs).toBe(5000)
   })
 })
 
@@ -628,9 +628,9 @@ describe('dropOffAnalysis', () => {
       makeEvent('u3', 'sign_up', 10),
     ]
     const result = dropOffAnalysis(events, steps)
-    expect(result[0].reached).toBe(3)
-    expect(result[1].reached).toBe(2)
-    expect(result[2].reached).toBe(1)
+    expect(result[0]!.reached).toBe(3)
+    expect(result[1]!.reached).toBe(2)
+    expect(result[2]!.reached).toBe(1)
   })
 
   it('counts users who dropped at each step', () => {
@@ -640,8 +640,8 @@ describe('dropOffAnalysis', () => {
       makeEvent('u2', 'sign_up', 10),
     ]
     const result = dropOffAnalysis(events, steps)
-    expect(result[0].droppedHere).toBe(1) // u2 dropped at sign_up
-    expect(result[1].droppedHere).toBe(1) // u1 dropped at email_verify
+    expect(result[0]!.droppedHere).toBe(1) // u2 dropped at sign_up
+    expect(result[1]!.droppedHere).toBe(1) // u1 dropped at email_verify
   })
 
   it('calculates drop rates correctly', () => {
@@ -651,7 +651,7 @@ describe('dropOffAnalysis', () => {
       makeEvent('u1', 'email_verify', 9),
     ]
     const result = dropOffAnalysis(events, steps)
-    expect(result[0].dropRate).toBeCloseTo(0.5, 5) // 1 of 2 dropped
+    expect(result[0]!.dropRate).toBeCloseTo(0.5, 5) // 1 of 2 dropped
   })
 
   it('returns empty for empty steps', () => {
@@ -666,7 +666,7 @@ describe('dropOffAnalysis', () => {
     ]
     const result = dropOffAnalysis(events, steps)
     // Last step: all who reached it "drop" (no further step)
-    expect(result[2].droppedHere).toBe(1)
+    expect(result[2]!.droppedHere).toBe(1)
   })
 })
 
@@ -688,8 +688,8 @@ describe('commonPaths', () => {
       makeEvent('u4', 'sign_up', 5),
     ]
     const result = commonPaths(events, 2, 5)
-    expect(result[0].path).toEqual(['page_view', 'sign_up'])
-    expect(result[0].count).toBe(3)
+    expect(result[0]!.path).toEqual(['page_view', 'sign_up'])
+    expect(result[0]!.count).toBe(3)
   })
 
   it('respects maxPathLength', () => {
@@ -702,14 +702,14 @@ describe('commonPaths', () => {
       makeEvent('u1', 'session_end', 0),
     ]
     const result = commonPaths(events, 3, 5)
-    expect(result[0].path).toHaveLength(3)
+    expect(result[0]!.path).toHaveLength(3)
   })
 
   it('includes percentage field', () => {
     const events: JourneyEvent[] = [makeEvent('u1', 'page_view', 5)]
     const result = commonPaths(events)
     expect(result[0]).toHaveProperty('percentage')
-    expect(typeof result[0].percentage).toBe('number')
+    expect(typeof result[0]!.percentage).toBe('number')
   })
 
   it('returns empty for empty events', () => {
@@ -863,9 +863,9 @@ describe('eventTimeSeries', () => {
       { userId: 'u3', eventType: 'page_view', timestamp: new Date('2026-06-02T00:00:00Z') },
     ]
     const result = eventTimeSeries(events, 'page_view', 'day')
-    expect(result[0].period).toBe('2026-06-01')
-    expect(result[1].period).toBe('2026-06-02')
-    expect(result[2].period).toBe('2026-06-03')
+    expect(result[0]!.period).toBe('2026-06-01')
+    expect(result[1]!.period).toBe('2026-06-02')
+    expect(result[2]!.period).toBe('2026-06-03')
   })
 
   it('uniqueUsers counts distinct users in each period', () => {
@@ -875,8 +875,8 @@ describe('eventTimeSeries', () => {
       { userId: 'u2', eventType: 'pick_view', timestamp: new Date('2026-06-01T12:00:00Z') },
     ]
     const result = eventTimeSeries(events, 'pick_view', 'day')
-    expect(result[0].uniqueUsers).toBe(2)
-    expect(result[0].count).toBe(3)
+    expect(result[0]!.uniqueUsers).toBe(2)
+    expect(result[0]!.count).toBe(3)
   })
 
   it('returns empty for unknown event type with no events', () => {
