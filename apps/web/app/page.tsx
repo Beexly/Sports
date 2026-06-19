@@ -37,6 +37,8 @@ import { SignalPipeline } from "@/components/world/signal-pipeline";
 import type { PipelineSummary } from "@/components/world/signal-pipeline";
 import { IntelligenceLayer } from "@/components/home/intelligence-layer";
 import { SignatureGrid, AmbientGlow } from "@/components/motion/signature-grid";
+import { SignalRoom } from "@/components/home/signal-room";
+import { buildSignalRoomScene, PUBLIC_CALIBRATION_FLOOR } from "@/lib/signal-room/scene";
 
 export const dynamic = "force-dynamic";
 
@@ -102,6 +104,16 @@ export default async function HomePage(): Promise<JSX.Element> {
   const totalRows =
     state.scoringNow.length + state.publishedToday.length + state.gatedTodayRows.length + passes.length;
   const heroPlate = getPlate("home-hero-cosmos");
+  // The Signal Room instrument reads the SAME real telemetry as the hero card —
+  // it never fabricates motion; it sits at rest when the board is empty.
+  const signalRoomScene = buildSignalRoomScene({
+    sources: pipelineSummary.activeSources,
+    scoring: state.scoringNow.length,
+    published: state.publishedToday.length,
+    gated: state.gatedTodayRows.length,
+    calibrationSample: calibration.sampleSize,
+    calibrationFloor: PUBLIC_CALIBRATION_FLOOR,
+  });
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden" style={{ backgroundColor: BRAND_COLORS.obsidianBlack, color: "white" }}>
@@ -318,6 +330,44 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
           {/* The module index — the journey's map, at the hero's seam. */}
           <WorldWaypoints />
+        </section>
+
+        {/* ── 00.5 · THE SIGNAL ROOM ────────────────────────────────────
+            The brand thesis made literal: a live instrument wired to the same
+            real telemetry as the hero card. Source mesh → evidence → decision
+            core → no-bet gate → board, with market gravity above and the
+            calibration ring below. It moves only when there are real live rows;
+            an empty board makes it sit honestly at rest. $0 to run — generated
+            by the system in the browser, not a pre-rendered image. */}
+        <section className="gw-nebula-deep relative isolate overflow-hidden bg-carbon px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">
+                  The Signal Room · live instrument
+                </p>
+                <h2 className="mt-3 max-w-2xl font-display text-3xl font-semibold leading-[1.05] text-white sm:text-4xl">
+                  Watch the room turn noise into a{" "}
+                  <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">decision</span>.
+                </h2>
+                <p className="mt-4 max-w-xl text-sm leading-6 text-ink-300">
+                  Not a rendering — the system drawing its own pipeline from the same live state as
+                  the board above. Signals only move when real rows do; the no-bet gate holds what it
+                  stops. When the board is empty, the room is quiet by design.
+                </p>
+              </div>
+              <Link
+                href="/methodology"
+                className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-orbital-cyan transition-colors hover:text-white"
+              >
+                How the pipeline works
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+            <div className="mt-8">
+              <SignalRoom scene={signalRoomScene} />
+            </div>
+          </div>
         </section>
 
         {/* ── 01 · GALAXY TWIN ──────────────────────────────────────── */}
