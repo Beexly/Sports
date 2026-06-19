@@ -723,37 +723,29 @@ export function normCDF(x: number): number {
  * Inverse normal CDF (probit) via rational polynomial (Beasley-Springer-Moro / Acklam).
  */
 export function normInvCDF(p: number): number {
-  const a = [
-    -3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
-     1.383577518672690e+02, -3.066479806614716e+01,  2.506628277459239e+00,
-  ];
-  const b = [
-    -5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02,
-     6.680131188771972e+01, -1.328068155288572e+01,
-  ];
-  const c = [
-    -7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00,
-    -2.549732539343734e+00,  4.374664141464968e+00,  2.938163982698783e+00,
-  ];
-  const d = [
-    7.784695709041462e-03, 3.224671290700398e-01,
-    2.445134137142996e+00, 3.754408661907416e+00,
-  ];
+  const a0 = -3.969683028665376e+01, a1 = 2.209460984245205e+02, a2 = -2.759285104469687e+02;
+  const a3 = 1.383577518672690e+02, a4 = -3.066479806614716e+01, a5 = 2.506628277459239e+00;
+  const b0 = -5.447609879822406e+01, b1 = 1.615858368580409e+02, b2 = -1.556989798598866e+02;
+  const b3 = 6.680131188771972e+01, b4 = -1.328068155288572e+01;
+  const c0 = -7.784894002430293e-03, c1 = -3.223964580411365e-01, c2 = -2.400758277161838e+00;
+  const c3 = -2.549732539343734e+00, c4 = 4.374664141464968e+00, c5 = 2.938163982698783e+00;
+  const d0 = 7.784695709041462e-03, d1 = 3.224671290700398e-01;
+  const d2 = 2.445134137142996e+00, d3 = 3.754408661907416e+00;
   const pLow = 0.02425, pHigh = 1 - pLow;
   let q: number, r: number;
   if (p < pLow) {
     q = Math.sqrt(-2 * Math.log(p));
-    return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-           ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+    return (((((c0 * q + c1) * q + c2) * q + c3) * q + c4) * q + c5) /
+           ((((d0 * q + d1) * q + d2) * q + d3) * q + 1);
   }
   if (p <= pHigh) {
     q = p - 0.5; r = q * q;
-    return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
-           (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+    return (((((a0 * r + a1) * r + a2) * r + a3) * r + a4) * r + a5) * q /
+           (((((b0 * r + b1) * r + b2) * r + b3) * r + b4) * r + 1);
   }
   q = Math.sqrt(-2 * Math.log(1 - p));
-  return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-          ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+  return -(((((c0 * q + c1) * q + c2) * q + c3) * q + c4) * q + c5) /
+          ((((d0 * q + d1) * q + d2) * q + d3) * q + 1);
 }
 
 // ---------------------------------------------------------------------------
@@ -860,7 +852,8 @@ export function chiSquareTestV2(
   expected?: number[][],
 ): { chiSq: number; df: number; pValue: number; significant: boolean } {
   const rows = observed.length;
-  const cols = observed[0].length;
+  const firstRow = observed[0];
+  const cols = firstRow ? firstRow.length : 0;
 
   let exp: number[][];
   if (expected) {
@@ -868,19 +861,21 @@ export function chiSquareTestV2(
   } else {
     const rowSums = observed.map((r) => r.reduce((a, b) => a + b, 0));
     const colSums = Array.from({ length: cols }, (_, j) =>
-      observed.reduce((s, r) => s + r[j], 0),
+      observed.reduce((s, r) => s + (r[j] ?? 0), 0),
     );
     const total = rowSums.reduce((a, b) => a + b, 0);
     exp = observed.map((r, i) =>
-      r.map((_, j) => (rowSums[i] * colSums[j]) / total),
+      r.map((_, j) => ((rowSums[i] ?? 0) * (colSums[j] ?? 0)) / total),
     );
   }
 
   let chiSq = 0;
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      if (exp[i][j] > 0) {
-        chiSq += Math.pow(observed[i][j] - exp[i][j], 2) / exp[i][j];
+      const eij = exp[i]?.[j] ?? 0;
+      const oij = observed[i]?.[j] ?? 0;
+      if (eij > 0) {
+        chiSq += Math.pow(oij - eij, 2) / eij;
       }
     }
   }
@@ -1217,10 +1212,10 @@ export function assignVariantV2(
   const wts = weights ?? variants.map(() => 1 / variants.length);
   let cumulative = 0;
   for (let i = 0; i < variants.length; i++) {
-    cumulative += wts[i];
-    if (bucket < cumulative) return variants[i];
+    cumulative += wts[i] ?? 0;
+    if (bucket < cumulative) return variants[i] ?? variants[variants.length - 1] ?? '';
   }
-  return variants[variants.length - 1];
+  return variants[variants.length - 1] ?? '';
 }
 
 /**
@@ -1263,7 +1258,9 @@ export function stratifiedSample(
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(rand() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
+      const tmp = a[i] as T;
+      a[i] = a[j] as T;
+      a[j] = tmp;
     }
     return a;
   };
