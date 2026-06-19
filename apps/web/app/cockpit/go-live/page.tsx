@@ -20,12 +20,19 @@ import {
   type ReadinessGroup,
   type CheckStatus,
 } from "@/lib/go-live/readiness";
+import { summarizeAutonomy } from "@/lib/autonomy/autonomy-map";
+import { evaluateSpendGovernor } from "@/lib/spend/spend-governor";
 
 export default async function CockpitGoLivePage(): Promise<JSX.Element> {
   const readiness = await loadGoLiveReadiness();
   const { readyCount, totalCount, blocking, loadedAtIso } = readiness;
   const allReady = blocking.length === 0;
   const pct = totalCount > 0 ? Math.round((readyCount / totalCount) * 100) : 0;
+
+  // Operating posture — pure, no extra DB: how self-driving + how cheap this runs.
+  const autonomy = summarizeAutonomy();
+  const spend = evaluateSpendGovernor();
+  const autonomyPct = Math.round(autonomy.recurringAutonomyShare * 100);
 
   return (
     <div className="flex flex-col gap-6">
@@ -68,6 +75,15 @@ export default async function CockpitGoLivePage(): Promise<JSX.Element> {
         blockingCount={blocking.length}
       />
 
+      {/* ── Operating posture — what runs itself + how cheap ──────────────── */}
+      <PostureStrip
+        autonomyPct={autonomyPct}
+        zeroSpend={spend.zeroSpend}
+        spendingCount={spend.spendingServices.length}
+        selfDriving={autonomy.autonomous + autonomy.autonomousWithinBudget}
+        ownerLevers={autonomy.ownerParked}
+      />
+
       {/* ── Groups ────────────────────────────────────────────────────────── */}
       {readiness.groups.map((group) => (
         <GroupSection key={group.name} group={group} />
@@ -79,6 +95,78 @@ export default async function CockpitGoLivePage(): Promise<JSX.Element> {
         presence and a live DB reachability probe. Nothing is fabricated; nothing is
         pre-marked ready. &ldquo;unknown&rdquo; means the check could not be determined,
         not that it passed.
+      </p>
+    </div>
+  );
+}
+
+// ── Operating posture strip ───────────────────────────────────────────────────
+
+function PostureStrip({
+  autonomyPct,
+  zeroSpend,
+  spendingCount,
+  selfDriving,
+  ownerLevers,
+}: {
+  autonomyPct: number;
+  zeroSpend: boolean;
+  spendingCount: number;
+  selfDriving: number;
+  ownerLevers: number;
+}): JSX.Element {
+  return (
+    <section className="rounded-lg border border-white/[0.06] bg-obsidian/60 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-sm font-semibold text-white">Operating posture</h2>
+          <p className="mt-0.5 text-xs text-ink-500">
+            Once the switches below are flipped, this is how the system runs.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/cockpit/autonomy"
+            className="rounded-md border border-white/[0.06] px-2.5 py-1 text-[11px] text-ink-300 hover:bg-white/[0.03]"
+          >
+            Autonomy map →
+          </Link>
+          <Link
+            href="/cockpit/spend"
+            className="rounded-md border border-white/[0.06] px-2.5 py-1 text-[11px] text-ink-300 hover:bg-white/[0.03]"
+          >
+            Spend governor →
+          </Link>
+        </div>
+      </div>
+      <dl className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <PostureStat label="Recurring ops self-driving" value={`${autonomyPct}%`} good />
+        <PostureStat
+          label="Spend posture"
+          value={zeroSpend ? "$0 / mo" : `${spendingCount} paid`}
+          good={zeroSpend}
+        />
+        <PostureStat label="Self-driving loops" value={String(selfDriving)} good />
+        <PostureStat label="Owner levers" value={String(ownerLevers)} />
+      </dl>
+    </section>
+  );
+}
+
+function PostureStat({
+  label,
+  value,
+  good,
+}: {
+  label: string;
+  value: string;
+  good?: boolean;
+}): JSX.Element {
+  return (
+    <div className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-ink-500">{label}</p>
+      <p className={`mt-0.5 text-base font-bold ${good ? "text-emerald-200" : "text-white"}`}>
+        {value}
       </p>
     </div>
   );
