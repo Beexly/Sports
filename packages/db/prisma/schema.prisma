@@ -30,6 +30,9 @@ model User {
   subscription  Subscription?
   alerts        Alert[]
   claudeApiCalls ClaudeApiCallRecord[]
+  // Galaxy Dynasty — the playable layer. Optional 1:1; a user exists without a
+  // game profile until they enter the Campus.
+  galaxyProfile GalaxyProfile?
 
   @@index([email])
   @@map("users")
@@ -2360,4 +2363,338 @@ model Signal {
   @@index([entityType, entityId])
   @@index([category])
   @@map("signals")
+}
+
+// ============================================================
+// GALAXY DYNASTY — the playable layer (Rookie Season slice)
+//
+// Additive only (DECISION D-007): new models, new enums, one optional relation
+// on User. No destructive change. Persistence for the @sports/galaxy-engine
+// core loop: identity, Sports IQ skills, the closed-loop Credit ledger, Signal
+// Check attempts, quests, cards, crews, merch entitlements, PvM boss progress,
+// and async Signal Duels.
+// ============================================================
+
+enum GalaxyArchetype {
+  SHARP
+  SCOUT
+  COLLECTOR
+  GM
+  CAPTAIN
+  SHOWMAN
+  STREET_LEGEND
+}
+
+enum GalaxyFaction {
+  SHARPS
+  SCOUTS
+  BUILDERS
+  COLLECTORS
+  MAVERICKS
+  CAPTAINS
+  SHOWMEN
+  GRINDERS
+}
+
+// Credit Constitution (bible §4.2): EARN reasons only. There is intentionally no
+// SPEND/REDEEM/WITHDRAW/CASHOUT member — credits never convert to cash.
+enum GalaxyCreditReason {
+  ONBOARDING_GRANT
+  SIGNAL_CHECK_REWARD
+  QUEST_REWARD
+  BOSS_REWARD
+  DUEL_REWARD
+  DAILY_STREAK
+  BLACKTOP_REWARD
+}
+
+enum SignalCheckSurface {
+  ACADEMY
+  WAR_ROOM
+  BLACKTOP
+  BOSS
+  DUEL
+  DAILY
+}
+
+enum SignalCheckResult {
+  PENDING
+  WIN
+  LOSS
+  PUSH
+}
+
+enum CrewRole {
+  CAPTAIN
+  MEMBER
+}
+
+enum SignalDuelStatus {
+  OPEN
+  RESOLVED
+}
+
+model GalaxyProfile {
+  id             String          @id @default(cuid())
+  userId         String          @unique
+  handle         String          @unique
+  archetype      GalaxyArchetype
+  faction        GalaxyFaction
+  characterLevel Int             @default(1)
+  characterXp    Int             @default(0)
+  // Non-spendable status (bible §4.2). Earned, never bought, never cashed.
+  prestige       Int             @default(0)
+  // Denormalized cache of the ledger sum. The ledger is the source of truth.
+  creditsBalance Int             @default(0)
+  avatarSeed     String?
+  // Ghost/AI seeded profile (anti-ghost-town, bible §4.3). Excluded from human ladders.
+  isGhost        Boolean         @default(false)
+  onboardedAt    DateTime?
+  lastDailyAt    DateTime?
+  dailyStreak    Int             @default(0)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  user             User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills           SportsIqSkill[]
+  ledger           GalaxyCreditLedgerEntry[]
+  attempts         SignalCheckAttempt[]
+  questCompletions GalaxyQuestCompletion[]
+  cards            GalaxyCardOwnership[]
+  crewMemberships  CrewMembership[]
+  ownedCrews       Crew[]                  @relation("CrewOwner")
+  merch            MerchEntitlement[]
+  bossProgress     BossProgress[]
+  duelsCreated     SignalDuel[]            @relation("DuelCreator")
+  duelsJoined      SignalDuel[]            @relation("DuelOpponent")
+  duelsWon         SignalDuel[]            @relation("DuelWinner")
+
+  @@index([faction])
+  @@index([archetype])
+  @@map("galaxy_profiles")
+}
+
+model SportsIqSkill {
+  id           String   @id @default(cuid())
+  profileId    String
+  // Odds API sport key (DECISION D-009), e.g. "americanfootball_nfl".
+  sportKey     String
+  level        Int      @default(1)
+  xp           Int      @default(0)
+  gradedCount  Int      @default(0)
+  // Running sum of Brier scores, for the per-skill calibration readout.
+  brierSum     Float    @default(0)
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, sportKey])
+  @@map("galaxy_sports_iq_skills")
+}
+
+model GalaxyCreditLedgerEntry {
+  id           String             @id @default(cuid())
+  profileId    String
+  // Always > 0 — earn-only (enforced by @sports/galaxy-engine awardCredits).
+  amount       Int
+  reason       GalaxyCreditReason
+  balanceAfter Int
+  refType      String?
+  refId        String?
+  createdAt    DateTime           @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, createdAt])
+  @@map("galaxy_credit_ledger")
+}
+
+model SignalCheckAttempt {
+  id               String             @id @default(cuid())
+  profileId        String
+  surface          SignalCheckSurface
+  sportKey         String
+  // Free-text context for the prompt shown to the player.
+  prompt           String
+  // Market shape (null for binary/trivia checks).
+  pickType         String?
+  selection        String?
+  line             Float?
+  // The home team, needed for engine settlement of market checks.
+  homeTeam         String?
+  confidence       Int
+  result           SignalCheckResult  @default(PENDING)
+  correct          Boolean?
+  brier            Float?
+  calibrationScore Int?
+  xpAwarded        Int                @default(0)
+  creditsAwarded   Int                @default(0)
+  // The realized outcome string for the audit drawer / appeals stub.
+  resolvedOutcome  String?
+  // Appeals/dispute stub (bible §4.3): a player may flag a grade for review.
+  disputed         Boolean            @default(false)
+  disputeNote      String?
+  gradedAt         DateTime?
+  createdAt        DateTime           @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, createdAt])
+  @@index([surface])
+  @@map("galaxy_signal_check_attempts")
+}
+
+model GalaxyQuest {
+  id            String   @id @default(cuid())
+  key           String   @unique
+  title         String
+  description   String
+  surface       SignalCheckSurface
+  sportKey      String?
+  rewardCredits Int      @default(0)
+  rewardXp      Int      @default(0)
+  active        Boolean  @default(true)
+  // Owner-approval gate for AI-generated quests (Galaxy Engine v0, bible §Phase 7).
+  generated     Boolean  @default(false)
+  approved      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  completions GalaxyQuestCompletion[]
+
+  @@map("galaxy_quests")
+}
+
+model GalaxyQuestCompletion {
+  id          String   @id @default(cuid())
+  profileId   String
+  questKey    String
+  completedAt DateTime @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  quest   GalaxyQuest   @relation(fields: [questKey], references: [key], onDelete: Cascade)
+
+  @@unique([profileId, questKey])
+  @@map("galaxy_quest_completions")
+}
+
+model GalaxyCard {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  // TEAM | CONCEPT | ARCHETYPE — collection + display only this build (no custody).
+  subjectType String
+  rarity      String
+  faction     GalaxyFaction?
+  // Digital companion data (bible Phase 5): stats, form, GSE rating, value trend.
+  gseRating   Int?
+  formTrend   String?
+  valueTrend  String?
+  statLine    Json?
+  assetSeed   String?
+  createdAt   DateTime @default(now())
+
+  ownership GalaxyCardOwnership[]
+
+  @@map("galaxy_cards")
+}
+
+model GalaxyCardOwnership {
+  id          String   @id @default(cuid())
+  profileId   String
+  cardId      String
+  acquiredVia String
+  acquiredAt  DateTime @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  card    GalaxyCard    @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, cardId])
+  @@map("galaxy_card_ownership")
+}
+
+model Crew {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  tag            String
+  motto          String?
+  faction        GalaxyFaction?
+  ownerProfileId String
+  createdAt      DateTime @default(now())
+
+  owner   GalaxyProfile    @relation("CrewOwner", fields: [ownerProfileId], references: [id], onDelete: Cascade)
+  members CrewMembership[]
+
+  @@map("galaxy_crews")
+}
+
+model CrewMembership {
+  id        String   @id @default(cuid())
+  crewId    String
+  profileId String
+  role      CrewRole @default(MEMBER)
+  joinedAt  DateTime @default(now())
+
+  crew    Crew          @relation(fields: [crewId], references: [id], onDelete: Cascade)
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([crewId, profileId])
+  @@map("galaxy_crew_memberships")
+}
+
+model MerchEntitlement {
+  id          String   @id @default(cuid())
+  profileId   String
+  sku         String
+  name        String
+  unlockedVia String
+  // Entitlement only — no physical custody/fulfillment this build (partner-gated).
+  redeemed    Boolean  @default(false)
+  unlockedAt  DateTime @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, sku])
+  @@map("galaxy_merch_entitlements")
+}
+
+model BossProgress {
+  id        String   @id @default(cuid())
+  profileId String
+  bossKey   String
+  cleared   Boolean  @default(false)
+  bestScore Float?
+  attempts  Int      @default(0)
+  clearedAt DateTime?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, bossKey])
+  @@map("galaxy_boss_progress")
+}
+
+model SignalDuel {
+  id               String           @id @default(cuid())
+  sportKey         String
+  prompt           String
+  pickType         String?
+  line             Float?
+  homeTeam         String?
+  status           SignalDuelStatus @default(OPEN)
+  creatorProfileId String
+  opponentProfileId String?
+  winnerProfileId  String?
+  creatorAttemptId String?
+  opponentAttemptId String?
+  createdAt        DateTime         @default(now())
+  resolvedAt       DateTime?
+
+  creator  GalaxyProfile  @relation("DuelCreator", fields: [creatorProfileId], references: [id], onDelete: Cascade)
+  opponent GalaxyProfile? @relation("DuelOpponent", fields: [opponentProfileId], references: [id])
+  winner   GalaxyProfile? @relation("DuelWinner", fields: [winnerProfileId], references: [id])
+
+  @@index([status])
+  @@map("galaxy_signal_duels")
 }
