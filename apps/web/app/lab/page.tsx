@@ -8,6 +8,7 @@ import { BRAND_COLORS } from "@/lib/brand";
 import { GameSimulatorTool } from "@/components/lab/game-simulator-tool";
 import { ParlayAnalyzerTool } from "@/components/lab/parlay-analyzer-tool";
 import { BankrollOptimizerTool } from "@/components/lab/bankroll-optimizer-tool";
+import { PaceScheduleTool } from "@/components/lab/pace-schedule-tool";
 import { GlassBoxExplainer } from "@/components/lab/glass-box-explainer";
 import { CalibrationExplorer } from "@/components/lab/calibration-explorer";
 import { loadGlassBoxPicks } from "@/lib/lab/glass-box";
@@ -38,6 +39,11 @@ const TOOLS = [
     name: "Bankroll & Kelly optimizer",
     status: "live",
     desc: "Size stakes to your edge and variance tolerance, with a Monte Carlo drawdown + risk-of-ruin simulation.",
+  },
+  {
+    name: "Pace & schedule optimizer",
+    status: "live",
+    desc: "Turn a matchup's rest situation and tempo into an expected margin shift with a confidence interval — built on the dormant schedule + pace analytics libraries.",
   },
   {
     name: "Glass-box pick explainer",
@@ -129,6 +135,21 @@ export default async function GalaxyLabPage(): Promise<JSX.Element> {
               Bankroll &amp; Kelly optimizer
             </h2>
             <BankrollOptimizerTool />
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section className="mt-10">
+            <h2 className="mb-1 font-display text-lg font-semibold text-white">
+              Pace &amp; schedule optimizer
+            </h2>
+            <p className="mb-4 max-w-2xl text-sm text-ink-300">
+              Enter a matchup&apos;s rest picture — days rest, back-to-back legs,
+              optional tempo — and see the expected scoring-margin shift the
+              schedule alone implies, with an honest confidence interval. It runs
+              on your inputs and excludes injury and availability data.
+            </p>
+            <PaceScheduleTool />
           </section>
         </Reveal>
 
