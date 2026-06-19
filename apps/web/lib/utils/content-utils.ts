@@ -206,7 +206,7 @@ export function buildHeadline(params: {
  */
 export function listToProseEn(items: readonly string[]): string {
   if (items.length === 0) return "";
-  if (items.length === 1) return items[0];
+  if (items.length === 1) return items[0]!;
   if (items.length === 2) return `${items[0]} and ${items[1]}`;
   const last = items[items.length - 1];
   const rest = items.slice(0, -1).join(", ");

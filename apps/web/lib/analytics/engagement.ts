@@ -65,7 +65,7 @@ export function buildFunnel(
         dropoffFromPrev: null,
       };
     }
-    const prev = stageCounts[index - 1];
+    const prev = stageCounts[index - 1]!;
     const conversionFromPrev =
       prev.count > 0 ? entry.count / prev.count : 0;
     const dropoffFromPrev = 1 - conversionFromPrev;
@@ -83,8 +83,8 @@ export function buildFunnel(
  */
 export function overallConversionRate(metrics: readonly FunnelMetrics[]): number {
   if (metrics.length < 2) return metrics.length === 1 ? 1 : 0;
-  const first = metrics[0].count;
-  const last = metrics[metrics.length - 1].count;
+  const first = metrics[0]!.count;
+  const last = metrics[metrics.length - 1]!.count;
   if (first === 0) return 0;
   return last / first;
 }
@@ -113,8 +113,8 @@ export function sessionScore(events: readonly SessionEvent[]): SessionScore {
 
   const typeSet = new Set<string>();
   let pickViewCount = 0;
-  let minTs = events[0].timestamp;
-  let maxTs = events[0].timestamp;
+  let minTs = events[0]!.timestamp;
+  let maxTs = events[0]!.timestamp;
 
   for (const e of events) {
     typeSet.add(e.type);

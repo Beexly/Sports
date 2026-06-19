@@ -564,7 +564,7 @@ describe("removeVig", () => {
     // fair: 0.5/1.1667 ≈ 0.4286, 0.6667/1.1667 ≈ 0.5714
     expect(probs[0]).toBeCloseTo(0.4286, 3);
     expect(probs[1]).toBeCloseTo(0.5714, 3);
-    expect(probs[0] + probs[1]).toBeCloseTo(1.0);
+    expect(probs[0]! + probs[1]!).toBeCloseTo(1.0);
   });
 });
 

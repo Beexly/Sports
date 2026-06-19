@@ -299,7 +299,7 @@ export async function mapConcurrent<T, U>(
   async function worker(): Promise<void> {
     while (nextIndex < items.length) {
       const i = nextIndex++;
-      results[i] = await fn(items[i], i);
+      results[i] = await fn(items[i]!, i);
     }
   }
 
@@ -322,7 +322,7 @@ export async function mapSerial<T, U>(
 ): Promise<U[]> {
   const results: U[] = [];
   for (let i = 0; i < items.length; i++) {
-    results.push(await fn(items[i], i));
+    results.push(await fn(items[i]!, i));
   }
   return results;
 }
@@ -355,7 +355,7 @@ export async function reduceAsync<T, U>(
 ): Promise<U> {
   let acc = initial;
   for (let i = 0; i < items.length; i++) {
-    acc = await fn(acc, items[i], i);
+    acc = await fn(acc, items[i]!, i);
   }
   return acc;
 }
@@ -608,7 +608,7 @@ export function memoizeAsync<T extends (...args: unknown[]) => Promise<unknown>>
       }
     );
 
-    entry.promise = promise;
+    entry.promise = promise as Promise<ReturnType<T>>;
 
     return promise as ReturnType<T>;
   }
@@ -626,7 +626,7 @@ export function memoizeAsync<T extends (...args: unknown[]) => Promise<unknown>>
     return cache.size;
   };
 
-  return memoized as T & { invalidate(...args: Parameters<T>): void; clear(): void; size(): number };
+  return memoized as unknown as T & { invalidate(...args: Parameters<T>): void; clear(): void; size(): number };
 }
 
 // ---------------------------------------------------------------------------
@@ -801,7 +801,7 @@ export class RateLimiter {
 
   private _prune(): void {
     const cutoff = Date.now() - this._windowMs;
-    while (this._calls.length > 0 && this._calls[0] <= cutoff) {
+    while (this._calls.length > 0 && this._calls[0]! <= cutoff) {
       this._calls.shift();
     }
   }

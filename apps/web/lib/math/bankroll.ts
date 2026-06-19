@@ -187,10 +187,10 @@ export function analyzeDrawdown(balances: readonly number[]): DrawdownAnalysis {
     };
   }
 
-  let peak = balances[0];
-  let peakBalance = balances[0];
+  let peak = balances[0]!;
+  let peakBalance = balances[0]!;
   let maxDrawdown = 0;
-  let maxDrawdownPctPeak = balances[0]; // the peak at which the max DD occurred
+  let maxDrawdownPctPeak = balances[0]!; // the peak at which the max DD occurred
 
   // Track losing streaks to report worstStreak
   // We approximate a "loss" as each step where balance decreases
@@ -198,8 +198,8 @@ export function analyzeDrawdown(balances: readonly number[]): DrawdownAnalysis {
   let currentStreak = 0;
 
   for (let i = 1; i < balances.length; i++) {
-    const bal = balances[i];
-    const prev = balances[i - 1];
+    const bal = balances[i]!;
+    const prev = balances[i - 1]!;
 
     if (bal < prev) {
       currentStreak++;
@@ -220,7 +220,7 @@ export function analyzeDrawdown(balances: readonly number[]): DrawdownAnalysis {
     }
   }
 
-  const currentBalance = balances[balances.length - 1];
+  const currentBalance = balances[balances.length - 1]!;
   const currentDrawdown = Math.max(0, peakBalance - currentBalance);
   const maxDrawdownPct = maxDrawdownPctPeak > 0 ? maxDrawdown / maxDrawdownPctPeak : 0;
   const currentDrawdownPct = peakBalance > 0 ? currentDrawdown / peakBalance : 0;
@@ -279,7 +279,7 @@ export function streakAnalysis(
     if (lossRun > longestLossStreak) longestLossStreak = lossRun;
   }
 
-  const last = outcomes[outcomes.length - 1];
+  const last = outcomes[outcomes.length - 1]!;
   // Re-count current streak length from the end
   let currentStreak = 0;
   for (let i = outcomes.length - 1; i >= 0; i--) {
@@ -391,8 +391,8 @@ export function cumulativeProfitLoss(
   let running = 0;
   const len = Math.min(stakes.length, outcomes.length, decimalOdds.length);
   for (let i = 0; i < len; i++) {
-    const stake = stakes[i];
-    const odds = decimalOdds[i];
+    const stake = stakes[i]!;
+    const odds = decimalOdds[i]!;
     const outcome = outcomes[i];
     if (outcome === "win") {
       running += profitFromStake(stake, odds);

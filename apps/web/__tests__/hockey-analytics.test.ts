@@ -395,7 +395,7 @@ describe('xgPerShot', () => {
       makeShot({ xCoord: 80, yCoord: 0, type: 'savedShot', shotType: 'wrist' }),
     ]
     const avg = xgPerShot(shots)
-    expect(avg).toBeCloseTo(xgNHL(shots[0]), 5)
+    expect(avg).toBeCloseTo(xgNHL(shots[0]!), 5)
   })
 
   it('returns 0 for empty array', () => {
@@ -409,7 +409,7 @@ describe('totalXg', () => {
       makeShot({ xCoord: 80, yCoord: 0, type: 'savedShot', shotType: 'wrist' }),
       makeShot({ xCoord: 70, yCoord: 10, type: 'savedShot', shotType: 'slap' }),
     ]
-    expect(totalXg(shots)).toBeCloseTo(xgNHL(shots[0]) + xgNHL(shots[1]), 5)
+    expect(totalXg(shots)).toBeCloseTo(xgNHL(shots[0]!) + xgNHL(shots[1]!), 5)
   })
 
   it('returns 0 for empty array', () => {
@@ -659,7 +659,7 @@ describe('filterByStrength', () => {
     ]
     const filtered = filterByStrength(shots, 'evenStrength')
     expect(filtered).toHaveLength(1)
-    expect(filtered[0].strengthState).toBe('evenStrength')
+    expect(filtered[0]!.strengthState).toBe('evenStrength')
   })
 
   it('returns only power play shots', () => {

@@ -423,7 +423,7 @@ export function analyzeTrends(
   let streakType: GameResult = 'W'
   let streakCount = 0
   if (teamGames.length > 0) {
-    streakType = gameResult(teamGames[0], teamId)
+    streakType = gameResult(teamGames[0]!, teamId)
     for (const g of teamGames) {
       const r = gameResult(g, teamId)
       if (r === streakType) streakCount++
@@ -441,7 +441,7 @@ export function analyzeTrends(
   )
 
   if (atsGames.length > 0) {
-    atsStreakType = atsCover(atsGames[0], teamId)
+    atsStreakType = atsCover(atsGames[0]!, teamId)
     for (const g of atsGames) {
       const r = atsCover(g, teamId)
       if (r === atsStreakType) atsStreakCount++

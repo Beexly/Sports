@@ -166,8 +166,8 @@ export function fractionalToDecimal(fractional: string): number | null {
   const parts = trimmed.split("/");
   if (parts.length !== 2) return null;
 
-  const numerator = parseFloat(parts[0]);
-  const denominator = parseFloat(parts[1]);
+  const numerator = parseFloat(parts[0]!);
+  const denominator = parseFloat(parts[1]!);
 
   if (
     !isFinite(numerator) ||

@@ -35,9 +35,9 @@ describe("buildFunnel", () => {
       { stage: "pro_subscriber", count: 100 },
     ]);
     expect(result).toHaveLength(3);
-    expect(result[0].stage).toBe("visitor");
-    expect(result[1].stage).toBe("registered");
-    expect(result[2].stage).toBe("pro_subscriber");
+    expect(result[0]!.stage).toBe("visitor");
+    expect(result[1]!.stage).toBe("registered");
+    expect(result[2]!.stage).toBe("pro_subscriber");
   });
 
   it("first stage has null conversionFromPrev and null dropoffFromPrev", () => {
@@ -45,8 +45,8 @@ describe("buildFunnel", () => {
       { stage: "visitor", count: 1000 },
       { stage: "registered", count: 400 },
     ]);
-    expect(result[0].conversionFromPrev).toBeNull();
-    expect(result[0].dropoffFromPrev).toBeNull();
+    expect(result[0]!.conversionFromPrev).toBeNull();
+    expect(result[0]!.dropoffFromPrev).toBeNull();
   });
 
   it("calculates conversion correctly for second stage", () => {
@@ -54,7 +54,7 @@ describe("buildFunnel", () => {
       { stage: "visitor", count: 1000 },
       { stage: "registered", count: 400 },
     ]);
-    expect(result[1].conversionFromPrev).toBeCloseTo(0.4);
+    expect(result[1]!.conversionFromPrev).toBeCloseTo(0.4);
   });
 
   it("calculates dropoff correctly for second stage", () => {
@@ -62,7 +62,7 @@ describe("buildFunnel", () => {
       { stage: "visitor", count: 1000 },
       { stage: "registered", count: 400 },
     ]);
-    expect(result[1].dropoffFromPrev).toBeCloseTo(0.6);
+    expect(result[1]!.dropoffFromPrev).toBeCloseTo(0.6);
   });
 
   it("handles three stages with correct conversions throughout", () => {
@@ -71,8 +71,8 @@ describe("buildFunnel", () => {
       { stage: "registered", count: 500 },
       { stage: "pro_subscriber", count: 100 },
     ]);
-    expect(result[1].conversionFromPrev).toBeCloseTo(0.5);
-    expect(result[2].conversionFromPrev).toBeCloseTo(0.2);
+    expect(result[1]!.conversionFromPrev).toBeCloseTo(0.5);
+    expect(result[2]!.conversionFromPrev).toBeCloseTo(0.2);
   });
 
   it("handles prev count of 0 gracefully", () => {
@@ -80,7 +80,7 @@ describe("buildFunnel", () => {
       { stage: "visitor", count: 0 },
       { stage: "registered", count: 50 },
     ]);
-    expect(result[1].conversionFromPrev).toBe(0);
+    expect(result[1]!.conversionFromPrev).toBe(0);
   });
 
   it("returns empty array for empty input", () => {
@@ -169,7 +169,7 @@ describe("sessionScore", () => {
     const events: { type: string; timestamp: number }[] = [];
     const types = ["pick_view", "page_view", "click", "scroll", "share", "like"];
     for (let i = 0; i < 20; i++) {
-      events.push({ type: types[i % types.length], timestamp: i * 30000 });
+      events.push({ type: types[i % types.length]!, timestamp: i * 30000 });
     }
     const score = sessionScore(events);
     expect(score.isHighValue).toBe(true);
@@ -263,7 +263,7 @@ describe("buildCohortRetention", () => {
       },
     ];
     const result = buildCohortRetention(cohorts, 12);
-    expect(result[0].retentionByWeek).toHaveLength(13); // weeks 0..12
+    expect(result[0]!.retentionByWeek).toHaveLength(13); // weeks 0..12
   });
 
   it("week 0 retention is always 1.0", () => {
@@ -277,7 +277,7 @@ describe("buildCohortRetention", () => {
       },
     ];
     const result = buildCohortRetention(cohorts, 4);
-    expect(result[0].retentionByWeek[0]).toBe(1.0);
+    expect(result[0]!.retentionByWeek[0]).toBe(1.0);
   });
 
   it("maps cohort labels and sizes correctly", () => {
@@ -292,8 +292,8 @@ describe("buildCohortRetention", () => {
       },
     ];
     const result = buildCohortRetention(cohorts, 4);
-    expect(result[0].cohortLabel).toBe("2024-03");
-    expect(result[0].size).toBe(3);
+    expect(result[0]!.cohortLabel).toBe("2024-03");
+    expect(result[0]!.size).toBe(3);
   });
 
   it("handles multiple cohorts", () => {
@@ -303,8 +303,8 @@ describe("buildCohortRetention", () => {
     ];
     const result = buildCohortRetention(cohorts, 4);
     expect(result).toHaveLength(2);
-    expect(result[0].cohortLabel).toBe("A");
-    expect(result[1].cohortLabel).toBe("B");
+    expect(result[0]!.cohortLabel).toBe("A");
+    expect(result[1]!.cohortLabel).toBe("B");
   });
 
   it("uses default maxWeeks of 12 when not provided", () => {
@@ -312,7 +312,7 @@ describe("buildCohortRetention", () => {
       { label: "D", users: [{ joinedAt: 0, lastActiveAt: week * 20 }] },
     ];
     const result = buildCohortRetention(cohorts);
-    expect(result[0].retentionByWeek).toHaveLength(13);
+    expect(result[0]!.retentionByWeek).toHaveLength(13);
   });
 });
 

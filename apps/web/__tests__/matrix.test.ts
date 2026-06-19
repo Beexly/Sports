@@ -39,7 +39,7 @@ describe("zeros", () => {
   it("returns correct shape", () => {
     const m = zeros(3, 4);
     expect(m.length).toBe(3);
-    expect(m[0].length).toBe(4);
+    expect(m[0]!.length).toBe(4);
   });
 
   it("all values are 0", () => {
@@ -59,7 +59,7 @@ describe("ones", () => {
   it("returns correct shape", () => {
     const m = ones(2, 5);
     expect(m.length).toBe(2);
-    expect(m[0].length).toBe(5);
+    expect(m[0]!.length).toBe(5);
   });
 
   it("all values are 1", () => {
@@ -74,16 +74,16 @@ describe("ones", () => {
 describe("identity", () => {
   it("3×3 has ones on diagonal", () => {
     const I = identity(3);
-    expect(I[0][0]).toBe(1);
-    expect(I[1][1]).toBe(1);
-    expect(I[2][2]).toBe(1);
+    expect(I[0]![0]).toBe(1);
+    expect(I[1]![1]).toBe(1);
+    expect(I[2]![2]).toBe(1);
   });
 
   it("3×3 off-diagonal are zero", () => {
     const I = identity(3);
-    expect(I[0][1]).toBe(0);
-    expect(I[1][0]).toBe(0);
-    expect(I[0][2]).toBe(0);
+    expect(I[0]![1]).toBe(0);
+    expect(I[1]![0]).toBe(0);
+    expect(I[0]![2]).toBe(0);
   });
 
   it("1×1 identity", () => {
@@ -102,16 +102,16 @@ describe("identity", () => {
 describe("diagonal", () => {
   it("places values on diagonal", () => {
     const d = diagonal([2, 5, 7]);
-    expect(d[0][0]).toBe(2);
-    expect(d[1][1]).toBe(5);
-    expect(d[2][2]).toBe(7);
+    expect(d[0]![0]).toBe(2);
+    expect(d[1]![1]).toBe(5);
+    expect(d[2]![2]).toBe(7);
   });
 
   it("off-diagonal are zero", () => {
     const d = diagonal([2, 5, 7]);
-    expect(d[0][1]).toBe(0);
-    expect(d[1][0]).toBe(0);
-    expect(d[2][0]).toBe(0);
+    expect(d[0]![1]).toBe(0);
+    expect(d[1]![0]).toBe(0);
+    expect(d[2]![0]).toBe(0);
   });
 
   it("is square with correct size", () => {
@@ -160,21 +160,21 @@ describe("set", () => {
   it("returns a new matrix with value changed", () => {
     const m = [[1, 2], [3, 4]];
     const m2 = set(m, 0, 0, 99);
-    expect(m2[0][0]).toBe(99);
+    expect(m2[0]![0]).toBe(99);
   });
 
   it("original matrix is not mutated", () => {
     const m = [[1, 2], [3, 4]];
     set(m, 0, 0, 99);
-    expect(m[0][0]).toBe(1);
+    expect(m[0]![0]).toBe(1);
   });
 
   it("other elements unchanged", () => {
     const m = [[1, 2], [3, 4]];
     const m2 = set(m, 1, 1, 7);
-    expect(m2[0][0]).toBe(1);
-    expect(m2[0][1]).toBe(2);
-    expect(m2[1][0]).toBe(3);
+    expect(m2[0]![0]).toBe(1);
+    expect(m2[0]![1]).toBe(2);
+    expect(m2[1]![0]).toBe(3);
   });
 });
 
@@ -281,10 +281,10 @@ describe("multiply", () => {
     const b = [[7, 8], [9, 10], [11, 12]];
     const c = multiply(a, b);
     expect(shape(c)).toEqual([2, 2]);
-    expect(c[0][0]).toBe(58);
-    expect(c[0][1]).toBe(64);
-    expect(c[1][0]).toBe(139);
-    expect(c[1][1]).toBe(154);
+    expect(c[0]![0]).toBe(58);
+    expect(c[0]![1]).toBe(64);
+    expect(c[1]![0]).toBe(139);
+    expect(c[1]![1]).toBe(154);
   });
 
   it("identity × M = M", () => {
@@ -482,9 +482,9 @@ describe("luDecompose", () => {
     const result = luDecompose(A);
     expect(result).not.toBeNull();
     const { L } = result!;
-    expect(L[0][0]).toBeCloseTo(1);
-    expect(L[1][1]).toBeCloseTo(1);
-    expect(L[0][1]).toBeCloseTo(0);
+    expect(L[0]![0]).toBeCloseTo(1);
+    expect(L[1]![1]).toBeCloseTo(1);
+    expect(L[0]![1]).toBeCloseTo(0);
   });
 
   it("U is upper triangular", () => {
@@ -492,7 +492,7 @@ describe("luDecompose", () => {
     const result = luDecompose(A);
     expect(result).not.toBeNull();
     const { U } = result!;
-    expect(U[1][0]).toBeCloseTo(0);
+    expect(U[1]![0]).toBeCloseTo(0);
   });
 
   it("returns null for singular matrix", () => {
@@ -549,8 +549,8 @@ describe("solve", () => {
     expect(x).not.toBeNull();
     // Verify A*x = b
     const Ax = multiply(A, reshape(x!, 2, 1));
-    expect(Ax[0][0]).toBeCloseTo(b[0]);
-    expect(Ax[1][0]).toBeCloseTo(b[1]);
+    expect(Ax[0]![0]).toBeCloseTo(b[0]!);
+    expect(Ax[1]![0]).toBeCloseTo(b[1]!);
   });
 });
 
@@ -659,8 +659,8 @@ describe("cloneMatrix", () => {
   it("deep clone: modifying clone does not affect original", () => {
     const m = [[1, 2], [3, 4]];
     const clone = cloneMatrix(m);
-    clone[0][0] = 99;
-    expect(m[0][0]).toBe(1);
+    clone[0]![0] = 99;
+    expect(m[0]![0]).toBe(1);
   });
 
   it("clone has same values", () => {

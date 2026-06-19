@@ -101,16 +101,16 @@ describe("buildCohortMatrix", () => {
 
   it("computes retention as retained/users", () => {
     const matrix = buildCohortMatrix(BASE_ROWS);
-    expect(matrix.retention[0][0]).toBeCloseTo(1.0);
-    expect(matrix.retention[0][1]).toBeCloseTo(0.8);
-    expect(matrix.retention[0][2]).toBeCloseTo(0.6);
+    expect(matrix.retention[0]![0]).toBeCloseTo(1.0);
+    expect(matrix.retention[0]![1]).toBeCloseTo(0.8);
+    expect(matrix.retention[0]![2]).toBeCloseTo(0.6);
   });
 
   it("second cohort has correct retention rates", () => {
     const matrix = buildCohortMatrix(BASE_ROWS);
-    expect(matrix.retention[1][0]).toBeCloseTo(1.0);
-    expect(matrix.retention[1][1]).toBeCloseTo(0.7);
-    expect(matrix.retention[1][2]).toBeCloseTo(0.5);
+    expect(matrix.retention[1]![0]).toBeCloseTo(1.0);
+    expect(matrix.retention[1]![1]).toBeCloseTo(0.7);
+    expect(matrix.retention[1]![2]).toBeCloseTo(0.5);
   });
 
   it("fills missing period with 0 when another cohort has that period", () => {
@@ -129,7 +129,7 @@ describe("buildCohortMatrix", () => {
     const ci = matrix.cohortIds.indexOf("A");
     const pi = matrix.periods.indexOf(1);
     // Cohort A has no row for period 1 → retention should be 0
-    expect(matrix.retention[ci][pi]).toBe(0);
+    expect(matrix.retention[ci]![pi]).toBe(0);
   });
 
   it("handles rows out of period order", () => {
@@ -154,7 +154,7 @@ describe("buildCohortMatrix", () => {
       { cohortId: "2024-01", period: 0, users: 0, retained: 0 },
     ];
     const matrix = buildCohortMatrix(rows);
-    expect(matrix.retention[0][0]).toBe(0);
+    expect(matrix.retention[0]![0]).toBe(0);
   });
 
   it("handles single cohort single period", () => {
@@ -163,7 +163,7 @@ describe("buildCohortMatrix", () => {
     ];
     const matrix = buildCohortMatrix(rows);
     expect(matrix.cohortIds).toEqual(["2024-06"]);
-    expect(matrix.retention[0][0]).toBe(1.0);
+    expect(matrix.retention[0]![0]).toBe(1.0);
   });
 
   it("retention matrix dimensions match cohortIds × periods", () => {
@@ -469,7 +469,7 @@ describe("survivalCurve", () => {
   it("is monotonically non-increasing for positive churn", () => {
     const curve = survivalCurve(1000, 0.08, 10);
     for (let i = 1; i < curve.length; i++) {
-      expect(curve[i]).toBeLessThanOrEqual(curve[i - 1]);
+      expect(curve[i]!).toBeLessThanOrEqual(curve[i - 1]!);
     }
   });
 });
@@ -611,7 +611,7 @@ describe("ltvByCohort", () => {
     const r1 = ltvByCohort(BASE_ROWS, 50);
     const r2 = ltvByCohort(BASE_ROWS, 100);
     for (const id of Object.keys(r1)) {
-      expect(r2[id]).toBeCloseTo(r1[id] * 2);
+      expect(r2[id]!).toBeCloseTo(r1[id]! * 2);
     }
   });
 });
@@ -876,7 +876,7 @@ describe("buildJourney", () => {
       makeEvent("u3", "signup", 20),
     ];
     const journey = buildJourney(events);
-    expect(journey[0].users).toBe(3);
+    expect(journey[0]!.users).toBe(3);
   });
 
   it("counts pro subscribers from upgrade events", () => {
@@ -1291,7 +1291,7 @@ describe("integration tests", () => {
     const avg = avgRetentionByPeriod(buildCohortMatrix(BASE_ROWS));
     const cum = cumulativeRetention(avg);
     for (let i = 1; i < cum.length; i++) {
-      expect(cum[i]).toBeLessThanOrEqual(cum[i - 1]);
+      expect(cum[i]!).toBeLessThanOrEqual(cum[i - 1]!);
     }
   });
 });

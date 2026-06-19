@@ -729,7 +729,7 @@ export function optimalLineup(
     const pos = player.position.toUpperCase()
     if ((remaining[pos] ?? 0) > 0 && totalSalary + player.salary <= salaryCap) {
       selected.push(player)
-      remaining[pos] -= 1
+      remaining[pos] = (remaining[pos] ?? 0) - 1
       totalSalary += player.salary
     }
   }

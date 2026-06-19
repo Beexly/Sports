@@ -289,8 +289,8 @@ describe('lastNGames', () => {
     ]
     const result = lastNGames(games, 'KC', 2)
     expect(result).toHaveLength(2)
-    expect(result[0].date.toISOString()).toContain('2024-01-15')
-    expect(result[1].date.toISOString()).toContain('2024-01-08')
+    expect(result[0]!.date.toISOString()).toContain('2024-01-15')
+    expect(result[1]!.date.toISOString()).toContain('2024-01-08')
   })
 
   it('returns all games when n exceeds total', () => {
@@ -331,7 +331,7 @@ describe('buildHeadToHead', () => {
 
   it('sorts games newest first', () => {
     const h2h = buildHeadToHead(allGames, 'KC', 'BUF')
-    expect(h2h.games[0].date >= h2h.games[1].date).toBe(true)
+    expect(h2h.games[0]!.date >= h2h.games[1]!.date).toBe(true)
   })
 
   it('computes teamA and teamB records correctly', () => {
@@ -511,10 +511,10 @@ describe('rankBySos', () => {
       TEAM_B: [makeGame('TEAM_B', 'OPP2', 30, 7)],
     }
     const result = rankBySos(['TEAM_A', 'TEAM_B'], schedules, records)
-    expect(result[0].teamId).toBe('TEAM_A')
-    expect(result[0].rank).toBe(1)
-    expect(result[1].teamId).toBe('TEAM_B')
-    expect(result[1].rank).toBe(2)
+    expect(result[0]!.teamId).toBe('TEAM_A')
+    expect(result[0]!.rank).toBe(1)
+    expect(result[1]!.teamId).toBe('TEAM_B')
+    expect(result[1]!.rank).toBe(2)
   })
 })
 

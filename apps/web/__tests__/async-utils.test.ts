@@ -891,8 +891,8 @@ describe("PriorityTaskRunner", () => {
     const runner = new PriorityTaskRunner<number>();
     runner.add({ id: "bad", fn: async () => { throw new Error("task failed"); } });
     const results = await runner.run();
-    expect(results[0].error).toBeInstanceOf(Error);
-    expect(results[0].result).toBeNull();
+    expect(results[0]!.error).toBeInstanceOf(Error);
+    expect(results[0]!.result).toBeNull();
   });
 
   it("supports concurrency > 1", async () => {
@@ -918,7 +918,7 @@ describe("PriorityTaskRunner", () => {
     const runner = new PriorityTaskRunner<number>();
     runner.add({ id: "x", fn: async () => 7 });
     const results = await runner.run();
-    expect(results[0].result).toBe(7);
+    expect(results[0]!.result).toBe(7);
   });
 });
 

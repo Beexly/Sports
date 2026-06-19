@@ -58,8 +58,8 @@ function median(values: number[]): number {
   const sorted = [...values].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
   return sorted.length % 2 === 0
-    ? (sorted[mid - 1] + sorted[mid]) / 2
-    : sorted[mid];
+    ? (sorted[mid - 1]! + sorted[mid]!) / 2
+    : sorted[mid]!;
 }
 
 /** Mean of an array. Returns 0 for empty arrays. */
@@ -110,7 +110,7 @@ export function buildCohortMatrix(rows: CohortRow[]): CohortMatrix {
     const ci = cohortIndex.get(row.cohortId);
     const pi = periodIndex.get(row.period);
     if (ci === undefined || pi === undefined) continue;
-    retention[ci][pi] = row.users > 0 ? row.retained / row.users : 0;
+    retention[ci]![pi] = row.users > 0 ? row.retained / row.users : 0;
   }
 
   return { cohortIds, periods, retention };
@@ -128,7 +128,7 @@ export function cohortRetentionAt(
   const ci = matrix.cohortIds.indexOf(cohortId);
   const pi = matrix.periods.indexOf(period);
   if (ci === -1 || pi === -1) return 0;
-  return matrix.retention[ci][pi];
+  return matrix.retention[ci]?.[pi] ?? 0;
 }
 
 /**
@@ -137,7 +137,7 @@ export function cohortRetentionAt(
  */
 export function avgRetentionByPeriod(matrix: CohortMatrix): number[] {
   return matrix.periods.map((_, pi) => {
-    const vals = matrix.retention.map((row) => row[pi]);
+    const vals = matrix.retention.map((row) => row[pi] ?? 0);
     return mean(vals);
   });
 }
@@ -151,14 +151,14 @@ export function bestCohort(matrix: CohortMatrix, atPeriod: number): string {
   const pi = matrix.periods.indexOf(atPeriod);
   if (pi === -1) return "";
 
-  let best = matrix.cohortIds[0];
-  let bestRate = matrix.retention[0][pi];
+  let best = matrix.cohortIds[0]!;
+  let bestRate = matrix.retention[0]![pi]!;
 
   for (let i = 1; i < matrix.cohortIds.length; i++) {
-    const rate = matrix.retention[i][pi];
+    const rate = matrix.retention[i]![pi]!;
     if (rate > bestRate) {
       bestRate = rate;
-      best = matrix.cohortIds[i];
+      best = matrix.cohortIds[i]!;
     }
   }
   return best;
@@ -173,14 +173,14 @@ export function worstCohort(matrix: CohortMatrix, atPeriod: number): string {
   const pi = matrix.periods.indexOf(atPeriod);
   if (pi === -1) return "";
 
-  let worst = matrix.cohortIds[0];
-  let worstRate = matrix.retention[0][pi];
+  let worst = matrix.cohortIds[0]!;
+  let worstRate = matrix.retention[0]![pi]!;
 
   for (let i = 1; i < matrix.cohortIds.length; i++) {
-    const rate = matrix.retention[i][pi];
+    const rate = matrix.retention[i]![pi]!;
     if (rate < worstRate) {
       worstRate = rate;
-      worst = matrix.cohortIds[i];
+      worst = matrix.cohortIds[i]!;
     }
   }
   return worst;
@@ -196,7 +196,7 @@ export function retentionTrend(
 ): number[] {
   const pi = matrix.periods.indexOf(period);
   if (pi === -1) return matrix.cohortIds.map(() => 0);
-  return matrix.retention.map((row) => row[pi]);
+  return matrix.retention.map((row) => row[pi] ?? 0);
 }
 
 /**
@@ -260,7 +260,7 @@ export function survivalCurve(
 ): number[] {
   const curve: number[] = [initialUsers];
   for (let t = 1; t <= months; t++) {
-    curve.push(curve[t - 1] * (1 - monthlyChurn));
+    curve.push(curve[t - 1]! * (1 - monthlyChurn));
   }
   return curve;
 }
@@ -333,9 +333,9 @@ export function ltvByCohort(
   const result: Record<string, number> = {};
 
   for (let ci = 0; ci < matrix.cohortIds.length; ci++) {
-    const id = matrix.cohortIds[ci];
+    const id = matrix.cohortIds[ci]!;
     // Area under retention curve = sum of retention rates across all periods
-    const area = matrix.retention[ci].reduce((s, v) => s + v, 0);
+    const area = matrix.retention[ci]!.reduce((s, v) => s + v, 0);
     result[id] = area * avgRevenue;
   }
 
@@ -535,8 +535,8 @@ export function buildJourney(events: SubscriberEvent[]): UserJourneyStep[] {
   ];
 
   return stepNames.map((step, i) => {
-    const users = stepCounts[i];
-    const nextUsers = i < stepCounts.length - 1 ? stepCounts[i + 1] : users;
+    const users = stepCounts[i]!;
+    const nextUsers = i < stepCounts.length - 1 ? stepCounts[i + 1]! : users;
     const dropoff = Math.max(0, users - nextUsers);
     return { step, users, dropoff };
   });
