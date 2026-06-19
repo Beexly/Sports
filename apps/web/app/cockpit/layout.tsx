@@ -77,6 +77,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
     section: "Monetization",
     items: [
       { href: "/cockpit/revenue", label: "Revenue", hint: "Lanes, MRR, activation" },
+      { href: "/cockpit/funding", label: "Funding", hint: "Backer proof packet · real signals only" },
       { href: "/cockpit/customer-proof", label: "Customer Proof", hint: "Funnel + Ask Galaxy + proof reports" },
       { href: "/cockpit/content-factory", label: "Content Factory", hint: "One brief → many surfaces" },
       { href: "/cockpit/channels", label: "Channels", hint: "Distribution channel registry" },
