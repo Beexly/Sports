@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth, signIn } from "@/lib/auth";
+import { safeCallbackUrl } from "@/lib/auth/safe-callback-url";
 import Link from "next/link";
 import { BRAND_NAME } from "@/lib/brand";
 
@@ -166,18 +167,6 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 // ─────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────
-
-/**
- * Validates callbackUrl to only allow same-origin relative paths.
- * Rejects absolute URLs (https://evil.com) and protocol-relative URLs
- * (//evil.com) which browsers treat as absolute — preventing open redirects.
- */
-function safeCallbackUrl(raw: string | undefined): string {
-  if (!raw) return "/dashboard";
-  // Must start with "/" but not "//" (protocol-relative)
-  if (raw.startsWith("/") && !raw.startsWith("//")) return raw;
-  return "/dashboard";
-}
 
 function getErrorMessage(error?: string): string | null {
   switch (error) {

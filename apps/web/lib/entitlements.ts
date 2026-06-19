@@ -5,6 +5,7 @@
 
 import { db } from "@sports/db";
 import { getEntitlements, type Entitlements, type SubscriptionTier } from "@sports/types";
+import { isDevFakeAdminActive } from "@/lib/auth/dev-fake-admin";
 
 export { getEntitlements };
 export type { Entitlements };
@@ -34,14 +35,11 @@ function isDatabaseUnreachable(error: unknown): boolean {
 }
 
 export async function getUserEntitlements(userId: string): Promise<Entitlements> {
-  // Dev-only escalation, hard-gated to non-production. Without the NODE_ENV
-  // guard a misconfigured prod (DEV_FAKE_ADMIN=true) would hand ELITE to any
-  // session whose id is literally "dev-admin" — bypassing the paywall.
-  if (
-    process.env["NODE_ENV"] !== "production" &&
-    process.env["DEV_FAKE_ADMIN"] === "true" &&
-    userId === "dev-admin"
-  ) {
+  // Dev-only escalation, hard-gated to non-production via isDevFakeAdminActive()
+  // (shared with auth() and the middleware). Without that guard a misconfigured
+  // prod (DEV_FAKE_ADMIN=true) would hand ELITE to any session whose id is
+  // literally "dev-admin" — bypassing the paywall.
+  if (isDevFakeAdminActive() && userId === "dev-admin") {
     return getEntitlements(DEV_FAKE_ADMIN_TIER);
   }
 

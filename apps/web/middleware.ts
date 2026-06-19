@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isDevFakeAdminActive } from "@/lib/auth/dev-fake-admin";
 
 /**
  * Middleware for route protection.
@@ -45,13 +46,10 @@ export function middleware(req: NextRequest): NextResponse {
     // even runs.
     //
     // HARD PRODUCTION GUARD: this escape hatch is ignored entirely in
-    // production. A stray DEV_FAKE_ADMIN=true in a prod environment can never
-    // open the auth gate — the flag only takes effect outside production. This
-    // defends in depth alongside the NODE_ENV check in getUserEntitlements.
-    if (
-      process.env["NODE_ENV"] !== "production" &&
-      process.env["DEV_FAKE_ADMIN"] === "true"
-    ) {
+    // production. isDevFakeAdminActive() is the single source of truth shared by
+    // auth(), this middleware, and getUserEntitlements — a stray
+    // DEV_FAKE_ADMIN=true in a prod environment can never open the auth gate.
+    if (isDevFakeAdminActive()) {
       return NextResponse.next();
     }
 

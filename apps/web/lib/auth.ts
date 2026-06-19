@@ -2,6 +2,7 @@ import NextAuth, { type NextAuthConfig, type Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@sports/db";
+import { isDevFakeAdminActive } from "@/lib/auth/dev-fake-admin";
 
 export type UserRole = "USER" | "ADMIN";
 
@@ -84,13 +85,15 @@ const realAuth = nextAuth.auth as () => Promise<Session | null>;
 /**
  * Dev-mode admin bypass.
  *
- * When DEV_FAKE_ADMIN=true, every auth() call returns a synthetic ADMIN
- * session. This is the launch-night escape hatch — it lets the operator
- * open /dashboard and /cockpit without OAuth or a real Postgres session
- * table. NEVER set this in production.
+ * When DEV_FAKE_ADMIN=true (outside production only), every auth() call returns
+ * a synthetic ADMIN session. This is the launch-night escape hatch — it lets the
+ * operator open /dashboard and /cockpit without OAuth or a real Postgres session
+ * table. It is HARD-GATED to non-production via isDevFakeAdminActive(): a stray
+ * DEV_FAKE_ADMIN=true in production can never mint an ADMIN session. NEVER rely
+ * on setting it in production.
  */
 export const auth: () => Promise<Session | null> = async () => {
-  if (process.env["DEV_FAKE_ADMIN"] === "true") {
+  if (isDevFakeAdminActive()) {
     return {
       user: {
         id: "dev-admin",
