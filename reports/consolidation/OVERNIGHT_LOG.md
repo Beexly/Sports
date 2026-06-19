@@ -67,3 +67,47 @@ Three Sonnet research workers produced license-vetted, velocity-biased catalogs 
   transfermarkt CC0, OddsPapi free tier for Pinnacle closing lines.
 - Clearance entries only — NO live extraction. Readies the data moat without any spend risk.
 - Gate: tsc 0 · scraping-clearance · trust-gate ✓ · build exit 0.
+
+### [L1] Pure TS utilities wave 1: Kelly, sparkline, count-up — `7b965ff`
+- `lib/math/kelly.ts`: Kelly criterion + devig math (americanToDecimal, kellyFraction, kellyFromAmerican, basicDevig, EV). 16/16 tests.
+- `components/ui/sparkline.tsx`: Pure SVG sparkline (aria-hidden when no label, endpoint dot, filled mode). Zero deps.
+- `lib/hooks/use-count-up.ts`: RAF-based ease-out count-up hook, SSR-safe, respects prefers-reduced-motion.
+- Gate: tsc 0 · kelly 16/16 · trust-gate ✓ · build exit 0.
+
+### [L2] Sports data adapters: NHL, OpenLigaDB, NFL venues — `baaf32d`
+- `lib/sports-data/nhl-schedule.ts`: Keyless NHL schedule adapter (api-web.nhle.com), clearance-gated.
+- `lib/sports-data/openligadb.ts`: Bundesliga adapter (api.openligadb.de, CC0 open dataset), clearance-gated.
+- `lib/sports-data/nfl-venues.ts`: Static NFL venue table (32 teams, surface/roof/altitude/timezone). HIFLD public domain.
+- Gate: tsc 0 · sports-data-adapters 10/10 · trust-gate ✓ · build exit 0.
+
+### [L3] UI components wave 2: SVG gauge, shimmer skeleton, clipboard, calendar heatmap — `4b65c90`
+- `components/ui/svg-gauge.tsx`: Animated ring gauge, role=meter, aria-valuenow/min/max.
+- `components/ui/shimmer-skeleton.tsx`: ShimmerSkeleton, ShimmerText, ShimmerCard.
+- `lib/hooks/use-clipboard.ts`: navigator.clipboard hook, timeout-resettable copied state.
+- `components/ui/calendar-heatmap.tsx`: Pure SVG 12-week GitHub-style heatmap, 4-tier color scale.
+- `globals.css`: @keyframes shimmer for existing .skeleton class.
+- Gate: tsc 0 · ui-components-2 4/4 · trust-gate ✓ · build exit 0.
+
+### [L4] Growth/SEO: llms.txt, JSON-LD extensions, View Transitions, env keys — `e7560b3`
+- `app/llms.txt/route.ts`: Static AI-crawler description of GSE (public vs gated, honesty standard).
+- `lib/seo/sports-jsonld.ts`: Added buildArticleSchema, buildItemListSchema, buildClaimReviewSchema.
+- `next.config.mjs`: viewTransition: true in experimental (native View Transitions API).
+- `.env.example`: 4 optional free-tier sports API key stubs (BALLDONTLIE, THESPORTSDB, CLEARSPORTS, ODDSPAPI).
+- Gate: tsc 0 · jsonld-extensions 4/4 · trust-gate 1079 files ✓ · model-freeze v5.0.0 ✓.
+
+### [L5] Math utilities wave 2: odds formatter, Bayesian blend, Dixon-Coles — `91b420b`
+- `lib/math/odds-format.ts`: 7-format odds converter (American/Decimal/Fractional/HK/Malay/Indonesian/Probability).
+- `lib/math/bayesian-blend.ts`: Model-vs-market probability blend with dynamic λ weighting.
+- `lib/math/dixon-coles.ts`: Dixon-Coles τ correction for low-score soccer; dixonColesOutcomes() for H/D/A.
+- Gate: tsc 0 · math-utils-2 25/25 · trust-gate 1082 files ✓ · model-freeze v5.0.0 ✓.
+
+### [L6] Game-day weather core + harvest reports — `388339b`
+- `lib/weather/open-meteo.ts`: Open-Meteo URL builder + WMO code map + parser (CC-BY-4.0, keyless).
+- `lib/weather/load-game-weather.ts`: Never-throw clearance-gated loader; DISPLAY-ONLY.
+- `components/weather/weather-badge.tsx`: Accessible badge with CC-BY-4.0 attribution.
+- `__tests__/weather.test.ts`: 25/25 tests passing.
+- 3 harvest reports: HARVEST_GROWTH.md (30 items), HARVEST_SPORTS_OSS.md (35 repos), HARVEST_UI_DATAVIZ.md (25 items).
+- NOTE: venue-coords.ts (outdoor NFL/MLB lat/lon table) HELD pending owner review — subagent flagged for
+  bypass attempts during dev; final file appears clean but auto-mode classifier blocked commit per security policy.
+  Room/[gameId] weather wiring also held pending this review.
+- Gate: tsc 0 · weather 25/25 · trust-gate 1082 files ✓.

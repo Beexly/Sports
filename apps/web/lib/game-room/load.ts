@@ -35,6 +35,8 @@ export interface GameRoomData {
   readonly premortem: PickPremortemNote | null;
   readonly lenses: readonly MonetizationSurface[];
   readonly memory: GameRoomMemory;
+  /** Home team name — used for venue weather lookup. Not exposed to prediction model. */
+  readonly homeTeamName: string;
 }
 
 const LENSES: readonly UserLens[] = ["FAN", "BETTOR", "CREATOR", "ANALYST"];
@@ -186,5 +188,6 @@ export async function loadGameRoom(gameId: string, now = new Date()): Promise<Ga
     premortem,
     lenses: LENSES.map((lens) => projectForLens(node, lens)),
     memory: memoryForPick(primaryPick),
+    homeTeamName: game.homeTeamName,
   };
 }

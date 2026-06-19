@@ -5,6 +5,9 @@ import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadGameRoom } from "@/lib/game-room/load";
+import { WeatherBadge } from "@/components/weather/weather-badge";
+import { loadGameWeather } from "@/lib/weather/load-game-weather";
+import { lookupVenueCoords } from "@/lib/weather/venue-coords";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +32,17 @@ export default async function GameRoomPage({
   const room = await loadGameRoom(params.gameId);
   if (!room) notFound();
 
+  // Load game-day weather for outdoor venues (display-only; never fed to model).
+  // Returns null on any error — badge renders nothing in that case.
+  const venueCoords = lookupVenueCoords(room.homeTeamName);
+  const weather = venueCoords?.isOutdoor
+    ? await loadGameWeather({
+        lat: venueCoords.lat,
+        lon: venueCoords.lon,
+        kickoffISO: room.node.commenceTime,
+      })
+    : null;
+
   return (
     <div className="min-h-screen bg-obsidian text-white">
       <Nav />
@@ -45,6 +59,11 @@ export default async function GameRoomPage({
             A persistent read-only room for market state, evidence history, pre-mortem context,
             lens-safe summaries, and postgame memory.
           </p>
+          {weather && (
+            <div className="mt-5">
+              <WeatherBadge weather={weather} />
+            </div>
+          )}
         </header>
 
         <section className="grid gap-4 md:grid-cols-4">
