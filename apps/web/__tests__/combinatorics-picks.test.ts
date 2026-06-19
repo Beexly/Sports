@@ -49,8 +49,8 @@ describe("factorial", () => {
   it("5! = 120", () => expect(factorial(5)).toBe(120));
   it("10! = 3628800", () => expect(factorial(10)).toBe(3628800));
   it("20! is a large number", () => expect(factorial(20)).toBeGreaterThan(1e18));
-  it("negative → NaN", () => expect(factorial(-1)).toBeNaN());
-  it("non-integer → NaN", () => expect(factorial(2.5)).toBeNaN());
+  it("negative → throws", () => expect(() => factorial(-1)).toThrow(RangeError));
+  it("non-integer → throws", () => expect(() => factorial(2.5)).toThrow(RangeError));
   it("> 170 → Infinity", () => expect(factorial(200)).toBe(Infinity));
 });
 
@@ -102,27 +102,27 @@ describe("Poisson distribution", () => {
 });
 
 describe("Binomial distribution", () => {
-  it("PMF: B(1,2,0.5) = 0.5", () => expect(binomialPmf(1, 2, 0.5)).toBeCloseTo(0.5, 6));
-  it("PMF: B(0,2,0) = 1", () => expect(binomialPmf(0, 2, 0)).toBe(1));
-  it("PMF: B(2,2,1) = 1", () => expect(binomialPmf(2, 2, 1)).toBe(1));
-  it("PMF: k > n → 0", () => expect(binomialPmf(5, 3, 0.5)).toBe(0));
+  it("PMF: B(n=2,k=1,p=0.5) = 0.5", () => expect(binomialPmf(2, 1, 0.5)).toBeCloseTo(0.5, 6));
+  it("PMF: B(n=2,k=0,p=0) = 1", () => expect(binomialPmf(2, 0, 0)).toBe(1));
+  it("PMF: B(n=2,k=2,p=1) = 1", () => expect(binomialPmf(2, 2, 1)).toBe(1));
+  it("PMF: k > n → 0", () => expect(binomialPmf(3, 5, 0.5)).toBe(0));
   it("CDF: P(X≤10 | n=10, p=0.5) ≈ 1", () => expect(binomialCdf(10, 10, 0.5)).toBeCloseTo(1, 4));
   it("PMF sums to 1", () => {
     const n = 5;
     const p = 0.3;
-    const total = Array.from({ length: n + 1 }, (_, k) => binomialPmf(k, n, p)).reduce((a, b) => a + b, 0);
+    const total = Array.from({ length: n + 1 }, (_, k) => binomialPmf(n, k, p)).reduce((a, b) => a + b, 0);
     expect(total).toBeCloseTo(1, 5);
   });
 });
 
 describe("negativeBinomialPmf", () => {
-  it("P(0,1,0.5) = 0.5", () => expect(negativeBinomialPmf(0, 1, 0.5)).toBeCloseTo(0.5, 6));
-  it("invalid inputs → 0", () => expect(negativeBinomialPmf(-1, 1, 0.5)).toBe(0));
+  it("P(r=1,k=0,p=0.5) = 0.5", () => expect(negativeBinomialPmf(1, 0, 0.5)).toBeCloseTo(0.5, 6));
+  it("invalid inputs → 0", () => expect(negativeBinomialPmf(1, -1, 0.5)).toBe(0));
 });
 
 describe("hypergeometricPmf", () => {
-  it("P(2 | N=10, K=5, n=4) is positive", () => expect(hypergeometricPmf(2, 10, 5, 4)).toBeGreaterThan(0));
-  it("k outside range → 0", () => expect(hypergeometricPmf(5, 10, 2, 3)).toBe(0));
+  it("P(N=10,K=5,n=4,k=2) is positive", () => expect(hypergeometricPmf(10, 5, 4, 2)).toBeGreaterThan(0));
+  it("k outside range → 0", () => expect(hypergeometricPmf(10, 2, 3, 5)).toBe(0));
 });
 
 describe("multinomialCoefficient", () => {
@@ -142,8 +142,8 @@ describe("dixonColesAdjustment", () => {
 describe("betEv / kellyFraction", () => {
   it("EV on coin flip at -110 is negative", () => expect(betEv(0.5, 100 / 110 + 1)).toBeLessThan(0));
   it("EV on +EV bet is positive", () => expect(betEv(0.6, 2.0)).toBeGreaterThan(0));
-  it("Kelly on -EV bet = 0", () => expect(kellyFraction(0.4, 100 / 110 + 1)).toBe(0));
-  it("Kelly on +EV bet > 0", () => expect(kellyFraction(0.55, 100 / 110 + 1)).toBeGreaterThan(0));
+  it("Kelly on -EV bet = 0", () => expect(kellyFraction(0.4, -110)).toBe(0));
+  it("Kelly on +EV bet > 0", () => expect(kellyFraction(0.55, -110)).toBeGreaterThan(0));
 });
 
 describe("waysToWinLoss / exactWinProb / atLeastWinsProb", () => {
