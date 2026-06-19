@@ -1,0 +1,175 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { Nav } from "@/components/ui/nav";
+import { Footer } from "@/components/ui/footer";
+import { Reveal } from "@/components/motion/reveal";
+import { BRAND_COLORS } from "@/lib/brand";
+import { GameSimulatorTool } from "@/components/lab/game-simulator-tool";
+
+export const metadata: Metadata = {
+  title: "Galaxy Lab — Run the Model Yourself",
+  description:
+    "An interactive sports-intelligence workbench. Simulate any matchup thousands of times, see the outcome distribution, and compare the model to the market line. A tool, not a tip sheet.",
+  alternates: { canonical: "/lab" },
+};
+
+const TOOLS = [
+  {
+    name: "Monte Carlo game simulator",
+    status: "live",
+    desc: "Simulate a matchup thousands of times from team ratings; see win probability, the margin distribution, and where the model disagrees with the spread.",
+  },
+  {
+    name: "Parlay stress-tester",
+    status: "soon",
+    desc: "Real correlation and risk-of-ruin on your slip — built on the parlay + risk-analytics libraries.",
+  },
+  {
+    name: "Bankroll & Kelly optimizer",
+    status: "soon",
+    desc: "Size stakes to your edge and variance tolerance, with drawdown simulation.",
+  },
+  {
+    name: "Glass-box pick explainer",
+    status: "pro",
+    desc: "The full devig → edge → distribution trail behind a real published pick. Unlocks with Pro.",
+  },
+  {
+    name: "Calibration explorer",
+    status: "gated",
+    desc: "The live reliability curve — honest 'building the record' until the settled-pick sample clears the gate.",
+  },
+] as const;
+
+function StatusChip({ status }: { status: string }): JSX.Element {
+  const map: Record<string, { label: string; color: string }> = {
+    live: { label: "Live", color: BRAND_COLORS.orbitalCyan },
+    soon: { label: "Coming soon", color: BRAND_COLORS.softUltravioletText },
+    pro: { label: "Pro", color: BRAND_COLORS.ionMagenta },
+    gated: { label: "Data-gated", color: BRAND_COLORS.softUltravioletText },
+  };
+  const s = map[status] ?? map.soon;
+  return (
+    <span
+      className="rounded-full px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.16em]"
+      style={{
+        color: s?.color,
+        border: `1px solid ${s?.color}40`,
+        background: `${s?.color}10`,
+      }}
+    >
+      {s?.label}
+    </span>
+  );
+}
+
+export default function GalaxyLabPage(): JSX.Element {
+  return (
+    <div style={{ backgroundColor: BRAND_COLORS.obsidianBlack }} className="min-h-screen">
+      <Nav />
+      <main className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+        <Reveal>
+          <header className="max-w-2xl">
+            <p
+              className="font-mono text-[11px] uppercase tracking-[0.22em]"
+              style={{ color: BRAND_COLORS.orbitalCyan }}
+            >
+              Galaxy Lab
+            </p>
+            <h1 className="mt-3 font-display text-3xl font-semibold leading-tight text-white sm:text-4xl">
+              Run the model yourself.
+            </h1>
+            <p className="mt-4 text-sm leading-relaxed text-ink-300 sm:text-base">
+              Every tout hides their math behind a paywall. We hand you the
+              engine. Simulate any matchup thousands of times, watch the outcome
+              distribution form, and see exactly where a model&apos;s number
+              disagrees with the market price. These are tools that run on{" "}
+              <span className="text-white">your</span> inputs — model
+              exploration, not published picks.
+            </p>
+          </header>
+        </Reveal>
+
+        <Reveal>
+          <section className="mt-10">
+            <GameSimulatorTool />
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section className="mt-12">
+            <h2 className="font-display text-lg font-semibold text-white">
+              The workbench
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm text-ink-300">
+              The Lab is built directly on Galaxy&apos;s open analytics
+              libraries. Tools ship as they&apos;re wired; the proprietary picks
+              themselves stay gated — the tools that run on your own numbers do
+              not.
+            </p>
+            <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+              {TOOLS.map((t) => (
+                <li
+                  key={t.name}
+                  className="rounded-xl border p-4"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.09)",
+                    background: "rgba(255,255,255,0.02)",
+                  }}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-display text-sm font-semibold text-white">
+                      {t.name}
+                    </h3>
+                    <StatusChip status={t.status} />
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-ink-300">
+                    {t.desc}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section
+            className="mt-12 rounded-2xl border p-6"
+            style={{
+              borderColor: `${BRAND_COLORS.orbitalCyan}22`,
+              background: `${BRAND_COLORS.orbitalCyan}06`,
+            }}
+          >
+            <h2 className="font-display text-base font-semibold text-white">
+              Why give the tools away?
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-300">
+              Because the moat isn&apos;t the calculator — it&apos;s the data and
+              the published methodology behind the picks. Letting you
+              pressure-test the method yourself is how trust gets earned. See the public
+              methodology and track record on{" "}
+              <Link
+                href="/methodology"
+                className="underline"
+                style={{ color: BRAND_COLORS.orbitalCyan }}
+              >
+                how it works
+              </Link>{" "}
+              and{" "}
+              <Link
+                href="/board"
+                className="underline"
+                style={{ color: BRAND_COLORS.orbitalCyan }}
+              >
+                today&apos;s board
+              </Link>
+              .
+            </p>
+          </section>
+        </Reveal>
+      </main>
+      <Footer />
+    </div>
+  );
+}
