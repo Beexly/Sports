@@ -701,3 +701,689 @@ export function thompsonSampling(
 
   return bestId;
 }
+
+// ---------------------------------------------------------------------------
+// Normal distribution helpers (inline, zero-dependency)
+// ---------------------------------------------------------------------------
+
+/**
+ * Standard normal CDF using erf-based Horner polynomial approximation.
+ * Abramowitz & Stegun 7.1.26 coefficients (max error ~1.5e-7).
+ */
+export function normCDF(x: number): number {
+  const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
+  const a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+  const sign = x < 0 ? -1 : 1;
+  const t = 1 / (1 + p * Math.abs(x) / Math.SQRT2);
+  const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x / 2);
+  return 0.5 * (1 + sign * y);
+}
+
+/**
+ * Inverse normal CDF (probit) via rational polynomial (Beasley-Springer-Moro / Acklam).
+ */
+export function normInvCDF(p: number): number {
+  const a = [
+    -3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
+     1.383577518672690e+02, -3.066479806614716e+01,  2.506628277459239e+00,
+  ];
+  const b = [
+    -5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02,
+     6.680131188771972e+01, -1.328068155288572e+01,
+  ];
+  const c = [
+    -7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00,
+    -2.549732539343734e+00,  4.374664141464968e+00,  2.938163982698783e+00,
+  ];
+  const d = [
+    7.784695709041462e-03, 3.224671290700398e-01,
+    2.445134137142996e+00, 3.754408661907416e+00,
+  ];
+  const pLow = 0.02425, pHigh = 1 - pLow;
+  let q: number, r: number;
+  if (p < pLow) {
+    q = Math.sqrt(-2 * Math.log(p));
+    return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+           ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+  }
+  if (p <= pHigh) {
+    q = p - 0.5; r = q * q;
+    return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
+           (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+  }
+  q = Math.sqrt(-2 * Math.log(1 - p));
+  return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+          ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+}
+
+// ---------------------------------------------------------------------------
+// Sample size calculation
+// ---------------------------------------------------------------------------
+
+/**
+ * Sample size per variant for a two-sided two-proportion z-test.
+ * Uses normal approximation. Returns ceil of required n per arm.
+ */
+export function sampleSizeForProportionTest(
+  baselineRate: number,
+  minimumDetectableEffect: number,
+  alpha = 0.05,
+  power = 0.8,
+): number {
+  const zAlpha = normInvCDF(1 - alpha / 2);
+  const zBeta = normInvCDF(power);
+  const p1 = baselineRate;
+  const p2 = baselineRate + minimumDetectableEffect;
+  const pBar = (p1 + p2) / 2;
+  const num = Math.pow(
+    zAlpha * Math.sqrt(2 * pBar * (1 - pBar)) + zBeta * Math.sqrt(p1 * (1 - p1) + p2 * (1 - p2)),
+    2,
+  );
+  const denom = Math.pow(p2 - p1, 2);
+  return Math.ceil(num / denom);
+}
+
+/**
+ * Sample size per variant for a two-sided two-sample mean test (known std).
+ */
+export function sampleSizeForMeanTest(
+  baselineStd: number,
+  minimumDetectableEffect: number,
+  alpha = 0.05,
+  power = 0.8,
+): number {
+  const zAlpha = normInvCDF(1 - alpha / 2);
+  const zBeta = normInvCDF(power);
+  const num = 2 * Math.pow((zAlpha + zBeta) * baselineStd, 2);
+  const denom = Math.pow(minimumDetectableEffect, 2);
+  return Math.ceil(num / denom);
+}
+
+/**
+ * Sample size using relative lift instead of absolute MDE.
+ * MDE = baselineRate * relativeLift.
+ */
+export function sampleSizeForRelativeLift(
+  baselineRate: number,
+  relativeLift: number,
+  alpha = 0.05,
+  power = 0.8,
+): number {
+  const mde = baselineRate * relativeLift;
+  return sampleSizeForProportionTest(baselineRate, mde, alpha, power);
+}
+
+/**
+ * Days needed to reach the required sample size given daily traffic and split ratio.
+ */
+export function daysToReachSampleSize(
+  requiredN: number,
+  dailyTraffic: number,
+  splitRatio = 0.5,
+): number {
+  return Math.ceil(requiredN / (dailyTraffic * splitRatio));
+}
+
+// ---------------------------------------------------------------------------
+// Statistical significance — frequentist
+// ---------------------------------------------------------------------------
+
+/**
+ * Two-sided two-proportion z-test.
+ * Returns z, pValue (two-sided), significant (alpha=0.05).
+ */
+export function twoProportionZTestV2(
+  controlConversions: number,
+  controlN: number,
+  treatmentConversions: number,
+  treatmentN: number,
+): { z: number; pValue: number; significant: boolean; alpha: number } {
+  const alpha = 0.05;
+  if (controlN === 0 || treatmentN === 0) {
+    return { z: 0, pValue: 1, significant: false, alpha };
+  }
+  const pC = controlConversions / controlN;
+  const pT = treatmentConversions / treatmentN;
+  const pPool = (controlConversions + treatmentConversions) / (controlN + treatmentN);
+  const se = Math.sqrt(pPool * (1 - pPool) * (1 / controlN + 1 / treatmentN));
+  const z = se === 0 ? 0 : (pT - pC) / se;
+  const pValue = 2 * (1 - normCDF(Math.abs(z)));
+  return { z, pValue, significant: pValue < alpha, alpha };
+}
+
+/**
+ * Chi-square test for MxN contingency table.
+ * If expected is not provided, computed from marginals.
+ */
+export function chiSquareTestV2(
+  observed: number[][],
+  expected?: number[][],
+): { chiSq: number; df: number; pValue: number; significant: boolean } {
+  const rows = observed.length;
+  const cols = observed[0].length;
+
+  let exp: number[][];
+  if (expected) {
+    exp = expected;
+  } else {
+    const rowSums = observed.map((r) => r.reduce((a, b) => a + b, 0));
+    const colSums = Array.from({ length: cols }, (_, j) =>
+      observed.reduce((s, r) => s + r[j], 0),
+    );
+    const total = rowSums.reduce((a, b) => a + b, 0);
+    exp = observed.map((r, i) =>
+      r.map((_, j) => (rowSums[i] * colSums[j]) / total),
+    );
+  }
+
+  let chiSq = 0;
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (exp[i][j] > 0) {
+        chiSq += Math.pow(observed[i][j] - exp[i][j], 2) / exp[i][j];
+      }
+    }
+  }
+
+  const df = (rows - 1) * (cols - 1);
+  const pValue = 1 - chiSquareCdf(chiSq, df);
+  return { chiSq, df, pValue, significant: pValue < 0.05 };
+}
+
+/**
+ * Welch's t-test (unequal variance two-sample).
+ */
+export function welchTTest(
+  controlData: number[],
+  treatmentData: number[],
+): { t: number; df: number; pValue: number; significant: boolean } {
+  const mean = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / arr.length;
+  const variance = (arr: number[], m: number) =>
+    arr.reduce((s, x) => s + Math.pow(x - m, 2), 0) / (arr.length - 1);
+
+  const n1 = controlData.length, n2 = treatmentData.length;
+  const m1 = mean(controlData), m2 = mean(treatmentData);
+  const v1 = variance(controlData, m1), v2 = variance(treatmentData, m2);
+
+  const se = Math.sqrt(v1 / n1 + v2 / n2);
+  const t = se === 0 ? 0 : (m2 - m1) / se;
+
+  // Welch-Satterthwaite df
+  const df =
+    Math.pow(v1 / n1 + v2 / n2, 2) /
+    (Math.pow(v1 / n1, 2) / (n1 - 1) + Math.pow(v2 / n2, 2) / (n2 - 1));
+
+  // Use normal approximation for pValue (accurate for large df)
+  const pValue = 2 * (1 - normCDF(Math.abs(t)));
+  return { t, df, pValue, significant: pValue < 0.05 };
+}
+
+/**
+ * Mann-Whitney U test with normal approximation for large samples.
+ */
+export function mannWhitneyU(
+  control: number[],
+  treatment: number[],
+): { U: number; z: number; pValue: number; significant: boolean } {
+  const n1 = control.length, n2 = treatment.length;
+  // Compute U statistic
+  let U1 = 0;
+  for (const a of control) {
+    for (const b of treatment) {
+      if (a < b) U1++;
+      else if (a === b) U1 += 0.5;
+    }
+  }
+  const U2 = n1 * n2 - U1;
+  const U = Math.min(U1, U2);
+  const meanU = (n1 * n2) / 2;
+  const stdU = Math.sqrt((n1 * n2 * (n1 + n2 + 1)) / 12);
+  const z = stdU === 0 ? 0 : (U - meanU) / stdU;
+  const pValue = 2 * normCDF(z); // z is already negative for min(U)
+  return { U, z, pValue, significant: pValue < 0.05 };
+}
+
+/**
+ * Confidence interval for difference of two proportions.
+ */
+export function confidenceIntervalDiff(
+  controlRate: number,
+  controlN: number,
+  treatmentRate: number,
+  treatmentN: number,
+  confidence = 0.95,
+): { lower: number; upper: number; includes_zero: boolean } {
+  const zc = normInvCDF(1 - (1 - confidence) / 2);
+  const se = Math.sqrt(
+    (controlRate * (1 - controlRate)) / controlN +
+    (treatmentRate * (1 - treatmentRate)) / treatmentN,
+  );
+  const diff = treatmentRate - controlRate;
+  const lower = diff - zc * se;
+  const upper = diff + zc * se;
+  return { lower, upper, includes_zero: lower <= 0 && upper >= 0 };
+}
+
+// ---------------------------------------------------------------------------
+// Effect size
+// ---------------------------------------------------------------------------
+
+/** Relative lift: (treatment - control) / control * 100 (percent) */
+export function relativeLift(control: number, treatment: number): number {
+  return ((treatment - control) / control) * 100;
+}
+
+/** Absolute difference: treatment - control */
+export function absoluteDiff(control: number, treatment: number): number {
+  return treatment - control;
+}
+
+/** Cohen's d: (mean2 - mean1) / pooledStd */
+export function cohenSD(mean1: number, mean2: number, pooledStdVal: number): number {
+  return (mean2 - mean1) / pooledStdVal;
+}
+
+/** Cohen's h for two proportions */
+export function cohenH(p1: number, p2: number): number {
+  return 2 * Math.asin(Math.sqrt(p2)) - 2 * Math.asin(Math.sqrt(p1));
+}
+
+/** Cramér's V */
+export function cramersV(chiSq: number, n: number, minDim: number): number {
+  return Math.sqrt(chiSq / (n * (minDim - 1)));
+}
+
+/** Pooled standard deviation */
+export function pooledStd(std1: number, n1: number, std2: number, n2: number): number {
+  return Math.sqrt(((n1 - 1) * std1 * std1 + (n2 - 1) * std2 * std2) / (n1 + n2 - 2));
+}
+
+/** Cohen's d effect size label */
+export function effectSizeLabel(cohenD: number): 'negligible' | 'small' | 'medium' | 'large' {
+  const abs = Math.abs(cohenD);
+  if (abs < 0.2) return 'negligible';
+  if (abs < 0.5) return 'small';
+  if (abs < 0.8) return 'medium';
+  return 'large';
+}
+
+// ---------------------------------------------------------------------------
+// Bayesian A/B testing
+// ---------------------------------------------------------------------------
+
+/** Beta posterior with conjugate prior */
+export function betaPosterior(
+  successes: number,
+  failures: number,
+  priorAlpha = 1,
+  priorBeta = 1,
+): { alpha: number; beta: number } {
+  return {
+    alpha: priorAlpha + successes,
+    beta: priorBeta + failures,
+  };
+}
+
+/** LCG seeded at 42 for reproducibility */
+function lcg42(): () => number {
+  let s = 42;
+  return () => {
+    s = (Math.imul(1664525, s) + 1013904223) >>> 0;
+    return s / 0xffffffff;
+  };
+}
+
+/** Sample from Beta distribution via Johnk/Normal approximation */
+function sampleBetaDist(a: number, b: number, rng: () => number): number {
+  if (a >= 1 && b >= 1) {
+    const mean = a / (a + b);
+    const variance = (a * b) / ((a + b) * (a + b) * (a + b + 1));
+    const std = Math.sqrt(variance);
+    const u1 = Math.max(rng(), 1e-10);
+    const u2 = rng();
+    const normal = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    return Math.max(1e-9, Math.min(1 - 1e-9, mean + std * normal));
+  }
+  const x = Math.pow(Math.max(rng(), 1e-15), 1 / a);
+  const y = Math.pow(Math.max(rng(), 1e-15), 1 / b);
+  const s = x + y;
+  return s === 0 ? 0.5 : x / s;
+}
+
+/**
+ * Monte Carlo P(B > A) using LCG seeded at 42.
+ */
+export function bayesianProbBetterThan(
+  alphaA: number,
+  betaA: number,
+  alphaB: number,
+  betaB: number,
+  samples = 10000,
+): number {
+  const rng = lcg42();
+  let bBeatsA = 0;
+  for (let i = 0; i < samples; i++) {
+    const sA = sampleBetaDist(alphaA, betaA, rng);
+    const sB = sampleBetaDist(alphaB, betaB, rng);
+    if (sB > sA) bBeatsA++;
+  }
+  return bBeatsA / samples;
+}
+
+/**
+ * Expected regret for choosing A or B.
+ */
+export function bayesianExpectedLoss(
+  alphaA: number,
+  betaA: number,
+  alphaB: number,
+  betaB: number,
+  samples = 10000,
+): { lossA: number; lossB: number } {
+  const rng = lcg42();
+  let lossA = 0, lossB = 0;
+  for (let i = 0; i < samples; i++) {
+    const sA = sampleBetaDist(alphaA, betaA, rng);
+    const sB = sampleBetaDist(alphaB, betaB, rng);
+    if (sB > sA) lossA += sB - sA;
+    else lossB += sA - sB;
+  }
+  return { lossA: lossA / samples, lossB: lossB / samples };
+}
+
+/**
+ * HDI / credible interval via beta quantile (numerical integration).
+ * Uses regularized incomplete beta (Wilson-Hilferty or bisection).
+ */
+export function credibleInterval(
+  alpha: number,
+  beta: number,
+  probability = 0.95,
+): { lower: number; upper: number } {
+  const lo = (1 - probability) / 2;
+  const hi = 1 - lo;
+  return {
+    lower: betaQuantile(lo, alpha, beta),
+    upper: betaQuantile(hi, alpha, beta),
+  };
+}
+
+/** Beta quantile via bisection on regularized incomplete beta */
+function betaQuantile(p: number, a: number, b: number): number {
+  if (p <= 0) return 0;
+  if (p >= 1) return 1;
+  // Start with mean as initial guess
+  let lo = 0, hi = 1, mid = a / (a + b);
+  for (let iter = 0; iter < 200; iter++) {
+    const cdf = regularizedIncompleteBeta(mid, a, b);
+    if (Math.abs(cdf - p) < 1e-10) break;
+    if (cdf < p) lo = mid;
+    else hi = mid;
+    mid = (lo + hi) / 2;
+  }
+  return mid;
+}
+
+/** Regularized incomplete beta function I_x(a,b) via continued fraction */
+function regularizedIncompleteBeta(x: number, a: number, b: number): number {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  // Use continued fraction (Lentz method) — from Numerical Recipes
+  const lbeta = gammaLn(a) + gammaLn(b) - gammaLn(a + b);
+  const front = Math.exp(Math.log(x) * a + Math.log(1 - x) * b - lbeta) / a;
+  // Symmetric relation
+  if (x > (a + 1) / (a + b + 2)) {
+    return 1 - regularizedIncompleteBeta(1 - x, b, a);
+  }
+  return front * betaCF(x, a, b);
+}
+
+/** Continued fraction for incomplete beta */
+function betaCF(x: number, a: number, b: number): number {
+  const MAXIT = 200;
+  const EPS = 3e-10;
+  const FPMIN = 1e-30;
+  let qab = a + b, qap = a + 1, qam = a - 1;
+  let c = 1, d = 1 - qab * x / qap;
+  if (Math.abs(d) < FPMIN) d = FPMIN;
+  d = 1 / d;
+  let h = d;
+  for (let m = 1; m <= MAXIT; m++) {
+    const m2 = 2 * m;
+    let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d;
+    const del = d * c;
+    h *= del;
+    if (Math.abs(del - 1) < EPS) break;
+  }
+  return h;
+}
+
+/** Beta distribution mean */
+export function betaMean(alpha: number, beta: number): number {
+  return alpha / (alpha + beta);
+}
+
+/** Beta distribution mode — throws for alpha<1 or beta<1 */
+export function betaMode(alpha: number, beta: number): number {
+  if (alpha < 1 || beta < 1) {
+    throw new Error('betaMode requires alpha >= 1 and beta >= 1');
+  }
+  return (alpha - 1) / (alpha + beta - 2);
+}
+
+/** Beta distribution variance */
+export function betaVariance(alpha: number, beta: number): number {
+  const s = alpha + beta;
+  return (alpha * beta) / (s * s * (s + 1));
+}
+
+// ---------------------------------------------------------------------------
+// Experiment management (new API)
+// ---------------------------------------------------------------------------
+
+/**
+ * FNV-1a 32-bit hash. Returns unsigned 32-bit integer.
+ */
+export function fnv1aHash(str: string): number {
+  let hash = 2166136261; // FNV offset basis
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i);
+    hash = Math.imul(hash, 16777619) >>> 0; // FNV prime, keep unsigned 32-bit
+  }
+  return hash >>> 0;
+}
+
+/**
+ * Deterministically assign a user to a variant using FNV-1a hash.
+ * Weights (if provided) must sum to 1. Defaults to equal weights.
+ */
+export function assignVariantV2(
+  userId: string,
+  experimentId: string,
+  variants: string[],
+  weights?: number[],
+): string {
+  if (variants.length === 0) throw new Error('No variants provided');
+  const hash = fnv1aHash(userId + experimentId);
+  const bucket = (hash % 10000) / 10000; // [0, 1)
+
+  const wts = weights ?? variants.map(() => 1 / variants.length);
+  let cumulative = 0;
+  for (let i = 0; i < variants.length; i++) {
+    cumulative += wts[i];
+    if (bucket < cumulative) return variants[i];
+  }
+  return variants[variants.length - 1];
+}
+
+/**
+ * Determine if a user is in an experiment rollout using hash-based rollout.
+ */
+export function isInExperiment(
+  userId: string,
+  experimentId: string,
+  rolloutPct: number,
+): boolean {
+  const hash = fnv1aHash(userId + experimentId);
+  return (hash % 100) < rolloutPct;
+}
+
+/**
+ * Proportional stratified sampling using LCG.
+ */
+export function stratifiedSample(
+  data: Array<{ group: string; value: number }>,
+  sampleSize: number,
+): Array<{ group: string; value: number }> {
+  // Count per group
+  const groups = new Map<string, Array<{ group: string; value: number }>>();
+  for (const item of data) {
+    const arr = groups.get(item.group) ?? [];
+    arr.push(item);
+    groups.set(item.group, arr);
+  }
+
+  const total = data.length;
+  const result: Array<{ group: string; value: number }> = [];
+
+  // LCG for shuffling
+  let seed = 42;
+  const rand = () => {
+    seed = (Math.imul(1664525, seed) + 1013904223) >>> 0;
+    return seed / 0xffffffff;
+  };
+  const shuffle = <T>(arr: T[]): T[] => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+
+  for (const [, items] of groups) {
+    const proportion = items.length / total;
+    const n = Math.round(proportion * sampleSize);
+    const shuffled = shuffle(items);
+    result.push(...shuffled.slice(0, n));
+  }
+
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// Sequential testing (alpha spending)
+// ---------------------------------------------------------------------------
+
+/**
+ * O'Brien-Fleming boundary at look k of K total looks.
+ * Approximation: z_alpha/2 * sqrt(K/k).
+ */
+export function obrienflemingBoundary(k: number, K: number, alpha = 0.05): number {
+  const zHalf = normInvCDF(1 - alpha / 2);
+  return zHalf * Math.sqrt(K / k);
+}
+
+/**
+ * Pocock boundary: constant threshold across K looks.
+ * Approximation: normInvCDF(1 - alpha/(2*K)).
+ */
+export function pocockBoundary(K: number, alpha = 0.05): number {
+  return normInvCDF(1 - alpha / (2 * K));
+}
+
+/**
+ * Array of cumulative alpha spent at each look (O'Brien-Fleming spending).
+ */
+export function alphaSpent(looks: number, totalLooks: number, alpha = 0.05): number[] {
+  const result: number[] = [];
+  for (let k = 1; k <= looks; k++) {
+    const boundary = obrienflemingBoundary(k, totalLooks, alpha);
+    const spent = alpha * (2 - 2 * normCDF(boundary));
+    result.push(spent);
+  }
+  return result;
+}
+
+/**
+ * Returns true if peeking before reaching power AND pValue doesn't clear the spending boundary.
+ */
+export function peekedTooEarly(
+  currentN: number,
+  requiredN: number,
+  pValue: number,
+  look: number,
+  totalLooks: number,
+  alpha = 0.05,
+): boolean {
+  if (currentN >= requiredN) return false; // Reached power — no longer "too early"
+  const boundary = obrienflemingBoundary(look, totalLooks, alpha);
+  const alphaAtLook = 2 * (1 - normCDF(boundary));
+  return pValue > alphaAtLook; // didn't clear the spending boundary
+}
+
+// ---------------------------------------------------------------------------
+// Sports-specific A/B helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Pick click-through rate lift between control and treatment.
+ */
+export function pickCTRLift(
+  controlClicks: number,
+  controlImpressions: number,
+  treatmentClicks: number,
+  treatmentImpressions: number,
+): { ctr_control: number; ctr_treatment: number; lift: number; significant: boolean } {
+  const ctr_control = controlClicks / controlImpressions;
+  const ctr_treatment = treatmentClicks / treatmentImpressions;
+  const { significant } = twoProportionZTestV2(
+    controlClicks, controlImpressions, treatmentClicks, treatmentImpressions,
+  );
+  const lift = relativeLift(ctr_control, ctr_treatment);
+  return { ctr_control, ctr_treatment, lift, significant };
+}
+
+/**
+ * Subscription conversion lift and annualized revenue impact.
+ * annualizedRevenueImpact = absoluteDiff * treatmentN * 12 * 14.99 (pro monthly price).
+ */
+export function subscriptionLift(
+  controlTrials: number,
+  controlN: number,
+  treatmentTrials: number,
+  treatmentN: number,
+): { conversionLift: number; annualizedRevenueImpact: number; significant: boolean } {
+  const controlRate = controlTrials / controlN;
+  const treatmentRate = treatmentTrials / treatmentN;
+  const conversionLift = relativeLift(controlRate, treatmentRate);
+  const absDiff = absoluteDiff(controlRate, treatmentRate);
+  const annualizedRevenueImpact = absDiff * treatmentN * 12 * 14.99;
+  const { significant } = twoProportionZTestV2(
+    controlTrials, controlN, treatmentTrials, treatmentN,
+  );
+  return { conversionLift, annualizedRevenueImpact, significant };
+}
+
+/**
+ * Pick board engagement A/B test — compares favorite rates.
+ */
+export function pickBoardEngagementTest(
+  control: { views: number; favorites: number; n: number },
+  treatment: { views: number; favorites: number; n: number },
+): { favoriteRateLift: number; significant: boolean } {
+  const { significant } = twoProportionZTestV2(
+    control.favorites, control.n, treatment.favorites, treatment.n,
+  );
+  const controlRate = control.favorites / control.n;
+  const treatmentRate = treatment.favorites / treatment.n;
+  const favoriteRateLift = relativeLift(controlRate, treatmentRate);
+  return { favoriteRateLift, significant };
+}
