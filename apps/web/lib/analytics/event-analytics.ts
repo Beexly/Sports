@@ -491,7 +491,10 @@ export function changePointDetection(
   values: number[],
   minSegmentSize: number = 5
 ): number[] {
-  if (values.length < 2 * minSegmentSize) return [];
+  // A non-positive segment size has no meaningful split and would let the
+  // scan loop fail to advance (segmentStart += maxIdx with maxIdx === 0),
+  // so reject it up front to guarantee termination.
+  if (minSegmentSize < 1 || values.length < 2 * minSegmentSize) return [];
 
   const changePoints: number[] = [];
   const threshold = computeGlobalStd(values) * 1.0; // 1 sigma threshold

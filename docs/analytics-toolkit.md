@@ -1,27 +1,18 @@
 # Analytics & Utility Toolkit — Capability Manifest
 
-The Galaxy Sports Edge codebase ships a cohesive layer of **pure, dependency-free,
-unit-tested TypeScript libraries** spanning sports analytics, business/product analytics,
-math, and general utilities. Every library is namespaced and reachable through a single
-entry point.
+Galaxy Sports Edge ships a cohesive layer of **pure, dependency-free, unit-tested TypeScript
+libraries** spanning sports analytics, business/product analytics, math, and utilities — all
+namespaced and reachable through one entry point.
 
 ## Entry points
 
 ```ts
-// one cohesive import surface
 import { sports, analytics, math, utils } from '@/lib/toolkit';
-sports.badmintonAnalytics.gameWinner(21, 19);   // 'a'
-math.numberTheory.gcd(48, 18);                   // 6
-utils.unitConversion.milesToKm(26.2);            // marathon km
-analytics.retentionAnalytics.churnRate(40, 100); // 0.4
-
-// or per-domain barrels
-import { complexNumbers } from '@/lib/math';
-import { financialMath } from '@/lib/math';
+sports.badmintonAnalytics.gameWinner(21, 19);
+math.numberTheory.gcd(48, 18);
+utils.unitConversion.milesToKm(26.2);
+analytics.retentionAnalytics.churnRate(40, 100);
 ```
-
-> Namespaced re-exports (`export * as`) mean identically-named helpers across libraries
-> (e.g. `dkProjection` in every sports library) never collide.
 
 ## Sports analytics — `@/lib/sports` (50 modules)
 
@@ -76,7 +67,7 @@ import { financialMath } from '@/lib/math';
 - `weather-impact`
 - `wrestling-analytics`
 
-## Product / business analytics — `@/lib/analytics` (27 modules)
+## Product / business analytics — `@/lib/analytics` (30 modules)
 
 - `ab-testing`
 - `attribution-analytics`
@@ -87,7 +78,9 @@ import { financialMath } from '@/lib/math';
 - `customer-lifecycle`
 - `email-analytics`
 - `engagement`
+- `event-analytics`
 - `events`
+- `forecasting-analytics`
 - `funnel-analytics`
 - `geographic-analytics`
 - `line-movement`
@@ -101,6 +94,7 @@ import { financialMath } from '@/lib/math';
 - `prop-analytics`
 - `recommendation-engine`
 - `retention-analytics`
+- `risk-analytics`
 - `social-analytics`
 - `streak`
 - `subscription-analytics`
@@ -189,13 +183,6 @@ import { financialMath } from '@/lib/math';
 
 ## Totals
 
-- **152 pure library modules** barreled across 4 domains.
-- Each carries its own Vitest suite under `apps/web/__tests__/` (collectively 13,000+ assertions).
-- Zero runtime npm dependencies added; TypeScript-native, strict-mode, `noUncheckedIndexedAccess`-safe.
-- Verified: `trust-gate` clean, `model-freeze` clean (MODEL_VERSION frozen at v5.0.0), toolkit integration test passing.
-
-## Parked (complete code, awaiting tests)
-
-Three libraries (`event-analytics`, `forecasting-analytics`, `risk-analytics`) live under
-`reports/parked-libraries/` — complete but untested (their build agents stalled before writing tests).
-They are intentionally NOT in the build until they have passing suites. See that folder's README.
+- **155 pure library modules** across 4 domains, ~26,900 passing assertions.
+- Zero runtime npm dependencies; TS strict + `noUncheckedIndexedAccess`-safe.
+- Verified: full `tsc` 0 errors, `next build` green, trust-gate + model-freeze clean (MODEL_VERSION v5.0.0).

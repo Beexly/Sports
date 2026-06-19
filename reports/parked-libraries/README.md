@@ -1,20 +1,11 @@
-# Parked Libraries (complete code, no tests yet)
+# Parked Libraries
 
-These libraries were generated during the analytics-toolkit build initiative but their
-worker agents stalled before producing test suites. Per the project's non-negotiable rule
-("Tests required — no feature is complete without passing tests"), they are **not** wired
-into the `apps/web` build until they have passing test coverage.
+_Empty._ The three previously-parked libraries (`event-analytics`, `forecasting-analytics`,
+`risk-analytics`) have been folded into the build with full test suites (664 tests total),
+are tsc/lint clean, and are exported from the analytics barrel (`apps/web/lib/analytics/index.ts`).
 
-| File | Lines | Status |
-|---|---|---|
-| `event-analytics.ts` | ~998 | Complete library, untested — needs a Vitest suite before integration |
-| `forecasting-analytics.ts` | ~726 | Complete library, untested — needs a Vitest suite before integration |
-| `risk-analytics.ts` | ~817 | Complete library, untested — needs a Vitest suite before integration |
+A latent infinite-loop bug in `event-analytics.changePointDetection` (hung when
+`minSegmentSize <= 0`) was found and fixed during the fold-in.
 
-To integrate any of these: move it back to `apps/web/lib/analytics/`, add
-`apps/web/__tests__/<name>.test.ts` with ≥130 passing tests, run the green gate
-(`tsc --noEmit` + targeted `vitest` + `trust-gate` + `model-freeze`), then add it to the
-domain barrel in `apps/web/lib/analytics/index.ts`.
-
-> NOTE: each came from an agent that hung — verify for runtime bugs (one sibling, `queue-utils`,
-> shipped with an infinite-loop bug that was caught and fixed during this consolidation).
+Future complete-but-untested libraries may be parked here pending test coverage before
+integration into the `apps/web` build.

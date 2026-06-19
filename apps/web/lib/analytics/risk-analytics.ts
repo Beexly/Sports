@@ -55,11 +55,6 @@ function normalCDF(x: number): number {
   return x >= 0 ? cdf : 1 - cdf;
 }
 
-/** Normal PDF */
-function normalPDF(x: number): number {
-  return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
-}
-
 /** Inverse normal (probit) via Beasley-Springer-Moro */
 function normalInverse(p: number): number {
   if (p <= 0) return -Infinity;
@@ -138,6 +133,13 @@ function boxMuller(u1: number, u2: number): number {
 function clamp(v: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, v));
 }
+
+/**
+ * Threshold below which a variance/std-dev result is treated as effectively
+ * zero. Guards against floating-point dust from constant/near-constant series
+ * (e.g. variance([0.05,0.05,0.05]) ≈ 5e-35) causing division blow-ups.
+ */
+const ZERO_EPSILON = 1e-12;
 
 // ---------------------------------------------------------------------------
 // 1. Value at Risk (VaR)
@@ -245,7 +247,7 @@ export function portfolioVariance(
  */
 export function portfolioSharpeRatio(returns: number[], riskFreeRate = 0): number {
   const std = stdDev(returns);
-  if (std === 0) return 0;
+  if (std < ZERO_EPSILON) return 0;
   return (mean(returns) - riskFreeRate) / std;
 }
 
@@ -254,7 +256,7 @@ export function portfolioSharpeRatio(returns: number[], riskFreeRate = 0): numbe
  */
 export function betaCoefficient(assetReturns: number[], marketReturns: number[]): number {
   const mktVar = variance(marketReturns);
-  if (mktVar === 0) return 0;
+  if (mktVar < ZERO_EPSILON) return 0;
   return covariance(assetReturns, marketReturns) / mktVar;
 }
 
@@ -285,7 +287,7 @@ export function informationRatio(
     activeReturns.push((portfolioReturns[i] ?? 0) - (benchmarkReturns[i] ?? 0));
   }
   const te = stdDev(activeReturns);
-  if (te === 0) return 0;
+  if (te < ZERO_EPSILON) return 0;
   return mean(activeReturns) / te;
 }
 
@@ -738,7 +740,7 @@ export function volatilityRegime(
   const longReturns = returns.slice(-longWindow);
   const shortVol = stdDev(recent);
   const longVol = stdDev(longReturns);
-  if (longVol === 0) return "normal";
+  if (longVol < ZERO_EPSILON) return "normal";
   const ratio = shortVol / longVol;
   if (ratio < 0.7) return "low";
   if (ratio < 1.3) return "normal";
