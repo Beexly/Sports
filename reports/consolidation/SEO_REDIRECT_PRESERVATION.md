@@ -44,6 +44,23 @@ redirect from inside the app (redirject chains hurt crawl budget + feel slow).
 - Unique `title` + 120–160-char `description` + canonical on every surviving page (the SEO
   metadata sweep already covers most routes; re-verify after the merges).
 
+## Pre-flight grep results (already run — update these before flipping each redirect)
+Concrete internal references found in `apps/web` (excludes tests). Update each to the
+canonical target, then flip the redirect:
+
+- **`/picks` → `/board`** (8 files): `app/observatory/page.tsx:221`, `app/board/error.tsx:43`,
+  `app/intelligence/page.tsx:236`, `app/brief/page.tsx:72`, `app/dashboard/error.tsx:43`,
+  `app/dashboard/page.tsx` (×3: 197, 292, 319), `app/pricing/page.tsx:399`. (Plus
+  `app/picks/page.tsx`'s own internal pagination links — those go away with the page or
+  become `/board` query links.)
+- **`/stats/players` → `/players`** (3 files): `app/stats/page.tsx` (28, 124),
+  `app/stats/layout.tsx:10`, `app/stats/player/[id]/page.tsx:27`. (Handle as part of the
+  `/stats/*` demotion — these may stay internal to the demoted tree.)
+- **`/gsn` → `/the-beat`** (3 files): `components/ui/command-palette.tsx:23`,
+  `components/world/airwave-signal-layer.tsx:100`, `components/home/intelligence-layer.tsx:20`.
+- **`/brief`**: no internal `href` references found — safe to redirect or repurpose without
+  link cleanup. (Note `app/brief/page.tsx` itself links OUT to `/picks` — see above.)
+
 ## Acceptance
 - Every merged URL 308s to its canonical; no redirect chains; no broken internal links.
 - Sitemap lists only survivors; merged/hidden paths are gone or `noindex`.
