@@ -64,8 +64,9 @@ export interface BookResult {
   /** Sum of raw implied probabilities (the booked total > 1 when vig present). */
   overround: number;
   /**
-   * The book's hold (vig) as a fraction of the booked total: overround /
-   * (1 + overround). Multiply by 100 for a percentage.
+   * The book's hold (vig) as a fraction of the booked total:
+   * (overround − 1) / overround, i.e. margin / booked total. Multiply by 100
+   * for a percentage.
    */
   hold: number;
 }
