@@ -43,6 +43,37 @@ At most ONE in-flight slice editing `app/cockpit/layout.tsx` (cockpit nav) and O
 | 7 | No-Vig Fair Odds & Hold calculator Lab tool (`/lab`, `/api/lab/no-vig`) | B (customer) | `272212ee` | tsc+22 vitest+trust+build |
 | 8 | Calibration Learning workbench (`/cockpit/calibration-learning`, exploratory) | A (internal) | `e61df54b` | tsc+8 vitest+nav 44+trust+freeze+build |
 | 9 | Lab discoverability + SEO (8-tool metadata, sitemap) | polish | `294a51f3` | tsc+guard suites+trust+build |
+| 10 | Market & Line Intelligence workbench (`/cockpit/market-analysis`, DB-read) | A (internal) | `882be401` | tsc+vitest+trust+freeze+build |
+| 11 | Cockpit resilience — loading/error boundaries on 4 workbenches | C (polish) | `bce8b944` | tsc+29 vitest+trust+build |
+| 12 | Weather Impact Explorer Lab tool (9th tool, `/api/lab/weather-impact`) | B (customer) | `e4a37db0` | tsc+21 vitest+trust+build |
+
+## FINAL VERIFICATION — whole repo green, ZERO errors (per owner "zero errors or gates" directive)
+Ran the full sweep:
+- `tsc --noEmit` on ALL 10 projects (apps/web + 5 packages + 4 workers) → **0 errors**.
+- apps/web vitest → **27,371 passed / 587 files**; prediction-engine **664**, data-ingestion **140**,
+  ingestion-pipeline **38** → **~28,213 tests, 0 failures**.
+- `next lint` → **0 warnings/errors**. `trust-gate` (1302 files) + `model-freeze` (v5.0.0) → OK.
+  `next build` → OK.
+Code state: nothing red anywhere. The ONLY remaining items are owner-credential / data-accumulation /
+browser-bound — enumerated below.
+
+## What's LEFT = owner input only (live source of truth: `/cockpit/go-live`, env presence never values)
+1. **Infrastructure**: DATABASE_URL (+DIRECT_URL), NEXTAUTH_SECRET, REDIS_URL, DB reachable.
+2. **Billing (Stripe)**: STRIPE_SECRET_KEY + price IDs (FOUNDING_DESK_MONTHLY, PRO_MONTHLY, ELITE_MONTHLY).
+3. **Data / win-rate pillar**: attach THE_ODDS_API_KEY + set OUTCOME_LEARNING_ENABLED=true → then the
+   calibration floor (100 eligible picks) accrues automatically over time (data gate, not a code gate).
+4. **Analytics (optional)**: one NEXT_PUBLIC_* provider var + ≤5 lines in lib/analytics/events.ts dispatch.
+5. **Deploy**: ship the branch to the host.
+- **AI/LLM: DONE** — free keyless pool (Pollinations); Jarvis + content work with no key (NOT a blocker).
+- **Data-integrity gates** (PUBLIC_PICKS / calibration): stay honestly closed; auto-open when their real
+  condition is met. NOT force-flipped (flipping = fabrication; the owner acknowledged these remain).
+- **Browser-bound QA** (Lighthouse perf, axe a11y, Playwright e2e, visual de-AI pass): needs a browser —
+  this container has none; deferred to a local/browser session. Not "errors", and not owner-credential.
+
+Lesson logged: never run two `next build` agents concurrently — they race on `.next/server/*-manifest.json`;
+the orchestrator runs the authoritative build serially (rm -rf .next) before every commit. Remaining dormant
+libs are honestly deferred (niche sports = no published picks; injury = restricted display rights;
+content/email/social-analytics = no real traffic/email data yet).
 
 ## Queue (priority order; honest value × low effort × low risk first)
 - [x] Line-Movement / Market Intelligence workbench → shipped (slice 4).
@@ -54,11 +85,6 @@ At most ONE in-flight slice editing `app/cockpit/layout.tsx` (cockpit nav) and O
 - [x] Discoverability + SEO pass → shipped (slice 9). `/lab` metadata + overview + sitemap.
 
 ## Loop status: core extraction COMPLETE
-9 slices shipped. Dormant sports/math/analytics libs are now consumed across 8 Lab tools + 4 cockpit
-workbenches + the settlement pool. Lesson logged: never run two `next build` agents concurrently — they
-race on `.next/server/*-manifest.json`; the orchestrator runs the authoritative build serially (rm -rf
-.next) before every commit. Remaining dormant libs are honestly deferred (niche sports = no published
-picks; weather/injury = no ingested data; content/email/social-analytics = no real traffic/email data yet).
 
 ## Opportunity backlog (researched; pick up as leverage allows)
 - Marketing/growth cockpit view for content/email/social-analytics — BLOCKED on real traffic/email data
