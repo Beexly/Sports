@@ -244,19 +244,27 @@ export function replaceMap(str: string, replacements: Record<string, string>): s
 export function levenshteinDistance(a: string, b: string): number {
   const m = a.length;
   const n = b.length;
-  const dp: number[][] = Array.from({ length: m + 1 }, (_, i) =>
-    Array.from({ length: n + 1 }, (__, j) => (i === 0 ? j : j === 0 ? i : 0)),
-  );
+  // Build as explicit nested arrays to satisfy noUncheckedIndexedAccess
+  const dp: number[][] = [];
+  for (let i = 0; i <= m; i++) {
+    const row: number[] = [];
+    for (let j = 0; j <= n; j++) {
+      row.push(i === 0 ? j : j === 0 ? i : 0);
+    }
+    dp.push(row);
+  }
   for (let i = 1; i <= m; i++) {
+    const rowI = dp[i] as number[];
+    const rowI1 = dp[i - 1] as number[];
     for (let j = 1; j <= n; j++) {
-      if (a[i - 1] === b[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1];
+      if (a.charAt(i - 1) === b.charAt(j - 1)) {
+        rowI[j] = rowI1[j - 1] as number;
       } else {
-        dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+        rowI[j] = 1 + Math.min(rowI1[j] as number, rowI[j - 1] as number, rowI1[j - 1] as number);
       }
     }
   }
-  return dp[m][n];
+  return ((dp[m] as number[])[n]) as number;
 }
 
 /** 0–1; 1 = identical. similarity = 1 - levenshtein / max(a.length, b.length) */
@@ -271,17 +279,22 @@ export function longestCommonSubstring(a: string, b: string): string {
   const n = b.length;
   let maxLen = 0;
   let endIdx = 0;
-  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  const dp: number[][] = [];
+  for (let i = 0; i <= m; i++) {
+    dp.push(new Array<number>(n + 1).fill(0));
+  }
   for (let i = 1; i <= m; i++) {
+    const rowI = dp[i] as number[];
+    const rowI1 = dp[i - 1] as number[];
     for (let j = 1; j <= n; j++) {
-      if (a[i - 1] === b[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1;
-        if (dp[i][j] > maxLen) {
-          maxLen = dp[i][j];
+      if (a.charAt(i - 1) === b.charAt(j - 1)) {
+        rowI[j] = (rowI1[j - 1] as number) + 1;
+        if ((rowI[j] as number) > maxLen) {
+          maxLen = rowI[j] as number;
           endIdx = i;
         }
       } else {
-        dp[i][j] = 0;
+        rowI[j] = 0;
       }
     }
   }
@@ -291,13 +304,18 @@ export function longestCommonSubstring(a: string, b: string): string {
 export function longestCommonSubsequence(a: string, b: string): string {
   const m = a.length;
   const n = b.length;
-  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  const dp: number[][] = [];
+  for (let i = 0; i <= m; i++) {
+    dp.push(new Array<number>(n + 1).fill(0));
+  }
   for (let i = 1; i <= m; i++) {
+    const rowI = dp[i] as number[];
+    const rowI1 = dp[i - 1] as number[];
     for (let j = 1; j <= n; j++) {
-      if (a[i - 1] === b[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1;
+      if (a.charAt(i - 1) === b.charAt(j - 1)) {
+        rowI[j] = (rowI1[j - 1] as number) + 1;
       } else {
-        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        rowI[j] = Math.max(rowI1[j] as number, rowI[j - 1] as number);
       }
     }
   }
@@ -306,11 +324,13 @@ export function longestCommonSubsequence(a: string, b: string): string {
   let i = m;
   let j = n;
   while (i > 0 && j > 0) {
-    if (a[i - 1] === b[j - 1]) {
-      result = a[i - 1] + result;
+    const rowI = dp[i] as number[];
+    const rowI1 = dp[i - 1] as number[];
+    if (a.charAt(i - 1) === b.charAt(j - 1)) {
+      result = a.charAt(i - 1) + result;
       i--;
       j--;
-    } else if (dp[i - 1][j] > dp[i][j - 1]) {
+    } else if ((rowI1[j] as number) > (rowI[j - 1] as number)) {
       i--;
     } else {
       j--;
@@ -335,10 +355,17 @@ export function diffWords(a: string, b: string): DiffToken[] {
   const n = wb.length;
 
   // Build LCS table
-  const lcs: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  const lcs: number[][] = [];
+  for (let i = 0; i <= m; i++) {
+    lcs.push(new Array<number>(n + 1).fill(0));
+  }
   for (let i = 1; i <= m; i++) {
+    const rowI = lcs[i] as number[];
+    const rowI1 = lcs[i - 1] as number[];
     for (let j = 1; j <= n; j++) {
-      lcs[i][j] = wa[i - 1] === wb[j - 1] ? lcs[i - 1][j - 1] + 1 : Math.max(lcs[i - 1][j], lcs[i][j - 1]);
+      rowI[j] = wa[i - 1] === wb[j - 1]
+        ? (rowI1[j - 1] as number) + 1
+        : Math.max(rowI1[j] as number, rowI[j - 1] as number);
     }
   }
 
@@ -347,15 +374,19 @@ export function diffWords(a: string, b: string): DiffToken[] {
   let i = m;
   let j = n;
   while (i > 0 || j > 0) {
-    if (i > 0 && j > 0 && wa[i - 1] === wb[j - 1]) {
-      tokens.unshift({ type: 'same', text: wa[i - 1] });
+    const rowI = lcs[i] as number[];
+    const rowI1 = lcs[i - 1] as number[];
+    const waWord = wa[i - 1] ?? '';
+    const wbWord = wb[j - 1] ?? '';
+    if (i > 0 && j > 0 && waWord === wbWord) {
+      tokens.unshift({ type: 'same', text: waWord });
       i--;
       j--;
-    } else if (j > 0 && (i === 0 || lcs[i][j - 1] >= lcs[i - 1][j])) {
-      tokens.unshift({ type: 'added', text: wb[j - 1] });
+    } else if (j > 0 && (i === 0 || (rowI[j - 1] as number) >= (rowI1[j] as number))) {
+      tokens.unshift({ type: 'added', text: wbWord });
       j--;
     } else {
-      tokens.unshift({ type: 'removed', text: wa[i - 1] });
+      tokens.unshift({ type: 'removed', text: waWord });
       i--;
     }
   }
@@ -497,7 +528,7 @@ export function formatPickLine(
 export function abbreviateName(fullName: string): string {
   const parts = fullName.trim().split(/\s+/);
   if (parts.length < 2) return fullName;
-  return `${parts[0].charAt(0)}. ${parts.slice(1).join(' ')}`;
+  return `${(parts[0] ?? '').charAt(0)}. ${parts.slice(1).join(' ')}`;
 }
 
 /**
@@ -658,27 +689,33 @@ export function levenshteinSimilarity(a: string, b: string): number {
 export function damerauLevenshteinDistance(a: string, b: string): number {
   const m = a.length;
   const n = b.length;
-  // Use flat array indexed as [i*(n+2)+j] to avoid noUncheckedIndexedAccess issues
-  const size = (m + 2) * (n + 2);
-  const dp = new Int32Array(size);
-  const idx = (i: number, j: number) => i * (n + 2) + j;
-  for (let i = 0; i <= m; i++) dp[idx(i, 0)] = i;
-  for (let j = 0; j <= n; j++) dp[idx(0, j)] = j;
+  // Nested number arrays with explicit init avoid noUncheckedIndexedAccess issues
+  const dp: number[][] = [];
+  for (let i = 0; i <= m + 1; i++) {
+    const row: number[] = [];
+    for (let j = 0; j <= n + 1; j++) {
+      row.push(i === 0 ? j : j === 0 ? i : 0);
+    }
+    dp.push(row);
+  }
 
   for (let i = 1; i <= m; i++) {
+    const rowI = dp[i] as number[];
+    const rowI1 = dp[i - 1] as number[];
     for (let j = 1; j <= n; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      dp[idx(i, j)] = Math.min(
-        dp[idx(i - 1, j)] + 1,
-        dp[idx(i, j - 1)] + 1,
-        dp[idx(i - 1, j - 1)] + cost,
+      const cost = a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1;
+      rowI[j] = Math.min(
+        (rowI1[j] as number) + 1,
+        (rowI[j - 1] as number) + 1,
+        (rowI1[j - 1] as number) + cost,
       );
-      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
-        dp[idx(i, j)] = Math.min(dp[idx(i, j)], dp[idx(i - 2, j - 2)] + cost);
+      if (i > 1 && j > 1 && a.charAt(i - 1) === b.charAt(j - 2) && a.charAt(i - 2) === b.charAt(j - 1)) {
+        const rowI2 = dp[i - 2] as number[];
+        rowI[j] = Math.min(rowI[j] as number, (rowI2[j - 2] as number) + cost);
       }
     }
   }
-  return dp[idx(m, n)];
+  return ((dp[m] as number[])[n]) as number;
 }
 
 /** Jaro similarity (0–1) */
@@ -764,14 +801,14 @@ export function soundex(s: string): string {
   const upper = s.toUpperCase().replace(/[^A-Z]/g, '');
   if (!upper) return '';
 
-  const first = upper[0];
+  const first = upper.charAt(0);
   let code = first;
   // In standard Soundex, H and W are ignored (do NOT reset prev digit)
   // Vowels (AEIOUY) separate consonant groups — they reset prev
   let prev = SOUNDEX_MAP[first] ?? '0';
 
   for (let i = 1; i < upper.length && code.length < 4; i++) {
-    const ch = upper[i];
+    const ch = upper.charAt(i);
     // H and W are ignored entirely — don't update prev
     if (ch === 'H' || ch === 'W') continue;
     // Vowels separate consonant groups — reset prev so next consonant is counted
@@ -802,10 +839,10 @@ export function metaphone(s: string): string {
   const len = str.length;
 
   for (let i = 0; i < len; i++) {
-    const ch = str[i] as string;
-    const prev = i > 0 ? str[i - 1] : '';
-    const next = i < len - 1 ? str[i + 1] : '';
-    const next2 = i < len - 2 ? str[i + 2] : '';
+    const ch = str.charAt(i);
+    const prev = i > 0 ? str.charAt(i - 1) : '';
+    const next = i < len - 1 ? str.charAt(i + 1) : '';
+    const next2 = i < len - 2 ? str.charAt(i + 2) : '';
 
     // Drop duplicate adjacent letters (except C)
     if (ch !== 'C' && ch === prev) continue;
@@ -859,7 +896,7 @@ export function metaphone(s: string): string {
           }
           i++;
         } else if (next === 'N') {
-          if (i === 0 || (i === 1 && !'AEIOU'.includes(str[0] ?? ''))) {
+          if (i === 0 || (i === 1 && !'AEIOU'.includes(str.charAt(0)))) {
             // silent
           } else {
             result += 'K';
@@ -989,9 +1026,9 @@ export function stemWord(word: string): string {
   // Helper: remove doubled consonant after suffix removal (e.g. "running"→"runn"→"run")
   function dedouble(s: string): string {
     if (s.length >= 2) {
-      const last = s[s.length - 1];
-      const prev = s[s.length - 2];
-      if (last === prev && !'aeiou'.includes(last ?? '')) {
+      const last = s.charAt(s.length - 1);
+      const prev = s.charAt(s.length - 2);
+      if (last === prev && !'aeiou'.includes(last)) {
         return s.slice(0, -1);
       }
     }
@@ -1074,12 +1111,17 @@ export function textDiff(
   const m = aLines.length;
   const n = bLines.length;
 
-  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  const dpRows: number[][] = [];
+  for (let i = 0; i <= m; i++) {
+    dpRows.push(new Array<number>(n + 1).fill(0));
+  }
   for (let i = 1; i <= m; i++) {
+    const rowI = dpRows[i] as number[];
+    const rowI1 = dpRows[i - 1] as number[];
     for (let j = 1; j <= n; j++) {
-      dp[i][j] = aLines[i - 1] === bLines[j - 1]
-        ? dp[i - 1][j - 1] + 1
-        : Math.max(dp[i - 1][j], dp[i][j - 1]);
+      rowI[j] = aLines[i - 1] === bLines[j - 1]
+        ? (rowI1[j - 1] as number) + 1
+        : Math.max(rowI1[j] as number, rowI[j - 1] as number);
     }
   }
 
@@ -1087,15 +1129,19 @@ export function textDiff(
   let i = m;
   let j = n;
   while (i > 0 || j > 0) {
-    if (i > 0 && j > 0 && aLines[i - 1] === bLines[j - 1]) {
-      result.unshift({ type: 'equal', text: aLines[i - 1] as string });
+    const rowI = dpRows[i] as number[];
+    const rowI1 = dpRows[i - 1] as number[];
+    const aLine = aLines[i - 1] ?? '';
+    const bLine = bLines[j - 1] ?? '';
+    if (i > 0 && j > 0 && aLine === bLine) {
+      result.unshift({ type: 'equal', text: aLine });
       i--;
       j--;
-    } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
-      result.unshift({ type: 'insert', text: bLines[j - 1] as string });
+    } else if (j > 0 && (i === 0 || (rowI[j - 1] as number) >= (rowI1[j] as number))) {
+      result.unshift({ type: 'insert', text: bLine });
       j--;
     } else {
-      result.unshift({ type: 'delete', text: aLines[i - 1] as string });
+      result.unshift({ type: 'delete', text: aLine });
       i--;
     }
   }
@@ -1197,24 +1243,33 @@ export function extractUrls(s: string): string[] {
 export function wildcardMatch(pattern: string, text: string): boolean {
   const m = pattern.length;
   const n = text.length;
-  const dp: boolean[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(false));
-  dp[0][0] = true;
+  // Row-based boolean arrays to satisfy noUncheckedIndexedAccess
+  const dpRows: number[][] = [];
+  for (let i = 0; i <= m; i++) {
+    dpRows.push(new Array<number>(n + 1).fill(0));
+  }
+  (dpRows[0] as number[])[0] = 1;
 
   for (let i = 1; i <= m; i++) {
-    if (pattern[i - 1] === '*') dp[i][0] = dp[i - 1][0];
+    const rowI = dpRows[i] as number[];
+    const rowI1 = dpRows[i - 1] as number[];
+    if (pattern.charAt(i - 1) === '*') rowI[0] = rowI1[0] as number;
   }
 
   for (let i = 1; i <= m; i++) {
+    const rowI = dpRows[i] as number[];
+    const rowI1 = dpRows[i - 1] as number[];
     for (let j = 1; j <= n; j++) {
-      if (pattern[i - 1] === '*') {
-        dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
-      } else if (pattern[i - 1] === '?' || pattern[i - 1] === text[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1];
+      const pc = pattern.charAt(i - 1);
+      if (pc === '*') {
+        rowI[j] = (rowI1[j] as number) | (rowI[j - 1] as number);
+      } else if (pc === '?' || pc === text.charAt(j - 1)) {
+        rowI[j] = rowI1[j - 1] as number;
       }
     }
   }
 
-  return dp[m][n];
+  return ((dpRows[m] as number[])[n] as number) === 1;
 }
 
 // ---------------------------------------------------------------------------
@@ -1238,7 +1293,7 @@ export function teamAbbreviation(teamName: string, maxLen = 3): string {
   return teamName
     .split(/\s+/)
     .filter((w) => w.length > 0)
-    .map((w) => w[0]?.toUpperCase() ?? '')
+    .map((w) => w.charAt(0).toUpperCase())
     .slice(0, maxLen)
     .join('');
 }
