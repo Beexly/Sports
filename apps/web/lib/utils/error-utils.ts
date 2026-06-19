@@ -382,7 +382,7 @@ export function resultAny<T, E extends Error>(
     if (isOk(r)) return ok(r.value);
     errors.push(r.error);
   }
-  return err(errors as unknown as E);
+  return err(errors as unknown as E) as unknown as Result<T, E[]>;
 }
 
 export function fromThrowable<T>(

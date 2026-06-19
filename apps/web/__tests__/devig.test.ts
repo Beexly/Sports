@@ -155,7 +155,7 @@ describe("devigPower", () => {
   it("produces results close to basic for symmetric market", () => {
     const basic = devigBasic([1.9091, 1.9091])!;
     const power = devigPower([1.9091, 1.9091])!;
-    expect(power.fairProbabilities[0]).toBeCloseTo(basic.fairProbabilities[0], 3);
+    expect(power.fairProbabilities[0]).toBeCloseTo(basic.fairProbabilities[0]!, 3);
   });
 
   it("handles a 3-outcome market, probs sum to 1", () => {
@@ -181,8 +181,8 @@ describe("devigAdditive", () => {
     const odds = [1.9091, 1.9091];
     const implied = [1 / 1.9091, 1 / 1.9091];
     const result = devigAdditive(odds)!;
-    const reduction0 = implied[0] - result.fairProbabilities[0];
-    const reduction1 = implied[1] - result.fairProbabilities[1];
+    const reduction0 = implied[0]! - result.fairProbabilities[0]!;
+    const reduction1 = implied[1]! - result.fairProbabilities[1]!;
     expect(reduction0).toBeCloseTo(reduction1, 10);
   });
 
@@ -234,7 +234,7 @@ describe("devigShin", () => {
     const shin = devigShin(odds)!;
     const basic = devigBasic(odds)!;
     // Shin and basic will differ on asymmetric markets
-    const diff = Math.abs(shin.fairProbabilities[0] - basic.fairProbabilities[0]);
+    const diff = Math.abs(shin.fairProbabilities[0]! - basic.fairProbabilities[0]!);
     // They might be very close but let's just ensure both are valid
     expect(shin.fairProbabilities[0]).toBeGreaterThan(0);
     expect(shin.fairProbabilities[1]).toBeGreaterThan(0);
@@ -363,15 +363,15 @@ describe("consensusNoVig", () => {
     const odds = [1.9091, 1.9091];
     const single = consensusNoVig([odds], "shin")!;
     const direct = devigShin(odds)!;
-    expect(single.fairProbabilities[0]).toBeCloseTo(direct.fairProbabilities[0], 5);
-    expect(single.fairProbabilities[1]).toBeCloseTo(direct.fairProbabilities[1], 5);
+    expect(single.fairProbabilities[0]).toBeCloseTo(direct.fairProbabilities[0]!, 5);
+    expect(single.fairProbabilities[1]).toBeCloseTo(direct.fairProbabilities[1]!, 5);
   });
 
   it("two books with identical odds → same as single book", () => {
     const odds = [1.9091, 1.9091];
     const result = consensusNoVig([odds, odds], "basic")!;
     const direct = devigBasic(odds)!;
-    expect(result.fairProbabilities[0]).toBeCloseTo(direct.fairProbabilities[0], 5);
+    expect(result.fairProbabilities[0]).toBeCloseTo(direct.fairProbabilities[0]!, 5);
   });
 
   it("takes median of two books with different odds", () => {

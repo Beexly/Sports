@@ -534,7 +534,7 @@ describe("mapErr()", () => {
   });
 
   it("passes Ok through unchanged", () => {
-    const r = mapErr(ok("value"), (e) => new AppError(`wrapped: ${e.message}`, "W"));
+    const r = mapErr(ok("value"), (e: AppError) => new AppError(`wrapped: ${e.message}`, "W"));
     expect(isOk(r)).toBe(true);
     if (isOk(r)) expect(r.value).toBe("value");
   });
@@ -1269,7 +1269,7 @@ describe("Result monad composition", () => {
   it("pipeline short-circuits on first Err", () => {
     const e = new AppError("fail", "F");
     const r = flatMap(
-      map(err<number>(e), (v) => v * 2),
+      map<number, number, AppError>(err(e), (v) => v * 2),
       (v) => ok(v + 1)
     );
     expect(isErr(r)).toBe(true);

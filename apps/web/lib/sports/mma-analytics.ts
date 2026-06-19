@@ -370,7 +370,7 @@ export function activeStreak(
 
   for (let i = results.length - 1; i >= 0; i--) {
     const r = results[i]
-    if (r === 'NC') continue
+    if (r === undefined || r === 'NC') continue
     if (streakType === null) {
       streakType = r
       count = 1

@@ -116,9 +116,9 @@ export function buildFunnel(steps: FunnelStep[]): FunnelResult {
     return { steps: [], overallConversion: 0, biggestDropOffStep: '' }
   }
 
-  const topUsers = steps[0].users
+  const topUsers = steps[0]?.users ?? 0
   const resultSteps = steps.map((step, i) => {
-    const prevUsers = i === 0 ? step.users : steps[i - 1].users
+    const prevUsers = i === 0 ? step.users : (steps[i - 1]?.users ?? 0)
     const conversionFromPrev = prevUsers === 0 ? 0 : step.users / prevUsers
     const conversionFromTop = topUsers === 0 ? 0 : step.users / topUsers
     const dropOff = Math.max(0, prevUsers - step.users)
@@ -134,11 +134,11 @@ export function buildFunnel(steps: FunnelStep[]): FunnelResult {
     }
   })
 
-  const lastUsers = steps[steps.length - 1].users
+  const lastUsers = steps[steps.length - 1]?.users ?? 0
   const overallConversion = topUsers === 0 ? 0 : lastUsers / topUsers
 
   // Find step with highest dropOffRate (skip step 0 since it has no previous)
-  let biggestDropOffStep = resultSteps[0].name
+  let biggestDropOffStep = resultSteps[0]?.name ?? ''
   let maxDropOffRate = -1
   for (const s of resultSteps) {
     if (s.dropOffRate > maxDropOffRate) {
@@ -158,7 +158,7 @@ export function microFunnel(total: number, stepRates: number[]): FunnelResult {
   const steps: FunnelStep[] = [{ name: 'Step 1', users: total }]
   let current = total
   for (let i = 0; i < stepRates.length; i++) {
-    current = Math.round(current * stepRates[i])
+    current = Math.round(current * (stepRates[i] ?? 0))
     steps.push({ name: `Step ${i + 2}`, users: current })
   }
   return buildFunnel(steps)
@@ -177,11 +177,11 @@ export function funnelCompare(
 
   const result: Array<{ step: string; rateA: number; rateB: number; delta: number; improved: boolean }> = []
   for (let i = 0; i < len; i++) {
-    const rateA = fA.steps[i].conversionFromTop
-    const rateB = fB.steps[i].conversionFromTop
+    const rateA = fA.steps[i]?.conversionFromTop ?? 0
+    const rateB = fB.steps[i]?.conversionFromTop ?? 0
     const delta = rateB - rateA
     result.push({
-      step: fA.steps[i].name,
+      step: fA.steps[i]?.name ?? '',
       rateA,
       rateB,
       delta,
@@ -203,7 +203,7 @@ export function lastTouchAttribution(touchPoints: TouchPoint[]): AttributionResu
 
   const groups = groupTouches(touchPoints)
   const sorted = [...touchPoints].sort((a, b) => b.timestamp - a.timestamp)
-  const lastSource = sorted[0].source
+  const lastSource = sorted[0]?.source ?? ''
 
   const creditMap = new Map<string, number>()
   for (const source of groups.keys()) {
@@ -221,7 +221,7 @@ export function firstTouchAttribution(touchPoints: TouchPoint[]): AttributionRes
 
   const groups = groupTouches(touchPoints)
   const sorted = [...touchPoints].sort((a, b) => a.timestamp - b.timestamp)
-  const firstSource = sorted[0].source
+  const firstSource = sorted[0]?.source ?? ''
 
   const creditMap = new Map<string, number>()
   for (const source of groups.keys()) {
@@ -301,14 +301,14 @@ export function positionBasedAttribution(
   }
 
   if (sorted.length === 1) {
-    creditMap.set(sorted[0].source, 1)
+    creditMap.set(sorted[0]!.source, 1)
     return buildAttributionResults(creditMap, groups)
   }
 
   if (sorted.length === 2) {
     // First and last are the same two points
-    const firstSrc = sorted[0].source
-    const lastSrc = sorted[sorted.length - 1].source
+    const firstSrc = sorted[0]!.source
+    const lastSrc = sorted[sorted.length - 1]!.source
     if (firstSrc === lastSrc) {
       creditMap.set(firstSrc, 1)
     } else {
@@ -326,8 +326,8 @@ export function positionBasedAttribution(
   }
 
   // 3+ touch points
-  const firstSrc = sorted[0].source
-  const lastSrc = sorted[sorted.length - 1].source
+  const firstSrc = sorted[0]!.source
+  const lastSrc = sorted[sorted.length - 1]!.source
   const middleTouches = sorted.slice(1, sorted.length - 1)
   const middleWeight = 1 - firstWeight - lastWeight
   const middlePerTouch = middleTouches.length > 0 ? middleWeight / middleTouches.length : 0
@@ -461,7 +461,7 @@ export function buildRetentionCohort(
  */
 export function retentionAtPeriod(matrix: RetentionMatrix, period: number): number {
   if (period < 0 || period >= matrix.rates.length) return 0
-  return matrix.rates[period]
+  return matrix.rates[period] ?? 0
 }
 
 /**
@@ -484,8 +484,8 @@ export function naturalRetentionCurve(
 ): { l30: number; l60: number; l90: number } {
   const getRate = (period: number): number => {
     if (retentionRates.length === 0) return 0
-    if (period >= retentionRates.length) return retentionRates[retentionRates.length - 1]
-    return retentionRates[period]
+    if (period >= retentionRates.length) return retentionRates[retentionRates.length - 1] ?? 0
+    return retentionRates[period] ?? 0
   }
 
   return {

@@ -125,7 +125,7 @@ export function devigPower(
   // k=1 gives rawSum > 1; k→∞ gives a value approaching 0.
   // So we binary search k in [0.01, 100].
   function objective(k: number): number {
-    return implied.reduce((s, q) => s + Math.pow(q, k), 0) - 1;
+    return implied!.reduce((s, q) => s + Math.pow(q, k), 0) - 1;
   }
 
   let lo = 0.01;
@@ -365,7 +365,7 @@ export function consensusNoVig(
 ): DevigResult | null {
   if (multiBookOddsArrays.length === 0) return null;
 
-  const outcomeCount = multiBookOddsArrays[0].length;
+  const outcomeCount = multiBookOddsArrays[0]!.length;
   if (outcomeCount === 0) return null;
 
   for (const book of multiBookOddsArrays) {
@@ -375,10 +375,10 @@ export function consensusNoVig(
   // For each outcome slot, collect odds across books and take the median
   const medianOdds: number[] = [];
   for (let i = 0; i < outcomeCount; i++) {
-    const col = multiBookOddsArrays.map((book) => book[i]).sort((a, b) => a - b);
+    const col = multiBookOddsArrays.map((book) => book[i]!).sort((a, b) => a - b);
     const mid = Math.floor(col.length / 2);
     const median =
-      col.length % 2 === 1 ? col[mid] : (col[mid - 1] + col[mid]) / 2;
+      col.length % 2 === 1 ? col[mid]! : (col[mid - 1]! + col[mid]!) / 2;
     medianOdds.push(median);
   }
 

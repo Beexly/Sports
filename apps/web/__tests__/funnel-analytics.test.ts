@@ -93,43 +93,43 @@ describe('buildFunnel', () => {
   it('step 1 has conversionFromPrev = 1', () => {
     const steps = [makeStep('A', 1000), makeStep('B', 600)]
     const result = buildFunnel(steps)
-    expect(result.steps[0].conversionFromPrev).toBe(1)
+    expect(result.steps[0]!.conversionFromPrev).toBe(1)
   })
 
   it('step 1 has conversionFromTop = 1', () => {
     const steps = [makeStep('A', 1000), makeStep('B', 600)]
     const result = buildFunnel(steps)
-    expect(result.steps[0].conversionFromTop).toBe(1)
+    expect(result.steps[0]!.conversionFromTop).toBe(1)
   })
 
   it('computes conversionFromPrev correctly', () => {
     const steps = [makeStep('A', 1000), makeStep('B', 600), makeStep('C', 300)]
     const result = buildFunnel(steps)
-    expect(result.steps[1].conversionFromPrev).toBeCloseTo(0.6)
-    expect(result.steps[2].conversionFromPrev).toBeCloseTo(0.5)
+    expect(result.steps[1]!.conversionFromPrev).toBeCloseTo(0.6)
+    expect(result.steps[2]!.conversionFromPrev).toBeCloseTo(0.5)
   })
 
   it('computes conversionFromTop correctly', () => {
     const steps = [makeStep('A', 1000), makeStep('B', 600), makeStep('C', 200)]
     const result = buildFunnel(steps)
-    expect(result.steps[1].conversionFromTop).toBeCloseTo(0.6)
-    expect(result.steps[2].conversionFromTop).toBeCloseTo(0.2)
+    expect(result.steps[1]!.conversionFromTop).toBeCloseTo(0.6)
+    expect(result.steps[2]!.conversionFromTop).toBeCloseTo(0.2)
   })
 
   it('computes dropOff counts', () => {
     const steps = [makeStep('A', 1000), makeStep('B', 600), makeStep('C', 300)]
     const result = buildFunnel(steps)
     // Step 0: no previous, so dropOff = 0 (from itself)
-    expect(result.steps[0].dropOff).toBe(0)
-    expect(result.steps[1].dropOff).toBe(400)
-    expect(result.steps[2].dropOff).toBe(300)
+    expect(result.steps[0]!.dropOff).toBe(0)
+    expect(result.steps[1]!.dropOff).toBe(400)
+    expect(result.steps[2]!.dropOff).toBe(300)
   })
 
   it('computes dropOffRate correctly', () => {
     const steps = [makeStep('A', 1000), makeStep('B', 600), makeStep('C', 300)]
     const result = buildFunnel(steps)
-    expect(result.steps[1].dropOffRate).toBeCloseTo(0.4)
-    expect(result.steps[2].dropOffRate).toBeCloseTo(0.5)
+    expect(result.steps[1]!.dropOffRate).toBeCloseTo(0.4)
+    expect(result.steps[2]!.dropOffRate).toBeCloseTo(0.5)
   })
 
   it('computes overallConversion correctly', () => {
@@ -162,7 +162,7 @@ describe('buildFunnel', () => {
     const steps = [makeStep('A', 0), makeStep('B', 0)]
     const result = buildFunnel(steps)
     expect(result.overallConversion).toBe(0)
-    expect(result.steps[0].conversionFromTop).toBe(0)
+    expect(result.steps[0]!.conversionFromTop).toBe(0)
   })
 })
 
@@ -178,19 +178,19 @@ describe('microFunnel', () => {
 
   it('step 1 users equals total', () => {
     const result = microFunnel(1000, [0.6, 0.5])
-    expect(result.steps[0].users).toBe(1000)
+    expect(result.steps[0]!.users).toBe(1000)
   })
 
   it('computes step users from rates', () => {
     const result = microFunnel(1000, [0.6, 0.5])
-    expect(result.steps[1].users).toBe(600)
-    expect(result.steps[2].users).toBe(300)
+    expect(result.steps[1]!.users).toBe(600)
+    expect(result.steps[2]!.users).toBe(300)
   })
 
   it('zero rates produce 0 users downstream', () => {
     const result = microFunnel(1000, [0, 0.5])
-    expect(result.steps[1].users).toBe(0)
-    expect(result.steps[2].users).toBe(0)
+    expect(result.steps[1]!.users).toBe(0)
+    expect(result.steps[2]!.users).toBe(0)
   })
 
   it('empty stepRates returns single-step funnel', () => {
@@ -217,21 +217,21 @@ describe('funnelCompare', () => {
     const b = [makeStep('A', 1000), makeStep('B', 700)]
     const result = funnelCompare(a, b)
     // step B: rateA = 0.5, rateB = 0.7, delta = 0.2
-    expect(result[1].delta).toBeCloseTo(0.2)
+    expect(result[1]!.delta).toBeCloseTo(0.2)
   })
 
   it('sets improved=true when rateB > rateA', () => {
     const a = [makeStep('A', 1000), makeStep('B', 500)]
     const b = [makeStep('A', 1000), makeStep('B', 700)]
     const result = funnelCompare(a, b)
-    expect(result[1].improved).toBe(true)
+    expect(result[1]!.improved).toBe(true)
   })
 
   it('sets improved=false when rateB < rateA', () => {
     const a = [makeStep('A', 1000), makeStep('B', 700)]
     const b = [makeStep('A', 1000), makeStep('B', 400)]
     const result = funnelCompare(a, b)
-    expect(result[1].improved).toBe(false)
+    expect(result[1]!.improved).toBe(false)
   })
 
   it('limits to shorter funnel length', () => {
@@ -268,7 +268,7 @@ describe('lastTouchAttribution', () => {
     const touches = [makeTouch('direct', 1000, 50)]
     const result = lastTouchAttribution(touches)
     expect(result).toHaveLength(1)
-    expect(result[0].credits).toBe(1)
+    expect(result[0]!.credits).toBe(1)
   })
 
   it('tracks revenue from all touches per source', () => {
@@ -319,7 +319,7 @@ describe('firstTouchAttribution', () => {
   it('single touch point gets full credit', () => {
     const touches = [makeTouch('organic', 5000)]
     const result = firstTouchAttribution(touches)
-    expect(result[0].credits).toBe(1)
+    expect(result[0]!.credits).toBe(1)
   })
 
   it('uses earliest timestamp as first touch', () => {
@@ -369,7 +369,7 @@ describe('linearAttribution', () => {
 
   it('single touch: credit = 1', () => {
     const result = linearAttribution([makeTouch('only', 1000)])
-    expect(result[0].credits).toBe(1)
+    expect(result[0]!.credits).toBe(1)
   })
 
   it('same source multiple times counts as one unique source for credit', () => {
@@ -422,7 +422,7 @@ describe('timeDecayAttribution', () => {
 
   it('single touch: credit = 1', () => {
     const result = timeDecayAttribution([makeTouch('only', 1000)])
-    expect(result[0].credits).toBe(1)
+    expect(result[0]!.credits).toBe(1)
   })
 
   it('respects custom halfLifeMs', () => {
@@ -479,7 +479,7 @@ describe('positionBasedAttribution', () => {
 
   it('single touch: credit = 1', () => {
     const result = positionBasedAttribution([makeTouch('only', 1000)])
-    expect(result[0].credits).toBe(1)
+    expect(result[0]!.credits).toBe(1)
   })
 
   it('two touches: each gets respective weight', () => {
@@ -541,7 +541,7 @@ describe('dataDrivernAttribution', () => {
   it('revenue is derived from conversionValue and credits', () => {
     const touches = [makeTouch('only', 1000)]
     const result = dataDrivernAttribution(touches, 200)
-    expect(result[0].revenue).toBeCloseTo(200)
+    expect(result[0]!.revenue).toBeCloseTo(200)
   })
 })
 
@@ -704,7 +704,7 @@ describe('buildRetentionCohort', () => {
   it('retained decreases monotonically', () => {
     const matrix = buildRetentionCohort(1000, 6, 0.15)
     for (let i = 1; i < matrix.retained.length; i++) {
-      expect(matrix.retained[i]).toBeLessThanOrEqual(matrix.retained[i - 1])
+      expect(matrix.retained[i]).toBeLessThanOrEqual(matrix.retained[i - 1]!)
     }
   })
 
@@ -722,7 +722,7 @@ describe('buildRetentionCohort', () => {
   it('rate decreases over time', () => {
     const matrix = buildRetentionCohort(1000, 5, 0.2)
     for (let i = 1; i < matrix.rates.length; i++) {
-      expect(matrix.rates[i]).toBeLessThanOrEqual(matrix.rates[i - 1])
+      expect(matrix.rates[i]).toBeLessThanOrEqual(matrix.rates[i - 1]!)
     }
   })
 })
@@ -854,7 +854,7 @@ describe('cumulativeLtv', () => {
   it('values are strictly increasing', () => {
     const result = cumulativeLtv(10, 0.1, 10)
     for (let i = 1; i < result.length; i++) {
-      expect(result[i]).toBeGreaterThan(result[i - 1])
+      expect(result[i]).toBeGreaterThan(result[i - 1]!)
     }
   })
 
@@ -1158,9 +1158,9 @@ describe('channelRankings', () => {
   it('preserves all original fields', () => {
     const chan = makeChan('test', 100, 10, 1, 50, 200)
     const result = channelRankings([chan])
-    expect(result[0].channel).toBe('test')
-    expect(result[0].impressions).toBe(100)
-    expect(result[0].rank).toBe(1)
+    expect(result[0]!.channel).toBe('test')
+    expect(result[0]!.impressions).toBe(100)
+    expect(result[0]!.rank).toBe(1)
   })
 
   it('assigns sequential ranks 1..n', () => {

@@ -71,7 +71,7 @@ function addThousandsSeparator(integerPart: string): string {
     if (i > 0 && (integerPart.length - i) % 3 === 0) {
       result.push(",");
     }
-    result.push(integerPart[i]);
+    result.push(integerPart[i]!);
   }
   return result.join("");
 }

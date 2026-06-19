@@ -509,20 +509,20 @@ function inverseNormalApprox(p: number): number {
 
   if (p < pLow) {
     const q = Math.sqrt(-2 * Math.log(p));
-    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
-           ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+    return (((((c[0]!*q+c[1]!)*q+c[2]!)*q+c[3]!)*q+c[4]!)*q+c[5]!) /
+           ((((d[0]!*q+d[1]!)*q+d[2]!)*q+d[3]!)*q+1);
   }
 
   if (p <= pHigh) {
     const q = p - 0.5;
     const r = q * q;
-    return (((((a[1]*r+a[2])*r+a[3])*r+a[4])*r+a[5])*r+a[6])*q /
-           (((((b[1]*r+b[2])*r+b[3])*r+b[4])*r+b[5])*r+1);
+    return (((((a[1]!*r+a[2]!)*r+a[3]!)*r+a[4]!)*r+a[5]!)*r+a[6]!)*q /
+           (((((b[1]!*r+b[2]!)*r+b[3]!)*r+b[4]!)*r+b[5]!)*r+1);
   }
 
   const q = Math.sqrt(-2 * Math.log(1 - p));
-  return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
-          ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  return -(((((c[0]!*q+c[1]!)*q+c[2]!)*q+c[3]!)*q+c[4]!)*q+c[5]!) /
+          ((((d[0]!*q+d[1]!)*q+d[2]!)*q+d[3]!)*q+1);
 }
 
 // ---------------------------------------------------------------------------
@@ -536,7 +536,8 @@ export function bestSendHour(events: EmailEvent[]): number {
   const counts = new Array<number>(24).fill(0);
   for (const e of events) {
     if (e.type === "open") {
-      counts[e.timestamp.getHours()]++;
+      const h = e.timestamp.getHours();
+      counts[h] = (counts[h] ?? 0) + 1;
     }
   }
   return counts.indexOf(Math.max(...counts));
@@ -549,7 +550,8 @@ export function bestSendDay(events: EmailEvent[]): number {
   const counts = new Array<number>(7).fill(0);
   for (const e of events) {
     if (e.type === "open") {
-      counts[e.timestamp.getDay()]++;
+      const d = e.timestamp.getDay();
+      counts[d] = (counts[d] ?? 0) + 1;
     }
   }
   return counts.indexOf(Math.max(...counts));
@@ -585,7 +587,10 @@ export function sendTimeRecommendation(
   for (const e of opens) {
     const day = e.timestamp.getDay();
     const hour = e.timestamp.getHours();
-    matrix[day][hour]++;
+    const row = matrix[day];
+    if (row !== undefined) {
+      row[hour] = (row[hour] ?? 0) + 1;
+    }
   }
 
   let bestDay = 0;
@@ -594,8 +599,9 @@ export function sendTimeRecommendation(
 
   for (let d = 0; d < 7; d++) {
     for (let h = 0; h < 24; h++) {
-      if (matrix[d][h] > bestCount) {
-        bestCount = matrix[d][h];
+      const count = matrix[d]?.[h] ?? 0;
+      if (count > bestCount) {
+        bestCount = count;
         bestDay = d;
         bestHour = h;
       }
@@ -623,7 +629,8 @@ export function hourlyEngagement(events: EmailEvent[]): number[] {
 
   for (const e of events) {
     if (e.type === "open") {
-      counts[e.timestamp.getHours()]++;
+      const h = e.timestamp.getHours();
+      counts[h] = (counts[h] ?? 0) + 1;
       totalOpens++;
     }
   }
@@ -642,7 +649,8 @@ export function dailyEngagement(events: EmailEvent[]): number[] {
 
   for (const e of events) {
     if (e.type === "open") {
-      counts[e.timestamp.getDay()]++;
+      const d = e.timestamp.getDay();
+      counts[d] = (counts[d] ?? 0) + 1;
       totalOpens++;
     }
   }
@@ -696,7 +704,7 @@ const BENCHMARKS: Record<string, CampaignBenchmark> = {
 export function industryBenchmark(
   industry: "sports" | "media" | "ecommerce" | "saas" | "general"
 ): CampaignBenchmark {
-  return BENCHMARKS[industry];
+  return BENCHMARKS[industry]!;
 }
 
 /**
@@ -711,7 +719,7 @@ export function benchmarkComparison(
   clickRate: "above" | "below" | "at";
   overall: "above" | "below" | "at";
 } {
-  const benchmark = BENCHMARKS[industry] ?? BENCHMARKS["general"];
+  const benchmark = BENCHMARKS[industry] ?? BENCHMARKS["general"]!;
   const or = openRate(c);
   const cr = clickRate(c);
 
@@ -725,7 +733,7 @@ export function benchmarkComparison(
   const crResult = compare(cr, benchmark.avgClickRate);
 
   // Overall: if both are above or one is above and none is below → above, etc.
-  const scores = [orResult, crResult].map((r) =>
+  const scores: number[] = [orResult, crResult].map((r) =>
     r === "above" ? 1 : r === "at" ? 0 : -1
   );
   const sum = scores.reduce((a, b) => a + b, 0);
@@ -743,7 +751,7 @@ export function performanceScore(
   c: EmailCampaign,
   industry: string
 ): number {
-  const benchmark = BENCHMARKS[industry] ?? BENCHMARKS["general"];
+  const benchmark = BENCHMARKS[industry] ?? BENCHMARKS["general"]!;
   const or = openRate(c);
   const cr = clickRate(c);
 

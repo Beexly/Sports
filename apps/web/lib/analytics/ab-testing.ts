@@ -98,7 +98,7 @@ export function assignVariant(experiment: Experiment, userId: string): Assignmen
   }
 
   // Fallback to last variant (handles floating-point edge cases)
-  return { variantId: normalized[normalized.length - 1].id, bucket };
+  return { variantId: normalized[normalized.length - 1]!.id, bucket };
 }
 
 // ---------------------------------------------------------------------------
@@ -272,8 +272,8 @@ export function bayesianABTest(
 
   // 95% credible interval
   lifts.sort((a, b) => a - b);
-  const lo = lifts[Math.floor(0.025 * samples)];
-  const hi = lifts[Math.floor(0.975 * samples)];
+  const lo = lifts[Math.floor(0.025 * samples)] ?? 0;
+  const hi = lifts[Math.floor(0.975 * samples)] ?? 0;
 
   const winner = probBBeatsA >= 0.95 ? "treatment" : probBBeatsA <= 0.05 ? "control" : null;
 
@@ -337,17 +337,17 @@ function zScore(p: number): number {
 
   if (p < pLow) {
     const q = Math.sqrt(-2 * Math.log(p));
-    return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-           ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+    return (((((c[0]! * q + c[1]!) * q + c[2]!) * q + c[3]!) * q + c[4]!) * q + c[5]!) /
+           ((((d[0]! * q + d[1]!) * q + d[2]!) * q + d[3]!) * q + 1);
   } else if (p <= pHigh) {
     const q = p - 0.5;
     const r = q * q;
-    return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
-           (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+    return (((((a[0]! * r + a[1]!) * r + a[2]!) * r + a[3]!) * r + a[4]!) * r + a[5]!) * q /
+           (((((b[0]! * r + b[1]!) * r + b[2]!) * r + b[3]!) * r + b[4]!) * r + 1);
   } else {
     const q = Math.sqrt(-2 * Math.log(1 - p));
-    return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-            ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+    return -(((((c[0]! * q + c[1]!) * q + c[2]!) * q + c[3]!) * q + c[4]!) * q + c[5]!) /
+            ((((d[0]! * q + d[1]!) * q + d[2]!) * q + d[3]!) * q + 1);
   }
 }
 
@@ -409,8 +409,10 @@ export function chiSquareTest(
 
   let statistic = 0;
   for (let i = 0; i < observed.length; i++) {
-    if (expected[i] === 0) continue;
-    statistic += Math.pow(observed[i] - expected[i], 2) / expected[i];
+    const exp = expected[i] ?? 0;
+    const obs = observed[i] ?? 0;
+    if (exp === 0) continue;
+    statistic += Math.pow(obs - exp, 2) / exp;
   }
 
   const df = observed.length - 1;
@@ -455,9 +457,9 @@ function gammaLn(x: number): number {
     return Math.log(Math.PI / Math.sin(Math.PI * x)) - gammaLn(1 - x);
   }
   const xm = x - 1;
-  let ag = p[0];
+  let ag = p[0]!;
   for (let i = 1; i < g + 2; i++) {
-    ag += p[i] / (xm + i);
+    ag += p[i]! / (xm + i);
   }
   const t = xm + g + 0.5;
   return 0.5 * Math.log(2 * Math.PI) + (xm + 0.5) * Math.log(t) - t + Math.log(ag);
@@ -652,8 +654,8 @@ export function epsilonGreedy(
   if (arms.length === 0) throw new Error("No arms provided");
 
   // Find best arm by conversion rate
-  let bestArm = arms[0];
-  let bestRate = arms[0].trials > 0 ? arms[0].conversions / arms[0].trials : 0;
+  let bestArm = arms[0]!;
+  let bestRate = arms[0]!.trials > 0 ? arms[0]!.conversions / arms[0]!.trials : 0;
 
   for (const arm of arms) {
     const rate = arm.trials > 0 ? arm.conversions / arm.trials : 0;
@@ -668,7 +670,7 @@ export function epsilonGreedy(
   // In a real system Math.random() < epsilon would trigger random selection
   // Here we use Math.random() as the spec doesn't require a seed for epsilon-greedy
   if (Math.random() < epsilon) {
-    return arms[Math.floor(Math.random() * arms.length)].id;
+    return arms[Math.floor(Math.random() * arms.length)]!.id;
   }
 
   return bestArm.id;
@@ -686,7 +688,7 @@ export function thompsonSampling(
 
   const rng = makeLcg(seed !== undefined ? seed : Date.now() % 0xffffffff);
 
-  let bestId = arms[0].id;
+  let bestId = arms[0]!.id;
   let bestSample = -Infinity;
 
   for (const arm of arms) {

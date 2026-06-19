@@ -396,7 +396,7 @@ export function winRateBySport(
 
   for (const pick of picks) {
     if (!grouped[pick.sport]) grouped[pick.sport] = [];
-    grouped[pick.sport].push(pick);
+    grouped[pick.sport]!.push(pick);
   }
 
   const result: Record<string, number | null> = {};
@@ -423,7 +423,7 @@ export function streakFromPicks(
   let length = 0;
 
   for (let i = picks.length - 1; i >= 0; i--) {
-    const result = picks[i].result;
+    const result = picks[i]!.result;
     if (result !== "win" && result !== "loss") continue;
 
     if (streakType === null) {

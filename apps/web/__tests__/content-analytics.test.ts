@@ -585,9 +585,9 @@ describe("topPerformingContent", () => {
 
   it("sorts by views descending", () => {
     const top = topPerformingContent(items, "views", 3);
-    expect(top[0].contentId).toBe("b");
-    expect(top[1].contentId).toBe("a");
-    expect(top[2].contentId).toBe("c");
+    expect(top[0]!.contentId).toBe("b");
+    expect(top[1]!.contentId).toBe("a");
+    expect(top[2]!.contentId).toBe("c");
   });
 
   it("returns top n items", () => {
@@ -602,29 +602,29 @@ describe("topPerformingContent", () => {
 
   it("sorts by socialShares descending", () => {
     const top = topPerformingContent(items, "socialShares", 3);
-    expect(top[0].contentId).toBe("b");
+    expect(top[0]!.contentId).toBe("b");
   });
 
   it("sorts by engagementRate descending", () => {
     const top = topPerformingContent(items, "engagementRate", 3);
-    expect(top[0].contentId).toBe("b");
+    expect(top[0]!.contentId).toBe("b");
   });
 
   it("sorts by avgTimeOnPage descending", () => {
     const top = topPerformingContent(items, "avgTimeOnPage", 2);
-    expect(top[0].contentId).toBe("b");
-    expect(top[1].contentId).toBe("a");
+    expect(top[0]!.contentId).toBe("b");
+    expect(top[1]!.contentId).toBe("a");
   });
 
   it("sorts by conversionCount descending", () => {
     const top = topPerformingContent(items, "conversionCount", 1);
-    expect(top[0].contentId).toBe("b");
+    expect(top[0]!.contentId).toBe("b");
   });
 
   it("does not mutate original array", () => {
     const copy = [...items];
     topPerformingContent(items, "views", 3);
-    expect(items[0].contentId).toBe(copy[0].contentId);
+    expect(items[0]!.contentId).toBe(copy[0]!.contentId);
   });
 });
 
@@ -640,10 +640,10 @@ describe("viewsByPeriod", () => {
     ];
     const result = viewsByPeriod(views, "day");
     expect(result.length).toBe(2);
-    expect(result[0].period).toBe("2024-03-15");
-    expect(result[0].count).toBe(2);
-    expect(result[1].period).toBe("2024-03-16");
-    expect(result[1].count).toBe(1);
+    expect(result[0]!.period).toBe("2024-03-15");
+    expect(result[0]!.count).toBe(2);
+    expect(result[1]!.period).toBe("2024-03-16");
+    expect(result[1]!.count).toBe(1);
   });
 
   it("groups views by hour", () => {
@@ -654,8 +654,8 @@ describe("viewsByPeriod", () => {
     ];
     const result = viewsByPeriod(views, "hour");
     expect(result.length).toBe(2);
-    expect(result[0].period).toBe("2024-03-15T10");
-    expect(result[0].count).toBe(2);
+    expect(result[0]!.period).toBe("2024-03-15T10");
+    expect(result[0]!.count).toBe(2);
   });
 
   it("groups views by week", () => {
@@ -676,7 +676,7 @@ describe("viewsByPeriod", () => {
       { contentId: "a", timestamp: new Date("2024-03-15T11:00:00Z"), userId: "u2" },
     ];
     const result = viewsByPeriod(views, "day");
-    expect(result[0].uniqueUsers).toBe(2);
+    expect(result[0]!.uniqueUsers).toBe(2);
   });
 
   it("treats undefined userId as distinct anonymous per view", () => {
@@ -686,7 +686,7 @@ describe("viewsByPeriod", () => {
     ];
     const result = viewsByPeriod(views, "day");
     // Each undefined userId is a distinct anonymous
-    expect(result[0].uniqueUsers).toBe(2);
+    expect(result[0]!.uniqueUsers).toBe(2);
   });
 
   it("returns results sorted by period ascending", () => {
@@ -695,8 +695,8 @@ describe("viewsByPeriod", () => {
       { contentId: "a", timestamp: new Date("2024-03-15T10:00:00Z"), userId: "u2" },
     ];
     const result = viewsByPeriod(views, "day");
-    expect(result[0].period).toBe("2024-03-15");
-    expect(result[1].period).toBe("2024-03-17");
+    expect(result[0]!.period).toBe("2024-03-15");
+    expect(result[1]!.period).toBe("2024-03-17");
   });
 
   it("returns empty array for no views", () => {
@@ -742,8 +742,8 @@ describe("extractKeywords", () => {
 
   it("returns most frequent words first", () => {
     const result = extractKeywords("sports sports sports game game result");
-    expect(result[0].word).toBe("sports");
-    expect(result[0].count).toBe(3);
+    expect(result[0]!.word).toBe("sports");
+    expect(result[0]!.count).toBe(3);
   });
 
   it("limits to topN results", () => {
@@ -778,8 +778,8 @@ describe("extractKeywords", () => {
 
   it("lowercases tokens", () => {
     const result = extractKeywords("Basketball BASKETBALL basketball");
-    expect(result[0].word).toBe("basketball");
-    expect(result[0].count).toBe(3);
+    expect(result[0]!.word).toBe("basketball");
+    expect(result[0]!.count).toBe(3);
   });
 });
 
@@ -1033,7 +1033,7 @@ describe("avgEngagementByType", () => {
 
   it("returns single item average correctly", () => {
     const result = avgEngagementByType(items, typeMapping);
-    const expected = contentEngagementScore(items[2]); // b1 is 'news'
+    const expected = contentEngagementScore(items[2]!); // b1 is 'news'
     expect(result["news"]).toBeCloseTo(expected, 5);
   });
 });

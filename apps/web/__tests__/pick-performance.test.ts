@@ -572,15 +572,15 @@ describe("topPicks", () => {
   it("returns picks sorted by EV descending", () => {
     const top = topPicks(picks, 10);
     for (let i = 1; i < top.length; i++) {
-      expect(top[i - 1].ev).toBeGreaterThanOrEqual(top[i].ev);
+      expect(top[i - 1]!.ev).toBeGreaterThanOrEqual(top[i]!.ev);
     }
   });
 
   it("respects n limit", () => {
     const top = topPicks(picks, 2);
     expect(top.length).toBe(2);
-    expect(top[0].ev).toBeCloseTo(0.5);
-    expect(top[1].ev).toBeCloseTo(0.4);
+    expect(top[0]!.ev).toBeCloseTo(0.5);
+    expect(top[1]!.ev).toBeCloseTo(0.4);
   });
 
   it("returns empty when no positive EV picks", () => {
@@ -607,13 +607,13 @@ describe("worstPicks", () => {
   it("returns picks sorted by EV ascending (most negative first)", () => {
     const worst = worstPicks(picks, 10);
     for (let i = 1; i < worst.length; i++) {
-      expect(worst[i - 1].ev).toBeLessThanOrEqual(worst[i].ev);
+      expect(worst[i - 1]!.ev).toBeLessThanOrEqual(worst[i]!.ev);
     }
   });
 
   it("first entry has the most negative EV", () => {
     const worst = worstPicks(picks, 1);
-    expect(worst[0].ev).toBeCloseTo(-0.3);
+    expect(worst[0]!.ev).toBeCloseTo(-0.3);
   });
 
   it("respects n limit", () => {

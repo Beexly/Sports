@@ -190,7 +190,7 @@ export function syllableCount(word: string): number {
   if (
     count > 1 &&
     w.endsWith("e") &&
-    !["a", "e", "i", "o", "u", "y"].includes(w[w.length - 2])
+    !["a", "e", "i", "o", "u", "y"].includes(w[w.length - 2] ?? "")
   ) {
     count -= 1;
   }
@@ -310,7 +310,7 @@ export function analyzeSeo(
   let m: RegExpExecArray | null;
   const hrefRe = /href="([^"]+)"/gi;
   while ((m = hrefRe.exec(content)) !== null) {
-    const href = m[1];
+    const href = m[1] ?? "";
     const isInternal =
       href.startsWith("/") ||
       internalMarkers.some((marker) => href.includes(marker));
@@ -324,7 +324,7 @@ export function analyzeSeo(
   // Markdown links
   const mdRe = /\[([^\]]*)\]\(([^)]+)\)/g;
   while ((m = mdRe.exec(content)) !== null) {
-    const href = m[2];
+    const href = m[2] ?? "";
     const isInternal =
       href.startsWith("/") ||
       internalMarkers.some((marker) => href.includes(marker));
@@ -346,7 +346,7 @@ export function analyzeSeo(
   let hasAltText = imageCount === 0 ? true : true;
   for (const img of htmlImgs) {
     const altMatch = /alt="([^"]*)"/i.exec(img);
-    if (!altMatch || altMatch[1].trim() === "") {
+    if (!altMatch || (altMatch[1] ?? "").trim() === "") {
       hasAltText = false;
       break;
     }
@@ -354,7 +354,7 @@ export function analyzeSeo(
   if (hasAltText) {
     for (const img of mdImgs) {
       const altMatch = /!\[([^\]]*)\]/.exec(img);
-      if (!altMatch || altMatch[1].trim() === "") {
+      if (!altMatch || (altMatch[1] ?? "").trim() === "") {
         hasAltText = false;
         break;
       }

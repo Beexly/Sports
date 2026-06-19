@@ -152,25 +152,25 @@ describe("filterAny", () => {
 describe("compareBy", () => {
   it("sorts ascending by numeric key", () => {
     const items = [{ v: 3 }, { v: 1 }, { v: 2 }];
-    const sorted = sortWith(compareBy((x) => x.v))(items);
+    const sorted = sortWith(compareBy((x: { v: number }) => x.v))(items);
     expect(sorted.map((x) => x.v)).toEqual([1, 2, 3]);
   });
 
   it("sorts descending by numeric key", () => {
     const items = [{ v: 3 }, { v: 1 }, { v: 2 }];
-    const sorted = sortWith(compareBy((x) => x.v, "desc"))(items);
+    const sorted = sortWith(compareBy((x: { v: number }) => x.v, "desc"))(items);
     expect(sorted.map((x) => x.v)).toEqual([3, 2, 1]);
   });
 
   it("sorts ascending by string key", () => {
     const items = [{ name: "charlie" }, { name: "alice" }, { name: "bob" }];
-    const sorted = sortWith(compareBy((x) => x.name))(items);
+    const sorted = sortWith(compareBy((x: { name: string }) => x.name))(items);
     expect(sorted.map((x) => x.name)).toEqual(["alice", "bob", "charlie"]);
   });
 
   it("sorts descending by string key", () => {
     const items = [{ name: "charlie" }, { name: "alice" }, { name: "bob" }];
-    const sorted = sortWith(compareBy((x) => x.name, "desc"))(items);
+    const sorted = sortWith(compareBy((x: { name: string }) => x.name, "desc"))(items);
     expect(sorted.map((x) => x.name)).toEqual(["charlie", "bob", "alice"]);
   });
 });
@@ -280,32 +280,33 @@ describe("processPipeline", () => {
 // ---------------------------------------------------------------------------
 
 describe("searchFilter", () => {
-  const items = [
+  type SearchItem = { name: string; sport: string };
+  const items: SearchItem[] = [
     { name: "Alice Johnson", sport: "Basketball" },
     { name: "Bob Smith", sport: "Football" },
     { name: "Carol White", sport: "baseball" },
   ];
 
   it("case-insensitive substring match by default", () => {
-    const pred = searchFilter("alice", [(x) => x.name]);
+    const pred = searchFilter("alice", [(x: SearchItem) => x.name]);
     expect(pred(items[0]!)).toBe(true);
     expect(pred(items[1]!)).toBe(false);
   });
 
   it("matches across multiple key functions", () => {
-    const pred = searchFilter("foot", [(x) => x.name, (x) => x.sport]);
+    const pred = searchFilter("foot", [(x: SearchItem) => x.name, (x: SearchItem) => x.sport]);
     expect(pred(items[1]!)).toBe(true);
     expect(pred(items[0]!)).toBe(false);
   });
 
   it("exact=true requires exact match (case-insensitive)", () => {
-    const pred = searchFilter("basketball", [(x) => x.sport], { exact: true });
+    const pred = searchFilter("basketball", [(x: SearchItem) => x.sport], { exact: true });
     expect(pred(items[0]!)).toBe(true);
     expect(pred(items[1]!)).toBe(false);
   });
 
   it("exact=true does not match substring", () => {
-    const pred = searchFilter("basket", [(x) => x.sport], { exact: true });
+    const pred = searchFilter("basket", [(x: SearchItem) => x.sport], { exact: true });
     expect(pred(items[0]!)).toBe(false);
   });
 
@@ -315,9 +316,9 @@ describe("searchFilter", () => {
   });
 
   it("case-sensitive match when caseSensitive=true", () => {
-    const pred = searchFilter("alice", [(x) => x.name], { caseSensitive: true });
+    const pred = searchFilter("alice", [(x: SearchItem) => x.name], { caseSensitive: true });
     expect(pred(items[0]!)).toBe(false); // name is "Alice" not "alice"
-    const pred2 = searchFilter("Alice", [(x) => x.name], { caseSensitive: true });
+    const pred2 = searchFilter("Alice", [(x: SearchItem) => x.name], { caseSensitive: true });
     expect(pred2(items[0]!)).toBe(true);
   });
 });
@@ -330,22 +331,22 @@ describe("rangeFilter", () => {
   const items = [1, 5, 10, 15, 20];
 
   it("filters within [min, max] inclusive", () => {
-    const pred = rangeFilter((x) => x, 5, 15);
+    const pred = rangeFilter((x: number) => x, 5, 15);
     expect(items.filter(pred)).toEqual([5, 10, 15]);
   });
 
   it("undefined min is unbounded below", () => {
-    const pred = rangeFilter((x) => x, undefined, 10);
+    const pred = rangeFilter((x: number) => x, undefined, 10);
     expect(items.filter(pred)).toEqual([1, 5, 10]);
   });
 
   it("undefined max is unbounded above", () => {
-    const pred = rangeFilter((x) => x, 10, undefined);
+    const pred = rangeFilter((x: number) => x, 10, undefined);
     expect(items.filter(pred)).toEqual([10, 15, 20]);
   });
 
   it("no bounds → all items pass", () => {
-    const pred = rangeFilter((x) => x);
+    const pred = rangeFilter((x: number) => x);
     expect(items.filter(pred)).toEqual(items);
   });
 });
@@ -364,17 +365,17 @@ describe("enumFilter", () => {
   ];
 
   it("matches allowed values", () => {
-    const pred = enumFilter((x) => x.status, ["active", "pending"] as Status[]);
+    const pred = enumFilter((x: { id: number; status: Status }) => x.status, ["active", "pending"] as Status[]);
     expect(items.filter(pred).map((x) => x.id)).toEqual([1, 3, 4]);
   });
 
   it("does not match non-allowed values", () => {
-    const pred = enumFilter((x) => x.status, ["inactive"] as Status[]);
+    const pred = enumFilter((x: { id: number; status: Status }) => x.status, ["inactive"] as Status[]);
     expect(items.filter(pred).map((x) => x.id)).toEqual([2]);
   });
 
   it("empty allowed list → no items", () => {
-    const pred = enumFilter((x) => x.status, [] as Status[]);
+    const pred = enumFilter((x: { id: number; status: Status }) => x.status, [] as Status[]);
     expect(items.filter(pred)).toEqual([]);
   });
 });
@@ -391,7 +392,7 @@ describe("dedupe", () => {
       { id: 1, name: "c" },
       { id: 3, name: "d" },
     ];
-    const result = dedupe((x) => x.id)(items);
+    const result = dedupe((x: { id: number; name: string }) => x.id)(items);
     expect(result).toEqual([
       { id: 1, name: "a" },
       { id: 2, name: "b" },
@@ -401,13 +402,13 @@ describe("dedupe", () => {
 
   it("preserves first occurrence", () => {
     const items = ["apple", "banana", "apple", "cherry"];
-    const result = dedupe((x) => x)(items);
+    const result = dedupe((x: string) => x)(items);
     expect(result).toEqual(["apple", "banana", "cherry"]);
   });
 
   it("no duplicates → returns same items", () => {
     const items = [1, 2, 3, 4, 5];
-    const result = dedupe((x) => x)(items);
+    const result = dedupe((x: number) => x)(items);
     expect(result).toEqual([1, 2, 3, 4, 5]);
   });
 });

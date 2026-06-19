@@ -160,9 +160,9 @@ export function medianLapTime(laps: LapTime[], driver?: string): number {
   const sorted = [...filtered].sort((a, b) => a.seconds - b.seconds);
   const mid = Math.floor(sorted.length / 2);
   if (sorted.length % 2 === 1) {
-    return sorted[mid].seconds;
+    return sorted[mid]!.seconds;
   }
-  return (sorted[mid - 1].seconds + sorted[mid].seconds) / 2;
+  return (sorted[mid - 1]!.seconds + sorted[mid]!.seconds) / 2;
 }
 
 /**
@@ -308,7 +308,7 @@ export function tireDegradation(
 
   const sumX = xVals.reduce((a, b) => a + b, 0);
   const sumY = yVals.reduce((a, b) => a + b, 0);
-  const sumXY = xVals.reduce((acc, x, i) => acc + x * yVals[i], 0);
+  const sumXY = xVals.reduce((acc, x, i) => acc + x * (yVals[i] ?? 0), 0);
   const sumX2 = xVals.reduce((acc, x) => acc + x * x, 0);
 
   const denom = n * sumX2 - sumX * sumX;

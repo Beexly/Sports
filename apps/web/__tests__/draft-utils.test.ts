@@ -243,15 +243,15 @@ describe('buildDraftBoard', () => {
 
   it('first pick has estimatedValue = 1000', () => {
     const board = buildDraftBoard(12, 10)
-    expect(board.picks[0].estimatedValue).toBe(1000)
+    expect(board.picks[0]!.estimatedValue).toBe(1000)
   })
 
   it('picks in even rounds have reversed pick order', () => {
     const board = buildDraftBoard(12, 2)
     // Round 2 is picks index 12-23 (overall 13-24)
     const round2 = board.picks.filter((p) => p.round === 2)
-    expect(round2[0].pickInRound).toBe(12) // First pick of round 2 = teamSize
-    expect(round2[round2.length - 1].pickInRound).toBe(1) // Last pick = 1
+    expect(round2[0]!.pickInRound).toBe(12) // First pick of round 2 = teamSize
+    expect(round2[round2.length - 1]!.pickInRound).toBe(1) // Last pick = 1
   })
 
   it('teamSize and rounds are stored correctly', () => {
@@ -386,7 +386,7 @@ describe('positionalScarcity', () => {
   it('sorted by scarcityScore descending', () => {
     const result = positionalScarcity(adpData)
     for (let i = 1; i < result.length; i++) {
-      expect(result[i - 1].scarcityScore).toBeGreaterThanOrEqual(result[i].scarcityScore)
+      expect(result[i - 1]!.scarcityScore).toBeGreaterThanOrEqual(result[i]!.scarcityScore)
     }
   })
 
@@ -407,13 +407,13 @@ describe('positionalScarcity', () => {
   it('scarcityScore = 100 for position with ADP=1', () => {
     const data = [{ position: 'QB', adp: 1 }]
     const result = positionalScarcity(data, 1)
-    expect(result[0].scarcityScore).toBe(100)
+    expect(result[0]!.scarcityScore).toBe(100)
   })
 
   it('scarcityScore is clamped at 0', () => {
     const data = [{ position: 'K', adp: 200 }]
     const result = positionalScarcity(data, 1)
-    expect(result[0].scarcityScore).toBeGreaterThanOrEqual(0)
+    expect(result[0]!.scarcityScore).toBeGreaterThanOrEqual(0)
   })
 })
 
@@ -544,7 +544,7 @@ describe('bestAvailableByRound', () => {
 
   it('result sorted by value descending', () => {
     const result = bestAvailableByRound(players, 1, 12, [])
-    expect(result[0].value).toBeGreaterThanOrEqual(result[result.length - 1].value)
+    expect(result[0]!.value).toBeGreaterThanOrEqual(result[result.length - 1]!.value)
   })
 
   it('excludes already drafted players', () => {
@@ -639,7 +639,7 @@ describe('byeWeekConflicts', () => {
     ]
     const conflicts = byeWeekConflicts(roster)
     for (let i = 1; i < conflicts.length; i++) {
-      expect(conflicts[i - 1].conflicts).toBeGreaterThanOrEqual(conflicts[i].conflicts)
+      expect(conflicts[i - 1]!.conflicts).toBeGreaterThanOrEqual(conflicts[i]!.conflicts)
     }
   })
 
