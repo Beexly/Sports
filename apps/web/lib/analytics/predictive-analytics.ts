@@ -70,11 +70,11 @@ function softThreshold(x: number, lambda: number): number {
 export function matTranspose(m: Matrix): Matrix {
   if (m.length === 0) return [];
   const rows = m.length;
-  const cols = m[0].length;
+  const cols = m[0]!.length;
   const result: Matrix = Array.from({ length: cols }, () => new Array<number>(rows).fill(0));
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      result[j][i] = m[i][j];
+      result[j]![i] = m[i]![j]!;
     }
   }
   return result;
@@ -82,27 +82,27 @@ export function matTranspose(m: Matrix): Matrix {
 
 export function matMul(a: Matrix, b: Matrix): Matrix {
   const n = a.length;
-  const m = b[0].length;
+  const m = b[0]!.length;
   const k = b.length;
   const result: Matrix = Array.from({ length: n }, () => new Array<number>(m).fill(0));
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < m; j++) {
       let sum = 0;
       for (let l = 0; l < k; l++) {
-        sum += a[i][l] * b[l][j];
+        sum += a[i]![l]! * b[l]![j]!;
       }
-      result[i][j] = sum;
+      result[i]![j] = sum;
     }
   }
   return result;
 }
 
 export function matAdd(a: Matrix, b: Matrix): Matrix {
-  return a.map((row, i) => row.map((val, j) => val + b[i][j]));
+  return a.map((row, i) => row.map((val, j) => val + b[i]![j]!));
 }
 
 export function vecDot(a: Vector, b: Vector): number {
-  return a.reduce((sum, val, i) => sum + val * b[i], 0);
+  return a.reduce((sum, val, i) => sum + val * b[i]!, 0);
 }
 
 export function matVec(m: Matrix, v: Vector): Vector {
@@ -127,31 +127,31 @@ function luDecompose(A: Matrix): { L: Matrix; U: Matrix; P: number[] } {
 
   for (let k = 0; k < n; k++) {
     // Find pivot
-    let maxVal = Math.abs(U[k][k]);
+    let maxVal = Math.abs(U[k]![k]!);
     let maxRow = k;
     for (let i = k + 1; i < n; i++) {
-      if (Math.abs(U[i][k]) > maxVal) {
-        maxVal = Math.abs(U[i][k]);
+      if (Math.abs(U[i]![k]!) > maxVal) {
+        maxVal = Math.abs(U[i]![k]!);
         maxRow = i;
       }
     }
 
     if (maxRow !== k) {
-      [U[k], U[maxRow]] = [U[maxRow], U[k]];
-      [P[k], P[maxRow]] = [P[maxRow], P[k]];
+      [U[k], U[maxRow]] = [U[maxRow]!, U[k]!];
+      [P[k], P[maxRow]] = [P[maxRow]!, P[k]!];
       if (k > 0) {
         for (let j = 0; j < k; j++) {
-          [L[k][j], L[maxRow][j]] = [L[maxRow][j], L[k][j]];
+          [L[k]![j], L[maxRow]![j]] = [L[maxRow]![j]!, L[k]![j]!];
         }
       }
     }
 
     for (let i = k + 1; i < n; i++) {
-      if (Math.abs(U[k][k]) < 1e-12) continue;
-      const factor = U[i][k] / U[k][k];
-      L[i][k] = factor;
+      if (Math.abs(U[k]![k]!) < 1e-12) continue;
+      const factor = U[i]![k]! / U[k]![k]!;
+      L[i]![k] = factor;
       for (let j = k; j < n; j++) {
-        U[i][j] -= factor * U[k][j];
+        U[i]![j]! -= factor * U[k]![j]!;
       }
     }
   }
@@ -166,11 +166,11 @@ function forwardSubstitution(L: Matrix, b: Vector): Vector {
   const n = L.length;
   const y: Vector = new Array<number>(n).fill(0);
   for (let i = 0; i < n; i++) {
-    let sum = b[i];
+    let sum = b[i]!;
     for (let j = 0; j < i; j++) {
-      sum -= L[i][j] * y[j];
+      sum -= L[i]![j]! * y[j]!;
     }
-    y[i] = sum / L[i][i];
+    y[i] = sum / L[i]![i]!;
   }
   return y;
 }
@@ -182,14 +182,14 @@ function backSubstitution(U: Matrix, y: Vector): Vector {
   const n = U.length;
   const x: Vector = new Array<number>(n).fill(0);
   for (let i = n - 1; i >= 0; i--) {
-    let sum = y[i];
+    let sum = y[i]!;
     for (let j = i + 1; j < n; j++) {
-      sum -= U[i][j] * x[j];
+      sum -= U[i]![j]! * x[j]!;
     }
-    if (Math.abs(U[i][i]) < 1e-12) {
+    if (Math.abs(U[i]![i]!) < 1e-12) {
       x[i] = 0;
     } else {
-      x[i] = sum / U[i][i];
+      x[i] = sum / U[i]![i]!;
     }
   }
   return x;
@@ -205,7 +205,7 @@ function solveLU(A: Matrix, b: Vector): Vector {
   // Apply permutation to b
   const pb: Vector = new Array<number>(n).fill(0);
   for (let i = 0; i < n; i++) {
-    pb[i] = b[P[i]];
+    pb[i] = b[P[i]!]!;
   }
 
   const y = forwardSubstitution(L, pb);
@@ -235,7 +235,7 @@ function matInverse(A: Matrix): Matrix {
     ej[j] = 1;
     const col = solveLU(A, ej);
     for (let i = 0; i < n; i++) {
-      inv[i][j] = col[i];
+      inv[i]![j] = col[i]!;
     }
   }
 
@@ -250,14 +250,14 @@ export function linearRegression(X: Matrix, y: Vector): LinearModel {
   const Xb = addBias(X);
   const beta = solveNormalEquations(Xb, y);
 
-  const intercept = beta[0];
+  const intercept = beta[0]!;
   const coefficients = beta.slice(1);
 
   const yPred = matVec(Xb, beta);
   const yMean = y.reduce((s, v) => s + v, 0) / y.length;
 
   const ssTot = y.reduce((s, v) => s + (v - yMean) ** 2, 0);
-  const ssRes = y.reduce((s, v, i) => s + (v - yPred[i]) ** 2, 0);
+  const ssRes = y.reduce((s, v, i) => s + (v - yPred[i]!) ** 2, 0);
 
   const rSq = ssTot < 1e-12 ? 1 : 1 - ssRes / ssTot;
   const msVal = ssRes / y.length;
@@ -271,7 +271,7 @@ export function predict(model: LinearModel, X: Matrix): Vector {
 
 export function residuals(model: LinearModel, X: Matrix, y: Vector): Vector {
   const yPred = predict(model, X);
-  return y.map((v, i) => v - yPred[i]);
+  return y.map((v, i) => v - yPred[i]!);
 }
 
 export function standardErrors(model: LinearModel, X: Matrix, y: Vector): Vector {
@@ -288,13 +288,13 @@ export function standardErrors(model: LinearModel, X: Matrix, y: Vector): Vector
   const XtXinv = matInverse(XtX);
 
   // SE for intercept + coefficients
-  const allSE = XtXinv.map((row, i) => Math.sqrt(Math.max(row[i] * sigmaSquared, 0)));
+  const allSE = XtXinv.map((row, i) => Math.sqrt(Math.max(row[i]! * sigmaSquared, 0)));
   return allSE.slice(1); // return only coefficient SEs
 }
 
 export function tStatistics(model: LinearModel, X: Matrix, y: Vector): Vector {
   const se = standardErrors(model, X, y);
-  return model.coefficients.map((c, i) => (se[i] < 1e-12 ? 0 : c / se[i]));
+  return model.coefficients.map((c, i) => (se[i]! < 1e-12 ? 0 : c / se[i]!));
 }
 
 /**
@@ -321,7 +321,7 @@ function tQuantile(alpha: number, df: number): number {
   if (!table) return normalQuantile(1 - alpha / 2);
 
   const idx = Math.min(df - 1, table.length - 1);
-  return table[Math.max(idx, 0)];
+  return table[Math.max(idx, 0)]!;
 }
 
 /**
@@ -340,15 +340,15 @@ function normalQuantile(p: number): number {
   if (Math.abs(y) < 0.42) {
     const r = y * y;
     return (
-      (y * (((a[3] * r + a[2]) * r + a[1]) * r + a[0])) /
-      ((((b[3] * r + b[2]) * r + b[1]) * r + b[0]) * r + 1)
+      (y * (((a[3]! * r + a[2]!) * r + a[1]!) * r + a[0]!)) /
+      ((((b[3]! * r + b[2]!) * r + b[1]!) * r + b[0]!) * r + 1)
     );
   }
 
   const r = p < 0.5 ? Math.log(-Math.log(p)) : Math.log(-Math.log(1 - p));
-  let x = c[0];
+  let x = c[0]!;
   for (let i = 1; i < c.length; i++) {
-    x += c[i] * r ** i;
+    x += c[i]! * r ** i;
   }
   return p < 0.5 ? -x : x;
 }
@@ -404,13 +404,13 @@ export function ridgeRegression(X: Matrix, y: Vector, lambda = 1.0): LinearModel
   const Xty = matVec(Xt, y);
   const beta = solveLU(XtXReg, Xty);
 
-  const intercept = beta[0];
+  const intercept = beta[0]!;
   const coefficients = beta.slice(1);
 
   const yPred = matVec(Xb, beta);
   const yMean = y.reduce((s, v) => s + v, 0) / y.length;
   const ssTot = y.reduce((s, v) => s + (v - yMean) ** 2, 0);
-  const ssRes = y.reduce((s, v, i) => s + (v - yPred[i]) ** 2, 0);
+  const ssRes = y.reduce((s, v, i) => s + (v - yPred[i]!) ** 2, 0);
   const rSq = ssTot < 1e-12 ? 1 : 1 - ssRes / ssTot;
   const msVal = ssRes / y.length;
 
@@ -427,20 +427,20 @@ export function lassoRegression(
   maxIter = 1000
 ): LinearModel {
   const n = X.length;
-  const numFeatures = X[0].length;
+  const numFeatures = X[0]!.length;
 
   // Standardize X
   const means: Vector = new Array<number>(numFeatures).fill(0);
   const stds: Vector = new Array<number>(numFeatures).fill(1);
 
   for (let j = 0; j < numFeatures; j++) {
-    const colVals = X.map((row) => row[j]);
+    const colVals = X.map((row) => row[j]!);
     means[j] = colVals.reduce((s, v) => s + v, 0) / n;
-    const variance = colVals.reduce((s, v) => s + (v - means[j]) ** 2, 0) / n;
+    const variance = colVals.reduce((s, v) => s + (v - means[j]!) ** 2, 0) / n;
     stds[j] = Math.sqrt(variance) || 1;
   }
 
-  const Xs: Matrix = X.map((row) => row.map((v, j) => (v - means[j]) / stds[j]));
+  const Xs: Matrix = X.map((row) => row.map((v, j) => (v - means[j]!) / stds[j]!));
 
   // Intercept from mean of y
   const yMean = y.reduce((s, v) => s + v, 0) / n;
@@ -450,8 +450,8 @@ export function lassoRegression(
   const yCenter = y.map((v) => v - yMean);
 
   // Precompute column dot products (X_j^T X_j)
-  const colNorms: Vector = Xs[0].map((_, j) => {
-    return Xs.reduce((s, row) => s + row[j] ** 2, 0);
+  const colNorms: Vector = Xs[0]!.map((_, j) => {
+    return Xs.reduce((s, row) => s + row[j]! ** 2, 0);
   });
 
   // Coordinate descent
@@ -459,38 +459,38 @@ export function lassoRegression(
     let maxChange = 0;
 
     for (let j = 0; j < numFeatures; j++) {
-      const oldBeta = beta[j];
+      const oldBeta = beta[j]!;
 
       // Compute partial residual
       const rho = Xs.reduce((s, row, i) => {
         let pred = 0;
         for (let k = 0; k < numFeatures; k++) {
-          if (k !== j) pred += Xs[i][k] * beta[k];
+          if (k !== j) pred += Xs[i]![k]! * beta[k]!;
         }
-        return s + row[j] * (yCenter[i] - pred);
+        return s + row[j]! * (yCenter[i]! - pred);
       }, 0);
 
-      const norm = colNorms[j];
+      const norm = colNorms[j]!;
       if (norm < 1e-12) {
         beta[j] = 0;
       } else {
         beta[j] = softThreshold(rho / norm, lambda / norm);
       }
 
-      maxChange = Math.max(maxChange, Math.abs(beta[j] - oldBeta));
+      maxChange = Math.max(maxChange, Math.abs(beta[j]! - oldBeta));
     }
 
     if (maxChange < 1e-6) break;
   }
 
   // Unstandardize: beta_orig_j = beta_std_j / std_j
-  const coefficients = beta.map((b, j) => b / stds[j]);
+  const coefficients = beta.map((b, j) => b / stds[j]!);
   const intercept = yMean - vecDot(coefficients, means);
 
   const yPred = X.map((row) => intercept + vecDot(coefficients, row));
   const yMeanOrig = y.reduce((s, v) => s + v, 0) / n;
   const ssTot = y.reduce((s, v) => s + (v - yMeanOrig) ** 2, 0);
-  const ssRes = y.reduce((s, v, i) => s + (v - yPred[i]) ** 2, 0);
+  const ssRes = y.reduce((s, v, i) => s + (v - yPred[i]!) ** 2, 0);
   const rSq = ssTot < 1e-12 ? 1 : 1 - ssRes / ssTot;
   const msVal = ssRes / n;
 
@@ -505,26 +505,26 @@ export function elasticNet(
   maxIter = 1000
 ): LinearModel {
   const n = X.length;
-  const numFeatures = X[0].length;
+  const numFeatures = X[0]!.length;
 
   // Standardize
   const means: Vector = new Array<number>(numFeatures).fill(0);
   const stds: Vector = new Array<number>(numFeatures).fill(1);
   for (let j = 0; j < numFeatures; j++) {
-    const colVals = X.map((row) => row[j]);
+    const colVals = X.map((row) => row[j]!);
     means[j] = colVals.reduce((s, v) => s + v, 0) / n;
-    const variance = colVals.reduce((s, v) => s + (v - means[j]) ** 2, 0) / n;
+    const variance = colVals.reduce((s, v) => s + (v - means[j]!) ** 2, 0) / n;
     stds[j] = Math.sqrt(variance) || 1;
   }
 
-  const Xs: Matrix = X.map((row) => row.map((v, j) => (v - means[j]) / stds[j]));
+  const Xs: Matrix = X.map((row) => row.map((v, j) => (v - means[j]!) / stds[j]!));
   const yMean = y.reduce((s, v) => s + v, 0) / n;
   const yCenter = y.map((v) => v - yMean);
 
   const beta: Vector = new Array<number>(numFeatures).fill(0);
 
-  const colNorms: Vector = Xs[0].map((_, j) =>
-    Xs.reduce((s, row) => s + row[j] ** 2, 0)
+  const colNorms: Vector = Xs[0]!.map((_, j) =>
+    Xs.reduce((s, row) => s + row[j]! ** 2, 0)
   );
 
   const lambdaL1 = alpha * l1Ratio;
@@ -534,36 +534,36 @@ export function elasticNet(
     let maxChange = 0;
 
     for (let j = 0; j < numFeatures; j++) {
-      const oldBeta = beta[j];
+      const oldBeta = beta[j]!;
 
       const rho = Xs.reduce((s, row, i) => {
         let pred = 0;
         for (let k = 0; k < numFeatures; k++) {
-          if (k !== j) pred += Xs[i][k] * beta[k];
+          if (k !== j) pred += Xs[i]![k]! * beta[k]!;
         }
-        return s + row[j] * (yCenter[i] - pred);
+        return s + row[j]! * (yCenter[i]! - pred);
       }, 0);
 
-      const norm = colNorms[j] + lambdaL2;
+      const norm = colNorms[j]! + lambdaL2;
       if (norm < 1e-12) {
         beta[j] = 0;
       } else {
         beta[j] = softThreshold(rho / norm, lambdaL1 / norm);
       }
 
-      maxChange = Math.max(maxChange, Math.abs(beta[j] - oldBeta));
+      maxChange = Math.max(maxChange, Math.abs(beta[j]! - oldBeta));
     }
 
     if (maxChange < 1e-6) break;
   }
 
-  const coefficients = beta.map((b, j) => b / stds[j]);
+  const coefficients = beta.map((b, j) => b / stds[j]!);
   const intercept = yMean - vecDot(coefficients, means);
 
   const yPred = X.map((row) => intercept + vecDot(coefficients, row));
   const yMeanOrig = y.reduce((s, v) => s + v, 0) / n;
   const ssTot = y.reduce((s, v) => s + (v - yMeanOrig) ** 2, 0);
-  const ssRes = y.reduce((s, v, i) => s + (v - yPred[i]) ** 2, 0);
+  const ssRes = y.reduce((s, v, i) => s + (v - yPred[i]!) ** 2, 0);
   const rSq = ssTot < 1e-12 ? 1 : 1 - ssRes / ssTot;
   const msVal = ssRes / n;
 
@@ -588,7 +588,7 @@ export function logisticRegression(
   const lambda = opts.lambda ?? 0.0;
 
   const n = X.length;
-  const p = X[0].length;
+  const p = X[0]!.length;
 
   let intercept = 0;
   let coefficients: Vector = new Array<number>(p).fill(0);
@@ -598,15 +598,15 @@ export function logisticRegression(
     const probs = X.map((row) => sigmoid(intercept + vecDot(coefficients, row)));
 
     // Gradients
-    const errors = probs.map((prob, i) => prob - y[i]);
+    const errors = probs.map((prob, i) => prob - y[i]!);
 
     const gradIntercept = errors.reduce((s, e) => s + e, 0) / n;
     const gradCoeffs = coefficients.map((_, j) =>
-      errors.reduce((s, e, i) => s + e * X[i][j], 0) / n + lambda * coefficients[j]
+      errors.reduce((s, e, i) => s + e * X[i]![j]!, 0) / n + lambda * coefficients[j]!
     );
 
     intercept -= lr * gradIntercept;
-    coefficients = coefficients.map((c, j) => c - lr * gradCoeffs[j]);
+    coefficients = coefficients.map((c, j) => c - lr * gradCoeffs[j]!);
   }
 
   const finalProbs = X.map((row) => sigmoid(intercept + vecDot(coefficients, row)));
@@ -631,7 +631,7 @@ export function logLoss(yTrue: Vector, yPred: Vector): number {
   const eps = 1e-12;
   return (
     -yTrue.reduce((s, y, i) => {
-      const p = clamp(yPred[i], eps, 1 - eps);
+      const p = clamp(yPred[i]!, eps, 1 - eps);
       return s + y * Math.log(p) + (1 - y) * Math.log(1 - p);
     }, 0) / yTrue.length
   );
@@ -644,12 +644,12 @@ export function logLoss(yTrue: Vector, yPred: Vector): number {
 export function rSquared(yTrue: Vector, yPred: Vector): number {
   const yMean = yTrue.reduce((s, v) => s + v, 0) / yTrue.length;
   const ssTot = yTrue.reduce((s, v) => s + (v - yMean) ** 2, 0);
-  const ssRes = yTrue.reduce((s, v, i) => s + (v - yPred[i]) ** 2, 0);
+  const ssRes = yTrue.reduce((s, v, i) => s + (v - yPred[i]!) ** 2, 0);
   return ssTot < 1e-12 ? 1 : 1 - ssRes / ssTot;
 }
 
 export function mse(yTrue: Vector, yPred: Vector): number {
-  return yTrue.reduce((s, v, i) => s + (v - yPred[i]) ** 2, 0) / yTrue.length;
+  return yTrue.reduce((s, v, i) => s + (v - yPred[i]!) ** 2, 0) / yTrue.length;
 }
 
 export function rmse(yTrue: Vector, yPred: Vector): number {
@@ -657,12 +657,12 @@ export function rmse(yTrue: Vector, yPred: Vector): number {
 }
 
 export function mae(yTrue: Vector, yPred: Vector): number {
-  return yTrue.reduce((s, v, i) => s + Math.abs(v - yPred[i]), 0) / yTrue.length;
+  return yTrue.reduce((s, v, i) => s + Math.abs(v - yPred[i]!), 0) / yTrue.length;
 }
 
 export function mape(yTrue: Vector, yPred: Vector): number {
   const validPairs = yTrue
-    .map((v, i) => ({ actual: v, pred: yPred[i] }))
+    .map((v, i) => ({ actual: v, pred: yPred[i]! }))
     .filter(({ actual }) => Math.abs(actual) > 1e-12);
   if (validPairs.length === 0) return 0;
   return (
@@ -706,9 +706,9 @@ export function confusionMatrix(yTrue: number[], yPred: number[]): Matrix {
   const matrix: Matrix = Array.from({ length: n }, () => new Array<number>(n).fill(0));
 
   for (let i = 0; i < yTrue.length; i++) {
-    const row = classIndex.get(yTrue[i])!;
-    const col = classIndex.get(yPred[i])!;
-    matrix[row][col]++;
+    const row = classIndex.get(yTrue[i]!)!;
+    const col = classIndex.get(yPred[i]!)!;
+    matrix[row]![col]!++;
   }
 
   return matrix;
@@ -716,7 +716,7 @@ export function confusionMatrix(yTrue: number[], yPred: number[]): Matrix {
 
 export function aucRoc(yTrue: number[], yScores: number[]): number {
   // Sort by descending score
-  const pairs = yTrue.map((y, i) => ({ y, score: yScores[i] })).sort((a, b) => b.score - a.score);
+  const pairs = yTrue.map((y, i) => ({ y, score: yScores[i]! })).sort((a, b) => b.score - a.score);
 
   const totalPos = yTrue.filter((v) => v === 1).length;
   const totalNeg = yTrue.length - totalPos;
@@ -751,7 +751,7 @@ export function aucRoc(yTrue: number[], yScores: number[]): number {
 }
 
 export function brierScore(yTrue: number[], yProbas: number[]): number {
-  return yTrue.reduce((s, y, i) => s + (y - yProbas[i]) ** 2, 0) / yTrue.length;
+  return yTrue.reduce((s, y, i) => s + (y - yProbas[i]!) ** 2, 0) / yTrue.length;
 }
 
 // ---------------------------------------------------------------------------
@@ -773,7 +773,7 @@ function shuffleIndices(n: number, rng: () => number): number[] {
   const indices = Array.from({ length: n }, (_, i) => i);
   for (let i = n - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
-    [indices[i], indices[j]] = [indices[j], indices[i]];
+    [indices[i], indices[j]] = [indices[j]!, indices[i]!];
   }
   return indices;
 }
@@ -805,10 +805,10 @@ export function kFoldCV(X: Matrix, y: Vector, k = 5, seed = 42): CrossValidation
   const scores: number[] = [];
 
   for (const { train, test } of folds) {
-    const XTrain = train.map((i) => X[i]);
-    const yTrain = train.map((i) => y[i]);
-    const XTest = test.map((i) => X[i]);
-    const yTest = test.map((i) => y[i]);
+    const XTrain = train.map((i) => X[i]!);
+    const yTrain = train.map((i) => y[i]!);
+    const XTest = test.map((i) => X[i]!);
+    const yTest = test.map((i) => y[i]!);
 
     const model = linearRegression(XTrain, yTrain);
     const yPred = predict(model, XTest);
@@ -828,10 +828,10 @@ export function leaveOneOutCV(X: Matrix, y: Vector): CrossValidationResult {
 
   for (let i = 0; i < n; i++) {
     const trainIdx = Array.from({ length: n }, (_, j) => j).filter((j) => j !== i);
-    const XTrain = trainIdx.map((j) => X[j]);
-    const yTrain = trainIdx.map((j) => y[j]);
-    const XTest = [X[i]];
-    const yTest = [y[i]];
+    const XTrain = trainIdx.map((j) => X[j]!);
+    const yTrain = trainIdx.map((j) => y[j]!);
+    const XTest = [X[i]!];
+    const yTest = [y[i]!];
 
     const model = linearRegression(XTrain, yTrain);
     const yPred = predict(model, XTest);
@@ -860,10 +860,10 @@ export function trainTestSplit(
   const trainIdx = indices.slice(nTest);
 
   return {
-    XTrain: trainIdx.map((i) => X[i]),
-    XTest: testIdx.map((i) => X[i]),
-    yTrain: trainIdx.map((i) => y[i]),
-    yTest: testIdx.map((i) => y[i]),
+    XTrain: trainIdx.map((i) => X[i]!),
+    XTest: testIdx.map((i) => X[i]!),
+    yTrain: trainIdx.map((i) => y[i]!),
+    yTest: testIdx.map((i) => y[i]!),
   };
 }
 
@@ -873,37 +873,37 @@ export function trainTestSplit(
 
 export function standardizeFeatures(X: Matrix): { X: Matrix; means: Vector; stds: Vector } {
   const n = X.length;
-  const p = X[0].length;
+  const p = X[0]!.length;
   const means: Vector = new Array<number>(p).fill(0);
   const stds: Vector = new Array<number>(p).fill(1);
 
   for (let j = 0; j < p; j++) {
-    const col = X.map((row) => row[j]);
+    const col = X.map((row) => row[j]!);
     means[j] = col.reduce((s, v) => s + v, 0) / n;
-    const variance = col.reduce((s, v) => s + (v - means[j]) ** 2, 0) / n;
+    const variance = col.reduce((s, v) => s + (v - means[j]!) ** 2, 0) / n;
     stds[j] = Math.sqrt(variance) || 1;
   }
 
-  const Xnorm: Matrix = X.map((row) => row.map((v, j) => (v - means[j]) / stds[j]));
+  const Xnorm: Matrix = X.map((row) => row.map((v, j) => (v - means[j]!) / stds[j]!));
   return { X: Xnorm, means, stds };
 }
 
 export function normalizeFeatures(X: Matrix): { X: Matrix; mins: Vector; maxes: Vector } {
-  const p = X[0].length;
+  const p = X[0]!.length;
   const mins: Vector = new Array<number>(p).fill(Infinity);
   const maxes: Vector = new Array<number>(p).fill(-Infinity);
 
   for (const row of X) {
     for (let j = 0; j < p; j++) {
-      mins[j] = Math.min(mins[j], row[j]);
-      maxes[j] = Math.max(maxes[j], row[j]);
+      mins[j] = Math.min(mins[j]!, row[j]!);
+      maxes[j] = Math.max(maxes[j]!, row[j]!);
     }
   }
 
   const Xnorm: Matrix = X.map((row) =>
     row.map((v, j) => {
-      const range = maxes[j] - mins[j];
-      return range < 1e-12 ? 0 : (v - mins[j]) / range;
+      const range = maxes[j]! - mins[j]!;
+      return range < 1e-12 ? 0 : (v - mins[j]!) / range;
     })
   );
 
@@ -915,7 +915,7 @@ export function polynomialFeatures(X: Matrix, degree: number): Matrix {
   if (degree === 1) return X;
 
   const n = X.length;
-  const p = X[0].length;
+  const p = X[0]!.length;
 
   return X.map((row) => {
     const features: number[] = [...row];
@@ -923,11 +923,11 @@ export function polynomialFeatures(X: Matrix, degree: number): Matrix {
     if (degree >= 2) {
       // Add degree-2 terms: x_i^2 and x_i * x_j for all i <= j
       for (let i = 0; i < p; i++) {
-        features.push(row[i] ** 2);
+        features.push(row[i]! ** 2);
       }
       for (let i = 0; i < p; i++) {
         for (let j = i + 1; j < p; j++) {
-          features.push(row[i] * row[j]);
+          features.push(row[i]! * row[j]!);
         }
       }
     }
@@ -935,17 +935,17 @@ export function polynomialFeatures(X: Matrix, degree: number): Matrix {
     if (degree >= 3) {
       // Add degree-3 terms: x_i^3, x_i^2 * x_j, x_i * x_j * x_k
       for (let i = 0; i < p; i++) {
-        features.push(row[i] ** 3);
+        features.push(row[i]! ** 3);
       }
       for (let i = 0; i < p; i++) {
         for (let j = 0; j < p; j++) {
-          if (i !== j) features.push(row[i] ** 2 * row[j]);
+          if (i !== j) features.push(row[i]! ** 2 * row[j]!);
         }
       }
       for (let i = 0; i < p; i++) {
         for (let j = i + 1; j < p; j++) {
           for (let k = j + 1; k < p; k++) {
-            features.push(row[i] * row[j] * row[k]);
+            features.push(row[i]! * row[j]! * row[k]!);
           }
         }
       }
@@ -960,14 +960,14 @@ export function polynomialFeatures(X: Matrix, degree: number): Matrix {
 
 export function featureCorrelation(X: Matrix): Matrix {
   const n = X.length;
-  const p = X[0].length;
+  const p = X[0]!.length;
   const means: Vector = new Array<number>(p).fill(0);
   const stds: Vector = new Array<number>(p).fill(0);
 
   for (let j = 0; j < p; j++) {
-    const col = X.map((row) => row[j]);
+    const col = X.map((row) => row[j]!);
     means[j] = col.reduce((s, v) => s + v, 0) / n;
-    stds[j] = Math.sqrt(col.reduce((s, v) => s + (v - means[j]) ** 2, 0) / n);
+    stds[j] = Math.sqrt(col.reduce((s, v) => s + (v - means[j]!) ** 2, 0) / n);
   }
 
   const corrMatrix: Matrix = Array.from({ length: p }, () => new Array<number>(p).fill(0));
@@ -975,12 +975,12 @@ export function featureCorrelation(X: Matrix): Matrix {
   for (let i = 0; i < p; i++) {
     for (let j = 0; j < p; j++) {
       if (i === j) {
-        corrMatrix[i][j] = 1;
+        corrMatrix[i]![j] = 1;
       } else {
         const cov =
-          X.reduce((s, row) => s + (row[i] - means[i]) * (row[j] - means[j]), 0) / n;
-        const denom = stds[i] * stds[j];
-        corrMatrix[i][j] = denom < 1e-12 ? 0 : cov / denom;
+          X.reduce((s, row) => s + (row[i]! - means[i]!) * (row[j]! - means[j]!), 0) / n;
+        const denom = stds[i]! * stds[j]!;
+        corrMatrix[i]![j] = denom < 1e-12 ? 0 : cov / denom;
       }
     }
   }
@@ -993,11 +993,11 @@ export function varianceThreshold(
   threshold = 0.01
 ): { X: Matrix; kept: number[] } {
   const n = X.length;
-  const p = X[0].length;
+  const p = X[0]!.length;
   const kept: number[] = [];
 
   for (let j = 0; j < p; j++) {
-    const col = X.map((row) => row[j]);
+    const col = X.map((row) => row[j]!);
     const mean = col.reduce((s, v) => s + v, 0) / n;
     const variance = col.reduce((s, v) => s + (v - mean) ** 2, 0) / n;
     if (variance >= threshold) {
@@ -1005,7 +1005,7 @@ export function varianceThreshold(
     }
   }
 
-  const Xfiltered: Matrix = X.map((row) => kept.map((j) => row[j]));
+  const Xfiltered: Matrix = X.map((row) => kept.map((j) => row[j]!));
   return { X: Xfiltered, kept };
 }
 
@@ -1023,9 +1023,9 @@ function pearsonCorrelation(x: Vector, y: Vector): number {
   let yVar = 0;
 
   for (let i = 0; i < n; i++) {
-    cov += (x[i] - xMean) * (y[i] - yMean);
-    xVar += (x[i] - xMean) ** 2;
-    yVar += (y[i] - yMean) ** 2;
+    cov += (x[i]! - xMean) * (y[i]! - yMean);
+    xVar += (x[i]! - xMean) ** 2;
+    yVar += (y[i]! - yMean) ** 2;
   }
 
   const denom = Math.sqrt(xVar * yVar);
@@ -1033,11 +1033,11 @@ function pearsonCorrelation(x: Vector, y: Vector): number {
 }
 
 export function pearsonFeatureImportance(X: Matrix, y: Vector): FeatureImportance[] {
-  const p = X[0].length;
+  const p = X[0]!.length;
   const importances: FeatureImportance[] = [];
 
   for (let j = 0; j < p; j++) {
-    const col = X.map((row) => row[j]);
+    const col = X.map((row) => row[j]!);
     const corr = pearsonCorrelation(col, y);
     importances.push({ index: j, importance: Math.abs(corr) });
   }
@@ -1066,19 +1066,19 @@ export function mutualInformationScore(x: Vector, y: Vector, bins = 10): number 
   const yCounts: number[] = new Array<number>(bins).fill(0);
 
   for (let i = 0; i < n; i++) {
-    const xi = discretize(x[i], xMin, xRange);
-    const yi = discretize(y[i], yMin, yRange);
-    joint[xi][yi]++;
-    xCounts[xi]++;
-    yCounts[yi]++;
+    const xi = discretize(x[i]!, xMin, xRange);
+    const yi = discretize(y[i]!, yMin, yRange);
+    joint[xi]![yi]!++;
+    xCounts[xi]!++;
+    yCounts[yi]!++;
   }
 
   let mi = 0;
   for (let xi = 0; xi < bins; xi++) {
     for (let yi = 0; yi < bins; yi++) {
-      const pxy = joint[xi][yi] / n;
-      const px = xCounts[xi] / n;
-      const py = yCounts[yi] / n;
+      const pxy = joint[xi]![yi]! / n;
+      const px = xCounts[xi]! / n;
+      const py = yCounts[yi]! / n;
       if (pxy > 0 && px > 0 && py > 0) {
         mi += pxy * Math.log(pxy / (px * py));
       }
@@ -1099,7 +1099,7 @@ export function selectKBest(
     .map((f) => f.index)
     .sort((a, b) => a - b);
 
-  const Xselected: Matrix = X.map((row) => selected.map((j) => row[j]));
+  const Xselected: Matrix = X.map((row) => selected.map((j) => row[j]!));
   return { X: Xselected, selected };
 }
 
@@ -1109,10 +1109,10 @@ export function recursiveFeatureElimination(
   k: number,
   stepSize = 1
 ): number[] {
-  let remaining = Array.from({ length: X[0].length }, (_, i) => i);
+  let remaining = Array.from({ length: X[0]!.length }, (_, i) => i);
 
   while (remaining.length > k) {
-    const Xcurrent = X.map((row) => remaining.map((j) => row[j]));
+    const Xcurrent = X.map((row) => remaining.map((j) => row[j]!));
     const model = ridgeRegression(Xcurrent, y, 1.0);
 
     // Find the weakest coefficient(s)

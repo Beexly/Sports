@@ -72,15 +72,15 @@ function linspace(start: number, stop: number, n: number): number[] {
 
 // Simple y = 2x + 1 data
 const X_LINE: number[][] = linspace(0, 10, 50).map((x) => [x]);
-const Y_LINE: number[] = X_LINE.map(([x]) => 2 * x + 1);
+const Y_LINE: number[] = X_LINE.map(([x]) => 2 * x! + 1);
 
 // Two-feature data: y = 3*x1 + 2*x2 + 5
 const X_2F: number[][] = Array.from({ length: 40 }, (_, i) => [i % 10, Math.floor(i / 10)]);
-const Y_2F: number[] = X_2F.map(([x1, x2]) => 3 * x1 + 2 * x2 + 5);
+const Y_2F: number[] = X_2F.map(([x1, x2]) => 3 * x1! + 2 * x2! + 5);
 
 // Logistic data: y=1 if x>5 else y=0
 const X_LOG: number[][] = linspace(0, 10, 60).map((x) => [x]);
-const Y_LOG: number[] = X_LOG.map(([x]) => (x > 5 ? 1 : 0));
+const Y_LOG: number[] = X_LOG.map(([x]) => (x! > 5 ? 1 : 0));
 
 // ---------------------------------------------------------------------------
 // Linear Algebra
@@ -128,17 +128,17 @@ describe("matMul", () => {
       [7, 8],
     ];
     const c = matMul(a, b);
-    expect(c[0][0]).toBe(19);
-    expect(c[0][1]).toBe(22);
-    expect(c[1][0]).toBe(43);
-    expect(c[1][1]).toBe(50);
+    expect(c[0]![0]).toBe(19);
+    expect(c[0]![1]).toBe(22);
+    expect(c[1]![0]).toBe(43);
+    expect(c[1]![1]).toBe(50);
   });
 
   it("multiplies non-square matrices", () => {
     const a = [[1, 2, 3]]; // 1x3
     const b = [[4], [5], [6]]; // 3x1
     const c = matMul(a, b);
-    expect(c[0][0]).toBe(32);
+    expect(c[0]![0]).toBe(32);
   });
 
   it("identity matrix multiplication", () => {
@@ -219,10 +219,10 @@ describe("addBias", () => {
       [3, 4],
     ];
     const Xb = addBias(X);
-    expect(Xb[0][0]).toBe(1);
-    expect(Xb[1][0]).toBe(1);
-    expect(Xb[0].slice(1)).toEqual([1, 2]);
-    expect(Xb[1].slice(1)).toEqual([3, 4]);
+    expect(Xb[0]![0]).toBe(1);
+    expect(Xb[1]![0]).toBe(1);
+    expect(Xb[0]!.slice(1)).toEqual([1, 2]);
+    expect(Xb[1]!.slice(1)).toEqual([3, 4]);
   });
 
   it("adds bias to single column", () => {
@@ -244,8 +244,8 @@ describe("solveNormalEquations", () => {
     const beta = solveNormalEquations(X, y);
     // Should be close to [1, 2]
     expect(beta).toHaveLength(2);
-    expect(approx(beta[0], 1, 0.2)).toBe(true);
-    expect(approx(beta[1], 2, 0.2)).toBe(true);
+    expect(approx(beta[0]!, 1, 0.2)).toBe(true);
+    expect(approx(beta[1]!, 2, 0.2)).toBe(true);
   });
 });
 
@@ -257,7 +257,7 @@ describe("linearRegression — OLS", () => {
   it("perfect fit on y=2x+1", () => {
     const model = linearRegression(X_LINE, Y_LINE);
     expect(approx(model.intercept, 1, 0.01)).toBe(true);
-    expect(approx(model.coefficients[0], 2, 0.01)).toBe(true);
+    expect(approx(model.coefficients[0]!, 2, 0.01)).toBe(true);
     expect(approx(model.rSquared, 1.0, 1e-6)).toBe(true);
     expect(approx(model.mse, 0, 1e-6)).toBe(true);
   });
@@ -279,8 +279,8 @@ describe("linearRegression — OLS", () => {
   it("two-feature regression: y=3x1+2x2+5", () => {
     const model = linearRegression(X_2F, Y_2F);
     expect(approx(model.intercept, 5, 0.1)).toBe(true);
-    expect(approx(model.coefficients[0], 3, 0.1)).toBe(true);
-    expect(approx(model.coefficients[1], 2, 0.1)).toBe(true);
+    expect(approx(model.coefficients[0]!, 3, 0.1)).toBe(true);
+    expect(approx(model.coefficients[1]!, 2, 0.1)).toBe(true);
   });
 
   it("MSE is 0 for perfect fit", () => {
@@ -301,14 +301,14 @@ describe("predict", () => {
     const model = linearRegression(X_LINE, Y_LINE);
     const yPred = predict(model, X_LINE);
     yPred.forEach((p, i) => {
-      expect(approx(p, Y_LINE[i], 0.01)).toBe(true);
+      expect(approx(p, Y_LINE[i]!, 0.01)).toBe(true);
     });
   });
 
   it("extrapolates correctly", () => {
     const model = linearRegression(X_LINE, Y_LINE);
     const yPred = predict(model, [[20]]);
-    expect(approx(yPred[0], 41, 0.1)).toBe(true); // 2*20+1
+    expect(approx(yPred[0]!, 41, 0.1)).toBe(true); // 2*20+1
   });
 
   it("returns same length as input", () => {
@@ -373,7 +373,7 @@ describe("tStatistics", () => {
     const model = linearRegression(X, y);
     const t = tStatistics(model, X, y);
     // Coefficient should be statistically significant (|t| > 2)
-    expect(Math.abs(t[0])).toBeGreaterThan(2);
+    expect(Math.abs(t[0]!)).toBeGreaterThan(2);
   });
 });
 
@@ -407,19 +407,19 @@ describe("ridgeRegression", () => {
   it("ridge coefficients are smaller than OLS for high lambda", () => {
     const ols = linearRegression(X_LINE, Y_LINE);
     const ridge = ridgeRegression(X_LINE, Y_LINE, 100);
-    expect(Math.abs(ridge.coefficients[0])).toBeLessThan(Math.abs(ols.coefficients[0]));
+    expect(Math.abs(ridge.coefficients[0]!)).toBeLessThan(Math.abs(ols.coefficients[0]!));
   });
 
   it("ridge with lambda=0 is close to OLS", () => {
     const ols = linearRegression(X_LINE, Y_LINE);
     const ridge = ridgeRegression(X_LINE, Y_LINE, 0.0001);
-    expect(approx(ridge.coefficients[0], ols.coefficients[0], 0.05)).toBe(true);
+    expect(approx(ridge.coefficients[0]!, ols.coefficients[0]!, 0.05)).toBe(true);
   });
 
   it("ridge coefficients shrink toward zero as lambda increases", () => {
     const ridge1 = ridgeRegression(X_LINE, Y_LINE, 1);
     const ridge100 = ridgeRegression(X_LINE, Y_LINE, 100);
-    expect(Math.abs(ridge100.coefficients[0])).toBeLessThan(Math.abs(ridge1.coefficients[0]));
+    expect(Math.abs(ridge100.coefficients[0]!)).toBeLessThan(Math.abs(ridge1.coefficients[0]!));
   });
 
   it("returns valid model structure", () => {
@@ -438,7 +438,7 @@ describe("ridgeRegression", () => {
   it("default lambda is 1.0", () => {
     const m1 = ridgeRegression(X_LINE, Y_LINE);
     const m2 = ridgeRegression(X_LINE, Y_LINE, 1.0);
-    expect(approx(m1.coefficients[0], m2.coefficients[0], 1e-8)).toBe(true);
+    expect(approx(m1.coefficients[0]!, m2.coefficients[0]!, 1e-8)).toBe(true);
   });
 });
 
@@ -450,7 +450,7 @@ describe("lassoRegression", () => {
   it("lasso with high lambda produces sparse coefficients", () => {
     const X = [[1, 0.01], [2, 0.02], [3, 0.03], [4, 0.04], [5, 0.05],
                [6, 0.06], [7, 0.07], [8, 0.08], [9, 0.09], [10, 0.1]];
-    const y = X.map(([x1]) => 3 * x1 + 1);
+    const y = X.map(([x1]) => 3 * x1! + 1);
     const model = lassoRegression(X, y, 10.0);
     // With high lambda, at least one coefficient should be near zero
     const zeroCoeffs = model.coefficients.filter((c) => Math.abs(c) < 0.5).length;
@@ -474,7 +474,7 @@ describe("lassoRegression", () => {
     const X = [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]];
     const y = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const model = lassoRegression(X, y, 100.0);
-    expect(Math.abs(model.coefficients[0])).toBeLessThan(2.0);
+    expect(Math.abs(model.coefficients[0]!)).toBeLessThan(2.0);
   });
 
   it("default lambda is 0.1 and maxIter 1000", () => {
@@ -508,7 +508,7 @@ describe("elasticNet", () => {
     const ridge = ridgeRegression(X_LINE, Y_LINE, 0.5);
     const en = elasticNet(X_LINE, Y_LINE, 0.5, 0.0);
     // Both should shrink coefficients
-    expect(Math.abs(en.coefficients[0])).toBeLessThan(3);
+    expect(Math.abs(en.coefficients[0]!)).toBeLessThan(3);
   });
 
   it("elastic net with low alpha has high R²", () => {
@@ -781,10 +781,10 @@ describe("confusionMatrix", () => {
   it("diagonal contains correct counts for perfect classifier", () => {
     const y = [0, 1, 0, 1];
     const cm = confusionMatrix(y, y);
-    expect(cm[0][0]).toBe(2); // TN
-    expect(cm[1][1]).toBe(2); // TP
-    expect(cm[0][1]).toBe(0); // FP
-    expect(cm[1][0]).toBe(0); // FN
+    expect(cm[0]![0]).toBe(2); // TN
+    expect(cm[1]![1]).toBe(2); // TP
+    expect(cm[0]![1]).toBe(0); // FP
+    expect(cm[1]![0]).toBe(0); // FN
   });
 
   it("auto-detects 3 classes", () => {
@@ -799,8 +799,8 @@ describe("confusionMatrix", () => {
     const y = [0, 0, 1, 1];
     const yPred = [1, 0, 0, 1];
     const cm = confusionMatrix(y, yPred);
-    expect(cm[0][1]).toBe(1); // FP
-    expect(cm[1][0]).toBe(1); // FN
+    expect(cm[0]![1]).toBe(1); // FP
+    expect(cm[1]![0]).toBe(1); // FN
   });
 });
 
@@ -894,14 +894,14 @@ describe("kFoldSplit", () => {
   it("same seed gives same splits", () => {
     const f1 = kFoldSplit(20, 4, 123);
     const f2 = kFoldSplit(20, 4, 123);
-    expect(f1[0].test).toEqual(f2[0].test);
+    expect(f1[0]!.test).toEqual(f2[0]!.test);
   });
 
   it("different seeds give different splits", () => {
     const f1 = kFoldSplit(20, 4, 1);
     const f2 = kFoldSplit(20, 4, 2);
     // Very likely to differ
-    const same = f1[0].test.every((v, i) => v === f2[0].test[i]);
+    const same = f1[0]!.test.every((v, i) => v === f2[0]!.test[i]);
     expect(same).toBe(false);
   });
 });
@@ -942,7 +942,7 @@ describe("leaveOneOutCV", () => {
 
   it("mean R² is close to 1 for perfect data", () => {
     const X = [[1], [2], [3], [4], [5], [6], [7]];
-    const y = X.map(([x]) => 2 * x + 3);
+    const y = X.map(([x]) => 2 * x! + 3);
     const result = leaveOneOutCV(X, y);
     // LOO on perfect linear data should give high R²
     expect(result.mean).toBeGreaterThan(0.9);
@@ -988,7 +988,7 @@ describe("standardizeFeatures", () => {
     const { X: Xstd, means, stds } = standardizeFeatures(X);
 
     for (let j = 0; j < 2; j++) {
-      const col = Xstd.map((r) => r[j]);
+      const col = Xstd.map((r) => r[j]!);
       const colMean = col.reduce((s, v) => s + v, 0) / col.length;
       const colStd = Math.sqrt(col.reduce((s, v) => s + (v - colMean) ** 2, 0) / col.length);
       expect(Math.abs(colMean)).toBeLessThan(1e-10);
@@ -1002,7 +1002,7 @@ describe("standardizeFeatures", () => {
   it("returns correct means", () => {
     const X = [[1], [3], [5]];
     const { means } = standardizeFeatures(X);
-    expect(approx(means[0], 3, 1e-8)).toBe(true);
+    expect(approx(means[0]!, 3, 1e-8)).toBe(true);
   });
 });
 
@@ -1021,7 +1021,7 @@ describe("normalizeFeatures", () => {
   it("min becomes 0 and max becomes 1", () => {
     const X = [[2], [5], [8]];
     const { X: Xnorm } = normalizeFeatures(X);
-    const col = Xnorm.map((r) => r[0]);
+    const col = Xnorm.map((r) => r[0]!);
     expect(Math.min(...col)).toBe(0);
     expect(Math.max(...col)).toBe(1);
   });
@@ -1046,8 +1046,8 @@ describe("polynomialFeatures", () => {
     const Xp = polynomialFeatures(X, 2);
     // [x, x²]
     expect(Xp[0]).toHaveLength(2);
-    expect(Xp[0][1]).toBe(4); // 2²
-    expect(Xp[1][1]).toBe(9); // 3²
+    expect(Xp[0]![1]).toBe(4); // 2²
+    expect(Xp[1]![1]).toBe(9); // 3²
   });
 
   it("degree=2 with 2 features adds x1², x2², x1*x2", () => {
@@ -1055,16 +1055,16 @@ describe("polynomialFeatures", () => {
     const Xp = polynomialFeatures(X, 2);
     // [x1, x2, x1², x2², x1*x2]
     expect(Xp[0]).toHaveLength(5);
-    expect(Xp[0][2]).toBe(4);   // x1²
-    expect(Xp[0][3]).toBe(9);   // x2²
-    expect(Xp[0][4]).toBe(6);   // x1*x2
+    expect(Xp[0]![2]).toBe(4);   // x1²
+    expect(Xp[0]![3]).toBe(9);   // x2²
+    expect(Xp[0]![4]).toBe(6);   // x1*x2
   });
 
   it("degree=2 increases column count beyond degree=1", () => {
     const X = [[1, 2, 3], [4, 5, 6]];
     const Xp1 = polynomialFeatures(X, 1);
     const Xp2 = polynomialFeatures(X, 2);
-    expect(Xp2[0].length).toBeGreaterThan(Xp1[0].length);
+    expect(Xp2[0]!.length).toBeGreaterThan(Xp1[0]!.length);
   });
 
   it("for p=2, d=2 we get exactly 5 features", () => {
@@ -1079,20 +1079,20 @@ describe("featureCorrelation", () => {
   it("diagonal is all 1s", () => {
     const X = [[1, 2], [3, 4], [5, 6], [7, 8]];
     const corr = featureCorrelation(X);
-    expect(approx(corr[0][0], 1.0, 1e-8)).toBe(true);
-    expect(approx(corr[1][1], 1.0, 1e-8)).toBe(true);
+    expect(approx(corr[0]![0]!, 1.0, 1e-8)).toBe(true);
+    expect(approx(corr[1]![1]!, 1.0, 1e-8)).toBe(true);
   });
 
   it("perfectly correlated features have correlation=1", () => {
     const X = [[1, 2], [2, 4], [3, 6], [4, 8]];
     const corr = featureCorrelation(X);
-    expect(approx(corr[0][1], 1.0, 0.01)).toBe(true);
+    expect(approx(corr[0]![1]!, 1.0, 0.01)).toBe(true);
   });
 
   it("correlation matrix is symmetric", () => {
     const X = [[1, 3], [2, 1], [3, 4], [4, 2]];
     const corr = featureCorrelation(X);
-    expect(approx(corr[0][1], corr[1][0], 1e-8)).toBe(true);
+    expect(approx(corr[0]![1]!, corr[1]![0]!, 1e-8)).toBe(true);
   });
 
   it("returns p×p matrix", () => {
@@ -1115,7 +1115,7 @@ describe("varianceThreshold", () => {
   it("reduces column count", () => {
     const X = [[1, 5, 10], [2, 5, 20], [3, 5, 30]];
     const { X: Xf } = varianceThreshold(X, 5);
-    expect(Xf[0].length).toBeLessThan(3);
+    expect(Xf[0]!.length).toBeLessThan(3);
   });
 
   it("default threshold is 0.01", () => {
@@ -1135,7 +1135,7 @@ describe("pearsonFeatureImportance", () => {
     const X = [[1, 100], [2, 50], [3, 200], [4, 300], [5, 150]];
     const y = [1, 2, 3, 4, 5]; // perfectly correlated with feature 0
     const imp = pearsonFeatureImportance(X, y);
-    expect(imp[0].index).toBe(0);
+    expect(imp[0]!.index).toBe(0);
   });
 
   it("returns p importances", () => {
@@ -1149,7 +1149,7 @@ describe("pearsonFeatureImportance", () => {
     const X = [[1], [2], [3], [4], [5]];
     const y = [5, 4, 3, 2, 1]; // negatively correlated
     const imp = pearsonFeatureImportance(X, y);
-    expect(imp[0].importance).toBeGreaterThanOrEqual(0);
+    expect(imp[0]!.importance).toBeGreaterThanOrEqual(0);
   });
 
   it("sorted descending by importance", () => {
@@ -1157,7 +1157,7 @@ describe("pearsonFeatureImportance", () => {
     const y = [2, 4, 6, 8, 10];
     const imp = pearsonFeatureImportance(X, y);
     for (let i = 0; i < imp.length - 1; i++) {
-      expect(imp[i].importance).toBeGreaterThanOrEqual(imp[i + 1].importance);
+      expect(imp[i]!.importance).toBeGreaterThanOrEqual(imp[i + 1]!.importance);
     }
   });
 });
@@ -1258,7 +1258,7 @@ describe("teamEfficiencyRegression", () => {
       105 - i * 0.5,
       i * 2,
     ]);
-    const wins = features.map(([off, def, pace]) => off * 0.3 - def * 0.2 + pace * 0.1);
+    const wins = features.map(([off, def, pace]) => off! * 0.3 - def! * 0.2 + pace! * 0.1);
     const model = teamEfficiencyRegression(features, wins);
     expect(model.coefficients).toHaveLength(3);
     expect(model.rSquared).toBeGreaterThan(0.9);
@@ -1270,14 +1270,14 @@ describe("playerImpactScore", () => {
     const stats: number[][] = Array.from({ length: 15 }, (_, i) => [
       10 + i, 5 + i * 0.5, 3 + i * 0.2,
     ]);
-    const outcome = stats.map(([pts]) => pts * 0.1);
+    const outcome = stats.map(([pts]) => pts! * 0.1);
     const scores = playerImpactScore(stats, outcome);
     expect(scores).toHaveLength(3);
   });
 
   it("returns numeric impact scores", () => {
     const stats: number[][] = Array.from({ length: 15 }, (_, i) => [i, i * 2]);
-    const outcome = stats.map(([a]) => a * 2);
+    const outcome = stats.map(([a]) => a! * 2);
     const scores = playerImpactScore(stats, outcome);
     scores.forEach((s) => {
       expect(typeof s).toBe("number");
@@ -1292,7 +1292,7 @@ describe("gameOutcomePrediction", () => {
     const homeF = [5.0];
     const awayF = [4.0];
     // Build a model for 2 features
-    const X2 = X_LOG.map(([x]) => [x, x * 0.8]);
+    const X2 = X_LOG.map(([x]) => [x!, x! * 0.8]);
     const model2 = logisticRegression(X2, Y_LOG, { lr: 0.05, maxIter: 500 });
     const result = gameOutcomePrediction(homeF, awayF, model2);
     expect(approx(result.homeWinProb + result.awayWinProb, 1.0, 1e-8)).toBe(true);
@@ -1301,7 +1301,7 @@ describe("gameOutcomePrediction", () => {
   it("home and away probabilities are between 0 and 1", () => {
     const X2 = [[1, 0.1], [2, 0.2], [3, 0.3], [4, 0.4], [5, 0.5],
                 [6, 0.6], [7, 0.7], [8, 0.8], [9, 0.9], [10, 1.0]];
-    const y2 = X2.map(([x]) => x > 5 ? 1 : 0);
+    const y2 = X2.map(([x]) => x! > 5 ? 1 : 0);
     const model = logisticRegression(X2, y2, { lr: 0.05, maxIter: 300 });
     const result = gameOutcomePrediction([7], [4], model);
     expect(result.homeWinProb).toBeGreaterThanOrEqual(0);
@@ -1312,7 +1312,7 @@ describe("gameOutcomePrediction", () => {
 
   it("stronger home team has higher win probability", () => {
     const X2 = Array.from({ length: 20 }, (_, i) => [i * 0.5, 10 - i * 0.4]);
-    const y2 = X2.map(([x]) => x > 5 ? 1 : 0);
+    const y2 = X2.map(([x]) => x! > 5 ? 1 : 0);
     const model = logisticRegression(X2, y2, { lr: 0.05, maxIter: 500 });
     // Home team with strong features vs weak away team
     const strong = gameOutcomePrediction([9], [1], model);
