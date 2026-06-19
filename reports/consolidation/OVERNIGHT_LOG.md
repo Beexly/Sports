@@ -27,9 +27,15 @@ Three Sonnet research workers produced license-vetted, velocity-biased catalogs 
   Wikidata CC0, HIFLD venues) + MIT Discord/Telegram distribution bot skeletons + `feed` (MIT) RSS spine.
   NC/ToS-restricted sources correctly parked.
 
+### [S2] Free-LLM pool widened with 4 free-tier OpenAI-compatible providers — this commit
+- Added Mistral, NVIDIA NIM, GitHub Models, Cohere to `providers/registry.ts` (keyed-free, INERT until the
+  owner sets each key → $0, zero risk; widens the pool + perspective diversity). Cloudflare Workers AI parked
+  (its base URL needs a per-account ACCOUNT_ID — doesn't fit the static-baseUrl shape).
+- Documented the 4 optional keys in `.env.example`.
+- Gate: tsc 0 · provider-pool 8/8 · model-router 5/5 · free-lane 6/6 · env-coverage ✓ · trust-gate ✓ · build exit 0.
+
 ## Integration queue (safe, build-verifiable, derived from the catalog)
-- [next] Extend the free-LLM provider registry with additional free-tier OpenAI-compatible providers
-  (inert until the owner sets a key — widens the pool at $0; pure config + build/test verified).
+- [done S2] Extend the free-LLM provider registry with additional free-tier OpenAI-compatible providers.
 - Register the new keyless/free data + API sources in `source-rights-registry.ts` + `cost-policy.ts`
   (catalog + clearance entries only — no live extraction).
 - Re-implement small permissive utilities TS-native (reliability-diagram helper, sparkline) with attribution,

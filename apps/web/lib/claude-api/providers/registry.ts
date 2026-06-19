@@ -95,6 +95,40 @@ export const FREE_PROVIDERS: readonly Provider[] = [
     model: "gemini-2.0-flash",
     apiKeyEnv: "GEMINI_API_KEY",
   },
+  // ── Additional free-tier OpenAI-compatible providers (leverage catalog,
+  //    reports/leverage/FREE_APIS.md). Each is keyed-free and INERT until its key
+  //    env is set — adding them only widens the pool + perspective diversity at $0;
+  //    none activates or spends without the owner provisioning a free key.
+  //    (Cloudflare Workers AI is parked: its base URL needs a per-account ACCOUNT_ID,
+  //    which doesn't fit this static baseUrl shape — see the catalog.)
+  {
+    id: "mistral",
+    label: "Mistral (free tier)",
+    baseUrl: "https://api.mistral.ai/v1",
+    model: "mistral-small-latest",
+    apiKeyEnv: "MISTRAL_API_KEY",
+  },
+  {
+    id: "nvidia",
+    label: "NVIDIA NIM (free)",
+    baseUrl: "https://integrate.api.nvidia.com/v1",
+    model: "meta/llama-3.1-70b-instruct",
+    apiKeyEnv: "NVIDIA_API_KEY",
+  },
+  {
+    id: "github-models",
+    label: "GitHub Models (free)",
+    baseUrl: "https://models.inference.ai.azure.com",
+    model: "gpt-4o-mini",
+    apiKeyEnv: "GITHUB_MODELS_API_KEY",
+  },
+  {
+    id: "cohere",
+    label: "Cohere (OpenAI-compat, free tier)",
+    baseUrl: "https://api.cohere.ai/compatibility/v1",
+    model: "command-r-08-2024",
+    apiKeyEnv: "COHERE_API_KEY",
+  },
 ];
 
 /** Resolve a provider's API key from env (undefined for keyless providers). */
