@@ -228,6 +228,12 @@ export interface SelfAuditResult {
   readonly summary: string;
 }
 
+/**
+ * Run the deterministic DRAFTED→NEEDS_REVIEW self-audit: a task passes only when
+ * it carries the artifacts a human reviewer needs — an owning agent, a draft note
+ * (decisionNotes), and a title. Pure; drives whether the loop parks the task at
+ * the human gate or skips it.
+ */
 export function runSelfAudit(
   task: Pick<CockpitTask, "assignedAgent" | "decisionNotes" | "title">
 ): SelfAuditResult {
