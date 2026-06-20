@@ -2,10 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { ShaderAuroraLazy } from "@/components/hero/shader-aurora-lazy";
+import { SignalCoreLazy } from "@/components/hero/signal-core-lazy";
+import { SignalSpine } from "@/components/motion/signal-spine";
+import { SignalDecode } from "@/components/motion/signal-decode";
+import { ObservatoryBeacon } from "@/components/motion/observatory-beacon";
+import { SentientWeather } from "@/components/motion/sentient-weather";
+import { SignalStatePulse } from "@/components/motion/signal-state-pulse";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { getPlate } from "@/lib/visual-production/asset-manifest";
 import { CinematicEntrance } from "@/components/landing/cinematic-entrance";
+import { MontageEntrance } from "@/components/landing/montage-entrance";
 import { CountUp } from "@/components/ui/count-up";
 import { BRAND_COLORS } from "@/lib/brand";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -69,15 +75,18 @@ export default async function HomePage(): Promise<JSX.Element> {
     passesResult.meta.dataError === "DB_UNREACHABLE";
   const totalRows =
     state.scoringNow.length + state.publishedToday.length + state.gatedTodayRows.length + passes.length;
-  const heroPlate = getPlate("home-hero-cosmos");
+  const heroPlate = getPlate("signal-room-hero");
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
+      <SentientWeather state="active" intensity={0.5} />
       {/* Site front door: the cinematic "SIGNAL ACQUIRED" cold open. Self-gating
           (localStorage) so it plays once on arrival, ~3s on return, skippable,
           reduced-motion safe — it dissolves to reveal the world behind it. */}
+      <MontageEntrance />
       <CinematicEntrance />
       <Nav />
+      <SignalSpine />
       <main id="main-content">
         {/* ── 00 · THE WORLD OPENS ─────────────────────────────────────
             The entrance burst dissolves into this: aurora, starfield, the
@@ -85,14 +94,14 @@ export default async function HomePage(): Promise<JSX.Element> {
         <section className="gw-nebula-deep relative isolate overflow-hidden border-b border-mineral">
           {heroPlate && (
             <GeneratedPlate
-              className="-z-30 opacity-70"
+              className="-z-30 opacity-85"
               gradient={heroPlate.gradient}
               still={heroPlate.still}
               motion={heroPlate.motion}
             />
           )}
           <div aria-hidden="true" className="absolute inset-0 -z-20">
-            <ShaderAuroraLazy />
+            <SignalCoreLazy />
           </div>
           <div aria-hidden="true" className="gw-starfield -z-10" />
           {/* Lighter damping than before — the aurora is the show; the copy
@@ -135,19 +144,22 @@ export default async function HomePage(): Promise<JSX.Element> {
                 </Link>
               </div>
               <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
-                We detect. You decide.
+                <SignalDecode speed={28}>We detect. You decide.</SignalDecode>
               </p>
             </div>
 
             <div className="gw-card-hover rounded-ds-lg border border-mineral bg-eclipse p-5">
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                    Board state · live telemetry
-                  </p>
+                <div className="flex items-start gap-3">
+                  <SignalStatePulse intensity={totalRows > 0 ? Math.min(1, totalRows / 8) : 0.15} size={28} />
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+                      <SignalDecode speed={20} delay={400}>Board state · live telemetry</SignalDecode>
+                    </p>
                   <h2 className="mt-2 text-2xl font-semibold text-ion-white">
                     {totalRows > 0 ? "Live rows available" : "No public rows yet"}
                   </h2>
+                  </div>
                 </div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                   updated {timeLabel(state.lastRefresh)}
@@ -241,6 +253,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         <WorldSection
           index="02"
           id="signal"
+          className="gw-grid-field"
           eyebrow="Signal vs noise"
           title="Same market. Two completely different readings."
           lede="The inputs that reach you arrive as argument — takes, steam, rumor, stale numbers. The engine takes the same inputs and structures them into something accountable."
@@ -426,6 +439,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         <WorldSection
           index="09"
           id="receipts"
+          className="gw-grid-field"
           eyebrow="Receipts"
           title="Trust is an architecture, not a tagline."
           lede="No fabricated picks, no invented stats, no silent edits. The ledger below is the live state of the engine's intake — status, grain, and what each lane unlocks."
@@ -543,6 +557,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
       </main>
+      <ObservatoryBeacon />
       <Footer />
     </div>
   );

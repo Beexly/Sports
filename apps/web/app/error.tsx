@@ -3,13 +3,13 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { captureError, initObservability } from "@/lib/observability/sentry";
+import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 
 /**
  * Global error boundary. Server-side errors arrive with a `digest`
- * field and a sanitized `error.message` from Next.js — we never see
- * the raw stack in production. Client-side errors get the full
- * message; we still avoid surfacing stack traces and keep the copy
- * on-brand. No banned phrases, no apologies that read as legal admissions.
+ * field and a sanitized `error.message` from Next.js.
+ *
+ * v2 — The mark stays visible even when the engine breaks.
  */
 export default function GlobalError({
   error,
@@ -19,19 +19,12 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Defensive init: SentryClientInit in root layout normally handles this,
-    // but error boundaries can mount before the layout's useEffect fires.
-    // initObservability is idempotent (_initialized guard makes this safe).
     initObservability();
-    // eslint-disable-next-line no-console
     console.error("[app] error boundary caught:", error);
     captureError(error, { digest: error.digest });
   }, [error]);
 
   const isProd = process.env.NODE_ENV === "production";
-  // In production, server errors arrive sanitized — show only the digest
-  // (a Next.js correlation id we can match in logs). In dev, show the
-  // full message so engineers can debug.
   const visibleDetail = isProd
     ? error.digest
       ? `Reference: ${error.digest}`
@@ -39,8 +32,17 @@ export default function GlobalError({
     : error.message;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-obsidian p-6 text-ion-1">
-      <div className="max-w-xl rounded-2xl border border-red-900 bg-red-950/30 p-6">
+    <div className="relative flex min-h-screen items-center justify-center bg-obsidian p-6 text-ion-1">
+      {/* Background mark — still breathing */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <LogoMarkInline size={400} pulse className="opacity-[0.04]" />
+      </div>
+
+      <div className="relative z-10 max-w-xl rounded-2xl border border-red-900 bg-red-950/30 p-8 text-center">
+        <div className="mb-5 flex justify-center">
+          <LogoMarkInline size={40} pulse glow />
+        </div>
+
         <h1 className="text-xl font-bold text-white">
           Something broke on my side.
         </h1>
@@ -51,7 +53,7 @@ export default function GlobalError({
         <pre className="mt-3 overflow-x-auto rounded-lg bg-red-950/60 p-3 text-[11px] text-red-100">
           {visibleDetail}
         </pre>
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => reset()}
             className="rounded-lg bg-red-900/60 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800"

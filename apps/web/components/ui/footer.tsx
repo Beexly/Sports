@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandLockup } from "@/components/brand/brand-lockup";
+import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
@@ -57,8 +58,11 @@ export function Footer() {
   return (
     <footer className="footer">
       {/* Ambient wordmark — closing brand statement under the link columns */}
-      <div className="footer-wordmark" aria-hidden="true">
-        GALAXY SPORTS EDGE
+      <div className="footer-wordmark group relative" aria-hidden="true">
+        <span className="transition-opacity duration-500 group-hover:opacity-0">GALAXY SPORTS EDGE</span>
+        <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+          <LogoMarkInline size={28} pulse glow />
+        </span>
       </div>
       <div className="container">
         <div className="footer-inner">

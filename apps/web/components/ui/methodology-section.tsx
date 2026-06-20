@@ -1,3 +1,4 @@
+import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 import { getClaim } from "@/lib/trust-claims";
 
 /**
@@ -90,6 +91,10 @@ export function MethodologySection() {
       className="relative isolate border-y border-mineral bg-carbon px-4 py-20 sm:px-6 lg:px-8"
       aria-labelledby="methodology-heading"
     >
+      {/* Watermark — the mark watches the methodology */}
+      <div aria-hidden className="pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 opacity-[0.03] sm:right-16">
+        <LogoMarkInline size={200} />
+      </div>
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-rule-fade" aria-hidden="true" />
       <div className="mx-auto max-w-7xl">
