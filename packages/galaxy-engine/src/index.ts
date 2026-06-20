@@ -119,6 +119,10 @@ export type {
   BossEncounterResult,
 } from "./bosses.js";
 
+// Crew roles & weekly missions (Stage 2 retention)
+export { CREW_ROLES, getCrewRole, isCrewLane } from "./crew-roles.js";
+export type { CrewLane, CrewRoleDef } from "./crew-roles.js";
+
 // Galaxy Score — one universal identity metric (bible §3)
 export {
   computeGalaxyScore,

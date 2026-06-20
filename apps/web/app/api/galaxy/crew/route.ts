@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isFactionId } from "@sports/galaxy-engine";
+import { isFactionId, isCrewLane } from "@sports/galaxy-engine";
 import { getCurrentProfileId } from "@/lib/galaxy/session";
-import { createCrew, joinCrew, listCrews } from "@/lib/galaxy/crew";
+import { createCrew, joinCrew, listCrews, setCrewLane } from "@/lib/galaxy/crew";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +19,7 @@ const Body = z.discriminatedUnion("action", [
     faction: z.string().optional(),
   }),
   z.object({ action: z.literal("join"), crewId: z.string() }),
+  z.object({ action: z.literal("lane"), crewId: z.string(), lane: z.string() }),
 ]);
 
 export async function POST(req: Request): Promise<NextResponse> {
@@ -46,6 +47,14 @@ export async function POST(req: Request): Promise<NextResponse> {
       faction,
     });
     return NextResponse.json({ ok: true, crew });
+  }
+
+  if (parsed.action === "lane") {
+    if (!isCrewLane(parsed.lane)) {
+      return NextResponse.json({ error: "Unknown crew lane." }, { status: 400 });
+    }
+    const res = await setCrewLane(profileId, parsed.crewId, parsed.lane);
+    return NextResponse.json({ ok: res.ok });
   }
 
   const crew = await joinCrew(profileId, parsed.crewId);

@@ -2643,6 +2643,9 @@ model CrewMembership {
   crewId    String
   profileId String
   role      CrewRole @default(MEMBER)
+  // Stage 2 — the member's crew lane/job (Captain, Sharp, Scout, Collector,
+  // Trader, Builder, Creator, Grinder). Distinct from `role` (authority).
+  lane      String?
   joinedAt  DateTime @default(now())
 
   crew    Crew          @relation(fields: [crewId], references: [id], onDelete: Cascade)
