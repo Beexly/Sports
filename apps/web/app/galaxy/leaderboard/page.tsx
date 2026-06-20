@@ -59,9 +59,10 @@ export default async function LeaderboardPage() {
         ))}
       </div>
 
-      <p style={{ marginTop: 16 }}>
+      <div style={{ marginTop: 16, display: "flex", gap: 14, flexWrap: "wrap" }}>
         <a href="/galaxy/duel" style={{ color: GALAXY.cyan }}>Enter a Signal Duel →</a>
-      </p>
+        <a href="/galaxy/season" style={{ color: GALAXY.cyan }}>Chase a seasonal title →</a>
+      </div>
     </GalaxyShell>
   );
 }

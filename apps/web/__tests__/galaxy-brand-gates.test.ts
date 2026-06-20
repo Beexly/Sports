@@ -120,6 +120,15 @@ describe("Gate: no pay-to-win — purchasable items never grant power", () => {
     }
   });
 
+  it("every boss-gated drop references a real boss (no stale keys)", () => {
+    const bossKeys = new Set(BOSSES.map((b) => b.key));
+    for (const d of SEASON_DROPS) {
+      if (d.requirement.kind === "boss_clear") {
+        expect(bossKeys.has(d.requirement.bossKey), `drop ${d.sku} references unknown boss ${d.requirement.bossKey}`).toBe(true);
+      }
+    }
+  });
+
   it("Pro season objectives add depth, not outcome rewards", () => {
     for (const o of SEASON_OBJECTIVES.filter((x) => x.track === "pro")) {
       expect(Object.keys(o)).not.toContain("rewardCredits");

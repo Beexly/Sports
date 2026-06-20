@@ -69,8 +69,8 @@ export const SEASON_DROPS: readonly SeasonDrop[] = [
   {
     sku: "drop-depths-clear-pin",
     name: "Depths Conqueror Pin",
-    description: "Awarded for clearing The Overconfidence King.",
-    requirement: { kind: "boss_clear", bossKey: "overconfidence_king", label: "Clear The Overconfidence King" },
+    description: "Awarded for clearing The Injury Fog.",
+    requirement: { kind: "boss_clear", bossKey: "injury_fog", label: "Clear The Injury Fog" },
   },
   {
     sku: "drop-sharp-ladder-frame",

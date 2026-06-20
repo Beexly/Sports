@@ -83,6 +83,7 @@ export function DuelArena({ scenarios, openDuels }: { scenarios: DuelScenario[];
         <select
           value={scenarioId}
           onChange={(e) => { setScenarioId(e.target.value); setResult(null); }}
+          aria-label="Pick a game to read"
           style={{ display: "block", marginTop: 6, padding: "9px 12px", borderRadius: 9, background: GALAXY.void, color: GALAXY.text, border: `1px solid ${GALAXY.border}`, width: "100%", maxWidth: 420 }}
         >
           {scenarios.map((s) => (

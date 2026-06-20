@@ -99,13 +99,13 @@ export function MarketPanel({
         No currency, no cash — cards only. Settlement is Stage-3 (partner-gated).
       </p>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <select value={offerCard} onChange={(e) => setOfferCard(e.target.value)} style={selectStyle}>
+        <select value={offerCard} onChange={(e) => setOfferCard(e.target.value)} aria-label="Card you offer" style={selectStyle}>
           {cards.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
         </select>
         <span style={{ color: GALAXY.textMuted }}>for</span>
-        <input value={wantSlug} onChange={(e) => setWantSlug(e.target.value)} placeholder="card slug you want (optional)" style={{ ...selectStyle, minWidth: 200 }} />
+        <input value={wantSlug} onChange={(e) => setWantSlug(e.target.value)} placeholder="card slug you want (optional)" aria-label="Card you want" style={{ ...selectStyle, minWidth: 200 }} />
       </div>
-      <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="note (optional)" maxLength={120} style={{ ...selectStyle, width: "100%", maxWidth: 420, marginTop: 10 }} />
+      <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="note (optional)" aria-label="Trade note" maxLength={120} style={{ ...selectStyle, width: "100%", maxWidth: 420, marginTop: 10 }} />
       <div style={{ marginTop: 10 }}>
         <button onClick={postOffer} disabled={busy} style={{ padding: "9px 18px", borderRadius: 9, border: "none", background: GALAXY.gold, color: GALAXY.void, fontWeight: 800, cursor: busy ? "not-allowed" : "pointer" }}>
           {busy ? "Posting…" : "Post offer"}

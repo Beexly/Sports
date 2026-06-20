@@ -33,9 +33,10 @@ export default async function CreatorsPage({ searchParams }: { searchParams: { r
 
       {active ? (
         <div style={{ marginTop: 16, maxWidth: 720 }}>
-          <p style={{ marginBottom: 12 }}>
+          <div style={{ marginBottom: 12, display: "flex", gap: 14, flexWrap: "wrap" }}>
             <a href="/galaxy/creators" style={{ color: GALAXY.cyan }}>← All gauntlets</a>
-          </p>
+            <a href="/galaxy/season" style={{ color: GALAXY.cyan }}>Gauntlets feed your Season Cup →</a>
+          </div>
           <h2 style={{ fontSize: 22, margin: "0 0 4px" }}>{active.title}</h2>
           <p style={{ color: GALAXY.textMuted, marginTop: 0 }}>by @{active.creator} — {active.blurb}</p>
           <div style={{ display: "grid", gap: 18, marginTop: 12 }}>

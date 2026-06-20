@@ -52,6 +52,7 @@ export function CrewPanel({ previews }: { previews: PreviewCrew[] }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Crew name"
+          aria-label="Crew name"
           maxLength={32}
           style={inputStyle}
         />
@@ -59,6 +60,7 @@ export function CrewPanel({ previews }: { previews: PreviewCrew[] }) {
           value={tag}
           onChange={(e) => setTag(e.target.value.toUpperCase())}
           placeholder="TAG"
+          aria-label="Crew tag"
           maxLength={5}
           style={inputStyle}
         />
@@ -67,6 +69,7 @@ export function CrewPanel({ previews }: { previews: PreviewCrew[] }) {
         value={motto}
         onChange={(e) => setMotto(e.target.value)}
         placeholder="Motto (optional)"
+        aria-label="Crew motto"
         maxLength={80}
         style={{ ...inputStyle, marginTop: 10, maxWidth: 440, width: "100%" }}
       />

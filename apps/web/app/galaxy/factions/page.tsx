@@ -61,6 +61,15 @@ export default async function FactionsPage() {
           </div>
         ))}
       </div>
+
+      <div style={{ marginTop: 18, display: "flex", gap: 12, flexWrap: "wrap" }}>
+        <a href="/galaxy/duel" style={{ color: GALAXY.cyan }}>Win duels for your faction →</a>
+        <a href="/galaxy/depths" style={{ color: GALAXY.cyan }}>Clear bosses →</a>
+      </div>
+      <p style={{ fontSize: 12, color: GALAXY.textMuted, marginTop: 8 }}>
+        Your rating and calibration feed your faction&apos;s power — every read this
+        week pushes the board.
+      </p>
     </GalaxyShell>
   );
 }

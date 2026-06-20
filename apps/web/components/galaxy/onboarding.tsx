@@ -54,6 +54,7 @@ export function GalaxyOnboarding() {
         value={handle}
         onChange={(e) => setHandle(e.target.value)}
         placeholder="e.g. NightSignal"
+        aria-label="Pick your handle"
         maxLength={24}
         style={{
           width: "100%",
