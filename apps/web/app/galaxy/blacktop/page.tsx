@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { GalaxyShell } from "@/components/galaxy/shell";
 import { SignalCheckCard } from "@/components/galaxy/signal-check-card";
+import { SignalSprint } from "@/components/galaxy/signal-sprint";
 import { GALAXY } from "@/lib/galaxy/theme";
 import { getCurrentProfileView } from "@/lib/galaxy/session";
-import { BLACKTOP_QUESTIONS } from "@/lib/galaxy/content";
+import { BLACKTOP_QUESTIONS, SIGNAL_SPRINT_QUESTIONS } from "@/lib/galaxy/content";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,22 @@ export default async function BlacktopPage() {
         just faster. Grind your Sports IQ a few seconds at a time.
       </p>
 
-      <div style={{ display: "grid", gap: 18, marginTop: 18, maxWidth: 720 }}>
+      <div style={{ marginTop: 18, maxWidth: 720 }}>
+        <SignalSprint
+          questions={SIGNAL_SPRINT_QUESTIONS.map((q) => ({
+            id: q.id,
+            prompt: q.prompt,
+            optionA: q.optionA,
+            optionB: q.optionB,
+            tag: q.tag,
+          }))}
+        />
+      </div>
+
+      <h2 style={{ fontSize: 14, letterSpacing: 1.2, color: GALAXY.textMuted, marginTop: 26 }}>
+        SINGLE REPS
+      </h2>
+      <div style={{ display: "grid", gap: 18, marginTop: 12, maxWidth: 720 }}>
         {BLACKTOP_QUESTIONS.map((q) => (
           <SignalCheckCard
             key={q.id}

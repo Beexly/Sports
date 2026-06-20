@@ -143,6 +143,68 @@ export function getBlacktopQuestion(id: string): BlacktopQuestion | null {
   return BLACKTOP_QUESTIONS.find((q) => q.id === id) ?? null;
 }
 
+// ── Signal Sprint — a 5-prompt rapid sports-IQ run (Phase 8) ──────────────────
+// A pure sports-intelligence drill — sharpen the read. Each prompt carries a
+// "signal tag" so the engine can build the player's sports brain map.
+
+export interface SprintQuestion {
+  readonly id: string;
+  readonly prompt: string;
+  readonly optionA: string;
+  readonly optionB: string;
+  readonly correct: "A" | "B";
+  readonly tag: string;
+  readonly explanation: string;
+}
+
+export const SIGNAL_SPRINT_QUESTIONS: readonly SprintQuestion[] = [
+  {
+    id: "ss-1",
+    prompt: "A star is downgraded to OUT an hour before kickoff and the total drops 3. What moved the number?",
+    optionA: "Informed money on the injury",
+    optionB: "Random noise",
+    correct: "A",
+    tag: "Injury Signal",
+    explanation: "A sharp, news-driven move near game time is usually informed — that's a real injury signal.",
+  },
+  {
+    id: "ss-2",
+    prompt: "A team scored 40 last week. The market now lays 3 extra points this week. The likely edge is…",
+    optionA: "Lay the inflated favorite",
+    optionB: "Fade the overreaction",
+    correct: "B",
+    tag: "Overreaction Trap",
+    explanation: "One big week over-moves the line. The disciplined edge is fading the overreaction.",
+  },
+  {
+    id: "ss-3",
+    prompt: "Two reads look equal, but one is built on 3 games and one on 30. Trust…",
+    optionA: "The 30-game read",
+    optionB: "The 3-game read",
+    correct: "A",
+    tag: "Small Sample Trap",
+    explanation: "Bigger samples are more stable. Three games is noise; thirty is signal.",
+  },
+  {
+    id: "ss-4",
+    prompt: "85% of tickets are on the prime-time favorite. The disciplined instinct is to…",
+    optionA: "Ride the public",
+    optionB: "Look for value on the other side",
+    correct: "B",
+    tag: "Public Signal",
+    explanation: "Heavy public money inflates the popular side — value drifts to the contrarian read.",
+  },
+  {
+    id: "ss-5",
+    prompt: "A rookie's usage just jumped and the card market hasn't reacted yet. The move is to…",
+    optionA: "Add the card to your watchlist",
+    optionB: "Ignore it",
+    correct: "A",
+    tag: "Card Signal",
+    explanation: "Usage leads production. Catch the breakout before the market reprices the card.",
+  },
+] as const;
+
 // ── Academy first Signal Check (onboarding rep) ───────────────────────────────
 
 export const ACADEMY_FIRST_CHECK: BlacktopQuestion = {

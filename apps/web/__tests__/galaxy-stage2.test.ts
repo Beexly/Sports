@@ -60,4 +60,17 @@ describe("Galaxy Dynasty — Stage 2 (Signal Cup)", () => {
   it("raid contribution is a safe no-op without a profile/DB", async () => {
     await expect(contributeToRaid("stub", featuredBossKey(), 3)).resolves.toBeUndefined();
   });
+
+  it("Signal Sprint grades 5 prompts and maps strong/weak signal tags", async () => {
+    const { runSignalSprint } = await import("@/lib/galaxy/sprint");
+    const { SIGNAL_SPRINT_QUESTIONS } = await import("@/lib/galaxy/content");
+    // Answer all correctly.
+    const allRight = SIGNAL_SPRINT_QUESTIONS.map((q) => ({ id: q.id, choice: q.correct }));
+    const r = await runSignalSprint("stub", allRight);
+    expect(r.total).toBe(SIGNAL_SPRINT_QUESTIONS.length);
+    expect(r.correctCount).toBe(SIGNAL_SPRINT_QUESTIONS.length);
+    expect(r.xp).toBeGreaterThan(0);
+    expect(r.strongTags.length).toBe(SIGNAL_SPRINT_QUESTIONS.length);
+    expect(r.weakTags.length).toBe(0);
+  });
 });
