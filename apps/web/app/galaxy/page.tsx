@@ -3,6 +3,7 @@ import Link from "next/link";
 import { GalaxyShell } from "@/components/galaxy/shell";
 import { DISTRICTS, GALAXY } from "@/lib/galaxy/theme";
 import { getCurrentProfileView } from "@/lib/galaxy/session";
+import { DailyClaim } from "@/components/galaxy/daily-claim";
 
 export const dynamic = "force-dynamic";
 
@@ -129,8 +130,11 @@ function FirstSessionChecklist({
         marginBottom: 26,
       }}
     >
-      <div style={{ fontSize: 12, letterSpacing: 1.5, color: GALAXY.gold, fontWeight: 700 }}>
-        ROOKIE SEASON — FIRST SESSION
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <div style={{ fontSize: 12, letterSpacing: 1.5, color: GALAXY.gold, fontWeight: 700 }}>
+          ROOKIE SEASON — FIRST SESSION
+        </div>
+        <DailyClaim streak={profile.dailyStreak} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px,1fr))", gap: 8, marginTop: 12 }}>
         {items.map((it) => (

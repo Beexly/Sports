@@ -167,5 +167,16 @@ integration → **54 web**. All green. Web typecheck 0, lint clean, build succee
 **Hard-stops:** none. No cash-out (duels/season/market never touch cash); Stripe
 untouched; additive schema only; no Higgsfield/Odds spend.
 
-**Next:** Stage 3 commerce depth + remaining Stage-2 polish (Creator Gauntlet
-board, Merch Foundry drops) — tracked in `BUILD_REPORT.md`.
+### Stage 2 round-out + Stage-4 starters
+
+- **Faction War standings** (`/galaxy/factions`): per-faction power (avg rating ×
+  size), Ghost-seeded so it's never empty — buildable Stage-4 social identity.
+- **Daily streak with STREAK INSURANCE** (`/galaxy` claim): a single missed day
+  never resets the streak (wellbeing §4.3); reward via the earn-only ledger.
+- **Creator Gauntlet** (`/galaxy/creators`): curated challenge boards (open UGC is
+  moderation-gated, logged for later).
+- **Merch Foundry drops**: achievement/season/ladder-gated cosmetic drops on the
+  store ("merch as proof").
+
+All green: web typecheck 0, lint clean, build succeeds (16 Galaxy pages + 10 API
+routes), language-law scans 44 files clean, 52 web + 66 engine Galaxy tests pass.

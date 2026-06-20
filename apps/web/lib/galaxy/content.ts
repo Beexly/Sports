@@ -240,6 +240,44 @@ export interface GhostProfileDef {
   readonly calibration: number;
 }
 
+// ── Creator Gauntlet — curated challenge boards (Stage 2) ─────────────────────
+// Curated, not open UGC: open creator submissions require the moderation/review
+// pipeline (logged Stage-4 item). These are authored challenge sets built from
+// the existing War Room reps.
+
+export interface CreatorChallenge {
+  readonly id: string;
+  readonly creator: string;
+  readonly title: string;
+  readonly blurb: string;
+  /** War Room scenario ids that make up the gauntlet. */
+  readonly scenarioIds: readonly string[];
+  readonly rewardLabel: string;
+}
+
+export const CREATOR_CHALLENGES: readonly CreatorChallenge[] = [
+  {
+    id: "cg-sharp-eye",
+    creator: "Ghost_SharpEcho",
+    title: "The Sharp Eye",
+    blurb: "Three reads, three numbers. Trust the math, not the names.",
+    scenarioIds: ["wr-1", "wr-2", "wr-3"],
+    rewardLabel: "Calibration reps + Season Points",
+  },
+  {
+    id: "cg-form-hunt",
+    creator: "Ghost_FormHawk",
+    title: "Form Hunt",
+    blurb: "Read the spot, not the storyline. Two quick reps.",
+    scenarioIds: ["wr-1", "wr-3"],
+    rewardLabel: "Scout XP + Season Points",
+  },
+] as const;
+
+export function getCreatorChallenge(id: string): CreatorChallenge | null {
+  return CREATOR_CHALLENGES.find((c) => c.id === id) ?? null;
+}
+
 export const GHOST_PROFILES: readonly GhostProfileDef[] = [
   { handle: "Ghost_SharpEcho", archetype: "SHARP", faction: "SHARPS", characterLevel: 9, calibration: 71 },
   { handle: "Ghost_FormHawk", archetype: "SCOUT", faction: "SCOUTS", characterLevel: 7, calibration: 64 },

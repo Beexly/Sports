@@ -45,6 +45,53 @@ export const COSMETICS: readonly CosmeticItem[] = [
   },
 ] as const;
 
+// ── Merch Foundry seasonal DROPS (Stage 2) ───────────────────────────────────
+// Achievement-gated, not purchasable — "merch as proof". Unlocked by clearing a
+// boss, reaching a Season tier, or hitting a ladder tier.
+
+export interface SeasonDrop {
+  readonly sku: string;
+  readonly name: string;
+  readonly description: string;
+  readonly requirement:
+    | { kind: "boss_clear"; bossKey: string; label: string }
+    | { kind: "season_tier"; tier: number; label: string }
+    | { kind: "rating_tier"; tier: string; label: string };
+}
+
+export const SEASON_DROPS: readonly SeasonDrop[] = [
+  {
+    sku: "drop-signal-cup-banner",
+    name: "Signal Cup Banner",
+    description: "Season 1 banner for your My Dynasty room.",
+    requirement: { kind: "season_tier", tier: 3, label: "Reach Season Tier 3" },
+  },
+  {
+    sku: "drop-depths-clear-pin",
+    name: "Depths Conqueror Pin",
+    description: "Awarded for clearing The Overconfidence King.",
+    requirement: { kind: "boss_clear", bossKey: "overconfidence_king", label: "Clear The Overconfidence King" },
+  },
+  {
+    sku: "drop-sharp-ladder-frame",
+    name: "Sharp Ladder Frame",
+    description: "A ranked frame for reaching the Sharp tier.",
+    requirement: { kind: "rating_tier", tier: "Sharp", label: "Reach the Sharp ladder tier" },
+  },
+] as const;
+
+export function isDropUnlocked(
+  drop: SeasonDrop,
+  ctx: { seasonTier: number; bossCleared: ReadonlySet<string>; ratingTierName: string },
+): boolean {
+  const r = drop.requirement;
+  if (r.kind === "boss_clear") return ctx.bossCleared.has(r.bossKey);
+  if (r.kind === "season_tier") return ctx.seasonTier >= r.tier;
+  // rating_tier: unlocked if the player is at or above that named tier.
+  const order = ["Rookie", "Contender", "Sharp", "Elite", "Legend"];
+  return order.indexOf(ctx.ratingTierName) >= order.indexOf(r.tier);
+}
+
 export interface NovaPack {
   readonly sku: string;
   readonly nova: number;

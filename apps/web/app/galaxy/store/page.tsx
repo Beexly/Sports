@@ -4,7 +4,7 @@ import { GalaxyShell } from "@/components/galaxy/shell";
 import { NovaPackButton } from "@/components/galaxy/store-buttons";
 import { GALAXY } from "@/lib/galaxy/theme";
 import { getCurrentProfileView } from "@/lib/galaxy/session";
-import { COSMETICS, NOVA_PACKS } from "@/lib/galaxy/store";
+import { COSMETICS, NOVA_PACKS, SEASON_DROPS, isDropUnlocked } from "@/lib/galaxy/store";
 import { badgeSvg } from "@/lib/galaxy/assets";
 
 export const dynamic = "force-dynamic";
@@ -60,6 +60,45 @@ export default async function StorePage() {
           to unlock the Signal Keeper entitlement.
         </p>
       )}
+
+      {/* Season drops (achievement-gated) */}
+      <h2 style={{ fontSize: 14, letterSpacing: 1.2, color: GALAXY.textMuted, marginTop: 28 }}>
+        SEASON DROPS · MERCH AS PROOF
+      </h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px,1fr))", gap: 12 }}>
+        {SEASON_DROPS.map((d) => {
+          const unlocked = profile
+            ? isDropUnlocked(d, {
+                seasonTier: profile.seasonTier,
+                bossCleared: new Set(profile.bossCleared),
+                ratingTierName: profile.ratingTier,
+              })
+            : false;
+          return (
+            <div
+              key={d.sku}
+              style={{
+                background: GALAXY.panel,
+                border: `1px solid ${unlocked ? `${GALAXY.gold}66` : GALAXY.border}`,
+                borderRadius: 12,
+                padding: 16,
+                opacity: unlocked ? 1 : 0.7,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <strong style={{ color: GALAXY.text }}>{d.name}</strong>
+                <span style={{ fontSize: 12, color: unlocked ? GALAXY.cyan : GALAXY.textMuted }}>
+                  {unlocked ? "Unlocked" : "Locked"}
+                </span>
+              </div>
+              <p style={{ fontSize: 12, color: GALAXY.textMuted, marginTop: 6 }}>{d.description}</p>
+              <div style={{ fontSize: 11, color: unlocked ? GALAXY.cyan : GALAXY.textMuted, marginTop: 8 }}>
+                {unlocked ? "Earned" : d.requirement.label}
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       {/* Cosmetics (Nova) */}
       <h2 style={{ fontSize: 14, letterSpacing: 1.2, color: GALAXY.textMuted, marginTop: 28 }}>
