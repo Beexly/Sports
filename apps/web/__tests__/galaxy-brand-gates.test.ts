@@ -10,6 +10,12 @@ import {
   buildAssetBrief,
   SEASON_OBJECTIVES,
 } from "@sports/galaxy-engine";
+import {
+  CONSUMABLES_CATALOG,
+  CONSUMABLE_EFFECT_KINDS,
+  CONSUMABLE_FORBIDDEN_DOMAINS,
+  combinedMultiplier,
+} from "@sports/galaxy-engine";
 import { COSMETICS, NOVA_PACKS, SEASON_DROPS } from "@/lib/galaxy/store";
 
 /**
@@ -127,6 +133,32 @@ describe("Gate: no pay-to-win — purchasable items never grant power", () => {
         expect(bossKeys.has(d.requirement.bossKey), `drop ${d.sku} references unknown boss ${d.requirement.bossKey}`).toBe(true);
       }
     }
+  });
+
+  it("consumables/boosts never affect outcomes (anti-pay-to-win)", () => {
+    const allow = new Set(CONSUMABLE_EFFECT_KINDS);
+    for (const c of CONSUMABLES_CATALOG) {
+      // Every effect must be on the non-outcome allow-list.
+      expect(allow.has(c.kind), `${c.id} has a non-allowed effect kind ${c.kind}`).toBe(true);
+      // No consumable may declare a forbidden (outcome/skill/rating) domain field.
+      for (const k of Object.keys(c)) {
+        for (const domain of CONSUMABLE_FORBIDDEN_DOMAINS) {
+          expect(k.toLowerCase()).not.toContain(domain);
+        }
+      }
+      // No outcome-y words in the kind itself.
+      expect(c.kind).not.toMatch(/rating|calibration|result|skill|win|outcome/);
+    }
+  });
+
+  it("boost multipliers are capped so stacking can't run away", () => {
+    const stacked = [
+      { kind: "credits_boost" as const, magnitude: 1.5 },
+      { kind: "credits_boost" as const, magnitude: 1.5 },
+      { kind: "credits_boost" as const, magnitude: 1.5 },
+    ];
+    expect(combinedMultiplier(stacked, "credits_boost")).toBeLessThanOrEqual(2);
+    expect(combinedMultiplier([], "season_boost")).toBe(1);
   });
 
   it("Pro season objectives add depth, not outcome rewards", () => {

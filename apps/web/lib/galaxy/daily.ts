@@ -57,11 +57,18 @@ export async function claimDaily(profileId: string): Promise<DailyResult> {
   if (last == null) {
     streak = 1;
   } else if (gap <= 2) {
-    // gap of 1 = consecutive; gap of 2 = one missed day, covered by insurance.
+    // gap of 1 = consecutive; gap of 2 = one missed day, covered by built-in insurance.
     streak = row.dailyStreak + 1;
     insuranceUsed = gap === 2;
   } else {
-    streak = 1; // 2+ missed days resets — but no penalty beyond starting over.
+    // 2+ missed days would reset — but a Streak Shield consumable saves it once.
+    const { consumeStreakShield } = await import("./consumables.js");
+    if (await consumeStreakShield(profileId)) {
+      streak = row.dailyStreak + 1;
+      insuranceUsed = true;
+    } else {
+      streak = 1; // no shield — start over (no penalty beyond restarting).
+    }
   }
 
   await applyReward(profileId, {

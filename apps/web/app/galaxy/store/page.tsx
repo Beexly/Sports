@@ -5,6 +5,9 @@ import { NovaPackButton } from "@/components/galaxy/store-buttons";
 import { GALAXY } from "@/lib/galaxy/theme";
 import { getCurrentProfileView } from "@/lib/galaxy/session";
 import { COSMETICS, NOVA_PACKS, SEASON_DROPS, isDropUnlocked } from "@/lib/galaxy/store";
+import { getConsumableInventory } from "@/lib/galaxy/consumables";
+import { BoostsPanel } from "@/components/galaxy/boosts-panel";
+import { getCurrentProfileId } from "@/lib/galaxy/session";
 import { badgeSvg } from "@/lib/galaxy/assets";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +21,8 @@ export const metadata: Metadata = {
 
 export default async function StorePage() {
   const profile = await getCurrentProfileView();
+  const profileId = await getCurrentProfileId();
+  const boosts = await getConsumableInventory(profileId ?? "stub");
 
   return (
     <GalaxyShell profile={profile}>
@@ -115,6 +120,18 @@ export default async function StorePage() {
           </div>
         ))}
       </div>
+
+      {/* Boosts & consumables */}
+      <h2 style={{ fontSize: 14, letterSpacing: 1.2, color: GALAXY.textMuted, marginTop: 28 }}>
+        BOOSTS &amp; CONSUMABLES
+      </h2>
+      <p style={{ fontSize: 12, color: GALAXY.textMuted, marginTop: 0, maxWidth: 620 }}>
+        Boosts speed your <strong style={{ color: GALAXY.text }}>cosmetic &amp; progression</strong>{" "}
+        economy (Credits, Season Points) and add flair. They{" "}
+        <strong style={{ color: GALAXY.text }}>never</strong> affect a Signal Check, duel, boss,
+        rating, or skill — calibration is always earned.
+      </p>
+      <BoostsPanel items={boosts} canAct={profileId != null} />
 
       {/* Nova packs (Stripe test mode) */}
       <h2 style={{ fontSize: 14, letterSpacing: 1.2, color: GALAXY.textMuted, marginTop: 28 }}>

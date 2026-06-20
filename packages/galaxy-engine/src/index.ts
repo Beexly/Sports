@@ -137,6 +137,22 @@ export type {
   CosmeticUnlockContext,
 } from "./cosmetics.js";
 
+// Boosts & consumables (Stage 3 revenue — never affects outcomes)
+export {
+  CONSUMABLES_CATALOG,
+  CONSUMABLE_EFFECT_KINDS,
+  CONSUMABLE_FORBIDDEN_DOMAINS,
+  getConsumable,
+  combinedMultiplier,
+  isNonOutcomeEffect,
+} from "./consumables.js";
+export type {
+  ConsumableDef,
+  ConsumableEffectKind,
+  ConsumableSource,
+  ActiveEffect,
+} from "./consumables.js";
+
 // Crew roles & weekly missions (Stage 2 retention)
 export { CREW_ROLES, getCrewRole, isCrewLane } from "./crew-roles.js";
 export type { CrewLane, CrewRoleDef } from "./crew-roles.js";

@@ -2480,6 +2480,8 @@ model GalaxyProfile {
   cosmetics        GalaxyCosmeticOwnership[]
   following        GalaxyFollow[]          @relation("Follower")
   followers        GalaxyFollow[]          @relation("Following")
+  consumables      GalaxyConsumableInventory[]
+  activeEffects    GalaxyActiveEffect[]
 
   @@index([faction])
   @@index([archetype])
@@ -2751,6 +2753,38 @@ model CrewRaidContribution {
 
   @@unique([raidId, profileId])
   @@map("galaxy_crew_raid_contributions")
+}
+
+// Stage 3 — boosts & consumables. Revenue line that NEVER affects outcomes:
+// effects only touch the cosmetic/progression economy (Credits, Season Points,
+// streak, cosmetics). Enforced by the engine allow-list + a brand gate test.
+model GalaxyConsumableInventory {
+  id           String   @id @default(cuid())
+  profileId    String
+  consumableId String
+  quantity     Int      @default(0)
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, consumableId])
+  @@map("galaxy_consumable_inventory")
+}
+
+model GalaxyActiveEffect {
+  id        String   @id @default(cuid())
+  profileId String
+  // ConsumableEffectKind (credits_boost | season_boost | crib_spotlight ...).
+  kind      String
+  magnitude Float    @default(1)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, expiresAt])
+  @@map("galaxy_active_effects")
 }
 
 // Stage 2 — social graph (follow / friends). Friends-play-with-friends spine.

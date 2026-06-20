@@ -324,10 +324,17 @@ export async function applyReward(profileId: string, input: RewardInput): Promis
     };
   }
 
+  // Active boosts multiply ONLY the cosmetic/progression economy (Credits +
+  // Season Points) — never skill/character XP, rating, or outcomes (anti-pay-to-win).
+  const { getActiveMultipliers } = await import("./consumables.js");
+  const mult = await getActiveMultipliers(profileId);
+
   // Credits — only path that changes the balance.
   let newBalance = row.creditsBalance;
+  let boostedCredits = input.credits;
   if (input.credits > 0) {
-    const entry = awardCredits(row.creditsBalance, input.credits, input.reason, input.ref);
+    boostedCredits = Math.max(input.credits, Math.round(input.credits * mult.credits));
+    const entry = awardCredits(row.creditsBalance, boostedCredits, input.reason, input.ref);
     newBalance = entry.balanceAfter;
     await db.galaxyCreditLedgerEntry.create({
       data: {
@@ -369,8 +376,8 @@ export async function applyReward(profileId: string, input: RewardInput): Promis
   const charState = characterLevelFromXp(newCharXp, row.characterLevel);
   const prestigeGained = charState.leveledUp ? charState.levelsGained : 0;
 
-  // Season Cup points accrue from every graded check (capped per check).
-  const seasonGain = seasonPointsForXp(input.xp);
+  // Season Cup points accrue from every graded check (capped per check), boosted.
+  const seasonGain = Math.round(seasonPointsForXp(input.xp) * mult.season);
 
   await db.galaxyProfile.update({
     where: { id: profileId },
@@ -385,7 +392,7 @@ export async function applyReward(profileId: string, input: RewardInput): Promis
 
   return {
     xp: input.xp,
-    credits: input.credits,
+    credits: boostedCredits,
     newBalance,
     skillKey: input.sportKey ?? null,
     skillLevel,
