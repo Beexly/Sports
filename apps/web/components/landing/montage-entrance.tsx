@@ -1,50 +1,52 @@
 "use client";
 
 /**
- * MontageEntrance — A 2009 Call of Duty-style cinematic cold open.
+ * MontageEntrance — Galaxy Sports Edge's single cinematic cold-open.
  *
- * Pure adrenaline. 5 seconds of impact frames, chrome text slams,
- * stat flashes, and an explosive particle finish. Skippable on any
- * interaction. Plays once per session via localStorage.
+ * One breathtaking arrival, ~3.6s, then it dissolves to reveal the site. A real
+ * motion plate (home-hero-cosmos) runs behind disciplined chrome word-slams that
+ * climax on the brand mark + "We detect. You decide." No fabricated stats, no
+ * chaotic neon — premium impact, not arcade.
  *
  * Sequence:
- *   0.0s — Black
- *   0.1s — WHITE FLASH + deep bass hit
- *   0.3s — "GALAXY" chrome slam with screen shake
- *   0.8s — Quick stat flash: "SIGNAL DETECTED"
- *   1.2s — "SPORTS" chrome slam
- *   1.5s — Quick stat flash: "NOISE FILTERED"
- *   1.8s — "EDGE" chrome slam + cyan glow burst
- *   2.2s — Three rapid HUD stat flashes
- *   2.8s — Slow hold: "THE INTELLIGENCE REVOLUTION"
- *   3.5s — Particle explosion outward
- *   4.0s — Fade to site
+ *   0.00s — Black; motion plate fades up behind it
+ *   0.12s — White flash + mark
+ *   0.35s — "GALAXY" slam (ice) + shake
+ *   0.80s — flick: SIGNAL DETECTED
+ *   1.20s — "SPORTS" slam (plasma) + shake
+ *   1.65s — flick: NOISE FILTERED
+ *   2.05s — "EDGE" slam (ice) + cyan burst ring
+ *   2.50s — brand mark resolves + tagline, particle shimmer
+ *   3.60s — dissolve to site
  *
- * Reduced motion → instant dissolve.
+ * This is the ONLY front-door sequence (the slow doctrine intro was retired).
+ * Plays once per session (localStorage). Skippable on any interaction.
+ * Reduced motion → instant dissolve, no video, no audio.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 
 const SEEN_KEY = "gse-montage-seen-v2";
+/** Legacy cinematic-intro flag — still set so any stragglers stay bypassed. */
 const CINEMATIC_SEEN_KEY = "gse-entrance-seen-v1";
+
 const PHASES = [
   { at: 0, id: "black" },
-  { at: 100, id: "flash" },
-  { at: 300, id: "galaxy" },
+  { at: 120, id: "flash" },
+  { at: 350, id: "galaxy" },
   { at: 800, id: "stat1" },
   { at: 1200, id: "sports" },
-  { at: 1500, id: "stat2" },
-  { at: 1800, id: "edge" },
-  { at: 2200, id: "hud" },
-  { at: 2800, id: "hold" },
-  { at: 3500, id: "explode" },
-  { at: 4200, id: "done" },
+  { at: 1650, id: "stat2" },
+  { at: 2050, id: "edge" },
+  { at: 2500, id: "resolve" },
+  { at: 3600, id: "done" },
 ] as const;
 
 export function MontageEntrance() {
   const [phase, setPhase] = useState<string>("black");
   const [done, setDone] = useState(false);
+  const [bedOn, setBedOn] = useState(false);
   const timers = useRef<number[]>([]);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -68,8 +70,11 @@ export function MontageEntrance() {
     let seen = false;
     try {
       seen = localStorage.getItem(SEEN_KEY) === "1";
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
 
+    // Reduced motion or already seen this session or explicit skip → no cold-open.
     if (seen || reduced || window.location.search.includes("intro=skip")) {
       setDone(true);
       return;
@@ -78,41 +83,51 @@ export function MontageEntrance() {
     try {
       localStorage.setItem(SEEN_KEY, "1");
       localStorage.setItem(CINEMATIC_SEEN_KEY, "1");
-    } catch { /* ignore */ }
-
-    // Play hype track
-    const audio = new Audio("/audio/montage-hype.m4a");
-    audio.volume = 0.6;
-    audio.play().catch(() => { /* ignore autoplay policy */ });
-    audioRef.current = audio;
-
-    for (const p of PHASES) {
-      timers.current.push(
-        window.setTimeout(() => setPhase(p.id), p.at)
-      );
+    } catch {
+      /* ignore */
     }
 
-    // Explosion canvas
+    // Motion plate fades up immediately for cinematic depth.
+    setBedOn(true);
+
+    // Best-effort sting — browser autoplay policy gates this; it only sounds for
+    // visitors who have already interacted with the domain, and never under
+    // reduced motion (handled above). No HTML autoPlay attribute is used.
+    try {
+      const audio = new Audio("/audio/montage-hype.m4a");
+      audio.volume = 0.55;
+      audio.play().catch(() => {
+        /* blocked by autoplay policy — stay silent */
+      });
+      audioRef.current = audio;
+    } catch {
+      /* ignore */
+    }
+
+    for (const p of PHASES) {
+      timers.current.push(window.setTimeout(() => setPhase(p.id), p.at));
+    }
+
+    // Climax shimmer — a restrained particle bloom behind the brand mark.
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext("2d");
       if (ctx) {
-        const w = canvas.width = window.innerWidth;
-        const h = canvas.height = window.innerHeight;
-        const particles = Array.from({ length: 200 }, () => ({
+        const w = (canvas.width = window.innerWidth);
+        const h = (canvas.height = window.innerHeight);
+        const particles = Array.from({ length: 160 }, () => ({
           x: w / 2,
           y: h / 2,
-          vx: (Math.random() - 0.5) * 15,
-          vy: (Math.random() - 0.5) * 15,
+          vx: (Math.random() - 0.5) * 13,
+          vy: (Math.random() - 0.5) * 13,
           life: 1,
-          decay: 0.01 + Math.random() * 0.02,
+          decay: 0.012 + Math.random() * 0.02,
           color: Math.random() > 0.6 ? "0,229,255" : Math.random() > 0.5 ? "122,92,255" : "255,45,214",
-          size: 1 + Math.random() * 3,
+          size: 1 + Math.random() * 2.5,
         }));
-
         let raf = 0;
         const draw = () => {
-          ctx.fillStyle = "rgba(5,6,8,0.15)";
+          ctx.fillStyle = "rgba(5,6,8,0.16)";
           ctx.fillRect(0, 0, w, h);
           let alive = false;
           for (const p of particles) {
@@ -120,8 +135,8 @@ export function MontageEntrance() {
             alive = true;
             p.x += p.vx;
             p.y += p.vy;
-            p.vx *= 0.98;
-            p.vy *= 0.98;
+            p.vx *= 0.97;
+            p.vy *= 0.97;
             p.life -= p.decay;
             ctx.fillStyle = `rgba(${p.color}, ${p.life})`;
             ctx.beginPath();
@@ -130,10 +145,7 @@ export function MontageEntrance() {
           }
           if (alive) raf = requestAnimationFrame(draw);
         };
-        const startExplosion = () => {
-          raf = requestAnimationFrame(draw);
-        };
-        timers.current.push(window.setTimeout(startExplosion, 3500));
+        timers.current.push(window.setTimeout(() => { raf = requestAnimationFrame(draw); }, 2500));
         return () => cancelAnimationFrame(raf);
       }
     }
@@ -141,7 +153,7 @@ export function MontageEntrance() {
     return () => timers.current.forEach((t) => window.clearTimeout(t));
   }, []);
 
-  // Skip on any interaction
+  // Skip on any interaction.
   useEffect(() => {
     if (done) return;
     const skip = () => finish();
@@ -159,27 +171,46 @@ export function MontageEntrance() {
 
   const show = (ids: string[]) => ids.includes(phase);
   const flash = show(["flash"]);
-  const galaxy = show(["galaxy", "stat1", "sports", "stat2", "edge", "hud", "hold", "explode"]);
-  const sports = show(["sports", "stat2", "edge", "hud", "hold", "explode"]);
-  const edge = show(["edge", "hud", "hold", "explode"]);
-  const hud = show(["hud", "hold", "explode"]);
-  const hold = show(["hold", "explode"]);
-  const explode = show(["explode"]);
+  const galaxy = show(["galaxy", "stat1", "sports", "stat2", "edge", "resolve"]);
+  const sports = show(["sports", "stat2", "edge", "resolve"]);
+  const edge = show(["edge", "resolve"]);
+  const resolve = show(["resolve"]);
 
   return (
     <div
       className="fixed inset-0 z-[80] overflow-hidden"
       style={{ background: "#050608" }}
       onClick={finish}
+      role="dialog"
+      aria-label="Entering Galaxy Sports Edge"
     >
+      {/* Cinematic motion bed — real footage, dimmed, behind the type. */}
+      <video
+        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+        style={{ opacity: bedOn && !resolve ? 0.5 : bedOn ? 0.32 : 0 }}
+        src="/immersive/home-hero-cosmos.mp4"
+        poster="/immersive/home-hero-cosmos.webp"
+        muted
+        autoPlay
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 60% at 50% 45%, rgba(5,6,8,0.35), rgba(5,6,8,0.82) 78%)",
+        }}
+      />
+
       {/* White flash */}
       {flash && (
         <div
           className="absolute inset-0 flex items-center justify-center"
-          style={{
-            background: "#ffffff",
-            animation: "montage-flash 0.25s ease-out forwards",
-          }}
+          style={{ background: "#ffffff", animation: "montage-flash 0.25s ease-out forwards" }}
         >
           <LogoMarkInline size={120} color="#050608" className="opacity-90" />
         </div>
@@ -187,12 +218,7 @@ export function MontageEntrance() {
 
       {/* GALAXY slam */}
       {galaxy && (
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{
-            animation: "montage-shake 0.15s ease-out",
-          }}
-        >
+        <div className="absolute inset-0 flex items-center justify-center" style={{ animation: "montage-shake 0.15s ease-out" }}>
           <span
             className="font-arch"
             style={{
@@ -203,7 +229,7 @@ export function MontageEntrance() {
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               color: "transparent",
-              filter: "drop-shadow(0 0 40px rgba(0,229,255,0.5)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
+              filter: "drop-shadow(0 0 40px rgba(0,229,255,0.45)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
               animation: "montage-slam 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
               opacity: 0,
             }}
@@ -213,13 +239,13 @@ export function MontageEntrance() {
         </div>
       )}
 
-      {/* STAT 1: SIGNAL DETECTED */}
-      {show(["stat1", "sports", "stat2", "edge", "hud", "hold", "explode"]) && (
+      {/* flick: SIGNAL DETECTED */}
+      {show(["stat1", "sports", "stat2", "edge", "resolve"]) && (
         <div
           className="absolute left-1/2 top-[62%] -translate-x-1/2 font-mono"
           style={{
             fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
-            letterSpacing: "0.3em",
+            letterSpacing: "0.32em",
             color: "#00E5FF",
             textShadow: "0 0 20px rgba(0,229,255,0.8)",
             animation: "montage-stat-flicker 0.3s ease-out forwards",
@@ -232,10 +258,7 @@ export function MontageEntrance() {
 
       {/* SPORTS slam */}
       {sports && (
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ animation: "montage-shake 0.12s ease-out 0.1s" }}
-        >
+        <div className="absolute inset-0 flex items-center justify-center" style={{ animation: "montage-shake 0.12s ease-out 0.1s" }}>
           <span
             className="font-arch"
             style={{
@@ -246,7 +269,7 @@ export function MontageEntrance() {
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               color: "transparent",
-              filter: "drop-shadow(0 0 40px rgba(255,45,214,0.4)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
+              filter: "drop-shadow(0 0 40px rgba(255,45,214,0.35)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
               animation: "montage-slam 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards",
               opacity: 0,
             }}
@@ -256,13 +279,13 @@ export function MontageEntrance() {
         </div>
       )}
 
-      {/* STAT 2: NOISE FILTERED */}
-      {show(["stat2", "edge", "hud", "hold", "explode"]) && (
+      {/* flick: NOISE FILTERED */}
+      {show(["stat2", "edge", "resolve"]) && (
         <div
           className="absolute left-1/2 top-[62%] -translate-x-1/2 font-mono"
           style={{
             fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
-            letterSpacing: "0.3em",
+            letterSpacing: "0.32em",
             color: "#7A5CFF",
             textShadow: "0 0 20px rgba(122,92,255,0.8)",
             animation: "montage-stat-flicker 0.3s ease-out 0.4s forwards",
@@ -276,10 +299,7 @@ export function MontageEntrance() {
       {/* EDGE slam + cyan burst */}
       {edge && (
         <>
-          <div
-            className="absolute inset-0 flex items-center justify-center"
-            style={{ animation: "montage-shake 0.15s ease-out 0.2s" }}
-          >
+          <div className="absolute inset-0 flex items-center justify-center" style={{ animation: "montage-shake 0.15s ease-out 0.2s" }}>
             <span
               className="font-arch"
               style={{
@@ -290,7 +310,7 @@ export function MontageEntrance() {
                 WebkitBackgroundClip: "text",
                 backgroundClip: "text",
                 color: "transparent",
-                filter: "drop-shadow(0 0 50px rgba(0,229,255,0.6)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
+                filter: "drop-shadow(0 0 50px rgba(0,229,255,0.55)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
                 animation: "montage-slam 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards",
                 opacity: 0,
               }}
@@ -298,7 +318,6 @@ export function MontageEntrance() {
               EDGE
             </span>
           </div>
-          {/* Cyan burst ring */}
           <div
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
             style={{
@@ -312,80 +331,39 @@ export function MontageEntrance() {
         </>
       )}
 
-      {/* HUD stat flashes */}
-      {hud && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="grid gap-4 text-center">
-            {[
-              { label: "DATA INTAKE", value: "12 LANES", color: "#00E5FF" },
-              { label: "MODELS ACTIVE", value: "3 ENGINES", color: "#7A5CFF" },
-              { label: "TRUST SCORE", value: "96.4%", color: "#FF2DD6" },
-            ].map((stat, i) => (
-              <div
-                key={stat.label}
-                className="font-mono"
-                style={{
-                  animation: `montage-hud-slide 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${0.2 + i * 0.15}s forwards`,
-                  opacity: 0,
-                  transform: "translateX(-30px)",
-                }}
-              >
-                <span style={{ fontSize: 11, letterSpacing: "0.25em", color: stat.color }}>
-                  {stat.label}
-                </span>
-                <span
-                  className="ml-4 font-arch"
-                  style={{
-                    fontSize: "clamp(1.5rem, 4vw, 2.5rem)",
-                    color: "#F6F7FA",
-                    textShadow: `0 0 20px ${stat.color}66`,
-                  }}
-                >
-                  {stat.value}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* HOLD: The Intelligence Revolution */}
-      {hold && (
+      {/* RESOLVE — brand mark + tagline, the calm confident landing. */}
+      {resolve && (
         <div
           className="absolute inset-0 flex flex-col items-center justify-center"
-          style={{
-            animation: "montage-fade-in 0.6s ease-out forwards",
-            opacity: 0,
-          }}
+          style={{ animation: "montage-fade-in 0.6s ease-out forwards", opacity: 0 }}
         >
+          <LogoMarkInline size={96} glow className="opacity-95" />
           <p
-            className="font-display text-balance text-ion-white"
-            style={{
-              fontSize: "clamp(1.2rem, 3.5vw, 2.5rem)",
-              lineHeight: 1.15,
-              textShadow: "0 2px 30px rgba(0,0,0,0.8)",
-            }}
+            className="mt-6 font-arch text-ion-white"
+            style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)", letterSpacing: "0.12em" }}
           >
-            The{" "}
-            <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">
-              intelligence
-            </span>{" "}
-            revolution.
+            GALAXY SPORTS EDGE
           </p>
-          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.3em] text-ion-2">
+          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.34em] text-orbital-cyan">
+            We detect. You decide.
+          </p>
+          <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.3em] text-ion-2">
             Press any key to enter
           </p>
         </div>
       )}
 
-      {/* Particle explosion canvas */}
-      {explode && (
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0"
-          style={{ pointerEvents: "none" }}
-        />
-      )}
+      {/* Particle shimmer canvas (climax only). */}
+      {resolve && <canvas ref={canvasRef} className="absolute inset-0" style={{ pointerEvents: "none" }} />}
+
+      {/* Skip — always available. */}
+      <button
+        type="button"
+        onClick={finish}
+        className="absolute right-5 top-5 z-10 rounded-full border border-mineral px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2 transition-colors hover:text-ion-white"
+      >
+        Skip ▸
+      </button>
     </div>
   );
 }

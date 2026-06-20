@@ -18,7 +18,7 @@ import { useEffect, useRef, useState } from "react";
 const THOUGHTS = [
   "Three books just moved the line simultaneously. Not coincidence.",
   "That injury report is six hours old. The market hasn't priced the update.",
-  "Public is 78% on the over. The gate is watching.",
+  "Public is piling on the over. The gate is watching.",
   "Consensus engine split wide on this one. Width is information.",
   "The sharp money arrived fourteen minutes before the steam.",
   "I've seen this narrative before. It didn't end well.",
@@ -26,10 +26,10 @@ const THOUGHTS = [
   "The closing line is still drifting. Patience is a signal too.",
   "Freshness check failed on that source. Holding it back.",
   "Noise is loudest right before the gate closes.",
-  "Correlation between those two legs: 0.71. Stacked fragility.",
+  "Those two legs move together more than the slip admits. Stacked fragility.",
   "The model is confident. The data is thin. The gate decides.",
   "I count twelve contradictory takes on this game. None sourced.",
-  "Historical pattern match: 73% accuracy, 34 samples. Not enough to publish.",
+  "Historical pattern match looks strong, but the sample is too thin to publish.",
   "The line moved but the context didn't. That's a trap, not an edge.",
 ] as const;
 

@@ -40,10 +40,14 @@ describe("Sample-mode UI contracts", () => {
     expect(src).toMatch(/Sample mode/);
   });
 
-  it("/ (home) suppresses demo rows instead of rendering fake public data", () => {
+  it("/ (home) renders no public board rows — suppression is enforced in the loaders", () => {
     const src = read("app/page.tsx");
-    expect(src).toMatch(/suppressedDemo/);
-    expect(src).toMatch(/Demo data suppressed/);
+    // The concise home never maps board rows into the page, so there is no fake
+    // public data to render; the loaders return empty readiness under demo mode
+    // (asserted separately below). It still pulls real state for door counts.
+    expect(src).toMatch(/loadBoardState/);
+    expect(src).not.toMatch(/state\.publishedToday\.map/);
+    expect(src).not.toMatch(/state\.gatedTodayRows\.map/);
     expect(src).not.toMatch(/sample-data-banner-home/);
   });
 

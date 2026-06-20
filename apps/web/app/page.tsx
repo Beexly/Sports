@@ -7,90 +7,56 @@ import { SignalSpine } from "@/components/motion/signal-spine";
 import { SignalDecode } from "@/components/motion/signal-decode";
 import { ObservatoryBeacon } from "@/components/motion/observatory-beacon";
 import { SentientWeather } from "@/components/motion/sentient-weather";
-import { SignalStatePulse } from "@/components/motion/signal-state-pulse";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { getPlate } from "@/lib/visual-production/asset-manifest";
-import { CinematicEntrance } from "@/components/landing/cinematic-entrance";
 import { MontageEntrance } from "@/components/landing/montage-entrance";
-import { CountUp } from "@/components/ui/count-up";
 import { BRAND_COLORS } from "@/lib/brand";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
-import { Reveal } from "@/components/motion/reveal";
 import { WorldSection } from "@/components/world/world-section";
-import { WorldWaypoints } from "@/components/world/world-waypoints";
-import { GalaxyTwinPreview } from "@/components/world/galaxy-twin-preview";
 import { SignalFragmentField } from "@/components/world/signal-fragment-field";
-import { MarketMirageChapter } from "@/components/world/market-mirage";
 import { NoBetGateChapter } from "@/components/world/no-bet-gate";
-import { DecisionAutopsyPreview } from "@/components/world/decision-autopsy-preview";
-import { ParlayMriPreview } from "@/components/world/parlay-mri-preview";
-import { CostOfNoiseCalculator } from "@/components/world/cost-of-noise-calculator";
-import { loadBoardPasses } from "@/lib/board/passes";
-import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
+import { loadBoardState } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
-import {
-  CONTEXT_INTELLIGENCE_SOURCES,
-  DATA_SOURCE_STACK,
-  PUBLIC_DATA_SOURCES,
-  TREND_BACKLOG,
-  sourceStatusLabel,
-} from "@/lib/data-sources/catalog";
 import { loadNflverseUsagePulse } from "@/lib/nflverse/usage-pulse";
-import { loadTrendWorkbench } from "@/lib/trends/workbench";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "A Sports Intelligence Operating System",
   description:
-    "Galaxy Sports Edge + Galaxy Sports Network: the market's noise turned into structured signal — public board state, no-bet gating, decision autopsies, media intelligence, and receipts for all of it.",
+    "Galaxy Sports Edge turns the market's noise into structured signal — a live board, no-bet gating, and receipts for all of it. We detect. You decide.",
   alternates: { canonical: "/" },
 };
 
-function timeLabel(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "pending";
-  return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-}
-
 export default async function HomePage(): Promise<JSX.Element> {
-  const [stateResult, passesResult, calibrationResult, nflversePulse] = await Promise.all([
+  const [stateResult, calibrationResult, nflversePulse] = await Promise.all([
     loadBoardState(),
-    loadBoardPasses(),
     loadPublicCalibrationReport(),
     loadNflverseUsagePulse(),
   ]);
   const state = stateResult.data;
-  const passes = passesResult.data.passes;
   const calibration = calibrationResult.data;
-  const trendWorkbench = loadTrendWorkbench();
-  const publicSourceCount = PUBLIC_DATA_SOURCES.length;
-  const contextSourceCount = CONTEXT_INTELLIGENCE_SOURCES.length;
-  const suppressedDemo =
-    stateResult.meta.suppressedDemoData === true ||
-    passesResult.meta.suppressedDemoData === true;
-  const dbUnreachable =
-    stateResult.meta.dataError === "DB_UNREACHABLE" ||
-    passesResult.meta.dataError === "DB_UNREACHABLE";
-  const totalRows =
-    state.scoringNow.length + state.publishedToday.length + state.gatedTodayRows.length + passes.length;
   const heroPlate = getPlate("signal-room-hero");
+
+  const cleared = state.publishedToday.length;
+  const gated = state.gatedTodayRows.length;
+  const scoring = state.scoringNow.length;
+  const settled = calibration.sampleSize;
+  const nflRows = nflversePulse.status === "live" ? nflversePulse.sourceRows : 0;
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
       <SentientWeather state="active" intensity={0.5} />
-      {/* Site front door: the cinematic "SIGNAL ACQUIRED" cold open. Self-gating
-          (localStorage) so it plays once on arrival, ~3s on return, skippable,
-          reduced-motion safe — it dissolves to reveal the world behind it. */}
+      {/* Site front door: ONE cinematic cold-open (~3.6s) over a real motion bed,
+          climaxing on the brand mark. Self-gating (localStorage) so it plays once
+          per session, skippable, reduced-motion safe — it dissolves to reveal the
+          world behind it. The slow doctrine intro was retired. */}
       <MontageEntrance />
-      <CinematicEntrance />
       <Nav />
       <SignalSpine />
       <main id="main-content">
-        {/* ── 00 · THE WORLD OPENS ─────────────────────────────────────
-            The entrance burst dissolves into this: aurora, starfield, the
-            thesis, and live board telemetry. Real data, honest empty states. */}
+        {/* ── HERO · the thesis, the graphic, two ways in ─────────────── */}
         <section className="gw-nebula-deep relative isolate overflow-hidden border-b border-mineral">
           {heroPlate && (
             <GeneratedPlate
@@ -104,154 +70,87 @@ export default async function HomePage(): Promise<JSX.Element> {
             <SignalCoreLazy />
           </div>
           <div aria-hidden="true" className="gw-starfield -z-10" />
-          {/* Lighter damping than before — the aurora is the show; the copy
-              column gets its own local scrim for AA contrast. */}
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-10"
             style={{
-              background: `radial-gradient(ellipse 70% 60% at 78% 18%, ${"#FF2DD6"}21, transparent 60%), radial-gradient(ellipse 60% 55% at 12% 80%, ${"#7A5CFF"}2b, transparent 65%), linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}b3 0%, ${BRAND_COLORS.obsidianBlack}59 44%, ${BRAND_COLORS.obsidianBlack}99 72%, ${BRAND_COLORS.obsidianBlack} 100%)`,
+              background: `radial-gradient(ellipse 70% 60% at 78% 18%, ${"#FF2DD6"}1c, transparent 60%), radial-gradient(ellipse 60% 55% at 12% 80%, ${"#7A5CFF"}24, transparent 65%), linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}b3 0%, ${BRAND_COLORS.obsidianBlack}4d 46%, ${BRAND_COLORS.obsidianBlack}99 74%, ${BRAND_COLORS.obsidianBlack} 100%)`,
             }}
           />
-          <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[1.04fr_0.96fr] lg:items-center lg:px-8">
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="gw-chip-cyan">GSE · the decision engine</span>
-                <span className="gw-chip-plasma">GSN · the signal studio</span>
-              </div>
-              <h1 className="mt-6 max-w-4xl font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
-                The market is full of <span className="gw-chrome-plasma">noise</span>.
-                <br />
-                <span className="gw-chrome-ice">Galaxy turns it into</span>{" "}
-                <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">signal</span>.
-              </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
-                We turn real sportsbook data into picks you can actually check — and
-                the discipline to know when not to bet.{" "}
-                The board is only as smart as the data behind it.{" "}
-                No public pick or projection appears unless the inputs are real enough
-                to defend — and every edge earns a receipt.
-              </p>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <Link href="/board" className="btn-primary min-h-11 px-5 py-3">
-                  Enter today&apos;s board
-                </Link>
-                <Link
-                  href="/trends"
-                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-orbital-cyan/60 px-5 py-3 text-sm font-semibold text-orbital-cyan transition-shadow hover:border-orbital-cyan hover:text-ion-white hover:shadow-[0_0_28px_-6px_rgba(0,229,255,0.6)]"
-                >
-                  Open Trend Lab
-                </Link>
-              </div>
-              <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
-                <SignalDecode speed={28}>We detect. You decide.</SignalDecode>
-              </p>
+          <div className="mx-auto max-w-5xl px-4 py-24 text-center sm:px-6 sm:py-32 lg:px-8">
+            <h1 className="mx-auto max-w-4xl font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
+              The market is full of <span className="gw-chrome-plasma">noise</span>.
+              <br />
+              <span className="gw-chrome-ice">Galaxy turns it into</span>{" "}
+              <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">signal</span>.
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-ion-1">
+              Real sportsbook data, structured into picks you can check — and the
+              discipline to know when not to bet.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link href="/board" className="btn-primary min-h-11 px-6 py-3">
+                Enter today&apos;s board
+              </Link>
+              <Link
+                href="/the-beat"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-orbital-cyan/60 px-6 py-3 text-sm font-semibold text-orbital-cyan transition-shadow hover:border-orbital-cyan hover:text-ion-white hover:shadow-[0_0_28px_-6px_rgba(0,229,255,0.6)]"
+              >
+                Watch The Beat
+              </Link>
             </div>
-
-            <div className="gw-card-hover rounded-ds-lg border border-mineral bg-eclipse p-5">
-              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                <div className="flex items-start gap-3">
-                  <SignalStatePulse intensity={totalRows > 0 ? Math.min(1, totalRows / 8) : 0.15} size={28} />
-                  <div>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                      <SignalDecode speed={20} delay={400}>Board state · live telemetry</SignalDecode>
-                    </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-ion-white">
-                    {totalRows > 0 ? "Live rows available" : "No public rows yet"}
-                  </h2>
-                  </div>
-                </div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-                  updated {timeLabel(state.lastRefresh)}
-                </p>
-              </div>
-              <dl className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <Metric label="Sports" value={state.sportsWatched} />
-                <Metric label="Books" value={state.booksPolled} />
-                <Metric label="Open" value={state.openPicks} />
-                <Metric label="Gated" value={state.gatedToday} />
-              </dl>
-              {dbUnreachable ? (
-                <div className="mt-5 rounded-ds-sm border border-mineral bg-carbon px-4 py-3">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-alert">
-                    Data store unreachable
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-ion-1">
-                    The public page is online, but the local database is not reachable from this
-                    checkout. Rows stay empty instead of blocking the experience or inventing data.
-                  </p>
-                </div>
-              ) : suppressedDemo ? (
-                <div className="mt-5 rounded-ds-sm border border-mineral bg-carbon px-4 py-3">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">
-                    Demo data suppressed
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-ion-1">
-                    Deterministic sample picks exist for internal testing, but the public front door
-                    is showing an empty readiness state instead of fake action.
-                  </p>
-                </div>
-              ) : null}
-              <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.18em] text-ion-2">
-                An empty board is the gate doing its job — not a promise withheld.
-              </p>
-            </div>
+            <p className="mt-7 font-mono text-[10px] uppercase tracking-[0.24em] text-ion-2">
+              <SignalDecode speed={28}>We detect. You decide.</SignalDecode>
+            </p>
           </div>
-          {/* LIVE ribbon — BlueYard-style ticker, fed only by real state.
-              Honest empty states ride the same ribbon. */}
-          <div className="relative border-t border-mineral/60 bg-void/40">
-            <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-2.5 sm:px-6 lg:px-8">
-              <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-alert/90 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-ion-white">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-ion-white" style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }} />
-                Live
-              </span>
-              <div className="gse-marquee min-w-0 flex-1" style={{ ["--gse-marquee-dur" as string]: "44s" }}>
-                <div className="gse-marquee-track font-mono text-[11px] uppercase tracking-[0.16em] text-ion-1">
-                  {[0, 1].map((copy) => (
-                    <span key={copy} aria-hidden={copy === 1}>
-                      <span className="px-6">Board · {state.publishedToday.length} public {state.publishedToday.length === 1 ? "row" : "rows"} cleared today</span>
-                      <span className="px-6 text-orbital-cyan">◆</span>
-                      <span className="px-6">Gate · {state.gatedTodayRows.length} {state.gatedTodayRows.length === 1 ? "row" : "rows"} holding behind the no-bet gate</span>
-                      <span className="px-6 text-plasma">◆</span>
-                      <span className="px-6">Scoring · {state.scoringNow.length} live</span>
-                      <span className="px-6 text-orbital-cyan">◆</span>
-                      <span className="px-6">Calibration sample · {calibration.sampleSize}</span>
-                      <span className="px-6 text-plasma">◆</span>
-                      <span className="px-6">Trend observations · {trendWorkbench.observationCount}</span>
-                      <span className="px-6 text-orbital-cyan">◆</span>
-                      <span className="px-6">Last refresh · {timeLabel(state.lastRefresh)}</span>
-                      <span className="px-6 text-plasma">◆</span>
-                      <span className="px-6">We detect. You decide.</span>
-                      <span className="px-6 text-orbital-cyan">◆</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* The module index — the journey's map, at the hero's seam. */}
-          <WorldWaypoints />
         </section>
 
-        {/* ── 01 · GALAXY TWIN ──────────────────────────────────────── */}
+        {/* ── SIGNAL MAP · four doors, one decision each ──────────────── */}
+        <section id="doors" className="border-b border-mineral bg-void/30 px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">
+              Four doors
+            </p>
+            <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold text-ion-white sm:text-4xl">
+              Pick the decision you came to make.
+            </h2>
+            <div className="mt-10 grid gap-px overflow-hidden rounded-ds-lg border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
+              <DoorCard
+                label="Board"
+                decides="What's worth a play today — and what to pass."
+                stat={cleared > 0 || gated > 0 ? `${cleared} cleared · ${gated} gated` : "Gate holding — no forced action"}
+                action="Open the board"
+                href="/board"
+              />
+              <DoorCard
+                label="Players"
+                decides="Who to trust this week, read across every signal."
+                stat={nflRows > 0 ? `${nflRows.toLocaleString()} live player rows` : "Intake warming up"}
+                action="Open the lab"
+                href="/players"
+              />
+              <DoorCard
+                label="Intelligence"
+                decides="Why the engine reads a game the way it does."
+                stat={settled > 0 ? `Calibrated on ${settled} settled picks` : "Calibration sample building"}
+                action="Open the engines"
+                href="/intelligence/engines"
+                accent
+              />
+              <DoorCard
+                label="Fantasy & Daily"
+                decides="Start-sit, waivers, trades and DFS — one read."
+                stat={`${scoring > 0 ? `${scoring} scoring now · ` : ""}Season + daily tools`}
+                action="Open the tools"
+                href="/fantasy"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ── SIGNAL VS NOISE · the one signature teaching beat ───────── */}
         <WorldSection
           index="01"
-          id="twin"
-          eyebrow="Galaxy Twin · Market Observatory"
-          title={
-            <>
-              The slate, read as a <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">living system</span>.
-            </>
-          }
-          lede="Every game is a node held by market gravity — bent by public pressure, flagged by context gaps, opened by edge windows, closed by the no-bet gate. Select a state to see how the engine reads it."
-          tone="deep"
-        >
-          <GalaxyTwinPreview />
-        </WorldSection>
-
-        {/* ── 02 · SIGNAL VS NOISE ──────────────────────────────────── */}
-        <WorldSection
-          index="02"
           id="signal"
           className="gw-grid-field"
           eyebrow="Signal vs noise"
@@ -259,75 +158,20 @@ export default async function HomePage(): Promise<JSX.Element> {
           lede="The inputs that reach you arrive as argument — takes, steam, rumor, stale numbers. The engine takes the same inputs and structures them into something accountable."
         >
           <SignalFragmentField />
-
-          {/* Ten-second product test — the live telemetry behind the claim. */}
-          <div className="mt-14 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-            <Reveal>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                Ten-second product test
-              </p>
-              <h3 className="mt-3 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
-                See the current state, not a promise.
-              </h3>
-              <p className="mt-4 text-sm leading-6 text-ion-1">
-                Anyone can claim signal. The honest version is checkable in ten seconds:
-                what cleared, what passed, which sources are live, and which trends are
-                statistically defensible — right now, on this page.
-              </p>
-            </Reveal>
-            <div className="grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
-              <StatusPanel
-                title="Public picks"
-                value={state.publishedToday.length}
-                detail={state.publishedToday.length > 0 ? "Published rows available." : "No fabricated picks."}
-                href="/board"
-              />
-              <StatusPanel
-                title="Trend observations"
-                value={trendWorkbench.observationCount}
-                detail="Trend engine is ready; observations are waiting on live intake writes."
-                href="/trends"
-              />
-              <StatusPanel
-                title="Calibration sample"
-                value={calibration.sampleSize}
-                detail={calibration.publicMessage}
-                href="/performance"
-              />
-              <StatusPanel
-                title="Real NFL rows"
-                value={nflversePulse.status === "live" ? nflversePulse.sourceRows : 0}
-                group
-                detail={
-                  nflversePulse.status === "live"
-                    ? `Usage pulse: ${nflversePulse.season} week ${nflversePulse.week ?? "N/A"}.`
-                    : "Usage pulse warming up."
-                }
-                href="/nflverse"
-              />
-            </div>
-          </div>
+          <p className="mt-10 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">
+            Right now ·{" "}
+            <span className="text-orbital-cyan">{cleared} cleared</span> ·{" "}
+            <span className="text-plasma">{gated} gated</span> ·{" "}
+            calibrated on <span className="text-ion-white">{settled} settled picks</span> ·{" "}
+            <Link href="/accountability" className="text-orbital-cyan underline-offset-4 hover:text-ion-white hover:underline">
+              see the receipts
+            </Link>
+          </p>
         </WorldSection>
 
-        {/* ── 03 · MARKET MIRAGE ────────────────────────────────────── */}
+        {/* ── NO-BET · restraint is a first-class output ──────────────── */}
         <WorldSection
-          index="03"
-          id="mirage"
-          eyebrow="Market Mirage"
-          title={
-            <>
-              The most dangerous pick is the <span className="gse-editorial gw-chrome-plasma">obvious</span> one.
-            </>
-          }
-          lede="Public pressure, stale lines, decayed prices, and incomplete context can make distortion look like consensus. Peel the layers and watch the sure-looking thing dissolve."
-          tone="nebula"
-        >
-          <MarketMirageChapter />
-        </WorldSection>
-
-        {/* ── 04 · THE NO-BET GATE ──────────────────────────────────── */}
-        <WorldSection
-          index="04"
+          index="02"
           id="gate"
           eyebrow="The No-Bet Gate"
           title={<>No-Bet is not absence. It is <span className="gw-chrome-ice">intelligence</span>.</>}
@@ -335,214 +179,36 @@ export default async function HomePage(): Promise<JSX.Element> {
           tone="deep"
         >
           <NoBetGateChapter />
-
-          {/* The real lanes — what's scoring, published, and gated right now. */}
-          <div className="mt-14 rounded-ds-lg border border-mineral bg-eclipse p-5">
-            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                  Today&apos;s lanes · live
-                </p>
-                <h3 className="mt-2 text-2xl font-semibold text-ion-white">Scored, published, passed</h3>
-              </div>
-              <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-                Full board
-              </Link>
-            </div>
-            <div className="mt-5 grid gap-3 lg:grid-cols-3">
-              <Lane title="Scoring" rows={state.scoringNow} empty="No active scoring rows." />
-              <Lane title="Published" rows={state.publishedToday} empty="No public pick has cleared." />
-              <Lane title="Gated" rows={state.gatedTodayRows} empty="No pass rows logged." />
-            </div>
-          </div>
         </WorldSection>
 
-        {/* ── 05 · DECISION AUTOPSY ─────────────────────────────────── */}
-        <WorldSection
-          index="05"
-          id="autopsy"
-          eyebrow="Decision Autopsy"
-          title="Every decision leaves evidence."
-          lede="Published rows don't vanish when they settle. They get x-rayed in public: original signal, market movement, caveats, result, lesson."
-        >
-          <DecisionAutopsyPreview />
-        </WorldSection>
-
-        {/* ── 06 · PARLAY MRI ───────────────────────────────────────── */}
-        <WorldSection
-          index="06"
-          id="mri"
-          eyebrow="Parlay MRI"
-          title="See inside the slip before money does."
-          lede="Stacked legs hide correlation, dependency, and compounding fragility. The MRI is risk education — it shows the structure, you make the call."
-        >
-          <ParlayMriPreview />
-        </WorldSection>
-
-        {/* ── 07 · THE BEAT — the public face of media intelligence.
-            The pipeline behind it (claims, review gates, studio) is ours and
-            stays internal; the visitor sees the graded OUTPUT and how it
-            plays into the board. */}
-        <WorldSection
-          index="07"
-          id="gsn"
-          eyebrow="Galaxy Sports Network · The Beat"
-          title={
-            <>
-              Sports media is a market too. <span className="gse-editorial text-plasma gw-text-glow-plasma">Noisy</span> — and
-              now <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">accountable</span>.
-            </>
-          }
-          lede="We grade the noise so you don't have to. Reporting is reliability-scored before it touches a number — and when a story moves our read on a game, you can see exactly where it landed."
-          tone="nebula"
-        >
-          <div className="grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral md:grid-cols-3">
-            <div className="bg-eclipse p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">Scored at the source</p>
-              <p className="mt-2 text-sm leading-6 text-ion-1">
-                Every report carries a reliability grade earned on the record — not a follower count.
-              </p>
-            </div>
-            <div className="bg-eclipse p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">Plays into the board</p>
-              <p className="mt-2 text-sm leading-6 text-ion-1">
-                A graded story becomes context on the game node it touches — injuries, roles, weather, scheme.
-              </p>
-            </div>
-            <div className="bg-eclipse p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-plasma">Browse it like a feed</p>
-              <p className="mt-2 text-sm leading-6 text-ion-1">
-                The Beat reads casual; the grading underneath is anything but.
-              </p>
-            </div>
-          </div>
-          <div className="mt-6">
-            <Link href="/the-beat" className="btn btn-primary">
-              Open The Beat
-            </Link>
-          </div>
-        </WorldSection>
-
-        {/* ── 08 · COST OF NOISE ────────────────────────────────────── */}
-        <WorldSection
-          index="08"
-          id="noise"
-          eyebrow="Cost of Noise"
-          title="How much of your process is noise?"
-          lede="Describe a typical week and get a directional read on your decision quality — where avoidable noise leaks in, and which Galaxy modules tighten it. Education, not a profit promise."
-          tone="deep"
-        >
-          <CostOfNoiseCalculator />
-        </WorldSection>
-
-        {/* ── 09 · RECEIPTS ─────────────────────────────────────────── */}
-        <WorldSection
-          index="09"
-          id="receipts"
-          className="gw-grid-field"
-          eyebrow="Receipts"
-          title="Trust is an architecture, not a tagline."
-          lede="No fabricated picks, no invented stats, no silent edits. The ledger below is the live state of the engine's intake — status, grain, and what each lane unlocks."
-        >
-          {/* Source health — our intake lanes, in our language. Vendor names
-              and license attribution live on /integrations, by design. */}
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        {/* ── PROOF STRIP · one band, routes to the proof ─────────────── */}
+        <section className="border-y border-orbital-cyan/20 bg-orbital-cyan/[0.04] px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                Source health
+                The proof
               </p>
-              <h3 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-                The engine&apos;s intake lanes
-              </h3>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
-                {publicSourceCount} structured intake lanes and {contextSourceCount} context feeds are tracked
-                separately so structured data, owned media workflows, licensed reporting, and
-                permission-gated references never blur together. Every lane is graded before it
-                touches a number you see.
+              <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+                Trust is an architecture, not a tagline.
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
+                No fabricated picks, no invented stats, no silent edits. Closing line value,
+                calibration, and a tamper-evident ledger — counted over every settled pick.
               </p>
             </div>
-            <Link href="/integrations" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-              Rights &amp; attribution
-            </Link>
-          </div>
-          <div className="mt-6 overflow-x-auto rounded-ds-md border border-mineral">
-            <table className="w-full min-w-[900px] text-left text-sm">
-              <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-                <tr>
-                  <th className="px-4 py-3">Intake lane</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Grain</th>
-                  <th className="px-4 py-3">What it unlocks</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-mineral bg-carbon">
-                {PUBLIC_DATA_SOURCES.map((source) => (
-                  <tr key={source.key}>
-                    <td className="px-4 py-3 font-semibold text-ion-white">{source.publicLabel}</td>
-                    <td className="px-4 py-3 font-mono text-ion">{sourceStatusLabel(source.status)}</td>
-                    <td className="px-4 py-3 text-ion-1">{source.grain}</td>
-                    <td className="px-4 py-3 text-ion-1">{source.unlocks}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2">
-            + {CONTEXT_INTELLIGENCE_SOURCES.length} context feeds (broadcast claims, beat intelligence,
-            studio assets, international reference) graded behind the same gates — all{" "}
-            {DATA_SOURCE_STACK.length} lanes on the{" "}
-            <Link href="/integrations" className="text-orbital-cyan hover:text-ion-white">
-              rights ledger
-            </Link>
-            .
-          </p>
-
-          {/* First trend targets — the questions the engine mines next. */}
-          <div className="mt-10 rounded-ds-lg border border-mineral bg-eclipse p-5">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-              First trend targets
-            </p>
-            <h3 className="mt-2 text-2xl font-semibold text-ion-white">The engine needs questions worth mining.</h3>
-            <div className="mt-5 grid gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral lg:grid-cols-4">
-              {TREND_BACKLOG.slice(0, 4).map((item) => (
-                <div key={item.key} className="bg-carbon p-4">
-                  <p className="font-semibold text-ion-white">{item.title}</p>
-                  <p className="mt-1 text-sm leading-6 text-ion-1">{item.question}</p>
-                  <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-                    {item.requiredSources.join(" + ")}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* The benchmark we publish — CLV, the proof touts never show. */}
-          <div className="mt-10 rounded-ds-lg border border-orbital-cyan/30 bg-orbital-cyan/[0.05] p-5 sm:p-7">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-              The benchmark we publish
-            </p>
-            <h3 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-              Closing line value — the one number touts never show.
-            </h3>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
-              A win streak is a screenshot. Whether the price we locked beat where the
-              market closed is the sharp-credible leading indicator of a real edge —
-              counted over every settled pick, and gated until it can be honestly
-              backed. You can track your own bets against the same metric, too.
-            </p>
-            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
-              <Link href="/clv" className="btn btn-primary">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+              <Link href="/clv" className="btn btn-primary whitespace-nowrap">
                 See our CLV
               </Link>
-              <Link href="/track" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-                Track your own →
+              <Link href="/performance" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+                Calibration →
               </Link>
               <Link href="/accountability" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-                Full accountability →
+                Accountability →
               </Link>
             </div>
           </div>
-        </WorldSection>
+        </section>
 
         <MethodologySection />
 
@@ -563,70 +229,37 @@ export default async function HomePage(): Promise<JSX.Element> {
   );
 }
 
-function Metric({ label, value }: { label: string; value: number }): JSX.Element {
-  return (
-    <div className="rounded-ds-sm border border-mineral bg-carbon px-3 py-2">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</dt>
-      <dd className="mt-1 font-numerals text-2xl font-semibold tabular-nums text-ion-white">
-        <CountUp value={value} />
-      </dd>
-    </div>
-  );
-}
-
-function StatusPanel({
-  title,
-  value,
-  detail,
+/* ── Signal-map door ──────────────────────────────────────────────────── */
+function DoorCard({
+  label,
+  decides,
+  stat,
+  action,
   href,
-  group,
+  accent = false,
 }: {
-  title: string;
-  value: number;
-  detail: string;
+  label: string;
+  decides: string;
+  stat: string;
+  action: string;
   href: string;
-  group?: boolean;
+  accent?: boolean;
 }): JSX.Element {
   return (
-    <Link href={href} className="block min-h-52 bg-eclipse p-5 transition-colors hover:bg-slate">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{title}</p>
-      <p className="gw-text-glow-cyan mt-4 font-numerals text-5xl font-semibold tabular-nums text-orbital-cyan">
-        <CountUp value={value} group={group} />
+    <Link
+      href={href}
+      className="group relative flex flex-col gap-3 bg-eclipse p-6 transition-colors hover:bg-carbon"
+    >
+      <span
+        aria-hidden
+        className={`absolute inset-x-0 top-0 h-px ${accent ? "bg-orbital-cyan/60" : "bg-mineral"} transition-colors group-hover:bg-orbital-cyan`}
+      />
+      <p className="font-display text-xl font-semibold text-ion-white">{label}</p>
+      <p className="flex-1 text-sm leading-6 text-ion-1">{decides}</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-orbital-cyan">{stat}</p>
+      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2 transition-colors group-hover:text-ion-white">
+        {action} <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
       </p>
-      <p className="mt-4 text-sm leading-6 text-ion-1">{detail}</p>
     </Link>
-  );
-}
-
-function Lane({
-  title,
-  rows,
-  empty,
-}: {
-  title: string;
-  rows: readonly BoardStateRow[];
-  empty: string;
-}): JSX.Element {
-  return (
-    <div className="rounded-ds-sm border border-mineral bg-carbon p-4">
-      <div className="flex items-center justify-between gap-3">
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">{title}</p>
-        <span className="font-numerals text-sm text-ion-2">{rows.length}</span>
-      </div>
-      <div className="mt-4 space-y-3">
-        {rows.length > 0 ? (
-          rows.slice(0, 3).map((row) => (
-            <Link key={row.id} href={`/room/${row.gameId}`} className="block border-l border-mineral pl-3">
-              <p className="text-sm font-semibold text-ion-white">{row.matchup}</p>
-              <p className="mt-1 text-xs text-ion-2">
-                {row.sport} / {row.edgeIndex === null ? "EI pending" : `EI ${row.edgeIndex}`}
-              </p>
-            </Link>
-          ))
-        ) : (
-          <p className="text-sm leading-6 text-ion-1">{empty}</p>
-        )}
-      </div>
-    </div>
   );
 }

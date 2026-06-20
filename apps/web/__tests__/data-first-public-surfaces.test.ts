@@ -9,17 +9,20 @@ function read(path: string): string {
 }
 
 describe("data-first public surfaces", () => {
-  it("homepage leads with data readiness and suppresses public demo rows", () => {
+  it("homepage is data-first — every number from a real loader, no fabricated rows", () => {
     const page = read("apps/web/app/page.tsx");
-    expect(page).toMatch(/The board is only as smart as the data behind it/);
-    expect(page).toMatch(/Demo data suppressed/);
-    expect(page).toMatch(/PUBLIC_DATA_SOURCES/);
-    expect(page).toMatch(/CONTEXT_INTELLIGENCE_SOURCES/);
-    expect(page).toMatch(/DATA_SOURCE_STACK/);
+    // The concise home routes the four doors and shows only live, real-sourced
+    // counts; demo suppression happens in the loaders, so the home renders no
+    // public board rows at all (nothing to fake).
+    expect(page).toMatch(/loadBoardState/);
+    expect(page).toMatch(/loadPublicCalibrationReport/);
     expect(page).toMatch(/loadNflverseUsagePulse/);
-    expect(page).toMatch(/Real NFL rows/);
+    expect(page).toMatch(/calibration\.sampleSize/);
+    expect(page).toMatch(/Pick the decision you came to make/);
     expect(page).not.toMatch(/AnnotatedSampleSignal/);
     expect(page).not.toMatch(/sample-data-banner-home/);
+    // No fabricated demo arrays defined inline on the front door.
+    expect(page).not.toMatch(/FALLBACK_PICKS/);
   });
 
   it("Trend Lab is a real route wired to the trend workbench and source catalog", () => {
