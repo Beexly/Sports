@@ -4,103 +4,95 @@ import { auth } from "@/lib/auth";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 
-// Small, clear top bar. The funnel doctrine: a FEW proprietary doors — the
-// Board, the Lab, the Engines, the Fantasy tools — plus standalone Contests
-// and The Beat for casual browse. Internal surfaces (Studio, Airwave) are
-// deliberately unlinked here: they are ours, not the visitor's.
-// `title` gives the metaphor-named doors a plain-English hover hint, since a
-// horizontal bar has no room for an inline subtitle.
-const PRIMARY_LINKS = [
-  { label: "Board", href: "/board", title: "Today's picks board" },
-  { label: "The House", href: "/house", title: "NFL hub — odds, picks & matchups" },
-] as const;
-
-const TAIL_LINKS = [
-  { label: "Contests", href: "/fantasy/contests", title: "Best ball, survivor & squares" },
-  { label: "The Beat", href: "/the-beat", title: "Sports-media intelligence — reporters, graded" },
-  { label: "Academy", href: "/academy", title: "Learn the system, step by step" },
-  { label: "Pricing", href: "/pricing", title: "Plans & what each unlocks" },
-] as const;
-
+// Four doors, not ten. The 2026 IA condenses every public surface into four
+// primary doors — Board, Players, Intelligence, Fantasy & Daily — plus a single
+// prominent media door (The Beat). Right-side utilities (Live Board, Pricing,
+// account) stay out of the door count. Each door is a mega-menu that states the
+// surface's plain-English purpose, so the bar reads like an instrument, not a
+// sitemap. Internal surfaces (Studio, Airwave) remain deliberately unlinked.
 type NavItem = { label: string; href: string; desc: string };
 type NavGroup = { heading?: string; items: readonly NavItem[] };
 
-// Players ▾ — the Lab plus a few high-value deep-link views. "See all in the Lab".
-const PLAYERS_MENU: readonly NavGroup[] = [
+// Board ▾ — the daily decision surfaces. What do I do today?
+const BOARD_MENU: readonly NavGroup[] = [
   {
     items: [
-      { label: "Player Lab", href: "/players", desc: "All player data in one tabbed surface" },
-    ],
-  },
-  {
-    heading: "Advanced stats",
-    items: [
-      { label: "Opportunity", href: "/players?view=opportunity", desc: "Air yards & target share — find buy-low and sell-high players" },
-      { label: "Snap Share", href: "/players?view=snaps", desc: "Who's actually on the field — offensive workload leaders" },
-      { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, accuracy, and yards over expected" },
-    ],
-  },
-  {
-    items: [
-      { label: "Edge Signals", href: "/players?view=edge", desc: "All the advanced stats, distilled into one tradeable read" },
+      { label: "Today's Board", href: "/board", desc: "Today's picks, scored and ranked" },
+      { label: "The House", href: "/house", desc: "NFL hub — odds, picks & matchups" },
+      { label: "Mission Control", href: "/today", desc: "Everything happening today, in one view" },
+      { label: "Daily Briefing", href: "/gsn", desc: "Our daily briefing format — live feed coming soon" },
     ],
   },
 ];
 
-// Intelligence ▾ — one tight list. Everything funnels into the engines;
-// the engine browser is the single deep door.
+// Players ▾ — one immaculate lab. The deep views are lenses on the same data,
+// not separate doors.
+const PLAYERS_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "Player Lab", href: "/players", desc: "Every player, every signal — filter, sort, expand" },
+      { label: "Edge Signals", href: "/players?view=edge", desc: "The advanced stats, distilled into one tradeable read" },
+    ],
+  },
+  {
+    heading: "Lenses",
+    items: [
+      { label: "Opportunity", href: "/players?view=opportunity", desc: "Air yards & target share — buy-low and sell-high" },
+      { label: "Snap Share", href: "/players?view=snaps", desc: "Who's actually on the field" },
+      { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, accuracy & yards over expected" },
+      { label: "DFS Board", href: "/players?view=dfs", desc: "Salary value vs. role and usage" },
+    ],
+  },
+  {
+    items: [
+      { label: "Trend Lab", href: "/trends", desc: "Trends that pass a real statistical test" },
+    ],
+  },
+];
+
+// Intelligence ▾ — the engine room and the proof. How we think, and how we prove it.
 const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
       { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, in one place" },
-      { label: "Mission Control", href: "/today", desc: "Everything happening today, in one view" },
-      { label: "Command Deck", href: "/deck", desc: "The owner's intelligence command deck — watch the company run itself" },
-      { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line moves & best available prices" },
-      { label: "Trend Lab", href: "/trends", desc: "Trends that pass a real statistical test" },
-      { label: "CLV Tracker", href: "/track", desc: "Track your own bets — did you beat the closing line?" },
-      { label: "GSN — Daily Briefing", href: "/gsn", desc: "A sample of our daily briefing format — live feed coming soon" },
+      { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line moves & best prices" },
+      { label: "Command Deck", href: "/deck", desc: "The intelligence command deck" },
       { label: "How we read metrics", href: "/intelligence/metrics", desc: "What each stat means, in plain terms" },
+      { label: "Learn the Signal", href: "/academy", desc: "Train on the process, step by step" },
     ],
   },
   {
-    heading: "Receipts",
+    heading: "The Proof Room",
     items: [
-      { label: "Closing Line Value", href: "/clv", desc: "Did we beat the closing line — the benchmark most services hide" },
-      { label: "Calibration Report", href: "/performance", desc: "Every settled pick — win rate shown once the sample is honest" },
+      { label: "Calibration Report", href: "/performance", desc: "Every settled pick — win rate, once the sample is honest" },
+      { label: "Closing Line Value", href: "/clv", desc: "Did we beat the close — the benchmark most services hide" },
       { label: "Trust Ledger", href: "/ledger", desc: "Every settled pick, with a tamper-proof receipt" },
       { label: "Accountability", href: "/accountability", desc: "Loss autopsies and the full public record" },
+      { label: "CLV Tracker", href: "/track", desc: "Track your own bets — did you beat the close?" },
     ],
   },
 ];
 
-// Fantasy ▾ — the core manager/DFS tools, plus Connect.
-const FANTASY_MENU: readonly NavGroup[] = [
+// Fantasy & Daily ▾ — the tools. Season-long managers and daily lineups in one door.
+const FANTASY_DAILY_MENU: readonly NavGroup[] = [
   {
-    heading: "Core tools",
+    heading: "Fantasy",
     items: [
-      { label: "Draft Assistant", href: "/fantasy/draft", desc: "Draft tiers, player values, and live pick guidance" },
-      { label: "Lineup Optimizer", href: "/fantasy/lineup", desc: "Start or sit — floor vs. ceiling, explained" },
+      { label: "Draft Assistant", href: "/fantasy/draft", desc: "Draft tiers, player values & live pick guidance" },
+      { label: "Start-Sit Helper", href: "/fantasy/lineup", desc: "Start or sit — floor vs. ceiling, explained" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Who to add and what to bid, with the why" },
       { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Is the trade fair? Value and win-now read" },
-    ],
-  },
-  {
-    items: [
-      { label: "All-in-One Optimizer", href: "/optimizer", desc: "Draft, lineups & DFS in one workspace" },
       { label: "Connect League", href: "/fantasy/connect", desc: "Link your league in one tap" },
     ],
   },
-];
-
-// DFS ▾ — daily fantasy is its own lane, not a fantasy sub-item.
-const DFS_MENU: readonly NavGroup[] = [
   {
     heading: "Daily",
     items: [
-      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Lineup builder for cash games & tournaments — fully transparent" },
-      { label: "Salary Board", href: "/fantasy/dfs#salary-board", desc: "DraftKings salaries, reconciled (when the feed is live)" },
+      { label: "All-in-One Optimizer", href: "/optimizer", desc: "Draft, lineups & daily in one workspace" },
+      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Lineup builder for cash games & tournaments" },
+      { label: "Salary Board", href: "/fantasy/dfs#salary-board", desc: "DraftKings salaries, reconciled when the feed is live" },
       { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & PrizePicks line edges, graded" },
-      { label: "DFS Player Board", href: "/players?view=dfs", desc: "Salary value vs. role and usage" },
+      { label: "Contests", href: "/fantasy/contests", desc: "Best ball, survivor & squares" },
     ],
   },
 ];
@@ -146,22 +138,14 @@ export async function Nav() {
           <BrandLockup />
 
           <nav className="nav-links" aria-label="Primary">
-            {PRIMARY_LINKS.map(({ href, label, title }) => (
-              <Link key={href} href={href} title={title}>
-                {label}
-              </Link>
-            ))}
-
+            <NavMenu label="Board" href="/board" groups={BOARD_MENU} />
             <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
-            <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
-            <NavMenu label="DFS" href="/fantasy/dfs" groups={DFS_MENU} />
+            <NavMenu label="Fantasy & Daily" href="/fantasy" groups={FANTASY_DAILY_MENU} />
 
-            {TAIL_LINKS.map(({ href, label, title }) => (
-              <Link key={href} href={href} title={title}>
-                {label}
-              </Link>
-            ))}
+            <Link href="/the-beat" title="Sports-media intelligence — reporters, graded">
+              The Beat
+            </Link>
           </nav>
         </div>
 

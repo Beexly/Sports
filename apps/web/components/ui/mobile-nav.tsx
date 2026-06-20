@@ -7,16 +7,19 @@ type NavLink = { label: string; href: string };
 // A section is either a flat list of links (no toggle) or a collapsible group.
 type Section = { heading: string; collapsible?: boolean; links: ReadonlyArray<NavLink> };
 
-// Mirrors the desktop top bar: a few proprietary doors, Contests and The
-// Beat standalone. Internal surfaces (Studio, Airwave) are not linked.
+// Mirrors the desktop four-door IA exactly: Board, Players, Intelligence
+// (with The Proof Room), Fantasy & Daily, plus the standalone Beat. Every
+// route reachable on desktop is reachable here. Internal surfaces (Studio,
+// Airwave) are not linked.
 const SECTIONS: readonly Section[] = [
   {
-    heading: "Start here",
+    heading: "Board",
+    collapsible: true,
     links: [
-      { label: "Board", href: "/board" },
-      { label: "Today — Mission Control", href: "/today" },
-      { label: "Contests", href: "/fantasy/contests" },
-      { label: "Pricing", href: "/pricing" },
+      { label: "Today's Board", href: "/board" },
+      { label: "The House — NFL hub", href: "/house" },
+      { label: "Mission Control", href: "/today" },
+      { label: "Daily Briefing", href: "/gsn" },
     ],
   },
   {
@@ -24,10 +27,12 @@ const SECTIONS: readonly Section[] = [
     collapsible: true,
     links: [
       { label: "Player Lab", href: "/players" },
+      { label: "Edge Signals", href: "/players?view=edge" },
       { label: "Opportunity", href: "/players?view=opportunity" },
       { label: "Snap Share", href: "/players?view=snaps" },
       { label: "Next Gen", href: "/players?view=nextgen" },
-      { label: "Edge Signals", href: "/players?view=edge" },
+      { label: "DFS Board", href: "/players?view=dfs" },
+      { label: "Trend Lab", href: "/trends" },
     ],
   },
   {
@@ -36,49 +41,43 @@ const SECTIONS: readonly Section[] = [
     links: [
       { label: "Intelligence Engines", href: "/intelligence/engines" },
       { label: "Galaxy Twin — Market map", href: "/observatory" },
-      { label: "Trend Lab — Tested trends", href: "/trends" },
-      { label: "CLV Tracker — Track your bets", href: "/track" },
-      { label: "GSN — Briefing (sample)", href: "/gsn" },
+      { label: "Command Deck", href: "/deck" },
       { label: "How we read metrics", href: "/intelligence/metrics" },
+      { label: "Learn the Signal", href: "/academy" },
     ],
   },
   {
-    heading: "Receipts",
+    heading: "The Proof Room",
     collapsible: true,
     links: [
-      { label: "Closing Line Value", href: "/clv" },
       { label: "Calibration Report", href: "/performance" },
+      { label: "Closing Line Value", href: "/clv" },
       { label: "Trust Ledger — Pick receipts", href: "/ledger" },
       { label: "Accountability", href: "/accountability" },
+      { label: "CLV Tracker — Track your bets", href: "/track" },
     ],
   },
   {
-    heading: "Fantasy",
+    heading: "Fantasy & Daily",
     collapsible: true,
     links: [
       { label: "Draft Assistant", href: "/fantasy/draft" },
-      { label: "Lineup Optimizer", href: "/fantasy/lineup" },
+      { label: "Start-Sit Helper", href: "/fantasy/lineup" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers" },
       { label: "Trade Analyzer", href: "/fantasy/trade" },
-      { label: "All-in-One Optimizer", href: "/optimizer" },
       { label: "Connect League", href: "/fantasy/connect" },
-    ],
-  },
-  {
-    heading: "DFS",
-    collapsible: true,
-    links: [
+      { label: "All-in-One Optimizer", href: "/optimizer" },
       { label: "DFS Suite", href: "/fantasy/dfs" },
       { label: "Salary Board", href: "/fantasy/dfs#salary-board" },
       { label: "Pick'em Edge", href: "/fantasy/props" },
-      { label: "DFS Player Board", href: "/players?view=dfs" },
+      { label: "Contests", href: "/fantasy/contests" },
     ],
   },
   {
     heading: "More",
     links: [
       { label: "The Beat — Media intelligence", href: "/the-beat" },
-      { label: "The Academy", href: "/academy" },
+      { label: "Pricing", href: "/pricing" },
       { label: "Dashboard", href: "/dashboard" },
     ],
   },
