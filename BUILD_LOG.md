@@ -180,3 +180,36 @@ untouched; additive schema only; no Higgsfield/Odds spend.
 
 All green: web typecheck 0, lint clean, build succeeds (16 Galaxy pages + 10 API
 routes), language-law scans 44 files clean, 52 web + 66 engine Galaxy tests pass.
+
+---
+
+## DEEPENING OS + STAGE 3 STARTERS
+
+Built per the owner's Deepening OS (deepen, don't sprawl) and the GTA/MMORPG
+"everything feeds one character" north star (see `DECISIONS.md` D-022..D-028 and
+`STAGE_2_BUILD_REPORT.md`):
+
+- **Galaxy Score v1** — one transparent 0–1000 identity metric (calibration-first).
+- **Boss canon** retheme to the five named bad-logic bosses + rich metadata.
+- **Season objectives** (daily/weekly/seasonal) + Pro track (depth, not outcomes).
+- **Cosmetics economy** — 23-item Wardrobe (kicks, fits, emotes, anthems, scenes,
+  banners, frames, ticket stubs, titles); earn / season-drop / Nova (test mode);
+  never affects outcomes.
+- **Cribs** (`/galaxy/u/[handle]`) — visitable public profiles decorated by
+  equipped cosmetics; **Friends/follow** social graph + Friends page.
+- **Crew Utility** — 8 lanes + weekly missions, crew XP, signal board, leaderboard.
+- **Crew Co-op Raids** — the week's boss tackled together (the first play-together
+  mode), crew-wide raid-banner entitlement on clear.
+- **Faction War**, **Creator Gauntlet**, **card momentum tags + detail/sparkline**,
+  **daily streak with streak-insurance**.
+- **Brand enforcement gates** (automated) + expanded **admin observability**.
+
+**Final tally:** 164 Galaxy tests (77 engine + 87 web); web typecheck 0; lint
+clean; build succeeds (~20 pages + 12 API routes); brand-safety suite (2191)
+unaffected. Stripe test-mode only; additive schema only; no external spend.
+
+The autonomously-buildable web trunk is comprehensive. What remains —
+**real-time 3D open world, real-money marketplace/custody, KYC, live wagering,
+literal action/violence tuning** — is the funded/partner/counsel-gated endgame
+behind the four hard-stops (bible §2/§4.4), with design + asset briefs ready to
+extend the trunk into a 3D client.
