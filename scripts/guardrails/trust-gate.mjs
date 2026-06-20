@@ -62,6 +62,10 @@ const WHITELIST_PATHS = new Set([
   "apps/web/lib/pick-explainer/policy.ts",
   // Content-safety lexicon: contains the banned phrases as detection terms.
   "apps/web/lib/safety/content-safety.ts",
+  // Galaxy brand Language Law: defines the forbidden vocabulary as detection
+  // patterns (ids/keys/rationale text), same rationale as trust-claims.ts. It is
+  // a rule definition, not public copy; /galaxy surfaces are still scanned.
+  "packages/galaxy-engine/src/language-law.ts",
   "packages/db/prisma/seed.ts",
 ]);
 
