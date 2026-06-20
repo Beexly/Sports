@@ -41,6 +41,7 @@ const SECTIONS: readonly Section[] = [
     heading: "Fantasy & Daily",
     collapsible: true,
     links: [
+      { label: "All fantasy & daily tools", href: "/fantasy" },
       { label: "Draft Assistant", href: "/fantasy/draft" },
       { label: "Start-Sit Helper", href: "/fantasy/lineup" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers" },
