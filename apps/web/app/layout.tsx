@@ -19,6 +19,7 @@ import { CommandPalette } from "@/components/ui/command-palette";
 import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
 import { SentientShell } from "@/components/motion/sentient-shell";
+import { PageExplainerAuto } from "@/components/explainers/page-explainer";
 
 const archFont = Big_Shoulders_Display({
   subsets: ["latin"],
@@ -224,6 +225,7 @@ export default function RootLayout({
         <CommandPalette />
         <GalaxyCursor />
         <SentientShell />
+        <PageExplainerAuto />
         <SentryClientInit />
 
         {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}
