@@ -5,10 +5,12 @@ import { MobileNav } from "@/components/ui/mobile-nav";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 
 // Four doors, not ten. The 2026 IA condenses every public surface into four
-// primary doors — Board, Players, Intelligence, Fantasy & Daily — plus a single
-// prominent media door (The Beat). Right-side utilities (Live Board, Pricing,
-// account) stay out of the door count. Each door is a mega-menu that states the
-// surface's plain-English purpose, so the bar reads like an instrument, not a
+// primary doors — Board, Players, Intelligence, Fantasy & Daily — plus two
+// prominent standalone links (The Beat, Proof). Players is a single direct link
+// to one immaculate lab (its deep views are in-page lenses, not nav items).
+// Proof is pulled OUT of Intelligence into its own door so credibility is a
+// global anchor, not a sub-menu. Right-side utilities (Live Board, Pricing,
+// account) stay out of the door count. The bar reads like an instrument, not a
 // sitemap. Internal surfaces (Studio, Airwave) remain deliberately unlinked.
 type NavItem = { label: string; href: string; desc: string };
 type NavGroup = { heading?: string; items: readonly NavItem[] };
@@ -25,55 +27,21 @@ const BOARD_MENU: readonly NavGroup[] = [
   },
 ];
 
-// Players ▾ — one immaculate lab. The deep views are lenses on the same data,
-// not separate doors.
-const PLAYERS_MENU: readonly NavGroup[] = [
-  {
-    items: [
-      { label: "Player Lab", href: "/players", desc: "Every player, every signal — filter, sort, expand" },
-      { label: "Edge Signals", href: "/players?view=edge", desc: "The advanced stats, distilled into one tradeable read" },
-    ],
-  },
-  {
-    heading: "Lenses",
-    items: [
-      { label: "Opportunity", href: "/players?view=opportunity", desc: "Air yards & target share — buy-low and sell-high" },
-      { label: "Snap Share", href: "/players?view=snaps", desc: "Who's actually on the field" },
-      { label: "Next Gen", href: "/players?view=nextgen", desc: "Separation, accuracy & yards over expected" },
-      { label: "DFS Board", href: "/players?view=dfs", desc: "Salary value vs. role and usage" },
-    ],
-  },
-  {
-    items: [
-      { label: "Trend Lab", href: "/trends", desc: "Trends that pass a real statistical test" },
-    ],
-  },
-];
-
-// Intelligence ▾ — the engine room and the proof. How we think, and how we prove it.
+// Intelligence ▾ — the engine room. How we think. (Proof moved to its own door.)
 const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
       { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, in one place" },
       { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line moves & best prices" },
-      { label: "Command Deck", href: "/deck", desc: "The intelligence command deck" },
       { label: "How we read metrics", href: "/intelligence/metrics", desc: "What each stat means, in plain terms" },
       { label: "Learn the Signal", href: "/academy", desc: "Train on the process, step by step" },
     ],
   },
-  {
-    heading: "The Proof Room",
-    items: [
-      { label: "Calibration Report", href: "/performance", desc: "Every settled pick — win rate, once the sample is honest" },
-      { label: "Closing Line Value", href: "/clv", desc: "Did we beat the close — the benchmark most services hide" },
-      { label: "Trust Ledger", href: "/ledger", desc: "Every settled pick, with a tamper-proof receipt" },
-      { label: "Accountability", href: "/accountability", desc: "Loss autopsies and the full public record" },
-      { label: "CLV Tracker", href: "/track", desc: "Track your own bets — did you beat the close?" },
-    ],
-  },
 ];
 
-// Fantasy & Daily ▾ — the tools. Season-long managers and daily lineups in one door.
+// Fantasy & Daily ▾ — the tools. Season-long managers and daily lineups in one
+// door. Condensed to the live, hand-in-hand tools; secondary surfaces live on
+// the /fantasy hub.
 const FANTASY_DAILY_MENU: readonly NavGroup[] = [
   {
     heading: "Fantasy",
@@ -82,7 +50,6 @@ const FANTASY_DAILY_MENU: readonly NavGroup[] = [
       { label: "Start-Sit Helper", href: "/fantasy/lineup", desc: "Start or sit — floor vs. ceiling, explained" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Who to add and what to bid, with the why" },
       { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Is the trade fair? Value and win-now read" },
-      { label: "Connect League", href: "/fantasy/connect", desc: "Link your league in one tap" },
     ],
   },
   {
@@ -90,9 +57,7 @@ const FANTASY_DAILY_MENU: readonly NavGroup[] = [
     items: [
       { label: "All-in-One Optimizer", href: "/optimizer", desc: "Draft, lineups & daily in one workspace" },
       { label: "DFS Suite", href: "/fantasy/dfs", desc: "Lineup builder for cash games & tournaments" },
-      { label: "Salary Board", href: "/fantasy/dfs#salary-board", desc: "DraftKings salaries, reconciled when the feed is live" },
       { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & PrizePicks line edges, graded" },
-      { label: "Contests", href: "/fantasy/contests", desc: "Best ball, survivor & squares" },
     ],
   },
 ];
@@ -139,12 +104,17 @@ export async function Nav() {
 
           <nav className="nav-links" aria-label="Primary">
             <NavMenu label="Board" href="/board" groups={BOARD_MENU} />
-            <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
+            <Link href="/players" title="One immaculate lab — every player, every signal">
+              Players
+            </Link>
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
             <NavMenu label="Fantasy & Daily" href="/fantasy" groups={FANTASY_DAILY_MENU} />
 
             <Link href="/the-beat" title="Sports-media intelligence — reporters, graded">
               The Beat
+            </Link>
+            <Link href="/calibration" title="The Proof Room — calibration, CLV, and the public ledger">
+              Proof
             </Link>
           </nav>
         </div>

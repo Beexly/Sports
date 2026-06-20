@@ -7,10 +7,11 @@ type NavLink = { label: string; href: string };
 // A section is either a flat list of links (no toggle) or a collapsible group.
 type Section = { heading: string; collapsible?: boolean; links: ReadonlyArray<NavLink> };
 
-// Mirrors the desktop four-door IA exactly: Board, Players, Intelligence
-// (with The Proof Room), Fantasy & Daily, plus the standalone Beat. Every
-// route reachable on desktop is reachable here. Internal surfaces (Studio,
-// Airwave) are not linked.
+// Mirrors the desktop IA exactly: Board, Players (one lab), Intelligence,
+// Fantasy & Daily, plus the standalone Beat and Proof doors. Players' deep
+// views are in-page lenses (not nav items), so they are not duplicated here.
+// Proof is its own door (the /calibration hub gathers every proof surface).
+// Internal surfaces (Studio, Airwave) are not linked.
 const SECTIONS: readonly Section[] = [
   {
     heading: "Board",
@@ -24,16 +25,7 @@ const SECTIONS: readonly Section[] = [
   },
   {
     heading: "Players",
-    collapsible: true,
-    links: [
-      { label: "Player Lab", href: "/players" },
-      { label: "Edge Signals", href: "/players?view=edge" },
-      { label: "Opportunity", href: "/players?view=opportunity" },
-      { label: "Snap Share", href: "/players?view=snaps" },
-      { label: "Next Gen", href: "/players?view=nextgen" },
-      { label: "DFS Board", href: "/players?view=dfs" },
-      { label: "Trend Lab", href: "/trends" },
-    ],
+    links: [{ label: "Player Lab — every player, every signal", href: "/players" }],
   },
   {
     heading: "Intelligence",
@@ -41,20 +33,8 @@ const SECTIONS: readonly Section[] = [
     links: [
       { label: "Intelligence Engines", href: "/intelligence/engines" },
       { label: "Galaxy Twin — Market map", href: "/observatory" },
-      { label: "Command Deck", href: "/deck" },
       { label: "How we read metrics", href: "/intelligence/metrics" },
       { label: "Learn the Signal", href: "/academy" },
-    ],
-  },
-  {
-    heading: "The Proof Room",
-    collapsible: true,
-    links: [
-      { label: "Calibration Report", href: "/performance" },
-      { label: "Closing Line Value", href: "/clv" },
-      { label: "Trust Ledger — Pick receipts", href: "/ledger" },
-      { label: "Accountability", href: "/accountability" },
-      { label: "CLV Tracker — Track your bets", href: "/track" },
     ],
   },
   {
@@ -65,12 +45,22 @@ const SECTIONS: readonly Section[] = [
       { label: "Start-Sit Helper", href: "/fantasy/lineup" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers" },
       { label: "Trade Analyzer", href: "/fantasy/trade" },
-      { label: "Connect League", href: "/fantasy/connect" },
       { label: "All-in-One Optimizer", href: "/optimizer" },
       { label: "DFS Suite", href: "/fantasy/dfs" },
-      { label: "Salary Board", href: "/fantasy/dfs#salary-board" },
       { label: "Pick'em Edge", href: "/fantasy/props" },
-      { label: "Contests", href: "/fantasy/contests" },
+    ],
+  },
+  {
+    heading: "Proof",
+    collapsible: true,
+    links: [
+      { label: "The Proof Room", href: "/calibration" },
+      { label: "Calibration Report", href: "/performance" },
+      { label: "Closing Line Value", href: "/clv" },
+      { label: "Trust Ledger — Pick receipts", href: "/ledger" },
+      { label: "Proof of Record", href: "/proof" },
+      { label: "Accountability", href: "/accountability" },
+      { label: "CLV Tracker — Track your bets", href: "/track" },
     ],
   },
   {
