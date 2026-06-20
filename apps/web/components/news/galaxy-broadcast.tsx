@@ -57,7 +57,7 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
             background: `radial-gradient(120% 90% at 20% 100%, ${scene.accent}26, transparent 60%), radial-gradient(80% 70% at 90% 10%, ${scene.accent}14, transparent 60%), ${BRAND_COLORS.obsidianBlack}`,
           }}
         >
-          <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "repeating-linear-gradient(0deg, #fff 0, #fff 1px, transparent 1px, transparent 3px)" }} />
+          <div aria-hidden className="gsn-scanlines pointer-events-none absolute inset-0 opacity-[0.1]" />
           <div className="relative flex flex-wrap items-center gap-2">
             <span className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider" style={{ background: `${scene.accent}22`, color: scene.accent }}>
               On location · {scene.label}

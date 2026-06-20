@@ -137,6 +137,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 stat={cleared > 0 || gated > 0 ? `${cleared} cleared · ${gated} gated` : "Gate holding. No forced action"}
                 action="Open the board"
                 href="/board"
+                bar={{ a: cleared, b: gated }}
               />
               <DoorCard
                 index={2}
@@ -257,6 +258,7 @@ function DoorCard({
   action,
   href,
   accent = false,
+  bar,
 }: {
   index: number;
   label: string;
@@ -265,7 +267,11 @@ function DoorCard({
   action: string;
   href: string;
   accent?: boolean;
+  /** Optional two-segment micro-bar: shows magnitude, not just text. */
+  bar?: { a: number; b: number };
 }): JSX.Element {
+  const showBar = bar && bar.a + bar.b > 0;
+  const aPct = showBar ? Math.round((bar.a / (bar.a + bar.b)) * 100) : 0;
   return (
     <Reveal delay={index * 70} className="flex">
       <Link
@@ -295,6 +301,14 @@ function DoorCard({
 
         {/* live readout */}
         <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-orbital-cyan tabular-nums">{stat}</p>
+
+        {/* micro-bar: show the split, do not just say it */}
+        {showBar && (
+          <span aria-hidden className="flex h-1 overflow-hidden rounded-full bg-mineral">
+            <span className="h-full bg-orbital-cyan" style={{ width: `${aPct}%` }} />
+            <span className="h-full flex-1 bg-plasma/70" />
+          </span>
+        )}
 
         <p className="flex items-center gap-1.5 border-t border-mineral/70 pt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2 transition-colors group-hover:text-ion-white">
           {action}

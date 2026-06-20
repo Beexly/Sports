@@ -28,11 +28,12 @@ export default function TheBeatPage() {
       <main id="main-content" className="flex-1">
         {/* ── BROADCAST · the always-on transmission ───────────────────── */}
         <section className="relative isolate overflow-hidden px-4 pb-10 pt-24 sm:px-6 lg:px-8">
-          {/* Cinematic motion backdrop. Decorative, reduced-motion safe. */}
+          {/* Cinematic GSN control-room plate. Decorative, reduced-motion safe.
+              Motion plate (Seedance/Kling i2v) lands once generation is approved;
+              the still is the premium upgrade in the meantime. */}
           <GeneratedPlate
-            className="-z-10 opacity-[0.18]"
-            still="/immersive/command-deck-wide-a.webp"
-            motion="/immersive/command-deck-motion.mp4"
+            className="-z-10 opacity-[0.2]"
+            still="/immersive/gsn-broadcast-plate.webp"
           />
           <div
             aria-hidden
@@ -71,8 +72,10 @@ export default function TheBeatPage() {
         {/* ── SIGNAL LEDGER · the graded feed (proof preserved) ─────────── */}
         <section className="px-4 pb-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
+            {/* The transmission flows down into the ledger */}
+            <div aria-hidden className="mx-auto h-10 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${BRAND_COLORS.orbitalCyan}66)` }} />
             <Reveal>
-              <div className="flex flex-col gap-2 border-t border-mineral pt-10">
+              <div className="flex flex-col gap-2 pt-2">
                 <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>The Signal Ledger</p>
                 <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl">
                   Every report, weighed the instant it lands.

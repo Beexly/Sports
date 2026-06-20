@@ -774,6 +774,28 @@ button { font-family: inherit; cursor: pointer; }
   }
 }
 
+/* ── Broadcast scanlines ─────────────────────────────────────────────────────
+   A live-feed scanline that drifts a few pixels on a fast step cycle, so the
+   broadcast scene reads as a running transmission rather than a static panel.
+   Reduced motion holds it still. */
+@keyframes gsn-scan-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 6px; }
+}
+.gsn-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.05) 0,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: gsn-scan-drift 0.55s steps(3) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gsn-scanlines { animation: none; }
+}
+
 /* Interactive galaxy hero */
 .hero-galaxy {
   min-height: 760px;

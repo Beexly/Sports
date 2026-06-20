@@ -88,7 +88,7 @@ export default function CalibrationProofRoomPage() {
       <Nav />
 
       <main className="mx-auto flex max-w-5xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
-        <header className="border-b border-mineral pb-10">
+        <header className="gw-nebula-deep -mx-4 rounded-ds-lg border-b border-mineral px-4 pb-10 pt-6 sm:-mx-6 sm:px-6">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-orbital-cyan">
             The Proof Room · Galaxy Calibration
           </p>
@@ -125,6 +125,7 @@ export default function CalibrationProofRoomPage() {
             body="Every settled pick carries a receipt stamped at generation time. The ledger is the running record. Nothing is quietly removed to make it look cleaner."
             href="/ledger"
             linkLabel="Open the Ledger"
+            accent
           />
           <ProofCard
             eyebrow="Cryptographic proof"
@@ -132,6 +133,7 @@ export default function CalibrationProofRoomPage() {
             body="Every settled pick carries a Merkle leaf hash stamped at generation time. The root over all settled picks is published so anyone can re-derive it and verify the record hasn't changed."
             href="/proof"
             linkLabel="View Proof of Record"
+            accent
           />
           <ProofCard
             eyebrow="Loss autopsies"
