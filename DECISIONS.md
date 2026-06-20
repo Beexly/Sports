@@ -93,3 +93,37 @@ of rationale each. Hard-stops are recorded in `BUILD_LOG.md`.
   offers record interest only; acceptance/settlement and any value exchange are
   Stage-3 partner-gated. This keeps the Credit Constitution intact — no currency,
   no cash, no custody touches the market this stage.
+
+## Deepening OS + product-vision decisions
+
+- **D-022 — Deepen, don't sprawl.** Per the Deepening OS, every pass must lift ≥2
+  of {Feel, Loop, Identity, Depth, Retention, Revenue, Trust}. Boss retheme,
+  Galaxy Score, cosmetics, cribs, friends were all chosen on that test.
+- **D-023 — GTA / MMORPG north star, mapped to original Galaxy systems.** The
+  owner's vision is GTA-grade engagement/retention in our own IP. Mapping (built
+  unless noted): map/districts → the Campus; missions/heists → quests + Signal
+  Checks + PvM bosses + (roadmap) crew raids; economy → Credits + Wardrobe +
+  cribs; radio → anthems; online lobbies/crews → Crews + Friends; reputation →
+  Galaxy Score + rank + Heat; world reacting → Galaxy Engine v0 (sports triggers
+  → events). The literal 3D open world is the funded endgame (bible §2/§4.4); the
+  web trunk is that world's brain/identity/economy/missions/social a 3D client
+  later renders. We build the trunk so every system extends into the 3D layer.
+- **D-024 — Everything feeds one character.** Not a bag of mini-games: every
+  surface flows into the same Sports IQ, Galaxy Score, Credits, faction, crew, and
+  season. The Crib makes that interconnection visible and visitable.
+- **D-025 — Name stays "Galaxy Dynasty".** Brand-safe, canon in the bible.
+  "Galaxy Quest" is avoided (existing film trademark — hard-stop #3); "Quest(s)"
+  remains the in-world feature term.
+- **D-026 — Brand stays sports-intelligence, not violence.** Galaxy Dynasty's
+  Language/Brand Law is non-violent by canon; competitive intensity comes through
+  Signal Duels, PvM bosses, Crew Clash, and Faction War. Any literal "action /
+  violence" tuning belongs to the funded 3D action layer and is a content-rating +
+  counsel decision (hard-stop #3) — roadmapped, not built autonomously.
+- **D-027 — No outcome-affecting consumables (no pay-to-win).** RuneScape-style
+  consumables (bait, cages, boosts) that buy power are excluded by the Credit
+  Constitution + anti-pay-to-win law. Sports IQ is the honest skill grind (leveled
+  by graded calibration). Monetization stays cosmetics + subscription (depth, not
+  outcomes) + achievement merch.
+- **D-028 — Cosmetics are the revenue engine.** Kicks, fits, emotes, anthems,
+  scenes, banners, frames, titles, ticket stubs — earn / season-drop / Nova (test
+  mode). Cosmetics never affect outcomes (enforced by a brand gate test).
