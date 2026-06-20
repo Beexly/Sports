@@ -7,7 +7,7 @@ import { MetricExplainer } from "@/components/ui/metric-explainer";
 import { Nav } from "@/components/ui/nav";
 import { PageHero } from "@/components/ui/page-hero";
 import { SourceError } from "@/components/ui/source-error";
-import { Tabs } from "@/components/ui/tabs";
+import { PlayerLensRail } from "@/components/players/player-lens-rail";
 import { PLAYER_VIEWS, resolvePlayerView, type ViewResult } from "@/lib/players/views";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
@@ -93,15 +93,12 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
           }
         />
 
-        <Tabs
-          param="view"
+        <PlayerLensRail
           active={view.slug}
           pathname={PATHNAME}
-          ariaLabel="Player Lab views"
           currentParams={searchParams}
-          variant="dark"
-          items={PLAYER_VIEWS.map((v) => ({
-            value: v.slug,
+          lenses={PLAYER_VIEWS.map((v) => ({
+            slug: v.slug,
             label: v.label,
             tooltip: v.tabTooltip,
           }))}
