@@ -73,3 +73,23 @@ of rationale each. Hard-stops are recorded in `BUILD_LOG.md`.
   (`db:push`/`db:migrate`); no migration was executed autonomously (hard-stop #2).
 - **D-017 — No new required env vars.** The slice reuses existing
   `DATABASE_URL`/`STRIPE_*`; `env-example-coverage` stays green.
+
+## Stage 2 — Signal Cup
+
+- **D-018 — Duels resolve immediately against seeded scenarios.** Both reads are
+  engine-graded against a known final, so a duel resolves the moment the second
+  read lands (instantly vs a Ghost, on-join vs a human). This keeps PvP always
+  playable (anti-ghost-town) without long-lived async state; live pre-kickoff
+  duels graded by the settlement worker are a Stage-3 item.
+- **D-019 — Ratings are Elo-on-calibration; ladders are skill-tiered.** Rating
+  moves on duel results only; tiers (Rookie→Legend) gate matchmaking, never power
+  (§4.1 anti-pay-to-win, §4.3 skill-tiered ladders). Ghost ratings derive from
+  their calibration so the ladder is never empty.
+- **D-020 — One generalized boss engine, five bosses.** `bosses.ts` replaces the
+  Public-Trap-specific path with a registry; `runPublicTrap` stays as a thin
+  back-compat wrapper. Each boss has a unique merch SKU; clearing is the only way
+  to unlock it (achievement-gated, no purchase).
+- **D-021 — Vault Market is a card-for-card prototype, never currency.** Trade
+  offers record interest only; acceptance/settlement and any value exchange are
+  Stage-3 partner-gated. This keeps the Credit Constitution intact — no currency,
+  no cash, no custody touches the market this stage.

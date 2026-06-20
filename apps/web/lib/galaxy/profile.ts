@@ -21,6 +21,10 @@ import {
   characterLevelFromXp,
   ONBOARDING_CREDIT_GRANT,
   skillXpToNextLevel,
+  ratingTier,
+  ratingTierProgress,
+  seasonProgress,
+  seasonPointsForXp,
   type GalaxyArchetypeId,
   type GalaxyFactionId,
   type CreditEarnReason,
@@ -95,6 +99,8 @@ export function serializeProfile(row: ProfileRow): ProfileView {
   );
 
   const crewMembership = row.crewMemberships[0] ?? null;
+  const tierP = ratingTierProgress(row.rating);
+  const season = seasonProgress(row.seasonPoints);
 
   return {
     id: row.id,
@@ -110,6 +116,13 @@ export function serializeProfile(row: ProfileRow): ProfileView {
     characterProgress: charState.progress,
     prestige: row.prestige,
     creditsBalance: row.creditsBalance,
+    rating: row.rating,
+    ratingTier: ratingTier(row.rating).name,
+    ratingTierProgress: tierP.progress,
+    seasonPoints: row.seasonPoints,
+    seasonTier: season.tier.tier,
+    seasonTierName: season.tier.name,
+    seasonProgress: season.progress,
     avatarSeed: row.avatarSeed ?? row.id,
     dailyStreak: row.dailyStreak,
     onboarded: row.onboardedAt != null,
@@ -336,6 +349,9 @@ export async function applyReward(profileId: string, input: RewardInput): Promis
   const charState = characterLevelFromXp(newCharXp, row.characterLevel);
   const prestigeGained = charState.leveledUp ? charState.levelsGained : 0;
 
+  // Season Cup points accrue from every graded check (capped per check).
+  const seasonGain = seasonPointsForXp(input.xp);
+
   await db.galaxyProfile.update({
     where: { id: profileId },
     data: {
@@ -343,6 +359,7 @@ export async function applyReward(profileId: string, input: RewardInput): Promis
       characterXp: newCharXp,
       characterLevel: charState.level,
       prestige: row.prestige + prestigeGained,
+      seasonPoints: row.seasonPoints + seasonGain,
     },
   });
 

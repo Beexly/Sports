@@ -57,9 +57,11 @@ export default async function DynastyPage() {
       {/* Status row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px,1fr))", gap: 12, marginTop: 20 }}>
         <Stat label="Rank (Level)" value={profile.characterLevel.toString()} />
+        <Stat label="Ladder Rating" value={`${profile.rating}`} accent={GALAXY.cyan} />
+        <Stat label="Tier" value={profile.ratingTier} accent={GALAXY.cyan} />
         <Stat label="Credits" value={profile.creditsBalance.toLocaleString()} accent={GALAXY.gold} />
+        <Stat label="Season" value={`T${profile.seasonTier} · ${profile.seasonPoints}pt`} accent={GALAXY.gold} />
         <Stat label="Prestige" value={profile.prestige.toString()} accent={GALAXY.violet} />
-        <Stat label="Daily Streak" value={`${profile.dailyStreak}`} />
       </div>
 
       {/* Level progress */}
@@ -119,8 +121,9 @@ export default async function DynastyPage() {
 
       {/* Quick links */}
       <div style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
-        <Link href="/galaxy/war-room" style={ctaStyle(GALAXY.gold)}>Run a Signal Check →</Link>
-        <Link href="/galaxy/vault" style={ctaStyle(GALAXY.deepBlue)}>Open the Vault</Link>
+        <Link href="/galaxy/duel" style={ctaStyle(GALAXY.gold)}>Enter a Signal Duel →</Link>
+        <Link href="/galaxy/season" style={ctaStyle(GALAXY.cyan)}>Season Cup</Link>
+        <Link href="/galaxy/leaderboard" style={ctaStyle(GALAXY.cyan)}>Ladder</Link>
         <Link href="/galaxy/store" style={ctaStyle(GALAXY.violet)}>Merch Foundry</Link>
       </div>
     </GalaxyShell>

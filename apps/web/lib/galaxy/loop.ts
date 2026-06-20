@@ -12,12 +12,12 @@ import { db, isStubMode } from "@sports/db";
 import {
   gradeMarketSignalCheck,
   gradeBinarySignalCheck,
-  evaluatePublicTrapEncounter,
-  PUBLIC_TRAP_SCENARIOS,
+  evaluateBossEncounter,
+  getBoss,
   PUBLIC_TRAP_BOSS_KEY,
-  PUBLIC_TRAP_MERCH_SKU,
   type SignalCheckOutcome,
-  type PublicTrapEncounterResult,
+  type BossEncounterResult,
+  type BossSide,
   type TrapSide,
 } from "@sports/galaxy-engine";
 import { applyReward } from "./profile.js";
@@ -213,34 +213,38 @@ export async function runAcademyCheck(
   return { outcome, reward, persisted: !isStubMode() && profileId !== "stub", questsCompleted: [] };
 }
 
-// ── PvM boss — The Public Trap ───────────────────────────────────────────────
+// ── PvM bosses — The Depths (5 bad-logic bosses, Stage 2) ────────────────────
 
-export interface PublicTrapResponse {
-  readonly result: PublicTrapEncounterResult;
+export interface BossResponse {
+  readonly result: BossEncounterResult;
   readonly reward: RewardSummary;
   readonly merchUnlocked: { sku: string; name: string } | null;
   readonly questsCompleted: readonly string[];
   readonly persisted: boolean;
 }
 
-export async function runPublicTrap(
+/** Run any of the 5 Depths bosses. The Public Trap is bossKey "public_trap". */
+export async function runBossEncounter(
   profileId: string,
-  answers: readonly { scenarioId: string; chosen: TrapSide; confidence: number }[],
-): Promise<PublicTrapResponse> {
-  const mapped = answers.map((a) => {
-    const scenario = PUBLIC_TRAP_SCENARIOS.find((s) => s.id === a.scenarioId);
-    if (!scenario) throw new Error(`Unknown Public Trap scenario: ${a.scenarioId}`);
-    return { scenario, chosen: a.chosen, confidence: clampConfidence(a.confidence) };
-  });
+  bossKey: string,
+  answers: readonly { scenarioId: string; chosen: BossSide; confidence: number }[],
+): Promise<BossResponse> {
+  const boss = getBoss(bossKey);
+  if (!boss) throw new Error(`Unknown boss: ${bossKey}`);
 
-  const result = evaluatePublicTrapEncounter(mapped);
+  const mapped = answers.map((a) => ({
+    scenarioId: a.scenarioId,
+    chosen: a.chosen,
+    confidence: clampConfidence(a.confidence),
+  }));
 
-  // Persist one summary attempt for the boss encounter.
+  const result = evaluateBossEncounter(bossKey, mapped);
+
   if (profileId !== "stub" && result.steps[0]) {
     await persistAttempt(profileId, {
       surface: "BOSS",
       sportKey: "americanfootball_nfl",
-      prompt: `The Public Trap — resisted ${result.resistedCount}/${result.totalSteps}`,
+      prompt: `${boss.name} — resisted ${result.resistedCount}/${result.totalSteps}`,
       confidence: Math.round(
         mapped.reduce((s, m) => s + m.confidence, 0) / Math.max(mapped.length, 1),
       ),
@@ -254,14 +258,13 @@ export async function runPublicTrap(
     credits: result.totalCredits,
     reason: "BOSS_REWARD",
     sportKey: "americanfootball_nfl",
-    ref: { type: "boss", id: PUBLIC_TRAP_BOSS_KEY },
+    ref: { type: "boss", id: bossKey },
   });
 
-  // Boss progress.
   if (profileId !== "stub") {
     try {
       await db.bossProgress.upsert({
-        where: { profileId_bossKey: { profileId, bossKey: PUBLIC_TRAP_BOSS_KEY } },
+        where: { profileId_bossKey: { profileId, bossKey } },
         update: {
           attempts: { increment: 1 },
           cleared: result.cleared,
@@ -270,7 +273,7 @@ export async function runPublicTrap(
         },
         create: {
           profileId,
-          bossKey: PUBLIC_TRAP_BOSS_KEY,
+          bossKey,
           attempts: 1,
           cleared: result.cleared,
           bestScore: result.resistedCount,
@@ -284,14 +287,14 @@ export async function runPublicTrap(
 
   let merchUnlocked: { sku: string; name: string } | null = null;
   const questsCompleted: string[] = [];
-  if (result.cleared) {
+  if (result.cleared && result.merchUnlockSku) {
     merchUnlocked = await unlockMerch(
       profileId,
-      PUBLIC_TRAP_MERCH_SKU,
-      "Signal Keeper Tee",
-      "Cleared The Public Trap",
+      result.merchUnlockSku,
+      result.merchUnlockName ?? result.merchUnlockSku,
+      `Cleared ${boss.name}`,
     );
-    if (await completeQuest(profileId, "clear-the-public-trap")) {
+    if (bossKey === PUBLIC_TRAP_BOSS_KEY && (await completeQuest(profileId, "clear-the-public-trap"))) {
       questsCompleted.push("clear-the-public-trap");
     }
   }
@@ -303,6 +306,23 @@ export async function runPublicTrap(
     questsCompleted,
     persisted: !isStubMode() && profileId !== "stub",
   };
+}
+
+/** Back-compat wrapper for The Public Trap (delegates to the generic runner). */
+export type PublicTrapResponse = BossResponse;
+
+export async function runPublicTrap(
+  profileId: string,
+  answers: readonly { scenarioId: string; chosen: TrapSide; confidence: number }[],
+): Promise<PublicTrapResponse> {
+  // TrapSide ("PUBLIC"|"VALUE") is structurally the same as BossSide ("TRAP"|"VALUE")
+  // for the value side; map PUBLIC → TRAP so the generic engine reads it.
+  const mapped = answers.map((a) => ({
+    scenarioId: a.scenarioId,
+    chosen: (a.chosen === "VALUE" ? "VALUE" : "TRAP") as BossSide,
+    confidence: a.confidence,
+  }));
+  return runBossEncounter(profileId, PUBLIC_TRAP_BOSS_KEY, mapped);
 }
 
 // ── Merch entitlement (achievement-gated; no custody — bible Phase 6) ─────────

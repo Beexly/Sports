@@ -6,8 +6,9 @@ import type { ProfileView } from "@/lib/galaxy/types";
 const NAV = [
   { href: "/galaxy", label: "Campus" },
   { href: "/galaxy/war-room", label: "War Room" },
-  { href: "/galaxy/blacktop", label: "Blacktop" },
+  { href: "/galaxy/duel", label: "Duel" },
   { href: "/galaxy/depths", label: "Depths" },
+  { href: "/galaxy/season", label: "Season" },
   { href: "/galaxy/vault", label: "Vault" },
   { href: "/galaxy/crew", label: "Crews" },
   { href: "/galaxy/dynasty", label: "My Dynasty" },
@@ -100,6 +101,9 @@ export function GalaxyShell({
             <div style={{ display: "flex", gap: 14, alignItems: "center", fontSize: 13 }}>
               <span style={{ color: GALAXY.textMuted }}>
                 Lv <strong style={{ color: GALAXY.text }}>{profile.characterLevel}</strong>
+              </span>
+              <span style={{ color: GALAXY.cyan, fontWeight: 700 }} title={profile.ratingTier}>
+                ⚔ {profile.rating}
               </span>
               <span style={{ color: GALAXY.gold, fontWeight: 700 }}>
                 ◇ {profile.creditsBalance.toLocaleString()} Credits

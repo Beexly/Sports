@@ -131,5 +131,41 @@ real engine outcomes even in DB-stub mode (persisted=false).
   production build succeeds (all 10 pages + 6 API routes compiled), existing
   brand-safety suite (2119) still green.
 
-**Final tally:** 89 Galaxy tests (51 engine + 38 web) passing.
-**Next:** see `BUILD_REPORT.md` — Stage-2 "Signal Cup".
+**Final tally (Stage 1):** 89 Galaxy tests (51 engine + 38 web) passing.
+
+---
+
+## STAGE 2 — Signal Cup (weekly-retention loop)
+
+**Built**
+- **Async Signal Duel (ranked PvP):** engine `duel.ts` scores two reads on the
+  same game (outcome + calibration + process), ties break to the better-calibrated
+  read. Server `duel.ts`: Ghost duels (always playable), open duel create/join,
+  Elo-on-calibration rating updates, skill-tiered Ghost matchmaking. UI: Proving
+  Grounds `/galaxy/duel` + ranked `/galaxy/leaderboard`.
+- **5 PvM bosses (The Depths):** generalized boss registry `bosses.ts` — The
+  Public Trap, Overconfidence King, Recency Chaser, Narrative Trap, The Anchor —
+  each teaches a cognitive bias; unique merch unlock per boss. `/galaxy/depths`
+  now a 5-boss selector.
+- **Season Program ("Signal Cup"):** `season.ts` tier track; points accrue from
+  every graded check; idempotent reward claim (`/galaxy/season`). Rating + Season
+  surfaced on My Dynasty and the header.
+- **Crew Clash:** computed crew "clash power" (avg member calibration × activity)
+  vs a seeded rival, on the Crew page.
+- **Vault Market prototype + watchlist:** `market.ts` — watch cards, post
+  card-for-card trade offers (no currency, no cash, no custody). `/galaxy/market`.
+
+**Schema (additive):** `GalaxyProfile.rating/seasonPoints/seasonTierClaimed`,
+`SignalDuel.scenarioId`, `CardWatch`, `CardTradeOffer` (+ enum). `prisma generate` OK.
+
+**Decisions:** D-018 … D-021 (see `DECISIONS.md`).
+
+**Tests:** engine +15 (rating/duel/season/bosses) → **66 engine**; web +5 Stage-2
+integration → **54 web**. All green. Web typecheck 0, lint clean, build succeeds
+(14 Galaxy pages + 9 API routes). Brand-safety suite (2147) unaffected.
+
+**Hard-stops:** none. No cash-out (duels/season/market never touch cash); Stripe
+untouched; additive schema only; no Higgsfield/Odds spend.
+
+**Next:** Stage 3 commerce depth + remaining Stage-2 polish (Creator Gauntlet
+board, Merch Foundry drops) — tracked in `BUILD_REPORT.md`.

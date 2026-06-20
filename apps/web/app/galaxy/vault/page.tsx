@@ -44,6 +44,11 @@ export default async function VaultPage() {
         and display only this season — a real marketplace and physical custody are
         partner-gated (Stage 3).
       </p>
+      <p style={{ marginTop: 0 }}>
+        <a href="/galaxy/market" style={{ color: GALAXY.cyan, fontSize: 14 }}>
+          Open the Vault Market — watch &amp; trade →
+        </a>
+      </p>
 
       <div
         style={{

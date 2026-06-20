@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentProfileId } from "@/lib/galaxy/session";
-import { runPublicTrap } from "@/lib/galaxy/loop";
+import { runBossEncounter } from "@/lib/galaxy/loop";
 
 export const dynamic = "force-dynamic";
 
 const Body = z.object({
+  bossKey: z.string().default("public_trap"),
   answers: z
     .array(
       z.object({
         scenarioId: z.string(),
-        chosen: z.enum(["PUBLIC", "VALUE"]),
+        // Accept TRAP/VALUE (generic) and PUBLIC (legacy Public Trap alias).
+        chosen: z.enum(["TRAP", "VALUE", "PUBLIC"]),
         confidence: z.number().min(1).max(99),
       }),
     )
@@ -18,7 +20,7 @@ const Body = z.object({
     .max(10),
 });
 
-/** Resolve a Public Trap encounter (PvM boss). */
+/** Resolve a Depths boss encounter (any of the 5 PvM bosses). */
 export async function POST(req: Request): Promise<NextResponse> {
   let parsed: z.infer<typeof Body>;
   try {
@@ -28,9 +30,14 @@ export async function POST(req: Request): Promise<NextResponse> {
   }
 
   const profileId = (await getCurrentProfileId()) ?? "stub";
+  const answers = parsed.answers.map((a) => ({
+    scenarioId: a.scenarioId,
+    chosen: (a.chosen === "PUBLIC" ? "TRAP" : a.chosen) as "TRAP" | "VALUE",
+    confidence: a.confidence,
+  }));
 
   try {
-    const res = await runPublicTrap(profileId, parsed.answers);
+    const res = await runBossEncounter(profileId, parsed.bossKey, answers);
     return NextResponse.json({ ok: true, ...res });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Boss encounter failed.";

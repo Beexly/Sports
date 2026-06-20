@@ -64,6 +64,14 @@ export interface ProfileView {
   readonly characterProgress: number;
   readonly prestige: number;
   readonly creditsBalance: number;
+  // Stage 2 — ranked ladder + Season Cup.
+  readonly rating: number;
+  readonly ratingTier: string;
+  readonly ratingTierProgress: number;
+  readonly seasonPoints: number;
+  readonly seasonTier: number;
+  readonly seasonTierName: string;
+  readonly seasonProgress: number;
   readonly avatarSeed: string;
   readonly dailyStreak: number;
   readonly onboarded: boolean;
@@ -92,4 +100,25 @@ export interface SignalCheckResponse {
   readonly persisted: boolean;
   /** Quest keys completed by this action. */
   readonly questsCompleted: readonly string[];
+}
+
+export interface LeaderboardEntry {
+  readonly rank: number;
+  readonly handle: string;
+  readonly rating: number;
+  readonly tier: string;
+  readonly archetype: string;
+  readonly isGhost: boolean;
+  readonly isYou: boolean;
+}
+
+export interface DuelView {
+  readonly id: string;
+  readonly sportKey: string;
+  readonly prompt: string;
+  readonly status: "OPEN" | "RESOLVED";
+  readonly creatorHandle: string;
+  readonly opponentHandle: string | null;
+  readonly winnerHandle: string | null;
+  readonly createdAt: string;
 }

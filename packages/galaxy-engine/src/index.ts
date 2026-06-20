@@ -102,6 +102,47 @@ export type {
   PublicTrapEncounterResult,
 } from "./public-trap.js";
 
+// The Depths — 5-boss registry (Stage 2)
+export {
+  BOSSES,
+  getBoss,
+  evaluateBossStep,
+  evaluateBossEncounter,
+} from "./bosses.js";
+export type {
+  BossSide,
+  BossScenario,
+  BossDef,
+  BossStepResult,
+  BossEncounterResult,
+} from "./bosses.js";
+
+// Ranked rating (Stage 2)
+export {
+  BASE_RATING,
+  RATING_TIERS,
+  expectedScore,
+  updateRating,
+  ratingTier,
+  ratingTierProgress,
+} from "./rating.js";
+export type { RatingTier, DuelOutcomeScore } from "./rating.js";
+
+// Signal Duel (async PvP, Stage 2)
+export { scoreDuelEntry, resolveDuel } from "./duel.js";
+export type { DuelWinner, DuelEntryScore, DuelResolution } from "./duel.js";
+
+// Season Program (Stage 2 "Signal Cup")
+export {
+  CURRENT_SEASON_KEY,
+  CURRENT_SEASON_NAME,
+  SEASON_TIERS,
+  seasonPointsForXp,
+  seasonProgress,
+  claimableTiers,
+} from "./season.js";
+export type { SeasonTier, SeasonProgress } from "./season.js";
+
 // Brand Language Law
 export {
   FORBIDDEN_PUBLIC_TERMS,

@@ -2446,6 +2446,10 @@ model GalaxyProfile {
   prestige       Int             @default(0)
   // Denormalized cache of the ledger sum. The ledger is the source of truth.
   creditsBalance Int             @default(0)
+  // Stage 2 — ranked ladder rating (Elo-on-calibration) + Season Cup track.
+  rating            Int          @default(1200)
+  seasonPoints      Int          @default(0)
+  seasonTierClaimed Int          @default(0)
   avatarSeed     String?
   // Ghost/AI seeded profile (anti-ghost-town, bible §4.3). Excluded from human ladders.
   isGhost        Boolean         @default(false)
@@ -2468,9 +2472,13 @@ model GalaxyProfile {
   duelsCreated     SignalDuel[]            @relation("DuelCreator")
   duelsJoined      SignalDuel[]            @relation("DuelOpponent")
   duelsWon         SignalDuel[]            @relation("DuelWinner")
+  watches          CardWatch[]
+  tradeOffersFrom  CardTradeOffer[]        @relation("TradeFrom")
+  tradeOffersTo    CardTradeOffer[]        @relation("TradeTo")
 
   @@index([faction])
   @@index([archetype])
+  @@index([rating])
   @@map("galaxy_profiles")
 }
 
@@ -2594,7 +2602,9 @@ model GalaxyCard {
   assetSeed   String?
   createdAt   DateTime @default(now())
 
-  ownership GalaxyCardOwnership[]
+  ownership   GalaxyCardOwnership[]
+  watches     CardWatch[]
+  tradeOffers CardTradeOffer[]
 
   @@map("galaxy_cards")
 }
@@ -2679,6 +2689,8 @@ model SignalDuel {
   id               String           @id @default(cuid())
   sportKey         String
   prompt           String
+  // War Room scenario the duel is read against (re-graded on resolution).
+  scenarioId       String?
   pickType         String?
   line             Float?
   homeTeam         String?
@@ -2697,4 +2709,46 @@ model SignalDuel {
 
   @@index([status])
   @@map("galaxy_signal_duels")
+}
+
+// Stage 2 — card watchlist (Collector value tracking).
+model CardWatch {
+  id        String   @id @default(cuid())
+  profileId String
+  cardId    String
+  createdAt DateTime @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  card    GalaxyCard    @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, cardId])
+  @@map("galaxy_card_watches")
+}
+
+// Stage 2 — Vault Market PROTOTYPE: card-for-card trade offers only. No currency,
+// no cash, no physical custody (Credit Constitution §4.2; custody is Stage-3
+// partner-gated). Acceptance/settlement is a logged Stage-3 step.
+enum CardTradeStatus {
+  OPEN
+  ACCEPTED
+  CANCELLED
+}
+
+model CardTradeOffer {
+  id              String          @id @default(cuid())
+  fromProfileId   String
+  toProfileId     String?
+  offerCardId     String
+  // Slug of the card the offerer wants in return (loose match — prototype).
+  requestCardSlug String?
+  note            String?
+  status          CardTradeStatus @default(OPEN)
+  createdAt       DateTime        @default(now())
+
+  fromProfile GalaxyProfile  @relation("TradeFrom", fields: [fromProfileId], references: [id], onDelete: Cascade)
+  toProfile   GalaxyProfile? @relation("TradeTo", fields: [toProfileId], references: [id])
+  offerCard   GalaxyCard     @relation(fields: [offerCardId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@map("galaxy_card_trade_offers")
 }
