@@ -1,9 +1,9 @@
 /**
- * /calibration — The Proof Room (Galaxy Calibration).
+ * /calibration. The Proof Room (Galaxy Calibration).
  *
  * The 2026 IA pulls proof OUT of the Intelligence menu and gives it its own
  * door. This is the single branded surface that gathers every credibility
- * receipt the platform publishes. It does NOT fabricate stats — it routes to
+ * receipt the platform publishes. It does NOT fabricate stats. It routes to
  * the surfaces that each carry their own freshness stamp and honest-band gate:
  *
  *   - /performance          Calibration Report (Honest Band)
@@ -27,14 +27,14 @@ import { BRAND_NAME } from "@/lib/brand";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
-  title: `The Proof Room — ${BRAND_NAME}`,
+  title: `The Proof Room · ${BRAND_NAME}`,
   description:
-    "Galaxy Calibration: every credibility receipt in one place. Calibration report, closing line value, the trust ledger, tamper-evident proof of record, and public loss autopsies. No fabricated stats — every number is gated until it can be honestly backed.",
+    "Galaxy Calibration: every credibility receipt in one place. Calibration report, closing line value, the trust ledger, tamper-evident proof of record, and public loss autopsies. No fabricated stats. Every number is gated until it can be honestly backed.",
   alternates: { canonical: "/calibration" },
   openGraph: {
-    title: `The Proof Room — ${BRAND_NAME}`,
+    title: `The Proof Room · ${BRAND_NAME}`,
     description:
-      "Galaxy Calibration: calibration, CLV, the trust ledger, proof of record, and loss autopsies — one branded surface.",
+      "Galaxy Calibration: calibration, CLV, the trust ledger, proof of record, and loss autopsies. One branded surface.",
     url: "/calibration",
     type: "website",
   },
@@ -57,16 +57,25 @@ function ProofCard({
 }) {
   return (
     <div
-      className={`flex flex-col gap-4 rounded-2xl border ${accent ? "border-orbital-cyan/40 bg-orbital-cyan/[0.05]" : "border-mineral bg-eclipse/50"} p-6`}
+      className={`group relative flex flex-col gap-4 overflow-hidden rounded-2xl border ${accent ? "border-orbital-cyan/40 bg-orbital-cyan/[0.05]" : "border-mineral bg-eclipse/50"} p-6 transition-colors hover:border-orbital-cyan/50`}
     >
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-2">{eyebrow}</p>
+      {/* accent rail. Draws on hover, matching the home console */}
+      <span
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-orbital-cyan transition-transform duration-500 ease-out group-hover:scale-x-100"
+      />
+      <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-ion-2">
+        <span aria-hidden className={`h-1 w-1 rounded-full ${accent ? "bg-orbital-cyan" : "bg-soft-ultraviolet"}`} />
+        {eyebrow}
+      </p>
       <h2 className="text-xl font-bold text-ion-white">{title}</h2>
       <p className="text-sm leading-6 text-ion-1">{body}</p>
       <Link
         href={href}
-        className="mt-auto self-start rounded-lg border border-orbital-cyan/40 px-4 py-2 text-sm font-semibold text-orbital-cyan hover:bg-orbital-cyan/10"
+        className="mt-auto inline-flex items-center gap-1.5 self-start rounded-lg border border-orbital-cyan/40 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:bg-orbital-cyan/10"
       >
         {linkLabel}
+        <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
       </Link>
     </div>
   );
@@ -89,7 +98,7 @@ export default function CalibrationProofRoomPage() {
           <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
             Every credibility receipt the platform publishes, gathered in one place. No
             fabricated picks, no invented stats, no silent edits. Each number stays gated
-            until the settled sample is large enough to back it honestly — and once it
+            until the settled sample is large enough to back it honestly. And once it
             settles, it stays in the record, win or loss.
           </p>
         </header>
@@ -98,7 +107,7 @@ export default function CalibrationProofRoomPage() {
           <ProofCard
             eyebrow="Calibration report"
             title="Honest Band"
-            body="Win rate across every settled canonical pick, with the uncertainty band shown — and held back entirely until the sample is honest. Bootstrap-era picks never inflate the denominator."
+            body="Win rate across every settled canonical pick, with the uncertainty band shown. And held back entirely until the sample is honest. Bootstrap-era picks never inflate the denominator."
             href="/performance"
             linkLabel="View Calibration Report"
             accent
@@ -106,14 +115,14 @@ export default function CalibrationProofRoomPage() {
           <ProofCard
             eyebrow="Closing line value"
             title="Beat the close"
-            body="Whether the price we locked beat where the market closed — the sharp-credible leading indicator of a real edge, and the one number tout services never show."
+            body="Whether the price we locked beat where the market closed. The sharp-credible leading indicator of a real edge, and the one number tout services never show."
             href="/clv"
             linkLabel="See our CLV"
           />
           <ProofCard
             eyebrow="Tamper-evident receipts"
             title="Trust Ledger"
-            body="Every settled pick carries a receipt stamped at generation time. The ledger is the running record — nothing is quietly removed to make it look cleaner."
+            body="Every settled pick carries a receipt stamped at generation time. The ledger is the running record. Nothing is quietly removed to make it look cleaner."
             href="/ledger"
             linkLabel="Open the Ledger"
           />
@@ -146,7 +155,7 @@ export default function CalibrationProofRoomPage() {
           </h2>
           <p className="max-w-2xl text-sm leading-6 text-ion-1">
             Not sure what a number means? The metrics guide explains every stat the engines
-            report — what it measures, when it matters, and how to read it — without the jargon.
+            report. What it measures, when it matters, and how to read it. Without the jargon.
           </p>
           <Link
             href="/intelligence/metrics"

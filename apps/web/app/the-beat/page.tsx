@@ -11,9 +11,9 @@ import { WIRE_DISCLAIMER } from "@/lib/news/wire";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "The Beat — Galaxy Broadcast & Reliability-Tiered Newsroom",
+  title: "The Beat · Galaxy Broadcast & Reliability-Tiered Newsroom",
   description:
-    "A constantly-running transmission: Nova reports the week's top signals on location, then the Signal Ledger scores every breaking report the instant it lands — source reliability, the players and lines it moves, and the move to make before the market prices it in.",
+    "A constantly-running transmission: Nova reports the week's top signals on location, then the Signal Ledger scores every breaking report the instant it lands. Source reliability, the players and lines it moves, and the move to make before the market prices it in.",
   alternates: { canonical: "/the-beat" },
 };
 
@@ -28,7 +28,7 @@ export default function TheBeatPage() {
       <main id="main-content" className="flex-1">
         {/* ── BROADCAST · the always-on transmission ───────────────────── */}
         <section className="relative isolate overflow-hidden px-4 pb-10 pt-24 sm:px-6 lg:px-8">
-          {/* Cinematic motion backdrop — decorative, reduced-motion safe. */}
+          {/* Cinematic motion backdrop. Decorative, reduced-motion safe. */}
           <GeneratedPlate
             className="-z-10 opacity-[0.18]"
             still="/immersive/command-deck-wide-a.webp"
@@ -55,7 +55,7 @@ export default function TheBeatPage() {
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">
-                Sports media is a market too — noisy, and now accountable. Nova brings you the week&apos;s
+                Sports media is a market too. Noisy, and now accountable. Nova brings you the week&apos;s
                 top signals on location; below, the Signal Ledger scores every report the instant it lands.
               </p>
             </Reveal>
@@ -79,7 +79,7 @@ export default function TheBeatPage() {
                 </h2>
                 <p className="max-w-2xl text-sm leading-6 text-ink-300">
                   The instant a report lands we weigh the source by tier, map it to the players and lines it
-                  moves, decay it by freshness, and tell you the move — before it&apos;s priced in.
+                  moves, decay it by freshness, and tell you the move. Before it&apos;s priced in.
                 </p>
               </div>
             </Reveal>

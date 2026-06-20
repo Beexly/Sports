@@ -28,19 +28,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 
 const SEEN_KEY = "gse-montage-seen-v2";
-/** Legacy cinematic-intro flag — still set so any stragglers stay bypassed. */
+/** Legacy cinematic-intro flag, still set so any stragglers stay bypassed. */
 const CINEMATIC_SEEN_KEY = "gse-entrance-seen-v1";
 
+// Tight, choreographed pacing (~3.3s). No dead air between beats: each slam is
+// answered by a flicker before the next word lands.
 const PHASES = [
   { at: 0, id: "black" },
-  { at: 120, id: "flash" },
-  { at: 350, id: "galaxy" },
-  { at: 800, id: "stat1" },
-  { at: 1200, id: "sports" },
-  { at: 1650, id: "stat2" },
-  { at: 2050, id: "edge" },
-  { at: 2500, id: "resolve" },
-  { at: 3600, id: "done" },
+  { at: 110, id: "flash" },
+  { at: 320, id: "galaxy" },
+  { at: 640, id: "stat1" },
+  { at: 1040, id: "sports" },
+  { at: 1360, id: "stat2" },
+  { at: 1720, id: "edge" },
+  { at: 2160, id: "resolve" },
+  { at: 3300, id: "done" },
 ] as const;
 
 export function MontageEntrance() {
@@ -67,22 +69,34 @@ export function MontageEntrance() {
     startedRef.current = true;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Accessibility always wins: reduced motion gets no cold-open.
+    if (reduced) {
+      setDone(true);
+      return;
+    }
+
+    const search = window.location.search;
+    // ?intro=play force-replays the cold-open, overriding the once-per-session
+    // gate, so it can always be re-triggered (e.g. the footer "Replay intro").
+    const forcePlay = search.includes("intro=play");
+
     let seen = false;
     try {
-      seen = localStorage.getItem(SEEN_KEY) === "1";
+      // Per-SESSION gating (not localStorage): every genuine visit gets the
+      // hype, while in-session navigation does not replay it.
+      seen = sessionStorage.getItem(SEEN_KEY) === "1";
     } catch {
       /* ignore */
     }
 
-    // Reduced motion or already seen this session or explicit skip → no cold-open.
-    if (seen || reduced || window.location.search.includes("intro=skip")) {
+    if (!forcePlay && (seen || search.includes("intro=skip"))) {
       setDone(true);
       return;
     }
 
     try {
-      localStorage.setItem(SEEN_KEY, "1");
-      localStorage.setItem(CINEMATIC_SEEN_KEY, "1");
+      sessionStorage.setItem(SEEN_KEY, "1");
+      sessionStorage.setItem(CINEMATIC_SEEN_KEY, "1");
     } catch {
       /* ignore */
     }
@@ -115,16 +129,27 @@ export function MontageEntrance() {
       if (ctx) {
         const w = (canvas.width = window.innerWidth);
         const h = (canvas.height = window.innerHeight);
-        const particles = Array.from({ length: 160 }, () => ({
-          x: w / 2,
-          y: h / 2,
-          vx: (Math.random() - 0.5) * 13,
-          vy: (Math.random() - 0.5) * 13,
-          life: 1,
-          decay: 0.012 + Math.random() * 0.02,
-          color: Math.random() > 0.6 ? "0,229,255" : Math.random() > 0.5 ? "122,92,255" : "255,45,214",
-          size: 1 + Math.random() * 2.5,
-        }));
+        const particles = Array.from({ length: 160 }, () => {
+          // Color-tuned decay: cool signal (cyan) dissipates fast, warm residue
+          // (plasma) lingers, ultraviolet sits between. Subliminal stratification.
+          const r = Math.random();
+          const [color, decay] =
+            r > 0.6
+              ? ["0,229,255", 0.02 + Math.random() * 0.018]
+              : r > 0.5
+                ? ["122,92,255", 0.012 + Math.random() * 0.014]
+                : ["255,45,214", 0.008 + Math.random() * 0.012];
+          return {
+            x: w / 2,
+            y: h / 2,
+            vx: (Math.random() - 0.5) * 13,
+            vy: (Math.random() - 0.5) * 13,
+            life: 1,
+            decay,
+            color,
+            size: 1 + Math.random() * 2.5,
+          };
+        });
         let raf = 0;
         const draw = () => {
           ctx.fillStyle = "rgba(5,6,8,0.16)";
@@ -145,7 +170,8 @@ export function MontageEntrance() {
           }
           if (alive) raf = requestAnimationFrame(draw);
         };
-        timers.current.push(window.setTimeout(() => { raf = requestAnimationFrame(draw); }, 2500));
+        // Let the brand mark land and breathe (~200ms) before the bloom.
+        timers.current.push(window.setTimeout(() => { raf = requestAnimationFrame(draw); }, 2360));
         return () => cancelAnimationFrame(raf);
       }
     }
@@ -184,9 +210,10 @@ export function MontageEntrance() {
       role="dialog"
       aria-label="Entering Galaxy Sports Edge"
     >
-      {/* Cinematic motion bed — real footage, dimmed, behind the type. */}
+      {/* Cinematic motion bed: real footage, dimmed, behind the type. The fade
+          eases out so the bed falls back as the words advance. */}
       <video
-        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out"
         style={{ opacity: bedOn && !resolve ? 0.5 : bedOn ? 0.32 : 0 }}
         src="/immersive/home-hero-cosmos.mp4"
         poster="/immersive/home-hero-cosmos.webp"

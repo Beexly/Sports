@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * The Beat — a reliability-tiered, impact-scored newsroom.
+ * The Beat. A reliability-tiered, impact-scored newsroom.
  *
  * Every breaking item, ranked by what deserves attention RIGHT NOW: source tier,
  * the fantasy + market delta, freshness decay, and the move to make. Filter by

@@ -1,16 +1,16 @@
 "use client";
 
 /**
- * GalaxyBroadcast — the cinematic, always-on transmission at the top of The Beat.
+ * GalaxyBroadcast. The cinematic, always-on transmission at the top of The Beat.
  *
  * The public face of the newsroom: Nova (the brand's synthetic field anchor)
  * reports the week's top signals on location, with a broadcast lower-third, a
  * teleprompter, and a segment rundown. It is the lean, public cut of the studio
- * broadcast — the persona bible and publish-readiness gate stay in the producer
+ * broadcast. The persona bible and publish-readiness gate stay in the producer
  * view (/fantasy/studio). The AI-presenter disclosure is always on screen.
  *
  * No photoreal likeness: Nova is a stylized brand mark, never a generated face.
- * Reduced-motion safe: the scene is CSS only — no media element plays on load.
+ * Reduced-motion safe: the scene is CSS only. No media element plays on load.
  */
 
 import { useState } from "react";
@@ -121,7 +121,7 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
         ))}
       </div>
 
-      {/* Disclosure — always on screen */}
+      {/* Disclosure. Always on screen */}
       <p className="border-t p-3 text-[11px] leading-relaxed text-ink-500" style={{ borderColor: BRAND_COLORS.steelGray }}>
         {broadcast.disclosure}
       </p>
@@ -129,7 +129,7 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
   );
 }
 
-/** Stylized brand avatar — a gradient mark, deliberately not a photoreal person. */
+/** Stylized brand avatar. A gradient mark, deliberately not a photoreal person. */
 function Avatar({ accent }: { accent: string }) {
   return (
     <div

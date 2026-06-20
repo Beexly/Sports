@@ -19,7 +19,7 @@ const PRODUCT_LINKS = [
 
 const COMPANY_LINKS = [
   { label: "Accountability", href: "/accountability" },
-  { label: "Receipts — Calibration", href: "/performance" },
+  { label: "Receipts · Calibration", href: "/performance" },
   { label: "Closing Line Value", href: "/clv" },
   { label: "Methodology", href: "/methodology" },
   { label: "The Vault", href: "/vault" },
@@ -72,7 +72,7 @@ export function Footer() {
             </div>
             <p className="disclaim">
               {BRAND_NAME} delivers calibrated market signals, not certainty.
-              Treat each one as one input in a disciplined decision — never
+              Treat each one as one input in a disciplined decision, never
               the decision itself.{" "}
               <strong style={{ color: "var(--ion)" }}>
                 Set limits before emotion enters.
@@ -99,7 +99,13 @@ export function Footer() {
 
         <div className="bottom">
           <span>{new Date().getFullYear()} {BRAND_NAME.toUpperCase()} / MATH YOU CAN READ</span>
-          <span>{CLOSING_LINE.toUpperCase()}</span>
+          <span className="flex items-center gap-3">
+            <a href="/?intro=play" className="opacity-70 transition-opacity hover:opacity-100">
+              ▶ Replay intro
+            </a>
+            <span aria-hidden>·</span>
+            {CLOSING_LINE.toUpperCase()}
+          </span>
         </div>
       </div>
     </footer>
