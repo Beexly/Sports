@@ -251,6 +251,9 @@ export async function onboardProfile(input: OnboardInput): Promise<OnboardResult
     const persisted = !isStubMode() && profileId !== "stub";
 
     if (persisted) {
+      // Grant starter cosmetics (frame, title, scene) + equip defaults.
+      const { grantStarterCosmetics } = await import("./cosmetics.js");
+      await grantStarterCosmetics(profileId);
       // Grant the starter card pack.
       for (const c of STARTER_CARDS) {
         const card = await db.galaxyCard.findUnique({ where: { slug: c.slug } });

@@ -119,6 +119,24 @@ export type {
   BossEncounterResult,
 } from "./bosses.js";
 
+// Cosmetics economy (bible §4.2 sanctioned monetization)
+export {
+  COSMETICS_CATALOG,
+  COSMETIC_CATEGORIES,
+  getCosmetic,
+  cosmeticsByCategory,
+  starterCosmetics,
+  isCosmeticUnlocked,
+} from "./cosmetics.js";
+export type {
+  CosmeticCategory,
+  CosmeticSource,
+  CosmeticRequirement,
+  CosmeticDef,
+  CosmeticSlot,
+  CosmeticUnlockContext,
+} from "./cosmetics.js";
+
 // Crew roles & weekly missions (Stage 2 retention)
 export { CREW_ROLES, getCrewRole, isCrewLane } from "./crew-roles.js";
 export type { CrewLane, CrewRoleDef } from "./crew-roles.js";

@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { GalaxyShell } from "@/components/galaxy/shell";
 import { GALAXY } from "@/lib/galaxy/theme";
-import { getCurrentProfileView } from "@/lib/galaxy/session";
+import { getCurrentProfileView, getCurrentProfileId } from "@/lib/galaxy/session";
 import { getGalaxyScoreFor } from "@/lib/galaxy/score";
+import { getEquippedTitle } from "@/lib/galaxy/cosmetics";
 import { avatarSvg, crestSvg, badgeSvg } from "@/lib/galaxy/assets";
 
 export const dynamic = "force-dynamic";
@@ -37,6 +38,8 @@ export default async function DynastyPage() {
 
   const pct = Math.round(profile.characterProgress * 100);
   const score = await getGalaxyScoreFor(profile);
+  const profileId = await getCurrentProfileId();
+  const equippedTitle = profileId ? await getEquippedTitle(profileId) : null;
 
   return (
     <GalaxyShell profile={profile}>
@@ -48,8 +51,12 @@ export default async function DynastyPage() {
           <h1 style={{ fontSize: 30, margin: 0, fontFamily: "var(--f-display, sans-serif)" }}>
             @{profile.handle}
           </h1>
+          {equippedTitle && (
+            <div style={{ color: GALAXY.gold, fontSize: 13, fontWeight: 700, marginTop: 2 }}>“{equippedTitle}”</div>
+          )}
           <div style={{ color: GALAXY.textMuted, marginTop: 4 }}>
-            {profile.archetypeName} · {profile.factionName}
+            {profile.archetypeName} · {profile.factionName} ·{" "}
+            <Link href="/galaxy/wardrobe" style={{ color: GALAXY.cyan }}>Wardrobe</Link>
           </div>
         </div>
         <Link href="/galaxy/score" style={{ marginLeft: "auto", textDecoration: "none", textAlign: "right" }}>

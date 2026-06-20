@@ -145,6 +145,48 @@ describe("The Depths — 5 bosses (Stage 2)", () => {
   });
 });
 
+import { COSMETICS_CATALOG, starterCosmetics, isCosmeticUnlocked, COSMETIC_CATEGORIES } from "../cosmetics.js";
+
+describe("Cosmetics economy (sanctioned monetization, no pay-to-win)", () => {
+  it("has unique ids, brand-safe names, and valid categories", () => {
+    const ids = COSMETICS_CATALOG.map((c) => c.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    const cats = new Set(COSMETIC_CATEGORIES.map((c) => c.id));
+    for (const c of COSMETICS_CATALOG) {
+      expect(cats.has(c.category)).toBe(true);
+      expect(isBrandSafe(`${c.name} ${c.description}`)).toBe(true);
+    }
+  });
+
+  it("no cosmetic grants power (no xp/rating/skill/credits fields)", () => {
+    for (const c of COSMETICS_CATALOG) {
+      for (const k of Object.keys(c)) {
+        expect(k.toLowerCase()).not.toMatch(/\bxp\b|rating|skill|credits|win|power|boost/);
+      }
+    }
+  });
+
+  it("nova cosmetics carry a price; earn cosmetics carry a requirement", () => {
+    for (const c of COSMETICS_CATALOG) {
+      if (c.source === "nova") expect(c.novaPrice).toBeGreaterThan(0);
+      if (c.source === "earn" || c.source === "season_drop") expect(c.requirement).toBeTruthy();
+    }
+  });
+
+  it("starter cosmetics are always unlocked", () => {
+    const ctx = { bossCleared: new Set<string>(), bossClearedCount: 0, bossTotal: 5, seasonTier: 1, ratingTierName: "Rookie" };
+    for (const c of starterCosmetics()) expect(isCosmeticUnlocked(c, ctx)).toBe(true);
+  });
+
+  it("earn cosmetics unlock only when the requirement is met", () => {
+    const locked = { bossCleared: new Set<string>(), bossClearedCount: 0, bossTotal: 5, seasonTier: 1, ratingTierName: "Rookie" };
+    const unlocked = { bossCleared: new Set(["public_trap"]), bossClearedCount: 1, bossTotal: 5, seasonTier: 6, ratingTierName: "Legend" };
+    const calibrated = COSMETICS_CATALOG.find((c) => c.id === "title-calibrated")!;
+    expect(isCosmeticUnlocked(calibrated, locked)).toBe(false);
+    expect(isCosmeticUnlocked(calibrated, unlocked)).toBe(true);
+  });
+});
+
 describe("Galaxy Score (bible §3)", () => {
   const strong: GalaxyScoreInput = {
     avgSkillLevel: 40,

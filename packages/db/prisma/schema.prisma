@@ -2450,6 +2450,8 @@ model GalaxyProfile {
   rating            Int          @default(1200)
   seasonPoints      Int          @default(0)
   seasonTierClaimed Int          @default(0)
+  // Stage 2 — equipped cosmetics: { slot: cosmeticId } (cosmetics never affect outcomes).
+  equippedCosmetics Json?
   avatarSeed     String?
   // Ghost/AI seeded profile (anti-ghost-town, bible §4.3). Excluded from human ladders.
   isGhost        Boolean         @default(false)
@@ -2475,6 +2477,7 @@ model GalaxyProfile {
   watches          CardWatch[]
   tradeOffersFrom  CardTradeOffer[]        @relation("TradeFrom")
   tradeOffersTo    CardTradeOffer[]        @relation("TradeTo")
+  cosmetics        GalaxyCosmeticOwnership[]
 
   @@index([faction])
   @@index([archetype])
@@ -2712,6 +2715,23 @@ model SignalDuel {
 
   @@index([status])
   @@map("galaxy_signal_duels")
+}
+
+// Stage 2 — cosmetic ownership (earned, season-dropped, or Nova test-mode).
+// Cosmetics never affect outcomes (anti-pay-to-win); pure identity/status.
+model GalaxyCosmeticOwnership {
+  id          String   @id @default(cuid())
+  profileId   String
+  cosmeticId  String
+  category    String
+  acquiredVia String
+  acquiredAt  DateTime @default(now())
+
+  profile GalaxyProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, cosmeticId])
+  @@index([profileId, category])
+  @@map("galaxy_cosmetic_ownership")
 }
 
 // Stage 2 — card watchlist (Collector value tracking).

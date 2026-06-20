@@ -131,6 +131,15 @@ export const DISTRICTS: readonly District[] = [
     order: 14,
   },
   {
+    id: "wardrobe",
+    name: "The Locker (Wardrobe)",
+    tagline: "Kicks, fits, emotes, anthems, titles — wear your identity.",
+    href: "/galaxy/wardrobe",
+    accent: GALAXY.gold,
+    status: "live",
+    order: 9.5,
+  },
+  {
     id: "foundry",
     name: "The Merch Foundry",
     tagline: "Achievement-gated unlocks and cosmetics.",
