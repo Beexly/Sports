@@ -3,7 +3,8 @@ import { BASE_RATING, updateRating, ratingTier, ratingTierProgress, expectedScor
 import { scoreDuelEntry, resolveDuel } from "../duel.js";
 import { evaluateSignalCheck } from "../signal-check.js";
 import { seasonProgress, claimableTiers, seasonPointsForXp, SEASON_TIERS } from "../season.js";
-import { BOSSES, getBoss, evaluateBossEncounter } from "../bosses.js";
+import { BOSSES, getBoss, evaluateBossEncounter, buildBossAssetBrief } from "../bosses.js";
+import { computeGalaxyScore, galaxyScoreTier, GALAXY_SCORE_MAX, type GalaxyScoreInput } from "../galaxy-score.js";
 import { isBrandSafe } from "../language-law.js";
 
 describe("Ranked rating (Stage 2)", () => {
@@ -97,29 +98,102 @@ describe("The Depths — 5 bosses (Stage 2)", () => {
     }
   });
 
-  it("clears a boss by resisting the bias, unlocking its merch", () => {
-    const boss = getBoss("overconfidence_king")!;
+  it("ships the canon five bosses", () => {
+    expect(BOSSES.map((b) => b.key).sort()).toEqual(
+      ["injury_fog", "line_move_mimic", "parlay_hydra", "public_trap", "recency_wraith"].sort(),
+    );
+  });
+
+  it("clears a boss by resisting the bias, unlocking its merch + clear bonus", () => {
+    const boss = getBoss("injury_fog")!;
     const r = evaluateBossEncounter(
-      "overconfidence_king",
+      "injury_fog",
       boss.scenarios.map((s) => ({ scenarioId: s.id, chosen: "VALUE" as const, confidence: 70 })),
     );
     expect(r.cleared).toBe(true);
-    expect(r.merchUnlockSku).toBe("calibrated-cap");
-    expect(r.totalCredits).toBeGreaterThan(0);
+    expect(r.merchUnlockSku).toBe("replacement-value-tee");
+    expect(r.clearBonusCredits).toBeGreaterThan(0);
+    expect(r.totalCredits).toBeGreaterThan(r.clearBonusCredits); // steps + bonus
+    expect(r.gsePrompt.length).toBeGreaterThan(0);
   });
 
-  it("does not clear when caught by the bias", () => {
-    const boss = getBoss("recency_chaser")!;
+  it("does not clear (no bonus, no merch) when caught by the bias", () => {
+    const boss = getBoss("recency_wraith")!;
     const r = evaluateBossEncounter(
-      "recency_chaser",
+      "recency_wraith",
       boss.scenarios.map((s) => ({ scenarioId: s.id, chosen: "TRAP" as const, confidence: 80 })),
     );
     expect(r.cleared).toBe(false);
     expect(r.merchUnlockSku).toBeNull();
+    expect(r.clearBonusCredits).toBe(0);
+  });
+
+  it("every boss has a compliant asset brief, lesson, and tie-ins", () => {
+    for (const b of BOSSES) {
+      expect(b.lesson.length).toBeGreaterThan(0);
+      expect(b.gsePrompt.length).toBeGreaterThan(0);
+      expect(b.cardTieInSlug.length).toBeGreaterThan(0);
+      const brief = buildBossAssetBrief(b.key);
+      expect(brief.prompt).toContain("no casino");
+      expect(brief.generated).toBe(false);
+    }
   });
 
   it("every boss merch SKU is unique", () => {
     const skus = BOSSES.map((b) => b.merchSku);
     expect(new Set(skus).size).toBe(skus.length);
+  });
+});
+
+describe("Galaxy Score (bible §3)", () => {
+  const strong: GalaxyScoreInput = {
+    avgSkillLevel: 40,
+    avgCalibration: 78,
+    rating: 1500,
+    bossClears: 4,
+    crewContribution: 70,
+    factionRank: 2,
+    cardCount: 8,
+    gradedChecks: 50,
+    merchCount: 2,
+    seasonTier: 4,
+  };
+
+  it("scores 0 for a brand-new profile", () => {
+    const fresh: GalaxyScoreInput = {
+      avgSkillLevel: 1,
+      avgCalibration: null,
+      rating: 900,
+      bossClears: 0,
+      crewContribution: 0,
+      factionRank: null,
+      cardCount: 0,
+      gradedChecks: 0,
+      merchCount: 0,
+      seasonTier: 1,
+    };
+    const s = computeGalaxyScore(fresh);
+    // Only the season-tier-1 floor contributes a little; total stays low.
+    expect(s.total).toBeLessThan(50);
+    expect(s.tier).toBe("Rookie");
+  });
+
+  it("rewards a well-rounded, calibrated player and breaks down transparently", () => {
+    const s = computeGalaxyScore(strong);
+    expect(s.total).toBeGreaterThan(400);
+    expect(s.max).toBe(GALAXY_SCORE_MAX);
+    expect(s.components.reduce((sum, c) => sum + c.points, 0)).toBe(s.total);
+    expect(s.components.every((c) => c.points <= c.max)).toBe(true);
+  });
+
+  it("calibration outweighs reckless volume", () => {
+    const calibrated = computeGalaxyScore({ ...strong, avgCalibration: 90, gradedChecks: 10 });
+    const grinder = computeGalaxyScore({ ...strong, avgCalibration: 40, gradedChecks: 500 });
+    expect(calibrated.total).toBeGreaterThan(grinder.total);
+  });
+
+  it("tiers ascend with score", () => {
+    expect(galaxyScoreTier(0)).toBe("Rookie");
+    expect(galaxyScoreTier(900)).toBe("Authority");
   });
 });

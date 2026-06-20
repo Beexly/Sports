@@ -43,8 +43,14 @@ export default async function GalaxyAdminPage() {
     { label: "Credits redeemed", value: `${m.creditsRedeemed} (closed loop)` },
     { label: "Boss attempts", value: m.bossAttempts.toLocaleString() },
     { label: "Boss clears", value: m.bossClears.toLocaleString(), accent: GALAXY.magenta },
+    { label: "Duels", value: m.duels.toLocaleString() },
+    { label: "Duels resolved", value: m.duelsResolved.toLocaleString() },
+    { label: "Avg ladder rating", value: m.avgRating != null ? `${m.avgRating}` : "—", accent: GALAXY.cyan },
+    { label: "Card watches", value: m.cardWatches.toLocaleString() },
+    { label: "Trade offers", value: m.tradeOffers.toLocaleString() },
     { label: "Merch unlocks", value: m.merchUnlocks.toLocaleString() },
     { label: "Crews", value: m.crews.toLocaleString(), accent: GALAXY.violet },
+    { label: "Brand gates", value: m.brandGatesEnforced ? "Enforced (CI)" : "FAILING", accent: m.brandGatesEnforced ? GALAXY.cyan : GALAXY.magenta },
     { label: "Higgsfield assets", value: `${m.higgsfieldAssetsGenerated} (briefs only)` },
   ];
 

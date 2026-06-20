@@ -25,14 +25,14 @@ describe("Galaxy Dynasty — Stage 2 (Signal Cup)", () => {
   });
 
   it("clears a non-Public-Trap boss and unlocks its merch", async () => {
-    const boss = getBoss("narrative_trap")!;
+    const boss = getBoss("line_move_mimic")!;
     const r = await runBossEncounter(
       "stub",
-      "narrative_trap",
+      "line_move_mimic",
       boss.scenarios.map((s) => ({ scenarioId: s.id, chosen: "VALUE" as const, confidence: 70 })),
     );
     expect(r.result.cleared).toBe(true);
-    expect(r.merchUnlocked?.sku).toBe("number-first-tee");
+    expect(r.merchUnlocked?.sku).toBe("closing-line-pin");
   });
 
   it("the ladder is seeded with Ghost profiles even with no database", async () => {

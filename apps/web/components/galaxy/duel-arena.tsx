@@ -135,7 +135,14 @@ export function DuelArena({ scenarios, openDuels }: { scenarios: DuelScenario[];
             <span style={{ color: GALAXY.gold, fontWeight: 700 }}>+{result.creditsAwarded} Credits</span>
           </div>
           <p style={{ color: GALAXY.textMuted, fontSize: 13, marginTop: 8 }}>{result.resolution.rationale}</p>
-          <button onClick={() => setResult(null)} style={{ ...outlineBtn(), marginTop: 8 }}>Run another</button>
+          <div style={{ marginTop: 10, padding: "10px 12px", borderRadius: 8, background: `${GALAXY.deepBlue}14`, border: `1px solid ${GALAXY.deepBlue}44`, fontSize: 13, color: GALAXY.text }}>
+            📡 War Room prep: study line movement and public splits on this matchup before your rematch.{" "}
+            <a href="/galaxy/war-room" style={{ color: GALAXY.cyan }}>Open the War Room →</a>
+          </div>
+          <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+            <button onClick={() => setResult(null)} style={outlineBtn()}>Rematch</button>
+            <a href="/galaxy/leaderboard" style={{ ...outlineBtn(), textDecoration: "none", display: "inline-block" }}>View ladder</a>
+          </div>
         </div>
       )}
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { GalaxyShell } from "@/components/galaxy/shell";
 import { GALAXY } from "@/lib/galaxy/theme";
 import { getCurrentProfileView } from "@/lib/galaxy/session";
+import { getGalaxyScoreFor } from "@/lib/galaxy/score";
 import { avatarSvg, crestSvg, badgeSvg } from "@/lib/galaxy/assets";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,7 @@ export default async function DynastyPage() {
   }
 
   const pct = Math.round(profile.characterProgress * 100);
+  const score = await getGalaxyScoreFor(profile);
 
   return (
     <GalaxyShell profile={profile}>
@@ -50,8 +52,15 @@ export default async function DynastyPage() {
             {profile.archetypeName} · {profile.factionName}
           </div>
         </div>
+        <Link href="/galaxy/score" style={{ marginLeft: "auto", textDecoration: "none", textAlign: "right" }}>
+          <div style={{ fontSize: 11, color: GALAXY.textMuted, letterSpacing: 1 }}>GALAXY SCORE</div>
+          <div style={{ fontSize: 30, fontWeight: 900, color: GALAXY.gold, fontFamily: "var(--f-display, sans-serif)", lineHeight: 1 }}>
+            {score.total}
+          </div>
+          <div style={{ fontSize: 12, color: GALAXY.cyan }}>{score.tier} →</div>
+        </Link>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={crestSvg(profile.faction)} alt="Faction crest" width={64} height={64} style={{ marginLeft: "auto" }} />
+        <img src={crestSvg(profile.faction)} alt="Faction crest" width={64} height={64} />
       </div>
 
       {/* Status row */}

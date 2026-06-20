@@ -3,7 +3,7 @@ import { GalaxyShell } from "@/components/galaxy/shell";
 import { SeasonClaimButton } from "@/components/galaxy/season-claim";
 import { GALAXY } from "@/lib/galaxy/theme";
 import { getCurrentProfileView } from "@/lib/galaxy/session";
-import { SEASON_TIERS, CURRENT_SEASON_NAME } from "@sports/galaxy-engine";
+import { SEASON_TIERS, CURRENT_SEASON_NAME, objectivesByCadence, type ObjectiveCadence } from "@sports/galaxy-engine";
 
 export const dynamic = "force-dynamic";
 
@@ -68,6 +68,39 @@ export default async function SeasonPage() {
       <div style={{ marginTop: 18 }}>
         <SeasonClaimButton />
       </div>
+
+      {/* Objective cadence — what to chase today / this week / this season */}
+      <h2 style={{ fontSize: 14, letterSpacing: 1.2, color: GALAXY.textMuted, marginTop: 30 }}>
+        WHAT TO CHASE
+      </h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px,1fr))", gap: 14 }}>
+        {(["daily", "weekly", "seasonal"] as ObjectiveCadence[]).map((cadence) => (
+          <div key={cadence} style={{ background: GALAXY.panel, border: `1px solid ${GALAXY.border}`, borderRadius: 14, padding: 16 }}>
+            <div style={{ fontSize: 12, letterSpacing: 1.2, color: GALAXY.gold, fontWeight: 700, textTransform: "uppercase" }}>
+              {cadence}
+            </div>
+            <div style={{ display: "grid", gap: 8, marginTop: 10 }}>
+              {objectivesByCadence(cadence).map((o) => (
+                <a key={o.id} href={o.href} style={{ textDecoration: "none", color: GALAXY.text }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 8, fontSize: 14 }}>
+                    <span>{o.label}</span>
+                    {o.track === "pro" && (
+                      <span style={{ fontSize: 10, color: GALAXY.cyan, border: `1px solid ${GALAXY.cyan}66`, borderRadius: 5, padding: "1px 5px", height: 16 }}>
+                        PRO
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ fontSize: 12, color: GALAXY.textMuted }}>{o.detail}</div>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p style={{ fontSize: 12, color: GALAXY.textMuted, marginTop: 10 }}>
+        Pro objectives add deeper vision and tools — never an outcome advantage.
+        Pro buys better instruments, not wins.
+      </p>
     </GalaxyShell>
   );
 }

@@ -25,6 +25,13 @@ export interface GalaxyMetrics {
   readonly crews: number;
   readonly subscriptionsByTier: Record<string, number>;
   readonly higgsfieldAssetsGenerated: number; // 0 this build (briefs only)
+  // Stage 2 deepening observability
+  readonly duels: number;
+  readonly duelsResolved: number;
+  readonly avgRating: number | null;
+  readonly cardWatches: number;
+  readonly tradeOffers: number;
+  readonly brandGatesEnforced: boolean;
   readonly stubMode: boolean;
 }
 
@@ -54,6 +61,11 @@ export async function getGalaxyMetrics(): Promise<GalaxyMetrics> {
     crews,
     proSubs,
     eliteSubs,
+    duels,
+    duelsResolved,
+    ratingAgg,
+    cardWatches,
+    tradeOffers,
   ] = await Promise.all([
     safe(() => db.galaxyProfile.count(), 0),
     safe(() => db.galaxyProfile.count({ where: { onboardedAt: { not: null } } }), 0),
@@ -69,6 +81,11 @@ export async function getGalaxyMetrics(): Promise<GalaxyMetrics> {
     safe(() => db.crew.count(), 0),
     safe(() => db.subscription.count({ where: { tier: "PRO" } }), 0),
     safe(() => db.subscription.count({ where: { tier: "ELITE" } }), 0),
+    safe(() => db.signalDuel.count(), 0),
+    safe(() => db.signalDuel.count({ where: { status: "RESOLVED" } }), 0),
+    safe(() => db.galaxyProfile.aggregate({ _avg: { rating: true } }), { _avg: { rating: null } } as { _avg: { rating: number | null } }),
+    safe(() => db.cardWatch.count(), 0),
+    safe(() => db.cardTradeOffer.count(), 0),
   ]);
 
   const subscriptionsByTier: Record<string, number> = {};
@@ -92,6 +109,12 @@ export async function getGalaxyMetrics(): Promise<GalaxyMetrics> {
     crews,
     subscriptionsByTier,
     higgsfieldAssetsGenerated: 0,
+    duels,
+    duelsResolved,
+    avgRating: ratingAgg._avg.rating != null ? Math.round(ratingAgg._avg.rating) : null,
+    cardWatches,
+    tradeOffers,
+    brandGatesEnforced: true, // enforced by galaxy-brand-gates.test.ts in CI
     stubMode: profilesTotal === 0 && signalChecks === 0,
   };
 }

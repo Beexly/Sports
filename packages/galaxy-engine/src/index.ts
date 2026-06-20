@@ -106,16 +106,26 @@ export type {
 export {
   BOSSES,
   getBoss,
+  buildBossAssetBrief,
   evaluateBossStep,
   evaluateBossEncounter,
 } from "./bosses.js";
 export type {
   BossSide,
+  BossDifficulty,
   BossScenario,
   BossDef,
   BossStepResult,
   BossEncounterResult,
 } from "./bosses.js";
+
+// Galaxy Score — one universal identity metric (bible §3)
+export {
+  computeGalaxyScore,
+  galaxyScoreTier,
+  GALAXY_SCORE_MAX,
+} from "./galaxy-score.js";
+export type { GalaxyScoreInput, GalaxyScore, GalaxyScoreComponent } from "./galaxy-score.js";
 
 // Ranked rating (Stage 2)
 export {
@@ -137,11 +147,19 @@ export {
   CURRENT_SEASON_KEY,
   CURRENT_SEASON_NAME,
   SEASON_TIERS,
+  SEASON_OBJECTIVES,
+  objectivesByCadence,
   seasonPointsForXp,
   seasonProgress,
   claimableTiers,
 } from "./season.js";
-export type { SeasonTier, SeasonProgress } from "./season.js";
+export type {
+  SeasonTier,
+  SeasonProgress,
+  SeasonObjective,
+  ObjectiveCadence,
+  ObjectiveTrack,
+} from "./season.js";
 
 // Brand Language Law
 export {

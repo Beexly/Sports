@@ -149,6 +149,15 @@ export const DISTRICTS: readonly District[] = [
     order: 11,
   },
   {
+    id: "score",
+    name: "Galaxy Score",
+    tagline: "One number for your whole sports identity.",
+    href: "/galaxy/score",
+    accent: GALAXY.gold,
+    status: "live",
+    order: 15,
+  },
+  {
     id: "dynasty",
     name: "My Dynasty",
     tagline: "Your record, rating, badges, and status.",

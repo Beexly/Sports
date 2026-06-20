@@ -4,7 +4,7 @@ import { GalaxyShell } from "@/components/galaxy/shell";
 import { CardWatchButton } from "@/components/galaxy/card-watch-button";
 import { GALAXY } from "@/lib/galaxy/theme";
 import { getCurrentProfileView, getCurrentProfileId } from "@/lib/galaxy/session";
-import { getCardDetail, sparklineSvg } from "@/lib/galaxy/card-analytics";
+import { getCardDetail, sparklineSvg, momentumTags } from "@/lib/galaxy/card-analytics";
 import { listWatchedSlugs } from "@/lib/galaxy/market";
 import { cardSvg } from "@/lib/galaxy/assets";
 
@@ -49,6 +49,24 @@ export default async function CardDetailPage({ params }: { params: { slug: strin
             <span style={{ color: GALAXY.text }}>GSE Rating <strong>{card.gseRating ?? "—"}</strong></span>
             <span style={{ color: trendColor(card.formTrend) }}>Form {card.formTrend ?? "—"}</span>
             <span style={{ color: trendColor(card.valueTrend) }}>Value {card.valueTrend ?? "—"}</span>
+          </div>
+
+          <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
+            {momentumTags(card).map((t) => (
+              <span
+                key={t.label}
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  padding: "3px 9px",
+                  borderRadius: 999,
+                  color: t.tone === "hot" ? GALAXY.gold : t.tone === "warn" ? GALAXY.magenta : GALAXY.cyan,
+                  border: `1px solid ${(t.tone === "hot" ? GALAXY.gold : t.tone === "warn" ? GALAXY.magenta : GALAXY.cyan)}55`,
+                }}
+              >
+                {t.label}
+              </span>
+            ))}
           </div>
 
           {/* Value index sparkline */}

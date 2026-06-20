@@ -90,6 +90,31 @@ export async function getCardDetail(slug: string): Promise<CardDetail | null> {
   };
 }
 
+/**
+ * Card momentum tags (Stage 2 deepening) — make cards feel alive. Derived from
+ * trend + rating + rarity; clearly a companion signal, not market data.
+ */
+export interface MomentumTag {
+  readonly label: string;
+  readonly tone: "hot" | "warn" | "info";
+}
+
+export function momentumTags(card: {
+  formTrend: string | null;
+  valueTrend: string | null;
+  gseRating: number | null;
+  rarity: string;
+}): MomentumTag[] {
+  const tags: MomentumTag[] = [];
+  if (card.formTrend === "UP") tags.push({ label: "Breakout Watch", tone: "hot" });
+  if (card.valueTrend === "UP") tags.push({ label: "Rookie Heat", tone: "hot" });
+  if (card.valueTrend === "DOWN") tags.push({ label: "Slump Warning", tone: "warn" });
+  if (card.formTrend === "DOWN") tags.push({ label: "Cooling", tone: "warn" });
+  if ((card.gseRating ?? 0) >= 70) tags.push({ label: "Sharp Rated", tone: "info" });
+  if (card.rarity === "LEGEND") tags.push({ label: "Vault Legend", tone: "info" });
+  return tags.slice(0, 3);
+}
+
 /** Inline SVG sparkline data-uri for a value history series. */
 export function sparklineSvg(history: number[], color: string): string {
   if (history.length === 0) return "";
