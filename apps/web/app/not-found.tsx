@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 
 /**
  * Brand-voiced global not-found page. No default framework 404.
+ *
+ * v2 — The orbital mark anchors the dead-end, breathing in the void.
  */
 export const metadata: Metadata = {
   title: "Off the board - Page not found",
@@ -13,11 +16,24 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative isolate flex min-h-screen flex-col overflow-hidden bg-obsidian">
+      {/* Ambient mark — breathing in the background */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 flex items-center justify-center"
+      >
+        <LogoMarkInline size={320} pulse glow className="opacity-[0.06]" />
+      </div>
+
       <Nav />
 
-      <main className="flex flex-1 items-center justify-center px-4 py-22 sm:px-6 lg:px-8">
+      <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-22 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-xl text-center">
+          {/* Live mark above the code */}
+          <div className="mb-6 flex justify-center">
+            <LogoMarkInline size={48} pulse glow />
+          </div>
+
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
             404 / Off the board
           </p>

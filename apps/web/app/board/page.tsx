@@ -7,6 +7,7 @@ import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
 
 export const metadata: Metadata = {
   title: "Today's Board - Galaxy Sports Edge",
@@ -46,6 +47,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
     <div className="relative isolate min-h-screen w-full overflow-x-hidden bg-obsidian text-ion-white">
       <GeneratedPlate assetId="board-command" className="-z-10 opacity-20" />
       <Nav />
+      <SignalRoomAtmosphere mode="ambient" />
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         {dbUnreachable && (
           <div className="flex flex-col gap-2 border border-red-900 bg-red-950/25 px-4 py-3 text-sm text-red-100 sm:flex-row sm:items-center">

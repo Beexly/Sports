@@ -3,6 +3,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
+import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
 import { TheBeat } from "@/components/news/the-beat";
 import { NATIONAL_INSIDERS, TEAM_BEATS, WIRE_DISCLAIMER } from "@/lib/news/wire";
 import { BRAND_COLORS } from "@/lib/brand";
@@ -19,6 +20,7 @@ export default function TheBeatPage() {
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Atmosphere />
       <Nav />
+      <SignalRoomAtmosphere mode="ambient" />
 
       <main id="main-content" className="flex-1">
         <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">

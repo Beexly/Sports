@@ -29,6 +29,12 @@ export const BRAND_POSITIONING =
 /** Two-letter monogram used in compact lockups when the icon SVG is overkill. */
 export const BRAND_MONOGRAM = "GSE";
 
+/** Galaxy Sports Network — the content studio LLC. */
+export const GSN_NAME = "Galaxy Sports Network";
+export const GSN_SHORT_NAME = "Galaxy Sports Network";
+export const GSN_TAGLINE = "The transmission, not the blog.";
+export const GSN_MONOGRAM = "GSN";
+
 /** Public support / general inquiries inbox. Single front-door for the brand. */
 export const SUPPORT_EMAIL = "hq@galaxysportsedge.com";
 

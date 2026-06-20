@@ -600,3 +600,168 @@
   }
   .gw-mirage-layer, .gw-card-hover { transition: none !important; }
 }
+
+/* ── Signal Spine animations ────────────────────────────────────────────────── */
+@keyframes spine-packet-0 {
+  0% { top: 0%; opacity: 0; }
+  5% { opacity: 0.9; }
+  95% { opacity: 0.9; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes spine-packet-1 {
+  0% { top: 0%; opacity: 0; }
+  8% { opacity: 0.7; }
+  92% { opacity: 0.7; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes spine-packet-2 {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes spine-packet-3 {
+  0% { top: 0%; opacity: 0; }
+  6% { opacity: 0.6; }
+  94% { opacity: 0.6; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ── Cursor ripple expand ────────────────────────────────────────────────── */
+@keyframes cursor-ripple-expand {
+  0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ── Observatory beacon pulse ────────────────────────────────────────────────── */
+@keyframes observatory-beacon-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 0.2; }
+}
+
+/* ── Signal state pulse animations ────────────────────────────────────────────────── */
+@keyframes signal-pulse-ring {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.35); opacity: 0.2; }
+}
+@keyframes signal-pulse-core {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* ── Signal Room grid field ────────────────────────────────────────────────── */
+.gw-grid-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(0, 229, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+  animation: grid-field-drift 24s linear infinite;
+}
+@keyframes grid-field-drift {
+  0% { background-position: 0 0; }
+  100% { background-position: 56px 56px; }
+}
+
+/* ── Health ring breathe ────────────────────────────────────────────────── */
+@keyframes health-ring-breathe {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* ── Montage Entrance animations ────────────────────────────────────────────────── */
+@keyframes montage-flash {
+  0% { opacity: 1; }
+  40% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+@keyframes montage-slam {
+  0% { opacity: 0; transform: scale(2.5) translateY(40px); filter: blur(12px); }
+  60% { opacity: 1; transform: scale(0.95) translateY(-2px); filter: blur(0px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); }
+}
+@keyframes montage-shake {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -2px); }
+  60% { transform: translate(-2px, 1px); }
+  80% { transform: translate(2px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes montage-stat-flicker {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  20% { opacity: 0.3; }
+  30% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes montage-burst-ring {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  20% { opacity: 0.6; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes montage-hud-slide {
+  0% { opacity: 0; transform: translateX(-30px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes montage-fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Logo mark pulse animation ────────────────────────────────────────────────── */
+@keyframes logo-mark-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+/* ── Sentient Weather animations ────────────────────────────────────────────────── */
+@keyframes sentient-lightning {
+  0%, 100% { opacity: 0; }
+  2% { opacity: 0.8; }
+  4% { opacity: 0; }
+  20% { opacity: 0; }
+  22% { opacity: 0.5; }
+  24% { opacity: 0; }
+  60% { opacity: 0; }
+  62% { opacity: 0.6; }
+  64% { opacity: 0; }
+}
+@keyframes sentient-breathe {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+/* ── Glitch Truth animations ────────────────────────────────────────────────── */
+@keyframes glitch-scan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+@keyframes glitch-band {
+  0%, 100% { transform: translateX(0); opacity: 0.3; }
+  25% { transform: translateX(3px); opacity: 0.6; }
+  50% { transform: translateX(-2px); opacity: 0.4; }
+  75% { transform: translateX(1px); opacity: 0.5; }
+}
+@keyframes glitch-noise {
+  0% { background-position: 0 0; }
+  100% { background-position: 128px 128px; }
+}
+
+/* ── Thermal Vision animations ────────────────────────────────────────────────── */
+@keyframes thermal-pulse-hot {
+  0%, 100% { opacity: 0.7; transform: scale(1); box-shadow: 0 0 4px rgba(255,45,214,0.4); }
+  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,45,214,0.7); }
+}
+@keyframes thermal-pulse-cold {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.15); }
+}
+@keyframes thermal-breathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}

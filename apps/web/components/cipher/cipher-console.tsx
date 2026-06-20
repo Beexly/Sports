@@ -31,6 +31,19 @@ export function CipherConsole({ state, codename, week, shardCount }: Props) {
         body, accent, body, accent, body,
       );
     } else {
+      console.log(
+        '%c    _.-''''''-._
+  .'  _     _  .'
+ /   (o)   (o)   \
+|  ,     Ξ     ,  |
+ \   '-.._ _..-'   /
+  .'      |      .'
+    '-._  |  _.-'
+        '''
+%c   ◆ Galaxy Sports Edge ◆',
+        'color:#7A5CFF;font-size:10px;line-height:1.2',
+        'color:#00E5FF;font-size:9px;letter-spacing:0.2em'
+      );
       console.log("%c◬ THE GLASS BOX CIPHER", head);
       console.log(
         `%cThe box is sealed. The next transmission opens %cMon 11:59am ET%c.\nWhen it does, the shards return. %c/cipher%c`,

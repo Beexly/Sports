@@ -54,6 +54,7 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
     items: [
       { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, in one place" },
       { label: "Mission Control", href: "/today", desc: "Everything happening today, in one view" },
+      { label: "Command Deck", href: "/deck", desc: "The owner's intelligence command deck — watch the company run itself" },
       { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line moves & best available prices" },
       { label: "Trend Lab", href: "/trends", desc: "Trends that pass a real statistical test" },
       { label: "CLV Tracker", href: "/track", desc: "Track your own bets — did you beat the closing line?" },

@@ -11,6 +11,7 @@
 
 import dynamic from "next/dynamic";
 import { BRAND_COLORS } from "@/lib/brand";
+import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 
 function GalaxyFallback() {
   return (
