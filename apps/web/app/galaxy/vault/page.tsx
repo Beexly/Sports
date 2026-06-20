@@ -80,6 +80,9 @@ export default async function VaultPage() {
               <span style={{ color: trendColor(c.formTrend) }}>Form {trendGlyph(c.formTrend)}</span>
               <span style={{ color: trendColor(c.valueTrend) }}>Value {trendGlyph(c.valueTrend)}</span>
             </div>
+            <a href={`/galaxy/vault/${c.slug}`} style={{ display: "inline-block", marginTop: 8, color: GALAXY.cyan, fontSize: 12 }}>
+              Card detail &amp; value trend →
+            </a>
           </div>
         ))}
       </div>
