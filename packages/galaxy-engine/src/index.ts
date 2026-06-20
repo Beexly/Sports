@@ -209,6 +209,19 @@ export {
 } from "./language-law.js";
 export type { ForbiddenTerm, LanguageViolation } from "./language-law.js";
 
+// World graph — districts, sports weather, rooms (world-graph architecture)
+export { DISTRICTS, getDistrict, isDistrictId } from "./world/districts.js";
+export type { DistrictDef, DistrictId, RoomType } from "./world/districts.js";
+export {
+  SPORTS_WEATHER,
+  getWeather,
+  activeWeatherForDay,
+  currentDayIndex,
+} from "./world/sports-weather.js";
+export type { SportsWeather, WeatherId } from "./world/sports-weather.js";
+export { ROOM_REGISTRY, getRoom, roomsForDistrict } from "./world/rooms.js";
+export type { RoomDef } from "./world/rooms.js";
+
 // Higgsfield asset-brief pipeline
 export {
   buildAssetBrief,
