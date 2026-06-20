@@ -147,3 +147,31 @@ of rationale each. Hard-stops are recorded in `BUILD_LOG.md`.
   an outcome/rating/calibration edge. Tier resolved server-side
   (`lib/galaxy/entitlement.ts`); free users see a locked upgrade prompt. Honors
   the anti-pay-to-win law while making the subscription a real revenue surface.
+
+## World-graph era (post-Galaxy-City)
+
+- **D-032 — The world is a graph, not a map.** Account → Campus → Districts →
+  Rooms → Sports Weather → Progression. The persistent identity/economy/live-sports
+  system is the product; rooms are nodes that write back to one account. Geography
+  comes last, room-by-room, behind a quality gate. (See
+  `GALAXY_WORLD_GRAPH_ARCHITECTURE.md`.)
+- **D-033 — Failed Galaxy City contained, not deleted.** Archived to
+  `experiments/failed-galaxy-city/`; removed from all primary surfaces; brand-gate
+  test prevents re-promotion. New rule: no public playable room ships before the
+  Galaxy quality gate (real art direction, captured + reviewed). (See
+  `FAILURE_REPORT_GALAXY_CITY.md`.)
+- **D-034 — District/Sports-Weather/Room registries live in the engine.**
+  `@sports/galaxy-engine/world/*` is the single typed source of truth; the app
+  renders it; completeness + brand-safety enforced by tests. theme.ts is now the
+  palette only.
+- **D-035 — Sports weather is deterministic now, live-feed-ready.** 14 states keyed
+  by UTC day; the interface is shaped so a live sports API replaces the rotation
+  without changing callers.
+- **D-036 — Premium rooms: Babylon.js; Blacktop: React→Phaser; live rooms:
+  Colyseus; backend: keep GSE+Prisma (Nakama deferred).** External repos are
+  study-only unless a room needs them; no external assets/IP; clones stay in
+  `research/external/` (gitignored), never the trunk. (See
+  `GALAXY_REPO_EXTRACTION_AUDIT.md`.)
+- **D-037 — First premium room = The Vault card gallery**, not a city — easiest to
+  make premium, strongest identity/commerce tie-in, screenshot-friendly, avoids the
+  fake-GTA trap. (See `FIRST_PLAYABLE_ROOM_BRIEF.md`.)

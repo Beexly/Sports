@@ -4,6 +4,8 @@ import { GALAXY } from "@/lib/galaxy/theme";
 import { auth } from "@/lib/auth";
 import { getCurrentProfileView } from "@/lib/galaxy/session";
 import { getGalaxyMetrics } from "@/lib/galaxy/admin-metrics";
+import { getGalaxyWorldState } from "@/lib/galaxy/world-state";
+import { DISTRICTS, ROOM_REGISTRY, SPORTS_WEATHER } from "@sports/galaxy-engine";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +32,7 @@ export default async function GalaxyAdminPage() {
   }
 
   const m = await getGalaxyMetrics();
+  const world = getGalaxyWorldState();
 
   const cards: { label: string; value: string; accent?: string }[] = [
     { label: "Profiles", value: m.profilesTotal.toLocaleString() },
@@ -81,6 +84,18 @@ export default async function GalaxyAdminPage() {
       </div>
 
       <div style={{ marginTop: 24, background: GALAXY.panel, border: `1px solid ${GALAXY.border}`, borderRadius: 12, padding: 16 }}>
+        <h2 style={{ fontSize: 15, marginTop: 0 }}>World state</h2>
+        <p style={{ fontSize: 14, color: GALAXY.text, margin: "4px 0" }}>
+          Active sports weather: <strong style={{ color: world.accent }}>{world.weatherName}</strong>
+          {world.bossName ? <> · featured boss: <strong>{world.bossName}</strong></> : null}
+        </p>
+        <p style={{ fontSize: 13, color: GALAXY.textMuted, margin: 0 }}>
+          World graph: {DISTRICTS.length} districts · {ROOM_REGISTRY.length} room blueprints ·{" "}
+          {SPORTS_WEATHER.length} weather states. Generated content stays owner-approval gated.
+        </p>
+      </div>
+
+      <div style={{ marginTop: 16, background: GALAXY.panel, border: `1px solid ${GALAXY.border}`, borderRadius: 12, padding: 16 }}>
         <h2 style={{ fontSize: 15, marginTop: 0 }}>Subscriptions (test mode)</h2>
         {Object.keys(m.subscriptionsByTier).length === 0 ? (
           <p style={{ color: GALAXY.textMuted, fontSize: 13 }}>No subscriptions recorded.</p>
