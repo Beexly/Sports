@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GalaxyShell } from "@/components/galaxy/shell";
-import { DISTRICTS, GALAXY, GALAXY_CITY_GAME_URL } from "@/lib/galaxy/theme";
+import { DISTRICTS, GALAXY } from "@/lib/galaxy/theme";
 import { getCurrentProfileView } from "@/lib/galaxy/session";
 import { DailyClaim } from "@/components/galaxy/daily-claim";
 
@@ -58,47 +58,6 @@ export default async function GalaxyCampusPage() {
           </Link>
         )}
       </section>
-
-      {/* Live playable game — the first 3D incarnation of the world */}
-      <a
-        href={GALAXY_CITY_GAME_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          display: "block",
-          marginBottom: 26,
-          textDecoration: "none",
-          borderRadius: 16,
-          padding: 22,
-          border: `1px solid ${GALAXY.gold}55`,
-          background: `radial-gradient(70% 120% at 15% 0%, ${GALAXY.deepBlue}33, transparent 60%), radial-gradient(60% 100% at 90% 0%, ${GALAXY.gold}1f, transparent 60%), ${GALAXY.panel}`,
-        }}
-      >
-        <div style={{ fontSize: 12, letterSpacing: 2, color: GALAXY.gold, fontWeight: 800 }}>
-          ▶ PLAY NOW · LIVE 3D ARCADE
-        </div>
-        <div style={{ fontSize: 26, fontWeight: 900, marginTop: 6, fontFamily: "var(--f-display, sans-serif)" }}>
-          Galaxy City
-        </div>
-        <div style={{ color: GALAXY.textMuted, marginTop: 4, maxWidth: 620 }}>
-          Drive a glowing hover-car through the neon night sports-city and collect the
-          Signals before the clock runs out. Plays in your browser — no download.
-        </div>
-        <span
-          style={{
-            display: "inline-block",
-            marginTop: 12,
-            background: GALAXY.gold,
-            color: GALAXY.void,
-            padding: "9px 18px",
-            borderRadius: 9,
-            fontWeight: 800,
-            fontSize: 14,
-          }}
-        >
-          Launch Galaxy City →
-        </span>
-      </a>
 
       {profile && <FirstSessionChecklist profile={profile} />}
 

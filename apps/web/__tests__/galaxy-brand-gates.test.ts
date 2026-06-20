@@ -64,6 +64,21 @@ describe("Gate: Credit Constitution — no cash-out path exists", () => {
   });
 });
 
+describe("Gate: failed Galaxy City prototype is not promoted", () => {
+  it("no primary Galaxy UI references the prototype URL/id/constant", () => {
+    const files = [
+      ...walk(resolve(webRoot, "app/galaxy")),
+      ...walk(resolve(webRoot, "components/galaxy")),
+      ...walk(resolve(webRoot, "lib/galaxy")),
+    ];
+    const forbidden = /joyful-field-633|GALAXY_CITY_GAME_URL|higgsfield\.gg/;
+    for (const f of files) {
+      const text = readFileSync(f, "utf8");
+      expect(forbidden.test(text), `${f} promotes the failed prototype`).toBe(false);
+    }
+  });
+});
+
 describe("Gate: Visual Law — every asset brief carries the mandatory line", () => {
   it("buildAssetBrief always includes the mandatory visual line", () => {
     const b = buildAssetBrief({ kind: "badge", subject: "a clean status badge" });

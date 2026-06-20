@@ -6,13 +6,6 @@
  * to import from server or client components.
  */
 
-/**
- * Live, deployed Galaxy Dynasty browser game (built + deployed via Higgsfield).
- * A stylized 3D night-city traversal arcade — the first playable incarnation of
- * the world. Updatable in place (Higgsfield game_id 7514cc77-3151-4ecb-ad39-a0b4b9b74dc1).
- */
-export const GALAXY_CITY_GAME_URL = "https://joyful-field-633.higgsfield.gg/";
-
 export const GALAXY = {
   void: "#05070D",
   panel: "#0B0E1A",
