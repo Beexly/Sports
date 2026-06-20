@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Galaxy City</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#05070d;color:#E9EDF7;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-user-select:none;user-select:none;}
+  canvas{display:block;position:fixed;inset:0;}
+  #hud{position:fixed;inset:0;pointer-events:none;z-index:5;}
+  .top{position:absolute;top:14px;left:0;right:0;display:flex;justify-content:center;gap:18px;flex-wrap:wrap;}
+  .chip{background:rgba(11,14,26,.66);border:1px solid #23304d;border-radius:10px;padding:7px 14px;
+    font-weight:800;font-size:15px;letter-spacing:.3px;backdrop-filter:blur(4px);}
+  .chip small{display:block;font-size:10px;letter-spacing:1.5px;color:#9AA6C2;font-weight:700;}
+  .gold{color:#F4C95D;} .cyan{color:#00E5FF;} .mag{color:#FF2DD6;}
+  #combo{position:absolute;top:90px;left:0;right:0;text-align:center;font-size:30px;font-weight:900;
+    color:#F4C95D;text-shadow:0 0 18px rgba(244,201,93,.7);opacity:0;transition:opacity .2s;}
+  #brand{position:absolute;left:14px;bottom:12px;font-weight:900;letter-spacing:1px;font-size:13px;color:#9AA6C2;}
+  #brand b{color:#F4C95D;}
+  .overlay{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:24px;background:radial-gradient(70% 90% at 50% 10%,rgba(43,95,227,.22),transparent 60%),
+    radial-gradient(60% 70% at 80% 0%,rgba(244,201,93,.12),transparent 60%),rgba(5,7,13,.92);}
+  .overlay h1{font-size:clamp(40px,11vw,86px);margin:0;font-weight:900;letter-spacing:2px;
+    background:linear-gradient(120deg,#F4C95D,#2B5FE3);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .overlay p{color:#9AA6C2;max-width:520px;font-size:16px;margin:10px 0;}
+  .btn{pointer-events:auto;margin-top:18px;background:#F4C95D;color:#05070d;border:none;border-radius:12px;
+    padding:15px 40px;font-size:20px;font-weight:900;letter-spacing:1px;cursor:pointer;box-shadow:0 0 30px rgba(244,201,93,.4);}
+  .btn:active{transform:scale(.97);}
+  .small{font-size:13px;color:#6f7891;margin-top:14px;}
+  #dev{position:fixed;top:4px;left:4px;color:#0f0;font:12px monospace;display:none;z-index:20;}
+  .hide{display:none!important;}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud" class="hide">
+  <div class="top">
+    <div class="chip"><small id="lScore">SCORE</small><span class="gold" id="score">0</span></div>
+    <div class="chip"><small id="lTime">TIME</small><span class="cyan" id="time">80</span></div>
+    <div class="chip"><small id="lSignals">SIGNALS</small><span id="signals">0/0</span></div>
+  </div>
+  <div id="combo"></div>
+  <div id="brand">GALAXY <b>DYNASTY</b></div>
+</div>
+<div id="dev"></div>
+
+<div id="startScreen" class="overlay">
+  <h1 id="t1">GALAXY CITY</h1>
+  <p id="tag"></p>
+  <p id="ctrl" class="small"></p>
+  <button class="btn" id="startBtn">DRIVE</button>
+  <p class="small">A Galaxy Dynasty arcade · night sports city · no downloads</p>
+</div>
+
+<div id="endScreen" class="overlay hide">
+  <h1 id="endTitle">CITY CLEARED</h1>
+  <p><span id="lFinal">Final Score</span>: <span class="gold" id="finalScore" style="font-weight:900">0</span></p>
+  <p class="small"><span id="lBest">Best</span>: <span id="bestScore">0</span></p>
+  <button class="btn" id="againBtn">RUN IT BACK</button>
+</div>
+
+<script type="module">
+import * as THREE from "./vendor/three.module.js";
+import { STR } from "./strings.js";
+
+// ---- localize static text ----
+document.getElementById("t1").textContent = STR.title;
+document.getElementById("tag").textContent = STR.tagline;
+document.getElementById("startBtn").textContent = STR.start;
+document.getElementById("againBtn").textContent = STR.again;
+document.getElementById("lScore").textContent = STR.score.toUpperCase();
+document.getElementById("lTime").textContent = STR.time.toUpperCase();
+document.getElementById("lSignals").textContent = STR.signals.toUpperCase();
+document.getElementById("lFinal").textContent = STR.finalScore;
+document.getElementById("lBest").textContent = STR.best;
+const isTouch = matchMedia("(pointer:coarse)").matches;
+document.getElementById("ctrl").textContent = isTouch ? STR.controlsTouch : STR.controls;
+
+// ---- palette ----
+const C = { void:0x05070d, gold:0xF4C95D, blue:0x2B5FE3, cyan:0x00E5FF, mag:0xFF2DD6, violet:0x7A5CFF };
+
+// ---- renderer / scene / camera ----
+const canvas = document.getElementById("c");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio||1, 1.5));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(C.void);
+scene.fog = new THREE.Fog(0x070a14, 60, 230);
+const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 600);
+camera.position.set(0, 9, -14);
+
+function resize(){
+  renderer.setSize(innerWidth, innerHeight, false);
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+}
+addEventListener("resize", resize); addEventListener("orientationchange", resize); resize();
+
+// ---- lights ----
+scene.add(new THREE.HemisphereLight(0x33406b, 0x05060a, 0.7));
+scene.add(new THREE.AmbientLight(0x223055, 0.5));
+const moon = new THREE.DirectionalLight(0x8aa0ff, 0.6); moon.position.set(40,90,20); scene.add(moon);
+const gold1 = new THREE.PointLight(C.gold, 1.2, 160, 2); gold1.position.set(0,40,0); scene.add(gold1);
+const cyan1 = new THREE.PointLight(C.cyan, 0.8, 140, 2); cyan1.position.set(-60,30,60); scene.add(cyan1);
+const mag1 = new THREE.PointLight(C.mag, 0.6, 140, 2); mag1.position.set(60,28,-60); scene.add(mag1);
+
+// ---- ground + roads ----
+const HALF = 150;
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(HALF*2, HALF*2),
+  new THREE.MeshStandardMaterial({ color:0x0a0e18, roughness:0.9, metalness:0.1 })
+);
+ground.rotation.x = -Math.PI/2; scene.add(ground);
+const grid = new THREE.GridHelper(HALF*2, 30, C.blue, 0x12203a);
+grid.material.opacity = 0.35; grid.material.transparent = true; grid.position.y = 0.02; scene.add(grid);
+
+// ---- window emissive texture (procedural) ----
+function windowTexture(){
+  const s=128, cv=document.createElement("canvas"); cv.width=cv.height=s;
+  const g=cv.getContext("2d"); g.fillStyle="#070a12"; g.fillRect(0,0,s,s);
+  const cols=["#F4C95D","#00E5FF","#2B5FE3","#7A5CFF"];
+  for(let y=6;y<s;y+=14) for(let x=6;x<s;x+=12){
+    if(Math.random()<0.5) continue;
+    g.fillStyle = cols[(Math.random()*cols.length)|0];
+    g.globalAlpha = 0.5+Math.random()*0.5;
+    g.fillRect(x,y,7,8);
+  }
+  g.globalAlpha=1;
+  const t=new THREE.CanvasTexture(cv); t.wrapS=t.wrapT=THREE.RepeatWrapping; return t;
+}
+const winTex = windowTexture();
+
+// ---- buildings (instanced — one draw call) ----
+const cell = 18, gapEvery = 4; // every 4th row/col is a road
+const positions = [];
+for(let i=-7;i<=7;i++) for(let j=-7;j<=7;j++){
+  if(i%gapEvery===0 || j%gapEvery===0) continue; // leave roads
+  positions.push([i*cell + (Math.random()*4-2), j*cell + (Math.random()*4-2)]);
+}
+const bGeo = new THREE.BoxGeometry(1,1,1);
+const bMat = new THREE.MeshStandardMaterial({
+  color:0x0b1020, roughness:0.7, metalness:0.3,
+  emissive:0xffffff, emissiveMap:winTex, emissiveIntensity:0.9, map:winTex
+});
+const buildings = new THREE.InstancedMesh(bGeo, bMat, positions.length);
+const m = new THREE.Matrix4(); const q = new THREE.Quaternion();
+positions.forEach((p,idx)=>{
+  const w = 7+Math.random()*5, d = 7+Math.random()*5, h = 8+Math.random()*46;
+  m.compose(new THREE.Vector3(p[0], h/2, p[1]), q, new THREE.Vector3(w, h, d));
+  buildings.setMatrixAt(idx, m);
+});
+buildings.instanceMatrix.needsUpdate = true;
+scene.add(buildings);
+
+// ---- player car (Galaxy hover-car) ----
+const car = new THREE.Group();
+const bodyMat = new THREE.MeshStandardMaterial({ color:0x0b0e1a, roughness:0.35, metalness:0.8,
+  emissive:C.gold, emissiveIntensity:0.25 });
+const trimMat = new THREE.MeshStandardMaterial({ color:C.gold, emissive:C.gold, emissiveIntensity:0.9, roughness:0.3, metalness:0.6 });
+const glassMat = new THREE.MeshStandardMaterial({ color:C.cyan, emissive:C.cyan, emissiveIntensity:0.5, roughness:0.2, metalness:0.5, transparent:true, opacity:0.85 });
+const body = new THREE.Mesh(new THREE.BoxGeometry(2.4,0.7,4.4), bodyMat); body.position.y=0.9; car.add(body);
+const cab = new THREE.Mesh(new THREE.BoxGeometry(1.9,0.7,2.0), glassMat); cab.position.set(0,1.5,-0.2); car.add(cab);
+const nose = new THREE.Mesh(new THREE.BoxGeometry(2.0,0.2,0.6), trimMat); nose.position.set(0,0.85,2.2); car.add(nose);
+for(const sx of [-1,1]){
+  const skirt = new THREE.Mesh(new THREE.BoxGeometry(0.25,0.3,4.2), trimMat); skirt.position.set(sx*1.2,0.55,0); car.add(skirt);
+}
+const glowUnder = new THREE.PointLight(C.gold, 1.0, 14, 2); glowUnder.position.set(0,0.3,0); car.add(glowUnder);
+scene.add(car);
+
+// ---- signals (collectibles) ----
+const signalGeo = new THREE.OctahedronGeometry(1.1, 0);
+const signalMat = new THREE.MeshStandardMaterial({ color:C.gold, emissive:C.gold, emissiveIntensity:1.4, roughness:0.2, metalness:0.4 });
+let signals = [];
+function spawnSignals(n){
+  signals.forEach(s=>scene.remove(s.mesh)); signals = [];
+  for(let k=0;k<n;k++){
+    // place on a road lane (multiple of cell near a gap)
+    const ix = (Math.floor(Math.random()*4)-2)*gapEvery*cell;
+    const along = (Math.random()*14-7)*cell;
+    const onX = Math.random()<0.5;
+    const x = onX ? along : ix, z = onX ? ix : along;
+    const mesh = new THREE.Mesh(signalGeo, signalMat.clone());
+    mesh.position.set(THREE.MathUtils.clamp(x,-HALF+8,HALF-8), 1.6, THREE.MathUtils.clamp(z,-HALF+8,HALF-8));
+    const light = new THREE.PointLight(C.gold, 0.8, 12, 2); mesh.add(light);
+    scene.add(mesh);
+    signals.push({ mesh, alive:true, phase:Math.random()*6.28 });
+  }
+}
+
+// ---- audio (tiny WebAudio beeps; no assets) ----
+let actx=null;
+function beep(freq, dur=0.09, type="triangle", gain=0.05){
+  try{ actx = actx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(), g=actx.createGain();
+    o.type=type; o.frequency.value=freq; o.connect(g); g.connect(actx.destination);
+    g.gain.setValueAtTime(gain, actx.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+dur);
+    o.start(); o.stop(actx.currentTime+dur);
+  }catch(e){}
+}
+
+// ---- input ----
+const BIND = { KeyW:"up",ArrowUp:"up", KeyS:"down",ArrowDown:"down", KeyA:"left",ArrowLeft:"left",
+               KeyD:"right",ArrowRight:"right", Space:"up" };
+const held = new Set();
+addEventListener("keydown", e=>{ const c=BIND[e.code]; if(c){ held.add(c); e.preventDefault(); } });
+addEventListener("keyup", e=>{ const c=BIND[e.code]; if(c) held.delete(c); });
+const touch = { steer:0, accel:false };
+function handleTouch(e){
+  touch.steer=0; touch.accel=false;
+  for(const t of e.touches){
+    if(t.clientX < innerWidth*0.5){
+      const rel = (t.clientX - innerWidth*0.22)/(innerWidth*0.22);
+      touch.steer = THREE.MathUtils.clamp(rel, -1, 1);
+    } else { touch.accel = true; }
+  }
+}
+addEventListener("touchstart", e=>{ handleTouch(e); e.preventDefault(); }, {passive:false});
+addEventListener("touchmove", e=>{ handleTouch(e); e.preventDefault(); }, {passive:false});
+addEventListener("touchend", e=>{ handleTouch(e); }, {passive:false});
+function padState(){
+  let steer=0, accel=false, brake=false;
+  for(const gp of (navigator.getGamepads?.()||[])) if(gp){
+    if(Math.abs(gp.axes[0]||0)>0.15) steer = gp.axes[0];
+    if(gp.buttons[0]?.pressed || gp.buttons[7]?.pressed) accel=true;
+    if(gp.buttons[1]?.pressed || gp.buttons[6]?.pressed) brake=true;
+  }
+  return { steer, accel, brake };
+}
+
+// ---- game state ----
+const G = { speed:0, heading:0, score:0, combo:1, lastPickup:-9999, timeLeft:80, total:24, left:0, running:false, t:0 };
+const els = {
+  hud:document.getElementById("hud"), score:document.getElementById("score"), time:document.getElementById("time"),
+  signals:document.getElementById("signals"), combo:document.getElementById("combo"),
+  start:document.getElementById("startScreen"), end:document.getElementById("endScreen"),
+  endTitle:document.getElementById("endTitle"), finalScore:document.getElementById("finalScore"),
+  bestScore:document.getElementById("bestScore"),
+};
+function bestKey(){ return "galaxy_city_best"; }
+function getBest(){ return Number(localStorage.getItem(bestKey())||0); }
+
+function startGame(){
+  G.speed=0; G.heading=0; G.score=0; G.combo=1; G.lastPickup=-9999; G.timeLeft=80; G.left=G.total; G.running=true; G.t=0;
+  car.position.set(0,0,0); car.rotation.y=0;
+  spawnSignals(G.total);
+  els.start.classList.add("hide"); els.end.classList.add("hide"); els.hud.classList.remove("hide");
+  beep(520,0.12,"sawtooth",0.04);
+  last = performance.now(); acc=0;
+}
+function endGame(cleared){
+  G.running=false;
+  let final = G.score + (cleared ? Math.round(G.timeLeft)*20 : 0);
+  G.score = final;
+  const best = Math.max(getBest(), final); localStorage.setItem(bestKey(), String(best));
+  els.endTitle.textContent = cleared ? STR.cleared : STR.timeUp;
+  els.finalScore.textContent = final.toLocaleString();
+  els.bestScore.textContent = best.toLocaleString();
+  els.hud.classList.add("hide"); els.end.classList.remove("hide");
+  beep(cleared?740:200,0.3,"triangle",0.05);
+}
+document.getElementById("startBtn").onclick = startGame;
+document.getElementById("againBtn").onclick = startGame;
+
+// ---- simulation ----
+const ACCEL=30, MAXSPD=46, REVMAX=-16, FRICTION=20, BRAKE=60, TURN=2.0;
+function update(dtMs){
+  const dt = dtMs/1000;
+  if(!G.running) return;
+  G.t += dt;
+
+  // gather commands
+  const pad = padState();
+  let up = held.has("up") || touch.accel || pad.accel;
+  let down = held.has("down") || pad.brake;
+  let steer = (held.has("left")?-1:0) + (held.has("right")?1:0) + touch.steer + pad.steer;
+  steer = THREE.MathUtils.clamp(steer, -1, 1);
+
+  // longitudinal
+  if(up) G.speed += ACCEL*dt;
+  else if(down) G.speed -= BRAKE*dt;
+  else { // friction toward 0
+    if(G.speed>0) G.speed = Math.max(0, G.speed - FRICTION*dt);
+    else if(G.speed<0) G.speed = Math.min(0, G.speed + FRICTION*dt);
+  }
+  G.speed = THREE.MathUtils.clamp(G.speed, REVMAX, MAXSPD);
+
+  // steering scales with speed + direction
+  const speedFactor = THREE.MathUtils.clamp(Math.abs(G.speed)/10, 0, 1);
+  G.heading -= steer * TURN * dt * speedFactor * Math.sign(G.speed||1);
+
+  // move
+  const fx = Math.sin(G.heading), fz = Math.cos(G.heading);
+  car.position.x += fx * G.speed * dt;
+  car.position.z += fz * G.speed * dt;
+  car.position.x = THREE.MathUtils.clamp(car.position.x, -HALF+6, HALF-6);
+  car.position.z = THREE.MathUtils.clamp(car.position.z, -HALF+6, HALF-6);
+  car.rotation.y = G.heading;
+  // subtle hover bob + bank
+  body.position.y = 0.9 + Math.sin(G.t*6)*0.04;
+  car.rotation.z = -steer * speedFactor * 0.12;
+
+  // timer
+  G.timeLeft -= dt;
+  if(G.timeLeft<=0){ G.timeLeft=0; endGame(false); }
+
+  // signals
+  for(const s of signals){
+    if(!s.alive) continue;
+    s.mesh.rotation.y += dt*1.6; s.mesh.rotation.x += dt*0.9;
+    s.mesh.position.y = 1.6 + Math.sin(G.t*3 + s.phase)*0.35;
+    const dx=s.mesh.position.x-car.position.x, dz=s.mesh.position.z-car.position.z;
+    if(dx*dx+dz*dz < 8.4){ // ~2.9 radius
+      s.alive=false; s.mesh.visible=false; G.left--;
+      const now=G.t*1000;
+      G.combo = (now - G.lastPickup < 4000) ? Math.min(G.combo+1,5) : 1;
+      G.lastPickup = now;
+      G.score += 100*G.combo;
+      beep(440 + G.combo*120, 0.10, "square", 0.05);
+      showCombo();
+      if(G.left<=0) endGame(true);
+    }
+  }
+
+  // camera follow
+  const camTarget = new THREE.Vector3(car.position.x - fx*14, 8.5, car.position.z - fz*14);
+  camera.position.lerp(camTarget, 1 - Math.pow(0.001, dt));
+  camera.lookAt(car.position.x + fx*6, 2.0, car.position.z + fz*6);
+
+  // pulse city lights
+  gold1.intensity = 1.0 + Math.sin(G.t*2)*0.25;
+}
+
+function showCombo(){
+  els.combo.textContent = "x" + G.combo + "  +" + (100*G.combo);
+  els.combo.style.opacity = 1;
+  clearTimeout(showCombo._t); showCombo._t = setTimeout(()=>els.combo.style.opacity=0, 650);
+}
+
+function syncHud(){
+  els.score.textContent = G.score.toLocaleString();
+  els.time.textContent = Math.ceil(G.timeLeft);
+  els.signals.textContent = (G.total - G.left) + "/" + G.total;
+}
+
+// ---- fixed-timestep loop ----
+const STEP = 1000/60; let acc=0, last=performance.now(), paused=false;
+let frames=0, fpsAt=last; const dev = new URLSearchParams(location.search).has("dev");
+if(dev) document.getElementById("dev").style.display="block";
+addEventListener("blur", ()=>paused=true);
+addEventListener("focus", ()=>{ paused=false; last=performance.now(); });
+function frame(now){
+  requestAnimationFrame(frame);
+  if(paused){ return; }
+  acc += now-last; last=now; if(acc>250) acc=250;
+  while(acc>=STEP){ update(STEP); acc-=STEP; }
+  if(G.running) syncHud();
+  renderer.render(scene, camera);
+  if(dev && (frames++, now-fpsAt>=500)){ document.getElementById("dev").textContent =
+    Math.round(frames*1000/(now-fpsAt))+" fps"; frames=0; fpsAt=now; }
+}
+requestAnimationFrame(frame);
+document.getElementById("bestScore") && (els.bestScore.textContent = getBest().toLocaleString());
+</script>
+</body>
+</html>

@@ -127,3 +127,23 @@ of rationale each. Hard-stops are recorded in `BUILD_LOG.md`.
 - **D-028 — Cosmetics are the revenue engine.** Kicks, fits, emotes, anthems,
   scenes, banners, frames, titles, ticket stubs — earn / season-drop / Nova (test
   mode). Cosmetics never affect outcomes (enforced by a brand gate test).
+- **D-029 — Boosts/consumables are a revenue line that never crosses pay-to-win.**
+  Allow-list effects only (Credits/Season-Point multipliers, streak shields,
+  cosmetic bursts/spotlights); applyReward boosts ONLY Credits + Season Points,
+  never skill/character XP, rating, calibration, or outcomes. Multipliers capped.
+  Enforced by `galaxy-brand-gates` tests.
+- **D-030 — Higgsfield builds REAL playable games, not just art — so we shipped
+  one.** `Galaxy City`, a stylized 3D night-city traversal arcade (Three.js,
+  vendored — no CDN), deployed via the Higgsfield apps engine to a public,
+  shareable URL (https://joyful-field-633.higgsfield.gg/, game_id
+  7514cc77-3151-4ecb-ad39-a0b4b9b74dc1) and listed on the marketplace. This is the
+  first *playable 3D incarnation* of the world and the GTA-closest, brand-safe
+  experience buildable now. Source lives in `galaxy-game/` (vendor/zip gitignored,
+  rebuild documented). A full real-time 3D open-world MMO remains the funded
+  endgame; this game + the web trunk de-risk and feed it. Higgsfield credit spend
+  is the owner's, used deliberately (assets + the deploy), well within balance.
+- **D-031 — GSE Pro = vision, not wins.** Pro/Elite unlocks a "Sharp Read" intel
+  panel in the War Room (process/context a sharp weighs) — never the answer, never
+  an outcome/rating/calibration edge. Tier resolved server-side
+  (`lib/galaxy/entitlement.ts`); free users see a locked upgrade prompt. Honors
+  the anti-pay-to-win law while making the subscription a real revenue surface.

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { GalaxyShell } from "@/components/galaxy/shell";
 import { SignalCheckCard } from "@/components/galaxy/signal-check-card";
 import { GALAXY } from "@/lib/galaxy/theme";
-import { getCurrentProfileView } from "@/lib/galaxy/session";
+import { getCurrentProfileView, getSessionUser } from "@/lib/galaxy/session";
+import { getGalaxyTier, isPro } from "@/lib/galaxy/entitlement";
 import { WAR_ROOM_SCENARIOS, ACADEMY_FIRST_CHECK } from "@/lib/galaxy/content";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,8 @@ export default async function WarRoomPage({
   searchParams: { academy?: string };
 }) {
   const profile = await getCurrentProfileView();
+  const user = await getSessionUser();
+  const pro = isPro(await getGalaxyTier(user?.id));
   const academyMode = searchParams.academy === "1";
 
   return (
@@ -58,6 +61,8 @@ export default async function WarRoomPage({
               context={`${s.context} ${s.market}.`}
               optionA={{ key: "A", label: s.options[0].label }}
               optionB={{ key: "B", label: s.options[1].label }}
+              proIntel={s.proIntel}
+              isPro={pro}
             />
           ))}
       </div>

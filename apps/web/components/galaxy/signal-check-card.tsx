@@ -44,6 +44,8 @@ export function SignalCheckCard({
   scenarioId,
   questionId,
   reveal,
+  proIntel,
+  isPro,
 }: {
   surface: "WAR_ROOM" | "BLACKTOP" | "ACADEMY";
   title: string;
@@ -54,6 +56,10 @@ export function SignalCheckCard({
   questionId?: string;
   /** Optional text revealed after grading (lesson / final). */
   reveal?: string;
+  /** GSE Pro "deeper read" intel (vision, not the answer). */
+  proIntel?: string;
+  /** Whether the viewer has GSE Pro/Elite. */
+  isPro?: boolean;
 }) {
   const [choice, setChoice] = useState<"A" | "B" | null>(null);
   const [confidence, setConfidence] = useState(60);
@@ -97,6 +103,31 @@ export function SignalCheckCard({
       </div>
       <h2 style={{ margin: "6px 0 4px", fontSize: 22, color: GALAXY.text }}>{title}</h2>
       <p style={{ color: GALAXY.textMuted, marginTop: 0 }}>{context}</p>
+
+      {proIntel && !result && (
+        <div
+          style={{
+            marginTop: 12,
+            borderRadius: 10,
+            border: `1px solid ${isPro ? GALAXY.cyan : GALAXY.border}55`,
+            background: isPro ? `${GALAXY.cyan}10` : "rgba(255,255,255,0.02)",
+            padding: "10px 12px",
+          }}
+        >
+          <div style={{ fontSize: 11, letterSpacing: 1, color: GALAXY.cyan, fontWeight: 700 }}>
+            GSE PRO · SHARP READ
+          </div>
+          {isPro ? (
+            <div style={{ fontSize: 13, color: GALAXY.text, marginTop: 4 }}>{proIntel}</div>
+          ) : (
+            <div style={{ fontSize: 13, color: GALAXY.textMuted, marginTop: 4 }}>
+              Pro unlocks the deeper read — the context a sharp weighs before the call.{" "}
+              <a href="/pricing" style={{ color: GALAXY.cyan }}>See GSE Pro →</a>{" "}
+              <span style={{ color: GALAXY.textMuted }}>(Pro = vision, never the answer.)</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {!result && (
         <>

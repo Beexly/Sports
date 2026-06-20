@@ -32,6 +32,12 @@ export interface WarRoomScenario {
   /** Real final used for engine settlement. */
   readonly homeScore: number;
   readonly awayScore: number;
+  /**
+   * GSE Pro "deeper read" — process/context a sharp would weigh. It improves the
+   * player's VISION, never reveals the answer (anti-pay-to-win). Free users see a
+   * locked upgrade prompt; Pro sees the intel.
+   */
+  readonly proIntel: string;
 }
 
 /**
@@ -54,6 +60,8 @@ export const WAR_ROOM_SCENARIOS: readonly WarRoomScenario[] = [
     ],
     homeScore: 27,
     awayScore: 17,
+    proIntel:
+      "Sharp lens: short rest dents a favorite's prep, and public money tends to inflate a marquee home number. Weigh the rest gap and the points against the consensus before you commit.",
   },
   {
     id: "wr-2",
@@ -68,6 +76,8 @@ export const WAR_ROOM_SCENARIOS: readonly WarRoomScenario[] = [
     ],
     homeScore: 20,
     awayScore: 13,
+    proIntel:
+      "Sharp lens: cold-weather divisional games trend toward defense and the run; a total that ticked down often means informed money on the Under. Weigh pace and weather over the opening number.",
   },
   {
     id: "wr-3",
@@ -82,6 +92,8 @@ export const WAR_ROOM_SCENARIOS: readonly WarRoomScenario[] = [
     ],
     homeScore: 24,
     awayScore: 21,
+    proIntel:
+      "Sharp lens: a home dog getting a field goal in a tight divisional matchup is a classic value spot — moneyline underdogs in coin-flip games carry price value. Weigh the matchup parity against the favorite's juice.",
   },
 ] as const;
 
