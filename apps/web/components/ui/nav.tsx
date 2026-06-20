@@ -27,14 +27,24 @@ const BOARD_MENU: readonly NavGroup[] = [
   },
 ];
 
-// Intelligence ▾ — the engine room. How we think. (Proof moved to its own door.)
+// Intelligence ▾ — the engine room. How we think. (Proof + Academy moved out.)
 const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
       { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, in one place" },
-      { label: "Galaxy Twin", href: "/observatory", desc: "Live market map — line moves & best prices" },
-      { label: "How we read metrics", href: "/intelligence/metrics", desc: "What each stat means, in plain terms" },
-      { label: "Learn the Signal", href: "/academy", desc: "Train on the process, step by step" },
+      { label: "Galaxy Twin", href: "/observatory", desc: "Live market map: line moves and best prices" },
+    ],
+  },
+];
+
+// GSN ▾ — Galaxy Sports Network, the media + studio arm. The broadcast, the
+// production desk, and the school. (How-we-read-metrics now lives under Proof.)
+const GSN_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "The Beat", href: "/the-beat", desc: "The cinematic broadcast, scored at the source" },
+      { label: "The Studio", href: "/fantasy/studio", desc: "Inside the production desk, where the broadcast is built" },
+      { label: "The Academy", href: "/academy", desc: "Learn the signal. Train on the process, step by step" },
     ],
   },
 ];
@@ -47,7 +57,7 @@ const FANTASY_DAILY_MENU: readonly NavGroup[] = [
     heading: "Fantasy",
     items: [
       { label: "Draft Assistant", href: "/fantasy/draft", desc: "Draft tiers, player values & live pick guidance" },
-      { label: "Start-Sit Helper", href: "/fantasy/lineup", desc: "Start or sit — floor vs. ceiling, explained" },
+      { label: "Start-Sit Helper", href: "/fantasy/lineup", desc: "Start or sit: floor vs. ceiling, explained" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Who to add and what to bid, with the why" },
       { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Is the trade fair? Value and win-now read" },
     ],
@@ -109,11 +119,9 @@ export async function Nav() {
             </Link>
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
             <NavMenu label="Fantasy & Daily" href="/fantasy" groups={FANTASY_DAILY_MENU} />
+            <NavMenu label="GSN" href="/the-beat" groups={GSN_MENU} />
 
-            <Link href="/the-beat" title="Sports-media intelligence — reporters, graded">
-              The Beat
-            </Link>
-            <Link href="/calibration" title="The Proof Room — calibration, CLV, and the public ledger">
+            <Link href="/calibration" title="The Proof Room: calibration, CLV, and the public ledger">
               Proof
             </Link>
           </nav>

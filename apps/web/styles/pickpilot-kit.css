@@ -665,25 +665,13 @@ button { font-family: inherit; cursor: pointer; }
 }
 .brand-mark-svg { width: 100%; height: 100%; }
 .brand-mark-orbit {
-  stroke: var(--ion-white);
-  stroke-width: 3.8;
-  stroke-linecap: round;
-}
-.brand-mark-orbit-secondary {
-  stroke: var(--ultraviolet-glow);
-  opacity: 0.72;
-}
-.brand-mark-vector {
-  stroke: var(--plasma);
-  stroke-width: 3;
-  stroke-linecap: round;
-}
-.brand-mark-vector-cyan {
   stroke: var(--orbital-cyan);
-  opacity: 0.92;
+  stroke-width: 5;
+  stroke-linecap: round;
 }
+.brand-mark-vector { fill: var(--ion-white); }
 .brand-mark-core { fill: var(--plasma); filter: drop-shadow(0 0 10px rgba(255,45,214,0.75)); }
-.brand-mark-ping { fill: var(--orbital-cyan); filter: drop-shadow(0 0 8px rgba(0,240,255,0.75)); }
+.brand-mark-ping { fill: var(--ultraviolet); filter: drop-shadow(0 0 8px rgba(122,92,255,0.7)); }
 .brand-wordmark {
   display: inline-flex;
   align-items: baseline;
@@ -734,51 +722,53 @@ button { font-family: inherit; cursor: pointer; }
   from { opacity: 0; transform: translateX(-6px); }
   to   { opacity: 1; transform: translateX(0); }
 }
+/* The orbital ring locks in: it sweeps round and settles to rest. The dash gaps
+   stay intact (no stroke-dashoffset draw, which would erase the split). */
+@keyframes gse-ring-lock {
+  0%   { opacity: 0; transform: rotate(-95deg) scale(0.62); }
+  100% { opacity: 1; transform: rotate(0deg) scale(1); }
+}
+/* The edge blade snaps across, slightly overshooting before it settles. */
+@keyframes gse-blade-in {
+  0%   { opacity: 0; transform: scale(0.2); }
+  62%  { opacity: 1; transform: scale(1.07); }
+  100% { opacity: 1; transform: scale(1); }
+}
 
 .brand-lockup-kinetic .brand-mark { animation: gse-mark-glow 0.95s ease-out both; }
 .brand-lockup-kinetic .brand-mark-orbit {
-  stroke-dasharray: 130;
-  animation: gse-mark-draw 0.46s ease-out both;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gse-ring-lock 0.55s cubic-bezier(0.2,0,0,1) both;
 }
-.brand-lockup-kinetic .brand-mark-orbit-secondary { animation-delay: 0.12s; }
-.brand-lockup-kinetic .brand-mark-vector {
-  stroke-dasharray: 130;
-  animation: gse-mark-draw 0.40s ease-out 0.24s both;
-}
-.brand-lockup-kinetic .brand-mark-vector-cyan { animation-delay: 0.32s; }
+.brand-lockup-kinetic .brand-mark-vector,
 .brand-lockup-kinetic .brand-mark-core,
 .brand-lockup-kinetic .brand-mark-ping {
   transform-box: fill-box;
   transform-origin: center;
 }
+.brand-lockup-kinetic .brand-mark-vector { animation: gse-blade-in 0.4s cubic-bezier(0.2,0.9,0.3,1.3) 0.34s both; }
 .brand-lockup-kinetic .brand-mark-core { animation: gse-mark-pop 0.26s cubic-bezier(0.2,0.9,0.3,1.3) 0.56s both; }
 .brand-lockup-kinetic .brand-mark-ping { animation: gse-mark-pop 0.30s cubic-bezier(0.2,0.9,0.3,1.3) 0.68s both; }
 .brand-lockup-kinetic .brand-wordmark { animation: gse-word-resolve 0.42s ease-out 0.50s both; }
 
-/* Inline mark (loading states, splashes) can opt into the same draw-on. */
-.logo-mark-kinetic path,
-.logo-mark-kinetic line {
-  stroke-dasharray: 130;
-  animation: gse-mark-draw 0.5s ease-out both;
-}
-.logo-mark-kinetic line { animation-delay: 0.26s; }
-.logo-mark-kinetic circle {
+/* Inline mark (loading states, splashes) can opt into the same lock-on. */
+.logo-mark-kinetic circle,
+.logo-mark-kinetic polygon {
   transform-box: fill-box;
   transform-origin: center;
-  animation: gse-mark-pop 0.3s cubic-bezier(0.2,0.9,0.3,1.3) 0.56s both;
+  animation: gse-mark-pop 0.4s cubic-bezier(0.2,0.9,0.3,1.3) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .brand-lockup-kinetic .brand-mark,
   .brand-lockup-kinetic .brand-mark-orbit,
   .brand-lockup-kinetic .brand-mark-vector,
-  .brand-lockup-kinetic .brand-mark-vector-cyan,
   .brand-lockup-kinetic .brand-mark-core,
   .brand-lockup-kinetic .brand-mark-ping,
   .brand-lockup-kinetic .brand-wordmark,
-  .logo-mark-kinetic path,
-  .logo-mark-kinetic line,
-  .logo-mark-kinetic circle {
+  .logo-mark-kinetic circle,
+  .logo-mark-kinetic polygon {
     animation: none !important;
     stroke-dashoffset: 0 !important;
   }

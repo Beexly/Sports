@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
-import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
+import { BRAND_NAME, CLOSING_LINE, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
   { label: "The NFL House", href: "/house" },
@@ -14,6 +14,7 @@ const PRODUCT_LINKS = [
   { label: "Start-Sit Helper", href: "/fantasy/lineup" },
   { label: "Contests", href: "/fantasy/contests" },
   { label: "The Beat", href: "/the-beat" },
+  { label: "The Studio", href: "/fantasy/studio" },
   { label: "The Academy", href: "/academy" },
 ] as const;
 
@@ -77,6 +78,9 @@ export function Footer() {
               <strong style={{ color: "var(--ion)" }}>
                 Set limits before emotion enters.
               </strong>
+            </p>
+            <p className="mt-4 text-xs text-ink-500">
+              {BRAND_NAME} is a {GSN_NAME} production.
             </p>
           </div>
 

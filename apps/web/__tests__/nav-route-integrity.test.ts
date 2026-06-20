@@ -67,6 +67,15 @@ describe("Nav route integrity", () => {
     }
   });
 
+  it("GSN is its own door grouping The Beat, The Studio, and The Academy", () => {
+    for (const route of ["/the-beat", "/fantasy/studio", "/academy"]) {
+      expect(desktop.includes(`"${route}"`), `desktop GSN missing ${route}`).toBe(true);
+      expect(mobile.includes(`"${route}"`), `mobile GSN missing ${route}`).toBe(true);
+    }
+    // Metrics moved out of Intelligence (it lives under Proof / on /calibration).
+    expect(desktop).not.toContain('"/intelligence/metrics"');
+  });
+
   it("Players is a single door and Proof left Intelligence", () => {
     // Players is a direct link, no mega-menu lens items leaking into the bar.
     expect(desktop).not.toContain('"/players?view=opportunity"');

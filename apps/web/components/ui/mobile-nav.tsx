@@ -18,23 +18,21 @@ const SECTIONS: readonly Section[] = [
     collapsible: true,
     links: [
       { label: "Today's Board", href: "/board" },
-      { label: "The House — NFL hub", href: "/house" },
+      { label: "The House: NFL hub", href: "/house" },
       { label: "Mission Control", href: "/today" },
       { label: "Daily Briefing", href: "/gsn" },
     ],
   },
   {
     heading: "Players",
-    links: [{ label: "Player Lab — every player, every signal", href: "/players" }],
+    links: [{ label: "Player Lab: every player, every signal", href: "/players" }],
   },
   {
     heading: "Intelligence",
     collapsible: true,
     links: [
       { label: "Intelligence Engines", href: "/intelligence/engines" },
-      { label: "Galaxy Twin — Market map", href: "/observatory" },
-      { label: "How we read metrics", href: "/intelligence/metrics" },
-      { label: "Learn the Signal", href: "/academy" },
+      { label: "Galaxy Twin: market map", href: "/observatory" },
     ],
   },
   {
@@ -52,22 +50,31 @@ const SECTIONS: readonly Section[] = [
     ],
   },
   {
+    heading: "GSN",
+    collapsible: true,
+    links: [
+      { label: "The Beat: cinematic broadcast", href: "/the-beat" },
+      { label: "The Studio: production desk", href: "/fantasy/studio" },
+      { label: "The Academy: learn the signal", href: "/academy" },
+    ],
+  },
+  {
     heading: "Proof",
     collapsible: true,
     links: [
       { label: "The Proof Room", href: "/calibration" },
       { label: "Calibration Report", href: "/performance" },
       { label: "Closing Line Value", href: "/clv" },
-      { label: "Trust Ledger — Pick receipts", href: "/ledger" },
+      { label: "Trust Ledger: pick receipts", href: "/ledger" },
       { label: "Proof of Record", href: "/proof" },
       { label: "Accountability", href: "/accountability" },
-      { label: "CLV Tracker — Track your bets", href: "/track" },
+      { label: "How we read metrics", href: "/intelligence/metrics" },
+      { label: "CLV Tracker: track your bets", href: "/track" },
     ],
   },
   {
     heading: "More",
     links: [
-      { label: "The Beat — Media intelligence", href: "/the-beat" },
       { label: "Pricing", href: "/pricing" },
       { label: "Dashboard", href: "/dashboard" },
     ],

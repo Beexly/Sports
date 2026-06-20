@@ -17,6 +17,7 @@ import { useState } from "react";
 import type { Broadcast } from "@/lib/fantasy/host";
 import { SCENES } from "@/lib/fantasy/host";
 import { BRAND_COLORS } from "@/lib/brand";
+import { GsnLockup } from "@/components/brand/gsn-lockup";
 
 export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
   const segs = broadcast.segments;
@@ -28,8 +29,10 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
 
   return (
     <div className="surface-card overflow-hidden p-0">
-      {/* On-air bar */}
+      {/* On-air bar: the GSN network bug, live state, and presenter disclosure */}
       <div className="flex flex-wrap items-center gap-3 border-b p-4" style={{ borderColor: BRAND_COLORS.steelGray }}>
+        <GsnLockup variant="bug" size={22} />
+        <span aria-hidden className="h-4 w-px" style={{ background: BRAND_COLORS.steelGray }} />
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em]"
           style={{ background: "rgba(255,45,45,0.16)", color: "#ff5a5a" }}
@@ -38,7 +41,7 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
           On air
         </span>
         <p className="font-display text-sm font-semibold text-white">
-          Galaxy Broadcast <span className="text-ink-500">· Week {broadcast.week}</span>
+          The Beat <span className="text-ink-500">· Week {broadcast.week}</span>
         </p>
         <span className="ml-auto rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}>
           Synthetic presenter
@@ -74,10 +77,10 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
             </div>
           </div>
 
-          {/* Lower third */}
-          <div className="absolute inset-x-0 bottom-0 border-t p-3" style={{ borderColor: `${scene.accent}55`, background: "linear-gradient(0deg, rgba(0,0,0,0.65), transparent)" }}>
-            <p className="text-[11px] uppercase tracking-[0.24em]" style={{ color: scene.accent }}>Galaxy Sports Network</p>
-            <p className="mt-0.5 text-sm font-medium text-white">{broadcast.title}</p>
+          {/* Lower third: the GSN network identity over the on-air title */}
+          <div className="absolute inset-x-0 bottom-0 border-t p-3" style={{ borderColor: `${scene.accent}55`, background: "linear-gradient(0deg, rgba(0,0,0,0.72), transparent)" }}>
+            <GsnLockup variant="full" size={18} />
+            <p className="mt-1 text-sm font-medium text-white">{broadcast.title}</p>
           </div>
         </div>
 

@@ -1,22 +1,30 @@
-# Galaxy Sports Edge — Logo Guidelines
+# Galaxy — Logo Guidelines (2026 brand-family mark)
 
-> The mark must be **noticed, seen, heard, and felt**. It is a signal lock: an orbit (the market in motion), an edge vector (our read crossing it), and a signal core/ping (the moment of detection). This document governs every use.
+> The mark must be **noticed, seen, heard, and felt**. It is a signal lock: a split orbital ring (the market in motion), an edge blade slicing through it (our read cutting the market), a signal core at the crossing, and a ping (the moment of detection). It is the **shared symbol** of Galaxy Sports Edge (the product/site) and Galaxy Sports Network (the company/network). This document governs every use.
 
-## The mark
+## The mark (2026)
 
-- **Concept:** broken orbital arc + crossed edge vectors + signal core, with a ping. The orbit is intentionally **open at the top** so it never reads as a circular letter (O/Q) or a coin.
+- **Concept:** a bold **split orbital ring** (open via two dash gaps so it never reads as a coin or an "O"), a sharp **edge blade** slicing diagonally through it, a **signal core** (plasma) at the crossing, and a **ping** (ultraviolet). Cyan ring + ion-white blade + plasma core + ultraviolet ping.
 - **Canonical sources:**
   - `apps/web/components/brand/brand-lockup.tsx` — `GalaxyMark` (the header/footer lockup, full color).
-  - `apps/web/components/brand/logo-mark-inline.tsx` — `LogoMarkInline` (loading states, splashes, badges; gradient `#00E5FF → #7A5CFF → #FF2DD6`).
+  - `apps/web/components/brand/logo-mark-inline.tsx` — `LogoMarkInline` (loading states, splashes, badges; full brand color, or a monochrome `color` override).
+  - `apps/web/components/brand/gsn-lockup.tsx` — `GsnLockup` (the Galaxy Sports Network identity: shared mark + Network wordmark; `bug` = the on-air corner mark).
   - `apps/web/public/favicon.svg` — favicon, simplified to read at 16px.
   - `apps/web/public/logo-mark.svg` — icon used for `apple-touch` and `sizes:any`.
+
+## Brand family
+
+- **Galaxy Sports Edge (GSE)** — the product/site. Lockup = mark + "Galaxy / Sports Edge". This is the live consumer brand.
+- **Galaxy Sports Network (GSN)** — the company/network (the LLC). Lockup = mark + "Galaxy / Sports Network" (`GsnLockup`). Used on the broadcast (The Beat), the Studio, the Academy, and as the parent-company attribution. Same mark, different wordmark.
 
 ## Variants
 
 | Variant | When | Source |
 |---|---|---|
-| Full lockup (mark + "Galaxy / Sports Edge") | Desktop header, footer, marketing | `BrandLockup` |
-| Compact (mark + `GSE`) | Tight bars, mobile | `BrandLockup compact` |
+| GSE full lockup (mark + "Galaxy / Sports Edge") | Desktop header, footer, marketing | `BrandLockup` |
+| GSE compact (mark + `GSE`) | Tight bars, mobile | `BrandLockup compact` |
+| GSN lockup (mark + "Galaxy / Sports Network") | Broadcast, Studio, network surfaces | `GsnLockup` |
+| GSN on-air bug (mark + `GSN`) | Broadcast on-air bar | `GsnLockup variant="bug"` |
 | Mark only | Avatars, badges, loading | `LogoMarkInline` |
 | Favicon | Browser tab (16/32px) | `public/favicon.svg` |
 | App icon | Home-screen / apple-touch | `public/logo-mark.svg` |
