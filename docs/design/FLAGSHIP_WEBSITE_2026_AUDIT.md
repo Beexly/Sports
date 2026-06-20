@@ -54,3 +54,4 @@
 ## Phase-1 progress log
 
 - **2026-06-20** — Nav condensed 10 → 4 doors (desktop + mobile parity); DFS→Daily; "Lineup Optimizer"→"Start-Sit Helper"; "Receipts"→"The Proof Room" grouping; Trend Lab moved under Players; Academy folded under Intelligence ("Learn the Signal"). Typecheck + brand-safety green. No new routes introduced (zero dead links).
+- **2026-06-20** — Kinetic logo signature: sub-1s draw-on + lock (orbit → vectors → core/ping → wordmark → glow decay) on the header lockup, opt-in `kinetic` on `LogoMarkInline`, fully disabled under `prefers-reduced-motion`, no autoplay audio. Added `LOGO_GUIDELINES.md` + guard test. Typecheck + build green.

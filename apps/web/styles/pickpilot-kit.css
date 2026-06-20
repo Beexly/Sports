@@ -708,6 +708,82 @@ button { font-family: inherit; cursor: pointer; }
 .brand-lockup-compact .brand-full { display: none; }
 .footer-lockup { margin-bottom: 16px; }
 
+/* ── Kinetic signature ───────────────────────────────────────────────────────
+   A sub-1s "draw-on + lock" that resolves the mark from nothing: the orbit
+   sweeps in, the edge vectors lock across it, the signal core and ping pop,
+   the wordmark resolves, and a glow decays into the resting state. Designed so
+   the brand is recognizable from the motion alone, before the full mark lands.
+   Plays once on render (it lives in the persistent layout, so it fires on a
+   full load — an arrival sting — not on in-app navigation). Fully disabled
+   under prefers-reduced-motion, which snaps straight to the resting state. */
+@keyframes gse-mark-draw {
+  from { stroke-dashoffset: 130; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes gse-mark-pop {
+  0%   { opacity: 0; transform: scale(0.2); }
+  60%  { opacity: 1; transform: scale(1.25); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes gse-mark-glow {
+  0%   { filter: drop-shadow(0 0 2px rgba(0,240,255,0)); }
+  55%  { filter: drop-shadow(0 0 18px rgba(0,240,255,0.7)); }
+  100% { filter: drop-shadow(0 0 12px rgba(0,240,255,0.32)); }
+}
+@keyframes gse-word-resolve {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.brand-lockup-kinetic .brand-mark { animation: gse-mark-glow 0.95s ease-out both; }
+.brand-lockup-kinetic .brand-mark-orbit {
+  stroke-dasharray: 130;
+  animation: gse-mark-draw 0.46s ease-out both;
+}
+.brand-lockup-kinetic .brand-mark-orbit-secondary { animation-delay: 0.12s; }
+.brand-lockup-kinetic .brand-mark-vector {
+  stroke-dasharray: 130;
+  animation: gse-mark-draw 0.40s ease-out 0.24s both;
+}
+.brand-lockup-kinetic .brand-mark-vector-cyan { animation-delay: 0.32s; }
+.brand-lockup-kinetic .brand-mark-core,
+.brand-lockup-kinetic .brand-mark-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.brand-lockup-kinetic .brand-mark-core { animation: gse-mark-pop 0.26s cubic-bezier(0.2,0.9,0.3,1.3) 0.56s both; }
+.brand-lockup-kinetic .brand-mark-ping { animation: gse-mark-pop 0.30s cubic-bezier(0.2,0.9,0.3,1.3) 0.68s both; }
+.brand-lockup-kinetic .brand-wordmark { animation: gse-word-resolve 0.42s ease-out 0.50s both; }
+
+/* Inline mark (loading states, splashes) can opt into the same draw-on. */
+.logo-mark-kinetic path,
+.logo-mark-kinetic line {
+  stroke-dasharray: 130;
+  animation: gse-mark-draw 0.5s ease-out both;
+}
+.logo-mark-kinetic line { animation-delay: 0.26s; }
+.logo-mark-kinetic circle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gse-mark-pop 0.3s cubic-bezier(0.2,0.9,0.3,1.3) 0.56s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-lockup-kinetic .brand-mark,
+  .brand-lockup-kinetic .brand-mark-orbit,
+  .brand-lockup-kinetic .brand-mark-vector,
+  .brand-lockup-kinetic .brand-mark-vector-cyan,
+  .brand-lockup-kinetic .brand-mark-core,
+  .brand-lockup-kinetic .brand-mark-ping,
+  .brand-lockup-kinetic .brand-wordmark,
+  .logo-mark-kinetic path,
+  .logo-mark-kinetic line,
+  .logo-mark-kinetic circle {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
 /* Interactive galaxy hero */
 .hero-galaxy {
   min-height: 760px;

@@ -13,12 +13,15 @@ export function LogoMarkInline({
   className = "",
   pulse = false,
   glow = false,
+  kinetic = false,
   color = "url(#logo-grad)",
 }: {
   size?: number;
   className?: string;
   pulse?: boolean;
   glow?: boolean;
+  /** One-shot draw-on "lock" sequence; honors prefers-reduced-motion. */
+  kinetic?: boolean;
   color?: string;
 }) {
   return (
@@ -27,7 +30,7 @@ export function LogoMarkInline({
       height={size}
       viewBox="0 0 64 64"
       fill="none"
-      className={className}
+      className={`${className}${kinetic ? " logo-mark-kinetic" : ""}`.trim()}
       style={{
         animation: pulse ? "logo-mark-pulse 2.4s ease-in-out infinite" : undefined,
         filter: glow ? "drop-shadow(0 0 12px rgba(0,229,255,0.5))" : undefined,

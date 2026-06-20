@@ -14,11 +14,11 @@ function GalaxyMark() {
   );
 }
 
-export function BrandLockup({ compact = false }: { compact?: boolean }) {
+export function BrandLockup({ compact = false, kinetic = true }: { compact?: boolean; kinetic?: boolean }) {
   return (
     <Link
       href="/"
-      className={`brand-lockup${compact ? " brand-lockup-compact" : ""}`}
+      className={`brand-lockup${compact ? " brand-lockup-compact" : ""}${kinetic ? " brand-lockup-kinetic" : ""}`}
       aria-label={`${BRAND_NAME} home`}
     >
       <span className="brand-mark">
