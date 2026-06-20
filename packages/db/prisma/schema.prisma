@@ -2719,6 +2719,40 @@ model SignalDuel {
   @@map("galaxy_signal_duels")
 }
 
+// Stage 3 — Crew co-op raids: the week's boss tackled together. Members each
+// contribute a boss run; combined resists fill the raid bar. Clearing unlocks a
+// crew-wide entitlement. Async (no realtime) — extends to the 3D client later.
+model CrewRaid {
+  id        String   @id @default(cuid())
+  crewId    String
+  bossKey   String
+  weekKey   String
+  goal      Int
+  progress  Int      @default(0)
+  cleared   Boolean  @default(false)
+  clearedAt DateTime?
+  createdAt DateTime @default(now())
+
+  contributions CrewRaidContribution[]
+
+  @@unique([crewId, bossKey, weekKey])
+  @@index([crewId])
+  @@map("galaxy_crew_raids")
+}
+
+model CrewRaidContribution {
+  id        String   @id @default(cuid())
+  raidId    String
+  profileId String
+  resists   Int
+  createdAt DateTime @default(now())
+
+  raid CrewRaid @relation(fields: [raidId], references: [id], onDelete: Cascade)
+
+  @@unique([raidId, profileId])
+  @@map("galaxy_crew_raid_contributions")
+}
+
 // Stage 2 — social graph (follow / friends). Friends-play-with-friends spine.
 model GalaxyFollow {
   id                 String   @id @default(cuid())

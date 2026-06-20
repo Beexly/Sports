@@ -285,6 +285,16 @@ export async function runBossEncounter(
     }
   }
 
+  // Crew co-op raid: a boss run on the week's featured boss fills the crew bar.
+  if (profileId !== "stub" && result.resistedCount > 0) {
+    try {
+      const { contributeToRaid } = await import("./raid.js");
+      await contributeToRaid(profileId, bossKey, result.resistedCount);
+    } catch {
+      /* no DB */
+    }
+  }
+
   let merchUnlocked: { sku: string; name: string } | null = null;
   const questsCompleted: string[] = [];
   if (result.cleared && result.merchUnlockSku) {

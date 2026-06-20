@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { runGhostDuel, leaderboard, listOpenDuels } from "@/lib/galaxy/duel";
 import { runBossEncounter } from "@/lib/galaxy/loop";
-import { getBoss } from "@sports/galaxy-engine";
+import { featuredBossKey, currentWeekKey, contributeToRaid } from "@/lib/galaxy/raid";
+import { getBoss, BOSSES } from "@sports/galaxy-engine";
 
 /**
  * Stage 2 — "Signal Cup" integration (engine + server loop, DB-stub mode).
@@ -47,5 +48,16 @@ describe("Galaxy Dynasty — Stage 2 (Signal Cup)", () => {
 
   it("open duel list is empty (and safe) with no database", async () => {
     expect(await listOpenDuels()).toEqual([]);
+  });
+
+  it("the weekly raid boss is deterministic and a real boss", () => {
+    const key = featuredBossKey();
+    expect(BOSSES.map((b) => b.key)).toContain(key);
+    expect(featuredBossKey("w-0")).toBe(BOSSES[0]!.key);
+    expect(currentWeekKey()).toMatch(/^w-\d+$/);
+  });
+
+  it("raid contribution is a safe no-op without a profile/DB", async () => {
+    await expect(contributeToRaid("stub", featuredBossKey(), 3)).resolves.toBeUndefined();
   });
 });

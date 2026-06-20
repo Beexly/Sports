@@ -5,6 +5,7 @@ import { GALAXY } from "@/lib/galaxy/theme";
 import { getCurrentProfileView } from "@/lib/galaxy/session";
 import { PREVIEW_CREWS, listCrews, getCrewDetail, crewLeaderboard } from "@/lib/galaxy/crew";
 import { getCrewClashState } from "@/lib/galaxy/crew-clash";
+import { getRaidView } from "@/lib/galaxy/raid";
 import { CrewLanePicker } from "@/components/galaxy/crew-lane-picker";
 import { CREW_ROLES } from "@sports/galaxy-engine";
 
@@ -44,6 +45,8 @@ export default async function CrewPage() {
       {profile?.crew && (
         <CrewClashCard crewId={profile.crew.id} crewName={profile.crew.name} tag={profile.crew.tag} role={profile.crew.role} members={profile.crew.memberCount} />
       )}
+
+      {profile?.crew && <CrewRaidCard crewId={profile.crew.id} />}
 
       {profile?.crew && (
         <div style={{ marginTop: 18 }}>
@@ -114,6 +117,38 @@ async function CrewDetailSection({ crewId }: { crewId: string }) {
       <div style={{ marginTop: 12, fontSize: 12, color: GALAXY.textMuted }}>
         Clubhouse customization unlocks with crew XP (coming next stage).
       </div>
+    </div>
+  );
+}
+
+async function CrewRaidCard({ crewId }: { crewId: string }) {
+  const raid = await getRaidView(crewId);
+  if (!raid) return null;
+  return (
+    <div style={{ marginTop: 16, background: `${GALAXY.magenta}10`, border: `1px solid ${GALAXY.magenta}44`, borderRadius: 14, padding: 16 }}>
+      <div style={{ fontSize: 12, letterSpacing: 1.2, color: GALAXY.magenta, fontWeight: 700 }}>
+        CREW RAID · THIS WEEK
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: 6, flexWrap: "wrap" }}>
+        <strong style={{ color: GALAXY.text, fontSize: 18 }}>{raid.bossName}</strong>
+        <span style={{ color: raid.cleared ? GALAXY.cyan : GALAXY.textMuted, fontWeight: 700 }}>
+          {raid.cleared ? "CLEARED ✓" : `${raid.progress} / ${raid.goal}`}
+        </span>
+      </div>
+      <div style={{ height: 8, background: GALAXY.border, borderRadius: 99, marginTop: 8, overflow: "hidden" }}>
+        <div style={{ width: `${raid.pct}%`, height: "100%", background: `linear-gradient(90deg, ${GALAXY.magenta}, ${GALAXY.gold})` }} />
+      </div>
+      <div style={{ fontSize: 12, color: GALAXY.textMuted, marginTop: 8 }}>
+        Every crew member who resists the boss fills the bar. Clear it together to unlock the raid banner.
+      </div>
+      <a href="/galaxy/depths" style={{ display: "inline-block", marginTop: 8, color: GALAXY.cyan, fontSize: 13 }}>
+        Fight {raid.bossName} in The Depths →
+      </a>
+      {raid.contributors.length > 0 && (
+        <div style={{ fontSize: 12, color: GALAXY.textMuted, marginTop: 8 }}>
+          Top contributors: {raid.contributors.slice(0, 3).map((c) => `@${c.handle} (${c.resists})`).join(", ")}
+        </div>
+      )}
     </div>
   );
 }
