@@ -11,6 +11,7 @@ const NAV = [
   { href: "/galaxy/season", label: "Season" },
   { href: "/galaxy/vault", label: "Vault" },
   { href: "/galaxy/crew", label: "Crews" },
+  { href: "/galaxy/friends", label: "Friends" },
   { href: "/galaxy/dynasty", label: "My Dynasty" },
 ] as const;
 

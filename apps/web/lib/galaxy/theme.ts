@@ -167,6 +167,15 @@ export const DISTRICTS: readonly District[] = [
     order: 15,
   },
   {
+    id: "friends",
+    name: "Friends",
+    tagline: "Follow players, visit cribs, play together.",
+    href: "/galaxy/friends",
+    accent: GALAXY.violet,
+    status: "live",
+    order: 16,
+  },
+  {
     id: "dynasty",
     name: "My Dynasty",
     tagline: "Your record, rating, badges, and status.",

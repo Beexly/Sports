@@ -2478,6 +2478,8 @@ model GalaxyProfile {
   tradeOffersFrom  CardTradeOffer[]        @relation("TradeFrom")
   tradeOffersTo    CardTradeOffer[]        @relation("TradeTo")
   cosmetics        GalaxyCosmeticOwnership[]
+  following        GalaxyFollow[]          @relation("Follower")
+  followers        GalaxyFollow[]          @relation("Following")
 
   @@index([faction])
   @@index([archetype])
@@ -2715,6 +2717,21 @@ model SignalDuel {
 
   @@index([status])
   @@map("galaxy_signal_duels")
+}
+
+// Stage 2 — social graph (follow / friends). Friends-play-with-friends spine.
+model GalaxyFollow {
+  id                 String   @id @default(cuid())
+  followerProfileId  String
+  followingProfileId String
+  createdAt          DateTime @default(now())
+
+  follower  GalaxyProfile @relation("Follower", fields: [followerProfileId], references: [id], onDelete: Cascade)
+  following GalaxyProfile @relation("Following", fields: [followingProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([followerProfileId, followingProfileId])
+  @@index([followingProfileId])
+  @@map("galaxy_follows")
 }
 
 // Stage 2 — cosmetic ownership (earned, season-dropped, or Nova test-mode).

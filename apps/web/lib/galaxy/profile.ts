@@ -164,6 +164,23 @@ export async function getProfileViewByUserId(userId: string): Promise<ProfileVie
   return serializeProfile(row);
 }
 
+export async function getProfileRowByHandle(handle: string) {
+  try {
+    return await db.galaxyProfile.findUnique({
+      where: { handle },
+      include: PROFILE_INCLUDE,
+    });
+  } catch {
+    return null;
+  }
+}
+
+export async function getProfileViewByHandle(handle: string): Promise<ProfileView | null> {
+  const row = await getProfileRowByHandle(handle);
+  if (!row) return null;
+  return serializeProfile(row);
+}
+
 /** Idempotently seed global catalog rows (cards, quests). Safe to call often. */
 export async function ensureGlobalSeed(): Promise<void> {
   try {

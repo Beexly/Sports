@@ -56,7 +56,8 @@ export default async function DynastyPage() {
           )}
           <div style={{ color: GALAXY.textMuted, marginTop: 4 }}>
             {profile.archetypeName} · {profile.factionName} ·{" "}
-            <Link href="/galaxy/wardrobe" style={{ color: GALAXY.cyan }}>Wardrobe</Link>
+            <Link href="/galaxy/wardrobe" style={{ color: GALAXY.cyan }}>Wardrobe</Link> ·{" "}
+            <Link href={`/galaxy/u/${encodeURIComponent(profile.handle)}`} style={{ color: GALAXY.cyan }}>Public Crib</Link>
           </div>
         </div>
         <Link href="/galaxy/score" style={{ marginLeft: "auto", textDecoration: "none", textAlign: "right" }}>

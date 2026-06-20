@@ -48,8 +48,11 @@ export default async function LeaderboardPage() {
           >
             <span style={{ color: GALAXY.textMuted, fontWeight: 700 }}>{r.rank}</span>
             <span style={{ color: GALAXY.text }}>
-              @{r.handle}{" "}
-              {r.isGhost && <span style={{ fontSize: 11, color: GALAXY.textMuted }}>(Ghost)</span>}
+              {r.isGhost ? (
+                <>@{r.handle} <span style={{ fontSize: 11, color: GALAXY.textMuted }}>(Ghost)</span></>
+              ) : (
+                <a href={`/galaxy/u/${encodeURIComponent(r.handle)}`} style={{ color: GALAXY.text }}>@{r.handle}</a>
+              )}
               {r.isYou && <span style={{ fontSize: 11, color: GALAXY.gold }}> · you</span>}
               <span style={{ fontSize: 11, color: GALAXY.textMuted }}> · {r.archetype}</span>
             </span>
