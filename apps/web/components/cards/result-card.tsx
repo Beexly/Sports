@@ -1,12 +1,12 @@
 import Image from "next/image";
 
 /**
- * ResultCard — a brand-styled, shareable receipt for a settled pick.
+ * ResultCard, a brand-styled, shareable receipt for a settled pick.
  *
  * Real data only: the matchup, the pick, the line, the settled result, and the
  * closing-line-value read are all passed in from the real settled-pick record.
  * It states the outcome honestly (WIN / LOSS / PUSH / PENDING) and never frames
- * a result as a guarantee — confidence is shown as a calibrated label, never a
+ * a result as a guarantee, confidence is shown as a calibrated label, never a
  * promise. Built at a social-friendly footprint for screenshot / opengraph use.
  */
 
@@ -82,7 +82,7 @@ export function ResultCard({
         </div>
         <div className="bg-obsidian px-4 py-3">
           <p className="font-numerals text-lg font-bold tabular-nums text-orbital-cyan">
-            {clvLabel ?? "—"}
+            {clvLabel ?? "n/a"}
           </p>
           <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-ion-2">Closing line value</p>
         </div>

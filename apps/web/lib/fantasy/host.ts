@@ -61,6 +61,37 @@ export const NOVA: Persona = {
   signOff: "Make the smart call, not the loud one. I'm Nova. I'll see you on the edge.",
 };
 
+/**
+ * The desk co-anchor. Orion holds the studio while Nova works the field, the
+ * steady, analytical counterweight who frames the market and the math. Two
+ * reporters trading segments give the broadcast its newsroom rhythm.
+ */
+export const ORION: Persona = {
+  name: "Orion",
+  handle: "@OrionAtTheDesk",
+  role: "Galaxy Sports Edge desk anchor",
+  tagline: "The market read, from the desk.",
+  voice: [
+    "Measured and precise. He slows the room down and frames the number.",
+    "Analytical, never dry; he makes the math feel like the story.",
+    "Sets up Nova's field reports and lands the takeaway.",
+    "Plain over jargon. Defines the term, then uses it.",
+    "Even-handed. Names the risk on every call.",
+  ],
+  values: [
+    "Process over outcome. The right read survives a bad beat.",
+    "Show the work. Every claim has a receipt.",
+    "Calm is a feature. No manufactured urgency.",
+  ],
+  avoids: [
+    "AI tells: 'as an AI', 'in conclusion', 'delve', robotic hedging.",
+    "Hype and certainty slang. He never sells a result as decided.",
+    "Talking past the audience. The desk explains, it doesn't lecture.",
+  ],
+  signOn: "At the desk, I'm Orion.",
+  signOff: "That's the read from the desk. I'm Orion. Nova, bring us home.",
+};
+
 export type Scene = "studio" | "sideline" | "practice" | "clubhouse" | "draft" | "community" | "office";
 
 export const SCENES: Record<Scene, { readonly label: string; readonly setting: string; readonly accent: string }> = {
@@ -82,6 +113,14 @@ function sceneForSignal(signal: SignalType): Scene {
   }
 }
 
+/** A minimal, serializable reporter tag for a segment (who delivers it). */
+export type ReporterTag = {
+  readonly name: string;
+  readonly role: string;
+  /** Single-letter mark for the on-stage avatar. */
+  readonly initial: string;
+};
+
 export type Segment = {
   readonly id: string;
   readonly scene: Scene;
@@ -90,7 +129,13 @@ export type Segment = {
   readonly script: string;
   /** production note for what's on screen */
   readonly broll: string;
+  /** which reporter delivers this segment (Nova in the field, Orion at the desk) */
+  readonly reporter: ReporterTag;
 };
+
+function reporterTag(p: Persona): ReporterTag {
+  return { name: p.name, role: p.role, initial: p.name.charAt(0).toUpperCase() };
+}
 
 export type Broadcast = {
   readonly persona: Persona;
@@ -104,7 +149,7 @@ export type Broadcast = {
 };
 
 export const HOST_DISCLOSURE =
-  "Nova is Galaxy Sports Edge's synthetic presenter. Her scripts are AI-generated and human-reviewed before anything is published; she does not post or reply on her own.";
+  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Their scripts are AI-generated and human-reviewed before anything is published; they do not post or reply on their own.";
 
 // ─────────────── publish-readiness pipeline (enforced doctrine) ───────────────
 
@@ -142,20 +187,25 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   const top = wire[0]!;
   const topScene = sceneForSignal(top.item.signal);
 
-  const coldOpen = `${persona.signOn} Week ${week} is loaded. Let's get you the edge before everybody else does.`;
+  // Two reporters trade segments: Nova works the field, Orion holds the desk.
+  const field = reporterTag(persona);
+  const desk = reporterTag(ORION);
+
+  const coldOpen = `${persona.signOn} Week ${week} is loaded. Orion's at the desk; let's get you the edge before everybody else does.`;
 
   const segments: Segment[] = [];
 
-  // 1. Top story. From the field
+  // 1. Top story. From the field, Nova
   segments.push({
     id: "seg-top",
     scene: topScene,
     kicker: "Top story",
     script: `We start from ${SCENES[topScene].setting}. ${top.item.headline}. Here's what it means for you: ${top.action}`,
     broll: `${SCENES[topScene].label}. Lower-third with the player and the fantasy/market delta.`,
+    reporter: field,
   });
 
-  // 2. Waiver wire. From the clubhouse
+  // 2. Waiver wire. From the clubhouse, Nova
   const waiverSection = brief.sections.find((s) => s.heading.startsWith("Waiver"));
   segments.push({
     id: "seg-waivers",
@@ -163,39 +213,42 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
     kicker: "Waiver wire",
     script: `To the clubhouse. Where your week is quietly won. Top of the board: ${waiverSection?.items[0] ?? "no must-adds this week."} Spend where the upside is, not where the points were.`,
     broll: "Clubhouse. Animated FAAB bids ticking up next to each name.",
+    reporter: field,
   });
 
-  // 3. Scheme watch. From the practice facility
+  // 3. Scheme watch. From the practice facility, Nova
   const schemeSection = brief.sections.find((s) => s.heading.startsWith("Scheme"));
   segments.push({
     id: "seg-scheme",
     scene: "practice",
     kicker: "Scheme watch",
-    script: `Out at the practice facility, one change is re-pricing a whole offense. ${schemeSection?.items[0] ?? ""} Watch the ripple before the market does.`,
+    script: `Out at the practice facility, one change is re-pricing a whole offense. ${schemeSection?.items[0] ?? ""} Watch the ripple before the market does. Orion, what does that do to the number?`,
     broll: "Practice facility. Arrows rising/falling over the affected players.",
+    reporter: field,
   });
 
-  // 4. The edge. DFS & pick'em from the desk
+  // 4. The edge. DFS & pick'em from the desk, Orion
   const dfsSection = brief.sections.find((s) => s.heading.startsWith("DFS"));
   const propSection = brief.sections.find((s) => s.heading.startsWith("Pick"));
   segments.push({
     id: "seg-edge",
     scene: "studio",
     kicker: "The edge of the week",
-    script: `Back at the desk. Your sharpest edge. In DFS: ${dfsSection?.items[0] ?? ""} And the pick'em our model likes most: ${propSection?.items[0] ?? ""}`,
+    script: `${ORION.signOn} Here's where the math lands. In DFS: ${dfsSection?.items[0] ?? ""} And the pick'em our model likes most: ${propSection?.items[0] ?? ""} Read the risk, then decide.`,
     broll: "Studio desk. Split screen, leverage dial and the prop distribution.",
+    reporter: desk,
   });
 
   const signOff = persona.signOff;
 
   const plaintext = [
     `GALAXY STUDIOS. THE GALAXY BRIEF · WEEK ${week}`,
-    `Host: ${persona.name} (${persona.role})`,
+    `Anchors: ${persona.name} (${persona.role}) · ${ORION.name} (${ORION.role})`,
     "",
     `[COLD OPEN · ${SCENES.studio.label}]`,
     coldOpen,
     "",
-    ...segments.flatMap((s) => [`[${s.kicker.toUpperCase()} · ${SCENES[s.scene].label}]`, s.script, `(B-roll: ${s.broll})`, ""]),
+    ...segments.flatMap((s) => [`[${s.kicker.toUpperCase()} · ${SCENES[s.scene].label} · ${s.reporter.name}]`, s.script, `(B-roll: ${s.broll})`, ""]),
     `[SIGN-OFF · ${SCENES.studio.label}]`,
     signOff,
     "",

@@ -1,5 +1,5 @@
 /**
- * MissionControlHow — a concise, three-beat "how this works" strip.
+ * MissionControlHow, a concise, three-beat "how this works" strip.
  *
  * No reading required: three glanceable beats (a signal lands, it hits your
  * roster, the move surfaces with its edge) connected by the signal fade. Server

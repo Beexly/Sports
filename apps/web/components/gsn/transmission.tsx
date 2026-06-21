@@ -1,14 +1,14 @@
 "use client";
 
 /**
- * GSNTransmission — the interactive daily intelligence briefing.
+ * GSNTransmission, the interactive daily intelligence briefing.
  *
  * A mission-control transmission: a console header, the slate summarised as a
  * live count strip you can CLICK to jump to the matching segment, and the day's
  * intelligence segments as an expandable briefing (Galaxy Brief, Market Mirage,
  * Roster Shock, Coaching Edge, Line-Movement Autopsy). Click a count or a
  * segment to decrypt its detail; points reveal in a short stagger. Illustrative
- * sample transmission — explicitly badged. Keyboard-accessible accordion.
+ * sample transmission, explicitly badged. Keyboard-accessible accordion.
  */
 
 import { useRef, useState } from "react";
@@ -49,7 +49,7 @@ export function GSNTransmission({ transmission }: { transmission: Transmission }
         <span className="text-[10px] uppercase tracking-[0.22em] text-ion-2">Decrypted · illustrative sample</span>
       </div>
 
-      {/* summary count strip — each cell jumps to its segment */}
+      {/* summary count strip, each cell jumps to its segment */}
       <div className="grid grid-cols-2 gap-px sm:grid-cols-3 lg:grid-cols-5" style={{ background: BRAND_COLORS.steelGray }}>
         {transmission.summary.map((s, i) => {
           const target = segmentForSummary(i, s.tone);

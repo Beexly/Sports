@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 /**
- * PlayerCard — a brand-styled, shareable "scored" player card.
+ * PlayerCard, a brand-styled, shareable "scored" player card.
  *
  * Real data only: every value is passed in from a real loader (nflverse season
  * lines, etc.). The card never invents a stat. It is built at a fixed, social-
