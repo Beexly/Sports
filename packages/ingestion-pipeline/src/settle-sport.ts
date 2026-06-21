@@ -88,11 +88,22 @@ export async function settleSport(
       });
       if (!game) continue;
 
+      const bothScores = score.homeScore !== null && score.awayScore !== null;
+
       await db.game.update({
         where: { id: game.id },
-        data: { homeScore: score.homeScore, awayScore: score.awayScore, status: "FINAL" },
+        data: {
+          homeScore: score.homeScore,
+          awayScore: score.awayScore,
+          // Only a game with both scores is truly FINAL. A completed-but-
+          // scoreless feed row keeps its prior status so consumers never read
+          // FINAL with null scores (an inconsistent "graded but no score" state).
+          ...(bothScores ? { status: "FINAL" as const } : {}),
+        },
       });
 
+      // The inline null-check (not the bothScores boolean) is what narrows the
+      // score types to `number` for the settlement math below.
       if (score.homeScore !== null && score.awayScore !== null) {
         // Settle pick results — always runs, regardless of bootstrap mode.
         // Real game outcomes are source truth and must be recorded.

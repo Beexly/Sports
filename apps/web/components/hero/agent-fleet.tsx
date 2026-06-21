@@ -189,10 +189,26 @@ export function AgentFleet({ className }: { className?: string }) {
         }
       }
 
-      raf = requestAnimationFrame(draw);
+      // Under reduced motion the scene is static: draw a single frame and stop
+      // re-arming, instead of clearing + redrawing (and the O(n^2) connection
+      // pass) every frame forever, including offscreen and in hidden tabs.
+      if (!reduced && !document.hidden) {
+        raf = requestAnimationFrame(draw);
+      }
     };
 
     raf = requestAnimationFrame(draw);
+
+    // Pause the loop when the tab is hidden; resume on return.
+    const onVisibility = () => {
+      if (document.hidden) {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+      } else if (!reduced) {
+        raf = requestAnimationFrame(draw);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
 
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
@@ -201,6 +217,7 @@ export function AgentFleet({ className }: { className?: string }) {
       cancelAnimationFrame(raf);
       canvas.removeEventListener("mousemove", onMove);
       canvas.removeEventListener("mouseleave", onLeave);
+      document.removeEventListener("visibilitychange", onVisibility);
       ro.disconnect();
     };
   }, []);

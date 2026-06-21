@@ -141,7 +141,9 @@ export function ConsensusEngine3D() {
     const glow = makeGlowTexture();
 
     // ── Background data field ──────────────────────────────────────────
-    const COUNT = 45000;
+    // Reconciled to the documented ~4k budget: 45k Float32 points through the
+    // bloom pass every frame was a 10x GPU cost for no visible gain.
+    const COUNT = 4500;
     const ARMS = 3;
     const rng = mulberry32(0x515ed);
     const fp = new Float32Array(COUNT * 3);

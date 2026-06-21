@@ -165,7 +165,7 @@ export function MontageEntrance() {
         poster="/brand/gse-reveal-poster.png"
         muted={muted}
         playsInline
-        preload="auto"
+        preload="metadata"
         onEnded={() =>
           timers.current.push(window.setTimeout(() => finish(), RESOLVE_HOLD_MS))
         }
