@@ -32,7 +32,7 @@ export function PersonalizedBriefing({ cards }: { cards: BriefingCard[] }) {
       {loaded && (!prefs || editing) && <Intake initial={prefs ?? DEFAULT_PREFS} onSave={save} onCancel={prefs ? () => setEditing(false) : undefined} />}
 
       {prefs && !editing && (
-        <div className="flex items-center gap-2 text-xs text-ink-500">
+        <div className="flex items-center gap-2 text-xs text-ion-2">
           <span>Personalized for <strong style={{ color: BRAND_COLORS.orbitalCyan }}>{FOCUS_LABEL[prefs.focus]}</strong> · {prefs.sports.join(", ") || "all sports"}</span>
           <button type="button" onClick={() => setEditing(true)} className="underline hover:text-ion-white">edit</button>
         </div>
