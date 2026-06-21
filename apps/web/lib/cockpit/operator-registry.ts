@@ -30,6 +30,108 @@ export interface OperatorRegistryEntry {
 }
 
 export const OPERATOR_REGISTRY: readonly OperatorRegistryEntry[] = [
+  // ── Real operators (affiliate candidates) ─────────────────────────────────
+  // These are REAL sportsbooks, recognized by the registry but NOT yet
+  // publishing partners. Affiliate revenue is subscription-additive: when an
+  // affiliate agreement is signed, flip that operator's `operatorClass` to
+  // "APPROVED_PARTNER" and populate `licensedStates` from the SIGNED agreement
+  // + the operator's current state licensing — then a compliant Promotion row
+  // for that `key` will pass the publish gate. Homepages + the 1-800-GAMBLER
+  // hotline are public facts; `licensedStates` is intentionally left empty so
+  // nothing is fabricated before the owner verifies it.
+  {
+    key: "draftkings",
+    displayName: "DraftKings Sportsbook",
+    homepage: "https://sportsbook.draftkings.com",
+    operatorClass: "KNOWN_NOT_PARTNERED",
+    licensedStates: [],
+    responsibleGamingHotline: "1-800-GAMBLER",
+    jurisdiction: "US",
+    isReal: true,
+    registeredAt: "2026-06-21",
+    reviewedAt: "2026-06-21",
+    reviewer: "garrett",
+  },
+  {
+    key: "fanduel",
+    displayName: "FanDuel Sportsbook",
+    homepage: "https://sportsbook.fanduel.com",
+    operatorClass: "KNOWN_NOT_PARTNERED",
+    licensedStates: [],
+    responsibleGamingHotline: "1-800-GAMBLER",
+    jurisdiction: "US",
+    isReal: true,
+    registeredAt: "2026-06-21",
+    reviewedAt: "2026-06-21",
+    reviewer: "garrett",
+  },
+  {
+    key: "betmgm",
+    displayName: "BetMGM",
+    homepage: "https://sports.betmgm.com",
+    operatorClass: "KNOWN_NOT_PARTNERED",
+    licensedStates: [],
+    responsibleGamingHotline: "1-800-GAMBLER",
+    jurisdiction: "US",
+    isReal: true,
+    registeredAt: "2026-06-21",
+    reviewedAt: "2026-06-21",
+    reviewer: "garrett",
+  },
+  {
+    key: "caesars",
+    displayName: "Caesars Sportsbook",
+    homepage: "https://www.caesars.com/sportsbook-and-casino",
+    operatorClass: "KNOWN_NOT_PARTNERED",
+    licensedStates: [],
+    responsibleGamingHotline: "1-800-GAMBLER",
+    jurisdiction: "US",
+    isReal: true,
+    registeredAt: "2026-06-21",
+    reviewedAt: "2026-06-21",
+    reviewer: "garrett",
+  },
+  {
+    key: "betrivers",
+    displayName: "BetRivers Sportsbook",
+    homepage: "https://www.betrivers.com",
+    operatorClass: "KNOWN_NOT_PARTNERED",
+    licensedStates: [],
+    responsibleGamingHotline: "1-800-GAMBLER",
+    jurisdiction: "US",
+    isReal: true,
+    registeredAt: "2026-06-21",
+    reviewedAt: "2026-06-21",
+    reviewer: "garrett",
+  },
+  {
+    key: "fanatics",
+    displayName: "Fanatics Sportsbook",
+    homepage: "https://sportsbook.fanatics.com",
+    operatorClass: "KNOWN_NOT_PARTNERED",
+    licensedStates: [],
+    responsibleGamingHotline: "1-800-GAMBLER",
+    jurisdiction: "US",
+    isReal: true,
+    registeredAt: "2026-06-21",
+    reviewedAt: "2026-06-21",
+    reviewer: "garrett",
+  },
+  {
+    key: "espnbet",
+    displayName: "ESPN BET",
+    homepage: "https://espnbet.com",
+    operatorClass: "KNOWN_NOT_PARTNERED",
+    licensedStates: [],
+    responsibleGamingHotline: "1-800-GAMBLER",
+    jurisdiction: "US",
+    isReal: true,
+    registeredAt: "2026-06-21",
+    reviewedAt: "2026-06-21",
+    reviewer: "garrett",
+  },
+
+  // ── Demo operators (cockpit QA only — never publishable) ──────────────────
   {
     key: "stellar",
     displayName: "Stellar Sportsbook (demo)",

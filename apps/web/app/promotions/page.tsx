@@ -188,7 +188,7 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
         </a>
         {promo.affiliateUrl && (
           <a
-            href={promo.affiliateUrl}
+            href={`/go/${promo.slug}`}
             target="_blank"
             rel="nofollow sponsored noopener noreferrer"
             className="inline-flex w-full items-center justify-center rounded-md bg-brand-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-brand-500"
