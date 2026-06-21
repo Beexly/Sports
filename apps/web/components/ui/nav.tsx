@@ -114,8 +114,8 @@ export async function Nav() {
 
           <nav className="nav-links" aria-label="Primary">
             <NavMenu label="Board" href="/board" groups={BOARD_MENU} />
-            <Link href="/players" title="One immaculate lab — every player, every signal">
-              Players
+            <Link href="/players" title="The Lab: one surface, every player, every signal">
+              The Lab
             </Link>
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
             <NavMenu label="Fantasy & Daily" href="/fantasy" groups={FANTASY_DAILY_MENU} />

@@ -48,7 +48,7 @@ describe("homepage doctrine hero", () => {
   });
 
   it("routes the four doors from the front door with live, real-sourced stats", () => {
-    for (const door of ["Board", "Players", "Intelligence", "Fantasy & Daily"]) {
+    for (const door of ["Board", "The Lab", "Intelligence", "Fantasy & Daily"]) {
       expect(page).toContain(door);
     }
     expect(page).toMatch(/loadBoardState/);

@@ -23,7 +23,7 @@ describe("Homepage data-first signal contract", () => {
   });
 
   it("routes the four doors instead of dumping every surface on the front page", () => {
-    for (const door of ["Board", "Players", "Intelligence", "Fantasy & Daily"]) {
+    for (const door of ["Board", "The Lab", "Intelligence", "Fantasy & Daily"]) {
       expect(pageSource).toContain(door);
     }
     expect(pageSource).toContain("DoorCard");

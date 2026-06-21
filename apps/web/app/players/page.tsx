@@ -10,6 +10,8 @@ import { SourceError } from "@/components/ui/source-error";
 import { PlayerLensRail } from "@/components/players/player-lens-rail";
 import { PLAYER_VIEWS, resolvePlayerView, type ViewResult } from "@/lib/players/views";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { PlayerCard } from "@/components/cards/player-card";
+import type { PlayerSeasonLine } from "@/lib/nflverse/player-lab";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse loads need headroom
@@ -47,6 +49,50 @@ function ViewFreshnessStamp({ result }: { result: ViewResult }) {
     >
       {parts.join(" · ")}
     </p>
+  );
+}
+
+/**
+ * Production spotlight — the first-ever "scored" shareable player card, fed by
+ * the real #1 season leader on the Production view (settled nflverse data). It
+ * only renders when that view loaded real rows; never fabricated.
+ */
+function ProductionSpotlight({ result, season }: { result: ViewResult; season?: string }) {
+  const leaders = result.sections.find((s) => s.kind === "production-leaders");
+  const top = leaders?.rows?.[0] as PlayerSeasonLine | undefined;
+  if (!top) return null;
+  const fmt = (n: number) => (Number.isFinite(n) ? n.toFixed(1) : "—");
+  return (
+    <div className="flex flex-col gap-4 rounded-ds-lg border border-mineral bg-eclipse/40 p-5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="max-w-md">
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">
+          Spotlight · season leader
+        </p>
+        <h2 className="mt-2 font-display text-xl font-semibold text-ion-white">
+          The shareable, scored player card
+        </h2>
+        <p className="mt-2 text-sm leading-6 text-ion-1">
+          Built from settled facts, not a projection. Every number on the card
+          traces back to real nflverse rows. Screenshot it, share it, check it.
+        </p>
+      </div>
+      <PlayerCard
+        rank={1}
+        name={top.playerName}
+        team={top.team}
+        position={top.position}
+        headlineValue={fmt(top.pprPerGame)}
+        headlineLabel="PPR / game"
+        stats={[
+          { label: "Last 5", value: fmt(top.last5PprPerGame), tone: "cyan" },
+          { label: "Form Δ", value: `${top.last5PprDelta >= 0 ? "+" : ""}${fmt(top.last5PprDelta)}`, tone: top.last5PprDelta >= 0 ? "cyan" : "plasma" },
+          { label: "Boom%", value: `${Math.round(top.boomRate * 100)}`, tone: "uv" },
+          { label: "Games", value: String(top.games), tone: "ion" },
+        ]}
+        footnote={season ? `${season} · settled nflverse` : "Settled nflverse"}
+        className="lg:w-80"
+      />
+    </div>
   );
 }
 
@@ -88,7 +134,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
           }
           aside={
             view.explainer && view.explainer.length > 0 ? (
-              <MetricExplainer terms={view.explainer} />
+              <MetricExplainer terms={view.explainer} variant="dark" />
             ) : undefined
           }
         />
@@ -115,6 +161,10 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
         ) : (
           <>
             <ViewFreshnessStamp result={result} />
+
+            {view.slug === "production" && (
+              <ProductionSpotlight result={result} season={result.windowLabel} />
+            )}
 
             <PlayerLabTable sections={result.sections} variant="dark" />
 

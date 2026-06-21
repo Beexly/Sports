@@ -15,7 +15,7 @@ describe("homepage engine centerpiece", () => {
     expect(page).toContain("Galaxy turns it into");
     expect(page).toContain("We detect. You decide.");
     expect(page).toContain("Pick the decision you came to make.");
-    for (const door of ["Board", "Players", "Intelligence", "Fantasy & Daily"]) {
+    for (const door of ["Board", "The Lab", "Intelligence", "Fantasy & Daily"]) {
       expect(page).toContain(door);
     }
   });

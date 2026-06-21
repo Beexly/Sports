@@ -141,8 +141,8 @@ export default async function HomePage(): Promise<JSX.Element> {
               />
               <DoorCard
                 index={2}
-                label="Players"
-                decides="Who to trust this week, read across every signal."
+                label="The Lab"
+                decides="Who to trust this week, across every signal in one surface."
                 stat={nflRows > 0 ? `${nflRows.toLocaleString()} live player rows` : "Intake warming up"}
                 action="Open the lab"
                 href="/players"

@@ -77,23 +77,37 @@ const MORE_ENGINES: readonly MoreEngine[] = [
   },
 ];
 
+/**
+ * The static engine catalog (POST-only / founder-gated / player-board engines)
+ * is tucked behind a native <details> disclosure so it never competes with the
+ * live, interactive engine panel above. Collapsed-by-default, but its content
+ * stays in the DOM — so every engine remains indexed and reachable, just not a
+ * wall of cards in the default view.
+ */
 function MoreEnginesSection(): JSX.Element {
   return (
-    <section className="flex flex-col gap-5 border-t border-mineral pt-8">
-      <div className="flex flex-col gap-1">
-        <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan">
-          More engines &amp; APIs
-        </p>
-        <h2 className="text-xl font-semibold text-ion-white">Engines without a standalone board</h2>
-        <p className="mt-1 max-w-3xl text-sm leading-6 text-ion-1">
-          Some engines are POST-only or founder-gated, and three player engines render on the player boards under{" "}
-          <Link href="/players" className="font-semibold text-orbital-cyan hover:text-ion-white">
-            /players
-          </Link>
-          . They stay indexed and reachable here.
-        </p>
-      </div>
-      <div className="grid gap-4 lg:grid-cols-2">
+    <details className="group border-t border-mineral pt-8">
+      <summary className="flex cursor-pointer list-none items-center gap-3 [&::-webkit-details-marker]:hidden">
+        <span className="flex-1">
+          <span className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan">
+            More engines &amp; APIs
+          </span>
+          <span className="mt-1 block text-base font-semibold text-ion-white">
+            {MORE_ENGINES.length} engines without a standalone board
+          </span>
+          <span className="mt-1 block max-w-3xl text-sm leading-6 text-ion-1">
+            POST-only, founder-gated, or rendered on the player boards under /players. Expand to browse them.
+          </span>
+        </span>
+        <span
+          aria-hidden
+          className="shrink-0 rounded-full border border-mineral px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2 transition-colors group-open:border-orbital-cyan/60 group-open:text-orbital-cyan"
+        >
+          <span className="group-open:hidden">Show ▸</span>
+          <span className="hidden group-open:inline">Hide ▾</span>
+        </span>
+      </summary>
+      <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {MORE_ENGINES.map((e) => (
           <article
             key={e.name}
@@ -114,7 +128,7 @@ function MoreEnginesSection(): JSX.Element {
           </article>
         ))}
       </div>
-    </section>
+    </details>
   );
 }
 
@@ -164,7 +178,7 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
           }
           aside={
             active.explainer && active.explainer.length > 0 ? (
-              <MetricExplainer terms={active.explainer} />
+              <MetricExplainer terms={active.explainer} variant="dark" />
             ) : undefined
           }
         />
