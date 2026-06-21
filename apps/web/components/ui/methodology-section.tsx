@@ -1,19 +1,20 @@
 import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
+import { CountUp } from "@/components/ui/count-up";
 import { getClaim } from "@/lib/trust-claims";
 
 /**
- * Methodology / Trust Section
+ * Methodology / Trust Surface
  *
- * Replaces the legacy hard-coded testimonials area on the homepage with
- * a factual explanation of how the platform actually evaluates picks.
+ * The living trust band on the homepage. It opens with a real, live ledger of
+ * the operation (settled picks calibrated, what cleared and gated today, live
+ * player rows) that counts up on scroll, under the signature signal fade. Below
+ * it, the methodology cards explain HOW each of those numbers is produced.
  *
- * The bullets are sourced from the Trust Claim Registry — anything shown
- * here is either an APPROVED METHODOLOGY/DATA_TRANSPARENCY claim or a
- * GATED PERFORMANCE claim flagged with its readiness gate.
- *
- * This component never invents social proof. It exists specifically so
- * the homepage has substantive trust signal without making unsupported
- * claims about user count, verification, or track record.
+ * The bullets are sourced from the Trust Claim Registry — anything shown here is
+ * either an APPROVED METHODOLOGY/DATA_TRANSPARENCY claim or a GATED PERFORMANCE
+ * claim flagged with its readiness gate. This component never invents social
+ * proof or a track-record number; the ledger figures are live operational
+ * counts passed in from real loaders.
  */
 
 interface MethodologyItem {
@@ -21,6 +22,18 @@ interface MethodologyItem {
   readonly claimId: string;
   readonly hint?: string; // small explanatory text under the body
   readonly lane: "data" | "model" | "gate";
+}
+
+/** Live operational figures, all real (passed from the page's loaders). */
+export interface TrustLedgerMetrics {
+  /** Settled canonical picks the calibration is computed on. */
+  readonly settled: number;
+  /** Picks that cleared the gates and published today. */
+  readonly cleared: number;
+  /** Reads the gate held back today (restraint as a first-class output). */
+  readonly gated: number;
+  /** Live player rows ingested (0 when intake is warming up). */
+  readonly playerRows: number;
 }
 
 const ITEMS: readonly MethodologyItem[] = [
@@ -75,7 +88,42 @@ function laneAccent(lane: MethodologyItem["lane"]): string {
   }
 }
 
-export function MethodologySection() {
+/** A single live figure in the ledger band — counts up on scroll into view. */
+function LedgerStat({
+  value,
+  label,
+  sub,
+  tone,
+  group = false,
+}: {
+  value: number;
+  label: string;
+  sub: string;
+  tone: "ion" | "cyan" | "plasma" | "uv";
+  group?: boolean;
+}) {
+  const color =
+    tone === "cyan"
+      ? "text-orbital-cyan"
+      : tone === "plasma"
+        ? "text-plasma"
+        : tone === "uv"
+          ? "text-ultraviolet"
+          : "text-ion-white";
+  return (
+    <div className="bg-carbon px-5 py-6">
+      <CountUp
+        value={value}
+        group={group}
+        className={`block font-numerals text-4xl font-bold tabular-nums ${color}`}
+      />
+      <p className="mt-2 text-sm font-semibold text-ion-white">{label}</p>
+      <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{sub}</p>
+    </div>
+  );
+}
+
+export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }) {
   // Resolve each item against the registry. We use getClaim() so both APPROVED
   // and GATED entries surface — the GATED ones (e.g. performance.public-stats-gated)
   // describe the *policy* about when public stats appear, which is itself an
@@ -104,13 +152,55 @@ export function MethodologySection() {
             id="methodology-heading"
             className="mt-4 font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl"
           >
-            The audit trail behind every signal
+            The audit trail behind every{" "}
+            <span className="bg-signal-fade bg-clip-text text-transparent">signal</span>
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-ion sm:text-lg">
             Every published pick ties back to live markets, timestamped data,
             factor scoring, and the gates that keep weak picks off the board.
           </p>
         </div>
+
+        {/* ── Live ledger band — real operational figures, counting up ──────── */}
+        {metrics && (
+          <div className="mx-auto mt-12 max-w-5xl">
+            <div className="surface-card relative overflow-hidden p-0">
+              {/* The signature signal fade crowns the live numbers. */}
+              <div aria-hidden className="h-1 w-full bg-signal-fade" />
+              <div className="grid grid-cols-2 gap-px bg-mineral lg:grid-cols-4">
+                <LedgerStat
+                  value={metrics.settled}
+                  label={metrics.settled > 0 ? "Settled picks calibrated" : "Calibration sample"}
+                  sub={metrics.settled > 0 ? "the only basis for any number" : "building honestly"}
+                  tone="ion"
+                  group
+                />
+                <LedgerStat
+                  value={metrics.cleared}
+                  label="Cleared today"
+                  sub="passed every gate"
+                  tone="cyan"
+                />
+                <LedgerStat
+                  value={metrics.gated}
+                  label="Gated today"
+                  sub="restraint, logged"
+                  tone="plasma"
+                />
+                <LedgerStat
+                  value={metrics.playerRows}
+                  label={metrics.playerRows > 0 ? "Live player rows" : "Player intake"}
+                  sub={metrics.playerRows > 0 ? "ingested + structured" : "warming up"}
+                  tone="uv"
+                  group
+                />
+              </div>
+            </div>
+            <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+              Live counts · the numbers below explain how each one is produced
+            </p>
+          </div>
+        )}
 
         <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {resolved.map(({ item, claim }) => (

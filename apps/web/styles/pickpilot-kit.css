@@ -748,6 +748,24 @@ button { font-family: inherit; cursor: pointer; }
   }
 }
 
+/* ── "How this page works" launcher ──────────────────────────────────────────
+   A short, one-time attention pulse draws the eye to the guide, then settles to
+   a calm resting glow. The gradient ring is the signal fade; the pulse only
+   widens the glow so it reads as an invitation, never a flash. Reduced motion
+   holds the resting glow with no pulse. */
+@keyframes explainer-attn {
+  0%, 100% { box-shadow: 0 10px 30px -10px rgba(0,229,255,0.40); }
+  50%      { box-shadow: 0 10px 32px -6px rgba(0,229,255,0.70), 0 0 0 5px rgba(0,229,255,0.10); }
+}
+.explainer-launcher {
+  box-shadow: 0 10px 30px -10px rgba(0,229,255,0.40);
+  animation: explainer-attn 2.4s ease-in-out 0.6s 3;
+}
+.explainer-launcher:hover { box-shadow: 0 12px 34px -6px rgba(0,229,255,0.65); }
+@media (prefers-reduced-motion: reduce) {
+  .explainer-launcher { animation: none !important; }
+}
+
 /* ── Broadcast scanlines ─────────────────────────────────────────────────────
    A live-feed scanline that drifts a few pixels on a fast step cycle, so the
    broadcast scene reads as a running transmission rather than a static panel.

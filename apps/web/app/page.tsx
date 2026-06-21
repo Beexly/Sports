@@ -230,7 +230,9 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        <MethodologySection />
+        <MethodologySection
+          metrics={{ settled, cleared, gated, playerRows: nflRows }}
+        />
 
         <section data-testid="homepage-responsible-close" className="gw-nebula px-4 py-14 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl rounded-ds-lg border border-mineral bg-eclipse p-5 sm:p-7">

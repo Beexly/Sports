@@ -3,13 +3,17 @@ import type { Config } from "tailwindcss";
 /**
  * Galaxy Sports Edge Tailwind config — cosmic intelligence palette.
  *
- * Canonical palette (verbatim from Brand Use Pack §4):
- *  - OBSIDIAN BLACK  #050608   — primary background
- *  - ION WHITE       #F6F7FA   — primary text / monochrome mark
- *  - ORBITAL CYAN    #00E5FF   — signal, data, active states
- *  - ION MAGENTA     #FF2DD6   — alert signal / emphasis
- *  - SOFT ULTRAVIOLET #7A5CFF  — depth, intelligence, secondary signal
- *  - STEEL GRAY      #1A1D23   — panels, dividers, UI depth
+ * Canonical palette (verbatim from the Brand Bible v1.0):
+ *  - OBSIDIAN BLACK   #05070B   — primary background
+ *  - COSMIC GRAY      #0D1117   — surface / UI panels
+ *  - STARLIGHT WHITE  #F5F7FF   — primary text / chrome highlights
+ *  - ORBITAL CYAN     #00E5FF   — signal, data, active states
+ *  - ION MAGENTA      #FF38C7   — alert signal / emphasis
+ *  - SOFT ULTRAVIOLET #7B61FF   — depth, intelligence, secondary signal
+ *  - ELECTRIC BLUE    #2A6BFF   — supporting cool
+ *  - NEBULA PURPLE    #A855F7   — nebula atmosphere
+ *  - STEEL GRAY       #211A33   — panels, dividers, UI depth
+ *  Signal fade = Orbital Cyan -> Ion Magenta -> Ultraviolet.
  *
  * Typography is bound to the doctrine CSS variables loaded through
  * next/font in `app/layout.tsx`.

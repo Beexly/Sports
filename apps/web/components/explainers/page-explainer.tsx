@@ -32,17 +32,37 @@ export function PageExplainer({ explainer }: { explainer: PageExplainer }) {
 
   return (
     <>
+      {/* A labeled, branded launcher — gradient-ringed in the signal fade, with
+          Nova and a clear two-line label. Deliberately not a faint pill: it is
+          the front door to understanding any surface. A short, one-time
+          attention pulse (reduced-motion safe) draws the eye, then it settles. */}
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="group fixed bottom-5 left-5 z-[60] inline-flex items-center gap-2 rounded-full border border-mineral bg-eclipse/90 px-3.5 py-2 text-xs font-semibold text-ion-1 shadow-lg backdrop-blur-sm transition-colors hover:border-orbital-cyan/60 hover:text-ion-white"
+        className="explainer-launcher group fixed bottom-5 left-5 z-[60] inline-flex rounded-full p-[1.5px]"
+        style={{ backgroundImage: "var(--signal-fade)" }}
         aria-haspopup="dialog"
+        aria-label={`${explainer.title} — guided walkthrough, ${explainer.durationLabel}`}
       >
-        <NovaMark size={22} />
-        <span className="hidden sm:inline">How this page works</span>
-        <span className="sm:hidden">Guide</span>
-        <span className="font-mono text-[10px] text-ion-2">{explainer.durationLabel}</span>
-        <span aria-hidden className="text-orbital-cyan">▸</span>
+        <span className="inline-flex items-center gap-2.5 rounded-full bg-obsidian/95 px-3 py-2 backdrop-blur-sm transition-colors group-hover:bg-eclipse sm:px-4 sm:py-2.5">
+          <NovaMark size={24} />
+          <span className="flex flex-col items-start leading-none">
+            <span className="text-[13px] font-semibold text-ion-white">
+              <span className="hidden sm:inline">How this page works</span>
+              <span className="sm:hidden">Guide</span>
+            </span>
+            <span className="mt-1 hidden font-mono text-[9px] uppercase tracking-[0.18em] text-ion-2 sm:inline">
+              Guided by Nova · {explainer.durationLabel}
+            </span>
+          </span>
+          <span
+            aria-hidden
+            className="ml-0.5 grid h-6 w-6 place-items-center rounded-full text-[11px] font-bold text-obsidian sm:ml-1"
+            style={{ backgroundImage: "var(--signal-fade)" }}
+          >
+            ▸
+          </span>
+        </span>
       </button>
       {open && <ExplainerModal explainer={explainer} onClose={() => setOpen(false)} />}
     </>
