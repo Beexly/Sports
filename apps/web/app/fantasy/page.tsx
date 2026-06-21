@@ -256,7 +256,7 @@ function EvidenceMetric({ label, value, detail }: { label: string; value: string
     <div className="border border-mineral bg-eclipse p-4">
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{label}</p>
       <p className="mt-2 font-numerals text-2xl font-semibold text-white">{value}</p>
-      <p className="mt-2 text-xs leading-5 text-ink-400">{detail}</p>
+      <p className="mt-2 text-xs leading-5 text-ion-2">{detail}</p>
     </div>
   );
 }

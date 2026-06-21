@@ -135,7 +135,7 @@ export default function ContestBaySealedPage() {
             </Link>
           </div>
 
-          <p className="mt-12 font-mono text-[10px] uppercase tracking-[0.3em] text-ink-500">
+          <p className="mt-12 font-mono text-[10px] uppercase tracking-[0.3em] text-ion-2">
             {"// no countdown · no leaks · worth the wait"}
           </p>
         </div>

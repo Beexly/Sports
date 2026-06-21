@@ -90,7 +90,7 @@ export default function TheBeatPage() {
               <TheBeat />
             </div>
             <Reveal delay={120}>
-              <p className="mt-6 text-xs leading-relaxed text-ink-500">{WIRE_DISCLAIMER}</p>
+              <p className="mt-6 text-xs leading-relaxed text-ion-2">{WIRE_DISCLAIMER}</p>
             </Reveal>
           </div>
         </section>

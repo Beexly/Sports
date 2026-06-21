@@ -74,7 +74,7 @@ export default function HumanPage(): JSX.Element {
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pb-16 sm:px-6 lg:px-8">
           <Reveal>
             <section className="surface-card p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">The non-negotiables</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-2">The non-negotiables</p>
               <ul className="mt-3 grid gap-2 sm:grid-cols-2">
                 {RULES.map((r) => (
                   <li key={r} className="flex gap-2 text-sm leading-6 text-ion-1">
