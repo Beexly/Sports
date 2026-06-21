@@ -136,6 +136,11 @@ export async function ingestNextGenStats(
     .filter((r) => Number(r["week"] ?? "0") >= 1 && (r["player_gsis_id"] ?? "") !== "")
     .map((r) => toRecord(r, season, statType, gate.rightsSnapshot, now));
 
+    // Never wipe existing rows on an empty upstream response (transient
+  // outage / empty mirror): preserve what's there and report a source-error.
+  if (data.length === 0) {
+    return { status: "source-error", season, statType, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
+  }
   await db.nextGenStat.deleteMany({ where: { season, statType } });
   const created = data.length > 0 ? await db.nextGenStat.createMany({ data }) : null;
 

@@ -78,6 +78,11 @@ export async function ingestDepthCharts(
     });
   }
 
+    // Never wipe existing rows on an empty upstream response (transient
+  // outage / empty mirror): preserve what's there and report a source-error.
+  if (data.length === 0) {
+    return { status: "source-error", season, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
+  }
   await db.depthChartEntry.deleteMany({ where: { season } });
   const created = data.length > 0 ? await db.depthChartEntry.createMany({ data }) : null;
 
