@@ -29,9 +29,9 @@
     /* Multi-layer atmospheric glow — never a flat black. ENERGI PASS:
        purple/magenta atmosphere turned up so the canvas reads cosmic. */
     background-image:
-      radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255, 45, 214, 0.09), transparent 70%),
-      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(122, 92, 255, 0.10), transparent 60%),
-      radial-gradient(ellipse 90% 70% at 15% 100%, rgba(122, 92, 255, 0.07), transparent 65%);
+      radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255,56,199, 0.09), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(123,97,255, 0.10), transparent 60%),
+      radial-gradient(ellipse 90% 70% at 15% 100%, rgba(123,97,255, 0.07), transparent 65%);
     background-attachment: fixed;
     min-height: 100vh;
   }
@@ -420,8 +420,8 @@
 .gw-nebula {
   position: relative;
   background:
-    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(122, 92, 255, 0.22), transparent 62%),
-    radial-gradient(ellipse 70% 45% at 86% 18%, rgba(255, 45, 214, 0.12), transparent 60%),
+    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(123,97,255, 0.22), transparent 62%),
+    radial-gradient(ellipse 70% 45% at 86% 18%, rgba(255,56,199, 0.12), transparent 60%),
     radial-gradient(ellipse 60% 60% at 50% 110%, rgba(0, 229, 255, 0.09), transparent 65%),
     radial-gradient(ellipse 45% 35% at 70% 65%, rgba(90, 30, 90, 0.35), transparent 70%),
     linear-gradient(180deg, var(--void) 0%, #0E0A1C 50%, var(--void) 100%);
@@ -429,8 +429,8 @@
 .gw-nebula-deep {
   position: relative;
   background:
-    radial-gradient(ellipse 100% 65% at 50% -10%, rgba(122, 92, 255, 0.28), transparent 65%),
-    radial-gradient(ellipse 60% 45% at 88% 30%, rgba(255, 45, 214, 0.14), transparent 60%),
+    radial-gradient(ellipse 100% 65% at 50% -10%, rgba(123,97,255, 0.28), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 88% 30%, rgba(255,56,199, 0.14), transparent 60%),
     radial-gradient(ellipse 55% 40% at 8% 90%, rgba(0, 229, 255, 0.10), transparent 60%),
     radial-gradient(ellipse 80% 60% at 30% 55%, rgba(58, 22, 70, 0.45), transparent 75%),
     var(--void);
@@ -444,9 +444,9 @@
     radial-gradient(1px 1px at 34% 68%, rgba(246, 247, 250, 0.35), transparent 50%),
     radial-gradient(1.5px 1.5px at 56% 14%, rgba(0, 229, 255, 0.45), transparent 50%),
     radial-gradient(1px 1px at 71% 47%, rgba(246, 247, 250, 0.4), transparent 50%),
-    radial-gradient(1px 1px at 87% 79%, rgba(122, 92, 255, 0.5), transparent 50%),
+    radial-gradient(1px 1px at 87% 79%, rgba(123,97,255, 0.5), transparent 50%),
     radial-gradient(1.5px 1.5px at 23% 88%, rgba(246, 247, 250, 0.3), transparent 50%),
-    radial-gradient(1px 1px at 64% 92%, rgba(255, 45, 214, 0.35), transparent 50%),
+    radial-gradient(1px 1px at 64% 92%, rgba(255,56,199, 0.35), transparent 50%),
     radial-gradient(1px 1px at 92% 8%, rgba(246, 247, 250, 0.45), transparent 50%);
   background-size: 520px 520px;
   mask-image: radial-gradient(ellipse at center, black 45%, transparent 95%);
@@ -516,23 +516,23 @@
   filter: drop-shadow(0 0 24px rgba(0, 229, 255, 0.28));
 }
 .gw-chrome-plasma {
-  background: linear-gradient(180deg, #FFFFFF 0%, #FFB8EE 30%, #FF2DD6 100%);
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFB8EE 30%, #FF38C7 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 26px rgba(255, 45, 214, 0.38));
+  filter: drop-shadow(0 0 26px rgba(255,56,199, 0.38));
 }
 .gw-chrome-violet {
   background: linear-gradient(180deg, #FFFFFF 0%, #D9CBFF 35%, #9F87FF 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 24px rgba(122, 92, 255, 0.35));
+  filter: drop-shadow(0 0 24px rgba(123,97,255, 0.35));
 }
 
 /* Saturated text glow — for short accent words only, never prose. */
 .gw-text-glow-cyan   { text-shadow: 0 0 18px rgba(0, 229, 255, 0.65), 0 0 44px rgba(0, 229, 255, 0.3); }
-.gw-text-glow-plasma { text-shadow: 0 0 18px rgba(255, 45, 214, 0.6), 0 0 44px rgba(255, 45, 214, 0.3); }
+.gw-text-glow-plasma { text-shadow: 0 0 18px rgba(255,56,199, 0.6), 0 0 44px rgba(255,56,199, 0.3); }
 .gw-text-glow-alert  { text-shadow: 0 0 18px rgba(255, 100, 112, 0.55), 0 0 40px rgba(255, 100, 112, 0.28); }
 .gw-text-glow-white  { text-shadow: 0 0 22px rgba(246, 247, 250, 0.45); }
 
@@ -551,14 +551,14 @@
   border-radius: 999px; padding: 5px 13px;
   font-family: var(--f-mono); font-size: 10px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.18em;
-  background: linear-gradient(110deg, #FF66E0, #FF2DD6);
+  background: linear-gradient(110deg, #FF66E0, #FF38C7);
   color: var(--plasma-ink);
-  box-shadow: 0 0 26px -4px rgba(255, 45, 214, 0.55);
+  box-shadow: 0 0 26px -4px rgba(255,56,199, 0.55);
 }
 
 /* Glow rings — semantic halo states for nodes and readouts. */
 .gw-ring-signal   { box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.45), 0 0 24px -4px rgba(0, 229, 255, 0.5); }
-.gw-ring-heat     { box-shadow: 0 0 0 1px rgba(255, 45, 214, 0.4), 0 0 24px -4px rgba(255, 45, 214, 0.45); }
+.gw-ring-heat     { box-shadow: 0 0 0 1px rgba(255,56,199, 0.4), 0 0 24px -4px rgba(255,56,199, 0.45); }
 .gw-ring-caution  { box-shadow: 0 0 0 1px rgba(255, 180, 84, 0.45), 0 0 20px -4px rgba(255, 180, 84, 0.4); }
 .gw-ring-gate     { box-shadow: 0 0 0 1px rgba(255, 100, 112, 0.45), 0 0 20px -4px rgba(255, 100, 112, 0.4); }
 
@@ -754,8 +754,8 @@
 
 /* ── Thermal Vision animations ────────────────────────────────────────────────── */
 @keyframes thermal-pulse-hot {
-  0%, 100% { opacity: 0.7; transform: scale(1); box-shadow: 0 0 4px rgba(255,45,214,0.4); }
-  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,45,214,0.7); }
+  0%, 100% { opacity: 0.7; transform: scale(1); box-shadow: 0 0 4px rgba(255,56,199,0.4); }
+  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,56,199,0.7); }
 }
 @keyframes thermal-pulse-cold {
   0%, 100% { opacity: 0.5; transform: scale(1); }

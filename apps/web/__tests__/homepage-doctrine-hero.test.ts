@@ -14,8 +14,9 @@ describe("homepage doctrine hero", () => {
   const galaxy = readRepoFile("apps/web/components/hero/interactive-galaxy.tsx");
 
   it("loads the doctrine font families through next/font and binds the CSS vars", () => {
-    expect(layout).toMatch(/Big_Shoulders_Display/);
-    expect(layout).toMatch(/Syne/);
+    // Exo 2 — the official Galaxy Sports Edge display face (Brand Bible §3),
+    // bound to both the heavy archetype slams and the standard headlines.
+    expect(layout).toMatch(/Exo_2/);
     expect(layout).toMatch(/Inter/);
     expect(tokens).toMatch(/--f-body: "Geist", "Inter"/);
     expect(layout).toMatch(/JetBrains_Mono/);

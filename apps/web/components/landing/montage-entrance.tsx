@@ -3,77 +3,79 @@
 /**
  * MontageEntrance — Galaxy Sports Edge's single cinematic cold-open.
  *
- * One breathtaking arrival, ~3.6s, then it dissolves to reveal the site. A real
- * motion plate (home-hero-cosmos) runs behind disciplined chrome word-slams that
- * climax on the brand mark + "We detect. You decide." No fabricated stats, no
- * chaotic neon — premium impact, not arcade.
+ * The official approved brand reveal (Brand Bible v1.0): the orbit forms, the
+ * comet streaks, the signal ignites, and the "GALAXY SPORTS EDGE" wordmark
+ * resolves in chrome — with sound. One breathtaking arrival, then it dissolves
+ * to reveal the site.
  *
- * Sequence:
- *   0.00s — Black; motion plate fades up behind it
- *   0.12s — White flash + mark
- *   0.35s — "GALAXY" slam (ice) + shake
- *   0.80s — flick: SIGNAL DETECTED
- *   1.20s — "SPORTS" slam (plasma) + shake
- *   1.65s — flick: NOISE FILTERED
- *   2.05s — "EDGE" slam (ice) + cyan burst ring
- *   2.50s — brand mark resolves + tagline, particle shimmer
- *   3.60s — dissolve to site
- *
- * This is the ONLY front-door sequence (the slow doctrine intro was retired).
- * Plays once per session (localStorage). Skippable on any interaction.
- * Reduced motion → instant dissolve, no video, no audio.
+ * Behavior:
+ *  - Plays the approved reveal MP4 (`/brand/gse-reveal.mp4`), letterboxed on
+ *    obsidian so the full wordmark is never cropped.
+ *  - Autoplay is MUTED by default (browser policy), with a tasteful unmute so
+ *    visitors can hear the sting. No unmuted autoplay is ever attempted.
+ *  - Plays once per session (sessionStorage). `?intro=play` force-replays it
+ *    (wired to the footer "Replay intro"); `?intro=skip` bypasses it.
+ *  - Skippable on any key / backdrop click; the controls never skip.
+ *  - prefers-reduced-motion → instant dissolve, no video, no audio.
+ *  - Resilient: a load error or a max-duration guard dissolves gracefully so a
+ *    visitor is never trapped behind the intro.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 
 const SEEN_KEY = "gse-montage-seen-v2";
 /** Legacy cinematic-intro flag, still set so any stragglers stay bypassed. */
 const CINEMATIC_SEEN_KEY = "gse-entrance-seen-v1";
 
-// Tight, choreographed pacing (~3.3s). No dead air between beats: each slam is
-// answered by a flicker before the next word lands.
-const PHASES = [
-  { at: 0, id: "black" },
-  { at: 110, id: "flash" },
-  { at: 320, id: "galaxy" },
-  { at: 640, id: "stat1" },
-  { at: 1040, id: "sports" },
-  { at: 1360, id: "stat2" },
-  { at: 1720, id: "edge" },
-  { at: 2160, id: "resolve" },
-  { at: 3300, id: "done" },
-] as const;
+/** Hard ceiling so a stalled video can never trap the visitor. */
+const MAX_DURATION_MS = 8000;
+/** Hold after the reveal resolves before dissolving to the site. */
+const RESOLVE_HOLD_MS = 650;
+/** Dissolve duration — must match the CSS opacity transition below. */
+const DISSOLVE_MS = 520;
 
 export function MontageEntrance() {
-  const [phase, setPhase] = useState<string>("black");
-  const [done, setDone] = useState(false);
-  const [bedOn, setBedOn] = useState(false);
+  const [active, setActive] = useState(false);
+  const [exiting, setExiting] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const timers = useRef<number[]>([]);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const startedRef = useRef(false);
+  const finishingRef = useRef(false);
 
-  const finish = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
+  const clearTimers = useCallback(() => {
     timers.current.forEach((t) => window.clearTimeout(t));
     timers.current = [];
-    setDone(true);
   }, []);
+
+  // Begin the dissolve, then unmount after the transition completes.
+  const finish = useCallback(() => {
+    if (finishingRef.current) return;
+    finishingRef.current = true;
+    clearTimers();
+    const video = videoRef.current;
+    if (video) {
+      try {
+        video.pause();
+      } catch {
+        /* ignore */
+      }
+    }
+    setExiting(true);
+    timers.current.push(
+      window.setTimeout(() => setActive(false), DISSOLVE_MS),
+    );
+  }, [clearTimers]);
 
   useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     // Accessibility always wins: reduced motion gets no cold-open.
-    if (reduced) {
-      setDone(true);
-      return;
-    }
+    if (reduced) return;
 
     const search = window.location.search;
     // ?intro=play force-replays the cold-open, overriding the once-per-session
@@ -89,10 +91,7 @@ export function MontageEntrance() {
       /* ignore */
     }
 
-    if (!forcePlay && (seen || search.includes("intro=skip"))) {
-      setDone(true);
-      return;
-    }
+    if (!forcePlay && (seen || search.includes("intro=skip"))) return;
 
     try {
       sessionStorage.setItem(SEEN_KEY, "1");
@@ -101,296 +100,116 @@ export function MontageEntrance() {
       /* ignore */
     }
 
-    // Motion plate fades up immediately for cinematic depth.
-    setBedOn(true);
+    setActive(true);
 
-    // Best-effort sting — browser autoplay policy gates this; it only sounds for
-    // visitors who have already interacted with the domain, and never under
-    // reduced motion (handled above). No HTML autoPlay attribute is used.
-    try {
-      const audio = new Audio("/audio/montage-hype.m4a");
-      audio.volume = 0.55;
-      audio.play().catch(() => {
-        /* blocked by autoplay policy — stay silent */
-      });
-      audioRef.current = audio;
-    } catch {
-      /* ignore */
-    }
+    // Hard ceiling — dissolve no matter what if the video never ends.
+    timers.current.push(window.setTimeout(() => finish(), MAX_DURATION_MS));
 
-    for (const p of PHASES) {
-      timers.current.push(window.setTimeout(() => setPhase(p.id), p.at));
-    }
+    return () => clearTimers();
+  }, [finish, clearTimers]);
 
-    // Climax shimmer — a restrained particle bloom behind the brand mark.
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        const w = (canvas.width = window.innerWidth);
-        const h = (canvas.height = window.innerHeight);
-        const particles = Array.from({ length: 160 }, () => {
-          // Color-tuned decay: cool signal (cyan) dissipates fast, warm residue
-          // (plasma) lingers, ultraviolet sits between. Subliminal stratification.
-          const r = Math.random();
-          const [color, decay] =
-            r > 0.6
-              ? ["0,229,255", 0.02 + Math.random() * 0.018]
-              : r > 0.5
-                ? ["122,92,255", 0.012 + Math.random() * 0.014]
-                : ["255,45,214", 0.008 + Math.random() * 0.012];
-          return {
-            x: w / 2,
-            y: h / 2,
-            vx: (Math.random() - 0.5) * 13,
-            vy: (Math.random() - 0.5) * 13,
-            life: 1,
-            decay,
-            color,
-            size: 1 + Math.random() * 2.5,
-          };
-        });
-        let raf = 0;
-        const draw = () => {
-          ctx.fillStyle = "rgba(5,6,8,0.16)";
-          ctx.fillRect(0, 0, w, h);
-          let alive = false;
-          for (const p of particles) {
-            if (p.life <= 0) continue;
-            alive = true;
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vx *= 0.97;
-            p.vy *= 0.97;
-            p.life -= p.decay;
-            ctx.fillStyle = `rgba(${p.color}, ${p.life})`;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-            ctx.fill();
-          }
-          if (alive) raf = requestAnimationFrame(draw);
-        };
-        // Let the brand mark land and breathe (~200ms) before the bloom.
-        timers.current.push(window.setTimeout(() => { raf = requestAnimationFrame(draw); }, 2360));
-        return () => cancelAnimationFrame(raf);
-      }
-    }
-
-    return () => timers.current.forEach((t) => window.clearTimeout(t));
-  }, []);
-
-  // Skip on any interaction.
+  // Once mounted, kick playback (muted autoplay is always permitted).
   useEffect(() => {
-    if (done) return;
-    const skip = () => finish();
-    window.addEventListener("keydown", skip, { once: true });
-    window.addEventListener("click", skip, { once: true });
-    window.addEventListener("touchstart", skip, { once: true });
-    return () => {
-      window.removeEventListener("keydown", skip);
-      window.removeEventListener("click", skip);
-      window.removeEventListener("touchstart", skip);
-    };
-  }, [done, finish]);
+    if (!active) return;
+    const video = videoRef.current;
+    if (!video) return;
+    video.play().catch(() => {
+      // Autoplay blocked entirely — don't trap the visitor.
+      finish();
+    });
+  }, [active, finish]);
 
-  if (done) return null;
+  // Skip on any key or backdrop click (controls stopPropagation separately).
+  useEffect(() => {
+    if (!active) return;
+    const onKey = () => finish();
+    window.addEventListener("keydown", onKey, { once: true });
+    return () => window.removeEventListener("keydown", onKey);
+  }, [active, finish]);
 
-  const show = (ids: string[]) => ids.includes(phase);
-  const flash = show(["flash"]);
-  const galaxy = show(["galaxy", "stat1", "sports", "stat2", "edge", "resolve"]);
-  const sports = show(["sports", "stat2", "edge", "resolve"]);
-  const edge = show(["edge", "resolve"]);
-  const resolve = show(["resolve"]);
+  if (!active) return null;
+
+  const unmute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
+    const next = !muted;
+    setMuted(next);
+    video.muted = next;
+    if (!next) {
+      // The click is a user gesture, so unmuted playback is now permitted.
+      video.play().catch(() => {
+        /* keep showing the visual even if audio is refused */
+      });
+    }
+  };
 
   return (
     <div
-      className="fixed inset-0 z-[80] overflow-hidden"
-      style={{ background: "#050608" }}
+      className="fixed inset-0 z-[80] flex items-center justify-center overflow-hidden transition-opacity ease-out"
+      style={{
+        background: "#05070B",
+        opacity: exiting ? 0 : 1,
+        transitionDuration: `${DISSOLVE_MS}ms`,
+      }}
       onClick={finish}
       role="dialog"
       aria-label="Entering Galaxy Sports Edge"
     >
-      {/* Cinematic motion bed: real footage, dimmed, behind the type. The fade
-          eases out so the bed falls back as the words advance. */}
+      {/* The approved cinematic reveal — letterboxed so the wordmark is never
+          cropped; obsidian frame reads as a premium cinematic bar. */}
       <video
-        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out"
-        style={{ opacity: bedOn && !resolve ? 0.5 : bedOn ? 0.32 : 0 }}
-        src="/immersive/home-hero-cosmos.mp4"
-        poster="/immersive/home-hero-cosmos.webp"
-        muted
-        autoPlay
-        loop
+        ref={videoRef}
+        className="h-full w-full object-contain"
+        src="/brand/gse-reveal.mp4"
+        poster="/brand/gse-reveal-poster.png"
+        muted={muted}
         playsInline
-        preload="metadata"
+        preload="auto"
+        onEnded={() =>
+          timers.current.push(window.setTimeout(() => finish(), RESOLVE_HOLD_MS))
+        }
+        onError={finish}
         aria-hidden="true"
       />
+
+      {/* Subtle vignette for depth without dimming the chrome. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0"
+        className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 70% 60% at 50% 45%, rgba(5,6,8,0.35), rgba(5,6,8,0.82) 78%)",
+            "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 58%, rgba(5,7,11,0.55) 100%)",
         }}
       />
 
-      {/* White flash */}
-      {flash && (
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ background: "#ffffff", animation: "montage-flash 0.25s ease-out forwards" }}
+      {/* Control bar — unmute + skip. stopPropagation so they never trigger the
+          backdrop skip. */}
+      <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3">
+        <button
+          type="button"
+          onClick={unmute}
+          className="inline-flex items-center gap-2 rounded-full border border-mineral bg-obsidian/60 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-ion-1 backdrop-blur transition-colors hover:text-ion-white"
+          aria-pressed={!muted}
         >
-          <LogoMarkInline size={120} color="#050608" className="opacity-90" />
-        </div>
-      )}
-
-      {/* GALAXY slam */}
-      {galaxy && (
-        <div className="absolute inset-0 flex items-center justify-center" style={{ animation: "montage-shake 0.15s ease-out" }}>
-          <span
-            className="font-arch"
-            style={{
-              fontSize: "clamp(4rem, 18vw, 14rem)",
-              lineHeight: 0.85,
-              letterSpacing: "0.06em",
-              background: "linear-gradient(180deg, #FFFFFF 0%, #E8FBFF 30%, #8FECFF 60%, #00E5FF 100%)",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              color: "transparent",
-              filter: "drop-shadow(0 0 40px rgba(0,229,255,0.45)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
-              animation: "montage-slam 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-              opacity: 0,
-            }}
-          >
-            GALAXY
-          </span>
-        </div>
-      )}
-
-      {/* flick: SIGNAL DETECTED */}
-      {show(["stat1", "sports", "stat2", "edge", "resolve"]) && (
-        <div
-          className="absolute left-1/2 top-[62%] -translate-x-1/2 font-mono"
-          style={{
-            fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
-            letterSpacing: "0.32em",
-            color: "#00E5FF",
-            textShadow: "0 0 20px rgba(0,229,255,0.8)",
-            animation: "montage-stat-flicker 0.3s ease-out forwards",
-            opacity: 0,
+          {muted ? "♪ Unmute" : "♪ Mute"}
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            finish();
           }}
+          className="inline-flex items-center rounded-full border border-mineral bg-obsidian/60 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2 backdrop-blur transition-colors hover:text-ion-white"
         >
-          SIGNAL DETECTED
-        </div>
-      )}
+          Skip ▸
+        </button>
+      </div>
 
-      {/* SPORTS slam */}
-      {sports && (
-        <div className="absolute inset-0 flex items-center justify-center" style={{ animation: "montage-shake 0.12s ease-out 0.1s" }}>
-          <span
-            className="font-arch"
-            style={{
-              fontSize: "clamp(4rem, 18vw, 14rem)",
-              lineHeight: 0.85,
-              letterSpacing: "0.06em",
-              background: "linear-gradient(180deg, #FFFFFF 0%, #FFB8EE 30%, #FF2DD6 100%)",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              color: "transparent",
-              filter: "drop-shadow(0 0 40px rgba(255,45,214,0.35)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
-              animation: "montage-slam 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards",
-              opacity: 0,
-            }}
-          >
-            SPORTS
-          </span>
-        </div>
-      )}
-
-      {/* flick: NOISE FILTERED */}
-      {show(["stat2", "edge", "resolve"]) && (
-        <div
-          className="absolute left-1/2 top-[62%] -translate-x-1/2 font-mono"
-          style={{
-            fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
-            letterSpacing: "0.32em",
-            color: "#7A5CFF",
-            textShadow: "0 0 20px rgba(122,92,255,0.8)",
-            animation: "montage-stat-flicker 0.3s ease-out 0.4s forwards",
-            opacity: 0,
-          }}
-        >
-          NOISE FILTERED
-        </div>
-      )}
-
-      {/* EDGE slam + cyan burst */}
-      {edge && (
-        <>
-          <div className="absolute inset-0 flex items-center justify-center" style={{ animation: "montage-shake 0.15s ease-out 0.2s" }}>
-            <span
-              className="font-arch"
-              style={{
-                fontSize: "clamp(4rem, 18vw, 14rem)",
-                lineHeight: 0.85,
-                letterSpacing: "0.06em",
-                background: "linear-gradient(180deg, #FFFFFF 0%, #E8FBFF 30%, #00E5FF 100%)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                color: "transparent",
-                filter: "drop-shadow(0 0 50px rgba(0,229,255,0.55)) drop-shadow(0 4px 20px rgba(0,0,0,0.8))",
-                animation: "montage-slam 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards",
-                opacity: 0,
-              }}
-            >
-              EDGE
-            </span>
-          </div>
-          <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{
-              width: "200vmax",
-              height: "200vmax",
-              border: "2px solid rgba(0,229,255,0.3)",
-              animation: "montage-burst-ring 0.8s ease-out 0.8s forwards",
-              opacity: 0,
-            }}
-          />
-        </>
-      )}
-
-      {/* RESOLVE — brand mark + tagline, the calm confident landing. */}
-      {resolve && (
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center"
-          style={{ animation: "montage-fade-in 0.6s ease-out forwards", opacity: 0 }}
-        >
-          <LogoMarkInline size={96} glow className="opacity-95" />
-          <p
-            className="mt-6 font-arch text-ion-white"
-            style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)", letterSpacing: "0.12em" }}
-          >
-            GALAXY SPORTS EDGE
-          </p>
-          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.34em] text-orbital-cyan">
-            We detect. You decide.
-          </p>
-          <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.3em] text-ion-2">
-            Press any key to enter
-          </p>
-        </div>
-      )}
-
-      {/* Particle shimmer canvas (climax only). */}
-      {resolve && <canvas ref={canvasRef} className="absolute inset-0" style={{ pointerEvents: "none" }} />}
-
-      {/* Skip — always available. */}
-      <button
-        type="button"
-        onClick={finish}
-        className="absolute right-5 top-5 z-10 rounded-full border border-mineral px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2 transition-colors hover:text-ion-white"
-      >
-        Skip ▸
-      </button>
+      {/* Quiet hint, top-right. */}
+      <p className="absolute right-5 top-5 z-10 font-mono text-[10px] uppercase tracking-[0.3em] text-ion-2">
+        Press any key to enter
+      </p>
     </div>
   );
 }

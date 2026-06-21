@@ -33,9 +33,9 @@ export function LogoMarkInline({
   color?: string;
 }) {
   const ring = color ?? "#00E5FF";
-  const blade = color ?? "#F6F7FA";
-  const core = color ?? "#FF2DD6";
-  const ping = color ?? "#7A5CFF";
+  const blade = color ?? "#F5F7FF";
+  const core = color ?? "#FF38C7";
+  const ping = color ?? "#7B61FF";
 
   return (
     <svg

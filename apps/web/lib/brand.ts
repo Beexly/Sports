@@ -225,17 +225,24 @@ export const HERO_SUBHEAD =
   "pricing gaps into auditable signals.";
 
 /**
- * Canonical brand colors — exact hex from the Galaxy Sports Edge
- * Brand Use Pack. Mirrors `tailwind.config.ts`.
+ * Canonical brand colors — exact hex from the Galaxy Sports Edge Brand Bible v1.0.
+ * Color is signal, not decoration. Never substitute. Mirrors `tailwind.config.ts`.
+ * Signal fade = Orbital Cyan -> Ion Magenta -> Ultraviolet.
  */
 export const BRAND_COLORS = {
-  obsidianBlack: "#050608",   // primary background
-  ionWhite: "#F6F7FA",        // primary text / monochrome mark
-  orbitalCyan: "#00E5FF",     // signal, data, active states
-  ionMagenta: "#FF2DD6",      // alert signal / emphasis
-  softUltraviolet: "#7A5CFF", // depth, intelligence, secondary signal
+  obsidianBlack: "#05070B",   // primary background
+  cosmicGray: "#0D1117",      // surface / UI panels
+  ionWhite: "#F5F7FF",        // starlight white — chrome highlights / text
+  orbitalCyan: "#00E5FF",     // primary energy / leading edge
+  ionMagenta: "#FF38C7",      // secondary energy / accent
+  softUltraviolet: "#7B61FF", // tertiary glow / transitions
+  electricBlue: "#2A6BFF",    // supporting cool
+  nebulaPurple: "#A855F7",    // nebula atmosphere
   steelGray: "#211A33",       // panels, dividers, UI depth
 } as const;
+
+/** The signal fade — the brand's signature gradient (cyan -> magenta -> violet). */
+export const SIGNAL_FADE = "linear-gradient(90deg, #00E5FF 0%, #FF38C7 52%, #7B61FF 100%)";
 
 /**
  * Compliance guardrails — language we cannot use, per the Brand Use Pack

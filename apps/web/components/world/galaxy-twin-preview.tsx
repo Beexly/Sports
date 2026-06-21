@@ -142,11 +142,11 @@ export function GalaxyTwinPreview(): JSX.Element {
           className="absolute inset-0 h-full w-full"
         >
           {/* gravity lines bend toward the heat node (30,22 → in viewBox terms) */}
-          <path d="M0 18 Q 30 26, 66 21 T 100 16" fill="none" stroke="rgba(255,45,214,0.42)" strokeWidth="0.3" strokeDasharray="2 1.6" className="gw-dash-flow" />
+          <path d="M0 18 Q 30 26, 66 21 T 100 16" fill="none" stroke="rgba(255,56,199,0.42)" strokeWidth="0.3" strokeDasharray="2 1.6" className="gw-dash-flow" />
           <path d="M0 36 Q 28 30, 56 38 T 100 34" fill="none" stroke="rgba(0,229,255,0.38)" strokeWidth="0.3" strokeDasharray="2 1.6" className="gw-dash-flow" />
-          <path d="M0 54 Q 40 60, 70 52 T 100 56" fill="none" stroke="rgba(122,92,255,0.45)" strokeWidth="0.3" strokeDasharray="2 1.6" className="gw-dash-flow" />
+          <path d="M0 54 Q 40 60, 70 52 T 100 56" fill="none" stroke="rgba(123,97,255,0.45)" strokeWidth="0.3" strokeDasharray="2 1.6" className="gw-dash-flow" />
           {/* connection threads between nodes */}
-          <path d="M30 15.4 L66 21" stroke="rgba(255,45,214,0.5)" strokeWidth="0.22" fill="none" />
+          <path d="M30 15.4 L66 21" stroke="rgba(255,56,199,0.5)" strokeWidth="0.22" fill="none" />
           <path d="M66 21 L56 51.8" stroke="rgba(0,229,255,0.5)" strokeWidth="0.22" fill="none" />
           <path d="M22 44.8 L56 51.8" stroke="rgba(255,180,84,0.5)" strokeWidth="0.22" fill="none" />
           <path d="M66 21 L84 40.6" stroke="rgba(152,163,181,0.4)" strokeWidth="0.22" fill="none" />

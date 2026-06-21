@@ -105,7 +105,7 @@ export function GmAutopilot() {
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider" style={{ color: hex, background: `${hex}1c` }}>{a.type}</span>
                     <span className="text-sm font-semibold text-white">{a.title}</span>
-                    <span className="rounded-full px-2 py-0.5 text-[9px] uppercase tracking-wider" style={{ background: a.reversible ? "rgba(0,229,255,0.12)" : "rgba(255,45,214,0.12)", color: a.reversible ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>
+                    <span className="rounded-full px-2 py-0.5 text-[9px] uppercase tracking-wider" style={{ background: a.reversible ? "rgba(0,229,255,0.12)" : "rgba(255,56,199,0.12)", color: a.reversible ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>
                       {a.reversible ? "reversible" : "commits FAAB"}
                     </span>
                     <span className="ml-auto font-mono text-[11px] text-ink-500">{Math.round(a.confidence * 100)}% conf</span>

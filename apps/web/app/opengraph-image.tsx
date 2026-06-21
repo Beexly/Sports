@@ -23,8 +23,8 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           background:
-            "radial-gradient(120% 80% at 70% 0%, #1A1D33 0%, #08091A 55%, #050608 100%)",
-          color: "#F6F7FA",
+            "radial-gradient(120% 80% at 70% 0%, #1A1D33 0%, #08091A 55%, #05070B 100%)",
+          color: "#F5F7FF",
           padding: "72px 88px",
           position: "relative",
           fontFamily: "'Exo 2', system-ui, sans-serif",
@@ -40,7 +40,7 @@ export default async function Image() {
             height: 500,
             borderRadius: "50%",
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(0,229,255,0.35) 0%, rgba(122,92,255,0.12) 60%, transparent 100%)",
+              "radial-gradient(50% 50% at 50% 50%, rgba(0,229,255,0.35) 0%, rgba(123,97,255,0.12) 60%, transparent 100%)",
             display: "flex",
           }}
         />
@@ -55,7 +55,7 @@ export default async function Image() {
             height: 520,
             borderRadius: "50%",
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(255,45,214,0.40) 0%, rgba(122,92,255,0.15) 60%, transparent 100%)",
+              "radial-gradient(50% 50% at 50% 50%, rgba(255,56,199,0.40) 0%, rgba(123,97,255,0.15) 60%, transparent 100%)",
             display: "flex",
           }}
         />
@@ -66,8 +66,8 @@ export default async function Image() {
             <defs>
               <linearGradient id="og-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#00E5FF" />
-                <stop offset="55%" stopColor="#7A5CFF" />
-                <stop offset="100%" stopColor="#FF2DD6" />
+                <stop offset="55%" stopColor="#7B61FF" />
+                <stop offset="100%" stopColor="#FF38C7" />
               </linearGradient>
             </defs>
             <path
@@ -78,8 +78,8 @@ export default async function Image() {
               fill="none"
             />
             <line x1="10" y1="16" x2="54" y2="50" stroke="url(#og-grad)" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="34" cy="30" r="4" fill="#FF2DD6" />
-            <circle cx="34" cy="30" r="1.5" fill="#F6F7FA" />
+            <circle cx="34" cy="30" r="4" fill="#FF38C7" />
+            <circle cx="34" cy="30" r="1.5" fill="#F5F7FF" />
           </svg>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <div
@@ -87,7 +87,7 @@ export default async function Image() {
                 fontSize: 56,
                 fontWeight: 800,
                 letterSpacing: "0.12em",
-                color: "#F6F7FA",
+                color: "#F5F7FF",
                 display: "flex",
               }}
             >
@@ -119,7 +119,7 @@ export default async function Image() {
             fontSize: 22,
             letterSpacing: "0.24em",
             textTransform: "uppercase",
-            color: "#7A5CFF",
+            color: "#7B61FF",
           }}
         >
           <div
@@ -143,7 +143,7 @@ export default async function Image() {
             fontWeight: 600,
             lineHeight: 1.02,
             letterSpacing: "-0.015em",
-            color: "#F6F7FA",
+            color: "#F5F7FF",
             maxWidth: 980,
           }}
         >

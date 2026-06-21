@@ -49,8 +49,8 @@ export function normalizeAnswer(raw: string): string {
 }
 
 const CYAN = "#00E5FF";
-const MAGENTA = "#FF2DD6";
-const UV = "#7A5CFF";
+const MAGENTA = "#FF38C7";
+const UV = "#7B61FF";
 
 /**
  * The storyline. Append a chapter per week; the season can build (later answers

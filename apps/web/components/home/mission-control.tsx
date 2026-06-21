@@ -50,7 +50,7 @@ export function MissionControl() {
       aria-labelledby="board-room-title"
       style={{
         background:
-          "linear-gradient(180deg, rgba(0,229,255,0.035), rgba(5,6,8,0.95) 42%, rgba(122,92,255,0.04))",
+          "linear-gradient(180deg, rgba(0,229,255,0.035), rgba(5,6,8,0.95) 42%, rgba(123,97,255,0.04))",
       }}
     >
       <div className="container">

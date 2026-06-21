@@ -153,9 +153,9 @@ export default function DeckPage(): JSX.Element {
                             sys.health > 0.9
                               ? "#00E5FF"
                               : sys.health > 0.75
-                                ? "#7A5CFF"
-                                : "#FF2DD6",
-                          boxShadow: `0 0 8px ${sys.health > 0.9 ? "rgba(0,229,255,0.4)" : sys.health > 0.75 ? "rgba(122,92,255,0.4)" : "rgba(255,45,214,0.4)"}`,
+                                ? "#7B61FF"
+                                : "#FF38C7",
+                          boxShadow: `0 0 8px ${sys.health > 0.9 ? "rgba(0,229,255,0.4)" : sys.health > 0.75 ? "rgba(123,97,255,0.4)" : "rgba(255,56,199,0.4)"}`,
                         }}
                       />
                     </div>
@@ -249,15 +249,15 @@ export default function DeckPage(): JSX.Element {
                     style={{
                       background:
                         agent.state === "alert"
-                          ? "#FF2DD6"
+                          ? "#FF38C7"
                           : agent.state === "idle"
-                            ? "#7A5CFF"
+                            ? "#7B61FF"
                             : "#00E5FF",
                       boxShadow:
                         agent.state === "alert"
-                          ? "0 0 8px 2px rgba(255,45,214,0.5)"
+                          ? "0 0 8px 2px rgba(255,56,199,0.5)"
                           : agent.state === "idle"
-                            ? "0 0 6px 1px rgba(122,92,255,0.3)"
+                            ? "0 0 6px 1px rgba(123,97,255,0.3)"
                             : "0 0 8px 2px rgba(0,229,255,0.4)",
                       animation:
                         agent.state === "alert"

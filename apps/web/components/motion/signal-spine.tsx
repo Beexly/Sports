@@ -75,8 +75,8 @@ export function SignalSpine() {
         style={{
           height: "calc(var(--spine-progress, 0) * 100%)",
           background:
-            "linear-gradient(180deg, #7A5CFF 0%, #00E5FF 60%, #5BEEFF 100%)",
-          boxShadow: "0 0 12px rgba(0,229,255,0.4), 0 0 4px rgba(122,92,255,0.6)",
+            "linear-gradient(180deg, #7B61FF 0%, #00E5FF 60%, #5BEEFF 100%)",
+          boxShadow: "0 0 12px rgba(0,229,255,0.4), 0 0 4px rgba(123,97,255,0.6)",
           transition: "height 0.1s linear",
         }}
       />
@@ -88,8 +88,8 @@ export function SignalSpine() {
             key={i}
             className="absolute left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full"
             style={{
-              background: i % 2 === 0 ? "#00E5FF" : "#7A5CFF",
-              boxShadow: `0 0 8px 2px ${i % 2 === 0 ? "rgba(0,229,255,0.6)" : "rgba(122,92,255,0.5)"}`,
+              background: i % 2 === 0 ? "#00E5FF" : "#7B61FF",
+              boxShadow: `0 0 8px 2px ${i % 2 === 0 ? "rgba(0,229,255,0.6)" : "rgba(123,97,255,0.5)"}`,
               animation: `spine-packet-${i} ${6 + i * 2}s linear infinite`,
               animationDelay: `${i * 1.5}s`,
               opacity: 0.8,
@@ -103,13 +103,13 @@ export function SignalSpine() {
         <svg width="16" height="16" viewBox="0 0 64 64" fill="none" className="opacity-60">
           <path
             d="M11 38C8 25 18 12 32 12c9.8 0 18 6.7 20.3 15.7"
-            stroke="rgba(255,45,214,0.7)"
+            stroke="rgba(255,56,199,0.7)"
             strokeWidth="4"
             strokeLinecap="round"
             fill="none"
           />
-          <line x1="10" y1="16" x2="54" y2="50" stroke="rgba(255,45,214,0.7)" strokeWidth="4" strokeLinecap="round" />
-          <circle cx="34" cy="30" r="5" fill="#FF2DD6" />
+          <line x1="10" y1="16" x2="54" y2="50" stroke="rgba(255,56,199,0.7)" strokeWidth="4" strokeLinecap="round" />
+          <circle cx="34" cy="30" r="5" fill="#FF38C7" />
         </svg>
       </div>
     </div>

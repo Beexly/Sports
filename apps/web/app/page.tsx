@@ -75,7 +75,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             aria-hidden="true"
             className="absolute inset-0 -z-10"
             style={{
-              background: `radial-gradient(ellipse 70% 60% at 78% 18%, ${"#FF2DD6"}1c, transparent 60%), radial-gradient(ellipse 60% 55% at 12% 80%, ${"#7A5CFF"}24, transparent 65%), linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}b3 0%, ${BRAND_COLORS.obsidianBlack}4d 46%, ${BRAND_COLORS.obsidianBlack}99 74%, ${BRAND_COLORS.obsidianBlack} 100%)`,
+              background: `radial-gradient(ellipse 70% 60% at 78% 18%, ${"#FF38C7"}1c, transparent 60%), radial-gradient(ellipse 60% 55% at 12% 80%, ${"#7B61FF"}24, transparent 65%), linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}b3 0%, ${BRAND_COLORS.obsidianBlack}4d 46%, ${BRAND_COLORS.obsidianBlack}99 74%, ${BRAND_COLORS.obsidianBlack} 100%)`,
             }}
           />
           <div className="mx-auto max-w-5xl px-4 py-24 text-center sm:px-6 sm:py-32 lg:px-8">

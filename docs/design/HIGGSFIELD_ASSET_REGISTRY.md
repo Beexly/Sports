@@ -2,6 +2,19 @@
 
 Every generated asset that touches the product, with its provenance, placement, and code-native fallback. Generation was authorized by the owner for the cinematic work. Model: Recraft 4.1 (images/vector), Seedance 2.0 / Kling 2.6 (video). Workspace: private (Ultra).
 
+## Official approved brand kit (the source of truth — Brand Bible v1.0)
+
+The owner delivered the final, approved brand kit (bible PDF + cinematic logo-reveal MP4 with audio + chrome stills). These supersede the earlier hand-built mark and are the canonical identity. Brand suite job `d2ol7oe51mr4n9`.
+
+| Asset | Source | Placement | Fallback |
+|---|---|---|---|
+| Cinematic reveal MP4 (with audio) | Approved brand kit (seedance_2_0 reveal job) | `public/brand/gse-reveal.mp4` → cold-open (`MontageEntrance`), muted-autoplay + tasteful unmute | poster still + reduced-motion bypass (no video) |
+| Reveal poster still | Frame export from the reveal MP4 | `public/brand/gse-reveal-poster.png` → video poster | n/a (is the fallback) |
+| Chrome emblem (GSN-in-GSE monogram) | Frame export at logo resolve (~4.5s) | `public/brand/gse-emblem.png` (512) + `-180`/`-64` → header lockup, favicon, app icon, manifest, Organization JSON-LD logo | `public/favicon.svg` vector mark (brand palette) |
+| Master logo still | Approved brand kit | `public/brand/gse-master.png` → press / share / OG source | code-native wordmark (Exo 2 + signal fade) |
+
+Palette + type locked to the bible: Orbital Cyan `#00E5FF`, Ion Magenta `#FF38C7`, Soft Ultraviolet `#7B61FF`, Electric Blue `#2A6BFF`, Nebula Purple `#A855F7`, Cosmic Gray `#0D1117`, Obsidian `#05070B`, Starlight White `#F5F7FF`; signal fade = cyan→magenta→violet. Display face = **Exo 2**, body = Inter. The retired near-miss hexes are guarded by `apps/web/__tests__/brand-palette-guard.test.ts`.
+
 ## Integrated
 
 | Asset | Job ID | Model | Placement | Fallback | Status |

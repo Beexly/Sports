@@ -48,7 +48,7 @@ export function SignalRoomAtmosphere({
             style={{
               background:
                 "radial-gradient(ellipse 60% 40% at 70% 20%, rgba(0,229,255,0.04), transparent 60%), " +
-                "radial-gradient(ellipse 50% 30% at 20% 80%, rgba(122,92,255,0.04), transparent 60%)",
+                "radial-gradient(ellipse 50% 30% at 20% 80%, rgba(123,97,255,0.04), transparent 60%)",
             }}
           />
         </div>

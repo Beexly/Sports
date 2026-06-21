@@ -30,7 +30,7 @@ export type BriefingCard = {
   readonly accent: string;
 };
 
-const HEX = { cyan: "#00E5FF", magenta: "#FF2DD6", uv: "#7A5CFF", amber: "#E0A800", white: "#F6F7FA" };
+const HEX = { cyan: "#00E5FF", magenta: "#FF38C7", uv: "#7B61FF", amber: "#E0A800", white: "#F5F7FF" };
 
 /** Compose the prioritized, cross-product briefing from the live engines. */
 export function buildBriefing(): BriefingCard[] {

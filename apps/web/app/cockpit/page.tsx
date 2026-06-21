@@ -843,7 +843,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
     <section
       data-testid="performance-target-zone"
       className="overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80 p-5"
-      style={{ borderColor: "rgba(122,92,255,0.20)" }}
+      style={{ borderColor: "rgba(123,97,255,0.20)" }}
     >
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
@@ -1020,7 +1020,7 @@ function AiOpsZone({ aiOps }: { aiOps: AiOpsSummary }) {
     <section
       data-testid="ai-ops-zone"
       className="overflow-hidden rounded-2xl border border-titanium/40 bg-carbon/80 p-5"
-      style={{ borderColor: "rgba(122,92,255,0.18)" }}
+      style={{ borderColor: "rgba(123,97,255,0.18)" }}
     >
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>

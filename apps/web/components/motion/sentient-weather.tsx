@@ -26,31 +26,31 @@ export function SentientWeather({
     calm: {
       background:
         "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,229,255,0.06) 0%, transparent 60%), " +
-        "radial-gradient(ellipse 60% 50% at 20% 80%, rgba(122,92,255,0.04) 0%, transparent 55%), " +
-        "linear-gradient(180deg, #050608 0%, #080a12 100%)",
+        "radial-gradient(ellipse 60% 50% at 20% 80%, rgba(123,97,255,0.04) 0%, transparent 55%), " +
+        "linear-gradient(180deg, #05070B 0%, #080a12 100%)",
     },
     active: {
       background:
         "radial-gradient(ellipse 70% 50% at 60% 25%, rgba(0,229,255,0.10) 0%, transparent 55%), " +
-        "radial-gradient(ellipse 50% 40% at 30% 70%, rgba(122,92,255,0.08) 0%, transparent 50%), " +
-        "linear-gradient(180deg, #050608 0%, #0a0c14 100%)",
+        "radial-gradient(ellipse 50% 40% at 30% 70%, rgba(123,97,255,0.08) 0%, transparent 50%), " +
+        "linear-gradient(180deg, #05070B 0%, #0a0c14 100%)",
     },
     volatile: {
       background:
-        "radial-gradient(ellipse 60% 45% at 70% 20%, rgba(255,45,214,0.12) 0%, transparent 50%), " +
+        "radial-gradient(ellipse 60% 45% at 70% 20%, rgba(255,56,199,0.12) 0%, transparent 50%), " +
         "radial-gradient(ellipse 50% 35% at 25% 75%, rgba(0,229,255,0.06) 0%, transparent 45%), " +
-        "linear-gradient(180deg, #050608 0%, #120810 100%)",
+        "linear-gradient(180deg, #05070B 0%, #120810 100%)",
     },
     stale: {
       background:
         "radial-gradient(ellipse 70% 55% at 50% 40%, rgba(100,100,120,0.05) 0%, transparent 60%), " +
-        "linear-gradient(180deg, #050608 0%, #060608 100%)",
+        "linear-gradient(180deg, #05070B 0%, #060608 100%)",
     },
     gated: {
       background:
-        "radial-gradient(ellipse 65% 50% at 50% 35%, rgba(122,92,255,0.10) 0%, transparent 55%), " +
-        "radial-gradient(ellipse 45% 40% at 80% 80%, rgba(255,45,214,0.06) 0%, transparent 50%), " +
-        "linear-gradient(180deg, #050608 0%, #0c0a18 100%)",
+        "radial-gradient(ellipse 65% 50% at 50% 35%, rgba(123,97,255,0.10) 0%, transparent 55%), " +
+        "radial-gradient(ellipse 45% 40% at 80% 80%, rgba(255,56,199,0.06) 0%, transparent 50%), " +
+        "linear-gradient(180deg, #05070B 0%, #0c0a18 100%)",
     },
   };
 
@@ -70,7 +70,7 @@ export function SentientWeather({
         <div
           className="absolute inset-0"
           style={{
-            background: "radial-gradient(ellipse 30% 20% at 70% 30%, rgba(255,45,214,0.15), transparent)",
+            background: "radial-gradient(ellipse 30% 20% at 70% 30%, rgba(255,56,199,0.15), transparent)",
             animation: `sentient-lightning 3s steps(1) infinite`,
             opacity: lightningOpacity,
           }}

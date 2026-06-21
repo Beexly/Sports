@@ -42,11 +42,11 @@ export function ThermalVision({
         aria-pressed={enabled}
         className="fixed bottom-6 left-6 z-50 flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all duration-300"
         style={{
-          borderColor: enabled ? "rgba(255,45,214,0.5)" : "rgba(0,229,255,0.3)",
-          background: enabled ? "rgba(255,45,214,0.1)" : "rgba(0,229,255,0.06)",
-          color: enabled ? "#FF2DD6" : "#00E5FF",
+          borderColor: enabled ? "rgba(255,56,199,0.5)" : "rgba(0,229,255,0.3)",
+          background: enabled ? "rgba(255,56,199,0.1)" : "rgba(0,229,255,0.06)",
+          color: enabled ? "#FF38C7" : "#00E5FF",
           boxShadow: enabled
-            ? "0 0 16px rgba(255,45,214,0.2)"
+            ? "0 0 16px rgba(255,56,199,0.2)"
             : "0 0 12px rgba(0,229,255,0.1)",
         }}
       >
@@ -54,8 +54,8 @@ export function ThermalVision({
           className="h-2 w-2 rounded-full"
           style={{
             background: enabled
-              ? "linear-gradient(180deg, #FF2DD6, #FFB454)"
-              : "linear-gradient(180deg, #00E5FF, #7A5CFF)",
+              ? "linear-gradient(180deg, #FF38C7, #FFB454)"
+              : "linear-gradient(180deg, #00E5FF, #7B61FF)",
             animation: enabled ? "thermal-pulse-hot 1.5s ease-in-out infinite" : "thermal-pulse-cold 3s ease-in-out infinite",
           }}
         />
@@ -70,7 +70,7 @@ export function ThermalVision({
           style={{
             mixBlendMode: "overlay",
             background:
-              "radial-gradient(ellipse 60% 50% at 70% 30%, rgba(255,45,214,0.08), transparent 60%), " +
+              "radial-gradient(ellipse 60% 50% at 70% 30%, rgba(255,56,199,0.08), transparent 60%), " +
               "radial-gradient(ellipse 50% 40% at 30% 70%, rgba(0,229,255,0.06), transparent 55%)",
             animation: "thermal-breathe 4s ease-in-out infinite",
           }}
@@ -102,22 +102,22 @@ export function ThermalBadge({
       className={`inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider transition-all duration-500 ${className}`}
       style={{
         background: isHot
-          ? `rgba(255,45,214,${0.08 + temperature * 0.15})`
+          ? `rgba(255,56,199,${0.08 + temperature * 0.15})`
           : isCold
             ? `rgba(0,229,255,${0.08 + Math.abs(temperature) * 0.15})`
-            : "rgba(122,92,255,0.06)",
+            : "rgba(123,97,255,0.06)",
         border: `1px solid ${isHot
-          ? `rgba(255,45,214,${0.2 + temperature * 0.3})`
+          ? `rgba(255,56,199,${0.2 + temperature * 0.3})`
           : isCold
             ? `rgba(0,229,255,${0.2 + Math.abs(temperature) * 0.3})`
-            : "rgba(122,92,255,0.15)"}`,
+            : "rgba(123,97,255,0.15)"}`,
         color: isHot
           ? `rgba(255,${180 - temperature * 80},${214 - temperature * 50},1)`
           : isCold
             ? `rgba(${0 + Math.abs(temperature) * 80},${229 - Math.abs(temperature) * 50},255,1)`
             : "#8B97AB",
         boxShadow: isHot
-          ? `0 0 ${8 + temperature * 12}px rgba(255,45,214,${0.15 + temperature * 0.2})`
+          ? `0 0 ${8 + temperature * 12}px rgba(255,56,199,${0.15 + temperature * 0.2})`
           : isCold
             ? `0 0 ${8 + Math.abs(temperature) * 12}px rgba(0,229,255,${0.15 + Math.abs(temperature) * 0.2})`
             : "none",
@@ -126,7 +126,7 @@ export function ThermalBadge({
       <span
         className="h-1 w-1 rounded-full"
         style={{
-          background: isHot ? "#FF2DD6" : isCold ? "#00E5FF" : "#7A5CFF",
+          background: isHot ? "#FF38C7" : isCold ? "#00E5FF" : "#7B61FF",
           animation: isHot
             ? "thermal-pulse-hot 1.2s ease-in-out infinite"
             : isCold

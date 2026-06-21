@@ -4,12 +4,12 @@
     <radialGradient id="g-bg" cx="50%" cy="42%" r="64%">
       <stop offset="0%"  stop-color="#0F1424"/>
       <stop offset="60%" stop-color="#070A11"/>
-      <stop offset="100%" stop-color="#050608"/>
+      <stop offset="100%" stop-color="#05070B"/>
     </radialGradient>
     <radialGradient id="g-core-glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"  stop-color="#FF2DD6" stop-opacity="0.8"/>
-      <stop offset="55%" stop-color="#7A5CFF" stop-opacity="0.28"/>
-      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
+      <stop offset="0%"  stop-color="#FF38C7" stop-opacity="0.8"/>
+      <stop offset="55%" stop-color="#7B61FF" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#05070B" stop-opacity="0"/>
     </radialGradient>
   </defs>
 
@@ -24,9 +24,9 @@
   <circle cx="256" cy="256" r="120" fill="url(#g-core-glow)"/>
 
   <!-- Edge blade slicing through -->
-  <polygon points="400,112 270.7,270.7 112,400 241.3,241.3" fill="#F6F7FA"/>
+  <polygon points="400,112 270.7,270.7 112,400 241.3,241.3" fill="#F5F7FF"/>
 
   <!-- Signal core + ping -->
-  <circle cx="256" cy="256" r="35" fill="#FF2DD6"/>
-  <circle cx="360" cy="136" r="18" fill="#7A5CFF"/>
+  <circle cx="256" cy="256" r="35" fill="#FF38C7"/>
+  <circle cx="360" cy="136" r="18" fill="#7B61FF"/>
 </svg>

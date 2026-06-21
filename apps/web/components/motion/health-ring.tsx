@@ -15,9 +15,9 @@ export function HealthRing({
   health = 0.87,
   segments = [
     { label: "Data intake", value: 0.92, color: "#00E5FF" },
-    { label: "Model inference", value: 0.85, color: "#7A5CFF" },
+    { label: "Model inference", value: 0.85, color: "#7B61FF" },
     { label: "Board state", value: 0.78, color: "#00E5FF" },
-    { label: "Media pipeline", value: 0.91, color: "#7A5CFF" },
+    { label: "Media pipeline", value: 0.91, color: "#7B61FF" },
     { label: "Trust ledger", value: 0.96, color: "#00E5FF" },
   ],
 }: {

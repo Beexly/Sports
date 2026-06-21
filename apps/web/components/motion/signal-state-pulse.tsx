@@ -47,7 +47,7 @@ export function SignalStatePulse({
         style={{
           animation: `signal-pulse-ring ${duration * 0.7}s ease-in-out infinite`,
           animationDelay: `${duration * 0.3}s`,
-          background: `radial-gradient(circle, rgba(122,92,255,${glowIntensity * 0.6}) 0%, transparent 60%)`,
+          background: `radial-gradient(circle, rgba(123,97,255,${glowIntensity * 0.6}) 0%, transparent 60%)`,
         }}
       />
       {/* Core dot */}

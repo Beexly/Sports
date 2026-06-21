@@ -52,7 +52,7 @@ export function GlitchTruth({
       <div
         className="absolute inset-0"
         style={{
-          boxShadow: `inset ${chromaStrength}px 0 ${chromaStrength * 2}px rgba(255,45,214,0.04), inset -${chromaStrength}px 0 ${chromaStrength * 2}px rgba(0,229,255,0.04)`,
+          boxShadow: `inset ${chromaStrength}px 0 ${chromaStrength * 2}px rgba(255,56,199,0.04), inset -${chromaStrength}px 0 ${chromaStrength * 2}px rgba(0,229,255,0.04)`,
         }}
       />
 

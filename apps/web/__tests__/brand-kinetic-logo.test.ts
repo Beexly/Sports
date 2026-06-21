@@ -5,10 +5,11 @@ import { resolve } from "node:path";
 /**
  * Kinetic logo guard.
  *
- * The 2026 brand requires the mark to be a kinetic signature — a sub-1s
- * draw-on that resolves the orbit, vectors, core, ping and wordmark — and
- * to be FULLY disabled under prefers-reduced-motion. These are the contracts
- * that keep the signature recognizable, accessible, and silent-by-default.
+ * The 2026 brand requires the official lockup to land with a kinetic signature
+ * — a sub-1s arrival sting that settles the chrome emblem and resolves the
+ * wordmark — and to be FULLY disabled under prefers-reduced-motion. These are
+ * the contracts that keep the signature recognizable, accessible, and
+ * silent-by-default.
  */
 
 const webRoot = resolve(__dirname, "..");
@@ -23,10 +24,19 @@ describe("Kinetic logo signature", () => {
     }
   });
 
-  it("drives the lockup mark + wordmark from the kinetic modifier", () => {
-    expect(css).toContain(".brand-lockup-kinetic .brand-mark-orbit");
-    expect(css).toContain(".brand-lockup-kinetic .brand-mark-vector");
+  it("drives the official emblem + wordmark from the kinetic modifier", () => {
+    expect(css).toContain(".brand-lockup-kinetic .brand-emblem");
     expect(css).toContain(".brand-lockup-kinetic .brand-wordmark");
+  });
+
+  it("renders the official chrome emblem + signal-fade wordmark in the lockup", () => {
+    const lockup = read("components/brand/brand-lockup.tsx");
+    // Official emblem asset (Brand Bible v1.0), not the retired hand-built SVG.
+    expect(lockup).toContain("/brand/gse-emblem.png");
+    expect(lockup).toContain("brand-wordmark-text");
+    // Wordmark filled with the signature signal fade.
+    expect(css).toContain(".brand-wordmark-text");
+    expect(css).toContain("var(--signal-fade)");
   });
 
   it("disables all kinetic animation under prefers-reduced-motion", () => {

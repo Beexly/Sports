@@ -178,7 +178,7 @@ export function AgentFleet({ className }: { className?: string }) {
           // Signal point
           ctx.beginPath();
           ctx.arc(2, 0, 2, 0, Math.PI * 2);
-          ctx.fillStyle = "#FF2DD6";
+          ctx.fillStyle = "#FF38C7";
           ctx.fill();
           ctx.restore();
         } else {
