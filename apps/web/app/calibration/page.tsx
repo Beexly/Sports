@@ -25,6 +25,10 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { ProofExplorer } from "@/components/proof/proof-explorer";
+import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: `The Proof Room · ${BRAND_NAME}`,
@@ -81,7 +85,9 @@ function ProofCard({
   );
 }
 
-export default function CalibrationProofRoomPage() {
+export default async function CalibrationProofRoomPage() {
+  const { data: report } = await loadPublicCalibrationReport();
+
   return (
     <div className="relative isolate min-h-screen bg-carbon text-ion">
       <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
@@ -102,6 +108,23 @@ export default function CalibrationProofRoomPage() {
             settles, it stays in the record, win or loss.
           </p>
         </header>
+
+        {/* Interactive head, the live calibration, explorable, not a link hub. */}
+        <ProofExplorer
+          buckets={report.buckets.map((b) => ({
+            label: b.label,
+            expectedWinRate: b.expectedWinRate,
+            observedWinRate: b.observedWinRate,
+            sampleSize: b.sampleSize,
+            delta: b.delta,
+          }))}
+          sampleSize={report.sampleSize}
+          brierScore={report.brierScore}
+          discriminationSpread={report.discrimination.spread}
+          discriminationTrend={report.discrimination.trend}
+          isCollecting={report.isCollecting}
+          publicMessage={report.publicMessage}
+        />
 
         <section className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
           <ProofCard
