@@ -30,8 +30,9 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
     );
     return NextResponse.json({ url: portalSession.url });
   } catch (err) {
+    // Log detail server-side; return a generic message to the client.
     const message = err instanceof Error ? err.message : "Portal error";
     console.error(`Portal session error: ${message}`);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: "Billing portal could not be opened." }, { status: 500 });
   }
 }

@@ -27,9 +27,10 @@ import { nextTransmission, formatCountdown, type NextTransmission } from "@/lib/
 export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
   const segs = broadcast.segments;
   const [i, setI] = useState(0);
-  const seg = segs[i]!;
-  const scene = SCENES[seg.scene];
-  const reporter = seg.reporter;
+  // Guard against an empty rundown so the broadcast never crashes to a blank.
+  const seg = segs[i] ?? segs[0] ?? null;
+  const scene = seg ? SCENES[seg.scene] : null;
+  const reporter = seg?.reporter ?? null;
   const onColdOpen = i === 0;
   const onSignOff = i === segs.length - 1;
 
@@ -59,7 +60,7 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
   }, []);
 
   const play = useCallback(() => {
-    if (!supportsSpeech.current) return;
+    if (!supportsSpeech.current || !seg) return;
     window.speechSynthesis.cancel();
     const text = [
       onColdOpen ? broadcast.coldOpen : "",
@@ -70,17 +71,26 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
       .join(" ");
     const u = new SpeechSynthesisUtterance(text);
     u.rate = 1.02;
-    u.pitch = reporter.initial === "O" ? 0.92 : 1.06; // desk vs field, distinct read
+    u.pitch = reporter?.initial === "O" ? 0.92 : 1.06; // desk vs field, distinct read
     u.onend = () => setSpeaking(false);
     u.onerror = () => setSpeaking(false);
     setSpeaking(true);
     window.speechSynthesis.speak(u);
-  }, [broadcast.coldOpen, broadcast.signOff, onColdOpen, onSignOff, reporter.initial, seg.script]);
+  }, [broadcast.coldOpen, broadcast.signOff, onColdOpen, onSignOff, reporter?.initial, seg]);
 
   // Stop audio whenever the segment changes.
   useEffect(() => {
     stop();
   }, [i, stop]);
+
+  // Empty rundown → a calm placeholder instead of a crash (hooks run first).
+  if (!seg || !scene || !reporter) {
+    return (
+      <div className="surface-card p-6 text-sm text-ion-2">
+        No transmission is queued right now. Check back at the next drop.
+      </div>
+    );
+  }
 
   return (
     <div className="surface-card overflow-hidden p-0">
@@ -158,6 +168,7 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
             <p className="text-[10px] uppercase tracking-[0.18em] text-ion-3">Teleprompter · {reporter.name}</p>
             <button
               type="button"
+              aria-label={speaking ? "Stop reading this segment" : "Play this segment aloud"}
               onClick={speaking ? stop : play}
               className="inline-flex items-center gap-1.5 rounded-full border border-mineral px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-1 transition-colors hover:border-orbital-cyan/60 hover:text-ion-white"
               aria-pressed={speaking}
@@ -192,6 +203,7 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
             key={s.id}
             type="button"
             onClick={() => setI(idx)}
+            aria-current={idx === i ? "true" : undefined}
             className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors"
             style={{
               background: idx === i ? `${SCENES[s.scene].accent}22` : "rgba(255,255,255,0.04)",

@@ -35,6 +35,7 @@ const mocks = vi.hoisted(() => ({
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   oddsCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
   pickUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
+  pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string } | null>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
 }));
 
@@ -44,7 +45,7 @@ vi.mock("@sports/db", () => ({
     sport: { upsert: mocks.sportUpsert },
     game: { upsert: mocks.gameUpsert, findUnique: mocks.gameFindUnique },
     odds: { create: mocks.oddsCreate },
-    pick: { upsert: mocks.pickUpsert },
+    pick: { upsert: mocks.pickUpsert, findUnique: mocks.pickFindUnique },
     pickSignalSnapshot: { upsert: mocks.snapshotUpsert },
   },
 }));
@@ -137,6 +138,8 @@ describe("processSport", () => {
     mocks.getHeadToHeadForm.mockResolvedValue(null);
     mocks.scoreGames.mockReturnValue([scoredPick()]);
     mocks.pickUpsert.mockResolvedValue({ id: "pick-1" });
+    // Default: no existing pick → the create/update upsert path runs as before.
+    mocks.pickFindUnique.mockResolvedValue(null);
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
   });
@@ -201,6 +204,18 @@ describe("processSport", () => {
     expect(call.update).not.toHaveProperty("clvLockPrice");
     expect(call.update).not.toHaveProperty("result");
     expect(call.update).not.toHaveProperty("settledAt");
+  });
+
+  it("freezes a SETTLED pick — a refresh never rewrites a graded row", async () => {
+    // The pick already exists and has been graded WIN by settlement.
+    mocks.pickFindUnique.mockResolvedValue({ id: "pick-1", result: "WIN" });
+
+    const result = await processSport(SPORT, "key", gates());
+
+    // The run still succeeds, but the settled pick is left exactly as graded:
+    // no upsert touches its selection/line/confidence/grade/reasoning.
+    expect(result.status).toBe("success");
+    expect(mocks.pickUpsert).not.toHaveBeenCalled();
   });
 
   it("locks the American price (not the line) for moneyline picks", async () => {

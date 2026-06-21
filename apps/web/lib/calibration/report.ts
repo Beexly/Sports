@@ -27,18 +27,36 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
     };
   }
 
-  const picks = await db.pick.findMany({
-    where: {
-      isPublished: true,
-      isBootstrap: false,
-      result: { in: ["WIN", "LOSS", "PUSH"] },
-      signalSnapshot: { is: { eligibleForLearning: true } },
-      NOT: { modelVersion: "v5.0.0-seed" },
-    },
-    include: { game: { include: { sport: { select: { name: true } } } } },
-    orderBy: { settledAt: "desc" },
-    take: 500,
-  });
+  // Fail OPEN like loadBoardState: a DB blip must never crash the home, board,
+  // house, or proof pages that await this. On error, return the honest
+  // building/empty state instead of throwing into the global error screen.
+  const picks = await db.pick
+    .findMany({
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        result: { in: ["WIN", "LOSS", "PUSH"] },
+        signalSnapshot: { is: { eligibleForLearning: true } },
+        NOT: { modelVersion: "v5.0.0-seed" },
+      },
+      include: { game: { include: { sport: { select: { name: true } } } } },
+      orderBy: { settledAt: "desc" },
+      take: 500,
+    })
+    .catch(() => null);
+
+  if (picks === null) {
+    const report = computeCalibration([]);
+    return {
+      data: {
+        ...report,
+        updatedAt: now.toISOString(),
+        isCollecting: true,
+        publicMessage: "Calibration is temporarily unavailable; building history from settled canonical picks.",
+      },
+      meta: { gated: false, isSampleData: false },
+    };
+  }
 
   const input: CalibrationPickInput[] = picks.map((pick) => ({
     id: pick.id,

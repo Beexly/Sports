@@ -135,6 +135,7 @@ export function AcademyProgress() {
                         type="button"
                         onClick={() => toggle(m.id)}
                         aria-pressed={done}
+                        aria-label={`Mark "${m.label}" complete`}
                         title={m.drill}
                         className="grid h-4 w-4 shrink-0 place-items-center rounded border transition-colors"
                         style={{

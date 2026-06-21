@@ -45,7 +45,9 @@ export function ReasoningShowcase({ steps }: { steps: readonly ShowcaseStep[] })
     return () => window.clearTimeout(id);
   }, [index, playing, steps.length]);
 
-  const active = steps[index]!;
+  const active = steps[index] ?? steps[0];
+  // Empty steps → render nothing rather than crash (hooks already ran above).
+  if (!active) return null;
   const counter = `${String(index + 1).padStart(2, "0")} / ${String(steps.length).padStart(2, "0")}`;
 
   return (

@@ -61,8 +61,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (err) {
+    // Log the detail server-side; return a generic message so internal/Stripe
+    // error text never leaks to the client.
     const message = err instanceof Error ? err.message : "Checkout failed";
     console.error(`Checkout error: ${message}`);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: "Checkout could not be started." }, { status: 500 });
   }
 }
