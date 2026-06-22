@@ -9,8 +9,14 @@
  * rates near 0 or 1. We surface the band next to the point estimate so a skeptic
  * sees the uncertainty, not a falsely precise number.
  *
- * Pure, dependency-free, fully unit-testable.
+ * The CORE Wilson math is the single canonical implementation in
+ * `@sports/prediction-engine` (model-limitations.ts). This module is the apps/web
+ * PRESENTATION layer over it: count-based input, a point estimate, null when there
+ * is no data, a break-even test, and formatting. One numeric core, no duplicate
+ * formula (see docs/strategy/BRANCH_RECONCILIATION.md §4).
  */
+
+import { wilsonInterval as wilsonLowHigh } from "@sports/prediction-engine";
 
 export interface WilsonInterval {
   /** Point estimate p̂ = successes / n, in 0..1. */
@@ -40,15 +46,13 @@ export function wilsonInterval(successes: number, n: number, z: number = Z_95): 
   const k = Math.min(total, Math.max(0, Math.floor(successes)));
   const p = k / total;
 
-  const z2 = z * z;
-  const denom = 1 + z2 / total;
-  const center = (p + z2 / (2 * total)) / denom;
-  const margin = (z * Math.sqrt((p * (1 - p)) / total + z2 / (4 * total * total))) / denom;
+  // Delegate the band to the canonical Wilson implementation in the shared package.
+  const { low, high } = wilsonLowHigh(p, total, z);
 
   return {
     point: round(p, 4),
-    low: round(clamp01(center - margin), 4),
-    high: round(clamp01(center + margin), 4),
+    low: round(clamp01(low), 4),
+    high: round(clamp01(high), 4),
     n: total,
     z,
   };
