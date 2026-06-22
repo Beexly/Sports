@@ -92,6 +92,17 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     failureMode: "Vercel cron doing backend work → CPU/cost pressure; silent cron failure → stale data.",
     nextAction: "activate the worker path; reduce Vercel cron to health checks / manual triggers.",
   },
+  {
+    id: "workers-orchestration-policy",
+    name: "Worker orchestration policy (idempotency, retry/backoff, dead-letter)",
+    category: "workers",
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: null,
+    evidenceRefs: ["apps/web/lib/workers/orchestration-policy.ts", "apps/web/__tests__/orchestration-policy.test.ts"],
+    lastVerifiedAt: V,
+    failureMode: "a retried settlement double-settles without an idempotency key.",
+    nextAction: "wire idempotencyKey + retryDecision + failure ledger into the BullMQ workers.",
+  },
 
   // ── cache ──
   {
