@@ -51,6 +51,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
     section: "Research OS",
     items: [
       { href: "/cockpit/build-board", label: "Build Board", hint: "Ranked next moves" },
+      { href: "/cockpit/trust-loop", label: "Trust Loop", hint: "Devig→verdict→receipt→CLV" },
       { href: "/cockpit/competitor-intel", label: "Competitor Intel", hint: "40+ field + gap board" },
       { href: "/cockpit/autonomy", label: "Autonomy", hint: "Self-learning + drift gates" },
     ],

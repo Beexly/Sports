@@ -32,3 +32,5 @@ export * from "./competitor-intelligence";
 export * from "./open-source-ledger";
 export * from "./analytics-methods";
 export * from "./self-learning";
+export * from "./projection-models";
+export * from "./trust-loop";
