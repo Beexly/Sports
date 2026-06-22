@@ -40,6 +40,7 @@ describe("getUserEntitlements — production DB path", () => {
     expect(ent.canSeeConfidence).toBe(true);
     expect(ent.canGetAlerts).toBe(false);
     expect(ent.dailyPickLimit).toBeNull();
+    expect(ent.canUseFantasyFull).toBe(true); // Pro includes the fantasy suite
   });
 
   it("returns ELITE entitlements including alerts", async () => {
@@ -49,6 +50,20 @@ describe("getUserEntitlements — production DB path", () => {
 
     expect(ent.tier).toBe("ELITE");
     expect(ent.canGetAlerts).toBe(true);
+  });
+
+  it("returns FANTASY entitlements: full fantasy suite, but no betting depth or alerts", async () => {
+    mocks.subscriptionFindFirst.mockResolvedValue({ tier: "FANTASY" });
+
+    const ent = await getUserEntitlements("user_1");
+
+    expect(ent.tier).toBe("FANTASY");
+    expect(ent.canUseFantasyDraftSuite).toBe(true);
+    expect(ent.canUseFantasyFull).toBe(true);
+    // The fantasy tier is NOT the betting-depth tier — that stays Pro+.
+    expect(ent.canSeeFactorBreakdown).toBe(false);
+    expect(ent.canSeeLineMovement).toBe(false);
+    expect(ent.canGetAlerts).toBe(false);
   });
 
   it("honors ACTIVE/TRIALING, plus PAST_DUE only within the grace window", async () => {
@@ -102,6 +117,7 @@ describe("getUserEntitlements — production DB path", () => {
     expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
     expect(ent.canSeeConfidence).toBe(true); // confidence freed for FREE (calibrated-honest, Step 3)
     expect(ent.dailyPickLimit).toBeNull();
+    expect(ent.canUseFantasyFull).toBe(false); // fantasy suite is paid; FREE gets a depth-limited trial
   });
 
   it("fails closed to FREE when the database is unreachable (P1001)", async () => {

@@ -76,3 +76,15 @@ export async function gateApi(
 export function requirePremiumApi(): Promise<NextResponse | null> {
   return gateApi((e) => e.tier !== "FREE");
 }
+
+/**
+ * Fantasy floor: any paid tier (Fantasy, Pro, or Elite). Gates fantasy JSON
+ * endpoints so the paid fantasy suite can't be reached by requesting the URL
+ * directly. FREE → 403, fails closed to FREE on lookup error.
+ */
+export function requireFantasyApi(): Promise<NextResponse | null> {
+  return gateApi(
+    (e) => e.canUseFantasyFull,
+    "This fantasy tool requires a Fantasy, Pro, or Elite subscription."
+  );
+}

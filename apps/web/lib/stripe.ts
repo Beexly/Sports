@@ -32,10 +32,14 @@ export const STRIPE_PRICE_IDS = {
       "",
     year: process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"] ?? "",
   },
+  FANTASY: {
+    month: process.env["STRIPE_FANTASY_MONTHLY_PRICE_ID"] ?? "",
+    year: process.env["STRIPE_FANTASY_ANNUAL_PRICE_ID"] ?? "",
+  },
 } as const;
 
 /** Resolve the Stripe price ID for a tier + billing interval. */
-export function getStripePriceId(tier: "PRO" | "ELITE", interval: BillingInterval): string {
+export function getStripePriceId(tier: "FANTASY" | "PRO" | "ELITE", interval: BillingInterval): string {
   return STRIPE_PRICE_IDS[tier][interval];
 }
 
@@ -43,6 +47,7 @@ export function getStripePriceId(tier: "PRO" | "ELITE", interval: BillingInterva
 // Advancing PRICING_PHASE re-prices every public surface at once.
 const currentPhase = getCurrentPricingPhase();
 export const PRICE_DISPLAY = {
+  FANTASY: { monthly: currentPhase.fantasy.monthly, annual: currentPhase.fantasy.annual, label: "Fantasy" },
   PRO: { monthly: currentPhase.pro.monthly, annual: currentPhase.pro.annual, label: "Pro" },
   ELITE: { monthly: currentPhase.elite.monthly, annual: currentPhase.elite.annual, label: "Elite" },
 } as const;
