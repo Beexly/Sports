@@ -62,6 +62,22 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
     ],
   },
   {
+    section: "Intelligence",
+    items: [
+      { href: "/cockpit/competitors", label: "Competitors", hint: "Market intelligence · 32 tracked" },
+      { href: "/cockpit/research", label: "Research", hint: "Revenue + prediction methods" },
+      { href: "/cockpit/product-map", label: "Product Map", hint: "First-of-kind system registry" },
+      { href: "/cockpit/revenue", label: "Revenue", hint: "Revenue models + pricing intel" },
+    ],
+  },
+  {
+    section: "Fantasy & DFS",
+    items: [
+      { href: "/cockpit/fantasy-war-room", label: "Fantasy War Room", hint: "Draft AI · voice Jarvis · league memory" },
+      { href: "/cockpit/source-rights", label: "Source Rights", hint: "GSE source rights registry" },
+    ],
+  },
+  {
     section: "Signals & sources",
     items: [
       { href: "/cockpit/sources", label: "Sources", hint: "Source intelligence" },
