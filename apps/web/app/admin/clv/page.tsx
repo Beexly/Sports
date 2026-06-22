@@ -5,6 +5,12 @@ import { db } from "@sports/db";
 import { summarizeClv, type ClvVerdict } from "@sports/prediction-engine";
 import { loadClvCoverage, type ClvCoverage } from "@/lib/performance/clv-coverage";
 import { loadSettlementHealth, type SettlementHealth } from "@/lib/performance/settlement-health";
+import {
+  segmentClv,
+  type ClvGradedItem,
+  type ClvSegment,
+  type SegmentDimension,
+} from "@/lib/performance/clv-segments";
 
 /**
  * Private CLV dashboard (admin-only) — the internal read on whether the model is
@@ -41,6 +47,7 @@ export default async function AdminClvPage() {
       id: true,
       pickType: true,
       selection: true,
+      confidence: true,
       clvKind: true,
       clvValue: true,
       clvVerdict: true,
@@ -48,6 +55,7 @@ export default async function AdminClvPage() {
       clvCloseLine: true,
       clvGradedAt: true,
       result: true,
+      game: { select: { sport: { select: { key: true } } } },
     },
     orderBy: { clvGradedAt: "desc" },
     take: 200,
@@ -70,6 +78,22 @@ export default async function AdminClvPage() {
   // Settlement health is the LEADING signal: picks that started but never settled
   // can never get a CLV record at all, and silently corrupt the public record.
   const settlement = await loadSettlementHealth(db);
+
+  // Phase 2: WHERE does the edge live? Segment the beat-close rate by sport, market,
+  // and confidence band. Only items with a known kind/verdict feed the segmenting.
+  const segmentItems: ClvGradedItem[] = graded
+    .filter((p) => p.clvKind === "POINTS" || p.clvKind === "PROBABILITY")
+    .map((p) => ({
+      sport: p.game?.sport?.key ?? "unknown",
+      pickType: p.pickType,
+      clvKind: p.clvKind as "POINTS" | "PROBABILITY",
+      clvValue: p.clvValue as number,
+      verdict: p.clvVerdict as ClvVerdict,
+      confidence: p.confidence,
+    }));
+  const segmentsBySport = segmentClv(segmentItems, "sport");
+  const segmentsByMarket = segmentClv(segmentItems, "pickType");
+  const segmentsByConfidence = segmentClv(segmentItems, "confidenceBand");
 
   const verdictCounts = VERDICTS.map((v) => ({
     verdict: v,
@@ -119,6 +143,21 @@ export default async function AdminClvPage() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section data-testid="clv-segments" className="rounded-2xl border border-titanium bg-carbon/40 p-4 text-xs">
+        <h2 className="mb-1 text-xs font-semibold uppercase tracking-widest text-ion-3">
+          Where the edge lives — segmented beat-close rate
+        </h2>
+        <p className="mb-3 text-[11px] text-ion-3">
+          Beat-close rate is unit-free and comparable across markets. Mean CLV only shows
+          within a single unit (points vs. probability) — mixed segments omit it by design.
+        </p>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <SegmentTable title="By sport" dimension="sport" segments={segmentsBySport} />
+          <SegmentTable title="By market" dimension="pickType" segments={segmentsByMarket} />
+          <SegmentTable title="By confidence" dimension="confidenceBand" segments={segmentsByConfidence} />
+        </div>
       </section>
 
       <section className="rounded-2xl border border-titanium bg-carbon/40 p-4 text-xs">
@@ -223,6 +262,56 @@ function CoverageCard({ coverage }: { coverage: ClvCoverage }) {
         </ul>
       )}
     </section>
+  );
+}
+
+function SegmentTable({
+  title,
+  dimension,
+  segments,
+}: {
+  title: string;
+  dimension: SegmentDimension;
+  segments: ClvSegment[];
+}) {
+  return (
+    <div data-testid={`clv-segment-${dimension}`}>
+      <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-ion-3">{title}</h3>
+      {segments.length === 0 ? (
+        <p className="text-ion-3">No graded picks yet.</p>
+      ) : (
+        <table className="w-full text-left text-ion-1">
+          <thead className="text-ion-3">
+            <tr>
+              <th className="py-1 pr-2 font-normal">Segment</th>
+              <th className="py-1 pr-2 font-normal">n</th>
+              <th className="py-1 pr-2 font-normal">Beat %</th>
+              <th className="py-1 pr-2 font-normal">Mean</th>
+            </tr>
+          </thead>
+          <tbody>
+            {segments.map((s) => (
+              <tr key={s.key} className="border-t border-titanium/60">
+                <td className="py-1 pr-2 text-ion-2">{s.key}</td>
+                <td className="py-1 pr-2 text-ion-3">{s.n}</td>
+                <td
+                  className={`py-1 pr-2 ${s.beatCloseRatePct >= 50 ? "text-green-400" : "text-ion-1"}`}
+                >
+                  {s.beatCloseRatePct}%
+                </td>
+                <td className="py-1 pr-2 text-ion-3">
+                  {s.meanClv == null
+                    ? "—"
+                    : s.kind === "PROBABILITY"
+                    ? `${s.meanClv >= 0 ? "+" : ""}${(s.meanClv * 100).toFixed(1)}%`
+                    : `${s.meanClv >= 0 ? "+" : ""}${s.meanClv.toFixed(2)}`}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
   );
 }
 
