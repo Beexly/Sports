@@ -99,9 +99,9 @@ describe("getUserEntitlements — production DB path", () => {
     const ent = await getUserEntitlements("lapsed_user");
 
     expect(ent.tier).toBe("FREE");
-    expect(ent.canSeePremiumPicks).toBe(false);
+    expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
     expect(ent.canSeeConfidence).toBe(false);
-    expect(ent.dailyPickLimit).toBe(2);
+    expect(ent.dailyPickLimit).toBeNull();
   });
 
   it("fails closed to FREE when the database is unreachable (P1001)", async () => {
@@ -112,7 +112,7 @@ describe("getUserEntitlements — production DB path", () => {
     const ent = await getUserEntitlements("user_1");
 
     expect(ent.tier).toBe("FREE");
-    expect(ent.canSeePremiumPicks).toBe(false);
+    expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
   });
 
   it("rethrows unexpected database errors instead of masking them", async () => {
@@ -174,7 +174,7 @@ describe("getUserEntitlements — DEV_FAKE_ADMIN gating", () => {
 
     // Falls through to the real DB path → fails closed to FREE.
     expect(ent.tier).toBe("FREE");
-    expect(ent.canSeePremiumPicks).toBe(false);
+    expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
     expect(mocks.subscriptionFindFirst).toHaveBeenCalledTimes(1);
   });
 

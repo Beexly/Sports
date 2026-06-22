@@ -49,7 +49,9 @@ export default async function BlogPostPage({
 
   if (!post) notFound();
 
-  const showFullContent = entitlements.canSeePremiumPicks;
+  // Paid-tier gate (decoupled from canSeePremiumPicks, now true for all since
+  // picks are free — ENTITLEMENT_REMAP_SPEC.md). Blog gating preserved as-is.
+  const showFullContent = entitlements.tier !== "FREE";
 
   return (
     <>

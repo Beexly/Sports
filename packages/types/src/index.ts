@@ -128,13 +128,18 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
   const isPro = tier === "PRO" || tier === "ELITE";
   return {
     tier,
-    canSeePremiumPicks: isPro,
+    // Entitlement remap Step 1 (ENTITLEMENT_REMAP_SPEC.md): picks are FREE.
+    // All tiers see all picks with no daily cap. The paid line is depth +
+    // tools + analytics + alerts, never access to the picks themselves.
+    canSeePremiumPicks: true,
+    // FREE confidence stays gated until the public number is calibrated-honest
+    // (Thread 2). Freed for FREE in Step 3 — honest first, free second.
     canSeeConfidence: isPro,
     canSeeLineMovement: isPro,
     canSeeFactorBreakdown: isPro,
     canSeeEdgeScore: true,
     canGetAlerts: tier === "ELITE",
-    dailyPickLimit: tier === "FREE" ? 2 : null,
+    dailyPickLimit: null,
     canUseTrendLab: isPro,
     canUseParlayMri: isPro,
     canUseClvLedger: tier === "ELITE",

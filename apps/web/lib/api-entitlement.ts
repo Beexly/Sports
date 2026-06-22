@@ -67,9 +67,12 @@ export async function gateApi(
 }
 
 /**
- * Premium floor: Pro or Elite. `canSeePremiumPicks` is true for both paid
- * tiers and false for FREE — the right floor for premium analytics JSON.
+ * Premium floor: Pro or Elite. Gates premium ANALYTICS endpoints
+ * (/api/intelligence/*), never the picks. Since the entitlement remap made
+ * `canSeePremiumPicks` true for all tiers (picks are free —
+ * ENTITLEMENT_REMAP_SPEC.md), this floor keys off paid-tier membership so the
+ * paid analytics stay paid. FREE → 403, fails closed to FREE on lookup error.
  */
 export function requirePremiumApi(): Promise<NextResponse | null> {
-  return gateApi((e) => e.canSeePremiumPicks);
+  return gateApi((e) => e.tier !== "FREE");
 }
