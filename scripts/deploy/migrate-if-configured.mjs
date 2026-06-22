@@ -17,11 +17,15 @@
  *
  * Resilience: Neon's serverless compute auto-suspends when idle, so a
  * production build can hit it cold and `prisma migrate deploy` fails with
- * P1001 ("Can't reach database server") — ERRORing the ENTIRE deploy even when
- * there are no pending migrations to apply. (This is what broke the deploy of
- * #49.) We retry TRANSIENT connectivity failures with backoff so a cold DB
- * self-heals (Neon wakes within a few seconds); a real migration error
- * (conflict, drift, bad SQL) is NOT transient and fails fast on the first try.
+ * P1001 ("Can't reach database server") — even when there are no pending
+ * migrations to apply. (This broke the deploy of #49, and again after a
+ * password rotation.) Policy on failure:
+ *  - NON-transient error (drift, conflict, bad SQL) → fail the build. Never
+ *    ship code against an unmigrated schema.
+ *  - TRANSIENT connectivity (P1001 / cold-start / unreachable from the build
+ *    network) after all retries → warn and PROCEED. We never reached the
+ *    server, so nothing was half-applied; the runtime connects through the
+ *    pooled endpoint independently. A connectivity blip must not gate a deploy.
  */
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
@@ -78,13 +82,30 @@ function runMigrateWithRetry() {
 
     const combined = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
     const transient = isTransientDbError(combined);
-    if (!transient || attempt >= MAX_MIGRATE_ATTEMPTS) {
+
+    // A NON-transient failure is a real migration error (drift, conflict, bad
+    // SQL). That MUST fail the build — never ship code against an unmigrated schema.
+    if (!transient) {
       console.error(
         `[migrate-if-configured] migrate failed on attempt ${attempt}/${MAX_MIGRATE_ATTEMPTS} ` +
-          `(transient=${transient}) — giving up.`
+          `with a NON-transient error — failing the build.`
       );
       return result.status ?? 1;
     }
+
+    // Transient connectivity after all retries: we could not reach the DB to
+    // apply (or even check) migrations. A connectivity blip must NOT gate the
+    // deploy — nothing was half-applied, and the runtime uses the pooled
+    // endpoint independently. Proceed; apply any pending migration out-of-band.
+    if (attempt >= MAX_MIGRATE_ATTEMPTS) {
+      console.warn(
+        `[migrate-if-configured] could not reach the DB after ${MAX_MIGRATE_ATTEMPTS} attempts ` +
+          `(transient connectivity, e.g. Neon cold-start). Proceeding with the build WITHOUT ` +
+          `blocking the deploy; apply migrations out-of-band if any are pending.`
+      );
+      return 0;
+    }
+
     const waitMs = backoffMs(attempt);
     console.warn(
       `[migrate-if-configured] transient DB-connectivity error on attempt ${attempt}/${MAX_MIGRATE_ATTEMPTS}; ` +
