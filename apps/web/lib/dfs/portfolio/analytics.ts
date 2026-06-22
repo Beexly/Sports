@@ -80,7 +80,6 @@ export function analyzePortfolio(
   let totalProjection = 0;
   let totalCeiling = 0;
   let totalOwnership = 0;
-  let totalLeverage = 0;
   let totalSalary = 0;
 
   for (const lineup of lineups) {

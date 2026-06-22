@@ -4,7 +4,6 @@ import {
   INTEGRITY_INVARIANTS,
   approvedSources,
   excludedSources,
-  fantasyPlatformSources,
   automatedSources,
   sourceById,
 } from "../source-rights-gates";

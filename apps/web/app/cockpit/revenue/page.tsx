@@ -2,15 +2,12 @@ import {
   REVENUE_MODELS,
   COMPETITOR_PRICING,
   GSE_REVENUE_PHASES,
-  SPORTSBOOK_AFFILIATE_PROGRAMS,
   coreRevenueModels,
   highRiskModels,
   competitorPricingRange,
 } from "@/lib/research/revenue-intelligence";
 import {
   TRUST_TIER_DEFINITIONS,
-  UNIT_ECONOMICS,
-  ARR_PROJECTIONS,
 } from "@/lib/gse/revenue-operating-model";
 
 export const dynamic = "force-dynamic";

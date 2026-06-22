@@ -1,14 +1,8 @@
 import {
   DRAFT_INTELLIGENCE_PHASES,
-  STANDARD_ROSTER_CONFIGS,
-  urgencyLabel,
-  valueOverAdpLabel,
 } from "@/lib/fantasy/draft-intelligence-roadmap";
 import {
   IMPORT_FORMAT_SPECS,
-  automatedImportFormats,
-  manualImportFormats,
-  archetypeLabel,
 } from "@/lib/fantasy/league-memory-roadmap";
 import {
   JARVIS_COMMAND_TEMPLATES,
@@ -19,7 +13,6 @@ import {
   blockedPlatforms,
 } from "@/lib/fantasy/voice-jarvis-roadmap";
 import {
-  DRAFT_ARCHETYPE_PROFILES,
   HISTORICAL_DATA_SOURCES,
   approvedHistoricalSources,
 } from "@/lib/fantasy/historical-draft-intelligence";
@@ -48,8 +41,6 @@ const SYNC_TONE: Record<SyncPermission, string> = {
 export default function FantasyWarRoomPage(): JSX.Element {
   const permitted = permittedPlatforms();
   const blocked = blockedPlatforms();
-  const autoImports = automatedImportFormats();
-  const manualImports = manualImportFormats();
   const approvedSources = approvedHistoricalSources();
 
   return (

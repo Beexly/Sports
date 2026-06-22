@@ -4,7 +4,6 @@ import {
   approvedSources,
   excludedSources,
   fantasyPlatformSources,
-  automatedSources,
   type SourceStatus,
 } from "@/lib/gse/source-rights-gates";
 
@@ -38,7 +37,6 @@ export default function SourceRightsPage(): JSX.Element {
   const approved = approvedSources();
   const excluded = excludedSources();
   const fantasyPlatforms = fantasyPlatformSources();
-  const automated = automatedSources();
 
   return (
     <div className="flex flex-col gap-6">

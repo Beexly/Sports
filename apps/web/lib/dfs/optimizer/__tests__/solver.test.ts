@@ -257,7 +257,7 @@ describe("solve()", () => {
     const count = result.lineups.length;
     const maxAllowed = Math.ceil(count * 0.6);
 
-    for (const [_id, exposure] of Object.entries(result.exposure)) {
+    for (const exposure of Object.values(result.exposure)) {
       const usedCount = Math.round(exposure * count);
       expect(usedCount).toBeLessThanOrEqual(maxAllowed);
     }
