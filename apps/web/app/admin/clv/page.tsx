@@ -11,6 +11,7 @@ import {
   type ClvSegment,
   type SegmentDimension,
 } from "@/lib/performance/clv-segments";
+import { wilsonInterval, formatWilsonPct, clearsThreshold } from "@/lib/performance/wilson-interval";
 
 /**
  * Private CLV dashboard (admin-only) — the internal read on whether the model is
@@ -384,6 +385,10 @@ function ClvCard({
       ? `${summary.averageClv >= 0 ? "+" : ""}${(summary.averageClv * 100).toFixed(2)}%`
       : `${summary.averageClv >= 0 ? "+" : ""}${summary.averageClv.toFixed(2)} pts`;
   const beat = summary.beatCloseRate;
+  // Honest uncertainty band: a 60% rate over 8 picks is not a 60% rate. The lower
+  // bound vs the 52.4% vig break-even is what tells us if we can claim an edge yet.
+  const ci = wilsonInterval(Math.round(beat * summary.sampleSize), summary.sampleSize);
+  const beatsBreakEven = ci ? clearsThreshold(ci, 0.524) : false;
   return (
     <section className="rounded-2xl border border-titanium bg-carbon/40 p-4">
       <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">{title}</h2>
@@ -393,6 +398,20 @@ function ClvCard({
         </span>
         <span className="text-xs text-ion-3">beat the close</span>
       </div>
+      {ci && (
+        <div className="mt-1 flex items-center gap-2 text-[11px]">
+          <span className="text-ion-3">95% CI {formatWilsonPct(ci)}</span>
+          <span
+            className={
+              beatsBreakEven
+                ? "rounded border border-green-900 bg-green-950/30 px-1.5 py-0.5 text-green-300"
+                : "rounded border border-titanium bg-carbon/40 px-1.5 py-0.5 text-ion-3"
+            }
+          >
+            {beatsBreakEven ? "clears 52.4% break-even" : "not yet above break-even"}
+          </span>
+        </div>
+      )}
       <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-ion-2">
         <span>Sample: {summary.sampleSize}</span>
         <span>Avg CLV: {avg}</span>
