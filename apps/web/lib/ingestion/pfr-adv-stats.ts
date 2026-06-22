@@ -49,7 +49,7 @@ function toRecord(r: CsvRow, season: number, statType: PfrStatType, rightsSnapsh
     playerName: r["pfr_player_name"] ?? "",
     season,
     week: Number(r["week"] ?? "0"),
-    seasonType: (r["game_type"] || "REG").startsWith("POST") ? "POST" : "REG",
+    seasonType: (r["game_type"] || "REG").toUpperCase().startsWith("POST") ? "POST" : "REG",
     team: r["team"] || null,
     opponent: r["opponent"] || null,
     gameKey: r["game_id"] ?? "",

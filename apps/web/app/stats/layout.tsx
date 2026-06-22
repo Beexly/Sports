@@ -24,6 +24,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
+      aria-current={isActive ? "page" : undefined}
       className={[
         "px-4 py-3 text-sm border-b-2 transition-colors whitespace-nowrap",
         isActive

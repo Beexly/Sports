@@ -42,7 +42,7 @@ function toRecord(r: CsvRow, season: number, rightsSnapshot: Prisma.InputJsonVal
   return {
     season,
     week: Number(r["week"] ?? "0"),
-    seasonType: (r["season_type"] || "REG").startsWith("POST") ? "POST" : "REG",
+    seasonType: (r["season_type"] || "REG").toUpperCase().startsWith("POST") ? "POST" : "REG",
     team: r["team"] ?? "",
     opponent: r["opponent_team"] || null,
     completions: int(r["completions"]),
