@@ -572,6 +572,17 @@ describe("scoreGames", () => {
       expect(pick.dataFreshnessAt).toEqual(at);
     }
   });
+
+  it("exposes the devigged market fair prob (the honest anchor for a proof receipt)", () => {
+    const picks = scoreGames([makeOddsInput()]);
+    expect(picks.length).toBeGreaterThan(0);
+    for (const pick of picks) {
+      // No longer discarded — a real probability in (0,1), market-derived.
+      expect(typeof pick.marketFairProb).toBe("number");
+      expect(pick.marketFairProb!).toBeGreaterThan(0);
+      expect(pick.marketFairProb!).toBeLessThan(1);
+    }
+  });
 });
 
 // ============================================================
