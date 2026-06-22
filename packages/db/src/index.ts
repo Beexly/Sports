@@ -152,6 +152,22 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function buildClient(): PrismaClient {
+  // Resilience against env-var scope confusion: the Vercel↔Neon integration
+  // manages POSTGRES_PRISMA_URL / DATABASE_URL_UNPOOLED, which are always present,
+  // whereas a manually-set DATABASE_URL/DIRECT_URL can end up scoped to the wrong
+  // target and read empty at runtime. Fall back to the integration-managed vars
+  // ONLY when ours are unset — never override a value we already have.
+  if (!process.env["DATABASE_URL"] && process.env["POSTGRES_PRISMA_URL"]) {
+    process.env["DATABASE_URL"] = process.env["POSTGRES_PRISMA_URL"];
+  }
+  if (!process.env["DIRECT_URL"]) {
+    const directFallback =
+      process.env["DATABASE_URL_UNPOOLED"] ??
+      process.env["POSTGRES_URL_NON_POOLING"] ??
+      process.env["DATABASE_URL"];
+    if (directFallback) process.env["DIRECT_URL"] = directFallback;
+  }
+
   const url = process.env["DATABASE_URL"];
   const force = process.env["FORCE_REAL_PRISMA"] === "true";
 
