@@ -154,6 +154,39 @@ Everything below is pure today; the work is fetching data and calling these func
     `injury-model.ts` (replace illustrative base rates with sourced data first); survivor tool on
     `survivor-optimizer.ts`.
 
+## 7B. Wiring map — new primitives → EXISTING repo surfaces
+
+The new `lib/gse` layer is connective tissue OVER systems that already exist. Plug each primitive into
+the surface that's already there; do not rebuild these.
+
+| New primitive (`lib/gse/`) | Plug into existing surface | Effect |
+|---|---|---|
+| `injury-model.assessInjury` | `lib/fantasy/lineup.ts` (start/sit), `app/fantasy/lineup` | Miss-time risk on start/sit + roster decisions |
+| `dfs-portfolio.*` | `lib/fantasy/dfs-optimizer.ts`, `app/fantasy/dfs` | Risk-parity exposure + Dupes-style leverage on the optimizer |
+| `survivor-optimizer.planSurvivor` | NEW tool under `app/fantasy/*` (none exists yet) | Survivor/pool product (TeamRankings niche) |
+| `query-engine.*` | NEW Finder UI; feed it `lib/intelligence/*` + player data | Stathead-style query builder |
+| `scoreline-model.*` | `packages/prediction-engine` (Poisson lives there) | Adds soccer 1X2/OU/BTTS coverage |
+| `projection-models.glicko2Update` | `packages/prediction-engine` (Elo/opponent-adjusted live there) | Uncertainty-aware team ratings |
+| `projection-models.blackLittermanBlend` | `packages/prediction-engine/edge-engine.ts` | Edge becomes a market-anchored posterior |
+| `shrinkage.*` | `lib/projections/player-projections.ts`, `packages/prediction-engine/player-projection.ts` | Stable early-season projections |
+| `forecasting.*` (CRPS/Platt/isotonic/Brier-decomp) | `lib/calibration/*` (Brier/ECE already there) | Deeper calibration + recalibration |
+| `trust-loop.*` | `lib/courtroom`, `lib/trust-ledger`, `app/today` Signal Courtroom | The end-to-end loop + frozen receipts |
+| `self-learning.*` (drift, promotion) | `packages/prediction-engine/calibration-drift.ts`, `lib/synthetic-monitoring` | Drift job + champion/challenger gate |
+| `data-excellence.*`, `claim-safety.*` | `packages/data-ingestion`, `lib/scraping/clearance-engine.ts` | Ingestion quality + rights hard-stops |
+| `competitor-intelligence`, `open-source-ledger`, `product-operating-system` | `/cockpit/build-board` (already wired) | Owner's ranked roadmap |
+
+## 7C. Prior scope — preserved, not replaced
+
+Everything from earlier sprints is intact; the gse layer sits UNDER it. Where each lives today:
+- **League Memory Graph** → `lib/fantasy/league-twin.ts` + `app/fantasy/league-twin`
+- **Manager Genome / GM Ledger** → `lib/fantasy/gm-ledger.ts` + `app/fantasy/gm-ledger`
+- **DFS Optimizer / Draft OS / Roster (lineup) / Trade / Waivers / Props / Scheme / Academy / Autopilot** → `lib/fantasy/*` + `app/fantasy/*`
+- **Voice / Jarvis Draft Co-Pilot** → `lib/jarvis/*`, `lib/voice/*` (formalized by `gse/jarvis-decision-copilot.ts`)
+- **GSN media / Narrative Intelligence / content** → `lib/media`, `lib/gsn`, `lib/visual-production`, `lib/news`, `packages/prediction-engine/narrative-signal.ts`
+- **Source Reliability Ledger / Trust Ledger / data reliability** → `lib/source-intelligence`, `lib/data-reliability`, `lib/trust-ledger`
+- **Observatory / Slate Twin / Bias Mirror / Signal Courtroom** → `lib/slate-twin`, `lib/courtroom`, `app/observatory`, `app/today`
+Do NOT duplicate these. New work either wires a `gse` primitive into them or adds a genuinely new surface.
+
 ## 8. Remaining gaps (need heavier infra than pure TS)
 
 - `matrix_fact` (player-similarity comps) and `gbm` (gradient boosting) — train in a **Python worker**,
