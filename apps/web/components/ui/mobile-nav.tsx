@@ -41,6 +41,7 @@ const SECTIONS: readonly Section[] = [
     links: [
       { label: "All fantasy & daily tools", href: "/fantasy" },
       { label: "Draft Assistant", href: "/fantasy/draft" },
+      { label: "Best Ball", href: "/fantasy/bestball" },
       { label: "Start-Sit Helper", href: "/fantasy/lineup" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers" },
       { label: "Trade Analyzer", href: "/fantasy/trade" },

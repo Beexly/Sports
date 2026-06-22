@@ -36,6 +36,7 @@ const COMMANDS: Command[] = [
   { label: "The GM Ledger", href: "/fantasy/gm-ledger", group: "Fantasy", keywords: "process grade decisions" },
   { label: "GM Academy", href: "/fantasy/academy", group: "Fantasy", keywords: "drills lessons injury market analytics" },
   { label: "Draft Assistant", href: "/fantasy/draft", group: "Fantasy", keywords: "tiers vor pick" },
+  { label: "Best Ball", href: "/fantasy/bestball", group: "Fantasy", keywords: "best ball draft ceiling stack spike bye" },
   { label: "Waiver & FAAB", href: "/fantasy/waivers", group: "Fantasy", keywords: "adds bids drop" },
   { label: "Start-Sit Helper", href: "/fantasy/lineup", group: "Fantasy", keywords: "start sit lineup optimizer" },
   { label: "DFS Optimizer", href: "/fantasy/dfs", group: "Fantasy", keywords: "draftkings salary cap leverage stack" },
