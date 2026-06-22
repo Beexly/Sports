@@ -394,10 +394,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {isFreeTier && picks.length > 0 && (
             <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
               <p className="text-sm font-semibold text-blue-200">
-                You&apos;re seeing {entitlements.dailyPickLimit ?? 2} free picks per day, with confidence.
+                Every pick is free - no daily limit, with the open verified record.
               </p>
               <p className="mt-1 text-xs text-blue-400/70">
-                Pro unlocks every signal and the full factor trail behind each one.
+                Pro adds the confidence score, the full factor trail, and line movement behind each one.
                 Edge Index is public on every pick.
               </p>
               <Link
@@ -531,8 +531,8 @@ function PaywallBanner({
 }) {
   const headline =
     hitDailyLimit && totalAvailableToday !== null && totalAvailableToday > 2
-      ? `${totalAvailableToday} signals published today — you're seeing 2`
-      : "You're on Free — two signals a day, with confidence";
+      ? `${totalAvailableToday} picks published today - create a free account to see them all`
+      : "You're on Free - every pick, free, with the open verified record";
   return (
     <div
       data-testid="paywall-banner"
@@ -541,7 +541,7 @@ function PaywallBanner({
       <div>
         <p className="text-sm font-semibold text-yellow-300">{headline}</p>
         <p className="mt-0.5 text-xs text-yellow-300/80">
-          Pro and Elite unlock every signal and the full factor trail behind each one.
+          Pro and Elite add confidence scores, the full factor trail, line movement, and the tools.
         </p>
       </div>
       <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
