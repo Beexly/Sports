@@ -436,11 +436,33 @@ model PickProofReceipt {
   modelVersion   String
   asOf           DateTime            // when the pick + odds were frozen (pre-kickoff)
   frozenAt       DateTime @default(now())
+  slateKey       String?             // the slate commitment that pre-registered this pick
 
-  pick           Pick     @relation(fields: [pickId], references: [id])
+  pick           Pick             @relation(fields: [pickId], references: [id])
+  slate          SlateCommitment? @relation(fields: [slateKey], references: [slateKey])
 
   @@index([contentHash])
+  @@index([slateKey])
   @@map("pick_proof_receipts")
+}
+
+// Commit-reveal slate commitment — a single immutable Merkle root over the WHOLE slate
+// of a sport's game-day, PUBLISHED before the first kickoff. Pre-registers the exact
+// population and its size (the fixed denominator), so picks can't be cherry-picked
+// after the fact: you cannot add a winner or drop a loser without changing this root.
+// See packages/prediction-engine/src/slate-commitment.ts (build + planSlateCommitment).
+model SlateCommitment {
+  id          String   @id @default(cuid())
+  slateKey    String   @unique // e.g. "NFL:2026-09-14" — one frozen commitment per sport + UTC day
+  root        String              // published Merkle root over the slate's receipts
+  count       Int                 // pre-registered population size (the fixed denominator)
+  committedAt DateTime            // published BEFORE the first kickoff
+  createdAt   DateTime @default(now())
+
+  receipts    PickProofReceipt[]
+
+  @@index([committedAt])
+  @@map("slate_commitments")
 }
 
 model GateDecision {

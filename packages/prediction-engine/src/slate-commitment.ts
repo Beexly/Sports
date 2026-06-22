@@ -118,3 +118,57 @@ export function verifyPickInSlate(
     foldsToRoot,
   };
 }
+
+// ───────────────────────── freeze-once planning ─────────────────────────
+
+/**
+ * Canonical slate key — one immutable commitment per (sport, UTC game-day). Picks for
+ * games on the same day are committed together so the population is pre-registered.
+ */
+export function dailySlateKey(sport: string, commenceTimeIso: string): string {
+  const day = commenceTimeIso.slice(0, 10); // YYYY-MM-DD (UTC, from an ISO string)
+  return `${sport.toUpperCase()}:${day}`;
+}
+
+export interface SlatePlanInput {
+  readonly slateKey: string;
+  readonly receipts: readonly PickProofReceipt[];
+  /** ISO kickoff of the EARLIEST game in this slate. */
+  readonly earliestKickoff: string;
+  /** ISO "now". */
+  readonly now: string;
+  /** True if a frozen commitment already exists for this slateKey. */
+  readonly alreadyCommitted: boolean;
+}
+
+export type SlatePlan =
+  | { readonly action: "COMMIT"; readonly commitment: SlateCommitment }
+  | { readonly action: "SKIP"; readonly reason: string };
+
+/**
+ * Decide whether to freeze a slate commitment — the honest, integrity-preserving
+ * gate around buildSlateCommitment. A commitment is published at most ONCE per slate,
+ * and ONLY while the whole slate is still pre-result (now < earliest kickoff). After
+ * the first game starts, committing would no longer be a true pre-registration, so we
+ * refuse. Pure — the caller persists a COMMIT result and re-roots nothing.
+ */
+export function planSlateCommitment(input: SlatePlanInput, hash: HashFn): SlatePlan {
+  if (input.alreadyCommitted) {
+    return { action: "SKIP", reason: "already frozen — a slate commitment is immutable" };
+  }
+  if (input.receipts.length === 0) {
+    return { action: "SKIP", reason: "no receipts to commit" };
+  }
+  const now = Date.parse(input.now);
+  const kickoff = Date.parse(input.earliestKickoff);
+  if (Number.isFinite(now) && Number.isFinite(kickoff) && now >= kickoff) {
+    return {
+      action: "SKIP",
+      reason: "first game already started — cannot publish a pre-result commitment now",
+    };
+  }
+  return {
+    action: "COMMIT",
+    commitment: buildSlateCommitment(input.slateKey, input.now, input.receipts, hash),
+  };
+}

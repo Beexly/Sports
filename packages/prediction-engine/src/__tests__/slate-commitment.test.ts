@@ -3,6 +3,8 @@ import {
   buildSlateCommitment,
   provePickInSlate,
   verifyPickInSlate,
+  planSlateCommitment,
+  dailySlateKey,
 } from "../slate-commitment.js";
 import { buildPickProofReceipt, type PickProofInput } from "../pick-proof-receipt.js";
 
@@ -92,5 +94,74 @@ describe("slate commitment (commit-reveal)", () => {
     const root = buildSlateCommitment("s", "t", receipts, testHash).root;
     const proof = provePickInSlate(receipts, 0, testHash);
     expect(verifyPickInSlate(receipts[0]!, proof, root, testHash).included).toBe(true);
+  });
+});
+
+describe("slate key + freeze-once planning", () => {
+  it("derives one key per sport + UTC game-day", () => {
+    expect(dailySlateKey("nfl", "2026-09-14T17:00:00.000Z")).toBe("NFL:2026-09-14");
+    expect(dailySlateKey("NBA", "2026-11-02T00:30:00.000Z")).toBe("NBA:2026-11-02");
+  });
+
+  it("commits a fresh, fully pre-result slate", () => {
+    const plan = planSlateCommitment(
+      {
+        slateKey: "NFL:2026-09-14",
+        receipts: slate(4),
+        earliestKickoff: "2026-09-14T17:00:00.000Z",
+        now: "2026-09-14T12:00:00.000Z",
+        alreadyCommitted: false,
+      },
+      testHash,
+    );
+    expect(plan.action).toBe("COMMIT");
+    if (plan.action === "COMMIT") {
+      expect(plan.commitment.count).toBe(4);
+      expect(plan.commitment.slateId).toBe("NFL:2026-09-14");
+    }
+  });
+
+  it("refuses to re-commit a frozen slate (immutability)", () => {
+    const plan = planSlateCommitment(
+      {
+        slateKey: "NFL:2026-09-14",
+        receipts: slate(4),
+        earliestKickoff: "2026-09-14T17:00:00.000Z",
+        now: "2026-09-14T12:00:00.000Z",
+        alreadyCommitted: true,
+      },
+      testHash,
+    );
+    expect(plan.action).toBe("SKIP");
+    if (plan.action === "SKIP") expect(plan.reason).toMatch(/immutable|frozen/i);
+  });
+
+  it("refuses to commit after the first game started (no fake pre-registration)", () => {
+    const plan = planSlateCommitment(
+      {
+        slateKey: "NFL:2026-09-14",
+        receipts: slate(4),
+        earliestKickoff: "2026-09-14T17:00:00.000Z",
+        now: "2026-09-14T17:30:00.000Z", // kickoff already passed
+        alreadyCommitted: false,
+      },
+      testHash,
+    );
+    expect(plan.action).toBe("SKIP");
+    if (plan.action === "SKIP") expect(plan.reason).toMatch(/already started/i);
+  });
+
+  it("skips an empty slate", () => {
+    const plan = planSlateCommitment(
+      {
+        slateKey: "NFL:2026-09-14",
+        receipts: [],
+        earliestKickoff: "2026-09-14T17:00:00.000Z",
+        now: "2026-09-14T12:00:00.000Z",
+        alreadyCommitted: false,
+      },
+      testHash,
+    );
+    expect(plan.action).toBe("SKIP");
   });
 });
