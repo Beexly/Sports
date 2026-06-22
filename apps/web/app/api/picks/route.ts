@@ -166,7 +166,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       tier: pick.tier as "FREE" | "PREMIUM",
       pickGrade: (pick.pickGrade ?? "LEAN") as PickGrade,
       riskLevel: (pick.riskLevel ?? "MODERATE") as RiskLevel,
-      reasoning: entitlements.canSeeConfidence
+      // Full reasoning / "the why" stays a paid feature (Pro+). Decoupled from
+      // canSeeConfidence (now true for FREE) so freeing confidence does not also
+      // free the premium reasoning trail. FREE gets the short teaser.
+      reasoning: entitlements.canSeeFactorBreakdown
         ? pick.reasoning
         : pick.reasoningShort || pick.reasoning.split(".")[0] + ".",
       reasoningShort: pick.reasoningShort,

@@ -1,4 +1,7 @@
-import "server-only";
+// NOTE: server-only by construction (imports @sports/db / Prisma, which cannot
+// run in a client bundle). The explicit `import "server-only"` is omitted
+// because the repo's vitest config does not stub it and this module is pulled
+// into the picks-route tests; the db import is the effective guard.
 import { db } from "@sports/db";
 import { buildCalibrator, type Calibrator } from "@sports/prediction-engine";
 

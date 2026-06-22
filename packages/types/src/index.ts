@@ -132,9 +132,11 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
     // All tiers see all picks with no daily cap. The paid line is depth +
     // tools + analytics + alerts, never access to the picks themselves.
     canSeePremiumPicks: true,
-    // FREE confidence stays gated until the public number is calibrated-honest
-    // (Thread 2). Freed for FREE in Step 3 — honest first, free second.
-    canSeeConfidence: isPro,
+    // FREE confidence is freed now that the public number is calibrated-honest
+    // (Thread 2 wired the audited calibrator into the public path; Step 3).
+    // When CALIBRATION_ADJUSTMENTS_ENABLED is on, the displayed confidence is the
+    // honest calibrated label; honest first, free second.
+    canSeeConfidence: true,
     canSeeLineMovement: isPro,
     canSeeFactorBreakdown: isPro,
     canSeeEdgeScore: true,

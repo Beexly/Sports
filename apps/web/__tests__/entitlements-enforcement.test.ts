@@ -100,7 +100,7 @@ describe("getUserEntitlements — production DB path", () => {
 
     expect(ent.tier).toBe("FREE");
     expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
-    expect(ent.canSeeConfidence).toBe(false);
+    expect(ent.canSeeConfidence).toBe(true); // confidence freed for FREE (calibrated-honest, Step 3)
     expect(ent.dailyPickLimit).toBeNull();
   });
 
@@ -139,7 +139,9 @@ describe("requireEntitlement", () => {
   it("throws EntitlementError when the check fails", async () => {
     mocks.subscriptionFindFirst.mockResolvedValue(null);
 
-    await expect(requireEntitlement("free_user", (e) => e.canSeeConfidence)).rejects.toThrow(
+    // FREE can now see confidence (it is calibrated-honest); gate on a flag FREE
+    // still lacks (factor breakdown is Pro+) to exercise the throw path.
+    await expect(requireEntitlement("free_user", (e) => e.canSeeFactorBreakdown)).rejects.toThrow(
       EntitlementError
     );
   });

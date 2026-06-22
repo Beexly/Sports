@@ -87,6 +87,6 @@ describe("/picks page — member data flow", () => {
   it("surfaces the daily-limit meta in the paywall banner", () => {
     expect(picksPageSrc).toMatch(/totalAvailableToday/);
     expect(picksPageSrc).toMatch(/hitDailyLimit/);
-    expect(picksPageSrc).toMatch(/signals published today/);
+    expect(picksPageSrc).toMatch(/picks published today/);
   });
 });
