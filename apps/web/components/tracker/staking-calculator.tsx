@@ -40,7 +40,7 @@ export function StakingCalculator() {
         <input type="range" min={0.1} max={1} step={0.05} value={frac} onChange={(e) => setFrac(Number(e.target.value))} className="mt-1 w-full accent-cyan-400" />
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4" aria-live="polite" aria-label="Stake recommendation">
         <Stat label="Edge" value={`${s.edgePp >= 0 ? "+" : ""}${s.edgePp}pp`} hex={s.edgePp >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta} />
         <Stat label="EV / unit" value={`${s.evPerUnit >= 0 ? "+" : ""}${s.evPerUnit}`} hex={s.hasEdge ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta} />
         <Stat label="Full Kelly" value={`${Math.round(s.fullKelly * 1000) / 10}%`} />

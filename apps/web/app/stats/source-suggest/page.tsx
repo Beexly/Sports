@@ -27,16 +27,17 @@ export default function Page() {
       <SectionHeader title="Submit a Source" />
       <form className="mb-6 space-y-4 border border-mineral bg-eclipse p-4 rounded">
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-ion-2 mb-2">Source URL</label>
+          <label htmlFor="src-url" className="block text-xs uppercase tracking-[0.2em] text-ion-2 mb-2">Source URL</label>
           <input
+            id="src-url"
             type="url"
             placeholder="https://..."
             className="w-full border border-mineral bg-carbon p-3 text-ion-white placeholder-ion-2 rounded"
           />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-ion-2 mb-2">Source Type</label>
-          <select className="w-full border border-mineral bg-carbon p-3 text-ion-white rounded">
+          <label htmlFor="src-type" className="block text-xs uppercase tracking-[0.2em] text-ion-2 mb-2">Source Type</label>
+          <select id="src-type" className="w-full border border-mineral bg-carbon p-3 text-ion-white rounded">
             <option>API</option>
             <option>Web Scrape</option>
             <option>Feed</option>
@@ -44,8 +45,9 @@ export default function Page() {
           </select>
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-ion-2 mb-2">Why This Source?</label>
+          <label htmlFor="src-reason" className="block text-xs uppercase tracking-[0.2em] text-ion-2 mb-2">Why This Source?</label>
           <textarea
+            id="src-reason"
             placeholder="Describe the data and why it matters..."
             className="w-full border border-mineral bg-carbon p-3 text-ion-white placeholder-ion-2 rounded"
             rows={4}
