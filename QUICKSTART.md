@@ -16,7 +16,7 @@ Create `apps\web\.env.local`:
 ```
 DATABASE_URL=stub
 DIRECT_URL=stub
-NEXTAUTH_SECRET=dev-launch-night-secret
+NEXTAUTH_SECRET=REDACTED_ROTATE_VIA_ENV
 NEXTAUTH_URL=http://localhost:3000
 DEV_FAKE_ADMIN=true
 NODE_ENV=development
@@ -52,7 +52,7 @@ Update `apps\web\.env.local`:
 DATABASE_URL=postgresql://sports:sports_dev_password@localhost:5432/sports_platform
 DIRECT_URL=postgresql://sports:sports_dev_password@localhost:5432/sports_platform
 FORCE_REAL_PRISMA=true
-NEXTAUTH_SECRET=dev-launch-night-secret
+NEXTAUTH_SECRET=REDACTED_ROTATE_VIA_ENV
 NEXTAUTH_URL=http://localhost:3000
 DEV_FAKE_ADMIN=true
 NODE_ENV=development

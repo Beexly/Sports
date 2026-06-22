@@ -43,6 +43,38 @@ describe("public CLV policy", () => {
     expect(p.publicMessage).toMatch(/60% of 40 graded picks/);
   });
 
+  it("bounds the public rate with a 95% Wilson interval", () => {
+    const p = evaluatePublicClvPolicy(base());
+    // 24/40 = 60% → Wilson 95% ≈ [44.6, 73.7]
+    expect(p.beatCloseCiLowPct).not.toBeNull();
+    expect(p.beatCloseCiHighPct).not.toBeNull();
+    expect(p.beatCloseCiLowPct!).toBeGreaterThan(40);
+    expect(p.beatCloseCiLowPct!).toBeLessThan(p.beatCloseRatePct!);
+    expect(p.beatCloseCiHighPct!).toBeGreaterThan(p.beatCloseRatePct!);
+    expect(p.publicMessage).toMatch(/95% CI/);
+  });
+
+  it("only claims a settled edge when the 95% lower bound clears 52.4% break-even", () => {
+    // 24/40 = 60% but the lower bound (~44.6%) does NOT clear break-even.
+    const small = evaluatePublicClvPolicy(base());
+    expect(small.clearsBreakEven).toBe(false);
+    expect(small.publicMessage).toMatch(/don't yet claim a settled edge/);
+
+    // A large, strong sample whose lower bound clears 52.4%.
+    const strong = evaluatePublicClvPolicy(
+      base({ gradedSampleSize: 600, beatCloseCount: 360, lostToCloseCount: 240, matchedCloseCount: 0 })
+    );
+    expect(strong.clearsBreakEven).toBe(true);
+    expect(strong.publicMessage).toMatch(/clears the 52\.4% break-even/);
+  });
+
+  it("hides the interval when gated", () => {
+    const p = evaluatePublicClvPolicy(base({ canExposePerformanceStats: false }));
+    expect(p.beatCloseCiLowPct).toBeNull();
+    expect(p.beatCloseCiHighPct).toBeNull();
+    expect(p.clearsBreakEven).toBe(false);
+  });
+
   it("never claims a guarantee, even when allowed", () => {
     const p = evaluatePublicClvPolicy(base());
     expect(p.publicMessage.toLowerCase()).not.toMatch(/guarantee(s|d)? (a |future )?win/);

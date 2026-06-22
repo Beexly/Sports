@@ -33,7 +33,7 @@ Create `apps\web\.env.local`:
 ```
 DATABASE_URL=stub
 DIRECT_URL=stub
-NEXTAUTH_SECRET=dev-launch-night-secret-please-replace
+NEXTAUTH_SECRET=REDACTED_ROTATE_VIA_ENV
 NEXTAUTH_URL=http://localhost:3000
 DEV_FAKE_ADMIN=true
 NODE_ENV=development

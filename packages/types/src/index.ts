@@ -461,6 +461,14 @@ export interface ScoredPick {
   confidence: number;      // 0–100
   edgeScore: number;       // 0–100
   consensusPct: number;    // 0.0–1.0
+  /**
+   * De-vigged MARKET fair probability for the chosen side (0–1). Market-derived
+   * (consensus minus vig) — NOT a model probability, and distinct from the reserved
+   * factorBreakdown.fairProbability slot. The honest anchor a proof receipt commits.
+   */
+  marketFairProb?: number | null;
+  /** Average American price of the chosen side at scoring time — the receipt's entry odds. */
+  entryPrice?: number | null;
   bookmakerCount: number;
   dataQualityScore: number; // 0–100 data trust score (always public)
 

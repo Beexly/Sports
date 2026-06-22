@@ -201,6 +201,24 @@ function ClvScoreboard({ policy }: { policy: PublicClvPolicy }) {
           <p className="mt-2 text-sm text-ion-2">
             of {policy.gradedSampleSize} graded canonical picks
           </p>
+          {policy.beatCloseCiLowPct != null && (
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <p className="font-mono text-xs tabular-nums text-ion-3">
+                95% confidence interval: {policy.beatCloseCiLowPct}%–{policy.beatCloseCiHighPct}%
+              </p>
+              <span
+                className={
+                  policy.clearsBreakEven
+                    ? "rounded-full border border-orbital-cyan/50 bg-orbital-cyan/10 px-3 py-1 text-xs font-semibold text-orbital-cyan"
+                    : "rounded-full border border-mineral bg-eclipse/60 px-3 py-1 text-xs font-semibold text-ion-2"
+                }
+              >
+                {policy.clearsBreakEven
+                  ? "Lower bound clears the 52.4% break-even line"
+                  : "Range still includes 52.4% break-even — no settled-edge claim yet"}
+              </span>
+            </div>
+          )}
         </div>
         <div className="grid grid-cols-3 divide-x divide-mineral/60 border-t border-mineral">
           <VerdictStat label="Beat" value={policy.beatCloseCount} accent="text-orbital-cyan" />

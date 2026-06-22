@@ -32,11 +32,18 @@ import {
   getHeadToHeadForm,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey } from "@sports/data-ingestion";
+import { createHash } from "node:crypto";
 import {
   scoreGames,
   buildPickSignalSnapshot,
+  buildPickProofReceipt,
 } from "@sports/prediction-engine";
 import type { ReadinessGates } from "@sports/prediction-engine";
+
+/** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
+function sha256Hex(input: string): string {
+  return createHash("sha256").update(input, "utf8").digest("hex");
+}
 import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
 
@@ -414,6 +421,63 @@ export async function processSport(
         console.warn(
           `${logPrefix} Snapshot capture failed for pick ${upsertedPick.id}: ` +
           `${snapErr instanceof Error ? snapErr.message : snapErr}`
+        );
+      }
+
+      // Freeze a tamper-evident proof receipt — the pre-result, pre-kickoff commitment
+      // to exactly what we claimed. Created ONCE (update:{}), never overwritten. Mints
+      // only with HONEST inputs: a real devigged market fair prob + the labeled
+      // confidence heuristic; modelProb stays null until a calibrated one exists (never
+      // confidence/100). Non-fatal — a receipt failure must never block a pick.
+      try {
+        const entryOdds = pick.entryPrice ?? (pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null);
+        if (
+          typeof pick.marketFairProb === "number" &&
+          pick.marketFairProb > 0 &&
+          pick.marketFairProb < 1 &&
+          typeof entryOdds === "number" &&
+          entryOdds !== 0
+        ) {
+          const receipt = buildPickProofReceipt(
+            {
+              pickId: upsertedPick.id,
+              gameId: pick.gameId,
+              selection: pick.selection,
+              pickType: pick.pickType,
+              line: pick.line,
+              entryOdds,
+              marketFairProb: pick.marketFairProb,
+              confidence: pick.confidence,
+              edgeScore: pick.edgeScore,
+              modelProb: null,
+              modelVersion: pick.modelVersion,
+              asOf: pick.dataFreshnessAt.toISOString(),
+            },
+            sha256Hex,
+          );
+          await db.pickProofReceipt.upsert({
+            where: { pickId: upsertedPick.id },
+            create: {
+              pickId: receipt.pickId,
+              payload: receipt.payload,
+              contentHash: receipt.contentHash,
+              marketFairProb: receipt.fields.marketFairProb,
+              confidence: receipt.fields.confidence,
+              edgeScore: receipt.fields.edgeScore,
+              modelProb: receipt.fields.modelProb ?? null,
+              entryOdds: receipt.fields.entryOdds,
+              line: receipt.fields.line,
+              modelVersion: receipt.fields.modelVersion,
+              asOf: new Date(receipt.fields.asOf),
+            },
+            update: {}, // immutable — a frozen receipt is never rewritten
+          });
+        }
+      } catch (receiptErr) {
+        // Non-fatal: proof-receipt failure must never kill a pick
+        console.warn(
+          `${logPrefix} Proof receipt mint failed for pick ${upsertedPick.id}: ` +
+          `${receiptErr instanceof Error ? receiptErr.message : receiptErr}`
         );
       }
     }
