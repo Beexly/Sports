@@ -132,12 +132,12 @@ export function SleeperConnect() {
           <input value={season} onChange={(e) => setSeason(e.target.value.replace(/\D/g, "").slice(0, 4))}
             className="mt-1 block w-24 rounded-md border bg-transparent px-3 py-2 text-sm text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
         </label>
-        <button type="button" onClick={connect} disabled={busy || !username.trim()} className="btn btn-primary disabled:opacity-50">
+        <button type="button" onClick={connect} disabled={busy || !username.trim()} aria-busy={busy} className="btn btn-primary disabled:opacity-50">
           {busy ? "Connecting…" : "Connect league"}
         </button>
       </div>
 
-      {error && <p className="rounded-lg border p-3 text-sm" style={{ borderColor: `${BRAND_COLORS.ionMagenta}55`, color: BRAND_COLORS.ionMagenta }}>{error}</p>}
+      {error && <p role="alert" className="rounded-lg border p-3 text-sm" style={{ borderColor: `${BRAND_COLORS.ionMagenta}55`, color: BRAND_COLORS.ionMagenta }}>{error}</p>}
 
       {/* league picker */}
       {leagues && leagues.length > 0 && !view && (

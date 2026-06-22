@@ -275,7 +275,7 @@ export function LeagueTwinGalaxy() {
         </div>
 
         {focused && (
-          <div className="surface-card p-4">
+          <div className="surface-card p-4" role="status" aria-live="polite">
             <div className="flex items-center gap-2">
               <span className="rounded px-1.5 py-0.5 text-[10px] font-bold" style={{ color: focused.hex, background: `${focused.hex}1c` }}>{focused.pos}</span>
               <span className="text-sm font-semibold text-white">{focused.player.name}</span>
@@ -304,13 +304,14 @@ export function LeagueTwinGalaxy() {
                   key={n.player.id}
                   type="button"
                   onClick={() => setFocusRef.current(n.player.id)}
+                  aria-pressed={active}
                   className="flex w-full items-center gap-2 rounded px-2 py-1 text-left text-xs transition-colors"
                   style={{ background: active ? "rgba(255,255,255,0.08)" : "transparent" }}
                 >
                   <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: n.hex }} />
                   <span className="flex-1 truncate text-white">{n.player.name}</span>
-                  {n.eclipsed && <span title="bye" style={{ color: BRAND_COLORS.ionMagenta }}>◑</span>}
-                  {n.shock !== "none" && <span title={n.shock} style={{ color: SHOCK_HEX[n.shock] }}>●</span>}
+                  {n.eclipsed && <span role="img" aria-label="on bye week" title="bye" style={{ color: BRAND_COLORS.ionMagenta }}>◑</span>}
+                  {n.shock !== "none" && <span role="img" aria-label={`shock: ${n.shock}`} title={n.shock} style={{ color: SHOCK_HEX[n.shock] }}>●</span>}
                   <span className="font-mono text-[10px] text-ink-500">{n.player.proj}</span>
                 </button>
               );
