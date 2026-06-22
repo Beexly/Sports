@@ -40,6 +40,16 @@ const BANNED_PHRASES = [
   { phrase: "profitable system", wordBoundary: false, claim: "banned.profitable-system" },
   { phrase: "no risk", wordBoundary: false, claim: "banned.no-risk" },
   { phrase: "100% chance", wordBoundary: false, claim: "banned.100-percent-chance" },
+  // BS-004 (brand-safety-rules-v2): the picks come from a deterministic engine,
+  // never an LLM. "AI" belongs only to the content/atmosphere layer. Banning the
+  // "AI picks" framing on any surface keeps that position honest. Precise to
+  // "pick(s)" so legitimate copy ("AI Ops", "AI-presenter disclosure",
+  // critiquing competitors' "AI prediction sites") is untouched.
+  { phrase: "AI picks", wordBoundary: true, claim: "banned.ai-picks" },
+  { phrase: "AI pick", wordBoundary: true, claim: "banned.ai-pick" },
+  { phrase: "AI-generated picks", wordBoundary: true, claim: "banned.ai-generated-picks" },
+  { phrase: "AI generated picks", wordBoundary: true, claim: "banned.ai-generated-picks-2" },
+  { phrase: "AI-generated pick", wordBoundary: true, claim: "banned.ai-generated-pick" },
 ];
 
 const SCAN_DIRS = [

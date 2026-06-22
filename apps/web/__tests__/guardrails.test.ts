@@ -56,6 +56,14 @@ describe("Phase 9 guardrails", () => {
     expect(src).toContain('"apps/web/lib/studio/templates/"');
   });
 
+  it("trust-gate enforces BS-004 — picks are a deterministic engine, never 'AI picks'", () => {
+    const src = readFileSync(resolve(REPO_ROOT, "scripts/guardrails/trust-gate.mjs"), "utf8");
+    // The brand position (deterministic engine, AI only in the content layer)
+    // must stay machine-enforced; this locks the rule so it can't silently vanish.
+    expect(src).toContain("banned.ai-picks");
+    expect(src).toContain("banned.ai-generated-picks");
+  });
+
   it("model-freeze exits 0 with the FROZEN baseline marker in place", () => {
     const r = runGuard("scripts/guardrails/model-freeze.mjs");
     if (r.status !== 0) {

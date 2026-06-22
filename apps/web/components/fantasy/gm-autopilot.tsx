@@ -58,6 +58,7 @@ export function GmAutopilot() {
               <button
                 key={l.level}
                 type="button"
+                aria-pressed={active}
                 onClick={() => setLevel(l.level)}
                 className="rounded-lg border p-2.5 text-left transition-colors"
                 style={{ borderColor: active ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.steelGray, background: active ? `${BRAND_COLORS.orbitalCyan}12` : "transparent" }}
@@ -69,7 +70,7 @@ export function GmAutopilot() {
           })}
         </div>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2" aria-live="polite">
           <div className="rounded-lg border p-3" style={{ borderColor: BRAND_COLORS.steelGray }}>
             <p className="text-[10px] uppercase tracking-wider" style={{ color: BRAND_COLORS.orbitalCyan }}>We do</p>
             <p className="mt-1 text-sm text-ink-200">{spec.weDo}</p>

@@ -102,6 +102,7 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
                   <button
                     key={f}
                     type="button"
+                    aria-pressed={active}
                     onClick={() => setFilter(f)}
                     className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none"
                     style={{ color: active ? BRAND_COLORS.obsidianBlack : "var(--ion-2,#c8d2dd)", background: active ? c : "rgba(255,255,255,0.05)", border: `1px solid ${active ? c : BRAND_COLORS.steelGray}` }}
@@ -172,7 +173,7 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
         {/* ── Brain: recommendation + scarcity + my roster ── */}
         <div className="space-y-4">
           {/* recommendation */}
-          <div className="surface-card relative overflow-hidden p-5">
+          <div className="surface-card relative overflow-hidden p-5" aria-live="polite">
             <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full blur-3xl" style={{ background: `${BRAND_COLORS.orbitalCyan}1f` }} />
             <p className="text-xs uppercase tracking-[0.16em]" style={{ color: BRAND_COLORS.orbitalCyan }}>On the clock — recommended · pick {currentPick}</p>
             {recs.length === 0 ? (
