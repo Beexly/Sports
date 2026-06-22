@@ -13,6 +13,7 @@ function item(overrides: Partial<ClvGradedItem> = {}): ClvGradedItem {
     clvValue: 0.5,
     verdict: "BEAT_CLOSE",
     confidence: 72,
+    modelVersion: "v5.0.0",
     ...overrides,
   };
 }
@@ -64,6 +65,17 @@ describe("segmented CLV", () => {
     const segs = segmentClv(items, "pickType");
     expect(segs[0]!.kind).toBe("POINTS");
     expect(segs[0]!.meanClv).toBe(0.5);
+  });
+
+  it("segments by model version — a swap can't hide inside a blended number", () => {
+    const items = [
+      item({ modelVersion: "v5.0.0", verdict: "BEAT_CLOSE" }),
+      item({ modelVersion: "v5.0.0", verdict: "BEAT_CLOSE" }),
+      item({ modelVersion: "v6.0.0", verdict: "LOST_TO_CLOSE" }),
+    ];
+    const segs = segmentClv(items, "modelVersion");
+    expect(segs.find((s) => s.key === "v5.0.0")!.beatCloseRatePct).toBe(100);
+    expect(segs.find((s) => s.key === "v6.0.0")!.beatCloseRatePct).toBe(0);
   });
 
   it("segments by confidence band", () => {

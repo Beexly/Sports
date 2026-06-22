@@ -49,6 +49,7 @@ export default async function AdminClvPage() {
       pickType: true,
       selection: true,
       confidence: true,
+      modelVersion: true,
       clvKind: true,
       clvValue: true,
       clvVerdict: true,
@@ -73,12 +74,13 @@ export default async function AdminClvPage() {
   const mlSummary = summarizeClv(mlItems);
   const pointsSummary = summarizeClv(pointsItems);
 
-  // Coverage is the integrity backbone of the north-star: the beat-close rate is
-  // only trustworthy if (nearly) every settled pick was graded against a close.
-  const coverage = await loadClvCoverage(db);
-  // Settlement health is the LEADING signal: picks that started but never settled
-  // can never get a CLV record at all, and silently corrupt the public record.
-  const settlement = await loadSettlementHealth(db);
+  // Coverage = integrity backbone (graded ÷ settled, the lagging signal); settlement
+  // health = the leading signal (picks that started but never settle). Fetched in
+  // parallel — neither depends on the graded rows above.
+  const [coverage, settlement] = await Promise.all([
+    loadClvCoverage(db),
+    loadSettlementHealth(db),
+  ]);
 
   // Phase 2: WHERE does the edge live? Segment the beat-close rate by sport, market,
   // and confidence band. Only items with a known kind/verdict feed the segmenting.
@@ -91,10 +93,12 @@ export default async function AdminClvPage() {
       clvValue: p.clvValue as number,
       verdict: p.clvVerdict as ClvVerdict,
       confidence: p.confidence,
+      modelVersion: p.modelVersion,
     }));
   const segmentsBySport = segmentClv(segmentItems, "sport");
   const segmentsByMarket = segmentClv(segmentItems, "pickType");
   const segmentsByConfidence = segmentClv(segmentItems, "confidenceBand");
+  const segmentsByVersion = segmentClv(segmentItems, "modelVersion");
 
   const verdictCounts = VERDICTS.map((v) => ({
     verdict: v,
@@ -154,10 +158,11 @@ export default async function AdminClvPage() {
           Beat-close rate is unit-free and comparable across markets. Mean CLV only shows
           within a single unit (points vs. probability) — mixed segments omit it by design.
         </p>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <SegmentTable title="By sport" dimension="sport" segments={segmentsBySport} />
           <SegmentTable title="By market" dimension="pickType" segments={segmentsByMarket} />
           <SegmentTable title="By confidence" dimension="confidenceBand" segments={segmentsByConfidence} />
+          <SegmentTable title="By model version" dimension="modelVersion" segments={segmentsByVersion} />
         </div>
       </section>
 

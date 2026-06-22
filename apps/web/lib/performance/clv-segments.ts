@@ -15,7 +15,7 @@
 
 export type ClvKind = "POINTS" | "PROBABILITY";
 export type ClvVerdict = "BEAT_CLOSE" | "MATCHED_CLOSE" | "LOST_TO_CLOSE";
-export type SegmentDimension = "sport" | "pickType" | "confidenceBand";
+export type SegmentDimension = "sport" | "pickType" | "confidenceBand" | "modelVersion";
 
 export interface ClvGradedItem {
   readonly sport: string;
@@ -24,6 +24,7 @@ export interface ClvGradedItem {
   readonly clvValue: number;
   readonly verdict: ClvVerdict;
   readonly confidence: number; // 0–100
+  readonly modelVersion: string;
 }
 
 export interface ClvSegment {
@@ -60,6 +61,8 @@ function keyOf(item: ClvGradedItem, dimension: SegmentDimension): string {
       return item.pickType || "unknown";
     case "confidenceBand":
       return confidenceBand(item.confidence);
+    case "modelVersion":
+      return item.modelVersion || "unknown";
   }
 }
 
