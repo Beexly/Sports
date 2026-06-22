@@ -50,6 +50,18 @@ const ENTRIES: readonly GlossaryEntry[] = [
     plain: "Where our model and the betting market disagree enough to matter — the gap we think the market has mispriced.",
   },
   {
+    id: "gseScore",
+    label: "GSE Score",
+    plain: "One 0–100 score for a pick: our confidence read, adjusted only by how provably we can stand behind it.",
+    more: "It is a ranking signal shown next to its inputs (confidence and the Edge Index) — not a win probability and not a promise.",
+  },
+  {
+    id: "gseMethod",
+    label: "The GSE PRICE Method",
+    plain: "Our five-pillar method — Proof, Read, Integrity, Context, Edge — that reads the board, scores the math, and gates the slate.",
+    more: "Every pillar maps to a real part of the engine; the framework is public while the exact weights stay protected.",
+  },
+  {
     id: "marketMap",
     label: "Galaxy Twin (market map)",
     plain: "A live map of the day's games showing where the betting market is moving, how much the books agree, and where the money is sharp vs casual.",

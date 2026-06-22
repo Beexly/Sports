@@ -9,12 +9,22 @@ import { InteractiveGalaxyLazy } from "@/components/hero/interactive-galaxy-lazy
 import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { BRAND_COLORS } from "@/lib/brand";
+import { PRICE_PILLARS, LIVE_VS_ROADMAP, GSE_SCORE_FORMULA } from "@sports/prediction-engine";
 
 export const metadata: Metadata = {
-  title: "Methodology - Deterministic Scoring, Open Framework",
+  title: "Methodology - The GSE PRICE Method",
   description:
-    "How Galaxy Sports Edge reads the board, scores the math, and gates the slate without publishing proprietary weights or constants.",
+    "The GSE PRICE Method — Proof, Read, Integrity, Context, Edge. How Galaxy Sports Edge reads the board, scores the math into one GSE Score, and gates the slate. Open framework; protected weights.",
   alternates: { canonical: "/methodology" },
+};
+
+// Plain-English label for each capability's wiring status (sourced from the engine spec).
+const ROADMAP_STATUS_LABEL: Record<string, { label: string; tone: string }> = {
+  PRICED: { label: "Live · in the score", tone: BRAND_COLORS.orbitalCyan },
+  SURFACED_UNPRICED: { label: "Surfaced · not yet priced", tone: BRAND_COLORS.softUltraviolet },
+  RND_BLOCKED: { label: "Research · blocked on data", tone: BRAND_COLORS.ionMagenta },
+  BUILT_NOT_WIRED: { label: "Built · not yet activated", tone: BRAND_COLORS.softUltraviolet },
+  PLANNED: { label: "Planned", tone: BRAND_COLORS.ionMagenta },
 };
 
 const FACTORS = [
@@ -124,6 +134,122 @@ export default function MethodologyPage(): JSX.Element {
               </article>
             ))}
           </Stagger>
+        </section>
+
+        {/* The GSE PRICE Method — five named pillars */}
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                The GSE PRICE Method
+              </p>
+              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
+                Five pillars, one name: <span style={{ color: BRAND_COLORS.orbitalCyan }}>PRICE</span>.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
+                Read the board, score the math, gate the slate — built on five pillars whose
+                initials spell PRICE. Each one is a real part of the engine, not a slogan.
+              </p>
+            </Reveal>
+            <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5" step={70}>
+              {PRICE_PILLARS.map((pillar, index) => (
+                <article key={pillar.letter} className="surface-card flex flex-col p-5">
+                  <span
+                    aria-hidden="true"
+                    className="font-display text-3xl tabular-nums"
+                    style={{ color: ACCENTS[index % ACCENTS.length] }}
+                  >
+                    {pillar.letter}
+                  </span>
+                  <h3 className="mt-2 text-lg font-semibold text-white">{pillar.name}</h3>
+                  <p className="mt-2 flex-1 text-sm leading-6 text-ink-300">{pillar.tagline}</p>
+                </article>
+              ))}
+            </Stagger>
+          </div>
+        </section>
+
+        {/* The GSE Score — what it is, and what it is not */}
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                The GSE Score
+              </p>
+              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
+                One score, derived honestly.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
+                The GSE Score is a single 0–100 number: our confidence read, adjusted only by how
+                provably we can stand behind the pick. A fully proven, pre-committed pick keeps its
+                full score; an unproven or stale one is discounted to no less than{" "}
+                {Math.round(GSE_SCORE_FORMULA.multiplierFloor * 100)}% of it.
+              </p>
+            </Reveal>
+            <Stagger className="mt-8 grid gap-5 md:grid-cols-2" step={100}>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">What it is</h3>
+                <ul className="mt-3 space-y-2 text-sm leading-6 text-ink-300">
+                  <li>· A ranking signal that blends the read, the edge, the context, and our proof state.</li>
+                  <li>· Shown next to its inputs — confidence and the public Edge Index — never alone.</li>
+                  <li>· Deterministic and versioned, so the same facts always produce the same score.</li>
+                </ul>
+              </article>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">What it is not</h3>
+                <ul className="mt-3 space-y-2 text-sm leading-6 text-ink-300">
+                  <li>· Not a win probability — we only show calibrated probabilities once settled results prove them.</li>
+                  <li>· Not a promise. No outcome is ever promised in an uncertain market.</li>
+                  <li>· Not a bet instruction. It is information; the decision is yours.</li>
+                </ul>
+              </article>
+            </Stagger>
+          </div>
+        </section>
+
+        {/* Live now vs. roadmap — sourced from the engine spec */}
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                Live now vs. roadmap
+              </p>
+              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
+                What scores today — and what doesn&apos;t yet.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
+                We label every capability. Some signals move the score today; others are built and
+                visible but deliberately not yet priced in until the proof clears.
+              </p>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="surface-card mt-8 overflow-hidden p-0">
+                {LIVE_VS_ROADMAP.map((row) => {
+                  const meta =
+                    ROADMAP_STATUS_LABEL[row.status] ??
+                    { label: "Planned", tone: BRAND_COLORS.ionMagenta };
+                  return (
+                    <div
+                      key={row.name}
+                      className="grid gap-2 px-5 py-4 sm:grid-cols-[1fr_auto]"
+                      style={{ borderBottom: `1px solid ${BRAND_COLORS.steelGray}` }}
+                    >
+                      <div>
+                        <p className="text-sm font-semibold text-white">{row.name}</p>
+                        <p className="mt-1 text-sm leading-6 text-ink-300">{row.detail}</p>
+                      </div>
+                      <span
+                        className="self-start whitespace-nowrap font-mono text-xs font-semibold sm:text-right"
+                        style={{ color: meta.tone }}
+                      >
+                        {meta.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </Reveal>
+          </div>
         </section>
 
         {/* Factor inventory */}

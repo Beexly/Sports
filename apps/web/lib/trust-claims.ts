@@ -161,6 +161,30 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
     lastReviewedAt: LAST_REVIEW,
     reviewNote: "Pick.factorBreakdown gated server-side by entitlements.canSeeFactorBreakdown.",
   },
+  {
+    id: "methodology.price-method",
+    copy:
+      "The GSE PRICE Method has five pillars — Proof, Read, Integrity, Context, Edge — that read the board, score the math, and gate the slate. Each pillar maps to a real part of the engine.",
+    category: "METHODOLOGY",
+    status: "APPROVED",
+    evidence: "ENGINE_BEHAVIOR",
+    visibility: "PUBLIC",
+    lastReviewedAt: LAST_REVIEW,
+    reviewNote:
+      "Backed by gse-method-spec.ts (PRICE_PILLARS) and the drift-guard test. Framework is published; exact weights stay proprietary.",
+  },
+  {
+    id: "methodology.gse-score",
+    copy:
+      "The GSE Score is a single 0-100 ranking signal: our confidence read, adjusted only by how provably we can stand behind the pick. It is shown next to its inputs and is not a win probability.",
+    category: "METHODOLOGY",
+    status: "APPROVED",
+    evidence: "ENGINE_BEHAVIOR",
+    visibility: "PUBLIC",
+    lastReviewedAt: LAST_REVIEW,
+    reviewNote:
+      "Backed by gse-score.ts (computeGseScore / buildGseScoreCard). Provenance haircut only; never presented as a probability. Calibration gates a real probability separately.",
+  },
 
   // ── Performance / track-record (all GATED) ────────────────────────
   {

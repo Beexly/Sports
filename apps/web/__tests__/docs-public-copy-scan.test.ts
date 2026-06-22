@@ -42,6 +42,8 @@ const DOCS = [
   "docs/adr/001-public-performance-policy.md",
   "docs/adr/002-jarvis-synthesizer.md",
   "CONTRIBUTING.md",
+  "docs/compendium/GSE_SYSTEM_COMPENDIUM.md",
+  "docs/compendium/GSE_METHOD_ONE_PAGER.md",
 ];
 
 describe("Docs — public-copy banned-phrase scan", () => {

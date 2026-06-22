@@ -249,6 +249,44 @@ export {
   impliedFromDecimalOdds,
   type ShinResult,
 } from "./shin-devig.js";
+// The GSE PRICE Method — typed single source of truth for the methodology (the doc,
+// the public /methodology page, and the drift-guard test all read from this).
+export {
+  PRICE_PILLARS,
+  SCORE_COMPONENTS,
+  GSE_BASELINE,
+  GSE_SCORE_FORMULA,
+  GRADE_LADDER,
+  LIVE_VS_ROADMAP,
+  GSE_METHOD,
+} from "./gse-method-spec.js";
+export type {
+  PillarLetter,
+  WireStatus,
+  PricePillar,
+  ScoreComponentSpec,
+  GradeThresholdSpec,
+  CapabilityStatus,
+  CapabilityRow,
+  MethodSpec,
+} from "./gse-method-spec.js";
+// The flagship GSE Score — confidence with a provenance haircut (a presentation index,
+// NOT a win probability). Pure packaging over existing outputs; engine untouched.
+export {
+  GSE_SCORE_VERSION,
+  provenanceCredibility,
+  provenanceMultiplier,
+  computeGseScore,
+  gsePublishTier,
+  buildGseScoreCard,
+} from "./gse-score.js";
+export type {
+  GseProvenanceInput,
+  GsePublishTier,
+  GseScoreProof,
+  GseScoreCard,
+  BuildGseScoreCardInput,
+} from "./gse-score.js";
 // Build-queue #4 — ML independent estimator scaffold (kyleskom concept).
 // Gradient-boosted stumps inference + honesty gate. Fed into independentFairValues
 // ONLY after calibration proves it (same law as Poisson / Elo estimators).
