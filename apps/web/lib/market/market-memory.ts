@@ -13,7 +13,7 @@
 
 export interface MarketMemoryInput {
   readonly openLine: number;
-  readonly lockLine: number; // line at our pick lock
+  readonly lockLine: number; // the line we locked at when the pick was made
   readonly currentLine: number;
   readonly closeLine?: number | null; // null until close
   /** True when a LOWER line is better for the side we took. */

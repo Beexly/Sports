@@ -154,6 +154,18 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     nextAction: "wire free adapters into persistence/settlement to protect paid credits.",
   },
 
+  {
+    id: "src-reliability-score",
+    name: "Source Reliability Score (continuous, rights-gated source trust)",
+    category: "data-sources",
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: null,
+    evidenceRefs: ["apps/web/lib/sources/source-reliability.ts", "apps/web/__tests__/source-reliability.test.ts"],
+    lastVerifiedAt: V,
+    failureMode: "weighting an unreliable / non-approved source into a public claim.",
+    nextAction: "wire from source health metrics + the rights registry; gate public-usable sources.",
+  },
+
   // ── model ──
   {
     id: "model-clv-grading",
@@ -220,6 +232,40 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     lastVerifiedAt: null,
     failureMode: "no calibrated model probability → receipt modelProb stays null.",
     nextAction: "cherry-pick the promoter; gate promotion on no-calibration-regression + sample floor.",
+  },
+
+  {
+    id: "model-no-bet-adversary",
+    name: "No-Bet Adversary Engine (case against every pick)",
+    category: "model",
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: null,
+    evidenceRefs: ["apps/web/lib/picks/no-bet-adversary.ts", "apps/web/__tests__/no-bet-adversary.test.ts"],
+    lastVerifiedAt: V,
+    failureMode: "publishing a pick the adversary case should have downgraded to no-bet.",
+    nextAction: "wire into pick publication so HIGH opposition forces no-bet, MEDIUM forces watchlist.",
+  },
+  {
+    id: "model-signal-lineage",
+    name: "Signal Lineage Engine (factor provenance audit)",
+    category: "model",
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: null,
+    evidenceRefs: ["apps/web/lib/picks/signal-lineage.ts", "apps/web/__tests__/signal-lineage.test.ts"],
+    lastVerifiedAt: V,
+    failureMode: "an active factor below Tier 2 / rights-blocked silently backs a claim.",
+    nextAction: "build lineage from PickSignalSnapshot + source rights; surface in the Proof Graph.",
+  },
+  {
+    id: "model-market-memory",
+    name: "Market Memory Engine (careful line-movement memory)",
+    category: "model",
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: null,
+    evidenceRefs: ["apps/web/lib/market/market-memory.ts", "apps/web/__tests__/market-memory.test.ts"],
+    lastVerifiedAt: V,
+    failureMode: "attributing movement to 'sharp money' without a sourced split.",
+    nextAction: "wire from the Odds time-series; never use sharp language unsourced.",
   },
 
   // ── claims ──
