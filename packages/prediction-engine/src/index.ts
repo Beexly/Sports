@@ -257,3 +257,28 @@ export type {
   DecisionStump,
   TrainingSample,
 } from "./ml-estimator.js";
+
+// OOS split harness — out-of-sample testing and health assessment
+export {
+  computeOosSplit,
+  segmentOosSplit,
+} from "./oos-split.js";
+export type {
+  SettledPickRecord,
+  OosSplitConfig,
+  OosSplitResult,
+  OosSegment,
+  SegmentedOosSplit,
+} from "./oos-split.js";
+
+// Champion/challenger model promoter — safe version progression
+export {
+  promoteModel,
+} from "./model-promoter.js";
+export type {
+  ModelMetadata,
+  ModelPerformance,
+  PromotionDecision,
+  PromotionReason,
+  PromotionConfig,
+} from "./model-promoter.js";
