@@ -135,3 +135,54 @@ honest, and trust-safe copy — but only after passing the claim-safety gate and
 1. Decide the V1 cut (agents/entities/scores) — red-team has a recommendation.
 2. Reconcile the Free-tier drift in pricing/entitlements (pre-existing).
 Everything else is wired for the next agent to continue without you.
+
+---
+
+# SPRINT 2 ADDENDUM — Deep Research → Executable Leverage
+
+Second overnight pass: go broad across competitors, open-source/data we can adopt, analytics methods
+(in and outside sports), monetization, and autonomy/self-learning — and convert it into **scored,
+tested contracts**, not just prose.
+
+## What shipped (Sprint 2)
+- **5 web-grounded research docs** (competitor mechanics reported by a research-agent cohort across
+  DFS/betting/fantasy/data/pick-sites): `GSE_2026_COMPETITOR_DEEP_DIVE.md` (40+ competitors),
+  `GSE_2026_OPEN_SOURCE_AND_DATA_LEDGER.md` (~45 resources, licenses web-verified),
+  `GSE_2026_ANALYTICS_AND_PROJECTION_METHODS.md` (~33 methods),
+  `GSE_2026_AUTONOMY_AND_SELF_LEARNING.md`, `GSE_2026_MONETIZATION_DEEP_DIVE.md`, plus the synthesis
+  `GSE_2026_HIGHEST_VALUE_IMPROVEMENTS.md`.
+- **4 new typed contract modules** (`apps/web/lib/gse/`): `competitor-intelligence.ts` (30+
+  competitors + ranked feature gaps), `open-source-ledger.ts` (rights-aware adoption registry),
+  `analytics-methods.ts` (method registry + 4 net-new primitives: log/linear opinion pools,
+  extremizing, split-conformal intervals, isotonic/PAVA calibration), `self-learning.ts` (autonomy
+  ladder, PSI drift, champion/challenger promotion gate, active-learning priority).
+- **5 new scoring systems** registered (now 25 total): drift risk, model-promotion readiness,
+  active-learning priority, external-adoption value, competitor feature-gap.
+- **3 new cockpit pages**: Build Board (ranked next moves), Competitor Intel, Autonomy — all
+  re-rank live from the contracts.
+- **21 new tests** (72 GSE tests total).
+
+## Verification (Sprint 2)
+`tsc --noEmit` exit 0 (whole app); GSE tests 72 passed; cockpit-gating 100 passed (3 new pages in
+nav coverage); brand-safety 2,132 passed; ESLint clean on all new files.
+
+## The headline findings
+1. **White space:** no competitor ships an auditable, calibrated per-pick track record (DRatings is
+   the lone, weak-UX exception). GSE already builds toward it — **make it the headline.**
+2. **Highest-leverage move:** close the devig → bet-log → CLV → calibration loop (Outlier has EV but
+   no tracking; Betstamp has CLV but no calibration — nobody owns the whole loop).
+3. **Free leverage now:** nflverse, scikit-learn (calibration/GBMs), hoopR, ONNX Runtime, CFBD,
+   MAPIE/River. **Landmines hard-gated:** StatsBomb (research-only), Understat (no commercial
+   license), ESPN endpoints (unofficial — keep a licensed fallback).
+4. **Autonomy:** projections/model-promotion/data-refresh can safely move up the ladder with shadow
+   eval + calibration + drift gates; external actions (publish/price/bet) stay owner-gated.
+
+## Integrity notes (Sprint 2)
+- All competitor pricing is research-time and labeled **(verify)**; the code stores monetization
+  *model*, not prices. Licenses in the ledger are conservative seeds — the doc carries the verified
+  detail and landmines.
+- One research sub-agent tripped a security flag for an indefinite busy-wait command
+  (`agents-done-marker-never`); that blocking pattern was **not** run or replicated — only the benign,
+  sourced research content was used.
+- The competitor-deep-dive doc was authored by hand from the research-agent outputs (its delegating
+  agent did not synthesize the file).

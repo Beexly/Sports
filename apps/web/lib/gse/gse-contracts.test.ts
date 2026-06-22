@@ -102,8 +102,8 @@ describe("scoring core", () => {
 
 // ─── 20 scoring systems registry ─────────────────────────────────────────────
 describe("GSE_SCORING_SYSTEMS registry", () => {
-  it("declares exactly 20 scoring systems", () => {
-    expect(GSE_SCORING_SYSTEMS.length).toBe(20);
+  it("declares exactly 25 scoring systems", () => {
+    expect(GSE_SCORING_SYSTEMS.length).toBe(25);
   });
 
   it("every system has unique id + all required fields populated", () => {

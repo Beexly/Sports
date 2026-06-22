@@ -25,3 +25,10 @@ export * from "./agent-orchestration";
 export * from "./revenue-intelligence-os";
 export * from "./product-operating-system";
 export * from "./thinking-page-contracts";
+
+// Sprint 2 — research → leverage: competitor intel, open-source adoption,
+// analytics methods, and the self-learning / autonomy loop.
+export * from "./competitor-intelligence";
+export * from "./open-source-ledger";
+export * from "./analytics-methods";
+export * from "./self-learning";
