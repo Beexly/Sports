@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { sha256Hex } from "@/lib/performance/proof-hash";
+import { sha256Hex, verifyReceiptHash } from "@/lib/performance/proof-hash";
 import {
   buildPickProofReceipt,
   verifyPickProofReceipt,
@@ -47,6 +47,16 @@ describe("production sha256 proof hash", () => {
     expect(verifyPickProofReceipt(r, sha256Hex)).toBe(true);
     const tampered = { ...r, fields: { ...r.fields, confidence: 99 } };
     expect(verifyPickProofReceipt(tampered, sha256Hex)).toBe(false);
+  });
+
+  it("re-verifies a stored receipt from its pickId + payload + hash", () => {
+    const r = buildPickProofReceipt(input(7), sha256Hex);
+    // The DB stores payload + contentHash; verification recomputes the leaf.
+    expect(verifyReceiptHash(r.pickId, r.payload, r.contentHash)).toBe(true);
+    // Any edit to the stored payload or hash fails the check.
+    expect(verifyReceiptHash(r.pickId, r.payload + " ", r.contentHash)).toBe(false);
+    expect(verifyReceiptHash(r.pickId, r.payload, "deadbeef")).toBe(false);
+    expect(verifyReceiptHash("other_pick", r.payload, r.contentHash)).toBe(false);
   });
 
   it("drives a real commit-reveal slate end to end", () => {

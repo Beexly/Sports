@@ -12,6 +12,7 @@ import {
   type SegmentDimension,
 } from "@/lib/performance/clv-segments";
 import { wilsonInterval, formatWilsonPct, clearsThreshold } from "@/lib/performance/wilson-interval";
+import { verifyReceiptHash } from "@/lib/performance/proof-hash";
 
 /**
  * Private CLV dashboard (admin-only) — the internal read on whether the model is
@@ -100,6 +101,26 @@ export default async function AdminClvPage() {
   const segmentsByConfidence = segmentClv(segmentItems, "confidenceBand");
   const segmentsByVersion = segmentClv(segmentItems, "modelVersion");
 
+  // Pre-result proof receipts — the frozen, hash-verifiable commitments. Guarded: the
+  // table only exists once the migration is deployed, so a missing table → empty state.
+  const proofReceipts = await db.pickProofReceipt
+    .findMany({
+      orderBy: { frozenAt: "desc" },
+      take: 25,
+      select: {
+        pickId: true,
+        payload: true,
+        contentHash: true,
+        confidence: true,
+        marketFairProb: true,
+        entryOdds: true,
+        modelVersion: true,
+        asOf: true,
+        pick: { select: { selection: true, pickType: true } },
+      },
+    })
+    .catch(() => [] as never[]);
+
   const verdictCounts = VERDICTS.map((v) => ({
     verdict: v,
     count: graded.filter((p) => p.clvVerdict === v).length,
@@ -164,6 +185,52 @@ export default async function AdminClvPage() {
           <SegmentTable title="By confidence" dimension="confidenceBand" segments={segmentsByConfidence} />
           <SegmentTable title="By model version" dimension="modelVersion" segments={segmentsByVersion} />
         </div>
+      </section>
+
+      <section data-testid="proof-receipts" className="rounded-2xl border border-titanium bg-carbon/40 p-4 text-xs">
+        <h2 className="mb-1 text-xs font-semibold uppercase tracking-widest text-ion-3">
+          Pre-result proof receipts ({proofReceipts.length})
+        </h2>
+        <p className="mb-3 text-[11px] text-ion-3">
+          Frozen at pick creation, before kickoff. Each row re-verifies its content
+          hash live — VERIFIED means the committed claim was not altered since.
+        </p>
+        {proofReceipts.length === 0 ? (
+          <p data-testid="proof-receipts-empty" className="text-ion-2">
+            No receipts yet. They accrue once the migration is deployed and picks are
+            generated (the mint is wired into pick creation).
+          </p>
+        ) : (
+          <table className="w-full text-left text-ion-1">
+            <thead className="text-ion-3">
+              <tr>
+                <th className="py-1 pr-2 font-normal">Selection</th>
+                <th className="py-1 pr-2 font-normal">Fair</th>
+                <th className="py-1 pr-2 font-normal">Conf</th>
+                <th className="py-1 pr-2 font-normal">Odds</th>
+                <th className="py-1 pr-2 font-normal">Ver</th>
+                <th className="py-1 pr-2 font-normal">Integrity</th>
+              </tr>
+            </thead>
+            <tbody>
+              {proofReceipts.map((r) => {
+                const intact = verifyReceiptHash(r.pickId, r.payload, r.contentHash);
+                return (
+                  <tr key={r.pickId} className="border-t border-titanium/60">
+                    <td className="py-1 pr-2">{r.pick?.selection ?? r.pickId}</td>
+                    <td className="py-1 pr-2 text-ion-2">{Math.round(r.marketFairProb * 100)}%</td>
+                    <td className="py-1 pr-2 text-ion-3">{r.confidence}</td>
+                    <td className="py-1 pr-2 text-ion-3">{r.entryOdds > 0 ? `+${r.entryOdds}` : r.entryOdds}</td>
+                    <td className="py-1 pr-2 text-ion-3">{r.modelVersion}</td>
+                    <td className={`py-1 pr-2 ${intact ? "text-green-400" : "text-red-400"}`}>
+                      {intact ? "VERIFIED" : "TAMPERED"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </section>
 
       <section className="rounded-2xl border border-titanium bg-carbon/40 p-4 text-xs">
