@@ -458,6 +458,17 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     nextAction: "owner creates Stripe live prices + webhook secret; verify a real checkout.",
   },
   {
+    id: "revenue-b2b-governance",
+    name: "B2B / API governance (key, domain, quota, claim-safe payload, revocation)",
+    category: "revenue",
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: "B2B is a future lane — needs signed pilots before any key is issued",
+    evidenceRefs: ["apps/web/lib/b2b/api-governance.ts", "apps/web/__tests__/api-governance.test.ts"],
+    lastVerifiedAt: V,
+    failureMode: "an embedded widget overclaims on a partner site, or a revoked key still works.",
+    nextAction: "wire as middleware when a B2B pilot is signed; deny non-claim-safe payloads.",
+  },
+  {
     id: "revenue-proof-cards",
     name: "Dynamic Proof Cards (proof → share → signup growth loop)",
     category: "revenue",
