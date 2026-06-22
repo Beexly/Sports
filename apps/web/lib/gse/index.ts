@@ -37,3 +37,7 @@ export * from "./trust-loop";
 export * from "./forecasting";
 export * from "./scoreline-model";
 export * from "./dfs-portfolio";
+export * from "./shrinkage";
+export * from "./injury-model";
+export * from "./survivor-optimizer";
+export * from "./query-engine";

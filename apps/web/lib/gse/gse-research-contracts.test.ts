@@ -56,10 +56,11 @@ describe("analytics methods", () => {
   it("registers methods across HAVE / PARTIAL / GAP maturity", () => {
     expect(ANALYTICS_METHODS.length).toBeGreaterThanOrEqual(25);
     expect(getMethod("elo")?.maturity).toBe("have");
-    // Real build targets still remain, and the Sprint-2/3/4 primitives that were
-    // shipped now read as "partial" (built, not yet in the live engine).
-    expect(methodsByMaturity("gap").length).toBeGreaterThanOrEqual(3);
-    expect(methodsByMaturity("partial").length).toBeGreaterThanOrEqual(8);
+    // Most methods are now built as primitives → "partial" (not yet in the live
+    // engine); only the heavy-infra methods (matrix factorization, gradient
+    // boosting via a Python/ONNX worker) remain genuine "gap"s.
+    expect(methodsByMaturity("gap").length).toBeGreaterThanOrEqual(1);
+    expect(methodsByMaturity("partial").length).toBeGreaterThanOrEqual(12);
   });
 
   it("opinion pools agree on identical inputs and handle empty", () => {
