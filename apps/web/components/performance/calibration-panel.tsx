@@ -1,5 +1,6 @@
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { HonestBand } from "@/components/performance/honest-band";
+import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
 import {
   NUMERIC_TEXT_CLASS,
   STAT_PLACEHOLDER,
@@ -75,6 +76,11 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
   const observedWidth = `${Math.round(bucket.observedWinRate * 100)}%`;
   const expectedLeft = `${Math.round(bucket.expectedWinRate * 100)}%`;
   const empty = bucket.sampleSize === 0;
+  // Per-bucket honesty: deciles of a modest settled set are SMALL samples, so each
+  // observed rate carries a wide 95% band. Show it rather than imply false precision.
+  const ci = empty
+    ? null
+    : wilsonInterval(Math.round(bucket.observedWinRate * bucket.sampleSize), bucket.sampleSize);
   return (
     <div className="flex items-center gap-3 py-2" data-testid="reliability-row">
       <span className={`w-14 shrink-0 text-xs text-ion-1 ${NUMERIC_TEXT_CLASS}`}>
@@ -98,6 +104,11 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
         className={`w-14 shrink-0 text-right text-xs font-semibold text-ion ${NUMERIC_TEXT_CLASS}`}
       >
         {empty ? STAT_PLACEHOLDER : formatRatioAsPercent(bucket.observedWinRate)}
+      </span>
+      <span
+        className={`hidden w-28 shrink-0 text-right text-[11px] text-ion-2 sm:inline-block ${NUMERIC_TEXT_CLASS}`}
+      >
+        {ci ? `95% ${formatWilsonPct(ci)}` : ""}
       </span>
       <span
         className={`w-16 shrink-0 text-right text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}
