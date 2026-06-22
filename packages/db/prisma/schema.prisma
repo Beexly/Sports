@@ -402,6 +402,7 @@ model Pick {
   lossAutopsy    LossAutopsy?
   gateDecisions  GateDecision[]
   creatorAssets  CreatorAsset[]
+  proofReceipt   PickProofReceipt?
 
   // One active pick per game per pick type — enforced at DB level to prevent
   // duplicate inserts from concurrent worker runs (TOCTOU race prevention).
@@ -413,6 +414,32 @@ model Pick {
   @@index([isFeatured])
   @@index([clvVerdict])
   @@map("picks")
+}
+
+// Pre-result proof receipt — the tamper-evident, pre-kickoff commitment to exactly
+// what we claimed for a pick (side, line/price, model prob, market fair prob, edge),
+// stamped with a content hash so a skeptic can confirm nothing was edited or
+// back-dated after the result was known. One immutable receipt per pick, frozen at
+// publish time. `payload` is the canonical serialization the `contentHash` covers —
+// see packages/prediction-engine/src/pick-proof-receipt.ts (build + verify).
+model PickProofReceipt {
+  id             String   @id @default(cuid())
+  pickId         String   @unique
+  payload        String   @db.Text // canonical committed serialization (source of truth)
+  contentHash    String              // hash over the committed leaf (id + payload)
+  modelProb      Float               // model win prob for the side, 0–1 (frozen)
+  marketFairProb Float               // de-vigged market fair prob for the side, 0–1
+  edge           Float               // modelProb − marketFairProb (probability points)
+  entryOdds      Int                 // American price we entered at
+  line           Float               // spread/total line (or price for ML)
+  modelVersion   String
+  asOf           DateTime            // when the pick + odds were frozen (pre-kickoff)
+  frozenAt       DateTime @default(now())
+
+  pick           Pick     @relation(fields: [pickId], references: [id])
+
+  @@index([contentHash])
+  @@map("pick_proof_receipts")
 }
 
 model GateDecision {

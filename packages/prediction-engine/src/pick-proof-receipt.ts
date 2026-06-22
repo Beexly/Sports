@@ -1,0 +1,139 @@
+/**
+ * Pre-result proof receipt — the tamper-evident commitment a hostile skeptic audits.
+ *
+ * The whole moat is an auditable track record. That record is only credible if a
+ * skeptic can be sure we did not quietly edit a pick (or its claimed model/market
+ * probabilities) AFTER seeing the result. This module freezes, at publish time and
+ * BEFORE kickoff, exactly what we claimed: the side, the line/price we entered at,
+ * our model's win probability, the de-vigged market fair probability, the edge, and
+ * the moment it was frozen — then stamps it with a content hash.
+ *
+ * Two properties make it auditable:
+ *   1. Determinism — the same committed facts always produce the same hash, so the
+ *      receipt can be re-derived and checked by anyone.
+ *   2. Tamper-evidence — changing ANY committed field changes the hash, so a
+ *      back-dated edit cannot masquerade as the original claim.
+ *
+ * It builds on proof-of-record.ts (canonical payload + leaf hash); a batch of these
+ * leaves rolls up into the published Merkle root. Pure and dependency-free: the hash
+ * is injected. PRODUCTION MUST inject a real cryptographic hash (node:crypto sha256
+ * hex). Never fabricate fields — bad input throws rather than minting a false receipt.
+ */
+
+import { canonicalPickPayload, hashLeaf, type HashFn } from "./proof-of-record.js";
+
+export interface PickProofInput {
+  readonly pickId: string;
+  readonly gameId: string;
+  readonly selection: string; // e.g. "Chiefs -3.5" / "OVER 48.5"
+  readonly pickType: string; // SPREAD | TOTAL | MONEYLINE
+  /** The line (spread/total) or American price (moneyline) we published at. */
+  readonly line: number;
+  /** Our model's win probability for the side taken, 0..1. */
+  readonly modelProb: number;
+  /** De-vigged market fair probability for the side taken, 0..1. */
+  readonly marketFairProb: number;
+  /** Edge in probability points = modelProb − marketFairProb. */
+  readonly edge: number;
+  /** American odds we entered at. */
+  readonly entryOdds: number;
+  readonly modelVersion: string;
+  /** ISO timestamp the pick + odds snapshot were frozen at (must be before kickoff). */
+  readonly asOf: string;
+}
+
+export interface PickProofReceipt {
+  readonly pickId: string;
+  /** Canonical serialization of the committed fields — the source of truth for verification. */
+  readonly payload: string;
+  /** Hash of the committed leaf (id + payload). Re-derivable by anyone with the same hash fn. */
+  readonly contentHash: string;
+  /** When the receipt was minted (mirrors asOf). */
+  readonly frozenAt: string;
+  /** The exact fields committed to, echoed back for display + re-verification. */
+  readonly fields: PickProofInput;
+}
+
+function round(value: number, decimals: number): number {
+  const f = 10 ** decimals;
+  return Math.round(value * f) / f;
+}
+
+function assertProb(name: string, p: number): void {
+  if (!Number.isFinite(p) || p < 0 || p > 1) {
+    throw new Error(`pick-proof-receipt: ${name} must be a probability in 0..1, got ${p}`);
+  }
+}
+
+function assertNonEmpty(name: string, s: string): void {
+  if (typeof s !== "string" || s.trim() === "") {
+    throw new Error(`pick-proof-receipt: ${name} must be a non-empty string`);
+  }
+}
+
+/**
+ * The committed fields, normalized to stable primitives. Probabilities are rounded
+ * to a fixed precision so floating-point noise never changes the hash for the same
+ * underlying claim. This is the only place that decides what the receipt commits to.
+ */
+function committedFields(i: PickProofInput): Readonly<Record<string, string | number | boolean>> {
+  return {
+    pickId: i.pickId,
+    gameId: i.gameId,
+    selection: i.selection,
+    pickType: i.pickType,
+    line: round(i.line, 4),
+    modelProb: round(i.modelProb, 6),
+    marketFairProb: round(i.marketFairProb, 6),
+    edge: round(i.edge, 6),
+    entryOdds: Math.round(i.entryOdds),
+    modelVersion: i.modelVersion,
+    asOf: i.asOf,
+  };
+}
+
+/**
+ * Freeze a pick into a tamper-evident receipt. Validates the inputs (never mints a
+ * receipt from non-finite probabilities or empty identifiers), builds the canonical
+ * payload, and stamps it with the injected hash.
+ */
+export function buildPickProofReceipt(input: PickProofInput, hash: HashFn): PickProofReceipt {
+  assertNonEmpty("pickId", input.pickId);
+  assertNonEmpty("gameId", input.gameId);
+  assertNonEmpty("selection", input.selection);
+  assertNonEmpty("modelVersion", input.modelVersion);
+  assertNonEmpty("asOf", input.asOf);
+  assertProb("modelProb", input.modelProb);
+  assertProb("marketFairProb", input.marketFairProb);
+  if (!Number.isFinite(input.edge)) throw new Error("pick-proof-receipt: edge must be finite");
+  if (!Number.isFinite(input.entryOdds) || input.entryOdds === 0) {
+    throw new Error("pick-proof-receipt: entryOdds must be a non-zero finite American price");
+  }
+  if (!Number.isFinite(input.line)) throw new Error("pick-proof-receipt: line must be finite");
+
+  const payload = canonicalPickPayload(committedFields(input));
+  const contentHash = hashLeaf(hash, { id: input.pickId, payload });
+
+  return {
+    pickId: input.pickId,
+    payload,
+    contentHash,
+    frozenAt: input.asOf,
+    fields: input,
+  };
+}
+
+/**
+ * Re-derive a receipt from its echoed fields and confirm both the canonical payload
+ * and the content hash still match. Returns false if any committed field was altered
+ * after the fact (the tamper signal) — the check a skeptic runs.
+ */
+export function verifyPickProofReceipt(receipt: PickProofReceipt, hash: HashFn): boolean {
+  let recomputed: PickProofReceipt;
+  try {
+    recomputed = buildPickProofReceipt(receipt.fields, hash);
+  } catch {
+    return false;
+  }
+  return recomputed.payload === receipt.payload && recomputed.contentHash === receipt.contentHash;
+}

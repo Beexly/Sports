@@ -105,6 +105,9 @@ export {
   canonicalPickPayload,
 } from "./proof-of-record.js";
 export type { HashFn, PickRecord, MerkleSibling, MerkleProof } from "./proof-of-record.js";
+// Pre-result proof receipt — freeze + verify a tamper-evident per-pick claim.
+export { buildPickProofReceipt, verifyPickProofReceipt } from "./pick-proof-receipt.js";
+export type { PickProofInput, PickProofReceipt } from "./pick-proof-receipt.js";
 export { buildPickSignalSnapshot } from "./signal-snapshot.js";
 export type { PickSignalSnapshotData } from "./signal-snapshot.js";
 export {
