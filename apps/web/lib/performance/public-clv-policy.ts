@@ -18,6 +18,11 @@
  *   3. otherwise → allowed
  */
 
+import { wilsonInterval, clearsThreshold } from "./wilson-interval";
+
+/** The market vig break-even line — beating the close below this isn't an edge. */
+const VIG_BREAK_EVEN = 0.524;
+
 export type PublicClvBlocker =
   | "GATE_OFF_PERFORMANCE_STATS"
   | "INSUFFICIENT_GRADED_SAMPLE";
@@ -42,6 +47,11 @@ export interface PublicClvPolicy {
   readonly matchedCloseCount: number;
   /** Share (0–100, one decimal) of graded picks that beat the close. Null when gated. */
   readonly beatCloseRatePct: number | null;
+  /** 95% Wilson lower/upper bound on the beat-close rate (0–100, one decimal). Null when gated. */
+  readonly beatCloseCiLowPct: number | null;
+  readonly beatCloseCiHighPct: number | null;
+  /** True only when the 95% lower bound clears the 52.4% vig break-even — an honest edge claim. */
+  readonly clearsBreakEven: boolean;
   readonly publicMessage: string;
   readonly operatorMessage: string;
   readonly minimumRequirements: readonly string[];
@@ -74,6 +84,13 @@ export function evaluatePublicClvPolicy(
       ? Math.round((input.beatCloseCount / input.gradedSampleSize) * 1000) / 10
       : null;
 
+  // Honest uncertainty: a 95% Wilson band on the rate. We only claim a real edge when
+  // the LOWER bound clears the vig break-even — the point estimate alone overclaims.
+  const ci = wilsonInterval(input.beatCloseCount, input.gradedSampleSize);
+  const beatCloseCiLowPct = ci ? Math.round(ci.low * 1000) / 10 : null;
+  const beatCloseCiHighPct = ci ? Math.round(ci.high * 1000) / 10 : null;
+  const clearsBreakEven = ci ? clearsThreshold(ci, VIG_BREAK_EVEN) : false;
+
   const minimumRequirements: string[] = [];
   if (blockers.includes("GATE_OFF_PERFORMANCE_STATS")) {
     minimumRequirements.push(
@@ -91,12 +108,17 @@ export function evaluatePublicClvPolicy(
 
   if (allowed) {
     publicMessage =
-      `Beat the close on ${beatCloseRatePct}% of ${input.gradedSampleSize} graded picks. ` +
+      `Beat the close on ${beatCloseRatePct}% of ${input.gradedSampleSize} graded picks ` +
+      `(95% CI ${beatCloseCiLowPct}–${beatCloseCiHighPct}%). ` +
+      (clearsBreakEven
+        ? `The lower bound clears the 52.4% break-even line. `
+        : `That range still includes the 52.4% break-even line, so we don't yet claim a settled edge. `) +
       `Closing line value is a leading indicator, not a guarantee of future results.`;
     operatorMessage =
       `CLV publishable. graded=${input.gradedSampleSize} ` +
       `(beat ${input.beatCloseCount} / matched ${input.matchedCloseCount} / lost ${input.lostToCloseCount}); ` +
-      `min=${minGraded}.`;
+      `rate=${beatCloseRatePct}% CI=${beatCloseCiLowPct}-${beatCloseCiHighPct}% ` +
+      `clearsBreakEven=${clearsBreakEven}; min=${minGraded}.`;
   } else {
     publicMessage =
       "Closing line value is still accruing. The CLV report opens once enough " +
@@ -117,6 +139,9 @@ export function evaluatePublicClvPolicy(
     lostToCloseCount: input.lostToCloseCount,
     matchedCloseCount: input.matchedCloseCount,
     beatCloseRatePct: allowed ? beatCloseRatePct : null,
+    beatCloseCiLowPct: allowed ? beatCloseCiLowPct : null,
+    beatCloseCiHighPct: allowed ? beatCloseCiHighPct : null,
+    clearsBreakEven: allowed ? clearsBreakEven : false,
     publicMessage,
     operatorMessage,
     minimumRequirements,
