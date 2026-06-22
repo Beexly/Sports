@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
 import { summarizeClv, type ClvVerdict } from "@sports/prediction-engine";
 import { loadClvCoverage, type ClvCoverage } from "@/lib/performance/clv-coverage";
+import { loadSettlementHealth, type SettlementHealth } from "@/lib/performance/settlement-health";
 
 /**
  * Private CLV dashboard (admin-only) — the internal read on whether the model is
@@ -66,6 +67,9 @@ export default async function AdminClvPage() {
   // Coverage is the integrity backbone of the north-star: the beat-close rate is
   // only trustworthy if (nearly) every settled pick was graded against a close.
   const coverage = await loadClvCoverage(db);
+  // Settlement health is the LEADING signal: picks that started but never settled
+  // can never get a CLV record at all, and silently corrupt the public record.
+  const settlement = await loadSettlementHealth(db);
 
   const verdictCounts = VERDICTS.map((v) => ({
     verdict: v,
@@ -93,7 +97,10 @@ export default async function AdminClvPage() {
         the sample is real and honestly disclosed.
       </p>
 
-      <CoverageCard coverage={coverage} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <CoverageCard coverage={coverage} />
+        <SettlementHealthCard settlement={settlement} />
+      </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <ClvCard title="Moneyline (implied-prob CLV)" summary={mlSummary} unit="prob" />
@@ -211,6 +218,59 @@ function CoverageCard({ coverage }: { coverage: ClvCoverage }) {
       {coverage.remediation.length > 0 && (
         <ul className="mt-2 list-disc space-y-1 pl-4 text-[11px] leading-snug text-ion-3">
           {coverage.remediation.map((step, i) => (
+            <li key={i}>{step}</li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function SettlementHealthCard({ settlement }: { settlement: SettlementHealth }) {
+  // Risk-flipped palette: overdue-to-settle picks are BAD, so a backlog renders hot.
+  const tone =
+    settlement.health === "HEALTHY"
+      ? { accent: "text-green-400", chip: "border-green-900 bg-green-950/30 text-green-200" }
+      : settlement.health === "DEGRADED"
+      ? { accent: "text-amber-400", chip: "border-amber-900 bg-amber-950/30 text-amber-200" }
+      : settlement.health === "CRITICAL"
+      ? { accent: "text-red-400", chip: "border-red-900 bg-red-950/30 text-red-200" }
+      : { accent: "text-ion-1", chip: "border-titanium bg-carbon/40 text-ion-2" };
+
+  return (
+    <section
+      data-testid="settlement-health"
+      className="rounded-2xl border border-titanium bg-carbon/40 p-4"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
+            Settlement health · leading signal
+          </h2>
+          <p className="mt-1 text-[11px] text-ion-3">
+            Commenced picks still unsettled past the grace window. A backlog means picks
+            that will never get a CLV record — and blank outcomes on the public board.
+          </p>
+        </div>
+        <span
+          className={`shrink-0 rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest ${tone.chip}`}
+        >
+          {settlement.health.replace(/_/g, " ").toLowerCase()}
+        </span>
+      </div>
+
+      <div className="mt-3 flex items-baseline gap-2">
+        <span className={`text-3xl font-bold ${tone.accent}`}>{settlement.overduePending}</span>
+        <span className="text-xs text-ion-3">overdue to settle (&gt;{settlement.graceHours}h)</span>
+      </div>
+
+      <div className="mt-2 text-xs text-ion-2">Commenced: {settlement.commencedTotal}</div>
+
+      <p className="mt-2 text-[11px] leading-snug text-ion-3">{settlement.operatorMessage}</p>
+
+      {settlement.remediation.length > 0 && (
+        <ul className="mt-2 list-disc space-y-1 pl-4 text-[11px] leading-snug text-ion-3">
+          {settlement.remediation.map((step, i) => (
             <li key={i}>{step}</li>
           ))}
         </ul>
