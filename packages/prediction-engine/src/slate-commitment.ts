@@ -38,10 +38,20 @@ export interface SlateCommitment {
   readonly count: number;
 }
 
-function toRecords(receipts: readonly PickProofReceipt[]): PickRecord[] {
+/**
+ * The minimum a slate needs from each pick: its id and its canonical committed
+ * payload. A full PickProofReceipt satisfies this, and so does a `{ pickId, payload }`
+ * row read straight from the DB — so the commit/prove path needs no receipt rehydration.
+ */
+export interface SlateLeaf {
+  readonly pickId: string;
+  readonly payload: string;
+}
+
+function toRecords(leaves: readonly SlateLeaf[]): PickRecord[] {
   // The same (id, payload) leaf the per-pick receipt hashes — so a pick's leaf in the
   // slate is exactly its receipt.contentHash. One canonical leaf definition, reused.
-  return receipts.map((r) => ({ id: r.pickId, payload: r.payload }));
+  return leaves.map((r) => ({ id: r.pickId, payload: r.payload }));
 }
 
 /**
@@ -52,23 +62,23 @@ function toRecords(receipts: readonly PickProofReceipt[]): PickRecord[] {
 export function buildSlateCommitment(
   slateId: string,
   committedAt: string,
-  receipts: readonly PickProofReceipt[],
+  leaves: readonly SlateLeaf[],
   hash: HashFn
 ): SlateCommitment {
-  if (receipts.length === 0) {
+  if (leaves.length === 0) {
     throw new Error("slate-commitment: refusing to commit an empty slate");
   }
-  const root = merkleRoot(toRecords(receipts), hash);
-  return { slateId, committedAt, root, count: receipts.length };
+  const root = merkleRoot(toRecords(leaves), hash);
+  return { slateId, committedAt, root, count: leaves.length };
 }
 
 /** Inclusion proof for the pick at `index` in the committed slate. */
 export function provePickInSlate(
-  receipts: readonly PickProofReceipt[],
+  leaves: readonly SlateLeaf[],
   index: number,
   hash: HashFn
 ): MerkleProof {
-  return inclusionProof(toRecords(receipts), index, hash);
+  return inclusionProof(toRecords(leaves), index, hash);
 }
 
 export interface SlateVerification {
@@ -132,7 +142,7 @@ export function dailySlateKey(sport: string, commenceTimeIso: string): string {
 
 export interface SlatePlanInput {
   readonly slateKey: string;
-  readonly receipts: readonly PickProofReceipt[];
+  readonly receipts: readonly SlateLeaf[];
   /** ISO kickoff of the EARLIEST game in this slate. */
   readonly earliestKickoff: string;
   /** ISO "now". */

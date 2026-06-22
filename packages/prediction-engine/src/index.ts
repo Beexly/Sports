@@ -116,7 +116,7 @@ export {
   planSlateCommitment,
   dailySlateKey,
 } from "./slate-commitment.js";
-export type { SlateCommitment, SlateVerification, SlatePlan, SlatePlanInput } from "./slate-commitment.js";
+export type { SlateCommitment, SlateVerification, SlatePlan, SlatePlanInput, SlateLeaf } from "./slate-commitment.js";
 export { buildPickSignalSnapshot } from "./signal-snapshot.js";
 export type { PickSignalSnapshotData } from "./signal-snapshot.js";
 export {
