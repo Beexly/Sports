@@ -1,5 +1,10 @@
-// Model version — bump when scoring logic changes
-export const MODEL_VERSION = "v5.0.0";
+// Model version — bump when scoring logic changes.
+// v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
+// Heuristic scoring weights are unchanged; the change is that calibrated
+// P(win) is applied at the display/conviction boundary when the audited
+// CALIBRATION_ADJUSTMENTS_ENABLED env gate is on. See
+// docs/calibration-proposals/2026-06-22-calibration-activation-v5.1.0.md.
+export const MODEL_VERSION = "v5.1.0";
 
 // ============================================================
 // Confidence thresholds

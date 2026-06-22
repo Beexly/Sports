@@ -542,9 +542,9 @@ describe("scoreGame — context integration", () => {
     }
   });
 
-  it("modelVersion is v5.0.0", () => {
+  it("modelVersion is v5.1.0", () => {
     const picks = scoreGame(makeOddsInput());
-    expect(picks[0]?.modelVersion).toBe("v5.0.0");
+    expect(picks[0]?.modelVersion).toBe("v5.1.0");
   });
 });
 

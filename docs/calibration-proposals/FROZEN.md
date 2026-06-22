@@ -32,10 +32,17 @@ prior picks; that requires an audit trail.
 
 ---
 
-frozen: v5.0.0
+frozen: v5.1.0
 
-Locked: 2026-05-18
-Locked by: internal calibration hardening pass (Phase 9)
-Reason: Phase 8/9 work introduces no scoring-weight change. The
-v5.0.0 weights set in `packages/prediction-engine/src/scoring.ts`
-remains the baseline.
+Locked: 2026-06-22
+Locked by: calibration activation (path-to-70.md §7)
+Reason: v5.1.0 activates isotonic calibration. The heuristic scoring
+weights in `packages/prediction-engine/src/scoring.ts` are UNCHANGED
+from the v5.0.0 baseline — the only change is that a validated isotonic
+map turns the raw confidence score into a calibrated P(win) at the
+display/conviction boundary, gated by CALIBRATION_ADJUSTMENTS_ENABLED.
+Audit trail + held-out validation:
+docs/calibration-proposals/2026-06-22-calibration-activation-v5.1.0.md.
+
+Prior baseline — Locked: 2026-05-18 (Phase 9): v5.0.0, no scoring-weight
+change; superseded by the v5.1.0 calibration activation above.
