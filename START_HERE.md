@@ -34,18 +34,21 @@ at the bottom.)*
 
 ---
 
-## ✅ STEP 1 — Verify it's actually back
+## ✅ STEP 1 — Verify it's actually back (one command)
 
+Once Vercel says **Ready**, run the full smoke test — it hits every public route + key APIs and
+prints a green/red checklist:
 ```powershell
-curl.exe -s -o NUL -w "home=%{http_code}\n" https://galaxysportsedge.com/
-curl.exe -s -o NUL -w "health=%{http_code}\n" https://galaxysportsedge.com/api/health
+npm run smoke:prod
 ```
-- Both `200` → **you're back online.** Done.
-- Site loads but shows data errors → runtime DB var issue: confirm `DATABASE_URL` (production)
-  holds the **pooled** Neon string (the `POSTGRES_PRISMA_URL` value). It should already — the
-  pooled endpoint is healthy (we proved it connects in ~80ms).
+- All green → **you're back online.** Done.
+- A few rows red but the site loads → tell me which routes; usually a single data path.
+- Site loads but everything DB-backed errors → runtime DB var issue. The app now **auto-falls
+  back** to the Neon-integration var (`POSTGRES_PRISMA_URL`) when `DATABASE_URL` is unset, so
+  this should be self-healing — but if not, confirm `DATABASE_URL` (production) holds the pooled
+  Neon string. (The pooled endpoint is healthy — proven to connect in ~80ms.)
 - Build still red → paste me the last 20 log lines; it'll be a new, different error and I'll
-  fix it. (Unlikely — the known blocker is gone.)
+  fix it. (Unlikely — the known blocker is gone, and `next build` needs no DB.)
 
 ---
 
