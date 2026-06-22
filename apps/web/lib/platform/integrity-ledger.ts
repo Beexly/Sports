@@ -249,12 +249,12 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     id: "claims-compiler",
     name: "Public claim compiler (sample/coverage/calibration gate)",
     category: "claims",
-    builtStatus: "PARTIAL", wiredStatus: "PARTIAL", provenStatus: "PARTIAL", publicSafeStatus: "PARTIAL",
-    ownerGate: "pieces exist (public-clv-policy, performance policy) but not unified into one compiler",
-    evidenceRefs: ["apps/web/lib/performance/public-clv-policy.ts"],
-    lastVerifiedAt: null,
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: null,
+    evidenceRefs: ["apps/web/lib/claims/public-claim-compiler.ts", "apps/web/__tests__/public-claim-compiler.test.ts"],
+    lastVerifiedAt: V,
     failureMode: "a new public number renders without passing every gate.",
-    nextAction: "unify the gates into one Public Claim Compiler all public stats pass through.",
+    nextAction: "wire compilePublicClaim() into every public performance-stat render path.",
   },
 
   // ── observability ──
