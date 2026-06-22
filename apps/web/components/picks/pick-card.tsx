@@ -124,7 +124,7 @@ export function PickCard({
         <div className="min-w-0">
           <p className="mb-1 text-[10px] font-medium text-ion-1">Confidence</p>
           {canSeeConfidence && pick.confidence !== null ? (
-            <ConfidenceBadge confidence={pick.confidence} />
+            <ConfidenceBadge confidence={pick.confidence} calibrated={pick.confidenceCalibrated} />
           ) : (
             <LockedValue label="Conf." />
           )}
@@ -405,15 +405,35 @@ function PickTypeBadge({ type }: { type: PickType }) {
   );
 }
 
-function ConfidenceBadge({ confidence }: { confidence: number }) {
-  let color = "text-ion-2 bg-titanium";
-  if (confidence >= 80) color = "text-verify bg-verify/10";
-  else if (confidence >= 70) color = "text-ion-blue bg-ion-blue/10";
-  else if (confidence >= 60) color = "text-plasma bg-plasma/10";
+function badgeColor(value: number): string {
+  if (value >= 80) return "text-verify bg-verify/10";
+  if (value >= 70) return "text-ion-blue bg-ion-blue/10";
+  if (value >= 60) return "text-plasma bg-plasma/10";
+  return "text-ion-2 bg-titanium";
+}
 
+function ConfidenceBadge({
+  confidence,
+  calibrated,
+}: {
+  confidence: number;
+  calibrated?: { pct: number; label: string } | null;
+}) {
+  // Thread 2: when the audited calibrator is active, show the HONEST calibrated
+  // label + win probability instead of the raw, overstated heuristic %.
+  if (calibrated) {
+    return (
+      <span
+        className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${badgeColor(calibrated.pct)}`}
+        aria-label={`Calibrated confidence: ${calibrated.label}, about ${calibrated.pct} percent win probability`}
+      >
+        {calibrated.label} · {calibrated.pct}%
+      </span>
+    );
+  }
   return (
     <span
-      className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${color}`}
+      className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${badgeColor(confidence)}`}
       aria-label={`Model confidence: ${confidence} out of 100`}
     >
       {confidence}%

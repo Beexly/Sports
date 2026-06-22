@@ -514,6 +514,11 @@ export interface PublicPick {
 
   // Gated by subscription
   confidence: number | null;         // null for FREE
+  // Honest, calibrated display of `confidence`. Populated ONLY when the audited
+  // calibrator is active (canApplyCalibrationAdjustments) and confidence is
+  // visible; null otherwise. When present, surfaces should show this calibrated
+  // label/probability instead of the raw heuristic % (Thread 2 — honest first).
+  confidenceCalibrated?: { pct: number; label: string } | null;
   edgeScore: number | null;          // null for FREE
   factorBreakdown: FactorBreakdown | null; // null for FREE
 
