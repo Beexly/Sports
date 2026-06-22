@@ -427,9 +427,10 @@ model PickProofReceipt {
   pickId         String   @unique
   payload        String   @db.Text // canonical committed serialization (source of truth)
   contentHash    String              // hash over the committed leaf (id + payload)
-  modelProb      Float               // model win prob for the side, 0–1 (frozen)
-  marketFairProb Float               // de-vigged market fair prob for the side, 0–1
-  edge           Float               // modelProb − marketFairProb (probability points)
+  marketFairProb Float               // de-vigged market fair prob for the side, 0–1 (real)
+  confidence     Int                 // published 0–100 confidence score (heuristic, NOT a prob)
+  edgeScore      Float               // published 0–100 net edge score
+  modelProb      Float?              // calibrated win prob 0–1 — null until one genuinely exists
   entryOdds      Int                 // American price we entered at
   line           Float               // spread/total line (or price for ML)
   modelVersion   String

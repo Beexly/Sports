@@ -6,7 +6,8 @@ import {
 } from "../pick-proof-receipt.js";
 
 // A deterministic, order-sensitive test hash. NOT cryptographic — production injects
-// node:crypto sha256. Good enough to prove determinism + tamper-sensitivity here.
+// node:crypto sha256 (apps/web proof-hash.ts). Good enough to prove determinism +
+// tamper-sensitivity here.
 function testHash(input: string): string {
   let h = 2166136261;
   for (let i = 0; i < input.length; i++) {
@@ -23,10 +24,11 @@ function base(overrides: Partial<PickProofInput> = {}): PickProofInput {
     selection: "Chiefs -3.5",
     pickType: "SPREAD",
     line: -3.5,
-    modelProb: 0.561,
-    marketFairProb: 0.524,
-    edge: 0.037,
     entryOdds: -110,
+    marketFairProb: 0.524,
+    confidence: 72,
+    edgeScore: 18,
+    modelProb: null, // honest default — no calibrated probability exists today
     modelVersion: "v5.0.0",
     asOf: "2026-06-22T17:00:00.000Z",
     ...overrides,
@@ -47,12 +49,21 @@ describe("pick proof receipt", () => {
     expect(verifyPickProofReceipt(r, testHash)).toBe(true);
   });
 
+  it("commits 'none' for modelProb when no calibrated probability exists", () => {
+    const without = buildPickProofReceipt(base({ modelProb: null }), testHash);
+    const withProb = buildPickProofReceipt(base({ modelProb: 0.58 }), testHash);
+    expect(without.payload).toMatch(/modelProb=none/);
+    // Adding a calibrated prob later is a different, separately-committed claim.
+    expect(without.contentHash).not.toBe(withProb.contentHash);
+  });
+
   it("is tamper-evident — editing any committed field changes the hash", () => {
     const original = buildPickProofReceipt(base(), testHash);
     const fields: Array<Partial<PickProofInput>> = [
-      { modelProb: 0.562 }, // nudged probability
+      { modelProb: 0.562 }, // claiming a calibrated prob after the fact
       { marketFairProb: 0.523 }, // nudged market fair prob
-      { edge: 0.038 },
+      { confidence: 73 }, // nudged the published confidence score
+      { edgeScore: 19 },
       { line: -3 }, // moved the line
       { entryOdds: -115 }, // better price claimed after the fact
       { selection: "Chiefs -3" },
@@ -67,14 +78,14 @@ describe("pick proof receipt", () => {
 
   it("detects a post-hoc edit to a stored receipt's fields", () => {
     const r = buildPickProofReceipt(base(), testHash);
-    // Someone rewrites the claimed model probability but keeps the old hash.
-    const tampered = { ...r, fields: { ...r.fields, modelProb: 0.99 } };
+    // Someone rewrites the claimed confidence but keeps the old hash.
+    const tampered = { ...r, fields: { ...r.fields, confidence: 99 } };
     expect(verifyPickProofReceipt(tampered, testHash)).toBe(false);
   });
 
   it("ignores float noise below the committed precision", () => {
-    const a = buildPickProofReceipt(base({ modelProb: 0.561 }), testHash);
-    const b = buildPickProofReceipt(base({ modelProb: 0.561 + 1e-9 }), testHash);
+    const a = buildPickProofReceipt(base({ marketFairProb: 0.524 }), testHash);
+    const b = buildPickProofReceipt(base({ marketFairProb: 0.524 + 1e-9 }), testHash);
     expect(a.contentHash).toBe(b.contentHash);
   });
 
@@ -83,6 +94,7 @@ describe("pick proof receipt", () => {
     expect(() => buildPickProofReceipt(base({ marketFairProb: -0.1 }), testHash)).toThrow(/probability/);
     expect(() => buildPickProofReceipt(base({ entryOdds: 0 }), testHash)).toThrow(/entryOdds/);
     expect(() => buildPickProofReceipt(base({ pickId: "" }), testHash)).toThrow(/pickId/);
-    expect(() => buildPickProofReceipt(base({ edge: Number.NaN }), testHash)).toThrow(/edge/);
+    expect(() => buildPickProofReceipt(base({ edgeScore: Number.NaN }), testHash)).toThrow(/edgeScore/);
+    expect(() => buildPickProofReceipt(base({ confidence: Number.NaN }), testHash)).toThrow(/confidence/);
   });
 });

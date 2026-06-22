@@ -22,10 +22,10 @@ function input(i: number): PickProofInput {
     selection: `Team ${i} -3.5`,
     pickType: "SPREAD",
     line: -3.5,
-    modelProb: 0.55 + i / 1000,
-    marketFairProb: 0.524,
-    edge: 0.026 + i / 1000,
     entryOdds: -110,
+    marketFairProb: 0.524,
+    confidence: 60 + (i % 30),
+    edgeScore: 10 + (i % 20),
     modelVersion: "v5.0.0",
     asOf: "2026-06-22T17:00:00.000Z",
   };

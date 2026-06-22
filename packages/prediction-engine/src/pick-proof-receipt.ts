@@ -29,14 +29,27 @@ export interface PickProofInput {
   readonly pickType: string; // SPREAD | TOTAL | MONEYLINE
   /** The line (spread/total) or American price (moneyline) we published at. */
   readonly line: number;
-  /** Our model's win probability for the side taken, 0..1. */
-  readonly modelProb: number;
-  /** De-vigged market fair probability for the side taken, 0..1. */
-  readonly marketFairProb: number;
-  /** Edge in probability points = modelProb − marketFairProb. */
-  readonly edge: number;
   /** American odds we entered at. */
   readonly entryOdds: number;
+  /**
+   * De-vigged market fair probability for the side taken, 0..1. This is a real,
+   * market-derived quantity (consensus minus vig) — the honest anchor we always have.
+   */
+  readonly marketFairProb: number;
+  /**
+   * The published 0–100 CONFIDENCE score. This is the engine's heuristic, NOT a
+   * calibrated probability — it is committed as the score we actually showed, so the
+   * receipt freezes the real claim without dressing a heuristic up as a probability.
+   */
+  readonly confidence: number;
+  /** The published 0–100 edge score (net bookmaker edge). Real engine output. */
+  readonly edgeScore: number;
+  /**
+   * A genuinely calibrated model win probability, 0..1 — present ONLY once such a
+   * probability exists (champion model w/ published calibration). Absent today, and
+   * the receipt commits "none" rather than fabricating one. Never pass confidence/100.
+   */
+  readonly modelProb?: number | null;
   readonly modelVersion: string;
   /** ISO timestamp the pick + odds snapshot were frozen at (must be before kickoff). */
   readonly asOf: string;
@@ -83,10 +96,13 @@ function committedFields(i: PickProofInput): Readonly<Record<string, string | nu
     selection: i.selection,
     pickType: i.pickType,
     line: round(i.line, 4),
-    modelProb: round(i.modelProb, 6),
-    marketFairProb: round(i.marketFairProb, 6),
-    edge: round(i.edge, 6),
     entryOdds: Math.round(i.entryOdds),
+    marketFairProb: round(i.marketFairProb, 6),
+    confidence: Math.round(i.confidence),
+    edgeScore: round(i.edgeScore, 4),
+    // Committed as "none" when absent — an honest, hashable commitment that we did
+    // NOT claim a calibrated probability, distinct from any future real value.
+    modelProb: i.modelProb == null ? "none" : round(i.modelProb, 6),
     modelVersion: i.modelVersion,
     asOf: i.asOf,
   };
@@ -103,9 +119,12 @@ export function buildPickProofReceipt(input: PickProofInput, hash: HashFn): Pick
   assertNonEmpty("selection", input.selection);
   assertNonEmpty("modelVersion", input.modelVersion);
   assertNonEmpty("asOf", input.asOf);
-  assertProb("modelProb", input.modelProb);
   assertProb("marketFairProb", input.marketFairProb);
-  if (!Number.isFinite(input.edge)) throw new Error("pick-proof-receipt: edge must be finite");
+  // modelProb is optional, but if present it must be a real probability — never a
+  // confidence score scaled into 0..1.
+  if (input.modelProb != null) assertProb("modelProb", input.modelProb);
+  if (!Number.isFinite(input.confidence)) throw new Error("pick-proof-receipt: confidence must be finite");
+  if (!Number.isFinite(input.edgeScore)) throw new Error("pick-proof-receipt: edgeScore must be finite");
   if (!Number.isFinite(input.entryOdds) || input.entryOdds === 0) {
     throw new Error("pick-proof-receipt: entryOdds must be a non-zero finite American price");
   }
