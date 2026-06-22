@@ -40,6 +40,11 @@ const SHARP_MONEY_ALLOW = new Set([
   "apps/web/lib/intelligence-graph/model-court/prompts.ts",
   "apps/web/lib/jarvis/capability-registry.ts",
   "apps/web/lib/pre-mortem/templates/line-movement.ts",
+  // The integrity ledger DESCRIBES the failure mode the Market Memory / No-Bet
+  // engines prevent ("attributing movement to 'sharp money' without a sourced
+  // split") — governance documentation of a banned pattern, same rationale as the
+  // glossary / tout-services exemptions above. Not a public claim.
+  "apps/web/lib/platform/integrity-ledger.ts",
   "packages/db/src/sample-picks.ts",
   "packages/prediction-engine/src/game-context.ts",
 ]);
