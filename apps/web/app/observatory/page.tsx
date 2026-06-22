@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { InteractiveGalaxy } from "@/components/hero/interactive-galaxy";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
 import { getPlate } from "@/lib/visual-production/asset-manifest";
 import { CipherShard } from "@/components/cipher/cipher-shard";
 import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
@@ -60,6 +61,7 @@ export default async function ObservatoryPage() {
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
+      <SignalRoomAtmosphere mode="ambient" />
 
       <main className="flex-1">
         {/* Hero */}

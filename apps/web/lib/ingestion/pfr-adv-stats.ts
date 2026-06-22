@@ -49,7 +49,7 @@ function toRecord(r: CsvRow, season: number, statType: PfrStatType, rightsSnapsh
     playerName: r["pfr_player_name"] ?? "",
     season,
     week: Number(r["week"] ?? "0"),
-    seasonType: (r["game_type"] || "REG").startsWith("POST") ? "POST" : "REG",
+    seasonType: (r["game_type"] || "REG").toUpperCase().startsWith("POST") ? "POST" : "REG",
     team: r["team"] || null,
     opponent: r["opponent"] || null,
     gameKey: r["game_id"] ?? "",
@@ -130,6 +130,11 @@ export async function ingestPfrAdvStats(
     .filter((r) => (r["pfr_player_id"] ?? "") !== "" && (r["game_id"] ?? "") !== "")
     .map((r) => toRecord(r, season, statType, gate.rightsSnapshot, now));
 
+    // Never wipe existing rows on an empty upstream response (transient
+  // outage / empty mirror): preserve what's there and report a source-error.
+  if (data.length === 0) {
+    return { status: "source-error", season, statType, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
+  }
   await db.pfrAdvStat.deleteMany({ where: { season, statType } });
   const created = data.length > 0 ? await db.pfrAdvStat.createMany({ data }) : null;
 

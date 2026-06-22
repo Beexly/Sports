@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandLockup } from "@/components/brand/brand-lockup";
-import { BRAND_NAME, CLOSING_LINE, HELPLINE, SOCIAL } from "@/lib/brand";
+import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
+import { BRAND_NAME, CLOSING_LINE, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
   { label: "The NFL House", href: "/house" },
@@ -10,15 +11,16 @@ const PRODUCT_LINKS = [
   { label: "Trend Lab", href: "/trends" },
   { label: "Decision Autopsy", href: "/performance/losses" },
   { label: "Parlay MRI", href: "/parlay-mri" },
-  { label: "Lineup Optimizer", href: "/fantasy/lineup" },
+  { label: "Start-Sit Helper", href: "/fantasy/lineup" },
   { label: "Contests", href: "/fantasy/contests" },
   { label: "The Beat", href: "/the-beat" },
+  { label: "The Studio", href: "/fantasy/studio" },
   { label: "The Academy", href: "/academy" },
 ] as const;
 
 const COMPANY_LINKS = [
   { label: "Accountability", href: "/accountability" },
-  { label: "Receipts — Calibration", href: "/performance" },
+  { label: "Receipts · Calibration", href: "/performance" },
   { label: "Closing Line Value", href: "/clv" },
   { label: "Methodology", href: "/methodology" },
   { label: "The Vault", href: "/vault" },
@@ -57,8 +59,11 @@ export function Footer() {
   return (
     <footer className="footer">
       {/* Ambient wordmark — closing brand statement under the link columns */}
-      <div className="footer-wordmark" aria-hidden="true">
-        GALAXY SPORTS EDGE
+      <div className="footer-wordmark group relative" aria-hidden="true">
+        <span className="transition-opacity duration-500 group-hover:opacity-0">GALAXY SPORTS EDGE</span>
+        <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+          <LogoMarkInline size={28} pulse glow />
+        </span>
       </div>
       <div className="container">
         <div className="footer-inner">
@@ -68,11 +73,14 @@ export function Footer() {
             </div>
             <p className="disclaim">
               {BRAND_NAME} delivers calibrated market signals, not certainty.
-              Treat each one as one input in a disciplined decision — never
+              Treat each one as one input in a disciplined decision, never
               the decision itself.{" "}
               <strong style={{ color: "var(--ion)" }}>
                 Set limits before emotion enters.
               </strong>
+            </p>
+            <p className="mt-4 text-xs text-ink-500">
+              {BRAND_NAME} is a {GSN_NAME} production.
             </p>
           </div>
 
@@ -95,7 +103,13 @@ export function Footer() {
 
         <div className="bottom">
           <span>{new Date().getFullYear()} {BRAND_NAME.toUpperCase()} / MATH YOU CAN READ</span>
-          <span>{CLOSING_LINE.toUpperCase()}</span>
+          <span className="flex items-center gap-3">
+            <a href="/?intro=play" className="opacity-70 transition-opacity hover:opacity-100">
+              ▶ Replay intro
+            </a>
+            <span aria-hidden>·</span>
+            {CLOSING_LINE.toUpperCase()}
+          </span>
         </div>
       </div>
     </footer>
@@ -111,7 +125,7 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h4>{title}</h4>
+      <h2 className="footer-col-title">{title}</h2>
       <ul>
         {links.map(({ label, href }) => (
           <li key={href}>

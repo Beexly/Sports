@@ -45,6 +45,7 @@ export function OptimizerWorkspace({ pool }: { pool?: readonly Player[] } = {}) 
                 key={t.key}
                 type="button"
                 onClick={() => setTab(t.key)}
+                aria-pressed={on}
                 className="rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none"
                 style={{ color: on ? BRAND_COLORS.obsidianBlack : "var(--ion-2,#c8d2dd)", background: on ? BRAND_COLORS.orbitalCyan : "transparent" }}
               >

@@ -242,8 +242,8 @@ const DEMO_BASE = {
 
 export const VERDICT_HEX: Record<TwinVerdict, string> = {
   PLAY: "#00E5FF",
-  WATCHLIST: "#7A5CFF",
-  "NO-BET": "#FF2DD6",
+  WATCHLIST: "#7B61FF",
+  "NO-BET": "#FF38C7",
 };
 
 export const LEAGUES: readonly TwinLeague[] = ["NFL", "NBA", "MLB", "NHL"];

@@ -81,6 +81,18 @@ export async function ingestHistoricalGames(
     });
   }
 
+  // This replaces the ENTIRE multi-season archive (the table calibration and
+  // backtests read from). A transient empty upstream must never wipe it:
+  // preserve what's there and report a source-error instead of deleting.
+  if (data.length === 0) {
+    return {
+      status: "source-error",
+      rowsWritten: 0,
+      seasons: 0,
+      error: "upstream returned no rows; existing archive preserved",
+    };
+  }
+
   // Idempotent full refresh: historical games are immutable; the current season
   // fills in as it plays. Replace the table, then chunk the insert.
   await db.historicalGame.deleteMany({});

@@ -89,13 +89,27 @@ export function draftBeexWeekly(
   };
 }
 
+/**
+ * Turn a third-person-singular verb into its base form ("we" voice).
+ * Handles the sibilant -es cases ("processes"->"process", "watches"->"watch",
+ * "fixes"->"fix", "pushes"->"push") and -ies/-oes, not just a bare -s strip
+ * (which produced broken words like "processe").
+ */
+function thirdPersonToWe(verb: string): string {
+  if (/oes$/i.test(verb)) return verb.slice(0, -2); // goes -> go, does -> do
+  if (/(?:ss|sh|ch|x|z)es$/i.test(verb)) return verb.slice(0, -2); // processes -> process, watches -> watch
+  if (/[^aeiou]ies$/i.test(verb)) return verb.slice(0, -3) + "y"; // tries -> try
+  if (/s$/i.test(verb)) return verb.slice(0, -1); // flags -> flag, raises -> raise
+  return verb;
+}
+
 /** First-person-plural pass: the script sounds like us, never like a tool. */
 export function rewriteInOurVoice(line: string): string {
   const rewritten = line
     .replace(/\bthe engine is\b/gi, "we're")
     .replace(/\bthe engine has\b/gi, "we have")
-    // third-person verb directly after "the engine" loses its -s: flags → flag
-    .replace(/\bthe engine (\w+)s\b/gi, (_m, verb: string) => `we ${verb}`)
+    // third-person verb directly after "the engine" -> base form ("we flag").
+    .replace(/\bthe engine (\w+s)\b/gi, (_m, verb: string) => `we ${thirdPersonToWe(verb)}`)
     .replace(/\bthe engine\b/gi, "we")
     .replace(/\bthe model\b/gi, "our number")
     .replace(/\bAI\b/g, "the desk");

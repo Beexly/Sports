@@ -37,7 +37,7 @@ const COMMANDS: Command[] = [
   { label: "GM Academy", href: "/fantasy/academy", group: "Fantasy", keywords: "drills lessons injury market analytics" },
   { label: "Draft Assistant", href: "/fantasy/draft", group: "Fantasy", keywords: "tiers vor pick" },
   { label: "Waiver & FAAB", href: "/fantasy/waivers", group: "Fantasy", keywords: "adds bids drop" },
-  { label: "Lineup Optimizer", href: "/fantasy/lineup", group: "Fantasy", keywords: "start sit" },
+  { label: "Start-Sit Helper", href: "/fantasy/lineup", group: "Fantasy", keywords: "start sit lineup optimizer" },
   { label: "DFS Optimizer", href: "/fantasy/dfs", group: "Fantasy", keywords: "draftkings salary cap leverage stack" },
   { label: "Pick'em Edge", href: "/fantasy/props", group: "Fantasy", keywords: "underdog prizepicks dk pick6 props" },
   { label: "Trade Analyzer", href: "/fantasy/trade", group: "Fantasy", keywords: "value fairness" },

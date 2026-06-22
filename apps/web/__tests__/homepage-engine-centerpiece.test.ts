@@ -10,15 +10,14 @@ describe("homepage engine centerpiece", () => {
   const page = readRepoFile("apps/web/app/page.tsx");
   const curve = readRepoFile("apps/web/components/home/calibration-curve.tsx");
 
-  it("replaces the legacy narrative with a data-readiness command surface", () => {
-    expect(page).toContain("The board is only as smart as the data behind it.");
-    expect(page).toContain("Board state");
-    expect(page).toContain("Ten-second product test");
-    expect(page).toContain("Source health");
-    expect(page).toContain("context feeds");
-    expect(page).toContain("licensed reporting");
-    expect(page).toContain("Today&apos;s lanes");
-    expect(page).toContain("First trend targets");
+  it("leads with the thesis and routes to the four doors", () => {
+    expect(page).toContain("The market is full of");
+    expect(page).toContain("Galaxy turns it into");
+    expect(page).toContain("We detect. You decide.");
+    expect(page).toContain("Pick the decision you came to make.");
+    for (const door of ["Board", "The Lab", "Intelligence", "Fantasy & Daily"]) {
+      expect(page).toContain(door);
+    }
   });
 
   it("does not render fabricated ledger or settlement examples", () => {
@@ -34,7 +33,7 @@ describe("homepage engine centerpiece", () => {
     }
   });
 
-  it("keeps the center band on design-token classes, not raw casino or gray utility colors", () => {
+  it("keeps the front door on design-token classes, not raw casino or gray utility colors", () => {
     expect(page).not.toMatch(/\b(?:text|bg|border)-(?:gray|cyan|pink|green|yellow|emerald|orange)-/);
     expect(page).toMatch(/bg-carbon/);
     expect(page).toMatch(/bg-eclipse/);
@@ -43,14 +42,12 @@ describe("homepage engine centerpiece", () => {
     expect(page).toMatch(/text-ion-white/);
   });
 
-  it("uses real data paths and honest collecting states", () => {
+  it("uses real data paths — every number comes from a loader, none fabricated", () => {
     expect(page).toMatch(/\bloadBoardState\b/);
-    expect(page).toMatch(/\bloadBoardPasses\b/);
-    expect(page).toMatch(/\bloadTrendWorkbench\b/);
-    expect(page).toContain("No public rows yet");
-    expect(page).toContain("Rows stay empty instead of blocking the experience or inventing data.");
-    expect(page).toContain("No active scoring rows.");
-    expect(page).toContain("Trend engine is ready; observations are waiting on live intake writes.");
+    expect(page).toMatch(/\bloadPublicCalibrationReport\b/);
+    expect(page).toMatch(/\bloadNflverseUsagePulse\b/);
+    expect(page).toContain("calibration.sampleSize");
+    expect(page).toContain("state.publishedToday.length");
   });
 
   it("draws calibration on scroll with a reduced-motion-safe fallback", () => {

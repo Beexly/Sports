@@ -32,7 +32,7 @@ export function PersonalizedBriefing({ cards }: { cards: BriefingCard[] }) {
       {loaded && (!prefs || editing) && <Intake initial={prefs ?? DEFAULT_PREFS} onSave={save} onCancel={prefs ? () => setEditing(false) : undefined} />}
 
       {prefs && !editing && (
-        <div className="flex items-center gap-2 text-xs text-ink-500">
+        <div className="flex items-center gap-2 text-xs text-ion-2">
           <span>Personalized for <strong style={{ color: BRAND_COLORS.orbitalCyan }}>{FOCUS_LABEL[prefs.focus]}</strong> · {prefs.sports.join(", ") || "all sports"}</span>
           <button type="button" onClick={() => setEditing(true)} className="underline hover:text-ion-white">edit</button>
         </div>
@@ -91,7 +91,7 @@ function Intake({ initial, onSave, onCancel }: { initial: Preferences; onSave: (
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-2 text-xs text-ink-400">{label}</p>
+      <p className="mb-2 text-xs text-ion-2">{label}</p>
       {children}
     </div>
   );
@@ -102,6 +102,7 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       className="rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
       style={{
         background: active ? BRAND_COLORS.orbitalCyan : "rgba(255,255,255,0.05)",

@@ -69,11 +69,15 @@ describe("value architecture — Free must not leak the paid product", () => {
     expect(free.price.annual).toBe(0);
   });
 
-  it("Free explicitly gates the full board, full reasoning, confidence, and alerts", () => {
+  it("Free gates the paid product (full reasoning, tools, alerts) — not the picks or confidence", () => {
     const gatedText = free.gated.join(" ").toLowerCase();
-    expect(gatedText).toContain("full board");
-    expect(gatedText).toMatch(/reasoning|confidence/);
+    // Picks are free and confidence is calibrated-honest-and-free now; the paid
+    // line is depth (the full why), the tools, and alerts.
+    expect(gatedText).toMatch(/full reasoning|factor trail/);
     expect(gatedText).toContain("alert");
+    // The board and confidence must NOT be gated — they are free.
+    expect(gatedText).not.toContain("full board");
+    expect(gatedText).not.toContain("confidence");
   });
 
   it("Free's unlocks are previews/education/samples only — never the full product", () => {

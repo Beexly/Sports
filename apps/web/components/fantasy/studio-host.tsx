@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * StudioHost — the on-air broadcast, fronted by the brand presenter.
+ * StudioHost, the on-air broadcast, fronted by the brand presenter.
  *
  * Scene-switches like a real reporter on location (sideline, clubhouse, practice,
  * desk), with a teleprompter script per segment and production b-roll notes. The
  * presenter is a stylized BRAND avatar, not a generated photoreal person, and an
- * AI-presenter disclosure is always on screen — credible and non-deceptive.
+ * AI-presenter disclosure is always on screen, credible and non-deceptive.
  */
 
 import { useState } from "react";
@@ -31,8 +31,8 @@ export function StudioHost({ broadcast }: { broadcast: Broadcast }) {
       <div className="surface-card flex flex-wrap items-center gap-4 p-4">
         <Avatar accent={BRAND_COLORS.orbitalCyan} />
         <div className="min-w-0">
-          <p className="text-base font-semibold text-white">{broadcast.persona.name} <span className="text-xs font-normal text-ink-500">{broadcast.persona.handle}</span></p>
-          <p className="text-xs text-ink-400">{broadcast.persona.role} · {broadcast.persona.tagline}</p>
+          <p className="text-base font-semibold text-ion-white">{broadcast.persona.name} <span className="text-xs font-normal text-ion-2">{broadcast.persona.handle}</span></p>
+          <p className="text-xs text-ion-2">{broadcast.persona.role} · {broadcast.persona.tagline}</p>
         </div>
         <span className="ml-auto rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}>Synthetic presenter</span>
         <button type="button" onClick={copy} className="btn btn-ghost btn-sm">{copied ? "Copied ✓" : "Copy script"}</button>
@@ -56,9 +56,9 @@ export function StudioHost({ broadcast }: { broadcast: Broadcast }) {
             <div className="relative mt-8 flex items-end gap-3">
               <Avatar accent={scene.accent} large />
               <div className="mb-1">
-                <p className="text-[10px] uppercase tracking-wider text-ink-500">{seg.kicker}</p>
-                <p className="font-display text-lg text-white">{broadcast.persona.name}</p>
-                <p className="text-[10px] text-ink-600">reporting from {scene.setting}</p>
+                <p className="text-[10px] uppercase tracking-wider text-ion-2">{seg.kicker}</p>
+                <p className="font-display text-lg text-ion-white">{broadcast.persona.name}</p>
+                <p className="text-[10px] text-ion-3">reporting from {scene.setting}</p>
               </div>
             </div>
 
@@ -70,15 +70,15 @@ export function StudioHost({ broadcast }: { broadcast: Broadcast }) {
 
           {/* teleprompter */}
           <div className="p-5">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-ink-600">Teleprompter</p>
-            <p className="mt-3 text-[15px] leading-relaxed text-white">{i === 0 ? `${broadcast.coldOpen} ` : ""}{seg.script}</p>
-            {i === segs.length - 1 && <p className="mt-3 text-[15px] leading-relaxed text-ink-300">{broadcast.signOff}</p>}
-            <p className="mt-4 border-t pt-3 text-[11px] text-ink-500" style={{ borderColor: BRAND_COLORS.steelGray }}><span className="text-ink-600">B-roll:</span> {seg.broll}</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-ion-3">Teleprompter</p>
+            <p className="mt-3 text-[15px] leading-relaxed text-ion-white">{i === 0 ? `${broadcast.coldOpen} ` : ""}{seg.script}</p>
+            {i === segs.length - 1 && <p className="mt-3 text-[15px] leading-relaxed text-ion-1">{broadcast.signOff}</p>}
+            <p className="mt-4 border-t pt-3 text-[11px] text-ion-2" style={{ borderColor: BRAND_COLORS.steelGray }}><span className="text-ion-3">B-roll:</span> {seg.broll}</p>
 
             {/* transport */}
             <div className="mt-5 flex items-center gap-2">
               <button type="button" onClick={() => setI((x) => Math.max(0, x - 1))} disabled={i === 0} className="btn btn-ghost btn-sm disabled:opacity-40">‹ Prev</button>
-              <span className="font-mono text-xs text-ink-500">{i + 1}/{segs.length}</span>
+              <span className="font-mono text-xs text-ion-2">{i + 1}/{segs.length}</span>
               <button type="button" onClick={() => setI((x) => Math.min(segs.length - 1, x + 1))} disabled={i === segs.length - 1} className="btn btn-primary btn-sm disabled:opacity-40 ml-auto">Next segment ›</button>
             </div>
           </div>
@@ -98,38 +98,38 @@ export function StudioHost({ broadcast }: { broadcast: Broadcast }) {
       {/* persona bible + disclosure */}
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="surface-card p-5">
-          <p className="text-xs uppercase tracking-[0.18em] text-ink-500">How {broadcast.persona.name} sounds</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-ion-2">How {broadcast.persona.name} sounds</p>
           <ul className="mt-3 space-y-1.5">
-            {broadcast.persona.voice.map((v, idx) => <li key={idx} className="flex gap-2 text-[13px] text-ink-300"><span style={{ color: BRAND_COLORS.orbitalCyan }}>▸</span>{v}</li>)}
+            {broadcast.persona.voice.map((v, idx) => <li key={idx} className="flex gap-2 text-[13px] text-ion-1"><span style={{ color: BRAND_COLORS.orbitalCyan }}>▸</span>{v}</li>)}
           </ul>
         </div>
         <div className="surface-card p-5">
-          <p className="text-xs uppercase tracking-[0.18em] text-ink-500">What she stands for</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-ion-2">What she stands for</p>
           <ul className="mt-3 space-y-1.5">
-            {broadcast.persona.values.map((v, idx) => <li key={idx} className="flex gap-2 text-[13px] text-ink-300"><span style={{ color: BRAND_COLORS.softUltraviolet }}>▸</span>{v}</li>)}
+            {broadcast.persona.values.map((v, idx) => <li key={idx} className="flex gap-2 text-[13px] text-ion-1"><span style={{ color: BRAND_COLORS.softUltraviolet }}>▸</span>{v}</li>)}
           </ul>
         </div>
       </div>
 
       <ReadinessPanel broadcast={broadcast} />
 
-      <p className="rounded-lg border p-3 text-[11px] leading-relaxed text-ink-500" style={{ borderColor: `${BRAND_COLORS.softUltraviolet}44`, background: `${BRAND_COLORS.softUltraviolet}0a` }}>
+      <p className="rounded-lg border p-3 text-[11px] leading-relaxed text-ion-2" style={{ borderColor: `${BRAND_COLORS.softUltraviolet}44`, background: `${BRAND_COLORS.softUltraviolet}0a` }}>
         {broadcast.disclosure}
       </p>
     </div>
   );
 }
 
-/** The publish-readiness gate — nothing ships until every gate is green and a human signs off. */
+/** The publish-readiness gate, nothing ships until every gate is green and a human signs off. */
 function ReadinessPanel({ broadcast }: { broadcast: Broadcast }) {
   // Demo context: no consent on file, no human approver → intentionally not ready.
   const r = assessPublishReadiness(broadcast);
   return (
     <div className="surface-card p-5">
       <div className="flex flex-wrap items-center gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-ink-500">Publish readiness</p>
+        <p className="text-xs uppercase tracking-[0.18em] text-ion-2">Publish readiness</p>
         <span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: r.ready ? `${BRAND_COLORS.orbitalCyan}1c` : "rgba(255,255,255,0.06)", color: r.ready ? BRAND_COLORS.orbitalCyan : "#E0A800" }}>
-          {r.ready ? "Ready to publish" : "Held — human approval required"}
+          {r.ready ? "Ready to publish" : "Held, human approval required"}
         </span>
       </div>
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -137,26 +137,26 @@ function ReadinessPanel({ broadcast }: { broadcast: Broadcast }) {
           <div key={g.id} className="flex items-start gap-2 rounded-lg border p-2.5" style={{ borderColor: g.passed ? `${BRAND_COLORS.orbitalCyan}44` : BRAND_COLORS.steelGray }}>
             <span className="mt-0.5 text-sm" style={{ color: g.passed ? BRAND_COLORS.orbitalCyan : "#7b8794" }}>{g.passed ? "✓" : "○"}</span>
             <div>
-              <p className="text-xs font-medium text-white">{g.label}</p>
-              <p className="text-[10px] leading-relaxed text-ink-500">{g.note}</p>
+              <p className="text-xs font-medium text-ion-white">{g.label}</p>
+              <p className="text-[10px] leading-relaxed text-ion-2">{g.note}</p>
             </div>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[10px] leading-relaxed text-ink-600">
+      <p className="mt-3 text-[10px] leading-relaxed text-ion-3">
         Brand-safety scans every script for sexual, hateful, unsafe, PII, and overclaiming content before it can pass.
-        Consent and human sign-off are operator-set — a synthetic segment can never mark itself publish-ready.
+        Consent and human sign-off are operator-set, a synthetic segment can never mark itself publish-ready.
       </p>
     </div>
   );
 }
 
-/** A stylized BRAND avatar — a gradient star-mark, deliberately not a photoreal person. */
+/** A stylized BRAND avatar, a gradient star-mark, deliberately not a photoreal person. */
 function Avatar({ accent, large }: { accent: string; large?: boolean }) {
   const s = large ? 64 : 44;
   return (
     <div className="grid shrink-0 place-items-center rounded-full" style={{ width: s, height: s, background: `radial-gradient(circle at 35% 30%, ${accent}, ${BRAND_COLORS.softUltraviolet} 70%, ${BRAND_COLORS.obsidianBlack})`, boxShadow: `0 0 18px ${accent}55` }} aria-hidden>
-      <span className="font-display font-bold text-white" style={{ fontSize: large ? 26 : 18 }}>N</span>
+      <span className="font-display font-bold text-ion-white" style={{ fontSize: large ? 26 : 18 }}>N</span>
     </div>
   );
 }

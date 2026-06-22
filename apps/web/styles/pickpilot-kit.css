@@ -17,7 +17,7 @@ button { font-family: inherit; cursor: pointer; }
      Reference: Linear / Stripe — 95% neutral, accent hits earn their pixels. */
   background:
     radial-gradient(ellipse 55% 38% at 100% 18%, rgba(0,229,255,0.05), transparent 72%),
-    radial-gradient(ellipse 45% 32% at 0% 85%, rgba(122,92,255,0.05), transparent 72%),
+    radial-gradient(ellipse 45% 32% at 0% 85%, rgba(123,97,255,0.05), transparent 72%),
     linear-gradient(180deg, var(--obsidian) 0%, var(--carbon) 30%, var(--obsidian) 100%);
 }
 
@@ -581,7 +581,7 @@ button { font-family: inherit; cursor: pointer; }
   display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
   gap: 40px;
 }
-.footer h4 {
+.footer .footer-col-title {
   font: 500 10px/1 var(--f-mono);
   letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--fg-muted);
@@ -654,59 +654,139 @@ button { font-family: inherit; cursor: pointer; }
 .brand-lockup {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
 }
-.brand-mark {
-  width: 38px;
-  height: 38px;
+/* Official chrome emblem (Brand Bible v1.0) — replaces the hand-built mark. */
+.brand-emblem {
+  width: 40px;
+  height: 40px;
   display: inline-flex;
-  color: var(--ion-white);
-  filter: drop-shadow(0 0 12px rgba(0,240,255,0.32));
+  flex: none;
+  filter: drop-shadow(0 0 14px rgba(0,229,255,0.30));
 }
-.brand-mark-svg { width: 100%; height: 100%; }
-.brand-mark-orbit {
-  stroke: var(--ion-white);
-  stroke-width: 3.8;
-  stroke-linecap: round;
-}
-.brand-mark-orbit-secondary {
-  stroke: var(--ultraviolet-glow);
-  opacity: 0.72;
-}
-.brand-mark-vector {
-  stroke: var(--plasma);
-  stroke-width: 3;
-  stroke-linecap: round;
-}
-.brand-mark-vector-cyan {
-  stroke: var(--orbital-cyan);
-  opacity: 0.92;
-}
-.brand-mark-core { fill: var(--plasma); filter: drop-shadow(0 0 10px rgba(255,45,214,0.75)); }
-.brand-mark-ping { fill: var(--orbital-cyan); filter: drop-shadow(0 0 8px rgba(0,240,255,0.75)); }
+.brand-emblem-img { width: 100%; height: 100%; object-fit: contain; }
 .brand-wordmark {
   display: inline-flex;
-  align-items: baseline;
-  gap: 9px;
-  color: var(--ion-white);
-  text-transform: uppercase;
-}
-.brand-gse {
-  font: 900 24px/0.9 var(--f-arch);
-  letter-spacing: 0.02em;
-  display: none;
-}
-.brand-full {
-  display: inline-flex;
   flex-direction: column;
-  gap: 2px;
-  font: 800 11px/0.95 var(--f-display);
-  letter-spacing: 0.22em;
+  align-items: flex-start;
+  gap: 3px;
+  line-height: 1;
 }
-.brand-full span:last-child { color: var(--orbital-cyan); }
-.brand-lockup-compact .brand-gse { display: inline-flex; }
-.brand-lockup-compact .brand-full { display: none; }
+/* Wordmark in Exo 2, filled with the signal fade (cyan -> magenta -> violet). */
+.brand-wordmark-text {
+  font: 800 17px/1 var(--f-display);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  white-space: nowrap;
+  background: var(--signal-fade);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+/* The signal underline — the brand's signature rule beneath the wordmark. */
+.brand-wordmark-underline {
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--signal-fade);
+  opacity: 0.85;
+}
+.brand-lockup-compact .brand-wordmark-text { font-size: 19px; letter-spacing: 0.06em; }
 .footer-lockup { margin-bottom: 16px; }
+
+/* ── Kinetic signature ───────────────────────────────────────────────────────
+   A sub-1s arrival sting: the official emblem fades up with a settling chrome
+   glow, then the wordmark resolves left-to-right. Designed so the brand reads
+   as it lands, not after. Plays once on render (it lives in the persistent
+   layout, so it fires on a full load — an arrival sting — not on in-app
+   navigation). Fully disabled under prefers-reduced-motion, which snaps
+   straight to the resting state. The gse-mark-* keyframes remain the shared
+   motion vocabulary for the inline code-native fallback mark. */
+@keyframes gse-mark-draw {
+  from { stroke-dashoffset: 130; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes gse-mark-pop {
+  0%   { opacity: 0; transform: scale(0.2); }
+  60%  { opacity: 1; transform: scale(1.25); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes gse-mark-glow {
+  0%   { opacity: 0; transform: scale(0.86); filter: drop-shadow(0 0 2px rgba(0,229,255,0)); }
+  55%  { opacity: 1; transform: scale(1.04); filter: drop-shadow(0 0 22px rgba(0,229,255,0.7)); }
+  100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 14px rgba(0,229,255,0.30)); }
+}
+@keyframes gse-word-resolve {
+  from { opacity: 0; transform: translateX(-6px); clip-path: inset(0 100% 0 0); }
+  to   { opacity: 1; transform: translateX(0); clip-path: inset(0 0 0 0); }
+}
+
+.brand-lockup-kinetic .brand-emblem {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gse-mark-glow 0.85s cubic-bezier(0.2,0,0,1) both;
+}
+.brand-lockup-kinetic .brand-wordmark { animation: gse-word-resolve 0.52s ease-out 0.34s both; }
+
+/* Inline mark (loading states, splashes) can opt into the same lock-on. */
+.logo-mark-kinetic circle,
+.logo-mark-kinetic polygon {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gse-mark-pop 0.4s cubic-bezier(0.2,0.9,0.3,1.3) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-lockup-kinetic .brand-emblem,
+  .brand-lockup-kinetic .brand-wordmark,
+  .logo-mark-kinetic circle,
+  .logo-mark-kinetic polygon {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    clip-path: none !important;
+  }
+}
+
+/* ── "How this page works" launcher ──────────────────────────────────────────
+   A short, one-time attention pulse draws the eye to the guide, then settles to
+   a calm resting glow. The gradient ring is the signal fade; the pulse only
+   widens the glow so it reads as an invitation, never a flash. Reduced motion
+   holds the resting glow with no pulse. */
+@keyframes explainer-attn {
+  0%, 100% { box-shadow: 0 10px 30px -10px rgba(0,229,255,0.40); }
+  50%      { box-shadow: 0 10px 32px -6px rgba(0,229,255,0.70), 0 0 0 5px rgba(0,229,255,0.10); }
+}
+.explainer-launcher {
+  box-shadow: 0 10px 30px -10px rgba(0,229,255,0.40);
+  animation: explainer-attn 2.4s ease-in-out 0.6s 3;
+}
+.explainer-launcher:hover { box-shadow: 0 12px 34px -6px rgba(0,229,255,0.65); }
+@media (prefers-reduced-motion: reduce) {
+  .explainer-launcher { animation: none !important; }
+}
+
+/* ── Broadcast scanlines ─────────────────────────────────────────────────────
+   A live-feed scanline that drifts a few pixels on a fast step cycle, so the
+   broadcast scene reads as a running transmission rather than a static panel.
+   Reduced motion holds it still. */
+@keyframes gsn-scan-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 6px; }
+}
+.gsn-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.05) 0,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: gsn-scan-drift 0.55s steps(3) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gsn-scanlines { animation: none; }
+}
 
 /* Interactive galaxy hero */
 .hero-galaxy {
@@ -725,8 +805,8 @@ button { font-family: inherit; cursor: pointer; }
   background:
     linear-gradient(90deg, rgba(5,7,11,0.97) 0%, rgba(5,7,11,0.82) 38%, rgba(5,7,11,0.30) 72%, rgba(5,7,11,0.62) 100%),
     radial-gradient(circle at 76% 36%, rgba(0,229,255,0.10), transparent 36%),
-    radial-gradient(circle at 64% 80%, rgba(255,45,214,0.08), transparent 28%),
-    radial-gradient(circle at 92% 18%, rgba(122,92,255,0.10), transparent 38%);
+    radial-gradient(circle at 64% 80%, rgba(255,56,199,0.08), transparent 28%),
+    radial-gradient(circle at 92% 18%, rgba(123,97,255,0.10), transparent 38%);
   z-index: 1;
   pointer-events: none;
 }
@@ -754,7 +834,7 @@ button { font-family: inherit; cursor: pointer; }
   place-items: center;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255,45,214,0.16), transparent 24%),
+    radial-gradient(circle at 50% 50%, rgba(255,56,199,0.16), transparent 24%),
     radial-gradient(circle at 50% 50%, rgba(0,240,255,0.16), transparent 40%),
     rgba(2,3,10,0.86);
   pointer-events: none;
@@ -766,7 +846,7 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--ion-white);
   text-shadow:
     0 0 24px rgba(0,240,255,0.52),
-    0 0 46px rgba(255,45,214,0.44);
+    0 0 46px rgba(255,56,199,0.44);
   animation: gse-intro-scale 3.2s var(--ease-out) forwards;
 }
 .hero-intro-line {
@@ -1004,12 +1084,8 @@ button { font-family: inherit; cursor: pointer; }
   .nav-left { min-width: 0; }
   .nav-logo { flex-shrink: 0; }
   .brand-lockup { gap: 9px; }
-  .brand-mark { width: 34px; height: 34px; }
-  .brand-full {
-    display: inline-flex;
-    font-size: 10px;
-    letter-spacing: 0.19em;
-  }
+  .brand-emblem { width: 34px; height: 34px; }
+  .brand-wordmark-text { font-size: 15px; letter-spacing: 0.12em; }
   .nav-links,
   .desktop-auth { display: none; }
   .mobile-nav { display: block; }
@@ -1025,7 +1101,7 @@ button { font-family: inherit; cursor: pointer; }
       linear-gradient(180deg, rgba(5,7,11,0.86) 0%, rgba(5,7,11,0.78) 42%, rgba(5,7,11,0.96) 100%),
       radial-gradient(circle at 50% 18%, rgba(0,229,255,0.20), transparent 34%),
       radial-gradient(circle at 78% 56%, rgba(255,59,199,0.10), transparent 30%),
-      radial-gradient(circle at 22% 70%, rgba(122,92,255,0.14), transparent 34%);
+      radial-gradient(circle at 22% 70%, rgba(123,97,255,0.14), transparent 34%);
   }
   .interactive-galaxy {
     inset: -120px -64% 22% -64%;
@@ -1064,12 +1140,12 @@ button { font-family: inherit; cursor: pointer; }
     justify-content: center;
   }
   .hero-ctas .btn-primary {
-    color: #050608;
+    color: #05070B;
     background: linear-gradient(90deg, var(--plasma-glow), var(--orbital-cyan-glow));
     box-shadow:
       0 0 0 1px rgba(246,247,250,0.12) inset,
       0 16px 34px -18px rgba(0,229,255,0.70),
-      0 16px 34px -18px rgba(255,45,214,0.60);
+      0 16px 34px -18px rgba(255,56,199,0.60);
   }
   .hero-ctas .btn-ghost {
     color: var(--ion-white);

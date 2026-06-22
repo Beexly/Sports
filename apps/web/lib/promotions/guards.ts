@@ -34,6 +34,7 @@ export type PromotionBlockerCode =
   | "MISSING_DISCLOSURE"
   | "MISSING_RG_TEXT"
   | "MISSING_TERMS_URL"
+  | "SUSPICIOUS_TERMS_URL"
   | "EXPIRED"
   | "STATUS_NOT_ACTIVE"
   | "COMPLIANCE_NOT_APPROVED"
@@ -41,6 +42,38 @@ export type PromotionBlockerCode =
   | "NO_ELIGIBLE_STATES"
   | "RESTRICTED_IN_STATE"
   | "OPERATOR_NOT_APPROVED";
+
+/**
+ * A terms URL is suspicious when it is not a real, public https(s) link:
+ * a non-web scheme (javascript:/data:/file:), an unparseable value, or a
+ * placeholder/test host (example.com, localhost, *.test/.invalid/.example).
+ * These must never reach a public affiliate surface.
+ */
+const SUSPICIOUS_HOSTS = new Set([
+  "example.com",
+  "example.org",
+  "example.net",
+  "localhost",
+  "127.0.0.1",
+  "0.0.0.0",
+]);
+const SUSPICIOUS_TLDS = [".test", ".invalid", ".example", ".localhost", ".local"];
+
+export function isSuspiciousUrl(raw: string): boolean {
+  const value = raw.trim();
+  if (!value) return false; // emptiness is handled by MISSING_TERMS_URL
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    return true; // unparseable → suspicious
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return true;
+  const host = url.hostname.toLowerCase();
+  if (SUSPICIOUS_HOSTS.has(host)) return true;
+  if (host === "localhost" || SUSPICIOUS_TLDS.some((tld) => host.endsWith(tld))) return true;
+  return false;
+}
 
 export interface PromotionBlocker {
   readonly code: PromotionBlockerCode;
@@ -106,6 +139,13 @@ export function evaluatePromotionForPublish(
     blockers.push({
       code: "MISSING_TERMS_URL",
       message: "Promotion is missing the operator's terms-and-conditions URL.",
+      reviewable: true,
+    });
+  } else if (isSuspiciousUrl(promo.termsUrl)) {
+    blockers.push({
+      code: "SUSPICIOUS_TERMS_URL",
+      message:
+        "Promotion terms URL is not a valid public https link (placeholder/test host or non-web scheme). It must point at the operator's real terms page.",
       reviewable: true,
     });
   }

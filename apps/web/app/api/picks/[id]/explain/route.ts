@@ -18,6 +18,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
@@ -76,6 +77,17 @@ export async function POST(
     return NextResponse.json(
       { error: "Pro or Elite required to ask the model why." },
       { status: 403 },
+    );
+  }
+
+  // Per-user throttle in front of the paid Claude call: the shared monthly
+  // budget gate alone can't stop one caller from looping this endpoint and
+  // draining the org-wide budget for everyone (denial-of-wallet).
+  const limit = consumeRateLimit("pick-explain", session.user.id, 10, 5 * 60 * 1000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment before asking again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
     );
   }
 

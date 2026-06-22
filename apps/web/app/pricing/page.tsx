@@ -29,7 +29,7 @@ const phase = getCurrentPricingPhase();
 export const metadata: Metadata = {
   title: "Pricing — Founding-Member Rates, Locked For Life",
   description:
-    "Free for two picks a day, with confidence. Founding-member pricing on Pro and Elite — the lowest price we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
+    "Free, honest picks and the most transparent verified record in the game. Pro and Elite are for the tools, depth, analytics, and alerts - founding-member pricing, the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: `Pricing — ${BRAND_NAME}`,
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 // ─────────────────────────────────────────────
 
 const FREE_FEATURES = [
-  { label: "2 picks per day, with confidence scores", included: true },
+  { label: "Every pick, free - honest labels & the open verified record", included: true },
   { label: "Edge Index on every signal", included: true },
   { label: "Game matchup info + pick type", included: true },
   { label: "Public verified record & calibration", included: true },

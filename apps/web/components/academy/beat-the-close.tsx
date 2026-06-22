@@ -196,8 +196,14 @@ export function BeatTheClose() {
   const [results, setResults] = useState<RoundResult[]>([]);
   const [best, setBest] = useState<number | null>(null);
   const timer = useRef<number | null>(null);
+  // Reduced-motion / screen-reader users get an UNTIMED window (WCAG 2.2.1):
+  // all intel is shown at once and the round never auto-passes on a clock.
+  const reducedRef = useRef(false);
 
   useEffect(() => {
+    reducedRef.current =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     try {
       const raw = localStorage.getItem(BEST_KEY);
       if (raw !== null) setBest(Number(raw));
@@ -226,6 +232,12 @@ export function BeatTheClose() {
   // on its own (hesitation is a decision too).
   useEffect(() => {
     if (phase !== "live") return;
+    // Reduced motion: reveal all intel at once and leave the window open — the
+    // player TAKEs or PASSes at their own pace, never force-passed by a timer.
+    if (reducedRef.current) {
+      if (ticksShown < round.ticks.length) setTicksShown(round.ticks.length);
+      return;
+    }
     if (ticksShown >= round.ticks.length) {
       timer.current = window.setTimeout(() => settle("PASS", null), TICK_MS);
       return;
@@ -312,11 +324,12 @@ export function BeatTheClose() {
               </p>
               <p className="mt-1 font-display text-xl font-semibold text-white">{round.matchup}</p>
             </div>
-            <div className="text-right">
+            <div className="text-right" role="status" aria-live="polite">
               <p className="font-mono text-[10px] uppercase tracking-widest text-ink-400">live line</p>
               <p
                 className="gse-cine-anim mt-1 font-mono text-3xl font-bold tabular-nums"
                 key={live}
+                aria-label={`Live line ${live > 0 ? "+" : ""}${live.toFixed(1)}`}
                 style={{ color: cyan, animation: "gse-flash-in 400ms ease-out both" }}
               >
                 {live > 0 ? `+${live.toFixed(1)}` : live.toFixed(1)}
@@ -373,7 +386,7 @@ export function BeatTheClose() {
       )}
 
       {phase === "report" && last && (
-        <div className="mt-6">
+        <div className="mt-6" role="status" aria-live="polite">
           <p className="font-mono text-[10px] uppercase tracking-widest text-ink-400">
             market closed · {last.matchup}
           </p>

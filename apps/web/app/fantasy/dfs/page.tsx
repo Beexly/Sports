@@ -39,13 +39,13 @@ export default async function DfsSuitePage() {
       {/* ── Salary Board — the optimizer's input layer ─────────────── */}
       <section id="salary-board" className="surface-card mb-8 p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="font-display text-xl font-semibold text-white">Salary board</h2>
+          <h2 className="font-display text-xl font-semibold text-ion-white">Salary board</h2>
           {live ? (
             <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: BRAND_COLORS.orbitalCyan }}>
               DraftKings · {dfs!.date} · {dfs!.rows.length} salaries
             </span>
           ) : (
-            <span className="font-mono text-[10px] uppercase tracking-widest text-ink-400">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-ion-2">
               feed not connected
             </span>
           )}
@@ -53,7 +53,7 @@ export default async function DfsSuitePage() {
 
         {live ? (
           <>
-            <p className="mt-1 text-sm text-ink-300">
+            <p className="mt-1 text-sm text-ion-1">
               Reconciled across providers — a salary is trusted when feeds agree; disagreement is
               flagged ({dfs!.discrepancies} flagged). Top of the slate below; the optimizer prices
               the full board.
@@ -61,17 +61,17 @@ export default async function DfsSuitePage() {
             <div className="mt-4 overflow-x-auto">
               <table className="w-full min-w-[560px] text-left text-sm">
                 <thead>
-                  <tr className="font-mono text-[10px] uppercase tracking-widest text-ink-400">
+                  <tr className="font-mono text-[10px] uppercase tracking-widest text-ion-2">
                     <th className="py-1.5 pr-4 font-medium">Player</th>
                     <th className="py-1.5 pr-4 font-medium">Team</th>
                     <th className="py-1.5 pr-4 font-medium">Pos</th>
                     <th className="py-1.5 font-medium">Salary</th>
                   </tr>
                 </thead>
-                <tbody className="text-ink-200">
+                <tbody className="text-ion-1">
                   {topRows.map((r) => (
                     <tr key={`${r.name}-${r.team}`} className="border-t border-mineral/60">
-                      <td className="py-1.5 pr-4 text-white">{r.name}</td>
+                      <td className="py-1.5 pr-4 text-ion-white">{r.name}</td>
                       <td className="py-1.5 pr-4">{r.team}</td>
                       <td className="py-1.5 pr-4 font-mono text-xs">{r.position}</td>
                       <td className="py-1.5 font-mono">${r.salary.toLocaleString()}</td>
@@ -82,7 +82,7 @@ export default async function DfsSuitePage() {
             </div>
           </>
         ) : (
-          <p className="mt-2 text-sm text-ink-300">
+          <p className="mt-2 text-sm text-ion-1">
             No licensed salary feed is connected right now, so no real salaries are shown — the
             board lights up the moment one is.{" "}
             <Link href="/integrations" className="text-orbital-cyan underline-offset-4 hover:underline">

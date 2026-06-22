@@ -16,6 +16,34 @@ import { extname, join, relative, resolve, sep } from "node:path";
 
 const ROOT = resolve(process.cwd());
 
+// BS-023 (brand-safety-rules-v2): "sharp money" / "smart money" framing claims a
+// factor the platform does not source yet, so it is banned on marketing and
+// published-pick surfaces. It legitimately appears in a known set of files:
+//   - education that teaches the concept (and teaches when it is NOT a factor),
+//   - the glossary that defines it,
+//   - internal engine / LLM-prompt / pre-mortem plumbing and dev fixtures,
+//   - the labelled-illustrative slate-twin demo (the LIVE path omits the split
+//     entirely — see apps/web/lib/slate-twin/get-slate-twin.ts line "publicMoney /
+//     sharp ... intentionally OMITTED"), and the sourced capability registry.
+// These files are exempted from THIS rule only (not the other bans). Any NEW
+// occurrence in a non-listed file fails the build — that is the context-aware
+// guard the v2 spec asks for, without false-positiving on correct copy.
+const SHARP_MONEY_ALLOW = new Set([
+  "apps/web/app/vs/tout-services/page.tsx",
+  "apps/web/components/academy/beat-the-close.tsx",
+  "apps/web/components/motion/ghost-jarvis.tsx",
+  "apps/web/components/slate-twin/galaxy-slate-twin.tsx",
+  "apps/web/lib/academy/curriculum.ts",
+  "apps/web/lib/academy/scenarios.ts",
+  "apps/web/lib/fantasy/academy.ts",
+  "apps/web/lib/glossary.ts",
+  "apps/web/lib/intelligence-graph/model-court/prompts.ts",
+  "apps/web/lib/jarvis/capability-registry.ts",
+  "apps/web/lib/pre-mortem/templates/line-movement.ts",
+  "packages/db/src/sample-picks.ts",
+  "packages/prediction-engine/src/game-context.ts",
+]);
+
 const BANNED_PHRASES = [
   { phrase: "lock", wordBoundary: true, claim: "banned.lock" },
   { phrase: "guaranteed", wordBoundary: false, claim: "banned.guaranteed-outcome" },
@@ -40,6 +68,21 @@ const BANNED_PHRASES = [
   { phrase: "profitable system", wordBoundary: false, claim: "banned.profitable-system" },
   { phrase: "no risk", wordBoundary: false, claim: "banned.no-risk" },
   { phrase: "100% chance", wordBoundary: false, claim: "banned.100-percent-chance" },
+  // BS-004 (brand-safety-rules-v2): the picks come from a deterministic engine,
+  // never an LLM. "AI" belongs only to the content/atmosphere layer. Banning the
+  // "AI picks" framing on any surface keeps that position honest. Precise to
+  // "pick(s)" so legitimate copy ("AI Ops", "AI-presenter disclosure",
+  // critiquing competitors' "AI prediction sites") is untouched.
+  { phrase: "AI picks", wordBoundary: true, claim: "banned.ai-picks" },
+  { phrase: "AI pick", wordBoundary: true, claim: "banned.ai-pick" },
+  { phrase: "AI-generated picks", wordBoundary: true, claim: "banned.ai-generated-picks" },
+  { phrase: "AI generated picks", wordBoundary: true, claim: "banned.ai-generated-picks-2" },
+  { phrase: "AI-generated pick", wordBoundary: true, claim: "banned.ai-generated-pick" },
+  // BS-023 (brand-safety-rules-v2): sharp/smart-money framing claims a factor we
+  // do not source yet. Context-aware via allowFiles — banned everywhere except
+  // the verified education / glossary / internal / labelled-demo files above.
+  { phrase: "sharp money", wordBoundary: false, claim: "banned.sharp-money", allowFiles: SHARP_MONEY_ALLOW },
+  { phrase: "smart money", wordBoundary: false, claim: "banned.smart-money", allowFiles: SHARP_MONEY_ALLOW },
 ];
 
 const SCAN_DIRS = [
@@ -141,10 +184,14 @@ function lineIsCommentOnly(line) {
   return false;
 }
 
-function scanText(text) {
+function scanText(text, relPath) {
   const hits = [];
   const lines = text.split(/\r?\n/);
+  const relNorm = relPath.split(sep).join("/");
   for (const entry of BANNED_PHRASES) {
+    // Per-rule file exemption (BS-023): skip this phrase for its allowlisted
+    // files only; every other banned phrase still applies to those files.
+    if (entry.allowFiles && entry.allowFiles.has(relNorm)) continue;
     const re = buildRegex(entry);
     for (let i = 0; i < lines.length; i++) {
       if (lineIsCommentOnly(lines[i])) continue;
@@ -188,7 +235,7 @@ async function main() {
       } catch {
         continue;
       }
-      const hits = scanText(text);
+      const hits = scanText(text, relPath);
       for (const hit of hits) {
         allHits.push({ file: relPath, ...hit });
       }

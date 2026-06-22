@@ -5,6 +5,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { PersonalizedBriefing } from "@/components/cockpit/personalized-briefing";
+import { MissionControlHow } from "@/components/cockpit/mission-control-how";
 import { buildBriefing } from "@/lib/cockpit/mission-control";
 import { BRAND_COLORS } from "@/lib/brand";
 
@@ -35,10 +36,15 @@ export default function TodayPage() {
               </h1>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-lg text-ink-300">
+              <p className="mt-5 max-w-2xl text-lg text-ion-1">
                 The whole platform, prioritized into one glance — across betting and fantasy. The engine ranks what
                 deserves your attention this minute and links you straight to the move.
               </p>
+            </Reveal>
+            <Reveal delay={220}>
+              <div className="mt-8 max-w-4xl">
+                <MissionControlHow />
+              </div>
             </Reveal>
           </div>
         </section>
@@ -46,7 +52,7 @@ export default function TodayPage() {
           <div className="mx-auto max-w-6xl">
             <Reveal><PersonalizedBriefing cards={cards} /></Reveal>
             <Reveal delay={120}>
-              <p className="mt-8 text-xs leading-relaxed text-ink-500">
+              <p className="mt-8 text-xs leading-relaxed text-ion-2">
                 Illustrative briefing composed live from the platform&apos;s engines. Priorities are computed from real
                 signals (news urgency, source reliability, leverage, roster risk); the underlying data is illustrative.
               </p>

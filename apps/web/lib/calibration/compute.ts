@@ -118,7 +118,17 @@ function resultToOutcome(result: CalibrationPickInput["result"]): number | null 
 }
 
 function bucketFor(confidence: number): (typeof BUCKETS)[number] {
-  return BUCKETS.find((bucket) => confidence >= bucket.min && confidence <= bucket.max) ?? BUCKETS[0]!;
+  // Buckets are contiguous via exclusive upper boundaries (the NEXT bucket's
+  // min): a value belongs to bucket i when it is below bucket i+1's floor. This
+  // closes the gaps in the integer [min,max] ranges (e.g. 69.3 / 89.5) that
+  // previously fell through to the 50-59 bucket and corrupted the per-bucket
+  // win rates. Values below the lowest floor clamp to the lowest bucket; the
+  // top bucket absorbs 90-100 and anything above.
+  for (let i = 0; i < BUCKETS.length; i++) {
+    const next = BUCKETS[i + 1];
+    if (!next || confidence < next.min) return BUCKETS[i]!;
+  }
+  return BUCKETS[BUCKETS.length - 1]!;
 }
 
 export function computeCalibration(input: readonly CalibrationPickInput[] = []): CalibrationReport {

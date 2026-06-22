@@ -239,7 +239,7 @@ function Question({
         </span>
         {q.prompt}
       </p>
-      <div className="mt-3 flex flex-col gap-2">
+      <div className="mt-3 flex flex-col gap-2" role="status" aria-live="polite">
         {q.options.map((o) => {
           const isChosen = chosen === o.id;
           const showState = answered && (isChosen || o.correct);
@@ -248,6 +248,8 @@ function Question({
               key={o.id}
               type="button"
               disabled={answered}
+              aria-pressed={isChosen}
+              aria-label={showState ? `${o.label} — ${o.correct ? "correct" : "incorrect"}` : o.label}
               onClick={() => onPick(o.id)}
               className="rounded-lg border px-3.5 py-2.5 text-left text-sm transition-colors"
               style={{

@@ -17,21 +17,21 @@ describe("launchStatusStyle", () => {
     }
   });
 
-  it("LAUNCH_READY tone is green", () => {
-    expect(launchStatusStyle("LAUNCH_READY").tone).toMatch(/green/);
+  it("LAUNCH_READY tone reads as ready (brand verify)", () => {
+    expect(launchStatusStyle("LAUNCH_READY").tone).toMatch(/verify/);
   });
 
-  it("NOT_READY_SAFETY tone is red", () => {
-    expect(launchStatusStyle("NOT_READY_SAFETY").tone).toMatch(/red/);
+  it("NOT_READY_SAFETY tone reads as blocked (brand alert)", () => {
+    expect(launchStatusStyle("NOT_READY_SAFETY").tone).toMatch(/alert/);
   });
 });
 
 describe("healthTone", () => {
-  it("returns a class string for each JarvisHealth", () => {
-    expect(healthTone("GREEN")).toMatch(/green/);
-    expect(healthTone("AMBER")).toMatch(/yellow/);
-    expect(healthTone("RED")).toMatch(/red/);
-    expect(healthTone("UNKNOWN")).toMatch(/gray/);
+  it("returns a brand-token class string for each JarvisHealth", () => {
+    expect(healthTone("GREEN")).toMatch(/verify/);
+    expect(healthTone("AMBER")).toMatch(/caution/);
+    expect(healthTone("RED")).toMatch(/alert/);
+    expect(healthTone("UNKNOWN")).toMatch(/ion-/);
   });
 });
 
@@ -64,12 +64,13 @@ describe("exhaustive coverage", () => {
   });
 
   it("every JarvisLaunchStatus has a non-default tone (except UNKNOWN)", () => {
+    const unknownTone = "bg-titanium text-ion-2 ring-mineral";
     for (const s of ALL_LAUNCH_STATUSES) {
       const tone = launchStatusStyle(s).tone;
       if (s === "UNKNOWN") {
-        expect(tone).toMatch(/gray/);
+        expect(tone).toBe(unknownTone);
       } else {
-        expect(tone).not.toMatch(/^bg-gray-800 text-gray-300 ring-gray-700\/40$/);
+        expect(tone).not.toBe(unknownTone);
       }
     }
   });

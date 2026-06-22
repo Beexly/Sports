@@ -18,7 +18,7 @@ import type { StandingRow } from "@/lib/integrations/sleeper-sync";
 import { connectorsByStatus, type ConnectorStatus } from "@/lib/integrations/connectors";
 import { BRAND_COLORS } from "@/lib/brand";
 
-const POS_HEX: Record<string, string> = { QB: "#00E5FF", RB: "#7A5CFF", WR: "#FF2DD6", TE: "#F6F7FA", DEF: "#9fb3c8", K: "#E0A800" };
+const POS_HEX: Record<string, string> = { QB: "#00E5FF", RB: "#7B61FF", WR: "#FF38C7", TE: "#F5F7FF", DEF: "#9fb3c8", K: "#E0A800" };
 
 const STATUS_HEX: Record<ConnectorStatus, string> = {
   live: BRAND_COLORS.orbitalCyan,
@@ -132,12 +132,12 @@ export function SleeperConnect() {
           <input value={season} onChange={(e) => setSeason(e.target.value.replace(/\D/g, "").slice(0, 4))}
             className="mt-1 block w-24 rounded-md border bg-transparent px-3 py-2 text-sm text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
         </label>
-        <button type="button" onClick={connect} disabled={busy || !username.trim()} className="btn btn-primary disabled:opacity-50">
+        <button type="button" onClick={connect} disabled={busy || !username.trim()} aria-busy={busy} className="btn btn-primary disabled:opacity-50">
           {busy ? "Connecting…" : "Connect league"}
         </button>
       </div>
 
-      {error && <p className="rounded-lg border p-3 text-sm" style={{ borderColor: `${BRAND_COLORS.ionMagenta}55`, color: BRAND_COLORS.ionMagenta }}>{error}</p>}
+      {error && <p role="alert" className="rounded-lg border p-3 text-sm" style={{ borderColor: `${BRAND_COLORS.ionMagenta}55`, color: BRAND_COLORS.ionMagenta }}>{error}</p>}
 
       {/* league picker */}
       {leagues && leagues.length > 0 && !view && (

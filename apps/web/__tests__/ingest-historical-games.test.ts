@@ -75,4 +75,19 @@ describe("ingestHistoricalGames", () => {
     expect(res.status).toBe("source-error");
     expect(mocks.deleteMany).not.toHaveBeenCalled();
   });
+
+  it("NEVER wipes the archive on an empty (or all-invalid) upstream response", async () => {
+    // A transient empty/truncated feed must preserve the existing archive:
+    // no deleteMany, and a source-error status instead of a silent wipe.
+    const empty = await ingestHistoricalGames({ now: NOW, fetcher: async () => ({ records: [] }) });
+    expect(empty.status).toBe("source-error");
+    expect(mocks.deleteMany).not.toHaveBeenCalled();
+
+    // Rows that all fail validation also yield zero usable data → still no wipe.
+    const allInvalid = await ingestHistoricalGames({ now: NOW, fetcher: async () => ({ records: [
+      { season: "", week: "1", away_team: "", home_team: "" },
+    ] }) });
+    expect(allInvalid.status).toBe("source-error");
+    expect(mocks.deleteMany).not.toHaveBeenCalled();
+  });
 });

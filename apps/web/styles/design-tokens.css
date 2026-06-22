@@ -6,9 +6,9 @@
 :root {
   /* ── ENVIRONMENT — cosmic dark scale ──────────────────── */
   /* Canonical values from Brand Use Pack §4. Tailwind config mirrors. */
-  --void:        #050608;   /* OBSIDIAN BLACK — Brand Use Pack §4 */
-  --obsidian:    #050608;   /* default canvas — exact spec */
-  --carbon:      #100D1D;   /* cosmic gray — page background (matches Tailwind `carbon`) */
+  --void:        #05070B;   /* OBSIDIAN BLACK — Brand Use Pack §4 */
+  --obsidian:    #05070B;   /* default canvas — exact spec */
+  --carbon:      #0D1117;   /* cosmic gray — page background (matches Tailwind `carbon`) */
   --eclipse:     #171228;   /* raised surface (matches Tailwind `eclipse`) */
   --titanium:    #211A33;   /* elevated — STEEL GRAY from spec */
   --slate:       #20283A;   /* hover (matches Tailwind `slate`) */
@@ -25,7 +25,7 @@
   /* DARK SCALE = marketing / cinematic surfaces (canvas is carbon #0D1117).
      Every value below is verified WCAG AA (>=4.5:1) as TEXT on carbon/eclipse
      so existing text-ion-* / var(--ion-*) usages are legible without renaming. */
-  --ion-white:   #F6F7FA;   /* ION WHITE — 17.67:1 on carbon — PASS */
+  --ion-white:   #F5F7FF;   /* ION WHITE — 17.67:1 on carbon — PASS */
   --ion:         #D5DDE9;   /* primary text — 13.83:1 on carbon — PASS */
   --ion-1:       #AEB7D2;   /* secondary · nebula silver — brighter, violet-tinted — PASS */
   /* WCAG AA fix: --ion-2 re-valued from #5E6878 (3.36:1, FAIL) to #9AA6B8
@@ -58,7 +58,7 @@
   /* ── PRIMARY SIGNAL — ion magenta ─────────────────────── */
   /* DARK SCALE accents — highlights only, never long prose. */
   /* ION MAGENTA from Brand Use Pack §4. */
-  --plasma:        #FF2DD6;
+  --plasma:        #FF38C7;
   --plasma-glow:   #FF66E0;
   --plasma-deep:   #C81EAA;
   --plasma-ink:    #1A0014;
@@ -78,11 +78,19 @@
   --orbital-cyan-deep: #00A8BF;
 
   /* ── NEBULA PURPLE — gradient anchor (rare, decorative) ─ */
-  --nebula-purple:     #7A5CFF;
+  /* Brand Bible v1.0: NEBULA PURPLE #A855F7 — nebula atmosphere. */
+  --nebula-purple:     #A855F7;
+  --nebula-purple-glow:#C084FC;
+  --nebula-purple-deep:#7E3FC2;
+
+  /* ── ELECTRIC BLUE — supporting cool (Brand Bible v1.0) ─ */
+  --electric-blue:      #2A6BFF;
+  --electric-blue-glow: #5B8DFF;
+  --electric-blue-deep: #1A4ACC;
 
   /* ── DEPTH — SOFT ULTRAVIOLET (model layer) ───────────── */
-  /* Brand Use Pack §4: SOFT ULTRAVIOLET #7A5CFF. */
-  --ultraviolet:      #7A5CFF;
+  /* Brand Use Pack §4: SOFT ULTRAVIOLET #7B61FF. */
+  --ultraviolet:      #7B61FF;
   --ultraviolet-glow: #9F87FF;
   --ultraviolet-deep: #5942CC;
 
@@ -169,6 +177,14 @@
   --accent-3:     var(--ultraviolet);
   --premium:      var(--ultraviolet);  /* premium tier reads deep, mysterious */
 
+  /* ── SIGNAL FADE — the brand's signature gradient ─────── */
+  /* Brand Bible v1.0: Orbital Cyan -> Ion Magenta -> Ultraviolet.
+     The single canonical brand gradient. Use for wordmark fills,
+     underlines, hero accents, and rule lines. Never re-author inline. */
+  --signal-fade: linear-gradient(90deg, #00E5FF 0%, #FF38C7 52%, #7B61FF 100%);
+  --signal-fade-135: linear-gradient(135deg, #00E5FF 0%, #FF38C7 52%, #7B61FF 100%);
+  --signal-fade-soft: linear-gradient(90deg, rgba(0,229,255,0.18) 0%, rgba(255,56,199,0.18) 52%, rgba(123,97,255,0.18) 100%);
+
   /* ── Spacing ─────────────────────────────────────────── */
   --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
   --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px;
@@ -196,7 +212,7 @@
   --dur-cinematic: 880ms;
 
   /* ── Shadows · atmospheric glows ─────────────────────── */
-  --glow-plasma:    0 0 48px -8px rgba(255, 45, 214, 0.58);
+  --glow-plasma:    0 0 48px -8px rgba(255,56,199, 0.58);
   --glow-ion-blue:  0 0 42px -8px rgba(59, 130, 255, 0.52);
   --glow-uv:        0 0 46px -6px rgba(192, 132, 252, 0.58);
   --glow-lime:      0 0 32px -8px rgba(212, 255, 61, 0.40);
@@ -209,8 +225,9 @@
   --shadow-float: 0 8px 32px -8px rgba(0,0,0,0.7);
 
   /* ── Type families ───────────────────────────────────── */
-  --f-arch: "Big Shoulders Display", "Druk", "Anton", "Impact", sans-serif;
-  --f-display: "Syne", "Neue Machina", "Space Grotesk", system-ui, sans-serif;
+  /* Exo 2 — official Galaxy Sports Edge display face (Brand Bible §3). */
+  --f-arch: "Exo 2", "Eurostile", "Rajdhani", system-ui, sans-serif;
+  --f-display: "Exo 2", "Rajdhani", "Space Grotesk", system-ui, sans-serif;
   --f-display-tech: "Space Grotesk", "Neue Montreal", system-ui, sans-serif;
   --f-body: "Geist", "Inter", system-ui, -apple-system, sans-serif;
   --f-numerals: "JetBrains Mono", "Geist Mono", ui-monospace, monospace;

@@ -28,7 +28,7 @@ function JournalEntryCard({ entry }: { readonly entry: PublicJournalEntry }): JS
         </h2>
       </Link>
       <p className="mt-3 line-clamp-3 text-sm leading-6 text-ink-300">{entry.coldOpen}</p>
-      <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-ink-500">
+      <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-ion-2">
         <span>{formatDate(new Date(entry.publishedAt))}</span>
         <span>{entry.readTimeMinutes} min read</span>
         <span>{entry.referencedPickIds.length} picks cited</span>

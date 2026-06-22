@@ -19,8 +19,8 @@ function makePromotion(overrides: Partial<Promotion> = {}): Promotion {
     offerSummary: "Deposit and place a wager to qualify for a bonus bet match.",
     offerCategory: "DEPOSIT_MATCH" as Promotion["offerCategory"],
     affiliateType: "CPA" as Promotion["affiliateType"],
-    affiliateUrl: "https://example.com/aff",
-    termsUrl: "https://example.com/terms",
+    affiliateUrl: "https://sportsbook.draftkings.com/aff",
+    termsUrl: "https://sportsbook.draftkings.com/help/promotions",
     promoCode: null,
     eligibleStates: ["NJ", "NY"],
     restrictedStates: [],
@@ -110,6 +110,25 @@ describe("promotion publish guard", () => {
       { now: TS_NOW }
     );
     expect(verdict.blockers.map((b) => b.code)).toContain("MISSING_TERMS_URL");
+  });
+
+  it("blocks a placeholder / unsafe terms URL", () => {
+    for (const bad of [
+      "https://example.com/terms",
+      "http://localhost:3000/terms",
+      "https://book.test/terms",
+      "javascript:alert(1)",
+      "not a url",
+    ]) {
+      const verdict = evaluatePromotionForPublish(
+        makePromotion({ termsUrl: bad }),
+        { now: TS_NOW }
+      );
+      expect(
+        verdict.blockers.map((b) => b.code),
+        `expected SUSPICIOUS_TERMS_URL for ${bad}`,
+      ).toContain("SUSPICIOUS_TERMS_URL");
+    }
   });
 
   it("hides expired promotions", () => {

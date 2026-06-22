@@ -99,9 +99,9 @@ describe("getUserEntitlements — production DB path", () => {
     const ent = await getUserEntitlements("lapsed_user");
 
     expect(ent.tier).toBe("FREE");
-    expect(ent.canSeePremiumPicks).toBe(false);
-    expect(ent.canSeeConfidence).toBe(false);
-    expect(ent.dailyPickLimit).toBe(2);
+    expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
+    expect(ent.canSeeConfidence).toBe(true); // confidence freed for FREE (calibrated-honest, Step 3)
+    expect(ent.dailyPickLimit).toBeNull();
   });
 
   it("fails closed to FREE when the database is unreachable (P1001)", async () => {
@@ -112,7 +112,7 @@ describe("getUserEntitlements — production DB path", () => {
     const ent = await getUserEntitlements("user_1");
 
     expect(ent.tier).toBe("FREE");
-    expect(ent.canSeePremiumPicks).toBe(false);
+    expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
   });
 
   it("rethrows unexpected database errors instead of masking them", async () => {
@@ -139,7 +139,9 @@ describe("requireEntitlement", () => {
   it("throws EntitlementError when the check fails", async () => {
     mocks.subscriptionFindFirst.mockResolvedValue(null);
 
-    await expect(requireEntitlement("free_user", (e) => e.canSeeConfidence)).rejects.toThrow(
+    // FREE can now see confidence (it is calibrated-honest); gate on a flag FREE
+    // still lacks (factor breakdown is Pro+) to exercise the throw path.
+    await expect(requireEntitlement("free_user", (e) => e.canSeeFactorBreakdown)).rejects.toThrow(
       EntitlementError
     );
   });
@@ -174,7 +176,7 @@ describe("getUserEntitlements — DEV_FAKE_ADMIN gating", () => {
 
     // Falls through to the real DB path → fails closed to FREE.
     expect(ent.tier).toBe("FREE");
-    expect(ent.canSeePremiumPicks).toBe(false);
+    expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
     expect(mocks.subscriptionFindFirst).toHaveBeenCalledTimes(1);
   });
 

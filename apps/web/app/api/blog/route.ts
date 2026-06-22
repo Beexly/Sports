@@ -44,8 +44,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       title: post.title,
       slug: post.slug,
       excerpt: post.excerpt,
-      // PAYWALL: full content only for subscribers
-      content: entitlements.canSeePremiumPicks ? post.content : null,
+      // PAYWALL: full content only for paid subscribers. Keyed off paid-tier
+      // membership (not canSeePremiumPicks, which is now true for all tiers since
+      // picks are free — ENTITLEMENT_REMAP_SPEC.md). Blog gating preserved as-is.
+      content: entitlements.tier !== "FREE" ? post.content : null,
       sport: post.sport,
       tags: post.tags,
       seoTitle: post.seoTitle,

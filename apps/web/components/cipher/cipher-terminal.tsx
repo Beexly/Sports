@@ -105,9 +105,9 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
       </div>
 
       {/* Codename + brief */}
-      <h3 className="relative mt-5 font-display text-2xl text-white sm:text-3xl">
+      <h2 className="relative mt-5 font-display text-2xl text-white sm:text-3xl">
         “{view.codename}”
-      </h3>
+      </h2>
       <p className="relative mt-3 max-w-2xl text-sm leading-relaxed text-ink-300">{view.brief}</p>
 
       {/* Shard rail — where to look (no tokens) */}

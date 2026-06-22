@@ -128,13 +128,20 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
   const isPro = tier === "PRO" || tier === "ELITE";
   return {
     tier,
-    canSeePremiumPicks: isPro,
-    canSeeConfidence: isPro,
+    // Entitlement remap Step 1 (ENTITLEMENT_REMAP_SPEC.md): picks are FREE.
+    // All tiers see all picks with no daily cap. The paid line is depth +
+    // tools + analytics + alerts, never access to the picks themselves.
+    canSeePremiumPicks: true,
+    // FREE confidence is freed now that the public number is calibrated-honest
+    // (Thread 2 wired the audited calibrator into the public path; Step 3).
+    // When CALIBRATION_ADJUSTMENTS_ENABLED is on, the displayed confidence is the
+    // honest calibrated label; honest first, free second.
+    canSeeConfidence: true,
     canSeeLineMovement: isPro,
     canSeeFactorBreakdown: isPro,
     canSeeEdgeScore: true,
     canGetAlerts: tier === "ELITE",
-    dailyPickLimit: tier === "FREE" ? 2 : null,
+    dailyPickLimit: null,
     canUseTrendLab: isPro,
     canUseParlayMri: isPro,
     canUseClvLedger: tier === "ELITE",
@@ -509,6 +516,11 @@ export interface PublicPick {
 
   // Gated by subscription
   confidence: number | null;         // null for FREE
+  // Honest, calibrated display of `confidence`. Populated ONLY when the audited
+  // calibrator is active (canApplyCalibrationAdjustments) and confidence is
+  // visible; null otherwise. When present, surfaces should show this calibrated
+  // label/probability instead of the raw heuristic % (Thread 2 — honest first).
+  confidenceCalibrated?: { pct: number; label: string } | null;
   edgeScore: number | null;          // null for FREE
   factorBreakdown: FactorBreakdown | null; // null for FREE
 

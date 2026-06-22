@@ -57,12 +57,13 @@ export function DkImportPanel({ onImport, onReset, imported }: { onImport: (play
       {open && (
         <div className="mt-4 space-y-3">
           <div className="flex flex-wrap items-center gap-3">
-            <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onFile} className="text-xs text-ink-300 file:mr-3 file:rounded file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-xs file:text-white" />
+            <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onFile} aria-label="Upload DraftKings CSV" className="text-xs text-ink-300 file:mr-3 file:rounded file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-xs file:text-white" />
             <span className="text-[11px] text-ink-600">or paste below</span>
           </div>
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
+            aria-label="Paste DraftKings CSV"
             rows={4}
             placeholder="Position,Name + ID,Name,ID,Roster Position,Salary,Game Info,TeamAbbrev,AvgPointsPerGame&#10;QB,..."
             className="w-full rounded-md border bg-transparent p-2 font-mono text-[11px] text-ink-200"

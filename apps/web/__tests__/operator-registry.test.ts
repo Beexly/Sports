@@ -20,9 +20,18 @@ describe("operator registry", () => {
     );
   });
 
-  it("blocks unknown operators from promo publishing", () => {
-    expect(() => assertPromoPublishAllowed("draftkings")).toThrow(
+  it("blocks operators that are not in the registry at all", () => {
+    expect(() => assertPromoPublishAllowed("totally-unknown-book")).toThrow(
       /not in the registry/
+    );
+  });
+
+  it("blocks real but not-yet-partnered operators (affiliate not signed)", () => {
+    // DraftKings is a real, recognized operator but KNOWN_NOT_PARTNERED until
+    // an affiliate agreement is signed and its class is flipped to APPROVED_PARTNER.
+    expect(getOperator("draftkings")?.operatorClass).toBe("KNOWN_NOT_PARTNERED");
+    expect(() => assertPromoPublishAllowed("draftkings")).toThrow(
+      /only APPROVED_PARTNER/
     );
   });
 
@@ -37,10 +46,10 @@ describe("operator registry", () => {
 
   it("summarizes registry counts", () => {
     expect(summarizeRegistry()).toEqual({
-      total: 4,
+      total: 11,
       byClass: {
         APPROVED_PARTNER: 0,
-        KNOWN_NOT_PARTNERED: 0,
+        KNOWN_NOT_PARTNERED: 7,
         DEMO: 4,
         BLOCKED: 0,
       },

@@ -4,6 +4,7 @@ import type { MetricTerm } from "@/components/ui/metric-explainer";
 // ── Loaders (reused verbatim — consolidation is presentation only) ────────────
 import {
   loadNflversePlayerLab,
+  type DefenseVsPositionRank,
   type PlayerSeasonLine,
   type SkillPosition,
 } from "@/lib/nflverse/player-lab";
@@ -146,11 +147,6 @@ export interface PlayerView {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const POSITIONS: readonly SkillPosition[] = ["RB", "WR", "TE"];
-const POSITION_LABEL: Record<SkillPosition, string> = {
-  RB: "Running backs",
-  WR: "Wide receivers",
-  TE: "Tight ends",
-};
 const POS_OPTIONS: ReadonlyArray<EnumOption> = POSITIONS.map((p) => ({ value: p, label: p }));
 
 /** Build distinct, sorted enum options from a row list (e.g. positions present). */
@@ -182,6 +178,16 @@ async function loadProductionView(): Promise<ViewResult> {
   }
   const allLeaders: PlayerSeasonLine[] = [...lab.leaders.RB, ...lab.leaders.WR, ...lab.leaders.TE];
 
+  // Merge the per-position defense ranks into ONE position-toggled table so the
+  // view is a single filterable surface instead of three stacked tables. Each
+  // row carries its own rank (within its position); the "Vs" column + position
+  // toggle keep it legible whether you read all three or focus one.
+  const allDefense: DefenseVsPositionRank[] = [
+    ...lab.defenseVsPosition.RB,
+    ...lab.defenseVsPosition.WR,
+    ...lab.defenseVsPosition.TE,
+  ];
+
   const sections: SectionData[] = [
     {
       id: "leaders",
@@ -195,20 +201,19 @@ async function loadProductionView(): Promise<ViewResult> {
       showRank: true,
       minWidth: 1180,
     },
-  ];
-
-  for (const position of POSITIONS) {
-    sections.push({
-      id: `defense-${position}`,
+    {
+      id: "defense",
       kind: "production-defense",
-      eyebrow: `Defense vs ${position}`,
-      title: `Softest matchups for ${POSITION_LABEL[position].toLowerCase()}`,
-      blurb: "PPR opportunity allowed per game, ranked across qualifying defenses. Rank 1 allows the most — what actually happened on the field.",
-      rows: lab.defenseVsPosition[position],
-      minWidth: 360,
+      eyebrow: "Defense vs position",
+      title: "Softest matchups, by position",
+      blurb: "PPR opportunity allowed per game, ranked across qualifying defenses within each position. Rank 1 allows the most. Use the position toggle to focus RB, WR, or TE.",
+      footnote: "What actually happened on the field — settled, not a projection. Rank is within the selected position.",
+      rows: allDefense,
+      enumOptions: POS_OPTIONS,
+      minWidth: 460,
       emptyTitle: "Not enough games in the source window.",
-    });
-  }
+    },
+  ];
 
   return {
     status: "live",

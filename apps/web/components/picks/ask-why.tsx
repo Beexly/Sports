@@ -100,6 +100,7 @@ export function AskWhy({ pickId }: { pickId: string }) {
       {(state === "done" || state === "error") && (
         <div
           data-testid="ask-why-result"
+          aria-live="polite"
           className={[
             "rounded-lg border p-3 text-[11px] leading-relaxed",
             state === "done"

@@ -26,8 +26,8 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           background:
-            "radial-gradient(120% 80% at 30% 0%, #14182A 0%, #08091A 55%, #050608 100%)",
-          color: "#F6F7FA",
+            "radial-gradient(120% 80% at 30% 0%, #14182A 0%, #08091A 55%, #05070B 100%)",
+          color: "#F5F7FF",
           padding: "72px 88px",
           position: "relative",
           fontFamily: "'Exo 2', system-ui, sans-serif",
@@ -50,10 +50,10 @@ export default async function Image() {
 
         {/* Brand mark + wordmark */}
         <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
-          <svg width="72" height="72" viewBox="0 0 48 48" fill="none" stroke="#F6F7FA" strokeWidth="3" strokeLinecap="round">
+          <svg width="72" height="72" viewBox="0 0 48 48" fill="none" stroke="#F5F7FF" strokeWidth="3" strokeLinecap="round">
             <path d="M 8 30 A 16 16 0 1 0 40 27" />
             <line x1="6" y1="10" x2="42" y2="38" />
-            <circle cx="25" cy="22" r="4" fill="#FF2DD6" stroke="none" />
+            <circle cx="25" cy="22" r="4" fill="#FF38C7" stroke="none" />
           </svg>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <div style={{ fontSize: 44, fontWeight: 800, letterSpacing: "0.12em", display: "flex" }}>
@@ -92,7 +92,7 @@ export default async function Image() {
             fontWeight: 700,
             lineHeight: 1.0,
             letterSpacing: "-0.02em",
-            color: "#F6F7FA",
+            color: "#F5F7FF",
           }}
         >
           Graded in public.

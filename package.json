@@ -8,6 +8,7 @@
     "workers/*"
   ],
   "scripts": {
+    "postinstall": "npm run db:generate",
     "dev": "npm run dev --workspace=apps/web",
     "build": "npm run build --workspace=apps/web",
     "start": "npm run start --workspace=apps/web",
@@ -31,7 +32,9 @@
     "guard:model-freeze": "node scripts/guardrails/model-freeze.mjs",
     "guard:draft-only": "node scripts/guardrails/draft-only.mjs",
     "guard:claude-api": "node scripts/guardrails/claude-api-usage.mjs",
-    "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/eval-contracts.mjs",
+    "guard:secrets": "node scripts/guardrails/secret-scan.mjs",
+    "prepare": "node scripts/setup-git-hooks.mjs",
+    "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/guardrails/secret-scan.mjs && node scripts/eval-contracts.mjs",
     "evals:contracts": "node scripts/eval-contracts.mjs",
     "snapshots:regen": "node scripts/regenerate-launch-snapshots.mjs",
     "resource-intel:generate": "npx tsx scripts/generate-resource-intelligence.mjs",

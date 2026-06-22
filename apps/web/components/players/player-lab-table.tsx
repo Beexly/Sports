@@ -164,7 +164,10 @@ function productionLeaderColumns(tok: Tok): ReadonlyArray<Column<PlayerSeasonLin
 
 function defenseColumns(tok: Tok): ReadonlyArray<Column<DefenseVsPositionRank>> {
   return [
-    { key: "rank", label: "Rank", align: "right", numeric: true, tooltip: "1 = softest matchup (allows most)" },
+    { key: "rank", label: "Rank", align: "right", numeric: true, tooltip: "1 = softest matchup (allows most), within position" },
+    { key: "position", label: "Vs", tooltip: "the position this rank is against", render: (r) => (
+      <span className={`font-mono text-xs uppercase tracking-wide ${tok.playerPos}`}>{r.position}</span>
+    ) },
     { key: "team", label: "Def", render: (r) => teamCell(r.team, tok) },
     { key: "games", label: "G", align: "right", numeric: true },
     { key: "pprAllowedPerGame", label: "PPR/G", align: "right", numeric: true, render: (r) => fmtDecimal(r.pprAllowedPerGame) },
@@ -517,6 +520,8 @@ function resolveBinding(section: SectionData, tok: Tok): SectionBinding {
           const r = row as DefenseVsPositionRank;
           return `${r.team}-${r.position}`;
         },
+        enumAccessor: (row) => (row as DefenseVsPositionRank).position,
+        enumLabel: POS_ENUM_LABEL,
       };
     }
     case "snaps": {

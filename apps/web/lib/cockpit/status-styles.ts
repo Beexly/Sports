@@ -10,27 +10,30 @@
 import type { JarvisHealth, JarvisLaunchStatus } from "@/lib/cockpit/jarvis";
 
 // Maps a launch status to its human label and visual tone.
+// Tones use the brand SEMANTIC palette (verify = ready, caution = warn,
+// alert = blocked, ion/titanium = unknown) so the cockpit stays on-brand and
+// AA-legible on the dark surfaces (verify/caution/alert all pass AA on carbon).
 export function launchStatusStyle(status: JarvisLaunchStatus): { label: string; tone: string } {
   switch (status) {
     case "LAUNCH_READY":
-      return { label: "LAUNCH READY", tone: "bg-green-900/50 text-green-300 ring-green-700/40" };
+      return { label: "LAUNCH READY", tone: "bg-verify/10 text-verify ring-verify/40" };
     case "LAUNCH_READY_PENDING_EXTERNAL_CONFIG":
       return {
         label: "LAUNCH READY · pending external config",
-        tone: "bg-yellow-900/40 text-yellow-300 ring-yellow-700/40",
+        tone: "bg-caution/10 text-caution ring-caution/40",
       };
     case "NOT_READY_DATA":
-      return { label: "NOT READY · data", tone: "bg-red-900/40 text-red-300 ring-red-700/40" };
+      return { label: "NOT READY · data", tone: "bg-alert/10 text-alert ring-alert/40" };
     case "NOT_READY_VALIDATION":
       return {
         label: "NOT READY · validation",
-        tone: "bg-orange-900/40 text-orange-300 ring-orange-700/40",
+        tone: "bg-caution/20 text-caution ring-caution/50",
       };
     case "NOT_READY_SAFETY":
-      return { label: "NOT READY · safety", tone: "bg-red-900/60 text-red-200 ring-red-700/40" };
+      return { label: "NOT READY · safety", tone: "bg-alert/20 text-alert ring-alert/50" };
     case "UNKNOWN":
     default:
-      return { label: "UNKNOWN", tone: "bg-gray-800 text-gray-300 ring-gray-700/40" };
+      return { label: "UNKNOWN", tone: "bg-titanium text-ion-2 ring-mineral" };
   }
 }
 
@@ -38,14 +41,14 @@ export function launchStatusStyle(status: JarvisLaunchStatus): { label: string; 
 export function healthTone(h: JarvisHealth): string {
   switch (h) {
     case "GREEN":
-      return "text-green-400";
+      return "text-verify";
     case "AMBER":
-      return "text-yellow-300";
+      return "text-caution";
     case "RED":
-      return "text-red-400";
+      return "text-alert";
     case "UNKNOWN":
     default:
-      return "text-gray-500";
+      return "text-ion-3";
   }
 }
 
@@ -53,13 +56,13 @@ export function healthTone(h: JarvisHealth): string {
 export function healthBadgeTone(h: JarvisHealth): string {
   switch (h) {
     case "GREEN":
-      return "bg-green-900/40 text-green-300";
+      return "bg-verify/10 text-verify";
     case "AMBER":
-      return "bg-yellow-900/40 text-yellow-300";
+      return "bg-caution/10 text-caution";
     case "RED":
-      return "bg-red-900/40 text-red-300";
+      return "bg-alert/10 text-alert";
     case "UNKNOWN":
     default:
-      return "bg-gray-800 text-gray-400";
+      return "bg-titanium text-ion-2";
   }
 }

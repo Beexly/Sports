@@ -57,7 +57,7 @@ export function BetTracker() {
   return (
     <div className="space-y-6">
       {/* portfolio */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" aria-live="polite" aria-label="Portfolio summary">
         <Metric label="Record" value={p.record} />
         <Metric label="Units" value={`${p.profit >= 0 ? "+" : ""}${p.profit}`} hex={p.profit >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta} />
         <Metric label="ROI" value={`${p.roi >= 0 ? "+" : ""}${p.roi}%`} hex={p.roi >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta} />
@@ -73,17 +73,17 @@ export function BetTracker() {
       <div className="surface-card p-4">
         <p className="mb-3 text-xs uppercase tracking-[0.18em] text-ink-500">Log a bet</p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-6">
-          <select value={form.sport} onChange={(e) => setForm({ ...form, sport: e.target.value })} className="rounded-md border bg-transparent px-2 py-1.5 text-sm text-ink-200" style={{ borderColor: BRAND_COLORS.steelGray }}>
+          <select value={form.sport} onChange={(e) => setForm({ ...form, sport: e.target.value })} aria-label="Sport" className="rounded-md border bg-transparent px-2 py-1.5 text-sm text-ink-200" style={{ borderColor: BRAND_COLORS.steelGray }}>
             {["NFL", "NBA", "MLB", "NHL", "NCAAF", "NCAAB", "Soccer"].map((s) => <option key={s} value={s} style={{ color: "#000" }}>{s}</option>)}
           </select>
-          <input value={form.event} onChange={(e) => setForm({ ...form, event: e.target.value })} placeholder="Matchup" className="col-span-2 rounded-md border bg-transparent px-2 py-1.5 text-sm text-white sm:col-span-2" style={{ borderColor: BRAND_COLORS.steelGray }} />
-          <select value={form.market} onChange={(e) => setForm({ ...form, market: e.target.value })} className="rounded-md border bg-transparent px-2 py-1.5 text-sm text-ink-200" style={{ borderColor: BRAND_COLORS.steelGray }}>
+          <input value={form.event} onChange={(e) => setForm({ ...form, event: e.target.value })} placeholder="Matchup" aria-label="Matchup" className="col-span-2 rounded-md border bg-transparent px-2 py-1.5 text-sm text-white sm:col-span-2" style={{ borderColor: BRAND_COLORS.steelGray }} />
+          <select value={form.market} onChange={(e) => setForm({ ...form, market: e.target.value })} aria-label="Market" className="rounded-md border bg-transparent px-2 py-1.5 text-sm text-ink-200" style={{ borderColor: BRAND_COLORS.steelGray }}>
             {["Spread", "Total", "Moneyline", "Prop", "Parlay"].map((m) => <option key={m} value={m} style={{ color: "#000" }}>{m}</option>)}
           </select>
-          <input value={form.selection} onChange={(e) => setForm({ ...form, selection: e.target.value })} placeholder="Selection (e.g. PHI -3)" className="col-span-2 rounded-md border bg-transparent px-2 py-1.5 text-sm text-white sm:col-span-1" style={{ borderColor: BRAND_COLORS.steelGray }} />
+          <input value={form.selection} onChange={(e) => setForm({ ...form, selection: e.target.value })} placeholder="Selection (e.g. PHI -3)" aria-label="Selection" className="col-span-2 rounded-md border bg-transparent px-2 py-1.5 text-sm text-white sm:col-span-1" style={{ borderColor: BRAND_COLORS.steelGray }} />
           <div className="flex gap-2">
-            <input value={form.odds} onChange={(e) => setForm({ ...form, odds: e.target.value })} placeholder="Odds" className="w-16 rounded-md border bg-transparent px-2 py-1.5 text-sm text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
-            <input value={form.stake} onChange={(e) => setForm({ ...form, stake: e.target.value })} placeholder="u" className="w-12 rounded-md border bg-transparent px-2 py-1.5 text-sm text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
+            <input value={form.odds} onChange={(e) => setForm({ ...form, odds: e.target.value })} placeholder="Odds" aria-label="Odds" className="w-16 rounded-md border bg-transparent px-2 py-1.5 text-sm text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
+            <input value={form.stake} onChange={(e) => setForm({ ...form, stake: e.target.value })} placeholder="u" aria-label="Stake in units" className="w-12 rounded-md border bg-transparent px-2 py-1.5 text-sm text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
           </div>
         </div>
         <div className="mt-3 flex items-center gap-3">
@@ -152,16 +152,16 @@ function BetRow({ bet, onSettle, onRemove }: { bet: Bet; onSettle: (id: string, 
             <span className="text-ink-500">P/L <strong style={{ color: pl >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{pl >= 0 ? "+" : ""}{pl}u</strong></span>
             {c && <span className="text-ink-500">CLV <strong style={{ color: c.beat ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{c.pp >= 0 ? "+" : ""}{c.pp}pp</strong> {c.beat ? "(beat close)" : "(reverse-CLV)"}</span>}
             {!c && <span className="text-ink-600">add closing odds for CLV →
-              <input value={closing} onChange={(e) => setClosing(e.target.value)} placeholder="close" className="ml-1 w-16 rounded border bg-transparent px-1 py-0.5 text-[11px] text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
+              <input value={closing} onChange={(e) => setClosing(e.target.value)} placeholder="close" aria-label="Closing odds" className="ml-1 w-16 rounded border bg-transparent px-1 py-0.5 text-[11px] text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
               <button type="button" onClick={() => { const v = parseInt(closing, 10); if (Number.isFinite(v)) onSettle(bet.id, bet.result, v); }} className="ml-1 underline" style={{ color: BRAND_COLORS.orbitalCyan }}>save</button>
             </span>}
           </>
         ) : (
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-ink-600">Settle:</span>
-            <input value={closing} onChange={(e) => setClosing(e.target.value)} placeholder="closing odds" className="w-24 rounded border bg-transparent px-2 py-1 text-[11px] text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
+            <input value={closing} onChange={(e) => setClosing(e.target.value)} placeholder="closing odds" aria-label="Closing odds" className="w-24 rounded border bg-transparent px-2 py-1 text-[11px] text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
             {(["win", "loss", "push"] as BetResult[]).map((r) => (
-              <button key={r} type="button" onClick={() => { const v = parseInt(closing, 10); onSettle(bet.id, r, Number.isFinite(v) ? v : undefined); }}
+              <button key={r} type="button" onClick={() => { const v = parseInt(closing, 10); onSettle(bet.id, r, Number.isFinite(v) ? v : undefined); }} aria-label={`Settle as ${r}`}
                 className="rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider" style={{ background: "rgba(255,255,255,0.06)", color: r === "win" ? BRAND_COLORS.orbitalCyan : r === "loss" ? BRAND_COLORS.ionMagenta : "#9fb3c8" }}>{r}</button>
             ))}
           </div>

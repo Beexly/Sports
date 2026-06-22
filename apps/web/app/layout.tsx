@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import {
-  Big_Shoulders_Display,
+  Exo_2,
   Instrument_Serif,
   Inter,
   JetBrains_Mono,
-  Syne,
 } from "next/font/google";
 import "./globals.css";
 import {
@@ -18,16 +17,22 @@ import {
 import { CommandPalette } from "@/components/ui/command-palette";
 import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
+import { SentientShell } from "@/components/motion/sentient-shell";
+import { PageExplainerAuto } from "@/components/explainers/page-explainer";
 
-const archFont = Big_Shoulders_Display({
+// Exo 2 — the official Galaxy Sports Edge display face (Brand Bible §3):
+// geometric, futuristic, uppercase for impact. Drives both the heavy archetype
+// slams (--f-arch) and the standard headlines (--f-display).
+const archFont = Exo_2({
   subsets: ["latin"],
-  weight: ["800", "900"],
+  weight: ["700", "800", "900"],
   variable: "--f-arch",
   display: "swap",
 });
 
-const displayFont = Syne({
+const displayFont = Exo_2({
   subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
   variable: "--f-display",
   display: "swap",
 });
@@ -61,7 +66,7 @@ const editorialFont = Instrument_Serif({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#04060a",
+  themeColor: "#05070B",
   width: "device-width",
   initialScale: 1,
 };
@@ -133,11 +138,14 @@ export const metadata: Metadata = {
     images: ["/opengraph-image"],
   },
   icons: {
+    // Official chrome emblem (Brand Bible v1.0) is the primary app/tab icon;
+    // the SVG fallback keeps a vector tab icon for browsers that prefer it.
     icon: [
+      { url: "/brand/gse-emblem-64.png", type: "image/png", sizes: "64x64" },
+      { url: "/brand/gse-emblem.png", type: "image/png", sizes: "512x512" },
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/logo-mark.svg", type: "image/svg+xml", sizes: "any" },
     ],
-    apple: [{ url: "/logo-mark.svg" }],
+    apple: [{ url: "/brand/gse-emblem-180.png", sizes: "180x180" }],
   },
   manifest: "/site.webmanifest",
 };
@@ -152,7 +160,7 @@ const organizationJsonLd = {
   name: BRAND_NAME,
   alternateName: "GSE",
   url: SITE_URL,
-  logo: `${SITE_URL}/logo-mark.svg`,
+  logo: `${SITE_URL}/brand/gse-emblem.png`,
   description: BRAND_META.description,
   sameAs: [
     SOCIAL.x,
@@ -222,6 +230,8 @@ export default function RootLayout({
         {children}
         <CommandPalette />
         <GalaxyCursor />
+        <SentientShell />
+        <PageExplainerAuto />
         <SentryClientInit />
 
         {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { loadGameRoom } from "@/lib/game-room/load";
 import {
   answerModelCourtQuestion,
@@ -32,6 +33,16 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ success: false, error: "unauthorized" }, { status: 401 });
+  }
+
+  // Per-user throttle in front of the paid Claude call (denial-of-wallet): one
+  // caller must not be able to loop this and drain the shared monthly budget.
+  const limit = consumeRateLimit("model-court", session.user.id, 10, 5 * 60 * 1000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { success: false, error: "rate-limited", message: "Too many requests. Please wait a moment before asking again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
   }
 
   const entitlements = await getUserEntitlements(session.user.id);
@@ -124,7 +135,12 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
         { status: 422 }
       );
     }
-    throw error;
+    // Shape any other failure into a controlled 500, matching every sibling
+    // route, instead of re-throwing into an uncontrolled Next error path.
+    return NextResponse.json(
+      { success: false, error: "generation-failed", message: "Model Court could not answer right now." },
+      { status: 500 }
+    );
   }
 }
 

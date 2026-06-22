@@ -14,8 +14,9 @@ describe("homepage doctrine hero", () => {
   const galaxy = readRepoFile("apps/web/components/hero/interactive-galaxy.tsx");
 
   it("loads the doctrine font families through next/font and binds the CSS vars", () => {
-    expect(layout).toMatch(/Big_Shoulders_Display/);
-    expect(layout).toMatch(/Syne/);
+    // Exo 2 — the official Galaxy Sports Edge display face (Brand Bible §3),
+    // bound to both the heavy archetype slams and the standard headlines.
+    expect(layout).toMatch(/Exo_2/);
     expect(layout).toMatch(/Inter/);
     expect(tokens).toMatch(/--f-body: "Geist", "Inter"/);
     expect(layout).toMatch(/JetBrains_Mono/);
@@ -34,25 +35,28 @@ describe("homepage doctrine hero", () => {
     expect(tokens).not.toMatch(/fonts\.googleapis\.com/);
   });
 
-  it("uses a data-first front-door headline", () => {
-    expect(page).toContain("The board is only as smart as the data behind it.");
-    expect(page).toContain("No public pick or projection appears unless the");
+  it("uses the noise-to-signal thesis headline, one cold-open, no legacy hero", () => {
+    expect(page).toContain("The market is full of");
+    expect(page).toContain("Galaxy turns it into");
+    expect(page).toContain("We detect. You decide.");
+    // ONE cold-open: the montage stays, the slow doctrine intro is retired.
+    expect(page).toContain("MontageEntrance");
+    expect(page).not.toContain("CinematicEntrance");
     expect(page).not.toContain("We&apos;re not AI");
     expect(page).not.toMatch(/data-testid="homepage-arch-headline"/);
     expect(page).not.toMatch(/AnnotatedSampleSignal/);
   });
 
-  it("renders board telemetry, source health, and Trend Lab from the front door", () => {
-    expect(page).toMatch(/Board state/);
-    expect(page).toMatch(/Source health/);
-    expect(page).toMatch(/Trend Lab/);
-    expect(page).toMatch(/PUBLIC_DATA_SOURCES/);
-    expect(page).toMatch(/TREND_BACKLOG/);
-    expect(page).toMatch(/sportsWatched/);
-    expect(page).toMatch(/booksPolled/);
-    expect(page).toMatch(/openPicks/);
-    expect(page).toMatch(/lastRefresh/);
-    expect(page).toMatch(/font-numerals/);
+  it("routes the four doors from the front door with live, real-sourced stats", () => {
+    for (const door of ["Board", "The Lab", "Intelligence", "Fantasy & Daily"]) {
+      expect(page).toContain(door);
+    }
+    expect(page).toMatch(/loadBoardState/);
+    expect(page).toMatch(/calibration\.sampleSize/);
+    expect(page).toMatch(/state\.publishedToday\.length/);
+    // The sprawling telemetry card + source-health table moved off the home.
+    expect(page).not.toMatch(/Source health/);
+    expect(page).not.toMatch(/PUBLIC_DATA_SOURCES/);
   });
 
   it("keeps the galaxy alive without placeholder node labels", () => {

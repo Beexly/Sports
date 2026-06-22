@@ -341,32 +341,49 @@ export async function processSport(
         (pick.pickGrade === "ELITE_PLAY" ||
           (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80));
 
-      // Upsert by DB-enforced unique key [gameId, pickType].
-      // Create sets origin fields (ingestionRunId, isBootstrap, isFeatured).
-      // Update never changes isBootstrap — creation era is immutable.
-      const upsertedPick = await db.pick.upsert({
+      // A SETTLED pick is frozen: once it has a WIN/LOSS/PUSH result, the
+      // refresh cycle must never rewrite its selection/line/confidence/grade/
+      // reasoning, or the published track record stops matching the line it
+      // was graded on (and calibration is corrupted). Settlement is the only
+      // writer for settled rows. We can't express "update only if PENDING" in
+      // a unique-key upsert, so check first and skip the rewrite when settled.
+      const existingPick = await db.pick.findUnique({
         where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-        create: {
-          gameId: pick.gameId,
-          pickType: pick.pickType,
-          ingestionRunId: run.id,
-          isBootstrap,
-          isFeatured,
-          // CLV lock snapshot — the line/price we ACTUALLY published at, captured
-          // once at creation. Absent from `update` below, so the refresh cycle can
-          // never overwrite it (Pick.line itself IS mutated each cycle). Moneyline
-          // `pick.line` holds the American price; spread/total `pick.line` holds the
-          // points line. Graded against the closing line at settlement.
-          clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
-          clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
-          ...pickUpdateData,
-        },
-        update: {
-          ...pickUpdateData,
-          // Re-evaluate featured status on each refresh when promotion is enabled.
-          isFeatured,
-        },
+        select: { id: true, result: true },
       });
+
+      let upsertedPick: { id: string };
+      if (existingPick && existingPick.result !== "PENDING") {
+        // Frozen — leave the settled pick exactly as graded.
+        upsertedPick = { id: existingPick.id };
+      } else {
+        // Upsert by DB-enforced unique key [gameId, pickType].
+        // Create sets origin fields (ingestionRunId, isBootstrap, isFeatured).
+        // Update never changes isBootstrap — creation era is immutable.
+        upsertedPick = await db.pick.upsert({
+          where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
+          create: {
+            gameId: pick.gameId,
+            pickType: pick.pickType,
+            ingestionRunId: run.id,
+            isBootstrap,
+            isFeatured,
+            // CLV lock snapshot — the line/price we ACTUALLY published at, captured
+            // once at creation. Absent from `update` below, so the refresh cycle can
+            // never overwrite it (Pick.line itself IS mutated each cycle). Moneyline
+            // `pick.line` holds the American price; spread/total `pick.line` holds the
+            // points line. Graded against the closing line at settlement.
+            clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
+            clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
+            ...pickUpdateData,
+          },
+          update: {
+            ...pickUpdateData,
+            // Re-evaluate featured status on each refresh when promotion is enabled.
+            isFeatured,
+          },
+        });
+      }
       picksGenerated++;
 
       // Capture PickSignalSnapshot — immutable record of signal state at prediction time.

@@ -6,6 +6,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { AcademySimulator } from "@/components/academy/academy-simulator";
+import { AcademyProgress } from "@/components/academy/academy-progress";
 import { CoursePlayer } from "@/components/academy/course-player";
 import { ReaderDoorway } from "@/components/house/reader-doorway";
 import { BeatTheClose } from "@/components/academy/beat-the-close";
@@ -23,9 +24,9 @@ import { SignalRule } from "@/components/motion/signal-rule";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "The Academy — Courses, Live Fire, and Beat the Close",
+  title: "The Academy — Tracks, Live Fire, and Beat the Close",
   description:
-    "Interactive courses with graded quizzes, a live-fire decision simulator, the Beat the Close training game, and the GM Academy — train process, calibration, and restraint.",
+    "A real curriculum: tracks and modules with saved progress and mastery, interactive courses with graded quizzes, a live-fire decision simulator, the Beat the Close training game, and the GM Academy. Train process, calibration, and restraint.",
   alternates: { canonical: "/academy" },
 };
 
@@ -95,10 +96,17 @@ export default function AcademyPage() {
                       <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em]" style={{ color: w.hex }}>
                         {w.label}
                       </p>
-                      <p className="mt-1.5 text-xs leading-relaxed text-ink-300">{w.desc}</p>
+                      <p className="mt-1.5 text-xs leading-relaxed text-ion-1">{w.desc}</p>
                     </a>
                   </HoloTilt>
                 ))}
+              </div>
+            </Reveal>
+
+            {/* LMS spine — tracks, modules, mastery (saved on-device) */}
+            <Reveal delay={300}>
+              <div className="mt-8">
+                <AcademyProgress />
               </div>
             </Reveal>
           </div>
@@ -119,7 +127,7 @@ export default function AcademyPage() {
                 <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
                   How should we explain things?
                 </p>
-                <p className="mt-1 text-sm text-ink-300">
+                <p className="mt-1 text-sm text-ion-1">
                   Set your register — every &ldquo;ask the model why&rdquo; across
                   Galaxy meets you here. New to this? Choose &ldquo;Teach me.&rdquo;
                 </p>
@@ -180,11 +188,11 @@ export default function AcademyPage() {
         <section id="film-room" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow text-ink-400">film room</p>
+              <p className="eyebrow text-ion-2">film room</p>
               <h2 className="mt-3 font-display text-3xl font-semibold text-white">
                 The filmed curriculum — in production.
               </h2>
-              <p className="mt-3 max-w-2xl text-ink-300">
+              <p className="mt-3 max-w-2xl text-ion-1">
                 Six episodes pairing with the course floor — the real production order, no
                 placeholders. Every lesson is already trainable above.
               </p>
@@ -201,7 +209,7 @@ export default function AcademyPage() {
         <section className="px-4 pb-24 pt-4 sm:px-6 lg:px-8">
           <Reveal>
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-sm leading-relaxed text-ink-500">
+              <p className="text-sm leading-relaxed text-ion-2">
                 Training content is illustrative and educational. Every floor rewards calibration
                 and restraint, never streaks — the same standard the engine holds itself to.
               </p>

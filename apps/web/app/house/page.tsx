@@ -8,6 +8,10 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { ReaderDoorway } from "@/components/house/reader-doorway";
 import { WEEKLY_RITUAL } from "@/lib/house/weekly-ritual";
 import { BRAND_COLORS } from "@/lib/brand";
+import { loadBoardState } from "@/lib/board/state";
+import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "The NFL House — Football Is Better When You Have a Room",
@@ -29,8 +33,15 @@ interface RoomDoor {
   readonly whose: string;
   readonly promise: string;
   readonly accent: string;
+  /** Which real, live operational count this door surfaces (never fabricated). */
+  readonly live?: "board" | "receipts" | "observatory" | "academy";
 }
 
+/**
+ * The doors, cut to the six that matter — one for each kind of fan, minimal
+ * overlap. Each opens onto a real surface and (where one exists) wears a LIVE
+ * count pulled from real loaders, never an invented community number.
+ */
 const ROOM_DOORS: readonly RoomDoor[] = [
   {
     name: "The War Room",
@@ -39,6 +50,16 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     promise:
       "The live decision surface — published rows, gated rows, and the discipline of No-Bet. Bring the number, not the ego.",
     accent: BRAND_COLORS.orbitalCyan,
+    live: "board",
+  },
+  {
+    name: "The Observatory",
+    href: "/observatory",
+    whose: "For the one who wants to see the whole board",
+    promise:
+      "The slate as a living market map — where the pressure is, where the gravity bends, where the edges open.",
+    accent: BRAND_COLORS.softUltraviolet,
+    live: "observatory",
   },
   {
     name: "The Film Room",
@@ -47,6 +68,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     promise:
       "Pressure, coverage, pace, protection — learn to watch like an analyst. Graded on decision quality, not bravado.",
     accent: BRAND_COLORS.softUltraviolet,
+    live: "academy",
   },
   {
     name: "Fantasy 101",
@@ -57,28 +79,13 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     accent: BRAND_COLORS.ionMagenta,
   },
   {
-    name: "The Parlay MRI Lab",
-    href: "/parlay-mri",
-    whose: "For the ticket that looks too good",
-    promise:
-      "Bring the slip. We show the correlation the payout hides — and when the sharpest move is the one you don't make.",
-    accent: BRAND_COLORS.ionMagenta,
-  },
-  {
-    name: "The Hall of Misses",
-    href: "/performance/losses",
-    whose: "For the skeptic — rightly so",
-    promise:
-      "Our losses, dissected in public. Process or variance — we say which, and what changes because of it.",
-    accent: BRAND_COLORS.orbitalCyan,
-  },
-  {
     name: "The Receipts",
     href: "/performance",
-    whose: "For anyone who's been burned before",
+    whose: "For the skeptic who's been burned before",
     promise:
-      "Calibration before claims. Every number on this site has to earn its place, and this is where it does.",
+      "Calibration before claims, losses dissected in public. Every number on this site has to earn its place, and this is where it does.",
     accent: BRAND_COLORS.softUltraviolet,
+    live: "receipts",
   },
   {
     name: "The Beat",
@@ -87,14 +94,6 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     promise:
       "Scores, stories, what changed — the casual surface. Long week? This is the room with the comfortable chair.",
     accent: BRAND_COLORS.orbitalCyan,
-  },
-  {
-    name: "The Observatory",
-    href: "/observatory",
-    whose: "For the one who wants to see the whole board",
-    promise:
-      "The slate as a living market map — where the pressure is, where the gravity bends, where the edges open.",
-    accent: BRAND_COLORS.softUltraviolet,
   },
 ];
 
@@ -108,7 +107,40 @@ const HOUSE_RULES: readonly string[] = [
   "Nobody is talked down to. Same data, different doorway.",
 ];
 
-export default function NflHousePage() {
+/** Resolve a door's live badge from real loaders. Returns null when there is
+ *  no honest count to show (never an invented number). */
+function doorBadge(
+  live: RoomDoor["live"],
+  data: { cleared: number; gated: number; settled: number; scoring: number },
+): string | null {
+  switch (live) {
+    case "board":
+      return data.cleared > 0 || data.gated > 0
+        ? `${data.cleared} cleared · ${data.gated} gated`
+        : "Gate holding";
+    case "observatory":
+      return data.scoring > 0 ? `${data.scoring} scoring now` : "Slate map live";
+    case "receipts":
+      return data.settled > 0 ? `${data.settled} settled` : "Calibrating";
+    case "academy":
+      return "Open lessons";
+    default:
+      return null;
+  }
+}
+
+export default async function NflHousePage() {
+  const [stateResult, calibrationResult] = await Promise.all([
+    loadBoardState(),
+    loadPublicCalibrationReport(),
+  ]);
+  const live = {
+    cleared: stateResult.data.publishedToday.length,
+    gated: stateResult.data.gatedTodayRows.length,
+    settled: calibrationResult.data.sampleSize,
+    scoring: stateResult.data.scoringNow.length,
+  };
+
   return (
     <div
       className="flex min-h-screen flex-col"
@@ -158,7 +190,7 @@ export default function NflHousePage() {
               </h1>
             </Reveal>
             <Reveal delay={170}>
-              <p className="mt-5 max-w-2xl text-lg text-ink-300">
+              <p className="mt-5 max-w-2xl text-lg text-ion-1">
                 We turn NFL data, market movement, fantasy decisions, and game-day
                 chaos into clear human reads. The math is the same in every room —
                 the doorway is yours. Come for clarity. Stay because it feels like
@@ -189,39 +221,62 @@ export default function NflHousePage() {
               >
                 Pick your door
               </h2>
-              <p className="mt-2 max-w-2xl text-sm text-ink-300">
+              <p className="mt-2 max-w-2xl text-sm text-ion-1">
                 Every room runs on the same engine and the same receipts. The only
                 thing that changes is how it speaks to you.
               </p>
             </Reveal>
-            <Stagger className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {ROOM_DOORS.map((door) => (
-                <Link
-                  key={door.href + door.name}
-                  href={door.href}
-                  data-testid="house-door"
-                  className="group flex flex-col rounded-2xl border border-mineral bg-eclipse/50 p-5 transition hover:border-mineral-hi hover:bg-eclipse/80"
-                >
-                  <span
-                    className="text-[10px] font-semibold uppercase tracking-[0.16em]"
-                    style={{ color: door.accent }}
+            <Stagger className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {ROOM_DOORS.map((door) => {
+                const badge = doorBadge(door.live, live);
+                return (
+                  <Link
+                    key={door.href + door.name}
+                    href={door.href}
+                    data-testid="house-door"
+                    className="group relative flex flex-col overflow-hidden rounded-2xl border border-mineral bg-eclipse/50 p-5 transition-colors duration-300 hover:border-mineral-hi hover:bg-eclipse/80"
                   >
-                    {door.whose}
-                  </span>
-                  <span className="mt-2 font-display text-xl text-ion-white">
-                    {door.name}
-                  </span>
-                  <span className="mt-3 flex-1 text-sm leading-relaxed text-ion-1">
-                    {door.promise}
-                  </span>
-                  <span
-                    className="mt-4 text-xs font-semibold uppercase tracking-wider text-ion-2 transition group-hover:text-ion-white"
-                    aria-hidden="true"
-                  >
-                    Enter →
-                  </span>
-                </Link>
-              ))}
+                    {/* hover-cinematic: an accent rail draws across the top, and a
+                        soft glow lifts from the door's accent color. */}
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100"
+                      style={{ background: `linear-gradient(90deg, ${door.accent}, transparent)` }}
+                    />
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute -inset-px -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                      style={{ background: `radial-gradient(60% 50% at 50% 0%, ${door.accent}14, transparent 70%)` }}
+                    />
+                    <div className="flex items-start justify-between gap-3">
+                      <span
+                        className="text-[10px] font-semibold uppercase tracking-[0.16em]"
+                        style={{ color: door.accent }}
+                      >
+                        {door.whose}
+                      </span>
+                      {badge && (
+                        <span className="shrink-0 rounded-full border border-mineral bg-carbon/70 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-ion-2 tabular-nums">
+                          <span aria-hidden className="mr-1 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: door.accent }} />
+                          {badge}
+                        </span>
+                      )}
+                    </div>
+                    <span className="mt-2 font-display text-xl text-ion-white">
+                      {door.name}
+                    </span>
+                    <span className="mt-3 flex-1 text-sm leading-relaxed text-ion-1">
+                      {door.promise}
+                    </span>
+                    <span
+                      className="mt-4 text-xs font-semibold uppercase tracking-wider text-ion-2 transition group-hover:text-ion-white"
+                      aria-hidden="true"
+                    >
+                      Enter →
+                    </span>
+                  </Link>
+                );
+              })}
             </Stagger>
           </div>
         </section>
@@ -242,7 +297,7 @@ export default function NflHousePage() {
               >
                 How should Galaxy speak to you?
               </h2>
-              <p className="mt-2 max-w-2xl text-sm text-ink-300">
+              <p className="mt-2 max-w-2xl text-sm text-ion-1">
                 The engine never changes. The explanation meets you where you
                 are — pick a register and every &ldquo;ask the model why&rdquo;
                 across the site honors it.
@@ -272,7 +327,7 @@ export default function NflHousePage() {
               >
                 The week has a shape. The desk works it.
               </h2>
-              <p className="mt-2 max-w-2xl text-sm text-ink-300">
+              <p className="mt-2 max-w-2xl text-sm text-ion-1">
                 An NFL week is a ritual, not a feed. This is how we move through
                 it — and when each room matters most.
               </p>

@@ -4,9 +4,8 @@ import { BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand";
 /**
  * Default OpenGraph image — Galaxy Sports Edge.
  *
- * 1200×630 — the Twitter / Facebook / LinkedIn standard. Edge runtime so
- * cold starts stay fast. The card features the orbital mark, the GALAXY /
- * SPORTS EDGE lockup, the tagline, and the brand closer.
+ * 1200×630 — Twitter / Facebook / LinkedIn standard. Uses the canonical
+ * logo-mark.svg path so social shares match the site identically.
  */
 
 export const runtime = "edge";
@@ -24,8 +23,8 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           background:
-            "radial-gradient(120% 80% at 70% 0%, #1A1D33 0%, #08091A 55%, #050608 100%)",
-          color: "#F6F7FA",
+            "radial-gradient(120% 80% at 70% 0%, #1A1D33 0%, #08091A 55%, #05070B 100%)",
+          color: "#F5F7FF",
           padding: "72px 88px",
           position: "relative",
           fontFamily: "'Exo 2', system-ui, sans-serif",
@@ -41,7 +40,7 @@ export default async function Image() {
             height: 500,
             borderRadius: "50%",
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(0,229,255,0.35) 0%, rgba(122,92,255,0.12) 60%, transparent 100%)",
+              "radial-gradient(50% 50% at 50% 50%, rgba(0,229,255,0.35) 0%, rgba(123,97,255,0.12) 60%, transparent 100%)",
             display: "flex",
           }}
         />
@@ -56,25 +55,31 @@ export default async function Image() {
             height: 520,
             borderRadius: "50%",
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(255,45,214,0.40) 0%, rgba(122,92,255,0.15) 60%, transparent 100%)",
+              "radial-gradient(50% 50% at 50% 50%, rgba(255,56,199,0.40) 0%, rgba(123,97,255,0.15) 60%, transparent 100%)",
             display: "flex",
           }}
         />
 
-        {/* Brand mark + wordmark */}
+        {/* Canonical brand mark — inline SVG matching logo-mark.svg */}
         <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-          <svg
-            width="84"
-            height="84"
-            viewBox="0 0 48 48"
-            fill="none"
-            stroke="#F6F7FA"
-            strokeWidth="3"
-            strokeLinecap="round"
-          >
-            <path d="M 8 30 A 16 16 0 1 0 40 27" />
-            <line x1="6" y1="10" x2="42" y2="38" />
-            <circle cx="25" cy="22" r="4" fill="#FF2DD6" stroke="none" />
+          <svg width="84" height="84" viewBox="0 0 64 64" fill="none">
+            <defs>
+              <linearGradient id="og-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#00E5FF" />
+                <stop offset="55%" stopColor="#7B61FF" />
+                <stop offset="100%" stopColor="#FF38C7" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M11 38C8 25 18 12 32 12c9.8 0 18 6.7 20.3 15.7"
+              stroke="url(#og-grad)"
+              strokeWidth="3"
+              strokeLinecap="round"
+              fill="none"
+            />
+            <line x1="10" y1="16" x2="54" y2="50" stroke="url(#og-grad)" strokeWidth="3" strokeLinecap="round" />
+            <circle cx="34" cy="30" r="4" fill="#FF38C7" />
+            <circle cx="34" cy="30" r="1.5" fill="#F5F7FF" />
           </svg>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <div
@@ -82,7 +87,7 @@ export default async function Image() {
                 fontSize: 56,
                 fontWeight: 800,
                 letterSpacing: "0.12em",
-                color: "#F6F7FA",
+                color: "#F5F7FF",
                 display: "flex",
               }}
             >
@@ -103,7 +108,7 @@ export default async function Image() {
           </div>
         </div>
 
-        {/* Eyebrow — founder anchor instead of product chrome */}
+        {/* Eyebrow */}
         <div
           style={{
             marginTop: 80,
@@ -114,7 +119,7 @@ export default async function Image() {
             fontSize: 22,
             letterSpacing: "0.24em",
             textTransform: "uppercase",
-            color: "#7A5CFF",
+            color: "#7B61FF",
           }}
         >
           <div
@@ -129,7 +134,7 @@ export default async function Image() {
           Sports intelligence · Live edge engine
         </div>
 
-        {/* Tagline — locked copy from Brand Use Pack §7 */}
+        {/* Tagline */}
         <div
           style={{
             marginTop: 28,
@@ -138,14 +143,14 @@ export default async function Image() {
             fontWeight: 600,
             lineHeight: 1.02,
             letterSpacing: "-0.015em",
-            color: "#F6F7FA",
+            color: "#F5F7FF",
             maxWidth: 980,
           }}
         >
           {BRAND_TAGLINE}
         </div>
 
-        {/* Personal subhead — the reason it exists, in my voice */}
+        {/* Personal subhead */}
         <div
           style={{
             marginTop: 18,
@@ -161,7 +166,7 @@ export default async function Image() {
           Because tout services don&apos;t show the losses.
         </div>
 
-        {/* Footer — a principle, signed */}
+        {/* Footer */}
         <div
           style={{
             marginTop: "auto",

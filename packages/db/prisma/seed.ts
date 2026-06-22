@@ -353,15 +353,23 @@ async function seedCockpit(): Promise<void> {
     ],
   });
 
-  // ── Phase 4 — Promotions seed (Bobby + Jarvis review queue) ──
-  // Idempotent: only seeds if the table is empty.
-  await seedPromotions();
+  // Production safety: the demo promotions / daily-brief / content drafts are
+  // illustrative rows that must NEVER seed a production database (they could
+  // surface on the public /promotions marketplace). Gate them on NODE_ENV the
+  // same way seedPicks is gated.
+  if (process.env["NODE_ENV"] !== "production") {
+    // ── Phase 4 — Promotions seed (Bobby + Jarvis review queue) ──
+    // Idempotent: only seeds if the table is empty.
+    await seedPromotions();
 
-  // ── Phase 5 — Daily Brief seed (one INTERNAL draft for today) ──
-  await seedDailyBrief();
+    // ── Phase 5 — Daily Brief seed (one INTERNAL draft for today) ──
+    await seedDailyBrief();
 
-  // ── Phase 8 — Draft-only content engine seed ──
-  await seedContentDrafts();
+    // ── Phase 8 — Draft-only content engine seed ──
+    await seedContentDrafts();
+  } else {
+    console.log("NODE_ENV=production — skipping demo promotions/daily-brief/content seed.");
+  }
 }
 
 // ─────────────────────────────────────────────

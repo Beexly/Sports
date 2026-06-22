@@ -13,16 +13,19 @@
 
 import dynamic from "next/dynamic";
 import { BRAND_COLORS } from "@/lib/brand";
+import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 
 function GalaxyFallback() {
   return (
     <div
       aria-hidden="true"
-      className="h-full w-full"
+      className="flex h-full w-full items-center justify-center"
       style={{
         background: `radial-gradient(60% 80% at 50% 46%, ${BRAND_COLORS.orbitalCyan}14, transparent 60%), radial-gradient(40% 60% at 70% 35%, ${BRAND_COLORS.softUltraviolet}10, transparent 65%), ${BRAND_COLORS.obsidianBlack}`,
       }}
-    />
+    >
+      <LogoMarkInline size={48} pulse glow />
+    </div>
   );
 }
 

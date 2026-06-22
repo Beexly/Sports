@@ -8,16 +8,19 @@
 
 import dynamic from "next/dynamic";
 import { BRAND_COLORS } from "@/lib/brand";
+import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 
 function AuroraFallback() {
   return (
     <div
       aria-hidden="true"
-      className="h-full w-full"
+      className="flex h-full w-full items-center justify-center"
       style={{
         background: `radial-gradient(60% 80% at 30% 20%, ${BRAND_COLORS.softUltraviolet}20, transparent 60%), radial-gradient(50% 70% at 78% 30%, ${BRAND_COLORS.orbitalCyan}12, transparent 62%), radial-gradient(60% 80% at 50% 100%, ${BRAND_COLORS.ionMagenta}0e, transparent 60%), ${BRAND_COLORS.obsidianBlack}`,
       }}
-    />
+    >
+      <LogoMarkInline size={40} pulse glow />
+    </div>
   );
 }
 

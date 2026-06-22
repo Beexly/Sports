@@ -9,6 +9,7 @@ import { parseDateParam } from "@/lib/parse-date-param";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
+import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 
 export const dynamic = "force-dynamic";
 
@@ -104,6 +105,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     take: entitlements.dailyPickLimit ?? 200,
   });
 
+  // Thread 2: honest calibrated confidence. Built once (memoised) and only when
+  // the audited calibrator is on; the calibrator is self-suppressing if the
+  // sample is insufficient/non-improving, so this is null-safe by construction.
+  const calibrator = gates.canApplyCalibrationAdjustments ? await getPublicCalibrator() : null;
+
   const publicPicks: PublicPick[] = picks.map((pick) => {
     // Parse + validate factorBreakdown from JSON storage. The Prisma column is
     // typed JsonValue; parseFactorBreakdown checks the shape and returns null
@@ -127,6 +133,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
     const dataQualityScore = storedDqScore ?? Math.round(pick.game.dataQualityScore);
 
+    // FREE-tier picks always carry their confidence; premium picks need the
+    // canSeeConfidence entitlement. (Picks are free; confidence is the paid line
+    // until Step 3 frees the now-calibrated number.)
+    const shownConfidence =
+      entitlements.canSeeConfidence || pick.tier === "FREE" ? pick.confidence : null;
+
     return {
       id: pick.id,
       game: {
@@ -143,8 +155,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // decision). Premium picks are never returned to FREE viewers (tier filter
       // above), and the board redacts confidence independently, so this does not
       // leak the paid product.
-      confidence:
-        entitlements.canSeeConfidence || pick.tier === "FREE" ? pick.confidence : null,
+      confidence: shownConfidence,
+      // Honest calibrated display of the confidence shown, when the audited
+      // calibrator is active (else null → surfaces show the raw heuristic %).
+      confidenceCalibrated: calibrator ? honestConfidence(shownConfidence, calibrator, true) : null,
       edgeScore: entitlements.canSeeEdgeScore ? pick.edgeScore : null,
       factorBreakdown,
       // Always visible — trust transparency
@@ -152,7 +166,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       tier: pick.tier as "FREE" | "PREMIUM",
       pickGrade: (pick.pickGrade ?? "LEAN") as PickGrade,
       riskLevel: (pick.riskLevel ?? "MODERATE") as RiskLevel,
-      reasoning: entitlements.canSeeConfidence
+      // Full reasoning / "the why" stays a paid feature (Pro+). Decoupled from
+      // canSeeConfidence (now true for FREE) so freeing confidence does not also
+      // free the premium reasoning trail. FREE gets the short teaser.
+      reasoning: entitlements.canSeeFactorBreakdown
         ? pick.reasoning
         : pick.reasoningShort || pick.reasoning.split(".")[0] + ".",
       reasoningShort: pick.reasoningShort,

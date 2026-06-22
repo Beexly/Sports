@@ -199,10 +199,10 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
               </button>
             </header>
 
-            <div className="flex-1 px-6 py-5">
+            <div className="flex-1 px-6 py-5" aria-live="polite" aria-busy={load.status === "loading"}>
               {load.status === "loading" && <DrawerSkeleton />}
               {load.status === "error" && (
-                <p className="text-sm text-alert/90">{load.message}</p>
+                <p role="alert" className="text-sm text-alert/90">{load.message}</p>
               )}
               {load.status === "loaded" && load.audit.tier === "FREE" && (
                 <SummaryAudit

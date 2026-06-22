@@ -10,23 +10,41 @@ describe("Homepage data-first signal contract", () => {
     expect(pageSource).not.toMatch(/annotated-sample-signal/);
   });
 
-  it("leads with data readiness instead of a fabricated pick example", () => {
-    expect(pageSource).toContain("The board is only as smart as the data behind it.");
-    expect(pageSource).toContain("No public rows yet");
-    expect(pageSource).toContain("Rows stay empty instead of blocking the experience or inventing data.");
+  it("derives every homepage number from real board + calibration state", () => {
+    // The concise home shows live numbers only — sourced from real loaders,
+    // never fabricated literals.
+    expect(pageSource).toMatch(/\bloadBoardState\b/);
+    expect(pageSource).toMatch(/\bloadPublicCalibrationReport\b/);
+    expect(pageSource).toMatch(/\bloadNflverseUsagePulse\b/);
+    expect(pageSource).toContain("state.publishedToday.length");
+    expect(pageSource).toContain("state.gatedTodayRows.length");
+    expect(pageSource).toContain("state.scoringNow.length");
+    expect(pageSource).toContain("calibration.sampleSize");
   });
 
-  it("surfaces the live board lanes without requiring sample rows", () => {
-    expect(pageSource).toContain("state.scoringNow");
-    expect(pageSource).toContain("state.publishedToday");
-    expect(pageSource).toContain("state.gatedTodayRows");
-    expect(pageSource).toContain("No active scoring rows.");
-    expect(pageSource).toContain("No public pick has cleared.");
+  it("routes the four doors instead of dumping every surface on the front page", () => {
+    for (const door of ["Board", "The Lab", "Intelligence", "Fantasy & Daily"]) {
+      expect(pageSource).toContain(door);
+    }
+    expect(pageSource).toContain("DoorCard");
+    expect(pageSource).toContain('href="/board"');
+    expect(pageSource).toContain('href="/players"');
+    expect(pageSource).toContain('href="/fantasy"');
   });
 
-  it("points users to real data sources and Trend Lab instead of static sample anatomy", () => {
-    expect(pageSource).toContain("PUBLIC_DATA_SOURCES");
-    expect(pageSource).toContain("TREND_BACKLOG");
-    expect(pageSource).toContain("Open Trend Lab");
+  it("stays concise — the relocated teaching chapters are gone from the front door", () => {
+    for (const legacy of [
+      "Ten-second product test",
+      "Today&apos;s lanes",
+      "First trend targets",
+      "GalaxyTwinPreview",
+      "MarketMirageChapter",
+      "DecisionAutopsyPreview",
+      "ParlayMriPreview",
+      "CostOfNoiseCalculator",
+      "WorldWaypoints",
+    ]) {
+      expect(pageSource).not.toContain(legacy);
+    }
   });
 });

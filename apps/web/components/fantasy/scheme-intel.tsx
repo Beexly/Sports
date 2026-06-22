@@ -29,6 +29,7 @@ export function SchemeIntel() {
             <button
               key={s.id}
               type="button"
+              aria-pressed={active}
               onClick={() => setId(s.id)}
               className="surface-card block w-full p-4 text-left transition-transform hover:-translate-y-0.5"
               style={{ boxShadow: active ? `inset 0 0 0 1px ${BRAND_COLORS.orbitalCyan}` : undefined }}
@@ -44,7 +45,7 @@ export function SchemeIntel() {
       </div>
 
       {/* cascade */}
-      <div className="space-y-4">
+      <div className="space-y-4" aria-live="polite">
         <div className="surface-card p-5">
           <p className="text-sm text-ink-300">{scenario.summary}</p>
           <div className="mt-3 flex flex-wrap items-center gap-4 text-xs">

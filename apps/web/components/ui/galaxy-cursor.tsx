@@ -5,16 +5,28 @@
  * pointer 1:1 and a lagging orbital ring that eases after it (rAF lerp,
  * zero React re-renders). The ring swells over interactive elements.
  *
+ * v2.0 — Added signal ripples on click, like touching the surface of the
+ * command room interface. Ripples propagate outward in orbital cyan and fade.
+ *
  * Self-disabling: touch/coarse pointers and prefers-reduced-motion get the
  * native cursor and nothing else. The native cursor is never hidden — the
  * overlay rides WITH it (mix-blend difference), so usability never regresses.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+interface Ripple {
+  id: number;
+  x: number;
+  y: number;
+}
+
+let rippleId = 0;
 
 export function GalaxyCursor() {
   const dotRef = useRef<HTMLDivElement | null>(null);
   const ringRef = useRef<HTMLDivElement | null>(null);
+  const [ripples, setRipples] = useState<Ripple[]>([]);
 
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)").matches;
@@ -38,6 +50,14 @@ export function GalaxyCursor() {
     const onOver = (e: MouseEvent) => {
       hot = Boolean((e.target as Element | null)?.closest?.("a, button, [role='button']"));
     };
+    const onClick = (e: MouseEvent) => {
+      rippleId++;
+      const id = rippleId;
+      setRipples((prev) => [...prev.slice(-3), { id, x: e.clientX, y: e.clientY }]);
+      setTimeout(() => {
+        setRipples((prev) => prev.filter((r) => r.id !== id));
+      }, 900);
+    };
     const loop = () => {
       rx += (x - rx) * 0.16;
       ry += (y - ry) * 0.16;
@@ -48,16 +68,35 @@ export function GalaxyCursor() {
 
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseover", onOver, { passive: true });
+    window.addEventListener("click", onClick, { passive: true });
     raf = requestAnimationFrame(loop);
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseover", onOver);
+      window.removeEventListener("click", onClick);
       cancelAnimationFrame(raf);
     };
   }, []);
 
   return (
     <>
+      {/* Click ripples — orbital cyan shockwaves */}
+      {ripples.map((r) => (
+        <span
+          key={r.id}
+          aria-hidden
+          className="pointer-events-none fixed left-0 top-0 z-[89] rounded-full border border-orbital-cyan/60"
+          style={{
+            left: r.x,
+            top: r.y,
+            width: 64,
+            height: 64,
+            transform: "translate(-50%, -50%)",
+            animation: "cursor-ripple-expand 800ms ease-out forwards",
+            willChange: "transform, opacity",
+          }}
+        />
+      ))}
       <div
         ref={dotRef}
         aria-hidden

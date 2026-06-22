@@ -22,7 +22,7 @@ export function CipherConsole({ state, codename, week, shardCount }: Props) {
   useEffect(() => {
     const head = "color:#00E5FF;font-weight:700;font-size:13px";
     const body = "color:#9fb3c8;font-size:12px";
-    const accent = "color:#FF2DD6;font-weight:600";
+    const accent = "color:#FF38C7;font-weight:600";
     /* eslint-disable no-console */
     if (state === "live") {
       console.log("%c◬ THE GLASS BOX CIPHER", head);

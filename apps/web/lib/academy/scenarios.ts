@@ -153,9 +153,9 @@ export const GRADE_HEX: Record<GradeTone, string> = {
   earned: "#00E5FF",
   respected: "#00E5FF",
   restraint: "#00E5FF",
-  missed: "#7A5CFF",
-  lucky: "#FF2DD6",
-  corrected: "#FF2DD6",
+  missed: "#7B61FF",
+  lucky: "#FF38C7",
+  corrected: "#FF38C7",
 };
 
 // ── Status ladder — earned by calibration, not streaks ──

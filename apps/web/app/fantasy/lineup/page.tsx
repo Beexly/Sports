@@ -5,9 +5,9 @@ import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Lineup Optimizer — Galaxy Fantasy",
+  title: "Start-Sit Helper — Galaxy Fantasy",
   description:
-    "The optimal start/sit with the leverage of every call — and a what-if toggle that re-solves your lineup the moment a player is ruled out.",
+    "The strongest start/sit call for the roster you already have — with the leverage of every call and a what-if toggle that re-ranks the moment a player is ruled out.",
   alternates: { canonical: "/fantasy/lineup" },
 };
 
@@ -21,10 +21,10 @@ export default async function LineupPage() {
   const pool = await resolveToolPoolAsync();
   return (
     <FantasyShell
-      eyebrow="Lineup Optimizer"
+      eyebrow="Start-Sit Helper"
       accent={BRAND_COLORS.ionMagenta}
       title={<>Start the points. Skip the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>guessing</span>.</>}
-      intro="The optimal lineup, solved — with the leverage of every call (how much you'd lose starting the next-best bench option) and a floor-to-ceiling band. Mark a player out and watch it re-solve."
+      intro="The strongest start/sit call for the roster you already have — with the leverage of every call (how much you'd lose starting the next-best bench option) and a floor-to-ceiling band. Mark a player out and watch it re-rank."
       note={pool
         ? "Live graded pool — real players with model-derived projections. The roster shown is a sample drawn from that pool (no league connection yet); optimization, leverage, and the floor/ceiling band are computed from real grades."
         : "Illustrative roster and projections. Optimization, leverage, and the floor/ceiling band are computed live from the sample pool."}

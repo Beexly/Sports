@@ -12,13 +12,24 @@ export const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]!, {
 // in Stripe (test mode) and wires the env vars. The dollar amounts shown to users
 // are NEVER hardcoded here — they derive from the current pricing phase
 // (pricing-phases.ts), the single source of truth, so display and intent can't drift.
+// The monthly interval falls back to the LEGACY single-interval vars
+// (STRIPE_PRO_PRICE_ID / STRIPE_ELITE_PRICE_ID) that the env template + CLAUDE.md
+// historically documented, mirroring the webhook's getTierFromPriceId tolerance.
+// Without this, an operator who provisioned prod from the documented legacy vars
+// would leave the _MONTHLY_ vars empty and every checkout would 503.
 export const STRIPE_PRICE_IDS = {
   PRO: {
-    month: process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] ?? "",
+    month:
+      process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] ??
+      process.env["STRIPE_PRO_PRICE_ID"] ??
+      "",
     year: process.env["STRIPE_PRO_ANNUAL_PRICE_ID"] ?? "",
   },
   ELITE: {
-    month: process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"] ?? "",
+    month:
+      process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"] ??
+      process.env["STRIPE_ELITE_PRICE_ID"] ??
+      "",
     year: process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"] ?? "",
   },
 } as const;

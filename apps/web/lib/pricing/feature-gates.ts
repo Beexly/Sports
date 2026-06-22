@@ -79,9 +79,9 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   },
   {
     key: "sample-signal",
-    displayName: "Two free picks, with confidence",
-    customerExplanation: "Two free picks a day — our lowest-confidence promoted picks — shown with their confidence score so you can judge the quality before subscribing.",
-    internalNote: "2/day (dailyPickLimit=2) of tier:FREE picks, confidence included; never the full inventory.",
+    displayName: "Every pick, free",
+    customerExplanation: "Every pick is free, with no daily limit and the open, honest verified record. Pro adds the confidence score, the full factor trail, line movement, and the tools.",
+    internalNote: "Picks de-paywalled (dailyPickLimit=null, canSeePremiumPicks=true for FREE). Confidence remains a Pro feature for FREE until the calibrated-honest display ships (Thread 2 / Step 3).",
     minTier: "FREE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
 

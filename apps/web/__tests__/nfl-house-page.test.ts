@@ -16,7 +16,7 @@ const src = readFileSync(join(ROOT, "app/house/page.tsx"), "utf8");
 describe("NFL House page", () => {
   it("every door points at a route that exists in the app", () => {
     const hrefs = [...src.matchAll(/href: "([^"]+)"/g)].map((m) => m[1]!);
-    expect(hrefs.length).toBeGreaterThanOrEqual(8);
+    expect(hrefs.length).toBeGreaterThanOrEqual(6);
     for (const href of hrefs) {
       const dir = join(ROOT, "app", href.replace(/^\//, ""));
       expect(

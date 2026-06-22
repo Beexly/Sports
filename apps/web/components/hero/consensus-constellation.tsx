@@ -92,7 +92,7 @@ function makeCoreTexture(): InstanceType<typeof THREE.CanvasTexture> {
   const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
   g.addColorStop(0, "rgba(246,247,250,0.95)");
   g.addColorStop(0.18, "rgba(0,229,255,0.55)");
-  g.addColorStop(0.5, "rgba(122,92,255,0.18)");
+  g.addColorStop(0.5, "rgba(123,97,255,0.18)");
   g.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);

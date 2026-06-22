@@ -3,13 +3,17 @@ import type { Config } from "tailwindcss";
 /**
  * Galaxy Sports Edge Tailwind config — cosmic intelligence palette.
  *
- * Canonical palette (verbatim from Brand Use Pack §4):
- *  - OBSIDIAN BLACK  #050608   — primary background
- *  - ION WHITE       #F6F7FA   — primary text / monochrome mark
- *  - ORBITAL CYAN    #00E5FF   — signal, data, active states
- *  - ION MAGENTA     #FF2DD6   — alert signal / emphasis
- *  - SOFT ULTRAVIOLET #7A5CFF  — depth, intelligence, secondary signal
- *  - STEEL GRAY      #1A1D23   — panels, dividers, UI depth
+ * Canonical palette (verbatim from the Brand Bible v1.0):
+ *  - OBSIDIAN BLACK   #05070B   — primary background
+ *  - COSMIC GRAY      #0D1117   — surface / UI panels
+ *  - STARLIGHT WHITE  #F5F7FF   — primary text / chrome highlights
+ *  - ORBITAL CYAN     #00E5FF   — signal, data, active states
+ *  - ION MAGENTA      #FF38C7   — alert signal / emphasis
+ *  - SOFT ULTRAVIOLET #7B61FF   — depth, intelligence, secondary signal
+ *  - ELECTRIC BLUE    #2A6BFF   — supporting cool
+ *  - NEBULA PURPLE    #A855F7   — nebula atmosphere
+ *  - STEEL GRAY       #211A33   — panels, dividers, UI depth
+ *  Signal fade = Orbital Cyan -> Ion Magenta -> Ultraviolet.
  *
  * Typography is bound to the doctrine CSS variables loaded through
  * next/font in `app/layout.tsx`.
@@ -27,19 +31,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ── CANONICAL GALAXY SPORTS EDGE PALETTE ─────────
-        "obsidian-black":    "#050608",
-        "ion-white-2":       "#F6F7FA",   // distinct from the .ion-white alias
+        // ── CANONICAL GALAXY SPORTS EDGE PALETTE (Brand Bible v1.0) ─────────
+        "obsidian-black":    "#05070B",
+        "ion-white-2":       "#F5F7FF",   // distinct from the .ion-white alias
         "orbital-cyan":      "#00E5FF",
-        "ion-magenta":       "#FF2DD6",
-        "soft-ultraviolet":  "#7A5CFF",
+        "ion-magenta":       "#FF38C7",
+        "soft-ultraviolet":  "#7B61FF",
+        "electric-blue":     "#2A6BFF",   // supporting cool (bible)
+        "nebula-purple":     "#A855F7",   // nebula atmosphere (bible)
+        "cosmic-gray":       "#0D1117",   // surface / UI panels (bible)
         "steel-gray":        "#211A33",
 
         // ── ENVIRONMENT — cosmic dark scale ───────────────
-        // Surfaces step from #050608 (deepest) up to #2E3849 (raised).
-        void:       "#050608",
+        // Surfaces step from #05070B (deepest) up to raised panels.
+        void:       "#05070B",
         obsidian:   "#080A0F",
-        carbon:     "#100D1D",
+        carbon:     "#0D1117",
         eclipse:    "#171228",
         titanium:   "#211A33",        // Steel Gray sits here
         slate:      "#20283A",
@@ -49,7 +56,7 @@ const config: Config = {
         // ── ION — cool whites & mineral silvers (DARK SCALE) ──
         // Marketing / cinematic text on carbon #0D1117. ion-2 / ion-3 were
         // re-valued to pass WCAG AA (>=4.5:1) as text; see design-tokens.css.
-        "ion-white": "#F6F7FA",
+        "ion-white": "#F5F7FF",
         ion: {
           DEFAULT: "#D5DDE9", // 13.83:1 on carbon
           1: "#AEB7D2",       // nebula silver — brighter + violet-tinted, AA+
@@ -72,7 +79,7 @@ const config: Config = {
 
         // ── PRIMARY SIGNAL — ion magenta ──────────────────
         plasma: {
-          DEFAULT: "#FF2DD6",
+          DEFAULT: "#FF38C7",
           glow: "#FF66E0",
           deep: "#C81EAA",
           ink: "#1A0014",
@@ -88,7 +95,7 @@ const config: Config = {
 
         // ── DEPTH — soft ultraviolet (model layer) ────────
         ultraviolet: {
-          DEFAULT: "#7A5CFF",
+          DEFAULT: "#7B61FF",
           glow: "#9F87FF",
           deep: "#5942CC",
         },
@@ -240,6 +247,11 @@ const config: Config = {
         float: "0 8px 32px -8px rgba(0,0,0,0.7)",
       },
       backgroundImage: {
+        // The signature brand gradient (Brand Bible v1.0): cyan -> magenta -> violet.
+        "signal-fade":
+          "linear-gradient(90deg, #00E5FF 0%, #FF38C7 52%, #7B61FF 100%)",
+        "signal-fade-135":
+          "linear-gradient(135deg, #00E5FF 0%, #FF38C7 52%, #7B61FF 100%)",
         "stadium-glow":
           "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,229,255,0.16), rgba(255,59,199,0.10) 35%, transparent 70%)",
         "cosmic-sweep":

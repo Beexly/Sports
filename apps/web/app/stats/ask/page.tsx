@@ -34,6 +34,7 @@ export default function Page({ searchParams }: { searchParams?: { q?: string } }
       <form className="mb-6">
         <input
           name="q"
+          aria-label="Ask StatKing a question"
           defaultValue={q}
           placeholder="best QB by fantasy edge, most volatile WR, hidden value RB..."
           className="w-full border border-mineral bg-eclipse p-3 text-ion-white placeholder-ion-2 rounded focus:border-orbital-cyan focus:outline-none"

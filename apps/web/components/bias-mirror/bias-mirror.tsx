@@ -76,7 +76,7 @@ export function BiasMirror() {
           <div aria-hidden className="pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full blur-3xl transition-colors duration-500" style={{ background: `${modeColor}1f` }} />
           <div className="relative flex items-center justify-between">
             <p className="text-xs uppercase tracking-[0.16em] text-ink-500">Recommended mode</p>
-            <span className="rounded-full px-3 py-1 text-sm font-bold transition-colors" style={{ color: modeColor, background: `${modeColor}14`, border: `1px solid ${modeColor}55` }}>
+            <span aria-live="polite" className="rounded-full px-3 py-1 text-sm font-bold transition-colors" style={{ color: modeColor, background: `${modeColor}14`, border: `1px solid ${modeColor}55` }}>
               {profile.mode}
             </span>
           </div>

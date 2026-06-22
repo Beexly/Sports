@@ -86,6 +86,8 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
           status: "CANCELED",
           tier: "FREE",
           canceledAt: new Date(),
+          // Clear the dunning anchor — a canceled row is no longer past-due.
+          pastDueSince: null,
         },
       });
       break;
@@ -178,6 +180,11 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
     cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
     trialStart,
     trialEnd,
+    // A live sync (created/updated/payment) means this is not a deleted row, so
+    // clear any stale cancellation stamp from a prior lifecycle — otherwise a
+    // reactivated member reads as active-but-canceled in reporting/churn logic.
+    // (canceledAt is only stamped by customer.subscription.deleted.)
+    canceledAt: null,
     // Recovery clears the grace anchor. While PAST_DUE the existing
     // first-failure stamp is preserved (and backfilled below if a sync
     // arrives before any invoice.payment_failed event).
