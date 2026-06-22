@@ -94,7 +94,8 @@ describe("no fake percentages on customer pages", () => {
     expect(pages.length).toBeGreaterThan(3);
     expect(pages.some((p) => p.includes("dashboard"))).toBe(true);
     // The performance numbers render in components, so those must be scanned too.
-    expect(pages.some((p) => p.includes(`${"components"}/`))).toBe(true);
+    // Separator-agnostic so this passes on Windows (\) as well as POSIX (/).
+    expect(pages.some((p) => /components[\\/]/.test(p))).toBe(true);
   });
 
   it.each(pages)("page has no hardcoded outcome-percentage: %s", (file) => {
