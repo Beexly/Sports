@@ -33,6 +33,21 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
     ],
   },
   {
+    section: "Decision OS",
+    items: [
+      { href: "/cockpit/decision-os", label: "Decision OS", hint: "Universal intelligence index" },
+      { href: "/cockpit/data-excellence", label: "Data Excellence", hint: "Quality · integrity · health" },
+      { href: "/cockpit/decision-graph", label: "Decision Graph", hint: "Ontology + relationships" },
+      { href: "/cockpit/evidence-engine", label: "Evidence Engine", hint: "Claim → verdict + courtroom" },
+      { href: "/cockpit/jarvis-os", label: "Jarvis OS", hint: "Copilot mode contracts" },
+      { href: "/cockpit/agents-os", label: "Agents OS", hint: "Constrained agent council" },
+      { href: "/cockpit/revenue-os", label: "Revenue OS", hint: "Trust-gated funnel" },
+      { href: "/cockpit/product-os", label: "Product OS", hint: "Opportunity · launch · moat" },
+      { href: "/cockpit/page-intelligence", label: "Page Intelligence", hint: "Thinking-website contracts" },
+      { href: "/cockpit/claim-safety", label: "Claim Safety", hint: "Public-claim + rights gates" },
+    ],
+  },
+  {
     section: "Picks & proof",
     items: [
       { href: "/cockpit/history", label: "History", hint: "Pick forensic ledger" },
