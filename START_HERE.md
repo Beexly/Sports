@@ -1,105 +1,68 @@
-# START HERE — when you're back
+# START HERE — launch control
 
-> One page. Read only this. Everything else is reference. Do the steps in order;
-> each is copy-paste. Status as of this writing: branch `claude/blissful-hamilton-d7edx1`
-> is **green** (typecheck 0 · 5,642 tests · build 191 pages · scanners clean).
+> One page. Everything else is reference. **Status: the site is LIVE** at
+> galaxysportsedge.com (recovered after the DB rotation). The `research/proven-edge`
+> engine work is **integrated into `main`, green, and dormant-safe** (typecheck 0 ·
+> 5,840 web tests · 487 engine · 36 ingestion · build 192 pages · all scanners clean).
+> Nothing below is urgent — it's the ordered path from "live & silent" to "fully public."
 
 ---
 
-## ⚡ STEP 0 — Recover production (do this first; ~3 min)
-
-Your live site is down because the DB password rotation invalidated the old credential and
-every redeploy was dying on a build-time `prisma migrate deploy` that can't reach Neon from
-Vercel's build network. **That's fixed in code now** (commit `4c67f04`): a transient
-connectivity failure (Neon cold-start / P1001) no longer blocks the deploy — only a *real*
-migration error does. And `next build` doesn't touch the DB (pages are `force-dynamic`), so
-nothing else in the build needs the database.
-
-Run, from your local checkout:
+## Deploy (when you need to ship `main`)
 ```powershell
 cd C:\dev\sports
-git pull origin claude/blissful-hamilton-d7edx1
-vercel --prod --yes
+git checkout main && git pull origin main
+vercel --prod --yes        # migrate step won't block; next build needs no DB
+npm run smoke:prod         # green/red checklist of every public route
 ```
-
-**What you'll see (this is success, not failure):** the migrate step will print
-`could not reach the DB after 4 attempts … Proceeding with the build WITHOUT blocking the deploy`,
-then continue into `next build`, compile, and go **Ready**.
-
-**Heads-up — what this deploy ships:** `vercel --prod` from this branch deploys the branch,
-which includes the approved pivot (**picks become free; paid tiers = tools/depth/alerts**).
-That's the direction you chose, so it's fine — just know the de-paywalled picks go live with
-this deploy. *(If you would rather recover WITHOUT shipping the pivot yet, see "Alternative"
-at the bottom.)*
+The migrate-resilience fix and the Prisma-auto-generate fix are now **on `main`** (they
+weren't before — `main` was missing them), so deploys are stable.
 
 ---
 
-## ✅ STEP 1 — Verify it's actually back (one command)
+## 🚀 The launch checklist — live & silent → fully public (all owner-gated, in order)
 
-Once Vercel says **Ready**, run the full smoke test — it hits every public route + key APIs and
-prints a green/red checklist:
-```powershell
-npm run smoke:prod
-```
-- All green → **you're back online.** Done.
-- A few rows red but the site loads → tell me which routes; usually a single data path.
-- Site loads but everything DB-backed errors → runtime DB var issue. The app now **auto-falls
-  back** to the Neon-integration var (`POSTGRES_PRISMA_URL`) when `DATABASE_URL` is unset, so
-  this should be self-healing — but if not, confirm `DATABASE_URL` (production) holds the pooled
-  Neon string. (The pooled endpoint is healthy — proven to connect in ~80ms.)
-- Build still red → paste me the last 20 log lines; it'll be a new, different error and I'll
-  fix it. (Unlikely — the known blocker is gone, and `next build` needs no DB.)
+You're in **silent launch**: marketing surfaces up, public picks/stats gated OFF (honest
+"collecting" state). To go public, do these in order — each step is proof-gated.
+
+**Infra & secrets (one-time, owner accounts):**
+- [ ] Renew **`THE_ODDS_API_KEY`** (paid tier — free exhausts in a day). *Fixes the `/api/health` 503 + empty `/observatory`.*
+- [ ] Stripe **LIVE**: swap to live keys, `npm run stripe:seed`, paste the 4 price IDs, set the live webhook.
+- [ ] Confirm prod env complete (`scripts/check-deploy-readiness.mjs` is the checklist).
+- [ ] **`prisma migrate deploy`** runs on the next DB-reachable deploy → activates the **proof receipts + slate-commitment** tables the engine work added.
+- [ ] Delete the orphan **`sports-db`** Neon project (prod runs on **`gse-postgres`**).
+
+**Gate-flip sequence (proof-gated; flip in this order):**
+- [ ] **C1** `CANONICAL_HISTORY_ENABLED=true` → accumulate 1–7 days; confirm crons run + data ingests.
+- [ ] **C2** `DERIVED_MODEL_HISTORY_ENABLED=true` (≥50 canonical games/sport).
+- [ ] **C3** `PUBLIC_PICKS_ENABLED=true` + keep `FORCE_NO_BET_IF_STALE=true` (picks go public; stale auto-suppresses).
+- [ ] **C4** `PERFORMANCE_STATS_ENABLED=true` (≥100 settled canonical picks; verify win rates match real outcomes).
+- [ ] **C5** `FEATURED_PICK_PROMOTION_ENABLED=true` (grade thresholds calibrated).
+- [ ] **C6** `CALIBRATION_ADJUSTMENTS_ENABLED=true` — **only** after the path-to-70 §7 audit (held-out `calibratedEce ≤ rawEce`). *Note: already validated once (0.198→0.044); re-confirm at the real sample.*
+- [ ] **C7/C8** `PUBLIC_BLOG_ENABLED`, then `CONFIDENCE_DISPLAY_MODE=precision`.
+
+`LAUNCH_LEDGER.md` has the full env block + details. `check-deploy-readiness.mjs` validates it.
 
 ---
 
-## 📦 What's DONE (don't redo any of this)
+## 🔌 The engine layer (integrated; activate deliberately)
+The proof/governance engines (Public Claim Compiler, No-Bet Adversary, Proof Graph, Market
+Memory, Signal Lineage, Cost Governor, + the performance-analytics suite) are **on `main`,
+unit-tested, and dormant** — pure modules with zero live effect until wired. Their honest
+state and the wiring roadmap live at **`/cockpit/integrity`** (the live ledger) and
+`docs/architecture/ADVANCED_SYSTEMS_SPINE_2026-06-22.md`. Live wiring was **deliberately not
+force-activated** — it changes pick/render behavior and several pieces depend on the
+owner-gated `migrate`/VPS, so it's staged as the ledger's gated next-actions, to wire in
+controlled passes (not rushed into a fresh-recovered prod). The 30/60/90 order is in the doc.
 
-- **The pivot**, fully built + tested on the branch: picks de-paywalled, "winners/profitable"
-  copy stripped, honest **calibrated** confidence wired into the public path (validated:
-  held-out ECE 0.198→0.044, MODEL_VERSION v5.1.0, audited proposal), confidence freed to all.
-- **Calibration activation** (v5.1.0) — properly audited and frozen.
-- **Deploy/build hardening** — Prisma client auto-generates on install, LF line endings,
-  cross-platform tests, and the migrate-never-blocks-the-deploy fix.
-- **Strategy, written down** — `docs/strategy/PATH_TO_PROVEN_EDGE.md` (CLV/EV is the target,
-  not a 70% win rate), `REVENUE_NOW.md` (picks free, tools are the product, fantasy is the
-  fastest money), `ENTITLEMENT_REMAP_SPEC.md`.
-- **Security** — Neon password rotated; old credential dead.
-
-## 📋 What's LEFT (minimal, in order — none are urgent)
-
-1. **Fantasy power-split** — keep all fantasy tools free through summer; flip a Pro power-gate
-   in **August** at peak draft demand (FREE = limited; PRO = unlimited + full suite; ELITE =
-   alerts). Decision already made; it just needs building behind an off switch.
-2. **Delete the orphan `sports-db` Neon project** — production runs on **`gse-postgres`**;
-   `sports-db` is an empty leftover that caused the two-database confusion. Confirm, then delete.
-3. **Owner-gated launch items** (only when you want to go fully public): Stripe LIVE keys,
-   renew `THE_ODDS_API_KEY`, custom-domain env. All in `LAUNCH_LEDGER.md`.
-
-## 🧠 Decisions already locked (so we don't relitigate)
-- **Subscription-primary, affiliate-additive.** Picks are free/honest; pay for tools + proof.
-- **Target = proven edge (CLV/EV), not a 70% win rate** (structurally impossible on efficient
-  markets; CLV is the real, defensible metric). See `PATH_TO_PROVEN_EDGE.md`.
-- **Honest-and-humble now:** the settled record is ~50.9%; we don't sell picks as a proven
-  edge until the record clears 52.4% breakeven.
-
-## 🌿 Reconciling your OTHER branch
-This branch is mostly **strategy docs + the pivot + infra/deploy fixes** — low collision surface.
-The deploy fixes (`package.json` postinstall, `scripts/deploy/migrate-if-configured.mjs`,
-`.gitattributes`, `vercel.json` untouched) are infra and should merge clean. When your other
-branch lands, merge order doesn't matter much; if anything conflicts it'll be in
-`apps/web/lib/pricing` / entitlements (the pivot) — ping me and I'll do the merge.
+## 🧠 Decisions locked
+- **Subscription-primary, affiliate-additive.** Picks free/honest; pay for tools + proof.
+- **Target = proven edge (CLV/EV), not a 70% win rate.** See `docs/strategy/PATH_TO_PROVEN_EDGE.md`.
+- **Honest-and-humble:** settled record ~50.9%; don't sell picks as a proven edge until CLV clears 52.4%.
+- **Fantasy:** free through summer; flip the Pro power-split in August at peak draft demand.
 
 ## 🗂 Doc index
-- **This file** = the only thing you need to act.
-- Active reference: `docs/strategy/*.md`, `LAUNCH_LEDGER.md`, `AFFILIATE_GO_LIVE.md`.
-- Superseded (ignore): `AGENT_HANDOFF.md`, `handoff/OVERNIGHT_SUMMARY_2026-06-22.md` — folded
-  into this file.
-
----
-
-## Alternative — recover WITHOUT shipping the pivot
-If you want production back on the pre-pivot state and ship the pivot deliberately later, the
-deploy fixes still need to reach whatever you deploy. Tell me "recover main without the pivot"
-and I'll cherry-pick just the three infra commits (postinstall, migrate-resilience, gitattributes)
-onto a clean `main`-based branch for you to deploy. One extra step, no pivot. Otherwise STEP 0
-is the one-command path.
+- **This file** = launch control.
+- Reference: `LAUNCH_LEDGER.md`, `docs/strategy/*.md`, `docs/architecture/ADVANCED_SYSTEMS_SPINE_2026-06-22.md`, `AFFILIATE_GO_LIVE.md`.
+- Live ops surface: `/cockpit/integrity` (the honest system-state ledger).
+- Superseded (ignore): `AGENT_HANDOFF.md`, `handoff/OVERNIGHT_SUMMARY_2026-06-22.md`.
