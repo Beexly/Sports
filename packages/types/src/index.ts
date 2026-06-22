@@ -460,6 +460,8 @@ export interface ScoredPick {
    * factorBreakdown.fairProbability slot. The honest anchor a proof receipt commits.
    */
   marketFairProb?: number | null;
+  /** Average American price of the chosen side at scoring time — the receipt's entry odds. */
+  entryPrice?: number | null;
   bookmakerCount: number;
   dataQualityScore: number; // 0–100 data trust score (always public)
 
