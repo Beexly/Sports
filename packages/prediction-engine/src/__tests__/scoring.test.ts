@@ -20,6 +20,17 @@ import {
 } from "../game-context.js";
 import type { OddsInput } from "@sports/types";
 import { MODEL_VERSION } from "../constants.js";
+import { buildPickProofReceipt, verifyPickProofReceipt } from "../pick-proof-receipt.js";
+
+// Deterministic non-crypto hash for the receipt contract test (prod injects sha256).
+function fnv(input: string): string {
+  let h = 2166136261;
+  for (let i = 0; i < input.length; i++) {
+    h ^= input.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0).toString(16).padStart(8, "0");
+}
 
 // ============================================================
 // Utility functions
@@ -581,6 +592,38 @@ describe("scoreGames", () => {
       expect(typeof pick.marketFairProb).toBe("number");
       expect(pick.marketFairProb!).toBeGreaterThan(0);
       expect(pick.marketFairProb!).toBeLessThan(1);
+    }
+  });
+
+  it("every real scored pick mints a valid, verifiable proof receipt (the mint contract)", () => {
+    // Locks the wiring contract process-sport.ts relies on: the scorer's output must
+    // always be receipt-compatible (fair prob in range, entry price non-zero), so the
+    // mint never silently fails on real picks.
+    const at = new Date("2026-04-15T12:00:00Z");
+    const picks = scoreGames([makeOddsInput()], at);
+    expect(picks.length).toBeGreaterThan(0);
+    for (const pick of picks) {
+      expect(typeof pick.entryPrice).toBe("number");
+      expect(pick.entryPrice).not.toBe(0);
+      const receipt = buildPickProofReceipt(
+        {
+          pickId: `${pick.gameId}:${pick.pickType}`,
+          gameId: pick.gameId,
+          selection: pick.selection,
+          pickType: pick.pickType,
+          line: pick.line,
+          entryOdds: pick.entryPrice!,
+          marketFairProb: pick.marketFairProb!,
+          confidence: pick.confidence,
+          edgeScore: pick.edgeScore,
+          modelProb: null, // honest — no calibrated prob yet
+          modelVersion: pick.modelVersion,
+          asOf: pick.dataFreshnessAt.toISOString(),
+        },
+        fnv,
+      );
+      expect(verifyPickProofReceipt(receipt, fnv)).toBe(true);
+      expect(receipt.payload).toMatch(/modelProb=none/);
     }
   });
 });
