@@ -36,3 +36,4 @@ export * from "./projection-models";
 export * from "./trust-loop";
 export * from "./forecasting";
 export * from "./scoreline-model";
+export * from "./dfs-portfolio";
