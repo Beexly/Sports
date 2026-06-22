@@ -267,6 +267,17 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     failureMode: "attributing movement to 'sharp money' without a sourced split.",
     nextAction: "wire from the Odds time-series; never use sharp language unsourced.",
   },
+  {
+    id: "model-court",
+    name: "Model Court (process gate for model changes)",
+    category: "model",
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: null,
+    evidenceRefs: ["apps/web/lib/model/model-court.ts", "apps/web/__tests__/model-court.test.ts"],
+    lastVerifiedAt: V,
+    failureMode: "a model change ships without prosecution/defense/falsifier/evidence/rollback.",
+    nextAction: "gate every MODEL_VERSION bump through tryModelChange() + the OOS promoter.",
+  },
 
   // ── claims ──
   {
@@ -301,6 +312,17 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     lastVerifiedAt: V,
     failureMode: "a new public number renders without passing every gate.",
     nextAction: "wire compilePublicClaim() into every public performance-stat render path.",
+  },
+  {
+    id: "claims-proof-graph",
+    name: "Proof Graph (claim → pick → receipt → sources → settlement → CLV → autopsy)",
+    category: "claims",
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: null,
+    evidenceRefs: ["apps/web/lib/proof/proof-graph.ts", "apps/web/__tests__/proof-graph.test.ts"],
+    lastVerifiedAt: V,
+    failureMode: "a public claim with no auditable chain behind it (proof theater).",
+    nextAction: "build graphs from real picks + receipts + snapshots; expose the click-path publicly.",
   },
 
   // ── observability ──
@@ -400,6 +422,17 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     failureMode: "moderation/distress/gambling-harm/minor liability without guardrails.",
     nextAction: "keep staged; pilot-only after the gates above are proven.",
   },
+  {
+    id: "community-safety-engine",
+    name: "Community Safety Engine (moderation policy as code)",
+    category: "community",
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: null,
+    evidenceRefs: ["apps/web/lib/community/community-safety.ts", "apps/web/__tests__/community-safety.test.ts"],
+    lastVerifiedAt: V,
+    failureMode: "distress met with an upsell, or a minor/self-excluded user in a room.",
+    nextAction: "wire into rooms when they pilot; distress → support, never sales.",
+  },
 
   // ── revenue ──
   {
@@ -412,6 +445,17 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     lastVerifiedAt: null,
     failureMode: "checkout not actually chargeable (no live prices) = no revenue.",
     nextAction: "owner creates Stripe live prices + webhook secret; verify a real checkout.",
+  },
+  {
+    id: "revenue-proof-cards",
+    name: "Dynamic Proof Cards (proof → share → signup growth loop)",
+    category: "revenue",
+    builtStatus: "YES", wiredStatus: "NO", provenStatus: "YES", publicSafeStatus: "NO",
+    ownerGate: null,
+    evidenceRefs: ["apps/web/lib/proof/proof-card.ts", "apps/web/__tests__/proof-card.test.ts"],
+    lastVerifiedAt: V,
+    failureMode: "a shared card whose copy isn't claim-safe.",
+    nextAction: "wire the per-route OG image render; the shared unit is a receipt, not a brag.",
   },
 ];
 
