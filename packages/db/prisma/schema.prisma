@@ -2361,3 +2361,885 @@ model Signal {
   @@index([category])
   @@map("signals")
 }
+
+// ============================================================
+// DFS OPTIMIZER — Phase 1: Data Truth and Schema
+// All models are additive. No existing models modified.
+// ============================================================
+
+enum DfsSite {
+  DRAFTKINGS
+  FANDUEL
+  YAHOO
+}
+
+enum DfsSlateType {
+  CLASSIC
+  SHOWDOWN
+  SINGLE_GAME
+  TIERS
+}
+
+enum DfsContestMode {
+  CASH
+  BALANCED
+  SINGLE_ENTRY
+  SMALL_FIELD_GPP
+  LARGE_FIELD_GPP
+  CONTRARIAN
+  LEVERAGE
+  SIMULATION_OPTIMIZED
+  LATE_SWAP
+}
+
+enum DfsProjectionSourceType {
+  INTERNAL_MODEL
+  USER_UPLOAD
+  LICENSED_VENDOR
+  MANUAL_OVERRIDE
+  BLENDED
+}
+
+enum DfsNarrativeSignalType {
+  CONTRACT_INCENTIVE
+  MILESTONE_GAME
+  BIRTHDAY_GAME
+  REVENGE_GAME
+  HOMECOMING
+  PRIMETIME_CONTEXT
+  PLAYOFF_URGENCY
+  SEEDING_URGENCY
+  AWARD_CHASE
+  PERSONAL_ACHIEVEMENT
+  COACH_QUOTE
+  BEAT_REPORT
+  ROLE_PROMISE
+  DEPTH_CHART_PROMOTION
+  TEAMMATE_INJURY_OPPORTUNITY
+  RETURN_FROM_INJURY
+  RETURN_FROM_SUSPENSION
+  TRADE_DEBUT
+  NEW_TEAM_ROLE
+  CONTRACT_YEAR
+  LOCKER_ROOM_FRICTION
+  MEDIA_HYPE_SPIKE
+  PUBLIC_SENTIMENT_SPIKE
+  WEATHER_TOUGHNESS_NARRATIVE
+  RIVALRY_CONTEXT
+}
+
+enum DfsNarrativeImpactType {
+  VOLUME
+  EFFICIENCY
+  VARIANCE
+  OWNERSHIP
+  LATE_SWAP
+  CONTEXT_ONLY
+  NEGATIVE
+  HYPE_ONLY
+}
+
+enum DfsSourceType {
+  OFFICIAL_LEAGUE_TEAM
+  INJURY_REPORT
+  BEAT_REPORTER
+  COACH_QUOTE
+  PLAYER_QUOTE
+  DATA_VENDOR
+  ODDS_PROVIDER
+  FANTASY_ANALYST
+  PUBLIC_SOCIAL
+  MARKET_SIGNAL
+  USER_UPLOAD
+  INTERNAL_MODEL
+}
+
+enum DfsAutopsyCategory {
+  GOOD_PROCESS_GOOD_OUTCOME
+  GOOD_PROCESS_BAD_OUTCOME
+  BAD_PROCESS_GOOD_OUTCOME
+  BAD_PROCESS_BAD_OUTCOME
+  LUCKY
+  RESPECTED_LOSS
+  CORRECTED_READ
+  NO_PLAY_SAVED_EXPOSURE
+  NARRATIVE_TRAP_AVOIDED
+  NARRATIVE_TRAP_MISSED
+  OWNERSHIP_MISREAD
+  PROJECTION_MISS
+  SOURCE_MISS
+  WEATHER_MISS
+  INJURY_MISS
+  CORRELATION_MISS
+}
+
+enum DfsFragilityType {
+  INJURY_DEPENDENT
+  WEATHER_DEPENDENT
+  BLOWOUT_SENSITIVE
+  COACH_QUOTE_DEPENDENT
+  INCENTIVE_DEPENDENT
+  TEAMMATE_INACTIVE_DEPENDENT
+  LATE_NEWS_DEPENDENT
+  LOW_SOURCE_CONFIDENCE
+  CHALK_FAILURE_DEPENDENT
+  THIN_VOLUME_CEILING
+  TOUCHDOWN_ONLY
+  GAME_TOTAL_DEPENDENT
+  OWNERSHIP_LEVERAGE_DEPENDENT
+}
+
+// Root entity for a DFS contest slate
+model DfsSlate {
+  id          String       @id @default(cuid())
+  name        String
+  site        DfsSite
+  slateType   DfsSlateType @default(CLASSIC)
+  sport       String       @default("NFL")
+  season      Int?
+  week        Int?
+  slateDate   DateTime
+  lockTime    DateTime?
+  isLive      Boolean      @default(false)
+  isActive    Boolean      @default(true)
+  externalId  String?
+
+  importedAt  DateTime?
+  importedBy  String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  salaryRows       DfsSalaryRow[]
+  projectionSets   DfsProjectionSet[]
+  narrativeSignals DfsNarrativeSignal[]
+  optimizerRuns    DfsOptimizerRun[]
+  autopsies        DfsAutopsy[]
+
+  @@index([site, slateDate])
+  @@index([sport, season, week])
+  @@index([isActive])
+  @@map("dfs_slates")
+}
+
+// Player salary row imported from DK/FD/Yahoo CSV
+model DfsSalaryRow {
+  id           String   @id @default(cuid())
+  slateId      String
+  site         DfsSite
+
+  name         String
+  position     String
+  team         String
+  opponent     String?
+  gameInfo     String?
+  salary       Int
+  avgPoints    Float?
+  sitePlayerId String?
+  rosterSlot   String?
+
+  // Resolved link to Player table (optional — may not match)
+  playerId     String?
+  gsisId       String?
+
+  isLocked     Boolean  @default(false)
+  isExcluded   Boolean  @default(false)
+
+  createdAt    DateTime @default(now())
+
+  slate        DfsSlate              @relation(fields: [slateId], references: [id], onDelete: Cascade)
+  projections  DfsPlayerProjection[]
+
+  @@unique([slateId, name, position, team])
+  @@index([slateId])
+  @@index([playerId])
+  @@map("dfs_salary_rows")
+}
+
+// Versioned projection set for a slate (one per source/run)
+model DfsProjectionSet {
+  id           String                  @id @default(cuid())
+  slateId      String
+  name         String
+  sourceType   DfsProjectionSourceType
+  sourceName   String?
+  sourceUrl    String?
+  modelVersion String?
+  isDefault    Boolean                 @default(false)
+  isModeled    Boolean                 @default(false)
+  isUserUpload Boolean                 @default(false)
+  isLicensed   Boolean                 @default(false)
+  notes        String?                 @db.Text
+
+  generatedAt  DateTime                @default(now())
+  expiresAt    DateTime?
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  slate         DfsSlate              @relation(fields: [slateId], references: [id], onDelete: Cascade)
+  projections   DfsPlayerProjection[]
+  optimizerRuns DfsOptimizerRun[]
+
+  @@index([slateId])
+  @@index([isDefault])
+  @@map("dfs_projection_sets")
+}
+
+// Full player projection (decomposed, sourced, versioned)
+model DfsPlayerProjection {
+  id              String  @id @default(cuid())
+  projectionSetId String
+  salaryRowId     String?
+
+  name     String
+  position String
+  team     String
+  opponent String?
+  salary   Int?
+  site     DfsSite
+
+  // Projection distribution
+  meanProjection   Float
+  medianProjection Float?
+  floorP10         Float?
+  floorP25         Float?
+  ceilingP75       Float?
+  ceilingP90       Float?
+  boomProbability  Float?
+  bustProbability  Float?
+  volatility       Float?
+
+  // Ownership
+  projectedOwnership Float?
+
+  // Derived scores (0-100)
+  valueScore            Float?
+  leverageScore         Float?
+  roleStabilityScore    Float?
+  gameEnvironmentScore  Float?
+  healthScore           Float?
+  marketMispricingScore Float?
+  narrativeSignalScore  Float?
+  sourceConfidenceScore Float?
+  fragilitPenalty       Float?
+  hypeInflationPenalty  Float?
+  gseEdgeScore          Float?
+
+  // Projection decomposition (for explainability)
+  baseProjection            Float?
+  roleAdjustment            Float?
+  gameEnvironmentAdjustment Float?
+  healthAdjustment          Float?
+  marketAdjustment          Float?
+  ownershipAdjustment       Float?
+  narrativeAdjustment       Float?
+
+  // Provenance
+  source           String
+  modelVersion     String?
+  isModeled        Boolean  @default(true)
+  isUserUploaded   Boolean  @default(false)
+  isLicensed       Boolean  @default(false)
+  isManualOverride Boolean  @default(false)
+  notes            String?  @db.Text
+  confidence       Float?
+  updatedAt        DateTime @updatedAt
+
+  projectionSet DfsProjectionSet @relation(fields: [projectionSetId], references: [id], onDelete: Cascade)
+  salaryRow     DfsSalaryRow?    @relation(fields: [salaryRowId], references: [id], onDelete: SetNull)
+
+  @@index([projectionSetId])
+  @@index([salaryRowId])
+  @@index([team])
+  @@map("dfs_player_projections")
+}
+
+// Ownership projection (separate model — ownership is human-behavior forecasting)
+model DfsOwnershipProjection {
+  id          String  @id @default(cuid())
+  slateId     String
+  salaryRowId String?
+
+  name     String
+  position String
+  team     String
+  site     DfsSite
+
+  projectedOwnership    Float
+  ownershipConfidence   Float?
+  ownershipVolatility   Float?
+  chalkRank             Int?
+  leverageScore         Float?
+  hypeInflationScore    Float?
+  contrarianViability   Float?
+  fadePressureScore     Float?
+  fieldOverreactionRisk Float?
+
+  source       String
+  modelVersion String?
+  isModeled    Boolean  @default(true)
+  isUserUpload Boolean  @default(false)
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  @@index([slateId])
+  @@index([salaryRowId])
+  @@map("dfs_ownership_projections")
+}
+
+// Feature store — one row per (player, slate, feature key)
+// Stores every input that feeds a projection, for full explainability.
+model DfsProjectionFeature {
+  id          String   @id @default(cuid())
+  slateId     String
+  playerName  String
+  team        String?
+  featureGroup String  // player_role | efficiency | team_game_env | dfs_market | narrative | source
+  featureKey  String   // e.g. "snap_share", "target_share", "implied_team_total"
+  value       Float
+  rawValue    Float?
+  source      String
+  confidence  Float?   @default(1.0)
+  fetchedAt   DateTime
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+
+  @@unique([slateId, playerName, featureGroup, featureKey])
+  @@index([slateId, playerName])
+  @@index([featureGroup, featureKey])
+  @@map("dfs_projection_features")
+}
+
+// Model version registry
+model DfsModelVersion {
+  id          String   @id @default(cuid())
+  version     String   @unique
+  description String?  @db.Text
+  sport       String   @default("NFL")
+  site        String?
+  isActive    Boolean  @default(false)
+  parameters  Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sport])
+  @@index([isActive])
+  @@map("dfs_model_versions")
+}
+
+// Source reliability ledger — truth about every data/narrative source
+model DfsSourceReliability {
+  id            String        @id @default(cuid())
+  sourceName    String        @unique
+  sourceType    DfsSourceType
+  sourceUrl     String?
+  licensePosture String?
+
+  historicalAccuracy   Float?
+  roleAccuracy         Float?
+  injuryAccuracy       Float?
+  projectionAccuracy   Float?
+  ownershipAccuracy    Float?
+  correctionRate       Float?
+  speculationRate      Float?
+  confirmationCount    Int    @default(0)
+  contradictionCount   Int    @default(0)
+  marketMovingPower    Float?
+  reliabilityScore     Float?
+
+  allowedProductUsage Boolean  @default(true)
+  notes               String?  @db.Text
+  lastUpdated         DateTime @default(now())
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  narrativeSignals DfsNarrativeSignal[]
+
+  @@index([sourceType])
+  @@map("dfs_source_reliability")
+}
+
+// Narrative signal — structured evidence object, not a vibe
+model DfsNarrativeSignal {
+  id          String                  @id @default(cuid())
+  slateId     String?
+  salaryRowId String?
+  playerId    String?
+  playerName  String
+  team        String?
+  gameId      String?
+  sourceId    String?
+
+  signalType      DfsNarrativeSignalType
+  claim           String                   @db.Text
+  evidence        String                   @db.Text
+  counterEvidence String?                  @db.Text
+  falsifiers      String[]
+
+  sourceNames       String[]
+  firstSeenAt       DateTime  @default(now())
+  lastSeenAt        DateTime  @default(now())
+  freshness         String    @default("FRESH")
+  sourceReliability Float?
+  confidence        Float?
+
+  impactType DfsNarrativeImpactType
+
+  // Bounded impact — each must have a football mechanism or stays CONTEXT_ONLY
+  projectionDelta   Float?
+  volatilityDelta   Float?
+  ownershipDelta    Float?
+  roleDelta         Float?
+  lateSwapDelta     Float?
+  hypeInflationDelta Float?
+
+  backTestStatus String?
+  auditStatus    String?
+  decayCurve     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  slate  DfsSlate?             @relation(fields: [slateId], references: [id], onDelete: SetNull)
+  source DfsSourceReliability? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+
+  @@index([slateId])
+  @@index([playerName, team])
+  @@index([signalType])
+  @@index([impactType])
+  @@map("dfs_narrative_signals")
+}
+
+// Signal Courtroom Case — evidence debate for a player, lineup, or portfolio
+model DfsSignalCourtroomCase {
+  id          String   @id @default(cuid())
+  entityType  String   // PLAYER | LINEUP | PORTFOLIO
+  entityRef   String   // player name, lineup id, or lineup set id
+
+  claim           String   @db.Text
+  evidence        String   @db.Text
+  counterEvidence String?  @db.Text
+  falsifiers      String[]
+  verdict         String?  @db.Text
+
+  // Quantified impact
+  projectionEffect Float?
+  ownershipEffect  Float?
+  exposureRec      String?  // PLAY | CAP | FADE | WATCH | NO_PLAY
+
+  sourceNames      String[]
+  sourceReliability Float?
+  confidence       Float?
+
+  isOpen     Boolean  @default(true)
+  resolvedAt DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([entityType, entityRef])
+  @@index([isOpen])
+  @@map("dfs_signal_courtroom_cases")
+}
+
+// Stack template — reusable stack configurations
+model DfsStackTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?  @db.Text
+  site        DfsSite
+  primaryTeam String?
+  stackType   String   // QB_WR1 | QB_WR2 | QB_TE | GAME_STACK | MINI_STACK | etc.
+  minCorrelated Int    @default(1)
+  maxCorrelated Int?
+  requiresBringBack Boolean @default(false)
+  bringBackCount    Int?
+  rules       Json?
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([site])
+  @@map("dfs_stack_templates")
+}
+
+// Player group — user-defined grouping rules for the optimizer
+model DfsPlayerGroup {
+  id          String   @id @default(cuid())
+  slateId     String?
+  name        String
+  description String?
+  site        DfsSite
+  groupType   String   // AT_LEAST_ONE | EXACTLY_ONE | MAX_ONE | IF_THEN | CUSTOM
+  minFromGroup Int     @default(1)
+  maxFromGroup Int?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members DfsPlayerGroupMember[]
+
+  @@index([slateId])
+  @@map("dfs_player_groups")
+}
+
+model DfsPlayerGroupMember {
+  id           String  @id @default(cuid())
+  groupId      String
+  name         String
+  team         String?
+  position     String?
+  sitePlayerId String?
+
+  group DfsPlayerGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([groupId])
+  @@map("dfs_player_group_members")
+}
+
+// Complete, replayable optimizer run
+model DfsOptimizerRun {
+  id              String         @id @default(cuid())
+  slateId         String
+  projectionSetId String?
+
+  site        DfsSite
+  contestMode DfsContestMode
+  lineupCount Int            @default(20)
+
+  salaryCap    Int?
+  minSalary    Int?
+  maxSalary    Int?
+  minSalaryUsed Int?
+
+  stackSettings    Json?
+  maxExposure      Float? @default(0.6)
+  minExposure      Float?
+  rules            Json?
+  objectiveWeights Json?
+
+  lockedPlayers   String[]
+  excludedPlayers String[]
+
+  status          String   @default("PENDING") // PENDING | RUNNING | COMPLETE | FAILED
+  warningMessages String[]
+  errorMessage    String?  @db.Text
+
+  triggeredBy    String?
+  engineVersion  String?
+  modelVersion   String?
+
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  slate          DfsSlate           @relation(fields: [slateId], references: [id], onDelete: Cascade)
+  projectionSet  DfsProjectionSet?  @relation(fields: [projectionSetId], references: [id], onDelete: SetNull)
+  lineupSets     DfsLineupSet[]
+  simulationRuns DfsSimulationRun[]
+
+  @@index([slateId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("dfs_optimizer_runs")
+}
+
+// Individual optimizer constraint/preference
+model DfsOptimizerRule {
+  id       String   @id @default(cuid())
+  runId    String?
+  slateId  String?
+  ruleType String   // QB_STACK | BRING_BACK | MAX_PER_TEAM | NO_QB_VS_DST | etc.
+  site     DfsSite
+  parameters Json
+  isActive Boolean  @default(true)
+  priority Int      @default(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slateId])
+  @@map("dfs_optimizer_rules")
+}
+
+// Collection of lineups from one optimizer run
+model DfsLineupSet {
+  id    String @id @default(cuid())
+  runId String
+  name  String?
+
+  avgProjection Float?
+  avgCeiling    Float?
+  avgOwnership  Float?
+  avgLeverage   Float?
+
+  portfolioThesis       String?  @db.Text
+  portfolioCounterThesis String? @db.Text
+  fragileAssumptions    String[]
+  narrativeDependencies Json?
+  weatherDependencies   Json?
+
+  chalkConcentration   Float?
+  fragility            Float?
+  correlationScore     Float?
+  sourceConfidenceAvg  Float?
+  duplicationRiskScore Float?
+
+  exportedAt   DateTime?
+  exportFormat String?
+  exportedBy   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  run     DfsOptimizerRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  lineups DfsLineup[]
+
+  @@index([runId])
+  @@map("dfs_lineup_sets")
+}
+
+// Individual lineup
+model DfsLineup {
+  id          String @id @default(cuid())
+  lineupSetId String
+  lineupNumber Int
+
+  salary       Int
+  projection   Float
+  floor        Float?
+  ceiling      Float?
+  totalOwnership Float?
+  leverageScore  Float?
+
+  primaryStack  String?
+  bringBack     String?
+  correlationScore Float?
+  duplicateRisk    Float?
+  fragility        Json?
+  contestFit       String?
+
+  lineupThesis         String? @db.Text
+  stackEvidence        String? @db.Text
+  stackCounterEvidence String? @db.Text
+  riskDependency       String? @db.Text
+  leveragePoint        String? @db.Text
+  whatBreaksThis       String? @db.Text
+  lateSwapNote         String? @db.Text
+
+  highestRiskPlayer   String?
+  highestUpsidePlayer String?
+  leveragePlayer      String?
+
+  createdAt DateTime @default(now())
+
+  lineupSet  DfsLineupSet        @relation(fields: [lineupSetId], references: [id], onDelete: Cascade)
+  players    DfsLineupPlayer[]
+  simResults DfsSimulationResult[]
+
+  @@index([lineupSetId])
+  @@map("dfs_lineups")
+}
+
+// Player slot within a lineup
+model DfsLineupPlayer {
+  id       String @id @default(cuid())
+  lineupId String
+
+  name     String
+  position String
+  team     String?
+  opponent String?
+  salary   Int?
+
+  projection Float?
+  floor      Float?
+  ceiling    Float?
+  ownership  Float?
+  leverage   Float?
+
+  slotOrder   Int
+  isStack     Boolean @default(false)
+  isBringBack Boolean @default(false)
+  isLocked    Boolean @default(false)
+
+  lineup DfsLineup @relation(fields: [lineupId], references: [id], onDelete: Cascade)
+
+  @@index([lineupId])
+  @@map("dfs_lineup_players")
+}
+
+// Monte Carlo simulation run over a lineup set
+model DfsSimulationRun {
+  id             String   @id @default(cuid())
+  optimizerRunId String
+  iterations     Int      @default(10000)
+  status         String   @default("PENDING")
+  useCorrelations Boolean @default(true)
+  scenarios      Json?
+  completedAt    DateTime?
+  createdAt      DateTime @default(now())
+
+  optimizerRun DfsOptimizerRun       @relation(fields: [optimizerRunId], references: [id], onDelete: Cascade)
+  results      DfsSimulationResult[]
+
+  @@index([optimizerRunId])
+  @@map("dfs_simulation_runs")
+}
+
+// Simulation outcome for one lineup
+model DfsSimulationResult {
+  id       String @id @default(cuid())
+  simRunId String
+  lineupId String
+
+  p50 Float?
+  p75 Float?
+  p90 Float?
+  p95 Float?
+  p99 Float?
+
+  cashRateEstimate    Float?
+  top10PctEstimate    Float?
+  top1PctEstimate     Float?
+  winProbabilityProxy Float?
+  bustProbability     Float?
+  scenarioResults     Json?
+
+  createdAt DateTime @default(now())
+
+  simRun DfsSimulationRun @relation(fields: [simRunId], references: [id], onDelete: Cascade)
+  lineup DfsLineup        @relation(fields: [lineupId], references: [id], onDelete: Cascade)
+
+  @@index([simRunId])
+  @@index([lineupId])
+  @@map("dfs_simulation_results")
+}
+
+// Late swap events — player changes after lineup lock
+model DfsLateSwapEvent {
+  id          String   @id @default(cuid())
+  lineupSetId String
+  originalPlayer    String
+  replacementPlayer String?
+  reason            String?  @db.Text
+  projectionChange  Float?
+  ownershipChange   Float?
+  leverageChange    Float?
+  salaryChange      Int?
+  swapType          String   // SCRATCH | UPGRADE | LEVERAGE_SHIFT | WEATHER | PRESERVE
+  isRecommended     Boolean  @default(false)
+  whySwap           String?  @db.Text
+  whyHold           String?  @db.Text
+  appliedAt         DateTime?
+  createdAt         DateTime @default(now())
+
+  @@index([lineupSetId])
+  @@map("dfs_late_swap_events")
+}
+
+// Structured news/intel for a slate
+model DfsNewsEvent {
+  id         String  @id @default(cuid())
+  slateId    String?
+  playerName String
+  team       String?
+  eventType  String  // INJURY | SCRATCH | PRACTICE_LIMITED | COACH_QUOTE | BEAT_REPORT | etc.
+  headline   String
+  details    String? @db.Text
+  source     String
+  sourceType DfsSourceType
+
+  impactLevel          String  // HIGH | MEDIUM | LOW | MONITORING
+  projectionImpact     Float?
+  ownershipImpact      Float?
+  lateSwapRelevance    Boolean @default(false)
+
+  publishedAt DateTime
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([slateId])
+  @@index([playerName])
+  @@index([eventType])
+  @@index([publishedAt])
+  @@map("dfs_news_events")
+}
+
+// Post-slate autopsy
+model DfsAutopsy {
+  id       String @id @default(cuid())
+  slateId  String
+
+  playerName String?
+  team       String?
+  position   String?
+
+  projectedPoints    Float?
+  actualPoints       Float?
+  projectionError    Float?
+  projectionErrorPct Float?
+
+  projectedOwnership Float?
+  actualOwnership    Float?
+  ownershipError     Float?
+
+  autopsyCategory    DfsAutopsyCategory
+
+  narrativeValidated Boolean?
+  narrativeType      String?
+
+  sourceWasAccurate  Boolean?
+  sourceName         String?
+
+  stackWorked        Boolean?
+  stackDescription   String?
+
+  lessonLearned      String? @db.Text
+  modelAdjustment    String? @db.Text
+
+  recordedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  slate DfsSlate @relation(fields: [slateId], references: [id], onDelete: Cascade)
+
+  @@index([slateId])
+  @@index([autopsyCategory])
+  @@index([playerName])
+  @@map("dfs_autopsies")
+}
+
+// Model calibration result after each slate
+model DfsCalibrationResult {
+  id           String @id @default(cuid())
+  slateId      String?
+  modelVersion String
+  sport        String @default("NFL")
+
+  projectionMae         Float?
+  projectionRmse        Float?
+  projectionBias        Float?
+  projectionCorrelation Float?
+
+  ownershipMae         Float?
+  ownershipBias        Float?
+  ownershipCorrelation Float?
+
+  confidenceBuckets   Json?
+  brierScore          Float?
+
+  sourceUpdates       Json?
+  narrativeAccuracy   Float?
+
+  avgPortfolioProjectionError Float?
+  portfolioThesisAccuracy     Float?
+
+  sampleSize Int?
+  period     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slateId])
+  @@index([modelVersion])
+  @@index([period])
+  @@map("dfs_calibration_results")
+}
