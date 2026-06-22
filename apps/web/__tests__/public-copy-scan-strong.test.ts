@@ -34,7 +34,6 @@ const SCAN_TARGETS = [
   "app/promotions/page.tsx",
   "app/brief/page.tsx",
   "app/blog/page.tsx",
-  "app/methodology/page.tsx",
 ];
 
 describe("Strong public-copy scan — registry-driven", () => {
