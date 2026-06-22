@@ -31,7 +31,7 @@ These are shipped, tested, and green on the branch. Listed so you know what you'
 
 ## B. Owner critical path — get the site LIVE (silent mode)
 
-Order matters. ~90 min if nothing stalls. Site goes up in **silent mode**: marketing surface only, all public-data gates OFF (honest "collecting" state), paywall off.
+Order matters. ~90 min if nothing stalls. Site goes up in **silent mode**: marketing surface only, all public-data gates OFF (honest "collecting" state), no public picks yet. (Picks are free; paid tiers sell tools/depth/alerts, not picks.)
 
 - [ ] **1. Domain + DNS** — point the chosen domain at Vercel (Cloudflare DNS records Vercel shows you).
 - [ ] **2. Vercel project** — import `Beexly/Sports`, framework Next.js, root `apps/web`. *Confirm this branch (or its merge target) is the production branch — see note at bottom.*
@@ -124,7 +124,7 @@ The click gate fails closed: a pulled/expired/non-compliant promo redirects to `
 
 ---
 
-## E. Stripe LIVE cutover (when you turn on the paywall)
+## E. Stripe LIVE cutover (when you enable paid subscriptions — tools/depth/alerts, not picks)
 
 - [ ] **E1 — `npm run stripe:seed`** in Live mode to create Pro/Elite products + per-interval prices.
 - [ ] **E2 — Swap env to live keys**: `STRIPE_SECRET_KEY=sk_live_...`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...`, and the four `STRIPE_*_{MONTHLY,ANNUAL}_PRICE_ID` to the live price IDs.
