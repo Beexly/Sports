@@ -125,7 +125,7 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h4>{title}</h4>
+      <h2 className="footer-col-title">{title}</h2>
       <ul>
         {links.map(({ label, href }) => (
           <li key={href}>

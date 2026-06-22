@@ -246,6 +246,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   <Link
                     key={key}
                     href={`/picks${p.toString() ? `?${p}` : ""}`}
+                    aria-current={isActive ? "page" : undefined}
                     className={[
                       "inline-flex min-h-11 items-center rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors",
                       isActive
@@ -271,6 +272,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   <Link
                     key={key}
                     href={`/picks${p.toString() ? `?${p}` : ""}`}
+                    aria-current={isActive ? "page" : undefined}
                     className={[
                       "inline-flex min-h-11 items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                       isActive

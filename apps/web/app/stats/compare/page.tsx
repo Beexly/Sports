@@ -18,8 +18,8 @@ export default function Page({ searchParams }: { searchParams?: { a?: string; b?
     <Shell title="Player Compare">
       <form method="get" className="border border-mineral bg-eclipse p-4 space-y-3">
         <div className="grid grid-cols-[1fr_1fr_auto] gap-3">
-          <input name="a" defaultValue={searchParams?.a ?? "p001"} placeholder="Player A ID (e.g. p001)" className="border border-mineral bg-eclipse p-2 text-ion-white text-sm rounded focus:border-orbital-cyan focus:outline-none" />
-          <input name="b" defaultValue={searchParams?.b ?? "p002"} placeholder="Player B ID (e.g. p002)" className="border border-mineral bg-eclipse p-2 text-ion-white text-sm rounded focus:border-orbital-cyan focus:outline-none" />
+          <input name="a" aria-label="Player A ID" defaultValue={searchParams?.a ?? "p001"} placeholder="Player A ID (e.g. p001)" className="border border-mineral bg-eclipse p-2 text-ion-white text-sm rounded focus:border-orbital-cyan focus:outline-none" />
+          <input name="b" aria-label="Player B ID" defaultValue={searchParams?.b ?? "p002"} placeholder="Player B ID (e.g. p002)" className="border border-mineral bg-eclipse p-2 text-ion-white text-sm rounded focus:border-orbital-cyan focus:outline-none" />
           <button className="border border-orbital-cyan px-3 py-2 text-orbital-cyan text-sm hover:bg-orbital-cyan hover:text-carbon transition-colors rounded">Compare</button>
         </div>
         <p className="text-xs text-ion-2">Enter player IDs from the Players page.</p>

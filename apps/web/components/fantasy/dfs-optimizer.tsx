@@ -84,7 +84,7 @@ export function DfsOptimizer() {
           {MODES.map((m) => {
             const active = mode === m.key;
             return (
-              <button key={m.key} type="button" onClick={() => setMode(m.key)} title={m.blurb}
+              <button key={m.key} type="button" onClick={() => setMode(m.key)} title={m.blurb} aria-pressed={active}
                 className="rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none"
                 style={{ color: active ? BRAND_COLORS.obsidianBlack : "var(--ion-1)", background: active ? BRAND_COLORS.orbitalCyan : "transparent" }}>
                 {m.label}
@@ -198,8 +198,8 @@ export function DfsOptimizer() {
                     <span className="flex-1 truncate text-sm text-ion-white">{p.name}</span>
                     <span className="font-mono text-[11px] text-ion-2">${p.salary}</span>
                     <span className="w-8 text-right font-mono text-[11px]" style={{ color: BRAND_COLORS.ionMagenta }}>{leverage(p).toFixed(1)}</span>
-                    <button type="button" onClick={() => toggle(locks, setLocks, p.id)} title="pin" className="px-1 text-sm" style={{ color: locked ? BRAND_COLORS.orbitalCyan : "var(--ion-3)" }}>★</button>
-                    <button type="button" onClick={() => toggle(excludes, setExcludes, p.id)} title="fade" className="px-1 text-sm" style={{ color: fade ? BRAND_COLORS.ionMagenta : "var(--ion-3)" }}>✕</button>
+                    <button type="button" onClick={() => toggle(locks, setLocks, p.id)} title="pin" aria-label={`Pin ${p.name}`} aria-pressed={locked} className="px-1 text-sm" style={{ color: locked ? BRAND_COLORS.orbitalCyan : "var(--ion-3)" }}>★</button>
+                    <button type="button" onClick={() => toggle(excludes, setExcludes, p.id)} title="fade" aria-label={`Fade ${p.name}`} aria-pressed={fade} className="px-1 text-sm" style={{ color: fade ? BRAND_COLORS.ionMagenta : "var(--ion-3)" }}>✕</button>
                   </div>
                 );
               })}

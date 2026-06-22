@@ -127,7 +127,7 @@ export function AcademySimulator() {
 
       {/* reveal */}
       {picked && grade && (
-        <div className="motion-safe:animate-[gse-step_450ms_ease-out] mt-6">
+        <div className="motion-safe:animate-[gse-step_450ms_ease-out] mt-6" role="status" aria-live="polite">
           <div className="rounded-xl p-5" style={{ background: `${GRADE_HEX[grade.tone]}0c`, border: `1px solid ${GRADE_HEX[grade.tone]}3a` }}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-bold" style={{ color: GRADE_HEX[grade.tone], background: `${GRADE_HEX[grade.tone]}14`, border: `1px solid ${GRADE_HEX[grade.tone]}55` }}>

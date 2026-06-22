@@ -114,6 +114,7 @@ export function ProofExplorer({
                     key={b.label}
                     type="button"
                     disabled={!has}
+                    aria-pressed={on}
                     onClick={() => setSelected(b.label)}
                     className={`rounded-full border px-3 py-1.5 font-mono text-[11px] tabular-nums transition-colors ${
                       on
@@ -129,6 +130,7 @@ export function ProofExplorer({
               })}
             </div>
 
+            <div role="status" aria-live="polite">
             {active && active.sampleSize > 0 ? (
               <div className="mt-3 grid grid-cols-3 gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral">
                 <Stat label="Observed" value={pct(active.observedWinRate)} tone="text-orbital-cyan" />
@@ -149,6 +151,7 @@ export function ProofExplorer({
                 {active.sampleSize} settled in this band · trend {discriminationTrend}
               </p>
             )}
+            </div>
           </div>
         </div>
       </div>

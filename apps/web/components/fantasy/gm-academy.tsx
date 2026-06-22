@@ -40,7 +40,7 @@ export function GmAcademy() {
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex rounded-full p-0.5" style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${BRAND_COLORS.steelGray}` }}>
           {(["drills", "reference"] as View[]).map((v) => (
-            <button key={v} type="button" onClick={() => setView(v)} className="rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider"
+            <button key={v} type="button" onClick={() => setView(v)} aria-pressed={view === v} className="rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider"
               style={{ color: view === v ? BRAND_COLORS.obsidianBlack : "#c8d2dd", background: view === v ? BRAND_COLORS.orbitalCyan : "transparent" }}>
               {v === "drills" ? "Drills" : "Reference"}
             </button>
@@ -51,7 +51,7 @@ export function GmAcademy() {
             const active = track === t;
             const hex = t === "All" ? "#fff" : TRACK_HEX[t];
             return (
-              <button key={t} type="button" onClick={() => switchTrack(t)} className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider"
+              <button key={t} type="button" onClick={() => switchTrack(t)} aria-pressed={active} className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider"
                 style={{ background: active ? `${hex}22` : "transparent", color: hex, boxShadow: active ? `inset 0 0 0 1px ${hex}` : "none" }}>
                 {t}
               </button>
@@ -93,13 +93,13 @@ function DrillCard({ drill, chosenId, onPick, onNext, last }: { drill: ReturnTyp
       <p className="mt-3 text-sm leading-relaxed text-ink-200">{drill.scenario}</p>
       <p className="mt-3 text-base font-semibold text-white">{drill.question}</p>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 space-y-2" role="status" aria-live="polite">
         {drill.options.map((o) => {
           const isChosen = chosenId === o.id;
           const reveal = Boolean(chosenId);
           const hex = V_HEX[o.verdict];
           return (
-            <button key={o.id} type="button" onClick={() => onPick(o.id)} disabled={reveal}
+            <button key={o.id} type="button" onClick={() => onPick(o.id)} disabled={reveal} aria-pressed={isChosen}
               className="block w-full rounded-lg border p-3 text-left text-sm"
               style={{
                 borderColor: reveal ? (o.verdict === "sound" ? `${BRAND_COLORS.orbitalCyan}88` : isChosen ? `${hex}88` : BRAND_COLORS.steelGray) : BRAND_COLORS.steelGray,
