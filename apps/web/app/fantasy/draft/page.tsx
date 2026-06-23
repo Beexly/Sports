@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DraftAssistant } from "@/components/fantasy/draft-assistant";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs headroom beyond the default
 
 export default async function DraftPage() {
-  const pool = await resolveToolPoolAsync();
+  const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
   return (
     <FantasyShell
       eyebrow="Draft Assistant"
@@ -29,7 +30,7 @@ export default async function DraftPage() {
         : "Illustrative player universe — fictional players, illustrative projections. Value over replacement, tiers, and recommendations are computed live from this sample pool."}
       wide
     >
-      <DraftAssistant pool={pool} />
+      <DraftAssistant pool={pool} canUseFantasyFull={viewer.canUseFantasyFull} />
     </FantasyShell>
   );
 }

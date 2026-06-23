@@ -15,7 +15,7 @@ import { SubscribeButton } from "./subscribe-button";
  * current pricing phase (pricing-phases.ts); this component only displays them.
  */
 
-type PlanId = "FREE" | "PRO" | "ELITE";
+type PlanId = "FREE" | "FANTASY" | "PRO" | "ELITE";
 type Interval = "month" | "year";
 
 export interface PlanView {
@@ -61,7 +61,7 @@ export function PricingPlans({
       </div>
 
       {/* Plan cards */}
-      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {plans.map((plan) => {
           const isPro = plan.id === "PRO";
           const isElite = plan.id === "ELITE";
