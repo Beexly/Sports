@@ -166,11 +166,14 @@ const COMPARISON_FEATURES = [
 
 // Fantasy mirrors Free on the betting columns (it adds no betting depth) and unlocks
 // the fantasy suite — so the table tells the honest "Free + the fantasy suite" story.
+// "Signals per day" is "All" for every tier: picks were de-paywalled (dailyPickLimit is
+// null for all — ENTITLEMENT_REMAP_SPEC), so the cell must not advertise a per-day cap
+// the server doesn't enforce. The paid line differentiates on depth/tools/alerts.
 const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | boolean)[]> = {
-  FREE: ["2", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true, "Trial"],
-  FANTASY: ["2", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true, true],
-  PRO: ["Unlimited", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true, true],
-  ELITE: ["Unlimited", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true, true],
+  FREE: ["All", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true, "Trial"],
+  FANTASY: ["All", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true, true],
+  PRO: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true, true],
+  ELITE: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true, true],
 };
 
 // ─────────────────────────────────────────────

@@ -4,7 +4,21 @@ import {
   metricClearance,
   clearedMetrics,
   coverageMapRows,
+  type MetricCoverageEntry,
 } from "./coverage-map";
+
+/** A metric pointing at a source that is NOT in the rights registry — must never clear. */
+const UNCLEARED_METRIC: MetricCoverageEntry = {
+  id: "synthetic-uncleared",
+  name: "Synthetic uncleared metric",
+  shortLabel: "Uncleared",
+  tier: 1,
+  sourceId: "definitely-not-a-registered-source",
+  clearance: { mode: "open_dataset_ingest", toolId: "fetch-native", intents: ["commercial_display"] },
+  theyWithhold: "n/a",
+  weCompute: "n/a",
+  attribution: "n/a",
+};
 
 describe("metrics coverage map — clearance-gated", () => {
   it("every registered metric clears its underlying source (no row without rights)", () => {
@@ -29,6 +43,19 @@ describe("metrics coverage map — clearance-gated", () => {
     // all currently-registered metrics are cleared, so the sets match today.
     expect(cleared.length).toBe(METRIC_COVERAGE.length);
     expect(cleared.every((m) => metricClearance(m).allowed)).toBe(true);
+  });
+
+  it("DROPS a metric whose source does not clear (the fail-closed path)", () => {
+    // sanity: the synthetic metric genuinely does not clear.
+    expect(metricClearance(UNCLEARED_METRIC).allowed).toBe(false);
+    const withUncleared = [...METRIC_COVERAGE, UNCLEARED_METRIC];
+    const cleared = clearedMetrics(new Date(), withUncleared);
+    expect(cleared.some((m) => m.id === "synthetic-uncleared")).toBe(false);
+    // the real, cleared rows still pass through.
+    expect(cleared.length).toBe(METRIC_COVERAGE.length);
+    // and it never reaches the public coverage rows.
+    const rows = coverageMapRows(new Date(), withUncleared);
+    expect(rows.some((r) => r.metric === "Uncleared")).toBe(false);
   });
 
   it("coverageMapRows carries the they-withhold / we-compute / attribution framing", () => {

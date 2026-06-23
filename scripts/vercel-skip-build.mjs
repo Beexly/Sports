@@ -15,8 +15,24 @@
  */
 import { execSync } from "node:child_process";
 
-/** Refs we always build: production + the active development trunk. */
-export const TRUNK_BRANCHES = ["main", "claude/sweet-fermi-sk9gws"];
+/**
+ * Refs we always build. Production `main` is always a trunk; the active development
+ * trunk is supplied via env (`ACTIVE_TRUNK`, comma-separated) rather than hardcoded —
+ * a baked-in branch literal goes stale the moment work moves and silently skips deploys
+ * on the new branch. Only `main` is permanent.
+ * @param {Record<string,string|undefined>} env
+ * @returns {string[]}
+ */
+export function resolveTrunks(env = process.env) {
+  const extra = (env.ACTIVE_TRUNK ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return ["main", ...extra];
+}
+
+/** Refs we always build, resolved from the environment at load time. */
+export const TRUNK_BRANCHES = resolveTrunks();
 
 /** A push touching any of these should build. */
 const BUILD_PATH_PREFIXES = ["apps/web/", "packages/", "workers/"];
@@ -34,6 +50,19 @@ export function shouldBuild({ branch, changedFiles, trunkBranches = TRUNK_BRANCH
   );
 }
 
+/**
+ * Is HEAD a merge commit? Parsed from `git rev-list --parents -n 1 HEAD`, whose first
+ * token is the commit sha and the rest are its parents — 2+ parents means a merge.
+ * Merges must force-build: `HEAD^ HEAD` only diffs the FIRST parent, so changes brought
+ * in from the merged-in side are invisible and could wrongly skip a needed deploy.
+ * @param {string|null} revListParentsLine
+ * @returns {boolean}
+ */
+export function isMergeCommit(revListParentsLine) {
+  const parts = (revListParentsLine ?? "").trim().split(/\s+/).filter(Boolean);
+  return parts.length > 2; // sha + 2+ parents
+}
+
 /** Changed files vs the parent commit. Returns null when it can't be determined. */
 function changedFilesFromGit() {
   try {
@@ -44,11 +73,21 @@ function changedFilesFromGit() {
   }
 }
 
+/** True when HEAD is a merge commit (force-build). Safe-fails to false. */
+function headIsMerge() {
+  try {
+    return isMergeCommit(execSync("git rev-list --parents -n 1 HEAD", { encoding: "utf8" }));
+  } catch {
+    return false;
+  }
+}
+
 // Run as a script (not when imported by the test).
 if (import.meta.url === `file://${process.argv[1]}`) {
   const branch = process.env.VERCEL_GIT_COMMIT_REF ?? "";
   const changedFiles = changedFilesFromGit();
-  const build = changedFiles === null ? true : shouldBuild({ branch, changedFiles });
+  // Force-build on merge commits and when the diff can't be determined (fail safe).
+  const build = headIsMerge() || changedFiles === null ? true : shouldBuild({ branch, changedFiles });
   if (build) {
     console.log(`[vercel-skip-build] BUILD (ref=${branch || "?"})`);
     process.exit(1); // proceed

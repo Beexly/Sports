@@ -92,10 +92,14 @@ export function metricClearance(entry: MetricCoverageEntry, now = new Date()): C
 /**
  * The metrics we may surface as live coverage: only those whose underlying source
  * clears for the commercial/derived use the metric puts it to. Fail-closed — anything
- * that does not clear is omitted, never shown.
+ * that does not clear is omitted, never shown. (`metrics` is injectable for testing the
+ * fail-closed path; defaults to the live registry.)
  */
-export function clearedMetrics(now = new Date()): readonly MetricCoverageEntry[] {
-  return METRIC_COVERAGE.filter((m) => metricClearance(m, now).allowed);
+export function clearedMetrics(
+  now = new Date(),
+  metrics: readonly MetricCoverageEntry[] = METRIC_COVERAGE,
+): readonly MetricCoverageEntry[] {
+  return metrics.filter((m) => metricClearance(m, now).allowed);
 }
 
 export interface CoverageMapRow {
@@ -110,8 +114,11 @@ export interface CoverageMapRow {
  * The "stats we have that they don't" rows for the marketing/coverage UI — derived from
  * the cleared set only, so the public claim never outruns the rights posture.
  */
-export function coverageMapRows(now = new Date()): readonly CoverageMapRow[] {
-  return clearedMetrics(now).map((m) => ({
+export function coverageMapRows(
+  now = new Date(),
+  metrics: readonly MetricCoverageEntry[] = METRIC_COVERAGE,
+): readonly CoverageMapRow[] {
+  return clearedMetrics(now, metrics).map((m) => ({
     metric: m.shortLabel,
     tier: m.tier,
     theyWithhold: m.theyWithhold,

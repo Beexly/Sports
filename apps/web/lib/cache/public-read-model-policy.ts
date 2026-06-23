@@ -63,7 +63,10 @@ export const PUBLIC_READ_POLICIES: Readonly<Record<string, CachePolicy>> = {
 
 /** Resolve the cache policy for a path. Fail-safe: defaults to no-store. */
 export function cachePolicyFor(path: string): CachePolicy {
-  if (NEVER_CACHE_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`) || path.startsWith(p))) {
+  // Segment-boundary match (exact prefix or `${prefix}/...`) — not a raw startsWith, which
+  // would over-match siblings like `/api/picks-public`. Anything unmatched still falls
+  // through to the fail-safe no-store default below, so this errs safe either way.
+  if (NEVER_CACHE_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`))) {
     return noStore("Per-user / entitlement-gated / sensitive / mutating — never cache.");
   }
   const exact = PUBLIC_READ_POLICIES[path];
