@@ -257,3 +257,5 @@ export type {
   DecisionStump,
   TrainingSample,
 } from "./ml-estimator.js";
+
+export { reduceLadder, RUNG_REQUIREMENTS } from "./ladder/reduce.js";

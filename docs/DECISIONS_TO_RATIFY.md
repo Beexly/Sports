@@ -9,6 +9,8 @@ This file records reversible choices and human-gated actions surfaced by the GSE
 | Use `codex/intelligence-core` in `C:\Users\Garrett\Sports-intelligence-core` instead of editing the dirty primary checkout | Codex | chosen | Preserves unrelated in-flight work on `codex/galaxy-dynasty-studio-rescue-v2` while starting from `origin/claude/sweet-fermi-sk9gws`. | No owner action required unless the owner wants work applied directly to another branch. |
 | Treat the GSE Intelligence package as external operating specs, not committed repo docs | Codex | chosen | The package files exist under `C:\Users\Garrett\Documents\Claude\Projects\AI Sports` but are absent from this branch by filename. | Optional: owner/Claude can commit the package docs later for repo-native provenance. |
 | Use `node --use-system-ca` for local nflverse probes on this host | Codex | chosen | Plain Node fetch failed TLS verification locally; system CA mode succeeded. | Optional environment cleanup if future scripts should run without `--use-system-ca`. |
+| Add `LadderEvent` to Prisma schema without applying a migration | Codex | chosen | A1 needs the append-only model contract, but schema application to a shared database is a human/infra gate. | `[SCHEMA]` Generate and apply a reviewed migration in the target database environment. |
+| Keep ladder reducer output shadow-only | Codex | chosen | A1 proves evidence derivation and two-track invariants without flipping `canPublishProjections`, pricing, performance stats, or model calibration. | `[OWNER]/[DATA]` Ratify any future runtime consumption of ladder state. |
 
 ## Standing Human Gates
 
