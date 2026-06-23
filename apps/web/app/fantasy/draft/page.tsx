@@ -3,6 +3,7 @@ import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DraftAssistant } from "@/components/fantasy/draft-assistant";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -19,6 +20,9 @@ export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs 
 
 export default async function DraftPage() {
   const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
+  // Server-side paywall enforcement: a FREE viewer never receives the paid rows of the
+  // live pool (CLAUDE.md rule 3) — only the trial subset crosses to the client.
+  const gatedPool = poolForViewer(pool, viewer.canUseFantasyFull);
   return (
     <FantasyShell
       eyebrow="Draft Assistant"
@@ -30,7 +34,7 @@ export default async function DraftPage() {
         : "Illustrative player universe — fictional players, illustrative projections. Value over replacement, tiers, and recommendations are computed live from this sample pool."}
       wide
     >
-      <DraftAssistant pool={pool} canUseFantasyFull={viewer.canUseFantasyFull} />
+      <DraftAssistant pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />
     </FantasyShell>
   );
 }

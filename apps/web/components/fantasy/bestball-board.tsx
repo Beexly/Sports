@@ -18,21 +18,25 @@ import { rosterNeedsNext, evaluateBestBallRoster, type StructureStatus } from "@
 import { BRAND_COLORS } from "@/lib/brand";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 import { FantasyUpsell } from "@/components/fantasy/fantasy-upsell";
+import { FREE_BOARD_DEPTH } from "@/lib/fantasy/free-trial";
 
 type Filter = Pos | "ALL";
 
 const ADP_HEX: Record<AdpLabel, string> = { steal: BRAND_COLORS.orbitalCyan, value: BRAND_COLORS.softUltraviolet, "on-time": "#9fb3c8", reach: BRAND_COLORS.ionMagenta, none: "#6b7785" };
 const STATUS_HEX: Record<StructureStatus, string> = { short: BRAND_COLORS.ionMagenta, "on-target": BRAND_COLORS.orbitalCyan, heavy: "#E0A800" };
 
-// Free trial: show the top of the board + one recommendation. The full board and the
-// full recommendation set are part of the paid Fantasy suite (a real trial, not a lock).
-const FREE_BOARD_DEPTH = 12;
-
 /**
- * @param pool When provided, the LIVE graded pool resolved server-side. When
+ * Free trial: show the top of the board + one recommendation. The full board and the
+ * full recommendation set are part of the paid Fantasy suite (a real trial, not a lock).
+ * The trial is enforced SERVER-SIDE — a FREE viewer is handed only the trial subset of a
+ * live pool (see `poolForViewer`); this client cap is the matching presentation.
+ *
+ * @param pool When provided, the (viewer-gated) graded pool resolved server-side. When
  * omitted, the tool runs on the illustrative default (the demo, unchanged).
+ * @param canUseFantasyFull Server-provided entitlement. Defaults FALSE (fail-closed): a
+ * caller that forgets it gets the capped trial board, never the full paid suite.
  */
-export function BestBallBoard({ pool, canUseFantasyFull = true }: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
+export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
   const universe = useMemo(() => pool ?? PLAYERS, [pool]);
   const [mine, setMine] = useState<Set<string>>(new Set());
   const [gone, setGone] = useState<Set<string>>(new Set());

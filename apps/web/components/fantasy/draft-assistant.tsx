@@ -21,22 +21,26 @@ import {
 import { BRAND_COLORS } from "@/lib/brand";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 import { FantasyUpsell } from "@/components/fantasy/fantasy-upsell";
+import { FREE_BOARD_DEPTH } from "@/lib/fantasy/free-trial";
 
 type Filter = Pos | "ALL";
 
 const LEVEL_HEX: Record<ScarcityLevel, string> = { critical: BRAND_COLORS.ionMagenta, tight: "#E0A800", ok: "#6b7785" };
 const ADP_HEX: Record<AdpLabel, string> = { steal: BRAND_COLORS.orbitalCyan, value: BRAND_COLORS.softUltraviolet, "on-time": "#9fb3c8", reach: BRAND_COLORS.ionMagenta, none: "#6b7785" };
 
-// Free trial: show the top of the board + one recommendation. The full board and the
-// full recommendation set are part of the paid Fantasy suite (a real trial, not a lock).
-const FREE_BOARD_DEPTH = 12;
-
 /**
- * @param pool When provided, the LIVE graded pool resolved server-side (real
- * players, real grades). When omitted, the tool runs on the illustrative default
- * (the demo, unchanged). VOR/tier baselines are computed against this universe.
+ * Free trial: show the top of the board + one recommendation. The full board and the
+ * full recommendation set are part of the paid Fantasy suite (a real trial, not a lock).
+ * The trial is enforced SERVER-SIDE — a FREE viewer is handed only the trial subset of a
+ * live pool (see `poolForViewer`); this client cap is the matching presentation.
+ *
+ * @param pool When provided, the (viewer-gated) graded pool resolved server-side. When
+ * omitted, the tool runs on the illustrative default. VOR/tier baselines are computed
+ * against this universe.
+ * @param canUseFantasyFull Server-provided entitlement. Defaults FALSE (fail-closed): a
+ * caller that forgets it gets the capped trial board, never the full paid suite.
  */
-export function DraftAssistant({ pool, canUseFantasyFull = true }: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
+export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
   const universe = useMemo(() => pool ?? PLAYERS, [pool]);
   const [mine, setMine] = useState<Set<string>>(new Set());
   const [gone, setGone] = useState<Set<string>>(new Set());

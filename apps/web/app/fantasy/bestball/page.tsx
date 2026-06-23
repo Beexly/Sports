@@ -3,6 +3,7 @@ import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { BestBallBoard } from "@/components/fantasy/bestball-board";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -21,6 +22,9 @@ export const maxDuration = 60; // heavy nflverse load (graded pool) needs headro
 
 export default async function BestBallPage() {
   const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
+  // Server-side paywall enforcement: a FREE viewer never receives the paid rows of the
+  // live pool (CLAUDE.md rule 3) — only the trial subset crosses to the client.
+  const gatedPool = poolForViewer(pool, viewer.canUseFantasyFull);
   return (
     <FantasyShell
       eyebrow="Best Ball"
@@ -32,7 +36,7 @@ export default async function BestBallPage() {
         : "Illustrative player universe — fictional players, illustrative projections. Ceiling, stack, and structure are computed live from this sample pool."}
       wide
     >
-      <BestBallBoard pool={pool} canUseFantasyFull={viewer.canUseFantasyFull} />
+      <BestBallBoard pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />
     </FantasyShell>
   );
 }

@@ -81,6 +81,12 @@ export function requirePremiumApi(): Promise<NextResponse | null> {
  * Fantasy floor: any paid tier (Fantasy, Pro, or Elite). Gates fantasy JSON
  * endpoints so the paid fantasy suite can't be reached by requesting the URL
  * directly. FREE → 403, fails closed to FREE on lookup error.
+ *
+ * NOTE: the live fantasy tools (Best Ball, Draft) are SSR pages, not JSON APIs, so
+ * they enforce the paywall a different way — the server hands a FREE viewer only the
+ * trial subset of the pool (`poolForViewer` in `lib/fantasy/free-trial.ts`), so the
+ * paid rows are never serialized to the client. This helper is the equivalent guard
+ * for any fantasy data exposed as a raw JSON route (mirrors `requirePremiumApi`).
  */
 export function requireFantasyApi(): Promise<NextResponse | null> {
   return gateApi(
