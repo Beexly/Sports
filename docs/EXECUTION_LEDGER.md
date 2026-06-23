@@ -7,7 +7,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] Slice 0 - Day-0 surface audit, branch/files check, nflverse access probe.
 - [x] A1 - LadderEvent shadow reducer, append-only model, invariant tests, two-track rung requirements.
 - [x] A2 - GameSettledEvent heartbeat and idempotent DATA/FORECAST/PROOF/UNLOCK fan-out stub.
-- [ ] E1 - Replay and historical-backtest harness over nflverse regular-season data.
+- [x] E1 - Replay and historical-backtest harness over nflverse regular-season data.
 - [ ] B1 - Feature-store interface over metrics plus coverage-map row per metric and persistence seam.
 - [ ] B2 - Player-rate shrinkage layer with empirical Bayes posteriors and published weights.
 - [ ] B3 - Market-anchored team yards/TD reconciliation with derived fantasy points.
@@ -54,7 +54,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: A2 `GameSettledEvent` heartbeat fan-out stub with ordering and idempotency tests.
 - BLOCKED-ON-HUMAN: applying a real database migration remains `[SCHEMA]`; publish/pricing/performance/calibration flips remain `[OWNER]/[DATA]`.
 
-## 2026-06-23T22:53:30Z - pending commit - A2
+## 2026-06-23T22:53:30Z - 84d666ee - A2
 
 - WHAT: Added pure `fanoutGameSettledHeartbeat()` for deterministic DATA -> FORECAST -> PROOF -> UNLOCK processing, idempotent per-stage ledger entries, PROOF-stage canonical settled sample events for both ladder tracks, and recomputed ladder state.
 - FILES: `packages/types/src/heartbeat.ts`, `packages/prediction-engine/src/ladder/heartbeat.ts`, `packages/prediction-engine/src/ladder/__tests__/heartbeat.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`
@@ -63,3 +63,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: PROOF is the only fan-out stage that emits settled-sample ladder events; replaying a prior PROOF ledger stage never double-counts the heartbeat.
 - NEXT: E1 replay and historical-backtest harness over nflverse regular-season data.
 - BLOCKED-ON-HUMAN: database persistence of fan-out ledger rows remains `[SCHEMA]/[INFRA]`; live score-source automation remains gated by source rights.
+
+## 2026-06-23T23:19:00Z - pending commit - E1
+
+- WHAT: Added the pure nflverse replay substrate: regular-season schedule-row parser for seasons 1999+, deterministic game ordering, historical-week replay with stable fingerprint, purged/embargoed walk-forward split builder, and an out-of-sample market-total MAE report.
+- FILES: `packages/prediction-engine/src/nflverse-replay-parser.ts`, `packages/prediction-engine/src/replay-harness.ts`, `packages/prediction-engine/src/__tests__/replay-harness.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: failing-first replay test failed on missing module; focused replay test passed 4 tests; `@sports/prediction-engine` typecheck passed; new/changed TS files measured under 250 pure LOC; repo `typecheck` passed; repo `lint` passed; web Vitest passed with `--testTimeout=30000`; repo `build` passed after replacing a Node-only `node:crypto` import with a runtime-neutral stable fingerprint; trust/model-freeze/draft-only passed.
+- FLAG: no runtime gate changed; harness is pure and shadow-only, with no DB writes and no projection/publication flips.
+- DECISIONS: E1 uses a deterministic runtime-neutral fingerprint for replay reproducibility; D4 remains responsible for any cryptographic replayable-provenance hash chain.
+- NEXT: B1 feature-store interface over metrics, metric coverage-map rows, and R2/DuckDB persistence seam.
+- BLOCKED-ON-HUMAN: none for B1 code seam; real R2/DuckDB provisioning remains `[INFRA]`.

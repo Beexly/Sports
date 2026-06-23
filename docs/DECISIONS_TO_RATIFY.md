@@ -11,6 +11,7 @@ This file records reversible choices and human-gated actions surfaced by the GSE
 | Use `node --use-system-ca` for local nflverse probes on this host | Codex | chosen | Plain Node fetch failed TLS verification locally; system CA mode succeeded. | Optional environment cleanup if future scripts should run without `--use-system-ca`. |
 | Add `LadderEvent` to Prisma schema without applying a migration | Codex | chosen | A1 needs the append-only model contract, but schema application to a shared database is a human/infra gate. | `[SCHEMA]` Generate and apply a reviewed migration in the target database environment. |
 | Keep ladder reducer output shadow-only | Codex | chosen | A1 proves evidence derivation and two-track invariants without flipping `canPublishProjections`, pricing, performance stats, or model calibration. | `[OWNER]/[DATA]` Ratify any future runtime consumption of ladder state. |
+| Use a runtime-neutral deterministic replay fingerprint in E1 | Codex | chosen | Exporting a Node-only crypto import through `@sports/prediction-engine` breaks the Next web bundle; E1 only needs deterministic replay identity. | No owner action required; D4 must choose the cryptographic hash-chain implementation for replayable provenance. |
 
 ## Standing Human Gates
 

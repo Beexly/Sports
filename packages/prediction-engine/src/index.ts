@@ -261,3 +261,18 @@ export type {
 export { reduceLadder, RUNG_REQUIREMENTS } from "./ladder/reduce.js";
 export { fanoutGameSettledHeartbeat } from "./ladder/heartbeat.js";
 export type { GameSettledFanoutInput, GameSettledFanoutResult } from "./ladder/heartbeat.js";
+export {
+  nflverseSchedulesToReplayGames,
+  replayHistoricalWeek,
+  buildPurgedEmbargoedSplits,
+  runMarketTotalReplayBacktest,
+} from "./replay-harness.js";
+export type {
+  NflverseScheduleRow,
+  ReplayGame,
+  HistoricalWeekTarget,
+  HistoricalWeekReplay,
+  ReplaySplitOptions,
+  WalkForwardSplit,
+  ReplayBacktestReport,
+} from "./replay-harness.js";
