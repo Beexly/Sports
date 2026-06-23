@@ -8,7 +8,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] A1 - LadderEvent shadow reducer, append-only model, invariant tests, two-track rung requirements.
 - [x] A2 - GameSettledEvent heartbeat and idempotent DATA/FORECAST/PROOF/UNLOCK fan-out stub.
 - [x] E1 - Replay and historical-backtest harness over nflverse regular-season data.
-- [ ] B1 - Feature-store interface over metrics plus coverage-map row per metric and persistence seam.
+- [x] B1 - Feature-store interface over metrics plus coverage-map row per metric and persistence seam.
 - [ ] B2 - Player-rate shrinkage layer with empirical Bayes posteriors and published weights.
 - [ ] B3 - Market-anchored team yards/TD reconciliation with derived fantasy points.
 - [ ] BT - Tweedie baseline projection, ACI intervals, Clark-West harness scoring.
@@ -64,7 +64,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: E1 replay and historical-backtest harness over nflverse regular-season data.
 - BLOCKED-ON-HUMAN: database persistence of fan-out ledger rows remains `[SCHEMA]/[INFRA]`; live score-source automation remains gated by source rights.
 
-## 2026-06-23T23:19:00Z - pending commit - E1
+## 2026-06-23T23:19:00Z - 8303eec8 - E1
 
 - WHAT: Added the pure nflverse replay substrate: regular-season schedule-row parser for seasons 1999+, deterministic game ordering, historical-week replay with stable fingerprint, purged/embargoed walk-forward split builder, and an out-of-sample market-total MAE report.
 - FILES: `packages/prediction-engine/src/nflverse-replay-parser.ts`, `packages/prediction-engine/src/replay-harness.ts`, `packages/prediction-engine/src/__tests__/replay-harness.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -73,3 +73,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: E1 uses a deterministic runtime-neutral fingerprint for replay reproducibility; D4 remains responsible for any cryptographic replayable-provenance hash chain.
 - NEXT: B1 feature-store interface over metrics, metric coverage-map rows, and R2/DuckDB persistence seam.
 - BLOCKED-ON-HUMAN: none for B1 code seam; real R2/DuckDB provisioning remains `[INFRA]`.
+
+## 2026-06-23T23:58:52Z - pending commit - B1
+
+- WHAT: Added a typed feature-store seam over cleared metrics, starting with opponent-adjusted EPA snapshots, coverage-map integrity checks, and an R2/DuckDB persistence contract marked INFRA-only.
+- FILES: `apps/web/lib/metrics/coverage-map.ts`, `apps/web/lib/metrics/feature-store.ts`, `apps/web/lib/metrics/feature-store.test.ts`, `apps/web/vitest.config.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused metrics tests passed 18 tests; repo `typecheck` passed; repo `lint` passed; exact web Vitest passed 151 files / 1,934 tests after moving the existing slow-suite timeout into `vitest.config.ts`; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: no runtime gate changed; feature-store snapshots are code-only/shadow and persistence is an `[INFRA]` interface with no writes.
+- DECISIONS: B1 keeps persistence as an injected `FeatureStorePersistence` contract with `FEATURE_STORE_PERSISTENCE_TARGET` documenting the future R2/DuckDB binding; missing or uncleared metric coverage fails closed.
+- NEXT: B2 player-rate shrinkage layer with empirical-Bayes posteriors and published weights.
+- BLOCKED-ON-HUMAN: provisioning `R2_FEATURE_STORE` and DuckDB relation `feature_store.metric_snapshots` remains `[INFRA]`.

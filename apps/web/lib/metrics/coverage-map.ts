@@ -102,6 +102,13 @@ export function clearedMetrics(
   return metrics.filter((m) => metricClearance(m, now).allowed);
 }
 
+export function metricCoverageById(
+  id: string,
+  metrics: readonly MetricCoverageEntry[] = METRIC_COVERAGE,
+): MetricCoverageEntry | null {
+  return metrics.find((metric) => metric.id === id) ?? null;
+}
+
 export interface CoverageMapRow {
   readonly metric: string;
   readonly tier: MetricTier;
