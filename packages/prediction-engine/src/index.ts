@@ -259,3 +259,5 @@ export type {
 } from "./ml-estimator.js";
 
 export { reduceLadder, RUNG_REQUIREMENTS } from "./ladder/reduce.js";
+export { fanoutGameSettledHeartbeat } from "./ladder/heartbeat.js";
+export type { GameSettledFanoutInput, GameSettledFanoutResult } from "./ladder/heartbeat.js";

@@ -6,7 +6,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 
 - [x] Slice 0 - Day-0 surface audit, branch/files check, nflverse access probe.
 - [x] A1 - LadderEvent shadow reducer, append-only model, invariant tests, two-track rung requirements.
-- [ ] A2 - GameSettledEvent heartbeat and idempotent DATA/FORECAST/PROOF/UNLOCK fan-out stub.
+- [x] A2 - GameSettledEvent heartbeat and idempotent DATA/FORECAST/PROOF/UNLOCK fan-out stub.
 - [ ] E1 - Replay and historical-backtest harness over nflverse regular-season data.
 - [ ] B1 - Feature-store interface over metrics plus coverage-map row per metric and persistence seam.
 - [ ] B2 - Player-rate shrinkage layer with empirical Bayes posteriors and published weights.
@@ -44,7 +44,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: A1 `LadderEvent` shadow reducer and invariant test.
 - BLOCKED-ON-HUMAN: none for A1; later money/secrets/infra/calibration flips remain owner-gated.
 
-## 2026-06-23T22:37:00Z - pending commit - A1
+## 2026-06-23T22:37:00Z - 94ee8bb8 - A1
 
 - WHAT: Added the shadow-only `LadderEvent` contract, `GameSettledEvent` heartbeat contract, two-track `RUNG_REQUIREMENTS`, pure deterministic `reduceLadder()`, invariant tests, and append-only Prisma `LadderEvent` model.
 - FILES: `packages/types/src/ladder.ts`, `packages/types/src/heartbeat.ts`, `packages/types/src/index.ts`, `packages/prediction-engine/src/ladder/reduce.ts`, `packages/prediction-engine/src/ladder/__tests__/reduce.test.ts`, `packages/prediction-engine/src/index.ts`, `packages/db/prisma/schema.prisma`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -53,3 +53,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: `currentRung` is a conservative cross-track summary; consumers must use `trackRungs.fantasy` and `trackRungs.betting` for unlock evidence so fantasy MAE cannot unlock betting pricing and betting CLV cannot unlock projection publishing.
 - NEXT: A2 `GameSettledEvent` heartbeat fan-out stub with ordering and idempotency tests.
 - BLOCKED-ON-HUMAN: applying a real database migration remains `[SCHEMA]`; publish/pricing/performance/calibration flips remain `[OWNER]/[DATA]`.
+
+## 2026-06-23T22:53:30Z - pending commit - A2
+
+- WHAT: Added pure `fanoutGameSettledHeartbeat()` for deterministic DATA -> FORECAST -> PROOF -> UNLOCK processing, idempotent per-stage ledger entries, PROOF-stage canonical settled sample events for both ladder tracks, and recomputed ladder state.
+- FILES: `packages/types/src/heartbeat.ts`, `packages/prediction-engine/src/ladder/heartbeat.ts`, `packages/prediction-engine/src/ladder/__tests__/heartbeat.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`
+- GATE: failing-first heartbeat test failed on missing module; focused heartbeat test passed 5 tests; `@sports/types` typecheck passed; `@sports/prediction-engine` typecheck passed; repo `typecheck` passed; repo `lint` passed; web Vitest passed with `--testTimeout=30000`; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: no runtime gate changed; fan-out is pure and returns ledger/ladder artifacts for a caller to persist later.
+- DECISIONS: PROOF is the only fan-out stage that emits settled-sample ladder events; replaying a prior PROOF ledger stage never double-counts the heartbeat.
+- NEXT: E1 replay and historical-backtest harness over nflverse regular-season data.
+- BLOCKED-ON-HUMAN: database persistence of fan-out ledger rows remains `[SCHEMA]/[INFRA]`; live score-source automation remains gated by source rights.

@@ -1,4 +1,5 @@
-export type GameSettledStage = "DATA" | "FORECAST" | "PROOF" | "UNLOCK";
+export const GAME_SETTLED_STAGES = ["DATA", "FORECAST", "PROOF", "UNLOCK"] as const;
+export type GameSettledStage = (typeof GAME_SETTLED_STAGES)[number];
 
 export interface GameSettledScoreline {
   readonly homeTeamId: string;
@@ -19,4 +20,14 @@ export interface GameSettledEvent {
   readonly scoreline: GameSettledScoreline;
   readonly modelVersion: string;
   readonly completedStages: readonly GameSettledStage[];
+}
+
+export interface GameSettledFanoutLedgerEntry {
+  readonly id: string;
+  readonly sourceEventId: string;
+  readonly idempotencyKey: string;
+  readonly stage: GameSettledStage;
+  readonly sequence: number;
+  readonly occurredAt: string;
+  readonly modelVersion: string;
 }
