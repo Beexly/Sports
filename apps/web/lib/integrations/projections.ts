@@ -26,6 +26,10 @@ export type PlayerProjection = {
 export interface ProjectionsProvider {
   readonly name: string;
   readonly live: boolean;
+  /** ISO time the live pool was fetched/built — drives the freshness label. */
+  readonly fetchedAt?: string;
+  /** Source-license attribution line (e.g. nflverse CC-BY-4.0). */
+  readonly attribution?: string;
   list(): PlayerProjection[];
   /**
    * The rich player pool the fantasy engines consume (usage/scheme/trend/etc.).
@@ -77,6 +81,20 @@ export function resolveProjectionsProvider(env: Record<string, string | undefine
 
 export function isLiveProjections(env: Record<string, string | undefined> = process.env): boolean {
   return Boolean(getLiveProvider()) && isConfigured("projections", env);
+}
+
+export type ProjectionsMeta = {
+  readonly live: boolean;
+  readonly name?: string;
+  readonly fetchedAt?: string;
+  readonly attribution?: string;
+};
+
+/** Honest live status + freshness/attribution metadata for the projections badge. */
+export function getLiveProjectionsMeta(env: Record<string, string | undefined> = process.env): ProjectionsMeta {
+  if (!isLiveProjections(env)) return { live: false };
+  const p = getLiveProvider()!;
+  return { live: true, name: p.name, fetchedAt: p.fetchedAt, attribution: p.attribution };
 }
 
 /**
