@@ -12,7 +12,7 @@ import { BRAND_COLORS } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Founding Launch — Galaxy Fantasy",
   description:
-    "Draft season is now. The Draft Assistant and Best Ball board run on real, cleared nflverse-graded data — roster ceiling, QB stacks, and bye structure, with the reasoning. Founding members lock the lowest rate we'll ever offer, for life.",
+    "Draft season is now. The Draft Assistant and Best Ball board run on real, cleared nflverse-graded data — roster ceiling, QB stacks, and bye structure, with the reasoning. Founding members keep the lowest rate we'll ever offer, for life.",
   alternates: { canonical: "/launch" },
 };
 
