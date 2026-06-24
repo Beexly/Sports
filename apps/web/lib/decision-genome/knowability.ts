@@ -63,8 +63,8 @@ export interface DecisionWindow {
 
 export type LeakageReason =
   | "missing-available-at"
-  | "available-after-lock"
-  | "trusted-after-lock"
+  | "available-too-late"
+  | "trusted-too-late"
   | "not-cleared-for-decision-use";
 
 export interface LeakageViolation {
@@ -86,16 +86,16 @@ export function isKnowableAtLock(fact: KnowableFact, window: DecisionWindow): bo
 /** Returns the single most important leakage reason for a fact, or null if clean. */
 export function checkFact(fact: KnowableFact, window: DecisionWindow): LeakageViolation | null {
   const { stamps } = fact;
-  const lock = window.decisionLockedAt;
+  const lockTime = window.decisionLockedAt;
 
   if (stamps.availableAt == null || !Number.isFinite(stamps.availableAt)) {
     return { factId: fact.id, reason: "missing-available-at", lateByMs: 0 };
   }
-  if (stamps.availableAt > lock) {
-    return { factId: fact.id, reason: "available-after-lock", lateByMs: stamps.availableAt - lock };
+  if (stamps.availableAt > lockTime) {
+    return { factId: fact.id, reason: "available-too-late", lateByMs: stamps.availableAt - lockTime };
   }
-  if (stamps.trustedAt != null && stamps.trustedAt > lock) {
-    return { factId: fact.id, reason: "trusted-after-lock", lateByMs: stamps.trustedAt - lock };
+  if (stamps.trustedAt != null && stamps.trustedAt > lockTime) {
+    return { factId: fact.id, reason: "trusted-too-late", lateByMs: stamps.trustedAt - lockTime };
   }
   if (fact.permissions && !fact.permissions.decisionUse) {
     return { factId: fact.id, reason: "not-cleared-for-decision-use", lateByMs: 0 };

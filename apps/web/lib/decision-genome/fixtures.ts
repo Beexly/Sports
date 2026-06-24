@@ -9,7 +9,7 @@
 import { evaluateAperture, type ApertureInput } from "./aperture";
 import { makeDecisionGenome, type DecisionGenome, type DecisionType } from "./decision-genome";
 
-const LOCK = Date.parse("2026-09-13T16:00:00.000Z");
+const LOCK_TIME = Date.parse("2026-09-13T16:00:00.000Z");
 const KICKOFF = Date.parse("2026-09-13T17:00:00.000Z");
 
 interface BuildArgs {
@@ -25,8 +25,8 @@ function build({ id, decisionType, input }: BuildArgs): DecisionGenome {
     decisionType,
     aperture: evaluation.state,
     time: {
-      window: { decisionLockedAt: LOCK, eventStartedAt: KICKOFF },
-      stamps: { availableAt: LOCK - 1000 * 60 * 30, trustedAt: LOCK - 1000 * 60 * 20 },
+      window: { decisionLockedAt: LOCK_TIME, eventStartedAt: KICKOFF },
+      stamps: { availableAt: LOCK_TIME - 1000 * 60 * 30, trustedAt: LOCK_TIME - 1000 * 60 * 20 },
     },
     market: input.market,
     evidence: input.evidence,

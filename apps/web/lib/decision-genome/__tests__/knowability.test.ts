@@ -27,7 +27,7 @@ describe("KnowabilityKernel", () => {
 
   it("rejects a fact that became available AFTER lock (leakage)", () => {
     const v = checkFact(fact("late", { availableAt: LOCK + 1 }), window);
-    expect(v?.reason).toBe("available-after-lock");
+    expect(v?.reason).toBe("available-too-late");
     expect(v?.lateByMs).toBe(1);
   });
 
@@ -38,7 +38,7 @@ describe("KnowabilityKernel", () => {
 
   it("rejects a fact trusted after lock even if available before", () => {
     const v = checkFact(fact("trustlate", { availableAt: LOCK - 50, trustedAt: LOCK + 10 }), window);
-    expect(v?.reason).toBe("trusted-after-lock");
+    expect(v?.reason).toBe("trusted-too-late");
   });
 
   it("rejects a fact not cleared for decision use", () => {

@@ -41,7 +41,7 @@ public surface.
 - **No confidence without calibration context** — `ModelState` carries `calibrationHealth`
   and an uncertainty band; the aperture shadows low-calibration decisions.
 - **No agent action beyond draft/escalate** — `AgentCourt` only scores claims.
-- **No data leakage across the decision lock** — `assertNoLeakage` is a hard gate.
+- **No data leakage after lock** — `assertNoLeakage` rejects any fact knowable too late.
 - **Projections stay shadow** — `ProofState.priced` is typed `false`; nothing here flips it.
 
 ## North star
