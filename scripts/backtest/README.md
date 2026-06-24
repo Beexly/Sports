@@ -10,11 +10,13 @@ logic lives here, only data loading + leakage-safe feature engineering.
 From the repo root (needs `node_modules` installed + outbound network):
 
 ```bash
-NODE_OPTIONS=--use-system-ca npx tsx scripts/backtest/player-projection-backtest.ts 2021 2022 2023
+NODE_OPTIONS=--use-system-ca npx tsx scripts/backtest/player-projection-backtest.ts 2021 2022 2023 2024 2025
 ```
 
-Args = seasons (default `2021 2022 2023`). PPR scoring, skill positions (QB/RB/WR/TE), regular
-season only. A player-week is eligible once it has ≥3 prior games that season (so trailing features
+Args = seasons (default = all completed seasons `2021 2022 2023 2024 2025`; the 2026 season has not
+been played yet). PPR scoring, skill positions (QB/RB/WR/TE), regular season only. nflverse renamed
+the weekly asset after 2024, so the driver tries both `player_stats_<season>.csv` and the newer
+`stats_player_week_<season>.csv` names. A player-week is eligible once it has ≥3 prior games that season (so trailing features
 exist). Features for week *W* use **strictly** weeks `< W` (no leakage).
 
 ## What it prints

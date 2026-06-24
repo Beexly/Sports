@@ -19,8 +19,11 @@
  * engine output stays priced=false / shadow.
  *
  * RUN (from repo root, in an env with node_modules installed + network):
- *   NODE_OPTIONS=--use-system-ca npx tsx scripts/backtest/player-projection-backtest.ts 2021 2022 2023
- * Args = seasons (default 2021 2022 2023). PPR scoring.
+ *   NODE_OPTIONS=--use-system-ca npx tsx scripts/backtest/player-projection-backtest.ts 2021 2022 2023 2024 2025
+ * Args = seasons (default = all completed NFL seasons 2021..2025; the 2026 season has not been
+ * played yet as of this writing). PPR scoring. nflverse renamed the weekly asset after 2024, so the
+ * driver tries both the legacy `player_stats_<season>.csv` and the newer
+ * `stats_player_week_<season>.csv` names (schemas share all columns this driver reads).
  */
 
 import {
@@ -31,7 +34,7 @@ import {
 // ---- config -------------------------------------------------------------
 const SEASONS: number[] = (process.argv.slice(2).map(Number).filter(Number.isInteger).length > 0
   ? process.argv.slice(2).map(Number).filter(Number.isInteger)
-  : [2021, 2022, 2023]);
+  : [2021, 2022, 2023, 2024, 2025]); // all completed NFL seasons as of 2026-06 (2026 not played yet)
 
 const SKILL_POSITIONS = new Set(["QB", "RB", "WR", "TE"]);
 const MIN_PRIOR_GAMES = 3; // need history before a player is eligible (trailing features exist)

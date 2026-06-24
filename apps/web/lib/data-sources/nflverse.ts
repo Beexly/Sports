@@ -131,6 +131,17 @@ function nflversePlayerStatsUrl(season: number): string {
   return `${NFLVERSE_BASE}/player_stats/player_stats_${season}.csv`;
 }
 
+// nflverse renamed the weekly player-stats release asset after the 2024 season; current seasons
+// (2025+) are published as stats_player/stats_player_week_<season>.csv. Try the legacy name first
+// (covers historical seasons), then the current name, so the app stays current through the latest
+// completed season instead of 404-ing on the newest data.
+function nflversePlayerStatsCandidateUrls(season: number): readonly string[] {
+  return [
+    `${NFLVERSE_BASE}/player_stats/player_stats_${season}.csv`,
+    `${NFLVERSE_BASE}/stats_player/stats_player_week_${season}.csv`,
+  ];
+}
+
 function parsePlayerStatRow(row: Record<string, string>): NflversePlayerStatRow {
   return {
     playerId: row["player_id"] ?? "",
@@ -159,40 +170,47 @@ export async function fetchNflversePlayerStats(
   season: number,
   fetcher: Fetcher = fetch as Fetcher,
 ): Promise<NflverseResult<NflversePlayerStatRow> | NflverseError> {
-  const url = nflversePlayerStatsUrl(season);
   const fetchedAt = new Date().toISOString();
+  let lastError: NflverseError | null = null;
 
-  let response: Awaited<ReturnType<Fetcher>>;
-  try {
-    response = await fetcher(url);
-  } catch {
-    return { ok: false, status: "network-error", message: "Network request failed.", season, source: "nflverse" };
+  for (const url of nflversePlayerStatsCandidateUrls(season)) {
+    let response: Awaited<ReturnType<Fetcher>>;
+    try {
+      response = await fetcher(url);
+    } catch {
+      lastError = { ok: false, status: "network-error", message: "Network request failed.", season, source: "nflverse" };
+      continue;
+    }
+
+    if (!response.ok) {
+      lastError = { ok: false, status: response.status, message: `nflverse returned HTTP ${response.status}.`, season, source: "nflverse" };
+      continue;
+    }
+
+    let raw: string;
+    try {
+      raw = await response.text();
+    } catch {
+      lastError = { ok: false, status: "parse-error", message: "Failed to read response body.", season, source: "nflverse" };
+      continue;
+    }
+
+    const rows = parseNflverseCsv(raw).map(parsePlayerStatRow);
+
+    return {
+      ok: true,
+      data: rows,
+      season,
+      fetchedAt,
+      dataQuality: "authoritative-free",
+      attribution: NFLVERSE_ATTRIBUTION,
+      license: NFLVERSE_LICENSE,
+      source: "nflverse",
+      cacheMaxAgeSeconds: 3600,
+    };
   }
 
-  if (!response.ok) {
-    return { ok: false, status: response.status, message: `nflverse returned HTTP ${response.status}.`, season, source: "nflverse" };
-  }
-
-  let raw: string;
-  try {
-    raw = await response.text();
-  } catch {
-    return { ok: false, status: "parse-error", message: "Failed to read response body.", season, source: "nflverse" };
-  }
-
-  const rows = parseNflverseCsv(raw).map(parsePlayerStatRow);
-
-  return {
-    ok: true,
-    data: rows,
-    season,
-    fetchedAt,
-    dataQuality: "authoritative-free",
-    attribution: NFLVERSE_ATTRIBUTION,
-    license: NFLVERSE_LICENSE,
-    source: "nflverse",
-    cacheMaxAgeSeconds: 3600,
-  };
+  return lastError ?? { ok: false, status: "network-error", message: "Network request failed.", season, source: "nflverse" };
 }
 
 // ─── Injuries ─────────────────────────────────────────────────────────────────

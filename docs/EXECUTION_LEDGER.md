@@ -373,3 +373,23 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Allocation still uses one shared usage*efficiency posterior per player; per-phase (pass/rush/receive) usage posteriors are a noted future refinement (a mobile QB's rush share is approximate). Conservation is exact per pool regardless.
 - NEXT: WO3 — gate the leaky readiness endpoints.
 - BLOCKED-ON-HUMAN: unchanged.
+
+## 2026-06-24T20:13:57Z - (self-commit) - DATA1 — keep nflverse data current through 2025
+
+- WHAT: nflverse renamed the weekly player-stats release asset after 2024 — current seasons (2025+)
+  publish ONLY as `stats_player/stats_player_week_<season>.csv` (the legacy `player_stats_<season>.csv`
+  404s, and the combined `player_stats/player_stats.csv.gz` is upstream-frozen at 1999-2024). Fixes:
+  (1) the backtest driver now defaults to ALL completed seasons 2021-2025 (was 2021-2023) and tries
+  both asset names; (2) `fetchNflversePlayerStats` (apps/web data-sources) now tries the legacy name
+  then falls back to `stats_player_week_<season>.csv`, so it resolves 2025.
+- FILES: `scripts/backtest/player-projection-backtest.ts`, `scripts/backtest/README.md`, `apps/web/lib/data-sources/nflverse.ts`, `apps/web/__tests__/nflverse.test.ts`, `docs/EXECUTION_LEDGER.md`
+- GATE: apps/web leaf Vitest `nflverse.test.ts` green (19 tests incl. a new fallback test); live fetch
+  verified — 2024 via legacy asset, 2025 via `stats_player_week_2025.csv`. Backtest re-run on real
+  2024/2025 data succeeded (driver fetched all 5 seasons).
+- FLAG: data adapters only; no gate/provider/pricing/model/schema change; nothing priced/published.
+- DECISIONS / CONFIRMED CURRENT: `currentNflSeason()` is date-driven and already returns 2025 (and
+  projections default to 2026) — runtime season logic is NOT stale. `resolveActiveSeason` is data-driven.
+- BLOCKED-ON-HUMAN: [DATA] the LIVE ingestion path `ingestPlayerWeeklyStats` → `fetchNflverse("player_stats_week")`
+  pulls the combined `player_stats.csv.gz` which nflverse has NOT yet populated with 2025; until then the
+  DB-backed trend modules show 2024 as the latest season (graceful, not broken). Closing this needs a
+  combined+per-season MERGE in `packages/data-ingestion` wired into the ingestion fetcher — addressed in DATA2.
