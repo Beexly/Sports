@@ -12,7 +12,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] B2 - Player-rate shrinkage layer with empirical Bayes posteriors and published weights.
 - [x] B3 - Market-anchored team yards/TD reconciliation with derived fantasy points.
 - [x] BT - Tweedie baseline projection, ACI intervals, Clark-West harness scoring.
-- [ ] B4 - Earned-weight ensemble with bounded loss and Clark-West gates.
+- [x] B4 - Earned-weight ensemble with bounded loss and Clark-West gates.
 - [ ] B5 - Adaptive Conformal Inference, Mondrian by position, rolling recalibration.
 - [ ] B6 - Self-publishing calibration harness and publish-criteria definition only.
 - [ ] C6 - Correlation/copula layer for best-ball/parlay consumption.
@@ -104,7 +104,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: BT Tweedie baseline projection, flagged/shadow with ACI intervals and Clark-West scoring hook.
 - BLOCKED-ON-HUMAN: fitting historical points-to-yards/TD conversion coefficients and promoting any derived projections remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T00:52:42Z - pending commit - BT
+## 2026-06-24T00:52:42Z - 9684385e - BT
 
 - WHAT: Added a shadow Tweedie-family projection baseline scaffold with cleared-feature boosted stumps, non-negative Tweedie deviance scoring, ACI interval generation, purged/embargoed temporal splits, and Clark-West market-baseline comparison.
 - FILES: `packages/prediction-engine/src/tweedie-baseline.ts`, `packages/prediction-engine/src/tweedie-aci.ts`, `packages/prediction-engine/src/projection-evaluation.ts`, `packages/prediction-engine/src/__tests__/tweedie-baseline.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -113,3 +113,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Keep the Tweedie baseline as a pure boosted-stump scaffold over explicitly cleared features until E1-backed data supplies enough out-of-sample evidence; export Clark-West as a shared evaluator for B4 rather than burying it in the Tweedie module.
 - NEXT: B4 earned-weight ensemble with bounded loss and must-beat equal-weight plus market-only gates.
 - BLOCKED-ON-HUMAN: real nflverse/player-feature training data, estimator promotion, public projection use, and pricing remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T01:03:57Z - pending commit - B4
+
+- WHAT: Added a sequential Hedge/multiplicative-weights ensemble backtest with capped absolute loss, pre-outcome earned predictions, equal-weight and market-only Clark-West comparisons, and a report-only promotion gate.
+- FILES: `packages/prediction-engine/src/earned-weight-ensemble.ts`, `packages/prediction-engine/src/__tests__/earned-weight-ensemble.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused earned-weight tests passed 4 tests; new TS/test files measured under 250 lines each; `@sports/prediction-engine` typecheck passed; repo `typecheck` passed; repo `lint` passed; exact web Vitest passed with the longer tool timeout; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false; `promotionGate.passes` is evidence only and requires both `ensembleVsEqualWeight` and `ensembleVsMarket` to pass Clark-West plus lower MAE than each baseline.
+- DECISIONS: Use pre-outcome sequential weight updates so a sample can only affect later samples; cap per-model absolute loss before the Hedge update to prevent one outlier from dominating the ensemble.
+- NEXT: B5 Adaptive Conformal Inference, Mondrian by position, rolling recalibration with non-overlapping calibration weeks.
+- BLOCKED-ON-HUMAN: real out-of-sample projection samples, any estimator promotion, and any public/paid consumption remain `[DATA]/[OWNER]`.

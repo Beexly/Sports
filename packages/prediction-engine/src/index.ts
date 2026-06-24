@@ -238,6 +238,18 @@ export type {
   AciObservation,
   AciInterval,
 } from "./tweedie-baseline.js";
+export {
+  boundedAbsoluteLoss,
+  updateHedgeWeights,
+  runEarnedWeightEnsembleBacktest,
+} from "./earned-weight-ensemble.js";
+export type {
+  EnsemblePredictionSample,
+  EarnedWeightEnsembleOptions,
+  EarnedWeightPrediction,
+  EarnedWeightPromotionGate,
+  EarnedWeightEnsembleReport,
+} from "./earned-weight-ensemble.js";
 
 // Elo independent-model backtest: results-only win probabilities, calibrated and
 // comparable to the market baseline. Measurement only; not wired into scoring.
