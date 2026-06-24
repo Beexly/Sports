@@ -32,4 +32,5 @@ export * from "./proof-card";
 // I — EpistemicAlphaLedger
 export * from "./epistemic-alpha";
 // Fixtures (sample genomes for tests/storybook/demos)
+export { allFixtures, signalGenome, passGenome, quarantineGenome } from "./fixtures";
 export * as decisionGenomeFixtures from "./fixtures";
