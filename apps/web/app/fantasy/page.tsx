@@ -12,6 +12,7 @@ export const dynamic = "force-dynamic";
  * routes; honor them forever so no shared link ever strands on the hub. */
 const LEGACY_TOOL_ROUTES: Record<string, string> = {
   draft: "/fantasy/draft",
+  bestball: "/fantasy/bestball",
   lineup: "/fantasy/lineup",
   waivers: "/fantasy/waivers",
   trade: "/fantasy/trade",
@@ -53,6 +54,7 @@ const LIVE_FIRST = [
 type ToolStatus = "live" | "partly live" | "gated";
 const TOOL_DIRECTORY: readonly (readonly [string, string, string, ToolStatus])[] = [
   ["Optimizer — DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay gated; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the illustrative pool now.", "/optimizer", "partly live"],
+  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility, and a next-pick recommender. Runs on the illustrative pool now; real the moment projections flip on.", "/fantasy/bestball", "partly live"],
   ["Human Performance", "Public confidence-band layer — venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
   ["Waiver & FAAB", "Needs roster sync, projections, injuries, and league market context.", "/fantasy/waivers", "gated"],
   ["Trade Analyzer", "Needs live player values and roster context.", "/fantasy/trade", "gated"],

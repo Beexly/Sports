@@ -1,5 +1,11 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, MODEL_VERSION, toEdgeIndex } from "@sports/prediction-engine";
+import {
+  buildBoardHealth,
+  type BoardDegradation,
+  type BoardHealthBadgeState,
+  type BoardSuppressionReason,
+} from "@/lib/board/health";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
@@ -32,7 +38,14 @@ export interface BoardStateData {
 
 export interface BoardStatePayload {
   data: BoardStateData;
-  meta: { isSampleData: boolean; suppressedDemoData?: boolean; dataError?: "DB_UNREACHABLE" };
+  meta: {
+    isSampleData: boolean;
+    suppressedDemoData?: boolean;
+    dataError?: "DB_UNREACHABLE";
+    traceId: string;
+    degradations: readonly BoardDegradation[];
+    health: BoardHealthBadgeState;
+  };
 }
 
 /**
@@ -64,6 +77,44 @@ function todayBounds(): { start: Date; end: Date } {
   return { start, end };
 }
 
+function rowCounts(rows: Pick<BoardStateData, "scoringNow" | "publishedToday" | "gatedTodayRows">) {
+  return {
+    gatedTodayRows: rows.gatedTodayRows.length,
+    publishedToday: rows.publishedToday.length,
+    scoringNow: rows.scoringNow.length,
+  };
+}
+
+function buildBoardMeta({
+  dataError,
+  modelVersion,
+  now,
+  rows,
+  suppressedReason,
+}: {
+  dataError?: "DB_UNREACHABLE";
+  modelVersion: string;
+  now: Date;
+  rows: Pick<BoardStateData, "scoringNow" | "publishedToday" | "gatedTodayRows">;
+  suppressedReason?: BoardSuppressionReason;
+}): BoardStatePayload["meta"] {
+  const health = buildBoardHealth({
+    dataError,
+    modelVersion,
+    now,
+    rowCounts: rowCounts(rows),
+    suppressedReason,
+  });
+  return {
+    degradations: health.degradations,
+    health: health.badge,
+    isSampleData: false,
+    ...(dataError ? { dataError } : {}),
+    ...(suppressedReason ? { suppressedDemoData: true } : {}),
+    traceId: health.traceId,
+  };
+}
+
 export async function loadBoardState(now = new Date()): Promise<BoardStatePayload> {
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
@@ -77,6 +128,11 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     gates.forceNoBetIfStale && (await isPublicPicksSurfaceStale(now).catch(() => false));
 
   if (demoActive || staleSuppressed) {
+    const emptyRows = {
+      gatedTodayRows: [],
+      publishedToday: [],
+      scoringNow: [],
+    };
     return {
       data: {
         sportsWatched: 0,
@@ -86,11 +142,16 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         lastRefresh: now.toISOString(),
         modelVersion: MODEL_VERSION,
         bootstrap: gates.isBootstrapMode,
-        scoringNow: [],
-        publishedToday: [],
-        gatedTodayRows: [],
+        scoringNow: emptyRows.scoringNow,
+        publishedToday: emptyRows.publishedToday,
+        gatedTodayRows: emptyRows.gatedTodayRows,
       },
-      meta: { isSampleData: false, suppressedDemoData: true },
+      meta: buildBoardMeta({
+        modelVersion: MODEL_VERSION,
+        now,
+        rows: emptyRows,
+        suppressedReason: demoActive ? "DEMO_DATA" : "STALE_DATA",
+      }),
     };
   }
 
@@ -149,6 +210,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
       const publishedRows = decisionRows.filter((row) => row.status === "PUBLISHED_TODAY");
       const gatedRows = decisionRows.filter((row) => row.status === "GATED_TODAY");
 
+      const modelVersion = decisions[0]?.modelVersion ?? MODEL_VERSION;
       return {
         data: {
           sportsWatched: new Set(decisionRows.map((row) => row.sport)).size,
@@ -156,13 +218,17 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
           openPicks: publishedRows.length,
           gatedToday: gatedRows.length,
           lastRefresh: now.toISOString(),
-          modelVersion: decisions[0]?.modelVersion ?? MODEL_VERSION,
+          modelVersion,
           bootstrap: gates.isBootstrapMode,
           scoringNow: scoringRows,
           publishedToday: publishedRows,
           gatedTodayRows: gatedRows,
         },
-        meta: { isSampleData: false },
+        meta: buildBoardMeta({
+          modelVersion,
+          now,
+          rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
+        }),
       };
     }
 
@@ -240,6 +306,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     updatedAt: game.updatedAt.toISOString(),
   }));
 
+    const modelVersion = publishedToday[0]?.modelVersion ?? MODEL_VERSION;
     return {
       data: {
         sportsWatched: new Set([...scoringRows, ...publishedRows, ...gatedRows].map((row) => row.sport)).size,
@@ -247,15 +314,24 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         openPicks: publishedRows.length,
         gatedToday: gatedRows.length,
         lastRefresh: now.toISOString(),
-        modelVersion: publishedToday[0]?.modelVersion ?? MODEL_VERSION,
+        modelVersion,
         bootstrap: gates.isBootstrapMode,
         scoringNow: scoringRows,
         publishedToday: publishedRows,
         gatedTodayRows: gatedRows,
       },
-      meta: { isSampleData: false },
+      meta: buildBoardMeta({
+        modelVersion,
+        now,
+        rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
+      }),
     };
   } catch {
+    const emptyRows = {
+      gatedTodayRows: [],
+      publishedToday: [],
+      scoringNow: [],
+    };
     return {
       data: {
         sportsWatched: 0,
@@ -265,11 +341,16 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         lastRefresh: now.toISOString(),
         modelVersion: MODEL_VERSION,
         bootstrap: gates.isBootstrapMode,
-        scoringNow: [],
-        publishedToday: [],
-        gatedTodayRows: [],
+        scoringNow: emptyRows.scoringNow,
+        publishedToday: emptyRows.publishedToday,
+        gatedTodayRows: emptyRows.gatedTodayRows,
       },
-      meta: { isSampleData: false, dataError: "DB_UNREACHABLE" },
+      meta: buildBoardMeta({
+        dataError: "DB_UNREACHABLE",
+        modelVersion: MODEL_VERSION,
+        now,
+        rows: emptyRows,
+      }),
     };
   }
 }

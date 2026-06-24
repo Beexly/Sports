@@ -210,11 +210,15 @@ function toProjection(p: Player): PlayerProjection {
   return { playerId: p.id, name: p.name, pos: p.pos, team: p.team, proj: p.proj, floor: p.floor, ceiling: p.ceiling, source: "live" };
 }
 
+const NFLVERSE_ATTRIBUTION = "Data via nflverse (CC-BY-4.0)";
+
 /** Build a live ProjectionsProvider from an already-loaded graded pool. Pure. */
-export function buildGradedProvider(pool: readonly Player[]): ProjectionsProvider {
+export function buildGradedProvider(pool: readonly Player[], fetchedAt?: string): ProjectionsProvider {
   return {
     name: "Graded — nflverse process model",
     live: true,
+    fetchedAt,
+    attribution: NFLVERSE_ATTRIBUTION,
     list: () => pool.map(toProjection),
     players: () => pool,
   };
@@ -271,6 +275,6 @@ export async function loadGradedPool({ fetcher = fetch }: { fetcher?: FetchLike 
  */
 export async function loadAndRegisterGradedProvider({ fetcher = fetch }: { fetcher?: FetchLike } = {}): Promise<GradedPoolResult> {
   const result = await loadGradedPool({ fetcher });
-  registerProjectionsProvider(result.status === "live" && result.players.length > 0 ? buildGradedProvider(result.players) : null);
+  registerProjectionsProvider(result.status === "live" && result.players.length > 0 ? buildGradedProvider(result.players, new Date().toISOString()) : null);
   return result;
 }

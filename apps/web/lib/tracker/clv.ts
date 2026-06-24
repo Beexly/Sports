@@ -81,6 +81,27 @@ export type Portfolio = {
   readonly brier: number;
 };
 
+export type PublicClvArtifactRow = {
+  readonly id: string;
+  readonly event: string;
+  readonly market: string;
+  readonly result: BetResult;
+  readonly clvPp: number;
+  readonly beatClose: boolean;
+};
+
+export type PublicClvArtifact = {
+  readonly status: "DRAFT_ONLY";
+  readonly generatedAt: string;
+  readonly sampleSize: number;
+  readonly averageClvPp: number;
+  readonly beatCloseRate: number;
+  readonly roi: number;
+  readonly brier: number;
+  readonly rows: readonly PublicClvArtifactRow[];
+  readonly note: string;
+};
+
 export function portfolio(bets: readonly Bet[]): Portfolio {
   const settledBets = bets.filter((b) => b.result !== "pending");
   const decided = bets.filter((b) => b.result === "win" || b.result === "loss");
@@ -113,6 +134,45 @@ export function portfolio(bets: readonly Bet[]): Portfolio {
     avgClv,
     clvWinRate,
     brier,
+  };
+}
+
+export function publicClvArtifact(
+  bets: readonly Bet[],
+  generatedAt: string | Date = new Date()
+): PublicClvArtifact {
+  const rows = bets
+    .map((bet) => ({ bet, clv: clvOf(bet) }))
+    .filter((entry): entry is { bet: Bet; clv: Clv } => entry.clv !== null)
+    .map(({ bet, clv }) => ({
+      id: bet.id,
+      event: bet.event,
+      market: bet.market,
+      result: bet.result,
+      clvPp: clv.pp,
+      beatClose: clv.beat,
+    }));
+  const p = portfolio(bets);
+  const averageClvPp = rows.length
+    ? Math.round((rows.reduce((sum, row) => sum + row.clvPp, 0) / rows.length) * 10) / 10
+    : 0;
+  const beatCloseRate = rows.length
+    ? Math.round((rows.filter((row) => row.beatClose).length / rows.length) * 1000) / 1000
+    : 0;
+
+  return {
+    status: "DRAFT_ONLY",
+    generatedAt: typeof generatedAt === "string" ? generatedAt : generatedAt.toISOString(),
+    sampleSize: rows.length,
+    averageClvPp,
+    beatCloseRate,
+    roi: p.roi,
+    brier: p.brier,
+    rows,
+    note:
+      rows.length === 0
+        ? "No CLV-graded bets are ready for a public artifact."
+        : "Draft-only CLV artifact data; publication still requires the existing public-performance gate.",
   };
 }
 

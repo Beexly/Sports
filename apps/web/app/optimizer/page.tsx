@@ -4,6 +4,8 @@ import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { OptimizerWorkspace } from "@/components/fantasy/optimizer-workspace";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { poolForViewer } from "@/lib/fantasy/free-trial";
 
 export const metadata: Metadata = {
   title: "The Optimizer — One Workspace for Every Lineup",
@@ -20,7 +22,11 @@ export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs 
 export default async function OptimizerPage(): Promise<JSX.Element> {
   // Live graded pool for Start/Sit + Draft tabs when projections are on; DFS uses
   // its own slate seam regardless.
-  const pool = await resolveToolPoolAsync();
+  const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
+  // Server-side paywall enforcement (CLAUDE.md rule 3): a FREE viewer never receives the
+  // paid rows of the live pool — only the trial subset is serialized to the client, so
+  // the Draft tab's cap is real, not a bypassable client-side slice.
+  const gatedPool = poolForViewer(pool, viewer.canUseFantasyFull);
   return (
     <div className="min-h-screen bg-carbon text-ion">
       <Nav />
@@ -38,7 +44,7 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
           </p>
         </section>
 
-        <OptimizerWorkspace pool={pool} />
+        <OptimizerWorkspace pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />
       </main>
       <Footer />
     </div>

@@ -6,6 +6,7 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { BoardHealthBadge } from "@/components/board/board-health-badge";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
 
@@ -83,12 +84,15 @@ export default async function BoardPage(): Promise<JSX.Element> {
                 and what was evaluated without becoming a pick.
               </p>
             </div>
-            <Link
-              href="/methodology"
-              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-orbital-cyan"
-            >
-              Read methodology
-            </Link>
+            <div className="flex min-w-0 flex-col gap-3 sm:items-end">
+              <BoardHealthBadge meta={stateResult.meta} />
+              <Link
+                href="/methodology"
+                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-orbital-cyan"
+              >
+                Read methodology
+              </Link>
+            </div>
           </div>
         </section>
 

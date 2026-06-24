@@ -1,5 +1,14 @@
 import { describe, it, expect } from "vitest";
-import { americanToDecimal, impliedProb, profit, clvOf, portfolio, calibration, type Bet } from "./clv";
+import {
+  americanToDecimal,
+  impliedProb,
+  profit,
+  clvOf,
+  portfolio,
+  publicClvArtifact,
+  calibration,
+  type Bet,
+} from "./clv";
 
 const bet = (over: Partial<Bet> = {}): Bet => ({
   id: "b", date: "2026-01-01T00:00:00Z", sport: "NFL", event: "A @ B", market: "Spread",
@@ -74,5 +83,21 @@ describe("clv tracker math", () => {
     expect(p.roi).toBe(0);
     expect(p.brier).toBe(0);
     expect(p.clvWinRate).toBe(0);
+  });
+
+  it("builds draft-only public CLV artifact data", () => {
+    const artifact = publicClvArtifact(
+      [
+        bet({ id: "1", odds: -110, result: "win", closingOdds: -130 }),
+        bet({ id: "2", odds: 100, result: "loss", closingOdds: 120 }),
+        bet({ id: "3", result: "pending" }),
+      ],
+      "2026-01-02T00:00:00.000Z"
+    );
+
+    expect(artifact.status).toBe("DRAFT_ONLY");
+    expect(artifact.sampleSize).toBe(2);
+    expect(artifact.beatCloseRate).toBe(0.5);
+    expect(artifact.rows.map((row) => row.id)).toEqual(["1", "2"]);
   });
 });

@@ -9,6 +9,7 @@ import {
   type Metric,
   type Stability,
 } from "@/lib/intelligence/metric-methodology";
+import { coverageMapUiData, type CoverageMapUiData } from "@/lib/metrics/coverage-map";
 
 export const metadata: Metadata = {
   title: "How We Read the Numbers — Metric Methodology",
@@ -67,9 +68,58 @@ function Row({ term, tone, children }: { term: string; tone: string; children: R
   );
 }
 
+function CoverageMapSection({ data }: { data: CoverageMapUiData }): JSX.Element {
+  return (
+    <section className="border border-mineral bg-eclipse p-5">
+      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">Coverage Map</p>
+          <h2 className="mt-2 max-w-3xl font-display text-2xl font-semibold leading-tight text-ion-white">
+            {data.headline}
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-ion-1">
+            Only clearance-approved rows render here. If a source cannot clear commercial derived analytics,
+            the row stays out of the public claim surface.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-ion-2 sm:grid-cols-4">
+          <span className="border border-mineral bg-carbon px-3 py-2">{data.summary.clearedRows} cleared</span>
+          <span className="border border-mineral bg-carbon px-3 py-2">{data.summary.tierOneRows} tier 1</span>
+          <span className="border border-mineral bg-carbon px-3 py-2">{data.summary.sourceCount} sources</span>
+          <span className="border border-mineral bg-carbon px-3 py-2">{data.summary.withheldRows} withheld</span>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-3 lg:grid-cols-2">
+        {data.rows.map((row) => (
+          <article key={row.id} className="border border-mineral bg-carbon p-4">
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+              <div>
+                <h3 className="text-base font-semibold leading-tight text-ion-white">{row.metric}</h3>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-orbital-cyan">
+                  {row.tierLabel}
+                </p>
+              </div>
+              <span className="w-fit border border-mineral bg-eclipse px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-ion-2">
+                {row.claimStatus} · priced=false
+              </span>
+            </div>
+            <dl className="mt-4 grid gap-3 text-sm leading-6">
+              <Row term="Closed-box gap" tone="text-plasma">{row.competitorGap}</Row>
+              <Row term="Transparent equivalent" tone="text-orbital-cyan">{row.transparentEquivalent}</Row>
+              <Row term="Attribution" tone="text-ion-2">{row.attribution}</Row>
+            </dl>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function MetricsMethodologyPage(): JSX.Element {
   const groups = metricsByCategory();
   const s = methodologySummary();
+  const coverage = coverageMapUiData();
 
   return (
     <div className="min-h-screen bg-carbon text-ion">
@@ -92,6 +142,8 @@ export default function MetricsMethodologyPage(): JSX.Element {
             <span className="border border-mineral bg-eclipse px-3 py-1.5">{s.live} live · {s.queued} queued</span>
           </div>
         </section>
+
+        <CoverageMapSection data={coverage} />
 
         {groups.map((g) => (
           <section key={g.category}>

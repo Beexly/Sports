@@ -13,6 +13,8 @@ import { GalaxySlateTwinLazy } from "@/components/slate-twin/galaxy-slate-twin-l
 import { MarketFairBoard } from "@/components/observatory/market-fair-board";
 import { LineShopBoard } from "@/components/observatory/line-shop-board";
 import { SimulationCloud } from "@/components/observatory/simulation-cloud";
+import { ScoringReliabilityPanel } from "@/components/observatory/scoring-reliability-panel";
+import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { getSlateTwin } from "@/lib/slate-twin/get-slate-twin";
 import { BRAND_NAME, SURFACES } from "@/lib/brand";
 import { BRAND_COLORS } from "@/lib/brand";
@@ -55,7 +57,7 @@ const PREVIEW: ReadonlyArray<{ readonly title: string; readonly body: string; re
 ];
 
 export default async function ObservatoryPage() {
-  const slate = await getSlateTwin();
+  const [slate, calibration] = await Promise.all([getSlateTwin(), loadPublicCalibrationReport()]);
   const live = slate.live;
   const plate = getPlate("observatory-market-field");
   return (
@@ -181,6 +183,12 @@ export default async function ObservatoryPage() {
         <section className="px-4 py-10 sm:px-6 lg:px-8" aria-label="Simulation cloud">
           <div className="mx-auto max-w-5xl">
             <SimulationCloud />
+          </div>
+        </section>
+
+        <section className="px-4 py-10 sm:px-6 lg:px-8" aria-label="Scoring reliability">
+          <div className="mx-auto max-w-5xl">
+            <ScoringReliabilityPanel report={calibration.data} gated={calibration.meta.gated} />
           </div>
         </section>
 

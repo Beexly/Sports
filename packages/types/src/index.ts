@@ -2,7 +2,7 @@
 // Shared Platform Types
 // ============================================================
 
-export type SubscriptionTier = "FREE" | "PRO" | "ELITE";
+export type SubscriptionTier = "FREE" | "FANTASY" | "PRO" | "ELITE";
 
 export type PickType = "SPREAD" | "MONEYLINE" | "TOTAL";
 export type PickTier = "FREE" | "PREMIUM";
@@ -16,6 +16,9 @@ export type RiskLevel =
   | "HIGH_VARIANCE"
   | "INJURY_RISK"
   | "LINE_STEAM";
+
+export * from "./ladder.js";
+export * from "./heartbeat.js";
 
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick
@@ -122,10 +125,14 @@ export interface Entitlements {
   canUseTrendLab: boolean;          // PRO+ — full cohort workbench
   canUseParlayMri: boolean;         // PRO+ — full parlay genome
   canUseClvLedger: boolean;         // ELITE — bet ledger + staking toolkit
+  // ── Fantasy suite gates — FANTASY tier ($49/yr) + PRO/ELITE; FREE = depth-limited trial ──
+  canUseFantasyDraftSuite: boolean; // draft + best-ball kit
+  canUseFantasyFull: boolean;       // the full fantasy suite
 }
 
 export function getEntitlements(tier: SubscriptionTier): Entitlements {
   const isPro = tier === "PRO" || tier === "ELITE";
+  const isPaid = tier !== "FREE"; // FANTASY, PRO, or ELITE — the paid fantasy line
   return {
     tier,
     // Entitlement remap Step 1 (ENTITLEMENT_REMAP_SPEC.md): picks are FREE.
@@ -145,6 +152,10 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
     canUseTrendLab: isPro,
     canUseParlayMri: isPro,
     canUseClvLedger: tier === "ELITE",
+    // Fantasy suite — the new FANTASY tier unlocks it; PRO/ELITE include it. FREE's
+    // trial is depth-limited at the page/API level, never a flag flip.
+    canUseFantasyDraftSuite: isPaid,
+    canUseFantasyFull: isPaid,
   };
 }
 

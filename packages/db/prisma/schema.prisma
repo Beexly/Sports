@@ -745,6 +745,7 @@ enum UserRole {
 
 enum SubscriptionTier {
   FREE
+  FANTASY
   PRO
   ELITE
 }
@@ -1620,6 +1621,25 @@ model CalibrationProposal {
   @@index([status])
   @@index([createdAt])
   @@map("calibration_proposals")
+}
+
+model LadderEvent {
+  id             String   @id @default(cuid())
+  type           String
+  track          String?
+  modelVersion   String
+  sourceEventId  String?
+  idempotencyKey String?  @unique
+  occurredAt     DateTime @default(now())
+  payload        Json
+  createdAt      DateTime @default(now())
+
+  @@index([type])
+  @@index([track])
+  @@index([modelVersion])
+  @@index([sourceEventId])
+  @@index([occurredAt])
+  @@map("ladder_events")
 }
 
 // ============================================================
