@@ -15,7 +15,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] B4 - Earned-weight ensemble with bounded loss and Clark-West gates.
 - [x] B5 - Adaptive Conformal Inference, Mondrian by position, rolling recalibration.
 - [x] B6 - Self-publishing calibration harness and publish-criteria definition only.
-- [ ] C6 - Correlation/copula layer for best-ball/parlay consumption.
+- [x] C6 - Correlation/copula layer for best-ball/parlay consumption.
 - [ ] C1 - Regression/breakout engine.
 - [ ] C2 - Opportunity and role-migration engine.
 - [ ] C3 - Game-script engine.
@@ -134,7 +134,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: B6 self-publishing calibration harness and publish-criteria definition only.
 - BLOCKED-ON-HUMAN: real calibration rows, public artifact publication, and any `canPublishProjections` flip remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T01:35:19Z - pending commit - B6
+## 2026-06-24T01:35:19Z - d7d56828 - B6
 
 - WHAT: Added draft-only projection self-publishing artifact data with deterministic pre-game commit fingerprints, MAE-by-position, interval coverage, Spearman rank correlation, Brier/log-loss/CRPS comparisons against market baseline, and review-only `canPublishProjections` criteria; added matching draft-only CLV artifact data.
 - FILES: `apps/web/lib/calibration/compute.ts`, `apps/web/__tests__/calibration.test.ts`, `apps/web/lib/tracker/clv.ts`, `apps/web/lib/tracker/clv.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -143,3 +143,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Treat public projection calibration as an artifact builder over already-settled rows; require pre-game commit evidence plus model-vs-market scoring-rule wins before a future owner/data gate can even consider publishing.
 - NEXT: C6 correlation/copula layer for best-ball/parlay consumption.
 - BLOCKED-ON-HUMAN: real settled projection rows, public artifact publication, and every projection provider/publish flip remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T02:05:35Z - pending commit - C6
+
+- WHAT: Added a shadow/priced=false Gaussian copula layer over projection marginals with QB/pass-catcher and same-game parlay links; best-ball roster evaluation and Parlay MRI vitals now consume the copula readout without changing live gates or pricing math.
+- FILES: `apps/web/lib/projections/correlation.ts`, `apps/web/lib/projections/correlation.test.ts`, `apps/web/lib/fantasy/bestball.ts`, `apps/web/lib/fantasy/bestball.test.ts`, `apps/web/lib/parlay/parlay.ts`, `apps/web/lib/parlay/parlay.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused C6 tests passed 23 tests; web app typecheck passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false; copula summaries are readouts only and do not flip projection provider, publish, betting, pricing, or model-version gates.
+- DECISIONS: Use projection-band standard deviations as marginals for fantasy players and Bernoulli standard deviations for parlay legs; positive correlations widen portfolio variance but leave existing best-ball recommendations and parlay EV unchanged.
+- NEXT: C1 regression/breakout engine extending receiving-opportunity.
+- BLOCKED-ON-HUMAN: learned correlation coefficients and any priced parlay/best-ball use remain `[DATA]/[OWNER]`.

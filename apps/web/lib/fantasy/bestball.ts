@@ -19,6 +19,13 @@
 
 import { PLAYERS, POSITIONS, vor, volatility, correlated, type Player, type Pos } from "./players";
 import { valueVsAdp, type AdpValue } from "./draft";
+import {
+  buildFantasyCopulaLinks,
+  stdevFromInterval,
+  summarizeGaussianCopulaPortfolio,
+  type GaussianCopulaMarginal,
+  type GaussianCopulaSummary,
+} from "../projections/correlation";
 
 /**
  * Underdog-style best ball: 18 roster spots; the weekly optimal lineup is
@@ -71,6 +78,26 @@ export function stacks(roster: readonly Player[]): Stack[] {
  */
 export function stackScore(roster: readonly Player[]): number {
   return stacks(roster).reduce((s, st) => s + st.size * st.size, 0);
+}
+
+function playerMarginal(player: Player): GaussianCopulaMarginal {
+  return {
+    id: player.id,
+    label: player.name,
+    role: player.pos,
+    mean: player.proj,
+    stdev: stdevFromInterval(player.floor, player.ceiling, player.proj),
+    team: player.team,
+  };
+}
+
+export function bestBallCopula(roster: readonly Player[]): GaussianCopulaSummary {
+  const marginals = roster.map(playerMarginal);
+  return summarizeGaussianCopulaPortfolio(
+    marginals,
+    buildFantasyCopulaLinks(marginals),
+    rosterProjection(roster) + spikeScore(roster) * 0.5,
+  );
 }
 
 // ── Bye fragility (no waivers to cover a thin week) ───────────────────────────
@@ -199,6 +226,7 @@ export type BestBallEvaluation = {
   readonly ceiling: number;
   readonly spike: number;
   readonly stackScore: number;
+  readonly copula: GaussianCopulaSummary;
   readonly stacks: Stack[];
   readonly byeFragility: number;
   readonly byeRisks: ByeRisk[];
@@ -214,6 +242,7 @@ export function evaluateBestBallRoster(roster: readonly Player[]): BestBallEvalu
     ceiling: rosterCeiling(roster),
     spike: spikeScore(roster),
     stackScore: stackScore(roster),
+    copula: bestBallCopula(roster),
     stacks: stacks(roster),
     byeFragility: bf.score,
     byeRisks: bf.risks,

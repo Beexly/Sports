@@ -13,6 +13,13 @@
  * with responsible-gaming: it makes parlay fragility legible rather than hyped.
  */
 
+import {
+  buildParlayCopulaLinks,
+  summarizeGaussianCopulaPortfolio,
+  type GaussianCopulaMarginal,
+  type GaussianCopulaSummary,
+} from "../projections/correlation";
+
 export type ParlayMarket = "Spread" | "Total" | "Moneyline" | "Prop";
 
 export type ParlayLeg = {
@@ -64,6 +71,7 @@ export type ParlayVitals = {
   /** house edge compounded across the legs, as a fraction (0.08 = 8%). */
   readonly houseEdge: number;
   readonly correlated: readonly CorrelatedGroup[];
+  readonly copula: GaussianCopulaSummary;
   /**
    * Dependency Coefficient (0..1): share of legs bound into shared-game
    * groups. Structural dependency only — counts ties the slip can see, not a
@@ -82,12 +90,29 @@ export function decimalToAmerican(d: number): string {
 
 const product = (xs: readonly number[]) => xs.reduce((a, b) => a * b, 1);
 
+function legMarginal(leg: ParlayLeg): GaussianCopulaMarginal {
+  const stdev = Math.sqrt(Math.max(0.0001, leg.winProb * (1 - leg.winProb)));
+  return {
+    id: leg.id,
+    label: leg.label,
+    role: "LEG",
+    mean: leg.winProb,
+    stdev,
+    groupId: leg.group,
+  };
+}
+
 export function computeVitals(legs: readonly ParlayLeg[]): ParlayVitals {
   const count = legs.length;
+  const copulaMarginals = legs.map(legMarginal);
+  const copula = summarizeGaussianCopulaPortfolio(
+    copulaMarginals,
+    buildParlayCopulaLinks(copulaMarginals),
+  );
   if (count === 0) {
     return {
       count: 0, survivability: 0, payoutDecimal: 0, fairPayoutDecimal: 0, ev: 0,
-      houseEdge: 0, correlated: [], dependencyCoefficient: 0, verdict: "Empty",
+      houseEdge: 0, correlated: [], copula, dependencyCoefficient: 0, verdict: "Empty",
       suggestions: ["Add legs to see the ticket's genome and vitals."],
     };
   }
@@ -146,7 +171,19 @@ export function computeVitals(legs: readonly ParlayLeg[]): ParlayVitals {
     suggestions.push("This ticket is structurally balanced — no hidden correlation, positive expected value, survivable leg count.");
   }
 
-  return { count, survivability, payoutDecimal, fairPayoutDecimal, ev, houseEdge, correlated, dependencyCoefficient, verdict, suggestions };
+  return {
+    count,
+    survivability,
+    payoutDecimal,
+    fairPayoutDecimal,
+    ev,
+    houseEdge,
+    correlated,
+    copula,
+    dependencyCoefficient,
+    verdict,
+    suggestions,
+  };
 }
 
 export const VERDICT_HEX: Record<ParlayVerdict, string> = {

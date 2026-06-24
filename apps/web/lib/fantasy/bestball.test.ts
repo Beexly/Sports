@@ -6,6 +6,7 @@ import {
   spikeScore,
   stacks,
   stackScore,
+  bestBallCopula,
   byeFragility,
   rosterStructure,
   rosterNeedsNext,
@@ -46,6 +47,16 @@ describe("stacks", () => {
   it("scores zero with no same-team correlation", () => {
     expect(stacks([cinQb, roe])).toHaveLength(0);
     expect(stackScore([cinQb, roe])).toBe(0);
+  });
+});
+
+describe("bestBallCopula", () => {
+  it("adds shadow/priced=false correlation variance for QB stacks", () => {
+    const summary = bestBallCopula([cinQb, cinWr, vale]);
+    expect(summary.status).toBe("shadow");
+    expect(summary.priced).toBe(false);
+    expect(summary.links.some((link) => link.kind === "qb-catcher")).toBe(true);
+    expect(summary.correlatedStdDev).toBeGreaterThan(summary.independentStdDev);
   });
 });
 
@@ -107,6 +118,7 @@ describe("evaluateBestBallRoster", () => {
     expect(e.full).toBe(false);
     expect(e.structure).toHaveLength(4);
     expect(e.stackScore).toBe(1);
+    expect(e.copula.links).toHaveLength(1);
     expect(e.ceiling).toBe(rosterCeiling([cinQb, cinWr, vale]));
     expect(BEST_BALL_ROSTER_SIZE).toBe(18);
   });

@@ -54,4 +54,12 @@ describe("computeVitals — the parlay genome math", () => {
     // Empty ticket stays 0, not NaN
     expect(computeVitals([]).dependencyCoefficient).toBe(0);
   });
+
+  it("includes a shadow/priced=false Gaussian copula readout for same-game stacks", () => {
+    const v = computeVitals(SAMPLE_LEGS);
+    expect(v.copula.status).toBe("shadow");
+    expect(v.copula.priced).toBe(false);
+    expect(v.copula.links.some((link) => link.kind === "game-stack")).toBe(true);
+    expect(v.copula.correlatedStdDev).toBeGreaterThan(v.copula.independentStdDev);
+  });
 });
