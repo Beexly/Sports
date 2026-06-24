@@ -21,7 +21,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] C3 - Game-script engine.
 - [x] C4 - Availability/return and role-tenure engine.
 - [x] C5 - Unified divergence layer.
-- [ ] D1 - Cross-market triangulation through player props.
+- [x] D1 - Cross-market triangulation through player props.
 - [ ] D2 - Options-style distribution outputs.
 - [ ] D3 - Model-parliament public CRPS leaderboard feed, flagged.
 - [ ] D4 - Replayable-provenance endpoint, flagged.
@@ -194,7 +194,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: C5 unified divergence layer.
 - BLOCKED-ON-HUMAN: learned hazard coefficients, injury/feed source rights, projection weighting, and any public/priced consumption remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T03:40:28Z - pending commit - C5
+## 2026-06-24T03:40:28Z - 3e44a995 - C5
 
 - WHAT: Added a unified shadow divergence layer that normalizes B3 market-anchor, C1 regression/breakout, C2 role-migration, C3 game-script, and C4 availability/tenure readouts into standardized signals routed to betting-candidate-shadow, fantasy buy-low/sell-high, and content-draft queues.
 - FILES: `apps/web/lib/intelligence/divergence.ts`, `apps/web/lib/intelligence/divergence.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -203,3 +203,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Make divergence the cross-source signal spine while keeping all downstream routes explicit shadow queues rather than live picks or published claims.
 - NEXT: D1 cross-market triangulation through player props.
 - BLOCKED-ON-HUMAN: learned source weights, betting consumption, public content use, and any priced/public routing remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T03:44:34Z - pending commit - D1
+
+- WHAT: Added a pure prop-anchor triangulation layer that reconciles third-market player prop medians/fair values against B3 market-anchored player yards, touchdowns, and derived fantasy points, then routes residuals into the C5 shadow divergence board.
+- FILES: `apps/web/lib/intelligence/prop-anchor.ts`, `apps/web/lib/intelligence/prop-anchor.test.ts`, `apps/web/lib/intelligence/divergence.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused prop-anchor/divergence tests passed 9 tests; web app typecheck passed; D1 module measured 176 LOC and D1 test measured 117 LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false / draft-only; no live prop ingestion, betting, projection provider, `canPublishProjections`, pricing, model-version, publication, or content-send gate changed.
+- DECISIONS: Treat posted prop lines as market medians unless a fair value is supplied; compare props to B3 physical units first and fantasy points only as a derived metric.
+- NEXT: D2 options-style distribution outputs for floor/ceiling/spike/bust readouts.
+- BLOCKED-ON-HUMAN: live player-prop source rights, fair-value derivation, learned residual thresholds, and any priced/public routing remain `[DATA]/[OWNER]`.

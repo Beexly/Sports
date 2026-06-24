@@ -9,6 +9,7 @@ import type { ReceivingOpportunityRow } from "./receiving-opportunity";
 
 export type DivergenceSource =
   | "market-anchor"
+  | "prop-anchor"
   | "regression-breakout"
   | "role-migration"
   | "game-script"
@@ -60,7 +61,7 @@ export interface DivergenceOptions {
   readonly highSeverityScore?: number;
 }
 
-const BETTING_SOURCES = new Set<DivergenceSource>(["market-anchor", "game-script"]);
+const BETTING_SOURCES = new Set<DivergenceSource>(["market-anchor", "prop-anchor", "game-script"]);
 
 function round(value: number, digits = 3): number {
   const factor = 10 ** digits;
