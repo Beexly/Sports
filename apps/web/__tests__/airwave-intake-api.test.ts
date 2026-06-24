@@ -1,7 +1,12 @@
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+// Route is ADMIN-gated (lib/auth/require-admin). Mock the session so the happy
+// path exercises the intake proof, and assert the gate itself separately.
+const { authMock } = vi.hoisted(() => ({ authMock: vi.fn() }));
+vi.mock("@/lib/auth", () => ({ auth: authMock }));
 
 const ORIGINAL_ENV = { ...process.env };
 
@@ -13,8 +18,13 @@ async function callRoute(): Promise<{ status: number; body: Record<string, unkno
 }
 
 describe("/api/airwave/intake-readiness", () => {
+  beforeEach(() => {
+    authMock.mockResolvedValue({ user: { role: "ADMIN" } });
+  });
+
   afterEach(() => {
     process.env = { ...ORIGINAL_ENV };
+    authMock.mockReset();
     vi.resetModules();
   });
 
@@ -56,6 +66,28 @@ describe("/api/airwave/intake-readiness", () => {
       expect(json).not.toContain("owner-private-transcripts");
       expect(json).not.toContain("Role note");
       expect(json).not.toContain("private://clip");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects non-admin callers with 403 and never leaks the local file path", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "gse-airwave-intake-route-403-"));
+    const file = join(dir, "owner-private-transcripts.tsv");
+    writeFileSync(file, "header\nvalue\n", "utf8");
+
+    try {
+      process.env["AIRWAVE_TRANSCRIPT_FILE_PATH"] = file;
+      authMock.mockResolvedValue(null);
+
+      const { status, body } = await callRoute();
+
+      expect(status).toBe(403);
+      expect(body["success"]).toBeUndefined();
+      expect(body["data"]).toBeUndefined();
+      const json = JSON.stringify(body);
+      expect(json).not.toContain(file);
+      expect(json).not.toContain("owner-private-transcripts");
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

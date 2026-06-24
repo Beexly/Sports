@@ -1,4 +1,9 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+// Route is ADMIN-gated (lib/auth/require-admin). Mock the session so the happy
+// path exercises the control-plane body, and assert the gate itself separately.
+const { authMock } = vi.hoisted(() => ({ authMock: vi.fn() }));
+vi.mock("@/lib/auth", () => ({ auth: authMock }));
 
 const ORIGINAL_ENV = { ...process.env };
 
@@ -10,8 +15,13 @@ async function callRoute(): Promise<{ status: number; body: Record<string, unkno
 }
 
 describe("/api/airwave/readiness", () => {
+  beforeEach(() => {
+    authMock.mockResolvedValue({ user: { role: "ADMIN" } });
+  });
+
   afterEach(() => {
     process.env = { ...ORIGINAL_ENV };
+    authMock.mockReset();
   });
 
   it("returns the Airwave control plane without leaking env values or enabling work", async () => {
@@ -34,6 +44,18 @@ describe("/api/airwave/readiness", () => {
     expect(policy["archivesRawAudio"]).toBe(false);
     expect(policy["autoPublishes"]).toBe(false);
     expect(lanes.some((lane) => lane["key"] === "transcript-spreadsheet")).toBe(true);
+    expect(JSON.stringify(body)).not.toContain("secret-sheet-id");
+  });
+
+  it("rejects non-admin callers with 403 and never leaks operational posture", async () => {
+    process.env["AIRWAVE_TRANSCRIPT_SHEET_ID"] = "secret-sheet-id";
+    authMock.mockResolvedValue(null);
+
+    const { status, body } = await callRoute();
+
+    expect(status).toBe(403);
+    expect(body["success"]).toBeUndefined();
+    expect(body["data"]).toBeUndefined();
     expect(JSON.stringify(body)).not.toContain("secret-sheet-id");
   });
 });
