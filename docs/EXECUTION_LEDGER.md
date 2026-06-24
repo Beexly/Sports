@@ -14,7 +14,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] BT - Tweedie baseline projection, ACI intervals, Clark-West harness scoring.
 - [x] B4 - Earned-weight ensemble with bounded loss and Clark-West gates.
 - [x] B5 - Adaptive Conformal Inference, Mondrian by position, rolling recalibration.
-- [ ] B6 - Self-publishing calibration harness and publish-criteria definition only.
+- [x] B6 - Self-publishing calibration harness and publish-criteria definition only.
 - [ ] C6 - Correlation/copula layer for best-ball/parlay consumption.
 - [ ] C1 - Regression/breakout engine.
 - [ ] C2 - Opportunity and role-migration engine.
@@ -124,7 +124,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: B5 Adaptive Conformal Inference, Mondrian by position, rolling recalibration with non-overlapping calibration weeks.
 - BLOCKED-ON-HUMAN: real out-of-sample projection samples, any estimator promotion, and any public/paid consumption remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T01:16:49Z - pending commit - B5
+## 2026-06-24T01:16:49Z - 635c6c44 - B5
 
 - WHAT: Added rolling Adaptive Conformal Inference with Mondrian position buckets, non-overlapping fit/calibration/test windows, per-position alpha updates, coverage summaries, and shadow/priced=false interval reports.
 - FILES: `packages/prediction-engine/src/conformal-intervals.ts`, `packages/prediction-engine/src/__tests__/conformal-intervals.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -133,3 +133,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Use rolling fit/calibration/test windows where calibration weeks never overlap fit weeks; ACI recalibrates alpha by position so Mondrian buckets can widen independently for worse-calibrated positions.
 - NEXT: B6 self-publishing calibration harness and publish-criteria definition only.
 - BLOCKED-ON-HUMAN: real calibration rows, public artifact publication, and any `canPublishProjections` flip remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T01:35:19Z - pending commit - B6
+
+- WHAT: Added draft-only projection self-publishing artifact data with deterministic pre-game commit fingerprints, MAE-by-position, interval coverage, Spearman rank correlation, Brier/log-loss/CRPS comparisons against market baseline, and review-only `canPublishProjections` criteria; added matching draft-only CLV artifact data.
+- FILES: `apps/web/lib/calibration/compute.ts`, `apps/web/__tests__/calibration.test.ts`, `apps/web/lib/tracker/clv.ts`, `apps/web/lib/tracker/clv.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused web tests passed 22 tests; web app typecheck passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: draft-only / no flip; `eligibleIfOwnerApproves` is criteria evidence only and does not change `canPublishProjections`, `PROJECTIONS_PROVIDER`, model version, pricing, or performance gates.
+- DECISIONS: Treat public projection calibration as an artifact builder over already-settled rows; require pre-game commit evidence plus model-vs-market scoring-rule wins before a future owner/data gate can even consider publishing.
+- NEXT: C6 correlation/copula layer for best-ball/parlay consumption.
+- BLOCKED-ON-HUMAN: real settled projection rows, public artifact publication, and every projection provider/publish flip remain `[DATA]/[OWNER]`.
