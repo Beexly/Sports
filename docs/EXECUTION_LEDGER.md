@@ -363,3 +363,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Making the loss honestly Tweedie improves fit but does NOT make it beat naive persistence on real data — the engine needs richer features (opponent/game-script/role), not a louder label. No "calibrated"/"proven" claim is permitted.
 - NEXT: WO2 — reconciliation yard coherence (split pass/rush/receiving pools).
 - BLOCKED-ON-HUMAN: unchanged.
+
+## 2026-06-24T20:05:21Z - (self-commit) - WO2 — reconciliation yard coherence (pass/rush/receiving pools)
+
+- WHAT: `market-anchored-reconciliation.ts` previously conserved a single merged team yard pool, so QB passing yards (/25) and skill rush/receiving yards (/10) were drawn from the same bucket — incoherent. Now `decomposeMarketAnchor` splits each team's yards & TDs into a PASSING pool and a RUSHING pool using the C3 game-script (`projectGameScript`) pass/run rate; the RECEIVING pool equals the passing pool (every passing yard is a receiving yard). Each pool is allocated by softmax(usage*efficiency) within its role group (passing->QB, receiving->WR/TE/RB, rushing->RB/QB/WR, with a fallback so any roster conserves) and CONSERVED SEPARATELY. Fantasy points are derived from the coherent components (pass yds/25 + pass TD*4 + rush&rec yds/10 + TD*6). Player projections gain passing/rushing/receiving yard & TD breakdown fields; `projectedYards`/`projectedTouchdowns`/`fantasyPoints`/`divergence` are kept (player totals) so consumers (`apps/web/lib/intelligence/divergence.ts`, `prop-anchor.ts`) stay compatible.
+- FILES: `packages/prediction-engine/src/market-anchored-reconciliation.ts`, `packages/prediction-engine/src/__tests__/market-anchored-reconciliation.test.ts`, `docs/EXECUTION_LEDGER.md`
+- GATE: prediction-engine Vitest green — 51 files / 518 tests (reconciliation suite rewritten to assert PER-POOL conservation + that player-total yards intentionally exceed the team total, proving the pools are distinct). trust/model-freeze/draft-only green. ENV CAVEAT (unchanged): apps/web typecheck/build not runnable here (Prisma CDN blocked, TS 6.0.2 deprecation); consumer compatibility preserved by keeping all previously-read fields as numbers.
+- FLAG: priced=false / status=shadow unchanged; no gate/provider/pricing/model-version/schema change.
+- DECISIONS: Allocation still uses one shared usage*efficiency posterior per player; per-phase (pass/rush/receive) usage posteriors are a noted future refinement (a mobile QB's rush share is approximate). Conservation is exact per pool regardless.
+- NEXT: WO3 — gate the leaky readiness endpoints.
+- BLOCKED-ON-HUMAN: unchanged.
