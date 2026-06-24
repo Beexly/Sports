@@ -495,3 +495,19 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   espn_qbr, officials) and several reach 2026 (schedules, draft_picks incl. the 2026 draft, combine,
   trades). player_stats fixed via DATA2 merge. Only `contracts` lags (year_signed 2022, upstream OTC).
 - BLOCKED-ON-HUMAN: none for NGS; contracts currency is an upstream nflverse/OTC limitation.
+
+## 2026-06-24T20:57:00Z - (self-commit) - DATA4 — currency guard so staleness can never silently regress
+
+- WHAT: Added `scripts/check-nflverse-currency.ts` (npm: `guard:nflverse-currency`) — a catalog-driven,
+  runnable probe that, for the current NFL season, checks EVERY nflverse dataset's resolved URL actually
+  returns current-season data (per-season assets must exist; combined assets must have maxSeason >= current;
+  player_stats_week's per-season merge is accounted for). Exits non-zero with the offending datasets if any
+  is stale, pointing at the catalog. Plus deterministic (no-network) unit tests asserting the rename-proof
+  datasets (ngs, player_stats_week) resolve to combined assets — caught by the normal gate.
+- FILES: `scripts/check-nflverse-currency.ts`, `package.json`, `packages/data-ingestion/src/nflverse-source.test.ts`, `docs/EXECUTION_LEDGER.md`
+- GATE: ran the live guard — ALL required datasets reach 2025 (NGS via combined, player_stats via merge,
+  several reach 2026), exit 0. data-ingestion Vitest green (19 nflverse tests incl. 2 new catalog guards).
+- FLAG: tooling/tests only; nothing priced/published; no model/schema change.
+- DECISIONS: Live HTTP check is a standalone script (run periodically / pre-kickoff), NOT a unit test
+  (would be flaky); the deterministic catalog assertions live in the gate to prevent regression.
+- BLOCKED-ON-HUMAN: optionally wire `guard:nflverse-currency` into a periodic cron / pre-deploy check.

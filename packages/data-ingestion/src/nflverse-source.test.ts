@@ -182,3 +182,21 @@ describe("fetchNflverse player_stats_week currency merge", () => {
     expect(table.records).toHaveLength(2); // unchanged combined coverage
   });
 });
+
+describe("nflverse currency resilience (rename-proof catalog)", () => {
+  // nflverse renamed these two assets after 2024 so the per-season names 404 for the current season.
+  // The catalog MUST use the combined all-seasons assets (consumers filter by season) — this locks
+  // that in deterministically (no network) so a regression is caught by the gate, complementing the
+  // live `scripts/check-nflverse-currency.ts` guard.
+  it("ngs resolves to the combined all-seasons asset, not per-season", () => {
+    expect(NFLVERSE_CATALOG.ngs.seasonal).toBe(false);
+    expect(nflverseUrl("ngs", 2025, "receiving")).toBe(`${NFLVERSE_BASE}/nextgen_stats/ngs_receiving.csv.gz`);
+    expect(nflverseUrl("ngs", 2025, "receiving")).not.toMatch(/_2025_/);
+  });
+
+  it("player_stats_week resolves to the combined asset (per-season merge handled in fetchNflverse)", () => {
+    expect(NFLVERSE_CATALOG.player_stats_week.seasonal).toBe(false);
+    expect(nflverseUrl("player_stats_week", 2025)).toContain("player_stats.csv.gz");
+    expect(nflverseUrl("player_stats_week", 2025)).not.toMatch(/_2025/);
+  });
+});
