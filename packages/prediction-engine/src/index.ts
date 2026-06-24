@@ -201,6 +201,21 @@ export type {
   NormalNormalPosteriorInput,
   PlayerRatePosterior,
 } from "./player-rate-posteriors.js";
+export {
+  DEFAULT_MARKET_ANCHOR_ASSUMPTIONS,
+  decomposeMarketAnchor,
+  reconcileMarketAnchoredPlayers,
+} from "./market-anchored-reconciliation.js";
+export type {
+  MarketAnchorTeamSide,
+  MarketAnchorAssumptions,
+  MarketAnchorInput,
+  TeamVolumeAnchor,
+  MarketAnchoredPlayerInput,
+  MarketAnchoredPlayerProjection,
+  MarketAnchorConservationCheck,
+  MarketAnchoredReconciliation,
+} from "./market-anchored-reconciliation.js";
 
 // Elo independent-model backtest: results-only win probabilities, calibrated and
 // comparable to the market baseline. Measurement only; not wired into scoring.

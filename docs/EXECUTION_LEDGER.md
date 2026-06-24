@@ -10,7 +10,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] E1 - Replay and historical-backtest harness over nflverse regular-season data.
 - [x] B1 - Feature-store interface over metrics plus coverage-map row per metric and persistence seam.
 - [x] B2 - Player-rate shrinkage layer with empirical Bayes posteriors and published weights.
-- [ ] B3 - Market-anchored team yards/TD reconciliation with derived fantasy points.
+- [x] B3 - Market-anchored team yards/TD reconciliation with derived fantasy points.
 - [ ] BT - Tweedie baseline projection, ACI intervals, Clark-West harness scoring.
 - [ ] B4 - Earned-weight ensemble with bounded loss and Clark-West gates.
 - [ ] B5 - Adaptive Conformal Inference, Mondrian by position, rolling recalibration.
@@ -84,7 +84,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: B2 player-rate shrinkage layer with empirical-Bayes posteriors and published weights.
 - BLOCKED-ON-HUMAN: provisioning `R2_FEATURE_STORE` and DuckDB relation `feature_store.metric_snapshots` remains `[INFRA]`.
 
-## 2026-06-24T00:09:08Z - pending commit - B2
+## 2026-06-24T00:09:08Z - 4e4a5560 - B2
 
 - WHAT: Added a pure player-rate posterior layer with empirical-Bayes peer priors, beta-binomial bounded-rate shrinkage, normal-normal continuous-rate shrinkage, published `w = n / (n + k)`, and `priced=false` shadow outputs.
 - FILES: `packages/prediction-engine/src/player-rate-posteriors.ts`, `packages/prediction-engine/src/__tests__/player-rate-posteriors.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -93,3 +93,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Use `DEFAULT_PLAYER_RATE_SHRINKAGE_K = 12` as reversible pseudo-sample strength until E1-backed walk-forward evidence tunes per-position/per-metric k values.
 - NEXT: B3 market-anchored reconciliation conserving team yards and TDs with derived fantasy points.
 - BLOCKED-ON-HUMAN: per-position/per-metric k tuning and any priced/public projection promotion remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T00:33:21Z - pending commit - B3
+
+- WHAT: Added market-anchored reconciliation that decomposes total/spread into team point, yard, and touchdown anchors; allocates team yards and TDs by softmax usage-efficiency posteriors; derives fantasy points after physical-unit conservation; and emits player divergence.
+- FILES: `packages/prediction-engine/src/market-anchored-reconciliation.ts`, `packages/prediction-engine/src/__tests__/market-anchored-reconciliation.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused market-anchor tests passed 4 tests; `@sports/prediction-engine` typecheck passed; new TS/test files measured under 250 pure LOC; repo `typecheck` passed; repo `lint` passed; exact web Vitest passed 151 files / 1,934 tests; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false; no fantasy projection publication, model version, pricing, or runtime flag changed.
+- DECISIONS: B3 conserves team-level yards and TDs first, with fantasy points derived afterward; pass/rush/receiving splits remain downstream inputs for C3/C5 rather than a reason to delay the corrected physical-unit invariant.
+- NEXT: BT Tweedie baseline projection, flagged/shadow with ACI intervals and Clark-West scoring hook.
+- BLOCKED-ON-HUMAN: fitting historical points-to-yards/TD conversion coefficients and promoting any derived projections remain `[DATA]/[OWNER]`.
