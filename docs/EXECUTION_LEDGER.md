@@ -474,3 +474,24 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   under the full gate (typecheck + apps/web Vitest + build) in a Prisma-capable environment.
 - FLAG: nothing changed; shadow-only by design.
 - BLOCKED-ON-HUMAN: run in an environment with the Prisma client generated, then wire + verify.
+
+## 2026-06-24T20:52:31Z - (self-commit) - DATA3 — NGS currency: switch to the combined all-seasons asset
+
+- WHAT: Found by an empirical probe of EVERY nflverse dataset (the user asked to truly verify currency,
+  not assume it): Next Gen Stats could not reach 2025. The catalog key "ngs" used the per-season
+  `nextgen_stats/ngs_<season>_<variant>.csv.gz`, which 404s for 2025 (all variants), while the COMBINED
+  `nextgen_stats/ngs_<variant>.csv.gz` exists and covers 2016->2025. Switched the catalog entry to the
+  combined asset (seasonal:false, `file: (_s, v) => ngs_<v>.csv.gz`); consumers already filter by season
+  via resolveActiveSeason, so NGS is now current without per-season 404s.
+- FILES: `packages/data-ingestion/src/nflverse-source.ts`, `packages/data-ingestion/src/nflverse-source.test.ts`
+- GATE: data-ingestion Vitest green (13 files / 103 tests; NGS URL assertion updated to the combined name).
+  Verified live: combined ngs_receiving/passing/rushing all return rows spanning 2016->2025.
+- FLAG: read adapter only; nothing priced/published; no model/schema change. `.seasonal` only affects a
+  readiness display string ("all seasons"), which is more accurate for a combined file.
+- DECISIONS: Combined NGS files are small (5-15k rows), so always-combined is strictly better than
+  per-season here (always current, no 404s, no perf cost).
+- EMPIRICAL CURRENCY SWEEP RESULT: all other nflverse datasets reach 2025 (pbp, snap_counts, injuries,
+  depth_charts, rosters, weekly_rosters, stats_team_week, pfr_advstats, ftn_charting, pbp_participation,
+  espn_qbr, officials) and several reach 2026 (schedules, draft_picks incl. the 2026 draft, combine,
+  trades). player_stats fixed via DATA2 merge. Only `contracts` lags (year_signed 2022, upstream OTC).
+- BLOCKED-ON-HUMAN: none for NGS; contracts currency is an upstream nflverse/OTC limitation.

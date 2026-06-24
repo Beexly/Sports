@@ -84,10 +84,14 @@ export const NFLVERSE_CATALOG = {
     file: (s) => `snap_counts_${s}.csv`,
   }),
   ngs: ds({
-    key: "ngs", tag: "nextgen_stats", grain: "player-week", since: 2016, seasonal: true,
+    key: "ngs", tag: "nextgen_stats", grain: "player-week", since: 2016, seasonal: false,
     description: "Next Gen Stats (variant: passing | receiving | rushing): separation, cushion, time-to-throw, air yards, speed.",
     unlocks: "Tracking-derived talent signals not in any box score (e.g. receiver separation).",
-    file: (s, v = "receiving") => `ngs_${s}_${v}.csv.gz`,
+    // Combined all-seasons asset. The per-season `ngs_<season>_<variant>.csv.gz` 404s for the current
+    // season (verified live 2026-06: ngs_2025_* missing), but the combined `ngs_<variant>.csv.gz`
+    // includes it (2016->2025). Consumers filter by season via resolveActiveSeason, so this keeps NGS
+    // current without per-season 404s.
+    file: (_s, v = "receiving") => `ngs_${v}.csv.gz`,
   }),
   pfr_advstats: ds({
     key: "pfr_advstats", tag: "pfr_advstats", grain: "player-week", since: 2018, seasonal: true,

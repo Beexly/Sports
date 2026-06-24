@@ -86,8 +86,9 @@ describe("nflverse url builder", () => {
   });
 
   it("applies dataset variants (NGS type, PFR unit) and gz extension", () => {
-    expect(nflverseUrl("ngs", 2024, "receiving")).toBe(`${NFLVERSE_BASE}/nextgen_stats/ngs_2024_receiving.csv.gz`);
-    expect(nflverseUrl("ngs", 2024)).toContain("ngs_2024_receiving.csv.gz"); // default variant
+    // NGS now uses the combined all-seasons asset (per-season ngs_<s>_<v> 404s for the current season).
+    expect(nflverseUrl("ngs", 2024, "receiving")).toBe(`${NFLVERSE_BASE}/nextgen_stats/ngs_receiving.csv.gz`);
+    expect(nflverseUrl("ngs", 2024)).toContain("ngs_receiving.csv.gz"); // default variant, combined
     expect(nflverseUrl("pfr_advstats", 2023, "def")).toBe(`${NFLVERSE_BASE}/pfr_advstats/advstats_week_def_2023.csv`);
   });
 
