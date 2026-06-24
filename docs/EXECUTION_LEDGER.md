@@ -432,3 +432,28 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   would publish invented copy. Left as an [OWNER] decision rather than fabricate it.
 - NEXT: WO3 — gate the leaky readiness endpoints (assess apps/web gateability first).
 - BLOCKED-ON-HUMAN: [OWNER] Fantasy VALUE_TIERS copy + entitlement wiring.
+
+## 2026-06-24T20:27:47Z - (self-commit) - WO3 — ADMIN-gate the operational-posture readiness endpoints
+
+- WHAT: Six read-only endpoints disclosed operational posture without auth. Added an ADMIN gate to
+  each, matching the existing `cockpit/*` pattern, via a NEW pure, unit-tested helper `isAdminSession`
+  (so the gate is consistent and at least partly verifiable despite the apps/web build being blocked
+  here). Gated: `airwave/readiness`, `airwave/intelligence-readiness`, `airwave/intake-readiness`,
+  `airwave/review-queue`, `media/readiness`, `health/synthetic-monitoring`.
+- FILES: `apps/web/lib/auth/require-admin.ts` (new), `apps/web/__tests__/require-admin.test.ts` (new),
+  the six route files above, `docs/EXECUTION_LEDGER.md`
+- GATE: `isAdminSession` leaf Vitest green (4 tests). The route files import `@/lib/auth` (NextAuth →
+  Prisma), so they cannot be typechecked/built in this sandbox; the guard is a verbatim copy of the
+  proven cockpit/* pattern (same `auth()` call, same role check) + a tested helper — verify under the
+  full gate in a Prisma-capable env before merge.
+- FLAG: access-control hardening only; payloads unchanged; nothing priced/published; no model/schema change.
+- DECISIONS: `health/synthetic-monitoring` reports synthetic-monitor posture (not a liveness probe), so
+  ADMIN-gating it is appropriate; if an external uptime check hits it, point that check at a dedicated
+  public liveness route instead.
+- NEXT: rate-limiting + WO5 shadow wiring — see BLOCKED.
+- BLOCKED-ON-HUMAN: [FOLLOW-UP, apps/web gate required] Rate-limit the unauthenticated reads
+  `human/{readiness,environment,roster-availability,availability}` and `sleeper/{leagues,league,market-signal}`
+  using the existing `consumeRateLimit` + `clientIp` (`apps/web/lib/api/rate-limit.ts`). Deferred here
+  because it spans 7 routes with mixed signatures (3 lack a `req` param) and `clientIp` is typed for
+  `NextRequest` (routes use `Request`) — changes that need apps/web typecheck, which the Prisma CDN
+  block prevents in this sandbox.
