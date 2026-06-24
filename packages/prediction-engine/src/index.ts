@@ -185,6 +185,23 @@ export type {
 export { projectPlayerSeason, backtestProjections } from "./player-projection.js";
 export type { PlayerSeasonLine, PlayerProjection, ProjectionBacktest } from "./player-projection.js";
 
+export {
+  DEFAULT_PLAYER_RATE_SHRINKAGE_K,
+  playerRateShrinkageWeight,
+  buildEmpiricalBayesRatePrior,
+  estimateBetaBinomialRatePosterior,
+  estimateNormalNormalRatePosterior,
+} from "./player-rate-posteriors.js";
+export type {
+  PlayerRatePosteriorFamily,
+  PlayerRatePrior,
+  EmpiricalBayesRateObservation,
+  EmpiricalBayesPriorOptions,
+  BetaBinomialPosteriorInput,
+  NormalNormalPosteriorInput,
+  PlayerRatePosterior,
+} from "./player-rate-posteriors.js";
+
 // Elo independent-model backtest: results-only win probabilities, calibrated and
 // comparable to the market baseline. Measurement only; not wired into scoring.
 export { eloBacktest } from "./elo-backtest.js";

@@ -9,7 +9,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] A2 - GameSettledEvent heartbeat and idempotent DATA/FORECAST/PROOF/UNLOCK fan-out stub.
 - [x] E1 - Replay and historical-backtest harness over nflverse regular-season data.
 - [x] B1 - Feature-store interface over metrics plus coverage-map row per metric and persistence seam.
-- [ ] B2 - Player-rate shrinkage layer with empirical Bayes posteriors and published weights.
+- [x] B2 - Player-rate shrinkage layer with empirical Bayes posteriors and published weights.
 - [ ] B3 - Market-anchored team yards/TD reconciliation with derived fantasy points.
 - [ ] BT - Tweedie baseline projection, ACI intervals, Clark-West harness scoring.
 - [ ] B4 - Earned-weight ensemble with bounded loss and Clark-West gates.
@@ -74,7 +74,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: B1 feature-store interface over metrics, metric coverage-map rows, and R2/DuckDB persistence seam.
 - BLOCKED-ON-HUMAN: none for B1 code seam; real R2/DuckDB provisioning remains `[INFRA]`.
 
-## 2026-06-23T23:58:52Z - pending commit - B1
+## 2026-06-23T23:58:52Z - 95524c2f - B1
 
 - WHAT: Added a typed feature-store seam over cleared metrics, starting with opponent-adjusted EPA snapshots, coverage-map integrity checks, and an R2/DuckDB persistence contract marked INFRA-only.
 - FILES: `apps/web/lib/metrics/coverage-map.ts`, `apps/web/lib/metrics/feature-store.ts`, `apps/web/lib/metrics/feature-store.test.ts`, `apps/web/vitest.config.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -83,3 +83,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: B1 keeps persistence as an injected `FeatureStorePersistence` contract with `FEATURE_STORE_PERSISTENCE_TARGET` documenting the future R2/DuckDB binding; missing or uncleared metric coverage fails closed.
 - NEXT: B2 player-rate shrinkage layer with empirical-Bayes posteriors and published weights.
 - BLOCKED-ON-HUMAN: provisioning `R2_FEATURE_STORE` and DuckDB relation `feature_store.metric_snapshots` remains `[INFRA]`.
+
+## 2026-06-24T00:09:08Z - pending commit - B2
+
+- WHAT: Added a pure player-rate posterior layer with empirical-Bayes peer priors, beta-binomial bounded-rate shrinkage, normal-normal continuous-rate shrinkage, published `w = n / (n + k)`, and `priced=false` shadow outputs.
+- FILES: `packages/prediction-engine/src/player-rate-posteriors.ts`, `packages/prediction-engine/src/__tests__/player-rate-posteriors.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused posterior tests passed 5 tests; `@sports/prediction-engine` typecheck passed; new TS/test files measured under 250 pure LOC; repo `typecheck` passed; repo `lint` passed; exact web Vitest passed 151 files / 1,934 tests; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false; no projection publication, model version, pricing, or runtime flag changed.
+- DECISIONS: Use `DEFAULT_PLAYER_RATE_SHRINKAGE_K = 12` as reversible pseudo-sample strength until E1-backed walk-forward evidence tunes per-position/per-metric k values.
+- NEXT: B3 market-anchored reconciliation conserving team yards and TDs with derived fantasy points.
+- BLOCKED-ON-HUMAN: per-position/per-metric k tuning and any priced/public projection promotion remain `[DATA]/[OWNER]`.
