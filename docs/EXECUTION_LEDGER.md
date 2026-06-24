@@ -29,7 +29,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] D6 - Active-learning uncertainty map.
 - [x] E2 - Scoring-rule and reliability-diagram reporting.
 - [x] E3 - Pipeline trace id, degradations, and Board-health badge.
-- [ ] F1 - Persist-what-we-fetch serving-table/interface seam.
+- [x] F1 - Persist-what-we-fetch serving-table/interface seam.
 - [ ] F2 - Coverage-map UI data.
 - [ ] F3 - Phase-0 cost-slice confirmation and ledger.
 - [ ] FINAL - Decisions file and Claude handoff.
@@ -274,7 +274,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: E3 pipeline trace id, degradations, and Board-health badge.
 - BLOCKED-ON-HUMAN: public calibration gate enablement, minimum sample approval, and any performance/publishing claim remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T15:53:34Z - pending commit - E3
+## 2026-06-24T15:53:34Z - 0a039722 - E3
 
 - WHAT: Added board pipeline trace IDs, typed `degradations[]`, health status metadata, and a compact Board-health badge on `/board` while preserving the existing confidence redaction route.
 - FILES: `apps/web/lib/board/health.ts`, `apps/web/lib/board/health.test.ts`, `apps/web/lib/board/state.ts`, `apps/web/components/board/board-health-badge.tsx`, `apps/web/app/board/page.tsx`, `apps/web/__tests__/board-stale-kill-switch.test.ts`, `apps/web/__tests__/board-state-confidence-gate.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -283,3 +283,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Treat board trace/degradation metadata as request-observability only; it explains suppressed/stale/DB/empty states without changing pick generation or publication logic.
 - NEXT: F1 persist-what-we-fetch serving-table/interface seam.
 - BLOCKED-ON-HUMAN: durable trace storage, alert routing, SLA thresholds, and any public status claims beyond per-request board metadata remain `[INFRA]/[OWNER]`.
+
+## 2026-06-24T16:09:06Z - pending commit - F1
+
+- WHAT: Added a code-only persist-what-we-fetch serving-table seam with deterministic SHA-256 payload hashes, R2 object keys, latest-serving rows, TTL freshness status, and an injected R2/DuckDB persistence interface.
+- FILES: `apps/web/lib/data-sources/fetch-serving-table.ts`, `apps/web/lib/data-sources/fetch-serving-table.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused fetch-serving-table tests passed 4 tests; F1 files measured 247 total LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed; TSX driver emitted deterministic hash prefix `43258cff783f`, `status=FRESH`, `priced=false`, and an R2-style object key.
+- FLAG: code-only / `priced=false` / target status `INFRA`; no R2 bucket, DuckDB relation, database migration, credential, runtime write path, projection provider, pricing, publication, or model gate changed.
+- DECISIONS: Use `hash-only` as the default storage mode and derive latest-serving rows from immutable snapshot metadata until infrastructure explicitly provisions `R2_FETCH_ARCHIVE` and `fetch_store.*`.
+- NEXT: F2 coverage-map UI data.
+- BLOCKED-ON-HUMAN: provisioning `R2_FETCH_ARCHIVE`, DuckDB `fetch_store.source_snapshots` / `fetch_store.latest_by_source`, retention policy, and any runtime writer remain `[INFRA]/[OWNER]`.
