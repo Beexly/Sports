@@ -353,3 +353,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: HONEST SCOPE — this tests "model vs naive points-persistence on real games" (the correct first question), NOT "beats the Vegas market" (needs historical player props, a [DATA] follow-up). The first real number says the boosted-log1p baseline does NOT beat naive persistence OOS on 2023 — i.e. iterate the model, do not publish.
 - NEXT: work order — Tweedie labeling, yard coherence, endpoint gating, env docs, shadow wiring.
 - BLOCKED-ON-HUMAN: unchanged; plus [DATA] historical player-prop lines for a true market-beat test.
+
+## 2026-06-24T19:53:52Z - (self-commit) - WO1 — wire the real Tweedie deviance gradient
+
+- WHAT: Replaced the "Tweedie-flavoured" loss with a GENUINE gradient-boosted Tweedie loss in `fitTweedieBaseline`. Each round now fits a stump to the Tweedie negative-gradient pseudo-residuals under a log link (mu=exp(F); pseudo = y*exp((1-p)F) - exp((2-p)F)) with power p=tweediePower (default 1.5); intercept is the Tweedie MLE constant log(mean(y)); predict uses the inverse log link mu=exp(F); numerical clamp on F. The truth-in-labeling note now accurately describes a Tweedie-fitted (not log1p-L2) model that is still shadow/unvalidated. This resolves the "Tweedie that isn't Tweedie" finding (chose the implement-it option over renaming).
+- FILES: `packages/prediction-engine/src/tweedie-baseline.ts`, `packages/prediction-engine/src/__tests__/tweedie-baseline.test.ts`, `docs/EXECUTION_LEDGER.md`
+- GATE: prediction-engine Vitest green incl. a NEW proof test asserting the loss depends on tweediePower (different p => different leaf adjustments & predictions; would fail if it were plain log1p-L2). Re-ran the real backtest on 2023: model MAE improved 4.9928 -> 4.8679, but still > naive 4.7573, so beats NAIVE = FALSE (gate correctly withholds). trust/model-freeze/draft-only green. (Repo typecheck/apps-web build still env-blocked per KS1.)
+- FLAG: priced=false / status=shadow unchanged; no gate, provider, pricing, model-version, or schema change.
+- DECISIONS: Making the loss honestly Tweedie improves fit but does NOT make it beat naive persistence on real data — the engine needs richer features (opponent/game-script/role), not a louder label. No "calibrated"/"proven" claim is permitted.
+- NEXT: WO2 — reconciliation yard coherence (split pass/rush/receiving pools).
+- BLOCKED-ON-HUMAN: unchanged.

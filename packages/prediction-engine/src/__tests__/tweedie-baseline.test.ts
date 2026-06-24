@@ -48,6 +48,21 @@ describe("fitTweedieBaseline", () => {
     expect(tweedieDeviance(0, 0.5)).toBeGreaterThanOrEqual(0);
     expect(tweedieDeviance(14, 14)).toBeLessThan(tweedieDeviance(14, 5));
   });
+
+  it("uses tweediePower in the boosting loss (genuinely Tweedie, not log1p-L2)", () => {
+    const opts = { clearedFeatureIds: ["usage"], rounds: 4, learningRate: 0.3 } as const;
+    const lowP = fitTweedieBaseline(samples, { ...opts, tweediePower: 1.1 });
+    const highP = fitTweedieBaseline(samples, { ...opts, tweediePower: 1.9 });
+
+    expect(lowP.tweediePower).toBe(1.1);
+    expect(highP.tweediePower).toBe(1.9);
+    // Different Tweedie power => different negative gradient => different leaf adjustments and
+    // predictions. If the loss ignored p (e.g. plain L2 on log1p), these would be identical.
+    expect(lowP.stumps[0]?.leftAdjustment).not.toBe(highP.stumps[0]?.leftAdjustment);
+    expect(predictTweedieFantasyPoints(lowP, { usage: 0.8 })).not.toBe(
+      predictTweedieFantasyPoints(highP, { usage: 0.8 }),
+    );
+  });
 });
 
 describe("buildTemporalProjectionSplits", () => {

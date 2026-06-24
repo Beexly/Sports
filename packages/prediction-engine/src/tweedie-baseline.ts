@@ -93,14 +93,23 @@ function candidateThresholds(values: readonly number[]): readonly number[] {
   return thresholds;
 }
 
+// Numerical guard on the additive log-link predictor F (mu = exp(F)).
+const LOG_LINK_CLAMP = 20;
+function clampLogLink(value: number): number {
+  return Math.min(LOG_LINK_CLAMP, Math.max(-LOG_LINK_CLAMP, value));
+}
+
 /**
- * TRUTH-IN-LABELING (do not remove without wiring the deviance gradient):
- * This is NOT a fitted Tweedie GLM. It is a gradient-boosted-stump baseline that minimizes the
- * L2 loss of `log1p(actualFantasyPoints)` — a Tweedie-FLAVORED scaffold. `tweediePower` is carried
- * on the model and `tweedieDeviance()` exists for scoring, but the boosting loss above does NOT use
- * the Tweedie deviance gradient. Until that gradient is wired into the loss ([DATA] follow-up),
- * no public-facing surface may describe this as a "fitted Tweedie model" / "Tweedie GLM". The
- * export name and any UI/marketing copy must stay honest (e.g. "boosted log1p baseline, shadow").
+ * Gradient-boosted Tweedie baseline (shadow). The boosting loss IS the Tweedie deviance:
+ * each round fits a stump to the Tweedie negative-gradient pseudo-residuals under a log link
+ *   mu_i = exp(F_i),   grad_i = -y_i * exp((1-p) F_i) + exp((2-p) F_i),
+ *   pseudo_i = -grad_i = y_i * exp((1-p) F_i) - exp((2-p) F_i),
+ * with power p = `tweediePower` (1 < p < 2; default 1.5). The intercept is the Tweedie MLE
+ * constant log(mean(y)). This is a simple functional-gradient GBM (mean-of-gradient steps,
+ * not a Newton step), so it is a genuinely Tweedie-fitted model but NOT a calibrated GLM with
+ * standard errors. It stays priced=false / status="shadow" and is UNVALIDATED on real data:
+ * no public surface may call it "calibrated"/"proven" until the backtest + calibration harness
+ * prove it out-of-sample. `proveTweediePowerUsed` in the tests confirms the loss depends on p.
  */
 export function fitTweedieBaseline(
   samples: readonly TweedieProjectionSample[],
@@ -117,25 +126,32 @@ export function fitTweedieBaseline(
     Array.from(new Set(usable.flatMap((sample) => Object.keys(sample.features)))).sort();
   const learningRate = options.learningRate ?? 0.2;
   const rounds = Math.max(0, options.rounds ?? 8);
-  const target = usable.map((sample) => Math.log1p(sample.actualFantasyPoints));
-  const intercept =
-    target.length === 0 ? 0 : target.reduce((sum, value) => sum + value, 0) / target.length;
+  const power = Math.min(1.99, Math.max(1.01, options.tweediePower ?? 1.5));
+  const y = usable.map((sample) => Math.max(0, sample.actualFantasyPoints));
+  const meanY = y.length === 0 ? 0 : y.reduce((sum, value) => sum + value, 0) / y.length;
+  // Tweedie MLE constant under the log link: F0 = log(mean(y)).
+  const intercept = clampLogLink(Math.log(Math.max(1e-3, meanY)));
   const current = usable.map(() => intercept);
   const stumps: TweedieStump[] = [];
 
   for (let round = 0; round < rounds; round++) {
+    // Tweedie negative-gradient pseudo-residuals at the current predictor F.
+    const pseudo = current.map((f, index) => {
+      const fc = clampLogLink(f);
+      return y[index]! * Math.exp((1 - power) * fc) - Math.exp((2 - power) * fc);
+    });
     let best: TweedieStump | null = null;
     let bestLoss = Number.POSITIVE_INFINITY;
     for (const featureId of featureIds) {
       const values = usable.map((sample) => featureValue(sample, featureId));
       for (const threshold of candidateThresholds(values)) {
-        const residuals = target.map((value, index) => value - current[index]!);
-        const left = residuals.filter((_, index) => values[index]! <= threshold);
-        const right = residuals.filter((_, index) => values[index]! > threshold);
+        const left = pseudo.filter((_, index) => values[index]! <= threshold);
+        const right = pseudo.filter((_, index) => values[index]! > threshold);
         if (left.length === 0 || right.length === 0) continue;
         const leftMean = left.reduce((sum, value) => sum + value, 0) / left.length;
         const rightMean = right.reduce((sum, value) => sum + value, 0) / right.length;
-        const loss = residuals.reduce((sum, residual, index) => {
+        // Split selection = best squared-error fit to the Tweedie negative gradient (standard GBM).
+        const loss = pseudo.reduce((sum, residual, index) => {
           const adjustment = values[index]! <= threshold ? leftMean : rightMean;
           return sum + (residual - adjustment) ** 2;
         }, 0);
@@ -158,7 +174,7 @@ export function fitTweedieBaseline(
         featureValue(sample, stump.featureId) <= stump.threshold
           ? stump.leftAdjustment
           : stump.rightAdjustment;
-      current[index] = (current[index] ?? intercept) + adjustment;
+      current[index] = clampLogLink((current[index] ?? intercept) + adjustment);
     });
   }
 
@@ -167,7 +183,7 @@ export function fitTweedieBaseline(
     intercept: round4(intercept),
     stumps,
     learningRate,
-    tweediePower: options.tweediePower ?? 1.5,
+    tweediePower: power,
     trainedSamples: usable.length,
     priced: false,
     status: "shadow",
@@ -178,11 +194,12 @@ export function predictTweedieFantasyPoints(
   model: TweedieBaselineModel,
   features: Readonly<Record<string, number>>,
 ): number {
+  // Inverse log link: mu = exp(F).
   const score = model.stumps.reduce((sum, stump) => {
     const value = Number.isFinite(features[stump.featureId]) ? features[stump.featureId]! : 0;
     return sum + (value <= stump.threshold ? stump.leftAdjustment : stump.rightAdjustment);
   }, model.intercept);
-  return round4(Math.max(0, Math.expm1(score)));
+  return round4(Math.max(0, Math.exp(clampLogLink(score))));
 }
 
 export function buildTemporalProjectionSplits(
