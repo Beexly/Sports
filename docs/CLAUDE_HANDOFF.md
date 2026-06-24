@@ -6,7 +6,7 @@ Branch: `codex/intelligence-core`
 
 Worktree: `C:\Users\Garrett\Sports-intelligence-core`
 
-Status: all checklist slices through F3 are built, locally committed, and pushed. FINAL handoff is complete after this document, `docs/DECISIONS_TO_RATIFY.md`, and `docs/EXECUTION_LEDGER.md` are committed and pushed.
+Status: all checklist slices through F3 are built, locally committed, and pushed. FINAL handoff is committed at `1f2e8dd4`; the audit follow-up confirms the branch state and adds `docs/INTELLIGENCE_CORE_AUDIT.md`.
 
 Final gate result: repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
 
@@ -42,7 +42,8 @@ Final gate result: repo `typecheck` passed; repo `lint` passed; full web Vitest 
 | F1 | `0b1c8317` | Persist-what-we-fetch serving-table/interface seam |
 | F2 | `eb44b04b` | Coverage-map UI data |
 | F3 | `42b0c882` | Phase-0 cost-slice confirmation |
-| FINAL | pending commit | Final decisions and Claude handoff |
+| FINAL | `1f2e8dd4` | Final decisions and Claude handoff |
+| AUDIT | pending self-commit | Full branch recheck and provenance polish |
 
 ## Safety Invariants
 
@@ -64,7 +65,7 @@ Final gate result: repo `typecheck` passed; repo `lint` passed; full web Vitest 
 
 ## Next 5 Tasks For Claude
 
-1. Review `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`, `docs/PHASE0_COST_SLICES.md`, and this handoff before touching deployment or production settings.
+1. Review `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`, `docs/PHASE0_COST_SLICES.md`, `docs/INTELLIGENCE_CORE_AUDIT.md`, and this handoff before touching deployment or production settings.
 2. Ratify or decline the `[SCHEMA]` migration path for `LadderEvent` and choose the target database environment.
 3. Provision or defer the `[INFRA]` seams for R2/DuckDB feature-store and fetch-store persistence, then wire only the reviewed implementations.
 4. Load real historical projection/outcome rows into the replay harness and produce purged/embargoed out-of-sample Clark-West reports before any promotion.

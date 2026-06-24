@@ -314,7 +314,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: FINAL decisions file and Claude handoff.
 - BLOCKED-ON-HUMAN: Vercel ignored-build command wiring, source snapshot env overrides, storage pruning cadence, and broader CDN/edge cache rollout remain `[OWNER]/[INFRA]`.
 
-## 2026-06-24T17:00:09Z - pending commit - FINAL
+## 2026-06-24T17:00:09Z - 1f2e8dd4 - FINAL
 
 - WHAT: Wrote the final branch handoff packet for Claude and added final ratification decisions covering code-ready versus live-ready status, human gates, and post-branch operating ownership.
 - FILES: `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`, `docs/CLAUDE_HANDOFF.md`
@@ -323,3 +323,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Treat the branch as code-ready after the final gate, not live-ready; all owner, infra, data, schema, publication, and paid-provider actions remain explicitly gated.
 - NEXT: Stop after final commit/push; Claude/owner review and ratification.
 - BLOCKED-ON-HUMAN: merge/deploy, schema application, infra provisioning, real-data model promotion, pricing/publication flips, and any live money action remain `[OWNER]/[INFRA]/[DATA]/[SCHEMA]`.
+
+## 2026-06-24T17:22:14Z - pending self-commit - AUDIT
+
+- WHAT: Re-audited the completed branch against the full checklist, sensitive-gate constraints, representative core implementation surfaces, and final handoff provenance; added a durable audit artifact and resolved the prior FINAL row's self-commit placeholder.
+- FILES: `docs/INTELLIGENCE_CORE_AUDIT.md`, `docs/CLAUDE_HANDOFF.md`, `docs/EXECUTION_LEDGER.md`
+- GATE: diff whitespace check passed; changed-file risk scan returned no matches for type suppressions, TODO/FIXME debt, direct live projection flips, or priced outputs; prediction-engine Vitest passed 51 files / 514 tests; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: documentation/audit only; no runtime code, feature flag, projection provider, pricing rung, model version, data source, credential, schema application, or production setting changed.
+- DECISIONS: Treat the audit as confirmation that the branch is code-ready behind gates, not a live-readiness approval; unresolved work remains human/data/infra/schema ratification.
+- NEXT: Push audit commit and stop.
+- BLOCKED-ON-HUMAN: same as FINAL: merge/deploy, schema application, infra provisioning, real-data model promotion, pricing/publication flips, and live money remain `[OWNER]/[INFRA]/[DATA]/[SCHEMA]`.
