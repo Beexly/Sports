@@ -28,7 +28,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] D5 - Community calibration-tournament scaffold, draft-only-safe.
 - [x] D6 - Active-learning uncertainty map.
 - [x] E2 - Scoring-rule and reliability-diagram reporting.
-- [ ] E3 - Pipeline trace id, degradations, and Board-health badge.
+- [x] E3 - Pipeline trace id, degradations, and Board-health badge.
 - [ ] F1 - Persist-what-we-fetch serving-table/interface seam.
 - [ ] F2 - Coverage-map UI data.
 - [ ] F3 - Phase-0 cost-slice confirmation and ledger.
@@ -264,7 +264,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: E2 scoring-rule and reliability-diagram reporting wired to gated public observatory data.
 - BLOCKED-ON-HUMAN: durable segment store, review workflow ownership, learned thresholds, and any retraining/promotion remain `[DATA]/[OWNER]/[INFRA]`.
 
-## 2026-06-24T15:41:11Z - pending commit - E2
+## 2026-06-24T15:41:11Z - d00a4b78 - E2
 
 - WHAT: Added draft-only scoring-rule and reliability-diagram reporting over the gated public calibration report, with Brier score, expected calibration error, max gap, and observatory panel rendering honest collecting states.
 - FILES: `apps/web/lib/calibration/scoring-reliability.ts`, `apps/web/lib/calibration/scoring-reliability.test.ts`, `apps/web/components/observatory/scoring-reliability-panel.tsx`, `apps/web/app/observatory/page.tsx`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -273,3 +273,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Wire the observatory panel only to `loadPublicCalibrationReport()` so public calibration remains gated and empty states stay explicit until settled canonical rows exist.
 - NEXT: E3 pipeline trace id, degradations, and Board-health badge.
 - BLOCKED-ON-HUMAN: public calibration gate enablement, minimum sample approval, and any performance/publishing claim remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T15:53:34Z - pending commit - E3
+
+- WHAT: Added board pipeline trace IDs, typed `degradations[]`, health status metadata, and a compact Board-health badge on `/board` while preserving the existing confidence redaction route.
+- FILES: `apps/web/lib/board/health.ts`, `apps/web/lib/board/health.test.ts`, `apps/web/lib/board/state.ts`, `apps/web/components/board/board-health-badge.tsx`, `apps/web/app/board/page.tsx`, `apps/web/__tests__/board-stale-kill-switch.test.ts`, `apps/web/__tests__/board-state-confidence-gate.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused board health/stale/confidence tests passed 18 tests; E3 new files measured 242 total LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed; local built-app smoke confirmed `/board` renders Board health and `/api/board/state` returns `traceId`, `degradations[]`, and health status.
+- FLAG: draft-only / `priced=false`; no projection provider, `canPublishProjections`, pricing, model-version, public performance gate, publication flag, or provider routing changed.
+- DECISIONS: Treat board trace/degradation metadata as request-observability only; it explains suppressed/stale/DB/empty states without changing pick generation or publication logic.
+- NEXT: F1 persist-what-we-fetch serving-table/interface seam.
+- BLOCKED-ON-HUMAN: durable trace storage, alert routing, SLA thresholds, and any public status claims beyond per-request board metadata remain `[INFRA]/[OWNER]`.

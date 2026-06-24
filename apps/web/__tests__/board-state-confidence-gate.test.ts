@@ -55,7 +55,19 @@ function payload(rows: BoardStateRow[]): BoardStatePayload {
       publishedToday: rows,
       gatedTodayRows: [],
     },
-    meta: { isSampleData: false },
+    meta: {
+      degradations: [],
+      health: {
+        draftOnly: true,
+        generatedAt: "2026-06-11T15:00:00.000Z",
+        label: "Healthy",
+        priced: false,
+        rowCount: rows.length,
+        status: "HEALTHY",
+      },
+      isSampleData: false,
+      traceId: "board-20260611T15000-test0001",
+    },
   };
 }
 

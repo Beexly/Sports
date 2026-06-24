@@ -90,6 +90,9 @@ describe("board loaders — stale-data kill switch", () => {
       expect(result.data.scoringNow).toEqual([]);
       expect(result.data.publishedToday).toEqual([]);
       expect(result.data.gatedTodayRows).toEqual([]);
+      expect(result.meta.traceId).toMatch(/^board-20260617T160000-[0-9a-f]{8}$/);
+      expect(result.meta.health.status).toBe("UNAVAILABLE");
+      expect(result.meta.degradations[0]?.code).toBe("STALE_DATA_SUPPRESSED");
       // Suppressed before touching the slate queries.
       expect(mocks.gateDecisionFindMany).not.toHaveBeenCalled();
     });
