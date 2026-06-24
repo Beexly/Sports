@@ -17,7 +17,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] B6 - Self-publishing calibration harness and publish-criteria definition only.
 - [x] C6 - Correlation/copula layer for best-ball/parlay consumption.
 - [x] C1 - Regression/breakout engine.
-- [ ] C2 - Opportunity and role-migration engine.
+- [x] C2 - Opportunity and role-migration engine.
 - [ ] C3 - Game-script engine.
 - [ ] C4 - Availability/return and role-tenure engine.
 - [ ] C5 - Unified divergence layer.
@@ -154,7 +154,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: C1 regression/breakout engine extending receiving-opportunity.
 - BLOCKED-ON-HUMAN: learned correlation coefficients and any priced parlay/best-ball use remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T02:17:06Z - pending commit - C1
+## 2026-06-24T02:17:06Z - 2511a89e - C1
 
 - WHAT: Extended receiving-opportunity with process-grade regression/breakout readouts: receiving TD aggregation, position-level xCatch/xTD baselines, expected-versus-actual deltas, regression score, and positive breakout score.
 - FILES: `apps/web/lib/intelligence/receiving-opportunity.ts`, `apps/web/lib/intelligence/receiving-opportunity.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -163,3 +163,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Keep C1 as an explanatory process layer over opportunity divergence; learned xCatch/xTD coefficients and any projection weighting remain gated by historical out-of-sample evidence.
 - NEXT: C2 opportunity and role-migration engine with Markov role states, shrunk transitions, and vacated-touch redistribution.
 - BLOCKED-ON-HUMAN: learned process coefficients, promotion into projections, and public/priced consumption remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T02:27:41Z - pending commit - C2
+
+- WHAT: Extended opportunity-transfer with Markov role states, smoothed role-transition probabilities, and vacated target/carry redistribution across next-men-up while conserving vacated usage.
+- FILES: `apps/web/lib/intelligence/opportunity-transfer.ts`, `apps/web/lib/intelligence/opportunity-transfer.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused opportunity-transfer tests passed 13 tests; web app typecheck passed; `git diff --check` and suppression scan passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: context/read-only; `canPublishProjections` remains false and no projection provider, pricing, model-version, betting, or publication gate changed.
+- DECISIONS: Use a prior-smoothed Markov transition matrix over weekly target/carry role states so sparse role moves are shrunk rather than overfit; redistribute vacated usage as explanatory context only.
+- NEXT: C3 game-script engine from Vegas win-probability path to pass/run rate, plays, and pace.
+- BLOCKED-ON-HUMAN: learned transition priors, promotion into projection weights, and any public/priced consumption remain `[DATA]/[OWNER]`.
