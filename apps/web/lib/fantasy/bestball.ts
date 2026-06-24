@@ -26,6 +26,11 @@ import {
   type GaussianCopulaMarginal,
   type GaussianCopulaSummary,
 } from "../projections/correlation";
+import {
+  buildProjectionDistributionBoard,
+  type ProjectionDistributionBoard,
+  type ProjectionDistributionInput,
+} from "../projections/distribution";
 
 /**
  * Underdog-style best ball: 18 roster spots; the weekly optimal lineup is
@@ -98,6 +103,23 @@ export function bestBallCopula(roster: readonly Player[]): GaussianCopulaSummary
     buildFantasyCopulaLinks(marginals),
     rosterProjection(roster) + spikeScore(roster) * 0.5,
   );
+}
+
+function playerDistributionInput(player: Player): ProjectionDistributionInput {
+  return {
+    playerId: player.id,
+    label: player.name,
+    position: player.pos,
+    mean: player.proj,
+    fallbackFloor: player.floor,
+    fallbackCeiling: player.ceiling,
+    spikeThreshold: player.ceiling,
+    bustThreshold: player.floor,
+  };
+}
+
+export function bestBallDistribution(roster: readonly Player[]): ProjectionDistributionBoard {
+  return buildProjectionDistributionBoard(roster.map(playerDistributionInput));
 }
 
 // ── Bye fragility (no waivers to cover a thin week) ───────────────────────────
@@ -227,6 +249,7 @@ export type BestBallEvaluation = {
   readonly spike: number;
   readonly stackScore: number;
   readonly copula: GaussianCopulaSummary;
+  readonly distribution: ProjectionDistributionBoard;
   readonly stacks: Stack[];
   readonly byeFragility: number;
   readonly byeRisks: ByeRisk[];
@@ -243,6 +266,7 @@ export function evaluateBestBallRoster(roster: readonly Player[]): BestBallEvalu
     spike: spikeScore(roster),
     stackScore: stackScore(roster),
     copula: bestBallCopula(roster),
+    distribution: bestBallDistribution(roster),
     stacks: stacks(roster),
     byeFragility: bf.score,
     byeRisks: bf.risks,

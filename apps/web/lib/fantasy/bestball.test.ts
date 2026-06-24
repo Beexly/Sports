@@ -7,6 +7,7 @@ import {
   stacks,
   stackScore,
   bestBallCopula,
+  bestBallDistribution,
   byeFragility,
   rosterStructure,
   rosterNeedsNext,
@@ -57,6 +58,20 @@ describe("bestBallCopula", () => {
     expect(summary.priced).toBe(false);
     expect(summary.links.some((link) => link.kind === "qb-catcher")).toBe(true);
     expect(summary.correlatedStdDev).toBeGreaterThan(summary.independentStdDev);
+  });
+});
+
+describe("bestBallDistribution", () => {
+  it("surfaces options-style floor, ceiling, spike, and bust readouts", () => {
+    const board = bestBallDistribution([cinQb, cinWr, vale]);
+    expect(board.status).toBe("shadow");
+    expect(board.priced).toBe(false);
+    expect(board.draftOnly).toBe(true);
+    expect(board.portfolioPoint).toBe(rosterProjection([cinQb, cinWr, vale]));
+    expect(board.portfolioFloor).toBeGreaterThan(0);
+    expect(board.portfolioCeiling).toBe(rosterCeiling([cinQb, cinWr, vale]));
+    expect(board.averageSpikeProbability).toBeGreaterThan(0);
+    expect(board.averageBustRisk).toBeGreaterThan(0);
   });
 });
 
@@ -119,6 +134,8 @@ describe("evaluateBestBallRoster", () => {
     expect(e.structure).toHaveLength(4);
     expect(e.stackScore).toBe(1);
     expect(e.copula.links).toHaveLength(1);
+    expect(e.distribution.players).toHaveLength(3);
+    expect(e.distribution.portfolioCeiling).toBe(e.ceiling);
     expect(e.ceiling).toBe(rosterCeiling([cinQb, cinWr, vale]));
     expect(BEST_BALL_ROSTER_SIZE).toBe(18);
   });

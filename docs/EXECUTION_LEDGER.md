@@ -22,7 +22,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] C4 - Availability/return and role-tenure engine.
 - [x] C5 - Unified divergence layer.
 - [x] D1 - Cross-market triangulation through player props.
-- [ ] D2 - Options-style distribution outputs.
+- [x] D2 - Options-style distribution outputs.
 - [ ] D3 - Model-parliament public CRPS leaderboard feed, flagged.
 - [ ] D4 - Replayable-provenance endpoint, flagged.
 - [ ] D5 - Community calibration-tournament scaffold, draft-only-safe.
@@ -204,7 +204,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: D1 cross-market triangulation through player props.
 - BLOCKED-ON-HUMAN: learned source weights, betting consumption, public content use, and any priced/public routing remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T03:44:34Z - pending commit - D1
+## 2026-06-24T03:44:34Z - 81907adc - D1
 
 - WHAT: Added a pure prop-anchor triangulation layer that reconciles third-market player prop medians/fair values against B3 market-anchored player yards, touchdowns, and derived fantasy points, then routes residuals into the C5 shadow divergence board.
 - FILES: `apps/web/lib/intelligence/prop-anchor.ts`, `apps/web/lib/intelligence/prop-anchor.test.ts`, `apps/web/lib/intelligence/divergence.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -213,3 +213,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Treat posted prop lines as market medians unless a fair value is supplied; compare props to B3 physical units first and fantasy points only as a derived metric.
 - NEXT: D2 options-style distribution outputs for floor/ceiling/spike/bust readouts.
 - BLOCKED-ON-HUMAN: live player-prop source rights, fair-value derivation, learned residual thresholds, and any priced/public routing remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T04:01:05Z - pending commit - D2
+
+- WHAT: Added options-style projection distribution outputs with floor, ceiling, spike probability, bust risk, convexity score, posterior weight, and conformal interval provenance; surfaced the distribution board in best-ball evaluation without changing recommendations.
+- FILES: `apps/web/lib/projections/distribution.ts`, `apps/web/lib/projections/distribution.test.ts`, `apps/web/lib/fantasy/bestball.ts`, `apps/web/lib/fantasy/bestball.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused distribution/best-ball tests passed 16 tests after correcting a threshold fixture; web app typecheck passed; D2 distribution module measured 174 LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false / draft-only; no projection provider, `canPublishProjections`, pricing, model-version, betting, publication, or recommendation-ranking gate changed.
+- DECISIONS: Use conformal intervals for distribution bounds when present, posterior variance as an uncertainty floor, and existing best-ball bands only as a labeled fallback.
+- NEXT: D3 model-parliament CRPS leaderboard feed, flagged.
+- BLOCKED-ON-HUMAN: real posterior/conformal feed wiring, learned spike/bust thresholds, and any public/priced display remain `[DATA]/[OWNER]`.
