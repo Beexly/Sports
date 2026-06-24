@@ -234,6 +234,23 @@ export type {
   GameScriptProjection,
 } from "./game-script.js";
 export {
+  DEFAULT_AVAILABILITY_COX_COEFFICIENTS,
+  buildKaplanMeierReturnCurve,
+  coxAvailabilityMultiplier,
+  projectAvailabilityRole,
+} from "./availability-role-tenure.js";
+export type {
+  AvailabilityStatus,
+  PracticeStatus,
+  ReturnSpellObservation,
+  KaplanMeierReturnPoint,
+  RoleTenureObservation,
+  AvailabilityCoxCoefficients,
+  AvailabilityRoleInput,
+  RoleTenureProjection,
+  AvailabilityRoleProjection,
+} from "./availability-role-tenure.js";
+export {
   tweedieDeviance,
   fitTweedieBaseline,
   predictTweedieFantasyPoints,

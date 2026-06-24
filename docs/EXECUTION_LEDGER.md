@@ -19,7 +19,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] C1 - Regression/breakout engine.
 - [x] C2 - Opportunity and role-migration engine.
 - [x] C3 - Game-script engine.
-- [ ] C4 - Availability/return and role-tenure engine.
+- [x] C4 - Availability/return and role-tenure engine.
 - [ ] C5 - Unified divergence layer.
 - [ ] D1 - Cross-market triangulation through player props.
 - [ ] D2 - Options-style distribution outputs.
@@ -174,7 +174,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: C3 game-script engine from Vegas win-probability path to pass/run rate, plays, and pace.
 - BLOCKED-ON-HUMAN: learned transition priors, promotion into projection weights, and any public/priced consumption remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T03:13:42Z - pending commit - C3
+## 2026-06-24T03:13:42Z - 9ef7304f - C3
 
 - WHAT: Added a shadow game-script engine deriving a Vegas win-probability path from total/spread and mapping average script to pass/run rate, run rate, expected plays, and pace labels.
 - FILES: `packages/prediction-engine/src/game-script.ts`, `packages/prediction-engine/src/__tests__/game-script.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -183,3 +183,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Use a spread-derived Vegas win-probability path and heuristic pass/run/pace assumptions as an explanatory scaffold until learned from historical data.
 - NEXT: C4 availability/return and role-tenure engine.
 - BLOCKED-ON-HUMAN: learned pass/run/pace coefficients, projection weighting, and any public/priced consumption remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T03:24:49Z - pending commit - C4
+
+- WHAT: Added a pure shadow availability/return and role-tenure engine with Kaplan-Meier return curves, Cox-style discrete-time hazard multipliers, P(active), expected snap share, and role half-life outputs.
+- FILES: `packages/prediction-engine/src/availability-role-tenure.ts`, `packages/prediction-engine/src/__tests__/availability-role-tenure.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused availability-role-tenure tests passed 5 tests; `@sports/prediction-engine` typecheck passed after strict array-read fixes; C4 engine measured 243 LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false; no injury feed automation, projection provider, `canPublishProjections`, pricing, model-version, betting, or publication gate changed.
+- DECISIONS: Keep return/spell survival, practice multipliers, and role half-life as explainable scaffolds until historical availability and snap data tune coefficients out of sample.
+- NEXT: C5 unified divergence layer.
+- BLOCKED-ON-HUMAN: learned hazard coefficients, injury/feed source rights, projection weighting, and any public/priced consumption remain `[DATA]/[OWNER]`.
