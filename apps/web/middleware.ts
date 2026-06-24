@@ -40,8 +40,9 @@ export function middleware(req: NextRequest): NextResponse {
     // Dev-mode bypass: when DEV_FAKE_ADMIN=true, the auth() helper returns
     // a synthetic admin session, so we must NOT redirect here. Without this
     // bypass, the middleware would 307 to /auth/signin before the page
-    // even runs.
-    if (process.env["DEV_FAKE_ADMIN"] === "true") {
+    // even runs. Hard-gated to non-production so a stray prod flag cannot
+    // drop the cookie redirect (defense-in-depth; mirrors auth.ts).
+    if (process.env["NODE_ENV"] !== "production" && process.env["DEV_FAKE_ADMIN"] === "true") {
       return NextResponse.next();
     }
 

@@ -25,7 +25,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`Stripe webhook signature verification failed: ${message}`);
-    return NextResponse.json({ error: `Webhook error: ${message}` }, { status: 400 });
+    // Don't echo verifier internals (timestamp/signing detail) back to the caller.
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
   // Idempotency: skip already-processed events
@@ -38,8 +39,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   try {
     await handleStripeEvent(event);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error(`Error handling Stripe event ${event.type}: ${message}`);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
 
-    // Record processed event
+  // Record the processed event. A concurrent delivery of the SAME event id can land
+  // between the findUnique check above and here → a unique-constraint violation on
+  // stripeEventId is benign (the event is handled, and the syncs are idempotent), so
+  // ack 200 rather than 500-ing into a Stripe retry storm at launch traffic.
+  try {
     await db.webhookEvent.create({
       data: {
         stripeEventId: event.id,
@@ -48,12 +58,26 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       },
     });
   } catch (err) {
+    if (isStripeEventIdConflict(err)) {
+      return NextResponse.json({ received: true, skipped: true });
+    }
     const message = err instanceof Error ? err.message : "Unknown error";
-    console.error(`Error handling Stripe event ${event.type}: ${message}`);
+    console.error(`Failed to record Stripe event ${event.id}: ${message}`);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   return NextResponse.json({ received: true });
+}
+
+/** True only for a Prisma P2002 unique-constraint violation on the stripeEventId column. */
+function isStripeEventIdConflict(err: unknown): boolean {
+  if (!err || typeof err !== "object") return false;
+  const e = err as { code?: unknown; meta?: { target?: unknown } };
+  if (e.code !== "P2002") return false;
+  const target = e.meta?.target;
+  if (Array.isArray(target)) return target.includes("stripeEventId");
+  if (typeof target === "string") return target.includes("stripeEventId");
+  return true; // P2002 with no target detail — the only unique key on this table is stripeEventId
 }
 
 async function handleStripeEvent(event: Stripe.Event): Promise<void> {

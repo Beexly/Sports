@@ -9,12 +9,10 @@ out/
 build/
 dist/
 
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Environment variables — ignore ALL .env* (real secrets land in .env.production,
+# .env.staging, etc. per the deploy flow); re-include only the committed templates.
+.env*
+!.env*.example
 
 # Prisma
 prisma/migrations/dev.db
