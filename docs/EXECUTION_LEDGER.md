@@ -31,7 +31,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] E3 - Pipeline trace id, degradations, and Board-health badge.
 - [x] F1 - Persist-what-we-fetch serving-table/interface seam.
 - [x] F2 - Coverage-map UI data.
-- [ ] F3 - Phase-0 cost-slice confirmation and ledger.
+- [x] F3 - Phase-0 cost-slice confirmation and ledger.
 - [ ] FINAL - Decisions file and Claude handoff.
 
 ## 2026-06-23T21:46:09Z - 0c13254f - Slice 0
@@ -294,7 +294,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: F2 coverage-map UI data.
 - BLOCKED-ON-HUMAN: provisioning `R2_FETCH_ARCHIVE`, DuckDB `fetch_store.source_snapshots` / `fetch_store.latest_by_source`, retention policy, and any runtime writer remain `[INFRA]/[OWNER]`.
 
-## 2026-06-24T16:22:43Z - pending commit - F2
+## 2026-06-24T16:22:43Z - eb44b04b - F2
 
 - WHAT: Added clearance-gated coverage-map UI data for "stats we have that closed-box products do not show" and surfaced it on `/intelligence/metrics` with cleared/tier/source/withheld counts, competitor-gap framing, transparent-equivalent framing, attribution, and `priced=false`.
 - FILES: `apps/web/lib/metrics/coverage-map.ts`, `apps/web/lib/metrics/coverage-map.test.ts`, `apps/web/app/intelligence/metrics/page.tsx`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -303,3 +303,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Derive the UI contract only from `coverageMapRows()` so public coverage claims fail closed with the same clearance engine as B1.
 - NEXT: F3 phase-0 cost-slice confirmation and ledger.
 - BLOCKED-ON-HUMAN: adding more coverage rows requires source-rights review, metric validation, and owner approval for any public claim beyond cleared derived rows.
+
+## 2026-06-24T16:49:45Z - pending commit - F3
+
+- WHAT: Confirmed shipped Phase-0 cost controls for deploy gating, source snapshot hash-only storage, and CDN/cache policy in a durable F3 artifact without changing runtime behavior.
+- FILES: `docs/PHASE0_COST_SLICES.md`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused cost-control tests passed: deploy gate 6 tests, ingestion source-snapshot 6 tests, and cockpit cache policy 25 tests; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed; manual artifact check confirmed deploy gate, snapshot hash-only, CDN/cache policy, and confirmation notes render in `docs/PHASE0_COST_SLICES.md`.
+- FLAG: documentation/confirmation only; no deploy config, credential, R2/DuckDB/Neon resource, cache header, production route, projection provider, pricing, model-version, publication, or paid-provider gate changed.
+- DECISIONS: Treat Phase-0 cost posture as green only for the named code paths and tests; Vercel ignored-build wiring, broader CDN rollout, and storage retention policy remain human-owned.
+- NEXT: FINAL decisions file and Claude handoff.
+- BLOCKED-ON-HUMAN: Vercel ignored-build command wiring, source snapshot env overrides, storage pruning cadence, and broader CDN/edge cache rollout remain `[OWNER]/[INFRA]`.
