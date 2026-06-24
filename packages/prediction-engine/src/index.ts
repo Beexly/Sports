@@ -250,6 +250,18 @@ export type {
   EarnedWeightPromotionGate,
   EarnedWeightEnsembleReport,
 } from "./earned-weight-ensemble.js";
+export {
+  buildRollingConformalWindows,
+  runRollingMondrianConformal,
+} from "./conformal-intervals.js";
+export type {
+  ConformalProjectionSample,
+  RollingConformalOptions,
+  RollingConformalWindow,
+  MondrianConformalInterval,
+  PositionCoverage,
+  RollingConformalReport,
+} from "./conformal-intervals.js";
 
 // Elo independent-model backtest: results-only win probabilities, calibrated and
 // comparable to the market baseline. Measurement only; not wired into scoring.

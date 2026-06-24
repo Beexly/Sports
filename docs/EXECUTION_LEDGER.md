@@ -13,7 +13,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] B3 - Market-anchored team yards/TD reconciliation with derived fantasy points.
 - [x] BT - Tweedie baseline projection, ACI intervals, Clark-West harness scoring.
 - [x] B4 - Earned-weight ensemble with bounded loss and Clark-West gates.
-- [ ] B5 - Adaptive Conformal Inference, Mondrian by position, rolling recalibration.
+- [x] B5 - Adaptive Conformal Inference, Mondrian by position, rolling recalibration.
 - [ ] B6 - Self-publishing calibration harness and publish-criteria definition only.
 - [ ] C6 - Correlation/copula layer for best-ball/parlay consumption.
 - [ ] C1 - Regression/breakout engine.
@@ -114,7 +114,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: B4 earned-weight ensemble with bounded loss and must-beat equal-weight plus market-only gates.
 - BLOCKED-ON-HUMAN: real nflverse/player-feature training data, estimator promotion, public projection use, and pricing remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T01:03:57Z - pending commit - B4
+## 2026-06-24T01:03:57Z - 7bfb81ff - B4
 
 - WHAT: Added a sequential Hedge/multiplicative-weights ensemble backtest with capped absolute loss, pre-outcome earned predictions, equal-weight and market-only Clark-West comparisons, and a report-only promotion gate.
 - FILES: `packages/prediction-engine/src/earned-weight-ensemble.ts`, `packages/prediction-engine/src/__tests__/earned-weight-ensemble.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -123,3 +123,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Use pre-outcome sequential weight updates so a sample can only affect later samples; cap per-model absolute loss before the Hedge update to prevent one outlier from dominating the ensemble.
 - NEXT: B5 Adaptive Conformal Inference, Mondrian by position, rolling recalibration with non-overlapping calibration weeks.
 - BLOCKED-ON-HUMAN: real out-of-sample projection samples, any estimator promotion, and any public/paid consumption remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T01:16:49Z - pending commit - B5
+
+- WHAT: Added rolling Adaptive Conformal Inference with Mondrian position buckets, non-overlapping fit/calibration/test windows, per-position alpha updates, coverage summaries, and shadow/priced=false interval reports.
+- FILES: `packages/prediction-engine/src/conformal-intervals.ts`, `packages/prediction-engine/src/__tests__/conformal-intervals.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused conformal tests passed 3 tests; new TS/test files measured under 250 lines each; `@sports/prediction-engine` typecheck passed; repo `typecheck` passed; repo `lint` passed; exact web Vitest passed with the longer tool timeout; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false; interval reports define evidence only and do not flip public projection, provider, model-version, pricing, or publishing flags.
+- DECISIONS: Use rolling fit/calibration/test windows where calibration weeks never overlap fit weeks; ACI recalibrates alpha by position so Mondrian buckets can widen independently for worse-calibrated positions.
+- NEXT: B6 self-publishing calibration harness and publish-criteria definition only.
+- BLOCKED-ON-HUMAN: real calibration rows, public artifact publication, and any `canPublishProjections` flip remain `[DATA]/[OWNER]`.
