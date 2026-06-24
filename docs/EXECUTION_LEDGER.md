@@ -25,7 +25,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] D2 - Options-style distribution outputs.
 - [x] D3 - Model-parliament public CRPS leaderboard feed, flagged.
 - [x] D4 - Replayable-provenance endpoint, flagged.
-- [ ] D5 - Community calibration-tournament scaffold, draft-only-safe.
+- [x] D5 - Community calibration-tournament scaffold, draft-only-safe.
 - [ ] D6 - Active-learning uncertainty map.
 - [ ] E2 - Scoring-rule and reliability-diagram reporting.
 - [ ] E3 - Pipeline trace id, degradations, and Board-health badge.
@@ -234,7 +234,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: D4 replayable-provenance endpoint from the hash chain.
 - BLOCKED-ON-HUMAN: real model output registry, sample-size approval, public feed enablement, and any model promotion remain `[DATA]/[OWNER]/[INFRA]`.
 
-## 2026-06-24T07:35:13Z - pending commit - D4
+## 2026-06-24T07:35:13Z - 7ded99ed - D4
 
 - WHAT: Added a replayable-provenance hash-chain module and flagged API endpoint that can verify event ordering, detect payload tampering, and re-derive calibration from settled-pick events while defaulting the public endpoint to `FLAGGED_OFF`.
 - FILES: `apps/web/lib/calibration/replayable-provenance.ts`, `apps/web/lib/calibration/replayable-provenance.test.ts`, `apps/web/app/api/calibration/replay-provenance/route.ts`, `apps/web/__tests__/replayable-provenance-route.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -243,3 +243,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Use SHA-256 over canonical event payloads and previous-hash links; replay calibration only when the chain verifies, otherwise withhold rows and sample counts.
 - NEXT: D5 community calibration-tournament scaffold, draft-only-safe.
 - BLOCKED-ON-HUMAN: public endpoint enablement, source hash-chain persistence, and any public calibration claim remain `[DATA]/[OWNER]/[INFRA]`.
+
+## 2026-06-24T07:45:04Z - pending commit - D5
+
+- WHAT: Added a draft-only community calibration-tournament scaffold that accepts pre-lock probability submissions, rejects late/pending/invalid rows, scores with bounded Brier/log-loss, maps forecasts through the calibration harness, and ranks a review-only leaderboard.
+- FILES: `apps/web/lib/tournament/calibration-tournament.ts`, `apps/web/lib/tournament/calibration-tournament.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused calibration-tournament tests passed 3 tests; web app typecheck passed; D5 module measured 192 LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: draft-only / `priced=false` / recognition disabled; no accounts, prizes, content-send, projection provider, `canPublishProjections`, pricing, model-version, publication, or public leaderboard gate changed.
+- DECISIONS: Score community forecasts only when submitted before lock and settled; keep ranking review-only and recognition impossible in code until owner/data approval.
+- NEXT: D6 active-learning uncertainty map.
+- BLOCKED-ON-HUMAN: participant identity, abuse controls, durable submission storage, recognition/public display, and any prize or account flow remain `[OWNER]/[INFRA]/[DATA]`.
