@@ -551,3 +551,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: research tool only; nothing priced/published; canPublishProjections untouched.
 - BLOCKED-ON-HUMAN: [DATA/MODEL] the real frontier build — earn the flip with a model that beats naive
   AND the market, validated by the existing Clark-West purged/embargoed harness, before any publication.
+
+## 2026-06-24T21:15:00Z - (record) - Definitive 2021-2025 backtest (current data incl. 2025)
+
+- RESULT: Newton-Tweedie, base trailing-usage features, 71 walk-forward folds, 18,344 OOS player-weeks
+  (2025 included via the currency fixes): model MAE 5.3087 vs naive 4.9064 -> beats NAIVE = FALSE
+  (Clark-West t=18.8 but model MAE is HIGHER, so the gate correctly withholds).
+- This is the owner's originally-requested current-through-2025 number. It confirms, on the largest and
+  most current sample, the same verdict as every other variant: the projection does NOT beat naive
+  points-persistence out-of-sample. Honest path forward = real ML work (the harness supports it);
+  nothing published, canPublishProjections stays off.
