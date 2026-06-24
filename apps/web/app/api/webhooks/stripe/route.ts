@@ -269,6 +269,13 @@ function getTierFromPriceId(priceId: string | undefined): "FREE" | "FANTASY" | "
   if (eliteIds.includes(priceId)) return "ELITE";
   if (proIds.includes(priceId)) return "PRO";
   if (fantasyIds.includes(priceId)) return "FANTASY";
+  // A real, non-empty priceId that matches NO configured tier means the webhook
+  // process is missing/typo'd a STRIPE_*_PRICE_ID. We fail closed to FREE for
+  // fraud-safety, but it must be loud — otherwise a paying customer is silently
+  // written tier=FREE. Surface it for alerting rather than swallowing it.
+  console.error(
+    `[stripe] unmapped priceId ${priceId} — defaulting to FREE; check the webhook env's STRIPE_*_PRICE_ID values`,
+  );
   return "FREE";
 }
 
