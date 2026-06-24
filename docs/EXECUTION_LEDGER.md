@@ -415,3 +415,20 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: WO3 — gate the leaky readiness endpoints.
 - BLOCKED-ON-HUMAN: verify end-to-end where the apps/web build + Prisma client are available (this
   sandbox blocks the Prisma engine CDN, so apps/web build/integration tests could not be run here).
+
+## 2026-06-24T20:22:40Z - (self-commit) - WO4 — document the launch switches in both env templates
+
+- WHAT: Added `PROJECTIONS_PROVIDER` to BOTH `.env.example` and `.env.production.example` (documented
+  as: leave unset = honest "illustrative" projections; setting it opts into a live source and does NOT
+  flip `canPublishProjections`). Added the `STRIPE_FANTASY_MONTHLY_PRICE_ID` / `STRIPE_FANTASY_ANNUAL_PRICE_ID`
+  pair to `.env.production.example` (`.env.example` already had them) with the note that Fantasy checkout
+  returns a clean 503 until they are set.
+- FILES: `.env.example`, `.env.production.example`, `docs/EXECUTION_LEDGER.md`
+- GATE: env templates only (no code). trust/model-freeze/draft-only green.
+- FLAG: documentation only; no runtime/secret/pricing/model change.
+- DECISIONS: The other half of the original item — adding a Fantasy entry to the `VALUE_TIERS` marketing
+  strip — was DEFERRED, not done: it requires owner marketing copy + positioning, expands the
+  `ValueTierId` union (used by entitlement switches this sandbox cannot typecheck — Prisma/TS6), and
+  would publish invented copy. Left as an [OWNER] decision rather than fabricate it.
+- NEXT: WO3 — gate the leaky readiness endpoints (assess apps/web gateability first).
+- BLOCKED-ON-HUMAN: [OWNER] Fantasy VALUE_TIERS copy + entitlement wiring.
