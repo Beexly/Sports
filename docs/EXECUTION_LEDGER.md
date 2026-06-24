@@ -16,7 +16,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] B5 - Adaptive Conformal Inference, Mondrian by position, rolling recalibration.
 - [x] B6 - Self-publishing calibration harness and publish-criteria definition only.
 - [x] C6 - Correlation/copula layer for best-ball/parlay consumption.
-- [ ] C1 - Regression/breakout engine.
+- [x] C1 - Regression/breakout engine.
 - [ ] C2 - Opportunity and role-migration engine.
 - [ ] C3 - Game-script engine.
 - [ ] C4 - Availability/return and role-tenure engine.
@@ -144,7 +144,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: C6 correlation/copula layer for best-ball/parlay consumption.
 - BLOCKED-ON-HUMAN: real settled projection rows, public artifact publication, and every projection provider/publish flip remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T02:05:35Z - pending commit - C6
+## 2026-06-24T02:05:35Z - 5c4e6f75 - C6
 
 - WHAT: Added a shadow/priced=false Gaussian copula layer over projection marginals with QB/pass-catcher and same-game parlay links; best-ball roster evaluation and Parlay MRI vitals now consume the copula readout without changing live gates or pricing math.
 - FILES: `apps/web/lib/projections/correlation.ts`, `apps/web/lib/projections/correlation.test.ts`, `apps/web/lib/fantasy/bestball.ts`, `apps/web/lib/fantasy/bestball.test.ts`, `apps/web/lib/parlay/parlay.ts`, `apps/web/lib/parlay/parlay.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -153,3 +153,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Use projection-band standard deviations as marginals for fantasy players and Bernoulli standard deviations for parlay legs; positive correlations widen portfolio variance but leave existing best-ball recommendations and parlay EV unchanged.
 - NEXT: C1 regression/breakout engine extending receiving-opportunity.
 - BLOCKED-ON-HUMAN: learned correlation coefficients and any priced parlay/best-ball use remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T02:17:06Z - pending commit - C1
+
+- WHAT: Extended receiving-opportunity with process-grade regression/breakout readouts: receiving TD aggregation, position-level xCatch/xTD baselines, expected-versus-actual deltas, regression score, and positive breakout score.
+- FILES: `apps/web/lib/intelligence/receiving-opportunity.ts`, `apps/web/lib/intelligence/receiving-opportunity.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused receiving-opportunity tests passed 8 tests; web app typecheck passed; `git diff --check` and suppression scan passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: context/read-only; no projection provider, `canPublishProjections`, pricing, model-version, betting, or publication gate changed.
+- DECISIONS: Keep C1 as an explanatory process layer over opportunity divergence; learned xCatch/xTD coefficients and any projection weighting remain gated by historical out-of-sample evidence.
+- NEXT: C2 opportunity and role-migration engine with Markov role states, shrunk transitions, and vacated-touch redistribution.
+- BLOCKED-ON-HUMAN: learned process coefficients, promotion into projections, and public/priced consumption remain `[DATA]/[OWNER]`.
