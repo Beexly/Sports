@@ -85,3 +85,38 @@ Prisma-capable environment before merge.**
 trust-gate / model-freeze / draft-only all green across the branch. No gate flipped, nothing priced or
 published, no secrets/money/pricing/model-version/schema touched. The branch remains code-ready behind
 gates, not live-ready.
+
+---
+
+## Currency re-verification + frontier audit (follow-up, same day)
+
+The owner asked to *prove* currency (not assume it) and push the frontier. Ran an empirical probe of
+EVERY nflverse dataset + a 16-agent adversarial audit (24 findings, verified). Outcome:
+
+### Currency — verified for real, not assumed
+- Probed all ~20 datasets live. Current through 2025: pbp, snap_counts, injuries, depth_charts, rosters,
+  weekly_rosters, stats_team_week, pfr_advstats, ftn_charting, pbp_participation, espn_qbr, officials.
+  Through 2026 (already played): schedules, **draft_picks (2026 draft present)**, combine, trades.
+- **Found + fixed NGS** (DATA3): per-season `ngs_2025_*` 404s; switched catalog to the combined
+  `ngs_<variant>.csv.gz` (covers 2016→2025).
+- **Added a currency guard** (DATA4): `scripts/check-nflverse-currency.ts` (npm `guard:nflverse-currency`)
+  fails loudly if any dataset can't reach the current season + deterministic catalog tests. Ran green.
+- `contracts` lags at 2022 (upstream OTC limitation — soft warning, not season-critical).
+
+### Real items the audit surfaced
+- **[CURRENCY, medium — remaining]** My DATA2 player_stats merge reaches the cron/persistence path but
+  NOT the ~9 read-only intelligence surfaces (player-lab, usage-pulse, edge-signals, player-model,
+  route-rate, qb-forward, predictiveness, receiving-opportunity, opportunity-transfer) — they build the
+  URL via `nflverseUrl()` + a private fetcher and bypass `fetchNflverse`. They show 2024 today (offseason,
+  not misleading) but would lag once 2025 kicks off (Sept 2026). FIX (before kickoff, under the gate):
+  route those reads through a merge-aware loader (harden `fetchNflverse` with failover/no-store first).
+  Deferred here because it is ungated apps/web work (Prisma-blocked sandbox) with time before it matters.
+- **[CORRECTNESS — fixed, AUDIT1]** Tweedie GBM now uses the Newton (2nd-order) leaf (anti-divergence) +
+  a deviance-monotonicity regression test.
+
+### Frontier — the honest verdict
+Built the backtest into an ablation harness and tried opponent-matchup features. Across EVERY variant
+(log1p / Tweedie-first-order / Tweedie-Newton / ± opponent), the projection does **not** beat naive
+points-persistence OOS (best ~4.87, naive 4.76). Beating naive is genuine ML research (regularization,
+early stopping, orthogonal/role features done carefully, proper CV) — not a one-session win. The harness
+now supports that work honestly; nothing is published, `canPublishProjections` stays off.
