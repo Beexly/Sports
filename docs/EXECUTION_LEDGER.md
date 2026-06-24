@@ -24,7 +24,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] D1 - Cross-market triangulation through player props.
 - [x] D2 - Options-style distribution outputs.
 - [x] D3 - Model-parliament public CRPS leaderboard feed, flagged.
-- [ ] D4 - Replayable-provenance endpoint, flagged.
+- [x] D4 - Replayable-provenance endpoint, flagged.
 - [ ] D5 - Community calibration-tournament scaffold, draft-only-safe.
 - [ ] D6 - Active-learning uncertainty map.
 - [ ] E2 - Scoring-rule and reliability-diagram reporting.
@@ -224,7 +224,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: D3 model-parliament CRPS leaderboard feed, flagged.
 - BLOCKED-ON-HUMAN: real posterior/conformal feed wiring, learned spike/bust thresholds, and any public/priced display remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T04:10:44Z - pending commit - D3
+## 2026-06-24T04:10:44Z - f05af2c3 - D3
 
 - WHAT: Added a flagged model-parliament CRPS leaderboard feed that ranks internal projection models by pre-game-committed settled CRPS, reports MAE and market CRPS edge, prepares public-safe rows, and keeps the public feed disabled.
 - FILES: `apps/web/lib/calibration/model-parliament.ts`, `apps/web/lib/calibration/model-parliament.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -233,3 +233,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Score only settled rows that were committed before settlement; rank by lower CRPS and expose market CRPS edge only when market baselines are supplied.
 - NEXT: D4 replayable-provenance endpoint from the hash chain.
 - BLOCKED-ON-HUMAN: real model output registry, sample-size approval, public feed enablement, and any model promotion remain `[DATA]/[OWNER]/[INFRA]`.
+
+## 2026-06-24T07:35:13Z - pending commit - D4
+
+- WHAT: Added a replayable-provenance hash-chain module and flagged API endpoint that can verify event ordering, detect payload tampering, and re-derive calibration from settled-pick events while defaulting the public endpoint to `FLAGGED_OFF`.
+- FILES: `apps/web/lib/calibration/replayable-provenance.ts`, `apps/web/lib/calibration/replayable-provenance.test.ts`, `apps/web/app/api/calibration/replay-provenance/route.ts`, `apps/web/__tests__/replayable-provenance-route.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused replayable-provenance tests passed 4 tests; web app typecheck passed; D4 module measured 332 LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: endpoint defaults to `FLAGGED_OFF`; feed is draft-only and `priced=false`; no projection provider, `canPublishProjections`, pricing, model-version, public publication, or calibration proposal state changed.
+- DECISIONS: Use SHA-256 over canonical event payloads and previous-hash links; replay calibration only when the chain verifies, otherwise withhold rows and sample counts.
+- NEXT: D5 community calibration-tournament scaffold, draft-only-safe.
+- BLOCKED-ON-HUMAN: public endpoint enablement, source hash-chain persistence, and any public calibration claim remain `[DATA]/[OWNER]/[INFRA]`.
