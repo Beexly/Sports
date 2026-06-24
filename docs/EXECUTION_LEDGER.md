@@ -333,3 +333,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Treat the audit as confirmation that the branch is code-ready behind gates, not a live-readiness approval; unresolved work remains human/data/infra/schema ratification.
 - NEXT: Push audit commit and stop.
 - BLOCKED-ON-HUMAN: same as FINAL: merge/deploy, schema application, infra provisioning, real-data model promotion, pricing/publication flips, and live money remain `[OWNER]/[INFRA]/[DATA]/[SCHEMA]`.
+
+## 2026-06-24T19:47:30Z - (self-commit) - KS1 — conformal (n+1) fix + Tweedie truth-in-labeling
+
+- WHAT: Re-created two engine edits that a prior session made locally but never pushed. (1) Split-conformal finite-sample quantile now uses the ceil((n+1)*p) order statistic in both `conformal-intervals.ts` and `tweedie-aci.ts`, so residual quantiles (and "calibrated" interval widths) are no longer systematically too small on small per-position samples; ACI still adapts alpha online, the correction only ever widens intervals. (2) Added a truth-in-labeling note on `fitTweedieBaseline` documenting that it boosts L2 of log1p(y) — a Tweedie-flavoured scaffold, NOT a fitted Tweedie GLM — and forbidding any public surface from calling it "Tweedie" until the deviance gradient is wired.
+- FILES: `packages/prediction-engine/src/conformal-intervals.ts`, `packages/prediction-engine/src/tweedie-aci.ts`, `packages/prediction-engine/src/tweedie-baseline.ts`, `docs/EXECUTION_LEDGER.md`
+- GATE: prediction-engine Vitest passed 51 files / 514 tests (conformal-intervals + tweedie-baseline suites included); trust-gate + model-freeze + draft-only passed. ENV CAVEAT: repo-wide `npm run typecheck` and apps/web `build`/Vitest could NOT be executed in this sandbox — TypeScript 6.0.2 errors on the repo's `moduleResolution:"node"` tsconfigs (TS5107 deprecation), and `prisma generate` is blocked by the proxy egress policy (ECONNRESET to the Prisma binary CDN), so `@sports/db` cannot be generated here. Both are pre-existing environmental constraints, not introduced by this change; tsc emitted ONLY the deprecation line (no type errors).
+- FLAG: no runtime feature flag, projection provider, pricing rung, model version, data source, credential, schema, or production setting changed. Conformal report stays `priced:false`/`status:"shadow"`.
+- DECISIONS: Comment-only Tweedie change; conformal change is behaviour-preserving except widening small-sample intervals (verified by hand against both test suites before running, then confirmed green).
+- NEXT: stand up + run the real nflverse backtest.
+- BLOCKED-ON-HUMAN: unchanged `[OWNER]/[INFRA]/[DATA]/[SCHEMA]` set.

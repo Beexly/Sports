@@ -22,8 +22,12 @@ function round4(value: number): number {
 function quantile(values: readonly number[], probability: number): number {
   if (values.length === 0) return 0;
   const sorted = [...values].sort((a, b) => a - b);
-  const index = Math.min(sorted.length - 1, Math.ceil(probability * sorted.length) - 1);
-  return sorted[Math.max(0, index)]!;
+  // Split-conformal finite-sample quantile with the (n+1) correction: the ceil((n+1) * p)-th
+  // order statistic. Without it the residual quantile is too small on small samples, so
+  // intervals run narrower than target coverage. ceil((n+1)*p) >= ceil(n*p) => intervals only widen.
+  const rank = Math.ceil((sorted.length + 1) * probability);
+  const index = Math.min(sorted.length - 1, Math.max(0, rank - 1));
+  return sorted[index]!;
 }
 
 export function adaptiveConformalIntervals(

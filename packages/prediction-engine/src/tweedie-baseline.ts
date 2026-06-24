@@ -93,6 +93,15 @@ function candidateThresholds(values: readonly number[]): readonly number[] {
   return thresholds;
 }
 
+/**
+ * TRUTH-IN-LABELING (do not remove without wiring the deviance gradient):
+ * This is NOT a fitted Tweedie GLM. It is a gradient-boosted-stump baseline that minimizes the
+ * L2 loss of `log1p(actualFantasyPoints)` — a Tweedie-FLAVORED scaffold. `tweediePower` is carried
+ * on the model and `tweedieDeviance()` exists for scoring, but the boosting loss above does NOT use
+ * the Tweedie deviance gradient. Until that gradient is wired into the loss ([DATA] follow-up),
+ * no public-facing surface may describe this as a "fitted Tweedie model" / "Tweedie GLM". The
+ * export name and any UI/marketing copy must stay honest (e.g. "boosted log1p baseline, shadow").
+ */
 export function fitTweedieBaseline(
   samples: readonly TweedieProjectionSample[],
   options: TweedieBaselineOptions = {},
