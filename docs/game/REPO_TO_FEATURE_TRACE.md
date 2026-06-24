@@ -1,0 +1,12 @@
+# Repo To Feature Trace
+
+| Problem | Repo Consulted | Files / Patterns Inspected | Lesson Extracted | Galaxy Implementation | Status | Next Improvement |
+| --- | --- | --- | --- | --- | --- | --- |
+| Babylon renderer lifecycle | Babylon.js | Context7 Babylon Engine/Scene/ArcRotateCamera examples | Create engine and scene in browser-only code, resize explicitly, dispose engine/scene together | `packages/galaxy-spatial/src/scene-shell.ts` | Shipped | Add post-process tuning after visual QA |
+| Spatial materials and atmosphere | Babylon.js, 3d-game-shaders-for-beginners | Babylon material/light examples; shader repo lighting vocabulary | Tokenize colors, fog, glow, and weather accents instead of hardcoded scene colors | `materials.ts`, `world-builder.ts`, `BeatBroadcastWall` | Shipped | Add calibrated bloom/fog presets |
+| Browser minigame loop | Phaser | Context7 Phaser Scene/create/update/input/destroy examples | Host Phaser inside React, destroy the game instance on unmount, keep prompt state in DOM/server loop | `components/galaxy/blacktop-arcade.tsx` | Shipped | Wire a timed score submit to profile rewards |
+| Presence room state | Colyseus | Context7 Schema/Room/onJoin/onLeave/updatePosition examples | Server owns player map; clients send clamped position and short signal messages | `packages/galaxy-presence/src/rookie-plaza-presence-room.ts` | Shipped | Start local Colyseus dev server and connect the client |
+| Quest/event authoring | GDevelop, RPG-JS | Event trigger/condition/action/reward model | Quests need trigger, condition, action, reward, writeback, route, repeatability, anti-abuse | `packages/galaxy-engine/src/game-kernel/quest-dsl.ts` | Shipped | Move authoring to content JSON once admin tooling exists |
+| MMO town population | Kaetram, Biomes | Browser MMO ghost/presence architecture concepts | Town should feel populated before live multiplayer; AI/ghost labels must be explicit | `presence.ts`, Rookie Plaza ghost routes | Shipped | Add route interpolation from server state |
+| Room transition feel | GlPortal | Portal/continuity concepts | District doors should be visual gates with route actions, not dashboard links only | Rookie Plaza gates and route strip | Shipped | Add animated portal transition between rooms |
+| Scene modularity | Magnum | Renderer/scene/input separation concepts | Keep spatial package separate from product brain and kernel state | `@sports/galaxy-spatial` package exports | Shipped | Add asset manifest when GLB assets are introduced |

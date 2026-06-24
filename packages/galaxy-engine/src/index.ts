@@ -222,6 +222,8 @@ export type { SportsWeather, WeatherId } from "./world/sports-weather.js";
 export { ROOM_REGISTRY, getRoom, roomsForDistrict } from "./world/rooms.js";
 export type { RoomDef } from "./world/rooms.js";
 
+export * from "./game-kernel/index.js";
+
 // Higgsfield asset-brief pipeline
 export {
   buildAssetBrief,

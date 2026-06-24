@@ -1,5 +1,12 @@
 # First Playable Room Brief — The Vault (Premium Card Gallery)
 
+## 2026-06-20 update
+
+The autonomous studio contract adds an earlier playable floor: **Rookie Plaza**.
+The Vault remains the first premium showcase room, but it now comes after the
+first-town RPG loop proves movement, NPCs, quests, inventory, sports weather,
+and profile writeback.
+
 **Recommendation:** the first premium playable room is **The Vault** — a premium 3D
 card gallery — *not* a city. It connects to identity, cards, collection, display,
 cosmetics, future commerce, and creator content; it is far easier to make visually

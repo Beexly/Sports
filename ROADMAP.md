@@ -16,16 +16,21 @@ account. No public playable room ships before it passes the Galaxy quality gate.
   command map; Stadium Gates; Signal Sprint Blacktop; admin observability.
 
 ## Next (buildable, no hard-stops)
-1. **The Vault — premium 3D card gallery** (Babylon.js) — first premium room;
+1. **Deepen Rookie Plaza** — raise the first-town quality score to 4/5 with
+   touch movement, richer NPC routing, quest feedback, ghost paths, and visual
+   polish. (`docs/game/RUNESCAPE_FLOOR_QUALITY_GATE.md`)
+2. **The Beat Broadcast Wall** — first spatial intelligence instrument outside
+   the room route; no fake live stats. (`docs/game/BABYLON_SPATIAL_QUALITY_GATE.md`)
+3. **The Vault — premium 3D card gallery** (Babylon.js when added) — first premium room;
    quality-gated. (`FIRST_PLAYABLE_ROOM_BRIEF.md`)
-2. **Marketplace prototype + seller tools** (no cash/custody — Stage-3 partner-gated
+4. **Marketplace prototype + seller tools** (no cash/custody — Stage-3 partner-gated
    for real settlement).
-3. **Live rooms via Colyseus** — Crew Hall presence, live Signal Duel (2v2/3v3),
+5. **Live rooms via Colyseus** — Crew Hall presence, live Signal Duel (2v2/3v3),
    boss raid rooms (8–16 to start).
-4. **Live sports feed** replaces deterministic weather (interface already designed).
-5. **Score→profile callbacks** from any future browser room (everything feeds one
+6. **Live sports feed** replaces deterministic weather (interface already designed).
+7. **Score→profile callbacks** from any future browser room (everything feeds one
    character).
-6. **More premium rooms** (War Room Plaza, Crew Clubhouse, Merch Foundry, Crib).
+8. **More premium rooms** (War Room Plaza, Crew Clubhouse, Merch Foundry, Crib).
 
 ## Funded / partner / counsel-gated (NOT autonomous — hard-stops)
 - Real-money activation / live payments / cash redemption (Stripe stays test).

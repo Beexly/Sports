@@ -29,6 +29,7 @@ import { resolve, join } from "node:path";
 const repoRoot = resolve(__dirname, "..");
 const APP_DIR = resolve(repoRoot, "app");
 const COMPONENTS_DIR = resolve(repoRoot, "components");
+const toRepoPath = (file: string) => file.replace(/\\/g, "/");
 
 const SKIP_SUBDIRS = new Set(["cockpit", "admin", "api", "auth"]);
 const SKIP_FILES = new Set<string>([
@@ -92,9 +93,9 @@ describe("no fake percentages on customer pages", () => {
 
   it("finds at least the dashboard and homepage so the test isn't silently empty", () => {
     expect(pages.length).toBeGreaterThan(3);
-    expect(pages.some((p) => p.includes("dashboard"))).toBe(true);
+    expect(pages.some((p) => toRepoPath(p).includes("dashboard"))).toBe(true);
     // The performance numbers render in components, so those must be scanned too.
-    expect(pages.some((p) => p.includes(`${"components"}/`))).toBe(true);
+    expect(pages.some((p) => toRepoPath(p).includes("components/"))).toBe(true);
   });
 
   it.each(pages)("page has no hardcoded outcome-percentage: %s", (file) => {

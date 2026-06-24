@@ -5,7 +5,10 @@ import type { ProfileView } from "@/lib/galaxy/types";
 
 const NAV = [
   { href: "/galaxy", label: "Campus" },
+  { href: "/galaxy/campus/rookie-plaza", label: "Rookie Plaza" },
   { href: "/galaxy/war-room", label: "War Room" },
+  { href: "/galaxy/beat", label: "The Beat" },
+  { href: "/galaxy/blacktop", label: "Blacktop" },
   { href: "/galaxy/duel", label: "Duel" },
   { href: "/galaxy/depths", label: "Depths" },
   { href: "/galaxy/season", label: "Season" },

@@ -6,6 +6,7 @@ import { getCurrentProfileView, getCurrentProfileId } from "@/lib/galaxy/session
 import { getGalaxyScoreFor } from "@/lib/galaxy/score";
 import { getEquippedTitle } from "@/lib/galaxy/cosmetics";
 import { avatarSvg, crestSvg, badgeSvg } from "@/lib/galaxy/assets";
+import { DISTRICT_REPUTATION, GAME_KERNEL_SKILLS, INVENTORY_ITEMS, QUESTS } from "@sports/galaxy-engine";
 
 export const dynamic = "force-dynamic";
 
@@ -90,6 +91,32 @@ export default async function DynastyPage() {
         <div style={{ height: 8, background: GALAXY.border, borderRadius: 99, marginTop: 6, overflow: "hidden" }}>
           <div style={{ width: `${pct}%`, height: "100%", background: `linear-gradient(90deg, ${GALAXY.deepBlue}, ${GALAXY.gold})` }} />
         </div>
+      </div>
+
+      <h2 style={{ fontSize: 14, letterSpacing: 1.2, color: GALAXY.textMuted, marginTop: 28 }}>ROOKIE PLAZA SAFEHOUSE</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px,1fr))", gap: 12 }}>
+        <div style={{ background: GALAXY.panel, border: `1px solid ${GALAXY.gold}66`, borderRadius: 8, padding: 14 }}>
+          <div style={{ fontSize: 11, color: GALAXY.textMuted }}>QUEST WALL</div>
+          <div style={{ fontSize: 22, fontWeight: 900, color: GALAXY.gold }}>{QUESTS.length} visible</div>
+          <div style={{ color: GALAXY.textMuted, fontSize: 12, marginTop: 4 }}>First six are playable from Rookie Plaza actions.</div>
+        </div>
+        <div style={{ background: GALAXY.panel, border: `1px solid ${GALAXY.cyan}66`, borderRadius: 8, padding: 14 }}>
+          <div style={{ fontSize: 11, color: GALAXY.textMuted }}>ITEM WALL</div>
+          <div style={{ fontSize: 22, fontWeight: 900, color: GALAXY.cyan }}>{INVENTORY_ITEMS.length} safe items</div>
+          <div style={{ color: GALAXY.textMuted, fontSize: 12, marginTop: 4 }}>Cards and tools are account identity objects with no cash value.</div>
+        </div>
+        <div style={{ background: GALAXY.panel, border: `1px solid ${GALAXY.violet}66`, borderRadius: 8, padding: 14 }}>
+          <div style={{ fontSize: 11, color: GALAXY.textMuted }}>DISTRICT REP</div>
+          <div style={{ fontSize: 22, fontWeight: 900, color: GALAXY.violet }}>{DISTRICT_REPUTATION.length} tracks</div>
+          <div style={{ color: GALAXY.textMuted, fontSize: 12, marginTop: 4 }}>{DISTRICT_REPUTATION.map((rep) => rep.label).join(" · ")}</div>
+        </div>
+      </div>
+      <div style={{ marginTop: 12, display: "flex", gap: 10, flexWrap: "wrap" }}>
+        {GAME_KERNEL_SKILLS.map((skill) => (
+          <span key={skill.id} style={{ border: `1px solid ${GALAXY.border}`, borderRadius: 999, padding: "6px 9px", color: GALAXY.textMuted, fontSize: 12 }}>
+            {skill.label}
+          </span>
+        ))}
       </div>
 
       {/* Sports IQ skills */}

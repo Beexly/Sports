@@ -175,3 +175,25 @@ of rationale each. Hard-stops are recorded in `BUILD_LOG.md`.
 - **D-037 — First premium room = The Vault card gallery**, not a city — easiest to
   make premium, strongest identity/commerce tie-in, screenshot-friendly, avoids the
   fake-GTA trap. (See `FIRST_PLAYABLE_ROOM_BRIEF.md`.)
+- **D-038 — First floor room = Rookie Plaza before The Vault.** The autonomous
+  studio contract raises the immediate bar from premium showcase to first-town RPG
+  floor. Rookie Plaza now ships before premium Vault work so movement, NPCs,
+  quests, inventory, weather, and writeback exist in the live web trunk.
+- **D-039 — Spatial OS is now Babylon-first.** The rescue branch installed and
+  scoped Babylon under `@sports/galaxy-spatial`; Rookie Plaza and The Beat use
+  Babylon scene/camera/material/world-builder patterns. Three.js is not the
+  spatial package engine.
+- **D-040 — Blacktop uses Phaser, not a hand-rolled loop.** `Signal Sprint` is a
+  Phaser scene hosted inside React because minigame input/update/destroy
+  lifecycle is a solved engine problem.
+- **D-041 — Presence ships in two layers.** `packages/galaxy-presence` owns the
+  Colyseus room/schema contract; the current Next route uses a local live-room
+  adapter so Rookie Plaza has disclosed room state before websocket hosting is
+  deployed.
+- **D-042 — Procedural geometry is a gameplay kit, not final art.**
+  `ROOKIE_PLAZA_ASSET_KIT` records which Babylon procedural assets are shipped
+  and keeps final authored character/prop art as an explicit gated track.
+- **D-043 — Rockstar/GTA-style direction becomes IP-safe Galaxy cinematics.**
+  Camera grammar, lighting mood, and trailer structure are encoded as original
+  Galaxy shot rules; no proprietary GTA/Rockstar locations, characters, audio,
+  UI, missions, maps, brands, or assets are copied.

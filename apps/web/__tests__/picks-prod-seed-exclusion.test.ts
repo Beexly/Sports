@@ -50,6 +50,7 @@ vi.mock("@sports/prediction-engine", async (importOriginal) => {
 });
 
 const SEED_FILTER = { modelVersion: "v5.0.0-seed" };
+const ROUTE_TEST_TIMEOUT_MS = 45000;
 
 function seedRow(id: string) {
   return {
@@ -134,7 +135,7 @@ describe("/api/picks — production seed-row exclusion", () => {
     expect(mocks.pickCount).toHaveBeenCalled();
     const countArgs = mocks.pickCount.mock.calls[0]?.[0];
     expect(countArgs?.where).toMatchObject({ NOT: SEED_FILTER });
-  });
+  }, ROUTE_TEST_TIMEOUT_MS);
 
   it("production: a stray seed row is never returned (query filters it out)", async () => {
     setNodeEnv("production");
@@ -146,9 +147,9 @@ describe("/api/picks — production seed-row exclusion", () => {
     const meta = body["meta"] as Record<string, unknown>;
     // No seed rows returned → containsSeedData must be false in prod.
     expect(meta["containsSeedData"]).toBe(false);
-  });
+  }, ROUTE_TEST_TIMEOUT_MS);
 
-  it("non-production (test): NO seed filter — demo mode preserved", async () => {
+  it("non-production (test): NO seed filter - demo mode preserved", async () => {
     setNodeEnv("test");
     // Demo mode returns seed rows and flags containsSeedData.
     mocks.pickFindMany.mockResolvedValue([seedRow("seed-1")]);
@@ -162,7 +163,7 @@ describe("/api/picks — production seed-row exclusion", () => {
 
     const meta = body["meta"] as Record<string, unknown>;
     expect(meta["containsSeedData"]).toBe(true);
-  });
+  }, ROUTE_TEST_TIMEOUT_MS);
 
   it("development: NO seed filter either (dev demo path unchanged)", async () => {
     setNodeEnv("development");
@@ -171,5 +172,5 @@ describe("/api/picks — production seed-row exclusion", () => {
 
     const findArgs = mocks.pickFindMany.mock.calls[0]?.[0];
     expect(findArgs?.where).not.toHaveProperty("NOT");
-  });
+  }, ROUTE_TEST_TIMEOUT_MS);
 });

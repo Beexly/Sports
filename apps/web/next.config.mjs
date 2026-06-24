@@ -33,6 +33,8 @@ const nextConfig = {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
       "@": path.resolve(process.cwd()),
+      "@sports/galaxy-engine": path.resolve(repoRoot, "packages/galaxy-engine/src/index.ts"),
+      "@sports/galaxy-spatial": path.resolve(repoRoot, "packages/galaxy-spatial/src/index.ts"),
     };
 
     // Resolve .js extension imports to .ts source files for transpiled workspace packages.

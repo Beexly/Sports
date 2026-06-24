@@ -44,6 +44,32 @@ export default async function GalaxyCampusPage() {
         )}
       </section>
 
+      <section
+        style={{
+          borderRadius: 8,
+          padding: 18,
+          marginBottom: 18,
+          border: `1px solid ${GALAXY.gold}66`,
+          background: `linear-gradient(135deg, ${GALAXY.gold}18, ${GALAXY.deepBlue}16), ${GALAXY.panel}`,
+        }}
+      >
+        <div style={{ fontSize: 11, letterSpacing: 1.6, color: GALAXY.gold, fontWeight: 800 }}>
+          FIRST PLAYABLE TOWN
+        </div>
+        <div style={{ display: "flex", gap: 14, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", marginTop: 6 }}>
+          <div>
+            <h2 style={{ fontSize: 24, margin: 0, fontFamily: "var(--f-display, sans-serif)" }}>Rookie Plaza</h2>
+            <p style={{ color: GALAXY.textMuted, margin: "6px 0 0", maxWidth: 680 }}>
+              Enter the Campus floor, talk to Coach Signal, run First Signal, claim the Rookie Signal Card,
+              and route into the War Room, Vault, Crew Hall, Blacktop, Depths, and My Dynasty.
+            </p>
+          </div>
+          <Link href="/galaxy/campus/rookie-plaza" style={{ background: GALAXY.gold, color: GALAXY.void, padding: "12px 18px", borderRadius: 8, fontWeight: 900, textDecoration: "none" }}>
+            Enter Rookie Plaza
+          </Link>
+        </div>
+      </section>
+
       {/* Sports weather — the live world layer */}
       <section
         style={{

@@ -1,12 +1,27 @@
 import { describe, it, expect } from "vitest";
-// Import the pure classification helpers from the deploy script (plain .mjs,
-// run directly in the Vercel build). The script guards its main() behind an
-// import.meta.url check, so importing here never runs a migration.
-import {
-  isTransientDbError,
-  backoffMs,
-  MAX_MIGRATE_ATTEMPTS,
-} from "../../../scripts/deploy/migrate-if-configured.mjs";
+import { createRequire } from "node:module";
+import { resolve } from "node:path";
+
+interface MigrateHelpers {
+  readonly isTransientDbError: (text: string | undefined) => boolean;
+  readonly backoffMs: (attempt: number) => number;
+  readonly MAX_MIGRATE_ATTEMPTS: number;
+}
+
+const require = createRequire(import.meta.url);
+const helpers = require(resolve(__dirname, "../../../scripts/deploy/migrate-if-configured-core.cjs")) as MigrateHelpers;
+
+function isTransientDbError(text: string | undefined): boolean {
+  return helpers.isTransientDbError(text);
+}
+
+function backoffMs(attempt: number): number {
+  return helpers.backoffMs(attempt);
+}
+
+function maxMigrateAttempts(): number {
+  return helpers.MAX_MIGRATE_ATTEMPTS;
+}
 
 describe("isTransientDbError", () => {
   it("treats Neon cold-start / connectivity failures as transient (retryable)", () => {
@@ -30,7 +45,6 @@ describe("isTransientDbError", () => {
       isTransientDbError("Error: P3018 A migration failed to apply. syntax error at or near")
     ).toBe(false);
     expect(isTransientDbError("")).toBe(false);
-    // @ts-expect-error — guards the null/undefined path
     expect(isTransientDbError(undefined)).toBe(false);
   });
 });
@@ -41,6 +55,6 @@ describe("backoffMs", () => {
     expect(backoffMs(2)).toBe(10000);
     expect(backoffMs(3)).toBe(20000);
     expect(backoffMs(4)).toBe(20000); // clamped to the last step
-    expect(MAX_MIGRATE_ATTEMPTS).toBe(4);
+    expect(maxMigrateAttempts()).toBe(4);
   });
 });

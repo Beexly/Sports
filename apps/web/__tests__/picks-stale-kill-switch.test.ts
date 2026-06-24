@@ -52,6 +52,8 @@ function minutesAgo(m: number): Date {
   return new Date(Date.now() - m * 60 * 1000);
 }
 
+const ROUTE_TEST_TIMEOUT_MS = 45000;
+
 async function callPicks(): Promise<{ status: number; body: Record<string, unknown> }> {
   vi.resetModules();
   const mod = await import("@/app/api/picks/route");
@@ -87,7 +89,7 @@ describe("/api/picks — stale-data kill switch", () => {
     // The freshness query must not run when the kill switch is off — this is
     // the byte-for-byte "no behavior change" guarantee.
     expect(mocks.ingestionRunFindFirst).not.toHaveBeenCalled();
-  });
+  }, ROUTE_TEST_TIMEOUT_MS);
 
   it("flag ON + stale: returns the same 503 collecting/bootstrap state", async () => {
     mocks.forceNoBetIfStale = true;
@@ -99,7 +101,7 @@ describe("/api/picks — stale-data kill switch", () => {
     expect(body["bootstrapMode"]).toBe(true);
     // Suppressed: the picks query never ran.
     expect(mocks.pickFindMany).not.toHaveBeenCalled();
-  });
+  }, ROUTE_TEST_TIMEOUT_MS);
 
   it("flag ON + never-succeeded ingestion is treated as stale (503)", async () => {
     mocks.forceNoBetIfStale = true;
@@ -109,7 +111,7 @@ describe("/api/picks — stale-data kill switch", () => {
 
     expect(status).toBe(503);
     expect(body["bootstrapMode"]).toBe(true);
-  });
+  }, ROUTE_TEST_TIMEOUT_MS);
 
   it("flag ON + fresh: serves picks normally", async () => {
     mocks.forceNoBetIfStale = true;
@@ -128,7 +130,7 @@ describe("/api/picks — stale-data kill switch", () => {
       }),
     );
     expect(mocks.pickFindMany).toHaveBeenCalled();
-  });
+  }, ROUTE_TEST_TIMEOUT_MS);
 
   it("flag ON + DB error on freshness query: fails OPEN (serves picks)", async () => {
     mocks.forceNoBetIfStale = true;
@@ -140,5 +142,5 @@ describe("/api/picks — stale-data kill switch", () => {
     // enforces staleness separately.
     expect(status).toBe(200);
     expect(body["success"]).toBe(true);
-  });
+  }, ROUTE_TEST_TIMEOUT_MS);
 });

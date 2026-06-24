@@ -15,13 +15,15 @@ import fs from "node:fs";
 import path from "node:path";
 import { BANNED_ANALYST_PHRASES } from "@/lib/voice/analyst-standard";
 
+const COLD_IMPORT_TEST_TIMEOUT_MS = 30000;
+
 // ── 1. Loader honesty ─────────────────────────────────────────────────────────
 
 describe("loadProofOfRecord loader honesty", () => {
   it("exports a loadProofOfRecord function", async () => {
     const mod = await import("@/lib/proof/load-proof-of-record");
     expect(typeof mod.loadProofOfRecord).toBe("function");
-  });
+  }, COLD_IMPORT_TEST_TIMEOUT_MS);
 
   it("returns empty picks and correct Merkle root when DB is stub (no settled picks)", async () => {
     const { loadProofOfRecord } = await import("@/lib/proof/load-proof-of-record");

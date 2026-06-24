@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import { getCurrentProfileView } from "@/lib/galaxy/session";
 import { getGalaxyMetrics } from "@/lib/galaxy/admin-metrics";
 import { getGalaxyWorldState } from "@/lib/galaxy/world-state";
-import { DISTRICTS, ROOM_REGISTRY, SPORTS_WEATHER } from "@sports/galaxy-engine";
+import { DISTRICTS, ROOM_REGISTRY, SPORTS_WEATHER, BLACKTOP_GAMES, GAME_KERNEL_BOSSES, GHOST_PRESENCE, NPCS, QUESTS } from "@sports/galaxy-engine";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +55,12 @@ export default async function GalaxyAdminPage() {
     { label: "Crews", value: m.crews.toLocaleString(), accent: GALAXY.violet },
     { label: "Brand gates", value: m.brandGatesEnforced ? "Enforced (CI)" : "FAILING", accent: m.brandGatesEnforced ? GALAXY.cyan : GALAXY.magenta },
     { label: "Higgsfield assets", value: `${m.higgsfieldAssetsGenerated} (briefs only)` },
+    { label: "Rookie Plaza quests", value: QUESTS.length.toLocaleString(), accent: GALAXY.gold },
+    { label: "Rookie Plaza NPCs", value: NPCS.length.toLocaleString(), accent: GALAXY.cyan },
+    { label: "Ghost routes", value: GHOST_PRESENCE.length.toLocaleString(), accent: GALAXY.violet },
+    { label: "Blacktop games", value: BLACKTOP_GAMES.length.toLocaleString(), accent: GALAXY.gold },
+    { label: "PvM bosses", value: GAME_KERNEL_BOSSES.length.toLocaleString(), accent: GALAXY.magenta },
+    { label: "Scene fallbacks", value: "tracked via rookie_plaza_presence_fallback" },
   ];
 
   return (

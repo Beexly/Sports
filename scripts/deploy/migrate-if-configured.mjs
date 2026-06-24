@@ -24,41 +24,17 @@
  * (conflict, drift, bad SQL) is NOT transient and fails fast on the first try.
  */
 import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
 
-/**
- * True when `text` looks like a transient DB-connectivity failure worth
- * retrying (Neon cold-start / network blip), NOT a real migration error.
- * Pure + exported so the classification is unit-tested.
- * @param {string} text combined stdout+stderr of the migrate attempt
- * @returns {boolean}
- */
-export function isTransientDbError(text) {
-  if (!text) return false;
-  const TRANSIENT = [
-    "P1001", // Prisma: "Can't reach database server"
-    "Can't reach database server",
-    "database server is running", // P1001 second line: "Please make sure your database server is running"
-    "ETIMEDOUT",
-    "ECONNREFUSED",
-    "ECONNRESET",
-    "EAI_AGAIN", // DNS resolution blip
-    "Connection terminated",
-    "connection closed",
-    "timed out",
-    "Timed out fetching a new connection",
-  ];
-  const haystack = text.toLowerCase();
-  return TRANSIENT.some((sig) => haystack.includes(sig.toLowerCase()));
-}
+const require = createRequire(import.meta.url);
+const {
+  isTransientDbError,
+  backoffMs,
+  MAX_MIGRATE_ATTEMPTS,
+} = require("./migrate-if-configured-core.cjs");
 
-/** Backoff (ms) before retry attempt N (1-indexed). Gives Neon time to wake. */
-export function backoffMs(attempt) {
-  const schedule = [5000, 10000, 20000];
-  return schedule[Math.min(attempt - 1, schedule.length - 1)];
-}
-
-export const MAX_MIGRATE_ATTEMPTS = 4;
+export { isTransientDbError, backoffMs, MAX_MIGRATE_ATTEMPTS };
 
 /** Block synchronously without busy-waiting (build step only). */
 function sleepSync(ms) {

@@ -213,3 +213,153 @@ The autonomously-buildable web trunk is comprehensive. What remains —
 literal action/violence tuning** — is the funded/partner/counsel-gated endgame
 behind the four hard-stops (bible §2/§4.4), with design + asset briefs ready to
 extend the trunk into a 3D client.
+
+---
+
+## 2026-06-20 — Rookie Plaza floor + Game Kernel + Spatial OS
+
+Built the first playable town slice from the autonomous studio contract:
+
+- `packages/galaxy-engine/src/game-kernel/`: world map, entities, 20 quests,
+  missions, 10 skills, 25 safe items/cards, NPC/dialogue, weather effects,
+  progression, anti-abuse, and GTA-shaped future systems.
+- `packages/galaxy-spatial/`: initial spatial boundary with scene shell,
+  materials, camera presets, input contract, performance budgets, and quality
+  scoring. Superseded in Studio Rescue v2 by the Babylon-first package.
+- `/galaxy/campus/rookie-plaza`: 3D Rookie Plaza, NPC dialogue, First Signal,
+  inventory, quest panel, and route exits.
+- `/api/galaxy/rookie-plaza`: state/action facade that reuses the existing
+  Signal Check reward loop.
+- Campus now surfaces `Enter Rookie Plaza` as the first playable action.
+
+Notes: Trust gate was green before implementation. This baseline initially used
+the available spatial dependency; Studio Rescue v2 superseded it with
+Babylon-first Rookie Plaza and Beat implementations.
+
+Validation:
+
+- Trust gate passed after implementation: 1028 scanned files.
+- Engine test suite passed: 10 files, 92 tests.
+- Spatial package tests passed: 1 file, 3 tests.
+- Engine and Spatial package typechecks passed.
+- Focused Galaxy web tests passed: Rookie Plaza contract, brand gates, language
+  law, first session, and Stage 2.
+- Scoped ESLint on changed Rookie Plaza web files passed with zero warnings.
+- Browser QA passed on `http://127.0.0.1:3078/galaxy/campus/rookie-plaza`;
+  Playwright screenshots are in `reports/`.
+
+Blocked checks:
+
+- Prisma generate hit a Windows `EPERM` file lock while renaming Prisma's query
+  engine DLL.
+- Web typecheck remains blocked by pre-existing generated Prisma client model
+  errors, not Rookie Plaza or Vitest config errors.
+- Web build got through certificate-gated font fetching with
+  `NODE_OPTIONS=--use-system-ca`, then failed static generation because local
+  Postgres credentials for user `sports` are invalid on admin routes.
+
+---
+
+## 2026-06-20 — Studio Rescue v2
+
+Built over the first Rookie Plaza pass:
+
+- Converted `packages/galaxy-spatial` to Babylon-first, with a scene shell,
+  materials, procedural asset kit, multi-part entity decoration, Rookie Plaza
+  world builder, Beat visual layers, and quality gates.
+- Added `packages/galaxy-presence` with a Colyseus Rookie Plaza room/schema and
+  tests.
+- Added a local live-room adapter in `apps/web/lib/galaxy/rookie-plaza-presence.ts`
+  so the current Next route has load, heartbeat, position sync, ghost disclosure,
+  and room roster state before websocket hosting.
+- Added touch joystick movement to Rookie Plaza and merged it with keyboard
+  movement.
+- Expanded The Beat from a route node into a Babylon spatial instrument with
+  ledger backplane, broadcast rings, source ticks, urgency towers, confidence
+  rings, calibration rings, route trails, and UI controls.
+- Added Phaser Signal Sprint for Blacktop.
+- Added IP-safe Galaxy cinematic shot rules and launch teaser beats derived from
+  the Rockstar-style video prompt without copying proprietary GTA/Rockstar
+  assets.
+
+Validation in this rescue pass:
+
+- Spatial tests and typecheck passed.
+- Presence tests and typecheck passed.
+- Game engine tests passed: 10 files, 94 tests.
+- Web Rookie Plaza contract tests passed: 3 tests.
+- Web typecheck passed after the presence fix.
+
+Known environment blockers:
+
+- Prisma generate can still hit Windows DLL file locks.
+- Browser QA captured every target route and screenshot once, but that pass hit a
+  stale `.next` cache file-open error. A clean rerun remains required after the
+  final code/doc changes.
+
+---
+
+## 2026-06-20 — Studio Rescue v2 polish and browser QA closeout
+
+Focused the pass on first-slice quality instead of adding more world breadth:
+
+- Collapsed Rookie Plaza quest/inventory/progression tools by default so first
+  load reads as a playable 3D room, not a dashboard.
+- Hid the touch joystick on desktop and made it a deliberate coarse-pointer
+  control for mobile/tablet movement.
+- Hardened Rookie Plaza Babylon graphics with denser field-grid geometry, a
+  center verification ring, boundary rails, corner light masts, reduced glow,
+  and lower weather-light blowout.
+- Updated the Playwright smoke to exercise the new quest-drawer flow.
+- Documented the safe free/open asset intake rule for FMHY-style discovery,
+  OpenGameArt/Kenney-style sources, and any future Higgsfield generation.
+
+Validation:
+
+- `npm run typecheck --workspace=packages/galaxy-spatial`
+- `npm run test --workspace=packages/galaxy-spatial -- --run`
+- `npm run typecheck --workspace=apps/web`
+- `npm run test --workspace=apps/web -- __tests__/rookie-plaza-contract.test.ts --run`
+- `npm run lint --workspace=apps/web -- components/galaxy/rookie-plaza-client.tsx`
+- `node reports/game-qa/playwright-smoke.cjs`
+
+Browser QA result:
+
+- `reports/game-qa/playwright-result.json` is green with no console errors, page
+  errors, or material console errors.
+- Screenshots refreshed under `reports/game-qa/` for Rookie Plaza, Blacktop,
+  Depths, My Dynasty, and Beat Broadcast Wall.
+
+Remaining honest launch blockers:
+
+- Final authored GLB/texture art remains a launch-quality art pass, not a code
+  dependency for the current playable slice.
+- Colyseus is integrated as a package and room contract, but public multiplayer
+  still requires websocket deployment and browser client hookup.
+- `packages/galaxy-spatial` has no package-local lint script; use typecheck and
+  Vitest until lint config is added there.
+
+---
+
+## 2026-06-24 — Session-wide audit and hardening
+
+Audited all session work, including the uncommitted Galaxy Dynasty Studio worktree in `C:\Users\Garrett\Sports`, not just the `codex/intelligence-core` branch.
+
+Corrections:
+
+- Hardened Rookie Plaza local presence with bounded live players, normalized session IDs/labels/signals, and regression coverage.
+- Removed the scene-remount path caused by NPC selection changes in the Rookie Plaza client.
+- Removed visible keyboard-instruction copy and tightened new Galaxy card radii.
+- Reconciled the stale autonomous studio report with the current Babylon-first rescue state.
+- Fixed full-suite test issues that were exposed only under Windows/full-web concurrency: resource dump SHA drift, path separators in the no-fake-percentage scanner, migration helper importability, and cold-import route/loader budgets.
+
+Validation:
+
+- `NODE_OPTIONS=--use-system-ca npm run typecheck`
+- `NODE_OPTIONS=--use-system-ca npm run lint`
+- `cd apps/web && NODE_OPTIONS=--use-system-ca npx vitest run`
+- `NODE_OPTIONS=--use-system-ca DATABASE_URL=stub npm run build`
+- `NODE_OPTIONS=--use-system-ca npm run guard:trust`
+- `NODE_OPTIONS=--use-system-ca npm run guard:model-freeze`
+- `NODE_OPTIONS=--use-system-ca npm run guard:draft-only`
+- Changed-file risk scan and `git diff --check` both clean.

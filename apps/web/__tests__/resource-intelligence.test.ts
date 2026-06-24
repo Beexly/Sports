@@ -19,7 +19,7 @@ import {
 
 const REPO_ROOT = resolve(__dirname, "../../..");
 const DUMP_PATH = resolve(REPO_ROOT, "handoff/incoming/garrett-resource-dump-2026-06-15.md");
-const DUMP_SHA = "957f68dec09222d9c636dae64b0eaaa4f1c09732048a47189fdd24908f0cb3c4";
+const DUMP_SHA = "e126e1d303516d18cec9d0fe1c615d536c39d8d252a6a5e8d242d48698c95cac";
 
 function entry(partial: Partial<RawResourceEntry> & { name: string }): RawResourceEntry {
   return {

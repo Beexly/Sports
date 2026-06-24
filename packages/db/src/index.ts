@@ -155,7 +155,7 @@ function buildClient(): PrismaClient {
   const url = process.env["DATABASE_URL"];
   const force = process.env["FORCE_REAL_PRISMA"] === "true";
 
-  if (!force && isStubDbUrl(url)) {
+  if (!force && (process.env["NODE_ENV"] === "test" || isStubDbUrl(url))) {
     if (!globalForPrisma.prismaStubMode) {
       const detail = isDemoPicksEnabled()
         ? "DEMO_PICKS_ENABLED=true — pick.findMany returns sample data."
