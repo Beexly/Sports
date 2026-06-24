@@ -105,11 +105,14 @@ function clampLogLink(value: number): number {
  *   mu_i = exp(F_i),   grad_i = -y_i * exp((1-p) F_i) + exp((2-p) F_i),
  *   pseudo_i = -grad_i = y_i * exp((1-p) F_i) - exp((2-p) F_i),
  * with power p = `tweediePower` (1 < p < 2; default 1.5). The intercept is the Tweedie MLE
- * constant log(mean(y)). This is a simple functional-gradient GBM (mean-of-gradient steps,
- * not a Newton step), so it is a genuinely Tweedie-fitted model but NOT a calibrated GLM with
- * standard errors. It stays priced=false / status="shadow" and is UNVALIDATED on real data:
- * no public surface may call it "calibrated"/"proven" until the backtest + calibration harness
- * prove it out-of-sample. `proveTweediePowerUsed` in the tests confirms the loss depends on p.
+ * constant log(mean(y)). Leaf values use the Newton (second-order) step
+ *   leaf = -sum(grad)/(sum(hess)+ridge)
+ * so the boosting descends the Tweedie deviance monotonically (a raw mean-of-gradient step on the
+ * log link can overshoot/diverge for small p). It is a genuinely Tweedie-fitted GBM but NOT a
+ * calibrated GLM with standard errors. It stays priced=false / status="shadow" and is UNVALIDATED
+ * on real data: no public surface may call it "calibrated"/"proven" until the backtest + calibration
+ * harness prove it out-of-sample. The tests confirm (a) the loss depends on p and (b) the total
+ * deviance is non-increasing round-over-round for p in {1.1, 1.5, 1.9}.
  */
 export function fitTweedieBaseline(
   samples: readonly TweedieProjectionSample[],
@@ -134,48 +137,69 @@ export function fitTweedieBaseline(
   const current = usable.map(() => intercept);
   const stumps: TweedieStump[] = [];
 
+  const RIDGE = 1e-6;
   for (let round = 0; round < rounds; round++) {
-    // Tweedie negative-gradient pseudo-residuals at the current predictor F.
-    const pseudo = current.map((f, index) => {
-      const fc = clampLogLink(f);
-      return y[index]! * Math.exp((1 - power) * fc) - Math.exp((2 - power) * fc);
-    });
-    let best: TweedieStump | null = null;
+    // Tweedie gradient & hessian of the deviance wrt the log-link predictor F (mu = exp(F)), p in (1,2):
+    //   grad_i = e^{(2-p)F} - y_i e^{(1-p)F}
+    //   hess_i = (2-p) e^{(2-p)F} + (p-1) y_i e^{(1-p)F}   (> 0 for p in (1,2), y >= 0)
+    // Split selection fits the negative gradient (pseudo = -grad) by squared error; the LEAF VALUE is
+    // the Newton step -sum(grad)/(sum(hess)+ridge). The raw mean-of-gradient step (no hessian) could
+    // overshoot and DIVERGE for small p — the Newton step descends the deviance monotonically.
+    const grad = new Array<number>(usable.length);
+    const hess = new Array<number>(usable.length);
+    const pseudo = new Array<number>(usable.length);
+    for (let i = 0; i < usable.length; i++) {
+      const fc = clampLogLink(current[i]!);
+      const a = Math.exp((2 - power) * fc);
+      const b = y[i]! * Math.exp((1 - power) * fc);
+      grad[i] = a - b;
+      hess[i] = (2 - power) * a + (power - 1) * b;
+      pseudo[i] = -grad[i]!;
+    }
+
+    let bestFeature: string | null = null;
+    let bestThreshold = 0;
     let bestLoss = Number.POSITIVE_INFINITY;
     for (const featureId of featureIds) {
       const values = usable.map((sample) => featureValue(sample, featureId));
       for (const threshold of candidateThresholds(values)) {
-        const left = pseudo.filter((_, index) => values[index]! <= threshold);
-        const right = pseudo.filter((_, index) => values[index]! > threshold);
-        if (left.length === 0 || right.length === 0) continue;
-        const leftMean = left.reduce((sum, value) => sum + value, 0) / left.length;
-        const rightMean = right.reduce((sum, value) => sum + value, 0) / right.length;
-        // Split selection = best squared-error fit to the Tweedie negative gradient (standard GBM).
-        const loss = pseudo.reduce((sum, residual, index) => {
-          const adjustment = values[index]! <= threshold ? leftMean : rightMean;
-          return sum + (residual - adjustment) ** 2;
-        }, 0);
-        if (loss < bestLoss) {
-          bestLoss = loss;
-          best = {
-            featureId,
-            threshold,
-            leftAdjustment: learningRate * leftMean,
-            rightAdjustment: learningRate * rightMean,
-          };
+        let lN = 0, rN = 0, lSum = 0, rSum = 0;
+        for (let i = 0; i < values.length; i++) {
+          if (values[i]! <= threshold) { lN++; lSum += pseudo[i]!; } else { rN++; rSum += pseudo[i]!; }
         }
+        if (lN === 0 || rN === 0) continue;
+        const leftMean = lSum / lN;
+        const rightMean = rSum / rN;
+        let loss = 0;
+        for (let i = 0; i < values.length; i++) {
+          const adjustment = values[i]! <= threshold ? leftMean : rightMean;
+          loss += (pseudo[i]! - adjustment) ** 2;
+        }
+        if (loss < bestLoss) { bestLoss = loss; bestFeature = featureId; bestThreshold = threshold; }
       }
     }
-    if (!best) break;
-    stumps.push(best);
-    const stump = best;
-    usable.forEach((sample, index) => {
+    if (bestFeature === null) break;
+
+    // Newton leaves for the chosen split (descends the Tweedie deviance, ridge-stabilized).
+    let gL = 0, hL = 0, gR = 0, hR = 0;
+    for (let i = 0; i < usable.length; i++) {
+      if (featureValue(usable[i]!, bestFeature) <= bestThreshold) { gL += grad[i]!; hL += hess[i]!; }
+      else { gR += grad[i]!; hR += hess[i]!; }
+    }
+    const stump: TweedieStump = {
+      featureId: bestFeature,
+      threshold: bestThreshold,
+      leftAdjustment: learningRate * (-gL / (hL + RIDGE)),
+      rightAdjustment: learningRate * (-gR / (hR + RIDGE)),
+    };
+    stumps.push(stump);
+    for (let i = 0; i < usable.length; i++) {
       const adjustment =
-        featureValue(sample, stump.featureId) <= stump.threshold
+        featureValue(usable[i]!, stump.featureId) <= stump.threshold
           ? stump.leftAdjustment
           : stump.rightAdjustment;
-      current[index] = clampLogLink((current[index] ?? intercept) + adjustment);
-    });
+      current[i] = clampLogLink((current[i] ?? intercept) + adjustment);
+    }
   }
 
   return {

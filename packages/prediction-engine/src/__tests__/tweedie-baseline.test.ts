@@ -63,6 +63,31 @@ describe("fitTweedieBaseline", () => {
       predictTweedieFantasyPoints(highP, { usage: 0.8 }),
     );
   });
+
+  it("descends the Tweedie deviance monotonically across rounds (anti-divergence) for p in {1.1,1.5,1.9}", () => {
+    const totalDeviance = (rounds: number, power: number): number => {
+      const model = fitTweedieBaseline(samples, {
+        clearedFeatureIds: ["usage", "market"], rounds, learningRate: 0.3, tweediePower: power,
+      });
+      return samples.reduce(
+        (sum, s) => sum + tweedieDeviance(s.actualFantasyPoints, predictTweedieFantasyPoints(model, s.features), power),
+        0,
+      );
+    };
+    for (const p of [1.1, 1.5, 1.9]) {
+      const d0 = totalDeviance(0, p);
+      const d2 = totalDeviance(2, p);
+      const d4 = totalDeviance(4, p);
+      const d8 = totalDeviance(8, p);
+      // Non-increasing round-over-round — the raw mean-of-gradient step (the bug) would diverge here
+      // for small p; the Newton step descends.
+      expect(d2).toBeLessThanOrEqual(d0 + 1e-6);
+      expect(d4).toBeLessThanOrEqual(d2 + 1e-6);
+      expect(d8).toBeLessThanOrEqual(d4 + 1e-6);
+      // And boosting genuinely helps over the intercept-only model.
+      expect(d8).toBeLessThan(d0);
+    }
+  });
 });
 
 describe("buildTemporalProjectionSplits", () => {

@@ -511,3 +511,43 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Live HTTP check is a standalone script (run periodically / pre-kickoff), NOT a unit test
   (would be flaky); the deterministic catalog assertions live in the gate to prevent regression.
 - BLOCKED-ON-HUMAN: optionally wire `guard:nflverse-currency` into a periodic cron / pre-deploy check.
+
+## 2026-06-24T21:09:36Z - (self-commit) - AUDIT1 — Tweedie GBM correctness: Newton (2nd-order) leaf
+
+- WHAT: An adversarial numerical review (multi-agent audit) found a real bug in this session's WO1
+  Tweedie boosting: the first-order mean-of-gradient leaf value on a log-link predictor can OVERSHOOT
+  and DIVERGE for small tweediePower (it does not provably descend the deviance). Replaced the leaf with
+  the Newton (second-order) step: per region, grad = e^{(2-p)F} - y e^{(1-p)F}, hess = (2-p)e^{(2-p)F}
+  + (p-1) y e^{(1-p)F} (>0), leaf = -sum(grad)/(sum(hess)+ridge). Split selection still fits the
+  negative-gradient pseudo-residuals by SSE. Also tightened the inner loops (no per-threshold array
+  allocation) — a ~3x backtest speedup (2023 single-season 42s -> 13s).
+- FILES: `packages/prediction-engine/src/tweedie-baseline.ts`, `packages/prediction-engine/src/__tests__/tweedie-baseline.test.ts`
+- GATE: prediction-engine Vitest green — 51 files / 519 tests, incl. a NEW regression test asserting the
+  total Tweedie deviance is NON-INCREASING round-over-round for p in {1.1,1.5,1.9} (this would have
+  caught the divergence the first-order step risked). trust/model-freeze/draft-only green.
+- HONEST RESULT: the Newton step is the correct implementation but it does NOT lower OOS MAE on this
+  weak baseline — 2023 OOS MAE went 4.87 (under-stepping first-order) -> 5.04 (correct Newton at the
+  fixed rounds=8/lr=0.2). Tweedie-deviance-optimal != MAE-optimal, and aggressive correct steps overfit
+  OOS at fixed hyperparameters. The model loses to naive (4.76) in BOTH variants — this fix is about
+  CORRECTNESS, not about winning. Proper lr/rounds/early-stopping tuning is part of the real ML work.
+- FLAG: priced=false / status=shadow unchanged; no gate/provider/pricing/model-version/schema change.
+- BLOCKED-ON-HUMAN: none for this fix.
+
+## 2026-06-24T21:09:36Z - (self-commit) - AUDIT2 — backtest becomes an honest ablation harness
+
+- WHAT: Turned the backtest into an experimentation tool and ran the first frontier feature experiment.
+  Added leakage-safe opponent defense-strength features (the week-W opponent's trailing points-allowed
+  to the player's position + overall + games-of-history; opponent's weeks < W only) as an OPT-IN
+  ablation (BACKTEST_OPP=1), off by default. Default seasons already 2021-2025. Prints the active feature
+  set. EMPIRICAL RESULT: opponent features are never selected by the greedy booster over trailing usage
+  (identical OOS MAE with/without) — i.e. they don't beat the trailing signal as built. Kept opt-in and
+  documented rather than piled into the default (more features != better).
+- FILES: `scripts/backtest/player-projection-backtest.ts`
+- GATE: driver runs clean under tsx on real 2023 data (base and +opp both 5.0437 OOS MAE vs naive 4.76).
+- HONEST FRONTIER VERDICT: across every variant tried (log1p, Tweedie first-order, Tweedie Newton, +/-
+  opponent), the projection does NOT beat naive points-persistence OOS. Beating naive is a genuine ML
+  research effort (regularization, early stopping, orthogonal/role features done carefully, proper CV),
+  not a one-session win. The harness now supports that work honestly (ablation + leakage-safe contract).
+- FLAG: research tool only; nothing priced/published; canPublishProjections untouched.
+- BLOCKED-ON-HUMAN: [DATA/MODEL] the real frontier build — earn the flip with a model that beats naive
+  AND the market, validated by the existing Clark-West purged/embargoed harness, before any publication.
