@@ -457,3 +457,20 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   because it spans 7 routes with mixed signatures (3 lack a `req` param) and `clientIp` is typed for
   `NextRequest` (routes use `Request`) — changes that need apps/web typecheck, which the Prisma CDN
   block prevents in this sandbox.
+
+## 2026-06-24T20:29:28Z - (deferred, not committed as code) - WO5 — shadow activation wiring
+
+- WHAT: The item "wire the LadderEvent reducer in shadow + surface divergence/parliament/uncertainty
+  readouts behind off-flags" is intentionally NOT implemented here. The pure reducer
+  (`packages/prediction-engine/src/ladder/reduce.ts` `reduceLadder` + `RUNG_REQUIREMENTS`) and the
+  heartbeat fan-out already exist and are TESTED in the package; what remains is an APP-level caller
+  plus observatory UI readouts — entirely apps/web wiring that imports Prisma and so cannot be
+  typechecked/built/tested in this sandbox (Prisma engine CDN is egress-blocked). It also has no app
+  callers today, which is the known B- "exported-only, not wired" gap.
+- DECISION: Per this session's rule "never ship a feature you can't verify," ungated app wiring is
+  DEFERRED rather than committed blind. Precise follow-up: add a shadow caller that runs `reduceLadder`
+  over the event log and LOGS its rung verdict vs. the authoritative env flags (no flag flip), and gate
+  the divergence/parliament/uncertainty observatory readouts behind their existing off-flags. Verify
+  under the full gate (typecheck + apps/web Vitest + build) in a Prisma-capable environment.
+- FLAG: nothing changed; shadow-only by design.
+- BLOCKED-ON-HUMAN: run in an environment with the Prisma client generated, then wire + verify.
