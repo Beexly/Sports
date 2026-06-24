@@ -324,7 +324,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: Stop after final commit/push; Claude/owner review and ratification.
 - BLOCKED-ON-HUMAN: merge/deploy, schema application, infra provisioning, real-data model promotion, pricing/publication flips, and any live money action remain `[OWNER]/[INFRA]/[DATA]/[SCHEMA]`.
 
-## 2026-06-24T17:22:14Z - pending self-commit - AUDIT
+## 2026-06-24T17:22:14Z - e72e420e - AUDIT
 
 - WHAT: Re-audited the completed branch against the full checklist, sensitive-gate constraints, representative core implementation surfaces, and final handoff provenance; added a durable audit artifact and resolved the prior FINAL row's self-commit placeholder.
 - FILES: `docs/INTELLIGENCE_CORE_AUDIT.md`, `docs/CLAUDE_HANDOFF.md`, `docs/EXECUTION_LEDGER.md`

@@ -43,7 +43,7 @@ Final gate result: repo `typecheck` passed; repo `lint` passed; full web Vitest 
 | F2 | `eb44b04b` | Coverage-map UI data |
 | F3 | `42b0c882` | Phase-0 cost-slice confirmation |
 | FINAL | `1f2e8dd4` | Final decisions and Claude handoff |
-| AUDIT | pending self-commit | Full branch recheck and provenance polish |
+| AUDIT | `e72e420e` | Full branch recheck and provenance polish |
 
 ## Safety Invariants
 
