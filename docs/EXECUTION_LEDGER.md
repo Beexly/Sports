@@ -343,3 +343,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Comment-only Tweedie change; conformal change is behaviour-preserving except widening small-sample intervals (verified by hand against both test suites before running, then confirmed green).
 - NEXT: stand up + run the real nflverse backtest.
 - BLOCKED-ON-HUMAN: unchanged `[OWNER]/[INFRA]/[DATA]/[SCHEMA]` set.
+
+## 2026-06-24T19:50:00Z - (self-commit) - KS2 — real nflverse player-projection backtest driver
+
+- WHAT: Re-created the runnable backtest driver (also lost from the prior unpushed session). `scripts/backtest/player-projection-backtest.ts` fetches real nflverse weekly player stats, engineers leakage-safe trailing-usage features (week W uses strictly weeks < W, per player-season), builds `TweedieProjectionSample[]` with a NAIVE points-persistence baseline, and runs the engine's EXISTING purged+embargoed walk-forward + Clark-West harness (`runTweedieBaselineBacktest`). No new modeling logic. Added `scripts/backtest/README.md` documenting honest scope.
+- FILES: `scripts/backtest/player-projection-backtest.ts`, `scripts/backtest/README.md`, `docs/EXECUTION_LEDGER.md`
+- GATE: driver compiles + runs under `tsx`; EXECUTED against real nflverse data in this sandbox (network reachable). RESULT — 2023 single-season: 3796 samples, 2955 OOS, model MAE 4.9928 vs naive MAE 4.7573 → beats NAIVE = FALSE (Clark-West t=4.40 but model MAE is HIGHER, so the gate correctly withholds). 2021–2023 full run was launched (11,164 samples built) and is recorded in the handoff once complete. trust/model-freeze/draft-only green.
+- FLAG: read-only analysis tool; nothing priced/published; does not touch `canPublishProjections`. Output is a console report only.
+- DECISIONS: HONEST SCOPE — this tests "model vs naive points-persistence on real games" (the correct first question), NOT "beats the Vegas market" (needs historical player props, a [DATA] follow-up). The first real number says the boosted-log1p baseline does NOT beat naive persistence OOS on 2023 — i.e. iterate the model, do not publish.
+- NEXT: work order — Tweedie labeling, yard coherence, endpoint gating, env docs, shadow wiring.
+- BLOCKED-ON-HUMAN: unchanged; plus [DATA] historical player-prop lines for a true market-beat test.
