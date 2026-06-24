@@ -22,6 +22,7 @@ This file records reversible choices and human-gated actions surfaced by the GSE
 | Keep C6 copula coefficients fixed and shadow-only | Codex | chosen | The first Gaussian-copula slice proves consumption by best-ball and Parlay MRI while avoiding learned coefficients, pricing changes, or betting recommendations without out-of-sample evidence. | `[DATA]/[OWNER]` Learn and approve sport/market-specific correlations before any priced use. |
 | Keep C1 regression/breakout as a receiving-opportunity readout | Codex | chosen | xCatch/xTD deltas explain process pressure behind buy-low/sell-high signals without changing projections, pricing, or pick generation. | `[DATA]/[OWNER]` Learn process coefficients and approve any projection/public consumption only after out-of-sample validation. |
 | Keep C2 role migration prior-smoothed and contextual | Codex | chosen | The Markov role-state matrix and vacated-touch redistribution explain where opportunity can flow, but sparse transitions are shrunk and not used as projection weights. | `[DATA]/[OWNER]` Learn transition priors from full historical data and approve any projection/public consumption only after out-of-sample validation. |
+| Keep C3 game-script as a shadow market-derived scaffold | Codex | chosen | Vegas win-probability path and pass/run/pace mappings explain game environment without becoming projection weights. | `[DATA]/[OWNER]` Learn coefficients and approve any projection/public consumption only after out-of-sample validation. |
 
 ## Standing Human Gates
 

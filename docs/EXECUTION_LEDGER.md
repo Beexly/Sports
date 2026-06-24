@@ -18,7 +18,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] C6 - Correlation/copula layer for best-ball/parlay consumption.
 - [x] C1 - Regression/breakout engine.
 - [x] C2 - Opportunity and role-migration engine.
-- [ ] C3 - Game-script engine.
+- [x] C3 - Game-script engine.
 - [ ] C4 - Availability/return and role-tenure engine.
 - [ ] C5 - Unified divergence layer.
 - [ ] D1 - Cross-market triangulation through player props.
@@ -164,7 +164,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: C2 opportunity and role-migration engine with Markov role states, shrunk transitions, and vacated-touch redistribution.
 - BLOCKED-ON-HUMAN: learned process coefficients, promotion into projections, and public/priced consumption remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T02:27:41Z - pending commit - C2
+## 2026-06-24T02:27:41Z - 305776e9 - C2
 
 - WHAT: Extended opportunity-transfer with Markov role states, smoothed role-transition probabilities, and vacated target/carry redistribution across next-men-up while conserving vacated usage.
 - FILES: `apps/web/lib/intelligence/opportunity-transfer.ts`, `apps/web/lib/intelligence/opportunity-transfer.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -173,3 +173,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Use a prior-smoothed Markov transition matrix over weekly target/carry role states so sparse role moves are shrunk rather than overfit; redistribute vacated usage as explanatory context only.
 - NEXT: C3 game-script engine from Vegas win-probability path to pass/run rate, plays, and pace.
 - BLOCKED-ON-HUMAN: learned transition priors, promotion into projection weights, and any public/priced consumption remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T03:13:42Z - pending commit - C3
+
+- WHAT: Added a shadow game-script engine deriving a Vegas win-probability path from total/spread and mapping average script to pass/run rate, run rate, expected plays, and pace labels.
+- FILES: `packages/prediction-engine/src/game-script.ts`, `packages/prediction-engine/src/__tests__/game-script.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused game-script tests passed 5 tests; `@sports/prediction-engine` typecheck passed after a readonly-array fix; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false; no projection provider, `canPublishProjections`, pricing, model-version, betting, or publication gate changed.
+- DECISIONS: Use a spread-derived Vegas win-probability path and heuristic pass/run/pace assumptions as an explanatory scaffold until learned from historical data.
+- NEXT: C4 availability/return and role-tenure engine.
+- BLOCKED-ON-HUMAN: learned pass/run/pace coefficients, projection weighting, and any public/priced consumption remain `[DATA]/[OWNER]`.

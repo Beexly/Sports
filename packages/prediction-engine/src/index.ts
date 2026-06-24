@@ -217,6 +217,23 @@ export type {
   MarketAnchoredReconciliation,
 } from "./market-anchored-reconciliation.js";
 export {
+  DEFAULT_GAME_SCRIPT_ASSUMPTIONS,
+  buildVegasWinProbabilityPath,
+  projectGameScript,
+} from "./game-script.js";
+export type {
+  GameScriptSide,
+  GameScriptCheckpoint,
+  PaceLabel,
+  ScriptLabel,
+  GameScriptAssumptions,
+  TeamScriptInput,
+  GameScriptInput,
+  WinProbabilityPathPoint,
+  TeamGameScriptProjection,
+  GameScriptProjection,
+} from "./game-script.js";
+export {
   tweedieDeviance,
   fitTweedieBaseline,
   predictTweedieFantasyPoints,
