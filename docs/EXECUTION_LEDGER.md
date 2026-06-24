@@ -20,7 +20,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] C2 - Opportunity and role-migration engine.
 - [x] C3 - Game-script engine.
 - [x] C4 - Availability/return and role-tenure engine.
-- [ ] C5 - Unified divergence layer.
+- [x] C5 - Unified divergence layer.
 - [ ] D1 - Cross-market triangulation through player props.
 - [ ] D2 - Options-style distribution outputs.
 - [ ] D3 - Model-parliament public CRPS leaderboard feed, flagged.
@@ -184,7 +184,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: C4 availability/return and role-tenure engine.
 - BLOCKED-ON-HUMAN: learned pass/run/pace coefficients, projection weighting, and any public/priced consumption remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T03:24:49Z - pending commit - C4
+## 2026-06-24T03:24:49Z - 005a4325 - C4
 
 - WHAT: Added a pure shadow availability/return and role-tenure engine with Kaplan-Meier return curves, Cox-style discrete-time hazard multipliers, P(active), expected snap share, and role half-life outputs.
 - FILES: `packages/prediction-engine/src/availability-role-tenure.ts`, `packages/prediction-engine/src/__tests__/availability-role-tenure.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -193,3 +193,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Keep return/spell survival, practice multipliers, and role half-life as explainable scaffolds until historical availability and snap data tune coefficients out of sample.
 - NEXT: C5 unified divergence layer.
 - BLOCKED-ON-HUMAN: learned hazard coefficients, injury/feed source rights, projection weighting, and any public/priced consumption remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T03:40:28Z - pending commit - C5
+
+- WHAT: Added a unified shadow divergence layer that normalizes B3 market-anchor, C1 regression/breakout, C2 role-migration, C3 game-script, and C4 availability/tenure readouts into standardized signals routed to betting-candidate-shadow, fantasy buy-low/sell-high, and content-draft queues.
+- FILES: `apps/web/lib/intelligence/divergence.ts`, `apps/web/lib/intelligence/divergence.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused divergence tests passed 5 tests; web app typecheck passed after fixing a test fixture shape; C5 module measured 239 LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false / draft-only; no betting, projection provider, `canPublishProjections`, pricing, model-version, publication, or content-send gate changed.
+- DECISIONS: Make divergence the cross-source signal spine while keeping all downstream routes explicit shadow queues rather than live picks or published claims.
+- NEXT: D1 cross-market triangulation through player props.
+- BLOCKED-ON-HUMAN: learned source weights, betting consumption, public content use, and any priced/public routing remain `[DATA]/[OWNER]`.
