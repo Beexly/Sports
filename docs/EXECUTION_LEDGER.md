@@ -11,7 +11,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] B1 - Feature-store interface over metrics plus coverage-map row per metric and persistence seam.
 - [x] B2 - Player-rate shrinkage layer with empirical Bayes posteriors and published weights.
 - [x] B3 - Market-anchored team yards/TD reconciliation with derived fantasy points.
-- [ ] BT - Tweedie baseline projection, ACI intervals, Clark-West harness scoring.
+- [x] BT - Tweedie baseline projection, ACI intervals, Clark-West harness scoring.
 - [ ] B4 - Earned-weight ensemble with bounded loss and Clark-West gates.
 - [ ] B5 - Adaptive Conformal Inference, Mondrian by position, rolling recalibration.
 - [ ] B6 - Self-publishing calibration harness and publish-criteria definition only.
@@ -94,7 +94,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: B3 market-anchored reconciliation conserving team yards and TDs with derived fantasy points.
 - BLOCKED-ON-HUMAN: per-position/per-metric k tuning and any priced/public projection promotion remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T00:33:21Z - pending commit - B3
+## 2026-06-24T00:33:21Z - 52c39ecd - B3
 
 - WHAT: Added market-anchored reconciliation that decomposes total/spread into team point, yard, and touchdown anchors; allocates team yards and TDs by softmax usage-efficiency posteriors; derives fantasy points after physical-unit conservation; and emits player divergence.
 - FILES: `packages/prediction-engine/src/market-anchored-reconciliation.ts`, `packages/prediction-engine/src/__tests__/market-anchored-reconciliation.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -103,3 +103,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: B3 conserves team-level yards and TDs first, with fantasy points derived afterward; pass/rush/receiving splits remain downstream inputs for C3/C5 rather than a reason to delay the corrected physical-unit invariant.
 - NEXT: BT Tweedie baseline projection, flagged/shadow with ACI intervals and Clark-West scoring hook.
 - BLOCKED-ON-HUMAN: fitting historical points-to-yards/TD conversion coefficients and promoting any derived projections remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T00:52:42Z - pending commit - BT
+
+- WHAT: Added a shadow Tweedie-family projection baseline scaffold with cleared-feature boosted stumps, non-negative Tweedie deviance scoring, ACI interval generation, purged/embargoed temporal splits, and Clark-West market-baseline comparison.
+- FILES: `packages/prediction-engine/src/tweedie-baseline.ts`, `packages/prediction-engine/src/tweedie-aci.ts`, `packages/prediction-engine/src/projection-evaluation.ts`, `packages/prediction-engine/src/__tests__/tweedie-baseline.test.ts`, `packages/prediction-engine/src/index.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused Tweedie tests passed 6 tests; new TS/test files measured under 250 lines each; repo `typecheck` passed after strict index-access fixes; repo `lint` passed; exact web Vitest passed after rerunning with a longer tool timeout; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false; Clark-West `beatsMarket` requires at least 30 out-of-sample samples, positive adjusted mean, t-statistic > 1.64, and model MAE below market MAE before any future promotion can be considered.
+- DECISIONS: Keep the Tweedie baseline as a pure boosted-stump scaffold over explicitly cleared features until E1-backed data supplies enough out-of-sample evidence; export Clark-West as a shared evaluator for B4 rather than burying it in the Tweedie module.
+- NEXT: B4 earned-weight ensemble with bounded loss and must-beat equal-weight plus market-only gates.
+- BLOCKED-ON-HUMAN: real nflverse/player-feature training data, estimator promotion, public projection use, and pricing remain `[DATA]/[OWNER]`.

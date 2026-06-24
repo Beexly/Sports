@@ -216,6 +216,28 @@ export type {
   MarketAnchorConservationCheck,
   MarketAnchoredReconciliation,
 } from "./market-anchored-reconciliation.js";
+export {
+  tweedieDeviance,
+  fitTweedieBaseline,
+  predictTweedieFantasyPoints,
+  buildTemporalProjectionSplits,
+  clarkWestTest,
+  runTweedieBaselineBacktest,
+  adaptiveConformalIntervals,
+} from "./tweedie-baseline.js";
+export type {
+  TweedieProjectionSample,
+  TweedieBaselineOptions,
+  TweedieStump,
+  TweedieBaselineModel,
+  TemporalProjectionSplit,
+  ProjectionSplitOptions,
+  ClarkWestSample,
+  ClarkWestReport,
+  TweedieBacktestReport,
+  AciObservation,
+  AciInterval,
+} from "./tweedie-baseline.js";
 
 // Elo independent-model backtest: results-only win probabilities, calibrated and
 // comparable to the market baseline. Measurement only; not wired into scoring.
