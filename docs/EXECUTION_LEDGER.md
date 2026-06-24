@@ -26,7 +26,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] D3 - Model-parliament public CRPS leaderboard feed, flagged.
 - [x] D4 - Replayable-provenance endpoint, flagged.
 - [x] D5 - Community calibration-tournament scaffold, draft-only-safe.
-- [ ] D6 - Active-learning uncertainty map.
+- [x] D6 - Active-learning uncertainty map.
 - [ ] E2 - Scoring-rule and reliability-diagram reporting.
 - [ ] E3 - Pipeline trace id, degradations, and Board-health badge.
 - [ ] F1 - Persist-what-we-fetch serving-table/interface seam.
@@ -244,7 +244,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: D5 community calibration-tournament scaffold, draft-only-safe.
 - BLOCKED-ON-HUMAN: public endpoint enablement, source hash-chain persistence, and any public calibration claim remain `[DATA]/[OWNER]/[INFRA]`.
 
-## 2026-06-24T07:45:04Z - pending commit - D5
+## 2026-06-24T07:45:04Z - d1aea679 - D5
 
 - WHAT: Added a draft-only community calibration-tournament scaffold that accepts pre-lock probability submissions, rejects late/pending/invalid rows, scores with bounded Brier/log-loss, maps forecasts through the calibration harness, and ranks a review-only leaderboard.
 - FILES: `apps/web/lib/tournament/calibration-tournament.ts`, `apps/web/lib/tournament/calibration-tournament.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -253,3 +253,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Score community forecasts only when submitted before lock and settled; keep ranking review-only and recognition impossible in code until owner/data approval.
 - NEXT: D6 active-learning uncertainty map.
 - BLOCKED-ON-HUMAN: participant identity, abuse controls, durable submission storage, recognition/public display, and any prize or account flow remain `[OWNER]/[INFRA]/[DATA]`.
+
+## 2026-06-24T07:54:26Z - pending commit - D6
+
+- WHAT: Added a shadow active-learning uncertainty map that ranks segments by mean absolute error, interval under-coverage, interval width, miss rate, and review priority score.
+- FILES: `apps/web/lib/metrics/uncertainty-map.ts`, `apps/web/lib/metrics/uncertainty-map.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused uncertainty-map tests passed 3 tests; web app typecheck passed; D6 module measured 180 LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / draft-only / `priced=false`; no active-learning automation, retraining, projection provider, `canPublishProjections`, pricing, model-version, publication, or public display gate changed.
+- DECISIONS: Rank segments for data/model review only; never let high uncertainty automatically widen intervals, retrain models, or alter projection weights.
+- NEXT: E2 scoring-rule and reliability-diagram reporting wired to gated public observatory data.
+- BLOCKED-ON-HUMAN: durable segment store, review workflow ownership, learned thresholds, and any retraining/promotion remain `[DATA]/[OWNER]/[INFRA]`.
