@@ -30,7 +30,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] E2 - Scoring-rule and reliability-diagram reporting.
 - [x] E3 - Pipeline trace id, degradations, and Board-health badge.
 - [x] F1 - Persist-what-we-fetch serving-table/interface seam.
-- [ ] F2 - Coverage-map UI data.
+- [x] F2 - Coverage-map UI data.
 - [ ] F3 - Phase-0 cost-slice confirmation and ledger.
 - [ ] FINAL - Decisions file and Claude handoff.
 
@@ -284,7 +284,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: F1 persist-what-we-fetch serving-table/interface seam.
 - BLOCKED-ON-HUMAN: durable trace storage, alert routing, SLA thresholds, and any public status claims beyond per-request board metadata remain `[INFRA]/[OWNER]`.
 
-## 2026-06-24T16:09:06Z - pending commit - F1
+## 2026-06-24T16:09:06Z - 0b1c8317 - F1
 
 - WHAT: Added a code-only persist-what-we-fetch serving-table seam with deterministic SHA-256 payload hashes, R2 object keys, latest-serving rows, TTL freshness status, and an injected R2/DuckDB persistence interface.
 - FILES: `apps/web/lib/data-sources/fetch-serving-table.ts`, `apps/web/lib/data-sources/fetch-serving-table.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -293,3 +293,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Use `hash-only` as the default storage mode and derive latest-serving rows from immutable snapshot metadata until infrastructure explicitly provisions `R2_FETCH_ARCHIVE` and `fetch_store.*`.
 - NEXT: F2 coverage-map UI data.
 - BLOCKED-ON-HUMAN: provisioning `R2_FETCH_ARCHIVE`, DuckDB `fetch_store.source_snapshots` / `fetch_store.latest_by_source`, retention policy, and any runtime writer remain `[INFRA]/[OWNER]`.
+
+## 2026-06-24T16:22:43Z - pending commit - F2
+
+- WHAT: Added clearance-gated coverage-map UI data for "stats we have that closed-box products do not show" and surfaced it on `/intelligence/metrics` with cleared/tier/source/withheld counts, competitor-gap framing, transparent-equivalent framing, attribution, and `priced=false`.
+- FILES: `apps/web/lib/metrics/coverage-map.ts`, `apps/web/lib/metrics/coverage-map.test.ts`, `apps/web/app/intelligence/metrics/page.tsx`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused coverage-map tests passed 6 tests after red test confirmed missing builder; touched files measured 437 total LOC with max file 206 pure LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed; built-app smoke confirmed `/intelligence/metrics` renders the coverage-map headline and `priced=false`.
+- FLAG: clearance-gated / `priced=false`; no source-rights gate, projection provider, `canPublishProjections`, pricing, model-version, public performance gate, publication flag, or data-ingestion runtime changed.
+- DECISIONS: Derive the UI contract only from `coverageMapRows()` so public coverage claims fail closed with the same clearance engine as B1.
+- NEXT: F3 phase-0 cost-slice confirmation and ledger.
+- BLOCKED-ON-HUMAN: adding more coverage rows requires source-rights review, metric validation, and owner approval for any public claim beyond cleared derived rows.

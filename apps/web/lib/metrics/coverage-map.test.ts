@@ -3,6 +3,7 @@ import {
   METRIC_COVERAGE,
   metricClearance,
   clearedMetrics,
+  coverageMapUiData,
   coverageMapRows,
   type MetricCoverageEntry,
 } from "./coverage-map";
@@ -33,9 +34,9 @@ describe("metrics coverage map — clearance-gated", () => {
   it("opponent-adjusted EPA is registered as the first Tier-1 metric on nflverse", () => {
     const epa = METRIC_COVERAGE.find((m) => m.id === "opponent-adjusted-epa");
     expect(epa).toBeDefined();
-    expect(epa!.tier).toBe(1);
-    expect(epa!.sourceId).toBe("nflverse");
-    expect(epa!.attribution).toContain("nflverse");
+    expect(epa?.tier).toBe(1);
+    expect(epa?.sourceId).toBe("nflverse");
+    expect(epa?.attribution).toContain("nflverse");
   });
 
   it("clearedMetrics surfaces only cleared rows (fail-closed)", () => {
@@ -66,5 +67,23 @@ describe("metrics coverage map — clearance-gated", () => {
       expect(row.weCompute.length).toBeGreaterThan(0);
       expect(row.attribution.length).toBeGreaterThan(0);
     }
+  });
+
+  it("builds UI-ready coverage data from cleared metrics only", () => {
+    const withUncleared = [...METRIC_COVERAGE, UNCLEARED_METRIC];
+    const data = coverageMapUiData(new Date("2026-06-24T16:40:00.000Z"), withUncleared);
+
+    expect(data.headline).toContain("Stats we have");
+    expect(data.generatedAt).toBe("2026-06-24T16:40:00.000Z");
+    expect(data.summary.clearedRows).toBe(METRIC_COVERAGE.length);
+    expect(data.summary.withheldRows).toBe(1);
+    expect(data.summary.priced).toBe(false);
+    expect(data.rows.some((row) => row.id === "synthetic-uncleared")).toBe(false);
+    expect(data.rows[0]).toMatchObject({
+      claimStatus: "cleared",
+      id: "opponent-adjusted-epa",
+      priced: false,
+      sourceId: "nflverse",
+    });
   });
 });

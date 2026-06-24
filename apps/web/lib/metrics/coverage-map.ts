@@ -110,11 +110,66 @@ export function metricCoverageById(
 }
 
 export interface CoverageMapRow {
+  readonly id: string;
   readonly metric: string;
   readonly tier: MetricTier;
+  readonly sourceId: string;
   readonly theyWithhold: string;
   readonly weCompute: string;
   readonly attribution: string;
+}
+
+export type CoverageMapUiRow = {
+  readonly id: string;
+  readonly metric: string;
+  readonly tier: MetricTier;
+  readonly tierLabel: string;
+  readonly sourceId: string;
+  readonly claimStatus: "cleared";
+  readonly competitorGap: string;
+  readonly transparentEquivalent: string;
+  readonly attribution: string;
+  readonly priced: false;
+};
+
+export type CoverageMapUiData = {
+  readonly headline: "Stats we have that closed-box products do not show";
+  readonly generatedAt: string;
+  readonly summary: {
+    readonly clearedRows: number;
+    readonly withheldRows: number;
+    readonly tierOneRows: number;
+    readonly sourceCount: number;
+    readonly priced: false;
+  };
+  readonly rows: readonly CoverageMapUiRow[];
+};
+
+class UnexpectedMetricTierError extends Error {
+  readonly name = "UnexpectedMetricTierError";
+
+  constructor(readonly tier: never) {
+    super(`Unexpected metric tier: ${tier}`);
+  }
+}
+
+function assertNeverMetricTier(tier: never): never {
+  throw new UnexpectedMetricTierError(tier);
+}
+
+function tierLabel(tier: MetricTier): string {
+  switch (tier) {
+    case 1:
+      return "Tier 1: open play-by-play derived";
+    case 2:
+      return "Tier 2: cleared public aggregate";
+    case 3:
+      return "Tier 3: attribution-segregated input";
+    case 4:
+      return "Tier 4: transparent proxy only";
+    default:
+      return assertNeverMetricTier(tier);
+  }
 }
 
 /**
@@ -126,10 +181,45 @@ export function coverageMapRows(
   metrics: readonly MetricCoverageEntry[] = METRIC_COVERAGE,
 ): readonly CoverageMapRow[] {
   return clearedMetrics(now, metrics).map((m) => ({
+    id: m.id,
     metric: m.shortLabel,
+    sourceId: m.sourceId,
     tier: m.tier,
     theyWithhold: m.theyWithhold,
     weCompute: m.weCompute,
     attribution: m.attribution,
   }));
+}
+
+export function coverageMapUiData(
+  now = new Date(),
+  metrics: readonly MetricCoverageEntry[] = METRIC_COVERAGE,
+): CoverageMapUiData {
+  const rows: readonly CoverageMapUiRow[] = coverageMapRows(now, metrics).map((row) => ({
+    attribution: row.attribution,
+    claimStatus: "cleared",
+    competitorGap: row.theyWithhold,
+    id: row.id,
+    metric: row.metric,
+    priced: false,
+    sourceId: row.sourceId,
+    tier: row.tier,
+    tierLabel: tierLabel(row.tier),
+    transparentEquivalent: row.weCompute,
+  }));
+  const withheldRows = metrics.length - rows.length;
+  const sources = new Set(rows.map((row) => row.sourceId));
+
+  return {
+    generatedAt: now.toISOString(),
+    headline: "Stats we have that closed-box products do not show",
+    rows,
+    summary: {
+      clearedRows: rows.length,
+      priced: false,
+      sourceCount: sources.size,
+      tierOneRows: rows.filter((row) => row.tier === 1).length,
+      withheldRows,
+    },
+  };
 }
