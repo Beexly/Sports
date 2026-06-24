@@ -23,7 +23,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] C5 - Unified divergence layer.
 - [x] D1 - Cross-market triangulation through player props.
 - [x] D2 - Options-style distribution outputs.
-- [ ] D3 - Model-parliament public CRPS leaderboard feed, flagged.
+- [x] D3 - Model-parliament public CRPS leaderboard feed, flagged.
 - [ ] D4 - Replayable-provenance endpoint, flagged.
 - [ ] D5 - Community calibration-tournament scaffold, draft-only-safe.
 - [ ] D6 - Active-learning uncertainty map.
@@ -214,7 +214,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: D2 options-style distribution outputs for floor/ceiling/spike/bust readouts.
 - BLOCKED-ON-HUMAN: live player-prop source rights, fair-value derivation, learned residual thresholds, and any priced/public routing remain `[DATA]/[OWNER]`.
 
-## 2026-06-24T04:01:05Z - pending commit - D2
+## 2026-06-24T04:01:05Z - 9dc2bfac - D2
 
 - WHAT: Added options-style projection distribution outputs with floor, ceiling, spike probability, bust risk, convexity score, posterior weight, and conformal interval provenance; surfaced the distribution board in best-ball evaluation without changing recommendations.
 - FILES: `apps/web/lib/projections/distribution.ts`, `apps/web/lib/projections/distribution.test.ts`, `apps/web/lib/fantasy/bestball.ts`, `apps/web/lib/fantasy/bestball.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -223,3 +223,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Use conformal intervals for distribution bounds when present, posterior variance as an uncertainty floor, and existing best-ball bands only as a labeled fallback.
 - NEXT: D3 model-parliament CRPS leaderboard feed, flagged.
 - BLOCKED-ON-HUMAN: real posterior/conformal feed wiring, learned spike/bust thresholds, and any public/priced display remain `[DATA]/[OWNER]`.
+
+## 2026-06-24T04:10:44Z - pending commit - D3
+
+- WHAT: Added a flagged model-parliament CRPS leaderboard feed that ranks internal projection models by pre-game-committed settled CRPS, reports MAE and market CRPS edge, prepares public-safe rows, and keeps the public feed disabled.
+- FILES: `apps/web/lib/calibration/model-parliament.ts`, `apps/web/lib/calibration/model-parliament.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused model-parliament tests passed 3 tests; web app typecheck passed; D3 module measured 212 LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: shadow / priced=false / draft-only / public feed `FLAGGED_OFF`; no projection provider, `canPublishProjections`, pricing, model-version, public publication, or model-weight gate changed.
+- DECISIONS: Score only settled rows that were committed before settlement; rank by lower CRPS and expose market CRPS edge only when market baselines are supplied.
+- NEXT: D4 replayable-provenance endpoint from the hash chain.
+- BLOCKED-ON-HUMAN: real model output registry, sample-size approval, public feed enablement, and any model promotion remain `[DATA]/[OWNER]/[INFRA]`.
