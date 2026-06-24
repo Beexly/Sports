@@ -363,3 +363,7 @@ Validation:
 - `NODE_OPTIONS=--use-system-ca npm run guard:model-freeze`
 - `NODE_OPTIONS=--use-system-ca npm run guard:draft-only`
 - Changed-file risk scan and `git diff --check` both clean.
+
+Follow-up visibility artifact:
+
+- Added `docs/ops/SESSION_WIDE_WORKTREE_AUDIT_2026-06-24.md` so Claude can see the complete session state across all touched worktrees, including the unrelated dirty files that remain outside the verified commits.
