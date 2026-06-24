@@ -160,7 +160,7 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
             })}
             {!canUseFantasyFull && board.length > FREE_BOARD_DEPTH && (
               <p className="border-t px-4 py-3 text-center text-xs text-ink-400" style={{ borderColor: BRAND_COLORS.steelGray }}>
-                Top {FREE_BOARD_DEPTH} of {board.length} shown — the full board is in the Fantasy suite.
+                Top {FREE_BOARD_DEPTH} shown — the full board is in the Fantasy suite.
               </p>
             )}
           </div>
