@@ -383,7 +383,52 @@ export async function fetchNflverseText(key: NflverseDatasetKey, season: number,
   return decodeDatasetText(res);
 }
 
+// The legacy combined `player_stats/player_stats.csv.gz` lags the newest season(s): nflverse ships
+// the latest weekly offensive stats only as per-season `stats_player/stats_player_week_<season>.csv`
+// after the 2024 rename. To stay current through the requested season we merge those per-season files
+// in (offensive REG/POST rows only, matching the combined file's scope). Best-effort by design: a
+// per-season file that is missing/unreachable is skipped, so the result is never worse than the
+// combined asset alone.
+const PLAYER_STATS_OFFENSE_POSITIONS = new Set(["QB", "RB", "WR", "TE", "FB"]);
+
+function maxSeasonIn(table: CsvTable): number {
+  let max = 0;
+  for (const row of table.records) {
+    const value = Number(row["season"]);
+    if (Number.isFinite(value) && value > max) max = value;
+  }
+  return max;
+}
+
+async function fetchPerSeasonPlayerStatsWeek(season: number): Promise<CsvTable | null> {
+  const url = `${NFLVERSE_BASE}/stats_player/stats_player_week_${season}.csv`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const table = parseCsv(await decodeDatasetText(res));
+    const records = table.records.filter((row) => {
+      const position = (row["position"] ?? "").toUpperCase();
+      const seasonType = (row["season_type"] ?? "REG").toUpperCase();
+      return PLAYER_STATS_OFFENSE_POSITIONS.has(position) && (seasonType === "REG" || seasonType.startsWith("POST"));
+    });
+    return { header: table.header, records };
+  } catch {
+    return null;
+  }
+}
+
 /** Fetch + parse a dataset asset into row records. */
 export async function fetchNflverse(key: NflverseDatasetKey, season: number, variant?: string): Promise<CsvTable> {
-  return parseCsv(await fetchNflverseText(key, season, variant));
+  const table = parseCsv(await fetchNflverseText(key, season, variant));
+  if (key !== "player_stats_week" || !Number.isFinite(season)) return table;
+
+  const covered = maxSeasonIn(table);
+  if (season <= covered) return table;
+
+  const records = [...table.records];
+  for (let extraSeason = covered + 1; extraSeason <= season; extraSeason++) {
+    const perSeason = await fetchPerSeasonPlayerStatsWeek(extraSeason);
+    if (perSeason && perSeason.records.length > 0) records.push(...perSeason.records);
+  }
+  return { header: table.header, records };
 }

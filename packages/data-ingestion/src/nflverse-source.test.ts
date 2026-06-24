@@ -1,7 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import {
   parseCsv,
   nflverseUrl,
+  fetchNflverse,
   NFLVERSE_CATALOG,
   NFLVERSE_BASE,
 } from "./nflverse-source";
@@ -128,5 +129,55 @@ describe("nflverse catalog integrity", () => {
     for (const key of ["pbp", "ngs", "snap_counts", "injuries", "pfr_advstats", "ftn_charting"]) {
       expect(NFLVERSE_CATALOG).toHaveProperty(key);
     }
+  });
+});
+
+describe("fetchNflverse player_stats_week currency merge", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  function textResponse(text: string, ok = true, status = 200) {
+    return { ok, status, arrayBuffer: async () => new TextEncoder().encode(text).buffer } as unknown as Response;
+  }
+
+  // Combined legacy asset covers through 2024 (offense only, REG).
+  const COMBINED = [
+    "player_id,position,season,week,season_type,fantasy_points_ppr",
+    "00-A,WR,2023,1,REG,12.3",
+    "00-A,WR,2024,1,REG,15.1",
+  ].join("\n");
+
+  // Per-season 2025 asset: an offensive REG row (keep), a defender (drop), a preseason row (drop).
+  const PER_SEASON_2025 = [
+    "player_id,position,season,week,season_type,fantasy_points_ppr",
+    "00-A,WR,2025,1,REG,18.7",
+    "99-D,DE,2025,1,REG,0",
+    "00-A,WR,2025,1,PRE,4.0",
+  ].join("\n");
+
+  it("merges the current per-season file when the combined asset lags (offense + REG/POST only)", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      if (url.includes("player_stats.csv.gz")) return textResponse(COMBINED);
+      if (url.includes("stats_player_week_2025.csv")) return textResponse(PER_SEASON_2025);
+      return textResponse("Not Found", false, 404);
+    }));
+
+    const table = await fetchNflverse("player_stats_week", 2025);
+    const seasons = table.records.map((r) => r["season"]);
+    expect(seasons).toContain("2025"); // current season merged in
+    expect(table.records.some((r) => r["position"] === "DE")).toBe(false); // defenders filtered
+    expect(table.records.filter((r) => r["season"] === "2025")).toHaveLength(1); // PRE row dropped
+  });
+
+  it("is best-effort: a missing per-season file leaves the combined data intact (no throw)", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      if (url.includes("player_stats.csv.gz")) return textResponse(COMBINED);
+      return textResponse("Not Found", false, 404); // per-season 2025 unavailable
+    }));
+
+    const table = await fetchNflverse("player_stats_week", 2025);
+    expect(table.records.some((r) => r["season"] === "2025")).toBe(false);
+    expect(table.records).toHaveLength(2); // unchanged combined coverage
   });
 });

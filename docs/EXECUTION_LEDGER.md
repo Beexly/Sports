@@ -393,3 +393,25 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   pulls the combined `player_stats.csv.gz` which nflverse has NOT yet populated with 2025; until then the
   DB-backed trend modules show 2024 as the latest season (graceful, not broken). Closing this needs a
   combined+per-season MERGE in `packages/data-ingestion` wired into the ingestion fetcher — addressed in DATA2.
+
+## 2026-06-24T20:19:48Z - (self-commit) - DATA2 — merge current per-season nflverse stats into the live path
+
+- WHAT: Centralized the 2025-currency fix inside `fetchNflverse("player_stats_week", season)` in the
+  data-ingestion package. After fetching the combined `player_stats.csv.gz` (upstream-frozen at 2024),
+  it now detects the max season covered and, for each season up to the requested one, merges in the
+  per-season `stats_player/stats_player_week_<s>.csv` asset — filtered to the combined file's scope
+  (offensive positions QB/RB/WR/TE/FB, REG/POST only). Best-effort: a missing/unreachable per-season
+  file is skipped, so the result is never worse than the combined asset alone. Because the LIVE
+  ingestion (`apps/web/lib/ingestion/player-stats.ts`) and the trend modules all call `fetchNflverse`
+  for this key, they now receive 2025 with NO apps/web edit.
+- FILES: `packages/data-ingestion/src/nflverse-source.ts`, `packages/data-ingestion/src/nflverse-source.test.ts`, `docs/EXECUTION_LEDGER.md`
+- GATE: data-ingestion Vitest green — 13 files / 103 tests, incl. 2 new tests (merge brings in the
+  current season filtered to offense+REG/POST; best-effort leaves combined data intact on a missing
+  per-season file). This package has no Prisma dependency, so it is fully runnable in this sandbox.
+- FLAG: read adapter only; no gate/provider/pricing/model/schema change; nothing priced/published.
+- DECISIONS: Kept the combined header to avoid surprising header-iterating consumers (records are
+  key-addressed, so per-season columns resolve by name). Filtered to offense+REG/POST to match the
+  combined file's scope and avoid polluting the DB with defenders/preseason rows.
+- NEXT: WO3 — gate the leaky readiness endpoints.
+- BLOCKED-ON-HUMAN: verify end-to-end where the apps/web build + Prisma client are available (this
+  sandbox blocks the Prisma engine CDN, so apps/web build/integration tests could not be run here).
