@@ -27,7 +27,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] D4 - Replayable-provenance endpoint, flagged.
 - [x] D5 - Community calibration-tournament scaffold, draft-only-safe.
 - [x] D6 - Active-learning uncertainty map.
-- [ ] E2 - Scoring-rule and reliability-diagram reporting.
+- [x] E2 - Scoring-rule and reliability-diagram reporting.
 - [ ] E3 - Pipeline trace id, degradations, and Board-health badge.
 - [ ] F1 - Persist-what-we-fetch serving-table/interface seam.
 - [ ] F2 - Coverage-map UI data.
@@ -254,7 +254,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: D6 active-learning uncertainty map.
 - BLOCKED-ON-HUMAN: participant identity, abuse controls, durable submission storage, recognition/public display, and any prize or account flow remain `[OWNER]/[INFRA]/[DATA]`.
 
-## 2026-06-24T07:54:26Z - pending commit - D6
+## 2026-06-24T07:54:26Z - d20e9b5c - D6
 
 - WHAT: Added a shadow active-learning uncertainty map that ranks segments by mean absolute error, interval under-coverage, interval width, miss rate, and review priority score.
 - FILES: `apps/web/lib/metrics/uncertainty-map.ts`, `apps/web/lib/metrics/uncertainty-map.test.ts`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -263,3 +263,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Rank segments for data/model review only; never let high uncertainty automatically widen intervals, retrain models, or alter projection weights.
 - NEXT: E2 scoring-rule and reliability-diagram reporting wired to gated public observatory data.
 - BLOCKED-ON-HUMAN: durable segment store, review workflow ownership, learned thresholds, and any retraining/promotion remain `[DATA]/[OWNER]/[INFRA]`.
+
+## 2026-06-24T15:41:11Z - pending commit - E2
+
+- WHAT: Added draft-only scoring-rule and reliability-diagram reporting over the gated public calibration report, with Brier score, expected calibration error, max gap, and observatory panel rendering honest collecting states.
+- FILES: `apps/web/lib/calibration/scoring-reliability.ts`, `apps/web/lib/calibration/scoring-reliability.test.ts`, `apps/web/components/observatory/scoring-reliability-panel.tsx`, `apps/web/app/observatory/page.tsx`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
+- GATE: focused scoring-reliability tests passed 2 tests; E2 files measured 247 total LOC; static diff/suppression checks passed; repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- FLAG: draft-only / `priced=false`; no projection provider, `canPublishProjections`, pricing, model-version, public performance gate, or publication flag changed.
+- DECISIONS: Wire the observatory panel only to `loadPublicCalibrationReport()` so public calibration remains gated and empty states stay explicit until settled canonical rows exist.
+- NEXT: E3 pipeline trace id, degradations, and Board-health badge.
+- BLOCKED-ON-HUMAN: public calibration gate enablement, minimum sample approval, and any performance/publishing claim remain `[DATA]/[OWNER]`.
