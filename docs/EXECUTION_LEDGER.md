@@ -32,7 +32,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - [x] F1 - Persist-what-we-fetch serving-table/interface seam.
 - [x] F2 - Coverage-map UI data.
 - [x] F3 - Phase-0 cost-slice confirmation and ledger.
-- [ ] FINAL - Decisions file and Claude handoff.
+- [x] FINAL - Decisions file and Claude handoff.
 
 ## 2026-06-23T21:46:09Z - 0c13254f - Slice 0
 
@@ -304,7 +304,7 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - NEXT: F3 phase-0 cost-slice confirmation and ledger.
 - BLOCKED-ON-HUMAN: adding more coverage rows requires source-rights review, metric validation, and owner approval for any public claim beyond cleared derived rows.
 
-## 2026-06-24T16:49:45Z - pending commit - F3
+## 2026-06-24T16:49:45Z - 42b0c882 - F3
 
 - WHAT: Confirmed shipped Phase-0 cost controls for deploy gating, source snapshot hash-only storage, and CDN/cache policy in a durable F3 artifact without changing runtime behavior.
 - FILES: `docs/PHASE0_COST_SLICES.md`, `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`
@@ -313,3 +313,13 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Treat Phase-0 cost posture as green only for the named code paths and tests; Vercel ignored-build wiring, broader CDN rollout, and storage retention policy remain human-owned.
 - NEXT: FINAL decisions file and Claude handoff.
 - BLOCKED-ON-HUMAN: Vercel ignored-build command wiring, source snapshot env overrides, storage pruning cadence, and broader CDN/edge cache rollout remain `[OWNER]/[INFRA]`.
+
+## 2026-06-24T17:00:09Z - pending commit - FINAL
+
+- WHAT: Wrote the final branch handoff packet for Claude and added final ratification decisions covering code-ready versus live-ready status, human gates, and post-branch operating ownership.
+- FILES: `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`, `docs/CLAUDE_HANDOFF.md`
+- GATE: repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed; manual handoff check confirmed branch state, final gate result, human gates, and next five Claude tasks are present.
+- FLAG: documentation/handoff only; no runtime feature flag, projection provider, pricing rung, model version, data source, credential, schema application, or production setting changed.
+- DECISIONS: Treat the branch as code-ready after the final gate, not live-ready; all owner, infra, data, schema, publication, and paid-provider actions remain explicitly gated.
+- NEXT: Stop after final commit/push; Claude/owner review and ratification.
+- BLOCKED-ON-HUMAN: merge/deploy, schema application, infra provisioning, real-data model promotion, pricing/publication flips, and any live money action remain `[OWNER]/[INFRA]/[DATA]/[SCHEMA]`.
