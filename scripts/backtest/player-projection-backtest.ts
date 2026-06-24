@@ -38,7 +38,12 @@ const SEASONS: number[] = (process.argv.slice(2).map(Number).filter(Number.isInt
 
 const SKILL_POSITIONS = new Set(["QB", "RB", "WR", "TE"]);
 const MIN_PRIOR_GAMES = 3; // need history before a player is eligible (trailing features exist)
-const CLEARED_FEATURE_IDS = [
+// Base trailing-usage feature set (the proven default). Opponent matchup features are an OPT-IN
+// ablation (set BACKTEST_OPP=1): an empirical experiment showed that adding them naively did NOT
+// beat naive persistence — it slightly hurt — so they are off by default until a more careful
+// treatment (regularization / proper feature selection) earns their place. The harness is thus an
+// honest ablation tool, not a feature-piling exercise.
+const BASE_FEATURE_IDS = [
   "trailingPoints",
   "trailingTargets",
   "trailingCarries",
@@ -46,7 +51,12 @@ const CLEARED_FEATURE_IDS = [
   "trailingRecYards",
   "trailingRushYards",
   "priorGames",
-] as const;
+];
+const OPP_FEATURE_IDS = ["oppAllowedToPos", "oppAllowedOverall", "oppGames"];
+const INCLUDE_OPP = process.env.BACKTEST_OPP === "1" || process.env.BACKTEST_OPP === "true";
+const CLEARED_FEATURE_IDS: readonly string[] = INCLUDE_OPP
+  ? [...BASE_FEATURE_IDS, ...OPP_FEATURE_IDS]
+  : BASE_FEATURE_IDS;
 
 // nflverse weekly player stats release asset patterns (tried in order).
 function candidateUrls(season: number): string[] {
@@ -112,7 +122,7 @@ function str(row: Record<string, string>, ...keys: string[]): string {
 }
 
 interface WeekRow {
-  playerId: string; season: number; week: number; position: string;
+  playerId: string; season: number; week: number; position: string; team: string; opponent: string;
   points: number; targets: number; carries: number; receptions: number; recYards: number; rushYards: number;
 }
 
@@ -127,6 +137,8 @@ function toWeekRow(r: Record<string, string>): WeekRow | null {
   if (seasonType && seasonType !== "REG") return null;
   return {
     playerId, season, week, position,
+    team: str(r, "recent_team", "team"),
+    opponent: str(r, "opponent_team", "opponent"),
     points: num(r, "fantasy_points_ppr", "fantasy_points"),
     targets: num(r, "targets"),
     carries: num(r, "carries", "rushing_attempts"),
@@ -140,6 +152,25 @@ function mean(xs: number[]): number { return xs.length === 0 ? 0 : xs.reduce((a,
 
 // Build leakage-safe samples: features for week W use ONLY weeks < W (same player, same season).
 function buildSamples(rows: WeekRow[]): TweedieProjectionSample[] {
+  // Opponent defense-strength tables (leakage-safe matchup signal): how many fantasy points each
+  // defense allowed, BY position and overall, per (season, week). The week-W opponent is known
+  // pre-game (legal); we only ever average the opponent's PRIOR weeks (< W) below.
+  const allowedByPos = new Map<string, number>(); // season|defense|pos|week -> pts allowed
+  const allowedTotal = new Map<string, number>(); // season|defense|week -> pts allowed (all skill)
+  for (const r of rows) {
+    if (!r.opponent) continue;
+    const kp = `${r.season}|${r.opponent}|${r.position}|${r.week}`;
+    const kt = `${r.season}|${r.opponent}|${r.week}`;
+    allowedByPos.set(kp, (allowedByPos.get(kp) ?? 0) + r.points);
+    allowedTotal.set(kt, (allowedTotal.get(kt) ?? 0) + r.points);
+  }
+  // Mean of a defense's prior-week allowances (strictly weeks < targetWeek, same season).
+  function oppTrailing(map: Map<string, number>, prefix: string, targetWeek: number): { mean: number; games: number } {
+    const vals: number[] = [];
+    for (let wk = 1; wk < targetWeek; wk++) { const v = map.get(`${prefix}|${wk}`); if (v !== undefined) vals.push(v); }
+    return { mean: mean(vals), games: vals.length };
+  }
+
   const byPlayerSeason = new Map<string, WeekRow[]>();
   for (const r of rows) {
     const key = `${r.playerId}-${r.season}`;
@@ -153,6 +184,9 @@ function buildSamples(rows: WeekRow[]): TweedieProjectionSample[] {
       const prior = weeks.slice(0, i);
       const w = weeks[i]!;
       const trailingPoints = mean(prior.map((p) => p.points)); // the NAIVE baseline
+      // Week-W opponent's trailing points allowed (matchup); 0 + games-count when no history yet.
+      const oppPos = oppTrailing(allowedByPos, `${w.season}|${w.opponent}|${w.position}`, w.week);
+      const oppAll = oppTrailing(allowedTotal, `${w.season}|${w.opponent}`, w.week);
       samples.push({
         sampleId: `${w.playerId}-${w.season}-W${w.week}`,
         season: w.season,
@@ -168,6 +202,10 @@ function buildSamples(rows: WeekRow[]): TweedieProjectionSample[] {
           trailingRecYards: mean(prior.map((p) => p.recYards)),
           trailingRushYards: mean(prior.map((p) => p.rushYards)),
           priorGames: prior.length,
+          // Opponent matchup (leakage-safe: opponent's weeks < W only)
+          oppAllowedToPos: oppPos.mean,
+          oppAllowedOverall: oppAll.mean,
+          oppGames: oppPos.games,
         },
       });
     }
@@ -176,7 +214,8 @@ function buildSamples(rows: WeekRow[]): TweedieProjectionSample[] {
 }
 
 async function main(): Promise<void> {
-  console.log(`\nGSE player-projection backtest — seasons ${SEASONS.join(", ")} (PPR)\n`);
+  console.log(`\nGSE player-projection backtest — seasons ${SEASONS.join(", ")} (PPR)`);
+  console.log(`features: ${INCLUDE_OPP ? "base + opponent matchup (ablation: BACKTEST_OPP=1)" : "base trailing-usage (default)"}\n`);
   const raw: WeekRow[] = [];
   for (const season of SEASONS) {
     const rows = await fetchSeason(season);
