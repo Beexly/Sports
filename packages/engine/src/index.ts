@@ -21,3 +21,8 @@ export * from "./galileo/incoherence-residual.js";
 export * from "./galileo/counterfactual-line-oracle.js";
 export * from "./galileo/edge-immune-system.js";
 export * from "./galileo/narrative-gravity.js";
+
+// Einstein Layer — Market Relativity & Belief Physics
+export * from "./einstein/observer-frame.js";
+export * from "./einstein/information-light-cone.js";
+export * from "./einstein/flesh-state-vector.js";
