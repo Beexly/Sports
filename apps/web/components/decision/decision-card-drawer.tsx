@@ -72,6 +72,13 @@ export function DecisionDrawer({ card }: { card: DecisionCard }) {
               <Section title="What the market did" body={d.whatTheMarketDid} />
               <Section title="What fantasy did" body={d.whatFantasyDid} />
               <Section title="What the crowd did" body={d.whatTheCrowdDid} />
+              <section className="rounded-lg border border-mineral bg-eclipse p-3">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-ion-blue/80">Why not stronger?</p>
+                <p className="mt-1 text-sm leading-5 text-ion">{card.upgrade.reason}</p>
+                {card.upgrade.dataNeeded.length > 0 ? (
+                  <p className="mt-2 text-xs text-ion-2">To go stronger we&apos;d need {card.upgrade.dataNeeded.join("; ")}.</p>
+                ) : null}
+              </section>
               {d.redFlags.length > 0 ? (
                 <section>
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-ion-blue/80">Red flags</p>
@@ -87,6 +94,9 @@ export function DecisionDrawer({ card }: { card: DecisionCard }) {
               <Section title="Knowable in time" body={lightConeLabel(d.lightConeStatus)} />
               <Section title="Rights" body={d.rightsStatus} />
               <Section title="Receipt" body={d.receiptRefs.join(", ")} />
+              <a href="/proof/memory" className="text-xs font-semibold text-ion-blue hover:underline">
+                What we learned →
+              </a>
             </div>
           </aside>
         </div>

@@ -36,7 +36,7 @@ function proseOf(): string[] {
   const frame = runDecisionFieldFrame(field001Input);
   const strings: string[] = [];
   for (const c of frame.emittedCards) {
-    strings.push(c.title, c.whatChanged, c.whatItMeans, c.whatToDo, c.whyNot);
+    strings.push(c.title, c.whatChanged, c.whatItMeans, c.whatToDo, c.whyNot, c.upgrade.reason, ...c.upgrade.dataNeeded);
     const d = c.proofDrawer;
     strings.push(d.whatChanged, d.whatTheMarketDid, d.whatFantasyDid, d.whatTheCrowdDid, d.whyNot, d.whatWouldChangeOurMind, d.sourceRaceSummary);
   }

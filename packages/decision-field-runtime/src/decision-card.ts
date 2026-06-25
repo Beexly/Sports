@@ -46,6 +46,15 @@ export interface ProofDrawer {
   readonly lightConeStatus: LightConeStatus;
 }
 
+/** Why a card is capped — and exactly what would upgrade it (ties product clarity to acquisition). */
+export interface CardUpgrade {
+  readonly cappedAt: MaxPermittedStrength;
+  readonly reason: string;
+  /** Plain-English facts we'd need to go stronger (e.g. "a fantasy projection snapshot"). */
+  readonly dataNeeded: readonly string[];
+  readonly requiresLiveData: boolean;
+}
+
 export interface DecisionCard {
   readonly id: string;
   readonly title: string;
@@ -77,6 +86,7 @@ export interface DecisionCard {
   readonly noticeabilityIndex: number;
   readonly cognitiveLoadScore: number;
   readonly regimeTag: string;
+  readonly upgrade: CardUpgrade;
 
   readonly claims: readonly CardClaim[];
   readonly prosecution: CardProsecutionTrace;

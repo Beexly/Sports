@@ -46,6 +46,7 @@ import { detectOverObservations } from "./over-observation.js";
 import { buildMetaSnapshot } from "./meta-intelligence-snapshot.js";
 import {
   type AutopsyHook,
+  type CardUpgrade,
   type DecisionCard,
   type SuppressedDecision,
   type ConfidenceLabel,
@@ -486,6 +487,7 @@ function buildCard(a: BuildCardArgs): DecisionCard {
     noticeabilityIndex: Number((a.stress * (1 - a.ghostPenalty)).toFixed(4)),
     cognitiveLoadScore: a.claims.length + a.prosecution.downgradeReasons.length,
     regimeTag: a.regimeTag,
+    upgrade: buildUpgrade(a),
     claims: a.claims,
     prosecution: a.prosecution,
     proofDrawer: {
@@ -532,6 +534,31 @@ function buildWhyNot(a: BuildCardArgs): string {
     return `Why not go stronger? ${a.prosecution.downgradeReasons[0]}.`;
   }
   return "Why not stronger? The evidence supports exactly this much and no more.";
+}
+
+// Plain-English labels for the fact groups a card is missing — what we'd need to go stronger.
+const GROUP_LABELS: Readonly<Record<string, string>> = {
+  role_delta: "a usage/role signal (snaps, routes, targets)",
+  fantasy_belief_snapshot: "a fantasy projection snapshot",
+  edge_basis: "a role or injury read",
+  live_price: "a live price",
+  crowd_move: "a crowd-movement signal",
+  reality_check: "a role/injury reality check",
+  any_signal: "a credible signal",
+  any_credible_fact: "a credible fact",
+};
+
+/** Tie the strength cap to exactly what we'd need to acquire to go stronger. */
+function buildUpgrade(a: BuildCardArgs): CardUpgrade {
+  const dataNeeded = a.statAudit.missingGroups.map((g) => GROUP_LABELS[g] ?? g);
+  const requiresLiveData = a.finalStrength === "INFO_ONLY" || a.statAudit.missingGroups.length > 0;
+  const reason =
+    dataNeeded.length > 0
+      ? `Capped at ${a.finalStrength.toLowerCase()} because we don't have ${dataNeeded.join(" and ")} yet.`
+      : a.prosecution.downgradeReasons.length > 0
+        ? `Capped at ${a.finalStrength.toLowerCase()}: ${a.prosecution.downgradeReasons[0]}.`
+        : `The evidence supports exactly ${a.finalStrength.toLowerCase()} and no more.`;
+  return { cappedAt: a.finalStrength, reason, dataNeeded, requiresLiveData };
 }
 
 function buildPlan(frameId: string, missed: readonly MissedObservation[]): OperatingPlan {
