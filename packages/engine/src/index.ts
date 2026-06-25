@@ -88,3 +88,8 @@ export * from "./genesis/unknown-unknown-scout.js";
 export * from "./genesis/mutant-hypothesis-generator.js";
 export * from "./genesis/proof-weighted-creativity.js";
 export * from "./genesis/law-making-constitution.js";
+export * from "./genesis/scarcity-curvature.js";
+export * from "./genesis/decision-phase-transition.js";
+export * from "./genesis/belief-refractive-index.js";
+export * from "./genesis/action-half-life.js";
+export * from "./genesis/anti-edge-minefield.js";
