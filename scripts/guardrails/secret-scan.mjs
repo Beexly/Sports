@@ -9,6 +9,10 @@
  *
  * Modes:
  *   - no args  → scan files git has STAGED (pre-commit hook usage).
+ *   - --all    → scan EVERY tracked file (`git ls-files`) — the CI gate, so a
+ *                secret already committed to the tree is caught, not just one
+ *                being newly staged. Without this, CI scans the empty stage and
+ *                the gate is a no-op.
  *   - <paths>  → scan the given file paths (CI / manual / test usage).
  *
  * Exits 1 (and prints each hit) if any high-confidence secret is found,
@@ -87,6 +91,15 @@ function stagedFiles() {
   return r.stdout.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
 }
 
+function allTrackedFiles() {
+  const r = spawnSync("git", ["ls-files"], { cwd: ROOT, encoding: "utf8" });
+  if (r.status !== 0) {
+    console.error("[secret-scan] FAIL - could not list tracked files (git ls-files).");
+    process.exit(1);
+  }
+  return r.stdout.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+}
+
 function scanFile(absPath, relNorm) {
   const hits = [];
   let text;
@@ -111,8 +124,15 @@ function scanFile(absPath, relNorm) {
 }
 
 function main() {
-  const argPaths = process.argv.slice(2).filter((a) => !a.startsWith("--"));
-  const files = argPaths.length ? argPaths : stagedFiles();
+  const rawArgs = process.argv.slice(2);
+  const argPaths = rawArgs.filter((a) => !a.startsWith("--"));
+  const scanAll = rawArgs.includes("--all");
+  // --all (full tree) wins over explicit paths, which win over the staged set.
+  const files = scanAll
+    ? allTrackedFiles()
+    : argPaths.length
+      ? argPaths
+      : stagedFiles();
 
   let allHits = [];
   let scanned = 0;
@@ -126,8 +146,11 @@ function main() {
     }
   }
 
+  const mode = scanAll ? "all-tracked" : argPaths.length ? "paths" : "staged";
   if (allHits.length === 0) {
-    console.log("[secret-scan] OK - scanned " + scanned + " file(s); no secrets detected.");
+    console.log(
+      "[secret-scan] OK - scanned " + scanned + " file(s) [" + mode + "]; no secrets detected."
+    );
     process.exit(0);
   }
 
