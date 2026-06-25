@@ -111,10 +111,13 @@ export async function loadProofOfRecord(
 ): Promise<ProofOfRecordBoard> {
   const generatedAt = now.toISOString();
 
-  // Fetch all canonical settled picks (for the Merkle root) with a bounded
-  // take that's large enough to cover the full public record without blowing
-  // memory. The surface shows MAX_PICKS; the root is over the full set.
-  const allSettled = await db.pick
+  // The COMPLETE committed set for the Merkle root — lightweight (no odds joins), in a
+  // stable order so the root is reproducible. NO take cap: the root and totalSettled must
+  // cover ALL settled canonical picks, exactly as the /proof page claims. (Previously
+  // capped at 500, which silently dropped the oldest picks once the record grew — the root
+  // then committed over fewer rows than stated.) The heavy game+odds data is fetched only
+  // for the MAX_PICKS rows actually displayed, below.
+  const committed = await db.pick
     .findMany({
       where: {
         result: { in: ["WIN", "LOSS", "PUSH", "VOID"] },
@@ -122,24 +125,25 @@ export async function loadProofOfRecord(
         isBootstrap: false,
         NOT: { modelVersion: "v5.0.0-seed" },
       },
-      include: {
-        game: {
-          include: {
-            sport: { select: { name: true } },
-            odds: {
-              where: { market: "H2H" },
-              orderBy: { fetchedAt: "desc" },
-              take: ODDS_ROWS_PER_GAME,
-            },
-          },
-        },
+      select: {
+        id: true,
+        pickType: true,
+        selection: true,
+        line: true,
+        confidence: true,
+        modelVersion: true,
+        generatedAt: true,
+        tier: true,
+        settledAt: true,
+        result: true,
+        clvVerdict: true,
+        clvValue: true,
       },
-      orderBy: { settledAt: "desc" },
-      take: 500,
+      orderBy: [{ settledAt: "desc" }, { id: "asc" }],
     })
     .catch(() => []);
 
-  if (allSettled.length === 0) {
+  if (committed.length === 0) {
     return {
       generatedAt,
       picks: [],
@@ -148,28 +152,44 @@ export async function loadProofOfRecord(
     };
   }
 
-  // Build PickRecords in a deterministic order (settledAt desc, then id asc
-  // as a tiebreaker) so the Merkle root is reproducible given the same rows.
-  const ordered = [...allSettled].sort((a, b) => {
-    const ta = a.settledAt?.getTime() ?? 0;
-    const tb = b.settledAt?.getTime() ?? 0;
-    if (ta !== tb) return tb - ta;
-    return a.id < b.id ? -1 : 1;
-  });
-
-  // Build PickRecord for each pick using canonicalPickPayload (the same
-  // deterministic serialization the engine uses at publish time).
-  const pickRecords: PickRecord[] = ordered.map((pick) =>
-    buildPickRecord(pick)
-  );
-
-  // Merkle root over the full set.
+  // Merkle root + leaves over the FULL committed set (committed is already in the
+  // deterministic settledAt-desc, id-asc order the root requires).
+  const pickRecords: PickRecord[] = committed.map((pick) => buildPickRecord(pick));
   const root = merkleRoot(pickRecords, sha256);
+
+  // Enrich only the displayed rows (top MAX_PICKS of the committed set) with game + H2H
+  // odds for the consensus read. Fetched by id, mapped back, so the displayed rows are
+  // exactly the first MAX_PICKS committed leaves — no ordering drift between two queries.
+  const topIds = committed.slice(0, MAX_PICKS).map((p) => p.id);
+  const displayRows = topIds.length
+    ? await db.pick
+        .findMany({
+          where: { id: { in: topIds } },
+          select: {
+            id: true,
+            game: {
+              select: {
+                homeTeamName: true,
+                awayTeamName: true,
+                commenceTime: true,
+                sport: { select: { name: true } },
+                odds: {
+                  where: { market: "H2H" },
+                  orderBy: { fetchedAt: "desc" },
+                  take: ODDS_ROWS_PER_GAME,
+                },
+              },
+            },
+          },
+        })
+        .catch(() => [])
+    : [];
+  const displayById = new Map(displayRows.map((d) => [d.id, d]));
 
   // Build the page rows (capped at MAX_PICKS) with inclusion proofs.
   const pageRows: ProofPickRow[] = [];
-  for (let i = 0; i < Math.min(ordered.length, MAX_PICKS); i++) {
-    const pick = ordered[i]!;
+  for (let i = 0; i < Math.min(committed.length, MAX_PICKS); i++) {
+    const pick = committed[i]!;
     const record = pickRecords[i]!;
     const proof = inclusionProof(pickRecords, i, sha256);
 
@@ -177,8 +197,10 @@ export async function loadProofOfRecord(
     // skip this row rather than surface a broken proof.
     if (!verifyInclusion(proof, root, sha256)) continue;
 
+    const game = displayById.get(pick.id)?.game ?? null;
+
     // Consensus market read from stored H2H odds history.
-    const oddsRows = (pick.game?.odds ?? []).map((o) => ({
+    const oddsRows = (game?.odds ?? []).map((o) => ({
       bookmaker: o.bookmaker,
       market: String(o.market),
       fetchedAt: o.fetchedAt,
@@ -189,22 +211,29 @@ export async function loadProofOfRecord(
     const marketRead = buildH2hMarketRead(oddsRows);
     const consensus = marketRead?.consensus ?? null;
 
-    // Model vs market: the model's confidence expressed as a probability
-    // compared to the market's fair home probability. This is directional
-    // signal — it shows whether the pick was on or against the market's lean.
+    // Model vs market: ONLY meaningful for MONEYLINE picks — the consensus is an H2H read,
+    // so compare the model's confidence to the fair prob of the SIDE actually picked.
+    // SPREAD/TOTAL picks have no like-for-like H2H probability, so leave it null rather
+    // than print a number that mixes two unrelated quantities.
     let modelVsMarketPp: number | null = null;
-    if (consensus !== null) {
-      const modelProb = pick.confidence / 100;
-      const fairProb = consensus.fairHomeProb;
-      modelVsMarketPp = Number(((modelProb - fairProb) * 100).toFixed(1));
+    if (consensus !== null && pick.pickType === "MONEYLINE") {
+      const fairProb =
+        pick.selection === game?.homeTeamName
+          ? consensus.fairHomeProb
+          : pick.selection === game?.awayTeamName
+            ? consensus.fairAwayProb
+            : null;
+      if (fairProb !== null) {
+        modelVsMarketPp = Number(((pick.confidence / 100 - fairProb) * 100).toFixed(1));
+      }
     }
 
     pageRows.push({
       id: pick.id,
-      sport: pick.game?.sport?.name ?? "—",
-      homeTeamName: pick.game?.homeTeamName ?? "—",
-      awayTeamName: pick.game?.awayTeamName ?? "—",
-      commenceTime: pick.game?.commenceTime?.toISOString() ?? "",
+      sport: game?.sport?.name ?? "—",
+      homeTeamName: game?.homeTeamName ?? "—",
+      awayTeamName: game?.awayTeamName ?? "—",
+      commenceTime: game?.commenceTime?.toISOString() ?? "",
       pickType: pick.pickType,
       selection: pick.selection,
       line: pick.line,
@@ -227,7 +256,7 @@ export async function loadProofOfRecord(
     generatedAt,
     picks: pageRows,
     merkleRoot: root,
-    totalSettled: ordered.length,
+    totalSettled: committed.length,
   };
 }
 

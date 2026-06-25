@@ -175,6 +175,33 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
       ? stripeSubscription.customer
       : stripeSubscription.customer.id;
 
+  // Out-of-order guard. `customer.subscription.deleted` is TERMINAL, but Stripe does not
+  // guarantee delivery order — a delayed `customer.subscription.updated` carrying an older
+  // active snapshot can arrive AFTER the delete. Never let it resurrect a subscription we
+  // have already recorded as cancelled-by-delete (same id) — that would re-grant premium
+  // for free. A genuine resubscribe is a new subscription id (and/or comes via checkout),
+  // so it is unaffected.
+  const incomingStatus = mapStripeStatus(stripeSubscription.status);
+  if (incomingStatus !== "CANCELED") {
+    const existing = await db.subscription
+      .findUnique({
+        where: { stripeCustomerId: customerId },
+        select: { status: true, canceledAt: true, stripeSubscriptionId: true },
+      })
+      .catch(() => null);
+    if (
+      existing &&
+      existing.status === "CANCELED" &&
+      existing.canceledAt != null &&
+      existing.stripeSubscriptionId === stripeSubscription.id
+    ) {
+      console.warn(
+        `[stripe] ignoring out-of-order reactivation of cancelled subscription ${stripeSubscription.id} for customer ${customerId}`,
+      );
+      return;
+    }
+  }
+
   const priceId = stripeSubscription.items.data[0]?.price.id;
   const tier = getTierFromPriceId(priceId);
   const status = mapStripeStatus(stripeSubscription.status);

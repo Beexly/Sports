@@ -22,6 +22,8 @@ describe("ApertureStateMachine", () => {
     expect(evaluateAperture(merge({ compliance: { ...base.compliance, rightsCleared: false } })).state).toBe("quarantine");
     expect(evaluateAperture(merge({ compliance: { ...base.compliance, languageClean: false } })).state).toBe("quarantine");
     expect(evaluateAperture(merge({ evidence: { ...base.evidence, rumorQuarantined: true } })).state).toBe("quarantine");
+    // Evidence's OWN rights snapshot must gate too, even when compliance.rightsCleared is true.
+    expect(evaluateAperture(merge({ evidence: { ...base.evidence, rightsCleared: false } })).state).toBe("quarantine");
   });
 
   it("passes when there is no actionable edge", () => {

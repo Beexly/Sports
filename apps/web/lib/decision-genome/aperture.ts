@@ -74,6 +74,7 @@ export function evaluateAperture(
   if (!compliance.rightsCleared) unsafe.push("rights not cleared");
   if (!compliance.languageClean) unsafe.push("banned language present");
   if (!compliance.contestBoundaryRespected) unsafe.push("contest/sweepstakes boundary breached");
+  if (!evidence.rightsCleared) unsafe.push("evidence rights not cleared");
   if (evidence.rumorQuarantined) unsafe.push("evidence is rumor-quarantined");
   if (!evidence.permissions.decisionUse) unsafe.push("evidence not cleared for decision use");
   if (unsafe.length > 0) {

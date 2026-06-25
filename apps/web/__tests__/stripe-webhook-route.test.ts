@@ -18,6 +18,7 @@ const mocks = vi.hoisted(() => ({
   webhookEventCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
   subscriptionUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
   subscriptionUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+  subscriptionFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
 }));
 
 vi.mock("@/lib/stripe", () => ({
@@ -36,6 +37,7 @@ vi.mock("@sports/db", () => ({
     subscription: {
       upsert: mocks.subscriptionUpsert,
       updateMany: mocks.subscriptionUpdateMany,
+      findUnique: mocks.subscriptionFindUnique,
     },
   },
 }));
@@ -83,16 +85,56 @@ describe("POST /api/webhooks/stripe", () => {
     mocks.webhookEventCreate.mockReset();
     mocks.subscriptionUpsert.mockReset();
     mocks.subscriptionUpdateMany.mockReset();
+    mocks.subscriptionFindUnique.mockReset();
 
     process.env["STRIPE_WEBHOOK_SECRET"] = "whsec_test";
     process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] = PRO_MONTHLY;
     process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"] = ELITE_ANNUAL;
 
-    // Default: event not yet processed, writes succeed
+    // Default: event not yet processed, no prior subscription row, writes succeed
     mocks.webhookEventFindUnique.mockResolvedValue(null);
     mocks.webhookEventCreate.mockResolvedValue({ id: "wh_1" });
     mocks.subscriptionUpsert.mockResolvedValue({ id: "s_1" });
     mocks.subscriptionUpdateMany.mockResolvedValue({ count: 1 });
+    mocks.subscriptionFindUnique.mockResolvedValue(null);
+  });
+
+  describe("out-of-order delivery", () => {
+    it("does NOT reactivate a subscription already cancelled-by-delete (same id)", async () => {
+      // Our DB already recorded the terminal delete for sub_123.
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        status: "CANCELED",
+        canceledAt: new Date(),
+        stripeSubscriptionId: "sub_123",
+      });
+      // A delayed updated event arrives with an OLD active snapshot of the SAME sub.
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("customer.subscription.updated", stripeSubscription({ status: "active" }), "evt_late")
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      // The reactivation must be skipped — no write that re-grants premium.
+      expect(mocks.subscriptionUpsert).not.toHaveBeenCalled();
+      expect(mocks.subscriptionUpdateMany).not.toHaveBeenCalled();
+    });
+
+    it("still syncs a genuinely NEW subscription id for a previously-cancelled customer", async () => {
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        status: "CANCELED",
+        canceledAt: new Date(),
+        stripeSubscriptionId: "sub_OLD",
+      });
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("customer.subscription.updated", stripeSubscription({ id: "sub_NEW", status: "active" }), "evt_resub")
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionUpsert).toHaveBeenCalled(); // resubscribe is not blocked
+    });
   });
 
   describe("signature verification", () => {

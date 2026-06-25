@@ -20,6 +20,7 @@ const mocks = vi.hoisted(() => ({
   getOdds: vi.fn<(sport: string, markets: string[]) => Promise<{ data: unknown[]; remainingRequests: number }>>(),
   validateFreshness: vi.fn<(at: Date) => boolean>(),
   validateOddsFreshness: vi.fn<(odds: unknown[]) => boolean>(),
+  freshGameIds: vi.fn<(odds: unknown[]) => Set<string>>(),
   normalizeGames: vi.fn<(events: unknown[]) => unknown[]>(),
   normalizeOdds: vi.fn<(events: unknown[], at: Date) => unknown[]>(),
   enrichGameContext: vi.fn<(args: unknown) => Promise<void>>(),
@@ -56,6 +57,7 @@ vi.mock("@sports/data-ingestion", () => ({
   DataNormalizer: vi.fn().mockImplementation(() => ({
     validateFreshness: mocks.validateFreshness,
     validateOddsFreshness: mocks.validateOddsFreshness,
+    freshGameIds: mocks.freshGameIds,
     normalizeGames: mocks.normalizeGames,
     normalizeOdds: mocks.normalizeOdds,
   })),
@@ -131,6 +133,7 @@ describe("processSport", () => {
     mocks.getOdds.mockResolvedValue({ data: [{ raw: true }], remainingRequests: 400 });
     mocks.validateFreshness.mockReturnValue(true);
     mocks.validateOddsFreshness.mockReturnValue(true);
+    mocks.freshGameIds.mockReturnValue(new Set());
     mocks.normalizeGames.mockReturnValue([normalizedGame()]);
     mocks.normalizeOdds.mockReturnValue([]);
     mocks.sportUpsert.mockResolvedValue({ id: "sport-1" });
@@ -184,10 +187,11 @@ describe("processSport", () => {
   });
 
   it("rejects a STALE UPSTREAM feed even when our fetch clock looks fresh (no-stale-data rule)", async () => {
-    // We fetched now (validateFreshness passes) but the upstream odds are stale.
+    // We fetched now (validateFreshness passes) but every game's upstream odds are stale,
+    // so no game id is fresh and the whole job must fail closed.
     mocks.validateFreshness.mockReturnValue(true);
-    mocks.normalizeOdds.mockReturnValue([{ bookmaker: "x" }]);
-    mocks.validateOddsFreshness.mockReturnValue(false);
+    mocks.normalizeOdds.mockReturnValue([{ gameExternalId: "g1", bookmaker: "x" }]);
+    mocks.freshGameIds.mockReturnValue(new Set());
 
     const result = await processSport(SPORT, "key", gates());
 

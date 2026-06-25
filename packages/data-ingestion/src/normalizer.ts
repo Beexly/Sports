@@ -115,24 +115,39 @@ export class DataNormalizer {
   }
 
   /**
-   * Validate that the UPSTREAM odds are actually recent — not merely that we just
-   * fetched them. `validateFreshness(fetchedAt)` only proves we polled the API now;
-   * it cannot catch a feed that is serving an hour-old cached board. This checks each
-   * bookmaker's OWN `last_update`: the data is fresh iff the most recently-updated book
-   * is within the threshold. Fail-safe: a non-empty set with no parseable upstream
-   * timestamp returns false (cannot verify → treat as stale). An empty set is vacuously
-   * fresh (no odds to be stale). A `false` here MUST stop the job — the "no stale data"
-   * invariant is enforced on real data age, not the local clock.
+   * Game ids whose UPSTREAM odds are fresh — i.e. the game's most recently-updated
+   * bookmaker is within the threshold. Decided PER GAME (not a single global max across
+   * the whole sport fetch), so a fresh game elsewhere in the same pull can never mask a
+   * stale game. `validateFreshness(fetchedAt)` only proves we polled now; this checks each
+   * bookmaker's own `last_update`. A game with no parseable upstream timestamp is omitted
+   * (fail-safe: not provably fresh → treated as stale). Callers DROP games not in this set.
+   */
+  freshGameIds(odds: readonly NormalizedOdds[]): Set<string> {
+    const cutoff = Date.now() - FRESHNESS_THRESHOLD_MS;
+    const freshestByGame = new Map<string, number>();
+    for (const o of odds) {
+      const t = o.bookmakerLastUpdate.getTime();
+      if (!Number.isFinite(t)) continue;
+      const prev = freshestByGame.get(o.gameExternalId);
+      if (prev === undefined || t > prev) freshestByGame.set(o.gameExternalId, t);
+    }
+    const fresh = new Set<string>();
+    for (const [game, freshest] of freshestByGame) {
+      if (freshest > cutoff) fresh.add(game);
+    }
+    return fresh;
+  }
+
+  /**
+   * Whole-feed liveness: true iff AT LEAST ONE game has fresh upstream odds. A non-empty
+   * fetch where no game is fresh is a dead/cached feed and the caller MUST stop the job.
+   * Per-game dropping of individual stale games is done via `freshGameIds`. An empty set
+   * is vacuously fresh (no odds to be stale). The "no stale data" invariant is enforced on
+   * real upstream data age, not the local clock.
    */
   validateOddsFreshness(odds: readonly NormalizedOdds[]): boolean {
     if (odds.length === 0) return true;
-    let freshest = Number.NEGATIVE_INFINITY;
-    for (const o of odds) {
-      const t = o.bookmakerLastUpdate.getTime();
-      if (Number.isFinite(t) && t > freshest) freshest = t;
-    }
-    if (!Number.isFinite(freshest)) return false; // had odds but no valid timestamp → fail safe
-    return Date.now() - freshest < FRESHNESS_THRESHOLD_MS;
+    return this.freshGameIds(odds).size > 0;
   }
 
   normalizeScores(

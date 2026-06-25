@@ -168,6 +168,26 @@ describe("DataNormalizer", () => {
       const corrupted = odds.map((o) => ({ ...o, bookmakerLastUpdate: new Date("not-a-date") }));
       expect(normalizer.validateOddsFreshness(corrupted)).toBe(false);
     });
+
+    it("decides freshness PER GAME — a fresh game cannot mask a stale one", () => {
+      const now = Date.now();
+      const fresh = normalizer.normalizeOdds([{ ...mockEvent, id: "fresh-game" }], new Date());
+      const staleEvent = {
+        ...mockEvent,
+        id: "stale-game",
+        bookmakers: mockEvent.bookmakers.map((b) => ({
+          ...b,
+          last_update: new Date(now - 3 * 60 * 60 * 1000).toISOString(), // 3h old
+        })),
+      };
+      const stale = normalizer.normalizeOdds([staleEvent], new Date());
+
+      const freshIds = normalizer.freshGameIds([...fresh, ...stale]);
+      expect(freshIds.has("fresh-game")).toBe(true);
+      expect(freshIds.has("stale-game")).toBe(false); // would have leaked under a global max
+      // The feed is still "live" overall (>=1 fresh game), so the job is not failed wholesale.
+      expect(normalizer.validateOddsFreshness([...fresh, ...stale])).toBe(true);
+    });
   });
 
   describe("normalizeScores", () => {
