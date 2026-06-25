@@ -58,6 +58,32 @@ export type {
   ClvRuleResult,
   ClvFeasibilityReport,
 } from "./clv-feasibility.js";
+// Closing-line forecaster (Charter Move #1) — predict the signed line delta and fire
+// only on expected favorable CLV. Real ridge regression + walk-forward OOS eval; SHADOW
+// until it beats the Δ̂=0 baseline AND clears ≥52.4% beat-close out-of-sample. Pure.
+export {
+  FEATURE_ORDER,
+  toFeatureVector,
+  BASELINE_MODEL,
+  predictDelta,
+  solveLinearSystem,
+  fitRidge,
+  forecastAction,
+  evaluateForecastRmse,
+  evaluateClvAtThreshold,
+  walkForwardForecast,
+} from "./closing-line-forecaster.js";
+export type {
+  ForecastFeatures,
+  ForecastSample,
+  RidgeModel,
+  ForecastRecommendation,
+  ForecastAction,
+  ForecastEvalRow,
+  ForecastEvaluation,
+  ClvAtThreshold,
+  WalkForwardOptions,
+} from "./closing-line-forecaster.js";
 // CLV capture — derive the closing line from the timestamped odds history and
 // grade a pick's lock-time line/price against it. Pure; the settlement pipeline
 // supplies real rows and persists the graded result.
