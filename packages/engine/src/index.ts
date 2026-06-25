@@ -83,3 +83,8 @@ export * from "./genesis/decision-leverage-field.js";
 export * from "./genesis/opportunity-conservation-tensor.js";
 export * from "./genesis/observer-mind-inversion.js";
 export * from "./genesis/ghost-similarity-physics.js";
+export * from "./genesis/formula-forge.js";
+export * from "./genesis/unknown-unknown-scout.js";
+export * from "./genesis/mutant-hypothesis-generator.js";
+export * from "./genesis/proof-weighted-creativity.js";
+export * from "./genesis/law-making-constitution.js";
