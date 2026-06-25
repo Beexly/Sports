@@ -5,3 +5,6 @@ export * from "./market-physics/coherence.js";
 export * from "./market-physics/alt-line-curvature.js";
 export * from "./market-physics/edge-ledger.js";
 export * from "./market-physics/expression-router.js";
+export * from "./market-physics/book-dna.js";
+export * from "./market-physics/shock-absorption.js";
+export * from "./market-physics/role-state.js";
