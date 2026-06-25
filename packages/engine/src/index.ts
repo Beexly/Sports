@@ -76,3 +76,10 @@ export * from "./fantasy/dynasty-asset-physics.js";
 export * from "./fantasy/fantasy-autopsy.js";
 export * from "./fantasy/fantasy-experiment-governor.js";
 export * from "./fantasy/fantasy-scientific-discovery-council.js";
+
+// Genesis Layer — proof-gated concept-invention engine (additive, shadow-only)
+export * from "./genesis/reality-belief-entanglement-tensor.js";
+export * from "./genesis/decision-leverage-field.js";
+export * from "./genesis/opportunity-conservation-tensor.js";
+export * from "./genesis/observer-mind-inversion.js";
+export * from "./genesis/ghost-similarity-physics.js";
