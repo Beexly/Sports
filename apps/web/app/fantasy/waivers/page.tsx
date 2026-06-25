@@ -3,6 +3,8 @@ import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { WaiverBoard } from "@/components/fantasy/waiver-board";
 import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -21,7 +23,10 @@ const LIVE_NOTE =
   "Live graded pool — real players with model-derived projections. Targets, FAAB tiers, and drop candidates are computed from real grades.";
 
 export default async function WaiversPage() {
-  const pool = await resolveToolPoolAsync();
+  const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
+  // Server-side paywall enforcement (CLAUDE.md rule 3): a FREE viewer never receives the
+  // paid rows of the live pool — only the trial subset crosses to the client.
+  const gatedPool = poolForViewer(pool, viewer.canUseFantasyFull);
   return (
     <FantasyShell
       eyebrow="Waiver & FAAB"
@@ -31,7 +36,7 @@ export default async function WaiversPage() {
       note={pool ? LIVE_NOTE : ILLUSTRATIVE_NOTE}
       wide
     >
-      <WaiverBoard pool={pool} />
+      <WaiverBoard pool={gatedPool} />
     </FantasyShell>
   );
 }

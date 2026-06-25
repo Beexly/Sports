@@ -33,7 +33,7 @@
     "guard:draft-only": "node scripts/guardrails/draft-only.mjs",
     "guard:claude-api": "node scripts/guardrails/claude-api-usage.mjs",
     "guard:secrets": "node scripts/guardrails/secret-scan.mjs",
-    "guard:nflverse-currency": "tsx scripts/check-nflverse-currency.ts",
+    "guard:nflverse-currency": "npx tsx scripts/check-nflverse-currency.ts",
     "prepare": "node scripts/setup-git-hooks.mjs",
     "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/guardrails/secret-scan.mjs && node scripts/eval-contracts.mjs",
     "evals:contracts": "node scripts/eval-contracts.mjs",
