@@ -93,3 +93,8 @@ export * from "./genesis/decision-phase-transition.js";
 export * from "./genesis/belief-refractive-index.js";
 export * from "./genesis/action-half-life.js";
 export * from "./genesis/anti-edge-minefield.js";
+export * from "./genesis/theory-ecology.js";
+export * from "./genesis/reflexive-product-risk.js";
+export * from "./genesis/cognitive-bias-differential.js";
+export * from "./genesis/league-economy-simulator.js";
+export * from "./genesis/contest-field-reflexivity.js";
