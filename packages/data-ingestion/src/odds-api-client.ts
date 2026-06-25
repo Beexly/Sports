@@ -42,6 +42,30 @@ export interface HistoricalOddsSnapshot {
   readonly data: OddsApiEvent[];
 }
 
+/** Minimal event shell from the historical EVENTS endpoint (no odds; costs 1 credit). */
+export interface HistoricalEventShell {
+  readonly id: string;
+  readonly sport_key: string;
+  readonly commence_time: string;
+  readonly home_team: string;
+  readonly away_team: string;
+}
+
+export interface HistoricalEventsSnapshot {
+  readonly timestamp: string;
+  readonly previous_timestamp: string | null;
+  readonly next_timestamp: string | null;
+  readonly data: HistoricalEventShell[];
+}
+
+/** Historical odds for a SINGLE event (needed for player props). `data` is one event. */
+export interface HistoricalEventOddsSnapshot {
+  readonly timestamp: string;
+  readonly previous_timestamp: string | null;
+  readonly next_timestamp: string | null;
+  readonly data: OddsApiEvent;
+}
+
 interface OddsApiRetryOptions {
   readonly maxRetries?: number;
   readonly baseDelayMs?: number;
@@ -239,5 +263,43 @@ export class OddsApiClient {
       dateFormat: "iso",
       date: isoTimestamp,
     });
+  }
+
+  /**
+   * Historical EVENTS at (or nearest to) `isoTimestamp` — event ids + teams, no odds.
+   * Costs 1 credit (0 if empty). Use the returned id with getHistoricalEventOdds to
+   * pull player props for a single game.
+   */
+  async getHistoricalEvents(
+    sportKey: SupportedSportKey,
+    isoTimestamp: string
+  ): Promise<OddsApiFetchResult<HistoricalEventsSnapshot>> {
+    return this.fetch<HistoricalEventsSnapshot>(`/historical/sports/${sportKey}/events`, {
+      dateFormat: "iso",
+      date: isoTimestamp,
+    });
+  }
+
+  /**
+   * Historical odds for a SINGLE event (player props, alternate lines, etc.). Accepts any
+   * market keys (e.g. player_pass_yds). Costs 10 × unique-markets-returned × regions.
+   * Available on paid plans; prop history exists from 2023-05-03.
+   */
+  async getHistoricalEventOdds(
+    sportKey: SupportedSportKey,
+    eventId: string,
+    markets: string[],
+    isoTimestamp: string
+  ): Promise<OddsApiFetchResult<HistoricalEventOddsSnapshot>> {
+    return this.fetch<HistoricalEventOddsSnapshot>(
+      `/historical/sports/${sportKey}/events/${eventId}/odds`,
+      {
+        regions: ODDS_REGION,
+        markets: markets.join(","),
+        oddsFormat: ODDS_FORMAT,
+        dateFormat: "iso",
+        date: isoTimestamp,
+      }
+    );
   }
 }
