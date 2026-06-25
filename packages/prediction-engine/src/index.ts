@@ -38,6 +38,26 @@ export type {
   MoneylineClvResult,
   ClvSummary,
 } from "./clv.js";
+// CLV feasibility — FDR-controlled test of whether a pre-registered entry rule can
+// systematically beat the close (the one open edge question). Pure; runner-fed.
+export {
+  median,
+  consensusFromEvent,
+  clvForBet,
+  studentTTwoSidedP,
+  oneSampleClvTTest,
+  evaluateClvFeasibility,
+  DEFAULT_CLV_RULES,
+} from "./clv-feasibility.js";
+export type {
+  SnapshotConsensus,
+  ClvGameOpenClose,
+  ClvBet,
+  ClvRule,
+  ClvTTest,
+  ClvRuleResult,
+  ClvFeasibilityReport,
+} from "./clv-feasibility.js";
 // CLV capture — derive the closing line from the timestamped odds history and
 // grade a pick's lock-time line/price against it. Pure; the settlement pipeline
 // supplies real rows and persists the graded result.
