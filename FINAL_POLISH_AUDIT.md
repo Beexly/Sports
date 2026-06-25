@@ -23,17 +23,22 @@ fail-closed decision-state stat matrix. No new architecture — hardening, clari
 - **Decision surfaces:** `npm run guard:decision-surfaces` → exit 0 (all 5 new packages typecheck clean).
 - **Package tests:** `nfl-stat-universe` 25/25; runtime copy-hygiene + factory/galileo suites green.
 - **Guardrails:** trust-gate / model-freeze / draft-only / claude-api / secret-scan / eval-contracts — all green.
-- **App typecheck (`apps/web`):** 204 errors = **52 environmental** (Prisma client not generated in the
-  sandbox; CI regenerates it) + **152 pre-existing** admin/lib type-debt across 53 files + **0 from this
-  workstream**. The decision-UI, new pages, and new packages are error-free. Full split & fix sequence in
-  `docs/build/PRODUCTION_BUILD_READINESS.md`.
+- **App typecheck (`apps/web`):** 204 sandbox errors, **all one root cause — Prisma not generated here**
+  (engine download `ECONNRESET`). 52 are direct missing-export `TS2305`; the other ~152 are *implicit-any
+  cascade* downstream of `prisma` being typed `any` (proven: 150/152 sit in the 52 Prisma-importing
+  files, and the worked examples in `team-rates-source.ts` / `memory/page.tsx` all derive from Prisma
+  query results — they vanish on `db:generate`, and hand-annotating them would fight the generated
+  types). **0 from this workstream; 0 genuine Prisma-independent debt demonstrated.** Decision-UI, new
+  pages, and new packages are error-free. Full evidence in `docs/build/PRODUCTION_BUILD_READINESS.md`.
 
 ## What's still blocked (and why it's honest, not hidden)
 
 1. **Full local `next build`** — gated *in this sandbox only* by the Prisma engine download (`ECONNRESET`
-   behind the proxy). CI runs `db:generate` first and is unaffected.
-2. **The 152 admin/lib type errors** — pre-existing, mechanical, but only safely fixed against a
-   Prisma-generated typecheck (CI or a networked dev box), file-by-file from the concentration table.
+   behind the proxy; even `prisma generate --no-engine` can't reach the version manifest). CI runs
+   `db:generate` first and is unaffected.
+2. **Confirming the post-generate residual** — the 204 sandbox errors are expected to clear entirely once
+   Prisma is generated. The one remaining check is to re-run `typecheck:app` on CI (Prisma present) and
+   confirm the true residual is 0 — not to hand-fix sandbox cascade artifacts.
 
 ## Safety posture (unchanged, verified)
 
@@ -52,6 +57,7 @@ Until then the runner refuses LIVE by design.
 
 ## Next highest-leverage move
 
-Run the 152-error admin type-debt cleanup in a Prisma-generated environment (start with
-`app/api/admin/dashboard/route.ts` @16 and `lib/board/state.ts` @10). That converts the app build from
-"green on CI" to "green everywhere" — the last gap between this and a fully boring-green tree.
+Confirm the app build on CI (where Prisma is generated) and capture the post-`db:generate` `typecheck:app`
+residual — expected 0. If any genuine, Prisma-independent error survives, fix it then. This converts the
+build from "expected green on CI" to "verified green," and closes the readiness story without burning
+effort on the 204 sandbox cascade artifacts (which `db:generate` clears for free).

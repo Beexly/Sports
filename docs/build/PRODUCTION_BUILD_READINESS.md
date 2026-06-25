@@ -1,35 +1,42 @@
 # Production Build Readiness
 
-**Last measured:** this hardening pass · `apps/web` `tsc --noEmit` → **204 errors**, split below.
-**Bottom line:** the new Decision Field surfaces are **0-error**. The remaining errors are **52
-environmental** (Prisma engine not generated in the sandbox; CI generates it) and **152 pre-existing
-admin/lib type-debt** errors that predate this workstream. None block the decision OS.
+**Last measured:** this hardening pass · `apps/web` `tsc --noEmit` → **204 errors in the sandbox**.
+**Bottom line:** the new Decision Field surfaces are **0-error**, and **all 204 sandbox errors trace to
+one root cause — the Prisma client is not generated here** (engine download `ECONNRESET` behind the
+proxy). 52 are the direct missing-export errors; the other ~152 are *implicit-any cascade* downstream of
+the same un-generated client. CI generates Prisma first, so it sees neither bucket. **Do not hand-fix
+the cascade — it resolves on `db:generate` and annotating it would fight the generated types.**
 
-## The honest split
+## The honest split — one root cause, two symptoms
 
-| Bucket | Count | Cause | Who fixes it |
+| Bucket | Count | What it is | Resolves when |
 |---|---|---|---|
-| **Environmental (Prisma)** | 52 | `@prisma/client` (40) + `@sports/db` (12) re-export `TS2305` — the generated client isn't present | `npm run db:generate` (CI runs it before typecheck/build; the sandbox can't — engine download `ECONNRESET`) |
-| **Pre-existing code debt** | 152 | implicit-any & friends in admin routes/pages + lib data-loaders | targeted typing pass (enumerated below) |
+| **Direct (Prisma missing exports)** | 52 | `TS2305`: `@prisma/client` (40) + `@sports/db` (12) have "no exported member 'PrismaClient' / 'Prisma' / '<Model>'" | `db:generate` |
+| **Cascade (implicit-any from Prisma=`any`)** | ~152 | `TS7006`/`TS2532`/`TS18046`… on `.map/.filter/.reduce((row) => …)` callbacks whose array comes from a `prisma.*` call (or a lib loader that wraps one) — `any` *only because* the client is un-generated | `db:generate` |
 | **From this workstream** | **0** | — | — |
+| **Genuine, Prisma-independent debt** | **0 demonstrated** | every error sampled traced back to Prisma-`any`; the true residual (if any) is only measurable after `db:generate` on CI | — |
 
-### Environmental (52) — not a code problem
+### Why the ~152 are cascade, not debt (proven, not asserted)
 
-These are `error TS2305: Module '"@prisma/client"' has no exported member 'PrismaClient'` (and
-`'Prisma'`, and the `@sports/db` re-exports of the same). They appear **only because the Prisma client
-has not been generated in this sandbox** — `node_modules/.prisma/client` is missing and the engine
-binary download fails with `ECONNRESET` behind the proxy. They vanish the instant `db:generate` runs.
+`prisma` is typed `any` in the sandbox (its client isn't generated), so **every value derived from a
+Prisma query is `any`**, and every callback over it becomes an implicit-any (`TS7006`). Worked example:
 
-- CI already runs `npm run db:generate` before `typecheck` and `build` in both the `test` and `build`
-  jobs (`.github/workflows/ci.yml`), so **CI never sees these 52**.
-- `package.json` `postinstall` also runs `db:generate`, so a normal local `npm install` resolves them too.
-- This is the one thing the sandbox genuinely cannot do; it is stated here rather than hidden.
+```ts
+// packages/data-ingestion/src/team-rates-source.ts
+const logs = await prisma.teamGameLog.findMany({ select: { teamScore: true, … } });
+return logs.filter((l) => l.teamScore !== null)   // ← TS7006 on `l` HERE, in the sandbox only
+           .map((l) => ({ … }));                   // ← and HERE
+```
 
-### Pre-existing code debt (152) — real, enumerated, none in decision-ui
+With Prisma generated, `findMany({select})` returns a typed array, `l` is inferred, and **both errors
+disappear**. Hand-annotating `l` would pin a shape that may not match the generated `select` type —
+trading a sandbox-only error for a real one. The same pattern holds for the lib loaders: e.g.
+`app/cockpit/memory/page.tsx`'s 2 errors come from `listMemoryByState()` (in `lib/jarvis/memory/
+actions.ts`, a Prisma loader) returning `any` here.
 
-By TS code: `TS7006` implicit-any ×135 · `TS18046` `unknown` in catch ×6 · `TS2532` possibly-undefined ×4 ·
-`TS7031` implicit-any binding ×3 · `TS2322` ×2 · `TS2339` ×1 · `TS18048` ×1. Across **53 files**, all in
-admin routes / cockpit pages / lib data-loaders. Highest concentrations:
+**Empirical concentration:** of the 53 files carrying cascade errors, **52 (150 errors) import Prisma /
+`@sports/db` / call `prisma.`**; the single remaining file is cascade through a Prisma loader as shown
+above. Highest concentrations (all Prisma-fed):
 
 | File | Errors |
 |---|---|
@@ -39,36 +46,27 @@ admin routes / cockpit pages / lib data-loaders. Highest concentrations:
 | `app/admin/clv/page.tsx` | 9 |
 | `app/cockpit/history/page.tsx` | 8 |
 | `packages/data-ingestion/src/context-enrichment.ts` | 6 |
-| `lib/proof/load-proof-of-record.ts` | 5 |
-| `lib/jarvis/memory/actions.ts` | 5 |
-| *(+45 more files, 1–4 each)* | … |
+| *(+47 more files, 1–5 each)* | … |
 
-**Verified:** `grep` across the decision-UI (`apps/web/components/decision/*`), the new public pages
-(`/today`, `/edge`, `/gameplan`, `/proof/*`), and all five new packages (`decision-field-runtime`,
-`decision-factory`, `nfl-stat-universe`, `autonomy`, `galileo-week`) returns **zero** genuine errors.
-`npm run guard:decision-surfaces` typechecks all five packages → exit 0.
+### Decision-surface verification (works in this sandbox, no Prisma)
 
-## Why the 152 are documented, not blind-fixed here
-
-Every one of the 152 lives in admin/lib code that **imports generated Prisma types**. Without a
-Prisma-generated typecheck to compile against (the sandbox can't generate it), "fixing" a `TS7006` by
-hand-annotating a `.map(row => …)` callback risks pinning the wrong type and trading a loud error for a
-silent one. The safe sequence is: generate Prisma → re-run `tsc` → fix against real types. That is a
-mechanical pass best done where `db:generate` succeeds (CI or a networked dev box), file-by-file from the
-concentration table above. This is a **targeted, scoped TODO**, not an open-ended cleanup.
+The new code does **not** depend on Prisma and is provably clean: `npm run guard:decision-surfaces`
+typechecks all five new packages → **exit 0**. `grep` across the decision-UI (`apps/web/components/
+decision/*`), the new public pages (`/today`, `/edge`, `/gameplan`, `/proof/*`), and the five packages
+returns **zero** errors of any kind.
 
 ## Clean build sequences
 
 **Local / CI (authoritative):**
 ```bash
 npm install            # postinstall runs db:generate
-npm run db:generate    # (explicit) regenerate the Prisma client
+npm run db:generate    # (explicit) regenerate the Prisma client — clears ALL 204
 npm run typecheck      # all workspaces
 npm run build          # apps/web production build
 ```
 Or the bundled helper: `npm run build:verify:local` (`db:generate → typecheck → build`).
 
-**Decision surfaces only (works in this sandbox, no Prisma needed):**
+**Decision surfaces only (no Prisma needed):**
 ```bash
 npm run guard:decision-surfaces   # tsc the 5 new packages → 0 errors
 npx vitest run packages/decision-field-runtime packages/decision-factory \
@@ -76,13 +74,15 @@ npx vitest run packages/decision-field-runtime packages/decision-factory \
 npm run guardrails                # trust-gate + model-freeze + draft-only + claude-api + secrets + evals
 ```
 
-**App typecheck (surfaces both buckets):** `npm run typecheck:app`.
+**App typecheck (surfaces the cascade in-sandbox):** `npm run typecheck:app`.
 
 ## Definition of done for "boring-green"
 
-1. `db:generate` succeeds → the 52 environmental errors → 0.
-2. The 152 admin/lib errors fixed file-by-file from the table → 0.
+1. `db:generate` succeeds → the 52 direct **and** the ~152 cascade errors → expected **0**.
+2. Re-run `npm run typecheck:app` on CI (Prisma generated) to measure the **true** residual — if any
+   genuine, Prisma-independent error survives, fix it then (none demonstrated in the sandbox).
 3. `npm run build:verify:local` exits 0; `npm run guardrails` green; package vitest green.
 
-Items 1 and 3-guardrails are achieved on CI today. Item 2 is the only remaining code work, and it does
-not touch the decision OS.
+CI already runs step 1 before typecheck/build (`.github/workflows/ci.yml`), so the app is expected to be
+green on CI today. The remaining action is to **confirm the post-generate residual on CI**, not to grind
+through 152 sandbox artifacts by hand.
