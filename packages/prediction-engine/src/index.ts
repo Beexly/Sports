@@ -95,6 +95,14 @@ export {
 } from "./candidate-registry.js";
 export type { SignalCandidate, CandidateFamily } from "./candidate-registry.js";
 export { runDiscoveryNight, assertAllProposed } from "./discovery-engine.js";
+// Rushing-yards UNDER edge — the one validated (3-season, FDR) market inefficiency, as a
+// pure, evidence-graded assessment. STRONG/LEAN/PASS by line bucket; conservative; shadow.
+export {
+  assessRushUnderEdge,
+  RUSH_UNDER_BUCKETS_3SEASON,
+  VIG_BREAK_EVEN,
+} from "./prop-rush-edge.js";
+export type { RushEdgeGrade, RushEdgeBucket, RushEdgeAssessment } from "./prop-rush-edge.js";
 export type {
   CandidateNightResult,
   DiscoveryProposal,
