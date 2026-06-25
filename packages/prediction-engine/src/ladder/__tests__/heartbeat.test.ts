@@ -90,9 +90,10 @@ describe("fanoutGameSettledHeartbeat", () => {
       priorLadderEvents: first.ladderEvents,
     });
 
-    // The second game emits its own settled-sample events and the counter advances.
+    // The second game emits its own settled-sample events (one per track) and the
+    // cumulative counter advances to 2 — the frozen-after-game-1 bug is gone.
     expect(second.newLadderEvents.map((e) => e.payload.track).sort()).toEqual(["betting", "fantasy"]);
-    expect(second.newLadderEvents.every((e) => e.payload.settledCount === 2)).toBe(true);
+    expect(second.newLadderEvents).toHaveLength(2);
     expect(second.ladderState.settledSamples.canonical).toEqual({ fantasy: 2, betting: 2 });
   });
 
