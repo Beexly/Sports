@@ -73,3 +73,6 @@ export * from "./fantasy/lineup-court.js";
 export * from "./fantasy/dfs-leverage-lab.js";
 export * from "./fantasy/bestball-draft-twin.js";
 export * from "./fantasy/dynasty-asset-physics.js";
+export * from "./fantasy/fantasy-autopsy.js";
+export * from "./fantasy/fantasy-experiment-governor.js";
+export * from "./fantasy/fantasy-scientific-discovery-council.js";
