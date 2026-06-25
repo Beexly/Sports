@@ -285,6 +285,32 @@ async function main(): Promise<void> {
   const samples = buildSamples(raw, vegas);
   console.log(`Built ${samples.length} samples (>= ${MIN_PRIOR_GAMES} prior games); ${[...vegas.keys()].length} team-week Vegas totals.\n`);
 
+  // Coverage diagnostic (COVERAGE_ONLY=1): how many samples actually got a Vegas value, and its spread.
+  const vegasVals = samples.map((s) => s.features.vegasImpliedTotal ?? 0).filter((v) => v > 0);
+  const cov = (100 * vegasVals.length) / Math.max(1, samples.length);
+  const vmean = vegasVals.reduce((a, b) => a + b, 0) / Math.max(1, vegasVals.length);
+  console.log(`VEGAS COVERAGE: ${vegasVals.length}/${samples.length} samples (${cov.toFixed(1)}%), mean implied total=${vmean.toFixed(2)}\n`);
+
+  // Exploitable-signal diagnostic: Pearson corr of each candidate feature with the NAIVE ERROR
+  // (actual - trailingPoints). A feature that correlates with naive's mistakes carries signal a
+  // capable model could exploit; ~0 means the feature genuinely adds nothing over the baseline.
+  const resid = samples.map((s) => s.actualFantasyPoints - (s.features.trailingPoints ?? 0));
+  function pearson(xs: number[], ys: number[]): number {
+    const n = xs.length;
+    const mx = xs.reduce((a, b) => a + b, 0) / n;
+    const my = ys.reduce((a, b) => a + b, 0) / n;
+    let cov = 0, vx = 0, vy = 0;
+    for (let i = 0; i < n; i++) { const dx = xs[i]! - mx, dy = ys[i]! - my; cov += dx * dy; vx += dx * dx; vy += dy * dy; }
+    return vx === 0 || vy === 0 ? 0 : cov / Math.sqrt(vx * vy);
+  }
+  console.log("CORRELATION WITH NAIVE ERROR (actual - trailingPoints):");
+  for (const f of ["vegasImpliedTotal", "recencyPoints", "trendPoints", "targetShare", "carryShare", "oppFpoe", "trailingTargets"]) {
+    const xs = samples.map((s) => s.features[f] ?? 0);
+    console.log(`  ${f.padEnd(20)} r = ${pearson(xs, resid).toFixed(4)}`);
+  }
+  console.log("");
+  if (process.env.COVERAGE_ONLY === "1") return;
+
   const opts = { rounds: 8, learningRate: 0.2, minTrainWeeks: 4, purgeWeeks: 1, embargoWeeks: 1 };
   type Row = { name: string; feats: number; modelMae: number; naiveMae: number; marginPct: number; t: number; beats: boolean };
   const results: Row[] = [];
