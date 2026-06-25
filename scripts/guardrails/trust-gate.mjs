@@ -49,9 +49,30 @@ const SHARP_MONEY_ALLOW = new Set([
   "packages/prediction-engine/src/game-context.ts",
 ]);
 
+// "lock" has a legitimate TEMPORAL/GOVERNANCE meaning in internal engine code: the moment a
+// fantasy waiver/FAAB/trade window or a betting line LOCKS (closes), and the CLV-timing decision
+// to "lock the bet in now" (accept the current number) vs wait. These files use it ONLY in that
+// sense (lockTime, POST_LOCK_ONLY, LOCK_NOW, pre-/post-lock) — never as betting slang for a
+// guaranteed pick. They are internal logic, not public copy; the public-copy scan (the 12 page
+// files) remains the real customer-facing defense. Owner-approved safe-technical exemption.
+// (Rename was evaluated and rejected: LOCK_NOW is exported with a ~21-reference blast radius across
+// types/tests — high risk for zero public benefit.)
+const LOCK_TECHNICAL_ALLOW = new Set([
+  "packages/engine/src/fantasy/fantasy-light-cone.ts",
+  "packages/engine/src/fantasy/fantasy-belief-state-transition.ts",
+  "packages/engine/src/fantasy/fantasy-scientific-discovery-council.ts",
+  "packages/prediction-engine/src/entry-timing.ts",
+]);
+
+// "guaranteed" appears here ONLY inside an explicit DISCLAIMER ("no outcome guaranteed") that does
+// the opposite of a promotional claim — it qualifies that the diagnostic does not promise a result.
+const GUARANTEED_DISCLAIMER_ALLOW = new Set([
+  "packages/engine/src/fantasy/trade-mri.ts",
+]);
+
 const BANNED_PHRASES = [
-  { phrase: "lock", wordBoundary: true, claim: "banned.lock" },
-  { phrase: "guaranteed", wordBoundary: false, claim: "banned.guaranteed-outcome" },
+  { phrase: "lock", wordBoundary: true, claim: "banned.lock", allowFiles: LOCK_TECHNICAL_ALLOW },
+  { phrase: "guaranteed", wordBoundary: false, claim: "banned.guaranteed-outcome", allowFiles: GUARANTEED_DISCLAIMER_ALLOW },
   { phrase: "sure thing", wordBoundary: false, claim: "banned.sure-thing" },
   { phrase: "risk-free", wordBoundary: false, claim: "banned.risk-free" },
   { phrase: "risk free", wordBoundary: false, claim: "banned.risk-free-2" },
