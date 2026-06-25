@@ -19,6 +19,7 @@ const mocks = vi.hoisted(() => ({
   // data-ingestion
   getOdds: vi.fn<(sport: string, markets: string[]) => Promise<{ data: unknown[]; remainingRequests: number }>>(),
   validateFreshness: vi.fn<(at: Date) => boolean>(),
+  validateOddsFreshness: vi.fn<(odds: unknown[]) => boolean>(),
   normalizeGames: vi.fn<(events: unknown[]) => unknown[]>(),
   normalizeOdds: vi.fn<(events: unknown[], at: Date) => unknown[]>(),
   enrichGameContext: vi.fn<(args: unknown) => Promise<void>>(),
@@ -54,6 +55,7 @@ vi.mock("@sports/data-ingestion", () => ({
   OddsApiClient: vi.fn().mockImplementation(() => ({ getOdds: mocks.getOdds })),
   DataNormalizer: vi.fn().mockImplementation(() => ({
     validateFreshness: mocks.validateFreshness,
+    validateOddsFreshness: mocks.validateOddsFreshness,
     normalizeGames: mocks.normalizeGames,
     normalizeOdds: mocks.normalizeOdds,
   })),
@@ -128,6 +130,7 @@ describe("processSport", () => {
     mocks.ingestionRunUpdate.mockResolvedValue({});
     mocks.getOdds.mockResolvedValue({ data: [{ raw: true }], remainingRequests: 400 });
     mocks.validateFreshness.mockReturnValue(true);
+    mocks.validateOddsFreshness.mockReturnValue(true);
     mocks.normalizeGames.mockReturnValue([normalizedGame()]);
     mocks.normalizeOdds.mockReturnValue([]);
     mocks.sportUpsert.mockResolvedValue({ id: "sport-1" });
@@ -177,6 +180,19 @@ describe("processSport", () => {
 
     expect(result.status).toBe("failed");
     expect(result.error).toMatch(/freshness/i);
+    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+  });
+
+  it("rejects a STALE UPSTREAM feed even when our fetch clock looks fresh (no-stale-data rule)", async () => {
+    // We fetched now (validateFreshness passes) but the upstream odds are stale.
+    mocks.validateFreshness.mockReturnValue(true);
+    mocks.normalizeOdds.mockReturnValue([{ bookmaker: "x" }]);
+    mocks.validateOddsFreshness.mockReturnValue(false);
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(result.status).toBe("failed");
+    expect(result.error).toMatch(/stale/i);
     expect(mocks.pickUpsert).not.toHaveBeenCalled();
   });
 

@@ -57,6 +57,7 @@ export class DataNormalizer {
           > & Partial<NormalizedOdds> = {
             gameExternalId: event.id,
             bookmaker: bookmaker.key,
+            bookmakerLastUpdate: new Date(bookmaker.last_update),
             market: this.mapMarket(market.key),
             fetchedAt,
           };
@@ -111,6 +112,27 @@ export class DataNormalizer {
   validateFreshness(fetchedAt: Date): boolean {
     const age = Date.now() - fetchedAt.getTime();
     return age < FRESHNESS_THRESHOLD_MS;
+  }
+
+  /**
+   * Validate that the UPSTREAM odds are actually recent — not merely that we just
+   * fetched them. `validateFreshness(fetchedAt)` only proves we polled the API now;
+   * it cannot catch a feed that is serving an hour-old cached board. This checks each
+   * bookmaker's OWN `last_update`: the data is fresh iff the most recently-updated book
+   * is within the threshold. Fail-safe: a non-empty set with no parseable upstream
+   * timestamp returns false (cannot verify → treat as stale). An empty set is vacuously
+   * fresh (no odds to be stale). A `false` here MUST stop the job — the "no stale data"
+   * invariant is enforced on real data age, not the local clock.
+   */
+  validateOddsFreshness(odds: readonly NormalizedOdds[]): boolean {
+    if (odds.length === 0) return true;
+    let freshest = Number.NEGATIVE_INFINITY;
+    for (const o of odds) {
+      const t = o.bookmakerLastUpdate.getTime();
+      if (Number.isFinite(t) && t > freshest) freshest = t;
+    }
+    if (!Number.isFinite(freshest)) return false; // had odds but no valid timestamp → fail safe
+    return Date.now() - freshest < FRESHNESS_THRESHOLD_MS;
   }
 
   normalizeScores(

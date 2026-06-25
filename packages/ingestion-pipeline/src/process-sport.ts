@@ -145,6 +145,13 @@ export async function processSport(
     const normalizedGames = normalizer.normalizeGames(events);
     const normalizedOdds = normalizer.normalizeOdds(events, fetchedAt);
 
+    // Real freshness gate: validate the UPSTREAM odds age (per-bookmaker last_update),
+    // not just our local fetch clock. A feed serving a stale cached board would pass the
+    // fetchedAt check above but fails here — stop the job rather than ingest stale odds.
+    if (!normalizer.validateOddsFreshness(normalizedOdds)) {
+      throw new Error("Upstream odds are stale: the freshest bookmaker update exceeds the freshness threshold");
+    }
+
     const sportRecord = await db.sport.upsert({
       where: { key: sport.key },
       create: { key: sport.key, name: sport.name, displayName: sport.displayName },

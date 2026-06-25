@@ -267,7 +267,11 @@ export interface NormalizedOdds {
   total?: number;
   overPrice?: number;
   underPrice?: number;
+  /** When WE fetched this snapshot (our clock). */
   fetchedAt: Date;
+  /** The bookmaker's OWN last-update time (upstream). The real freshness signal —
+   *  proves whether the odds actually changed recently, not just when we polled. */
+  bookmakerLastUpdate: Date;
 }
 
 // ============================================================

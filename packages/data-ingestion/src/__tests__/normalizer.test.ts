@@ -130,6 +130,46 @@ describe("DataNormalizer", () => {
     });
   });
 
+  describe("validateOddsFreshness (real upstream age, not the local clock)", () => {
+    it("carries the bookmaker's own last_update onto each normalized odd", () => {
+      const odds = normalizer.normalizeOdds([mockEvent], new Date());
+      expect(odds.length).toBeGreaterThan(0);
+      for (const o of odds) {
+        expect(o.bookmakerLastUpdate).toBeInstanceOf(Date);
+        expect(Number.isFinite(o.bookmakerLastUpdate.getTime())).toBe(true);
+      }
+    });
+
+    it("is fresh when the upstream last_update is recent", () => {
+      const odds = normalizer.normalizeOdds([mockEvent], new Date()); // mock last_update = now
+      expect(normalizer.validateOddsFreshness(odds)).toBe(true);
+    });
+
+    it("catches a STALE feed even when we just fetched it (the tautology fix)", () => {
+      const staleEvent = {
+        ...mockEvent,
+        bookmakers: mockEvent.bookmakers.map((b) => ({
+          ...b,
+          last_update: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3h old
+        })),
+      };
+      // We fetched "now", so validateFreshness(now) would pass — but the data is stale.
+      const odds = normalizer.normalizeOdds([staleEvent], new Date());
+      expect(normalizer.validateFreshness(new Date())).toBe(true);
+      expect(normalizer.validateOddsFreshness(odds)).toBe(false);
+    });
+
+    it("is vacuously fresh for an empty odds set", () => {
+      expect(normalizer.validateOddsFreshness([])).toBe(true);
+    });
+
+    it("fails safe when odds exist but carry no parseable upstream timestamp", () => {
+      const odds = normalizer.normalizeOdds([mockEvent], new Date());
+      const corrupted = odds.map((o) => ({ ...o, bookmakerLastUpdate: new Date("not-a-date") }));
+      expect(normalizer.validateOddsFreshness(corrupted)).toBe(false);
+    });
+  });
+
   describe("normalizeScores", () => {
     it("normalizes completed scores correctly", () => {
       const scores = normalizer.normalizeScores([
