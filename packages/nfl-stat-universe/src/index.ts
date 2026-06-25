@@ -14,3 +14,4 @@ export * from "./stat-compiler.js";
 export * from "./audit.js";
 export * from "./provider-portfolio.js";
 export * from "./ingestion-cadence-planner.js";
+export * from "./decision-state-matrix.js";
