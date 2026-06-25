@@ -62,3 +62,8 @@ export * from "./fantasy/role-mass-transfer-engine.js";
 export * from "./fantasy/fantasy-conservation-engine.js";
 export * from "./fantasy/fantasy-absorption-half-life.js";
 export * from "./fantasy/fantasy-format-relativity.js";
+export * from "./fantasy/fantasy-belief-state-transition.js";
+export * from "./fantasy/platform-dna-genome.js";
+export * from "./fantasy/manager-dna-genome.js";
+export * from "./fantasy/fantasy-decision-leverage-index.js";
+export * from "./fantasy/fantasy-ghost-bench.js";
